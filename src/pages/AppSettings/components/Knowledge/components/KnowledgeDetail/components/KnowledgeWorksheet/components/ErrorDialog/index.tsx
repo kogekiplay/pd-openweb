@@ -6,13 +6,13 @@ const ErrorDialogTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 18px;
+  font-size: var(--font-xl);
   font-weight: 700;
   color: var(--color-text-primary);
   .buttonBox {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: var(--space-5);
     padding-right: 10px;
     .btn {
       display: flex;
@@ -20,7 +20,7 @@ const ErrorDialogTitle = styled.div`
       justify-content: center;
       width: 85px;
       height: 36px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: 700;
       color: var(--color-text-primary);
       border: 1px solid var(--color-border-primary);
@@ -39,7 +39,7 @@ const ErrorDialogWrap = styled.div`
     gap: 5px;
     padding: 5px 0;
     border-bottom: 1px solid var(--color-border-secondary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     .name {
       flex: 1;
       padding-left: 10px;

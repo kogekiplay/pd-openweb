@@ -12,7 +12,7 @@ const CustomChartContentWrap = styled.div`
   flex-direction: column;
   height: 100%;
   .label {
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-family: FZLanTingHeiS;
     font-weight: 600;
     line-height: 13px;
@@ -122,7 +122,7 @@ const CustomChartContentWrap = styled.div`
       }
       .removeIcon {
         position: absolute;
-        font-size: 16px;
+        font-size: var(--font-lg);
         top: 0;
         right: 0;
         background: var(--color-background-primary);
@@ -154,11 +154,11 @@ const CustomColorsWrap = styled.div`
   box-shadow: var(--shadow-lg);
   opacity: 1;
   border-radius: var(--radius-sm);
-  padding: 24px;
+  padding: var(--space-6);
   .customColors {
     display: flex;
     gap: 6px;
-    margin-top: 16px;
+    margin-top: var(--space-4);
     flex-wrap: wrap;
     .colorItem {
       width: 34px;

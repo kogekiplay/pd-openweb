@@ -8,11 +8,11 @@ const AddWorksheetBtn = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   min-width: 88px;
   height: 36px;
   border-radius: 36px;
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 700;
   color: var(--color-text-inverse);
   background: var(--color-primary);
@@ -21,7 +21,7 @@ const AddWorksheetBtn = styled.div`
     background: var(--color-primary-dark);
   }
   .icon {
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
   ${props =>
     props.disabled &&

@@ -4,7 +4,7 @@ import { RichText } from 'ming-ui';
 
 const Text = styled.div`
   color: var(--color-text-disabled);
-  font-size: 12px;
+  font-size: var(--font-xs);
   margin-top: ${props => (props.displayRow ? '7px' : '3px')};
 `;
 

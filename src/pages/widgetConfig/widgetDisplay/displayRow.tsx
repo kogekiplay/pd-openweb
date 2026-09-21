@@ -23,7 +23,7 @@ const DisplayRowListWrap = styled.div`
   .rowsWidgetContent {
     flex: 1;
     min-height: 100%;
-    padding: 12px 20px;
+    padding: var(--space-3) var(--space-5);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -45,7 +45,7 @@ const DisplayRowListWrap = styled.div`
   }
   .rowsWrap {
     border-radius: 8px;
-    padding: 8px 0;
+    padding: var(--space-2) 0;
     box-sizing: border-box;
     background: var(--color-background-primary);
     display: flex;
@@ -55,13 +55,13 @@ const DisplayRowListWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
   }
   .displayRow {
     position: relative;
   }
   .controlNum {
-    margin-left: 12px;
+    margin-left: var(--space-3);
     border-bottom: 1px solid transparent;
     &:hover {
       border-bottom: 1px dashed currentColor;

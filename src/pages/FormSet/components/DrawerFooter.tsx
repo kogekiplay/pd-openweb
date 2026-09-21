@@ -8,12 +8,12 @@ const FooterWrap = styled.div`
   align-items: center;
   width: 100%;
   height: 66px;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   box-sizing: border-box;
   background-color: var(--color-background-card) !important;
   .saveBtn {
     display: inline-block;
-    padding: 0 32px;
+    padding: 0 var(--space-8);
     color: var(--color-white);
     background-color: var(--color-primary);
     border-radius: var(--radius-sm);
@@ -30,7 +30,7 @@ const FooterWrap = styled.div`
   }
   .cancelBtn {
     display: inline-block;
-    padding: 0 32px;
+    padding: 0 var(--space-8);
     color: var(--color-primary);
     border-radius: var(--radius-sm);
     line-height: 34px;

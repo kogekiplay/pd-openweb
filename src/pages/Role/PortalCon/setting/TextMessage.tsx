@@ -15,14 +15,14 @@ const Wrap = styled.div`
   .warnTxt {
     background: var(--color-yellow-black);
     border-radius: var(--radius-sm);
-    padding: 12px;
-    margin-bottom: 24px;
+    padding: var(--space-3);
+    margin-bottom: var(--space-6);
   }
   position: relative;
   height: calc(100% - 100px);
   overflow: hidden;
   .content {
-    padding: 24px;
+    padding: var(--space-6);
     height: calc(100% - 68px);
     overflow: auto;
     .sign {
@@ -45,7 +45,7 @@ const Wrap = styled.div`
     width: 100%;
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
-    padding: 12px;
+    padding: var(--space-3);
     border-radius: var(--radius-sm);
     height: 90px;
     resize: none;
@@ -60,7 +60,7 @@ const Wrap = styled.div`
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
     color: var(--color-primary);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     display: inline-block;
     cursor: pointer;
     margin-top: 14px;
@@ -81,9 +81,9 @@ const Wrap = styled.div`
 
   .smsServiceCard {
     background: var(--color-background-tertiary);
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-md);
-    margin-top: 12px;
+    margin-top: var(--space-3);
   }
 `;
 

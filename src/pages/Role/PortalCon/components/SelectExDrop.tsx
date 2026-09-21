@@ -14,7 +14,7 @@ const StyledSelectContainer = styled.div`
     --ant-select-border-color: var(--color-border-secondary);
   }
   .ant-select:not(.ant-select-customize-input) .ant-select-content {
-    padding-right: 24px;
+    padding-right: var(--space-6);
   }
 
   .ant-select-suffix {
@@ -46,8 +46,8 @@ const StyledTag = styled.span`
   &.ant-select-selection-item {
     background: var(--color-background-disabled);
     border-radius: var(--radius-sm);
-    margin-right: 4px;
-    padding: 0 8px;
+    margin-right: var(--space-1);
+    padding: 0 var(--space-2);
   }
 `;
 

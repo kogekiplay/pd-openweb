@@ -21,8 +21,8 @@ const ContentWrap = styled.div`
     line-height: 40px;
     background: var(--color-primary-transparent);
     border-radius: var(--radius-sm);
-    padding-left: 12px;
-    margin-bottom: 24px;
+    padding-left: var(--space-3);
+    margin-bottom: var(--space-6);
   }
   input {
     width: 120px;
@@ -37,7 +37,7 @@ const ContentWrap = styled.div`
     width: 24px;
     height: 24px;
     border-radius: var(--radius-sm);
-    margin-right: 8px;
+    margin-right: var(--space-2);
     text-align: center;
   }
   .size {
@@ -63,7 +63,7 @@ const ContentWrap = styled.div`
     line-height: 36px;
     padding: 0 30px;
     border-radius: var(--radius-sm);
-    font-size: 14px;
+    font-size: var(--font-md);
     cursor: pointer;
     transition:
       color ease-in 0.2s,
@@ -72,7 +72,7 @@ const ContentWrap = styled.div`
   }
 
   .saveBtn {
-    margin-right: 20px;
+    margin-right: var(--space-5);
     background: var(--color-primary);
     color: var(--color-white);
     &:hover {
@@ -108,7 +108,7 @@ const ContentWrap = styled.div`
       border: 1px solid var(--color-link-hover);
       line-height: 34px;
       cursor: pointer;
-      padding: 0 20px;
+      padding: 0 var(--space-5);
       border-radius: var(--radius-sm);
       &:hover {
         color: var(--color-white);
@@ -122,7 +122,7 @@ const ContentWrap = styled.div`
   }
   .header {
     border-bottom: 1px solid var(--color-border-secondary);
-    padding: 12px 0;
+    padding: var(--space-3) 0;
   }
 
   .searchButton {

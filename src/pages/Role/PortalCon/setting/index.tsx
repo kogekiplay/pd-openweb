@@ -28,7 +28,7 @@ const Wrap = styled.div`
   width: 640px;
   background: var(--color-background-primary);
   .header {
-    padding: 24px 24px 16px;
+    padding: var(--space-6) var(--space-6) var(--space-4);
     display: flex;
     & > span {
       flex: 1;
@@ -38,13 +38,13 @@ const Wrap = styled.div`
   }
   .conTab {
     border-bottom: 1px solid var(--color-border-secondary);
-    padding-left: 8px;
+    padding-left: var(--space-2);
     li {
       display: inline-block;
-      margin: 0 16px;
+      margin: 0 var(--space-4);
       position: relative;
       padding-bottom: 13px;
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: 500;
       color: var(--color-text-secondary);
       &:hover {
@@ -71,7 +71,7 @@ const WrapCon = styled.div`
   background: var(--color-background-primary);
   position: absolute;
   bottom: 0;
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-6);
   width: 100%;
   left: 0;
   right: 0;
@@ -79,7 +79,7 @@ const WrapCon = styled.div`
   .saveBtn {
     display: inline-block;
     height: 36px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     border-radius: var(--radius-sm);
     box-sizing: border-box;
     line-height: 36px;
@@ -103,8 +103,8 @@ const WrapCon = styled.div`
     background: var(--color-background-primary);
     border: 1px solid var(--color-primary);
     color: var(--color-primary);
-    margin-left: 16px;
-    padding: 0 32px;
+    margin-left: var(--space-4);
+    padding: 0 var(--space-8);
     width: auto;
   }
   .closePortal {

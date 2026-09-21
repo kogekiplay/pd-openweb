@@ -30,8 +30,8 @@ const BaseInfoWrap = styled(Dialog)`
 const Wrap = styled.div`
   width: 100%;
   color: var(--color-text-secondary);
-  font-size: 13px;
-  padding: 20px 20px 0;
+  font-size: var(--font-sm);
+  padding: var(--space-5) var(--space-5) 0;
   overflow: auto;
   .keyInfo {
     white-space: pre-wrap;

@@ -14,7 +14,7 @@ const Wrap = styled.div`
     }
     .listLiHeader {
       color: var(--color-text-tertiary);
-      font-size: 12px;
+      font-size: var(--font-xs);
     }
     .listLi {
       display: flex;

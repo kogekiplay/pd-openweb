@@ -13,7 +13,7 @@ const RangeBox = styled.div`
   box-shadow: var(--shadow-lg);
   box-sizing: border-box;
   line-height: 1;
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: bold;
   transition: all 0.3s;
   animation-name: fadeInUp;
@@ -38,14 +38,14 @@ const RangeBox = styled.div`
     }
   }
   .con {
-    padding: 24px;
+    padding: var(--space-6);
     max-height: 350px;
     overflow: auto;
     h5 {
       margin: 0;
       line-height: 1;
-      margin-bottom: 20px;
-      font-size: 14px;
+      margin-bottom: var(--space-5);
+      font-size: var(--font-md);
     }
     .Radio-text {
       font-weight: initial;
@@ -53,7 +53,7 @@ const RangeBox = styled.div`
     }
   }
   .conLine {
-    margin: 0 24px;
+    margin: 0 var(--space-6);
     border-bottom: 1px solid var(--color-border-secondary);
   }
   .inputTxt {
@@ -61,7 +61,7 @@ const RangeBox = styled.div`
   }
 `;
 const HeaderRange = styled.div`
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-6);
   border-bottom: 1px solid var(--color-border-secondary);
   .ming.icon-close {
     float: right;

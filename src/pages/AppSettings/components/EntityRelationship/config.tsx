@@ -20,7 +20,7 @@ export const stylesheet_er = `
   padding: 6px 0;
   border: 1px solid var(--color-border-primary);
   .count {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
 }
 .x6-graph-svg {
@@ -30,10 +30,10 @@ export const stylesheet_er = `
   height: 1px;
   background: var(--color-border-primary);
   border: none;
-  margin: 2px 12px 6px 12px;
+  margin: 2px var(--space-3) 6px var(--space-3);
 }
 .nodeTitle {
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
@@ -48,7 +48,7 @@ export const stylesheet_er = `
   }
 }
 .nodeControlItem {
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   width: 100%;
   box-sizing: border-box;
   display: flex;
@@ -60,7 +60,7 @@ export const stylesheet_er = `
   }
   .icon {
     vertical-align: text-bottom;
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
 }
 .icon {
@@ -81,10 +81,10 @@ export const stylesheet_er = `
   align-items: center;
 }
 .Font14 {
-  font-size: 14px !important;
+  font-size: var(--font-md) !important;
 }
 .Font12 {
-  font-size: 12px !important;
+  font-size: var(--font-xs) !important;
 }
 .Bold {
   font-weight: bold !important;

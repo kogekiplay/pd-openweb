@@ -13,10 +13,10 @@ const DescWrap = styled.div`
     border-radius: 10px;
     border: 1px solid var(--color-border-secondary);
     text-align: center;
-    padding: 24px 20px;
+    padding: var(--space-6) var(--space-5);
     flex: 1;
     &:nth-child(2) {
-      margin: 0 20px;
+      margin: 0 var(--space-5);
     }
     .title {
       font-weight: 500;

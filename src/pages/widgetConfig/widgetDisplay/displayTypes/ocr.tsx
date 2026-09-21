@@ -10,7 +10,7 @@ const InfoWrap = styled.div`
     display: flex;
     align-items: center;
     line-height: 36px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     text-align: center;

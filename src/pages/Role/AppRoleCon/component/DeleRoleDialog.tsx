@@ -11,7 +11,7 @@ const Wrap = styled.div`
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
 
     :global(.Dropdown--input) {
       padding-left: 15px;

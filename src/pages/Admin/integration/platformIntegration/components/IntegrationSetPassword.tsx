@@ -11,22 +11,22 @@ import RegExpValidator from 'src/utils/expression';
 import Config from '../../../config';
 
 const SetInitialPassword = styled.div`
-  padding: 20px 0;
+  padding: var(--space-5) 0;
   border-bottom: 1px solid var(--color-border-secondary);
   .syncBox {
     max-width: 637px;
   }
   .initialPasswordInfo {
-    margin: 24px 0 20px 0;
+    margin: var(--space-6) 0 var(--space-5) 0;
     position: relative;
     .passwordlabel {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-title);
     }
     .password {
       width: 320px;
       height: 36px;
-      margin: 0 24px 0 28px;
+      margin: 0 var(--space-6) 0 28px;
       border: 1px solid var(--color-primary);
     }
     .passwordError {

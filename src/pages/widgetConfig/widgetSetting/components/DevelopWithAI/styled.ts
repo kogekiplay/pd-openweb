@@ -10,10 +10,10 @@ export const IconButton = styled.div`
   display: flex;
   align-items: center;
   .icon {
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
   .text {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: ${props => props.textColor || 'var(--color-text-primary)'};
   }
   &.disabled {

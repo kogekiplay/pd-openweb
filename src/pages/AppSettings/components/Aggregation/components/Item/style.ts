@@ -8,7 +8,7 @@ export const Wrap = styled.div`
   }
   background: var(--color-background-primary);
   min-height: 68px;
-  padding: 12px 0;
+  padding: var(--space-3) 0;
   margin: 0 40px;
   .iconCon {
     width: 36px;
@@ -60,7 +60,7 @@ export const WrapS = styled(Menu)`
 export const WrapDialog = styled.div`
   .ic {
     span {
-      padding: 4px 6px;
+      padding: var(--space-1) 6px;
       border-radius: var(--radius-sm);
       margin-left: -6px;
       &:hover {

@@ -28,7 +28,7 @@ const EditUserExtendInfoCon = styled.div`
     color: var(--color-white);
     line-height: 36px;
     border-radius: var(--radius-sm);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 400;
     -webkit-transition:
       color ease-in 0.2s,

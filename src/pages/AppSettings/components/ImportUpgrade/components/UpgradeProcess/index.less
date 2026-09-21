@@ -18,7 +18,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   box-shadow: var(--shadow-sm);
   z-index: 1000;
   .applicationIcon {
@@ -28,14 +28,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
   .w110 {
     width: 110px;
   }
   .helpIcon {
     .icon-help {
-      font-size: 20px !important;
+      font-size: var(--font-2xl) !important;
       color: var(--color-text-tertiary) !important;
     }
   }
@@ -125,7 +125,7 @@
   overflow-y: auto;
   border: 1px dashed var(--color-border-secondary);
   box-sizing: border-box;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   overflow: hidden;
   .uploadImg {
     width: 52px;
@@ -137,7 +137,7 @@
     line-height: 34px;
     border: 1px solid var(--color-primary);
     border-radius: var(--radius-sm);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     box-sizing: border-box;
   }
   .errTip {
@@ -169,7 +169,7 @@
       height: 30px;
       border-radius: var(--radius-sm);
       color: var(--color-white);
-      margin-right: 12px;
+      margin-right: var(--space-3);
       text-align: center;
       line-height: 30px;
       svg {
@@ -193,10 +193,10 @@
   box-shadow: var(--shadow-lg);
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
-  padding: 20px 0;
+  padding: var(--space-5) 0;
   li {
     height: 36px;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     display: flex;
     align-items: center;
     &:hover {
@@ -214,7 +214,7 @@
 }
 
 .settingsWrap {
-  padding: 0 0 40px 12px;
+  padding: 0 0 40px var(--space-3);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   margin-bottom: 30px;
@@ -228,7 +228,7 @@
 .updateMethodWrap {
   .updateMethodItem {
     flex: 1;
-    padding: 25px 12px 20px;
+    padding: 25px var(--space-3) var(--space-5);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
   }

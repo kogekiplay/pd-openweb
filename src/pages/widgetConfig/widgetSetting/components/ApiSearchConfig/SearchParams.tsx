@@ -14,8 +14,8 @@ const ControlWrap = styled.div`
       margin-top: 9px;
     }
     &.isChild {
-      margin-top: 8px;
-      padding: 8px 0 8px 20px;
+      margin-top: var(--space-2);
+      padding: var(--space-2) 0 var(--space-2) var(--space-5);
       border-left: 3px solid var(--color-background-disabled);
     }
     .settingItemTitle {
@@ -23,7 +23,7 @@ const ControlWrap = styled.div`
     }
     .cm-placeholder {
       color: var(--color-text-placeholder);
-      font-size: 14px;
+      font-size: var(--font-md);
       line-height: 27px;
       /* CM5 的 placeholder 是独立的绝对定位元素、要自己补左内边距；
        CM6 的 .cm-placeholder 在 .cm-line 里，已经继承了那 10px，删掉以免翻倍 */

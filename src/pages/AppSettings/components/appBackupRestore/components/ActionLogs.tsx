@@ -16,26 +16,26 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   height: 50px;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
 `;
 
 const Content = styled.div`
   flex: 1;
   height: calc(100% - 50px);
   background-color: var(--color-background-secondary);
-  padding: 16px 0;
+  padding: var(--space-4) 0;
   overflow: hidden;
 `;
 
 const SelectCon = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-tertiary);
   display: flex;
   justify-content: space-between;
-  margin-bottom: 16px;
-  padding: 0 24px;
+  margin-bottom: var(--space-4);
+  padding: 0 var(--space-6);
   .icon {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-secondary);
   }
   .icon.icon-arrow-down {
@@ -50,7 +50,7 @@ const SelectCon = styled.div`
   }
   .selectUser,
   .selectDate {
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
     background: var(--color-background-primary);
     display: flex;
     align-items: center;
@@ -69,10 +69,10 @@ const SelectCon = styled.div`
     }
   }
   .selectUser {
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
   .selectConText {
-    margin: 0 4px;
+    margin: 0 var(--space-1);
   }
   .selectLight {
     color: var(--color-primary);
@@ -87,13 +87,13 @@ const SelectCon = styled.div`
 
 const ActionLogWrap = styled.div`
   border-bottom: 1px solid var(--color-border-secondary);
-  padding: 16px;
+  padding: var(--space-4);
   background-color: var(--color-background-primary);
-  margin: 0 24px 16px;
+  margin: 0 var(--space-6) var(--space-4);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.08);
   .row {
     justify-content: space-between;
-    font-size: 13px;
+    font-size: var(--font-sm);
     .avatar {
       width: 20px;
       height: 20px;
@@ -109,7 +109,7 @@ const ActionLogWrap = styled.div`
   }
   .actContent {
     color: var(--color-text-title);
-    padding-left: 8px;
+    padding-left: var(--space-2);
     .changeBefore {
       color: var(--color-text-disabled);
       text-decoration: line-through;

@@ -44,7 +44,7 @@ const SettingModelWrap = styled.div`
     justify-content: space-between;
     border: 1px solid var(--color-border-tertiary);
     line-height: 34px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     border-radius: var(--radius-sm);
   }
   .globalDetail {
@@ -52,7 +52,7 @@ const SettingModelWrap = styled.div`
     min-height: 36px;
     background: var(--color-background-secondary);
     line-height: 1.5;
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
   }
 `;
 

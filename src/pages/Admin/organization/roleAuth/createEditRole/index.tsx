@@ -17,10 +17,10 @@ const RoleDrawer = styled(Drawer)`
     }
   }
   .ant-drawer-body {
-    padding: 8px 24px 16px 24px;
+    padding: var(--space-2) var(--space-6) var(--space-4) var(--space-6);
   }
   .ant-drawer-footer {
-    padding: 12px 24px;
+    padding: var(--space-3) var(--space-6);
     border: none;
   }
 
@@ -28,11 +28,11 @@ const RoleDrawer = styled(Drawer)`
     display: flex;
     align-items: center;
     border-bottom: 1px solid var(--color-border-secondary);
-    padding-bottom: 16px;
-    padding-top: 24px;
+    padding-bottom: var(--space-4);
+    padding-top: var(--space-6);
     .Checkbox {
       span {
-        font-size: 14px !important;
+        font-size: var(--font-md) !important;
       }
     }
   }

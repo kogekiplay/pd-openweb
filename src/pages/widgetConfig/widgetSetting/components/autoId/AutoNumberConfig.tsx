@@ -12,7 +12,7 @@ const NumberConfigWrap = styled.div`
   .settingItem {
     display: flex;
     align-items: center;
-    margin-top: 16px;
+    margin-top: var(--space-4);
 
     .title {
       width: 80px;
@@ -34,7 +34,7 @@ const NumberConfigWrap = styled.div`
     }
     .addWrap,
     .subWrap {
-      padding: 0 4px;
+      padding: 0 var(--space-1);
       height: 16px;
     }
     .addWrap {
@@ -42,9 +42,9 @@ const NumberConfigWrap = styled.div`
     }
   }
   .hint {
-    margin: 8px 0 0 80px;
+    margin: var(--space-2) 0 0 80px;
     color: var(--color-text-tertiary);
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .clickable {
     color: var(--color-primary);
@@ -52,7 +52,7 @@ const NumberConfigWrap = styled.div`
   }
   .footerBtn {
     text-align: right;
-    margin-top: 32px;
+    margin-top: var(--space-8);
   }
   .ming.Checkbox {
     display: flex;

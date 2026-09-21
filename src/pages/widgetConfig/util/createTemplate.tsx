@@ -18,15 +18,15 @@ import { formatControlsData } from './data';
 const TemplateRelationNotice = styled.div`
   margin-top: 10px;
   margin-left: 28px;
-  padding: 10px 12px;
+  padding: 10px var(--space-3);
   border-radius: var(--radius-sm);
   background: var(--color-warning-bg);
   border: 1px solid var(--color-warning);
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--space-2);
   color: var(--color-text-primary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 1.5;
   .icon-info {
     color: var(--color-warning);
@@ -49,7 +49,7 @@ const TemplateFieldsList = styled.div`
       color: var(--color-text-tertiary);
     }
     .fieldName {
-      margin-left: 8px;
+      margin-left: var(--space-2);
       color: var(--color-text-primary);
       word-break: break-word;
     }
@@ -62,7 +62,7 @@ const TemplateDialogWrap = styled(Dialog)`
       margin-right: 0;
       margin-top: 10px;
       &:last-child {
-        margin-top: 16px;
+        margin-top: var(--space-4);
       }
       display: flex;
       .Radio-box {

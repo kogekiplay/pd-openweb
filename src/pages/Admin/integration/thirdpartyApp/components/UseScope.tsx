@@ -9,16 +9,16 @@ import AuthAppList from 'src/pages/Admin/components/AuthAppList';
 const UseScopeWrap = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: var(--space-5);
   flex: 1;
   min-height: 0;
-  padding: 26px 16px 16px;
+  padding: 26px var(--space-4) var(--space-4);
   overflow: hidden;
   .Radio {
     margin-right: 26px !important;
   }
   .Radio-box {
-    margin-right: 8px !important;
+    margin-right: var(--space-2) !important;
   }
   .appListWrapper {
     display: flex;
@@ -34,7 +34,7 @@ const UseScopeWrap = styled.div`
 `;
 
 const Footer = styled.div`
-  margin-top: 24px;
+  margin-top: var(--space-6);
 `;
 
 export default function UseScope(props) {

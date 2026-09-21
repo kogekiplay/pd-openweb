@@ -8,15 +8,15 @@ import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 
 export const Wrapper = styled.div`
-  padding: 35px 40px 32px;
+  padding: 35px 40px var(--space-8);
   max-width: 1080px;
   .settingItem {
     display: flex;
     align-items: center;
-    margin-top: 24px;
+    margin-top: var(--space-6);
     .labelText {
       width: 120px;
-      margin-right: 12px;
+      margin-right: var(--space-3);
     }
   }
 `;

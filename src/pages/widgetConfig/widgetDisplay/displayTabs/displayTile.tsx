@@ -12,7 +12,7 @@ const DisplayTabWrap = styled.div`
   background: var(--color-background-primary);
   display: flex;
   flex-direction: column;
-  margin-top: 12px;
+  margin-top: var(--space-3);
 `;
 
 export default function DisplayTab(props) {

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Button, Input, Support, UpgradeIcon } from 'ming-ui';
 
 const HeaderWrap = styled.div`
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
   .content {
     height: 40px;
   }
@@ -17,8 +17,8 @@ const HeaderWrap = styled.div`
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
     border-radius: 18px;
-    padding: 0 12px;
-    margin-left: 20px;
+    padding: 0 var(--space-3);
+    margin-left: var(--space-5);
     overflow: hidden;
     .ming.Input {
       flex: 1;

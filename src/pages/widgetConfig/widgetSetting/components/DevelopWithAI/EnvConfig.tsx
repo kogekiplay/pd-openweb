@@ -15,22 +15,22 @@ import { getFormData } from './util';
 
 const Con = styled.div`
   position: relative;
-  padding: 16px 20px;
+  padding: var(--space-4) var(--space-5);
   .title {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-title);
     font-weight: bold;
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
   }
   .sectionTitle {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
   }
   .envRadio {
     display: flex;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
     .name {
       color: var(--color-text-title);
     }
@@ -42,7 +42,7 @@ const Con = styled.div`
 `;
 
 const LoadMockDataBtn = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   cursor: pointer;
   display: inline-flex;
@@ -53,7 +53,7 @@ const LoadMockDataBtn = styled.div`
 `;
 
 const LoadedMockDataBtn = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-secondary);
   height: 24px;
   display: flex;
@@ -63,30 +63,30 @@ const LoadedMockDataBtn = styled.div`
     max-width: 200px;
     overflow: hidden;
     color: var(--color-text-title);
-    margin-left: 16px;
+    margin-left: var(--space-4);
   }
   .clearMockData {
     color: var(--color-primary);
     cursor: pointer;
-    margin-left: 16px;
+    margin-left: var(--space-4);
   }
 `;
 
 const ShowAllEnvBtn = styled.div`
-  margin-left: 20px;
-  font-size: 13px;
+  margin-left: var(--space-5);
+  font-size: var(--font-sm);
   color: var(--color-primary);
   display: inline-block;
   cursor: pointer;
   i {
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
 `;
 
 const DrawerContent = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: var(--space-5);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -94,23 +94,23 @@ const DrawerContent = styled.div`
     font-size: 17px;
     color: var(--color-text-title);
     font-weight: bold;
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
   }
   .sectionTitle {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
   }
   .envValueArea {
     background-color: var(--color-background-secondary);
-    padding: 12px 15px;
+    padding: var(--space-3) 15px;
     border-radius: var(--radius-sm);
     white-space: pre-wrap;
   }
   .envSecTitle {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
-    margin: 8px 0;
+    margin: var(--space-2) 0;
   }
   .close {
     position: absolute;
@@ -125,7 +125,7 @@ const DrawerContent = styled.div`
     flex: 1;
     overflow-y: auto;
     margin: 0 -20px;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
   }
 `;
 

@@ -55,7 +55,7 @@ const ApplicationTriggerWrapper = styled.div`
   background-color: var(--color-background-primary);
   .item {
     width: 130px;
-    padding: 10px 24px;
+    padding: 10px var(--space-6);
     &:hover {
       color: var(--color-white);
       background-color: var(--color-primary);

@@ -5,12 +5,12 @@ import { Input } from 'ming-ui';
 const Con = styled.div`
   display: flex;
   align-items: center;
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-text-title);
   font-weight: bold;
   input {
     border: none !important;
-    font-size: 16px !important;
+    font-size: var(--font-lg) !important;
     color: var(--color-text-title) !important;
     font-weight: bold !important;
     padding-left: 0 !important;

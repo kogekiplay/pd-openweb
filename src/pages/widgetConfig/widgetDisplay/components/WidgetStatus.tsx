@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const StatusWrap = styled.div`
   max-height: 18px;
   i {
-    font-size: 18px;
+    font-size: var(--font-xl);
     margin-left: 3px;
     // &:first-child {
     //   margin-left: ${props => (props.showTitle ? '3px' : '0px')};

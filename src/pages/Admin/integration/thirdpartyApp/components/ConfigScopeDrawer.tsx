@@ -15,7 +15,7 @@ const DrawerWrap = styled(Drawer)`
   }
   .ant-drawer-header {
     border-color: var(--color-border-secondary);
-    padding: 14px 24px;
+    padding: 14px var(--space-6);
     .ant-drawer-header-title {
       flex-direction: row-reverse;
       .ant-drawer-title {
@@ -40,13 +40,13 @@ const TabWrap = styled.div`
   width: 190px;
   background: var(--color-background-primary);
   border-right: 1px solid var(--color-border-secondary);
-  padding: 20px 8px 0;
+  padding: var(--space-5) var(--space-2) 0;
   .tabItem {
     width: 100%;
     height: 40px;
     line-height: 40px;
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
-    padding-left: 20px;
+    padding-left: var(--space-5);
     border-radius: var(--radius-sm);
     cursor: pointer;
     &.active {

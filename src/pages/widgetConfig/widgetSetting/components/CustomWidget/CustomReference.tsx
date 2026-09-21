@@ -12,7 +12,7 @@ import AddFields from '../CustomEvent/CustomAction/AddFields';
 const CustomReferenceWrap = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  margin-top: var(--space-5);
   div:last-child {
     padding: 0;
     background: var(--color-background-primary);
@@ -41,7 +41,7 @@ const CustomReferenceWrap = styled.div`
       background: var(--color-background-primary);
       border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-primary);
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       &.isDel {
         color: var(--color-error);
       }
@@ -64,15 +64,15 @@ const CustomReferenceWrap = styled.div`
       cursor: pointer;
     }
     .deleteIcon {
-      margin-left: 16px;
-      font-size: 20px;
+      margin-left: var(--space-4);
+      font-size: var(--font-2xl);
       &:hover {
         color: var(--color-error);
       }
     }
     .showValue {
       font-size: 17px;
-      margin: 0 -10px 0 16px;
+      margin: 0 -10px 0 var(--space-4);
     }
   }
 `;

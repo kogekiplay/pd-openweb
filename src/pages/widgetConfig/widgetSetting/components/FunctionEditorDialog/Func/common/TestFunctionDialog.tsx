@@ -18,7 +18,7 @@ const Header = styled.div`
   height: 50px;
   font-size: 17px;
   font-weight: bold;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   line-height: 50px;
 `;
 
@@ -35,7 +35,7 @@ const EditorConCon = styled.div`
 
 const EditorCon = styled.div`
   height: 100%;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   background: var(--color-background-secondary);
   border-radius: var(--radius-sm);
   /* CM6：.CodeMirror → .cm-editor */
@@ -69,7 +69,7 @@ const TestCon = styled.div`
       border: 1px solid var(--color-text-disabled);
       color: var(--color-text-disabled);
       cursor: pointer;
-      font-size: 12px;
+      font-size: var(--font-xs);
       display: flex;
       justify-content: center;
       &:hover {
@@ -80,7 +80,7 @@ const TestCon = styled.div`
   }
   .controlName {
     padding: 0 26px;
-    margin-top: 12px;
+    margin-top: var(--space-3);
     position: relative;
     display: flex;
     align-items: center;
@@ -91,17 +91,17 @@ const TestCon = styled.div`
       flex: 1;
       margin-left: 10px;
       font-weight: bold;
-      font-size: 20px;
+      font-size: var(--font-2xl);
       color: var(--color-success);
       white-space: nowrap;
     }
     .name {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       font-weight: bold;
       flex-shrink: 0;
     }
     .equal {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       font-weight: bold;
       color: var(--color-text-secondary);
       margin-left: 6px;

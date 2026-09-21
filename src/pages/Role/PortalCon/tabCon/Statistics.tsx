@@ -11,7 +11,7 @@ import type { RootState } from 'src/redux/types';
 import * as actions from '../redux/actions';
 
 const Wrap = styled.div`
-  padding: 16px 32px 40px;
+  padding: var(--space-4) var(--space-8) 40px;
   .timeTypeDrop {
     width: 180px;
     height: 36px;
@@ -41,7 +41,7 @@ const Wrap = styled.div`
     border-radius: var(--radius-sm);
     line-height: 32px;
     color: var(--color-white);
-    font-size: 13px;
+    font-size: var(--font-sm);
     float: right;
     padding: 0 15px;
     &:hover {
@@ -51,7 +51,7 @@ const Wrap = styled.div`
   .registerLine,
   .loginLine {
     height: 300px;
-    margin-top: 24px;
+    margin-top: var(--space-6);
   }
 `;
 let g2plotComponent = null;

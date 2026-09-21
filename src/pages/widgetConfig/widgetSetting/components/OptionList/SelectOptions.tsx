@@ -38,14 +38,14 @@ const MenuWrap = styled(Menu)`
   position: relative !important;
   &.List--withIconFront {
     .Item-content {
-      padding-left: 16px !important;
+      padding-left: var(--space-4) !important;
       &:hover {
         i {
           color: var(--color-white);
         }
       }
       i {
-        font-size: 16px;
+        font-size: var(--font-lg);
         margin-right: 5px;
       }
     }
@@ -63,7 +63,7 @@ const OptionsWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-top: 12px;
+    padding-top: var(--space-3);
     .setColor {
       span {
         margin-left: 6px;
@@ -82,8 +82,8 @@ const OptionsWrap = styled.div`
 `;
 
 const OptionListItem = styled.div`
-  margin-top: 12px;
-  padding: 0 12px;
+  margin-top: var(--space-3);
+  padding: 0 var(--space-3);
   border: 1px solid var(--color-border-primary);
   background-color: var(--color-background-primary);
   border-radius: var(--radius-sm);
@@ -95,7 +95,7 @@ const OptionListItem = styled.div`
     line-height: 24px;
     padding: 10px 0;
     .delete {
-      margin-left: 8px;
+      margin-left: var(--space-2);
     }
   }
 
@@ -103,7 +103,7 @@ const OptionListItem = styled.div`
     i {
       cursor: pointer;
       color: var(--color-text-tertiary);
-      font-size: 16px;
+      font-size: var(--font-lg);
       &:hover {
         color: var(--color-primary);
       }
@@ -113,7 +113,7 @@ const OptionListItem = styled.div`
   ul {
     position: relative;
     ${props => (props.isMore ? 'max-height: 289px;overflow: hidden;' : '')}
-    padding: 8px 0;
+    padding: var(--space-2) 0;
   }
   li {
     display: flex;

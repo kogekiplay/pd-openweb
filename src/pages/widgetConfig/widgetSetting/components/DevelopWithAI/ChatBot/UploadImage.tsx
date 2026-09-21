@@ -6,16 +6,16 @@ import { humanFileSize } from 'src/pages/kc/utils';
 
 const Con = styled.div`
   position: relative;
-  font-size: 14px;
+  font-size: var(--font-md);
   cursor: pointer;
   display: flex;
   align-items: center;
   .icon {
     color: var(--color-text-secondary);
-    font-size: 16px;
+    font-size: var(--font-lg);
   }
   .hint {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
     margin-left: 6px;
   }

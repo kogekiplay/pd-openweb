@@ -18,10 +18,10 @@ const Con = styled.div`
     color: var(--color-text-primary);
   }
   .ant-collapse-header {
-    padding: 12px 14px !important;
+    padding: var(--space-3) 14px !important;
   }
   .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
-    margin-right: 4px;
+    margin-right: var(--space-1);
     vertical-align: middle;
   }
   .ant-collapse-item {
@@ -41,8 +41,8 @@ const ControlItem = styled.div`
   display: flex;
   height: 36px;
   line-height: 36px;
-  font-size: 13px;
-  padding: 0 20px;
+  font-size: var(--font-sm);
+  padding: 0 var(--space-5);
   cursor: pointer;
   &:hover {
     background: var(--color-border-secondary);
@@ -51,16 +51,16 @@ const ControlItem = styled.div`
 
 const ExpandIcon = styled.i`
   display: inline-block;
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-text-tertiary);
   vertical-align: middle !important;
   transform: ${({ isActive }) => `rotate(${isActive ? 0 : -90}deg)`};
 `;
 
 const Icon = styled.i`
-  font-size: 18px;
+  font-size: var(--font-xl);
   color: var(--color-text-tertiary);
-  margin-right: 8px;
+  margin-right: var(--space-2);
   line-height: 36px;
 `;
 

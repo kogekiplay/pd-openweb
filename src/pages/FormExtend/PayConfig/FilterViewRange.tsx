@@ -20,10 +20,10 @@ const RangeBox = styled.div`
   box-shadow: var(--shadow-lg);
   box-sizing: border-box;
   line-height: 1;
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: bold;
   .con {
-    padding: 24px;
+    padding: var(--space-6);
     max-height: 350px;
     overflow: auto;
     .Radio-text {

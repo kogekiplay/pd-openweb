@@ -7,8 +7,8 @@ const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
   width: fit-content;
-  margin-top: 32px;
-  margin-bottom: 24px;
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-6);
   cursor: pointer;
 
   .titleText {
@@ -19,7 +19,7 @@ const TitleWrapper = styled.div`
   }
   i {
     color: var(--color-text-tertiary);
-    margin-right: 12px;
+    margin-right: var(--space-3);
   }
 `;
 

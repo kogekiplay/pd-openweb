@@ -14,14 +14,14 @@ const MenuWrap = styled(Menu)`
   position: relative !important;
   &.List--withIconFront {
     .Item-content {
-      padding-left: 16px !important;
+      padding-left: var(--space-4) !important;
       &:hover {
         i {
           color: var(--color-white);
         }
       }
       i {
-        font-size: 16px;
+        font-size: var(--font-lg);
         margin-right: 5px;
       }
     }

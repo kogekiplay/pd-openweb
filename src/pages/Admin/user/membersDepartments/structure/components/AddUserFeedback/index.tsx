@@ -12,7 +12,7 @@ const FeedbackDialog = styled(Dialog)`
   .footer {
     text-align: right;
     .ming.Button--medium {
-      padding: 0 24px;
+      padding: 0 var(--space-6);
     }
     .ming.Button--link {
       height: 34px;

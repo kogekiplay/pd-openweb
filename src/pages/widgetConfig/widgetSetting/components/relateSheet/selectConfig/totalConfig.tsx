@@ -12,7 +12,7 @@ import SelectControl from '../../SelectControl';
 
 const TotalConfigWrap = styled.div`
   .addTotalControl {
-    margin-top: 12px;
+    margin-top: var(--space-3);
     line-height: 32px;
     color: var(--color-text-secondary);
     font-weight: bold;
@@ -29,11 +29,11 @@ const TotalConfigWrap = styled.div`
   .totalItem {
     display: flex;
     align-items: center;
-    margin-top: 12px;
+    margin-top: var(--space-3);
     .controlName {
       flex: 1;
-      padding: 0 12px;
-      margin-right: 12px;
+      padding: 0 var(--space-3);
+      margin-right: var(--space-3);
       height: 36px;
       line-height: 36px;
       border-radius: var(--radius-sm);
@@ -46,9 +46,9 @@ const TotalConfigWrap = styled.div`
     }
     .deleteBtn {
       color: var(--color-text-tertiary);
-      font-size: 16px;
+      font-size: var(--font-lg);
       cursor: pointer;
-      margin-left: 12px;
+      margin-left: var(--space-3);
       &:hover {
         color: var(--color-error);
       }

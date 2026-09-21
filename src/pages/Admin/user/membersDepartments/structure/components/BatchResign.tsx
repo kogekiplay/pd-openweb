@@ -27,7 +27,7 @@ const UserList = styled.div`
   overflow-y: auto;
   border: 1px solid var(--color-border-secondary);
   border-radius: var(--radius-sm);
-  padding: 8px 0;
+  padding: var(--space-2) 0;
   box-sizing: border-box;
 `;
 
@@ -49,7 +49,7 @@ const MenuWrap = styled(Menu)`
   padding: 6px 0;
   box-sizing: border-box;
   .ant-dropdown-menu-item {
-    padding: 7px 12px !important;
+    padding: 7px var(--space-3) !important;
   }
   .ant-dropdown-menu-item-disabled {
     color: var(--color-text-tertiary) !important;

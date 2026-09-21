@@ -11,7 +11,7 @@ const FilterData = styled.div`
   align-items: center;
   padding: 2px 6px;
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-secondary);
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
@@ -19,7 +19,7 @@ const FilterData = styled.div`
   cursor: pointer;
   .icon {
     margin-right: 5px;
-    font-size: 18px;
+    font-size: var(--font-xl);
   }
   &.active {
     color: var(--color-primary);
@@ -39,13 +39,13 @@ const FilterConfigWrapper = styled.div`
   margin: 0 -20px;
   min-height: 300px;
   .tips {
-    padding: 0 20px;
-    font-size: 14px;
+    padding: 0 var(--space-5);
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
     margin-bottom: 10px;
   }
   .contentBox {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
   }
 `;
 
@@ -53,8 +53,8 @@ const Footer = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 20px;
-  margin-top: 20px;
+  gap: var(--space-5);
+  margin-top: var(--space-5);
 `;
 
 const FieldConditions = props => {

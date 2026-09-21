@@ -63,7 +63,7 @@ const Wrap = styled.div`
   }
   .hintBoxWrap {
     position: relative;
-    margin-top: 12px;
+    margin-top: var(--space-3);
   }
   .hintArrow {
     position: absolute;
@@ -77,7 +77,7 @@ const Wrap = styled.div`
     transform: translateX(-50%) rotate(45deg);
   }
   .hintBox {
-    padding: 12px 13px;
+    padding: var(--space-3) 13px;
     border: 1px solid var(--color-border-secondary);
     border-radius: var(--radius-sm);
     background: var(--color-background-secondary);

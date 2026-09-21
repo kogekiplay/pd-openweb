@@ -9,7 +9,7 @@ const SubmitButton = styled(Button)`
   .submitContent {
     height: 40px;
     border-radius: var(--radius-sm);
-    padding: 0 32px;
+    padding: 0 var(--space-8);
     overflow: hidden;
     white-space: nowrap;
     i {

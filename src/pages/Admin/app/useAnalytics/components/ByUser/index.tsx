@@ -16,7 +16,7 @@ import { formatter, selectDateList } from '../../util';
 import ViewInactive from '../ViewInactive';
 
 const ByUserWrap = styled.div`
-  padding: 24px;
+  padding: var(--space-6);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -28,7 +28,7 @@ const ByUserWrap = styled.div`
     .export {
       margin-left: 26px;
       min-width: 76px;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
     }
   }
   .userInfo {

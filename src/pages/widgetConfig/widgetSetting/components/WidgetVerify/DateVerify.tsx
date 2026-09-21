@@ -17,7 +17,7 @@ const WeekWrap = styled(DropdownContent)`
   overflow: auto;
   .weekItem {
     line-height: 36px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     cursor: pointer;
     &:hover {
       background-color: var(--color-background-hover);

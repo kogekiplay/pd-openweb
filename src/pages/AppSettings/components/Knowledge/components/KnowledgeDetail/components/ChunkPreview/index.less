@@ -6,9 +6,9 @@
   .chunkPreviewHeader {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     margin: 0 -20px;
-    font-size: 18px;
+    font-size: var(--font-xl);
     font-weight: 700;
     color: var(--color-text-tertiary);
     .icon {
@@ -56,13 +56,13 @@
     .sideBarBox {
       display: flex;
       flex-direction: column;
-      padding: 16px 20px;
+      padding: var(--space-4) var(--space-5);
       width: 305px;
       height: 100%;
       border-right: 1px solid var(--color-border-secondary);
       .sideBarHeader {
         margin-bottom: 10px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         font-weight: 700;
         color: var(--color-text-primary);
         .recordCount {
@@ -89,7 +89,7 @@
           display: flex;
           width: 100%;
           padding: 10px 90px 10px 40px;
-          font-size: 14px;
+          font-size: var(--font-md);
           border: none;
           border-bottom: 1px solid var(--color-border-secondary);
         }
@@ -125,10 +125,10 @@
             align-items: center;
             margin-left: 6px;
             color: var(--color-text-primary);
-            font-size: 13px;
+            font-size: var(--font-sm);
             .clearFilterIcon {
               margin-left: 2px;
-              font-size: 14px;
+              font-size: var(--font-md);
               color: var(--color-text-secondary);
               cursor: pointer;
             }
@@ -140,10 +140,10 @@
         min-height: 0;
         margin-right: -20px;
         .sideBarLoading {
-          padding: 20px 0;
+          padding: var(--space-5) 0;
         }
         .sideBarContentBox {
-          padding-right: 20px;
+          padding-right: var(--space-5);
           .sideBarContentItem {
             display: flex;
             align-items: center;
@@ -152,7 +152,7 @@
             height: 46px;
             border-radius: var(--radius-sm);
             border: 1px solid transparent;
-            font-size: 13px;
+            font-size: var(--font-sm);
             color: var(--color-text-primary);
             cursor: pointer;
             &:hover {
@@ -168,13 +168,13 @@
               min-width: 0;
             }
             .fileIcon {
-              margin-right: 8px;
+              margin-right: var(--space-2);
               width: 18px !important;
               height: 20px !important;
             }
             .parseEnhancedIcon {
-              margin-left: 4px;
-              font-size: 16px;
+              margin-left: var(--space-1);
+              font-size: var(--font-lg);
               color: var(--color-mingo);
             }
           }
@@ -183,10 +183,10 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          padding-right: 20px;
+          padding-right: var(--space-5);
           padding-bottom: 82px;
           height: 100%;
-          font-size: 14px;
+          font-size: var(--font-md);
           color: var(--color-text-secondary);
         }
       }
@@ -195,31 +195,31 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 20px 0 20px 20px;
+      padding: var(--space-5) 0 var(--space-5) var(--space-5);
       min-width: 0;
       height: 100%;
       .emptyContent {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding-right: 20px;
+        padding-right: var(--space-5);
         width: 100%;
         height: 100%;
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-text-secondary);
       }
       .mainContentHeader {
-        margin-bottom: 20px;
+        margin-bottom: var(--space-5);
         .titleBox {
           display: flex;
           align-items: center;
-          font-size: 16px;
+          font-size: var(--font-lg);
           font-weight: 700;
           color: var(--color-text-primary);
           .launchIcon {
             padding: 2px;
-            margin-left: 8px;
-            font-size: 16px;
+            margin-left: var(--space-2);
+            font-size: var(--font-lg);
             color: var(--color-text-secondary);
             cursor: pointer;
             border-radius: var(--radius-sm);
@@ -231,17 +231,17 @@
         }
         .baseInfoBox {
           display: flex;
-          gap: 20px;
-          margin-top: 8px;
-          font-size: 12px;
+          gap: var(--space-5);
+          margin-top: var(--space-2);
+          font-size: var(--font-xs);
           color: var(--color-text-secondary);
           .attachmentParseEnhanced {
             display: flex;
             align-items: center;
             color: var(--color-text-primary);
             .icon {
-              margin-right: 4px;
-              font-size: 16px;
+              margin-right: var(--space-1);
+              font-size: var(--font-lg);
               color: var(--color-mingo);
             }
           }
@@ -258,7 +258,7 @@
         min-height: 0;
         .mainContentBodyBox {
           position: relative;
-          padding-right: 20px;
+          padding-right: var(--space-5);
           height: 100%;
           .emptyPlaceholderText {
             position: absolute;
@@ -266,7 +266,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             margin-bottom: -5px;
-            font-size: 14px;
+            font-size: var(--font-md);
             color: var(--color-text-secondary);
           }
           .chunkDetailItem {
@@ -281,7 +281,7 @@
               background-color: var(--color-background-card);
               border-radius: var(--radius-sm);
               box-shadow: var(--shadow-sm);
-              font-size: 13px;
+              font-size: var(--font-sm);
               visibility: hidden;
             }
             .chunkDetailItemIndex {
@@ -290,15 +290,15 @@
               color: var(--color-primary);
             }
             .recordEnhanceBox {
-              margin-top: 20px;
+              margin-top: var(--space-5);
               .recordEnhance {
                 display: flex;
                 align-items: center;
                 right: 10px;
                 color: var(--color-text-primary);
                 .icon {
-                  margin-right: 4px;
-                  font-size: 16px;
+                  margin-right: var(--space-1);
+                  font-size: var(--font-lg);
                   color: var(--color-mingo);
                 }
               }
@@ -323,7 +323,7 @@
           }
         }
         .mainContentLoading {
-          padding: 20px 0;
+          padding: var(--space-5) 0;
         }
       }
     }
@@ -331,7 +331,7 @@
 }
 
 .attachmentTypesFilterPopup {
-  padding: 4px 0;
+  padding: var(--space-1) 0;
   width: 150px;
   background-color: var(--color-background-card);
   box-shadow: var(--shadow-md);
@@ -341,7 +341,7 @@
     justify-content: space-between;
     padding: 0 10px;
     height: 44px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-primary);
     &.active {
       background-color: var(--color-primary-transparent);
@@ -350,7 +350,7 @@
       background-color: var(--color-background-tertiary);
     }
     .icon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-primary);
     }
   }

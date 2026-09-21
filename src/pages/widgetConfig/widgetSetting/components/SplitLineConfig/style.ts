@@ -130,19 +130,19 @@ export const EmptyControl = styled.div`
   position: relative;
   border: 1px dashed var(--color-border-secondary);
   border-radius: var(--radius-sm);
-  padding-top: 8px;
+  padding-top: var(--space-2);
   .emptyText {
     color: var(--color-text-tertiary);
   }
   .mingoGenWidgets {
-    margin: 20px 0;
+    margin: var(--space-5) 0;
   }
 `;
 
 export const SectionItemWrap = styled.div`
   width: 100%;
   background: var(--color-background-primary);
-  padding: 4px 0;
+  padding: var(--space-1) 0;
   display: flex;
   border-bottom: 1px solid var(--color-text-placeholder);
   .titleBox {
@@ -186,12 +186,12 @@ export const SectionItemWrap = styled.div`
 
   .headerArrow {
     flex-shrink: 0;
-    font-size: 18px;
+    font-size: var(--font-xl);
     width: 40px;
     height: 40px;
     line-height: 40px;
     text-align: center;
-    margin-left: 8px;
+    margin-left: var(--space-2);
     border-radius: var(--radius-sm);
     cursor: ${props => (props.hidetitle ? 'default' : 'pointer')};
     .iconBox {
@@ -215,7 +215,7 @@ export const SectionItemWrap = styled.div`
     margin-right: 5px !important;
     color: ${props => props.theme} !important;
     i {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       display: inline-block;
       transform-origin: center;
       ${props => (props.visible ? 'transform: rotate(90deg)' : '')};
@@ -235,7 +235,7 @@ export const SectionItemWrap = styled.div`
       width: unset;
       height: unset;
       line-height: unset;
-      margin-left: 12px;
+      margin-left: var(--space-3);
       i {
         color: var(--color-text-tertiary);
       }

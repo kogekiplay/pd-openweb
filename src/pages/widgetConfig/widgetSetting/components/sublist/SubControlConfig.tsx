@@ -20,19 +20,19 @@ const SubControlConfigWrap = styled.div`
   flex-direction: column;
   & > div:nth-child(2) {
     margin-top: 0;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     flex: unset;
   }
   .subListConfigContent {
     flex: 1;
     min-width: 0;
-    padding: 0 20px 60px 20px;
+    padding: 0 var(--space-5) 60px var(--space-5);
     overflow: auto;
     overflow-x: hidden;
   }
   .backToSupConfig {
     line-height: 36px;
-    padding: 12px 20px;
+    padding: var(--space-3) var(--space-5);
     font-size: 15px;
     color: var(--color-text-title);
     span {

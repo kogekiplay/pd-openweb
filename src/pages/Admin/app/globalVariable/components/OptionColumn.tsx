@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   align-items: center;
   .optionIcon {
     color: var(--color-text-tertiary);
-    font-size: 16px;
+    font-size: var(--font-lg);
     cursor: pointer;
     display: none;
     &:hover {
@@ -26,7 +26,7 @@ const OptionMenu = styled.div`
   background: var(--color-background-card);
 `;
 const MenuItem = styled.div`
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   line-height: 36px;
   cursor: pointer;
   &:hover {

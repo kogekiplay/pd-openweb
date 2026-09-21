@@ -4,7 +4,7 @@ export const HomePageWrap = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 24px;
+  padding: var(--space-6);
   padding-top: 19px;
   box-sizing: border-box;
   overflow-y: auto;
@@ -41,7 +41,7 @@ export const HomePageWrap = styled.div`
       background: var(--color-background-primary);
       border-radius: 6px;
       min-height: 187px;
-      padding: 20px 24px;
+      padding: var(--space-5) var(--space-6);
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -64,7 +64,7 @@ export const HomePageWrap = styled.div`
       .renewTag {
         color: var(--color-success);
         .doneIcon {
-          margin-right: 4px;
+          margin-right: var(--space-1);
         }
       }
       .helpIcon {
@@ -81,7 +81,7 @@ export const HomePageWrap = styled.div`
       }
       .greenBtn {
         padding: 6px 21px;
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-white);
         border-radius: 16px;
         background: var(--color-success);
@@ -99,7 +99,7 @@ export const HomePageWrap = styled.div`
       }
       .blueBtn {
         padding: 6px 21px;
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-white) !important;
         border-radius: 16px;
         background: var(--color-primary);
@@ -116,8 +116,8 @@ export const HomePageWrap = styled.div`
         }
       }
       .whiteBtn {
-        padding: 6px 16px;
-        font-size: 14px;
+        padding: 6px var(--space-4);
+        font-size: var(--font-md);
         color: var(--color-text-primary);
         border-radius: 16px;
         border: 1px solid var(--color-border-primary);
@@ -129,7 +129,7 @@ export const HomePageWrap = styled.div`
         }
       }
       .trialTag {
-        padding: 4px 8px;
+        padding: var(--space-1) var(--space-2);
         background: var(--color-warning-bg);
         color: var(--color-warning);
         margin-left: 10px;
@@ -139,7 +139,7 @@ export const HomePageWrap = styled.div`
       .eyeIcon {
         width: 20px;
         height: 20px;
-        font-size: 14px;
+        font-size: var(--font-md);
         display: inline-block;
         text-align: center;
         vertical-align: middle;
@@ -186,7 +186,7 @@ export const HomePageWrap = styled.div`
   .infoWrapCopy {
     display: flex;
     .content {
-      padding: 28px 16px !important;
+      padding: 28px var(--space-4) !important;
     }
     @media screen and (max-width: 1920px) {
       display: block;
@@ -198,7 +198,7 @@ export const HomePageWrap = styled.div`
     .content {
       background-color: var(--color-background-primary);
       box-sizing: border-box;
-      padding: 24px;
+      padding: var(--space-6);
       box-shadow: var(--shadow-sm);
       border-radius: var(--radius-sm);
       .count {
@@ -209,7 +209,7 @@ export const HomePageWrap = styled.div`
       }
       .name {
         color: var(--color-text-secondary);
-        margin-top: 4px;
+        margin-top: var(--space-1);
       }
     }
     .useCount {
@@ -222,7 +222,7 @@ export const HomePageWrap = styled.div`
       }
     }
     .workflowTitle {
-      margin-top: 4px;
+      margin-top: var(--space-1);
       text-align: left;
       font-weight: 600;
     }
@@ -237,7 +237,7 @@ export const HomePageWrap = styled.div`
   }
   .infoBox {
     width: 100%;
-    padding: 0 12px 0 0;
+    padding: 0 var(--space-3) 0 0;
     &.pTitle {
       padding-top: 56px !important;
     }
@@ -249,7 +249,7 @@ export const HomePageWrap = styled.div`
   .userInfo .content {
     display: flex;
     align-items: center;
-    padding: 32px 24px 50px 24px;
+    padding: var(--space-8) var(--space-6) 50px var(--space-6);
     position: relative;
     box-shadow: var(--shadow-sm);
     border-radius: 6px;
@@ -258,18 +258,18 @@ export const HomePageWrap = styled.div`
       top: 12px;
       right: 12px;
       color: var(--color-text-tertiary);
-      font-size: 12px;
+      font-size: var(--font-xs);
       cursor: pointer;
       .hoverColorPrimary:hover {
         color: var(--color-primary) !important;
       }
     }
     .limitUser {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-tertiary);
     }
     .name {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-secondary);
       font-weight: 600;
     }
@@ -278,11 +278,11 @@ export const HomePageWrap = styled.div`
       flex: 1;
       align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: var(--space-2);
       li {
         width: calc((100% - 16px) / 3);
         min-height: 132px;
-        padding: 10px 20px;
+        padding: 10px var(--space-5);
         @media screen and (max-width: 1391px) {
           width: calc(50% - 4px);
           min-width: 320px;
@@ -313,14 +313,14 @@ export const HomePageWrap = styled.div`
     }
   }
   .title {
-    margin: 24px 0 16px 0;
-    font-size: 16px;
+    margin: var(--space-6) 0 var(--space-4) 0;
+    font-size: var(--font-lg);
     line-height: 16px;
   }
 
   .purchaseUser,
   .recharge {
-    padding: 6px 16px;
+    padding: 6px var(--space-4);
     transition: background-color 0.25s;
     background: rgba(18, 148, 247, 0.1);
     font-weight: 600;
@@ -328,7 +328,7 @@ export const HomePageWrap = styled.div`
     border-radius: 16px;
     cursor: pointer;
     order: 2;
-    font-size: 14px;
+    font-size: var(--font-md);
     &:hover {
       background: rgba(18, 148, 247, 0.2);
     }
@@ -349,7 +349,7 @@ export const HomePageWrap = styled.div`
     bottom: 16px;
     width: calc(100% - 48px);
     .inviteUser {
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       line-height: 32px;
       border-radius: 24px;
       position: unset;
@@ -370,7 +370,7 @@ export const HomePageWrap = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 20px 24px;
+      padding: var(--space-5) var(--space-6);
       border-radius: var(--radius-sm);
       box-shadow: var(--shadow-sm);
     }
@@ -381,12 +381,12 @@ export const HomePageWrap = styled.div`
     .upgradeWrapper {
       display: flex;
       align-items: center;
-      margin-top: 4px;
+      margin-top: var(--space-1);
       .upgradeBtn {
         display: flex;
         align-items: center;
         height: 28px;
-        padding: 0 12px;
+        padding: 0 var(--space-3);
         border: 1px solid #4caf50;
         border-radius: 14px;
         color: #4caf50;
@@ -403,17 +403,17 @@ export const HomePageWrap = styled.div`
       display: flex;
       align-items: center;
       i {
-        font-size: 24px;
+        font-size: var(--font-3xl);
         color: var(--color-primary);
       }
       span {
         color: var(--color-text-secondary);
-        font-size: 14px;
-        margin: 0 12px 0 10px;
+        font-size: var(--font-md);
+        margin: 0 var(--space-3) 0 10px;
       }
       .balance {
         color: var(--color-text-title);
-        font-size: 16px;
+        font-size: var(--font-lg);
         margin: 0;
         font-weight: 600;
       }
@@ -424,21 +424,21 @@ export const HomePageWrap = styled.div`
       top: 4px;
       right: 4px;
       line-height: 26px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       color: var(--color-white);
       border-radius: var(--radius-sm);
       background: linear-gradient(281deg, var(--color-warning) 0%, #ffad12 100%);
       z-index: 2;
       i {
-        margin-right: 4px;
+        margin-right: var(--space-1);
       }
     }
     .renew {
       display: flex;
       align-items: center;
       align-self: flex-start;
-      padding: 0 16px;
-      margin-top: 8px;
+      padding: 0 var(--space-4);
+      margin-top: var(--space-2);
       line-height: 24px;
       background: var(--color-warning);
       color: var(--color-white);
@@ -451,10 +451,10 @@ export const HomePageWrap = styled.div`
   .nextLicenseInfo {
     display: flex;
     position: relative;
-    margin-left: 24px;
+    margin-left: var(--space-6);
     align-items: center;
     line-height: 24px;
-    padding: 12px 0;
+    padding: var(--space-3) 0;
 
     .licenseFlag {
       position: absolute;
@@ -479,17 +479,17 @@ export const HomePageWrap = styled.div`
       font-size: 11px;
     }
     .expireDays {
-      margin: 0 12px;
-      font-size: 12px;
+      margin: 0 var(--space-3);
+      font-size: var(--font-xs);
       span {
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-primary);
-        margin: 0 4px;
+        margin: 0 var(--space-1);
       }
     }
     .expireDate {
       margin: 0 5px;
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-text-secondary);
     }
     .upgrade {
@@ -504,7 +504,7 @@ export const HomePageWrap = styled.div`
         color: var(--color-warning);
       }
       span {
-        margin-left: 4px;
+        margin-left: var(--space-1);
         &:hover {
           color: var(--color-primary);
         }
@@ -527,14 +527,14 @@ export const HomePageWrap = styled.div`
       height: auto;
       display: flex;
       align-items: center;
-      padding: 24px 0;
+      padding: var(--space-6) 0;
       border-radius: var(--radius-sm);
       ul {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: 60%;
-        padding: 0 12px;
+        padding: 0 var(--space-3);
       }
     }
 
@@ -562,7 +562,7 @@ export const HomePageWrap = styled.div`
         }
       }
       .workflowInfo {
-        margin-top: 20px;
+        margin-top: var(--space-5);
         padding: 0 calc(10%+24px);
         width: 100%;
       }
@@ -570,7 +570,7 @@ export const HomePageWrap = styled.div`
   }
   .quickEntry {
     .content {
-      padding: 16px;
+      padding: var(--space-4);
       background-color: var(--color-background-primary);
       box-shadow: var(--shadow-sm);
       border-radius: 6px;
@@ -581,7 +581,7 @@ export const HomePageWrap = styled.div`
       li {
         width: 25%;
         min-width: 276px;
-        padding: 8px;
+        padding: var(--space-2);
         box-sizing: border-box;
         cursor: pointer;
         .wrap {
@@ -589,7 +589,7 @@ export const HomePageWrap = styled.div`
           align-items: center;
           border: 1px solid var(--color-background-disabled);
           border-radius: var(--radius-sm);
-          padding: 24px 16px;
+          padding: var(--space-6) var(--space-4);
           height: 100%;
           box-sizing: border-box;
           &:hover {
@@ -602,13 +602,13 @@ export const HomePageWrap = styled.div`
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            margin-right: 12px;
+            margin-right: var(--space-3);
             flex-shrink: 0;
             color: var(--color-white);
-            font-size: 18px;
+            font-size: var(--font-xl);
           }
           .explain {
-            margin-top: 8px;
+            margin-top: var(--space-2);
             color: var(--color-text-disabled);
           }
         }
@@ -624,26 +624,26 @@ export const HomePageWrap = styled.div`
 
 export const FreeTrialWrap = styled.div`
   text-align: center;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   .title {
     font-size: 28px;
   }
   .subTitle {
-    margin-top: 8px;
-    font-size: 16px;
+    margin-top: var(--space-2);
+    font-size: var(--font-lg);
   }
   .invitePerson {
-    font-size: 18px;
-    margin-top: 20px;
+    font-size: var(--font-xl);
+    margin-top: var(--space-5);
     span {
       color: var(--color-primary);
-      font-size: 24px;
+      font-size: var(--font-3xl);
       margin: 0 6px;
     }
   }
   .expire {
     color: var(--color-text-secondary);
-    margin: 12px 0;
+    margin: var(--space-3) 0;
   }
   .remainTime {
     color: var(--color-primary);
@@ -657,9 +657,9 @@ export const FreeTrialWrap = styled.div`
       min-width: 80px;
       .achieveDays {
         color: var(--color-primary);
-        font-size: 14px;
+        font-size: var(--font-md);
         span {
-          margin-right: 4px;
+          margin-right: var(--space-1);
           font-size: 28px;
         }
       }
@@ -682,7 +682,7 @@ export const FreeTrialWrap = styled.div`
       position: relative;
       background-color: var(--color-background-secondary);
       height: 8px;
-      margin: 24px 0;
+      margin: var(--space-6) 0;
       .iconWrap {
         position: absolute;
         top: -15px;
@@ -695,7 +695,7 @@ export const FreeTrialWrap = styled.div`
         text-align: center;
         line-height: 36px;
         color: var(--color-white);
-        font-size: 20px;
+        font-size: var(--font-2xl);
       }
     }
   }
@@ -706,17 +706,17 @@ export const TitleWrap = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 22px;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-4);
   height: 32px;
   font-weight: bold;
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-text-primary);
   .titleBtn {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 32px;
     background: var(--color-background-primary);
     font-weight: bold;
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 32px;
     border-radius: var(--radius-sm);
     cursor: pointer;

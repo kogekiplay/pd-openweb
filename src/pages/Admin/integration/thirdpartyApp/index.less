@@ -5,11 +5,11 @@
 
   .header {
     height: 60px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     border-bottom: 1px solid var(--color-border-secondary);
 
     .Button {
-      font-size: 12px;
+      font-size: var(--font-xs);
       height: 27px;
       line-height: 27px;
       min-height: 27px;
@@ -19,7 +19,7 @@
   }
 
   .applicationListWrapper {
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     .appName,
     .appKey,
     .appSecret,
@@ -58,7 +58,7 @@
   }
   .applicationHeader {
     color: var(--color-text-secondary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 50px;
   }
   .applicationItem {
@@ -68,7 +68,7 @@
 
 .applicationTriggerWrapper .item {
   width: 130px;
-  padding: 10px 24px;
+  padding: 10px var(--space-6);
   &:hover {
     color: var(--color-white);
     background-color: var(--color-primary);

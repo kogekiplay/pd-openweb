@@ -22,7 +22,7 @@ const DelateDialogWrap = styled.ul`
         width: 18px;
         height: 18px;
         border-radius: 50%;
-        margin-right: 12px;
+        margin-right: var(--space-3);
         .tri {
           width: 0;
           height: 0;
@@ -36,8 +36,8 @@ const DelateDialogWrap = styled.ul`
       }
     }
     i {
-      font-size: 16px;
-      margin-left: 12px;
+      font-size: var(--font-lg);
+      margin-left: var(--space-3);
       cursor: pointer;
       color: var(--color-text-tertiary);
       &:hover {

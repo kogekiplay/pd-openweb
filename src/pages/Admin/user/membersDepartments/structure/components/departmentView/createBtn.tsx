@@ -18,7 +18,7 @@ import * as entitiesActions from '../../actions/entities';
 import { createEditDeptDialog } from '../CreateEditDeptDialog';
 
 const Wrap = styled.div`
-  padding: 12px 0;
+  padding: var(--space-3) 0;
   border-top: 1px solid var(--color-border-secondary);
   display: flex;
   align-items: center;

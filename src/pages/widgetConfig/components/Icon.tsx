@@ -3,7 +3,7 @@ import cx from 'classnames';
 import styled from 'styled-components';
 
 const IconWrap = styled.i`
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-text-tertiary);
 
   &.action {

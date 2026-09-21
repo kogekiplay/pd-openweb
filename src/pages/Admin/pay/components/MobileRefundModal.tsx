@@ -8,7 +8,7 @@ import paymentAjax from 'src/api/payment';
 
 const Wrap = styled(Popup)`
   .popupContent {
-    padding: 24px 20px 8px;
+    padding: var(--space-6) var(--space-5) var(--space-2);
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
   }

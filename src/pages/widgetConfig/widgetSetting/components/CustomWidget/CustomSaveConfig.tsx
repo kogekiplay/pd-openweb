@@ -14,10 +14,10 @@ const SaveWrap = styled(Dropdown)`
     display: flex;
     align-items: center;
     .itemText {
-      padding-left: 16px;
+      padding-left: var(--space-4);
     }
     i {
-      font-size: 16px !important;
+      font-size: var(--font-lg) !important;
       margin-right: 10px;
     }
   }

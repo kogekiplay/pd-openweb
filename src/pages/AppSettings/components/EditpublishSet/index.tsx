@@ -26,15 +26,15 @@ const WrapCon = styled.div`
   overflow: auto;
   position: relative;
   h6 {
-    padding-top: 24px;
+    padding-top: var(--space-6);
   }
   .borTopLine {
     border-top: 1px solid var(--color-border-secondary);
-    margin-top: 24px;
+    margin-top: var(--space-6);
   }
   .publishAppCourse {
     font-weight: 600;
-    margin-top: 20px;
+    margin-top: var(--space-5);
 
     span {
       color: var(--color-primary);
@@ -48,21 +48,21 @@ const WrapCon = styled.div`
     background: rgba(230, 162, 60, 0.17);
     border-radius: var(--radius-sm);
     margin-top: 10px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
   }
   .editFixed {
     color: var(--color-primary);
     margin-top: 10px;
   }
   .con {
-    margin: 20px 0 40px;
+    margin: var(--space-5) 0 40px;
     ul {
       display: flex;
       li {
         text-align: center;
         margin-right: 100px;
         .imgCon {
-          margin: 20px 0;
+          margin: var(--space-5) 0;
           height: 43px;
         }
       }

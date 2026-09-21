@@ -20,8 +20,8 @@ import loadingSvg from '../loading.svg';
 
 const Summary = styled.div`
   background-color: var(--color-background-primary);
-  padding: 20px 32px 0;
-  margin-bottom: 32px;
+  padding: var(--space-5) var(--space-8) 0;
+  margin-bottom: var(--space-8);
   .summaryItem {
     height: 133px;
     flex-direction: column;
@@ -46,17 +46,17 @@ const Summary = styled.div`
     }
   }
   .summaryWrap {
-    gap: 24px;
+    gap: var(--space-6);
     flex-wrap: wrap;
   }
 `;
 
 const ChartWrap = styled.div`
   background-color: var(--color-background-primary);
-  padding: 20px 32px;
+  padding: var(--space-5) var(--space-8);
   .conditions {
     justify-content: space-between;
-    margin: 20px 0 32px;
+    margin: var(--space-5) 0 var(--space-8);
     .selectCondition {
       .width200 {
         width: 200px;
@@ -128,18 +128,18 @@ const ChartWrap = styled.div`
           min-width: 0;
         }
         .totalValue {
-          margin-left: 4px;
+          margin-left: var(--space-1);
         }
       }
     }
     .mBotto8 {
-      margin-bottom: 8px;
+      margin-bottom: var(--space-2);
     }
     .lengendTag {
       display: inline-block;
       width: 12px;
       height: 2px;
-      margin-right: 8px;
+      margin-right: var(--space-2);
       margin-bottom: 2px;
       vertical-align: middle;
     }

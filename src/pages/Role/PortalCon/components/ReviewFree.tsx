@@ -66,7 +66,7 @@ const Wrap = styled.div`
   .listCon {
     background: var(--color-background-secondary);
     border-radius: 6px;
-    padding: 13px 16px;
+    padding: 13px var(--space-4);
     display: flex;
     .act {
       width: 70px;
@@ -79,7 +79,7 @@ const Wrap = styled.div`
     }
     .listLiHeader {
       color: var(--color-text-tertiary);
-      font-size: 12px;
+      font-size: var(--font-xs);
     }
     .listLi {
       display: flex;

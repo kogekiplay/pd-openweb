@@ -1,16 +1,16 @@
 .SideBarContainer {
-  padding: 20px;
+  padding: var(--space-5);
   width: 100%;
   min-height: 100%;
   .filterTitle {
     margin-bottom: 10px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: 700;
     color: var(--color-text-primary);
   }
   .filterSubTitle {
     margin-bottom: 10px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-primary);
   }
   .filterDesc {
@@ -22,11 +22,11 @@
     justify-content: center;
     align-items: center;
     gap: 6px;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
     width: 100%;
     height: 34px;
     border-radius: var(--radius-sm);
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: 700;
     color: var(--color-white);
     background-color: var(--color-primary);
@@ -38,7 +38,7 @@
       background-color: var(--color-primary-dark);
     }
     .icon {
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
   }
   .filterSelect {
@@ -50,13 +50,13 @@
     flex-direction: column;
     gap: 10px;
     .modeItem {
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       width: 100%;
       height: 44px;
       line-height: 44px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-tertiary);
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: 700;
       color: var(--color-text-primary);
       background-color: var(--color-background-primary);
@@ -69,7 +69,7 @@
     }
   }
   .sliderBox {
-    margin: 20px 0;
+    margin: var(--space-5) 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -82,10 +82,10 @@
           display: flex;
           align-items: center;
           gap: 6px;
-          font-size: 13px;
+          font-size: var(--font-sm);
           color: var(--color-text-primary);
           .icon {
-            font-size: 16px;
+            font-size: var(--font-lg);
             color: var(--color-text-tertiary);
           }
         }

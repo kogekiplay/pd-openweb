@@ -13,7 +13,7 @@ import { handleAdvancedSettingChange } from '../../util/setting';
 
 const ConfigRelation = styled.div`
   .title {
-    margin: 24px 0 12px 0;
+    margin: var(--space-6) 0 var(--space-3) 0;
   }
 
   .mapItem {
@@ -38,7 +38,7 @@ const ConfigRelation = styled.div`
     .item {
       background-color: var(--color-background-secondary);
       line-height: 36px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       border-radius: var(--radius-sm);
     }
     .infoWrap {

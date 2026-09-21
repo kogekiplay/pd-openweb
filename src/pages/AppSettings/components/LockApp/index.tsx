@@ -14,7 +14,7 @@ const Wrap = styled.div`
     background: var(--color-warning-bg);
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     padding-left: 14px;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
   }
   .recoverAction {
     width: 783px;

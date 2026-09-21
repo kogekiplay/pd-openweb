@@ -13,7 +13,7 @@ const DATA_SOURCE_MODE = [
     text: _l('新建数据源'),
     value: 0,
     children: (
-      <div style={{ margin: '0 0 4px 28px', fontWeight: 'normal' }} className="Font12 textTertiary">
+      <div style={{ margin: '0 0 var(--space-1) 28px', fontWeight: 'normal' }} className="Font12 textTertiary">
         {_l('我们将为您新建一个表与层级视图，用来管理级联选择的数据')}
       </div>
     ),
@@ -21,9 +21,9 @@ const DATA_SOURCE_MODE = [
   { text: _l('选择已有表作为数据源'), value: 1 },
 ];
 const SelectDataSourceWrap = styled.div`
-  padding-bottom: 24px;
+  padding-bottom: var(--space-6);
   label {
-    margin-top: 12px;
+    margin-top: var(--space-3);
   }
   .selectSheetWrap.canSwitchSelectType {
     margin-left: 30px;

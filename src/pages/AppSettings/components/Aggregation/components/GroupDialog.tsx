@@ -83,7 +83,7 @@ const WrapItem = styled.div(
   .dragIcon,
   .clearIcon {
     opacity: 0;
-    font-size: 14px;
+    font-size: var(--font-md);
   }
   &:hover {
     background: rgba(230, 247, 255, 0.61);
@@ -122,7 +122,7 @@ const WrapItem = styled.div(
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
-    padding: 0 8px 0 12px;
+    padding: 0 var(--space-2) 0 var(--space-3);
     &.hasField {
       position: relative;
       .clearField,
@@ -148,7 +148,7 @@ const WrapItem = styled.div(
       background: var(--color-background-disabled);
       border: none;
       font-weight: 700;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
     }
   }
 `,

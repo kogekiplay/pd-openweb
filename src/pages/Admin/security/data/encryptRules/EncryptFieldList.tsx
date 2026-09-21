@@ -9,7 +9,7 @@ import Empty from 'src/pages/Admin/common/TableEmpty';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 
 const Wrap = styled.div`
-  padding: 12px 20px;
+  padding: var(--space-3) var(--space-5);
   flex: 1;
   min-height: 0;
   display: flex;

@@ -5,11 +5,11 @@ import { sysRoleType } from 'src/pages/Role/config.js';
 import ItemCon from './ItemCon';
 
 const Wrap = styled.p`
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: bold;
   color: var(--color-text-tertiary);
   padding-left: 18px;
-  margin: 10px 0 4px 0;
+  margin: 10px 0 var(--space-1) 0;
 `;
 
 const ROLE_ACTION_MANAGE_MEMBERS = 10;

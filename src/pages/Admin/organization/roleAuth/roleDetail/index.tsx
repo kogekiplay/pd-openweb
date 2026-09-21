@@ -17,7 +17,7 @@ const DetailDrawer = styled(Drawer)`
   }
   .ant-drawer-header {
     border: none;
-    padding-bottom: 8px;
+    padding-bottom: var(--space-2);
     .ant-drawer-close {
       display: none;
     }
@@ -33,15 +33,15 @@ const DetailDrawer = styled(Drawer)`
     }
   }
   .ant-drawer-body {
-    padding: 0px 0px 16px;
+    padding: 0px 0px var(--space-4);
   }
   .tabList {
     display: flex;
-    margin: 0 24px;
+    margin: 0 var(--space-6);
     border-bottom: 1px solid var(--color-border-secondary);
     .tabItem {
-      padding: 10px 8px;
-      margin-right: 24px;
+      padding: 10px var(--space-2);
+      margin-right: var(--space-6);
       border-bottom: 2px solid transparent;
       cursor: pointer;
       &.isActive {
@@ -52,7 +52,7 @@ const DetailDrawer = styled(Drawer)`
     }
   }
   .hrPermissionsHeader {
-    padding: 20px 0;
+    padding: var(--space-5) 0;
     border-top: 1px solid var(--color-border-secondary);
     &.noBorder {
       border: none;
@@ -60,7 +60,7 @@ const DetailDrawer = styled(Drawer)`
   }
   .Checkbox {
     span {
-      font-size: 14px !important;
+      font-size: var(--font-md) !important;
     }
   }
 `;

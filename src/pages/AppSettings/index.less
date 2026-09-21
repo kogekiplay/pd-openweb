@@ -7,7 +7,7 @@
     overflow: auto;
     width: 240px;
     border-right: 1px solid var(--color-border-primary);
-    padding: 8px 8px 0;
+    padding: var(--space-2) var(--space-2) 0;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -18,13 +18,13 @@
     .line {
       width: 100%;
       border-top: 1px solid var(--color-border-secondary);
-      margin: 8px 0;
+      margin: var(--space-2) 0;
     }
     .configItem {
       display: flex;
       align-items: center;
       height: 44px;
-      padding-left: 20px;
+      padding-left: var(--space-5);
       border-radius: var(--radius-sm);
       cursor: pointer;
       i {
@@ -72,9 +72,9 @@
       align-items: center;
       justify-content: end;
       .collapseWrapIcon {
-        padding: 8px;
+        padding: var(--space-2);
         border-radius: 50%;
-        margin-right: 4px;
+        margin-right: var(--space-1);
         &:hover {
           background-color: color-mix(in srgb, var(--color-overlay-ink) 5%, transparent);
         }
@@ -89,7 +89,7 @@
   }
   .manageAppRight {
     overflow: auto;
-    padding: 20px 40px;
+    padding: var(--space-5) 40px;
     &.language {
       padding: 0;
     }
@@ -110,10 +110,10 @@
       height: 42px;
       line-height: 42px;
       text-align: center;
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: 500;
       &:last-child {
-        margin-left: 32px;
+        margin-left: var(--space-8);
       }
       &.active {
         border-bottom: 2px solid var(--color-link-hover);
@@ -190,7 +190,7 @@
     line-height: 36px;
     font-size: 14;
     color: var(--color-text-title);
-    padding-left: 20px;
+    padding-left: var(--space-5);
   }
   .backupRestoreItem:hover {
     background-color: var(--color-primary);

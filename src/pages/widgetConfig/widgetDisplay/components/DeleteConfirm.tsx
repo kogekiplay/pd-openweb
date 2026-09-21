@@ -7,7 +7,7 @@ import 'rc-trigger/assets/index.css';
 
 const DeleteConfirmWrap = styled.div`
   width: 320px;
-  padding: 22px 24px;
+  padding: 22px var(--space-6);
   background: var(--color-background-primary);
   border-radius: var(--radius-sm);
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.24);
@@ -17,7 +17,7 @@ const DeleteConfirmWrap = styled.div`
   }
   .hint {
     color: var(--color-text-secondary);
-    margin: 6px 0 20px 0;
+    margin: 6px 0 var(--space-5) 0;
   }
   .btnList {
     display: flex;
@@ -25,7 +25,7 @@ const DeleteConfirmWrap = styled.div`
     align-items: center;
     .cancel {
       color: var(--color-text-tertiary);
-      margin-right: 24px;
+      margin-right: var(--space-6);
       cursor: pointer;
     }
   }

@@ -21,13 +21,13 @@ const TEXT_TYPE_CONTROL = [2, 3, 4, 5, 7, 32, 33];
 const ConfigWrap = styled.div`
   .infoWrap {
     line-height: 48px;
-    padding-left: 12px;
+    padding-left: var(--space-3);
     background-color: var(--color-background-secondary);
   }
   .addFilterControl {
     width: 120px;
     border-radius: var(--radius-sm);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     line-height: 32px;
     color: var(--color-primary);
     font-weight: bold;
@@ -39,7 +39,7 @@ const ConfigWrap = styled.div`
   .configItem {
     display: flex;
     align-items: center;
-    margin-top: 24px;
+    margin-top: var(--space-6);
     .title {
       width: 80px;
     }

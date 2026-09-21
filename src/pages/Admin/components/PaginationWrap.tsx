@@ -8,7 +8,7 @@ const Wrap = styled.div`
   justify-content: center;
   min-height: 0;
   .ant-pagination {
-    padding: 12px;
+    padding: var(--space-3);
     .ant-pagination-options {
       display: none;
     }
@@ -21,11 +21,11 @@ const Wrap = styled.div`
       a {
         color: var(--color-text-title);
         display: inline-block;
-        padding: 3px 8px;
+        padding: 3px var(--space-2);
         text-align: center;
         vertical-align: middle;
         border: 1px solid transparent;
-        font-size: 13px;
+        font-size: var(--font-sm);
         border-radius: var(--radius-sm);
       }
       a:hover {

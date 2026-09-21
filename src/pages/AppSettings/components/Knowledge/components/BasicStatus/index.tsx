@@ -14,15 +14,15 @@ const iconRotate = keyframes`
 
 const StatusWrapper = styled.div`
   display: flex;
-  gap: 20px;
+  gap: var(--space-5);
   min-width: 0;
   ${props => props.from === STATUS_FROM.COLLECTION && 'color: var(--color-text-secondary);'}
   .statusItemBox {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--space-1);
     min-width: 0;
-    font-size: 13px;
+    font-size: var(--font-sm);
     white-space: normal;
     word-break: break-all;
     &.failed {
@@ -33,21 +33,21 @@ const StatusWrapper = styled.div`
     }
     .icon-agent_loading,
     .icon-clock {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-primary);
     }
     .icon-Finish,
     .icon-done {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-success);
     }
     .icon-cancel,
     .icon-cancel_line {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-error);
     }
     .icon-info {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-warning);
     }
     .icon-agent_loading {

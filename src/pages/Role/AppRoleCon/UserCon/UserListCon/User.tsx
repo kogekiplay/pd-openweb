@@ -24,9 +24,9 @@ import { getTranslateInfo } from 'src/utils/app';
 import { dateConvertToUserZone, getCurrentProject } from 'src/utils/project';
 
 const Wrap = styled.div`
-  padding: 20px 10px 20px 10px;
+  padding: var(--space-5) 10px var(--space-5) 10px;
   &.conExternal {
-    padding: 20px 0;
+    padding: var(--space-5) 0;
   }
   .toRole {
     color: var(--color-text-title);
@@ -59,7 +59,7 @@ const Wrap = styled.div`
     border-radius: 9px 9px 9px 9px;
     color: var(--color-white);
     .tag {
-      font-size: 12px;
+      font-size: var(--font-xs);
       font-weight: 400;
     }
   }
@@ -78,7 +78,7 @@ const Wrap = styled.div`
 const WrapBar = styled.div`
   .toRole {
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     border: 1px solid var(--color-border-primary);
     line-height: 34px;
     display: inline-block;
@@ -92,7 +92,7 @@ const WrapBar = styled.div`
     background: var(--color-primary);
     border-radius: var(--radius-sm);
     color: var(--color-white);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     display: inline-block;
     &:hover {
       background: var(--color-link-hover);
@@ -107,13 +107,13 @@ const WrapBar = styled.div`
   }
   .exportAppRolesBtn {
     height: 37px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     box-sizing: border-box;
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
     background: var(--color-background-primary);
     color: var(--color-text-primary);
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 35px;
     vertical-align: top;
   }

@@ -17,7 +17,7 @@ import { DropdownPlaceholder } from '../../../styled';
 
 const SelectItem = styled.div`
   .title {
-    margin: 24px 0 6px 0;
+    margin: var(--space-6) 0 6px 0;
   }
 `;
 
@@ -27,16 +27,16 @@ const SelectSheetWrap = styled.div`
   box-shadow: var(--shadow-lg);
   .tabNav {
     display: flex;
-    padding-left: 20px;
+    padding-left: var(--space-5);
     border-bottom: 1px solid --color-background-disabled;
   }
   .navItem {
     margin-bottom: 0 !important;
-    padding: 12px 0;
+    padding: var(--space-3) 0;
     color: var(--color-text-primary);
     border-bottom: 2px solid transparent;
     cursor: pointer;
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: bold;
     &:hover {
       color: var(--color-primary);
@@ -46,11 +46,11 @@ const SelectSheetWrap = styled.div`
       border-bottom-color: var(--color-primary);
     }
     &:last-child {
-      margin-left: 32px;
+      margin-left: var(--space-8);
     }
   }
   .searchWrap {
-    padding: 8px 10px 8px 20px;
+    padding: var(--space-2) 10px var(--space-2) var(--space-5);
     border-bottom: 1px solid var(--color-border-primary);
     input {
       border: none;

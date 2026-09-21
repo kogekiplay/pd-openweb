@@ -18,14 +18,14 @@ const Con = styled.div`
 
 const No = styled.span`
   margin-right: 10px;
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 36px;
   width: 24px;
   text-align: center;
   .delete {
     cursor: pointer;
     display: none;
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-tertiary);
   }
 `;

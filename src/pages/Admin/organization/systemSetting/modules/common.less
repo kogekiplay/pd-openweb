@@ -3,8 +3,8 @@
   .formGroup {
     width: 100%;
     position: relative;
-    font-size: 13px;
-    margin-bottom: 20px;
+    font-size: var(--font-sm);
+    margin-bottom: var(--space-5);
 
     .formLabel,
     .formControl {
@@ -21,7 +21,7 @@
       width: 100%;
       border-radius: var(--radius-sm);
       border: 1px solid var(--color-border-tertiary);
-      padding: 6px 12px;
+      padding: 6px var(--space-3);
       display: inline-block;
 
       &.error {
@@ -52,14 +52,14 @@
     .formLabel {
       color: var(--color-text-title);
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: var(--space-2);
       line-height: 1;
     }
 
     .formDescribe {
       color: var(--color-text-tertiary);
       vertical-align: top;
-      margin-bottom: 12px;
+      margin-bottom: var(--space-3);
       line-height: 1;
     }
   }
@@ -67,7 +67,7 @@
 
 .existResult {
   color: var(--color-error);
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 
 .warpMerge {
@@ -91,7 +91,7 @@
     position: absolute;
     top: 10px;
     left: 5px;
-    font-size: 18px;
+    font-size: var(--font-xl);
   }
 
   .content {

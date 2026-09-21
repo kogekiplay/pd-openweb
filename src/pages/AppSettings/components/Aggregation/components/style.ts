@@ -21,7 +21,7 @@ export const Wrap = styled.div`
       z-index: 9999;
     }
     .setConB {
-      padding: 24px;
+      padding: var(--space-6);
       overflow-y: auto;
     }
   }
@@ -68,7 +68,7 @@ export const WrapSource = styled.div`
         margin-left: -8px;
       }
       .icon-search {
-        font-size: 18px !important;
+        font-size: var(--font-xl) !important;
         left: 16px;
         top: 16px;
       }
@@ -112,10 +112,10 @@ export const WrapWorksheet = styled.div`
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
     border-radius: var(--radius-sm);
-    margin: 0 12px 0;
+    margin: 0 var(--space-3) 0;
     box-sizing: border-box;
     width: calc(100% - 24px);
-    padding: 2px 5px 8px 12px;
+    padding: 2px 5px var(--space-2) var(--space-3);
     display: flex !important;
     &:hover {
       background: var(--color-background-hover);
@@ -136,7 +136,7 @@ export const Header = styled.div`
   z-index: 10000;
   .pageName {
     .iconWrap {
-      padding-right: 24px;
+      padding-right: var(--space-6);
       .back {
         color: var(--color-text-secondary);
         &:hover {
@@ -181,7 +181,7 @@ export const Header = styled.div`
   }
   .publishBtn {
     box-sizing: border-box;
-    padding: 0 32px;
+    padding: 0 var(--space-8);
     line-height: 36px;
     color: var(--color-white);
     cursor: pointer;
@@ -216,7 +216,7 @@ export const WrapPreview = styled.div`
   .pagination {
     .icon-arrow-left-border,
     .icon-arrow-right-border {
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
   }
   .sheetViewTable {
@@ -241,8 +241,8 @@ export const WrapPreview = styled.div`
   }
   .warnCon {
     border-radius: var(--radius-sm);
-    padding: 8px 14px;
-    margin: 20px 24px 0;
+    padding: var(--space-2) 14px;
+    margin: var(--space-5) var(--space-6) 0;
     &.isERR {
       background: var(--color-error-bg);
     }
@@ -262,7 +262,7 @@ export const WrapPreview = styled.div`
       background: var(--color-warning-bg);
     }
     .btn {
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       height: 32px;
       line-height: 32px;
       background: var(--color-background-primary);
@@ -287,13 +287,13 @@ export const WrapPreview = styled.div`
     }
   }
   .searchInputComp.default .icon-search {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     &:hover {
       color: var(--color-primary) !important;
     }
   }
   .previewHeader {
-    padding: 16px 24px 0;
+    padding: var(--space-4) var(--space-6) 0;
   }
   .previewEmpty {
     & > div {
@@ -301,7 +301,7 @@ export const WrapPreview = styled.div`
     }
   }
   .previewBtn {
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     line-height: 36px;
     min-width: 0;
     position: absolute;
@@ -371,7 +371,7 @@ export const WrapS = styled(Menu)`
     color: var(--color-error) !important;
   }
   .ming.Item .Item-content {
-    padding: 0 8px 0 16px;
+    padding: 0 var(--space-2) 0 var(--space-4);
     & > span {
       display: flex;
       .Icon {

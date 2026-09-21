@@ -7,7 +7,7 @@ export const AddEventWrap = styled.div`
   ${props =>
     props.type === 'action'
       ? 'width: fit-content;'
-      : 'width: 100%; height: 36px;justify-content: center; border: 1px dashed var(--color-border-primary);margin-top: 20px;border-radius: var(--radius-sm);'}
+      : 'width: 100%; height: 36px;justify-content: center; border: 1px dashed var(--color-border-primary);margin-top: var(--space-5);border-radius: var(--radius-sm);'}
   cursor: pointer;
   color: var(--color-primary);
   ${props =>
@@ -15,9 +15,9 @@ export const AddEventWrap = styled.div`
       ? 'background: var(--color-background-secondary);border-color: var(--color-background-secondary);color: var(--color-text-tertiary) !important;cursor: not-allowed !important;'
       : ''}
   i {
-    margin-right: 4px;
+    margin-right: var(--space-1);
     color: var(--color-primary);
-    font-size: 16px;
+    font-size: var(--font-lg);
     ${props => (props.disabled ? 'color: var(--color-text-tertiary) !important;' : '')}
   }
   &:hover {
@@ -31,14 +31,14 @@ export const AddEventWrap = styled.div`
 export const IconWrap = styled.span`
   color: var(--color-text-tertiary);
   cursor: pointer;
-  font-size: 16px;
+  font-size: var(--font-lg);
   &:hover {
     color: ${props => (props.type === 'danger' ? 'var(--color-error)' : 'var(--color-primary)')};
   }
 `;
 
 export const EventActionWrap = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -74,10 +74,10 @@ export const EventActionWrap = styled.div`
   }
   .actionText {
     font-weight: 600;
-    margin-top: 12px;
+    margin-top: var(--space-3);
   }
   .eventContent {
-    padding-left: 24px;
+    padding-left: var(--space-6);
     display: flex;
     flex-direction: column;
   }
@@ -97,12 +97,12 @@ export const CustomActionWrap = styled.div`
   }
   .splitLine {
     width: 100%;
-    margin: 24px 0;
+    margin: var(--space-6) 0;
     height: 1px;
     background: var(--color-border-primary);
   }
   .alertContent {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     border-radius: var(--radius-sm);
     line-height: 36px;
     display: flex;
@@ -151,7 +151,7 @@ export const CustomActionWrap = styled.div`
     .setItem {
       display: flex;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: var(--space-3);
       .itemFiledTitle {
         width: 140px;
         margin-right: 10px;
@@ -161,7 +161,7 @@ export const CustomActionWrap = styled.div`
         min-width: 0;
       }
       .itemFiled {
-        padding: 0 12px;
+        padding: 0 var(--space-3);
         display: flex;
         line-height: 36px;
         align-items: center;
@@ -183,7 +183,7 @@ export const CustomActionWrap = styled.div`
 
 export const DynamicBtn = styled.div`
   height: 36px;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   width: fit-content;
   display: flex;
   align-items: center;
@@ -195,7 +195,7 @@ export const DynamicBtn = styled.div`
   font-weight: 600;
   i {
     color: var(--color-primary);
-    margin-right: 4px;
+    margin-right: var(--space-1);
     font-size: 15px;
   }
   &:hover(:not(.disabled)) {
@@ -213,7 +213,7 @@ export const DynamicBtn = styled.div`
 `;
 
 export const ActionWrap = styled.div`
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   background: var(--color-background-secondary);
   border: 1px solid var(--color-border-secondary);
   border-radius: var(--radius-sm);
@@ -226,7 +226,7 @@ export const ActionWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
   }
   .textCon {
     display: flex;
@@ -247,7 +247,7 @@ export const ActionWrap = styled.div`
 `;
 
 export const SpliceWrap = styled.div`
-  margin-top: 8px;
+  margin-top: var(--space-2);
   position: relative;
   display: flex;
   justify-content: center;
@@ -263,6 +263,6 @@ export const SpliceWrap = styled.div`
     background: var(--color-background-primary);
   }
   .ming.Dropdown .Dropdown--input {
-    padding: 2px 8px !important;
+    padding: 2px var(--space-2) !important;
   }
 `;

@@ -11,7 +11,7 @@ const NoTitleControlWrap = styled.div`
   .imgContent {
     width: 80%;
     text-align: center;
-    margin: 24px auto;
+    margin: var(--space-6) auto;
     position: relative;
     img {
       display: block;

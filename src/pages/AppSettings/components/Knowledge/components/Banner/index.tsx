@@ -33,11 +33,11 @@ const iconRotate = keyframes`
 const BannerWrapper = styled.div`
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   width: 100%;
   height: 42px;
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 700;
   color: var(--color-text-primary);
 
@@ -45,14 +45,14 @@ const BannerWrapper = styled.div`
 
   .icon {
     margin-right: 10px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: ${({ type }) => iconColorMap[type]};
   }
 
   .icon-agent_loading {
     display: inline-block;
     animation: ${iconRotate} 0.8s linear infinite;
-    font-size: 16px;
+    font-size: var(--font-lg);
   }
 
   .action {

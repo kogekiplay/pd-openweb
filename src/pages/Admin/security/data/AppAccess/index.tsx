@@ -14,8 +14,8 @@ import AddAndEditAppAccess from './AddAndEditAppAccess';
 const Description = styled.div`
   background: color-mix(in srgb, var(--color-primary) 10%, transparent);
   border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  margin-bottom: 20px;
+  padding: 10px var(--space-3);
+  margin-bottom: var(--space-5);
 `;
 
 const ContentWrap = styled.div`

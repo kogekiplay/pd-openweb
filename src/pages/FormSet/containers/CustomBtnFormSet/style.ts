@@ -46,13 +46,13 @@ export const Con = styled.div`
   .line {
     border-top: 1px solid var(--color-border-secondary);
     width: 100%;
-    margin-top: 8px;
+    margin-top: var(--space-2);
   }
   .customBtnSearch {
     width: 320px;
     height: 36px;
-    margin: 16px 0 12px 0;
-    padding: 0 16px;
+    margin: var(--space-4) 0 var(--space-3) 0;
+    padding: 0 var(--space-4);
     border: 1px solid var(--color-border-primary);
     border-radius: 18px;
     box-sizing: border-box;

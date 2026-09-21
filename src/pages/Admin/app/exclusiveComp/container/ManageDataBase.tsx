@@ -20,12 +20,12 @@ const ActionOpWrap = styled.ul`
   box-shadow: var(--shadow-sm);
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   width: 160px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
-  padding: 4px 0;
+  padding: var(--space-1) 0;
   li {
     line-height: 36px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     cursor: pointer;
     &:hover {
       background-color: var(--color-primary);

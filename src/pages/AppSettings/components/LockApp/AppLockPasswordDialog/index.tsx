@@ -23,10 +23,10 @@ const PasswordInputBox = styled.div`
   .inputBox {
     border: none;
     background: var(--color-background-secondary);
-    padding-left: 16px;
+    padding-left: var(--space-4);
     width: 200px;
     height: 36px;
-    margin-right: 16px;
+    margin-right: var(--space-4);
     &.editInput {
       background: var(--color-background-primary);
       border: 1px solid var(--color-primary);
@@ -39,7 +39,7 @@ const PasswordInputBox = styled.div`
     }
   }
   .error {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-error);
   }
 `;
@@ -54,12 +54,12 @@ const UnLockFooter = styled.div`
 const IconWrap = styled.div`
   height: 18px;
   width: 18px;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-tertiary);
   text-align: center;
   line-height: 18px;
   cursor: pointer;
-  margin-right: 12px;
+  margin-right: var(--space-3);
 `;
 
 const checkErrorPassword = password => {

@@ -43,7 +43,7 @@ const Wrapper = styled.div`
     }
   }
   .memberTag {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-primary);
     padding: 2px 6px;
     border-radius: 12px;
@@ -56,7 +56,7 @@ const Wrapper = styled.div`
     background: var(--color-primary);
     font-weight: bold;
     padding: 2px 6px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     border-radius: 12px;
     display: inline-block;
     flex-shrink: 0;

@@ -29,7 +29,7 @@ const Header = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   font-size: 17px;
   font-weight: bold;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   line-height: 50px;
 `;
 const Main = styled.div`
@@ -46,7 +46,7 @@ const Dev = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   overflow: hidden;
 `;
 const CodeEditCon = styled.div`
@@ -63,9 +63,9 @@ const ActiveJsSwitchCon = styled.div`
   display: flex;
   font-weight: normal;
   align-items: center;
-  margin: 16px 30px;
+  margin: var(--space-4) 30px;
   line-height: 1em;
-  font-size: 14px;
+  font-size: var(--font-md);
   label {
     margin-right: 6px;
   }

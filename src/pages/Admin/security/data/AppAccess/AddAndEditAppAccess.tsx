@@ -48,7 +48,7 @@ const ContentWrap = styled.div`
   }
   .accessTypeRadioGroup {
     .Radio-box {
-      margin-right: 8px !important ;
+      margin-right: var(--space-2) !important ;
     }
     .Radio {
       margin-right: 26px !important;

@@ -21,7 +21,7 @@ const Wrap = styled.div`
       background: var(--color-border-primary);
       border-radius: 1px;
       display: block;
-      margin-left: 8px;
+      margin-left: var(--space-2);
     }
     .conRadioGroup {
       padding: 15px 30px;

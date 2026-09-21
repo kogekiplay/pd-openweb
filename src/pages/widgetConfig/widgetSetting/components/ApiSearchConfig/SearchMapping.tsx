@@ -27,7 +27,7 @@ const SELECT_OPTIONS = [
 
 const MappingWrap = styled.div`
   .controlLabel {
-    margin-top: 16px;
+    margin-top: var(--space-4);
   }
   .requireIcon {
     position: absolute;

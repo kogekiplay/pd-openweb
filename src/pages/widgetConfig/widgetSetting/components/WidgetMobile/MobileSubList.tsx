@@ -18,7 +18,7 @@ const MobileSubListWrap = styled.div`
     justify-content: space-between;
     border: 1px solid var(--color-border-tertiary);
     line-height: 34px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     border-radius: var(--radius-sm);
   }
 `;

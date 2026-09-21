@@ -12,7 +12,7 @@
     cursor: pointer;
     user-select: none;
     &.isSingle {
-      margin: 0 16px;
+      margin: 0 var(--space-4);
       cursor: default;
     }
     &.expanded {
@@ -25,7 +25,7 @@
       align-items: center;
       .panelIcon {
         margin-right: 10px;
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-text-tertiary);
         transition: transform 0.3s;
       }
@@ -37,12 +37,12 @@
       }
       .worksheetName {
         font-weight: 500;
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-text-primary);
       }
       .noFields {
         margin: 0 6px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         font-weight: 700;
         color: var(--color-text-tertiary);
         white-space: nowrap;
@@ -53,13 +53,13 @@
       align-items: center;
       gap: 10px;
       .switchText {
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-text-primary);
       }
       .freeText {
-        padding: 2px 4px;
+        padding: 2px var(--space-1);
         margin-right: 10px;
-        font-size: 12px;
+        font-size: var(--font-xs);
         font-weight: 700;
         border-radius: var(--radius-sm);
         color: var(--color-warning);
@@ -67,8 +67,8 @@
       }
       .deleteWorksheetIcon {
         margin-right: 22px;
-        margin-left: 12px;
-        font-size: 18px;
+        margin-left: var(--space-3);
+        font-size: var(--font-xl);
         color: var(--color-text-tertiary);
         cursor: pointer;
         &:hover {
@@ -86,9 +86,9 @@
       max-height: 2000px;
     }
     .panelContent {
-      padding: 12px;
+      padding: var(--space-3);
       &.single {
-        padding: 12px 0 !important;
+        padding: var(--space-3) 0 !important;
       }
     }
     .fieldBox {
@@ -96,11 +96,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 20px 0 24px;
+        padding: 0 var(--space-5) 0 var(--space-6);
         height: 40px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         &.single {
-          padding: 0 16px !important;
+          padding: 0 var(--space-4) !important;
         }
         .left {
           flex: 1;
@@ -111,19 +111,19 @@
           color: var(--color-text-primary);
           .controlIcon {
             margin-right: 3px;
-            font-size: 20px;
+            font-size: var(--font-2xl);
             color: var(--color-text-secondary);
           }
           .controlSubIcon {
             margin-left: 3px;
-            font-size: 18px;
+            font-size: var(--font-xl);
             color: var(--color-primary);
           }
         }
         .right {
           display: flex;
           .deleteFieldIcon {
-            font-size: 18px;
+            font-size: var(--font-xl);
             color: var(--color-text-tertiary);
             cursor: pointer;
             &:hover {
@@ -134,10 +134,10 @@
       }
       .emptyField {
         padding: 10px 26px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         color: var(--color-text-tertiary);
         &.single {
-          padding: 10px 16px !important;
+          padding: 10px var(--space-4) !important;
         }
       }
     }
@@ -145,7 +145,7 @@
       margin: 5px 0 5px 25px;
       width: 200px;
       &.single {
-        margin: 5px 16px;
+        margin: 5px var(--space-4);
       }
     }
   }
@@ -153,20 +153,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px 0 37px;
+    padding: 0 var(--space-5) 0 37px;
     height: 42px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-primary);
     background: var(--color-background-secondary);
     &.single {
-      padding: 0 16px !important;
+      padding: 0 var(--space-4) !important;
     }
     .left {
       display: flex;
       align-items: center;
       .discussIcon {
-        margin-right: 8px;
-        font-size: 20px;
+        margin-right: var(--space-2);
+        font-size: var(--font-2xl);
         color: var(--color-text-secondary);
       }
     }

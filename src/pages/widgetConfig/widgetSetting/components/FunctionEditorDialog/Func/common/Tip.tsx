@@ -5,8 +5,8 @@ import { functionDetails } from '../enum';
 
 const Con = styled.div`
   height: 100%;
-  padding: 16px 0 0;
-  font-size: 13px;
+  padding: var(--space-4) 0 0;
+  font-size: var(--font-sm);
   line-height: 24px;
   overflow: auto;
   .fn {
@@ -22,11 +22,11 @@ const Con = styled.div`
   }
   .control {
     display: inline-block;
-    margin: 0 4px;
+    margin: 0 var(--space-1);
     height: 24px;
     line-height: 22px;
     color: var(--color-primary);
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     border-radius: 24px;
     border: 1px solid var(--color-primary-transparent);
     background: #d8eeff;
@@ -42,17 +42,17 @@ const Con = styled.div`
 `;
 
 const Des = styled.div`
-  margin-top: 4px;
-  font-size: 12px;
+  margin-top: var(--space-1);
+  font-size: var(--font-xs);
   color: var(--color-text-secondary);
   bb {
-    font-size: 14px !important;
+    font-size: var(--font-md) !important;
   }
   bb,
   b {
     font-weight: 500;
     color: var(--color-text-title);
-    margin: 6px 0 4px;
+    margin: 6px 0 var(--space-1);
     display: inline-block;
   }
 `;

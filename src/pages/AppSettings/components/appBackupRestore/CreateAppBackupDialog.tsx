@@ -5,7 +5,7 @@ import { Checkbox, Dialog, LoadDiv, Support, SvgIcon } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';
 
 const CreateBackupCon = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 17px;
   &.emptyWrap {
     height: 216px;
@@ -39,11 +39,11 @@ const CreateBackupCon = styled.div`
 `;
 
 const Footer = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 36px;
   min-height: 36px;
   span {
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 36px;
     min-height: 36px;
     display: inline-block;

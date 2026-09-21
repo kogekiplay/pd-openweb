@@ -22,7 +22,7 @@ const Wrap = styled.div(
   width: ${width || '580px'};
   background: var(--color-background-primary);
   .headerWrap {
-    padding: 24px;
+    padding: var(--space-6);
     font-size: 17px;
     font-weight: 600;
     color: var(--color-text-title);
@@ -30,7 +30,7 @@ const Wrap = styled.div(
   .footerWrap {
     padding: 18px 22px;
     .btn {
-      padding: 0 32px;
+      padding: 0 var(--space-8);
       line-height: 36px;
       border-radius: var(--radius-sm);
       box-sizing: border-box;
@@ -66,7 +66,7 @@ const UserInfoDialogWrap = styled.div`
   overflow-x: hidden;
   .customFieldsContainer {
     width: 100%;
-    padding: 0 14px 24px 14px;
+    padding: 0 14px var(--space-6) 14px;
     flex: 1;
     margin: 0;
   }

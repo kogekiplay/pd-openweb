@@ -56,7 +56,7 @@ const DisplayItemWrap = styled.div`
   position: relative;
   box-sizing: border-box;
   list-style: none;
-  ${props => (props.isTab ? '' : 'padding: 8px 12px;')}
+  ${props => (props.isTab ? '' : 'padding: var(--space-2) var(--space-3);')}
   min-height: 48px;
   cursor: grab;
   transition: box-shadow 0.25s ease-in-out;
@@ -111,7 +111,7 @@ const DisplayItemWrap = styled.div`
     right: -2px;
   }
   .verifyInfo {
-    margin-top: 8px;
+    margin-top: var(--space-2);
     color: var(--color-error);
   }
 `;

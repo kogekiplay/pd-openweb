@@ -2,11 +2,11 @@ import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
 
 export const SettingItem = styled.div`
-  margin-top: 20px;
+  margin-top: var(--space-5);
   position: relative;
   ${props => (props.hide ? 'display: none;' : '')}
   .ant-input {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     line-height: 26px;
     border-radius: var(--radius-sm);
@@ -36,7 +36,7 @@ export const SettingItem = styled.div`
   }
   &.withSplitLine {
     border-top: 1px solid var(--color-border-primary);
-    padding-top: 24px;
+    padding-top: var(--space-6);
   }
   .ming.Dropdown {
     &.disabled {
@@ -69,7 +69,7 @@ export const SettingItem = styled.div`
   .settingItemTitle {
     display: flex;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
     font-weight: bold;
     color: var(--color-text-title);
     .icon-help {
@@ -97,7 +97,7 @@ export const SettingItem = styled.div`
   }
   .credTypesWrap {
     .ming.Radio {
-      margin: 12px 0 0 0;
+      margin: var(--space-3) 0 0 0;
       flex-basis: 50%;
     }
   }
@@ -109,7 +109,7 @@ export const SettingItem = styled.div`
     margin: 0 auto;
     line-height: 38px;
     color: var(--color-text-tertiary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     text-align: center;
   }
   .subTitle {
@@ -132,13 +132,13 @@ export const SettingItem = styled.div`
   }
 `;
 export const RelateInfo = styled.div`
-  margin-top: 12px;
+  margin-top: var(--space-3);
   i {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-secondary);
   }
   .text {
-    margin: 0 4px;
+    margin: 0 var(--space-1);
   }
   .name {
     color: var(--color-primary);
@@ -149,7 +149,7 @@ export const InfoWrap = styled.div`
   border-radius: var(--radius-sm);
   color: var(--color-text-secondary);
   line-height: 34px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   background: ${props => props.bgColor || 'var(--color-background-primary)'};
 `;
 
@@ -197,9 +197,9 @@ export const DropdownPlaceholder = styled.div`
   align-items: center;
   min-height: 36px;
   border: 1px solid var(--color-border-primary);
-  margin-top: 12px;
+  margin-top: var(--space-3);
   border-radius: var(--radius-sm);
-  padding: 0 5px 0 12px;
+  padding: 0 5px 0 var(--space-3);
   cursor: pointer;
   &.active,
   &:hover {
@@ -260,13 +260,13 @@ export const SelectFieldsWrap = styled.div`
     margin: 0 auto;
     line-height: 38px;
     color: var(--color-text-tertiary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     text-align: center;
   }
   .clearValue {
     line-height: 36px;
     color: var(--color-primary);
-    padding-left: 12px;
+    padding-left: var(--space-3);
     cursor: pointer;
     &:hover {
       background-color: var(--color-primary);
@@ -275,12 +275,12 @@ export const SelectFieldsWrap = styled.div`
   }
   .search {
     position: relative;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
     i {
       position: absolute;
       top: 11px;
       left: 16px;
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
     input {
       box-sizing: border-box;
@@ -302,16 +302,16 @@ export const SelectFieldsWrap = styled.div`
   .relateSheetList {
     border-top: 1px solid var(--color-border-primary);
     background-color: var(--color-background-primary);
-    margin-top: 8px;
+    margin-top: var(--space-2);
     &:first-child {
       border-top: none;
       margin-top: 0px;
     }
     .title {
-      padding: 12px 0 0 16px;
+      padding: var(--space-3) 0 0 var(--space-4);
       font-weight: bold;
       max-width: 220px;
-      margin-bottom: 8px;
+      margin-bottom: var(--space-2);
     }
   }
   .fieldList {
@@ -324,7 +324,7 @@ export const SelectFieldsWrap = styled.div`
       height: 36px;
       ${props => (props.limitWidth ? 'max-width: 320px;' : 'max-width: 100%;')}
       line-height: 36px;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       cursor: pointer;
       white-space: nowrap;
       overflow: hidden;
@@ -337,9 +337,9 @@ export const SelectFieldsWrap = styled.div`
         }
       }
       i {
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-text-tertiary);
-        margin-right: 8px;
+        margin-right: var(--space-2);
       }
     }
   }
@@ -350,7 +350,7 @@ export const CommonDisplay = styled.div`
   justify-content: space-between;
   align-items: center;
   position: relative;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border: 1px solid var(--color-border-primary);
   height: ${props => props.height || 34}px;
   line-height: 34px;
@@ -370,12 +370,12 @@ export const CommonDisplay = styled.div`
   .unit {
     max-width: 20%;
     flex-shrink: 0;
-    padding-left: 12px;
+    padding-left: var(--space-3);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     &.prefix {
-      padding: 0 12px 0 0;
+      padding: 0 var(--space-3) 0 0;
     }
   }
   &.select {
@@ -384,9 +384,9 @@ export const CommonDisplay = styled.div`
     }
   }
   i {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
 `;
 
@@ -400,7 +400,7 @@ export const CircleAdd = styled.div`
   border: 1px solid var(--color-border-primary);
   margin-top: ${props => (props.displayRow ? '5px' : '12px')};
   i {
-    font-size: 14px;
+    font-size: var(--font-md);
   }
 `;
 
@@ -416,8 +416,8 @@ export const OptionsWrap = styled.div`
     .optionItem {
       display: flex;
       max-width: 100%;
-      margin-right: 16px;
-      margin-top: 8px;
+      margin-right: var(--space-4);
+      margin-top: var(--space-2);
       ${props => (props.direction === '0' ? `width: ${props.width}px;` : 'width: fit-content;')}
     }
     .ming.Radio {
@@ -431,7 +431,7 @@ export const OptionsWrap = styled.div`
   }
 `;
 export const OptionWrap = styled.div`
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   line-height: 24px;
   border-radius: 18px;
   color: var(--color-white);
@@ -447,26 +447,26 @@ export const OptionWrap = styled.div`
   &.withoutColor {
     background: transparent;
     color: var(--color-text-title);
-    padding: 0 4px;
+    padding: 0 var(--space-1);
   }
   background-color: ${props => props.color || 'var(--color-primary)'};
 `;
 
 export const EditModelWrap = styled.div`
-  ${props => (props.isTab ? 'padding: 8px 20px;' : '')}
+  ${props => (props.isTab ? 'padding: var(--space-2) var(--space-5);' : '')}
   .desc {
     line-height: 13px;
     &.subList {
-      margin-bottom: 8px;
+      margin-bottom: var(--space-2);
     }
   }
   .operationWrap.isActive {
     visibility: true;
   }
   .operationIconWrap {
-    padding: 0 4px;
+    padding: 0 var(--space-1);
     i {
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
   }
   .resizeWidth {
@@ -496,14 +496,14 @@ export const EditModelWrap = styled.div`
     margin-right: 2px;
   }
   .unSupport {
-    font-size: 12px;
+    font-size: var(--font-xs);
     vertical-align: initial;
   }
   .addControl {
     height: 84px;
     line-height: 84px;
     text-align: center;
-    font-size: 12px;
+    font-size: var(--font-xs);
     border: 1px solid var(--color-border-primary);
     background-color: var(--color-background-primary);
   }
@@ -512,7 +512,7 @@ export const EmptySheetPlaceHolder = styled.div`
   height: 84px;
   line-height: 84px;
   text-align: center;
-  font-size: 12px;
+  font-size: var(--font-xs);
   border: 1px solid var(--color-border-primary);
   background-color: var(--color-background-primary);
   color: var(--color-text-tertiary);
@@ -520,7 +520,7 @@ export const EmptySheetPlaceHolder = styled.div`
 
 export const ControlTag = styled.div`
   line-height: 24px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-radius: 16px;
   background: #d8eeff;
   color: var(--color-primary);
@@ -541,7 +541,7 @@ export const IntroMenu = styled.div`
     display: flex;
     align-items: center;
     line-height: 36px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     cursor: pointer;
     &:hover {
       background: var(--color-primary);
@@ -553,7 +553,7 @@ export const IntroMenu = styled.div`
     i {
       margin-right: 10px;
       color: var(--color-text-secondary);
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
   }
 `;
@@ -580,8 +580,8 @@ export const WidgetIntroWrap = styled.div`
         background: var(--color-background-secondary);
       }
       span {
-        margin-left: 8px;
-        font-size: 16px;
+        margin-left: var(--space-2);
+        font-size: var(--font-lg);
         font-weight: 600;
       }
     }
@@ -631,19 +631,19 @@ export const DropdownContent = styled.div`
   box-shadow: var(--shadow-lg);
   padding: 6px 0;
   .empty {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     color: var(--color-text-tertiary);
     cursor: pointer;
   }
   .title {
     font-weight: bold;
-    padding: 6px 16px 6px;
+    padding: 6px var(--space-4) 6px;
   }
   .item {
     display: flex;
     align-items: center;
     line-height: 36px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     cursor: pointer;
     transition: background-color color 0.25s;
     i {
@@ -673,21 +673,21 @@ export const DropdownContentWrap = styled(DropdownContent)`
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     margin-bottom: 6px;
     border-bottom: 1px solid --color-background-disabled;
     input {
       line-height: 36px;
       border: none;
       outline: none;
-      padding-left: 8px;
+      padding-left: var(--space-2);
     }
   }
   .emptyText {
     margin: 0 auto;
     line-height: 38px;
     color: var(--color-text-tertiary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     text-align: center;
   }
   .countryContent {
@@ -747,7 +747,7 @@ export const TitleContentWrap = styled.div`
     }
     .typeIcon {
       color: var(--color-text-tertiary);
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
     .controlName {
       margin-left: 6px;
@@ -791,7 +791,7 @@ export const TitleContentWrap = styled.div`
 
   .desc {
     color: var(--color-text-tertiary);
-    margin-top: 8px;
+    margin-top: var(--space-2);
     line-height: 13px;
   }
 `;
@@ -799,7 +799,7 @@ export const TitleContentWrap = styled.div`
 export const RelateDetail = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 12px;
+  margin-top: var(--space-3);
   .flexWidth {
     flex: 1;
     max-width: max-content;
@@ -871,7 +871,7 @@ export const SheetViewWrap = styled.div`
   display: flex;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
-  margin-top: 8px;
+  margin-top: var(--space-2);
   .Dropdown--input {
     border: none !important;
   }
@@ -884,7 +884,7 @@ export const SheetViewWrap = styled.div`
     }
   }
   .viewCon {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     background: var(--color-background-secondary);
     line-height: 34px;
     text-align: center;
@@ -904,12 +904,12 @@ export const SheetViewWrap = styled.div`
 `;
 
 export const NumberRange = styled.div`
-  margin-top: 8px;
+  margin-top: var(--space-2);
   display: flex;
   justify-content: space-between;
   align-items: center;
   span {
-    margin: 0 8px;
+    margin: 0 var(--space-2);
     color: var(--color-text-tertiary);
   }
   input {
@@ -920,13 +920,13 @@ export const NumberRange = styled.div`
 export const BothRelateInfo = styled.div`
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);
-  padding: 10px 12px;
+  padding: 10px var(--space-3);
   background-color: var(--color-background-primary);
   .displayType {
-    margin-top: 8px;
+    margin-top: var(--space-2);
   }
   span {
-    margin: 0 4px;
+    margin: 0 var(--space-1);
   }
   .sourceName {
     color: var(--color-primary);
@@ -937,10 +937,10 @@ export const DisplayTabs = styled.div`
   border-bottom: 1px solid var(--color-border-primary);
   display: flex;
   .tabItem {
-    padding: 5px 20px;
+    padding: 5px var(--space-5);
     border-bottom: 3px solid transparent;
     color: var(--color-text-secondary);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 600;
     cursor: pointer;
     &.active {
@@ -955,7 +955,7 @@ export const DisplayTabs = styled.div`
 
 export const DisplayMode = styled.div`
   display: flex;
-  padding: 8px 0;
+  padding: var(--space-2) 0;
   justify-content: space-between;
   .displayItem {
     flex: 1;
@@ -963,7 +963,7 @@ export const DisplayMode = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 12px;
+    margin-right: var(--space-3);
     &:last-child {
       margin-right: 0;
     }
@@ -1019,7 +1019,7 @@ export const EditOptionDialog = styled(Dialog)`
     min-height: 0;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     box-sizing: border-box;
   }
   .handleOption {
@@ -1027,7 +1027,7 @@ export const EditOptionDialog = styled(Dialog)`
     left: 0;
     right: 0;
     bottom: 58px;
-    padding: 12px 36px;
+    padding: var(--space-3) 36px;
   }
 `;
 
@@ -1055,7 +1055,7 @@ export const CoverWrap = styled.div`
   overflow-x: hidden;
   background: var(--color-background-primary);
   box-shadow: 0px 4px 12px 1px rgba(0, 0, 0, 0.1608);
-  padding: 16px;
+  padding: var(--space-4);
   .coverTitle {
     display: flex;
     align-items: center;

@@ -42,7 +42,7 @@ const PicMask = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
   text-align: center;
   line-height: 60px;
-  font-size: 20px;
+  font-size: var(--font-2xl);
   color: var(--color-white);
 `;
 const Pages = styled.div`

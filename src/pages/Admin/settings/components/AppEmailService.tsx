@@ -17,12 +17,12 @@ const PageWrap = styled.div`
   .serviceCard {
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-md);
-    margin-top: 16px;
+    margin-top: var(--space-4);
     background: var(--color-background-card);
   }
   .serviceHeader {
     min-height: 64px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
   }
   .serviceName {
     max-width: 220px;
@@ -34,13 +34,13 @@ const PageWrap = styled.div`
     display: inline-flex;
     align-items: center;
     height: 22px;
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     border-radius: 11px;
     color: var(--color-white);
     background: var(--color-primary);
   }
   .serviceAppList {
-    padding: 0 24px 18px;
+    padding: 0 var(--space-6) 18px;
 
     .appEmailAuthList {
       border: 0;

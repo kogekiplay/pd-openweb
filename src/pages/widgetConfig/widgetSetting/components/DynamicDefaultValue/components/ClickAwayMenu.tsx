@@ -5,7 +5,7 @@ import { Menu, MenuItem } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
 
 const ClearSelect = styled.div`
-  padding: 4px 16px 6px 16px;
+  padding: var(--space-1) var(--space-4) 6px var(--space-4);
   color: var(--color-text-secondary);
   cursor: pointer;
 `;

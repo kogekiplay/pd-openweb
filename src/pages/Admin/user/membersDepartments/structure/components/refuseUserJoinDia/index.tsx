@@ -6,7 +6,7 @@ import userController from 'src/api/user';
 
 const DialogWrap = styled(Dialog)`
   .test-textarea {
-    padding: 8px;
+    padding: var(--space-2);
     color: var(--color-text-title);
     box-sizing: border-box;
     width: 100%;

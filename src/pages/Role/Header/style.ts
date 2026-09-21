@@ -17,7 +17,7 @@ export const TopBar = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 50px;
-  padding-right: 24px;
+  padding-right: var(--space-6);
   box-shadow: var(--shadow-sm);
   background-color: var(--color-background-primary);
   z-index: 1;
@@ -38,7 +38,7 @@ export const WrapTabCon = styled.div`
   display: block;
   text-align: center;
   & > span {
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     margin: 0 10px;
     line-height: 48px;
     display: inline-block;
@@ -54,7 +54,7 @@ export const WrapTabCon = styled.div`
   }
 `;
 export const WrapOpenPortalBtn = styled.div`
-  padding: 0 14px 0 8px;
+  padding: 0 14px 0 var(--space-2);
   line-height: 34px;
   height: 34px;
   background: var(--color-primary-transparent);
@@ -80,7 +80,7 @@ export const WrapPop = styled.div`
     width: 100%;
   }
   .con {
-    padding: 24px;
+    padding: var(--space-6);
     line-height: 26px;
     h6 {
       font-size: 15px;
@@ -104,11 +104,11 @@ export const WrapPop = styled.div`
       }
     }
     .btn {
-      margin-top: 16px;
+      margin-top: var(--space-4);
       line-height: 36px;
       background: var(--color-primary);
       border-radius: var(--radius-sm);
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       color: var(--color-white);
       font-weight: 600;
       &:hover {
@@ -118,7 +118,7 @@ export const WrapPop = styled.div`
     .helpPortal {
       line-height: 36px;
       float: right;
-      margin-top: 16px;
+      margin-top: var(--space-4);
       font-weight: 500;
     }
   }

@@ -19,7 +19,7 @@ import { getPageConfig } from '../utils';
 import PictureSelect from './components/PictureSelect';
 
 const Con = styled.div`
-  padding: 0 24px;
+  padding: 0 var(--space-6);
   width: 640px;
   .customImgWrap {
     width: 90px;
@@ -65,7 +65,7 @@ const Con = styled.div`
   }
 `;
 const Close = styled.span`
-  font-size: 18px;
+  font-size: var(--font-xl);
   color: var(--color-text-tertiary);
   cursor: pointer;
 `;
@@ -78,7 +78,7 @@ const ThemeColorWrapper = styled.ul`
     position: relative;
     width: 30px;
     height: 30px;
-    margin: 0 12px 12px 0;
+    margin: 0 var(--space-3) var(--space-3) 0;
     line-height: 30px;
     text-align: center;
     border-radius: 50%;
@@ -97,7 +97,7 @@ const ThemeColorWrapper = styled.ul`
     }
     & > .icon {
       color: var(--color-white);
-      font-size: 18px;
+      font-size: var(--font-xl);
       line-height: 30px;
     }
     &.isLight {
@@ -120,7 +120,7 @@ const UploadBtn = styled(CustomButton)`
     position: relative;
     top: 3px;
     margin-right: 7px;
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
 `;
 
@@ -135,7 +135,7 @@ const LayoutSettingWrap = styled.div`
   .layoutRadio.ming.Radio {
     line-height: 1;
     .Radio-text {
-      font-size: 13px !important;
+      font-size: var(--font-sm) !important;
       font-weight: bold !important;
     }
     .Radio-box {
@@ -148,7 +148,7 @@ const LayoutSettingWrap = styled.div`
   .explainImg {
     width: 120px;
     height: auto;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
     border-radius: var(--radius-sm);
     &:hover {
       box-shadow: var(--shadow-sm);
@@ -373,7 +373,7 @@ class AppearanceConfig extends React.Component<any, any> {
             {this.renderCustomColor(theme)}
             <Hr />
             <div className="flexRow">
-              <H3 className="flex" style={{ margin: '4px 0' }}>
+              <H3 className="flex" style={{ margin: 'var(--space-1) 0' }}>
                 {_l('封面图片')}
               </H3>
               <ClearCover height="28" borderRadius="14" onClick={() => this.handleChangePageConfig({ cover: '' })}>

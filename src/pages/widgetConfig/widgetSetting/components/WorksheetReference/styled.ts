@@ -8,7 +8,7 @@ export const ReferenceWrap = styled.div`
 
   .infoContent {
     background: var(--color-yellow-black);
-    padding: 16px 20px;
+    padding: var(--space-4) var(--space-5);
     span {
       word-break: keep-all;
     }
@@ -18,7 +18,7 @@ export const ReferenceWrap = styled.div`
     width: 216px;
     border-right: 1px solid var(--color-border-primary);
     box-sizing: border-box;
-    padding: 12px;
+    padding: var(--space-3);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -27,7 +27,7 @@ export const ReferenceWrap = styled.div`
       line-height: 32px;
       border-radius: var(--radius-sm);
       cursor: pointer;
-      padding: 0 8px;
+      padding: 0 var(--space-2);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -49,7 +49,7 @@ export const ReferenceWrap = styled.div`
     flex-direction: column;
     background: var(--color-background-secondary);
     .navDesc {
-      padding: 12px 0;
+      padding: var(--space-3) 0;
     }
     .subnavContainer {
       height: 43px;
@@ -57,9 +57,9 @@ export const ReferenceWrap = styled.div`
       box-sizing: border-box;
       display: flex;
       align-items: center;
-      padding: 0 20px;
+      padding: 0 var(--space-5);
       .subnavItem {
-        padding: 0 12px;
+        padding: 0 var(--space-3);
         color: var(--color-text-secondary);
         line-height: 42px;
         cursor: pointer;
@@ -78,7 +78,7 @@ export const ReferenceWrap = styled.div`
       min-height: 0;
       display: flex;
       flex-direction: column;
-      padding: 0 20px;
+      padding: 0 var(--space-5);
       .emptyContent {
         height: 100%;
         width: 100%;
@@ -91,7 +91,7 @@ export const ReferenceWrap = styled.div`
         width: 100%;
         height: auto;
         margin-bottom: 10px;
-        padding: 12px 16px;
+        padding: var(--space-3) var(--space-4);
         box-sizing: border-box;
         background: var(--color-background-primary);
         border-radius: var(--radius-sm);
@@ -138,7 +138,7 @@ export const ReferenceWrap = styled.div`
 export const ExtraTime = styled.span`
   display: inline-block;
   width: 125px;
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: normal;
   text-align: right;
   color: var(--color-text-tertiary);

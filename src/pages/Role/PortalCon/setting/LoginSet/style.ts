@@ -9,7 +9,7 @@ export const Wrap = styled.div`
   height: calc(100% - 100px);
   overflow: hidden;
   .content {
-    padding: 24px;
+    padding: var(--space-6);
     height: calc(100% - 68px);
     overflow: auto;
   }
@@ -47,7 +47,7 @@ export const Wrap = styled.div`
         line-height: 62px;
       }
       span {
-        font-size: 16px;
+        font-size: var(--font-lg);
         vertical-align: top;
         display: inline-block;
         line-height: 64px;
@@ -83,10 +83,10 @@ export const Wrap = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
-    margin-top: 16px;
+    margin-top: var(--space-4);
     height: 36px;
     .contentText {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-title);
     }
     .ming.Slider {
@@ -99,12 +99,12 @@ export const Wrap = styled.div`
       margin-left: 2px;
       height: 36px;
       line-height: 36px;
-      padding: 0 8px;
+      padding: 0 var(--space-2);
       border: 1px solid transparent;
       border-radius: var(--radius-sm);
       background: var(--color-background-secondary);
       color: var(--color-text-primary);
-      font-size: 13px;
+      font-size: var(--font-sm);
       text-align: center;
       flex-shrink: 0;
       &:focus {
@@ -167,7 +167,7 @@ export const Wrap = styled.div`
   .bgTypeUl {
     .bgTypeUlLi {
       height: 36px;
-      padding: 0 20px;
+      padding: 0 var(--space-5);
       background: var(--color-background-primary);
       border: 1px solid var(--color-background-secondary);
       border-radius: 0px var(--radius-sm) var(--radius-sm) 0px;
@@ -203,11 +203,11 @@ export const Wrap = styled.div`
     .check {
       color: var(--color-white);
       vertical-align: middle;
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
   }
   .upload_imageBg {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     background: var(--color-primary-transparent);
     border-radius: 6px;
     color: var(--color-primary);
@@ -281,7 +281,7 @@ export const WrapCon = styled.div`
     }
   }
   &.isCenterCon {
-    padding: 32px 32px 40px;
+    padding: var(--space-8) var(--space-8) 40px;
     width: 320px;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
     border-radius: var(--radius-sm);
@@ -291,7 +291,7 @@ export const WrapCon = styled.div`
     transform: translate(-50%, -50%);
   }
   .pageTitleDeme {
-    font-size: 16px;
+    font-size: var(--font-lg);
     font-weight: 600;
   }
 

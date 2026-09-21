@@ -29,13 +29,13 @@ const AllWidgetsWrap = styled.div`
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     border-bottom: 1px solid var(--color-border-primary);
     input {
       line-height: 36px;
       border: none;
       outline: none;
-      padding-left: 8px;
+      padding-left: var(--space-2);
     }
     + div {
       border: none !important;
@@ -53,18 +53,18 @@ const AllWidgetsWrap = styled.div`
     overflow: auto;
   }
   .title {
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: bold;
     border-top: 1px solid var(--color-border-primary);
     line-height: 30px;
-    padding-left: 16px;
+    padding-left: var(--space-4);
     padding-top: 6px;
     color: var(--color-text-tertiary);
   }
   .emptyText {
-    margin: 20px 0 32px 0;
+    margin: var(--space-5) 0 var(--space-8) 0;
     color: var(--color-text-tertiary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     text-align: center;
     line-height: unset;
   }
@@ -88,7 +88,7 @@ const WidgetInfo = styled.div`
     display: flex;
     align-items: center;
     flex: 1;
-    margin-right: 16px;
+    margin-right: var(--space-4);
     line-height: 36px;
     &:hover {
       border-color: var(--color-primary);
@@ -96,7 +96,7 @@ const WidgetInfo = styled.div`
 
     .name {
       flex: 1;
-      padding-left: 12px;
+      padding-left: var(--space-3);
     }
   }
   .iconOption {
@@ -108,7 +108,7 @@ const WidgetInfo = styled.div`
   }
 `;
 const ControlsWrap = styled.div`
-  margin-top: 8px;
+  margin-top: var(--space-2);
   display: flex;
   line-height: 36px;
   color: var(--color-primary);
@@ -117,7 +117,7 @@ const ControlsWrap = styled.div`
     color: var(--color-link-hover);
   }
   align-items: center;
-  padding-left: 12px;
+  padding-left: var(--space-3);
   cursor: pointer;
   span {
     margin-left: 6px;
@@ -135,7 +135,7 @@ const ConfigureWrap = styled.div`
   max-height: 440px;
   overflow-x: hidden;
   margin-right: -8px;
-  padding-right: 8px;
+  padding-right: var(--space-2);
 `;
 
 const getFilterData = value => {

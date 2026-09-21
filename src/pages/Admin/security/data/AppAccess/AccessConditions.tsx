@@ -7,7 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { ACCESS_CONDITION_ENUM, DEVICE_ENUM, YES_NO_ENUM } from '../enum';
 
 const AccessConditionsWrap = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   .keyInput {
     width: 130px;
   }

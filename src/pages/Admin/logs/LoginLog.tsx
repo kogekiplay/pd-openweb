@@ -19,7 +19,7 @@ import { LOGIN_FAIL_REASON, LOGIN_LOG_COLUMNS } from './enum';
 
 const LoginLogWrap = styled.div`
   .tipInfo {
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 36px;
     font-weight: 400;
   }

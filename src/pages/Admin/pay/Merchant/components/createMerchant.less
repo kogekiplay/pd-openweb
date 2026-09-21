@@ -32,10 +32,10 @@
     z-index: 1;
     left: 0;
     color: var(--color-white);
-    padding: 3px 8px;
+    padding: 3px var(--space-2);
     white-space: nowrap;
     background: var(--color-error);
-    font-size: 12px;
+    font-size: var(--font-xs);
     right: 0;
     max-width: fit-content;
   }
@@ -59,14 +59,14 @@
     max-height: 36px !important;
     min-height: 36px !important;
     overflow: hidden !important;
-    padding: 6px 12px !important;
+    padding: 6px var(--space-3) !important;
   }
   .noBindWeiXin {
     display: inline-block;
     height: 36px;
     line-height: 36px;
     background: var(--color-background-secondary);
-    padding: 0 30px 0 16px;
+    padding: 0 30px 0 var(--space-4);
     border-radius: 6px;
   }
   .submit.ming.Button--disabled {
@@ -93,7 +93,7 @@
   background: var(--color-background-secondary);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
-  padding: 14px 16px 4px 20px;
+  padding: 14px var(--space-4) var(--space-1) var(--space-5);
   align-items: center;
   .icon-edit {
     right: 16px;
@@ -102,5 +102,5 @@
 }
 
 .secretScrollDialog .mui-dialog-footer {
-  padding: 10px 34px 20px 24px !important;
+  padding: 10px 34px var(--space-5) var(--space-6) !important;
 }

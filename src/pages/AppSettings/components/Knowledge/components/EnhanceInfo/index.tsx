@@ -10,8 +10,8 @@ const EnhanceInfoBtn = styled.div`
   color: var(--color-text-primary);
   cursor: pointer;
   .icon {
-    margin-right: 4px;
-    font-size: 16px;
+    margin-right: var(--space-1);
+    font-size: var(--font-lg);
     color: var(--color-mingo);
   }
 `;

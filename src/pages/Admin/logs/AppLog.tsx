@@ -13,7 +13,7 @@ const AppLogWrap = styled.div`
   flex-direction: column;
   border-radius: var(--radius-sm);
   .tipInfo {
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 36px;
     font-weight: 400;
   }

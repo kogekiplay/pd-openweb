@@ -53,12 +53,12 @@ const ActionWrap = styled.div`
   .act {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
     cursor: pointer;
     .icon {
       color: var(--color-text-tertiary);
-      font-size: 18px;
+      font-size: var(--font-xl);
     }
     &:hover {
       color: var(--color-primary);

@@ -5,7 +5,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 
 const HeaderRange = styled.div`
   display: block;
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-6);
   font-weight: bold;
   border-bottom: 1px solid var(--color-border-secondary);
   .ming.icon-close {
@@ -23,7 +23,7 @@ const RangeBox = styled.div`
   box-shadow: var(--shadow-lg);
   box-sizing: border-box;
   line-height: 1;
-  font-size: 14px;
+  font-size: var(--font-md);
   transition: all 0.3s;
   animation-name: fadeInUp;
   animation-duration: 0.3s;
@@ -47,12 +47,12 @@ const RangeBox = styled.div`
     }
   }
   .con {
-    padding: 24px;
+    padding: var(--space-6);
     h5 {
       margin: 0;
       line-height: 1;
-      margin-bottom: 20px;
-      font-size: 14px;
+      margin-bottom: var(--space-5);
+      font-size: var(--font-md);
     }
     .Radio-text {
       font-weight: initial;
@@ -60,7 +60,7 @@ const RangeBox = styled.div`
     }
   }
   .dropOptionTrigger {
-    padding: 24px;
+    padding: var(--space-6);
     max-height: 260px;
     overflow: auto;
   }

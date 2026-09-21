@@ -15,7 +15,7 @@ const InputWrap = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
   padding-right: 10px;
   border-bottom: 1px solid --color-background-disabled;
   input {
@@ -23,7 +23,7 @@ const InputWrap = styled.div`
     flex: 1;
     border: none;
     outline: none;
-    padding-left: 8px;
+    padding-left: var(--space-2);
   }
 `;
 

@@ -9,14 +9,14 @@ import { dialogSelectApp } from 'ming-ui/functions';
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-6);
   width: 100%;
   min-height: 0;
   border-radius: 8px;
   overflow-y: auto;
   border: 1px dashed var(--color-border-secondary);
   box-sizing: border-box;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   flex: 1;
   padding: 40px 58px;
   .UpgradeSelectAppItem {
@@ -26,7 +26,7 @@ const Wrap = styled.div`
     .box {
       width: 310px;
       height: 72px;
-      padding: 16px;
+      padding: var(--space-4);
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -75,10 +75,10 @@ const SelectWrap = styled.ul`
   background: var(--color-background-card);
   box-shadow: var(--shadow-sm);
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
   li {
-    padding: 10px 20px;
+    padding: 10px var(--space-5);
     cursor: pointer;
     &:not(.disabled):hover {
       color: var(--color-primary);

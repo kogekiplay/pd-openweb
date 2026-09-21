@@ -8,7 +8,7 @@ const ChangeRoleDialogWrap = styled.div`
   display: flex;
   & > span {
     line-height: 36px;
-    margin-right: 16px;
+    margin-right: var(--space-4);
   }
   .topActDrop {
     flex-shrink: 0;

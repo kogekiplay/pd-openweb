@@ -22,7 +22,7 @@ const SelectInfoWrap = styled.div`
       border-color: var(--color-primary);
     }
     .text {
-      margin: 6px 0 0 12px;
+      margin: 6px 0 0 var(--space-3);
       line-height: 22px;
     }
   }
@@ -34,7 +34,7 @@ const SelectInfoWrap = styled.div`
     margin: 6px 6px 0 6px;
     background-color: var(--color-border-secondary);
     border-radius: var(--radius-sm);
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     .countryName {
       margin: 0 6px;
     }

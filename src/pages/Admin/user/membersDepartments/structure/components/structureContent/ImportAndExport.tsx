@@ -22,7 +22,7 @@ const ImportBtn = styled.div`
   color: var(--color-white);
   height: 36px;
   line-height: 36px;
-  margin: 44px auto 24px;
+  margin: 44px auto var(--space-6);
   text-align: center;
   width: 193px;
   cursor: ${props => (props.notAllowed ? 'not-allowed' : 'pointer')};

@@ -18,7 +18,7 @@ export const PortalBarWrap = styled.div`
     border: 1px solid var(--color-border-primary);
     border-left: none;
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: var(--color-text-tertiary);
     line-height: 30px;
     padding: 0 6px;
@@ -53,7 +53,7 @@ export const PortalBarWrap = styled.div`
           line-height: 34px;
           box-sizing: border-box;
           vertical-align: top;
-          padding: 0 12px;
+          padding: 0 var(--space-3);
           border-radius: var(--radius-sm);
           &:-ms-input-placeholder {
             color: var(--color-text-placeholder) !important;
@@ -83,7 +83,7 @@ export const Popup = styled.div`
   box-shadow: var(--shadow-lg);
   .searchWrapper {
     border-bottom: 1px solid var(--color-border-secondary);
-    margin: 8px 16px 0;
+    margin: var(--space-2) var(--space-4) 0;
     display: flex;
     height: 38px;
     line-height: 38px;
@@ -109,7 +109,7 @@ export const Popup = styled.div`
       height: 10px;
     }
     .widgetList {
-      padding: 8px 16px;
+      padding: var(--space-2) var(--space-4);
       &:hover {
         background: var(--color-background-hover);
         border-radius: var(--radius-sm);
@@ -142,9 +142,9 @@ export const Popup = styled.div`
 export const ClearIcon = styled.i`
   position: absolute;
   right: 0;
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-text-tertiary);
-  margin-right: 8px;
+  margin-right: var(--space-2);
   cursor: pointer;
   &:hover {
     color: var(--color-text-secondary);

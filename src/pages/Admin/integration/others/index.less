@@ -12,13 +12,13 @@
 //首页
 .toolContentBox {
   .toolItem {
-    padding: 24px 0;
+    padding: var(--space-6) 0;
     box-sizing: border-box;
     border-bottom: 1px solid var(--color-border-secondary);
     display: flex;
     .toolItemLabel {
       width: 182px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-title);
     }
     .toolItemRight {
@@ -28,8 +28,8 @@
       flex-direction: column;
       .toolItemDescribe {
         color: var(--color-text-tertiary);
-        font-size: 13px;
-        margin-top: 8px;
+        font-size: var(--font-sm);
+        margin-top: var(--space-2);
       }
       .customNameWrap {
         .name {
@@ -51,7 +51,7 @@
     color: var(--color-text-title);
     font-size: 15px;
     font-weight: 600;
-    margin: 25px 0 32px;
+    margin: 25px 0 var(--space-8);
   }
   label {
     span {
@@ -90,7 +90,7 @@
       line-height: 36px;
       display: flex;
       .minus {
-        font-size: 18px;
+        font-size: var(--font-xl);
         line-height: 36px;
         color: var(--color-text-disabled);
         &:hover {
@@ -104,21 +104,21 @@
     width: 100%;
     height: 1px;
     background: var(--color-border-secondary);
-    margin-top: 20px;
+    margin-top: var(--space-5);
   }
   .formItem {
     display: flex;
     color: var(--color-text-title);
-    font-size: 13px;
-    margin-bottom: 16px;
+    font-size: var(--font-sm);
+    margin-bottom: var(--space-4);
     .formLabel {
       width: 140px;
       text-align: left;
-      margin-right: 8px;
-      margin-top: 8px;
+      margin-right: var(--space-2);
+      margin-top: var(--space-2);
       &.width135 {
         width: 135px;
-        margin-right: 20px;
+        margin-right: var(--space-5);
       }
     }
     .formRight {
@@ -140,8 +140,8 @@
         }
         .formItemDesc {
           color: var(--color-text-tertiary);
-          font-size: 12px;
-          margin-left: 16px;
+          font-size: var(--font-xs);
+          margin-left: var(--space-4);
         }
       }
       &.directionRow {
@@ -149,7 +149,7 @@
       }
     }
     .errorMsg {
-      padding-top: 4px;
+      padding-top: var(--space-1);
       height: 25px;
       color: var(--color-error);
     }

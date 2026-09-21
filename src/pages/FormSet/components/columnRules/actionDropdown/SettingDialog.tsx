@@ -11,9 +11,9 @@ const SectionConfirmWrap = styled.div`
   flex-direction: column;
   .title {
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-title);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
     &.labelBetween {
       display: flex;
       justify-content: space-between;

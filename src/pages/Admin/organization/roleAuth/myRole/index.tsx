@@ -13,7 +13,7 @@ const Wrap = styled.div`
   flex-direction: column;
   .roleAuthHeader {
     height: 56px;
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -31,8 +31,8 @@ const Wrap = styled.div`
         display: flex;
         align-items: center;
         border-bottom: 2px solid transparent;
-        margin-right: 4px;
-        padding: 0 16px;
+        margin-right: var(--space-1);
+        padding: 0 var(--space-4);
         &:hover {
           background-color: var(--color-background-hover);
         }

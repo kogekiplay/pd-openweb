@@ -53,9 +53,9 @@ const Erweima = styled.div`
 const Description = styled.div`
   background: color-mix(in srgb, var(--color-primary) 5%, transparent);
   border-radius: var(--radius-sm);
-  padding: 8px 10px;
+  padding: var(--space-2) 10px;
   color: var(--color-text-tertiary);
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   color: var(--color-text-title);
 `;
 

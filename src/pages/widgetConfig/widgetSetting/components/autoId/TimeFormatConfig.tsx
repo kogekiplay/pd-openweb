@@ -11,7 +11,7 @@ const TimeFormatConfigWrap = styled.div`
     color: var(--color-text-secondary);
   }
   .hint {
-    margin-top: 12px;
+    margin-top: var(--space-3);
     color: var(--color-text-secondary);
     &.invalid {
       color: var(--color-error);
@@ -19,7 +19,7 @@ const TimeFormatConfigWrap = styled.div`
   }
   .footerBtn {
     text-align: right;
-    margin-top: 32px;
+    margin-top: var(--space-8);
   }
 `;
 

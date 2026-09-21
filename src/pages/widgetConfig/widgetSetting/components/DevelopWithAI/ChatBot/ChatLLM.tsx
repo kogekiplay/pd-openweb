@@ -22,16 +22,16 @@ const Container = styled.div`
   flex-direction: column;
   background-color: var(--color-background-primary);
   height: 100%;
-  padding-top: 12px;
+  padding-top: var(--space-3);
   .code-card {
     margin-bottom: 10px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     width: 260px;
     background-color: var(--color-background-primary);
     border-radius: 8px;
     box-shadow: inset 0 0 0 2px rgba(189, 189, 189, 0.2);
     position: relative;
-    padding: 10px 20px;
+    padding: 10px var(--space-5);
     .title {
       font-weight: bold;
       color: var(--color-text-title);
@@ -64,7 +64,7 @@ const MessageWrapper = styled.div`
 const Message = styled.div`
   display: flex;
   gap: 10px;
-  margin: 10px 0 16px;
+  margin: 10px 0 var(--space-4);
   cursor: ${props => (props.loading ? 'default' : 'pointer')};
   // &.active {
   //   border: 1px solid var(--color-primary);
@@ -83,7 +83,7 @@ const Avatar = styled.div`
   flex-shrink: 0;
   overflow: hidden;
   .icon-ai1 {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-white);
   }
   img {
@@ -99,14 +99,14 @@ const TextContainer = styled.div`
 
 const InputContainer = styled.div`
   position: relative;
-  padding-top: 12px;
+  padding-top: var(--space-3);
 `;
 
 const InputWrapper = styled.div`
   position: relative;
   margin: 0 17px;
   font-size: 0px;
-  padding: 4px 0;
+  padding: var(--space-1) 0;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   &.focused {
@@ -116,10 +116,10 @@ const InputWrapper = styled.div`
 
 const Input = styled(AutoHeightInput)`
   width: 100%;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   border: none;
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--font-sm);
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -134,13 +134,13 @@ const Input = styled(AutoHeightInput)`
 const SendTools = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 6px 12px;
+  padding: 6px var(--space-3);
 `;
 
 const SendButton = styled.div`
   cursor: pointer;
   color: var(--color-primary);
-  font-size: 20px;
+  font-size: var(--font-2xl);
   line-height: 1em;
   &.disabled {
     color: var(--color-text-placeholder);
@@ -187,7 +187,7 @@ const ScrollToBottomButton = styled.div`
   margin-top: -40px;
   position: absolute;
   right: 17px;
-  font-size: 18px;
+  font-size: var(--font-xl);
   color: var(--color-text-title);
   width: 30px;
   height: 30px;

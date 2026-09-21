@@ -6,7 +6,7 @@ import { Input, Textarea } from 'ming-ui';
 
 const Con = styled.div(
   ({ active }) => `
-  padding: 10px 20px;
+  padding: 10px var(--space-5);
   white-space: pre-line;
   ${active ? 'background: var(--color-background-secondary)' : ''}
   :hover { background: var(--color-background-secondary) }

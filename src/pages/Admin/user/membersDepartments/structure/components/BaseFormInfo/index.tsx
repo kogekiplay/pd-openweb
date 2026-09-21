@@ -29,12 +29,12 @@ const SelectWrap = styled(Select)`
 const RoleTagsWrap = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   flex-wrap: wrap;
   .roleTag {
     background: var(--color-border-secondary);
     border-radius: 12px 12px 12px 12px;
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     height: 24px;
     line-height: 24px;
     display: inline-block;
@@ -49,7 +49,7 @@ const DelIconWrap = styled.div`
   height: 20px;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  margin-left: 8px;
+  margin-left: var(--space-2);
   &:hover {
     background: var(--color-background-hover);
     i {

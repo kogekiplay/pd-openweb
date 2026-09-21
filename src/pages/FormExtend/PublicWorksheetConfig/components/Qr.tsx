@@ -9,10 +9,10 @@ const Con = styled.div(
 );
 const Tip = styled.div`
   text-align: center;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
   line-height: 1em;
-  margin: 8px 0 -2px;
+  margin: var(--space-2) 0 -2px;
 `;
 const Bulge = styled.span(
   ({ width }) => `

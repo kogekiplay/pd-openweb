@@ -21,7 +21,7 @@ const Wrap = styled.div`
     left: 0;
     width: 180px;
     padding: 6px 0;
-    font-size: 13px;
+    font-size: var(--font-sm);
     background: var(--color-background-card);
     max-height: 189px;
     overflow-y: scroll;

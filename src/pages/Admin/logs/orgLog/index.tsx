@@ -23,7 +23,7 @@ const FlexWrap = styled.div`
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  padding: 0 32px;
+  padding: 0 var(--space-8);
 `;
 
 export default class orgLog extends React.Component<any, any> {

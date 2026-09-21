@@ -26,10 +26,10 @@ const SelectIcon = styled.div`
   border-radius: var(--radius-sm);
   cursor: pointer;
   position: relative;
-  margin-right: 4px;
+  margin-right: var(--space-1);
   .hoverMask {
     display: none;
-    font-size: 16px;
+    font-size: var(--font-lg);
   }
   .text {
     color: ${props => (props.textColor >= 192 ? 'var(--color-text-title)' : '#fff')};

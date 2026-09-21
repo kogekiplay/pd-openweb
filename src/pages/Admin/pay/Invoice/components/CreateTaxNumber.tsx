@@ -27,9 +27,9 @@ const DivideLine = styled.div`
 const Description = styled.div`
   background: color-mix(in srgb, var(--color-primary) 5%, transparent);
   border-radius: var(--radius-sm);
-  padding: 8px 10px;
+  padding: var(--space-2) 10px;
   color: var(--color-text-tertiary);
-  margin-bottom: 32px;
+  margin-bottom: var(--space-8);
   color: var(--color-text-title);
 `;
 
@@ -45,15 +45,15 @@ const StepContentWrap = styled.div`
   .formLabelText {
     font-weight: 600;
     color: var(--color-text-secondary);
-    margin: 20px 0 6px;
+    margin: var(--space-5) 0 6px;
     .required {
       color: var(--color-error);
       font-weight: bold;
-      font-size: 14px;
+      font-size: var(--font-md);
     }
   }
   .tips {
-    font-size: 12px;
+    font-size: var(--font-xs);
     margin-top: 10px;
     color: var(--color-text-disabled);
   }
@@ -65,7 +65,7 @@ const StepContentWrap = styled.div`
     background: var(--color-background-secondary);
     border: 1px solid var(--color-border-secondary);
     color: var(--color-primary);
-    padding-left: 12px;
+    padding-left: var(--space-3);
     cursor: pointer;
     &:hover {
       color: var(--color-link-hover);
@@ -81,14 +81,14 @@ const StepContentWrap = styled.div`
   .line {
     height: 1px;
     background: var(--color-background-disabled);
-    margin: 10px 0 20px;
+    margin: 10px 0 var(--space-5);
   }
   .secretWrap {
     width: 50%;
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
-    padding: 14px 16px 4px 20px;
+    padding: 14px var(--space-4) var(--space-1) var(--space-5);
     align-items: center;
     .icon-edit {
       right: 16px;

@@ -48,7 +48,7 @@ const FlexWrap = styled.div`
 `;
 const TabWrap = styled.div`
   height: 56px;
-  padding: 0 24px 0 8px;
+  padding: 0 var(--space-6) 0 var(--space-2);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -67,8 +67,8 @@ const TabWrap = styled.div`
     font-size: 17px;
     font-weight: 600;
     border-bottom: 2px solid transparent;
-    margin-right: 4px;
-    padding: 0 16px;
+    margin-right: var(--space-1);
+    padding: 0 var(--space-4);
     cursor: pointer;
     &:hover {
       background-color: var(--color-background-hover);
@@ -112,7 +112,7 @@ const Box = styled.div`
   background: var(--color-yellow-black);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-warning-border);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
 `;
 const AvatarWrap = styled.div`
   width: 24px;

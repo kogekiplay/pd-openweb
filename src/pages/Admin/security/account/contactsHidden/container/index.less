@@ -27,12 +27,12 @@
     line-height: 40px;
     border-radius: 11px;
     display: inline-block;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     padding: 0 15px;
 
     .delete {
       display: none;
-      font-size: 24px;
+      font-size: var(--font-3xl);
     }
 
     &.active,
@@ -56,7 +56,7 @@
 
     .fullname {
       color: var(--color-text-title);
-      font-size: 13px;
+      font-size: var(--font-sm);
       margin-left: 10px;
       display: inline-block;
       vertical-align: middle;
@@ -71,7 +71,7 @@
       vertical-align: middle;
       background: var(--color-border-secondary);
       color: var(--color-primary);
-      font-size: 12px;
+      font-size: var(--font-xs);
       line-height: 24px;
       text-align: center;
       &.orgRoleIcon {
@@ -106,7 +106,7 @@
       box-sizing: border-box;
 
       li {
-        padding: 0 24px;
+        padding: 0 var(--space-6);
 
         &:hover {
           background: var(--color-border-secondary);
@@ -116,24 +116,24 @@
   }
 
   .whitelist {
-    padding: 24px 0;
-    margin: 24px 15px 0;
+    padding: var(--space-6) 0;
+    margin: var(--space-6) 15px 0;
     border-top: 1px solid var(--color-border-secondary);
   }
 
   .con {
     .conBox {
       & > div {
-        padding: 32px 0 0;
+        padding: var(--space-8) 0 0;
         .ruleItem {
           border-bottom: 1px solid var(--color-border-secondary);
-          margin-bottom: 24px;
-          padding-bottom: 32px;
+          margin-bottom: var(--space-6);
+          padding-bottom: var(--space-8);
         }
         .rulesBox {
-          margin: 24px 0 0;
+          margin: var(--space-6) 0 0;
           border: 1px solid var(--color-border-secondary);
-          padding: 24px 8px;
+          padding: var(--space-6) var(--space-2);
           box-sizing: border-box;
           position: relative;
           display: flex;
@@ -157,7 +157,7 @@
             text-align: right;
             display: inline-flex;
             cursor: pointer;
-            font-size: 13px;
+            font-size: var(--font-sm);
             color: var(--color-primary);
 
             &:hover {
@@ -171,13 +171,13 @@
 
   .editCon {
     p {
-      margin-top: 32px;
+      margin-top: var(--space-8);
     }
 
     .listCon {
-      margin: 16px 0 0;
+      margin: var(--space-4) 0 0;
       border: 1px solid var(--color-border-secondary);
-      padding: 24px 8px;
+      padding: var(--space-6) var(--space-2);
       box-sizing: border-box;
       position: relative;
     }
@@ -195,11 +195,11 @@
       line-height: 28px;
       background: var(--color-primary);
       border-radius: 14px;
-      margin-top: 32px;
+      margin-top: var(--space-8);
       color: var(--color-white);
       display: inline-block;
       cursor: pointer;
-      margin-left: 24px;
+      margin-left: var(--space-6);
       text-align: center;
 
       &.disable {

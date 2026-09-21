@@ -20,9 +20,9 @@ import { TaxSettingDialog } from './TaxSetting';
 const ExplainWrap = styled.div`
   background: var(--color-primary-transparent);
   border-radius: var(--radius-sm);
-  font-size: 13px;
-  padding: 12px;
-  margin-bottom: 8px;
+  font-size: var(--font-sm);
+  padding: var(--space-3);
+  margin-bottom: var(--space-2);
 `;
 
 const TaxNumber = forwardRef((props, ref) => {

@@ -11,7 +11,7 @@ import EditInput from './EditInput';
 
 const ControlTag = styled.div`
   line-height: 24px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-radius: 16px;
   background: #d8eeff;
   color: var(--color-link-hover);
@@ -63,11 +63,11 @@ const NodeTagTextarea = props => {
           open={formulaMapVisible}
           onOpenChange={visible => setFormulaMapVisible(visible)}
           placement="bottomRight"
-          popupRender={() => <Menu style={{ width: 180, padding: '8px 0' }}>
+          popupRender={() => <Menu style={{ width: 180, padding: 'var(--space-2) 0' }}>
               {formulaMapList.map(data => (
                 <Menu.Item
                   key={data.id}
-                  style={{ padding: '7px 12px' }}
+                  style={{ padding: '7px var(--space-3)' }}
                   onClick={() => {
                     if (tagTextareaRef.current) {
                       tagTextareaRef.current.insertColumnTag(data.id);

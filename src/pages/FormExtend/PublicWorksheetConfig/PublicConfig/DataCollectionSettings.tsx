@@ -20,7 +20,7 @@ const { RangePicker } = DatePicker;
 
 const CustomPeriodDropdown = styled(Dropdown)`
   width: 110px;
-  margin-right: 20px;
+  margin-right: var(--space-5);
   &.ming.Dropdown .Dropdown--border,
   .dropdownTrigger .Dropdown--border {
     height: 32px;
@@ -93,7 +93,7 @@ const MonthDropdownItem = styled.div`
 
 const DaySelectContainer = styled.div`
   width: 320px;
-  padding: 12px 13px;
+  padding: var(--space-3) 13px;
   background: var(--color-background-primary);
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.16);
   border-radius: 6px;
@@ -105,7 +105,7 @@ const DaySelectContainer = styled.div`
     height: 26px;
     line-height: 26px;
     border-radius: var(--radius-sm);
-    margin: 0 8px 8px 8px;
+    margin: 0 var(--space-2) var(--space-2) var(--space-2);
     border: 1px solid transparent;
     cursor: pointer;
 
@@ -160,13 +160,13 @@ const NoExpandSelect = styled.div`
   align-items: center;
   width: 320px;
   height: 32px;
-  padding: 5px 5px 5px 12px;
+  padding: 5px 5px 5px var(--space-3);
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);
   box-sizing: border-box;
   cursor: pointer;
   i {
-    margin-left: 8px;
+    margin-left: var(--space-2);
     color: var(--color-text-tertiary);
   }
 

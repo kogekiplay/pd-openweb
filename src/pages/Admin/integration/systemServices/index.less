@@ -2,17 +2,17 @@
   .systemServicesContent {
     flex: 1;
     min-height: 0;
-    padding: 24px;
+    padding: var(--space-6);
     box-sizing: border-box;
     overflow-y: auto;
 
     .serviceCardsGrid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: var(--space-3);
 
       @media (min-width: 1600px) {
-        gap: 20px;
+        gap: var(--space-5);
         grid-template-columns: repeat(4, 1fr);
       }
 

@@ -19,7 +19,7 @@ const MultiSelectDrop = styled(CommonDisplay)`
     overflow: hidden;
   }
   .optionItem {
-    margin: 4px 6px 0 0;
+    margin: var(--space-1) 6px 0 0;
   }
 `;
 

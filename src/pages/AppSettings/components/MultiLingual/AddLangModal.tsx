@@ -85,9 +85,9 @@ const AddLangModal = props => {
         </div>
       }
       styles={{ body: {
-        padding: '12px 24px',
+        padding: 'var(--space-3) var(--space-6)',
       }, footer: {
-        padding: '16px',
+        padding: 'var(--space-4)',
       } }}
       size={700}
       open={visible}

@@ -15,7 +15,7 @@ import type { RootState } from 'src/redux/types';
 
 const pageSize = 1000;
 const Wrap = styled.div`
-  padding: 20px 10px 20px 10px;
+  padding: var(--space-5) 10px var(--space-5) 10px;
   .wrapTr:not(.checkBoxTr):not(.optionWrapTr) {
     width: calc(calc(calc(100% - 70px - 38px) / 100) * 15);
   }
@@ -32,7 +32,7 @@ const WrapBar = styled.div`
     background: var(--color-primary);
     border-radius: var(--radius-sm);
     color: var(--color-white);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     display: inline-block;
   }
   .search .roleSearch {

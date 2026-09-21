@@ -10,7 +10,7 @@ import SectionTitle from './SectionTitle';
 
 const PreFillWrap = styled.div`
   justify-content: space-between;
-  padding: 0 16px 0 13px;
+  padding: 0 var(--space-4) 0 13px;
   height: 36px;
   background: var(--color-background-secondary);
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
@@ -25,7 +25,7 @@ const PreFillWrap = styled.div`
 
 const FillDialogWrap = styled(Dialog)`
   .mui-dialog-header {
-    padding: 24px 24px 28px !important;
+    padding: var(--space-6) var(--space-6) 28px !important;
   }
   .fillInput {
     border-color: var(--color-border-primary) !important;

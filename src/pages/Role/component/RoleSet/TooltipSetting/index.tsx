@@ -10,7 +10,7 @@ import OptionSet from './optionSet';
 import SheetSet from './sheetSet';
 
 const Wrap = styled.div`
-  padding: 24px 40px;
+  padding: var(--space-6) 40px;
   width: 880px;
   background: var(--color-background-primary);
   box-shadow: 0px 12px 24px 1px rgba(0, 0, 0, 0.16);
@@ -23,7 +23,7 @@ const Wrap = styled.div`
   .headerCon {
     font-weight: 600;
     font-size: 17px;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
   }
   .tabCon {
     border-bottom: 1px solid var(--color-border-primary);

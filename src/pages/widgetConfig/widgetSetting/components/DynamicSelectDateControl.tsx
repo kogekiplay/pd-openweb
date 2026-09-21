@@ -21,13 +21,13 @@ const DateInfoWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-left: 12px;
+    padding-left: var(--space-3);
     flex: 1;
     min-width: 0;
     height: 36px;
   }
   .clearValue {
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-secondary);
     padding: 0 6px;
     cursor: pointer;

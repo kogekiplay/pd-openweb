@@ -28,9 +28,9 @@ const WHOLE_SIZE = 12;
 const BackBtn = styled.span`
   cursor: pointer;
   font-weight: 700;
-  margin: 16px 0 0;
+  margin: var(--space-4) 0 0;
   display: inline-block;
-  font-size: 13px;
+  font-size: var(--font-sm);
   width: 74px;
   text-align: center;
   line-height: 32px;
@@ -78,7 +78,7 @@ const PayButton = styled.div`
   min-height: 36px;
   line-height: 17px;
   margin-left: 10px;
-  padding: 3px 8px;
+  padding: 3px var(--space-2);
   box-sizing: border-box;
   border-radius: var(--radius-sm);
   color: var(--color-primary);
@@ -101,7 +101,7 @@ const PayButton = styled.div`
 `;
 
 const ColumnSettingWrap = styled.div`
-  padding: 12px 0 20px;
+  padding: var(--space-3) 0 var(--space-5);
   .titleBtn {
     color: var(--color-text-tertiary);
     cursor: pointer;
@@ -337,7 +337,7 @@ class ConfigPanel extends React.Component<any, any> {
                 <ShareUrl
                   theme="light"
                   className="customShareUrl"
-                  style={{ margin: '16px 0', flexDirection: 'column' }}
+                  style={{ margin: 'var(--space-4) 0', flexDirection: 'column' }}
                   showPreview={false}
                   url={shareUrl}
                   showCompletely={{ copy: true, qr: true }}
@@ -378,7 +378,7 @@ class ConfigPanel extends React.Component<any, any> {
             </React.Fragment>
           )}
           {publicConfigVisible && <PublicConfig onClose={() => this.setState({ publicConfigVisible: false })} />}
-          <Hr style={{ margin: '20px -20px 0' }} />
+          <Hr style={{ margin: 'var(--space-5) -20px 0' }} />
           <div>
             <H2 className="mBottom10 Left" style={{ color: 'var(--color-text-secondary)', fontSize: '14px' }}>
               {_l('显示的字段')}
@@ -420,7 +420,7 @@ class ConfigPanel extends React.Component<any, any> {
             {_l('人员、部门、组织角色、自由连接、扩展值的文本字段不能用于公开表单，原表单内的以上字段将被自动隐藏。')}
           </Tip9e>
 
-          <div className="flex minHeight0" style={{ margin: '0 -20px', padding: '0 0 32px' }}>
+          <div className="flex minHeight0" style={{ margin: '0 -20px', padding: '0 0 var(--space-8)' }}>
             <ScrollView>
               {loading && (
                 <div>
@@ -432,7 +432,7 @@ class ConfigPanel extends React.Component<any, any> {
                   />
                 </div>
               )}
-              <div style={{ padding: '0 25px 0 20px' }}>
+              <div style={{ padding: '0 25px 0 var(--space-5)' }}>
                 <ControlList
                   controls={originalControls}
                   hidedControlIds={hidedControlIds}

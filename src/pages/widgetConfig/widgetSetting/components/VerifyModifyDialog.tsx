@@ -10,13 +10,13 @@ const VerifyModifyDialogWrap = styled.div`
     margin: 0;
   }
   .btns {
-    margin-top: 32px;
+    margin-top: var(--space-8);
     text-align: right;
     .Button {
-      padding: 0 20px;
+      padding: 0 var(--space-5);
     }
     .close {
-      margin-right: 16px;
+      margin-right: var(--space-4);
     }
   }
 `;

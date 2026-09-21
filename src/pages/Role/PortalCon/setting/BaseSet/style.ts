@@ -8,7 +8,7 @@ export const Wrap = styled.div`
     width: 130px;
   }
   .content {
-    padding: 24px;
+    padding: var(--space-6);
     height: calc(100% - 68px);
     overflow: auto;
   }
@@ -31,7 +31,7 @@ export const Wrap = styled.div`
   }
   .urlH,
   .urlEnd {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     height: 36px;
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm) 0px 0px var(--radius-sm);
@@ -48,7 +48,7 @@ export const Wrap = styled.div`
   input.domainName {
     width: 200px;
     height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     line-height: 36px;
     background: var(--color-background-primary);
     border-top: 1px solid var(--color-background-secondary);
@@ -63,7 +63,7 @@ export const Wrap = styled.div`
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     line-height: 36px;
     .editFlow {
       color: var(--color-primary);
@@ -76,7 +76,7 @@ export const Wrap = styled.div`
     border-radius: var(--radius-sm);
   }
   .cardSelect {
-    font-size: 12px !important;
+    font-size: var(--font-xs) !important;
     .ant-select-selection-item-remove:hover {
       color: var(--color-primary) !important;
     }
@@ -86,7 +86,7 @@ export const SwitchStyle = styled.div`
   display: inline-block;
   .switchText {
     line-height: 24px;
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .icon {
     vertical-align: middle;

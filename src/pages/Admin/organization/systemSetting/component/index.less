@@ -3,7 +3,7 @@
   // align-items: center;
   // margin-top: 30px;
   color: var(--color-text-title);
-  font-size: 13px;
+  font-size: var(--font-sm);
   &.pTop54 {
     padding-top: 54px;
   }
@@ -34,7 +34,7 @@
     flex-wrap: wrap;
     .homeImage {
       vertical-align: bottom;
-      padding: 4px;
+      padding: var(--space-1);
       border: 2px solid transparent;
     }
   }
@@ -46,7 +46,7 @@
   .set-describe {
     color: var(--color-text-secondary);
     .open-setting-rules-Txt {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-primary);
       cursor: pointer;
     }
@@ -122,7 +122,7 @@
 .sub-domain {
   padding-bottom: 40px;
   .ming.Button--small {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
 
   .ming.Button {
@@ -131,7 +131,7 @@
 }
 .domain-describe {
   color: var(--color-text-tertiary);
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 24px;
 }
 
@@ -148,7 +148,7 @@
     position: absolute;
     top: 10px;
     left: 5px;
-    font-size: 18px;
+    font-size: var(--font-xl);
   }
   .content {
     min-height: 210px;
@@ -216,7 +216,7 @@
 .userManageWorkSite {
   /* itemSearch end */
   .ming.Button--small {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
 
   .ming.Button {
@@ -241,10 +241,10 @@
     background: var(--color-background-secondary);
     // border: 1px solid var(--color-white);
     border-radius: 15px;
-    margin-left: 24px;
+    margin-left: var(--space-6);
 
     .btnSearch {
-      font-size: 20px;
+      font-size: var(--font-2xl);
 
       position: absolute;
 
@@ -265,8 +265,8 @@
   }
 
   .dataView {
-    font-size: 13px;
-    padding: 0 24px;
+    font-size: var(--font-sm);
+    padding: 0 var(--space-6);
     margin-top: 30px;
     box-sizing: border-box;
     .ant-table {
@@ -279,14 +279,14 @@
       thead > tr > th {
         height: 48px;
         background: var(--color-background-primary);
-        padding: 1px 24px 12px 1px;
+        padding: 1px var(--space-6) var(--space-3) 1px;
         box-sizing: border-box;
         color: var(--color-text-secondary);
         font-weight: 600;
       }
       tbody > tr > td {
         height: 48px;
-        padding: 1px 24px 1px 1px;
+        padding: 1px var(--space-6) 1px 1px;
         box-sizing: border-box;
         color: var(--color-text-title);
         border-bottom: none;
@@ -302,17 +302,17 @@
         line-height: unset;
         a {
           display: inline-block;
-          padding: 3px 8px;
+          padding: 3px var(--space-2);
           border: 1px solid var(--color-border-tertiary);
           color: var(--color-text-secondary);
-          font-size: 12px;
+          font-size: var(--font-xs);
           border-radius: var(--radius-sm);
         }
       }
       .ant-pagination-disabled a {
         color: var(--color-text-placeholder);
         border: 1px solid var(--color-white);
-        font-size: 12px;
+        font-size: var(--font-xs);
       }
       .ant-pagination-item {
         height: unset;
@@ -323,11 +323,11 @@
         a {
           color: var(--color-text-secondary);
           display: inline-block;
-          padding: 3px 8px;
+          padding: 3px var(--space-2);
           text-align: center;
           vertical-align: middle;
           border: 1px solid var(--color-white);
-          font-size: 12px;
+          font-size: var(--font-xs);
         }
         a:hover {
           border: 1px solid var(--color-border-tertiary);
@@ -398,7 +398,7 @@
     color: var(--color-error) !important;
   }
   .projectInfoCard {
-    padding: 24px;
+    padding: var(--space-6);
     border-radius: var(--radius-md);
     border: 1px solid var(--color-border-secondary);
   }

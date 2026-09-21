@@ -18,7 +18,7 @@ export const Container = styled.div`
   }
 
   .icon {
-    margin-right: 4px;
+    margin-right: var(--space-1);
     margin-bottom: 2px;
   }
 `;
@@ -26,7 +26,7 @@ export const Container = styled.div`
 export const DropdownPanel = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 4px;
+  padding: var(--space-1);
   width: 300px;
   max-height: 320px;
   box-shadow: var(--shadow-lg);
@@ -42,7 +42,7 @@ export const SearchInputWrapper = styled.div`
     display: flex;
     width: 98%;
     margin: 0 auto 10px;
-    padding: 4px 10px 4px 40px;
+    padding: var(--space-1) 10px var(--space-1) 40px;
     border: none;
     border-bottom: 1px solid var(--color-border-secondary);
   }
@@ -57,7 +57,7 @@ export const SearchInputWrapper = styled.div`
 `;
 
 export const Item = styled.div`
-  padding: 10px 20px;
+  padding: 10px var(--space-5);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -74,19 +74,19 @@ export const Item = styled.div`
   }
   .labelIcon {
     margin-right: 7px;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: var(--color-text-secondary);
   }
   .labelText {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-primary);
   }
   .labelSubIcon {
     margin-left: 5px;
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-primary);
   }
 `;

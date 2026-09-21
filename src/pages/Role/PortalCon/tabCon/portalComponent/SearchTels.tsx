@@ -8,7 +8,7 @@ import * as actions from '../../redux/actions';
 
 const Wrap = styled.div`
   textarea {
-    padding: 12px 30px 12px 12px;
+    padding: var(--space-3) 30px var(--space-3) var(--space-3);
     resize: none;
     width: 432px;
     height: 360px;

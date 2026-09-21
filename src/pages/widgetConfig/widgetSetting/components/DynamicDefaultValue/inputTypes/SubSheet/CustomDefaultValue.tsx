@@ -65,7 +65,7 @@ export default class CustomDefaultValue extends Component<any, any> {
           onClose();
         }}
       >
-        <div style={{ minHeight: 74, margin: '10px 0 12px' }}>
+        <div style={{ minHeight: 74, margin: '10px 0 var(--space-3)' }}>
           <ChildTable
             initRowIsCreate={false}
             enableRules={!isBlankSubList}

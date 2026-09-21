@@ -29,7 +29,7 @@ export const DefaultOptionSetting = styled(SettingItem)`
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    padding: 0 12px 5px 12px;
+    padding: 0 var(--space-3) 5px var(--space-3);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
     min-height: 36px;
@@ -45,14 +45,14 @@ export const DefaultOptionsMenu = styled(DropdownContent)`
   width: 300px;
   .clearDefault {
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     color: var(--color-text-tertiary);
   }
   .optionItem {
     display: flex;
     align-items: center;
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     cursor: pointer;
     transition: background-color 0.25s;
     &:hover {
@@ -66,7 +66,7 @@ export const DefaultOptionsMenu = styled(DropdownContent)`
       flex: 1;
     }
     i {
-      font-size: 18px;
+      font-size: var(--font-xl);
       color: var(--color-primary);
     }
   }

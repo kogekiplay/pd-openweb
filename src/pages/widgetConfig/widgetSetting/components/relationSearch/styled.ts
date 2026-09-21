@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const AddRelate = styled.div`
   .intro {
-    font-size: 14px;
+    font-size: var(--font-md);
     span {
       margin-left: 6px;
       color: var(--color-primary);
@@ -14,7 +14,7 @@ export const AddRelate = styled.div`
     min-height: 300px;
     border: 1px solid var(--color-border-primary);
     border-radius: 8px;
-    padding: 20px 18px;
+    padding: var(--space-5) 18px;
     .relateWarning {
       height: 44px;
       background: var(--color-background-secondary);
@@ -22,14 +22,14 @@ export const AddRelate = styled.div`
       display: flex;
       align-items: center;
       padding: 0 14px;
-      margin-top: 16px;
+      margin-top: var(--space-4);
       &.active {
         background: var(--color-primary-transparent);
         border: 1px solid var(--color-primary);
       }
     }
     .selectItem {
-      margin: 24px 0 6px 0;
+      margin: var(--space-6) 0 6px 0;
     }
   }
   .relateTypeTab {
@@ -68,7 +68,7 @@ export const AddRelate = styled.div`
   }
   .footerBtn {
     text-align: right;
-    margin-top: 32px;
+    margin-top: var(--space-8);
   }
   .existRelateWrap {
     .emptyHint {
@@ -79,7 +79,7 @@ export const AddRelate = styled.div`
       height: 36px;
       display: flex;
       align-items: center;
-      padding: 0px 8px;
+      padding: 0px var(--space-2);
       border-radius: var(--radius-sm);
       cursor: pointer;
       &:hover {
@@ -98,9 +98,9 @@ export const AddRelate = styled.div`
     max-height: 260px;
     overflow: auto;
     .title {
-      margin: 12px 0;
+      margin: var(--space-3) 0;
       span {
-        margin: 0 4px;
+        margin: 0 var(--space-1);
       }
     }
   }
@@ -118,7 +118,7 @@ export const FilterContent = styled.div`
         height: 36px;
         border-radius: var(--radius-sm);
         box-shadow: none !important;
-        font-size: 13px;
+        font-size: var(--font-sm);
         &.flexItem {
           flex: 1;
           min-width: 0;
@@ -147,7 +147,7 @@ export const FilterContent = styled.div`
       }
       .conditionValue {
         flex: 1;
-        margin-left: 12px;
+        margin-left: var(--space-3);
         min-width: 0;
         .optionCheckbox {
           word-break: break-all;
@@ -156,7 +156,7 @@ export const FilterContent = styled.div`
         }
       }
       .deletedColumn {
-        margin-left: 12px;
+        margin-left: var(--space-3);
       }
     }
     .worksheetFilterDateCondition {

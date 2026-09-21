@@ -17,9 +17,9 @@ const ViewWrap = styled.div`
   display: flex;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
-  margin-top: 8px;
+  margin-top: var(--space-2);
   .viewCon {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     background: var(--color-background-secondary);
     line-height: 34px;
     text-align: center;
@@ -75,7 +75,7 @@ export default function ControlMask(props) {
       </div>
 
       {datamask === '1' && (
-        <EditInfo style={{ margin: '8px 0' }} onClick={() => setVisible(true)}>
+        <EditInfo style={{ margin: 'var(--space-2) 0' }} onClick={() => setVisible(true)}>
           <div className="text overflow_ellipsis textPrimary">
             <span className="Bold">{_l('掩码方式：')}</span>
             {_.get(

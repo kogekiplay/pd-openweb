@@ -12,7 +12,7 @@ export const Wrap = styled.div`
   flex-flow: column nowrap;
   background: var(--color-background-primary);
   .header {
-    padding: 14px 32px;
+    padding: 14px var(--space-8);
     border-bottom: 1px solid var(--color-border-primary);
   }
   .footer {
@@ -67,7 +67,7 @@ export const Wrap = styled.div`
           font-weight: bold;
         }
         .tableHeaderOption {
-          padding-left: 32px;
+          padding-left: var(--space-8);
           width: 15%;
           max-width: 170px;
           min-width: 100px;
@@ -88,7 +88,7 @@ export const Wrap = styled.div`
         border-bottom: 1px solid var(--color-border-secondary);
         color: var(--color-text-disabled);
         line-height: 45px;
-        padding-left: 24px;
+        padding-left: var(--space-6);
       }
       .tableRow {
         display: flex;
@@ -113,7 +113,7 @@ export const Wrap = styled.div`
           .arrowIconShow {
             border-radius: 50%;
             display: inline-block;
-            margin-right: 20px;
+            margin-right: var(--space-5);
             opacity: 0;
             transition: all 0.4s ease;
             width: 32px;
@@ -185,7 +185,7 @@ export const Wrap = styled.div`
       width: 25%;
       float: left;
       margin-bottom: 15px;
-      padding-right: 20px;
+      padding-right: var(--space-5);
       box-sizing: border-box;
     }
   }

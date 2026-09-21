@@ -7,7 +7,7 @@ const Wrap = styled.div`
   height: 48px;
   line-height: 48px;
   color: var(--color-error);
-  padding-left: 20px;
+  padding-left: var(--space-5);
   background-color: var(--color-background-card);
   box-shadow: var(--shadow-sm);
   border-radius: var(--radius-sm);

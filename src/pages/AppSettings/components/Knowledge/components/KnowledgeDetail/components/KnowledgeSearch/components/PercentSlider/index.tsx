@@ -18,7 +18,7 @@ const Container = styled.div`
     }
   }
   .percentText {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-primary);
   }
 `;

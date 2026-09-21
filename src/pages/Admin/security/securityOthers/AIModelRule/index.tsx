@@ -11,12 +11,12 @@ import EditRuleDrawer from './EditRuleDrawer';
 const Description = styled.div`
   background: color-mix(in srgb, var(--color-primary) 10%, transparent);
   border-radius: var(--radius-sm);
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  font-size: 13px;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-5);
+  font-size: var(--font-sm);
   .statusTitle {
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--font-md);
     margin-bottom: 6px;
   }
   .tipItem {

@@ -17,7 +17,7 @@ import BatchAdd from './BatchAdd';
 import 'rc-trigger/assets/index.css';
 
 const OptionsWrap = styled.div`
-  margin-top: 8px;
+  margin-top: var(--space-2);
   border: ${({ showBorder }) => (showBorder ? '1px solid rgba(253 ,180,50 ,0.3)' : 'none')};
   .dragPointer {
     &:hover {
@@ -29,7 +29,7 @@ const OptionsWrap = styled.div`
 const HandleOption = styled.div`
   display: flex;
   align-items: center;
-  padding: 12px;
+  padding: var(--space-3);
 
   .operate {
     display: flex;
@@ -96,7 +96,7 @@ const DragItem = styled.div`
 
   .optionContent {
     margin-left: ${props => (props.isOther ? '21px' : '8px')};
-    padding-right: 8px;
+    padding-right: var(--space-2);
     display: flex;
     align-items: center;
     flex: 1;
@@ -113,7 +113,7 @@ const DragItem = styled.div`
 
   .optionName {
     flex: 1;
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     &.repeatError {
       input {
         color: var(--color-error);

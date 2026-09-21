@@ -5,14 +5,14 @@ import { Support } from 'ming-ui';
 import { HAS_WARNING_CONTROL } from 'src/pages/widgetConfig/config';
 
 const WarningWrap = styled.div`
-  font-size: 12px;
+  font-size: var(--font-xs);
   padding: 10px;
   line-height: 21px;
   border-radius: var(--radius-sm);
   ${props =>
     props.isBg
       ? 'margin-top: 10px;background: var(--color-yellow-black);'
-      : 'margin: 12px 0;background: var(--color-background-secondary);border: 1px solid var(--color-border-primary);'}
+      : 'margin: var(--space-3) 0;background: var(--color-background-secondary);border: 1px solid var(--color-border-primary);'}
 `;
 
 const DEFAULT_TEXT = {

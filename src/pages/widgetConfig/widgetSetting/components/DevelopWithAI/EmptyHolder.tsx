@@ -14,7 +14,7 @@ const Con = styled.div`
   align-items: center;
   justify-content: center;
   .genBtn {
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     background-color: var(--color-background-primary);
     border-radius: 30px;
     height: 30px;
@@ -22,13 +22,13 @@ const Con = styled.div`
     align-items: center;
     justify-content: center;
     color: var(--color-text-title);
-    font-size: 13px;
+    font-size: var(--font-sm);
     border: 1px solid var(--color-border-primary);
-    margin-top: 12px;
+    margin-top: var(--space-3);
     cursor: pointer;
   }
   .enterEditor {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-primary);
     cursor: pointer;
     margin-top: 30px;

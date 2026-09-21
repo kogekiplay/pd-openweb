@@ -11,7 +11,7 @@ const Con = styled.div`
   border: 2px dashed var(--color-border-secondary);
   border-radius: var(--radius-sm);
   color: var(--color-text-disabled);
-  font-size: 20px;
+  font-size: var(--font-2xl);
   text-align: center;
   line-height: 60px;
   letter-spacing: 3px;
@@ -39,7 +39,7 @@ const ImgCon = styled.div`
     position: absolute;
     top: -15px;
     right: -15px;
-    font-size: 18px;
+    font-size: var(--font-xl);
     color: var(--color-text-disabled);
   }
 `;

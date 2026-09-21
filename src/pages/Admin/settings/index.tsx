@@ -13,7 +13,7 @@ import CustomColor from './components/CustomColor/index';
 import CustomIcon from './components/CustomIcon';
 
 const ConfigItemWrap = styled.div`
-  padding: 0 32px;
+  padding: 0 var(--space-8);
   &.hoverStyle:hover {
     background: var(--color-background-hover);
   }
@@ -22,7 +22,7 @@ const ConfigItemWrap = styled.div`
 const Item = styled.div`
   display: flex;
   align-items: center;
-  padding: 24px 24px 24px 0;
+  padding: var(--space-6) var(--space-6) var(--space-6) 0;
   border-bottom: 1px solid var(--color-border-secondary);
 `;
 

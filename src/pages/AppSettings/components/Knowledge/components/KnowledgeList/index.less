@@ -1,7 +1,7 @@
 .knowledgeListContainer {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-5);
   height: 100%;
   .header {
     display: flex;
@@ -9,13 +9,13 @@
     justify-content: space-between;
     .headerLeft {
       .headerLeftTitle {
-        font-size: 18px;
+        font-size: var(--font-xl);
         font-weight: 700;
         color: var(--color-text-primary);
       }
       .description {
-        margin-top: 8px;
-        font-size: 13px;
+        margin-top: var(--space-2);
+        font-size: var(--font-sm);
         color: var(--color-text-secondary);
       }
     }
@@ -27,10 +27,10 @@
     .knowledgeList {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: var(--space-4);
       padding: 0 40px;
       .knowledgeItem {
-        padding: 20px;
+        padding: var(--space-5);
         border-radius: var(--radius-sm);
         border: 1px solid var(--color-border-primary);
         background-color: var(--color-background-primary);
@@ -54,7 +54,7 @@
               color: var(--color-text-primary);
             }
             .modelInfo {
-              font-size: 16px;
+              font-size: var(--font-lg);
               color: var(--color-text-secondary);
             }
           }
@@ -63,11 +63,11 @@
             align-items: center;
             color: var(--color-text-secondary);
             .moreIconWrap {
-              padding: 4px;
-              margin-left: 8px;
+              padding: var(--space-1);
+              margin-left: var(--space-2);
               cursor: pointer;
               .moreIcon {
-                font-size: 16px;
+                font-size: var(--font-lg);
               }
             }
           }
@@ -76,7 +76,7 @@
           display: flex;
           justify-content: space-between;
           align-items: flex-end;
-          margin-top: 16px;
+          margin-top: var(--space-4);
           .knowledgeWorksheet {
             flex: 1;
             min-width: 0;
@@ -86,20 +86,20 @@
             .worksheetItem {
               display: flex;
               align-items: center;
-              gap: 8px;
+              gap: var(--space-2);
               padding: 0 10px;
               max-width: 200px;
               height: 30px;
               border-radius: 30px;
               background-color: var(--color-background-tertiary);
               .icon {
-                font-size: 16px;
+                font-size: var(--font-lg);
                 color: var(--color-text-secondary);
               }
               .title {
                 flex: 1;
                 min-width: 0;
-                font-size: 13px;
+                font-size: var(--font-sm);
                 color: var(--color-text-primary);
               }
             }
@@ -118,35 +118,35 @@
 
 .confirmVectorizeInfo {
   .description {
-    margin-bottom: 24px;
-    font-size: 13px;
+    margin-bottom: var(--space-6);
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
   }
   .baseInfo,
   .totalInfo {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-primary);
   }
   .totalInfo {
-    margin: 20px 0;
+    margin: var(--space-5) 0;
   }
 }
 
 .updateKnowledgeForm {
   margin-bottom: 60px;
   .formLabel {
-    margin-bottom: 12px;
-    font-size: 13px;
+    margin-bottom: var(--space-3);
+    font-size: var(--font-sm);
     font-weight: 700;
     color: var(--color-text-primary);
   }
   input {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
     width: 100%;
   }
 }
 
 .deleteKnowledge {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   color: var(--color-text-primary);
 }

@@ -28,24 +28,24 @@ const DetailDrawer = styled(Drawer)`
 
   .statusWrap {
     display: flex;
-    padding: 12px;
+    padding: var(--space-3);
     border-radius: var(--radius-sm);
     background-color: var(--color-background-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
     .Warning {
       color: var(--color-warning);
     }
   }
   .groupTitle {
-    padding: 20px 0 8px 0;
-    font-size: 16px;
+    padding: var(--space-5) 0 var(--space-2) 0;
+    font-size: var(--font-lg);
     font-weight: 600;
     border-bottom: 2px solid var(--color-border-secondary);
   }
   .groupContent {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 4px;
+    margin-top: var(--space-1);
   }
   .formItem {
     display: flex;
@@ -53,14 +53,14 @@ const DetailDrawer = styled(Drawer)`
     box-sizing: border-box;
     flex: 0 0 33.3333%;
     max-width: 33.3333%;
-    padding-right: 24px;
+    padding-right: var(--space-6);
     margin-top: 10px;
     height: 36px;
-    font-size: 14px;
+    font-size: var(--font-md);
   }
   .labelText {
     color: var(--color-text-secondary);
-    margin-right: 20px;
+    margin-right: var(--space-5);
     white-space: nowrap;
   }
   .overflow_ellipsis_line2 {

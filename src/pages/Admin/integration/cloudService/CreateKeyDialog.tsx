@@ -9,12 +9,12 @@ const { Option } = Select;
 const MAX_SECRET_NAME_LENGTH = 20;
 
 const CreateDialogContent = styled.div`
-  padding-top: 8px;
+  padding-top: var(--space-2);
 
   .createTip {
     color: var(--color-text-secondary);
     margin-bottom: 22px;
-    font-size: 14px;
+    font-size: var(--font-md);
   }
 `;
 
@@ -25,7 +25,7 @@ const CreateFormItem = styled.div`
     color: var(--color-text-title);
     font-weight: 600;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--font-md);
   }
 
   .ming.Input {
@@ -33,7 +33,7 @@ const CreateFormItem = styled.div`
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
   }
 
   &.ant-select,
@@ -47,7 +47,7 @@ const CreateFormItem = styled.div`
     height: 38px !important;
     display: flex;
     align-items: center;
-    padding: 0 12px !important;
+    padding: 0 var(--space-3) !important;
   }
 
   .ant-select-selection-item,

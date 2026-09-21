@@ -36,7 +36,7 @@ const OrderInfo = styled.div`
     .label {
       width: 108px;
       color: var(--color-text-tertiary);
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
     .value {
       flex: 1;
@@ -48,7 +48,7 @@ const OrderInfo = styled.div`
     width: 100%;
     height: 1px;
     border-top: 1px solid var(--color-border-secondary);
-    margin: 20px 0 28px 0;
+    margin: var(--space-5) 0 28px 0;
   }
   .borderRadius16 {
     border-radius: 16px;
@@ -60,7 +60,7 @@ const OrderDetail = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 15px 24px 24px;
+  padding: 15px var(--space-6) var(--space-6);
   .tableRow {
     .headerItem {
       padding: 10px 0;
@@ -69,7 +69,7 @@ const OrderDetail = styled.div`
       width: 110px;
     }
     .bodyItem {
-      padding: 12px 8px 12px 0;
+      padding: var(--space-3) var(--space-2) var(--space-3) 0;
       border-bottom: 1px solid var(--color-border-secondary);
       width: 110px;
     }

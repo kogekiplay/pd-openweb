@@ -14,9 +14,9 @@ const AppListContainer = styled.div`
     display: flex;
     height: 36px;
     line-height: 36px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
-    padding: 0 12px;
+    padding: 0 var(--space-3);
   }
   .name {
     flex: 7;
@@ -44,7 +44,7 @@ const AppListContainer = styled.div`
       display: flex;
       height: 48px;
       line-height: 48px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       .appIcon {
         display: flex;
         justify-content: center;
@@ -54,7 +54,7 @@ const AppListContainer = styled.div`
         height: 24px;
         line-height: 16px;
         border-radius: var(--radius-sm);
-        margin-right: 8px;
+        margin-right: var(--space-2);
       }
       .userIcon {
         width: 25px;

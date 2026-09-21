@@ -2,7 +2,7 @@
   flex: 1;
   min-height: 0;
   box-sizing: border-box;
-  margin: 16px;
+  margin: var(--space-4);
   position: relative;
   background-color: var(--color-background-primary);
   border-radius: var(--radius-sm);
@@ -23,7 +23,7 @@
     border-bottom: 1px solid var(--color-border-secondary);
     display: flex;
     align-items: center;
-    padding-left: 24px;
+    padding-left: var(--space-6);
   }
 
   .stepDiviceLine {
@@ -87,7 +87,7 @@
   .btnBack {
     padding: 5px 15px 5px 0px;
     color: var(--color-text-secondary);
-    font-size: 14px;
+    font-size: var(--font-md);
   }
 
   .btnBack:hover {
@@ -105,7 +105,7 @@
     border: 2px solid var(--color-text-disabled);
     border-radius: var(--radius-sm);
     cursor: pointer;
-    margin-right: 24px;
+    margin-right: var(--space-6);
   }
 
   .warpOneStep,
@@ -158,18 +158,18 @@
   }
   .stepContent .infoShow {
     .infoShowRow {
-      margin-top: 8px;
+      margin-top: var(--space-2);
       display: flex;
       align-items: center;
       .infoShowLabel {
         width: 70px;
         text-align: left;
         color: var(--color-text-tertiary);
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
       .infoShowResult {
         color: var(--color-text-tertiary);
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
     }
   }
@@ -190,7 +190,7 @@
     margin-top: 25px;
     label {
       color: var(--color-text-tertiary);
-      font-size: 13px;
+      font-size: var(--font-sm);
       input {
         display: none;
       }
@@ -209,7 +209,7 @@
     line-height: 30px;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 14px; /* float: left; */
+    font-size: var(--font-md); /* float: left; */
   }
   .stepContent .txtCustomPrice {
     border: 0px;

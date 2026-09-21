@@ -11,11 +11,11 @@ const StatusWrap = styled.span`
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    margin-right: 4px;
+    margin-right: var(--space-1);
     display: inline-block;
   }
   .statusText {
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
 `;
 

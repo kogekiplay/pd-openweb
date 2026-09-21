@@ -19,7 +19,7 @@ const Con = styled.div`
   width: 100%;
   height: 100%;
   background: var(--color-background-primary);
-  padding: 35px 40px 0 32px;
+  padding: 35px 40px 0 var(--space-8);
   overflow: hidden;
   .noDataIcon {
     border-radius: 50%;
@@ -27,7 +27,7 @@ const Con = styled.div`
     width: 130px;
     height: 130px;
     text-align: center;
-    margin: 60px auto 24px;
+    margin: 60px auto var(--space-6);
     .icon {
       line-height: 130px;
       font-size: 60px;
@@ -38,7 +38,7 @@ const Con = styled.div`
   .aiActionItem {
     display: flex;
     align-items: center;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     font-weight: 600;
     padding: 3px 0 11px 10px;

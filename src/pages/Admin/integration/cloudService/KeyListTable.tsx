@@ -22,8 +22,8 @@ const SearchInputWrap = styled.div`
     background: transparent;
     line-height: 34px;
     padding-left: 42px !important;
-    padding-right: 32px !important;
-    font-size: 14px;
+    padding-right: var(--space-8) !important;
+    font-size: var(--font-md);
 
     &:hover,
     &:focus,
@@ -44,7 +44,7 @@ const SearchIcon = styled(Icon)`
   top: 50%;
   transform: translateY(-50%);
   color: var(--color-text-tertiary);
-  font-size: 18px;
+  font-size: var(--font-xl);
   z-index: 2;
   pointer-events: none;
 `;
@@ -55,7 +55,7 @@ const ClearIcon = styled(Icon)`
   top: 50%;
   transform: translateY(-50%);
   color: var(--color-text-tertiary);
-  font-size: 14px;
+  font-size: var(--font-md);
   z-index: 2;
   cursor: pointer;
 
