@@ -118,7 +118,7 @@ const PopupWrapper = styled.div`
     cursor: pointer;
     &:hover {
       color: var(--color-white);
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
     }
   }
   .divider {

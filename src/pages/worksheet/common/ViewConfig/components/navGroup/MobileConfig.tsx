@@ -39,7 +39,7 @@ const MobileConfigWrap = styled.div`
     margin-right: 48px;
   }
   .activeIcon {
-    color: var(--color-white);
+    color: var(--color-on-primary);
     position: absolute;
     right: -8px;
     top: -8px;
@@ -47,7 +47,7 @@ const MobileConfigWrap = styled.div`
     height: 18px;
     border-radius: 50%;
     border: 2px solid var(--color-white);
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-solid);
   }
   .activeTxt {
     color: var(--color-primary);

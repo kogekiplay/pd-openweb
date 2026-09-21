@@ -46,7 +46,7 @@ const QrCodeWrap = styled.div`
     }
     .refresh {
       padding: 10px var(--space-6);
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       opacity: 1;
       border-radius: 18px;
       color: var(--color-white);

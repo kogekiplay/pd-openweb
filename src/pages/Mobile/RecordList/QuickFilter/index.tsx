@@ -57,7 +57,7 @@ const Con = styled.div`
     }
     .query {
       color: var(--color-white);
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
     }
   }
 `;
@@ -88,8 +88,8 @@ const SavedItem = styled.div`
   background-color: var(--color-background-secondary);
   word-break: break-all;
   &.active {
-    background-color: var(--color-primary);
-    color: var(--color-white);
+    background-color: var(--color-primary-solid);
+    color: var(--color-on-primary);
   }
 `;
 

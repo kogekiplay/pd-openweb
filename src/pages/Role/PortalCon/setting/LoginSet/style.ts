@@ -178,7 +178,7 @@ export const Wrap = styled.div`
         border-radius: var(--radius-sm) 0px 0px var(--radius-sm);
       }
       &.current {
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         color: var(--color-white);
         position: relative;
         z-index: 1;

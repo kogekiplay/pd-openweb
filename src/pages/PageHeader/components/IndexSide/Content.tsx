@@ -214,7 +214,13 @@ export default function SideContent(props) {
             }}
           >
             <Icon icon={item.icon} className="Font20" style={{ color: item.color }} />
-            <div className="textTertiary mTop5">{item.text}</div>
+            {/* 【用 secondary 不是 tertiary】这是「动态/任务/日程/文件」这几个
+                可点击的导航入口，不是「弱化说明」。
+                --color-text-tertiary 对白底只有 2.68:1，**任何字号都不达 WCAG**
+                （正文要 4.5、大字要 3，它两个都够不着）；secondary 是 4.61，达标。
+                档位注释写得很清楚：tertiary 是「表格次要列、占位性提示」，
+                导航入口不属于那一类。 */}
+            <div className="textSecondary mTop5">{item.text}</div>
           </div>
         ))}
       </div>

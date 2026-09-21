@@ -109,12 +109,12 @@ const DaySelectContainer = styled.div`
     border: 1px solid transparent;
     cursor: pointer;
 
-    :hover {
+    &:hover {
       border: 1px solid var(--color-primary);
     }
 
     &.active {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       color: var(--color-white);
     }
   }
@@ -144,11 +144,11 @@ const WeekContainer = styled.div`
       border-bottom-right-radius: var(--radius-sm);
       border-right-width: 1px;
     }
-    :hover {
+    &:hover {
       border-color: var(--color-primary);
     }
     &.active {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       color: var(--color-white);
     }
   }

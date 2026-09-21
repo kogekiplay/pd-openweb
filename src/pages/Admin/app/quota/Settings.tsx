@@ -73,13 +73,13 @@ const ContentWrap = styled.div`
 
   .saveBtn {
     margin-right: var(--space-5);
-    background: var(--color-primary);
-    color: var(--color-white);
+    background: var(--color-primary-solid);
+    color: var(--color-on-primary);
     &:hover {
       background: var(--color-primary-dark);
     }
     &.disabled {
-      color: var(--color-white);
+      color: var(--color-on-primary);
       background: var(--color-primary-transparent);
       cursor: not-allowed;
       &:hover {
@@ -104,7 +104,7 @@ const ContentWrap = styled.div`
     display: flex;
     height: 36px;
     .add {
-      color: var(--color-link-hover);
+      color: var(--color-primary-dark);
       border: 1px solid var(--color-primary-dark);
       line-height: 34px;
       cursor: pointer;

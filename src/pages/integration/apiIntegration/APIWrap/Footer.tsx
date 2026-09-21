@@ -38,7 +38,7 @@ const FooterCon = styled.div`
     padding: 0 30px;
     border: 1px solid var(--color-primary);
     &:hover {
-      color: var(--color-link-hover);
+      color: var(--color-primary-dark);
       border: 1px solid var(--color-primary-dark);
     }
   }

@@ -31,7 +31,7 @@ const Wrapper = styled.div`
       }
       .confirmBtn {
         background: var(--color-primary);
-        :hover {
+        &:hover {
           background: var(--color-primary-dark);
         }
       }

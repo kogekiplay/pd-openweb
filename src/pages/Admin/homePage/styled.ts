@@ -102,7 +102,7 @@ export const HomePageWrap = styled.div`
         font-size: var(--font-md);
         color: var(--color-white) !important;
         border-radius: 16px;
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -123,7 +123,7 @@ export const HomePageWrap = styled.div`
         border: 1px solid var(--color-border-primary);
         cursor: pointer;
         &:hover {
-          color: var(--color-link-hover);
+          color: var(--color-primary-dark);
           border: 1px solid var(--color-primary-dark);
           cursor: pointer;
         }
@@ -727,7 +727,7 @@ export const TitleWrap = styled.div`
     cursor: pointer;
     border: 1px solid var(--color-border-primary);
     &:hover {
-      color: var(--color-link-hover);
+      color: var(--color-primary-dark);
       border: 1px solid var(--color-primary-dark);
       cursor: pointer;
     }

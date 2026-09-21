@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router';
 import { Provider } from 'react-redux';
 import { ConfigProvider } from 'antd';
 import { GlobalStoreProvider } from 'src/common/GlobalStore';
-import { PLATFORM_PRIMARY } from 'src/common/theme';
+import { antdTheme, PLATFORM_PRIMARY } from 'src/common/theme';
 import store from 'src/redux/configureStore';
 import App from './App';
 
@@ -19,7 +19,7 @@ const root = createRoot(document.getElementById('app'));
 root.render(
   <Provider store={store}>
     <GlobalStoreProvider>
-      <ConfigProvider theme={{ token: { colorPrimary: PLATFORM_PRIMARY } }}>
+            <ConfigProvider theme={antdTheme(PLATFORM_PRIMARY)}>
         <Router>
           <App />
         </Router>

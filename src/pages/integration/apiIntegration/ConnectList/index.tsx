@@ -79,9 +79,9 @@ const WrapListHeader = styled.div`
   padding: var(--space-8) var(--space-8) 0 var(--space-8);
   .addConnect {
     padding: var(--space-2) var(--space-6);
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: 21px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     display: inline-block;
     &:hover {
       background: var(--color-primary-dark);

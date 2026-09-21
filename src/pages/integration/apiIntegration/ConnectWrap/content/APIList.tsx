@@ -30,9 +30,9 @@ const Wrap = styled.div`
   }
   .addApi {
     padding: var(--space-2) var(--space-6);
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: 21px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     display: inline-block;
     &:hover {
       background: var(--color-primary-dark);

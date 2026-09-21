@@ -29,7 +29,7 @@ const Menu = styled.ul`
     line-height: 36px;
     padding: 0 var(--space-5);
     &:hover {
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
       color: var(--color-white);
     }
   }

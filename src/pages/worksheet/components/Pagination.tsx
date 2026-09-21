@@ -158,8 +158,8 @@ const BarPage = styled.span`
     background: var(--color-background-hover);
   }
   &.current {
-    background: var(--color-primary);
-    color: var(--color-text-inverse);
+    background: var(--color-primary-solid);
+    color: var(--color-on-primary);
     cursor: default;
   }
   &.dot {

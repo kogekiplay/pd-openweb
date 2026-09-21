@@ -545,13 +545,22 @@ function SheetHeader(props) {
             )}
             {/* 显示创建按钮 */}
             {canNewRecord && !worksheetInfo.isRequestingRelationControls && (
+              /* 【文字色不能写死白，也不能用 .textWhite】底色是应用自选的主题色，
+                 浅色主题下白字读不清（实测橙色 2.77:1）。--color-on-primary 由调色板
+                 按主色明度决定黑白，够读就还是白。见 common/theme/palette.ts。
+                 .textWhite 带 !important，留着会压过这里，所以要摘掉。 */
               <span
-                style={{ backgroundColor: appPkg.iconColor || 'var(--color-primary)' }}
+                style={{
+                  // 【底色走实心面，不是 iconColor 原值】主色太浅时白字读不清，
+                  // --color-primary-solid 会自动换成同色相的深色档；够深的一点不变。
+                  backgroundColor: 'var(--color-primary-solid)',
+                  color: 'var(--color-on-primary)',
+                }}
                 className="addRow mLeft8 overflow_ellipsis WordBreak addRecordEntry"
                 onClick={() => openNewRecord({ allowShowMingoCreate: true })}
               >
-                <span className="Icon icon icon-plus Font13 mRight5 textWhite" />
-                <span className="textWhite bold">{advancedSetting.btnname || entityName || _l('记录')}</span>
+                <span className="Icon icon icon-plus Font13 mRight5" />
+                <span className="bold">{advancedSetting.btnname || entityName || _l('记录')}</span>
               </span>
             )}
           </VerticalCenter>

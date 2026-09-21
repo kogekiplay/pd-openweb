@@ -40,7 +40,7 @@ const MoreOperateMenu = styled.ul`
       color: var(--color-text-title) !important;
     }
     &:hover {
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
       color: var(--color-white);
       a {
         color: var(--color-white);

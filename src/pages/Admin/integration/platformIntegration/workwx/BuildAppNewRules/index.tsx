@@ -77,10 +77,10 @@ const BuildAppBox = styled.div`
     width: 132px;
     height: 36px;
     line-height: 36px;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     opacity: 1;
     border-radius: 18px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     font-size: var(--font-md);
     font-weight: 600;
     margin-top: 36px;

@@ -69,7 +69,7 @@ const Wrap = styled.div`
       background: var(--color-background-primary);
       bottom: 0;
       .btnCon {
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         color: var(--color-white);
         height: 36px;
         line-height: 36px;

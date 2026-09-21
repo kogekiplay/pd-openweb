@@ -180,9 +180,9 @@ const Pagination = styled.div`
   .next {
     height: 100%;
     line-height: 36px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     padding: 0 var(--space-3);
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: var(--radius-sm);
     &.disabled {
       color: var(--color-text-disabled);

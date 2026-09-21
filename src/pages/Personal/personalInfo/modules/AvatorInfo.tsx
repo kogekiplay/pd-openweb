@@ -35,7 +35,7 @@ const Wrap = styled.div`
     border: 1px solid var(--color-border-primary);
     line-height: 36px;
     &.save {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       color: var(--color-white);
       border: 1px solid var(--color-primary);
     }

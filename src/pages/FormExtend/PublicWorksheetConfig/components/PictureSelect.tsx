@@ -16,14 +16,14 @@ const Pic = styled.div`
   margin-right: 6px;
   background-size: cover !important;
   background-color: rgba(0, 0, 0, 0.4) !important;
-  :nth-child(6n) {
+  &:nth-child(6n) {
     margin-right: 0px;
   }
   .picMask,
   .icon {
     visibility: hidden;
   }
-  :hover {
+  &:hover {
     .picMask {
       visibility: visible;
     }

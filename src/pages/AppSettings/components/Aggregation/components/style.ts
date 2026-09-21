@@ -183,14 +183,14 @@ export const Header = styled.div`
     box-sizing: border-box;
     padding: 0 var(--space-8);
     line-height: 36px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     cursor: pointer;
     border-radius: var(--radius-sm);
     text-align: center;
     font-weight: 600;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     &:hover {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
     }
   }
   .disable,

@@ -27,11 +27,11 @@ const SyncWithDealWrapper = styled.div`
       padding: var(--space-2) var(--space-3) 6px;
       font-size: var(--font-sm);
 
-      :hover {
+      &:hover {
         border-color: var(--color-background-disabled) !important;
         background: var(--color-background-disabled);
       }
-      :focus {
+      &:focus {
         border-color: var(--color-primary) !important;
         background: var(--color-background-primary);
       }

@@ -75,8 +75,8 @@ const CardWrapper = styled.div`
     height: 24px;
     padding: 0 10px;
     border-radius: 12px;
-    color: var(--color-white);
-    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    background-color: var(--color-primary-solid);
     font-weight: normal;
     line-height: 24px;
     white-space: nowrap;

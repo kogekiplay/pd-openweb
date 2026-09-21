@@ -60,7 +60,7 @@ const MyWriteButton = styled.div(
       font-weight: 600;
       font-size: var(--font-md);
     }
-    :hover {
+    &:hover {
       background: ${getRgbaByColor(themeBgColor, 0.1)};
     }
 `,

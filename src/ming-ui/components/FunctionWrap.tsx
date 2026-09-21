@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { StyleSheetManager } from 'styled-components';
 import shouldForwardProp from 'src/common/shouldForwardProp';
 import { browserIsMobile } from 'src/utils/common';
+import { antdTheme } from 'src/common/theme';
 
 /**
  * 使用方法
@@ -77,7 +78,7 @@ export default function (Comp, props: Record<string, any> = {}) {
   const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
 
   root.render(
-    <ConfigProvider theme={primaryColor ? { token: { colorPrimary: primaryColor } } : undefined}>
+    <ConfigProvider theme={primaryColor ? antdTheme(primaryColor) : undefined}>
       <StyleSheetManager shouldForwardProp={shouldForwardProp}>
         <Comp
           {...(props.visibleName ? { [props.visibleName]: true } : { visible: true })}

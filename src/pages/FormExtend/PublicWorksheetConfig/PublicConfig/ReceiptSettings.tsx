@@ -81,7 +81,7 @@ const PopupWrap = styled.div`
         color: var(--color-text-disabled);
       }
       &:hover {
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         color: var(--color-white);
         .Icon {
           color: var(--color-white);

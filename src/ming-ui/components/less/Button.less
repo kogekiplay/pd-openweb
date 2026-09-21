@@ -13,10 +13,18 @@
     font-weight: bold;
 
     // type
+    /* 【底色用「实心面」而不是主色本身】应用主题色是用户随便选的，
+       而主按钮一律配白字。实测生产上 13 个真实主题色，4 个配白字连 3:1 都不到
+       （最低 2.28），字是糊的。--color-primary-solid 在主色够深时【就是主色】
+       （9 个色一点不变），太浅时换成同色相的深色档，白字就够了。
+       文字仍走 --color-on-primary，它几乎总是白 —— 留着是兜极端浅色。
+       规则和为什么不是「把白字翻成黑字」，见 palette.ts 的 solidPrimary。
+       其它 type（success/error）压的是语义色、不随主题变，保持基础白字。 */
     &--primary {
-      background: var(--app-primary-color);
+      background: var(--color-primary-solid);
+      color: var(--color-on-primary);
       &:hover {
-        background: var(--app-primary-hover-color);
+        background: var(--color-primary-solid-hover);
       }
     }
     &--secondary {

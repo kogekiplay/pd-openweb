@@ -28,7 +28,7 @@ const TestButton = styled.div`
   &.default {
     &:hover {
       color: var(--color-white);
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
     }
   }
 

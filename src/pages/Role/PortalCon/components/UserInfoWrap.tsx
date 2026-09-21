@@ -36,7 +36,7 @@ const Wrap = styled.div(
       box-sizing: border-box;
       &.saveBtn {
         color: var(--color-white);
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         &:hover {
           background: var(--color-primary);
         }

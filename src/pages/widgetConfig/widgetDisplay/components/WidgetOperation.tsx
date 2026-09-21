@@ -80,7 +80,7 @@ const OperationWrap = styled.div`
 const WidthMenuItem = styled(MenuItem)`
   &.isActive {
     background: var(--color-primary-dark);
-    color: var(--color-white);
+    color: var(--color-on-primary);
 
     &.ming.MenuItem .Item-content:not(.disabled):hover {
       background: var(--color-primary-dark) !important;

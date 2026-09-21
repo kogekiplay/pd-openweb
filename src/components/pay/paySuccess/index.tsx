@@ -33,7 +33,7 @@ const PaySuccessWrap = styled.div`
       height: 38px;
       line-height: 38px;
       text-align: center;
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
       transition: all 0.35s ease-in;
       color: var(--color-white);
       margin: 0 auto 50px;

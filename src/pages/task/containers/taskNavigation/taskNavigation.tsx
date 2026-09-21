@@ -82,7 +82,7 @@ const SearchFolderCon = styled.ul`
       margin-right: var(--space-2);
     }
     &.selected {
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
       color: var(--color-white);
     }
   }

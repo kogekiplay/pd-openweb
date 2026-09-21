@@ -76,7 +76,7 @@ const HeaderWrapper = styled.div`
 
         &.isActive {
           .stepIcon {
-            background: var(--color-primary);
+            background: var(--color-primary-solid);
             color: var(--color-white);
           }
           span {

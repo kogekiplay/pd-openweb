@@ -33,7 +33,7 @@ const RegularBackupWrap = styled.div`
     border-right: 1px solid var(--color-background-secondary);
     &:hover,
     &.active {
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
       color: var(--color-white);
     }
   }
@@ -61,7 +61,7 @@ const DaySelectWrap = styled.div`
     border-radius: 1px;
     &.active {
       color: var(--color-white);
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
     }
   }
 `;

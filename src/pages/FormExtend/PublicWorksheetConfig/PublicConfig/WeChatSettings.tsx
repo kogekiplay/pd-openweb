@@ -10,10 +10,10 @@ import CommonSwitch from './CommonSwitch';
 import SectionTitle from './SectionTitle';
 
 const AddControl = styled.div`
-  :hover {
+  &:hover {
     color: var(--color-white) !important;
   }
-  :hover .icon {
+  &:hover .icon {
     color: var(--color-white) !important;
   }
 `;

@@ -181,7 +181,20 @@
 
 // 左侧导航样式兼容
 .leftNavigationStyleWrap {
-  #containerWrapper {
+  /* 【必须限定「应用头栏真的在里面」】`#containerWrapper` 是应用视图和
+     应用管理（设置）页【共用】的容器，而 body 上这个类是 AppDetail 挂载时加的。
+
+     从设置页点返回时，两件事不同步：AppDetail 先挂载并加上这个类（连同它的
+     CSS 分包一起到位），而设置页要等工作表那条懒加载路由解析完才卸载 ——
+     中间有一段窗口（实测生产 337ms 加类、555ms 才卸载；dev 上会放大到数秒）。
+     那段时间里，设置页的 <header> 作为 row 容器的 flex 项从「顶部整行」
+     塌成「左侧窄列」：实测 header 宽度 972 -> 176、内容左移 12 -> 188，
+     看起来就是整个页面被挤到右边、左边空着一块（张奇录屏里那一帧）。
+
+     `:has(.appPkgHeaderWrap)` 让这条规则只在应用头栏**真的渲染出来**时才生效，
+     设置页在场时容器保持 column，那一帧就不会歪。
+     （`:has` 的浏览器门槛比本仓已经在用的 `color-mix()` 还低，不引入新的兼容包袱。） */
+  #containerWrapper:has(.appPkgHeaderWrap) {
     flex-direction: row !important;
   }
   .appPkgHeaderWrap {

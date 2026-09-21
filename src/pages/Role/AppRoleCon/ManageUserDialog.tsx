@@ -52,8 +52,8 @@ const Wrapper = styled.div`
     flex-shrink: 0;
   }
   .ownerTag {
-    color: var(--color-white);
-    background: var(--color-primary);
+    color: var(--color-on-primary);
+    background: var(--color-primary-solid);
     font-weight: bold;
     padding: 2px 6px;
     font-size: var(--font-xs);

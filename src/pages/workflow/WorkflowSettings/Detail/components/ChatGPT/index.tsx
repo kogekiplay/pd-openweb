@@ -58,9 +58,9 @@ const Footer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     font-size: 26px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
   }
   .sendBtn {
     position: absolute;

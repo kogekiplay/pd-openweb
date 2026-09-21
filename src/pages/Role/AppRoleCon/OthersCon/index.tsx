@@ -46,7 +46,7 @@ const Des = styled.div`
     border: 1px solid var(--color-border-primary);
     background: var(--color-background-primary);
     &.c {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       border: 0;
       color: var(--color-white);
     }
@@ -74,9 +74,9 @@ const ExplainCon = styled.div`
   }
   .explain-button {
     padding: 15px 22px;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border: none;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     font-size: var(--font-md);
     border-radius: var(--radius-sm);
     font-weight: 600;

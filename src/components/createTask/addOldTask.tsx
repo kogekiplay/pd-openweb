@@ -25,11 +25,11 @@ const SearchTaskCon = styled.ul`
     padding: 0 15px;
     &.active {
       color: var(--color-white);
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
     }
     &:hover {
       color: var(--color-white);
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
     }
     &.noData {
       color: var(--color-text-title) !important;

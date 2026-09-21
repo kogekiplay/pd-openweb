@@ -245,11 +245,11 @@ export const WrapContainer = styled.div`
     line-height: 1.5;
   }
   .loginBtn {
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     height: 48px;
     border-radius: 6px;
     line-height: 48px;
-    color: var(--color-text-inverse);
+    color: var(--color-on-primary);
     font-weight: bold;
     font-size: var(--font-lg);
     &:hover {
@@ -367,7 +367,7 @@ export const WrapWXCon = styled.div`
       }
       .refresh {
         padding: 10px var(--space-6);
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         opacity: 1;
         border-radius: 18px;
         color: var(--color-white);

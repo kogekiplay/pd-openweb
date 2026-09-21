@@ -269,7 +269,7 @@ export const SelectFieldsWrap = styled.div`
     padding-left: var(--space-3);
     cursor: pointer;
     &:hover {
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
       color: var(--color-white);
     }
   }
@@ -330,7 +330,7 @@ export const SelectFieldsWrap = styled.div`
       overflow: hidden;
       text-overflow: ellipsis;
       &:hover {
-        background-color: var(--color-primary);
+        background-color: var(--color-primary-solid);
         color: var(--color-white);
         i {
           color: var(--color-white);
@@ -544,7 +544,7 @@ export const IntroMenu = styled.div`
     padding: 0 var(--space-4);
     cursor: pointer;
     &:hover {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       color: var(--color-white);
       i {
         color: var(--color-white);
@@ -658,7 +658,7 @@ export const DropdownContent = styled.div`
       color: var(--color-text-disabled);
     }
     &:not(disabled):hover {
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
       color: var(--color-white);
       i {
         color: var(--color-white);

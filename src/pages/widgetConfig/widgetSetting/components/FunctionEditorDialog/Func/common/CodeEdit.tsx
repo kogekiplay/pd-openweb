@@ -79,8 +79,8 @@ const TestButton = styled.div`
   font-size: var(--font-xs);
   color: var(--color-primary);
   &:hover {
-    background: var(--color-primary);
-    color: var(--color-white);
+    background: var(--color-primary-solid);
+    color: var(--color-on-primary);
   }
 `;
 

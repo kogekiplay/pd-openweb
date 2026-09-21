@@ -195,7 +195,7 @@ export const WrapFooter = styled.div`
   .saveBtn {
     height: 36px;
     padding: 0 30px;
-    color: var(--color-white);
+    color: var(--color-on-primary);
     line-height: 36px;
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     font-size: var(--font-md);
@@ -204,7 +204,7 @@ export const WrapFooter = styled.div`
       color ease-in 0.2s,
       border-color ease-in 0.2s,
       background-color ease-in 0;
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     &:not(.disabled):hover {
       background: var(--color-primary-dark);
     }

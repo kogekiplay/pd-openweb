@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Routes } from 'react-router';
 import { ConfigProvider } from 'antd';
 import _ from 'lodash';
-import { AppThemeScope, getCachedAppColor } from 'src/common/theme';
+import { antdTheme, AppThemeScope, getCachedAppColor } from 'src/common/theme';
 import { navigateTo } from 'router/navigateTo';
 import { LoadDiv } from 'ming-ui';
 import ajaxRequest from 'src/api/homeApp';
@@ -164,8 +164,11 @@ let Application = class Application extends Component<any, any> {
     const appId = this.currentAppId();
     const seed = loadedAppId ? iconColor : getCachedAppColor(appId);
 
+    // antdTheme 里除了 colorPrimary，还会把【实心主按钮】的底色换成够深的一档
+    // （主色太浅时白字读不清）。三处 ConfigProvider 必须走同一个函数，
+    // 否则弹层里的按钮会和主界面不一样深。见 common/theme/palette.ts。
     return (
-      <ConfigProvider theme={{ token: { colorPrimary: seed || iconColor } }}>
+      <ConfigProvider theme={antdTheme(seed || iconColor)}>
         <AppThemeScope seed={iconColor} loaded={!!loadedAppId} appId={appId} />
         {this.renderContent()}
       </ConfigProvider>

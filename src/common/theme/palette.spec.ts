@@ -23,6 +23,7 @@ type ThemeVars = Record<string, string>;
 type PaletteModule = {
   buildThemeVars: (seed: string, mode?: 'light' | 'dark') => ThemeVars;
   themeVarsToCssText: (vars: ThemeVars) => string;
+  onSolidPrimary: (primary: string) => string;
 };
 
 function loadPalette(): PaletteModule {
@@ -138,15 +139,15 @@ assert.deepStrictEqual(Object.keys(light).sort(), Object.keys(dark).sort());
 
 // 13. 中性色阶带主题倾向：不是纯灰，但也不是主色。
 const { readability } = require('@ctrl/tinycolor');
-assert.notStrictEqual(light['--color-text-secondary'], '#757575', '中性色没染上主题倾向');
+assert.notStrictEqual(light['--color-text-secondary'], '#5d5d5d', '中性色没染上主题倾向');
 assert.notStrictEqual(light['--color-text-secondary'], light['--color-primary'], '中性色被整个换成主色了');
 
 // 14. 【核心 · 可读性】染色不能把次要文字压到 WCAG AA 以下。
-//     #757575 对白底本来就只有 4.61，暖色方向是瓶颈 —— 这条挡的就是
+//     次要文字对白底本来就不宽裕，暖色方向是瓶颈 —— 这条挡的就是
 //     「把 TINT_TEXT 调大一点」这种看起来无害的改动。
 // 染色保明度，所以对比度应当与【原始纯灰】几乎一致，而不只是「够用」。
 // 这条比「>= 4.3」严得多：它挡住的是「把 TINT 调大」和「去掉保明度那一步」两种改动。
-const BASE_CONTRAST = readability('#757575', '#ffffff'); // 4.61
+const BASE_CONTRAST = readability('#5d5d5d', '#ffffff'); // 6.58
 for (const seed of ['#e91e63', '#d98936', '#ff9800', '#1677ff', '#00b96b', '#722ed1']) {
   const v = buildThemeVars(seed, 'light');
   const r = readability(v['--color-text-secondary'], '#ffffff');
@@ -167,4 +168,50 @@ for (const key of [
   assert.ok(!(key in light), `${key} 不该由调色板产出（保持 Less 里的中性值）`);
 }
 
-console.log('palette.spec: 15 组断言全部通过');
+/* 16. 【实心面 + 它上面的文字】主色太浅时，**换底色**（换成同色相的深色档），
+   而不是把白字翻成黑字。
+
+   这条是被张奇的反馈纠正过来的，两处都不能改回去：
+     · 第一版做的是翻字色，按 WCAG 算橙底黑字 7.58 远高于白字 2.77，
+       数字上大胜，但他一眼说「可见度变差了」——**他是对的**：
+       WCAG 2.x 的公式不区分明暗极性，而且主按钮的"可见度"还包含
+       它像不像一个主操作，彩底黑字读起来像警告标签。
+     · 阈值仍是 3，且**只在不达标时才换底色**：达标的 9 个色实心面就是主色本身，
+       一点不变。改成「一律用深色档」会让所有应用的按钮都比自己选的颜色深一号。 */
+{
+  const { solidPrimary, onSolidPrimary } = loadPalette() as unknown as {
+    solidPrimary: (p: string, a: string) => string;
+    onSolidPrimary: (c: string) => string;
+  };
+
+  // 生产上实测到的真实应用主题色（2026-09-21 从工作台抓的）
+  const 太浅要换底色 = ['#1fbcd5', '#9ca4a6', '#d98936', '#4caf50'];
+  const 够深不许动 = ['#2296f3', '#e91e63', '#0b64f6', '#3054eb', '#4051b6', '#732ed1', '#455a65', '#2d46c4', '#3a16af'];
+
+  for (const c of 太浅要换底色) {
+    const v = buildThemeVars(c, 'light');
+    assert.notStrictEqual(v['--color-primary-solid'], c, `${c} 配白字不足 3:1，实心面必须换成深色档`);
+    assert.ok(
+      readability(v['--color-primary-solid'], v['--color-on-primary']) >= 3,
+      `${c} 换完之后实心面上的文字仍然不够读 —— 深色档不够深，或者前景色选错了`,
+    );
+    assert.strictEqual(v['--color-on-primary'], '#ffffff', `${c} 换底色之后白字就够了，不该再翻黑 —— 翻黑正是被否掉的那个方案`);
+  }
+  for (const c of 够深不许动) {
+    const v = buildThemeVars(c, 'light');
+    assert.strictEqual(v['--color-primary-solid'], c, `${c} 配白字已经够 3:1，实心面必须【就是主色本身】`);
+    assert.strictEqual(v['--color-on-primary'], '#ffffff', `${c} 该保持白字`);
+  }
+
+  // 悬停：常态是主色时加深；常态已经是深色档时回到主色（antd 没有更深的一档，
+  // 而本模块不许自算 darken）
+  const 浅 = buildThemeVars('#d98936', 'light');
+  assert.strictEqual(浅['--color-primary-solid-hover'], '#d98936', '常态已是深色档时，悬停回到主色');
+  const 深 = buildThemeVars('#3a16af', 'light');
+  assert.notStrictEqual(深['--color-primary-solid-hover'], '#3a16af', '常态是主色时，悬停要加深');
+
+  // 极端浅色：连深色档都撑不住白字，这时才允许翻墨色（兜底仍然有效）
+  assert.strictEqual(buildThemeVars('#ffff00', 'light')['--color-on-primary'], '#000000', '纯黄这种极端浅色，兜底翻墨色');
+}
+
+console.log('palette.spec: 16 组断言全部通过');

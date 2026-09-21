@@ -9,7 +9,7 @@ const Con = styled.div(
   padding: 10px var(--space-5);
   white-space: pre-line;
   ${active ? 'background: var(--color-background-secondary)' : ''}
-  :hover { background: var(--color-background-secondary) }
+  &:hover { background: var(--color-background-secondary) }
 `,
 );
 const EmptyTip = styled.span`

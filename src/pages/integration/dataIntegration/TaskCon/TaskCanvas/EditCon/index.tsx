@@ -109,14 +109,14 @@ const WrapR = styled.div`
   }
   .editControl {
     padding: 6px var(--space-4);
-    background: var(--color-primary);
+    background: var(--color-primary-solid);
     border-radius: var(--radius-sm);
-    color: var(--color-white);
+    color: var(--color-on-primary);
     font-weight: 400;
     border: 1px solid var(--color-primary);
     .icon,
     .icon:hover {
-      color: var(--color-white);
+      color: var(--color-on-primary);
     }
     &.disable {
       border: 1px solid var(--color-text-disabled);

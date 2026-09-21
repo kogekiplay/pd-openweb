@@ -28,7 +28,7 @@ const Con = styled.div`
       padding: 0 var(--space-4);
       line-height: 38px;
       height: 38px;
-      background: var(--color-primary) 0% 0% no-repeat padding-box;
+      background: var(--color-primary-solid) 0% 0% no-repeat padding-box;
       border-radius: 32px;
       text-align: center;
       font-size: var(--font-sm);

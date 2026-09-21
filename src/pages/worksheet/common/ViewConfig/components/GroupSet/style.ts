@@ -137,7 +137,7 @@ export const Wrap = styled.div`
       }
       span.addIcon {
         position: relative;
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         border-radius: var(--radius-sm);
         color: var(--color-white);
         display: inline-block;

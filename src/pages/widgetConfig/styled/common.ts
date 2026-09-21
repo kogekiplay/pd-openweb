@@ -109,7 +109,7 @@ export const DropdownOverlay = styled.div`
         color: var(--color-text-disabled);
       }
       &:not(disabled):not(.grayItem):hover {
-        background-color: var(--color-primary);
+        background-color: var(--color-primary-solid);
         color: var(--color-white);
         i {
           color: var(--color-white);
