@@ -59,7 +59,7 @@ export const ConnetWrap = styled.div`
     }
     .node {
     }
-    padding: 20px 20px 0 37px;
+    padding: var(--space-5) var(--space-5) 0 37px;
     border-bottom: 1px solid var(--color-border-primary);
     background: var(--color-background-primary);
     .logo {
@@ -94,7 +94,7 @@ export const ConnetWrap = styled.div`
       color: var(--color-text-title);
       display: inline-block;
       margin: 0 18px;
-      padding: 24px 8px 10px;
+      padding: var(--space-6) var(--space-2) 10px;
       box-sizing: border-box;
       border-bottom: 3px solid rgba(0, 0, 0, 0);
       &.disble {
@@ -109,7 +109,7 @@ export const ConnetWrap = styled.div`
   .listCon {
     .chooseAuthType {
       width: 880px;
-      padding: 24px;
+      padding: var(--space-6);
       margin: 22px auto 0;
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-primary);

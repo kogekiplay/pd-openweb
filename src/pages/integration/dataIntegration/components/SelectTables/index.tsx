@@ -10,7 +10,7 @@ import homeAppApi from 'src/api/homeApp';
 import { isValidName } from '../../constant';
 
 const NewItem = styled.div`
-  padding: 5px 12px;
+  padding: 5px var(--space-3);
   color: var(--color-primary);
   cursor: pointer;
 `;

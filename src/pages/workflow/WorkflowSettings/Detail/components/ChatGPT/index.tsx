@@ -52,7 +52,7 @@ const Footer = styled.div`
   .clearBtn {
     width: 48px;
     height: 48px;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     border-radius: 50%;
     cursor: pointer;
     display: flex;
@@ -73,7 +73,7 @@ const Footer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     &.active {
       .icon-airplane {
         color: var(--color-primary);
@@ -102,7 +102,7 @@ const Footer = styled.div`
     align-items: center;
     justify-content: center;
     background: var(--color-background-primary);
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     color: var(--color-text-secondary);
     &:hover {
       border-color: var(--color-primary);
@@ -115,9 +115,9 @@ const Avatar = styled.div`
   min-width: 36px;
   width: 36px;
   height: 36px;
-  margin-right: 8px;
+  margin-right: var(--space-2);
   border-radius: 50%;
-  font-size: 24px;
+  font-size: var(--font-3xl);
   color: var(--color-white);
   background: var(--color-background-disabled);
   display: flex;
@@ -144,9 +144,9 @@ const ListContent = styled.div`
   }
   .markdown-body {
     padding: 0 !important;
-    font-size: 14px;
+    font-size: var(--font-md);
     h1 {
-      font-size: 16px !important;
+      font-size: var(--font-lg) !important;
       padding-bottom: 0 !important;
       border: none !important;
       line-height: normal !important;
@@ -171,7 +171,7 @@ const ListContent = styled.div`
 
 const UseBtn = styled.span`
   cursor: pointer;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   border-radius: var(--radius-sm);
   display: inline-flex;
   height: 32px;

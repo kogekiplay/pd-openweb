@@ -24,9 +24,9 @@ const UsageDetailWrapper = styled.div`
     }
     .arrowIcon {
       transform: rotate(-90deg);
-      margin-right: 8px;
+      margin-right: var(--space-2);
       color: var(--color-text-placeholder);
-      font-size: 20px;
+      font-size: var(--font-2xl);
     }
     .ant-switch-checked {
       background-color: rgba(40, 202, 131, 1);
@@ -94,7 +94,7 @@ const TaskIcon = styled.div`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  margin-right: 8px;
+  margin-right: var(--space-2);
   font-size: 22px;
   background: var(--color-background-card);
   box-shadow: var(--shadow-sm);
@@ -115,7 +115,7 @@ const TaskIcon = styled.div`
     border-radius: 50%;
     background: var(--color-background-inverse);
     color: var(--color-white);
-    font-size: 12px;
+    font-size: var(--font-xs);
     font-weight: 600;
   }
 `;

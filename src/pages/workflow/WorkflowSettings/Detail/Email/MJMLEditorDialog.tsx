@@ -78,7 +78,7 @@ const DialogContent = styled.div`
         background: var(--mjml-editor-bg);
         color: var(--mjml-editor-text);
         font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
-        font-size: 13px;
+        font-size: var(--font-sm);
         line-height: 20px;
       }
       .cm-gutters {
@@ -100,17 +100,17 @@ const DialogContent = styled.div`
     flex: 1;
     min-height: 0;
     margin: 0;
-    padding: 12px 14px;
+    padding: var(--space-3) 14px;
     overflow: auto;
     white-space: pre;
     font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 20px;
     background: var(--mjml-editor-bg);
     color: var(--mjml-editor-text);
   }
   .mjmlError {
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
     color: var(--color-error);
     background: var(--color-error-bg);
     border-bottom: 1px solid var(--color-error-border);

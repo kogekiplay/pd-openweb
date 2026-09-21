@@ -14,7 +14,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 const ControlTag = styled.div`
   line-height: 24px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-radius: 16px;
   background: #d8eeff;
   color: var(--color-link-hover);

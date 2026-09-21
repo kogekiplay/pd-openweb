@@ -24,7 +24,7 @@ const Wrap = styled.div`
     }
   }
   .addAccount {
-    padding: 8px 24px;
+    padding: var(--space-2) var(--space-6);
     background: var(--color-primary);
     border-radius: 21px;
     color: var(--color-white);
@@ -37,7 +37,7 @@ const Wrap = styled.div`
     width: 1000px;
     background: var(--color-background-primary);
     margin: 30px auto;
-    padding: 20px;
+    padding: var(--space-5);
     border-radius: 8px 8px 8px 8px;
     .flex2 {
       flex: 2;
@@ -67,13 +67,13 @@ const Wrap = styled.div`
 
     .headT {
       border-bottom: 1px solid var(--color-border-secondary);
-      padding-bottom: 20px;
+      padding-bottom: var(--space-5);
       .option {
         opacity: 1;
       }
     }
     .tableTr {
-      padding: 20px 0;
+      padding: var(--space-5) 0;
       border-bottom: 1px solid var(--color-border-secondary);
       &:hover {
         background: var(--color-background-hover);

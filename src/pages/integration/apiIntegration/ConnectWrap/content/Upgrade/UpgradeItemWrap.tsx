@@ -3,7 +3,7 @@ import cx from 'classnames';
 import styled from 'styled-components';
 
 const UpgradeContentItem = styled.div`
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   border: 1px solid var(--color-border-primary);
   margin-bottom: 30px;
@@ -17,7 +17,7 @@ const UpgradeContentItem = styled.div`
     &.hoverRowItem:hover {
       background-color: var(--color-background-hover);
       margin: 0 -12px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
     }
   }
   .noBorder {
@@ -30,7 +30,7 @@ const UpgradeContentItem = styled.div`
     width: 50px;
   }
   .partialChanges {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
     background-color: var(--color-border-secondary);
     padding: 0 7px;

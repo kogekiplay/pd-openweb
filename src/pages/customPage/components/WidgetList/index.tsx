@@ -14,7 +14,7 @@ const WidgetWrap = styled.div`
   background-color: var(--color-background-primary);
   padding: 10px;
   .header {
-    padding-left: 12px;
+    padding-left: var(--space-3);
     line-height: 36px;
     span {
       color: var(--color-text-secondary);
@@ -32,8 +32,8 @@ const WidgetWrap = styled.div`
       line-height: 44px;
       cursor: pointer;
       span {
-        margin-left: 12px;
-        font-size: 14px;
+        margin-left: var(--space-3);
+        font-size: var(--font-md);
       }
       .add {
         visibility: hidden;

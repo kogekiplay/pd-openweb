@@ -26,8 +26,8 @@ const BgImageWrap = styled(ReactSVG)`
 const ContentWrap = styled.div`
   box-sizing: border-box;
   justify-content: center;
-  padding: 0 8px;
-  padding-top: 4px;
+  padding: 0 var(--space-2);
+  padding-top: var(--space-1);
   background-color: var(--color-background-secondary);
   height: 100%;
   flex: 1;
@@ -68,7 +68,7 @@ const ContentWrap = styled.div`
     display: none;
   }
   .componentsWrap {
-    padding: 0 0 4px 0;
+    padding: 0 0 var(--space-1) 0;
     flex: 1;
     position: relative;
   }

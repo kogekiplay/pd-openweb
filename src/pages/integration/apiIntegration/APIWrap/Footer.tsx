@@ -7,7 +7,7 @@ import { BtnWrap } from '../style';
 const FooterCon = styled.div`
   height: 70px;
   background: var(--color-background-primary);
-  padding: 16px 40px;
+  padding: var(--space-4) 40px;
   .boc {
     max-width: 800px;
     .close {
@@ -27,7 +27,7 @@ const FooterCon = styled.div`
     height: 36px;
     line-height: 36px;
     color: var(--color-white);
-    padding: 0 32px;
+    padding: 0 var(--space-8);
     border-radius: var(--radius-sm);
   }
   .update {

@@ -52,7 +52,7 @@ const Wrap = styled.div`
       line-height: 10px;
     }
     &.ant-picker-range .ant-picker-input > input {
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
   }
   .countInput {

@@ -16,7 +16,7 @@ import '../../WorkflowSettings/EditFlow/index.less';
 import './index.less';
 
 const Start = styled.div`
-  padding: 0 0 32px 0 !important;
+  padding: 0 0 var(--space-8) 0 !important;
   &::before {
     content: '';
     position: absolute;
@@ -46,7 +46,7 @@ const Start = styled.div`
       margin-right: 10px;
       border-radius: 50%;
       color: var(--color-white);
-      font-size: 20px;
+      font-size: var(--font-2xl);
     }
   }
 `;
@@ -62,12 +62,12 @@ const End = styled.div`
 `;
 
 const Legend = styled.div`
-  margin-left: 12px;
-  font-size: 12px;
+  margin-left: var(--space-3);
+  font-size: var(--font-xs);
   .legendLine {
     width: 12px;
     height: 3px;
-    margin-right: 8px;
+    margin-right: var(--space-2);
   }
 `;
 

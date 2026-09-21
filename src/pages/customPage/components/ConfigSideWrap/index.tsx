@@ -15,7 +15,7 @@ const SideWrapper = styled(SideWrap)`
   &.sideAbsolute {
     position: absolute;
     header {
-      padding: 0 24px 0 24px;
+      padding: 0 var(--space-6) 0 var(--space-6);
       box-shadow: none;
     }
     .mask {
@@ -25,7 +25,7 @@ const SideWrapper = styled(SideWrap)`
       position: absolute;
     }
     .sideContent {
-      margin-top: 20px;
+      margin-top: var(--space-5);
       padding-bottom: 30px;
     }
   }
@@ -108,7 +108,7 @@ const Wrap = styled.div`
     background-color: var(--color-border-tertiary);
   }
   .selectChartColor {
-    padding: 8px;
+    padding: var(--space-2);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     .colorBlock {
@@ -122,14 +122,14 @@ const Wrap = styled.div`
   }
   .label {
     width: 70px;
-    margin-right: 20px;
+    margin-right: var(--space-5);
     font-weight: 600;
   }
   .icon-trash:hover {
     color: var(--color-error) !important;
   }
   .typeSelect {
-    font-size: 13px;
+    font-size: var(--font-sm);
     border-radius: var(--radius-sm);
     width: max-content;
     padding: 3px;
@@ -183,7 +183,7 @@ const Wrap = styled.div`
     &.ant-select-single.ant-select-show-arrow .ant-select-content-value,
     .ant-select-single.ant-select-show-arrow .ant-select-placeholder {
       opacity: 1;
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
     &.ant-select-single.ant-select-open .ant-select-selection-item,
     &.ant-select-single.ant-select-open .ant-select-content-value {
@@ -221,7 +221,7 @@ const Wrap = styled.div`
       line-height: 10px;
     }
     &.ant-picker-range .ant-picker-input > input {
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
   }
 

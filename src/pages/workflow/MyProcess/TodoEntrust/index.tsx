@@ -12,8 +12,8 @@ const IconWrapper = styled.div`
   cursor: pointer;
 
   .iconText {
-    margin-left: 8px;
-    font-size: 14px;
+    margin-left: var(--space-2);
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
   }
 

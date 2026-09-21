@@ -37,7 +37,7 @@ const ExistSourceWrapper = styled.div`
 `;
 
 const LeftListWrapper = styled.div`
-  padding: 16px;
+  padding: var(--space-4);
   width: 260px;
   box-sizing: border-box;
   border-right: 1px solid var(--color-border-secondary);
@@ -75,10 +75,10 @@ const LeftListWrapper = styled.div`
       }
     }
     .categoryText {
-      padding: 12px 0;
+      padding: var(--space-3) 0;
       margin-bottom: 0;
       color: var(--color-text-secondary);
-      font-size: 12px;
+      font-size: var(--font-xs);
     }
   }
 
@@ -100,7 +100,7 @@ const LeftListWrapper = styled.div`
 
 const RightListWrapper = styled.div`
   flex: 1;
-  padding: 12px;
+  padding: var(--space-3);
   box-sizing: border-box;
 
   .listItem {
@@ -109,30 +109,30 @@ const RightListWrapper = styled.div`
     height: 72px;
     width: 100%;
     border-radius: var(--radius-sm);
-    font-size: 13px;
+    font-size: var(--font-sm);
     cursor: pointer;
 
     .itemIcon {
-      padding: 0 20px;
+      padding: 0 var(--space-5);
       .svg-icon {
         width: 22px;
         height: 22px;
       }
     }
     .itemText {
-      padding: 12px 0;
+      padding: var(--space-3) 0;
       overflow: hidden;
       p {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         margin-bottom: 6px;
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-text-title);
         font-weight: 600;
       }
       span {
-        margin-right: 8px;
+        margin-right: var(--space-2);
         color: var(--color-text-tertiary);
       }
     }

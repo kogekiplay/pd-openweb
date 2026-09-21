@@ -22,7 +22,7 @@ const TaskListBox = styled.div`
 
     &.isHeader {
       .rowItem {
-        padding: 8px 0;
+        padding: var(--space-2) 0;
         .sortIcon {
           color: var(--color-text-disabled);
           height: 8px;
@@ -53,7 +53,7 @@ const TaskListBox = styled.div`
     display: flex;
     align-items: center;
     margin: 0;
-    padding: 12px 0;
+    padding: var(--space-3) 0;
     border-bottom: 1px solid var(--color-border-secondary);
 
     .titleColumn {
@@ -62,12 +62,12 @@ const TaskListBox = styled.div`
     }
     .arrowIcon {
       transform: rotate(-90deg);
-      margin-right: 8px;
+      margin-right: var(--space-2);
       color: var(--color-text-placeholder);
-      font-size: 20px;
+      font-size: var(--font-2xl);
     }
     .titleText {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-title);
       font-weight: 600;
     }
@@ -75,9 +75,9 @@ const TaskListBox = styled.div`
       background-color: rgba(40, 202, 131, 1);
     }
     .errorIcon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-error);
-      margin-left: 8px;
+      margin-left: var(--space-2);
       cursor: pointer;
     }
     .warnColor {
@@ -167,7 +167,7 @@ const TaskIcon = styled.div`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  margin-right: 8px;
+  margin-right: var(--space-2);
   font-size: 22px;
   background: var(--color-background-card);
   box-shadow: var(--shadow-sm);
@@ -188,13 +188,13 @@ const TaskIcon = styled.div`
     border-radius: 50%;
     background: var(--color-background-inverse);
     color: var(--color-white);
-    font-size: 12px;
+    font-size: var(--font-xs);
     font-weight: 600;
   }
 `;
 
 const ErrorInfoWrapper = styled.div`
-  padding: 18px 20px;
+  padding: 18px var(--space-5);
   width: 220px;
   background: var(--color-background-primary);
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.24);
@@ -228,10 +228,10 @@ const FilterItem = styled.div`
 
   .itemText {
     min-width: 100px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     font-weight: 600;
-    padding: 8px 0;
+    padding: var(--space-2) 0;
   }
 
   ul {
@@ -240,14 +240,14 @@ const FilterItem = styled.div`
     li {
       display: inline-block;
       padding: 0 15px;
-      margin: 4px 0 4px 8px;
+      margin: var(--space-1) 0 var(--space-1) var(--space-2);
       height: 28px;
       box-sizing: border-box;
       border: 1px solid var(--color-border-secondary);
       border-radius: 20px;
       cursor: pointer;
       line-height: 26px;
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-text-title);
 
       &.isActive {
@@ -297,7 +297,7 @@ const SelectedWrapper = styled.div`
   .operateBtn {
     height: 36px;
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
     cursor: pointer;

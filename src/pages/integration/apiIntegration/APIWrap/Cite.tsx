@@ -8,20 +8,20 @@ import packageVersionAjax from 'src/pages/workflow/api/packageVersion';
 import { pathCompletion } from 'src/utils/common';
 
 const Wrap = styled.div`
-  padding: 24px;
+  padding: var(--space-6);
   max-width: 800px;
   .info,
   .liCon {
     background: var(--color-background-primary);
     width: 100%;
     // border: 1px solid var(--color-border-secondary);
-    padding: 20px 24px;
+    padding: var(--space-5) var(--space-6);
     border-radius: 6px;
     &.liCon {
       padding: 0;
     }
     .li {
-      padding: 14px 20px;
+      padding: 14px var(--space-5);
       &.borTop {
         border-top: 1px solid var(--color-background-disabled);
       }

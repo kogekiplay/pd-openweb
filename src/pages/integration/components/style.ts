@@ -25,10 +25,10 @@ export const Wrap = styled.div`
   // border: 1px solid var(--color-border-primary);
   border-radius: 10px;
   .con {
-    padding: 20px 24px;
+    padding: var(--space-5) var(--space-6);
     .title {
       width: 130px;
-      padding-right: 20px;
+      padding-right: var(--space-5);
     }
   }
   .workflowSettings {
@@ -51,7 +51,7 @@ export const Wrap = styled.div`
   }
   .customTextareaCon {
     margin-top: -10px;
-    padding: 0 24px 24px;
+    padding: 0 var(--space-6) var(--space-6);
     .actionControlMore {
       width: 34px;
       height: 34px;
@@ -61,7 +61,7 @@ export const Wrap = styled.div`
       border-top-right-radius: var(--radius-sm);
       border-bottom-right-radius: var(--radius-sm);
       border-color: var(--color-border-primary);
-      font-size: 20px;
+      font-size: var(--font-2xl);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -78,7 +78,7 @@ export const Wrap = styled.div`
     background: var(--color-background-disabled);
     border: 1px solid var(--color-border-secondary);
     color: var(--color-text-title);
-    font-size: 14px;
+    font-size: var(--font-md);
     padding: 0 10px;
     overflow: hidden;
   }

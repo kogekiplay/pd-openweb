@@ -21,7 +21,7 @@ import {
 } from '../components';
 
 const GenerateJSONBox = styled.textarea`
-  padding: 12px;
+  padding: var(--space-3);
   border-radius: var(--radius-sm);
   height: 340px;
   overflow: auto;

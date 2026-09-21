@@ -15,7 +15,7 @@ const Wrap = styled.div`
   justify-content: center;
   flex: 1;
   background-color: var(--color-background-tertiary);
-  padding: 24px;
+  padding: var(--space-6);
   min-width: 0;
 
   .SingleViewWrap {
@@ -36,7 +36,7 @@ const ViewWrap = styled.div`
   .SingleViewHeader {
     font-size: 17px;
     height: 50px;
-    padding: 10px 16px;
+    padding: 10px var(--space-4);
     align-items: center;
     border-bottom: 1px solid var(--color-border-secondary);
     .searchInputComp,
@@ -44,7 +44,7 @@ const ViewWrap = styled.div`
       background-color: transparent;
     }
     &.mobile {
-      font-size: 14px;
+      font-size: var(--font-md);
       height: 44px;
       background-color: var(--widget-color);
     }

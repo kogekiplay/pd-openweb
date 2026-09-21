@@ -18,7 +18,7 @@ const Con = styled.div`
   width: 800px;
   margin: 22px auto;
   background: var(--color-background-primary);
-  padding: 32px 24px;
+  padding: var(--space-8) var(--space-6);
   border-radius: var(--radius-sm);
 `;
 const WrapCon = styled.div`
@@ -29,7 +29,7 @@ const WrapCon = styled.div`
     padding-bottom: 140px;
   }
   .line {
-    margin: 32px 0;
+    margin: var(--space-8) 0;
     width: 100%;
     border-top: 1px solid var(--color-border-secondary);
   }
@@ -52,7 +52,7 @@ const WrapCon = styled.div`
         color: var(--color-text-title);
       }
       .txtTime {
-        font-size: 12px;
+        font-size: var(--font-xs);
         font-weight: 400;
       }
     }
@@ -84,7 +84,7 @@ const WrapCon = styled.div`
       }
       .item {
         flex-shrink: 0;
-        padding: 8px 6px;
+        padding: var(--space-2) 6px;
         &.width100 {
           width: 100px;
         }
@@ -98,7 +98,7 @@ const WrapCon = styled.div`
     .pre,
     .next {
       display: inline-block;
-      margin: 0 32px;
+      margin: 0 var(--space-8);
       cursor: pointer;
       color: var(--color-text-title);
       &.disable {

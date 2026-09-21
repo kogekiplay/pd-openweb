@@ -12,7 +12,7 @@ const ButtonDisplayWrap = styled.div`
   flex-direction: column;
   width: 100%;
   min-height: 200px;
-  padding: 24px 20px;
+  padding: var(--space-6) var(--space-5);
   text-align: center;
   background-color: var(--color-background-card);
   overflow: auto;
@@ -20,12 +20,12 @@ const ButtonDisplayWrap = styled.div`
   .title,
   .explain {
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     color: var(--title-color);
   }
 `;
 const BtnWrap = styled.div`
-  margin: 4px 0;
+  margin: var(--space-1) 0;
   padding: 0 10px;
   cursor: pointer;
   box-sizing: border-box;
@@ -51,10 +51,10 @@ const BtnWrap = styled.div`
     box-sizing: border-box;
     transition: border 0.25s;
     border: 1px solid transparent;
-    padding: 4px;
+    padding: var(--space-1);
     &.horizontal {
       display: flex;
-      padding: 4px 20px;
+      padding: var(--space-1) var(--space-5);
     }
     &:hover {
       border: 1px dashed var(--color-border-primary);
@@ -76,7 +76,7 @@ const BtnWrap = styled.div`
       background-color: ${props => new TinyColor(props.color).darken(20).toString()};
     }
     .icon {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       margin-right: 6px;
     }
   }
@@ -96,7 +96,7 @@ const BtnWrap = styled.div`
   }
 `;
 const SortableButtonListWrap = styled.div`
-  margin-top: 16px;
+  margin-top: var(--space-4);
   border-top: 1px solid var(--color-border-primary);
   display: flex;
   flex-direction: column;
@@ -104,7 +104,7 @@ const SortableButtonListWrap = styled.div`
   box-sizing: border-box;
   overflow: auto;
   .hint {
-    margin: 24px 0;
+    margin: var(--space-6) 0;
     text-align: center;
     color: var(--color-text-tertiary);
   }

@@ -23,11 +23,11 @@ const HISTORY_TITLE = [
 
 const Box = styled.div`
   border-radius: var(--radius-sm);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   height: 40px;
   display: flex;
   align-items: center;
-  margin: 10px 24px 0;
+  margin: 10px var(--space-6) 0;
   > a {
     color: var(--color-text-title);
     border-bottom: 1px dashed var(--color-text-secondary);

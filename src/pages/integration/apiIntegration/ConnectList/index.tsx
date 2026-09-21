@@ -32,7 +32,7 @@ const Wrap = styled.div`
   background: var(--color-background-primary);
   min-height: 100%;
   .tips {
-    padding: 0 32px 0 32px;
+    padding: 0 var(--space-8) 0 var(--space-8);
   }
   .desCon {
     height: 260px;
@@ -60,7 +60,7 @@ const Wrap = styled.div`
           padding: 10px;
           font-weight: 600;
           display: inline-block;
-          font-size: 16px;
+          font-size: var(--font-lg);
         }
         &.isCur {
           border-bottom: 4px solid var(--color-primary);
@@ -76,9 +76,9 @@ const Wrap = styled.div`
   }
 `;
 const WrapListHeader = styled.div`
-  padding: 32px 32px 0 32px;
+  padding: var(--space-8) var(--space-8) 0 var(--space-8);
   .addConnect {
-    padding: 8px 24px;
+    padding: var(--space-2) var(--space-6);
     background: var(--color-primary);
     border-radius: 21px;
     color: var(--color-white);

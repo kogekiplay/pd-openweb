@@ -10,15 +10,15 @@ import MirrorList from './components/MirrorList.jsx';
 
 const Wrap = styled.div`
   background: var(--color-background-primary);
-  padding: 32px 32px 0;
+  padding: var(--space-8) var(--space-8) 0;
 
   .filterContent {
-    margin-top: 24px;
+    margin-top: var(--space-6);
 
     .taskListText {
       font-size: 15px;
       font-weight: 600;
-      margin-bottom: 12px;
+      margin-bottom: var(--space-3);
     }
     .searchInput {
       width: 360px;
@@ -29,11 +29,11 @@ const Wrap = styled.div`
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 24px;
+      font-size: var(--font-3xl);
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      margin-left: 24px;
+      margin-left: var(--space-6);
       color: var(--color-text-tertiary);
       cursor: pointer;
 
@@ -48,7 +48,7 @@ const Wrap = styled.div`
     }
   }
   .addTaskButton {
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     line-height: 36px;
     height: 36px;
     background: var(--color-primary);

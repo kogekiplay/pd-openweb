@@ -10,7 +10,7 @@ const FilterTextCon = styled.div`
   background: var(--color-background-input);
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);
-  padding: 8px 16px 10px;
+  padding: var(--space-2) var(--space-4) 10px;
   box-sizing: border-box;
   color: var(--color-text-title);
   margin-top: 10px;
@@ -18,7 +18,7 @@ const FilterTextCon = styled.div`
 
   .txtFilter {
     flex: 1;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     line-height: 20px;
 
@@ -30,7 +30,7 @@ const FilterTextCon = styled.div`
 
       .titleTxt {
         width: 100px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         line-height: 22px;
         display: inline-block;
       }
@@ -38,7 +38,7 @@ const FilterTextCon = styled.div`
       .txt {
         flex: 1;
         font-weight: 500;
-        font-size: 13px;
+        font-size: var(--font-sm);
       }
     }
   }

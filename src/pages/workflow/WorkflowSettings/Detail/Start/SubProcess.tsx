@@ -16,12 +16,12 @@ const List = styled.div`
     width: 30px;
   }
   .fieldName {
-    padding: 5px 12px;
+    padding: 5px var(--space-3);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-tertiary);
     height: 36px;
     line-height: 36px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     &:focus {
       border-color: var(--color-primary);
     }

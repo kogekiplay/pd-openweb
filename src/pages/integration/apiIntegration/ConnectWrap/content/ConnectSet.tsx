@@ -12,7 +12,7 @@ import { getNodeList } from '../util';
 const Wrap = styled.div`
   .descContainer {
     width: 880px;
-    margin: 24px auto 0;
+    margin: var(--space-6) auto 0;
     border-radius: 10px;
     background: var(--color-background-primary);
     .mdEditorHeader {
@@ -22,7 +22,7 @@ const Wrap = styled.div`
       height: 55px;
       display: flex;
       justify-content: space-between;
-      padding: 16px 24px;
+      padding: var(--space-4) var(--space-6);
       border-bottom: 1px solid var(--color-border-secondary);
       .caption {
         font-size: 17px;
@@ -32,7 +32,7 @@ const Wrap = styled.div`
       .editAppIntro {
         cursor: pointer;
         color: var(--color-text-secondary);
-        margin-right: 8px;
+        margin-right: var(--space-2);
         span {
           margin-left: 5px;
         }
@@ -42,7 +42,7 @@ const Wrap = styled.div`
       position: relative;
       width: 100%;
       .editorNull {
-        padding: 0 24px;
+        padding: 0 var(--space-6);
         color: var(--color-text-placeholder);
         border: 1px solid var(--color-border-secondary);
         border-radius: 0 0 10px 10px;
@@ -50,7 +50,7 @@ const Wrap = styled.div`
       .editorContent {
         overflow: hidden !important;
         .ck-content {
-          padding: 12px 24px;
+          padding: var(--space-3) var(--space-6);
           box-sizing: border-box;
           border-radius: 0 0 10px 10px !important;
         }
@@ -70,7 +70,7 @@ const Wrap = styled.div`
         }
       }
       .mdEditorContent {
-        font-size: 14px;
+        font-size: var(--font-md);
         overflow: auto;
         word-break: break-all;
         img {
@@ -83,12 +83,12 @@ const Wrap = styled.div`
         }
         ul {
           list-style-type: disc;
-          margin-left: 16px;
-          font-size: 14px;
+          margin-left: var(--space-4);
+          font-size: var(--font-md);
         }
         ol {
-          margin-left: 16px;
-          font-size: 14px;
+          margin-left: var(--space-4);
+          font-size: var(--font-md);
           list-style-type: decimal;
 
           li {
@@ -104,7 +104,7 @@ const Wrap = styled.div`
         box-sizing: border-box;
         height: 55px;
         align-items: center;
-        padding: 0 24px;
+        padding: 0 var(--space-6);
         .caption {
           font-size: 17px;
           font-weight: bold;
@@ -114,7 +114,7 @@ const Wrap = styled.div`
           color: var(--color-text-tertiary);
         }
         .mdEditorCancel {
-          font-size: 13px;
+          font-size: var(--font-sm);
           cursor: pointer;
 
           &:not(:hover) {
@@ -122,11 +122,11 @@ const Wrap = styled.div`
           }
         }
         .mdEditorSave {
-          font-size: 13px;
+          font-size: var(--font-sm);
           cursor: pointer;
           color: var(--color-white);
           border-radius: var(--radius-sm);
-          margin-left: 32px;
+          margin-left: var(--space-8);
           height: 32px;
           line-height: 32px;
           padding: 0 22px;

@@ -13,7 +13,7 @@ import { DATABASE_TYPE, FROM_TYPE_TAB_LIST, ROLE_TYPE, ROLE_TYPE_TAB_LIST, SORT_
 import OptionColumn from './OptionColumn';
 
 const FilterContent = styled.div`
-  margin-top: 16px;
+  margin-top: var(--space-4);
   .searchInput {
     width: 360px;
     min-width: 360px;
@@ -23,11 +23,11 @@ const FilterContent = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 24px;
+    font-size: var(--font-3xl);
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    margin-left: 24px;
+    margin-left: var(--space-6);
     color: var(--color-text-tertiary);
     cursor: pointer;
 
@@ -64,10 +64,10 @@ const FilterItem = styled.div`
 
   .itemText {
     min-width: 70px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
     font-weight: 600;
-    padding: 8px 0;
+    padding: var(--space-2) 0;
   }
 
   ul {
@@ -76,14 +76,14 @@ const FilterItem = styled.div`
     li {
       display: inline-block;
       padding: 0 15px;
-      margin: 4px 0 4px 8px;
+      margin: var(--space-1) 0 var(--space-1) var(--space-2);
       height: 28px;
       box-sizing: border-box;
       border: 1px solid var(--color-border-secondary);
       border-radius: 20px;
       cursor: pointer;
       line-height: 26px;
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-text-title);
 
       &.isActive {
@@ -129,7 +129,7 @@ const SourceListBox = styled.div`
     display: flex;
     align-items: center;
     margin: 0;
-    padding: 8px 0;
+    padding: var(--space-2) 0;
     border-bottom: 1px solid var(--color-border-secondary);
 
     .sortIcon {
@@ -146,12 +146,12 @@ const SourceListBox = styled.div`
     display: flex;
     align-items: center;
     margin: 0;
-    padding: 12px 0;
+    padding: var(--space-3) 0;
     border-bottom: 1px solid var(--color-border-secondary);
 
     .titleText,
     .taskNum {
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: 700;
     }
 
@@ -169,8 +169,8 @@ const SourceListBox = styled.div`
       width: 32px;
       height: 32px;
       border-radius: 16px;
-      margin-right: 8px;
-      font-size: 16px;
+      margin-right: var(--space-2);
+      font-size: var(--font-lg);
       min-width: 32px;
       .svg-icon {
         width: 20px;
@@ -197,7 +197,7 @@ const SourceListBox = styled.div`
 
   .name,
   .address {
-    padding-right: 8px;
+    padding-right: var(--space-2);
     width: 0;
   }
 

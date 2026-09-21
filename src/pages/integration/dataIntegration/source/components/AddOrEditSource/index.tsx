@@ -38,7 +38,7 @@ const HeaderWrapper = styled.div`
   .headerLeft {
     display: flex;
     align-items: center;
-    padding-left: 32px;
+    padding-left: var(--space-8);
     cursor: pointer;
   }
 
@@ -56,7 +56,7 @@ const HeaderWrapper = styled.div`
           color: var(--color-text-title);
           display: inline-block;
           height: 64px;
-          padding: 26px 20px 12px 20px;
+          padding: 26px var(--space-5) var(--space-3) var(--space-5);
           font-size: 15px;
           font-weight: 600;
         }
@@ -72,7 +72,7 @@ const HeaderWrapper = styled.div`
 
   .headerRight {
     display: inline-flex;
-    padding-right: 32px;
+    padding-right: var(--space-8);
     width: 120px;
 
     .saveButton {
@@ -97,12 +97,12 @@ const ContentWrapper = styled.div`
     overflow: auto;
     padding: 0px 80px;
     background-color: var(--color-background-primary);
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
 
   .configGuide {
     flex: 1;
-    padding: 20px;
+    padding: var(--space-5);
     height: calc(100vh - 50px);
     min-width: 400px;
     overflow: auto;

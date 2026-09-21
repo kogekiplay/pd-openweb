@@ -6,7 +6,7 @@
 }
 
 .selectOptionWrapper {
-  padding: 7px 12px;
+  padding: 7px var(--space-3);
   &.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
     font-weight: unset;
     color: var(--color-white);
@@ -14,7 +14,7 @@
 }
 
 .selectTitleOptionWrapper {
-  padding: 7px 12px;
+  padding: 7px var(--space-3);
 }
 
 .editWidgetDialogWrap {
@@ -22,7 +22,7 @@
     width: auto;
     box-sizing: border-box;
     height: 100%;
-    padding: 32px 32px 0;
+    padding: var(--space-8) var(--space-8) 0;
     margin: 0;
   }
   .ant-modal-body {
@@ -78,7 +78,7 @@
     &.ant-select-single.ant-select-show-arrow .ant-select-content-value,
     .ant-select-placeholder {
       opacity: 1;
-      font-size: 13px;
+      font-size: var(--font-sm);
       display: flex;
       align-items: center;
     }

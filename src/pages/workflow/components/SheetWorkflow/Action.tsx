@@ -212,11 +212,11 @@ function UpdateUserDialog(props) {
 
 const MobileUpdateUserWrap = styled.div`
   .header {
-    padding: 24px 16px 16px;
+    padding: var(--space-6) var(--space-4) var(--space-4);
     background-color: var(--color-background-secondary);
   }
   .content {
-    padding: 24px 16px 16px;
+    padding: var(--space-6) var(--space-4) var(--space-4);
     background-color: var(--color-background-primary);
     .original {
       border-bottom: 1px solid var(--color-background-secondary);
@@ -243,7 +243,7 @@ const MobileUpdateUserWrap = styled.div`
         position: absolute;
         right: -3px;
         top: -5px;
-        font-size: 18px;
+        font-size: var(--font-xl);
       }
     }
   }

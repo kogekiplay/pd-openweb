@@ -27,7 +27,7 @@ const TestResultBox = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-sm);
-  font-size: 16px;
+  font-size: var(--font-lg);
   position: absolute;
   right: 0;
   bottom: 0;

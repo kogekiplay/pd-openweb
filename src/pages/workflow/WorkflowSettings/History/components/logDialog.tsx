@@ -27,13 +27,13 @@ const DialogWrapper = styled(Dialog)`
 const Nav = styled.div`
   width: 320px !important;
   .scrollViewContainer {
-    padding: 12px 8px;
+    padding: var(--space-3) var(--space-2);
   }
   li {
     height: 48px;
     display: flex;
     align-items: center;
-    padding: 12px 8px;
+    padding: var(--space-3) var(--space-2);
     cursor: pointer;
     border-radius: 6px;
 
@@ -48,7 +48,7 @@ const Content = styled.div`
   flex: 1;
   min-width: 0;
   .scrollViewContainer {
-    padding: 20px 24px 20px 21px;
+    padding: var(--space-5) var(--space-6) var(--space-5) 21px;
     background: var(--color-background-secondary);
     border-radius: 0 0 var(--radius-sm) 0;
   }
@@ -56,9 +56,9 @@ const Content = styled.div`
     border-radius: 6px;
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-primary);
-    padding: 12px;
+    padding: var(--space-3);
     margin-left: 69px;
-    margin-top: 12px;
+    margin-top: var(--space-3);
     &.success {
       border-color: var(--color-task);
       background: rgba(1, 202, 131, 0.04);
@@ -76,7 +76,7 @@ const ListIconBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-mingo-dark);
   background: #eee3ff;
 `;
@@ -92,7 +92,7 @@ const Error = styled.div`
   background: rgba(244, 67, 54, 0.04);
   font-size: 15px;
   color: var(--color-error);
-  margin: 20px auto;
+  margin: var(--space-5) auto;
 `;
 
 const MODEL_ICON = {

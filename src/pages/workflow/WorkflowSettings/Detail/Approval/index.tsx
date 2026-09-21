@@ -49,7 +49,7 @@ const CustomMessageBox = styled.div`
   background: var(--color-background-secondary);
   border-radius: var(--radius-sm);
   align-items: center;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   .icon-trash:hover {
     color: var(--color-error) !important;
   }
@@ -57,7 +57,7 @@ const CustomMessageBox = styled.div`
 
 const TABS_ITEM = styled.div`
   display: inline-flex;
-  padding: 0 12px 12px 12px;
+  padding: 0 var(--space-3) var(--space-3) var(--space-3);
   margin-right: 36px;
   font-weight: bold;
   font-size: 15px;

@@ -17,7 +17,7 @@ const TimingSettingListWrapper = styled.div`
     display: flex;
     align-items: center;
     margin: 0;
-    padding: 15px 8px;
+    padding: 15px var(--space-2);
     border-bottom: 1px solid var(--color-border-secondary);
 
     &.notHeader {
@@ -38,7 +38,7 @@ const TimingSettingListWrapper = styled.div`
     .readType {
       flex: 1;
       min-width: 0;
-      padding-right: 8px;
+      padding-right: var(--space-2);
     }
     .lastReadDate {
       width: 200px;

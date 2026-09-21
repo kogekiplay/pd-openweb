@@ -12,7 +12,7 @@ import Settings from 'src/pages/widgetConfig/widgetSetting/settings';
 
 const Wrapper = styled.div`
   width: 348px;
-  padding: 20px;
+  padding: var(--space-5);
   background: var(--color-background-primary);
   box-shadow: var(--shadow-lg);
   border-radius: var(--radius-sm);
@@ -20,7 +20,7 @@ const Wrapper = styled.div`
 
   .selectItem {
     width: 100% !important;
-    font-size: 13px;
+    font-size: var(--font-sm);
     &.ant-select,
     & .ant-select {
       --ant-select-border-size: 1px !important;

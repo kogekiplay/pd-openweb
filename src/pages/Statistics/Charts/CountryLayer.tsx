@@ -18,7 +18,7 @@ import { fillValueMap } from '../common/reportDataUtils';
 import { formatrChartValue, formatYaxisList, getChartColors, getControlMinAndMax, getStyleColor } from './common';
 
 const PathWrapper = styled.div`
-  font-size: 14px;
+  font-size: var(--font-md);
   padding: 5px 15px;
   position: absolute;
   bottom: 30px;

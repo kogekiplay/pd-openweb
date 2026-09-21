@@ -9,17 +9,17 @@ import ControlsDataTable from 'src/pages/worksheet/components/ControlsDataTable'
 
 const Wrap = styled.div`
   background: var(--color-background-primary);
-  padding: 30px 20px;
+  padding: 30px var(--space-5);
   .header {
     border-bottom: 1px solid var(--color-border-primary);
-    padding: 16px 10px;
+    padding: var(--space-4) 10px;
     background: var(--color-background-primary);
   }
   .pagination {
     margin-top: -3px;
     .icon-arrow-left-border,
     .icon-arrow-right-border {
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
   }
   .statusIcon {

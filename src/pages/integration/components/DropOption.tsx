@@ -30,7 +30,7 @@ const MenuWrap = styled(Menu)`
     li {
       height: 36px;
       line-height: 36px;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       &:hover {
         background: var(--color-background-secondary);
         color: var(--color-primary);

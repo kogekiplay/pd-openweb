@@ -1,8 +1,8 @@
 .sheetWorkflowWrapper {
   .workflowCard {
-    font-size: 13px;
+    font-size: var(--font-sm);
     border-radius: 8px;
-    padding: 20px;
+    padding: var(--space-5);
     box-shadow: 0px 1px 2px 0px #0000000f;
     transition: box-shadow 0.2s;
     background: var(--color-background-primary);
@@ -20,13 +20,13 @@
     }
     .branchWrap {
       margin: 0 -20px;
-      padding: 15px 20px;
+      padding: 15px var(--space-5);
       &.hover:hover {
         background-color: var(--color-background-secondary);
       }
       &:last-child {
         margin-bottom: -20px;
-        padding-bottom: 20px;
+        padding-bottom: var(--space-5);
       }
     }
     .branchWrapLine {
@@ -71,7 +71,7 @@
       }
     }
     .flowNodeName {
-      padding: 4px 10px;
+      padding: var(--space-1) 10px;
       border-radius: var(--radius-sm);
       background-color: color-mix(in srgb, var(--color-primary) 13%, transparent);
     }
@@ -109,14 +109,14 @@
     padding: 0;
   }
   .workflowStep {
-    padding: 0 28px 0 20px;
+    padding: 0 28px 0 var(--space-5);
   }
   .workflowStep .stepContentWrap {
     background-color: var(--color-background-primary);
   }
   .workflowStepFooter {
     height: 80px;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     border-top: 1px solid var(--color-border-secondary);
     background-color: var(--color-background-primary);
   }
@@ -133,7 +133,7 @@
     border-radius: 20px;
     width: max-content;
     padding: 2px 7px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     font-weight: bold;
   }
 }

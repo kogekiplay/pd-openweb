@@ -36,7 +36,7 @@ const PreviewContentWrapper = styled.div`
   flex-direction: column;
   .iconWrap {
     text-align: right;
-    padding: 8px;
+    padding: var(--space-2);
     background-color: var(--color-background-primary);
     .icon-task-later {
       transform: rotate(0deg);

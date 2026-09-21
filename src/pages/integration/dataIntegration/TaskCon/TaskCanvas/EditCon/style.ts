@@ -137,9 +137,9 @@ export const WrapL = styled.div`
     line-height: 1;
     background: var(--color-background-secondary);
     border: 1px solid var(--color-border-primary);
-    padding: 5px 12px;
+    padding: 5px var(--space-3);
     border-radius: 14px;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     display: inline-block;
   }
 `;

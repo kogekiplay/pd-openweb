@@ -27,7 +27,7 @@ const Wrap = styled.div`
     }
   }
   .selectItem {
-    font-size: 13px;
+    font-size: var(--font-sm);
     width: 100% !important;
   }
   height: 100%;
@@ -52,7 +52,7 @@ const Wrap = styled.div`
       border: 1px solid var(--color-border-secondary);
       height: 55px;
       line-height: 55px;
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       .icon {
         color: var(--color-text-tertiary);
         &:hover {
@@ -60,11 +60,11 @@ const Wrap = styled.div`
         }
       }
       .tabItem {
-        margin-right: 20px;
+        margin-right: var(--space-5);
       }
     }
     .footerCon {
-      padding: 12px 24px;
+      padding: var(--space-3) var(--space-6);
       height: 60px;
       background: var(--color-background-primary);
       bottom: 0;
@@ -88,7 +88,7 @@ const Wrap = styled.div`
     }
     .conC {
       overflow-y: auto;
-      padding: 15px 24px;
+      padding: 15px var(--space-6);
       .listCon {
         height: auto;
       }

@@ -57,7 +57,7 @@ const CountList = styled.ul`
   box-shadow: var(--shadow-lg);
   li {
     box-sizing: border-box;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     line-height: 32px;
     transition: all 0.25s;
     cursor: pointer;

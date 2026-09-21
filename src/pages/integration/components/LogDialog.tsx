@@ -21,7 +21,7 @@ const Wrap = styled.div`
       color: var(--color-text-title);
       display: inline-block;
       margin: 0 18px;
-      padding: 0 20px 10px;
+      padding: 0 var(--space-5) 10px;
       box-sizing: border-box;
       border-bottom: 3px solid rgba(0, 0, 0, 0);
       &.isCur {
@@ -39,7 +39,7 @@ const Wrap = styled.div`
     height: 380px;
     background: var(--color-cyan-blue);
     overflow: auto;
-    padding: 16px;
+    padding: var(--space-4);
   }
 `;
 

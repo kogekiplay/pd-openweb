@@ -16,7 +16,7 @@ const AuthListDrawer = styled(Drawer)`
   }
   .ant-drawer-header {
     border-bottom: 0;
-    padding: 24px;
+    padding: var(--space-6);
     .ant-drawer-header-title {
       flex-direction: row-reverse;
       .ant-drawer-title {
@@ -59,11 +59,11 @@ const AuthListDrawer = styled(Drawer)`
 const ListItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 24px 12px;
-  margin: 0 24px;
+  padding: var(--space-6) var(--space-3);
+  margin: 0 var(--space-6);
   border-bottom: 1px solid var(--color-border-secondary);
   &.titleItem {
-    padding: 12px;
+    padding: var(--space-3);
     color: var(--color-text-secondary);
   }
   &:not(.titleItem):hover {

@@ -32,7 +32,7 @@ const OptionMenu = styled.div`
 `;
 
 const MenuItem = styled.div`
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   line-height: 36px;
   cursor: pointer;
   &:hover {

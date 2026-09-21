@@ -14,7 +14,7 @@ import SpecificFieldsValue from '../SpecificFieldsValue';
 
 const Button = styled.span`
   border: 1px solid var(--color-primary);
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   height: 28px;
   line-height: 28px;
   display: inline-flex;
@@ -25,7 +25,7 @@ const Button = styled.span`
 
 const Box = styled.div`
   background: var(--color-background-tertiary);
-  padding: 10px 12px;
+  padding: 10px var(--space-3);
   margin-top: 10px;
   border-radius: var(--radius-sm);
   position: relative;
@@ -37,7 +37,7 @@ const Box = styled.div`
 `;
 
 const EndBox = styled.div`
-  padding: 16px;
+  padding: var(--space-4);
   border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
   border: 1px solid var(--color-border-secondary);
 `;

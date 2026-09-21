@@ -15,13 +15,13 @@ const TOOLS_ITEM = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  margin-right: 4px;
+  font-size: var(--font-lg);
+  margin-right: var(--space-1);
   margin-top: 5px;
   position: relative;
   &.executing {
     border: 5px solid var(--color-white);
-    font-size: 12px;
+    font-size: var(--font-xs);
     & ~ span:not(.executing) {
       color: var(--color-white);
       background: var(--color-text-disabled) !important;

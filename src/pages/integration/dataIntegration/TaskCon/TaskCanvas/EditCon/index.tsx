@@ -41,7 +41,7 @@ const Wrap = styled.div`
     height: 100%;
     width: 560px;
     border-right: 1px solid var(--color-border-secondary);
-    padding: 20px 24px;
+    padding: var(--space-5) var(--space-6);
     overflow: auto;
     .desCon {
       margin-top: 14px;
@@ -53,7 +53,7 @@ const Wrap = styled.div`
       height: 72px;
       border: 1px solid var(--color-border-secondary);
       border-radius: 6px;
-      padding: 16px 12px;
+      padding: var(--space-4) var(--space-3);
       .iconCon {
         width: 40px;
         height: 40px;
@@ -80,13 +80,13 @@ const Wrap = styled.div`
         }
       }
       .name {
-        font-size: 12px;
+        font-size: var(--font-xs);
         font-weight: 400;
         color: var(--color-text-tertiary);
         max-width: 150px;
       }
       .des {
-        font-size: 14px;
+        font-size: var(--font-md);
         font-weight: 600;
       }
     }
@@ -94,7 +94,7 @@ const Wrap = styled.div`
 `;
 
 const WrapR = styled.div`
-  padding: 16px 24px 0 16px;
+  padding: var(--space-4) var(--space-6) 0 var(--space-4);
   height: 100%;
   overflow: hidden;
   width: 100%;
@@ -108,7 +108,7 @@ const WrapR = styled.div`
     }
   }
   .editControl {
-    padding: 6px 16px;
+    padding: 6px var(--space-4);
     background: var(--color-primary);
     border-radius: var(--radius-sm);
     color: var(--color-white);
@@ -129,7 +129,7 @@ const WrapR = styled.div`
     }
   }
   .previewData {
-    padding: 6px 16px;
+    padding: 6px var(--space-4);
     background: var(--color-background-primary);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-primary);
@@ -160,7 +160,7 @@ const WrapR = styled.div`
       flex-shrink: 0;
       width: 200px;
       border-left: 1px solid var(--color-border-secondary);
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       box-sizing: border-box;
       height: 35px;
       line-height: 35px;

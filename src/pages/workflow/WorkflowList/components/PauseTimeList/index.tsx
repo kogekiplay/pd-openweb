@@ -10,7 +10,7 @@ const PauseTimeListCon = styled.div`
   .runDateItem {
     line-height: 32px;
     color: var(--color-text-title);
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     .pause {
       color: var(--color-error);
     }

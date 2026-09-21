@@ -8,7 +8,7 @@ import { FIELD_TYPE_LIST } from '../../../enum';
 
 const OutputListItem = styled.div(
   ({ isHeader }) => `
-  font-size: 13px;
+  font-size: var(--font-sm);
   height: 36px;
   display: flex;
   align-items: center;

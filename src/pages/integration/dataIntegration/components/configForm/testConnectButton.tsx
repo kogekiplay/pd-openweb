@@ -10,10 +10,10 @@ const TestButton = styled.div`
   border-radius: var(--radius-sm);
   color: var(--color-primary);
   background-color: var(--color-background-primary);
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 18px;
   height: 36px;
-  padding: 8px 30px;
+  padding: var(--space-2) 30px;
   cursor: pointer;
 
   &.lightHover {

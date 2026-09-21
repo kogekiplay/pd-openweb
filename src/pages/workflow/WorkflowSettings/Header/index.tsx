@@ -68,7 +68,7 @@ const TestHeader = styled.div`
   display: flex;
   align-items: center;
   height: 55px;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   align-items: center;
   color: var(--color-white);
   .icon-delete {
@@ -111,10 +111,10 @@ const Footer = styled.div`
     height: 36px;
     line-height: 36px;
     display: inline-block;
-    padding: 0 32px;
+    padding: 0 var(--space-8);
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 14px;
+    font-size: var(--font-md);
     box-sizing: border-box;
     color: var(--color-white);
   }

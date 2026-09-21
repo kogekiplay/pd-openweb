@@ -49,23 +49,23 @@ const Wrap = styled.div`
     }
   }
   .wrap-center {
-    padding: 20px 8px;
+    padding: var(--space-5) var(--space-2);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     .svgIconWrap {
-      margin-bottom: 12px;
+      margin-bottom: var(--space-3);
     }
   }
   .wrap-left {
-    padding: 30px 24px;
+    padding: 30px var(--space-6);
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
     .svgIconWrap {
-      margin-right: 16px;
+      margin-right: var(--space-4);
     }
   }
   .svgIconWrap {
@@ -165,14 +165,14 @@ const NumberChartContent = styled.div`
     }
   }
   .subTextWrap > .w100:first-of-type {
-    margin-top: 8px;
+    margin-top: var(--space-2);
   }
   .flexWrap {
     flex-wrap: wrap;
   }
   .contrastWrap,
   .minorWrap {
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
     align-items: center !important;
   }
   .count {

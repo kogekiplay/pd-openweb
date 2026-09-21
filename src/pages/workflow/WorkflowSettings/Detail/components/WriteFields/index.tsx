@@ -44,7 +44,7 @@ const DecryptBox = styled.span`
   padding: 3px 5px;
   background: var(--color-warning-border);
   border-radius: var(--radius-sm);
-  font-size: 12px;
+  font-size: var(--font-xs);
   min-width: max-content;
 `;
 

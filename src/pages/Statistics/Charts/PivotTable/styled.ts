@@ -92,7 +92,7 @@ const PivotTableContent = styled.div`
       position: relative;
     }
     .cell-value {
-      padding: 8px;
+      padding: var(--space-2);
       // height: 38px;
       position: relative;
       overflow-wrap: break-word;
@@ -134,7 +134,7 @@ const PivotTableContent = styled.div`
     }
     .optionWrap {
       color: var(--color-black);
-      padding: 3px 8px;
+      padding: 3px var(--space-2);
       border-radius: 40px;
       width: max-content;
     }

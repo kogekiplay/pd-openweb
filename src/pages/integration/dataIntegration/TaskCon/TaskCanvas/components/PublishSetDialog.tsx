@@ -19,7 +19,7 @@ const Wrap = styled.div`
   }
   .verifyPasswordWrap {
     .verifyPasswordTitle {
-      font-size: 14px !important;
+      font-size: var(--font-md) !important;
     }
   }
 `;

@@ -6,7 +6,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 
 const SortableBtnIconWrap = styled.div`
   display: flex;
-  font-size: 14px;
+  font-size: var(--font-md);
   align-items: center;
   line-height: 32px;
   cursor: pointer;
@@ -14,7 +14,7 @@ const SortableBtnIconWrap = styled.div`
 const SortableBtnListWrap = styled.ul`
   /* box-shadow: 0 0 2px rgba(0, 0, 0, 0.25); */
   background-color: var(--color-background-primary);
-  padding: 6px 24px;
+  padding: 6px var(--space-6);
   min-height: 205px;
   max-height: 560px;
   overflow: auto;
@@ -43,7 +43,7 @@ const ModalContentWrap = styled.div`
 
   button {
     margin-top: 26px;
-    margin-right: 24px;
+    margin-right: var(--space-6);
     align-self: flex-end;
   }
 `;

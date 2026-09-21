@@ -25,7 +25,7 @@ const Wrap = styled.div`
       line-height: 30px;
       padding: 0 10px;
       color: var(--color-text-tertiary);
-      font-size: 20px;
+      font-size: var(--font-2xl);
       cursor: pointer;
       font-weight: bold;
       &:last-child {

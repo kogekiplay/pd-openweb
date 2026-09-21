@@ -73,13 +73,13 @@
 
   .headerBtn {
     border-radius: var(--radius-sm);
-    padding: 5px 18px 5px 16px !important;
+    padding: 5px 18px 5px var(--space-4) !important;
     display: inline-flex;
     align-items: center;
     min-width: 0;
     max-width: 150px;
     font-weight: bold;
-    font-size: 13px;
+    font-size: var(--font-sm);
 
     .icon {
       flex-shrink: 0;
@@ -138,8 +138,8 @@
       background-color: var(--color-background-primary);
       color: var(--color-text-title);
       border: 1px solid var(--color-border-primary);
-      padding-top: 4px;
-      padding-bottom: 4px;
+      padding-top: var(--space-1);
+      padding-bottom: var(--space-1);
       transition: none;
       i {
         color: var(--color-text-secondary);
@@ -186,7 +186,7 @@
       left: initial !important;
 
       .actionText {
-        margin-left: 20px;
+        margin-left: var(--space-5);
       }
     }
   }
@@ -300,14 +300,14 @@
     }
   }
   .signatureFromMobile {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
     cursor: pointer;
     display: flex;
     align-items: center;
     margin: 0 10px;
     .icon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       margin-right: 6px;
     }
   }

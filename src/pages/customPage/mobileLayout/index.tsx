@@ -7,17 +7,17 @@ const MobileList = styled.div`
   box-sizing: border-box;
   width: 240px;
   background-color: var(--color-background-primary);
-  padding: 16px;
+  padding: var(--space-4);
   .emptyHint {
     margin-top: 14px;
-    padding: 12px 14px;
+    padding: var(--space-3) 14px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-secondary);
     color: var(--color-text-tertiary);
-    font-size: 12px;
+    font-size: var(--font-xs);
     text-align: center;
     p {
-      margin: 16px 0 0 0;
+      margin: var(--space-4) 0 0 0;
     }
     i {
       font-size: 32px;
@@ -34,14 +34,14 @@ const MobileList = styled.div`
       background-color: var(--color-background-secondary);
       transition: background-color 0.25s;
       border-radius: var(--radius-sm);
-      margin-top: 8px;
+      margin-top: var(--space-2);
       cursor: pointer;
       i {
-        font-size: 20px;
+        font-size: var(--font-2xl);
       }
       .name {
         flex: 1;
-        padding-left: 12px;
+        padding-left: var(--space-3);
       }
       .add {
         visibility: hidden;
@@ -59,7 +59,7 @@ const MobileList = styled.div`
 const MobileConfig = styled.div`
   flex: 1;
   background-color: var(--color-background-secondary);
-  padding: 20px;
+  padding: var(--space-5);
 
   .mobileWrap {
     box-sizing: border-box;

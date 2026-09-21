@@ -42,7 +42,7 @@ const Wrap = styled.div`
       align-items: center;
       justify-content: center;
       .icon {
-        font-size: 24px;
+        font-size: var(--font-3xl);
         color: var(--color-white);
       }
     }
@@ -85,7 +85,7 @@ const Wrap = styled.div`
         color: var(--color-text-tertiary);
         cursor: pointer;
         opacity: 0;
-        font-size: 20px;
+        font-size: var(--font-2xl);
       }
       &:hover {
         background: var(--color-background-secondary);

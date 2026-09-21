@@ -63,7 +63,7 @@ const WrapHeader = styled.div`
     border: 1px solid var(--color-border-primary);
     border-radius: 6px;
     line-height: 72px;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
   }
 `;
 
@@ -79,7 +79,7 @@ const Wrap = styled.div`
     width: 100%;
     height: 36px;
     line-height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);

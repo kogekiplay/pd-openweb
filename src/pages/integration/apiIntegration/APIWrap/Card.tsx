@@ -32,13 +32,13 @@ const Wrap = styled.div`
     color: var(--color-success);
   }
   .con {
-    padding: 24px;
+    padding: var(--space-6);
     border-top: 1px solid var(--color-border-secondary);
     .webhookList {
       li {
         // height: 34px;
         line-height: 34px;
-        padding: 0 8px;
+        padding: 0 var(--space-2);
         &:hover {
           background: var(--color-background-hover);
         }
@@ -67,7 +67,7 @@ const Wrap = styled.div`
   .paramLi {
     // height: 34px;
     line-height: 34px;
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     &:not(.disabled):hover {
       background: var(--color-background-secondary);
     }

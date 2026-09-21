@@ -29,13 +29,13 @@ const Wrap = styled.div`
     line-height: 50px;
   }
   width: 880px;
-  margin: 24px auto 0;
+  margin: var(--space-6) auto 0;
   background: var(--color-background-primary);
   // border: 1px solid var(--color-border-primary);
   border-radius: 10px;
   .paramCon {
     border-top: 1px solid var(--color-border-primary);
-    padding: 16px;
+    padding: var(--space-4);
     .conTr {
       min-height: 34px;
       line-height: 34px;
@@ -52,7 +52,7 @@ const Wrap = styled.div`
     .option,
     .name,
     .des {
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       min-height: 36px;
       line-height: 36px;
       & > span {
@@ -80,7 +80,7 @@ const Wrap = styled.div`
     }
     &.isEdit {
       border-top: none;
-      padding: 0 24px 24px;
+      padding: 0 var(--space-6) var(--space-6);
       .conTr {
         margin-bottom: 10px;
         &:hover {
@@ -116,7 +116,7 @@ const Wrap = styled.div`
         }
       }
       .saveBtn {
-        margin: 24px auto 0px;
+        margin: var(--space-6) auto 0px;
         padding: 11px 50px;
         background: var(--color-primary);
         color: var(--color-white);

@@ -65,10 +65,10 @@ const TemplateList = styled.div`
     height: 28px;
     display: inline-block;
     line-height: 28px;
-    padding: 0 12px;
-    margin-right: 8px;
-    margin-top: 4px;
-    margin-bottom: 4px;
+    padding: 0 var(--space-3);
+    margin-right: var(--space-2);
+    margin-top: var(--space-1);
+    margin-bottom: var(--space-1);
     cursor: pointer;
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
@@ -396,7 +396,7 @@ export default class OtherAction extends Component<any, any> {
                 {!!entrustList[user.accountId] && (
                   <Tooltip
                     placement="bottomLeft"
-                    overlayInnerStyle={{ padding: '12px 16px', minWidth: 240, width: 'max-content' }}
+                    overlayInnerStyle={{ padding: 'var(--space-3) var(--space-4)', minWidth: 240, width: 'max-content' }}
                     align={{ offset: [5, 15] }}
                     title={() => (
                       <Fragment>

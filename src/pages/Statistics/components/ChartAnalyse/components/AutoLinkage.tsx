@@ -10,12 +10,12 @@ import store from 'src/redux/configureStore';
 
 const Con = styled(Modal)`
   .ant-modal-header {
-    padding: 20px 24px 10px !important;
+    padding: var(--space-5) var(--space-6) 10px !important;
   }
   .searchWrap {
     padding: 5px 0;
     border-bottom: 1px solid var(--color-background-secondary);
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
     input {
       padding: 3px;
       border: none;

@@ -15,7 +15,7 @@ const HistoryBox = styled.span`
 `;
 
 const HistoryListBox = styled.div`
-  padding: 12px 0px;
+  padding: var(--space-3) 0px;
   width: 440px;
   display: flex;
   background: var(--color-background-card);
@@ -27,7 +27,7 @@ const HistoryListBox = styled.div`
   position: fixed;
 
   header {
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     height: 24px;
     margin-left: 9px;
   }
@@ -35,8 +35,8 @@ const HistoryListBox = styled.div`
   .historyLine {
     background: var(--color-border-secondary);
     height: 1px;
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-2);
   }
 
   .red {
@@ -47,14 +47,14 @@ const HistoryListBox = styled.div`
 `;
 
 const HistoryListCon = styled.div`
-  padding: 0 12px;
+  padding: 0 var(--space-3);
 `;
 
 const ListItem = styled.div`
   min-height: 68px;
   padding: 0 9px;
   border-radius: 8px;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   &:not(.disabled):hover {
     background: var(--color-background-hover);
     .icon-more_horiz {
@@ -67,7 +67,7 @@ const ListItem = styled.div`
     border: 1px solid var(--color-border-secondary);
     color: var(--color-white);
     border-radius: 50%;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -79,7 +79,7 @@ const ListItem = styled.div`
   .historyListTag {
     border-radius: 11px;
     padding: 2px 9px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-white);
     &.blue {
       background: var(--color-primary);

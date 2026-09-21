@@ -33,7 +33,7 @@ const Wrap = styled.div`
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-bottom: 20px;
+      margin-bottom: var(--space-5);
     }
     .dashBorder {
       border: 2px dashed var(--color-border-secondary);
@@ -84,7 +84,7 @@ const Wrap = styled.div`
         line-height: 34px;
         border: 1px solid var(--color-primary);
         border-radius: var(--radius-sm);
-        padding: 0 12px;
+        padding: 0 var(--space-3);
         box-sizing: border-box;
       }
 

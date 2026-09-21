@@ -72,10 +72,10 @@ const ErrorTips = styled.div`
   left: 130px;
   border-radius: var(--radius-sm);
   color: var(--color-white);
-  padding: 5px 12px;
+  padding: 5px var(--space-3);
   white-space: nowrap;
   background: var(--color-error);
-  font-size: 12px;
+  font-size: var(--font-xs);
   min-height: auto !important;
   .errorArrow {
     position: absolute;

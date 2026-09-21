@@ -184,7 +184,7 @@ export default class WebhookContent extends Component<any, any> {
               <div className="Font13 textSecondary mTop5">{_l('请在3分钟内向URL发送一条GET或POST请求')}</div>
               <div
                 className="mTop15 workflowDetailDesc"
-                style={{ padding: '15px 16px', color: overtime ? 'var(--color-error)' : 'var(--color-primary)' }}
+                style={{ padding: '15px var(--space-4)', color: overtime ? 'var(--color-error)' : 'var(--color-primary)' }}
               >
                 {overtime ? _l('当前URL并没有收到任何有效请求，是否重试?') : _l('正在接收请求…')}
               </div>

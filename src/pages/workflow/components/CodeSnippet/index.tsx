@@ -16,7 +16,7 @@ const EditDialogBox = styled(Dialog)`
   }
   input {
     border: 1px solid var(--color-border-primary);
-    padding: 9px 12px;
+    padding: 9px var(--space-3);
     height: 36px;
     line-height: 18px;
     border-radius: var(--radius-sm);
@@ -37,7 +37,7 @@ const DialogBox = styled(Dialog)`
     border-bottom: 1px solid var(--color-border-primary);
     li {
       padding: 14px;
-      font-size: 14px;
+      font-size: var(--font-md);
       cursor: pointer;
       position: relative;
       &:not(.active) {
@@ -72,13 +72,13 @@ const DialogBox = styled(Dialog)`
         line-height: 18px;
         background: var(--color-background-secondary);
         border-radius: 16px;
-        padding: 7px 32px 7px 32px;
+        padding: 7px var(--space-8) 7px var(--space-8);
         border: none;
       }
     }
   }
   .codeSnippetLeft {
-    padding: 16px 0;
+    padding: var(--space-4) 0;
     width: 240px;
     border-right: 1px solid var(--color-border-primary);
     .codeSnippetLangType {
@@ -87,7 +87,7 @@ const DialogBox = styled(Dialog)`
       border-radius: 9px;
       padding: 2px;
       text-align: center;
-      margin-right: 20px;
+      margin-right: var(--space-5);
       > div {
         cursor: pointer;
       }
@@ -101,7 +101,7 @@ const DialogBox = styled(Dialog)`
     }
     li {
       height: 36px;
-      margin-right: 20px;
+      margin-right: var(--space-5);
       padding-left: 15px;
       position: relative;
       cursor: pointer;
@@ -135,7 +135,7 @@ const DialogBox = styled(Dialog)`
         height: 28px;
         border-radius: var(--radius-sm);
         color: var(--color-text-secondary);
-        margin-right: 4px;
+        margin-right: var(--space-1);
         display: none;
         &:hover {
           background: var(--color-background-primary);
@@ -150,7 +150,7 @@ const DialogBox = styled(Dialog)`
     }
   }
   .codeSnippetRight {
-    padding: 16px 0 20px 16px;
+    padding: var(--space-4) 0 var(--space-5) var(--space-4);
     .tagInputareaIuput {
       border: none !important;
     }

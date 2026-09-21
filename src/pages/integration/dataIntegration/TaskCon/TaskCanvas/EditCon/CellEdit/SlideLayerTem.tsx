@@ -30,7 +30,7 @@ const WrapCon = styled.div`
       left: -15px;
       top: 16px;
       display: none;
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-text-disabled);
       cursor: pointer;
       &:hover {
@@ -77,7 +77,7 @@ const WrapCon = styled.div`
       height: 48px;
       min-width: 48px;
       line-height: 48px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
     }
     .tableCon {
       .itemBox {

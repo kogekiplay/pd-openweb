@@ -29,7 +29,7 @@ const Wrap = styled.div`
     }
   }
   .addApi {
-    padding: 8px 24px;
+    padding: var(--space-2) var(--space-6);
     background: var(--color-primary);
     border-radius: 21px;
     color: var(--color-white);
@@ -40,7 +40,7 @@ const Wrap = styled.div`
   }
   .apiCon {
     max-width: 1000px;
-    margin: 32px auto;
+    margin: var(--space-8) auto;
     .searchCon {
       & > div {
         background: var(--color-background-primary);

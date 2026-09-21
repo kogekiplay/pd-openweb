@@ -83,7 +83,7 @@ const SettingWrap = styled.div`
     box-sizing: border-box;
     height: 32px;
     line-height: 32px;
-    padding: 0 20px 0 16px;
+    padding: 0 var(--space-5) 0 var(--space-4);
     border-radius: 18px;
     background-color: var(--color-background-card);
     font-weight: bold;
@@ -97,8 +97,8 @@ const SettingWrap = styled.div`
     display: flex;
     align-items: center;
     .itemTitle {
-      margin: 0 10px 0 24px;
-      font-size: 13px;
+      margin: 0 10px 0 var(--space-6);
+      font-size: var(--font-sm);
     }
     .btnStyle,
     .btnWidth {
@@ -116,7 +116,7 @@ const SettingWrap = styled.div`
         height: 30px;
         line-height: 30px;
         color: var(--color-text-tertiary);
-        font-size: 20px;
+        font-size: var(--font-2xl);
         cursor: pointer;
         &:last-child {
           border: none;

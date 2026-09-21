@@ -1,7 +1,7 @@
 .chartDataSource {
   width: 250px;
   border-left: 1px solid var(--color-border-secondary);
-  padding: 24px 0;
+  padding: var(--space-6) 0;
   background-color: var(--color-background-card);
   transition: width 0.2s;
 
@@ -10,12 +10,12 @@
   }
 
   .horizontalPaddingWrapper {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
 
   .sheetInfoWrapper,
   .timeWrapper {
-    padding: 7px 12px;
+    padding: 7px var(--space-3);
     border-radius: var(--radius-sm);
     background-color: var(--color-background-secondary);
     .removeViewId {
@@ -24,7 +24,7 @@
   }
 
   .searchControlWrapper {
-    padding: 8px 5px;
+    padding: var(--space-2) 5px;
     border-bottom: 1px solid var(--color-border-primary);
     input {
       color: var(--color-text-primary);
@@ -43,10 +43,10 @@
       display: flex;
       align-items: center;
       flex-direction: row-reverse;
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: bold;
       color: var(--color-text-title) !important;
-      padding: 16px 16px 0 16px;
+      padding: var(--space-4) var(--space-4) 0 var(--space-4);
     }
     .ant-collapse-arrow {
       // 同 ChartStyle/index.less：antd 5 把 transition 从 `.ant-collapse-arrow svg`

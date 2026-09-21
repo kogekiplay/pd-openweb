@@ -69,13 +69,13 @@ const ContentWrap = styled.div`
     // overflow: hidden;
   }
   .tabsHeader {
-    padding: 0 12px 0;
+    padding: 0 var(--space-3) 0;
     margin: 0 0 5px 0;
     overflow-x: auto;
     overflow-y: hidden;
     .tab {
       color: var(--widget-title-color);
-      padding: 12px 10px 6px;
+      padding: var(--space-3) 10px 6px;
       margin-right: 10px;
       white-space: pre;
       &.active,
@@ -110,7 +110,7 @@ const ContentWrap = styled.div`
   }
   .cardsHeader {
     margin: 0;
-    padding-top: 12px;
+    padding-top: var(--space-3);
     &::after {
       content: none !important;
     }

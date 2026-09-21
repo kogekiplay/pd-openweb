@@ -16,7 +16,7 @@ const Wrap = styled.div`
       margin-top: -4px;
     }
   }
-  padding: 0 32px 32px;
+  padding: 0 var(--space-8) var(--space-8);
   .noData {
     .iconCon {
       width: 130px;
@@ -29,7 +29,7 @@ const Wrap = styled.div`
     }
   }
   .addConnect {
-    padding: 8px 24px;
+    padding: var(--space-2) var(--space-6);
     background: var(--color-primary);
     border-radius: 21px;
     color: var(--color-white);
@@ -70,7 +70,7 @@ const Wrap = styled.div`
     .name {
       flex: 40;
       overflow: hidden;
-      padding-left: 8px;
+      padding-left: var(--space-2);
     }
     .imgCon {
       width: 36px;
@@ -80,7 +80,7 @@ const Wrap = styled.div`
       overflow: hidden;
       line-height: 36px;
       text-align: center;
-      font-size: 20px;
+      font-size: var(--font-2xl);
     }
   }
   .conTr {

@@ -27,7 +27,7 @@ import {
 
 const TABS_ITEM = styled.div`
   display: inline-flex;
-  padding: 0 12px 12px 12px;
+  padding: 0 var(--space-3) var(--space-3) var(--space-3);
   margin-right: 36px;
   font-weight: bold;
   font-size: 15px;

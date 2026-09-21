@@ -9,12 +9,12 @@ import { LINK_PARA_FIELDS } from '../../config';
 
 const DEFAULT_PARA_ITEM = { key: '', value: { type: 'static', data: '' } };
 const LinkParaWrap = styled.div`
-  padding: 16px 0;
+  padding: var(--space-4) 0;
   .title {
-    margin-top: 16px;
+    margin-top: var(--space-4);
   }
   input {
-    font-size: 13px;
+    font-size: var(--font-sm);
     height: 32px;
     border-radius: var(--radius-sm);
   }
@@ -29,7 +29,7 @@ const LinkParaWrap = styled.div`
     }
   }
   .paraItem {
-    margin-top: 12px;
+    margin-top: var(--space-3);
     .selectField {
       flex-shrink: 0;
       width: 32px;
@@ -53,12 +53,12 @@ const LinkParaWrap = styled.div`
   .fieldWrap {
     line-height: 34px;
     flex: 1;
-    padding-left: 12px;
+    padding-left: var(--space-3);
     border: 1px solid var(--color-border-primary);
     background: var(--color-background-primary);
   }
   .add {
-    margin-top: 16px;
+    margin-top: var(--space-4);
     font-weight: bold;
     color: var(--color-primary);
     &:hover {

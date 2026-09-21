@@ -24,15 +24,15 @@ const { SubMenu, Divider } = Menu;
 
 const AdjustScreenWrap = styled.div`
   width: 360px;
-  padding: 14px 20px;
-  padding-bottom: 16px;
+  padding: 14px var(--space-5);
+  padding-bottom: var(--space-4);
   line-height: 20px;
   h3 {
     margin: 0;
   }
   .hint {
-    margin: 12px 0;
-    font-size: 12px;
+    margin: var(--space-3) 0;
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
   }
 `;

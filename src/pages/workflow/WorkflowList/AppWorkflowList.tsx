@@ -51,7 +51,7 @@ const HeaderWrap = styled.div`
   box-shadow: var(--shadow-md);
   z-index: 15;
   background-color: var(--color-background-primary);
-  padding: 0 24px 0 16px;
+  padding: 0 var(--space-6) 0 var(--space-4);
   .applicationIcon {
     width: 28px;
     height: 28px;
@@ -95,7 +95,7 @@ const CreateBtn = styled.div`
   .workflowAdd {
     line-height: 32px !important;
     border-radius: 32px !important;
-    padding: 0 16px !important;
+    padding: 0 var(--space-4) !important;
     opacity: 0.87;
     font-weight: bold;
     &:hover {
@@ -112,7 +112,7 @@ const CreateBtnBig = styled.div`
   .flowSupport {
     line-height: 36px !important;
     border-radius: 36px !important;
-    padding: 0 32px !important;
+    padding: 0 var(--space-8) !important;
     opacity: 0.87;
     font-weight: bold;
     &:hover {
@@ -122,11 +122,11 @@ const CreateBtnBig = styled.div`
   .flowSupport {
     line-height: 34px !important;
     background-color: var(--color-background-primary);
-    margin-left: 16px;
+    margin-left: var(--space-4);
     border: 1px solid var(--color-text-disabled);
     span {
       margin-left: 0 !important;
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: bold;
       color: var(--color-text-title) !important;
     }

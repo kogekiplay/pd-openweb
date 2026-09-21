@@ -30,7 +30,7 @@ const LazyDisplayFallback = () => (
 const WidgetContent = styled.div`
   flex: 1;
   box-sizing: border-box;
-  padding: 12px;
+  padding: var(--space-3);
   height: 100%;
   &.button {
     display: flex;

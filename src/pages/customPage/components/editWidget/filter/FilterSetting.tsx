@@ -29,9 +29,9 @@ const RadioWrap = styled.div`
   > div {
     justify-content: center;
     box-sizing: border-box;
-    padding: 4px 10px;
+    padding: var(--space-1) 10px;
     color: var(--color-text-secondary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     cursor: pointer;
     &.active {
       color: var(--color-primary);

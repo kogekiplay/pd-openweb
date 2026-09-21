@@ -49,7 +49,7 @@ export const AddTagWrap = styled.div`
     position: absolute;
   }
   .ant-input {
-    font-size: 13px;
+    font-size: var(--font-sm);
     padding: 7px 11px;
     border-radius: 0 !important;
     border: none !important;
@@ -68,7 +68,7 @@ export const AddTagWrap = styled.div`
     width: 100%;
   }
   .ant-space-item {
-    padding: 7px 16px;
+    padding: 7px var(--space-4);
     margin-bottom: 0 !important;
     &:hover {
       background-color: var(--color-background-hover);

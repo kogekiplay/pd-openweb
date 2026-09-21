@@ -13,7 +13,7 @@ const SyncWithDealWrapper = styled.div`
   width: 643px;
 
   .arrowIcon {
-    margin: 32px 0;
+    margin: var(--space-8) 0;
     text-align: center;
     color: var(--color-primary);
   }
@@ -24,8 +24,8 @@ const SyncWithDealWrapper = styled.div`
       background: var(--color-background-secondary);
       border: 1px solid var(--color-background-secondary) !important;
       border-radius: var(--radius-sm);
-      padding: 8px 12px 6px;
-      font-size: 13px;
+      padding: var(--space-2) var(--space-3) 6px;
+      font-size: var(--font-sm);
 
       :hover {
         border-color: var(--color-background-disabled) !important;

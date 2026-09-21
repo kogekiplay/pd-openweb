@@ -20,7 +20,7 @@ const Wrap = styled.div`
   bottom: 0;
   box-shadow: 0 8px 36px rgb(0 0 0 / 24%);
   background: var(--color-background-primary);
-  padding: 0 0 30px 24px;
+  padding: 0 0 30px var(--space-6);
   margin: 0 auto;
   .moreBtn {
     height: 36px;
@@ -49,7 +49,7 @@ const Wrap = styled.div`
     }
     td,
     th {
-      padding: 15px 8px !important;
+      padding: 15px var(--space-2) !important;
       flex: 1;
       .fromTxt a {
         color: var(--color-text-title) !important;
@@ -90,7 +90,7 @@ const Wrap = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 8px;
+    padding: 5px var(--space-2);
     .activeCon {
       width: 20px;
       height: 100%;
@@ -133,7 +133,7 @@ const Wrap = styled.div`
     align-items: center;
     justify-content: space-between;
     min-width: 170px;
-    padding: 5px 8px;
+    padding: 5px var(--space-2);
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-sm);
     &:hover {

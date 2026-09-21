@@ -7,7 +7,7 @@ const thumbnailWidth = 240;
 const thumbnailHeight = 240;
 
 const Thumbnail = styled.div`
-  margin: 20px;
+  margin: var(--space-5);
 `;
 
 const Box = styled.div`

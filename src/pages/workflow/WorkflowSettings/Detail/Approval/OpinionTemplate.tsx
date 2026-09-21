@@ -26,7 +26,7 @@ const Btn = styled.div`
   line-height: 32px;
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   background: var(--color-background-secondary);
   cursor: pointer;
   color: var(--color-text-secondary);
