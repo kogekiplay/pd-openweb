@@ -16,7 +16,7 @@ const CustomButtonInCard = styled.div`
   justify-content: center;
   align-items: center;
   gap: 5px;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   height: 32px;
   border-radius: var(--radius-sm);
   ${props => props.disabled && 'opacity: 0.5;'}
@@ -31,7 +31,7 @@ const CustomButtonInCard = styled.div`
     }
   }
   .icon {
-    font-size: 18px;
+    font-size: var(--font-xl);
   }
   .svgIcon {
     svg {
@@ -58,7 +58,7 @@ const CustomButtonInPopup = styled.div`
   ${props => props.disabled && 'opacity: 0.5;'}
   height: 50px;
   .icon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
   .operateButtonText {
     margin-left: 25px;

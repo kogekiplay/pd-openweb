@@ -13,7 +13,7 @@ const DialogWrap = styled(Dialog)`
     align-items: center;
     height: 40px;
     background: var(--color-background-secondary);
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     font-weight: bold;
     .name {
       width: 160px;
@@ -27,7 +27,7 @@ const DialogWrap = styled(Dialog)`
       align-items: center;
       height: 45px;
       border-bottom: 1px solid var(--color-border-secondary);
-      padding-right: 20px;
+      padding-right: var(--space-5);
       .name {
         display: flex;
         align-items: center;
@@ -42,7 +42,7 @@ const DialogWrap = styled(Dialog)`
     }
   }
   .emptyContent {
-    padding-left: 16px;
+    padding-left: var(--space-4);
     height: 45px;
     line-height: 45px;
     border-bottom: 1px solid var(--color-border-secondary);
@@ -50,7 +50,7 @@ const DialogWrap = styled(Dialog)`
 
   .verifyPasswordInput {
     .verifyPasswordTitle {
-      font-size: 13px !important;
+      font-size: var(--font-sm) !important;
     }
   }
 `;

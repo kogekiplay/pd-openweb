@@ -16,7 +16,7 @@ const OperateMenu = styled.div`
   background: var(--color-background-card);
 `;
 const MenuItem = styled.div`
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   line-height: 36px;
   cursor: pointer;
   &.isDel {
@@ -29,8 +29,8 @@ const MenuItem = styled.div`
 
 const ConfirmDialog = styled(Dialog)`
   .mui-dialog-desc {
-    padding-top: 8px !important;
-    font-size: 13px;
+    padding-top: var(--space-2) !important;
+    font-size: var(--font-sm);
   }
   .passwordInput {
     box-shadow: none !important;

@@ -9,7 +9,7 @@ const BetaWrapper = styled.div`
   transform: scale(0.9);
   height: 16px;
   line-height: 12px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   background: var(--color-success);
   border-radius: var(--radius-sm);
   span {

@@ -5,7 +5,7 @@ export const Wrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: var(--space-5);
 `;
 
 export const LoginDialog = styled.div`
@@ -16,7 +16,7 @@ export const LoginDialog = styled.div`
 `;
 
 export const LoginTitle = styled.div`
-  font-size: 18px;
+  font-size: var(--font-xl);
   color: #333;
   margin-bottom: 30px;
 `;
@@ -26,7 +26,7 @@ export const ReturnButton = styled.button`
   border: none;
   border-radius: 8px;
   padding: 14px 40px;
-  font-size: 16px;
+  font-size: var(--font-lg);
   margin-bottom: 15px;
   transition: background-color 0.3s;
 

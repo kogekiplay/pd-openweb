@@ -2,7 +2,7 @@
   .adm-popup-body {
     display: flex;
     flex-direction: column;
-    padding-bottom: 12px !important;
+    padding-bottom: var(--space-3) !important;
     max-height: calc(~'100% - 40px');
   }
   .popupWrapper {
@@ -22,7 +22,7 @@
   .header {
     line-height: 24px;
     justify-content: space-between;
-    padding: 15px 15px 20px;
+    padding: 15px 15px var(--space-5);
     color: var(--color-text-tertiary);
     .closeIcon {
       width: 24px;
@@ -34,7 +34,7 @@
     padding: 0 15px;
     .btnTypeLabel {
       margin-bottom: 10px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: 500;
       color: var(--color-text-tertiary);
     }
@@ -48,7 +48,7 @@
     }
   }
   .btnsBox + .btnsBox {
-    margin-top: 20px;
+    margin-top: var(--space-5);
   }
   .extrBtnBox {
     line-height: 50px;
@@ -58,7 +58,7 @@
       padding-left: 22px;
       color: var(--color-error);
       .delIcon {
-        margin-right: 20px;
+        margin-right: var(--space-5);
         line-height: 50px;
       }
     }
@@ -85,7 +85,7 @@
         line-height: 44px;
         font-size: 17px;
         font-weight: 700;
-        padding: 0 16px;
+        padding: 0 var(--space-4);
         background-color: var(--color-background-primary);
         color: var(--color-text-title);
         .closeIcon {

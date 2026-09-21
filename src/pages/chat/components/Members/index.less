@@ -3,7 +3,7 @@
 
   &-hander {
     .icon-invite {
-      font-size: 18px;
+      font-size: var(--font-xl);
       cursor: pointer;
       margin-left: 10px;
       &:not(:hover) {
@@ -12,10 +12,10 @@
     }
   }
   &-body {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
   &-list {
-    padding: 20px 0 5px;
+    padding: var(--space-5) 0 5px;
     margin-left: 10px;
   }
   &-creator {
@@ -43,7 +43,7 @@
   display: flex;
   flex-direction: column;
   .addMember {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     cursor: pointer;
     &:not(:hover) {
       color: var(--color-text-tertiary) !important;
@@ -57,7 +57,7 @@
 
 .ChatPanel-Member-item {
   display: flex;
-  padding: 12px 18px 12px 22px;
+  padding: var(--space-3) 18px var(--space-3) 22px;
   position: relative;
   width: 100%;
   height: 60px;
@@ -91,7 +91,7 @@
   .name {
     vertical-align: middle;
     max-width: 140px;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -103,14 +103,14 @@
   }
   .memberInfo {
     width: 100%;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
     display: flex;
     cursor: pointer;
     padding-top: 1px;
     > span {
       vertical-align: middle;
-      margin-right: 8px;
+      margin-right: var(--space-2);
       min-width: 50px;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -129,7 +129,7 @@
     transition: 0.3s;
     .icon-chat-session {
       cursor: pointer;
-      font-size: 18px;
+      font-size: var(--font-xl);
       &:not(:hover) {
         color: var(--color-text-tertiary) !important;
       }

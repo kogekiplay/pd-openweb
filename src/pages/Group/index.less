@@ -1,7 +1,7 @@
 .groupValidate-wrapper {
   width: 1000px;
   height: 600px;
-  margin: 20px auto 0;
+  margin: var(--space-5) auto 0;
   background-color: var(--color-background-primary);
   display: flex;
   flex-direction: column;
@@ -16,8 +16,8 @@
   }
   .group-name {
     color: var(--color-text-title);
-    font-size: 20px;
-    padding-bottom: 8px;
+    font-size: var(--font-2xl);
+    padding-bottom: var(--space-2);
   }
   .group-row,
   .group-create-tiem {
@@ -26,9 +26,9 @@
   .group-row {
     display: flex;
     flex-direction: row;
-    padding-top: 20px;
+    padding-top: var(--space-5);
     > div:first-child {
-      padding-right: 20px;
+      padding-right: var(--space-5);
     }
   }
   .black {
@@ -38,10 +38,10 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    margin: 50px 0 16px 0;
+    margin: 50px 0 var(--space-4) 0;
   }
   .group-create-tiem {
-    padding: 12px 0 32px 0;
+    padding: var(--space-3) 0 var(--space-8) 0;
     text-align: left;
   }
   .group-about {
@@ -56,7 +56,7 @@
   .group-btns {
     display: flex;
     justify-content: center;
-    padding-top: 32px;
+    padding-top: var(--space-8);
   }
   .group-btn {
     font-size: 15px;
@@ -70,7 +70,7 @@
     padding: 0 5px;
     box-sizing: initial;
     i {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       margin-right: 7px;
     }
   }

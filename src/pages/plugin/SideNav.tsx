@@ -29,12 +29,12 @@ const Wrap = styled.div`
 
     span {
       font-weight: 600;
-      font-size: 14px;
+      font-size: var(--font-md);
     }
     i {
       color: var(--color-text-secondary);
-      font-size: 16px;
-      margin-right: 8px;
+      font-size: var(--font-lg);
+      margin-right: var(--space-2);
     }
     a {
       display: inline-flex;
@@ -46,18 +46,18 @@ const Wrap = styled.div`
     .freeTag {
       display: inline-block;
       line-height: 16px;
-      padding: 2px 4px;
+      padding: 2px var(--space-1);
       border-radius: var(--radius-sm);
       background: var(--color-warning);
       color: var(--color-white);
-      margin-left: 4px;
-      font-size: 12px;
+      margin-left: var(--space-1);
+      font-size: var(--font-xs);
       font-weight: 500;
     }
     .upgradeIcon {
       color: var(--color-warning);
       margin-left: 6px;
-      font-size: 16px;
+      font-size: var(--font-lg);
     }
 
     &.isDisabled {

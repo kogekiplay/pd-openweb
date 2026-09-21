@@ -26,7 +26,7 @@ const RecordCardIOWrap = styled.div`
 `;
 
 const SkeletonWrap = styled.div`
-  padding: 10px 12px;
+  padding: 10px var(--space-3);
   margin-bottom: 10px;
   border: 1px solid var(--color-background-card);
   background-color: var(--color-background-primary);

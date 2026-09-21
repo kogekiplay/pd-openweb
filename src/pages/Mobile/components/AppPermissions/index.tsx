@@ -17,7 +17,7 @@ import noAppListImg from './img/noList.png';
 const ApplyJoinAppPopup = styled(Popup)`
   .adm-popup-body {
     border-radius: 8px 8px 0 0;
-    padding: 16px 15px 7px;
+    padding: var(--space-4) 15px 7px;
     .ming.Textarea {
       border: 1px solid var(--color-border-secondary);
       &::-webkit-input-placeholder {

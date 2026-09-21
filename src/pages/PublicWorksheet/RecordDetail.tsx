@@ -14,7 +14,7 @@ const RecordCon = styled.div`
   position: relative;
 
   .recordDetailHeader {
-    padding: 20px 24px;
+    padding: var(--space-5) var(--space-6);
     font-size: 17px;
     font-weight: 600;
   }

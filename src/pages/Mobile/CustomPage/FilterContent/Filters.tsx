@@ -29,7 +29,7 @@ const Con = styled.div`
     padding: 15px;
     overflow: auto;
     .controlWrapper {
-      margin-bottom: 20px;
+      margin-bottom: var(--space-5);
     }
     .selected {
       color: var(--color-primary);

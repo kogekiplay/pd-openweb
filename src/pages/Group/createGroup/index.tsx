@@ -16,14 +16,14 @@ import SelectAvatarTrigger from './SelectAvatarTrigger';
 
 const ContentWrap = styled.div`
   .group {
-    margin-bottom: 24px;
+    margin-bottom: var(--space-6);
     display: flex;
     align-items: center;
     &.flexStart {
       align-items: flex-start;
     }
     .label {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-title);
       width: 20%;
       font-weight: 600;
@@ -37,7 +37,7 @@ const ContentWrap = styled.div`
 
 const CreateDialog = styled(Dialog)`
   .mui-dialog-header {
-    padding: 24px !important;
+    padding: var(--space-6) !important;
   }
 `;
 

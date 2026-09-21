@@ -39,9 +39,9 @@ const AITableWrap = styled.div`
     }
 
     .providerSubtext {
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-text-secondary);
-      margin-top: 4px;
+      margin-top: var(--space-1);
     }
 
     .modelCell {
@@ -76,7 +76,7 @@ const AITableWrap = styled.div`
 
   .sectionTitle {
     color: var(--color-text-title);
-    margin: 16px 0 8px;
+    margin: var(--space-4) 0 var(--space-2);
     &:first-child {
       margin-top: 0;
     }

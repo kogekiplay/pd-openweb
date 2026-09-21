@@ -25,11 +25,11 @@ const SkeletonWrap = styled.div`
   .appSkeletonWrap {
     width: 25%;
     flex-shrink: 0;
-    margin-top: 20px;
+    margin-top: var(--space-5);
   }
   .name {
     width: 55px;
-    margin-top: 12px;
+    margin-top: var(--space-3);
     height: 13px;
     border-radius: 8px;
     &.subName {
@@ -44,7 +44,7 @@ const SkeletonWrap = styled.div`
 
   .billboards {
     height: 160px;
-    margin: 0 16px 32px;
+    margin: 0 var(--space-4) var(--space-8);
     background: #000000;
     opacity: 0.02;
     border-radius: 8px;

@@ -16,7 +16,7 @@ import ViewContent from './ViewContent';
 const WidgetContent = styled.div`
   flex: 1;
   box-sizing: border-box;
-  padding: 8px 10px;
+  padding: var(--space-2) 10px;
   height: 100%;
   &.button {
     display: flex;
@@ -35,7 +35,7 @@ const WidgetContent = styled.div`
     background-color: transparent;
   }
   &.mobileButton {
-    padding: 8px 6px !important;
+    padding: var(--space-2) 6px !important;
   }
   &.mobileTabs,
   &.mobileCard,

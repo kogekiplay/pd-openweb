@@ -43,9 +43,9 @@ const Wrap = styled.div`
     min-width: 18px;
     background-color: var(--color-error);
     z-index: 1;
-    font-size: 12px;
+    font-size: var(--font-xs);
     font-weight: bold;
-    padding: 3px 4px;
+    padding: 3px var(--space-1);
     line-height: 1;
   }
   .errorIcon {

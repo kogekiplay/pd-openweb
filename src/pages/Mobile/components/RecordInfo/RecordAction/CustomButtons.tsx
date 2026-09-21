@@ -32,7 +32,7 @@ const BtnCon = styled.div`
   }
   .groupBtnArrow {
     flex-shrink: 0;
-    margin-left: 4px;
+    margin-left: var(--space-1);
   }
 `;
 
@@ -42,7 +42,7 @@ const PopupBtnCon = styled.div`
   height: 50px;
   ${props => props.disabled && 'opacity: 0.5;'}
   .icon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
   .operateButtonText {
     flex: 1;
@@ -58,12 +58,12 @@ const PopupBtnCon = styled.div`
 `;
 
 const GroupPopupContent = styled.div`
-  padding: 0 18px 12px;
+  padding: 0 18px var(--space-3);
   .emptyGroupTip {
     height: 50px;
     line-height: 50px;
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
   }
 `;
 

@@ -18,7 +18,7 @@ const Wrapper = styled.div`
       display: flex;
       align-items: center;
       margin: 0;
-      padding: 15px 12px;
+      padding: 15px var(--space-3);
       border-bottom: 1px solid var(--color-border-primary);
     }
     .headTr {
@@ -58,7 +58,7 @@ const Wrapper = styled.div`
     .viewName {
       flex: 5;
       width: 0;
-      padding-right: 8px;
+      padding-right: var(--space-2);
 
       .isDel {
         color: var(--color-error);
@@ -68,7 +68,7 @@ const Wrapper = styled.div`
       flex: 1;
       .icon-trash {
         color: var(--color-text-tertiary);
-        font-size: 14px;
+        font-size: var(--font-md);
         cursor: pointer;
         &:hover {
           color: var(--color-error);

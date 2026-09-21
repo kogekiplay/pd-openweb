@@ -20,8 +20,8 @@ const Wrap = styled.div`
     min-width: 0;
   }
   .navItem {
-    font-size: 14px;
-    padding: 10px 20px;
+    font-size: var(--font-md);
+    padding: 10px var(--space-5);
     position: relative;
     &.active {
       color: var(--color-primary);

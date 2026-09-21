@@ -6,7 +6,7 @@
   height: 470px;
 
   .scrollViewContainer > div > div:last-child .Message-container-continuous {
-    padding: 6px 20px 15px 70px;
+    padding: 6px var(--space-5) 15px 70px;
     .Message-body {
       min-height: 25px;
     }
@@ -14,7 +14,7 @@
 }
 
 .ChatPanel-unreadTop {
-  padding: 8px 10px 8px 20px;
+  padding: var(--space-2) 10px var(--space-2) var(--space-5);
   box-shadow: var(--shadow-sm);
   border-radius: 20px 0 0 20px;
   cursor: pointer;
@@ -66,10 +66,10 @@
   left: 0;
   width: 100%;
   color: var(--color-white);
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   box-sizing: border-box;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--font-md);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -109,11 +109,11 @@
     background-size: cover;
   }
   .InviteMessage-title {
-    font-size: 20px;
-    margin: 20px 0 0;
+    font-size: var(--font-2xl);
+    margin: var(--space-5) 0 0;
   }
   .InviteMessage-content {
-    margin: 16px 0 0;
+    margin: var(--space-4) 0 0;
     font-size: 15px;
     .addMember {
       cursor: pointer;

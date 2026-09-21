@@ -1,6 +1,6 @@
 .AppTask {
   .taskToolbar {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     background-color: var(--color-background-primary);
     height: 46px;
     line-height: 46px;
@@ -12,7 +12,7 @@
       margin-bottom: 0;
     }
     .networkLabel {
-      font-size: 18px;
+      font-size: var(--font-xl);
       color: var(--color-text-disabled);
       margin-right: 10px;
     }
@@ -29,7 +29,7 @@
       padding: 0 18px 0 14px;
       border-radius: 18px;
       .icon-plus {
-        font-size: 13px;
+        font-size: var(--font-sm);
         margin-right: 5px;
         display: inline-block;
         vertical-align: top;
@@ -39,7 +39,7 @@
     .taskFilterBtn {
       color: var(--color-text-secondary);
       cursor: pointer;
-      margin-right: 20px;
+      margin-right: var(--space-5);
       user-select: none;
       i {
         font-size: 28px;
@@ -52,7 +52,7 @@
       }
     }
     .folderSettingsBtn {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       color: var(--color-text-secondary);
       cursor: pointer;
       display: inline-block;
@@ -63,11 +63,11 @@
       }
     }
     .folderTabList {
-      padding: 0 32px;
+      padding: 0 var(--space-8);
       li {
         float: left;
         padding: 0 3px;
-        font-size: 14px;
+        font-size: var(--font-md);
         border-bottom: 3px solid transparent;
         cursor: pointer;
         transition: border-color 0.3s ease-out;
@@ -89,7 +89,7 @@
           width: 7px;
           height: 7px;
           background-color: #ff6e40;
-          margin-left: 4px;
+          margin-left: var(--space-1);
         }
         .folderNewTip:not(.Hidden) {
           display: inline-block;
@@ -97,7 +97,7 @@
       }
     }
     .folderTop {
-      font-size: 18px;
+      font-size: var(--font-xl);
       margin-right: 5px;
       cursor: pointer;
       color: var(--color-text-disabled);
@@ -137,7 +137,7 @@
       }
     }
     .folderNoticeBtn {
-      font-size: 18px;
+      font-size: var(--font-xl);
       margin-right: 10px;
       vertical-align: top;
       margin-top: 14px;
@@ -191,7 +191,7 @@
         }
         i {
           margin-right: 10px;
-          font-size: 14px;
+          font-size: var(--font-md);
           width: 14px;
           display: inline-block;
         }
@@ -236,7 +236,7 @@
       .filterHead {
         height: 54px;
         align-items: center;
-        padding: 0 16px;
+        padding: 0 var(--space-4);
         .filterHeadReset {
           border-width: 1px;
           border-style: solid;
@@ -254,7 +254,7 @@
         }
       }
       .filterContent {
-        padding: 0 16px;
+        padding: 0 var(--space-4);
         line-height: normal;
       }
       .taskDelayAndOverdue {
@@ -310,7 +310,7 @@
       .taskStatusBtns {
         align-items: center;
         justify-content: center;
-        margin-top: 8px;
+        margin-top: var(--space-2);
         .taskStatusBtn {
           width: 71px;
           height: 28px;
@@ -338,7 +338,7 @@
       }
       .filterSearchIcon {
         position: absolute;
-        font-size: 18px;
+        font-size: var(--font-xl);
         left: 5px;
         top: 10px;
         color: var(--color-text-secondary);
@@ -352,7 +352,7 @@
         border-width: 0;
         border-bottom-width: 1px;
         vertical-align: top;
-        font-size: 12px;
+        font-size: var(--font-xs);
         &:not(:focus) {
           border-color: rgba(0, 0, 0, 0.32) !important;
         }
@@ -361,7 +361,7 @@
         position: absolute;
         right: 10px;
         top: 12px;
-        font-size: 14px;
+        font-size: var(--font-md);
         cursor: pointer;
         border-color: rgba(0, 0, 0, 0.32) !important;
       }
@@ -369,14 +369,14 @@
         margin-top: 25px;
         display: inline-block;
         color: var(--color-text-tertiary);
-        font-size: 13px;
+        font-size: var(--font-sm);
         user-select: none;
         .Checkbox-box {
-          margin-right: 8px;
+          margin-right: var(--space-2);
         }
       }
       .filterTaskSolidBtn {
-        padding: 0 12px;
+        padding: 0 var(--space-3);
         border-radius: 12px;
         height: 24px;
         line-height: 24px;
@@ -393,7 +393,7 @@
       }
       .filterLabel {
         color: var(--color-text-tertiary);
-        margin-top: 12px;
+        margin-top: var(--space-3);
         span:after {
           width: 150px;
           white-space: normal;
@@ -407,7 +407,7 @@
           padding-left: 0;
         }
         .icon-arrow-down-border {
-          font-size: 12px !important;
+          font-size: var(--font-xs) !important;
         }
         .Item-content.disabled {
           cursor: default;
@@ -418,13 +418,13 @@
           padding-left: 0;
           span,
           i {
-            font-size: 12px !important;
+            font-size: var(--font-xs) !important;
           }
         }
       }
       .filterLine {
         width: 100%;
-        margin-top: 16px;
+        margin-top: var(--space-4);
         height: 1px;
         background: var(--color-background-disabled);
       }
@@ -436,7 +436,7 @@
         border: 1px solid var(--color-white);
         display: inline-block;
         vertical-align: top;
-        margin-top: 12px;
+        margin-top: var(--space-3);
       }
       .filterOptions {
         position: relative;
@@ -462,7 +462,7 @@
         }
       }
       .filterOptionsBtn {
-        padding: 0 8px;
+        padding: 0 var(--space-2);
         border-radius: 12px;
         margin-right: 7px;
         margin-bottom: 7px;

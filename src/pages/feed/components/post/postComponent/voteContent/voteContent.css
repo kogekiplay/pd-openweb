@@ -1,17 +1,17 @@
 .voteContent {
   margin-top: 15px;
-  margin-left: 12px;
+  margin-left: var(--space-3);
 }
 .voteContent li {
   margin-top: 5px;
 }
 .voteContent .voteItemContainer {
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 .voteContent .voteItemContainer label {
   word-wrap: break-word;
   color: var(--color-text-title);
-  font-size: 14px !important;
+  font-size: var(--font-md) !important;
   line-height: 28px !important;
   margin-left: 5px;
 }
@@ -36,13 +36,13 @@
 .voteContent .voteResult .outBar {
   width: 60%;
   height: 12px;
-  margin: 8px 10px 8px 0;
+  margin: var(--space-2) 10px var(--space-2) 0;
 }
 .voteContent .voteResult .inBar {
   height: 100%;
 }
 .voteContent .voteResult li {
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 28px;
   padding-bottom: 5px;
 }

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Wrap = styled.div`
   .termsText {
     margin-top: 13px;
-    font-size: 14px;
+    font-size: var(--font-md);
     .terms {
       color: var(--color-primary);
       text-decoration: none;
@@ -18,9 +18,9 @@ export const Wrap = styled.div`
     display: block;
     background: var(--color-primary);
     border-radius: 6px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-inverse);
-    margin-top: 32px;
+    margin-top: var(--space-8);
     text-align: center;
   }
 
@@ -63,8 +63,8 @@ export const Wrap = styled.div`
   }
 
   .authSwitchEntry {
-    margin-top: 8px;
-    font-size: 14px;
+    margin-top: var(--space-2);
+    font-size: var(--font-md);
     line-height: 20px;
     color: var(--color-text-secondary);
     .authSwitchLink {
@@ -78,10 +78,10 @@ export const Wrap = styled.div`
   }
 
   .footerCon {
-    margin: 20px auto 0;
+    margin: var(--space-5) auto 0;
     text-align: center;
     .changeBtn {
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: bold;
     }
     .lineCenter {
@@ -108,6 +108,6 @@ export const Wrap = styled.div`
 
   .passThis {
     display: inline-block;
-    margin: 32px auto;
+    margin: var(--space-8) auto;
   }
 `;

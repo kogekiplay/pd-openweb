@@ -31,12 +31,12 @@
     margin: 0 !important;
     padding: 10px;
     height: auto !important;
-    padding: 0 4px;
+    padding: 0 var(--space-1);
     border-radius: 6px;
     .privacyTextCon {
       flex-wrap: wrap;
       padding: 10px 0;
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: bold;
     }
     &.errorDiv {
@@ -51,7 +51,7 @@
   }
   .canSendCodeByTel {
     margin: 0 !important;
-    padding: 10px 4px;
+    padding: 10px var(--space-1);
     height: auto !important;
     border-radius: 6px;
     &.errorDiv {
@@ -73,7 +73,7 @@
     color: var(--color-text-secondary);
     position: absolute;
     right: 8px;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     background: none;
     &:hover {
       background: var(--color-background-hover);
@@ -82,7 +82,7 @@
 
   .iti {
     // width: 100%;
-    font-size: 14px;
+    font-size: var(--font-md);
     height: 48px;
   }
 
@@ -156,7 +156,7 @@
 
   .mesDiv {
     position: relative;
-    margin-top: 24px;
+    margin-top: var(--space-6);
     background: var(--color-background-primary);
     border-radius: 6px;
     background-clip: padding-box;
@@ -176,7 +176,7 @@
       transform: translateY(-50%);
       padding-right: 0 !important;
       z-index: 1 !important;
-      font-size: 14px;
+      font-size: var(--font-md);
     }
     &.showIti {
       .iti__country-container {
@@ -211,7 +211,7 @@
       top: 50%;
       transform: translateY(-50%);
       color: var(--color-text-placeholder);
-      font-size: 14px;
+      font-size: var(--font-md);
       z-index: 0;
       line-height: 1.5;
       transition: all 0.3s;
@@ -223,7 +223,7 @@
       display: block;
       color: var(--color-error);
       text-align: right;
-      font-size: 13px;
+      font-size: var(--font-sm);
       width: 100%;
       line-height: 20px;
       word-wrap: break-word;
@@ -265,10 +265,10 @@
         color: var(--color-error) !important;
         top: -1px;
         transform: translateY(-50%);
-        font-size: 12px;
+        font-size: var(--font-xs);
         font-weight: 600;
         background: var(--color-background-primary);
-        padding: 0 4px;
+        padding: 0 var(--space-1);
       }
       &.warnDiv {
         input[type='text']:not(.iti__search-input),
@@ -291,7 +291,7 @@
           color: var(--color-text-title) !important;
           padding: 10px 10px;
           font-weight: bold;
-          font-size: 14px;
+          font-size: var(--font-md);
           line-height: 24px;
           background: var(--color-background-primary) 0% 0% no-repeat padding-box;
           box-shadow: var(--shadow-md);
@@ -343,13 +343,13 @@
       height: 48px;
       vertical-align: top;
       line-height: 48px;
-      font-size: 14px;
+      font-size: var(--font-md);
       transition:
         border-color 0.2s,
         box-shadow 0.2s;
 
       .Dropdown--placeholder {
-        padding: 0 12px;
+        padding: 0 var(--space-3);
         color: var(--color-text-placeholder) !important;
         line-height: 48px;
       }
@@ -373,13 +373,13 @@
 
     &.hasValue {
       .title {
-        font-size: 12px;
+        font-size: var(--font-xs);
         color: var(--color-text-secondary) !important;
         top: -1px;
         transform: translateY(-50%);
         z-index: 0;
         background: var(--color-background-primary);
-        padding: 0 4px;
+        padding: 0 var(--space-1);
         font-weight: 600;
       }
 
@@ -424,7 +424,7 @@
       right: 4px;
       top: 4px;
       text-align: center;
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: bold;
       color: var(--color-text-inverse);
       line-height: 40px;
@@ -481,7 +481,7 @@
 .loginContainer {
   .backspaceT {
     color: var(--color-text-secondary);
-    font-size: 14px;
+    font-size: var(--font-md);
     .backspace {
       vertical-align: -2px;
       display: inline-block;

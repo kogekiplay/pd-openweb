@@ -13,7 +13,7 @@
 }
 .yunFileNav .fileSearch .btnFileSearch {
   display: inline-block;
-  font-size: 20px;
+  font-size: var(--font-2xl);
   color: var(--color-text-secondary);
   position: absolute;
   margin: 9px;
@@ -36,7 +36,7 @@
 .yunFileNav .folderHeader {
   height: 32px;
   line-height: 32px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--color-white);
   padding: 0 15px 0 15px;
 }
@@ -53,7 +53,7 @@
 }
 .yunFileNav .folderHeader .iconFileType {
   margin-right: 9px;
-  font-size: 14px;
+  font-size: var(--font-md);
   vertical-align: top;
   display: inline-block;
   margin-top: 15px;
@@ -73,7 +73,7 @@
   display: inline-block;
 }
 .yunFileNav .folderHeader .addNewFolder {
-  font-size: 24px;
+  font-size: var(--font-3xl);
   cursor: pointer;
 }
 .yunFileNav .flexColumn {
@@ -100,8 +100,8 @@
 }
 .yunFileNav .folderList .isStared {
   float: right;
-  margin-top: 12px;
-  font-size: 14px; /* width: 30px; */
+  margin-top: var(--space-3);
+  font-size: var(--font-md); /* width: 30px; */
   color: #fbc02d;
   z-index: 10;
 }
@@ -115,12 +115,12 @@
   padding-left: 45px !important;
 }
 #leftFolderList .folderItem .settingsLayer .Item-content {
-  padding-left: 16px !important;
+  padding-left: var(--space-4) !important;
 }
 .yunFileNav .folderList .folderSetting {
   float: right;
   margin-top: 14px;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: #afb3bc;
   z-index: 10;
 }
@@ -139,7 +139,7 @@
   line-height: 32px !important;
 }
 .settingsLayer .settingItem .Icon {
-  font-size: 18px;
+  font-size: var(--font-xl);
   color: var(--color-text-tertiary) !important;
   display: inline-block;
   vertical-align: middle;
@@ -149,10 +149,10 @@
 }
 .settingsLayer .settingItem .Item-content {
   color: var(--color-text-secondary);
-  padding-left: 16px !important;
+  padding-left: var(--space-4) !important;
 }
 .settingsLayer .settingItem .Item-content .icon-trash {
-  font-size: 14px;
+  font-size: var(--font-md);
   vertical-align: 0;
   margin-right: 10px;
   margin-left: 1px;
@@ -162,7 +162,7 @@
   vertical-align: top;
 }
 .settingsLayer .settingItem .Item-content .icon-knowledge-log {
-  font-size: 13px;
+  font-size: var(--font-sm);
   margin-right: 10px;
   margin-left: 1px;
 }
@@ -171,13 +171,13 @@
 }
 .settingsLayer .settingItem .Item-content .icon-knowledge-recycle {
   margin-right: 10px;
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 .yunFileNav .fileHr.bottomHr {
   margin: 0px;
 }
 .yunFileNav .folderBottom {
-  font-size: 13px;
+  font-size: var(--font-sm);
   height: 50px;
   line-height: 50px;
   width: 100%;
@@ -246,10 +246,10 @@
   margin: 0 auto;
 }
 .yunFileNav .myFolderSetting {
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: #afb3bc;
   position: absolute;
-  margin: 12px;
+  margin: var(--space-3);
   right: 0px;
 }
 #container .fileMenuTop .typeList .myFolderSetting .Item-content {
@@ -270,7 +270,7 @@
   position: absolute;
   top: 11px;
   left: 28px;
-  font-size: 16px;
+  font-size: var(--font-lg);
 }
 .yunFileNav .folderList .folderListIcon.icon-folder-open {
   top: 10px;
@@ -289,7 +289,7 @@
 .kcDialogBox .usageList .icon-help {
   margin-left: 10px;
   margin-right: 10px;
-  font-size: 14px;
+  font-size: var(--font-md);
   vertical-align: middle;
 }
 .yunFileNav .folderProjectItem {
@@ -301,14 +301,14 @@
     margin: 0 14px 10px;
     border-radius: 28px;
     .icon-search {
-      font-size: 20px;
+      font-size: var(--font-2xl);
       color: var(--color-text-disabled);
     }
     .Input {
-      font-size: 13px;
+      font-size: var(--font-sm);
       height: 28px;
       border: none;
-      padding-left: 4px;
+      padding-left: var(--space-1);
       background-color: transparent;
       &::placeholder {
         color: var(--color-text-disabled);
@@ -326,16 +326,16 @@
   left: 15px;
 }
 .yunFileNav .typeList .Icon.icon-attachment {
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-primary) !important;
   transform: rotateZ(-90deg);
 }
 .yunFileNav .typeList .Icon.icon-access_time {
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-cyan) !important;
 }
 .yunFileNav .typeList .Icon.icon-task-star {
-  font-size: 16px;
+  font-size: var(--font-lg);
   color: var(--color-warning) !important;
 }
 
@@ -350,9 +350,9 @@
 }
 
 .kcDialogBox .dialogCloseBtn {
-  margin-top: 8px !important;
+  margin-top: var(--space-2) !important;
   margin-right: -22px !important;
-  font-size: 16px !important;
+  font-size: var(--font-lg) !important;
 }
 .kcDialogBox .header .title {
   /*vertical-align:middle!important;*/

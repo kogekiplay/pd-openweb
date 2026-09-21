@@ -40,7 +40,7 @@
   line-height: 38px;
   width: 124px;
   text-align: center;
-  font-size: 14px;
+  font-size: var(--font-md);
   position: relative;
 }
 .uploadAssistant .chooseBtn .chooseBtnText {
@@ -99,8 +99,8 @@
   overflow: auto;
 }
 .uploadAssistant .fileList.fileListHeader {
-  font-size: 14px;
-  margin-top: 12px;
+  font-size: var(--font-md);
+  margin-top: var(--space-3);
   border-top: 1px solid var(--color-border-primary);
 }
 .uploadAssistant .fileList .fileListItem {
@@ -130,7 +130,7 @@
   height: 24px;
   vertical-align: top;
   display: inline-block;
-  margin-top: 12px;
+  margin-top: var(--space-3);
   margin-right: 14px;
 }
 .uploadAssistant .fileList .fileListSize {
@@ -165,8 +165,8 @@
   text-align: center;
 }
 .uploadAssistant .fileList .fileListProgress .uploadPercentageText.Icon {
-  font-size: 16px;
-  margin-top: 16px;
+  font-size: var(--font-lg);
+  margin-top: var(--space-4);
 }
 .uploadAssistant .fileList .fileListPosition {
   width: 155px;
@@ -178,10 +178,10 @@
 
 .uploadAssistant .fileList .fileListAction .fileListActionBtn {
   user-select: none;
-  font-size: 18px;
+  font-size: var(--font-xl);
   color: var(--color-text-tertiary);
 }
 .uploadAssistant .fileList .fileListAction .textIcon {
   font-size: 26px;
-  margin-left: 4px;
+  margin-left: var(--space-1);
 }

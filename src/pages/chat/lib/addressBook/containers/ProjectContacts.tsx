@@ -13,13 +13,13 @@ const SearchContainer = styled.div`
   width: 100%;
   height: 100%;
   .searchUsers {
-    padding-top: 24px;
+    padding-top: var(--space-6);
     height: 50%;
     .userTxt {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-secondary);
-      margin-bottom: 8px;
-      padding-left: 24px;
+      margin-bottom: var(--space-2);
+      padding-left: var(--space-6);
     }
     .searchResult {
       width: 100%;
@@ -30,17 +30,17 @@ const SearchContainer = styled.div`
     height: 50%;
     padding-top: 10px;
     .departmentTxt {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-secondary);
-      padding-left: 24px;
+      padding-left: var(--space-6);
     }
     .searchResult {
       width: 100%;
       flex: 1;
       .departmentItem {
         color: var(--color-text-title);
-        font-size: 13px;
-        padding-left: 24px;
+        font-size: var(--font-sm);
+        padding-left: var(--space-6);
         line-height: 32px;
         .icon {
           line-height: 32px;

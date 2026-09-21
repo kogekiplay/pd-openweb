@@ -21,7 +21,7 @@ const Con = styled.div`
   .side-header {
     height: 50px;
     flex-shrink: 0;
-    padding: 0 12px 0 16px;
+    padding: 0 var(--space-3) 0 var(--space-4);
     .brand-wordmark {
       height: 22px;
       width: auto;
@@ -33,19 +33,19 @@ const Con = styled.div`
     height: 40px;
     border-radius: 40px;
     border: 1px solid var(--color-border-secondary);
-    margin: 4px 16px 12px;
+    margin: var(--space-1) var(--space-4) var(--space-3);
     cursor: pointer;
     transition: border-color 0.2s ease;
     &:hover {
       border-color: var(--color-border-hover);
     }
     i {
-      font-size: 18px;
+      font-size: var(--font-xl);
       color: var(--color-mingo);
       margin-right: 6px;
     }
     span {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-title);
       font-weight: 500;
     }
@@ -53,9 +53,9 @@ const Con = styled.div`
   /* 搜索：去边框、左对齐，做成与列表行一致的轻量行式；点击打开搜索弹窗（参考设计稿） */
   .searchBox {
     flex-shrink: 0;
-    margin: 0 8px 4px;
+    margin: 0 var(--space-2) var(--space-1);
     height: 40px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.2s ease;
@@ -63,34 +63,34 @@ const Con = styled.div`
       background: var(--color-background-hover);
     }
     .icon-search {
-      font-size: 18px;
+      font-size: var(--font-xl);
       color: var(--color-text-secondary);
     }
     .placeholder {
       flex: 1;
-      margin: 0 8px;
-      font-size: 14px;
+      margin: 0 var(--space-2);
+      font-size: var(--font-md);
       color: var(--color-text-secondary);
     }
   }
   .list-title {
     flex-shrink: 0;
-    padding: 8px 16px 4px;
-    font-size: 12px;
+    padding: var(--space-2) var(--space-4) var(--space-1);
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
   }
   .sessionList {
     flex: 1;
-    padding: 0 8px;
+    padding: 0 var(--space-2);
     .sessionItem {
       cursor: pointer;
       border-radius: 6px;
-      padding: 0 6px 0 12px;
+      padding: 0 6px 0 var(--space-3);
       height: 40px;
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-primary);
       .operateIcon {
-        margin-left: 8px;
+        margin-left: var(--space-2);
         width: 24px;
         height: 24px;
         flex-shrink: 0;
@@ -113,8 +113,8 @@ const Con = styled.div`
       }
     }
     .emptyStatus {
-      padding: 24px 0;
-      font-size: 14px;
+      padding: var(--space-6) 0;
+      font-size: var(--font-md);
       color: var(--color-text-tertiary);
       text-align: center;
     }
@@ -134,7 +134,7 @@ export const ExpandIcon = styled.span`
     background: var(--color-background-hover);
   }
   i {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: var(--color-text-secondary);
   }
   &.un-expand {
@@ -143,7 +143,7 @@ export const ExpandIcon = styled.span`
     left: 0;
     z-index: 2;
     border: 1px solid var(--color-border-secondary);
-    margin: 12px;
+    margin: var(--space-3);
   }
 `;
 

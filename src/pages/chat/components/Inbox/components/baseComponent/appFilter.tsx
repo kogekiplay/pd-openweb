@@ -57,7 +57,7 @@ const AppFilterWrap = styled.div`
 `;
 
 const SelectAppTrigger = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   padding: 5px 10px;
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-sm);

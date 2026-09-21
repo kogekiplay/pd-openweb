@@ -6,7 +6,7 @@ import { PAPER_DIRECTION_OPTIONS, PAPER_SIZE_OPTIONS } from '../../core/config';
 import { getPrintPaperDirectionOption, getPrintPaperSizeOption } from '../../core/layout';
 
 const LayoutSettingWrap = styled.div`
-  margin-top: 20px;
+  margin-top: var(--space-5);
 
   .settingLabel {
     margin-bottom: 10px;
@@ -17,7 +17,7 @@ const LayoutSettingWrap = styled.div`
 
   .directionList {
     display: flex;
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .directionCard {

@@ -277,7 +277,7 @@ Calendar.Method = {
             '<span class="icon-calendartask" data-endtime="' +
               // v2 给的是 moment，这里读的是它的内部字段 _i；v7 给原生 Date，直接格式化
               moment(event.end).format('HH:mm') +
-              '" style="width:14px;display: inline-block;height:14px;margin: 1px 3px -2px 0;font-size: 16px;vertical-align: top;"> </span>',
+              '" style="width:14px;display: inline-block;height:14px;margin: 1px 3px -2px 0;font-size: var(--font-lg);vertical-align: top;"> </span>',
           );
           // 任务不允许拉伸：v2 是把 .fc-resizer 这个 DOM 删掉，v7 有正经开关，
           // 在事件源里给任务加 durationEditable: false（见上面的 events 函数）。

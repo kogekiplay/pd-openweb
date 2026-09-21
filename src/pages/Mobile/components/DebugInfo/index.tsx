@@ -10,8 +10,8 @@ const Wrap = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 0 16px;
-  font-size: 12px;
+  padding: 0 var(--space-4);
+  font-size: var(--font-xs);
   font-weight: 600;
   display: flex;
   align-items: center;

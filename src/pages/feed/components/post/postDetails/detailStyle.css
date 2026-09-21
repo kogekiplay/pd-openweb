@@ -2,18 +2,18 @@
   max-width: 1000px;
   min-width: 700px;
   min-height: 400px;
-  margin: 20px auto;
+  margin: var(--space-5) auto;
 }
 #postDetail .updateHead {
-  font-size: 16px;
+  font-size: var(--font-lg);
   height: 66px;
   line-height: 76px;
   margin: 0px 30px 0px 30px;
   border-bottom: 1px solid var(--color-border-primary);
 }
 #postDetail .postCard {
-  padding: 20px 30px 30px 30px;
-  font-size: 13px;
+  padding: var(--space-5) 30px 30px 30px;
+  font-size: var(--font-sm);
 }
 
 #postDetail .postOperatorList li {
@@ -54,7 +54,7 @@
   border: 0;
   padding: 0;
   width: 100%;
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 .postDetail-errorIcon {
   color: rgb(255, 145, 0);

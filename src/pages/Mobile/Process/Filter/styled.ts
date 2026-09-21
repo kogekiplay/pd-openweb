@@ -2,11 +2,11 @@ import styled from 'styled-components';
 
 export const OptionWrap = styled.div`
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--font-xs);
   display: inline-block;
-  margin: 0 12px 12px 0;
+  margin: 0 var(--space-3) var(--space-3) 0;
   color: var(--color-text-title);
-  padding: 4px 12px;
+  padding: var(--space-1) var(--space-3);
   border-radius: 28px;
   max-width: 200px;
   user-select: none;
@@ -25,7 +25,7 @@ export const SidebarWrap = styled.div`
   background: var(--color-background-primary);
   width: 100%;
   height: calc(100% - 45px);
-  padding: 20px 20px 0;
+  padding: var(--space-5) var(--space-5) 0;
   .overflowY {
     overflow-y: auto;
     margin-right: -10px;

@@ -28,7 +28,7 @@ const AutoLinkagePopover = styled.div`
     overflow-y: auto;
   }
   .linkageFilter {
-    padding: 5px 8px;
+    padding: 5px var(--space-2);
     border-radius: var(--radius-sm);
     &:hover {
       background-color: var(--color-background-hover);
@@ -61,7 +61,7 @@ const LinkageBtn = props => {
     const res = toArray();
     return (
       <AutoLinkagePopover>
-        <div className="valignWrapper" style={{ padding: '0 4px 0 9px' }}>
+        <div className="valignWrapper" style={{ padding: '0 var(--space-1) 0 9px' }}>
           <div className="Font17 bold textPrimary flex">{_l('联动筛选')}</div>
           <Icon
             className="Font24 textTertiary pointer"

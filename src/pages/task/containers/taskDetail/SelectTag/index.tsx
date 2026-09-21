@@ -12,7 +12,7 @@ const DropWrap = styled.ul`
     display: flex;
     align-items: center;
     height: 28px;
-    padding: 8px;
+    padding: var(--space-2);
     &:hover {
       background: var(--color-primary-focus-outer);
     }
@@ -27,11 +27,11 @@ const DropWrap = styled.ul`
 `;
 
 const EmptyDrop = styled.div`
-  padding: 6px 12px;
+  padding: 6px var(--space-3);
 `;
 
 const Tag = styled.div`
-  font-size: 12px;
+  font-size: var(--font-xs);
   background-color: var(--color-background-disabled);
   padding: 0 10px;
   border-radius: 12px;
@@ -40,7 +40,7 @@ const Tag = styled.div`
   display: flex;
   align-items: center;
   .removeIcon {
-    margin-left: 8px;
+    margin-left: var(--space-2);
   }
   .point {
     width: 10px;

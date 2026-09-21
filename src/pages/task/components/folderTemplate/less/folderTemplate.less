@@ -1,12 +1,12 @@
 ﻿.folderTemplate {
   .dialogContent {
-    padding: 0 0 20px 0;
+    padding: 0 0 var(--space-5) 0;
   }
   .mui-dialog-body {
     padding: 0 10px 22px !important;
   }
   .folderTemplateSidebar {
-    font-size: 13px;
+    font-size: var(--font-sm);
     box-sizing: border-box;
     padding: 0 0 14px;
     width: 145px;
@@ -23,7 +23,7 @@
         background: var(--color-background-hover);
       }
       &.colorPrimary {
-        font-size: 14px;
+        font-size: var(--font-md);
       }
       &:not(.colorPrimary) {
         i {
@@ -33,10 +33,10 @@
       i {
         width: 18px;
         height: 18px;
-        margin: 12px 10px 0;
+        margin: var(--space-3) 10px 0;
         display: inline-block;
         vertical-align: top;
-        font-size: 18px;
+        font-size: var(--font-xl);
       }
     }
   }
@@ -47,7 +47,7 @@
     height: 400px;
     li {
       float: left;
-      margin: 10px 0 14px 24px;
+      margin: 10px 0 14px var(--space-6);
       height: 100px;
       width: 170px;
       color: var(--color-white);
@@ -102,8 +102,8 @@
         height: 100px;
         width: 170px;
         box-sizing: border-box;
-        padding: 12px;
-        font-size: 13px;
+        padding: var(--space-3);
+        font-size: var(--font-sm);
         z-index: 3;
         div {
           overflow: hidden;
@@ -128,11 +128,11 @@
           width: 28px;
           height: 20px;
           display: inline-block;
-          margin-right: 8px;
+          margin-right: var(--space-2);
           text-align: center;
           background: var(--color-background-primary);
           border-radius: var(--radius-sm);
-          font-size: 14px;
+          font-size: var(--font-md);
           &:not(:hover) {
             color: var(--color-text-secondary) !important;
           }
@@ -150,8 +150,8 @@
         }
       }
       .icon-add_circle {
-        font-size: 20px;
-        margin-right: 8px;
+        font-size: var(--font-2xl);
+        margin-right: var(--space-2);
       }
     }
   }

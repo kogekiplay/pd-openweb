@@ -26,7 +26,7 @@ const CollapsedBar = styled.div`
   left: 0;
   z-index: 2;
   height: 50px;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   gap: 10px;
   background-color: var(--color-background-primary);
   .brand-wordmark {
@@ -71,9 +71,9 @@ const OrgList = styled.ul`
 `;
 
 const OrgItem = styled.li`
-  padding: 11px 20px;
+  padding: 11px var(--space-5);
   border-radius: 6px;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-primary);
   cursor: pointer;
   &:hover {

@@ -21,7 +21,7 @@ const InputCom = styled.input`
 `;
 
 const MobileInputWrap = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
   .iti {
     width: 100%;
   }
@@ -48,7 +48,7 @@ const StepLine = styled.div`
       background-color: ${({ step }) => (step === 1 ? ' var(--color-border-secondary)' : 'var(--color-primary)')};
     }
     &:first-child {
-      margin-left: 8px;
+      margin-left: var(--space-2);
       background-color: var(--color-primary);
       .dot {
         left: 15px;
@@ -57,7 +57,7 @@ const StepLine = styled.div`
       }
     }
     &:nth-child(2) {
-      margin-right: 8px;
+      margin-right: var(--space-2);
       .dot {
         right: 15px;
       }

@@ -14,7 +14,7 @@ const TableWrap = styled.div`
     border-bottom: none;
     th,
     td {
-      padding: 8px 12px;
+      padding: var(--space-2) var(--space-3);
       text-align: left;
       border-bottom: 1px solid var(--color-border-secondary);
       border-right: 1px solid var(--color-border-secondary);
@@ -25,7 +25,7 @@ const TableWrap = styled.div`
       }
 
       &.editMode {
-        padding: 4px 8px;
+        padding: var(--space-1) var(--space-2);
       }
     }
 
@@ -65,15 +65,15 @@ const TableWrap = styled.div`
   }
 
   .unitText {
-    margin-left: 8px;
+    margin-left: var(--space-2);
     color: var(--color-text-secondary);
   }
 
   .lastUpdateTime {
-    margin-top: 16px;
+    margin-top: var(--space-4);
     text-align: right;
     color: var(--color-text-secondary);
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
 `;
 

@@ -23,9 +23,9 @@ const BatchOptBtn = styled.div`
   align-items: center;
   height: 56px;
   justify-content: space-between;
-  padding: 0 24px;
-  padding-bottom: calc(constant(safe-area-inset-bottom) - 20px);
-  padding-bottom: calc(env(safe-area-inset-bottom) - 20px);
+  padding: 0 var(--space-6);
+  padding-bottom: calc(constant(safe-area-inset-bottom) - var(--space-5));
+  padding-bottom: calc(env(safe-area-inset-bottom) - var(--space-5));
   font-weight: 700;
   box-shadow: 0 -6px 12px rgba(0, 0, 0, 0.12);
   background-color: var(--color-background-card);

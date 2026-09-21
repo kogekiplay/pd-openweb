@@ -5,7 +5,7 @@
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     width: 300px;
     .folderBoxPadding {
-      padding: 0 24px;
+      padding: 0 var(--space-6);
       position: relative;
     }
     .folderBoxImg {
@@ -25,13 +25,13 @@
       padding-left: 10px;
       border: 1px solid var(--color-border-secondary);
       border-radius: var(--radius-sm);
-      margin-top: 16px;
+      margin-top: var(--space-4);
       &:not(:focus) {
         border-color: var(--color-border-tertiary) !important;
       }
     }
     .folderBoxDesc {
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-secondary);
       margin-top: 13px;
     }
@@ -52,7 +52,7 @@
       .icon-arrow-down-border {
         display: inline-block;
         vertical-align: top;
-        margin-top: 4px;
+        margin-top: var(--space-1);
         margin-left: 5px;
       }
     }
@@ -77,7 +77,7 @@
       text-overflow: ellipsis;
       cursor: pointer;
       i {
-        font-size: 14px;
+        font-size: var(--font-md);
         width: 20px;
         display: inline-block;
         &.icon-charger {
@@ -107,7 +107,7 @@
       text-align: right;
       span {
         display: inline-block;
-        margin-left: 32px;
+        margin-left: var(--space-8);
         height: 36px;
         line-height: 36px;
         cursor: pointer;
@@ -117,7 +117,7 @@
         &.createFolderBtnSave {
           padding: 0 30px;
           color: var(--color-white);
-          font-size: 14px;
+          font-size: var(--font-md);
           border-radius: var(--radius-sm);
         }
       }
@@ -151,12 +151,12 @@
     top: 30px;
     left: 0;
     padding: 5px 0;
-    font-size: 13px;
+    font-size: var(--font-sm);
     white-space: nowrap;
     width: 260px;
     background: var(--color-background-primary);
     li {
-      padding: 7px 20px 5px 20px;
+      padding: 7px var(--space-5) 5px var(--space-5);
       line-height: 22px;
       &:not(:hover) {
         background: var(--color-background-primary) !important;

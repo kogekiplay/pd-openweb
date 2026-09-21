@@ -16,7 +16,7 @@
       position: absolute;
       top: 13px;
       left: 12px;
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-text-secondary);
     }
     .subTaskHeader {
@@ -36,8 +36,8 @@
       }
       .icon-arrow-down-border,
       .icon-arrow-up-border {
-        margin-top: 12px;
-        font-size: 16px;
+        margin-top: var(--space-3);
+        font-size: var(--font-lg);
         &:not(:hover) {
           color: var(--color-text-tertiary) !important;
         }
@@ -64,7 +64,7 @@
         display: inline-block;
         visibility: hidden;
         width: 16px;
-        margin-top: 4px;
+        margin-top: var(--space-1);
         cursor: pointer;
         vertical-align: top;
         color: rgba(0, 0, 0, 0.5);
@@ -94,7 +94,7 @@
         margin: 5px 0 0 10px;
       }
       .subTaskName {
-        font-size: 13px;
+        font-size: var(--font-sm);
         line-height: 20px;
         width: 100%;
         padding: 0;
@@ -141,14 +141,14 @@
       display: inline-block;
       height: 36px;
       line-height: 36px;
-      font-size: 13px;
+      font-size: var(--font-sm);
       margin-left: 6px;
       margin-top: 10px;
       &:not(:hover) {
         color: var(--color-text-tertiary) !important;
       }
       i {
-        font-size: 14px;
+        font-size: var(--font-md);
         margin-right: 10px;
       }
     }

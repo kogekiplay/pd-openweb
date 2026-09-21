@@ -14,7 +14,7 @@ const Wrap = styled.div`
   right: 10px;
   .item {
     color: var(--color-text-disabled);
-    padding: 4px 12px;
+    padding: var(--space-1) var(--space-3);
     border-radius: var(--radius-sm);
   }
   .active {

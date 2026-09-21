@@ -9,12 +9,12 @@ const MoreButtonWrapper = styled.div`
   justify-content: center;
   align-items: center;
   color: var(--color-text-tertiary);
-  font-size: 18px;
+  font-size: var(--font-xl);
   ${props =>
     props.showType === 'icon'
       ? `
           flex: 1;
-          padding: 0 8px;
+          padding: 0 var(--space-2);
         `
       : `
           width: 32px;
@@ -25,7 +25,7 @@ const MoreButtonWrapper = styled.div`
 `;
 
 const MoreButtonPopupContent = styled.div`
-  padding: 0 18px 12px;
+  padding: 0 18px var(--space-3);
 `;
 
 const MoreButtonPopup = props => {

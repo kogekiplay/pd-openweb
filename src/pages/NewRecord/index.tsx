@@ -31,7 +31,7 @@ const Success = styled.div`
   .status {
     font-size: 17px;
     color: var(--color-text-secondary);
-    margin: 24px 0 32px;
+    margin: var(--space-6) 0 var(--space-8);
   }
 `;
 const STATUS = {

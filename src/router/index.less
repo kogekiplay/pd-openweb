@@ -73,7 +73,7 @@ body.inAppScope {
     background: var(--color-background-tertiary);
   }
   #container {
-    margin: 12px;
+    margin: var(--space-3);
     /* 【必须把 height:100% 覆盖掉】基础规则里是 height:100%，
        加上 12px 上下外边距之后卡片总高 = 100% + 24px，底部那条间隙会被挤出视口
        （实测外壳下边界 768、卡片下边界 780）。
@@ -117,7 +117,7 @@ body.inAppScope {
   .appPkgHeaderWrap {
     .workSheetItem,
     .appGroup {
-      margin-right: 8px;
+      margin-right: var(--space-2);
       border-top-right-radius: 8px;
       border-bottom-right-radius: 8px;
     }

@@ -13,9 +13,9 @@ const AttachmentsWrap = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-bottom: 32px;
+  padding-bottom: var(--space-8);
   .empty {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
   }
 `;
@@ -24,7 +24,7 @@ const Content = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 0 15px;
-  margin: 12px 0;
+  margin: var(--space-3) 0;
 `;
 
 const AttachmentsList = styled.div`
@@ -64,7 +64,7 @@ const AttachmentsList = styled.div`
   }
   .attachment-name {
     text-align: center;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-title);
     margin-top: 3px;
   }
@@ -127,7 +127,7 @@ const Attachments = ({
   return (
     <AttachmentsWrap>
       {!attachments.length && (
-        <div className="empty" style={{ margin: '12px 15px' }}>
+        <div className="empty" style={{ margin: 'var(--space-3) 15px' }}>
           <span>{_l('请点击下方按钮上传附件，上传后会自动显示在PC端上')}</span>
         </div>
       )}

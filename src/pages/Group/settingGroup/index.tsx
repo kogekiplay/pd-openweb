@@ -47,7 +47,7 @@ const ContentWrap = styled.div`
   .group-card {
     background-color: var(--color-background-primary);
     border-radius: 6px;
-    padding: 16px;
+    padding: var(--space-4);
     display: flex;
     align-items: center;
     min-height: 46px;
@@ -56,7 +56,7 @@ const ContentWrap = styled.div`
     }
   }
   .button-card {
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: 600;
     color: var(--color-text-title);
     justify-content: center;
@@ -84,7 +84,7 @@ const ContentWrap = styled.div`
     }
   }
   .group-header-card {
-    gap: 16px;
+    gap: var(--space-4);
     justify-content: space-between;
     .avatarWrap {
       position: relative;
@@ -117,27 +117,27 @@ const ContentWrap = styled.div`
     }
   }
   .contentWrap {
-    gap: 20px;
+    gap: var(--space-5);
     .groupItem {
       .label {
-        font-size: 13px;
+        font-size: var(--font-sm);
         font-weight: 600;
         color: var(--color-text-secondary);
-        margin-bottom: 8px;
-        padding-left: 16px;
+        margin-bottom: var(--space-2);
+        padding-left: var(--space-4);
       }
     }
     input {
       border: none !important;
       background: var(--color-background-primary) !important;
-      padding: 0 16px !important;
+      padding: 0 var(--space-4) !important;
       border-radius: 6px !important;
       height: 46px !important;
     }
     .userList {
       flex-wrap: wrap;
       overflow: hidden;
-      gap: 8px;
+      gap: var(--space-2);
       overflow: hidden;
       img {
         width: 32px;
@@ -150,7 +150,7 @@ const ContentWrap = styled.div`
     }
   }
   .btnSplitLine {
-    margin: 0 16px;
+    margin: 0 var(--space-4);
     width: calc(100% - 36px);
     height: 1px;
     background: var(--color-background-secondary);
@@ -170,14 +170,14 @@ const UserDialogContent = styled.div`
     background: var(--color-background-primary);
     border-radius: 6px;
     padding-top: 6px;
-    padding-bottom: 16px;
+    padding-bottom: var(--space-4);
     flex: 1;
     display: flex;
     flex-direction: column;
     .searchWrap {
       display: flex;
       align-items: center;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       input {
         border: none !important;
       }
@@ -188,8 +188,8 @@ const UserDialogContent = styled.div`
   }
   .userItem {
     height: 40px;
-    gap: 8px;
-    padding: 0 16px;
+    gap: var(--space-2);
+    padding: 0 var(--space-4);
     &:hover {
       background: var(--color-background-hover);
     }

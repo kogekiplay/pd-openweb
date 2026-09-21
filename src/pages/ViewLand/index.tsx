@@ -26,7 +26,7 @@ const Con = styled.div`
     }
   }
   .queryInput .inputCon > i {
-    font-size: 20px !important;
+    font-size: var(--font-2xl) !important;
     margin-top: 2px;
   }
 `;

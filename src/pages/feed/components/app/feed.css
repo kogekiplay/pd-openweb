@@ -23,13 +23,13 @@
   vertical-align: top;
   width: 100%;
   box-sizing: border-box;
-  padding-top: 20px;
+  padding-top: var(--space-5);
   border-left: 250px solid transparent;
   position: relative;
 }
 .contentLeft {
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   max-width: 800px;
   min-width: 500px;
 }

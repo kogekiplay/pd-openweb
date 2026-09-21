@@ -5,7 +5,7 @@
   white-space: nowrap;
 }
 .mmTab > ul > li {
-  font-size: 14px;
+  font-size: var(--font-md);
   border-bottom: none;
   box-sizing: border-box;
   border-bottom: none;

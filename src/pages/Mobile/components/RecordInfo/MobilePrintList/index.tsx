@@ -101,7 +101,7 @@ const PrintPopupWrap = styled(PopupWrapper)`
     --z-index: 10005;
   }
   .popupContentBox {
-    padding-bottom: 12px;
+    padding-bottom: var(--space-3);
   }
 `;
 
@@ -119,7 +119,7 @@ const PrintListContent = styled.div`
     height: 44px;
     display: flex;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     font-weight: 500;
     &.disabledCloudPrint {
       .ming.Icon,
@@ -135,17 +135,17 @@ const PrintListContent = styled.div`
 `;
 
 const UpgradeContent = styled.div`
-  padding-bottom: 20px;
+  padding-bottom: var(--space-5);
   .hint {
-    margin: 32px 24px 10px;
+    margin: var(--space-8) var(--space-6) 10px;
     text-align: center;
     font-size: 22px;
     font-weight: bold;
   }
   .explain {
-    margin: 0 24px;
+    margin: 0 var(--space-6);
     max-width: 600px;
-    font-size: 14px;
+    font-size: var(--font-md);
     text-align: center;
   }
 `;

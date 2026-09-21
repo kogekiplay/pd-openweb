@@ -14,7 +14,7 @@ const SearchRowsWrapper = styled.div`
   .cuttingLine {
     height: 16px;
     width: 1px;
-    margin: 0 12px 0 10px;
+    margin: 0 var(--space-3) 0 10px;
     background-color: var(--color-text-disabled);
   }
   .mobileQuickFilterTrigger {

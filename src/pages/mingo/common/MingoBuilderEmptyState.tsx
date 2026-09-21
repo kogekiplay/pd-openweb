@@ -23,7 +23,7 @@ const Wrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 32px 10vh;
+  padding: 0 var(--space-8) 10vh;
   text-align: center;
   pointer-events: none;
   overflow: hidden;

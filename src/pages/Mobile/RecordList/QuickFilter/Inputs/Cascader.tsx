@@ -21,14 +21,14 @@ const CascaderCon = styled.div`
     background: var(--color-background-secondary);
     text-align: center;
     line-height: 26px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-tertiary);
   }
   .rightArrow {
     position: absolute;
     right: 0;
     line-height: 26px;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-text-placeholder);
   }
 `;
@@ -38,8 +38,8 @@ const CascaderItem = styled.span`
   height: 28px;
   background: var(--color-background-secondary);
   border-radius: 14px;
-  margin: 0 8px 10px 0;
-  padding-right: 12px;
+  margin: 0 var(--space-2) 10px 0;
+  padding-right: var(--space-3);
   line-height: 28px;
   .userAvatar {
     width: 28px;
@@ -50,7 +50,7 @@ const CascaderItem = styled.span`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    margin: 0 20px 0 8px;
+    margin: 0 var(--space-5) 0 var(--space-2);
     vertical-align: middle;
   }
 `;

@@ -21,13 +21,13 @@
   &-hander {
     color: var(--color-text-primary);
     font-weight: bolder;
-    font-size: 14px;
-    padding: 0 16px;
+    font-size: var(--font-md);
+    padding: 0 var(--space-4);
     display: flex;
     justify-content: space-between;
 
     &-entry {
-      font-size: 12px;
+      font-size: var(--font-xs);
       cursor: pointer;
     }
     &-entry:not(:hover) {
@@ -35,7 +35,7 @@
     }
   }
   .nodata {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
 
   &Panel {
@@ -53,7 +53,7 @@
     .header {
       padding: 10px 17px 10px 10px;
       display: flex;
-      font-size: 14px;
+      font-size: var(--font-md);
       justify-content: space-between;
       align-items: center;
     }
@@ -66,7 +66,7 @@
     .slideInfoBar {
       cursor: pointer;
       .icon-arrow-left-border {
-        font-size: 18px;
+        font-size: var(--font-xl);
       }
     }
     .nodata-wrapper {

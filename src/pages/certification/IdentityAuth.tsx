@@ -17,17 +17,17 @@ const Wrapper = styled.div`
   background: var(--color-background-primary);
   .tips {
     width: 100%;
-    padding: 16px 24px;
+    padding: var(--space-4) var(--space-6);
     background: color-mix(in srgb, var(--color-primary) 3%, transparent);
   }
   .paddingInline24 {
-    padding: 0 24px;
+    padding: 0 var(--space-6);
   }
   .labelText {
     color: var(--color-text-secondary);
     font-weight: 600;
     margin-bottom: 10px;
-    margin-top: 24px;
+    margin-top: var(--space-6);
   }
   .icon-check_circle {
     color: var(--color-success);

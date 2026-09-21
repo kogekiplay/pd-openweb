@@ -26,7 +26,7 @@ export const PageWrap = styled.div`
 
   @media (max-width: ${MOBILE_BREAKPOINT}) {
     background-color: #fff;
-    padding: 16px;
+    padding: var(--space-4);
     align-items: flex-start;
     padding-top: 40px;
   }
@@ -37,7 +37,7 @@ export const Card = styled.div`
   min-height: 400px;
   max-width: 100%;
   border-radius: 12px;
-  padding: 32px;
+  padding: var(--space-8);
   background-color: #fff;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
@@ -46,7 +46,7 @@ export const Card = styled.div`
     width: 100%;
     border: none;
     box-shadow: none;
-    padding: 32px 24px 28px;
+    padding: var(--space-8) var(--space-6) 28px;
     border-radius: 0;
   }
 `;
@@ -55,7 +55,7 @@ export const LogoWrap = styled.div`
   width: auto;
   height: 72px;
   display: block;
-  margin: 0 auto 24px;
+  margin: 0 auto var(--space-6);
   img {
     width: 100%;
     height: 100%;
@@ -116,9 +116,9 @@ export const ScopeListWrap = styled.ul`
   }
 
   @media (max-width: ${MOBILE_BREAKPOINT}) {
-    padding-left: 4px;
+    padding-left: var(--space-1);
     li {
-      padding-left: 12px;
+      padding-left: var(--space-3);
     }
   }
 `;

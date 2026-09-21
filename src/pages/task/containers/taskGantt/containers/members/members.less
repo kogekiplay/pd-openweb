@@ -14,12 +14,12 @@
     }
 
     header {
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       border-bottom: 1px solid rgba(117, 117, 117, 0.15);
       height: 48px;
       line-height: 48px;
       box-sizing: border-box;
-      font-size: 13px;
+      font-size: var(--font-sm);
       color: var(--color-text-secondary);
       position: relative;
       width: 164px;
@@ -41,10 +41,10 @@
       }
       li {
         width: 140px;
-        padding: 8px 12px 2px;
+        padding: var(--space-2) var(--space-3) 2px;
         min-height: 30px;
         line-height: 24px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         border-bottom: 1px solid rgba(117, 117, 117, 0.15);
         box-sizing: initial;
         &:last-child {
@@ -53,7 +53,7 @@
         .ganttMembersAvatar {
           display: inline-block !important;
           vertical-align: top;
-          margin-right: 8px;
+          margin-right: var(--space-2);
           cursor: default;
         }
         .overflow_ellipsis {

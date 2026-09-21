@@ -56,7 +56,7 @@ const ViewCon = styled.div`
 
 const Header = styled.div`
   height: 44px;
-  padding: 0px 24px;
+  padding: 0px var(--space-6);
   background-color: var(--color-background-primary);
 `;
 

@@ -10,7 +10,7 @@ import TodoList from './TodoList';
 const TodoEntrustWrapper = styled.div`
   box-sizing: border-box;
   width: 100%;
-  padding-bottom: 20px;
+  padding-bottom: var(--space-5);
   background-color: var(--color-background-secondary);
   overflow: auto;
 
@@ -23,7 +23,7 @@ const TodoEntrustWrapper = styled.div`
 
 const CardWrapper = styled.div`
   width: 100%;
-  padding: 20px;
+  padding: var(--space-5);
   margin-bottom: 15px;
   box-sizing: border-box;
   background-color: var(--color-background-primary);
@@ -34,7 +34,7 @@ const CardWrapper = styled.div`
   }
 
   .cardTitle {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
     color: var(--color-text-title);
     font-size: 15px;
     font-weight: bold;
@@ -62,7 +62,7 @@ const EntrustButton = styled.button`
   justify-content: center;
   align-items: center;
   border: 0;
-  font-size: 13px;
+  font-size: var(--font-sm);
   height: 32px;
   line-height: 32px;
   border-radius: var(--radius-md);

@@ -1,5 +1,5 @@
 ﻿.MDUpdater {
-  padding: 15px 20px;
+  padding: 15px var(--space-5);
   width: auto;
   z-index: 1;
   position: relative;
@@ -18,7 +18,7 @@
 
 .MDUpdater .myUpdateType {
   float: left;
-  padding-left: 4px;
+  padding-left: var(--space-1);
 }
 
 .MDUpdater .myUpdateType .falseHide {
@@ -36,7 +36,7 @@
   overflow: hidden;
   margin: 0px;
   padding: 0px;
-  margin-right: 20px;
+  margin-right: var(--space-5);
   position: relative;
 }
 
@@ -138,7 +138,7 @@
   background-position: left top !important;
   cursor: pointer;
   background-size: 100%;
-  font-size: 18px;
+  font-size: var(--font-xl);
   text-decoration: none;
 }
 

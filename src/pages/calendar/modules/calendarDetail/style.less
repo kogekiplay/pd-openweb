@@ -48,8 +48,8 @@
 
   .actionHint {
     color: var(--color-white);
-    padding-left: 16px;
-    font-size: 14px;
+    padding-left: var(--space-4);
+    font-size: var(--font-md);
     line-height: 30px;
   }
   .Button--link:hover {
@@ -114,7 +114,7 @@
     line-height: 16px;
     .categoryArrow {
       color: var(--color-white);
-      font-size: 14px;
+      font-size: var(--font-md);
       line-height: 16px;
       display: inline-block;
       width: 16px;
@@ -167,8 +167,8 @@
 }
 
 .calendarMainPart {
-  margin-top: 8px;
-  padding: 10px 16px;
+  margin-top: var(--space-2);
+  padding: 10px var(--space-4);
   // override ming-ui padding on dropdown
   .Dropdown--input {
     padding: 0 !important;
@@ -176,7 +176,7 @@
   .calBox {
     border: 1px solid var(--color-border-secondary);
     background-color: var(--color-background-primary);
-    font-size: 13px;
+    font-size: var(--font-sm);
     border-radius: var(--radius-sm);
   }
   .calRow {
@@ -184,7 +184,7 @@
     .calIcon {
       color: var(--color-text-tertiary);
       flex: 0 0 auto;
-      padding: 12px 16px 0;
+      padding: var(--space-3) var(--space-4) 0;
     }
     .calLine {
       flex: 1 0 0%;
@@ -234,7 +234,7 @@
     }
     .editWrapper {
       border-bottom: 2px dotted var(--color-border-primary);
-      padding-bottom: 4px;
+      padding-bottom: var(--space-1);
       padding-left: 5px;
       padding-right: 5px;
     }
@@ -264,8 +264,8 @@
       align-items: center;
       .addressBox {
         flex: 1 0 0%;
-        padding: 12px 0;
-        font-size: 13px;
+        padding: var(--space-3) 0;
+        font-size: var(--font-sm);
         -webkit-appearance: none;
         border: none;
         background: transparent;
@@ -289,7 +289,7 @@
         }
       }
       .addCalendarMember {
-        padding-right: 20px;
+        padding-right: var(--space-5);
         display: flex;
         align-items: center;
         color: var(--color-text-tertiary);
@@ -310,7 +310,7 @@
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
-          padding-left: 8px;
+          padding-left: var(--space-2);
           max-width: 72px;
           display: block;
         }
@@ -321,7 +321,7 @@
           display: block;
           background: url('../images/iconState.png') no-repeat 0 0;
           background-size: 42px 14px;
-          margin-top: 12px;
+          margin-top: var(--space-3);
           margin-left: -8px;
           position: relative;
           z-index: 1;
@@ -343,11 +343,11 @@
       line-height: 1.5;
     }
     .summaryBox {
-      padding: 12px 0;
+      padding: var(--space-3) 0;
       width: 100%;
     }
     .Textarea {
-      font-size: 13px;
+      font-size: var(--font-sm);
       vertical-align: top;
       padding: 0;
       -webkit-appearance: none;
@@ -393,12 +393,12 @@
       left: 25px;
       width: 90px;
       height: 2px;
-      margin-top: 16px;
+      margin-top: var(--space-4);
       transition: all 0.15s ease-in;
     }
   }
   .commentsContainer {
-    padding: 0 20px 0 33px;
+    padding: 0 var(--space-5) 0 33px;
     .commentEmpty {
       text-align: center;
       padding-top: 120px;
@@ -435,7 +435,7 @@
   }
   .calendarTopicCount {
     display: block;
-    padding-top: 8px;
+    padding-top: var(--space-2);
     color: var(--color-text-tertiary);
   }
 }
@@ -475,7 +475,7 @@
     .messageNosubmit {
       color: #ff9c00;
       background: var(--color-background-primary);
-      padding-left: 8px;
+      padding-left: var(--space-2);
     }
     .contentItem:last-of-type {
       max-width: 175px;

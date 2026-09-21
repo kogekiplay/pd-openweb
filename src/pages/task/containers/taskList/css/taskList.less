@@ -62,7 +62,7 @@
   }
   #taskList .icon-task-card {
     display: inline-block;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-tertiary);
   }
   #taskList .cardColor {
@@ -78,7 +78,7 @@
   #taskList .taskListDate {
     width: 280px;
     text-align: right;
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
   #taskList .rightGap {
     text-align: right;
@@ -92,7 +92,7 @@
   #taskList .markStar {
     width: 35px;
     display: table-cell;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: #afb3bc;
   }
   #taskList .markStar .icon-task-star {
@@ -149,7 +149,7 @@
     z-index: 1;
   }
   #taskList .taskListName .spanName {
-    font-size: 13px;
+    font-size: var(--font-sm);
     max-width: 85%;
     margin-right: -50px;
     border-right: 55px transparent solid;
@@ -162,7 +162,7 @@
     height: 22px;
     line-height: 22px;
     margin-top: 11px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     padding-left: 2px;
     padding-right: 5px;
     border: 0px #fff solid;
@@ -181,7 +181,7 @@
   }
   .listStageTaskContent .newTopic {
     display: inline-block;
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-primary);
     margin-top: 15px;
     vertical-align: top;
@@ -190,12 +190,12 @@
   .listStageTaskContent .newTopicCount {
     display: inline-block;
     color: var(--color-primary);
-    font-size: 12px;
+    font-size: var(--font-xs);
     margin-left: 5px;
     font-family: 'Hiragino Sans GB';
   }
   .listStageTaskContent .tipCount {
-    font-size: 14px;
+    font-size: var(--font-md);
     vertical-align: top;
     line-height: 23px;
     margin-left: 3px;
@@ -222,7 +222,7 @@
   }
   #taskSearchNullTask {
     color: var(--color-text-tertiary);
-    font-size: 16px;
+    font-size: var(--font-lg);
   }
   #taskSearchNullTask .loadingCenter {
     margin-top: -130px;
@@ -262,7 +262,7 @@
     font-size: 17px;
     height: 56px;
     line-height: 56px;
-    padding-left: 8px;
+    padding-left: var(--space-2);
     cursor: pointer;
   }
   #taskList .taskListFolderName .stageTaskCount {
@@ -282,7 +282,7 @@
   #taskList .taskListStageName .arrow-down,
   #taskList .taskListFolderName .arrow-down {
     float: left;
-    margin: 24px 10px 0;
+    margin: var(--space-6) 10px 0;
     transition: transform 0.4s ease-in-out;
     transform-origin: 50% 50%;
     border-left-color: transparent !important;
@@ -310,9 +310,9 @@
     display: inline-block;
     height: 22px;
     line-height: 22px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     padding: 0px 5px;
-    margin-top: 12px;
+    margin-top: var(--space-3);
     vertical-align: top;
     margin-right: 3px;
   }
@@ -335,8 +335,8 @@
     height: auto;
   }
   #folderMember > .header .title {
-    font-size: 13px !important;
-    margin: 16px 0px 16px 24px;
+    font-size: var(--font-sm) !important;
+    margin: var(--space-4) 0px var(--space-4) var(--space-6);
     color: var(--color-text-tertiary);
     line-height: 1.5;
     width: 420px;
@@ -353,7 +353,7 @@
     vertical-align: -1px;
   }
   #folderMember > .header .folderTypes .icon-folder-private {
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
   #folderMember > .header .groups {
     width: 425px;
@@ -369,14 +369,14 @@
   }
   #folderMember .updateTypes {
     display: inline-block;
-    font-size: 12px;
+    font-size: var(--font-xs);
     margin-left: 5px;
   }
   #folderMember .headers {
-    margin-top: 16px;
+    margin-top: var(--space-4);
   }
   #folderMember .titleTip {
-    margin-top: 16px;
+    margin-top: var(--space-4);
     width: 440px;
     color: var(--color-text-tertiary);
     line-height: 21px;
@@ -389,16 +389,16 @@
     display: inline-block;
     vertical-align: top;
     margin-left: 6px;
-    font-size: 16px;
+    font-size: var(--font-lg);
   }
   #folderMember .memberBox {
-    margin-top: 16px;
+    margin-top: var(--space-4);
     overflow-y: auto;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
   }
   #folderMember .memberBox li {
-    padding: 4px 0;
-    font-size: 13px;
+    padding: var(--space-1) 0;
+    font-size: var(--font-sm);
   }
   #folderMember .downArrow {
     display: inline-block;
@@ -425,7 +425,7 @@
     margin-left: 5px;
   }
   .memberBox li .userOp {
-    margin-left: 20px;
+    margin-left: var(--space-5);
     vertical-align: top;
     display: inline-block;
     margin-top: 6px;
@@ -471,7 +471,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
   .myTaskSettingList li {
-    font-size: 12px;
+    font-size: var(--font-xs);
     line-height: 22px;
     height: 22px;
     padding: 5px 0;
@@ -482,7 +482,7 @@
     color: var(--color-white);
   }
   .myTaskSettingList li i {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     margin: 0 6px 0 14px;
   }
   .myTaskSettingList li:not(:hover):not(.colorPrimary) i {
@@ -499,7 +499,7 @@
     display: inline-block;
     width: 20px;
     height: 20px;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     vertical-align: top;
     margin-top: 13px;
   }

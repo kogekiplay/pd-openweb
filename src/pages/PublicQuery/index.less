@@ -69,7 +69,7 @@
       }
 
       .fromTxt {
-        font-size: 12px;
+        font-size: var(--font-xs);
         margin-top: 0px;
 
         a {
@@ -99,7 +99,7 @@
     .unnormalCon {
       max-width: 880px;
       width: 100%;
-      margin: 32px auto 0;
+      margin: var(--space-8) auto 0;
       border-radius: var(--radius-sm);
       box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.12);
       box-sizing: border-box;
@@ -117,9 +117,9 @@
       .msg {
         width: 100%;
         text-align: center;
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-text-tertiary);
-        margin-top: 16px;
+        margin-top: var(--space-4);
       }
     }
 
@@ -134,13 +134,13 @@
   .shareConBox {
     max-width: 880px;
     margin: 54px auto 0;
-    padding-bottom: 16px;
+    padding-bottom: var(--space-4);
     overflow-x: hidden;
   }
 
   @media screen and (max-width: 600px) {
     .shareConBox {
-      padding: 0 8px 16px;
+      padding: 0 var(--space-2) var(--space-4);
       margin: 54px auto 0;
     }
   }

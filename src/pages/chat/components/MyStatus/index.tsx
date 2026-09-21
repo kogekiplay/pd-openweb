@@ -19,7 +19,7 @@ const DialogWrap = styled(Dialog)`
     overflow: hidden;
   }
   .statusItem {
-    padding: 12px 16px 12px 7px;
+    padding: var(--space-3) var(--space-4) var(--space-3) 7px;
     border-radius: var(--radius-sm);
     .icon-delete1 {
       display: none;
@@ -28,10 +28,10 @@ const DialogWrap = styled(Dialog)`
     .emojiWrap {
       width: 40px;
       height: 40px;
-      margin-right: 8px;
+      margin-right: var(--space-2);
       overflow: hidden;
       border-radius: var(--radius-sm);
-      padding-left: 8px;
+      padding-left: var(--space-2);
       &:hover {
         background: rgba(0, 0, 0, 0.04);
       }

@@ -6,7 +6,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { GLOBAL_SEARCH_TYPE } from '../enum';
 
 const GlobalSearchSideCon = styled.ul`
-  padding-top: 8px;
+  padding-top: var(--space-2);
   padding-right: 11px;
   width: fit-content;
   .sideItem {

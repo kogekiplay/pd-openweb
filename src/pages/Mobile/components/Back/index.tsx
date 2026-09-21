@@ -24,8 +24,8 @@ const Content = styled.div`
     margin-top: -2px;
   }
   &.backBtn {
-    padding-bottom: calc(constant(safe-area-inset-bottom) - 20px);
-    padding-bottom: calc(env(safe-area-inset-bottom) - 20px);
+    padding-bottom: calc(constant(safe-area-inset-bottom) - var(--space-5));
+    padding-bottom: calc(env(safe-area-inset-bottom) - var(--space-5));
   }
 `;
 

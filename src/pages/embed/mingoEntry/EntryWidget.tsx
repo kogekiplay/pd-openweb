@@ -87,7 +87,7 @@ function mapAttachmentForRequest(item) {
 const Wrap = styled.div`
   ${() => (md.global.SysSettings.aiBrandThemeColor ? `--color-mingo: ${md.global.SysSettings.aiBrandThemeColor};` : '')}
   width: 100%;
-  padding: 4px;
+  padding: var(--space-1);
   background: transparent;
   text-align: left;
   border-radius: 22px;
@@ -115,7 +115,7 @@ const Wrap = styled.div`
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-auto-rows: auto;
-    gap: 12px;
+    gap: var(--space-3);
     margin-top: 48px;
     padding: 0 26px;
     overflow: hidden;
@@ -132,10 +132,10 @@ const Wrap = styled.div`
   }
   .entrySample {
     height: auto;
-    padding: 12px 16px;
+    padding: var(--space-3) var(--space-4);
     border: 1px solid var(--color-border-secondary);
     border-radius: 16px;
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 1.5;
     color: var(--color-text-primary);
     background-color: var(--color-background-primary);
@@ -150,11 +150,11 @@ const Wrap = styled.div`
     }
   }
   .entryRefresh {
-    margin: 20px auto 0;
+    margin: var(--space-5) auto 0;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    font-size: 14px;
+    gap: var(--space-1);
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
     cursor: pointer;
     &:hover {

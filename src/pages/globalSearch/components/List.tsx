@@ -11,7 +11,7 @@ import { getImgUrl } from '../utils';
 import TextHeightLine from './TextHeightLine';
 
 const Box = styled.div`
-  padding-bottom: 12px;
+  padding-bottom: var(--space-3);
   .title {
     margin-left: 14px;
   }
@@ -27,7 +27,7 @@ const Box = styled.div`
     background: var(--color-background-hover);
   }
   .list .listItem .avatarCon {
-    margin-right: 8px;
+    margin-right: var(--space-2);
     margin-left: 14px;
     width: 32px;
     text-align: center;
@@ -35,7 +35,7 @@ const Box = styled.div`
   .list .listItem .listItemInfo {
     flex: 1;
     height: 100%;
-    padding: 8px 0;
+    padding: var(--space-2) 0;
   }
   .list .listItem .listItemInfoDes {
     position: relative;
@@ -43,7 +43,7 @@ const Box = styled.div`
   .list .listItem .listItemInfoDes p {
     position: absolute;
     width: 100%;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
   }
   .list .listItem .listItemInfo .listItemInfoTitle {

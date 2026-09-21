@@ -1,7 +1,7 @@
 .personalInfoContainer {
   flex: 1;
   min-height: 0;
-  padding: 24px 40px;
+  padding: var(--space-6) 40px;
   box-sizing: border-box;
   background-color: var(--color-background-primary);
   overflow-x: hidden;
@@ -22,7 +22,7 @@
       border-radius: var(--radius-sm);
       height: 32px;
       line-height: 30px;
-      padding: 6px 12px;
+      padding: 6px var(--space-3);
       box-sizing: border-box;
       &.isErr {
         border: 1px solid red;
@@ -73,10 +73,10 @@
   .eduOrWorkItemBox {
     width: 60%;
     border-radius: var(--radius-sm);
-    padding: 20px;
+    padding: var(--space-5);
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.16);
     box-sizing: border-box;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
     cursor: pointer;
     .itemOption {
       display: none;
@@ -100,7 +100,7 @@
       .itemDate,
       .itemOption {
         width: 40%;
-        padding-left: 16px;
+        padding-left: var(--space-4);
         box-sizing: border-box;
         text-align: right;
       }

@@ -17,7 +17,7 @@ const processList = [
 ];
 
 const Wrap = styled.div`
-  padding: 16px 0;
+  padding: var(--space-4) 0;
   .processItem {
     justify-content: center;
     position: relative;
@@ -34,7 +34,7 @@ const ListWrap = styled.div`
   display: flex;
   flex-direction: column;
   height: 340px;
-  padding: 16px 16px 0;
+  padding: var(--space-4) var(--space-4) 0;
   .tabWrap {
     height: 51px;
     background: var(--color-background-secondary);
@@ -54,7 +54,7 @@ const ListWrap = styled.div`
   }
   .list {
     overflow: hidden;
-    margin-top: 4px;
+    margin-top: var(--space-1);
     .listItem {
       margin-top: 14px;
       img {

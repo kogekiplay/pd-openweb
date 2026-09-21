@@ -1,7 +1,7 @@
 .WorksheetSharePage {
   .fot {
     width: 100%;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-disabled);
     line-height: 24px;
     text-align: center;
@@ -24,7 +24,7 @@
 
     .recordCardListHeader {
       // padding: 11px 94px 0 0;
-      margin-top: 4px;
+      margin-top: var(--space-1);
       // height: 34px;
       // display: flex;
       align-items: center;
@@ -50,7 +50,7 @@
         overflow: hidden;
         .orderStatus {
           display: inline-block;
-          font-size: 12px;
+          font-size: var(--font-xs);
           vertical-align: bottom;
           margin: -4px 0 0 2px;
           transform: scale(0.9);
@@ -122,7 +122,7 @@
   }
   @media screen and (max-width: 880px) {
     .recordCardListBox {
-      padding-top: 20px;
+      padding-top: var(--space-5);
       &.isPublicquery {
         padding-top: 50px;
       }

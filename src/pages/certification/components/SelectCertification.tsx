@@ -9,7 +9,7 @@ import { pathCompletion } from 'src/utils/common';
 
 const SelectDialog = styled(Dialog)`
   .certItem {
-    padding: 16px;
+    padding: var(--space-4);
     border-radius: 7px;
     background: var(--color-background-secondary);
     border: 1px solid var(--color-background-secondary);
@@ -18,11 +18,11 @@ const SelectDialog = styled(Dialog)`
     font-weight: 600;
     .tagText {
       color: var(--color-success);
-      font-size: 12px;
+      font-size: var(--font-xs);
     }
     .name {
       font-size: 17px;
-      margin-top: 8px;
+      margin-top: var(--space-2);
     }
     &:hover {
       background: var(--color-background-secondary);
@@ -37,7 +37,7 @@ const SelectDialog = styled(Dialog)`
     width: 100%;
     height: 1px;
     background: var(--color-background-secondary);
-    margin: 16px 0 6px;
+    margin: var(--space-4) 0 6px;
   }
 
   .addCertBtn {

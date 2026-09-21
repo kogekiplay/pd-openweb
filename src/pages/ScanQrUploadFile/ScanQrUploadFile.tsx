@@ -27,7 +27,7 @@ const Con = styled.div`
     margin-bottom: 10px;
   }
   .error {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-tertiary);
   }
 `;
@@ -41,7 +41,7 @@ const StatusBar = styled.div`
   color: var(--color-text-primary);
   flex-shrink: 0;
   .icon {
-    font-size: 16px;
+    font-size: var(--font-lg);
     color: var(--color-success);
     margin-right: 6px;
   }

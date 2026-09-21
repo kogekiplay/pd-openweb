@@ -16,26 +16,26 @@ import copy from 'src/utils/copyToClipboard';
 import { API_EXTENDS, pluginApiConfig } from '../config';
 
 const FormItem = styled.div`
-  margin-bottom: 16px;
+  margin-bottom: var(--space-4);
   .labelText {
     display: flex;
     align-items: center;
     color: var(--color-text-secondary);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
     .requiredStar {
       color: var(--color-error);
-      margin-left: 4px;
+      margin-left: var(--space-1);
       font-weight: bold;
     }
     i {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-disabled);
-      margin-left: 8px;
+      margin-left: var(--space-2);
     }
   }
   input {
     width: 100%;
-    font-size: 13px !important;
+    font-size: var(--font-sm) !important;
     &.notEditPwd {
       background: var(--color-background-secondary);
       border: none;
@@ -58,7 +58,7 @@ const FormItem = styled.div`
     box-shadow: none;
     .ant-picker-input {
       input {
-        font-size: 13px !important;
+        font-size: var(--font-sm) !important;
       }
     }
     &:hover {

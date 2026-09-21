@@ -10,7 +10,7 @@ const Wrap = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  padding: 16px 10px;
+  padding: var(--space-4) 10px;
   height: 100%;
   background-color: var(--color-background-primary);
   .loadingWrap {

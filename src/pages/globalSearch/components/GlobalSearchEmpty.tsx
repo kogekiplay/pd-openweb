@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import EmptyImg from '../image/empty.png';
 
 const Container = styled.div`
-  font-size: 16px;
+  font-size: var(--font-lg);
   position: absolute;
   top: 50%;
   left: 50%;
@@ -13,7 +13,7 @@ const Container = styled.div`
   .imgCon {
     width: 114px;
     height: 118px;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
     img {
       width: 100%;
       height: 100%;

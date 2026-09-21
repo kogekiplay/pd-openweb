@@ -17,7 +17,7 @@ const AppItemWrap = styled.div`
   width: calc(50% - 5px);
   height: 56px;
   margin-bottom: 10px;
-  padding-left: 12px;
+  padding-left: var(--space-3);
   position: relative;
   &.empty {
     background-color: var(--color-background-primary);
@@ -45,7 +45,7 @@ const AppItemWrap = styled.div`
     min-width: 0;
     padding-right: 10px;
     .name {
-      font-size: 14px;
+      font-size: var(--font-md);
       &.app {
         word-break: break-all;
         text-overflow: ellipsis;

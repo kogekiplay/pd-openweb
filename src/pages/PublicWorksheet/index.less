@@ -54,25 +54,25 @@ body,
     box-shadow: 0px 1px 4px #00000029;
 
     .infoCon {
-      padding: 32px 32px 0px 32px;
+      padding: var(--space-8) var(--space-8) 0px var(--space-8);
     }
     .worksheetName {
       white-space: break-spaces;
       line-height: 1em;
       font-size: 32px;
       font-weight: 600;
-      margin: 32px 0 20px;
+      margin: var(--space-8) 0 var(--space-5);
     }
 
     .worksheetLimitInfo {
-      margin-bottom: 20px;
+      margin-bottom: var(--space-5);
       border-left: 5px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
       .itemInfo {
         height: 22px;
-        margin-left: 8px;
+        margin-left: var(--space-2);
         color: var(--color-text-secondary);
         span {
-          font-size: 13px;
+          font-size: var(--font-sm);
           font-weight: bold;
           line-height: 22px;
         }
@@ -85,13 +85,13 @@ body,
       width: 100%;
       box-sizing: border-box;
       overflow: auto;
-      margin-bottom: 16px;
+      margin-bottom: var(--space-4);
 
       ol,
       ul {
         list-style: decimal;
         list-style-position: outside;
-        margin-left: 16px;
+        margin-left: var(--space-4);
       }
 
       img {
@@ -102,11 +102,11 @@ body,
 
   .submitCon {
     text-align: center;
-    margin: 30px 32px;
+    margin: 30px var(--space-8);
     .submitBtn {
       max-width: 736px;
       span {
-        padding: 0 32px;
+        padding: 0 var(--space-8);
       }
       :hover {
         background: color-mix(in srgb, var(--color-overlay-ink) 10%, transparent);
@@ -118,11 +118,11 @@ body,
   .mingdaoCon {
     display: flex;
     align-items: center;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: rgba(0, 0, 0, 0.6);
     margin: 0 auto;
     width: 800px;
-    padding: 10px 32px 12px;
+    padding: 10px var(--space-8) var(--space-3);
 
     a {
       color: var(--color-text-primary);
@@ -168,7 +168,7 @@ body,
     flex-direction: row-reverse;
     .relateRecordBlockCon {
       padding-left: 0 !important;
-      padding-right: 24px;
+      padding-right: var(--space-6);
     }
   }
   & > .customFieldsContainer {
@@ -177,7 +177,7 @@ body,
   .relateRecordBlockCon {
     flex: 1;
     min-width: 0;
-    padding-left: 24px;
+    padding-left: var(--space-6);
   }
 }
 
@@ -203,10 +203,10 @@ body,
 
   .publicWorksheet {
     .infoCon {
-      padding: 24px 24px 0px 24px !important;
+      padding: var(--space-6) var(--space-6) 0px var(--space-6) !important;
     }
     .formMain {
-      padding: 0 24px !important;
+      padding: 0 var(--space-6) !important;
     }
 
     .logo {
@@ -224,10 +224,10 @@ body,
       }
 
       .receipt {
-        padding: 0 24px;
+        padding: 0 var(--space-6);
       }
       .submitCon {
-        margin: 30px 24px;
+        margin: 30px var(--space-6);
       }
     }
 
@@ -235,9 +235,9 @@ body,
       text-align: center;
       width: auto;
       margin: 0 10px;
-      padding: 12px 0 20px;
+      padding: var(--space-3) 0 var(--space-5);
       .Right {
-        margin-left: 16px;
+        margin-left: var(--space-4);
       }
     }
   }
@@ -255,7 +255,7 @@ body,
     display: flex;
     flex-direction: column;
     min-height: 82px;
-    padding: 16px 12px;
+    padding: var(--space-4) var(--space-3);
     margin: 10px;
     background: var(--color-background-primary);
     box-shadow: var(--shadow-sm);
@@ -282,12 +282,12 @@ body,
         flex: 1;
         display: flex;
         flex-wrap: nowrap;
-        gap: 8px;
+        gap: var(--space-2);
         justify-content: flex-end;
       }
       .operateBtn {
         height: 32px;
-        padding: 0 20px;
+        padding: 0 var(--space-5);
         line-height: 32px;
         border-radius: var(--radius-sm);
         color: var(--color-white);
@@ -330,14 +330,14 @@ body,
         }
         .btnWrapper {
           width: 100%;
-          margin-top: 20px;
+          margin-top: var(--space-5);
         }
         .operateBtn {
           flex: 1;
           text-align: center;
         }
         & > * {
-          margin-top: 16px;
+          margin-top: var(--space-4);
         }
       }
     }

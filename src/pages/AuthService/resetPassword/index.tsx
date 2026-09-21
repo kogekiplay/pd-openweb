@@ -24,9 +24,9 @@ const WrapBtn = styled.div`
   display: block;
   background: var(--color-primary);
   border-radius: 6px;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--color-text-inverse);
-  margin-top: 32px;
+  margin-top: var(--space-8);
   text-align: center;
 
   &:hover {

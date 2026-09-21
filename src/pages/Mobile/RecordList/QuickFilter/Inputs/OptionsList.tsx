@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 
 const Item = styled.div`
-  padding: 8px 0;
+  padding: var(--space-2) 0;
   .icon-done {
     color: var(--color-primary);
   }

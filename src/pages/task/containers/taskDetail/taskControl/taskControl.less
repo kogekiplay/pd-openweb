@@ -2,7 +2,7 @@
   .taskControlHeader {
     align-items: center;
     height: 54px;
-    font-size: 14px;
+    font-size: var(--font-md);
     background: var(--color-background-primary);
     border: 1px solid var(--color-border-secondary);
     border-radius: var(--radius-sm);
@@ -12,16 +12,16 @@
       border-bottom-right-radius: 0;
     }
     .icon-task-extension {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-text-secondary);
-      margin-left: 12px;
-      margin-right: 16px;
+      margin-left: var(--space-3);
+      margin-right: var(--space-4);
     }
     .taskDetailFold {
       margin-right: 22px;
       .icon-arrow-down-border,
       .icon-arrow-up-border {
-        font-size: 16px;
+        font-size: var(--font-lg);
         &:not(:hover) {
           color: var(--color-text-tertiary) !important;
         }

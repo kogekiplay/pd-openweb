@@ -5,7 +5,7 @@ export const mobileMingoPromptInputCss = css`
     flex-shrink: 0;
     border: 1px solid var(--color-border-primary);
     border-radius: 18px;
-    padding: 12px 12px 8px;
+    padding: var(--space-3) var(--space-3) var(--space-2);
   }
   .textAreaCon.focused {
     border-color: var(--color-mingo);
@@ -15,7 +15,7 @@ export const mobileMingoPromptInputCss = css`
   }
   .mentionEditor {
     min-height: 70px;
-    padding: 8px 12px 12px;
+    padding: var(--space-2) var(--space-3) var(--space-3);
   }
   .mentionEditor[data-empty='true']::before {
     top: 8px;
@@ -26,7 +26,7 @@ export const mobileMingoPromptInputCss = css`
     }
     .footerStart,
     > div:last-child > div {
-      gap: 12px;
+      gap: var(--space-3);
     }
     .mobileMingoAttachmentButton,
     .promptVoiceButton {
@@ -37,22 +37,22 @@ export const mobileMingoPromptInputCss = css`
       border-radius: 50% !important;
       background: var(--color-background-tertiary);
       .btnIcon {
-        font-size: 20px;
+        font-size: var(--font-2xl);
         color: var(--color-text-secondary);
       }
     }
     .promptMentionButton {
       flex: none;
       height: 40px;
-      padding: 0 16px !important;
+      padding: 0 var(--space-4) !important;
       border-radius: 20px !important;
       background: var(--color-background-tertiary);
       .btnIcon {
-        font-size: 20px;
+        font-size: var(--font-2xl);
         color: var(--color-text-secondary);
       }
       .btnText {
-        font-size: 14px;
+        font-size: var(--font-md);
         font-weight: 500;
         color: var(--color-text-secondary);
         margin-left: initial !important;
@@ -65,7 +65,7 @@ export const mobileMingoPromptInputCss = css`
       padding: 0 !important;
       border-radius: 8px !important;
       .btnIcon {
-        font-size: 20px;
+        font-size: var(--font-2xl);
       }
     }
   }
@@ -94,7 +94,7 @@ const Wrapper = styled.div`
   .mobileAiHeader {
     height: 58px;
     flex-shrink: 0;
-    padding: 8px 16px;
+    padding: var(--space-2) var(--space-4);
     align-items: center;
     .icon {
       font-size: 22px;
@@ -104,7 +104,7 @@ const Wrapper = styled.div`
   .mobileAiHomeHeader {
     height: 46px;
     flex-shrink: 0;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     align-items: center;
   }
   .mingoProjectSelect {
@@ -114,7 +114,7 @@ const Wrapper = styled.div`
   }
   .toolbarActions {
     flex-shrink: 0;
-    margin-left: 12px;
+    margin-left: var(--space-3);
     align-items: center;
     .toolbarIconBtn {
       width: 36px;
@@ -122,7 +122,7 @@ const Wrapper = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-left: 16px;
+      margin-left: var(--space-4);
       &:first-child {
         margin-left: 0;
       }

@@ -20,8 +20,8 @@ import FilterInput, { NumberTypes, TextTypes } from './Inputs';
 import { conditionAdapter, turnControl, validate } from './utils';
 
 const Con = styled.div`
-  padding-bottom: calc(constant(safe-area-inset-bottom) - 20px);
-  padding-bottom: calc(env(safe-area-inset-bottom) - 20px);
+  padding-bottom: calc(constant(safe-area-inset-bottom) - var(--space-5));
+  padding-bottom: calc(env(safe-area-inset-bottom) - var(--space-5));
   background-color: var(--color-background-card);
   .header {
     padding: 10px 15px;
@@ -37,7 +37,7 @@ const Con = styled.div`
     padding: 0 15px;
     overflow: auto;
     .controlWrapper {
-      margin-bottom: 20px;
+      margin-bottom: var(--space-5);
     }
     .selected {
       color: var(--color-primary);
@@ -75,10 +75,10 @@ const SpaceLine = styled.div`
 
 const SavedItem = styled.div`
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--font-xs);
   display: inline-block;
-  margin: 0 12px 12px 0;
-  padding: 4px 12px;
+  margin: 0 var(--space-3) var(--space-3) 0;
+  padding: var(--space-1) var(--space-3);
   border-radius: 28px;
   max-width: 200px;
   -webkit-user-select: none;

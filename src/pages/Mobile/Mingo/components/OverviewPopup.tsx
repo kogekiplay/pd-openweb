@@ -83,13 +83,13 @@ const OverviewContent = styled.div`
   min-height: 0;
   overflow: auto;
   scrollbar-width: none;
-  padding: 16px;
+  padding: var(--space-4);
   background: var(--color-background-card);
   &::-webkit-scrollbar {
     display: none;
   }
   .overviewEmpty {
-    padding-top: 24px;
+    padding-top: var(--space-6);
     text-align: center;
     color: var(--color-text-secondary);
   }
@@ -98,7 +98,7 @@ const OverviewContent = styled.div`
     max-width: none;
   }
   .PanelWrap {
-    gap: 12px;
+    gap: var(--space-3);
   }
 `;
 
@@ -112,7 +112,7 @@ const OverviewPopupInner = styled.div`
 const SectionList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 `;
 
 const SectionBlock = styled.div`
@@ -129,7 +129,7 @@ const SectionHeader = styled.button`
   padding: 10px 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   text-align: left;
   background: var(--color-background-card);
   .tileIcon {
@@ -153,26 +153,26 @@ const SectionHeader = styled.button`
   .itemTitle {
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    gap: var(--space-2);
     font-size: 17px;
     font-weight: 700;
     line-height: 22px;
     color: var(--color-text-primary);
   }
   .count {
-    font-size: 13px;
+    font-size: var(--font-sm);
     font-weight: 400;
     color: var(--color-text-primary);
   }
   .itemDesc {
-    margin-top: 4px;
-    font-size: 14px;
+    margin-top: var(--space-1);
+    font-size: var(--font-md);
     line-height: 20px;
     color: var(--color-text-tertiary);
   }
   .foldIcon {
     flex-shrink: 0;
-    font-size: 20px;
+    font-size: var(--font-2xl);
     color: var(--color-text-tertiary);
     transform: rotate(${p => (p.$collapsed ? '180deg' : '0deg')});
     transition: transform 0.2s;
@@ -181,7 +181,7 @@ const SectionHeader = styled.button`
 
 const SectionBody = styled.div`
   border-top: 1px solid var(--color-border-secondary);
-  padding: 12px 0;
+  padding: var(--space-3) 0;
   background: var(--color-background-card);
   button[aria-label='修改'] {
     display: none;
@@ -208,7 +208,7 @@ const OverviewFooter = styled.div`
     border-radius: 20px;
     color: var(--color-white);
     background: var(--color-mingo);
-    font-size: 14px;
+    font-size: var(--font-md);
     font-weight: 600;
   }
   .generateBtn.loading {
@@ -221,7 +221,7 @@ const OverviewFooter = styled.div`
   }
   .generateLoadingIcon {
     color: currentColor;
-    font-size: 16px;
+    font-size: var(--font-lg);
     margin-right: 6px;
     animation: mingoGenerateLoading 0.75s linear infinite;
   }

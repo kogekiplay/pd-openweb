@@ -5,7 +5,7 @@ import GroupFilterList from './GroupFilterList';
 
 const FilterWrap = styled.div`
   height: 40px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   background-color: var(--color-background-primary);
 `;
 const CloseIcon = styled.i`

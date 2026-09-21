@@ -13,7 +13,7 @@ ol,
 ul,
 textarea,
 button {
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-primary);
   line-height: 1.5;
 }
@@ -40,7 +40,7 @@ html {
 
 html body {
   color: var(--color-text-primary);
-  font-size: 13px !important;
+  font-size: var(--font-sm) !important;
   margin: 0px;
   padding: 0px;
   background-attachment: fixed;
@@ -440,7 +440,7 @@ body .Hidden {
 }
 
 .mAll12 {
-  margin: 12px !important;
+  margin: var(--space-3) !important;
 }
 
 .mAll15 {
@@ -448,7 +448,7 @@ body .Hidden {
 }
 
 .mAll20 {
-  margin: 20px !important;
+  margin: var(--space-5) !important;
 }
 
 .mAll25 {
@@ -476,7 +476,7 @@ body .Hidden {
 }
 
 .mTop4 {
-  margin-top: 4px !important;
+  margin-top: var(--space-1) !important;
 }
 
 .mTop5 {
@@ -492,7 +492,7 @@ body .Hidden {
 }
 
 .mTop8 {
-  margin-top: 8px !important;
+  margin-top: var(--space-2) !important;
 }
 
 .mTop9 {
@@ -508,7 +508,7 @@ body .Hidden {
 }
 
 .mTop12 {
-  margin-top: 12px !important;
+  margin-top: var(--space-3) !important;
 }
 
 .mTop13 {
@@ -524,7 +524,7 @@ body .Hidden {
 }
 
 .mTop16 {
-  margin-top: 16px !important;
+  margin-top: var(--space-4) !important;
 }
 
 .mTop18 {
@@ -532,7 +532,7 @@ body .Hidden {
 }
 
 .mTop20 {
-  margin-top: 20px !important;
+  margin-top: var(--space-5) !important;
 }
 
 .mTop22 {
@@ -540,7 +540,7 @@ body .Hidden {
 }
 
 .mTop24 {
-  margin-top: 24px !important;
+  margin-top: var(--space-6) !important;
 }
 
 .mTop25 {
@@ -560,7 +560,7 @@ body .Hidden {
 }
 
 .mTop32 {
-  margin-top: 32px !important;
+  margin-top: var(--space-8) !important;
 }
 
 .mTop35 {
@@ -612,7 +612,7 @@ body .Hidden {
 }
 
 .mRight4 {
-  margin-right: 4px !important;
+  margin-right: var(--space-1) !important;
 }
 
 .mRight5 {
@@ -628,7 +628,7 @@ body .Hidden {
 }
 
 .mRight8 {
-  margin-right: 8px !important;
+  margin-right: var(--space-2) !important;
 }
 
 .mRight9 {
@@ -640,7 +640,7 @@ body .Hidden {
 }
 
 .mRight12 {
-  margin-right: 12px !important;
+  margin-right: var(--space-3) !important;
 }
 
 .mRight13 {
@@ -656,7 +656,7 @@ body .Hidden {
 }
 
 .mRight16 {
-  margin-right: 16px !important;
+  margin-right: var(--space-4) !important;
 }
 
 .mRight18 {
@@ -664,11 +664,11 @@ body .Hidden {
 }
 
 .mRight20 {
-  margin-right: 20px !important;
+  margin-right: var(--space-5) !important;
 }
 
 .mRight24 {
-  margin-right: 24px !important;
+  margin-right: var(--space-6) !important;
 }
 
 .mRight25 {
@@ -684,7 +684,7 @@ body .Hidden {
 }
 
 .mRight32 {
-  margin-right: 32px !important;
+  margin-right: var(--space-8) !important;
 }
 
 .mRight35 {
@@ -720,7 +720,7 @@ body .Hidden {
 }
 
 .mBottom4 {
-  margin-bottom: 4px !important;
+  margin-bottom: var(--space-1) !important;
 }
 
 .mBottom5 {
@@ -736,7 +736,7 @@ body .Hidden {
 }
 
 .mBottom8 {
-  margin-bottom: 8px !important;
+  margin-bottom: var(--space-2) !important;
 }
 
 .mBottom10 {
@@ -744,7 +744,7 @@ body .Hidden {
 }
 
 .mBottom12 {
-  margin-bottom: 12px !important;
+  margin-bottom: var(--space-3) !important;
 }
 
 .mBottom13 {
@@ -760,7 +760,7 @@ body .Hidden {
 }
 
 .mBottom16 {
-  margin-bottom: 16px !important;
+  margin-bottom: var(--space-4) !important;
 }
 
 .mBottom18 {
@@ -768,11 +768,11 @@ body .Hidden {
 }
 
 .mBottom20 {
-  margin-bottom: 20px !important;
+  margin-bottom: var(--space-5) !important;
 }
 
 .mBottom24 {
-  margin-bottom: 24px !important;
+  margin-bottom: var(--space-6) !important;
 }
 
 .mBottom25 {
@@ -788,7 +788,7 @@ body .Hidden {
 }
 
 .mBottom32 {
-  margin-bottom: 32px !important;
+  margin-bottom: var(--space-8) !important;
 }
 
 .mBottom40 {
@@ -824,7 +824,7 @@ body .Hidden {
 }
 
 .mLeft4 {
-  margin-left: 4px !important;
+  margin-left: var(--space-1) !important;
 }
 
 .mLeft5 {
@@ -840,7 +840,7 @@ body .Hidden {
 }
 
 .mLeft8 {
-  margin-left: 8px !important;
+  margin-left: var(--space-2) !important;
 }
 
 .mLeft10 {
@@ -848,7 +848,7 @@ body .Hidden {
 }
 
 .mLeft12 {
-  margin-left: 12px !important;
+  margin-left: var(--space-3) !important;
 }
 
 .mLeft14 {
@@ -860,7 +860,7 @@ body .Hidden {
 }
 
 .mLeft16 {
-  margin-left: 16px !important;
+  margin-left: var(--space-4) !important;
 }
 
 .mLeft17 {
@@ -868,11 +868,11 @@ body .Hidden {
 }
 
 .mLeft20 {
-  margin-left: 20px !important;
+  margin-left: var(--space-5) !important;
 }
 
 .mLeft24 {
-  margin-left: 24px !important;
+  margin-left: var(--space-6) !important;
 }
 
 .mLeft25 {
@@ -888,7 +888,7 @@ body .Hidden {
 }
 
 .mLeft32 {
-  margin-left: 32px !important;
+  margin-left: var(--space-8) !important;
 }
 
 .mLeft35 {
@@ -952,11 +952,11 @@ body .Hidden {
 }
 
 .pAll16 {
-  padding: 16px !important;
+  padding: var(--space-4) !important;
 }
 
 .pAll20 {
-  padding: 20px !important;
+  padding: var(--space-5) !important;
 }
 
 .pAll25 {
@@ -996,7 +996,7 @@ body .Hidden {
 }
 
 .pTop8 {
-  padding-top: 8px !important;
+  padding-top: var(--space-2) !important;
 }
 
 .pTop10 {
@@ -1004,7 +1004,7 @@ body .Hidden {
 }
 
 .pTop12 {
-  padding-top: 12px !important;
+  padding-top: var(--space-3) !important;
 }
 
 .pTop13 {
@@ -1016,11 +1016,11 @@ body .Hidden {
 }
 
 .pTop16 {
-  padding-top: 16px !important;
+  padding-top: var(--space-4) !important;
 }
 
 .pTop20 {
-  padding-top: 20px !important;
+  padding-top: var(--space-5) !important;
 }
 
 .pTop25 {
@@ -1064,7 +1064,7 @@ body .Hidden {
 }
 
 .pRight8 {
-  padding-right: 8px !important;
+  padding-right: var(--space-2) !important;
 }
 
 .pRight9 {
@@ -1076,7 +1076,7 @@ body .Hidden {
 }
 
 .pRight12 {
-  padding-right: 12px !important;
+  padding-right: var(--space-3) !important;
 }
 
 .pRight15 {
@@ -1084,15 +1084,15 @@ body .Hidden {
 }
 
 .pRight16 {
-  padding-right: 16px !important;
+  padding-right: var(--space-4) !important;
 }
 
 .pRight20 {
-  padding-right: 20px !important;
+  padding-right: var(--space-5) !important;
 }
 
 .pRight24 {
-  padding-right: 24px !important;
+  padding-right: var(--space-6) !important;
 }
 
 .pRight25 {
@@ -1140,7 +1140,7 @@ body .Hidden {
 }
 
 .pBottom8 {
-  padding-bottom: 8px !important;
+  padding-bottom: var(--space-2) !important;
 }
 
 .pBottom10 {
@@ -1148,7 +1148,7 @@ body .Hidden {
 }
 
 .pBottom12 {
-  padding-bottom: 12px !important;
+  padding-bottom: var(--space-3) !important;
 }
 
 .pBottom13 {
@@ -1160,11 +1160,11 @@ body .Hidden {
 }
 
 .pBottom16 {
-  padding-bottom: 16px !important;
+  padding-bottom: var(--space-4) !important;
 }
 
 .pBottom20 {
-  padding-bottom: 20px !important;
+  padding-bottom: var(--space-5) !important;
 }
 
 .pBottom25 {
@@ -1204,7 +1204,7 @@ body .Hidden {
 }
 
 .pLeft8 {
-  padding-left: 8px !important;
+  padding-left: var(--space-2) !important;
 }
 
 .pLeft9 {
@@ -1220,7 +1220,7 @@ body .Hidden {
 }
 
 .pLeft12 {
-  padding-left: 12px !important;
+  padding-left: var(--space-3) !important;
 }
 
 .pLeft15 {
@@ -1228,15 +1228,15 @@ body .Hidden {
 }
 
 .pLeft16 {
-  padding-left: 16px !important;
+  padding-left: var(--space-4) !important;
 }
 
 .pLeft20 {
-  padding-left: 20px !important;
+  padding-left: var(--space-5) !important;
 }
 
 .pLeft24 {
-  padding-left: 24px !important;
+  padding-left: var(--space-6) !important;
 }
 
 .pLeft25 {
@@ -1434,27 +1434,27 @@ body .Hidden {
 }
 
 .font8 {
-  font-size: 16px;
+  font-size: var(--font-lg);
   transform: scale(0.5);
   display: inline-block;
 }
 
 .font10 {
-  font-size: 20px;
+  font-size: var(--font-2xl);
   transform: scale(0.5);
   display: inline-block;
 }
 
 .Font12 {
-  font-size: 12px !important;
+  font-size: var(--font-xs) !important;
 }
 
 .Font13 {
-  font-size: 13px !important;
+  font-size: var(--font-sm) !important;
 }
 
 .Font14 {
-  font-size: 14px !important;
+  font-size: var(--font-md) !important;
 }
 
 .Font15 {
@@ -1462,7 +1462,7 @@ body .Hidden {
 }
 
 .Font16 {
-  font-size: 16px !important;
+  font-size: var(--font-lg) !important;
 }
 
 .Font17 {
@@ -1470,7 +1470,7 @@ body .Hidden {
 }
 
 .Font18 {
-  font-size: 18px !important;
+  font-size: var(--font-xl) !important;
 }
 
 .Font19 {
@@ -1478,7 +1478,7 @@ body .Hidden {
 }
 
 .Font20 {
-  font-size: 20px !important;
+  font-size: var(--font-2xl) !important;
 }
 
 .Font22 {
@@ -1486,7 +1486,7 @@ body .Hidden {
 }
 
 .Font24 {
-  font-size: 24px !important;
+  font-size: var(--font-3xl) !important;
 }
 
 .Font26 {
@@ -1672,7 +1672,7 @@ body .Hidden {
 
 .TextBox {
   height: 20px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 18px;
   border: 1px solid var(--color-border-primary);
   background-color: var(--color-background-primary);
@@ -1685,7 +1685,7 @@ body .Hidden {
   outline: none;
   overflow-y: auto;
   resize: none;
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 18px;
   word-wrap: break-word;
   font-family: Tahoma, Arial, 'Microsoft Yahei';
@@ -1695,7 +1695,7 @@ body .Hidden {
 /*静态页面使用的按钮样式 扁平*/
 .btn-small {
   padding: 7px 14px;
-  font-size: 16px;
+  font-size: var(--font-lg);
   -webkit-border-radius: var(--radius-sm);
   -moz-border-radius: var(--radius-sm);
   border-radius: var(--radius-sm);
@@ -1789,7 +1789,7 @@ body .Hidden {
 
 .btnBootstrap-small {
   padding: 2px 6px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   -webkit-border-radius: var(--radius-sm);
   -moz-border-radius: var(--radius-sm);
   border-radius: var(--radius-sm);
@@ -2815,10 +2815,10 @@ html:not(.appHomeMobile) .ant-message {
 }
 
 .pcToast.ant-message-notice .ant-message-notice-content {
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 500;
   border-radius: 40px;
-  padding: 10px 20px 10px 18px;
+  padding: 10px var(--space-5) 10px 18px;
   word-break: break-word;
 }
 
@@ -2846,7 +2846,7 @@ html:not(.appHomeMobile) .ant-message {
 
 /* antd Select 样式  begin---> */
 .mdAntSelect {
-  font-size: 13px !important;
+  font-size: var(--font-sm) !important;
 }
 
 .mdAntSelect:not(.ant-select-disabled):hover.ant-select,
@@ -2986,12 +2986,12 @@ input::-webkit-contacts-auto-fill-button {
 
 .hr-line:not(:last-child):not(:first-child) {
   border-top: 1px solid var(--color-background-disabled);
-  margin: 4px 0;
+  margin: var(--space-1) 0;
 }
 
 .ant-modal .ant-modal-container,
 .ant-modal .ant-modal-body {
-  font-size: 13px;
+  font-size: var(--font-sm);
 }
 
 .iti__flag-box,
@@ -3004,7 +3004,7 @@ input::-webkit-contacts-auto-fill-button {
   height: 36px;
   border-color: var(--color-border-primary);
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--font-sm);
   line-height: 36px;
 }
 

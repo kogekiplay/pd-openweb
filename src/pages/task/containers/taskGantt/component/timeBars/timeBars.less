@@ -22,7 +22,7 @@
       padding: 0 !important;
     }
     .overflow_ellipsis {
-      padding: 0 8px;
+      padding: 0 var(--space-2);
       max-width: 120px;
       position: relative;
       z-index: 1;
@@ -60,7 +60,7 @@
       span {
         height: 16px;
         line-height: 16px;
-        padding: 0 8px;
+        padding: 0 var(--space-2);
         display: inline-block;
       }
       > div {
@@ -109,7 +109,7 @@
         padding-right: 1px;
         cursor: w-resize;
         &.dragBigRadius {
-          padding-left: 4px;
+          padding-left: var(--space-1);
         }
       }
       .timeBarDragRight {
@@ -118,7 +118,7 @@
         padding-left: 1px;
         cursor: e-resize;
         &.dragBigRadius {
-          padding-right: 4px;
+          padding-right: var(--space-1);
         }
       }
     }
@@ -154,7 +154,7 @@
       }
       &.timeBarOverdueStyle {
         margin-left: -8px;
-        padding-right: 8px;
+        padding-right: var(--space-2);
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
       }
@@ -164,12 +164,12 @@
       width: 16px;
       height: 16px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: var(--font-md);
       vertical-align: top;
       position: relative;
       color: var(--color-text-placeholder);
       z-index: 2;
-      margin-right: 4px;
+      margin-right: var(--space-1);
       &:hover {
         color: var(--color-text-tertiary);
       }
@@ -177,7 +177,7 @@
     .timeBarMessageP {
       height: 16px;
       line-height: 16px;
-      padding: 0 8px;
+      padding: 0 var(--space-2);
       display: inline-block;
     }
   }

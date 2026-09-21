@@ -1,7 +1,7 @@
 ﻿.folderDetailWrapper {
   width: 720px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   .folderDesc,
   .folderDetailMembers,
   .folderComment,
@@ -11,7 +11,7 @@
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   }
   .descTitle {
-    font-size: 14px;
+    font-size: var(--font-md);
     line-height: 46px;
     height: 46px;
     border-bottom: 1px solid var(--color-border-secondary);
@@ -35,7 +35,7 @@
       padding: 15px 0;
     }
     .mdEditorCancel {
-      font-size: 13px;
+      font-size: var(--font-sm);
       cursor: pointer;
       line-height: 32px;
 
@@ -45,33 +45,33 @@
     }
 
     .mdEditorSave {
-      font-size: 13px;
+      font-size: var(--font-sm);
       cursor: pointer;
       color: var(--color-white);
       border-radius: var(--radius-sm);
       height: 32px;
       line-height: 32px;
       padding: 0 22px;
-      margin: 0 20px 20px;
+      margin: 0 var(--space-5) var(--space-5);
     }
   }
   .folderDetailTabList {
     padding-bottom: 50px;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
   }
   .folderDetailTab {
     overflow: hidden;
-    padding-left: 20px;
+    padding-left: var(--space-5);
     border-bottom: 1px solid var(--color-border-secondary);
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     .commItem {
       line-height: 46px;
       float: left;
       height: 43px;
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       text-align: center;
       cursor: pointer;
-      margin-right: 20px;
+      margin-right: var(--space-5);
       transition: border-color 0.3s ease-out;
       border-bottom: 3px solid transparent;
       &:not(:hover):not(.active) {
@@ -86,10 +86,10 @@
       color: var(--color-text-tertiary);
       cursor: pointer;
       .operationCheckbox {
-        font-size: 12px;
+        font-size: var(--font-xs);
         border-radius: var(--radius-xs);
         color: var(--color-white);
-        margin-right: 8px;
+        margin-right: var(--space-2);
         border-width: 1px;
         border-style: solid;
         margin-top: 1px;
@@ -106,7 +106,7 @@
   }
   .folderDetailList {
     .commentList {
-      padding: 0 20px;
+      padding: 0 var(--space-5);
     }
     .folderDetailNoTalk {
       color: var(--color-text-disabled);
@@ -128,7 +128,7 @@
         color: var(--color-text-tertiary);
       }
       .logsType {
-        font-size: 16px;
+        font-size: var(--font-lg);
         position: absolute;
         top: 0;
         left: 20px;
@@ -146,26 +146,26 @@
     }
   }
   .folderDetailMembers {
-    padding: 20px 16px;
+    padding: var(--space-5) var(--space-4);
     width: 100%;
     box-sizing: border-box;
     .folderDetailHead {
-      font-size: 14px;
+      font-size: var(--font-md);
       color: var(--color-text-title);
-      margin-bottom: 16px;
+      margin-bottom: var(--space-4);
       .icon-help {
         opacity: 0.4;
         margin: 0 6px;
       }
       a {
-        font-size: 12px;
+        font-size: var(--font-xs);
         text-decoration: none;
       }
     }
     .folderDetailDesc {
-      font-size: 14px;
+      font-size: var(--font-md);
       opacity: 0.4;
-      margin-top: 4px;
+      margin-top: var(--space-1);
     }
     .folderDetailMemberLabel {
       height: 28px;
@@ -179,7 +179,7 @@
       padding-left: 10px;
       box-sizing: border-box;
       width: 100%;
-      font-size: 14px;
+      font-size: var(--font-md);
       li {
         position: relative;
         min-height: 36px;
@@ -223,9 +223,9 @@
       background: var(--color-border-secondary);
     }
     .folderDetailRange {
-      margin-top: 16px;
+      margin-top: var(--space-4);
       display: flex;
-      font-size: 13px;
+      font-size: var(--font-sm);
       .folderDetailRangeLabel {
         i {
           opacity: 0.4;
@@ -246,7 +246,7 @@
 }
 
 .folderDetailOpBtn {
-  font-size: 12px;
+  font-size: var(--font-xs);
   text-align: center;
   cursor: pointer;
   &:not(:hover) {

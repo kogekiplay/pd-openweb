@@ -22,13 +22,13 @@ export const WrapCom = styled.div`
     justify-content: center;
     min-height: auto;
     box-sizing: border-box;
-    padding: 24px 0;
+    padding: var(--space-6) 0;
     .loginContainer {
       width: 100%;
       min-width: 400px;
       max-width: 480px;
       min-height: 540px;
-      padding: 32px 40px 40px;
+      padding: var(--space-8) 40px 40px;
       box-sizing: border-box;
       margin: 0 auto;
       background: var(--color-background-primary);
@@ -45,9 +45,9 @@ export const WrapCom = styled.div`
         top: 36px;
         right: 40px;
         z-index: 2;
-        gap: 4px;
+        gap: var(--space-1);
         .iconCon {
-          font-size: 16px;
+          font-size: var(--font-lg);
         }
         .txt,
         .iconCon,
@@ -108,7 +108,7 @@ export const WrapCom = styled.div`
             width: 8px;
             height: 3px;
             background: var(--color-primary);
-            margin-top: 12px;
+            margin-top: var(--space-3);
           }
         }
       }
@@ -139,7 +139,7 @@ export const WrapCom = styled.div`
         min-height: 0;
         width: 100%;
         max-width: 100%;
-        padding: 32px 24px 23px;
+        padding: var(--space-8) var(--space-6) 23px;
         border-radius: 0;
         box-shadow: none;
         &.createOrgContainer {

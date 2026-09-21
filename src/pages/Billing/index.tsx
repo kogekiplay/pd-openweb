@@ -10,8 +10,8 @@ const PageWrap = styled.div`
   height: 100vh;
   overflow-y: auto;
   background: var(--color-background-secondary);
-  padding: 32px 0 60px;
-  font-size: 14px;
+  padding: var(--space-8) 0 60px;
+  font-size: var(--font-md);
   .cardWrap {
     width: auto;
     padding: 30px;
@@ -20,7 +20,7 @@ const PageWrap = styled.div`
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px 1px;
     min-width: 840px;
     max-width: 1000px;
-    margin: 20px auto 0;
+    margin: var(--space-5) auto 0;
     min-width: 100px !important;
   }
 `;

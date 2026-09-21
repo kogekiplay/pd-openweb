@@ -39,14 +39,14 @@ const ConfigWrapper = styled.div`
     top: -1px;
 
     ul {
-      padding: 24px 24px 0 24px;
+      padding: var(--space-6) var(--space-6) 0 var(--space-6);
       border-bottom: 1px solid var(--color-border-secondary);
       li {
         display: inline-block;
         font-size: 15px;
         font-weight: 600;
         margin: 0;
-        padding: 10px 20px;
+        padding: 10px var(--space-5);
         box-sizing: border-box;
         border-bottom: 2px solid rgba(0, 0, 0, 0);
         cursor: pointer;
@@ -59,7 +59,7 @@ const ConfigWrapper = styled.div`
     .searchWrapper {
       display: flex;
       justify-content: flex-end;
-      padding: 12px 24px;
+      padding: var(--space-3) var(--space-6);
       .workflowSearchWrap {
         width: 220px;
         input {
@@ -75,7 +75,7 @@ const ConfigWrapper = styled.div`
     z-index: 10;
     right: 24px;
     top: 22px;
-    font-size: 24px;
+    font-size: var(--font-3xl);
     cursor: pointer;
     &:hover {
       color: var(--color-primary);
@@ -84,7 +84,7 @@ const ConfigWrapper = styled.div`
 
   .configHeader {
     background: var(--color-background-primary);
-    padding: 32px 24px 0px 24px;
+    padding: var(--space-8) var(--space-6) 0px var(--space-6);
     width: 100%;
     transition: height 0.2s;
     position: relative;
@@ -96,7 +96,7 @@ const ConfigWrapper = styled.div`
       width: 48px;
       height: 48px;
       min-width: 48px;
-      margin-right: 20px;
+      margin-right: var(--space-5);
       background: var(--color-background-primary);
       color: var(--color-text-disabled);
       border-radius: 8px;
@@ -104,7 +104,7 @@ const ConfigWrapper = styled.div`
     }
     .nameInput {
       width: 100%;
-      font-size: 20px;
+      font-size: var(--font-2xl);
       font-weight: bold;
       border: none;
       padding: 0;
@@ -117,22 +117,22 @@ const ConfigWrapper = styled.div`
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-primary);
       border-radius: 6px;
-      padding: 22px 20px;
-      margin-top: 24px;
+      padding: 22px var(--space-5);
+      margin-top: var(--space-6);
 
       .versionPublishBtn {
         display: flex;
         align-items: center;
         height: 36px;
         line-height: 36px;
-        padding: 0 16px;
+        padding: 0 var(--space-4);
         border-radius: 36px;
         background: var(--color-primary-transparent);
         color: var(--color-primary);
         cursor: pointer;
         i {
           margin-right: 6px;
-          font-size: 16px;
+          font-size: var(--font-lg);
         }
         &:hover {
           opacity: 0.8;
@@ -142,7 +142,7 @@ const ConfigWrapper = styled.div`
   }
 
   .configContent {
-    padding: 12px 24px;
+    padding: var(--space-3) var(--space-6);
     .tagInputareaIuput {
       min-height: 220px;
       .cm-content {
@@ -153,7 +153,7 @@ const ConfigWrapper = styled.div`
 
   .configFooter {
     background: var(--color-background-primary);
-    padding: 16px 20px;
+    padding: var(--space-4) var(--space-5);
 
     .footerBtn {
       display: inline-block;

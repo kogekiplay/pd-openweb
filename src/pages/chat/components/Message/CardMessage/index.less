@@ -5,7 +5,7 @@
   border-radius: 10px;
   transition: all 0.3s;
   cursor: pointer;
-  padding: 15px 20px;
+  padding: 15px var(--space-5);
   box-sizing: border-box;
   &:hover {
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
@@ -16,10 +16,10 @@
     display: flex;
     align-items: center;
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
     i {
-      margin-right: 4px;
-      font-size: 16px;
+      margin-right: var(--space-1);
+      font-size: var(--font-lg);
     }
     .icon-attachment {
       margin-left: 5px;
@@ -90,7 +90,7 @@
         border-radius: 50%;
         color: var(--color-white);
         background-color: var(--color-text-tertiary);
-        font-size: 13px;
+        font-size: var(--font-sm);
         text-align: center;
       }
     }
@@ -104,7 +104,7 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       &-itemInput {
-        padding-left: 24px;
+        padding-left: var(--space-6);
         display: block;
         height: 24px;
         position: relative;

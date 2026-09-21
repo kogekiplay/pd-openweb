@@ -12,17 +12,17 @@ import MobileDatePicker from 'src/ming-ui/components/MobileDatePicker';
 
 const ModalWrap = styled(Popup)`
   .description {
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
-    padding: 22px 16px;
+    padding: 22px var(--space-4);
   }
   .formInfo {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     overflow-x: hidden;
     overflow-y: auto;
     .formItem {
       .label {
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-text-title);
         font-weight: 600;
       }
@@ -32,7 +32,7 @@ const ModalWrap = styled(Popup)`
       left: -10px;
       top: 3px;
       color: var(--color-error);
-      font-size: 13px;
+      font-size: var(--font-sm);
       font-weight: bold;
     }
     .organization,
@@ -52,7 +52,7 @@ const ModalWrap = styled(Popup)`
       background: var(--color-background-secondary) !important;
       display: inline-flex;
       align-items: center;
-      margin: 4px 8px 4px 0;
+      margin: var(--space-1) var(--space-2) var(--space-1) 0;
       padding: 0 10px;
       vertical-align: top;
       position: relative;
@@ -67,7 +67,7 @@ const ModalWrap = styled(Popup)`
       }
     }
     .client {
-      margin: 15px 0 24px 0;
+      margin: 15px 0 var(--space-6) 0;
     }
     .userItemWrapper {
       display: flex;
@@ -85,7 +85,7 @@ const ModalWrap = styled(Popup)`
         background: var(--color-background-secondary);
         border-top-right-radius: 22px;
         border-bottom-right-radius: 22px;
-        padding-left: 20px !important;
+        padding-left: var(--space-5) !important;
         margin-left: -16px;
       }
     }
@@ -107,12 +107,12 @@ const ModalWrap = styled(Popup)`
   &.projectListModal {
     height: 280px;
     .adm-popup-body {
-      padding: 16px 0px 0;
+      padding: var(--space-4) 0px 0;
     }
     .header {
       line-height: 24px;
       margin-bottom: 10px;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
       .closeIcon {
         width: 24px;
         height: 24px;
@@ -127,7 +127,7 @@ const ModalWrap = styled(Popup)`
     .projectListWrap {
       height: calc(100% - 50px);
       overflow: auto;
-      padding: 0 16px;
+      padding: 0 var(--space-4);
     }
 
     .projectItem {

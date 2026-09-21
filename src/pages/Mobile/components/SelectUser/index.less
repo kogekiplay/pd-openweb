@@ -7,7 +7,7 @@
     min-height: 46px;
     height: auto;
     color: var(--color-text-title);
-    padding: 10px 16px 0;
+    padding: 10px var(--space-4) 0;
     margin: 5px 0 10px;
     text-align: left;
     background-color: var(--color-background-primary);
@@ -16,12 +16,12 @@
       display: flex;
       align-items: center;
       border-radius: 24px;
-      padding: 0px 8px;
+      padding: 0px var(--space-2);
       height: 24px;
       background-color: var(--color-background-tertiary);
       margin: 0 10px 10px 0;
       float: left;
-      font-size: 13px;
+      font-size: var(--font-sm);
 
       .curSelected {
         max-width: 200px;
@@ -43,7 +43,7 @@
   }
 
   .adm-list-header {
-    padding-left: 16px;
+    padding-left: var(--space-4);
   }
   .adm-list-body {
     border: none !important;
@@ -51,10 +51,10 @@
   }
 
   .adm-list-item {
-    padding-left: 16px !important;
+    padding-left: var(--space-4) !important;
     background: var(--color-background-card) !important;
     .adm-list-item-content {
-      padding-right: 12px !important;
+      padding-right: var(--space-3) !important;
       .adm-list-item-content-main {
         padding: 7px 0 !important;
         color: var(--color-text-title);
@@ -72,7 +72,7 @@
     display: flex;
     justify-content: space-between;
     padding: 13px 15px 13px 0;
-    margin-left: 16px;
+    margin-left: var(--space-4);
     .onlySelf {
       font-size: 15px;
     }
@@ -131,13 +131,13 @@
   .checkItemBox {
     display: flex;
     align-items: center;
-    padding-left: 16px;
+    padding-left: var(--space-4);
     width: 100%;
     &:last-child .checkItemInfoBox {
       border-bottom: initial;
     }
     .checkboxBox {
-      margin-right: 12px;
+      margin-right: var(--space-3);
     }
     .checkItemInfoBox {
       display: flex;
@@ -151,12 +151,12 @@
         .fullname {
           max-width: calc(~'100vw - 110px');
           font-weight: 600;
-          font-size: 13px;
+          font-size: var(--font-sm);
           color: var(--color-text-title);
         }
         .departmentInfo {
           max-width: calc(~'100vw - 110px');
-          font-size: 12px;
+          font-size: var(--font-xs);
           color: var(--color-text-secondary);
         }
       }
@@ -165,7 +165,7 @@
 
   // A-Z
   .sortTitle {
-    padding: 12px 12px 12px 16px;
+    padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
     color: var(--color-text-title);
     font-size: 15px;
     font-weight: 500;
@@ -175,13 +175,13 @@
   .departmentItemBox {
     display: flex;
     align-items: center;
-    padding-left: 16px;
+    padding-left: var(--space-4);
     width: 100%;
     &:last-child .departmentSelectItemInfoBox {
       border-bottom: initial;
     }
     .checkboxBox {
-      margin-right: 12px;
+      margin-right: var(--space-3);
     }
     .departmentSelectItemInfoBox {
       display: flex;
@@ -190,7 +190,7 @@
       font-size: 15px;
       color: var(--color-text-title);
       font-weight: bold;
-      padding: 7px 12px 7px 0;
+      padding: 7px var(--space-3) 7px 0;
       border-bottom: 1px solid var(--color-border-secondary);
       .departmentItemContent {
         display: flex;
@@ -219,7 +219,7 @@
   .extraDivision {
     display: flex;
     align-items: center;
-    padding-left: 12px;
+    padding-left: var(--space-3);
     border-left: 1px solid var(--color-border-secondary);
     height: 20px;
     color: var(--color-border-secondary);

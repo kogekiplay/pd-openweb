@@ -15,8 +15,8 @@ const PreviewContentWrapper = styled.div`
   flex-direction: column;
   .iconWrap {
     background: #ffffffe6;
-    padding: 8px;
-    font-size: 24px;
+    padding: var(--space-2);
+    font-size: var(--font-3xl);
     flex-direction: row-reverse;
     .icon-task-later {
       transform: rotate(0deg);
@@ -33,7 +33,7 @@ const PreviewContentWrapper = styled.div`
   .fileWrapper {
     justify-content: center;
     .name {
-      margin: 17px 0 20px 0;
+      margin: 17px 0 var(--space-5) 0;
     }
   }
   .fileIcon {

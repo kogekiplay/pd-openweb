@@ -9,7 +9,7 @@ const GroupButtonInCard = styled.div`
   justify-content: center;
   align-items: center;
   gap: 5px;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   height: 32px;
   border-radius: var(--radius-sm);
   color: var(--color-text-primary);
@@ -29,7 +29,7 @@ const GroupButtonInCard = styled.div`
     }
   }
   .icon {
-    font-size: 18px;
+    font-size: var(--font-xl);
   }
   .operateButtonText {
     max-width: 100%;
@@ -39,7 +39,7 @@ const GroupButtonInCard = styled.div`
   }
   .groupArrow {
     flex-shrink: 0;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
   }
 `;
@@ -50,7 +50,7 @@ const GroupButtonInPopup = styled.div`
   height: 50px;
   ${props => props.disabled && 'opacity: 0.5;'}
   .icon {
-    font-size: 20px;
+    font-size: var(--font-2xl);
   }
   .operateButtonText {
     flex: 1;
@@ -65,18 +65,18 @@ const GroupButtonInPopup = styled.div`
   }
   .groupArrow {
     flex-shrink: 0;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-tertiary);
   }
 `;
 
 const GroupPopupContent = styled.div`
-  padding: 0 18px 12px;
+  padding: 0 18px var(--space-3);
   .emptyGroupTip {
     height: 50px;
     line-height: 50px;
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
   }
 `;
 

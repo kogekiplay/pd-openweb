@@ -9,7 +9,7 @@ import WorkflowChatBot from 'src/components/Mingo/modules/WorkflowChatBot';
 import chatbotAjax from 'src/pages/workflow/apiV2/chatbot';
 
 const MessageListHeader = styled.div`
-  padding: 20px 0 6px;
+  padding: var(--space-5) 0 6px;
   max-width: 880px;
   margin: 0 auto;
   .title {
@@ -19,7 +19,7 @@ const MessageListHeader = styled.div`
   }
   .updateTime {
     margin-top: 6px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     color: var(--color-text-secondary);
   }
   &.isSmallMode {

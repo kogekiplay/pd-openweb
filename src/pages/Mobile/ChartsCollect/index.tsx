@@ -9,7 +9,7 @@ import Back from '../components/Back';
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 16px 10px;
+  padding: var(--space-4) 10px;
   background-color: var(--color-background-secondary);
   height: 100%;
   overflow-y: auto;
@@ -23,7 +23,7 @@ const Wrap = styled.div`
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
     border-radius: var(--radius-sm);
     margin-bottom: 10px;
-    padding: 16px 15px 15px;
+    padding: var(--space-4) 15px 15px;
     box-sizing: content-box;
     .reportName {
       font-size: 17px;

@@ -6,9 +6,9 @@ import groupAjax from 'src/api/group';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
 
 const Box = styled.div`
-  padding: 12px;
+  padding: var(--space-3);
   background: var(--color-yellow-black);
-  font-size: 13px;
+  font-size: var(--font-sm);
   .pointer {
     margin: 6px 0 2px;
     &:hover {

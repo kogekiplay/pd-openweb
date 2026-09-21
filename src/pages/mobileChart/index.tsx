@@ -17,7 +17,7 @@ const store = configureStore();
 const LayoutContent = styled.div`
   width: 100%;
   height: 100%;
-  padding: 8px 15px;
+  padding: var(--space-2) 15px;
   box-sizing: border-box;
   background-color: var(--color-background-primary);
   .g2-tooltip {

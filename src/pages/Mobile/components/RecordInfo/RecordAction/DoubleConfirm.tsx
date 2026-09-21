@@ -10,20 +10,20 @@ import verifyPassword from 'src/components/verifyPassword';
 
 const ConfirmDialogWrap = styled(Popup)`
   .adm-popup-body {
-    padding: 10px 20px 10px;
+    padding: 10px var(--space-5) 10px;
   }
   .remarkButton {
     box-sizing: border-box;
     border-radius: var(--radius-sm);
-    padding: 8px;
-    font-size: 14px;
+    padding: var(--space-2);
+    font-size: var(--font-md);
     width: 100%;
     border: 1px solid var(--color-border-secondary);
     min-height: 38px;
     max-height: 10000px;
   }
   .ming.Textarea {
-    padding: 8px;
+    padding: var(--space-2);
     border: 1px solid var(--color-border-secondary);
     min-height: 39px !important;
   }
@@ -62,7 +62,7 @@ const ConfirmDialogWrap = styled(Popup)`
   }
 `;
 const SectionName = styled.div`
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
   font-weight: 500;
   margin: 0px 0 10px;
@@ -112,7 +112,7 @@ const RemarkModeModal = styled(Popup)`
   }
   .modeItem {
     border-bottom: 1px solid var(--color-background-secondary);
-    padding: 16px 8px 16px 0;
+    padding: var(--space-4) var(--space-2) var(--space-4) 0;
     margin-left: 6px;
     text-align: left;
   }

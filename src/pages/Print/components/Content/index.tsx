@@ -257,7 +257,7 @@ export default class Con extends React.Component<any, any> {
                   width: '100%',
                   fontSize: TitleFont[fontType],
                   fontWeight: 'bold',
-                  margin: '24px 0 5px',
+                  margin: 'var(--space-6) 0 5px',
                   textAlign: type === 52 ? 'center' : 'left',
                 }}
               >

@@ -32,7 +32,7 @@ export const Wrap = styled.div`
     &::before {
       content: '\\2190';
       margin-right: 6px;
-      font-size: 20px;
+      font-size: var(--font-2xl);
       line-height: 1;
     }
     &:hover {
@@ -105,7 +105,7 @@ export const WrapCon = styled.div`
     width: 95%;
     min-width: 95%;
     height: auto;
-    padding: 48px 24px;
+    padding: 48px var(--space-6);
     .messageConBox {
       margin: 0 auto;
     }
@@ -125,12 +125,12 @@ export const WrapCon = styled.div`
     }
   }
   .txtConsole {
-    font-size: 20px;
+    font-size: var(--font-2xl);
     font-weight: 500;
     text-align: center;
   }
   .pageTitle {
-    margin-bottom: 32px;
+    margin-bottom: var(--space-8);
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -147,7 +147,7 @@ export const WrapCon = styled.div`
     line-height: 48px;
     color: var(--color-text-inverse);
     font-weight: bold;
-    font-size: 16px;
+    font-size: var(--font-lg);
     &:hover {
       background: var(--color-primary-dark);
     }
