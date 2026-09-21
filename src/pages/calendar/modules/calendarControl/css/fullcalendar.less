@@ -28,9 +28,18 @@
     --fc-classic-faint: var(--color-border-secondary);
     --fc-classic-muted-foreground: var(--color-text-secondary);
     --fc-classic-foreground: var(--color-text-primary);
-    // 老版本 .fc-today 用的是 --color-error-bg（浅红底），保持一致
-    --fc-classic-today: var(--color-error-bg);
+    // 【今天那一格的底色】迁移时这里写的是 --color-error-bg（浅红），理由记的是
+    // 「老版本 .fc-today 用的就是它」—— 那条理由是错的：老文件里 .fc-unthemed .fc-today
+    // 明明是 `background: none`。于是日视图里【整片网格都泛粉】（那一列全是今天），
+    // 看着像出了故障。换成极浅的品牌底。
+    --fc-classic-today: var(--color-background-hover);
     --fc-classic-highlight: var(--color-cyan-blue);
+  }
+
+  // 日视图只有一列，那一列必然是今天 —— 整片铺底没有任何区分作用，只会让人以为出错了。
+  .fc-view.fc-timeGridDay-view,
+  .fc-view.fc-dayGridDay-view {
+    --fc-classic-today: transparent;
   }
 
   // ── 2. 这个页面自己的规则 ───────────────────────────────────────────────
@@ -87,8 +96,7 @@
     border-top: 1px solid var(--color-border-secondary);
   }
 
-  // 今天那一格用双线边框区分
-  td.fc-day-today {
-    border-style: double;
-  }
+  // 原先这里是 `td.fc-day-today { border-style: double }`。v7 的格子是 div 不是 td
+  // （整页 0 个 td.fc-day-today），规则从来没生效；双线边框也是上一代的做法。
+  // 今天现在靠上面那条浅品牌底表达。
 }

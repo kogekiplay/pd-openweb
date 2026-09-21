@@ -120,10 +120,12 @@ Calendar.Method = {
     createCalendarInstance(document.getElementById('calendar'), {
       headerToolbar: {
         left: 'today prev,next title',
+        center: '',
         // v2 的 agendaDay/agendaWeek/month 改成 v7 的名字；"列表"不再靠往工具栏
         // 注入一个假按钮再 destroy 掉日历，直接用 v7 内置的 listMonth 视图。
-        center: 'timeGridDay,timeGridWeek,dayGridMonth,listMonth',
-        right: '',
+        // 放 right 而不是 center：v7 的工具栏是 space-between 的三块，放 center
+        // 时这组按钮会停在偏左的位置，右边空一大片（1440 宽下右侧空约 360px）。
+        right: 'timeGridDay,timeGridWeek,dayGridMonth,listMonth',
       },
       // v7：buttonText 被移除，改成 buttons 映射的 .text，且 key 必须是精确视图名
       buttons: {

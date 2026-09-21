@@ -24,9 +24,14 @@ export const CALENDAR_VIEW_FORMATS = {
   },
   timeGridWeek: {
     titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
+    // 【周视图一列只放一条】1440 宽下一列约 165px。并排 3 条 = 每条 53px，
+    // 标题只剩「上午…」，等于什么都没显示。一条占满整列至少能读全，
+    // 其余收进「+N 更多」（点开是完整弹层）。日视图列宽 1200+，放得下 3 条。
+    eventMaxStack: 1,
   },
   timeGridDay: {
     titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
+    eventMaxStack: 3,
   },
   dayGridWeek: {
     titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
