@@ -287,9 +287,10 @@ export function getCalendarData() {
         endFormat: isTimeStyle(endData) ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD',
       };
     });
+    // listMonth 跟在最后：它和月视图共用日期区间，是"时间轴摊不开时"的兜底读法
     const btnList = isTimeStyle(calendarInfo[0].startData)
-      ? 'today prev,next dayGridMonth,timeGridWeek,timeGridDay'
-      : 'today prev,next dayGridMonth,dayGridWeek,dayGridDay';
+      ? 'today prev,next dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+      : 'today prev,next dayGridMonth,dayGridWeek,dayGridDay,listMonth';
     let viewType = getCalendartypeData()[`${worksheetId}-${viewId}`];
     let typeStr = '';
 

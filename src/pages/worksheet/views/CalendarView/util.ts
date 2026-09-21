@@ -287,7 +287,15 @@ export const setDataFormatByRowId = pram => {
   ];
 };
 
+/**
+ * 「默认视图」那一栏的下标 -> FullCalendar 视图名。
+ * 0=月  1=周  2=日  3=列表（新增）
+ *
+ * 【列表为什么不分周/日】listMonth 用的日期区间和月视图一样，来回切不重新取数；
+ * 而且它本来就是给"一天太多条、时间轴摊不开"的表用的，再按周/日切没有意义。
+ */
 export const getCalendarViewType = (strType, data) => {
+  if (strType === '3') return 'listMonth';
   if (!['1', '2'].includes(strType)) return 'dayGridMonth';
   const isTime = isTimeStyle(data);
   return strType === '1' ? (isTime ? 'timeGridWeek' : 'dayGridWeek') : isTime ? 'timeGridDay' : 'dayGridDay';
