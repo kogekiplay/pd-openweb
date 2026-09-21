@@ -28,9 +28,22 @@ const SINK_PORT = 30099;
 const PROBE = path.join(__dirname, 'geometry-probe.ts');
 const source: string = fs.readFileSync(PROBE, 'utf8');
 
-if (/:\s*(string|number|boolean|any|void|unknown)\b/.test(source.replace(/\/\*[\s\S]*?\*\//g, ''))) {
-  console.error('探针里出现了类型标注 —— 粘进控制台会语法错。去掉标注，别在这里加转译。');
-  process.exit(1);
+// 探针必须是纯 JS 语法。这里挡两类最容易手滑写进去的 TS：
+//   · 类型标注 `x: string`
+//   · 类型断言 `x as any` / `<Foo>x`
+// 【为什么值得单列一道检查】这两样都能过类型门禁，只在粘进控制台那一刻才炸，
+// 而且报的是干巴巴的 SyntaxError，不会告诉你是哪一行、更不会说"你写了 TS"。
+const stripped: string = source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+const tsSyntax: Array<[RegExp, string]> = [
+  [/:\s*(string|number|boolean|any|void|unknown|Record<)/, '类型标注'],
+  [/\bas\s+(any|unknown|const|[A-Z][A-Za-z]*)\b/, '类型断言'],
+];
+for (const [re, what] of tsSyntax) {
+  const m = stripped.match(re);
+  if (m) {
+    console.error(`探针里出现了${what}（${m[0]}）—— 粘进控制台会语法错。去掉它，别在这里加转译。`);
+    process.exit(1);
+  }
 }
 
 // 探针是 async（要隔一会儿采两次证明页面静止），所以调用处要 await。

@@ -56,7 +56,6 @@ export async function captureGeometry(settleMs = 400) {
   const VOLATILE_CLASS = [
     // —— 跟构建走（坑二）——
     /^sc-[A-Za-z0-9]+$/, // styled-components 的组件类
-    /^[a-zA-Z]{5,8}$/, // styled-components 生成的随机类（dBetQf 这种）
     /^css-dev-only-do-not-override-/, // antd cssinjs（开发态）
     /^css-var-_r_/, // antd cssinjs 的 CSS 变量作用域类
     /^css-[0-9a-z]{6,}$/, // antd cssinjs（生产态）
@@ -68,12 +67,39 @@ export async function captureGeometry(settleMs = 400) {
     /^control-(head|val|rule)-undefined$/, // 没有值时的占位类，随数据出现/消失
   ];
 
+  /**
+   * styled-components 的内容哈希类要**按位置剥，不能按长度猜**（坑五）。
+   *
+   * class 属性的排布是固定的：`sc-<id> … <同样个数的内容哈希> … <用户类名>`，
+   * 例如 `sc-iAzFDi sc-kRfPgF eiuRBV jTOmKK Font17 bold Hand` —— 两个 sc- 后面
+   * 正好跟两个哈希。所以数出 sc- 的个数 N，把最后一个 sc- 之后的 N 个 token 剥掉。
+   *
+   * 最初写的是按长度 `/^[a-zA-Z]{5,8}$/`，实测漏得厉害：本页哈希长度分布是
+   * 5/6/9/10，两头都漏。而且**不能简单放宽成 {3,10}** —— 那会把 `flex`、`bold`、
+   * `cell` 这类真类名一起剥掉，让不同元素塌成同一个 key，后果比漏剥更糟。
+   *
+   * 漏剥的表现同坑二：改了 CSS -> 哈希变 -> key 变 -> 两份快照配不上。
+   * 这条就是这么发现的：工作台第一批映射后，192/779 个元素配不上，
+   * 差异只是多了个 4 字符的 `gjlh`。
+   */
+  function stripStyledHashes(raw) {
+    let lastSc = -1;
+    let scCount = 0;
+    for (let i = 0; i < raw.length; i++) {
+      if (/^sc-[A-Za-z0-9]+$/.test(raw[i])) {
+        scCount++;
+        lastSc = i;
+      }
+    }
+    if (!scCount) return raw;
+    return raw.filter((c, i) => !(i > lastSc && i <= lastSc + scCount));
+  }
+
   function stableClasses(el) {
     if (typeof el.className !== 'string') return '';
-    return el.className
-      .trim()
-      .split(/\s+/)
-      .filter(c => c && !VOLATILE_CLASS.some(re => re.test(c)))
+    const raw = el.className.trim().split(/\s+/).filter(Boolean);
+    return stripStyledHashes(raw)
+      .filter(c => !VOLATILE_CLASS.some(re => re.test(c)))
       .sort() // 类名顺序在 React 重渲染时会变，排序后才稳定
       .join('.');
   }
@@ -114,6 +140,17 @@ export async function captureGeometry(settleMs = 400) {
 
     for (let i = 0; i < all.length; i++) {
       const el = all[i];
+
+      // 【跳过 SVG 内部】<svg> 自己的盒子要量（它参与版面），但里面的 <g>/<path>
+      // 不参与 CSS 布局，而且图标是异步取回来的、内部结构配不稳 ——
+      // 实测工作台 779 个元素里有 154 个是图标内部，纯噪声。
+      //
+      // 用 closest 而不是 ownerSVGElement：后者只声明在 SVGElement 上，
+      // 这里的 el 是 Element，要写 `(el as any)` 才过类型检查 ——
+      // 而类型断言同样是 TS 语法，粘进控制台就废了（见文件头的纯 JS 约束）。
+      const svgHost = el.closest('svg');
+      if (svgHost && svgHost !== el) continue;
+
       const r = el.getBoundingClientRect();
 
       // 不可见的元素没有版面意义，量了只是噪声
