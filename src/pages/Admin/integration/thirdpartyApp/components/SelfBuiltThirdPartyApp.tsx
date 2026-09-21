@@ -58,7 +58,7 @@ const ApplicationTriggerWrapper = styled.div`
     padding: 10px var(--space-6);
     &:hover {
       color: var(--color-white);
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
     }
   }
 `;

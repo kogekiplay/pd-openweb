@@ -116,7 +116,7 @@ const OptionItem = styled.div`
     color: var(--color-text-secondary);
     font-size: var(--font-lg);
     cursor: pointer;
-    :hover {
+    &:hover {
       color: #f00;
     }
   }

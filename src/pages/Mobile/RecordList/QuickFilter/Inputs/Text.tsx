@@ -30,7 +30,7 @@ const SearchTypeWrap = styled.div`
       font-weight: 600;
     }
     &.active {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       color: var(--color-white);
       .icon {
         color: var(--color-white);

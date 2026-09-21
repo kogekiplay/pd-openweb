@@ -134,7 +134,7 @@ export const WrapCon = styled.div`
     padding: 6px var(--space-2);
     &:hover,
     &.isCur {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       color: var(--color-text-inverse);
       .colorPrimary {
         color: var(--color-text-inverse) !important;

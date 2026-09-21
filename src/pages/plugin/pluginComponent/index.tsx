@@ -93,7 +93,7 @@ const Wrapper = styled.div`
       }
       .headerBtn {
         padding: var(--space-2) var(--space-6);
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         border-radius: 18px;
         color: var(--color-white);
         display: inline-block;

@@ -118,7 +118,7 @@ const Wrap = styled.div`
       .saveBtn {
         margin: var(--space-6) auto 0px;
         padding: 11px 50px;
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         color: var(--color-white);
         line-height: 1em;
         border-radius: 30px;

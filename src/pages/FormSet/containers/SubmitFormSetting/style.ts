@@ -67,7 +67,7 @@ export const Con = styled.div`
         line-height: 32px;
         min-height: 32px;
         padding: 0 var(--space-5);
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         border-radius: var(--radius-sm);
         max-width: 155px;
         box-sizing: border-box;

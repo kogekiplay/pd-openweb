@@ -35,7 +35,7 @@ const Wrap = styled.div`
       color: var(--color-text-secondary);
     }
     &:hover {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       color: var(--color-white);
       .Icon {
         color: var(--color-white);

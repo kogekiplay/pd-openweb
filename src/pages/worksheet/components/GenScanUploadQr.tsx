@@ -43,7 +43,7 @@ const Popup = styled.div`
     .refresh {
       padding: var(--space-1) var(--space-5);
       border-radius: 45px;
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       color: var(--color-white);
       &:hover {
         background: var(--color-primary);

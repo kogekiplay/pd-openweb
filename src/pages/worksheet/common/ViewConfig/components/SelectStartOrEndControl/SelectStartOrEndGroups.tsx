@@ -88,7 +88,7 @@ const Wrap = styled.div`
       vertical-align: middle;
     }
     &:hover {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       color: var(--color-white) !important;
       i {
         color: var(--color-white) !important;

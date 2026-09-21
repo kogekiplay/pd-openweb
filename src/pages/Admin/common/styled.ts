@@ -42,7 +42,7 @@ export const BillInfoWrap = styled.div`
       display: inline-block;
       height: 24px;
       line-height: 24px;
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
       color: var(--color-white);
       font-size: var(--font-xs);
       padding: 0 var(--space-4);
@@ -59,7 +59,7 @@ export const BillInfoWrap = styled.div`
       &:hover {
         background-color: var(--color-background-primary);
         border: 1px solid var(--color-primary-dark);
-        color: var(--color-link-hover);
+        color: var(--color-primary-dark);
       }
     }
   }
@@ -299,7 +299,7 @@ export const AccountIdOperation = styled.ul`
     line-height: 36px;
     transition: all 0.25s;
     &:hover {
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
       color: var(--color-white);
     }
   }

@@ -10,15 +10,19 @@ const Tab = styled.div`
   cursor: pointer;
   font-weight: 500;
   font-size: var(--font-md) !important;
-  color: ${({ active }) => (active ? 'var(--color-primary)' : 'var(--color-text-secondary)')};
+  /* 【选中态靠下划线表达，不靠文字颜色】主题色是用户自选的，拿它当文字色时
+     13 个真实主题色里有 6 个对白底达不到 4.5:1（最低 2.28），选中的标签反而最难读。
+     下面的 ::after 那条 3px 主题色下划线才是状态标识，文字用正文墨色就行。
+     hover 同理走墨色 —— 相对未选中的次要灰已经是明确的反馈。 */
+  color: ${({ active }) => (active ? 'var(--color-text-primary)' : 'var(--color-text-secondary)')};
   padding: 0 30px;
   line-height: 50px;
   display: inline-block;
   text-decoration: none;
-  :hover {
-    color: var(--color-primary);
+  &:hover {
+    color: var(--color-text-primary);
   }
-  ::after {
+  &::after {
     content: ' ';
     position: absolute;
     left: 18px;

@@ -155,7 +155,7 @@ const MoreOperateMenu = styled.ul`
     padding: 0 var(--space-6);
     cursor: pointer;
     &:hover {
-      background-color: var(--color-primary);
+      background-color: var(--color-primary-solid);
       color: var(--color-white);
     }
   }

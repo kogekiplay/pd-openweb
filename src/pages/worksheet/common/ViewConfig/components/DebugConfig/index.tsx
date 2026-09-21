@@ -40,7 +40,7 @@ const Wrap = styled.div`
         color: var(--color-primary);
       }
       &.cur {
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         color: var(--color-white);
       }
     }

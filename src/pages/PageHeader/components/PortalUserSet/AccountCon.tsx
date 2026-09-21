@@ -94,7 +94,7 @@ const AccountWrap = styled.div`
     .btnSendVerifyCode {
       width: 130px;
       height: 36px;
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       opacity: 1;
       border-radius: var(--radius-sm);
       border: 0;

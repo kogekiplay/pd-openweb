@@ -17,7 +17,7 @@ const Con = styled.div`
     width: 100px;
     color: #0097ef;
     background-color: #f5f5f5;
-    ::before {
+    &::before {
       border-color: #f5f5f5 !important;
     }
   }
@@ -25,14 +25,14 @@ const Con = styled.div`
     width: 100px;
     color: red;
     background-color: #ffe9e7;
-    ::before {
+    &::before {
       border-color: #ffe9e7 !important;
     }
   }
   .agree {
     color: #fff;
     background-color: #0097ef;
-    ::before {
+    &::before {
       border-color: #0097ef !important;
     }
   }

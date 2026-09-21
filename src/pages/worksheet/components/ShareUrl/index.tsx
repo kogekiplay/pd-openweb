@@ -37,7 +37,7 @@ const Icon = styled(TextBlock)`
   font-size: var(--font-xl);
   text-align: center;
   margin-left: 6px;
-  :hover {
+  &:hover {
     color: var(--color-primary);
   }
   ${({ theme }) =>
@@ -56,7 +56,7 @@ const InputIcon = styled.span`
   color: var(--color-text-tertiary);
   font-size: var(--font-md);
   margin-left: 6px;
-  :hover {
+  &:hover {
     color: var(--color-primary);
   }
 `;
@@ -70,7 +70,7 @@ const TextIcon = styled(TextBlock)`
   font-size: var(--font-sm);
   font-weight: 500;
   margin-left: 6px;
-  :hover {
+  &:hover {
     color: var(--color-primary);
   }
   ${({ theme }) =>
@@ -100,7 +100,7 @@ const SeparateDisplayButton = styled(TextBlock)`
     font-size: var(--font-xl);
   }
 
-  :hover {
+  &:hover {
     color: var(--color-primary);
     i {
       color: var(--color-primary);

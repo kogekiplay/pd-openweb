@@ -106,7 +106,7 @@ export const WrapPop = styled.div`
     .btn {
       margin-top: var(--space-4);
       line-height: 36px;
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       border-radius: var(--radius-sm);
       padding: 0 var(--space-6);
       color: var(--color-white);

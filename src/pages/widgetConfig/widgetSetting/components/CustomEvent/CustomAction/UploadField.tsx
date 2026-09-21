@@ -68,13 +68,13 @@ const UploadListWrap = styled.div`
       color: var(--color-primary);
       margin-right: var(--space-5);
       &:hover {
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         border-color: var(--color-primary);
         color: var(--color-white);
       }
     }
     .submitBtn {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       color: var(--color-white);
       &:hover {
         background: var(--color-primary-dark);

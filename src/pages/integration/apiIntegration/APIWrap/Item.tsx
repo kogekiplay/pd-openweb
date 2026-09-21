@@ -34,7 +34,7 @@ const Wrap = styled.div`
     .btn {
       margin: 40px auto 0;
       padding: 11px 50px;
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       color: var(--color-white);
       line-height: 1em;
       border-radius: 30px;

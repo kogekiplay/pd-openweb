@@ -104,7 +104,7 @@ const ContentWrap = styled.div`
     display: flex;
     height: 36px;
     .add {
-      color: var(--color-link-hover);
+      color: var(--color-primary-dark);
       border: 1px solid var(--color-primary-dark);
       line-height: 34px;
       cursor: pointer;

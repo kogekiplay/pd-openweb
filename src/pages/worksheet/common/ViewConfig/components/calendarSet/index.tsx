@@ -60,7 +60,7 @@ const ShowChoose = styled.div`
         overflow: hidden;
       }
       &.checked {
-        background: var(--color-primary);
+        background: var(--color-primary-solid);
         color: var(--color-white);
         border-top: 1px solid var(--color-primary);
         border-bottom: 1px solid var(--color-primary);

@@ -170,7 +170,7 @@ export const BlackBtn = styled.span`
     font-size: var(--font-xl);
     margin-right: 6px;
   }
-  :hover {
+  &:hover {
     background-color: rgba(0, 0, 0, 0.25);
   }
 `;

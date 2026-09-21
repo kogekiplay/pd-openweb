@@ -38,10 +38,10 @@ const NewDropdown = styled(Dropdown)`
   }
 `;
 const AddControl = styled.div`
-  :hover {
+  &:hover {
     color: var(--color-white) !important;
   }
-  :hover .icon {
+  &:hover .icon {
     color: var(--color-white) !important;
   }
 `;

@@ -583,7 +583,7 @@ export const WorksheetListWrap = styled.div`
       line-height: 32px;
       &:hover {
         color: var(--color-white) !important;
-        background-color: var(--color-primary) !important;
+        background-color: var(--color-primary-solid) !important;
       }
     }
   }

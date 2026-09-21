@@ -68,7 +68,7 @@ export const Wrap = styled.div(
       line-height: 32px;
       border-radius: var(--radius-sm);
       color: var(--color-white);
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       i::before {
         line-height: 32px;
         color: var(--color-white);

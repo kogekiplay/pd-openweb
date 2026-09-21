@@ -46,7 +46,7 @@ const Des = styled.div`
     border: 1px solid var(--color-border-primary);
     background: var(--color-background-primary);
     &.c {
-      background: var(--color-primary);
+      background: var(--color-primary-solid);
       border: 0;
       color: var(--color-white);
     }
