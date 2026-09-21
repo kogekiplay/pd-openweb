@@ -61,8 +61,10 @@ const PopupWrap = styled(Popup)`
     .cancel {
       color: var(--color-text-secondary);
     }
+    /* 主按钮要跟应用主题，不能用 --color-info（那是写死的信息蓝，不跟主题）。
+       同组的 .delete 用 --color-error 是对的：那是语义色。 */
     .primary {
-      background-color: var(--color-info) !important;
+      background-color: var(--color-primary) !important;
       color: var(--color-white);
     }
     .delete {

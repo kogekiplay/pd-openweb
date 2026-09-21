@@ -39,9 +39,10 @@ const Wrap = styled.div`
       color: var(--color-text-title);
       a {
         text-decoration: none;
-        color: var(--color-link);
+        /* 当前页的高亮属于品牌色 —— --color-link 是写死的蓝，不跟主题 */
+        color: var(--color-primary);
         font-weight: 600;
-        border: 1px solid var(--color-link) !important;
+        border: 1px solid var(--color-primary) !important;
         &:hover {
           background-color: var(--color-background-primary);
         }
