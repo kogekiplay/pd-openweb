@@ -9,12 +9,12 @@ import { addBehaviorLog } from 'src/utils/project';
 
 const AppStatus = styled.div`
   border-radius: 10px;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   line-height: 22px;
   box-sizing: border-box;
   background: #515151;
   color: var(--color-white);
-  margin-left: 8px;
+  margin-left: var(--space-2);
   text-align: center;
   white-space: nowrap;
   &.isOverdue {

@@ -36,7 +36,7 @@ const CascaderSelectWrap = styled.div`
     &-Item {
       cursor: pointer;
       min-height: 32px;
-      padding: 0 6px 0 12px;
+      padding: 0 6px 0 var(--space-3);
       justify-content: space-between;
       &:hover {
         background: var(--color-background-hover);
@@ -60,7 +60,7 @@ const CascaderSearchSelectWrap = styled.ul`
   li {
     min-height: 32px;
     cursor: pointer;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     flex-wrap: wrap;
     &:hover {
       background: rgba(0, 0, 0, 0.06);

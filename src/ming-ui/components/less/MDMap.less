@@ -6,13 +6,13 @@
     border-right: 1px solid color-mix(in srgb, var(--color-overlay-ink) 5%, transparent);
     .distanceInfo {
       height: 57px;
-      padding: 20px 16px 0;
+      padding: var(--space-5) var(--space-4) 0;
     }
   }
   .MDMapInput {
     border-radius: 18px;
     background: var(--color-background-secondary);
-    padding: 8px 8px 8px 38px;
+    padding: var(--space-2) var(--space-2) var(--space-2) 38px;
     height: 36px;
     line-height: 36px;
     border: none;
@@ -20,7 +20,7 @@
   }
   .MDMapList {
     display: flex;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     border-bottom: 1px solid color-mix(in srgb, var(--color-overlay-ink) 5%, transparent);
     height: 57px;
     justify-content: space-between;
@@ -37,7 +37,7 @@
   }
   .MDMapCustom {
     flex: 1;
-    padding: 24px 16px 16px 16px;
+    padding: var(--space-6) var(--space-4) var(--space-4) var(--space-4);
     display: flex;
     flex-direction: column;
     .ant-input {

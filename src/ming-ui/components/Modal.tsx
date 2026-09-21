@@ -34,7 +34,7 @@ const ModalButtonCon = styled(BgIconButton.Group)`
 `;
 
 const ConfirmCon = styled.div`
-  margin-top: 20px;
+  margin-top: var(--space-5);
   text-align: right;
 `;
 

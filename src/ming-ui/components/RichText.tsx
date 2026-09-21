@@ -227,7 +227,7 @@ const Wrapper = styled.div(
       min-height: ${minHeight || 90}px !important;
       max-height: ${maxHeight ? `${maxHeight}px` : 'initial'} ;
       border: 1px solid var(--color-background-secondary) !important;
-      font-size: 13px !important;
+      font-size: var(--font-sm) !important;
       background: var(--color-background-secondary) !important;
       border-radius: var(--radius-sm) !important;
       box-shadow: none !important;

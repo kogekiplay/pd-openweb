@@ -15,7 +15,7 @@ const Con = styled.div`
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-disabled);
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -34,13 +34,13 @@ const Con = styled.div`
     height: 24px;
     width: 32px;
     text-align: center;
-    font-size: 13px !important;
+    font-size: var(--font-sm) !important;
     &:focus {
       border-color: var(--color-primary);
     }
   }
   .pageNumber {
-    margin: 0 8px;
+    margin: 0 var(--space-2);
   }
 `;
 

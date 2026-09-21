@@ -15,7 +15,7 @@ const RoleSelectWrap = styled.div`
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   .searchRoleWrap {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     line-height: 40px;
     height: 40px;
     border-bottom: 1px solid var(--color-border-secondary);
@@ -23,7 +23,7 @@ const RoleSelectWrap = styled.div`
     input {
       outline: none;
       border: none;
-      margin-right: 12px;
+      margin-right: var(--space-3);
     }
   }
   .groupItem,
@@ -52,11 +52,11 @@ const RoleSelectWrap = styled.div`
   }
   .selectCurrent {
     color: var(--color-text-title);
-    margin: 4px 0;
+    margin: var(--space-1) 0;
     padding: 0 17px;
     height: 44px;
     line-height: 44px;
-    font-size: 13px;
+    font-size: var(--font-sm);
     &:hover {
       background: var(--color-background-hover);
     }
@@ -70,7 +70,7 @@ const RoleSelectWrap = styled.div`
       background: var(--color-success);
       text-align: center;
       vertical-align: middle;
-      margin-right: 8px;
+      margin-right: var(--space-2);
       line-height: 28px;
       color: var(--color-white);
       border-radius: 50%;

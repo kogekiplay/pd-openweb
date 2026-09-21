@@ -7,7 +7,7 @@
   user-select: none;
 
   & > .li {
-    font-size: 13px;
+    font-size: var(--font-sm);
     line-height: 20px;
     color: var(--color-text-title);
     cursor: pointer;
@@ -27,7 +27,7 @@
     &.dropdown-nav {
       color: var(--color-text-title);
       cursor: default;
-      padding: 6px 12px;
+      padding: 6px var(--space-3);
       & div:hover,
       &.checked {
         color: var(--color-text-title);
@@ -46,7 +46,7 @@
         }
 
         i.icon {
-          font-size: 14px;
+          font-size: var(--font-md);
           line-height: 20px;
           width: 20px;
           text-align: center;
@@ -65,7 +65,7 @@
       button {
         border: none;
         padding: 0 6px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         line-height: 20px;
         height: 20px;
         background-color: transparent;
@@ -78,7 +78,7 @@
         width: 100%;
         box-sizing: border-box;
         padding: 2px 6px;
-        font-size: 13px;
+        font-size: var(--font-sm);
         line-height: 20px;
       }
     }
@@ -92,7 +92,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     & > li {
-      font-size: 13px;
+      font-size: var(--font-sm);
       line-height: 36px;
       color: var(--color-text-title);
       cursor: pointer;
@@ -143,11 +143,11 @@
       }
 
       i.icon.arrow {
-        font-size: 14px;
+        font-size: var(--font-md);
         line-height: 20px;
         width: 20px;
         text-align: center;
-        padding: 8px;
+        padding: var(--space-2);
         vertical-align: middle;
         color: var(--color-text-tertiary);
         box-sizing: content-box;
@@ -175,7 +175,7 @@
           i.icon {
             display: none;
             color: var(--color-white);
-            font-size: 14px;
+            font-size: var(--font-md);
             width: 18px;
             line-height: 18px;
             text-align: center;

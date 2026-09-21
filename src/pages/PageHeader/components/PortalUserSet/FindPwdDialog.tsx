@@ -12,7 +12,7 @@ import { encrypt } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 
 const AccountWrap = styled.div`
-  margin-top: 20px;
+  margin-top: var(--space-5);
   margin-bottom: -2px;
   margin-left: -2px;
   margin-right: -2px;
@@ -50,7 +50,7 @@ const AccountWrap = styled.div`
       border: 1px solid var(--color-border-secondary);
       opacity: 1;
       border-radius: var(--radius-sm);
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       line-height: 36px;
       width: 100%;
       &.telBox {

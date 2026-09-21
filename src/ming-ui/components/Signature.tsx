@@ -30,14 +30,14 @@ const SignatureBox = styled.div`
     align-items: center;
   }
   .signatureFromMobile {
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-secondary);
     cursor: pointer;
     display: flex;
     align-items: center;
     margin: 0 10px;
     .icon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       margin-right: 6px;
     }
   }

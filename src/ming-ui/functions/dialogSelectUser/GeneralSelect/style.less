@@ -18,10 +18,10 @@
         display: flex;
         border-style: solid;
         font-weight: bold;
-        font-size: 14px;
+        font-size: var(--font-md);
         border-width: 0;
-        margin-right: 24px;
-        padding: 6px 8px;
+        margin-right: var(--space-6);
+        padding: 6px var(--space-2);
         color: var(--color-text-title);
         cursor: pointer;
         position: relative;
@@ -56,12 +56,12 @@
       width: 100%;
       display: flex;
       align-items: center;
-      margin-top: 16px;
+      margin-top: var(--space-4);
       &__item {
         display: flex;
         font-weight: bold;
-        font-size: 12px;
-        margin-right: 8px;
+        font-size: var(--font-xs);
+        margin-right: var(--space-2);
         padding: 5px 15px;
         color: var(--color-text-title);
         background-color: var(--color-background-secondary);
@@ -80,7 +80,7 @@
       }
     }
     &-searchIcon {
-      font-size: 16px;
+      font-size: var(--font-lg);
       display: inline-block;
       color: var(--color-text-tertiary);
       float: left;
@@ -100,7 +100,7 @@
         position: absolute;
         left: 18px;
         top: 13px;
-        font-size: 16px;
+        font-size: var(--font-lg);
         color: var(--color-text-secondary);
       }
       input {
@@ -133,7 +133,7 @@
         border-radius: 50%;
         cursor: pointer;
         span {
-          font-size: 16px;
+          font-size: var(--font-lg);
           color: var(--color-text-tertiary);
           border-radius: 50%;
         }
@@ -188,9 +188,9 @@
   .GSelect-User {
     height: 40px;
     line-height: 40px;
-    padding-left: 8px;
+    padding-left: var(--space-2);
     vertical-align: middle;
-    padding-right: 20px;
+    padding-right: var(--space-5);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -203,8 +203,8 @@
       border-radius: var(--radius-sm);
     }
     &__avatar {
-      margin-right: 12px;
-      margin-left: 8px;
+      margin-right: var(--space-3);
+      margin-left: var(--space-2);
       img {
         height: 28px;
         width: 28px;
@@ -218,7 +218,7 @@
       white-space: nowrap;
       text-overflow: ellipsis;
       padding-right: 10px;
-      font-size: 14px;
+      font-size: var(--font-md);
       .textSecondary {
         color: var(--color-text-title) !important;
       }
@@ -241,9 +241,9 @@
       .closeBtn {
         line-height: 36px;
         min-height: 36px;
-        padding: 0 32px;
+        padding: 0 var(--space-8);
         min-width: 92px;
-        font-size: 14px;
+        font-size: var(--font-md);
         color: var(--color-text-tertiary);
         cursor: pointer;
         &:hover {

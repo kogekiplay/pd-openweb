@@ -51,7 +51,7 @@ const CardContentBoxWrap = styled.div`
   }
 
   .cardContent {
-    padding: 16px 16px 16px 16px;
+    padding: var(--space-4) var(--space-4) var(--space-4) var(--space-4);
     > .TxtCenter {
       margin: 0 !important;
       padding: 0 0 10px;
@@ -107,7 +107,7 @@ const BusinessCardWrap = styled.div`
     line-height: 19px;
     background: var(--color-background-disabled);
     border-radius: var(--radius-sm);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
   }
 
   .cardContent-wrapper {

@@ -14,7 +14,7 @@ const HomeEntry = styled.div`
   height: 28px;
   border-radius: 14px;
   border: 1px solid var(--color-border-secondary);
-  margin: 0 12px 0 16px;
+  margin: 0 var(--space-3) 0 var(--space-4);
   color: var(--color-text-tertiary);
   text-align: center;
   line-height: 29px;

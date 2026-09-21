@@ -18,11 +18,11 @@
   background-color: var(--color-background-primary);
   .nativeModuleLogo {
     width: 238px;
-    padding-left: 12px;
+    padding-left: var(--space-3);
     box-sizing: initial;
     .flexCenterHeight();
     .homepageIcon {
-      padding: 8px;
+      padding: var(--space-2);
       background-color: var(--dot-wrap-bg);
       border-radius: 8px;
       box-sizing: content-box;
@@ -41,10 +41,10 @@
       }
     }
     .nativeCoordinationIcon {
-      margin: 0 8px 0 16px;
+      margin: 0 var(--space-2) 0 var(--space-4);
     }
     .nativeTitle {
-      font-size: 16px;
+      font-size: var(--font-lg);
       color: var(--color-text-primary);
     }
   }
@@ -55,7 +55,7 @@
       box-sizing: border-box;
       height: 100%;
       line-height: 50px;
-      padding: 0 20px;
+      padding: 0 var(--space-5);
       transition: all 0.25s;
       cursor: pointer;
       color: var(--color-text-secondary);

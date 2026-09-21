@@ -7,11 +7,11 @@ import Icon from './Icon';
 import UpgradeIcon from './UpgradeIcon';
 
 const Wrap = styled.ul`
-  margin: 12px 14px 0;
+  margin: var(--space-3) 14px 0;
   li {
     padding: 14px;
     color: var(--color-text-title);
-    font-size: 14px;
+    font-size: var(--font-md);
     cursor: pointer;
     background: var(--color-background-primary) 0% 0% no-repeat padding-box;
     border: 1px solid var(--color-border-secondary);
@@ -21,7 +21,7 @@ const Wrap = styled.ul`
       width: 30px;
       color: var(--color-text-secondary);
       text-align: left;
-      font-size: 18px;
+      font-size: var(--font-xl);
       font-weight: normal;
     }
     &.current {

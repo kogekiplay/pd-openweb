@@ -10,7 +10,7 @@ const VertifyPasswordDialogWrap = styled(Popup)`
   .adm-popup-body {
     overflow: auto;
     max-height: calc(100vh - 30px);
-    padding: 20px 20px 0px;
+    padding: var(--space-5) var(--space-5) 0px;
   }
   .ming.Textarea {
     border: 1px solid var(--color-border-secondary);

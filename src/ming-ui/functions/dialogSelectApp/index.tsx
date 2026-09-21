@@ -20,7 +20,7 @@ const AppDialog = styled(Dialog)`
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     .searchCon {
       width: 100%;
       height: 36px;
@@ -30,7 +30,7 @@ const AppDialog = styled(Dialog)`
       height: 48px;
       line-height: 48px;
       margin-top: 5px;
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: 600;
       color: var(--color-text-secondary);
       border-bottom: 1px solid var(--color-border-secondary);
@@ -61,7 +61,7 @@ const AppDialog = styled(Dialog)`
       justify-content: center;
       align-items: center;
       color: var(--color-text-disabled);
-      font-size: 14px;
+      font-size: var(--font-md);
     }
     .appListWrapper {
       flex: 1;
@@ -79,7 +79,7 @@ const AppDialog = styled(Dialog)`
           height: 38px;
           line-height: 24px;
           border-radius: var(--radius-sm);
-          margin-right: 8px;
+          margin-right: var(--space-2);
         }
       }
     }
@@ -87,7 +87,7 @@ const AppDialog = styled(Dialog)`
   .selectedInfo {
     position: absolute;
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
     left: 24px;
     bottom: 26px;
   }

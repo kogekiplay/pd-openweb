@@ -494,12 +494,12 @@ export class IntlTelInputAdapter {
     this.dialCodeTrigger.tabIndex = this.element.disabled ? -1 : 0;
     this.dialCodeTrigger.style.cssText = [
       'position:absolute',
-      'padding-left:12px',
+      'padding-left:var(--space-3)',
       'top:0',
       'display:flex',
       'align-items:center',
-      'gap:4px',
-      'padding-right:4px',
+      'gap:var(--space-1)',
+      'padding-right:var(--space-1)',
       'cursor:pointer',
       'z-index:2',
       'user-select:none',
@@ -511,7 +511,7 @@ export class IntlTelInputAdapter {
 
     const arrow = document.createElement('span');
     arrow.className = 'mdIntlTelDialCodeArrow';
-    arrow.style.cssText = 'font-size:12px;line-height:1;';
+    arrow.style.cssText = 'font-size:var(--font-xs);line-height:1;';
     arrow.textContent = '▾';
 
     this.dialCodeTrigger.appendChild(this.dialCodeLabel);

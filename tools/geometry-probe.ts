@@ -65,6 +65,10 @@ export async function captureGeometry(settleMs = 400) {
     /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i,
     /^(cell|row|col|rowHeight)-(\d+|NaN)$/, // 行列下标；兄弟序号已经能区分，不需要它
     /^control-(head|val|rule)-undefined$/, // 没有值时的占位类，随数据出现/消失
+    // `cell-id-7301559378183747` 这类【每次渲染重新生成】的数字 id。
+    // 跟上面那条只差一个 `-id-`，但漏掉它的代价很大：工作表主视图配对率
+    // 卡在 72.9%，四分之一的页面实际没被检查。补上之后到 100%。
+    /^[a-zA-Z]+-id-\d+$/,
   ];
 
   /**

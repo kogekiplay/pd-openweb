@@ -8,7 +8,7 @@
 
 .ColorPickerPanelTrigger {
   background: var(--color-background-primary);
-  padding: 12px;
+  padding: var(--space-3);
   border-radius: 8px;
   box-shadow: var(--shadow-lg);
   .react-colorful {
@@ -16,7 +16,7 @@
     height: auto;
   }
   .react-colorful__saturation {
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     height: 160px;
     border-radius: var(--radius-sm);
     border: none;
@@ -32,7 +32,7 @@
     width: 194px;
     height: 8px;
     border-radius: var(--radius-sm);
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
     .react-colorful__pointer {
       width: 12px;
       height: 12px;
@@ -57,13 +57,13 @@
         display: flex;
         align-items: center;
         border-radius: var(--radius-sm);
-        padding: 0 8px;
+        padding: 0 var(--space-2);
         border: 1px solid var(--color-border-primary);
         &:hover {
           border: 1px solid var(--color-primary-light);
         }
         .prefix {
-          font-size: 14px;
+          font-size: var(--font-md);
           color: rgba(0, 0, 0, 0.25);
         }
         .hexColorInput {
@@ -76,19 +76,19 @@
         justify-content: space-between;
         align-items: center;
         margin-inline-start: 4px;
-        font-size: 12px;
-        gap: 4px;
+        font-size: var(--font-xs);
+        gap: var(--space-1);
         .ant-input-number-input {
           padding-inline-start: 4px;
           padding-inline-end: 0;
-          font-size: 12px;
+          font-size: var(--font-xs);
         }
       }
     }
     .alphaInput {
       flex: 0 0 44px;
       margin-inline-start: 4px;
-      font-size: 12px;
+      font-size: var(--font-xs);
       .ant-input-number-input {
         padding-inline-start: 4px;
         padding-inline-end: 0;
@@ -107,12 +107,12 @@
     position: relative;
   }
   .commonColorPickerWrap {
-    margin-right: 8px;
-    padding-right: 8px;
+    margin-right: var(--space-2);
+    padding-right: var(--space-2);
     border-right: 1px solid rgba(5, 5, 5, 0.06);
     flex: 1 1 0%;
     .title {
-      font-size: 12px;
+      font-size: var(--font-xs);
       line-height: 20px;
       display: flex;
       align-items: center;
@@ -127,7 +127,7 @@
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
-      padding: 8px 0;
+      padding: var(--space-2) 0;
       transition: all 0.3s;
       .commonColorItem {
         width: 18px;

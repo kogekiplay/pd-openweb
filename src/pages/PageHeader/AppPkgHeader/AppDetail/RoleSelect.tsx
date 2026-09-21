@@ -27,15 +27,15 @@ const RoleSelectWrap = styled.div`
   background-color: var(--color-background-primary);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
   z-index: 20;
-  padding: 16px 0;
+  padding: var(--space-4) 0;
   .roleSelectHeader {
-    padding: 0 24px;
+    padding: 0 var(--space-6);
     .changeTypeCon:hover {
       color: var(--color-link-hover) !important;
     }
   }
   .roleSelectSearch {
-    padding: 0 15px 0 24px;
+    padding: 0 15px 0 var(--space-6);
     .roleSearch {
       width: 100%;
       background: var(--color-background-primary) !important;
@@ -44,10 +44,10 @@ const RoleSelectWrap = styled.div`
     }
   }
   .roleSelectList {
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     overflow: scroll;
     .item {
-      padding: 14px 12px;
+      padding: 14px var(--space-3);
       border-radius: var(--radius-sm);
       height: 42px;
       .icon {
@@ -67,7 +67,7 @@ const RoleSelectWrap = styled.div`
     }
   }
   .roleMultipleValues {
-    padding: 16px 24px;
+    padding: var(--space-4) var(--space-6);
     border-top: 1px solid var(--color-border-secondary);
     border-bottom: 1px solid var(--color-border-secondary);
     .clearAll:hover {
@@ -79,7 +79,7 @@ const RoleSelectWrap = styled.div`
     .values {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: var(--space-3);
       li {
         padding: 6px;
         background: var(--color-border-secondary);

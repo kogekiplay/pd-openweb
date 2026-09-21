@@ -1,6 +1,11 @@
 // 对话框按 lg 档（12px）—— 它是「面板」那一类，不是控件
 @dialog-radius: var(--radius-lg);
 @dialog-overlay-bg: var(--color-background-overlay);
+// 【这两个【不能】换成 var(--space-*)】下面第 107 行有
+// `@dialog-hr-padding - @close-hit-padding`，那是 LESS 的【编译期】算术；
+// CSS 变量要到浏览器运行时才解析，LESS 拿到 `var(--space-6) - 6px`
+// 只会报 "Operation on an invalid type"，编译直接失败。
+// 凡是参与 LESS 运算的变量一律保持字面量。
 @dialog-hr-padding: 24px;
 // 关闭叉的点击热区内边距：图标 22 + 6*2 = 34，比裸图标好点中
 @close-hit-padding: 6px;
@@ -34,7 +39,7 @@
     left: 0;
     right: 0;
     overflow: auto;
-    padding: 32px 0;
+    padding: var(--space-8) 0;
     text-align: center;
 
     & > .mui-dialog-ghost {
@@ -126,7 +131,7 @@
 
       & > .mui-dialog-header {
         line-height: 1;
-        padding: 20px 24px 16px;
+        padding: var(--space-5) var(--space-6) var(--space-4);
         border-radius: @dialog-radius 0 0 @dialog-radius;
 
         & > .mui-dialog-default-title {
@@ -136,7 +141,7 @@
         }
 
         & > .mui-dialog-desc {
-          padding-top: 16px;
+          padding-top: var(--space-4);
           font-size: @dialog-base-font;
           color: var(--color-text-secondary);
           word-break: break-word;
@@ -156,12 +161,12 @@
       }
 
       & > .mui-dialog-footer {
-        padding: 10px @dialog-hr-padding 20px;
+        padding: 10px @dialog-hr-padding var(--space-5);
         text-align: right;
         border-radius: 0 0 @dialog-radius @dialog-radius;
 
         .Button + .Button {
-          margin-left: 16px;
+          margin-left: var(--space-4);
         }
         .Button--link {
           color: var(--color-text-secondary);

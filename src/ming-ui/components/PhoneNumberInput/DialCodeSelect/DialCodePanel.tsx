@@ -19,11 +19,11 @@ const PanelWrap = styled.div`
     display: flex;
     align-items: center;
     height: 44px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     line-height: 44px;
     border-bottom: 1px solid var(--color-border-primary);
     .searchIcon {
-      margin-right: 8px;
+      margin-right: var(--space-2);
       color: var(--color-text-tertiary);
     }
     input {
@@ -44,7 +44,7 @@ const PanelWrap = styled.div`
   }
   .countryRow {
     height: 36px;
-    padding: 0 12px;
+    padding: 0 var(--space-3);
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -65,13 +65,13 @@ const PanelWrap = styled.div`
     }
   }
   .groupTitle {
-    padding: 6px 12px 2px;
+    padding: 6px var(--space-3) 2px;
     color: var(--color-text-tertiary);
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
   .indexBar {
     width: 22px;
-    padding: 12px 4px;
+    padding: var(--space-3) var(--space-1);
     border-left: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
@@ -80,7 +80,7 @@ const PanelWrap = styled.div`
   }
   .indexItem {
     line-height: 15px;
-    font-size: 12px;
+    font-size: var(--font-xs);
     color: var(--color-text-tertiary);
     cursor: pointer;
     &:hover {
@@ -88,7 +88,7 @@ const PanelWrap = styled.div`
     }
   }
   .empty {
-    padding: 16px 12px;
+    padding: var(--space-4) var(--space-3);
     color: var(--color-text-tertiary);
   }
 `;

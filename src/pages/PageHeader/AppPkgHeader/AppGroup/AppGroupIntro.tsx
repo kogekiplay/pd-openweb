@@ -58,7 +58,7 @@ let AppGroupIntro = class AppGroupIntro extends Component<any, any> {
             size="small"
             style={{
               height: 36,
-              padding: '0 24px',
+              padding: '0 var(--space-6)',
             }}
             onClick={e => {
               e.stopPropagation();

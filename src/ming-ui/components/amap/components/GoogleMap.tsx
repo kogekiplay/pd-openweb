@@ -20,7 +20,7 @@ const ErrorContent = styled.div`
   }
   span {
     color: var(--color-text-tertiary);
-    margin-top: 16px;
+    margin-top: var(--space-4);
     font-size: ${props => (props.disabled ? '13px' : '17px')};
     font-weight: bold;
   }

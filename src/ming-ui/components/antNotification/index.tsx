@@ -6,7 +6,7 @@ import './index.less';
 
 const DefaultBtn = styled.div`
   max-width: 120px;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   line-height: 32px;
   text-overflow: ellipsis;
   white-space: nowrap;

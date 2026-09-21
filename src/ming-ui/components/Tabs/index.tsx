@@ -9,7 +9,7 @@ const Tab = styled.div`
   position: relative;
   cursor: pointer;
   font-weight: 500;
-  font-size: 14px !important;
+  font-size: var(--font-md) !important;
   color: ${({ active }) => (active ? 'var(--color-primary)' : 'var(--color-text-secondary)')};
   padding: 0 30px;
   line-height: 50px;

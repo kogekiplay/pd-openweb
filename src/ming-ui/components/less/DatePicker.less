@@ -21,7 +21,7 @@
   width: 246px;
   border: @datepicker-border;
   list-style: none;
-  font-size: 12px;
+  font-size: var(--font-xs);
   text-align: left;
   background-color: var(--color-background-primary);
   border-radius: var(--radius-sm);
@@ -45,7 +45,7 @@
 
   &-title {
     display: inline-block;
-    font-size: 16px;
+    font-size: var(--font-lg);
 
     .@{prefixClass}-beginEnd {
       font-weight: 600;
@@ -55,7 +55,7 @@
       color: var(--color-text-primary);
       & > span {
         display: inline-block;
-        margin-left: 4px;
+        margin-left: var(--space-1);
         cursor: pointer;
         user-select: none;
         &:hover {
@@ -82,7 +82,7 @@
       width: 40px;
       height: 40px;
       text-align: center;
-      font-size: 14px;
+      font-size: var(--font-md);
 
       &:hover {
         cursor: pointer;
@@ -188,14 +188,14 @@
 
     .calender-task-header-col {
       width: 50%;
-      padding: 13px 16px;
+      padding: 13px var(--space-4);
       box-sizing: border-box;
       float: left;
     }
   }
 
   &-every-week {
-    margin: 4px 0;
+    margin: var(--space-1) 0;
     display: flex;
   }
 
@@ -212,7 +212,7 @@
       display: block;
       font-weight: normal;
       color: var(--color-text-tertiary);
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
   }
 
@@ -275,12 +275,12 @@
     }
   }
   &-footer-back {
-    padding: 8px 0;
+    padding: var(--space-2) 0;
     & > .Icon {
       display: inline-block;
       width: 30px;
       height: 30px;
-      font-size: 24px;
+      font-size: var(--font-3xl);
       text-align: center;
       line-height: 30px;
       color: var(--color-text-disabled);
@@ -315,7 +315,7 @@
   &-morrow-btn,
   &-clear-btn {
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
     height: 45px;
     line-height: 45px;
     &:hover {

@@ -18,7 +18,7 @@
   font-variant: normal;
   text-rendering: auto;
   line-height: 36px;
-  font-size: 24px;
+  font-size: var(--font-3xl);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }

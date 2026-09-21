@@ -10,7 +10,7 @@
   .cityPickerContentBox {
     overflow-y: auto;
     .popupListBox {
-      padding-left: 16px;
+      padding-left: var(--space-4);
       .popupListItem {
         display: flex;
         align-items: center;
@@ -25,7 +25,7 @@
           justify-content: space-between;
           align-items: center;
           flex: 1;
-          padding: 12px 6px 12px 0;
+          padding: var(--space-3) 6px var(--space-3) 0;
           font-size: 15px;
         }
       }
@@ -34,15 +34,15 @@
 
   .CityPicker-input-textCon::-webkit-input-placeholder {
     color: var(--color-text-disabled);
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .CityPicker-input-textCon::-moz-placeholder {
     color: var(--color-text-disabled);
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .CityPicker-input-textCon::-ms-input-placeholder {
     color: var(--color-text-disabled);
-    font-size: 13px;
+    font-size: var(--font-sm);
   }
   .CityPicker-input-placeholder-Gray3::-webkit-input-placeholder {
     color: var(--color-text-title) !important;

@@ -32,7 +32,7 @@ const Wrap = styled.div`
   .ant-input {
     height: auto !important;
     min-height: calc(100% - 2px);
-    padding: 0 12px !important;
+    padding: 0 var(--space-3) !important;
     border: none !important;
     box-shadow: none !important;
     background-color: unset !important;
@@ -42,7 +42,7 @@ const Wrap = styled.div`
   }
   .maskPhoneContent {
     flex: 1;
-    padding: 0 32px 0 12px;
+    padding: 0 var(--space-8) 0 var(--space-3);
     display: flex;
     align-items: center;
     min-height: calc(100% - 2px);
@@ -59,10 +59,10 @@ const Wrap = styled.div`
     width: auto;
     min-width: fit-content;
     height: 100%;
-    padding: 0 4px 0 12px;
+    padding: 0 var(--space-1) 0 var(--space-3);
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--space-1);
     cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
     pointer-events: ${props => (props.disabled ? 'none' : 'auto')};
     user-select: none;

@@ -21,7 +21,7 @@ const DeptSelectWrap = styled.div`
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   .searchRoleWrap {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     line-height: 40px;
     height: 40px;
     border-bottom: 1px solid var(--color-border-secondary);
@@ -29,16 +29,16 @@ const DeptSelectWrap = styled.div`
     input {
       outline: none;
       border: none;
-      margin-right: 12px;
+      margin-right: var(--space-3);
     }
   }
   .selectDepartmentContent {
-    padding: 4px 8px;
+    padding: var(--space-1) var(--space-2);
     .quick-department {
       height: 36px;
       display: flex;
       align-items: center;
-      padding: 0 4px;
+      padding: 0 var(--space-1);
       box-sizing: border-box;
       border-radius: var(--radius-sm);
       &.active {

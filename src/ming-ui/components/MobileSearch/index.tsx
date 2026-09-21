@@ -20,7 +20,7 @@ const SearchWrapper = styled.div`
   }
 
   .icon-h5_search {
-    font-size: 14px;
+    font-size: var(--font-md);
     color: var(--color-text-secondary);
   }
   .icon-workflow_cancel {

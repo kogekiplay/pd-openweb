@@ -60,7 +60,7 @@ const AccountWrap = styled.div`
       border: 1px solid var(--color-border-secondary);
       opacity: 1;
       border-radius: var(--radius-sm);
-      padding: 0 12px;
+      padding: 0 var(--space-3);
       line-height: 36px;
       &.telBox {
         background: var(--color-background-secondary);

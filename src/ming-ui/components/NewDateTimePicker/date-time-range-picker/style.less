@@ -27,7 +27,7 @@
         .mui-forminput {
           width: auto;
           max-width: 80px;
-          padding: 4px 6px;
+          padding: var(--space-1) 6px;
           min-height: 30px;
         }
       }
@@ -35,18 +35,18 @@
 
     dl {
       margin: 0;
-      margin-left: 12px;
+      margin-left: var(--space-3);
       dt {
-        font-size: 16px;
+        font-size: var(--font-lg);
         line-height: 30px;
       }
       dd {
-        margin-left: 24px;
+        margin-left: var(--space-6);
         & > span {
           display: inline-block;
           margin-right: 6px;
-          padding-left: 12px;
-          font-size: 14px;
+          padding-left: var(--space-3);
+          font-size: var(--font-md);
           line-height: 30px;
           vertical-align: middle;
         }
@@ -61,7 +61,7 @@
         flex: none;
         width: 50%;
         box-sizing: border-box;
-        padding: 0 12px;
+        padding: 0 var(--space-3);
         &:nth-child(2) {
           border-left: none;
           padding-left: 19px;
@@ -76,7 +76,7 @@
     &.toolbar {
       box-sizing: content-box;
       min-height: 36px;
-      padding: 8px 18px;
+      padding: var(--space-2) 18px;
       text-align: right;
       background-color: var(--color-background-secondary);
 
@@ -105,11 +105,11 @@
 
         .timePickerGroup > .label {
           width: 36px;
-          font-size: 13px;
+          font-size: var(--font-sm);
           line-height: 30px;
           text-align: center;
           vertical-align: middle;
-          margin-right: 8px;
+          margin-right: var(--space-2);
         }
 
         & > .Dropdown {
@@ -129,7 +129,7 @@
         }
 
         .toolbarActions > button {
-          font-size: 13px;
+          font-size: var(--font-sm);
           line-height: 20px;
           padding: 5px 6px;
           min-width: 50px;
@@ -140,7 +140,7 @@
           text-overflow: ellipsis;
           white-space: nowrap;
           &.Button--ghost {
-            padding: 4px 6px;
+            padding: var(--space-1) 6px;
           }
         }
       }

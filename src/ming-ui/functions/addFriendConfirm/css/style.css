@@ -2,7 +2,7 @@
   display: block;
   width: 100%;
   height: 40px;
-  margin-top: 12px;
+  margin-top: var(--space-3);
   padding: 6px 10px;
   outline: none;
   border: 1px solid transparent;
@@ -20,7 +20,7 @@
 }
 
 .recBox .tip {
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-tertiary);
-  margin-bottom: 16px;
+  margin-bottom: var(--space-4);
 }

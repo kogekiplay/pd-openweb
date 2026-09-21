@@ -13,7 +13,7 @@ const ContentWrapper = styled.div`
     display: flex;
     position: relative;
     height: 36px;
-    margin-top: 8px;
+    margin-top: var(--space-2);
 
     input {
       flex: 1;
@@ -60,7 +60,7 @@ const ContentWrapper = styled.div`
   }
   .appList {
     flex: 1;
-    margin-top: 16px;
+    margin-top: var(--space-4);
     overflow: auto;
   }
 `;
@@ -68,12 +68,12 @@ const ContentWrapper = styled.div`
 const Item = styled.div`
   display: flex;
   align-items: center;
-  padding: 8px;
+  padding: var(--space-2);
   border-radius: var(--radius-sm);
   cursor: pointer;
   .expandIcon {
     font-size: 10px;
-    margin-right: 8px;
+    margin-right: var(--space-2);
     color: var(--color-text-tertiary);
     cursor: pointer;
     &:hover {
