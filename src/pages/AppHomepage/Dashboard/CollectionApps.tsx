@@ -10,8 +10,8 @@ const Wrapper = styled.div`
   flex-direction: column;
   .titleBtn {
     display: inline-block;
-    font-size: 13px;
-    padding: 8px 10px;
+    font-size: var(--font-sm);
+    padding: var(--space-2) 10px;
     color: var(--color-text-secondary);
     border-radius: var(--radius-sm);
     cursor: pointer;

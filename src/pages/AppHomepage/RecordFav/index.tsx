@@ -28,7 +28,7 @@ const Con = styled.div`
   display: flex;
   min-width: 0;
   box-sizing: border-box;
-  ${({ forCard }) => !forCard && 'padding: 24px 0;'}
+  ${({ forCard }) => !forCard && 'padding: var(--space-6) 0;'}
   width: 100%;
   height: 100%;
   .openNavIcon {
@@ -80,13 +80,13 @@ const Con = styled.div`
   .rowDivider {
     height: 1px;
     background: var(--color-border-primary);
-    margin: 16px 0;
+    margin: var(--space-4) 0;
   }
 `;
 const NavCon = styled.div`
   width: 214px;
   transition: width 0.2s;
-  margin-left: 24px;
+  margin-left: var(--space-6);
   &.closeCon {
     width: 0;
     margin-left: 0;

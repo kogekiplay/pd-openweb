@@ -5,7 +5,7 @@ import './AppList.less';
 
 const Con = styled.div`
   display: flex;
-  padding-bottom: 24px;
+  padding-bottom: var(--space-6);
   margin: 0 -30px;
 `;
 

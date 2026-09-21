@@ -16,7 +16,7 @@ const AppStatus = styled.div`
   box-sizing: border-box;
   white-space: nowrap;
   padding: 0 10px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   &.isOverdue {
     background: var(--color-text-disabled);
   }
@@ -30,7 +30,7 @@ const AppStatus = styled.div`
     background-color: #202124;
   }
   &.mobilePadding {
-    padding: 0 8px;
+    padding: 0 var(--space-2);
   }
   &.isRecent {
     left: unset;

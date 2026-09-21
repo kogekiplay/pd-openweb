@@ -64,7 +64,7 @@ const CarouselWrapper = styled(Carousel)`
 
 const BulletinSkeleton = styled.div`
   flex: 1;
-  padding: 24px;
+  padding: var(--space-6);
   .skeletonBlock {
     width: 100%;
     height: 100%;

@@ -13,7 +13,7 @@ const RadioGroupComp = styled(RadioGroup)`
 
 const IconInputCon = styled.div`
   display: flex;
-  padding: 8px 0 8px 12px;
+  padding: var(--space-2) 0 var(--space-2) var(--space-3);
   height: 36px;
   align-items: center;
   border: 1px solid var(--color-border-tertiary);
@@ -116,7 +116,7 @@ export default function EditGroup(props) {
     <Modal
       visible
       width={480}
-      bodyStyle={{ padding: '16px 24px' }}
+      bodyStyle={{ padding: 'var(--space-4) var(--space-6)' }}
       onOk={() => {
         if (!(name || '').trim()) {
           alert(_l('请填写名称'), 3);

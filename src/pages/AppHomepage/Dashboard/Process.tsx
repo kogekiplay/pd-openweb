@@ -13,10 +13,10 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   .finishedCon {
-    padding: 8px 10px;
+    padding: var(--space-2) 10px;
     border-radius: var(--radius-sm);
     color: var(--color-text-tertiary);
-    font-size: 14px;
+    font-size: var(--font-md);
     cursor: pointer;
     &:hover {
       background: var(--color-background-hover);
@@ -45,7 +45,7 @@ const Wrapper = styled.div`
     }
   }
   .divider {
-    margin: 20px;
+    margin: var(--space-5);
     width: 1px;
     background: var(--color-border-primary);
   }
@@ -54,28 +54,28 @@ const TodoTabList = styled.div`
   height: 48px;
   display: flex;
   align-items: center;
-  padding: 0 8px 0px 20px;
+  padding: 0 var(--space-2) 0px var(--space-5);
   .tabItem {
     display: flex;
     align-items: center;
     position: relative;
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-sm);
 
     .itemText {
-      font-size: 14px;
+      font-size: var(--font-md);
       font-weight: bold;
     }
     .itemCount {
       width: auto;
-      margin-left: 4px;
+      margin-left: var(--space-1);
       height: 20px;
       line-height: 20px;
       padding: 0 6px;
       border-radius: 10px;
       background: rgba(244, 67, 54, 0.16);
       color: var(--color-error);
-      font-size: 12px;
+      font-size: var(--font-xs);
       font-weight: bold;
     }
 
@@ -106,7 +106,7 @@ const TodoTabList = styled.div`
   .viewAll {
     display: flex;
     align-items: center;
-    padding: 6px 4px 6px 10px;
+    padding: 6px var(--space-1) 6px 10px;
     border-radius: var(--radius-sm);
     color: var(--color-text-tertiary);
     cursor: pointer;
@@ -116,7 +116,7 @@ const TodoTabList = styled.div`
   }
 `;
 const DataListWrapper = styled.div`
-  padding: 0 20px;
+  padding: 0 var(--space-5);
   overflow: auto;
   height: 180px;
   &.displayComplete {
@@ -166,7 +166,7 @@ const DataListWrapper = styled.div`
         align-items: center;
         justify-content: center;
         border-radius: var(--radius-sm);
-        margin-left: 12px;
+        margin-left: var(--space-3);
         cursor: pointer;
         &:hover {
           background: var(--color-background-hover);
@@ -178,9 +178,9 @@ const DataListWrapper = styled.div`
     width: fit-content;
     height: 32px;
     line-height: 32px;
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     border-radius: var(--radius-sm);
-    margin-top: 16px;
+    margin-top: var(--space-4);
     cursor: pointer;
     color: ${({ themeColor }) => themeColor};
     background: ${({ btnColor }) => btnColor};
@@ -191,7 +191,7 @@ const DataListWrapper = styled.div`
 `;
 const ProcessSkeleton = styled.div`
   flex: 1;
-  padding: 24px 24px 12px 24px;
+  padding: var(--space-6) var(--space-6) var(--space-3) var(--space-6);
   .skeletonBlock {
     width: 100%;
     height: 100%;

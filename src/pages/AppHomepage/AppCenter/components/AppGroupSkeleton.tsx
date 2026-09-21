@@ -36,7 +36,7 @@ const SkeletonWrap = styled.div`
   .name {
     width: 96px;
     margin: 0 auto;
-    margin-top: 12px;
+    margin-top: var(--space-3);
     height: 16px;
     border-radius: 8px;
     &.subName {

@@ -5,10 +5,10 @@ import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';
 
 const DropdownWrap = styled.div`
-  padding: 8px 0;
+  padding: var(--space-2) 0;
   max-height: 201px;
   overflow-y: scroll;
-  font-size: 13px;
+  font-size: var(--font-sm);
   color: var(--color-text-title);
   border-radius: var(--radius-sm);
   .item {

@@ -21,7 +21,7 @@ const GroupItemLink = styled(MdLink)`
 const GroupItemCon = styled.div`
   display: block;
   color: var(--color-text-title);
-  font-size: 14px;
+  font-size: var(--font-md);
   cursor: pointer;
   height: 36px;
   padding: 0 14px;
@@ -32,7 +32,7 @@ const GroupItemCon = styled.div`
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   .name {
-    margin-right: 4px;
+    margin-right: var(--space-1);
   }
   .operate {
     display: none;
@@ -119,7 +119,7 @@ const MoreBtnCon = styled(VerticalMiddle)`
 
 const GroupItemIcon = styled(SvgIcon)`
   font-size: 0px;
-  margin-right: 8px;
+  margin-right: var(--space-2);
 `;
 
 export default function GroupItem(props) {
