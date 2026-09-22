@@ -32,7 +32,7 @@ export const Content = styled.div`
     border-top: 1px solid --color-background-disabled;
   }
   .moreBtn {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     cursor: pointer;
     padding: var(--space-1) 0 0 var(--space-4);
   }
@@ -97,7 +97,7 @@ export const SearchUsers = styled.div`
     color: var(--color-text-secondary);
     cursor: pointer;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   input {
@@ -302,10 +302,10 @@ const TabsCon = styled.div`
     line-height: 32px;
     font-weight: 500;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       background: var(--color-background-primary);
     }
   }

@@ -27,7 +27,7 @@ const Wrap = styled.ul`
     &.current {
       background: var(--color-primary-transparent-light);
       box-shadow: inset 0 0 0 2px var(--color-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       box-sizing: border-box;
       z-index: 1;
       position: relative;
