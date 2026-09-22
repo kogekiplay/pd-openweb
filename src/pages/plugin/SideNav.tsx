@@ -48,7 +48,7 @@ const Wrap = styled.div`
       line-height: 16px;
       padding: 2px var(--space-1);
       border-radius: var(--radius-sm);
-      background: var(--color-warning);
+      background: var(--color-warning-solid);
       color: var(--color-white);
       margin-left: var(--space-1);
       font-size: var(--font-xs);

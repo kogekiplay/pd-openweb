@@ -106,7 +106,7 @@ const Wrap = styled.div`
     }
     .Beta {
       padding: var(--space-1) 5px;
-      background: var(--color-success);
+      background: var(--color-success-solid);
       border-radius: var(--radius-sm);
       color: var(--color-white);
     }

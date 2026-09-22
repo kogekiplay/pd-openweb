@@ -35,7 +35,10 @@
   --color-background-secondary: #090909;
   --color-background-tertiary: #1f1f1f;
   --color-background-card: #222222; /* 卡片/菜单/面板（明显亮于基底） */
-  --color-background-hover: #393939; /*  hover (对比card高亮)） */
+  /* 【2026-09-22 压暗一档】原值对卡片底跳了 1.38 —— 而亮色主题的 hover
+     对白底只跳 1.09，暗色这一档是两套主题里的异类，强得有点扎眼。
+     压到 1.26 之后仍清楚可辨，同时把 tertiary 文字对它的对比度从 3.43 救到 4.72。 */
+  --color-background-hover: #333333;
   --color-background-disabled: #141414;
   --color-background-overlay: rgba(0, 0, 0, 0.6); /* 提高不透明度 */
   --color-background-overlay-light: rgba(0, 0, 0, 0.24); /* 提高不透明度 */
@@ -47,7 +50,10 @@
   --color-text-primary: #e6e6e6;
   --color-text-title: #f2f2f2;
   --color-text-secondary: #b3b3b3;
-  --color-text-tertiary: #8c8c8c;
+  /* 【2026-09-22 提亮一档】原值对 hover 底只有 3.43 —— 暗色的 hover 底比页面底亮很多，
+     悬停在列表行上时这一档的次要信息就读不清了，而列表行恰恰是最常悬停的地方。
+     配合下面把 hover 底压暗一档，现在对 hover 4.72、对卡片 5.94、对页面 6.75。 */
+  --color-text-tertiary: #9e9e9e;
   --color-text-placeholder: #6f6f6f;
   --color-text-disabled: #5e5e5e;
   --color-text-inverse: #ffffff; /* 不变 */
@@ -79,6 +85,9 @@
      而「浅底 + 同色字」的小标签正是这一档最常见的用法。取 Material green-400
      （暗色主题里已经在用它当 --color-success-border）：7.65 / 6.73 / 4.87，三关全过。 */
   --color-success-text: #66bb6a;
+  /* 实心底的取值明暗两套【相同】：它要扛的是压在自己身上的白字，
+     和页面底色无关。见 theme-default.less 里的说明。 */
+  --color-success-solid: #348a3a;
   /* 【这两条以前是缺的，暗色下会沿用 :root 的亮色值】
      theme-default.less 定义在 :root 上，暗色只覆盖了一部分，没覆盖的会原样漏下来：
      --color-success-hover 亮色是深绿、--color-error-hover 亮色是深红，
@@ -92,6 +101,8 @@
   /* 暗色底下 --color-warning 本来就够亮（对页面底 9.34、对暗色警示底 6.90），
      不需要再压暗 —— 这一档在两套主题里取值不同是正常的，别照抄亮色那个深橙。 */
   --color-warning-text: #ff9800;
+  /* 同 --color-success-solid：实心底明暗两套同值。 */
+  --color-warning-solid: #d97b00;
   --color-error: #f44336;
   /* 错误文字：【2026-09-22 改过一次】原先写的是原色，理由是"对页面底够"。
      那次只算了页面底，漏了卡片底和自家浅底 —— 实测 4.32 / 3.45，两个都不到 4.5，

@@ -39,9 +39,7 @@ function parseRgba(value: string): [number, number, number, number] | null {
 }
 
 function relativeLuminance([r, g, b]: Rgb): number {
-  const lin = [r, g, b]
-    .map(v => v / 255)
-    .map(v => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
+  const lin = [r, g, b].map(v => v / 255).map(v => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
   return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
 }
 
@@ -73,10 +71,7 @@ const AA_BODY = 4.5;
 
 function check(label: string, fgHex: string, bg: Rgb, min = AA_BODY) {
   const ratio = contrast(parseHex(fgHex), bg);
-  assert.ok(
-    ratio >= min,
-    `${label} 对比度只有 ${ratio.toFixed(2)}，要 >= ${min}（颜色 ${fgHex}）`,
-  );
+  assert.ok(ratio >= min, `${label} 对比度只有 ${ratio.toFixed(2)}，要 >= ${min}（颜色 ${fgHex}）`);
   return ratio;
 }
 
@@ -98,7 +93,11 @@ function check(label: string, fgHex: string, bg: Rgb, min = AA_BODY) {
   for (const tone of ['success', 'warning', 'error'] as const) {
     const tint = parseRgba(readVar(lightSrc, `--color-${tone}-bg`));
     assert.ok(tint, `--color-${tone}-bg 不是 rgba()，判据要重写`);
-    check(`亮色 --color-${tone}-text 对 --color-${tone}-bg`, readVar(lightSrc, `--color-${tone}-text`), flatten(tint!, pageBg));
+    check(
+      `亮色 --color-${tone}-text 对 --color-${tone}-bg`,
+      readVar(lightSrc, `--color-${tone}-text`),
+      flatten(tint!, pageBg),
+    );
   }
 }
 
@@ -152,6 +151,64 @@ function check(label: string, fgHex: string, bg: Rgb, min = AA_BODY) {
     );
     check(`暗色 ${name} 对页面底`, readVar(darkSrc, name), pageBg);
     check(`暗色 ${name} 对卡片底`, readVar(darkSrc, name), cardBg);
+  }
+}
+
+// 5b. 【实心底 + 白字】success / warning 的主色扛不住白字：2.78 / 2.16，连 3 都不到。
+//     所以各配了一个 -solid 档。判据是 3 而不是 4.5 —— 主按钮那次定过：彩底白字维持 >=3
+//     （翻成黑字数字上更好看，但实测观感更差，见 --color-primary-solid 那一套）。
+//     error(3.68) 和 info(4.10) 本来就过 3，【故意不配 solid 档】，所以这里也不测它们：
+//     加一个值等于原色的别名就是造第二个真相源。
+{
+  const WHITE = '#ffffff';
+  const AA_UI = 3;
+  for (const tone of ['success', 'warning'] as const) {
+    for (const [label, src] of [
+      ['亮色', lightSrc],
+      ['暗色', darkSrc],
+    ] as const) {
+      const solid = readVar(src, `--color-${tone}-solid`);
+      check(`${label} 白字压 --color-${tone}-solid`, WHITE, parseHex(solid), AA_UI);
+    }
+    // 反向：主色本身【必须】扛不住白字 —— 否则这个 -solid 档就没有存在理由了
+    const base = contrast(parseHex(readVar(lightSrc, `--color-${tone}`)), parseHex(WHITE));
+    assert.ok(base < AA_UI, `--color-${tone} 压白字已经有 ${base.toFixed(2)} 了，--color-${tone}-solid 可以考虑退役`);
+  }
+  // 实心底明暗两套同值：它扛的是压在自己身上的白字，和页面底色无关
+  for (const tone of ['success', 'warning'] as const) {
+    assert.strictEqual(
+      readVar(lightSrc, `--color-${tone}-solid`),
+      readVar(darkSrc, `--color-${tone}-solid`),
+      `--color-${tone}-solid 明暗两套取值应当相同`,
+    );
+  }
+}
+
+// 5c. 【文字灰阶要对每一层背景都成立，不能只对页面主底成立】
+//     --color-text-tertiary 是本仓用得最多的弱化文字档（约 4000 处）。
+//     它原先那个灰正好是"白底上 4.5 的临界值"，余量为 0，
+//     于是只要底色稍微不是纯白就跌破：极浅底 4.35、区块/hover 底 4.17。
+//     而这几层底色在页面上到处都是，浏览器探针扫出来的 4.3 上下的零星不达标
+//     基本都是这一个原因。这条断言逼着它对每一层背景都留余量。
+//
+//     【禁用底不在名单里】那上面的文字本来就该用 disabled 档，WCAG 也豁免禁用控件。
+{
+  const LAYERS = [
+    '--color-background-primary',
+    '--color-background-secondary',
+    '--color-background-tertiary',
+    '--color-background-hover',
+  ];
+  for (const [label, src] of [
+    ['亮色', lightSrc],
+    ['暗色', darkSrc],
+  ] as const) {
+    const fg = readVar(src, '--color-text-tertiary');
+    for (const layer of LAYERS) {
+      const bg = readVar(src, layer);
+      if (!/^#/.test(bg)) continue; // 半透明层不在这条的射程内
+      check(`${label} --color-text-tertiary 对 ${layer}`, fg, parseHex(bg));
+    }
   }
 }
 

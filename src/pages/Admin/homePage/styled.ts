@@ -84,7 +84,7 @@ export const HomePageWrap = styled.div`
         font-size: var(--font-md);
         color: var(--color-white);
         border-radius: 16px;
-        background: var(--color-success);
+        background: var(--color-success-solid);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -440,7 +440,7 @@ export const HomePageWrap = styled.div`
       padding: 0 var(--space-4);
       margin-top: var(--space-2);
       line-height: 24px;
-      background: var(--color-warning);
+      background: var(--color-warning-solid);
       color: var(--color-white);
       border-radius: 12px;
       cursor: pointer;

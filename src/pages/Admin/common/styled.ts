@@ -226,7 +226,7 @@ export const BillInfoWrap = styled.div`
 
   .goToPay {
     padding: 0 var(--space-3);
-    background-color: var(--color-warning);
+    background-color: var(--color-warning-solid);
     color: var(--color-white);
     line-height: 24px;
     border-radius: 12px;

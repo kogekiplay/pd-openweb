@@ -135,7 +135,7 @@ export const WrapWx = styled.div`
         color: var(--color-text-tertiary);
       }
       &.wxLogin {
-        background: var(--color-success);
+        background: var(--color-success-solid);
         color: var(--color-white);
         .icon {
           color: var(--color-white);

@@ -63,7 +63,7 @@ const Wrap = styled.div`
     padding: 0 10px;
     font-size: var(--font-xs);
     margin-left: 5px;
-    background: var(--color-success);
+    background: var(--color-success-solid);
   }
   .count {
     color: var(--color-white);

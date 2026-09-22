@@ -15,8 +15,8 @@
  * 和我们的 Less 会得到两种不同的蓝，正是这次要修的病。
  * palette.spec.ts 第 2 组断言专门钉这条，改成自算会当场红。
  */
-import { theme } from 'antd';
 import { generate } from '@ant-design/colors';
+import { theme } from 'antd';
 import { readability, TinyColor } from '@ctrl/tinycolor';
 
 export type ThemeMode = 'light' | 'dark';
@@ -98,7 +98,7 @@ const TINT_SURFACE = 32;
 const NEUTRALS: Record<ThemeMode, Record<string, [string, number]>> = {
   light: {
     '--color-text-secondary': ['#5d5d5d', TINT_TEXT],
-    '--color-text-tertiary': ['#767676', TINT_TEXT],
+    '--color-text-tertiary': ['#707070', TINT_TEXT],
     '--color-text-title': ['#454545', TINT_TEXT],
     '--color-text-placeholder': ['#cccccc', TINT_TEXT],
     '--color-text-disabled': ['#bdbdbd', TINT_TEXT],
@@ -114,7 +114,7 @@ const NEUTRALS: Record<ThemeMode, Record<string, [string, number]>> = {
   },
   dark: {
     '--color-text-secondary': ['#b3b3b3', TINT_TEXT],
-    '--color-text-tertiary': ['#8c8c8c', TINT_TEXT],
+    '--color-text-tertiary': ['#9e9e9e', TINT_TEXT],
     '--color-text-title': ['#f2f2f2', TINT_TEXT],
     '--color-text-placeholder': ['#6f6f6f', TINT_TEXT],
     '--color-text-disabled': ['#5e5e5e', TINT_TEXT],
@@ -125,7 +125,7 @@ const NEUTRALS: Record<ThemeMode, Record<string, [string, number]>> = {
     '--color-border-strong': ['#606060', TINT_SURFACE],
     '--color-background-secondary': ['#090909', TINT_SURFACE],
     '--color-background-tertiary': ['#1f1f1f', TINT_SURFACE],
-    '--color-background-hover': ['#393939', TINT_SURFACE],
+    '--color-background-hover': ['#333333', TINT_SURFACE],
     '--color-background-disabled': ['#141414', TINT_SURFACE],
   },
 };

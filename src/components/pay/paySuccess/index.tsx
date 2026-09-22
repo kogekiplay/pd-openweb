@@ -18,7 +18,7 @@ const PaySuccessWrap = styled.div`
     .okIcon {
       border: 2px solid var(--color-success);
       color: var(--color-white);
-      background: var(--color-success);
+      background: var(--color-success-solid);
       font-size: 30px;
       width: 45px;
       height: 45px;

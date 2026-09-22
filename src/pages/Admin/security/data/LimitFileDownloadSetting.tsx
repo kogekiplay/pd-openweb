@@ -70,7 +70,7 @@ const Wrap = styled.div`
       line-height: 24px;
       text-align: center;
       &.orgRoleIcon {
-        background-color: var(--color-warning);
+        background-color: var(--color-warning-solid);
         color: var(--color-white);
       }
     }
