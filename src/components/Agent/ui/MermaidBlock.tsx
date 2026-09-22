@@ -19,6 +19,14 @@ async function getMermaid() {
     m.initialize({
       startOnLoad: false,
       theme: 'neutral',
+      /* 【layout / look 这两条是 mermaid 12 升级时补的，不能删】
+         v12 把 ELK 换成了默认布局引擎（flowchart / state / class / ER / requirement 全部），
+         并把默认外观换成了 neo —— 两者都不报错，只是**同一段图源会排出不一样的版面、
+         画出不一样的配色**。历史对话里已经渲染过的图会跟着变样。
+         显式钉回 dagre + classic，升级就只是升版本，不附带视觉变更。
+         这两个键在 v11 里也存在（且就是当时的默认值），所以写上去是向下兼容的。 */
+      layout: 'dagre',
+      look: 'classic',
       fontFamily: "'PingFang SC', 'Microsoft YaHei', sans-serif",
       er: { useMaxWidth: true, diagramPadding: 16 },
       // htmlLabels=false：流程图标签改用纯 SVG 文本而非 foreignObject(HTML)，
