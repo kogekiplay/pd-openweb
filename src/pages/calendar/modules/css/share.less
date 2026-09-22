@@ -80,8 +80,9 @@
 
   .calendarMenu .calendarNumber {
     border-radius: 18px;
-    /* 徽标底用深一档的红：白字压 --color-error 只有 3.68，12px 要 4.5；换成 -text 档后 5.62 */
-    background: var(--color-error-text);
+    /* 徽标底用实心档：白字压 --color-error 只有 3.68，而徽标是 12px 白字、要 4.5；换成 --color-error-solid 后 5.62。
+       这一档明暗同值 —— 文字档暗色下是浅粉，当背景用方向正好反了（实测白字只剩 2.15）。 */
+    background: var(--color-error-solid);
     color: var(--color-white);
     height: 18px;
     line-height: 18px;

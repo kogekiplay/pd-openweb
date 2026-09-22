@@ -41,9 +41,19 @@ export default class WorkSheetItem extends Component<any, any> {
     }
   }
   textColor(isActive) {
-    const { iconColor, currentPcNaviStyle, themeType } = this.props.appPkg;
+    const { currentPcNaviStyle, themeType } = this.props.appPkg;
     const darkColor = [1, 3].includes(currentPcNaviStyle) && !['light'].includes(themeType);
-    return darkColor ? `rgba(255, 255, 255, ${isActive ? 1 : 0.9})` : isActive ? iconColor : undefined;
+    /* 【选中项的文字走 --color-primary-text，不要直接用 appPkg.iconColor】
+       选中态的底是同色 10% 浅底（下面的 bgColor），原色压上去实测：
+       亮色 ~3.5、暗色只有 2.48（暗色下 --color-primary 会被 darkAlgorithm 调过，
+       而这里读的是原始 iconColor，于是连引擎调整都吃不到）。
+       --color-primary-text 就是引擎按同一个 iconColor 算出来的"当文字用"那一档，
+       明暗两边方向都对。图标（svgColor）仍用原色 —— 非文本对比只要 3:1。 */
+    return darkColor
+      ? `rgba(255, 255, 255, ${isActive ? 1 : 0.9})`
+      : isActive
+        ? 'var(--color-primary-text)'
+        : undefined;
   }
   bgColor() {
     const { iconColor, currentPcNaviStyle, themeType } = this.props.appPkg;

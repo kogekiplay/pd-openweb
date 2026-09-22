@@ -38,27 +38,27 @@
 
 ## 逐页
 
-| 路径 | 看什么 | 亮 | 暗 |
-| --- | --- | --- | --- |
-| `/dashboard` | 应用卡片、主按钮 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 工作台正常，平台色 -->
-| `/app/:appId`（测试应用） | 左侧导航选中态、主按钮 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 用真实应用横向取样 -->
-| `/app/:appId` 工作表视图 | 行选中底、筛选器、分页 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 杂散平台蓝 0 -->
-| `/app/:appId` 记录详情弹层 | **对话框里的主按钮** —— portal 路径，是变量挂 documentElement 而不是包裹元素的全部理由 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ **body 直属浮层 18 个，弹层内主按钮 rgb(217,137,54) = 应用色** -->
-| `/app/:appId` 自定义页面 | 按钮组件、图表配色（图表序列色**不该**跟随） | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 19 个入口图标各用各的配置色，未被主题吞掉 -->
-| `/app/:appId` 应用设置 | 表单控件、开关、Tab 选中条 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 杂散平台蓝 0 -->
-| `/app/:appId` 应用内工作流 | 节点选中态、连线 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 杂散平台蓝 0 -->
-| `/admin/structure/:projectId` | 后台不属于任何应用，应是平台色 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 平台色 -->
-| `/admin/*` 其余几页 | 同上 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 首页/角色/成员与部门/应用管理 -->
-| `/apps/calendar/home` | 日程色块、今日高亮 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 粉底是「今天」列的 --color-error-bg，非回归 -->
-| `/apps/task` | 任务状态色 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ -->
-| `/feed` | 动态流链接色 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ -->
-| `/personal` | 表单、头像 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 平台色 -->
-| `/search` | 搜索高亮 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 平台色 -->
-| `/workflowedit/:flowId` | 节点选中态、连线 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ -->
-| Mingo / AI 助手界面 | **必须保持 Mingo 紫**，不能变成主题色（这条仍然成立） | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ --color-mingo 仍是 #6e09f9 紫，未被主题吞掉 -->
-| 聊天面板（右侧） | 在应用里应**跟随应用色** | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 跟随应用色 -->
-| 顶栏 | 在应用里应**跟随应用色**；回工作台后变回平台色 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ 应用内跟随，回工作台变回平台色 -->
-| **深色顶栏的应用** | 应用设置里把顶栏主题设成深色，走的是 `--color-on-app-paper` 那一侧。**这一侧至今没被实际验证过** —— 浅色顶栏的应用覆盖不到它 | ✓ | ✓ |  <!-- 2026-09-19 生产 ✓ **首次验证**：采购管理 #3a16af，顶栏 class `appPkgHeaderWrap theme`、底 rgb(58,22,175)，on-app-ink/paper = #05020e / #efecf9，白字可读 -->
+| 路径                          | 看什么                                                                                                                       | 亮  | 暗  |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| `/dashboard`                  | 应用卡片、主按钮                                                                                                             | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 工作台正常，平台色 -->                                                                                                                     |
+| `/app/:appId`（测试应用）     | 左侧导航选中态、主按钮                                                                                                       | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 用真实应用横向取样 -->                                                                                                                     |
+| `/app/:appId` 工作表视图      | 行选中底、筛选器、分页                                                                                                       | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 杂散平台蓝 0 -->                                                                                                                           |
+| `/app/:appId` 记录详情弹层    | **对话框里的主按钮** —— portal 路径，是变量挂 documentElement 而不是包裹元素的全部理由                                       | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ **body 直属浮层 18 个，弹层内主按钮 rgb(217,137,54) = 应用色** -->                                                                         |
+| `/app/:appId` 自定义页面      | 按钮组件、图表配色（图表序列色**不该**跟随）                                                                                 | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 19 个入口图标各用各的配置色，未被主题吞掉 -->                                                                                              |
+| `/app/:appId` 应用设置        | 表单控件、开关、Tab 选中条                                                                                                   | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 杂散平台蓝 0 -->                                                                                                                           |
+| `/app/:appId` 应用内工作流    | 节点选中态、连线                                                                                                             | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 杂散平台蓝 0 -->                                                                                                                           |
+| `/admin/structure/:projectId` | 后台不属于任何应用，应是平台色                                                                                               | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 平台色 -->                                                                                                                                 |
+| `/admin/*` 其余几页           | 同上                                                                                                                         | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 首页/角色/成员与部门/应用管理 -->                                                                                                          |
+| `/apps/calendar/home`         | 日程色块、今日高亮                                                                                                           | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 粉底是「今天」列的 --color-error-bg，非回归 -->                                                                                            |
+| `/apps/task`                  | 任务状态色                                                                                                                   | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ -->                                                                                                                                        |
+| `/feed`                       | 动态流链接色                                                                                                                 | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ -->                                                                                                                                        |
+| `/personal`                   | 表单、头像                                                                                                                   | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 平台色 -->                                                                                                                                 |
+| `/search`                     | 搜索高亮                                                                                                                     | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 平台色 -->                                                                                                                                 |
+| `/workflowedit/:flowId`       | 节点选中态、连线                                                                                                             | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ -->                                                                                                                                        |
+| Mingo / AI 助手界面           | **必须保持 Mingo 紫**，不能变成主题色（这条仍然成立）                                                                        | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ --color-mingo 仍是 #6e09f9 紫，未被主题吞掉 -->                                                                                            |
+| 聊天面板（右侧）              | 在应用里应**跟随应用色**                                                                                                     | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 跟随应用色 -->                                                                                                                             |
+| 顶栏                          | 在应用里应**跟随应用色**；回工作台后变回平台色                                                                               | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ 应用内跟随，回工作台变回平台色 -->                                                                                                         |
+| **深色顶栏的应用**            | 应用设置里把顶栏主题设成深色，走的是 `--color-on-app-paper` 那一侧。**这一侧至今没被实际验证过** —— 浅色顶栏的应用覆盖不到它 | ✓   | ✓   | <!-- 2026-09-19 生产 ✓ **首次验证**：采购管理 #3a16af，顶栏 class `appPkgHeaderWrap theme`、底 rgb(58,22,175)，on-app-ink/paper = #05020e / #efecf9，白字可读 --> |
 
 **不要列进来的两条**（已知 404，不是回归）：`/kc/my`、`/calendar`。
 日历的正确路径是 `/apps/calendar/home`。
@@ -67,10 +67,10 @@
 
 暗色由**两个信号**驱动，正常情况下由 `setBodyThemeMode` 一起设置：
 
-| 信号 | 谁在认 |
-| --- | --- |
-| `documentElement` 的 `data-theme` | 主题引擎（`src/common/theme`）、全部 `[data-theme='dark']` 的 Less |
-| `window.themeMode` | 应用顶栏/左侧导航 —— 它据此把 `navColor` 强制成 `#1b2025`、`themeType` 置为 `black`（`AppPkgHeader/AppDetail/index.tsx:136,370`） |
+| 信号                              | 谁在认                                                                                                                            |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `documentElement` 的 `data-theme` | 主题引擎（`src/common/theme`）、全部 `[data-theme='dark']` 的 Less                                                                |
+| `window.themeMode`                | 应用顶栏/左侧导航 —— 它据此把 `navColor` 强制成 `#1b2025`、`themeType` 置为 `black`（`AppPkgHeader/AppDetail/index.tsx:136,370`） |
 
 手动只设 `data-theme="dark"` 会让两者脱节：正文变深、**左侧导航仍是浅色**，
 看起来像 bug，其实是测法错了（2026-09-19 踩过一次）。
@@ -78,9 +78,11 @@
 正确的验法是改 `localStorage.themeMode` 再刷新：
 
 ```js
-localStorage.setItem('themeMode', 'dark'); location.reload();
+localStorage.setItem('themeMode', 'dark');
+location.reload();
 // 验完记得还原
-localStorage.setItem('themeMode', 'light'); location.reload();
+localStorage.setItem('themeMode', 'light');
+location.reload();
 ```
 
 判据：顶栏 class 应为 `appPkgHeaderWrap black`、底色 `rgb(27, 32, 37)`。
@@ -92,7 +94,8 @@ localStorage.setItem('themeMode', 'light'); location.reload();
 ```js
 const el = document.querySelector('.ant-btn-primary');
 const v = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
-const probe = new Option().style; probe.color = v;
+const probe = new Option().style;
+probe.color = v;
 [getComputedStyle(el).backgroundColor, probe.color];
 ```
 
@@ -107,24 +110,25 @@ const probe = new Option().style; probe.color = v;
 （`--max-old-space-size=8192` 是 V8 flag，bun 用 JavaScriptCore 不认，而 webpack 确实要这 8G 堆）。
 **发布后要在生产上再跑一遍这份清单** —— 验的是真实现象，不是包换没换。
 
-
 ## 2026-09-19 生产验收结论
 
 亮/暗两栏都在生产上跑过了。暗色的取证（IT运维，应用色 #d98936）：
 
-| 看什么 | 实测 |
-| --- | --- |
-| `data-theme` | `dark` |
-| 顶栏 class / 底色 | `appPkgHeaderWrap black` / `rgb(27, 32, 37)` —— 正是本文件上面写的判据 |
-| 应用内 `--color-primary` | `#bb7731`（antd 暗色算法把应用色调过，不是原样的 #d98936） |
-| 后台 `--color-primary` | `#1668dc`（平台蓝的暗色版，应用色没有渗进来） |
-| 卡片底 / 正文底 | `#222` / `rgb(13, 8, 4)` |
+| 看什么                   | 实测                                                                   |
+| ------------------------ | ---------------------------------------------------------------------- |
+| `data-theme`             | `dark`                                                                 |
+| 顶栏 class / 底色        | `appPkgHeaderWrap black` / `rgb(27, 32, 37)` —— 正是本文件上面写的判据 |
+| 应用内 `--color-primary` | `#bb7731`（antd 暗色算法把应用色调过，不是原样的 #d98936）             |
+| 后台 `--color-primary`   | `#1668dc`（平台蓝的暗色版，应用色没有渗进来）                          |
+| 卡片底 / 正文底          | `#222` / `rgb(13, 8, 4)`                                               |
 
 **验完记得还原**：`localStorage.setItem('themeMode','light')`。
 
-### 仍然欠着的一条
+### ~~仍然欠着的一条~~ 已补（2026-09-22 复核）
 
-`setAppThemeColor`（`src/utils/common.ts:1438`）**没有按 Task 6 Step 3 删掉** ——
-`src/pages/Chatbot/index.tsx:120` 还在用它。它注入的 `<style>` 整个 SPA 会话不清除，
-是个已知未修的旧注入器。不影响上面任何一条判据（Chatbot 是独立入口），
-但子项目 A 的 Task 6 严格说没做完。
+原文记的是「`setAppThemeColor` 没按 Task 6 Step 3 删掉，Chatbot 还在用」。
+复核过：**那个注入器已经不在了**，`src/utils/common.ts` 里零引用，
+`src/pages/Chatbot/index.tsx` 改成直接调 `applyAppTheme(iconColor)`，
+文件里也写明了为什么能删（引擎写的是 documentElement 的 inline style，
+恒压过注入器写的 `:root` 规则，所以自打引擎上线那条注入就已经是死代码）。
+子项目 A 的 Task 6 现在是做完的。
