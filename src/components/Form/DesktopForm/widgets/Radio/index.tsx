@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Radio } from 'ming-ui';
 import autoSize from 'ming-ui/components/AutoSize';
-import { isLightColor } from 'src/utils/control';
+import { getOptionChipStyle } from 'src/utils/optionColor';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
 import { getCheckAndOther } from '../../../core/utils';
 import OtherInput from '../Checkbox/OtherInput';
@@ -104,15 +104,13 @@ const RadioWidget = props => {
   const renderList = (item, checkIds) => {
     return (
       <span
-        className={cx(
-          'ellipsis customRadioItem',
-          { textWhite: enumDefault2 === 1 && !isLightColor(item.color) },
-          { textBlack: enumDefault2 === 1 && isLightColor(item.color) },
-          { 'pLeft12 pRight12': enumDefault2 === 1 || checkIds.length > 1 },
-        )}
-        style={{
-          background: enumDefault2 === 1 ? item.color : checkIds.length > 1 ? 'var(--color-border-secondary)' : '',
-        }}
+        className={cx('ellipsis customRadioItem', { 'pLeft12 pRight12': enumDefault2 === 1 || checkIds.length > 1 })}
+        style={
+          // 选项色配色交给 getOptionChipStyle（浅底 + 同色深字），见 src/utils/optionColor.ts
+          enumDefault2 === 1
+            ? getOptionChipStyle(item.color)
+            : { background: checkIds.length > 1 ? 'var(--color-border-secondary)' : '' }
+        }
       >
         {item.value}
       </span>

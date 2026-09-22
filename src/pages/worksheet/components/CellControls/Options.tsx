@@ -13,8 +13,8 @@ import Checkbox from 'src/components/Form/DesktopForm/widgets/Checkbox';
 import Dropdown from 'src/components/Form/DesktopForm/widgets/Dropdown';
 import Radio from 'src/components/Form/DesktopForm/widgets/Radio';
 import { isKeyBoardInputChar } from 'src/utils/common';
-import { isLightColor } from 'src/utils/control';
 import { getSelectedOptions } from 'src/utils/control';
+import { getOptionChipStyle } from 'src/utils/optionColor';
 import EditableCellCon from '../EditableCellCon';
 import CellErrorTips from './comps/CellErrorTip';
 import { FROM } from './enum';
@@ -168,15 +168,11 @@ OtherOption.propTypes = {
 };
 
 function getOptionStyle(option, cell) {
+  // 同 OptionSteps：配色交给 getOptionChipStyle（浅底 + 同色深字）。
+  // 【原来给 wfstatus 的 abort/other 单挑了黑字】那是因为这两个状态的底色浅、
+  // 白字读不了 —— 新算法按实际对比度挑档，这类情况本来就会得到深字，不用再特判。
   return (cell.enumDefault2 === 1 && option.color) || cell.controlId === 'wfstatus'
-    ? {
-        backgroundColor: option.color,
-        color:
-          (option.color && isLightColor(option.color)) ||
-          (cell.controlId === 'wfstatus' && _.includes(['abort', 'other'], option.key))
-            ? 'var(--color-black)'
-            : 'var(--color-white)',
-      }
+    ? getOptionChipStyle(option.color)
     : {};
 }
 

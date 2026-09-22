@@ -3,7 +3,6 @@ import cx from 'classnames';
 import { identity, includes } from 'lodash';
 import { Radio } from 'ming-ui';
 import autoSize from 'ming-ui/components/AutoSize';
-import { isLightColor } from 'src/utils/control';
 import { OptionsWrap, OptionWrap } from '../../styled';
 import { getAdvanceSetting, getItemOptionWidth, getOptions } from '../../util/setting';
 
@@ -31,7 +30,6 @@ function FlatMenu({ data, fromType }) {
             <Radio checked={includes(checkedValue, item.key)} />
             <OptionWrap
               className={cx({
-                light: isLightColor(item.color),
                 withoutColor: data.enumDefault2 !== 1,
                 horizontal: direction !== '1',
               })}

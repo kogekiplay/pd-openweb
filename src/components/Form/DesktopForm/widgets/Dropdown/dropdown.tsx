@@ -5,7 +5,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';
 import { MAX_OPTIONS_COUNT } from 'src/pages/widgetConfig/config';
-import { isLightColor } from 'src/utils/control';
+import { getOptionChipStyle } from 'src/utils/optionColor';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
 import { getCheckAndOther } from '../../../core/utils';
 import OtherInput from '../Checkbox/OtherInput';
@@ -61,11 +61,10 @@ const DropdownComp = props => {
           key={item.key}
           className={cx(
             'ellipsis mTop5 mBottom5 mRight5 Font13',
-            enumDefault2 === 1 ? (isLightColor(item.color) ? 'textBlack' : 'textWhite') : '',
             enumDefault2 === 1 ? 'customAntDropdownTitleWithBG' : 'customAntDropdownTitle',
             { isEmpty: item.key === 'isEmpty' },
           )}
-          style={enumDefault2 === 1 ? { background: item.color } : { color: 'var(--color-text-primary)' }}
+          style={enumDefault2 === 1 ? getOptionChipStyle(item.color) : { color: 'var(--color-text-primary)' }}
           title={item.value}
         >
           {item.value}
@@ -82,16 +81,12 @@ const DropdownComp = props => {
     item => {
       return (
         <span
-          className={cx(
-            'customRadioItem ellipsis',
-            enumDefault2 === 1 ? (isLightColor(item.color) ? 'textBlack' : 'textWhite') : '',
-            {
-              isEmpty: item.key === 'isEmpty',
-              'pLeft12 pRight12': enumDefault2 === 1,
-            },
-          )}
+          className={cx('customRadioItem ellipsis', {
+            isEmpty: item.key === 'isEmpty',
+            'pLeft12 pRight12': enumDefault2 === 1,
+          })}
           title={item.value}
-          style={{ background: enumDefault2 === 1 ? item.color : '' }}
+          style={enumDefault2 === 1 ? getOptionChipStyle(item.color) : {}}
         >
           {item.value}
         </span>
@@ -167,11 +162,10 @@ const DropdownComp = props => {
         key={tagValue}
         className={cx(
           'mTop5 mBottom5 mRight5',
-          enumDefault2 === 1 ? (isLightColor(currentItem.color) ? 'textBlack' : 'textWhite') : '',
           enumDefault2 === 1 ? 'customAntDropdownTitleWithBG' : 'customAntDropdownTitle',
           { isEmpty: tagValue === 'isEmpty' },
         )}
-        style={{ background: enumDefault2 === 1 ? currentItem.color : '' }}
+        style={enumDefault2 === 1 ? getOptionChipStyle(currentItem.color) : {}}
         title={label}
       >
         <div className="ellipsis Font13">
@@ -183,14 +177,14 @@ const DropdownComp = props => {
   };
 
   return (
-    (<Fragment>
+    <Fragment>
       <Select
         {...(mode ? { mode, tagRender } : {})}
         ref={selectRef}
         classNames={{ popup: { root: dropdownClassName } }}
         className={cx('w100 customAntSelect', { optionDisabled: disabled })}
         disabled={disabled}
-        showSearch={{ filterOption: () => true, onSearch: handleSearch, optionFilterProp: "children" }}
+        showSearch={{ filterOption: () => true, onSearch: handleSearch, optionFilterProp: 'children' }}
         open={open}
         allowClear={checkIds.length > 0}
         listHeight={320}
@@ -241,7 +235,7 @@ const DropdownComp = props => {
           )}
       </Select>
       <OtherInput {...props} isSelect={true} />
-    </Fragment>)
+    </Fragment>
   );
 };
 

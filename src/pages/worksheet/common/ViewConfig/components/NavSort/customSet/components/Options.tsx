@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import { isLightColor } from 'src/utils/control';
+import { getOptionChipStyle } from 'src/utils/optionColor';
 
 const Wrap = styled.span`
   padding: 5px var(--space-2);
@@ -13,8 +13,8 @@ export default function (props) {
   const data = props.controlInfo.options.find(o => o.key === props.item) || {};
 
   if (_.get(props, 'controlInfo.enumDefault2') === 1) {
-    const fontColor = !isLightColor(data.color) ? '#fff' : 'var(--color-text-title)';
-    style = { background: data.color, color: fontColor };
+    // 配色交给 getOptionChipStyle（浅底 + 同色深字），见 src/utils/optionColor.ts
+    style = getOptionChipStyle(data.color);
   }
 
   return (

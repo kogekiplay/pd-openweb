@@ -5,7 +5,6 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Checkbox } from 'ming-ui';
 import autoSize from 'ming-ui/components/AutoSize';
-import { isLightColor } from 'src/utils/control';
 import { CommonDisplay, OptionsWrap, OptionWrap } from '../../styled';
 import { getAdvanceSetting, getItemOptionWidth, getOptions } from '../../util/setting';
 
@@ -44,7 +43,6 @@ function MultiSelect({ data, fromType }) {
                 return (
                   <OptionWrap
                     className={cx('optionItem', {
-                      light: isLightColor(item.color),
                       withoutColor: data.enumDefault2 !== 1,
                     })}
                     color={item.color}
@@ -78,7 +76,6 @@ function MultiSelect({ data, fromType }) {
             <Checkbox checked={checkedValue.includes(item.key)} />
             <OptionWrap
               className={cx({
-                light: isLightColor(item.color),
                 withoutColor: data.enumDefault2 !== 1,
                 horizontal: direction !== '1',
               })}

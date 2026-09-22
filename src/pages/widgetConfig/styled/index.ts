@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
+import { getOptionChipStyle } from 'src/utils/optionColor';
 
 export const SettingItem = styled.div`
   margin-top: var(--space-5);
@@ -434,22 +435,28 @@ export const OptionWrap = styled.div`
   padding: 0 var(--space-3);
   line-height: 24px;
   border-radius: 18px;
-  color: var(--color-white);
   ${props =>
     props.direction !== '0' ? 'white-space: normal' : 'white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'};
 
   &.horizontal {
     ${props => (props.direction === '0' ? `max-width: ${props.width}px;` : '')}
   }
-  &.light {
-    color: var(--color-text-title);
-  }
   &.withoutColor {
     background: transparent;
     color: var(--color-text-title);
     padding: 0 var(--space-1);
   }
-  background-color: ${props => props.color || 'var(--color-primary)'};
+  /* 【选项色的底和字一起算，不要只给底】原来是「底 = 选项色、字 = 白，
+     再靠一个 .light 类在浅色时翻成深字」—— 实测 20 色色板里 7 色不达标，
+     而且其中 5 色黑白两种字色都够不着 4.5，翻字色救不回来。
+     改成浅底 + 同色深字，两个值都由 getOptionChipStyle 出，
+     .light 类随之退役（三个 displayTypes 里已一并去掉）。
+     没给 color 时保持原样走主题色实心底 —— 那是"未配色"的占位样子，不是选项色。 */
+  ${props => {
+    if (!props.color) return 'color: var(--color-white); background-color: var(--color-primary);';
+    const chip = getOptionChipStyle(props.color);
+    return `color: ${chip.color}; background-color: ${chip.background};`;
+  }}
 `;
 
 export const EditModelWrap = styled.div`
