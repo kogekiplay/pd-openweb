@@ -113,6 +113,7 @@ const MemoFullCalendar = React.memo(
     calendarFormatData,
     weekbegin,
     showall,
+    rowHeight,
     unweekday,
     others,
     currentView,
@@ -323,7 +324,15 @@ const MemoFullCalendar = React.memo(
             info.event.extendedProps.rowid,
           );
         }}
-        dayMaxEventRows={showall === '0'}
+        /* 【给的是具体行数，不是 true】传 true 走的是库的 "auto" 模式 —— 它靠**实测**
+           每格能放下几行来决定，而这个测量在布局还没稳定时可能量到 0，结果就是
+           整格一条事件都不显示、只剩一个「+N 更多」（张奇报的"紧凑下一行都不显示"）。
+           传数字走 "maxEventRows" 模式：行数是写死的，不用测量，也就没有这个时序问题；
+           而且库会自己把「+N」算作占一行（源码 computeDayGridMoreLinkLevelTax），
+           不会再出现链接挤出格子的情况。
+           紧凑的事件条约 18px、宽松的是 40px 的卡片，所以紧凑多给一行。
+           勾了「显示所有日程」时传 false = 不限制，和原来一致。 */
+        dayMaxEventRows={showall === '0' ? (rowHeight === '1' ? 2 : 3) : false}
         /* 【周/日视图里并发事件太多会退化成一堵竖线墙】考勤这类表一天能有几十条同一时刻
            的打卡记录。FullCalendar 默认把同一时段的事件平分列宽，25 条并发 + 165px 的
            列宽 = 每条 6px，标题一个字也看不见，签到时刻还都是零时长（高度只有 2px）。
@@ -1082,6 +1091,7 @@ class RecordCalendarBase extends Component<any, any> {
               calendarFormatData={calendarFormatData}
               weekbegin={weekbegin}
               showall={showall}
+              rowHeight={_.get(currentView, 'advancedSetting.rowHeight') || '0'}
               unweekday={unweekday}
               others={others}
               currentView={currentView}
