@@ -150,7 +150,7 @@ export const WrapContainer = styled.div`
   }
   .back {
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
   }
   img {
@@ -320,7 +320,7 @@ export const WrapUl = styled.div`
         border-bottom: 3px solid var(--color-white);
         word-break: break-all;
         &.isCur {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
           border-bottom: 3px solid var(--color-primary);
         }
       }

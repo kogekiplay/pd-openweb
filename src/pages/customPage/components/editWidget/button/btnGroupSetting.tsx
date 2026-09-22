@@ -87,7 +87,7 @@ const SettingWrap = styled.div`
     border-radius: 18px;
     background-color: var(--color-background-card);
     font-weight: bold;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       background-color: var(--color-background-card);
       color: var(--color-primary-dark);
@@ -122,7 +122,7 @@ const SettingWrap = styled.div`
           border: none;
         }
         &.active {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
           border-radius: var(--radius-sm);
           background-color: var(--color-background-card);
         }

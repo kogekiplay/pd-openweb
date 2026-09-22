@@ -57,7 +57,7 @@ const BannerWrapper = styled.div`
 
   .action {
     margin-left: 6px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     cursor: pointer;
     &:hover {
       color: var(--color-primary-light);

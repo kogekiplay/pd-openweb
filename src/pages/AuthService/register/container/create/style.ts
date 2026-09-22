@@ -79,15 +79,15 @@ export const Wrap = styled.div`
       input[type='text']:not(.iti__search-input),
       input[type='password'],
       .Dropdown--input {
-          border: 1px solid var(--color-primary) !important;
-          box-shadow: var(--shadow-sm);
+        border: 1px solid var(--color-primary) !important;
+        box-shadow: var(--shadow-sm);
         .Dropdown--placeholder {
           opacity: 0;
           transition: all 0.3s;
         }
         &.active {
           .title {
-            color: var(--color-primary) !important;
+            color: var(--color-primary-text) !important;
             top: -1px;
             transform: translateY(-50%);
           }

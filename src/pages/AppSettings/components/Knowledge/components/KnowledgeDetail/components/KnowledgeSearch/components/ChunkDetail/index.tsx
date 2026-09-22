@@ -20,7 +20,7 @@ const Container = styled.div`
   cursor: pointer;
   color: var(--color-text-secondary);
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background-color: var(--color-background-tertiary);
   }
 `;
@@ -81,7 +81,7 @@ const LaunchIcon = styled(Icon)`
   border-radius: var(--radius-sm);
   &:hover {
     background-color: var(--color-background-tertiary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

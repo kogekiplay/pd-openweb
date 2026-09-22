@@ -5,7 +5,7 @@ export const Wrap = styled.div`
     margin-top: 13px;
     font-size: var(--font-md);
     .terms {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       text-decoration: none;
     }
   }
@@ -68,7 +68,7 @@ export const Wrap = styled.div`
     line-height: 20px;
     color: var(--color-text-secondary);
     .authSwitchLink {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       font-size: 15px;
       font-weight: 400;
       &:hover {
@@ -94,7 +94,7 @@ export const Wrap = styled.div`
       color: var(--color-text-secondary);
     }
     .textB {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
 
     .textB:hover {

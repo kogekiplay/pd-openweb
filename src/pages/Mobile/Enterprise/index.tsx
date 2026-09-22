@@ -43,7 +43,7 @@ const EmptyProject = styled.div`
     }
   }
   .colorPrimary {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   .bgColorPrimary {
     background-color: var(--color-primary);

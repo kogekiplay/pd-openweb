@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -22,7 +22,7 @@ const OrgSelectCon = styled.div`
   }
   .orgShowCon:hover {
     border-color: var(--color-primary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   .mLeft9 {
     margin-left: 9px !important;

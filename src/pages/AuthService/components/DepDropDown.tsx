@@ -106,7 +106,7 @@ export default class DepDropDown extends Component<any, any> {
                 let text = nameArr.map((item, index) => {
                   if (item === keywords) {
                     return (
-                      <span key={item + index} style={{ color: 'var(--color-primary)' }}>
+                      <span key={item + index} style={{ color: 'var(--color-primary-text)' }}>
                         {item}
                       </span>
                     );
@@ -193,7 +193,7 @@ export default class DepDropDown extends Component<any, any> {
     const { popupClassName, treePopupAlign } = this.props;
     const { options, searchOptions, keywords, isError, value } = this.state;
     return (
-      (<TreeSelect
+      <TreeSelect
         className="w100 customAntSelect customTreeSelect"
         classNames={{ popup: { root: cx(popupClassName) } }}
         dropdownPopupAlign={treePopupAlign}
@@ -238,7 +238,7 @@ export default class DepDropDown extends Component<any, any> {
             this.loadData();
           }
         }}
-      />)
+      />
     );
   }
 }

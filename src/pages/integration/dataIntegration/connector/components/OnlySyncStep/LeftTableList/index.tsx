@@ -69,7 +69,7 @@ const LeftListWrapper = styled.div`
         .listItem {
           border-left: 3px solid var(--color-primary);
           span {
-            color: var(--color-primary);
+            color: var(--color-primary-text);
             font-weight: 600;
           }
         }

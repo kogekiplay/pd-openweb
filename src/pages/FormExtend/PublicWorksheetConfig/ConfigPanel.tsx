@@ -107,7 +107,7 @@ const ColumnSettingWrap = styled.div`
     cursor: pointer;
     font-weight: bold;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .columnWrap {
@@ -130,7 +130,7 @@ const ColumnSettingWrap = styled.div`
         margin-left: 0;
       }
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         i {
           color: var(--color-primary);
         }
@@ -140,7 +140,7 @@ const ColumnSettingWrap = styled.div`
       }
       &.active {
         background: var(--color-background-primary);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         i {
           color: var(--color-primary);
         }

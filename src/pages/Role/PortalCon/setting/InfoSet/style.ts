@@ -16,7 +16,7 @@ export const Wrap = styled.div`
     height: 36px;
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     line-height: 34px;
     text-align: center;
     &:hover {

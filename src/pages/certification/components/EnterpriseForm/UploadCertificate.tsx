@@ -18,7 +18,7 @@ const Wrapper = styled.div`
     &:hover {
       border-color: var(--color-primary) !important;
       span {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       .icon {
         color: var(--color-primary);

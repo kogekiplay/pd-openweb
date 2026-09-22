@@ -33,7 +33,7 @@ const GlobalSearchSideCon = styled.ul`
   .sideItem.current {
     background: var(--color-primary-transparent);
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   .sideItem.current span {
     border-left: 2px solid var(--color-primary);

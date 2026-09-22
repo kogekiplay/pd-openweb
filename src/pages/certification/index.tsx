@@ -38,7 +38,7 @@ const Wrapper = styled.div`
       font-size: 17px;
       font-weight: 500;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     .helpWrap {

@@ -55,7 +55,7 @@ const ImageUploadWrap = styled.div`
     border: 1.5px dashed var(--color-text-disabled);
     border-radius: var(--radius-sm);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-color: var(--color-primary);
     }
   }

@@ -38,7 +38,7 @@ ol {
 }
 a {
   text-decoration: none;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
   cursor: pointer;
 }
 /*盒子布局*/
@@ -368,7 +368,7 @@ footer a.addCalendar {
   margin-bottom: var(--space-5);
 }
 footer a.wAddCalendar {
-  color: var(--color-primary);
+  color: var(--color-primary-text);
   margin-top: var(--space-3);
 }
 footer a.join.leave {

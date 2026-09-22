@@ -60,7 +60,7 @@ const LinkParaWrap = styled.div`
   .add {
     margin-top: var(--space-4);
     font-weight: bold;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       color: var(--color-primary-dark);
     }

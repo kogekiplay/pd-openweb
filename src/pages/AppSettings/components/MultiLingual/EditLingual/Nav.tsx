@@ -23,7 +23,7 @@ const Wrap = styled.div`
         fill: var(--color-primary) !important;
       }
       font-weight: bold;
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       background-color: var(--color-primary-transparent);
     }
   }
@@ -60,7 +60,7 @@ const Wrap = styled.div`
         fill: var(--color-primary) !important;
       }
       font-weight: bold;
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       background-color: var(--color-primary-transparent);
     }
     .ant-tree-title {

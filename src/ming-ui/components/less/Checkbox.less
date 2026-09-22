@@ -96,6 +96,8 @@
       background-color: var(--color-background-primary);
     }
     &.checked .Checkbox-box {
+      /* 这个 color 画的是勾（图标字体），不是文字 —— 下一行 i.icon 只是把同一个值
+         再写一遍。按非文本对比只要 3:1，主题色原色就够，不迁深一档。 */
       color: var(--color-primary);
       border-color: var(--color-primary);
       & > i.icon {

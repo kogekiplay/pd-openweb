@@ -140,7 +140,7 @@ export const Header = styled.div`
       .back {
         color: var(--color-text-secondary);
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
     }
@@ -269,7 +269,7 @@ export const WrapPreview = styled.div`
       border-radius: var(--radius-sm);
       border: 1px solid var(--color-text-disabled);
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border: 1px solid var(--color-primary);
       }
       &.refreshBtn:hover {
@@ -365,7 +365,7 @@ export const WrapS = styled(Menu)`
     }
   }
   .ming.Item.colorPrimary .Item-content:not(.disabled):hover {
-    color: var(--color-primary) !important;
+    color: var(--color-primary-text) !important;
   }
   .Red.ming.MenuItem .Item-content:not(.disabled):hover {
     color: var(--color-error) !important;

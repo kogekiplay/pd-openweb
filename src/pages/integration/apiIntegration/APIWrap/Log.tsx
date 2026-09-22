@@ -28,7 +28,7 @@ const Wrap = styled.div`
     border: 1px solid var(--color-border-secondary);
     border-radius: 20px;
     padding: 0 48px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   .noData {
     padding-bottom: 140px;
@@ -68,9 +68,9 @@ const Wrap = styled.div`
       td,
       th {
         .fromTxt {
-          color: var(--color-primary) !important;
+          color: var(--color-primary-text) !important;
           a {
-            color: var(--color-primary) !important;
+            color: var(--color-primary-text) !important;
           }
         }
       }

@@ -28,7 +28,7 @@ const ViewErrorPageContainer = styled.div`
     text-align: center;
     border: 1px solid var(--color-primary);
     margin-top: 30px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

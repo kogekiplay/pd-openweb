@@ -19,7 +19,7 @@ export const TagWrap = styled.div`
     background-color: var(--color-background-primary);
     margin: 0 10px 10px 0;
     &.add {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       transition: all 0.3s;
       &:hover {
         color: var(--color-link-hover);

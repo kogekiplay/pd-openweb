@@ -31,7 +31,7 @@ const Wrap = styled.div`
   .toRole {
     color: var(--color-text-title);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .wrapTr:not(.checkBoxTr):not(.optionWrapTr) {
@@ -49,7 +49,7 @@ const Wrap = styled.div`
     padding: 0 !important;
   }
   .isCurmemberType {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   .isMyRoleW {
     padding: 0px 7px;
@@ -84,7 +84,7 @@ const WrapBar = styled.div`
     display: inline-block;
     &:hover {
       border: 1px solid var(--color-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .addUser {
@@ -119,7 +119,7 @@ const WrapBar = styled.div`
   }
   .exportAppRolesBtn:hover {
     border-color: var(--color-primary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

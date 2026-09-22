@@ -125,7 +125,7 @@ const ListWrapper = styled.div`
       align-items: center;
       cursor: pointer;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         i {
           color: var(--color-primary) !important;
         }

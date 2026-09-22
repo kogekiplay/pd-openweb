@@ -29,7 +29,7 @@ const SelectCountWrap = styled.div`
       justify-content: center;
       align-items: center;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     .add {

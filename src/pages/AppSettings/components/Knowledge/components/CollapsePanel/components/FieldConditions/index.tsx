@@ -22,7 +22,7 @@ const FilterData = styled.div`
     font-size: var(--font-xl);
   }
   &.active {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     border-color: var(--color-primary);
   }
   &.noFilter {

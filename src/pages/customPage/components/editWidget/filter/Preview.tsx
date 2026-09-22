@@ -19,7 +19,7 @@ const Wrap = styled.div`
   .addFilterItem {
     height: 36px;
     padding: 0 15px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     border: none;
     border-radius: 24px;
     background-color: var(--color-background-card);

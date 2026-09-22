@@ -31,7 +31,7 @@ const FooterWrap = styled.div`
   .cancelBtn {
     display: inline-block;
     padding: 0 var(--space-8);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     border-radius: var(--radius-sm);
     line-height: 34px;
     border: 1px solid var(--color-primary);

@@ -1,7 +1,7 @@
 import React, { Fragment, lazy, Suspense, useEffect } from 'react';
 import { useSetState } from 'react-use';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Icon, Input, LoadDiv, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -68,7 +68,7 @@ const Con = styled.div`
     width: 200px;
   }
   .activeCon {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       opacity: 0.8;
     }

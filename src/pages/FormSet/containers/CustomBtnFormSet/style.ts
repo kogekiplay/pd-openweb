@@ -37,7 +37,7 @@ export const Con = styled.div`
       color: var(--color-text-tertiary);
     }
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       .trashIcon {
         color: var(--color-primary);
       }

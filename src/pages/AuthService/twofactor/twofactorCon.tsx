@@ -30,7 +30,7 @@ const MethodItem = styled.div`
     !props.isMobile &&
     `
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
       i {
         color: var(--color-primary) !important;
       }

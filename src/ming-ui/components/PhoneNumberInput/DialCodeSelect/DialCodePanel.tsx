@@ -52,7 +52,7 @@ const PanelWrap = styled.div`
       background: var(--color-background-hover);
     }
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
     .code {
       width: 64px;
@@ -84,7 +84,7 @@ const PanelWrap = styled.div`
     color: var(--color-text-tertiary);
     cursor: pointer;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .empty {

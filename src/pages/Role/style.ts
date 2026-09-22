@@ -21,7 +21,7 @@ export const WrapHeader = styled.div`
       border-bottom: 3px solid transparent;
       border-top: 3px solid transparent;
       &.cur {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-bottom: 3px solid var(--color-primary);
       }
     }
@@ -34,7 +34,7 @@ export const WrapHeader = styled.div`
   .moreop {
     color: var(--color-text-disabled);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;
@@ -56,7 +56,7 @@ export const WrapNav = styled.div`
     border-radius: 24px;
     border: 1px solid var(--color-border-primary);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border: 1px solid var(--color-primary);
     }
   }
@@ -72,7 +72,7 @@ export const WrapNav = styled.div`
       .moreop {
         color: var(--color-text-disabled);
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
       cursor: pointer;
@@ -82,7 +82,7 @@ export const WrapNav = styled.div`
         color: var(--color-text-tertiary);
       }
       &.cur {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         background: var(--color-primary-transparent) !important;
         border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
         font-weight: bold !important;
@@ -129,7 +129,7 @@ export const WrapNav = styled.div`
         }
         .tag {
           padding: 0 6px;
-          color: var(--color-primary);
+          color: var(--color-primary-text);
           background: color-mix(in srgb, var(--color-primary) 10%, transparent);
           border-radius: 11px;
           line-height: 22px;
@@ -140,7 +140,7 @@ export const WrapNav = styled.div`
           background: var(--color-background-hover);
         }
         &.cur {
-          color: var(--color-primary) !important;
+          color: var(--color-primary-text) !important;
           .roleIcon {
             color: var(--color-primary);
           }
@@ -178,7 +178,7 @@ export const WrapTableCon = styled.div`
     .toOthers,
     .del {
       font-weight: 400;
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       line-height: 37px;
       height: 37px;
       background: var(--color-primary-transparent);
@@ -251,7 +251,7 @@ export const WrapFooter = styled.div`
       background-color ease-in 0;
     &:hover {
       border: 1px solid var(--color-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .line {

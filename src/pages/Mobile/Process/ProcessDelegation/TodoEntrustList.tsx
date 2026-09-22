@@ -73,7 +73,7 @@ const EntrustButton = styled.button`
     background-color: var(--color-background-tertiary);
   }
   &.isAdd {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background-color: var(--color-background-primary);
   }
 `;

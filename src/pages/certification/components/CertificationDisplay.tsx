@@ -9,7 +9,7 @@ import SelectCertification from './SelectCertification';
 
 const Wrapper = styled.div`
   .certBtn {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     font-weight: bold;
     width: fit-content;
     cursor: pointer;

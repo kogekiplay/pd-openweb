@@ -59,7 +59,7 @@ const Wrap = styled.div`
     line-height: 34px;
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     padding: 0 var(--space-3);
     display: inline-block;
     cursor: pointer;

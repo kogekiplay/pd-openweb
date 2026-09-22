@@ -31,7 +31,7 @@ const Wrap = styled.div`
     line-height: 36px;
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     i {
       color: var(--color-primary);
       line-height: 36px;

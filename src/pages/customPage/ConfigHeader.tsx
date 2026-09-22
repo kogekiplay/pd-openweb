@@ -88,7 +88,7 @@ const ConfigHeader = styled(FlexCenter)`
   }
   .pageSetting {
     &:hover * {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
   }
   .close {

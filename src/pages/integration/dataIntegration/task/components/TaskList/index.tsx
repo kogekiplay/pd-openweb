@@ -43,7 +43,7 @@ const TaskListBox = styled.div`
           }
         }
         .titleText {
-          color: var(--color-primary) !important;
+          color: var(--color-primary-text) !important;
         }
       }
     }
@@ -252,7 +252,7 @@ const FilterItem = styled.div`
 
       &.isActive {
         font-weight: 600;
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       &:hover {
         border-color: var(--color-border-tertiary);
@@ -303,7 +303,7 @@ const SelectedWrapper = styled.div`
     cursor: pointer;
     &:hover {
       border-color: var(--color-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

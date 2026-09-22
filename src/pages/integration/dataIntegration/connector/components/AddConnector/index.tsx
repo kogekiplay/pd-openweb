@@ -113,7 +113,7 @@ const HeaderWrapper = styled.div`
       margin-right: var(--space-4);
       border: 1px solid var(--color-primary);
       background: var(--color-background-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

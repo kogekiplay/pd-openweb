@@ -120,7 +120,7 @@ const CustomUrlSet = styled.div`
   border: 1px solid var(--color-border-primary);
   &:hover {
     border-color: var(--color-primary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

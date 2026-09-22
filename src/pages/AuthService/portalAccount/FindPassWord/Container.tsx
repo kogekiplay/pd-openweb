@@ -17,7 +17,7 @@ const Wrap = styled.div`
       padding-bottom: var(--space-2);
       border-bottom: 1px solid var(--color-white);
       &.isCur {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-bottom: 1px solid var(--color-primary);
       }
     }

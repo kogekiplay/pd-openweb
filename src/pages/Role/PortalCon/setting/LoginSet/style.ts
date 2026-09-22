@@ -35,7 +35,7 @@ export const Wrap = styled.div`
     border-radius: var(--radius-sm);
     line-height: 80px;
     position: relative;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     padding: 6px;
     .upload_logo {
       height: 100%;
@@ -62,7 +62,7 @@ export const Wrap = styled.div`
       background: var(--color-background-primary);
       border-radius: 50%;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     &:hover {
@@ -210,7 +210,7 @@ export const Wrap = styled.div`
     padding: 0 var(--space-4);
     background: var(--color-primary-transparent);
     border-radius: 6px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     display: inline-block;
     height: 44px;
     line-height: 44px;
@@ -223,7 +223,7 @@ export const Wrap = styled.div`
   .hideUploadBgTxt {
     color: var(--color-text-tertiary);
     a {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .loginDemo {

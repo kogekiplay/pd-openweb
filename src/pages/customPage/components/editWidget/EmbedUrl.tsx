@@ -50,7 +50,7 @@ const ContentWrap = styled(FlexCenter)`
   .previewBtn {
     height: 36px;
     padding: 0 15px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background-color: var(--color-background-card);
     border: none;
     border-radius: 24px;

@@ -33,7 +33,7 @@ const Wrap = styled.div`
       border-bottom: 3px solid transparent;
       font-weight: 600;
       &.cur {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-bottom: 3px solid var(--color-primary);
       }
     }
@@ -44,7 +44,7 @@ const Wrap = styled.div`
   .pointer {
     color: var(--color-text-disabled);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;
@@ -85,13 +85,13 @@ export default class Con extends PureComponent<any, any> {
     const { iconUrl, sheetName, sheetId } = sheet;
     const { tab = 0 } = this.state;
     return (
-      (<Drawer
+      <Drawer
         size={880}
         onClose={() => onClose()}
         mask={true}
         placement="right"
         open={showRoleSet}
-       
+
         closable={false}
       >
         <Wrap className="roleSettingWrap flexColumn">
@@ -142,7 +142,7 @@ export default class Con extends PureComponent<any, any> {
           </div>
           <div className="setCon flex">{this.renderContent()}</div>
         </Wrap>
-      </Drawer>)
+      </Drawer>
     );
   }
 }

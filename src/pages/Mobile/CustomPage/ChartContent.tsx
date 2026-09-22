@@ -35,7 +35,7 @@ const ModalContent = styled.div`
       background-color: var(--color-background-secondary);
     }
     .active {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
       background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
     }
   }

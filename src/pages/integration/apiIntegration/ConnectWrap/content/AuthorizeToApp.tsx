@@ -92,7 +92,7 @@ const WrapCon = styled.div`
     justify-content: center;
   }
   .addApp {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       color: var(--color-link-hover);
     }

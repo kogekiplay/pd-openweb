@@ -76,7 +76,7 @@ const Con = styled.div`
       a {
         color: var(--color-text-secondary);
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
     }

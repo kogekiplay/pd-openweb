@@ -117,7 +117,7 @@ const MoreOperate = styled.span`
   font-size: var(--font-xl);
   &:hover {
     background-color: var(--color-background-secondary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 const MenuWrap = styled(Menu)`

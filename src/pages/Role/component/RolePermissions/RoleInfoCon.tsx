@@ -34,7 +34,7 @@ const WrapSys = styled.div`
   .toUser {
     color: var(--color-text-title);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

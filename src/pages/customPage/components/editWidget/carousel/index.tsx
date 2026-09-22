@@ -32,7 +32,7 @@ const Wrap = styled.div`
         border: none;
       }
       &.active {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-radius: var(--radius-sm);
         background-color: var(--color-background-card);
       }

@@ -47,7 +47,7 @@ const Wrap = styled.div`
     .pass {
       &.isAct {
         background: var(--color-primary-transparent);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         &:hover {
           background: var(--color-primary-transparent);
         }
@@ -64,14 +64,14 @@ const Wrap = styled.div`
     }
     .setList {
       height: 32px;
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       vertical-align: middle;
       line-height: 32px;
       padding: 0 var(--space-3);
       background: var(--color-background-secondary);
       border-radius: var(--radius-sm);
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       &.isOpen {
         background: var(--color-background-primary);

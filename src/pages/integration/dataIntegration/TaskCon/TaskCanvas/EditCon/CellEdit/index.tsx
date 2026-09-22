@@ -78,7 +78,7 @@ const Wrap = styled.div`
         padding: 0 36px;
         &.cancleBtn {
           background: var(--color-background-primary);
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
         &.disabled {
           border: 1px solid var(--color-text-disabled);

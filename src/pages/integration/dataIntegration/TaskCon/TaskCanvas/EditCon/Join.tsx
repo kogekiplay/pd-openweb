@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dropdown } from 'ming-ui';
 import { JOIN_TYPE } from '../config';
@@ -23,7 +23,7 @@ const PopupWrap = styled.ul`
     }
     &.isCur {
       background: var(--color-primary-transparent);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border: 1px solid var(--color-primary);
     }
     .toolTipCon {

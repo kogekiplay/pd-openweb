@@ -28,7 +28,7 @@ const PopupWrapper = styled.div`
     height: 32px;
     padding: 0 10px;
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       background-color: var(--color-primary-transparent);
       .ellipsis {
         font-weight: 600;

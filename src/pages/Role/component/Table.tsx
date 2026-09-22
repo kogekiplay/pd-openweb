@@ -40,7 +40,7 @@ const Wrap = styled.div`
     }
     &.isSort {
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }
@@ -118,7 +118,7 @@ const WrapLi = styled.div`
     .optionWrapTr {
       .moreop {
         &:hover {
-          color: var(--color-primary) !important;
+          color: var(--color-primary-text) !important;
         }
       }
     }
@@ -148,7 +148,7 @@ const WrapSort = styled.div`
     display: none;
   }
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   &:hover,
   &.isCue {

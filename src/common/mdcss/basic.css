@@ -2953,9 +2953,10 @@ html:not(.appHomeMobile) .ant-message {
 }
 /* ----> antd Select 样式 end */
 
+/* 文字走深一档；紧跟着的 .hoverText:hover i 那条管图标，保持主题色原色。 */
 .hoverText:hover {
   cursor: pointer;
-  color: var(--color-primary) !important;
+  color: var(--color-primary-text) !important;
 }
 
 .hoverText:hover i {

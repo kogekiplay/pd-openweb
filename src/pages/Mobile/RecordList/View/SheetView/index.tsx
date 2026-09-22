@@ -14,9 +14,9 @@ import { refreshWorksheetControls } from 'worksheet/redux/actions';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import type { RootState } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 import { replaceBtnsTranslateInfo } from 'src/utils/translate';
 import SheetRows, { WithoutRows } from '../../SheetRows';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const BatchOptBtn = styled.div`
   display: flex;
@@ -48,7 +48,7 @@ const BatchOptBtn = styled.div`
     line-height: 36px;
     text-align: center;
     font-weight: 500;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background-color: rgba(152, 194, 255, 0.1);
     border-radius: 11px;
     margin-left: 6px;

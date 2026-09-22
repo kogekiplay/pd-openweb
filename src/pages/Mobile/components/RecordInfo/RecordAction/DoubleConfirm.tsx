@@ -81,7 +81,7 @@ const SectionName = styled.div`
     right: 0;
     top: 0;
     font-weight: 400;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

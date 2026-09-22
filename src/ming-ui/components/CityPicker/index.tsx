@@ -70,7 +70,7 @@ const CascaderSearchSelectWrap = styled.ul`
     }
     .CityPicker-Search-Highline {
       background: unset;
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

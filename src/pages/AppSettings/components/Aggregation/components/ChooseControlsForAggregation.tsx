@@ -20,7 +20,7 @@ const Wrap = styled.div`
     }
     &.hs {
       background: var(--color-background-hover);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
     svg {
       margin-top: 2px;

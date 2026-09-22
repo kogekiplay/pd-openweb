@@ -70,7 +70,7 @@ export const WrapL = styled.div`
     background: var(--color-background-primary);
     border: 1px dashed var(--color-border-primary);
     border-radius: var(--radius-sm);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     line-height: 58px;
     &:hover {
       border: 1px dashed var(--color-primary);
@@ -121,7 +121,7 @@ export const WrapL = styled.div`
       &.isCur {
         background: color-mix(in srgb, var(--color-primary) 10%, transparent);
         border: 1px solid var(--color-primary);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }

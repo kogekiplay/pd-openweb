@@ -52,7 +52,7 @@ const TabList = styled.div`
       &.isCur {
         border-bottom: 4px solid var(--color-primary);
         a {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
     }
@@ -93,7 +93,16 @@ const NoDataWrapper = styled.div`
   justify-content: center;
 `;
 
-export default function SourceSelectModal({ projectId, isCreateConnector, onChange, onClose, roleType }: { projectId?: string; [key: string]: any }) {
+export default function SourceSelectModal({
+  projectId,
+  isCreateConnector,
+  onChange,
+  onClose,
+  roleType,
+}: {
+  projectId?: string;
+  [key: string]: any;
+}) {
   const [currentTab, setCurrentTab] = useState(SOURCE_FROM_TYPE.COMMON);
   const [searchKeyWords, setSearchKeyWords] = useState('');
   const [dataSourceList, setDataSourceList] = useState([]);
