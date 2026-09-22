@@ -151,7 +151,9 @@ const OptionListItem = styled.div`
       cursor: pointer;
       font-weight: 600;
       &:hover {
-        color: color-mix(in srgb, var(--color-primary) 80%, transparent);
+        /* 基色跟着上面一起换成深一档：本来就是"hover 时淡一点"的意思，
+           底色不变，继续拿原色去淡只会比正常态还难读。 */
+        color: color-mix(in srgb, var(--color-primary-text) 80%, transparent);
       }
     }
   }

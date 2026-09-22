@@ -64,7 +64,7 @@ const renderState = data => {
         <span
           className="bold"
           style={{
-            color: 'var(--color-primary)',
+            color: 'var(--color-primary-text)',
           }}
         >
           {_l('等我填写...')}
@@ -75,7 +75,7 @@ const renderState = data => {
         <span
           className="bold"
           style={{
-            color: 'var(--color-primary)',
+            color: 'var(--color-primary-text)',
           }}
         >
           {_l('等我审批...')}

@@ -388,14 +388,17 @@ export default class YAxis extends Component<any, any> {
             </span>
             {isScatterChart && (
               <Dropdown
-                popupRender={() => <Menu
+                popupRender={() => (
+                  <Menu
                     className="chartControlMenu chartMenu"
                     expandIcon={<Icon icon="arrow-right-tip" />}
                     subMenuOpenDelay={0.2}
                   >
                     {allYaxisList.map((item, index: number) => (
                       <Menu.Item
-                        style={{ color: index === inheritLastYaxisIndex ? 'var(--color-primary) !important' : null }}
+                        style={{
+                          color: index === inheritLastYaxisIndex ? 'var(--color-primary-text) !important' : null,
+                        }}
                         onClick={() => {
                           this.props.onChangeStyle({
                             inheritLastYaxisIndex: index,
@@ -408,7 +411,8 @@ export default class YAxis extends Component<any, any> {
                         </div>
                       </Menu.Item>
                     ))}
-                  </Menu>}
+                  </Menu>
+                )}
                 trigger={['click']}
                 placement="bottomRight"
               >

@@ -388,7 +388,7 @@ export default class XAxis extends Component<any, any> {
             {getEmptyTypes(reportType).map(item => (
               <Menu.Item
                 key={item.value}
-                style={{ color: item.value === xaxes.emptyType ? 'var(--color-primary) !important' : null }}
+                style={{ color: item.value === xaxes.emptyType ? 'var(--color-primary-text) !important' : null }}
                 onClick={() => {
                   this.handleChangeXaxes({ emptyType: item.value });
                 }}
@@ -424,7 +424,7 @@ export default class XAxis extends Component<any, any> {
           >
             {displayModes.map(item => (
               <Menu.Item
-                style={{ color: item.value === xaxes.displayMode ? 'var(--color-primary) !important' : null }}
+                style={{ color: item.value === xaxes.displayMode ? 'var(--color-primary-text) !important' : null }}
                 key={item.value}
                 onClick={() => {
                   this.handleChangeXaxes({ displayMode: item.value });

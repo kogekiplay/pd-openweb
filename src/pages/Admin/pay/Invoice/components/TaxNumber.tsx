@@ -83,7 +83,7 @@ const TaxNumber = forwardRef((props, ref) => {
                   ? 'var(--color-success)'
                   : record.planType === 99
                     ? 'var(--color-error)'
-                    : 'var(--color-primary)',
+                    : 'var(--color-primary-text)',
             }}
           >
             {TAX_STATUS_TEXT[record.planType]}

@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { Button, ConfigProvider, Dropdown, Input, Menu, Modal } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { Icon, TagTextarea } from 'ming-ui';
 import { isNumberControl } from 'statistics/common/controlUtils';
 import { textNormTypes } from 'statistics/common/reportConfigUtils';
 import SelectControls from 'worksheet/common/WorkSheetFilter/components/SelectControls';
-import { normTypes } from '../../../enum';
 import type { FormControl } from 'src/utils/controlTypes';
+import { normTypes } from '../../../enum';
 
 const ControlTag = styled.div`
   line-height: 24px;
@@ -146,14 +146,17 @@ class CalculateControl extends Component<any, any> {
 
     this.setState({ dot: count });
   };
-  renderControlTypeOverlay({ controlId, type, enumDefault }: { controlId?: string; enumDefault?: number; [key: string]: any }, norm) {
+  renderControlTypeOverlay(
+    { controlId, type, enumDefault }: { controlId?: string; enumDefault?: number; [key: string]: any },
+    norm,
+  ) {
     const isNumber = isNumberControl(type) || enumDefault === 1;
     return (
       <Menu className="chartMenu" style={{ width: 140 }}>
         {(isNumber ? calculateControlNormTypes : textControlNormTypes).map(item => (
           <Menu.Item
             key={item.value}
-            style={{ color: norm.value === item.value ? 'var(--color-primary) !important' : null }}
+            style={{ color: norm.value === item.value ? 'var(--color-primary-text) !important' : null }}
             onClick={() => {
               const newFormulaStr = this.state.formulaStr.replace(
                 new RegExp(`${controlId}-${norm.value || '\\d'}`),
@@ -197,7 +200,7 @@ class CalculateControl extends Component<any, any> {
 
     if (showDropdownId) {
       return (
-        (<Dropdown
+        <Dropdown
           trigger={['click']}
           popupRender={() => this.renderControlTypeOverlay(control, norm)}
           open={showDropdownId}
@@ -208,7 +211,7 @@ class CalculateControl extends Component<any, any> {
           }}
         >
           <span className="Absolute" style={showDropdownStyle} />
-        </Dropdown>)
+        </Dropdown>
       );
     } else {
       return null;
@@ -280,7 +283,7 @@ class CalculateControl extends Component<any, any> {
               },
             }}
           >
-            <div className="flexRow valignWrapper pointer" style={{ color: 'var(--color-primary) !important' }}>
+            <div className="flexRow valignWrapper pointer" style={{ color: 'var(--color-primary-text) !important' }}>
               <Icon className="Font20" icon="add" />
               <span className="Font13">{_l('选择字段')}</span>
             </div>
@@ -367,7 +370,7 @@ export default class CalculateControlModal extends Component<any, any> {
   render() {
     const { dialogVisible } = this.props;
     return (
-      (<Modal
+      <Modal
         title={_l('添加计算字段')}
         width={480}
         className="chartModal"
@@ -386,7 +389,7 @@ export default class CalculateControlModal extends Component<any, any> {
           }}
           {...this.props}
         />
-      </Modal>)
+      </Modal>
     );
   }
 }

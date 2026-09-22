@@ -48,9 +48,12 @@
   }
 
   .ant-tree.ant-tree-directory .ant-tree-treenode-selected {
-    .treeNodeIcon,
-    .departmentName {
+    /* 同 Admin/menu 里那处：选中行的文字和图标拆开，文字走深一档，图标留原色。 */
+    .treeNodeIcon {
       color: var(--color-primary) !important;
+    }
+    .departmentName {
+      color: var(--color-primary-text) !important;
     }
     .ant-tree-draggable-icon {
       display: none !important;

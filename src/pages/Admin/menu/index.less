@@ -130,7 +130,13 @@
     .activeItem {
       background-color: var(--color-primary-transparent) !important;
       position: relative;
-      .subName,
+      /* 【文字和图标拆开】原来这两个选择器合用一条 color。
+         底色是 --color-primary-transparent（同色浅底），主题色文字压上去实测只有 3.4，
+         文字得走深一档的 --color-primary-text；图标按非文本对比只要 3:1，
+         而且要的就是"这是主题色"这个识别，压暗反而认不出来，所以留原色。 */
+      .subName {
+        color: var(--color-primary-text) !important;
+      }
       i.homeIcon {
         color: var(--color-primary) !important;
       }

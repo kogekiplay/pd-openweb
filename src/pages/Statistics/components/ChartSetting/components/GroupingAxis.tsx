@@ -124,7 +124,7 @@ export default class GroupingAxis extends Component<any, any> {
           <Menu.Item
             className="valignWrapper"
             disabled={item.value === split.particleSizeType ? true : newDisableParticleSizeTypes.includes(item.value)}
-            style={{ color: item.value === split.particleSizeType ? 'var(--color-primary) !important' : null }}
+            style={{ color: item.value === split.particleSizeType ? 'var(--color-primary-text) !important' : null }}
             key={item.value}
             onClick={() => {
               this.handleChangeTimeParticleSizeType(item.value);
@@ -147,7 +147,7 @@ export default class GroupingAxis extends Component<any, any> {
           <Menu.Item
             className="valignWrapper"
             disabled={item.value === split.particleSizeType ? true : newDisableParticleSizeTypes.includes(item.value)}
-            style={{ color: item.value === split.particleSizeType ? 'var(--color-primary) !important' : null }}
+            style={{ color: item.value === split.particleSizeType ? 'var(--color-primary-text) !important' : null }}
             key={item.value}
             onClick={() => {
               this.handleChangeTimeParticleSizeType(item.value);
@@ -176,7 +176,7 @@ export default class GroupingAxis extends Component<any, any> {
           {emptyTypes.map(item => (
             <Menu.Item
               key={item.value}
-              style={{ color: item.value === split.emptyType ? 'var(--color-primary) !important' : null }}
+              style={{ color: item.value === split.emptyType ? 'var(--color-primary-text) !important' : null }}
               onClick={() => {
                 this.handleChangeEmptyType(item.value);
               }}
