@@ -246,7 +246,7 @@ export default function PreviewData(props) {
             __html: _l(
               '导入 %0 行数据， %1/共 %2 列',
               needImportCellData.length,
-              `<span style="color:var(--color-warning)">${_.values(mapConfig).filter(_.identity).length}</span>`,
+              `<span style="color:var(--color-warning-text)">${_.values(mapConfig).filter(_.identity).length}</span>`,
               controls.length,
             ),
           }}

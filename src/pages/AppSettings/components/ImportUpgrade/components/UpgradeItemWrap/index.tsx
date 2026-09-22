@@ -37,7 +37,7 @@ const UpgradeContentItem = styled.div`
     background: rgba(244, 67, 54, 0.1);
   }
   .actionUpdate {
-    color: var(--color-warning);
+    color: var(--color-warning-text);
     background: rgba(235, 145, 57, 0.28);
   }
   .w50 {

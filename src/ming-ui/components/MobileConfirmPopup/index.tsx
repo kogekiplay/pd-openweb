@@ -27,7 +27,7 @@ const PopupWrap = styled(Popup)`
         color: var(--color-error);
       }
       .warning {
-        color: var(--color-warning);
+        color: var(--color-warning-text);
       }
       .info {
         color: var(--color-info);

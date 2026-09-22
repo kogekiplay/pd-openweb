@@ -272,7 +272,7 @@ export default class StepItem extends Component<any, any> {
                 {action === UNNECESSARY_OPERATION_CODE ? (
                   UNNECESSARY_OPERATION[type]
                 ) : action === OVERRULE && actionTargetName ? (
-                  <span style={{ color: 'var(--color-warning)' }}>{_l('退回到%0', actionTargetName)}</span>
+                  <span style={{ color: 'var(--color-warning-text)' }}>{_l('退回到%0', actionTargetName)}</span>
                 ) : !operationTime && !!logIds ? (
                   _l('暂存')
                 ) : (

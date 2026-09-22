@@ -64,7 +64,7 @@ const ContentWrap = styled.div`
       color: var(--color-error);
     }
     &.orange {
-      color: var(--color-warning);
+      color: var(--color-warning-text);
     }
   }
   .switch-other-item {

@@ -75,7 +75,7 @@ export const PopoverWrap = styled.div`
       background-color: var(--color-background-hover);
     }
     .trial {
-      color: var(--color-warning) !important;
+      color: var(--color-warning-text) !important;
     }
     .free {
       color: var(--color-success) !important;

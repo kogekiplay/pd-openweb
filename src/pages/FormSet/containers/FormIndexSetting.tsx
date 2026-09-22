@@ -149,7 +149,7 @@ const Con = styled.div`
     color: var(--color-success);
   }
   .wildcardIndexColor {
-    color: var(--color-warning);
+    color: var(--color-warning-text);
   }
   .sortFields:hover {
     color: var(--color-primary);

@@ -91,7 +91,7 @@ const ProjectItem = styled.div`
   }
 
   .trial {
-    color: var(--color-warning) !important;
+    color: var(--color-warning-text) !important;
   }
   .free {
     color: var(--color-success) !important;

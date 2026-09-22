@@ -15,7 +15,7 @@ function getIcon(type = 'success', isMobile = false) {
     },
     warning: {
       name: 'error1',
-      color: 'var(--color-warning)',
+      color: 'var(--color-warning-text)',
     },
     info: {
       name: 'info',

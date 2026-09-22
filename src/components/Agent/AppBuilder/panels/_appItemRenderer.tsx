@@ -11,7 +11,7 @@ import { CardEditButton, PanelWrap, parseCompactList, parseCompactStr } from './
 const TYPE_BADGE = {
   worksheet: {
     label: _l('工作表'),
-    color: 'var(--color-warning)',
+    color: 'var(--color-warning-text)',
     border: 'var(--color-warning-border)',
     bg: 'var(--color-warning-bg)',
   },

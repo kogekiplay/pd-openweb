@@ -13,7 +13,7 @@ export const HomePageWrap = styled.div`
     color: var(--color-error);
   }
   .Yellow_de9 {
-    color: var(--color-warning);
+    color: var(--color-warning-text);
   }
   .Hover_theme:hover {
     color: var(--color-link-hover) !important;
@@ -131,7 +131,7 @@ export const HomePageWrap = styled.div`
       .trialTag {
         padding: var(--space-1) var(--space-2);
         background: var(--color-warning-bg);
-        color: var(--color-warning);
+        color: var(--color-warning-text);
         margin-left: 10px;
         display: inline-block;
         border-radius: 50px;

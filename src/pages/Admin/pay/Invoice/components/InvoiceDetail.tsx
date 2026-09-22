@@ -33,7 +33,7 @@ const DetailDrawer = styled(Drawer)`
     background-color: var(--color-background-tertiary);
     font-size: var(--font-md);
     .Warning {
-      color: var(--color-warning);
+      color: var(--color-warning-text);
     }
   }
   .groupTitle {

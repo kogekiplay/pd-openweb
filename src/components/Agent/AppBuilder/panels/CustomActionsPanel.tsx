@@ -17,7 +17,7 @@ const TYPE_CONFIG = {
   },
   createRelatedRecord: {
     label: _l('新建关联记录'),
-    color: 'var(--color-warning)',
+    color: 'var(--color-warning-text)',
     border: 'var(--color-warning-border)',
     bg: 'var(--color-warning-bg)',
     iconName: 'add_circle_outline',

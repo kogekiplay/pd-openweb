@@ -227,7 +227,7 @@ export const WrapPreview = styled.div`
     color: var(--color-success);
   }
   .stop {
-    color: var(--color-warning);
+    color: var(--color-warning-text);
   }
   .coverTab {
     position: absolute;
@@ -273,7 +273,7 @@ export const WrapPreview = styled.div`
         border: 1px solid var(--color-primary);
       }
       &.refreshBtn:hover {
-        color: var(--color-warning);
+        color: var(--color-warning-text);
         border: 1px solid var(--color-warning);
       }
       &.finishedBtn:hover {

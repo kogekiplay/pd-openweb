@@ -6,7 +6,7 @@ import { pathCompletion } from 'src/utils/common';
 
 const DialogWrap = styled(Dialog)`
   .promptTitle {
-    color: var(--color-warning);
+    color: var(--color-warning-text);
   }
   .mui-dialog-default-title {
     font-size: var(--font-3xl) !important;

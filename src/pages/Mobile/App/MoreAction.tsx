@@ -45,7 +45,7 @@ const ModalWrap = styled(Popup)`
       color: var(--color-yellow) !important;
     }
     .lightColor {
-      color: var(--color-warning) !important;
+      color: var(--color-warning-text) !important;
     }
   }
 `;
