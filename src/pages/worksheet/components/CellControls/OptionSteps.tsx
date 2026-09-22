@@ -7,16 +7,13 @@ import { bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import { Steps } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
-import { isLightColor } from 'src/utils/control';
+import { getOptionChipStyle } from 'src/utils/optionColor';
 import { FROM } from './enum';
 
 function getOptionStyle(option, cell) {
-  return cell.enumDefault2 === 1 && option.color
-    ? {
-        backgroundColor: option.color,
-        color: option.color && isLightColor(option.color) ? 'var(--color-black)' : 'var(--color-white)',
-      }
-    : {};
+  // 选项色是用户自选的业务数据，配色交给 getOptionChipStyle（浅底 + 同色深字）。
+  // 原来是「实心原色底 + 黑或白字」，20 色色板里 7 色不达标，见 src/utils/optionColor.ts。
+  return cell.enumDefault2 === 1 && option.color ? getOptionChipStyle(option.color) : {};
 }
 
 const Con = styled.div`
@@ -118,7 +115,10 @@ function OptionsSteps(props, ref) {
       <div className="cellOptions cellControl w100">
         <span
           className="cellOption ellipsis"
-          style={Object.assign({}, { ...getOptionStyle(option, cell), margin: '0px var(--space-1) 0px 0px', maxWidth: '100%' })}
+          style={Object.assign(
+            {},
+            { ...getOptionStyle(option, cell), margin: '0px var(--space-1) 0px 0px', maxWidth: '100%' },
+          )}
         >
           {option.value}
         </span>

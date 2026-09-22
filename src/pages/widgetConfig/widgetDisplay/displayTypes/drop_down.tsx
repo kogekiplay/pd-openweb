@@ -2,7 +2,6 @@ import React from 'react';
 import cx from 'classnames';
 import _, { head } from 'lodash';
 import { Steps } from 'ming-ui';
-import { isLightColor } from 'src/utils/control';
 import { CommonDisplay, OptionWrap } from '../../styled';
 import { getAdvanceSetting, getOptions } from '../../util/setting';
 
@@ -23,7 +22,6 @@ export default function Dropdown({ data }) {
       {value ? (
         <OptionWrap
           className={cx({
-            light: isLightColor(color),
             withoutColor: enumDefault2 !== 1,
             horizontal: direction !== '1',
           })}

@@ -4,7 +4,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, UserHead } from 'ming-ui';
 import { FlexCenter } from 'worksheet/styled';
-import { isLightColor } from 'src/utils/control';
+import { getOptionChipStyle } from 'src/utils/optionColor';
 import { CAN_AS_BOARD_OPTION } from '../config';
 
 const BoardTitleWrap = styled(FlexCenter)`
@@ -33,14 +33,11 @@ const BoardTitleWrap = styled(FlexCenter)`
       margin-left: var(--space-1);
     }
   }
-  .optionType {
-    &.haveColor {
-      color: var(--color-white);
-    }
-    &.isLightColor {
-      color: var(--color-text-title);
-    }
-  }
+  /* 【颜色不在这里定】选项色是用户自己选的业务数据，底色和字色都由
+     getOptionChipStyle 按当前主题算（浅底 + 同色深字），写成内联样式。
+     原来这里是「实心原色底 + 黑或白字」，实测 20 色色板里 7 色不达标，
+     最差的白字压黄底只有 1.42；而且其中 5 色黑白两种字色都够不着 4.5 ——
+     只要底是原色就无解，不是翻字色能救的。 */
   .relationSheetType {
     color: var(--color-primary-text);
     background-color: rgba(0, 0, 0, 0.05);
@@ -70,7 +67,9 @@ const RecordCount = styled.div`
   min-width: 24px;
   border-radius: 12px;
   text-align: center;
-  color: var(--color-text-tertiary);
+  /* tertiary 对白底刚好 4.54，压在这块 5% 灰底上掉到 3.91、不够 4.5。
+     这里是条数，不是弱化的辅助说明，降一档到 secondary。 */
+  color: var(--color-text-secondary);
   background-color: rgba(0, 0, 0, 0.05);
 `;
 
@@ -96,11 +95,8 @@ export default class BoardTitle extends Component<any, any> {
       const isColorful = enumDefault2 === 1 && color;
       return (
         <div
-          className={cx('boardTitle optionType', {
-            haveColor: isColorful,
-            isLightColor: isLightColor(color),
-          })}
-          style={{ backgroundColor: isColorful ? color : 'transparent' }}
+          className={cx('boardTitle optionType', { haveColor: isColorful })}
+          style={isColorful ? getOptionChipStyle(color) : { backgroundColor: 'transparent' }}
         >
           {name}
         </div>

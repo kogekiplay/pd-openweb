@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { Checkbox, Icon } from 'ming-ui';
 import autoSize from 'ming-ui/components/AutoSize';
 import { MAX_OPTIONS_COUNT } from 'src/pages/widgetConfig/config';
-import { isLightColor } from 'src/utils/control';
+import { getOptionChipStyle } from 'src/utils/optionColor';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
 import { getCheckAndOther } from '../../../core/utils';
 import OtherInput from './OtherInput';
@@ -142,16 +142,12 @@ const CheckboxWidgets = props => {
     (item, noMaxWidth) => {
       return (
         <span
-          className={cx(
-            'customRadioItem WordBreak ellipsis',
-            { textWhite: enumDefault2 === 1 && !isLightColor(item.color) },
-            { textBlack: enumDefault2 === 1 && isLightColor(item.color) },
-            {
-              'pLeft12 pRight12': enumDefault2 === 1,
-            },
-          )}
+          className={cx('customRadioItem WordBreak ellipsis', {
+            'pLeft12 pRight12': enumDefault2 === 1,
+          })}
           style={{
-            background: enumDefault2 === 1 ? item.color : '',
+            // 选项色配色交给 getOptionChipStyle（浅底 + 同色深字），见 src/utils/optionColor.ts
+            ...(enumDefault2 === 1 ? getOptionChipStyle(item.color) : {}),
             maxWidth: noMaxWidth ? 'auto' : 140,
           }}
           title={item.value}
@@ -310,14 +306,18 @@ const CheckboxWidgets = props => {
     }
 
     return (
-      (<Fragment>
+      <Fragment>
         <Select
           ref={selectRef}
           mode="multiple"
           classNames={{ popup: { root: dropdownClassName } }}
           className={cx('w100 customAntSelect', { optionDisabled: disabled })}
           disabled={disabled}
-          showSearch={{ filterOption: () => true, onSearch: keywords => setKeywords(keywords.trim()), autoClearSearchValue: false }}
+          showSearch={{
+            filterOption: () => true,
+            onSearch: keywords => setKeywords(keywords.trim()),
+            autoClearSearchValue: false,
+          }}
           allowClear={checkIds.length > 0}
           listHeight={320}
           placeholder={hint}
@@ -398,7 +398,7 @@ const CheckboxWidgets = props => {
             isSelect={true}
           />
         )}
-      </Fragment>)
+      </Fragment>
     );
   };
 
@@ -415,15 +415,14 @@ const CheckboxWidgets = props => {
         key={tagValue}
         className={cx(
           'mTop5 mBottom5 mRight5',
-          {
-            textWhite: enumDefault2 === 1 && !isLightColor(currentItem.color),
-            isEmpty: tagValue === 'isEmpty',
-          },
+          { isEmpty: tagValue === 'isEmpty' },
           enumDefault2 === 1 || isFocus ? 'customAntDropdownTitleWithBG' : 'customAntDropdownTitle',
         )}
-        style={{
-          background: enumDefault2 === 1 ? currentItem.color : isFocus ? 'var(--color-background-tertiary)' : '',
-        }}
+        style={
+          enumDefault2 === 1
+            ? getOptionChipStyle(currentItem.color)
+            : { background: isFocus ? 'var(--color-background-tertiary)' : '' }
+        }
         title={label}
       >
         <div className="Font13" style={{ color: enumDefault2 !== 1 ? 'var(--color-text-primary)' : '' }}>
@@ -432,8 +431,10 @@ const CheckboxWidgets = props => {
         </div>
         {isFocus && (
           <Icon
+            // 彩色标签里这个叉跟着标签的文字色走（继承即可），
+            // 非彩色标签仍按主题明暗决定
             icon={cx('close Font14 mLeft5 pointer', {
-              textWhite: enumDefault2 === 1 ? !isLightColor(currentItem.color) : window.themeMode === 'dark',
+              textWhite: enumDefault2 !== 1 && window.themeMode === 'dark',
             })}
             onMouseDown={event => {
               event.preventDefault();
