@@ -269,22 +269,31 @@
         border-radius: 6px;
         color: var(--color-text-secondary);
         cursor: pointer;
+        /* 【这两块统计的数字都读不了，选中态更糟】逐项量过（浅色主题）：
+             延期：橙字 #ff9800 压在**绿色**底上 1.93 —— 底色本身也是错的，
+                   「延期未开始」是警示态却用了 success 的绿；换成 warning 底仍只有 1.96。
+             逾期：红字压红底 3.15，20px 勉强过线，但同一套写法经不起再小一号。
+             选中态：白字压橙实底 **2.16**、压红实底 3.68 —— 13px 标签要 4.5，两个都不过。
+           根子是 `--color-warning`(#ff9800) 对白底只有 2.14，**当文字色任何字号都到不了线**。
+           所以底色恢复语义（延期 = 警示橙），文字一律走墨色：
+           墨字/橙底 16.62、墨字/红底 15.61、墨字/橙实底 8.47、墨字/红实底 4.96，全部达标。
+           颜色仍然在传达状态 —— 只是由**底色**承担，不由那几个数字承担。 */
         &.taskDelay {
-          background: var(--color-success-bg);
+          background: var(--color-warning-bg);
           .Font20 {
-            color: var(--color-warning);
+            color: var(--color-text-primary);
           }
         }
         &.taskOverdue {
           background: var(--color-error-bg);
           .Font20 {
-            color: var(--color-error);
+            color: var(--color-text-primary);
           }
         }
         &.active {
-          color: var(--color-white);
+          color: var(--color-text-primary);
           .Font20 {
-            color: var(--color-white) !important;
+            color: var(--color-text-primary) !important;
           }
           &.taskDelay {
             background: var(--color-warning);
