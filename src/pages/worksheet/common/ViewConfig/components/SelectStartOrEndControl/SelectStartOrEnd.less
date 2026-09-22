@@ -27,7 +27,8 @@
            **4px 宽、带上下端帽的空心管**（中间 2px 是透明的），根本不是一条线。
          · 线的中心 x = 10，而两个圆点的中心都在 9 —— 整整偏 1px。
        改成一条真正的 1px 线，三者共用同一条中轴（x = 9）；竖直方向直接锚在两个圆心上：
-       top 18 = 起点圆心，bottom 17 = 终点圆心（行高 36、行距 16、容器 88，88 - 71 = 17）。
+       top 18 = 起点圆心，bottom 18 = 终点圆心（两行都是 36 高、行距 16，容器 88，
+       两个圆心分别在 18 和 70，上下各留 18）。
        `:has` 限定「确实有结束行」才画 —— 只选了开始字段的那一组不该拖一根断线出来。 */
     &:has(.startCom.end)::before {
       content: ' ';
@@ -35,7 +36,7 @@
       left: 9px;
       transform: translateX(-50%);
       top: 18px;
-      bottom: 17px;
+      bottom: 18px;
       width: 1px;
       background: var(--color-border-primary);
       z-index: 0;
@@ -90,6 +91,18 @@
             line-height: 36px !important;
             height: 36px !important;
           }
+          /* 【框里的图标和字段名原先是贴着顶的，不居中】
+             上面那句把 .ant-select-content 撑成 36px，但它是 display:block，
+             而我们自定义渲染出来的那一行（renderOptionLabel 的
+             `.flexRow.alignItemsCenter`）只有 22px 高 —— 于是它老老实实待在
+             36px 盒子的【顶部】，图标和文字的中线在 11，而框的中线在 18，
+             整整高了 7px。张奇框出来说"中间的没居中"就是这个。
+             不去改 .ant-select-content 的 display（那会连带影响 antd 自己的
+             输入框/占位符层），只把我们这一行撑满高度 —— 它本身已经
+             align-items:center，撑满之后自然就居中了。 */
+          > .flexRow {
+            height: 100%;
+          }
         }
       }
       .errorTxtOption {
@@ -98,7 +111,9 @@
       &.end {
         .tag {
           left: 5px;
-          top: 15px;
+          /* 行高 36，小圆点 8px，居中应该是 (36-8)/2 = 14。原先写的 15，
+             圆心落在 19 而行的中线在 18 —— 比同一行的「结束」二字和选择器低 1px。 */
+          top: 14px;
           width: 8px;
           height: 8px;
           background: var(--color-border-primary);

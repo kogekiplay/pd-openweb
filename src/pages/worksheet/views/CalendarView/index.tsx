@@ -232,6 +232,7 @@ const MemoFullCalendar = React.memo(
         defaultTimedEventDuration={'00:00:01'}
         events={calendarFormatData}
         viewDidMount={() => {
+          owner.rememberViewType();
           owner.calendarActionFn();
           owner.getEventsFn();
         }}
@@ -546,7 +547,16 @@ class RecordCalendarBase extends Component<any, any> {
 
       if (viewId !== prevProps.base.viewId || !_.isEqual(currentView, preView)) {
         this.props.getCalendarData();
-        this.calendarComponentRef.current && this.calendarComponentRef.current.getApi().changeView(initialView); // 更改视图类型
+        /* 【这里原先还有一句 changeView(initialView)，删掉了】
+           它拿的 initialView 是【本次渲染的、也就是改动生效前的】那个值，
+           而上一行 getCalendarData() 正是要把 initialView 算成新的。
+           于是在设置里改「默认视图」时，这一句会立刻把日历【摁回旧视图】；
+           再往下 componentDidUpdate 结尾那段"记住当前视图"又把旧视图写回
+           localStorage —— 而 localStorage 的优先级高于设置项，等于把刚选的
+           默认视图覆盖掉了。张奇报的"选了列表但没默认显示列表"就是这条链。
+           真正该负责切视图的是下面那个 `!isEqual(initialView, prev.initialView)`
+           分支：它比的是 redux 里 initialView 的新旧值，只在真的变了时才切，
+           时序也对。这里不需要再抢一次。 */
 
         this.props.fetchExternal();
         this.getEventsFn();
@@ -601,15 +611,36 @@ class RecordCalendarBase extends Component<any, any> {
       }
     }
 
-    if (this.calendarComponentRef.current) {
-      const { base } = this.props;
-      const { viewId, worksheetId } = base;
-      let view = this.calendarComponentRef.current.getApi().view;
-      let data = getCalendartypeData();
-      data[`${worksheetId}-${viewId}`] = view.type;
-      safeLocalStorageSetItem('CalendarViewType', JSON.stringify(data));
-    }
   }
+
+  /**
+   * 记住「这个视图上次看的是哪种日历模式」，下次进来直接落回去。
+   *
+   * 【为什么挪到 viewDidMount，不能留在 componentDidUpdate 结尾】
+   * 原先它在 componentDidUpdate 的最后【无条件】执行 —— 每次重渲染都把
+   * 日历【当前】的模式写进 localStorage。而 getCalendarData() 算 initialView 时
+   * localStorage 的优先级【高于】设置里的「默认视图」。
+   *
+   * 于是在设置里选「默认视图 = 列表」时会这样打架：
+   *   1. 设置的点击回调把 localStorage 写成 listMonth；
+   *   2. 存视图是一次异步请求，在它回来之前组件可能因为别的 props 变化重渲染；
+   *   3. 这一句就把【还没切过去的】旧模式（dayGridMonth）又写回 localStorage；
+   *   4. 等 getCalendarData() 真的跑起来，读到的还是旧值 —— 选择被吃掉了，
+   *      刷新之后依然是旧视图。
+   * 张奇报的「我选的是列表，但没默认显示列表」就是这条链。
+   *
+   * viewDidMount 只在【视图真的挂载/切换】时触发，那才是"用户现在在看什么"
+   * 这件事发生变化的时刻，不会去抢设置项刚写下的值。
+   */
+  rememberViewType = () => {
+    if (!this.calendarComponentRef.current) return;
+
+    const { viewId, worksheetId } = this.props.base;
+    const type = this.calendarComponentRef.current.getApi().view.type;
+    const data = getCalendartypeData();
+    data[`${worksheetId}-${viewId}`] = type;
+    safeLocalStorageSetItem('CalendarViewType', JSON.stringify(data));
+  };
 
   dbClickDay = () => {
     if (clickData) {
