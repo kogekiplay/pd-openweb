@@ -45,7 +45,7 @@ const Header = styled.div`
       border-bottom: 3px solid transparent;
       &.active {
         border-bottom-color: var(--color-primary);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       &:first-child {
         margin-right: 30px;

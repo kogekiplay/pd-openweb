@@ -1,8 +1,6 @@
 ﻿import React, { useRef, useState } from 'react';
 import { Input } from 'antd';
-
 // import 'antd/es/input/style/css';
-
 
 import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
@@ -24,7 +22,7 @@ const CreateRecordWrap = styled.div`
     font-size: var(--font-lg);
     color: var(--color-text-tertiary);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

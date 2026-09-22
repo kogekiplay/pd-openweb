@@ -54,7 +54,7 @@ const Wrap = styled.div`
       height: 28px;
       line-height: 28px;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         background: var(--color-background-hover);
         border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       }
@@ -71,7 +71,7 @@ const Wrap = styled.div`
         margin: 0 auto;
       }
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         background: var(--color-background-hover);
         border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
       }

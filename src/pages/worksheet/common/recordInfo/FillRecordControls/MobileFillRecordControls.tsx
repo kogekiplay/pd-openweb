@@ -31,7 +31,7 @@ const Con = styled.div`
     border-top: 1px solid var(--color-background-secondary);
     background-color: var(--color-background-primary);
     .edit {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;
@@ -128,7 +128,9 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
                     setTimeout(() => {
                       this.setState(oldState => ({
                         formFlag: Math.random(),
-                        formData: oldState.formData.map((c: FormControl) => (c.controlId === controlId ? { ...c, value } : c)),
+                        formData: oldState.formData.map((c: FormControl) =>
+                          c.controlId === controlId ? { ...c, value } : c,
+                        ),
                       }));
                     }, 500);
                   }

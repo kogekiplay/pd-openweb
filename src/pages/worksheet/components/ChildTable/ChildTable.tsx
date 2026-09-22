@@ -125,7 +125,7 @@ const BatchAddOfAddRowComp = styled.div`
   padding: 0 var(--space-2);
   background: var(--color-background-primary);
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

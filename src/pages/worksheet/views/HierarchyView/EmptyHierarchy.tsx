@@ -42,7 +42,7 @@ const EmptyHierarchyWrap = styled.div`
     &.allowAdd {
       cursor: pointer;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }

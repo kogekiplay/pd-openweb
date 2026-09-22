@@ -26,9 +26,9 @@ const Wrap = styled.div`
     &:hover,
     &.has {
       border: 1px solid var(--color-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       i {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }

@@ -76,7 +76,7 @@ const VerticalCenter = styled.div`
       height: 28px;
       &:hover {
         .draftTxt {
-          color: var(--color-primary) !important;
+          color: var(--color-primary-text) !important;
         }
       }
     }

@@ -54,7 +54,7 @@ const AddWrap = styled(FlexCenter)`
   color: var(--color-text-tertiary);
   &:hover {
     background-color: var(--color-background-overlay-light);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

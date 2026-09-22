@@ -80,7 +80,7 @@ const Wrap = styled.div`
         color: var(--color-text-secondary);
       }
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         .icon {
           color: var(--color-primary);
         }
@@ -90,7 +90,7 @@ const Wrap = styled.div`
   .toCustomLib {
     color: var(--color-text-tertiary);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .minBold {
@@ -126,7 +126,7 @@ const Wrap = styled.div`
         border: 1px solid var(--color-primary);
         i,
         .viewName {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
     }

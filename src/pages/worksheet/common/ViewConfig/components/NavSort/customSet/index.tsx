@@ -27,7 +27,7 @@ const Wrap = styled.div`
     &:hover {
       background: var(--color-background-secondary);
       // background: var(--color-background-secondary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       &.clearBtn {
         color: var(--color-error);
       }

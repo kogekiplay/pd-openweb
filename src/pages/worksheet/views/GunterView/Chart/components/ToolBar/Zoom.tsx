@@ -17,7 +17,7 @@ const IconWrap = styled(Icon)`
     cursor: inherit;
   }
   &.hoverColor:hover:not(.disable) {
-    color: var(--color-primary) !important;
+    color: var(--color-primary-text) !important;
   }
 `;
 let Zoom = class Zoom extends Component<any, any> {

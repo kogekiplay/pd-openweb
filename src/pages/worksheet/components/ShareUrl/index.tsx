@@ -1,6 +1,5 @@
 ﻿import React, { Fragment } from 'react';
 import { Popover } from 'antd';
-import copy from 'src/utils/copyToClipboard';
 import { saveAs } from 'file-saver';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -8,6 +7,7 @@ import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { TextBlock } from 'worksheet/components/Basics';
+import copy from 'src/utils/copyToClipboard';
 import SendToChat from './SendToChat';
 import './ShareUrl.less';
 
@@ -38,7 +38,7 @@ const Icon = styled(TextBlock)`
   text-align: center;
   margin-left: 6px;
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   ${({ theme }) =>
     theme === 'light' &&
@@ -57,7 +57,7 @@ const InputIcon = styled.span`
   font-size: var(--font-md);
   margin-left: 6px;
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 
@@ -71,7 +71,7 @@ const TextIcon = styled(TextBlock)`
   font-weight: 500;
   margin-left: 6px;
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   ${({ theme }) =>
     theme === 'light' &&
@@ -101,9 +101,9 @@ const SeparateDisplayButton = styled(TextBlock)`
   }
 
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     i {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   ${({ theme }) =>
@@ -309,7 +309,7 @@ export default class ShareUrl extends React.Component<any, any> {
             )}
             {qrVisible && (
               <Popover
-                classNames={{ root: "qrHoverPanel" }}
+                classNames={{ root: 'qrHoverPanel' }}
                 placement="bottomRight"
                 align={{
                   overflow: { adjustX: true, adjustY: true },

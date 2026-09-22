@@ -38,7 +38,7 @@ const MobileTableContent = styled.div`
     background-color: #00000003;
   }
   .showAll {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     padding: 10px 0;
     justify-content: center;
   }
@@ -70,7 +70,7 @@ const FlattenContent = styled.div`
       color: var(--color-error);
     }
     .edit {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .mobileChildTableFlatForm {
@@ -87,7 +87,7 @@ const FlattenContent = styled.div`
     }
   }
   .showAll {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     padding: 10px 0;
     justify-content: center;
   }

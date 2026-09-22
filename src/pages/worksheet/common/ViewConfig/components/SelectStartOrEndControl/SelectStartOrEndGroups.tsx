@@ -37,14 +37,14 @@ const WrapFragment = styled.div`
   }
   .addMark {
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
   }
   .addCalendarcids {
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
       i {
-        color: var(--color-primary) !important;
+        color: var(--color-primary-text) !important;
       }
     }
   }

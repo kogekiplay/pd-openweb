@@ -21,7 +21,7 @@ const Title = styled.div`
     color: var(--color-text-tertiary);
     cursor: pointer;
     &.on {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

@@ -28,7 +28,7 @@ const ConditionsWrap = styled.div`
     line-height: 36px;
 
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
 
     &.disabled {

@@ -17,7 +17,7 @@ const NewDialog = styled(Dialog)`
     line-height: 26px;
     padding: 0 var(--space-2);
     border-radius: var(--radius-sm);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background: var(--color-primary-transparent);
     font-size: var(--font-sm);
     font-weight: 400;

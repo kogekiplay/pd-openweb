@@ -17,8 +17,8 @@ import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { browserIsMobile } from 'src/utils/common';
 import { renderText as renderCellText } from 'src/utils/control';
-import { getGroupControlId } from 'src/utils/worksheet';
 import type { FormControl } from 'src/utils/controlTypes';
+import { getGroupControlId } from 'src/utils/worksheet';
 
 const Con = styled.div`
   display: flex;
@@ -70,9 +70,9 @@ const EmbedAddRecord = styled.div`
     color: var(--color-text-secondary);
   }
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     i {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

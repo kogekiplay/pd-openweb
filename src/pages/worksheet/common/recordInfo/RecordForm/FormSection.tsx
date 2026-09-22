@@ -30,7 +30,7 @@ const FormSectionWrap = styled.div`
     ${props => (props.isUnfold ? '' : 'flex-direction:column;min-height: 50px;justify-content: center;')}
     ${props => (props.isFixedRight ? 'flex-direction: row-reverse;' : '')}
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       .icon {
         color: var(--color-primary) !important;
       }

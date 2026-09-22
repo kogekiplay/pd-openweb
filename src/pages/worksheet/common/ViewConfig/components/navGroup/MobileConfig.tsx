@@ -50,7 +50,7 @@ const MobileConfigWrap = styled.div`
     background-color: var(--color-primary-solid);
   }
   .activeTxt {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   .ming.Radio .Radio-box {
     margin-right: 6px !important;
