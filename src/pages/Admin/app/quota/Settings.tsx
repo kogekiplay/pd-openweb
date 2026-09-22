@@ -130,7 +130,7 @@ const ContentWrap = styled.div`
   }
   .resetBtn {
     line-height: 36px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       color: var(--color-link-hover);
     }

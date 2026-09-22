@@ -96,7 +96,7 @@ const DialogBox = styled(Dialog)`
         background: var(--color-background-primary);
         box-shadow: var(--shadow-sm);
         border-radius: 7px;
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     li {
@@ -107,7 +107,7 @@ const DialogBox = styled(Dialog)`
       cursor: pointer;
       &.active {
         background: var(--color-primary-transparent);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         &:after {
           width: 3px;
           height: 18px;
@@ -122,7 +122,7 @@ const DialogBox = styled(Dialog)`
       }
       &:hover {
         background: var(--color-primary-transparent);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         .codeSnippetOperator {
           display: flex;
         }
@@ -139,7 +139,7 @@ const DialogBox = styled(Dialog)`
         display: none;
         &:hover {
           background: var(--color-background-primary);
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
         &.active {
           display: flex;

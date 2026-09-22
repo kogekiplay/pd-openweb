@@ -41,7 +41,7 @@ const ResetWrap = styled.div`
     }
   }
   .reset {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     cursor: pointer;
   }
 `;

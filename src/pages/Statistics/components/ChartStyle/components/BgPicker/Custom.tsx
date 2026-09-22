@@ -12,7 +12,7 @@ const Wrap = styled.div`
     border: 1.5px dashed var(--color-text-disabled);
     border-radius: var(--radius-sm);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-color: var(--color-primary);
     }
   }
@@ -42,7 +42,7 @@ const Wrap = styled.div`
       border-radius: var(--radius-sm);
       background-color: var(--color-background-primary);
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }

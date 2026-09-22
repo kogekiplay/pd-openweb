@@ -204,7 +204,7 @@ const renderOverlay = ({
             {displayModes.map(item => (
               <Menu.Item
                 style={{
-                  color: item.value === displayMode ? 'var(--color-primary) !important' : null,
+                  color: item.value === displayMode ? 'var(--color-primary-text) !important' : null,
                 }}
                 key={item.value}
                 onClick={() => {

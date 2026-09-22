@@ -65,7 +65,7 @@ const UploadListWrap = styled.div`
     }
     .uploadBtn {
       border: 1px solid var(--color-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       margin-right: var(--space-5);
       &:hover {
         background: var(--color-primary-solid);

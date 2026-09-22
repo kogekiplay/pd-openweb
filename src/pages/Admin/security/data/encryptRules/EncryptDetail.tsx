@@ -32,7 +32,7 @@ const TabWrap = styled.div`
     padding-bottom: var(--space-3);
   }
   .active {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     font-weight: 600;
     border-bottom: 2px solid var(--color-primary);
   }

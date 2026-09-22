@@ -41,7 +41,7 @@ const HierarchyViewConfigWrap = styled.div`
       }
       .addRelate {
         width: 280px;
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         font-weight: bold;
       }
       .deleteWrap {

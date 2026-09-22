@@ -101,7 +101,7 @@ const ChartWrap = styled.div`
         cursor: pointer;
         margin: 2px;
         &.currentDimension {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
           background-color: var(--color-background-primary);
           border-radius: var(--radius-sm);
         }

@@ -34,7 +34,7 @@ const StatusWrap = styled.ul`
     line-height: 36px;
     &.active,
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-bottom-color: var(--color-primary);
     }
   }

@@ -42,7 +42,7 @@ const BoardTitleWrap = styled(FlexCenter)`
     }
   }
   .relationSheetType {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background-color: rgba(0, 0, 0, 0.05);
     cursor: pointer;
     font-size: 15px;

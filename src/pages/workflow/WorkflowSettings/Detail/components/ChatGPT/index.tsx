@@ -106,7 +106,7 @@ const Footer = styled.div`
     color: var(--color-text-secondary);
     &:hover {
       border-color: var(--color-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

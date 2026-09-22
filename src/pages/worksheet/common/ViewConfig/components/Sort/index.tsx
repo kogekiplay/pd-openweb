@@ -22,7 +22,7 @@ const Wrap = styled.div`
     display: inline-block;
     &:hover {
       border: 1px solid var(--color-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .AddSortCon .Dropdown--input {

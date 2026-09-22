@@ -105,7 +105,7 @@ const AuthWrap = styled.div`
     align-items: center;
     justify-content: center;
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
   }
 `;

@@ -573,7 +573,11 @@ export default class StepItem extends Component<any, any> {
         className="stepTimeConsuming flexRow"
         style={{
           color:
-            time > 0 ? 'var(--color-error)' : currentAccountNotified ? 'var(--color-warning)' : 'var(--color-primary)',
+            time > 0
+              ? 'var(--color-error)'
+              : currentAccountNotified
+                ? 'var(--color-warning)'
+                : 'var(--color-primary-text)',
         }}
       >
         <Icon icon={time > 0 ? 'error1' : 'hourglass'} className="Font14 mRight2" />
@@ -684,21 +688,23 @@ export default class StepItem extends Component<any, any> {
               <div className="mTop6 mLeft14 mRight14 WordBreak">{explain}</div>
             )}
 
-            {(isCC && workItems.length > 5 && !showMore ? workItems.slice(0, 5) : workItems).map((item, index: number) => {
-              let { workItemAccount } = item;
-              const { avatar, accountId } = workItemAccount;
-              return (
-                <div
-                  key={index}
-                  className={cx('stepContent flexRow', { Border0: showMore && index === workItems.length - 1 })}
-                >
-                  <div className="avatarBoxCon">
-                    <UserHead size={36} user={{ userHead: avatar, accountId }} appId={appId} projectId={projectId} />
+            {(isCC && workItems.length > 5 && !showMore ? workItems.slice(0, 5) : workItems).map(
+              (item, index: number) => {
+                let { workItemAccount } = item;
+                const { avatar, accountId } = workItemAccount;
+                return (
+                  <div
+                    key={index}
+                    className={cx('stepContent flexRow', { Border0: showMore && index === workItems.length - 1 })}
+                  >
+                    <div className="avatarBoxCon">
+                      <UserHead size={36} user={{ userHead: avatar, accountId }} appId={appId} projectId={projectId} />
+                    </div>
+                    <div className="stepDetail flex flexColumn">{this.renderDetail(item)}</div>
                   </div>
-                  <div className="stepDetail flex flexColumn">{this.renderDetail(item)}</div>
-                </div>
-              );
-            })}
+                );
+              },
+            )}
 
             {debugEventDump &&
               Object.keys(debugEventDump).map((key, index) => {
@@ -713,12 +719,14 @@ export default class StepItem extends Component<any, any> {
 
                       {this.renderOperatorSubtitle(flowNode.type, key, debugEventDump)}
                     </div>
-                    {debugEventDump[key].map(({ avatar, accountId, fullName }: { accountId?: string; [key: string]: any }) => (
-                      <div className="flexRow alignItemsCenter mTop8" key={accountId}>
-                        <UserHead size={24} user={{ userHead: avatar, accountId }} projectId={projectId} />
-                        <span className="flex ellipsis mLeft12">{fullName}</span>
-                      </div>
-                    ))}
+                    {debugEventDump[key].map(
+                      ({ avatar, accountId, fullName }: { accountId?: string; [key: string]: any }) => (
+                        <div className="flexRow alignItemsCenter mTop8" key={accountId}>
+                          <UserHead size={24} user={{ userHead: avatar, accountId }} projectId={projectId} />
+                          <span className="flex ellipsis mLeft12">{fullName}</span>
+                        </div>
+                      ),
+                    )}
                   </div>
                 );
               })}

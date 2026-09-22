@@ -2,8 +2,8 @@ import React, { Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Tree } from 'antd';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import _ from 'lodash';
 import { Icon, LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import departmentController from 'src/api/department';
@@ -442,7 +442,7 @@ class DepartmentTree extends React.Component<any, any> {
               <span>{_l('，可')}</span>
               <span
                 className="Hand mLeft3"
-                style={{ color: 'var(--color-primary)' }}
+                style={{ color: 'var(--color-primary-text)' }}
                 onClick={() => {
                   this.props.updateShowExport(true);
                   this.props.updateImportType('importDepartment');

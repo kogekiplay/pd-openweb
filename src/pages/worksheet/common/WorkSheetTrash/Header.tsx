@@ -78,7 +78,7 @@ const Close = styled.span`
   font-size: 22px;
   color: var(--color-text-tertiary);
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

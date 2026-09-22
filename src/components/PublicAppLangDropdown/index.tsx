@@ -31,7 +31,7 @@ const IconWrap = styled(Icon)`
   padding: var(--space-1);
 
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 
@@ -173,7 +173,8 @@ export default function PublicAppLangDropdown(props) {
   return (
     <Wrapper className={className}>
       <Dropdown
-        popupRender={() => <MenuWrap>
+        popupRender={() => (
+          <MenuWrap>
             {loading ? (
               <li className="flexRow alignItemsCenter justifyContentCenter" style={{ height: 36 }}>
                 <LoadDiv size="small" />
@@ -194,7 +195,8 @@ export default function PublicAppLangDropdown(props) {
                 ))}
               </React.Fragment>
             )}
-          </MenuWrap>}
+          </MenuWrap>
+        )}
         placement={placement}
         trigger={['click']}
         onOpenChange={value => {

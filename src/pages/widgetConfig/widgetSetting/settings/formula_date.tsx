@@ -2,6 +2,7 @@ import React, { Fragment, useLayoutEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { Dropdown, TagTextarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { FormControl } from 'src/utils/controlTypes';
 import { CALC_TYPE, OUTPUT_FORMULA_DATE } from '../../config/setting';
 import { ControlTag, SettingItem } from '../../styled';
 import { getAdvanceSetting, getControlByControlId, parseDataSource } from '../../util';
@@ -14,7 +15,6 @@ import ToTodaySetting from '../components/formula/toTodaySetting';
 import PointerConfig from '../components/PointerConfig';
 import PreSuffix from '../components/PreSuffix';
 import SelectControl from '../components/SelectControl';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const FORMAT_TYPE = [
   { text: _l('开始日期 00:00，结束日期 24:00'), value: '1' },
@@ -127,7 +127,7 @@ export default function FormulaDate(props) {
                   </Fragment>
                 }
               >
-                <span className="pointer" style={{ color: 'var(--color-primary)' }}>
+                <span className="pointer" style={{ color: 'var(--color-primary-text)' }}>
                   {_l('查看时间单位')}
                 </span>
               </Tooltip>

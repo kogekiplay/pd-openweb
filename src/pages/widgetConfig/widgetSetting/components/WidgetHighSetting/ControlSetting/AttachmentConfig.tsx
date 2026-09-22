@@ -70,7 +70,7 @@ const WaterMarkSettingWrap = styled.div`
         cursor: pointer;
         &.active,
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
         &.active {
           font-weight: bold;

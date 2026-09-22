@@ -56,7 +56,7 @@ const Pagination = styled.div`
     cursor: pointer;
     margin-right: var(--space-2);
     &:not(.disabled):hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       background: var(--color-background-secondary);
     }
     &.disabled {

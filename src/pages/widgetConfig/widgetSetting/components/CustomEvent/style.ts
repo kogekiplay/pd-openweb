@@ -16,7 +16,7 @@ export const AddEventWrap = styled.div`
       : ''}
   i {
     margin-right: var(--space-1);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     font-size: var(--font-lg);
     ${props => (props.disabled ? 'color: var(--color-text-tertiary) !important;' : '')}
   }
@@ -194,7 +194,7 @@ export const DynamicBtn = styled.div`
   cursor: pointer;
   font-weight: 600;
   i {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     margin-right: var(--space-1);
     font-size: 15px;
   }

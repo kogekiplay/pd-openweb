@@ -108,7 +108,7 @@ const OperateCon = styled.div`
 
 const RelateScanQRCodeWrap = styled(RelateScanQRCode)`
   &.lineWrap {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     width: 100%;
     .scanIcon {
       color: var(--color-primary) !important;

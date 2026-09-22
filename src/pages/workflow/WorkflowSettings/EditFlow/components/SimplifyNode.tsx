@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
-import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -39,7 +39,7 @@ const Box = styled.div`
   .workflowOperate {
     color: var(--color-text-secondary);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .workflowNodeName {

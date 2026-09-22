@@ -18,13 +18,23 @@ const FeedbackDialog = styled(Dialog)`
       height: 34px;
       line-height: 34px;
       border: 1px solid var(--color-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;
 
 // 恢复权限
-const recovery = ({ accountId, fullname, projectId, callback = () => {} }: { accountId?: string; fullname?: string; projectId?: string; [key: string]: any }) => {
+const recovery = ({
+  accountId,
+  fullname,
+  projectId,
+  callback = () => {},
+}: {
+  accountId?: string;
+  fullname?: string;
+  projectId?: string;
+  [key: string]: any;
+}) => {
   Confirm({
     title: _l('确定恢复 %0 权限吗？', fullname),
     onOk: () => {

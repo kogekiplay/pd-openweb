@@ -29,7 +29,7 @@ const Con = styled.div`
   }
   .enterEditor {
     font-size: var(--font-sm);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     cursor: pointer;
     margin-top: 30px;
   }

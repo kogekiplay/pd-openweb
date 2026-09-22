@@ -60,11 +60,11 @@ const SwitchTab = styled.div`
     text-align: center;
     display: inline-block;
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       background: var(--color-background-primary);
     }
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

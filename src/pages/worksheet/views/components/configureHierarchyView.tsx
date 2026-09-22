@@ -64,7 +64,7 @@ const HierarchyViewConfigWrap = styled.div`
     .addRelate {
       margin-top: 6px;
       width: 280px;
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       font-weight: bold;
     }
   }

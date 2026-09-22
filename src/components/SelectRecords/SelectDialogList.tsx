@@ -39,7 +39,7 @@ const ListItemCon = styled.div`
     background: var(--color-primary-transparent);
     .listItemCheck {
       font-size: var(--font-xl);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .listItemCover {

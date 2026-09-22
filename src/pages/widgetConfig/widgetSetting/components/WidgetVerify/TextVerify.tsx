@@ -46,7 +46,7 @@ const ConfigWrap = styled.div`
       cursor: pointer;
       transition: color 0.25s;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }
@@ -93,7 +93,7 @@ const FormatInfo = styled.div`
       color: var(--color-text-tertiary);
       margin-right: 10px;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     .deleteBtn:hover {
@@ -123,7 +123,7 @@ const AddVerify = styled.div`
   height: 21px;
   color: var(--color-text-tertiary);
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   &.disable i {
     cursor: not-allowed;

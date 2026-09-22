@@ -66,7 +66,7 @@ const FilterTitleItemCon = styled(VerticalMiddle)`
   }
   &.active {
     background: var(--color-primary-transparent);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     .filterIcon {
       color: var(--color-primary);
     }

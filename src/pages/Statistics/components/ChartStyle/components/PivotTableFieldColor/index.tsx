@@ -57,7 +57,7 @@ const ColorRuleItem = styled.div`
     padding: 7px;
     display: none;
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
       display: block;
     }
   }

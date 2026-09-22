@@ -89,7 +89,7 @@ const IconBtn = styled.span`
   font-size: var(--font-xl);
   font-weight: bold;
   &.active {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   &:hover {
     background-color: var(--color-background-hover);

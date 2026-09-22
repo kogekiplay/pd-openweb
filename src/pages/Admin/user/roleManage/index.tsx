@@ -80,7 +80,7 @@ const TreeWrap = styled(Tree)`
       }
       .nodeName {
         font-weight: 600 !important;
-        color: var(--color-primary) !important;
+        color: var(--color-primary-text) !important;
       }
     }
   }

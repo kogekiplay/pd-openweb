@@ -30,7 +30,7 @@ const ButtonWrapper = styled.div`
   background-color: var(--color-background-secondary);
   cursor: pointer;
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background-color: var(--color-background-hover);
   }
 `;

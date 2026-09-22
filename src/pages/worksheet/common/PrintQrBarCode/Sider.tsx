@@ -8,6 +8,7 @@ import { Dropdown, Input, RadioGroup, Slider, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ControlSelect from 'worksheet/components/ControlSelect';
 import { FILTER } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import {
   A4_LAYOUT_LIST,
   BAR_HEIGHT_LIST,
@@ -35,7 +36,6 @@ import {
 } from './enum';
 import SelectControlWithInput from './SelectControlWithInput';
 import { getDefaultText } from './util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const LABEL_MIN_WIDTH = 20;
 const LABEL_MIN_HEIGHT = 20;
@@ -102,7 +102,7 @@ const ConfigItem = styled.div(
   }
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
     border-color: var(--color-primary) !important;
-    color: var(--color-primary) !important;
+    color: var(--color-primary-text) !important;
     background-color: var(--color-background-hover);
   }
   .ant-radio-button-wrapper {
@@ -137,7 +137,7 @@ const SetAsTitle = styled.i`
   color: var(--color-text-tertiary);
   cursor: pointer;
   &.on {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 
@@ -332,7 +332,12 @@ function LabeSizeConfig(props) {
 }
 
 export default function Sider(props) {
-  const { config = {}, maxLineNumber, controls, onUpdate = () => {} }: { controls: FormControl[]; [key: string]: any } = props;
+  const {
+    config = {},
+    maxLineNumber,
+    controls,
+    onUpdate = () => {},
+  }: { controls: FormControl[]; [key: string]: any } = props;
   const {
     sourceType = 0,
     sourceUrlType = 0,
@@ -627,11 +632,7 @@ export default function Sider(props) {
         <div className="mTop15 flexRow justifyContentCenter">
           <div>{_l('显示文本')}</div>
           <div className="flex"></div>
-          <Switch
-            size="small"
-            checked={showBarValue}
-            onClick={() => onUpdate({ showBarValue: !showBarValue })}
-          />
+          <Switch size="small" checked={showBarValue} onClick={() => onUpdate({ showBarValue: !showBarValue })} />
         </div>
       )}
       <TypeLabel>{_l('显示字段')}</TypeLabel>

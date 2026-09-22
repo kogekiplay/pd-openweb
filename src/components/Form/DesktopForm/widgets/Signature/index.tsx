@@ -27,7 +27,7 @@ const SignatureBox = styled.div`
     color: var(--color-text-primary);
     line-height: 36px;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;
@@ -51,7 +51,7 @@ const SignaturePopup = styled.div`
       cursor: pointer;
       color: var(--color-text-secondary);
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }

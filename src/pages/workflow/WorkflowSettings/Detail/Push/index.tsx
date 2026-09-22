@@ -73,7 +73,7 @@ const BtnContent = styled.div`
     color: var(--color-text-disabled);
     cursor: pointer;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .Font13.bold {

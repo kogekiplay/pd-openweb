@@ -73,7 +73,7 @@ const ImportError = styled.div`
     border: 1px solid var(--color-primary);
     border-radius: 32px;
     background-color: var(--color-background-primary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       color: var(--color-primary-light) !important;
       border-color: var(--color-primary-light) !important;

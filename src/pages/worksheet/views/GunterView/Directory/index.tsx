@@ -14,7 +14,7 @@ const More = styled.div`
   height: 32px;
   padding: 0 15px;
   .ant-dropdown-trigger:hover {
-    color: var(--color-primary) !important;
+    color: var(--color-primary-text) !important;
   }
 `;
 export const MenuOverlayWrapper = styled(Menu)`

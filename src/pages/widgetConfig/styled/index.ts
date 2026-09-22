@@ -141,7 +141,7 @@ export const RelateInfo = styled.div`
     margin: 0 var(--space-1);
   }
   .name {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 export const InfoWrap = styled.div`
@@ -172,11 +172,11 @@ export const EditInfo = styled(InfoWrap)`
     .clearBtn {
       visibility: visible;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     .edit {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   &.borderError {
@@ -265,7 +265,7 @@ export const SelectFieldsWrap = styled.div`
   }
   .clearValue {
     line-height: 36px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     padding-left: var(--space-3);
     cursor: pointer;
     &:hover {
@@ -815,7 +815,7 @@ export const RelateDetail = styled.div`
     flex: 1;
     &.needLink {
       cursor: pointer;
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;
@@ -840,9 +840,9 @@ export const AnimationWrap = styled.div`
       margin-left: 0;
     }
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       i {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     i {
@@ -850,9 +850,9 @@ export const AnimationWrap = styled.div`
     }
     &.active {
       background: var(--color-background-card);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       i {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     &.disabled {
@@ -929,7 +929,7 @@ export const BothRelateInfo = styled.div`
     margin: 0 var(--space-1);
   }
   .sourceName {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 
@@ -944,11 +944,11 @@ export const DisplayTabs = styled.div`
     font-weight: 600;
     cursor: pointer;
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-bottom-color: var(--color-primary) !important;
     }
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;
@@ -990,7 +990,7 @@ export const DisplayMode = styled.div`
       }
       .text,
       i {
-        color: var(--color-primary) !important;
+        color: var(--color-primary-text) !important;
       }
     }
     &:hover {
@@ -1011,7 +1011,7 @@ export const EditOptionDialog = styled(Dialog)`
   .setOption {
     color: var(--color-text-tertiary);
     span:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .optionsWrap {
@@ -1068,7 +1068,7 @@ export const CoverWrap = styled.div`
     padding: 6px 18px;
     color: var(--color-text-secondary);
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-color: var(--color-primary);
     }
     &:last-child {

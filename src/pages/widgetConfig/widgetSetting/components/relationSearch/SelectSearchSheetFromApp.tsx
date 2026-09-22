@@ -39,10 +39,10 @@ const SelectSheetWrap = styled.div`
     font-size: var(--font-md);
     font-weight: bold;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-bottom-color: var(--color-primary);
     }
     &:last-child {

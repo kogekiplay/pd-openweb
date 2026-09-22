@@ -56,7 +56,7 @@ const AddParamsBtn = styled.div`
   }
 
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

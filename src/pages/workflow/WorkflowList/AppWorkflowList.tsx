@@ -72,7 +72,7 @@ const HeaderWrap = styled.div`
       color: var(--color-text-secondary);
     }
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       .trashIcon {
         color: var(--color-primary);
       }
@@ -139,7 +139,7 @@ const DropdownBox = styled.div`
       border-color: var(--color-primary) !important;
       background: var(--color-primary-transparent);
       .value {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     &:hover {

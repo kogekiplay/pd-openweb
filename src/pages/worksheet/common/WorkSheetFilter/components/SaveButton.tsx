@@ -26,7 +26,7 @@ const Con = styled.div`
       cursor: pointer;
     }
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-color: var(--color-primary);
     }
   }

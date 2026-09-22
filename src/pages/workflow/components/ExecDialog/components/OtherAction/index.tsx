@@ -76,7 +76,7 @@ const TemplateList = styled.div`
     position: relative;
     &:hover,
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       background-color: var(--color-primary-transparent);
     }
     .icon-delete {
@@ -396,7 +396,11 @@ export default class OtherAction extends Component<any, any> {
                 {!!entrustList[user.accountId] && (
                   <Tooltip
                     placement="bottomLeft"
-                    overlayInnerStyle={{ padding: 'var(--space-3) var(--space-4)', minWidth: 240, width: 'max-content' }}
+                    overlayInnerStyle={{
+                      padding: 'var(--space-3) var(--space-4)',
+                      minWidth: 240,
+                      width: 'max-content',
+                    }}
                     align={{ offset: [5, 15] }}
                     title={() => (
                       <Fragment>

@@ -1,11 +1,11 @@
 import React, { Fragment, useRef } from 'react';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Button } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import projectAjax from 'src/api/project';
 import { pathCompletion } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 
 const TYPE_CONFIG = {
   desktop: {
@@ -80,7 +80,7 @@ const InstallDialog = styled.div`
   }
   .selectUser {
     span {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       margin-left: var(--space-1);
       cursor: pointer;
     }

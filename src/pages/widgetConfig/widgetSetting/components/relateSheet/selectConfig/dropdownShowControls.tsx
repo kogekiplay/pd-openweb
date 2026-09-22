@@ -1,15 +1,15 @@
 import React, { Fragment } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { RadioGroup } from 'ming-ui';
 import SortColumns from 'src/pages/worksheet/components/SortColumns/SortColumns';
+import type { FormControl } from 'src/utils/controlTypes';
 import { SettingItem } from '../../../../styled';
 import { getFilterRelateControls } from '../../../../util';
 import { getAdvanceSetting, getControlsSorts, handleAdvancedSettingChange } from '../../../../util/setting';
 import DropdownCover from './DropdownCover';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const DropdownShowControlsWrap = styled.div`
   .ming.Radio {
@@ -27,7 +27,7 @@ const DropdownShowControlsWrap = styled.div`
     cursor: pointer;
     &.active,
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

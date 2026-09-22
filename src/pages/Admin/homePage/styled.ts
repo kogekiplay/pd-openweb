@@ -261,7 +261,7 @@ export const HomePageWrap = styled.div`
       font-size: var(--font-xs);
       cursor: pointer;
       .hoverColorPrimary:hover {
-        color: var(--color-primary) !important;
+        color: var(--color-primary-text) !important;
       }
     }
     .limitUser {
@@ -404,7 +404,7 @@ export const HomePageWrap = styled.div`
       align-items: center;
       i {
         font-size: var(--font-3xl);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       span {
         color: var(--color-text-secondary);
@@ -483,7 +483,7 @@ export const HomePageWrap = styled.div`
       font-size: var(--font-xs);
       span {
         font-size: var(--font-lg);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         margin: 0 var(--space-1);
       }
     }
@@ -493,7 +493,7 @@ export const HomePageWrap = styled.div`
       color: var(--color-text-secondary);
     }
     .upgrade {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       margin-left: 6px;
     }
     .delayTrial {
@@ -506,7 +506,7 @@ export const HomePageWrap = styled.div`
       span {
         margin-left: var(--space-1);
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
     }
@@ -641,7 +641,7 @@ export const FreeTrialWrap = styled.div`
     font-size: var(--font-xl);
     margin-top: var(--space-5);
     span {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       font-size: var(--font-3xl);
       margin: 0 6px;
     }
@@ -651,7 +651,7 @@ export const FreeTrialWrap = styled.div`
     margin: var(--space-3) 0;
   }
   .remainTime {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     margin-left: 6px;
   }
   .inviteRules {
@@ -661,7 +661,7 @@ export const FreeTrialWrap = styled.div`
     li {
       min-width: 80px;
       .achieveDays {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         font-size: var(--font-md);
         span {
           margin-right: var(--space-1);

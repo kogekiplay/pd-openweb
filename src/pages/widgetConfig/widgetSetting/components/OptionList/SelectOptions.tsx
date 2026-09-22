@@ -75,7 +75,7 @@ const OptionsWrap = styled.div`
       color: var(--color-text-tertiary);
       span:hover,
       i:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }
@@ -105,7 +105,7 @@ const OptionListItem = styled.div`
       color: var(--color-text-tertiary);
       font-size: var(--font-lg);
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }
@@ -128,7 +128,7 @@ const OptionListItem = styled.div`
     }
     i {
       &:hover {
-        color: var(--color-primary) !important;
+        color: var(--color-primary-text) !important;
       }
     }
     .hideIcon {
@@ -147,11 +147,13 @@ const OptionListItem = styled.div`
       bottom: 0;
       width: 100%;
       background-color: var(--color-background-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       cursor: pointer;
       font-weight: 600;
       &:hover {
-        color: color-mix(in srgb, var(--color-primary) 80%, transparent);
+        /* 基色跟着上面一起换成深一档：本来就是"hover 时淡一点"的意思，
+           底色不变，继续拿原色去淡只会比正常态还难读。 */
+        color: color-mix(in srgb, var(--color-primary-text) 80%, transparent);
       }
     }
   }

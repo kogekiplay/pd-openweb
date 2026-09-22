@@ -78,10 +78,10 @@ const WidgetList = styled.div`
       font-size: var(--font-md);
       cursor: pointer;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       &.active {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-bottom-color: var(--color-primary) !important;
       }
     }
@@ -179,7 +179,7 @@ const WidgetList = styled.div`
         line-height: 34px;
         cursor: pointer;
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
       .templateIcon {

@@ -11,7 +11,7 @@ const MobileFlowChart = lazy(() => import('../FlowChart').then(module => ({ defa
 const Btn = styled.div`
   &:hover {
     .textDisabled {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
   }
 `;

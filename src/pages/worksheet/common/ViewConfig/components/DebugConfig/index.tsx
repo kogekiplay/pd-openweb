@@ -37,7 +37,7 @@ const Wrap = styled.div`
       margin-top: 14px;
       &.hs {
         background: var(--tabCon-bg);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       &.cur {
         background: var(--color-primary-solid);

@@ -49,7 +49,7 @@ const Wrap = styled.div`
     color: var(--color-error);
   }
   .wait {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   .war {
     color: var(--color-warning-text);
@@ -79,7 +79,7 @@ const Wrap = styled.div`
       border: 1px solid var(--color-border-secondary);
       &:hover {
         border-color: var(--color-primary);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     &.cancelRefundBtn {
@@ -123,7 +123,7 @@ const Btn = styled.div`
   text-align: center;
   cursor: pointer;
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     border: 1px solid var(--color-primary);
   }
 `;
@@ -146,7 +146,7 @@ const SelectPayStatusWrap = styled.span`
     text-align: center;
   }
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     box-shadow: var(--shadow-sm);
   }
 `;
@@ -175,7 +175,7 @@ const More = styled.div`
   color: var(--color-text-tertiary);
   border: 1px solid var(--color-border-secondary);
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   &.mobileMore {
     width: 32px;

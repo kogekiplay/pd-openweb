@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, Modal } from 'ming-ui';
@@ -15,12 +14,12 @@ import { SHEET_VIEW_HIDDEN_TYPES } from 'worksheet/constants/enum';
 import { SYSTEM_ENUM } from 'src/components/Form/core/config';
 import RestrictAccessStatus from 'src/components/restrictAccessStatus';
 import { resortControlByColRow } from 'src/pages/widgetConfig/util';
+import OptionalRouter from 'src/router/OptionalRouter';
 import { emitter } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { updateDraftTotalInfo } from './utils';
 import WorksheetDraftOperate from './WorksheetDraftOperate';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
-import OptionalRouter from 'src/router/OptionalRouter';
 
 const Con = styled.div`
   width: 100%;
@@ -48,7 +47,7 @@ const Header = styled.div`
     font-size: 22px;
     color: var(--color-text-tertiary);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;
@@ -147,7 +146,16 @@ function DraftModal(props) {
       });
   };
 
-  const renderColumnHead = ({ className, style, control, isLast, updateSheetColumnWidths }: { className?: string; [key: string]: any }) => {
+  const renderColumnHead = ({
+    className,
+    style,
+    control,
+    isLast,
+    updateSheetColumnWidths,
+  }: {
+    className?: string;
+    [key: string]: any;
+  }) => {
     const maskData =
       _.get(control, 'advancedSetting.datamask') === '1' && _.get(control, 'advancedSetting.isdecrypt') === '1';
 

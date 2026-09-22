@@ -66,7 +66,7 @@ const AppListContainer = styled.div`
         color: var(--color-text-disabled);
         cursor: pointer;
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
     }

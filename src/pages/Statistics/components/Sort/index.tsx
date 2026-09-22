@@ -46,7 +46,7 @@ const SortContent = styled.div`
         border-right: 1px solid var(--color-border-tertiary);
       }
       &.active {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-color: var(--color-primary);
         background-color: var(--color-background-primary);
       }

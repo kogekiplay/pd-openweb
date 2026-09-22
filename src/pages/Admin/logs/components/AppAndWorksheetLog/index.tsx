@@ -74,7 +74,7 @@ const TabWrap = styled.div`
       background-color: var(--color-background-hover);
     }
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-bottom-color: var(--color-primary);
     }
   }

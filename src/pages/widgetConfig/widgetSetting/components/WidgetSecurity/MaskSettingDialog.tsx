@@ -95,7 +95,7 @@ const SelectItem = styled.div`
     margin-left: 11px;
     cursor: pointer;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       background: var(--color-background-secondary);
     }
   }

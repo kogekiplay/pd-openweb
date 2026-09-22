@@ -8,11 +8,11 @@ import styled from 'styled-components';
 import { Checkbox, Dialog, Dropdown as MingDropdown, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { isCustomWidget } from 'src/pages/widgetConfig/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import { DATE_SHOW_TYPES } from '../../../../config/setting';
 import { DropdownContent, DropdownPlaceholder, EditInfo, SettingItem } from '../../../../styled';
 import { getAdvanceSetting, getDateToEn, handleAdvancedSettingChange } from '../../../../util/setting';
 import DateInput from '../../DynamicDefaultValue/inputTypes/DateInput.jsx';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const INTERVAL = [1, 5, 10, 15, 30, 60];
 
@@ -37,7 +37,7 @@ const ConfigWrap = styled.div`
       cursor: pointer;
       transition: color 0.25s;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }
@@ -266,7 +266,9 @@ function StartEndTime(props) {
             <Checkbox
               size="small"
               checked={!!locationbegin}
-              onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { locationbegin: checked ? '0' : '1' }))}
+              onClick={(checked: boolean) =>
+                onChange(handleAdvancedSettingChange(data, { locationbegin: checked ? '0' : '1' }))
+              }
             >
               <span>{_l('默认定位到起始日期')}</span>
               <Tooltip
@@ -284,7 +286,9 @@ function StartEndTime(props) {
         <Checkbox
           size="small"
           checked={max}
-          onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { max: checked ? '' : JSON.stringify([]) }))}
+          onClick={(checked: boolean) =>
+            onChange(handleAdvancedSettingChange(data, { max: checked ? '' : JSON.stringify([]) }))
+          }
         >
           <span>{_l('结束日期')}</span>
         </Checkbox>
@@ -320,13 +324,15 @@ export default function DateConfig(props) {
 
   if (type === 16) {
     return (
-      (<Fragment>
+      <Fragment>
         {/* <ShowFormat {...props} /> */}
         <div className="labelWrap mTop8">
           <Checkbox
             size="small"
             checked={!!timeinterval}
-            onClick={(checked: boolean) => onChange(handleAdvancedSettingChange(data, { timeinterval: checked ? '' : '1' }))}
+            onClick={(checked: boolean) =>
+              onChange(handleAdvancedSettingChange(data, { timeinterval: checked ? '' : '1' }))
+            }
           >
             <span>{_l('预设分钟间隔')}</span>
             <Tooltip
@@ -342,7 +348,8 @@ export default function DateConfig(props) {
             trigger={'click'}
             open={timeIntervalVisible}
             onOpenChange={v => setVisible({ timeIntervalVisible: v })}
-            popupRender={() => <IntervalWrap>
+            popupRender={() => (
+              <IntervalWrap>
                 {INTERVAL.map(v => (
                   <div
                     key={v}
@@ -355,7 +362,8 @@ export default function DateConfig(props) {
                     {_l('%0分钟', v)}
                   </div>
                 ))}
-              </IntervalWrap>}
+              </IntervalWrap>
+            )}
           >
             <DropdownPlaceholder className={cx({ active: timeIntervalVisible })} color="var(--color-text-primary)">
               {_l('%0分钟', timeinterval)}
@@ -364,7 +372,7 @@ export default function DateConfig(props) {
           </Dropdown>
         )}
         {!isCustomWidget(data) && <StartEndTime {...props} />}
-      </Fragment>)
+      </Fragment>
     );
   }
 }

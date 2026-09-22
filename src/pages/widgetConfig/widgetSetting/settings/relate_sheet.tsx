@@ -46,7 +46,7 @@ const RelateSheetWrap = styled.div`
   .filterBtn {
     color: var(--color-text-tertiary);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .emptyRelateView {

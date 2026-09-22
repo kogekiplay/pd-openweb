@@ -103,11 +103,11 @@ export const SectionItem = styled.div`
       color: var(--color-text-secondary);
       flex: 1;
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       &.active {
         background: var(--color-background-primary);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }

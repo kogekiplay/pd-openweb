@@ -259,7 +259,9 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    transition: background-color 0.15s, color 0.15s;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
     &:hover {
       background: var(--color-primary-solid);
       color: var(--color-on-primary);
@@ -288,7 +290,9 @@
     padding-bottom: var(--space-1) !important;
     border-radius: var(--radius-sm) !important;
     position: relative !important;
-    transition: background-color 0.15s, color 0.15s !important;
+    transition:
+      background-color 0.15s,
+      color 0.15s !important;
     &:focus {
       box-shadow: none !important;
     }
@@ -608,11 +612,11 @@
         font-weight: 400;
         border-bottom: 3px solid transparent;
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
           border-bottom: 3px solid transparent;
         }
         &.current {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
           border-bottom: 3px solid var(--color-primary);
           &:hover {
             border-bottom: 3px solid var(--color-primary);
@@ -703,11 +707,11 @@
     &:hover,
     &.show {
       .num {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       .ming {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     &:hover {

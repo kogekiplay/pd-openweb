@@ -61,7 +61,7 @@ const FlattenContent = styled.div`
       color: var(--color-error);
     }
     .edit {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .cardTitleRow {
@@ -99,7 +99,7 @@ const FlattenContent = styled.div`
     }
   }
   .showAll {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     padding: 10px 0;
     justify-content: center;
   }
@@ -225,7 +225,9 @@ export default function ChildTableFlatComp(props) {
   };
 
   const showFields = controls
-    .filter((c: FormControl) => _.find(props.showControls || [], scid => scid === c.controlId) && controlState(c).visible)
+    .filter(
+      (c: FormControl) => _.find(props.showControls || [], scid => scid === c.controlId) && controlState(c).visible,
+    )
     .map(formatMobileCardControl); // 配置可显示字段
   const titleControl = showtitleid && _.find(controls, { controlId: showtitleid });
   const fieldsWithTitle = titleControl
@@ -318,7 +320,9 @@ export default function ChildTableFlatComp(props) {
         const ignoreLock = /^(temp|default|empty)/.test(rowid);
         const title =
           getTitleTextFromControls(
-            controls.map((v: FormControl) => (v.controlId === showtitleid ? { ...v, attribute: 1 } : { ...v, attribute: 0 })),
+            controls.map((v: FormControl) =>
+              v.controlId === showtitleid ? { ...v, attribute: 1 } : { ...v, attribute: 0 },
+            ),
             item,
             control.advancedSetting.titleSourceControlType,
             { appId },
@@ -329,7 +333,9 @@ export default function ChildTableFlatComp(props) {
               'noBoxShadow allowOverflow': isEdit && !disabled && isExpand,
             })}
             key={rowid}
-            ref={el => { rowRefs.current[index] = el; }}
+            ref={el => {
+              rowRefs.current[index] = el;
+            }}
             style={{ scrollMarginTop: '10px' }}
           >
             <div
@@ -392,7 +398,9 @@ export default function ChildTableFlatComp(props) {
                   appId={appId}
                   from={from}
                   masterData={masterData}
-                  rowFormData={() => control.relationControls.map((c: FormControl) => ({ ...c, value: item[c.controlId] }))}
+                  rowFormData={() =>
+                    control.relationControls.map((c: FormControl) => ({ ...c, value: item[c.controlId] }))
+                  }
                 />
               ) : (
                 <div
@@ -408,7 +416,9 @@ export default function ChildTableFlatComp(props) {
                     disabledFunctions={isEdit ? ['controlRefresh'] : []}
                     ignoreLock={ignoreLock}
                     isDraft={isDraft}
-                    ref={el => { customWidgetRefs.current[index] = el; }}
+                    ref={el => {
+                      customWidgetRefs.current[index] = el;
+                    }}
                     recordId={rowid}
                     data={showFields.map(c => ({
                       ...c,

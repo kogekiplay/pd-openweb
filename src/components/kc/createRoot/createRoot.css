@@ -259,7 +259,7 @@
 }
 
 .kcDialogBox .folderName .addFolderStar:hover {
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 
 .kcDialogBox .folderName .addFolderStar.icon-task-star {

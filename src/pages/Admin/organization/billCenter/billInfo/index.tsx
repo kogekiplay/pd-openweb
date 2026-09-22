@@ -156,7 +156,7 @@ const AIWelfarePointValue = styled.span`
   gap: var(--space-1);
 
   .monthlyRemaining {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     font-weight: 600;
     cursor: pointer;
   }

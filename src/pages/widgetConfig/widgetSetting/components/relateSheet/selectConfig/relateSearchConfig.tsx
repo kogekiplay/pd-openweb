@@ -39,7 +39,7 @@ const ConfigWrap = styled.div`
     width: 100%;
     border-radius: var(--radius-sm);
     line-height: 44px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background: var(--color-background-secondary);
     font-weight: bold;
     display: flex;

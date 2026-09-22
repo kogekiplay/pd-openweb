@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Input } from 'antd';
-
+import Trigger from '@rc-component/trigger';
 // import 'antd/es/input/style/css';
 
-
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import SVG from 'svg.js';
 import { Button } from 'ming-ui';
@@ -28,7 +26,7 @@ const CreateRecordWrap = styled.div`
     font-size: var(--font-lg);
     color: var(--color-text-tertiary);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

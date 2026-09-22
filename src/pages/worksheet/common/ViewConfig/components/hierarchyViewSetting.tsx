@@ -87,7 +87,7 @@ const HierarchyViewSettingWrap = styled.div(
           padding-left: var(--space-5);
           color: var(--color-text-secondary);
           &:hover {
-            color: var(--color-primary);
+            color: var(--color-primary-text);
           }
         }
         .delete {
@@ -169,7 +169,7 @@ const HierarchyViewSettingWrap = styled.div(
     }
   }
   .addRelate {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     font-weight: bold;
     cursor: pointer;
     margin-top: 18px;

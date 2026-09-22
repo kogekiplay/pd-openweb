@@ -65,10 +65,10 @@ export const ReferenceWrap = styled.div`
         cursor: pointer;
         border-bottom: 3px solid transparent;
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
         &.active {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
           border-bottom-color: var(--color-primary);
         }
       }
@@ -103,9 +103,9 @@ export const ReferenceWrap = styled.div`
             color: var(--color-text-secondary);
           }
           &:not(.isPassive):hover {
-            color: var(--color-primary) !important;
+            color: var(--color-primary-text) !important;
             i {
-              color: var(--color-primary) !important;
+              color: var(--color-primary-text) !important;
             }
           }
         }
@@ -145,7 +145,7 @@ export const ExtraTime = styled.span`
   .getBtn {
     ${props =>
       props.isLoading
-        ? 'display:inline-block;animation: rotate 2s linear infinite;color: var(--color-primary);'
+        ? 'display:inline-block;animation: rotate 2s linear infinite;color: var(--color-primary-text);'
         : 'display:none;'}
   }
   .time {

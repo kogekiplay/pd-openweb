@@ -28,7 +28,7 @@ const Con = styled.div`
   }
   .hoverHighlight {
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
       border-color: var(--color-primary);
     }
   }

@@ -72,7 +72,7 @@ export const PopupContentBox = styled.div`
   }
 
   .highlight {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     vertical-align: initial !important;
   }
 
@@ -98,6 +98,6 @@ export const PopupContentBox = styled.div`
     word-break: break-all;
     white-space: wrap;
     font-size: 15px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;

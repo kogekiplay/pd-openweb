@@ -153,9 +153,9 @@ export const AnimationWrap = styled.div`
       margin-left: 0;
     }
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       i {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     i {
@@ -163,9 +163,9 @@ export const AnimationWrap = styled.div`
     }
     &.active {
       background: var(--color-background-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       i {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     &.disabled {

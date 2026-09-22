@@ -19,7 +19,7 @@ const TotalConfigWrap = styled.div`
     display: inline-flex;
     align-items: center;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
     &.disabled {
       color: var(--color-text-tertiary);

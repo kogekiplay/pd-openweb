@@ -19,7 +19,7 @@ const Wrap = styled.div`
     padding: 0 var(--space-4);
     background: var(--color-background-secondary);
     border-radius: var(--radius-sm);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       background: var(--color-background-hover);
     }

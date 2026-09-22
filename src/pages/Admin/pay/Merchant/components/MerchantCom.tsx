@@ -310,7 +310,7 @@ export default class MerchantCom extends Component<any, any> {
         dataIndex: 'subscribeMerchant',
         render: (value, record) => {
           return (
-            <span style={{ color: value ? 'var(--color-success)' : 'var(--color-primary)' }}>
+            <span style={{ color: value ? 'var(--color-success)' : 'var(--color-primary-text)' }}>
               {value ? _l('已付费') : record.planType === 0 ? _l('试用中') : _l('待付费')}
             </span>
           );
