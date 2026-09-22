@@ -33,7 +33,7 @@ const MenuWrap = styled(Menu)`
       padding: 0 var(--space-4);
       &:hover {
         background: var(--color-background-secondary);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }

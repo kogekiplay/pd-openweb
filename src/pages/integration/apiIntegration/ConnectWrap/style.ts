@@ -101,7 +101,7 @@ export const ConnetWrap = styled.div`
         color: var(--color-text-secondary);
       }
       &.isCur {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-bottom: 3px solid var(--color-primary);
       }
     }

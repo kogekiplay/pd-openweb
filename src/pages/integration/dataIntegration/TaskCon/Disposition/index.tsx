@@ -74,7 +74,7 @@ const WrapCon = styled.div`
     }
   }
   .addApp {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       color: var(--color-link-hover);
     }

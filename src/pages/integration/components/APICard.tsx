@@ -49,7 +49,7 @@ const Wrap = styled.div`
   &:hover {
     border: 1px solid var(--color-border-secondary);
     .name {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
     .optionCon {
       opacity: 1;

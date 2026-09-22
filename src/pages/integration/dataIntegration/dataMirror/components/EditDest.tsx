@@ -10,7 +10,7 @@ const Wrap = styled.div`
     background: var(--color-background-primary);
     border: 1px dashed var(--color-border-primary);
     border-radius: var(--radius-sm);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       border: 1px dashed var(--color-primary);
     }

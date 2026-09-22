@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import bg from 'staticfiles/images/query.png';
 import styled from 'styled-components';
 import { Dropdown, Icon, Menu, ScrollView, Support } from 'ming-ui';
@@ -65,7 +65,7 @@ const Wrap = styled.div`
         &.isCur {
           border-bottom: 4px solid var(--color-primary);
           a {
-            color: var(--color-primary);
+            color: var(--color-primary-text);
           }
         }
       }

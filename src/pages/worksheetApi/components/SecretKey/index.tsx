@@ -35,7 +35,7 @@ const DialogWrap = styled(Dialog)`
         &:not(.isView) {
           cursor: pointer;
           &:hover {
-            color: var(--color-primary);
+            color: var(--color-primary-text);
           }
         }
       }

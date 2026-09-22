@@ -3,10 +3,10 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { CARD_TYE_LIST } from 'src/pages/integration/config';
+import { pathCompletion } from 'src/utils/common';
 import ConnectAvator from '../../components/ConnectAvator';
 import Card from './Card';
 import Item from './Item';
-import { pathCompletion } from 'src/utils/common';
 
 const Wrap = styled.div`
   padding: 0 var(--space-6) var(--space-6);
@@ -30,7 +30,7 @@ const Wrap = styled.div`
     padding: 3px 19px;
     border-radius: 28px;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border: 1px solid var(--color-primary);
     }
   }
@@ -108,7 +108,11 @@ export default function Set(props) {
 
             {/* 超级管理员和拥有者才能查看连接 */}
             {props.isConnectOwner && (
-              <a className="mLeft15 toConnect" href={pathCompletion(`/integrationConnect/${props.connectInfo.id}`)} target="_blank">
+              <a
+                className="mLeft15 toConnect"
+                href={pathCompletion(`/integrationConnect/${props.connectInfo.id}`)}
+                target="_blank"
+              >
                 {_l('查看')}
               </a>
             )}

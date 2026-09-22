@@ -75,7 +75,7 @@ const SelectCon = styled.div`
     margin: 0 var(--space-1);
   }
   .selectLight {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     .icon {
       color: var(--color-primary);
     }

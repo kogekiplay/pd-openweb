@@ -90,7 +90,7 @@ const ListItem = styled.div`
     color: var(--color-success);
   }
   .reviewing {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

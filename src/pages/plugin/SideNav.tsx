@@ -70,7 +70,7 @@ const Wrap = styled.div`
     &.isCurrent {
       background: var(--color-primary-transparent);
       a {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         i {
           color: var(--color-primary);
         }

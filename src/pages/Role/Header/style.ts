@@ -48,7 +48,7 @@ export const WrapTabCon = styled.div`
     border-bottom: 3px solid transparent;
     &.current {
       position: relative;
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-bottom: 3px solid var(--color-primary);
     }
   }

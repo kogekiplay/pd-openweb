@@ -28,7 +28,7 @@ const Wrap = styled.div`
     display: block;
     color: var(--color-text-secondary);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .title {
@@ -48,7 +48,7 @@ const Wrap = styled.div`
       &.isCur,
       &:hover {
         font-weight: 600;
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-bottom: 3px solid var(--color-primary);
       }
     }
@@ -59,7 +59,7 @@ const Wrap = styled.div`
     line-height: 36px;
     margin-right: var(--space-4);
     border: 1px solid var(--color-primary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     cursor: pointer;
     border-radius: var(--radius-sm);
     text-align: center;

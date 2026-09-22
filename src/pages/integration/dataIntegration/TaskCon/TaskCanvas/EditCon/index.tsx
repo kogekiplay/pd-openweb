@@ -133,7 +133,7 @@ const WrapR = styled.div`
     background: var(--color-background-primary);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-primary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     font-weight: 400;
     .icon {
       color: var(--color-primary);

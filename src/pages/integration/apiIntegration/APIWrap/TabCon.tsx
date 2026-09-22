@@ -12,7 +12,7 @@ const TabConWrap = styled.div`
     color: var(--color-text-title);
     border-bottom: 3px solid transparent;
     &.isCur {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-bottom: 3px solid var(--color-primary);
     }
   }

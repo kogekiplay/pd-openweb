@@ -41,7 +41,7 @@ const AppLinkWrap = styled.div`
     border: 1px solid var(--color-border-primary);
     margin-left: var(--space-2);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border: 1px solid var(--color-primary);
     }
   }

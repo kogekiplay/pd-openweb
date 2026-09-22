@@ -15,7 +15,7 @@ const OptionQuoteWrap = styled.div`
     border-radius: var(--radius-sm);
     &:hover {
       background-color: var(--color-background-hover);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
     &.disabled {
       cursor: auto;

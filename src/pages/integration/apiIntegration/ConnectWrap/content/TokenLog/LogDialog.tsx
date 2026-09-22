@@ -23,7 +23,7 @@ const Wrap = styled.div`
       box-sizing: border-box;
       border-bottom: 3px solid rgba(0, 0, 0, 0);
       &.isCur {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-bottom: 3px solid var(--color-primary);
       }
     }

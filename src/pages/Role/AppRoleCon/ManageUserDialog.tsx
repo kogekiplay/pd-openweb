@@ -44,7 +44,7 @@ const Wrapper = styled.div`
   }
   .memberTag {
     font-size: var(--font-xs);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     padding: 2px 6px;
     border-radius: 12px;
     background: var(--color-primary-transparent);

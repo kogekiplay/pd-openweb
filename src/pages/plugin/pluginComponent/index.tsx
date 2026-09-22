@@ -64,7 +64,7 @@ const Wrapper = styled.div`
         &.isCur {
           border-bottom: 4px solid var(--color-primary);
           a {
-            color: var(--color-primary);
+            color: var(--color-primary-text);
           }
         }
       }
@@ -129,7 +129,7 @@ const PluginListBox = styled.div`
     &:hover {
       background: var(--color-background-card);
       .name {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
 

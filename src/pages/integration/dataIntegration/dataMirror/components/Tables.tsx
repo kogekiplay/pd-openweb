@@ -83,12 +83,12 @@ const ListBox = styled.div`
     &:hover {
       background: var(--color-background-card);
       .titleText {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }
   .optionTxt {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       color: var(--color-link-hover);
     }

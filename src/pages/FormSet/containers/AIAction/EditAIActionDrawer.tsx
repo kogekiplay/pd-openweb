@@ -96,7 +96,7 @@ const Wrapper = styled.div`
       border: 1px solid #50ae54;
     }
     &.settingBtn {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border: 1px solid var(--color-primary);
     }
   }

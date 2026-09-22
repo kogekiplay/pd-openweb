@@ -56,7 +56,7 @@ const OnlySyncWrapper = styled.div`
     width: 64px;
     min-width: 64px;
     height: 56px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   .dbItem {
     display: flex;
@@ -83,7 +83,7 @@ const OnlySyncWrapper = styled.div`
     width: fit-content;
     margin-top: var(--space-5);
     cursor: pointer;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       color: var(--color-link-hover);
       i {

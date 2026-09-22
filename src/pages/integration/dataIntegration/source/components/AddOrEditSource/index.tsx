@@ -63,7 +63,7 @@ const HeaderWrapper = styled.div`
         &.isCur {
           border-bottom: 3px solid var(--color-primary);
           a {
-            color: var(--color-primary);
+            color: var(--color-primary-text);
           }
         }
       }

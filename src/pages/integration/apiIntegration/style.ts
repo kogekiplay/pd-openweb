@@ -95,7 +95,7 @@ export const WrapFooter = styled.div`
     color: var(--color-text-secondary);
     margin-right: 52px;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
     padding: var(--space-2) var(--space-8);
   }
@@ -130,7 +130,7 @@ export const CardTopWrap = styled.div`
     padding: 0 var(--space-5);
     margin-right: var(--space-3);
     line-height: 26px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     border: 1px solid var(--color-primary);
     border-radius: 26px;
     height: 28px;
@@ -147,13 +147,13 @@ export const WrapBtn = styled.div`
   padding: var(--space-2) var(--space-3);
   margin: 0 auto;
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   &.btnToAccount {
     background: var(--color-background-primary);
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-sm);
     border: 1px solid var(--color-primary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &.disable {
       border: 1px solid var(--color-border-secondary);
       color: var(--color-text-title);
@@ -173,7 +173,7 @@ export const MoreOperate = styled.span`
   color: var(--color-text-tertiary);
   font-size: var(--font-xl);
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

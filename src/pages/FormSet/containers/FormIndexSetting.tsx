@@ -106,7 +106,7 @@ const Con = styled.div`
             opacity: 0;
           }
           .edit {
-            color: var(--color-primary);
+            color: var(--color-primary-text);
             &:hover {
               opacity: 0.8;
             }
@@ -117,7 +117,7 @@ const Con = styled.div`
 
           & > span {
             display: inline-flex;
-            color: var(--color-primary);
+            color: var(--color-primary-text);
 
             &:hover {
               opacity: 0.8;
@@ -152,7 +152,7 @@ const Con = styled.div`
     color: var(--color-warning-text);
   }
   .sortFields:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

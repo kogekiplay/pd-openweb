@@ -19,7 +19,7 @@ const TestButton = styled.div`
   &.lightHover {
     &.default {
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         background: var(--color-background-secondary);
       }
     }

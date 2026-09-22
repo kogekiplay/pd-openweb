@@ -28,7 +28,7 @@ const TimingSettingListWrapper = styled.div`
       &:hover {
         background: var(--color-background-secondary);
         .tableName {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
     }
@@ -77,7 +77,14 @@ const NoDataWrapper = styled.div`
   }
 `;
 
-export default function TimingSettingList({ projectId, sourceId, onViewUseDetail }: { projectId?: string; [key: string]: any }) {
+export default function TimingSettingList({
+  projectId,
+  sourceId,
+  onViewUseDetail,
+}: {
+  projectId?: string;
+  [key: string]: any;
+}) {
   const [timingList, setTimingList] = useState([]);
   const [fetchState, setFetchState] = useSetState({ loading: true, pageNo: 0, noMore: false });
   const [settingDetail, setSettingDetail] = useState(null);

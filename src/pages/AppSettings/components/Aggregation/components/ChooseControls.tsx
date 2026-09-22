@@ -53,7 +53,7 @@ const Wrap = styled.div`
     }
     &.hs {
       background: var(--color-background-hover);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
     &.disable {
       cursor: not-allowed;

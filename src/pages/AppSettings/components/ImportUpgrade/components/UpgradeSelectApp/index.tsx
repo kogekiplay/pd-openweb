@@ -60,7 +60,7 @@ const Wrap = styled.div`
     .selectAppBtn {
       &:hover {
         border: 1px solid var(--color-primary);
-        color: var(--color-primary) !important;
+        color: var(--color-primary-text) !important;
       }
     }
   }
@@ -81,7 +81,7 @@ const SelectWrap = styled.ul`
     padding: 10px var(--space-5);
     cursor: pointer;
     &:not(.disabled):hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       background: var(--color-primary-transparent);
     }
     &.disabled {

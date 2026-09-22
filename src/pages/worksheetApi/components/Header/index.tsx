@@ -88,11 +88,11 @@ const HeaderWrap = styled.header`
         display: flex;
         align-items: center;
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
       &.active {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-color: var(--color-primary);
       }
     }

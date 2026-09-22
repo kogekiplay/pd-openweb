@@ -19,9 +19,9 @@ const Wrap = styled.div`
   }
   .down,
   .uploadUser {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
     span {
       display: inline-block;

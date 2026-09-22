@@ -66,7 +66,7 @@ export const Wrap = styled.div`
     padding: 0 var(--space-4);
     line-height: 36px;
     .editFlow {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .rangePicker {
@@ -78,7 +78,7 @@ export const Wrap = styled.div`
   .cardSelect {
     font-size: var(--font-xs) !important;
     .ant-select-selection-item-remove:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
   }
 `;

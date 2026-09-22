@@ -37,7 +37,7 @@ const WrapCon = styled.div`
     margin-top: var(--space-5);
 
     span {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       cursor: pointer;
       margin-left: 13px;
       display: inline-block;
@@ -51,7 +51,7 @@ const WrapCon = styled.div`
     padding: 0 var(--space-3);
   }
   .editFixed {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     margin-top: 10px;
   }
   .con {

@@ -48,10 +48,10 @@ const Wrap = styled.div`
       font-weight: 500;
       color: var(--color-text-secondary);
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       &.current {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         &::before {
           content: ' ';
           width: 100%;
@@ -102,7 +102,7 @@ const WrapCon = styled.div`
     cursor: pointer;
     background: var(--color-background-primary);
     border: 1px solid var(--color-primary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     margin-left: var(--space-4);
     padding: 0 var(--space-8);
     width: auto;

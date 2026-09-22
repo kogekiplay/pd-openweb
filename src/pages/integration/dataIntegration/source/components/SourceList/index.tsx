@@ -88,7 +88,7 @@ const FilterItem = styled.div`
 
       &.isActive {
         font-weight: 600;
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       &:hover {
         border-color: var(--color-border-tertiary);
@@ -158,7 +158,7 @@ const SourceListBox = styled.div`
     &:hover {
       background: var(--color-background-card);
       .titleText {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
 

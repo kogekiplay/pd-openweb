@@ -62,7 +62,7 @@ const ErrorDialogWrap = styled.div`
       gap: 10px;
       width: 100px;
       .btn {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         font-weight: 700;
         cursor: pointer;
         &:hover {

@@ -49,7 +49,7 @@ const Wrap = styled.div`
         &.isCur {
           border-bottom: 4px solid var(--color-primary);
           a {
-            color: var(--color-primary);
+            color: var(--color-primary-text);
           }
         }
       }

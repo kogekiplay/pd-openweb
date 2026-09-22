@@ -18,7 +18,7 @@ const FooterCon = styled.div`
       padding: 0 30px;
       border: 1px solid var(--color-border-secondary);
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border: 1px solid var(--color-primary);
       }
     }
@@ -34,7 +34,7 @@ const FooterCon = styled.div`
     height: 38px;
     border-radius: var(--radius-sm);
     line-height: 38px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     padding: 0 30px;
     border: 1px solid var(--color-primary);
     &:hover {

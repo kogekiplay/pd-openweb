@@ -138,7 +138,7 @@ const Wrapper = styled.div`
         margin-left: var(--space-2);
       }
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         i {
           color: var(--color-primary);
         }

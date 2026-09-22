@@ -46,7 +46,7 @@ const Refresh = styled.span`
   cursor: pointer;
   &:hover {
     background-color: var(--color-background-hover);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 const ActionWrap = styled.div`
@@ -61,7 +61,7 @@ const ActionWrap = styled.div`
       font-size: var(--font-xl);
     }
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       .icon {
         color: var(--color-primary);
       }

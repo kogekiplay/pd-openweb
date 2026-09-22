@@ -21,7 +21,7 @@ const Wrap = styled.div`
     border-bottom: 1px solid --color-background-disabled;
     &:hover {
       .langName {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       background-color: var(--color-background-hover);
     }

@@ -68,7 +68,7 @@ const StatusWrapper = styled.div`
   }
   .statusBtn {
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     cursor: pointer;
     white-space: nowrap;
     &:hover {

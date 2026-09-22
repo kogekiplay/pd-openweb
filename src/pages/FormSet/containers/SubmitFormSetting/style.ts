@@ -48,7 +48,7 @@ export const Con = styled.div`
         padding-left: 0px;
       }
       .currentMenu {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     .ming.MenuItem .Item-content:not(.disabled):hover {
@@ -253,12 +253,12 @@ export const WrapTxt = styled.div`
     width: 20px;
 
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
   }
 
   .editWorkflow {
     width: auto;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;

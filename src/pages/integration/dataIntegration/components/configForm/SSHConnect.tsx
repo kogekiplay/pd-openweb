@@ -74,7 +74,7 @@ const Wrapper = styled.div`
       cursor: pointer;
       color: rgba(0, 0, 0, 0.85);
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
     .ant-select-item-empty {
@@ -142,7 +142,7 @@ const DialogWrapper = styled.div`
   }
 
   .copyButton {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     cursor: pointer;
     margin-right: var(--space-2);
     &.isHide {

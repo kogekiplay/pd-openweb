@@ -51,7 +51,7 @@ const ConfigWrapper = styled.div`
         border-bottom: 2px solid rgba(0, 0, 0, 0);
         cursor: pointer;
         &.isCur {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
           border-bottom: 2px solid var(--color-primary);
         }
       }
@@ -128,7 +128,7 @@ const ConfigWrapper = styled.div`
         padding: 0 var(--space-4);
         border-radius: 36px;
         background: var(--color-primary-transparent);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         cursor: pointer;
         i {
           margin-right: 6px;
@@ -168,7 +168,7 @@ const ConfigWrapper = styled.div`
         color: var(--color-text-secondary);
         border: 1px solid var(--color-border-secondary);
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
           border: 1px solid var(--color-primary);
         }
       }
