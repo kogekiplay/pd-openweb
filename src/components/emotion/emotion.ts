@@ -4,9 +4,24 @@ import { getCaretPosition, setCaretPosition } from 'src/utils/common';
 import emotionData from './data';
 import './emotion.css';
 
-twemoji.base = '/staticfiles/images/emotion/twemoji/';
-twemoji.size = 72;
-twemoji.className = 'emotion-twemoji';
+/**
+ * twemoji 2 -> 14 之后改用 parse(node, options) 传配置，不再写模块级全局属性。
+ *
+ * 【为什么必须改】14 自带的 index.d.ts 只声明了 `{ convert, parse }` ——
+ * base / size / className 这些模块级可变属性运行时确实还在，但类型里没有，
+ * 直接赋值会报三条 TS2339。官方把它们当遗留写法，`TwemojiOptions` 里有等价的字段。
+ *
+ * 【两版产出的 URL 完全一致】实测：都拼成
+ * `/staticfiles/images/emotion/twemoji/72x72/<codepoint>.png`
+ * （size 给数字 72 会被规范化成 '72x72'，两版都一样）。
+ * 本仓自带 2661 个素材，data.ts 里用到的 455 个 emoji 在两版下文件名逐个比对全相同、
+ * 且本地全都有 —— 升级后 0 个会 404。
+ */
+const TWEMOJI_OPTIONS = {
+  base: '/staticfiles/images/emotion/twemoji/',
+  size: 72,
+  className: 'emotion-twemoji',
+} as const;
 
 const isRetina = !!(window.devicePixelRatio && window.devicePixelRatio > 1);
 
@@ -428,10 +443,7 @@ Emotion.prototype.show = function show(left, top) {
       !$(e.target).closest('.mdEmotion').length &&
       // $.contains 的形参是 Element；这里两侧在类型上都可能是 Document
       //（jQuery 把 document 上的 handler target 标成 Document），运行期传进来的是真实节点。
-      !(
-        $.contains(_this.$el[0] as unknown as Element, e.target as unknown as Element) ||
-        _this.$el[0] === e.target
-      )
+      !($.contains(_this.$el[0] as unknown as Element, e.target as unknown as Element) || _this.$el[0] === e.target)
     ) {
       _this.hide();
     }
@@ -470,7 +482,7 @@ Emotion.prototype.load = function (index: number) {
 
     if (tabObj.type === 'emoji') {
       $.each(contentObj, function (i, item) {
-        content += `<a class="emotionItem emoji" code="${item}">${twemoji.parse(item)}</a>`;
+        content += `<a class="emotionItem emoji" code="${item}">${twemoji.parse(item, TWEMOJI_OPTIONS)}</a>`;
       });
     } else {
       $.each(contentObj, function (i, item) {
@@ -558,7 +570,7 @@ Emotion.prototype.parse = function (str) {
     });
   });
 
-  return twemoji.parse(str);
+  return twemoji.parse(str, TWEMOJI_OPTIONS);
 };
 
 Emotion.parse = Emotion.prototype.parse;
