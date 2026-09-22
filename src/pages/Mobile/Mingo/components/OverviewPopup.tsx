@@ -40,7 +40,7 @@ const ICON_STYLE_BY_KEY = {
     background: 'var(--color-error-bg)',
   },
   worksheets: {
-    color: 'var(--color-warning)',
+    color: 'var(--color-warning-text)',
     background: 'var(--color-warning-bg)',
   },
   customPages: {

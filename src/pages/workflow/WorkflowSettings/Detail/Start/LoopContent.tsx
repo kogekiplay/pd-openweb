@@ -28,7 +28,7 @@ export default class LoopContent extends Component<any, any> {
         <div className="workflowDetailDesc pTop15 pBottom15 mTop20" style={{ background: 'rgba(255, 163, 64, 0.12)' }}>
           <div className="textSecondary mBottom5">
             {_l('新版定时触发器可以综合小时、天/星期、月三个维度来设置定时任务。')}
-            <span style={{ color: 'var(--color-warning)' }}>
+            <span style={{ color: 'var(--color-warning-text)' }}>
               {_l('注意：切换为新方式并保存配置后，将无法恢复到旧的配置方式')}
             </span>
           </div>

@@ -111,7 +111,7 @@ const Editor = styled.div`
     color: var(--color-error);
   }
   .cm-system {
-    color: var(--color-warning);
+    color: var(--color-warning-text);
   }
 `;
 

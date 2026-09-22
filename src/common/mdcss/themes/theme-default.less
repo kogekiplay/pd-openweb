@@ -110,9 +110,15 @@
   --color-success-border: #81c784; /* 成功边：消息/卡片边线、强调轮廓 */
   --color-success-hover: #216327;
 
-  --color-warning: #ff9800; /* 警告主色：风险提示、注意要点图标 */
+  --color-warning: #ff9800; /* 警告主色：风险提示、注意要点图标 —— 【只能当填充/图标，不能当文字】 */
   --color-warning-bg: rgba(255, 152, 0, 0.12); /* 警告浅底：轻量提醒条/Tag 背景 */
   --color-warning-border: #ffb74d; /* 警告边：提醒轮廓、进度状态边 */
+  /* 警告文字：--color-warning 对白底只有 2.14，**当文字色任何字号都到不了线**
+     （大字要 3、正文要 4.5），而全仓有 123 处把它当前景色用。
+     success 和 error 各有一个够深的变体（--color-success-hover / --color-error-hover），
+     warning 这一档一直缺着。这里取 antd 的 orange-8 而不是自己调一个：
+     对白底 5.43、对 --color-warning-bg 4.94，都过 4.5，且仍明确是橙色、不会被读成错误红。 */
+  --color-warning-text: #ad4e00;
 
   --color-error: #f44336; /* 错误主色：表单校验失败、危险操作强调 */
   --color-error-bg: rgba(244, 67, 54, 0.12); /* 错误浅底：错误提示条/Tag 背景 */

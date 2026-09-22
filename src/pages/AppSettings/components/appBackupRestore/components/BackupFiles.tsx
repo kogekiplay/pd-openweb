@@ -97,7 +97,7 @@ const ListWrap = styled.div`
       }
     }
     .warningColor {
-      color: var(--color-warning);
+      color: var(--color-warning-text);
     }
   }
 `;

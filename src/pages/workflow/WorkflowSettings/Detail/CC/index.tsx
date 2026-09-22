@@ -226,7 +226,7 @@ export default class CC extends Component<any, any> {
                 {_l(
                   '新版发送记录可以选择一个视图，按照所选视图配置的显示字段发送。如果通知人分发了此视图，可以直接按权限编辑记录、执行自定义动作。',
                 )}
-                <span style={{ color: 'var(--color-warning)' }}>
+                <span style={{ color: 'var(--color-warning-text)' }}>
                   {_l('注意：切换为新方式并保存配置后，将无法恢复到旧的配置方式')}
                 </span>
               </div>

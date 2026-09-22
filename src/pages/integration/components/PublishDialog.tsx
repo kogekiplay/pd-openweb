@@ -86,7 +86,7 @@ const Wrap = styled.div`
   }
   .warnCon {
     padding: 5px 10px;
-    color: var(--color-warning);
+    color: var(--color-warning-text);
     background: rgba(243, 180, 84, 0.1);
     border-radius: var(--radius-sm);
   }

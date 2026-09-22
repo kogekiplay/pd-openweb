@@ -52,7 +52,7 @@ const Wrap = styled.div`
     color: var(--color-primary);
   }
   .war {
-    color: var(--color-warning);
+    color: var(--color-warning-text);
   }
   .cancel {
     color: var(--color-text-secondary);

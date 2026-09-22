@@ -334,7 +334,7 @@ export default class Message extends Component<any, any> {
                 const controlObj = data.formulaMap[key] || {};
 
                 if (!nodeObj.name || !controlObj.name) {
-                  return <span style={{ color: 'var(--color-warning)' }}>({_l('缺少字段变量')})</span>;
+                  return <span style={{ color: 'var(--color-warning-text)' }}>({_l('缺少字段变量')})</span>;
                 }
 
                 return (

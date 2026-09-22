@@ -31,7 +31,7 @@ const Wrapper = styled.div`
     color: var(--color-error);
   }
   .warningColor {
-    color: var(--color-warning);
+    color: var(--color-warning-text);
   }
 `;
 

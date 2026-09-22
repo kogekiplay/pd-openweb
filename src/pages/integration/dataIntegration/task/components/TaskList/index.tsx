@@ -81,7 +81,7 @@ const TaskListBox = styled.div`
       cursor: pointer;
     }
     .warnColor {
-      color: var(--color-warning);
+      color: var(--color-warning-text);
     }
   }
 
