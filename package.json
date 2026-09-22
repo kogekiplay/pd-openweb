@@ -38,7 +38,7 @@
     "@antv/l7": "2.29.1",
     "@antv/l7-maps": "2.29.1",
     "@antv/l7plot": "0.5.11",
-    "@antv/layout": "^0.3.25",
+    "@antv/layout": "^2.0.0",
     "@antv/util": "3.3.11",
     "@antv/x6": "^3.1.8",
     "@antv/x6-react-shape": "3.0.1",
