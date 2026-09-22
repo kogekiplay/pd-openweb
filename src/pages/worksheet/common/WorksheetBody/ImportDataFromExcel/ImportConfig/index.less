@@ -60,6 +60,8 @@
           text-align: center;
           z-index: 1;
           box-shadow: var(--shadow-lg);
+          /* 浮动弹层补圆角：有投影没圆角，是圆角那批漏掉的一类（同一轮扫出 10 处） */
+          border-radius: var(--radius-sm);
           padding: 6px 0;
           div {
             cursor: pointer;

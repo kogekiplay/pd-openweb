@@ -481,6 +481,8 @@
     display: none;
     border: 1px solid var(--color-text-disabled);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* 浮动弹层补圆角：有投影没圆角，是圆角那批漏掉的一类（同一轮扫出 10 处） */
+    border-radius: var(--radius-sm);
     position: absolute;
     background: var(--color-background-primary);
     padding: 3px 0;

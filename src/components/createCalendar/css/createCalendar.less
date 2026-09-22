@@ -88,6 +88,8 @@
   .createCalendarTitle .calendarColorMain {
     padding: 6px 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* 浮动弹层补圆角：有投影没圆角，是圆角那批漏掉的一类（同一轮扫出 10 处） */
+    border-radius: var(--radius-sm);
     position: absolute;
     right: 26px;
     top: 38px;
