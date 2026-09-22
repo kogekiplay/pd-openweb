@@ -285,12 +285,14 @@ class AppSettings extends Component<any, any> {
               .map(item => {
                 const { type, icon, text } = item;
                 return (
-                  <Fragment>
+                  /* 【key 要挂在 map 返回的那一层】原先挂在里面的 configItem 上，
+                     而列表子元素是这个 Fragment —— React 看不到 key，
+                     每次进应用设置都报一条 "Each child in a list should have a unique key"。 */
+                  <Fragment key={type}>
                     {_.includes(['publish', 'language', 'recyclebin', 'appOfflineSubmit'], type) && (
                       <div className="line"></div>
                     )}
                     <div
-                      key={type}
                       className={cx(`configItem ${type}`, {
                         active: type === currentConfigType,
                         collapseItem: collapseAppManageNav,
