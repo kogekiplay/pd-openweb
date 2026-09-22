@@ -70,7 +70,9 @@ const GroupItemCon = styled.div`
     background-color: var(--color-background-hover);
   }
   &.active {
-    color: ${({ themeColor }) => themeColor};
+    /* 文字用深一档（同 SideNav）：主题色压 10% 同色浅底最低只有 3.40。
+       下面的 .fontIcon / svg 是图标，走非文本的 3:1，保持主题色原色。 */
+    color: ${({ textColor, themeColor }) => textColor || themeColor};
     background-color: ${({ activeColor }) => activeColor};
     .fontIcon {
       color: ${({ themeColor }) => `${themeColor} !important`};
@@ -154,6 +156,7 @@ export default function GroupItem(props) {
   const content = (
     <GroupItemCon
       themeColor={dashboardColor.themeColor}
+      textColor={dashboardColor.textColor}
       activeColor={dashboardColor.activeColor}
       className={cx(className, {
         hover: menuVisible,

@@ -93,7 +93,7 @@ const LinkIcon = styled.div`
   }
   &:hover {
     i {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;
