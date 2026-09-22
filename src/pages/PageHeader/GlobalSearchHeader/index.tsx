@@ -22,7 +22,7 @@ const HomeEntry = styled.div`
   cursor: pointer;
   &:hover {
     border-color: var(--color-border-primary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 const MODULE_TO_TEXT = {

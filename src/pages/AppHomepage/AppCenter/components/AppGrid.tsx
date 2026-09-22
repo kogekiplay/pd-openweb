@@ -107,7 +107,8 @@ const GroupTab = styled.div`
   margin-bottom: var(--space-2);
   &.active,
   &:hover {
-    color: ${({ themeColor }) => themeColor};
+    /* 同 GroupItem：文字走深一档，压在 10% 同色浅底上才够读 */
+    color: ${({ textColor, themeColor }) => textColor || themeColor};
     background-color: ${({ activeColor }) => activeColor};
   }
 `;
@@ -123,9 +124,9 @@ const GroupTabClickPopup = styled.div`
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     i {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
   }
 `;
@@ -500,6 +501,7 @@ function MarkedGroupTab(props) {
                     <GroupTab
                       themeColor={dashboardColor.themeColor}
                       activeColor={dashboardColor.activeColor}
+                      textColor={dashboardColor.textColor}
                       key={i}
                       className={cx('ellipsis', { active: safeActiveGroupId === group.id })}
                       onClick={() => {

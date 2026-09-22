@@ -198,7 +198,7 @@ export const Wrap = styled.div`
     margin: 0;
     border: none;
     background: var(--color-primary-bg);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     border-radius: 6px;
     .icon {
       color: var(--color-primary);
@@ -208,7 +208,7 @@ export const Wrap = styled.div`
     }
     &:hover {
       background: color-mix(in srgb, var(--color-primary) 12%, transparent);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       .icon {
         color: var(--color-primary);
       }
