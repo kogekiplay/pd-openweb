@@ -71,7 +71,7 @@ export default class SelectApp extends React.Component<any, any> {
 
     if (keyword && !list.length) {
       return (
-        <div className="manageListNull textDisabled mBottom20">
+        <div className="manageListNull textTertiary mBottom20">
           {_l('未找到 "%0" 相关应用，请更换关键词试试', keyword)}
         </div>
       );

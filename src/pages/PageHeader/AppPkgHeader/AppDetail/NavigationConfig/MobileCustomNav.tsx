@@ -142,7 +142,7 @@ export default function MobileCustomNav(props) {
                   !_.isEmpty(searchList) ? (
                     searchList.map(item => renderAppItem({ item }))
                   ) : (
-                    <div className="textDisabled mTop20 mBottom30 TxtCenter">{_l('没有搜索结果')}</div>
+                    <div className="textTertiary mTop20 mBottom30 TxtCenter">{_l('没有搜索结果')}</div>
                   )
                 ) : (
                   <Fragment>

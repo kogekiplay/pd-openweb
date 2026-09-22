@@ -1081,10 +1081,10 @@ export default function SheetWorkflow(props) {
             ) : isMobile ? (
               <div className="flexColumn valignWrapper h100 withoutData">
                 <Icon className="Font70" icon="examination_approval_color" />
-                <div className="Font18 textDisabled mTop20">{_l('暂无审批流程')}</div>
+                <div className="Font18 textTertiary mTop20">{_l('暂无审批流程')}</div>
               </div>
             ) : (
-              <div className="mTop5 mLeft4 textDisabled Font13">{_l('暂无审批流程')}</div>
+              <div className="mTop5 mLeft4 textTertiary Font13">{_l('暂无审批流程')}</div>
             )}
           </div>
         </Wrap>

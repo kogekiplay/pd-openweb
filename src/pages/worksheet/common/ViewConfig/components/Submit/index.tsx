@@ -383,7 +383,7 @@ export default function SubmitConfig(params) {
                 );
               })}
               {list.length <= 0 && !loading && (
-                <div className="textDisabled nullCon TxtCenter pTop10">{_l('还没有提交')}</div>
+                <div className="textTertiary nullCon TxtCenter pTop10">{_l('还没有提交')}</div>
               )}
               {loading && <LoadDiv />}
             </div>

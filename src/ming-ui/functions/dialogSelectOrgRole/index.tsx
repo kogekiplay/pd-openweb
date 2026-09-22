@@ -228,7 +228,7 @@ class DialogSelectOrgRole extends Component<any, any> {
     ) {
       return (
         <div className="emptyWrap">
-          <p className="textDisabled Font14">{_l('没有可选组织角色')}</p>
+          <p className="textTertiary Font14">{_l('没有可选组织角色')}</p>
         </div>
       );
     }
@@ -237,7 +237,7 @@ class DialogSelectOrgRole extends Component<any, any> {
       return (
         <div className="GSelect-NoData">
           <i className="icon-search GSelect-iconNoData" />
-          <p className="GSelect-noDataText textDisabled">{_l('搜索无结果')}</p>
+          <p className="GSelect-noDataText textTertiary">{_l('搜索无结果')}</p>
         </div>
       );
     }

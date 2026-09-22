@@ -322,7 +322,7 @@ export default function SelectOptions(props) {
                   {!deleteStatus ? (
                     <span className="textSecondary">{optionList.appName}</span>
                   ) : (
-                    <span className="textDisabled">{_l('无所属应用')}</span>
+                    <span className="textTertiary">{_l('无所属应用')}</span>
                   )}
                 </div>
                 <div className="operate flexCenter">

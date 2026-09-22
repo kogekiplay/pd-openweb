@@ -43,7 +43,7 @@ export default class AppImportUpgrade extends Component<any, any> {
         radiusSize={130}
         iconClassName="Font50 textTertiary"
         emptyTxt={_l('暂无升级记录')}
-        emptyTxtClassName="Font17 textDisabled mTop15"
+        emptyTxtClassName="Font17 textTertiary mTop15"
       />
     );
   };

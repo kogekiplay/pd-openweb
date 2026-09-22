@@ -250,7 +250,7 @@ export default class SelectOrgRole extends Component<any, any> {
     ) {
       return (
         <div className="emptyWrap h100 flexCenter justifyContentCenter">
-          <div className="textDisabled Font14">{_l('没有可选组织角色')}</div>
+          <div className="textTertiary Font14">{_l('没有可选组织角色')}</div>
         </div>
       );
     }

@@ -59,7 +59,7 @@ export default class DefaultUserList extends Component<any, any> {
   };
 
   renderOftenEmpty = () => {
-    return <div className="textDisabled mTop16 mBottom16">{_l('暂无最常协作人员')}</div>;
+    return <div className="textTertiary mTop16 mBottom16">{_l('暂无最常协作人员')}</div>;
   };
 
   render() {

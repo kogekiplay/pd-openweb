@@ -1028,7 +1028,7 @@ function SettingGroup(props) {
               </div>
               <div className="userList minHeight0">
                 {_.isEmpty(userList) ? (
-                  <div className="textDisabled Font13 mTop32 TxtCenter">{_l('无匹配结果')}</div>
+                  <div className="textTertiary Font13 mTop32 TxtCenter">{_l('无匹配结果')}</div>
                 ) : (
                   <ScrollView onScrollEnd={onScrollEnd}>{userList.map(l => renderUserItem(l))}</ScrollView>
                 )}

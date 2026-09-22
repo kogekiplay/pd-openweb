@@ -321,7 +321,7 @@ export default function PayLog(props) {
         <div className="iconWrap flexRow justifyContentCenter alignItemsCenter">
           <i className="icon icon-sp_account_balance_wallet_white Font50 textWhite" />
         </div>
-        <div className="Font15 textDisabled mTop20 bold">{isMobile ? _l('暂无付款') : _l('暂无订单')}</div>
+        <div className="Font15 textTertiary mTop20 bold">{isMobile ? _l('暂无付款') : _l('暂无订单')}</div>
       </EmptyWrap>
     );
   };

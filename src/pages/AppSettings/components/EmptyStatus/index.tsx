@@ -25,7 +25,10 @@ const EmptyStatusWrap = styled.div`
     .emptyTxt {
       margin-top: var(--space-3);
       font-size: 15px;
-      color: var(--color-text-disabled);
+      /* 【空态文案不是禁用态】disabled 档对白底只有 1.88，
+         WCAG 豁免的是【禁用控件】，不是"要读的空态说明"。
+         上面那个 .icon 是插画，留 disabled 档没问题。 */
+      color: var(--color-text-tertiary);
     }
   }
 `;
