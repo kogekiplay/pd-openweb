@@ -148,8 +148,17 @@
         border-left-color: color-mix(in srgb, var(--color-on-app-ink) 40%, transparent);
       }
     }
+    /* 【带文字的和纯图标的拆开】原来三个选择器合用 50%，实测生产上「待办」只有 3.64。
+       浅色顶栏的底是应用色 10% 浅底，ink 只给 50% 压不住 12~13px 的正文：
+       50% -> 2.6~3.6、60% -> 3.3，80% 才到 5.7。
+       图标那条留在 50%：非文本对比只要 3:1，本来就够，跟着一起压深反而变闷。 */
     .backlogWrap,
-    .appExtensionWrap .appExtensionItem,
+    .appExtensionWrap .appExtensionItem {
+      color: color-mix(in srgb, var(--color-on-app-ink) 80%, transparent) !important;
+      &:hover {
+        color: var(--color-on-app-ink) !important;
+      }
+    }
     .commonUserHandleWrap .icon {
       color: color-mix(in srgb, var(--color-on-app-ink) 50%, transparent) !important;
       &:hover {
@@ -183,14 +192,16 @@
     }
     .roledebugSelectWrap {
       background: color-mix(in srgb, var(--color-primary) 10%, transparent) !important;
-      color: color-mix(in srgb, var(--color-on-app-ink) 50%, transparent) !important;
+      /* 同上面 .backlogWrap：ink 50% 压在应用色 10% 浅底上实测只有 2.63，
+         这是「选择角色」那段文字，12~13px 要 4.5。提到 80%（5.69），hover 给满。 */
+      color: color-mix(in srgb, var(--color-on-app-ink) 80%, transparent) !important;
       a {
-        color: color-mix(in srgb, var(--color-on-app-ink) 50%, transparent) !important;
+        color: color-mix(in srgb, var(--color-on-app-ink) 80%, transparent) !important;
       }
       .roledebugSelectWrap-iconWrap:hover,
       .text:hover,
       .iconHover:hover {
-        color: color-mix(in srgb, var(--color-on-app-ink) 60%, transparent) !important;
+        color: var(--color-on-app-ink) !important;
       }
       .roledebugSelectWrap-iconWrap:hover::after {
         background: color-mix(in srgb, var(--color-primary) 20%, transparent);
@@ -198,10 +209,14 @@
     }
     .roleSelectCon {
       background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-      color: color-mix(in srgb, var(--color-on-app-ink) 40%, transparent);
+      /* 同上面两处：这是「选择角色」那段文字，ink 40% 压在应用色 10% 浅底上只有 2.64。
+         提到 80%（5.69），hover 给满。
+         【注意它不是 .roledebugSelectWrap】两个长得几乎一样、都在顶栏、都叫"选择角色"，
+         我一开始改错了那个，量出来纹丝不动才发现。 */
+      color: color-mix(in srgb, var(--color-on-app-ink) 80%, transparent);
       span:hover,
       i:hover {
-        color: color-mix(in srgb, var(--color-on-app-ink) 60%, transparent);
+        color: var(--color-on-app-ink);
       }
     }
   }
