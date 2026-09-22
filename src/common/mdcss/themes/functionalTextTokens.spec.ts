@@ -212,6 +212,48 @@ function check(label: string, fgHex: string, bg: Rgb, min = AA_BODY) {
   }
 }
 
+// 5d. 【反向断言 · 全仓扫描】-text 档不许当背景用。
+//     这是 2026-09-22 真踩到的：徽标为了让 12px 白字够 4.5，把底色从 --color-error
+//     改成了 --color-error-text，亮色下白字压深红 5.62、看着完全正常 ——
+//     但**文字档亮色是深色、暗色是浅色，方向相反**，暗色下就成了白字压浅粉，只剩 2.15。
+//     这种错在亮色下测不出来，只能靠静态断言拦。
+//     要"够深的实心底"请用 --color-*-solid：那一档明暗同值，就是为这个场景配的。
+{
+  const { execSync } = require('child_process');
+  const repoRoot = path.resolve(__dirname, '../../../..');
+  const files: string[] = execSync(`git -C ${repoRoot} ls-files 'src/**'`, {
+    encoding: 'utf8',
+    maxBuffer: 1 << 28,
+  })
+    .split('\n')
+    .filter((f: string) => /\.(less|css|ts|tsx)$/.test(f));
+
+  const BAD = /background[-\w]*\s*:\s*[^;{}]*var\(--color-(?:primary|success|warning|error)-text\)/;
+  const offenders: string[] = [];
+  for (const f of files) {
+    let src: string;
+    try {
+      src = fs.readFileSync(path.join(repoRoot, f), 'utf8');
+    } catch {
+      continue;
+    }
+    if (!/-text\)/.test(src)) continue;
+    // 注释里提到不算数
+    src
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .split('\n')
+      .forEach((line: string, i: number) => {
+        if (/^\s*\/\//.test(line)) return;
+        if (BAD.test(line)) offenders.push(`${f}:${i + 1}  ${line.trim().slice(0, 80)}`);
+      });
+  }
+  assert.strictEqual(
+    offenders.length,
+    0,
+    '把 --color-*-text 当背景用了（亮色看着对、暗色会反过来）。改用 --color-*-solid：\n  ' + offenders.join('\n  '),
+  );
+}
+
 // 6. hover 档的方向：亮色下比主色【更深】，暗色下比主色【更亮】。
 //    方向写反了肉眼不一定立刻看出来（两边都还是"变了一点"），但 hover 会往背景里塌。
 {
