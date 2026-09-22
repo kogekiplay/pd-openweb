@@ -24,10 +24,10 @@ const TransactionDetailsWrap = styled.div`
     padding-top: 0 !important;
   }
   .color_47 {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .color_f4 {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 
@@ -686,7 +686,9 @@ export default class RefundOrder extends Component<any, any> {
         <FlexWrap>
           <PageTableCon
             paginationInfo={{ pageIndex, pageSize: 50 }}
-            ref={node => { this.tableWrap = node; }}
+            ref={node => {
+              this.tableWrap = node;
+            }}
             loading={loading}
             columns={this.columns}
             dataSource={list}

@@ -260,7 +260,7 @@ class Con extends React.Component<any, any> {
           location.reload();
         } else {
           Dialog.confirm({
-            title: <span style={{ color: 'var(--color-error)' }}>{_l('无法退出非“人员”类型成员加入的角色')}</span>,
+            title: <span style={{ color: 'var(--color-error-text)' }}>{_l('无法退出非“人员”类型成员加入的角色')}</span>,
             description: _l('非“人员”类型的成员，只能由管理员或运营者操作'),
             closable: false,
             removeCancelBtn: true,

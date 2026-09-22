@@ -23,7 +23,7 @@ const Wrapper = styled.div`
     margin-bottom: var(--space-6);
     gap: var(--space-3);
     .greenColor {
-      color: var(--color-success);
+      color: var(--color-success-text);
     }
   }
   .formItem {

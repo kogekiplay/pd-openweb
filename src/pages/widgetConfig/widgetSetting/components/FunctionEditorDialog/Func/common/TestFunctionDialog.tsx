@@ -92,7 +92,7 @@ const TestCon = styled.div`
       margin-left: 10px;
       font-weight: bold;
       font-size: var(--font-2xl);
-      color: var(--color-success);
+      color: var(--color-success-text);
       white-space: nowrap;
     }
     .name {
@@ -108,7 +108,7 @@ const TestCon = styled.div`
       font-family: monospace;
     }
     &.error {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
   }
   .testForm {

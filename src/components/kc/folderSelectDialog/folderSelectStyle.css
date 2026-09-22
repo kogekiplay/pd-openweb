@@ -419,7 +419,7 @@
 
 .folderSelectDialog .nodeVisibleType .danger {
   border-color: var(--color-error) !important;
-  color: var(--color-error) !important;
+  color: var(--color-error-text) !important;
 }
 
 .folderSelectDialog .nodeVisibleType .updateTypeBtn {

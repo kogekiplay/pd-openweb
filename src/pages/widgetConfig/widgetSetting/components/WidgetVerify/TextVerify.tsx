@@ -62,7 +62,7 @@ const ConfigWrap = styled.div`
       }
     }
     .invalid {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
     .isInvalid,
     .invalidInput {
@@ -97,7 +97,7 @@ const FormatInfo = styled.div`
       }
     }
     .deleteBtn:hover {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
     .filterIcon.active {
       color: var(--color-primary);

@@ -87,7 +87,7 @@
 }
 
 .kcDialogBox .folderMemberBox .memberItem .owner {
-  color: var(--color-success);
+  color: var(--color-success-text);
 }
 
 .kcDialogBox .folderMemberBox .memberItem .permission {

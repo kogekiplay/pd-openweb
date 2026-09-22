@@ -16,13 +16,13 @@ const Con = styled.div`
     width: calc(100% - 44px);
     font-size: var(--font-sm);
     .errorName {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
     .conditionItemHeader {
       position: relative;
       margin-bottom: 2px;
       .deletedColumn {
-        color: var(--color-error);
+        color: var(--color-error-text);
         margin-bottom: 6px;
         .icon {
           transform: rotate(90deg);

@@ -53,7 +53,7 @@ const StatusBar = styled.div`
     font-size: var(--font-xl);
   }
   .generated {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   &.unsaved {
     background: linear-gradient(

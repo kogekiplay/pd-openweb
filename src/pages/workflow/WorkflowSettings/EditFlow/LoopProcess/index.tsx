@@ -23,7 +23,7 @@ export default class LoopProcess extends Component<any, any> {
               <span className="textSecondary">
                 {item.actionId === ACTION_ID.CONDITION_LOOP ? _l('满足条件时循环：') : _l('循环指定次数：')}
               </span>
-              {item.subProcessName || <span style={{ color: 'var(--color-error)' }}>{_l('流程已删除')}</span>}
+              {item.subProcessName || <span style={{ color: 'var(--color-error-text)' }}>{_l('流程已删除')}</span>}
             </Fragment>
           ) : (
             _l('设置此节点')

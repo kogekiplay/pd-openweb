@@ -47,7 +47,7 @@ const StepContentWrap = styled.div`
     color: var(--color-text-secondary);
     margin: var(--space-5) 0 6px;
     .required {
-      color: var(--color-error);
+      color: var(--color-error-text);
       font-weight: bold;
       font-size: var(--font-md);
     }

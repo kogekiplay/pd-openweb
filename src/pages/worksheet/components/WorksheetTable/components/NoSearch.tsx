@@ -15,7 +15,7 @@ const Con = styled.div`
     max-width: 300px;
   }
   .green {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
 `;
 

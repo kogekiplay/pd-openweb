@@ -20,7 +20,7 @@ const BetaWrapper = styled.div`
     color: var(--color-white);
   }
   .betaSign {
-    color: var(--color-success);
+    color: var(--color-success-text);
     background: var(--color-background-primary);
   }
 `;

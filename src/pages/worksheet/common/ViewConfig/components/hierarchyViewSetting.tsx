@@ -93,7 +93,7 @@ const HierarchyViewSettingWrap = styled.div(
         .delete {
           color: var(--color-text-secondary);
           &:hover {
-            color: var(--color-error);
+            color: var(--color-error-text);
           }
         }
       }

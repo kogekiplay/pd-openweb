@@ -24,7 +24,7 @@ const PopupWrap = styled(Popup)`
         font-size: var(--font-2xl);
       }
       .error {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
       .warning {
         color: var(--color-warning-text);

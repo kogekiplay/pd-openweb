@@ -239,7 +239,7 @@ export default class ApprovalProcess extends Component<any, any> {
 
     if (data.selectNodeId) {
       Dialog.confirm({
-        title: <span style={{ color: 'var(--color-error)' }}>{_l('注意！你将要更改审批流程的数据对象')}</span>,
+        title: <span style={{ color: 'var(--color-error-text)' }}>{_l('注意！你将要更改审批流程的数据对象')}</span>,
         description: _l(
           '更换为新的工作表后，所有相关节点配置的字段都将被重置，你需要重新配置这些节点。请确认你需要执行此操作',
         ),

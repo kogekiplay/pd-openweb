@@ -19,7 +19,7 @@ const MenuWrap = styled(Menu)`
     padding: 7px var(--space-3);
   }
   .danger {
-    color: var(--color-error) !important;
+    color: var(--color-error-text) !important;
   }
 `;
 

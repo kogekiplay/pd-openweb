@@ -4,8 +4,8 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { ROW_ID_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';
-import DynamicDefaultValue from '../DynamicDefaultValue';
 import type { FormControl } from 'src/utils/controlTypes';
+import DynamicDefaultValue from '../DynamicDefaultValue';
 
 const ControlWrap = styled.div`
   .childWrap {
@@ -35,7 +35,13 @@ const ControlWrap = styled.div`
 `;
 
 export default function SearchParams(props) {
-  const { requestControls = [], data = {}, allControls = [], onChange, fromOperationFlow }: { allControls: FormControl[]; [key: string]: any } = props;
+  const {
+    requestControls = [],
+    data = {},
+    allControls = [],
+    onChange,
+    fromOperationFlow,
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const requestmap = getAdvanceSetting(data, 'requestmap') || [];
 
   // 获取对象数组本身选择的子表或关联记录控件
@@ -59,7 +65,7 @@ export default function SearchParams(props) {
           {item.required && (
             <div
               className="Absolute"
-              style={{ left: `${isChild ? '12px' : '-6px'}`, marginTop: '1px', color: 'var(--color-error)' }}
+              style={{ left: `${isChild ? '12px' : '-6px'}`, marginTop: '1px', color: 'var(--color-error-text)' }}
             >
               *
             </div>

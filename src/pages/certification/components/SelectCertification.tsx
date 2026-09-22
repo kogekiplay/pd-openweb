@@ -17,7 +17,7 @@ const SelectDialog = styled(Dialog)`
     margin-top: 10px;
     font-weight: 600;
     .tagText {
-      color: var(--color-success);
+      color: var(--color-success-text);
       font-size: var(--font-xs);
     }
     .name {

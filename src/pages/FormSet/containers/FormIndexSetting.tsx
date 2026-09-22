@@ -146,7 +146,7 @@ const Con = styled.div`
     }
   }
   .uniqueIndexColor {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .wildcardIndexColor {
     color: var(--color-warning-text);

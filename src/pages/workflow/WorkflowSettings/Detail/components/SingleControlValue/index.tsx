@@ -419,7 +419,7 @@ export default class SingleControlValue extends Component<any, any> {
     const { appName, appTypeName, nodeId, nodeName, nodeTypeId, appType, actionId } = obj || {};
 
     if (nodeId && !nodeName) {
-      return <span style={{ color: 'var(--color-error)' }}>{_l('节点已删除')}</span>;
+      return <span style={{ color: 'var(--color-error-text)' }}>{_l('节点已删除')}</span>;
     }
 
     return (
@@ -723,7 +723,9 @@ export default class SingleControlValue extends Component<any, any> {
                 item.fieldValue && (
                   <Fragment>
                     {selectItem.value}
-                    {selectItem.isDeleted && <span style={{ color: 'var(--color-error)' }}>{_l('（已过期）')}</span>}
+                    {selectItem.isDeleted && (
+                      <span style={{ color: 'var(--color-error-text)' }}>{_l('（已过期）')}</span>
+                    )}
                   </Fragment>
                 )
               }

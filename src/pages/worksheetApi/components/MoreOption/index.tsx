@@ -108,7 +108,7 @@ let MoreOption = class MoreOption extends Component<any, any> {
         ) : (
           <div
             style={{
-              color: 'var(--color-error)',
+              color: 'var(--color-error-text)',
             }}
           >
             {_l('删除授权密钥')}
@@ -170,7 +170,7 @@ let MoreOption = class MoreOption extends Component<any, any> {
               )
             }
             style={{
-              color: 'var(--color-error)',
+              color: 'var(--color-error-text)',
             }}
           >
             {_l('删除')}

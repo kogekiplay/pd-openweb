@@ -223,7 +223,7 @@ export const CardButton = styled.span`
       !isMobile ? ' color: var(--color-text-title); box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.16);' : ''}
   }
   &.red:hover {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 

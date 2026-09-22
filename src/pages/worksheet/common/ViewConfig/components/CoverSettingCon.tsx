@@ -15,7 +15,7 @@ import ButtonTabs from './ButtonTabs';
 const SettingCon = styled.div`
   .ming.Dropdown.isDelete .Dropdown--input .value,
   .dropdownTrigger .Dropdown--input .value {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .ming.Dropdown.isDelete .Dropdown--border,
   .dropdownTrigger .Dropdown--border {

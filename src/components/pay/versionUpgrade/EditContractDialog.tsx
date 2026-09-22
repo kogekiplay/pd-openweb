@@ -32,7 +32,7 @@ const FormGroup = styled.div`
   width: 512px;
   .required {
     margin-right: 2px;
-    color: var(--color-error);
+    color: var(--color-error-text);
     font-size: var(--font-md);
     vertical-align: text-top;
   }

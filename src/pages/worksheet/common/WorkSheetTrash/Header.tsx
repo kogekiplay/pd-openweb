@@ -134,7 +134,7 @@ function Header(props, ref) {
           <Clear
             onClick={() => {
               Dialog.confirm({
-                title: <span style={{ color: 'var(--color-error)' }}>{_l('是否清空回收站')}</span>,
+                title: <span style={{ color: 'var(--color-error-text)' }}>{_l('是否清空回收站')}</span>,
                 buttonType: 'danger',
                 anim: false,
                 description: _l('清空后，记录无法恢复，请谨慎操作！'),

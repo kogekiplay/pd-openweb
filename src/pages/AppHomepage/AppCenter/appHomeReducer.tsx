@@ -472,7 +472,17 @@ export class CreateActions {
       handleDashboardOrAppResponse(this.dispatch, data, true);
     });
   }
-  loadAppAndGroups({ projectId, activeGroupType, activeGroupId, noGroupsLoading, noCache, isOwnedApp = false }: { projectId?: string; [key: string]: any }) {
+  loadAppAndGroups({
+    projectId,
+    activeGroupType,
+    activeGroupId,
+    noGroupsLoading,
+    noCache,
+    isOwnedApp = false,
+  }: {
+    projectId?: string;
+    [key: string]: any;
+  }) {
     if (!activeGroupId) {
       localStorage.removeItem(`latest_group_${md.global.Account.accountId}`);
     }
@@ -579,7 +589,18 @@ export class CreateActions {
       });
     });
   }
-  addGroup({ projectId, name, icon, groupType, cb = () => {} }: { projectId?: string; name?: string; icon?: string; [key: string]: any }) {
+  addGroup({
+    projectId,
+    name,
+    icon,
+    groupType,
+    cb = () => {},
+  }: {
+    projectId?: string;
+    name?: string;
+    icon?: string;
+    [key: string]: any;
+  }) {
     homeAppAjax
       .addGroup({ projectId, name, icon, groupType })
       .then(({ id, status }) => {
@@ -601,7 +622,19 @@ export class CreateActions {
       })
       .catch(cb);
   }
-  editGroup({ id, projectId, name, icon, groupType, cb = () => {} }: { projectId?: string; name?: string; icon?: string; [key: string]: any }) {
+  editGroup({
+    id,
+    projectId,
+    name,
+    icon,
+    groupType,
+    cb = () => {},
+  }: {
+    projectId?: string;
+    name?: string;
+    icon?: string;
+    [key: string]: any;
+  }) {
     homeAppAjax
       .editGroup({ id, projectId, name, icon, groupType })
       .then(status => {
@@ -729,7 +762,7 @@ export class CreateActions {
           });
         } else {
           Dialog.confirm({
-            title: <span style={{ color: 'var(--color-error)' }}>{_l('无法退出通过部门加入的应用')}</span>,
+            title: <span style={{ color: 'var(--color-error-text)' }}>{_l('无法退出通过部门加入的应用')}</span>,
             description: _l('您所在的部门被加入了此应用，只能由应用管理员进行操作'),
             closable: false,
             removeCancelBtn: true,
@@ -815,7 +848,16 @@ export class CreateActions {
         !window.platformENV.isOverseas && !window.platformENV.isLocal && alert(_l('新建应用失败！'), 2);
       });
   }
-  updateAppSort({ sortType, appIds, projectId, groupId }: { projectId?: string; groupId?: string; [key: string]: any }) {
+  updateAppSort({
+    sortType,
+    appIds,
+    projectId,
+    groupId,
+  }: {
+    projectId?: string;
+    groupId?: string;
+    [key: string]: any;
+  }) {
     const markedAppDisplay = _.get(this.state, 'origin.homeSetting.markedAppDisplay');
 
     if (!_.isUndefined(markedAppDisplay) && sortType === 1) {

@@ -70,7 +70,7 @@ const DeleteIcon = styled.i`
   display: inline-block;
   color: var(--color-text-tertiary);
   &:hover {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 

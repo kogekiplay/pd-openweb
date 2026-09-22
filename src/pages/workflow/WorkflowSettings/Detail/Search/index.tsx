@@ -523,7 +523,7 @@ export default class Search extends Component<any, any> {
    */
   renderFieldsTitle(item) {
     if (!item) {
-      return <span style={{ color: 'var(--color-error)' }}>{_l('字段已删除')}</span>;
+      return <span style={{ color: 'var(--color-error-text)' }}>{_l('字段已删除')}</span>;
     }
 
     return (

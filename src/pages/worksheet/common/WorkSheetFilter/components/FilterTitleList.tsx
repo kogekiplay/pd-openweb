@@ -32,7 +32,7 @@ const MenuCon = styled(Menu)`
     }
   }
   .red {
-    color: var(--color-error);
+    color: var(--color-error-text);
     &.ming.MenuItem .icon {
       color: var(--color-error);
     }

@@ -14,11 +14,11 @@ const ModalWrap = styled(Popup)`
     flex-direction: column;
   }
   .success {
-    color: var(--color-success);
+    color: var(--color-success-text);
     font-size: var(--font-2xl);
   }
   .error {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .warning {
     color: #fb0;
@@ -58,11 +58,11 @@ const BatchModalWrap = styled.div`
   padding: 0 var(--space-2);
   box-sizing: border-box;
   .success {
-    color: var(--color-success);
+    color: var(--color-success-text);
     font-size: var(--font-2xl);
   }
   .error {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .warning {
     color: #fb0;

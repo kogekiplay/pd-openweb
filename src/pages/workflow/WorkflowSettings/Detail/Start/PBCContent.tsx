@@ -33,7 +33,7 @@ const Header = styled.div`
     width: 120px;
   }
   .red {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 
@@ -549,7 +549,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
             <div className="flex">
               <div className="bold">
                 {_l('字段名')}
-                <span style={{ color: 'var(--color-error)' }}>*</span>
+                <span style={{ color: 'var(--color-error-text)' }}>*</span>
               </div>
               <div className="mTop10 flexRow">{renderControlName(selectItem)}</div>
               <div className="mTop5 textSecondary">{_l('在用户输入时字段的显示名称。如：请输入手机号')}</div>

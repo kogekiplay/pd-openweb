@@ -69,7 +69,7 @@ const EntrustButton = styled.button`
   color: var(--color-white);
   background-color: var(--color-primary);
   &.overEntrust {
-    color: var(--color-error);
+    color: var(--color-error-text);
     background-color: var(--color-background-tertiary);
   }
   &.isAdd {

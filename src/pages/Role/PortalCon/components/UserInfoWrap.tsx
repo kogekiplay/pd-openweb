@@ -54,7 +54,7 @@ const Wrap = styled.div(
       line-height: 36px;
       color: var(--color-text-secondary);
       &:hover {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
     }
   }

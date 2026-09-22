@@ -272,7 +272,7 @@ function ExplanDetail(props) {
         </span>
         <span className="flex"></span>
         {explanInfo && moment(explanInfo.expirationDatetime).add(1, 'd').isBefore(new Date()) && (
-          <span className="" style={{ color: 'var(--color-error)' }}>
+          <span className="" style={{ color: 'var(--color-error-text)' }}>
             {_l('服务已过期')}
           </span>
         )}

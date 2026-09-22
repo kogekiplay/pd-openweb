@@ -59,7 +59,7 @@ const Wrap = styled.div`
       }
 
       .errorColor {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
 
       .notificationIconWrap {

@@ -60,7 +60,7 @@ export const WrapL = styled.div`
       .closeBtn {
         opacity: 1;
         &:hover {
-          color: var(--color-error);
+          color: var(--color-error-text);
         }
       }
     }

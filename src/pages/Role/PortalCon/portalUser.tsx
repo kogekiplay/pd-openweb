@@ -50,7 +50,7 @@ const WrapRejectBtn = styled.div`
   border: 1px solid var(--color-border-primary);
   color: var(--color-error);
   &:hover {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   &.disable {
     opacity: 0.5;

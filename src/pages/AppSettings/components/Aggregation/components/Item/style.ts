@@ -50,11 +50,11 @@ export const WrapS = styled(Menu)`
       color: var(--color-text-tertiary) !important;
     }
     .Red {
-      color: var(--color-error) !important;
+      color: var(--color-error-text) !important;
     }
   }
   .Red.ming.MenuItem .Item-content:not(.disabled):hover {
-    color: var(--color-error) !important;
+    color: var(--color-error-text) !important;
   }
 `;
 export const WrapDialog = styled.div`

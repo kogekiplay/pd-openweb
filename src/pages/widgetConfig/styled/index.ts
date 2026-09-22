@@ -223,7 +223,7 @@ export const DropdownPlaceholder = styled.div`
   }
   &.deleted {
     background-color: rgba(251, 238, 241);
-    color: var(--color-error);
+    color: var(--color-error-text);
     border: 1px solid var(--color-error);
     cursor: pointer;
   }
@@ -491,7 +491,7 @@ export const EditModelWrap = styled.div`
   }
 
   th span {
-    color: var(--color-error);
+    color: var(--color-error-text);
     vertical-align: middle;
     margin-right: 2px;
   }
@@ -734,7 +734,7 @@ export const TitleContentWrap = styled.div`
       position: absolute;
       top: ${props => (props.displayRow ? '8px' : '4px')};
       left: -8px;
-      color: var(--color-error);
+      color: var(--color-error-text);
       transition: all 0.25s;
     }
     .titleContent {

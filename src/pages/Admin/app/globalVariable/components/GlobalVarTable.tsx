@@ -105,7 +105,7 @@ const Wrapper = styled.div`
         line-height: 16px;
         padding: 0 var(--space-2);
         border-radius: 27px;
-        color: var(--color-error);
+        color: var(--color-error-text);
         background: rgba(245, 23, 68, 0.08);
         font-size: 11px;
       }

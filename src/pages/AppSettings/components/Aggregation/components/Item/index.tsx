@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Switch } from 'antd';
-import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import { Dialog, Icon, MenuItem, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import AggTableAjax from 'src/pages/integration/api/aggTable.js';
@@ -16,7 +16,18 @@ import { pathCompletion } from 'src/utils/common';
 import MoveDialog from '../MoveDialog';
 import { Wrap, WrapDialog, WrapS } from './style';
 
-const ReSyncDialog = ({ aggTableId, onClose, onChange, items, projectId, appId }: { projectId?: string; appId?: string; [key: string]: any }) => {
+const ReSyncDialog = ({
+  aggTableId,
+  onClose,
+  onChange,
+  items,
+  projectId,
+  appId,
+}: {
+  projectId?: string;
+  appId?: string;
+  [key: string]: any;
+}) => {
   const [reCheck, setReCheck] = useState(false);
   const [reCheckLoading, setReCheckLoading] = useState(true);
   const [aggNameList, setAggNameList] = useState([]);
@@ -199,7 +210,7 @@ export default function ItemCard(props) {
     const deleteDia = () => {
       Dialog.confirm({
         title: (
-          <span style={{ color: 'var(--color-error)' }} className="WordBreak">
+          <span style={{ color: 'var(--color-error-text)' }} className="WordBreak">
             {_l('删除聚合表“%0”', item.name)}
           </span>
         ),
@@ -231,7 +242,7 @@ export default function ItemCard(props) {
         if (hasGet) {
           Dialog.confirm({
             title: (
-              <span style={{ color: 'var(--color-error)' }} className="WordBreak">
+              <span style={{ color: 'var(--color-error-text)' }} className="WordBreak">
                 {_l('删除聚合表“%0”', item.name)}
               </span>
             ),

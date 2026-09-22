@@ -122,7 +122,8 @@ const renderSurplusTime = data => {
         <span
           className="stepTimeConsuming flexRow"
           style={{
-            color: time > 0 ? 'var(--color-error)' : currentAccountNotified ? 'var(--color-warning-text)' : undefined,
+            color:
+              time > 0 ? 'var(--color-error-text)' : currentAccountNotified ? 'var(--color-warning-text)' : undefined,
           }}
         >
           {time > 0 ? _l('已超时%0', covertTime(time)) : covertTime(time)}

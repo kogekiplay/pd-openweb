@@ -29,7 +29,7 @@ const STATUS_CONFIG = {
   },
   1: {
     text: _l('创建失败'),
-    textColor: 'var(--color-error)',
+    textColor: 'var(--color-error-text)',
     loading: false,
     icon: 'icon-cancel',
     color: 'var(--color-error)',
@@ -50,7 +50,7 @@ const STATUS_CONFIG = {
   },
   4: {
     text: _l('停止中'),
-    textColor: 'var(--color-warning)',
+    textColor: 'var(--color-warning-text)',
     loading: false,
     icon: null,
     color: 'var(--color-warning)',
@@ -64,14 +64,14 @@ const STATUS_CONFIG = {
   },
   6: {
     text: _l('重启中'),
-    textColor: 'var(--color-warning)',
+    textColor: 'var(--color-warning-text)',
     loading: false,
     icon: null,
     color: 'var(--color-warning)',
   },
   7: {
     text: _l('销毁中'),
-    textColor: 'var(--color-warning)',
+    textColor: 'var(--color-warning-text)',
     loading: false,
     icon: null,
     color: 'var(--color-warning)',
@@ -85,7 +85,7 @@ const STATUS_CONFIG = {
   },
   9: {
     text: _l('销毁失败'),
-    textColor: 'var(--color-error)',
+    textColor: 'var(--color-error-text)',
     loading: false,
     icon: 'icon-cancel',
     color: 'var(--color-error)',

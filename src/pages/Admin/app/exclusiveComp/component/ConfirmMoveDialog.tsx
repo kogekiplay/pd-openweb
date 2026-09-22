@@ -6,7 +6,7 @@ import { MIGRATE_CODE } from '../config';
 
 const Content = styled.div`
   .warningInfo {
-    color: var(--color-error) !important;
+    color: var(--color-error-text) !important;
     line-height: 24px;
     font-size: var(--font-sm);
     margin-bottom: var(--space-5);

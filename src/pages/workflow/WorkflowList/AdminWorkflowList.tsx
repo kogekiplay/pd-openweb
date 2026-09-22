@@ -500,7 +500,7 @@ class AdminWorkflowList extends Component<any, any> {
                       color:
                         (limitExecCount - useExecCount) / limitExecCount > 0.1
                           ? 'var(--color-text-title)'
-                          : 'var(--color-error)',
+                          : 'var(--color-error-text)',
                     }}
                   >
                     {(overage || 0).toFixed(2)}%

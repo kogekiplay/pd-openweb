@@ -642,7 +642,7 @@ function MessageItem({
                   size="small"
                   iconStyle={{
                     ...iconStyle,
-                    color: 'var(--color-error)',
+                    color: 'var(--color-error-text)',
                   }}
                   icon="close"
                   popupPlacement="top"
@@ -652,7 +652,7 @@ function MessageItem({
                   size="small"
                   iconStyle={{
                     ...iconStyle,
-                    color: 'var(--color-success)',
+                    color: 'var(--color-success-text)',
                   }}
                   icon="hr_ok"
                   popupPlacement="top"

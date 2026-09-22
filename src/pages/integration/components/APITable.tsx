@@ -69,7 +69,7 @@ const Wrap = styled.div(
     }
   }
   .Green_fr{
-    color:var(--color-success)
+    color:var(--color-success-text)
   }
 `,
 );

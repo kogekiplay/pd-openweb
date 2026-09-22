@@ -22,7 +22,7 @@ const FormItem = styled.div`
     font-weight: 500;
     margin-bottom: 10px;
     .requiredStar {
-      color: var(--color-error);
+      color: var(--color-error-text);
       margin-left: -4px;
     }
   }

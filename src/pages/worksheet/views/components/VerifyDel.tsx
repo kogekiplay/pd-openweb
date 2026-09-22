@@ -18,7 +18,7 @@ const DelVerify = styled.div`
   .delComponent {
     margin-top: var(--space-5);
     text-align: right;
-    color: var(--color-error);
+    color: var(--color-error-text);
     cursor: pointer;
   }
   .btnGroup {

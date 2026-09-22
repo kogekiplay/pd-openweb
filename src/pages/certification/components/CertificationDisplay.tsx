@@ -22,7 +22,7 @@ const Wrapper = styled.div`
     height: 30px;
     display: flex;
     align-items: center;
-    color: var(--color-success);
+    color: var(--color-success-text);
     background: var(--color-success-bg);
     padding: 0 var(--space-3);
     border-radius: var(--radius-sm);

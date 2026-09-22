@@ -13,7 +13,9 @@ export default class DeleteNodeObj extends Component<any, any> {
 
     if (data.selectNodeObj.appId && data.selectNodeObj.appId !== selectNodeObj.appId) {
       Dialog.confirm({
-        title: <span style={{ color: 'var(--color-error)' }}>{_l('注意！你将要更改节点对象的表和原来不一致')}</span>,
+        title: (
+          <span style={{ color: 'var(--color-error-text)' }}>{_l('注意！你将要更改节点对象的表和原来不一致')}</span>
+        ),
         description: _l(
           '更改新的节点对象的工作表后，所有使用原表格数据的节点配置都将重置，且无法恢复。请确认你要执行此操作',
         ),

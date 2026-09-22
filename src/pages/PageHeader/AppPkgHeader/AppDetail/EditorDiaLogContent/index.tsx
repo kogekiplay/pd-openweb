@@ -45,7 +45,7 @@ const Wrap = styled.div`
         border-color: var(--color-error) !important;
       }
       .TxtRight {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
     }
   }

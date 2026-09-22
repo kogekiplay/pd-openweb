@@ -7,11 +7,11 @@ function getIcon(type = 'success', isMobile = false) {
   const config = {
     success: {
       name: 'Finish',
-      color: 'var(--color-success)',
+      color: 'var(--color-success-text)',
     },
     error: {
       name: 'cancel',
-      color: 'var(--color-error)',
+      color: 'var(--color-error-text)',
     },
     warning: {
       name: 'error1',

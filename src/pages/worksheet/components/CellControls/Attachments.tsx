@@ -171,7 +171,7 @@ const HoverPreviewPanelCon = styled.div`
     color: var(--color-text-tertiary);
     font-size: var(--font-xl);
     &:not(.disabled):hover {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
     &.disabled {
       cursor: not-allowed;

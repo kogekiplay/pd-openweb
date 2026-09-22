@@ -14,7 +14,7 @@ const AccessConditionsWrap = styled.div`
   .delete {
     color: var(--color-text-tertiary);
     &:hover {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
   }
 `;

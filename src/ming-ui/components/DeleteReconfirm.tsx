@@ -81,7 +81,7 @@ export default ({
       style={style}
       className={className}
       visible
-      title={<span style={{ color: 'var(--color-error)' }}>{title}</span>}
+      title={<span style={{ color: 'var(--color-error-text)' }}>{title}</span>}
       onCancel={closeLayer}
       description={description}
       footer={_.isUndefined(footer) ? renderFooter() : footer}

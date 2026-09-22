@@ -21,7 +21,7 @@ export default ({
     if (!item) {
       return (
         <Tooltip title={`ID：${data.assignFieldId}`}>
-          <span style={{ color: 'var(--color-error)' }}>{_l('字段已删除')}</span>
+          <span style={{ color: 'var(--color-error-text)' }}>{_l('字段已删除')}</span>
         </Tooltip>
       );
     }

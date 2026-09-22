@@ -14,8 +14,8 @@ import { getIconByType } from 'src/pages/widgetConfig/util';
 import LoadingDots from 'src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/LoadingDots';
 import { emitter, htmlEncodeReg } from 'src/utils/common';
 import { changeCodeOfAIGenControl, convertAiRecommendControlToControlData } from 'src/utils/control';
-import { parseStreamingJsonlData } from 'src/utils/sse';
 import type { FormControl } from 'src/utils/controlTypes';
+import { parseStreamingJsonlData } from 'src/utils/sse';
 
 const Con = styled.div`
   border-radius: 8px;
@@ -78,7 +78,7 @@ const Con = styled.div`
     .relate-worksheet-new-worksheet {
       margin: 6px 0 0 31px;
       font-size: var(--font-xs);
-      color: var(--color-success);
+      color: var(--color-success-text);
       cursor: pointer;
     }
     &.widget-list-title {

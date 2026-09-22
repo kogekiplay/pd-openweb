@@ -48,7 +48,7 @@ const UserListWrapper = styled.div`
     &:hover:not(.isHeader) {
       background: var(--color-background-hover);
       .removeBtn {
-        color: var(--color-error) !important;
+        color: var(--color-error-text) !important;
       }
     }
   }

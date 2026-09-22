@@ -24,7 +24,7 @@ const Wrap = styled.div`
     margin-bottom: 15px;
   }
   .errTip {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 
@@ -116,7 +116,9 @@ class BackupFromFilesCom extends Component<any, any> {
   renderUploadBtn = children => {
     return (
       <QiniuUpload
-        ref={ele => { this.uploaderWrap = ele; }}
+        ref={ele => {
+          this.uploaderWrap = ele;
+        }}
         className="upgradeAppUpload mTop24"
         options={{
           filters: {

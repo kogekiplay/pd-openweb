@@ -28,7 +28,7 @@ const Header = styled.div`
     width: 180px;
   }
   .red {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 
@@ -300,7 +300,7 @@ export default class PBC extends Component<any, any> {
 
             <div className="mTop20 bold">
               {_l('字段名')}
-              <span style={{ color: 'var(--color-error)' }}>*</span>
+              <span style={{ color: 'var(--color-error-text)' }}>*</span>
             </div>
             <div className="mTop10 flexRow">{this.renderFieldName(selectItem)}</div>
             <div className="mTop5 textSecondary">{_l('在工作流使用时，作为返回结果的字段名称')}</div>

@@ -464,10 +464,10 @@ export default class Code extends Component<any, any> {
 
               {msg && (
                 <Fragment>
-                  <div className="mTop10" style={{ color: 'var(--color-error)' }}>
+                  <div className="mTop10" style={{ color: 'var(--color-error-text)' }}>
                     {_l('代码错误')}
                   </div>
-                  <div className="mTop10" style={{ color: 'var(--color-error)' }}>
+                  <div className="mTop10" style={{ color: 'var(--color-error-text)' }}>
                     {msg}
                   </div>
                 </Fragment>

@@ -481,7 +481,7 @@ function Operate(props) {
                   Dialog.confirm({
                     onlyClose: true,
                     title: (
-                      <span className="Bold" style={{ color: 'var(--color-error)' }}>
+                      <span className="Bold" style={{ color: 'var(--color-error-text)' }}>
                         {_l('注意：此操作将删除原始记录')}
                       </span>
                     ),

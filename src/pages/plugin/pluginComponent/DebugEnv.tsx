@@ -61,7 +61,7 @@ const Wrapper = styled.div`
       padding-right: var(--space-2);
 
       .isDel {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
     }
     .operate {

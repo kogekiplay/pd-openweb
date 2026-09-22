@@ -81,7 +81,7 @@ const WidgetInfo = styled.div`
   .del {
     color: var(--color-text-tertiary);
     &:hover {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
   }
   .widgetItem {

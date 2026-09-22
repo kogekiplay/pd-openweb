@@ -44,7 +44,7 @@ const Wrap = styled.div`
     color: var(--color-text-tertiary);
   }
   .Green_fr {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
 `;
 let Ajax: ApiResult | null = null;

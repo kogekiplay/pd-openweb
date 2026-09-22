@@ -19,7 +19,7 @@ const Wrap = styled.div`
   }
 
   .roleDialogDangerTitle {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 

@@ -64,7 +64,7 @@ const Wrap = styled.div`
   }
   .newBadge {
     margin-left: 3px;
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   /* 加载中骨架卡：与 tryItem 同款卡片，内置居中扫光条（复用 ming-ui Skeleton） */
   .tryItem.trySkeleton {

@@ -83,7 +83,7 @@ const Wrap = styled.div`
 const WrapRejectBtn = styled.div`
   color: var(--color-error);
   &:hover {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 

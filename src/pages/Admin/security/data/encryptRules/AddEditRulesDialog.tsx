@@ -31,7 +31,7 @@ const FormItem = styled.div`
     position: absolute;
     left: -8px;
     top: 3px;
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .ming.Input {
     height: 34px;

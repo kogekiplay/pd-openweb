@@ -389,10 +389,10 @@ function ExplanList(props) {
                     {_l('到期')}
                   </span>
                   {item.remainingDays < 1 ? (
-                    <span style={{ color: 'var(--color-error)' }}>{_l('已过期')}</span>
+                    <span style={{ color: 'var(--color-error-text)' }}>{_l('已过期')}</span>
                   ) : (
                     <Fragment>
-                      {_l('剩余')} <span style={{ color: 'var(--color-success)' }}>{item.remainingDays}</span>{' '}
+                      {_l('剩余')} <span style={{ color: 'var(--color-success-text)' }}>{item.remainingDays}</span>{' '}
                       {_l('天')}
                     </Fragment>
                   )}

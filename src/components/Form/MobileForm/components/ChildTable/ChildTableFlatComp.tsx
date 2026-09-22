@@ -58,7 +58,7 @@ const FlattenContent = styled.div`
       text-align: center;
     }
     .delete {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
     .edit {
       color: var(--color-primary-text);

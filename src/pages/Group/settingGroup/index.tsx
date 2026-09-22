@@ -61,7 +61,7 @@ const ContentWrap = styled.div`
     color: var(--color-text-title);
     justify-content: center;
     &.red {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
     &.orange {
       color: var(--color-warning-text);

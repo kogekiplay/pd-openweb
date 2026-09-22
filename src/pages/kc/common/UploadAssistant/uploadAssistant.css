@@ -80,10 +80,10 @@
 }
 
 .uploadAssistant .fgSuccess {
-  color: var(--color-success);
+  color: var(--color-success-text);
 }
 .uploadAssistant .fgError {
-  color: var(--color-error);
+  color: var(--color-error-text);
 }
 .uploadAssistant .bgSuccess {
   background: var(--color-success);

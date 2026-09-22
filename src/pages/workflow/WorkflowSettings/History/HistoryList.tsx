@@ -181,7 +181,7 @@ export default class HistoryList extends Component<any, any> {
     const discardFun = () => {
       Dialog.confirm({
         className: 'deleteApprovalProcessDialog',
-        title: <span style={{ color: 'var(--color-error)' }}>{_l('丢弃排队中的执行')}</span>,
+        title: <span style={{ color: 'var(--color-error-text)' }}>{_l('丢弃排队中的执行')}</span>,
         description: _l('这些已触发的流程实例将不会被执行'),
         onOk: () => {
           processVersion.remove({ processIds: [processId] }).then(() => {

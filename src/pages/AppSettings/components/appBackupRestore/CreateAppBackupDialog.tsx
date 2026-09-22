@@ -17,13 +17,13 @@ const CreateBackupCon = styled.div`
     background: rgba(255, 159, 51, 0.15);
     height: 32px;
     line-height: 32px;
-    color: var(--color-warning);
+    color: var(--color-warning-text);
     .icon {
       color: var(--color-warning);
     }
   }
   .limitNum {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .FontW {
     font-weight: 600;

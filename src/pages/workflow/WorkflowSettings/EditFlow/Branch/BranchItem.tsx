@@ -93,7 +93,7 @@ export default class BranchItem extends Component<any, any> {
                       <span
                         className="ellipsis maxWidth mRight5"
                         style={{
-                          color: obj.nodeName && obj.filedValue ? 'var(--color-text-title)' : 'var(--color-error)',
+                          color: obj.nodeName && obj.filedValue ? 'var(--color-text-title)' : 'var(--color-error-text)',
                         }}
                       >
                         {obj.nodeName && obj.filedValue
@@ -160,11 +160,11 @@ export default class BranchItem extends Component<any, any> {
             <Fragment key={i}>
               {obj.controlId ? (
                 <Fragment>
-                  <span style={{ color: obj.nodeName ? 'var(--color-text-title)' : 'var(--color-error)' }}>
+                  <span style={{ color: obj.nodeName ? 'var(--color-text-title)' : 'var(--color-error-text)' }}>
                     {obj.nodeName || _l('节点已删除')}
                   </span>
                   -
-                  <span style={{ color: obj.controlName ? 'var(--color-text-title)' : 'var(--color-error)' }}>
+                  <span style={{ color: obj.controlName ? 'var(--color-text-title)' : 'var(--color-error-text)' }}>
                     {obj.controlName || _l('字段已删除')}
                   </span>
                 </Fragment>

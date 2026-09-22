@@ -105,10 +105,10 @@ const Editor = styled.div`
   /* 已知 / 未知函数名。CM5 时代 .cm-customFn 是 JS mode 按注入的 keywords 染的色；
      现在由 formulaMarks 的 fnName 装饰器给，类名沿用以免样式失联，并补一个未知函数的红色。 */
   .cm-customFn {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .cm-unknownFn {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .cm-system {
     color: var(--color-warning-text);

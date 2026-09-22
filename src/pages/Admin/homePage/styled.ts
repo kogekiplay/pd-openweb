@@ -10,7 +10,7 @@ export const HomePageWrap = styled.div`
   overflow-y: auto;
   background: var(--color-background-secondary);
   .Red_f00 {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .Yellow_de9 {
     color: var(--color-warning-text);
@@ -62,7 +62,7 @@ export const HomePageWrap = styled.div`
         }
       }
       .renewTag {
-        color: var(--color-success);
+        color: var(--color-success-text);
         .doneIcon {
           margin-right: var(--space-1);
         }
@@ -354,7 +354,7 @@ export const HomePageWrap = styled.div`
       border-radius: 24px;
       position: unset;
       background-color: rgb(76, 175, 80, 0.1);
-      color: var(--color-success);
+      color: var(--color-success-text);
       margin: 0 auto;
       display: inline-block;
       white-space: nowrap;

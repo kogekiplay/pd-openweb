@@ -84,10 +84,10 @@ const ListItem = styled.div`
   }
 
   .reject {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .agree {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .reviewing {
     color: var(--color-primary-text);

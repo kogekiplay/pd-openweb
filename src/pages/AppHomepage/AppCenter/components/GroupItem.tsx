@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import { bool, func, number, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, MdLink, Menu, MenuItem, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -95,7 +95,7 @@ const MenuWrap = styled(Menu)`
   padding: 6px 0 !important;
   width: 200px !important;
   .ming.MenuItem.red .Item-content {
-    color: var(--color-error) !important;
+    color: var(--color-error-text) !important;
     .Icon {
       color: var(--color-error) !important;
     }

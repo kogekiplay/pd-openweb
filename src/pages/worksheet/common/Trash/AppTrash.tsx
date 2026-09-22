@@ -170,7 +170,7 @@ export default function AppTrash(props) {
           const app = apps[appIndex];
           VerifyPasswordConfirm.confirm({
             title: (
-              <div className="Bold" style={{ color: 'var(--color-error)' }}>
+              <div className="Bold" style={{ color: 'var(--color-error-text)' }}>
                 <i className="icon-error error" style={{ fontSize: '28px', marginRight: '8px' }}></i>
                 {_l('将彻底删除应用 “%0”，请认证你的身份', app.appName)}
               </div>

@@ -444,7 +444,7 @@ export default class extends Component<any, any> {
     return (
       <Fragment>
         <div className="title flexRow valignWrapper relative">
-          <div className="Absolute bold" style={{ margin: '1px 0px 0px -8px', color: 'var(--color-error)' }}>
+          <div className="Absolute bold" style={{ margin: '1px 0px 0px -8px', color: 'var(--color-error-text)' }}>
             *
           </div>
           <div className="Font13 bold flex textPrimary">{_l('签名')}</div>
@@ -467,7 +467,7 @@ export default class extends Component<any, any> {
 
     return (
       <div className="itemWrap flexRow valignWrapper">
-        <div className="Absolute bold" style={{ margin: '1px 0px 0px -8px', color: 'var(--color-error)' }}>
+        <div className="Absolute bold" style={{ margin: '1px 0px 0px -8px', color: 'var(--color-error-text)' }}>
           *
         </div>
         <div className="textPrimary Font13 bold">{_l('选择下一节点审批人')}</div>
@@ -589,7 +589,10 @@ export default class extends Component<any, any> {
               <div className="flex flexColumn">
                 <div className="title flexRow valignWrapper relative pTop10">
                   {(passContent || overruleContent) && (
-                    <div className="Absolute bold" style={{ margin: '1px 0px 0px -8px', color: 'var(--color-error)' }}>
+                    <div
+                      className="Absolute bold"
+                      style={{ margin: '1px 0px 0px -8px', color: 'var(--color-error-text)' }}
+                    >
                       *
                     </div>
                   )}

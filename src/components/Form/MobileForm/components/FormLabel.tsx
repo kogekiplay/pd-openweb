@@ -215,7 +215,7 @@ export default ({
             style={{
               margin: item.desc && !_.includes([FROM.H5_ADD], from) ? '0px 0px 0px -8px' : '0px 0px 0px -13px',
               top: item.desc && !_.includes([FROM.H5_ADD], from) ? '9px' : '15px',
-              color: 'var(--color-error)',
+              color: 'var(--color-error-text)',
               position: 'absolute',
             }}
           >

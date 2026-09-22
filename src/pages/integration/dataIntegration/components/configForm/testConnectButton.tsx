@@ -38,7 +38,7 @@ const TestButton = styled.div`
   }
 
   &.testSuccess {
-    color: var(--color-success);
+    color: var(--color-success-text);
     border-color: var(--color-success);
     i {
       width: 14px;
@@ -51,7 +51,7 @@ const TestButton = styled.div`
   }
 
   &.testFailed {
-    color: var(--color-error);
+    color: var(--color-error-text);
     border-color: var(--color-error);
     i {
       color: var(--color-error);

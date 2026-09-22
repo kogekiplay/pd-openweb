@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import update from 'immutability-helper';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -58,7 +58,7 @@ export default function OperateList(props) {
     if (_.isEmpty(data)) {
       Dialog.confirm({
         title: (
-          <span className="Bold" style={{ color: 'var(--color-error)', wordBreak: 'break-all' }}>
+          <span className="Bold" style={{ color: 'var(--color-error-text)', wordBreak: 'break-all' }}>
             {_l('删除选项集 “%0”', name)}
           </span>
         ),

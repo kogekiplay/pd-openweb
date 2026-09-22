@@ -92,7 +92,7 @@ const SourceSelectFormWrapper = styled.div`
     position: absolute;
     top: 0;
     margin: 3px 0 0 -8px;
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .sourceNameInput {
     width: 50%;

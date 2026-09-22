@@ -74,6 +74,18 @@
   --color-success: #4caf50;
   --color-success-bg: rgba(76, 175, 80, 0.2);
   --color-success-border: #66bb6a;
+  /* 成功文字：亮色那档是深绿，照抄到暗色只有 2.48，必须反着来取更亮的。
+     原色对页面底 6.51、对卡片底 5.72 都够，但压在自家 20% 浅底上只有 4.15 ——
+     而「浅底 + 同色字」的小标签正是这一档最常见的用法。取 Material green-400
+     （暗色主题里已经在用它当 --color-success-border）：7.65 / 6.73 / 4.87，三关全过。 */
+  --color-success-text: #66bb6a;
+  /* 【这两条以前是缺的，暗色下会沿用 :root 的亮色值】
+     theme-default.less 定义在 :root 上，暗色只覆盖了一部分，没覆盖的会原样漏下来：
+     --color-success-hover 亮色是深绿、--color-error-hover 亮色是深红，
+     在暗色页面底上分别只有 2.48 和 2.39 —— 都是看不见的程度，
+     而全仓有 27 处在用它们。暗色的 hover 要往【更亮】走，取 Material 浅一档：
+     success 8.99 / error 6.06（对页面底）。 */
+  --color-success-hover: #81c784;
   --color-warning: #ff9800;
   --color-warning-bg: rgba(255, 152, 0, 0.2);
   --color-warning-border: #ffb74d;
@@ -81,8 +93,15 @@
      不需要再压暗 —— 这一档在两套主题里取值不同是正常的，别照抄亮色那个深橙。 */
   --color-warning-text: #ff9800;
   --color-error: #f44336;
-  /* 同 --color-warning-text：暗色底下原色就够（对页面底 5.47、对暗色错误底 4.57），不压暗。 */
-  --color-error-text: #f44336;
+  /* 错误文字：【2026-09-22 改过一次】原先写的是原色，理由是"对页面底够"。
+     那次只算了页面底，漏了卡片底和自家浅底 —— 实测 4.32 / 3.45，两个都不到 4.5，
+     而弹窗、菜单、面板全是卡片底，恰恰是错误文案最常出现的地方。
+     取 Material red-200（暗色主题里已经在用它当 --color-error-border）：
+     对页面底 8.41、卡片底 7.39、自家 20% 浅底 5.91。
+     这个漏子是新加的 functionalTextTokens.spec.ts 当场测出来的。 */
+  --color-error-text: #ef9a9a;
+  /* 见上面 --color-success-hover 那段说明，同一个漏下来的问题。 */
+  --color-error-hover: #e57373;
   --color-error-bg: rgba(244, 67, 54, 0.2);
   --color-error-border: #ef9a9a;
   --color-info: #1677ff;

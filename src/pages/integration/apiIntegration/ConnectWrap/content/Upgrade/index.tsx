@@ -124,7 +124,7 @@ const Wrap = styled.div`
       box-sizing: border-box;
     }
     .errTip {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
   }
   .scopeLoadingWrap {

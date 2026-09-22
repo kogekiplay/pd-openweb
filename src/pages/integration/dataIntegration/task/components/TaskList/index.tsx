@@ -201,7 +201,7 @@ const ErrorInfoWrapper = styled.div`
   border-radius: var(--radius-sm);
 
   .errorText {
-    color: var(--color-error);
+    color: var(--color-error-text);
     word-break: break-all;
   }
 `;

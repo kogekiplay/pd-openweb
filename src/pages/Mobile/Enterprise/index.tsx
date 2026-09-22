@@ -152,7 +152,7 @@ class ProjectCard extends Component<any, any> {
               <div>
                 <span className="textTertiary">{common.PROJECT_STATUS_TYPES_LABLE[item.projectStatus]}</span>
                 {item.projectStatus === common.PROJECT_STATUS_TYPES.PAID && (
-                  <span className="mLeft10" style={{ color: 'var(--color-success)' }}>
+                  <span className="mLeft10" style={{ color: 'var(--color-success-text)' }}>
                     {_l('%0 到期', moment(item.currentLicense.endDate).format('YYYY-MM-DD'))}
                   </span>
                 )}

@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { useSetState } from 'react-use';
-import cx from 'classnames';
-import copy from 'src/utils/copyToClipboard';
-import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
+import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Icon, LoadDiv, Radio, ScrollView, UserHead } from 'ming-ui';
 import pluginAjax from 'src/api/plugin';
 import { checkPermission } from 'src/components/checkPermission';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import PublishVersion from 'src/pages/plugin/pluginComponent/PublishVersion.jsx';
+import copy from 'src/utils/copyToClipboard';
 
 const Wrap = styled.div`
   height: 100%;
@@ -78,7 +78,7 @@ const WrapPopup = styled.div`
       color: var(--color-text-tertiary);
     }
     &.del {
-      color: var(--color-error);
+      color: var(--color-error-text);
       .icon {
         color: var(--color-error);
       }

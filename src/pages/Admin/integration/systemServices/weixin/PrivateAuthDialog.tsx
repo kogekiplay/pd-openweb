@@ -36,14 +36,14 @@ const DialogWrap = styled(Dialog)`
     width: 520px;
     margin: 0 auto;
     .required {
-      color: var(--color-error);
+      color: var(--color-error-text);
       margin-right: var(--space-1);
     }
     .error {
       border-color: var(--color-error) !important;
     }
     .errorMessage {
-      color: var(--color-error);
+      color: var(--color-error-text);
       margin-top: 5px;
     }
     .description {

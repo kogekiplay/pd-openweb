@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, LoadDiv, Menu, Radio, Support } from 'ming-ui';
 import flowNodeAjax from 'src/pages/workflow/api/flowNode';
@@ -24,7 +24,7 @@ const Wrap = styled.div`
   border-radius: 10px;
   max-width: ${props => `${props.maxW || '800px'}`};
   .Green_right {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .con {
     padding: var(--space-6);

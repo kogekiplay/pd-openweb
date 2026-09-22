@@ -152,7 +152,7 @@ const Footer = styled.div`
   }
   .closeBtn {
     border-color: var(--color-error);
-    color: var(--color-error);
+    color: var(--color-error-text);
     &:hover {
       background: var(--color-error);
     }
