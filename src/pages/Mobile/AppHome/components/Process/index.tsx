@@ -46,7 +46,7 @@ const ListWrap = styled.div`
       border-radius: 6px;
       text-align: center;
       &.active {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         background: var(--color-background-card);
         box-shadow: var(--shadow-md);
       }

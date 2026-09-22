@@ -47,13 +47,13 @@ const FilterTextCon = styled.div`
     width: 20px;
 
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
   }
 
   .editWorkflow {
     width: auto;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

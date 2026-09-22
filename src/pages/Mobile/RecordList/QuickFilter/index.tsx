@@ -40,7 +40,7 @@ const Con = styled.div`
       margin-bottom: var(--space-5);
     }
     .selected {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       max-width: 100px;
       padding-left: 10px;
       font-weight: 500;

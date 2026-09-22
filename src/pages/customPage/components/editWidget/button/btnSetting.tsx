@@ -42,7 +42,7 @@ const BtnSettingWrap = styled.div`
       transition: all 0.25s;
       cursor: pointer;
       &.active {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-bottom-color: var(--color-primary);
       }
     }
@@ -111,7 +111,7 @@ const BtnSettingWrap = styled.div`
         justify-content: center;
       }
       .active {
-        color: var(--color-primary) !important;
+        color: var(--color-primary-text) !important;
         border-radius: var(--radius-sm);
         padding: 3px 0;
         font-weight: bold;

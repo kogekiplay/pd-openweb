@@ -24,7 +24,7 @@ const Wrap = styled.div`
   }
 
   .authPrimaryText {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 export default class CreateOrAdd extends React.Component<any, any> {

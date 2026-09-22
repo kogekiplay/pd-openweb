@@ -37,7 +37,7 @@ const FilterEntry = styled.div`
     width: 100%;
   }
   .highlight {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
   .name {
     color: var(--title-color);

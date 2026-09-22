@@ -39,7 +39,7 @@ const Con = styled.div`
     background-color: var(--color-background-secondary);
     cursor: pointer;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       i {
         color: var(--color-primary) !important;
       }

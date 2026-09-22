@@ -25,7 +25,7 @@ export const Wrap = styled.div`
     text-align: center;
     .changeBtn {
       font-size: var(--font-md);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       font-weight: bold;
       &:hover {
         color: var(--color-primary-light);
@@ -43,7 +43,7 @@ export const Wrap = styled.div`
     line-height: 20px;
     color: var(--color-text-secondary);
     .authSwitchLink {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       font-size: 15px;
       font-weight: 400;
       &:hover {
@@ -85,7 +85,7 @@ export const Wrap = styled.div`
   }
   .loginModeSwitch {
     margin: var(--space-4) 0 var(--space-6);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     font-size: 15px;
     font-weight: 400;
     line-height: 22px;

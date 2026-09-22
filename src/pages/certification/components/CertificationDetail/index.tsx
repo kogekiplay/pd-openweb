@@ -54,7 +54,7 @@ const Wrapper = styled.div`
     border-radius: var(--radius-sm);
     font-weight: 600;
     cursor: pointer;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background: color-mix(in srgb, var(--color-primary) 10%, transparent);
     &:hover {
       background: color-mix(in srgb, var(--color-primary) 20%, transparent);

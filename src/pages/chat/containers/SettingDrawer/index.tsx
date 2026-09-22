@@ -24,7 +24,7 @@ const Wrap = styled.div`
     padding: 10px var(--space-5);
     position: relative;
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       font-weight: bold;
       background-color: var(--color-background-card);
       &::before {

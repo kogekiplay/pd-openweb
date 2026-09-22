@@ -46,7 +46,7 @@ export const WrapCon = styled.div`
   }
   .back {
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
   }
   img {

@@ -28,7 +28,7 @@ const Wrapper = styled.div`
     padding: 0 10px;
     border-radius: 16px;
     background: #d8eeff;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     border: 1px solid var(--color-primary-transparent);
     &.invalid {
       color: var(--color-error-text);
@@ -49,7 +49,7 @@ const Wrapper = styled.div`
     cursor: pointer;
     color: var(--color-text-tertiary);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 

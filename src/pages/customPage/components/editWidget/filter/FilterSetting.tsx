@@ -34,7 +34,7 @@ const RadioWrap = styled.div`
     font-size: var(--font-sm);
     cursor: pointer;
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       font-weight: bold;
       border-radius: var(--radius-sm);
       background-color: var(--color-background-primary);

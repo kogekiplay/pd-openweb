@@ -23,7 +23,7 @@ export const TabsSettingPopover = styled.div`
       justify-content: center;
     }
     .active {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
       border-radius: var(--radius-sm);
       font-weight: bold;
       background-color: var(--color-background-card);
