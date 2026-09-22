@@ -23,7 +23,11 @@ const WrapFragment = styled.div`
   }
   .addMarkInput {
     background: var(--color-background-primary);
-    border: 1px solid var(--color-border-secondary);
+    /* 【和旁边的下拉框用同一个边框档】这个输入框就贴在「开始」那个字段选择器右边、
+       同样 36px 高。原先用的是 secondary(#ddecf8)，而抽屉里所有 antd 控件的边框
+       走的是 primary(#cbe0f0)——实测这一屏 4 个控件用 primary，只有它一个用 secondary，
+       并排放着就是它比邻居浅一档。 */
+    border: 1px solid var(--color-border-primary);
     opacity: 1;
     border-radius: var(--radius-sm);
     padding: 0 var(--space-3);
