@@ -20,14 +20,24 @@
   .selectBox.selectStartOrEndCon {
     position: relative;
     margin-top: var(--space-4);
-    &::before {
+    /* 【连接「开始」「结束」两个圆点的竖线】原先写的是
+         width: 1px; border: 1px solid ...; top: 22px; height: calc(100% - 42px);
+       两处都不对，在真抽屉上量过（1440 宽、两行的情况）：
+         · `width:1px` 又加了四边 `border:1px` —— 实际渲染出来是一个
+           **4px 宽、带上下端帽的空心管**（中间 2px 是透明的），根本不是一条线。
+         · 线的中心 x = 10，而两个圆点的中心都在 9 —— 整整偏 1px。
+       改成一条真正的 1px 线，三者共用同一条中轴（x = 9）；竖直方向直接锚在两个圆心上：
+       top 18 = 起点圆心，bottom 17 = 终点圆心（行高 36、行距 16、容器 88，88 - 71 = 17）。
+       `:has` 限定「确实有结束行」才画 —— 只选了开始字段的那一组不该拖一根断线出来。 */
+    &:has(.startCom.end)::before {
       content: ' ';
-      width: 1px;
-      height: calc(~'100% - 42px');
-      border: 1px solid var(--color-border-secondary);
       position: absolute;
-      top: 22px;
-      left: 8px;
+      left: 9px;
+      transform: translateX(-50%);
+      top: 18px;
+      bottom: 17px;
+      width: 1px;
+      background: var(--color-border-primary);
       z-index: 0;
     }
     .startCom {
