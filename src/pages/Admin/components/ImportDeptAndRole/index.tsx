@@ -51,7 +51,7 @@ const ImportWrap = styled.div`
         color: var(--color-text-title);
       }
       .color_gr {
-        color: var(--color-success);
+        color: var(--color-success-text);
       }
       .color_g {
         color: var(--color-text-tertiary);
@@ -63,7 +63,7 @@ const ImportWrap = styled.div`
         color: var(--color-text-secondary);
       }
       .color_r {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
       .color_blue {
         color: var(--color-primary-text);

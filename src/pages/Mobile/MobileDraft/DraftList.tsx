@@ -27,7 +27,7 @@ const Wrap = styled.div`
     }
     .deleteRecord {
       position: absolute;
-      color: var(--color-error);
+      color: var(--color-error-text);
       font-size: 22px;
       right: 10px;
       bottom: 10px;

@@ -100,7 +100,7 @@ const Menu = styled.div`
     }
   }
   .deleteItem {
-    color: var(--color-error);
+    color: var(--color-error-text);
     .icon {
       color: var(--color-error);
     }

@@ -13,7 +13,11 @@ export default ({
   showAutoModel = false,
   showModelSettings = false,
   updateSource = () => {},
-}: { appId?: string; projectId?: string; [key: string]: any }) => {
+}: {
+  appId?: string;
+  projectId?: string;
+  [key: string]: any;
+}) => {
   const [modelDetail, setModelDetail] = useState({});
   const [modelParameterDialog, setModelParameterDialog] = useState(false);
   const [modelParameter, setModelParameter] = useState({});
@@ -109,7 +113,7 @@ export default ({
             {_.isEmpty(modelDetail) ? null : modelDetail.status ? (
               renderModelInfo(modelDetail)
             ) : (
-              <span style={{ color: 'var(--color-error)' }}>{_l('模型未开启或已删除')}</span>
+              <span style={{ color: 'var(--color-error-text)' }}>{_l('模型未开启或已删除')}</span>
             )}
           </div>
         ) : (
@@ -122,7 +126,7 @@ export default ({
             openSearch
             renderTitle={() =>
               list.find(o => o.value === data.model)?.text || (
-                <span style={{ color: 'var(--color-error)' }}>{_l('模型已删除')}</span>
+                <span style={{ color: 'var(--color-error-text)' }}>{_l('模型已删除')}</span>
               )
             }
             onChange={model => {

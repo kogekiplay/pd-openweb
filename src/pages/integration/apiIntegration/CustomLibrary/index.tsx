@@ -116,7 +116,7 @@ const Content = styled.div`
       overflow: hidden;
     }
     .listItemRemove {
-      color: var(--color-error);
+      color: var(--color-error-text);
       cursor: pointer;
     }
   }

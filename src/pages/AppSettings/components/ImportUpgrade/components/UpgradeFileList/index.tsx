@@ -60,10 +60,10 @@ const FileItemWrap = styled.div`
     }
   }
   .greenColor {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .redColor {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .passwordInputBox {
     width: 248px;

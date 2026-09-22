@@ -433,7 +433,7 @@ export default class ProcessMatters extends Component<any, any> {
                 <div className="flexRow mTop12">
                   <Icon icon="report" className="Font36 mRight10" style={{ color: 'var(--color-error)' }} />
                   <div className="w100">
-                    <div className="Font20 mBottom5" style={{ color: 'var(--color-error)' }}>
+                    <div className="Font20 mBottom5" style={{ color: 'var(--color-error-text)' }}>
                       {_l('%0 条异常', fail.length)}
                     </div>
                     <div style={{ maxHeight: 500, overflowY: 'auto' }}>

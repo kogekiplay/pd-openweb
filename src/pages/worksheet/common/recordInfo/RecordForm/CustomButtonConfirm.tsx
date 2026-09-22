@@ -18,7 +18,7 @@ const SectionName = styled.div`
       position: absolute;
       left: -10px;
       top: 3px;
-      color: var(--color-error);
+      color: var(--color-error-text);
       content: '*';
     }
   }

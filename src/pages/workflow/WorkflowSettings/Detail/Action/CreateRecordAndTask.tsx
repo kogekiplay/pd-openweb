@@ -117,7 +117,7 @@ export default class CreateRecordAndTask extends Component<any, any> {
               {_l('前往组织后台开通')}
             </span>
 
-            <div className="mTop10" style={{ color: 'var(--color-error)' }}>
+            <div className="mTop10" style={{ color: 'var(--color-error-text)' }}>
               {_l('注意️：若节点状态一直是进行中，请检查数电账号是否已登录或者是否已完成人脸识别。')}
             </div>
           </div>

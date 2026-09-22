@@ -50,7 +50,7 @@ const TotalConfigWrap = styled.div`
       cursor: pointer;
       margin-left: var(--space-3);
       &:hover {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
     }
   }

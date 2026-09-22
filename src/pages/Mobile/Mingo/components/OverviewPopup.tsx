@@ -36,7 +36,7 @@ const ICON_STYLE_BY_KEY = {
     background: 'var(--color-primary-transparent-light)',
   },
   roles: {
-    color: 'var(--color-error)',
+    color: 'var(--color-error-text)',
     background: 'var(--color-error-bg)',
   },
   worksheets: {
@@ -44,7 +44,7 @@ const ICON_STYLE_BY_KEY = {
     background: 'var(--color-warning-bg)',
   },
   customPages: {
-    color: 'var(--color-success)',
+    color: 'var(--color-success-text)',
     background: 'var(--color-success-bg)',
   },
   customActions: {

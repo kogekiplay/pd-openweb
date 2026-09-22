@@ -149,7 +149,7 @@ const MingoWelcomeWrap = styled.div`
     }
     .newBadge {
       margin-left: var(--space-2);
-      color: var(--color-success);
+      color: var(--color-success-text);
       font-size: var(--font-sm);
       font-weight: 500;
     }

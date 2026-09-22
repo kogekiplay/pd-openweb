@@ -29,7 +29,7 @@ const RuleInfo = styled.li`
   .delWrap {
     display: flex;
     align-items: center;
-    color: var(--color-error);
+    color: var(--color-error-text);
     i {
       margin-right: var(--space-1);
     }
@@ -79,7 +79,7 @@ const RuleInfo = styled.li`
         margin-top: 6px;
       }
       .errorHint {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
     }
     .ruleItem {
@@ -186,7 +186,7 @@ function SortableItem({
     if (isEmpty(currentControl)) {
       return (
         <div className="delWrap">
-          <AutoIcon style={{ color: 'var(--color-error)' }} icon="delete" type="delete" />
+          <AutoIcon style={{ color: 'var(--color-error-text)' }} icon="delete" type="delete" />
           <span>{_l('字段已删除')}</span>
         </div>
       );

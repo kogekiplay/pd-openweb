@@ -26,7 +26,7 @@ const StatusWrapper = styled.div`
     white-space: normal;
     word-break: break-all;
     &.failed {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
     .ming.Icon {
       flex-shrink: 0;

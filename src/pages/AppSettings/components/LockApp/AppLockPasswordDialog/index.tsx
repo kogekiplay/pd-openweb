@@ -40,7 +40,7 @@ const PasswordInputBox = styled.div`
   }
   .error {
     font-size: var(--font-xs);
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 

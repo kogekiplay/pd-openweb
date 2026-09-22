@@ -24,7 +24,7 @@ const Menu = styled.div`
     padding: 5px 10px;
   }
   .clearDate {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .active:not(.clearDate),
   .item:not(.clearDate):hover {

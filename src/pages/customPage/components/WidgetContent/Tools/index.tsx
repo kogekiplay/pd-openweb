@@ -66,12 +66,12 @@ const ToolsWrap = styled.ul`
       color: var(--color-primary-text);
     }
     &.del:hover {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
     &.highlight {
       color: var(--color-primary-text);
       &.del {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
     }
     &.switchButton {

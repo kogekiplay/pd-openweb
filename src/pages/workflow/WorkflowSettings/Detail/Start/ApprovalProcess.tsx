@@ -18,7 +18,7 @@ export default props => {
         <div className="Font13 bold">{_l('被以下工作流触发')}</div>
         <div className="Font13 mTop15 flexRow alignItemsCenter">
           <div className="ellipsis">
-            {data.triggerName || <span style={{ color: 'var(--color-error)' }}>{_l('流程已删除')}</span>}
+            {data.triggerName || <span style={{ color: 'var(--color-error-text)' }}>{_l('流程已删除')}</span>}
           </div>
           {data.triggerName && (
             <i

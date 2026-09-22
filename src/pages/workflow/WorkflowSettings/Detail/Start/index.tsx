@@ -6,6 +6,7 @@ import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { Dialog, LoadDiv, ScrollView } from 'ming-ui';
 import flowNode from '../../../api/flowNode';
+import type { FormControl } from 'src/utils/controlTypes';
 import { APP_TYPE, DATE_TYPE, TRIGGER_ID } from '../../enum';
 import { checkConditionsIsNull, checkJSON, clearFlowNodeMapParameter, getIcons, getStartNodeColor } from '../../utils';
 import { DetailFooter, DetailHeader } from '../components';
@@ -21,7 +22,6 @@ import SubProcess from './SubProcess';
 import UserAndDepartment from './UserAndDepartment';
 import WebhookContent from './WebhookContent';
 import WorksheetContent from './WorksheetContent';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const START_NODE_EXECUTE_DATE_TYPE = 16;
 
@@ -320,7 +320,7 @@ export default class Start extends Component<any, any> {
 
     if (this.state.data.appId) {
       Dialog.confirm({
-        title: <span style={{ color: 'var(--color-error)' }}>{_l('注意！你将要更改触发流程的工作表')}</span>,
+        title: <span style={{ color: 'var(--color-error-text)' }}>{_l('注意！你将要更改触发流程的工作表')}</span>,
         description: _l(
           '更换为新的工作表后，所有相关节点配置的字段都将被重置，你需要重新配置这些节点。请确认你需要执行此操作',
         ),

@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import copy from 'src/utils/copyToClipboard';
 import { Dialog, Menu, MenuItem } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
 import projectSettingAjax from 'src/api/projectSetting';
 import DisabledDepartmentAndRoleName from 'src/components/DisabledDepartmentAndRoleName';
 import { CLEAR_CACHE_PROCESS_TYPE } from 'src/pages/Admin/enum';
+import copy from 'src/utils/copyToClipboard';
 import {
   deleteDepartment,
   disabledAndEnabledDepartments,
@@ -214,7 +214,7 @@ let DiaActionTree = class DiaActionTree extends React.Component<any, any> {
         <MenuItem
           onClick={() => this.deleteCurrentDepartment(item)}
           style={{
-            color: 'var(--color-error)',
+            color: 'var(--color-error-text)',
           }}
         >
           {_l('删除')}

@@ -40,7 +40,7 @@ const Wrap = styled.div`
         opacity: 1;
         color: var(--color-text-secondary);
         &:hover {
-          color: var(--color-error);
+          color: var(--color-error-text);
         }
       }
     }

@@ -10,6 +10,7 @@ import { Checkbox, CityPicker, Dropdown, Icon, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { DateTime } from 'ming-ui/components/NewDateTimePicker';
 import { dialogSelectDept, dialogSelectOrgRole, dialogSelectUser } from 'ming-ui/functions';
+import type { ControlOption, FormControl } from 'src/utils/controlTypes';
 import { CONDITION_TYPE, DATE_LIST, FORMAT_TEXT } from '../../../enum';
 import {
   checkConditionAllowEmpty,
@@ -23,7 +24,6 @@ import ActionFields from '../ActionFields';
 import SelectOtherFields from '../SelectOtherFields';
 import Tag from '../Tag';
 import TagInput from '../TagInput';
-import type { ControlOption, FormControl } from 'src/utils/controlTypes';
 
 /** 一条触发条件里的取值项 */
 interface ConditionValue {
@@ -179,7 +179,7 @@ export default class Condition extends Component<any, any> {
       <Fragment>
         <span className="textSecondary mRight5">[{getControlTypeName(item)}]</span>
         <Tooltip title={item.controlName ? null : `ID：${item.controlId}`}>
-          <span style={{ color: item.controlName ? 'var(--color-text-title)' : 'var(--color-error)' }}>
+          <span style={{ color: item.controlName ? 'var(--color-text-title)' : 'var(--color-error-text)' }}>
             {item.controlName || _l('字段已删除')}
           </span>
         </Tooltip>
@@ -844,7 +844,9 @@ export default class Condition extends Component<any, any> {
                     timePicker={showTimePicker}
                     timeMode={timeMode}
                     allowClear={false}
-                    onOk={(e: moment.Moment) => this.updateConditionDateValue({ value: e.format(formatString), i, j, second: true })}
+                    onOk={(e: moment.Moment) =>
+                      this.updateConditionDateValue({ value: e.format(formatString), i, j, second: true })
+                    }
                   >
                     {conditionValues[1] && conditionValues[1].value
                       ? moment(conditionValues[1].value).format(formatString)
@@ -1494,7 +1496,9 @@ export default class Condition extends Component<any, any> {
         <Header />
         <div className="flowDetailTrigger">
           {data.map((item, i) =>
-            item.map((source, j: number) => this.renderItem(source, i, j, i === data.length - 1, j === item.length - 1)),
+            item.map((source, j: number) =>
+              this.renderItem(source, i, j, i === data.length - 1, j === item.length - 1),
+            ),
           )}
         </div>
       </Fragment>

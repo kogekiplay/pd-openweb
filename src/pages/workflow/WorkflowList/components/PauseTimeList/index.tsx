@@ -12,10 +12,10 @@ const PauseTimeListCon = styled.div`
     color: var(--color-text-title);
     padding: 0 var(--space-6);
     .pause {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
     .recover {
-      color: var(--color-success);
+      color: var(--color-success-text);
     }
     &:hover {
       .pause {

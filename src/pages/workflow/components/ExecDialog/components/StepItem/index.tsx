@@ -516,7 +516,7 @@ export default class StepItem extends Component<any, any> {
           <span
             className="stepTimeConsuming flexRow"
             style={{
-              color: maxEndTimeConsuming > 0 ? 'var(--color-error)' : 'var(--color-success)',
+              color: maxEndTimeConsuming > 0 ? 'var(--color-error-text)' : 'var(--color-success-text)',
               backgroundColor: maxEndTimeConsuming > 0 ? 'var(--color-error-bg)' : 'var(--color-success-bg)',
             }}
           >
@@ -574,9 +574,9 @@ export default class StepItem extends Component<any, any> {
         style={{
           color:
             time > 0
-              ? 'var(--color-error)'
+              ? 'var(--color-error-text)'
               : currentAccountNotified
-                ? 'var(--color-warning)'
+                ? 'var(--color-warning-text)'
                 : 'var(--color-primary-text)',
         }}
       >

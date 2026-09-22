@@ -264,7 +264,7 @@ export default class Start extends Component<any, any> {
         <Fragment>
           <WorksheetMessage item={{ ...item, appTypeName: _l('数据对象') }} />
           <div className="pLeft8 pRight8 mTop9 textSecondary pBottom5">
-            “{item.triggerName || <span style={{ color: 'var(--color-error)' }}>{_l('流程已删除')}</span>}”
+            “{item.triggerName || <span style={{ color: 'var(--color-error-text)' }}>{_l('流程已删除')}</span>}”
             <span className="mLeft5">{_l('触发')}</span>
           </div>
         </Fragment>

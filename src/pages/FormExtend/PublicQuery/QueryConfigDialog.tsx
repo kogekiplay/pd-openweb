@@ -24,7 +24,7 @@ const Item = styled.div`
 const Title = styled.div`
   font-weight: 500;
   .required {
-    color: var(--color-error);
+    color: var(--color-error-text);
     margin-top: -10px;
   }
 `;

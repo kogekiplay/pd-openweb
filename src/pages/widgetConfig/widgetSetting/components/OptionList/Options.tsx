@@ -116,7 +116,7 @@ const DragItem = styled.div`
     padding: 0 var(--space-2);
     &.repeatError {
       input {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
     }
   }

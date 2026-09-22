@@ -191,7 +191,7 @@ export default props => {
           )}
 
           {!startEventId && (
-            <div className="Font14 Bold" style={{ color: 'var(--color-error)', marginTop: 14, marginBottom: 48 }}>
+            <div className="Font14 Bold" style={{ color: 'var(--color-error-text)', marginTop: 14, marginBottom: 48 }}>
               {_l('审批流程异常，请删除后重新配置')}
             </div>
           )}

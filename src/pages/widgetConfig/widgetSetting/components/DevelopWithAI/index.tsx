@@ -117,7 +117,7 @@ const Terminal = styled.div`
   .content {
     flex: 1;
     padding: var(--space-1) var(--space-5);
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 

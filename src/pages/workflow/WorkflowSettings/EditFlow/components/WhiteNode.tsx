@@ -34,7 +34,7 @@ export default ({
                 'Font14 bold mTop5 flexRow alignItemsCenter justifyContentCenter',
                 IconElement ? 'mBottom5' : 'mBottom15',
               )}
-              style={{ color: isComplete ? 'var(--color-success)' : 'var(--color-primary-text)' }}
+              style={{ color: isComplete ? 'var(--color-success-text)' : 'var(--color-primary-text)' }}
             >
               {isComplete && <i className="icon-done Font16 mRight8" />}
               {nodeDesc}

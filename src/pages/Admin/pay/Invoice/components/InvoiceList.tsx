@@ -25,10 +25,10 @@ const Wrapper = styled.div`
     padding-left: var(--space-4);
   }
   .successColor {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .failedColor {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .warningColor {
     color: var(--color-warning-text);

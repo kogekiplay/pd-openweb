@@ -1,14 +1,14 @@
 export const WFSTATUS_OPTIONS = [
   {
     key: 'pass',
-    color: 'var(--color-success)',
+    color: 'var(--color-success-text)',
     index: 1,
     enumDefault2: 1,
     value: _l('同意'),
   },
   {
     key: 'refuse',
-    color: 'var(--color-error)',
+    color: 'var(--color-error-text)',
     index: 2,
     enumDefault2: 1,
     value: _l('否决'),

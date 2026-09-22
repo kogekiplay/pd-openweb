@@ -65,7 +65,7 @@ const MenuItemWrap = styled(MenuItem)`
 
 const RedMenuItemWrap = styled(MenuItemWrap)`
   .Item-content {
-    color: var(--color-error) !important;
+    color: var(--color-error-text) !important;
     .Icon {
       color: var(--color-error) !important;
     }

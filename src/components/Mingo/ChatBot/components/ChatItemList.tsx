@@ -227,7 +227,7 @@ function ChatHistoryItem({
                 setMenuVisible(false);
                 Dialog.confirm({
                   title: (
-                    <span style={{ color: 'var(--color-error)', fontWeight: 'bold' }}>{_l('确定删除该对话')}</span>
+                    <span style={{ color: 'var(--color-error-text)', fontWeight: 'bold' }}>{_l('确定删除该对话')}</span>
                   ),
                   width: window.innerWidth - 20 > 480 ? 480 : window.innerWidth - 20,
                   description: _l('删除后，聊天记录将不可恢复'),
@@ -238,7 +238,7 @@ function ChatHistoryItem({
                 });
               }}
             >
-              <span className="mLeft10" style={{ color: 'var(--color-error)' }}>
+              <span className="mLeft10" style={{ color: 'var(--color-error-text)' }}>
                 {_l('删除')}
               </span>
             </MenuItem>

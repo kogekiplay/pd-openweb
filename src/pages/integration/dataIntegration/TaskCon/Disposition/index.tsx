@@ -68,7 +68,7 @@ const WrapCon = styled.div`
         color: var(--color-text-secondary);
         cursor: pointer;
         &:hover {
-          color: var(--color-error);
+          color: var(--color-error-text);
         }
       }
     }

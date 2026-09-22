@@ -39,7 +39,7 @@ const ListWrapper = styled.div`
       padding: 0px var(--space-2);
       background: var(--color-success-bg);
       border-radius: 36px;
-      color: var(--color-success);
+      color: var(--color-success-text);
       font-weight: 600;
       font-size: var(--font-xs);
       margin: 0px 6px;
@@ -55,7 +55,7 @@ const ListWrapper = styled.div`
       display: none;
 
       .redBtn {
-        color: var(--color-error);
+        color: var(--color-error-text);
         margin-left: var(--space-3);
       }
       span {
@@ -178,7 +178,7 @@ const SecretDetailItem = styled.div`
     background: var(--color-background-secondary);
   }
   .expired {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 

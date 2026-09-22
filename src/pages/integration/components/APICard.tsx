@@ -37,7 +37,7 @@ const Wrap = styled.div`
     }
     .del {
       &:hover {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
     }
   }

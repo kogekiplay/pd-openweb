@@ -43,7 +43,7 @@ const CustomReferenceWrap = styled.div`
       border: 1px solid var(--color-border-primary);
       padding: 0 var(--space-3);
       &.isDel {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
     }
     .customField {

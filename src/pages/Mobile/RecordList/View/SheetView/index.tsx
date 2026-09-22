@@ -37,7 +37,7 @@ const BatchOptBtn = styled.div`
   left: 0;
   width: 100%;
   .deleteOpt {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .disabledDel {
     color: rgba(244, 67, 54, 0.5);

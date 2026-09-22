@@ -83,7 +83,7 @@ export const DropdownOverlay = styled.div`
         margin-right: 6px;
       }
       &.invalid {
-        color: var(--color-error);
+        color: var(--color-error-text);
         i {
           color: var(--color-error);
         }
@@ -98,7 +98,7 @@ export const DropdownOverlay = styled.div`
       &.delete {
         &:not(disabled):not(.grayItem):hover {
           background-color: rgba(251, 0, 56, 0.08);
-          color: var(--color-error);
+          color: var(--color-error-text);
           i {
             color: var(--color-error);
           }

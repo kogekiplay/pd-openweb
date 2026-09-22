@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Select } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
 import qs from 'query-string';
-import Trigger from '@rc-component/trigger';
 import {
   DeleteReconfirm,
   Dialog,
@@ -657,7 +657,7 @@ export default class AppManagement extends Component<any, any> {
               <span className="textTertiary mLeft15 mRight5">{_l('剩余')}</span>
               <span
                 className="bold"
-                style={{ color: maxCount - count > 10 ? 'var(--color-text-title)' : 'var(--color-error)' }}
+                style={{ color: maxCount - count > 10 ? 'var(--color-text-title)' : 'var(--color-error-text)' }}
               >
                 {maxCount - count < 0 ? 0 : maxCount - count}
               </span>

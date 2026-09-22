@@ -383,7 +383,7 @@ export function ButtonList({
                   }
                 }}
               />
-              <div className="mTop10 confirmSubmitHint hide" style={{ color: 'var(--color-success)' }}>
+              <div className="mTop10 confirmSubmitHint hide" style={{ color: 'var(--color-success-text)' }}>
                 {_l('已提交，请输入下一条')}
               </div>
             </div>

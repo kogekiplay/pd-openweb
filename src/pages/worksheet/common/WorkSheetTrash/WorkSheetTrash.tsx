@@ -1,5 +1,4 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-
 import update from 'immutability-helper';
 import _ from 'lodash';
 import { arrayOf, bool, func, shape, string } from 'prop-types';
@@ -10,13 +9,13 @@ import WorksheetTable from 'worksheet/components/WorksheetTable';
 import { RowHead } from 'worksheet/components/WorksheetTable/components/';
 import { SHEET_VIEW_HIDDEN_TYPES } from 'worksheet/constants/enum';
 import RestrictAccessStatus from 'src/components/restrictAccessStatus';
+import type { ReduxAction } from 'src/redux/types';
+import OptionalRouter from 'src/router/OptionalRouter';
 import { controlState } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import Header from './Header';
 import TrashBatchOperate from './TrashBatchOperate';
 import ColumnHead from './TrashColumnHead';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
-import type { ReduxAction } from 'src/redux/types';
-import OptionalRouter from 'src/router/OptionalRouter';
 
 const Con = styled.div`
   width: 100%;
@@ -310,7 +309,10 @@ export default function WorkSheetTrash(props) {
             onHardDelete={() => {
               VerifyPasswordConfirm.confirm({
                 title: (
-                  <div className="Bold" style={{ color: 'var(--color-error)', display: 'flex', alignItems: 'center' }}>
+                  <div
+                    className="Bold"
+                    style={{ color: 'var(--color-error-text)', display: 'flex', alignItems: 'center' }}
+                  >
                     <i className="icon-error error" style={{ fontSize: '28px', marginRight: '8px' }}></i>
                     {_l('彻底删除%0', worksheetInfo.entityName)}
                   </div>

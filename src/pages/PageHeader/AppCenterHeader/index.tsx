@@ -94,7 +94,7 @@ const ProjectItem = styled.div`
     color: var(--color-warning-text) !important;
   }
   .free {
-    color: var(--color-success) !important;
+    color: var(--color-success-text) !important;
   }
 `;
 

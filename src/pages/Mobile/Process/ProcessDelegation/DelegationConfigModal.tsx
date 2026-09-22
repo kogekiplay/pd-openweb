@@ -31,7 +31,7 @@ const ModalWrap = styled(Popup)`
       position: absolute;
       left: -10px;
       top: 3px;
-      color: var(--color-error);
+      color: var(--color-error-text);
       font-size: var(--font-sm);
       font-weight: bold;
     }

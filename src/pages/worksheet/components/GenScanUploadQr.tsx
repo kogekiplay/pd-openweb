@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { LoadDiv, Qr } from 'ming-ui';
 import attachmentAjax from 'src/api/attachment';
@@ -17,7 +17,7 @@ const Popup = styled.div`
   box-shadow: var(--shadow-xl);
   border-radius: 6px;
   .error {
-    color: var(--color-error);
+    color: var(--color-error-text);
     text-align: center;
     line-height: 200px;
   }
@@ -58,7 +58,7 @@ const Popup = styled.div`
   }
   .danger {
     font-size: var(--font-md);
-    color: var(--color-error);
+    color: var(--color-error-text);
     margin: 3px 0 10px;
     text-align: center;
   }

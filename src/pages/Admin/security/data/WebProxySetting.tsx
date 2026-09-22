@@ -63,7 +63,7 @@ const FormBox = styled.div`
     .errorMsg {
       padding-top: var(--space-1);
       height: 25px;
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
   }
 
@@ -75,12 +75,12 @@ const FormBox = styled.div`
   }
   .closeBtn {
     border-color: var(--color-error);
-    color: var(--color-error);
+    color: var(--color-error-text);
     &:hover {
       background: var(--color-error);
     }
     &.Button--disabled {
-      color: var(--color-error);
+      color: var(--color-error-text);
       background: transparent !important;
     }
   }

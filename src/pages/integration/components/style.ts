@@ -8,7 +8,7 @@ export const Wrap = styled.div`
     font-weight: 400;
   }
   .Green_right {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .iconCon {
     width: 44px;

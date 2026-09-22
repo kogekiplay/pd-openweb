@@ -106,7 +106,7 @@ const Wrapper = styled.div`
         height: 170px;
       }
       .green {
-        color: var(--color-success);
+        color: var(--color-success-text);
       }
       .qrMask {
         position: absolute;

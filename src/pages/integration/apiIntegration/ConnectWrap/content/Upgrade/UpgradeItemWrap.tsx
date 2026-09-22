@@ -24,7 +24,7 @@ const UpgradeContentItem = styled.div`
     border: none !important;
   }
   .addTxtColor {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .w50 {
     width: 50px;

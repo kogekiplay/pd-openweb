@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import { bool, func, node, oneOf, oneOfType, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 
 const Con = styled.div`
@@ -15,7 +15,7 @@ const Con = styled.div`
   line-height: 26px;
   font-size: var(--font-xs);
   color: var(--color-white);
-  background-color: ${({ color }) => color || 'var(--color-error)'};
+  background-color: ${({ color }) => color || 'var(--color-error-text)'};
   .delIcon {
     cursor: pointer;
     color: rgba(0, 0, 0, 0.24);
@@ -31,11 +31,11 @@ const Angle = styled.div`
   ${({ pos }) => `${pos === 'top' ? 'bottom' : 'top'}: -6px;`}
   left: 0;
   border: 3px solid transparent;
-  border-left-color: ${({ color }) => color || 'var(--color-error)'};
+  border-left-color: ${({ color }) => color || 'var(--color-error-text)'};
   ${({ pos, color }) =>
     pos === 'top'
-      ? `border-top-color: ${color || 'var(--color-error)'};`
-      : `border-bottom-color: ${color || 'var(--color-error)'};`}
+      ? `border-top-color: ${color || 'var(--color-error-text)'};`
+      : `border-bottom-color: ${color || 'var(--color-error-text)'};`}
 `;
 
 function CellErrorTipContent(props) {

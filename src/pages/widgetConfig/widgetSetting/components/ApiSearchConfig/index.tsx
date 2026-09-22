@@ -87,7 +87,7 @@ const AuthWrap = styled.div`
   margin-top: var(--space-4);
   position: relative;
   .authRequired {
-    color: var(--color-error);
+    color: var(--color-error-text);
     position: absolute;
     margin-top: 1px;
     left: -6px;

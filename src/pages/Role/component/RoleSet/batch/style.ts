@@ -31,7 +31,7 @@ export const Wrap = styled.div`
     overflow: auto;
     padding: 15px var(--space-5) var(--space-6);
     .hasSet {
-      color: var(--color-success);
+      color: var(--color-success-text);
     }
     .rolePermissionInlineRow {
       display: inline-flex;

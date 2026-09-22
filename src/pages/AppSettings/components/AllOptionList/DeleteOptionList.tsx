@@ -123,7 +123,7 @@ export default function DeleteOptionList({
         title ? (
           title
         ) : (
-          <span className="Bold" style={{ color: 'var(--color-error)', wordBreak: 'break-all' }}>
+          <span className="Bold" style={{ color: 'var(--color-error-text)', wordBreak: 'break-all' }}>
             {_l('无法直接删除选项集 “%0”', name)}
           </span>
         )

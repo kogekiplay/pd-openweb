@@ -57,7 +57,7 @@ const EditUserExtendInfoCon = styled.div`
   .cancelBtn {
     float: right;
     cursor: pointer;
-    color: var(--color-error);
+    color: var(--color-error-text);
     background: var(--color-background-primary);
     border: 1px solid var(--color-error);
   }
@@ -271,7 +271,7 @@ export default function EditUserExtendInfo(props) {
         <Modal
           className="cancelUserExtendInfo"
           width={494}
-          title={<span style={{ color: 'var(--color-error)', fontWeight: 600 }}>{_l('停用用户扩展信息表')}</span>}
+          title={<span style={{ color: 'var(--color-error-text)', fontWeight: 600 }}>{_l('停用用户扩展信息表')}</span>}
           visible={dialogVisible}
           okText={_l('停用')}
           cancelText={_l('取消')}

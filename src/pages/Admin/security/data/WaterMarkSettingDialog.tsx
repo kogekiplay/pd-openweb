@@ -1,7 +1,7 @@
 import React, { Fragment, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Dialog, TagTextarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -30,7 +30,7 @@ const FooterBtns = styled.div`
   }
   .closeBtn {
     border-color: var(--color-error);
-    color: var(--color-error);
+    color: var(--color-error-text);
     &:hover {
       background: var(--color-error);
     }

@@ -117,7 +117,7 @@ export default ({ data, getCallBackNodeNames, updateSource, onClose }) => {
                               {currentNode ? (
                                 currentNode[key]
                               ) : (
-                                <span style={{ color: 'var(--color-error)' }}>{_l('节点已删除')}</span>
+                                <span style={{ color: 'var(--color-error-text)' }}>{_l('节点已删除')}</span>
                               )}
                             </span>
                             <span

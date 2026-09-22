@@ -55,11 +55,11 @@ const WorkflowList = styled.ul`
       background: var(--color-background-disabled);
     }
     .success {
-      color: var(--color-success);
+      color: var(--color-success-text);
     }
     .failure,
     .btnDisabled {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
   }
   .empty {

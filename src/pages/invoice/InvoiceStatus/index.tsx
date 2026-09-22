@@ -134,7 +134,7 @@ export default function InvoiceStatus(props) {
         <div className={`flexRow alignItemsCenter ${isLandPage ? 'mBottom4' : 'mBottom12'}`}>
           <span className="textSecondary bold">{_l('发票金额：')}</span>
           <span
-            style={{ color: isLandPage ? 'var(--color-success)' : 'var(--color-text-title)' }}
+            style={{ color: isLandPage ? 'var(--color-success-text)' : 'var(--color-text-title)' }}
             className={cx('bold', { Font24: isLandPage })}
           >
             {'￥' + (price || '0')}

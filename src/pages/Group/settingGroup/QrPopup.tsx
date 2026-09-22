@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSetState } from 'react-use';
-import PropTypes from 'prop-types';
 import Trigger from '@rc-component/trigger';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 
@@ -13,7 +13,7 @@ const Popup = styled.div`
   box-shadow: 0px 1px 6px 1px rgba(0, 0, 0, 0.24);
   border-radius: 6px;
   .error {
-    color: var(--color-error);
+    color: var(--color-error-text);
     text-align: center;
     line-height: 130px;
   }

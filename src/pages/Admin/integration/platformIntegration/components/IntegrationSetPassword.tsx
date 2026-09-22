@@ -33,7 +33,7 @@ const SetInitialPassword = styled.div`
       border: 1px solid var(--color-error);
     }
     .passwordErrorTxt {
-      color: var(--color-error);
+      color: var(--color-error-text);
       padding-left: 80px;
     }
     .ant-btn-primary {

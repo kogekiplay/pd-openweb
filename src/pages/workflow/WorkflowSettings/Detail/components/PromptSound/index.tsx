@@ -39,7 +39,7 @@ const AudioBox = styled.span`
 
 const DelBtn = styled.i`
   &:hover {
-    color: var(--color-error) !important;
+    color: var(--color-error-text) !important;
   }
 `;
 

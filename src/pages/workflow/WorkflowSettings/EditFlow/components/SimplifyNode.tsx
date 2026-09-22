@@ -85,7 +85,7 @@ export default props => {
       events: () => {
         Dialog.confirm({
           className: 'deleteApprovalProcessDialog',
-          title: <span style={{ color: 'var(--color-error)' }}>{_l('删除“%0”', item.name)}</span>,
+          title: <span style={{ color: 'var(--color-error-text)' }}>{_l('删除“%0”', item.name)}</span>,
           onOk: () => {
             deleteNode(processId, item.id);
           },

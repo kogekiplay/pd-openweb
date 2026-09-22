@@ -296,14 +296,14 @@ export const ModalWrap = styled(Popup)`
       padding-bottom: 15px;
     }
     .RedMenuItem {
-      color: var(--color-error) !important;
+      color: var(--color-error-text) !important;
     }
   }
 `;
 export const RedMenuItemWrap = styled(MenuItem)`
   &.RedMenuItem {
     .Item-content {
-      color: var(--color-error) !important;
+      color: var(--color-error-text) !important;
       .Icon {
         color: var(--color-error) !important;
       }

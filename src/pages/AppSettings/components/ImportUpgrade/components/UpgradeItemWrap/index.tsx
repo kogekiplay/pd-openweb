@@ -29,7 +29,7 @@ const UpgradeContentItem = styled.div`
     border-radius: var(--radius-sm);
   }
   .actionAdd {
-    color: var(--color-success);
+    color: var(--color-success-text);
     background: var(--color-success-bg);
   }
   .actionDelete {

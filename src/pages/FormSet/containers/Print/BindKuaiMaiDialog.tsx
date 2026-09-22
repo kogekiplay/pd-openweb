@@ -12,7 +12,7 @@ const Con = styled.div`
     color: var(--color-text-secondary);
   }
   .required {
-    color: var(--color-error);
+    color: var(--color-error-text);
     position: absolute;
     left: 0px;
     top: 3px;

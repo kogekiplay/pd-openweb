@@ -62,7 +62,7 @@
   cursor: pointer;
 }
 .createShareDialog .shareBtn.cancelStyle {
-  color: var(--color-success) !important;
+  color: var(--color-success-text) !important;
 }
 .noShare {
   width: 100%;
@@ -89,7 +89,7 @@
 }
 
 .shareBtnClose {
-  color: var(--color-error) !important;
+  color: var(--color-error-text) !important;
 }
 #createShareAlert {
   border-radius: var(--radius-sm);

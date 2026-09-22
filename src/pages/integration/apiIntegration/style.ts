@@ -71,7 +71,7 @@ export const MenuItemWrap = styled(MenuItem)`
 
 export const RedMenuItemWrap = styled(MenuItemWrap)`
   .Item-content {
-    color: var(--color-error) !important;
+    color: var(--color-error-text) !important;
     .Icon {
       color: var(--color-error) !important;
     }

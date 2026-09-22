@@ -43,10 +43,10 @@ const Wrap = styled.div`
     background: var(--color-background-secondary);
   }
   .success {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .err {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .wait {
     color: var(--color-primary-text);

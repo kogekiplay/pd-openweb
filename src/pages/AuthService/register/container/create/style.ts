@@ -46,7 +46,7 @@ export const Wrap = styled.div`
 
     .mesDiv.errorDiv:not(.errorDivCu) {
       .title {
-        color: var(--color-error) !important;
+        color: var(--color-error-text) !important;
         top: -1px;
         transform: translateY(-50%);
       }

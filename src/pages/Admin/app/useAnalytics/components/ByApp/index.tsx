@@ -76,7 +76,7 @@ const ByAppWrap = styled.div`
       padding-top: 3px;
     }
     .isOpen {
-      color: var(--color-success) !important;
+      color: var(--color-success-text) !important;
     }
     .chartIcon {
       display: none;

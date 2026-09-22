@@ -115,7 +115,7 @@ export default props => {
       <div className="Font13">
         {_l('选择账户')}
         {required && (
-          <span className="mLeft5" style={{ color: 'var(--color-error)' }}>
+          <span className="mLeft5" style={{ color: 'var(--color-error-text)' }}>
             *
           </span>
         )}
@@ -129,7 +129,7 @@ export default props => {
           renderTitle={
             authId && list.length && !list.find(o => o.value === authId)
               ? () => {
-                  return <span style={{ color: 'var(--color-error)' }}>{_l('账户已删除')}</span>;
+                  return <span style={{ color: 'var(--color-error-text)' }}>{_l('账户已删除')}</span>;
                 }
               : null
           }

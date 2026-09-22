@@ -357,15 +357,33 @@ body .Hidden {
   font-weight: bold;
 }
 
+/* .Red 在 JSX 里被写了 242 次，227 次是文字、15 次挂在图标上。
+   文字走深一档；图标按 WCAG 1.4.11 非文本对比只要 3:1，原色就够，
+   而且要的就是"这是红色"这个识别，压深反而认不出来。
+   i.Red 的特指度(0,1,1)高于 .Red(0,1,0)，两条都带 !important 时更特指的赢。
+   和 color-class.less 里 .colorPrimary / i.colorPrimary 是同一套做法。 */
 .Red {
+  color: var(--color-error-text) !important;
+}
+
+i.Red {
   color: var(--color-error) !important;
 }
 
+/* .Green / .DepGreen 同理 */
 .Green {
+  color: var(--color-success-text) !important;
+}
+
+i.Green {
   color: var(--color-success) !important;
 }
 
 .DepGreen {
+  color: var(--color-success-text) !important;
+}
+
+i.DepGreen {
   color: var(--color-success) !important;
 }
 

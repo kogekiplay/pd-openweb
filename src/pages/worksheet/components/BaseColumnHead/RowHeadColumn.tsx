@@ -13,7 +13,7 @@ const Con = styled.div`
     margin-right: var(--space-2);
   }
   .requiredStatus {
-    color: var(--color-error);
+    color: var(--color-error-text);
     margin-right: 2px;
   }
   .controlName {

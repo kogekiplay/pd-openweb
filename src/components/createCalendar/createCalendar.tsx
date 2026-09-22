@@ -574,7 +574,10 @@ $.extend(CreateCalendar.prototype, {
           return;
         }
 
-        if (!_.isNumber(parseInt(String($(this).val() ?? ''), 10)) || _.isNaN(parseInt(String($(this).val() ?? ''), 10))) {
+        if (
+          !_.isNumber(parseInt(String($(this).val() ?? ''), 10)) ||
+          _.isNaN(parseInt(String($(this).val() ?? ''), 10))
+        ) {
           $(this).attr('value', $(this).attr('defaultValue'));
           return false;
         }
@@ -595,7 +598,10 @@ $.extend(CreateCalendar.prototype, {
         $(this).attr({ defaultValue: value, value: value });
       })
       .blur(function (this: HTMLElement) {
-        if (!_.isNumber(parseInt(String($(this).val() ?? ''), 10)) || _.isNaN(parseInt(String($(this).val() ?? ''), 10))) {
+        if (
+          !_.isNumber(parseInt(String($(this).val() ?? ''), 10)) ||
+          _.isNaN(parseInt(String($(this).val() ?? ''), 10))
+        ) {
           $(this).attr('value', $(this).attr('defaultValue'));
         }
 
@@ -1148,7 +1154,7 @@ CreateCalendar.methods = {
                   <div className="memberBusyCalendarsWrap">
                     <div
                       style={{
-                        color: 'var(--color-error)',
+                        color: 'var(--color-error-text)',
                       }}
                       className="mBottom5"
                     >

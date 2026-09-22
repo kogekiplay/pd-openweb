@@ -14,10 +14,10 @@ const Wrapper = styled.div`
     border-radius: 8px;
     padding: var(--space-4);
     .successColor {
-      color: var(--color-success);
+      color: var(--color-success-text);
     }
     .failColor {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
   }
 `;

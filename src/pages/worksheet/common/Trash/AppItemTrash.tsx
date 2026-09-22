@@ -212,7 +212,9 @@ export default function AppItemTrash(props) {
   function onDelete(itemIndex) {
     const needDeleteItem = appItems[itemIndex];
     Dialog.confirm({
-      title: <span style={{ color: 'var(--color-error)' }}>{_l('将彻底删除工作表"%0"', needDeleteItem.name)}</span>,
+      title: (
+        <span style={{ color: 'var(--color-error-text)' }}>{_l('将彻底删除工作表"%0"', needDeleteItem.name)}</span>
+      ),
       buttonType: 'danger',
       description: _l('彻底删除该数据后，将无法恢复。'),
       okText: _l('彻底删除'),

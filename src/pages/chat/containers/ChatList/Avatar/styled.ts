@@ -30,7 +30,7 @@ export const Wrap = styled.div`
     }
   }
   .logout:hover {
-    color: var(--color-error) !important;
+    color: var(--color-error-text) !important;
   }
   .myAccount {
     padding: 3px var(--space-2);
@@ -78,7 +78,7 @@ export const PopoverWrap = styled.div`
       color: var(--color-warning-text) !important;
     }
     .free {
-      color: var(--color-success) !important;
+      color: var(--color-success-text) !important;
     }
   }
 `;

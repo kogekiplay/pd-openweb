@@ -34,7 +34,7 @@ const List = styled.div`
   .fieldDelBtn {
     cursor: pointer;
     &:not(.disabled):hover {
-      color: var(--color-error) !important;
+      color: var(--color-error-text) !important;
     }
   }
   .startConditionWrap.actionFields {

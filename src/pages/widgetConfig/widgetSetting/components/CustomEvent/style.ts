@@ -33,7 +33,7 @@ export const IconWrap = styled.span`
   cursor: pointer;
   font-size: var(--font-lg);
   &:hover {
-    color: ${props => (props.type === 'danger' ? 'var(--color-error)' : 'var(--color-primary)')};
+    color: ${props => (props.type === 'danger' ? 'var(--color-error-text)' : 'var(--color-primary)')};
   }
 `;
 
@@ -139,7 +139,7 @@ export const CustomActionWrap = styled.div`
     cursor: pointer;
     margin-left: 10px;
     &:hover {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
   }
   .setValueContent {

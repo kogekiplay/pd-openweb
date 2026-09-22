@@ -224,7 +224,7 @@ export const WrapPreview = styled.div`
     border-right: 0;
   }
   .finished {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .stop {
     color: var(--color-warning-text);
@@ -277,11 +277,11 @@ export const WrapPreview = styled.div`
         border: 1px solid var(--color-warning);
       }
       &.finishedBtn:hover {
-        color: var(--color-success);
+        color: var(--color-success-text);
         border: 1px solid var(--color-success);
       }
       &.errBtn:hover {
-        color: var(--color-error);
+        color: var(--color-error-text);
         border: 1px solid var(--color-error);
       }
     }
@@ -361,14 +361,14 @@ export const WrapS = styled(Menu)`
       color: var(--color-text-tertiary) !important;
     }
     .Red {
-      color: var(--color-error) !important;
+      color: var(--color-error-text) !important;
     }
   }
   .ming.Item.colorPrimary .Item-content:not(.disabled):hover {
     color: var(--color-primary-text) !important;
   }
   .Red.ming.MenuItem .Item-content:not(.disabled):hover {
-    color: var(--color-error) !important;
+    color: var(--color-error-text) !important;
   }
   .ming.Item .Item-content {
     padding: 0 var(--space-2) 0 var(--space-4);

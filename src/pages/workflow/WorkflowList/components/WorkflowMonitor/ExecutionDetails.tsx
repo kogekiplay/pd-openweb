@@ -412,7 +412,7 @@ export default class ExecutionDetails extends Component<any, any> {
                     getPopupContainer={() => this.props.monitorContainer}
                   >
                     <span className="Hand Hover_1f">
-                      <span style={{ color: waiting ? 'var(--color-error)' : 'var(--color-text-title)' }}>
+                      <span style={{ color: waiting ? 'var(--color-error-text)' : 'var(--color-text-title)' }}>
                         {!waiting ? _l('正常') : _l('暂停')}
                       </span>
                       <Icon icon="arrow-down" className="textSecondary mLeft5" />
@@ -480,7 +480,8 @@ export default class ExecutionDetails extends Component<any, any> {
                 trigger={['click']}
                 placement="bottomLeft"
                 getPopupContainer={() => this.props.monitorContainer}
-                popupRender={() => <div className="runoOperateBox">
+                popupRender={() => (
+                  <div className="runoOperateBox">
                     {runDateList.map(v => (
                       <div
                         className="runDateItem Font13"
@@ -490,7 +491,8 @@ export default class ExecutionDetails extends Component<any, any> {
                         {v.label}
                       </div>
                     ))}
-                  </div>}
+                  </div>
+                )}
               >
                 <Button type="ghostgray" className="mRight10">
                   {_l('暂停')}

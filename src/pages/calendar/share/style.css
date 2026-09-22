@@ -384,7 +384,7 @@ footer a.join.leave {
   padding-top: 5px;
 }
 .leaveBoxTitle {
-  color: var(--color-success);
+  color: var(--color-success-text);
   border-bottom: 1px solid var(--color-border-tertiary);
   padding-bottom: var(--space-5);
 }
@@ -410,7 +410,7 @@ footer a.join.leave {
 .leaveBoxMessage {
   text-align: center;
   margin-top: var(--space-5);
-  color: var(--color-error);
+  color: var(--color-error-text);
 }
 .leaveBoxTitle span {
   position: static;

@@ -60,10 +60,10 @@ export const Wrap = styled.div`
       font-weight: 400;
       min-height: 55px;
       &.isErr {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
       &.isGreen {
-        color: var(--color-success);
+        color: var(--color-success-text);
       }
       .item {
         min-width: 0;

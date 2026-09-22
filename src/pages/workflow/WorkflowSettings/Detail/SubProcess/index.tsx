@@ -276,7 +276,7 @@ export default class SubProcess extends Component<any, any> {
                 <Fragment>
                   <div className="ellipsis">{data.subProcessName}</div>
                   {!data.subProcessEnabled && (
-                    <div className="flex" style={{ color: 'var(--color-error)' }}>
+                    <div className="flex" style={{ color: 'var(--color-error-text)' }}>
                       （{_l('未开启')}）
                     </div>
                   )}

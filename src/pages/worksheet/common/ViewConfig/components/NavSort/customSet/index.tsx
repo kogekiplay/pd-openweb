@@ -29,7 +29,7 @@ const Wrap = styled.div`
       // background: var(--color-background-secondary);
       color: var(--color-primary-text);
       &.clearBtn {
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
     }
   }

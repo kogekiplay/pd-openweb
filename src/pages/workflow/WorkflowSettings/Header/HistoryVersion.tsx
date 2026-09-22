@@ -41,7 +41,7 @@ const HistoryListBox = styled.div`
 
   .red {
     &:hover {
-      color: var(--color-error) !important;
+      color: var(--color-error-text) !important;
     }
   }
 `;

@@ -61,7 +61,7 @@ const FormItem = styled.div`
     font-weight: 600;
     margin-bottom: 10px;
     .requiredStar {
-      color: var(--color-error);
+      color: var(--color-error-text);
       margin-left: var(--space-1);
     }
   }

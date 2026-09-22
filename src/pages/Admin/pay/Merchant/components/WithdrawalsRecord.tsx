@@ -63,7 +63,7 @@ export default class WithdrawalsRecord extends Component<any, any> {
         dataIndex: 'amount',
         width: 160,
         render: text => {
-          return <div style={{ color: 'var(--color-success)' }}>{text}</div>;
+          return <div style={{ color: 'var(--color-success-text)' }}>{text}</div>;
         },
       },
       {
@@ -306,7 +306,9 @@ export default class WithdrawalsRecord extends Component<any, any> {
               <FlexWrap className="flex">
                 <PageTableCon
                   paginationInfo={{ pageIndex, pageSize: 50 }}
-                  ref={node => { this.tableWrap = node; }}
+                  ref={node => {
+                    this.tableWrap = node;
+                  }}
                   loading={loading}
                   columns={this.columns}
                   dataSource={list}

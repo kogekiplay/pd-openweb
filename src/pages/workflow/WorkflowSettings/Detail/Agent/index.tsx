@@ -94,7 +94,7 @@ const TOOLS_ITEM = styled.div`
     display: none;
   }
   .red {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 
@@ -146,7 +146,7 @@ const SHEET_LIST = styled.div`
   border-radius: var(--radius-sm);
   font-size: 0;
   &.red {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 

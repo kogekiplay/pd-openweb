@@ -64,7 +64,7 @@ const SortableItemBox = styled.div`
     color: #465a65;
   }
   .red {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 

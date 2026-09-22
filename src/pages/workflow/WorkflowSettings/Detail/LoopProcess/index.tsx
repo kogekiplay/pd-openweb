@@ -143,7 +143,7 @@ export default class LoopProcess extends Component<any, any> {
         </div>
         <div className="flexRow mTop5 alignItemsCenter mBottom20">
           <div className="ellipsis">
-            {data.subProcessName || <span style={{ color: 'var(--color-error)' }}>{_l('流程已删除')}</span>}
+            {data.subProcessName || <span style={{ color: 'var(--color-error-text)' }}>{_l('流程已删除')}</span>}
           </div>
           {data.subProcessId && data.subProcessName && (
             <i

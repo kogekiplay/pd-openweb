@@ -20,7 +20,7 @@ const MenuItem = styled.div`
   line-height: 36px;
   cursor: pointer;
   &.isDel {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   &:hover {
     background-color: var(--color-background-hover);

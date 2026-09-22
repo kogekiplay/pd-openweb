@@ -50,7 +50,7 @@ const MobileTableContent = styled.div`
 
 const FlattenContent = styled.div`
   .childTableErrorMessage {
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   .rowHeader {
     height: 36px;
@@ -67,7 +67,7 @@ const FlattenContent = styled.div`
       text-align: center;
     }
     .delete {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
     .edit {
       color: var(--color-primary-text);

@@ -40,7 +40,7 @@ const Item = styled.div(
   display: flex;
   margin-bottom: ${isLastLine ? 0 : 8}px;
   width: ${maxWidth};
-  --border-color: ${requiredError ? 'var(--color-error)' : 'var(--color-border-primary)'};
+  --border-color: ${requiredError ? 'var(--color-error-text)' : 'var(--color-border-primary)'};
   ${
     isConfigMode
       ? `
@@ -459,7 +459,7 @@ export default function Conditions(props) {
           <Label className="label" title={item.control.controlName}>
             <span className="name">{item.control.controlName || _l('未命名')}</span>
             {item.isRequired && (
-              <span className="requiredMark" style={{ color: 'var(--color-error)' }}>
+              <span className="requiredMark" style={{ color: 'var(--color-error-text)' }}>
                 *
               </span>
             )}

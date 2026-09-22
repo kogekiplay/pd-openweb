@@ -112,7 +112,7 @@ const DisplayItemWrap = styled.div`
   }
   .verifyInfo {
     margin-top: var(--space-2);
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 

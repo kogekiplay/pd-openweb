@@ -186,7 +186,7 @@ export default function Runner({ reRenderFlag, type, code, params, onChange = ()
   }, [reRenderFlag]);
   return (
     <Con>
-      {error ? <span style={{ color: 'var(--color-error)' }}>{type === 'production' ? '' : error}</span> : element}
+      {error ? <span style={{ color: 'var(--color-error-text)' }}>{type === 'production' ? '' : error}</span> : element}
     </Con>
   );
 }

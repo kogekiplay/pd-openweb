@@ -53,7 +53,7 @@ const IconWrap = styled.div`
 const STATUS_INFO = {
   4: {
     text: _l('应用正在升级中...'),
-    color: 'var(--color-success)',
+    color: 'var(--color-success-text)',
   },
   10: {
     text: _l('应用正在升级中...'),

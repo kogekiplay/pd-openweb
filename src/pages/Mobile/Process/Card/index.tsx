@@ -104,7 +104,7 @@ export default class Card extends Component<any, any> {
       <span
         className="stepTimeConsuming flexRow"
         style={{
-          color: maxEndTimeConsuming > 0 ? 'var(--color-error)' : 'var(--color-success)',
+          color: maxEndTimeConsuming > 0 ? 'var(--color-error-text)' : 'var(--color-success-text)',
         }}
       >
         <Icon icon={maxEndTimeConsuming > 0 ? 'access_time' : 'task'} className="Font14 mRight2" />
@@ -133,9 +133,9 @@ export default class Card extends Component<any, any> {
         style={{
           color:
             time > 0
-              ? 'var(--color-error)'
+              ? 'var(--color-error-text)'
               : currentAccountNotified
-                ? 'var(--color-warning)'
+                ? 'var(--color-warning-text)'
                 : 'var(--color-primary-text)',
         }}
       >

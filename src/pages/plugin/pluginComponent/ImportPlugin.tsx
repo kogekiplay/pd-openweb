@@ -32,7 +32,7 @@ const UploadWrapper = styled.div`
       margin-bottom: 15px;
     }
     .error {
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
   }
 `;

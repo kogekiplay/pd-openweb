@@ -293,7 +293,7 @@ export default function SessionHistory({
                             setMenuOpenId('');
                             Dialog.confirm({
                               title: (
-                                <span style={{ color: 'var(--color-error)', fontWeight: 'bold' }}>
+                                <span style={{ color: 'var(--color-error-text)', fontWeight: 'bold' }}>
                                   {_l('确定删除该对话')}
                                 </span>
                               ),
@@ -304,7 +304,7 @@ export default function SessionHistory({
                             });
                           }}
                         >
-                          <span className="mLeft10" style={{ color: 'var(--color-error)' }}>
+                          <span className="mLeft10" style={{ color: 'var(--color-error-text)' }}>
                             {_l('删除')}
                           </span>
                         </MenuItem>

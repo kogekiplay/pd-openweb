@@ -57,7 +57,7 @@ const Wrap = styled.div`
   }
   .successTxt {
     font-size: var(--font-md);
-    color: var(--color-success);
+    color: var(--color-success-text);
     margin-top: var(--space-5);
   }
 `;

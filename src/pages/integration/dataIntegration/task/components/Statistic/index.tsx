@@ -32,7 +32,7 @@ const StatisticContent = styled.div`
           color: var(--color-task);
         }
         &.error {
-          color: var(--color-error);
+          color: var(--color-error-text);
         }
       }
     }

@@ -18,7 +18,7 @@ const Con = styled.div`
     color: var(--color-text-secondary);
   }
   .green {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
   .control {
     display: inline-block;

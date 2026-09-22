@@ -23,7 +23,7 @@ const TYPE_BADGE = {
   },
   workspace: {
     label: _l('工作台'),
-    color: 'var(--color-success)',
+    color: 'var(--color-success-text)',
     border: 'var(--color-success-border)',
     bg: 'var(--color-success-bg)',
   },
