@@ -18,12 +18,18 @@
     transition: width 0.2s ease-out;
     background-color: var(--color-background-card);
     box-shadow: var(--shadow-lg);
+    /* 【圆角要挂在 .inputWrap 上，不是里面的 input】画出那块白底和投影的是这一层，
+       原先只有 input 有圆角 —— 而 input 被 .inputWrap 的白底整块盖住，
+       看到的就是一个四角全直的白条（圆角那一批漏掉的就是这里）。
+       档位取 md：变量表里 md 就是「卡片、弹层、菜单、气泡」，这是个弹层。 */
+    border-radius: var(--radius-md);
+    overflow: hidden;
     input {
       box-sizing: border-box;
       width: 100%;
       padding: 0 60px 0 40px;
       height: 54px;
-      border-radius: var(--radius-sm);
+      border-radius: inherit;
       outline: none;
       border: none;
       box-shadow: var(--shadow-md);
@@ -31,12 +37,11 @@
     input::-webkit-input-placeholder {
       color: var(--color-text-disabled);
     }
+    /* 出结果时输入框和下面的结果面板连成一体：上圆下直，圆角交给结果面板收尾 */
     &.hasResult {
       width: 1000px;
       box-shadow: none;
-      input {
-        border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-      }
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
     }
     & > .icon {
       position: absolute;
@@ -67,11 +72,22 @@
     height: calc(~'100vh - 94px');
     background: var(--color-background-primary);
     border-top: 1px solid var(--color-border-tertiary);
+    /* 接在输入框下面，由它收掉下面两个角 */
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
     opacity: 0;
+    /* 【没出结果时不能吃点击】组件里本来就有「点遮罩关闭」（handleMaskClick 判断
+       e.target 是不是 .globalSearchWrap），但这块结果面板宽 600px、高几乎满屏，
+       即使 opacity:0 也**还在布局里、照样接收点击** —— 点遮罩中间那一大片全落在它身上，
+       于是"点外部关不掉"。只有左右两侧那点窄边能关，所以看着像功能不存在。
+       没结果时让它不参与命中测试；出结果时再收回来（面板内部要能点）。 */
+    pointer-events: none;
     transition: width 0.2s ease-out;
     &.easeWidth {
       opacity: 1;
       width: 1000px;
+      pointer-events: auto;
     }
   }
 }

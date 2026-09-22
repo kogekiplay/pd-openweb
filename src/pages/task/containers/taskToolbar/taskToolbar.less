@@ -157,6 +157,8 @@
       right: 82px;
       background: var(--color-background-card);
       box-shadow: var(--shadow-lg);
+      /* 浮动弹层补圆角：有投影没圆角，是圆角那批漏掉的一类（同一轮扫出 10 处） */
+      border-radius: var(--radius-sm);
       padding: 6px 0;
       z-index: 100;
       li {
@@ -229,6 +231,8 @@
       width: 270px;
       background-color: var(--color-background-primary);
       box-shadow: var(--shadow-lg);
+      /* 浮动弹层补圆角：有投影没圆角，是圆角那批漏掉的一类（同一轮扫出 10 处） */
+      border-radius: var(--radius-sm);
       animation: filterAnimationsIn 0.25s ease-out both;
       &.reverse {
         animation: filterAnimationsLeave 0.25s ease-out both;

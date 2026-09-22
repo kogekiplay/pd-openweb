@@ -483,6 +483,8 @@
     padding-left: 10px;
     display: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /* 浮动弹层补圆角：有投影没圆角，是圆角那批漏掉的一类（同一轮扫出 10 处） */
+    border-radius: var(--radius-sm);
     -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
   #folderJoin .joinText,
