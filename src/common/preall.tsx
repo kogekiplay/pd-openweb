@@ -31,6 +31,26 @@ installPlatformTheme();
 // 的顶层页面（字段编辑、表单设计、打印…），它们刷新时没有 appPkg 可用。
 syncThemeFromLocation();
 
+// 「请求被取消」不该刷控制台。
+//
+// src/common/global.ts 里 `errorCode: textStatus === 'abort' ? 1 : jqXHR.status` ——
+// **errorCode 1 有且只有「被 abort」这一个含义**（HTTP 状态码不可能是 1），
+// 所以按 errorCode === 1 来判是精确的，不会误吞真错误。
+//
+// 整页跳转时浏览器会把在途 XHR 全 abort 掉，这些 rejection 落在一个正在拆掉的
+// 页面里、没有任何人接，于是控制台每次硬跳转都留下几条
+// "Uncaught (in promise) {errorCode: 1, errorMessage: 请求被取消}"。
+//
+// 【为什么放全局而不是继续一处处加 .catch】仓库里已经这么修过 6 处
+// （integration 三处、worksheet 的 WorkSheet/galleryview/actions），每处一段同样的注释。
+// 但 unhandledrejection 只对【没人接的】rejection 触发 —— 组件自己 catch 的照样能拿到，
+// 所以放这里既覆盖全部调用点（含以后新写的），又不会改变任何现有行为。
+window.addEventListener('unhandledrejection', event => {
+  if (event.reason && event.reason.errorCode === 1) {
+    event.preventDefault();
+  }
+});
+
 /** 存储分发类入口 状态 和 分享id */
 const parseShareId = () => {
   window.shareState = {};

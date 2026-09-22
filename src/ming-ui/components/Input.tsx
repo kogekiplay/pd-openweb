@@ -62,7 +62,14 @@ class Input extends Component<any, any> {
   }
 
   render() {
-    const { size, type, manualRef, value, ...others } = this.props;
+    /* 【这些是本组件自己的 props，绝不能跟着 ...others 落到 <input> 上】
+       原先只摘了 size/type/manualRef/value，于是控制台每次都报两条：
+       · valueFilter -> "React does not recognize the `valueFilter` prop on a DOM element"
+       · defaultValue -> "contains an input with both value and defaultValue"
+         （构造函数里已经用它做过初始值了，再透传给 DOM 就成了受控+非受控并存）
+       onChange / onChangeText 同理：onChange 虽然被下面显式的那个覆盖掉、
+       不会真的出错，但留在 others 里纯属误导。 */
+    const { size, type, manualRef, value, defaultValue, valueFilter, onChange, onChangeText, ...others } = this.props;
     const inputValue = value === undefined ? this.state.value : value;
 
     return (
