@@ -59,10 +59,13 @@ export const DropdownOverlay = styled.div`
     }
     &.grayDropdown .item {
       &:last-child {
+        /* 下拉里最后一项是「删除」：图标留原色（非文本对比 3:1 够），
+           文案走深一档。脚本没自动改这处，是因为块里紧跟着一条 i 选择器，
+           被当成了图标块。 */
         i {
           color: var(--color-error);
         }
-        color: var(--color-error);
+        color: var(--color-error-text);
       }
       &:hover {
         background: var(--color-background-hover);
