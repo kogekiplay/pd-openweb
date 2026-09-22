@@ -10,7 +10,7 @@ const StatusWrap = styled.div`
     //   margin-left: ${props => (props.showTitle ? '3px' : '0px')};
     // }
     &.title {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

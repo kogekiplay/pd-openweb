@@ -12,7 +12,7 @@ export const BillInfoWrap = styled.div`
       font-weight: 600;
     }
     .invoiceSetting {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       margin: 0 var(--space-2);
     }
   }
@@ -21,7 +21,7 @@ export const BillInfoWrap = styled.div`
     align-items: center;
     i,
     .balance {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       margin: 0 var(--space-2);
     }
     .eyeIcon {
@@ -55,7 +55,7 @@ export const BillInfoWrap = styled.div`
       background-color: var(--color-background-primary);
       border: 1px solid var(--color-primary);
       line-height: 22px;
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       &:hover {
         background-color: var(--color-background-primary);
         border: 1px solid var(--color-primary-dark);
@@ -101,7 +101,7 @@ export const BillInfoWrap = styled.div`
       .dateRange {
         margin: 0 var(--space-2);
         background: var(--color-primary-transparent);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         padding: 0 var(--space-3);
         border-radius: var(--radius-sm);
         display: inline-block;

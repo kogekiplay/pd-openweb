@@ -38,7 +38,7 @@ const RelateSheetWrap = styled.div`
   .filterBtn {
     color: var(--color-text-tertiary);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;
@@ -90,7 +90,7 @@ const CoverWrap = styled.div`
     padding: 6px 18px;
     color: var(--color-text-secondary);
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-color: var(--color-primary);
     }
     &:last-child {

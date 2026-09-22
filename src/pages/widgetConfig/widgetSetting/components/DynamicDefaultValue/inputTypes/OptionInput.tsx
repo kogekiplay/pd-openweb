@@ -67,7 +67,7 @@ export const DefaultOptionsMenu = styled(DropdownContent)`
     }
     i {
       font-size: var(--font-xl);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .colorWrap {

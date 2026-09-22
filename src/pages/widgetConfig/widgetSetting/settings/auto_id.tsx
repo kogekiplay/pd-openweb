@@ -106,7 +106,7 @@ const RuleInfo = styled.li`
 
 const RuleList = styled.ul`
   .addRule {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     margin: var(--space-3) 0 0 var(--space-5);
     cursor: pointer;
     i {

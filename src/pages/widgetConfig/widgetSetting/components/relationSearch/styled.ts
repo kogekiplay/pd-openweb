@@ -5,7 +5,7 @@ export const AddRelate = styled.div`
     font-size: var(--font-md);
     span {
       margin-left: 6px;
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .relateWrap {
@@ -58,7 +58,7 @@ export const AddRelate = styled.div`
 
       &.active,
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border: 1px solid var(--color-primary);
       }
       &.active {

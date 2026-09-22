@@ -106,7 +106,7 @@ const BuildAppBox = styled.div`
   }
   .linkTxt {
     font-size: var(--font-sm);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     cursor: pointer;
   }
   .BoldText {

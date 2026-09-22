@@ -44,7 +44,7 @@ const Wrap = styled.div`
         &.menuTab-active {
           border-bottom-color: var(--color-primary);
           a {
-            color: var(--color-primary) !important;
+            color: var(--color-primary-text) !important;
           }
         }
       }

@@ -16,7 +16,7 @@ const Wrapper = styled.div`
     align-items: center;
     padding: var(--space-1) 0;
     cursor: pointer;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     i {
       font-size: var(--font-xl);
       margin-right: var(--space-1);

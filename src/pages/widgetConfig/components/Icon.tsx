@@ -21,7 +21,7 @@ const IconWrap = styled.i`
   &.link {
     cursor: pointer;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;
@@ -31,6 +31,15 @@ const IconWrap = styled.i`
  * type ['delete'] 提供默认样式 删除是红色
  * @param {} param0
  */
-export default function Icon({ className, type, icon, ...rest }: { className?: string; icon?: string; [key: string]: any }) {
+export default function Icon({
+  className,
+  type,
+  icon,
+  ...rest
+}: {
+  className?: string;
+  icon?: string;
+  [key: string]: any;
+}) {
   return <IconWrap className={cx(`icon-${icon}`, className, { action: rest['onClick'] }, type)} {...rest}></IconWrap>;
 }

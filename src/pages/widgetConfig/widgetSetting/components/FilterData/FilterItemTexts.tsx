@@ -24,7 +24,7 @@ const FilterTextWrap = styled.div`
     background: var(--color-background-secondary);
     border-color: var(--color-border-primary);
     .editFilter {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
     .clearFilter {
       opacity: 1;
@@ -90,7 +90,7 @@ const FilterTextWrap = styled.div`
 
   .editWorkflow {
     width: auto;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

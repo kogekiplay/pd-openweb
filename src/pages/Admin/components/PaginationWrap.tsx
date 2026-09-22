@@ -40,7 +40,7 @@ const Wrap = styled.div`
       a {
         text-decoration: none;
         /* 当前页的高亮属于品牌色 —— --color-link 是写死的蓝，不跟主题 */
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         font-weight: 600;
         border: 1px solid var(--color-primary) !important;
         &:hover {

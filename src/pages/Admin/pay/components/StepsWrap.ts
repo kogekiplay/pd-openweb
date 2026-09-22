@@ -69,7 +69,7 @@ export const StepsWrap = styled(Steps)`
       border-color: transparent;
     }
     .ant-steps-item-title {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .ant-steps-item-process {
@@ -78,7 +78,7 @@ export const StepsWrap = styled(Steps)`
       border-color: var(--color-primary);
     }
     .ant-steps-item-title {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

@@ -44,14 +44,14 @@ const HandleOption = styled.div`
     color: var(--color-text-secondary);
     cursor: pointer;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 
   .addOptions {
     display: flex;
     align-items: center;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     cursor: pointer;
     &:hover {
       color: var(--color-link-hover);

@@ -65,7 +65,7 @@ const ChartColorSettingBox = styled.div(
       i {
         color: var(--color-text-tertiary);
         &:hover {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
     }

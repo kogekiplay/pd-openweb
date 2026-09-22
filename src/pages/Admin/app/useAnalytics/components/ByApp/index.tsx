@@ -39,7 +39,7 @@ const ByAppWrap = styled.div`
         border-radius: var(--radius-sm);
       }
       .currentTab {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         background-color: var(--color-background-primary);
       }
     }
@@ -85,7 +85,7 @@ const ByAppWrap = styled.div`
       &:hover {
         background: var(--color-background-hover);
         .nameBox {
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
         .chartIcon {
           display: inline-block;

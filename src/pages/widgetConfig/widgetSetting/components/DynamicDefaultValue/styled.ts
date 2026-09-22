@@ -189,9 +189,9 @@ export const SelectOtherFieldWrap = styled(FlexCenter)`
   transition: all 0.25s;
   color: var(--color-text-disabled);
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     i {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   i {
@@ -344,7 +344,7 @@ export const DynamicInputStyle = styled(FlexCenter)`
     background-color: var(--color-background-secondary);
     border: 1px solid var(--color-border-primary);
     .edit {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
     .delete {
       display: block;

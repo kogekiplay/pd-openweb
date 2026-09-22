@@ -25,7 +25,7 @@ const Con = styled.div`
     margin: 0 var(--space-1);
     height: 24px;
     line-height: 22px;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     padding: 0 var(--space-2);
     border-radius: 24px;
     border: 1px solid var(--color-primary-transparent);

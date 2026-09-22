@@ -14,7 +14,7 @@ const DialogFooter = styled.div`
   justify-content: space-between;
   .addOptionList {
     cursor: pointer;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     &:hover {
       color: var(--color-link-hover);
     }

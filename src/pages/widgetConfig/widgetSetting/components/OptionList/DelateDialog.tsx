@@ -41,7 +41,7 @@ const DelateDialogWrap = styled.ul`
       cursor: pointer;
       color: var(--color-text-tertiary);
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }

@@ -68,7 +68,7 @@ const ImportWrap = styled.div`
         color: var(--color-error);
       }
       .color_blue {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
       .importUploadModule {
         display: flex;
@@ -115,7 +115,7 @@ const ImportWrap = styled.div`
           border-radius: 32px;
           border: 1px solid var(--color-primary);
           background-color: var(--color-background-primary);
-          color: var(--color-primary);
+          color: var(--color-primary-text);
         }
       }
       .importBtn {
@@ -192,7 +192,7 @@ const ListErrorInfo = styled.div`
       margin-right: 19px;
     }
     .primaryColor {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .errorList {

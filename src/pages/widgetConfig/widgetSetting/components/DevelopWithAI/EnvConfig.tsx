@@ -66,7 +66,7 @@ const LoadedMockDataBtn = styled.div`
     margin-left: var(--space-4);
   }
   .clearMockData {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     cursor: pointer;
     margin-left: var(--space-4);
   }

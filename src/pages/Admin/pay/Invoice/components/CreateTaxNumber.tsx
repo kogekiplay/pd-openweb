@@ -64,7 +64,7 @@ const StepContentWrap = styled.div`
     border-radius: var(--radius-sm);
     background: var(--color-background-secondary);
     border: 1px solid var(--color-border-secondary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     padding-left: var(--space-3);
     cursor: pointer;
     &:hover {

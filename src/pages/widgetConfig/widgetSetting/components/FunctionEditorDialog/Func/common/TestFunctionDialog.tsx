@@ -74,7 +74,7 @@ const TestCon = styled.div`
       justify-content: center;
       &:hover {
         border-color: var(--color-primary);
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }

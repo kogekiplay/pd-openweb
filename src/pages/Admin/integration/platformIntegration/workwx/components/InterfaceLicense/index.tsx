@@ -75,7 +75,7 @@ const OrderDetail = styled.div`
     }
   }
   .themeColor {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

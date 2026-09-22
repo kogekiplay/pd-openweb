@@ -75,7 +75,7 @@ const OptionsWrap = styled.div`
       color: var(--color-text-tertiary);
       span:hover,
       i:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }
@@ -105,7 +105,7 @@ const OptionListItem = styled.div`
       color: var(--color-text-tertiary);
       font-size: var(--font-lg);
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
       }
     }
   }
@@ -128,7 +128,7 @@ const OptionListItem = styled.div`
     }
     i {
       &:hover {
-        color: var(--color-primary) !important;
+        color: var(--color-primary-text) !important;
       }
     }
     .hideIcon {
@@ -147,7 +147,7 @@ const OptionListItem = styled.div`
       bottom: 0;
       width: 100%;
       background-color: var(--color-background-primary);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       cursor: pointer;
       font-weight: 600;
       &:hover {
