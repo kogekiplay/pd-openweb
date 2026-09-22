@@ -177,6 +177,15 @@
     font-size: var(--font-xs);
     font-weight: 500;
     white-space: nowrap;
+    /* 【时间格里只留 "+N"，不要「更多」两个字】这个链接是浮在事件上面的，
+       库给它的容器是 `left:24px; right:0`，而事件本身占满整列 —— 两者必然重叠，
+       换位置解决不了（贴右、沉到底都试过，只是换一个被压的对象）。
+       把它变窄才是真有用的：60px -> 36px，事件能露出来的文字从 26px 变成 53px。
+       另外补一点阴影，让它读起来是"浮在上面的小标记"而不是事件的一部分。 */
+    box-shadow: var(--shadow-sm);
+    .moreWord {
+      display: none;
+    }
     &:hover {
       background: var(--color-primary-solid);
       border-color: var(--color-primary-solid);
