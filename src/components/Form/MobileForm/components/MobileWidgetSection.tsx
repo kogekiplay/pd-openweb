@@ -49,7 +49,7 @@ const TabCon = styled.div`
   }
   .adm-tabs-tab-active .tabName,
   .adm-tabs-tab-active .count {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 
   .tabLine {

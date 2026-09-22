@@ -91,7 +91,7 @@ const ProjectsMenuCon = styled.div`
     height: 40px;
     line-height: 40px;
     &.active {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       background: color-mix(in srgb, var(--color-primary) 8%, transparent);
     }
     &:not(.active):hover {

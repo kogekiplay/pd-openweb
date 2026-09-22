@@ -101,7 +101,7 @@ const PcUploadModalWrap = styled(Modal)`
         height: 56px;
         border: 1px solid var(--color-primary);
         border-radius: 50%;
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         background: transparent;
         cursor: pointer;
         i {

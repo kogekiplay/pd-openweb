@@ -26,7 +26,7 @@ const Footer = styled.div`
     cursor: pointer;
   }
   .lastSignature {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

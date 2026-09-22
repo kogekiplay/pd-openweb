@@ -67,7 +67,7 @@ const NavBox = styled.div`
     &.active {
       font-weight: bold;
       background-color: var(--color-primary-transparent);
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
   .listItemIcon {

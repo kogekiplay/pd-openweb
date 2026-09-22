@@ -22,7 +22,7 @@ const IconWrapper = styled.div`
       color: var(--color-primary) !important;
     }
     i {
-      color: var(--color-primary) !important;
+      color: var(--color-primary-text) !important;
     }
   }
 `;

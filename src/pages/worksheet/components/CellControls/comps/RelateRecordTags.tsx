@@ -88,7 +88,7 @@ const Tag = styled.div`
     padding-right: var(--space-6);
   }
   &.allowOpenRecord:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     background-color: color-mix(in srgb, var(--color-primary) 16%, transparent);
     cursor: pointer;
   }

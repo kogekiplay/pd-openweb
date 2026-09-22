@@ -16,7 +16,7 @@ const PopupWrapper = styled.div`
       border: 1px solid var(--color-border-secondary);
       color: var(--color-text-secondary);
       &:hover {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         border-color: var(--color-primary);
       }
     }

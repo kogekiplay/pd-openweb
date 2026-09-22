@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import MobileCardCellControl from 'src/components/MobileCardCellControls/MobileCardCellControl';
 import { controlState, getControlStyles } from 'src/utils/control';
-import { updateRulesData } from '../../../core/formUtils/updateRulesData';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import { updateRulesData } from '../../../core/formUtils/updateRulesData';
 
 const MobileTableContent = styled.div`
   .mobileTableHeader {
@@ -105,7 +105,7 @@ const MobileTableContent = styled.div`
     background-color: rgba(244, 67, 54, 0.1);
   }
   .showAll {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     padding: 10px 0;
     justify-content: center;
   }
@@ -287,7 +287,9 @@ export default function MobileTable(props) {
                         appId={appId}
                         rowHeight={30}
                         masterData={masterData}
-                        rowFormData={() => controls.map((c: FormControl) => Object.assign({}, c, { value: row[c.controlId] }))}
+                        rowFormData={() =>
+                          controls.map((c: FormControl) => Object.assign({}, c, { value: row[c.controlId] }))
+                        }
                         canedit={c.type === 36 && controlPermission.editable && !control.mobileCheckRuleLocked}
                         updateCell={({ value }) => {
                           if (c.type !== 36) return;

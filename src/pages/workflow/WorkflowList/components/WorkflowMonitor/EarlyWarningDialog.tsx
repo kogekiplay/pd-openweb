@@ -38,7 +38,7 @@ const AddNotifierBtn = styled.div`
   color: var(--color-text-secondary);
   &:hover {
     border: 1px solid var(--color-primary);
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 `;
 

@@ -27,7 +27,7 @@ const PathWrapper = styled.div`
   border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   .item {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     cursor: pointer;
     &:last-child {
       color: var(--color-text-primary);

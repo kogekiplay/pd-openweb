@@ -41,6 +41,10 @@ const DialogWrap = styled(Dialog)`
       font-weight: 600;
       cursor: pointer;
       text-align: center;
+      /* 【这一处故意不迁到 --color-primary-text】下面那行底色是写死的白，暗色模式下还是白；
+         而 --color-primary-text 在暗色下取的是【更亮】的一档，压在白底上反而更糟。
+         真正的毛病是那个写死的白（暗色下整个药丸就不该是白的），那是另一回事。
+         这里 17px/600 属于 WCAG 的大字号，只要 3:1，主题色原色本来就够。 */
       &.isActive {
         color: var(--color-primary);
         background: #fff;

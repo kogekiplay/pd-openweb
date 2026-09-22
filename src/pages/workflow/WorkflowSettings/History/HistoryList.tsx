@@ -33,7 +33,7 @@ const Box = styled.div`
     border-bottom: 1px dashed var(--color-text-secondary);
     margin: 0 3px;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
     }
   }
 `;

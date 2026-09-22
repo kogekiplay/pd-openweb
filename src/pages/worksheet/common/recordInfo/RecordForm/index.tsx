@@ -100,7 +100,7 @@ const LockWrap = styled.div`
       font-size: var(--font-lg);
       color: #56799d;
       &:hover {
-        ${props => (props.isAdmin ? 'cursor: pointer;color:var(--color-primary);' : '')}
+        ${props => (props.isAdmin ? 'cursor: pointer;color:var(--color-primary-text);' : '')}
       }
       i {
         margin: 0 var(--space-3);

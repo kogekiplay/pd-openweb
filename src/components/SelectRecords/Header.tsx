@@ -60,13 +60,13 @@ const FastFiltersExpandBtn = styled.div`
     color: var(--color-text-tertiary);
     border-color: var(--color-border-secondary);
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-primary-text);
       border-color: var(--color-primary);
       background: var(--color-background-primary);
     }
   }
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     border-color: var(--color-primary);
     background: var(--color-background-primary);
   }
