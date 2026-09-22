@@ -9,9 +9,9 @@ import instanceVersion from 'src/pages/workflow/api/instanceVersion';
 import OtherAction from 'mobile/ProcessRecord/OtherAction';
 import { ACTION_TO_METHOD } from 'src/pages/workflow/components/ExecDialog/config';
 import { covertTime, FLOW_NODE_TYPE_STATUS, INSTANCELOG_STATUS } from 'src/pages/workflow/MyProcess/config';
+import type { FormControl } from 'src/utils/controlTypes';
 import { processInformTabs } from '../enum';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export default class Card extends Component<any, any> {
   constructor(props) {
@@ -132,7 +132,11 @@ export default class Card extends Component<any, any> {
         className="stepTimeConsuming flexRow"
         style={{
           color:
-            time > 0 ? 'var(--color-error)' : currentAccountNotified ? 'var(--color-warning)' : 'var(--color-primary)',
+            time > 0
+              ? 'var(--color-error)'
+              : currentAccountNotified
+                ? 'var(--color-warning)'
+                : 'var(--color-primary-text)',
         }}
       >
         <Icon icon={time > 0 ? 'error1' : 'hourglass'} className="Font14 mRight2" />

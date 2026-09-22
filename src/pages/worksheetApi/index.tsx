@@ -1349,7 +1349,7 @@ class WorksheetApi extends Component<any, any> {
                 {!isSharePage && (
                   <span
                     className="Hand Font13 mLeft20"
-                    style={{ color: 'var(--color-primary)' }}
+                    style={{ color: 'var(--color-primary-text)' }}
                     onClick={() => this.setState({ showWorksheetAliasDialog: true, dialogType: type })}
                   >
                     {_l('设置')}
@@ -1364,7 +1364,7 @@ class WorksheetApi extends Component<any, any> {
             {!isSharePage && (
               <span
                 className="Right Hand Font13"
-                style={{ color: 'var(--color-primary)' }}
+                style={{ color: 'var(--color-primary-text)' }}
                 onClick={() => {
                   this.setState({ aliasDialog: { visible: true, type: this.MENU_LIST[i].type }, dialogType: type });
                 }}

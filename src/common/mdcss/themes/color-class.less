@@ -1,6 +1,20 @@
-/* 品牌主色文字：用于链接、强调文字、主色图标等品牌色场景 */
+/* 品牌主色文字：用于链接、强调文字、主色图标等品牌色场景。
+   【全仓最大的一处】.colorPrimary 在 JSX 里被用了 699 次，其中 620 次是文字 ——
+   也就是"主题色当文字"这个毛病最集中的来源，所以它走深一档的 --color-primary-text。
+
+   剩下 79 次挂在图标上（`<i class="icon icon-xxx colorPrimary">`，或者 ming-ui
+   的 <Icon> —— 它渲染出来也是 <i class="ming Icon icon-xxx icon ...">）。
+   图标按 WCAG 1.4.11 非文本对比只要 3:1，主题色原色本来就够，而且要的就是
+   "这是主题色"这个识别，压暗反而认不出来，所以下面单挑出来保持原色。
+   i.colorPrimary 的特指度(0,1,1)高于 .colorPrimary(0,1,0)，两条都带 !important
+   时更特指的赢，不用再加别的手段。 */
 .colorPrimary,
 .hoverColorPrimary:hover {
+  color: var(--color-primary-text) !important;
+}
+
+i.colorPrimary,
+i.hoverColorPrimary:hover {
   color: var(--color-primary) !important;
 }
 

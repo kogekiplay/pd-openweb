@@ -179,7 +179,7 @@ export default class MobileCityPicker extends Component<any, any> {
                             style={{
                               color:
                                 select.length && select[select.length - 1].id === item.id
-                                  ? 'var(--color-primary)'
+                                  ? 'var(--color-primary-text)'
                                   : 'var(--color-text-title)',
                             }}
                           >
@@ -191,7 +191,7 @@ export default class MobileCityPicker extends Component<any, any> {
                               style={{
                                 color:
                                   select.length && select[select.length - 1].id === item.id
-                                    ? 'var(--color-primary)'
+                                    ? 'var(--color-primary-text)'
                                     : 'var(--color-text-title)',
                               }}
                             >
