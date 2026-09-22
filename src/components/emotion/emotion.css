@@ -41,6 +41,15 @@
   border-radius: var(--radius-sm);
   z-index: 99999;
   height: 240px;
+  /* 【这个宽度不能去掉，否则 tab 条永远滚不动】
+     本元素是 position: absolute 且原先没写 width，宽度就由内容收缩决定。
+     tab 条设了 overflow-x: auto，但 auto 不影响它对父级的固有宽度贡献 ——
+     结果不是 tab 条溢出，而是**整个面板被 tab 条顶宽**：实测面板长到 408px，
+     tab 条 clientWidth 和 scrollWidth 双双 408，maxScroll 恒为 0，
+     滚轮监听第一个判断就 return，两侧渐隐也永远不亮。
+     副作用还有：表情格子只有 380px，右边白空 28px。
+     钉到和 .mdEmotionWrapper 一样的 380px，tab 条才真的有东西可溢出。 */
+  width: 380px;
 }
 .mdEmotion .mdEmotionWrapper {
   padding: var(--space-1);
@@ -135,7 +144,16 @@
   border-right-color: var(--color-background-primary);
   left: 1px;
 }
+/* 【tab 条改成横向滚动】分类从 4 组扩到 9 组之后连同历史/经典/笨笨熊/Aru 一共 12 个，
+   原来是 inline-block 自然换行，放不下就折到第二行、被 50px 的高度裁掉。
+   改成单行横向滚动，并做三件事让人看得出「这里能滚」：
+     1) 左右两侧的渐隐遮罩（下面的 ::before / ::after）——
+        内容被切掉时边缘是渐隐而不是硬切，这是最通用的可滚动暗示；
+     2) 常驻一条细滚动条，不用 hover 才出现；
+     3) 竖向滚轮映射成横向（见 emotion.ts 的 wheel 监听）——
+        普通鼠标只有竖滚轮，不映射的话在这条上滚是没反应的。 */
 .mdEmotion .mdEmotionTab {
+  position: relative;
   border-top: solid 1px var(--color-border-secondary);
   margin-bottom: -9px;
   padding: 10px 6px;
@@ -143,8 +161,24 @@
   background: var(--color-background-primary);
   box-sizing: border-box;
   font-size: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* 细滚动条常驻：靠它本身就已经在说「还有内容」。
+     【颜色必须走标准属性 scrollbar-color，不能用 ::-webkit-scrollbar 伪元素】
+     Chromium 121 起有个反直觉规则：一旦声明了 scrollbar-width 或 scrollbar-color，
+     整套 ::-webkit-scrollbar-* 伪元素就被**整体忽略**，不是合并也不是覆盖。
+     这里原先写了 ::-webkit-scrollbar { height: 4px } 和 thumb 配色，
+     在 Chrome 152 实测一条都没生效：量到滚动条 12px（默认粗细），
+     颜色退回系统默认的亮白 —— 在深色面板上就是贴着底边的一条刺眼白杠。 */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-tertiary) transparent;
+  overscroll-behavior-x: contain;
 }
 .mdEmotion .mdEmotionTab .tabItem {
+  flex: 0 0 auto;
   display: inline-block;
   font-size: var(--font-2xl);
   line-height: 100%;
@@ -227,4 +261,57 @@
   height: auto;
   vertical-align: middle;
   max-height: 100%;
+}
+
+/* 【emoji 面板改成字符渲染后的排版】
+   原先每格是一张 twemoji 图片，靠 img 自己的尺寸撑开；
+   改成字符之后要显式给字号和行高，否则会塌成一行小字。
+   字号取 22px，和原来 tabItem-images 的 22px 视觉等大。 */
+.mdEmotion .mdEmotionWrapper .mdEmotionPanel .emotionItem.emojiChar {
+  font-size: 22px;
+  line-height: 28px;
+  text-align: center;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Twemoji Mozilla', sans-serif;
+}
+/* tab 上的字符图标，和 .tabItem-images 的 22px 对齐 */
+.mdEmotion .mdEmotionTab .tabItem-char {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  font-size: var(--font-xl);
+  line-height: 22px;
+  text-align: center;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Twemoji Mozilla', sans-serif;
+}
+
+/* 两侧渐隐：盖在 tab 条上方，提示两边还有内容。
+   用 wrapper 上的伪元素而不是 tab 条自己的 —— 伪元素会跟着滚动内容走，
+   贴在容器上就不是「固定在边缘」了。 */
+.mdEmotion .mdEmotionTabFade {
+  position: relative;
+}
+.mdEmotion .mdEmotionTabFade::before,
+.mdEmotion .mdEmotionTabFade::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  bottom: 0;
+  width: 24px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.mdEmotion .mdEmotionTabFade::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-background-primary), transparent);
+}
+.mdEmotion .mdEmotionTabFade::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-background-primary), transparent);
+}
+/* 这两个类由 emotion.ts 按实际滚动位置加减 */
+.mdEmotion .mdEmotionTabFade.canScrollLeft::before,
+.mdEmotion .mdEmotionTabFade.canScrollRight::after {
+  opacity: 1;
 }
