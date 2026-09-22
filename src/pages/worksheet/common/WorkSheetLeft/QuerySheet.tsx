@@ -130,7 +130,7 @@ export default class QuerySheet extends Component<any, any> {
               (workSheetList.filter(item => item.worksheets.length > 0).length > 0 ? (
                 <div className="sheetList">{this.renderSheetList()}</div>
               ) : (
-                <div className="empty textDisabled">{_l('无匹配的工作表')}</div>
+                <div className="empty textTertiary">{_l('无匹配的工作表')}</div>
               ))}
           </ClickAwayable>
         )}

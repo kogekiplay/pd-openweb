@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Dropdown, Radio, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import userAjax from 'src/api/user';
@@ -323,7 +323,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
         content = userInfo[item.id];
     }
 
-    return underName ? content : content || <span className="textDisabled">{_l('未填写')}</span>;
+    return underName ? content : content || <span className="textTertiary">{_l('未填写')}</span>;
   };
 
   // 名片层

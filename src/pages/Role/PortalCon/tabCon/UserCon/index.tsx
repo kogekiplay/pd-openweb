@@ -245,7 +245,7 @@ class Con extends React.Component<any, any> {
         <div className="navCon navConList">
           <ul>
             {navList.length <= 0 ? (
-              <div className="TxtCenter textDisabled mTop20">{_l('无相关角色')}</div>
+              <div className="TxtCenter textTertiary mTop20">{_l('无相关角色')}</div>
             ) : (
               navList.map(o => {
                 let optList = [];

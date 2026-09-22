@@ -18,7 +18,7 @@ export default function SearchResultEmpty() {
   return (
     <EmptyWrap className="flexColumn">
       <i className="icon icon-h5_search Font50" />
-      <div className="textDisabled Font17 Bold">{_l('没有搜索结果')}</div>
+      <div className="textTertiary Font17 Bold">{_l('没有搜索结果')}</div>
     </EmptyWrap>
   );
 }

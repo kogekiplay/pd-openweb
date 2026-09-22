@@ -295,7 +295,7 @@ export function RoleSelect(props) {
     ) {
       return (
         <div className="emptyWrap">
-          <div className="textDisabled Font14">{_l('没有可选组织角色')}</div>
+          <div className="textTertiary Font14">{_l('没有可选组织角色')}</div>
         </div>
       );
     }

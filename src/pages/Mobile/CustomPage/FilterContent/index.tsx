@@ -176,7 +176,7 @@ function FilterContent(props) {
             {otherFiltersGroup.length ? (
               <div className="nowrap Font13 bold">{filtersText.join('; ')}</div>
             ) : (
-              <span className="textDisabled">{_l('无筛选内容')}</span>
+              <span className="textTertiary">{_l('无筛选内容')}</span>
             )}
           </div>
         )}

@@ -188,7 +188,7 @@ class AppHome extends React.Component<any, any> {
       return (
         <div className="flexColumn emptyWrap flex alignItemsCenter justifyContentCenter textTertiary">
           <Icon icon="h5_search" className="Font50" />
-          <div className="textDisabled Font17 Bold">{_l('没有搜索结果')}</div>
+          <div className="textTertiary Font17 Bold">{_l('没有搜索结果')}</div>
         </div>
       );
     }
@@ -224,7 +224,17 @@ class AppHome extends React.Component<any, any> {
   };
 
   // 应用收藏/最近使用/记录收藏 title
-  renderTitle = ({ type = 'collectAppList', wrapTitle, icon, showMore, moreText, iconClass }: { icon?: string; [key: string]: any }) => {
+  renderTitle = ({
+    type = 'collectAppList',
+    wrapTitle,
+    icon,
+    showMore,
+    moreText,
+    iconClass,
+  }: {
+    icon?: string;
+    [key: string]: any;
+  }) => {
     const projectObj = getCurrentProject(
       localStorage.getItem('currentProjectId') || (md.global.Account.projects[0] || {}).projectId,
     );

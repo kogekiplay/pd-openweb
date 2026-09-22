@@ -30,7 +30,7 @@ const MobileSearch = props => {
     return _.get(searchInput.current || {}, 'value') && enumDefault === 1 && _.isEmpty(mobileSearchResult) ? (
       <div className="w100 h100 flexColumn alignItemsCenter justifyContentCenter">
         <Icon icon="h5_search" className="Font50" />
-        <div className="textDisabled Font17 Bold mTop40">{_l('没有搜索结果')}</div>
+        <div className="textTertiary Font17 Bold mTop40">{_l('没有搜索结果')}</div>
       </div>
     ) : (
       <div className="flex searchResult">

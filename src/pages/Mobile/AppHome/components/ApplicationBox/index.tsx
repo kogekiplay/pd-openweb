@@ -107,7 +107,17 @@ export default class ApplicationList extends Component<any, any> {
     this.actionSheetHandler = showAddAppActionSheet();
   };
 
-  forTitle = ({ type, name, icon, iconUrl, showExpandIcon = true }: { name?: string; icon?: string; [key: string]: any }) => {
+  forTitle = ({
+    type,
+    name,
+    icon,
+    iconUrl,
+    showExpandIcon = true,
+  }: {
+    name?: string;
+    icon?: string;
+    [key: string]: any;
+  }) => {
     const { dashboardHideGroup = [] } = this.state;
 
     if (_.includes(['apps', 'externalApps'], type)) {
@@ -168,7 +178,7 @@ export default class ApplicationList extends Component<any, any> {
           {this.forTitle({ type, name, icon, iconUrl, showExpandIcon })}
         </div>
         {type === 'externalApps' && _.isEmpty(apps) ? (
-          <div className="textDisabled bold mLeft30 mTop20" style={{ paddingLeft: `${distance}px` }}>
+          <div className="textTertiary bold mLeft30 mTop20" style={{ paddingLeft: `${distance}px` }}>
             {_l('暂无外部协作者的应用')}
           </div>
         ) : _.includes(dashboardHideGroup, type) ? null : (

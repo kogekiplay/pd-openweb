@@ -465,7 +465,7 @@ class MemberList extends Component<any, any> {
           <div className="flex flexColumn valignWrapper">
             <img src={noMmberImg} alt={_l('暂无成员')} width="110" />
             <br />
-            <p className="mTop0 textDisabled Font17">{_l('暂无成员')}</p>
+            <p className="mTop0 textTertiary Font17">{_l('暂无成员')}</p>
             {canEditUser && !window.isPublicApp && (
               <Button
                 className="addUserButton"

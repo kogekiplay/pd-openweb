@@ -186,7 +186,7 @@ export default class ExportAppCom extends Component<any, any> {
                   radiusSize={132}
                   icon="import"
                   iconClassName="textTertiary Font50"
-                  emptyTxtClassName="textDisabled mTop18 Font17"
+                  emptyTxtClassName="textTertiary mTop18 Font17"
                   emptyTxt={_l('暂无导出记录')}
                 />
               ) : (
