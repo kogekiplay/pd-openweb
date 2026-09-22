@@ -57,7 +57,7 @@ const WecharPayWrap = styled.div`
     .payTxt {
       width: 280px;
       height: 50px;
-      background: var(--color-success);
+      background: var(--color-success-solid);
       color: var(--color-white);
       text-align: center;
       line-height: 50px;

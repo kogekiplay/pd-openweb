@@ -67,7 +67,7 @@ const RoleSelectWrap = styled.div`
       width: 28px;
       height: 28px;
       display: inline-block;
-      background: var(--color-success);
+      background: var(--color-success-solid);
       text-align: center;
       vertical-align: middle;
       margin-right: var(--space-2);

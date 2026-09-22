@@ -51,7 +51,7 @@ const RightSection = styled.div`
     }
     &.success {
       color: var(--color-white);
-      background: var(--color-success);
+      background: var(--color-success-solid);
     }
   }
 `;

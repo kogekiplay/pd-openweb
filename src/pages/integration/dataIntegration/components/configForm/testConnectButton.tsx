@@ -45,7 +45,7 @@ const TestButton = styled.div`
       height: 14px;
       border-radius: 50%;
       margin-right: 5px;
-      background: var(--color-success);
+      background: var(--color-success-solid);
       color: var(--color-white);
     }
   }

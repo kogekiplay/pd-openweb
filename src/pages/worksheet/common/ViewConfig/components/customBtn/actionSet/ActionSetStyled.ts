@@ -73,7 +73,7 @@ export const WrapPopover = styled.div`
     color: var(--color-text-primary);
     &.first {
       color: var(--color-white);
-      background: var(--color-success);
+      background: var(--color-success-solid);
       border: 1px solid var(--color-success);
     }
     i {

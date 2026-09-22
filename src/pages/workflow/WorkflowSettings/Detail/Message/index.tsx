@@ -32,7 +32,7 @@ const TagBox = styled.div`
   align-items: center;
   white-space: nowrap;
   &.yellow {
-    background: var(--color-warning);
+    background: var(--color-warning-solid);
     color: var(--color-white) !important;
   }
   &.blue {
