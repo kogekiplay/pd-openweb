@@ -42,7 +42,7 @@
     "@antv/util": "3.3.11",
     "@antv/x6": "^3.1.8",
     "@antv/x6-react-shape": "3.0.1",
-    "@babel/runtime": "^7.29.7",
+    "@babel/runtime": "^8.0.5",
     "@ckeditor/ckeditor5-react": "11.2.0",
     "@codemirror/autocomplete": "^6.20.3",
     "@codemirror/commands": "^6.11.1",
