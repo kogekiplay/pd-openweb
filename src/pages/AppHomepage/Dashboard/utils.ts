@@ -45,20 +45,35 @@ export const themeColors = [
   '#FADB14',
 ];
 
+/**
+ * 选中项**文字**用的深一档。
+ *
+ * 【为什么不能直接用 themeColor】它是组织自选的平台色，拿来当文字压在 10% 同色浅底上，
+ * 实测粉色那档只有 3.40，12px 要 4.5。这里取 antd 色阶第 8 级 ——
+ * 和主题引擎的 --color-primary-text 同一个算法（palette.ts 的 primaryTextColor），
+ * 只是侧边栏这套颜色不走引擎、是自己算的，所以要在这里对齐一次。
+ */
+const textTone = (color: string) => generate(color)[7];
+
+/** 平台默认色，和 theme-default.less 的 --color-primary 一致 */
+const DEFAULT_THEME = '#1677ff';
+
 export const getDashboardColor = color => {
   //默认主题
   if (!color || (!_.includes(themeColors, color) && !color.startsWith('#'))) {
     return {
       bgColor: '#f7f8fc',
-      themeColor: '#1677ff',
-      activeColor: getRgbaByColor('#1677ff', '0.1'),
-      hoverColor: getRgbaByColor('#1677ff', '0.16'),
+      themeColor: DEFAULT_THEME,
+      textColor: textTone(DEFAULT_THEME),
+      activeColor: getRgbaByColor(DEFAULT_THEME, '0.1'),
+      hoverColor: getRgbaByColor(DEFAULT_THEME, '0.16'),
     };
   }
 
   return {
-    bgColor: color !== '#1677ff' ? (color === '#d4b106' ? '#f9f7d7' : generate(color)[0]) : '#f7f8fc',
+    bgColor: color !== DEFAULT_THEME ? (color === '#d4b106' ? '#f9f7d7' : generate(color)[0]) : '#f7f8fc',
     themeColor: color,
+    textColor: textTone(color),
     activeColor: getRgbaByColor(color, '0.1'),
     hoverColor: getRgbaByColor(color, '0.16'),
   };

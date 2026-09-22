@@ -15,6 +15,10 @@
   --color-primary: #1677ff; /* 主色：按钮、填充、图标、文字强调、聚焦、关键图标 */
   --color-primary-light: #4096ff; /* 稍浅：hover */
   --color-primary-dark: #0958d9; /* 稍深：按下，深度强调 */
+  /* 主题色「当文字」专用：主色本身对白底只有 3.12，当正文读不了。
+     实际值由主题引擎按应用主题色算（palette.ts 的 primaryTextColor，取 antd 色阶第 8 级），
+     这里写的是引擎没挂载时的平台默认蓝兜底。 */
+  --color-primary-text: #003eb3;
   --color-primary-focus: #1677ff; /* 聚焦环主色 */
   --color-primary-focus-outer: rgba(22, 119, 255, 0.4); /* 外发光式聚焦环，增加层级 */
   --color-primary-transparent: rgba(22, 119, 255, 0.12); /* 透明覆盖：高亮、浅色背景、点击反馈（随底层混色） */

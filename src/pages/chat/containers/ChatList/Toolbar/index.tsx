@@ -41,7 +41,8 @@ const Wrap = styled.div`
     border-radius: 16px;
     text-align: center;
     min-width: 18px;
-    background-color: var(--color-error);
+    /* 徽标底用深一档的红：白字压 --color-error 只有 3.68，12px 要 4.5；换成 -text 档后 5.62 */
+    background-color: var(--color-error-text);
     z-index: 1;
     font-size: var(--font-xs);
     font-weight: bold;
