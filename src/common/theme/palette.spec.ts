@@ -68,6 +68,36 @@ assert.notStrictEqual(dark['--color-primary'], light['--color-primary']);
 assert.strictEqual(dark['--color-primary-light'], antdDark.colorPrimaryHover);
 assert.strictEqual(dark['--color-primary-dark'], antdDark.colorPrimaryActive);
 
+// 3b.【核心】--color-primary-text 必须来自 antd 的 generate() 色阶，不是自算的 darken。
+//     这一档存在的理由是：主题色直接当文字色，10 个真实主题里只有 6 个对白底够 4.5。
+//     下标（亮色 7 / 暗色 8）是量出来的，改之前要把 10 个真实色重算对比度。
+{
+  const { generate } = require('@ant-design/colors');
+  assert.strictEqual(light['--color-primary-text'], generate(SEED)[7]);
+  assert.strictEqual(dark['--color-primary-text'], generate(SEED, { theme: 'dark', backgroundColor: '#161616' })[8]);
+  assert.notStrictEqual(light['--color-primary-text'], dark['--color-primary-text']);
+
+  // 真正要守的是【结果】：对各自的页面底都得够读。挑最难的两个真实主题色验。
+  const lumOf = (h: string) => {
+    const s = h.replace('#', '');
+    const ch = [0, 2, 4].map(i => parseInt(s.slice(i, i + 2), 16) / 255);
+    const f = (v: number) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+    return 0.2126 * f(ch[0]) + 0.7152 * f(ch[1]) + 0.0722 * f(ch[2]);
+  };
+  const ratio = (a: string, b: string) => {
+    const [x, y] = [lumOf(a), lumOf(b)];
+    return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+  };
+  for (const hard of ['#1fbcd5', '#455a65']) {
+    assert.ok(
+      ratio(generate(hard)[7], '#ffffff') >= 4.5,
+      `亮色 ${hard} 的 primary-text 对白底不足 4.5：${ratio(generate(hard)[7], '#ffffff').toFixed(2)}`,
+    );
+    const d = generate(hard, { theme: 'dark', backgroundColor: '#161616' })[8];
+    assert.ok(ratio(d, '#161616') >= 4.5, `暗色 ${hard} 的 primary-text 对暗底不足 4.5：${ratio(d, '#161616').toFixed(2)}`);
+  }
+}
+
 // 4. 透明档：明暗两套取值【不同】。
 //    亮色 .4/.12/.06 抄自 theme-default.less，暗色 .5/.2/.12 抄自 theme-dark.less
 //    （暗底上同样的 alpha 会看不见，原作者已经调过）。

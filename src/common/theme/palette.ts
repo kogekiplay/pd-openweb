@@ -16,6 +16,7 @@
  * palette.spec.ts 第 2 组断言专门钉这条，改成自算会当场红。
  */
 import { theme } from 'antd';
+import { generate } from '@ant-design/colors';
 import { readability, TinyColor } from '@ctrl/tinycolor';
 
 export type ThemeMode = 'light' | 'dark';
@@ -162,6 +163,23 @@ function tintedNeutrals(primary: string, mode: ThemeMode): ThemeVars {
   return out;
 }
 
+/** 暗色页面底，和 theme-dark.less 的 --color-background-primary 保持一致（算对比度用的基准）。 */
+const DARK_PAGE_BG = '#161616';
+
+/**
+ * 主题色「当文字」时用的那一档。
+ *
+ * antd 的 token 里最深只到 colorPrimaryActive，不够 —— 但 antd **导出了造 token 用的
+ * 那个调色函数** `generate()`，直接取它色阶里的一级，既拿到够深/够亮的颜色，
+ * 又不违背「不自算 lighten/darken」。
+ *
+ * 亮色第 8 级、暗色阶第 9 级都是量出来的（见 buildThemeVars 里的注释），
+ * 改这两个下标之前先把 10 个真实主题色重算一遍对比度。
+ */
+export function primaryTextColor(seed: string, mode: ThemeMode = 'light'): string {
+  return mode === 'dark' ? generate(seed, { theme: 'dark', backgroundColor: DARK_PAGE_BG })[8] : generate(seed)[7];
+}
+
 export function buildThemeVars(seed: string, mode: ThemeMode = 'light'): ThemeVars {
   // 非法色不能让整站没主题色。TinyColor 对乱字符串返回 isValid=false 而不是抛，
   // 但 antd 的算法拿到它会产出一串 NaN 颜色，界面会变成透明/黑块 —— 比抛错更难查。
@@ -196,6 +214,17 @@ export function buildThemeVars(seed: string, mode: ThemeMode = 'light'): ThemeVa
     // 直接从 antd token 读回这两级，和上面几档同源，不会分叉。
     '--color-primary-bg': token.colorPrimaryBg,
     '--color-primary-border': token.colorPrimaryBorder,
+
+    // ——— 主题色「当文字」专用的那一档（2026-09-22 补）———
+    // 主题色是用户自选的，拿它直接当文字色，10 个真实主题里只有 6 个对白底够 4.5
+    //（最差青色 2.28）；退一步用 colorPrimaryActive 也只到 7 个。
+    // 这一档取 **antd 自己的 generate() 色阶**，不是我们自算 lighten/darken ——
+    // 所以文件头那条「调色板绝不分叉」的规矩仍然成立（generate 正是 antd 造 token 用的函数）。
+    // 亮色取第 8 级：10/10 全过 4.5，最低 5.69。
+    // 暗色取暗色阶第 9 级（暗色阶里序号越大越亮）：对 #161616 底 10/10 全过，最低 4.96。
+    // 佐证：绿色主题的亮色第 8 级正好是 #216327 —— 和 theme-default.less 里
+    // 手写多年的 --color-success-hover 一模一样，说明那批深色档本来就是这么来的。
+    '--color-primary-text': primaryTextColor(safeSeed, mode),
 
     // ——— 带主题倾向的中性色阶 ———
     // 图标、次要文字、分隔线、浅底都走这一套；不含页面底/卡片底/输入框底/正文主文字。

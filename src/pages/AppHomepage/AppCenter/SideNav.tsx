@@ -139,9 +139,13 @@ const ModuleEntry = styled(BaseEntry)`
     width: 164px;
   }
   &.active {
-    .entryIcon,
+    /* 【文字用深一档，图标仍用主题色】主题色压在 10% 同色浅底上，粉色只有 3.40，
+       12px 要 4.5。图标走 WCAG 非文本那一套（3:1），不必跟着变深。 */
     .fullName,
     .name {
+      color: ${({ textColor, themeColor }) => textColor || themeColor};
+    }
+    .entryIcon {
       color: ${({ themeColor }) => themeColor};
     }
     background: ${({ activeColor }) => activeColor};
@@ -176,7 +180,8 @@ const DashboardEntry = styled.div`
     line-height: 20px;
     width: 20px;
     height: 20px;
-    background-color: var(--color-error);
+    /* 徽标底用深一档的红：白字压 --color-error 只有 3.68，12px 要 4.5；换成 -text 档后 5.62 */
+    background-color: var(--color-error-text);
     z-index: 1;
     &.isExpanded {
       right: 12px;
@@ -328,6 +333,7 @@ export default function SideNav(props) {
       <ModuleEntry
         key={index}
         themeColor={dashboardColor.themeColor}
+        textColor={dashboardColor.textColor}
         activeColor={dashboardColor.activeColor}
         className={cx('moduleEntry', {
           active: active === entry.type,
