@@ -94,11 +94,10 @@
     min-height: 0;
   }
   .calendarCon.boldEvent {
-    .fc-more-popover {
-      .fc-event {
-        .boldEventCard();
-      }
-    }
+    /* 【这里原先还有一条 .fc-more-popover .fc-event 走宽松卡片样式，删了】
+       弹层是 portal 到 <body> 的，根本不在 .boxCalendar 里，更不在 .calendarCon 里，
+       这条选择器从来没匹配上过。弹层现在有自己的一套版式（文件末尾那块），
+       里面的事件统一用紧凑条 —— 一屏几十条的弹层本来也不该用 40px 的大卡片。 */
     .fc-dayGridMonth-view {
       .fc-daygrid-day-bottom {
         line-height: 38px;
@@ -135,9 +134,6 @@
   }
   a:hover {
     text-decoration: none;
-  }
-  .fc .fc-highlight {
-    background: @DEFAULT_COLOR;
   }
   /* v7 的事件内部结构是 .fc-event > div > .fc-event-main > .fc-event-title，
      v6 的 fc-event-main-frame / fc-event-title-container 两层都没有了（0 命中）。
@@ -201,6 +197,10 @@
   }
   /* 原先这里靠 .fc-timegrid-event-condensed 去掉短事件时间后面的连接符，
      v7 没有这个类（0 命中），规则一直没生效，删掉。 */
+  /* 【名字骗人：fc-daygrid-block-event 实际只出现在周/日视图的时间格事件上】
+     四个视图逐个数过：月 0、周 7、日 15，条数和时间格里的事件数完全对上，
+     月视图一条都不带。所以这两行其实是「时间格事件的时间/标题」样式，
+     和上面 .fc-timegrid-event 那几条是一套的。名字是 v6 留下的，别照名字改用途。 */
   .fc-daygrid-block-event .fc-event-time,
   .fc-daygrid-block-event .fc-event-title {
     padding-left: 6px;
@@ -212,7 +212,8 @@
     line-height: 14px;
     font-size: var(--font-xs);
   }
-  .fc .fc-col-header-cell-cushion {
+  /* 同样是 `.fc ` 前缀的遗留死规则，去掉前缀才生效 */
+  .fc-col-header-cell-cushion {
     font-size: var(--font-md);
     line-height: 1.2;
   }
@@ -255,12 +256,11 @@
       color: var(--color-on-primary);
     }
   }
-  .fc-scrollgrid td,
-  .fc-scrollgrid th {
-    border-color: var(--view-border-color) !important;
-    border-right: 0;
-  }
-  .fc-scrollgrid th {
+  /* 【td / th 在 v7 里一个都没有】v7 的网格整套改成 div + flex，
+     月/周/日 四个视图逐个数过都是 0 命中。这两条从迁移至今没生效过。
+     边框颜色由 .fc-scrollgrid 那条统一管，表头的字重/内边距挪到
+     .fc-col-header-cell（活的语义类）上。 */
+  .fc-col-header-cell {
     border-bottom: none !important;
     font-weight: normal !important;
     padding-top: 2px;
@@ -346,36 +346,16 @@
   a {
     color: var(--color-text-primary);
   }
-  .fc-more-popover {
-    opacity: 0;
-    &.show {
-      opacity: 1;
-      z-index: 11;
-    }
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-lg);
-    max-width: 240px;
-    .fc-popover-body {
-      padding: 0 var(--space-3) var(--space-3);
-      max-height: 400px;
-      overflow: auto;
-      /* v6 是 .fc-daygrid-event-harness（事件外层包装），v7 没有这层，直接落到事件本身。 */
-      .fc-event {
-        margin-top: 10px;
-      }
-    }
-    .fc-popover-header {
-      padding: var(--space-4) var(--space-3) 0px;
-      background: var(--color-background-primary);
-      color: var(--color-text-title);
-      font-size: var(--font-md);
-      font-weight: bold;
-    }
+
+  /* 【这三条原先都带 `.fc ` 前缀 —— v7 的根元素没有 .fc 这个类，整页 0 命中】
+     所以「非当前月的格子铺浅灰」和「选区高亮」一直没生效。去掉前缀。 */
+  .fc-highlight {
+    background: @DEFAULT_COLOR;
   }
-  .fc .fc-day-other {
+  .fc-day-other {
     background: var(--color-background-secondary);
   }
-  .fc .fc-day-other .fc-daygrid-day-top {
+  .fc-day-other .fc-daygrid-day-top {
     //非当前月的时间显示
     opacity: 1;
     .num {
@@ -775,5 +755,45 @@
   .cardCon .fieldContentWrap {
     max-height: 200px;
     overflow: auto;
+  }
+}
+
+/* 【「+N 更多」弹层必须写在 .boxCalendar 外面】它是 **portal 到 <body> 的**
+   （实测 parentElement 链只有 body > html，closest('.boxCalendar') 为 null）。
+   原先整块都嵌在 .boxCalendar 里 —— 也就是说 opacity/.show、圆角、阴影、max-width
+   这一整套从来没生效过。四个视图逐个数的那轮才发现。 */
+.fc-more-popover {
+  opacity: 0;
+  &.show {
+    opacity: 1;
+    z-index: 11;
+  }
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  max-width: 240px;
+  /* 【弹层必须自己封顶滚动】原先靠 `.fc-popover-body { max-height:400px; overflow:auto }`，
+     但 **v7 既不输出 fc-popover-body 也不输出 fc-popover-header**，compat 层里也没有
+     对应钩子可挂（库只给了 popoverClass / popoverCloseClass 两个）。那两条规则从迁移
+     至今一直是死的 —— 实测点开一个「+53 更多」，弹层是 220x1262，视口才 768，
+     上面 500 多 px 直接被切在屏幕外、够不着。
+     封顶改挂在弹层根上；日期那一行（.fc-col-header-cell，是活的语义类）吸顶，
+     滚动时不跟着跑。 */
+  max-height: 60vh;
+  overflow-y: auto;
+  > .fc-col-header-cell {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--color-background-primary);
+    padding: var(--space-3) var(--space-3) var(--space-2);
+    color: var(--color-text-title);
+    font-size: var(--font-md);
+    font-weight: bold;
+  }
+  > .fc-daygrid-day {
+    padding: 0 var(--space-3) var(--space-3);
+  }
+  .fc-event {
+    margin-top: 10px;
   }
 }
