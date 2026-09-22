@@ -61,7 +61,7 @@ const Wrapper = styled.div`
     }
 
     &.delCert {
-      color: var(--color-error);
+      color: var(--color-error-text);
       background: rgba(244, 67, 54, 0.1);
       &:hover {
         background: rgba(244, 67, 54, 0.2);

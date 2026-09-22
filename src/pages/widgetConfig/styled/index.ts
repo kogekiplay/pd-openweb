@@ -182,7 +182,7 @@ export const EditInfo = styled(InfoWrap)`
   &.borderError {
     border-color: var(--color-error);
     background: var(--color-error-bg);
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
   &.disabled {
     cursor: not-allowed;
@@ -229,7 +229,7 @@ export const DropdownPlaceholder = styled.div`
   }
   &.invalid {
     border-color: currentColor !important;
-    color: var(--color-error);
+    color: var(--color-error-text);
     background-color: var(--color-error-bg);
     i {
       color: var(--color-error);
@@ -526,7 +526,7 @@ export const ControlTag = styled.div`
   color: var(--color-primary);
   border: 1px solid var(--color-primary-transparent);
   &.invalid {
-    color: var(--color-error);
+    color: var(--color-error-text);
     background: rgba(244, 67, 54, 0.06);
     border-color: var(--color-error);
   }

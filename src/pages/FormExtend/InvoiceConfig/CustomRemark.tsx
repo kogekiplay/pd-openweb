@@ -31,7 +31,7 @@ const Wrapper = styled.div`
     color: var(--color-primary);
     border: 1px solid var(--color-primary-transparent);
     &.invalid {
-      color: var(--color-error);
+      color: var(--color-error-text);
       background: rgba(244, 67, 54, 0.06);
       border-color: var(--color-error);
     }

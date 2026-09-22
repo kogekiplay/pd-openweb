@@ -55,7 +55,7 @@ const ParamsDropdown = styled(Dropdown)`
     white-space: normal;
   }
   &.isDelete {
-    color: var(--color-error);
+    color: var(--color-error-text);
     background: rgba(244, 67, 54, 0.06);
     .Dropdown--input {
       border-color: var(--color-error) !important;

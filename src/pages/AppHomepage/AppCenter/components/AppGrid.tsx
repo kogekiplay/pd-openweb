@@ -361,7 +361,7 @@ function GroupTitle(props) {
           />
         )}
         <div className="ellipsis">{title}</div>
-        {_.isNumber(count) && count !== 0 && <span className="textDisabled mLeft6 Bold Font15">{count}</span>}
+        {_.isNumber(count) && count !== 0 && <span className="textSecondary mLeft6 Bold Font15">{count}</span>}
       </GroupTitleContent>
       {!!group && (
         <Tooltip title={_l('取消标星')} placement="bottom">
@@ -958,7 +958,7 @@ export default function AppGrid(props) {
               {currentTheme.appIcon && <img src={currentTheme.appIcon} />}
               {_l('应用')}
               {notDisplayMyAppTitle && !!myApps.length && (
-                <span className="textDisabled mLeft6 Bold Font15">{myApps.length}</span>
+                <span className="textSecondary mLeft6 Bold Font15">{myApps.length}</span>
               )}
             </div>
             <div className="flex" />

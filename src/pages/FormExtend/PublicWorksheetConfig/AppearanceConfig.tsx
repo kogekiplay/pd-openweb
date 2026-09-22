@@ -127,7 +127,7 @@ const UploadBtn = styled(CustomButton)`
 const ClearCover = styled(CustomButton)`
   &:hover {
     background-color: var(--color-error-bg);
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 `;
 

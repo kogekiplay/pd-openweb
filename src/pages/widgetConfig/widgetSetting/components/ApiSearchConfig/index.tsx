@@ -29,7 +29,9 @@ const SearchMode = styled.div`
   border: 1px solid var(--color-border-primary);
   cursor: pointer;
   ${({ isDelete }) =>
-    isDelete ? 'border: 1px solid var(--color-error);background: var(--color-error-bg);color: var(--color-error);' : ''}
+    isDelete
+      ? 'border: 1px solid var(--color-error);background: var(--color-error-bg);color: var(--color-error-text);'
+      : ''}
   &:hover {
     border-color: var(--color-border-tertiary);
   }
