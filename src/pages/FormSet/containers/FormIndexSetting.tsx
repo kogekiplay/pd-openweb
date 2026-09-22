@@ -99,7 +99,7 @@ const Con = styled.div`
             height: 24px;
             padding: 0 var(--space-3);
             border-radius: 12px;
-            color: var(--color-error);
+            color: var(--color-error-text);
             background-color: var(--color-error-bg);
           }
           .opacity0 {

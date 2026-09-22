@@ -111,7 +111,7 @@ const DialogContent = styled.div`
   }
   .mjmlError {
     padding: var(--space-2) var(--space-3);
-    color: var(--color-error);
+    color: var(--color-error-text);
     background: var(--color-error-bg);
     border-bottom: 1px solid var(--color-error-border);
     white-space: pre-wrap;

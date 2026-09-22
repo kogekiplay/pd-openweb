@@ -35,7 +35,7 @@ const ModalWrap = styled(Popup)`
   }
   .rejectApprove {
     &.select {
-      color: var(--color-error);
+      color: var(--color-error-text);
       border-color: var(--color-error);
       background-color: var(--color-error-bg);
     }

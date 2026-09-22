@@ -33,7 +33,7 @@ const UpgradeContentItem = styled.div`
     background: var(--color-success-bg);
   }
   .actionDelete {
-    color: var(--color-error);
+    color: var(--color-error-text);
     background: rgba(244, 67, 54, 0.1);
   }
   .actionUpdate {

@@ -31,7 +31,7 @@ const ProcessToastContent = styled.div`
     border-radius: 50px;
     font-size: 1em;
     font-weight: 600;
-    color: var(--color-error);
+    color: var(--color-error-text);
     background-color: var(--color-error-bg);
   }
 `;

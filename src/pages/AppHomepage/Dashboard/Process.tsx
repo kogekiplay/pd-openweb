@@ -74,7 +74,7 @@ const TodoTabList = styled.div`
       padding: 0 6px;
       border-radius: 10px;
       background: rgba(244, 67, 54, 0.16);
-      color: var(--color-error);
+      color: var(--color-error-text);
       font-size: var(--font-xs);
       font-weight: bold;
     }

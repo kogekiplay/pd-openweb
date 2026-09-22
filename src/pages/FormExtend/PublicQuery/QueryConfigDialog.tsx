@@ -49,7 +49,7 @@ const TagCon = styled.ul`
     &.error {
       background-color: var(--color-error-bg);
       border-color: var(--color-error-bg);
-      color: var(--color-error);
+      color: var(--color-error-text);
     }
     .tag {
       margin-right: 5px;

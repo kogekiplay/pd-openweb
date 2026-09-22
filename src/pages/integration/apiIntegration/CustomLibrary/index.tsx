@@ -26,7 +26,7 @@ const ApplyBtn = styled.div`
     width: 20px;
     height: 20px;
     background: var(--color-error-bg);
-    color: var(--color-error);
+    color: var(--color-error-text);
     border-radius: 50%;
     display: flex;
     align-items: center;
