@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { Icon, LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import worksheetAjax from 'src/api/worksheet';
+import { OptionChip } from 'src/components/OptionChip';
 import EditOptionList from 'src/pages/widgetConfig/widgetSetting/components/OptionList/EditOptionList';
 import { getTranslateInfo } from 'src/utils/app';
 import { getOptions } from '../../../widgetConfig/util/setting';
@@ -77,6 +78,8 @@ const ListItem = styled.div`
     display: flex;
     align-items: center;
     line-height: 30px;
+    /* 彩色选项画成 24px 高的标签后，flex 行的高度由标签决定，靠 min-height 保住原来的行距 */
+    min-height: 30px;
 
     .colorWrap {
       width: 16px;
@@ -129,8 +132,13 @@ const OptionItem = props => {
           .filter(item => !item.isDeleted)
           .map(({ color, value }, index) => (
             <li key={index}>
-              {colorful && <div className="colorWrap" style={{ backgroundColor: color }}></div>}
-              <div className="name ellipsis flex">{value}</div>
+              {colorful ? (
+                <OptionChip color={color} title={value}>
+                  {value}
+                </OptionChip>
+              ) : (
+                <div className="name ellipsis flex">{value}</div>
+              )}
             </li>
           ))}
         {options.length > 15 && <li className="more">{_l('更多 ...')}</li>}

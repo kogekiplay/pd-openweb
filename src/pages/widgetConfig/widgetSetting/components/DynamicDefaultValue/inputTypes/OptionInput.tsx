@@ -5,6 +5,7 @@ import update from 'immutability-helper';
 import { find, head, includes, isEmpty } from 'lodash';
 import _ from 'lodash';
 import styled from 'styled-components';
+import { OptionChip } from 'src/components/OptionChip';
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
 import { DropdownContent, SettingItem } from '../../../../styled';
 import { getOptions, handleAdvancedSettingChange } from '../../../../util/setting';
@@ -52,6 +53,8 @@ export const DefaultOptionsMenu = styled(DropdownContent)`
     display: flex;
     align-items: center;
     line-height: 36px;
+    /* 彩色选项画成 24px 高的标签后，flex 行的高度由标签决定，靠 min-height 保住原来的 36px */
+    min-height: 36px;
     padding: 0 var(--space-3);
     cursor: pointer;
     transition: background-color 0.25s;
@@ -217,8 +220,13 @@ export default function DefaultOptions(props) {
                     <Fragment key={index}>
                       {isEmpty && <div className="emptyOption" />}
                       <div className={cx('optionItem', { checked })} key={key} onClick={() => switchChecked(key)}>
-                        {colorful && color && <div className="colorWrap" style={{ backgroundColor: color }}></div>}
-                        <div className="text overflow_ellipsis">{value}</div>
+                        {colorful && color ? (
+                          <OptionChip color={color} title={value}>
+                            {value}
+                          </OptionChip>
+                        ) : (
+                          <div className="text overflow_ellipsis">{value}</div>
+                        )}
                         {checked && <i className="icon-done"></i>}
                       </div>
                       {isEmpty && <div className="emptyOption" />}
@@ -248,10 +256,13 @@ export default function DefaultOptions(props) {
                       key={index}
                       className={cx('option pointer overflow_ellipsis', { isDeleted: isEmpty(option) })}
                     >
-                      {colorful && option.color && (
-                        <div className="colorWrap" style={{ backgroundColor: option.color }}></div>
+                      {colorful && option.color ? (
+                        <OptionChip color={option.color} title={option.value}>
+                          {option.value}
+                        </OptionChip>
+                      ) : (
+                        <div className="text overflow_ellipsis">{option.value || _l('已删除')}</div>
                       )}
-                      <div className="text overflow_ellipsis">{option.value || _l('已删除')}</div>
                       <i
                         className="icon-close"
                         onClick={e => {

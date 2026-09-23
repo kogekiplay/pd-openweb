@@ -46,6 +46,7 @@ export default function DropConfig(props) {
       {visible && (
         <AssignValue
           options={options}
+          colorful={data.enumDefault2 === 1}
           enableScore={enumDefault === 1}
           onOk={({ options, enableScore }) => {
             onChange({ options, enumDefault: +enableScore });
