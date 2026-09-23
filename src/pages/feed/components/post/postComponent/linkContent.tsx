@@ -5,7 +5,21 @@ import { htmlDecodeReg } from 'src/utils/common';
 /**
  * 链接型动态所带的链接和图片
  */
-class LinkContent extends React.Component<any, any> {
+/** 形状与下面的 propTypes 一致 */
+interface LinkItem {
+  linkUrl: string;
+  linkTitle: string;
+  linkDesc?: string;
+  flashUrl?: string;
+  linkThumb?: string;
+}
+
+interface LinkContentProps {
+  linkItem: LinkItem;
+  [key: string]: unknown;
+}
+
+class LinkContent extends React.Component<LinkContentProps> {
   static override propTypes = {
     linkItem: PropTypes.shape({
       linkUrl: PropTypes.string.isRequired,

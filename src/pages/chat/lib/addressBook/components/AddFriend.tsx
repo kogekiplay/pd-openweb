@@ -2,7 +2,12 @@ import React from 'react';
 import { Button, Icon } from 'ming-ui';
 import { addFriendConfirm } from 'ming-ui/functions';
 
-export default class AddFriend extends React.Component<any, any> {
+interface AddFriendProps {
+  accountId?: string;
+  [key: string]: unknown;
+}
+
+export default class AddFriend extends React.Component<AddFriendProps> {
   override render() {
     return (
       <div className="contacts-add-friend">
