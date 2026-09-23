@@ -22,9 +22,9 @@ export default class QuerySheet extends Component<any, any> {
     };
     this.searchSheet = _.debounce(this.getSearchData, 500);
   }
-  hideSearchList = function () {
+  hideSearchList = () => {
     this.setState({ listVisible: false });
-  }.bind(this);
+  };
   renderSheetList() {
     const { workSheetList } = this.state;
     return workSheetList.map(
@@ -48,7 +48,7 @@ export default class QuerySheet extends Component<any, any> {
         ),
     );
   }
-  getSearchData = function () {
+  getSearchData = () => {
     this.setState({ listVisible: !!this.state.keyWords, isLoading: true });
     sheetAjax.getWorksheets({ keyWords: this.state.keyWords }).then(data => {
       this.setState({
@@ -57,7 +57,7 @@ export default class QuerySheet extends Component<any, any> {
         isLoading: false,
       });
     });
-  }.bind(this);
+  };
   render() {
     const { workSheetList, isLoading, listVisible } = this.state;
     return (

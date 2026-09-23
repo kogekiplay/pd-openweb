@@ -3,6 +3,7 @@ import kc from 'src/api/kc';
 import createShare from 'src/components/createShare/createShare';
 import kcUtil from 'src/pages/kc/util';
 import { pathCompletion } from 'src/utils/common';
+import defineMethods from 'src/utils/defineMethods';
 
 var copyNode = kc.copyNode;
 var addNode = kc.addNode;
@@ -13,7 +14,27 @@ var NODE_TYPE = {
   KC: 2,
 };
 
-var SaveToKnowledge = function (nodeType, sourceData, options) {
+/** 把附件 / 知识文件存到知识中心的某个文件夹。nodeType 见 NODE_TYPE，决定 sourceData 里用哪几个字段 */
+interface SaveToKnowledgeFields {
+  sourceData: {
+    // 知识文件（NODE_TYPE.KC）
+    nodeId?: string;
+    isShareFolder?: boolean;
+    // 七牛附件（NODE_TYPE.QINIU）
+    name?: string;
+    filePath?: string;
+    // 普通附件（NODE_TYPE.COMMON）
+    fileID?: string;
+    originalFileName?: string;
+    // 通用
+    allowDown?: boolean;
+    des?: string;
+  };
+  options: { createShare: boolean };
+  nodeType: number;
+}
+
+function SaveToKnowledge(this: SaveToKnowledgeInstance, nodeType, sourceData, options) {
   this.sourceData = sourceData;
   this.options = Object.assign(
     {
@@ -22,10 +43,11 @@ var SaveToKnowledge = function (nodeType, sourceData, options) {
     options,
   );
   this.nodeType = nodeType;
-};
+}
 
-SaveToKnowledge.prototype = {
-  save: function (path) {
+const saveToKnowledgeMethods = defineMethods<SaveToKnowledgeFields>()({
+  /** path：folderSelectDialog 选中的目标，type 1 我的文件 / 2 共享文件夹根 / 3 子文件夹 */
+  save: function (path: { type: number; node: { id: string; rootId?: string; position?: string } }) {
     var SK = this;
     var nodeType = SK.nodeType;
     var sourceData = SK.sourceData;
@@ -167,7 +189,10 @@ SaveToKnowledge.prototype = {
 
     return json;
   },
-};
+});
+
+SaveToKnowledge.prototype = saveToKnowledgeMethods;
+type SaveToKnowledgeInstance = SaveToKnowledgeFields & typeof saveToKnowledgeMethods;
 
 export default function (nodeType, sourceData, options?) {
   return new SaveToKnowledge(nodeType, sourceData, options);

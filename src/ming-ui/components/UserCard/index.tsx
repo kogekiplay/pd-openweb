@@ -290,7 +290,7 @@ class UserCard extends React.Component<any, any> {
     );
   }
 
-  formatData = function (result) {
+  formatData = result => {
     const { type, sourceId = '', accountId, groupId } = this.props;
     const id = (type === 1 ? accountId : groupId) || sourceId;
 

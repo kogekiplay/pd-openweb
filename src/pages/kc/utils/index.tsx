@@ -113,7 +113,8 @@ export function humanFileSize(size, accuracy = 0, space = ' ', units = ['B', 'KB
   return (size / Math.pow(1024, i)).toFixed(accuracy) * 1 + space + units[i];
 }
 
-export function IdItem(item) {
+/** 配合 new 使用：把 item 的字段拷到实例上，原型上补 hashCode / equals（按 id） */
+export function IdItem(this: { id?: string }, item) {
   return assign(this, item);
 }
 

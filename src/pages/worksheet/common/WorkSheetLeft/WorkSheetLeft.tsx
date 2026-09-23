@@ -48,9 +48,9 @@ class WorkSheetLeft extends Component<any, any> {
       projectFolded: getProjectfoldedFromStorage(),
     };
   }
-  componentDidMount = function () {
+  componentDidMount() {
     this.getSheetList(this.props);
-  };
+  }
   componentWillUnmount() {
     this.props.sheetListActions.updateSheetListLoading(true);
     this.props.sheetListActions.clearSheetList();

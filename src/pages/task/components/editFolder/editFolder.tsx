@@ -5,10 +5,33 @@ import _ from 'lodash';
 import { Button, Dialog } from 'ming-ui';
 import { SelectGroupTrigger } from 'ming-ui/functions/quickSelectGroup';
 import ajaxRequest from 'src/api/taskCenter';
+import defineMethods from 'src/utils/defineMethods';
 import editFolderTpl from './tpl/editFolder.html';
 import './css/editFolder.less';
 
-const EditFolder = function (opts) {
+/** 保存后交给回调的结果：visibility 0 私密 / 1 群组可见 / 2 全公司可见；群组可见时带上所选群组 */
+interface EditFolderResult {
+  visibility: number;
+  /** 群组 id 逗号分隔；全公司可见时是 'everyone' */
+  groupIds: string;
+  groupInfo?: { groupID: string; groupName: string }[];
+}
+
+interface EditFolderFields {
+  settings: {
+    folderId: string;
+    visibility: number;
+    /** 群组可见时已选的群组 id，逗号分隔 */
+    selectGroup: string;
+    callback: ((folder: EditFolderResult) => void) | null;
+    projectId: string;
+    projectName: string;
+    /** 选择器当前的公开范围（SelectGroupTrigger 回调给的对象三个数组总是齐的），没选时是 undefined */
+    scope?: { shareGroupIds: string[]; shareProjectIds: string[]; radioProjectIds?: string[] };
+  };
+}
+
+function EditFolder(this: EditFolderInstance, opts) {
   const defaults = {
     folderId: null,
     visibility: null,
@@ -21,9 +44,9 @@ const EditFolder = function (opts) {
 
   this.settings = $.extend(defaults, opts);
   this.init();
-};
+}
 
-$.extend(EditFolder.prototype, {
+const editFolderMethods = defineMethods<EditFolderFields>()({
   init() {
     const _this = this;
     const settings = this.settings;
@@ -110,7 +133,7 @@ $.extend(EditFolder.prototype, {
   },
 
   // 验证部分数据
-  returnCheck() {
+  returnCheck(): false | EditFolderResult {
     const settings = this.settings;
     let visibility;
     let groupIds = [];
@@ -184,6 +207,9 @@ $.extend(EditFolder.prototype, {
       });
   },
 });
+
+$.extend(EditFolder.prototype, editFolderMethods);
+type EditFolderInstance = EditFolderFields & typeof editFolderMethods;
 
 export default function (opts) {
   return new EditFolder(opts);

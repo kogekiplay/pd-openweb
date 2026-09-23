@@ -300,7 +300,11 @@ function NewRecordForm(props) {
 
     // loading 必须在延迟之前打开：延迟期间遮罩不出现，提交按钮可以被连点，会叠加出多次提交
     onSubmitBegin();
-    setTimeout(handleSubmit, this.hasFocusingRelateRecordTags || window.cellTextIsBlurring ? 1000 : 0);
+    /* 原先是 this.hasFocusingRelateRecordTags || window.cellTextIsBlurring。那个标记是 RecordInfo（类组件）
+       在保存按钮 onMouseDown 时置在自己实例上的；这里 newRecord 经 registerFunc 交出去、以
+       newRecordContent.current.newRecord() 调用，this 是那个普通对象，身上从来没有这个字段，恒为 undefined。
+       按实际效果去掉，行为不变。 */
+    setTimeout(handleSubmit, window.cellTextIsBlurring ? 1000 : 0);
   }
 
   async function onSave(error, { data = [], handleRuleError, handleServiceError, alertLockError } = {}) {

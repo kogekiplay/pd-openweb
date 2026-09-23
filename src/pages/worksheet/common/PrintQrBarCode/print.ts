@@ -145,8 +145,6 @@ export class QrPdf {
   declare option: (typeof A4_OPTS)[number];
   /** 打印预览用的临时容器 */
   declare $dialog: HTMLElement;
-  /** 标签类走 pdfkit 渲染（见 GeneratingPdf），A4 走 jspdf */
-  declare isPdfKit: boolean;
 
   constructor({ worksheetName, printType, layout, printData, correctLevel, config }: QrPdfOptions = {}) {
     this.worksheetName = worksheetName;
@@ -488,17 +486,10 @@ export default async function (
   console.time('render qr');
   const pdf = new QrPdf({ worksheetName, printType, layout, printData, correctLevel, config });
 
-  if (pdf.isPdfKit) {
-    this.doc.end();
-    this.stream.on('finish', function () {
-      console.log('finish');
-      const url = this.stream.toBlobURL('application/pdf');
-      // document.querySelector('iframe').src = url;
-      window.open(url);
-    });
-  } else {
-    await pdf.render();
-  }
+  /* 这里原先还有一支 if (pdf.isPdfKit) { this.doc.end(); this.stream.on('finish', ...) }。
+     isPdfKit 全仓从来没被赋过值（恒为 undefined），是标签类改由 GeneratingPdf 走 pdfkit 渲染之后留下的死分支；
+     里面的 this 在这个模块级函数里是 undefined、stream 也不是 QrPdf 的字段，真走进去会直接抛错。 */
+  await pdf.render();
 
   console.timeEnd('render qr');
   pdf.openDialog();

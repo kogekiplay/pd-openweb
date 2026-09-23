@@ -307,7 +307,8 @@ export default function pivotTableCountPanelGenerator(props) {
           true,
         );
       } else {
-        this.props.changeCurrentReport(
+        // 原先写成 this.props.changeCurrentReport：这是函数不是类组件，取消勾选时直接 TypeError、勾掉没效果
+        changeCurrentReport(
           {
             pivotTable: {
               ...pivotTable,

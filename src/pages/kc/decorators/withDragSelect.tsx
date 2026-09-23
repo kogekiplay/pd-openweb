@@ -2,7 +2,8 @@ import React from 'react';
 import { assign } from 'lodash';
 import PropTypes from 'prop-types';
 
-function execFunc(func, ...args) {
+// 原样把调用方的 this 转给 func
+function execFunc(this: unknown, func, ...args) {
   if (typeof func === 'function') {
     return func.call(this, ...args);
   }
