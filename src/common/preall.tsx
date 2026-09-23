@@ -12,7 +12,7 @@ import { LoadDiv } from 'ming-ui';
 import accountSetting from 'src/api/accountSetting';
 import global from 'src/api/global';
 import shouldForwardProp from 'src/common/shouldForwardProp';
-import { installPlatformTheme, syncThemeFromLocation } from 'src/common/theme';
+import { installPlatformTheme, installStaticHolderTheme, syncThemeFromLocation } from 'src/common/theme';
 import { prefetchMyPermissions } from 'src/components/checkPermission';
 import { resetPortalUrl } from 'src/pages/AuthService/portalAccount/util.js';
 import { initThemeMode } from 'src/router/globalEvents';
@@ -27,6 +27,8 @@ import { getPssId, setPssId } from 'src/utils/pssId';
 // 装完之后 theme-default.less / theme-dark.less 里那些主色字面值就只剩
 // 「JS 还没执行时那一帧的兜底」这一个作用了 —— inline style 恒压过它们。
 installPlatformTheme();
+// antd 静态方法（全局 alert 用的 message 等）渲染在 React 树外，也让它们走同一个主题入口
+installStaticHolderTheme();
 // 首屏按 URL 认领应用色。覆盖的是那批「属于应用、却不在 Application 路由树里」
 // 的顶层页面（字段编辑、表单设计、打印…），它们刷新时没有 appPkg 可用。
 syncThemeFromLocation();
