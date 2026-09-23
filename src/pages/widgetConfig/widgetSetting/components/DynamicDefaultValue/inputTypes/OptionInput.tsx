@@ -16,13 +16,6 @@ export const DefaultOptionSetting = styled(SettingItem)`
   .holder {
     height: 34px;
   }
-  .colorWrap {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    margin-right: 6px;
-    flex-shrink: 0;
-  }
   .content {
     display: flex;
   }
@@ -72,12 +65,6 @@ export const DefaultOptionsMenu = styled(DropdownContent)`
       font-size: var(--font-xl);
       color: var(--color-primary-text);
     }
-  }
-  .colorWrap {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    margin-right: 6px;
   }
   .emptyOption {
     border-top: 1px solid rgba(0, 0, 0, 0.09);

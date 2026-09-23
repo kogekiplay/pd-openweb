@@ -123,12 +123,6 @@ const OptionListItem = styled.div`
     line-height: 30px;
     /* 彩色选项画成 24px 高的标签后，flex 行的高度由标签决定，靠 min-height 保住原来的行距 */
     min-height: 30px;
-    .colorWrap {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      margin-right: 6px;
-    }
     i {
       &:hover {
         color: var(--color-primary-text) !important;

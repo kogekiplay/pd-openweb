@@ -49,12 +49,6 @@ const AssignValueContent = styled.div`
         border-top: 1px solid var(--color-border-primary);
       }
 
-      .colorWrap {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin-right: 6px;
-      }
     }
     .valueList {
       border-left: none;

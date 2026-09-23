@@ -19,22 +19,6 @@ const DelateDialogWrap = styled.ul`
     .name {
       display: flex;
       align-items: center;
-      .colorWrap {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        margin-right: var(--space-3);
-        .tri {
-          width: 0;
-          height: 0;
-          border: 4px solid transparent;
-          border-top-color: var(--color-background-primary);
-          &.isLight {
-            border-top-color: rgba(0, 0, 0, 0.7);
-          }
-          transform: translate(5px, 8px);
-        }
-      }
     }
     i {
       font-size: var(--font-lg);
