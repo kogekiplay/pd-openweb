@@ -69,7 +69,8 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [['@babel/preset-env', { targets: { chrome: '58' } }]],
+            // 目标与 .babelrc、CI/webpack.config.ts 保持一致，依据见后者那条注释
+            presets: [['@babel/preset-env', { targets: { chrome: '103' } }]],
           },
         },
       },

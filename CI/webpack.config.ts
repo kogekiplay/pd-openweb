@@ -107,8 +107,14 @@ const getModuleRules = () => {
       include: /node_modules\/(@ctrl\/tinycolor)/,
       use: {
         loader: 'babel-loader',
+        /* 目标要和 .babelrc 的两个 env 块保持一致（全仓共四处写死了这个版本号）。
+           取 103 的依据是生产 nginx 访问日志：2026-09-03 ~ 09-23 共 314 个去重会话，
+           排掉扫描器之后最老的真实客户端是一台 OPPO PEQM00（Android 13）上的
+           Mingdao Application WebView，停在 Chrome 103 不更新。
+           再往上调没有任何收益 —— 实测 preset-env 在 103 / 138 / 152 三档下
+           产出逐字节相同，而 58 那一档会把同一段源码膨胀到 17 倍。 */
         options: {
-          presets: [['@babel/preset-env', { targets: { chrome: '58' } }]],
+          presets: [['@babel/preset-env', { targets: { chrome: '103' } }]],
         },
       },
     },
