@@ -92,7 +92,8 @@ const proxyConfigs: { name: string; path: string; replace: string; server: any; 
     server: publishConfig.apiServer,
   },
   // 【API_PATH_PREFIX：把 dev server 接到一套已部署的 HAP 上】
-  // 上游默认 replace:'/'，前提是 API_SERVER 直接指向后端服务本身（服务在根路径提供接口）。
+  // 上游 7.4.4 及以前默认 replace:'/'（前提是 API_SERVER 直接指向后端服务本身、服务在根路径提供接口），
+  // 7.4.5 起改成了 '/wwwapi/'。
   // 但如果 API_SERVER 指向的是一套已部署 HAP 的 nginx 入口，布局完全不同：
   // 主 API 在 /wwwapi/，而 workflow / report / integration 等各挂在别的路径下，
   // 且【具体挂哪儿是每套部署自己定的】——见下面 resolveApiRoutes。
@@ -109,7 +110,8 @@ const proxyConfigs: { name: string; path: string; replace: string; server: any; 
   {
     name: 'api',
     path: '/api/',
-    replace: process.env.API_PATH_PREFIX || '/',
+    // 不设 API_PATH_PREFIX 时跟上游 7.4.5 的默认值一致
+    replace: process.env.API_PATH_PREFIX || '/wwwapi/',
     server: publishConfig.apiServer,
     rewriteHosts: true,
   },
