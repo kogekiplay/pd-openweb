@@ -111,7 +111,7 @@ class CalendarShare extends Component<any, any> {
               if (weekDay.length === 5 && weekDay[0] == 1 && weekDay[4] == 5) {
                 messages += '工作日';
               } else {
-                weekDay.forEach((item, index: number) => {
+                weekDay.forEach((_item, index: number) => {
                   if (index === 0) {
                     messages += '星期';
                   } else {

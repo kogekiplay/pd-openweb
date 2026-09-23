@@ -73,7 +73,7 @@ function useChatBot({ sessionId, params = [], defaultMessages = [], currentCode,
     setLoading(false);
   };
 
-  const sendMessage = async (content, { noCode = false, attachment } = {}) => {
+  const sendMessage = async (content, { attachment } = {}) => {
     const text = (content || '').trim();
     if (!text && !attachment) return;
 

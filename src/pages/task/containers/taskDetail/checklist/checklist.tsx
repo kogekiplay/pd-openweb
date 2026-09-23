@@ -73,7 +73,7 @@ class ChecklistOperator extends Component<any, any> {
 }
 
 const checklistSource = {
-  beginDrag(props, monitor, component) {
+  beginDrag(props, _monitor, component) {
     const node = getNode(component);
     if (!node) return { index: props.index };
     const preview = node.outerHTML;

@@ -19,7 +19,7 @@ export default class ExtraUserList extends Component<any, any> {
 
     if (data.list && data.list.length) {
       const currentId = _.get(
-        _.find(data.list || [], (i, idx) => idx === this.props.currentIndex),
+        _.find(data.list || [], (_i, idx) => idx === this.props.currentIndex),
         'accountId',
       );
 

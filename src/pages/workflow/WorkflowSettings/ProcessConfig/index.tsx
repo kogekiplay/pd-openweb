@@ -822,7 +822,7 @@ class ProcessConfig extends Component<any, any> {
                   type={2}
                   content={data.value}
                   formulaMap={data.formulaMap}
-                  onChange={(err, value) => this.updateSource({ value })}
+                  onChange={(_err, value) => this.updateSource({ value })}
                   updateSource={this.updateSource}
                 />
               </div>
@@ -862,7 +862,7 @@ class ProcessConfig extends Component<any, any> {
                   type={2}
                   content={data.endValue}
                   formulaMap={data.formulaMap}
-                  onChange={(err, value) => this.updateSource({ endValue: value })}
+                  onChange={(_err, value) => this.updateSource({ endValue: value })}
                   updateSource={this.updateSource}
                 />
               </div>

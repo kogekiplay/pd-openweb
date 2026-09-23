@@ -74,7 +74,7 @@ const TaxNumber = forwardRef((props, ref) => {
       title: _l('状态'),
       dataIndex: 'planType',
       width: 120,
-      render: (text, record) => {
+      render: (_text, record) => {
         return (
           <span
             style={{
@@ -95,7 +95,7 @@ const TaxNumber = forwardRef((props, ref) => {
       title: _l('操作人'),
       dataIndex: 'operator',
       width: 150,
-      render: (text, record) => {
+      render: (_text, record) => {
         const { operator = {} } = record;
         const { accountId, fullname, avatar } = operator;
         return (
@@ -129,7 +129,7 @@ const TaxNumber = forwardRef((props, ref) => {
       dataIndex: 'operate',
       width: 'fit-content',
       fixed: 'right',
-      render: (text, record) => {
+      render: (_text, record) => {
         const { planType } = record;
 
         return (

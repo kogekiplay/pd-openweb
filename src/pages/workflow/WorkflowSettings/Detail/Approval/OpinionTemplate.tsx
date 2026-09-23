@@ -124,7 +124,7 @@ export default ({
             className="icon-trash Font16 textSecondary pointer mLeft10"
             onClick={() => {
               const newSource = _.cloneDeep(items);
-              _.remove(newSource, (o, i) => i === index);
+              _.remove(newSource, (_o, i) => i === index);
               setData(Object.assign({}, data, { [sourceKey]: newSource }));
             }}
           />

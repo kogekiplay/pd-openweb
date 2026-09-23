@@ -186,7 +186,7 @@ export default props => {
               height={0}
               content={data.query}
               formulaMap={data.formulaMap}
-              onChange={(err, value) => updateSource({ query: value })}
+              onChange={(_err, value) => updateSource({ query: value })}
               updateSource={updateSource}
             />
           </div>

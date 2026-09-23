@@ -16,7 +16,7 @@ import './timeBars.less';
 
 let root;
 const ganttSource = {
-  beginDrag(props, monitor, component) {
+  beginDrag(props, _monitor, component) {
     // 触发拖拽单侧的时候也触发了拖拽整个的bug
     if (config.isSingleDrag) {
       return {};

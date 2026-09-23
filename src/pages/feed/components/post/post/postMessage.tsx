@@ -44,7 +44,7 @@ class PostMessage extends React.Component<any, any> {
 
     $(this.messageNode)
       .find('[data-accountid]')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         const accountId = $(ele).attr('data-accountid');
         $(ele).removeAttr('data-accountid');
 
@@ -59,7 +59,7 @@ class PostMessage extends React.Component<any, any> {
 
     $(this.messageNode)
       .find('[data-groupid]')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         const groupid = $(ele).attr('data-groupid');
         $(ele).removeAttr('data-groupid');
 

@@ -257,7 +257,7 @@ export default function TextVerify(props) {
                 );
               }}
               onDelete={sortIdx => {
-                const newList = filterRegex.filter((i, idx) => sortIdx !== idx);
+                const newList = filterRegex.filter((_i, idx) => sortIdx !== idx);
                 onChange(
                   handleAdvancedSettingChange(data, { filterregex: JSON.stringify(getSortItems(newList, false)) }),
                 );

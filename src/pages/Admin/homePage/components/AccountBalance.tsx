@@ -152,7 +152,7 @@ export default function AccountBalance(props) {
           closeDialog,
         });
       },
-      closeWarning: (warningValue, notifiers, noticeTypes, closeDialog) => {
+      closeWarning: (_warningValue, notifiers, noticeTypes, closeDialog) => {
         setBalanceLimitNotice({
           noticeEnabled: false,
           balanceLimit: 0,

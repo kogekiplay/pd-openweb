@@ -294,7 +294,7 @@ export default class MerchantCom extends Component<any, any> {
         dataIndex: 'merchantPaymentChannel',
         ellipsis: true,
         width: 200,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { merchantPaymentChannel } = record;
           return PAY_CHANNEL_TXT[merchantPaymentChannel] || '';
         },
@@ -302,7 +302,7 @@ export default class MerchantCom extends Component<any, any> {
       {
         title: _l('状态'),
         dataIndex: 'status',
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <Fragment>
               <span
@@ -342,7 +342,7 @@ export default class MerchantCom extends Component<any, any> {
       {
         title: _l('支付渠道'),
         dataIndex: 'paymentMethod',
-        render: (text, record) => {
+        render: (_text, record) => {
           const { aliPayStatus, wechatPayStatus } = record;
 
           if (_.includes([1, 2], aliPayStatus) && _.includes([1, 2], wechatPayStatus)) {
@@ -360,7 +360,7 @@ export default class MerchantCom extends Component<any, any> {
         title: _l('操作人'),
         dataIndex: 'accountInfo',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { createAccount = {} } = record;
           const { accountId, fullname, avatar } = createAccount;
           return (
@@ -384,7 +384,7 @@ export default class MerchantCom extends Component<any, any> {
         dataIndex: 'accountId',
         width: 'fit-content',
         fixed: 'right',
-        render: (text, record) => {
+        render: (_text, record) => {
           const { status, merchantPaymentChannel } = record;
 
           // 0-注册中 1-待开通 2-开通中 3-已开通 4-已禁用

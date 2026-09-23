@@ -257,7 +257,7 @@ export default class DateCalc extends Component<any, any> {
               )
             }
             onAddClick={() => this.setState({ formulaColumnSelectVisible: true })}
-            onChange={(err, value) => {
+            onChange={(_err, value) => {
               onFormulaEditStatusChange(true);
               this.setState({
                 formulaStr: value,

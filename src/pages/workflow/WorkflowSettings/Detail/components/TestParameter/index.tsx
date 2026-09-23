@@ -149,7 +149,7 @@ export default ({
               setUploadingIndex(index);
               up.disableBrowse();
             }}
-            onError={(up, err, errTip) => {
+            onError={(_up, _err, errTip) => {
               alert(errTip, 2);
             }}
           >

@@ -157,7 +157,7 @@ export default function AccessConditions(props) {
                 {addressRule.length > 1 && (
                   <span
                     className="delete mLeft8 Hand"
-                    onClick={() => setAdressRule(addressRule.filter((v, i) => index !== i))}
+                    onClick={() => setAdressRule(addressRule.filter((_v, i) => index !== i))}
                   >
                     <Icon icon="delete1" />
                   </span>

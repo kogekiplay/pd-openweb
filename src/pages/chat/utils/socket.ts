@@ -250,7 +250,7 @@ export const Contact = {
  */
 export const fetchUploadToken = param => {
   return new Promise((resolve, reject) => {
-    IM.socket.emit('upload token', param, (err, data) => {
+    IM.socket.emit('upload token', param, (_err, data) => {
       if (data.token && data.key) {
         resolve(data);
       } else {

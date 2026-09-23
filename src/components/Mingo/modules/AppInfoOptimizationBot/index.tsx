@@ -136,7 +136,7 @@ function MingoContent(props, ref) {
       //       `,
       //     },
     ],
-    aiCompletionApi: async (messages, { abortController, agentParams = {} }) => {
+    aiCompletionApi: async (_messages, { abortController, agentParams = {} }) => {
       configSnapshotRef.current = { ...config };
       //  0全部 1优化应用名称项 2优化应用项图标
       let optimizeType = 0;

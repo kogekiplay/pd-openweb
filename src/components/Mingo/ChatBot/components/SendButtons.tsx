@@ -183,7 +183,7 @@ function SendButtons(
             allowMimeTypes={allowMimeTypes}
             allowMultiSelection={allowMultiSelection}
             dropElementId={dropFileElementId}
-            onAdd={(uploader, files) => {
+            onAdd={(_uploader, files) => {
               focusSendTextArea();
               onUpdateFiles(oldFiles => [
                 ...oldFiles,
@@ -197,13 +197,13 @@ function SendButtons(
                 })),
               ]);
             }}
-            onUploadProgress={(uploader, file) => {
+            onUploadProgress={(_uploader, file) => {
               const progress = ((file.loaded / file.size) * 100).toFixed(0);
               onUpdateFiles(oldFiles => [
                 ...oldFiles.map(f => (f.id === file.id ? { ...f, status: 'uploading', file, progress } : f)),
               ]);
             }}
-            onUploaded={(uploader, file, response) => {
+            onUploaded={(_uploader, file, response) => {
               const commonAttachment = formatResponseData(file, response);
               const isImage = /^image\//.test(file.type) || /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name);
               const shouldOcr = needOcr && !(mingoOcr && isImage);

@@ -285,7 +285,7 @@ function AddUserByTelDialog(props) {
                   icon="trash"
                   onClick={() => {
                     if (i !== 0) {
-                      setList(list.filter((o, index) => index !== i));
+                      setList(list.filter((_o, index) => index !== i));
                     }
                   }}
                 />

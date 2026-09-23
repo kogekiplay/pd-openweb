@@ -118,7 +118,6 @@ const MemoFullCalendar = React.memo(
     others,
     currentView,
     appId,
-    unselectAuto,
     hour24,
   }: any) {
     /* 【设置里的「排序」在这里才真正接上】此前 eventOrder 写死 'start'，抽屉里那一栏
@@ -1134,7 +1133,7 @@ class RecordCalendarBase extends Component<any, any> {
             recordId={recordId}
             worksheetId={worksheetId}
             rules={worksheetInfo.rules}
-            updateSuccess={(ids, updated) => {
+            updateSuccess={(_ids, updated) => {
               let attribute = controls.find((o: FormControl) => o.attribute === 1);
 
               // 更改了 开始时间/结束时间/标题字段/颜色 =>更新日历视图数据

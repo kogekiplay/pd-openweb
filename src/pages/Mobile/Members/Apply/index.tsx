@@ -43,7 +43,7 @@ class ApplyList extends React.Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, index) => {
+      onAction: (_action, index) => {
         if (index < roleList.length) {
           this.props.dispatch(
             actions.editAppApplyStatus({

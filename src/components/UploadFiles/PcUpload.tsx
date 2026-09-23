@@ -312,7 +312,7 @@ function PcUpload(props) {
   };
 
   const handleDelete = () => {
-    const newPhotoList = photoList.filter((i, index) => index !== previewIndex);
+    const newPhotoList = photoList.filter((_i, index) => index !== previewIndex);
     setPhotoList(newPhotoList);
 
     if (_.isEmpty(newPhotoList)) {

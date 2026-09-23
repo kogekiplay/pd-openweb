@@ -113,7 +113,7 @@ export default function SubListSummaryWidget(props) {
                     icon="delete1"
                     className="Font18 pointer mLeft14"
                     onClick={() => {
-                      const newList = settingList.filter((i, idx) => idx !== index);
+                      const newList = settingList.filter((_i, idx) => idx !== index);
                       setSettingList(newList);
                     }}
                   />

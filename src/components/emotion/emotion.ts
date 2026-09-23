@@ -537,7 +537,7 @@ Emotion.prototype.load = function (index: number) {
 
   // 加载历史记录
   if (_this.options.history && index === 0 && window.localStorage && window.localStorage[this.options.historyKey]) {
-    $.each(JSON.parse(window.localStorage[_this.options.historyKey]), function (i, item) {
+    $.each(JSON.parse(window.localStorage[_this.options.historyKey]), function (_i, item) {
       /* 【这里只该做一件事：tab 被关掉时，别把对应的表情留在历史里】
          原先写成三条正向白名单，最后一条是 item.indexOf('emotion/default') —— 靠图片路径认人。
          emoji 面板改成渲染 Unicode 字符之后，格子长这样：
@@ -565,11 +565,11 @@ Emotion.prototype.load = function (index: number) {
       // 没素材的就成了破图。字符由系统字体画，Unicode 有多少就能列多少。
       // **对插入结果没有影响** —— 点选时取的一直是 code 属性里的原字符（见 Emotion.prototype.select），
       // 面板里的图从来只是显示用的。
-      $.each(contentObj, function (i, item) {
+      $.each(contentObj, function (_i, item) {
         content += `<a class="emotionItem emoji emojiChar" code="${item}">${item}</a>`;
       });
     } else {
-      $.each(contentObj, function (i, item) {
+      $.each(contentObj, function (_i, item) {
         const extraClassName =
           tabObj.name === 'Aru' ? 'emotionItemAru' : tabObj.name === _l('笨笨熊') ? 'emotionItemBear' : '';
         const imgPath =

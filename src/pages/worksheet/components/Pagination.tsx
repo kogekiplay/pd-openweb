@@ -414,7 +414,7 @@ export default class Pagination extends React.Component<any, any> {
             </div>
           )}
           {[...new Array(abnormalMode ? 7 : isEnd ? 6 : 5)]
-            .map((a, i) => minShowPage + i)
+            .map((_a, i) => minShowPage + i)
             .filter(page => page < this.pageNum || abnormalMode)
             .map((page, i) => (
               <div

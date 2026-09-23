@@ -172,7 +172,7 @@ export default function InvoiceDetail(props) {
         {
           key: 'account',
           label: _l('申请人'),
-          render: (value, record) => {
+          render: (_value, record) => {
             const { accountId, fullname, avatar, isPortal } = record.account || {};
 
             return (
@@ -194,7 +194,7 @@ export default function InvoiceDetail(props) {
         {
           key: 'operator',
           label: _l('开票人'),
-          render: (value, record) => {
+          render: (_value, record) => {
             const { accountId, fullname, avatar, isPortal } = record.operator || {};
 
             if (_.isEmpty(record.operator) || !accountId) {
@@ -280,7 +280,7 @@ export default function InvoiceDetail(props) {
         {
           key: 'app',
           label: _l('所属应用'),
-          render: (text, record) => {
+          render: (_text, record) => {
             const { sourceInfo = {}, orderId, invoiceId } = record;
             const { appColor, appIconUrl, appName, appId } = sourceInfo;
 
@@ -303,7 +303,7 @@ export default function InvoiceDetail(props) {
         {
           key: 'worksheet',
           label: processId ? _l('所属工作流') : _l('所属表单'),
-          render: (value, record) => {
+          render: (_value, record) => {
             const { sourceInfo = {}, orderId, invoiceId } = record;
             const { workSheetName, worksheetId } = sourceInfo;
 

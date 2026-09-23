@@ -96,7 +96,7 @@ export default class SendToolbar extends Component<any, any> {
       showAru: true,
       offset: isFileTrsnsfer ? 313 : 263,
       relatedLeftSpace: isFileTrsnsfer ? -304 : -264,
-      onMDBearSelect: (name: string, src, targetEmotionSrc) => {
+      onMDBearSelect: (name: string, _src, targetEmotionSrc) => {
         // 注意：ft 这个字段是作为七牛文件存储的类型判断的，所以要注意加上这个字段
         // 1.图片 2.附件 3.音频
         name = name == 'null' ? null : name;
@@ -115,7 +115,7 @@ export default class SendToolbar extends Component<any, any> {
         };
         this.props.onSendEmotionPicMsg(message);
       },
-      onSelect: (name: string, value, emotionText) => {
+      onSelect: (name: string, _value, emotionText) => {
         this.props.onSendEmotionTextMsg(emotionText || name);
       },
     });
@@ -210,12 +210,12 @@ export default class SendToolbar extends Component<any, any> {
           const cb = window[`chatBeforeUpload${file.id}`];
           cb && cb(uploader);
         },
-        UploadProgress(uploader, file) {
+        UploadProgress(_uploader, file) {
           const uploadPercent = ((file.loaded / file.size) * 100).toFixed(1);
           const cb = window[`chatUploadProgress${file.id}`];
           cb && cb(uploadPercent);
         },
-        FileUploaded(uploader, file, response) {
+        FileUploaded(_uploader, file, response) {
           // 【不再 JSON.parse】plupload 给的是原始响应字符串，createUploader 给的是
           // 已解析并补好 fileExt/fileName/filePath/serverName 的对象。
           const uploadFile = response.response;
@@ -234,7 +234,7 @@ export default class SendToolbar extends Component<any, any> {
 
           _this.props.onSendFileMsg({ file: uploadFile, type }, msg);
         },
-        Error(uploader, error) {
+        Error(_uploader, error) {
           if (error.code === UploadError.FILE_SIZE_ERROR) {
             alert(_l('单个文件大小超过%0MB，无法支持上传', fileUploadLimitSize), 2);
           } else {

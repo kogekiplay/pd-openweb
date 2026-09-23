@@ -254,7 +254,7 @@ function DetailView(props) {
 
                 setCurrentRecord(item);
               }}
-              onUpdateFn={(updated, item) => {
+              onUpdateFn={(_updated, item) => {
                 updateRow(item);
                 if (item.rowid === currentRecord.rowid) {
                   setFlag(+new Date());
@@ -365,7 +365,7 @@ function DetailView(props) {
               worksheetId={worksheetId}
               rules={worksheetInfo.rules}
               isWorksheetQuery={worksheetInfo.isWorksheetQuery}
-              updateSuccess={(ids, updated, data) => updateRow(data)}
+              updateSuccess={(_ids, _updated, data) => updateRow(data)}
               onDeleteSuccess={() => deleteRow(currentRecord.rowid)}
               handleAddSheetRow={data => {
                 updateRow(data);

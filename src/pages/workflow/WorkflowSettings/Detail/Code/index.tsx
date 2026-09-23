@@ -330,7 +330,7 @@ export default class Code extends Component<any, any> {
         }}
         lineNumbers
         maxHeight={10000000}
-        onChange={(err, value) => {
+        onChange={(_err, value) => {
           if (value === this.state.data.code) {
             return;
           }

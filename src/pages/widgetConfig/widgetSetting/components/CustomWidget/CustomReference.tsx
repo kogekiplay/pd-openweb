@@ -139,7 +139,7 @@ export default function CustomReference(props) {
             <Icon
               icon="hr_delete"
               className="deleteIcon"
-              onClick={() => handleChange(reference.filter((i, idx) => idx !== index))}
+              onClick={() => handleChange(reference.filter((_i, idx) => idx !== index))}
             />
           </div>
         );

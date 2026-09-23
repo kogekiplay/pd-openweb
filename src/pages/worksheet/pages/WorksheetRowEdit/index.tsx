@@ -160,7 +160,7 @@ class WorksheetRowEdit extends Component<any, any> {
       return (
         <VerificationPass
           validatorPassPromise={(value, captchaResult) => {
-            return new Promise((resolve, reject) => {
+            return new Promise((_resolve, reject) => {
               if (value) {
                 this.getLinkDetail({
                   password: value,

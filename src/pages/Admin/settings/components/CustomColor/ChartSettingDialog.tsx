@@ -347,7 +347,7 @@ export default function ChartSettingDialog(props) {
                   <Icon
                     icon="delete_12"
                     className="textTertiary deleteIcon"
-                    onClick={() => setColors(colors.filter((l, i) => i !== index))}
+                    onClick={() => setColors(colors.filter((_l, i) => i !== index))}
                   />
                 </Tooltip>
               )}

@@ -121,7 +121,7 @@ export class FlowChart extends Component<any, any> {
     const $content = $box.find('.workflowEditContent');
     let maxWidth = $box.width();
 
-    $content.find('> .flexColumn > .workflowBranch').map((i, item) => {
+    $content.find('> .flexColumn > .workflowBranch').map((_i, item) => {
       if (maxWidth < $(item).innerWidth()) {
         maxWidth = $(item).innerWidth();
       }
@@ -272,7 +272,7 @@ export class FlowChart extends Component<any, any> {
       }
     });
 
-    $('.workflowExecLine').each((item, el) => {
+    $('.workflowExecLine').each((_item, el) => {
       const $el = $(el);
 
       $el.height(_.max([$el.closest('.executed').innerHeight(), $el.closest('.workflowBoxPending').innerHeight()]));

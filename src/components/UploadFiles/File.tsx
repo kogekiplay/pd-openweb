@@ -265,7 +265,7 @@ export default class FileComponent extends Component<any, any> {
       isDelete: false,
     });
   };
-  renderPreview(fileResponse, fileClassName, isDoc, isVid, isKc) {
+  renderPreview(fileResponse, fileClassName, isDoc, _isVid, isKc) {
     return isDoc ? (
       <Fragment>
         <div className={cx(fileClassName, 'UploadFiles-fileIcon', 'UploadFiles-previewIcon')} />

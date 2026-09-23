@@ -72,7 +72,7 @@ export default class HistoryDetail extends Component<any, any> {
       const index = _.findIndex(works, o => _.includes([flowId, id], o.flowNode.prveId));
 
       if (currentIndex !== index && index !== -1) {
-        works = works.filter((o, i) => i !== currentIndex);
+        works = works.filter((_o, i) => i !== currentIndex);
         works.splice(index - (currentIndex < index ? 1 : 0), 0, item);
       }
     });

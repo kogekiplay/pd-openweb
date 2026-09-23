@@ -400,7 +400,7 @@ export default props => {
         showCurrent
         content={data.processConfig.recordTitle}
         formulaMap={data.processConfig.formulaMap}
-        onChange={(err, value) =>
+        onChange={(_err, value) =>
           updateSource({
             processConfig: Object.assign({}, data.processConfig, { recordTitle: value }),
           })

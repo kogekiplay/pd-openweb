@@ -309,7 +309,7 @@ class AppearanceConfig extends React.Component<any, any> {
             this.setState({ isUploading: true });
             up.disableBrowse();
           }}
-          onError={(up, err) => {
+          onError={(_up, err) => {
             if (err.code === -600) alert(_l('上传失败，只允许上传5M以内的文件'), 2);
           }}
         >

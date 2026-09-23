@@ -43,7 +43,7 @@ md.linkify.set({ fuzzyLink: true, urlAuth: true });
 
 // 所有 markdown 链接统一在新标签页打开，并补 rel 防止 opener 反向控制
 const defaultLinkOpen =
-  md.renderer.rules.link_open || ((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options));
+  md.renderer.rules.link_open || ((tokens, idx, options, _env, self) => self.renderToken(tokens, idx, options));
 
 md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
   const token = tokens[idx];

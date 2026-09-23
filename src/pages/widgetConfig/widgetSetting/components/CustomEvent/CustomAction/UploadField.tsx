@@ -104,7 +104,7 @@ export default class UploadFile extends Component<any, any> {
     this.initUpload();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_prevProps, prevState) {
     if (prevState.isComplete !== this.state.isComplete) {
       this.initUpload();
     }
@@ -123,7 +123,7 @@ export default class UploadFile extends Component<any, any> {
       },
       type: 0,
       init: {
-        Error: (up, err) => {
+        Error: (_up, err) => {
           const {
             file: { name },
             code,
@@ -147,7 +147,7 @@ export default class UploadFile extends Component<any, any> {
           newFiles = newFiles.filter(i => !_.includes(this.deleteFileKey, i.key));
           this.setState({ files: newFiles, dragOver: false });
         },
-        FileUploaded: (up, file, info) => {
+        FileUploaded: (up, _file, info) => {
           this.cacheFile.push(info);
 
           if (this.cacheFile.length === up.files.length) {
@@ -200,7 +200,7 @@ export default class UploadFile extends Component<any, any> {
                       className="deleteIcon Font16 pointer"
                       onClick={() => {
                         this.deleteFileKey.push(file.key);
-                        const newFiles = files.filter((i, idx) => idx !== index);
+                        const newFiles = files.filter((_i, idx) => idx !== index);
                         this.setState({ files: newFiles }, () => {
                           if (_.isEmpty(newFiles)) {
                             this.setState({ isComplete: false });

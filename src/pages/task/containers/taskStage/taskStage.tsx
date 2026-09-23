@@ -132,7 +132,7 @@ class TaskStage extends Component<any, any> {
   }
 
   renderStageChargeUser() {
-    $('#taskList .singleStage .stageChargeAvatar').each((i, ele) => {
+    $('#taskList .singleStage .stageChargeAvatar').each((_i, ele) => {
       let $ele = $(ele);
       if ($ele.data('hasbusinesscard')) return;
       const accountId = $ele.closest('.singleStage').data('chargeid');
@@ -153,7 +153,7 @@ class TaskStage extends Component<any, any> {
   }
   renderChargeHeaderAvatar(params?) {
     const { taskConfig } = this.props;
-    $('#tasks .listStageContent .chargeHeaderAvatar').each((i, ele) => {
+    $('#tasks .listStageContent .chargeHeaderAvatar').each((_i, ele) => {
       let $ele = $(ele);
 
       if ($ele.data('hasbusinesscard')) return;
@@ -737,7 +737,7 @@ class TaskStage extends Component<any, any> {
    * 评分控件
    */
   customScore() {
-    $('.listStageCustomItemStar[data-type=score]').map((i, item) => {
+    $('.listStageCustomItemStar[data-type=score]').map((_i, item) => {
       if (!$(item).find('.Score-wrapper').length) {
         const type = $(item).data('enum');
         const score = $(item).data('score');

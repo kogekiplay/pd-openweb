@@ -350,7 +350,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                 className="mLeft15"
                 onClick={() =>
                   this.setState({
-                    configs: configs.filter((c, idx) => idx !== index),
+                    configs: configs.filter((_c, idx) => idx !== index),
                   })
                 }
               >

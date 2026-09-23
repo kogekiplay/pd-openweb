@@ -180,7 +180,7 @@ export default class File extends Component<any, any> {
           height={0}
           content={data.fileName}
           formulaMap={data.formulaMap}
-          onChange={(err, value) => this.updateSource({ fileName: value })}
+          onChange={(_err, value) => this.updateSource({ fileName: value })}
           updateSource={this.updateSource}
         />
 

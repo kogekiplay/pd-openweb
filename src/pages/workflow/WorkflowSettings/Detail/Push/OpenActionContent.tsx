@@ -291,7 +291,7 @@ export default class OpenActionContent extends Component<any, any> {
         type={2}
         content={data.content}
         formulaMap={formulaMap}
-        onChange={(err, value) => updateSource({ [key]: value })}
+        onChange={(_err, value) => updateSource({ [key]: value })}
         updateSource={updateRootSource}
       />
     );

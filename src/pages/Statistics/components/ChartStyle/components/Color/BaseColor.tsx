@@ -207,7 +207,7 @@ export default class BaseColor extends Component<any, any> {
             className="textTertiary Font20 deleteIcon"
             onClick={() => {
               this.setState({
-                customColors: customColors.filter((c, i) => i !== index),
+                customColors: customColors.filter((_c, i) => i !== index),
               });
             }}
           />

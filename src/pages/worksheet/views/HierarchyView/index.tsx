@@ -142,7 +142,7 @@ function Hierarchy(props) {
   });
   const [, drop] = useDrop({
     accept: ITEM_TYPE.ITEM,
-    hover(item, monitor) {
+    hover(_item, monitor) {
       function scroll() {
         const $wrap = document.querySelector('.hierarchyViewWrap');
         if (!$wrap) return;

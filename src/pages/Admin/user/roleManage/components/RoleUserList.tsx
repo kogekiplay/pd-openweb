@@ -49,7 +49,7 @@ class RoleUserList extends Component<any, any> {
       selectedDepartment: (item?.orgRoleChargeDepartments || []).map(l => {
         return { ...l, checkIncludeChilren: true };
       }),
-      selectFn: (dep, dep2) => {
+      selectFn: (_dep, dep2) => {
         const departmentIds = dep2.map(l => ({ departmentId: l.departmentId, isIncludeSub: true }));
         OrganizeAjax.setOrgRoleChargeDepartment({
           projectId,

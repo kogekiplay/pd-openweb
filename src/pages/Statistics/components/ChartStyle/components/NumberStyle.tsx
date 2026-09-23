@@ -547,7 +547,7 @@ export function numberSummaryPanelGenerator(props) {
         <Switch
           size="small"
           checked={switchChecked}
-          onClick={(checked, event) => {
+          onClick={(_checked, event) => {
             event.stopPropagation();
           }}
           onChange={checked => {
@@ -637,7 +637,7 @@ export default function numberStylePanelGenerator(props) {
             <Switch
               size="small"
               checked={numberChartStyle.iconVisible}
-              onClick={(checked, event) => {
+              onClick={(_checked, event) => {
                 event.stopPropagation();
               }}
               onChange={checked => {

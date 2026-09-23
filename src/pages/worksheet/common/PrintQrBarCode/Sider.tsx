@@ -671,7 +671,7 @@ export default function Sider(props) {
           />
         </SetAsTitleTooltip>
       </div>
-      {[...new Array(maxLineNumber)].map((o, i) => (
+      {[...new Array(maxLineNumber)].map((_o, i) => (
         <SelectControlWithInput
           type={(showTexts[i] || {}).type}
           value={(showTexts[i] || {}).value}

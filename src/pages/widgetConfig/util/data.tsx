@@ -1096,7 +1096,7 @@ type WidgetsChangedCallback = (result?: { newWidgets?: FormControl[][] }) => voi
 export const clearAndSetWidgets = (
   data: FormControl[],
   // 【这个形参没有被用到】函数体里一次都没读，保留是为了不动 3 个调用点的实参位置
-  para: unknown,
+  _para: unknown,
   widgetProps: WidgetProps,
   callback?: WidgetsChangedCallback,
 ) => {

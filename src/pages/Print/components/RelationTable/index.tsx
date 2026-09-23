@@ -95,7 +95,7 @@ export default class RelationTable extends React.Component<any, any> {
           dataIndex: 'number',
           className: 'orderNumber',
           width: orderNumberWidth,
-          render: (text, record, index: number) => index + 1,
+          render: (_text, _record, index: number) => index + 1,
         },
       ];
     }
@@ -166,7 +166,7 @@ export default class RelationTable extends React.Component<any, any> {
           width,
           controlId: it.controlId,
           control: it,
-          render: (text, record) => {
+          render: (_text, record) => {
             if ([29].includes(it.type) && !['2', '5', '6'].includes(it.advancedSetting.showtype)) {
               let list = (it.relationControls || []).find(o => o.attribute === 1) || {};
 

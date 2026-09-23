@@ -83,7 +83,7 @@ export default ({
   const deleteKeys = i => {
     const items = _.cloneDeep(source);
 
-    _.remove(items, (obj, index) => index === i);
+    _.remove(items, (_obj, index) => index === i);
     updateSource({ [sourceKey]: items });
   };
 
@@ -281,7 +281,7 @@ export default ({
                   height={0}
                   content={item.value}
                   formulaMap={formulaMap}
-                  onChange={(err, value) => updateKeyValues({ key: pairsName, value, i })}
+                  onChange={(_err, value) => updateKeyValues({ key: pairsName, value, i })}
                   updateSource={updateSource}
                 />
               )}

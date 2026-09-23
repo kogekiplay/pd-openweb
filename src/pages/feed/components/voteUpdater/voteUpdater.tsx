@@ -17,7 +17,7 @@ const VoteUpdater = defineMethods<VoteUpdaterFields>()({
   init: function ($el) {
     const _this = this;
 
-    return $el.each(function (i, el) {
+    return $el.each(function (_i, el) {
       var idPrefix = Math.random().toString(36).substring(7);
       var $el = $(el);
       if (!$el.attr('id')) {
@@ -155,7 +155,7 @@ const VoteUpdater = defineMethods<VoteUpdaterFields>()({
               $el
                 .find('.voteLastHour')
                 .find('option')
-                .each(function (hourOptionIndex, option) {
+                .each(function (_hourOptionIndex, option) {
                   var disabled = parseInt($(option).val(), 10) <= hour;
                   if (disabled) $(option).hide();
                   $(option).prop('disabled', disabled);
@@ -322,7 +322,7 @@ const VoteUpdater = defineMethods<VoteUpdaterFields>()({
   reset: function ($el) {
     var _this = this;
 
-    return $el.each(function (i, el) {
+    return $el.each(function (_i, el) {
       var $el = $(el);
       if ($el.find('.voteOptions input').length > 0) {
         $el.find('.voteOptions input[type = "text"]').addClass('textPlaceholder').val(_l('请输入投票项'));

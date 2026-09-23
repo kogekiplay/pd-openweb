@@ -292,7 +292,7 @@ export function initConfigDetail(id, data, currentReport, customPageConfig) {
       result.displaySetup.showPileTotal = false;
       result.displaySetup.hideOverlapText = false;
       result.displaySetup.showDimension = false;
-      result.yaxisList = currentReport.yaxisList.filter((n, index: number) => index < 3);
+      result.yaxisList = currentReport.yaxisList.filter((_n, index: number) => index < 3);
     }
 
     if (reportTypes.DualAxes === reportType) {

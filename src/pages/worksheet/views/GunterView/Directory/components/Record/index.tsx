@@ -419,7 +419,7 @@ let Record = class Record extends Component<any, any> {
                 recordId: row.rowid,
                 updateType: row.sys_lock ? 42 : 41,
               },
-              (err, resdata) => {
+              (_err, resdata) => {
                 if (resdata) {
                   this.props.updateRecord(row, [], { ...row, sys_lock: resdata.sys_lock });
 

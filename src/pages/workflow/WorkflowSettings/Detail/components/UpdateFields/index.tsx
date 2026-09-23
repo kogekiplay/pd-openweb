@@ -94,7 +94,7 @@ export default class UpdateFields extends Component<any, any> {
   delFields(i) {
     const fields = _.cloneDeep(this.props.fields);
 
-    _.remove(fields, (item, index) => index === i);
+    _.remove(fields, (_item, index) => index === i);
     this.props.updateSource({ fields });
   }
 

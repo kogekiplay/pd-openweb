@@ -360,7 +360,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
           ..._.pick(this.props, ['appId', 'viewId', 'worksheetId', 'recordId']),
           updateType: this.state.isRecordLock ? 42 : 41,
         },
-        (err, resdata) => {
+        (_err, resdata) => {
           if (resdata) {
             this.setState({
               isRecordLock: resdata.sys_lock,

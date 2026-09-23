@@ -169,7 +169,7 @@ function AddUserDialog(props) {
                 setLoading(true);
                 up.disableBrowse();
               }}
-              onBeforeUpload={(up, file) => {
+              onBeforeUpload={(_up, file) => {
                 setState({ file });
               }}
               onUploaded={(up, file) => {

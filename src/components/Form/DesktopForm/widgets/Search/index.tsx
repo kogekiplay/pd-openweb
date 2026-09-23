@@ -179,7 +179,7 @@ const Search = props => {
     const responseMap = safeParse(responsemap || '[]');
     let rowData = {};
 
-    const newValue = getOptions().filter((i, idx) => `${idx}` === item.key);
+    const newValue = getOptions().filter((_i, idx) => `${idx}` === item.key);
     responseMap.map(i => {
       if (!i.subid && _.isUndefined(data[i.cid])) {
         rowData[i.cid] = clearValue((newValue[0] || {})[i.id]);
@@ -364,8 +364,8 @@ const Search = props => {
             <span className="textTertiary">{_l('没有返回结果')}</span>
           ) : null
         }
-        onSelect={(value, option) => handleSelect(option)}
-        onChange={(value, option) => {
+        onSelect={(_value, option) => handleSelect(option)}
+        onChange={(_value, option) => {
           // keywords判断是为了直接点击删除
           if (_.get(option, 'label') || !keywords.length) {
             onChange(_.get(option, 'label'));

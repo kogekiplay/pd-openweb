@@ -301,7 +301,7 @@ export default class Authentication extends Component<any, any> {
                     height={0}
                     content={item.url}
                     formulaMap={data.formulaMap}
-                    onChange={(err, value) => this.updateAjaxParameter({ url: value }, i)}
+                    onChange={(_err, value) => this.updateAjaxParameter({ url: value }, i)}
                     updateSource={this.updateSource}
                   />
                 </div>
@@ -460,7 +460,7 @@ export default class Authentication extends Component<any, any> {
               type={2}
               content={item.body}
               formulaMap={data.formulaMap}
-              onChange={(err, value) => this.updateAjaxParameter({ body: value }, index)}
+              onChange={(_err, value) => this.updateAjaxParameter({ body: value }, index)}
               updateSource={this.updateSource}
             />
           </div>

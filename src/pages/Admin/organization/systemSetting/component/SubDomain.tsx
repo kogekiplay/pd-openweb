@@ -27,7 +27,7 @@ export default class SubDomain extends Component<any, any> {
     this.setState({ isLoading: true });
     Promise.all([this.getSubDomainInfo(), this.getSysColor()]).then(([res, { homeImage }]) => {
       const attUrl = `${md.global.FileStoreConfig.pictureHost}/ProjectLogo/`;
-      this.images = new Array(5).fill(1).map(function (item, index) {
+      this.images = new Array(5).fill(1).map(function (_item, index) {
         return `${attUrl}HomeImage_1${index + 1}.jpg?imageView2/2/w/194/h/52/q/90`;
       });
       const splitHome = homeImage.split('/') || [];

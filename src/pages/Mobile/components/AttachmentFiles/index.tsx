@@ -234,7 +234,7 @@ export class UploadFileWrapper extends Component<any, any> {
       onBeforeUpload(uploader) {
         self.currentFile = uploader;
       },
-      onUploadProgress(uploader, file) {
+      onUploadProgress(_uploader, file) {
         const loaded = file.loaded || 0;
         const size = file.size || 0;
         const uploadPercent = ((loaded / size) * 100).toFixed(1);
@@ -514,7 +514,7 @@ export default class AttachmentList extends Component<any, any> {
               ? this.renderImage(item, index)
               : this.renderFile(item, index),
         )}
-        {emptys.map((item, index) => (
+        {emptys.map((_item, index) => (
           <div key={index} className="fileWrapper fileEmpty"></div>
         ))}
       </div>

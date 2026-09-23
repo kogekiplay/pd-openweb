@@ -726,12 +726,12 @@ export default class Condition extends Component<any, any> {
 
       // 显示类型是年月
       if (showType === '4') {
-        _.remove(dateList, (o, index) => _.includes([0, 1], index));
+        _.remove(dateList, (_o, index) => _.includes([0, 1], index));
       }
 
       // 显示类型是年
       if (showType === '5') {
-        _.remove(dateList, (o, index) => _.includes([0, 1, 2, 3], index));
+        _.remove(dateList, (_o, index) => _.includes([0, 1, 2, 3], index));
       }
 
       if (_.includes(['9', '10', '17', '18', '39', '40', '41', '42'], item.conditionId)) {
@@ -1033,7 +1033,7 @@ export default class Condition extends Component<any, any> {
                   value={
                     conditionValues[0] && conditionValues[0].value ? dayjs(conditionValues[0].value, timeFormat) : null
                   }
-                  onChange={(time, timeString) => this.updateConditionDateValue({ value: timeString, i, j })}
+                  onChange={(_time, timeString) => this.updateConditionDateValue({ value: timeString, i, j })}
                 />
               </div>
             )}
@@ -1061,7 +1061,7 @@ export default class Condition extends Component<any, any> {
                         ? dayjs(conditionValues[1].value, timeFormat)
                         : null
                     }
-                    onChange={(time, timeString) =>
+                    onChange={(_time, timeString) =>
                       this.updateConditionDateValue({ value: timeString, i, j, second: true })
                     }
                   />
@@ -1147,7 +1147,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 成员选择
    */
-  selectUser(evt: React.MouseEvent, users: any[], i: number, j: number, unique?: boolean) {
+  selectUser(_evt: React.MouseEvent, users: any[], i: number, j: number, unique?: boolean) {
     dialogSelectUser({
       title: _l('选择人员'),
       SelectUserSettings: {

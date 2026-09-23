@@ -52,7 +52,7 @@ const dealDataPermission = props => {
         break;
     }
 
-    item.eventPermissions = eventPermissions.replace(/x/g, (a, b) => {
+    item.eventPermissions = eventPermissions.replace(/x/g, (_a, b) => {
       return (item.fieldPermission || '111')[b];
     });
   }

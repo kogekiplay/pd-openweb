@@ -186,7 +186,7 @@ class DepartmentTree extends React.Component<any, any> {
       sortedDepartmentIds = [];
       let ar;
       let i;
-      loop(data, dropKey, (item, index: number, arr) => {
+      loop(data, dropKey, (_item, index: number, arr) => {
         ar = arr;
         i = index;
       });
@@ -273,7 +273,7 @@ class DepartmentTree extends React.Component<any, any> {
           if (!props.departmentId) {
             list = list.concat(subDepartments);
           } else {
-            loop(list, props.departmentId, (item, index: number, arr) => {
+            loop(list, props.departmentId, (_item, index: number, arr) => {
               arr[index].subDepartments = subDepartments;
             });
           }

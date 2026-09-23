@@ -97,7 +97,7 @@ export default function (props) {
                         disabled={!defaultRange.includes(item.value)}
                         key={`${i}_rangeItem`}
                         checked={(isAllRange || daterange.includes(item.value)) && defaultRange.includes(item.value)}
-                        onClick={(a, s, event) => {
+                        onClick={(_a, _s, event) => {
                           if (event.shiftKey && startIndex !== null) {
                             // 计算选中范围
                             function sliceBetweenValues(arr, startValue, endValue) {

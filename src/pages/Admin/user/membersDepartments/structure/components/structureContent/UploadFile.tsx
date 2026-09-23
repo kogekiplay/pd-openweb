@@ -77,7 +77,7 @@ export default class UploadFile extends Component<any, any> {
 
           isUploading = false;
         },
-        Error(up, error) {
+        Error(_up, error) {
           if (error.code === UploadError.FILE_SIZE_ERROR) {
             alert(_l('单个文件大小超过4MB，无法支持上传'), 2);
           } else {

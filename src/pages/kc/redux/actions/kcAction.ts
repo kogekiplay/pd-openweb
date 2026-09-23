@@ -602,7 +602,7 @@ export function restoreNode() {
 }
 
 export function batchDownload() {
-  return (dispatch: AppDispatch, getState: GetState) => {
+  return (_dispatch: AppDispatch, getState: GetState) => {
     const kcState = getState().kc;
     const { list, selectedItems, currentFolder, currentRoot, selectAll } = kcState;
     handleBatchDownload({

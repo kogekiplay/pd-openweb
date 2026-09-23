@@ -645,7 +645,7 @@ Toolbar.Method = {
 
           $('#invitedCalendars')
             .find('.showBusinessCard')
-            .each((i, ele) => {
+            .each((_i, ele) => {
               var $this = $(ele);
               if (!$this.data('hasbusinesscard')) {
                 var accountId = $this.parents('.addOtherUser').attr('data-id') || $this.attr('data-id');
@@ -802,7 +802,7 @@ Toolbar.Method = {
       $('#calendarType').scrollTop($('#calendarType')[0].scrollHeight);
     }
 
-    $('#calendarMenu .addOtherUserHeadImg.noInsert').each((i, ele) => {
+    $('#calendarMenu .addOtherUserHeadImg.noInsert').each((_i, ele) => {
       const accountId = $(ele).parent().attr('data-id');
       const avatar = $(ele).attr('data-src');
       $(ele).removeClass('noInsert');

@@ -6,7 +6,7 @@ import { TwofactorType } from 'src/pages/AuthService/twofactor/config';
 import { WrapCon } from './styled';
 
 // 发送状态管理 hook
-function useOtpSending(timeLeft, hasSend, onSend) {
+function useOtpSending(timeLeft, _hasSend, onSend) {
   const [internalSending, setInternalSending] = React.useState(false);
   const isSendingRef = useRef(false);
   const prevTimeLeftRef = useRef(timeLeft);

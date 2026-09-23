@@ -578,7 +578,7 @@ export function getPublicWorksheet(params, cb = () => {}) {
     });
 }
 
-function getInfoControl(formData, publicWorksheetInfo) {
+function getInfoControl(_formData, publicWorksheetInfo) {
   const info = getInfo();
   const { originalControls } = publicWorksheetInfo;
   const staticControlIds = [

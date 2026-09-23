@@ -183,7 +183,7 @@ export default function DisplayItem(props) {
       data,
       widgetType: data.type,
     },
-    end(item, monitor) {
+    end(_item, monitor) {
       if (!monitor.didDrop()) return;
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;

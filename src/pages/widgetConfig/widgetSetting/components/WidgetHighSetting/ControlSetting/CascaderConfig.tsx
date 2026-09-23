@@ -32,7 +32,7 @@ const LEVEL_OPTIONS = [
   { text: _l('任意选择'), value: '0' },
 ];
 
-const LAYER_OPTIONS = Array.from({ length: 10 }).map((item, index) => ({
+const LAYER_OPTIONS = Array.from({ length: 10 }).map((_item, index) => ({
   value: `${index + 1}`,
   text: `${index + 1}层`,
 }));

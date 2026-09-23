@@ -560,7 +560,7 @@ export default class Agent extends Component<any, any> {
           showNodeDataSelect={key === 'prompt'}
           content={data[key]}
           formulaMap={data.formulaMap}
-          onChange={(err, value) => this.updateSource({ [key]: value })}
+          onChange={(_err, value) => this.updateSource({ [key]: value })}
           updateSource={this.updateSource}
         />
       </Fragment>

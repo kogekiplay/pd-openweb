@@ -667,7 +667,7 @@ function selectFolder() {
 }
 
 export function saveToKnowlwdge(savePath) {
-  return (dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
+  return (_dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
     const state = getState();
     const index = state.index;
     const currentAttachment = state.attachments[index];
@@ -755,7 +755,7 @@ export function changeStateOfAttachment(attachment, index: number) {
 }
 
 export function onClose() {
-  return (dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
+  return (_dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
     const state = getState();
 
     if (state.onClose) {

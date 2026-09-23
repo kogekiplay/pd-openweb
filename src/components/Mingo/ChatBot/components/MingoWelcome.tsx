@@ -614,7 +614,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
               existingFiles={draftAttachments}
               allowMimeTypes={AGENT_ATTACHMENT_MIME_TYPES}
               dropElementId={PROMPT_INPUT_ID}
-              onAdd={(up, files) => {
+              onAdd={(_up, files) => {
                 setDraftAttachments(prev => [
                   ...prev,
                   ...files.map(f => ({
@@ -629,14 +629,14 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
                 // 选完文件把焦点交回输入框，便于继续输入
                 setTimeout(() => promptInputRef.current && promptInputRef.current.focus(), 0);
               }}
-              onUploadProgress={(up, file) => {
+              onUploadProgress={(_up, file) => {
                 const progress = ((file.loaded / file.size) * 100).toFixed(0);
 
                 setDraftAttachments(prev =>
                   prev.map(f => (f.id === file.id ? { ...f, status: 'uploading', file, progress } : f)),
                 );
               }}
-              onUploaded={(up, file, response) => {
+              onUploaded={(_up, file, response) => {
                 const commonAttachment = formatResponseData(file, response);
 
                 setDraftAttachments(prev =>

@@ -389,7 +389,7 @@ export default function ConfigureControl(props) {
     onChange(updateControlsWithSorts(newRelationControls));
   };
 
-  const handleControlDataChange = (id, obj) => {
+  const handleControlDataChange = (_id, obj) => {
     onChange({
       relationControls: update(controls, {
         [activeWidgetIndex]: { $apply: item => ({ ...item, ...obj }) },

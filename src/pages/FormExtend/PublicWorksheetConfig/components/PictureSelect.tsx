@@ -100,7 +100,7 @@ export default class extends React.Component<any, any> {
           ))}
         </PicList>
         <Pages>
-          {[...new Array(Math.ceil(images.length / 12))].map((a, i) => (
+          {[...new Array(Math.ceil(images.length / 12))].map((_a, i) => (
             <PageCon
               key={i}
               onClick={() => {

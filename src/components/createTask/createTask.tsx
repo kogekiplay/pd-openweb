@@ -310,7 +310,7 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
     // 同上，frameid 是 class。原先按 id 找一个都找不到，头像上的用户卡片从来没挂上过
     $('.' + settings.frameid)
       .find('#taskUserBox,.imgMemberBox')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         var $this = $(ele);
         var accountId = $this.attr('data-id').replace(/@|\+/gi, '');
         if ($this.data('bind')) {
@@ -604,7 +604,7 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
     var has;
     var i;
     var _that = this;
-    var newMemberCheckFun = function (index: number, item) {
+    var newMemberCheckFun = function (_index: number, item) {
       if (item.accountId === memberArr[i].accountId) {
         has = true;
         return false;
@@ -669,7 +669,7 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
           memberList = '';
           var isExistes;
           var accountId = '';
-          var existsIdsCheckFun = function (index: number, id) {
+          var existsIdsCheckFun = function (_index: number, id) {
             if (id.split('MD_SpecialAccounts')[0] === accountId.split('MD_SpecialAccounts')[0]) {
               if (!users[i].accountId) {
                 $('.createTaskAddMemberBox .imgMemberBox[data-id=' + id + ']')
@@ -852,7 +852,7 @@ CreateTask.Motheds = {
           var folderList = '';
           CreateTask.settings.isMore = source.data && source.data.length === 20;
           if (source.data) {
-            $.each(source.data, function (index: number, item) {
+            $.each(source.data, function (_index: number, item) {
               folderList +=
                 '<li class="item overflow_ellipsis bgColorPrimary" data-folderid="' +
                 item.folderID +

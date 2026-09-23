@@ -275,7 +275,7 @@ let Calendar = class Calendar extends Component<any, any> {
       });
     }
   };
-  yearChanged = (event, value) => {
+  yearChanged = (_event, value) => {
     let view = 'year';
 
     if (this.props.mode === 'month') {
@@ -291,7 +291,7 @@ let Calendar = class Calendar extends Component<any, any> {
       source: 'yearTable',
     });
   };
-  monthChanged = (event, value) => {
+  monthChanged = (_event, value) => {
     let view = 'month';
 
     if (this.props.mode === 'date' || this.props.mode === 'datetime') {

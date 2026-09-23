@@ -26,7 +26,7 @@ export default class CopyApp extends Component<any, any> {
     visible: true,
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(_nextProps, nextState) {
     return (
       !_.isEqual(nextState.pending, this.state.pending) ||
       !_.isEqual(nextState.DBInstancesDialog, this.state.DBInstancesDialog)

@@ -130,7 +130,7 @@ function PluginSettings(params) {
   };
 
   const openEdit = n => {
-    setState({ editInfo: paramSettings.find((o, i) => i === n), showEdit: true });
+    setState({ editInfo: paramSettings.find((_o, i) => i === n), showEdit: true });
   };
 
   const onEdit = (info, n) => {
@@ -156,7 +156,7 @@ function PluginSettings(params) {
     const { view } = params;
     onChangeView(
       {
-        paramSettings: paramSettings.filter((o, i) => i !== n),
+        paramSettings: paramSettings.filter((_o, i) => i !== n),
       },
       true,
     );
@@ -164,7 +164,7 @@ function PluginSettings(params) {
     onChangeView(
       {
         plugin_map: JSON.stringify({
-          ..._.omit(safeParse(plugin_map), [(paramSettings.find((o, i) => i === n) || {}).fieldId]),
+          ..._.omit(safeParse(plugin_map), [(paramSettings.find((_o, i) => i === n) || {}).fieldId]),
         }),
       },
       false,

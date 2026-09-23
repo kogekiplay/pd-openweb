@@ -124,7 +124,7 @@ export default function (props) {
                 className={cx('delete Hand InlineBlock mTop6 Bold TxtCenter mLeft10')}
                 onClick={() => {
                   setState({
-                    showtime: showtime.filter((o, i) => i !== n),
+                    showtime: showtime.filter((_o, i) => i !== n),
                   });
                 }}
               >

@@ -223,7 +223,7 @@ function User(props) {
           handleChangeSort(sorter);
         }}
         loading={props.portal.loading}
-        clickRow={(info, id) => {
+        clickRow={(_info, id) => {
           setCurrentId(id);
           let data = controls.map(it => {
             return { ...it, value: (list.find(item => item.rowid === id) || {})[it.controlId] };

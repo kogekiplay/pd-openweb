@@ -372,7 +372,7 @@ export default class AIGC extends Component<any, any> {
           height={0}
           content={data[key]}
           formulaMap={data.formulaMap}
-          onChange={(err, value) => this.updateSource({ [key]: value })}
+          onChange={(_err, value) => this.updateSource({ [key]: value })}
           updateSource={this.updateSource}
         />
       </Fragment>

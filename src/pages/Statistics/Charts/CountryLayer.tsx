@@ -520,7 +520,7 @@ export class CountryLayer extends Component<any, any> {
         steps: ['province', 'city'],
         triggerUp: null,
         triggerDown: null,
-        onUp: (from, to, callback) => {
+        onUp: (_from, _to, callback) => {
           callback();
         },
       },

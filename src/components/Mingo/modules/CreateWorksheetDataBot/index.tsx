@@ -460,7 +460,7 @@ function MingoContent(props, ref) {
         { abortController },
       );
     },
-    onMessagePipe: (messageContent, messageData, messageId) => {
+    onMessagePipe: (messageContent, _messageData, messageId) => {
       setSelectedDataMessageId(prev => uniq([...prev, messageId]));
       const jsonlBlockFence = '```custom_block_mingo_create_worksheet_data_jsonl\n';
 

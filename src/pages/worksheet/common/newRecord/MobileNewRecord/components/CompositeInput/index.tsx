@@ -60,7 +60,7 @@ const formatAppFile = (file: MobileFileLike = {}) => ({
   status: 'uploaded',
 });
 
-const CompositeInput = forwardRef((props, ref) => {
+const CompositeInput = forwardRef((_props, ref) => {
   const { step, text, loading, error, onStart, onReset, onGenerateRecord } = useVoice();
 
   const uploadFileRef = useRef(null);
@@ -94,14 +94,14 @@ const CompositeInput = forwardRef((props, ref) => {
     setValue('');
   };
 
-  const onUploadProgress = (up, file) => {
+  const onUploadProgress = (_up, file) => {
     const progress = ((file.loaded / file.size) * 100).toFixed(0);
     setExistingFiles(oldFiles => [
       ...oldFiles.map(f => (f.id === file.id ? { ...f, status: 'uploading', progress } : f)),
     ]);
   };
 
-  const onUploaded = (up, file) => {
+  const onUploaded = (_up, file) => {
     setExistingFiles(oldFiles => [
       ...oldFiles.map(f =>
         f.id === file.id ? { ...f, status: 'uploaded', url: file.url, file: { id: file.id, url: file.url } } : f,

@@ -154,7 +154,7 @@ export default props => {
           onAdd={up => {
             up.disableBrowse();
           }}
-          onError={(up, err, errTip) => {
+          onError={(_up, _err, errTip) => {
             alert(errTip, 2);
           }}
         >

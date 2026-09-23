@@ -157,7 +157,7 @@ class TaskList extends Component<any, any> {
 
   renderChargeHeaderAvatar(params?) {
     const { taskConfig } = this.props;
-    $('#tasks .listStageTaskContent tr .chargeTd').each((i, ele) => {
+    $('#tasks .listStageTaskContent tr .chargeTd').each((_i, ele) => {
       let $ele = $(ele);
       if ($ele.data('hasbusinesscard')) return;
       const folderId = taskConfig.folderId;
@@ -341,7 +341,7 @@ class TaskList extends Component<any, any> {
           // 下标就跟 classify 编号对不上了。可靠的键是模板写在表格上的 data-type
           //（见 tpl/taskClassify.html：`<table … data-type="{{=key}}">`，key 就是
           // classify 编号，与 updateMyTaskIsMore 写入时用的是同一套）。
-          .each((index, el) => {
+          .each((_index, el) => {
             const classifyType = $(el).find('table').attr('data-type');
             if (classifyType !== undefined && taskListSettings.myTaskIsMore[classifyType]) {
               myTaskIsMore = true;
@@ -636,7 +636,7 @@ class TaskList extends Component<any, any> {
       classify.push(0);
     }
 
-    $.each(classify, (i, v) => {
+    $.each(classify, (_i, v) => {
       // 存在 有打开的分类 没有加载完 则继续加载
       if (taskListSettings.myTaskIsMore[v]) {
         flag = true;
@@ -784,7 +784,7 @@ class TaskList extends Component<any, any> {
       遍历未关闭的列表数据 返回数据任务数目>=PageSize => 该分类还有个更多 一个分类未完时是不会返回下个分类的 break loop
       若分类已完成 将isMore 设为false
       */
-    $.each(classify, (item, v) => {
+    $.each(classify, (_item, v) => {
       const arr = data.data['classify_' + v];
 
       for (let i = 0; i < v + 1; i++) {
@@ -1000,7 +1000,7 @@ class TaskList extends Component<any, any> {
     $title.parents('.persist-area').removeClass('Hidden');
     $newCount.html((count <= 0 ? 0 : count) + taskArray.length);
 
-    $.each(taskArray, (i, v) => {
+    $.each(taskArray, (_i, v) => {
       $('#taskList tr[data-taskid=' + v + ']')
         .find('.myTaskTag')
         .html(buildMyTaskIcon(type));

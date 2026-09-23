@@ -1287,7 +1287,7 @@ class PivotTable extends Component<any, any> {
 
     return data;
   }
-  renderLineTd(data, row, index: number, control, diffWidth, linesData = []) {
+  renderLineTd(data, _row, _index: number, control, diffWidth, linesData = []) {
     const { style } = this.props.reportData;
     const { pivotTableUnilineShow } = style ? style : {};
     const { controlType, fields, displayMode = 'text' } = control;

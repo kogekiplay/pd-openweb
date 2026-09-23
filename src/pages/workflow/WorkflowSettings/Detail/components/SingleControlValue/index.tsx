@@ -221,7 +221,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 成员选择
    */
-  selectUser(evt, item, i, unique) {
+  selectUser(_evt, item, i, unique) {
     dialogSelectUser({
       title: _l('选择人员'),
       showMoreInvite: false,
@@ -519,7 +519,7 @@ export default class SingleControlValue extends Component<any, any> {
                 />
               );
             }}
-            onChange={(err, value) => {
+            onChange={(_err, value) => {
               this.updateSingleControlValue({ fieldValue: value, fieldValueId: '', nodeAppId: '' }, i);
             }}
           />
@@ -771,7 +771,7 @@ export default class SingleControlValue extends Component<any, any> {
               multipleLevel={false}
               multipleHideDropdownNav
               filter
-              onChange={(e, ids) => this.updateSingleControlValue({ fieldValue: ids.join(',') }, i)}
+              onChange={(_e, ids) => this.updateSingleControlValue({ fieldValue: ids.join(',') }, i)}
             />
           )}
           {this.renderOtherFields(item, i)}
@@ -810,7 +810,7 @@ export default class SingleControlValue extends Component<any, any> {
                   this.setState({ isUploading: true });
                   up.disableBrowse();
                 }}
-                onError={(up, err, errTip) => {
+                onError={(_up, _err, errTip) => {
                   alert(errTip, 2);
                 }}
               />
@@ -853,7 +853,7 @@ export default class SingleControlValue extends Component<any, any> {
                         onClick={() => {
                           const newFieldValue = JSON.parse(item.fieldValue);
 
-                          _.remove(newFieldValue, (obj, objIndex) => objIndex === fileIndex);
+                          _.remove(newFieldValue, (_obj, objIndex) => objIndex === fileIndex);
 
                           this.cacheFile = newFieldValue;
                           this.updateSingleControlValue({ fieldValue: JSON.stringify(newFieldValue) }, i);
@@ -1241,7 +1241,7 @@ export default class SingleControlValue extends Component<any, any> {
                 placeholder={_l('请选择时间')}
                 format={timeFormat}
                 value={item.fieldValue ? dayjs(item.fieldValue, timeFormat) : null}
-                onChange={(time, timeString) => this.updateSingleControlValue({ fieldValue: timeString }, i)}
+                onChange={(_time, timeString) => this.updateSingleControlValue({ fieldValue: timeString }, i)}
               />
             </div>
           )}

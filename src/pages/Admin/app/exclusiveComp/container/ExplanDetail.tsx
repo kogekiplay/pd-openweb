@@ -190,7 +190,7 @@ function ExplanDetail(props) {
       title: _l('类型'),
       dataIndex: 'id',
       width: 150,
-      render: (value, record) => {
+      render: (_value, record) => {
         return (
           <div className="columnType">
             {(START_APP_TYPE[record.process.child ? 'subprocess' : record.process.startAppType] || {}).text}
@@ -207,7 +207,7 @@ function ExplanDetail(props) {
       title: _l('添加人'),
       dataIndex: 'id',
       width: 300,
-      render: (value, record) => {
+      render: (_value, record) => {
         return (
           <div className="flexRow textSecondary">
             <UserHead
@@ -224,7 +224,7 @@ function ExplanDetail(props) {
       title: '',
       width: 50,
       dataIndex: 'id',
-      render: (value, record, index: number) => {
+      render: (_value, record, index: number) => {
         return (
           <Trigger
             popupVisible={actionOp === index}

@@ -76,7 +76,7 @@ class DateTime extends Component<any, any> {
     });
   };
 
-  onChange = (event, value) => {
+  onChange = (_event, value) => {
     let newValue = null;
     let label = '';
     const mode = this.props.timePicker ? 'datetime' : this.props.mode;

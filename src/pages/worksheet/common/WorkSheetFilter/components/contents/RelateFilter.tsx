@@ -44,7 +44,7 @@ export default class RelateFilter extends Component<any, any> {
 
   remove = num => {
     const { dynamicSource = {}, onChange } = this.props;
-    const dy = dynamicSource.filter((u, i) => i !== num);
+    const dy = dynamicSource.filter((_u, i) => i !== num);
     onChange({
       dynamicSource: [...dy],
       isDynamicsource: true,

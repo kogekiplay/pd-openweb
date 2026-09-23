@@ -1869,7 +1869,7 @@ class WorksheetApi extends Component<any, any> {
   };
 
   fillFilters() {
-    return new Array(3).fill(1).map((o, i) => {
+    return new Array(3).fill(1).map((_o, i) => {
       return {
         controlId: `control${i + 1}`,
         dataType: 6,
@@ -1929,7 +1929,7 @@ class WorksheetApi extends Component<any, any> {
     let totalHeight = 0;
     let isExist = false;
 
-    $('.scrollViewContainer .worksheetApiLi').map((index: number, el) => {
+    $('.scrollViewContainer .worksheetApiLi').map((_index: number, el) => {
       heightArr.push({
         id: $(el).attr('id').replace('-content', ''),
         h: $(el).height(),

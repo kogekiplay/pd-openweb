@@ -71,7 +71,7 @@ export default function DraggableItem(props) {
 
     previewOptions: { captureDraggingState: true },
 
-    end(obj, monitor) {
+    end(_obj, monitor) {
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;
       handleAdd(dropResult);

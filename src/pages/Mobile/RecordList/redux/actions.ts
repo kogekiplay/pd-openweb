@@ -677,7 +677,7 @@ export const changePageIndex = (pageIndex: number) => (dispatch: AppDispatch, ge
 };
 
 export const updateQuickFilter =
-  (filter = [], view, { noLoad } = {}) =>
+  (filter = [], _view, { noLoad } = {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, worksheetInfo = {} } = getState().mobile;
     const view = _.find(worksheetInfo.views || [], item => base.viewId === item.viewId) || {};

@@ -124,8 +124,8 @@ let ToolBar = class ToolBar extends Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, index) => {
-        const value = (_.find(PERIODS, (v, i) => i === index) || []).value;
+      onAction: (_action, index) => {
+        const value = (_.find(PERIODS, (_v, i) => i === index) || []).value;
         changeViewType(value);
         this.actionSheetHandler.close();
       },

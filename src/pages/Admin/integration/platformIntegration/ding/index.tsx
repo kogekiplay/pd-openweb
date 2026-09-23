@@ -153,7 +153,7 @@ export default class Ding extends React.Component<any, any> {
     return newStr;
   };
 
-  inputRender = (strId: string, w: number, labelId: string) => {
+  inputRender = (strId: string, _w: number, labelId: string) => {
     return (
       <React.Fragment>
         <div className="inputTitleBox">

@@ -343,7 +343,7 @@ export const replaceField = (text, fieldMap, connector = '>') => {
   if (!Object.keys(fieldMap).length) return text;
   const reg = /\$(\w+-\w+)\$/;
   if (!reg.test(text)) return text;
-  const handledText = text.replace(reg, ($0, $1) => {
+  const handledText = text.replace(reg, (_$0, $1) => {
     const ids = $1.split(/([a-zA-Z0-9#]{24,32})-/).filter(item => item);
     const value = ids.map((v, index: number) => fieldMap[index === 0 ? v : ids.join('-')].name);
     return ` (${value.join(connector)}) `;

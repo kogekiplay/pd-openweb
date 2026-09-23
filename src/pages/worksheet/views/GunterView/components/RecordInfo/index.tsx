@@ -62,7 +62,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
           currentSheetRows={this.getCurrentSheetRows()}
           hideRecordInfo={onClose}
           hideRows={rowIds => hideRecord(rowIds[0])}
-          updateRows={(ids, newItem, updateControls) => {
+          updateRows={(_ids, newItem, updateControls) => {
             this.props.updateRecord(row, updateControls, newItem);
           }}
           isCharge={isCharge}

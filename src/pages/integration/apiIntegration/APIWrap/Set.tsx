@@ -69,7 +69,7 @@ export default function Set(props) {
     getList(startEventId);
     let list = l.filter(o => [23, 8, 21, 14].includes(o.typeId));
     const i = list.findIndex(it => it.typeId === 23);
-    list = list.filter((o, index) => index >= i);
+    list = list.filter((_o, index) => index >= i);
     //过滤掉 输入参数 前面的节点
     setList(list);
   }, []);

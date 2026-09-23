@@ -51,7 +51,7 @@ const renderRecordAttachments = (value, isRelateMultipleSheet, fileStyle = '0') 
               ...new Array(
                 isRelateMultipleSheet ? pictureAttachments.length : Math.ceil(pictureAttachments.length / 2) * 2,
               ),
-            ].map((a, index) => (
+            ].map((_a, index) => (
               <div key={index}>
                 {pictureAttachments[index] && (
                   <div
@@ -106,7 +106,7 @@ const renderRecordAttachments = (value, isRelateMultipleSheet, fileStyle = '0') 
                 width: '100%',
               }}
             >
-              {[...new Array(Math.ceil(pictureAttachments.length / 2))].map((a, index) => (
+              {[...new Array(Math.ceil(pictureAttachments.length / 2))].map((_a, index) => (
                 <tr key={index}>
                   {[0, 1].map((i, idx) => (
                     <td key={idx} width="50%" style={{ textAlign: 'center', border: 'none' }}>

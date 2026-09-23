@@ -70,7 +70,7 @@ export default class PaginationWrap extends Component<any, any> {
     this.state = {};
   }
 
-  itemRender(current, type, originalElement) {
+  itemRender(_current, type, originalElement) {
     if (type === 'prev') {
       return <a className="page">{_l('上一页')}</a>;
     }

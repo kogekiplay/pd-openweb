@@ -961,7 +961,7 @@ class ChildTable extends React.Component<any, any> {
     }
 
     const newCellErrors = validateAll
-      ? _.omitBy(cellErrors, (value, key) => key.startsWith(`${rowid}-`))
+      ? _.omitBy(cellErrors, (_value, key) => key.startsWith(`${rowid}-`))
       : _.omit(
           cellErrors,
           updatedControlIds.map(controlId => `${rowid}-${controlId}`),

@@ -219,7 +219,7 @@ export default class extends PureComponent<any, any> {
                         item.key === 'ADD' ? (readSize <= 0 ? false : sheet.canAdd) : item.size === viewList.length
                       }
                       clearselected={item.key !== 'ADD' && item.size > 0 && item.size !== viewList.length}
-                      onClick={(checked: boolean, value, event) => {
+                      onClick={(checked: boolean, _value, event) => {
                         this.toggleViewAuth(item.key, !checked);
                         event.stopPropagation();
                       }}

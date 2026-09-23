@@ -59,7 +59,7 @@ function ManageDataBase(props) {
       classNames: 'appName',
       width: 200,
       ellipsis: true,
-      render: (value, record) => {
+      render: (_value, record) => {
         return (
           <div className="appRowName flexRow">
             <IsAppAdmin
@@ -114,7 +114,7 @@ function ManageDataBase(props) {
       classNames: 'addUser',
       ellipsis: true,
       width: 160,
-      render: (value, record) => {
+      render: (_value, record) => {
         return (
           <div className="valignWrapper">
             <UserHead

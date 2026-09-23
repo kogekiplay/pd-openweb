@@ -233,7 +233,7 @@ class Dropdown extends Component<any, any> {
     }
   }
 
-  handleChange(event, item) {
+  handleChange(_event, item) {
     if (item.disabled) {
       return;
     }

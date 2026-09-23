@@ -80,7 +80,7 @@ export default function ScoreInput(props) {
       action={['click']}
       popup={
         <DropWrap className="dropList">
-          {list.fill(1).map((o, i) => {
+          {list.fill(1).map((_o, i) => {
             let num = i + 1;
             return (
               <div

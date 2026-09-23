@@ -170,7 +170,7 @@ function PorTalTable(props) {
             x: props.width - 1,
           }}
           showSorterTooltip={false}
-          onChange={(pagination, filters, sorter) => {
+          onChange={(_pagination, _filters, sorter) => {
             props.handleChangeSortHeader(sorter);
           }}
           onRow={data => {

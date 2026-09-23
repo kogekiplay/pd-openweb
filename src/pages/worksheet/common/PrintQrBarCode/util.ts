@@ -199,9 +199,11 @@ export function createBarLabeObjectFromConfig(
   config: PrintLabelConfig = {},
   value: string,
   texts = [],
-  // 调用点除了 isPreview 还会传 pixelRadio（print.ts 的条码分支传 1.5），
-  // 这一项直接并进 BarLabel 的配置里，所以类型取 BarLabelOptions 的子集。
-  { isPreview = false, ...restLabelOptions }: BarLabelOptions = {},
+  /* 调用点除了 isPreview 还会传 pixelRadio（print.ts 的条码分支传 1.5），所以类型取 BarLabelOptions 的子集。
+     【注意：pixelRadio 在这里没有生效】下面 new BarLabel 从来没收它（上游原本就只解构了 isPreview），
+     条码标签一直按 BarLabel 的默认 2 倍渲染；二维码那一路（createQrLabeObjectFromConfig）是 ...options 透传的，1.5 生效。
+     透下去会把已经用了很久的条码打印分辨率从 2 倍降到 1.5 倍 —— 对要上扫码枪的条码是实打实的风险，没有顺手改。 */
+  { isPreview = false }: BarLabelOptions = {},
 ) {
   let width, height;
 

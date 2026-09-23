@@ -104,7 +104,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 160,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.account || record.mobile || '';
           },
         },
@@ -115,7 +115,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 200,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.fullname || record.fullName || '';
           },
         },
@@ -125,7 +125,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 160,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.job || record.jobStr || '';
           },
         },
@@ -135,7 +135,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 160,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.department || record.departmentStr || '';
           },
         },
@@ -145,7 +145,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 160,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.orgRole || record.orgRoleStr || '';
           },
         },
@@ -157,7 +157,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 160,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.contactPhone || record.workPhone || '';
           },
         },

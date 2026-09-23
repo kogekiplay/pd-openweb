@@ -55,7 +55,7 @@ export default class RefundOrder extends Component<any, any> {
         dataIndex: 'merchantPaymentChannel',
         ellipsis: true,
         width: 200,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { merchantPaymentChannel } = record;
           return PAY_CHANNEL_TXT[merchantPaymentChannel] || '';
         },
@@ -64,7 +64,7 @@ export default class RefundOrder extends Component<any, any> {
         title: _l('退款状态'),
         dataIndex: 'status',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           // 0 退款中 1 退款失败 2 已退款 3 待处理 4 已拒绝 5 已取消 6 同意退款
           const { status } = record;
           return (
@@ -92,7 +92,7 @@ export default class RefundOrder extends Component<any, any> {
         title: _l('对账 ID'),
         dataIndex: 'channelCheckId',
         width: 350,
-        render: (text, record) => {
+        render: (_text, record) => {
           return record.channelCheckId || '-';
         },
       },
@@ -114,7 +114,7 @@ export default class RefundOrder extends Component<any, any> {
         title: _l('申请人'),
         dataIndex: 'operatorAccountId',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { payAccountInfo = {} } = record;
           const { accountId, fullname, avatar, isPortal } = payAccountInfo;
           return (
@@ -149,7 +149,7 @@ export default class RefundOrder extends Component<any, any> {
         title: _l('所属应用'),
         dataIndex: 'app',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { sourceInfo = {} } = record;
           const { appColor, appIconUrl, appName, appId } = sourceInfo;
           return (
@@ -168,7 +168,7 @@ export default class RefundOrder extends Component<any, any> {
         title: _l('所属表单/所属工作流'),
         dataIndex: 'worksheet',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { sourceInfo = {} } = record;
           const { workSheetName, worksheetId } = sourceInfo;
 
@@ -195,7 +195,7 @@ export default class RefundOrder extends Component<any, any> {
         title: _l('操作人'),
         dataIndex: 'operatorAccountInfo',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { operatorAccountInfo = {} } = record;
           const { accountId, fullname, avatar, isPortal } = operatorAccountInfo;
 
@@ -233,7 +233,7 @@ export default class RefundOrder extends Component<any, any> {
         dataIndex: 'action',
         fixed: 'right',
         width: 180,
-        render: (text, record) => {
+        render: (_text, record) => {
           if (record.status !== 3) return null;
           return (
             <Fragment>

@@ -173,7 +173,7 @@ export default function InfoSet(props) {
         <div className="">
           <SortableList
             itemKey="controlId"
-            items={controls.filter((o, i) => i !== 0)}
+            items={controls.filter((_o, i) => i !== 0)}
             useDragHandle
             onSortEnd={handleSortEnd}
             helperClass={'portalList'}

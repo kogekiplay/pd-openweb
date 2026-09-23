@@ -615,7 +615,7 @@ export default class Print extends Component<any, any> {
               ...new Array(
                 isRelateMultipleSheet ? pictureAttachments.length : Math.ceil(pictureAttachments.length / 2) * 2,
               ),
-            ].map((a, index) => (
+            ].map((_a, index) => (
               <div key={index} className="pictureAttachment">
                 {pictureAttachments[index] && (
                   <div className="imgCon">
@@ -693,7 +693,7 @@ export default class Print extends Component<any, any> {
                     {i + 1}
                   </td>
                 )}
-                {[...new Array(4)].map((c, colIndex) => (
+                {[...new Array(4)].map((_c, colIndex) => (
                   <td key={colIndex} className="detailRowItem">
                     <span className="Bold TxtMiddle mLeft10">
                       {rowData[colIndex] && (rowData[colIndex].controlName || '')}

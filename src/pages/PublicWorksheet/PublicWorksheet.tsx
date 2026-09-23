@@ -58,7 +58,7 @@ export default class PublicWorksheet extends React.Component<any, any> {
     const { isPreview, worksheetId } = this.props;
 
     if (isPreview) {
-      getPublicWorksheetInfo(worksheetId, (err, info) => {
+      getPublicWorksheetInfo(worksheetId, (_err, info) => {
         this.setState({
           loading: false,
           status: FILL_STATUS.NORMAL,

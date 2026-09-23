@@ -105,7 +105,7 @@ export default class OutsourcingList extends Component<any, any> {
       {
         title: _l('操作'),
         dataIndex: 'option',
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <div className="adminHoverDeleteColor" onClick={() => this.handleDelete(record.accountId)}>
               {_l('移除')}

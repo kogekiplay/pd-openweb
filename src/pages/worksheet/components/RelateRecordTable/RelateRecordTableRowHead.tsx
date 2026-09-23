@@ -206,7 +206,7 @@ export default function RowHead(props) {
           removeRecords([row]);
         }}
         onRecreate={onRecreate}
-        onUpdate={(rowdata, row) => {
+        onUpdate={(_rowdata, row) => {
           updateRows(_.omit(row, ['allowedit', 'allowdelete']));
         }}
       />

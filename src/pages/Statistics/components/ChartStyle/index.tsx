@@ -86,7 +86,7 @@ let ChartStyle = class ChartStyle extends Component<any, any> {
           <Switch
             size="small"
             checked={switchChecked}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -220,7 +220,7 @@ let ChartStyle = class ChartStyle extends Component<any, any> {
           <Switch
             size="small"
             checked={displaySetup.showLegend}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -381,7 +381,7 @@ let ChartStyle = class ChartStyle extends Component<any, any> {
           <Switch
             size="small"
             checked={switchChecked}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -427,7 +427,7 @@ let ChartStyle = class ChartStyle extends Component<any, any> {
           <Switch
             size="small"
             checked={quadrant.visible}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -550,7 +550,7 @@ let ChartStyle = class ChartStyle extends Component<any, any> {
           <Switch
             size="small"
             checked={showTitle}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {

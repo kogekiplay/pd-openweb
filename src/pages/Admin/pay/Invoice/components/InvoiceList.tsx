@@ -431,7 +431,7 @@ const InvoiceList = forwardRef((props, ref) => {
       fixed: 'right',
       width: 'auto',
       minWidth: 108,
-      render: (value, record) => {
+      render: (_value, record) => {
         return (
           <div className="flexRow alignItemsCenter">
             <span className="colorPrimary Hand Hover_51" onClick={() => setDetailVisibleId(record.invoiceId)}>

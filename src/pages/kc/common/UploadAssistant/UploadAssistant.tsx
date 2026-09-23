@@ -144,7 +144,7 @@ class UploadAssistant extends React.Component<any, any> {
             break;
         }
       },
-      before_upload_check: (up, files) =>
+      before_upload_check: (_up, files) =>
         service.getUsage().then(usage => {
           if (usage.used + files.reduce((total, file) => total + (file.size || 0), 0) > usage.total) {
             throw _l('选择的文件超过本月上传流量上限');
@@ -224,14 +224,14 @@ class UploadAssistant extends React.Component<any, any> {
           });
           comp._isMounted && comp.setState({ fileList });
         },
-        FilesRemoved(up, files) {
+        FilesRemoved(_up, files) {
           let { fileList } = comp.state;
           _.forEach(files, file => {
             fileList = fileList.delete(file.id);
           });
           comp._isMounted && comp.setState({ fileList });
         },
-        Error(up, err, errTip) {
+        Error(_up, err, errTip) {
           if (errTip) {
             alert(errTip);
           }
@@ -244,7 +244,7 @@ class UploadAssistant extends React.Component<any, any> {
           });
           comp._isMounted && comp.setState({ fileList });
         },
-        UploadProgress(up, file) {
+        UploadProgress(_up, file) {
           const fileList = comp.state.fileList.update(file.id, fileItem => {
             if (!fileItem) fileItem = {};
             fileItem.loaded = file && file['loaded'];
@@ -253,7 +253,7 @@ class UploadAssistant extends React.Component<any, any> {
           });
           comp._isMounted && comp.setState({ fileList });
         },
-        FileUploaded(up, file, info) {
+        FileUploaded(_up, file, info) {
           const { bucket, key, fsize } = info.response;
           const item = comp.state.fileList.get(file.id);
           service

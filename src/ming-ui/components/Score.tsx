@@ -172,7 +172,7 @@ class Score extends Component<any, any> {
     const list = Array.from({ length: count });
     return (
       <div className="Score-wrapper">
-        {list.map((item, index) => (type === 'line' ? this.renderLine(index) : this.renderStar(index)))}
+        {list.map((_item, index) => (type === 'line' ? this.renderLine(index) : this.renderStar(index)))}
       </div>
     );
   }

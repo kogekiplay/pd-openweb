@@ -315,7 +315,7 @@ export default class UpgradeProcess extends Component<any, any> {
         onAdd={() => {
           this.setState({ isEncrypt: false, errTip: '' });
         }}
-        onBeforeUpload={(up, file) => {
+        onBeforeUpload={(_up, file) => {
           setTimeout(() => {
             !this.state.analyzeLoading && this.setState({ file: batchUpdate ? {} : file, analyzeLoading: true });
           }, 200);
@@ -805,7 +805,7 @@ export default class UpgradeProcess extends Component<any, any> {
 
   renderFooter = () => {
     const { current, batchUpdate, batchCheckUpgradeLoading, modelType, files, upgradeModel } = this.state;
-    const items = ITEMS.filter((l, index) => index !== 1 || (batchUpdate && upgradeModel !== 1));
+    const items = ITEMS.filter((_l, index) => index !== 1 || (batchUpdate && upgradeModel !== 1));
     const isUpgradeScope = items[current].key === 'renderUpgradeScope';
     const isAllNew = batchUpdate && files.every(item => item.type === 1);
 
@@ -860,7 +860,7 @@ export default class UpgradeProcess extends Component<any, any> {
       modelType,
       upgradeModel,
     } = this.state;
-    const items = ITEMS.filter((l, index) => index !== 1 || (batchUpdate && upgradeModel === 0));
+    const items = ITEMS.filter((_l, index) => index !== 1 || (batchUpdate && upgradeModel === 0));
     const appInfo = _.get(files[currentAppIndex], 'selectApp') || _.get(files[currentAppIndex], 'apps[0]');
 
     return (

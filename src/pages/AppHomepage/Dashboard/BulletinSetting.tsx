@@ -409,7 +409,7 @@ export default function BulletinSetting(props) {
                 setUploadLoading(true);
                 up.disableBrowse();
               }}
-              onError={(up, err, errTip) => {
+              onError={(_up, _err, errTip) => {
                 alert(errTip, 2);
               }}
             >

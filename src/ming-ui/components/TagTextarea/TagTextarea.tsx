@@ -459,7 +459,7 @@ export default class TagTextarea extends React.Component<any, any> {
     const isPaste = origin === 'paste';
     const changes = [];
     let dirty = false;
-    tr.changes.iterChanges((fromA, toA, fromB, toB, inserted) => {
+    tr.changes.iterChanges((fromA, toA, _fromB, _toB, inserted) => {
       const raw = inserted.toString();
       const next = sanitizeInput(raw, { mode: kind, isPaste });
 
@@ -534,7 +534,7 @@ export default class TagTextarea extends React.Component<any, any> {
     const removed = [];
     let from = null;
     let to = null;
-    update.changes.iterChanges((fromA, toA, fromB, toB, inserted) => {
+    update.changes.iterChanges((fromA, toA, _fromB, _toB, inserted) => {
       if (from === null) {
         // from / to 也是全文绝对 offset（CM5 时代是 {line, ch}）。
         // 目前没有消费方读它们——工作流公式只读 origin / text[0] / removed[0]——

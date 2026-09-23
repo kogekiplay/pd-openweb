@@ -137,7 +137,7 @@ function HierarchyMix(props) {
 
   const [, drop] = useDrop({
     accept: ITEM_TYPE.ITEM,
-    hover(item, monitor) {
+    hover(_item, monitor) {
       function scroll() {
         const $wrap = document.querySelector('.hierarchyViewMinWrap');
         const pos = $wrap.getBoundingClientRect();

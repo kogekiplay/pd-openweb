@@ -256,7 +256,7 @@ class FolderChart extends Component<any, any> {
       if ($folderChartChargeList.find('.folderChartSelectAll.bgColorPrimary').length) {
         isAuto = true;
       } else {
-        $folderChartChargeList.find('.folderChartSelect.bgColorPrimary').each((i, item) => {
+        $folderChartChargeList.find('.folderChartSelect.bgColorPrimary').each((_i, item) => {
           chargeAccountIDs.push($(item).attr('data-id'));
         });
       }
@@ -1064,7 +1064,7 @@ class FolderChart extends Component<any, any> {
   }
 
   folderChartsCustom() {
-    $('.folderChartBoxModel .folderChartModel[data-model=custom]').map((i, item) => {
+    $('.folderChartBoxModel .folderChartModel[data-model=custom]').map((_i, item) => {
       const id = $(item).data('id');
       const type = $(item).data('type');
       const source = _.find(folderChartSettings.data, ({ controlId }) => controlId === id);

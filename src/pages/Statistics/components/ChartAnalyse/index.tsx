@@ -70,7 +70,7 @@ let ChartAnalyse = class ChartAnalyse extends Component<any, any> {
           <Switch
             size="small"
             checked={displaySetup.showRowList}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -134,7 +134,7 @@ let ChartAnalyse = class ChartAnalyse extends Component<any, any> {
               size="small"
               checked={switchChecked}
               disabled={!rangeType}
-              onClick={(checked, event) => {
+              onClick={(_checked, event) => {
                 event.stopPropagation();
               }}
               onChange={checked => {

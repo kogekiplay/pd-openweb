@@ -85,7 +85,7 @@ class MemberList extends Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, index) => {
+      onAction: (_action, index) => {
         if (index === 0) {
           this.setState({
             type: 'user',
@@ -145,7 +145,7 @@ class MemberList extends Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, index) => {
+      onAction: (_action, index) => {
         this.setState({
           type: 'department',
           selectUserVisible: true,
@@ -210,7 +210,7 @@ class MemberList extends Component<any, any> {
 
     if ((isSysRole && !(isOwner && isMe)) || isAllOrganization || (!isSysRole && !accountId)) {
       // 普通角色非人员||系统角色
-      BUTTONS = BUTTONS.filter((it, index) => index !== 0);
+      BUTTONS = BUTTONS.filter((_it, index) => index !== 0);
     } else if (isSysRole && isOwner && isMe) {
       // 系统角色&当前用户为拥有者
       BUTTONS = BUTTONS_Owers;
@@ -240,7 +240,7 @@ class MemberList extends Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, buttonIndex) => {
+      onAction: (_action, buttonIndex) => {
         if (!isSysRole && buttonIndex === 0 && !isAllOrganization && !!accountId) {
           const param = {
             appId: params.appId,
@@ -360,7 +360,7 @@ class MemberList extends Component<any, any> {
     });
   };
 
-  renderUserTag = (roleType, isOwner) => {
+  renderUserTag = (_roleType, isOwner) => {
     if (isOwner) {
       return (
         <span className="memberTag">

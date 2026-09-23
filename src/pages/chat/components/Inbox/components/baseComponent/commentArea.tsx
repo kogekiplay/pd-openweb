@@ -170,7 +170,7 @@ class CommentItem extends React.Component<any, any> {
     const { replyId } = this.props;
     $(`.inboxBox .commentItem-${replyId}`)
       .find('[data-accountid],[data-groupid]')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         if ($(ele).attr('bindUserCard')) return;
         $(ele).attr('bindUserCard', 'true');
         let accountId = $(ele).attr('data-accountid');

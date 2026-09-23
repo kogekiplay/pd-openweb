@@ -80,7 +80,7 @@ export default class DefaultUserList extends Component<any, any> {
       const { manageOftenUserVisible } = this.state;
       const totalList = (_.get(data, 'oftenUsers.list') || []).concat(_.get(data, 'users.list') || []);
       const currentId = _.get(
-        _.find(totalList, (i, idx) => idx === this.props.currentIndex),
+        _.find(totalList, (_i, idx) => idx === this.props.currentIndex),
         'accountId',
       );
       const isOften = this.props.currentIndex <= (_.get(data, 'oftenUsers.list') || []).length - 1;

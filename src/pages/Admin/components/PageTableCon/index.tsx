@@ -149,7 +149,7 @@ export default class PageTableCon extends Component<any, any> {
             fixed: 'right',
             align: 'right',
             dataIndex: 'moreAction',
-            render: (text, record) => {
+            render: (_text, record) => {
               if (!moreActionContent) return;
               return moreActionContent(record);
             },

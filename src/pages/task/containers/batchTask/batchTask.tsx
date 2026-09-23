@@ -432,7 +432,7 @@ BatchTask.loadBatchData = function (auth: number) {
 
   // 列表
   if (!folderId) {
-    $.each($tasks, (i: number, item: HTMLElement) => {
+    $.each($tasks, (_i: number, item: HTMLElement) => {
       $item = $(item);
       BatchTask.Settings.TaskIds.push($item.data('taskid'));
       itemAuth = $item.data('auth');
@@ -454,7 +454,7 @@ BatchTask.loadBatchData = function (auth: number) {
       }
     });
   } else if (viewType === config.folderViewType.treeView) {
-    $.each($tasks, (i: number, item: HTMLElement) => {
+    $.each($tasks, (_i: number, item: HTMLElement) => {
       $item = $(item);
       $itemParent = $item.parent();
       BatchTask.Settings.TaskIds.push($itemParent.data('taskid'));
@@ -473,7 +473,7 @@ BatchTask.loadBatchData = function (auth: number) {
       }
     });
   } else {
-    $.each($tasks, (i: number, item: HTMLElement) => {
+    $.each($tasks, (_i: number, item: HTMLElement) => {
       $item = $(item);
       BatchTask.Settings.TaskIds.push($item.data('taskid'));
       itemAuth = $item.data('auth');
@@ -639,7 +639,7 @@ BatchTask.DelTask = function () {
         const allTask = source.DeleteTaskID;
 
         if (allTask) {
-          $.each(allTask, (i: number, taskId: string) => {
+          $.each(allTask, (_i: number, taskId: string) => {
             afterDeleteTask([taskId]);
           });
         }
@@ -655,7 +655,7 @@ BatchTask.DelTask = function () {
             alert(_l('删除失败'), 3);
           } else {
             if (source.data.success.length) {
-              $.each(source.data.success, (i: number, taskId: string) => {
+              $.each(source.data.success, (_i: number, taskId: string) => {
                 afterDeleteTask([taskId]);
               });
               alert(_l('删除成功'));
@@ -840,11 +840,11 @@ BatchTask.addMembers = function (users: TaskMember[], callbackInviteResult?: (re
 
   // 外部用户
   if (_.isFunction(callbackInviteResult)) {
-    $.each(users, (i: number, item: TaskMember) => {
+    $.each(users, (_i: number, item: TaskMember) => {
       specialAccounts[item.account] = item.fullname;
     });
   } else {
-    $.each(users, (i: number, item: TaskMember) => {
+    $.each(users, (_i: number, item: TaskMember) => {
       userIdArr.push(item.accountId);
     });
   }
@@ -1003,7 +1003,7 @@ BatchTask.builAuthTask = function (data, args, type, title: string) {
     const authObj = [];
     let avatar;
 
-    $.each($selectTasks, (i, item) => {
+    $.each($selectTasks, (_i, item) => {
       $item = $(item);
       // 项目
       if (!folderId) {

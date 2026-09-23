@@ -146,7 +146,7 @@ export default class SelectUsersFromApp extends Component<any, any> {
               multipleHideDropdownNav
               filter
               filterHint={_l('搜索')}
-              onChange={(evt, ids) => this.setState({ selectRoleIds: multiChoose ? ids : [ids] })}
+              onChange={(_evt, ids) => this.setState({ selectRoleIds: multiChoose ? ids : [ids] })}
             />
           </div>
         </div>

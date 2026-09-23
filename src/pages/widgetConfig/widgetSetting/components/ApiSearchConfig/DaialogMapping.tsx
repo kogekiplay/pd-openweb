@@ -205,7 +205,7 @@ export default function DialogMapping(props) {
     let newResponseMap = [];
 
     if (_.isUndefined(value)) {
-      newResponseMap = mappingData.filter((i, idx) => idx !== index);
+      newResponseMap = mappingData.filter((_i, idx) => idx !== index);
     } else {
       newResponseMap =
         index > -1

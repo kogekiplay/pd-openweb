@@ -56,7 +56,7 @@ export default function ScoreConfig({ data, onChange }) {
   const getNames = () => {
     return itemnames.length
       ? itemnames
-      : Array.from({ length: max }).map((i, index) => ({ key: `${index + 1}`, value: '' }));
+      : Array.from({ length: max }).map((_i, index) => ({ key: `${index + 1}`, value: '' }));
   };
 
   useEffect(() => {

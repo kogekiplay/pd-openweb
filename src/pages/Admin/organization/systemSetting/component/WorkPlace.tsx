@@ -38,7 +38,7 @@ export default class WorkPlace extends Component<any, any> {
         title: _l('操作'),
         dataIndex: 'workSiteId',
         key: 'workSiteId',
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <div className="colorPrimary">
               <button
@@ -347,7 +347,7 @@ export default class WorkPlace extends Component<any, any> {
                                 this.getData();
                               });
                             },
-                            itemRender: (current, type, originalElement) => {
+                            itemRender: (_current, type, originalElement) => {
                               if (type === 'prev') {
                                 return <a className="page">{_l('上一页')}</a>;
                               }

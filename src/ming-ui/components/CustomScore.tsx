@@ -131,7 +131,7 @@ class CustomScore extends Component<any, any> {
 
     return (
       <div className={cx('Score-wrapper customScoreWrap', className)}>
-        {list.map((item, index) => {
+        {list.map((_item, index) => {
           const tipText = `${_.get(itemnames[index], 'value') || index + 1}`;
           let tipProps = { placement: 'top', offset: [0, 1] };
 

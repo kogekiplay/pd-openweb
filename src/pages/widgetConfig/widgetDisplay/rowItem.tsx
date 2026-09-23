@@ -59,7 +59,7 @@ export default function RowItem({ row, displayItemType, sectionId, index, ...res
       }
       return undefined;
     },
-    drop(item, monitor) {
+    drop(_item, monitor) {
       if (monitor.isOver({ shallow: true })) {
         if (!pointerDir) return undefined;
         if (pointerDir === 'right') {

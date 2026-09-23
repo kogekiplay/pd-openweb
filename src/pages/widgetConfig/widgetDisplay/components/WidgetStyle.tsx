@@ -46,7 +46,7 @@ export const FILL_COLOR = [
   { value: '4', text: _l('模糊图片'), img: img },
 ];
 
-const AUTO_PLAY = Array.from({ length: 11 }).map((item, index) => ({
+const AUTO_PLAY = Array.from({ length: 11 }).map((_item, index) => ({
   value: `${index}`,
   text: index ? _l('%0秒', index) : _l('关闭'),
 }));

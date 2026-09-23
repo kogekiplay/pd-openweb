@@ -503,7 +503,7 @@ function TemplatePanelHeader(props) {
     },
     canDrag: () => !_.isEmpty(controls),
     previewOptions: { captureDraggingState: true },
-    end(obj, monitor) {
+    end(_obj, monitor) {
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;
       onAdd(item, dropResult);

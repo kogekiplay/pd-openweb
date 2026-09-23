@@ -192,7 +192,7 @@ export default function GroupDialog(props) {
             icon="trash"
             className="clearIcon Hand del Font16"
             onClick={() => {
-              onUpdate(items.filter((o, i) => i !== num));
+              onUpdate(items.filter((_o, i) => i !== num));
             }}
           />
         </div>
@@ -378,7 +378,7 @@ export default function GroupDialog(props) {
     //字段名称显示第一个工作表，第一个字段的名称。
     let isErr = false;
     groupControls.map(o => {
-      sourceInfos.map((oo, nn) => {
+      sourceInfos.map((_oo, nn) => {
         if (!(_.get(o, `fields[${nn}]`) || {}).oid) {
           isErr = true;
         }

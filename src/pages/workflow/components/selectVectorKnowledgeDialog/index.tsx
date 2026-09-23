@@ -140,7 +140,7 @@ class SelectVectorKnowledge extends Component<any, any> {
               multipleHideDropdownNav
               filter
               filterHint={_l('搜索')}
-              onChange={(evt, ids) => this.setState({ selectKnowledgeIds: ids })}
+              onChange={(_evt, ids) => this.setState({ selectKnowledgeIds: ids })}
             />
           </div>
         </div>

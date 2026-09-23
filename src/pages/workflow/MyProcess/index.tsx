@@ -121,7 +121,7 @@ export default class MyProcess extends Component<any, any> {
     this.removeEscEvent = this.bindEscEvent();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_prevProps, prevState) {
     if (prevState.visible !== this.state.visible) {
       const key = 'myProcessFilterOpen';
       this.state.visible ? localStorage.setItem(key, 'true') : localStorage.removeItem(key);

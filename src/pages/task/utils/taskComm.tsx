@@ -348,7 +348,7 @@ export const afterDeleteTask = (taskIdArray, parentTaskId?) => {
       if (taskIdArray.length === 1 && $subTask.length > 0) {
         let $item;
 
-        $subTask.children('li').each((i, item) => {
+        $subTask.children('li').each((_i, item) => {
           $item = $(item);
 
           // 存在子任务
@@ -490,7 +490,7 @@ export const afterDeleteTask = (taskIdArray, parentTaskId?) => {
   }
 
   // 清除localStorage中的评论
-  $.each(taskIdArray, (index: number, v) => {
+  $.each(taskIdArray, (_index: number, v) => {
     const localStorageKey = 'task_' + v;
     window.localStorage.removeItem(localStorageKey);
   });
@@ -629,7 +629,7 @@ export const afterUpdateTaskParent = (taskId: string, parentId, oldParentId, dat
 };
 
 // 更新母任务后列表处理
-const afterUpdateTaskParentList = (taskId: string, parentId, oldParentId) => {
+const afterUpdateTaskParentList = (_taskId: string, parentId, oldParentId) => {
   const $tr = getTrOrLi(oldParentId);
 
   if ($tr.length > 0) {
@@ -665,7 +665,7 @@ const afterUpdateTaskParentList = (taskId: string, parentId, oldParentId) => {
 };
 
 // 更新母任务后操作
-const afterUpdateTaskParentComm = (taskId: string, parentId, oldParentId, $dyLi?) => {
+const afterUpdateTaskParentComm = (taskId: string, parentId, _oldParentId, $dyLi?) => {
   let $li = getTrOrLi(taskId);
   let $singleFolderTask = $li.closest('.singleFolderTask');
   const $oldParent = $li.parent();

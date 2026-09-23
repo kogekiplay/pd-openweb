@@ -753,7 +753,7 @@ export default class RecordInfo extends Component<any, any> {
           recordId,
           updateType: this.state.isRecordLock ? 42 : 41,
         },
-        (err, resdata) => {
+        (_err, resdata) => {
           if (resdata) {
             const changedValue = { sys_lock: resdata.sys_lock };
             updateRows([recordId], _.omit(resdata, ['allowedit', 'allowdelete']), changedValue);
