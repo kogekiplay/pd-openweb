@@ -212,8 +212,118 @@ function antdBindings(ast) {
   return map;
 }
 
+// ──────────────────── styled 包装的别名 ────────────────────
+// `const SelectWrap = styled(Select)\`...\`` 之后 JSX 里写的是 <SelectWrap>，
+// 属性原样透传给 antd 的 Select（styled-components 对【组件】不过滤 props），
+// 所以同样要迁移。2026-09-23 之前这里不认包装，BaseFormInfo 的职位下拉就这样漏掉了
+// onDropdownVisibleChange，打开成员抽屉必报一条弃用警告。
+// 认的形态：styled(X)`` / styled(X).attrs(...)`` / styled(X).withConfig(...)`` / styled(X)({...})，
+// X 可以是 antd 绑定，也可以是另一个已登记的包装（styled(styled(Select)) 这种套娃，多轮收敛）。
+// 只看模块顶层的声明 —— 组件内部现场包一层的写法本仓没有，也不该有。
+// 返回：局部名 -> 声明节点。resolveComponent 靠它确认 JSX 里的名字确实是这条声明。
+function styledAliases(ast, map, src) {
+  const decls = new Map();
+  let styledName = null;
+
+  for (const node of ast.program.body) {
+    if (node.type !== 'ImportDeclaration' || node.source.value !== 'styled-components') continue;
+
+    const def = node.specifiers.find(s => s.type === 'ImportDefaultSpecifier');
+
+    if (def) styledName = def.local.name;
+  }
+
+  if (!styledName) return decls;
+
+  // styled(X) 调用里的 X；不是这个形态返回 null
+  const wrappedOf = init => {
+    let n = init;
+
+    if (n && n.type === 'TaggedTemplateExpression') n = n.tag;
+    else if (n && n.type === 'CallExpression' && n.callee.type === 'CallExpression') n = n.callee; // styled(X)({...})
+
+    // .attrs(...) / .withConfig(...)，可以连写
+    while (
+      n &&
+      n.type === 'CallExpression' &&
+      n.callee.type === 'MemberExpression' &&
+      ['attrs', 'withConfig'].includes(n.callee.property.name)
+    ) {
+      n = n.callee.object;
+    }
+
+    if (
+      n &&
+      n.type === 'CallExpression' &&
+      n.callee.type === 'Identifier' &&
+      n.callee.name === styledName &&
+      n.arguments.length === 1 &&
+      n.arguments[0].type === 'Identifier'
+    ) {
+      return n.arguments[0].name;
+    }
+
+    return null;
+  };
+
+  // 包装自己读了哪些东西：模板插值（${p => p.width}）、.attrs(...) / .withConfig(...) 的参数、
+  // 对象写法的样式对象。【静态 CSS 文本不算】—— 否则 `width: 100%` 全是假阳性。
+  const readsOf = init => {
+    const parts = [];
+    let n = init;
+
+    if (n.type === 'TaggedTemplateExpression') {
+      parts.push(...n.quasi.expressions);
+      n = n.tag;
+    } else if (n.type === 'CallExpression' && n.callee.type === 'CallExpression') {
+      parts.push(...n.arguments);
+      n = n.callee;
+    }
+
+    while (n && n.type === 'CallExpression' && n.callee.type === 'MemberExpression') {
+      parts.push(...n.arguments);
+      n = n.callee.object;
+    }
+
+    return parts.map(e => src.slice(e.start, e.end)).join('\n');
+  };
+
+  const declarators = [];
+
+  for (const node of ast.program.body) {
+    const decl = node.type === 'ExportNamedDeclaration' ? node.declaration : node;
+
+    if (!decl || decl.type !== 'VariableDeclaration') continue;
+
+    for (const d of decl.declarations) {
+      if (d.id.type === 'Identifier' && d.init) declarators.push(d);
+    }
+  }
+
+  for (let changed = true; changed; ) {
+    changed = false;
+
+    for (const d of declarators) {
+      if (decls.has(d.id.name)) continue;
+
+      const inner = wrappedOf(d.init);
+
+      if (inner && map.has(inner)) {
+        map.set(d.id.name, map.get(inner));
+        decls.set(d.id.name, d);
+        // 套娃时把里层包装读的东西一并算上
+        const innerDecl = decls.get(inner);
+        d.__styledReads = readsOf(d.init) + (innerDecl ? '\n' + innerDecl.__styledReads : '');
+        changed = true;
+      }
+    }
+  }
+
+  return decls;
+}
+
 // JSX 元素名 → antd 组件名；解析不出来（或被局部变量遮蔽）返回 null
-function resolveComponent(openingPath, bindings) {
+function resolveComponent(openingPath, bindings, styledDecls) {
   const nameNode = openingPath.node.name;
   let rootName;
 
@@ -226,9 +336,10 @@ function resolveComponent(openingPath, bindings) {
 
   // 【防遮蔽】确认这个名字在此处确实绑定到那条 import，而不是同名的局部变量/参数。
   // 不查的话，`const Tooltip = ...` 之后的用法会被误判成 antd 的。
+  // styled 包装的绑定不是 module 而是 const，要求它正好是登记的那条顶层声明。
   const binding = openingPath.scope.getBinding(rootName);
 
-  if (binding && binding.kind !== 'module') return null;
+  if (binding && binding.kind !== 'module' && styledDecls.get(rootName) !== binding.path.node) return null;
 
   const base = bindings.get(rootName);
 
@@ -246,7 +357,43 @@ if (!rules.length) {
   process.exit(2);
 }
 
-const stats = new Map(rules.map(r => [r.name, { changed: 0, skipped: [] }]));
+const LIST = argv.includes('--list'); // 逐条列出改动位置，给人工复核用
+
+// --scan-deprecated：只报告、不改。对每个解析到 antd 组件（含 styled 包装）的 JSX 元素，
+// 拿【已安装 antd 版本】的 `antd info` 弃用清单逐个属性比对。
+// 为什么要有它：官方 `antd lint --only deprecated` 和上面的规则一样按 import 绑定看 JSX，
+// 2026-09-23 它报 0 条的时候，styled 包装上还挂着一批弃用属性（打开成员抽屉就报警告）。
+// 清单不手抄：升级 antd 之后自动跟着变。props 对象再展开（{...selectProps}）这种仍然看不到，得 grep。
+const SCAN = argv.includes('--scan-deprecated');
+const scanHits = [];
+const deprecatedCache = new Map();
+const ANTD_VERSION = require('antd/package.json').version;
+
+function deprecatedPropsOf(comp) {
+  if (!deprecatedCache.has(comp)) {
+    let names = [];
+
+    try {
+      const out = require('child_process').execFileSync(
+        'antd',
+        ['info', comp, '--version', ANTD_VERSION, '--format', 'json', '--detail'],
+        { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] },
+      );
+      names = (JSON.parse(out).props || []).filter(p => p.deprecated).map(p => p.name);
+    } catch (e) {
+      if (e.code === 'ENOENT') {
+        console.error('找不到 antd CLI：npm install -g @ant-design/cli');
+        process.exit(2);
+      }
+      // 不是 antd 的顶层组件（比如 Typography.Text 这种子组件名），当作没有弃用属性
+    }
+
+    deprecatedCache.set(comp, new Set(names));
+  }
+
+  return deprecatedCache.get(comp);
+}
+const stats = new Map(rules.map(r => [r.name, { changed: 0, skipped: [], at: [] }]));
 let filesWithAntd = 0;
 let filesChanged = 0;
 
@@ -274,11 +421,13 @@ for (const file of collect(SRC)) {
 
   filesWithAntd++;
 
+  const styledDecls = styledAliases(ast, bindings, src);
+
   const edits = []; // {start, end, text, rule}
 
   traverse(ast, {
     JSXOpeningElement(p) {
-      const comp = resolveComponent(p, bindings);
+      const comp = resolveComponent(p, bindings, styledDecls);
 
       if (!comp) return;
 
@@ -287,8 +436,39 @@ for (const file of collect(SRC)) {
       );
       const wraps = Object.create(null); // 目标属性名 -> [{attr, key, inner, rule}]
 
+      // 元素是 styled 包装时，包装自己的样式插值读到的 prop 不能改名/改形状：
+      // 比如 styled(Drawer)`width: ${p => p.width}px` 配 <DrawerWrap width={480}>，
+      // 把 width 改成 size 会让样式静默失效。这种一律跳过交人工。
+      const rootName = p.node.name.type === 'JSXIdentifier' ? p.node.name.name : p.node.name.object.name;
+
+      if (SCAN) {
+        if (!comp.includes('.')) {
+          const dep = deprecatedPropsOf(comp);
+
+          for (const a of p.node.attributes) {
+            if (a.type === 'JSXAttribute' && typeof a.name.name === 'string' && dep.has(a.name.name)) {
+              const via = styledDecls.has(rootName) ? `（styled 包装 ${rootName}）` : '';
+              scanHits.push(`${path.relative(ROOT, file)}:${a.loc.start.line}  ${comp}.${a.name.name}${via}`);
+            }
+          }
+        }
+
+        return;
+      }
+
+      const styledReads = (styledDecls.get(rootName) || {}).__styledReads || '';
+      const readByStyled = name => new RegExp(`\\b${name}\\b`).test(styledReads);
+
       for (const rule of rules) {
         if (!rule.components.includes(comp)) continue;
+
+        const touched = rule.kind === 'showSearch' ? rule.sources : [rule.from];
+        const read = touched.find(n => attrNames.has(n) && readByStyled(n));
+
+        if (read) {
+          stats.get(rule.name).skipped.push(`${path.relative(ROOT, file)}:${p.node.loc.start.line}（styled 包装的样式读了 ${read}）`);
+          continue;
+        }
 
         if (rule.kind === 'showSearch') {
           const present = rule.sources
@@ -444,6 +624,9 @@ for (const file of collect(SRC)) {
   for (const e of edits) {
     out = out.slice(0, e.start) + e.text + out.slice(e.end);
     stats.get(e.rule).changed++;
+
+    const line = src.slice(0, e.start).split('\n').length;
+    stats.get(e.rule).at.push(`${path.relative(ROOT, file)}:${line}`);
   }
 
   if (APPLY) fs.writeFileSync(file, out);
@@ -455,6 +638,12 @@ if (filesWithAntd < 100) {
   process.exit(1);
 }
 
+if (SCAN) {
+  console.log(`antd ${ANTD_VERSION} 弃用属性扫描：${filesWithAntd} 个文件，命中 ${scanHits.length} 处`);
+  scanHits.forEach(x => console.log(`  ${x}`));
+  process.exit(scanHits.length ? 1 : 0);
+}
+
 console.log(`${APPLY ? '已改写' : 'dry-run'}：扫到 ${filesWithAntd} 个从 antd 导入组件的文件，命中 ${filesChanged} 个\n`);
 
 for (const r of rules) {
@@ -463,6 +652,7 @@ for (const r of rules) {
   if (!s.changed && !s.skipped.length) continue;
 
   console.log(`  ${r.name}：改 ${s.changed} 处${s.skipped.length ? `，跳过 ${s.skipped.length} 处` : ''}`);
+  if (LIST) [...new Set(s.at)].forEach(x => console.log(`      改 ${x}`));
   s.skipped.slice(0, 8).forEach(x => console.log(`      跳过 ${x}`));
   if (s.skipped.length > 8) console.log(`      …还有 ${s.skipped.length - 8} 处`);
 }

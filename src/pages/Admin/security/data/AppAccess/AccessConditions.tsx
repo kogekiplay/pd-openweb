@@ -174,7 +174,6 @@ export default function AccessConditions(props) {
         return (
           <div className="w100">
             <SelectWrap
-              showArrow
               allowClear
               mode="multiple"
               options={DEVICE_ENUM}
@@ -182,12 +181,15 @@ export default function AccessConditions(props) {
               placeholder={_l('请选择')}
               value={clientRule}
               suffixIcon={<Icon icon="arrow-down-border" className="textTertiary Font14" />}
-              filterOption={(inputValue, option) => {
-                return (
-                  DEVICE_ENUM.find(item => item.value === option.value)
-                    .label.toLowerCase()
-                    .indexOf(inputValue.toLowerCase()) > -1
-                );
+              // 多选且没写 showSearch 时 rc-select 默认就开搜索，传对象同样是开，所以并进来等价
+              showSearch={{
+                filterOption: (inputValue, option) => {
+                  return (
+                    DEVICE_ENUM.find(item => item.value === option.value)
+                      .label.toLowerCase()
+                      .indexOf(inputValue.toLowerCase()) > -1
+                  );
+                },
               }}
               onChange={value => setDeviceList(value)}
             ></SelectWrap>

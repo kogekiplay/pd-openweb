@@ -113,7 +113,7 @@ export default function CellSearch(props) {
               ..._.pick(props, ['projectId', 'recordId', 'appId', 'worksheetId', 'viewId']),
             }}
             formData={!rowFormData ? null : _.isFunction(rowFormData) ? rowFormData() : rowFormData}
-            defaultSelectProps={{ open: true, dropdownMatchSelectWidth: 420 }}
+            defaultSelectProps={{ open: true, popupMatchSelectWidth: 420 }}
             onChange={(value, id) => {
               if (id) {
                 // 重写子表数据更新逻辑

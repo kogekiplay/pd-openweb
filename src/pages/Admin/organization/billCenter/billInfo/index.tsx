@@ -486,7 +486,7 @@ export default function BillInfo({ match }) {
     return (
       <AgentBillingDetailDrawer
         open
-        width={980}
+        size={980}
         title={
           <div className="agentBillingDetailTitle">
             <span className="agentBillingTitleText">{_l('扣费明细')}</span>
@@ -509,7 +509,7 @@ export default function BillInfo({ match }) {
           </div>
         }
         placement="right"
-        destroyOnClose
+        destroyOnHidden
         onClose={() => {
           agentBillingDetailCacheKeyRef.current = '';
           setAgentBillingDetail({ visible: false, loading: false, list: [], traceId: '' });

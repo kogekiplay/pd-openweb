@@ -128,7 +128,7 @@ export default class AutoLinkage extends Component<any, any> {
         className="chartModal"
         open={modalVisible}
         centered={true}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
         footer={this.renderFooter()}
         onCancel={() => this.setState({ modalVisible: false })}

@@ -211,7 +211,7 @@ export default function VarLog(props) {
   return (
     <LogDrawer
       open
-      width={470}
+      size={470}
       placement="right"
       title={_l('日志')}
       closeIcon={<i className="icon-close Font18" />}

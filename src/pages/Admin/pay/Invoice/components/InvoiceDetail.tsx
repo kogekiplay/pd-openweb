@@ -372,7 +372,7 @@ export default function InvoiceDetail(props) {
   ];
 
   return (
-    <DetailDrawer open width={1100} title={_l('发票详情-%0', invoiceId)} onClose={onClose}>
+    <DetailDrawer open size={1100} title={_l('发票详情-%0', invoiceId)} onClose={onClose}>
       {loading && <LoadDiv className="mTop20" />}
 
       {!loading && (

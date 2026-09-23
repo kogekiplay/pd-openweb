@@ -155,15 +155,14 @@ export default function CustomButtonConfirm(props) {
 
     return (
       <SelectBox
-        showSearch
+        showSearch={{ filterOption: (input, option) => option.label.toLowerCase().includes(input.toLowerCase()) }}
         allowClear
         suffixIcon={<Icon icon="arrow-down-border Font14" />}
         notFoundContent={<span className="textTertiary">{_l('无匹配结果')}</span>}
-        dropdownClassName="templateListSelect"
+        classNames={{ popup: { root: 'templateListSelect' } }}
         getPopupContainer={triggerNode => triggerNode.parentElement}
         onChange={value => setState({ remark: value })}
         onClear={() => setState({ remark: '' })}
-        filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
         options={options}
         {...param}
       />

@@ -385,10 +385,10 @@ export default function EditRuleDrawer(props) {
   return (
     <DrawerWrap
       title={title}
-      width={660}
+      size={660}
       open={visible}
       onClose={onClose}
-      destroyOnClose
+      destroyOnHidden
       footer={
         <div className="flexRow">
           <Button type="primary" disabled={saveDisabled} onClick={handleSave}>

@@ -449,7 +449,11 @@ export default class Options extends React.Component<any, any> {
                     }, 100);
                   }
                 },
-                onDropdownVisibleChange: visible => {
+                // 必须叫 onOpenChange：控件自己在 <Select> 上也写了 onOpenChange，这里靠「后展开的覆盖前面的」
+                // 顶掉它（上游 antd 4 时两边都叫 onDropdownVisibleChange，就是这个语义）。
+                // 写成 onDropdownVisibleChange 时 antd 6 取 onOpenChange || onDropdownVisibleChange，
+                // 这个回调会被静默忽略 —— 2026-09-11 的 antd 6 迁移只改了控件那一侧，单元格下拉关掉后就不再退出编辑。
+                onOpenChange: visible => {
                   if (!visible && !this.isChanging) {
                     this.handleExit();
                   }
@@ -473,7 +477,8 @@ export default class Options extends React.Component<any, any> {
                 autoFocus: true,
                 defaultOpen: true,
                 getPopupContainer,
-                onDropdownVisibleChange: visible => {
+                // 同上：要顶掉 Dropdown 控件自己的 onOpenChange
+                onOpenChange: visible => {
                   if ((!error || this.isSubList) && !visible && !this.isChanging) {
                     this.handleExit();
                   }
