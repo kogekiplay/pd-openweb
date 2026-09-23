@@ -206,7 +206,7 @@ export default function TimingSettingList({
         {settingDetail && (
           <SettingDrawer
             open={true}
-            width={600}
+            size={600}
             placement="right"
             mask={false}
             title={_l('定时设置')}

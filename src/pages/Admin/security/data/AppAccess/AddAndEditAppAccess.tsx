@@ -205,8 +205,8 @@ export default function AddAndEditAppAccess(props) {
       title={isEdit ? _l('编辑应用访问策略') : _l('新建应用访问策略')}
       open={visible}
       onClose={onClose}
-      width={640}
-      destroyOnClose={true}
+      size={640}
+      destroyOnHidden={true}
       closeIcon={<i className="icon-close Font18" />}
       footer={
         <Fragment>

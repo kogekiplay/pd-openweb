@@ -91,11 +91,11 @@ export default function ConfigScopeDrawer(props) {
   return (
     <DrawerWrap
       title={_l('集成应用')}
-      width={685}
+      size={685}
       open
       onClose={onClose}
       placement="right"
-      destroyOnClose={true}
+      destroyOnHidden={true}
       closeIcon={<i className="icon-close Font18" />}
     >
       {loading ? (

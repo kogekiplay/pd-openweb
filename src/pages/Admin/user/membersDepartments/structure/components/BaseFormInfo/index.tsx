@@ -579,19 +579,19 @@ export default class BaseFormInfo extends Component<any, any> {
               this.select = select;
             }}
             className={cx('w100 mdAntSelect', { noBorder: typeCursor === 2 })}
-            showSearch
+            showSearch={{
+              filterOption: () => true,
+              onSearch: (keywords: string) =>
+                this.setState({ keywords, jobIds: jobIds.filter(item => item.indexOf('add_') === -1) }),
+            }}
             allowClear={type === 'multiple' ? departmentItem.jobIds.length > 0 : jobIds.length > 0}
             listHeight={285}
             optionLabelProp="label"
             value={type === 'multiple' ? departmentItem.jobIds : jobIds}
             placeholder={_l('请选择')}
             suffixIcon={<Icon icon="arrow-down-border Font14" />}
-            filterOption={() => true}
             notFoundContent={<span className="textTertiary">{_l('可直接输入创建新的职位')}</span>}
-            onSearch={(keywords: string) =>
-              this.setState({ keywords, jobIds: jobIds.filter(item => item.indexOf('add_') === -1) })
-            }
-            onDropdownVisibleChange={open => {
+            onOpenChange={open => {
               this.setState({ keywords: '' });
               !open && this.select.blur();
             }}

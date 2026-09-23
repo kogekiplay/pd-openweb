@@ -292,7 +292,7 @@ export default function SSHConnect(props) {
             getPopupContainer={() => sshSelectRef.current}
             placeholder={_l('请选择')}
             notFoundContent={<div></div>}
-            dropdownRender={menu => (
+            popupRender={menu => (
               <React.Fragment>
                 <div className="addItem" onClick={() => setAddDialogVisible(true)}>
                   <Icon icon="add" />

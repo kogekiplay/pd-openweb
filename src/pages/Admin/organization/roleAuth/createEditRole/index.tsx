@@ -86,8 +86,8 @@ export default function CreateEditRole(props) {
   return (
     <RoleDrawer
       open={true}
-      width={720}
-      maskClosable={false}
+      size={720}
+      mask={{ closable: false }}
       title={roleId ? (isEditHr ? _l('编辑人事权限') : _l('编辑权限')) : _l('新建管理员角色')}
       extra={<Icon icon="close" className="Font20 textTertiary Hand" onClick={onClose} />}
       footer={

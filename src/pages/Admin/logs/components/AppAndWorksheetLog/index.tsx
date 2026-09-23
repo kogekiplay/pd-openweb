@@ -566,7 +566,7 @@ export default class AppAndWorksheetLog extends Component<any, any> {
         value: integrationApp,
         loading: this.state.LoadingIntegrationApp,
         filterOption: (inputValue, option) => option.children.toLowerCase().includes(inputValue.toLowerCase()),
-        onDropdownVisibleChange: visible => {
+        onOpenChange: visible => {
           if (visible) {
             if (integrationAppList.length) {
               return;

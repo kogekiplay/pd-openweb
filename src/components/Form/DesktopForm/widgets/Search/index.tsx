@@ -295,15 +295,21 @@ const Search = props => {
   // 按钮搜索下拉框
   const isSelectBtn = enumDefault === 2 && clicksearch !== '1';
   let selectProps = {};
+  // antd 6 里搜索相关的配置要放进 showSearch 对象，顶层的 onSearch / filterOption 已弃用。
+  // rc-select 的 useSearchConfig 是「顶层先铺、对象后盖」，而这里的对象原先只有 searchValue，
+  // 所以挪进对象与原先放在顶层逐项等价。
+  let searchConfig = {};
 
   // 下拉框
   if (enumDefault === 1) {
-    selectProps = {
+    searchConfig = {
       onSearch: (keywords: string) => updateKeywords(keywords),
       filterOption: (inputValue, option) => {
         return `${option.label}`.indexOf(inputValue) > -1;
       },
-      onDropdownVisibleChange: open => {
+    };
+    selectProps = {
+      onOpenChange: open => {
         updateKeywords('');
         open ? handleSearch() : searchRef.current.blur();
         onVisibleChange(open);
@@ -313,7 +319,7 @@ const Search = props => {
 
   // 搜索下拉框
   if (enumDefault === 2) {
-    selectProps = {
+    searchConfig = {
       onSearch: (keywords: string) => {
         updateKeywords(keywords);
         // 实时搜索
@@ -324,13 +330,15 @@ const Search = props => {
         }
       },
       filterOption: false,
+    };
+    selectProps = {
       onInputKeyDown: e => {
         // 按钮回车搜索
         if (e.keyCode === 13 && clicksearch !== '1') {
           handleSearch();
         }
       },
-      onDropdownVisibleChange: open => {
+      onOpenChange: open => {
         // 预加载
         if (searchfirst === '1' && open) {
           handleSearch();
@@ -353,7 +361,7 @@ const Search = props => {
         optionLabelProp="label"
         value={value}
         placeholder={hint || _l('请选择')}
-        showSearch={{ searchValue: keywords }}
+        showSearch={{ searchValue: keywords, ...searchConfig }}
         suffixIcon={suffixIcon}
         {...{ ...defaultSelectProps, ...selectProps }}
         notFoundContent={

@@ -278,16 +278,14 @@ export default function EditAIActionDrawer(props) {
       <DrawerWrapper
         className="Absolute editAIActionDrawer"
         showChatbotDialog={showChatbotDialog}
-        width={showChatbotDialog ? 1200 : 800}
+        size={showChatbotDialog ? 1200 : 800}
         open
         mask={false}
         placement="right"
         closable={false}
-        maskClosable={false}
         zIndex={2}
         getContainer={false}
-        bodyStyle={{ padding: 0 }}
-        maskStyle={{ background: 'rgba(0, 0, 0, 0.32)' }}
+        styles={{ body: { padding: 0 }, mask: { background: 'rgba(0, 0, 0, 0.32)' } }}
         style={{ transform: 'translateX(1px)' }}
         onClose={onClose}
       >

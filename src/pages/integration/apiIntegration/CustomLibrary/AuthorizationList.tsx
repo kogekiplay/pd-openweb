@@ -211,7 +211,7 @@ export default function AuthorizationList(props) {
     <AuthListDrawer
       open
       title={_l('API 申请使用审核')}
-      width={840}
+      size={840}
       placement="right"
       closeIcon={<i className="icon-close Font18" />}
       onClose={onClose}

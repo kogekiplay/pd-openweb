@@ -271,7 +271,7 @@ export default function VarAddOrEditModal(props) {
     <VarDrawer
       autoFocus={false}
       open={visible}
-      width={600}
+      size={600}
       placement="right"
       mask={false}
       title={drawerTitle}

@@ -372,7 +372,9 @@ export default class EditUser extends Component<any, any> {
                 className={cx('formControl input', {
                   error: errors['mobilePhone'] && !!checkForm['mobilePhone'](mobilePhone, this.iti),
                 })}
-                value={this.fromatMobilePhoe(mobilePhone)}
+                // iti 还没建好时 fromatMobilePhoe 原样返回；接口没给手机号时那就是 undefined / null，
+                // 输入框会先非受控、iti 建好后再变受控（原因同 TextInput）
+                value={this.fromatMobilePhoe(mobilePhone) ?? ''}
                 manualRef={ele => (this.mobilePhone = ele)}
                 onInput={e => this.changeFormInfo(e, 'mobilePhone')}
                 placeholder={_l('请输入')}

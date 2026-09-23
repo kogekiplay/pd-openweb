@@ -150,7 +150,7 @@ export default function RoleDetail(props) {
       className="roleDetailDrawer"
       open={true}
       mask={false}
-      width={720}
+      size={720}
       title={title}
       extra={<Icon icon="close" className="Font20 textTertiary Hand" onClick={onClose} />}
       onClose={onClose}

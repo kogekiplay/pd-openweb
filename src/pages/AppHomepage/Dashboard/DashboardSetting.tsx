@@ -280,8 +280,8 @@ export default function DashboardSetting(props) {
     <React.Fragment>
       <SettingDrawer
         open
-        maskStyle={{ backgroundColor: 'transparent' }}
-        width={480}
+        styles={{ mask: { backgroundColor: 'transparent' } }}
+        size={480}
         title={_l('自定义工作台')}
         placement="right"
         afterOpenChange={visible => setEnableSlider(visible)}

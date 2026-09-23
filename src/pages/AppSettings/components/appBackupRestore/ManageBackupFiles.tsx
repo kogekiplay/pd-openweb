@@ -323,7 +323,7 @@ export default function ManageBackupFiles(props) {
           title={_l('操作日志')}
           onClose={() => setShowLog(false)}
           open={showLog}
-          headerStyle={{ display: 'none' }}
+          styles={{ header: { display: 'none' } }}
         >
           <ActionLogs projectId={projectId} appId={appId} onClose={() => setShowLog(false)} />
         </DrawerWrap>
