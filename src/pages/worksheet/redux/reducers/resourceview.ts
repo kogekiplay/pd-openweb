@@ -1,5 +1,7 @@
-import type { ReduxAction } from 'src/redux/types';
-export function loading(state = true, action: ReduxAction) {
+import type { DataAction } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
+
+export function loading(state = true, action: DataAction<boolean>) {
   switch (action.type) {
     case 'CHANGE_RESOURCE_LOADING':
       return action.data;
@@ -8,7 +10,7 @@ export function loading(state = true, action: ReduxAction) {
   }
 }
 
-export function keywords(state = '', action: ReduxAction) {
+export function keywords(state = '', action: DataAction<string>) {
   switch (action.type) {
     case 'CHANGE_RESOURCE_KEYWORDS':
       return action.data;
@@ -17,7 +19,7 @@ export function keywords(state = '', action: ReduxAction) {
   }
 }
 
-export function resourceRelationControls(state = [], action: ReduxAction) {
+export function resourceRelationControls(state: FormControl[] = [], action: DataAction<FormControl[]>) {
   switch (action.type) {
     case 'CHANGE_RESOURCE_RESOURCE_RELATION_CONTROLS':
       return action.data;
@@ -26,7 +28,7 @@ export function resourceRelationControls(state = [], action: ReduxAction) {
   }
 }
 
-export function resourceData(state = [], action: ReduxAction) {
+export function resourceData(state: ApiPayload[] = [], action: DataAction<ApiPayload[]>) {
   switch (action.type) {
     case 'CHANGE_RESOURCE_RESOURCE_DATA':
       return action.data;
@@ -35,7 +37,7 @@ export function resourceData(state = [], action: ReduxAction) {
   }
 }
 
-export function resourceDataByKey(state = [], action: ReduxAction) {
+export function resourceDataByKey(state: ApiPayload[] = [], action: DataAction<ApiPayload[]>) {
   switch (action.type) {
     case 'CHANGE_RESOURCE_RESOURCE_DATA_BY_KEY':
       return action.data;
@@ -44,7 +46,8 @@ export function resourceDataByKey(state = [], action: ReduxAction) {
   }
 }
 
-export function timeList(state = [], action: ReduxAction) {
+// 初始值是 []，但写进来的是 { list: [...] } 这样的对象（见 actions/resourceview 的 CHANGE_RESOURCE_TIME_LIST）
+export function timeList(state: ApiPayload = [], action: DataAction<ApiPayload>) {
   switch (action.type) {
     case 'CHANGE_RESOURCE_TIME_LIST':
       return action.data;
@@ -53,7 +56,7 @@ export function timeList(state = [], action: ReduxAction) {
   }
 }
 
-export function gridTimes(state = [], action: ReduxAction) {
+export function gridTimes(state: ApiPayload[] = [], action: DataAction<ApiPayload[]>) {
   switch (action.type) {
     case 'CHANGE_RESOURCE_TIME_LIST_A':
       return action.data;
@@ -62,7 +65,8 @@ export function gridTimes(state = [], action: ReduxAction) {
   }
 }
 
-export function currentTime(state = null, action: ReduxAction) {
+/** 'YYYY-MM-DD'；null 表示「今天」 */
+export function currentTime(state: string | null = null, action: DataAction<string | null>) {
   switch (action.type) {
     case 'CHANGE_RESOURCE_CURRENT_TIME':
       return action.data;

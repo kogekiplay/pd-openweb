@@ -13,7 +13,7 @@ export const getRoleList =
   (isAdd, orgRoleGroupId = '') =>
   (dispatch: AppDispatch, getState: GetState) => {
     const {
-      rolePageInfo = {},
+      rolePageInfo = { pageIndex: 1, isMore: false },
       projectId,
       roleList = [],
       searchValue,

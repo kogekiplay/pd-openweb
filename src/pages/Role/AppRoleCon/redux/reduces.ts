@@ -1,8 +1,17 @@
 import { combineReducers } from 'redux';
+import type { DataAction } from 'src/redux/types';
 import { initData } from '../UserCon/config';
-import type { ReduxAction } from 'src/redux/types';
 
-export const loading = (state = false, action: ReduxAction) => {
+/** 快捷标签：只用来切当前角色 */
+export interface AppRoleQuickTag {
+  tab?: string;
+  roleId?: string;
+}
+
+/** 成员列表的分页 / 搜索参数，形状见 UserCon/config 的 initData */
+export type AppRolePagingModel = typeof initData;
+
+export const loading = (state = false, action: DataAction<boolean>) => {
   switch (action.type) {
     case 'UPDATE_ROLE_LOADING':
       return action.data;
@@ -11,7 +20,7 @@ export const loading = (state = false, action: ReduxAction) => {
   }
 };
 
-export const pageLoading = (state = false, action: ReduxAction) => {
+export const pageLoading = (state = false, action: DataAction<boolean>) => {
   switch (action.type) {
     case 'ROLE_UPDATE_PAGE_LOADING':
       return action.data;
@@ -20,7 +29,10 @@ export const pageLoading = (state = false, action: ReduxAction) => {
   }
 };
 
-export const quickTag = (state = { tab: '', roleId: '' }, action: ReduxAction) => {
+export const quickTag = (
+  state: AppRoleQuickTag = { tab: '', roleId: '' },
+  action: DataAction<AppRoleQuickTag | undefined>,
+) => {
   switch (action.type) {
     case 'UPDATE_QUICKTAG':
       return action.data || { tab: '', roleId: '' };
@@ -29,7 +41,7 @@ export const quickTag = (state = { tab: '', roleId: '' }, action: ReduxAction) =
   }
 };
 
-export const roleId = (state = 'all', action: ReduxAction) => {
+export const roleId = (state = 'all', action: DataAction<string>) => {
   switch (action.type) {
     case 'UPDATE_ROLEID':
       return action.data;
@@ -39,7 +51,7 @@ export const roleId = (state = 'all', action: ReduxAction) => {
 };
 
 //成员数据
-export const user = (state = [], action: ReduxAction) => {
+export const user = (state: ApiPayload[] = [], action: DataAction<ApiPayload[]>) => {
   switch (action.type) {
     case 'UPDATE_APPUSER':
       return action.data;
@@ -49,7 +61,7 @@ export const user = (state = [], action: ReduxAction) => {
 };
 
 //成员全部总数
-export const total = (state = 0, action: ReduxAction) => {
+export const total = (state = 0, action: DataAction<number>) => {
   switch (action.type) {
     case 'UPDATE_APPUSER_LIST_ALL_TOTAL':
       return action.data;
@@ -59,7 +71,7 @@ export const total = (state = 0, action: ReduxAction) => {
 };
 
 //成员数组数据
-export const userList = (state = [], action: ReduxAction) => {
+export const userList = (state: ApiPayload[] = [], action: DataAction<ApiPayload[]>) => {
   switch (action.type) {
     case 'UPDATE_APPUSER_LIST':
       return action.data;
@@ -69,7 +81,7 @@ export const userList = (state = [], action: ReduxAction) => {
 };
 
 //申请数据
-export const apply = (state = [], action: ReduxAction) => {
+export const apply = (state: ApiPayload[] = [], action: DataAction<ApiPayload[]>) => {
   switch (action.type) {
     case 'UPDATE_APPLYINFO':
       return action.data;
@@ -79,7 +91,7 @@ export const apply = (state = [], action: ReduxAction) => {
 };
 
 //外协数据
-export const outsourcing = (state = {}, action: ReduxAction) => {
+export const outsourcing = (state: ApiPayload = {}, action: DataAction<ApiPayload>) => {
   switch (action.type) {
     case 'UPDATE_OUTSOURCING':
       return action.data;
@@ -89,7 +101,7 @@ export const outsourcing = (state = {}, action: ReduxAction) => {
 };
 
 //角色数据
-export const roleInfos = (state = [], action: ReduxAction) => {
+export const roleInfos = (state: ApiPayload[] = [], action: DataAction<ApiPayload[]>) => {
   switch (action.type) {
     case 'UPDATE_APPROLESUMMARY':
       return action.data;
@@ -99,7 +111,7 @@ export const roleInfos = (state = [], action: ReduxAction) => {
 };
 
 //安装应用相关限制数据
-export const roleLimitInfo = (state = [], action: ReduxAction) => {
+export const roleLimitInfo = (state: ApiPayload = [], action: DataAction<ApiPayload>) => {
   switch (action.type) {
     case 'UPDATE_APPROLESUMMARY_ROLELIMITINFO':
       return action.data;
@@ -108,7 +120,7 @@ export const roleLimitInfo = (state = [], action: ReduxAction) => {
   }
 };
 
-export const selectedIds = (state = [], action: ReduxAction) => {
+export const selectedIds = (state: string[] = [], action: DataAction<string[]>) => {
   switch (action.type) {
     case 'UPDATE_SELECTLIST':
       return action.data;
@@ -117,7 +129,10 @@ export const selectedIds = (state = [], action: ReduxAction) => {
   }
 };
 
-export const appRolePagingModel = (state = initData, action: ReduxAction) => {
+export const appRolePagingModel = (
+  state: AppRolePagingModel = initData,
+  action: DataAction<AppRolePagingModel | undefined>,
+) => {
   switch (action.type) {
     case 'UPDATE_APPROLEPAGINGMODEL':
       return action.data || initData;
