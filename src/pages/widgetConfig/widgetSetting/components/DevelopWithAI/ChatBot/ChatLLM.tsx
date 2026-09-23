@@ -291,7 +291,7 @@ function ChatLLM(
         ),
       },
     ],
-    onError: (error, eventData) => {
+    onError: (_error, eventData) => {
       setError({
         errorMsg: _l('模型调用失败'),
         sourceData: eventData,

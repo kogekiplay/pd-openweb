@@ -217,7 +217,7 @@ export default class CreateFolder extends Component<any, any> {
             </div>
             <div className="createFolderSlider">
               {this.props.materials
-                .filter((o, index: number) => index === 0)
+                .filter((_o, index: number) => index === 0)
                 .map((material, i) => {
                   return (
                     <div style={{ ...sliderHeight }} key={i}>

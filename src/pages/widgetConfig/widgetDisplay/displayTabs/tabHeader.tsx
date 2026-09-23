@@ -200,7 +200,7 @@ export function DragHeaderItem(props) {
       id: data.controlId,
     },
 
-    end(obj, monitor) {
+    end(_obj, monitor) {
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;
       const { rowIndex } = dropResult;
@@ -226,7 +226,7 @@ export function DragHeaderItem(props) {
         }
       }
     },
-    drop(item, monitor) {
+    drop(_item, monitor) {
       if (monitor.isOver({ shallow: true })) {
         if (!pointerDir) return undefined;
         const childLength = data.type === 52 ? _.get(putControlByOrder(data.relationControls), 'length') || 1 : 1;

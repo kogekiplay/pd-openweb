@@ -361,7 +361,7 @@ const shareFolderMethods = defineMethods<ShareFolderFields>()({
 
     function getPathWidth() {
       return _.sum(
-        $path.map(function (index: number, ele) {
+        $path.map(function (_index: number, ele) {
           return $(ele).width();
         }),
       );

@@ -669,7 +669,7 @@ export default class Search extends Component<any, any> {
             height={0}
             content={data.link}
             formulaMap={data.formulaMap}
-            onChange={(err, value) => this.updateSource({ link: value })}
+            onChange={(_err, value) => this.updateSource({ link: value })}
             updateSource={this.updateSource}
           />
         </div>

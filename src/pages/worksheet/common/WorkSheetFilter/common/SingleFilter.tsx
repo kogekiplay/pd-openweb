@@ -98,7 +98,7 @@ export default class SingleFilter extends Component<any, any> {
   }
   deleteCondition(index: number) {
     const { conditions } = this.state;
-    const newConditions = conditions.filter((c, i) => i !== index);
+    const newConditions = conditions.filter((_c, i) => i !== index);
     this.setState({
       conditions: newConditions,
     });

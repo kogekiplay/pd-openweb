@@ -280,7 +280,7 @@ export default class Con extends React.Component<any, any> {
             >
               {Array(6)
                 .fill(6)
-                .map((l, i) => {
+                .map((_l, i) => {
                   return (
                     <React.Fragment key={i}>
                       <col key={2 * i} width={(2 * i) % 3 === 0 || (2 * i) % 4 === 0 ? nameWidth : valueWidth} />
@@ -540,9 +540,9 @@ export default class Con extends React.Component<any, any> {
     let list = relationsList.data || [];
     const fontType = FONT_STYLE[printData.font || DEFAULT_FONT_SIZE];
     const fileStyle = safeParse((advanceSettings.find(l => l.key === 'atta_style') || {}).value);
-    const relationFileStyle = _.pickBy(fileStyle, (value, key) => _.startsWith(key, `${tableList.controlId}_`));
+    const relationFileStyle = _.pickBy(fileStyle, (_value, key) => _.startsWith(key, `${tableList.controlId}_`));
     const user_info = safeParse((advanceSettings.find(l => l.key === 'user_info') || {}).value);
-    const relationUserInfo = _.pickBy(user_info, (value, key) => _.startsWith(key, `${tableList.controlId}_`));
+    const relationUserInfo = _.pickBy(user_info, (_value, key) => _.startsWith(key, `${tableList.controlId}_`));
 
     //空置隐藏则不显示
     if (isHideNull && list.length <= 0) {

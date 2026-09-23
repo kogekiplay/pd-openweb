@@ -231,7 +231,7 @@ function ImportPlugin(props) {
           setErrorTip('');
           setIsEncrypt(false);
         }}
-        onUploaded={(up, file, response) => {
+        onUploaded={(_up, file, response) => {
           setUploading(false);
           setFile({ ...file, key: response.key });
           const url = md.global.FileStoreConfig.documentHost + '/' + response.key;

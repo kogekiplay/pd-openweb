@@ -130,7 +130,7 @@ export default class CalendarDate extends Component<any, any> {
     return $(this.elem).height();
   }
 
-  componentDidUpdate(prevProps, prevState, prevHeight) {
+  componentDidUpdate(_prevProps, _prevState, prevHeight) {
     if (!this.elem || prevHeight === null) return;
     var $elem = $(this.elem);
     var height = prevHeight;

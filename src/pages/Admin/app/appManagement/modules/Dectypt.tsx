@@ -146,7 +146,7 @@ export default class Dectypt extends Component<any, any> {
               this.setState({ analyzeLoading: true });
               up.disableBrowse();
             }}
-            onBeforeUpload={(up, file) => {
+            onBeforeUpload={(_up, file) => {
               this.setState({ file });
             }}
             onUploaded={(up, file, response) => {

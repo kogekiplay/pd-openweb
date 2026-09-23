@@ -484,7 +484,7 @@ export default class UploadFiles extends Component<any, any> {
       },
     );
   }
-  onMDPreview(id, index: number) {
+  onMDPreview(_id, index: number) {
     const currentFile = this.state.attachmentData[index];
 
     if (!currentFile) {
@@ -531,7 +531,7 @@ export default class UploadFiles extends Component<any, any> {
         hideFunctions: hideFunctions,
       },
       {
-        deleteCallback: (docversionid, fileId) => {
+        deleteCallback: (_docversionid, fileId) => {
           const newAttachmentData = this.state.attachmentData.filter(item => item.fileID !== fileId);
           this.setState({
             attachmentData: newAttachmentData,
@@ -557,7 +557,7 @@ export default class UploadFiles extends Component<any, any> {
       },
     );
   }
-  onPreview(id, index: number, event) {
+  onPreview(id, _index: number, event) {
     if (event.target.classList.contains('UploadFiles-editInput')) {
       return;
     }
@@ -885,7 +885,7 @@ export default class UploadFiles extends Component<any, any> {
           onBeforeUpload={uploader => {
             _this.currentFile = uploader;
           }}
-          onUploadProgress={(uploader, file) => {
+          onUploadProgress={(_uploader, file) => {
             const loaded = file.loaded || 0;
             const size = file.size || 0;
             const uploadPercent = ((loaded / size) * 100).toFixed(1);
@@ -903,7 +903,7 @@ export default class UploadFiles extends Component<any, any> {
               temporaryData: newTemporaryData,
             });
           }}
-          onUploaded={(uploader, file, response) => {
+          onUploaded={(_uploader, file, response) => {
             // 上传完成，取消进度条
             const newTemporaryData = _this.state.temporaryData.map(item => {
               if (file.id == item.id && 'progress' in item) {
@@ -1145,7 +1145,7 @@ export default class UploadFiles extends Component<any, any> {
                 : {})}
             />
           ))}
-          {emptys.map((item, index) => (
+          {emptys.map((_item, index) => (
             <div style={style} key={index} className="UploadFiles-file-wrapper UploadFiles-fileEmpty" />
           ))}
         </div>

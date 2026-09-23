@@ -78,7 +78,7 @@ export default class WithdrawalsRecord extends Component<any, any> {
         title: _l('操作人'),
         dataIndex: 'accountId',
         width: 120,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { payAccountInfo = {} } = record;
           const { accountId, fullname, avatar } = payAccountInfo;
           return (

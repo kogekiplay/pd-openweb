@@ -129,12 +129,12 @@ class BackupFromFilesCom extends Component<any, any> {
         onAdd={() => {
           this.setState({ isEncrypt: false, errTip: '' });
         }}
-        onBeforeUpload={(up, file) => {
+        onBeforeUpload={(_up, file) => {
           setTimeout(() => {
             this.setState({ file, analyzeLoading: true });
           }, 200);
         }}
-        onUploaded={(up, file, response) => {
+        onUploaded={(_up, file, response) => {
           const { key } = response;
           this.setState(
             {

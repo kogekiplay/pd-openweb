@@ -88,7 +88,9 @@ export default function CustomAction(props) {
     const remark = comparisonLangId ? comparisonLangInfo.remark : _.get(btn.advancedSetting, 'remarkname');
     const hintText = comparisonLangId ? comparisonLangInfo.hintText : _.get(btn.advancedSetting, 'remarkhint');
     const remarkoptions = _.get(JSON.parse(_.get(btn.advancedSetting, 'remarkoptions') || '{}'), 'template') || [];
-    const withoutRemarkoptions = remarkoptions.filter((item, index: number) => !translateInfo[`templateName_${index}`]);
+    const withoutRemarkoptions = remarkoptions.filter(
+      (_item, index: number) => !translateInfo[`templateName_${index}`],
+    );
 
     const handleSave = info => {
       onEditAppLang({

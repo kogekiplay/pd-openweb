@@ -693,7 +693,7 @@ export default function SelectDialog({ ...args }) {
                       sheetViewHighlightRows={
                         activeRowIndex > -1 && records[activeRowIndex] ? { [records[activeRowIndex].rowid]: true } : {}
                       }
-                      onCellClick={(clickedControl, clickedRow, rowIndex) => {
+                      onCellClick={(_clickedControl, clickedRow, rowIndex) => {
                         handleToggleSelect(clickedRow.rowid, rowIndex);
                       }}
                       renderColumnHead={({ control, ...rest }) => {

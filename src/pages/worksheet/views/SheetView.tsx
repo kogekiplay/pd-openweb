@@ -1014,7 +1014,7 @@ class TableViewBase extends React.Component<any, any> {
     addRecord(record);
   };
 
-  handleCellClick = (cell: FormControl | undefined, row: RecordRow, rowIndex?: number) => {
+  handleCellClick = (cell: FormControl | undefined, row: RecordRow, _rowIndex?: number) => {
     const { allowOpenRecord = true } = this.props;
 
     if (!row || !row.rowid) {

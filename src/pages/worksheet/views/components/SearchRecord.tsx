@@ -112,7 +112,7 @@ const SearchRecord = props => {
     setOpen(true);
   };
 
-  const onSelect = (data, { record }) => {
+  const onSelect = (_data, { record }) => {
     onSearch(record);
     setSearchRecord(record);
     setOpen(false);

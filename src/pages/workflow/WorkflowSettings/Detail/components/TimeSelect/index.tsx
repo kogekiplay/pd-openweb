@@ -147,7 +147,7 @@ export default class TimeSelect extends Component<any, any> {
                 minute: data.time ? parseInt(data.time.split(':')[1]) : 0,
                 second: 0,
               }}
-              onChange={(event, value) => {
+              onChange={(_event, value) => {
                 updateSource({
                   time: value.hour.toString().padStart(2, '0') + ':' + value.minute.toString().padStart(2, '0'),
                 });

@@ -328,7 +328,7 @@ export default class Footer extends Component<any, any> {
               </div>
             </div>
           ),
-          onAction: (action, index) => {
+          onAction: (_action, index) => {
             if (index === 0) {
               run('after');
             }
@@ -370,7 +370,7 @@ export default class Footer extends Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, index) => {
+      onAction: (_action, index) => {
         this.handleOperation(buttons[index].id);
         this.actionSelectOperationHandler.close();
       },

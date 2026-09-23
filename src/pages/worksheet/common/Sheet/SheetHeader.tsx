@@ -188,7 +188,7 @@ function SheetHeader(props) {
       appId,
       groupId,
       workSheetId: worksheetId,
-      updateWorksheetInfo: (id, data) => {
+      updateWorksheetInfo: (_id, data) => {
         updateWorksheetInfo(data);
       },
       updateSheetListAppItem: updateSheetListAppItem,

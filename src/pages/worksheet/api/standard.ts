@@ -98,7 +98,6 @@ export class RequestPool {
 
 export function createRequestPool({
   abortController,
-  maxConcurrentRequests,
 }: {
   abortController?: AbortController;
   /**

@@ -64,7 +64,7 @@ export default args => {
       if (filterCustom) {
         message = message.replace(customRegExp, '');
       } else {
-        message = message.replace(customRegExp, function ($0, $1, $2) {
+        message = message.replace(customRegExp, function (_$0, _$1, $2) {
           let customStr = $2;
           let splitterIndex = customStr.indexOf('|');
 

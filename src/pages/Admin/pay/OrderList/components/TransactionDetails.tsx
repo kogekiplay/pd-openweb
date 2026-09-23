@@ -81,7 +81,7 @@ export default class TransactionDetails extends Component<any, any> {
         dataIndex: 'merchantPaymentChannel',
         ellipsis: true,
         width: 200,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { merchantPaymentChannel } = record;
           return PAY_CHANNEL_TXT[merchantPaymentChannel] || '';
         },
@@ -90,7 +90,7 @@ export default class TransactionDetails extends Component<any, any> {
         title: _l('订单状态'),
         dataIndex: 'status',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { status } = record;
           return (_.find(ORDER_STATUS, item => item.value === status) || {}).label;
         },
@@ -163,7 +163,7 @@ export default class TransactionDetails extends Component<any, any> {
         title: _l('对账 ID'),
         dataIndex: 'channelCheckId',
         width: 350,
-        render: (text, record) => {
+        render: (_text, record) => {
           return record.channelCheckId || '-';
         },
       },
@@ -179,7 +179,7 @@ export default class TransactionDetails extends Component<any, any> {
         title: _l('下单人'),
         dataIndex: 'accountId',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { payAccountInfo = {}, sourceType } = record;
           const { accountId, fullname, avatar, isPortal } = payAccountInfo;
 
@@ -219,7 +219,7 @@ export default class TransactionDetails extends Component<any, any> {
         title: _l('支付方式'),
         dataIndex: 'payOrderType',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { payOrderType, status } = record;
           return _.includes([0, 4], status)
             ? '-'
@@ -239,7 +239,7 @@ export default class TransactionDetails extends Component<any, any> {
         title: _l('所属应用'),
         dataIndex: 'app',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { sourceInfo = {} } = record;
           const { appColor, appIconUrl, appName, appId } = sourceInfo;
           return (
@@ -258,7 +258,7 @@ export default class TransactionDetails extends Component<any, any> {
         title: _l('所属表单'),
         dataIndex: 'worksheet',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { sourceInfo = {} } = record;
           const { workSheetName, worksheetId } = sourceInfo;
 
@@ -281,7 +281,7 @@ export default class TransactionDetails extends Component<any, any> {
         title: _l('记录'),
         dataIndex: 'record',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { sourceInfo = {} } = record;
           return <span title={sourceInfo.title}>{sourceInfo.title}</span>;
         },
@@ -300,7 +300,7 @@ export default class TransactionDetails extends Component<any, any> {
         dataIndex: 'action',
         fixed: 'right',
         width: 'auto',
-        render: (text, record) => {
+        render: (_text, record) => {
           // 开票： 已开票、开票中不展示，同时申请退款、退款中、已退款不展示开票按钮；状态是申请开票、开票失败、已支付才可点击开票
           // 退款：已退款、退款中、订单状态（已完结）也不展示此操作项；订单状态已支付、退款失败才可点击退款
           const { status, amount, refundAmount } = record;

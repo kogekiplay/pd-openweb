@@ -90,7 +90,7 @@ function getMapConfigByExcel(controls: FormControl[] = [], excelData = []) {
 
 function getDefaultMap(controls: FormControl[]) {
   return [...new Array(controls.length)]
-    .map((a, i) => ({ [i]: _.get(controls, `${i}.controlId`) }))
+    .map((_a, i) => ({ [i]: _.get(controls, `${i}.controlId`) }))
     .reduce((a, b) => Object.assign({}, a, b));
 }
 
@@ -157,7 +157,7 @@ export default function PreviewData(props) {
                     value={headRowIndex}
                     data={new Array(cellsData.length < 10 ? cellsData.length : 10)
                       .fill()
-                      .map((e, i) => ({ text: i === 0 ? _l('没有表头行') : _l('第%0行', i), value: i }))}
+                      .map((_e, i) => ({ text: i === 0 ? _l('没有表头行') : _l('第%0行', i), value: i }))}
                     onChange={setHeadRowIndex}
                   />
                   <Tooltip title={_l('只有表头下方的数据才会被导入')} placement="bottom">

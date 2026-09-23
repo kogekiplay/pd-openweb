@@ -272,7 +272,7 @@ function EntityRelationship(props) {
     sortData.forEach((item, dataIndex) => {
       const controls: FormControl[] = item.controls.filter(l => !HIDE_FIELDS.includes(l.type));
 
-      let items = _.fill(Array(item.start + item.end), 0).map((l, index) => ({
+      let items = _.fill(Array(item.start + item.end), 0).map((_l, index) => ({
         id: `${item.worksheetId}-${index}`,
         group: 'port1',
       }));
@@ -443,7 +443,7 @@ function EntityRelationship(props) {
     graphRef.current.fromJSON({ nodes: newNodes, edges });
   };
 
-  const onCreate = async (type, param) => {
+  const onCreate = async (_type, param) => {
     const { name, remark } = param;
     const res = await appManagementApi.addWorkSheet({
       appId,

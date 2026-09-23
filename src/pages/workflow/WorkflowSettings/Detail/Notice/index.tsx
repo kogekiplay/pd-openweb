@@ -134,7 +134,7 @@ export default class Notice extends Component<any, any> {
           type={2}
           content={data.sendContent}
           formulaMap={data.formulaMap}
-          onChange={(err, value) => this.updateSource({ sendContent: value })}
+          onChange={(_err, value) => this.updateSource({ sendContent: value })}
           updateSource={this.updateSource}
         />
 

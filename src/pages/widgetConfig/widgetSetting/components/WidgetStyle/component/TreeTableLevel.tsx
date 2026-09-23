@@ -6,7 +6,7 @@ import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util
 export default function TreeTableLevel(props) {
   const { data, onChange } = props;
   const { defaultlayer } = getAdvanceSetting(data);
-  const LEVEL_SETTING_LIST = Array.from({ length: 5 }).map((item, index) => ({
+  const LEVEL_SETTING_LIST = Array.from({ length: 5 }).map((_item, index) => ({
     text: `${index + 1}`,
     value: `${index + 1}`,
   }));

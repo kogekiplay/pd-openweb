@@ -16,7 +16,7 @@ export default class Member extends Component<any, any> {
   removeMember = (index: number) => {
     const accounts = _.cloneDeep(this.props.accounts);
 
-    _.remove(accounts, (obj, i) => i === index);
+    _.remove(accounts, (_obj, i) => i === index);
     this.props.updateSource({ accounts });
   };
 
@@ -88,7 +88,7 @@ export default class Member extends Component<any, any> {
     ];
 
     if (!item.roleTypeId) {
-      _.remove(list, (o, i) => i === 1);
+      _.remove(list, (_o, i) => i === 1);
     }
 
     // 部门控件
@@ -330,7 +330,7 @@ export default class Member extends Component<any, any> {
     ];
 
     if (!item.roleTypeId) {
-      _.remove(list, (o, i) => i === 1);
+      _.remove(list, (_o, i) => i === 1);
     }
 
     return (

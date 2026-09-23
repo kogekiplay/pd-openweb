@@ -210,14 +210,14 @@ export default function ExportRecords({ projectId, type }: { projectId?: string;
         dataIndex: 'exportPassword',
         width: 150,
         ellipsis: true,
-        render: (text, record) => renderPassword(record, 'exportPassword'),
+        render: (_text, record) => renderPassword(record, 'exportPassword'),
       },
       {
         title: _l('应用锁密码'),
         dataIndex: 'lockPassword',
         width: 150,
         ellipsis: true,
-        render: (text, record) => renderPassword(record, 'lockPassword'),
+        render: (_text, record) => renderPassword(record, 'lockPassword'),
       },
       {
         title: '',

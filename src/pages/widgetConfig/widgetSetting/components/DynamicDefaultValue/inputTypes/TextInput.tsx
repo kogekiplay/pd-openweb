@@ -133,7 +133,7 @@ export default class TextInput extends Component<any, any> {
               return <OtherField className="tagTextField overflow_ellipsis" item={{ cid, rcid }} {...this.props} />;
             }}
             getRef={tagtextarea => (this.$tagtextarea = tagtextarea)}
-            onChange={(err, value) => {
+            onChange={(_err, value) => {
               from !== DYNAMIC_FROM_MODE.FAST_FILTER && this.transferValue(value.trim());
             }}
             onBlur={() => {

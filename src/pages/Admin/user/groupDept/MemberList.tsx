@@ -48,7 +48,7 @@ export default class MemberList extends Component<any, any> {
       {
         title: _l('操作'),
         dataIndex: 'option',
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <div
               className="Hand colorPrimary Font13 adminHoverColor"

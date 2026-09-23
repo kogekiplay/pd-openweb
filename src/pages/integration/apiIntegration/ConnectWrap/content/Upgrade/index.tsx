@@ -210,7 +210,7 @@ function Upgrade(props) {
       });
   };
 
-  const onUploadComplete = (up, file, response) => {
+  const onUploadComplete = (_up, file, response) => {
     const { key } = response;
     const fileInfo = { ...file, key };
     setState({
@@ -269,7 +269,7 @@ function Upgrade(props) {
               onAdd={() => {
                 setState({ errTip: '' });
               }}
-              onBeforeUpload={(up, file) => {
+              onBeforeUpload={(_up, file) => {
                 !analyzeLoading && setState({ file: file, analyzeLoading: true });
               }}
               onUploaded={onUploadComplete}

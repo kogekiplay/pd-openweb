@@ -445,7 +445,7 @@ export default class WebHook extends Component<any, any> {
             type={2}
             content={data.body}
             formulaMap={data.formulaMap}
-            onChange={(err, value) => this.updateSource({ body: value })}
+            onChange={(_err, value) => this.updateSource({ body: value })}
             updateSource={this.updateSource}
           />
         )}
@@ -506,7 +506,7 @@ export default class WebHook extends Component<any, any> {
               height={0}
               content={data.sendContent}
               formulaMap={data.formulaMap}
-              onChange={(err, value) => this.updateSource({ sendContent: value })}
+              onChange={(_err, value) => this.updateSource({ sendContent: value })}
               updateSource={this.updateSource}
             />
           </div>
@@ -802,7 +802,7 @@ export default class WebHook extends Component<any, any> {
   deleteErrorMsg(i) {
     const errorMsgArray = _.cloneDeep(this.state.errorMsgArray);
 
-    _.remove(errorMsgArray, (o, index) => index === i);
+    _.remove(errorMsgArray, (_o, index) => index === i);
     this.setState({ errorMsgArray });
   }
 

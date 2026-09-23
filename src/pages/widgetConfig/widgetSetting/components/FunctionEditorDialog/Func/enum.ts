@@ -68,21 +68,21 @@ export const functions = {
 
     if (result > 7) {
       const startWorkDayLength = [...new Array(7 - startWeekDay)]
-        .map((d, i) => startWeekDay + i)
+        .map((_d, i) => startWeekDay + i)
         .filter(d => _.includes(workDays, d)).length;
       const endWorkDayLength = [...new Array(endWeekDay)]
-        .map((d, i) => i + 1)
+        .map((_d, i) => i + 1)
         .filter(d => _.includes(workDays, d)).length;
       result =
         _.intersection(
-          [1, 2, 3, 4, 5, 6, 7].map((d, i) => i),
+          [1, 2, 3, 4, 5, 6, 7].map((_d, i) => i),
           workDays,
         ).length *
           Math.floor((result - (7 - startWeekDay) - endWeekDay) / 7) +
         startWorkDayLength +
         endWorkDayLength;
     } else {
-      const days = [...new Array(result)].map((d, i) => Number((startWeekDay + i).toString(7).slice(-1)));
+      const days = [...new Array(result)].map((_d, i) => Number((startWeekDay + i).toString(7).slice(-1)));
       result = days.filter(d => _.includes(workDays, d)).length;
     }
 
@@ -135,7 +135,7 @@ export const functions = {
   },
   // 为日期加减时间
   DATEADD: function (date, expression, format = 1) {
-    expression = expression.replace(/\+\(undefined\)/g, '').replace(/\((\d+)\)/, ($0, $1) => $1);
+    expression = expression.replace(/\+\(undefined\)/g, '').replace(/\((\d+)\)/, (_$0, $1) => $1);
     expression = expression.replace(/\w\w:\w\w:\w\w/g, timeStr => {
       const [h, m, s] = dayjs(timeStr, 'HH:mm:ss').format('HH:mm:ss').split(':').map(Number);
       return `${h}h+${m}m+${s}s`;

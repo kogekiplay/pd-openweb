@@ -272,7 +272,7 @@ export default class Snapshot extends Component<any, any> {
                 content={data.appId}
                 formulaMap={data.formulaMap}
                 getRef={tagtextarea => (this.urlTextarea = tagtextarea)}
-                onChange={(err, value) => this.updateSource({ appId: value })}
+                onChange={(_err, value) => this.updateSource({ appId: value })}
                 updateSource={this.updateSource}
               />
             </div>

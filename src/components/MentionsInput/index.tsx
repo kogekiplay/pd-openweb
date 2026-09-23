@@ -762,7 +762,7 @@ const MentionsInput = props => {
     });
   };
 
-  const populateDropdown = (query, results) => {
+  const populateDropdown = (_query, results) => {
     const { accounts = [], categorys = [] } = results;
     const id = _.get(accounts[0] || categorys[0], 'id');
     setActiveId(id);

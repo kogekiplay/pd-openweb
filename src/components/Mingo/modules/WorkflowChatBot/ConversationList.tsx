@@ -75,7 +75,6 @@ const NewConversationButton = styled.div`
 `;
 
 function ConversationList({
-  name,
   appId,
   isMobile,
   isCharge,

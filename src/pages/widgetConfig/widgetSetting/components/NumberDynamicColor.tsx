@@ -98,7 +98,7 @@ export default function NumberDynamicColor(props) {
                 className={cx('icon-remove_circle_outline iconOp mLeft20', { disabled: deleteDisabled })}
                 onClick={() => {
                   if (deleteDisabled) return;
-                  setDynamicColor(dynamicColor.filter((i, dx) => dx !== index));
+                  setDynamicColor(dynamicColor.filter((_i, dx) => dx !== index));
                 }}
               ></span>
               <span

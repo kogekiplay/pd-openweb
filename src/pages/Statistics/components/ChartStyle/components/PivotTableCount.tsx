@@ -113,7 +113,7 @@ export default function pivotTableCountPanelGenerator(props) {
           <Switch
             size="small"
             checked={switchChecked}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -160,7 +160,7 @@ export default function pivotTableCountPanelGenerator(props) {
           <Switch
             size="small"
             checked={showLineTotal}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -406,7 +406,7 @@ export default function pivotTableCountPanelGenerator(props) {
           <Switch
             size="small"
             checked={showColumnTotal}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {

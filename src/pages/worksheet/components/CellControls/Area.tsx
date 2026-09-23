@@ -104,7 +104,7 @@ export default class Date extends React.Component<any, any> {
     }
   };
 
-  handleChange = (array, panelIndex, autoClose = true) => {
+  handleChange = (array, _panelIndex, autoClose = true) => {
     const { tableFromModule, cell, updateCell, updateEditingStatus, onValidate } = this.props;
     const last = _.last(array);
     const anylevel = _.get(cell, 'advancedSetting.anylevel');

@@ -321,7 +321,7 @@ export default ({ flowInfo, isPlugin, customBtn, wrapClassName, isIntegration = 
               )}
 
               {list
-                .filter((o, index) => !(flowInfo.publishStatus === 1 && flowInfo.enabled && index === 0))
+                .filter((_o, index) => !(flowInfo.publishStatus === 1 && flowInfo.enabled && index === 0))
                 .map(renderItem)}
 
               {((isLoading && pageIndex > 1) || (!list.length && isFirstLoad)) && (

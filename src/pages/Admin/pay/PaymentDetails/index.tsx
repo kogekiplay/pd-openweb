@@ -33,7 +33,7 @@ export default class PaymentDetails extends Component<any, any> {
         title: _l('支付状态'),
         dataIndex: 'payOrderType',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { status } = record;
           return (_.find(PAY_STATUS, item => item.value === status) || {}).label;
         },
@@ -42,7 +42,7 @@ export default class PaymentDetails extends Component<any, any> {
         title: _l('支付方式'),
         dataIndex: 'payOrderType',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           return record.payOrderType === 0 ? _l('支付宝') : _l('微信');
         },
       },

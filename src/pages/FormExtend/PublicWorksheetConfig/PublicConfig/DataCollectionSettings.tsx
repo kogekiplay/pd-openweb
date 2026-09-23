@@ -454,7 +454,7 @@ export default function DataCollectionSettings(props) {
                     suffixIcon={null}
                     disabledTime={() => getDisabledTime('start', item)}
                     value={item.start ? dayjs(item.start, 'HH:mm') : null}
-                    onChange={(time, timeString) => onTimeChange(timeString, index, 'start')}
+                    onChange={(_time, timeString) => onTimeChange(timeString, index, 'start')}
                   />
                   <Icon icon="minus textSecondary Font12 mLeft4 mRight4" />
                   <CustomTimePicker
@@ -464,7 +464,7 @@ export default function DataCollectionSettings(props) {
                     suffixIcon={null}
                     disabledTime={() => getDisabledTime('end', item)}
                     value={item.end ? dayjs(item.end, 'HH:mm') : null}
-                    onChange={(time, timeString) => onTimeChange(timeString, index, 'end')}
+                    onChange={(_time, timeString) => onTimeChange(timeString, index, 'end')}
                   />
                   <Icon
                     icon={index === 0 ? 'add_circle_outline' : 'remove_circle_outline'}

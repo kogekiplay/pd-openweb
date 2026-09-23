@@ -151,7 +151,7 @@ class AddRecord extends Component<any, any> {
                 addType={2}
                 notDialog={true}
                 changeWorksheetStatusCode={() => this.setState({ status: STATUS.ERROR })}
-                onAdd={(data, { continueAdd }) => {
+                onAdd={(_data, { continueAdd }) => {
                   if (!continueAdd) {
                     this.setState({ status: STATUS.SUCCESS });
                   }

@@ -46,7 +46,7 @@ class DatePickerBase extends Component<any, any> {
     return state;
   };
 
-  headerButtonOnClick = (event, action) => {
+  headerButtonOnClick = (_event, action) => {
     // 头部按钮会改这三样：切换年/月/日视图、挪光标日期、换翻页步长
     const data: { mode?: string; cursor?: Date; step?: number } = {};
 

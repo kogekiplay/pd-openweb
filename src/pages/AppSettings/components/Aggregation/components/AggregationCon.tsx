@@ -430,7 +430,7 @@ export default function AggregationCon(props) {
               icon="clear"
               className="clearIcon Hand textTertiary del hoverColorPrimary mLeft8 Font16"
               onClick={() => {
-                onUpdate(items.filter((o, i) => i !== num));
+                onUpdate(items.filter((_o, i) => i !== num));
               }}
             />
           </Tooltip>

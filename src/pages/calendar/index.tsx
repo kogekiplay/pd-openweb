@@ -26,7 +26,7 @@ export default class CalendarEntrypoint extends Component<any, any> {
     toolBar.init();
 
     const _this = this;
-    $('#calendar').on('openTask', function (event, taskId: string) {
+    $('#calendar').on('openTask', function (_event, taskId: string) {
       _this.setState({ openTaskDetail: true, taskId });
     });
   }

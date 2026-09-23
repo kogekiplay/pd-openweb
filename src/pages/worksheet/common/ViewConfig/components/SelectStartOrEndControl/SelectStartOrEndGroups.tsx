@@ -273,7 +273,7 @@ export default function SelectStartOrEndGroups(props) {
                 }
 
                 handleChange({
-                  calendarcids: JSON.stringify(calendarcids.filter((item, n) => n !== i)),
+                  calendarcids: JSON.stringify(calendarcids.filter((_item, n) => n !== i)),
                 });
               }}
             />

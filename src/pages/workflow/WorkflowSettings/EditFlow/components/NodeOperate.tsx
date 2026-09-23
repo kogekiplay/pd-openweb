@@ -315,12 +315,12 @@ export default class NodeOperate extends Component<any, any> {
 
     // 触发节点没有删除 || 禁用删除
     if (item.typeId === NODE_TYPE.FIRST || noDelete) {
-      _.remove(list, (o, index) => index === 4);
+      _.remove(list, (_o, index) => index === 4);
     }
 
     // 只有分支节点有复制
     if (item.typeId !== NODE_TYPE.BRANCH_ITEM) {
-      _.remove(list, (o, index) => _.includes([2, 3], index));
+      _.remove(list, (_o, index) => _.includes([2, 3], index));
     }
 
     // 当前分支节点的位置

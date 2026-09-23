@@ -142,7 +142,7 @@ class EditPrint extends React.Component<any, any> {
       },
       type: 33,
       init: {
-        BeforeUpload: (up, file) => {
+        BeforeUpload: (_up, file) => {
           if (RegExpValidator.getExtOfFileName(file.name).toLocaleLowerCase() !== SUFFIX[fileType]) {
             alert(_l('上传失败，文件错误'), 3);
             return false;
@@ -163,7 +163,7 @@ class EditPrint extends React.Component<any, any> {
           up.setOption('auto_start', true);
           up.disableBrowse();
         },
-        UploadProgress: (uploader, file) => {
+        UploadProgress: (_uploader, file) => {
           this.setState({ loading: true, suc: false, loadPer: file.percent });
         },
         FileUploaded: (up, file, info) => {
@@ -182,7 +182,7 @@ class EditPrint extends React.Component<any, any> {
           );
           up.disableBrowse(false);
         },
-        Error: (up, err, errTip) => {
+        Error: (_up, _err, errTip) => {
           this.setState({
             loading: false,
             suc: false,

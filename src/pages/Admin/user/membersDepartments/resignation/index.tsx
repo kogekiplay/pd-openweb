@@ -77,7 +77,7 @@ export default class extends React.Component<any, any> {
           dataIndex: 'accountId',
           fixed: 'left',
           disabled: true,
-          render: (text, record) => {
+          render: (_text, record) => {
             const { avatar, accountId, fullname } = record;
             return (
               <div className="flexRow alignItemsCenter">
@@ -109,7 +109,7 @@ export default class extends React.Component<any, any> {
           title: _l('部门'),
           dataIndex: 'departmentInfos',
           width: 200,
-          render: (text, record) => {
+          render: (_text, record) => {
             const { departmentInfos = [] } = record;
             const { fullDepartmentInfo = {} } = this.state;
             const txt = departmentInfos.map((item, index: number) => {
@@ -150,7 +150,7 @@ export default class extends React.Component<any, any> {
         {
           title: _l('职位'),
           dataIndex: 'jobInfos',
-          render: (text, record) => {
+          render: (_text, record) => {
             const { jobInfos = [] } = record;
             const txt = jobInfos.map((item, index: number) => {
               return item.jobName + (index < jobInfos.length - 1 ? ';' : '');
@@ -182,7 +182,7 @@ export default class extends React.Component<any, any> {
           title: _l('加入天数'),
           dataIndex: 'joinDays',
           width: 100,
-          render: (text, record) => {
+          render: (_text, record) => {
             return moment().diff(moment(record.createTime), 'days');
           },
         },
@@ -345,7 +345,7 @@ export default class extends React.Component<any, any> {
               dataIndex: 'action',
               width: 80,
               fixed: 'right',
-              render: (text, record) => {
+              render: (_text, record) => {
                 const prop = {
                   record,
                   authority,

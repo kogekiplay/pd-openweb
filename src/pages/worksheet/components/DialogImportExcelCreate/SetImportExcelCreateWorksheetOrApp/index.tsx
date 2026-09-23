@@ -405,7 +405,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
     } = this.props;
     const { rows = [], selectCells = [], rowNum }: { rows: RecordRow[]; [key: string]: any } = currentSheetInfo;
     const cells = rows.length ? rows[0].cells : [];
-    const showRows = rows.filter((it, index) => index === 0).concat(rows.slice(rowNum, rowNum + 10));
+    const showRows = rows.filter((_it, index) => index === 0).concat(rows.slice(rowNum, rowNum + 10));
     return (
       <Fragment>
         {importLoading && createType === 'worksheet' && (

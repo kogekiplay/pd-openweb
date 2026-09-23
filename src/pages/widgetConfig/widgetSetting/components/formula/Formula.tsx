@@ -78,7 +78,7 @@ export default class Formula extends React.Component<any, any> {
     }
   }
 
-  getFormulaFromDataSource(calType, dataSource) {
+  getFormulaFromDataSource(_calType, dataSource) {
     return dataSource;
   }
 

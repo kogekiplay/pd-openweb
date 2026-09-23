@@ -133,7 +133,7 @@ function SearchRecord(props) {
     setOpen(true);
   };
 
-  const onSelect = (data, { record }) => {
+  const onSelect = (_data, { record }) => {
     setSearchRecord(record);
     setOpen(false);
   };

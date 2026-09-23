@@ -439,7 +439,7 @@ export const operate = status => (dispatch: AppDispatch, getState: GetState) => 
  * 发送设置置顶的会话
  * @param {*} message
  */
-export const sendSetTop = message => (dispatch: AppDispatch, getState: GetState) => {
+export const sendSetTop = message => (_dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const { isTop } = message;
 

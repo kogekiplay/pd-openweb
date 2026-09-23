@@ -539,7 +539,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
         fname: file.name,
       },
       {
-        onProgress(loaded, total, percent) {
+        onProgress(loaded, _total, percent) {
           file.loaded = loaded;
           file.percent = Math.round(percent);
           trigger('UploadProgress', uploader, file);

@@ -142,7 +142,7 @@ export default function DraggableRecord(props) {
       return data;
     },
 
-    end(item, monitor) {
+    end(_item, monitor) {
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;
       const draggingItem = safeParse(localStorage.getItem('draggingHierarchyItem'));

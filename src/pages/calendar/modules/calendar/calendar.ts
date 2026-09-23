@@ -916,7 +916,7 @@ Calendar.Method = {
   },
 
   // 0 选中状态 1 离开状态
-  changeEventColor: function (event, jsEvent, type) {
+  changeEventColor: function (_event, jsEvent, type) {
     if (jsEvent.currentTarget == document) return;
     if (!$(jsEvent.currentTarget).hasClass('notAllDayOver')) {
       var rgbColor = $(jsEvent.currentTarget).css('background-color');

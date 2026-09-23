@@ -144,7 +144,7 @@ export default ({
                         minute: data.endTime ? parseInt(data.endTime.split(':')[1]) : 0,
                         second: 0,
                       }}
-                      onChange={(event, value) => {
+                      onChange={(_event, value) => {
                         updateSource({
                           endTime:
                             value.hour.toString().padStart(2, '0') + ':' + value.minute.toString().padStart(2, '0'),

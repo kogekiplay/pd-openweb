@@ -127,7 +127,7 @@ export default class GroupsList extends Component<any, any> {
         title: _l('操作'),
         dataIndex: 'option',
         width: 60,
-        render: (text, record) => {
+        render: (_text, record) => {
           const menu = (
             <div className="menuOption">
               {record.isVerified ? (
@@ -199,7 +199,7 @@ export default class GroupsList extends Component<any, any> {
   }
 
   //排序
-  handleChangeSort(pagination, filters, sorter) {
+  handleChangeSort(_pagination, _filters, sorter) {
     const { field, order } = sorter;
     const sortType = order === 'ascend' ? 1 : 0;
     this.setState(

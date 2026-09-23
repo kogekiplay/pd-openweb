@@ -140,7 +140,7 @@ export default function NotFillStatus(props) {
 
   const handleReceive = () => {
     const text = afterSubmit.content || '';
-    const output = text.replace(/#\{([^}]+)\}/g, (match, controlId: string) => {
+    const output = text.replace(/#\{([^}]+)\}/g, (_match, controlId: string) => {
       const control = _.find(fillData, l => l.controlId === controlId) || {};
 
       if (control.type === 14 && control.value && !_.isArray(safeParse(control.value))) {

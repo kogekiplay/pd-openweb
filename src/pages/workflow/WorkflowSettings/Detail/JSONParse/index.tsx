@@ -310,7 +310,7 @@ export default class JSONParse extends Component<any, any> {
                   height={0}
                   content={data.errorMessage}
                   formulaMap={data.formulaMap}
-                  onChange={(err, value) => this.updateSource({ errorMessage: value })}
+                  onChange={(_err, value) => this.updateSource({ errorMessage: value })}
                   updateSource={this.updateSource}
                 />
                 {!isIntegration && (

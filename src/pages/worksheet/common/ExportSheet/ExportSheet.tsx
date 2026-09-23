@@ -344,7 +344,7 @@ export default class ExportSheet extends Component<any, any> {
     const { columnsSelected } = this.state;
     const exportControlsId = [];
 
-    _.forEach(columnsSelected, (value, key) => {
+    _.forEach(columnsSelected, (_value, key) => {
       columnsSelected[key] && exportControlsId.push(key);
     });
 

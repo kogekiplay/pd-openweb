@@ -153,7 +153,7 @@ function MingoContent(props, ref) {
     useChat({
       sendImageUrlsWithImage: true,
       defaultMessages: getDefaultValueOfMessagesOfMingoCreateRecord(worksheetId),
-      aiCompletionApi: async (messages, { abortController, agentParams }) => {
+      aiCompletionApi: async (_messages, { abortController, agentParams }) => {
         const agentName = cache.current.isSmartFill ? 'record-smart-filler' : 'record-precise-filler';
         const formFieldsControls = buildFormFieldsControls(worksheetInfo, { from: 'generate-record' });
         // get(..., {}) 的兜底让类型变成 `{} | Account` 的联合，读字段就报错。

@@ -226,7 +226,7 @@ class EditBox extends React.Component<any, any> {
                   onClick={() => {
                     const newActionData = {
                       ...currentActionData,
-                      controls: (currentActionData.controls || []).filter((c, cIndex) => cIndex !== childIndex),
+                      controls: (currentActionData.controls || []).filter((_c, cIndex) => cIndex !== childIndex),
                     };
                     controls.length === 1
                       ? ruleItems.splice(actionIndex, 1)
@@ -460,7 +460,7 @@ class EditBox extends React.Component<any, any> {
             values={controls}
             activeTab={activeTab}
             dropDownData={dropData}
-            onChange={(key, value) => {
+            onChange={(_key, value) => {
               const newVal = [{ controls: value, message, type: 6 }];
               updateSelectRule('ruleItems', newVal);
             }}
@@ -600,7 +600,7 @@ class EditBox extends React.Component<any, any> {
             values={controls}
             activeTab={activeTab}
             dropDownData={dropData}
-            onChange={(key, value) => {
+            onChange={(_key, value) => {
               const newVal = [{ controls: value, message, type: 11 }];
               updateSelectRule('ruleItems', newVal);
             }}

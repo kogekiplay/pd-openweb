@@ -79,7 +79,7 @@ class DateTimePicker extends Component<any, any> {
     };
   };
 
-  dateOnChange = (event, value) => {
+  dateOnChange = (_event, value) => {
     const newValue = new Date(this.state.value);
 
     newValue.setFullYear(value.getFullYear(), value.getMonth(), value.getDate());
@@ -134,7 +134,7 @@ class DateTimePicker extends Component<any, any> {
     );
   };
 
-  timeOnChange = (event, value) => {
+  timeOnChange = (_event, value) => {
     const newValue = new Date(this.state.value);
 
     newValue.setHours(value.hour);

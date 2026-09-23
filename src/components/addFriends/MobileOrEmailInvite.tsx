@@ -214,7 +214,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
           onClick={() => {
             if (index !== 0) {
               this.setState({
-                list: this.state.list.filter((o, i) => i !== index),
+                list: this.state.list.filter((_o, i) => i !== index),
               });
             }
           }}

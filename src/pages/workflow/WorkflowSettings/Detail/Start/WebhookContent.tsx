@@ -364,7 +364,7 @@ export default class WebhookContent extends Component<any, any> {
                       type={2}
                       content={data.returnJson}
                       formulaMap={data.formulaMap}
-                      onChange={(err, value) => updateSource({ returnJson: value })}
+                      onChange={(_err, value) => updateSource({ returnJson: value })}
                       updateSource={updateSource}
                     />
                   )}

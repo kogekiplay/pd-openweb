@@ -70,7 +70,7 @@ function CommonBoard(props) {
 
   const [, drop] = useDrop({
     accept: ITEM_TYPE.RECORD,
-    hover(props, monitor) {
+    hover(_props, monitor) {
       function scroll() {
         const $wrap = _.get($listWrapRef, 'current');
         const offset = monitor.getClientOffset();

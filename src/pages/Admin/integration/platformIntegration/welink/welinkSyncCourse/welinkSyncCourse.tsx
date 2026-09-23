@@ -45,7 +45,7 @@ export default class WelinkSyncCourse extends React.Component<any, any> {
     });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(_nextProps, nextState) {
     return compareProps(this.state, nextState);
   }
 

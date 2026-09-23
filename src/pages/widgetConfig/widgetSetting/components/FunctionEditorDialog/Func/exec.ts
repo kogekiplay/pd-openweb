@@ -192,7 +192,7 @@ function formatFunctionResult(control, value) {
             .toFixed(12)
             .toString()
             .match(/^-?[\d.]+/)[0];
-          result = (result || '').replace(/\.([0-9]*[1-9])0+$|\.0+$/, (match, group) => {
+          result = (result || '').replace(/\.([0-9]*[1-9])0+$|\.0+$/, (_match, group) => {
             return group ? `.${group}` : '';
           });
         }

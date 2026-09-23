@@ -118,7 +118,7 @@ export default function FormHeader(props) {
                         ownerAccountId: ownerAccount.accountId,
                         projectId,
                         target: ownerRef.current,
-                        changeOwner: async (users, accountId) => {
+                        changeOwner: async (_users, accountId) => {
                           try {
                             const { account, record } = await updateRecordOwner({
                               worksheetId,

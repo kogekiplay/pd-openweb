@@ -63,7 +63,7 @@ export default ({ companyId, processId, relationId, selectNodeId, data, selectMs
         showCurrent
         content={selectMsg}
         formulaMap={data.formulaMap}
-        onChange={(err, value) => setMsg(value)}
+        onChange={(_err, value) => setMsg(value)}
         updateSource={updateSource}
       />
       <div className="mTop20">{_l('预览')}</div>

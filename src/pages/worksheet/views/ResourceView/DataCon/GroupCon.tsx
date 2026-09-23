@@ -206,7 +206,7 @@ export default function GroupCon(props) {
   useEffect(() => {
     let w = widthConfig[0] || minControlWidth;
     const controlList = getControls(props);
-    controlList.map((o, i) => {
+    controlList.map((_o, i) => {
       w = w + (widthConfig[i + 1] || minControlWidth);
     });
     setState({
@@ -232,7 +232,7 @@ export default function GroupCon(props) {
         [index]: width,
       };
       let w = widthConfig[0] || minControlWidth;
-      displayControlsInfo.map((o, i) => {
+      displayControlsInfo.map((_o, i) => {
         w = w + (widthConfig[i + 1] || minControlWidth);
       });
       setState({
@@ -399,7 +399,7 @@ export default function GroupCon(props) {
   let scrollLeftNum = headContainer.current && headContainer.current.scrollLeft;
   const allW = _.sum([
     displayControlsInfo.length <= 0 ? props.directoryWidth : widthConfig[0] || minControlWidth,
-    ...displayControlsInfo.map((o, index) => widthConfig[index + 1] || minControlWidth),
+    ...displayControlsInfo.map((_o, index) => widthConfig[index + 1] || minControlWidth),
   ]);
   return (
     <Wrap

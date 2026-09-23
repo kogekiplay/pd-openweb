@@ -262,9 +262,9 @@ export function getDefaultSortType(sortBy) {
 export function confirm(
   header: string,
   content: string,
-  showClose: boolean,
-  ckText: string,
-  minorContent: string,
+  _showClose: boolean,
+  _ckText: string,
+  _minorContent: string,
   yesText = undefined,
   noText = undefined,
 ) {

@@ -270,7 +270,7 @@ function contactInfoIsFresh(contactInfo, key?: string) {
   // 掩码校验：Account 里存的是 138****5678 这种打码值，拿缓存里的明文按位填回去应当相等。
   // 不相等说明用户在别处改了手机号/邮箱，缓存过期了。只有传了 key 才有得比。
   if (key && contactInfo[key] && md.global.Account[key]) {
-    const restored = md.global.Account[key].replace(/\*/g, (a, b) => contactInfo[key][b]);
+    const restored = md.global.Account[key].replace(/\*/g, (_a, b) => contactInfo[key][b]);
     if (restored !== contactInfo[key]) return false;
   }
 

@@ -143,7 +143,7 @@ export default props => {
           handleChangeConfig({ imageUploadLoading: true });
           up.disableBrowse();
         }}
-        onError={(up, err, errTip) => {
+        onError={(_up, _err, errTip) => {
           handleChangeConfig({ imageUploadLoading: false });
           alert(errTip, 2);
         }}

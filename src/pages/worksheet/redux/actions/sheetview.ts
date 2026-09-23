@@ -1262,7 +1262,7 @@ export function updateColumnStyles(changes) {
 }
 
 export function saveColumnStylesToLocal(changes) {
-  return (dispatch: AppDispatch, getState: GetState) => {
+  return (_dispatch: AppDispatch, getState: GetState) => {
     const { sheetview, base } = getState().sheet;
     const viewId = get(base, 'viewId');
 
@@ -1603,7 +1603,7 @@ export function refreshTreeOfTreeTableView(cb = () => {}) {
       type: 'UPDATE_TREE_TABLE_VIEW_DATA',
       value: {
         maxLevel,
-        treeMap: forEach(treeMap, (value, key) => {
+        treeMap: forEach(treeMap, (_value, key) => {
           try {
             treeMap[key].folded = get(oldTreeMap, key + '.folded');
           } catch (err) {

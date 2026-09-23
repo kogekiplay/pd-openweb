@@ -93,7 +93,7 @@ let InboxList = class InboxList extends React.Component<any, any> {
           });
         }
       })
-      .catch((jqXHR, textStatus) => {
+      .catch((_jqXHR, textStatus) => {
         if (textStatus !== 'abort') {
           alert(_l('加载失败，点击重试'), 2);
           this.setState({

@@ -130,7 +130,7 @@ export default function SetValue(props) {
                     icon="trash"
                     className="Font16 deleteBtn"
                     onClick={() => {
-                      setState({ actionItems: actionItems.filter((i, idx) => idx !== index) });
+                      setState({ actionItems: actionItems.filter((_i, idx) => idx !== index) });
                     }}
                   />
                 </div>

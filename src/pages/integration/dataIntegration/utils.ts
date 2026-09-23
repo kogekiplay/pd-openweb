@@ -200,7 +200,7 @@ export const getInitWorkSheetFields = (
   return isSourceAppType || withRowId ? rowIDField.concat(initWorkSheetFields) : initWorkSheetFields;
 };
 
-export const getMatchedFieldsOptions = (types, sourceField, destFields, isSourceAppType, isDestAppType) => {
+export const getMatchedFieldsOptions = (types, sourceField, destFields, _isSourceAppType, isDestAppType) => {
   const matchedTypeIds = _.uniq(((types || {})[sourceField.id]) || []).map(type => type.dataType);
   const matchedMdTypeIds = _.uniq(((types || {})[sourceField.id]) || []).map(type => type.mdType);
 

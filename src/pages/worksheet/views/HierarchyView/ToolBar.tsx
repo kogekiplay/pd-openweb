@@ -163,8 +163,8 @@ export default class ToolBar extends Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, index) => {
-        const value = (_.find(DISPLAY_HIERARCHY, (v, i) => i === index) || []).value;
+      onAction: (_action, index) => {
+        const value = (_.find(DISPLAY_HIERARCHY, (_v, i) => i === index) || []).value;
         this.changeDisplayLevel(value);
         this.actionSheetHandler.close();
       },

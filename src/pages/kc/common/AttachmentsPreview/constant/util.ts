@@ -73,7 +73,7 @@ function showKcVersionPanel(attachment, options) {
   return false;
 }
 
-function showDownload(attachment, options) {
+function showDownload(_attachment, options) {
   const { hideFunctions } = options;
 
   if (hideFunctions && hideFunctions.indexOf('download') > -1) {

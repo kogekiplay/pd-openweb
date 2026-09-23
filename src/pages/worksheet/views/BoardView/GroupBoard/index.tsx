@@ -47,7 +47,7 @@ const GroupBoard = props => {
   const isManualExpand = useRef(false);
   const [, drop] = useDrop({
     accept: ITEM_TYPE.RECORD,
-    hover(props, monitor) {
+    hover(_props, monitor) {
       handleAutoScroll(scrollViewRef, monitor);
     },
   });

@@ -1404,7 +1404,7 @@ export default class Approval extends Component<any, any> {
                     height={0}
                     content={data.explain}
                     formulaMap={data.formulaMap}
-                    onChange={(err, value) => this.updateSource({ explain: value })}
+                    onChange={(_err, value) => this.updateSource({ explain: value })}
                     updateSource={this.updateSource}
                   />
 

@@ -134,7 +134,7 @@ export default function (props) {
 
     if (isSameType([28], controlInfo)) {
       const list = [...new Array(parseInt(_.get(controlInfo, ['advancedSetting', 'max']) || '1', 10))].map(
-        (o, i) => i + 1 + '',
+        (_o, i) => i + 1 + '',
       );
       formatSettingData(list);
     }

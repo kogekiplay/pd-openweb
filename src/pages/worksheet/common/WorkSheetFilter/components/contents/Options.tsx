@@ -309,7 +309,7 @@ export default class Options extends Component<any, any> {
           .sort((a, b) => a.index - b.index)
           .map(option => ({ id: option.key, name: option.value }));
       } else if (control.type === 28) {
-        options = Array.from({ length: (control.advancedSetting || {}).max }).map((v, i) => ({
+        options = Array.from({ length: (control.advancedSetting || {}).max }).map((_v, i) => ({
           id: i + 1 + '',
           name: SCORE_TEXT[i],
         }));

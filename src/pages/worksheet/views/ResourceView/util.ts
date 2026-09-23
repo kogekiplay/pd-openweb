@@ -24,7 +24,7 @@ export const getTimesByYear = dateData => {
 };
 
 //获取某年的日历数组
-export const getViewTimesByYear = (view, date = moment()) => {
+export const getViewTimesByYear = (_view, date = moment()) => {
   return {
     list: [
       {
@@ -217,7 +217,7 @@ export const formatRecordPoint = (row, view, list = [], controls, currentTime) =
 
   const getTimeConfig = (time, isEnd?) => {
     let n = -1;
-    list.forEach((o, i) => {
+    list.forEach((_o, i) => {
       const key = type === 'Week' ? 'h' : type === 'Month' ? 'd' : 'm';
 
       // 和当前时间相等

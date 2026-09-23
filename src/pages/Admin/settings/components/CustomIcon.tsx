@@ -138,7 +138,7 @@ export default class CustomIcon extends Component<any, any> {
               getTokenParam={{
                 extend: preserveColor ? 'preserve' : '',
               }}
-              onUploaded={(up, files) => {
+              onUploaded={(_up, files) => {
                 this.cacheData.push(files);
                 !this.uploadLoadingKey && this.startLoading();
               }}
@@ -158,7 +158,7 @@ export default class CustomIcon extends Component<any, any> {
                   });
                 }
               }}
-              onError={(up, err, errTip) => {
+              onError={(_up, _err, errTip) => {
                 alert(errTip, 2);
               }}
             >

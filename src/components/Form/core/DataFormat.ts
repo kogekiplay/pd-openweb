@@ -651,7 +651,7 @@ export default class DataFormat {
     controlId,
     value,
     notInsertControlIds = false,
-    removeUniqueItem = (controlId?: string) => {},
+    removeUniqueItem = (_controlId?: string) => {},
     data,
     isInit = false,
     isDefaultValue = false,

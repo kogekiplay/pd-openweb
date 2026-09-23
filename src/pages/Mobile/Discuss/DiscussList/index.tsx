@@ -79,7 +79,7 @@ class DiscussList extends Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, index) => {
+      onAction: (_action, index) => {
         if (index === 0) {
           this.props.dispatch(actions.removeSheetDiscussion(discussionId, rowId));
         }

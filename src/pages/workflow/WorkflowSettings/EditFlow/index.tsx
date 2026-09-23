@@ -98,7 +98,7 @@ class EditFlow extends Component<any, any> {
     const $content = $box.find('.workflowEditContent');
     let maxWidth = $box.width();
 
-    $content.find('> .flexColumn > .workflowBranch, > .flexColumn > .approvalProcessBoxBox').map((i, item) => {
+    $content.find('> .flexColumn > .workflowBranch, > .flexColumn > .approvalProcessBoxBox').map((_i, item) => {
       if (maxWidth < ($(item).innerWidth() * this.state.scale) / 100) {
         maxWidth = ($(item).innerWidth() * this.state.scale) / 100;
       }

@@ -147,7 +147,7 @@ const Attachments = ({
             : {
                 className: 'w100',
                 options: {
-                  getToken: (files, a, b, options = {}) => {
+                  getToken: (files, _a, _b, options = {}) => {
                     return attachmentAjax.getScanUploadToken(
                       {
                         files,
@@ -189,7 +189,7 @@ const Attachments = ({
                     })),
                   ]);
                 },
-                onUploaded: (up, file) => {
+                onUploaded: (_up, file) => {
                   setAttachments(old =>
                     old.map(item => (item.id === file.id ? { ...item, loading: false, url: file.url } : item)),
                   );

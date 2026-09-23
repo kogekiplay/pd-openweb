@@ -208,7 +208,7 @@ export default function Aggregate(props) {
                 className="icon icon-clear_bold mLeft8 InlineBlock Hand"
                 onClick={() => {
                   setData({
-                    aggregateFields: aggregateFields.filter((a, i) => item !== i),
+                    aggregateFields: aggregateFields.filter((_a, i) => item !== i),
                   });
                 }}
               />

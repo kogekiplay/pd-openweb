@@ -95,7 +95,7 @@ export default class ArrayInput extends Component<any, any> {
               return <OtherField className="tagTextField overflow_ellipsis" item={{ cid, rcid }} {...this.props} />;
             }}
             getRef={tagtextarea => (this.$tagtextarea = tagtextarea)}
-            onChange={(err, value) => {
+            onChange={(_err, value) => {
               this.transferValue(value.trim());
             }}
           />

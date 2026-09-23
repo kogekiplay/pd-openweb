@@ -18,7 +18,7 @@ export default function SelectFields(props) {
         showSelectAll={actionType !== ACTION_VALUE_ENUM.ACTIVATE_TAB}
         values={actionItems}
         dropDownData={filterSysControls}
-        onChange={(key, value) => {
+        onChange={(_key, value) => {
           onSelectField(value);
         }}
       />

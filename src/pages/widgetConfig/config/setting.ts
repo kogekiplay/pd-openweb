@@ -259,7 +259,7 @@ export const DISPLAY_RC_TITLE_STYLE = [
   { icon: 'align_vertical_center', value: '1', text: _l('居中对齐') },
 ];
 
-export const DISPLAY_FROZEN_LIST = Array.from({ length: 11 }).map((item, index) => ({
+export const DISPLAY_FROZEN_LIST = Array.from({ length: 11 }).map((_item, index) => ({
   value: `${index}`,
   text: !index ? _l('不冻结') : _l('%0列', index),
 }));

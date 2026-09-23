@@ -348,7 +348,7 @@ export default function Join(props) {
                       ...(node.nodeConfig || {}),
                       config: {
                         ...(_.get(node, 'nodeConfig.config') || {}),
-                        conditions: (conditions || []).filter((a, index) => i !== index),
+                        conditions: (conditions || []).filter((_a, index) => i !== index),
                       },
                     },
                   });

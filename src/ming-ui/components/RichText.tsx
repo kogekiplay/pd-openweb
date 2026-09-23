@@ -345,7 +345,7 @@ class MyUploadAdapter {
   }
 
   // Initializes XMLHttpRequest listeners.
-  _initListeners(resolve, reject) {
+  _initListeners(_resolve, reject) {
     const xhr = this.xhr;
     const loader = this.loader;
     const genericErrorText = "Couldn't upload file:" + ` ${loader.file.name}.`;
@@ -724,7 +724,7 @@ const RichText = forwardRef((props, ref) => {
           }
 
           if (get(editorDom, 'current.editor.editing.view.document')) {
-            editorDom.current.editor.editing.view.document.on('clipboardInput', (evt, data) => {
+            editorDom.current.editor.editing.view.document.on('clipboardInput', (_evt, data) => {
               const clipboardData = data.dataTransfer.getData('text/html'); // 获取粘贴的 HTML 内容
 
               if (clipboardData && isWordContent(clipboardData)) {
@@ -757,7 +757,7 @@ const RichText = forwardRef((props, ref) => {
 
           lastSavedContentRef.current = editor.getData();
         }}
-        onChange={(event, editor) => {
+        onChange={(_event, editor) => {
           const currentData = editor.getData();
           if (normalizeContent(currentData) === normalizeContent(lastSavedContentRef.current)) return;
           changeSetting && changeSetting(true);
@@ -765,7 +765,7 @@ const RichText = forwardRef((props, ref) => {
             onActualSave(currentData);
           }
         }}
-        onBlur={(event, editor) => {
+        onBlur={(_event, editor) => {
           window.richTextDialogIsActive = false;
           const currentData = editor.getData();
 

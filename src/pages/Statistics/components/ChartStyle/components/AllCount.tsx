@@ -18,7 +18,7 @@ export default function allCountPanelGenerator(props) {
         <Switch
           size="small"
           checked={totalSwitch}
-          onClick={(checked, event) => {
+          onClick={(_checked, event) => {
             event.stopPropagation();
           }}
           onChange={checked => {

@@ -604,7 +604,7 @@ export default class Message extends Component<any, any> {
           type={2}
           content={messageContent}
           formulaMap={data.formulaMap}
-          onChange={(err, value) => this.setState({ messageContent: value.replace(/【/g, '[').replace(/】/g, ']') })}
+          onChange={(_err, value) => this.setState({ messageContent: value.replace(/【/g, '[').replace(/】/g, ']') })}
           updateSource={this.updateSource}
         />
 

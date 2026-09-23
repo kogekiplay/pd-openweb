@@ -410,7 +410,7 @@ export default class Push extends Component<any, any> {
                   <i
                     className="icon-trash workflowMessageDelete"
                     onClick={() => {
-                      this.updateSource({ buttons: data.buttons.filter((o, i) => i !== index) });
+                      this.updateSource({ buttons: data.buttons.filter((_o, i) => i !== index) });
                     }}
                   />
 
@@ -686,7 +686,7 @@ export default class Push extends Component<any, any> {
         {...height}
         content={data[key]}
         formulaMap={data.formulaMap}
-        onChange={(err, value) => this.updateSource({ [key]: value })}
+        onChange={(_err, value) => this.updateSource({ [key]: value })}
         updateSource={this.updateSource}
       />
     );

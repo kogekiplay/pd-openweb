@@ -146,7 +146,7 @@ export const updateNoDepartmentUsers = noDepartmentUsers => ({
 });
 
 // 重新邀请
-export const fetchReInvite = (accountIds, callback) => (dispatch: StructureDispatch, getState: StructureGetState) => {
+export const fetchReInvite = (accountIds, callback) => (_dispatch: StructureDispatch, getState: StructureGetState) => {
   const { projectId } = getState().current;
 
   importUserAjax
@@ -168,7 +168,7 @@ export const fetchReInvite = (accountIds, callback) => (dispatch: StructureDispa
 };
 
 // 取消邀请并移除
-export const fetchCancelImportUser = (accountIds, callback) => (dispatch: StructureDispatch, getState: StructureGetState) => {
+export const fetchCancelImportUser = (accountIds, callback) => (_dispatch: StructureDispatch, getState: StructureGetState) => {
   const { projectId } = getState().current;
 
   importUserAjax

@@ -5,7 +5,7 @@ import ConfirmAction from '../CompositeInput/ConfirmAction';
 import { useVoice } from '../VoiceProvider';
 import VoiceToText from '../VoiceToText';
 
-const VoiceInput = forwardRef((props, ref) => {
+const VoiceInput = forwardRef((_props, ref) => {
   const { step, text, loading, onStart, onReset, onGenerateRecord } = useVoice();
 
   const [visible, setVisible] = useState(false);

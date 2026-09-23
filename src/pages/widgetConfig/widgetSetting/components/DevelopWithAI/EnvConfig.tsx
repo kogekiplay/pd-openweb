@@ -240,7 +240,7 @@ function EnvValueShow({
           setRows(
             res.data
               .slice(0, maxLength)
-              .map(r => pickBy(r, (value, key) => key.length === 24))
+              .map(r => pickBy(r, (_value, key) => key.length === 24))
               .concat(res.data.length > maxLength ? '...' : []),
           );
         });

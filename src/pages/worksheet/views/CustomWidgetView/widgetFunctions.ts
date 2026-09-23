@@ -156,12 +156,12 @@ export const utils = {
               appId: args.appId || (args.worksheetInfo && args.worksheetInfo.appId),
               rowId: args.recordId,
               className: 'full',
-              updateSuccess: (rowIds, newRow) => {
+              updateSuccess: (_rowIds, newRow) => {
                 resolve({ action: 'update', value: newRow });
               },
             }
           : {
-              updateRows: (rowIds, newRow) => {
+              updateRows: (_rowIds, newRow) => {
                 resolve({ action: 'update', value: newRow });
               },
             }),

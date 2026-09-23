@@ -69,7 +69,7 @@ export default class BaseMessageComponent extends React.Component<any, any> {
 
     $(`.inboxBox .messageItem-${inboxId}`)
       .find('[data-accountid],[data-groupid]')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         if ($(ele).attr('bindUserCard')) return;
         $(ele).attr('bindUserCard', 'true');
         let accountId = $(ele).attr('data-accountid');

@@ -119,7 +119,7 @@ const SearchBox = props => {
     const responseMap = safeParse(responsemap || '[]');
     let rowData = {};
 
-    const newValue = getOptions().filter((i, idx) => `${idx}` === item.key);
+    const newValue = getOptions().filter((_i, idx) => `${idx}` === item.key);
     responseMap.map(i => {
       if (!i.subid && _.isUndefined(data[i.cid])) {
         rowData[i.cid] = clearValue((newValue[0] || {})[i.id]);

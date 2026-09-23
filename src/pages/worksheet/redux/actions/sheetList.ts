@@ -255,7 +255,7 @@ export function updateSheetListIsUnfold(visible) {
   };
 }
 
-export function updateAppItemInfo(id, type, name: string) {
+export function updateAppItemInfo(_id, type, name: string) {
   return function (dispatch) {
     if (type) {
       dispatch(updatePageInfo({ pageName: name }));

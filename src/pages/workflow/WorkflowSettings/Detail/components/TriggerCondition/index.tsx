@@ -15,7 +15,7 @@ export default props => {
         return item;
       });
     } else {
-      newData = props.data.filter((item, index: number) => i !== index);
+      newData = props.data.filter((_item, index: number) => i !== index);
     }
 
     props.updateSource(newData);

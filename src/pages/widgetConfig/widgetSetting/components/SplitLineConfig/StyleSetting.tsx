@@ -44,7 +44,7 @@ const renderItem = newVal => {
 };
 
 const getDropData = () => {
-  return Array.from({ length: 3 }).map((item, index) => {
+  return Array.from({ length: 3 }).map((_item, index) => {
     const newVal = String(index);
     return {
       value: newVal,

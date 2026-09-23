@@ -283,7 +283,7 @@ class TaskControl extends Component<any, any> {
               disableRules={true}
               data={controlData}
               widgetStyle={{ align_pc: '1', titlelayout_pc: '2', titlewidth_pc: '84' }}
-              onChange={(values, ids, { controlId }: { controlId?: string; [key: string]: any }) => this.updateFieldsData({ controlId })}
+              onChange={(_values, _ids, { controlId }: { controlId?: string; [key: string]: any }) => this.updateFieldsData({ controlId })}
               onBlur={(controlId: string) => this.updateFieldsData({ isBlur: true, controlId })}
             />
           </div>

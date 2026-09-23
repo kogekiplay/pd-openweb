@@ -423,7 +423,7 @@ const folderSelectMethods = defineMethods<FolderSelectFields>()({
           $folderContent
             .find('.folderUrl .positionUrl span.flex')
             .prevAll()
-            .each(function (i, v) {
+            .each(function (_i, v) {
               prevWidth += $(v).width();
             });
           $positionUrl.css({ 'margin-left': '-' + prevWidth + 'px' });
@@ -945,7 +945,7 @@ const folderSelectMethods = defineMethods<FolderSelectFields>()({
 
         // 添加 title (tips)
         let html = '';
-        $folderPath.children().each(function (i, el) {
+        $folderPath.children().each(function (_i, el) {
           el = $(el);
           html += el.attr('title') ? el.attr('title') : $(el).html();
         });
@@ -1294,7 +1294,7 @@ const folderSelectMethods = defineMethods<FolderSelectFields>()({
       });
   },
   //保存位置
-  savePos: function (resObj?, isFolder?) {
+  savePos: function (_resObj?, isFolder?) {
     var folderSelect = this;
     var settings = folderSelect.settings;
     if (isFolder) {

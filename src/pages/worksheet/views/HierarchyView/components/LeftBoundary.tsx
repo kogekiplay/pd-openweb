@@ -15,7 +15,7 @@ export default function LeftBoundary(props) {
       const $wrap = document.querySelector('.hierarchyViewWrap');
       return (get(data, 'path') || []).length > 1 && $wrap.scrollLeft === 0;
     },
-    drop(item, monitor) {
+    drop(_item, monitor) {
       const data = monitor.getItem();
       if (!data) return;
       if (data.path.length > 1) {

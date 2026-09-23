@@ -33,7 +33,7 @@ class EditCon extends React.Component<any, any> {
     dispatch(updateRulesByRuleId(data));
   };
 
-  addUser = (data, type) => {
+  addUser = (_data, type) => {
     const $this = this;
     const { projectId } = this.props;
     const SelectUserSettingsForAdd = {
@@ -56,7 +56,7 @@ class EditCon extends React.Component<any, any> {
     });
   };
 
-  addDept = (data, type) => {
+  addDept = (_data, type) => {
     const { projectId } = this.props;
     const $this = this;
 

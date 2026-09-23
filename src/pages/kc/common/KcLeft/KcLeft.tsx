@@ -430,7 +430,7 @@ class KcLeft extends Component<any, any> {
     }
   };
 
-  renderProjectRoots = (projectId: string, index: number, filterRoots) => {
+  renderProjectRoots = (projectId: string, _index: number, filterRoots) => {
     projectId = projectId || '';
     const { projectRootKeywords = {} } = this.state;
     const isFolded = this.state.foldedProjects.includes(projectId);

@@ -165,13 +165,13 @@ export default function PersonalAccessToken() {
       title: _l('名称'),
       dataIndex: 'name',
       width: 200,
-      render: (text, record) => <div className="ellipsis">{record.name}</div>,
+      render: (_text, record) => <div className="ellipsis">{record.name}</div>,
     },
     {
       title: _l('令牌'),
       dataIndex: 'rawToken',
       width: '32%',
-      render: (text, record) => {
+      render: (_text, record) => {
         const visible = visibleTokenIds.includes(record.id);
         const tokenText = visible ? record.rawToken : formatMaskedToken(record.rawToken);
 
@@ -210,7 +210,7 @@ export default function PersonalAccessToken() {
       title: _l('状态'),
       dataIndex: 'status',
       width: '10%',
-      render: (text, record) => (
+      render: (_text, record) => (
         <div className="status">
           <span className={`statusBadge ${STATUS[record.status]?.className}`}>{STATUS[record.status]?.text}</span>
           {record.status === 3 && (
@@ -238,7 +238,7 @@ export default function PersonalAccessToken() {
       dataIndex: 'actions',
       width: '6%',
       align: 'right',
-      render: (text, record) => (
+      render: (_text, record) => (
         <div className="actions">
           <Trigger
             action={['click']}

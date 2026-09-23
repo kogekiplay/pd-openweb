@@ -681,7 +681,7 @@ function AddWorkflowDialog(props) {
                 }
                 text={null}
                 value={checkedDialog.list.map(l => l.id)}
-                onClick={(checkd, value) => {
+                onClick={(_checkd, value) => {
                   setCheckedDialog({
                     ...checkedDialog,
                     checked: value,

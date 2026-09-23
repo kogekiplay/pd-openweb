@@ -403,7 +403,7 @@ class TaskNavigation extends Component<any, any> {
   }
 
   renderFolderAvatar() {
-    $('#taskNavigator .folderCharge').each((i, ele) => {
+    $('#taskNavigator .folderCharge').each((_i, ele) => {
       const $ele = $(ele);
       if ($ele.data('hasbusinesscard')) return;
 
@@ -974,7 +974,7 @@ class TaskNavigation extends Component<any, any> {
             let sb = '';
             let $item;
             let fileName;
-            $.each($projectFolder, (i, item) => {
+            $.each($projectFolder, (_i, item) => {
               $item = $(item);
               if ((fileId && $item.data('fileid') == fileId) || !$item.find('.txtProjectNameEdit').val().trim()) {
                 return true;
@@ -1533,7 +1533,7 @@ class TaskNavigation extends Component<any, any> {
   setNetworkState() {
     const $networks = $('#taskNavigator .networkFolderList');
     const networkArr = [];
-    $.each($networks, (i, e) => {
+    $.each($networks, (_i, e) => {
       if ($(e).find('.folderList').is(':visible')) {
         networkArr.push($(e).data('projectid'));
       }
@@ -1547,7 +1547,7 @@ class TaskNavigation extends Component<any, any> {
   setFolderState = function () {
     const $folders = $('#taskNavigator .folderList .projectFolder');
     const folderArr = [];
-    $.each($folders, (i, e) => {
+    $.each($folders, (_i, e) => {
       if ($(e).find('.projectFolderUl').is(':visible')) {
         folderArr.push($(e).data('fileid'));
       }
@@ -1852,7 +1852,7 @@ class TaskNavigation extends Component<any, any> {
     const projectId = $projectFolder.closest('.networkFolderList').attr('data-projectid');
     const fileName = $this.val().trim();
 
-    $.each($lis, (i, item) => {
+    $.each($lis, (_i, item) => {
       folderIdArr.push($(item).data('id'));
     });
 

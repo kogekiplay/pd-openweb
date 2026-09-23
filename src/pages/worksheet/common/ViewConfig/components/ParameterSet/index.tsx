@@ -373,7 +373,7 @@ export default function ParameterSet(params) {
           disableRules
           data={paramSettings}
           isCreate={true}
-          onChange={(data, ids, { controlId }: { controlId?: string; [key: string]: any }) => {
+          onChange={(data, _ids, { controlId }: { controlId?: string; [key: string]: any }) => {
             if (!controlId) {
               return;
             }

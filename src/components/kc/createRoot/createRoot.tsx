@@ -710,7 +710,7 @@ const rootSettingsMethods = defineMethods<RootSettingsFields>()({
     //成员名片层
     $('.folderMemberBox ul')
       .find('.imgMemberBox[data-account-id]')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         const root = createRoot(ele);
         root.render(
           <UserHead
@@ -925,7 +925,7 @@ const rootSettingsMethods = defineMethods<RootSettingsFields>()({
         $('.folderMembers .folderMemberBox ul').append(memberHtml);
         $('.folderMemberBox ul')
           .find('.imgMemberBox[data-account-id]:last')
-          .each((i, ele) => {
+          .each((_i, ele) => {
             const root = createRoot(ele);
             root.render(
               <UserHead
@@ -1000,7 +1000,7 @@ const rootSettingsMethods = defineMethods<RootSettingsFields>()({
               $('.folderMembers .folderMemberBox ul').append(memberHtml);
               $('.folderMemberBox ul')
                 .find('.imgMemberBox[data-account-id]:last')
-                .each((i, ele) => {
+                .each((_i, ele) => {
                   const root = createRoot(ele);
                   root.render(
                     <UserHead

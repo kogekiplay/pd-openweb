@@ -71,7 +71,7 @@ export default ({ projectId, processId, relationId, selectNodeId, data, text, mi
                 minute: data.dayTime ? parseInt(data.dayTime.split(':')[1]) : 0,
                 second: 0,
               }}
-              onChange={(event, value) => {
+              onChange={(_event, value) => {
                 onChange(
                   Object.assign({}, data, {
                     dayTime: value.hour.toString().padStart(2, '0') + ':' + value.minute.toString().padStart(2, '0'),

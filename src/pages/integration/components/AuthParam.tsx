@@ -202,7 +202,7 @@ function AuthParam(props) {
             content={_.get(cache, 'current.node.sendContent')}
             formulaMap={_.get(cache, 'current.node.formulaMap')}
             isIntegration={true}
-            onChange={(err, value) => {
+            onChange={(_err, value) => {
               cache.current.node = { ...cache.current.node, sendContent: value };
               setNode(cache.current.node);
             }}

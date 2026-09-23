@@ -57,7 +57,7 @@ export default class ImportApp extends React.Component<any, any> {
         mime_types: [{ extensions: 'mdy' }],
       },
       init: {
-        BeforeUpload: (up, file) => {
+        BeforeUpload: (_up, file) => {
           if (RegExpValidator.getExtOfFileName(file.name) != 'mdy') {
             alert(_l('上传失败，文件类型错误'), 2);
             return false;
@@ -69,10 +69,10 @@ export default class ImportApp extends React.Component<any, any> {
         FilesAdded: up => {
           up.setOption('auto_start', true);
         },
-        UploadProgress: (uploader, file) => {
+        UploadProgress: (_uploader, file) => {
           this.setState({ file });
         },
-        FileUploaded: (up, file, info) => {
+        FileUploaded: (_up, file, info) => {
           const { key } = info.response;
           this.setState(
             {

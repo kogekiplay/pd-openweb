@@ -361,7 +361,7 @@ class SelectAIModelDialog extends Component<any, any> {
                   <Checkbox
                     size="small"
                     checked={checkedModelIds.has(item.id)}
-                    onClick={(checked: boolean, value, e) => {
+                    onClick={(_checked: boolean, _value, e) => {
                       e.stopPropagation();
                       this.toggleModel(item.id);
                       this.setState({ selectModel: item.id });
@@ -609,7 +609,7 @@ class SelectAIModelDialog extends Component<any, any> {
                           size="small"
                           checked={brandState === 'all'}
                           clearselected={brandState === 'some'}
-                          onClick={(checked: boolean, value, e) => {
+                          onClick={(_checked: boolean, _value, e) => {
                             e.stopPropagation();
                             this.toggleBrand(item.developer.id);
                           }}

@@ -266,7 +266,7 @@ class TaskTree extends Component<any, any> {
   }
 
   updateChargeHeaderAvatar(param) {
-    $('#taskList .listStageTaskContent .chargeImgWrap').each((index: number, ele) => {
+    $('#taskList .listStageTaskContent .chargeImgWrap').each((_index: number, ele) => {
       const $ele = $(ele);
       if ($ele.data('hasbusinesscard')) return;
       const data = {
@@ -470,7 +470,7 @@ class TaskTree extends Component<any, any> {
 
           if (taskTreeSettings.pageIndex === 1) {
             $('#taskList').html(doT.template(treeMaster)(source));
-            $('#taskList .chargeImgWrap').each((index: number, ele) => {
+            $('#taskList .chargeImgWrap').each((_index: number, ele) => {
               this.renderUserCard(ele);
             });
           } else if (listStatus === 1 || listStatus === 0 || stageId === 1) {
@@ -489,7 +489,7 @@ class TaskTree extends Component<any, any> {
               $('#taskList .singleFolderTask:first').append(allTasks);
             }
 
-            $('#taskList .chargeImgWrap').each((index: number, ele) => {
+            $('#taskList .chargeImgWrap').each((_index: number, ele) => {
               this.renderUserCard(ele);
             });
           } else {
@@ -497,7 +497,7 @@ class TaskTree extends Component<any, any> {
               // 未完成
               let allTasks = doT.template(treeMaster)(source);
               $('#taskList .singleFolderTask:first').append(allTasks);
-              $('#taskList .chargeImgWrap').each((index: number, ele) => {
+              $('#taskList .chargeImgWrap').each((_index: number, ele) => {
                 this.renderUserCard(ele);
               });
             }
@@ -514,7 +514,7 @@ class TaskTree extends Component<any, any> {
               // 已完成
               let allTasks = doT.template(treeMaster)(alreadly);
               $('#taskList .singleFolderTask:last').append(allTasks);
-              $('#taskList .chargeImgWrap').each((index: number, ele) => {
+              $('#taskList .chargeImgWrap').each((_index: number, ele) => {
                 this.renderUserCard(ele);
               });
             }
@@ -632,7 +632,7 @@ class TaskTree extends Component<any, any> {
             $li.find('.treeLoadingSingleTask').remove();
           }
 
-          $('#taskList .chargeImgWrap').each((index: number, ele) => {
+          $('#taskList .chargeImgWrap').each((_index: number, ele) => {
             this.renderUserCard(ele);
           });
         } else {
@@ -812,7 +812,7 @@ class TaskTree extends Component<any, any> {
         }
       }
 
-      $('#taskList .chargeImgWrap').each((index: number, ele) => {
+      $('#taskList .chargeImgWrap').each((_index: number, ele) => {
         this.renderUserCard(ele);
       });
       // 计算加一

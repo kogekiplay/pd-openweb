@@ -143,7 +143,7 @@ class Upload extends Component<any, any> {
         FilesAdded() {
           _this.setState({ loading: true });
         },
-        FileUploaded(up, file, res) {
+        FileUploaded(_up, _file, res) {
           // 【这里不再 JSON.parse】plupload 给的是原始响应字符串，
           // createUploader 给的是已经解析并补好字段的对象。
           const data = res.response;
@@ -219,7 +219,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
         dataIndex: 'appName',
         className: 'flex minWidth0',
         ellipsis: true,
-        render: (text, item) => {
+        render: (_text, item) => {
           return (
             <div className="appName overflow_ellipsis flexRow valignWrapper">
               <img className="avatarUrl" src={item.avatarUrl} />
@@ -233,7 +233,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
         dataIndex: 'about',
         className: 'flex minWidth0',
         ellipsis: true,
-        render: (text, item) => {
+        render: (_text, item) => {
           return <div className="about overflow_ellipsis">{item.about || '-'}</div>;
         },
       },
@@ -248,7 +248,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
         dataIndex: 'appSecret',
         width: 330,
         ellipsis: true,
-        render: (text, item) => {
+        render: (_text, item) => {
           const { appSecretVisible } = item;
           const isHovered = this.state.hoveredSecretId === item.appId;
 
@@ -295,7 +295,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
         dataIndex: 'operation',
         width: 60,
         fixed: 'right',
-        render: (text, record) => {
+        render: (_text, record) => {
           return <Moreop onEdit={() => this.handleEdit(record)} onDelete={() => this.handleDelete(record)} />;
         },
       },

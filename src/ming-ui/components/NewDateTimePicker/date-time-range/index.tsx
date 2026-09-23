@@ -123,7 +123,7 @@ class DateTimeRange extends Component<any, any> {
     this.props.onVisibleChange(!this.state.menuOpened);
   };
 
-  onChange = (event, value, config) => {
+  onChange = (_event, value, config) => {
     let newValue = null;
     let label = this.props.placeholder;
 

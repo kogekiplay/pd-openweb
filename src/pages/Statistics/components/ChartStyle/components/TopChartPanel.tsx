@@ -77,7 +77,7 @@ export default function topChartPanelGenerator(props) {
           <Switch
             size="small"
             checked={valueProgressVisible}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -96,7 +96,7 @@ export default function topChartPanelGenerator(props) {
           <Switch
             size="small"
             checked={topStyle}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {

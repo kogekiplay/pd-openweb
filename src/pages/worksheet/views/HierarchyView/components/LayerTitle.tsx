@@ -51,7 +51,7 @@ export default function LayerTitle({
   const context = useContext(SheetContext);
   return (
     <ItemTitle scale={scale} isStraightLine={isStraightLine}>
-      {Array.from({ length: layerLength }).map((item, index) => {
+      {Array.from({ length: layerLength }).map((_item, index) => {
         const value = titles[index];
         return (
           <li key={index}>

@@ -83,7 +83,7 @@ function RelateRecordTable(props) {
         relationWorksheetId: base.worksheetId,
         rules: relateWorksheetInfo.rules,
         isDraft,
-        updateRows: (ids, newRecord) => {
+        updateRows: (_ids, newRecord) => {
           updateRecord(newRecord);
         },
         projectId: relateWorksheetInfo.projectId,

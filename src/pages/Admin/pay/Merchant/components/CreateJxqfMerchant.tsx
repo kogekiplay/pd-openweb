@@ -294,7 +294,7 @@ export default class CreateJxqfMerchant extends Component<any, any> {
       currentWeChatServiceAccount,
     } = this.state;
     const { publicFormUrl, signUrl } = merchant;
-    const description = (_.find(STEPS, (item, index) => step === index) || {}).description;
+    const description = (_.find(STEPS, (_item, index) => step === index) || {}).description;
 
     return (
       <Fragment>

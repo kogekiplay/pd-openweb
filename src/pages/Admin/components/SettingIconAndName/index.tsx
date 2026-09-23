@@ -97,11 +97,11 @@ export default class SettingIconAndName extends Component<any, any> {
         bucket: 4,
         type: 4,
       },
-      onUploaded: (up, file) => {
+      onUploaded: (_up, file) => {
         const { serverName, key, fileName } = file;
         this.setState({ iconUrl: `${serverName}${key}`, icon: fileName, file });
       },
-      onError: (up, err, errTip) => {
+      onError: (_up, _err, errTip) => {
         alert(errTip, 2);
       },
     };

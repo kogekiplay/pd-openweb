@@ -234,7 +234,7 @@ export default function ExternalLinkDialog(props) {
                   return <TagWrapper className="overflow_ellipsis">{tagName}</TagWrapper>;
                 }}
                 ref={tagTextAreaRef}
-                onChange={(err, value) => setAppInfo({ urlTemplate: value.trim() })}
+                onChange={(_err, value) => setAppInfo({ urlTemplate: value.trim() })}
               />
               <Trigger
                 action={['click']}

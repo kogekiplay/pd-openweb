@@ -277,7 +277,7 @@ export default function yAxisPanelGenerator(props) {
           <Switch
             size="small"
             checked={switchChecked}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -321,7 +321,7 @@ export default function yAxisPanelGenerator(props) {
             <Switch
               size="small"
               checked={rightYSwitchChecked}
-              onClick={(checked, event) => {
+              onClick={(_checked, event) => {
                 event.stopPropagation();
               }}
               onChange={checked => {

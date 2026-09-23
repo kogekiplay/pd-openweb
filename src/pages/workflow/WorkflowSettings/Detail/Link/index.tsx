@@ -278,7 +278,7 @@ export default class Link extends Component<any, any> {
                 height={0}
                 content={data.linkName}
                 formulaMap={data.formulaMap}
-                onChange={(err, value) => this.updateSource({ linkName: value })}
+                onChange={(_err, value) => this.updateSource({ linkName: value })}
                 updateSource={this.updateSource}
               />
             </div>

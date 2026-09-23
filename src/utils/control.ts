@@ -2078,7 +2078,7 @@ export function convertControlTypeToAiRecommendControlType(control?: FormControl
  * aiGeneratedControls 会被加入到字段列表里，但是别名是不可以重复的
  * 这个函数的目的就是处理 aiGeneratedControls 的 code 属性，当这个 别名在 existingControls 里存在时，自动在 code 后面加上 _1, _2, _3, ...
  */
-export function changeCodeOfAIGenControl(existingControls: FormControl[], aiGeneratedControls: FormControl[]) {
+export function changeCodeOfAIGenControl(_existingControls: FormControl[], aiGeneratedControls: FormControl[]) {
   return aiGeneratedControls;
   // if (!aiGeneratedControls || !Array.isArray(aiGeneratedControls)) {
   //   return aiGeneratedControls;

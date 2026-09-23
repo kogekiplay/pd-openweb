@@ -332,7 +332,7 @@ export default class CC extends Component<any, any> {
                   type={2}
                   content={data.sendContent}
                   formulaMap={data.formulaMap}
-                  onChange={(err, value) => this.updateSource({ sendContent: value })}
+                  onChange={(_err, value) => this.updateSource({ sendContent: value })}
                   updateSource={this.updateSource}
                 />
                 <div className="mTop10">

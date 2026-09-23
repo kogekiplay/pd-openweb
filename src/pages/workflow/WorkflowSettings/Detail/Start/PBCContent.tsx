@@ -591,7 +591,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
                   <i
                     className="icon-trash Font16 textSecondary hoverColorPrimary mLeft10 pointer"
                     onClick={() => {
-                      let newOptions = selectItem.options.filter((o, i) => i !== index);
+                      let newOptions = selectItem.options.filter((_o, i) => i !== index);
 
                       if (!newOptions.length) {
                         newOptions = newOptions.concat({ key: '', value: '' });

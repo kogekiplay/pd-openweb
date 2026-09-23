@@ -664,7 +664,7 @@ const BaseCard = props => {
                     worksheetId,
                     updateType: row.sys_lock ? 42 : 41,
                   },
-                  (err, resdata) => {
+                  (_err, resdata) => {
                     if (resdata) {
                       onUpdate({
                         // 层级只更新锁定属性

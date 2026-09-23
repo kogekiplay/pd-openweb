@@ -101,13 +101,13 @@ function cellErrors(state = {}, action: ReduxAction) {
 function persistedCellErrors(state = {}, action: ReduxAction) {
   switch (action.type) {
     case 'UPDATE_CELL_ERRORS':
-      return _.pickBy({ ...state, ...(action.persisted || {}) }, (error, key) => key in (action.value || {}));
+      return _.pickBy({ ...state, ...(action.persisted || {}) }, (_error, key) => key in (action.value || {}));
     default:
       return state;
   }
 }
 
-function lastAction(state, action: ReduxAction) {
+function lastAction(_state, action: ReduxAction) {
   return action;
 }
 

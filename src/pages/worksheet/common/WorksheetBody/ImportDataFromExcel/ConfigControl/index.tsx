@@ -821,7 +821,7 @@ export default class ConfigControl extends Component<any, any> {
                   multipleHideDropdownNav
                   maxSelectNum={5}
                   filter
-                  onChange={(e, controlIds) => {
+                  onChange={(_e, controlIds) => {
                     this.setState({
                       repeatConfig: Object.assign({}, repeatConfig, {
                         controlIds,

@@ -139,7 +139,7 @@ class Dropdown extends Component<any, any> {
     }
   }
 
-  handleChange(event, value) {
+  handleChange(_event, value) {
     if (this.props.value == undefined) {
       this.setState({
         value,

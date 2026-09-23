@@ -3,15 +3,15 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-23T04:52:25.696Z",
-  "rawCount": 13014,
+  "generatedAt": "2026-09-23T05:04:26.074Z",
+  "rawCount": 13013,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 13014,
+  "keptCount": 13013,
   "uniqueKeys": 3014,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
@@ -1962,7 +1962,7 @@
     "src/pages/widgetConfig/widgetSetting/components/CustomWidget/CustomSaveConfig.tsx|TS2353": 2,
     "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/ChatLLM.tsx|TS2322": 3,
     "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/ChatLLM.tsx|TS2339": 3,
-    "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/ChatLLM.tsx|TS2353": 2,
+    "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/ChatLLM.tsx|TS2353": 1,
     "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/ChatLLM.tsx|TS2554": 2,
     "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/ChatLLM.tsx|TS2739": 1,
     "src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/Markdown.tsx|TS2339": 13,

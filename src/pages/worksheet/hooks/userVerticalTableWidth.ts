@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { getMaxControlNameWidthOfControls } from '../components/BaseColumnHead/getTableColumnWidth';
 
-function getControlWidth(visibleColumns, i, sheetColumnWidths = {}) {
+function getControlWidth(_visibleColumns, i, sheetColumnWidths = {}) {
   // const control = visibleColumns[i];
   // if (control && control.width) {
   //   return control.width;

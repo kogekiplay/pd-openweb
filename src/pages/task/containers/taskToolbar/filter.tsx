@@ -517,7 +517,7 @@ class Filter extends Component<any, any> {
   /**
    * 切换标签
    */
-  switchTags = (evt, ids) => {
+  switchTags = (_evt, ids) => {
     this.props.dispatch(updateTaskTags(ids));
   };
 
@@ -562,7 +562,7 @@ class Filter extends Component<any, any> {
             label={label}
             multipleLevel={false}
             multipleHideDropdownNav
-            onChange={(evt, keys) => this.switchCustoms(item.controlId, keys)}
+            onChange={(_evt, keys) => this.switchCustoms(item.controlId, keys)}
           />
           <div className="mTop10">
             {customs.map((key, i) =>

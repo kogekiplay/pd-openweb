@@ -56,7 +56,7 @@ export default class UploadFile extends Component<any, any> {
       },
       type,
       init: {
-        Error: (up, err) => {
+        Error: (_up, err) => {
           const {
             file: { name },
             code,
@@ -80,10 +80,10 @@ export default class UploadFile extends Component<any, any> {
           up.setOption('auto_start', true);
           onFilesAdded(up);
         },
-        UploadProgress: (uploader, file) => {
+        UploadProgress: (_uploader, file) => {
           this.setState({ file });
         },
-        FileUploaded: (up, file, info) => {
+        FileUploaded: (_up, file, info) => {
           this.setState({ file });
           fileUploaded({ ...file, key: info.response.key });
         },

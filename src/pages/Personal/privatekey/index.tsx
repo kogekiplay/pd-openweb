@@ -120,7 +120,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     });
   };
 
-  handleCloseApply = (event, result) => {
+  handleCloseApply = (_event, result) => {
     location.hash = '';
     this.setState({ isApply: false, loading: true, ...(result ? { pageIndex: 1 } : {}) }, () => {
       this.getLicenseList(() => {

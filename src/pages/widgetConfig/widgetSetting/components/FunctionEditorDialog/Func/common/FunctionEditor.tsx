@@ -492,7 +492,7 @@ export default class Function {
         label: control.controlName,
         type: 'variable',
         // 字段不是往文本里插名字，而是回调宿主去插 $id$（与 CM5 的 pick handler 一致）
-        apply: (view, completion, from, to) => {
+        apply: (view, _completion, from, to) => {
           view.dispatch({ changes: { from, to, insert: '' } });
           this.insertTagToEditor({
             value: [get(control, 'workflowGroupId', ''), get(control, 'controlId')].filter(identity).join('-'),
@@ -512,7 +512,7 @@ export default class Function {
       options.push({
         label: fnName,
         type: 'function',
-        apply: (view, completion, from, to) => {
+        apply: (view, _completion, from, to) => {
           // CM5 是在 change 事件里看 origin === 'complete' 再 insertBrackets()；
           // CM6 直接在 apply 里一次事务搞定：插入 "FN()" 并把光标放进括号中间。
           const insert = fnName + '()';
