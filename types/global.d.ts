@@ -579,6 +579,34 @@ interface Window {
   mingoInitialHandoffKey?: string;
   /** 打开 Mingo 时要进入的分组 */
   mingoInitialGroupId?: string;
+  /** 公开表单 / 公开查询 / 记录填写链接的分享者（接口返回的 shareAuthor）；图表按「有值即公开分享」判断 */
+  shareAuthor?: string;
+  /** 工作流推送的提示音播放器（桌面 / 移动端的 workflow socket 各建一个 audio 元素） */
+  workflowAudioPlayer?: HTMLAudioElement;
+  /** 拖拽排序时被拖元素的尺寸，占位块照它画（SortableList、自定义按钮分组写入，拖完清成 undefined） */
+  MD_DRAG_ITEM?: { width: number; height: number } | undefined;
+  /** 已渲染的表单实例 id：useFormEventManager 挂载时追加、卸载时摘掉，用来隔离各表单的键盘事件 */
+  FormActiveTabId?: string[];
+  /** 刷新应用页头的分组 / 应用详情（AppDetail、LeftAppGroup 挂载时挂上） */
+  updateAppGroups?: () => void;
+  /** 有自定义视图插件（iframe）挂着：WidgetContainer 挂载置 true、卸载置 false */
+  customWidgetViewIsActive?: boolean;
+  /** 表格单元格正在被主动聚焦（WorksheetTable / CellControls 置 true，10ms 后没进编辑就清回 false） */
+  handFocusCell?: boolean;
+  /** 甘特图能否响应缩放：Zoom 工具条挂载和图表重绘完成时置 true，缩放进行中置 false（防连点） */
+  isZoom?: boolean;
+  /** 集成场景由宿主注入的访问令牌（本仓只有读取点）；有值且没有 pssid 时请求头用它 */
+  access_token?: string;
+  /** 公开应用的授权串：URL hash 形如 #publicapp<授权串>，preall 截出来（去掉 #isPrivateBuild） */
+  publicAppAuthorization?: string;
+  /** 富文本编辑器处于聚焦状态（名字里的 dialog 是历史叫法；CKEditor 的 onFocus / onBlur 维护） */
+  richTextDialogIsActive?: boolean;
+  /** 部署在子路径下时的路径前缀，由页面外部注入（本仓只有读取点，spec 里置空串） */
+  __customSubPath__?: string;
+  /** 刷新工作表左侧导航（新建应用项后调） */
+  __worksheetLeftReLoad?: () => void;
+  /** 表单设计器最近一次加字段是不是 Mingo 发起的 */
+  lastAddWidgetsTriggerByMingo?: boolean;
 
   // !! 测量污染开关 !!
   // 全仓有 4076 处 window.X 访问、276 个不同属性名，其中最热的
