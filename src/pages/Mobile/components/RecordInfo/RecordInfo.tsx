@@ -332,7 +332,8 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
           }
         },
       );
-    } catch (err) {
+    } catch (thrown) {
+      const err = thrown as ApiRejection;
       console.error(err);
 
       if (err && err.resultCode === 4) {

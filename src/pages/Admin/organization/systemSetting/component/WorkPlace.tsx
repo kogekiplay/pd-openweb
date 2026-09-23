@@ -99,7 +99,11 @@ export default class WorkPlace extends Component<any, any> {
     this.setState({ selectedRowKeys });
   };
 
-  showSiteDialog({ workSiteName, workSiteId }) {
+  /* 不传参 = 新建（两个字段都是 undefined）；编辑时传整条 record。
+     新建按钮原先把 showSiteDialog 直接 bind 给 onClick，于是 MouseEvent 被当成
+     这个参数传进来，从事件对象上取 workSiteName / workSiteId 碰巧都是 undefined ——
+     行为对，但全靠 MouseEvent 恰好没有这两个属性。strictBindCallApply 打开后当场报出来。 */
+  showSiteDialog({ workSiteName, workSiteId }: { workSiteName?: string; workSiteId?: string } = {}) {
     this.setState({
       siteVisible: true,
       workSiteName,
@@ -289,7 +293,7 @@ export default class WorkPlace extends Component<any, any> {
                 ) : (
                   <button
                     className="ming Button Button--primary Button--small itemCreate"
-                    onClick={this.showSiteDialog.bind(this)}
+                    onClick={() => this.showSiteDialog()}
                   >
                     {_l('新建')}
                   </button>

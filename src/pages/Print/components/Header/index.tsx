@@ -81,7 +81,8 @@ class Header extends React.Component<any, any> {
 
           try {
             dataUrl = canvasData.toDataURL('image/jpeg');
-          } catch (error) {
+          } catch (thrown) {
+            const error = thrown as Partial<Error>;
             if (error?.name === 'SecurityError' || /tainted canvases/i.test(error?.message)) {
               isTainted = true;
             }

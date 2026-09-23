@@ -131,7 +131,8 @@ export class MessageHandler {
         },
         '*',
       );
-    } catch (error) {
+    } catch (thrown) {
+      const error = thrown as Partial<Error>;
       event.source.postMessage(
         {
           type: 'IFRAME_RESPONSE',

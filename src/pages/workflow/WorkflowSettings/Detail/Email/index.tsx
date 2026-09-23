@@ -224,7 +224,8 @@ export default class Email extends Component<any, any> {
         const result = await this.convertMjml(mjmlValue);
 
         mjmlHtml = result.html;
-      } catch (err) {
+      } catch (thrown) {
+        const err = thrown as Partial<Error>;
         this.setState({ saveRequest: false });
         alert(err.message || _l('MJML 格式错误，请修正后再保存'), 2);
         return;
