@@ -427,6 +427,55 @@ interface Window {
   $: JQueryStatic;
   jQuery: JQueryStatic;
 
+  // ---- 按「赋值处的真实类型」逐个登记（2026-09-23 起，终点配置 noPropertyAccessFromIndexSignature 要求）----
+  // 全部登记完之后删掉最下面那条索引签名；新加的 window.X 请在这里补一行，写明是谁写入的。
+
+  // src/common/global.ts 启动时按 UA 算好的环境标志
+  isDingTalk: boolean;
+  isMacOs: boolean;
+  isMingDaoApp: boolean;
+  isMiniProgram: boolean;
+  isWxWork: boolean;
+  isWeLink: boolean;
+  isFeiShu: boolean;
+  isWeiXin: boolean;
+  isIphone: boolean;
+  isAndroid: boolean;
+  isChrome: boolean;
+  isFirefox: boolean;
+  isEdge: boolean;
+  isSafari: boolean;
+  isMDClient: boolean;
+  isWindows: boolean;
+  isIPad: boolean;
+  /** 部署形态开关，src/common/global.ts 设初值（嵌入式 Mingo 入口 widgetEntry 自己兜底一份） */
+  platformENV: { isOverseas: boolean; isLocal: boolean; isPlatform: boolean };
+  /** 被自定义 alert 覆盖之前的原生 window.alert（src/common/global.ts 的 customAlert，启动时必定写入） */
+  nativeAlert: Window['alert'];
+  /** 公开表单页标记（PublicWorksheet 写入；预览态为 false） */
+  isPublicWorksheet?: boolean;
+  /** 移动端路由跳转：移动端根组件（src/pages/Mobile/index.tsx）在所有移动端路由之前注入，也只在移动端页面里调用 */
+  mobileNavigateTo: (url: string, isReplace?: boolean) => void;
+  /** 飞书客户端注入的 JSSDK；本仓只用 config / ready 两个方法 */
+  h5sdk?: { config: (options: Record<string, unknown>) => void; ready: (callback: () => void) => void };
+  /** 打开 Mingo 时要直接进入的任务：各入口写入，Mingo 挂载或 handleStartPendingTask 时消费后清成 null */
+  mingoPendingStartTask?: {
+    /** MINGO_TASK_TYPE 里的值 */
+    type?: number;
+    params?: unknown;
+    base?: Record<string, unknown>;
+    callFromHelp?: boolean;
+  } | null;
+  /**
+   * 【全仓（含上游）从没被赋值过】mingo 的 Header 用 !window.callFromHelp 决定显不显示「复制链接」，
+   * 于是那个条件恒为真。帮助面板写的是 mingoPendingStartTask.callFromHelp，而那个对象用完即清。
+   */
+  callFromHelp?: boolean;
+  /** 聊天语音播放器的构造函数（mp3player.ts 默认导出，同时挂到 window 上兼容全局访问） */
+  MP3Player?: typeof import('src/pages/chat/lib/mp3player/mp3player').default;
+  /** 表格单元格复制出来的内容，JSON 串（control.ts / CellControls 写入，粘贴时读取） */
+  tempCopyForSheetView?: string;
+
   // !! 测量污染开关 !!
   // 全仓有 4076 处 window.X 访问、276 个不同属性名，其中最热的
   // platformENV(801)/isMingDaoApp(135)/isPublicApp(125)/shareState(123)/
