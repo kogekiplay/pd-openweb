@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import homeAppApi from 'api/homeApp';
 import { LoadDiv } from 'ming-ui';

@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Component, Fragment, lazy, Suspense } from 'react';
 import { Checkbox, Popover } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';

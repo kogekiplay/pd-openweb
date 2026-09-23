@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { assign } from 'lodash';
 import PropTypes from 'prop-types';

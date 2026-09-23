@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useSetState } from 'react-use';
 import { Checkbox, Divider, Radio, Space } from 'antd';

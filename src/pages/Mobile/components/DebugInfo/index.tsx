@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import appManagementApi from 'src/api/appManagement';

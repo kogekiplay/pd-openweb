@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { getControlByControlId } from '../../../util';
 import { getAdvanceSetting } from '../../../util/setting';

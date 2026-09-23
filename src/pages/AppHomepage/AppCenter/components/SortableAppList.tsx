@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _, { isEmpty } from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import { SortableList } from 'ming-ui';

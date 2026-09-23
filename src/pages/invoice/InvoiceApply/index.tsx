@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Popup } from 'antd-mobile';
 import { match } from 'path-to-regexp';
 import { Dialog, FunctionWrap, LoadDiv } from 'ming-ui';

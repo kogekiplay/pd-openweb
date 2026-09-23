@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, LoadDiv, Menu, MenuItem, VerifyPasswordConfirm } from 'ming-ui';

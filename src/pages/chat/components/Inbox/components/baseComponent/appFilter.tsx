@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Dropdown } from 'antd';
 import api from 'api/homeApp';
 import cx from 'classnames';

@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import styled from 'styled-components';
+﻿import styled from 'styled-components';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { pathCompletion } from 'src/utils/common';
 

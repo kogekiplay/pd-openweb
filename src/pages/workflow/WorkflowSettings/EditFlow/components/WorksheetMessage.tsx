@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { pathCompletion } from 'src/utils/common';
 import { APP_TYPE } from '../../enum';

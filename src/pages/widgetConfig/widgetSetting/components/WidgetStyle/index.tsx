@@ -1,4 +1,3 @@
-import React from 'react';
 import { isSheetDisplay } from 'src/pages/widgetConfig/util';
 import RelateStyle from './RelateStyle';
 import SubListStyle from './SubListStyle';

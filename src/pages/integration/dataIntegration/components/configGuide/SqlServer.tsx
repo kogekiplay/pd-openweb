@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import accountAuth from './images/accountAuth.png';
 import accountAuthEn from './images/accountAuth_en.png';
 import createAdminAccount from './images/createAdminAccount.png';

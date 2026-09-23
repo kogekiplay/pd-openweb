@@ -1,4 +1,4 @@
-import React, { Component, forwardRef, lazy, Suspense, useImperativeHandle, useMemo } from 'react';
+import { Component, forwardRef, lazy, Suspense, useImperativeHandle, useMemo } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Provider } from 'react-redux';
 import { Popover } from 'antd';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import _ from 'lodash';
 import { Input } from 'ming-ui';
 import { formatNumberThousand } from 'src/utils/control';

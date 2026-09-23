@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { Tooltip } from 'ming-ui/antd-components';
 import { fetchFilterData, formatFilterConditionToText } from '../../../../../../core/utils';
 import type { FormControl } from 'src/utils/controlTypes';

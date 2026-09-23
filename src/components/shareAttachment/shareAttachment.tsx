@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import copy from 'src/utils/copyToClipboard';
 import doT from 'dot';

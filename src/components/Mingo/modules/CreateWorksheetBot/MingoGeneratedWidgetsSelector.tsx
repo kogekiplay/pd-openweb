@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import { difference, filter, find, get, isEmpty, isEqual, sortBy, uniq } from 'lodash';
 import styled, { keyframes } from 'styled-components';

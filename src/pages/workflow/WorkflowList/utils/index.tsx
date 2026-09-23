@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { MdLink } from 'ming-ui';

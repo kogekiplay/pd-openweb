@@ -1,4 +1,3 @@
-import React from 'react';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import { ACTION_VALUE_ENUM } from '../config';
 import ActivateTab from './actionTypes/ActivateTab';

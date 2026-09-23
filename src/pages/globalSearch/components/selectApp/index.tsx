@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import { Icon, Input, SvgIcon } from 'ming-ui';
 import HomeAjax from 'src/api/homeApp';

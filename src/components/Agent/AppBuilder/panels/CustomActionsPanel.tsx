@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { CardEditButton, PanelWrap } from './_shared';

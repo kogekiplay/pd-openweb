@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Support } from 'ming-ui';
 import agentApi from 'src/api/agent';

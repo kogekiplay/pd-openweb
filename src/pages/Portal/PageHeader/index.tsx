@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, useLocation } from 'react-router';
 import { formatPortalHref } from 'src/pages/Portal/util.js';
 import genRouteComponent from 'src/router/genRouteComponent';

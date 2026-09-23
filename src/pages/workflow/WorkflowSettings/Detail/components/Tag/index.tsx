@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getIcons } from '../../../utils';

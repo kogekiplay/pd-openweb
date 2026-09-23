@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, Support } from 'ming-ui';
 import { FIELD_RULE_TIP_URL, SELECT_FIELD_TIP } from '../../../../core/config';
 import CollapsePanel from '../../../CollapsePanel';

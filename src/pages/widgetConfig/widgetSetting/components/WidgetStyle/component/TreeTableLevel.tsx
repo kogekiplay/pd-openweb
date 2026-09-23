@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { AnimationWrap, SettingItem } from 'src/pages/widgetConfig/styled';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';

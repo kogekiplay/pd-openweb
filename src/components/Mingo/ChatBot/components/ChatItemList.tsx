@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';

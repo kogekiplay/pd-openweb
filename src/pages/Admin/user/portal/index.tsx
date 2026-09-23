@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import AdminTitle from 'src/pages/Admin/common/AdminTitle';
 import OutsourcingList from './OutsourcingList.jsx';

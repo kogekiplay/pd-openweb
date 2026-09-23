@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import ActionDropDown from 'src/pages/FormSet/components/columnRules/actionDropdown/ActionDropDown.jsx';
 import { SYS, SYS_CONTROLS } from 'src/pages/widgetConfig/config/widget';

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { CALC_TYPE, OUTPUT_FORMULA_FUNC } from 'src/pages/widgetConfig/config/setting';

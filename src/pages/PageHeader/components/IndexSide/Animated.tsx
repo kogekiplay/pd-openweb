@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { animate, useMotionValue, useMotionValueEvent } from 'motion/react';
 import { SPRING_DEFAULT } from 'src/utils/spring';
 import IndexSide from './index';

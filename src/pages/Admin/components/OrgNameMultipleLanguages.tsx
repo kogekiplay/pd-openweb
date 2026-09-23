@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, FunctionWrap, Icon, Input, LoadDiv, Textarea } from 'ming-ui';

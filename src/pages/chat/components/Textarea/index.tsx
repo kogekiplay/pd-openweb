@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Textarea from 'ming-ui/components/Textarea';
 import { getCaretPosition, setCaretPosition } from 'src/utils/common';
 import * as utils from '../../utils/';

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Popover } from 'antd';
 import cx from 'classnames';
 import img from 'staticfiles/images/markdown.png';

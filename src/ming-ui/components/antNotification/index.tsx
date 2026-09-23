@@ -1,4 +1,3 @@
-import React from 'react';
 import { notification } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';

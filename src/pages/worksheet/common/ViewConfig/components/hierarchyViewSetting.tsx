@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSetState } from 'react-use';
 import { Menu } from 'antd';
 import Trigger from '@rc-component/trigger';

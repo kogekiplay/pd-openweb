@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 // remarkable 2 去掉了 default export，Remarkable 改为具名导出。
 import { Remarkable } from 'remarkable';
 // v2 删掉了 linkify 选项（只 console.warn 然后静默无效），改由插件提供。

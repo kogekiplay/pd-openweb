@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef } from 'react';
+import { lazy, Suspense, useRef } from 'react';
 import { func } from 'prop-types';
 import { Dialog, Modal } from 'ming-ui';
 

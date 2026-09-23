@@ -1,5 +1,4 @@
 // 部门/组织角色名称显示
-import React from 'react';
 import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import { browserIsMobile } from 'src/utils/common';

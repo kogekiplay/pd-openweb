@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { pathCompletion } from 'src/utils/common';
 
 export default class DetailDialog extends Component<any, any> {

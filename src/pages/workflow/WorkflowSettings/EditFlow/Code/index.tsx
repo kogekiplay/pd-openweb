@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { ACTION_ID } from '../../enum';
 import { CreateNode, NodeOperate } from '../components';

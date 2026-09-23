@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import WorksheetShareLand from './pages/WorksheetShareLand';
 
 export default class WorksheetShareLandEntry extends Component<any, any> {

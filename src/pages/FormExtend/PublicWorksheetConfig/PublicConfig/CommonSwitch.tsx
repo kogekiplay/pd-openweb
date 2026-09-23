@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

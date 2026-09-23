@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { Menu, MenuItem } from 'ming-ui';
 import { NODE_TYPE } from '../../enum';

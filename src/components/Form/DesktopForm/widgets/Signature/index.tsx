@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import axios from 'axios';
 import cx from 'classnames';

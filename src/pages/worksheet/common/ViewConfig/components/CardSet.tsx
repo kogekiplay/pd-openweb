@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import { VIEW_DISPLAY_TYPE } from 'src/pages/worksheet/constants/enum';
 import Abstract from './Abstract';

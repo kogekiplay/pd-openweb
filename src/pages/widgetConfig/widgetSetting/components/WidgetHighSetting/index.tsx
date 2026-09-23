@@ -1,4 +1,3 @@
-import React from 'react';
 import ControlSetting from './ControlSetting';
 
 // 高级设置

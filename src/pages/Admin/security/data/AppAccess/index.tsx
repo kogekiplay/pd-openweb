@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';

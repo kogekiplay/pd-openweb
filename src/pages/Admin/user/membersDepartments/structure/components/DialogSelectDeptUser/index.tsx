@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { Dialog, LoadDiv, ScrollView } from 'ming-ui';
 import Checkbox from 'ming-ui/components/Checkbox';

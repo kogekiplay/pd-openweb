@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Dialog } from 'ming-ui';
 import DropMotion from 'worksheet/components/Animations/DropMotion';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Checkbox } from 'antd';
 import Trigger from '@rc-component/trigger';
 import moment from 'moment';

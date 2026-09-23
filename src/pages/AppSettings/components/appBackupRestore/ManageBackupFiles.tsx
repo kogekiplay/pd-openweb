@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Drawer } from 'antd';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';

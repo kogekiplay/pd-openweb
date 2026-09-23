@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import FocusLock from 'react-focus-lock';
 import { useSetState } from 'react-use';
 import { Popup } from 'antd-mobile';

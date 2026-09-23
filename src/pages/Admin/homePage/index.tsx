@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { Dialog, Icon } from 'ming-ui';

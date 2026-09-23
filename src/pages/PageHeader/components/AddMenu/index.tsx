@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import addFriends from 'src/components/addFriends';
 import createCalendar from 'src/components/createCalendar/load';

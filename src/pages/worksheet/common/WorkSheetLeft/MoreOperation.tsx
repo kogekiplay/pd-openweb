@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';

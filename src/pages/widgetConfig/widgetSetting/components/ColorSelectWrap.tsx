@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import { ColorPicker, Icon } from 'ming-ui';
 import { SCORE_COLORS_LIST } from '../../config/score';

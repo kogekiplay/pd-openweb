@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, Checkbox, ConfigProvider, Dropdown, Form, Input, Menu, Modal, Select } from 'antd';
 import _ from 'lodash';

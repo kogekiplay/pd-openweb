@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import kc from 'src/api/kc';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
 import Constant from '../../../utils/constant';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { LoadDiv } from 'ming-ui';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';

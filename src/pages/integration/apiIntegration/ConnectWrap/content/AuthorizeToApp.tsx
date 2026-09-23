@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { ConfigProvider, Table } from 'antd';
 import styled from 'styled-components';

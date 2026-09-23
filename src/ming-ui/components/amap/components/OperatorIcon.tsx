@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 

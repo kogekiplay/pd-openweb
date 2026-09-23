@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { ActionSheet, List } from 'antd-mobile';
 import localForage from 'localforage';
 import _ from 'lodash';

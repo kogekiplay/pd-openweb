@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, Checkbox, ConfigProvider, Input, Modal, Select } from 'antd';
 import { ColorPicker, Icon } from 'ming-ui';

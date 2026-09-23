@@ -1,4 +1,3 @@
-import React from 'react';
 import { OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 

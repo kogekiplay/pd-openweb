@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Button, Dialog, Dropdown, Icon, ScrollView, SvgIcon } from 'ming-ui';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import preall from 'src/common/preall';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { get, pick } from 'lodash';
 import PropTypes from 'prop-types';
 import { permitList } from 'src/pages/FormSet/config.js';

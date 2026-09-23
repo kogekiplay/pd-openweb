@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { DatePicker, Select } from 'antd';
 import en_US from 'antd/es/date-picker/locale/en_US';

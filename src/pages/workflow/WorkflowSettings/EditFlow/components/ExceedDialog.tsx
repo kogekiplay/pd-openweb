@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dialog } from 'ming-ui';
 import exceedImg from '../../../asset/exceed.png';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import RecordCardIO from 'mobile/RecordList/RecordCard/RecordCardIO';
 import { isShowAddRecord } from 'worksheet/views/BoardView/util';
 import AddRecordBtn from '../components/AddRecordBtn';

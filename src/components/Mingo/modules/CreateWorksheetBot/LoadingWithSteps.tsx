@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import LoadingDots from 'src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/LoadingDots';
 import { STEP_STATUS } from './config';

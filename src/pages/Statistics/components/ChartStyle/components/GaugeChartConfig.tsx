@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Checkbox, Collapse, ConfigProvider, Input, Modal, Radio, Switch } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';

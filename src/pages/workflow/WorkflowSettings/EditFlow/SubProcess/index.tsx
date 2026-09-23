@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import { pathCompletion } from 'src/utils/common';
 import { CreateNode, NodeOperate } from '../components';

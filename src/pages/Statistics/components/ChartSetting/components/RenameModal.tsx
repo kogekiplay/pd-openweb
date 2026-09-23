@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, ConfigProvider, Input, Modal } from 'antd';
 import { Icon } from 'ming-ui';

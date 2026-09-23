@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { APP_TYPE } from '../../enum';
 import { SelectNodeObject, UpdateFields } from '../components';
 

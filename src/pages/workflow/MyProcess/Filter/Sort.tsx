@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dropdown, Menu } from 'antd';
 import { Icon } from 'ming-ui';
 import { SORT_LIST } from '../config';

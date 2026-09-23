@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { CardEditButton, PanelWrap } from './_shared';

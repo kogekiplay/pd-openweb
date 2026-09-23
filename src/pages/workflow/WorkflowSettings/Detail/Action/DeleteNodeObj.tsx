@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { Checkbox, Dialog } from 'ming-ui';
 import { SelectNodeObject } from '../components';

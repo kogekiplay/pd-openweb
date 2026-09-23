@@ -1,4 +1,3 @@
-import React from 'react';
 import AttachmentOperate from './AttachmentOperate';
 import EmbedOperate from './EmbedOperate';
 import RelateOperate from './RelateOperate';

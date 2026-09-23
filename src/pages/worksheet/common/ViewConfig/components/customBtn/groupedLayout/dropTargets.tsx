@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { useDragLayer, useDrop } from 'react-dnd';
 import cx from 'classnames';
 import { type CustomBtnDragItem, ITEM_TYPE, ITEM_TYPE_GROUP } from './constants';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import aiModelAuthAjax from 'src/api/dataLimit.js';
 import projectSettingController from 'src/api/projectSetting';

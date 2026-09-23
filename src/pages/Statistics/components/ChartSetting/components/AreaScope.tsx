@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Checkbox, Select } from 'antd';
 import _ from 'lodash';
 import { CityPicker, Icon, Input } from 'ming-ui';

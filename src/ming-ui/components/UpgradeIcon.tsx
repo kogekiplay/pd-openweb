@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tooltip } from 'ming-ui/antd-components';
 
 export default function UpgradeIcon(props) {

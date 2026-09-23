@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useRef } from 'react';
+import { Fragment, memo, useRef } from 'react';
 import cx from 'classnames';
 import { includes, isFunction, isUndefined } from 'lodash';
 import styled from 'styled-components';

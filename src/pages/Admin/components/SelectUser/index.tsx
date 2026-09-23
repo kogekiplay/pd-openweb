@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Select } from 'antd';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';

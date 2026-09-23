@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Icon, Linkify, Textarea } from 'ming-ui';
 
 export default class CalendarSummary extends Component<any, any> {

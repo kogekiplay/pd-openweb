@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Dropdown, RadioGroup } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { SettingItem } from '../../styled';

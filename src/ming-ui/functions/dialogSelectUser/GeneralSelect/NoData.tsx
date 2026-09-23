@@ -1,4 +1,3 @@
-import React from 'react';
 import './css/noData.less';
 
 const NoData = props => {

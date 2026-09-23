@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Component, Fragment, lazy, Suspense } from 'react';
 import { shallowEqual } from 'react-redux';
 import homeAppApi from 'api/homeApp';
 import cx from 'classnames';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
 import { UploadError } from 'src/utils/uploader/constants';

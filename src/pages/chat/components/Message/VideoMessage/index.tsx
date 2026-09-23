@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import * as utils from '../../../utils/';
 import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';

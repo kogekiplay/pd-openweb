@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { Dialog, FunctionWrap } from 'ming-ui';
 import './css/userCard.less';

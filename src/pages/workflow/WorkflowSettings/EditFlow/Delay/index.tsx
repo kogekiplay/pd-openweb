@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import { TIME_TYPE_NAME } from '../../enum';

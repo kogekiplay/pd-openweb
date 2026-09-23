@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { register } from '@antv/x6-react-shape';
 import _ from 'lodash';
 import moment from 'moment';

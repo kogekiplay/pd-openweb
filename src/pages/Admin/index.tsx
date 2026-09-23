@@ -1,4 +1,4 @@
-import React, { lazy, PureComponent, Suspense } from 'react';
+import { lazy, PureComponent, Suspense } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Route, Routes } from 'react-router';
 import _ from 'lodash';

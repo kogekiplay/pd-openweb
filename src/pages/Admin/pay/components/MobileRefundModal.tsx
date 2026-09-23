@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button, Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';

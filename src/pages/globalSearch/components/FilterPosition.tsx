@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';

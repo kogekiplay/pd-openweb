@@ -1,4 +1,3 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 import { Dialog, FunctionWrap } from 'ming-ui';
 import { GlobalStoreProvider } from 'src/common/GlobalStore';

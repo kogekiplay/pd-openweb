@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, ConfigProvider, Form, Input } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { LoadDiv, UserHead } from 'ming-ui';
 import chatbotAjax from 'src/pages/workflow/apiV2/chatbot';

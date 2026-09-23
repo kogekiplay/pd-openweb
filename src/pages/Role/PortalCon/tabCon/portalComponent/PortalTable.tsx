@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ConfigProvider, Pagination, Table } from 'antd';
 import styled from 'styled-components';
 

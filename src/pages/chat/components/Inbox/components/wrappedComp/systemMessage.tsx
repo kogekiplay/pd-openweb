@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, PureComponent, Suspense } from 'react';
+import { Fragment, lazy, PureComponent, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { match } from 'path-to-regexp';
 import styled from 'styled-components';

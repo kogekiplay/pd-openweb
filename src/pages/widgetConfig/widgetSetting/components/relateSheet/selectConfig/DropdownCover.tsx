@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { RadioGroup } from 'ming-ui';
 import { COVER_FILL_TYPES } from '../../../../config/setting';

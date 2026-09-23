@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { number, string } from 'prop-types';
 import genQr from 'src/pages/worksheet/common/PrintQrBarCode/genQrDataurl';
 

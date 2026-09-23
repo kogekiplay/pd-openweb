@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from 'antd';
 import { Popup } from 'antd-mobile';
 import cx from 'classnames';

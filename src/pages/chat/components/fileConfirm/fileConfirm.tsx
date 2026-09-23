@@ -1,4 +1,3 @@
-import React from 'react';
 import moment from 'moment';
 import { Button, Dialog } from 'ming-ui';
 import { formatFileSize, getClassNameByExt } from 'src/utils/common';

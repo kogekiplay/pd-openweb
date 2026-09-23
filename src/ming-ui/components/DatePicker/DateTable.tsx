@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import DateTBody from './DateTBody';
 import DateTHead from './DateTHead';
 

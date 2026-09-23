@@ -1,4 +1,4 @@
-import React, { cloneElement, Component } from 'react';
+import { cloneElement, Component } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';

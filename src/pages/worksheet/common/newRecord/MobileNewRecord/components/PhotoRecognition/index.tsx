@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, Fragment, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { compatibleMDJS } from 'src/utils/project';
 import UploadFiles from '../UploadFiles';
 

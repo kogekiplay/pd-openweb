@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import withRouter from '../../../../router/withRouter';
 import { Popover } from 'antd';
 import cx from 'classnames';

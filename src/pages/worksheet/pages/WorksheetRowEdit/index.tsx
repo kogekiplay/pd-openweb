@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Component, Fragment, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import { LoadDiv, ScrollView } from 'ming-ui';

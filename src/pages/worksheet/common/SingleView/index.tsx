@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react';
 import { Provider } from 'react-redux';
 import { arrayOf, bool, element, number, shape, string } from 'prop-types';
 import { updateBase } from 'worksheet/redux/actions';

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Checkbox, Dropdown, LoadDiv, RadioGroup } from 'ming-ui';
 import fixedDataApi from 'src/api/fixedData';

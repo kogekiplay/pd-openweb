@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import cx from 'classnames';
 import { compareProps } from '../../../PageHeader/util';
 import './index.less';

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
 import Trigger from '@rc-component/trigger';

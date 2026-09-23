@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { RelateDetail } from 'src/pages/widgetConfig/styled';
 import { toEditWidgetPage } from '../../util';

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Checkbox, Collapse, Input, Select, Switch } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';

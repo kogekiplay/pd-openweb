@@ -1,4 +1,4 @@
-import React, { forwardRef, Suspense, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, Suspense, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';

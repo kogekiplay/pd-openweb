@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { Dialog, FunctionWrap } from 'ming-ui';
 import { dialogSelectDept } from 'ming-ui/functions';

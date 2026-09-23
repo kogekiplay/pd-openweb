@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Button } from 'ming-ui';
 import projectSettingAjax from 'src/api/projectSetting';
 import UserBaseInfoSetting from './components/UserBaseInfoSetting';

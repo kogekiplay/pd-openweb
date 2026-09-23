@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { Button, Dialog, Dropdown } from 'ming-ui';
 import reportConfig from '../../api/reportConfig';

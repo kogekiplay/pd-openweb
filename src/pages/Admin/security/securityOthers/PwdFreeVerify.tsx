@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dialog, FunctionWrap, Radio } from 'ming-ui';
 import projectSettingController from 'src/api/projectSetting';
 

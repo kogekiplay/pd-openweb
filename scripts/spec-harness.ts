@@ -70,28 +70,34 @@ function resolveSpecTarget(request) {
   return found;
 }
 
+// development 必须钉成 false：spec 跑的时候 NODE_ENV 没设，babel 会按 development 编译成
+// react/jsx-dev-runtime 的 jsxDEV()，和发布构建（production 环境，jsx() / jsxs()）不是一回事，
+// 假 React 的 spec 也就接不住。钉死之后 spec 编译出来的和发布包同一种调用。
+const BUILD_JSX = { runtime: 'automatic', development: false };
+
 function babelPresets(file, extra = []) {
   const isTS = /\.tsx?$/.test(file);
-  // Babel 8 的 preset-react 默认从 classic 切成了 automatic runtime。真实构建在 .babelrc 里
-  // 钉死了 classic，spec 必须跟着，否则 JSX 会编译成 jsx() 而不是 React.createElement——
-  // 那些注入自己的假 createElement 来观察渲染树的 spec 会静默拿到空树（踩过：5 个 spec 全红）。
-  // 注意不能只在「调用方没传 preset-react」时才钉：多数 spec 自己传了裸的 '@babel/preset-react'，
-  // 所以这里对调用方传进来的那份也做归一化（调用方若显式指定了 runtime 则尊重它）。
-  const withClassicJsx = p => {
+  // JSX 的 runtime 必须跟真实构建一致。.babelrc 在 2026-09-23 从 classic 切到了 automatic：
+  // JSX 编译成 react/jsx-runtime 的 jsx() / jsxs()，产品文件里也不再为 JSX 去 import React。
+  // 这里若还停在 classic，编译出来的 React.createElement 会找不到 React（ReferenceError）。
+  // 自己造假 React 来观察渲染树的 spec，要同时把 'react/jsx-runtime' 指到 jsxRuntimeFrom(假 createElement)，
+  // 否则 jsx() 走的是真 React，假树里什么都没有 —— 当年从 automatic 钉回 classic 时 5 个 spec 全红，是同一个坑。
+  // 多数 spec 自己传了裸的 '@babel/preset-react'，所以对调用方那份也归一化（调用方显式指定了 runtime 的尊重它）。
+  const withBuildJsx = p => {
     const name = Array.isArray(p) ? p[0] : p;
 
     if (!String(name).includes('preset-react')) return p;
 
     const opts = Array.isArray(p) ? p[1] || {} : {};
 
-    return [name, { runtime: 'classic', ...opts }];
+    return [name, { ...BUILD_JSX, ...opts }];
   };
   const presets = extra
     .filter(p => !String(Array.isArray(p) ? p[0] : p).includes('preset-typescript'))
-    .map(withClassicJsx);
+    .map(withBuildJsx);
 
   if (!presets.some(p => String(Array.isArray(p) ? p[0] : p).includes('preset-react'))) {
-    presets.push(['@babel/preset-react', { runtime: 'classic' }]);
+    presets.push(['@babel/preset-react', BUILD_JSX]);
   }
   // Babel 8 移除了 .isTSX / .allExtensions，改为默认按文件扩展名判断是否 TSX——
   // 这里本来就是按扩展名算的，且传的是真实文件名，所以直接去掉即等价。
@@ -124,6 +130,24 @@ function transformSync(code, opts: Record<string, any> = {}) {
     presets: babelPresets(file, opts.presets || []),
     plugins: opts.plugins || ['@babel/plugin-transform-modules-commonjs'],
   });
+}
+
+/**
+ * 给「自己造了假 React」的 spec 用：把 automatic runtime 的 jsx / jsxs 调用转回它们的假 createElement，
+ * 在 localRequire 里 `if (request === 'react/jsx-runtime') return jsxRuntimeFrom(createElement, Fragment)`。
+ *
+ * 参数形状要和 classic 下 createElement(type, props, ...children) 收到的一致：
+ * jsx(type, props, key) 的 children 在 props 里 —— 单个子节点或动态数组原样当【一个】参数；
+ * jsxs 的 children 是静态写出来的多个子节点，要摊开；key 放回 props。
+ */
+function jsxRuntimeFrom(createElement, Fragment: unknown = 'Fragment') {
+  const adapt = (spread: boolean) => (type, props, key) => {
+    const { children, ...rest } = props || {};
+    const finalProps = key === undefined ? rest : { ...rest, key };
+    const kids = children === undefined ? [] : spread ? children : [children];
+    return createElement(type, finalProps, ...kids);
+  };
+  return { __esModule: true, jsx: adapt(false), jsxs: adapt(true), Fragment };
 }
 
 /** Read a source file as text, re-resolving a stale extension. Used by the text-assert specs. */
@@ -222,6 +246,7 @@ function expectedFailure(label, fn) {
 
 module.exports = {
   expectedFailure,
+  jsxRuntimeFrom,
   transformFileSync,
   transformSync,
   readSource,

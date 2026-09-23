@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
 import appManagementApi from 'src/api/appManagement';

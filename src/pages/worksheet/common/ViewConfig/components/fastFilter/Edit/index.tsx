@@ -1,4 +1,3 @@
-import React from 'react';
 import ClickAway from 'ming-ui/components/ClickAway';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import EditContent from './EditContent';

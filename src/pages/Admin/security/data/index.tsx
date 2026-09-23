@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { Dialog, LoadDiv, Support, Switch, VerifyPasswordConfirm } from 'ming-ui';
 import dataLimitAjax from 'src/api/dataLimit';

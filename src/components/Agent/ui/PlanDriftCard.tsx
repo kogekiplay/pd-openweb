@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
 import { Icon } from 'ming-ui';
 import { colors, radii, spacing } from './tokens';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { arrayOf, bool, object, oneOf, string } from 'prop-types';
 import './index.less';

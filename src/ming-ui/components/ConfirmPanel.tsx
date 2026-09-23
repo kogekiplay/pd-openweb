@@ -1,4 +1,3 @@
-import React from 'react';
 import Trigger from '@rc-component/trigger';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';

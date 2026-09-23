@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { TimePicker } from 'antd';
 import localeEn from 'antd/es/date-picker/locale/en_US';

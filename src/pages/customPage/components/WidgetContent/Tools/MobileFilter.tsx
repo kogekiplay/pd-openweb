@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dropdown, Menu } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';

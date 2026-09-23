@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import _ from 'lodash';
 import { Dialog, Icon, LoadDiv, Radio, ScrollView } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';

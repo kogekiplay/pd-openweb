@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';

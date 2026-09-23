@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import { flatten, head, isEmpty, last } from 'lodash';

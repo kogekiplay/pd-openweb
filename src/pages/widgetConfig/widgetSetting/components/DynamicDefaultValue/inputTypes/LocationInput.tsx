@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import MDMap from 'ming-ui/components/amap/MDMap';
 import { getMapConfig } from 'src/utils/control';

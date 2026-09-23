@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, SpinLoading } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';

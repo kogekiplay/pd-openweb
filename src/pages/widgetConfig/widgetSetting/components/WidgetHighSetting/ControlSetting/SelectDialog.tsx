@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dropdown } from 'antd';
 import update from 'immutability-helper';
 import _ from 'lodash';

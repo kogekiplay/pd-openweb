@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import player from '../../../lib/mp3player/mp3player';
 import * as socket from '../../../utils/socket';

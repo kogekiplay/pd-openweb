@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';

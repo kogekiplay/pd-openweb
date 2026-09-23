@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Icon } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import Result from 'ming-ui/functions/dialogSelectUser/GeneralSelect/Result';

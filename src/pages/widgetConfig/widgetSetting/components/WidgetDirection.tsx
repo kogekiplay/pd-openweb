@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { Dropdown } from 'ming-ui';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../util/setting';

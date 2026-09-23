@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import doT from 'dot';
+﻿import doT from 'dot';
 import _ from 'lodash';
 import Dialog from 'ming-ui/components/Dialog';
 import tpl from './template/repeatCalendarOperator.html';

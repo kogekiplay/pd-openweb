@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import hoistStatics from 'hoist-non-react-statics';
 

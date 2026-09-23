@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { get } from 'lodash';
 import { getRecorderAuthConfig } from 'src/components/Mingo/ChatBot/components/Recorder/index';
 import { VOICE_STEP } from '../../core/config';

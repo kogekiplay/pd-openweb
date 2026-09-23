@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useState } from 'react';
+import { Fragment, memo, useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, Icon, ScrollView } from 'ming-ui';
 import MarkdownPreview from '../MarkdownPreview';

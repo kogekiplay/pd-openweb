@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import { debounce, find, uniq } from 'lodash';
 import styled from 'styled-components';

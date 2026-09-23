@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState } from 'react';
+import { Component, Fragment, useState } from 'react';
 import { Input } from 'antd';
 import styled from 'styled-components';
 import { ColorPicker } from 'ming-ui';

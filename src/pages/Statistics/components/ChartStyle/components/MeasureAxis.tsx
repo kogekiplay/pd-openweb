@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Input } from 'antd';
 
 export default class MeasureAxis extends Component<any, any> {

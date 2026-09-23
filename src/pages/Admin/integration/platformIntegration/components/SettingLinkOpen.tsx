@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { Radio } from 'ming-ui';
 import Ajax from 'src/api/workWeiXin';

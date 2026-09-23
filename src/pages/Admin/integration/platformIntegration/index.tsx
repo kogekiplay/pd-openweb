@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { LoadDiv, UpgradeIcon } from 'ming-ui';
 import roleAjax from 'src/api/role';

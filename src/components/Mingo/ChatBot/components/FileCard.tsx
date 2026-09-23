@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, memo, Suspense } from 'react';
+import { Fragment, lazy, memo, Suspense } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Checkbox, Input } from 'antd';
 
 export default class SubLineCount extends Component<any, any> {

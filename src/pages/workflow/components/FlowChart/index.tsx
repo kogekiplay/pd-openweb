@@ -1,4 +1,4 @@
-import React, { Component, Fragment, memo } from 'react';
+import { Component, Fragment, memo } from 'react';
 import { Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';

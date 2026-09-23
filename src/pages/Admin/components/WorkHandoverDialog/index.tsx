@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Button, Checkbox, Dialog, LoadDiv, SvgIcon } from 'ming-ui';

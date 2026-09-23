@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { v4 as uuidv4, validate } from 'uuid';

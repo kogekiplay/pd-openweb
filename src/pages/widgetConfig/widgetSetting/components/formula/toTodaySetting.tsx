@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Dropdown } from 'ming-ui';
 import { SettingItem } from '../../../styled';
 import { parseDataSource } from '../../../util';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { string } from 'prop-types';
 import ReactDocumentTitle from 'ming-ui/components/DocumentTitle';

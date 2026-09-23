@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, Fragment, useImperativeHandle, useRef, useState } from 'react';
 import { useCallback } from 'react';
 import styled from 'styled-components';
 import { QiniuUpload } from 'ming-ui';

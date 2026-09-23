@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import UploadFiles from 'src/components/UploadFiles';
+﻿import UploadFiles from 'src/components/UploadFiles';
 import LinkContent from './linkContent';
 import MedalContent from './medalContent';
 import VoteContent from './voteContent';

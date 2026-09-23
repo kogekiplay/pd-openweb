@@ -1,4 +1,3 @@
-import React from 'react';
 import { FilterContent } from 'src/pages/widgetConfig/widgetSetting/components/relationSearch/styled.js';
 import FilterConfig from 'src/pages/worksheet/common/WorkSheetFilter/common/FilterConfig';
 import { SettingItem } from '../../../styled';

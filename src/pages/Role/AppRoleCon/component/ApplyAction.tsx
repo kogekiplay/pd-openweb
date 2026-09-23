@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';

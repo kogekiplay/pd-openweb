@@ -1,4 +1,4 @@
-﻿import React, { Component, Fragment } from 'react';
+﻿import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Button, Checkbox, Dialog, Dropdown, Icon, LoadDiv, RadioGroup, ScrollView } from 'ming-ui';

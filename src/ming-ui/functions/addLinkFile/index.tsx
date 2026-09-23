@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Dialog, FunctionWrap, Icon, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import LinkImg from './image/link.png';

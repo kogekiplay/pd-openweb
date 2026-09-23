@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Icon, LoadDiv } from 'ming-ui';
 import { TEST_STATUS } from '../../constant';

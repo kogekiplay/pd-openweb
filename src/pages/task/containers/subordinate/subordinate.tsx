@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import { navigateTo } from 'src/router/navigateTo';
 import TaskGantt from '../taskGantt/containers/taskGantt/taskGantt';
 import './subordinate.less';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dialog, RichText } from 'ming-ui';
 import './editAgreementOrPrivacy.less';
 

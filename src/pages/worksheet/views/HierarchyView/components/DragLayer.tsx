@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import { useDragLayer } from 'react-dnd';
 import BaseCard from '../../components/BaseCard';

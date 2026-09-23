@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Icon, Support } from 'ming-ui';
 import SourceSelectModal from '../components/SourceSelectModal';

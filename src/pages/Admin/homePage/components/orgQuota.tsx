@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Progress } from 'antd';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import { Button, Checkbox, Dialog, RadioGroup } from 'ming-ui';

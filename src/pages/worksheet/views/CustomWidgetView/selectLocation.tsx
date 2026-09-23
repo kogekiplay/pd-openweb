@@ -1,4 +1,3 @@
-import React from 'react';
 import { bool, func, number, shape } from 'prop-types';
 import MDMap from 'ming-ui/components/amap/MDMap';
 import functionWrap from 'ming-ui/components/FunctionWrap';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Amap from 'ming-ui/components/amap/Amap';
 import './index.less';
 

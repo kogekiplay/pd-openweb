@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useState } from 'react';
+import { memo, useMemo, useRef, useState } from 'react';
 import { InputNumber, Select, Slider } from 'antd';
 import cx from 'classnames';
 import { Icon } from 'ming-ui';

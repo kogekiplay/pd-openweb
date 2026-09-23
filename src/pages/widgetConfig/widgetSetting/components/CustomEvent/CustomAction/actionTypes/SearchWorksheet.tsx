@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useEffect } from 'react';
+import { Component, Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import update from 'immutability-helper';

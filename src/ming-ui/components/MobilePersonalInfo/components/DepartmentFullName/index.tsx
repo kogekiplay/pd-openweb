@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import departmentController from 'src/api/department';
 
 const DepartmentFullName = props => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { EMBED_LANGUAGE_PREFIX, resolveEmbed } from './embed';
 import { ChartSkeleton } from './embed/Chart';

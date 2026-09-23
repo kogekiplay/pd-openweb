@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Fragment } from 'react';
 import { Button, Popup } from 'antd-mobile';
 import _ from 'lodash';

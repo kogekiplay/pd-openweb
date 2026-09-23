@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import _ from 'lodash';
 import { Dialog, Radio } from 'ming-ui';
 import { ACTION_ID, NODE_TYPE } from '../../enum';

@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, useImperativeHandle, useState } from 'react';
+import { forwardRef, Fragment, useImperativeHandle, useState } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';

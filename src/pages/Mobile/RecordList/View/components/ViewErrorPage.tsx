@@ -1,7 +1,6 @@
 /**
  * h5看板、日历视图配置错误提示页
  */
-import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 

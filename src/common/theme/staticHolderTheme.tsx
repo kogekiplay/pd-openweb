@@ -1,4 +1,3 @@
-import React from 'react';
 import { ConfigProvider } from 'antd';
 import { currentThemeSeed } from './applyThemeVars';
 import { antdTheme } from './palette';

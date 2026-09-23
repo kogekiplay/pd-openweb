@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import { ACTION_ID, CUSTOM_ACTION_TEXT } from '../../enum';
 

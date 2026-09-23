@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import { Radio } from 'ming-ui';
 import { FindResult, SelectNodeObject, SingleControlValue } from '../components';

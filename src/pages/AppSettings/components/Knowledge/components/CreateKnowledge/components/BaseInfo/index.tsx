@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Icon } from 'ming-ui';
 import { useAutoFocus } from '../../../../core/hooks';
 import { useCreateKnowledgeStore } from '../../index';

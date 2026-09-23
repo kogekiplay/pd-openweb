@@ -1,4 +1,3 @@
-import React from 'react';
 import { get, head } from 'lodash';
 import styled from 'styled-components';
 import { Slider } from 'ming-ui';

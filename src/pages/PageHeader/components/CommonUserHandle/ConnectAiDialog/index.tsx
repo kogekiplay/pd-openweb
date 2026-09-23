@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';

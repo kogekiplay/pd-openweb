@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import { Progress } from 'antd';
 import cx from 'classnames';

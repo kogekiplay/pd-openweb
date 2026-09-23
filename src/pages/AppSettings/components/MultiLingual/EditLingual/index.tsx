@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Popover, Select } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';

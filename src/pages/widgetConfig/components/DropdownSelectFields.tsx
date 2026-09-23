@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dropdown } from 'antd';
 import { isEmptyValue } from 'src/utils/control';
 import { DropdownPlaceholder } from '../styled';

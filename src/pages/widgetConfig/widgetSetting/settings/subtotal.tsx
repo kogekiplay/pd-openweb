@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import _, { get, includes, isEmpty } from 'lodash';
 import styled from 'styled-components';

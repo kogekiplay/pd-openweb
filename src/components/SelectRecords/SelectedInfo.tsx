@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { get, includes, isUndefined } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';

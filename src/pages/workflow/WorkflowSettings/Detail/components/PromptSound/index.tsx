@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Dropdown, QiniuUpload, Radio } from 'ming-ui';

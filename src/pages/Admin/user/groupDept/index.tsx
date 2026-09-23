@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Icon } from 'ming-ui';
 import Config from '../../config';
 import GroupsList from './GroupList';

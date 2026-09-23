@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Dialog, UserCard } from 'ming-ui';
 import service from '../../api/service';
 import { htmlEncodeReg, pathCompletion } from 'src/utils/common';

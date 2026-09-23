@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { includes } from 'lodash';

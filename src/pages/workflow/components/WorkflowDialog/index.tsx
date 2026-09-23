@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { bool, func, string } from 'prop-types';
 import { FullScreenCurtain } from 'ming-ui';
 import WorkflowSettings from '../../WorkflowSettings';

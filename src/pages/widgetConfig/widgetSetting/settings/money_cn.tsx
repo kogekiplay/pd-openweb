@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import _ from 'lodash';
 import { Dropdown } from 'ming-ui';
 import { SettingItem } from '../../styled';

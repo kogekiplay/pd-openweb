@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { RadioGroup } from 'ming-ui';
 import { TIME_DISPLAY_TYPE } from '../../config/setting';
 import { SettingItem } from '../../styled';

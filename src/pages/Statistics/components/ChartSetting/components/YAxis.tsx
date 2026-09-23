@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Checkbox, Dropdown, Menu } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 // linkify-it 6 去掉了 default export，只保留具名的 linkifyit / LinkifyIt / REBuilder。
 import { linkifyit } from 'linkify-it';
 

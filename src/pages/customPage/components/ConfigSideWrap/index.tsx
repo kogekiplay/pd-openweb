@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { generate } from '@ant-design/colors';
 import cx from 'classnames';
 import _ from 'lodash';

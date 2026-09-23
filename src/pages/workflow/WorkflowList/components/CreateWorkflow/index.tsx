@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import { func, string } from 'prop-types';
 import { FullScreenCurtain, Icon, Support } from 'ming-ui';
 import api from '../../../api/process';

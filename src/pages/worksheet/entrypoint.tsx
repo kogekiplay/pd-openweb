@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import WorkSheet from './WorkSheet';
 
 export default class KcEntrypoint extends Component<any, any> {

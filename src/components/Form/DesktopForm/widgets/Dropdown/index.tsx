@@ -1,4 +1,3 @@
-import React from 'react';
 import { Steps } from 'ming-ui';
 import Dropdown from './dropdown';
 

@@ -1,7 +1,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { transformSync, resolveSpecTarget } = require('../../../scripts/spec-harness.ts');
+const { jsxRuntimeFrom, transformSync, resolveSpecTarget } = require('../../../scripts/spec-harness.ts');
 
 global._l = text => text;
 
@@ -29,6 +29,8 @@ function requireSource(filePath) {
   });
 
   function localRequire(request) {
+    // JSX 走 automatic runtime（与 .babelrc 一致），jsx() 也要落到假 createElement
+    if (request === 'react/jsx-runtime') return jsxRuntimeFrom(() => null);
     if (request === 'react') {
       return { __esModule: true, default: { createElement: () => null } };
     }

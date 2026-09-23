@@ -1,4 +1,4 @@
-import React, { Fragment, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useLayoutEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { Dropdown, TagTextarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import type { Moment } from 'moment';
 import PropTypes from 'prop-types';
 import CalendarHeader from './CalendarHeaderOld';

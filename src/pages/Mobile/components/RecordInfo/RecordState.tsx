@@ -1,4 +1,3 @@
-import React from 'react';
 import { SpinLoading } from 'antd-mobile';
 import { Icon } from 'ming-ui';
 

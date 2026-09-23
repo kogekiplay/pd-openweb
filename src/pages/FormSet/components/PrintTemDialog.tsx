@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { func } from 'prop-types';
 import { FullScreenCurtain } from 'ming-ui';
 import PrintForm from 'src/pages/Print';

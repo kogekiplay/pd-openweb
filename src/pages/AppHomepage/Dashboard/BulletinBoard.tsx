@@ -1,4 +1,3 @@
-import React from 'react';
 import { Carousel } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 // CodeMirror 6。这是 CM5 → CM6 迁移的第一步（试点），仓里另外两处

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import { RadioGroup } from 'ming-ui';
 import SortConditions from 'src/pages/worksheet/common/ViewConfig/components/SortConditions';

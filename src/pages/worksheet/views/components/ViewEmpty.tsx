@@ -1,4 +1,3 @@
-import React from 'react';
 import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 import { browserIsMobile } from 'src/utils/common';

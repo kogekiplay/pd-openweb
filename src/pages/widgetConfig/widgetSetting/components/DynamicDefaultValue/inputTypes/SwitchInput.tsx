@@ -1,4 +1,4 @@
-import React, { createRef, Fragment, useState } from 'react';
+import { createRef, Fragment, useState } from 'react';
 import { ClickAwayMenu, DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 import { getTypeList } from '../util';

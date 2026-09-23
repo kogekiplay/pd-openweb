@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import { DraggableBtnRow } from './ActionRow';
 import { DropGap, EmptyGroupDropTarget } from './dropTargets';

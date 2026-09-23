@@ -1,4 +1,3 @@
-import React from 'react';
 import { dialogSelectUser } from 'ming-ui/functions';
 import Config from '../../../config';
 

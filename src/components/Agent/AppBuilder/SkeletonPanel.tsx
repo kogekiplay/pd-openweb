@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 // 复用全站骨架的扫光配色（--skeleton-* 已在 ming-ui Skeleton 的 less 中按明暗主题定义）

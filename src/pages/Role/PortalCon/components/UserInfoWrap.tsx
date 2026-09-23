@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Dialog as MobileDialog, Toast } from 'antd-mobile';
 import _ from 'lodash';

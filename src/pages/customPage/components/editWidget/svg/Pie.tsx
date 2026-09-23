@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default props => (
   <svg width={77.538} height={77.689} {...props}>

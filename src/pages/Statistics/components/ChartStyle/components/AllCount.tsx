@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Checkbox, Collapse, Input, Switch } from 'antd';
 import _ from 'lodash';
 import { isNumberControl } from 'statistics/common/controlUtils';

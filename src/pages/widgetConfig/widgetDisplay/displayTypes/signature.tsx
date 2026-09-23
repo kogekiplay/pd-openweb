@@ -1,4 +1,3 @@
-import React from 'react';
 import { CommonDisplay } from '../../styled';
 
 export default function Signature() {

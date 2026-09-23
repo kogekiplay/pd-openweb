@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { oneOf } from 'prop-types';
 import { Button, Dialog, Skeleton, SvgIcon, Textarea, UserHead } from 'ming-ui';

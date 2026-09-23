@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import styled, { css, keyframes } from 'styled-components';
 import { Icon } from 'ming-ui';

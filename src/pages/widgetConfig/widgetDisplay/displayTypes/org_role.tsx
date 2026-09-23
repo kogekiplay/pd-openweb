@@ -1,4 +1,3 @@
-import React from 'react';
 import { CircleAdd } from '../../styled';
 
 export default function OrgRole() {

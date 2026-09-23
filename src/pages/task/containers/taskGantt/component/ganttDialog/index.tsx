@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import axios from 'axios';
 import html2canvas from 'html2canvas';
 import _ from 'lodash';

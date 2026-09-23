@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';

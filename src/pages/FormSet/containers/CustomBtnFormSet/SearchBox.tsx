@@ -1,4 +1,3 @@
-import React from 'react';
 import { Icon } from 'ming-ui';
 
 export default function SearchBox({ value, onChange }) {

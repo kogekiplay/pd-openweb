@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { FlexCenter } from 'worksheet/components/Basics';

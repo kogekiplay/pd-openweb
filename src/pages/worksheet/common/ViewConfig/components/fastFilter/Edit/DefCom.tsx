@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { DATE_FORMAT_BY_DATERANGETYPE } from 'src/pages/worksheet/common/ViewConfig/components/fastFilter/config.js';

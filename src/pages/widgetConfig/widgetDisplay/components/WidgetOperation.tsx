@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from 'antd';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';

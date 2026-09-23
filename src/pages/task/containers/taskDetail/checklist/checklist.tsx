@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 // react-dnd v14 删除了 DragSource / DropTarget 装饰器且没有官方替代，
 // 这里用 v16 的 hooks 重建了一份语义一致的（含 spec 第三参 component）。

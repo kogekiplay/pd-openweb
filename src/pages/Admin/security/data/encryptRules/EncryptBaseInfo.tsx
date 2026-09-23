@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment, useEffect, useState } from 'react';
+import { Component, createRef, Fragment, useEffect, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Icon, Input, Textarea } from 'ming-ui';

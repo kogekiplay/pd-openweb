@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSetState } from 'react-use';
 import FunctionEditorDialog from '../../../FunctionEditorDialog';
 import type { FormControl } from 'src/utils/controlTypes';

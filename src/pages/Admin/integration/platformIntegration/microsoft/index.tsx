@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import { Button, Dialog, Icon, Input, LoadDiv, Support, Switch, UpgradeIcon } from 'ming-ui';

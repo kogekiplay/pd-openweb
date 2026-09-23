@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from 'react';
+import { Fragment, PureComponent } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { Dropdown, LoadDiv } from 'ming-ui';

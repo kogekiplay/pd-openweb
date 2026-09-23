@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import styled from 'styled-components';
 import { WidgetContent } from '../components';
 import { getComponentTitleText, getIconByType, isLightColor, replaceColor } from '../util';

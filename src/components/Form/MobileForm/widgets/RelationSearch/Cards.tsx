@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _, { identity } from 'lodash';
 import { Icon } from 'ming-ui';
 import { LoadingButton } from '../../components/RelateRecordCards';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { array, shape, string } from 'prop-types';
 import { Icon } from 'ming-ui';

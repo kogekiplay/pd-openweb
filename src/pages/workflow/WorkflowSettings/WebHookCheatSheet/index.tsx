@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import JsonView from '@mingdaocom/json-view';
 import { LoadDiv, ScrollView } from 'ming-ui';
 import api from '../../api/flowNode';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { getAreaHintText } from 'src/pages/widgetConfig/util/setting';
 import { CommonDisplay } from '../../styled';
 

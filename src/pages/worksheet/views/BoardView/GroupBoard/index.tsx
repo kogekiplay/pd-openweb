@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import _ from 'lodash';
 import styled from 'styled-components';

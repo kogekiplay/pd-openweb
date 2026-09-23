@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';

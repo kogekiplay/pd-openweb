@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, FunctionWrap, Input } from 'ming-ui';
 import systemIntegrationAjax from 'src/api/systemIntegration';

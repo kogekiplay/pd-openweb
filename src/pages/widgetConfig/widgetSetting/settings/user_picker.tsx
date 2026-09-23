@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import _ from 'lodash';
 import { RadioGroup } from 'ming-ui';
 import { DISPLAY_USER_TYPE_OPTIONS } from '../../config/setting';

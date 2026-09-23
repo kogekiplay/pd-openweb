@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import _, { debounce } from 'lodash';
 import { func, string } from 'prop-types';
 import styled from 'styled-components';

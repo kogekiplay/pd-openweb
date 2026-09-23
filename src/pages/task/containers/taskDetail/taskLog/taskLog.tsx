@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import filterXSS from 'xss';
 import LoadDiv from 'ming-ui/components/LoadDiv';

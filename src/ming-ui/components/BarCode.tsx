@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import JsBarcode from 'jsbarcode';
 
 export default class Barcode extends Component<any, any> {

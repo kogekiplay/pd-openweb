@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Popup } from 'antd-mobile';
 import Trigger from '@rc-component/trigger';

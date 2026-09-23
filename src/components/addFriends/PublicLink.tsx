@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { Dropdown, Icon, LoadDiv } from 'ming-ui';

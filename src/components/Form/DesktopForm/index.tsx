@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo, useRef } from 'react';
+import { Fragment, useCallback, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import cx from 'classnames';
 import _ from 'lodash';

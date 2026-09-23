@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { Divider, Input, Switch } from 'antd';
 import cx from 'classnames';

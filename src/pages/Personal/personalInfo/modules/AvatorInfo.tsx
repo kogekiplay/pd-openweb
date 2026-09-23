@@ -1,4 +1,4 @@
-﻿import React, { Component, lazy, Suspense } from 'react';
+﻿import { Component, lazy, Suspense } from 'react';
 import styled from 'styled-components';
 import { Button, LoadDiv } from 'ming-ui';
 import accountAjax from 'src/api/account';

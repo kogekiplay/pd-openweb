@@ -1,4 +1,3 @@
-import React from 'react';
 import _, { find, flatten, get, includes } from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';

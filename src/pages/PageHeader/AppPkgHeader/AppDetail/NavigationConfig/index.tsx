@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Checkbox, Tabs } from 'antd';
 import cx from 'classnames';
 import { Icon, RadioGroup } from 'ming-ui';

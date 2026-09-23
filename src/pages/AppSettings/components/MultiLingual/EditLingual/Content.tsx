@@ -1,4 +1,3 @@
-import React from 'react';
 import App from './App';
 import AppRole from './AppRole';
 import Collections from './Collections';

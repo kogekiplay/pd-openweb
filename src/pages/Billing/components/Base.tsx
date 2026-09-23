@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LoadDiv } from 'ming-ui';
 import AIService from 'src/api/aIService';
 import { initialFunctionData } from '../config';

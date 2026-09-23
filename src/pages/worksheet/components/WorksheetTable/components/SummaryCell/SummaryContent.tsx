@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import _, { isEmpty } from 'lodash';
 import { arrayOf, bool, number, shape, string } from 'prop-types';

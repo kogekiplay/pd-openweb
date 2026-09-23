@@ -1,4 +1,3 @@
-import React from 'react';
 import defineMethods from 'src/utils/defineMethods';
 import { createRoot } from 'react-dom/client';
 import doT from 'dot';

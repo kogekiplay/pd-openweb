@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Checkbox, Input, Select } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';

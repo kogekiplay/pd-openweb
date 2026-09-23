@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { SYSTEM_CONTROLS } from 'worksheet/constants/enum';

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal } from 'antd';
 import { Button } from 'ming-ui';
 import externalPortalAjax from 'src/api/externalPortal';

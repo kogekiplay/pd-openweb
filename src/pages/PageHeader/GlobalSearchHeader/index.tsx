@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import withRouter from '../../../router/withRouter';
 import _ from 'lodash';
 import styled from 'styled-components';

@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, Fragment, useEffect, useImperativeHandle, useRef } from 'react';
 import cx from 'classnames';
 import { Tooltip } from 'ming-ui/antd-components';
 import { browserIsMobile } from 'src/utils/common';

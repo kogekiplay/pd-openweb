@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import doT from 'dot';
+﻿import doT from 'dot';
 import { Button, Dialog } from 'ming-ui';
 import kcAjax from 'src/api/kc';
 import { formatFileSize, getClassNameByExt } from 'src/utils/common';

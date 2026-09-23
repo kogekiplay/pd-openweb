@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { Dialog } from 'ming-ui';

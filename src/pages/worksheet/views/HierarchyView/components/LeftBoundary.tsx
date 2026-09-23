@@ -1,4 +1,3 @@
-import React from 'react';
 import { useDrop } from 'react-dnd';
 import cx from 'classnames';
 import { get } from 'lodash';

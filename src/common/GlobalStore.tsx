@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { emitter } from 'src/utils/common';
 
 const GlobalStoreContext = createContext();

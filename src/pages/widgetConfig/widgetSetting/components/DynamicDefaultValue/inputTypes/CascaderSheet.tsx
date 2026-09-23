@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';

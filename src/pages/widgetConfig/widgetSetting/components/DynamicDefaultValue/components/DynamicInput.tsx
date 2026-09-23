@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
 import { handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';

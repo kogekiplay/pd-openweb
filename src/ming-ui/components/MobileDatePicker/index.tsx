@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-mobile-datepicker';
 import moment from 'moment';
 import PropTypes from 'prop-types';

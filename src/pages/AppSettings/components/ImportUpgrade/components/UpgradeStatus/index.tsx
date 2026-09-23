@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon, Skeleton, SvgIcon } from 'ming-ui';

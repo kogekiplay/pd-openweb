@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Card, Dialog, Input, SpinLoading } from 'antd-mobile';
 import _ from 'lodash';

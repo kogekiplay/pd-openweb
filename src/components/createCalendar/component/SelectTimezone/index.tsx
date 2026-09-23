@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import Dropdown from 'ming-ui/components/Dropdown';
 import './index.less';
 

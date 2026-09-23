@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, LoadDiv } from 'ming-ui';
 import functionWrap from 'ming-ui/components/FunctionWrap';

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createPortal } from 'react-dom';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import './index.less';

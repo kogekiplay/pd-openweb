@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Select } from 'antd';
 import _ from 'lodash';
 import { Dialog, FunctionWrap, Icon, Switch } from 'ming-ui';

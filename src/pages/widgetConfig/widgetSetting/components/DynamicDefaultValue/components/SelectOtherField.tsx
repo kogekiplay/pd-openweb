@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment } from 'react';
+import { Component, createRef, Fragment } from 'react';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import { func } from 'prop-types';

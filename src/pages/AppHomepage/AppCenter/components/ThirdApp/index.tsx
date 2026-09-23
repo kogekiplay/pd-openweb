@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import api from 'api/application';
 import _ from 'lodash';
 import { func } from 'prop-types';

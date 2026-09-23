@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';

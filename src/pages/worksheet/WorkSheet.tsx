@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { Component, Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

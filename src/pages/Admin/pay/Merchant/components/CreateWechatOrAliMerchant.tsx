@@ -1,5 +1,5 @@
 // 微信支付 or 支付宝支付
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import CryptoJS from 'crypto-js';

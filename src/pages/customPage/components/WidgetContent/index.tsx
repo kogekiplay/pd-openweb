@@ -1,4 +1,4 @@
-import React, { Fragment, useLayoutEffect, useState } from 'react';
+import { Fragment, useLayoutEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import 'react-grid-layout/css/styles.css';

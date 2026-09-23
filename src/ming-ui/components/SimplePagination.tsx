@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import { isNaN } from 'lodash';
 import { func, number } from 'prop-types';

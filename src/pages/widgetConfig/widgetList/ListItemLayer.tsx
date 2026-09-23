@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRef } from 'react';
 import { useDragLayer } from 'react-dnd';
 import cx from 'classnames';

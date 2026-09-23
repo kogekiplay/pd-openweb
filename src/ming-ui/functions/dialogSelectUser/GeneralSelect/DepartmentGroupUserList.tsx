@@ -1,7 +1,7 @@
 /**
  * 选择成员（按部门或群组）
  */
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox } from 'ming-ui';

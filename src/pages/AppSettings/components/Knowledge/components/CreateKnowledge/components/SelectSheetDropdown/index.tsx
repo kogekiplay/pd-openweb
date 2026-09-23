@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import Dropdown from '../../../Dropdown';
 import { useCreateKnowledgeStore } from '../../index';
 import { addSelectedWorksheet } from '../../store/actions';

@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Trigger from '@rc-component/trigger';

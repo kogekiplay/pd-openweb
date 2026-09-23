@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSetState } from 'react-use';
 import { Dropdown, Menu } from 'antd';
 import _ from 'lodash';

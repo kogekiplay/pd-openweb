@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { DEFAULT_CONFIG } from 'src/pages/widgetConfig/config/widget';
 import { enumWidgetType, getIconByType } from 'src/pages/widgetConfig/util';

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import DisplayRow from './displayRow';

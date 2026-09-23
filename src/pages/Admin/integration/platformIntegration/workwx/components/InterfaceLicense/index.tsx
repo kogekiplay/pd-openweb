@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
 import { Button, Icon, LoadDiv, ScrollView } from 'ming-ui';

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useCallback, useState } from 'react';
+import { lazy, Suspense, useCallback, useState } from 'react';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import Trigger from '@rc-component/trigger';

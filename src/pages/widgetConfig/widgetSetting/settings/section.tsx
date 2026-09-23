@@ -1,4 +1,3 @@
-import React from 'react';
 import { SettingItem } from '../../styled';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../util/setting';
 import IconSetting from '../components/SplitLineConfig/IconSetting';

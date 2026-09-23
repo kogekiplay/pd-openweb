@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Dialog } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import account from 'src/api/account';

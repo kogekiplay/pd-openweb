@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import _, { head } from 'lodash';
 import { Steps } from 'ming-ui';

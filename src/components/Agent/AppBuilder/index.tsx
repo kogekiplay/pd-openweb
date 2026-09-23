@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
+import { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import homeAppAjax from 'src/api/homeApp';

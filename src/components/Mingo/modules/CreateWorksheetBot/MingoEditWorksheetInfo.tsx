@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useMeasure } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';

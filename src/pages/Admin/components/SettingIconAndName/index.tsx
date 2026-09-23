@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from 'styled-components';
 import { Button, Dialog, Icon, Input, QiniuUpload } from 'ming-ui';
 import dingIcon from '../../integration/platformIntegration/images/ding.png';

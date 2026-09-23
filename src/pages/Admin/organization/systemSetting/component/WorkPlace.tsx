@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { ConfigProvider, Spin, Table } from 'antd';
 import _ from 'lodash';
 import { Dialog, Icon, LoadDiv } from 'ming-ui';

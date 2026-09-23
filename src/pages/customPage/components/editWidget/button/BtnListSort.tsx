@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Modal } from 'antd';
 import styled from 'styled-components';
 import { Button, Icon, SortableList } from 'ming-ui';

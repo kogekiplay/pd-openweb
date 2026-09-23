@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Popup } from 'antd-mobile';
 import cx from 'classnames';
 import PropTypes from 'prop-types';

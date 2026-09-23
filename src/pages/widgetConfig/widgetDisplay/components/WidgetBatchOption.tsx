@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dropdown } from 'antd';
 import _, { find, flatten } from 'lodash';
 import styled from 'styled-components';

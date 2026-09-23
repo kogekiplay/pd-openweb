@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { Dialog, Dropdown, Icon } from 'ming-ui';

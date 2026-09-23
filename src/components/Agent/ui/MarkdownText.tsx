@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import MarkdownIt from 'markdown-it';
 import styled from 'styled-components';
 import { CodeBlock } from './CodeBlock';

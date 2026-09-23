@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { renderToString } from 'react-dom/server';
 import cx from 'classnames';
 import _ from 'lodash';

@@ -3,7 +3,6 @@
 //   - worksheets.json:  type = 'worksheet'
 //   - custom-pages.json: type ∈ { 'dashboard', 'workspace', 'aiAssistant' }
 // 本 module 渲染一份 items 数组（已按 type 过滤），按 groupName 分组卡片化展示。
-import React from 'react';
 import styled from 'styled-components';
 import { Icon, SvgIcon } from 'ming-ui';
 import { CardEditButton, PanelWrap, parseCompactList, parseCompactStr } from './_shared';

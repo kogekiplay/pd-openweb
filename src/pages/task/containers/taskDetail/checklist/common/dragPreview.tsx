@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 export default class DragPreview extends Component<any, any> {
   constructor(props) {

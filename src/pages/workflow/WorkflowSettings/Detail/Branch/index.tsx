@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { Dialog, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

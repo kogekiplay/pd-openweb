@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import CloseNet from '../CloseNet';
 import CommonInfo from '../CommonInfo';
 import PositionInfo from '../PositionInfo';

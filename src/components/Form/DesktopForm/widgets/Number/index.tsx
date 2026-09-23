@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Slider } from 'ming-ui';
 import { getAdvanceSetting } from 'src/utils/controlCommon';
 import { useWidgetEvent } from '../../../core/useFormEventManager';

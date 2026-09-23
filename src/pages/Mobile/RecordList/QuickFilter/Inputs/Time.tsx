@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { func, number, shape, string } from 'prop-types';

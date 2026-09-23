@@ -1,4 +1,3 @@
-import React from 'react';
 import { assign, isEmpty, isObject, trim } from 'lodash';
 import _ from 'lodash';
 import moment from 'moment';

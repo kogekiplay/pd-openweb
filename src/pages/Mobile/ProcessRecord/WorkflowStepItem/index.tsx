@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import Steps from 'src/pages/workflow/components/ExecDialog/Steps';

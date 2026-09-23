@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Confirm from 'ming-ui/components/Dialog/Confirm';
 import process from '../../../api/process';
 

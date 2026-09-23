@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSetState } from 'react-use';
 import styled from 'styled-components';
 import { Dialog, FunctionWrap, Switch } from 'ming-ui';

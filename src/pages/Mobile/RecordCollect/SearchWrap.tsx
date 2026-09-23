@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Popup } from 'antd-mobile';
 import cx from 'classnames';
 import styled from 'styled-components';

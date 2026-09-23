@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useMemo } from 'react';
+import { Fragment, memo, useMemo } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';

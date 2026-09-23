@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSetState } from 'react-use';
 import { Button, ConfigProvider, Modal } from 'antd';
 import update from 'immutability-helper';

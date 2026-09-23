@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import kc from 'src/api/kc';
 import RegExpValidator from 'src/utils/expression';

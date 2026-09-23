@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { get, pick } from 'lodash';
 import { arrayOf, bool, func, shape, string } from 'prop-types';
 import qs from 'query-string';

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import unauthorizedPic from 'src/components/UnusualContent/unauthorized.png';
 

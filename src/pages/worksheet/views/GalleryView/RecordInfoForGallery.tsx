@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import RecordInfoWrapper from 'src/pages/worksheet/common/recordInfo/RecordInfoWrapper';
 import type { RecordRow } from 'src/utils/controlTypes';

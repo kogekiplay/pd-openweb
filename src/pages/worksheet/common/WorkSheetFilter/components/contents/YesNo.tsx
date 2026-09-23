@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { includes } from 'lodash';
 import PropTypes from 'prop-types';
 import { RadioGroup } from 'ming-ui';

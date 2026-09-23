@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import AdminCommon from 'src/pages/Admin/common/common';
 import Config from '../../config';
 import Announce from './components/Announce';

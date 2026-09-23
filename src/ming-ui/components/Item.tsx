@@ -1,4 +1,4 @@
-import React, { createElement } from 'react';
+import { createElement } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './less/Item.less';

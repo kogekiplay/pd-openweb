@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, ConfigProvider, Dropdown, Input, Menu, Modal } from 'antd';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';

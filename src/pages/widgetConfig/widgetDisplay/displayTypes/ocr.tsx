@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { TEMPLATE_TYPE } from '../../config/ocr';
 import { CommonDisplay } from '../../styled';

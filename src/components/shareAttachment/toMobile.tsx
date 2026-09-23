@@ -1,4 +1,3 @@
-import React from 'react';
 import doT from 'dot';
 import _ from 'lodash';
 import qs from 'query-string';

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import emptyPng from './empty.png';
 import SelectControls from './SelectControls';

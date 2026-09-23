@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { ActionSheet, Button, Dialog, List, SpinLoading } from 'antd-mobile';
 import cx from 'classnames';

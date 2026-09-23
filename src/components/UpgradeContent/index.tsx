@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Skeleton } from 'ming-ui';

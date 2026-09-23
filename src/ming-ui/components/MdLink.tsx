@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import { Link } from 'react-router';
+﻿import { Link } from 'react-router';
 import cx from 'classnames';
 import propTypes from 'prop-types';
 import { pathCompletion } from 'src/utils/common';

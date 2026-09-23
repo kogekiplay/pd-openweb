@@ -29,11 +29,11 @@
     "allowImportingTsExtensions": true,
     "allowArbitraryExtensions": true,
 
-    // 用 classic（"react"）而不是 "react-jsx"：.babelrc 的 @babel/preset-react 没配
-    // runtime，babel 7 默认即 classic；eslint.config.js 也把 react/react-in-jsx-scope
-    // 设为 error，说明全仓 JSX 文件都显式 import React。React 运行时 18.3.1。
-    // 选 "react-jsx" 会与真实构建产物不一致。
-    "jsx": "react",
+    // 和 .babelrc 的 @babel/preset-react { runtime: 'automatic' } 一致（2026-09-23 一起从 classic 切过来）：
+    // JSX 编译成 react/jsx-runtime 的 jsx() / jsxs()，只为 JSX 而写的 import React 已由
+    // tools/codemod-drop-unused-react-import.ts 删掉（2494 个文件）。两边必须一起改 ——
+    // 只改这里，tsc 会把 babel 仍在用的 React 判成未使用；只改 babel，产物会找不到 React。
+    "jsx": "react-jsx",
 
     // 【allowJs 已移除】全仓被 tsc 解析到的 .js 只剩 3 个，全是 vendor/生成物，
     // 各自配了同名 .d.ts（applibrary_v2 / svgIcon / Recorder/lib），
@@ -72,8 +72,8 @@
     //   noImplicitAny +38712（其中参数隐式 any 30178）
     //   noPropertyAccessFromIndexSignature +17156
     //   strict:true 合计 +47743；终点全开合计 +69593，涉及 3749 个文件
-    //   declaration（真正输出 .d.ts 时才报）+25
-    //   jsx: react-jsx +2507（2494 条是 import React 变成未使用；要和 babel 的 automatic runtime 一起换）
+    //   declaration（真正输出 .d.ts 时才报）+25 —— 已打开
+    //   jsx: react-jsx +2507（2494 条是 import React 变成未使用）—— 已打开，连同 babel 的 automatic runtime
     "alwaysStrict": true,
     "noFallthroughCasesInSwitch": true,
     "allowUnreachableCode": false,

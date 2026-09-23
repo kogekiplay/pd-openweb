@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Checkbox, Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';

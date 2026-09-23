@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, Icon, Input, LoadDiv, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Dropdown, Menu } from 'antd';
 import addFriends from 'src/components/addFriends';
 import Constant from '../../utils/constant';

@@ -1,4 +1,3 @@
-import React from 'react';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import { FILTER_VALUE_ENUM } from '../config';
 import IntegratedApi from '../CustomAction/actionTypes/IntegratedApi';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Tooltip } from 'ming-ui/antd-components';
 import config from '../../utils/config';
 import Constant from '../../utils/constant';

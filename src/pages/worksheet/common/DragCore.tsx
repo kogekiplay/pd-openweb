@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 const DOUBLE_CLICK_DELAY = 200; // 双击判定时间阈值（毫秒）
 

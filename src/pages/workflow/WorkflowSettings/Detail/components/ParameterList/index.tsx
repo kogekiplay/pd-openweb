@@ -1,4 +1,3 @@
-import React from 'react';
 import { Checkbox } from 'ming-ui';
 import { getControlTypeName } from '../../../utils';
 import type { FormControl } from 'src/utils/controlTypes';

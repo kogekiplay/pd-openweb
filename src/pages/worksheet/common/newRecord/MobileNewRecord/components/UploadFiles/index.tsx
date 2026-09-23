@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
 import { QiniuUpload } from 'ming-ui';
 import type { MobileFileLike } from 'src/pages/worksheet/types';
 

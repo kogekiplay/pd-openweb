@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 

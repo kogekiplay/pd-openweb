@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
 import Trigger from '@rc-component/trigger';

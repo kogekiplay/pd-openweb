@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import type { RootState } from 'src/redux/types';

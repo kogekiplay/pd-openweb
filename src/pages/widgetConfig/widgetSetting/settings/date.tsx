@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import _ from 'lodash';
 import { Checkbox, Dropdown, RadioGroup } from 'ming-ui';
 import { getTimeZoneText } from 'src/utils/control';

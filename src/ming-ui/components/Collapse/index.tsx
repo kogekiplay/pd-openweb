@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const Collapse = ({ open, duration = 300, children }) => {
   const ref = useRef<HTMLDivElement | null>(null);

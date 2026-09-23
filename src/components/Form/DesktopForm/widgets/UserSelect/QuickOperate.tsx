@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Popover } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';

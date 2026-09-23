@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Dialog, FunctionWrap, Radio } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';

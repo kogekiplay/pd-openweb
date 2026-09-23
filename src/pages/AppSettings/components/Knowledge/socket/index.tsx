@@ -1,4 +1,3 @@
-import React from 'react';
 import filterXSS from 'xss';
 import { antNotification, Icon } from 'ming-ui';
 import { navigateTo } from 'src/router/navigateTo';

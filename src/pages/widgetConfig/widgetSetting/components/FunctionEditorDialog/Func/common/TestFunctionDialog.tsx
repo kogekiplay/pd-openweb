@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import cx from 'classnames';
 import { find, get, isFunction, omit, uniq } from 'lodash';
 import _ from 'lodash';

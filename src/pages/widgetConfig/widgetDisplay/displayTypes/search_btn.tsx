@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const Search_Btn_Wrap = styled.div`

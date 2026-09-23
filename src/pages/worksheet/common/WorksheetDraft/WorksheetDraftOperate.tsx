@@ -1,4 +1,3 @@
-import React from 'react';
 import { Icon } from 'ming-ui';
 import DropMotion from 'worksheet/components/Animations/DropMotion';
 import './index.less';

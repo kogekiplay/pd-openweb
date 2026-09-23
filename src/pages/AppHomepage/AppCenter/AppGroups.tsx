@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useReducer, useRef } from 'react';
+import { useEffect, useMemo, useReducer, useRef } from 'react';
 import withRouter from '../../../router/withRouter';
 import _ from 'lodash';
 import { shape, string } from 'prop-types';

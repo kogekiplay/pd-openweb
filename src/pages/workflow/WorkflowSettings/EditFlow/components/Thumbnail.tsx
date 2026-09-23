@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Drawer } from 'antd';
 import domtoimage from 'dom-to-image';
 import styled from 'styled-components';

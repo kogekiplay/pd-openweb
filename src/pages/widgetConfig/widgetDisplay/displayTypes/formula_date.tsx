@@ -1,4 +1,3 @@
-import React from 'react';
 import { UNIT_TO_TEXT } from '../../config/setting';
 import { CommonDisplay } from '../../styled';
 import { getAdvanceSetting } from '../../util';

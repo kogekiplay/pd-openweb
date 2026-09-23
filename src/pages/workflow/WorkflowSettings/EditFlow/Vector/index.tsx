@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import { SEARCH_MODE_MAP } from '../../enum';
 import { CreateNode, NodeOperate } from '../components';

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Modal } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';

@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { includes } from 'lodash';
 import moment from 'moment';

@@ -1,4 +1,3 @@
-import React from 'react';
 import _, { isEmpty } from 'lodash';
 import styled from 'styled-components';
 import { DRAG_ACCEPT } from '../../config/Drag';

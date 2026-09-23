@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import nzh from 'nzh';
 import { DEPARTMENT_ORGANIZE, RELATION_TYPE, USER_ORGANIZE, USER_TYPE } from '../../enum';

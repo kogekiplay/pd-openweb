@@ -1,4 +1,4 @@
-﻿import React, { Fragment } from 'react';
+﻿import { Fragment } from 'react';
 import { Dialog } from 'ming-ui';
 import { generateRandomPassword } from 'src/utils/common';
 import './index.less';

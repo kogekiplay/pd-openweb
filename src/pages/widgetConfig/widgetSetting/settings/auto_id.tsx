@@ -1,4 +1,4 @@
-import React, { Fragment, useRef } from 'react';
+import { Fragment, useRef } from 'react';
 import { useSetState } from 'react-use';
 import { Dropdown } from 'antd';
 import update from 'immutability-helper';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Checkbox, ConfigProvider, Modal, Radio, Space } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 // remarkable 2 去掉了 default export，Remarkable 改为具名导出。
 import { Remarkable, utils } from 'remarkable';

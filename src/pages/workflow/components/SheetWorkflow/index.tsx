@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Drawer } from 'antd';
 import { ActionSheet } from 'antd-mobile';
 import Trigger from '@rc-component/trigger';

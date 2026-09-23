@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useState } from 'react';
+import { Fragment, lazy, Suspense, useState } from 'react';
 import JsonView from '@mingdaocom/json-view';
 import cx from 'classnames';
 import { get } from 'lodash';

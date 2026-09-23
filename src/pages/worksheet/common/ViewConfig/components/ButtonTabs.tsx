@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { AnimationWrap } from 'src/pages/worksheet/common/ViewConfig/style.jsx';
 

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Input, Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import ClickAway from 'ming-ui/components/ClickAway';
 import DiscussLogFile from '../../components/DiscussLogFile';
 import './Discussion.less';

@@ -1,4 +1,3 @@
-import React from 'react';
 import Header from 'src/components/worksheetConfigHeader';
 
 export default function WidgetConfigHeader({ name: worksheetName, ...rest }) {

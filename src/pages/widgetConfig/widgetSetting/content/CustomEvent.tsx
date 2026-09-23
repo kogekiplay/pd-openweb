@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
 import update from 'immutability-helper';
 import _ from 'lodash';

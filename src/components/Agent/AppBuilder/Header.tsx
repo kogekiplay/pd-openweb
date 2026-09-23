@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Icon } from 'ming-ui';
 import { transitions } from '../ui/tokens';

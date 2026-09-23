@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import cx from 'classnames';
 import { includes } from 'lodash';
 import _ from 'lodash';

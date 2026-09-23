@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { bool, func, string } from 'prop-types';
 import { Icon, ScrollView } from 'ming-ui';

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import moment from 'moment';
 import { DatePicker } from 'ming-ui';
 import Config from '../config';

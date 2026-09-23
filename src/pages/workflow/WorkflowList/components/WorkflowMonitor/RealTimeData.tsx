@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from 'react';
+import { Fragment, PureComponent } from 'react';
 import _ from 'lodash';
 import flowMonitor from 'src/pages/workflow/api/processVersion.js';
 import { settingEarlyWarning } from './EarlyWarningDialog';

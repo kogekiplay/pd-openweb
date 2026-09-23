@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { Button, Icon, LoadDiv } from 'ming-ui';
 import projectController from 'src/api/project';

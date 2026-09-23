@@ -1,4 +1,3 @@
-import React from 'react';
 import defineMethods from 'src/utils/defineMethods';
 import { renderToString } from 'react-dom/server';
 import doT from 'dot';

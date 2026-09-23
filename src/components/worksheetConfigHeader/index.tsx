@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Tabs } from 'ming-ui';
 import { useGlobalStore } from 'src/common/GlobalStore';

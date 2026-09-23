@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { Dialog } from 'ming-ui';
 import { addToken } from 'src/utils/common';

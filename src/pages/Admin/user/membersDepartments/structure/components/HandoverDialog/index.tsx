@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Dialog } from 'ming-ui';
 import FunctionWrap from 'ming-ui/components/FunctionWrap';

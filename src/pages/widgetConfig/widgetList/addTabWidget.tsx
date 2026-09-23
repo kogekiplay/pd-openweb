@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import tabBottomImg from '/staticfiles/images/tab_bottom.png';
 import tabLeftImg from '/staticfiles/images/tab_left.png';
 import tabTopImg from '/staticfiles/images/tab_top.png';

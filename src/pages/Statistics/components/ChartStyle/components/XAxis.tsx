@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Checkbox, Input } from 'antd';
 import cx from 'classnames';
 import { Icon } from 'ming-ui';

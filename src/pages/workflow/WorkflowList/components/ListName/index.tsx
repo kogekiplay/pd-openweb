@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { MdLink } from 'ming-ui';
 

@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import { emitter } from 'src/utils/common';
 import TaskCenter from './containers/taskCenter/taskCenter';
 

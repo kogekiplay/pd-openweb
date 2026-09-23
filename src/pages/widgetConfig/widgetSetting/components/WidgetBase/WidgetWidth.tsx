@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { AnimationWrap, SettingItem } from '../../../styled';
 import { adjustWidthList } from '../../../util/setting';

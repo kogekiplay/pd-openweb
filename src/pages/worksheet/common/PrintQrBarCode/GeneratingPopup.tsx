@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import PDFObject from 'pdfobject';
 import styled from 'styled-components';
 import { FlexCenter, rotate } from 'worksheet/components/Basics';

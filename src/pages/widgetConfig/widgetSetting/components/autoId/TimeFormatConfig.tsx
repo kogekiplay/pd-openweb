@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import moment from 'moment';

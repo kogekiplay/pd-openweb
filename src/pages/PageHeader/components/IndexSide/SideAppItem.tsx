@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon, MdLink, SvgIcon } from 'ming-ui';

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useDrop } from 'react-dnd';
 import { useSetState } from 'react-use';
 import cx from 'classnames';

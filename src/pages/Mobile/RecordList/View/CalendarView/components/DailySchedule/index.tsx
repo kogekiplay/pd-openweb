@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, memo, useImperativeHandle } from 'react';
+import { forwardRef, Fragment, memo, useImperativeHandle } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { MobileSearch, PopupWrapper, ScrollView } from 'ming-ui';

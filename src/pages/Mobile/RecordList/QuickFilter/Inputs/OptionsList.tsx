@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { arrayOf, bool, func, shape, string } from 'prop-types';
 import styled from 'styled-components';

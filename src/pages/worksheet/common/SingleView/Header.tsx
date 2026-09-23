@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from 'antd';
 import cx from 'classnames';
 import _, { get, isEmpty } from 'lodash';

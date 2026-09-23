@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo, useRef } from 'react';
+import { Fragment, useCallback, useMemo, useRef } from 'react';
 import { Grid as WindowGrid } from 'react-window';
 import { includes, isFunction } from 'lodash';
 import { normalizeGridCellStyle, RESET_V2_CONTAINER_BOX } from '../gridCellStyle';

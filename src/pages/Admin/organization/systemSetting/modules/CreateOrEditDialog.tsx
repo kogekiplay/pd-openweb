@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Dialog } from 'ming-ui';
 import fixedDataAjax from 'src/api/fixedData.js';

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Empty, Select } from 'antd';
 import JsonView from '@mingdaocom/json-view';
 import { Support } from 'ming-ui';

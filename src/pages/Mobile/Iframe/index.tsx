@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import DocumentTitle from 'mobile/components/DocumentTitle';
 import Back from '../components/Back';
 

@@ -1,6 +1,6 @@
 const assert = require('assert');
 const path = require('path');
-const { transformFileSync } = require('../../../../scripts/spec-harness.ts');
+const { jsxRuntimeFrom, transformFileSync } = require('../../../../scripts/spec-harness.ts');
 
 function requireMobileCityPicker() {
   // exports 上挂的是被测模块的导出，形状由被测代码决定；不标类型
@@ -13,6 +13,8 @@ function requireMobileCityPicker() {
   });
 
   function localRequire(importPath) {
+    // JSX 走 automatic runtime（与 .babelrc 一致），jsx() 也要落到假 createElement
+    if (importPath === 'react/jsx-runtime') return jsxRuntimeFrom(() => null, 'Fragment');
     if (importPath === 'react') {
       class Component {
         // 手写的 React 替身，字段要显式声明（见其它 spec 同样处理）

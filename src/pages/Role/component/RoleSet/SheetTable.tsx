@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import _ from 'lodash';

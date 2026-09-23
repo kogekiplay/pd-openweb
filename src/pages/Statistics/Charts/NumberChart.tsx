@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { generate } from '@ant-design/colors';
 import { Col, Dropdown, Menu, Row } from 'antd';
 import cx from 'classnames';

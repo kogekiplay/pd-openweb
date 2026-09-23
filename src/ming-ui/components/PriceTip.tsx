@@ -1,4 +1,3 @@
-import React from 'react';
 import { pathCompletion } from 'src/utils/common';
 
 export default function PriceTip(props) {

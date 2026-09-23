@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { Dialog, Dropdown, FunctionWrap, Icon } from 'ming-ui';
 import { checkPermission } from 'src/components/checkPermission';

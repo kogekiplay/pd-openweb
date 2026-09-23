@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import 'react-grid-layout/css/styles.css';
 import GridLayout from 'react-grid-layout/legacy';

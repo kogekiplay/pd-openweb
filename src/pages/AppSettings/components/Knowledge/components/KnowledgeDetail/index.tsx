@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import { memo, useState } from 'react';
 import { KnowledgeDetailViewMode } from '../../core/config';
 import ChunkPreview from './components/ChunkPreview';
 import KnowledgeWorksheet from './components/KnowledgeWorksheet';

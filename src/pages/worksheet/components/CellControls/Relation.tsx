@@ -1,7 +1,6 @@
 /**
  * 工作表控件-关联
  */
-import React from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { UserHead } from 'ming-ui';

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { updateRulesData } from 'src/components/Form/core/formUtils/updateRulesData';
 import { fromType, typeForCon } from '../../core/config';
 import { getControlsForPrint, isRelationControl } from '../../core/util';

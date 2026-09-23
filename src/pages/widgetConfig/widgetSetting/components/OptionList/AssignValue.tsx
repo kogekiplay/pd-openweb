@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { InputNumber, Switch } from 'antd';
 import cx from 'classnames';
 import update from 'immutability-helper';

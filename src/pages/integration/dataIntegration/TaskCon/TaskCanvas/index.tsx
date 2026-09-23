@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';

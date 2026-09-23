@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { get, isEmpty } from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';

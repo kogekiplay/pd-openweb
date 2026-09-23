@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import styled from 'styled-components';

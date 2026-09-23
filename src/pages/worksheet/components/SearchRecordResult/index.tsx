@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { includes } from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv, Modal } from 'ming-ui';

@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import UserFeed from 'src/pages/feed/components/app/userFeed';
 import Info from '../Info/UserInfo';

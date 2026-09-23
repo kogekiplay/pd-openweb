@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Popover } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';

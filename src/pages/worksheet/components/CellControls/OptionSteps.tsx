@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { useKey } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';

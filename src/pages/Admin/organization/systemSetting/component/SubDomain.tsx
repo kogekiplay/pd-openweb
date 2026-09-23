@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Input } from 'antd';
 import _ from 'lodash';
 import { Dialog, Icon, LoadDiv, QiniuUpload } from 'ming-ui';

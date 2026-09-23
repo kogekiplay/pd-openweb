@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';

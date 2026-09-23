@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { ConfigProvider, Input, Spin, Table } from 'antd';
 import cx from 'classnames';
 import { LoadDiv } from 'ming-ui';

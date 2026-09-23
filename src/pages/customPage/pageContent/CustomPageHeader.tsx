@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { Popover } from 'antd';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';

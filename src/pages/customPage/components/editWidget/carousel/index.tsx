@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, ConfigProvider, Modal } from 'antd';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';

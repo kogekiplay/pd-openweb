@@ -1,4 +1,3 @@
-import React from 'react';
 
 export const listConfigStr = {
   10: _l('显示创建按钮'),

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { get } from 'lodash';
 import _ from 'lodash';
 import { Checkbox, Dropdown } from 'ming-ui';

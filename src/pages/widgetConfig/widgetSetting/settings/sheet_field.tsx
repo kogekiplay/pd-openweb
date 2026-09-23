@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Dropdown } from 'antd';
 import cx from 'classnames';

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Checkbox, Dropdown, Menu } from 'antd';
 import { ActionSheet, Button, Dialog as MobileDialog, Popup } from 'antd-mobile';
 import cx from 'classnames';

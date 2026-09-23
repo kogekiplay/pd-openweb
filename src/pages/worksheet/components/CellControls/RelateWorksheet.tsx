@@ -1,7 +1,7 @@
 /**
  * 工作表控件-关联他表
  */
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';

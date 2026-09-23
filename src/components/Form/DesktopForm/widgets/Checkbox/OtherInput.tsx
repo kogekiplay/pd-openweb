@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import cx from 'classnames';
 import { Textarea } from 'ming-ui';
 import { getCheckAndOther } from '../../../core/utils';

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Route, Routes } from 'react-router';
 import { Popover } from 'antd';
 import _ from 'lodash';

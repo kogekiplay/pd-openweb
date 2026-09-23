@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Input } from 'antd';
 import _ from 'lodash';
 import { Checkbox } from 'ming-ui';

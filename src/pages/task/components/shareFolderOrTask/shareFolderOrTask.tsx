@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import { Dialog } from 'ming-ui';
 import './shareFolderOrTask.less';

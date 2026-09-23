@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { Icon } from 'ming-ui';
 

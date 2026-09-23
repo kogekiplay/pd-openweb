@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Dialog, LoadDiv } from 'ming-ui';
 import postAjax from 'src/api/post';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';

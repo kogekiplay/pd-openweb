@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import { Dialog as MobileDialog } from 'antd-mobile';
+﻿import { Dialog as MobileDialog } from 'antd-mobile';
 import _, { isEmpty } from 'lodash';
 import { Dialog } from 'ming-ui';
 import sheetAjax from 'src/api/worksheet';

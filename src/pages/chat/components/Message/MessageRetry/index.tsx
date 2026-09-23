@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import './index.less';
 

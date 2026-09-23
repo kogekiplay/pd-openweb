@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import kcCtrl from 'src/api/kc';

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';

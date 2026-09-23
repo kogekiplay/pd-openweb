@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { get } from 'lodash';
 import styled from 'styled-components';
 import { BgIconButton, Checkbox, Dialog } from 'ming-ui';

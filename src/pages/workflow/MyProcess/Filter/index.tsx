@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { DatePicker, Select } from 'antd';
 import en_US from 'antd/es/date-picker/locale/en_US';

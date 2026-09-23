@@ -1,4 +1,3 @@
-import React from 'react';
 import { AgentBusProvider } from './agentBus';
 import ChatPanel from './ChatPanel';
 

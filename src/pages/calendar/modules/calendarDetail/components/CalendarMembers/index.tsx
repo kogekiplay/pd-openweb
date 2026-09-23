@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import Icon from 'ming-ui/components/Icon';
 import Member from './member';

@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useEffect, useImperativeHandle, useState } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useState } from 'react';
 import { get } from 'lodash';
 import { Icon } from 'ming-ui';
 import { compatibleMDJS } from 'src/utils/project';

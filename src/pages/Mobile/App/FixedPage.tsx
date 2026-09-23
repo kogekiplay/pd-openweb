@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import Back from '../components/Back';

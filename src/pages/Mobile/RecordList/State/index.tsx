@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import alreadyDelete from './assets/alreadyDelete.png';
 import withoutPermission from './assets/withoutPermission.png';
 

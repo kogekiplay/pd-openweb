@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { UserCard } from 'ming-ui';
 import { MEMBER_STATUS } from '../../constant';
 

@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Popup } from 'antd-mobile';
 import axios from 'axios';
 import _ from 'lodash';

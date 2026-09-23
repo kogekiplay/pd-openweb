@@ -1,4 +1,4 @@
-import React, { createRef, Fragment, useEffect, useRef, useState } from 'react';
+import { createRef, Fragment, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { CardNav, ScrollView } from 'ming-ui';

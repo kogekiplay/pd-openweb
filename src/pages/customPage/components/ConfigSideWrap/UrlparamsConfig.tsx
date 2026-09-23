@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Input } from 'antd';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

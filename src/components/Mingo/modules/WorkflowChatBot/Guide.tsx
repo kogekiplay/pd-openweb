@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import chatBotDefaultIcon from 'src/pages/Chatbot/assets/profile.png';
 

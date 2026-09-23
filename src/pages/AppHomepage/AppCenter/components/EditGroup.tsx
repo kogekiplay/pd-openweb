@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { func, number, string } from 'prop-types';
 import styled from 'styled-components';
 import { Modal, RadioGroup, SvgIcon } from 'ming-ui';

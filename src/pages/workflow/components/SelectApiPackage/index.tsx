@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { navigateTo } from 'router/navigateTo';
 import { Dialog, Icon, LoadDiv, ScrollView } from 'ming-ui';

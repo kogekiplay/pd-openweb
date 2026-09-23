@@ -1,4 +1,3 @@
-import React from 'react';
 import { getControlIcon } from '../../../../core/utils';
 import Dropdown from '../../../Dropdown';
 import type { FormControl } from 'src/utils/controlTypes';

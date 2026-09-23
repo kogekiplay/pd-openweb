@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Icon, LoadDiv, MobileSearch, PopupWrapper, Radio } from 'ming-ui';

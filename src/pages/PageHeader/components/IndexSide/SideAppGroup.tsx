@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import cx from 'classnames';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
 import SideAppItem from './SideAppItem';

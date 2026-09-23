@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef } from 'react';
+import { lazy, Suspense, useRef } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';

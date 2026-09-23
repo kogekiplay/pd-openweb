@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { Checkbox, Radio, Switch } from 'ming-ui';
 import CellControl from 'worksheet/components/CellControls';

@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import mdImg from 'staticfiles/images/mingdao.png';
 import styled from 'styled-components';
 import projectSettingController from 'src/api/projectSetting';

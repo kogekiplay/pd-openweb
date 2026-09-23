@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { ConfigProvider, Dropdown, Input, Select, Spin, Table } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';

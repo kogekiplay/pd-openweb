@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Input, Popover } from 'antd';
 import { filter, get, pick } from 'lodash';
 import _ from 'lodash';

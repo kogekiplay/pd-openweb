@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Support, Switch } from 'ming-ui';
 import workWeiXinAjax from 'src/api/workWeiXin';
 import SettingIconAndName from '../../../components/SettingIconAndName';

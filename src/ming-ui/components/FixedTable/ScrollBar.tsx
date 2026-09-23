@@ -1,4 +1,3 @@
-import React from 'react';
 import { ScrollView } from 'ming-ui';
 
 export default function ScrollBar(props) {

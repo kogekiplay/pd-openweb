@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import CarouselPreview from 'src/pages/customPage/components/editWidget/carousel/Carousel';

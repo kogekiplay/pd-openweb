@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useSetState } from 'react-use';
 import { LoadDiv } from 'ming-ui';

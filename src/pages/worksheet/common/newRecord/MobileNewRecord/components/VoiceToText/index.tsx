@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import useRecorder from 'src/components/Mingo/ChatBot/components/Recorder/useRecorder';

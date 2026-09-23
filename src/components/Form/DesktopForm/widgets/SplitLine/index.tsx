@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import SplitLineSection from 'src/pages/widgetConfig/widgetSetting/components/SplitLineConfig/SplitLineSection.jsx';
 

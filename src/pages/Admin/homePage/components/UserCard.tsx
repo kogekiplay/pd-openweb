@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { Support } from 'ming-ui';
 import addFriends from 'src/components/addFriends';

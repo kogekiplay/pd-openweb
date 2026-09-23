@@ -1,4 +1,3 @@
-import React from 'react';
 import { func, number, shape } from 'prop-types';
 import { Checkbox } from 'ming-ui';
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
