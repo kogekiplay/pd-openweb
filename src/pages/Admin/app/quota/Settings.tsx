@@ -750,7 +750,9 @@ export default class LimitAttachmentUpload extends Component<any, any> {
                   value={appIds}
                   mode="multiple"
                   maxTagCount="responsive"
-                  notFoundContent={() => <span className="textTertiary">{_l('无搜索结果')}</span>}
+                  // 原来传的是 () => <span>…：antd 的 notFoundContent 要的是节点不是函数，React 不渲染函数子节点，
+                  // 于是搜不到结果时下拉里一片空白、「无搜索结果」从没显示过（原版就是这样）。下面工作表那个同理
+                  notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
                   onClear={() =>
                     this.setState({ appPageIndex: 1, keyword: '', worksheetIds: [] }, () => {
                       this.getAppList();
@@ -801,7 +803,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
                     mode="multiple"
                     maxTagCount="responsive"
                     disabled={_.isEmpty(appIds)}
-                    notFoundContent={() => <span className="textTertiary">{_l('无搜索结果')}</span>}
+                    notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
                     onClear={() => this.setState({ worksheetIds: [] })}
                     onChange={value => this.setState({ worksheetIds: value })}
                   >
@@ -841,7 +843,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
             </div>
             <div className="add" onClick={this.showAddAppList}>
               <i className="icon icon-plus" />
-              <san>{businessType === 2 ? _l('工作表') : _l('应用')}</san>
+              <span>{businessType === 2 ? _l('工作表') : _l('应用')}</span>
             </div>
           </div>
           <div className="list">
