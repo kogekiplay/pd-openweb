@@ -6,7 +6,6 @@ import { isRelateRecordTableControl } from 'src/utils/control';
 import { init, updateTreeTableViewData } from './action';
 import reducer from './reducer';
 import type { FormControl } from 'src/utils/controlTypes';
-import type { ReduxAction } from 'src/redux/types';
 
 export default function generateStore(
   control: FormControl,

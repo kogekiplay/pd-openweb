@@ -7,7 +7,7 @@ import { getMyPermissions } from 'src/components/checkPermission';
 import { hasPermission } from 'src/components/checkPermission';
 import { upgradeVersionDialog } from 'src/components/upgradeVersion';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
-import { addSubPathOfRoute, emitter, getRequest } from 'src/utils/common';
+import { emitter, getRequest } from 'src/utils/common';
 import { getCurrentProject } from 'src/utils/project';
 import { PLUGIN_TYPE } from './config';
 import PluginComponent from './pluginComponent';

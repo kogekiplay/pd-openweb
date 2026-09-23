@@ -26,8 +26,6 @@ import {
   getDate as fcGetDate,
   getViewName as fcGetViewName,
   refetchEvents as fcRefetchEvents,
-  renderCalendar as fcRender,
-  getCalendar,
   toV2View,
   toV7View,
 } from './fcInstance';
@@ -49,15 +47,6 @@ interface FcEvent {
   title?: string;
   start?: any;
   end?: any;
-  [key: string]: any;
-}
-
-/** v3 回调里的 element 是 jQuery 包装对象；本仓没装 @types/jquery，写出用到的那几个方法 */
-interface JQueryLike {
-  find(selector: string): JQueryLike;
-  addClass(cls: string): JQueryLike;
-  removeClass(cls: string): JQueryLike;
-  attr(...args: any[]): any;
   [key: string]: any;
 }
 

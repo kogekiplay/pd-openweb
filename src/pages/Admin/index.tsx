@@ -7,7 +7,6 @@ import { LoadDiv, WaterMark } from 'ming-ui';
 import withoutPermission from 'src/pages/worksheet/assets/withoutPermission.png';
 import expandRoutePaths from 'src/router/expandRoutePaths';
 import { RouteElement } from 'src/router/routeProps';
-import { addSubPathOfRoute } from 'src/utils/common';
 import { getCurrentProject, getFeatureStatus } from 'src/utils/project';
 import AdminCommon from './common/common';
 import Empty from './common/TableEmpty';

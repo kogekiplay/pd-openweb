@@ -10,7 +10,7 @@ import { upgradeVersionDialog } from 'src/components/upgradeVersion';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import { integrationConfig } from 'src/pages/integration/config.js';
 import { navigateTo } from 'src/router/navigateTo';
-import { addSubPathOfRoute, emitter } from 'src/utils/common';
+import { emitter } from 'src/utils/common';
 import { VersionProductType } from 'src/utils/enum';
 import { getCurrentProject } from 'src/utils/project';
 import { getFeatureStatus } from 'src/utils/project';

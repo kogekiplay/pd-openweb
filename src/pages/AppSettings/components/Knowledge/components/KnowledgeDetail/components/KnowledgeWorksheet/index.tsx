@@ -63,9 +63,6 @@ const deleteKeyFromMap = (mapSetter, key) => {
     return next;
   });
 };
-const handleViewRule = () => {
-  window.open(FIELD_RULE_TIP_URL, '_blank');
-};
 
 const KnowledgeWorksheet = props => {
   const { appId, projectId, knowledgeId, backToList, openChunkPreview } = props;

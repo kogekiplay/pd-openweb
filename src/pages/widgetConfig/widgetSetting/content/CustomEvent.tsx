@@ -1,6 +1,5 @@
 import React, { Fragment, useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
-import { Collapse } from 'antd';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -35,7 +34,6 @@ import DynamicText from '../components/DynamicDefaultValue/components/DynamicTex
 import WidgetWarning from '../components/WidgetBase/WidgetWarning';
 import { SettingCollapseWrap } from './styled';
 
-const { Panel } = Collapse;
 
 const renderDefaultFilter = showSplice => {
   return (

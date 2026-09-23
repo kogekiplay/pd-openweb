@@ -526,8 +526,6 @@ export default class LimitAttachmentUpload extends Component<any, any> {
     let text = '';
     const { businessType } = this.props;
 
-    const limitSize = md.global.SysSettings.fileUploadLimitSize || 4 * 1024;
-
     switch (businessType) {
       case 1:
         const limitSize = md.global.SysSettings.fileUploadLimitSize || 4 * 1024;
@@ -713,7 +711,6 @@ export default class LimitAttachmentUpload extends Component<any, any> {
       total,
       initialTotal,
       appPageIndex,
-      limitRowTotal,
     } = this.state;
     const disabled = _.isEqual(initialLimits, limits) && _.isEqual(size, initialSize);
 

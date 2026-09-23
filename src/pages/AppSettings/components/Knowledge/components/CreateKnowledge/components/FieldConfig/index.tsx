@@ -15,10 +15,6 @@ import {
 import SelectSheetDropDown from '../SelectSheetDropdown';
 import './index.less';
 
-const handleViewRule = () => {
-  window.open(FIELD_RULE_TIP_URL, '_blank');
-};
-
 const FieldConfig = ({ attachmentEnhancedTip }) => {
   const { state, dispatch } = useCreateKnowledgeStore();
   const { appId, projectId, selectedWorksheetList } = state;

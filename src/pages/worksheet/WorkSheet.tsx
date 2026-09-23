@@ -3,7 +3,6 @@ import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import UseKey from 'react-use/lib/component/UseKey';
-import { TinyColor } from '@ctrl/tinycolor';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
