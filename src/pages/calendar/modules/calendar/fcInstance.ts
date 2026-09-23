@@ -152,7 +152,8 @@ export function createCalendarInstance(el: HTMLElement, options: CalendarOptions
       // 库自身文案（"All-day"、"+N more"）仍是英文。
       locales: [zhCnLocale, zhTwLocale, jaLocale, thLocale, msLocale],
       ...options,
-      locale,
+      // 没传 locale 时不写这个键（而不是写成 undefined），交给 FullCalendar 用默认语言
+      ...(locale === undefined ? {} : { locale }),
     }),
   );
   // React 19 的 root.render 是同步提交的，ref 在这之后就已经填好
