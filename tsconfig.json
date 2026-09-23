@@ -40,7 +40,17 @@
     // 模块解析走声明文件，不需要 tsc 去读那三个 .js 本身。
     // 我们自己写的那一个（原 src/library/plupload/createUploader.js）已转成 .ts
     // 并移到 src/utils/ —— 它原先躺在被门禁整目录剔噪的 src/library/ 下，一直没被检查过。
-    "noEmit": true,
+    //
+    // 【只输出声明】原先是 noEmit。按终点配置改成只产 .d.ts（JS 仍然只由 babel 产出），
+    // 写到 node_modules/.cache 下、不进仓库，也没有消费方 —— 要的是它附带的那道检查：
+    // 导出的东西的类型必须写得出名字（TS4082 用了私有名字 / TS2883 引用了不可移植的路径）。
+    // 这类诊断在 noEmit 下根本不算，2026-09-23 真输出一次才量出 25 条，清完后打开。
+    // fast 门禁不带 --noEmit，每次都会真的输出并检查；strict 门禁和探针带 --noEmit ——
+    // TS7 下 noEmit 优先，与这里不冲突，也不会输出。
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "node_modules/.cache/tsc-dts",
+    "noEmitOnError": false,
 
     "strict": false,
     "noImplicitAny": false,

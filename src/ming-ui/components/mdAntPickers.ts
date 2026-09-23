@@ -37,8 +37,14 @@
 import React from 'react';
 import generatePicker from 'antd/es/date-picker/generatePicker';
 import momentGenerateConfig from '@rc-component/picker/generate/moment';
+import type { Moment } from 'moment';
 
-const MomentPicker = generatePicker(momentGenerateConfig);
+// 【类型要显式写出来】推断出的类型里引用的是 antd 自己嵌套安装的那份 @rc-component/picker
+//（antd/node_modules/@rc-component/picker，1.12.x；顶层那份 1.14.0 是给上面的 moment 配置用的），
+// 生成声明文件时写不出这个路径（TS2883「不可移植」）。借 generatePicker 自己的返回类型来命名就行。
+type MomentPickerType = ReturnType<typeof generatePicker<Moment>>;
+
+const MomentPicker: MomentPickerType = generatePicker<Moment>(momentGenerateConfig);
 
 // generatePicker 产出的 TimePicker 上【没有】RangePicker，而 antd 的 TimePicker 有
 //（antd/es/time-picker/index.js 里它就是 RangePicker + 强制 picker="time" + mode: undefined）。
@@ -50,8 +56,11 @@ const TimeRangePicker = React.forwardRef((props: any, ref) =>
 
 TimeRangePicker.displayName = 'TimePicker.RangePicker';
 
-export const DatePicker = MomentPicker; // 自带 .RangePicker / .TimePicker，与 antd 同形
-export const RangePicker = MomentPicker.RangePicker;
-export const TimePicker = Object.assign(MomentPicker.TimePicker, { RangePicker: TimeRangePicker });
+export const DatePicker: MomentPickerType = MomentPicker; // 自带 .RangePicker / .TimePicker，与 antd 同形
+export const RangePicker: MomentPickerType['RangePicker'] = MomentPicker.RangePicker;
+export const TimePicker: MomentPickerType['TimePicker'] & { RangePicker: typeof TimeRangePicker } = Object.assign(
+  MomentPicker.TimePicker,
+  { RangePicker: TimeRangePicker },
+);
 
 export default MomentPicker;
