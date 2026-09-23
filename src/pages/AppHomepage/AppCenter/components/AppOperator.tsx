@@ -109,9 +109,10 @@ export default ({
 
   return (
     <Menu className="Relative" onClickAway={onClickAway}>
-      {list.map(({ type, icon, text, ...rest }) =>
+      {list.map(({ type, icon, text, ...rest }, index) =>
         type === 'setGroup' ? (
           <EditGroupMenuItem
+            key={index}
             {...propsRest}
             projectId={projectId}
             onUpdateAppBelongGroups={onUpdateAppBelongGroups}

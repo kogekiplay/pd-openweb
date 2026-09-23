@@ -557,9 +557,9 @@ function AddWorkflowDialog(props) {
           >
             {appList
               .filter(l => l.appName.toLowerCase().indexOf(searchApp ? searchApp.toLowerCase() : '') > -1)
-              .map(item => {
+              .map((item, index) => {
                 return (
-                  <Select.Option value={item.appId}>
+                  <Select.Option key={index} value={item.appId}>
                     <SelectAppOption>
                       <span className="imgCon" style={{ background: item.iconColor }}>
                         <SvgIcon url={item.iconUrl} fill="#FFF" size={16} />

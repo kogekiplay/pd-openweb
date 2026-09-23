@@ -292,9 +292,10 @@ export default function SelectStartOrEndGroups(props) {
             <Wrap>
               {timeControls
                 .filter(o => !calendarIds.includes(o.controlId))
-                .map(o => {
+                .map((o, index) => {
                   return (
                     <div
+                      key={index}
                       className="Hand WordBreak overflow_ellipsis"
                       onClick={() => {
                         handleChange({

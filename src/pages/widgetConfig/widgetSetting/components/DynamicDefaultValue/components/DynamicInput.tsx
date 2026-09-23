@@ -56,16 +56,24 @@ export default function DynamicInput({
   if (isLinkParams || isDYDateTime) {
     return (
       <DynamicInputStyle className="">
-        {(getAdvanceSetting(data, 'defsource') || []).map(o => {
+        {(getAdvanceSetting(data, 'defsource') || []).map((o, index) => {
           if (isLinkParams) {
             const isDel = !(linkParams || []).includes(o.cid);
-            return <span className={isDel ? 'Red' : ''}>{!isDel ? o.cid : _l('该参数已删除')}</span>;
+            return (
+              <span key={index} className={isDel ? 'Red' : ''}>
+                {!isDel ? o.cid : _l('该参数已删除')}
+              </span>
+            );
           }
 
           if (isDYDateTime) {
             const info = _.flattenDeep(DATE_TYPE).find(it => it.value == o.cid);
             const isDel = !info || !getDaterange(data.advancedSetting || {}).includes(o.cid);
-            return <span className={isDel ? 'Red' : ''}>{!isDel ? info.text : _l('已删除')}</span>;
+            return (
+              <span key={index} className={isDel ? 'Red' : ''}>
+                {!isDel ? info.text : _l('已删除')}
+              </span>
+            );
           }
         })}
         <Tooltip title={_l('清除')}>

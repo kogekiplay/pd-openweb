@@ -324,13 +324,13 @@ function Setting(props) {
                 renderTitle={() => {
                   return (
                     <div className="">
-                      {(safeParse(requiredcids, 'array') || []).map(it => {
+                      {(safeParse(requiredcids, 'array') || []).map((it, index) => {
                         const info = filters.filter(control => {
                           return _.get(control.objectControls[0], 'controlId') === it;
                         })[0];
                         const isDel = !info;
                         return (
-                          <div className={cx('itemT InlineBlock', { Red: isDel })}>
+                          <div key={index} className={cx('itemT InlineBlock', { Red: isDel })}>
                             {!isDel ? info.name || _l('未命名') : _l('已删除')}
                             <Icon
                               icon={'close'}

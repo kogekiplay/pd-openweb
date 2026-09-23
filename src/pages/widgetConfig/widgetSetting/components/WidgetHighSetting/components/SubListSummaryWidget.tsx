@@ -94,7 +94,7 @@ export default function SubListSummaryWidget(props) {
                 .filter(_.identity)
                 .map(i => ({ text: i.label, value: i.value }));
               return (
-                <div className="summaryItem">
+                <div key={index} className="summaryItem">
                   <div className="summaryControlName overflow_ellipsis">
                     <span className="mLeft12 mRight12">{currentControl.controlName}</span>
                   </div>

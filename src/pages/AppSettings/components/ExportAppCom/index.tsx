@@ -191,11 +191,11 @@ export default class ExportAppCom extends Component<any, any> {
                 />
               ) : (
                 <ScrollView className="h100" onScrollEnd={this.onScrollEnd}>
-                  {records.map(item => {
+                  {records.map((item, index) => {
                     const { operator = {}, createTime, apps = [], downLoadUrl } = item;
                     const appNames = apps.map((v, i) => (i < apps.length - 1 ? v.appName + ';' : v.appName)).join('');
                     return (
-                      <div className="row flexRow">
+                      <div key={index} className="row flexRow">
                         <div className="operator flexRow">
                           <UserHead
                             className="circle mRight8"

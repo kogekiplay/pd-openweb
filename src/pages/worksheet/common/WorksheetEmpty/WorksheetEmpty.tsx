@@ -104,8 +104,9 @@ class WorksheetEmpty extends Component<any, any> {
                 action={['click']}
                 popup={
                   <div className="createlist">
-                    {createWorksheetList.map(item => (
+                    {createWorksheetList.map((item, index) => (
                       <div
+                        key={index}
                         className="createWorksheetItem Hand"
                         onClick={() => {
                           if (item.createType === 'importExcel') {

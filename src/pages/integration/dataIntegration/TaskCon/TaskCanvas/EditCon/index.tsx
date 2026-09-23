@@ -561,9 +561,9 @@ export default class EditorCon extends Component<any, any> {
                 {fieldNames.length > 0 && (
                   <div className="tableHeader flexRow">
                     <div className="tag flexRow alignItemsCenter itemCon InlineBlock">#</div>
-                    {fieldNames.map(o => {
+                    {fieldNames.map((o, index) => {
                       return (
-                        <div className="itemCon flexRow alignItemsCenter InlineBlock">
+                        <div key={index} className="itemCon flexRow alignItemsCenter InlineBlock">
                           <EditFeildsName
                             title={showMDCell ? o.controlName : o}
                             // canEdit
@@ -632,12 +632,12 @@ export default class EditorCon extends Component<any, any> {
                   <React.Fragment>
                     {rows.map((o, i) => {
                       return (
-                        <div className="rowCon flexRow">
+                        <div key={i} className="rowCon flexRow">
                           <div className="tag flexRow alignItemsCenter itemCon InlineBlock">{i + 1}</div>
-                          {fieldNames.map(item => {
+                          {fieldNames.map((item, index) => {
                             if (showMDCell) {
                               return (
-                                <div className="itemCon">
+                                <div key={index} className="itemCon">
                                   <CellControl
                                     cell={{ ...item, value: o[item.controlId] }}
                                     worksheetId={_.get(node, 'nodeConfig.config.workSheetId')}
@@ -649,6 +649,7 @@ export default class EditorCon extends Component<any, any> {
                             } else {
                               return (
                                 <div
+                                  key={index}
                                   className="itemCon flexRow alignItemsCenter InlineBlock"
                                   dangerouslySetInnerHTML={{ __html: o[item] }}
                                 ></div>

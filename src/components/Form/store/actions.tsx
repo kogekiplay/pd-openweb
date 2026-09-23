@@ -250,8 +250,8 @@ export const errorDialog = errors => {
     MobileDialog.alert({
       content: (
         <div>
-          {errors.map(item => (
-            <div className="textSecondary mBottom6 WordBreak">{item}</div>
+          {errors.map((item, index) => (
+            <div key={index} className="textSecondary mBottom6 WordBreak">{item}</div>
           ))}
         </div>
       ),
@@ -263,8 +263,8 @@ export const errorDialog = errors => {
       title: <span className="Bold Font17 Red">{_l('错误提示')}</span>,
       description: (
         <div>
-          {errors.map(item => (
-            <div className="textSecondary mBottom6 WordBreak">{item}</div>
+          {errors.map((item, index) => (
+            <div key={index} className="textSecondary mBottom6 WordBreak">{item}</div>
           ))}
         </div>
       ),

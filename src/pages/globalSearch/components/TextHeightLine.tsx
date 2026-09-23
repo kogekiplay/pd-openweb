@@ -18,7 +18,7 @@ export default function TextHeightLine(props) {
       {list.map((it, index: number) => {
         if (index === 0) return it;
         return (
-          <React.Fragment>
+          <React.Fragment key={index}>
             <span className={cx('hightLine', hightLineClass)}>{heightLineText}</span>
             {it}
           </React.Fragment>

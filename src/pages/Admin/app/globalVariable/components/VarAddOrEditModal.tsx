@@ -395,9 +395,10 @@ export default function VarAddOrEditModal(props) {
             <span>{_l('是否允许在工作流中更新')}</span>
           </div>
           <div className="flexRow mTop16">
-            {ALLOW_UPDATE_RADIOS.map(item => {
+            {ALLOW_UPDATE_RADIOS.map((item, index) => {
               return (
                 <Radio
+                  key={index}
                   text={item.text}
                   checked={item.value === formData.allowEdit}
                   onClick={() => setFormData({ allowEdit: item.value })}
@@ -413,9 +414,10 @@ export default function VarAddOrEditModal(props) {
                 <span>{_l('授权范围')}</span>
               </div>
               <div className="flexRow alignItemsCenter mTop16">
-                {AUTH_SCOPE_RADIOS.map(item => {
+                {AUTH_SCOPE_RADIOS.map((item, index) => {
                   return (
                     <Radio
+                      key={index}
                       text={item.text}
                       checked={item.value === formData.scope}
                       onClick={() => setFormData({ scope: item.value })}

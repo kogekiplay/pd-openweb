@@ -188,7 +188,7 @@ export default function BatchSetDialog(props) {
         )}
         {state[`isOpen${type}`] && (
           <div className="list">
-            {list.map(o => {
+            {list.map((o, index) => {
               const info = {
                 direction: controlIsNumber(o) ? 2 : 0,
                 ...(styles.find(a => a.cid === o.controlId) || {}),
@@ -202,7 +202,7 @@ export default function BatchSetDialog(props) {
                 _.includes([10010, 33, 45, 47, 25], o.type) || (o.type === 30 && o.strDefault === '10');
 
               return (
-                <div className="flexRow mTop8 alignItemsCenter">
+                <div key={index} className="flexRow mTop8 alignItemsCenter">
                   <div className="flex flex-shrink-0 flexRow alignItemsCenter">
                     <Icon type={getIconByType(o.type)} className="textSecondary flex-shrink-0" />
                     <span className="mLeft5 WordBreak overflow_ellipsis flex" title={o.controlName}>
@@ -381,7 +381,7 @@ export default function BatchSetDialog(props) {
       mask={{ closable: false }}
       width={720}
       footer={[
-        <div className="flexRow alignItemsCenter pTop6 pBottom6 pLeft8 pRight8">
+        <div key={'0'} className="flexRow alignItemsCenter pTop6 pBottom6 pLeft8 pRight8">
           <div className="flex flexRow alignItemsCenter justifyContentLeft">
             <Checkbox checked={applyToAll} onChange={() => setState({ applyToAll: !applyToAll })}>
               {_l('同时应用到其它所有表格视图')}

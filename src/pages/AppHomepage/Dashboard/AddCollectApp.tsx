@@ -184,7 +184,7 @@ function AddCollectApp(props) {
           const isAppChecked = !!_.find(selectedItems, item => item.appId === app.id && !item.type);
           const appName = _.get(_.find(appLang, { key: app.id }), 'value') || app.name;
           return (
-            <React.Fragment>
+            <React.Fragment key={index}>
               <Item
                 key={index}
                 onClick={() => {
@@ -211,13 +211,14 @@ function AddCollectApp(props) {
                 <div className="overflow_ellipsis">{appName}</div>
               </Item>
               {isExpand &&
-                (items[app.id] || []).map(item => {
+                (items[app.id] || []).map((item, index) => {
                   const isItemChecked = !!_.find(selectedItems, i => i.itemId === item.workSheetId);
                   const itemType = item.type === 0 ? 2 : item.type; // 转换类型--0传2(工作表),1传1(自定义页面)
                   const workSheetName =
                     _.get(_.find(appLang, { key: item.workSheetId }), 'value') || item.workSheetName;
                   return (
                     <Item
+                      key={index}
                       className="isItem"
                       onClick={() => {
                         const newSelected = isItemChecked

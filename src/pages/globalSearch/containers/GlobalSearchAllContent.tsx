@@ -288,8 +288,9 @@ export default class GlobalSearchAllContent extends Component<any, any> {
             title={{ width: '78px' }}
             paragraph={false}
           />
-          {[0, 1, 2, 3].map(() => (
+          {[0, 1, 2, 3].map((_item, index) => (
             <Skeleton
+              key={index}
               className="mBottom14"
               loading={true}
               active={true}
@@ -361,8 +362,9 @@ export default class GlobalSearchAllContent extends Component<any, any> {
             title={{ width: '78px' }}
             paragraph={false}
           />
-          {[0, 1, 2, 3].map(() => (
+          {[0, 1, 2, 3].map((_item, index) => (
             <Skeleton
+              key={index}
               className="mBottom20"
               loading={true}
               active={true}
@@ -405,6 +407,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
               searchScope === 'all'
                 ? [
                     <OrgSelect
+                      key={'0'}
                       style={{ marginLeft: '18px' }}
                       currentProjectId={appProjectId}
                       needAll={false}
@@ -440,6 +443,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
               searchScope === 'all'
                 ? [
                     <OrgSelect
+                      key={'0'}
                       style={{ marginLeft: '18px' }}
                       currentProjectId={recordProjectId}
                       needAll={false}
@@ -450,7 +454,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
                         })
                       }
                     />,
-                    <div className="mLeftAuto valignWrapper">
+                    <div key={'1'} className="mLeftAuto valignWrapper">
                       <FilterPosition
                         className="mRight20"
                         projectId={recordProjectId}
@@ -475,7 +479,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
                     </div>,
                   ]
                 : [
-                    <div className="mLeftAuto valignWrapper">
+                    <div key={'0'} className="mLeftAuto valignWrapper">
                       <FilterPosition
                         className="mRight20"
                         projectId={recordProjectId}

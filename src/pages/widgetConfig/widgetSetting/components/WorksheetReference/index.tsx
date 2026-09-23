@@ -332,11 +332,12 @@ function WorksheetReferenceDialog(props) {
         )}
         {_.includes([SUB_MODULE_TYPES.WIDGET, SUB_MODULE_TYPES.WORKFLOW, SUB_MODULE_TYPES.VIEW], subModule) && (
           <div className="subnavContainer">
-            {SUBNAV_LIST.map(item => {
+            {SUBNAV_LIST.map((item, index) => {
               if (!showNav(subModule, references, item.value)) return null;
               const navCount = getNavCount(item.value);
               return (
                 <div
+                  key={index}
                   className={cx('subnavItem', { active: appType === item.value })}
                   onClick={() => {
                     if (appType === item.value) return;
@@ -396,10 +397,11 @@ function WorksheetReferenceDialog(props) {
     >
       <ReferenceWrap height={windowHeight - 72 - 50}>
         <div className="sidebarContainer">
-          {(type === 2 ? SIDEBAR_LIST_BY_WORKSHEET : SIDEBAR_LIST).map(item => {
+          {(type === 2 ? SIDEBAR_LIST_BY_WORKSHEET : SIDEBAR_LIST).map((item, index) => {
             const isActive = subModule === item.value;
             return (
               <div
+                key={index}
                 className={cx('sidebarItem overflow_ellipsis', { active: isActive })}
                 onClick={() => handleSideClick(item.value)}
               >

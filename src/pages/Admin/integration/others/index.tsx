@@ -404,7 +404,7 @@ export default class OtherTool extends Component<any, any> {
             </div>
             {DNGroupList.map((it, i) => {
               return (
-                <div className="groupItem mBottom16">
+                <div key={i} className="groupItem mBottom16">
                   <div className="flex">
                     <Input
                       style={{ height: 36 }}
@@ -751,7 +751,7 @@ export default class OtherTool extends Component<any, any> {
 
     return (
       <Fragment>
-        {DATA_INFO.map(item => {
+        {DATA_INFO.map((item, index) => {
           const { key, featureId, docLink, showSetting, description, showCustomName, label, iconClassName } = item;
           const featureType = getFeatureStatus(Config.projectId, featureId);
           if ((item.featureId && !featureType) || !hasPermission(authority, AUTH_MAPPING[item.key])) return null;
@@ -759,7 +759,7 @@ export default class OtherTool extends Component<any, any> {
           if (key === 'sso') return null;
 
           return (
-            <div className="toolItem">
+            <div key={index} className="toolItem">
               <div className="toolItemLabel">
                 {item.label}
                 {(featureType === '2' || (key === 'sso' && licenseType === 0)) && <UpgradeIcon />}

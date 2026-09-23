@@ -79,10 +79,11 @@ export default class SelectApp extends React.Component<any, any> {
 
     return (
       <ScrollView className="flex mBottom12" onScrollEnd={this.searchDataList}>
-        {list.map(item => {
+        {list.map((item, index) => {
           const isSelect = _.findIndex(selectList, app => app.appId === item.appId) > -1;
           return (
             <Checkbox
+              key={index}
               className="TxtMiddle selectAppSortableItem"
               checked={isSelect}
               onClick={() => this.updateSelectList(isSelect, item)}

@@ -139,9 +139,10 @@ export default function ReviewFreeByWorksheetWrap(props) {
                     }
                   >
                     {sheetList.length > 0 ? (
-                      sheetList.map(item => {
+                      sheetList.map((item, index) => {
                         return (
                           <MenuItem
+                            key={index}
                             onClick={() => {
                               setClear(true);
                               setSheetId(item.workSheetId);

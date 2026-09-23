@@ -266,9 +266,10 @@ class GDMap extends Component<any, any> {
 
     return (
       <AnimationWrap className={cx('mLeft16 mRight16', { mTop16: !isMobile })}>
-        {MAP_TYPE.map(item => {
+        {MAP_TYPE.map((item, index) => {
           return (
             <div
+              key={index}
               className={cx('animaItem', { active: this.state.tab === item.value })}
               onClick={() => {
                 this.setState({ tab: item.value }, () => {
@@ -353,7 +354,7 @@ class GDMap extends Component<any, any> {
         {(keywords ? list : defaultList).map((item, index: number) => {
           if (item.address && typeof item.address === 'string') {
             return (
-              <div className="MDMapList">
+              <div key={index} className="MDMapList">
                 <div
                   key={index}
                   className="flexColumn flex ellipsis"

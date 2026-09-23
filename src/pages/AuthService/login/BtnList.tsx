@@ -166,9 +166,9 @@ export default function (props) {
             </a>
           )}
           {!_.isEmpty(googleSsoSet) &&
-            googleSsoSet.map(o => {
+            googleSsoSet.map((o, index) => {
               return (
-                <a href={isMobile ? o.h5IndexUrl : o.webIndexUrl} className="w100 flexRow alignItemsCenter">
+                <a key={index} href={isMobile ? o.h5IndexUrl : o.webIndexUrl} className="w100 flexRow alignItemsCenter">
                   {o.tpType === 13 ? (
                     <React.Fragment>
                       <img src={googleIcon} width="20px" className="mRight8" />

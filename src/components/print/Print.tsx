@@ -615,7 +615,7 @@ export default class Print extends Component<any, any> {
                 isRelateMultipleSheet ? pictureAttachments.length : Math.ceil(pictureAttachments.length / 2) * 2,
               ),
             ].map((a, index) => (
-              <div className="pictureAttachment">
+              <div key={index} className="pictureAttachment">
                 {pictureAttachments[index] && (
                   <div className="imgCon">
                     <img
@@ -635,8 +635,8 @@ export default class Print extends Component<any, any> {
         )}
         {isRelateMultipleSheet ? (
           <div className="recordAttachmentPictures">
-            {otherAttachments.map((item: PrintAttachment) => (
-              <div className="pictureAttachment onlyText">
+            {otherAttachments.map((item: PrintAttachment, index) => (
+              <div key={index} className="pictureAttachment onlyText">
                 <p className="imageAttachmentName ellipsis"> {item.originalFilename + item.ext} </p>
               </div>
             ))}
@@ -659,15 +659,17 @@ export default class Print extends Component<any, any> {
     return detailsType === 2 ? (
       <table className="detailsTable" style={{ tableLayout: 'fixed' }} cellpadding="0" cellspacing="0">
         <tr>
-          {[<td width="20"></td>].concat(
-            controls.map(c => <th style={c.type === 14 ? { width: 200 } : {}}>{c.controlName || ''}</th>),
+          {/* 前导格与映射出的表头 concat 进同一个数组，key 要在合并后的数组里唯一：
+              表头按字段 controlId（天然唯一），前导格用固定字符串，两者不会撞 */}
+          {[<td key="rowNumber" width="20"></td>].concat(
+            controls.map(c => <th key={c.controlId} style={c.type === 14 ? { width: 200 } : {}}>{c.controlName || ''}</th>),
           )}
         </tr>
         {relateRecord.data.map((item: RecordRow, i: number) => (
-          <tr>
-            {[<td> {i + 1} </td>].concat(
+          <tr key={i}>
+            {[<td key="rowNumber"> {i + 1} </td>].concat(
               controls.map(c => (
-                <td className="textPreLine">
+                <td key={c.controlId} className="textPreLine">
                   {this.getShowContent(Object.assign({}, c, { value: item[c.controlId], isRelateMultipleSheet: true }))}
                 </td>
               )),
@@ -678,9 +680,9 @@ export default class Print extends Component<any, any> {
     ) : (
       <div className="verticalLayout">
         {relateRecord.data.map((item: RecordRow, i: number) => (
-          <table className="detailItem" cellpadding="0" cellspacing="0" style={{ tableLayout: 'fixed' }}>
+          <table key={i} className="detailItem" cellpadding="0" cellspacing="0" style={{ tableLayout: 'fixed' }}>
             {_.chunk(controls, 4).map((rowData, rowIndex) => (
-              <tr className="detailItemControlRow">
+              <tr key={rowIndex} className="detailItemControlRow">
                 {rowIndex === 0 && (
                   <td
                     rowSpan={Math.ceil(controls.length / 4)}
@@ -691,7 +693,7 @@ export default class Print extends Component<any, any> {
                   </td>
                 )}
                 {[...new Array(4)].map((c, colIndex) => (
-                  <td className="detailRowItem">
+                  <td key={colIndex} className="detailRowItem">
                     <span className="Bold TxtMiddle mLeft10">
                       {rowData[colIndex] && (rowData[colIndex].controlName || '')}
                     </span>

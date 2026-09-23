@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import React, { createRef, Fragment, useEffect, useState } from 'react';
 import { Dropdown } from 'antd';
 import cx from 'classnames';
 import update from 'immutability-helper';
@@ -210,11 +210,11 @@ export default function DefaultOptions(props) {
                 >
                   {_l('清除')}
                 </div>
-                {options.map(({ key, color, value }) => {
+                {options.map(({ key, color, value }, index) => {
                   const checked = includes(checkedValue, key);
                   const isEmpty = key === 'isEmpty' && from === DYNAMIC_FROM_MODE.FAST_FILTER;
                   return (
-                    <>
+                    <Fragment key={index}>
                       {isEmpty && <div className="emptyOption" />}
                       <div className={cx('optionItem', { checked })} key={key} onClick={() => switchChecked(key)}>
                         {colorful && color && <div className="colorWrap" style={{ backgroundColor: color }}></div>}
@@ -222,17 +222,18 @@ export default function DefaultOptions(props) {
                         {checked && <i className="icon-done"></i>}
                       </div>
                       {isEmpty && <div className="emptyOption" />}
-                    </>
+                    </Fragment>
                   );
                 })}
               </DefaultOptionsMenu>
             )}
           >
             <div className="defaultOptionsWrap">
-              {dynamicValue.map(({ cid, rcid, staticValue }) => {
+              {dynamicValue.map(({ cid, rcid, staticValue }, index) => {
                 if (cid) {
                   return (
                     <OtherField
+                      key={index}
                       {...props}
                       item={{ cid, rcid }}
                       className={cx({ singleOption: includes([9, 11], type) })}
@@ -243,7 +244,10 @@ export default function DefaultOptions(props) {
                 if (staticValue) {
                   const option = find(options, item => item.key === staticValue) || {};
                   return (
-                    <OptionControl className={cx('option pointer overflow_ellipsis', { isDeleted: isEmpty(option) })}>
+                    <OptionControl
+                      key={index}
+                      className={cx('option pointer overflow_ellipsis', { isDeleted: isEmpty(option) })}
+                    >
                       {colorful && option.color && (
                         <div className="colorWrap" style={{ backgroundColor: option.color }}></div>
                       )}

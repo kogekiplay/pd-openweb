@@ -153,8 +153,8 @@ function CurrentWorkItems(props) {
       <div className="flexRow valignWrapper mBottom12">
         <div className="Font13 textSecondary label">{type === 4 ? _l('审批人') : _l('填写人')}</div>
         <div className="flex flexRow valignWrapper flexWrap" ref={wrapRef}>
-          {currentWorkItems.map(data => (
-            <span className="InlineBlock Relative mRight8">
+          {currentWorkItems.map((data, index) => (
+            <span key={index} className="InlineBlock Relative mRight8">
               {data.workItemAccount.accountId === md.global.Account.accountId ? (
                 <div className="flexRow valignWrapper myAvatar">{_l('我')}</div>
               ) : (

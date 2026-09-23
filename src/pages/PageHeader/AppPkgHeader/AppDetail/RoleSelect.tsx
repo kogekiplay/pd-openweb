@@ -182,8 +182,8 @@ function RoleSelect(props) {
 
           {!!value.length && (
             <ul className="values mTop11">
-              {value.map(roleId => (
-                <li className="Font12 overflow_ellipsis">
+              {value.map((roleId, index) => (
+                <li key={index} className="Font12 overflow_ellipsis">
                   {(roleList.find(l => l.roleId === roleId) || {}).name}
                   <Icon
                     icon="clear"
@@ -209,7 +209,7 @@ function RoleSelect(props) {
         {roleList
           .filter(l => !search || l.name.toLowerCase().includes(search.toLowerCase()))
           .map((item, index) => (
-            <React.Fragment>
+            <React.Fragment key={index}>
               {[0, 3].includes(index) && (
                 <p className="Font12 pLeft12 mBottom4 mTop10 textTertiary">{index === 0 ? _l('系统') : _l('自定义')}</p>
               )}

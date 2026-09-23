@@ -405,7 +405,7 @@ export default class Push extends Component<any, any> {
 
             {(data.buttons || []).map((button, index: number) => {
               return (
-                <BtnContent>
+                <BtnContent key={index}>
                   <div className="workflowMessageTitle">{_l('按钮%0', index + 1)}</div>
                   <i
                     className="icon-trash workflowMessageDelete"

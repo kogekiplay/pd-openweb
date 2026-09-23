@@ -274,7 +274,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
           </p>
           <div className="con">
             <ul>
-              {[1, 2, 3].map(o => {
+              {[1, 2, 3].map((o, index) => {
                 let cur = false;
                 let s = ['pcCon', 'webCon', 'appCon'][o - 1];
 
@@ -293,6 +293,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
                 s = !cur ? s + 'hover' : s;
                 return (
                   <li
+                    key={index}
                     onClick={() => {
                       let curData = {};
 

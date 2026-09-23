@@ -286,9 +286,10 @@ export default class Formula extends React.Component<any, any> {
           <div className="formulaCon">
             <div className="customTip">{_l('输入英文+、-、*、/、( ) 进行运算')}</div>
             <CalItem className="formulaBtns">
-              {CAL_LIST.map(calItem => {
+              {CAL_LIST.map((calItem, index) => {
                 return (
                   <div
+                    key={index}
                     onClick={() => {
                       this.tagtextarea.focus();
                       const cursor = this.tagtextarea.getCursor();

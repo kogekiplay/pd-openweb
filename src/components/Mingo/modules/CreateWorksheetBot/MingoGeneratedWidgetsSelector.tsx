@@ -377,7 +377,7 @@ function WidgetList({
         const isRelatedTable = item.type === 'relatedTable' || item.type === 'multiRelated' || item.type === 'related';
         const isDisabled = disabled || isExist;
         return (
-          <Tooltip title={item.description}>
+          <Tooltip key={i} title={item.description}>
             <div
               className="widget-item t-flex t-flex-col"
               key={item.id || `widget-${i}`}

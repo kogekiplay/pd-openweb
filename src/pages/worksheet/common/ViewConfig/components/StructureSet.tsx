@@ -325,10 +325,11 @@ export default function StructureSet(props) {
             { text: 4, value: '4' },
             { text: 5, value: '5' },
             // { text: _l('全部'), value: 'all' },
-          ].map(item => {
+          ].map((item, index) => {
             const defaultlayer = _.get(props, 'view.advancedSetting.defaultlayer') || '1';
             return (
               <div
+                key={index}
                 className={cx('animaItem overflow_ellipsis', {
                   active: defaultlayer === item.value,
                 })}

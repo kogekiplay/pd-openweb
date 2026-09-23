@@ -133,7 +133,7 @@ export default function HierarchyViewConfig({ fields, handleSelect, currentSheet
               <span className="textTertiary">{_l('( 本表 )')}</span>
             </li>
             {multiRelate.map((item, index) => (
-              <li>
+              <li key={index}>
                 <span className="textTertiary">{_l('第%0级', index + 2)}</span>
                 <div className="controlInfo">
                   <i className="icon-link_worksheet"></i>

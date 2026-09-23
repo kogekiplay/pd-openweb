@@ -215,7 +215,7 @@ class EditBox extends React.Component<any, any> {
           const queryId = i.type === '2' && _.get(safeParse(i.value), 'id');
           const error = setValueError[`${actionIndex}-${childIndex}`];
           return (
-            <div className="flexColumn mBottom12">
+            <div key={childIndex} className="flexColumn mBottom12">
               <div className="setFieldContainer mBottom12">
                 <div className="fieldItem overflowEllipsis" key={i.controlId}>
                   <span className={cx({ Red: !control })}>{control ? control.controlName : _l('字段已删除')}</span>
@@ -313,7 +313,7 @@ class EditBox extends React.Component<any, any> {
         {ruleItems.map((actionItem, actionIndex) => {
           const actionError = (ruleError.actionError || {})[actionIndex] || false;
           return (
-            <div className="actionItemCon">
+            <div key={actionIndex} className="actionItemCon">
               <Select
                 className={cx('ruleListSelect', { flexItem: _.includes([7], actionItem.type) })}
                 classNames={{ popup: { root: 'ruleListSelectDropdown' } }}
@@ -384,8 +384,9 @@ class EditBox extends React.Component<any, any> {
           popupAlign={{ points: ['tl', 'bl'], offset: [0, 4] }}
           popup={() => (
             <Fragment>
-              {listData.map(i => (
+              {listData.map((i, index) => (
                 <div
+                  key={index}
                   onClick={() =>
                     updateSelectRule('ruleItems', ruleItems.concat({ ...originActionItem, type: i.value }))
                   }

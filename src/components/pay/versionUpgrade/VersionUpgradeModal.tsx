@@ -257,8 +257,12 @@ export default function VersionUpgrade(props) {
   return (
     <DialogWrap visible width={1100} showFooter={false} onCancel={onCancel}>
       <div className="headerTab">
-        {SUBSCRIPTION_TABS.map(item => (
-          <div className={cx('tabItem', { isActive: currentTab === item.key })} onClick={() => setCurrentTab(item.key)}>
+        {SUBSCRIPTION_TABS.map((item, index) => (
+          <div
+            key={index}
+            className={cx('tabItem', { isActive: currentTab === item.key })}
+            onClick={() => setCurrentTab(item.key)}
+          >
             {item.text}
           </div>
         ))}

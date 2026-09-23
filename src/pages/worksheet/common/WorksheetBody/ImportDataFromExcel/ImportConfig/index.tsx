@@ -236,11 +236,12 @@ export default class ImportConfig extends Component<any, any> {
                   {fileName}
                 </div>
                 <ScrollView className="flex mTop15">
-                  {fileList.map(item => {
+                  {fileList.map((item, index) => {
                     const disabled =
                       !item.state || item.total > md.global.SysSettings.worksheetExcelImportDataLimitCount;
                     return (
                       <Radio
+                        key={index}
                         className={cx('sheetItem Block', {
                           bgColorPrimaryTransparent: !disabled && item.sheetNumber === importSheetIndex,
                         })}

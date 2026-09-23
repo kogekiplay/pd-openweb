@@ -97,10 +97,10 @@ export default function (props) {
     const reservecontrols = safeParse(advancedSetting.reservecontrols);
     return (
       <div className="">
-        {reservecontrols.map(it => {
+        {reservecontrols.map((it, index) => {
           const control = props.worksheetControls.find(o => o.controlId === it);
           return (
-            <div className="itemT flexRow alignItemsCenter">
+            <div key={index} className="itemT flexRow alignItemsCenter">
               <span className={cx('flex overflow_ellipsis', { Red: !control })}>
                 {!control ? _l('字段已删除') : control.controlName}
               </span>

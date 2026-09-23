@@ -391,12 +391,12 @@ export default class PortalList extends Component<any, any> {
               cancelAble
               onChange={(appId: string) => this.updateState({ appId })}
             />
-            {DATE_TYPE.map(item => {
+            {DATE_TYPE.map((item, index) => {
               const [startDateKey, endDateKey] = item.key;
               const startDate = this.state[startDateKey];
               const endDate = this.state[endDateKey];
               return (
-                <span className="InlineBlock mLeft12">
+                <span key={index} className="InlineBlock mLeft12">
                   <DatePicker.RangePicker
                     selectedValue={[startDate ? moment(startDate) : '', endDate ? moment(endDate) : '']}
                     onClear={() =>

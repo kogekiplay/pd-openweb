@@ -225,8 +225,9 @@ function CreateGroup(props) {
   const renderGroupType = () => {
     return (
       <Fragment>
-        {GROUP_TYPES.map(l => (
+        {GROUP_TYPES.map((l, index) => (
           <Radio
+            key={index}
             text={l.label}
             value={l.value}
             checked={type === l.value}

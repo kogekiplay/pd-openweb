@@ -180,8 +180,8 @@ export default class EncryptRules extends Component<any, any> {
               ) : _.isEmpty(dataSource) ? (
                 <Empty className="w100 h100" detail={{ icon: 'icon-verify', desc: _l('无数据') }} />
               ) : (
-                dataSource.map(item => (
-                  <div className="flexRow listItem">
+                dataSource.map((item, index) => (
+                  <div key={index} className="flexRow listItem">
                     <div className="flex ellipsis">
                       {item.name}
                       {!!item.remark && (

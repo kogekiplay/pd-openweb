@@ -387,14 +387,14 @@ export default function SelectOptions(props) {
               <ul>
                 {optionList.options
                   .filter(item => !item.isDeleted)
-                  .map(({ color, value, score, key }) => {
+                  .map(({ color, value, score, key }, index) => {
                     // 从options里取值，选项集不变
                     const hide = _.get(
                       _.find(options, i => i.key === key),
                       'hide',
                     );
                     return (
-                      <li>
+                      <li key={index}>
                         <div className="flexCenter flex overflow_ellipsis">
                           {optionList.colorful && <div className="colorWrap" style={{ backgroundColor: color }}></div>}
                           <div className="name flex overflow_ellipsis">{value}</div>

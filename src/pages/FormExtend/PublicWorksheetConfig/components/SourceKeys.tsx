@@ -69,7 +69,7 @@ export default function ({
   };
 
   return sourceKeys.map((key, index: number) => (
-    <Fragment>
+    <Fragment key={index}>
       <Con key={key} className="mBottom6 flexRow">
         <No>
           <span className="index">{index + 1}</span>

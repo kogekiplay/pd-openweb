@@ -174,6 +174,7 @@ export default function SendToChat(props) {
               <ScrollView className="flex" ref={scrollViewRef}>
                 {list.map((account, index) => (
                   <AccountItem
+                    key={index}
                     className={cx({ active: index === activeIndex })}
                     onClick={() => {
                       setSelectedUser(account);

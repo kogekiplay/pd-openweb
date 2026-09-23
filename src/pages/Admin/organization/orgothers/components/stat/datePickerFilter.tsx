@@ -47,9 +47,10 @@ export default function DatePickerFilter(props) {
 
   return (
     <DatePickerFilterWrap ref={$ref}>
-      {DATE_FILTER.map(({ id, text }) =>
+      {DATE_FILTER.map(({ id, text }, index) =>
         id === 'custom' ? (
           <DatePicker.RangePicker
+            key={index}
             offset={{ left: -533, top: -220 }}
             popupParentNode={() => $ref.current}
             max={moment(_endDate)}

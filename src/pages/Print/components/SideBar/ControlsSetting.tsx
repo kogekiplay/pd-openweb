@@ -363,7 +363,7 @@ export default function ControlsSetting(props) {
         if (l.key === 'signature' && !signature.length) return null;
 
         return (
-          <React.Fragment>
+          <React.Fragment key={i}>
             <p className="Bold mTop15 textTertiary">{l.label}</p>
             {renderLi([systemControl, controls.filter(l => !l.sectionId), signature][i])}
           </React.Fragment>

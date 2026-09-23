@@ -438,13 +438,13 @@ export default class PayConfig extends Component<any, any> {
         {[
           { key: 'internalUser', text: _l('应用内成员可用') },
           { key: 'externalUser', text: _l('外部门户用户可用') },
-        ].map(item => {
+        ].map((item, index) => {
           const { key, text } = item;
           const { isEnable, viewIds, filter = [] } = this.state[key] || {};
           const hasFilters = !_.isEmpty(filter);
 
           return (
-            <Fragment>
+            <Fragment key={index}>
               <div className="flexRow" key={key}>
                 {key === 'externalUser' && !isEnabledExternalPortal && !isEnable ? (
                   <Tooltip title={_l('请先开启外部门户功能')} placement="bottom">

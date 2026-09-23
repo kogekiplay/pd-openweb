@@ -290,8 +290,12 @@ export default function TrashDialog(props) {
   const renderList = item => {
     return (
       <div className="flexRow trashLi alignItemsCenter">
-        {columns.map(o => {
-          return <div className={cx('flex minWidth0', o.className)}>{o.render(item)}</div>;
+        {columns.map((o, index) => {
+          return (
+            <div key={index} className={cx('flex minWidth0', o.className)}>
+              {o.render(item)}
+            </div>
+          );
         })}
       </div>
     );
@@ -300,8 +304,12 @@ export default function TrashDialog(props) {
   const renderHeader = () => {
     return (
       <div className="flexRow trashHeader alignItemsCenter">
-        {columns.map(o => {
-          return <div className={cx('flex', o.className)}>{o.id !== 'option' ? o.name : ''}</div>;
+        {columns.map((o, index) => {
+          return (
+            <div key={index} className={cx('flex', o.className)}>
+              {o.id !== 'option' ? o.name : ''}
+            </div>
+          );
         })}
       </div>
     );

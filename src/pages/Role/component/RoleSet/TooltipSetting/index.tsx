@@ -127,6 +127,7 @@ export default class Con extends PureComponent<any, any> {
               {tabList.map((o, i) => {
                 return (
                   <li
+                    key={i}
                     className={cx('Hand Font15 mRight24', { cur: i === tab })}
                     onClick={() => {
                       this.setState({

@@ -292,12 +292,12 @@ export default function GlobalVarTable(props) {
   ];
 
   const renderVarTable = list => {
-    return list.map(varItem => {
+    return list.map((varItem, index) => {
       const allowSelect = !varItem.hasChild && allowSelected;
       const children = varTreeList.filter(item => item.pid === varItem.key) || [];
 
       return (
-        <React.Fragment>
+        <React.Fragment key={index}>
           <div
             key={varItem.hasChild ? varItem.key : varItem.id}
             className={cx('dataItem', {

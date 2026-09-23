@@ -212,9 +212,9 @@ export default function Info(props) {
         <div className="chooseAuthType">
           <p className="title TxtLeft">{_l('请选择鉴权方式')}</p>
           <ul className="flexRow mTop30 chooseTypeContent justifyContentCenter">
-            {TYPELIST.map(o => {
+            {TYPELIST.map((o, index) => {
               return (
-                <li className={'chooseTypeCon'}>
+                <li key={index} className={'chooseTypeCon'}>
                   <Radio
                     className=""
                     text={o.name}

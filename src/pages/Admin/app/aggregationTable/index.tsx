@@ -341,7 +341,7 @@ export default class AggregationTable extends Component<any, any> {
               />
             ) : (
               <ScrollView className="w100 h100">
-                {list.map(item => {
+                {list.map((item, index) => {
                   const {
                     name,
                     appName,
@@ -356,7 +356,7 @@ export default class AggregationTable extends Component<any, any> {
                   } = item;
 
                   return (
-                    <div className="flexRow alignItemsCenter listContent">
+                    <div key={index} className="flexRow alignItemsCenter listContent">
                       <div
                         className={cx('flex flexRow pLeft10 ', {
                           'Hand hoverColorPrimary': aggTableTaskStatus !== 0 && !!worksheetId,

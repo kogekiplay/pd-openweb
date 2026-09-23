@@ -86,7 +86,7 @@ export default function DropOption(props) {
           )}
           {props.list.map(
             ({ text, value, disabled, getTime = () => {} }: { disabled?: boolean; [key: string]: any }, i) => (
-              <React.Fragment>
+              <React.Fragment key={i}>
                 {forGroup && i === 0 && <div className="textSecondary mLeft12 LineHeight36">{_l('时间')}</div>}
                 <MenuItem
                   key={value}

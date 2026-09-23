@@ -116,10 +116,10 @@ class ContactsHidden extends React.Component<any, any> {
 
   renderCon = () => {
     const { data = [], dispatch } = this.props;
-    return rules.map(item => {
+    return rules.map((item, index) => {
       if (item.type === 'hiddeRules') return;
       return (
-        <div className="ruleItem">
+        <div key={index} className="ruleItem">
           <h6 className="textPrimary Font15">{item.title}</h6>
           <p className={cx('textTertiary Font13 mTop12', { mBottom10: data.length > 0 })}>{item.description}</p>
           {this.renderList(item.type, item.ruleType)}

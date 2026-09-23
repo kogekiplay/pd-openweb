@@ -570,10 +570,10 @@ export function DeptSelect(props) {
   const renderList = data => {
     return (
       <div className="QSelect-departmentList">
-        {data.map(item => {
+        {data.map((item, index) => {
           const checked = getChecked(item);
           return (
-            <React.Fragment>
+            <React.Fragment key={index}>
               <div className={cx('quick-department', { active: checked, disabled: !!item.disabled })}>
                 {departrangetype !== '1' && (
                   <div

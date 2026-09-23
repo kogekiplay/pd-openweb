@@ -345,9 +345,9 @@ export default class SecuritySetting extends Component<any, any> {
                               desc: _l('使用手机上的身份验证器应用获得验证码'),
                               checked: 'twoAuthenticationTotpEnabled',
                             },
-                          ].map(item => {
+                          ].map((item, index) => {
                             return (
-                              <div className="flexRow LineHeight30">
+                              <div key={index} className="flexRow LineHeight30">
                                 <div className="checkedIcon">
                                   {this.state[item.checked] && <Icon icon="done" className="Font16" />}
                                 </div>

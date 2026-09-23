@@ -123,9 +123,9 @@ export default class SaveDia extends React.Component<any, any> {
                 }}
                 className="itemList"
               >
-                {printData.views.map(it => {
+                {printData.views.map((it, index) => {
                   return (
-                    <div class="item">
+                    <div key={index} class="item">
                       {it.name}
                       <a
                         href="javascript:void(0)"

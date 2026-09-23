@@ -127,7 +127,7 @@ export default ({ data = [], list = [], errorItems, setErrorItems, updateSource 
       }
 
       return (
-        <Fragment>
+        <Fragment key={index}>
           <li className="flexRow relative" key={obj.controlId}>
             {obj.dataSource && (
               <div className="w20 relative">{index !== source.length - 1 && <span className="clearLine" />}</div>

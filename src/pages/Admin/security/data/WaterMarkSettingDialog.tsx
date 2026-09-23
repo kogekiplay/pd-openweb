@@ -84,8 +84,8 @@ function WaterMarkSettingDialog(props) {
       <SelectFieldsWrap>
         <div className="fieldsWrap" style={{ width: '430px' }}>
           <ul className="fieldList">
-            {CONTROLS.map(item => (
-              <li onClick={() => onClick(item)} style={{ maxWidth: '100%' }}>
+            {CONTROLS.map((item, index) => (
+              <li key={index} onClick={() => onClick(item)} style={{ maxWidth: '100%' }}>
                 {item.controlName}
               </li>
             ))}

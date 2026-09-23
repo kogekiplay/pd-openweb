@@ -38,8 +38,9 @@ export default function SelectControl({ className, list, searchable = true, onCl
       ) : (
         <div className="fieldsWrap">
           <ul className="fieldList">
-            {controls.map(item => (
+            {controls.map((item, index) => (
               <li
+                key={index}
                 onClick={() => {
                   onClick(item);
                 }}

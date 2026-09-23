@@ -70,7 +70,7 @@ export default function SetValue(props) {
               const isDelete = !_.get(currentControl, 'controlName');
               const queryId = item.type === '2' && _.get(safeParse(item.value), 'id');
               return (
-                <div className="setItem">
+                <div key={index} className="setItem">
                   <div className="itemFiled itemFiledTitle ">
                     {icon && <Icon className="mRight8 Font14 textSecondary" icon={icon} />}
                     <span

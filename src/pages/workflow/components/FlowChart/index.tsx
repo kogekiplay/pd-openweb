@@ -285,7 +285,7 @@ export class FlowChart extends Component<any, any> {
   renderNode = ({ processId, data, firstId, excludeFirstId = false }) => {
     const { parentId } = this.state;
     const { appId } = this.props;
-    return getSameLevelIds(data, firstId, excludeFirstId).map(id => {
+    return getSameLevelIds(data, firstId, excludeFirstId).map((id, index) => {
       const item = data[id];
 
       if (
@@ -308,7 +308,7 @@ export class FlowChart extends Component<any, any> {
 
       const NodeComponent = nodeModules[item.typeId];
 
-      return <NodeComponent {...props} />;
+      return <NodeComponent key={index} {...props} />;
     });
   };
 

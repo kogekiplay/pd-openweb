@@ -124,10 +124,11 @@ export default function DepartmentConfig(props) {
           <div className="defaultOptionsWrap">
             {chooseRange.length > 0 ? (
               <Fragment>
-                {chooseRange.map(item => {
+                {chooseRange.map((item, index) => {
                   if (item.type === 4) {
                     return (
                       <OtherField
+                        key={index}
                         {...props}
                         from={DYNAMIC_FROM_MODE.DEPART_CONFIG}
                         dynamicValue={chooseRange}

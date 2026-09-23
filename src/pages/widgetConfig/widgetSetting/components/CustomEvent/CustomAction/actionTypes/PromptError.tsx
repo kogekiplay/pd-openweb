@@ -65,7 +65,7 @@ export default function PromptError(props) {
               const { icon, currentControl } = getDetail(item.controlId);
               const isDelete = _.isEmpty(currentControl);
               return (
-                <div className="setItem">
+                <div key={index} className="setItem">
                   <div className="itemFiled itemFiledTitle ">
                     {icon && <Icon className="mRight8 Font14 textSecondary" icon={icon} />}
                     <span className={cx('flex overflow_ellipsis', { Red: isDelete })}>

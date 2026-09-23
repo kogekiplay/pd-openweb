@@ -324,9 +324,10 @@ function Setting(props) {
             />
             <h6 className={cx('Font13 textPrimary Bold mBottom0 mTop32')}>{_l('注册方式')}</h6>
             <div className="">
-              {REJISTER_WAY.map(o => {
+              {REJISTER_WAY.map((o, index) => {
                 return (
                   <Checkbox
+                    key={index}
                     className="mTop16 InlineBlock mRight60 setCheckbox"
                     text={o.txt}
                     checked={editData.registerMode[o.key]}
@@ -342,11 +343,12 @@ function Setting(props) {
             </div>
             <h6 className={cx('Font13 textPrimary Bold mBottom0 mTop32')}>{_l('登录方式')}</h6>
             <div className="">
-              {LOGIN_WAY.map(o => {
+              {LOGIN_WAY.map((o, index) => {
                 if (o.key === 'weChat' && md.global.SysSettings.hideWeixin) return;
 
                 return (
                   <Checkbox
+                    key={index}
                     className="mTop16 InlineBlock mRight60 setCheckbox"
                     text={o.txt}
                     checked={editData.loginMode[o.key]}

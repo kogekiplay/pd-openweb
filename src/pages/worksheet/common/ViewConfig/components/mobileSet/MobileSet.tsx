@@ -268,9 +268,10 @@ export default class MobileSet extends React.Component<any, any> {
         <div className="commonConfigItem Font13 bold">{_l('卡片模板')}</div>
         <div className="commonConfigItem mBottom32">
           <ul className="cardUl">
-            {[1, 2, 0].map(it => {
+            {[1, 2, 0].map((it, index) => {
               return (
                 <li
+                  key={index}
                   className={cx('mTop12 Hand', {
                     current: appshowtype === it + '',
                     mRight12: it === 1,

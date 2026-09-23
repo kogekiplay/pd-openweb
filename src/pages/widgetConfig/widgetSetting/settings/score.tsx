@@ -118,6 +118,7 @@ export default function Score({ data, onChange }) {
             {colors.map((item, index) => {
               return (
                 <WidgetColor
+                  key={index}
                   isNormal={false}
                   color={item.value}
                   text={`${index + 1}`}

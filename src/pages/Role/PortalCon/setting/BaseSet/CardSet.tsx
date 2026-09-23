@@ -10,15 +10,15 @@ export default function (props) {
       <React.Fragment>
         {businessCardOption
           .filter(l => l.value.includes('_'))
-          .map(item => (
-            <Select.Option value={item.value} label={item.label}>
+          .map((item, index) => (
+            <Select.Option key={index} value={item.value} label={item.label}>
               {item.label}
             </Select.Option>
           ))}
         {businessCardOption
           .filter(l => !l.value.includes('_'))
           .map((item, i) => (
-            <Select.Option value={item.value} label={item.label} className={cx({ BorderTopGrayC: i === 0 })}>
+            <Select.Option key={i} value={item.value} label={item.label} className={cx({ BorderTopGrayC: i === 0 })}>
               {item.label}
             </Select.Option>
           ))}

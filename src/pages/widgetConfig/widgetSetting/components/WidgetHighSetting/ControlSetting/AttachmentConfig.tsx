@@ -359,9 +359,10 @@ function WaterMarkDialog(props) {
           <SettingItem>
             <div className="settingItemTitle">{_l('样式')}</div>
             <div className="markStyleContent">
-              {MARK_STYLE_OPTIONS.map(item => {
+              {MARK_STYLE_OPTIONS.map((item, index) => {
                 return (
                   <div
+                    key={index}
                     className="markStyleItem"
                     onClick={() => {
                       setInfo({
@@ -431,8 +432,9 @@ function WaterMarkDialog(props) {
             <SectionItem className="mTop24">
               <div className="label ">{_l('疏密度')}</div>
               <AnimationWrap className="flex">
-                {MASK_DENSITY.map(item => (
+                {MASK_DENSITY.map((item, index) => (
                   <div
+                    key={index}
                     className={cx('animaItem', { active: info.watermarkdensity === item.value })}
                     onClick={() => {
                       setInfo({ watermarkdensity: item.value });
@@ -447,11 +449,12 @@ function WaterMarkDialog(props) {
             <SectionItem className="mTop24">
               <div className="label">{_l('水印位置')}</div>
               <table className="positionBox">
-                {_.chunk(MASK_POSITION, 3).map(row => {
+                {_.chunk(MASK_POSITION, 3).map((row, index) => {
                   return (
-                    <tr>
-                      {row.map(col => (
+                    <tr key={index}>
+                      {row.map((col, index) => (
                         <td
+                          key={index}
                           className={cx({ active: col.value === info.position })}
                           onClick={() => setInfo({ position: col.value })}
                         >

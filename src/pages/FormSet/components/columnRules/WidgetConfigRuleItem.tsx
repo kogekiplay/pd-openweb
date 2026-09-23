@@ -170,7 +170,7 @@ function renderFilterItemTexts(filters = [], disabled = false, worksheetControls
     <React.Fragment>
       {filterItemTexts.map((item, index) => {
         return (
-          <span className={cx({ textDisabled: disabled })}>
+          <span key={index} className={cx({ textDisabled: disabled })}>
             {filterItemTexts.length > 1 ? <span className="textTertiary mRight2">(</span> : null}
             {(item.groupFilters || []).map((child, childIdx) => {
               return renderItemText(child, childIdx);

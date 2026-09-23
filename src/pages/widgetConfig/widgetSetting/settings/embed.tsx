@@ -202,9 +202,10 @@ export default function Embed(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('类型')}</div>
         <DisplayMode>
-          {EMBED_TYPES.map(({ value, text, img }) => {
+          {EMBED_TYPES.map(({ value, text, img }, index) => {
             return (
               <div
+                key={index}
                 className={cx('displayItem', { active: enumDefault === value })}
                 onClick={() => {
                   handleClear();

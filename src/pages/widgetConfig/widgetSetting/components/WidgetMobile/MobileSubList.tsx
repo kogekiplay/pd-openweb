@@ -81,10 +81,11 @@ export default function MobileSubList({ data, onChange }) {
       <SettingItem className="mTop0">
         <div className="settingItemTitle">{_l('显示样式')}</div>
         <DisplayMode>
-          {DISPLAY_OPTIONS.map(i => {
+          {DISPLAY_OPTIONS.map((i, index) => {
             const active = h5showtype === i.value;
             return (
               <div
+                key={index}
                 className={cx('displayItem', { active: active })}
                 onClick={() => {
                   if (active) return;

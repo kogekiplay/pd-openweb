@@ -38,10 +38,11 @@ export default function TableConfig(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('类型')}</div>
         <DisplayMode>
-          {DIRECTION_DISPLAY_TYPE.map(item => {
+          {DIRECTION_DISPLAY_TYPE.map((item, index) => {
             const isActive = direction === item.value;
             return (
               <div
+                key={index}
                 className={cx('displayItem', { active: isActive })}
                 onClick={() => {
                   if (isActive) return;

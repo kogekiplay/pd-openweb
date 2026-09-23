@@ -181,10 +181,11 @@ export default function Money(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('显示方式')}</div>
         <AnimationWrap>
-          {DISPLAY_OPTIONS.map(({ text, value }) => {
+          {DISPLAY_OPTIONS.map(({ text, value }, index) => {
             const isActive = showformat === value;
             return (
               <div
+                key={index}
                 className={cx('animaItem breakText', { active: isActive })}
                 onClick={() => {
                   if (isActive) return;

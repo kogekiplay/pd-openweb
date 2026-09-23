@@ -304,8 +304,9 @@ export default function TextVerify(props) {
               <Support href="https://help.mingdao.com/worksheet/regular-expression" type={3} text={_l('帮助')} />
             </div>
             <ul className="list">
-              {FORMAT_CONFIG.map(item => (
+              {FORMAT_CONFIG.map((item, index) => (
                 <li
+                  key={index}
                   onClick={() =>
                     setData({ ...itemData, name: item.text, err: _l('请输入%0', item.text), value: item.regExp })
                   }

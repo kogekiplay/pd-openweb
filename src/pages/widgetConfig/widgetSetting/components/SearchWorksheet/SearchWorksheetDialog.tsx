@@ -313,7 +313,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
           // 查询表字段已删除
           const isDelete = item.subCid && !_.find(subControls, subControl => subControl.value === item.subCid);
           return (
-            <div className="mappingItem">
+            <div key={index} className="mappingItem">
               <div className="mappingControlName overflow_ellipsis">
                 {_.get(selectControl, 'controlName') || (
                   <Tooltip title={_l('ID: %0', item.cid)} placement="bottom">
@@ -492,9 +492,10 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                           }
                         >
                           {sheetList.length > 0 ? (
-                            sheetList.map(item => {
+                            sheetList.map((item, index) => {
                               return (
                                 <MenuItem
+                                  key={index}
                                   onClick={() => {
                                     if (item.sheetId === sheetId) return;
                                     this.setState(

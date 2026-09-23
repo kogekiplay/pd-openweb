@@ -256,7 +256,7 @@ export default function GroupDialog(props) {
                   : _.get(item, `fields[${i}].name`);
 
               return (
-                <React.Fragment>
+                <React.Fragment key={i}>
                   <Trigger
                     action={['click']}
                     key={`${o.worksheetId}_${i}_${o.controlId}_${version}`}
@@ -477,7 +477,7 @@ export default function GroupDialog(props) {
               <div className="leftCon tit"></div>
               {sourceInfos.map((it, i) => {
                 return (
-                  <React.Fragment>
+                  <React.Fragment key={i}>
                     <div className="Dropdown--input TxtCenter WordBreak overflow_ellipsis">{it.workSheetName}</div>
                     {i < sourceInfos.length - 1 && <div className="joinCon"></div>}
                   </React.Fragment>

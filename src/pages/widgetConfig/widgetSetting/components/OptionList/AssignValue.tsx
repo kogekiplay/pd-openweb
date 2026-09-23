@@ -110,9 +110,9 @@ export default function AssignValue(props) {
           <ul>
             <li className="Bold title">{_l('选项')}</li>
             {options.map(
-              ({ color, value, isDeleted }) =>
+              ({ color, value, isDeleted }, index) =>
                 !isDeleted && (
-                  <li>
+                  <li key={index}>
                     <div style={{ background: color }} className="colorWrap"></div>
                     <div className="flex overflow_ellipsis">{value}</div>
                   </li>
@@ -124,7 +124,7 @@ export default function AssignValue(props) {
             {options.map(
               (item, index: number) =>
                 !item.isDeleted && (
-                  <li>
+                  <li key={index}>
                     {checked && (
                       <InputNumber
                         value={item.score}

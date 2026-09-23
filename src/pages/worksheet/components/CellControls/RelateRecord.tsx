@@ -212,6 +212,7 @@ export default class RelateRecord extends React.Component<any, any> {
 
         return (
           <ViewHoverRelateRecordCard
+            key={index}
             record={record.sourcevalue ? JSON.parse(record.sourcevalue) : record}
             control={cell}
             {...this.props}

@@ -145,9 +145,9 @@ export default function (props) {
       <React.Fragment>
         <div className="mTop20">
           {actionList.length > 0 &&
-            actionList.map(o => {
+            actionList.map((o, index) => {
               return (
-                <div className="rolePermissionInlineRow">
+                <div key={index} className="rolePermissionInlineRow">
                   <Checkbox
                     checked={(sheet[o.key] || {}).enable}
                     onChange={() => {
@@ -243,8 +243,9 @@ export default function (props) {
         <div className="radioCon">
           <div className="conRadioGroup">
             <div className="flexRow alignItemsCenter">
-              {(type === 'read' ? dataPermissionOptions : operationPermissionOptions).map(option => (
+              {(type === 'read' ? dataPermissionOptions : operationPermissionOptions).map((option, index) => (
                 <MDRadio
+                  key={index}
                   className="InlineFlex cascaderRadio textPrimary"
                   text={option.label}
                   checked={option.value === value}

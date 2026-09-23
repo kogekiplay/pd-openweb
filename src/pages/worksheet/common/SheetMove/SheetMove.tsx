@@ -215,8 +215,8 @@ export default class SheetMove extends Component<any, any> {
                   name: _.get(_.find(appList, { value: appValue }), 'text') || '',
                   subName: _l('(作为一级分组移动)'),
                 })}
-              {grouping.map(data => (
-                <Fragment>
+              {grouping.map((data, index) => (
+                <Fragment key={index}>
                   {this.renderGroupingItem(data)}
                   {type !== 2 &&
                     data.subVisible &&

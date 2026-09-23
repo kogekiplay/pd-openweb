@@ -244,8 +244,8 @@ class LineConfigModal extends Component<any, any> {
                     this.handleChangeConfig({ controlId: value });
                   }}
                 >
-                  {allYaxisList.map(item => (
-                    <Select.Option className="selectOptionWrapper" value={item.controlId}>
+                  {allYaxisList.map((item, index) => (
+                    <Select.Option key={index} className="selectOptionWrapper" value={item.controlId}>
                       {item.controlName || <span className="Red">{_l('当前字段已删除')}</span>}
                     </Select.Option>
                   ))}

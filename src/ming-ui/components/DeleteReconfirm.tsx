@@ -97,7 +97,7 @@ export default ({
           />
         ) : (
           <div>
-            {data.map(({ text, value }) =>
+            {data.map(({ text, value }, index) =>
               clickOmitText ? (
                 <Fragment key={value}>
                   <Checkbox
@@ -109,7 +109,12 @@ export default ({
                   <span>{text}</span>
                 </Fragment>
               ) : (
-                <Checkbox value={value} text={text} onClick={(checkd, value) => onChange(checkd ? value : undefined)} />
+                <Checkbox
+                  key={index}
+                  value={value}
+                  text={text}
+                  onClick={(checkd, value) => onChange(checkd ? value : undefined)}
+                />
               ),
             )}
           </div>

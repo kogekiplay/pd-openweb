@@ -29,9 +29,10 @@ export default function WidgetRowHeight({ data, onChange }) {
     <SettingItem>
       <div className="settingItemTitle">{_l('行高')}</div>
       <AnimationWrap>
-        {HEIGHT_SETTING_LIST.map(({ text, value }) => {
+        {HEIGHT_SETTING_LIST.map(({ text, value }, index) => {
           return (
             <div
+              key={index}
               className={cx('animaItem overflow_ellipsis', { active: rowheight === value })}
               onClick={() => onChange(handleAdvancedSettingChange(data, { rowheight: value }))}
             >

@@ -75,8 +75,9 @@ export default function AppGlobalVariable(props) {
         }}
       />
       <div className="tabWrap">
-        {tabInfos.map(item => (
+        {tabInfos.map((item, index) => (
           <div
+            key={index}
             className={cx('tabItem Hand', { active: item.value === currentTab })}
             onClick={() => setCurrentTab(item.value)}
           >

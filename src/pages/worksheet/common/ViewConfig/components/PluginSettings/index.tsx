@@ -323,9 +323,10 @@ function PluginSettings(params) {
             // }}
             popup={
               <WrapPopup>
-                {PARAM_TYPES.map(o => {
+                {PARAM_TYPES.map((o, index) => {
                   return (
                     <div
+                      key={index}
                       className="Hand Font14"
                       onClick={() => {
                         let num = paramSettings.filter(a => a.fieldId === o.fieldId).length;

@@ -69,9 +69,10 @@ export default function FilterViewRange(props) {
           {!isAllView &&
             views
               .filter(l => l.worksheetId !== l.viewId)
-              .map(it => {
+              .map((it, index) => {
                 return (
                   <Checkbox
+                    key={index}
                     className="mTop15 mLeft25 Normal"
                     text={it.name}
                     checked={viewIds.includes(it.viewId)}

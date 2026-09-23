@@ -111,8 +111,8 @@ export default function AccessConditions(props) {
       case 1:
         return (
           <Fragment>
-            {hearderRule.map(item => (
-              <div className="flexRow alignItemsCenter mBottom8">
+            {hearderRule.map((item, idx) => (
+              <div key={idx} className="flexRow alignItemsCenter mBottom8">
                 <Input
                   className="keyInput mRight8"
                   placeholder={_l('Key')}
@@ -148,7 +148,7 @@ export default function AccessConditions(props) {
         return (
           <Fragment>
             {addressRule.map((item, index) => (
-              <div className="flexRow alignItemsCenter mBottom8">
+              <div key={index} className="flexRow alignItemsCenter mBottom8">
                 <Input
                   className="flex"
                   value={item}

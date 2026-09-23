@@ -124,9 +124,10 @@ function SearchFolder() {
           <li className="emptyItem">{_l('没有搜索到相关结果')}</li>
         ) : (
           <React.Fragment>
-            {data.map(item => {
+            {data.map((item, index) => {
               return (
                 <li
+                  key={index}
                   data-folderid={item.folderID}
                   onClick={() => {
                     if (item.folderID) {
@@ -972,8 +973,8 @@ BatchTask.taskAuth = function (type: string, title: string, args?: any, minorCon
         <React.Fragment>
           <div className="tipTitle">{_l('有%0条任务被锁定且你不具有负责人权限，无法被修改', taskCount)}</div>
           <div className="authTaskBox">
-            {BatchTask.Settings.authTask.map((item: BatchAuthTask) => (
-              <div className="authTask">
+            {BatchTask.Settings.authTask.map((item: BatchAuthTask, index) => (
+              <div key={index} className="authTask">
                 <span className="markTask lockTask"></span>
                 <img className="circle batchAvatar" src={item.avatar} />
                 <span className="batchName overflow_ellipsis">{item.TaskName}</span>
@@ -1109,8 +1110,8 @@ BatchTask.showAuthTask = function (authObj, title: string, type) {
             <div className="tipTitle">{_l('有%0条任务被锁定且你不具有负责人权限，无法被修改', taskCount)}</div>
           )}
           <div className="authTaskBox">
-            {authObj.map(item => (
-              <div className="authTask">
+            {authObj.map((item, index) => (
+              <div key={index} className="authTask">
                 {type !== 'UpdateActualStartTime' && <span className="markTask lockTask"></span>}
                 <img className="circle batchAvatar" src={item.avatar} />
                 <span className="batchName overflow_ellipsis">{item.TaskName}</span>

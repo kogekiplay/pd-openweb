@@ -117,7 +117,7 @@ const MobilePersonalInfo = props => {
       if (id === 'currentDepartmentFullName') {
         if (!userInfo.departmentInfos?.length) return null;
 
-        return <DepartmentFullName projectId={projectId} departmentInfos={userInfo.departmentInfos} />;
+        return <DepartmentFullName key={id} projectId={projectId} departmentInfos={userInfo.departmentInfos} />;
       }
 
       return (

@@ -376,9 +376,9 @@ export default function WidgetIntro(props) {
           popup={() => {
             return (
               <IntroMenu>
-                {switchList.map(i => {
+                {switchList.map((i, index) => {
                   return (
-                    <div className="menuItem" onClick={() => switchType(i)}>
+                    <div key={index} className="menuItem" onClick={() => switchType(i)}>
                       <Icon icon={i.icon} />
                       {i.widgetName}
                     </div>
@@ -410,11 +410,11 @@ export default function WidgetIntro(props) {
       </div>
 
       <div className="introOptions">
-        {DISPLAY_OPTIONS.map(item => {
+        {DISPLAY_OPTIONS.map((item, index) => {
           if (!supportWidgetIntroOptions(data, item.value, from, isRecycle)) return null;
 
           return (
-            <Tooltip title={item.text} placement="bottom">
+            <Tooltip key={index} title={item.text} placement="bottom">
               <div
                 className={cx('optionIcon', { active: settingMode === item.value })}
                 onClick={() => setSettingMode(item.value)}

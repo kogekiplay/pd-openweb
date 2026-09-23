@@ -151,9 +151,10 @@ export default function SelectSheetFromApp(props) {
     return (
       <SelectSheetWrap>
         <div className="tabNav">
-          {initConfig.map(({ value, text }) => {
+          {initConfig.map(({ value, text }, index) => {
             return (
               <div
+                key={index}
                 className={cx('navItem', { active: queryType === value })}
                 onClick={() => {
                   const currentSheets = getCurrentSheets(value);

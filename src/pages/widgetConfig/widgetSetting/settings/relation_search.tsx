@@ -226,9 +226,10 @@ export default function RelationSearch(props) {
         />
         <div className="flexCenter mTop20">
           <span className="textSecondary mRight20">{_l('填充方式')}</span>
-          {FILL_TYPES.map(item => {
+          {FILL_TYPES.map((item, index) => {
             return (
               <span
+                key={index}
                 className={cx('coverType Hand', { active: item.value === covertype })}
                 onClick={() => onChange(handleAdvancedSettingChange(data, { covertype: item.value }))}
               >
@@ -390,8 +391,9 @@ export default function RelationSearch(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('显示查询结果')}</div>
         <AnimationWrap>
-          {SEARCH_RESULT_TYPES.map(({ text, value }) => (
+          {SEARCH_RESULT_TYPES.map(({ text, value }, index) => (
             <div
+              key={index}
               className={cx('animaItem', { active: enumDefault === value })}
               onClick={() => {
                 let nextData = { ...data, enumDefault: value };

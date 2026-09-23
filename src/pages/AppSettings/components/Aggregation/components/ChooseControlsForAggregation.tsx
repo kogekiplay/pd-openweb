@@ -50,10 +50,11 @@ function ChooseWorksheet(props) {
         <div className="mTop6">
           {worksheets
             .filter(o => !o.isDelete)
-            .map(o => {
+            .map((o, index) => {
               const hs = worksheetId === o.workSheetId;
               return (
                 <div
+                  key={index}
                   className={cx('itemControl flexRow alignItemsCenter', { hs })}
                   onClick={() => {
                     onChange(o.workSheetId);

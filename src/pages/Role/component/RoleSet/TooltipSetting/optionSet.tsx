@@ -118,9 +118,9 @@ export default function Set(props) {
         </div>
         <div className="">
           {actionList.length > 0 &&
-            actionList.map(o => {
+            actionList.map((o, index) => {
               return (
-                <div className="rolePermissionInlineRow">
+                <div key={index} className="rolePermissionInlineRow">
                   <Checkbox
                     className="TxtMiddle"
                     checked={(sheet[o.key] || {}).enable}
@@ -198,14 +198,14 @@ export default function Set(props) {
         </div>
         <div className="OptionInfo">
           {actionList.length > 0 &&
-            actionList.map(o => {
+            actionList.map((o, index) => {
               if (md.global.SysSettings.hideAIBasicFun && o.btnType === 1 && 'unableCustomButtons' === key) {
                 //过滤掉 Ai 动作
                 return null;
               }
 
               return (
-                <div className="subCheckbox InlineBlock flexRow alignItemsCenter">
+                <div key={index} className="subCheckbox InlineBlock flexRow alignItemsCenter">
                   <Checkbox
                     className={'mTop20 InlineBlock TxtMiddle'}
                     checked={!unableList.includes(o.id)}

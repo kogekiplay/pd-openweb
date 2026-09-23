@@ -63,9 +63,9 @@ export default class CustomTableCom extends Component<any, any> {
     return (
       <div className={cx('tableWrap flexColumn overflowHidden', className)}>
         <div className="tableHeader flexRow">
-          {columns.map(item => {
+          {columns.map((item, index) => {
             return (
-              <div className={`${item.className} flexRow alignItemsCenter`}>
+              <div key={index} className={`${item.className} flexRow alignItemsCenter`}>
                 <div
                   className={cx({
                     hoverColorPrimary: item.sorter,
@@ -113,14 +113,22 @@ export default class CustomTableCom extends Component<any, any> {
             this.renderEmpty()
           ) : (
             <ScrollView className="h100">
-              {dataSource.map(item => {
+              {dataSource.map((item, index) => {
                 return (
-                  <div className="row flexRow alignItemsCenter">
-                    {columns.map(it => {
+                  <div key={index} className="row flexRow alignItemsCenter">
+                    {columns.map((it, index) => {
                       if (it.render) {
-                        return <div className={it.className}>{it.render(item)}</div>;
+                        return (
+                          <div key={index} className={it.className}>
+                            {it.render(item)}
+                          </div>
+                        );
                       } else {
-                        return <div className={it.className}>{item[it.dataIndex]}</div>;
+                        return (
+                          <div key={index} className={it.className}>
+                            {item[it.dataIndex]}
+                          </div>
+                        );
                       }
                     })}
                   </div>

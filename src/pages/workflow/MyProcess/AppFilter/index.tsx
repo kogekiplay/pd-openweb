@@ -172,8 +172,8 @@ export default class AppFilter extends Component<any, any> {
             );
           }}
         >
-          {TYPES.map(item => (
-            <Select.Option className="processOptionWrapper" value={item.value}>
+          {TYPES.map((item, index) => (
+            <Select.Option key={index} className="processOptionWrapper" value={item.value}>
               <div className="flexRow valignWrapper">
                 <i className={`icon ${item.icon} textTertiary Font18 mRight5`} />
                 {item.text}
@@ -192,8 +192,8 @@ export default class AppFilter extends Component<any, any> {
             this.props.onChange(app.id, value);
           }}
         >
-          {processList.map(item => (
-            <Select.Option className="processOptionWrapper" value={item.id}>
+          {processList.map((item, index) => (
+            <Select.Option key={index} className="processOptionWrapper" value={item.id}>
               {item.name}
             </Select.Option>
           ))}

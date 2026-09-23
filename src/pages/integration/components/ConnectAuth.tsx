@@ -90,9 +90,9 @@ const renderList = fields => {
           <div className="flex textTertiary">{_l('参数名')}</div>
           <div className="flex textTertiary">{_l('参考值')}</div>
         </div>
-        {fields.map(o => {
+        {fields.map((o, index) => {
           return (
-            <div className="flexRow line">
+            <div key={index} className="flexRow line">
               <div className="flex WordBreak">{o.controlName}</div>
               <div className="flex WordBreak">{o.value}</div>
             </div>

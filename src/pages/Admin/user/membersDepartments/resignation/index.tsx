@@ -130,7 +130,7 @@ export default class extends React.Component<any, any> {
                             className={`${index < departmentInfos.length - 1 ? 'mBottom8' : ''} `}
                           >
                             {fullName.map((n, i) => (
-                              <span>
+                              <span key={i}>
                                 {n}
                                 {fullName.length - 1 > i && <span className="mLeft8 mRight8">/</span>}
                               </span>

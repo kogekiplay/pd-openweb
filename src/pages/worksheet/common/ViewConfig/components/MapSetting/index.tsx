@@ -206,6 +206,7 @@ export default function MapSetting(props) {
           {[_l('浅色'), _l('深色'), _l('动态颜色')].map((item, i) => {
             return (
               <div
+                key={i}
                 className={cx('animaItem overflow_ellipsis', { active: Number(advancedSetting.tagType || 0) === i })}
                 onClick={() => updateViewTagType(i)}
               >
@@ -265,9 +266,10 @@ export default function MapSetting(props) {
         )}
         <div className="title bold mBottom8 mTop24">{_l('默认视图显示')}</div>
         <AnimationWrap className="tagColorWrap">
-          {VIEW_CENTER_TYPE.map(({ value, text }) => {
+          {VIEW_CENTER_TYPE.map(({ value, text }, index) => {
             return (
               <div
+                key={index}
                 className={cx('animaItem overflow_ellipsis', {
                   active: Number(mapLocation.type || 1) === value,
                 })}
@@ -281,10 +283,10 @@ export default function MapSetting(props) {
         {Number(mapLocation.type) === 2 && (
           <div className="mTop16">
             <RadioBox>
-              {CENTER_POSITION_TYPE.map(({ value, text }) => {
+              {CENTER_POSITION_TYPE.map(({ value, text }, index) => {
                 const isDisabled = !isHttps && !isLocalhost && value === 2;
                 return (
-                  <div className="radioItem">
+                  <div key={index} className="radioItem">
                     <Radio
                       disabled={isDisabled}
                       text={text}

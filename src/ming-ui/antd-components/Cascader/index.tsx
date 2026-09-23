@@ -401,7 +401,7 @@ const Cascader = React.forwardRef(
 
           if (text.search(new RegExp(searchValue.trim().replace(/([,.+?:()*[\]^$|{}\\-])/g, '\\$1'), 'i')) !== -1) {
             return (
-              <React.Fragment>
+              <React.Fragment key={i}>
                 <span className="colorPrimary">{text}</span>
                 {!isLast && <span> / </span>}
               </React.Fragment>
@@ -409,7 +409,7 @@ const Cascader = React.forwardRef(
           }
 
           return (
-            <React.Fragment>
+            <React.Fragment key={i}>
               {text}
               {!isLast && <span> / </span>}
             </React.Fragment>

@@ -131,9 +131,10 @@ function ActionCon(props) {
                 ? true
                 : o.key !== 'publish',
             )
-            .map(a => {
+            .map((a, index) => {
               return (
                 <div
+                  key={index}
                   className={cx('Hand Font14 flexRow alignItemsCenter pLeft12', { del: a.key === 'delete' })}
                   onClick={e => {
                     setState({ visible: false });
@@ -322,9 +323,9 @@ export default function SubmitConfig(params) {
           </div>
           <WrapList className="flexColumn mTop12">
             <div className="con mTop10 flex">
-              {list.map(o => {
+              {list.map((o, index) => {
                 return (
-                  <div className="flexRow conLi alignItemsCenter">
+                  <div key={index} className="flexRow conLi alignItemsCenter">
                     <Radio
                       className=""
                       checked={o.id === CommitId}

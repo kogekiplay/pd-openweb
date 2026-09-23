@@ -123,7 +123,7 @@ export default function Set(props) {
         if ([23, 8, 21].includes(o.typeId)) {
           let desInfo = CARD_TYE_LIST.find(item => o.typeId === item.typeId);
           return (
-            <React.Fragment>
+            <React.Fragment key={i}>
               <Card
                 {...props}
                 nodeInfo={o}
@@ -175,6 +175,7 @@ export default function Set(props) {
         } else if (o.typeId == 14) {
           return (
             <ItemCon
+              key={i}
               {...props}
               isNew={false}
               prveId={o.prveId}

@@ -462,9 +462,9 @@ export default class CreateIndex extends Component<any, any> {
               )}
             </div>
 
-            {QA_TEXT.map(v => {
+            {QA_TEXT.map((v, index) => {
               return (
-                <Fragment>
+                <Fragment key={index}>
                   <div className="desTitle  mTop16" onClick={() => this.openAndClose(v.qa)}>
                     <span className="Hand"> {v.title}</span>
                   </div>

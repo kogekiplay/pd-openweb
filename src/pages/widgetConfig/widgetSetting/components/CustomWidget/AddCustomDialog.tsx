@@ -101,9 +101,10 @@ export default function AddCustomDialog(props) {
 
         <SettingItem>
           <div className="settingItemTitle">{_l('字段是否存储数据？')}</div>
-          {DISPLAY_OPTIONS.map(({ value, text, desc }) => {
+          {DISPLAY_OPTIONS.map(({ value, text, desc }, index) => {
             return (
               <Radio
+                key={index}
                 size="middle"
                 checked={customType === value}
                 text={text}

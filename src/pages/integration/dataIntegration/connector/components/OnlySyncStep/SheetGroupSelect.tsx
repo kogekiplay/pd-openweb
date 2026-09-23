@@ -134,8 +134,8 @@ export default function SheetGroupSelect(props) {
           {groups.length ? (
             <div className="contentWrapper">
               <ScrollView>
-                {groups.map(group => (
-                  <React.Fragment>
+                {groups.map((group, index) => (
+                  <React.Fragment key={index}>
                     {renderGroupItem(group)}
                     {group.subVisible && group.childSections.map(subGroup => renderGroupItem(subGroup))}
                   </React.Fragment>

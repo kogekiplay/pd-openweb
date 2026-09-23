@@ -216,9 +216,10 @@ export default class WorkSheetComment extends React.Component<any, any> {
           {/* 内部成员，且外部门户支持参与讨论，但不可见内部讨论 */}
           {!md.global.Account.isPortal && allowExAccountDiscuss && exAccountDiscussEnum === 1 && (
             <div className="discussType flexRow alignItemsCenter">
-              {discussTypes.map(o => {
+              {discussTypes.map((o, index) => {
                 return (
                   <div
+                    key={index}
                     className={cx('discuss TxtCenter flex Bold Hand', { isCur: disType === o.id })}
                     onClick={() => {
                       this.setState({ disType: o.id }, () => {

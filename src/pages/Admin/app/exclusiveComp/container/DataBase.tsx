@@ -222,11 +222,11 @@ function DataBase(props) {
                 </div>
               </div>
               <div className="content Font13 valignWrapper">
-                {DISPLAY_DATA.map(l => {
+                {DISPLAY_DATA.map((l, index) => {
                   const itemValue = item[l.key] || l.defaultValue;
 
                   return (
-                    <div>
+                    <div key={index}>
                       <div className="label textTertiary mBottom8">{l.label}</div>
                       <div className="value">{l.format ? l.format(itemValue) : itemValue}</div>
                     </div>

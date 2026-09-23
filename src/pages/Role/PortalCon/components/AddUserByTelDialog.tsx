@@ -190,7 +190,7 @@ function AddUserByTelDialog(props) {
         <div className="list">
           {list.map((o, i) => {
             return (
-              <div className="row">
+              <div key={i} className="row">
                 {effectiveType === 0 ? (
                   <Tel
                     data={o}

@@ -747,8 +747,8 @@ export default class extends Component<any, any> {
                   controlId: data.controlId,
                   isContrastValue: true,
                 })}
-              {minorList.map(data => (
-                <div className="w100 flexRow textWrap minorWrap Font14">
+              {minorList.map((data, index) => (
+                <div key={index} className="w100 flexRow textWrap minorWrap Font14">
                   <div className="mRight5 textSecondary name">{data.name}</div>
                   <div>{formatrChartValue(data.value, false, newYaxisList, data.controlId)}</div>
                 </div>

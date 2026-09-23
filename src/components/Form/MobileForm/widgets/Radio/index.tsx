@@ -50,6 +50,7 @@ const RadioWidget = props => {
       {displayOptions.map((item, index: number) => {
         return (
           <div
+            key={index}
             className="flexColumn"
             style={{ width: item.key === 'other' && checkIds.includes('other') && !disabled ? '100%' : 'auto' }}
           >

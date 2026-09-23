@@ -325,10 +325,10 @@ function ConnectParam(props) {
               </div>
             </div>
           )}
-          {controls.map(o => {
+          {controls.map((o, index) => {
             const disabled = (nodeControls.find(it => o.controlId === it.controlId) || {}).hide;
             return (
-              <div className="par conTr flexRow">
+              <div key={index} className="par conTr flexRow">
                 <div className={cx('name WordBreak', { disable: isParamSchemaLocked })}>
                   {inputRender(o, 'controlName')}
                 </div>

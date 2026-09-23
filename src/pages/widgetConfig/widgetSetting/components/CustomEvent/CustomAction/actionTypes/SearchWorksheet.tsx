@@ -527,9 +527,10 @@ class SearchWorksheetActionDialog extends Component<any, any> {
                           }
                         >
                           {sheetList.length > 0 ? (
-                            sheetList.map(item => {
+                            sheetList.map((item, index) => {
                               return (
                                 <MenuItem
+                                  key={index}
                                   onClick={() => {
                                     if (item.sheetId === sheetId) return;
                                     this.setState(

@@ -70,8 +70,8 @@ function SelectDBInstance(props) {
         popupRender={() => {
           return (
             <DropdownWrap>
-              {options.map(l => (
-                <Fragment>
+              {options.map((l, index) => (
+                <Fragment key={index}>
                   <div
                     className={cx('item Hand overflow_ellipsis', { current: l.value === dbInstance.value })}
                     onClick={() => {

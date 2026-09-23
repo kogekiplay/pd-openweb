@@ -542,6 +542,7 @@ function MessageItem({
                       if (part.type === 'text') {
                         return (
                           <ReactRemarkable
+                            key={key}
                             markdown={part.text}
                             isStreaming={isStreaming}
                             flag={JSON.stringify({ taskStatus, disabled: !isLastAssistantMessage })}

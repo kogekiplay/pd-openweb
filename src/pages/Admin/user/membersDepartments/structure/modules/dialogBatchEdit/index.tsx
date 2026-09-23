@@ -201,7 +201,7 @@ export default class DialogBatchEdit extends Component<any, any> {
         {filedValue === 1 &&
           departmentInfos.map((item, i) => {
             return (
-              <span className="itemSpan mAll5">
+              <span key={i} className="itemSpan mAll5">
                 {item.departmentName}
                 {i === 0 && <span className="isTopIcon">{_l('主')}</span>}
                 <div className="moreOption">
@@ -316,8 +316,10 @@ export default class DialogBatchEdit extends Component<any, any> {
               this.setState({ workSiteId: value });
             }}
           >
-            {workSiteInfo.map(item => (
-              <Option value={item.workSiteId}>{item.workSiteName}</Option>
+            {workSiteInfo.map((item, index) => (
+              <Option key={index} value={item.workSiteId}>
+                {item.workSiteName}
+              </Option>
             ))}
           </Select>
         )}

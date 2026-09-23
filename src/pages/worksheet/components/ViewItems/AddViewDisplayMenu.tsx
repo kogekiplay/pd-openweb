@@ -285,10 +285,11 @@ export default class AddViewDisplayMenu extends Component<any, any> {
   };
   renderCon = (info, isDev?) => {
     const { onClick } = this.props;
-    return info.map(o => {
+    return info.map((o, index) => {
       const { icon, id, iconColor = 'var(--color-cyan-dark)', name, iconUrl } = o;
       return (
         <div
+          key={index}
           className="valignWrapper flex Hand"
           onClick={() =>
             // pluginSource 插件来源 0:开发 1:已发布
@@ -330,8 +331,9 @@ export default class AddViewDisplayMenu extends Component<any, any> {
           <div className="title Bold Font15">{_l('默认视图')}</div>
           {VIEW_TYPE_ICON.filter(
             o => o.id !== 'customize' && (!md.global.SysSettings.enableMap ? o.id !== 'map' : true),
-          ).map(({ icon, text, id, color, isNew }) => (
+          ).map(({ icon, text, id, color, isNew }, index) => (
             <Trigger
+              key={index}
               popup={
                 <GuildWrap className="guildWrap">
                   <div className="left">

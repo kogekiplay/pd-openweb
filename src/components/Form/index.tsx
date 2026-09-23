@@ -436,9 +436,9 @@ const Entrance = React.forwardRef((componentProps, ref) => {
         cancelText: _l('忽略，继续保存'),
         description: (
           <div>
-            {uniqueErrors.map(item => {
+            {uniqueErrors.map((item, index) => {
               return (
-                <div className="errorItem">
+                <div key={index} className="errorItem">
                   <Tooltip
                     title={item.ignoreErrorMessage ? _l('非强制校验，可选择忽略') : _l('必须修改正确后才能保存')}
                     placement="bottomLeft"

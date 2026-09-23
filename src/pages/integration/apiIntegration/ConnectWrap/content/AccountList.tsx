@@ -348,9 +348,9 @@ function AccountList(props) {
           ) : listSearch.length <= 0 ? (
             <p className="textTertiary mTop20 pBottom20 TxtCenter">{_l('无匹配的结果，换一个关键词试试吧')}</p>
           ) : (
-            listSearch.map(o => {
+            listSearch.map((o, index) => {
               return (
-                <div className="tableTr flexRow alignItemsCenter">
+                <div key={index} className="tableTr flexRow alignItemsCenter">
                   <div className="flex2 acc flexRow pLeft10">
                     <span className="flex WordBreak">{o.name}</span>
                     {o.status === 0 && (

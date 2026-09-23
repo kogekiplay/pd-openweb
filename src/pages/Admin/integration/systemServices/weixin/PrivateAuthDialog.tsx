@@ -96,8 +96,8 @@ export default function PrivateAuthDialog(props) {
         )}
       </div>
       <div className="formGroup">
-        {FORM_CONFIG.map(item => (
-          <Fragment>
+        {FORM_CONFIG.map((item, index) => (
+          <Fragment key={index}>
             <div className="mTop20 mBottom10 TxtLeft">
               <span className="required">*</span>
               {item.label}

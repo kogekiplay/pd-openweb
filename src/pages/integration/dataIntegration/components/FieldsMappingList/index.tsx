@@ -867,7 +867,7 @@ export default function FieldMappingList(props) {
           data.map((field, i) => {
             const sourceField = field.sourceField || {};
             return (
-              <div className="itemWrapper">
+              <div key={i} className="itemWrapper">
                 <div key={i} className="dataItem">
                   {getColumns().map((column, j) => {
                     return (

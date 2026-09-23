@@ -92,8 +92,9 @@ export default function Control(props) {
       </div>
       <ScrollView className="h100" ref={scrollViewRef}>
         <div className="pLeft20 pRight20">
-          {controls.map(c => (
+          {controls.map((c, index) => (
             <ControlContent
+              key={index}
               app={app}
               control={c}
               selectNode={selectNode}

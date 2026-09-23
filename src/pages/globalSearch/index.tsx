@@ -445,6 +445,7 @@ class GlobalSearch extends Component<any, any> {
 
             let buttons = [
               <OrgSelect
+                key="0"
                 style={{ marginLeft: '18px' }}
                 currentProjectId={(item === 'apps' ? appProjectId : projectId) || getCurrentProjectId()}
                 needAll={false}
@@ -517,9 +518,10 @@ class GlobalSearch extends Component<any, any> {
           {data &&
             data
               .filter(l => l.type !== 'user' && l.type !== 'group')
-              .map(item => {
+              .map((item, index) => {
                 return (
                   <List
+                    key={index}
                     className="globalSearchAllContentItem"
                     data={item}
                     dataKey={item.type}
@@ -535,7 +537,7 @@ class GlobalSearch extends Component<any, any> {
           {data &&
             data
               .filter(l => l.type === 'user' || l.type === 'group')
-              .map(item => {
+              .map((item, index) => {
                 let _data = {
                   allCount: item.count,
                   type: item.type,
@@ -543,6 +545,7 @@ class GlobalSearch extends Component<any, any> {
                 };
                 return (
                   <UserList
+                    key={index}
                     needDesc={false}
                     data={{ ..._data }}
                     type={item.type === 'user' ? 0 : 1}
@@ -727,6 +730,7 @@ class GlobalSearch extends Component<any, any> {
                   <React.Fragment>
                     {[...new Array(5)].map((item, index) => (
                       <Skeleton
+                        key={index}
                         className="mBottom20 scrollListskeleton"
                         active={true}
                         round={true}

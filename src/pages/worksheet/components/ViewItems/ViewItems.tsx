@@ -549,9 +549,10 @@ let ViewItems = class ViewItems extends Component<any, any> {
         </div>
         {expandRecycle && (
           <ul className="drawerWorksheetRecycleList">
-            {data.map(l => {
+            {data.map((l, index) => {
               return (
                 <HideItem
+                  key={index}
                   item={l}
                   appId={appId}
                   style={{

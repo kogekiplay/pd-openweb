@@ -664,8 +664,8 @@ export default class ExportSheet extends Component<any, any> {
                   </div>
 
                   {exportRelationalSheet &&
-                    exportMoreRecord.map(column => (
-                      <div className="flexRow">
+                    exportMoreRecord.map((column, index) => (
+                      <div key={index} className="flexRow">
                         <div className="flex mLeft25">
                           <Checkbox
                             key={column.controlId}

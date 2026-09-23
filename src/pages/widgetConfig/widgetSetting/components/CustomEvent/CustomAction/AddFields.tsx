@@ -66,11 +66,11 @@ export default function AddFields(props) {
 
             <div className="dropdownContent">
               {filterData.length > 0 ? (
-                filterData.map(i => {
+                filterData.map((i, index) => {
                   const enumType = enumWidgetType[i.type];
                   const { icon } = DEFAULT_CONFIG[enumType];
                   return (
-                    <div className="item overflow_ellipsis" onClick={() => onItemClick(i)}>
+                    <div key={index} className="item overflow_ellipsis" onClick={() => onItemClick(i)}>
                       <Icon icon={icon} className="Font15" />
                       <span className="overflow_ellipsis" title={i.controlName}>
                         {i.controlName}

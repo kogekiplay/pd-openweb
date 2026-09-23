@@ -139,10 +139,10 @@ export default function EditContractDialog(props) {
 
   return (
     <DialogWrap width={560} title={_l('组织信息')} visible={visible} onOk={onOk} onCancel={onCancel}>
-      {formData.map(item => {
+      {formData.map((item, index) => {
         const { key, label, placeholder, isRequired } = item;
         return (
-          <FormGroup className="formGroup">
+          <FormGroup key={index} className="formGroup">
             <div className="label mBottom4">
               {isRequired && <span className="required">*</span>}
               {label}

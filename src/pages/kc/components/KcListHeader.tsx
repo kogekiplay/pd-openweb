@@ -136,7 +136,11 @@ export default class KcListHeader extends Component<any, any> {
                     </span>
                   );
                 } else if (i === 2) {
-                  return <span className="positionSpan">&nbsp;{'>'} ...</span>;
+                  return (
+                    <span key={i} className="positionSpan">
+                      &nbsp;{'>'} ...
+                    </span>
+                  );
                 }
 
                 return '';

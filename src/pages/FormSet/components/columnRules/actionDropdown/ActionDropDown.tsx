@@ -194,9 +194,9 @@ export default class DropDownItem extends Component<any, any> {
     const currentArr = getTextById(dropDownData, values, actionType, from) || [];
     return (
       <Fragment>
-        {currentArr.map(item => {
+        {currentArr.map((item, index) => {
           return (
-            <span className={cx('valueText', { disabled: item.isDelete })}>
+            <span key={index} className={cx('valueText', { disabled: item.isDelete })}>
               <Tooltip title={!item.isDel ? '' : <span>{_l('ID: %0', item.controlId)}</span>} placement="bottom">
                 <span className="ellipsis controlNameBox">{item.name}</span>
               </Tooltip>
@@ -371,9 +371,9 @@ export default class DropDownItem extends Component<any, any> {
     const { values = [], actionType, from } = this.props;
     const { extendId } = this.state;
 
-    return dropData.map(item => {
+    return dropData.map((item, index) => {
       return (
-        <Fragment>
+        <Fragment key={index}>
           {this.renderItem(item, parentControl, deepIndex)}
           {!_.isEmpty(_.get(item, 'relationControls')) &&
           _.includes(extendId, item.controlId) &&

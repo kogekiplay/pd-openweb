@@ -401,11 +401,11 @@ export default class WorkHandoverDialog extends Component<any, any> {
   renderAppMember = () => {
     const { appsMemberData, currentAppId, selectAppMemberData } = this.state;
 
-    return appsMemberData.map(item => {
+    return appsMemberData.map((item, index) => {
       const checked = !!_.find(selectAppMemberData, l => l.appId === item.appId);
 
       return (
-        <div className="appWrap">
+        <div key={index} className="appWrap">
           <AppItem
             key={`work-handle-over-${item.appId}`}
             className="pLeft16"
@@ -467,8 +467,9 @@ export default class WorkHandoverDialog extends Component<any, any> {
       >
         <div className="flexColumn overflowHidden" style={{ height: `${windowHeight - 180}px` }}>
           <div className="tabBox flexRow">
-            {TAB_LIST.map(item => (
+            {TAB_LIST.map((item, index) => (
               <div
+                key={index}
                 className={cx('tabItem', { active: item.tab === activeTab })}
                 onClick={() =>
                   this.setState({

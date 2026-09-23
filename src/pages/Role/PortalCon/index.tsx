@@ -190,9 +190,10 @@ class PortalCon extends React.Component<any, any> {
       <WrapCon className="flexColumn overflowHidden">
         <WrapHeader className="">
           <div className="tabCon flex InlineBlock pLeft26">
-            {tablist.map(o => {
+            {tablist.map((o, index) => {
               return (
                 <span
+                  key={index}
                   className={cx('tab Hand Font14 Bold', { cur: this.state.tab === o.key })}
                   id={`tab_${o.key}`}
                   onClick={() => {

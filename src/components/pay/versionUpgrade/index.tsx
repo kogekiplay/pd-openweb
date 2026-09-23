@@ -258,9 +258,9 @@ export default class VersionUpgrade extends Component<any, any> {
     return (
       <div className="featureWrap flexRow" ref={node => { this.featureWrap = node; }}>
         <div className="fixedInfo">
-          {featureDataList.map(item => {
+          {featureDataList.map((item, index) => {
             return (
-              <div className={cx('flex', { 'flexRow alignItemsCenter justifyContentCenter': item.version === 2 })}>
+              <div key={index} className={cx('flex', { 'flexRow alignItemsCenter justifyContentCenter': item.version === 2 })}>
                 {item.versionName}
                 {item.version === 2 && <span className="introduce">{_l('推荐')}</span>}
               </div>
@@ -268,11 +268,12 @@ export default class VersionUpgrade extends Component<any, any> {
           })}
         </div>
 
-        {featureDataList.map(v => {
+        {featureDataList.map((v, index) => {
           const { version, versionName } = v;
 
           return (
             <div
+              key={index}
               className={cx('col flex', {
                 activeVersion: activeVersion === version,
                 featureDescription: version === -1,
@@ -286,10 +287,10 @@ export default class VersionUpgrade extends Component<any, any> {
                 }}
               >
                 <div className="versionNameTitle">{versionName}</div>
-                {v.featureData.map(item => {
+                {v.featureData.map((item, index) => {
                   if (item.subTitle) {
                     return (
-                      <div className={`item bold Font14 ${item.className}`}>
+                      <div key={index} className={`item bold Font14 ${item.className}`}>
                         {v.version === -1 ? item.subTitle : ''}
                       </div>
                     );
@@ -298,11 +299,12 @@ export default class VersionUpgrade extends Component<any, any> {
                   let content = item[`value${version}`];
 
                   if (_.isObject(content)) {
-                    content = Object.keys(content).map(i => <div>{content[i]}</div>);
+                    content = Object.keys(content).map((i, index) => <div key={index}>{content[i]}</div>);
                   }
 
                   return (
                     <div
+                      key={index}
                       className={cx(`item ${item.className}`, {
                         [content]: _.includes(['basicPng', 'basicNo'], content),
                         flexColumn: _.isObject(item[`value${version}`]),
@@ -391,9 +393,9 @@ export default class VersionUpgrade extends Component<any, any> {
                 {_l('我们力求通过科学的特性组合，让不同需求的用户感到物超所值')}
               </div>
               <div className="versionInfo">
-                {versionIntroduction.map(item => {
+                {versionIntroduction.map((item, index) => {
                   return (
-                    <div className="versionInfoItem">
+                    <div key={index} className="versionInfoItem">
                       <div className="versionName">{item.versionName}</div>
                       <div className="versionDes">*{_l('赠送%0人用户包', item.sendUserPackageNum)}</div>
                       <div className="priceDes">

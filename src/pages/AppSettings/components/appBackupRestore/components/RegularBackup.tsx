@@ -118,8 +118,9 @@ export default function RegularBackup(props) {
   const renderDay = () => {
     return (
       <DaySelectWrap>
-        {Days.map(item => (
+        {Days.map((item, index) => (
           <div
+            key={index}
             className={cx('dayItem Hand', { active: Number(item) === cycleValue })}
             onClick={() => updateData({ cycleValue: Number(item) })}
           >

@@ -184,13 +184,14 @@ export default function MoreOptions(props) {
 
   const menu = (
     <Menu className="customEventMoreOptions">
-      {EVENT_MORE_OPTIONS.map(i => {
+      {EVENT_MORE_OPTIONS.map((i, index) => {
         const isDelete = i.value === 'delete';
         const eventActions = _.get(_.head(customEvent.filter(i => i.eventId === eventId)), 'eventActions') || [];
 
         const disabled = isDelete && eventActions.length === 1;
         return (
           <MenuItem
+            key={index}
             className={cx({ isDanger: isDelete, disabled })}
             icon={<Icon icon={i.icon} className="Font15" />}
             onClick={e => {
