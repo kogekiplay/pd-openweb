@@ -23,7 +23,18 @@ import FormCover from './FormCover';
 import FormHeader from './FormHeader';
 import FormSection, { getDefaultIsUnfold } from './FormSection';
 
-export const RecordFormContext = React.createContext();
+/* RecordForm 往下透传给关联记录表格 / 下拉的上下文。原先是 React.createContext() 一个参数都没给，
+   类型成了 Context<unknown>，消费方的解构在 strictFunctionTypes 下全部报错。
+   字段按 Provider 实际给的（{ width, recordbase, iseditting, isMingoCreate }）与消费方实际读的对齐：
+   width 来自 useMeasure()；recordbase 里消费方读 recordTitle / instanceId / workId。
+   默认值仍是 undefined（与原先不传参完全一致），不在 Provider 下时消费方各自有 = {} / || {} 兜底。 */
+export interface RecordFormContextValue {
+  width?: number;
+  recordbase?: { recordTitle?: string; instanceId?: string; workId?: string; [key: string]: unknown };
+  iseditting?: boolean;
+  isMingoCreate?: boolean;
+}
+export const RecordFormContext = React.createContext<RecordFormContextValue | undefined>(undefined);
 
 const ShadowCon = styled.div`
   width: 100%;

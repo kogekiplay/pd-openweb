@@ -306,6 +306,12 @@ declare var md: {
  */
 declare type ApiResult = Promise<any> & { [key: string]: any };
 
+// 接口 resolve 出来的值的类型 —— 就是 ApiResult 解包之后的那个（目前是 any，见上面那段说明）。
+// 用在「把接口返回值原样转手 resolve 出去」的地方，比如 new Promise<{ data: ApiPayload }>(...)。
+// 【为什么不直接写 any】它引用的是既有声明而不是新造一个 any：哪天 ApiResult 精确化了，
+// 这些转手的地方自动跟上；而且一眼能看出「这里是接口原样透传」，不是没人管的漏网之鱼。
+declare type ApiPayload = Awaited<ApiResult>;
+
 declare var mdyAPI: (...args: any[]) => ApiResult;
 declare var agentAPI: (args?: Record<string, unknown>, options?: AgentApiOptions) => ApiResult;
 /**

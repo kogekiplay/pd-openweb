@@ -93,7 +93,8 @@ export class DialCodeSelectInstance {
   declare panelLayout: DialCodePanelLayout;
   declare _onTriggerClick: (event: MouseEvent) => void;
   declare _onTriggerKeydown: (event: KeyboardEvent) => void;
-  declare _onOutsideClick: (event: MouseEvent) => void;
+  // 同时注册给 mousedown 与 touchstart（见 _openPanel），触屏上收到的是 TouchEvent；两者都有 target，只用到它
+  declare _onOutsideClick: (event: MouseEvent | TouchEvent) => void;
   declare _onEsc: (event: KeyboardEvent) => void;
   declare _onReposition: () => void;
   declare _destroy: () => void;

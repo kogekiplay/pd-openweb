@@ -855,7 +855,9 @@ export class QrLabel {
   renderVerticalTexts({ x = 0, y = 0, fontSize, textList, color = '#222', width, firstIsBold }) {
     const { isPreview } = this.options;
     let textTop = y;
-    const texts = _.flatten(
+    /* 泛型必须显式写：map 的回调要么返回单个对象、要么返回对象数组，
+       lodash 的 flatten 从这个并集推不出元素类型，会得到 unknown[] */
+    const texts = _.flatten<{ text?: string; forceInLine?: boolean; isBold?: boolean }>(
       textList.map(({ text, forceInLine } = {}, i) =>
         forceInLine
           ? { text, forceInLine, isBold: this.firstIsTitle && i === 0 }
