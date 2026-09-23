@@ -60,8 +60,11 @@ function canReceiveRef(Comp) {
  * 把 any 【塌缩成具体对象类型】，于是外部传的几十个 props 全部"不在允许的 props 里"
  * （TableComp.tsx:432 报 not assignable to 'IntrinsicAttributes & …'）。
  * v18 不会，因为它的 LibraryManagedAttributes 还有 propTypes 分支兜着。
+ *
+ * 必须 export：autoSize() 的返回类型里带着它，19 个 `export default autoSize(X)` 的模块
+ * 在生成声明文件时要能写出这个名字，否则报 TS4082（用了私有名字）。
  */
-interface AutoSizeProps {
+export interface AutoSizeProps {
   width?: number;
   height?: number;
   watchHeight?: boolean;
