@@ -140,11 +140,13 @@ export const FORM_ERROR_TYPE_TEXT = {
       );
     }
   },
+  // 默认值与校验处（formUtils 里判定 DATE_TIME 的地方）保持一致。没配 allowtime 时按全天算，
+  // 那样永远不会判出 DATE_TIME，所以实际走到这里时 allowtime 一定有值；兜底只为类型如实。
   DATE_TIME: ({ advancedSetting = {} }: FormControl) =>
     _l(
       '请填写（%0 ~ %1）范围内的时间',
-      advancedSetting.allowtime.split('-')[0],
-      advancedSetting.allowtime.split('-')[1],
+      (advancedSetting.allowtime || '00:00-24:00').split('-')[0],
+      (advancedSetting.allowtime || '00:00-24:00').split('-')[1],
     ),
   TEXT_RANGE: ({ value, advancedSetting = {} }: FormControl) => {
     const { min, max } = advancedSetting;

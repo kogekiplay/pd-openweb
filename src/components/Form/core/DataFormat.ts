@@ -1804,7 +1804,9 @@ export default class DataFormat {
             getDynamicValue(
               this.data,
               Object.assign({}, item, {
-                advancedSetting: { defsource: item.advancedSetting?.defsource.replace(/isAsync/gi, 'async') },
+                // asyncControls 只收 advancedSetting.defsource 为真的控件（见上面收集它的 _.filter），
+                // 这里的 ?? '' 永远走不到，只为类型如实
+                advancedSetting: { defsource: (item.advancedSetting?.defsource ?? '').replace(/isAsync/gi, 'async') },
               }),
               this.masterData,
             ),
