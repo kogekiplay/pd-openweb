@@ -211,7 +211,8 @@ function useChatBot({ sessionId, params = [], defaultMessages = [], currentCode,
         if (done) break;
         await loader.feed(value);
       }
-    } catch (error) {
+    } catch (thrown) {
+      const error = thrown as Partial<Error>;
       if (error.name === 'AbortError') {
         console.log('Request aborted:', error.message);
       } else {

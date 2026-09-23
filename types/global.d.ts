@@ -524,6 +524,27 @@ declare interface ApiOptions {
   [key: string]: any;
 }
 
+// 业务代码 catch 到的「接口错误」。useUnknownInCatchVariables 打开后 catch 变量是 unknown，
+// 各处要把它当成下面这个形状来读。【字段是按真实来源取的并集，不是猜的】：
+//   - errorCode / errorMessage / errorData：window.mdyAPI 遇到 responseData.exception 时
+//       reject({ errorCode: responseData.state, errorMessage: responseData.exception, errorData: responseData })
+//       （src/common/global.ts，mdyAPI 的 promise 体内）
+//   - status / data / response：HTTP 层失败时 reject 的是 axios 的 error.response，
+//       或者拿不到 response 时的原始 axios error（后者的 response 字段才有值）
+//   - resultCode：工作表行接口成功时 resolve 的是带 resultCode 的对象，
+//       不少调用方在 resultCode !== 1 时把它原样 throw 出去，于是 catch 里也会见到它
+// 全部可选：同一个 catch 可能接到上面任一种，也可能接到别的东西。
+// 这里只描述形状、不做运行期判断 —— 调用处原有的 err && ... 防御照旧保留。
+declare interface ApiRejection {
+  errorCode?: number;
+  errorMessage?: string;
+  errorData?: unknown;
+  resultCode?: number;
+  status?: number;
+  data?: unknown;
+  response?: { status?: number; data?: unknown };
+}
+
 /** window.agentAPI 的第二个参数。Agent 服务自己一套，与 ApiOptions 不通用。 */
 declare interface AgentApiOptions {
   url?: string;

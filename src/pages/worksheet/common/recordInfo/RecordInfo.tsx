@@ -619,7 +619,8 @@ export default class RecordInfo extends Component<any, any> {
           this.loadTempValue({ updateTime: data.updateTime });
         },
       );
-    } catch (res) {
+    } catch (thrown) {
+      const res = thrown as ApiRejection;
       if (instanceId && workId && res.errorCode === 10) {
         onError(res);
       }

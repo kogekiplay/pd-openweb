@@ -90,7 +90,8 @@ const RecordOwner = props => {
       });
       updateRecordDialogOwner(account, record);
       alert(_l('修改成功'));
-    } catch (err) {
+    } catch (thrown) {
+      const err = thrown as ApiRejection;
       if (err && err.resultCode === 72) {
         alert(_l('%0已锁定，修改失败', entityName), 3);
         return;

@@ -134,7 +134,6 @@ class ChatPanelSessionInfo extends Component<any, any> {
           {!session.isPost && shouldRenderSessionInfo && (
             <DiscussionAnnouncement
               session={session}
-              onSetPanelVisible={this.handleSetPanelVisible.bind(this, 'feeds')}
               onChangeIsPost={(projectId: string) => {
                 this.props.dispatch(actions.resetGroupIsPost(session.groupId, projectId));
               }}

@@ -82,7 +82,8 @@ export function anonAttachmentType(file) {
 export async function withCaptcha(doRequest) {
   try {
     return await doRequest();
-  } catch (err) {
+  } catch (thrown) {
+    const err = thrown as ApiRejection;
     const status = err && (err.status || (err.response && err.response.status));
     const body = (err && (err.data || (err.response && err.response.data))) || {};
     const code = stringValue(readField(body, 'errorCode'));

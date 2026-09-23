@@ -64,7 +64,8 @@ export default class PrePayOrder extends Component<any, any> {
         { worksheetId, projectId, appId },
         { silent: true },
       );
-    } catch ({ errorCode, errorMessage }) {
+    } catch (thrown) {
+      const { errorCode, errorMessage } = thrown as ApiRejection;
       this.setState({ orderStatus: errorCode ? errorCode : -1, errorMessage, loading: false });
       return;
     }
