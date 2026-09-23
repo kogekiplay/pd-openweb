@@ -314,12 +314,12 @@ function ChartWrapper(props) {
                   <Icon
                     icon="navigate_before"
                     className={cx('Font24 textTertiary mRight10', { allow: beforeAllow })}
-                    onClick={beforeAllow && onLoadBeforeData.bind(this, index - 1)}
+                    onClick={beforeAllow && onLoadBeforeData.bind(null, index - 1)}
                   />
                   <Icon
                     icon="navigate_next"
                     className={cx('Font24 textTertiary mRight20', { allow: nextAllow })}
-                    onClick={nextAllow && onLoadNextData.bind(this, index + 1)}
+                    onClick={nextAllow && onLoadNextData.bind(null, index + 1)}
                   />
                 </Fragment>
               )}

@@ -4,9 +4,16 @@ import doT from 'dot';
 import _ from 'lodash';
 import moment from 'moment';
 import { DatePicker, QiniuUpload } from 'ming-ui';
+import defineMethods from 'src/utils/defineMethods';
 import './voteUpdater.css';
 
-const VoteUpdater = {
+/** 单例：动态发布框里的投票编辑区。方法里的 this 就是 VoteUpdater 本身 */
+interface VoteUpdaterFields {
+  /** 截止日期 'YYYY-MM-DD'；init / reset 时置为明天，日期选择器改过之后是选中的那天 */
+  voteLastTime?: string;
+}
+
+const VoteUpdater = defineMethods<VoteUpdaterFields>()({
   init: function ($el) {
     const _this = this;
 
@@ -141,10 +148,9 @@ const VoteUpdater = {
           selectedValue={moment(_this.voteLastTime)}
           onOk={value => {
             _this.voteLastTime = moment(value).format('YYYY-MM-DD');
-            var voteLastTime = value;
-            voteLastTime = new Date(voteLastTime);
+            var voteLastTime = new Date(value);
             var today = new Date(new Date().getTime() - (new Date().getTime() % 86400000));
-            if (today - voteLastTime === 0) {
+            if (today.getTime() - voteLastTime.getTime() === 0) {
               var hour = new Date().getHours();
               $el
                 .find('.voteLastHour')
@@ -359,8 +365,10 @@ const VoteUpdater = {
     var voteOptionFiles = '';
     var voteLastTime = this.voteLastTime;
     var voteLastHour = '';
-    var voteAvailableNumber = '';
+    var voteAvailableNumber = 0;
     var voteAnonymous = false;
+    /* 原先是 voteVisble = voteAnonymous.length > 0：voteAnonymous 已经是 .prop('checked') 取出的布尔值，
+       布尔值没有 length，结果恒为 false。服务端接口注释写明这个参数「目前没用，所有人都可见」，按它一直以来的值写死 */
     var voteVisble = false;
 
     $voteItems.each(function (i) {
@@ -377,7 +385,6 @@ const VoteUpdater = {
     voteLastHour = $el.find('.voteLastHour').val();
     voteAvailableNumber = parseInt($el.find('.voteAvailableNumber').val() || '0', 10);
     voteAnonymous = $el.find('.voteAnonymous').prop('checked');
-    voteVisble = voteAnonymous.length > 0;
 
     return {
       invalid: _.filter($voteItems, function (voteItem) {
@@ -397,13 +404,13 @@ const VoteUpdater = {
   alertInvalidData: function ($el) {
     var $emptyInput = _.filter($el.find('.voteOptions li input[type = "text"]'), function (voteItemInput) {
       var $voteItemInput = $(voteItemInput);
-      $voteItemInput.val(_.trim($voteItemInput.val()));
+      $voteItemInput.val(_.trim(String($voteItemInput.val() ?? '')));
       return $voteItemInput.val() === '' || $voteItemInput.val() === _l('请输入投票项');
     });
     if ($emptyInput.length) {
       alert(_l('投票项内容不能为空'), 3);
     }
   },
-};
+});
 
 export default VoteUpdater;

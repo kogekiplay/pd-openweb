@@ -247,9 +247,13 @@ function HierarchyMix(props) {
     }
 
     if (type === 'toOrigin') {
-      const $wrap = _.get(this.$wrap, 'current');
-      $wrap.scrollLeft = 0;
-      $wrap.scrollTop = 0;
+      // 原先是 _.get(this.$wrap, 'current')：类组件时代的写法，函数组件里 this 是 undefined，
+      // 点工具栏「回到原点」直接 TypeError。$wrapRef 就是它（挂在滚动容器上，本组件别处也都这么取）
+      const $wrap = _.get($wrapRef, 'current');
+      if ($wrap) {
+        $wrap.scrollLeft = 0;
+        $wrap.scrollTop = 0;
+      }
     }
 
     if (type === 'adjustScale') {

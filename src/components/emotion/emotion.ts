@@ -80,13 +80,26 @@ function insertImageToEditor(container, elemstr) {
   container.focus();
 }
 
-function Emotion(el, options) {
+/** 构造函数里用到的字段和方法；方法本身都在下面逐个挂到 Emotion.prototype 上 */
+interface EmotionInstance {
+  $el: JQuery;
+  options: typeof Emotion.options;
+  getDefaultTab(options: typeof Emotion.options): number;
+  _init(): void;
+}
+
+function Emotion(this: EmotionInstance, el, options) {
   this.$el = $(el);
 
   // 当最近表情为空时，将默认显示默认表情，否则将显示最近表情
   // 有指定的参数传进来时将以传进来的传进来的参数为准，这样用户就能强制性地显示他们想要默认显示的tab
   this.options = $.extend({}, Emotion.options, options);
-  options.defaultTab = this.getDefaultTab(this.options);
+  /* 原先写成 options.defaultTab = this.getDefaultTab(this.options)：写到的是调用方传进来的那个对象
+     （上一行已经拷贝完了），this.options 从没拿到算出来的值 —— 没有最近记录时（新用户、清过本地存储）
+     打开面板总停在一个空白的「最近」页上。调用方都没有显式传 defaultTab，这里补上「传了就以传的为准」。 */
+  if (!options || options.defaultTab === undefined) {
+    this.options.defaultTab = this.getDefaultTab(this.options);
+  }
   this._init();
 }
 

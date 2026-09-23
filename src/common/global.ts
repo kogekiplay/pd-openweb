@@ -1011,7 +1011,7 @@ window.agentAPI = (args: Record<string, unknown> = {}, options: AgentApiOptions 
   arr.forEach(function (item) {
     item.prepend =
       item.prepend ||
-      function () {
+      function (this: Element | Document | DocumentFragment) {
         const argArr = Array.prototype.slice.call(arguments),
           docFrag = document.createDocumentFragment();
 

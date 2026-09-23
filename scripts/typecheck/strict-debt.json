@@ -399,7 +399,6 @@
     "src/ming-ui/components/Dialog/Dialog.tsx",
     "src/ming-ui/components/Dialog/DialogBase.tsx",
     "src/ming-ui/components/Dialog/Promise.tsx",
-    "src/ming-ui/components/Dialog/index.ts",
     "src/ming-ui/components/Dropdown.tsx",
     "src/ming-ui/components/DropdownGroup.tsx",
     "src/ming-ui/components/EditingBar.tsx",
