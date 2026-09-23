@@ -4,9 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import worksheetAjax from 'src/api/worksheet';
 import { createRequestPool } from 'worksheet/api/standard';
 import { getTreeExpandSize, handleUpdateTreeNodeExpansion, treeDataUpdater } from 'worksheet/common/TreeTableHelper';
-import type { RuleFilterItem } from 'src/components/Form/core/types';
+import type { MasterData, RuleFilterItem } from 'src/components/Form/core/types';
 import { postWithToken } from 'src/utils/common';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import type { ChildTableDispatch, ChildTableGetState } from './types';
 
@@ -602,6 +602,23 @@ class RowData {
   }
 }
 
+/** setRowsFromStaticRows 的入参。DataFormat 按分支往上挂 staticRows / type / isSetValueFrom*，所以都是可选 */
+export interface SetRowsFromStaticRowsParams {
+  recordId?: string | undefined;
+  masterData?: MasterData | undefined;
+  /** 要写进子表的行 */
+  staticRows?: RecordRow[] | undefined;
+  abortController?: AbortController | undefined;
+  /** 'append' = 追加在现有行后面；不给就是整体替换 */
+  type?: 'append' | undefined;
+  allowEdit?: boolean | undefined;
+  isDefaultValue?: boolean | undefined;
+  isQueryWorksheetFill?: boolean | undefined;
+  isSetValueFromEvent?: boolean | undefined;
+  isSetValueFromRule?: boolean | undefined;
+  triggerSubListControlValueChange?: ((controlValue?: ControlValue) => void) | undefined;
+}
+
 export function setRowsFromStaticRows({
   recordId,
   masterData,
@@ -613,8 +630,8 @@ export function setRowsFromStaticRows({
   isQueryWorksheetFill = true,
   isSetValueFromEvent = false,
   isSetValueFromRule = false,
-  triggerSubListControlValueChange = (_controlValue?: any) => {},
-} = {}) {
+  triggerSubListControlValueChange = (_controlValue?: ControlValue) => {},
+}: SetRowsFromStaticRowsParams = {}) {
   return (getState, dispatch, DataFormat) => {
     const { base } = getState();
     const { controls, projectId, searchConfig, initRowIsCreate, max }: { controls: FormControl[]; [key: string]: any } =

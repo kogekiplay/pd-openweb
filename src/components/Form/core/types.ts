@@ -19,21 +19,21 @@ export type {
 
 /** 校验失败的条目，errorItems 数组的元素。 */
 export interface FormError {
-  controlId?: string;
+  controlId?: string | undefined;
   /** 错误类别，见 core/config 的 FORM_ERROR_TYPE */
-  errorType?: string;
-  errorMessage?: string;
+  errorType?: string | undefined;
+  errorMessage?: string | undefined;
   /** 部分场景用 errorText 而不是 errorMessage */
-  errorText?: string;
-  showError?: boolean;
+  errorText?: string | undefined;
+  showError?: boolean | undefined;
   /** 只记错不弹提示 */
-  ignoreErrorMessage?: boolean;
+  ignoreErrorMessage?: boolean | undefined;
   /** 由哪条业务规则产生 */
-  ruleId?: string;
+  ruleId?: string | undefined;
   /** 子表内部的逐行错误 */
-  errorItems?: FormError[];
+  errorItems?: FormError[] | undefined;
   /** 这条错误来自子表（错误气泡的样式要换一套） */
-  isChildTable?: boolean;
+  isChildTable?: boolean | undefined;
 }
 
 /**
@@ -42,8 +42,10 @@ export interface FormError {
  *（见 formUtils/index.ts 的 getDynamicValue）。
  */
 export interface MasterData {
-  worksheetId?: string;
-  formData?: FormControl[];
+  worksheetId?: string | undefined;
+  /** 主记录所在应用（DataFormat 取应用时区等用，读的地方都是 _.get(masterData, 'appId')） */
+  appId?: string | undefined;
+  formData?: FormControl[] | undefined;
 }
 
 /**

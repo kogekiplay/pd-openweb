@@ -9,6 +9,11 @@
  * 翻转之后默认值变成「必须 strict 干净」，清单是**存量欠债**、只许变短。
  * 清单归零时这个文件和它守的那份 json 一起删掉，tsconfig.json 里直接写 strict:true。
  *
+ * 【口径 = 终点配置（2026-09-23 起）】不只是 strict + noImplicitAny，而是 tsconfig 终点要开的
+ * 全部严格开关（见 TARGET_FLAGS）。清单外的文件在切换那一刻已经全部按终点口径清干净，
+ * 所以切换没有往清单里加任何文件。之后新写的文件一上来就要满足终点配置，不会再攒出一批
+ * 「strict 干净、终点下却是脏的」文件 —— 为了切换，先分几批清掉了这样的 34 个文件 / 238 条。
+ *
  * 判据
  * ----
  *   - 清单【外】的任何文件出现 strict 诊断 -> 失败。新文件、新目录、
@@ -46,6 +51,16 @@ const STATS = args.includes('--stats');
 // 与 tsc-gate.js 同款的诊断头行解析。缩进行是同一条诊断的展开说明，不单独计数。
 const HEAD = /^(\S[^(]*)\((\d+),(\d+)\): (error|warning) (TS\d+): (.*)$/;
 
+// tsconfig.json 里还没打开、但终点配置要开的严格开关。某个开关在 tsconfig.json 里永久打开后，
+// 从这里删掉即可（留着也无害，只是重复）。
+const TARGET_FLAGS = [
+  '--strict',
+  '--noImplicitAny',
+  '--noUncheckedIndexedAccess',
+  '--exactOptionalPropertyTypes',
+  '--noPropertyAccessFromIndexSignature',
+];
+
 function runStrictTsc() {
   const started = Date.now();
   // 【不能用 npx】npx 找的是 registry / 全局，不是工作区里的那个 tsc。
@@ -54,7 +69,7 @@ function runStrictTsc() {
   const tsc = path.join(path.dirname(require.resolve('typescript/package.json')), 'bin/tsc');
   const res = spawnSync(
     process.execPath,
-    [tsc, '--noEmit', '--pretty', 'false', '--strict', '--noImplicitAny'],
+    [tsc, '--noEmit', '--pretty', 'false', ...TARGET_FLAGS],
     { cwd: ROOT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 },
   );
   const out = `${res.stdout || ''}${res.stderr || ''}`;

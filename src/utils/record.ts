@@ -42,9 +42,9 @@ export function getNewRecordPageUrl({
   worksheetId,
   viewId,
 }: {
-  appId?: string;
-  worksheetId?: string;
-  viewId?: string;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
 }) {
   return pathCompletion(`/app/${appId}/newrecord/${worksheetId}/${viewId}/`);
 }

@@ -232,6 +232,14 @@ export const WIDGET_VALUE_ID: { [controlType: number]: string } = {
   48: 'organizeId',
 };
 
+/**
+ * 取某类控件的取值 id（人员 accountId、部门 departmentId…）。
+ * 不认识的类型给空串：拿它去取值一样是 undefined，和原来按 undefined 取键的结果相同。
+ */
+export function getWidgetValueId(type: number | undefined): string {
+  return (type === undefined ? undefined : WIDGET_VALUE_ID[type]) ?? '';
+}
+
 // 掩码配置相关属性
 export const MASK_ADVANCEDSETTING = [
   'datamask',

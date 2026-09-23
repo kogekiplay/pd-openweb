@@ -1123,10 +1123,11 @@ export function getTemporaryAttachmentFromUrl({
   fileSize,
   fileExt,
 }: {
-  fileUrl?: string;
-  fileName?: string;
-  fileSize?: number;
-  fileExt?: string;
+  // 调用方多是把模型 / 接口给的字段原样转过来，没给就是 undefined（fileName 的默认值照样生效）
+  fileUrl?: string | undefined;
+  fileName?: string | undefined;
+  fileSize?: number | undefined;
+  fileExt?: string | undefined;
 } = {}) {
   const urlObj = new URL(String(fileUrl));
   const name = fileName.replace(/\.[^.]+$/, '');

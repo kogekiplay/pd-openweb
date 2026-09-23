@@ -306,10 +306,10 @@ export const formatSearchResultValue = ({
   controls = [],
   searchResult = '',
 }: {
-  targetControl?: FormControl;
-  currentControl?: FormControl;
-  controls?: FormControl[];
-  searchResult?: ControlValue;
+  targetControl?: FormControl | undefined;
+  currentControl?: FormControl | undefined;
+  controls?: FormControl[] | undefined;
+  searchResult?: ControlValue | undefined;
 }) => {
   if (_.includes([9, 10, 11], currentControl.type)) {
     return getControlValue(controls, currentControl, targetControl.controlId, searchResult);
@@ -1069,11 +1069,11 @@ export const onValidator = ({
   appId,
 }: {
   item: FormControl;
-  data?: FormControl[];
-  masterData?: MasterData;
-  ignoreRequired?: boolean;
-  verifyAllControls?: boolean;
-  appId?: string;
+  data?: FormControl[] | undefined;
+  masterData?: MasterData | undefined;
+  ignoreRequired?: boolean | undefined;
+  verifyAllControls?: boolean | undefined;
+  appId?: string | undefined;
 }) => {
   let errorType = '';
   let errorText = '';
