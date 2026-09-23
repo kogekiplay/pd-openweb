@@ -24,12 +24,12 @@
     "check:install": "node scripts/install-stamp.ts check",
     "typecheck:tools": "node scripts/typecheck/tools-gate.ts",
     "typecheck:strict": "node scripts/typecheck/tsc-strict-gate.ts",
-    "typecheck:strict:widen": "node scripts/typecheck/tsc-strict-gate.ts --widen",
     "typecheck:strict:stats": "node scripts/typecheck/tsc-strict-gate.ts --stats",
     "geom:capture": "node tools/capture-geometry.ts",
     "geom:diff": "node tools/compare-geometry.ts",
     "check:typography": "node tools/audit-typography.ts --check",
-    "contrast:capture": "node tools/capture-contrast.ts"
+    "contrast:capture": "node tools/capture-contrast.ts",
+    "typecheck:strict:shrink": "node scripts/typecheck/tsc-strict-gate.ts --shrink"
   },
   "dependencies": {
     "@ant-design/colors": "^8.0.1",
