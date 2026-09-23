@@ -25,6 +25,25 @@
     "noImplicitAny": false,
     "skipLibCheck": true,
 
+    // ── 通往 strict:true 的路上，已经永久打开的检查 ─────────────────────────
+    // 最终目标是 strict 全开 + noImplicitReturns + TS 7 的其余有价值检查。
+    // 2026-09-23 逐开关实测过代价（基线 13182 条），下面这七个【单开、合开增量都是 0】，
+    // 所以直接写死，不走任何名单。之后每清完一个开关的欠债就往这里挪一个。
+    // 剩下的按代价从低到高：strictBindCallApply 2 / useUnknownInCatchVariables 22 /
+    // strictFunctionTypes 23 / noUnusedLocals 34 / noImplicitThis 431 /
+    // noImplicitReturns 647 / noUnusedParameters 730 / noImplicitOverride 2900 /
+    // strictNullChecks 10764 / noImplicitAny 38544。
+    "alwaysStrict": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    // 这两条和构建链是同一个前提：babel 逐文件擦类型、不做跨文件分析，
+    // 所以 const enum / namespace / 参数属性这类「需要编译器生成代码」的语法
+    // 在本仓本来就用不了。写上它们只是把这个事实交给 tsc 来守。
+    "isolatedModules": true,
+    "erasableSyntaxOnly": true,
+    "strictBuiltinIteratorReturn": true,
+
     // R1 配对开关：.babelrc 的 onlyRemoveTypeImports:true 会把
     // `import { SomeType } from './x'` 原样保留到产物；verbatimModuleSyntax 用 TS1484
     // 强制这类写法改成 `import type`，把洞补上。
