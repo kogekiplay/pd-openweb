@@ -156,7 +156,7 @@ const normalizeUrls = obj => {
   return obj;
 };
 
-const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {}) => {
+const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguageReload = false }: any = {}) => {
   // 处理location.href方法异步的问题
   window.isWaiting = false;
 
@@ -212,9 +212,15 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
 
     // 设置默认语言
     if (!lang) {
-      window.isWaiting = true;
       const sysDefaultLang = window.getDefaultLangKey();
 
+      // SSO 回调由调用方跳转目标页，使语言生效，避免刷新后重复登录。（上游 7.4.5）
+      if (skipLanguageReload) {
+        setCookie('i18n_langtag', sysDefaultLang);
+        return undefined;
+      }
+
+      window.isWaiting = true;
       if (
         (location.pathname.includes('/public/') && !isPublicMingoPlan()) ||
         location.pathname.includes('/recordfileupload')
@@ -314,6 +320,8 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
       !localStorage.getItem('i18n_reload')
     ) {
       setCookie('i18n_langtag', md.global.Account.lang);
+
+      if (skipLanguageReload) return undefined;
 
       if (window.top !== window.self) {
         localStorage.setItem('i18n_reload', true);
@@ -415,13 +423,25 @@ const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
   return Pre;
 };
 
-export default function (Comp, { allowNotLogin, requestParams } = {}) {
+export default function (
+  Comp,
+  {
+    allowNotLogin,
+    requestParams,
+    skipLanguageReload = false,
+  }: {
+    allowNotLogin?: boolean;
+    requestParams?: Record<string, unknown>;
+    /** SSO 回调用（上游 7.4.5）：语言只写 cookie 不刷新页面，由调用方自己跳转，避免刷新后重复登录 */
+    skipLanguageReload?: boolean;
+  } = {},
+) {
   if (_.isObject(Comp) && Comp.type === 'function') {
     // 【这条分支只能同步】4 个 share 页用 preall({ type: 'function' }) 当哨兵，
     // 调完紧接着就 new 出页面对象去读 md.global（见 kc/folderShare、kc/shareMobile、
     // Statistics/PublicShare、Chatbot/PublicShare），改异步要连它们一起动。
     // 这 4 个页面需要真实分享链接才能验证，单独一批做。
-    getGlobalMeta({ allowNotLogin, requestParams, sync: true });
+    getGlobalMeta({ allowNotLogin, requestParams, sync: true, skipLanguageReload });
     // 哨兵用法：调用方不要返回值（它们拿到的一直是 undefined）
     return undefined;
   } else {
