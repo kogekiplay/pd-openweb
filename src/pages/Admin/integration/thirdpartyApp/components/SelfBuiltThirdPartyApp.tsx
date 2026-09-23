@@ -7,7 +7,6 @@ import { Tooltip } from 'ming-ui/antd-components';
 import application from 'src/api/application';
 import PageTableCon from 'src/pages/Admin/components/PageTableCon';
 import { handleMask } from 'src/pages/Admin/util';
-import { getToken } from 'src/utils/common';
 import copy from 'src/utils/copyToClipboard';
 import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';

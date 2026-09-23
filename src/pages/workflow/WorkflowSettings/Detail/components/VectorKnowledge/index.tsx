@@ -61,13 +61,6 @@ const generateFields = data => {
     fieldName: _l('最大召回数 (Top K)'),
     fieldValue: data.topK,
   };
-  const rrfK = {
-    fieldId: 'rrfK',
-    type: 6,
-    fieldName: _l('融合排序参数'),
-    desc: _l('用于融合“向量+全文”的排序。数值越大排序波动越小，越小越强调最靠前结果；建议默认 60。'),
-    fieldValue: data.rrfK,
-  };
   const minRelevance = {
     fieldId: 'minRelevance',
     type: 6,
@@ -80,6 +73,13 @@ const generateFields = data => {
     auto: fields,
     vector: [...fields, topK],
     keyword: [...fields, topK, minRelevance],
+    /* 【混合检索这里只有 topK，没有 rrfK —— 存疑，等产品决定】
+       rrfK（「融合排序参数」，说明写的就是「用于融合向量+全文的排序」）
+       在上游 7.3.0（2026-05-07）连同字段定义、说明文字、下面保存逻辑里的读取
+       一起引入，唯独没接进这一行；截至上游 7.4.4 仍是如此。
+       所以界面上永远不显示它，保存时恒走默认值 60（夹在 1-100）。
+       2026-09-23 开 noUnusedLocals 时把那个从未被引用的字段定义删掉了（行为不变）。
+       要暴露给用户的话：从 git 历史取回定义，这里改成 [...fields, topK, rrfK]。 */
     hybrid: [...fields, topK],
   }[data.searchMode];
 };

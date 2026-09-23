@@ -14,7 +14,6 @@ import UploadFiles from 'src/components/UploadFiles';
 import { addComment } from '../../../redux/postActions';
 
 const LET_ME_REPLY = _l('我来回复');
-const TEXT_AREA_MIN_HEIGHT_COLLAPSE = 22;
 const TEXT_AREA_MIN_HEIGHT_EXPAND = 50;
 const TEXT_AREA_MAX_HEIGHT = 180;
 

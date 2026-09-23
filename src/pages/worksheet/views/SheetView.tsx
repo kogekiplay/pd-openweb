@@ -1671,7 +1671,7 @@ class TableViewBase extends React.Component<any, any> {
       isDraft,
       printCharge,
     } = this.props;
-    const { allWorksheetIsSelected, sheetSelectedRows, sheetHiddenColumns } = sheetViewConfig;
+    const { allWorksheetIsSelected, sheetSelectedRows } = sheetViewConfig;
     const showNumber = (get(view, 'advancedSetting.showno') || '1') === '1' && !isTreeTableView;
     const showOperate = (get(view, 'advancedSetting.showquick') || '1') === '1';
 

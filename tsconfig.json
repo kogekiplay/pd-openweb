@@ -43,6 +43,10 @@
     "isolatedModules": true,
     "erasableSyntaxOnly": true,
     "strictBuiltinIteratorReturn": true,
+    // 2026-09-23 清掉 35 处后打开。要注意的是「算了却没用」不一定是垃圾：
+    // 这一轮里有一处（VectorKnowledge 的 rrfK）是上游漏接进界面的字段，
+    // 删之前先确认是死代码还是断掉的功能。
+    "noUnusedLocals": true,
 
     // R1 配对开关：.babelrc 的 onlyRemoveTypeImports:true 会把
     // `import { SomeType } from './x'` 原样保留到产物；verbatimModuleSyntax 用 TS1484

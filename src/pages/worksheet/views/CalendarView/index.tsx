@@ -934,7 +934,6 @@ class RecordCalendarBase extends Component<any, any> {
       setViewConfigVisible,
     } = this.props;
     const { calendarData = {}, calenderEventList = {} } = calendarview;
-    const { eventScheduled = [] } = calenderEventList;
     const { appId, worksheetId, viewId } = base;
     const currentView = getCurrentView(this.props);
     let {
@@ -959,7 +958,8 @@ class RecordCalendarBase extends Component<any, any> {
     }
 
     const { recordInfoVisible, recordId, isLoading, rows = [], showPrevNext = false, random } = this.state;
-    const typeEvent = readInitType();
+    // 返回值这里用不上，但调用不能删：它在 localStorage 没有值时会写入默认的展示类型
+    readInitType();
     const { calendarInfo = [], unweekday = '', btnList, initialView } = calendarData;
     const { height, calendarFormatData } = this.state;
     let isDelete =

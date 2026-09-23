@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createParser } from 'eventsource-parser';
-import { find, findLast, get, omit } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import agentApi from 'src/api/agent';
-import sseAjax from 'src/api/sse';
-import { MESSAGE_TYPE } from './enum';
 
 // 在文件顶部添加 ChunkLoader 类
 class ChunkLoader {
@@ -39,7 +36,7 @@ class ChunkLoader {
 }
 
 function useChatBot({ sessionId, params = [], defaultMessages = [], currentCode, onError = () => {} }) {
-  const [firstInputMessage, setFirstInputMessage] = useState<string | undefined>();
+  const [, setFirstInputMessage] = useState<string | undefined>();
   const [messages, setMessages] = useState(defaultMessages);
   const [code, setCode] = useState(currentCode);
   const [input, setInput] = useState('');

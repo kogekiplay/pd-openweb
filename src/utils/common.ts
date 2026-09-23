@@ -1,4 +1,3 @@
-import { TinyColor } from '@ctrl/tinycolor';
 import dayjs from 'dayjs';
 import EventEmitter from 'events';
 import JSEncrypt from 'jsencrypt';

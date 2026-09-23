@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
 import update from 'immutability-helper';
-import { head, isEmpty, last, pick } from 'lodash';
+import { head, isEmpty, last } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Dialog, ScrollView, Skeleton, Switch } from 'ming-ui';
