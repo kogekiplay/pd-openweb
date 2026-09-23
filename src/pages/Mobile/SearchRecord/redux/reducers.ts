@@ -1,5 +1,7 @@
-import type { ReduxAction } from 'src/redux/types';
-export const currentSearchSheetRows = (state = [], action: ReduxAction) => {
+import type { DataAction } from 'src/redux/types';
+import type { RecordRow } from 'src/utils/controlTypes';
+
+export const currentSearchSheetRows = (state: RecordRow[] = [], action: DataAction<RecordRow[]>) => {
   switch (action.type) {
     case 'MOBILE_CHANGE_SEARCH_SHEET_ROWS':
       return Object.assign([], action.data);
