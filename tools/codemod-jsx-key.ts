@@ -15,7 +15,7 @@
  * 解析走 @babel/core 的 parseSync + 仓库 .babelrc，与真实构建看到的语法完全一致
  * （本仓 preset-react 给所有文件开 JSX，.ts 里 <T>() => 这类写法 tsc 认、babel 不认）。
  *
- * 用法：node tools/codemod-jsx-key.cjs < 命中清单   （每行 "path:line:col"）
+ * 用法：node tools/codemod-jsx-key.ts < 命中清单   （每行 "path:line:col"）
  */
 const fs = require('fs');
 const path = require('path');
@@ -106,12 +106,18 @@ function chainTop(callPath) {
   }
   return cur;
 }
-const stats = { files: 0, iterator: 0, array: 0, fragment: 0, addedParam: 0, skipped: [] };
+interface Edit {
+  start: number;
+  end: number;
+  text: string;
+}
+
+const stats = { files: 0, iterator: 0, array: 0, fragment: 0, addedParam: 0, skipped: [] as string[] };
 
 for (const [file, list] of byFile) {
   const code = fs.readFileSync(file, 'utf8');
   const ast = babel.parseSync(code, { filename: path.resolve(file), babelrc: true, sourceType: 'module' });
-  const edits = []; // { start, end, text }  —— 替换 [start,end) 为 text；插入时 start===end
+  const edits: Edit[] = []; // 替换 [start,end) 为 text；插入时 start===end
   const paramAdded = new Map(); // 同一个回调只补一次参数：fnNode -> name
   let needFragmentImport = false;
 

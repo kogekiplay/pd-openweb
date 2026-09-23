@@ -11,6 +11,7 @@ import 'src/components/autoTextarea/autoTextarea';
 import createShare from 'src/components/createShare/createShare';
 import UploadFiles from 'src/components/UploadFiles';
 import { htmlDecodeReg, htmlEncodeReg, pathCompletion } from 'src/utils/common';
+import defineMethods from 'src/utils/defineMethods';
 import SelectTimezone from './component/SelectTimezone';
 import timezone from './timezone';
 import taskHtml from './tpl/createCalendar.html';
@@ -18,7 +19,50 @@ import './css/createCalendar.less';
 
 const RangePicker = DatePicker.RangePicker;
 
-var CreateCalendar = function (opts) {
+/** 创建日程弹层的全部状态：构造函数里 defaults 与调用方参数合并而成。
+ *  实例上的 settings 和静态的 CreateCalendar.settings 是同一个对象（静态那份给 CreateCalendar.methods 用）。 */
+interface CreateCalendarSettings {
+  frameid: string;
+  /** 构造函数里统一成 Date；日期选择器改过之后是 'YYYY-MM-DD HH:mm' 字符串 */
+  Start: Date | string;
+  End: Date | string;
+  AllDay: boolean;
+  /** 调用方预填的成员 */
+  MemberArray: { accountId?: string; avatar?: string; fullname?: string }[];
+  /** 调用方预填的描述（从动态 / 分享弹层带过来的文字） */
+  Message: string | null;
+  /** 分类颜色 -> class 名，下标是接口返回的 color（另补了 99 / 100） */
+  ColorClass: string[];
+  isShowHoverMember: boolean;
+  timer: string;
+  /** 所选时区的偏移（分钟），符号与 moment().utcOffset() 相反 */
+  timezone: number;
+  isAttachComplete: boolean;
+  calendarMembers: unknown;
+  defaultAttachmentData: ApiPayload[];
+  defaultKcAttachmentData: ApiPayload[];
+  createCalendarAttachments: { attachmentData: ApiPayload[]; kcAttachmentData: ApiPayload[] };
+  /** 创建成功后回调，参数是接口返回的日程（补了 name / address / startDate / endDate / isRecur） */
+  callback: ((calendar: ApiPayload) => void) | null;
+  createShare: boolean;
+  allDay: boolean;
+  telRemind: boolean;
+  calendarPrivate: boolean;
+  /** 重复日程的截止日期 'YYYY-MM-DD'，选过才有 */
+  overTime?: string;
+  ProjectID?: string;
+}
+
+interface CreateCalendarFields {
+  settings: CreateCalendarSettings;
+  /** 日期区间选择器的 React 根：全天勾选切换时要用同一个根重渲染 */
+  _calendarDateRoot?: ReturnType<typeof createRoot>;
+}
+
+/* 【为什么从 var CreateCalendar = function 改成函数声明】下面往它身上挂了静态的 methods / settings，
+   TS 只认函数声明（和 const 函数表达式）上的这种属性赋值；var 的写法让全文件 30 处
+   CreateCalendar.methods.xxx 都报「属性不存在」，那 700 行等于完全没受检查。 */
+function CreateCalendar(this: CreateCalendarInstance, opts) {
   var _this = this;
   var defaults = {
     frameid: 'createCalendar',
@@ -66,7 +110,10 @@ var CreateCalendar = function (opts) {
   var msg = settings.Message;
   var datetime = msg ? CreateCalendar.methods.getDate(msg) : null;
 
-  if (datetime && datetime !== 'Invalid Date') {
+  /* 【从描述里解析出的时间实际上从没生效过】紧接着的 if / else 两支都会重新给 settings.Start 赋值，
+     这里写进去的值马上被覆盖。要不要让它生效（会改变用户看到的默认开始时间）是产品决定，这里不动；
+     只把判断本身改对：原先写的 datetime !== 'Invalid Date' 是拿 Date 对象和字符串比，恒为真。 */
+  if (datetime && !isNaN(datetime.getTime())) {
     settings.Start = datetime;
   }
 
@@ -82,9 +129,9 @@ var CreateCalendar = function (opts) {
 
   // 初始化
   _this.init();
-};
+}
 
-$.extend(CreateCalendar.prototype, {
+const createCalendarMethods = defineMethods<CreateCalendarFields>()({
   // 初始化
   init: function () {
     var _this = this;
@@ -102,7 +149,9 @@ $.extend(CreateCalendar.prototype, {
       width: 800,
       noFooter: true,
       onOk: () => {
-        _this.send();
+        // 原先调的是 _this.send() —— 实例和原型上都没有这个方法。这里其实走不到（noFooter 没有确定按钮，
+        // Dialog.confirm 也默认关掉了回车触发），真正的提交是模板里的 #calendarSubmitBtn
+        CreateCalendar.methods.send();
       },
       onCancel: () => {},
       handleClose: () => {
@@ -248,14 +297,17 @@ $.extend(CreateCalendar.prototype, {
       },
     );
 
-    $(document).on('click', function (event) {
-      var $target = $(event.target);
+    // 点空白处收起分类列表。挂在 document 上：先解掉上一次打开弹层时挂的（原先每开一次就多挂一个、从不解绑）
+    $(document)
+      .off('click.createCalendarCategory')
+      .on('click.createCalendarCategory', function (event) {
+        var $target = $(event.target);
 
-      // 隐藏分类
-      if (!$target.closest('#calendarColorMain').length && !$target.closest('#createCategoryID').length) {
-        $('#calendarColorMain').hide();
-      }
-    });
+        // 隐藏分类
+        if (!$target.closest('#calendarColorMain').length && !$target.closest('#createCategoryID').length) {
+          $('#calendarColorMain').hide();
+        }
+      });
   },
 
   // 初始化分类事件
@@ -617,8 +669,8 @@ $.extend(CreateCalendar.prototype, {
     CreateCalendar.methods.repeatResult();
   },
 
-  // 初始化更改重复事件
-  initUpdateRepeat: function ($el) {
+  // 初始化更改重复事件（从 tab 点进来时传入那个 tab，确认后移除它；「更改」按钮进来不传）
+  initUpdateRepeat: function ($el?: JQuery) {
     var _this = this;
 
     Dialog.confirm({
@@ -769,6 +821,14 @@ $.extend(CreateCalendar.prototype, {
     }
   },
 });
+
+$.extend(CreateCalendar.prototype, createCalendarMethods);
+type CreateCalendarInstance = CreateCalendarFields & typeof createCalendarMethods;
+
+// 静态的 settings（最近一次打开的弹层）是在构造函数体内赋值的，TS 不把函数体里的属性赋值当声明，这里补上类型
+declare namespace CreateCalendar {
+  let settings: CreateCalendarSettings;
+}
 
 CreateCalendar.methods = {
   // 插入成员到dom
@@ -974,9 +1034,8 @@ CreateCalendar.methods = {
 
   // 从今天加减日期,返回字符串
   addDay: function (n) {
-    var uom = new Date(new Date() - 0 + n * 86400000);
-    uom = uom.getMonth() + 1 + '/' + uom.getDate() + '/' + uom.getFullYear();
-    return uom;
+    var uom = new Date(Date.now() + n * 86400000);
+    return uom.getMonth() + 1 + '/' + uom.getDate() + '/' + uom.getFullYear();
   },
 
   // 获取星期几
@@ -1322,16 +1381,16 @@ CreateCalendar.methods = {
         const currentDay = moment(start)
           .utcOffset((timezone / 60) * -1)
           .format('YYYY-MM-DD');
-        const diffDay = (moment(bjDay) - moment(currentDay)) / 24 / 60 / 60 / 1000;
+        // diff 不带单位就是毫秒差，与原先两个 moment 直接相减（走 valueOf）一样
+        const diffDay = moment(bjDay).diff(moment(currentDay)) / 24 / 60 / 60 / 1000;
 
         if (diffDay !== 0) {
           const weekDayArr = weekDay.toString(2).split('');
           let square;
           let newDays = 0;
 
-          weekDayArr.forEach((num, i) => {
-            num = parseInt(num);
-            if (num === 1) {
+          weekDayArr.forEach((bit, i) => {
+            if (parseInt(bit) === 1) {
               square = weekDayArr.length - i - 1 + diffDay;
 
               if (square > 6) {
@@ -1420,11 +1479,18 @@ CreateCalendar.methods = {
           if (_.isFunction(settings.callback)) {
             settings.callback(source.data);
           }
-        } else if (source.code === 9) {
-          alert(_l('邀请短信发送数量已达最大限制，请移除外部用户创建日程'));
+        } else {
+          /* 失败要把按钮放开。点击时置了 disabled 防重复提交，原先只有成功分支（整个弹层关掉）和
+             两个前置校验会收尾：接口失败后按钮一直是灰的，照 code 9 的提示移除外部用户再点也没反应，
+             只能关掉弹层重填。 */
+          $submitBtn.removeAttr('disabled');
+          if (source.code === 9) {
+            alert(_l('邀请短信发送数量已达最大限制，请移除外部用户创建日程'));
+          }
         }
       })
       .catch(function () {
+        $submitBtn.removeAttr('disabled');
         alert(_l('操作失败，请稍后再试'), 2);
       });
   },

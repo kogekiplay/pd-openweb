@@ -53,7 +53,7 @@ export default class PrintOptDialog extends Component<any, any> {
       workflow: props.workflow,
     };
   }
-  toggleCheckItem = function (controlId: string) {
+  toggleCheckItem = (controlId: string) => {
     const controlOption = this.state.controlOption;
     const index = controlOption.indexOf(controlId);
     let formDetailEvaluateLength = 0;
@@ -81,7 +81,7 @@ export default class PrintOptDialog extends Component<any, any> {
     } else {
       this.setState({ controlOption, printCheckAll: false });
     }
-  }.bind(this);
+  };
   toggleTaskCheckItem(key) {
     const { task } = this.state;
     const newTask = task.map(item => {
@@ -108,7 +108,7 @@ export default class PrintOptDialog extends Component<any, any> {
       workflow: newWorkflow,
     });
   }
-  toggleCheckAll = function () {
+  toggleCheckAll = () => {
     const controlOption = this.state.controlOption;
 
     if (this.state.printCheckAll) {
@@ -133,7 +133,7 @@ export default class PrintOptDialog extends Component<any, any> {
 
       this.setState({ controlOption, printCheckAll: true });
     }
-  }.bind(this);
+  };
   renderApprovalFlow() {
     return (
       <div className="processOption">
@@ -148,6 +148,8 @@ export default class PrintOptDialog extends Component<any, any> {
             type="radio"
             className="mRight6 TxtMiddle"
             name="processOption"
+            // 点击由外层 div 处理；不加 readOnly，React 会报「给了 checked 却没有 onChange」（radio 上的 readonly 浏览器本身忽略）
+            readOnly
             checked={this.state.processOption === 'all'}
           />
           <span className="Font13 textPrimary mRight10 TxtMiddle">{_l('完整模式')}</span>
@@ -163,6 +165,7 @@ export default class PrintOptDialog extends Component<any, any> {
             type="radio"
             className="mRight6 TxtMiddle"
             name="processOption"
+            readOnly
             checked={this.state.processOption === 'some'}
           />
           <span className="Font13 textPrimary TxtMiddle mRight10">{_l('精简模式')}</span>
@@ -180,6 +183,7 @@ export default class PrintOptDialog extends Component<any, any> {
             type="radio"
             className="mRight6 TxtMiddle"
             name="processOption"
+            readOnly
             checked={this.state.processOption === 'no'}
           />
           <span className="Font13 textPrimary TxtMiddle mRight10">{_l('不打印')}</span>
@@ -237,7 +241,8 @@ export default class PrintOptDialog extends Component<any, any> {
         title={_l('设置打印内容显隐')}
         okText={_l('确认')}
         onOk={() => {
-          let controlOption = [];
+          // 只用来做「不能一个都不选」的校验；交给 changePrintVisible 的仍是 state 里的数组
+          let controlOption: string[] | 'all' = [];
           let formDetailEvaluateLength = 0;
           this.state.reqInfo.formControls &&
             this.state.reqInfo.formControls.forEach(formControlItem => {
