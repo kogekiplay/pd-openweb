@@ -726,10 +726,11 @@ export const dealMaskValue = (data: FormControl = {}) => {
 // 将颜色变量转换为颜色值
 export const getColorValue = (color = '') => {
   if (_.isString(color) && color.includes('var(')) {
-    const match = color.match(/var\((--[^)]+)\)/);
+    // 捕获组只要匹配上就一定有值（至少是「--」加一个字符）
+    const name = color.match(/var\((--[^)]+)\)/)?.[1];
 
-    if (match) {
-      return getComputedStyle(document.body).getPropertyValue(match[1]);
+    if (name) {
+      return getComputedStyle(document.body).getPropertyValue(name);
     }
   }
 

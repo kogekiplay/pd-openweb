@@ -177,7 +177,23 @@ const DARK_PAGE_BG = '#161616';
  * 改这两个下标之前先把 10 个真实主题色重算一遍对比度。
  */
 export function primaryTextColor(seed: string, mode: ThemeMode = 'light'): string {
-  return mode === 'dark' ? generate(seed, { theme: 'dark', backgroundColor: DARK_PAGE_BG })[8] : generate(seed)[7];
+  return mode === 'dark'
+    ? rampLevel(generate(seed, { theme: 'dark', backgroundColor: DARK_PAGE_BG }), 8)
+    : rampLevel(generate(seed), 7);
+}
+
+/**
+ * 取 antd 色阶里的第 i 级（从 0 数）。generate() 固定返回 10 级；取不到说明色阶生成器的行为变了，
+ * 直接抛错 —— 悄悄拿 undefined 当颜色用，只会在界面上表现成「某处颜色不对」，很难查。
+ */
+export function rampLevel(ramp: string[], i: number): string {
+  const color = ramp[i];
+
+  if (color === undefined) {
+    throw new Error(`antd 色阶没有第 ${i} 级（共 ${ramp.length} 级）`);
+  }
+
+  return color;
 }
 
 export function buildThemeVars(seed: string, mode: ThemeMode = 'light'): ThemeVars {

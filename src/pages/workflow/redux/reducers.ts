@@ -1,7 +1,14 @@
-import type { ReduxAction } from 'src/redux/types';
-﻿import { combineReducers } from 'redux';
+import { combineReducers } from 'redux';
+import type { DataAction } from 'src/redux/types';
 
-const flowInfo = (state = {}, action: ReduxAction) => {
+// 流程信息来自接口（getProcessPublish 等），形状未类型化，按接口原样值记
+type FlowInfoAction =
+  | { type: 'GET_FLOW_INFO' | 'UPDATE_PROCESS'; data: ApiPayload }
+  | { type: 'UPDATE_PUBLIC_STATE'; obj: ApiPayload }
+  | { type: 'UPDATE_PUBLISH_STATUS'; publishStatus: number }
+  | { type: 'CLEAR_FLOW_SOURCE' };
+
+const flowInfo = (state: ApiPayload = {}, action: FlowInfoAction) => {
   switch (action.type) {
     case 'GET_FLOW_INFO':
       return action.data;
@@ -24,7 +31,7 @@ const flowInfo = (state = {}, action: ReduxAction) => {
   }
 };
 
-const workflowDetail = (state = {}, action: ReduxAction) => {
+const workflowDetail = (state: ApiPayload = {}, action: DataAction<ApiPayload>) => {
   switch (action.type) {
     case 'GET_PROCESS_INFO':
     case 'ADD_FLOW_NODE':
@@ -42,7 +49,7 @@ const workflowDetail = (state = {}, action: ReduxAction) => {
   }
 };
 
-const workflowTestRunning = (state = {}, action: ReduxAction) => {
+const workflowTestRunning = (state: ApiPayload = {}, action: DataAction<ApiPayload>) => {
   switch (action.type) {
     case 'UPDATE_WORKFLOW_TEST_RUNNING':
     case 'CLEAR_WORKFLOW_TEST_RUNNING':

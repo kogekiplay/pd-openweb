@@ -35,8 +35,9 @@ export type SubListStore = any;
 export interface ControlAdvancedSetting {
   // 下面这些键是【已经被按点访问、且值确实落在本类型上】的（2026-09-23 在终点配置下由 TS4111 收集）。
   // 接口给的值一律是字符串（开关是 '1' / '0'，复杂配置是 JSON 串）。
-  // 不一次性把全仓 grep 到的 324 个键都塞进来：那里面混着视图配置（view.advancedSetting）等别的对象，
-  // 等对应文件被类型化、诊断落到这个类型上时再补 —— 登记的键必须有真实出处。
+  // 控件和视图（WorksheetView.advancedSetting）共用这个类型。不一次性把全仓 grep 到的 324 个键都塞进来：
+  // 那些访问大多发生在类型还是 any 的对象上，并不能证明值落在这里；等对应文件被类型化、
+  // 诊断落到这个类型上时再补 —— 登记的键必须有真实出处。
   allowdelete?: string;
   allowlink?: string;
   allowtime?: string;

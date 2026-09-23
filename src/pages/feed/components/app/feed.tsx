@@ -8,7 +8,13 @@ import { Updater } from '../updater';
 import './feed.css';
 import './style.css';
 
-class Feed extends React.Component<any, any> {
+interface FeedProps {
+  /** 默认展开的群组（来自 store，接口原样值） */
+  defaultExpandedGroup?: ApiPayload[];
+  [key: string]: unknown;
+}
+
+class Feed extends React.Component<FeedProps> {
   static override propTypes = {
     defaultExpandedGroup: PropTypes.array, // 群组加入 store
   };

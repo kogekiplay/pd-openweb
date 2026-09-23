@@ -4,6 +4,7 @@ import cx from 'classnames';
 import update from 'immutability-helper';
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
+import { OptionChip } from 'src/components/OptionChip';
 
 const AssignValueContent = styled.div`
   .hint {
@@ -48,12 +49,6 @@ const AssignValueContent = styled.div`
         border-top: 1px solid var(--color-border-primary);
       }
 
-      .colorWrap {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin-right: 6px;
-      }
     }
     .valueList {
       border-left: none;
@@ -77,7 +72,8 @@ const AssignValueContent = styled.div`
 `;
 
 export default function AssignValue(props) {
-  const { enableScore, onOk, ...rest } = props;
+  // colorful 只决定选项怎么画，不能随 rest 漏给 Dialog
+  const { enableScore, onOk, colorful, ...rest } = props;
   const [options, setOptions] = useState(props.options);
   const [checked, setChecked] = useState(enableScore);
 
@@ -113,8 +109,13 @@ export default function AssignValue(props) {
               ({ color, value, isDeleted }, index) =>
                 !isDeleted && (
                   <li key={index}>
-                    <div style={{ background: color }} className="colorWrap"></div>
-                    <div className="flex overflow_ellipsis">{value}</div>
+                    {colorful ? (
+                      <OptionChip color={color} title={value}>
+                        {value}
+                      </OptionChip>
+                    ) : (
+                      <div className="flex overflow_ellipsis">{value}</div>
+                    )}
                   </li>
                 ),
             )}

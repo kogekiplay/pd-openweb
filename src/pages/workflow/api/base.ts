@@ -1,7 +1,18 @@
 export const controllerName = 'Workflow';
 
+/** server() 只看请求选项里的这三个开关来选接口服务；其余字段原样随请求走 */
+interface ServerOptions {
+  /** 集成中心的接口 */
+  isIntegration?: boolean;
+  /** 工作流插件的接口 */
+  isPlugin?: boolean;
+  /** 在插件页里也强制走普通工作流接口 */
+  isWorkflow?: boolean;
+  [key: string]: unknown;
+}
+
 export default {
-  server: (options: Record<string, any> = {}) => {
+  server: (options: ServerOptions = {}) => {
     const isPlugin = location.href.indexOf('workflowplugin') > -1;
 
     if (options.isIntegration) {

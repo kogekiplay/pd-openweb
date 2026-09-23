@@ -1,5 +1,7 @@
 import type { ReduxAction } from 'src/redux/types';
-export function detailViewRows(state = [], action: ReduxAction) {
+import type { RecordRow } from 'src/utils/controlTypes';
+
+export function detailViewRows(state: RecordRow[] = [], action: ReduxAction<{ list: RecordRow[] }>) {
   const { type } = action;
 
   switch (type) {
@@ -10,7 +12,7 @@ export function detailViewRows(state = [], action: ReduxAction) {
   }
 }
 
-export function detailViewRowsCount(state = 0, action: ReduxAction) {
+export function detailViewRowsCount(state = 0, action: ReduxAction<{ count: number }>) {
   const { type } = action;
 
   switch (type) {
@@ -21,7 +23,7 @@ export function detailViewRowsCount(state = 0, action: ReduxAction) {
   }
 }
 
-export function noMoreRows(state = false, action: ReduxAction) {
+export function noMoreRows(state = false, action: ReduxAction<{ noMore: boolean }>) {
   const { type } = action;
 
   switch (type) {
@@ -32,7 +34,7 @@ export function noMoreRows(state = false, action: ReduxAction) {
   }
 }
 
-export function detailViewLoading(state = false, action: ReduxAction) {
+export function detailViewLoading(state = false, action: ReduxAction<{ loading: boolean }>) {
   switch (action.type) {
     case 'CHANGE_DETAIL_VIEW_LOADING':
       return action.loading;
@@ -41,7 +43,7 @@ export function detailViewLoading(state = false, action: ReduxAction) {
   }
 }
 
-export function detailPageIndex(state = 1, action: ReduxAction) {
+export function detailPageIndex(state = 1, action: ReduxAction<{ pageIndex: number }>) {
   const { type } = action;
 
   switch (type) {
@@ -52,7 +54,7 @@ export function detailPageIndex(state = 1, action: ReduxAction) {
   }
 }
 
-export function detailKeyWords(state = '', action: ReduxAction) {
+export function detailKeyWords(state = '', action: ReduxAction<{ keyWords?: string }>) {
   const { type } = action;
 
   switch (type) {

@@ -9,7 +9,12 @@ export const updateProjectId = (projectId: string) => dispatch => {
 };
 
 export const getPositionList = () => (dispatch: AppDispatch, getState: GetState) => {
-  const { positionPageInfo = {}, projectId, positionList = [], searchValue } = getState().orgManagePage.position;
+  const {
+    positionPageInfo = { pageIndex: 1, isMore: false },
+    projectId,
+    positionList = [],
+    searchValue,
+  } = getState().orgManagePage.position;
   const { pageIndex } = positionPageInfo;
   let extra = searchValue ? { keywords: searchValue } : { pageIndex: pageIndex || 1, pageSize: PAGE_SIZE };
   jobAjax

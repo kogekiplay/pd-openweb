@@ -1,9 +1,26 @@
 import { combineReducers } from 'redux';
 import { List, Map, Set } from 'immutable';
+import type { ReduxAction, ValueAction } from 'src/redux/types';
 import { NODE_SORT_BY, NODE_SORT_TYPE, PICK_TYPE } from '../constant/enum';
-import type { ReduxAction } from 'src/redux/types';
 
-function kcListElement(state = null, action: ReduxAction) {
+/** 列表的只读 / 回收站状态，由 updateRoot 按当前根目录写入 */
+interface KcListState {
+  isRecycle?: boolean;
+  isReadOnly?: boolean;
+}
+
+// 节点（文件夹 / 文件）来自接口，形状未类型化，按接口原样值记
+type KcListAction =
+  | { type: 'KC_CLEAR_LIST' | 'KC_CLEAR_KC' }
+  | { type: 'KC_REPLACE_NODES'; value: List<ApiPayload> }
+  | { type: 'KC_FETCH_NODES_SUCCESS'; value: ApiPayload[] }
+  | { type: 'KC_ADD_NEWFOLDER_SUCCESS'; value: ApiPayload };
+
+type KcSelectedItemsAction =
+  | { type: 'KC_UPDATE_SELECTED_ITEMS'; value: Set<ApiPayload> }
+  | { type: 'KC_SELECT_ALL_ITEMS'; value: boolean; selectedItems: Set<ApiPayload> };
+
+function kcListElement(state: HTMLDivElement | null = null, action: ValueAction<HTMLDivElement | null>) {
   switch (action.type) {
     case 'KC_UPDATE_LIST_ELEMENT':
       return action.value;
@@ -31,7 +48,7 @@ function listLoading(state = true, action: ReduxAction) {
   }
 }
 
-function path(state = '', action: ReduxAction) {
+function path(state = '', action: ValueAction<string>) {
   switch (action.type) {
     case 'KC_UPDATE_PATH':
       return action.value;
@@ -48,7 +65,10 @@ const defaultParams = Map({
   sortType: NODE_SORT_TYPE.DESC,
 });
 
-function params(state: Map<string, any> = defaultParams, action: ReduxAction): Map<string, any> {
+function params(
+  state: Map<string, any> = defaultParams,
+  action: ValueAction<Record<string, unknown>>,
+): Map<string, any> {
   switch (action.type) {
     case 'KC_CLEAR_KC':
       return defaultParams;
@@ -59,7 +79,7 @@ function params(state: Map<string, any> = defaultParams, action: ReduxAction): M
   }
 }
 
-function currentFolder(state = {}, action: ReduxAction) {
+function currentFolder(state: ApiPayload = {}, action: ValueAction<ApiPayload>) {
   switch (action.type) {
     case 'KC_UPDATE_FOLDER':
       return action.value;
@@ -68,7 +88,8 @@ function currentFolder(state = {}, action: ReduxAction) {
   }
 }
 
-function currentRoot(state = PICK_TYPE.MY, action: ReduxAction) {
+// 值是 PICK_TYPE 里的数字，或者（进到某个共享根目录时）那个根节点对象本身
+function currentRoot(state: number | ApiPayload = PICK_TYPE.MY, action: ValueAction<number | ApiPayload>) {
   switch (action.type) {
     case 'KC_UPDATE_ROOT':
       return action.value;
@@ -77,7 +98,7 @@ function currentRoot(state = PICK_TYPE.MY, action: ReduxAction) {
   }
 }
 
-function list(state = List(), action: ReduxAction) {
+function list(state: List<ApiPayload> = List(), action: KcListAction) {
   switch (action.type) {
     case 'KC_CLEAR_LIST':
     case 'KC_CLEAR_KC':
@@ -93,7 +114,7 @@ function list(state = List(), action: ReduxAction) {
   }
 }
 
-function totalCount(state = 0, action: ReduxAction) {
+function totalCount(state = 0, action: ValueAction<number>) {
   switch (action.type) {
     case 'KC_UPDATE_TOTALCOUNT':
       return action.value;
@@ -104,7 +125,7 @@ function totalCount(state = 0, action: ReduxAction) {
   }
 }
 
-function kcUsage(state = {}, action: ReduxAction) {
+function kcUsage(state: ApiPayload = {}, action: ValueAction<ApiPayload>) {
   switch (action.type) {
     case 'KC_FETCH_USAGE_SUCCESS':
       return action.value;
@@ -113,7 +134,7 @@ function kcUsage(state = {}, action: ReduxAction) {
   }
 }
 
-function isRecycle(state = false, action: ReduxAction) {
+function isRecycle(state = false, action: ValueAction<KcListState>) {
   switch (action.type) {
     case 'KC_UPDATE_LIST_STATE':
       return action.value.isRecycle || false;
@@ -122,7 +143,7 @@ function isRecycle(state = false, action: ReduxAction) {
   }
 }
 
-function isReadOnly(state = true, action: ReduxAction) {
+function isReadOnly(state = true, action: ValueAction<KcListState>) {
   switch (action.type) {
     case 'KC_UPDATE_LIST_STATE':
       return action.value.isReadOnly || false;
@@ -131,7 +152,7 @@ function isReadOnly(state = true, action: ReduxAction) {
   }
 }
 
-function isGlobalSearch(state = false, action: ReduxAction) {
+function isGlobalSearch(state = false, action: ValueAction<boolean>) {
   switch (action.type) {
     case 'KC_CLEAR_KC':
       return false;
@@ -143,7 +164,7 @@ function isGlobalSearch(state = false, action: ReduxAction) {
 }
 
 // 选择
-export function selectAll(state = false, action: ReduxAction) {
+export function selectAll(state = false, action: ValueAction<boolean>) {
   switch (action.type) {
     case 'KC_CHANGE_SELECT_ALL':
     case 'KC_SELECT_ALL_ITEMS':
@@ -153,7 +174,7 @@ export function selectAll(state = false, action: ReduxAction) {
   }
 }
 
-export function selectedItems(state = Set(), action: ReduxAction) {
+export function selectedItems(state: Set<ApiPayload> = Set(), action: KcSelectedItemsAction) {
   switch (action.type) {
     case 'KC_UPDATE_SELECTED_ITEMS':
       return action.value;
@@ -171,7 +192,7 @@ export function rightMenuOption(state = false, action: ReduxAction) {
   }
 }
 
-export function baseUrl(state = '/apps/kc', action: ReduxAction) {
+export function baseUrl(state = '/apps/kc', action: ValueAction<string>) {
   switch (action.type) {
     case 'KC_UPDATE_KC_BASE_URL':
       return action.value;

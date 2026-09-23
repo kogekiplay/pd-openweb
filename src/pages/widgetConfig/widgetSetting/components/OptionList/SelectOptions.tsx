@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Dialog, Dropdown, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import worksheetAjax from 'src/api/worksheet';
+import { OptionChip } from 'src/components/OptionChip';
 import SelectOtherWorksheetDialog from 'src/pages/worksheet/components/SelectWorksheet/SelectOtherWorksheetDialog';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util.js';
 import AutoIcon from '../../../components/Icon';
@@ -120,12 +121,8 @@ const OptionListItem = styled.div`
     align-items: center;
     justify-content: space-between;
     line-height: 30px;
-    .colorWrap {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      margin-right: 6px;
-    }
+    /* 彩色选项画成 24px 高的标签后，flex 行的高度由标签决定，靠 min-height 保住原来的行距 */
+    min-height: 30px;
     i {
       &:hover {
         color: var(--color-primary-text) !important;
@@ -396,8 +393,13 @@ export default function SelectOptions(props) {
                     return (
                       <li key={index}>
                         <div className="flexCenter flex overflow_ellipsis">
-                          {optionList.colorful && <div className="colorWrap" style={{ backgroundColor: color }}></div>}
-                          <div className="name flex overflow_ellipsis">{value}</div>
+                          {optionList.colorful ? (
+                            <OptionChip color={color} title={value}>
+                              {value}
+                            </OptionChip>
+                          ) : (
+                            <div className="name flex overflow_ellipsis">{value}</div>
+                          )}
                         </div>
                         <div className="flexCenter">
                           {fromPortal ? null : (

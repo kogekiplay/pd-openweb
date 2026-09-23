@@ -48,11 +48,18 @@ export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, und
  * 本仓的 action 都是 `{ type, ...载荷 }` 的裸对象，载荷字段名由每个 reducer 自己
  * 约定（value / rows / data / controls ...），没有统一的 action creator 层。
  *
- * 索引签名在这里【不是偷懒】：这个对象的形状本来就是各 reducer 各自约定的，
- * 收窄成某一份具体联合，只会把别的 reducer 合法的读取判成错。真要收窄，
- * 得一个 reducer 一个 reducer 地给它自己的 action 定判别联合，那是另一件事。
+ * 默认形状带索引签名：这个对象的形状本来就是各 reducer 各自约定的，
+ * 收窄成某一份全局联合，只会把别的 reducer 合法的读取判成错。
+ *
+ * 【收窄是按 reducer 做的】写 ReduxAction<{ data: boolean }>，TS 就只放行这个 reducer
+ * 真正读的字段，类型也如实。终点配置（noPropertyAccessFromIndexSignature）下，
+ * 默认形状上的 action.xxx 一律报 TS4111 —— 那正是「这个 reducer 的载荷还没写出真实形状」的记号。
+ * 本仓 reducer 最常见的是「action.data / action.value 原样成为新 state」，那种情况载荷类型就是 state 类型。
  */
-export interface ReduxAction {
-  type: string;
-  [key: string]: any;
-}
+export type ReduxAction<Payload extends object = { [key: string]: any }> = { type: string } & Payload;
+
+/** 载荷字段叫 data、原样成为新 state 的 action（本仓最常见的 reducer 形状）。T 就是那个 reducer 的 state 类型。 */
+export type DataAction<T> = ReduxAction<{ data: T }>;
+
+/** 同上，载荷字段叫 value。 */
+export type ValueAction<T> = ReduxAction<{ value: T }>;

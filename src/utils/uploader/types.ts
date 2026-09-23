@@ -138,8 +138,8 @@ export interface UploadErrorInfo {
   code?: number;
   message?: string;
   status?: number;
-  /** HTTP 错误时后端返回体，本仓只读其中的 error 文案 */
-  response?: { error?: string };
+  /** HTTP 错误时后端返回体，本仓只读其中的 error 文案；返回体解析失败时显式给 undefined（见 qiniuV1 的 httpError） */
+  response?: { error?: string } | undefined;
   file?: UploaderFile;
   details?: string;
 }

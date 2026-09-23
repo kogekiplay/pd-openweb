@@ -1,5 +1,6 @@
 import { generate } from '@ant-design/colors';
 import { TinyColor } from '@ctrl/tinycolor';
+import { rampLevel } from 'src/common/theme/palette';
 
 /**
  * 选项色标签（chip）的配色。
@@ -47,8 +48,11 @@ export interface OptionChipStyle {
 
 function relativeLuminance(hex: string): number {
   const { r, g, b } = new TinyColor(hex).toRgb();
-  const lin = [r, g, b].map(v => v / 255).map(v => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
-  return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+  const lin = (channel: number) => {
+    const v = channel / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
 }
 
 function contrast(a: string, b: string): number {
@@ -96,7 +100,8 @@ const cache = new Map<string, OptionChipStyle>();
  */
 export function getOptionChipStyle(color: string, mode?: ThemeMode): OptionChipStyle {
   const themeMode: ThemeMode =
-    mode || (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+    mode ||
+    (typeof document !== 'undefined' && document.documentElement.dataset['theme'] === 'dark' ? 'dark' : 'light');
 
   const key = `${color}|${themeMode}`;
   const hit = cache.get(key);
@@ -128,8 +133,8 @@ export function getOptionChipStyle(color: string, mode?: ThemeMode): OptionChipS
     // 从第 8 级往末尾找第一个够 4.5 的。两套主题的下标范围相同不是巧合：
     // antd 的暗色阶本来就是反着排的（下标越大越亮），所以"往对比度更高的方向走"
     // 在两边都是下标递增。
-    const picked = [7, 8, 9].map(i => ramp[i]).find(c => contrast(c, flat) >= AA_BODY);
-    text = picked || ramp[9];
+    const picked = [7, 8, 9].map(i => rampLevel(ramp, i)).find(c => contrast(c, flat) >= AA_BODY);
+    text = picked || rampLevel(ramp, 9);
   }
 
   const style: OptionChipStyle = { background, color: text };
