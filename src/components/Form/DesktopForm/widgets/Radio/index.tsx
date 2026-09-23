@@ -106,7 +106,7 @@ const RadioWidget = props => {
       <span
         className={cx('ellipsis customRadioItem', { 'pLeft12 pRight12': enumDefault2 === 1 || checkIds.length > 1 })}
         style={
-          // 选项色配色交给 getOptionChipStyle（浅底 + 同色深字），见 src/utils/optionColor.ts
+          // 选项色配色交给 getOptionChipStyle（底 = 选的颜色，字色按对比度挑），见 src/utils/optionColor.ts
           enumDefault2 === 1
             ? getOptionChipStyle(item.color)
             : { background: checkIds.length > 1 ? 'var(--color-border-secondary)' : '' }

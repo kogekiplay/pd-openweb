@@ -447,9 +447,8 @@ export const OptionWrap = styled.div`
     padding: 0 var(--space-1);
   }
   /* 【选项色的底和字一起算，不要只给底】原来是「底 = 选项色、字 = 白，
-     再靠一个 .light 类在浅色时翻成深字」—— 实测 20 色色板里 7 色不达标，
-     而且其中 5 色黑白两种字色都够不着 4.5，翻字色救不回来。
-     改成浅底 + 同色深字，两个值都由 getOptionChipStyle 出，
+     再靠一个 .light 类在浅色时翻成深字」—— 实测 20 色色板里 7 色不达标。
+     现在两个值都由 getOptionChipStyle 出（底 = 选的颜色，字色按对比度挑），
      .light 类随之退役（三个 displayTypes 里已一并去掉）。
      没给 color 时保持原样走主题色实心底 —— 那是"未配色"的占位样子，不是选项色。 */
   ${props => {

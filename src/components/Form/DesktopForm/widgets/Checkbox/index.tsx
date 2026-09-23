@@ -146,7 +146,7 @@ const CheckboxWidgets = props => {
             'pLeft12 pRight12': enumDefault2 === 1,
           })}
           style={{
-            // 选项色配色交给 getOptionChipStyle（浅底 + 同色深字），见 src/utils/optionColor.ts
+            // 选项色配色交给 getOptionChipStyle（底 = 选的颜色，字色按对比度挑），见 src/utils/optionColor.ts
             ...(enumDefault2 === 1 ? getOptionChipStyle(item.color) : {}),
             maxWidth: noMaxWidth ? 'auto' : 140,
           }}
