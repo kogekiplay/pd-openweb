@@ -388,7 +388,7 @@ const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
         loading: true,
       };
     }
-    componentDidMount() {
+    override componentDidMount() {
       // 【等取完再放行】getGlobalMeta 以前是同步 XHR，所以下面这句 setState 紧跟着写也没事；
       // 现在改成异步，正好用上这个组件本来就有的 loading 态 —— 期间显示 <LoadDiv>，
       // 被包的 Comp 在 md.global 填好之前不会渲染。
@@ -397,7 +397,7 @@ const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
       });
     }
 
-    render() {
+    override render() {
       const { loading } = this.state;
 
       if (window.isDingTalk) {

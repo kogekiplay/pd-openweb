@@ -46,7 +46,7 @@ export default class ApiPackage extends Component<any, any> {
     window.open(pathCompletion(`/integrationConnect/${item.appId}`));
   };
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
 
     return (

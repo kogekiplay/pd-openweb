@@ -129,7 +129,7 @@ export default class Sort extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { rightY } = this.props.currentReport;
       this.setState({
@@ -688,7 +688,7 @@ export default class Sort extends Component<any, any> {
       reportTypes.CountryLayer,
     ].includes(reportType);
   };
-  render() {
+  override render() {
     const { visible, currentCustomSort, customSortValue, sortList, customSortLoading, dropdownPlacement } = this.state;
     const sortListHeight = sortList.length * 38;
     const Content = this.renderContent();

@@ -110,7 +110,7 @@ export default class WithdrawalsRecord extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getMerchantBalance();
     this.getDataList();
   }
@@ -193,7 +193,7 @@ export default class WithdrawalsRecord extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     const { loading, list, searchValues, pageIndex, count, balanceLoading } = this.state;
     const { status = '' } = searchValues || {};

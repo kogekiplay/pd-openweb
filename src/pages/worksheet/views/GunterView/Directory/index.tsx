@@ -64,7 +64,7 @@ let GunterDirectory = class GunterDirectory extends Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeDocumentDragListeners();
   }
 
@@ -260,7 +260,7 @@ let GunterDirectory = class GunterDirectory extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { width, loading, base } = this.props;
     const { widthConfig } = this.state;
     return (

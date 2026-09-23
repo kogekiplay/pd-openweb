@@ -11,7 +11,7 @@ export default class ChatWindowEntrypoint extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const data = qs.parse(location.search.slice(1));
     return (
       <DocumentTitle title={String(data.name || '')}>

@@ -470,7 +470,7 @@ export default class XAxis extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { name, currentReport } = this.props;
     return (
       <div className="fieldWrapper mBottom20">

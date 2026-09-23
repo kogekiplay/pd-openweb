@@ -20,7 +20,7 @@ function createChainedFunction(...argsOuter) {
 }
 
 class Picker extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     panelCls: PropTypes.string,
     className: PropTypes.string,
     disabled: PropTypes.bool,
@@ -54,13 +54,13 @@ class Picker extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.defaultVisible) {
       this.onClick();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         value: this.props.defaultValue,
@@ -120,7 +120,7 @@ class Picker extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const state = this.state;
     const { className, disabled } = this.props;

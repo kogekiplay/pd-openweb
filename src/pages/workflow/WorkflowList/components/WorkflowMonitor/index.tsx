@@ -33,7 +33,7 @@ export default class WorkflowMonitor extends Component<any, any> {
     };
     this.lineChart = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getFlowList();
   }
 
@@ -154,7 +154,7 @@ export default class WorkflowMonitor extends Component<any, any> {
     this.setState({ detailList });
   };
 
-  render() {
+  override render() {
     let { pageIndex, count, loading, detailList = [], showHistoryDetail, dateStr, historyDetailList } = this.state;
     const { projectId } = this.props.match.params;
 

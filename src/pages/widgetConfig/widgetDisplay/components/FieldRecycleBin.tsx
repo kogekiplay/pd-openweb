@@ -265,7 +265,7 @@ export default class FieldRecycleBin extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { globalSheetInfo: { projectId } = {} } = this.props;
     const { visible } = this.state;
     const isFree =

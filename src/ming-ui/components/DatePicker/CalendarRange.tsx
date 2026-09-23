@@ -46,7 +46,7 @@ function normalizeAnchor(props, init) {
 }
 
 class CalendarRange extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     prefixCls: PropTypes.string,
     timePicker: PropTypes.bool,
     /**
@@ -95,7 +95,7 @@ class CalendarRange extends Component<any, any> {
     this.halfData = this.props.halfData;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const newState: { selectedValue?: unknown } = {};
 
@@ -266,7 +266,7 @@ class CalendarRange extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const state = this.state;
     const { prefixCls, timePicker, className, locale } = props;

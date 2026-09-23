@@ -64,7 +64,7 @@ export default class CreateFolder extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const that = this;
 
     $('#folderName').select();
@@ -192,7 +192,7 @@ export default class CreateFolder extends Component<any, any> {
 
   handleScope = value => this.setState({ scope: value });
 
-  render() {
+  override render() {
     const sliderHeight = {
       height: $(window).height() - 180,
       overflow: 'hidden',

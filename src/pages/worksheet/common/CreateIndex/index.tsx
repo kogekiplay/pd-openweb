@@ -313,7 +313,7 @@ export default class CreateIndex extends Component<any, any> {
     this.setState({ showQAList: temp });
   };
 
-  render() {
+  override render() {
     const {
       currentIndexInfo,
       worksheetAvailableFields,

@@ -68,7 +68,7 @@ let TimeBlock = class TimeBlock extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { grouping } = this.props.gunterView;
     return (
       <div className="timeBlockWrapper">{grouping.map(item => item.width > 0 && this.renderGroupingItem(item))}</div>

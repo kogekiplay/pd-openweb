@@ -29,7 +29,7 @@ export default class RoleSearchBox extends Component<any, any> {
     this.props.handleClear();
   };
 
-  render() {
+  override render() {
     const { searchValue } = this.state;
     return (
       <div className="searchContainer Relative">

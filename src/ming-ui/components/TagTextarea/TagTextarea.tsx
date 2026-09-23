@@ -118,7 +118,7 @@ function initCmGlobals({ state, view }) {
 }
 
 export default class TagTextarea extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     noCursor: PropTypes.bool,
     className: PropTypes.string,
     mode: PropTypes.number,
@@ -172,12 +172,12 @@ export default class TagTextarea extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.getRef(this);
     this.initCodeMirror();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.unmounted = true;
     this.props.getRef(undefined);
 
@@ -658,7 +658,7 @@ export default class TagTextarea extends React.Component<any, any> {
     this.setState({ active: false });
   };
 
-  render() {
+  override render() {
     const { className, maxHeight, rightIcon, onAddClick, noCursor, readonly } = this.props;
     return (
       <div className={cx('tagInputarea', className, { flexRow: rightIcon })}>

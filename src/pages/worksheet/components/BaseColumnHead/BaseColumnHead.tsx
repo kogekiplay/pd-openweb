@@ -12,7 +12,7 @@ import getTableColumnWidth from './getTableColumnWidth';
 import './style.less';
 
 export default class BaseColumnHead extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     canDrag: PropTypes.bool,
     className: PropTypes.string,
@@ -37,7 +37,7 @@ export default class BaseColumnHead extends React.Component<any, any> {
     this.state = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.drag) {
       this.drag.addEventListener('mousedown', this.handleMouseDown);
     }
@@ -135,7 +135,7 @@ export default class BaseColumnHead extends React.Component<any, any> {
     changeSort(newSortType);
   };
 
-  render() {
+  override render() {
     const {
       disabled,
       disableSort,

@@ -59,11 +59,11 @@ class ViewConfigCon extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchBtnByAll();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.viewId !== prevProps.viewId) {
         const { view = {}, viewConfigTab, setViewConfigTab } = this.props;
@@ -444,7 +444,7 @@ class ViewConfigCon extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { viewSetting, showBatch } = this.state;
     const data = viewTypeConfig.find(item => item.type === viewSetting) || {};
 

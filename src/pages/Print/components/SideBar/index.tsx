@@ -478,7 +478,7 @@ class SideNav extends React.Component<any, any> {
     return undefined;
   };
 
-  render() {
+  override render() {
     const { handChange, printData } = this.props;
     const { approvePosition = 0 } = printData;
     const { closeList = [] } = this.state;

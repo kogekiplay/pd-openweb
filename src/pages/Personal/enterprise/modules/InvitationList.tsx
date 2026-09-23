@@ -72,7 +72,7 @@ export default class InvitationList extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { list = [] } = this.props;
     return (
       <div className="overflowHidden pAll10">

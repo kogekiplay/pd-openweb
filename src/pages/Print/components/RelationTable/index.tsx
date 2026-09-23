@@ -27,7 +27,7 @@ export default class RelationTable extends React.Component<any, any> {
     };
     this.mdTabledId = props.id || uuidv4();
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.setData(this.props);
     const { printData } = this.props;
     $('.ant-table').css({
@@ -36,7 +36,7 @@ export default class RelationTable extends React.Component<any, any> {
     emitter.addListener('TRIGGER_CHANGE_COLUMN_WIDTH_MASK_' + this.mdTabledId, this.showColumnWidthChangeMask);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(this.props.controls, prevProps.controls) ||
@@ -56,7 +56,7 @@ export default class RelationTable extends React.Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     emitter.removeListener('TRIGGER_CHANGE_COLUMN_WIDTH_MASK_' + this.mdTabledId, this.showColumnWidthChangeMask);
   }
 
@@ -383,7 +383,7 @@ export default class RelationTable extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { dataSource, orderNumberCheck, id, style = {}, relationStyleNum, printData, contentWidth } = this.props;
     const { realShowData, enableEmptyPlaceholder, emptyPlaceholderMode } = printData;
     const placeholderMode =

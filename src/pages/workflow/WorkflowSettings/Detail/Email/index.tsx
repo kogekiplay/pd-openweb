@@ -51,13 +51,13 @@ export default class Email extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
     this.getNodeDetail(this.props);
     emitter.addListener('CHANGE_THEME_MODE', this.handleMJMLPreviewThemeChange);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -76,7 +76,7 @@ export default class Email extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
     emitter.removeListener('CHANGE_THEME_MODE', this.handleMJMLPreviewThemeChange);
   }
@@ -775,7 +775,7 @@ export default class Email extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { data } = this.state;
 
     if (_.isEmpty(data)) {

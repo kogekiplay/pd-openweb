@@ -82,7 +82,7 @@ export default class Filter extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.isResetFilter) {
         this.handleReset();
@@ -619,7 +619,7 @@ export default class Filter extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     return <div className="processFilterDrawerWrapper">{this.renderDrawerContent()}</div>;
   }
 }

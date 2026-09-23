@@ -58,7 +58,7 @@ export default class Api extends Component<any, any> {
     window.open(pathCompletion(`/integrationApi/${item.appId}`));
   };
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
 
     return (

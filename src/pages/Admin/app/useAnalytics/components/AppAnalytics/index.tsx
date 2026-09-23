@@ -48,10 +48,10 @@ export default class AppAnalytics extends Component<any, any> {
       isAuthority: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
-  componentDidUpdate() {
+  override componentDidUpdate() {
     if (this.state.currentTab === 1) {
       this.getData();
     }
@@ -73,7 +73,7 @@ export default class AppAnalytics extends Component<any, any> {
       });
     }
   };
-  render() {
+  override render() {
     const { projectId, appId } = _.get(this.props, 'match.params') || {};
     let { currentTab, isAuthority } = this.state;
 

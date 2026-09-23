@@ -121,7 +121,7 @@ export default class EncryptBaseInfo extends Component<any, any> {
       maskToken: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.ruleDetail) {
       this.setState({ ruleDetail: this.props.ruleDetail });
     } else {
@@ -138,7 +138,7 @@ export default class EncryptBaseInfo extends Component<any, any> {
         this.setState({ ruleDetail: res.encryptRule });
       });
   };
-  render() {
+  override render() {
     const {
       showEditBaseInfo,
       ruleDetail = {},

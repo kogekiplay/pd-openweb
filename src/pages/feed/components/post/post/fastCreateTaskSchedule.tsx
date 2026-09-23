@@ -10,7 +10,7 @@ import createTask from 'src/components/createTask/load';
 import './postOperateList.css';
 
 class FastCreateTaskSchedule extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     selectText: PropTypes.any.isRequired,
     handFastCreate: PropTypes.func,
     style: PropTypes.any,
@@ -44,7 +44,7 @@ class FastCreateTaskSchedule extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     return (
       <ClickAway onClickAway={this.componentClickAway}>
         <Menu

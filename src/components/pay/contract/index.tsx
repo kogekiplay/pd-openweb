@@ -32,7 +32,7 @@ class ContractCom extends Component<any, any> {
     this.state = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getOrderContractInfo();
   }
 
@@ -152,7 +152,7 @@ class ContractCom extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { user = {}, order = {} } = this.state;
 
     return (

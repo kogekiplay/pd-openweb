@@ -11,7 +11,7 @@ import './voteContent.css';
  * 投票动态所带的投票内容
  */
 class VoteContent extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     dispatch: PropTypes.func,
     voteItem: PropTypes.shape({
       VoteID: PropTypes.string.isRequired,
@@ -52,7 +52,7 @@ class VoteContent extends React.Component<any, any> {
     this.setState({ isShowResult: true });
   };
 
-  render() {
+  override render() {
     return (
       <div className="voteContent">
         {this.state.isShowResult ? (

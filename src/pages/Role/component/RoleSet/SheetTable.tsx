@@ -83,18 +83,18 @@ const getViewSize = (views, keyName: string) => {
 };
 
 export default class extends PureComponent<any, any> {
-  state = {
+  override state = {
     show: false,
     showRoleSet: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({
       show: this.props.isShow,
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.isShow !== this.props.isShow) {
         this.setState({
@@ -148,7 +148,7 @@ export default class extends PureComponent<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { showRoleSet } = this.state;
     const { sheet, updateLookPages, updateNavigateHide, projectId, appId } = this.props;
     const { readSize, editSize, removeSize, showRead, showEdit, showRemove } = this.formatViews(sheet.views);

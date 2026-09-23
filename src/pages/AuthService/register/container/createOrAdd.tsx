@@ -59,7 +59,7 @@ export default class CreateOrAdd extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { onChange = () => {} } = this.props;
 
     return (

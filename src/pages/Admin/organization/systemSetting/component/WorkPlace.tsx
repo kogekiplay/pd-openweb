@@ -69,7 +69,7 @@ export default class WorkPlace extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -208,7 +208,7 @@ export default class WorkPlace extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       keywords,
       loading,

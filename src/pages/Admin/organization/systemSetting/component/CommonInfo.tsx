@@ -34,11 +34,11 @@ export default class CommonInfo extends Component<any, any> {
     this.uploaderWrap = createRef(null);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getAllData();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.level !== prevProps.level) {
         this.getAllData();
@@ -255,7 +255,7 @@ export default class CommonInfo extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { onViewCert } = this.props;
     const {
       isDefaultLogo,

@@ -30,7 +30,7 @@ export default class ProcessRecordInfo extends Component<any, any> {
 
   processFooter = React.createRef();
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getWorkItem();
   }
 
@@ -161,7 +161,7 @@ export default class ProcessRecordInfo extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { className, workId, instanceId, onClose, onSave } = this.props;
     const { loading, workItem, instance, error, errorMsg, appInfo } = this.state;
 

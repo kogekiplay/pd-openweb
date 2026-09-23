@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
 
 export default class CalendarAction extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     type: PropTypes.string.isRequired,
     save: PropTypes.func.isRequired,
     cancel: PropTypes.func.isRequired,
@@ -28,7 +28,7 @@ export default class CalendarAction extends Component<any, any> {
     setTimeout(callback, 300);
   }
 
-  render() {
+  override render() {
     const { type, save, cancel, confirm, refuse } = this.props;
     return (
       <div

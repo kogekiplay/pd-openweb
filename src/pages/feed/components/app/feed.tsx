@@ -9,11 +9,11 @@ import './feed.css';
 import './style.css';
 
 class Feed extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     defaultExpandedGroup: PropTypes.array, // 群组加入 store
   };
 
-  render() {
+  override render() {
     return (
       <ScrollView className="feedApp clearfix feedAppScroll" scrollContentClassName="feedAppScrollContent">
         <div className="mdLeftNav feedLeftNav bgTertiary  feedLeftNavGlass" />

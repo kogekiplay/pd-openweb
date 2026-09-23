@@ -211,7 +211,7 @@ export default class extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getColumns();
     this.getData();
   }
@@ -297,7 +297,7 @@ export default class extends React.Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { projectId, authority = [] } = this.props;
     const {
       loading,

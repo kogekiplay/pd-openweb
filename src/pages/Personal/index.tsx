@@ -34,15 +34,15 @@ const getLazyComponent = factory => {
   return lazyCache.get(factory);
 };
 export default class PersonalEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppPersonal');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppPersonal');
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     if (nextProps.location.search !== this.props.location.search) {
       return true;
     }
@@ -59,7 +59,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const menus =
       (!window.platformENV.isOverseas && !window.platformENV.isLocal) ||
       ((window.platformENV.isOverseas || window.platformENV.isLocal) && md.global.Config.ShowLicense)

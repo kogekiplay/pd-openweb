@@ -65,7 +65,7 @@ class WorksheetListShare extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       cardControls,
       rowsList = [],

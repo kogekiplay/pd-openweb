@@ -382,7 +382,7 @@ export default class EnterpriseCard extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { showItem, userInfo, loading, hasProjectAdminAuth } = this.state;
     const { departmentInfos = [], jobInfos = [] } = userInfo;
     const { card, DragHandle, isClose } = this.props;

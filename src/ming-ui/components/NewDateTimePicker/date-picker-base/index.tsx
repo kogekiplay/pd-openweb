@@ -20,7 +20,7 @@ class DatePickerBase extends Component<any, any> {
     this.state = state;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState(this.generateState(this.props));
     }
@@ -149,7 +149,7 @@ class DatePickerBase extends Component<any, any> {
     this.setState(newData);
   };
 
-  render() {
+  override render() {
     return (
       <div className="mui-datepickerbase">
         <Header

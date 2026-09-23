@@ -7,7 +7,7 @@ import ajaxRequest from 'src/api/appManagement';
 import '../SelectUsersFromApp/index.less';
 
 export default class SelectProcess extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: PropTypes.string,
     companyId: PropTypes.string.isRequired,
     processListType: PropTypes.string.isRequired,
@@ -33,7 +33,7 @@ export default class SelectProcess extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { selectAppId } = this.state;
 
     this.getAppList();
@@ -162,7 +162,7 @@ export default class SelectProcess extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { onCancel, processListType } = this.props;
     const { appList } = this.state;
 

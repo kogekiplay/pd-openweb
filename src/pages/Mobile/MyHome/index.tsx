@@ -98,7 +98,7 @@ class MyHome extends Component<any, any> {
     // window.location.reload();
   };
 
-  render() {
+  override render() {
     const projectObj = getCurrentProject(
       localStorage.getItem('currentProjectId') || (md.global.Account.projects[0] || {}).projectId,
     );

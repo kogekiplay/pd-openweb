@@ -46,13 +46,13 @@ const Wrap = styled.div`
   }
 `;
 export default class HubAndPluginHeader extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     path: string,
   };
   static defaultProps = {
     path: 'integration',
   };
-  state = { indexSideVisible: false };
+  override state = { indexSideVisible: false };
 
   changeIndexVisible = (visible = true) => {
     this.timer = setTimeout(() => {
@@ -60,7 +60,7 @@ export default class HubAndPluginHeader extends Component<any, any> {
     }, 100);
   };
 
-  render() {
+  override render() {
     const { indexSideVisible } = this.state;
     const { path = '' } = this.props;
     const isPlugin = _.includes('/plugin', path);

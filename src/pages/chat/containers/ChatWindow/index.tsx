@@ -24,7 +24,7 @@ let ChatWindow = class ChatWindow extends Component<{ dispatch: AppDispatch; [ke
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { session } = this.props;
     const { id, type } = session;
     if (hasMounted) return;
@@ -91,7 +91,7 @@ let ChatWindow = class ChatWindow extends Component<{ dispatch: AppDispatch; [ke
     });
   }
 
-  render() {
+  override render() {
     const { loading } = this.state;
     const { currentSessionList } = this.props;
     return (

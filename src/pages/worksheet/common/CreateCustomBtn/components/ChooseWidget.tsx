@@ -117,7 +117,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     this.chooseDia = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { writeControls = [] } = this.props;
     this.setState({
       keyWords: '',
@@ -129,7 +129,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     $('.cursorText').focus();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { writeControls = [], writeObject, relationControls, widgetList } = this.props;
 
@@ -273,7 +273,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { onClose } = this.props;
     const { data = [], keyWords, initData = [] } = this.state;
     const list = keyWords ? data : formatControlsChildBySectionId(data);

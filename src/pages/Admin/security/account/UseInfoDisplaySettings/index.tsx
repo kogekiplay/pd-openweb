@@ -18,7 +18,7 @@ export default class UseInfoDisplaySettings extends Component<any, any> {
     this.settingEle = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getUserFieldSettings();
   }
 
@@ -69,7 +69,7 @@ export default class UseInfoDisplaySettings extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { projectId, onClose = () => {} } = this.props;
     const { flag, settings, editStatus, saveLoading } = this.state;
     return (

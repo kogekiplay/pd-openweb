@@ -77,7 +77,7 @@ class MobileGalleryView extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { view, currentSheetRows, sheetRowLoading, sheetView, quickFilter, isPullRefreshing } = this.props;
     const wWidth = window.innerWidth;
     const needClickToSearch = _.get(view, 'advancedSetting.clicksearch') === '1';

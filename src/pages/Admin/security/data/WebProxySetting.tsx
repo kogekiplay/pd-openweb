@@ -94,7 +94,7 @@ export default class WebProxySetting extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     projectSettingController
       .getApiProxySettings({
         projectId: this.props.projectId,
@@ -189,7 +189,7 @@ export default class WebProxySetting extends Component<any, any> {
     this.setState({ [field]: value });
   };
 
-  render() {
+  override render() {
     const { onClose = () => {}, apiProxyEnabled } = this.props;
     const { http, https, ip, portNumber, openIdentityValidate, userName, webProxyPassword, isSaveWebProxy, loading } =
       this.state;

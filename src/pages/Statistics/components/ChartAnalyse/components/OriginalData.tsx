@@ -162,7 +162,7 @@ export default class OriginalData extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { style, viewId, worksheetInfo } = this.props;
     const { views } = worksheetInfo;
     const view = _.find(views, { viewId });

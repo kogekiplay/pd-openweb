@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import './less/Textarea.less';
 
 class Textarea extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     minHeight: PropTypes.number,
     maxHeight: PropTypes.number,
     maxLength: PropTypes.number,
@@ -32,7 +32,7 @@ class Textarea extends Component<any, any> {
     manualRef: () => {},
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const $textarea = $(this.textarea);
     const events = this.props.resizeAfterBlur ? 'input keyup blur' : 'input keyup';
     const { chat } = this.props;
@@ -99,7 +99,7 @@ class Textarea extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const $textarea = $(this.textarea); // 处理 isFocus 变化
 
@@ -140,7 +140,7 @@ class Textarea extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     // 【isSelect / isFocus / resizeAfterBlur / chat 也要解构掉】它们都在上面的 propTypes 里，
     // 是本组件自己消费的（见 componentDidMount / onBlur / 样式分支），
     // 漏掉就会随 ...rest 落到真实 <textarea> 上，React 逐个报

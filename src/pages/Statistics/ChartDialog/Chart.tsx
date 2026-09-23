@@ -59,11 +59,11 @@ let Chart = class Chart extends Component<any, any> {
     this.$chartRef = createRef(null);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.changeDragValue(this.props.direction);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.scopeVisible !== prevProps.scopeVisible || this.props.direction !== prevProps.direction) {
         setTimeout(() => {
@@ -223,7 +223,7 @@ let Chart = class Chart extends Component<any, any> {
     return undefined;
   }
 
-  render() {
+  override render() {
     const {
       loading,
       base,

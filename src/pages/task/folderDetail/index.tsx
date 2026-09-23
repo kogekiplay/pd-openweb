@@ -3,15 +3,15 @@ import { emitter } from 'src/utils/common';
 import TaskCenter from './containers/taskCenter/taskCenter';
 
 export default class FolderEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppTask');
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('#container').off('.task');
     $('body').off('.task').removeClass('taskDetailOpen');
     $('html').removeClass('AppTask');
   }
-  render() {
+  override render() {
     return <TaskCenter folderId={this.props.match.params.id} hideNavigation={true} emitter={emitter} />;
   }
 }

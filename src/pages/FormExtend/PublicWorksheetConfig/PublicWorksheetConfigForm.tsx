@@ -59,7 +59,7 @@ const SubmitCon = styled.div(
 );
 
 class PublicWorksheetConfigForm extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     controls: PropTypes.arrayOf(PropTypes.shape({})),
     originalControls: PropTypes.arrayOf(PropTypes.shape({})),
     loading: PropTypes.bool,
@@ -79,7 +79,7 @@ class PublicWorksheetConfigForm extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     window.scrollToFormEnd = () => {
       if (this.con) {
         $(this.con).find('.scrollViewContainer .scroll-viewport').scrollTop(100000);
@@ -87,7 +87,7 @@ class PublicWorksheetConfigForm extends React.Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     delete window.scrollToFormEnd;
   }
 
@@ -155,7 +155,7 @@ class PublicWorksheetConfigForm extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       worksheetInfo,
       worksheetSettings,

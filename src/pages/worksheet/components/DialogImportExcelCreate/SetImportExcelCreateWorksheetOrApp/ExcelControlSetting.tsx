@@ -59,7 +59,7 @@ export default class ExcelControlSetting extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.fieldName) {
       this.fieldName.focus();
     }
@@ -71,7 +71,7 @@ export default class ExcelControlSetting extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { data: { type, dataSource } = {} } = this.props;
 
@@ -127,7 +127,7 @@ export default class ExcelControlSetting extends Component<any, any> {
     return _.find(list, i => (i.total ? _.includes(i.total, value) : i.value === value));
   }
 
-  render() {
+  override render() {
     const { data = {}, worksheetList = [], createType, projectId, appId } = this.props;
     const { step, visible, controls, loading } = this.state;
     const { type, controlName, dataSource, sourceConfig = {} } = data;

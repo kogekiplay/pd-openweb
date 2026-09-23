@@ -27,7 +27,7 @@ export default class WebhookContent extends Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     clearInterval(this.setInterval);
   }
 
@@ -101,7 +101,7 @@ export default class WebhookContent extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { data, updateSource, onSave } = this.props;
     const { type, count, maxCount, contentType } = this.state;
     const overtime = !data.controls.length && count >= maxCount;

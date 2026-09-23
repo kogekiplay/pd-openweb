@@ -34,7 +34,7 @@ export default class ChatCount extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { autoOpenDiscuss } = this.props;
     this.getDiscussionsCount();
     if (autoOpenDiscuss) {
@@ -62,7 +62,7 @@ export default class ChatCount extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const {
       appId,
       worksheetId,

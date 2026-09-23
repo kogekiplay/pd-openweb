@@ -20,7 +20,7 @@ class UserProfile extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isLoading } = this.props;
     return (
       <div className="clearfix">

@@ -19,7 +19,7 @@ const getInitialLoadType = inboxType => {
 export default class Inbox extends React.Component<any, any> {
   static INBOXTYPES = INBOXTYPES;
 
-  static propTypes = {
+  static override propTypes = {
     inboxType: PropTypes.oneOf(_.values(INBOXTYPES)).isRequired,
     clearUnread: PropTypes.bool,
     callback: PropTypes.func,
@@ -30,14 +30,14 @@ export default class Inbox extends React.Component<any, any> {
     callback: () => {},
   };
 
-  state = {
+  override state = {
     type: getInitialLoadType(this.props.inboxType),
     inboxFavorite: false,
     filter: null,
     updateNow: undefined,
   };
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.inboxType !== prevProps.inboxType || this.props.count !== prevProps.count) {
         this.setState({
@@ -111,7 +111,7 @@ export default class Inbox extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     return (
       <div className="flexColumn h100">
         {md.global.Account.isPortal && browserIsMobile() ? null : this.renderHeader()}

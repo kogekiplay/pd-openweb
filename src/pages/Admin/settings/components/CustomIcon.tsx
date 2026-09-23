@@ -9,7 +9,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import './index.less';
 
 export default class CustomIcon extends Component<any, any> {
-  state = {
+  override state = {
     selected: [],
     data: null,
     preserveColor: false,
@@ -19,7 +19,7 @@ export default class CustomIcon extends Component<any, any> {
   cacheData = [];
   uploadLoadingKey = undefined;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getList();
   }
 
@@ -96,7 +96,7 @@ export default class CustomIcon extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     const { selected, data, preserveColor, cacheKey } = this.state;
 

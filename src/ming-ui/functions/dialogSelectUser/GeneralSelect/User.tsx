@@ -40,7 +40,7 @@ export default class User extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     let {
       projectId,
       user,

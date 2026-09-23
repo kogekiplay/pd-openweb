@@ -32,13 +32,13 @@ class DateTime extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.defaultVisible) {
       this.showMenu();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectedValue !== prevProps.selectedValue) {
         const mode = this.props.timePicker ? 'datetime' : this.props.mode;
@@ -93,7 +93,7 @@ class DateTime extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const min = this.props.min ? this.props.min.toDate() : null;
     const max = this.props.max ? this.props.max.toDate() : null;
 

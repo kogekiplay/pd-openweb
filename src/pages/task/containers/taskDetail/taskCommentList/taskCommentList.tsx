@@ -59,7 +59,7 @@ class TaskCommentList extends Component<any, any> {
     this.props.dispatch(removeTaskDiscussions(this.props.taskId, discussionId));
   };
 
-  render() {
+  override render() {
     const { onlyLookMe } = this.state;
     const { taskId, taskDetails, manualRef } = this.props;
     const { data } = taskDetails[taskId];

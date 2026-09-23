@@ -62,7 +62,7 @@ export default class ToolBar extends Component<any, any> {
     const nextScale = type === 'shrink' ? Math.max(SCALE_LIMIT.min, scale - 10) : Math.min(SCALE_LIMIT.max, scale + 10);
     onClick('adjustScale', { scale: nextScale });
   };
-  render() {
+  override render() {
     const { scale, onClick, isOpenEdit } = this.props;
     return (
       <ToolBarWrap className={cx('flexRow valignWrappe', { isOpenEdit })}>

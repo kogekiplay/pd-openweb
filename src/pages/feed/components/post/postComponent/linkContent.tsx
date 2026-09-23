@@ -6,7 +6,7 @@ import { htmlDecodeReg } from 'src/utils/common';
  * 链接型动态所带的链接和图片
  */
 class LinkContent extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     linkItem: PropTypes.shape({
       linkUrl: PropTypes.string.isRequired,
       linkTitle: PropTypes.string.isRequired,
@@ -16,7 +16,7 @@ class LinkContent extends React.Component<any, any> {
     }),
   };
 
-  render() {
+  override render() {
     const linkItem = this.props.linkItem;
 
     return (

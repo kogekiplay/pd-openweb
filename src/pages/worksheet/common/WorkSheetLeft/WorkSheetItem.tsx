@@ -79,7 +79,7 @@ export default class WorkSheetItem extends Component<any, any> {
 
     return url;
   }
-  render() {
+  override render() {
     const {
       projectId,
       appId,

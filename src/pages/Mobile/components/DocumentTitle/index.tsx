@@ -50,27 +50,27 @@ export function setDingTalkNavigationTitle(title: string) {
 }
 
 export default class DocumentTitle extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     title: string,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     setDingTalkNavigationTitle(this.props.title);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.title !== this.props.title) {
       setDingTalkNavigationTitle(this.props.title);
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     setTimeout(() => {
       setDingTalkNavigationTitle(document.title);
     });
   }
 
-  render() {
+  override render() {
     return <ReactDocumentTitle title={this.props.title} />;
   }
 }

@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { createIntlTelInput } from 'ming-ui/components/PhoneNumberInput/util';
 
 export default class Tel extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     const {
       data: { value },
     } = this.props;
@@ -31,7 +31,7 @@ export default class Tel extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         (this.props.data || {}).value !== (prevProps.data || {}).value &&
@@ -43,7 +43,7 @@ export default class Tel extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.destroy = true;
     this.iti && this.iti.destroy();
   }
@@ -71,7 +71,7 @@ export default class Tel extends Component<any, any> {
     (this.props.data || {}).value !== value && this.props.onChange({ value, isErr: !this.iti.isValidNumber() });
   };
 
-  render() {
+  override render() {
     const { inputClassName, onInputKeydown, clickCallback } = this.props;
 
     return (

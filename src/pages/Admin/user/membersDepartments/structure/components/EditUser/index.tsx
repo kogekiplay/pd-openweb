@@ -27,7 +27,7 @@ export default class EditUser extends Component<any, any> {
     };
     this.it = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { typeCursor, editCurrentUser = {} } = this.props;
     typeCursor !== 2 && this.getUserData();
     if (typeCursor === 2) {
@@ -55,7 +55,7 @@ export default class EditUser extends Component<any, any> {
     }, 500);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.typeCursor !== 0 && !_.isEqual(prevProps.editCurrentUser, this.props.editCurrentUser)) {
         const { fullname, mobilePhone, email, jobNumber, contactPhone } = this.props;
@@ -412,7 +412,7 @@ export default class EditUser extends Component<any, any> {
       </Fragment>
     );
   };
-  render() {
+  override render() {
     const {
       actType,
       typeCursor,

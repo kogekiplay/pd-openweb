@@ -100,11 +100,11 @@ export default class UploadFile extends Component<any, any> {
   uploader;
   uploadMp3;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.initUpload();
   }
 
-  componentDidUpdate(_prevProps, prevState) {
+  override componentDidUpdate(_prevProps, prevState) {
     if (prevState.isComplete !== this.state.isComplete) {
       this.initUpload();
     }
@@ -164,7 +164,7 @@ export default class UploadFile extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { files = [], dragOver } = this.state;
 
     if (files.length) {

@@ -22,7 +22,7 @@ class CalendarShare extends Component<any, any> {
 
   requesting = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.init();
   }
 
@@ -524,7 +524,7 @@ class CalendarShare extends Component<any, any> {
     return (size / Math.pow(1024, i)).toFixed(accuracy) * 1 + units[i];
   }
 
-  render() {
+  override render() {
     return (
       <Fragment>
         <div className="w100" id="loading">

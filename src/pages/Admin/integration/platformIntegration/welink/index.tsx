@@ -39,7 +39,7 @@ export default class Welink extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     Ajax.getWelinkProjectSettingInfo({ projectId: this.props.projectId }).then(res => {
       this.setState({
         pageLoading: false,
@@ -456,7 +456,7 @@ export default class Welink extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { CorpId, Secret } = this.state;
 
     if (this.state.pageLoading) {

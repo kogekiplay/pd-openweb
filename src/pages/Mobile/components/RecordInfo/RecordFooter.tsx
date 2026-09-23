@@ -142,7 +142,7 @@ export default class RecordFooter extends Component<any, any> {
    */
   actionSheetHandler?: { close: () => void };
 
-  componentDidMount() {
+  override componentDidMount() {
     if (
       this.props.getDataType !== 21 &&
       !this.props.isPublicShare &&
@@ -166,7 +166,7 @@ export default class RecordFooter extends Component<any, any> {
     this.getShareCardSet();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
     this.shareSheetHandler && this.shareSheetHandler.close();
   }
@@ -682,7 +682,7 @@ export default class RecordFooter extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isEditRecord } = this.props;
     return (
       <Fragment>

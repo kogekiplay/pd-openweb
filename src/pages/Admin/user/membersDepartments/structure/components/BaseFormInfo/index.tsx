@@ -70,7 +70,7 @@ export default class BaseFormInfo extends Component<any, any> {
       departmentInfos: props.actType === 'add' && props.departmentInfos ? [props.departmentInfos] : [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { typeCursor, editCurrentUser = {}, actType } = this.props;
 
     if (typeCursor === 2 || actType === 'add') {
@@ -81,7 +81,7 @@ export default class BaseFormInfo extends Component<any, any> {
     actType === 'edit' && this.updateBaseInfo(this.props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.baseInfo, prevProps.baseInfo)) {
         this.setState({
@@ -620,7 +620,7 @@ export default class BaseFormInfo extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { typeCursor, projectId, authority = [] } = this.props;
     const {
       worksiteList = [],

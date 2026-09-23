@@ -55,13 +55,13 @@ const LoadableMobileRecordInfoModal = lazy(() =>
 const LoadableRecordInfoWrapper = lazy(() => import('worksheet/common/recordInfo/RecordInfoWrapper'));
 
 class WorksheetRowEdit extends Component<any, any> {
-  state = {
+  override state = {
     loading: true,
     isError: false,
     data: {},
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getLinkDetail();
   }
   /**
@@ -209,7 +209,7 @@ class WorksheetRowEdit extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { loading, data, isError } = this.state;
     const isMobile = browserIsMobile();
     const RecordInfo = isMobile ? LoadableMobileRecordInfoModal : LoadableRecordInfoWrapper;

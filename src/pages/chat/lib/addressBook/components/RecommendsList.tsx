@@ -20,11 +20,11 @@ export default class RecommendsList extends React.Component<any, any> {
     this.fetch = this.fetch.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetch();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.isLoaded !== prevProps.isLoaded && this.props.isLoaded === false) {
         this.setState(
@@ -100,7 +100,7 @@ export default class RecommendsList extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { listData, isLoading, pageIndex, hasMore } = this.state;
     if (!isLoading && (listData === null || !listData.length)) return null;
     if (isLoading && pageIndex === 1) return null;

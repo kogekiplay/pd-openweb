@@ -153,7 +153,7 @@ export default class CardToolbar extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { visible } = this.state;
 
     if (!this.toolItems.length) {

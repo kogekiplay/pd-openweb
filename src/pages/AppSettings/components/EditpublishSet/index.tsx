@@ -109,7 +109,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
     this.saveRef = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { fixRemark, fixed, ssoAddress } = this.props.data || {};
     this.setState({ fixed, fixRemark, ssoAddress });
   }
@@ -260,7 +260,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { projectId, appId, data } = this.props;
     const { appDisplay, webMobileDisplay, pcDisplay } = data;
     const { fixRemark, fixed, ssoAddress } = this.state;

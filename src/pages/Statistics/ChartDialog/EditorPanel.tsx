@@ -160,7 +160,7 @@ export default class EditorPanel extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       dataIsUnfold,
       permissionType,

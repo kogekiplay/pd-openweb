@@ -74,7 +74,7 @@ export default class DepartmentTree extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.defaultCheckedDepId) {
       this.handleSelectGroup(this.props.defaultCheckedDepId);
     }
@@ -397,7 +397,7 @@ export default class DepartmentTree extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     let { departmentLoading, department = [] } = this.state;
     return (
       <div className="flexRow h100">

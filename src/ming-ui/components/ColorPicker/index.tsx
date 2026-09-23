@@ -112,7 +112,7 @@ const isColorString = value => {
 };
 
 class ColorPicker extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     visible: PropTypes.bool,
     notTrigger: PropTypes.bool,
     children: PropTypes.node,
@@ -156,7 +156,7 @@ class ColorPicker extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.value !== this.props.value) {
       const { value } = this.props;
       const { color } = this.state;
@@ -270,7 +270,7 @@ class ColorPicker extends Component<any, any> {
     handleClose(stringColor);
   };
 
-  render() {
+  override render() {
     const {
       children,
       className,

@@ -46,7 +46,7 @@ export default class SystemMessage extends Component<any, any> {
       textarea.focus();
     }, 0);
   };
-  render() {
+  override render() {
     const { message, session } = this.props;
     const isFileTransfer = session.id === 'file-transfer';
     return (

@@ -16,7 +16,7 @@ class DialogSelectOrgRole extends Component<any, any> {
     onClose: () => {},
   };
 
-  state = {
+  override state = {
     selectData: [],
     loading: true,
     keywords: '',
@@ -29,7 +29,7 @@ class DialogSelectOrgRole extends Component<any, any> {
 
   promise = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.init();
   }
 
@@ -313,7 +313,7 @@ class DialogSelectOrgRole extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { onClose, projectId, onSave, showCompanyName, orgRoleDialogVisible, overlayClosable } = this.props;
     const { keywords, selectData } = this.state;
     let isShowRole =

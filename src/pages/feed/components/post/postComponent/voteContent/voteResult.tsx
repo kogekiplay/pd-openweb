@@ -8,11 +8,11 @@ import VoteOptionMemberList from './voteOptionMemberList';
  * 投票结果
  */
 class VoteResult extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     voteItem: PropTypes.object.isRequired,
   };
 
-  state = {
+  override state = {
     memberElements: {},
   };
 
@@ -29,7 +29,7 @@ class VoteResult extends React.Component<any, any> {
     this.setState({ memberElements });
   };
 
-  render() {
+  override render() {
     const voteItem = this.props.voteItem;
     return (
       <ul className="voteResult">

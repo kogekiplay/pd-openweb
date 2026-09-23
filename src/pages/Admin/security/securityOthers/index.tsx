@@ -23,7 +23,7 @@ export default class SecurityOthers extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getEnabledNoneVerification();
     this.getOnlyManagerSettings();
     this.getAIModelAuthRuleList();
@@ -102,7 +102,7 @@ export default class SecurityOthers extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const projectId = Config.projectId;
     const {
       noneVerificationEnabled,

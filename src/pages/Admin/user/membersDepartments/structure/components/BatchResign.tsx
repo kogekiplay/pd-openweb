@@ -359,7 +359,7 @@ export default class BatchResign extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     return (
       <Fragment>
         <BatchResignDialogStyle />

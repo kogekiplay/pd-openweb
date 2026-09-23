@@ -83,7 +83,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     this.gunterChartWrapperEl = document.querySelector(`.gunterView-${base.viewId} .gunterChartWrapper`);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.style, prevProps.style)) {
         this.$ref.current.style.transform = null;
@@ -97,7 +97,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeDocumentDragListeners();
     setRecordDragging(false);
     clearInterval(this.timer);
@@ -722,7 +722,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     return <span className="recordTitle overflow_ellipsis">{title || emptyValue}</span>;
   }
 
-  render() {
+  override render() {
     const { tooltipVisible } = this.state;
     const { row, style, onClick, viewConfig, searchRecordId, disable } = this.props;
     const { milepost, startDisable, endDisable } = viewConfig;

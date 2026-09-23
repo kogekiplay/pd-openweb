@@ -45,7 +45,7 @@ export default class Con extends React.Component<any, any> {
     this.props.onAction(action, data);
   };
 
-  render() {
+  override render() {
     const { appId, dataList, roleId, isForPortal, roleList } = this.props;
     const sysList = roleList.filter(o => sysRoleType.includes(o.roleType));
     const List = roleList.filter(o => !sysRoleType.includes(o.roleType));

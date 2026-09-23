@@ -16,7 +16,7 @@ export default class DialogCreateApp extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { appInfo = {} } = this.props;
 
     if (this.inputBox) {
@@ -58,7 +58,7 @@ export default class DialogCreateApp extends Component<any, any> {
 
     this.setState({ isEditSheetName: false });
   };
-  render() {
+  override render() {
     const {
       visible,
       projectId,

@@ -5,7 +5,7 @@ export default class SubLineCount extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { currentReport, onChangeCurrentReport } = this.props;
     const { yaxisList = [] } = currentReport;
     const { lines } = currentReport.pivotTable;

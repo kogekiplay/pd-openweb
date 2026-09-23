@@ -16,7 +16,7 @@ export default class Branch extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { processId, selectNodeId, selectNodeType, instanceId } = this.props;
 
     flowNode
@@ -92,7 +92,7 @@ export default class Branch extends Component<any, any> {
     this.setState({ saveRequest: true });
   };
 
-  render() {
+  override render() {
     const { flowInfo, closeDetail, instanceId } = this.props;
     const { data, controls, name } = this.state;
 

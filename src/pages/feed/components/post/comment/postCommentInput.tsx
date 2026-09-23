@@ -21,14 +21,14 @@ const TEXT_AREA_MAX_HEIGHT = 180;
  * 动态回复输入框
  */
 class PostCommentInput extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     postItem: PropTypes.object,
     onPublished: PropTypes.func,
     focus: PropTypes.bool,
     isPostDetail: PropTypes.bool,
   };
 
-  state = {
+  override state = {
     isEditing: false,
     isReshare: false,
     uploadAttachmentObj: undefined,
@@ -43,11 +43,11 @@ class PostCommentInput extends React.Component<any, any> {
     },
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.initTextarea();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     const postItem = this.props.postItem;
     const isToComment = !!postItem.commentID;
 
@@ -80,7 +80,7 @@ class PostCommentInput extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const textarea = this.textarea;
     const button = this.button;
     textarea.destroy && textarea.destroy();
@@ -319,7 +319,7 @@ class PostCommentInput extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const postItem = this.props.postItem;
     const isToComment = !!postItem.commentID;
     const dropElementID = 'text_' + postItem.postID + '_' + postItem.commentID + 'C';

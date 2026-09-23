@@ -20,7 +20,7 @@ export default class Discussion extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     let hiddenTabs = ['discussPortal', 'approval', 'workflow', 'pay', 'logs']; //工作表讨论暂时不支持外部讨论功能
 
     if (!this.props.discussSwitch) {

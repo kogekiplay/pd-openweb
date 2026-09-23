@@ -46,7 +46,7 @@ let GunterChartHeader = class GunterChartHeader extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { gunterView } = this.props;
     const { loading, periodList, chartScroll } = gunterView;
     const wrapperWidth = periodList.length ? periodList.map(item => item.width).reduce((a, b) => a + b) : 0;

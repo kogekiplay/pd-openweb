@@ -53,7 +53,7 @@ export default class WaitingPay extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (!orderId) {
       alert(_l('传入参数无效'), 3);
       return false;
@@ -320,7 +320,7 @@ export default class WaitingPay extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { payStyle, balanceNotEnough, currRecordObj, needEmail, isPay, loading, balance } = this.state;
 
     if (loading) {

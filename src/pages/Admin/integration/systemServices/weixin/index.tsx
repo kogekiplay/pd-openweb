@@ -57,7 +57,7 @@ export default class WeiXin extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { state, auth_code } = getRequest();
 
     if (window.platformENV.isPlatform && auth_code) {
@@ -221,7 +221,7 @@ export default class WeiXin extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { authLoading } = this.props;
     const { loading, currentAppId, weiXinInfo } = this.state;
 

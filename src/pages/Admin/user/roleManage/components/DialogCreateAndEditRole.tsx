@@ -17,7 +17,7 @@ class DialogCreateAndEditRole extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.input.focus();
   }
 
@@ -132,7 +132,7 @@ class DialogCreateAndEditRole extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { filed, showRoleDialog, treeData } = this.props;
     const { roleName, remark, orgRoleGroupId } = this.state;
     const groupOptions = treeData.map(l => {

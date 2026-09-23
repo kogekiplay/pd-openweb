@@ -13,7 +13,7 @@ export default class GanttHeader extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { type, data, name, switchDisplayType, refresh, exportData, closeLayer, scrollToToday } = this.props;
     return (
       <div className="ganttHeader flexRow">

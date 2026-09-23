@@ -259,7 +259,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { createRecordVisible } = this.state;
     return (
       <Fragment>

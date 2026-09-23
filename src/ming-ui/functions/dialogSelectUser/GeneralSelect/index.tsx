@@ -188,7 +188,7 @@ export default class GeneraSelect extends Component<any, any> {
     return this.promiseObj;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const needUpdate =
         this.props.commonSettings.projectId !== this.commonSettings.projectId ||
@@ -204,13 +204,13 @@ export default class GeneraSelect extends Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown, false);
     this.defaultAction();
     this.focusSearchInput();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
@@ -1717,7 +1717,7 @@ export default class GeneraSelect extends Component<any, any> {
     return undefined;
   }
 
-  render() {
+  override render() {
     return (
       <div className="GSelect-box" ref={this.boxRef}>
         <div className="GSelect-head">{this.renderHead()}</div>

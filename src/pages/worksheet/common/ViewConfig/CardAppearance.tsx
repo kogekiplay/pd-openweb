@@ -71,7 +71,7 @@ const SelectValue = styled(DisplayControlOption)`
 `;
 
 export default class CardAppearance extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
   constructor(props) {
     super(props);
@@ -83,7 +83,7 @@ export default class CardAppearance extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { view } = this.props;
     const { emptyname = '' } = getAdvanceSetting(view);
     this.setState({
@@ -91,7 +91,7 @@ export default class CardAppearance extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { view } = this.props;
       const { emptyname = '' } = getAdvanceSetting(view);
@@ -104,7 +104,7 @@ export default class CardAppearance extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { showChangeName } = this.state;
     const { worksheetControls, currentSheetInfo, updateCurrentView, view, appId, columns } = this.props;
     const allCanSelectFieldsInBoardControls = filterAndFormatterControls({

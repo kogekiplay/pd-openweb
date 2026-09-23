@@ -4,7 +4,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 
 export default class DropDownItem extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     value: PropTypes.any,
     dropDownData: PropTypes.array,
     onChange: PropTypes.func,
@@ -27,7 +27,7 @@ export default class DropDownItem extends Component<any, any> {
     });
     return result;
   }
-  render() {
+  override render() {
     const { className, listWidth, dropDownData, onChange } = this.props;
     const { value } = this.state;
 

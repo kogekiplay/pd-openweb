@@ -80,7 +80,7 @@ export default class ApplyPrivateKey extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { serverId, product, projectName, job, scaleId, licenseVersion, submitLoading } = this.state;
     const privateVersion = getRequest().v;
     const showVersion = privateVersion && parseFloat(privateVersion) >= 5.3;

@@ -18,7 +18,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     this.state = this.generateState(props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState(this.generateState(this.props));
     }
@@ -395,7 +395,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     this.timeOnChange(null, time, index, halfData);
   };
 
-  render() {
+  override render() {
     const classList = ['mui-datetimerangepicker'];
 
     if (this.props.show) {

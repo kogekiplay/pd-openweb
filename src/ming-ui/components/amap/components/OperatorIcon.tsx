@@ -19,7 +19,7 @@ export default class OperatorIcon extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { isMobile, onClose, defaultLocation, setPosition, setZoom } = this.props;
     return (
       <Fragment>

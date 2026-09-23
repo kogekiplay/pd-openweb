@@ -83,7 +83,7 @@ const PERMISSION_WAYS_WITH_UNCHECKED = [
 ];
 
 export default class extends PureComponent<any, any> {
-  static propTypes = {
+  static override propTypes = {
     loading: PropTypes.bool,
     roleDetail: roleDetailPropType,
     onChange: PropTypes.func,
@@ -101,7 +101,7 @@ export default class extends PureComponent<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.loading && !this.props.loading && !_.get(prevProps, 'roleDetail.roleId') && this.input) {
       this.input.select();
     }
@@ -633,7 +633,7 @@ export default class extends PureComponent<any, any> {
     onChange({ [type]: data });
   };
 
-  render() {
+  override render() {
     let {
       roleDetail: { name, description, roleId, hideAppForMembers } = {},
       loading,

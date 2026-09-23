@@ -48,11 +48,11 @@ class Card extends Component<any, any> {
     };
     this.isPublicShare = window.shareAuthor || _.get(window, 'shareState.shareId');
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getData(this.props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.needUpdate !== prevProps.needUpdate ||
@@ -63,7 +63,7 @@ class Card extends Component<any, any> {
       }
     }
   }
-  componentWillUnmount = () => {
+  override componentWillUnmount = () => {
     clearInterval(this.timer);
     this.abortRequest();
   };
@@ -306,7 +306,7 @@ class Card extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { dialogVisible, reportData, settingVisible, scopeVisible, sheetVisible, activeData, isLinkageFilter } =
       this.state;
     const { showTitle = true } = reportData.displaySetup || {};

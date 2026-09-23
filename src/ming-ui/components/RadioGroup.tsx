@@ -18,7 +18,7 @@ const formatData = (value, data) => {
 };
 
 class RadioGroup extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({
         text: PropTypes.any, // Raio显示的名称
@@ -54,13 +54,13 @@ class RadioGroup extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.needDefaultUpdate && typeof this.props.checkedValue !== 'undefined') {
       this.handleClick(this.props.checkedValue);
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.refreshId(this.props.checkedValue, this.props.data);
     }
@@ -82,7 +82,7 @@ class RadioGroup extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { className, vertical, style, radioItemClassName } = this.props;
     const cls = cx('ming RadioGroup', {
       [className]: !!className,

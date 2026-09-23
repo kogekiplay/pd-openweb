@@ -22,7 +22,7 @@ export default class Portal extends Component<any, any> {
       currentTab: 'portal',
     };
   }
-  render() {
+  override render() {
     const { currentTab } = this.state;
     const { projectId } = this.props.match.params;
 

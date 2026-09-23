@@ -69,7 +69,7 @@ const WORKFLOW_TRIGGER_MODE = [
   },
 ];
 export default class CreateFlow extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: string.isRequired,
     onBack: func,
     flowName: string,
@@ -118,7 +118,7 @@ export default class CreateFlow extends Component<any, any> {
     focus ? $ele.classList.add('borderColorPrimary') : $ele.classList.remove('borderColorPrimary');
   };
 
-  render() {
+  override render() {
     const { flowName } = this.state;
     return (
       <FullScreenCurtain>

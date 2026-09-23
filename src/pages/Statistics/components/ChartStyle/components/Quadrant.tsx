@@ -85,7 +85,7 @@ export default class Quadrant extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { quadrant, onChangeQuadrant } = this.props;
     return (
       <Fragment>

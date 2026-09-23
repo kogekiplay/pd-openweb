@@ -20,7 +20,7 @@ import {
 const noCheckConditionAvailable = ['relateSheet', 'rule', 'subTotal', 'custombutton'];
 
 export default class SingleFilter extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isRules: PropTypes.bool,
     controllable: PropTypes.bool,
     feOnly: PropTypes.bool,
@@ -45,7 +45,7 @@ export default class SingleFilter extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.id && this.props.id !== prevProps.id) {
         const formateddata = formatOriginFilterValue({
@@ -189,7 +189,7 @@ export default class SingleFilter extends Component<any, any> {
       );
     });
   }
-  render() {
+  override render() {
     const { from, canEdit, showSystemControls, filterColumnClassName, offset } = this.props;
     let { columns = [] } = this.props;
     const { conditions } = this.state;

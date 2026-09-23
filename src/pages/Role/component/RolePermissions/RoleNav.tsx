@@ -5,7 +5,7 @@ import { WrapNav } from 'src/pages/Role/style';
 import RoleList from './RoleList';
 
 export default class Con extends React.Component<any, any> {
-  render() {
+  override render() {
     const { roleList = [], keywords } = this.props;
     return (
       <WrapNav className="flexColumn">

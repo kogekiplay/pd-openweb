@@ -54,7 +54,7 @@ const DEFAULT_TEXT = {
   extendSourceId: _l('扩展值'),
 };
 class PublicConfig extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     originalControls: PropTypes.arrayOf(PropTypes.shape({})),
     worksheetSettings: PropTypes.shape({}),
     shareUrl: PropTypes.string,
@@ -542,7 +542,7 @@ class PublicConfig extends React.Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const {
       onClose,
       shareUrl,

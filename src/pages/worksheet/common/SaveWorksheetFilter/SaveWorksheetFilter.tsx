@@ -5,7 +5,7 @@ import { Dialog, Input, RadioGroup } from 'ming-ui';
 import './SaveWorksheetFilter.less';
 
 export default class SaveWorksheetFilter extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     title: PropTypes.string,
     visible: PropTypes.bool,
     isCharge: PropTypes.bool,
@@ -21,12 +21,12 @@ export default class SaveWorksheetFilter extends Component<any, any> {
       filterType: props.filterType || 1,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.form) {
       this.form.querySelector('.sheetName').focus();
     }
   }
-  render() {
+  override render() {
     const { title, visible, isCharge, onClose, onSave } = this.props;
     const { filterName, filterType } = this.state;
     return (

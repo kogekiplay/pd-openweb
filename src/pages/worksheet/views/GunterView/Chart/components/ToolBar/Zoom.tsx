@@ -78,7 +78,7 @@ let Zoom = class Zoom extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { periodType } = this.props;
     const { minDayWidth, defaultMinDayWidth } =
       _.find(PERIODS, {

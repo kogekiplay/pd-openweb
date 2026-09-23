@@ -25,17 +25,17 @@ const typeColors = {
 };
 
 class ThumbnailItem extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     attachment: PropTypes.object,
     current: PropTypes.bool,
     onClick: PropTypes.func,
   };
 
-  state = {
+  override state = {
     error: false,
   };
 
-  render() {
+  override render() {
     const MAX_IMG_VIEW_SIZE = 20971520;
     const attachment = this.props.attachment;
     const { previewType, size, name } = attachment;

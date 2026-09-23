@@ -315,7 +315,7 @@ class ImportDepAndPosition extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.importExportResult, this.props.importExportResult)) {
         let { actionResult } = this.props.importExportResult;
@@ -499,7 +499,7 @@ class ImportDepAndPosition extends Component<any, any> {
       );
     }
   };
-  render() {
+  override render() {
     const { importExportType } = this.props;
     let { actionResultStatus } = this.state;
     return (

@@ -29,7 +29,7 @@ export class UploadFileWrapper extends Component<any, any> {
     this.uploading = false;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.files.length !== prevProps.files.length) {
         this.setState({
@@ -339,7 +339,7 @@ export class UploadFileWrapper extends Component<any, any> {
   onRemoveAll(uploader) {
     this.removeFiles(uploader, uploader.files);
   }
-  render() {
+  override render() {
     const { appId, worksheetId, projectId } = this.props;
     const { children, qiniuUploadClassName, className, style } = this.props;
     return (
@@ -502,7 +502,7 @@ export default class AttachmentList extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { attachments } = this.props;
     const emptys = Array.from({ length: 6 });
     return (

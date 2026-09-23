@@ -34,7 +34,7 @@ export default class ChartSort extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { rightY } = this.props.currentReport;
       this.setState({
@@ -380,7 +380,7 @@ export default class ChartSort extends Component<any, any> {
       )
     );
   }
-  render() {
+  override render() {
     const { rightYaxisList } = this.state;
     const { currentReport } = this.props;
     const { xaxes, yaxisList = [], split, rightY, reportType } = currentReport;

@@ -20,7 +20,7 @@ import { TYPE_GROUP, TYPES } from '../constants';
 import InboxFilter from './baseComponent/inboxFilter';
 
 class InboxHeader extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     title: PropTypes.string,
     type: PropTypes.oneOf(_.values(TYPES)),
     inboxFavorite: PropTypes.bool,
@@ -28,7 +28,7 @@ class InboxHeader extends React.Component<any, any> {
     changeFaviorite: PropTypes.func,
   };
 
-  state = {
+  override state = {
     settingVisible: false,
   };
 
@@ -181,7 +181,7 @@ class InboxHeader extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { inboxFavorite, title, filter, currentSession } = this.props;
     const clsNameFunc = flag =>
       cx('inboxItem Hand', {

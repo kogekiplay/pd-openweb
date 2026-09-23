@@ -38,7 +38,7 @@ export default class UploadFile extends Component<any, any> {
     this.state = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.initUpload();
   }
 
@@ -90,7 +90,7 @@ export default class UploadFile extends Component<any, any> {
       },
     });
   }
-  render() {
+  override render() {
     const { style } = this.props;
     const { file = {} } = this.state;
     return file.name ? (

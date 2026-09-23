@@ -37,7 +37,7 @@ let AppPkgHeader = class AppPkgHeader extends Component<any, any> {
 
   // 兼容形如 /worksheet/:worksheetId?的旧工作表路由
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { appId, groupId, worksheetId } = getIds(this.props);
 
@@ -101,7 +101,7 @@ let AppPkgHeader = class AppPkgHeader extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { ...props } = this.props;
     return <AppDetail {...props} />;
   }

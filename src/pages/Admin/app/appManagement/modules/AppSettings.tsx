@@ -30,7 +30,7 @@ export default class AppSettings extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.list !== prevProps.list) {
         this.setState({
@@ -156,7 +156,7 @@ export default class AppSettings extends React.Component<any, any> {
     return undefined;
   }
 
-  render() {
+  override render() {
     const { activeId, list } = this.state;
 
     if (!list.length) {

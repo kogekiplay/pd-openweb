@@ -248,7 +248,7 @@ class UnLockDialog extends Component<any, any> {
     graphicVertify(() => handleRequest('unlock', { appId, password: lockPassword }, this.props));
   };
 
-  render() {
+  override render() {
     const { visible, onCancel = () => {}, sourceType, isOwner, appId, isLock } = this.props;
     const { lockPassword } = this.state;
     const isNormalApp = sourceType === 1;

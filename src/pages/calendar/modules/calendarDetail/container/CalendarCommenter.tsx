@@ -36,7 +36,7 @@ export default class CalendarCommenter extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const {
       calendar: { id, title, discussions, recurTime },
       change,

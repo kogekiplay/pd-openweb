@@ -100,7 +100,7 @@ export class CountryLayer extends Component<any, any> {
     this.CountryLayerChart = null;
     this.DotLayerChart = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     Promise.all([import('@antv/l7plot')]).then(([l7plot]) => {
       this.Choropleth = _.get(l7plot, 'Choropleth.default') || _.get(l7plot, 'default.Choropleth') || l7plot.Choropleth;
       this.DotLayer = _.get(l7plot, 'DotLayer.default') || _.get(l7plot, 'default.DotLayer') || l7plot.DotLayer;
@@ -119,12 +119,12 @@ export class CountryLayer extends Component<any, any> {
       }
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.CountryLayerChart && this.CountryLayerChart.destroy();
     this.resizeObserver && this.resizeObserver.unobserve(this.chartEl);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { style = {}, displaySetup = {} } = this.props.reportData;
       const { style: oldStyle = {}, displaySetup: oldDisplaySetup = {} } = prevProps.reportData;
@@ -707,7 +707,7 @@ export class CountryLayer extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { count, originalCount, dropdownVisible, offset, path } = this.state;
     const { xaxes = {}, displaySetup = {}, country = {}, summary } = this.props.reportData;
     const chooserange = _.get(xaxes, 'advancedSetting.chooserange');

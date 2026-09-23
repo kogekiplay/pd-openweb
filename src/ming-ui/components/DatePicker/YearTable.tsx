@@ -54,7 +54,7 @@ class YearTable extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     // list items
     const list = this.renderList();
 

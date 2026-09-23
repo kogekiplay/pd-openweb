@@ -47,7 +47,7 @@ export default class FeiShu extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getFeishuProjectSettingInfo();
   }
 
@@ -372,7 +372,7 @@ export default class FeiShu extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     const {
       currentTab,

@@ -10,7 +10,7 @@ import { SOURCE_TYPE } from './config';
 import './css/commentList.less';
 
 class CommentList extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     sourceId: PropTypes.string.isRequired,
     sourceType: PropTypes.oneOf(_.values(SOURCE_TYPE)).isRequired,
     pageIndex: PropTypes.number,
@@ -52,14 +52,14 @@ class CommentList extends React.Component<any, any> {
     this.fetch = this.fetch.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.callRef();
     if (!this.props.doNotLoadAtDidMount) {
       this.fetch();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const changeSource = this.props.entityType !== prevProps.entityType || prevProps.sourceId !== this.props.sourceId; //内部和外部讨论 || 源id改变
       //内部和外部讨论 || 源id改变
@@ -193,7 +193,7 @@ class CommentList extends React.Component<any, any> {
     this.props.updateCommentList(commentList);
   };
 
-  render() {
+  override render() {
     const {
       commentList,
       sourceId,

@@ -89,7 +89,7 @@ class PositionContent extends Component<any, any> {
     this.props.updateUserPageIndex(page);
     this.props.getUserList({ pageIndex: page, jobId: currentPosition.jobId });
   };
-  render() {
+  override render() {
     const { currentPosition, allUserCount, userPageIndex, userLoading, selectUserIds, projectId } = this.props;
     return (
       <Fragment>

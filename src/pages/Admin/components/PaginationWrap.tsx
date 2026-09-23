@@ -82,7 +82,7 @@ export default class PaginationWrap extends Component<any, any> {
     return originalElement;
   }
 
-  render() {
+  override render() {
     const { className, total, pageSize, pageIndex, onChange = () => {} } = this.props;
     return (
       <Wrap className={className}>

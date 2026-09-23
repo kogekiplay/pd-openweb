@@ -21,7 +21,7 @@ class ColumnRulesCon extends React.Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.clearColumnRules();
     this.props.updateActiveTab(0);
   }
@@ -76,7 +76,7 @@ class ColumnRulesCon extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       saveLoading,
       addColumnRules,

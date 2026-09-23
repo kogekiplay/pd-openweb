@@ -26,7 +26,7 @@ export default class Action extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -34,7 +34,7 @@ export default class Action extends Component<any, any> {
    * 获取动作详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -449,7 +449,7 @@ export default class Action extends Component<any, any> {
     this.updateSource({ fields });
   };
 
-  render() {
+  override render() {
     const { selectNodeType } = this.props;
     const { data } = this.state;
     const bgClassName = _.includes(

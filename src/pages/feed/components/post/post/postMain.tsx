@@ -12,7 +12,7 @@ import PostMessage from './postMessage';
  * 动态主体内容，包括动态内容和用户头像、姓名和发布到的群组
  */
 class PostMain extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: PropTypes.string,
     children: PropTypes.any,
     postItem: PropTypes.object.isRequired,
@@ -23,7 +23,7 @@ class PostMain extends React.Component<any, any> {
     minHeight: PropTypes.number,
   };
 
-  state = {
+  override state = {
     isFullHeight: false,
     isFastCreate: false,
     left: 0,
@@ -95,7 +95,7 @@ class PostMain extends React.Component<any, any> {
     this.setState({ isFastCreate: !this.state.isFastCreate });
   };
 
-  render() {
+  override render() {
     const postItem = this.props.postItem;
     let fastCreateHtml;
 

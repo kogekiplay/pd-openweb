@@ -5,7 +5,7 @@ import { Menu, MenuItem } from 'ming-ui';
 import { FORMULA } from './enum';
 
 export default class FnList extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     fnmatch: PropTypes.string,
     onClickAwayExceptions: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),
     onClickAway: PropTypes.func,
@@ -16,7 +16,7 @@ export default class FnList extends Component<any, any> {
     keys.splice(5, 0, 'HR-HR');
     return keys;
   }
-  render() {
+  override render() {
     const { fnmatch, onClickAwayExceptions, onClickAway, onFnClick } = this.props;
     const formulaKeys = this.getFormulaKeysWithHr().filter(
       key => key.match(new RegExp('.*' + fnmatch.toUpperCase() + '.*')) || key === 'HR-HR',

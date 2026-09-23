@@ -9,7 +9,7 @@ import WorkSheetItem from './WorkSheetItem';
 
 const ClickAwayable = ClickAway;
 export default class QuerySheet extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     sheetActions: PropTypes.object,
   };
   constructor(props) {
@@ -58,7 +58,7 @@ export default class QuerySheet extends Component<any, any> {
       });
     });
   };
-  render() {
+  override render() {
     const { workSheetList, isLoading, listVisible } = this.state;
     return (
       <div className="querySheet Relative">

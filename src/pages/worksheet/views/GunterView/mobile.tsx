@@ -19,11 +19,11 @@ let MobileGunter = class MobileGunter extends Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.initMobileGunter(data);
   }
 
-  render() {
+  override render() {
     const { loading, views, controls } = this.props;
 
     if (loading) {

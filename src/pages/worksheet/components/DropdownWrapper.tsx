@@ -6,7 +6,7 @@ import './DropdownWrapper.less';
 
 const ClickAwayable = ClickAway;
 export default class DropdownWrapper extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     visible: PropTypes.bool,
     downElement: PropTypes.element,
   };
@@ -16,7 +16,7 @@ export default class DropdownWrapper extends Component<any, any> {
       visible: false,
     };
   }
-  render() {
+  override render() {
     const { children, downElement, className, disabled } = this.props;
     const { visible } = this.state;
     return (

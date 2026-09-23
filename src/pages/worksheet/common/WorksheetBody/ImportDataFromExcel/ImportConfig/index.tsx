@@ -11,7 +11,7 @@ import type { RecordRow } from 'src/utils/controlTypes';
 const titleLineArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const ClickAwayable = ClickAway;
 export default class ImportConfig extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     hideImportConfig: PropTypes.func,
     nextStep: PropTypes.func,
     fileList: PropTypes.any,
@@ -203,7 +203,7 @@ export default class ImportConfig extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { fileName, fileList, hideImportConfig } = this.props;
     const { importSheetIndex, titleLine, selectRow, showCancelDialog, hoverIndex } = this.state;
     const selectSheet = _.find(fileList, item => item.sheetNumber === importSheetIndex) || {};

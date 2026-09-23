@@ -11,11 +11,11 @@ import { pathCompletion } from 'src/utils/common';
 class PostUsernameGroup extends React.Component<any, any> {
   static displayName = 'PostUsernameGroup';
 
-  static propTypes = {
+  static override propTypes = {
     postItem: PropTypes.any.isRequired,
   };
 
-  render() {
+  override render() {
     const { postItem, ...props } = this.props;
 
     const children = [];

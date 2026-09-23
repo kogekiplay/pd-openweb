@@ -7,12 +7,12 @@ import ColumnRulesCon from '../components/columnRules/ColumnRulesCon';
 import * as columnRules from '../components/columnRules/redux/actions/columnRules';
 
 class ColumnRules extends React.Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     const { loadColumnRules } = this.props;
     loadColumnRules(this.props);
   }
 
-  render() {
+  override render() {
     const { formSet } = this.props;
     return (
       <React.Fragment>

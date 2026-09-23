@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './CheckBlock.less';
 
 export default class CheckBlock extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({
         text: PropTypes.string,
@@ -19,7 +19,7 @@ export default class CheckBlock extends React.Component<any, any> {
     onChange: () => {},
   };
 
-  render() {
+  override render() {
     const { data, value, onChange } = this.props;
     return (
       <div className="checkBlock">

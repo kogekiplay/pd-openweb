@@ -22,7 +22,7 @@ class Calender extends Component<any, any> {
    * 生成周数据
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.generateList(this.props);
     }
@@ -439,7 +439,7 @@ class Calender extends Component<any, any> {
     return content;
   };
 
-  render() {
+  override render() {
     const content = this.renderContent();
 
     return <div className="mui-calender">{content}</div>;

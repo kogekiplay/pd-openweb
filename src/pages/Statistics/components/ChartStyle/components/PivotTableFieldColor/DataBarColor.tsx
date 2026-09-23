@@ -18,7 +18,7 @@ export default class DataBarColor extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         const { colorRule } = this.props;
@@ -158,7 +158,7 @@ export default class DataBarColor extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { visible, onCancel } = this.props;
     return (
       <Modal

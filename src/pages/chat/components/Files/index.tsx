@@ -103,7 +103,7 @@ export class FileItem extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { fileType, item } = this.props;
 
     if (fileType === 2) {
@@ -145,7 +145,7 @@ export default class Files extends Component<any, any> {
       loading: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { session } = this.props;
     ajax
       .getFileList({
@@ -161,7 +161,7 @@ export default class Files extends Component<any, any> {
         });
       });
   }
-  render() {
+  override render() {
     const { loading, files } = this.state;
     const { session } = this.props;
     return (

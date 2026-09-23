@@ -11,7 +11,7 @@ export default class CalendarComments extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const $tab = $(this.tab);
     const $bottomLine = $tab.find('.bottomLine');
     $tab.find('li').hover(
@@ -24,7 +24,7 @@ export default class CalendarComments extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { ...others } = this.props;
     const { id, recurTime } = this.props.calendar;
     const sourceId = recurTime ? `${id}|${recurTime}` : id;

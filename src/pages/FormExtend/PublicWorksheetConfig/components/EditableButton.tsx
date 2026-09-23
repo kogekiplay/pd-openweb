@@ -22,7 +22,7 @@ const SubmitButton = styled(Button)`
 `;
 
 export default class EditableButton extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     name: PropTypes.string,
     onChange: PropTypes.func,
     themeBgColor: PropTypes.string,
@@ -35,7 +35,7 @@ export default class EditableButton extends React.Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { name, onChange, themeBgColor } = this.props;
     const { isEditing } = this.state;
     return (

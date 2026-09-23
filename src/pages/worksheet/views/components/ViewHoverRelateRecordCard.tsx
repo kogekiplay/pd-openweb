@@ -120,7 +120,7 @@ export default class ViewHoverRelateRecordCard extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { popupVisible, previewRecordId } = this.state;
     const { children, control = {} } = this.props;
     const { showControls = [], advancedSetting } = control;

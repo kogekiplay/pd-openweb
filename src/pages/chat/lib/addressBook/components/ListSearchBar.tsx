@@ -22,7 +22,7 @@ export default class SearchBar extends React.Component<any, any> {
     this.searchHandler = this.searchHandler.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.keywords !== prevProps.keywords) {
         this.setState({
@@ -32,7 +32,7 @@ export default class SearchBar extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.search && this.search.cancel) {
       this.search.cancel();
     }
@@ -81,7 +81,7 @@ export default class SearchBar extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { type } = this.props;
     const isGroup = type === 'groups';
     const isFriend = type === 'friends';

@@ -80,7 +80,7 @@ export default class WorkSheetCommentList extends Component<any, any> {
     });
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const { listRef } = this.props;
 
     if (listRef) {
@@ -93,7 +93,7 @@ export default class WorkSheetCommentList extends Component<any, any> {
     this.getFollower();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       //内部和外部讨论切换
       if (this.props.entityType !== prevProps.entityType) {
@@ -117,7 +117,7 @@ export default class WorkSheetCommentList extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     emitter.removeListener('RELOAD_RECORD_INFO_DISCUSS', this.reload);
   }
 
@@ -364,7 +364,7 @@ export default class WorkSheetCommentList extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       worksheet: { projectId, worksheetId, rowId, appId, appName, appSectionId, viewId, title, doNotLoadAtDidMount },
       change,

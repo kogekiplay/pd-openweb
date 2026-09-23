@@ -33,13 +33,13 @@ class Time extends Component<any, any> {
     this.root = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     window.addEventListener('mousedown', this.clickListener, false);
 
     window.addEventListener('keydown', this.keyDownListener, false);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== this.state.value) {
         const value = this.props.value || {
@@ -56,7 +56,7 @@ class Time extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('mousedown', this.clickListener, false);
 
     window.removeEventListener('keydown', this.keyDownListener, false);
@@ -124,7 +124,7 @@ class Time extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const classList = ['mui-time'];
 
     if (this.state.menuOpened && this.button) {

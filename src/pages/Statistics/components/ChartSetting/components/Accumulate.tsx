@@ -90,7 +90,7 @@ export default class Accumulate extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { allControls, currentReport } = this.props;
     const { showControlVisible, showOptionIds } = this.state;
     const { xaxes, displaySetup } = currentReport;

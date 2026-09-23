@@ -13,13 +13,13 @@ class WidgetsDesc extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.formcon && this.formcon.clientHeight <= 48 && this.formconMoreDesc) {
       this.formconMoreDesc.style.display = 'none';
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     if (
       !_.isEqual(_.pick(nextProps, ['desc']), _.pick(this.props, ['desc'])) ||
       !_.isEqual(_.pick(nextState, ['isShow']), _.pick(this.state, ['isShow']))
@@ -30,7 +30,7 @@ class WidgetsDesc extends React.Component<any, any> {
     return false;
   }
 
-  render() {
+  override render() {
     const { item, from } = this.props;
     const { isShow } = this.state;
     const isMobile = browserIsMobile();

@@ -12,7 +12,7 @@ function supportsVideo() {
 }
 
 class VideoPlayer extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     src: PropTypes.string,
     attachment: PropTypes.object,
     changeStateOfAttachment: PropTypes.func,
@@ -23,11 +23,11 @@ class VideoPlayer extends Component<any, any> {
       showMask: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.loadVideo(this.props.src);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.src !== prevProps.src) {
         this.loadVideo(this.props.src);
@@ -57,7 +57,7 @@ class VideoPlayer extends Component<any, any> {
     newAttachment.msg = _l('此文件格式不支持在线播放，您可以下载后使用其他应用打开');
     this.props.changeStateOfAttachment();
   }
-  render() {
+  override render() {
     const { canDownload } = this.props;
     return (
       <div className="videoPlayer">

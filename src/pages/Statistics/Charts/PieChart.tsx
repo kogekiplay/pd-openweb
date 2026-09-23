@@ -57,7 +57,7 @@ export default class extends Component<any, any> {
     this.PieComponent = null;
     this.isUnmounted = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     loadG2Plot().then(data => {
       if (this.isUnmounted) {
         return;
@@ -67,11 +67,11 @@ export default class extends Component<any, any> {
       this.renderPieChart();
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     this.destroyPieChart();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { displaySetup, style } = this.props.reportData;
     const { displaySetup: oldDisplaySetup, style: oldStyle } = prevProps.reportData;
     const shouldRecreate =
@@ -454,7 +454,7 @@ export default class extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { count, originalCount, dropdownVisible, offset } = this.state;
     const { summary, displaySetup } = this.props.reportData;
     const showTotal = displaySetup ? displaySetup.showTotal : false;

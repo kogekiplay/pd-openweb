@@ -43,7 +43,7 @@ class AppHome extends React.Component<any, any> {
     this.handleScroll = _.debounce(this.handleScroll.bind(this), 300);
     this.isSetScrollTop = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('appHomeMobile');
     this.getProject();
 
@@ -52,12 +52,12 @@ class AppHome extends React.Component<any, any> {
     // 清除工作表滚动条高度
     this.props.updateAppScrollY(0);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('appHomeMobile');
     window.removeEventListener('popstate', this.closePage);
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     const { isHomeLoading, appHomeScrollY } = this.props;
 
     if (
@@ -554,7 +554,7 @@ class AppHome extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { searchValue } = this.state;
 
     const projectObj = getCurrentProject(

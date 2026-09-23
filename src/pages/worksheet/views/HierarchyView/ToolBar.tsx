@@ -118,7 +118,7 @@ export default class ToolBar extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 初始化时不显示导出图片
     setTimeout(() => {
       this.setState({
@@ -127,7 +127,7 @@ export default class ToolBar extends Component<any, any> {
     }, 200);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
   }
 
@@ -171,7 +171,7 @@ export default class ToolBar extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       className,
       style = {},

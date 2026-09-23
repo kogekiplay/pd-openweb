@@ -24,7 +24,7 @@ const handleEnumText = {
   3: _l('仅更新'),
 };
 export default class ConfigControl extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: PropTypes.string,
     worksheetId: PropTypes.string,
     isFromRelateRecord: PropTypes.bool,
@@ -107,7 +107,7 @@ export default class ConfigControl extends Component<any, any> {
   cacheSource = null;
   hasRecordId = {};
 
-  componentDidMount() {
+  override componentDidMount() {
     const { appId, worksheetId } = this.props;
     this.getWorksheetInfo({ appId, worksheetId });
   }
@@ -1109,7 +1109,7 @@ export default class ConfigControl extends Component<any, any> {
       .join('、');
   }
 
-  render() {
+  override render() {
     const { onCancel, isCharge } = this.props;
     const {
       dropDownData,

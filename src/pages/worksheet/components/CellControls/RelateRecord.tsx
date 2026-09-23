@@ -34,8 +34,8 @@ const RecordCardCellRelateRecord = styled.div`
   margin-right: 6px;
 `;
 export default class RelateRecord extends React.Component<any, any> {
-  static contextType = SheetContext;
-  static propTypes = {
+  static override contextType = SheetContext;
+  static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),
     singleLine: PropTypes.bool,
@@ -57,7 +57,7 @@ export default class RelateRecord extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.cell.value !== this.props.cell.value) {
         this.setState({
@@ -67,7 +67,7 @@ export default class RelateRecord extends React.Component<any, any> {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     return (
       this.props.isediting !== nextProps.isediting ||
       (nextProps.from === 4 && this.props.cell.value !== nextProps.cell.value) ||
@@ -296,7 +296,7 @@ export default class RelateRecord extends React.Component<any, any> {
     updateEditingStatus(false);
   };
 
-  render() {
+  override render() {
     const {
       projectId,
       appId,

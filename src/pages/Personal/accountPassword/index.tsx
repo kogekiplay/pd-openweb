@@ -114,7 +114,7 @@ export default class AccountChart extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -445,7 +445,7 @@ export default class AccountChart extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       email,
       mobilePhone,

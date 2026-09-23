@@ -17,7 +17,7 @@ export default class SelectTimezone extends PureComponent<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { data } = this.props;
     let { value, text } = this.getDefaultTimezone();
     return (

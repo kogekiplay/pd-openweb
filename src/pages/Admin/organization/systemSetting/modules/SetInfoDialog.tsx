@@ -47,7 +47,7 @@ export default class SetInfoDialog extends Component<any, any> {
     this.searchRequest = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getRegionConfigInfos();
     this.getTimeZones();
   }
@@ -326,7 +326,7 @@ export default class SetInfoDialog extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { visible } = this.state;
     return (
       <Dialog

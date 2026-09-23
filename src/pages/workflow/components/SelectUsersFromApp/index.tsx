@@ -6,7 +6,7 @@ import { getTranslateInfo } from 'src/utils/app';
 import './index.less';
 
 export default class SelectUsersFromApp extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: PropTypes.string,
     companyId: PropTypes.string.isRequired,
     onOk: PropTypes.func,
@@ -31,7 +31,7 @@ export default class SelectUsersFromApp extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { selectAppId } = this.state;
 
     this.getAppList();
@@ -162,7 +162,7 @@ export default class SelectUsersFromApp extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { appList } = this.state;
 
     return (

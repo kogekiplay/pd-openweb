@@ -36,7 +36,7 @@ class ChatPanelHeader extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!this.props.searchText) {
         this.setState({
@@ -285,7 +285,7 @@ class ChatPanelHeader extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { infoVisible, session, isWindow, isOpenFile, socketState } = this.props;
     const { searchVisible, focus, value } = this.state;
     const name = session.name || session.fullname;

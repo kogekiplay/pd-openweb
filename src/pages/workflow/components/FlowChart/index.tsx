@@ -72,14 +72,14 @@ const Legend = styled.div`
 `;
 
 export class FlowChart extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: string.isRequired,
     processId: string.isRequired,
     instanceId: string.isRequired,
     selectNodeId: string,
   };
 
-  state = {
+  override state = {
     scale: 100,
     parentId: '',
     startEventId: '',
@@ -89,7 +89,7 @@ export class FlowChart extends Component<any, any> {
     execLineComplete: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const { processId, instanceId } = this.props;
 
     flowNode.get({ processId, instanceId }).then(result => {
@@ -103,7 +103,7 @@ export class FlowChart extends Component<any, any> {
     });
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     const { execIds, execPendingIds } = this.state;
 
     if (!this.state.execLineComplete) {
@@ -328,7 +328,7 @@ export class FlowChart extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { processId } = this.props;
     const { scale, startEventId, flowNodeMap, execPendingIds } = this.state;
     const isMobile = browserIsMobile();

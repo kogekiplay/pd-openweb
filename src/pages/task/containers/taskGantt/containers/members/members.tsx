@@ -14,7 +14,7 @@ class Members extends Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 竖着滚动对应右侧竖着滚动
     $(this.ganttMembersList).on({
       mouseover() {
@@ -118,7 +118,7 @@ class Members extends Component<any, any> {
     return count;
   }
 
-  render() {
+  override render() {
     const { accountTasksKV } = this.props;
     return (
       <div className="ganttMembers">

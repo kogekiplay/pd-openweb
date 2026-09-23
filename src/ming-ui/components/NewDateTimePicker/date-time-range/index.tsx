@@ -15,13 +15,13 @@ class DateTimeRange extends Component<any, any> {
     this.state = this.generateState(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.defaultVisible) {
       this.showMenu();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.selectedValue, prevProps.selectedValue)) {
         this.setState(this.generateState(this.props));
@@ -141,7 +141,7 @@ class DateTimeRange extends Component<any, any> {
     this.props.onVisibleChange(false);
   };
 
-  render() {
+  override render() {
     const min = this.props.min ? this.props.min.toDate() : null;
     const max = this.props.max ? this.props.max.toDate() : null;
 

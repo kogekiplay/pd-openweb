@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Checkbox, Dialog } from 'ming-ui';
 
 export default class PrintOptDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     visible: PropTypes.any,
     reqInfo: PropTypes.any,
     printCheckAll: PropTypes.any,
@@ -229,7 +229,7 @@ export default class PrintOptDialog extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { options } = this.state;
     const { type } = this.props;
     return (

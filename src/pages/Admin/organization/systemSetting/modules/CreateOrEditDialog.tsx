@@ -13,7 +13,7 @@ export default class SiteName extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         workSiteName: this.props.workSiteId ? this.props.workSiteName : '',
@@ -67,7 +67,7 @@ export default class SiteName extends Component<any, any> {
     }, 3000);
   }
 
-  render() {
+  override render() {
     return (
       <Dialog
         visible={this.props.visible}

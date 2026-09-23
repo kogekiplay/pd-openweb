@@ -513,7 +513,7 @@ class RecordCalendarBase extends Component<any, any> {
       isMove: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({
       canNew: getCanCreateRecord(this.props),
     });
@@ -523,7 +523,7 @@ class RecordCalendarBase extends Component<any, any> {
     this.getEventsFn();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { base, calendarview = {}, height, sheetSwitchPermit } = this.props;
 
@@ -921,7 +921,7 @@ class RecordCalendarBase extends Component<any, any> {
     this.props.fetchExternal();
   };
 
-  render() {
+  override render() {
     const {
       toCustomWidget,
       worksheetInfo,

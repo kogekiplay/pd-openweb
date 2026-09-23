@@ -14,7 +14,7 @@ export default class ganttContent extends Component<any, any> {
    * 1. 绑定滚动事件以实现同步滚动
    * 2. 重新计算甘特图的背景高度
    */
-  componentDidMount() {
+  override componentDidMount() {
     const $taskList = document.querySelector('.taskListWrap');
     this.graphWrap.addEventListener('scroll', e => {
       e.currentTarget.className == config.scrollingEle && ($taskList.scrollTop = e.target.scrollTop);
@@ -68,11 +68,11 @@ export default class ganttContent extends Component<any, any> {
     $bg.style.height = $taskListWrap.style.height = Math.max(contentHeight, wrapHeight) + 'px';
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.computeBgHeight();
   }
 
-  render() {
+  override render() {
     const { type, beginTime, endTime, ...rest } = this.props;
 
     /**

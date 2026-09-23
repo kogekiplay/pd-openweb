@@ -80,7 +80,7 @@ export default class WorksheetItem extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.computeDirectionVisible();
     }
@@ -142,7 +142,7 @@ export default class WorksheetItem extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       excelDetailData: sheetList,
       currentSheetInfo = {},

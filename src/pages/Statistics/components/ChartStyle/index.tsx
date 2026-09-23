@@ -673,7 +673,7 @@ let ChartStyle = class ChartStyle extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { currentReport, sourceType } = this.props;
     const { reportType } = currentReport;
     return (

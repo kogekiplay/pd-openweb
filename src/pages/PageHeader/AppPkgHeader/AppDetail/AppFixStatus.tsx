@@ -16,7 +16,7 @@ export default class AppFixStatus extends Component<any, any> {
       fixRemark: props.fixRemark || '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     let appFixTextarea = document.getElementById('appFixTextarea');
     appFixTextarea.focus();
   }
@@ -83,7 +83,7 @@ export default class AppFixStatus extends Component<any, any> {
       );
     }
   }
-  render() {
+  override render() {
     const { fixRemark } = this.state;
     const { fixed, onCancel } = this.props;
     const options = {

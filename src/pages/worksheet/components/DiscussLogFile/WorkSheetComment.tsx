@@ -14,7 +14,7 @@ const discussTypes = [
   { id: 2, name: 'discussPortal', text: _l('外部门户') },
 ];
 export default class WorkSheetComment extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: PropTypes.string,
     worksheetId: PropTypes.string,
     appSectionId: PropTypes.string,
@@ -30,7 +30,7 @@ export default class WorkSheetComment extends React.Component<any, any> {
       disType: md.global.Account.isPortal && props.exAccountDiscussEnum === 1 ? 2 : 1, //外部门户且不可见内部讨论 则直接显示外部讨论
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId, worksheetId, appSectionId, disableScroll } = this.props;
 
     if (this.scrollView && disableScroll) {
@@ -49,14 +49,14 @@ export default class WorkSheetComment extends React.Component<any, any> {
     this.getAtData();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.formFlag !== prevProps.formFlag || !_.isEqual(prevProps.formdata, this.props.formdata)) {
         this.getAtData(this.props);
       }
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.$scrollCon) {
       this.$scrollCon.removeEventListener('scroll', this.handleRecordRightContentScroll);
     }
@@ -152,7 +152,7 @@ export default class WorkSheetComment extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       instanceId,
       workId,

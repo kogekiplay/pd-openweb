@@ -46,7 +46,7 @@ class EditFlow extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { selectNodeId } = this.state;
 
     this.changeScreenWidth();
@@ -59,7 +59,7 @@ class EditFlow extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(prevProps, this.props) || prevState.scale !== this.state.scale) {
       this.changeScreenWidth();
       this.setViewCenter();
@@ -567,7 +567,7 @@ class EditFlow extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { flowInfo, workflowDetail, urlParams, isPlugin } = this.props;
     const {
       nodeId,

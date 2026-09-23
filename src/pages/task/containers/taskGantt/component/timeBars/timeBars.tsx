@@ -155,11 +155,11 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.noDateListAlignLeft();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     if (
       _.isEqual(nextProps.data, this.props.data) &&
       this.props.viewType === nextProps.viewType &&
@@ -177,7 +177,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
     return true;
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.noDateListAlignLeft();
   }
 
@@ -688,7 +688,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { data, viewType, connectDragSource, dragTaskId } = this.props;
     const timeBarStyle = this.getColorBlockStyle();
     const offset = [this.state.offsetX, 1];

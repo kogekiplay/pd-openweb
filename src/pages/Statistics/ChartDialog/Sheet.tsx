@@ -66,7 +66,7 @@ let ChartSheet = class ChartSheet extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.loading && !this.props.loading) {
         this.getTableData(this.props);
@@ -79,7 +79,7 @@ let ChartSheet = class ChartSheet extends Component<any, any> {
     return ![reportTypes.PivotTable].includes(currentReport.reportType);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { loading } = this.props;
 
     if (!loading) {
@@ -279,7 +279,7 @@ let ChartSheet = class ChartSheet extends Component<any, any> {
     return undefined;
   }
 
-  render() {
+  override render() {
     const { style, isSmall, base } = this.props;
     return (
       <Con

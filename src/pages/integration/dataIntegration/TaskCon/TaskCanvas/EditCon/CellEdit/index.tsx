@@ -114,7 +114,7 @@ export default class CellEdit extends Component<any, any> {
       tab: 0,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { node = {} } = this.props;
     const { nodeType = '' } = node;
 
@@ -131,7 +131,7 @@ export default class CellEdit extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.node, this.props.node) || !_.isEqual(prevProps, this.props)) {
         this.setState(
@@ -359,7 +359,7 @@ export default class CellEdit extends Component<any, any> {
       </span>
     );
   };
-  render() {
+  override render() {
     const { onClose, onSave, list, flowData = {}, currentProjectId } = this.props;
     const { srcIsDb } = flowData;
     const { node = {}, loading, sheetName, isEr, fileList, tab, fieldsBysource } = this.state;

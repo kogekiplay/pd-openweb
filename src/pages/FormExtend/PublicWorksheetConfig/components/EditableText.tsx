@@ -33,7 +33,7 @@ const NewTextarea = styled(Textarea)`
 `;
 
 export default class EditableText extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: PropTypes.string,
     mutiLine: PropTypes.bool, // 多行
     turnLine: PropTypes.bool, // 多行呈现换行
@@ -51,7 +51,7 @@ export default class EditableText extends React.Component<any, any> {
       editting: false,
     };
   }
-  render() {
+  override render() {
     const { mutiLine, turnLine, minHeight, maxLength, className, emptyTip, style, value, onChange } = this.props;
     const { inputvalue, editting } = this.state;
     return (

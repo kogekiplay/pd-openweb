@@ -31,8 +31,8 @@ function getPopupContainer(popupContainer, rows) {
 
 // enumDefault 单选 0 多选 1
 export default class User extends React.Component<any, any> {
-  static contextType = ChildTableContext;
-  static propTypes = {
+  static override contextType = ChildTableContext;
+  static override propTypes = {
     className: PropTypes.string,
     singleLine: PropTypes.bool,
     style: PropTypes.shape({}),
@@ -54,7 +54,7 @@ export default class User extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value) {
         this.setState({
@@ -346,7 +346,7 @@ export default class User extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const {
       className,
       error,

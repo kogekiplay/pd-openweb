@@ -21,7 +21,7 @@ const SCORE_TEXT = [
   _l('十级'),
 ];
 export default class Options extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
     control: PropTypes.shape({}),
@@ -40,7 +40,7 @@ export default class Options extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.fullValues, prevProps.fullValues)) {
         this.setState({
@@ -365,7 +365,7 @@ export default class Options extends Component<any, any> {
       );
     }
   };
-  render() {
+  override render() {
     return (
       <div
         className="worksheetFilterOptionsCondition"

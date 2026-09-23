@@ -159,7 +159,7 @@ const ColumnSettingWrap = styled.div`
 `;
 
 class ConfigPanel extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     worksheetInfo: PropTypes.shape({}),
     worksheetSettings: PropTypes.shape({}),
     shareUrl: PropTypes.string,
@@ -272,7 +272,7 @@ class ConfigPanel extends React.Component<any, any> {
     this.setState({ activeColumn: -1 });
   };
 
-  render() {
+  override render() {
     const {
       loading,
       worksheetInfo,

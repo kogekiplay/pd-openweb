@@ -155,11 +155,11 @@ export default class extends Component<any, any> {
       newYaxisList: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.setCount(this.props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.reportData.yaxisList, prevProps.reportData.yaxisList)) {
         this.setCount(this.props);
@@ -429,7 +429,7 @@ export default class extends Component<any, any> {
       </TopChartContent>
     );
   }
-  render() {
+  override render() {
     const { count, originalCount, dropdownVisible, offset } = this.state;
     const { summary, displaySetup = {} } = this.props.reportData;
     const showTotal = displaySetup.showTotal && !_.isEmpty(summary);

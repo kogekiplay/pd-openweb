@@ -49,13 +49,13 @@ class PortalMessage extends Component<{ dispatch: AppDispatch; [key: string]: an
       count: 0,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     // 注册事件
     socketEvent.socketInitEvent.call(this);
     this.getChatCount();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { sessionList = [] } = this.props;
       const count = (sessionList.find(o => o.value === 'worksheet') || {}).count;
@@ -84,7 +84,7 @@ class PortalMessage extends Component<{ dispatch: AppDispatch; [key: string]: an
         }
       });
   };
-  render() {
+  override render() {
     const { rp } = getAppFeaturesVisible();
     const { isMobile, color } = this.props;
     const { count = 0 } = this.state;

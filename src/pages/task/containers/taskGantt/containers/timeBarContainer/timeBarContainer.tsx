@@ -28,7 +28,7 @@ class TimeBarContainer extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const that = this;
     // 竖着滚动对应左侧竖着滚动  横向滚动对应时间条滚动
     $(this.timeBarContainer).on({
@@ -252,7 +252,7 @@ class TimeBarContainer extends Component<any, any> {
     this.setState({ openTaskDetail: true, taskId });
   };
 
-  render() {
+  override render() {
     const { accountTasksKV, stateConfig, timeAxisSource } = this.props;
     const currentView = stateConfig.currentView;
     const filterWeekend = stateConfig.filterWeekend;

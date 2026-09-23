@@ -369,7 +369,7 @@ export default class TransactionDetails extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getDataList();
     this.getPayOrderSummary();
   }
@@ -815,7 +815,7 @@ export default class TransactionDetails extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { projectId, changeShowHeader = () => {} } = this.props;
     const {
       loading,

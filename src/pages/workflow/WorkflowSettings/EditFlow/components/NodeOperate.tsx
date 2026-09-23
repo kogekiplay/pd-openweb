@@ -454,7 +454,7 @@ export default class NodeOperate extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { item, nodeClassName, noCopy, nodeStyle = {} } = this.props;
 
     return (

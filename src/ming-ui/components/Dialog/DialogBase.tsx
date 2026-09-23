@@ -8,7 +8,7 @@ import '../less/Dialog.less';
 const dialogContainerPadding = 32;
 
 class DialogBase extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 弹窗叠弹窗错位
      */
@@ -120,7 +120,7 @@ class DialogBase extends Component<any, any> {
     document.body.appendChild(this.target);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     window.addEventListener('resize', this.autoPosition);
     this.autoPosition();
     if (window.closeFns) {
@@ -134,7 +134,7 @@ class DialogBase extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.type !== prevProps.type) {
         this.autoPosition();
@@ -144,7 +144,7 @@ class DialogBase extends Component<any, any> {
     this.autoPosition();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('resize', this.autoPosition);
 
     if (this.props.dislocate && window.dislocateCount) {
@@ -253,7 +253,7 @@ class DialogBase extends Component<any, any> {
     this._dialog.style.width = `${dialogWidth}px`;
   };
 
-  render() {
+  override render() {
     const { autoZIndex, dialogClasses, containerClassName, style, overlayClosable } = this.props;
     const { dislocateIndex } = this.state;
     const dialogContainerStyle: React.CSSProperties = {};

@@ -24,10 +24,10 @@ class DiscussList extends Component<any, any> {
       accountId: null,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getSheetDiscussion(this.state.pageIndex);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
     this.props.dispatch(actions.emptySheetDiscussion());
   }
@@ -150,7 +150,7 @@ class DiscussList extends Component<any, any> {
       </List.Item>
     );
   }
-  render() {
+  override render() {
     const { loading, isMore, personalInfoVisible, accountId } = this.state;
     const { sheetDiscussions, appId, projectId } = this.props;
 

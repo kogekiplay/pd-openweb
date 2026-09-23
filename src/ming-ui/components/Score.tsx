@@ -6,7 +6,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import './less/Score.less';
 
 class Score extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 类型
      */
@@ -76,7 +76,7 @@ class Score extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if ('score' in this.props) {
         this.setState({
@@ -167,7 +167,7 @@ class Score extends Component<any, any> {
       </Tooltip>
     );
   }
-  render() {
+  override render() {
     const { count, type } = this.props;
     const list = Array.from({ length: count });
     return (

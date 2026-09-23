@@ -6,7 +6,7 @@ export default class DetailDialog extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { typeName, data = [], url, urlDetail } = this.props;
     return (
       <div className="mationBox pBottom20">

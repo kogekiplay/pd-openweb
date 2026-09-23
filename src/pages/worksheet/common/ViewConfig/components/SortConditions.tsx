@@ -147,7 +147,7 @@ const Item = props => {
 };
 
 export default class SortConditions extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     showSystemControls: PropTypes.bool,
     sortConditions: PropTypes.arrayOf(PropTypes.shape({})),
     columns: PropTypes.arrayOf(PropTypes.shape({})),
@@ -164,7 +164,7 @@ export default class SortConditions extends React.Component<any, any> {
     this.state = this.getNewState(props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(prevProps.sortConditions, this.props.sortConditions) ||
@@ -323,7 +323,7 @@ export default class SortConditions extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { className } = this.props;
     return <ConditionsWrap className={cx(className, 'sortConditions')}>{this.renderConditions()}</ConditionsWrap>;
   }

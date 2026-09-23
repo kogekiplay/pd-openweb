@@ -6,7 +6,7 @@ import { isOldSheetList } from 'src/pages/widgetConfig/util';
 import PublicFormDisplay from '../../widgetConfig/widgetDisplay/publicFormDisplay';
 
 export default class FormPreview extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     controls: PropTypes.arrayOf(PropTypes.shape({})),
     onChange: PropTypes.func,
     onHideControl: PropTypes.func,
@@ -23,7 +23,7 @@ export default class FormPreview extends React.Component<any, any> {
     this.state = {};
   }
 
-  render() {
+  override render() {
     const { advancedSetting, controls, onChange, onHideControl } = this.props;
     return (
       <div className="customWidgetForWorksheetWrap publicWorksheetForm">

@@ -30,7 +30,7 @@ class CreatePrintDrawer extends React.Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const {
       worksheetProjectId,
       onCloseDrawer,
@@ -147,7 +147,7 @@ class Print extends React.Component<any, any> {
       showCloudPrint: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { worksheetId } = this.props;
     this.loadPrint({ worksheetId: worksheetId }); // 获取当前模板
     this.checkedCloudPrint();
@@ -480,7 +480,7 @@ class Print extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       loading,
       previewRowId = '',

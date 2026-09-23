@@ -14,7 +14,7 @@ export const getConfirmDisable = ({ select = [], mustLast, level = 3 }) => {
 };
 
 export default class MobileCityPicker extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     placeholder: PropTypes.string,
     defaultValue: PropTypes.any,
@@ -115,7 +115,7 @@ export default class MobileCityPicker extends Component<any, any> {
     return <MobileSearch onSearch={(keywords: string) => this.handleSearch(keywords)} />;
   }
 
-  render() {
+  override render() {
     const {
       disabled,
       children,

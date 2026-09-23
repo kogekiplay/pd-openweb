@@ -44,7 +44,7 @@ export default class PersonalInfo extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -390,7 +390,7 @@ export default class PersonalInfo extends React.Component<any, any> {
     alert(_l('复制成功'));
   };
 
-  render() {
+  override render() {
     const { accountInfo, loading, educationList, workList, baseDetail, editFullName, isErr } = this.state;
 
     if (loading) {

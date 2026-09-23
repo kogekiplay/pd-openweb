@@ -62,7 +62,7 @@ export default class EditCardInfo extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const { contactPhone } = this.state;
     return (
       <div className="editEnterpriseCardInfo clearfix">

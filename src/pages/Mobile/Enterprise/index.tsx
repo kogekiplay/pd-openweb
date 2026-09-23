@@ -125,7 +125,7 @@ class ProjectCard extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { item, checkedProjectId } = this.props;
     const { visible, loading } = this.state;
     return (
@@ -192,7 +192,7 @@ class Enterprise extends Component<any, any> {
       checkedProjectId: currentProject.projectId,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getProjectList();
   }
 
@@ -250,7 +250,7 @@ class Enterprise extends Component<any, any> {
       </Fragment>
     );
   };
-  render() {
+  override render() {
     const { loading, projectList = [], checkedProjectId } = this.state;
     const projectObj = getCurrentProject(
       localStorage.getItem('currentProjectId') || (md.global.Account.projects[0] || {}).projectId,

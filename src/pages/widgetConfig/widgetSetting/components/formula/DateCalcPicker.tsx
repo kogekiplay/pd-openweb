@@ -9,7 +9,7 @@ import { getIconByType } from 'src/pages/widgetConfig/util';
 import './DateCalcPicker.less';
 
 export default class DateCalcPicker extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     value: PropTypes.string, // 选中值 可以为 日期字符串 id 或 $id$
     widgets: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // widgets editWidgets 或 control 数组
     onChange: PropTypes.func.isRequired, //  返回 value
@@ -128,7 +128,7 @@ export default class DateCalcPicker extends Component<any, any> {
       }));
   }
 
-  render() {
+  override render() {
     const { emptyText } = this.props;
     let { value } = this.props;
     const { showMenu } = this.state;

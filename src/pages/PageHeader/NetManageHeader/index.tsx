@@ -53,9 +53,9 @@ const PAGE_HEADER_ROUTE = {
 // 段，写清楚实际形状比在调用处 String() 强转诚实。
 const fn = match<{ roleType: string; projectId: string }>('/admin/:roleType/:projectId', { decode: false });
 export default class NetManageHeader extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
-  state = {
+  override state = {
     indexSideVisible: false,
   };
 
@@ -71,7 +71,7 @@ export default class NetManageHeader extends Component<any, any> {
     if (_.includes(PAGE_HEADER_ROUTE.certification, path)) return 'certification';
     return '';
   };
-  render() {
+  override render() {
     const text = MODULE_TO_TEXT[this.getModule()];
     return (
       <div className="netManageHeaderWrap">

@@ -250,7 +250,7 @@ export default class RefundOrder extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getDataList();
   }
 
@@ -652,7 +652,7 @@ export default class RefundOrder extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     const { loading, list, count, pageIndex, searchValues } = this.state;
 

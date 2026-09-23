@@ -79,7 +79,7 @@ export default class AddEditRulesDialog extends Component<any, any> {
       cipherMode: 1,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.handleDefaultRuleName();
   }
 
@@ -272,7 +272,7 @@ export default class AddEditRulesDialog extends Component<any, any> {
     this.setState({ ruleName });
   };
 
-  render() {
+  override render() {
     const { type, visible, projectId, onCancel } = this.props;
     const {
       status,

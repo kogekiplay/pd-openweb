@@ -27,7 +27,7 @@ class SheetRows extends Component<any, any> {
 
   scrollViewRef = React.createRef();
 
-  componentDidMount() {
+  override componentDidMount() {
     this.intervalId = setInterval(() => {
       const scrollInfo = this.scrollViewRef.current?.getScrollInfo?.();
 
@@ -39,7 +39,7 @@ class SheetRows extends Component<any, any> {
     }, 50);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
@@ -187,7 +187,7 @@ class SheetRows extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       currentSheetRows,
       sheetRowLoading,

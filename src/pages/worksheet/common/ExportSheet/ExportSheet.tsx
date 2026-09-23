@@ -13,7 +13,7 @@ import { isRelateRecordTableControl } from 'src/utils/control';
 import './ExportSheet.less';
 
 export default class ExportSheet extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     allCount: PropTypes.number,
     sheetHiddenColumns: PropTypes.array,
     // 同上：PropTypes.boolean 不存在，正确是 bool。
@@ -67,7 +67,7 @@ export default class ExportSheet extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { columns, worksheetId, exportView, isCharge } = this.props;
     let { columnsSelected } = this.state;
     let exportId = false;
@@ -393,7 +393,7 @@ export default class ExportSheet extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { allCount, onClose, allWorksheetIsSelected, selectRowIds, hideStatistics, isCharge, columns } = this.props;
     const {
       type,

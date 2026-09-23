@@ -13,15 +13,15 @@ import { compareProps } from '../util';
 import './index.less';
 
 export default class NativeHeader extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     path: string,
   };
   static defaultProps = {
     path: 'feed',
   };
-  state = { indexSideVisible: false };
+  override state = { indexSideVisible: false };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     return compareProps(this.state, nextState) || compareProps(this.props, nextProps, ['path']);
   }
   switchIndexSideVisible = (visible = true) => {
@@ -30,7 +30,7 @@ export default class NativeHeader extends Component<any, any> {
     }, 100);
   };
 
-  render() {
+  override render() {
     const { path } = this.props;
     const { indexSideVisible } = this.state;
     return (

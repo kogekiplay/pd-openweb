@@ -48,7 +48,7 @@ export default class ProjectContactList extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.departmentsList, this.props.departmentsList)) {
         this.setState({
@@ -168,7 +168,7 @@ export default class ProjectContactList extends React.Component<any, any> {
   }
   onScrollEnd = () => {};
 
-  render() {
+  override render() {
     return <div className="h100">{this.renderListContent()}</div>;
   }
 }

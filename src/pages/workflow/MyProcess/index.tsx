@@ -113,7 +113,7 @@ export default class MyProcess extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getTodoList();
     getTodoCount().then(countData => {
       this.updateCountData(countData);
@@ -121,14 +121,14 @@ export default class MyProcess extends Component<any, any> {
     this.removeEscEvent = this.bindEscEvent();
   }
 
-  componentDidUpdate(_prevProps, prevState) {
+  override componentDidUpdate(_prevProps, prevState) {
     if (prevState.visible !== this.state.visible) {
       const key = 'myProcessFilterOpen';
       this.state.visible ? localStorage.setItem(key, 'true') : localStorage.removeItem(key);
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeEscEvent();
   }
 
@@ -1163,7 +1163,7 @@ export default class MyProcess extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       stateTab,
       selectCard,

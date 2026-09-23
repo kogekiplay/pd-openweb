@@ -14,7 +14,7 @@ const DEFAULT_COLOR = '#1677ff';
 const NAME_MAX_LENGTH = 100;
 
 class SelectIcon extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: string,
     className: string,
     iconColor: string,
@@ -56,14 +56,14 @@ class SelectIcon extends Component<any, any> {
     }, 500);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.$nameRef.current) {
       this.$nameRef.current.focus();
       this.$nameRef.current.select();
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.dataChange();
     // 取消防抖函数，避免内存泄漏
     this.debouncedModifyName?.cancel();
@@ -198,7 +198,7 @@ class SelectIcon extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { projectId, className, hideInput, hideColor, onClearIcon, onCancel, showNavigationConfig } = this.props;
     const colorList = getThemeColors(projectId);
     const { iconColor, navColor, name } = this.state;

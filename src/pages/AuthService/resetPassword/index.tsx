@@ -52,7 +52,7 @@ export default class ResetPassword extends React.Component<any, any> {
     this.password = React.createRef();
     this.passwordCopy = React.createRef();
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (!request.state) {
       return alert(_l('当前地址错误'), 3);
     } else {
@@ -253,7 +253,7 @@ export default class ResetPassword extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { loading } = this.state;
     return (
       <WrapCom className="flexColumn">

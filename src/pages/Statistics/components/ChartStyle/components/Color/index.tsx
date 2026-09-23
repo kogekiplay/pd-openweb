@@ -154,7 +154,7 @@ export default class ColorEntrance extends Component<any, any> {
       />
     );
   }
-  render() {
+  override render() {
     const name = this.getColorName();
     const { displaySetup } = this.props.currentReport;
     const ruleVisible = this.getRuleVisible();

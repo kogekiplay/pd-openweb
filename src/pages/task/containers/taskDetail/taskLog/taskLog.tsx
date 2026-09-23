@@ -13,7 +13,7 @@ export default class TaskDetail extends Component<any, any> {
       getSuccess: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getTaskLog();
     if (this.props.manualRef) {
       this.props.manualRef(this);
@@ -70,7 +70,7 @@ export default class TaskDetail extends Component<any, any> {
     return undefined;
   }
 
-  render() {
+  override render() {
     const { logs, getSuccess } = this.state;
 
     // 空状态

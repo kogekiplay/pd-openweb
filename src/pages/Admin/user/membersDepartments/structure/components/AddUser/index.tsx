@@ -32,11 +32,11 @@ export default class AddUser extends Component<any, any> {
     this.itiInvite = null;
     this.itiAutonomously = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.itiFn();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.addUserVisible !== this.props.addUserVisible) {
         this.setState({
@@ -45,7 +45,7 @@ export default class AddUser extends Component<any, any> {
       }
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.iti && this.iti.destroy();
     this.itiInvite && this.itiInvite.destroy();
     this.itiAutonomously && this.itiAutonomously.destroy();
@@ -580,7 +580,7 @@ export default class AddUser extends Component<any, any> {
     this.setState({ openChangeUserInfoDrawer: !this.state.openChangeUserInfoDrawer });
   };
 
-  render() {
+  override render() {
     const {
       actType,
       typeCursor,

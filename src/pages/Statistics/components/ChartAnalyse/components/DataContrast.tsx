@@ -194,7 +194,7 @@ export default class DataContrast extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { contrastVisible, isNumberChart } = this.props;
     return (
       <Fragment>

@@ -19,7 +19,7 @@ export default class CalendarSummary extends Component<any, any> {
     return undefined;
   }
 
-  render() {
+  override render() {
     const { editable, attachments } = this.props;
     const { isFocus } = this.state;
 

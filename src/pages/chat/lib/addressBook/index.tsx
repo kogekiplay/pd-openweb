@@ -30,7 +30,7 @@ class AddressBook extends React.Component<any, any> {
     this.updateHighlightTab = this.updateHighlightTab.bind(this);
   }
 
-  shouldComponentUpdate(_nextProps, nextState) {
+  override shouldComponentUpdate(_nextProps, nextState) {
     return !shallowEqual(nextState, this.state);
   }
 
@@ -67,7 +67,7 @@ class AddressBook extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { type, projectId, list } = this.state;
     return (
       <div className="contacts-dialog">

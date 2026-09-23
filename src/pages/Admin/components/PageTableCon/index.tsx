@@ -23,7 +23,7 @@ export default class PageTableCon extends Component<any, any> {
 
   // 分页
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.paginationInfo !== this.props.paginationInfo) {
         this.setState({
@@ -108,7 +108,7 @@ export default class PageTableCon extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       className,
       loading,

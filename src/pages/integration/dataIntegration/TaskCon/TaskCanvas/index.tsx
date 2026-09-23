@@ -56,7 +56,7 @@ class TaskCanvas extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { flowData = {}, flowId } = this.props;
     const { flowNodes, firstNodeId } = flowData;
     this.setState({
@@ -70,7 +70,7 @@ class TaskCanvas extends Component<any, any> {
 
   //删除节点
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.curId) {
         this.setState({
@@ -259,7 +259,7 @@ class TaskCanvas extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { loading, scale, list, currentId, flowNodes } = this.state;
     return (
       <Wrap className="taskContainer Relative flex">

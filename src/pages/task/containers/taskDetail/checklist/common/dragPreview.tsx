@@ -5,7 +5,7 @@ export default class DragPreview extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     return (
       <div
         className="taskDetailDragPreview"

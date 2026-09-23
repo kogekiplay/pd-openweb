@@ -116,7 +116,7 @@ export default class OutsourcingList extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getGroupsList();
   }
 
@@ -235,7 +235,7 @@ export default class OutsourcingList extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { selectKeys, count, pageSize, pageIndex, loading, list } = this.state;
     const rowSelection = {
       selectKeys,

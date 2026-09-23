@@ -10,12 +10,12 @@ export default class CountDown extends Component<any, any> {
     this.interval = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.func();
     this.startTimer();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.endDate !== this.props.endDate) {
       this.setState(
         {
@@ -29,7 +29,7 @@ export default class CountDown extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.clearTimer();
   }
 
@@ -83,7 +83,7 @@ export default class CountDown extends Component<any, any> {
       return _l('1分钟');
     }
   };
-  render() {
+  override render() {
     let { timeStr } = this.state;
     return (
       <span>

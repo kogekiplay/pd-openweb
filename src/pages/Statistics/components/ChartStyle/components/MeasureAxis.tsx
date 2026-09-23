@@ -5,7 +5,7 @@ export default class MeasureAxis extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { currentReport, onChangeDisplayValue } = this.props;
     const { displaySetup } = currentReport;
     const { ydisplay } = displaySetup;

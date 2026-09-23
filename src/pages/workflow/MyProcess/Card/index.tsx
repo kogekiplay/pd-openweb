@@ -15,7 +15,7 @@ export default class Card extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     return (
       !_.isEqual(this.props.item.id, nextProps.item.id) ||
       this.props.approveChecked !== nextProps.approveChecked ||
@@ -388,7 +388,7 @@ export default class Card extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { onClick, approveChecked } = this.props;
     return (
       <div className="cardWrapper pointer" onClick={onClick}>

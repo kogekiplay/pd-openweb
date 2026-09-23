@@ -44,7 +44,7 @@ const SignatureBox = styled.div`
 `;
 
 export default class Signature extends Component<any, any> {
-  state = {
+  override state = {
     isEdit: false,
     signature: '',
     key: '',
@@ -53,7 +53,7 @@ export default class Signature extends Component<any, any> {
 
   isComplete = true;
 
-  componentDidMount() {
+  override componentDidMount() {
     setTimeout(() => {
       this.initCanvas();
     }, 100);
@@ -148,7 +148,7 @@ export default class Signature extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { showUploadFromMobile, worksheetId, viewId, canvasStyle = {} } = this.props;
     const { isEdit, signature, showButton } = this.state;
 

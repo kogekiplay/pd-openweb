@@ -42,7 +42,7 @@ export default class ChartCollect extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -62,7 +62,7 @@ export default class ChartCollect extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { collectCharts, loading } = this.state;
 
     return (

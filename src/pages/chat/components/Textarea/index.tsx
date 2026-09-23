@@ -137,7 +137,7 @@ export default class TextareaBox extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { value } = this.state;
     const { referMessage, disabled, placeholder } = this.props;
     return (

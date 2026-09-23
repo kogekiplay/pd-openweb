@@ -4,7 +4,7 @@ import { Dialog, Input } from 'ming-ui';
 import { H3 } from 'worksheet/components/Basics';
 
 export default class AddConntrol extends React.Component<any, any> {
-  render() {
+  override render() {
     const { defaultText, onOk, onClose } = this.props;
     return (
       <Dialog

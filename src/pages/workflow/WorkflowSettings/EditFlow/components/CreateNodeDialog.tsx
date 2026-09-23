@@ -1221,7 +1221,7 @@ export default class CreateNodeDialog extends Component<any, any> {
   // 缓存滚动条位置
   cacheScrollTop = 0;
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const featureType = getFeatureStatus(this.props.flowInfo.companyId, VersionProductType.flowPlugin);
 
@@ -1860,7 +1860,7 @@ export default class CreateNodeDialog extends Component<any, any> {
     this.setState({ currentSectionIndex: sectionIndex });
   }, 200);
 
-  render() {
+  override render() {
     const { nodeId, flowInfo } = this.props;
     const { selectSecond, showProcessDialog, showCodeSnippetDialog, branchDialogModel, selectItemType } = this.state;
     const isApprovalProcess = selectItemType === NODE_TYPE.APPROVAL_PROCESS;

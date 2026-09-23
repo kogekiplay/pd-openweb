@@ -19,7 +19,7 @@ export default class CloseNet extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -69,7 +69,7 @@ export default class CloseNet extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { isLoading, effectiveApkCount, effectiveWorksheetCount, effectiveWorksheetRowCount, disabled } = this.state;
     const currentProject = getCurrentProject(Config.projectId);
 

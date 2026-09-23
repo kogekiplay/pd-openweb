@@ -61,7 +61,7 @@ class View extends Component<any, any> {
     this.checkWorksheetRowsBtnDebounced = _.debounce(this.checkWorksheetRowsBtn, 120);
     this.buttonsCheckRequestKey = '';
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { view, base = {} } = this.props;
     const { getFilters, openMode } = getRequest();
 
@@ -96,7 +96,7 @@ class View extends Component<any, any> {
     this.props.handleLoadOperateButtons({ worksheetInfo: this.props.worksheetInfo });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.mobileNavGroupFilters, this.props.mobileNavGroupFilters)) {
         prevProps.fetchSheetRows({
@@ -107,7 +107,7 @@ class View extends Component<any, any> {
       this.prepareCheckWorksheetRowsBtn(this.props, prevProps);
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.APP_OPEN_NEW_PAGE = undefined;
     this.checkWorksheetRowsBtnDebounced.cancel();
     emitter.removeListener('MOBILE_RELOAD_RECORD_INFO', this.refreshList);
@@ -203,7 +203,7 @@ class View extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const {
       view,
       base,

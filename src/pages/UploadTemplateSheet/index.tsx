@@ -92,7 +92,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     (async () => {
       // 显示模板打印弹框
       $('html').addClass('uploadTemplateSheet');
@@ -190,7 +190,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     })().catch(console.error);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('uploadTemplateSheet');
   }
 
@@ -748,7 +748,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { worksheetName } = this.state;
     return (
       <React.Fragment>

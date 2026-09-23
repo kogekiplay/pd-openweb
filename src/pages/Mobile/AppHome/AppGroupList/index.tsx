@@ -20,7 +20,7 @@ class AppGroupList extends Component<any, any> {
     super(props);
     this.state = {};
   }
-  componentDidMount() {
+  override componentDidMount() {
     const projectObj = getCurrentProject(
       localStorage.getItem('currentProjectId') || (md.global.Account.projects[0] || {}).projectId,
     );
@@ -80,7 +80,7 @@ class AppGroupList extends Component<any, any> {
       </div>
     );
   };
-  render() {
+  override render() {
     const { myAppData = {} } = this.props;
     const { markedGroup = [], personalGroups = [], projectGroups = [] } = myAppData;
     return (

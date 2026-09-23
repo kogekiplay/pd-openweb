@@ -132,7 +132,7 @@ export default class extends Component<any, any> {
     this.g2plotComponent = null;
     this.isUnmounted = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     loadG2Plot().then(data => {
       if (this.isUnmounted) {
         return;
@@ -142,11 +142,11 @@ export default class extends Component<any, any> {
       this.renderBarChart(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     this.destroyBarChart();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { displaySetup, style } = this.props.reportData;
     const { displaySetup: oldDisplaySetup, style: oldStyle } = prevProps.reportData;
     const shouldRecreate =
@@ -803,7 +803,7 @@ export default class extends Component<any, any> {
       return <div className="pBottom10">{renderItem(summary)}</div>;
     }
   }
-  render() {
+  override render() {
     const { dropdownVisible, offset } = this.state;
     const { displaySetup = {} } = this.props.reportData;
     return (

@@ -7,7 +7,7 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
 export default class CascaderSheet extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onDynamicValueChange: func,
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
   };
@@ -22,7 +22,7 @@ export default class CascaderSheet extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (_.get(this.props, 'data.controlId') !== _.get(prevProps, 'data.controlId')) {
         this.setState({
@@ -58,7 +58,7 @@ export default class CascaderSheet extends Component<any, any> {
     const { defaultType } = this.props;
     defaultType && this.$wrap.triggerClick();
   };
-  render() {
+  override render() {
     const { data, defaultType, hideOtherFields = false, getType, dynamicValue } = this.props;
     const titleControl = _.find(data.relationControls || [], re => re.attribute === 1);
     const { visible } = this.state;

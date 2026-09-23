@@ -116,8 +116,8 @@ const DEFAULT_TABLE_PAGE_SIZE = 20;
 const EXPAND_TABLE_PAGE_SIZE = 200;
 
 class ChildTable extends React.Component<any, any> {
-  static contextType = RecordInfoContext;
-  static propTypes = {
+  static override contextType = RecordInfoContext;
+  static override propTypes = {
     mode: PropTypes.string,
     entityName: PropTypes.string,
     recordId: PropTypes.string,
@@ -180,7 +180,7 @@ class ChildTable extends React.Component<any, any> {
     this.expandPaginationFrame = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { control, recordId, needResetControls } = this.props;
     this.updateDefsourceOfControl();
     if (recordId) {
@@ -194,7 +194,7 @@ class ChildTable extends React.Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.refreshFlag && this.props.refreshFlag !== prevProps.refreshFlag) {
         this.refresh();
@@ -256,7 +256,7 @@ class ChildTable extends React.Component<any, any> {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     if (!_.isEqual(this.state, nextState)) {
       return true;
     }
@@ -277,7 +277,7 @@ class ChildTable extends React.Component<any, any> {
     );
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { mode, control } = this.props;
 
     if (mode !== 'dialog' && _.isFunction(control.addRefreshEvents)) {
@@ -1152,7 +1152,7 @@ class ChildTable extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       cellErrors,
       from,

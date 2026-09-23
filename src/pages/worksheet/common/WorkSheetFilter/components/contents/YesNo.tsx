@@ -6,7 +6,7 @@ import { getSwitchItemNames } from 'src/utils/control';
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
 export default class YesNo extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
     control: PropTypes.shape({}),
@@ -57,7 +57,7 @@ export default class YesNo extends Component<any, any> {
 
     return value ? FILTER_CONDITION_TYPE.HASVALUE : FILTER_CONDITION_TYPE.ISNULL;
   };
-  render() {
+  override render() {
     const { disabled, control, type, onChange } = this.props;
     const data = this.getRadioGroupData(control.type);
     return (

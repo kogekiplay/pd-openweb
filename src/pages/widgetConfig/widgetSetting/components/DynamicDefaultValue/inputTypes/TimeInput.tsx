@@ -9,7 +9,7 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap, WrapMaxOrMin } from '../styled';
 
 export default class TimeInput extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onDynamicValueChange: func,
     data: shape({ enumDefault: number }),
     clearOldDefault: func,
@@ -26,11 +26,11 @@ export default class TimeInput extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.updateValue();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.dynamicValue, prevProps.dynamicValue)) {
         this.updateValue(this.props);
@@ -107,7 +107,7 @@ export default class TimeInput extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { defaultType } = this.props;
 
     return (

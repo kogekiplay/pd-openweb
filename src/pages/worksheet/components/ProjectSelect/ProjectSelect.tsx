@@ -5,7 +5,7 @@ import MenuItem from 'ming-ui/components/MenuItem';
 import './ProjectSelect.less';
 
 export default class ProjectSelect extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func,
   };
@@ -33,7 +33,7 @@ export default class ProjectSelect extends Component<any, any> {
       </MenuItem>
     ));
   }
-  render() {
+  override render() {
     const { value, onChange } = this.props;
     const { isSlideDown } = this.state;
     return (

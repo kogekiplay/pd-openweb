@@ -12,7 +12,7 @@ class TimeAxis extends Component<any, any> {
     this.currentYear = moment().isoWeekYear();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     utils.syncUpdateScroll();
   }
 
@@ -145,7 +145,7 @@ class TimeAxis extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { stateConfig, timeAxisSource } = this.props;
     const { currentView } = stateConfig;
 

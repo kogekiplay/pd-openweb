@@ -8,7 +8,7 @@ export default class UploadFile extends Component<any, any> {
     super(props);
     this.state = {};
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.uploadFile();
   }
   uploadFile() {
@@ -70,7 +70,7 @@ export default class UploadFile extends Component<any, any> {
       },
     });
   }
-  render() {
+  override render() {
     const { fileName } = this.props;
     return (
       <button

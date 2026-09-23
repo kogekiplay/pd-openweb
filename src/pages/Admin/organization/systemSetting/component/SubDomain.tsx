@@ -23,7 +23,7 @@ export default class SubDomain extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({ isLoading: true });
     Promise.all([this.getSubDomainInfo(), this.getSysColor()]).then(([res, { homeImage }]) => {
       const attUrl = `${md.global.FileStoreConfig.pictureHost}/ProjectLogo/`;
@@ -178,7 +178,7 @@ export default class SubDomain extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { domainName, isLoading, currentHomeImage, visible } = this.state;
     return (
       <div className="orgManagementWrap">

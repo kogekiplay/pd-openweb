@@ -32,7 +32,7 @@ export default class InvoiceConfig extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -110,7 +110,7 @@ export default class InvoiceConfig extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props.worksheetInfo || {};
     const {
       loading,

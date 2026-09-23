@@ -8,7 +8,7 @@ import SelectOtherFields from '../SelectOtherFields';
 import Tag from '../Tag';
 
 export default class CustomTextarea extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: PropTypes.string,
     processId: PropTypes.string,
     relationId: PropTypes.string,
@@ -46,15 +46,15 @@ export default class CustomTextarea extends Component<any, any> {
     showNodeDataSelect: false,
   };
 
-  state = {
+  override state = {
     fieldsVisible: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.getRef(this.tagtextarea);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const editor = this.tagtextarea;
 
     if (editor && editor.view && prevProps.content !== this.props.content) {
@@ -76,7 +76,7 @@ export default class CustomTextarea extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       projectId,
       processId,

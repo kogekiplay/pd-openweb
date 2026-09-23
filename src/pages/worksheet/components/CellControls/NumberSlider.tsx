@@ -54,7 +54,7 @@ function levelSafeParse(value) {
 }
 
 export default class NumberSlider extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),
     editable: PropTypes.bool,
@@ -75,7 +75,7 @@ export default class NumberSlider extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value) {
         this.setState({
@@ -182,7 +182,7 @@ export default class NumberSlider extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const {
       from,
       recordId,

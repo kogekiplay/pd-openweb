@@ -30,7 +30,7 @@ export default class UserDetail extends React.Component<any, any> {
     this.deleteFriendConfirm = this.deleteFriendConfirm.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { accountId } = this.props;
 
     if (accountId) {
@@ -38,7 +38,7 @@ export default class UserDetail extends React.Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.accountId && this.props.accountId !== prevProps.accountId) {
         this.fetchUserDetail(this.props.accountId);
@@ -220,7 +220,7 @@ export default class UserDetail extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isLoading, data } = this.state;
     const { userCards = [] } = data || {};
     const { accountId, projectId, hideBackBtn } = this.props;

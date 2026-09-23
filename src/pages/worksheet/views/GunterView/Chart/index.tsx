@@ -37,7 +37,7 @@ class GunterChart extends Component<any, any> {
     };
     this.$ref = createRef(null);
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { isMobile } = this.props;
     const scroll = new GunterScroll(this.$ref.current, {
       scrollX: true,
@@ -74,7 +74,7 @@ class GunterChart extends Component<any, any> {
     this.props.updateChartScroll(scroll);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.gunterView.zoom !== prevProps.gunterView.zoom) {
         window.isZoom = true;
@@ -134,7 +134,7 @@ class GunterChart extends Component<any, any> {
       }
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { chartScroll } = this.props.gunterView;
 
     if (chartScroll) {
@@ -283,7 +283,7 @@ class GunterChart extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { base, gunterView, isMobile } = this.props;
     const { loading, groupingVisible } = gunterView;
     return (

@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 
 export default class ViewGroup extends PureComponent<any, any> {
-  static propTypes = {
+  static override propTypes = {
     hasViews: PropTypes.bool,
     className: PropTypes.string,
     children: PropTypes.any,
@@ -25,7 +25,7 @@ export default class ViewGroup extends PureComponent<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { className } = this.props;
     return (
       <div

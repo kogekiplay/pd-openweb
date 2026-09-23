@@ -57,7 +57,7 @@ export default class EditInfo extends React.Component<any, any> {
     return true;
   }
 
-  render() {
+  override render() {
     const { baseInfo } = this.state;
     return (
       <div className="baseInfoEditContent textPrimary">

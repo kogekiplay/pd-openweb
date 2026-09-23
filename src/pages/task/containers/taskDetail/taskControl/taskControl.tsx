@@ -21,7 +21,7 @@ class TaskControl extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.formatData(this.props.taskControls[this.props.taskId] || []);
   }
 
@@ -29,7 +29,7 @@ class TaskControl extends Component<any, any> {
    * 格式化数据
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.taskControls[this.props.taskId], prevProps.taskControls[prevProps.taskId])) {
         this.formatData(this.props.taskControls[this.props.taskId] || []);
@@ -248,7 +248,7 @@ class TaskControl extends Component<any, any> {
     this.props.dispatch(taskFoldStatus(this.props.taskId, 'control'));
   };
 
-  render() {
+  override render() {
     const { flag, controlData } = this.state;
     const isHidden = _.includes(this.props.taskFoldStatus[this.props.taskId] || [], 'control');
 

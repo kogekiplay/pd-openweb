@@ -26,7 +26,7 @@ let GunterEnter = class GunterEnter extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const {
       isCharge,
       noLoadAtDidMount,

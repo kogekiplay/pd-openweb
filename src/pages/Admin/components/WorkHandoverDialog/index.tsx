@@ -117,7 +117,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getCount();
     this.getList();
     this.getApps();
@@ -429,7 +429,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { visible, transferor = {}, onCancel = () => {} } = this.props;
     const { fullname } = transferor;
     const {

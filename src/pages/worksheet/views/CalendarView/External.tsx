@@ -26,13 +26,13 @@ let External = class External extends Component<any, any> {
     this.scrollRef = React.createRef();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     new Draggable(document.getElementById(`externalEvents-${this.state.random}`), {
       itemSelector: '.fcEvent',
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { calendarview = {}, fetchExternal, refreshEventList, updateCalendarEventIsAdd } = this.props;
       const { calendarEventIsAdd, calendarData = {} } = calendarview;
@@ -262,7 +262,7 @@ let External = class External extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { calendarview } = this.props;
     const { calenderEventList = {}, calendarLoading = false } = calendarview;
     const { keyWords, searchData = [] } = calenderEventList;

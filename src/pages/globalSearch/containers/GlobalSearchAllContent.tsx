@@ -43,7 +43,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.requestDebounce(this.props.searchKeyword);
     this.getFilterCount();
 
@@ -52,7 +52,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.searchKeyword !== prevProps.searchKeyword) {
         const { searchKeyword } = this.props;
@@ -571,7 +571,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
     safeLocalStorageSetItem('GLOBAL_SEARCH_SCOPE_MING', type);
   };
 
-  render() {
+  override render() {
     const { searchScope, isApp } = this.state;
     return (
       <ClickAwayable id="GlobalSearchAllContentDiv" onClickAwayExceptions={['#GlobalSearch']}>

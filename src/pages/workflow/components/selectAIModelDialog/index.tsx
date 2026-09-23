@@ -244,7 +244,7 @@ const MODEL_DESCRIPTIONS = {
 };
 
 class SelectAIModelDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     showAutoModel: PropTypes.bool,
     isMultiple: PropTypes.bool,
     selectedModels: PropTypes.array, // isMultiple 模式下回显已选：[{ modelId, developerId, ... }]
@@ -272,7 +272,7 @@ class SelectAIModelDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { showAutoModel, projectId, appId } = this.props;
     const request =
       projectId && appId
@@ -519,7 +519,7 @@ class SelectAIModelDialog extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { showAutoModel, isMultiple, onOk, onClose } = this.props;
     const { list, selectVendor, selectModel, checkedModelIds } = this.state;
 

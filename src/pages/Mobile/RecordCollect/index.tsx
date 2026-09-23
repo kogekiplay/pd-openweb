@@ -55,7 +55,7 @@ export default class RecordCollect extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -101,7 +101,7 @@ export default class RecordCollect extends Component<any, any> {
     this.setState({ selectAppId: appId, searchValue: searchVal, searchRecords, loading: false });
   };
 
-  render() {
+  override render() {
     const { projectId } = _.get(this.props, 'match.params') || {};
     const { collectRecords, loading, selectAppId, searchRecords, collectRecord, searchValue, apps } = this.state;
     let list = (selectAppId && selectAppId !== 'all') || searchValue ? searchRecords : collectRecords;

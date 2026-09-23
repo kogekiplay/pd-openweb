@@ -7,7 +7,7 @@ import process from '../../api/process';
 import './index.less';
 
 export default class SelectWorkflow extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     visible: bool,
     processId: string,
     relationId: string,
@@ -25,13 +25,13 @@ export default class SelectWorkflow extends Component<any, any> {
     onClose: () => {},
   };
 
-  state = {
+  override state = {
     data: null,
     keywords: '',
     selectItems: [],
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const { visible } = this.props;
 
     if (visible) {
@@ -39,7 +39,7 @@ export default class SelectWorkflow extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!prevProps.visible && this.props.visible) {
         this.getData();
@@ -134,7 +134,7 @@ export default class SelectWorkflow extends Component<any, any> {
     this.setState({ selectItems });
   }
 
-  render() {
+  override render() {
     const { visible, onSave, onClose } = this.props;
     const { data, selectItems } = this.state;
 

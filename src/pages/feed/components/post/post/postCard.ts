@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
  * 动态基础卡片样式
  */
 class PostCard extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     component: PropTypes.any,
     className: PropTypes.string,
     children: PropTypes.any,
@@ -20,13 +20,13 @@ class PostCard extends React.Component<any, any> {
     ]),
   };
 
-  state = { leaving: false };
+  override state = { leaving: false };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.bindComponentWillLeave();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       this.bindComponentWillLeave();
     }
@@ -48,7 +48,7 @@ class PostCard extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const props = _.assign({}, this.props);
     props.className = cx(
       'card postCard clearfix',

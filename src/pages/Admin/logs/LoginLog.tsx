@@ -159,7 +159,7 @@ export default class LoginLog extends Component<any, any> {
     });
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getLogList({ pageIndex: 1, pageSize: 50 });
   }
 
@@ -228,7 +228,7 @@ export default class LoginLog extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { loading, dataSource = [], count = 0, disabledExportBtn, searchValues, pageIndex } = this.state;
 
     const licenseType = (md.global.Account.projects.find(o => o.projectId === Config.projectId) || {}).licenseType;

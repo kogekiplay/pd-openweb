@@ -16,7 +16,7 @@ export default class WebHookCheatSheet extends Component<any, any> {
       errorState: !selectNodeId || !processId,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { processId, currentNodeId: nodeId, selectNodeId } = this.props.match.params;
 
     if (processId && selectNodeId) {
@@ -28,7 +28,7 @@ export default class WebHookCheatSheet extends Component<any, any> {
   goIndex = () => {
     location.href = pathCompletion('/');
   };
-  render() {
+  override render() {
     const { apiData, loading, errorState } = this.state;
     const { app, process, data, formatData } = apiData;
     if (errorState) return <ErrorState text={_l('参数错误')} />;

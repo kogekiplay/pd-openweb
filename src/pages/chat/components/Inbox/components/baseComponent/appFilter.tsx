@@ -73,7 +73,7 @@ export default class AppFilter extends Component<any, any> {
       searchValue: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     api.getAllHomeApp().then(data => {
       data.validProject.push({
         projectId: 'validProject',
@@ -169,7 +169,7 @@ export default class AppFilter extends Component<any, any> {
       </AppFilterWrap>
     );
   }
-  render() {
+  override render() {
     const { app, menuVisible } = this.state;
     const { apkId } = this.props;
     return (

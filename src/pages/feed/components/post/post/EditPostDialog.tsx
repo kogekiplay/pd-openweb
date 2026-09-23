@@ -35,7 +35,7 @@ export default class EditPostDialog extends React.Component<any, any> {
     );
   }
 
-  state = {
+  override state = {
     visible: true,
     kcAttachmentData: [],
     temporaryData: [],
@@ -61,7 +61,7 @@ export default class EditPostDialog extends React.Component<any, any> {
       });
     }
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.setContent(this.props.postItem);
   }
   formatAttachment(attachment) {
@@ -203,7 +203,7 @@ export default class EditPostDialog extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { postItem } = this.props;
 
     if (!postItem) return false;

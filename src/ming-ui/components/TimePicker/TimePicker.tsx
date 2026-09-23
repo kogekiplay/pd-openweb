@@ -12,7 +12,7 @@ const getComputedStyle = (element, attr) => {
 };
 
 class TimePicker extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 时间选择器类名
      */
@@ -110,11 +110,11 @@ class TimePicker extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.clickHandler = this.addEvent(document, 'click', this.withClickAway);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if ('value' in this.props) {
         this.setState({
@@ -128,7 +128,7 @@ class TimePicker extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.clickHandler) {
       this.clickHandler.remove();
     }
@@ -233,7 +233,7 @@ class TimePicker extends Component<any, any> {
     this.setState({ visible: false });
   };
 
-  render() {
+  override render() {
     const { placeholder, className, popupParentNode, children, ...others } = this.props;
     const { visible, bounding, value } = this.state;
 

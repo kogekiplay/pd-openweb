@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import './index.less';
 
 export default class TableEmpty extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     detail: PropTypes.object,
   };
 
-  render() {
+  override render() {
     const { icon, desc, customIcon, descClassName } = this.props.detail;
     const { className } = this.props;
 

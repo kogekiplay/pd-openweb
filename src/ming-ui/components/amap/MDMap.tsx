@@ -42,7 +42,7 @@ class GDMap extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this._MapLoader = new MapLoader();
     this._MapLoader.loadJs().then(() => {
       this.initMapObject();
@@ -54,7 +54,7 @@ class GDMap extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this._maphHandler) {
       this._maphHandler.destroyMap();
       this._maphHandler = null;
@@ -413,7 +413,7 @@ class GDMap extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isMobile, distance, onClose = () => {} } = this.props;
     const { defaultLocation, locationFailedDialogVisible } = this.state;
 
@@ -546,7 +546,7 @@ export default class MDMap extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const MapComponent = getMapConfig() ? GoogleMap : GDMap;
     return <MapComponent {...this.props} />;
   }

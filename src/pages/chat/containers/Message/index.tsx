@@ -29,7 +29,7 @@ class Message extends Component<any, any> {
       moreVisible: false,
     };
   }
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     const { currentSession } = this.props;
 
     if (currentSession.value == nextProps.currentSession.value) {
@@ -214,7 +214,7 @@ class Message extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { message, session } = this.props;
     const { sysType, iswd } = message;
     return (

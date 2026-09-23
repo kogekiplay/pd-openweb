@@ -160,7 +160,7 @@ export default class extends Component<any, any> {
     this.scene = null;
     this.g2plotComponent = {};
   }
-  componentDidMount() {
+  override componentDidMount() {
     Promise.all([import('@antv/l7'), import('@antv/l7-maps')]).then(([l7, maps]) => {
       const { LayerPopup, PointLayer, Scene } = l7;
       const { GaodeMap } = maps;
@@ -171,11 +171,11 @@ export default class extends Component<any, any> {
       this.renderWorldMap(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.scene && this.scene.destroy();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { style = {}, displaySetup = {} } = this.props.reportData;
       const { style: oldStyle = {}, displaySetup: oldDisplaySetup = {} } = prevProps.reportData;
@@ -416,7 +416,7 @@ export default class extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { count, originalCount, dropdownVisible, offset } = this.state;
     const { summary, displaySetup = {} } = this.props.reportData;
     return (

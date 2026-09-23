@@ -88,7 +88,7 @@ class Unit extends Component<any, any> {
       true,
     );
   };
-  render() {
+  override render() {
     const { data, currentReport = {} } = this.props;
     const { reportType, pivotTable = {} } = currentReport;
     const {

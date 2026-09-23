@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './SheetPagination.less';
 
 export default class SheetPagination extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     count: PropTypes.number,
     pageSize: PropTypes.number,
     pageIndex: PropTypes.number,
@@ -59,7 +59,7 @@ export default class SheetPagination extends Component<any, any> {
         .concat(this.renderPage(pages));
     }
   }
-  render() {
+  override render() {
     const { count, pageSize, pageIndex } = this.props;
     const pageMax = 9;
     const pages = Math.ceil(count / pageSize);

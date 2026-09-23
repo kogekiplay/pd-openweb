@@ -235,7 +235,7 @@ export default class GroupingAxis extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { name, split, yaxisList, reportType } = this.props;
     const visible = [
       reportTypes.BarChart,

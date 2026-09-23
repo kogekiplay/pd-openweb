@@ -110,7 +110,7 @@ class LineConfigModal extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible && !prevProps.visible) {
         this.setState({
@@ -148,7 +148,7 @@ class LineConfigModal extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { lineConfig } = this.state;
     const { visible, onCancel, yaxisList, rightYaxisList, reportType } = this.props;
     const { type } = lineConfig;
@@ -418,7 +418,7 @@ export default class AuxiliaryLine extends Component<any, any> {
       </Menu>
     );
   };
-  render() {
+  override render() {
     const { currentReport } = this.props;
     const { displaySetup, yaxisList, rightY, reportType } = currentReport;
     const rightYaxisList = _.get(rightY, ['yaxisList']);

@@ -37,7 +37,7 @@ export default class HistoryLogs extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { onClose = () => {}, historyLogInfo = {} } = this.props;
     const { isLoading, allCount, list } = historyLogInfo;
     const { pageSize, pageIndex } = this.state;

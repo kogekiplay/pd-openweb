@@ -51,7 +51,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     this.searchRef = React.createRef();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.sheetInfoLoading && !prevProps.sheetInfoLoading) {
         this.flag = null;
@@ -86,13 +86,13 @@ let ViewItems = class ViewItems extends Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.containerWrapper = document.getElementById('wrapper');
     this.containerWrapper && this.containerWrapper.addEventListener('click', this.clickDrawerArea);
     this.computeViewItemActiveLeft();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.containerWrapper && this.containerWrapper.removeEventListener('click', this.clickDrawerArea);
   }
 
@@ -671,7 +671,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       directionVisible,
       hideDirection,

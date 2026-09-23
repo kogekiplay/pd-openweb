@@ -8,7 +8,7 @@ import PostController from 'src/api/post';
 import { SOURCE_TYPE } from '../../constants';
 
 export default class ReplyTo extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     sourceType: PropTypes.oneOf(_.values(SOURCE_TYPE)),
 
     sourceId: PropTypes.string,
@@ -24,7 +24,7 @@ export default class ReplyTo extends React.Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.abortRequest();
   }
 
@@ -76,7 +76,7 @@ export default class ReplyTo extends React.Component<any, any> {
     return undefined;
   }
 
-  render() {
+  override render() {
     return (
       <Tooltip title={this.state.replayMsg || <LoadDiv />} type="white" mouseEnterDelay={0.3}>
         <i

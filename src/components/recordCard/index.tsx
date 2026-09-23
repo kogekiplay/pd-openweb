@@ -23,7 +23,7 @@ function getCoverControlData(data) {
 }
 
 export default class RecordCard extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     from: PropTypes.number,
     disabled: PropTypes.bool,
     selected: PropTypes.bool,
@@ -39,7 +39,7 @@ export default class RecordCard extends Component<any, any> {
     from: 1,
     showControls: [],
   };
-  state = {
+  override state = {
     forceShowFullValue: null,
   };
 
@@ -91,7 +91,7 @@ export default class RecordCard extends Component<any, any> {
       .map(scid => _.find(allControls, c => c.controlId === scid))
       .filter(c => (showTitleId ? showTitleId !== c.controlId : c && c.attribute !== 1));
   }
-  render() {
+  override render() {
     const {
       from = 1,
       disabled,

@@ -252,7 +252,7 @@ class CalculateControl extends Component<any, any> {
       });
     }
   };
-  render() {
+  override render() {
     const { axisControls } = this.props;
     const { controlName, formulaStr, dot, dropdownVisible } = this.state;
     return (
@@ -367,7 +367,7 @@ export default class CalculateControlModal extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { dialogVisible } = this.props;
     return (
       <Modal

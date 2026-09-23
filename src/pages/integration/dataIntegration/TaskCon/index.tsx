@@ -44,7 +44,7 @@ class Task extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { params = {} } = this.props.match;
     const { id, type } = params;
     this.setState(
@@ -392,7 +392,7 @@ class Task extends Component<any, any> {
     }
     return undefined;
   };
-  render() {
+  override render() {
     const {
       flowData = {},
       loading,

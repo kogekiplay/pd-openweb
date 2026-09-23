@@ -166,7 +166,7 @@ class CommentItem extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { replyId } = this.props;
     $(`.inboxBox .commentItem-${replyId}`)
       .find('[data-accountid],[data-groupid]')
@@ -332,7 +332,7 @@ class CommentItem extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { createAccount, addCallback, replyId } = this.props;
     const { showCommenter } = this.state;
 
@@ -368,7 +368,7 @@ class CommentItem extends React.Component<any, any> {
 }
 
 export default class CommentArea extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     commentsProps: PropTypes.shape({
       comments: PropTypes.array,
       commentsCount: PropTypes.number,
@@ -515,7 +515,7 @@ export default class CommentArea extends React.Component<any, any> {
     return undefined;
   }
 
-  render() {
+  override render() {
     return (
       <div className="Font12">
         <div>

@@ -109,11 +109,11 @@ export default class ProjectContacts extends React.Component<any, any> {
     this.fetchDepartments = this.fetchDepartments.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchDepartments();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({}, this.fetchDepartments);
       if (!_.isEqual(prevProps.projectId, this.props.projectId)) {
@@ -127,7 +127,7 @@ export default class ProjectContacts extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.abortRequest();
   }
 
@@ -384,7 +384,7 @@ export default class ProjectContacts extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { selectedAccountId, keywords, usersLoading, groupList = [], groupId } = this.state;
     return (
       <React.Fragment>

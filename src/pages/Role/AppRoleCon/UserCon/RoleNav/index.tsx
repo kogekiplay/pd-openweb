@@ -177,7 +177,7 @@ export default class Con extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     return <WrapNav className="flexColumn">{this.renderNav()}</WrapNav>;
   }
 }

@@ -157,7 +157,7 @@ const LayoutSettingWrap = styled.div`
 `;
 
 class AppearanceConfig extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     open: PropTypes.bool,
     worksheetInfo: PropTypes.shape({}),
     updateWorksheetInfo: PropTypes.func,
@@ -344,7 +344,7 @@ class AppearanceConfig extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { open, worksheetInfo, onClose, theme, pageConfigs = '[]', pageConfigKey = '' } = this.props;
     const { projectId } = worksheetInfo;
     const COLORS = getThemeColors(projectId);

@@ -15,11 +15,11 @@ let MobileContainer = class MobileContainer extends Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.initMobileGunter(data);
   }
 
-  render() {
+  override render() {
     const { loading, base = {}, views } = this.props;
     const { appId, worksheetId, viewId } = base;
 

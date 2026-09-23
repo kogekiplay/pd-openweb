@@ -121,7 +121,7 @@ export default class GraphContent extends Component<any, any> {
       );
     });
   }
-  render() {
+  override render() {
     const { data } = this.props;
     return <div className="graphContent">{this.renderProcess(data)}</div>;
   }

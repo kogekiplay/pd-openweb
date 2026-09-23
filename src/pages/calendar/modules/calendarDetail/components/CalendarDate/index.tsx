@@ -62,7 +62,7 @@ let EditBlock = class EditBlock extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       calendar: { start, allDay, end, isChildCalendar },
       change,
@@ -125,12 +125,12 @@ export default class CalendarDate extends Component<any, any> {
     };
   }
 
-  getSnapshotBeforeUpdate() {
+  override getSnapshotBeforeUpdate() {
     if (!this.elem) return null;
     return $(this.elem).height();
   }
 
-  componentDidUpdate(_prevProps, _prevState, prevHeight) {
+  override componentDidUpdate(_prevProps, _prevState, prevHeight) {
     if (!this.elem || prevHeight === null) return;
     var $elem = $(this.elem);
     var height = prevHeight;
@@ -197,7 +197,7 @@ export default class CalendarDate extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isEditing } = this.state;
     return (
       <div

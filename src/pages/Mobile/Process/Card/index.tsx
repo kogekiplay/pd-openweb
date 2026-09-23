@@ -337,7 +337,7 @@ export default class Card extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { otherActionVisible, action, instance } = this.state;
     const {
       item,

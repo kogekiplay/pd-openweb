@@ -21,7 +21,7 @@ export default class NewFriends extends React.Component<any, any> {
     this.updateApplysFlag = this.updateApplysFlag.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         loadedRecommends: false,
@@ -67,7 +67,7 @@ export default class NewFriends extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     return <div className="contacts-new-friends">{this.renderContent()}</div>;
   }
 }

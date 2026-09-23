@@ -21,7 +21,7 @@ import './css/commenter.less';
 
 const ClickAwayable = ClickAway;
 class Commenter extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     placeholder: PropTypes.string,
     activePlaceholder: PropTypes.string,
     textareaMaxHeight: PropTypes.number,
@@ -94,7 +94,7 @@ class Commenter extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { textarea, faceBtn } = this;
     const { textareaMaxHeight, textareaMinHeight, projectId } = this.props;
     const comp = this;
@@ -169,7 +169,7 @@ class Commenter extends React.Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.storageId && this.props.storageId !== prevProps.storageId) {
         this.textarea.value = window.localStorage.getItem('commenter-' + this.props.storageId) || '';
@@ -206,7 +206,7 @@ class Commenter extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.textarea.destroy && this.textarea.destroy();
   }
 
@@ -418,7 +418,7 @@ class Commenter extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       canAddLink,
       projectId,

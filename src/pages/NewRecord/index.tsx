@@ -51,11 +51,11 @@ let NewRecordLand = class NewRecordLand extends Component<any, any> {
     this.handleWorksheetInfoReady = this.handleWorksheetInfoReady.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     emitter.on('MINGO_CREATE_RECORD_ACTIVE', this.handleMingoCreateRecordActive);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     emitter.off('MINGO_CREATE_RECORD_ACTIVE', this.handleMingoCreateRecordActive);
   }
 
@@ -85,7 +85,7 @@ let NewRecordLand = class NewRecordLand extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const {
       match = {},
       appPkg = {},

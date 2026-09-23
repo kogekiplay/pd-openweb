@@ -47,7 +47,7 @@ export default class LoopProcess extends Component<any, any> {
     window.open(pathCompletion(`/workflowedit/${item.subProcessId}`));
   };
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
 
     return (

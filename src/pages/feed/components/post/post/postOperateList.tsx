@@ -30,7 +30,7 @@ const { POST_TYPE } = postEnum;
  * 动态的操作列表
  */
 class PostOperateList extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     dispatch: PropTypes.func,
     options: PropTypes.object,
     postItem: PropTypes.any.isRequired,
@@ -225,7 +225,7 @@ class PostOperateList extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const postItem = this.props.postItem;
     const canEdit = postItem.isMy;
     const canRemove = this.props.allowOperate;

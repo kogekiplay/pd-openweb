@@ -10,7 +10,7 @@ import { SOURCE_TYPE } from './config';
 export default class FileList extends Component<any, any> {
   static TYPES = SOURCE_TYPE;
 
-  static propTypes = {
+  static override propTypes = {
     sourceType: PropTypes.oneOf(_.values(SOURCE_TYPE)),
     sourceId: PropTypes.string.isRequired,
     appId: PropTypes.string.isRequired,
@@ -36,7 +36,7 @@ export default class FileList extends Component<any, any> {
     this.cancel = this.cancel.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getFiles();
     this.props.manualRef(this);
   }
@@ -125,7 +125,7 @@ export default class FileList extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isLoading, isShowBtns } = this.state;
     return (
       <div className="fileContent mTop10">

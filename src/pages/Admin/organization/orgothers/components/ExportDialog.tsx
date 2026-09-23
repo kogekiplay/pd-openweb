@@ -98,7 +98,7 @@ export default class ExportDialog extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { datePickerVisible, startDate, endDate, typeList } = this.state;
     let outPutList = '';
     typeList.forEach(item => {

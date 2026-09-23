@@ -10,7 +10,7 @@ export default class MapMessage extends Component<any, any> {
     const { location } = this.props.message;
     window.open(`http://gaode.com/search?query=${location.title}`);
   }
-  render() {
+  override render() {
     const { location } = this.props.message;
     const param = {
       zoom: 20,

@@ -202,7 +202,7 @@ class Header extends React.Component<any, any> {
     return undefined;
   };
 
-  render() {
+  override render() {
     const {
       params,
       printData,

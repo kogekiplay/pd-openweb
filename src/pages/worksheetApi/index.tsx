@@ -134,7 +134,7 @@ class WorksheetApi extends Component<any, any> {
     this.handleGetId = this.getId.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getAppInfo();
   }
 
@@ -2038,7 +2038,7 @@ class WorksheetApi extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       data = [],
       loading,

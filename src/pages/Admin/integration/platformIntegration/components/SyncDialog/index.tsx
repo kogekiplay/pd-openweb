@@ -27,7 +27,7 @@ export default class SyncDialog extends Component<any, any> {
     this.ajaxWorkWXUsers = null;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         (!_.isEqual(prevProps.isBindRelationship, this.props.isBindRelationship) && this.props.isBindRelationship) ||
@@ -603,7 +603,7 @@ export default class SyncDialog extends Component<any, any> {
       </Dialog>
     );
   };
-  render() {
+  override render() {
     return (
       <Fragment>
         {this.renderSyncInfo()}

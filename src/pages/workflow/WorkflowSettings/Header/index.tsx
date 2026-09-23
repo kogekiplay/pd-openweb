@@ -158,7 +158,7 @@ class Header extends Component<any, any> {
 
   closeTestDialog = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     const that = this;
 
     $('.AppAdminWorkflowEdit').on('click', '.publishDialogOpenHistory', () => {
@@ -173,7 +173,7 @@ class Header extends Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     IM.socket.off('workflow_running');
   }
 
@@ -871,7 +871,7 @@ class Header extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { tabIndex, switchTabs, flowInfo, isIntegration, isPlugin, openFlowInfo, isAIActions } = this.props;
     const { publishErrorVisible, errorInfo, isProgressing, showTestFlow, showChatbotDialog } = this.state;
     const tabs = TABS_OPTS.filter(

@@ -81,7 +81,7 @@ let History = class History extends Component<any, any> {
   pageSize = 20;
   filterPara = {};
 
-  componentDidMount() {
+  override componentDidMount() {
     const { flowInfo } = this.props;
     const { instanceId } = this.state;
     this.getData();
@@ -490,7 +490,7 @@ let History = class History extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { flowInfo } = this.props;
     const { selectActionId, showTalksDrawer } = this.state;
     return (

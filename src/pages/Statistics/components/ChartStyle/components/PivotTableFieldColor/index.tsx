@@ -185,7 +185,7 @@ export default class PivotTableFieldColor extends Component<any, any> {
       return null;
     }
   }
-  render() {
+  override render() {
     const { onChangeDisplayValue, currentReport } = this.props;
     const { yaxisList, displaySetup } = currentReport;
     const { colorRules = [] } = displaySetup;

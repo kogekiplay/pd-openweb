@@ -9,13 +9,13 @@ import { PUSH_TYPE } from '../../enum';
 import { CustomTextarea, SelectNodeObject, SpecificFieldsValue } from '../components';
 
 export default class OpenActionContent extends Component<any, any> {
-  state = {
+  override state = {
     showOtherWorksheet: false,
     otherAppName: '',
     worksheetInfo: null,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const { data } = this.props;
 
     if (data.appId) {
@@ -307,7 +307,7 @@ export default class OpenActionContent extends Component<any, any> {
     switchWorksheet(appId);
   };
 
-  render() {
+  override render() {
     const { data } = this.props;
     const { showOtherWorksheet } = this.state;
 

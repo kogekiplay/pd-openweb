@@ -25,7 +25,7 @@ class ChatPanelSessionInfo extends Component<any, any> {
     this.first = this.props.infoVisible;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       // 展开和收起
       if (this.props.infoVisible) {
@@ -106,7 +106,7 @@ class ChatPanelSessionInfo extends Component<any, any> {
       this.props.dispatch(actions.addUserSession(accountId, msg));
     }
   }
-  render() {
+  override render() {
     const { session, infoVisible, searchText } = this.props;
     const { panelType, panelVisible } = this.state;
     const shouldRenderSessionInfo = infoVisible || this.first;

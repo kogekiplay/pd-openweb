@@ -32,14 +32,14 @@ export default class PublicShareChart extends Component<any, any> {
     this.isUnmounted = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.refreshShareInfo();
     this.refreshTimer = setInterval(() => {
       this.refreshShareInfo({ showLoading: true });
     }, SHARE_REFRESH_INTERVAL);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     clearInterval(this.refreshTimer);
   }
@@ -152,7 +152,7 @@ export default class PublicShareChart extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { loading, errorCode } = this.state;
 
     if (errorCode === 300016) {

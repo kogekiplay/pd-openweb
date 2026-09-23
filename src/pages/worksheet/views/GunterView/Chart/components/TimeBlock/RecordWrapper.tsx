@@ -49,7 +49,7 @@ let RecordWrapper = class RecordWrapper extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { recordInfoVisible } = this.state;
     const { row, style, groupKey, buttonsCheckStatus } = this.props;
     return (

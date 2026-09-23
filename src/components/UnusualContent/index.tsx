@@ -24,10 +24,10 @@ const STATUS_TO_TEXT = {
 };
 
 export default class UnusualContent extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     status: oneOf([2, 3, 4, 5]),
   };
-  state = {
+  override state = {
     remark: '',
     applyJoinAppVisible: false,
     reinstallLoading: false,
@@ -105,7 +105,7 @@ export default class UnusualContent extends Component<any, any> {
       </Fragment>
     );
   };
-  render() {
+  override render() {
     const { status, appPkg } = this.props;
     const { src, text } = STATUS_TO_TEXT[status] || {};
     const { applyJoinAppVisible, remark, reinstallLoading } = this.state;

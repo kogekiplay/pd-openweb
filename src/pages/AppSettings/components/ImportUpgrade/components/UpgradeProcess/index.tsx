@@ -67,7 +67,7 @@ export default class UpgradeProcess extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.state.batchUpdate) {
       appManagementAjax
         .getBatchId({ projectId: this.props.projectId, upgradeModel: this.state.upgradeModel })
@@ -846,7 +846,7 @@ export default class UpgradeProcess extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { appDetail = {} } = this.props;
     const {
       current,

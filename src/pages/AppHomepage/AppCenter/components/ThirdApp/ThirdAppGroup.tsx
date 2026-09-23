@@ -44,14 +44,14 @@ const ThirdAppItem = ({ onSetTopClick, appId, projectId, appName, avatar, isTop,
   </div>
 );
 export default class ThirdAppGroup extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     data: shape({
       apps: array,
       companyName: string,
       type: string,
     }),
   };
-  render() {
+  override render() {
     const {
       data: { apps = [], companyName, type = '' },
       ...rest

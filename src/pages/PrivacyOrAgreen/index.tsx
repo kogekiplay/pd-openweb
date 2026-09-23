@@ -68,7 +68,7 @@ class PrivacyOrAgreen extends React.Component<any, any> {
       loading: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId = '' } = getRequest();
     this.ajax = null;
     if (location.pathname.indexOf('privacy') < 0) {
@@ -96,7 +96,7 @@ class PrivacyOrAgreen extends React.Component<any, any> {
       });
     });
   }
-  render() {
+  override render() {
     const { summary, logoImageUrl, customizeName, appColor, appLogoUrl, loading } = this.state;
 
     if (loading) {

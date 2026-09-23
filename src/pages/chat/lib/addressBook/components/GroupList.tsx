@@ -13,11 +13,11 @@ export default class GroupList extends React.Component<any, any> {
     });
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.fetch();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.debouncedScroll.cancel();
   }
 
@@ -87,7 +87,7 @@ export default class GroupList extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     return (
       <ScrollView className="h100" onScrollEnd={this.debouncedScroll}>
         {this.renderListContent()}

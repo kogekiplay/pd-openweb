@@ -11,7 +11,7 @@ import { TimePicker as AntTimePicker } from 'src/ming-ui/components/mdAntPickers
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
 export default class Date extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
     value: PropTypes.string,
@@ -24,7 +24,7 @@ export default class Date extends Component<any, any> {
     super(props);
     this.state = {};
   }
-  render() {
+  override render() {
     const { control = {}, type, value, minValue, maxValue, onChange } = this.props;
     const lang = getCookie('i18n_langtag') || window.getDefaultLangKey();
     const datePickerLocale = { en: en_US, ja: ja_JP, 'zh-Hans': zh_CN, 'zh-Hant': zh_TW }[lang] || en_US;

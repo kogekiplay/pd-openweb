@@ -13,7 +13,7 @@ import RoleItem from './roleItem';
 import './style.less';
 
 class RoleList extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: PropTypes.string.isRequired,
     manualRef: PropTypes.func,
   };
@@ -34,7 +34,7 @@ class RoleList extends React.Component<any, any> {
     this.getMyRoles = this.getMyRoles.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getMyRoles();
     this.getCanApplyRoles();
 
@@ -158,7 +158,7 @@ class RoleList extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { entry } = this.props;
     const { isLoading, list, totalCount, pageSize, pageIndex, applyList, showApplyRole } = this.state;
 

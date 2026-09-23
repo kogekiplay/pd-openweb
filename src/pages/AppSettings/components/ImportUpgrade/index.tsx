@@ -33,7 +33,7 @@ export default class AppImportUpgrade extends Component<any, any> {
       logList: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getUpgradeLogs();
   }
   renderEmpty = () => {
@@ -73,7 +73,7 @@ export default class AppImportUpgrade extends Component<any, any> {
 
     this.setState({ showUpgradeProcess: true });
   };
-  render() {
+  override render() {
     const { projectId, data } = this.props;
     const { showUpgradeProcess, loading, logList } = this.state;
 

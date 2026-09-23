@@ -7,7 +7,7 @@ import { Avatar, UserCard } from 'ming-ui';
  * 用户头像，带 hover 的层
  */
 export default class UserHead extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     user: PropTypes.shape({
       accountId: PropTypes.string,
       userHead: PropTypes.string,
@@ -50,7 +50,7 @@ export default class UserHead extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { user, appId, projectId, operation, headClick, chatButton, newPageChat, isFromDepartureList, size } =
       this.props;
 

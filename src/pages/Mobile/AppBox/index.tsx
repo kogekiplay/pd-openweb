@@ -12,7 +12,7 @@ let AddBox = class AddBox extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     return (
       <div className="appBox h100">
         <div className="content">

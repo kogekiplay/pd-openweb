@@ -16,7 +16,7 @@ export default class Account extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { showDialogSettingInviteRules, showAddressRange, showUseInfoDisplay } = this.state;
     const projectId = Config.projectId;
 

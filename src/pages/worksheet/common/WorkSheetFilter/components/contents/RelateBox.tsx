@@ -11,7 +11,7 @@ import { isSheetDisplay } from '../../../../../widgetConfig/util';
 import { API_ENUM_TO_TYPE, DEFAULT_COLUMNS, FILTER_CONDITION_TYPE } from '../../enum';
 
 let RelateBox = class RelateBox extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     values: PropTypes.arrayOf(PropTypes.string),
   };
@@ -107,7 +107,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
     return avaControls;
   };
 
-  render() {
+  override render() {
     const {
       showUl,
       onChangeFn,

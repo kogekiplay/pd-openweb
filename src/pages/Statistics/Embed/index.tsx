@@ -31,7 +31,7 @@ export default class EmbedChart extends Component<any, any> {
     exportPivotTableSocket();
     customNotice();
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId } = this;
     homeAppApi
       .getApp({
@@ -58,7 +58,7 @@ export default class EmbedChart extends Component<any, any> {
         window[`timeZone_${this.appId}`] = data.timeZone;
       });
   }
-  render() {
+  override render() {
     const { loading, appInfo } = this.state;
 
     if (loading) {

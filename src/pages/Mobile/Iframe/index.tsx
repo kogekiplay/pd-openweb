@@ -13,7 +13,7 @@ export default class Iframe extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { alias } = this.props.match.params;
     const { url, title } = data[alias];
     return (

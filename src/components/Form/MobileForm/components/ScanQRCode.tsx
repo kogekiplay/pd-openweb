@@ -97,7 +97,7 @@ const formatScanQRCodeResult = resultStr => {
 };
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: PropTypes.string,
     disablePhoto: PropTypes.bool,
     onChange: PropTypes.func,
@@ -130,13 +130,13 @@ export default class Widgets extends Component<any, any> {
     this.zxingComponent = null;
     this.zxingCodeReader = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     // if (window.isDingTalk || window.isWeLink || isWx || window.isWxWork || window.isFeiShu || window.customScan) {
     //   return;
     // }
     // this.loadBuildInScan(false);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.clearQrcode();
   }
   get formatsToSupport() {
@@ -817,7 +817,7 @@ export default class Widgets extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { visible, isError, scanShape, uploadFile, loadShadeRegion } = this.state;
     const { className, disablePhoto, children, scantype = '0' } = this.props;
 

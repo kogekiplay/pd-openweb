@@ -43,7 +43,7 @@ import {
 import './KcMain.less';
 
 class KcMain extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     path: PropTypes.string,
     baseUrl: PropTypes.string,
     appBaseUrl: PropTypes.string,
@@ -101,7 +101,7 @@ class KcMain extends Component<any, any> {
       detailAttamentsPreviewActive: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { path, appBaseUrl, updateKcListElement, changeFolder, updateKcBaseUrl } = this.props;
     this.jqns = Math.floor(Math.random() * 100000);
     updateKcBaseUrl(appBaseUrl || '/apps/kc');
@@ -124,7 +124,7 @@ class KcMain extends Component<any, any> {
     this.handleRegisterNodeItemEvent();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { path, query, changeFolder } = prevProps;
 
@@ -134,7 +134,7 @@ class KcMain extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $(document).off('.' + this.jqns);
   }
 
@@ -215,7 +215,7 @@ class KcMain extends Component<any, any> {
     const { selectAll, selectedItems, list } = this.props;
     return selectedItems.size > 1 || (selectAll && list.size > 1);
   };
-  render() {
+  override render() {
     const {
       path,
       list,

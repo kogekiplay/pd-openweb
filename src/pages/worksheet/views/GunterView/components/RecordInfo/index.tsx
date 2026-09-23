@@ -15,7 +15,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { row } = this.props;
     this.props.updateEditIndex(row.rowid);
   }
@@ -30,7 +30,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     return rows;
   }
 
-  render() {
+  override render() {
     const { row, isCharge, base, worksheetInfo, sheetSwitchPermit, hideRecord, onClose, view } = this.props;
 
     if (isMobile) {

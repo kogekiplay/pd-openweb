@@ -74,7 +74,7 @@ let RangeDrop = class RangeDrop extends React.Component<any, any> {
     return list.filter(l => l.viewId !== l.worksheetId);
   }
 
-  render() {
+  override render() {
     const { printData, views, setData, className } = this.props;
     const viewList = this.getViews(views);
     return (

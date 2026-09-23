@@ -239,7 +239,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId, fromType, setDetailMode, showInviteRules } = this.props;
     const { selectType, list, loading, keywords, searchData, showDialogSettingInviteRules } = this.state;
 

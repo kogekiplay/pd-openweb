@@ -370,7 +370,7 @@ export default class TimeModal extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { dropdownVisible } = this.state;
     const { visible, onCancel } = this.props;
     return (

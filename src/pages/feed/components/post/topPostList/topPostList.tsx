@@ -11,18 +11,18 @@ import PostCard from '../post/postCard';
 import TopPostPager from './topPostPager';
 
 class TopPostList extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     dispatch: PropTypes.func,
     fontSize: PropTypes.number,
     topPostIds: PropTypes.arrayOf(PropTypes.string),
     postsById: PropTypes.object,
     options: PropTypes.object,
   };
-  state = {
+  override state = {
     pageIndex: 0,
     focus: false,
   };
-  componentDidMount() {
+  override componentDidMount() {
     this.props.dispatch(loadTop());
     const comp = this;
     comp._isMounted = true;
@@ -41,7 +41,7 @@ class TopPostList extends React.Component<any, any> {
     }, 5000);
     comp.handleChangeItem(0);
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     if (!shallowEqual(nextProps, this.props)) return true;
     if (this.state.pageIndex !== nextState.pageIndex) return true;
     const { topPostIds, postsById } = this.props;
@@ -54,7 +54,7 @@ class TopPostList extends React.Component<any, any> {
 
     return false;
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this._isMounted = false;
     if (this.nextItem && this.nextItem.cancel) this.nextItem.cancel();
   }
@@ -88,7 +88,7 @@ class TopPostList extends React.Component<any, any> {
       }}
     />
   );
-  render() {
+  override render() {
     const { groupId, projectId, listType } = this.props.options;
     if (!this.props.topPostIds.length || listType !== postEnum.LIST_TYPE.project || groupId || projectId === '')
       return false;

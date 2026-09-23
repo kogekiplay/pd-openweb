@@ -60,7 +60,7 @@ export default class Con extends PureComponent<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { sheet, isForPortal } = this.props;
     worksheetApi.getExtendAttrOptionalControl({ worksheetId: sheet.sheetId, isPortal: isForPortal }).then(res => {
       this.setState({
@@ -81,7 +81,7 @@ export default class Con extends PureComponent<any, any> {
     return undefined;
   };
 
-  render() {
+  override render() {
     const { showRoleSet, onClose, sheet, projectId, appId } = this.props;
     const { iconUrl, sheetName, sheetId } = sheet;
     const { tab = 0 } = this.state;

@@ -11,14 +11,14 @@ import { Wrap } from './style';
 import { fillTranslateInfo } from './util';
 
 export default class RoleSet extends PureComponent<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: PropTypes.string,
     roleId: PropTypes.string,
     show: PropTypes.bool.isRequired, // 是否显示弹层
     editCallback: PropTypes.func.isRequired, // 编辑创建的回调
   };
 
-  state = {
+  override state = {
     loading: false,
     roleDetail: undefined,
     hasChange: false,
@@ -27,12 +27,12 @@ export default class RoleSet extends PureComponent<any, any> {
   };
   static defaultRoleName = '';
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.onRef(this);
     this.fetchRoleDetail();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.roleId !== prevProps.roleId) {
         this.fetchRoleDetail(this.props);
@@ -212,7 +212,7 @@ export default class RoleSet extends PureComponent<any, any> {
     }
   };
 
-  render() {
+  override render() {
     let { roleId, isForPortal, showRoleSet, projectId, appId, setQuickTag, onDelRole, handleChangePage, canEditUser } =
       this.props;
     roleId = roleId === 'new' ? '' : roleId;

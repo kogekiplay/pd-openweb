@@ -174,7 +174,7 @@ export default class CreateNode extends Component<any, any> {
     this.setState({ showBranchDialog: false });
   };
 
-  render() {
+  override render() {
     const { data, item, className = '' } = this.props;
     const { branchDialogModel } = this.state;
 

@@ -59,7 +59,7 @@ export default class RecordCard extends Component<any, any> {
       appshowtype: _.includes([1, 3, 4, 6], view.viewType) ? '1' : _.get(view, 'advancedSetting.appshowtype') || '0',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.cardWrap) {
       const { view } = this.props;
 
@@ -73,7 +73,7 @@ export default class RecordCard extends Component<any, any> {
       }
     }
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { data, view } = this.props;
     const prevCoverCid = prevProps.view.coverCid;
     const coverCid = view.coverCid;
@@ -463,7 +463,7 @@ export default class RecordCard extends Component<any, any> {
       changeBatchOptData(copyBatchOptCheckedData);
     }
   };
-  render() {
+  override render() {
     const {
       className,
       view,

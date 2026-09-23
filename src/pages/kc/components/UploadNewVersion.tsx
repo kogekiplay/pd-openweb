@@ -10,14 +10,14 @@ class UploadNewVersion extends React.Component<any, any> {
   uploader;
   con;
 
-  static propTypes() {
+  static override propTypes() {
     return {
       item: React.propTypes.object,
       callback: React.propTypes.func,
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const _this = this;
     const MAX_FILE_COUNT = 1;
     this.uploader = createUploader({
@@ -78,7 +78,7 @@ class UploadNewVersion extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     return (
       <span
         className="newVersionFile"

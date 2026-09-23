@@ -144,7 +144,7 @@ const DisplayFieldForNameInfo = {
 };
 
 class UserCard extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: PropTypes.string,
     appId: PropTypes.string,
     sourceId: PropTypes.string,
@@ -176,14 +176,14 @@ class UserCard extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.state.visible) {
       this.fetchData();
       this.addOutsideMouseDownListener();
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     const { data, preSourceId, visible, enlargeImageVisible } = this.state;
 
     if (
@@ -204,7 +204,7 @@ class UserCard extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeOutsideMouseDownListener();
   }
 
@@ -584,7 +584,7 @@ class UserCard extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { isMobile, visible, wrapKey, enlargeImageVisible } = this.state;
     const { className, disabled } = this.props;
     const isPublic = location.pathname.includes('/public/') || location.href.includes('#publicapp');

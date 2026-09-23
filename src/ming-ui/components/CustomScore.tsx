@@ -23,7 +23,7 @@ const CustomScoreIcon = styled.div`
 `;
 
 class CustomScore extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 配置信息
      */
@@ -74,7 +74,7 @@ class CustomScore extends Component<any, any> {
     this.onSelect = this.onSelect.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if ('score' in this.props) {
         this.setState({
@@ -109,7 +109,7 @@ class CustomScore extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { score, lastScore } = this.state;
     const { className, data = {}, hideTip, hideText = false, from, backgroundColor } = this.props;
     const isOldData = !(data.advancedSetting || {}).itemicon;

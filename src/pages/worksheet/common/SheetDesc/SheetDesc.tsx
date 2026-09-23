@@ -16,7 +16,7 @@ export default class SheetDesc extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.desc !== prevProps.desc) {
         this.setState({
@@ -53,7 +53,7 @@ export default class SheetDesc extends Component<any, any> {
       }
     }
   };
-  render() {
+  override render() {
     const { cacheKey, title, visible, onClose, isEditing, setDescIsEditing, permissionType, data } = this.props;
     const { desc, resume, remark } = this.state;
     return (

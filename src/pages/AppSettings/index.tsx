@@ -60,7 +60,7 @@ class AppSettings extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
 
     if (this.props.location.search === '?backup') {
@@ -70,7 +70,7 @@ class AppSettings extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.location.search === '?backup') {
         this.setState({
@@ -238,7 +238,7 @@ class AppSettings extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       currentConfigType,
       data,

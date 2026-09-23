@@ -60,7 +60,7 @@ export default class AvatarEditor extends Component<any, any> {
 
   static isUploading = false;
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     this.avatarLoadKey = '';
     this.revokeAvatarObjectUrl();
@@ -245,7 +245,7 @@ export default class AvatarEditor extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { from, label } = this.props;
     const { avatar, preview, src, editorImageWidth, editorCropRadius, minCropRadius } = this.state;
     const isMobile = browserIsMobile();

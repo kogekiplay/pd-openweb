@@ -40,7 +40,7 @@ class Filter extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { folderId, filterUserId, taskFilter } = this.props.taskConfig;
 
     // 获取标签
@@ -95,7 +95,7 @@ class Filter extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!this.props.taskConfig.searchKeyWords) {
         this.search.value = '';
@@ -108,7 +108,7 @@ class Filter extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('#taskList .listStage').css('paddingRight', 0);
     this.mounted = false;
   }
@@ -659,7 +659,7 @@ class Filter extends Component<any, any> {
     this.props.taskFilterLeave();
   };
 
-  render() {
+  override render() {
     const { searchKeyWords, folderId, filterSettings, listStatus, taskFilter, filterUserId } = this.props.taskConfig;
     const { folderSearchRange } = filterSettings;
     const { customs, overNotStarted, expiredUnfinished } = this.state;

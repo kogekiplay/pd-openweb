@@ -6,7 +6,7 @@ import CalendarDetail from '../modules/calendarDetail';
 import './style.less';
 
 class CalendarDetailEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppCalendar AppCalendarDetail');
     CalendarDetail({
       isDetailPage: true,
@@ -14,7 +14,7 @@ class CalendarDetailEntrypoint extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.match.params.id !== this.props.match.params.id) {
         CalendarDetail({
@@ -24,10 +24,10 @@ class CalendarDetailEntrypoint extends Component<any, any> {
       }
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppCalendar AppCalendarDetail');
   }
-  render() {
+  override render() {
     return (
       <div className="borderContainer Relative flexColumn">
         <div

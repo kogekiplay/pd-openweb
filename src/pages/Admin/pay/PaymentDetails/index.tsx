@@ -87,7 +87,7 @@ export default class PaymentDetails extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getList();
   }
 
@@ -107,7 +107,7 @@ export default class PaymentDetails extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { onClose = () => {} } = this.props;
     const { loading, list, pageIndex, count } = this.state;
 

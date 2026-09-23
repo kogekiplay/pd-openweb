@@ -18,7 +18,7 @@ export default class FileMessage extends Component<any, any> {
     this.iconClassName = getClassNameByExt(RegExpValidator.getExtOfFileName((files || {}).name));
     this.uploader = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { message } = this.props;
     const { files } = message.msg;
     const { aid } = files;
@@ -78,7 +78,7 @@ export default class FileMessage extends Component<any, any> {
       handleMessageFilePreview.call(this);
     }
   }
-  render() {
+  override render() {
     const { message } = this.props;
     const { files = {} } = message.msg;
     const { progress, cancel, cancelShow } = this.state;

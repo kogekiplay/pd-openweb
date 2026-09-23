@@ -95,14 +95,14 @@ class PortalCon extends React.Component<any, any> {
     setQuickTag();
     setDefaultFastFilters();
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId, projectId } = this.props;
     this.props.getControls(appId, projectId);
     this.props.getPortalRoleList(appId);
     this.fetchPorBaseInfo();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { canEditApp, canEditUser } = this.props;
       const tab = canEditUser ? 'user' : canEditApp ? 'roleSet' : '';
@@ -165,7 +165,7 @@ class PortalCon extends React.Component<any, any> {
         );
     }
   };
-  render() {
+  override render() {
     const { appDetail, appId, closePortal, canEditApp, canEditUser, portal, setQuickTag } = this.props;
     const { baseSetResult = {}, showEditUrl, portalSet, showPortalSetting, tab, showCustomUrlSet } = this.state;
     let tablist = conList;

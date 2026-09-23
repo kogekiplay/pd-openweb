@@ -12,7 +12,7 @@ import { humanDateTime, humanFileSize, shallowEqual } from '../../utils';
 import './Detail.css';
 
 class Detail extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   };
   constructor(props) {
@@ -30,7 +30,7 @@ class Detail extends React.Component<any, any> {
     this._isMounted = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this._isMounted = true;
     this.getNodesTotalFolderCountAndFileSize(this.props);
 
@@ -62,7 +62,7 @@ class Detail extends React.Component<any, any> {
     );
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     return (
       !shallowEqual(this.props, nextProps) ||
       !shallowEqual(this.state, nextState) ||
@@ -70,7 +70,7 @@ class Detail extends React.Component<any, any> {
     );
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!shallowEqual(prevProps, this.props)) {
         this.getNodesTotalFolderCountAndFileSize(this.props);
@@ -122,7 +122,7 @@ class Detail extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this._isMounted = false;
   }
 
@@ -477,7 +477,7 @@ class Detail extends React.Component<any, any> {
     this.props.updateDetailAttachmentsPreviewState(!!item);
   };
 
-  render() {
+  override render() {
     const { previewFile } = this.state;
     const selectedOneItem = !!this.props.data.id;
     const data = selectedOneItem ? this.props.data : '';
@@ -706,13 +706,13 @@ class Detail extends React.Component<any, any> {
 }
 
 class AttributePair extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     name: PropTypes.string.isRequired,
     value: PropTypes.any,
     hide: PropTypes.bool,
   };
 
-  render() {
+  override render() {
     return (
       <li className={cx('boxSizing ellipsis', { hide: this.props.hide })}>
         <span className="attributeLeft">

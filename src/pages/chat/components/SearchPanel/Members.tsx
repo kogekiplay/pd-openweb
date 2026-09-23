@@ -14,12 +14,12 @@ export default class Members extends Component<any, any> {
       members: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { searchText } = this.props;
     this.updateMembers(searchText);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.searchText !== prevProps.searchText) {
         this.setState(
@@ -64,7 +64,7 @@ export default class Members extends Component<any, any> {
     const { searchText } = this.props;
     this.updateMembers(searchText);
   }
-  render() {
+  override render() {
     const { members, loading } = this.state;
     return (
       <ScrollView

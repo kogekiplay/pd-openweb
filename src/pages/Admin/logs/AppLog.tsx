@@ -33,7 +33,7 @@ export default class AppLog extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { appId, projectId, worksheetId } = _.get(this.props, 'match.params') || '';
 
     return (

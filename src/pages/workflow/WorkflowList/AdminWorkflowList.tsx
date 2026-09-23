@@ -76,7 +76,7 @@ class AdminWorkflowList extends Component<any, any> {
 
   postList = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId } = this.props.match.params;
 
     this.getList();
@@ -84,7 +84,7 @@ class AdminWorkflowList extends Component<any, any> {
     this.getAutoOrderStatus(projectId);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props, prevProps)) {
         this.setState(
@@ -113,7 +113,7 @@ class AdminWorkflowList extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     localStorage.removeItem('workflowTab');
   }
 
@@ -399,7 +399,7 @@ class AdminWorkflowList extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { params } = this.props.match;
     const {
       pageIndex,

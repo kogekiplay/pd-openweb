@@ -147,7 +147,7 @@ class RoleManage extends Component<any, any> {
     this.promise = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { match } = this.props;
     const { params = {} } = match;
     this.props.updateIsRequestList(true);
@@ -158,7 +158,7 @@ class RoleManage extends Component<any, any> {
     this.init(false, true);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.updateUserLoading(true);
   }
 
@@ -883,7 +883,7 @@ class RoleManage extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { roleList = [], currentRole = {}, projectId, isImportRole, searchValue, authority } = this.props;
     let {
       showRoleDialog,

@@ -16,7 +16,7 @@ export default class CopyTask extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const that = this;
     $('.copyTask').on('click', '.checkOperation:not(.noClick)', function (this: HTMLElement) {
       $(this).toggleClass('checked');
@@ -76,7 +76,7 @@ export default class CopyTask extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     return (
       <Dialog
         visible={this.state.visible}

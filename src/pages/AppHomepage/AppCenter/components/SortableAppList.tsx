@@ -17,7 +17,7 @@ const SORT_TYPE = {
 };
 
 export default class SortableComponent extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     items: arrayOf(
       shape({
         icon: string,
@@ -43,7 +43,7 @@ export default class SortableComponent extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.items.length !== this.props.items.length) {
       this.setState({ sortedIds: this.props.items.map(item => item.id) });
     }
@@ -57,7 +57,7 @@ export default class SortableComponent extends Component<any, any> {
     this.props.onAppSorted({ appIds: sortedAppIds, projectId, sortType: SORT_TYPE[type], groupId });
   };
 
-  render() {
+  override render() {
     const {
       items,
       allowCreate,

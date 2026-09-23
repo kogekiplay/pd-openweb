@@ -11,7 +11,7 @@ export default class DialogUpload extends Component<any, any> {
   fileUploaded = file => {
     this.props.fileUploaded(file);
   };
-  render() {
+  override render() {
     const { visible } = this.props;
     return (
       <Dialog

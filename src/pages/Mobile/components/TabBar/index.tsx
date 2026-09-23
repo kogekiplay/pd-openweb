@@ -11,7 +11,7 @@ let TabBar = class TabBar extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { action, history } = this.props;
     return (
       <div className="appTabBar">

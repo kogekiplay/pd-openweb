@@ -13,17 +13,17 @@ export default class lineClampTextBox extends Component<any, any> {
     this.$textContent = createRef();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     setTimeout(() => {
       this.renderLineClampText();
     }, 0);
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     return compareProps(nextProps, this.props, ['text']);
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     setTimeout(() => {
       this.renderLineClampText();
     }, 0);
@@ -43,7 +43,7 @@ export default class lineClampTextBox extends Component<any, any> {
 
     return;
   }
-  render() {
+  override render() {
     const { className, style, text, line = 2, ...props } = this.props;
     return (
       <div

@@ -114,7 +114,7 @@ class ExportAttachment extends Component<any, any> {
     this.props.onCancel();
   };
 
-  render() {
+  override render() {
     const { onCancel = () => {}, attachmentControls = [], isCharge } = this.props;
     const { hyphen, hyphenValue, nameMethodValues = [], selectControlIds = [], generateFolder } = this.state;
 

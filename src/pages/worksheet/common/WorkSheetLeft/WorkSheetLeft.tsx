@@ -36,7 +36,7 @@ function getProjectfoldedFromStorage() {
 }
 
 class WorkSheetLeft extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     worksheetId: PropTypes.string,
     sheetListActions: PropTypes.object,
     sheetList: PropTypes.array,
@@ -48,15 +48,15 @@ class WorkSheetLeft extends Component<any, any> {
       projectFolded: getProjectfoldedFromStorage(),
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getSheetList(this.props);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.sheetListActions.updateSheetListLoading(true);
     this.props.sheetListActions.clearSheetList();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.groupId !== prevProps.groupId) {
         this.getSheetList(this.props);
@@ -168,7 +168,7 @@ class WorkSheetLeft extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { loading, isUnfold, secondLevelGroup = false, appPkg, style } = this.props;
     const { data } = this;
 

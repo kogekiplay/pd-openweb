@@ -159,7 +159,7 @@ export default class GroupsList extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getGroupsList();
   }
 
@@ -400,7 +400,7 @@ export default class GroupsList extends Component<any, any> {
     this.setState({ selectKeys });
   };
 
-  render() {
+  override render() {
     const { selectKeys, types, status, loading, list, count, pageSize, pageIndex } = this.state;
     const rowSelection = {
       selectedRowKeys: selectKeys,

@@ -20,7 +20,7 @@ const createWorksheetList = [
 ];
 
 class WorksheetEmpty extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     dispatch: PropTypes.func,
   };
   constructor(props) {
@@ -204,7 +204,7 @@ class WorksheetEmpty extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { isValidAppSectionId } = this.props;
     return (
       <div className="worksheetEmpty noneData">

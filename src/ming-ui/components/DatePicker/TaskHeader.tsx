@@ -12,7 +12,7 @@ class TaskHeader extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     return (
       <div className="calender-task-header">
         <div className="calender-task-header-col">

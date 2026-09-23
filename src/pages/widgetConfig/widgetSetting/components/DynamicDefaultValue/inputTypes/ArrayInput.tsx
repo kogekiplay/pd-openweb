@@ -7,7 +7,7 @@ import { DynamicValueInputWrap } from '../styled';
 import { transferValue } from '../util';
 
 export default class ArrayInput extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
     onDynamicValueChange: func,
     clearOldDefault: func,
@@ -18,7 +18,7 @@ export default class ArrayInput extends Component<any, any> {
     dynamicValue: [],
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const { dynamicValue, data, clearOldDefault, onDynamicValueChange } = this.props;
     const { default: defaultValue } = data;
 
@@ -30,7 +30,7 @@ export default class ArrayInput extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (JSON.stringify(this.props.dynamicValue) !== JSON.stringify(prevProps.dynamicValue)) {
       if (this.$tagtextarea) {
         // 光标现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}
@@ -80,7 +80,7 @@ export default class ArrayInput extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { defaultType } = this.props;
     return (
       <DynamicValueInputWrap ref={con => { this.$textinput = con; }} triggerStyle={true}>

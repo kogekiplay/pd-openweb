@@ -70,7 +70,7 @@ export default class Workwx extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     Ajax.getWXProjectSettingInfo({ projectId: this.props.projectId }).then(res => {
       this.setState({
         pageLoading: false,
@@ -664,7 +664,7 @@ export default class Workwx extends React.Component<any, any> {
     }
     return undefined;
   };
-  render() {
+  override render() {
     let { intergrationType, currentTab, status, isProxy } = this.state;
     const { projectId } = this.props;
 

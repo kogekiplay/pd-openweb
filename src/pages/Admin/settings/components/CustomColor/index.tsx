@@ -85,7 +85,7 @@ export default class CustomColor extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getColorSettings();
   }
 
@@ -321,7 +321,7 @@ export default class CustomColor extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { system_color, custom_color, system_char, custom_char, customChartDialog } = this.state;
 
     return (

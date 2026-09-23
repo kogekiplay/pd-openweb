@@ -34,12 +34,12 @@ class PositionInfo extends Component<any, any> {
     this.state = { showRoleDialog: false };
     this.ajaxObj = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.props.updatePositionPageInfo({ pageIndex: 1, isMore: false });
     this.props.updateProjectId(Config.projectId);
     this.props.getPositionList();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.updateUserloading(true);
   }
   // 导出职位列表
@@ -118,7 +118,7 @@ class PositionInfo extends Component<any, any> {
       </div>
     );
   };
-  render() {
+  override render() {
     const { positionList = [], isLoading = false, currentPosition, projectId, isImportRole, searchValue } = this.props;
     let { showRoleDialog, filed } = this.state;
 

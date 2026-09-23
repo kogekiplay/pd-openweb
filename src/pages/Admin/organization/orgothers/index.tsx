@@ -60,7 +60,7 @@ export default class Orgothers extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { level, exportVisible } = this.state;
 
     return (

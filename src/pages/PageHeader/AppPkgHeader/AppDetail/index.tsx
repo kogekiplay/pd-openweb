@@ -106,7 +106,7 @@ let mousePosition = {
   y: 23,
 };
 let AppInfo = class AppInfo extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appStatus: oneOf([0, 1, 2, 3, 4, 5]),
     updateColor: func,
     updateNavColor: func,
@@ -166,7 +166,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     this.checkNavigationStyle(_.get(this.state.data, 'currentPcNaviStyle'));
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.unmounted = false;
     this.ids = getIds(this.props);
     this.getData();
@@ -182,7 +182,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     emitter.addListener('REFRESH_APP_DETAIL', this.getData);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.ids = getIds(this.props);
       const { data } = this.state;
@@ -238,7 +238,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.unmounted = true;
     clearTimeout(this.timer);
     $('[rel="icon"]').attr('href', '/favicon.png?t=' + Date.now());
@@ -1029,7 +1029,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { appStatus, ...props } = this.props;
     const {
       indexSideVisible,

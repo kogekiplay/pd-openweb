@@ -38,7 +38,7 @@ const Box = styled.div`
   }
 `;
 export default class HistoryList extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     processId: string,
     data: any,
     accumulation: any,
@@ -59,7 +59,7 @@ export default class HistoryList extends Component<any, any> {
     onUpdateBatchIds: () => {},
   };
 
-  state = {
+  override state = {
     showList: false,
   };
 
@@ -233,7 +233,7 @@ export default class HistoryList extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { data, isChatbot, ...res } = this.props;
 
     return (

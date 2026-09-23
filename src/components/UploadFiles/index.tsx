@@ -44,8 +44,8 @@ const errorCode = {
 };
 
 export default class UploadFiles extends Component<any, any> {
-  static contextType = RecordInfoContext;
-  static propTypes = {
+  static override contextType = RecordInfoContext;
+  static override propTypes = {
     /**
      * 不限制上传的量
      */
@@ -193,7 +193,7 @@ export default class UploadFiles extends Component<any, any> {
     this.tokens = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { temporaryData, kcAttachmentData } = this.state;
     const { isInitCall } = this.props;
 
@@ -203,7 +203,7 @@ export default class UploadFiles extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if ('attachmentData' in this.props && !this._uploading) {
         this.setState({
@@ -966,7 +966,7 @@ export default class UploadFiles extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     let {
       advancedSetting = {},
       controlId,

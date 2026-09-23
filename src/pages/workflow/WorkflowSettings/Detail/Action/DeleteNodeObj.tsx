@@ -29,7 +29,7 @@ export default class DeleteNodeObj extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { data, updateSource } = this.props;
 
     return (

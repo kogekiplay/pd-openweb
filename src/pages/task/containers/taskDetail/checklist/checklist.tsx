@@ -23,7 +23,7 @@ function getNode(component) {
 }
 
 class ChecklistOperator extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     const { isShowOperator } = this.props;
     const clipboardText = this.props.data.name;
 
@@ -40,7 +40,7 @@ class ChecklistOperator extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     return (
       <ClickAwayable
         component="ul"
@@ -239,7 +239,7 @@ let Checklist: any = class Checklist extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { data, connectDragSource, connectDropTarget } = this.props;
     const items = data.items || [];
     const sum = items.length;

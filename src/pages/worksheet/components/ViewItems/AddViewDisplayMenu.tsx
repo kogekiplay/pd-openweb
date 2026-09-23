@@ -225,7 +225,7 @@ const GuildText = {
 const LoadableLottie = lazy(() => import('react-lottie'));
 const LOTTIE_EVENT_LISTENERS = [];
 export default class AddViewDisplayMenu extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
 
   constructor(props) {
@@ -239,7 +239,7 @@ export default class AddViewDisplayMenu extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { canAddCustomView } = this.props;
 
     if (canAddCustomView) {
@@ -249,7 +249,7 @@ export default class AddViewDisplayMenu extends Component<any, any> {
 
   //或是自定义列表，更新customList //或是自定义列表，更新customList
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { canAddCustomView, popupVisible } = this.props;
 
@@ -317,7 +317,7 @@ export default class AddViewDisplayMenu extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { onClick, canAddCustomView, projectId, ...rest } = this.props;
     const { myPlugins = [], orgPlugins = [], loading, retract } = this.state;
     const hasPluginAuth =

@@ -17,7 +17,7 @@ export default class TimeSelect extends Component<any, any> {
    * 修改类型
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.text && this.text.value !== this.props.data.number) {
         this.text.value = this.props.data.number;
@@ -60,7 +60,7 @@ export default class TimeSelect extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { data, dateNoTime, updateSource } = this.props;
     const list = [
       {

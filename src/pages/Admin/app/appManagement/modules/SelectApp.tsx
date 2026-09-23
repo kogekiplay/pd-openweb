@@ -24,7 +24,7 @@ export default class SelectApp extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getList();
   }
 
@@ -169,7 +169,7 @@ export default class SelectApp extends React.Component<any, any> {
     this.getList();
   }, 200);
 
-  render() {
+  override render() {
     const { selectList } = this.state;
 
     return (

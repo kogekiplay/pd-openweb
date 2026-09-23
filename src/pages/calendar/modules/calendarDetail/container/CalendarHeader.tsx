@@ -9,7 +9,7 @@ import Textarea from 'ming-ui/components/Textarea';
 import { Config, getCalendarColor, getUserAllCalCategories } from '../common';
 
 export default class CalendarHeader extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     title: PropTypes.string.isRequired,
     auth: PropTypes.object.isRequired,
     color: PropTypes.number.isRequired,
@@ -37,7 +37,7 @@ export default class CalendarHeader extends Component<any, any> {
     };
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     const { isShowCategory, isCategoryReady } = this.state;
 
     // 首次在打开时去加载 日程分类
@@ -79,7 +79,7 @@ export default class CalendarHeader extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       title,
       auth: { showEdit },

@@ -47,7 +47,7 @@ function isEndOfMonth(current) {
 }
 
 class DateTBody extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabledDate: PropTypes.func,
     prefixCls: PropTypes.string,
     value: PropTypes.object,
@@ -55,7 +55,7 @@ class DateTBody extends Component<any, any> {
     selectedValue: PropTypes.oneOfType([PropTypes.object, PropTypes.arrayOf(PropTypes.object)]),
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const { prefixCls, selectedValue, value, disabledDate, direction } = props;
     let iIndex;

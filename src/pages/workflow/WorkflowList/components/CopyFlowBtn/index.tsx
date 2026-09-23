@@ -38,7 +38,7 @@ export default class CopyFlowBtn extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { isConvertSubProcess, isConvertPBP } = this.props;
 
     return (
