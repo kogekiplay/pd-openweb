@@ -207,7 +207,9 @@ export default class MoreOverlay extends Component<any, any> {
     const isFavorite =
       _.find(md.global.Account.projects, { projectId }) &&
       !window.isPublicApp &&
-      !window.shareState.id &&
+      // 原来写的是 shareState.id —— 全仓（含上游）从没人写过这个字段，条件恒为真，
+      // 登录用户打开公开图表 / 公开页面链接时照样看得到「收藏」。分享 id 一直叫 shareId
+      !window.shareState.shareId &&
       !md.global.Account.isPortal &&
       sourceType !== 2;
     return (

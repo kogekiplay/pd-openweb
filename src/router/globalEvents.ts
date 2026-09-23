@@ -149,8 +149,9 @@ export const initThemeMode = () => {
       localStorage.setItem('themeMode', getDefaultThemeMode());
     }
 
-    if (['dark', 'light'].includes(localStorage.getItem('themeMode'))) {
-      window.themeMode = localStorage.getItem('themeMode');
+    const savedThemeMode = localStorage.getItem('themeMode');
+    if (savedThemeMode === 'dark' || savedThemeMode === 'light') {
+      window.themeMode = savedThemeMode;
       setBodyThemeMode(window.themeMode);
     } else {
       window.themeMode = e.matches ? 'dark' : 'light';

@@ -476,6 +476,110 @@ interface Window {
   /** 表格单元格复制出来的内容，JSON 串（control.ts / CellControls 写入，粘贴时读取） */
   tempCopyForSheetView?: string;
 
+  // ---- 第二批（2026-09-23 傍晚）----
+  /**
+   * 分发类入口（公开表单 / 视图 / 记录 / 页面 / 图表…）的状态与分享 id。
+   * src/common/preall.tsx 的 parseShareId 启动时按路径写入（初值是 {}，所以字段全可选）；
+   * 嵌入式 Mingo 入口（widgetEntry）自己兜底一个空对象。
+   */
+  shareState: {
+    /** 从 /public/<类型>/<id> 路径里取：公开表单 32 位，其余 24 位 */
+    shareId?: string | undefined;
+    isPublicPrint?: boolean | undefined;
+    isPublicQuery?: boolean | undefined;
+    isPublicForm?: boolean | undefined;
+    /** 公开表单的预览态（门户账号信息页会按上下文改写） */
+    isPublicFormPreview?: boolean | undefined;
+    isPublicView?: boolean | undefined;
+    isPublicRecord?: boolean | undefined;
+    isPublicWorkflowRecord?: boolean | undefined;
+    isPublicPage?: boolean | undefined;
+    isPublicChart?: boolean | undefined;
+    isPublicChatbot?: boolean | undefined;
+    isPublicApidoc?: boolean | undefined;
+  };
+  /** 公开应用（/public/app/...）标记，src/common/preall.tsx 写入 */
+  isPublicApp?: boolean;
+  /**
+   * 用户选的主题，'system' 表示跟随系统。router/globalEvents 启动时按 localStorage 写入，
+   * 个人设置（桌面 / 门户 / 移动端）切换时改写。
+   */
+  themeMode?: 'light' | 'dark' | 'system';
+  /** 系统默认语言的 key（如 'zh-Hans'），src/common/global.ts */
+  getDefaultLangKey: () => string;
+  /** 可设置的语言列表（SysSettings.defaultAllowLangs 过滤后的 langConfig），src/common/global.ts */
+  getAllowLangConfig: () => typeof import('src/common/langConfig').default;
+  /**
+   * 指定接口编辑后清掉本地缓存的时间戳，让下次读取走接口（src/common/global.ts）。
+   * requestData 是那次请求的参数，用来拼缓存键。
+   */
+  clearLocalDataTime: (options: {
+    // 这两个拼成「接口名」去匹配各缓存的 clearInterface；多数调用方只按 clearSpecificKeys 清，不给
+    controllerName?: string;
+    actionName?: string;
+    requestData?: ApiArgs;
+    clearSpecificKeys?: string[];
+  }) => void;
+  /**
+   * 按 ESC 关闭的弹层登记表：Modal / Dialog / 附件预览打开时登记、关闭时删掉，
+   * router/globalEvents 收到 ESC 时调 index 最大那一项的 fn。
+   * fn 写成方法签名是有意的：登记进来的是各组件的 onCancel / onClose，参数类型各写各的，
+   * 而这里实际传进去的一律是 keydown 事件。
+   */
+  closeFns: {
+    // Modal 的 id 是 Math.random() 算出来的数，Dialog / 附件预览是字符串
+    [id: string]: { id: string | number; className?: string | undefined; index?: number | undefined; fn?(e: KeyboardEvent): void };
+  };
+  /** closeFns 的层级计数，打开一层 +1、全关时归零（首次打开前是 undefined） */
+  closeindex?: number;
+  /** 启动时从 global meta 取到的系统配置：preall 的 finish 写入（SSO、公开表单各自再写一次） */
+  config: {
+    /** IM 长连接退回轮询 */
+    SocketPolling?: boolean | undefined;
+    /** 文件访问前缀 */
+    FilePath?: string | undefined;
+    /** 头像等附件访问前缀 */
+    AttrPath?: string | undefined;
+    /** IM 服务地址 */
+    SERVER_NAME?: string | undefined;
+    /** 自定义视图插件（WidgetView）在 iframe 里时，postMessage 回宿主要带的容器 id；本仓只有读、没有写入点 */
+    containerId?: string | undefined;
+  };
+  /** 公开分享 / 开放接口文档页拿到授权后写入的 clientId */
+  clientId?: string;
+  /** 移动端记录列表：点开记录时是否新开页（View 组件按视图配置写入，离开时清成 undefined） */
+  APP_OPEN_NEW_PAGE?: boolean | undefined;
+  /** 当前激活的表格实例 id：表单里有多个子表 / 关联表时，键盘和点击外部的处理只认它 */
+  activeTableId?: string | undefined;
+  /** 错开弹出的 Modal 已叠了几层（dislocate 的 Modal 每多一层往右错 10px，全关时归零） */
+  dislocateCount?: number;
+  /** 为 true 时应用页头的应用导航浮层不弹出（角色页、Chatbot、工作表头的某些操作期间写 true） */
+  disabledSideButton?: boolean;
+  /** 公开表单的分享 id（PublicWorksheet 写入） */
+  publicWorksheetShareId?: string;
+  /** 工作表左侧分组 mousedown 的时间戳，按住移动超过 50ms 才算拖拽；松开清成 null */
+  dragNow?: number | null;
+  /** 单元格编辑器正在失焦保存：子表弹窗的提交要等它 1 秒 */
+  cellTextIsBlurring?: boolean;
+  /** 页面马上要跳走（改语言后重载、跳登录等）：preall 置 true，根组件只渲染加载中 */
+  isWaiting?: boolean;
+  /** 各工作表的草稿条数，键是 worksheetId */
+  draftTotalNumInfo?: { [worksheetId: string]: number };
+  /** 表单设计器 / 函数编辑器挂出来的全局事件总线（就是 src/utils/common 的 emitter） */
+  emitter?: import('events').EventEmitter;
+  /** 知识库上传助手的弹出窗口（window.open 的返回值） */
+  uploadAssistantWindow?: Window | null;
+  /** 自定义页面的重排函数：页面组件挂上去，页头切换全屏 / 收起时调它 */
+  customPageWindowResize?: () => void;
+  /** 打开 Mingo 时预填的输入框文字 */
+  mingoInitialMessage?: string;
+  /** 打开 Mingo 时要进入的会话 */
+  mingoInitialSessionId?: string | undefined;
+  /** 从别处交接到 Mingo 时的交接键 */
+  mingoInitialHandoffKey?: string;
+  /** 打开 Mingo 时要进入的分组 */
+  mingoInitialGroupId?: string;
+
   // !! 测量污染开关 !!
   // 全仓有 4076 处 window.X 访问、276 个不同属性名，其中最热的
   // platformENV(801)/isMingDaoApp(135)/isPublicApp(125)/shareState(123)/
