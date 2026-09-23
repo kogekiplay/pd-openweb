@@ -50,7 +50,9 @@ function Relation(props) {
                     </span>
                   </a>
                 ) : (
-                  <span className="relatioName">{`[${RELATION_TYPE_NAME[relation.type]}]` + _l('已删除')}</span>
+                  <span key={index} className="relatioName">
+                    {`[${RELATION_TYPE_NAME[relation.type]}]` + _l('已删除')}
+                  </span>
                 ),
               )}
         </div>

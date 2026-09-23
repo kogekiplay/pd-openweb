@@ -40,7 +40,7 @@ export default props => {
         )}
       </div>
       {urlParams.map((value, index: number) => (
-        <div className="flexRow alignItemsCenter mBottom10 urlParamsWrap">
+        <div key={index} className="flexRow alignItemsCenter mBottom10 urlParamsWrap">
           <Input
             placeholder={_l('请输入参数名')}
             className="pageInput"

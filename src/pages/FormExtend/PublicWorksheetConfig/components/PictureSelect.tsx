@@ -83,8 +83,9 @@ export default class extends React.Component<any, any> {
     return (
       <div>
         <PicList>
-          {images.slice(pageIndex * 12, (pageIndex + 1) * 12).map(url => (
+          {images.slice(pageIndex * 12, (pageIndex + 1) * 12).map((url, index) => (
             <Pic
+              key={index}
               onClick={() => onChange(`${md.global.FileStoreConfig.pubHost}/${url}`)}
               style={{ background: `url(${md.global.FileStoreConfig.pubHost}/${url}?imageView2/1/w/160)` }}
             >
@@ -101,6 +102,7 @@ export default class extends React.Component<any, any> {
         <Pages>
           {[...new Array(Math.ceil(images.length / 12))].map((a, i) => (
             <PageCon
+              key={i}
               onClick={() => {
                 this.setState({ pageIndex: i });
               }}

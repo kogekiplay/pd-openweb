@@ -64,10 +64,10 @@ function OperateDialog(props) {
   return (
     <Dialog width={480} visible={true} title={_l('批量操作设置')} onCancel={onClose} onOk={() => onOk(batchInfo)}>
       <div className="flexColumn pTop8">
-        {BATCH_OPTIONS.map(item => {
+        {BATCH_OPTIONS.map((item, index) => {
           const defaultValue = getAdvanceSetting(data)[item.disabledKey] || '1';
           return (
-            <div className="labelWrap mBottom10 ">
+            <div key={index} className="labelWrap mBottom10 ">
               <Checkbox
                 size="small"
                 {...(item.disabledKey ? { disabled: getAdvanceSetting(data, [item.disabledKey]) === 0 } : {})}
@@ -79,9 +79,9 @@ function OperateDialog(props) {
             </div>
           );
         })}
-        {BATCH_OPTIONS_RELATE_VIEW.map(item => {
+        {BATCH_OPTIONS_RELATE_VIEW.map((item, index) => {
           return (
-            <div className="labelWrap mBottom10 flexCenter">
+            <div key={index} className="labelWrap mBottom10 flexCenter">
               <Checkbox
                 size="small"
                 disabled={!isRelateView}

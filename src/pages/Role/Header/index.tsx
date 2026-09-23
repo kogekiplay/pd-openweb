@@ -100,10 +100,11 @@ export default function RoleHeader(props) {
         <WrapTabCon className="editTypeTab">
           {[0, 1]
             .filter(o => (canEnterPortal ? true : o !== 1))
-            .map(o => {
+            .map((o, index) => {
               if (o === 1 && !featureType) return;
               return (
                 <span
+                  key={index}
                   className={cx('editTypeTabLi Hand Bold Font14', { current: editType === o })}
                   onClick={() => {
                     if (o === editType) return;

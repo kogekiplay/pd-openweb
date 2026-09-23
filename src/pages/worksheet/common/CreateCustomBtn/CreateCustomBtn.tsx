@@ -686,7 +686,7 @@ class CreateCustomBtnCon extends React.Component<any, any> {
                   } else {
                     const controlName = writeControlsData && writeControlsData.controlName;
                     return (
-                      <React.Fragment>
+                      <React.Fragment key={i}>
                         <span className="Bold WordBreak">
                           {controlName || (writeControlsData.type === 22 ? _l('分割线') : _l('备注'))}
                         </span>
@@ -913,9 +913,10 @@ class CreateCustomBtnCon extends React.Component<any, any> {
           onPopupVisibleChange={visible => this.setState({ showCustomIcon: visible })}
           popup={
             <ul className="buttonTrigger">
-              {ICONS.map(item => {
+              {ICONS.map((item, index) => {
                 return (
                   <li
+                    key={index}
                     className={cx('buttonSetLi iconLi Hand', {
                       current: item === icon && !!item,
                       Font20: !item,

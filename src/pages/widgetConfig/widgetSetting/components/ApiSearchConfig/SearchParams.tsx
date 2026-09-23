@@ -107,13 +107,13 @@ export default function SearchParams(props) {
 
   return (
     <ControlWrap fromOperationFlow={fromOperationFlow}>
-      {requestControls.map(item => {
+      {requestControls.map((item, index) => {
         const hasValue = _.get(
           _.find(requestmap, i => i.id === item.controlId),
           'defsource',
         );
         return (
-          <Fragment>
+          <Fragment key={index}>
             {renderItem(item)}
             {item.child && hasValue && <div className="childContent">{item.child.map(c => renderItem(c))}</div>}
           </Fragment>

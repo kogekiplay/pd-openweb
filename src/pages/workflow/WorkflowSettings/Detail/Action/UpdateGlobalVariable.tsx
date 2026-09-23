@@ -85,7 +85,7 @@ export default props => {
 
       {data.fields.map((item, i) => {
         return (
-          <Fragment>
+          <Fragment key={i}>
             <ul className="flowDetailMembers">
               <li className="flexRow">
                 <Tag

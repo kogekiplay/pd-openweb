@@ -299,9 +299,10 @@ let SelectFields = class SelectFields extends Component<any, any> {
                     <span>{name}</span>
                   </div>
                   <ul className="fieldList">
-                    {list.map(({ text, id }) => {
+                    {list.map(({ text, id }, index) => {
                       return (
                         <li
+                          key={index}
                           className="overflow_ellipsis"
                           onClick={() =>
                             onClick({

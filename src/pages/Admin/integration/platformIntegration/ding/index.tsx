@@ -556,9 +556,10 @@ export default class Ding extends React.Component<any, any> {
               )}
               <div className="stepItem">
                 <h3 className="stepTitle Font16 textPrimary pBottom5">{_l('应用在钉钉PC端打开方式')}</h3>
-                {optionTypes.map(item => {
+                {optionTypes.map((item, index) => {
                   return (
                     <Radio
+                      key={index}
                       className="Block mTop20"
                       disabled={this.state.isCloseDing}
                       checked={this.state.intergrationClientWorkingPattern === item.key}

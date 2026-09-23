@@ -298,8 +298,8 @@ export default function InvoiceForm(props) {
 
         {(isExpand || isConfirmOrTest) &&
           formData.invoiceOutputType === 1 &&
-          optionalFields.map(item => (
-            <div className="formItem">
+          optionalFields.map((item, index) => (
+            <div key={index} className="formItem">
               <div className="label">{item.label}</div>
               {renderFieldComponent(item.key)}
             </div>

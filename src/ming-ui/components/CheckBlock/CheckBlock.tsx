@@ -23,8 +23,12 @@ export default class CheckBlock extends React.Component<any, any> {
     const { data, value, onChange } = this.props;
     return (
       <div className="checkBlock">
-        {data.map(item => (
-          <div className={cx('block', { active: item.value === value })} onClick={() => onChange(item.value)}>
+        {data.map((item, index) => (
+          <div
+            key={index}
+            className={cx('block', { active: item.value === value })}
+            onClick={() => onChange(item.value)}
+          >
             {item.text}
           </div>
         ))}

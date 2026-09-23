@@ -44,9 +44,10 @@ export default function PromptMessage(props) {
         <SettingItem className="mTop0">
           <div className="settingItemTitle">{_l('提示类型')}</div>
           <div className="flexCenter">
-            {ALERT_TYPE_OPTIONS.map(item => {
+            {ALERT_TYPE_OPTIONS.map((item, index) => {
               return (
                 <div
+                  key={index}
                   className={cx('alertContent mRight10', { active: item.value === advancedSetting.alerttype })}
                   onClick={() => {
                     setState({ advancedSetting: { ...advancedSetting, alerttype: item.value } });

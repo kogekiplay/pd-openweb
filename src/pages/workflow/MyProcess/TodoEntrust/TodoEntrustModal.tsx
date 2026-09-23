@@ -420,9 +420,10 @@ export default function TodoEntrustModal(props) {
       <FormItem>
         <span className="bold">{_l('委托范围')}</span>
         <div className="flexRow alignItemsCenter mTop16">
-          {ENTRUST_SCOPE.filter(item => (item.value === 2 ? formData.companyId : true)).map(item => {
+          {ENTRUST_SCOPE.filter(item => (item.value === 2 ? formData.companyId : true)).map((item, index) => {
             return (
               <Radio
+                key={index}
                 text={item.text}
                 checked={item.value === formData.scope}
                 onClick={() => {

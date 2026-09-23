@@ -43,9 +43,10 @@ export default props => {
 
   return (
     <DatePickerFilterWrap ref={$ref}>
-      {(dataConfig || Config.DATE_FILTER).map(({ id, text, pastDays }) =>
+      {(dataConfig || Config.DATE_FILTER).map(({ id, text, pastDays }, index) =>
         id === 'custom' ? (
           <DatePicker.RangePicker
+            key={index}
             offset={{ left: -533, top: -185 }}
             popupParentNode={() => $ref.current}
             onOk={([start, end]) => {

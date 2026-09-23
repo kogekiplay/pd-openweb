@@ -52,7 +52,7 @@ const moreErrorDialog = (startTime, updateTypes, callback) => {
     children: (
       <React.Fragment>
         {updateTypes.map((item, i) => (
-          <div className="tanttRadio" data-type={item}>
+          <div key={i} className="tanttRadio" data-type={item}>
             <span
               className="tanttRadioItem"
               onClick={e => {

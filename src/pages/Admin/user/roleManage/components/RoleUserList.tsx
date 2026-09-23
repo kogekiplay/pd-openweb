@@ -108,8 +108,8 @@ class RoleUserList extends Component<any, any> {
               ) : (
                 <div>
                   {(departmentsPath.find(l => l.accountId === item.accountId) || { departments: [] }).departments.map(
-                    l => (
-                      <div>{l.name}</div>
+                    (l, index) => (
+                      <div key={index}>{l.name}</div>
                     ),
                   )}
                 </div>

@@ -248,9 +248,9 @@ class TaskNode extends Component<any, any> {
     return (
       <WrapAct>
         <ul>
-          {ACTION_LIST.map(o => {
+          {ACTION_LIST.map((o, index) => {
             return (
-              <React.Fragment>
+              <React.Fragment key={index}>
                 <li
                   className={'flexRow alignItemsCenter Hand'}
                   onClick={() => {

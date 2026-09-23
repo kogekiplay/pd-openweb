@@ -373,7 +373,7 @@ export default class Filter extends Component<any, any> {
           }}
         >
           {operationTypeData.map((item, index) => (
-            <Select.Option className="processOptionWrapper" value={index}>
+            <Select.Option key={index} className="processOptionWrapper" value={index}>
               {item.text}
             </Select.Option>
           ))}
@@ -398,7 +398,7 @@ export default class Filter extends Component<any, any> {
           }}
         >
           {statusData.map((item, index) => (
-            <Select.Option className="processOptionWrapper" value={index}>
+            <Select.Option key={index} className="processOptionWrapper" value={index}>
               {item.text}
             </Select.Option>
           ))}
@@ -501,8 +501,8 @@ export default class Filter extends Component<any, any> {
           <Select.Option className="processOptionWrapper" value="">
             {_l('全部')}
           </Select.Option>
-          {projects.map(item => (
-            <Select.Option className="processOptionWrapper" value={item.projectId}>
+          {projects.map((item, index) => (
+            <Select.Option key={index} className="processOptionWrapper" value={item.projectId}>
               {item.companyName}
             </Select.Option>
           ))}

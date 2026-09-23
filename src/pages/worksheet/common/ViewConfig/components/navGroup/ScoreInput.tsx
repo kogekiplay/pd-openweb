@@ -84,6 +84,7 @@ export default function ScoreInput(props) {
             let num = i + 1;
             return (
               <div
+                key={i}
                 className={cx('flexRow dropLi Hand', { cur: (props.values || []).includes(num + '') })}
                 onClick={() => {
                   if ((props.values || []).includes(num + '')) {

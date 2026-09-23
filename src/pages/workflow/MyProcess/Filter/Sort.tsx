@@ -10,8 +10,9 @@ export default props => {
       trigger={['click']}
       placement="bottomLeft"
       popupRender={() => <Menu className="" expandIcon={<Icon icon="arrow-right-tip" />} style={{ width: 180 }}>
-          {SORT_LIST.map(item => (
+          {SORT_LIST.map((item, index) => (
             <Menu.Item
+              key={index}
               data-event={item.icon}
               className="pLeft10"
               style={{ padding: '7px var(--space-3)' }}

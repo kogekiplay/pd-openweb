@@ -928,7 +928,6 @@ export default class TransactionDetails extends Component<any, any> {
                   className={cx('Font26 bold mLeft10', {
                     colorPrimary: _.includes(['totalAmount', 'dateRangeTotalAmount', 'realAmount'], id),
                   })}
-                  zw
                 >
                   {!_.isUndefined(this.state[id]) ? <MaskText text={formatNumberThousand(this.state[id])} /> : '-'}
                 </span>

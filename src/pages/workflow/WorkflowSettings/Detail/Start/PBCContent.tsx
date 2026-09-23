@@ -704,9 +704,9 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
                 {[
                   { text: selectItem.type === 9 ? _l('下拉框') : _l('勾选框'), value: '0' },
                   { text: selectItem.type === 9 ? _l('平铺') : _l('开关'), value: '1' },
-                ].map(item => {
+                ].map((item, index) => {
                   return (
-                    <div className="mRight20" style={{ width: 200 }}>
+                    <div key={index} className="mRight20" style={{ width: 200 }}>
                       <Radio
                         key={item.value}
                         checked={item.value === (_.get(selectItem, 'advancedSetting.showtype') || '0')}
@@ -727,9 +727,9 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
                 {[
                   { text: _l('横向排列'), value: '2' },
                   { text: _l('纵向排列'), value: '1' },
-                ].map(item => {
+                ].map((item, index) => {
                   return (
-                    <div className="mRight20" style={{ width: 200 }}>
+                    <div key={index} className="mRight20" style={{ width: 200 }}>
                       <Radio
                         key={item.value}
                         checked={item.value === (_.get(selectItem, 'advancedSetting.direction') || '2')}

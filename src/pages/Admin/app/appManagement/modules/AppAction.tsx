@@ -85,7 +85,7 @@ export default function BatchImportApp(props) {
         popup={() => {
           return (
             <ul className="optionPanelTrigger moreOptionPanelTrigger">
-              {optionData.map(item => {
+              {optionData.map((item, index) => {
                 const featureType = getFeatureStatus(projectId, item.featureId);
 
                 // 私有部署支持迁移模式、公有云使用应用访问策略指标（用于测试）
@@ -102,6 +102,7 @@ export default function BatchImportApp(props) {
                   // 仅私有部署支持迁移模式
                   return (
                     <Trigger
+                      key={index}
                       action={['hover']}
                       popupVisible={importAppPopupVisible}
                       onPopupVisibleChange={visible => setData({ importAppPopupVisible: visible })}

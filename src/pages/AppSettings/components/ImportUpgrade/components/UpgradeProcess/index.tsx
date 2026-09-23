@@ -683,7 +683,7 @@ export default class UpgradeProcess extends Component<any, any> {
             <div className="textTertiary Font13 TxtCenter">{_l('数据正在加载中...')}</div>
           </div>
         ) : (
-          UPGARADE_TYPE_LIST.map(item => {
+          UPGARADE_TYPE_LIST.map((item, index) => {
             const { type } = item;
             const itemList = (contrasts[type] || []).filter(v => (!modelType && v.upgradeType !== 4) || modelType);
             const isExpand = _.includes(expandTypeList, item.type);
@@ -692,6 +692,7 @@ export default class UpgradeProcess extends Component<any, any> {
 
             return (
               <UpgradeItemWrap
+                key={index}
                 modelType={modelType}
                 isWorksheetDetail={false}
                 itleClassName="Font15"

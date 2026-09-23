@@ -124,9 +124,9 @@ function WidgetBatch(props) {
                 <DropdownOverlay>
                   <div className="dropdownContent Width250">
                     {sectionData.length > 0 ? (
-                      sectionData.map(item => {
+                      sectionData.map((item, index) => {
                         return (
-                          <div className="item " onClick={() => handleOperate('move', item.controlId)}>
+                          <div key={index} className="item " onClick={() => handleOperate('move', item.controlId)}>
                             <div className="text overflow_ellipsis">{item.controlName}</div>
                           </div>
                         );
@@ -175,10 +175,10 @@ function WidgetBatch(props) {
 
         <SettingItem>
           <div className="settingItemTitle">{_l('字段属性')}</div>
-          {PERMISSION_OPTIONS.map(option => {
+          {PERMISSION_OPTIONS.map((option, idx) => {
             const { index, text, tips, mode } = option;
             return (
-              <div className="labelWrap">
+              <div key={idx} className="labelWrap">
                 <Checkbox
                   size="small"
                   className="customWidgetCheckbox"

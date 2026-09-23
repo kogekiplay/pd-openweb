@@ -9,6 +9,7 @@ import * as socketEvent from 'src/pages/chat/utils/socketEvent.js';
 import PortalMg from 'src/pages/Portal/PortalMg.jsx';
 import type { RootState } from 'src/redux/types';
 import { getAppFeaturesVisible } from 'src/utils/common';
+import type { AppDispatch } from 'src/redux/types';
 import './index.less';
 
 const Wrap = styled.div`
@@ -40,7 +41,8 @@ const Wrap = styled.div`
   }
 `;
 
-class PortalMessage extends Component<any, any> {
+// connect 包过、会收到 dispatch；socketEvent 里的函数用 .call(this) 调，要求 this.props.dispatch 存在
+class PortalMessage extends Component<{ dispatch: AppDispatch; [key: string]: any }, any> {
   constructor(props) {
     super(props);
     this.state = {

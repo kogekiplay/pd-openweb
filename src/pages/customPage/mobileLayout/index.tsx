@@ -110,9 +110,9 @@ export default function MobileLayout(props) {
         {hidedComponents.length > 0 ? (
           <ul>
             {hidedComponents.map(
-              item =>
+              (item, index) =>
                 !item.mobile.visible && (
-                  <li onClick={() => updateWidgetVisible({ widget: item, layoutType: 'mobile' })}>
+                  <li key={index} onClick={() => updateWidgetVisible({ widget: item, layoutType: 'mobile' })}>
                     <i className={`icon-${getIconByType(item.type)} textSecondary`}></i>
                     <div className="name overflow_ellipsis">{getComponentTitleText(item)}</div>
                     <i className="icon-add add"></i>

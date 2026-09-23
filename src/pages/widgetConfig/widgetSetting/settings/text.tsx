@@ -66,9 +66,10 @@ export default function Text(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('类型')}</div>
         <DisplayMode>
-          {DISPLAY_OPTIONS.map(item => {
+          {DISPLAY_OPTIONS.map((item, index) => {
             return (
               <Popover
+                key={index}
                 color="black"
                 classNames={{ root: 'textMarkdownTipsContainer' }}
                 content={item.value === 3 ? <MarkdownTips /> : ''}

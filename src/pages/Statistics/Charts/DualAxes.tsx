@@ -810,8 +810,8 @@ export default class extends Component<any, any> {
               {renderItem(summary)}
             </div>
           )}
-          {controlList.map(data => (
-            <div className="flexRow mRight10" style={{ alignItems: 'baseline' }}>
+          {controlList.map((data, index) => (
+            <div key={index} className="flexRow mRight10" style={{ alignItems: 'baseline' }}>
               {renderItem({
                 ...data,
                 name: data.name || _.get(_.find(yaxisList, { controlId: data.controlId }), 'controlName'),

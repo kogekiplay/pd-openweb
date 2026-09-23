@@ -515,8 +515,8 @@ export default class ExecutionDetails extends Component<any, any> {
               </Button>
               {window.platformENV.isOverseas ||
                 (window.platformENV.isLocal &&
-                  Object.keys(routerList).map(v => (
-                    <Button type="ghostgray" className="mRight10" onClick={() => this.updateRouterIndex(v)}>
+                  Object.keys(routerList).map((v, index) => (
+                    <Button key={index} type="ghostgray" className="mRight10" onClick={() => this.updateRouterIndex(v)}>
                       {_l(`通道：${routerList[v]}`)}
                     </Button>
                   )))}

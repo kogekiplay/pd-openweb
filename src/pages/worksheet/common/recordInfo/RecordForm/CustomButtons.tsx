@@ -1029,13 +1029,13 @@ export default class CustomButtons extends React.Component<any, any> {
 
         if (button.desc && type === 'button' && button.style !== 'icon') {
           return (
-            <Tooltip placement="bottom" title={button.desc}>
+            <Tooltip key={i} placement="bottom" title={button.desc}>
               {buttonComponent}
             </Tooltip>
           );
         } else if (button.style === 'icon') {
           return (
-            <Tooltip placement="bottom" title={button.name}>
+            <Tooltip key={i} placement="bottom" title={button.name}>
               {buttonComponent}
             </Tooltip>
           );
@@ -1044,8 +1044,8 @@ export default class CustomButtons extends React.Component<any, any> {
         }
       });
     } else if (type === 'iconText') {
-      buttonComponents = buttons.map(button => (
-        <Tooltip placement="bottom" title={button.desc}>
+      buttonComponents = buttons.map((button, index) => (
+        <Tooltip key={index} placement="bottom" title={button.desc}>
           <span>
             <IconText
               title={button.name}

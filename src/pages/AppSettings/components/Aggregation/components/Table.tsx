@@ -71,9 +71,9 @@ function Table(props) {
         {props.controls.length > 0 && (
           <div className="tableHeader flexRow">
             <div className="tag flexRow alignItemsCenter itemCon InlineBlock"></div>
-            {props.controls.map(control => {
+            {props.controls.map((control, index) => {
               return (
-                <div className="itemCon flex flexRow alignItemsCenter Relative" width={width}>
+                <div key={index} className="itemCon flex flexRow alignItemsCenter Relative" width={width}>
                   {props.showIcon && control.icon && (
                     <React.Fragment>
                       {control.color && <div className="colorCon" style={{ backgroundColor: control.color }}></div>}
@@ -99,11 +99,11 @@ function Table(props) {
           <React.Fragment>
             {props.data.map((o, i) => {
               return (
-                <div className="rowCon flexRow">
+                <div key={i} className="rowCon flexRow">
                   <div className="tag flexRow alignItemsCenter itemCon InlineBlock">{i + 1}</div>
-                  {props.controls.map(item => {
+                  {props.controls.map((item, index) => {
                     return (
-                      <div className="itemCon flex" width={width}>
+                      <div key={index} className="itemCon flex" width={width}>
                         <CellControl
                           cell={{ ...item, value: o[item.controlId] }}
                           worksheetId={props.worksheetId}

@@ -82,9 +82,9 @@ export default class InvitationList extends Component<any, any> {
         <ul className="pTop10">
           {list.length ? (
             <Fragment>
-              {list.map(item => {
+              {list.map((item, index) => {
                 return (
-                  <Fragment>
+                  <Fragment key={index}>
                     <li className="Left LineHeight25 Width250 overflow_ellipsis">{item.companyName}</li>
                     {this.renderOption(item)}
                   </Fragment>

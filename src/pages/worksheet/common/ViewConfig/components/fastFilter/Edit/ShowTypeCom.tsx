@@ -21,9 +21,10 @@ export default function ShowTypeCom(props) {
         }}
         value={safeParse(advancedSetting[data.key]) || data.default}
       >
-        {data.types.map(o => {
+        {data.types.map((o, index) => {
           return (
             <Radio
+              key={index}
               value={o.value}
               // disabled={data.key === 'direction' && Number(advancedSetting.allowitem) === 1 && o.value === 1} // 平铺类型只支持多选
             >

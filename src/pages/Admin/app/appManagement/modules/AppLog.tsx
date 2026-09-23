@@ -255,14 +255,14 @@ export default class AppLog extends React.Component<any, any> {
     const { list } = this.state;
     return (
       <Fragment>
-        {list.map(item => {
+        {list.map((item, index) => {
           const isAppItem = !!item.appItem;
           const message = createLinksForMessage({
             message: item.message,
             rUserList: [item.operator],
           });
           return (
-            <div className="appLogListItem">
+            <div key={index} className="appLogListItem">
               <div className="appLogListItemTop textTertiary">
                 <span className="flexCenter">
                   <span className={cx('Font15 mRight10 mBottom2', optionTypeIcon[item.handleType])}></span>

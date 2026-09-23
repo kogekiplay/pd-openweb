@@ -2414,10 +2414,10 @@ class TableViewBase extends React.Component<any, any> {
             allowAdjustScale={false}
             allowExportAsImage={false}
             customButtons={[
-              <span className="mLeft10 mRight20 Hand" onClick={expandAllTreeTableViewNode}>
+              <span key={'0'} className="mLeft10 mRight20 Hand" onClick={expandAllTreeTableViewNode}>
                 {_l('展开全部')}
               </span>,
-              <span className="Hand" onClick={collapseAllTreeTableViewNode}>
+              <span key={'1'} className="Hand" onClick={collapseAllTreeTableViewNode}>
                 {_l('收起全部')}
               </span>,
             ]}

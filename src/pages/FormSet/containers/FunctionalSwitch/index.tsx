@@ -221,7 +221,7 @@ function FunctionalSwitch(props) {
             <div className="switchBoxCon">
               <h5 className="Bold">{_l('功能开关')}</h5>
               <p>{_l('设置启用的系统功能和使用范围')}</p>
-              {allSwitch.map(o => {
+              {allSwitch.map((o, index) => {
                 const key = o.key;
                 let batchNum = info.data.filter(
                   item => batch.includes(item.type) && info.data.find(a => a.type === item.type).state,
@@ -232,12 +232,12 @@ function FunctionalSwitch(props) {
                 ).length;
                 let noStatistics = statisticsNum <= 0;
                 return (
-                  <React.Fragment>
+                  <React.Fragment key={index}>
                     <h6 className="Font13 mTop24 textPrimary Bold">{o.txt}</h6>
                     <ul className="mTop12">
                       {o.list
                         .filter(it => !hideList.includes(it))
-                        .map(oo => {
+                        .map((oo, index) => {
                           const o = info.data.find(a => a.type === oo) || {};
 
                           if (
@@ -250,7 +250,10 @@ function FunctionalSwitch(props) {
                           }
 
                           return (
-                            <li className={cx({ current: (info.showData.type || '') === o.type, isOpen: o.state })}>
+                            <li
+                              key={index}
+                              className={cx({ current: (info.showData.type || '') === o.type, isOpen: o.state })}
+                            >
                               {/* batch,statistics内的操作左侧没有开关*/}
                               {![...batch, ...statistics].includes(oo) ? (
                                 renderSwitch(o)

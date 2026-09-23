@@ -52,8 +52,12 @@ export default class MobileRadio extends Component<any, any> {
           {children ||
             data
               .filter(item => _.some(value, v => _.isEqual(v, item)))
-              .map(item => {
-                return <span className="ellipsis Font15">{item.value}</span>;
+              .map((item, index) => {
+                return (
+                  <span key={index} className="ellipsis Font15">
+                    {item.value}
+                  </span>
+                );
               })}
         </span>
 

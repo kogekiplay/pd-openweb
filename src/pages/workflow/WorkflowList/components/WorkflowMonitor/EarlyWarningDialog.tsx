@@ -164,6 +164,7 @@ class EarlyWarningDialog extends Component<any, any> {
               : true,
           ).map((item, index) => (
             <Checkbox
+              key={index}
               checked={noticeTypes.includes(item.value)}
               disabled={index === 0}
               onClick={() => this.onChangeNoticeTypes(item.value)}
@@ -245,9 +246,9 @@ class EarlyWarningDialog extends Component<any, any> {
         <NotifierCon>
           <span className="txtMiddle mRight20 pTop5">{_l('通知')}</span>
           <div className="notifierUsers">
-            {notifiers.map(it => {
+            {notifiers.map((it, index) => {
               return (
-                <NotifierItem>
+                <NotifierItem key={index}>
                   <UserHead
                     className="circle"
                     user={{

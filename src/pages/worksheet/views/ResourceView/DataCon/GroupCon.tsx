@@ -442,6 +442,7 @@ export default function GroupCon(props) {
             {displayControlsInfo.map((o, index) => {
               return (
                 <TbWrap
+                  key={index}
                   className="tb Relative flexRow alignItemsCenter h100"
                   style={{ width: isM ? '100%' : widthConfig[index + 1] || minControlWidth }}
                 >
@@ -567,6 +568,7 @@ export default function GroupCon(props) {
             const hoverHandlers = getResourceRowHoverHandlers(viewId, i);
             return (
               <div
+                key={i}
                 className="th flexRow alignItemsCenter Relative"
                 id={`resourceGroup_${viewId}_${i}`}
                 style={{
@@ -608,6 +610,7 @@ export default function GroupCon(props) {
                       : widthConfig[index + 1] || minControlWidth;
                   return (
                     <TbWrap
+                      key={index}
                       className={cx('tb overflow_ellipsis WordBreak h100 flexRow alignItemsCenter')}
                       style={{
                         width: tbW,

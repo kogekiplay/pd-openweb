@@ -127,8 +127,8 @@ const OptionItem = props => {
       <ul>
         {options
           .filter(item => !item.isDeleted)
-          .map(({ color, value }) => (
-            <li>
+          .map(({ color, value }, index) => (
+            <li key={index}>
               {colorful && <div className="colorWrap" style={{ backgroundColor: color }}></div>}
               <div className="name ellipsis flex">{value}</div>
             </li>
@@ -257,6 +257,7 @@ export default function AllOptionList(props) {
 
     return items.map((item, index) => (
       <OptionItem
+        key={index}
         {...item}
         status={currentTab}
         index={index}
@@ -297,8 +298,9 @@ export default function AllOptionList(props) {
         {[
           { label: _l('启用'), value: 1 },
           { label: _l('停用'), value: 9 },
-        ].map(item => (
+        ].map((item, index) => (
           <div
+            key={index}
             className={cx('tabItem Hand', { active: item.value === currentTab })}
             onClick={() => {
               setCurrentTab(item.value);

@@ -73,8 +73,8 @@ export default props => {
               });
             }}
           >
-            {refreshs.map(data => (
-              <Select.Option className="selectOptionWrapper" value={data.value}>
+            {refreshs.map((data, index) => (
+              <Select.Option key={index} className="selectOptionWrapper" value={data.value}>
                 {data.name}
               </Select.Option>
             ))}

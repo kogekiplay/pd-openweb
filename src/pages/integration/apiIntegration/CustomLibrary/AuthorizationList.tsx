@@ -234,7 +234,7 @@ export default function AuthorizationList(props) {
         <ScrollView className="flex" onScrollEnd={onScrollEnd}>
           {authorizationList.map((dataItem, i) => {
             return (
-              <ListItem>
+              <ListItem key={i}>
                 {columns
                   .filter(item => hasManageAuth || !_.includes(['applyUser', 'operate'], item.dataIndex))
                   .map((item, j) => {

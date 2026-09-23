@@ -35,10 +35,11 @@ export default function DropOption(props) {
       popup={
         <MenuWrap className="Relative">
           {props.showHeader && props.showHeader()}
-          {props.dataList.map(o => {
+          {props.dataList.map((o, index) => {
             if (o.type === 'err') {
               return (
                 <RedMenuItemWrap
+                  key={index}
                   onClick={e => {
                     e.stopPropagation();
                     props.onAction(o);
@@ -51,7 +52,7 @@ export default function DropOption(props) {
             }
 
             return (
-              <React.Fragment>
+              <React.Fragment key={index}>
                 {o.showLine && (
                   <div
                     style={{ width: '100%', margin: '6px 0', borderTop: '1px solid var(--color-border-secondary)' }}

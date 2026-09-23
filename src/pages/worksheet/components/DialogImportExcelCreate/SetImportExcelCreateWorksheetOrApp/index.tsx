@@ -490,8 +490,8 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
                       {rows.length
                         ? rows
                             .slice(0, 11)
-                            .map(v =>
-                              v.rowNumber === 0 ? '' : <Option value={v.rowNumber}>{_l('第%0行', v.rowNumber)}</Option>,
+                            .map((v, index) =>
+                              v.rowNumber === 0 ? '' : <Option key={index} value={v.rowNumber}>{_l('第%0行', v.rowNumber)}</Option>,
                             )
                         : ''}
                     </Select>

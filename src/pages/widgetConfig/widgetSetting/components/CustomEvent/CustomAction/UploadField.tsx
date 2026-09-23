@@ -179,7 +179,7 @@ export default class UploadFile extends Component<any, any> {
           <div className="listContent">
             {files.map((file, index: number) => {
               return (
-                <div className="uploadItem">
+                <div key={index} className="uploadItem">
                   <div className="flex flexCenter flexRow overflow_ellipsis">
                     <div className="mRight20 fileIcon-mp3 mp3Icon" />
                     <span className="flex overflow_ellipsis pRight16">{file.name}</span>

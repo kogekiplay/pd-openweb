@@ -302,7 +302,7 @@ export default function StepsVerifyDialog(props) {
             desc: _l('使用手机上的身份验证器应用获得验证码'),
             checked: 'twoAuthenticationTotpEnabled',
           },
-        ].map(item => {
+        ].map((item, index) => {
           const disabled =
             (item.value === 'authenticator' &&
               !twoAuthenticationEmailEnabled &&
@@ -313,7 +313,7 @@ export default function StepsVerifyDialog(props) {
                 !twoAuthenticationEmailEnabled) ||
                 (item.value === 'email' && twoAuthenticationEmailEnabled && !twoAuthenticationMobilePhoneEnabled)));
           return (
-            <div className="methodItem">
+            <div key={index} className="methodItem">
               {disabled ? (
                 <Tooltip
                   title={

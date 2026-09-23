@@ -368,10 +368,11 @@ export default function DataCollectionSettings(props) {
             }}
             popup={
               <DaySelectContainer>
-                {Array.from(Array(31), (_, i) => i + 1).map(item => {
+                {Array.from(Array(31), (_, i) => i + 1).map((item, index) => {
                   const isSelected = _.includes(selectedDays, item);
                   return (
                     <div
+                      key={index}
                       className={cx('dayItem', { active: isSelected })}
                       onClick={() => {
                         const newLimitWriteTime = _.cloneDeep(limitWriteTime);

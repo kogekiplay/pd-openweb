@@ -151,10 +151,11 @@ function TipsRender(props) {
             </span>
           </div>
           <div className="flex mLeft40" style={{ display: 'flex', gap: '10px 46px', flexWrap: 'wrap' }}>
-            {extendAttrList.map(item => {
+            {extendAttrList.map((item, index) => {
               const isChecked = extendAttrValue.indexOf(item.id) > -1;
               return (
                 <span
+                  key={index}
                   className="flexRow alignItemsCenter Hand"
                   onClick={() => {
                     if (isChecked) {

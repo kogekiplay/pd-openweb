@@ -182,7 +182,11 @@ export default function ChartColorSetting(props) {
     <ChartColorSettingBox select={selected}>
       <div className={cx('chartWrap flex', { minGap: colors.length > 8 })} onClick={() => handleSelect(!selected)}>
         {colors.map((color, index: number) => (
-          <span className="colorBox" style={{ background: color, height: COLOR_BOX_HEIGHT[(index + 1) % 8] }}></span>
+          <span
+            key={index}
+            className="colorBox"
+            style={{ background: color, height: COLOR_BOX_HEIGHT[(index + 1) % 8] }}
+          ></span>
         ))}
       </div>
       {!disablechecked && (

@@ -27,9 +27,10 @@ function SettingLinkOpen(props) {
   return (
     <div className={cx('stepItem', className)}>
       <h3 className="stepTitle Font16 textPrimary pBottom5">{_l('消息链接')}</h3>
-      {messageLinkTypes.map(item => {
+      {messageLinkTypes.map((item, index) => {
         return (
           <Radio
+            key={index}
             className="Block mTop20"
             disabled={disabled}
             checked={value === item.key}

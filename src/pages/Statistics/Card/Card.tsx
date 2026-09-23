@@ -430,8 +430,8 @@ class Card extends Component<any, any> {
                     <div className="Font14 bold mBottom5">
                       {_l('作用于图表的条件')} · <span>{initiateChartInfo.length}</span>
                     </div>
-                    {initiateChartInfo.map(item => (
-                      <div className="linkageFilter">
+                    {initiateChartInfo.map((item, idx) => (
+                      <div key={idx} className="linkageFilter">
                         {item.filters.map((n, index: number) => (
                           <div className="flexRow alignItemsCenter" key={n.controlId}>
                             {!index && (

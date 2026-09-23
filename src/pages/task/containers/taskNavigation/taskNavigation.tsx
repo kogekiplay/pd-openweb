@@ -266,8 +266,9 @@ function SearchFolder(props) {
                 <span className="icon-search icon" title={_l('搜索')}></span>
                 {_l('搜索和“%0”相关的任务>', search)}
               </li>
-              {data.folders.map(folder => (
+              {data.folders.map((folder, index) => (
                 <li
+                  key={index}
                   className={cx('searchFolders', { selected: highlight.id === folder.folderID })}
                   data-type="folder"
                   data-id={folder.folderID}
@@ -297,8 +298,9 @@ function SearchFolder(props) {
                   {folder.folderName}
                 </li>
               ))}
-              {data.labels.map(label => (
+              {data.labels.map((label, index) => (
                 <li
+                  key={index}
                   className={cx('searchCategorys', { selected: highlight.id === label.categoryID })}
                   data-type="category"
                   data-id={label.categoryID}

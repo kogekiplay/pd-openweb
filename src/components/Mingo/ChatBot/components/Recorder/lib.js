@@ -429,9 +429,12 @@ registerProcessor('my-processor', MyProcessor);
     S,
     y,
     w = S;
-  function C() {
-    console.log('');
-  }
+  /* 【这里原本是空函数】这是内嵌的压缩版 CryptoJS，C 就是它 Base.extend 里的临时构造函数
+     （源码里叫 F：function F() {}，只用来 F.prototype = obj; new F() 按原型造对象）。
+     这份压缩产物里它的函数体被换成了 console.log('')，于是每定义一个类就打一行空白 ——
+     初始化时 extend 6 次，而 useRecorder.ts 在模块顶层就调了 init()、Mingo 又挂在全站外壳上，
+     结果每个页面加载都往控制台打 6 行空的 lib.js:315。构造函数体对实例没有任何作用，删掉零影响。 */
+  function C() {}
   ((p = (S = (g = w).lib).WordArray),
     (f = S.Hasher),
     (m = []),

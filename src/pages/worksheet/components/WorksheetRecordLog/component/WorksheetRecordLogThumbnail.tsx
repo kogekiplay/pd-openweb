@@ -85,8 +85,9 @@ function WorksheetRecordLogThumbnail(props) {
       ));
     }
 
-    return list.map(item => (
+    return list.map((item, index) => (
       <Trigger
+        key={index}
         action={['hover']}
         getPopupContainer={() => document.body}
         autoDestroy

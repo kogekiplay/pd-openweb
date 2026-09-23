@@ -314,7 +314,7 @@ class EditFlow extends Component<any, any> {
     let pluginInputNode;
     let pluginOutputNode;
     let pluginInputNodeProps;
-    const nodeList = getSameLevelIds(data, firstId, excludeFirstId).map(id => {
+    const nodeList = getSameLevelIds(data, firstId, excludeFirstId).map((id, index) => {
       const props = {
         key: id,
         companyId: flowInfo.companyId,
@@ -374,7 +374,7 @@ class EditFlow extends Component<any, any> {
         return null;
       }
 
-      return <NodeComponent {...props} />;
+      return <NodeComponent key={index} {...props} />;
     });
 
     // 插件

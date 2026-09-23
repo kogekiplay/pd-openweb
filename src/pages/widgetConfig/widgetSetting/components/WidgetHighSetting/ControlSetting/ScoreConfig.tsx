@@ -147,9 +147,9 @@ export default function ScoreConfig({ data, onChange }) {
             <div>{_l('等级')}</div>
             <div>{_l('文字')}</div>
           </ItemName>
-          {names.map(it => {
+          {names.map((it, index) => {
             return (
-              <ItemName>
+              <ItemName key={index}>
                 <div className="scoreIndex">{it.key}</div>
                 <input
                   name="controlSettingScoreConfig"

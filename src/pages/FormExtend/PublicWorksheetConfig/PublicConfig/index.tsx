@@ -761,8 +761,8 @@ class PublicConfig extends React.Component<any, any> {
                 { name: _l('浏览器'), key: 'browserControlId' },
                 { name: _l('设备'), key: 'deviceControlId' },
                 { name: _l('系统'), key: 'systemControlId' },
-              ].map(item => (
-                <React.Fragment>
+              ].map((item, index) => (
+                <React.Fragment key={index}>
                   <div className="mBottom8">{item.name}</div>
                   <NewDropdown
                     isAppendToBody

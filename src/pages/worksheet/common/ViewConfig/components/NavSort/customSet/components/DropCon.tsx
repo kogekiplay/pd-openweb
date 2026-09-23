@@ -178,7 +178,7 @@ export default function (props) {
               )}
               {!!list.length && (
                 <div className="pTop6 pBottom6">
-                  {list.map(record => {
+                  {list.map((record, index) => {
                     const ids = isSameType([9, 10, 11, 28], controlInfo)
                       ? currentList
                       : currentList.map(it => it.rowid);
@@ -191,6 +191,7 @@ export default function (props) {
                     );
                     return (
                       <div
+                        key={index}
                         className={cx('recordItem flexRow alignItemsCenter', {
                           isCur: isHas,
                         })}

@@ -287,6 +287,7 @@ export default function ReviewFree(props) {
               {list.map((o, i) => {
                 return (
                   <Radio
+                    key={i}
                     className="mRight60 pRight10"
                     text={o}
                     checked={i === type}

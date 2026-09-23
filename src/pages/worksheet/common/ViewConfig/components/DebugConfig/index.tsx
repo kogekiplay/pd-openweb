@@ -483,7 +483,7 @@ export default function DebugConfig(params) {
       <ul>
         {devTapList.map((o, i) => {
           return (
-            <li className="Relative flexRow">
+            <li key={i} className="Relative flexRow">
               {i < 3 && <div className="leftLine"></div>}
               <div className={cx('tabCon Bold', { hs: stepState >= i, cur: cur === i })}>
                 {stepState < i || cur === i ? i + 1 : <Icon className="Font14" icon={'done'} />}

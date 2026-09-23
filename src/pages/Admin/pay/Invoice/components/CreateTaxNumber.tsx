@@ -593,8 +593,8 @@ export default function CreateTaxNumber(props) {
                     <div className="textSecondary mBottom5 bold">{_l('百望账户信息')}</div>
                     <div className="secretWrap flexRow Relative">
                       <div className="flex">
-                        {privateFields.map(item => (
-                          <div className="flexRow mBottom10">
+                        {privateFields.map((item, index) => (
+                          <div key={index} className="flexRow mBottom10">
                             <div>{item.label}：</div>
                             <div className="flex ellipsis">********************</div>
                           </div>
@@ -748,8 +748,8 @@ export default function CreateTaxNumber(props) {
                     setData({ account: '', password: '', appKey: '', appSecret: '', salt: '' });
                   }}
                 >
-                  {privateFields.map(item => (
-                    <Fragment>
+                  {privateFields.map((item, index) => (
+                    <Fragment key={index}>
                       <div className="textSecondary bold mTop4 mBottom6">
                         <span>{item.label}</span>
                         <span className="Red bold Font14">*</span>

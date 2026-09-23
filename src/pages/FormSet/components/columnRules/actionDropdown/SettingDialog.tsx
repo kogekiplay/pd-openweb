@@ -95,9 +95,10 @@ function SettingDialog(props) {
             </div>
             {parentConfig.isCustom && (
               <Fragment>
-                {(parentItem.type === 34 ? SUBLIST_PERMISSION_DISPLAY : RELATE_PERMISSION_DISPLAY).map(i => {
+                {(parentItem.type === 34 ? SUBLIST_PERMISSION_DISPLAY : RELATE_PERMISSION_DISPLAY).map((i, index) => {
                   return (
                     <Checkbox
+                      key={index}
                       className="mBottom8"
                       text={i.text}
                       checked={_.includes(permission, i.value)}
@@ -139,9 +140,9 @@ function SettingDialog(props) {
               }}
             />
           </div>
-          {(parentItem.relationControls || []).map(i => {
+          {(parentItem.relationControls || []).map((i, index) => {
             return (
-              <div className="rowItem">
+              <div key={index} className="rowItem">
                 <div className="rowTitle flex">{i.controlName}</div>
                 <Checkbox
                   className="flex"

@@ -10,9 +10,11 @@ import SessionList from '../SessionList';
 import Mingo from './Mingo';
 import Toolbar from './Toolbar';
 import ToolbarDrawer from './Toolbar/Drawer';
+import type { AppDispatch } from 'src/redux/types';
 import './index.less';
 
-class Chat extends Component<any, any> {
+// connect 包过、会收到 dispatch；socketEvent 里的函数用 .call(this) 调，要求 this.props.dispatch 存在
+class Chat extends Component<{ dispatch: AppDispatch; [key: string]: any }, any> {
   constructor(props) {
     super(props);
   }

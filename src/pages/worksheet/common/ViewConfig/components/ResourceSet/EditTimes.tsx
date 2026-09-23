@@ -78,7 +78,7 @@ export default function (props) {
       <Wrap className="flexColumn h100">
         {showtime.map((o, n) => {
           return (
-            <div className="flexRow timeCon alignItemsCenter">
+            <div key={n} className="flexRow timeCon alignItemsCenter">
               <TimePicker.RangePicker
                 className={cx('rangePicker w100 borderAll3 flex', { mTop12: n !== 0 })}
                 format="HH:mm"

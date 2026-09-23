@@ -815,11 +815,11 @@ function SettingGroup(props) {
             </div>
           </div>
         )}
-        {GROUP_INFOS.filter(l => !l.isPost || groupInfo.isPost).map(item => {
+        {GROUP_INFOS.filter(l => !l.isPost || groupInfo.isPost).map((item, index) => {
           if (item.require && !_.get(groupInfo, item.key)) return null;
 
           return (
-            <div className="groupItem">
+            <div key={index} className="groupItem">
               <div className="label">
                 {item.label}
                 {item.key === 'users' && _l('（%0人）', _.get(groupInfo, 'groupMemberCount'))}

@@ -204,8 +204,9 @@ class SelectIntegrationApi extends Component<any, any> {
           <div className="linkContent">
             <div className="title">{_l('选择API')}</div>
             <div className="linkBox">
-              {LINK_TYPES.filter(l => !excludeTypes.includes(l.value)).map(l => (
+              {LINK_TYPES.filter(l => !excludeTypes.includes(l.value)).map((l, index) => (
                 <div
+                  key={index}
                   className={cx('linkItem', { active: linkType === l.value })}
                   onClick={() =>
                     this.setState(

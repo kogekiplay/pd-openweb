@@ -118,11 +118,11 @@ class WorkflowHistory extends Component<any, any> {
         {...rest}
       >
         <StatusWrap>
-          {STATUS.map(item => {
+          {STATUS.map((item, index) => {
             const { id } = item;
             const list = data[id] || [];
             return (
-              <li className={cx(id, { active: activeStatus === id })} onClick={() => this.switchStatus(id)}>
+              <li key={index} className={cx(id, { active: activeStatus === id })} onClick={() => this.switchStatus(id)}>
                 {item.text}
                 {<span>{`(${list.length})`}</span>}
               </li>

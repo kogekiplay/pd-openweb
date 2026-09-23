@@ -88,10 +88,10 @@ export default class CustomLocation extends Component<any, any> {
       <Fragment>
         <div className="MDMapCustom">
           <div className="Font17 bold">{_l('添加当前位置')}</div>
-          {filterOptions.map(item => {
+          {filterOptions.map((item, index) => {
             const isLatLng = _.includes(['lat', 'lng'], item.key);
             return (
-              <Fragment>
+              <Fragment key={index}>
                 <div className="mBottom4 mTop16 bold textSecondary">{item.title}</div>
                 <Input
                   disabled={item.disabled}

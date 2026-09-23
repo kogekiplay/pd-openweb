@@ -93,6 +93,8 @@ module.exports = [
       'react/jsx-uses-react': 'error',
       'react/jsx-uses-vars': 'error',
       'react/react-in-jsx-scope': 'error',
+      // 2026-09-23 全仓清零（579 处）后打开；零容忍门禁是 bun run check:jsx-key，这里是给编辑器即时标红用的
+      'react/jsx-key': ['error', { checkFragmentShorthand: true, warnOnDuplicates: true }],
 
       // React Hooks recommended rules run as warnings before React Compiler adoption.
       ...reactHooksRecommendedRules,

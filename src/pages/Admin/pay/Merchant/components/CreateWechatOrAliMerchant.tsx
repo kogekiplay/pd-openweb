@@ -419,8 +419,8 @@ export default function CreateWechatOrAliMerchant(props) {
             <div className="textSecondary mBottom5 bold">{_l('密钥信息')}</div>
             <div className="secretWrap flexRow Relative">
               <div className="flex">
-                {secretFormInfo.map(item => (
-                  <div className="flexRow mBottom10">
+                {secretFormInfo.map((item, index) => (
+                  <div key={index} className="flexRow mBottom10">
                     <div>{item.label}：</div>
                     <div className="flex ellipsis">{initData[item.field]}</div>
                   </div>

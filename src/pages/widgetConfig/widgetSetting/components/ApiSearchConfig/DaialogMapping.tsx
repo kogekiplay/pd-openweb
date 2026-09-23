@@ -104,9 +104,9 @@ export default function DialogMapping(props) {
             />
           )}
         </div>
-        {list.map(item => {
+        {list.map((item, index) => {
           return (
-            <Fragment>
+            <Fragment key={index}>
               {renderItem(item)}
               {item.child && item.child.map(c => renderItem(c))}
             </Fragment>

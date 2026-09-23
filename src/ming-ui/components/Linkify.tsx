@@ -44,8 +44,11 @@ export default function MdLinkify(props) {
         elements.push(string.substring(lastIndex, match.index));
       }
 
+      // elements 是字符串与 <a> 混排的数组，整个当 children 返回，所以 <a> 要有 key
+      // （原先没有，每个带链接的单元格都刷一条「Each child in a list should have a unique key」）。
+      // match.index 是这段链接在原字符串里的起始位置，同一个字符串里天然唯一。
       const parseComponent = (
-        <a {...properties} href={match.url}>
+        <a key={match.index} {...properties} href={match.url}>
           {match.text}
         </a>
       );

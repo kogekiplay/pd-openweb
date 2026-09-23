@@ -126,7 +126,7 @@ let External = class External extends Component<any, any> {
             </div>
           )}
           <div className="mcm">
-            {eventData.map(it => {
+            {eventData.map((it, index) => {
               let timeStr;
 
               if (moment(it.date).format('ll') === moment().format('ll')) {
@@ -136,7 +136,7 @@ let External = class External extends Component<any, any> {
               }
 
               return (
-                <div className="">
+                <div key={index} className="">
                   <div className={cx('timeStr', {})}>
                     {timeStr} <span className="pLeft3">{moment(it.date).format('dddd')}</span>
                   </div>
@@ -198,7 +198,7 @@ let External = class External extends Component<any, any> {
               >
                 {it.title}
               </div>
-              {it.timeList.map(o => {
+              {it.timeList.map((o, index) => {
                 if (o.start) {
                   const startTxt = renderText(
                     { ...o.info.startData, value: o.row[o.info.begin] },
@@ -207,7 +207,7 @@ let External = class External extends Component<any, any> {
                     },
                   );
                   return (
-                    <div className="textTertiary Font13 mTop2">
+                    <div key={index} className="textTertiary Font13 mTop2">
                       {startTxt}
                       <span className="mLeft10">{o.info.mark}</span>
                     </div>
@@ -318,9 +318,10 @@ let External = class External extends Component<any, any> {
             {!this.state.isSearch && (
               <div className="tab">
                 <ul>
-                  {this.props.tabList.map(it => {
+                  {this.props.tabList.map((it, index) => {
                     return (
                       <li
+                        key={index}
                         className={cx('Hand', {
                           current: it.key === typeEvent,
                         })}

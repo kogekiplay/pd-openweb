@@ -73,7 +73,7 @@ export default function NumberDynamicColor(props) {
         {dynamicColor.map((item, index: number) => {
           const deleteDisabled = dynamicColor.length === 1;
           return (
-            <DynamicColorWrap>
+            <DynamicColorWrap key={index}>
               <span>{_l('当数值≤')}</span>
               <input
                 name="numberDynamicColor"

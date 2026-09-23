@@ -362,6 +362,7 @@ class PortalSetting extends React.Component<any, any> {
               {SETTYPE.map((o, i) => {
                 return (
                   <li
+                    key={i}
                     className={cx('Hand', { current: i === type })}
                     onClick={() => {
                       this.setState({ type: i });

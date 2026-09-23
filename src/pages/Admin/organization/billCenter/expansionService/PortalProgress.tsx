@@ -201,9 +201,10 @@ export default class PortalProgress extends Component<any, any> {
             expandType === 'portalupgrade' && (
               <div className="flexRow payType">
                 {_l('购买方式')}
-                {DISPLAY_OPTIONS.map(item => {
+                {DISPLAY_OPTIONS.map((item, index) => {
                   return (
                     <Radio
+                      key={index}
                       className="mLeft32"
                       text={item.text}
                       checked={payType === item.value}
@@ -217,8 +218,9 @@ export default class PortalProgress extends Component<any, any> {
             <Fragment>
               <div className="textSecondary mBottom12">{_l('订阅方式')}</div>
               <div className="mBottom32">
-                {subscribeTypes.map(item => (
+                {subscribeTypes.map((item, index) => (
                   <Radio
+                    key={index}
                     text={item.text}
                     checked={externalType === item.value}
                     onClick={() => handleChange('externalType', item.value)}
@@ -233,8 +235,8 @@ export default class PortalProgress extends Component<any, any> {
           <div className="portal-ant-slider" onMouseUp={this.onMouseUp}>
             <div className="portal-ant-slider-bg" style={{ width: `${moveX}px` }}></div>
             <div className="portal-ant-slider-step" id="portal-ant-slider-step" onClick={this.handleClick}>
-              {marks.map(item => (
-                <span className={cx('portal-ant-slider-dot', { active: userCount >= item.value })}></span>
+              {marks.map((item, index) => (
+                <span key={index} className={cx('portal-ant-slider-dot', { active: userCount >= item.value })}></span>
               ))}
             </div>
             <Tooltip title={_l('%0人', userCount)} placement="top">
@@ -246,9 +248,12 @@ export default class PortalProgress extends Component<any, any> {
             </Tooltip>
             {!window.platformENV.isOverseas && (
               <div className="portal-ant-slider-mark">
-                {marks.map(item => {
+                {marks.map((item, index) => {
                   return (
-                    <span className={cx('portal-ant-slider-mark-text', { InlineBlock: item.value <= userCount })}>
+                    <span
+                      key={index}
+                      className={cx('portal-ant-slider-mark-text', { InlineBlock: item.value <= userCount })}
+                    >
                       {item.label}
                     </span>
                   );

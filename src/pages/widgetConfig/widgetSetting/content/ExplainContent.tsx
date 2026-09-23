@@ -47,8 +47,9 @@ const UserContent = props => {
             <SectionItem>
               <div className="label Width90">{_l('显示方式')}</div>
               <AnimationWrap className="flex">
-                {DISPLAY_TYPES.map(item => (
+                {DISPLAY_TYPES.map((item, index) => (
                   <div
+                    key={index}
                     className={cx('animaItem', { active: hinttype === item.value })}
                     onClick={() => {
                       onChange(handleAdvancedSettingChange(data, { hinttype: item.value }));

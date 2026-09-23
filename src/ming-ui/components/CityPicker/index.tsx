@@ -414,7 +414,7 @@ export default function CityPicker(props) {
                 let levelIndex = index + 1;
 
                 return (
-                  <ul className="CascaderSelectWrap-List">
+                  <ul key={index} className="CascaderSelectWrap-List">
                     {list.map(item => {
                       return (
                         <li

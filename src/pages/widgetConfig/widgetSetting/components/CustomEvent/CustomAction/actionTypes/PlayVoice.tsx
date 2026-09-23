@@ -64,11 +64,12 @@ export default function PlayVoice(props) {
         <CustomActionWrap>
           <SettingItem className="mTop0">
             <div className="settingItemTitle">{_l('声音')}</div>
-            {VOICE_FILE_LIST.concat(voiceFiles).map(item => {
+            {VOICE_FILE_LIST.concat(voiceFiles).map((item, index) => {
               const isActive = item.fileKey === advancedSetting.fileKey;
               const isUpload = _.get(item, 'fileKey.length') > 3;
               return (
                 <div
+                  key={index}
                   className={cx('alertContent overflow_ellipsis mBottom8', {
                     active: isActive,
                   })}

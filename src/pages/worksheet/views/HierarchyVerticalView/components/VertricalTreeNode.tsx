@@ -208,7 +208,7 @@ function VertricalTreeNode(props) {
             // 上 2 86 左 1 125 右 0 125
 
             return (
-              <Fragment>
+              <Fragment key={index}>
                 <div className={`mixTreeNode ${isNarrow ? 'coverpositionTop' : 'coverpositionAlign'}`}>
                   <TreeNode
                     {...props}

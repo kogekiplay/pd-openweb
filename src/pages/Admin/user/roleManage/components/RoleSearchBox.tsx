@@ -37,11 +37,13 @@ export default class RoleSearchBox extends Component<any, any> {
         <input
           name="roleSearchBox"
           autoComplete="off"
-          defaultValue={searchValue}
           ref={input => { this.input = input; }}
           onChange={e => {
             this.props.updateIsRequestList(false);
-            this.setState({ searchValue: e.target.value.trim() });
+            /* 存原始输入，只在发起搜索时 trim。原先这里存的是 trim 过的值、又写回受控的 value，
+               于是打不出空格：输入到「项目 」那一刻尾部空格被剪掉，接着打「经理」就成了「项目经理」。
+               （原先还同时写了 defaultValue，受控 / 非受控混用，React 每次渲染都警告） */
+            this.setState({ searchValue: e.target.value });
             if (this.ajaxObj && this.ajaxObj.abort) {
               this.ajaxObj.abort();
               this.ajaxObj = null;

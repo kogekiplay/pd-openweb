@@ -527,9 +527,9 @@ export default class PrePayOrder extends Component<any, any> {
                     <div className="line"></div>
                     <div className="TxtLeft">{_l('支付方式')}</div>
                     <div className="mobilePayChannel flex">
-                      {payChannels.map(item => {
+                      {payChannels.map((item, index) => {
                         return (
-                          <div className="mobilePayChannelItem flexCenter">
+                          <div key={index} className="mobilePayChannelItem flexCenter">
                             <div
                               className={cx('channelIcon', {
                                 wechatBgColor: item.value === 2,
@@ -555,9 +555,10 @@ export default class PrePayOrder extends Component<any, any> {
                   </Fragment>
                 ) : (
                   <div className="payChannel valignWrapper justifyContentCenter">
-                    {payChannels.map(item => {
+                    {payChannels.map((item, index) => {
                       return (
                         <div
+                          key={index}
                           className={cx('payChannelItem valignWrapper justifyContentCenter Relative Hand', {
                             activePayChannel: activePayChannel === item.value,
                           })}

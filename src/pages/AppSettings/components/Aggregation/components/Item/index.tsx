@@ -96,8 +96,12 @@ const ReSyncDialog = ({
         {reCheck && aggNameList.length > 0 && (
           <div class="mTop5">
             <div className="textTertiary">{_l('以下%0个聚合表使用该数据源', aggNameList.length)}</div>
-            {aggNameList.map(o => {
-              return <div className="mTop8">{o}</div>;
+            {aggNameList.map((o, index) => {
+              return (
+                <div key={index} className="mTop8">
+                  {o}
+                </div>
+              );
             })}
           </div>
         )}

@@ -119,10 +119,10 @@ const GroupBoard = props => {
   const renderBoardTitle = () => {
     return (
       <Fragment>
-        {viewData.map(item => {
+        {viewData.map((item, index) => {
           if (item.key === '-1' && !hasNoFirstGroup) return;
           return (
-            <div className="groupHeaderItemWrap">
+            <div key={index} className="groupHeaderItemWrap">
               <BoardTitle
                 count={boardViewRecordCount[item.key] || 0}
                 showRecordInfo={showRecordInfo}

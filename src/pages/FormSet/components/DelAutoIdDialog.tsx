@@ -89,9 +89,9 @@ export default function DelDialog(props) {
         </p>
         {!loading &&
           hasCheck &&
-          list.map(o => {
+          list.map((o, index) => {
             return (
-              <div className="mBottom6">
+              <div key={index} className="mBottom6">
                 <span className="colorPrimary">{o.name}</span>
                 {(o.flowNodes || []).length > 0 && (
                   <span className="">{` (  ${(o.flowNodes || []).map(item => item.name).join(',')} ) `}</span>

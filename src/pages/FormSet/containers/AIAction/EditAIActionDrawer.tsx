@@ -373,9 +373,9 @@ export default function EditAIActionDrawer(props) {
                       <div className="flexRow mTop30">
                         <div className="label">{_l('工具')}</div>
                         <div className="flex">
-                          {tools.map(v => {
+                          {tools.map((v, index) => {
                             return (
-                              <div className="flexRow alignItemsCenter LineHeight30">
+                              <div key={index} className="flexRow alignItemsCenter LineHeight30">
                                 <i className={`toolTxtColor Font16 mRight5 ${AGENT_TOOLS[v.type]?.icon}`} />
                                 <span className="bold">{AGENT_TOOLS[v.type]?.displayName}</span>
                                 <span className="toolTxtColor">

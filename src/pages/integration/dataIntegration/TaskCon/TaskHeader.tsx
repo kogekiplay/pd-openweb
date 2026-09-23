@@ -155,9 +155,10 @@ export default function Header(props) {
         )}
       </div>
       <ul className="tabCon">
-        {taskTabList.map(o => {
+        {taskTabList.map((o, index) => {
           return (
             <li
+              key={index}
               className={cx('Hand Font16', { isCur: tab === o.type })}
               onClick={() => {
                 if (tab === o.type) {

@@ -245,7 +245,7 @@ class AppointDialog extends React.Component<any, any> {
 
               if (sectionIds.includes(item.controlId)) {
                 return (
-                  <div className="itemBox mTop10">
+                  <div key={index} className="itemBox mTop10">
                     <Icon icon={getIconByType(type)} className={cx('Font14 textTertiary mRight15')} />
                     <span className="" title={controlName}>
                       {controlName}
@@ -257,7 +257,7 @@ class AppointDialog extends React.Component<any, any> {
               const fieldLabel = controlName || (type === 22 ? _l('分段') : _l('备注'));
 
               return (
-                <div className="itemBox mTop10">
+                <div key={index} className="itemBox mTop10">
                   <span
                     className={cx('widget controlname textPrimary Font13 WordBreak overflow_ellipsis Relative', {
                       isErr: canNotForWrite,

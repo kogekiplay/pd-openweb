@@ -235,9 +235,10 @@ function DetailView(props) {
       )
     ) : (
       <ScrollView id="detailNavList" className="flex" onScrollEnd={onScrollEnd}>
-        {detailViewRows.map(item => {
+        {detailViewRows.map((item, index) => {
           return (
             <DetailItem
+              key={index}
               {...props}
               itemData={item}
               currentRecordId={currentRecord.rowid}

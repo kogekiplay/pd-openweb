@@ -458,7 +458,7 @@ export default function PayLog(props) {
           }
 
           return (
-            <div className={cx('flexRow alignItemsCenter', { mBottom12: i < refundInfoKeys.length - 1 })}>
+            <div key={i} className={cx('flexRow alignItemsCenter', { mBottom12: i < refundInfoKeys.length - 1 })}>
               <span className={cx('payTitle textSecondary Bold')}>{a.txt}</span>
               <span className={cx('con mLeft15 WordBreak textPrimary')}>
                 {['createTime', 'refundTime'].includes(a.key)
@@ -539,7 +539,7 @@ export default function PayLog(props) {
               ([0, 4, 7].includes(payOrder.status) && ['settlementAmount', 'taxAmount'].includes(o.key)) || //待支付/支付超时/已取消结算金额和手续费显示-
               (!payOrder[o.key] && payOrder[o.key] !== 0); //已支付/已退款/部分退款直接显示结算金额和手续费
             return (
-              <div className={cx('flexRow alignItemsCenter', { mBottom12: i < list.length - 1 })}>
+              <div key={i} className={cx('flexRow alignItemsCenter', { mBottom12: i < list.length - 1 })}>
                 <span className={cx('payTitle textSecondary Bold')}>{o.txt}</span>
                 <span className={cx('con mLeft15 WordBreak textPrimary')}>
                   {o.key === 'sourceType'

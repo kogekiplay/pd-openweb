@@ -122,10 +122,11 @@ export default function RoleConfig(props) {
           <div className="defaultOptionsWrap">
             {chooseRange.length > 0 ? (
               <Fragment>
-                {chooseRange.map(item => {
+                {chooseRange.map((item, index) => {
                   if (item.type === 4) {
                     return (
                       <OtherField
+                        key={index}
                         {...props}
                         from={DYNAMIC_FROM_MODE.ORG_CONFIG}
                         dynamicValue={chooseRange}

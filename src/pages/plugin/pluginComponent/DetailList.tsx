@@ -224,8 +224,8 @@ function SecretKeyDialog(props) {
         <SecretDetailItem>
           <div className="labelText">{_l('授权给指定组织')}</div>
           <div className="flex">
-            {projects.map(item => (
-              <div>{item}</div>
+            {projects.map((item, index) => (
+              <div key={index}>{item}</div>
             ))}
           </div>
         </SecretDetailItem>

@@ -905,7 +905,7 @@ export default function TaskList({ projectId, onRefreshComponents }: { projectId
             <TaskListBox>
               {taskList.map((sourceItem, index) => {
                 return (
-                  <div className="itemWrapper">
+                  <div key={index} className="itemWrapper">
                     <div key={index} className="rowItem">
                       {columns.map((item, i) => {
                         return (

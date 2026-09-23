@@ -105,11 +105,12 @@ export default function SwitchType({ data, fromAggregation, onChange }) {
         <Fragment>
           <div className="settingItemTitle">{_l('计算方式')}</div>
           <AnimationWrap>
-            {FORMULA_TYPES.map(({ text, value }) => {
+            {FORMULA_TYPES.map(({ text, value }, index) => {
               if (fromAggregation && value === 38) return;
               const isActive = data.type === value;
               return (
                 <div
+                  key={index}
                   className={cx('animaItem overflow_ellipsis', { active: isActive })}
                   onClick={() => {
                     if (isActive) return;

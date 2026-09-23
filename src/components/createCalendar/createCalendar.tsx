@@ -1161,7 +1161,7 @@ CreateCalendar.methods = {
                       {_l('他的日程与您创建的日程有冲突')}
                     </div>
                     <div className="memberCalendars mBottom20">
-                      {calendars.map(calendar => {
+                      {calendars.map((calendar, index) => {
                         var calendarTime = '';
                         if (calendar.allDay == 'true') {
                           calendarTime =
@@ -1177,7 +1177,7 @@ CreateCalendar.methods = {
                         }
 
                         return (
-                          <div className="memberCalendarItem">
+                          <div key={index} className="memberCalendarItem">
                             <div className="memberCalendarTime textTertiary">{calendarTime}</div>
                             <div className="memberCalendarName overflow_ellipsis">
                               <a

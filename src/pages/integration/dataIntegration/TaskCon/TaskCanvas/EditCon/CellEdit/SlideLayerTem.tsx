@@ -163,10 +163,10 @@ export default function SlideLayerTem(props) {
           )}
           <div className="itemBox textSecondary">{_l('重命名')}</div>
         </div>
-        {fields.map(item => {
+        {fields.map((item, index) => {
           const isNotSupport = [22].includes(item.mdType); //排除分段
           return (
-            <div className="tableCon flexRow alignItemsCenter">
+            <div key={index} className="tableCon flexRow alignItemsCenter">
               {item.isErr && (
                 <Icon
                   className="deleteIcon"
@@ -314,7 +314,7 @@ export default function SlideLayerTem(props) {
           const leftField = _.get(item, ['leftField']) || {};
           const rightField = _.get(item, ['rightField']) || {};
           return (
-            <div className="tableCon flexRow alignItemsCenter">
+            <div key={i} className="tableCon flexRow alignItemsCenter">
               <div className="itemBox itemBoxCheck">
                 <Checkbox
                   className="TxtMiddle InlineBlock mRight0 checked_selected checkBox "

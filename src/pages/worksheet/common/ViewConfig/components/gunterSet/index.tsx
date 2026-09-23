@@ -184,9 +184,10 @@ export default function GunterSet(props) {
       )}
       <div className="title Font13 bold mTop32">{_l('默认视图')}</div>
       <AnimationWrap className="mTop8">
-        {obj.map(it => {
+        {obj.map((it, index) => {
           return (
             <div
+              key={index}
               className={cx('animaItem overflow_ellipsis', { active: it.key === calendartype })}
               onClick={() => {
                 handleChange({ calendartype: it.key });
@@ -219,6 +220,7 @@ export default function GunterSet(props) {
               let n = i + 1;
               return (
                 <div
+                  key={i}
                   className={cx('animaItem overflow_ellipsis', { active: unweekday.indexOf(n) < 0 })}
                   onClick={() => {
                     let str = unweekday;

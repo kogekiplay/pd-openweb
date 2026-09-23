@@ -239,6 +239,7 @@ class ColorPicker extends Component<any, any> {
       <div className={cx('commonColors', { hide: !expand })}>
         {list.map((colorItem, index: number) => (
           <div
+            key={index}
             className="commonColorItem"
             /* 第四行是变量色，光看色块分不出它会随主题变 —— 悬停说一声 */
             title={colorItem.includes('var(') ? _l('跟随主题：应用主题色变了，这个颜色也会跟着变') : undefined}
@@ -378,8 +379,9 @@ class ColorPicker extends Component<any, any> {
                 </div>
               ) : (
                 <div className="rgbInputWrap">
-                  {['r', 'g', 'b'].map(key => (
+                  {['r', 'g', 'b'].map((key, index) => (
                     <InputNumber
+                      key={index}
                       className="rgbInput"
                       size="small"
                       step="1"

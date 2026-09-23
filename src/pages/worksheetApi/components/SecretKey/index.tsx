@@ -162,11 +162,11 @@ export default props => {
   const renderDataList = () => {
     return (
       <div className="dataList">
-        {worksheets.map(sheet => {
+        {worksheets.map((sheet, index) => {
           const isExpand = expandKeys.includes(sheet.sheetId);
 
           return (
-            <React.Fragment>
+            <React.Fragment key={index}>
               <div className="dataItem" key={sheet.sheetId}>
                 <div
                   className="name"

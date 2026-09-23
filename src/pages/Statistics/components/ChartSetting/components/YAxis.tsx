@@ -396,6 +396,7 @@ export default class YAxis extends Component<any, any> {
                   >
                     {allYaxisList.map((item, index: number) => (
                       <Menu.Item
+                        key={index}
                         style={{
                           color: index === inheritLastYaxisIndex ? 'var(--color-primary-text) !important' : null,
                         }}

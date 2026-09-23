@@ -115,7 +115,7 @@ function ChooseControl(props) {
           {controlsByKey.length <= 0 ? (
             <div className="textTertiary mTop40 pTop8 TxtCenter pBottom20">{_l('暂无相关字段')}</div>
           ) : (
-            controlsByKey.map(o => {
+            controlsByKey.map((o, index) => {
               const isFull =
                 o.isFull || ([29, 34, 35].includes(o.type) && !canChooseForParent(props.flowData, o.dataSource));
 
@@ -127,6 +127,7 @@ function ChooseControl(props) {
               const hs = controlId === o.controlId;
               return (
                 <div
+                  key={index}
                   className={cx('itemControl flexRow alignItemsCenter', {
                     hs,
                     disable: disable && ![29, 34, 35].includes(o.type),

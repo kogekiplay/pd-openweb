@@ -298,9 +298,10 @@ export default class SelectOtherField extends Component<any, any> {
         case 'DY_DATE':
           return (
             <Menu style={{ maxHeight: 200, overflowY: 'auto' }}>
-              {getDaterange(data.advancedSetting || {}).map(o => {
+              {getDaterange(data.advancedSetting || {}).map((o, index) => {
                 return (
                   <MenuItem
+                    key={index}
                     className="overflow_ellipsis"
                     onClick={e => {
                       this.handleActionForDY(o);
@@ -317,9 +318,10 @@ export default class SelectOtherField extends Component<any, any> {
         case 'DY_LINK':
           return linkParams.length > 0 ? (
             <Menu>
-              {linkParams.map(item => {
+              {linkParams.map((item, index) => {
                 return (
                   <MenuItem
+                    key={index}
                     className="overflow_ellipsis"
                     onClick={e => {
                       this.handleActionForLinkParam(item);
@@ -384,9 +386,9 @@ export default class SelectOtherField extends Component<any, any> {
         />
       ) : (
         <Menu>
-          {filterTypes.map(item => {
+          {filterTypes.map((item, index) => {
             return (
-              <MenuItem className="overflow_ellipsis" onClick={() => this.handleAction(item)}>
+              <MenuItem key={index} className="overflow_ellipsis" onClick={() => this.handleAction(item)}>
                 <MenuStyle>
                   {from !== DYNAMIC_FROM_MODE.CUSTOM_PHP && <i className={`${item.icon} Font20 mRight15`}></i>}
                   {item.text}

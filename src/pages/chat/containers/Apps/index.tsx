@@ -195,8 +195,9 @@ const Apps = props => {
                       overflowY: 'auto',
                     }}
                   >
-                    {popoverApps.map(app => (
+                    {popoverApps.map((app, index) => (
                       <div
+                        key={index}
                         className={cx('itemWrap pointer flexRow alignItemsCenter', { active: appId === app.id })}
                         onClick={() => handleOpenApp(app)}
                       >

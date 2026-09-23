@@ -200,9 +200,9 @@ export default class DialogCreateApp extends Component<any, any> {
           )}
           {!createAppStatus && !createAppLoading && (
             <div className="sheetInfo">
-              {importSheets.map(item => {
+              {importSheets.map((item, index) => {
                 return (
-                  <div className="sheetInfoItem flexRow">
+                  <div key={index} className="sheetInfoItem flexRow">
                     {item.sheetId === currentSheetId && isEditSheetName ? (
                       <div className="flex">
                         <input

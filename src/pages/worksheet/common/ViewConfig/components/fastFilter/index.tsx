@@ -285,11 +285,11 @@ export default function FastFilter(params) {
                     renderTitle={() => {
                       return (
                         <div className="">
-                          {(safeParse(requiredcids, 'array') || []).map(it => {
+                          {(safeParse(requiredcids, 'array') || []).map((it, index) => {
                             const info = worksheetControls.find((o: FormControl) => o.controlId === it);
                             const isDel = !fastFilters.find(item => item.controlId === it) || !info;
                             return (
-                              <div className={cx('itemT InlineBlock', { Red: isDel })}>
+                              <div key={index} className={cx('itemT InlineBlock', { Red: isDel })}>
                                 {!isDel ? info.controlName : _l('已删除')}
                                 <Icon
                                   icon={'close'}

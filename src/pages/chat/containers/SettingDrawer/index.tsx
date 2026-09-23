@@ -132,8 +132,9 @@ const Setting = props => {
     <Wrap className="flexRow w100 h100">
       <div className="nav">
         <div className="textPrimary bold Font22 pAll20">{_l('设置')}</div>
-        {navs.map(nav => (
+        {navs.map((nav, index) => (
           <div
+            key={index}
             className={cx('navItem pointer', { active: nav.value === navType })}
             onClick={() => setNavType(nav.value)}
           >

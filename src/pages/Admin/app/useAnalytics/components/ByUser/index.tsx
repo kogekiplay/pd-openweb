@@ -89,9 +89,9 @@ export default class ByUser extends Component<any, any> {
                     {departments.map((v, depIndex) => {
                       const fullName = (this.state.fullDepartmentInfo[v.departmentId] || '').split('/');
                       return (
-                        <div className={cx({ mBottom8: depIndex < departments.length - 1 })}>
+                        <div key={depIndex} className={cx({ mBottom8: depIndex < departments.length - 1 })}>
                           {fullName.map((n, i) => (
-                            <span>
+                            <span key={i}>
                               {n}
                               {fullName.length - 1 > i && <span className="mLeft8 mRight8">/</span>}
                             </span>

@@ -265,6 +265,7 @@ export default class CustomColor extends Component<any, any> {
         {list.map((item, index: number) => {
           return (
             <ChartColorSetting
+              key={index}
               name={item.name}
               editable={editable}
               selected={item.enable}

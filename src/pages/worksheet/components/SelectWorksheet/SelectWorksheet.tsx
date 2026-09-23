@@ -56,8 +56,9 @@ function WorksheetList(props) {
             </SearchWrap>
           )}
           <ScrollView style={{ maxHeight: 200 }}>
-            {filterSheets().map(worksheet => (
+            {filterSheets().map((worksheet, index) => (
               <div
+                key={index}
                 className={cx(
                   'worksheetItem overflow_ellipsis ',
                   filterIds.includes(worksheet.workSheetId) ? 'disable' : 'Hand',

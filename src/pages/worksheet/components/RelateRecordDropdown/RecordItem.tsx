@@ -113,8 +113,10 @@ export default class RecordItem extends React.PureComponent<any, any> {
           marginLeft: '-7px',
         }}
       >
-        {texts.map(text => (
-          <div className={`${baseCle}-control`}>{text}</div>
+        {texts.map((text, index) => (
+          <div key={index} className={`${baseCle}-control`}>
+            {text}
+          </div>
         ))}
       </div>
     );

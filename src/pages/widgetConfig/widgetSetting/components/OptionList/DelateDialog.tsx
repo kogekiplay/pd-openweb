@@ -62,9 +62,9 @@ export default function DelateDialog({ options = [], colorful, onOk, onCancel })
       onCancel={onCancel}
     >
       <DelateDialogWrap>
-        {deleteOptions.map(item => {
+        {deleteOptions.map((item, index) => {
           return (
-            <li>
+            <li key={index}>
               <div className="name flex ellipsis">
                 {colorful && (
                   <div className="colorWrap" style={{ backgroundColor: item.color }}>

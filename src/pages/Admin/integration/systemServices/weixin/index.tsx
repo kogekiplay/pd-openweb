@@ -113,9 +113,9 @@ export default class WeiXin extends Component<any, any> {
       root.render(
         <Dialog {...options}>
           <ul>
-            {AUTH_OPTIONS.map(item => {
+            {AUTH_OPTIONS.map((item, index) => {
               return (
-                <li className={cx('mTop10 textPrimary', { Hidden: !_.includes(data.funcInfo || [], item.value) })}>
+                <li key={index} className={cx('mTop10 textPrimary', { Hidden: !_.includes(data.funcInfo || [], item.value) })}>
                   {item.text}
                 </li>
               );

@@ -88,10 +88,10 @@ export default class AppImportUpgrade extends Component<any, any> {
         />
         {!loading && !_.isEmpty(logList) ? (
           <LogsWrap>
-            {logList.map(item => {
+            {logList.map((item, index) => {
               const { fileName, createTime, creater = {} } = item;
               return (
-                <div className="logsItem">
+                <div key={index} className="logsItem">
                   <img className="avatar" src={creater.avatar} />
                   <div className="flex flexColumn pTop2">
                     <div className="textTertiary mBottom8">

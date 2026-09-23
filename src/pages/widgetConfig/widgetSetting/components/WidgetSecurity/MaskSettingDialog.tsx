@@ -247,11 +247,11 @@ export default function MaskSettingDialog(props) {
 
           {detail.defaultmask === '1' && (
             <Fragment>
-              {Setting_Config.map(({ text, dropdownKey, inputKey, data, errKey }) => {
+              {Setting_Config.map(({ text, dropdownKey, inputKey, data, errKey }, index) => {
                 const dropValue = detail[dropdownKey] || '0';
                 const inputValue = detail[inputKey];
                 return (
-                  <div className="flexCenter mTop12">
+                  <div key={index} className="flexCenter mTop12">
                     <span className="InlineBlock Width100 mRight10">{text}</span>
                     <Dropdown
                       className="Width200"

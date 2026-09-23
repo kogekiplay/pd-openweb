@@ -46,9 +46,9 @@ export default ({ data, onChange }) => {
             <i className="icon-help textTertiary Font16 pointer"></i>
           </Tooltip>
         </div>
-        {SCAN_CODE_CONFIG.map(i => {
+        {SCAN_CODE_CONFIG.map((i, idx) => {
           return (
-            <div className="labelWrap">
+            <div key={idx} className="labelWrap">
               <Checkbox
                 size="small"
                 checked={_.includes(['0', i.value], scantype)}

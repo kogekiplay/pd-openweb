@@ -38,10 +38,11 @@ function AddTabWidget(props) {
         <div className="addTabWidgetLeftWrap">
           <div className="textSecondary mRight12">{_l('标签页位置')}</div>
           <div className="tabPositionWrap">
-            {TAB_POSITION_TYPE.map(item => {
+            {TAB_POSITION_TYPE.map((item, index) => {
               const active = item.value === position;
               return (
                 <div
+                  key={index}
                   className={cx('tabPositionItem', { active })}
                   onClick={() => {
                     if (active) return;

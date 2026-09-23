@@ -87,10 +87,10 @@ export default function (props) {
             // if (aa.length <= 0) return '';
             return (
               <div className="flex" key={`${i}_rangeC`}>
-                {it.map(item => {
+                {it.map((item, index) => {
                   // if (!defaultRange.includes(item.value)) return '';
                   return (
-                    <React.Fragment>
+                    <React.Fragment key={index}>
                       <Checkbox
                         className="checkBox mBottom10 noSelect"
                         text={item.text}

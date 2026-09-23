@@ -39,6 +39,7 @@ export default function NavigationConfig(props) {
       <Fragment>
         {list.map((item, index: number) => (
           <Checkbox
+            key={index}
             className={cx('mLeft0 mRight10', { hide: !item.show })}
             checked={displayIcon.split('')[index] === '1'}
             onChange={e => {

@@ -197,8 +197,8 @@ class ExportAttachment extends Component<any, any> {
                     this.setState({ hyphen: option.optionLabel, hyphenValue: value });
                   }}
                 >
-                  {hyphenList.map(v => (
-                    <Option value={v.value} optionLabel={v.optionLabel}>
+                  {hyphenList.map((v, index) => (
+                    <Option key={index} value={v.value} optionLabel={v.optionLabel}>
                       {v.label}
                     </Option>
                   ))}
@@ -211,7 +211,7 @@ class ExportAttachment extends Component<any, any> {
               {_l('示例：')}
               {exampleArr.map((v, i) => {
                 return (
-                  <Fragment>
+                  <Fragment key={i}>
                     <span>{v.example}</span>
                     {i < exampleArr.length - 1 && <span>{hyphen}</span>}
                   </Fragment>

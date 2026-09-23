@@ -170,9 +170,9 @@ export default function Item(props) {
       return (
         <div className="con TxtCenter">
           <div className="mTop30">
-            {[...TYPENODE, { txt: _l('从代码片段库中选择'), key: 'codeSnippet' }].map(o => {
+            {[...TYPENODE, { txt: _l('从代码片段库中选择'), key: 'codeSnippet' }].map((o, index) => {
               return (
-                <span className="chooseTypeCon">
+                <span key={index} className="chooseTypeCon">
                   <Radio
                     className=""
                     text={o.txt}

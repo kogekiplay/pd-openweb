@@ -550,7 +550,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
 
             {/* 关联记录（列表）、子表中的字段列表 */}
             {cardControls.map((it, i) => (
-              <React.Fragment>
+              <React.Fragment key={i}>
                 {/** 分割线 */}
                 {i + 1 <= cardControls.length && i > 0 && <p className="line" />}
 
@@ -631,9 +631,9 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
 
     return (
       <div className="listCon">
-        {approvalList.map(item => {
+        {approvalList.map((item, index) => {
           return (
-            <React.Fragment>
+            <React.Fragment key={index}>
               <p
                 className="mTop20 Bold Font13 pointer"
                 style={{ left: '-1em', position: 'relative' }}
@@ -648,12 +648,12 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
 
               {item.expandControls && (
                 <React.Fragment>
-                  {APPROVAL_SYS.map(l => {
+                  {APPROVAL_SYS.map((l, index) => {
                     const fieldCode = `#{[Approval]${item.name}.${l.key}${l.key === 'signature' ? '$[48*20]$' : ''}}`;
                     const fieldAlias = `#{[Approval]${item.id}.${l.key}}`;
 
                     return (
-                      <div className="list">
+                      <div key={index} className="list">
                         <span className="textIndent">{`${l.name}`}</span>
                         <span className="copySpan">
                           {fieldCode}

@@ -84,10 +84,11 @@ export default function WeekdaySetting({ data, onChange }) {
         }}
       >
         <WeekdayWrap>
-          {WEEKDAY_TYPE.map(({ text, value }) => {
+          {WEEKDAY_TYPE.map(({ text, value }, index) => {
             const isSelect = _.includes(weekdayArr, value);
             return (
               <li
+                key={index}
                 className={cx({ active: isSelect })}
                 onClick={() => {
                   const newVal = isSelect ? weekdayArr.filter(i => i !== value) : weekdayArr.concat([value]);

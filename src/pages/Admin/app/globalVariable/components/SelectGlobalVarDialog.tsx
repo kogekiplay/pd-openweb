@@ -99,8 +99,9 @@ function SelectGlobalVar(props) {
         <div className="tabWrap">
           {tabInfos
             .filter(o => appId || (!appId && o.value === 'project'))
-            .map(item => (
+            .map((item, index) => (
               <div
+                key={index}
                 className={cx('tabItem Hand', { active: item.value === currentTab })}
                 onClick={() => setCurrentTab(item.value)}
               >

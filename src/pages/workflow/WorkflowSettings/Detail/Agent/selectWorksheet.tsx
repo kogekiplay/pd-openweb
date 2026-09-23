@@ -45,8 +45,9 @@ const SelectWorksheet = props => {
                 {!worksheetList.length ? (
                   <LoadDiv className="mTop15" />
                 ) : (
-                  worksheetList.map(o => (
+                  worksheetList.map((o, index) => (
                     <Checkbox
+                      key={index}
                       className="mTop15 mLeft30"
                       text={o.workSheetName}
                       checked={_.includes(worksheetIds, o.workSheetId)}

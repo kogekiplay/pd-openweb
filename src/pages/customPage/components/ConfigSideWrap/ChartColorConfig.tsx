@@ -417,8 +417,8 @@ export default props => {
               });
             }}
           >
-            {titleStyles.map(data => (
-              <Select.Option className="selectTitleOptionWrapper" value={data.value}>
+            {titleStyles.map((data, index) => (
+              <Select.Option key={index} className="selectTitleOptionWrapper" value={data.value}>
                 <div className="flexRow alignItemsCenter">
                   <TemplateTitleWrap className="Relative" style={getBgColor(data.value)}>
                     {_l('标题')}

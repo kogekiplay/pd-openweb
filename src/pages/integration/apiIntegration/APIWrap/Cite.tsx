@@ -132,7 +132,7 @@ export default function Cite(props) {
               .filter(o => o.type === 2)
               .map((o, i) => {
                 return (
-                  <div className={cx('li flexRow Hand', { borTop: i !== 0 })}>
+                  <div key={i} className={cx('li flexRow Hand', { borTop: i !== 0 })}>
                     <div className="flex Bold name Font14">
                       <a target="_blank" className="" href={pathCompletion(`/workflowedit/${o.primaryId}`)}>
                         {o.primaryName}
@@ -154,7 +154,7 @@ export default function Cite(props) {
               .filter(o => o.type === 1)
               .map((o, i) => {
                 return (
-                  <div className={cx('li flexRow Hand', { borTop: i !== 0 })}>
+                  <div key={i} className={cx('li flexRow Hand', { borTop: i !== 0 })}>
                     <div className="flex Bold name Font14">
                       <a target="_blank" className="" href={pathCompletion(`/worksheet/${o.primaryId}`)}>
                         {o.primaryName}

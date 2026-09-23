@@ -227,11 +227,12 @@ function WorksheetRecordLogSubTable(props) {
         const info = safeParse(value);
         let _rows = safeParse(info.rows, 'array');
 
-        return _rows.map(item => {
+        return _rows.map((item, index) => {
           let _value = item.name || _l('未命名');
 
           return (
             <span
+              key={index}
               className={`rectTag ${
                 editRowType === 'add'
                   ? 'newBackground'

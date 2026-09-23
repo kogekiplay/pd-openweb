@@ -71,7 +71,14 @@ const getLoginUrl = (redirectUrl?) => {
 /** 跳转到 登录页 */
 let pendingCheckLogin;
 
-export function navigateToLogin({ needSecondCheck, needReturnUrl = true, redirectUrl } = {}) {
+/* 参数类型必须显式写：「解构 + = {} 默认值」只会把带默认值的 needReturnUrl 推进参数类型，
+   needSecondCheck / redirectUrl 被整个丢掉，于是全仓传这两个选项的调用点都报「不是已知属性」——
+   可函数体里明明读了它们。 */
+export function navigateToLogin({
+  needSecondCheck,
+  needReturnUrl = true,
+  redirectUrl,
+}: { needSecondCheck?: boolean; needReturnUrl?: boolean; redirectUrl?: string } = {}) {
   const handleNavigate = (newTab = false) => {
     const link = needReturnUrl ? `?ReturnUrl=${encodeURIComponent(location.href)}` : ``;
     let isSubDomain = true;

@@ -185,11 +185,12 @@ function SelectConfig(props) {
       ) : (
         <SelectConfigWrap>
           <DisplayTabs>
-            {getTabsDisplay(isDropdown).map(item => {
+            {getTabsDisplay(isDropdown).map((item, index) => {
               const active = showTab === item.value;
               if (_.includes([3, 4], item.value) && (data.enumDefault === 1 || showtype === '3')) return null;
               return (
                 <div
+                  key={index}
                   className={cx('tabItem', { active })}
                   onClick={() => {
                     if (active) return;

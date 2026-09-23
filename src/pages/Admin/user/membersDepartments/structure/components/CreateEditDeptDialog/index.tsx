@@ -235,10 +235,10 @@ export default class CreateEditDeptDialog extends Component<any, any> {
                 <span className="infoLabel">{_l('部门负责人')}</span>
                 <div className="mTop10">
                   <span className="chargerUserBox">
-                    {chargeUsers.map(item => {
+                    {chargeUsers.map((item, index) => {
                       const { avatar, fullname } = item;
                       return (
-                        <div className="chargerUserItem">
+                        <div key={index} className="chargerUserItem">
                           <img src={avatar} alt={fullname} className="chargeUserAvatar" />
                           <span className="TxtMiddle chargeUserName">{fullname}</span>
                           <i

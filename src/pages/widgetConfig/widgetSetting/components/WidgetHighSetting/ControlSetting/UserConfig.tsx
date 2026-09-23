@@ -212,8 +212,8 @@ export default function UserConfig(props) {
                 open={overlayVisible}
                 onOpenChange={setVisible}
                 popupRender={() => <DropdownContent>
-                    {USER_RANGE.map(item => (
-                      <div className="item" onClick={() => handleClick(item)}>
+                    {USER_RANGE.map((item, index) => (
+                      <div key={index} className="item" onClick={() => handleClick(item)}>
                         {item.text}
                       </div>
                     ))}
@@ -222,10 +222,11 @@ export default function UserConfig(props) {
                 <div className="defaultOptionsWrap">
                   {chooseRange.length > 0 ? (
                     <Fragment>
-                      {chooseRange.map(item => {
+                      {chooseRange.map((item, index) => {
                         if (item.type === 4) {
                           return (
                             <OtherField
+                              key={index}
                               {...props}
                               dynamicValue={chooseRange}
                               controls={props.allControls || []}

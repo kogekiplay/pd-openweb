@@ -420,8 +420,8 @@ export default function unitPanelGenerator(props) {
         <Collapse.Panel header={_l('值')} key="pivotTableUnit" {...collapseProps}>
           {yaxisList
             .filter(data => data.normType !== 7)
-            .map(item => (
-              <Fragment>
+            .map((item, index) => (
+              <Fragment key={index}>
                 <div className="mBottom12 Bold textSecondary">{item.controlName}</div>
                 <Unit
                   currentReport={currentReport}

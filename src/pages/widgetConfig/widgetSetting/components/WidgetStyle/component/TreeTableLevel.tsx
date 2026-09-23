@@ -15,9 +15,10 @@ export default function TreeTableLevel(props) {
     <SettingItem>
       <div className="settingItemTitle">{_l('默认展开层级')}</div>
       <AnimationWrap>
-        {LEVEL_SETTING_LIST.map(({ text, value }) => {
+        {LEVEL_SETTING_LIST.map(({ text, value }, index) => {
           return (
             <div
+              key={index}
               className={cx('animaItem overflow_ellipsis', { active: defaultlayer === value })}
               onClick={() => onChange(handleAdvancedSettingChange(data, { defaultlayer: value }))}
             >

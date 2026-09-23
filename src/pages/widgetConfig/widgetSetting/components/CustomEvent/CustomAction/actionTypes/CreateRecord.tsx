@@ -91,7 +91,7 @@ export default function CreateRecord(props) {
             {actionItems.map((item, index: number) => {
               const { icon, currentControl } = getDetail(item.controlId);
               return (
-                <div className="setItem">
+                <div key={index} className="setItem">
                   <div className="itemFiled itemFiledTitle ">
                     {icon && <Icon className="mRight8 Font14 textSecondary" icon={icon} />}
                     <span className={cx('flex overflow_ellipsis', { Red: _.isEmpty(currentControl) })}>

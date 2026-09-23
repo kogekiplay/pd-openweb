@@ -95,9 +95,10 @@ export default function (props) {
     const { calendarInfo = [] } = calendarData;
     return (
       <WrapChoose>
-        {calendarInfo.map(o => {
+        {calendarInfo.map((o, index) => {
           return (
             <div
+              key={index}
               className="setLi Hand WordBreak overflow_ellipsis"
               onClick={() => {
                 setState({ popupVisible: '' });

@@ -579,8 +579,8 @@ export function numberSummaryPanelGenerator(props) {
         >
           {normTypes
             .filter(n => ![5, 6].includes(n.value))
-            .map(item => (
-              <Select.Option className="selectOptionWrapper" value={item.value}>
+            .map((item, index) => (
+              <Select.Option key={index} className="selectOptionWrapper" value={item.value}>
                 {item.alias || item.text}
               </Select.Option>
             ))}

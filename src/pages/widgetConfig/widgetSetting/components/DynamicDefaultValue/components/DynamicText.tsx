@@ -27,7 +27,7 @@ export default ({ dynamicValue = [], data = {}, ...rest }) => {
 
   return (
     <DynamicTextWrap>
-      {dynamicValue.map(item => {
+      {dynamicValue.map((item, index) => {
         if (!checkCellIsEmpty(item.staticValue)) {
           const type = getControlType(data);
 
@@ -149,7 +149,7 @@ export default ({ dynamicValue = [], data = {}, ...rest }) => {
             return null;
           }
         } else {
-          return <OtherField dynamicValue={dynamicValue} data={data} item={item} {...rest} />;
+          return <OtherField key={index} dynamicValue={dynamicValue} data={data} item={item} {...rest} />;
         }
       })}
     </DynamicTextWrap>
