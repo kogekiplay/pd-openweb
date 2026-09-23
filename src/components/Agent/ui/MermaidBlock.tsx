@@ -29,8 +29,20 @@ async function getMermaid() {
       look: 'classic',
       fontFamily: "'PingFang SC', 'Microsoft YaHei', sans-serif",
       er: { useMaxWidth: true, diagramPadding: 16 },
-      // htmlLabels=false：流程图标签改用纯 SVG 文本而非 foreignObject(HTML)，
-      // 否则导出 PNG 时 foreignObject 内的 HTML 无法被 canvas 正确绘制，标签会丢失。
+      /* 【htmlLabels: false 只有一半生效，但保留——删掉会改变连线标签的渲染】
+         这里原先的注释写着「否则导出 PNG 时 foreignObject 内的 HTML 画不出来、标签会丢失」，
+         **那是错的**。2026-09-23 拿本文件下面 downloadDiagramPng 的真实导出路径实测过
+         （mermaid 11.17.2 与 12.0.0 各一遍，同一段图源、同一份 config）：导出的 PNG 里
+         6 个标签一个不少 —— Chromium 会把 data:URL 里的 foreignObject 照常画进 canvas。
+         它只有一半生效的原因：mermaid 早已把 flowchart.htmlLabels 标成 deprecated
+         （FLOWCHART_HTML_LABELS_DEPRECATED），真正的开关是**顶层** htmlLabels。
+         下面这三个名字里只有 getEffectiveHtmlLabels 能在装好的包里搜到
+         （node_modules/mermaid/dist/mermaid.core.mjs）；另两个是 mermaid 源码里的名字，
+         压缩产物里已经没有了，别照着 grep node_modules 然后以为注释在瞎说。
+         节点标签走 labelHelper()，那里只读 getConfig().htmlLabels，我们没设这个键，
+         而 evaluate(undefined) 判定为 true —— 所以节点标签照旧是 foreignObject；
+         只有连线标签走 getEffectiveHtmlLabels()（它才会回退到 flowchart.htmlLabels）变成 <text>。
+         别把它"修"成顶层 htmlLabels: false：那不解决任何问题，却会把节点标签也换成 SVG 文本、改掉版面。 */
       flowchart: { useMaxWidth: true, htmlLabels: false },
       maxTextSize: 99999,
     });
