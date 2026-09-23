@@ -17,7 +17,8 @@ function isIOSH5() {
 }
 
 function loadImageFromFile(file) {
-  return new Promise((resolve, reject) => {
+  // objectUrl 可选：浏览器不支持 createObjectURL 时走下面 FileReader 那条兜底路径，只 resolve { image }
+  return new Promise<{ image: HTMLImageElement; objectUrl?: string }>((resolve, reject) => {
     const urlCreator = window.URL || window.webkitURL;
 
     if (!urlCreator || !urlCreator.createObjectURL) {

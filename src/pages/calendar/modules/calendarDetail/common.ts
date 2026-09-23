@@ -54,7 +54,7 @@ export function getParamsFromUrl() {
 }
 
 export function getCalendarDetail(calnedarId, recurTime) {
-  return new Promise((resolve, reject) => {
+  return new Promise<{ type: 'SUCCESS'; data: ApiPayload }>((resolve, reject) => {
     AjaxRequest.getCalendarDetail2({
       calendarID: calnedarId,
       recurTime: recurTime || '',
@@ -317,7 +317,7 @@ export const shareCalendar = function (params, callback) {
 };
 
 export const addMember = ({ members, users }, { id, recurTime, originRecur, isChildCalendar }) => {
-  return new Promise(resolve => {
+  return new Promise<{ source: ApiPayload; isAllCalendar: boolean }>(resolve => {
     var existsIds = [];
     var addMembers = [];
     var existsAccounts = [];
@@ -394,7 +394,7 @@ export const removeMember = function (accountID, { id, recurTime, originRecur, i
   const operatorTitle = isMe ? _l('您确定退出该日程吗？') : _l('您确定移出日程成员吗？');
   const recurTitle = isMe ? _l('您确定退出重复日程吗？') : _l('您确定移出重复日程成员吗？');
 
-  return new Promise((resolve, reject) => {
+  return new Promise<{ accountID: string; isAllCalendar: boolean }>((resolve, reject) => {
     const removeMemberFunc = function (isAllCalendar) {
       AjaxRequest.removeMember({
         calendarID: id,
@@ -442,7 +442,7 @@ export const removeMember = function (accountID, { id, recurTime, originRecur, i
 export const editCalendar = (calendar, isEdit, { originStartTime, originEndTime }) => {
   const { members } = calendar;
 
-  return new Promise(resolve => {
+  return new Promise<{ isAllCalendar: boolean; oldStartTime: string; oldEndTime: string; reInvite?: boolean }>(resolve => {
     const updateFunc = (reInvite?) => {
       return function (isAllCalendar) {
         let {
@@ -696,7 +696,7 @@ export const reInvite = function (
   { id, recurTime, originRecur, isChildCalendar },
   { email, mobile } = {},
 ) {
-  return new Promise(resolve => {
+  return new Promise<{ accountId: string; isAllCalendar: boolean }>(resolve => {
     const reInviteFun = function (isAllCalendar) {
       AjaxRequest.reInvite({
         accountID,
@@ -732,7 +732,7 @@ export const reInvite = function (
 };
 
 export const removeWxMember = function (thirdId, { id, recurTime, originRecur, isChildCalendar }) {
-  return new Promise(resolve => {
+  return new Promise<{ thirdId: string; isAllCalendar: boolean }>(resolve => {
     var removeWeChatMemberFun = function (isAllCalendar) {
       AjaxRequest.removeCalendarWeChatMember({
         calendarID: id,

@@ -309,7 +309,7 @@ BatchTask.initEvent = function () {
   $batchTask.on('click', '.batchCharge', function () {
     let size = 0;
     let projectId = $('.selectTask:first').attr('data-projectid');
-    $.map($('.selectTask'), (_this: HTMLElement) => {
+    $.map($('.selectTask').toArray(), (_this: HTMLElement) => {
       if ($(_this).attr('data-projectid') === projectId) {
         size++;
       }
@@ -346,7 +346,7 @@ BatchTask.initEvent = function () {
     let size = 0;
     const existsIds = [];
     let projectId = $('.selectTask:first').attr('data-projectid');
-    $.map($('.selectTask'), (_this: HTMLElement) => {
+    $.map($('.selectTask').toArray(), (_this: HTMLElement) => {
       if ($(_this).attr('data-projectid') === projectId) {
         size++;
       }
@@ -500,7 +500,7 @@ BatchTask.bindDialog = function () {
     .html(renderToString(<LoadDiv />));
 
   let lockedSize = 0;
-  $.map($('.selectTask'), (_this: HTMLElement) => {
+  $.map($('.selectTask').toArray(), (_this: HTMLElement) => {
     if ($(_this).find('.lockToOtherTask').length) {
       lockedSize++;
     }
@@ -540,7 +540,7 @@ BatchTask.renderSelectTags = () => {
 
 BatchTask.getAllTaskIds = function () {
   const allTaskIds = [];
-  $.map($('.selectTask'), (_this: HTMLElement) => {
+  $.map($('.selectTask').toArray(), (_this: HTMLElement) => {
     allTaskIds.push($(_this).data('taskid'));
   });
 

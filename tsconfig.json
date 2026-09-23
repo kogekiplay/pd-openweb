@@ -52,6 +52,10 @@
     // 接口错误的形状见 types/global.d.ts 的 ApiRejection。
     "useUnknownInCatchVariables": true,
     "strictBindCallApply": true,
+    // 23 条里一大半是 new Promise(resolve => ...) 没写类型参数、于是全是 Promise<unknown>，
+    // 回调一解构就在逆变检查下报错。修法是在【源头】写出 resolve 的真实形状，不在每个 .then 上打补丁；
+    // 接口原样透传的值用 types/global.d.ts 的 ApiPayload（= Awaited<ApiResult>）。
+    "strictFunctionTypes": true,
 
     // R1 配对开关：.babelrc 的 onlyRemoveTypeImports:true 会把
     // `import { SomeType } from './x'` 原样保留到产物；verbatimModuleSyntax 用 TS1484
