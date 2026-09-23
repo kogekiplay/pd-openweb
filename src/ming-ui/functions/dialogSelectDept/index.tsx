@@ -371,6 +371,7 @@ class DialogSelectDept extends React.Component<any, any> {
     this.setState({
       list: departmentTree,
     });
+    return undefined;
   }
 
   setMoreList = (departmentId, isDelete) => {

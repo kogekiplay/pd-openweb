@@ -34,7 +34,7 @@ export function getNavigationBlockMessage(): string {
 
 export default function NavigationPrompt({ when, message }: { when: boolean; message: string }) {
   useEffect(() => {
-    if (!when) return;
+    if (!when) return undefined;
 
     const getMessage = () => message;
     blockers.add(getMessage);

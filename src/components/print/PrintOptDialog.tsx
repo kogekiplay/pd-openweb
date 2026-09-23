@@ -281,6 +281,7 @@ export default class PrintOptDialog extends Component<any, any> {
           }
 
           alert(_l('修改成功'));
+          return undefined;
         }}
         onCancel={() => {
           this.props.hidePrintOptDialog();

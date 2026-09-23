@@ -140,8 +140,8 @@ function contentIsEmpty(content) {
   if (isArray(content)) {
     return (
       content.filter(item => {
-        if (item.type === 'text' && item.text === '') return;
-        if (item.type === 'tool_calls' && filterToolCalls(item.toolCalls).length === 0) return;
+        if (item.type === 'text' && item.text === '') return undefined;
+        if (item.type === 'tool_calls' && filterToolCalls(item.toolCalls).length === 0) return undefined;
         return true;
       }).length === 0
     );
@@ -188,7 +188,7 @@ interface RawChatMessage {
 
 export function formatMessage(message: RawChatMessage) {
   if (!['user', 'assistant'].includes(message.role)) {
-    return;
+    return undefined;
   }
 
   // 逐个字段拼出来，键在下面几行才补齐，所以先把形状写出来
@@ -211,7 +211,7 @@ export function formatMessage(message: RawChatMessage) {
   result.hasSubmit = message.hasSubmit;
   result.modelMessageId = get(message, 'metadata.id');
   if (isEmpty(result.content) && isEmpty(result.media)) {
-    return;
+    return undefined;
   }
 
   return result;
@@ -520,7 +520,7 @@ function MingoContent(props, ref) {
   // 发送报错等场景下服务端未下发 conversationId，URL 仍停留在空会话，点「新对话」navigate 到
   // 同一地址不会触发上面的 [props.conversationId] 重置副作用，需由会话列表广播事件主动重置。
   useEffect(() => {
-    if (showMessagesOnly) return;
+    if (showMessagesOnly) return undefined;
     const handleNewConversation = (payload: Record<string, any> = {}) => {
       if (payload.chatbotId && payload.chatbotId !== chatbotId) return;
       resetToNewConversation();

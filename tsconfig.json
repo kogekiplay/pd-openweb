@@ -30,8 +30,8 @@
     // 2026-09-23 逐开关实测过代价（基线 13182 条），下面这七个【单开、合开增量都是 0】，
     // 所以直接写死，不走任何名单。之后每清完一个开关的欠债就往这里挪一个。
     // 剩下的按代价从低到高（数字是当时实测的增量）：strictBindCallApply 2 / useUnknownInCatchVariables 22 /
-    // strictFunctionTypes 23 / noUnusedLocals 34 / noImplicitThis 431 —— 以上都已打开 ——
-    // noImplicitReturns 647 / noUnusedParameters 730 / noImplicitOverride 2900 /
+    // strictFunctionTypes 23 / noUnusedLocals 34 / noImplicitThis 431 / noImplicitReturns 647 —— 以上都已打开 ——
+    // noUnusedParameters 730 / noImplicitOverride 2900 /
     // strictNullChecks 10764 / noImplicitAny 38544。
     "alwaysStrict": true,
     "noFallthroughCasesInSwitch": true,
@@ -61,6 +61,11 @@
     // 没开时对象字面量方法里的 this 一律是 any，那些方法体等于没受检查；清这批的途中在里面挖出了二十多个真 bug。
     // 函数组件里的 this 是 undefined（ES 模块是严格模式），报这条的多半是类组件改函数组件时漏改的真崩溃，别用标注糊过去。
     "noImplicitThis": true,
+    // 642 条清完后打开（2026-09-23）。绝大多数是有意的「这条路径不返回」，统一写成 return undefined
+    // （tools/codemod-implicit-returns.ts，与掉出函数末尾逐位等价；没用 return null —— 解构默认值和 defaultProps
+    // 只对 undefined 生效）。这个开关真正要抓的是「该返回却漏了」：reduce 丢累加器、比较函数漏分支、
+    // replace 回调插进字符串 "undefined"。新报出来的先想是不是这种，再决定补什么，别顺手补 undefined。
+    "noImplicitReturns": true,
 
     // R1 配对开关：.babelrc 的 onlyRemoveTypeImports:true 会把
     // `import { SomeType } from './x'` 原样保留到产物；verbatimModuleSyntax 用 TS1484

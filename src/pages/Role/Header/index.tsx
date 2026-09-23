@@ -101,7 +101,7 @@ export default function RoleHeader(props) {
           {[0, 1]
             .filter(o => (canEnterPortal ? true : o !== 1))
             .map((o, index) => {
-              if (o === 1 && !featureType) return;
+              if (o === 1 && !featureType) return undefined;
               return (
                 <span
                   key={index}

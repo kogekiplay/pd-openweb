@@ -368,6 +368,7 @@ class MemberList extends Component<any, any> {
         </span>
       );
     }
+    return undefined;
   };
 
   renderBase = () => {

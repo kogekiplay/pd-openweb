@@ -245,7 +245,7 @@ function PcUpload(props) {
 
   useEffect(() => {
     if (!(cameraStatus === CAMERA_STATUS.CAMERA_OPENED && streamRef.current && videoRef.current)) {
-      return;
+      return undefined;
     }
 
     const video = videoRef.current;

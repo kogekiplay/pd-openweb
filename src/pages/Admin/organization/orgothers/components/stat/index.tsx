@@ -104,6 +104,7 @@ export default class Stat extends React.Component<any, any> {
         case 'docstat':
           return StatTable.REPOREPORT_TYPES.DOC;
       }
+      return undefined;
     })();
     const projectId = Config.projectId;
     return (

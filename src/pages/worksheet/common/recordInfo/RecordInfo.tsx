@@ -928,7 +928,7 @@ export default class RecordInfo extends Component<any, any> {
     if (error && !ignoreError) {
       callback({ error: true });
       this.setState({ submitLoading: false });
-      return;
+      return undefined;
     }
 
     const {
@@ -964,7 +964,7 @@ export default class RecordInfo extends Component<any, any> {
         submitLoading: false,
       });
       callback();
-      return;
+      return undefined;
     }
 
     this.abortChildTable();
@@ -1021,7 +1021,7 @@ export default class RecordInfo extends Component<any, any> {
           }
         },
       );
-      return;
+      return undefined;
     }
 
     updateRecord(
@@ -1132,6 +1132,7 @@ export default class RecordInfo extends Component<any, any> {
         }
       },
     );
+    return undefined;
   };
 
   updateRecordOwner = (newOwner, record) => {

@@ -129,6 +129,7 @@ export const getDefaultLayout = ({
       return { x: 0, y: y + h, w: 4, h: titleVisible ? 7 : 6, minW, minH: 2 };
     }
   }
+  return undefined;
 };
 
 // export const formatComponents = components => components.map(item => ({ ...item, layout: JSON.parse(item.layout || '{}') }));

@@ -244,6 +244,7 @@ const getLineStyle = value => {
   if (value === 3) {
     return { lineWidth: 3, lineDash: [3, 3] };
   }
+  return undefined;
 };
 
 /**
@@ -720,6 +721,7 @@ const isApplyStyle = (applyValue, recordKey) => {
   if (applyValue === 3) {
     return recordKey === 'sum';
   }
+  return undefined;
 };
 
 // 规则没给 min/max 时回落到这个字段在整批数据里的实际最小/最大值

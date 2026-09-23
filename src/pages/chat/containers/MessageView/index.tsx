@@ -413,6 +413,7 @@ class MessageView extends Component<any, any> {
         return false;
       }
     }
+    return undefined;
   };
   renderInviteMessage() {
     const { session } = this.props;

@@ -158,7 +158,7 @@ export default function Grid(props) {
   );
 
   if (!config.width || !config.height) {
-    return;
+    return undefined;
   }
 
   return (

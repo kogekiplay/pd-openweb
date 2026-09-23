@@ -67,7 +67,7 @@ export default class SelectApp extends React.Component<any, any> {
   renderList() {
     const { list, loading, selectList = [], keyword } = this.state;
 
-    if (list === null) return;
+    if (list === null) return undefined;
 
     if (keyword && !list.length) {
       return (

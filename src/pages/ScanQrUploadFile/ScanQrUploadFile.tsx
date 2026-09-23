@@ -87,7 +87,7 @@ const ScanQrUploadFile = () => {
   }, [scanId]);
   useEffect(() => {
     if (!scanId) {
-      return;
+      return undefined;
     }
 
     attachmentAjax

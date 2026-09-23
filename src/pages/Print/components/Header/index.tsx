@@ -199,6 +199,7 @@ class Header extends React.Component<any, any> {
     }
 
     window.print();
+    return undefined;
   };
 
   render() {

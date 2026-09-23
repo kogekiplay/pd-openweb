@@ -156,6 +156,7 @@ export default class AppManagement extends Component<any, any> {
       this.setState({ DBInstancesDialog: true });
       return true;
     }
+    return undefined;
   }
 
   /**
@@ -220,7 +221,7 @@ export default class AppManagement extends Component<any, any> {
   renderList() {
     const { list, loading, hiddenIds } = this.state;
 
-    if (list === null) return;
+    if (list === null) return undefined;
 
     if (!list.length) {
       return (

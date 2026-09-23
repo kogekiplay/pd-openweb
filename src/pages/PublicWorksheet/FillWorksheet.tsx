@@ -107,15 +107,15 @@ export default class FillWorksheet extends React.Component<any, any> {
 
   onSave = (error, { data, handleRuleError, handleServiceError, alertLockError }) => {
     if (this.issubmitting) {
-      return;
+      return undefined;
     }
 
     if (error) {
       this.setState({ submitLoading: false });
-      return;
+      return undefined;
     }
 
-    if (!this.customwidget.current) return;
+    if (!this.customwidget.current) return undefined;
     const { publicWorksheetInfo = {}, onSubmit } = this.props;
     const {
       shareId,
@@ -247,6 +247,7 @@ export default class FillWorksheet extends React.Component<any, any> {
         submit();
       }
     }
+    return undefined;
   };
 
   renderFormSection = () => {

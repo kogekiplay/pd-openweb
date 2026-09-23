@@ -43,6 +43,7 @@ function getShowTypeData(control) {
   } else if (control.type === WIDGETS_TO_API_TYPE_ENUM.MULTI_SELECT) {
     return showTypeData.filter(a => [0, 7].includes(a.value));
   }
+  return undefined;
 }
 
 class ColumnHead extends Component<any, any> {

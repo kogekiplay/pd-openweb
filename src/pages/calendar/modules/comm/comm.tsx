@@ -65,6 +65,7 @@ Comm.inviteCalendar = {
         }
 
         Comm.confirmOrUnconfirmInviteMe(calendarId, 2, reason, recurTime, '');
+        return undefined;
       },
     });
 

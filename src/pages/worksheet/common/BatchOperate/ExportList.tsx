@@ -93,7 +93,7 @@ export default function ExportList(props) {
           onClickAway={() => setMenuVisible(false)}
         >
           {EXPORT_LIST.map((item, i) => {
-            if (item.exportType === 2 && _.isEmpty(attachmentControls)) return;
+            if (item.exportType === 2 && _.isEmpty(attachmentControls)) return undefined;
             return (
               <MenuItem
                 data-event={item.key}

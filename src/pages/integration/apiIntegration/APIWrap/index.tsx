@@ -234,6 +234,7 @@ function APISetting(props) {
       case 2:
         return <Log hasManageAuth={hasManageAuth} processId={data.id} connectInfo={apkInfo} />;
     }
+    return undefined;
   };
 
   if (loading) {

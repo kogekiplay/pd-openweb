@@ -450,11 +450,11 @@ export default function PayLog(props) {
         {refundInfoKeys.map((a, i) => {
           if (![2].includes(o.status) && a.key === 'refundTime') {
             //只有已退款才有退款时间
-            return;
+            return undefined;
           }
 
           if (a.key === 'operatorAccountInfo' && !_.get(o, `operatorAccountInfo.accountId`)) {
-            return;
+            return undefined;
           }
 
           return (

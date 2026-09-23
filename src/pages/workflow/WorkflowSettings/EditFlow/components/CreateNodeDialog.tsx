@@ -1638,6 +1638,7 @@ export default class CreateNodeDialog extends Component<any, any> {
 
             return !!item.secondList.length;
           }
+          return undefined;
         });
 
         return o;

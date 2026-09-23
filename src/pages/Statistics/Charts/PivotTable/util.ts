@@ -318,6 +318,7 @@ const isApplyStyle = (applyValue, recordKey) => {
   if (applyValue === 3) {
     return recordKey === 'sum';
   }
+  return undefined;
 };
 
 const getCompiledScopeRuleColor = (value, controlMinAndMax: Record<string, any> = {}, scopeRules = [], emptyShowType) => {

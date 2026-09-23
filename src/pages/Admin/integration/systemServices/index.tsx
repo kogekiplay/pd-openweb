@@ -157,7 +157,7 @@ class SystemServices extends Component<any, any> {
 
   getTwilioProvider = () => {
     if (!this.props.location.pathname.includes('systemservice')) {
-      return;
+      return undefined;
     }
 
     return smsAjax

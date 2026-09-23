@@ -216,7 +216,7 @@ export default class EditUser extends Component<any, any> {
 
     if (useMultiJobs && !!departmentJobInfos.filter(item => !item.departmentId).length) {
       alert(_l('多任职信息中部门不能为空'), 3);
-      return;
+      return undefined;
     }
 
     if (window.platformENV.isPlatform) {
@@ -324,6 +324,7 @@ export default class EditUser extends Component<any, any> {
         }
       });
     }
+    return undefined;
   };
   renderBaseUserInfo = () => {
     const { typeCursor, projectId } = this.props;

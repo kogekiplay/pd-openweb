@@ -187,7 +187,7 @@ function NewRecordForm(props) {
       if (!customwidget.current?.dataFormat) {
         // loading 已经提前打开，这里必须收尾，否则遮罩关不掉
         onSubmitEnd();
-        return;
+        return undefined;
       }
 
       if (options.rowStatus === 21) {
@@ -291,11 +291,12 @@ function NewRecordForm(props) {
           },
           ..._.pick(props, ['notDialog', 'addWorksheetRow', 'masterRecord', 'addType', 'updateWorksheetControls']),
         });
-        return;
+        return undefined;
       }
 
       cache.current.newRecordOptions = options;
       customwidget.current.submitFormData();
+      return undefined;
     }
 
     // loading 必须在延迟之前打开：延迟期间遮罩不出现，提交按钮可以被连点，会叠加出多次提交
@@ -310,7 +311,7 @@ function NewRecordForm(props) {
   async function onSave(error, { data = [], handleRuleError, handleServiceError, alertLockError } = {}) {
     if (error) {
       onSubmitEnd();
-      return;
+      return undefined;
     }
 
     let hasError;
@@ -338,7 +339,7 @@ function NewRecordForm(props) {
           console.log(err);
           submitLock.current = false;
           onSubmitEnd();
-          return;
+          return undefined;
         }
       }
 
@@ -532,6 +533,7 @@ function NewRecordForm(props) {
         ..._.pick(props, ['notDialog', 'addWorksheetRow', 'masterRecord', 'addType', 'updateWorksheetControls']),
       });
     }
+    return undefined;
   }
 
   registerFunc({ newRecord, setRestoreVisible });

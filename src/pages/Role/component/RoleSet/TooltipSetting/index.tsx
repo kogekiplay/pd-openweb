@@ -78,6 +78,7 @@ export default class Con extends PureComponent<any, any> {
       case 2:
         return <ControlSet {...this.props} />;
     }
+    return undefined;
   };
 
   render() {

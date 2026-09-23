@@ -475,6 +475,7 @@ class SideNav extends React.Component<any, any> {
           />
         );
     }
+    return undefined;
   };
 
   render() {

@@ -68,7 +68,7 @@ function getCanvasSafeMaxSide(width: number, height: number, needCompress) {
   }
 
   if (!isIOSH5() || width * height <= IOS_CANVAS_SAFE_MAX_PIXELS) {
-    return;
+    return undefined;
   }
 
   return Math.floor(Math.max(width, height) * Math.sqrt(IOS_CANVAS_SAFE_MAX_PIXELS / (width * height)));

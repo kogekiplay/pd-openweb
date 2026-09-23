@@ -686,6 +686,7 @@ const getTimeAxisSource = (viewType, filterWeekend) => {
   if (viewType === VIEWTYPE.MONTH) {
     return getMonthsTime();
   }
+  return undefined;
 };
 
 /**
@@ -705,6 +706,7 @@ const getOneHourWidth = viewType => {
   if (viewType === VIEWTYPE.MONTH) {
     return GRANULARITY.MONTH;
   }
+  return undefined;
 };
 
 /**
@@ -724,6 +726,7 @@ const singleDayWidth = viewType => {
   if (viewType === VIEWTYPE.MONTH) {
     return workingSumHours * GRANULARITY.MONTH;
   }
+  return undefined;
 };
 
 /**
@@ -762,6 +765,7 @@ const singleTableWidth = (viewType, filterWeekend?, month?) => {
 
     return days * singleDayWidth(viewType);
   }
+  return undefined;
 };
 
 /**

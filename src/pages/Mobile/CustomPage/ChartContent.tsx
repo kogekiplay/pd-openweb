@@ -338,7 +338,7 @@ function ChartContent(props) {
 
     if (!customPageContent) {
       setVisible(true);
-      return;
+      return undefined;
     }
 
     const chart = customPageContent.querySelector(`.widgetContent .analysis-${widget.id}`);

@@ -285,6 +285,7 @@ const createCalendarMethods = defineMethods<CreateCalendarFields>()({
 
       $(this).attr('disabled', 'disabled');
       CreateCalendar.methods.send();
+      return undefined;
     });
 
     // 创建hover变色
@@ -543,7 +544,7 @@ const createCalendarMethods = defineMethods<CreateCalendarFields>()({
       .keyup(function (this: HTMLElement) {
         if (!_.isNumber(parseInt(String($(this).val() ?? ''))) || _.isNaN($(this).val())) {
           if (!String($(this).val() ?? '').trim()) {
-            return;
+            return undefined;
           }
 
           $(this).attr('value', $(this).attr('defaultValue'));
@@ -555,15 +556,16 @@ const createCalendarMethods = defineMethods<CreateCalendarFields>()({
         var len = value.length;
         if (len > 2) {
           $(this).attr('value', value.substring(0, 2));
-          return;
+          return undefined;
         }
 
         if (parseInt(value, 10) > 30) {
           $(this).attr('value', '30');
-          return;
+          return undefined;
         }
 
         $(this).attr({ defaultValue: value, value: value });
+        return undefined;
       })
       .blur(function (this: HTMLElement) {
         if (!_.isNumber(parseInt(String($(this).val() ?? ''))) || _.isNaN($(this).val())) {
@@ -623,7 +625,7 @@ const createCalendarMethods = defineMethods<CreateCalendarFields>()({
     $('.repeatDialogConfirm #txtOverCount')
       .keyup(function (this: HTMLElement) {
         if (!String($(this).val() ?? '').trim()) {
-          return;
+          return undefined;
         }
 
         if (
@@ -639,15 +641,16 @@ const createCalendarMethods = defineMethods<CreateCalendarFields>()({
         var len = value.length;
         if (len > 2) {
           $(this).attr('value', value.substring(0, 2));
-          return;
+          return undefined;
         }
 
         if (parseInt(value, 10) > 30) {
           $(this).attr('value', '30');
-          return;
+          return undefined;
         }
 
         $(this).attr({ defaultValue: value, value: value });
+        return undefined;
       })
       .blur(function (this: HTMLElement) {
         if (
@@ -853,6 +856,7 @@ CreateCalendar.methods = {
         isExistes = true;
         return false;
       }
+      return undefined;
     };
 
     var existsAccountsCheckFun = function (i, account) {
@@ -866,6 +870,7 @@ CreateCalendar.methods = {
         });
         return false;
       }
+      return undefined;
     };
 
     for (var i = 0; i < users.length; i++) {
@@ -1058,6 +1063,7 @@ CreateCalendar.methods = {
       default:
         break;
     }
+    return undefined;
   },
 
   // 重复日程返回结果
@@ -1171,7 +1177,7 @@ CreateCalendar.methods = {
    */
   checkUserBusyState: function ($elem) {
     if (!md.global.Account.projects.length) {
-      return;
+      return undefined;
     }
 
     var selectedDate = CreateCalendar.methods.getDialogTime();
@@ -1272,6 +1278,7 @@ CreateCalendar.methods = {
           }
         }
       });
+    return undefined;
   },
 
   // 获取日程时间
@@ -1493,6 +1500,7 @@ CreateCalendar.methods = {
         $submitBtn.removeAttr('disabled');
         alert(_l('操作失败，请稍后再试'), 2);
       });
+    return undefined;
   },
 };
 

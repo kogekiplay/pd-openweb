@@ -597,7 +597,7 @@ class RelateRecordCards extends Component<any, any> {
       };
     } catch (err) {
       console.log(err);
-      return;
+      return undefined;
     }
   }
 

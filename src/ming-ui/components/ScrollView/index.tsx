@@ -123,10 +123,10 @@ const ScrollView = forwardRef((props: ScrollViewProps, ref) => {
    * OverlayScrollbars 没有直接给内容元素加类的选项，只能拿实例后自己挂。
    */
   useEffect(() => {
-    if (!scrollContentClassName || !osRef.current) return;
+    if (!scrollContentClassName || !osRef.current) return undefined;
 
     const content = osRef.current.osInstance()?.elements()?.content;
-    if (!content) return;
+    if (!content) return undefined;
 
     content.classList.add(scrollContentClassName);
     return () => content.classList.remove(scrollContentClassName);
@@ -162,9 +162,9 @@ const ScrollView = forwardRef((props: ScrollViewProps, ref) => {
   const getScrollInfo = () => {
     if (!osRef.current) return {};
     const osInstance = osRef.current.osInstance();
-    if (!osInstance) return;
+    if (!osInstance) return undefined;
     const viewport = osInstance?.elements()?.viewport;
-    if (!viewport) return;
+    if (!viewport) return undefined;
     const scrollHeight = viewport.scrollHeight || 0;
     const clientHeight = viewport.clientHeight || 0;
 

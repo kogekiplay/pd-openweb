@@ -374,6 +374,7 @@ export const getShowtypeByDateRangeType = dateRangeType => {
     case DATE_RANGE_TYPE.SECOND:
       return DATE_SHOW_TYPE.SECOND;
   }
+  return undefined;
 };
 
 export const getDateRangeTypeListByShowtype = showtype => {

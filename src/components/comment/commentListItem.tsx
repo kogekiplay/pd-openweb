@@ -123,6 +123,7 @@ export default class CommentListItem extends React.Component<any, any> {
         alert(_l('获取回复内容失败'), 2);
       }
     });
+    return undefined;
   }
 
   renderMoreAction() {

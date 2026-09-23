@@ -185,6 +185,7 @@ export default function AllOptionList(props) {
     });
 
     setPos(pos);
+    return undefined;
   };
 
   useEffect(() => {

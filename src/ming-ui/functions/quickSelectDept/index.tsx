@@ -405,6 +405,7 @@ export function DeptSelect(props) {
     setState({
       list: departmentTree,
     });
+    return undefined;
   };
 
   const setMoreList = (departmentId, isDelete) => {

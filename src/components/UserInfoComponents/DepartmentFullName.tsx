@@ -145,4 +145,5 @@ export default function DepartmentFullName(props) {
       </DepartmentFullNameWrapper>
     );
   }
+  return undefined;
 }

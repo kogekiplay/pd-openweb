@@ -233,6 +233,7 @@ const getMarkStyle = value => {
       fontColor: '#bdbdbd',
     };
   }
+  return undefined;
 };
 
 function WaterMarkDialog(props) {

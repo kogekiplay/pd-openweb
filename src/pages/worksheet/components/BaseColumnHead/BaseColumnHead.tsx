@@ -119,6 +119,7 @@ export default class BaseColumnHead extends React.Component<any, any> {
     } else if (isAsc === false) {
       return <i className="icon icon-score-down sortIcon" />;
     }
+    return undefined;
   }
 
   handleChangeSort = () => {

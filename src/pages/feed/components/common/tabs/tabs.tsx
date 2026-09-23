@@ -37,7 +37,7 @@ export class Tabs extends React.Component<any, any> {
 
   getIndicatorPosition = () => {
     const currentTab = this.currentTab;
-    if (!currentTab) return;
+    if (!currentTab) return undefined;
 
     const tabWidth = currentTab.offsetWidth;
     const tabLeft = currentTab.offsetLeft;

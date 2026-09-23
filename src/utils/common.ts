@@ -140,6 +140,7 @@ export function saveTempRecordValueToLocal(key: string, id, value: string, max =
     safeLocalStorageSetItem(key, JSON.stringify(savedIds));
     safeLocalStorageSetItem(`${key}_${id}`, value);
   }
+  return undefined;
 }
 
 export function removeTempRecordValueFromLocal(key: string, id) {

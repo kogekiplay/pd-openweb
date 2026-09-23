@@ -54,6 +54,7 @@ const recurShowFileConfirm = (up, files, i, length, cb) => {
       }
     },
   });
+  return undefined;
 };
 
 export default class SendToolbar extends Component<any, any> {
@@ -193,6 +194,7 @@ export default class SendToolbar extends Component<any, any> {
           // 并把 token/key/serverName/fileName 挂到同一批文件对象上。
           // 确认流程本身不需要凭证，最后那次 up.start() 也不怕早于凭证（见上面的说明）。
           recurShowFileConfirm(uploader, files, 0, files.length, _this.props.onPrepareUpload.bind(this));
+          return undefined;
         },
         BeforeUpload(uploader, file) {
           const fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;

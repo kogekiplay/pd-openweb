@@ -500,6 +500,7 @@ export default class MerchantCom extends Component<any, any> {
                 </Fragment>
               );
           }
+          return undefined;
         },
       },
     ];

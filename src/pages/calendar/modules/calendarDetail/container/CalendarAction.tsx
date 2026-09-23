@@ -68,6 +68,7 @@ export default class CalendarAction extends Component<any, any> {
                   </div>
                 );
             }
+            return undefined;
           })()}
         </div>
       </div>

@@ -25,6 +25,7 @@ export const getStrBytesLength = (str = '', bytesLength = 16) => {
       return result;
     }
   }
+  return undefined;
 };
 
 export const translatePortalRoleOptions = (appId: string, controls: FormControl[] = []) => {

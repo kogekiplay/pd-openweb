@@ -363,7 +363,9 @@ class Commenter extends React.Component<any, any> {
           });
         }
       }
+      return undefined;
     });
+    return undefined;
   }
 
   clearLocalStorage = (status = true) => {

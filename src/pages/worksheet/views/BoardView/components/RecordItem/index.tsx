@@ -229,6 +229,7 @@ function SortableRecordItem(props) {
     } catch (error) {
       console.log(error);
     }
+    return undefined;
   };
 
   const updateTitleControlData = control => {

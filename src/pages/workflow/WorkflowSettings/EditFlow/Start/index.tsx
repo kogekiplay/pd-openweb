@@ -295,6 +295,7 @@ export default class Start extends Component<any, any> {
         </Fragment>
       );
     }
+    return undefined;
   }
 
   openDocument = evt => {

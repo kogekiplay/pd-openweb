@@ -16,7 +16,7 @@ const VoiceProvider = ({ children, onGenerateRecord, onAbort }) => {
     // 没有开启语音转文字
     if (!get(md, 'global.Account.accountId') || !md.global.SysSettings.enableVoiceToText) {
       setLoading(false);
-      return;
+      return undefined;
     }
 
     getRecorderAuthConfig()

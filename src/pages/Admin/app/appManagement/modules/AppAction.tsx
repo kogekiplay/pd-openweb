@@ -95,7 +95,7 @@ export default function BatchImportApp(props) {
                     : window.platformENV.isLocal && !window.platformENV.isOverseas && !window.platformENV.isPlatform;
 
                 if (_.includes(['handleExportAll', 'openAppTrash', 'handleUpdateAll'], item.action) && !featureType) {
-                  return;
+                  return undefined;
                 }
 
                 if (item.action === 'handleUpdateAll' && featureType !== '2' && isSupportMigrateMode) {

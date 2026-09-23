@@ -70,6 +70,7 @@ export default class UserListCon extends React.Component<any, any> {
           if (data) {
             return true;
           }
+          return undefined;
         })
         .map(o => o.split('_')[0]);
     };

@@ -127,6 +127,7 @@ export default class HistoryDetail extends Component<any, any> {
             type === 0 && workItemAccount.accountId === 'user-undefined' ? _l('发起人为空') : workItemAccount.fullName,
         };
       }
+      return undefined;
     });
 
     const isApproval = appType === 9 && type === 0;
@@ -214,6 +215,7 @@ export default class HistoryDetail extends Component<any, any> {
                   <div key={key} />
                 );
               }
+              return undefined;
             }))}
 
         {!!updateWorks && (

@@ -82,6 +82,7 @@ export default class TimeBarFences extends Component<any, any> {
 
       return 'transparent';
     }
+    return undefined;
   }
 
   render() {

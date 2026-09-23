@@ -76,6 +76,7 @@ class Attachment extends Component<any, any> {
 
         $('#attachmentOperation').css({ left, top });
         event.stopPropagation();
+        return undefined;
       },
     );
 

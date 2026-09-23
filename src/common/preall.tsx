@@ -12,7 +12,7 @@ import { LoadDiv } from 'ming-ui';
 import accountSetting from 'src/api/accountSetting';
 import global from 'src/api/global';
 import shouldForwardProp from 'src/common/shouldForwardProp';
-import { installPlatformTheme, syncThemeFromLocation } from 'src/common/theme';
+import { installPlatformTheme, installStaticHolderTheme, syncThemeFromLocation } from 'src/common/theme';
 import { prefetchMyPermissions } from 'src/components/checkPermission';
 import { resetPortalUrl } from 'src/pages/AuthService/portalAccount/util.js';
 import { initThemeMode } from 'src/router/globalEvents';
@@ -27,6 +27,8 @@ import { getPssId, setPssId } from 'src/utils/pssId';
 // 装完之后 theme-default.less / theme-dark.less 里那些主色字面值就只剩
 // 「JS 还没执行时那一帧的兜底」这一个作用了 —— inline style 恒压过它们。
 installPlatformTheme();
+// antd 静态方法（全局 alert 用的 message 等）渲染在 React 树外，也让它们走同一个主题入口
+installStaticHolderTheme();
 // 首屏按 URL 认领应用色。覆盖的是那批「属于应用、却不在 Application 路由树里」
 // 的顶层页面（字段编辑、表单设计、打印…），它们刷新时没有 appPkg 可用。
 syncThemeFromLocation();
@@ -225,7 +227,7 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
         window.location.reload();
       }
 
-      return;
+      return undefined;
     }
 
     // 设置日期库语言。moment 和 dayjs 的 locale id 完全一致，所以共用一个取值。
@@ -262,11 +264,11 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
 
     if (allowNotLogin) window.allowNotLogin = true;
 
-    if (allowNotLogin || window.isPublicApp || (isMobilePrintForm && !md.global.Account.accountId)) return;
+    if (allowNotLogin || window.isPublicApp || (isMobilePrintForm && !md.global.Account.accountId)) return undefined;
 
     if (!md.global.Account.accountId) {
       navigateToLogin();
-      return;
+      return undefined;
     }
 
     initThemeMode();
@@ -289,13 +291,13 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
           md.global.Account.appId
         ) {
           location.href = pathCompletion(`/portal/${md.global.Account.appId}`);
-          return;
+          return undefined;
         }
 
         location.href = pathCompletion('/dashboard');
       }
 
-      return;
+      return undefined;
     }
 
     // 第一次进入
@@ -321,7 +323,7 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
 
       window.location.reload();
       window.isWaiting = true;
-      return;
+      return undefined;
     }
 
     // 设置网络多语言
@@ -420,6 +422,8 @@ export default function (Comp, { allowNotLogin, requestParams } = {}) {
     // Statistics/PublicShare、Chatbot/PublicShare），改异步要连它们一起动。
     // 这 4 个页面需要真实分享链接才能验证，单独一批做。
     getGlobalMeta({ allowNotLogin, requestParams, sync: true });
+    // 哨兵用法：调用方不要返回值（它们拿到的一直是 undefined）
+    return undefined;
   } else {
     return wrapComponent(Comp, { allowNotLogin, requestParams });
   }

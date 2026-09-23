@@ -67,6 +67,7 @@ export default class TaskDetail extends Component<any, any> {
     } else if (type === 14 || type === 99) {
       return 'icon-trash';
     }
+    return undefined;
   }
 
   render() {

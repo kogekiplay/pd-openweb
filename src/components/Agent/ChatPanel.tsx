@@ -833,7 +833,7 @@ export default function ChatPanel({
   }, [appBuilderVisible, landingLayout]);
 
   useEffect(() => {
-    if (!landingLayout) return;
+    if (!landingLayout) return undefined;
     const onSidebarState = ({ visible }: { visible?: boolean } = {}) => setSidebarCollapsed(!visible);
     emitter.on(AGENT_HEADER_EVENT.SIDEBAR_STATE, onSidebarState);
     return () => {

@@ -280,6 +280,7 @@ export default function SessionHistory({
                                   renameInputRef.current && renameInputRef.current.focus();
                                   return false;
                                 }
+                                return undefined;
                               },
                             });
                           }}

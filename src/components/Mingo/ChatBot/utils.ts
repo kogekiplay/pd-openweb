@@ -319,7 +319,7 @@ export function mapWidgetTypeToControlType(type) {
     // case 'tab':
     //   return 'TAB';
     default:
-      return;
+      return undefined;
   }
 }
 

@@ -216,6 +216,7 @@ export default class Widgets extends Component<any, any> {
     if (scantype === '2') {
       return ['qrCode'];
     }
+    return undefined;
   };
   // 加载内置的扫码
   loadBuildInScan = () => {

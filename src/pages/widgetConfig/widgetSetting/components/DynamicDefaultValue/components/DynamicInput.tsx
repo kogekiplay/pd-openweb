@@ -75,6 +75,7 @@ export default function DynamicInput({
               </span>
             );
           }
+          return undefined;
         })}
         <Tooltip title={_l('清除')}>
           <div

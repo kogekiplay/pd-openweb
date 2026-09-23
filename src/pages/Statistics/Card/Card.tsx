@@ -295,6 +295,7 @@ class Card extends Component<any, any> {
     if ([reportTypes.PivotTable].includes(reportType)) {
       return _.isEmpty(data.data) ? <WithoutData /> : this.renderChart();
     }
+    return undefined;
   }
   renderBody() {
     const { loading, reportData } = this.state;

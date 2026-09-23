@@ -390,7 +390,7 @@ export default function AppBuilder({
 
   // ESC 关闭：预览 overlay 打开时先关 overlay，否则关闭整个搭建/预览面板（等价右上角 X）
   useEffect(() => {
-    if (!visible) return;
+    if (!visible) return undefined;
     const onKeyDown = e => {
       if (e.key !== 'Escape') return;
       if (overlayOpen) setOverlayOpen(false);

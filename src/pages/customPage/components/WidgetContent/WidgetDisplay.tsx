@@ -283,6 +283,7 @@ const WidgetDisplay = forwardRef((props, $cardRef) => {
     if (componentType === 'subsection') {
       return <Subsection editable={editable} widget={widget} />;
     }
+    return undefined;
   };
 
   return (

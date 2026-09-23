@@ -98,6 +98,7 @@ export const newTask = (acceptor, options: CardSenderOptions = {}) => {
           },
         };
         resolve(message);
+        return undefined;
       },
     }).catch(reject);
   });

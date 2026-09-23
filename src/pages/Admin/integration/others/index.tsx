@@ -464,6 +464,7 @@ export default class OtherTool extends Component<any, any> {
           </div>
         );
     }
+    return undefined;
   }
 
   renderFormCommon(list) {
@@ -473,8 +474,8 @@ export default class OtherTool extends Component<any, any> {
       <Fragment>
         {list &&
           list.map(({ label, key, compType, errorMsg, desc, showCheckbox, checkedField, placeholder }) => {
-            if (key === 'domainPath' && searchRange !== 0) return;
-            if (key === 'DNGroup' && searchRange !== 1) return;
+            if (key === 'domainPath' && searchRange !== 0) return undefined;
+            if (key === 'DNGroup' && searchRange !== 1) return undefined;
             return (
               <div className="formItem" key={key}>
                 <div className={cx('formLabel', { flexRow: showCheckbox })}>
@@ -772,7 +773,7 @@ export default class OtherTool extends Component<any, any> {
                       onClick={() => {
                         if (featureType === '2') {
                           buriedUpgradeVersionDialog(Config.projectId, featureId);
-                          return;
+                          return undefined;
                         }
 
                         if (key === 'sso' && licenseType === 0) {
@@ -784,6 +785,7 @@ export default class OtherTool extends Component<any, any> {
                         }
 
                         this.enableForm(key);
+                        return undefined;
                       }}
                     />
                   )}
@@ -807,7 +809,7 @@ export default class OtherTool extends Component<any, any> {
                       onClick={() => {
                         if (featureType === '2') {
                           buriedUpgradeVersionDialog(Config.projectId, featureId);
-                          return;
+                          return undefined;
                         }
 
                         if (key === 'sso' && licenseType === 0) {
@@ -822,6 +824,7 @@ export default class OtherTool extends Component<any, any> {
                           default:
                             this.toggleComp(key);
                         }
+                        return undefined;
                       }}
                     >
                       {_l('设置')}
@@ -927,6 +930,7 @@ export default class OtherTool extends Component<any, any> {
       // case 'isSingleLogin':
       //   return this.renderLogin();
     }
+    return undefined;
   }
 
   renderSSO = () => {

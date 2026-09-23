@@ -19,7 +19,7 @@ function ViewContent(props) {
 
     if (!customPageContent) {
       setVisible(true);
-      return;
+      return undefined;
     }
 
     const view = customPageContent.querySelector(`.widgetContent .view-${setting.id}`);

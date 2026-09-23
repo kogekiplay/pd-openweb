@@ -41,6 +41,7 @@ const KnowledgeDetail = props => {
           />
         );
     }
+    return undefined;
   };
 
   return renderContent();

@@ -75,6 +75,7 @@ export default class WaitingPay extends Component<any, any> {
           }
         });
       });
+    return undefined;
   }
 
   getHidBalance = () => {
@@ -106,7 +107,7 @@ export default class WaitingPay extends Component<any, any> {
   viewByCurrRecordObj() {
     const { currRecordObj } = this.state;
     const { ReCharge, Ultimate, Enterprise } = billCommon.orderRecordType || {};
-    if (!currRecordObj) return;
+    if (!currRecordObj) return undefined;
     const { status, recordType, price } = currRecordObj;
     const hasFinanceAuth = checkPermission(Config.projectId, PERMISSION_ENUM.FINANCE); //是否有财务权限
 
@@ -142,6 +143,7 @@ export default class WaitingPay extends Component<any, any> {
       payStyle: firstItem,
       loading: false,
     });
+    return undefined;
   }
 
   renderTitle() {

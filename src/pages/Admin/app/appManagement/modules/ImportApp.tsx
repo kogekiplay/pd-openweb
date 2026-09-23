@@ -64,6 +64,7 @@ export default class ImportApp extends React.Component<any, any> {
           }
 
           this.setState({ file: file });
+          return undefined;
         },
         FilesAdded: up => {
           up.setOption('auto_start', true);
@@ -278,6 +279,7 @@ export default class ImportApp extends React.Component<any, any> {
           </div>
         );
     }
+    return undefined;
   }
 
   render() {

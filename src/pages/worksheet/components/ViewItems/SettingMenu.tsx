@@ -279,7 +279,7 @@ function SettingMenu(props) {
                       key: 'exportAttachment',
                     },
                   ].map(it => {
-                    if (it.exportType === 2 && _.isEmpty(getAttachmentControls())) return;
+                    if (it.exportType === 2 && _.isEmpty(getAttachmentControls())) return undefined;
                     return (
                       <MenuItem
                         key={it.key}

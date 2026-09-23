@@ -69,12 +69,12 @@ export default class RowDetail extends React.Component<any, any> {
 
   handleSave = (nextContinue, isSwitchSave, ignoreAlert) => {
     if (!this.customwidget.current) {
-      return;
+      return undefined;
     }
 
     if ($(this.formcon.current).find('.Progress--circle').length > 0) {
       alert(_l('附件正在上传，请稍后'), 3);
-      return;
+      return undefined;
     }
 
     const { data, onSave, onClose, openNextRecord } = this.props;
@@ -88,7 +88,7 @@ export default class RowDetail extends React.Component<any, any> {
       const row = [{}, ...formdata].reduce((a = {}, b = {}) => Object.assign(a, { [b.controlId]: b.value }));
       onSave({ ...data, ...row, empty: false }, updateControlIds);
       if (isSwitchSave) {
-        return;
+        return undefined;
       } else if (nextContinue) {
         this.setState({ flag: Math.random() }, () => {
           if (this.formcon.current) {
@@ -107,6 +107,7 @@ export default class RowDetail extends React.Component<any, any> {
         onClose();
       }
     }
+    return undefined;
   };
 
   handleClose = () => {

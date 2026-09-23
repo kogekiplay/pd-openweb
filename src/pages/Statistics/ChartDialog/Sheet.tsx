@@ -276,6 +276,7 @@ let ChartSheet = class ChartSheet extends Component<any, any> {
         </Fragment>
       );
     }
+    return undefined;
   }
 
   render() {

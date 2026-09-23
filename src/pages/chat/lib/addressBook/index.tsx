@@ -57,6 +57,7 @@ class AddressBook extends React.Component<any, any> {
       default:
         break;
     }
+    return undefined;
   }
 
   updateHighlightTab(type, projectId: string) {

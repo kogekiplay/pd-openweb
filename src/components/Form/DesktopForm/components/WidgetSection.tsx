@@ -186,6 +186,7 @@ export default function WidgetSection(props) {
         />
       );
     }
+    return undefined;
   };
 
   if (!activeControl) {

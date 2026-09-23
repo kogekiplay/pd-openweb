@@ -988,6 +988,7 @@ class TaskNavigation extends Component<any, any> {
               ${fileName}
               </li>
               `;
+              return undefined;
             });
 
             if (sb.length > 0) {
@@ -1103,7 +1104,7 @@ class TaskNavigation extends Component<any, any> {
         // 直接移出
         if ($(this).data('type') == 'exitfile') {
           that.updateFolderIntoFile(projectId, folderId, '');
-          return;
+          return undefined;
         }
 
         // 点击移动title
@@ -1114,6 +1115,7 @@ class TaskNavigation extends Component<any, any> {
         // 移动文件夹
         that.updateFolderIntoFile(projectId, folderId, fileId);
       }
+      return undefined;
     });
 
     // 项目文件夹弹出层
@@ -1189,7 +1191,7 @@ class TaskNavigation extends Component<any, any> {
           }
 
           if (taskNavigationSettings.isBlur) {
-            return;
+            return undefined;
           }
 
           taskNavigationSettings.isBlur = true;
@@ -1201,6 +1203,7 @@ class TaskNavigation extends Component<any, any> {
           } else {
             that.addUserFolderFile($this);
           }
+          return undefined;
         },
         focus() {
           $(this).addClass('bgColorPrimaryTransparent textPrimary');
@@ -1735,6 +1738,7 @@ class TaskNavigation extends Component<any, any> {
         }
       }
     }
+    return undefined;
   }
 
   /**

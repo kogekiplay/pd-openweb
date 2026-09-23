@@ -47,6 +47,7 @@ class EditableBlock extends React.Component<any, any> {
     this.setState({
       isEditing: false,
     });
+    return undefined;
   }
 
   render() {

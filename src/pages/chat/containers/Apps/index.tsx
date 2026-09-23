@@ -137,7 +137,7 @@ const Apps = props => {
   }, []);
 
   useEffect(() => {
-    if (typeof ResizeObserver === 'undefined') return;
+    if (typeof ResizeObserver === 'undefined') return undefined;
 
     const resizeObserver = new ResizeObserver(() => {
       if (appsWrap.current) {

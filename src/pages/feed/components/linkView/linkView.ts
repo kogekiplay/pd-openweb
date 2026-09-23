@@ -95,6 +95,7 @@ function LinkView(this: LinkViewInstance, el, param) {
           options.callback(options.linkViewData);
         }
       });
+    return undefined;
   };
 
   _this.createLinkViewHtml = function (data) {

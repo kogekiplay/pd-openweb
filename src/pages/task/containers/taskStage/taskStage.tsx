@@ -300,7 +300,7 @@ class TaskStage extends Component<any, any> {
 
           // 右键 || 标记完成
           if (event.button === 2 || $target.is('.markTask')) {
-            return;
+            return undefined;
           }
 
           // 原本的阶段ID
@@ -334,7 +334,7 @@ class TaskStage extends Component<any, any> {
             $(event.target).hasClass('markTask') ||
             $(event.target).hasClass('taskStar')
           ) {
-            return;
+            return undefined;
           }
 
           if ((event.ctrlKey || event.metaKey) && event.shiftKey) {
@@ -378,6 +378,7 @@ class TaskStage extends Component<any, any> {
           if ($('#taskList .addNewTask').length > 0) {
             that.canelCreateStageTask($('#taskList .addNewTask').closest('li.singleStage'));
           }
+          return undefined;
         },
       },
       '.singleStage .listStageContent li.singleTaskStage',
@@ -466,7 +467,7 @@ class TaskStage extends Component<any, any> {
             $(event.target).is('.icon-arrow-down-border') ||
             $(event.target).closest('.listStageDownOperator').length
           ) {
-            return;
+            return undefined;
           }
 
           const $singleStage = $(this).closest('li.singleStage');
@@ -522,7 +523,7 @@ class TaskStage extends Component<any, any> {
         this.state.openTaskDetail &&
         !$(event.target).closest('.singleTaskStage, .addNewTask, .stageHeader, .bottomNewBox').length
       ) {
-        return;
+        return undefined;
       }
 
       const $listStage = $('#taskList .listStage');
@@ -537,7 +538,7 @@ class TaskStage extends Component<any, any> {
         listStageWidth > listStageContentWidth ||
         $('.singleStage .txtAddNew').length
       ) {
-        return;
+        return undefined;
       }
 
       taskStageSettings.pointGapX = event.clientX;
@@ -662,6 +663,7 @@ class TaskStage extends Component<any, any> {
       }
 
       event.stopPropagation();
+      return undefined;
     });
 
     // 创建新阶段
@@ -1059,6 +1061,7 @@ class TaskStage extends Component<any, any> {
 
           return false;
         }
+        return undefined;
       });
     }
   }
@@ -1287,6 +1290,7 @@ class TaskStage extends Component<any, any> {
               end = end ? end.format('YYYY-MM-DD HH:00') : '';
               $stageDate.data('start', start);
               $stageDate.data('end', end);
+              return undefined;
             }}
             onClear={() => {
               delete $stageDate.data().start;
@@ -1457,6 +1461,7 @@ class TaskStage extends Component<any, any> {
 
               return false;
             }
+            return undefined;
           });
 
           // 没有找到元素
@@ -1467,6 +1472,7 @@ class TaskStage extends Component<any, any> {
             }
           }
         }
+        return undefined;
       });
     }
   }

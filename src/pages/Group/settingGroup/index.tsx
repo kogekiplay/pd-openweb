@@ -652,7 +652,7 @@ function SettingGroup(props) {
   };
 
   const renderUsers = (users, editable: boolean) => {
-    if (!users) return;
+    if (!users) return undefined;
 
     return (
       <div

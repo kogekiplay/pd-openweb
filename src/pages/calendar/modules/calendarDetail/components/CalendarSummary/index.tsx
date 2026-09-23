@@ -16,6 +16,7 @@ export default class CalendarSummary extends Component<any, any> {
     this.props.change({
       description: value,
     });
+    return undefined;
   }
 
   render() {

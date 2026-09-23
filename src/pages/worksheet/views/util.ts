@@ -282,7 +282,7 @@ export const getCardTitleFieldForView = (row = {}, worksheetControls: FormContro
   );
 
   if (!titleControl) {
-    return;
+    return undefined;
   }
 
   return {

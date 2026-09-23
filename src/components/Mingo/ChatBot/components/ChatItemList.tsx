@@ -203,6 +203,7 @@ function ChatHistoryItem({
                       cache.current.input.focus();
                       return false;
                     }
+                    return undefined;
                   },
                 });
               }}

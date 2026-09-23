@@ -327,6 +327,7 @@ class PortalSetting extends React.Component<any, any> {
           this.setState({ saveLoading: false });
         },
       );
+    return undefined;
   };
   render() {
     const { show, closeSet } = this.props;

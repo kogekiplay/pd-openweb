@@ -600,7 +600,7 @@ function Operate(props) {
                   if (!records.length) {
                     cb();
                     alert(_l('数据为空，暂不支持导出！'), 3);
-                    return;
+                    return undefined;
                   }
 
                   return exportRelateRecordRecords({

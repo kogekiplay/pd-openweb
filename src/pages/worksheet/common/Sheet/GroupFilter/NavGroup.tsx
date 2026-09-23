@@ -203,7 +203,7 @@ export default function NavGroup(props) {
 
               // 显示有数据的项 //排除全部和空
               if (navshow === '1' && count <= 0 && !['null', ''].includes(o.value)) {
-                return;
+                return undefined;
               }
 
               const showCount = count > 0 && view.viewType !== 2;

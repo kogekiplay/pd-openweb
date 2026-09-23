@@ -49,7 +49,7 @@ export function getDefaultText({
     };
   }
 
-  return;
+  return undefined;
 }
 
 const DPI_MM = 8;

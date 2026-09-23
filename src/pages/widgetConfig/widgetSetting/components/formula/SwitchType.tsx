@@ -106,7 +106,7 @@ export default function SwitchType({ data, fromAggregation, onChange }) {
           <div className="settingItemTitle">{_l('计算方式')}</div>
           <AnimationWrap>
             {FORMULA_TYPES.map(({ text, value }, index) => {
-              if (fromAggregation && value === 38) return;
+              if (fromAggregation && value === 38) return undefined;
               const isActive = data.type === value;
               return (
                 <div

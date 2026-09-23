@@ -170,7 +170,7 @@ export const externalSupportField = control => {
 export const isCustomField = ({ advancedSetting }: Partial<FormControl>) => ['1', '2'].includes(advancedSetting?.customtype);
 
 export async function fetchFilterData({ worksheetId, filterId, setWorksheetControlsMap, setFilterConditionsMap }: { worksheetId?: string; [key: string]: any }) {
-  if (!filterId) return;
+  if (!filterId) return undefined;
 
   try {
     const [worksheetInfo, filterData] = await Promise.all([

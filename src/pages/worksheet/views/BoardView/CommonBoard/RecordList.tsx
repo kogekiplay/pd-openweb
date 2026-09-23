@@ -91,7 +91,8 @@ export default function Board(props) {
       setState(state => {
         const { pageIndex } = state;
         const nextPageIndex = pageIndex + 1;
-        if (pendingFlag.current) return;
+        // react-use 的 useSetState 会把返回值 Object.assign 进上一份 state，原先返回 undefined 等于原样
+        if (pendingFlag.current) return state;
         pendingFlag.current = true;
         getSingleBoardPageData({
           kanbanKey: list.key,

@@ -62,7 +62,7 @@ export function calculateZoomLevel(coordinates, mapWidth, mapHeight, paddingPerc
 
 export function calculatePoleCenter(coordinates) {
   if (coordinates.length === 0) {
-    return;
+    return undefined;
   }
 
   var minLatitude = 90;

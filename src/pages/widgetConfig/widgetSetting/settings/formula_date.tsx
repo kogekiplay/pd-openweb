@@ -179,6 +179,7 @@ export default function FormulaDate(props) {
     if (enumDefault === 3) {
       return <ToTodaySetting {...props} />;
     }
+    return undefined;
   };
 
   return (

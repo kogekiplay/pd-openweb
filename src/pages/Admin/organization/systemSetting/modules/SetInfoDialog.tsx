@@ -14,6 +14,7 @@ const checkFuncs = {
         msg: _l('企业简称不能为空'),
       };
     }
+    return undefined;
   },
   companyName: companyName => {
     if (!companyName.trim()) {
@@ -21,6 +22,7 @@ const checkFuncs = {
         msg: _l('企业全称不能为空'),
       };
     }
+    return undefined;
   },
 };
 

@@ -165,6 +165,7 @@ export default class CalendarDate extends Component<any, any> {
         isEditing: true,
       });
     }
+    return undefined;
   }
 
   renderShowBlock() {

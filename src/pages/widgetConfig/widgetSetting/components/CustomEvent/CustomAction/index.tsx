@@ -60,6 +60,7 @@ const CustomActionConfig = props => {
     case ACTION_VALUE_ENUM.SEARCH_WORKSHEET:
       return <SearchWorksheet {...props} />;
   }
+  return undefined;
 };
 
 export default props => functionWrap(CustomActionConfig, { ...props });

@@ -56,7 +56,7 @@ export default class ByUser extends Component<any, any> {
         className: 'flex minWidth120 pLeft10',
         render: item => {
           const { user } = item;
-          if (!user) return;
+          if (!user) return undefined;
           return (
             <div className="flexRow userInfo">
               <UserHead

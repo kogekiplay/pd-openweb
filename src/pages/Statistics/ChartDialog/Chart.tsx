@@ -220,6 +220,7 @@ let Chart = class Chart extends Component<any, any> {
       const params = { ...currentReport, map, contrast, contrastMap };
       return <Chart {...props} reportData={params} />;
     }
+    return undefined;
   }
 
   render() {

@@ -348,7 +348,7 @@ const isAncestor = (src, target) => {
 };
 
 const isSibling = (src, target) => {
-  if (!Array.isArray(src) || !Array.isArray(target)) return;
+  if (!Array.isArray(src) || !Array.isArray(target)) return undefined;
   return JSON.stringify(src.slice(0, -1)) === JSON.stringify(target.slice(0, -1));
 };
 
@@ -517,6 +517,7 @@ export function getAssignChildren({ path = [], pathId = [], callback, ...args },
           pageSize: 1000,
         };
       }
+      return undefined;
     };
 
     args = {

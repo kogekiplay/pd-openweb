@@ -247,6 +247,7 @@ export default class Announce extends Component<any, any> {
           alert(_l('发送失败'), 2);
         }
       });
+    return undefined;
   };
 
   renderAttachmentList = () => {

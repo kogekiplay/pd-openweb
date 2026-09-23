@@ -204,6 +204,7 @@ class Dropdown extends Component<any, any> {
         } else if (_.isArray(item)) {
           getTextFromList(item);
         }
+        return undefined;
       });
     };
 

@@ -721,6 +721,7 @@ Calendar.Method = {
         event.stopPropagation();
         return false;
       }
+      return undefined;
     });
   },
 
@@ -865,6 +866,7 @@ Calendar.Method = {
         return '#DADADA';
       }
     }
+    return undefined;
   },
 
   // 离开颜色
@@ -910,6 +912,7 @@ Calendar.Method = {
         return '#E6E6E6';
       }
     }
+    return undefined;
   },
 
   // 0 选中状态 1 离开状态
@@ -1053,6 +1056,7 @@ Calendar.Method = {
       default:
         break;
     }
+    return undefined;
   },
 };
 
@@ -1094,6 +1098,7 @@ Calendar.Event = function () {
           );
         },
       });
+      return undefined;
     })
     .on('click', '#calendarListMore', function (this: HTMLElement) {
       var startDate2 = $(this).attr('queryend');

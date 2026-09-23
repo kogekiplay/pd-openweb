@@ -163,6 +163,7 @@ function SelectConfig(props) {
     } else if (showTab === 4) {
       return <SortConfig {...editProps} />;
     }
+    return undefined;
   };
 
   return (

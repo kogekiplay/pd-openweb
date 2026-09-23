@@ -34,6 +34,7 @@ export default props => {
           endDate: formatDate(moment(beginOfCurrentMonth).subtract(1, 'day')),
         };
     }
+    return undefined;
   };
 
   const handleClick = (id, pastDays) => {

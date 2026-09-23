@@ -42,6 +42,7 @@ export default class InviteOrAddUsers extends Component<any, any> {
         fromText: name,
       });
     }
+    return undefined;
   };
 
   render() {

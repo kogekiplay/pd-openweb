@@ -360,6 +360,7 @@ export default class extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
   renderSignType() {
     const { selectedUser, countersignType } = this.state;
@@ -400,6 +401,7 @@ export default class extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
   renderSelectUser() {
     const { projectId, action, instance } = this.props;
@@ -439,6 +441,7 @@ export default class extends Component<any, any> {
         />
       );
     }
+    return undefined;
   }
   renderSignature() {
     return (
@@ -530,6 +533,7 @@ export default class extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
   renderContent() {
     const { action, instance, projectId } = this.props;

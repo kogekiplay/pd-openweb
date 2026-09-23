@@ -45,7 +45,7 @@ export const existAccountHint = function (result) {
 
   if (result.sendMessageResult === SendMessageResult.Failed) {
     alert(_l('邀请失败'), 2);
-    return;
+    return undefined;
   }
 
   let accountInfos = []; // 成功

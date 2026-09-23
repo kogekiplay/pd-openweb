@@ -293,6 +293,7 @@ class CommentItem extends React.Component<any, any> {
           );
         }
       }
+      return undefined;
     };
 
     return (
@@ -511,6 +512,7 @@ export default class CommentArea extends React.Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
 
   render() {

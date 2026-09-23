@@ -193,7 +193,7 @@ export default class ByApp extends Component<any, any> {
         title: '',
         className: 'width50',
         render: item => {
-          if (!item.appId) return;
+          if (!item.appId) return undefined;
           return (
             <Tooltip title={_l('使用分析')}>
               <Icon
@@ -340,7 +340,7 @@ export default class ByApp extends Component<any, any> {
         className: 'width50',
         render: item => {
           const { app } = item;
-          if (!app.name) return;
+          if (!app.name) return undefined;
           return (
             <Tooltip title={_l('使用分析')}>
               <Icon

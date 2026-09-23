@@ -364,9 +364,10 @@ function AddUserFeedback(props) {
 
       default:
     }
+    return undefined;
   };
 
-  if (!actionResult) return;
+  if (!actionResult) return undefined;
 
   return (
     <FeedbackDialog

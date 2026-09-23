@@ -157,7 +157,7 @@ class TaskTree extends Component<any, any> {
             $(event.target).hasClass('markTask') ||
             $(event.target).hasClass('taskStar')
           ) {
-            return;
+            return undefined;
           }
 
           if ((event.ctrlKey || event.metaKey) && event.shiftKey) {
@@ -195,6 +195,7 @@ class TaskTree extends Component<any, any> {
             taskId,
             isForceUpdate: true,
           });
+          return undefined;
         },
       },
       '.singleTreeTask',

@@ -710,6 +710,7 @@ Toolbar.Method = {
       default:
         break;
     }
+    return undefined;
   },
 
   // 不同颜色class 返回不同的值
@@ -732,6 +733,7 @@ Toolbar.Method = {
       default:
         break;
     }
+    return undefined;
   },
 
   // 未确认日程颜色

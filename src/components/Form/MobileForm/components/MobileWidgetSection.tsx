@@ -144,6 +144,7 @@ const getCount = (control = {}) => {
   const data = _.isArray(value) ? value : value ? JSON.parse(value) : [];
 
   if (_.isArray(data) && data.length) return data.length;
+  return undefined;
 };
 
 function MobileWidgetSection(props) {

@@ -134,6 +134,7 @@ const uploadNewVersionMethods = defineMethods<UploadNewVersionFields>()({
           NV.callback(data);
         }
       });
+    return undefined;
   },
   setProcess: function (percent) {
     var NV = this;

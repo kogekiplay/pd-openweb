@@ -208,7 +208,7 @@ function ViewControl(props) {
   };
 
   useEffect(() => {
-    if (!emitter || !chartId) return;
+    if (!emitter || !chartId) return undefined;
     emitter.on('EXPORT_CURRENT_VIEW_AS_EXCEL', handleExport);
     return () => {
       emitter.off('EXPORT_CURRENT_VIEW_AS_EXCEL', handleExport);

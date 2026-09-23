@@ -60,6 +60,7 @@ export default function HapAiDialog({ visible, onCancel = () => {} }) {
         iframe.removeEventListener('load', () => setIframeLoaded(false));
       };
     }
+    return undefined;
   }, [visible]);
 
   return (

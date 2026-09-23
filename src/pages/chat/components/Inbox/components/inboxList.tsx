@@ -115,6 +115,7 @@ let InboxList = class InboxList extends React.Component<any, any> {
         this.fetchInboxList();
       },
     );
+    return undefined;
   }
 
   renderList() {

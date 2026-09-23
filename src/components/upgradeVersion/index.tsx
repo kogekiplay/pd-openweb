@@ -36,6 +36,7 @@ export const upgradeVersionDialog = options => {
     description: descFunc(),
     noFooter: true,
   });
+  return undefined;
 };
 
 /**

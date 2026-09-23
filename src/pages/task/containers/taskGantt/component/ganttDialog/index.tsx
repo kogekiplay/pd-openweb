@@ -110,7 +110,7 @@ export default class GanttDialog extends Component<any, any> {
    * @param {Array} data
    */
   dealWithData(data) {
-    if (!Array.isArray(data)) return;
+    if (!Array.isArray(data)) return undefined;
     data.forEach(item => {
       item.child && (item.childrenVisible = true);
       this.dealWithData(item.child);

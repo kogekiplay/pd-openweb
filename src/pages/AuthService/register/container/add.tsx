@@ -104,7 +104,7 @@ export default function (props) {
     const { regcode, onChange = () => {} } = props;
 
     const renderWarn = () => {
-      if (!warnTxt) return;
+      if (!warnTxt) return undefined;
       return <div className={cx('warnTips')} dangerouslySetInnerHTML={{ __html: warnTxt }}></div>;
     };
 

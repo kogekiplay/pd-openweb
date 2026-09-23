@@ -179,7 +179,7 @@ function IconTabs(props) {
   };
 
   const renderCommonIcon = () => {
-    if (!commonData.length) return;
+    if (!commonData.length) return undefined;
 
     return (
       <div className="commonIcon">

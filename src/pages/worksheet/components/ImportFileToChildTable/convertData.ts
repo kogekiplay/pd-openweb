@@ -60,7 +60,7 @@ function getDateStringValue(dateString) {
     return moment(dateString, showFormat).format();
   }
 
-  return;
+  return undefined;
 }
 
 async function convert({ projectId, worksheetId, controlId, mapConfig = [], controls = [], data = [] }: { projectId?: string; worksheetId?: string; controlId?: string; [key: string]: any }) {

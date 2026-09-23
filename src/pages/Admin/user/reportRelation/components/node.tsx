@@ -97,6 +97,7 @@ class Node extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
 
   toggle() {
@@ -124,6 +125,7 @@ class Node extends Component<any, any> {
         />
       );
     }
+    return undefined;
   }
 
   add() {

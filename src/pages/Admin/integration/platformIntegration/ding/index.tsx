@@ -507,7 +507,7 @@ export default class Ding extends React.Component<any, any> {
             )}
             <div className={cx('tabBox', { singleTab: !(this.state.status === 1 && !this.state.isCloseDing) })}>
               {TABS.map(({ key, label }) => {
-                if (key === 'other' && !(this.state.status === 1 && !this.state.isCloseDing)) return;
+                if (key === 'other' && !(this.state.status === 1 && !this.state.isCloseDing)) return undefined;
 
                 return (
                   <span

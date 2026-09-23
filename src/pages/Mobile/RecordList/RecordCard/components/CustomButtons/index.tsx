@@ -182,6 +182,7 @@ const CustomButtons = props => {
     } else if (isFunction(button.onClick)) {
       button.onClick(button);
     }
+    return undefined;
   };
 
   const triggerCustomBtn = btn => {

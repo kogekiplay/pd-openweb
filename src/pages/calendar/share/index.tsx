@@ -389,6 +389,7 @@ class CalendarShare extends Component<any, any> {
         window.location.href = addToken(
           `${md.global.Config.AjaxApiUrl}download/exportSharedCalendar?token=${settings.token}&thirdId=${settings.thirdID}`,
         );
+        return undefined;
       });
 
     // 微信加入日程按钮提示浏览器打开

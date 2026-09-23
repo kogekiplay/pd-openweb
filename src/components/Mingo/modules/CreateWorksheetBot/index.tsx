@@ -121,6 +121,7 @@ function getCurrentAppData({ base = {}, sheetList = {} } = {}) {
       appDescription: globalStoreForMingo.appDescription,
     };
   }
+  return undefined;
 }
 
 function MingoContent(props, ref) {

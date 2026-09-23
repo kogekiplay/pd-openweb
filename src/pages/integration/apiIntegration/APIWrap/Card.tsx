@@ -299,6 +299,7 @@ export default function Card(props) {
           </div>
         );
     }
+    return undefined;
   };
 
   const renderBtn = () => {

@@ -30,7 +30,7 @@ function CustomBtnFormSet(props) {
   const ajaxRef = useRef(null);
 
   useEffect(() => {
-    if (!worksheetId) return;
+    if (!worksheetId) return undefined;
     getSheetBtns();
 
     return () => {

@@ -901,6 +901,7 @@ export default class CustomButtons extends React.Component<any, any> {
     } else if (isFunction(button.onClick)) {
       button.onClick(button);
     }
+    return undefined;
   };
 
   render() {

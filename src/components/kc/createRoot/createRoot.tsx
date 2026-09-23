@@ -202,6 +202,7 @@ const rootSettingsMethods = defineMethods<RootSettingsFields>()({
               })
               .catch(_this.settings.reject);
           }
+          return undefined;
         },
       });
 
@@ -897,6 +898,7 @@ const rootSettingsMethods = defineMethods<RootSettingsFields>()({
             existingUsers.push(user);
             return false;
           }
+          return undefined;
         });
       }
 

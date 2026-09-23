@@ -264,6 +264,7 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
         }
 
         $(this).toggleClass('bgColorPrimaryDark bgColorPrimary');
+        return undefined;
       },
       mouseout: function () {
         // 禁用
@@ -272,6 +273,7 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
         }
 
         $(this).toggleClass('bgColorPrimaryDark bgColorPrimary');
+        return undefined;
       },
       click: function () {
         if ($(this).attr('disabled')) {
@@ -280,6 +282,7 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
 
         $(this).attr('disabled', 'disabled');
         CreateTask.Motheds.send();
+        return undefined;
       },
     });
 
@@ -606,6 +609,7 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
         has = true;
         return false;
       }
+      return undefined;
     };
 
     for (i = 0; i < memberArr.length; i++) {
@@ -677,6 +681,7 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
               isExistes = true;
               return false;
             }
+            return undefined;
           };
 
           for (i = 0; i < users.length; i++) {
@@ -771,6 +776,7 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
             $('#txtLastDateText').html(
               !start && !end ? _l('未指定起止时间') : formatTaskTime(false, start, end, '', '', true),
             );
+            return undefined;
           }}
           onClear={() => {
             delete $txtLastDate.data().start;
@@ -1026,7 +1032,7 @@ CreateTask.Motheds = {
           alert(_l('操作失败，请稍后再试'), 2);
         });
 
-      return;
+      return undefined;
     }
 
     ajaxRequest
@@ -1121,11 +1127,13 @@ CreateTask.Motheds = {
           // 接口说没建成：把点击时置上的 disabled 放开，否则按钮一直灰着、只能关掉重填（原先只有 catch 分支会放开）
           $submitBtn.removeAttr('disabled');
         }
+        return undefined;
       })
       .catch(function () {
         $submitBtn.removeAttr('disabled');
         alert(_l('操作失败，请稍后再试'), 2);
       });
+    return undefined;
   },
 
   // 验证当前用户是否在该网络

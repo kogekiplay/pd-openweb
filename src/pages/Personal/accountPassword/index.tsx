@@ -89,6 +89,7 @@ const WORKBINDOPTION = state => {
     case 7:
       return { label: _l('Microsoft'), img: microsoftImg, iconIsImage: true };
   }
+  return undefined;
 };
 
 export default class AccountChart extends React.Component<any, any> {

@@ -123,6 +123,7 @@ class Dropdown extends Component<any, any> {
         } else if (item.children) {
           getTextFromList(item.children);
         }
+        return undefined;
       });
     };
 

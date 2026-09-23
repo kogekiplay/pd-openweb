@@ -173,7 +173,7 @@ export default function orgQuota(props) {
                   item => {
                     const { key, limit, text, link, click, featureId, routePath = undefined, autoPurchase } = item;
 
-                    if (featureId && !getFeatureStatus(projectId, featureId)) return;
+                    if (featureId && !getFeatureStatus(projectId, featureId)) return undefined;
 
                     const percentValue = data[key] === 0 ? 0 : getCountProcess(key, limit);
 

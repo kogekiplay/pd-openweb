@@ -788,6 +788,7 @@ export default class UpgradeProcess extends Component<any, any> {
       case 1:
         return _.some(files, l => l.type === undefined) && upgradeModel !== 1;
     }
+    return undefined;
   };
 
   updateFiles = files => this.setState({ files });

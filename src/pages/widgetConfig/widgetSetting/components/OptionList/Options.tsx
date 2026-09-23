@@ -294,7 +294,7 @@ function SelectOptions(props, ref) {
   }));
 
   useEffect(() => {
-    if (!isDrag || !wrapRef.current) return;
+    if (!isDrag || !wrapRef.current) return undefined;
 
     const scrollEl = findScrollableParent(wrapRef.current);
     let animationId;

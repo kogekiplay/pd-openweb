@@ -98,6 +98,7 @@ let UpgradeService = class UpgradeService extends Component<any, any> {
           });
         }
       });
+    return undefined;
   }
 
   handleBack() {
@@ -321,6 +322,7 @@ let UpgradeService = class UpgradeService extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
 };
 UpgradeService = withRouter(UpgradeService);

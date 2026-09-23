@@ -683,6 +683,7 @@ export const checkOptionsRepeat = (controls: FormControl[] = [], checkCollection
       }
     }
   }
+  return undefined;
 };
 
 export const getCurrentRowSize = row => {

@@ -1103,7 +1103,7 @@ function WorksheetTable(props, ref) {
         // 空状态
         renderEmpty={({ style }) => {
           if (keyWords && showSearchEmpty) {
-            return;
+            return undefined;
           }
 
           return (

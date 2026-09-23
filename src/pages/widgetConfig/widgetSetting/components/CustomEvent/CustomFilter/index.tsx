@@ -23,6 +23,7 @@ const CustomFilterConfig = props => {
     case FILTER_VALUE_ENUM.CUSTOM_FUN:
       return <FunctionEditor {...props} />;
   }
+  return undefined;
 };
 
 export default props => functionWrap(CustomFilterConfig, { ...props });
