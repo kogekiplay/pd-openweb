@@ -15,7 +15,7 @@ const publishStatus2Text = {
 };
 
 export default class PublishBtn extends Component<any, any> {
-  state = {
+  override state = {
     publishing: false,
     publishData: {},
     dialogVisible: false,
@@ -85,7 +85,7 @@ export default class PublishBtn extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { disabled = false, item, showTime, showCreateTime } = this.props;
     const { publishData, dialogVisible } = this.state;
 

@@ -22,7 +22,7 @@ export default class SelectOrgRole extends Component<any, any> {
     };
     this.searchRef = createRef();
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.init();
   }
 
@@ -314,7 +314,7 @@ export default class SelectOrgRole extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { visible, onClose, unique, hideClearBtn = true } = this.props;
     const { selectedOrgRole } = this.state;
     return (

@@ -24,11 +24,11 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getUserCardInfo();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.flag !== this.props.flag) {
         this.setState({
@@ -415,7 +415,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     return (
       <Fragment>
         {this.renderPersonalProfile()}

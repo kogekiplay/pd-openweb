@@ -6,7 +6,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import './popup.less';
 
 class Popup extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     children: PropTypes.element,
     withMask: PropTypes.bool,
     onClickAwayExceptions: PropTypes.array,
@@ -16,12 +16,12 @@ class Popup extends React.Component<any, any> {
     arrowStyle: PropTypes.object,
   };
 
-  state = {
+  override state = {
     style: this.props.style,
     arrowStyle: this.props.arrowStyle,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const $popup = $(this.popup);
     const position = $popup.offset();
     const outerOffset = position.left + $popup.width() - document.body.clientWidth;
@@ -38,7 +38,7 @@ class Popup extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const withMask = this.props.withMask;
     const popup = withMask ? (
       <div>

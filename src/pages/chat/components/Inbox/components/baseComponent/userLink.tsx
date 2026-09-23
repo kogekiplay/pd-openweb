@@ -9,7 +9,7 @@ export default class UserLink extends React.Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { accountId, fullname } = this.props;
 
     return (

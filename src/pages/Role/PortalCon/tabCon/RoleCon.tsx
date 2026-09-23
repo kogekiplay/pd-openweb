@@ -21,7 +21,7 @@ class Con extends React.Component<any, any> {
       copyData: null,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { portal = {}, canEditUser } = this.props;
     const { roleList = [] } = portal;
     this.setState({
@@ -58,7 +58,7 @@ class Con extends React.Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { portal = {} } = prevProps;
       const { roleList = [] } = portal;
@@ -149,7 +149,7 @@ class Con extends React.Component<any, any> {
       this.setState({ roleId: data.roleId });
     }
   };
-  render() {
+  override render() {
     const { getPortalRoleList, setPortalRoleList, portal, showRoleSet, appId, projectId, editType } = this.props;
     const { loading } = portal;
     const { roleList = [], dataList = [], roleId, copyData } = this.state;

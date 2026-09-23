@@ -48,7 +48,7 @@ class WorksheetSahre extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('WorksheetSharePage');
     this.getShareInfo(this.state.shareId);
   }
@@ -240,7 +240,7 @@ class WorksheetSahre extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       isSearch,
       loading,

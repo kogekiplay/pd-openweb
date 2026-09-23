@@ -20,7 +20,7 @@ import { getRootLog } from './rootLog';
 import './KcLeft.less';
 
 class KcLeft extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     path: PropTypes.string,
     keywords: PropTypes.string,
     usage: PropTypes.shape({}),
@@ -78,7 +78,7 @@ class KcLeft extends Component<any, any> {
     };
     this.searchNodes = this.searchNodes.bind(this);
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { getUsage } = this.props;
     getUsage();
     this._isMounted = true;
@@ -104,7 +104,7 @@ class KcLeft extends Component<any, any> {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     return !(
       shallowEqual(nextProps, this.props) &&
       shallowEqual(nextProps.usage, this.props.usage) &&
@@ -112,7 +112,7 @@ class KcLeft extends Component<any, any> {
       nextState.roots === this.state.roots
     );
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.keywords !== this.state.keywords) {
         this.setState({
@@ -127,7 +127,7 @@ class KcLeft extends Component<any, any> {
     );
     this.updateSearchName();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this._isMounted = false;
   }
 
@@ -620,7 +620,7 @@ class KcLeft extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { searchName, keywords } = this.state;
 
     const selectOptions = this.state.selectOptions && (

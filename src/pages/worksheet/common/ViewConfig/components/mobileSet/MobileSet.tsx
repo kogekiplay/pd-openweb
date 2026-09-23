@@ -33,7 +33,7 @@ export default class MobileSet extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { appshowtype = '0', checkradioid = '' } = getAdvanceSetting(this.props.view);
 
@@ -294,7 +294,7 @@ export default class MobileSet extends React.Component<any, any> {
     );
   };
   // 移动端显示
-  render() {
+  override render() {
     const { view } = this.props;
     const isGallery = VIEW_DISPLAY_TYPE[view.viewType] === 'gallery';
 

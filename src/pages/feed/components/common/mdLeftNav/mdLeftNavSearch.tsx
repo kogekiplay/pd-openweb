@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './mdLeftNavSearch.css';
 
 class MDLeftNavSearch extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     value: PropTypes.string,
     onSearch: PropTypes.func,
     onChange: PropTypes.func,
@@ -26,7 +26,7 @@ class MDLeftNavSearch extends React.Component<any, any> {
     $(this.root).removeClass('borderColorPrimary').addClass('borderSecondary');
   };
 
-  render() {
+  override render() {
     /* onSearch / defaultValue 是本组件自己的 props，不能跟着 ...props 落到 <input> 上。
        原先只摘了 value，于是 onSearch 透传到 DOM，控制台每次挂载都报
        "Unknown event handler property `onSearch`. It will be ignored."

@@ -62,13 +62,13 @@ const NoPermission = (
   </div>
 );
 export default class AdminEntryPoint extends PureComponent<any, any> {
-  state = {
+  override state = {
     isLoading: true,
     authority: [],
     routeKeys: [],
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     if (_.isNull(localStorage.getItem('adminList_isUp'))) {
       safeLocalStorageSetItem('adminList_isUp', true);
     }
@@ -77,7 +77,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
     this.init();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const projectId = getProjectIdFromPath();
 
@@ -92,7 +92,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppAdmin');
   }
 
@@ -241,7 +241,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
   /* 下面几处「判断完要跳走」原先是在 render 里直接 navigateTo(...) 再 return null ——
      渲染期间改路由状态，React 报「Cannot update a component (BrowserRouter) while rendering」。
      改成返回 <RedirectTo>，在提交之后再调同一个 navigateTo，跳转逻辑一点没变。 */
-  render() {
+  override render() {
     const { authority = [], isLoading, routeKeys } = this.state;
     let { isSuperAdmin } = getCurrentProject(Config.projectId, true);
 

@@ -27,7 +27,7 @@ class MobileLog extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getControls();
     if (getLogParams === 'true') {
       mdAppResponse({ type: 'getLogParams' }).then(data => {
@@ -51,7 +51,7 @@ class MobileLog extends React.Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { controls = [], filterUniqueIds } = this.state;
     let param = getLogParams === 'true' ? { filterUniqueIds: filterUniqueIds, showFilter: false } : {};
     return (

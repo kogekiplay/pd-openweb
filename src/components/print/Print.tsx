@@ -74,7 +74,7 @@ const allocationTask = (result: { data?: any; [key: string]: any }) => {
 };
 
 export default class Print extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     reqId: PropTypes.string,
   };
   constructor(props) {
@@ -111,7 +111,7 @@ export default class Print extends Component<any, any> {
       workflow: [],
     };
   }
-  componentDidMount = () => {
+  override componentDidMount = () => {
     const { params } = this.props.match;
 
     if (params.printType === 'worksheet') {
@@ -238,7 +238,7 @@ export default class Print extends Component<any, any> {
         });
       });
   }
-  componentDidUpdate = function (this: Print) {
+  override componentDidUpdate = function (this: Print) {
     $('#container, .AppHr form').addClass('hrApprovalBox');
     $('html.AppHr').addClass('hrApprovalAppHr');
   };
@@ -1641,7 +1641,7 @@ export default class Print extends Component<any, any> {
       </table>
     );
   }
-  render() {
+  override render() {
     const { params } = this.props.match;
     const { task, configOptions, rowInfo } = this.state;
     let { logo } = this.state;

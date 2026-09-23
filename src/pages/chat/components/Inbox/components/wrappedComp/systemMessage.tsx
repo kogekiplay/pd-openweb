@@ -55,12 +55,12 @@ const removeWebUrlPrefix = href => {
  */
 
 export default class SystemMessage extends PureComponent<any, any> {
-  state = {
+  override state = {
     showAddressBook: false,
     processInfo: null,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const that = this;
 
     if (this.msg) {
@@ -250,7 +250,7 @@ export default class SystemMessage extends PureComponent<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { Message = {}, createTime, inboxType, app = null, processId = null, status, readTime } = this.props;
     const { showAddressBook, processInfo } = this.state;
     const { typeName, isFavorite, inboxId } = formatInboxItem(this.props);

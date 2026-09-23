@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import '../less/Progress.less';
 
 class LineProgress extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 进度条类名
      */
@@ -29,7 +29,7 @@ class LineProgress extends Component<any, any> {
     theme: 'primary',
   };
 
-  render() {
+  override render() {
     const { className, theme, percent, active, ...other } = this.props;
 
     const progressCls = classNames(

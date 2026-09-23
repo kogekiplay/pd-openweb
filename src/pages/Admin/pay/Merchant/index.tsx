@@ -27,11 +27,11 @@ export default class Merchant extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({ myPermissions: getMyPermissions(Config.projectId) });
   }
 
-  render() {
+  override render() {
     const { showHeader, showCreateMerchant, myPermissions } = this.state;
     const { iscreate } = getRequest();
     const featureType = getFeatureStatus(Config.projectId, VersionProductType.PAY);

@@ -27,7 +27,7 @@ const LoadWrap = styled.div`
 `;
 
 class Node extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     subordinates: PropTypes.arrayOf(PropTypes.string),
     isFirst: PropTypes.bool,
     isLast: PropTypes.bool,
@@ -209,11 +209,11 @@ class Node extends Component<any, any> {
     return <Item {...itemProps} />;
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     return !_.isEqual(this.props, nextProps);
   }
 
-  render() {
+  override render() {
     const { isFirst, isLast, id, subordinates, auth, isLoading, pageIndex } = this.props;
 
     if (isLoading && !id && pageIndex === 1) {

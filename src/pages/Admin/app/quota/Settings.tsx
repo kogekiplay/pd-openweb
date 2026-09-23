@@ -165,7 +165,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
     this.savePromise = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 【私有部署】管理额度工作表行记录数上限通过接口获取，超过上限保存拦截
     if ((window.platformENV.isLocal || window.platformENV.isOverseas) && this.props.businessType === 2) {
       this.getLimitRowTotal();
@@ -693,7 +693,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { title, columns = [], businessType, onClose = () => {} } = this.props;
     const {
       size,

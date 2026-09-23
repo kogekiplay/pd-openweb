@@ -183,7 +183,7 @@ export default class SpecificFieldsValue extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { data, type, hasOtherField } = this.props;
 
     return (

@@ -22,7 +22,7 @@ export default class CopyFolder extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('.copyFolder').on('click', '.checkOperation:not(.noClick)', function (this: HTMLElement) {
       let className = 'checkOperation ';
       $(this).toggleClass('checked');
@@ -164,7 +164,7 @@ export default class CopyFolder extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     return (
       <Dialog
         visible

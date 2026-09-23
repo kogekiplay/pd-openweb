@@ -78,7 +78,7 @@ export default class MapField extends Component<any, any> {
     this.state = { showDialog: false, mapFields: fieldsConfig[props.type] };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { fieldMaps } = this.props;
     const { mapFields = [] } = this.state;
     this.setState({
@@ -169,7 +169,7 @@ export default class MapField extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { fieldMaps } = this.props;
     const { mapFields, showDialog } = this.state;
     const isEmptyField = Object.keys(fieldMaps).every(v => !fieldMaps[v]);

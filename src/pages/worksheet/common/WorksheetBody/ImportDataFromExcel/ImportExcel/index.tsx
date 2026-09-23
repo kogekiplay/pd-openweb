@@ -22,7 +22,7 @@ export default class ImportExcel extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const comp = this;
     this.uploader = createUploader({
       runtimes: 'html5',
@@ -176,7 +176,7 @@ export default class ImportExcel extends React.Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { hideUploadExcel } = this.props;
     const { fileList } = this.state;
     const { worksheetExcelImportDataLimitCount } = md.global.SysSettings;

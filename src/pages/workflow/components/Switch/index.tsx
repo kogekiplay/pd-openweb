@@ -11,7 +11,7 @@ const STATUS2TEXT = {
 };
 
 export default class Switch extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /** 是否禁止关闭 */
     disabledClose: bool,
     /** 流程运行状态 */
@@ -42,11 +42,11 @@ export default class Switch extends Component<any, any> {
     refreshPublish: () => {},
   };
 
-  state = {
+  override state = {
     disabled: false,
   };
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!this.props.pending && prevProps.pending) {
         this.setState({
@@ -66,7 +66,7 @@ export default class Switch extends Component<any, any> {
     if (type === 'refreshPublish') refreshPublish();
   };
 
-  render() {
+  override render() {
     const { disabledClose, pending, status, isNew, isRefresh, className } = this.props;
     const { disabled } = this.state;
 

@@ -61,7 +61,7 @@ class TaskComment extends Component<any, any> {
     this.props.scrollToComment();
   };
 
-  render() {
+  override render() {
     const { taskId, taskDetails } = this.props;
     const { data } = taskDetails[taskId] || {};
 

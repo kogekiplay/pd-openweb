@@ -27,7 +27,7 @@ export default class CreateEditDeptDialog extends Component<any, any> {
       submitLoading: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.type === 'create') return;
     this.getDeptInfo();
   }
@@ -183,7 +183,7 @@ export default class CreateEditDeptDialog extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { projectId, type, visible, onCancel = () => {} } = this.props;
     const { departmentInfo, parentDepartment, chargeUsers, submitLoading } = this.state;
     const { companyName } = _.find(md.global.Account.projects, item => item.projectId === projectId) || {};

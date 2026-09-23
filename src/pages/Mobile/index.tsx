@@ -21,7 +21,7 @@ import './index.less';
 let App = class App extends Component<any, any> {
   genRouteComponent = genRouteComponent();
 
-  componentDidMount() {
+  override componentDidMount() {
     this.switchPath(this.props.location);
     this.initPageEnv();
     this.initSession();
@@ -29,7 +29,7 @@ let App = class App extends Component<any, any> {
     this.registerMobileNavigateTo();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.location.pathname !== prevProps.location.pathname) {
         Dialog.clear();
@@ -92,7 +92,7 @@ let App = class App extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const isPortal = md.global.Account.isPortal;
     const ROUTER = isPortal ? _.pick(ROUTE_CONFIG, PORTAL) : ROUTE_CONFIG;
     return (
@@ -140,7 +140,7 @@ function MobileFallback({ isPortal }) {
 App = preall(withRouter(DeclareConfirm(App)));
 
 class Mobile extends Component<any, any> {
-  render() {
+  override render() {
     return (
       <Provider store={store}>
         <Router>

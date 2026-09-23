@@ -81,7 +81,7 @@ export default class extends Component<any, any> {
       true,
     );
   };
-  render() {
+  override render() {
     const { country, style, onChangeCurrentReport } = this.props;
     const level = country.particleSizeType - 1;
     const scopeLevel = country.particleSizeType == 1 ? '' : country.particleSizeType;

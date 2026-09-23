@@ -48,7 +48,7 @@ class ChatPanel extends Component<any, any> {
       error: undefined,
     };
   }
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     const { currentSession } = nextProps;
 
     if ('isRender' in currentSession && !currentSession.isRender) {
@@ -74,7 +74,7 @@ class ChatPanel extends Component<any, any> {
     return true;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { currentSession: newCurrentSession } = this.props;
       const { currentSession, currentSessionList, currentInboxList } = prevProps;
@@ -213,7 +213,7 @@ class ChatPanel extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { loading, isError, error } = this.state;
     const { currentSession, currentSessionList = [], currentInboxList = [], embed = false } = this.props;
     return (

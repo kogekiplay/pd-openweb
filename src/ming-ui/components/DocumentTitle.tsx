@@ -51,18 +51,18 @@ function syncTitle(): void {
 }
 
 export default class DocumentTitle extends React.Component<DocumentTitleProps> {
-  componentDidMount() {
+  override componentDidMount() {
     mountedInstances.push(this);
     syncTitle();
   }
 
-  componentDidUpdate(prevProps: DocumentTitleProps) {
+  override componentDidUpdate(prevProps: DocumentTitleProps) {
     if (prevProps.title !== this.props.title) {
       syncTitle();
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const i = mountedInstances.indexOf(this);
 
     if (i > -1) {
@@ -72,7 +72,7 @@ export default class DocumentTitle extends React.Component<DocumentTitleProps> {
     syncTitle();
   }
 
-  render() {
+  override render() {
     // 与原包一致：有子节点就渲染【唯一的那个】，没有就什么都不渲染
     return this.props.children ? React.Children.only(this.props.children) : null;
   }

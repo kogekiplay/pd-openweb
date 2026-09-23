@@ -31,7 +31,7 @@ let MajorAxisLabel = class MajorAxisLabel extends Component<any, any> {
     this.yearLabelWidth = 0;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { chartScroll } = this.props;
 
     if (!isGunterExport) {
@@ -44,7 +44,7 @@ let MajorAxisLabel = class MajorAxisLabel extends Component<any, any> {
     this.yearLabelWidth = (_.get(this.$yearRef, 'current.offsetWidth') || 52) - paddingLeft;
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { chartScroll } = this.props;
     chartScroll.off('scroll', this.onScroll);
   }
@@ -110,7 +110,7 @@ let MajorAxisLabel = class MajorAxisLabel extends Component<any, any> {
     return m;
   }
 
-  render() {
+  override render() {
     const { item, periodType } = this.props;
     return (
       <Fragment>

@@ -24,7 +24,7 @@ class Root extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { dispatch } = this.props;
     dispatch(initRoot());
     dispatch(fetchRootSubordinates('')).finally(() => {
@@ -46,7 +46,7 @@ class Root extends Component<any, any> {
       });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
   }
 
@@ -70,7 +70,7 @@ class Root extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { auth, authForAll, allowStructureSelfEdit, searchUser, nodeDialogVisible, rootLoading } = this.state;
 
     return (

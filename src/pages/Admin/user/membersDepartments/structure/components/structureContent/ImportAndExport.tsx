@@ -255,7 +255,7 @@ class ImportAndExport extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     let { currentTab, isShowFailList, fileName, importFileLoading } = this.state;
     return (
       <div className="exportContainer flexColumn">

@@ -120,7 +120,7 @@ const ContentBox = styled.div`
 `;
 
 class SelectPBPDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     companyId: PropTypes.string,
     appId: PropTypes.string,
     onOk: PropTypes.func,
@@ -145,7 +145,7 @@ class SelectPBPDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { appId } = this.props;
 
     this.getAppList();
@@ -212,7 +212,7 @@ class SelectPBPDialog extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { appId, onOk, onClose } = this.props;
     const { appList, selectAppId, keyword } = this.state;
     let { list } = this.state;

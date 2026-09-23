@@ -43,7 +43,7 @@ export default class SheetSetName extends Component<any, any> {
 
     this.props.onHide();
   }
-  render() {
+  override render() {
     const { visible } = this.props;
     const { entityName } = this.state;
     return (

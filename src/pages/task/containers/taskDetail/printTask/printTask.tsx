@@ -28,7 +28,7 @@ export default class PrintTask extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('#printTask_container').on('click', '.printOperation .checkOperation', function (this: HTMLElement) {
       $(this).toggleClass('checked');
     });
@@ -67,7 +67,7 @@ export default class PrintTask extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     return (
       <Dialog
         visible

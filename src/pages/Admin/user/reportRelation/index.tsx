@@ -15,15 +15,15 @@ export default class App extends React.Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppAdminReportRelation');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppAdminReportRelation');
   }
 
-  render() {
+  override render() {
     const { from } = this.props;
     return (
       <Provider store={store}>

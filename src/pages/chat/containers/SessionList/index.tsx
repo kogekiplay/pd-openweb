@@ -24,13 +24,13 @@ class ContextMenu extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.popup = document.createElement('div');
     this.popup.className = 'ChatList-ContextMenu';
     document.querySelector('body').appendChild(this.popup);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         this.renderLayer(this.props);
@@ -55,7 +55,7 @@ class ContextMenu extends Component<any, any> {
       this.handleShow(offset);
     }, 200);
   }
-  render() {
+  override render() {
     return <noscript />;
   }
 }
@@ -106,7 +106,7 @@ class SessionList extends Component<any, any> {
     };
     this.isWindowChat = location.href.includes('windowChat');
   }
-  componentDidMount() {
+  override componentDidMount() {
     // const { visible } = this.props;
     // 会话列表
     this.getChatSessionList(this.state.pageIndex);
@@ -114,11 +114,11 @@ class SessionList extends Component<any, any> {
     window.handleOpenChatPanel = this.handleOpenChatPanel.bind(this);
     // !visible && this.handleResizeObserver();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.resizeObserver && this.resizeObserver.unobserve(this.sessionListWrap);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { chatCount } = this.state;
       const { sessionList, currentSession } = this.props;
@@ -660,7 +660,7 @@ class SessionList extends Component<any, any> {
       );
     }
   }
-  render() {
+  override render() {
     const { loading, menuVisible, offset, hoverItem, isClear, chatCount } = this.state;
     const { currentSession, visible, sessionList, isOpenCommonApp } = this.props;
     return (

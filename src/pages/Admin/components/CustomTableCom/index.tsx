@@ -17,7 +17,7 @@ export default class CustomTableCom extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.dataSource, this.props.dataSource)) {
         this.setState({
@@ -57,7 +57,7 @@ export default class CustomTableCom extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { columns = [], loading, total, pageIndex, className } = this.props;
     let { dataSource = [], sorterInfo = {} } = this.state;
     return (

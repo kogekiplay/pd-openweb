@@ -50,7 +50,7 @@ export default class DataCom extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getEnabledWatermark();
     this.getApiProxyState();
     this.getAttachmentSetting();
@@ -382,7 +382,7 @@ export default class DataCom extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       showEncryptRules,
       enabledWatermark,

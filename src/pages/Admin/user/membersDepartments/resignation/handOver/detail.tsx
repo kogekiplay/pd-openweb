@@ -77,7 +77,7 @@ export const callDialogSelectUser = function (projectId: string, callback = () =
 };
 
 export default class Detail extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     user: PropTypes.shape({
       avatar: PropTypes.string,
       accountId: PropTypes.string,
@@ -105,7 +105,7 @@ export default class Detail extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchList();
   }
 
@@ -719,7 +719,7 @@ export default class Detail extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { returnCallback, projectId } = this.props;
     return (
       <div className="transferDetail">

@@ -194,7 +194,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
       exportFileName: fileName,
     });
   };
-  render() {
+  override render() {
     const { resultDetail = {}, currentTab, importError } = this.props;
     let { dataSource = [] } = this.state;
     const { successCount } = resultDetail;

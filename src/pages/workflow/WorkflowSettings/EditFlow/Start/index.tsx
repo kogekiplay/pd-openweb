@@ -305,7 +305,7 @@ export default class Start extends Component<any, any> {
     window.open(pathCompletion(`/worksheetapi/${relationId}`));
   };
 
-  render() {
+  override render() {
     const {
       processId,
       item,

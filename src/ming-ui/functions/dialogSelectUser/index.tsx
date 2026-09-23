@@ -32,11 +32,11 @@ class DialogSelectUser extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.initDropList();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.cancelAnimationFrame(this.focusSearchInputFrame);
   }
 
@@ -237,7 +237,7 @@ class DialogSelectUser extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { dialogProps, visible } = this.props;
     const windowHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
     return (

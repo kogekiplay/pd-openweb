@@ -201,12 +201,12 @@ export default class Agent extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
     this.mounted = true;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -225,7 +225,7 @@ export default class Agent extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
   }
 
@@ -992,7 +992,7 @@ export default class Agent extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { data, showVectorDialog, toolNode } = this.state;
 
     if (_.isEmpty(data)) {

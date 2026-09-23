@@ -192,7 +192,7 @@ class PivotTable extends Component<any, any> {
     this.cache = {};
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { style } = this.props.reportData;
       const { style: oldStyle } = prevProps.reportData;
@@ -1567,7 +1567,7 @@ class PivotTable extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { dragValue, pageSize, dropdownVisible, offset, pageIndex } = this.state;
     const { themeColor, customPageConfig, reportData, linkageMatch = {}, sourceType } = this.props;
     const { reportId, yaxisList, columns, lines, style, pivotTable } = reportData;

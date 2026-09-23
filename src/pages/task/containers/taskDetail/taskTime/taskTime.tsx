@@ -359,7 +359,7 @@ class TaskTime extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { taskId } = this.props;
     const { data } = this.props.taskDetails[taskId];
     const hasAuth = data.auth === config.auth.Charger || data.auth === config.auth.Member;

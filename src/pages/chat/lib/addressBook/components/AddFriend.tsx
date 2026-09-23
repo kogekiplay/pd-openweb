@@ -3,7 +3,7 @@ import { Button, Icon } from 'ming-ui';
 import { addFriendConfirm } from 'ming-ui/functions';
 
 export default class AddFriend extends React.Component<any, any> {
-  render() {
+  override render() {
     return (
       <div className="contacts-add-friend">
         <Icon icon={'error1'} className="contacts-add-friend-icon" />

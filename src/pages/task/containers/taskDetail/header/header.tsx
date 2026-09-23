@@ -47,7 +47,7 @@ class Header extends Component<any, any> {
   checkboxRef = React.createRef();
   taskStatusCheckboxRef = React.createRef();
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     if (this.state.showChecklistDialog) {
       $(this.checklistText).select();
     }
@@ -334,7 +334,7 @@ class Header extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { showOperator, showChecklistDialog } = this.state;
     const { taskId, openType, closeDetail } = this.props;
     const { data } = this.props.taskDetails[taskId];

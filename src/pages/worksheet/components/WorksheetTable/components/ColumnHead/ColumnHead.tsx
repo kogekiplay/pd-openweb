@@ -47,8 +47,8 @@ function getShowTypeData(control) {
 }
 
 class ColumnHead extends Component<any, any> {
-  static contextType = SheetContext;
-  static propTypes = {
+  static override contextType = SheetContext;
+  static override propTypes = {
     rowIsSelected: PropTypes.bool,
     readonly: PropTypes.bool,
     disabledFunctions: PropTypes.arrayOf(PropTypes.string),
@@ -169,7 +169,7 @@ class ColumnHead extends Component<any, any> {
     updateColumnStyles({ [controlId]: { [key]: value } });
   };
 
-  render() {
+  override render() {
     const {
       className,
       type = '',

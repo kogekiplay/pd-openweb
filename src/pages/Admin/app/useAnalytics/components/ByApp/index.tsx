@@ -367,7 +367,7 @@ export default class ByApp extends Component<any, any> {
     this.useageRequest = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getList();
   }
 
@@ -547,7 +547,7 @@ export default class ByApp extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     let {
       currentTab,
       list = [],

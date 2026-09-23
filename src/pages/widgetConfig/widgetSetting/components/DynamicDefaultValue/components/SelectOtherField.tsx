@@ -43,7 +43,7 @@ const MenuStyle = styled.div`
 `;
 
 export default class SelectOtherField extends Component<any, any> {
-  static propTypes = { onTriggerClick: func };
+  static override propTypes = { onTriggerClick: func };
   static defaultProps = {
     onTriggerClick: _.noop,
   };
@@ -51,7 +51,7 @@ export default class SelectOtherField extends Component<any, any> {
     super(props);
     this.$wrap = createRef(null);
   }
-  state = {
+  override state = {
     isDynamic: false,
     filedVisible: false,
     searchVisible: false,
@@ -267,7 +267,7 @@ export default class SelectOtherField extends Component<any, any> {
     return types;
   };
 
-  render() {
+  override render() {
     const { isDynamic, filedVisible, fxVisible, searchVisible, showPopupType } = this.state;
     const {
       data,

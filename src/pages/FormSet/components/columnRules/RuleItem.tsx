@@ -101,7 +101,7 @@ class RuleItems extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (_.get(this.props, 'ruleData.name') !== this.state.name) {
         this.setState({
@@ -210,7 +210,7 @@ class RuleItems extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       selectColumnRules,
       deleteControlRules,

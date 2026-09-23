@@ -54,7 +54,7 @@ class ChatPanelSession extends Component<any, any> {
       this.checkAccountSecured();
     }
   }
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     const { session } = this.props;
 
     if (nextProps.currentSession.value === session.id) {
@@ -63,7 +63,7 @@ class ChatPanelSession extends Component<any, any> {
 
     return false;
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { session } = this.props;
     delete window[`onChangeChatValue-${session.id}`];
   }
@@ -75,7 +75,7 @@ class ChatPanelSession extends Component<any, any> {
    * 获取是否是风险账号
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const value = this.props.currentSession.value;
       value && this.focus(value);
@@ -446,7 +446,7 @@ class ChatPanelSession extends Component<any, any> {
       return false;
     }
   }
-  render() {
+  override render() {
     const { value, infoVisible, searchText, isOpenFile, isSecured } = this.state;
     const { session, referMessage, socketState } = this.props;
     const hideChat = md.global.SysSettings.forbidSuites.includes('6');
@@ -539,7 +539,7 @@ class ChatPanelWrapper extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { session, currentSession } = this.props;
     const { id } = session;
     return (

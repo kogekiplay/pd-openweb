@@ -27,7 +27,7 @@ const TRIGGER_TYPE = {
 };
 
 class ProcessConfig extends Component<any, any> {
-  state = {
+  override state = {
     data: {},
     showWorkflow: false,
     showSelectUserDialog: false,
@@ -35,7 +35,7 @@ class ProcessConfig extends Component<any, any> {
     errorItems: {},
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const { flowInfo } = this.props;
 
     process.getProcessConfig({ processId: flowInfo.id }).then(data => {
@@ -966,7 +966,7 @@ class ProcessConfig extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { flowInfo } = this.props;
     const isWebhook = _.includes([7], flowInfo.startAppType) && !flowInfo.child;
     const isPBC = _.includes([17], flowInfo.startAppType) && !flowInfo.child;

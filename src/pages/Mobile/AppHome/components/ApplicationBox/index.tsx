@@ -22,7 +22,7 @@ export default class ApplicationList extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const dashboardHideGroup = localStorage.getItem(`dashboardExpandGroup_${md.global.Account.accountId}`);
 
     if (dashboardHideGroup) {
@@ -30,7 +30,7 @@ export default class ApplicationList extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
   }
 
@@ -205,7 +205,7 @@ export default class ApplicationList extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { myAppData = {}, projectId, projectGroupsNameLang } = this.props;
     const {
       markedGroup = [],

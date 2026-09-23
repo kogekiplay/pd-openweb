@@ -215,7 +215,7 @@ export default class BaseColor extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { visible, onCancel } = this.props;
     const { type, customColors, controlColors } = this.state;
     const isOptionColor = !_.isEmpty(controlColors);

@@ -193,7 +193,7 @@ const pageSizeNums = [
 ];
 
 export default class Pagination extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appendToBody: PropTypes.bool,
     disabled: PropTypes.bool,
     abnormalMode: PropTypes.bool,
@@ -472,7 +472,7 @@ export default class Pagination extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       disabled,
       abnormalMode,

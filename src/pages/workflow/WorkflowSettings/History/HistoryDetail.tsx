@@ -24,7 +24,7 @@ import {
 } from './config';
 
 export default class HistoryDetail extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isPlugin: bool,
     id: string,
     moduleType: number,
@@ -37,7 +37,7 @@ export default class HistoryDetail extends Component<any, any> {
     openNodeDetail: () => {},
   };
 
-  state = {
+  override state = {
     data: {},
     isRetry: false,
     processInfo: {},
@@ -45,7 +45,7 @@ export default class HistoryDetail extends Component<any, any> {
 
   retryPosition = '';
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
     this.getProcessPublish();
   }
@@ -365,7 +365,7 @@ export default class HistoryDetail extends Component<any, any> {
     return level > 9 ? 9 : level;
   }
 
-  render() {
+  override render() {
     const { onClick, id, openNodeDetail, isPlugin, moduleType } = this.props;
     const { data, isRetry, processInfo } = this.state;
 

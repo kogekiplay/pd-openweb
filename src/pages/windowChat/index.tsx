@@ -18,7 +18,7 @@ class WindowChat extends Component<any, any> {
     };
     Object.assign(window, settings);
   }
-  render() {
+  override render() {
     return (
       <Provider store={store}>
         <Chat />

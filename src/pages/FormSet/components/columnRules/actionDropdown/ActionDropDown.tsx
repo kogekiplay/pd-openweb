@@ -21,7 +21,7 @@ import './ActionDropDown.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default class DropDownItem extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     values: PropTypes.arrayOf(PropTypes.shape({})),
     dropDownData: PropTypes.array,
     onChange: PropTypes.func,
@@ -42,7 +42,7 @@ export default class DropDownItem extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { dropDownData = [], actionType } = this.props;
     const newDropDownData = getNewDropDownData(dropDownData, actionType);
     this.setState({
@@ -51,7 +51,7 @@ export default class DropDownItem extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { dropDownData = [], actionType } = this.props;
 
@@ -433,7 +433,7 @@ export default class DropDownItem extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { values = [], actionError, activeTab = 0, disabled } = this.props;
     const { keyword, visible, dropDownData } = this.state;
     const menu = (

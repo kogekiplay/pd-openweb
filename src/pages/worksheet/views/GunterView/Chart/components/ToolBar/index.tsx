@@ -77,7 +77,7 @@ let ToolBar = class ToolBar extends Component<any, any> {
     super(props);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
   }
 
@@ -132,7 +132,7 @@ let ToolBar = class ToolBar extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { searchData, isMobile, mobileViewType, periodType } = this.props;
     const isMobileSingleView = mobileViewType == 'single';
     return (

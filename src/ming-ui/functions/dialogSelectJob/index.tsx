@@ -13,7 +13,7 @@ class DialogSelectJob extends Component<any, any> {
     onClose: () => {},
   };
 
-  state = {
+  override state = {
     data: [],
     selectData: [],
     loading: true,
@@ -24,7 +24,7 @@ class DialogSelectJob extends Component<any, any> {
 
   promise = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchData();
   }
 
@@ -126,7 +126,7 @@ class DialogSelectJob extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { onClose, projectId, onSave, showCompanyName, overlayClosable, visible } = this.props;
     const { keywords, selectData } = this.state;
 

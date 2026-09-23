@@ -52,13 +52,13 @@ export default class CustomLocation extends Component<any, any> {
     return null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({
       customLocation: this.props.customLocation || this.formatDefault() || this.formatCurrent() || null,
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       // 经纬度不同才赋值，防止name被冲掉
       if (
@@ -75,7 +75,7 @@ export default class CustomLocation extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { allowCustom, setPosition = () => {} } = this.props;
     const customLocation = this.state.customLocation || {};
     const { lng = '', lat = '' } = customLocation;

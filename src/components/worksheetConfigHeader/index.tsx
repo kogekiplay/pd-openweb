@@ -25,7 +25,7 @@ export default function WorksheetConfigHeader(props) {
 }
 
 class WorksheetConfigHeaderComponent extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: PropTypes.string,
     worksheetId: PropTypes.string,
     showSaveButton: PropTypes.bool,
@@ -88,7 +88,7 @@ class WorksheetConfigHeaderComponent extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { showSaveButton, saveLoading, worksheetName, onBack, onSave, onClose, mingoCreateWorksheetAction } =
       this.props;
     return (

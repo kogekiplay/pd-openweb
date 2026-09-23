@@ -61,7 +61,7 @@ export default class DropDownSet extends React.Component<any, any> {
       visible: false,
     };
   }
-  render() {
+  override render() {
     const {
       className,
       view,

@@ -76,7 +76,7 @@ export default class EncryptFieldList extends Component<any, any> {
     this.promise = null;
     this.appPromise = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getAppList();
     this.getList();
   }
@@ -191,7 +191,7 @@ export default class EncryptFieldList extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     const { appList, worksheetList, searchParams, dataList, loading, isMoreApp } = this.state;
     return (

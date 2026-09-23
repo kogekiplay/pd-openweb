@@ -97,7 +97,7 @@ function getDomNode(node) {
 }
 
 class DragSelect extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     component: PropTypes.any,
     selectionStyle: PropTypes.object, // 选择框样式
     manuallyStart: PropTypes.bool, // 如果为 true，需要手动调用组件的 startDragSelect 方法开始框选
@@ -121,13 +121,13 @@ class DragSelect extends React.Component<any, any> {
   getRootNode = () => this.rootNode;
   getChildNode = (i: number) =>
     getDomNode((this.dragSelectItemNodes || {})[i]) || getDomNode(this['dragSelectItem$' + i]);
-  componentDidMount() {
+  override componentDidMount() {
     const fn = this.handleMouseDown.bind(this);
     const container = this.getContainer();
     container.addEventListener('mousedown', fn);
     this.removeMouseDownHandler = () => container.removeEventListener('mousedown', fn);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeMouseDownHandler();
     this.clear();
   }
@@ -296,7 +296,7 @@ class DragSelect extends React.Component<any, any> {
     execFunc(!this.props.manuallyStart && !this.selectionEl && this.startDragSelect, ...args);
     execFunc(this.props.onMouseDown, ...args);
   }
-  render() {
+  override render() {
     // 【自己的 prop 必须解构掉，不能进 ...rest】默认渲染成 <div>，
     // 而 ...rest 会原样落到真实 DOM 上，于是 React 逐个报
     //   Unknown event handler property `onDragSelectStart`. It will be ignored.

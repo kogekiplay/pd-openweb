@@ -30,12 +30,12 @@ export default class Files extends Component<any, any> {
       files: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { searchText } = this.props;
     this.updateFiles(searchText);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.searchText !== prevProps.searchText) {
         this.setState(
@@ -81,7 +81,7 @@ export default class Files extends Component<any, any> {
     const { searchText } = this.props;
     this.updateFiles(searchText);
   }
-  render() {
+  override render() {
     const { files, loading } = this.state;
     return (
       <ScrollView

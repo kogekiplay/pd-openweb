@@ -38,7 +38,7 @@ export default class SheetMove extends Component<any, any> {
       searchValue: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId } = this.props;
     const { projectId } = store.getState().appPkg;
     homeApp.getAllHomeApp().then(result => {
@@ -149,7 +149,7 @@ export default class SheetMove extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { appItem } = this.props;
     const { appList, appValue, grouping, searchValue } = this.state;
     const { workSheetName, iconUrl, type } = appItem;

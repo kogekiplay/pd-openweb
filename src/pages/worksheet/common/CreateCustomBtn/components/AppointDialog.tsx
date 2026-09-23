@@ -62,7 +62,7 @@ const Wrap = styled.div`
   }
 `;
 class AppointDialog extends React.Component<any, any> {
-  state = {
+  override state = {
     showAppointDialog: this.props.showAppointDialog,
     writeObject: this.props.writeObject || 1,
     writeType: this.props.writeType || 1,
@@ -77,7 +77,7 @@ class AppointDialog extends React.Component<any, any> {
     showChooseWidgetDialog: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     $('.Radio').attr('title', '');
     $(document).find('.iconErr').click();
   }
@@ -335,7 +335,7 @@ class AppointDialog extends React.Component<any, any> {
     return '';
   };
 
-  render = () => {
+  override render = () => {
     const {
       btnId,
       workflowType,

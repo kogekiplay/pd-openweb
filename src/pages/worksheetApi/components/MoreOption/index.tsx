@@ -122,7 +122,7 @@ let MoreOption = class MoreOption extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { data, appId, getAuthorizes, setFn } = this.props;
     const { showEditDialog } = this.state;
     return (

@@ -198,7 +198,7 @@ export default class EditorCon extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.node, this.props.node)) {
         this.setState(
@@ -669,7 +669,7 @@ export default class EditorCon extends Component<any, any> {
     }
     return undefined;
   };
-  render() {
+  override render() {
     const { onUpdate } = this.props;
     const { maxTable, showEditControl } = this.state;
     return (

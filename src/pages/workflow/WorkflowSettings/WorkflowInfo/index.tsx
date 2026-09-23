@@ -42,7 +42,7 @@ class WorkflowInfo extends Component<any, any> {
    * 确定按钮点击事件
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         this.setState({
@@ -82,7 +82,7 @@ class WorkflowInfo extends Component<any, any> {
     onClose();
   };
 
-  render() {
+  override render() {
     const { flowInfo, visible, isPlugin, onClose } = this.props;
     const { explain, name, iconColor, iconName } = this.state;
 

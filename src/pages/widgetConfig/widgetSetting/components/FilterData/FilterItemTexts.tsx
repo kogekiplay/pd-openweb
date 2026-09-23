@@ -131,7 +131,7 @@ export default class FilterItemTexts extends React.Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     let {
       data = {},
       allControls = [],

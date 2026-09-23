@@ -78,7 +78,7 @@ export default class PlatformIntegration extends Component<any, any> {
     Config.setPageTitle(_l('集成 - 企业身份'));
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId, type } = _.get(this.props, 'match.params') || {};
 
     if (type === 'microsoft') {
@@ -173,7 +173,7 @@ export default class PlatformIntegration extends Component<any, any> {
     return null;
   };
 
-  render() {
+  override render() {
     const { projectId } = _.get(this.props, 'match.params') || {};
     const { loading } = this.state;
 

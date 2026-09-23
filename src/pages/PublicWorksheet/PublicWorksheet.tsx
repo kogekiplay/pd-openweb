@@ -32,7 +32,7 @@ const TopBar = styled.div(
 const PreFillWrap = styled.div``;
 
 export default class PublicWorksheet extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isPreview: PropTypes.bool,
     worksheetId: PropTypes.string,
   };
@@ -54,7 +54,7 @@ export default class PublicWorksheet extends React.Component<any, any> {
     window.isPublicWorksheet = _.get(window, 'shareState.isPublicFormPreview') ? false : true;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { isPreview, worksheetId } = this.props;
 
     if (isPreview) {
@@ -106,7 +106,7 @@ export default class PublicWorksheet extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     !this.props.isPreview && window.removeEventListener('popstate', this.pageBack);
   }
 
@@ -214,7 +214,7 @@ export default class PublicWorksheet extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isPreview } = this.props;
     const { loading, publicWorksheetInfo = {}, formData, rules, status, qrurl, pageConfigKey, submitRes } = this.state;
     const { worksheetId, writeScope, appId, projectId } = publicWorksheetInfo;

@@ -5,7 +5,7 @@ import { Icon } from 'ming-ui';
 import './index.less';
 
 export default class TagInput extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     defaultValue: PropTypes.string,
     className: PropTypes.string,
     createTag: PropTypes.func,
@@ -19,7 +19,7 @@ export default class TagInput extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  state = {
+  override state = {
     val: this.props.defaultValue,
     charWidth: 0,
     inputActive: false,
@@ -65,7 +65,7 @@ export default class TagInput extends Component<any, any> {
     this.props.delTag(item);
   };
 
-  render() {
+  override render() {
     const { tags, className, disable } = this.props;
     const { val, inputActive, charWidth, inputFocus } = this.state;
     return (

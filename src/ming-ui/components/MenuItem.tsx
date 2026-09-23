@@ -10,7 +10,7 @@ class MenuItem extends Component<any, any> {
   declare menuItemNode: HTMLElement | null;
   declare nativeElement: HTMLElement | null;
 
-  static propTypes = {
+  static override propTypes = {
     icon: PropTypes.element,
     iconAtEnd: PropTypes.bool,
     subMenu: PropTypes.element,
@@ -23,7 +23,7 @@ class MenuItem extends Component<any, any> {
     setRef: PropTypes.func,
   };
 
-  state = {
+  override state = {
     showSubMenu: false,
   };
 
@@ -58,7 +58,7 @@ class MenuItem extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     let { subMenu } = this.props;
 
     if (subMenu) {

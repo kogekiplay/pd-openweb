@@ -16,7 +16,7 @@ export default class Announcement extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { session } = this.props;
 
@@ -67,7 +67,7 @@ export default class Announcement extends Component<any, any> {
       />
     );
   }
-  render() {
+  override render() {
     const { value, compile } = this.state;
     return (
       <div

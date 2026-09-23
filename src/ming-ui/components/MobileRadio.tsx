@@ -7,7 +7,7 @@ import { MAX_OPTIONS_COUNT } from 'src/pages/widgetConfig/config';
 import './less/MobileCheckbox.less';
 
 export default class MobileRadio extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     allowAdd: PropTypes.bool,
     callback: PropTypes.func,
@@ -24,7 +24,7 @@ export default class MobileRadio extends Component<any, any> {
     value: [],
   };
 
-  state = {
+  override state = {
     visible: false,
     keywords: '',
   };
@@ -39,7 +39,7 @@ export default class MobileRadio extends Component<any, any> {
     this.setState({ visible: false });
   };
 
-  render() {
+  override render() {
     const { disabled, allowAdd, children, value, renderText, controlName, delOptions = [] } = this.props;
     let { data } = this.props;
     const { visible, keywords } = this.state;

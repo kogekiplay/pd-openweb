@@ -32,7 +32,7 @@ class TaskGantt extends Component<any, any> {
     config.isRequestComplete = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getSource();
     this.socketMonitor();
 
@@ -58,7 +58,7 @@ class TaskGantt extends Component<any, any> {
    * 获取数据
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.taskConfig, prevProps.taskConfig)) {
         config.projectId = this.props.taskConfig.projectId;
@@ -290,7 +290,7 @@ class TaskGantt extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     return (
       <div className="taskGanttContainer flexColumn">
         <FolderToolbar showStaticGantt={!!config.folderId} />

@@ -72,7 +72,7 @@ class SystemServices extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getWeiXinBindInfo();
     this.getPrintList();
     if (showTwilioSystemService) {
@@ -295,7 +295,7 @@ class SystemServices extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { loading, currentService, authLoading, printList } = this.state;
 
     if (loading) {

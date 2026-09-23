@@ -28,7 +28,7 @@ export default class EmbedPage extends Component<any, any> {
     this.appId = appId;
     this.pageId = pageId;
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId } = this;
     homeAppApi
       .checkApp({ appId })
@@ -75,7 +75,7 @@ export default class EmbedPage extends Component<any, any> {
       return <CustomPageContent ids={{ appId: this.appId, worksheetId: this.pageId }} id={this.pageId} />;
     }
   }
-  render() {
+  override render() {
     const { loading } = this.state;
     return <Provider store={store}>{loading ? <LoadDiv /> : this.renderPage()}</Provider>;
   }

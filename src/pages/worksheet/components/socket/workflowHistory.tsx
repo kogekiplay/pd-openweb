@@ -81,13 +81,13 @@ const STATUS = [
 ];
 
 class WorkflowHistory extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
-  state = {
+  override state = {
     activeStatus: 'success',
     data: {},
   };
-  componentDidMount() {
+  override componentDidMount() {
     const { storeId } = this.props;
     process.getStore({ storeId }).then(data => {
       const filtered = _.filter(data, item => !!item.checked);
@@ -100,7 +100,7 @@ class WorkflowHistory extends Component<any, any> {
   switchStatus = id => {
     this.setState({ activeStatus: id });
   };
-  render() {
+  override render() {
     const { title, ...rest } = this.props;
     const { activeStatus, data } = this.state;
     return (

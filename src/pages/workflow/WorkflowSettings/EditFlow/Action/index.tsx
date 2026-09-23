@@ -279,7 +279,7 @@ export default class Action extends Component<any, any> {
     return item.fieldValueId ? `${item.nodeName}-${item.fieldValueName}` : '';
   }
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
     const bgClassName = _.includes(
       [APP_TYPE.INVOICE, APP_TYPE.REFUND, APP_TYPE.PROCESS, APP_TYPE.GLOBAL_VARIABLE],

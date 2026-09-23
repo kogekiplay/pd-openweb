@@ -324,7 +324,7 @@ export default class MessageToolbar extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { message, session, isDuplicated } = this.props;
     const isAdmin = session.isAdmin || false;
     const differenceTime = moment(getCurrentTime()).valueOf() - moment(message.time).valueOf() <= 300 * 1000;

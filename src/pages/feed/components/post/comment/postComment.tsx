@@ -15,7 +15,7 @@ import PostCommentInput from './postCommentInput';
  * 动态的单条回复
  */
 class PostComment extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     dispatch: PropTypes.func,
     className: PropTypes.string,
     last: PropTypes.bool,
@@ -87,7 +87,7 @@ class PostComment extends React.Component<any, any> {
     setTimeout(cb, 400);
   };
 
-  render() {
+  override render() {
     const { categories } = this.props;
     const commentItem = Object.assign({ categories }, this.props.commentItem);
 

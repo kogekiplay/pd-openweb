@@ -59,7 +59,7 @@ export default class PortalList extends Component<any, any> {
 
   postList = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId } = this.props;
     projectAjax.getProjectLicenseSupportInfo({ projectId }).then(res => {
       this.setState(
@@ -309,7 +309,7 @@ export default class PortalList extends Component<any, any> {
     this.setState({ pageIndex: page }, this.getPortalList);
   };
 
-  render() {
+  override render() {
     const {
       loading,
       pageIndex,

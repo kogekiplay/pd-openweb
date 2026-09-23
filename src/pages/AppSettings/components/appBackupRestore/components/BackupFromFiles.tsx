@@ -48,7 +48,7 @@ class BackupFromFilesCom extends Component<any, any> {
     this.timer = null;
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.timer && clearTimeout(this.timer);
   }
 
@@ -198,7 +198,7 @@ class BackupFromFilesCom extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { onCancel = () => {}, appName, validLimit, currentValid } = this.props;
     const {
       file,

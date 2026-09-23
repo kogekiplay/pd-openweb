@@ -19,7 +19,7 @@ export default class MessageSendText extends Component<any, any> {
     config.inputMode = newType;
     safeLocalStorageSetItem('im_input_mode', newType);
   }
-  render() {
+  override render() {
     const { type } = this.state;
     const { value, socketState = 0 } = this.props;
     return (

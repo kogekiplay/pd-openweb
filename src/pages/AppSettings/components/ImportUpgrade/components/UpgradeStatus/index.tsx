@@ -275,7 +275,7 @@ export default class UpgradeStatus extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { appPkg } = this.props;
     const { pcNaviStyle } = appPkg;
 

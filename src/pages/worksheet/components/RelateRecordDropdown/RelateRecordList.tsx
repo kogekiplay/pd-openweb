@@ -15,8 +15,8 @@ import ReacordItem from './RecordItem';
 import type { RecordRow } from 'src/utils/controlTypes';
 
 export default class RelateRecordList extends React.PureComponent<any, any> {
-  static contextType = ChildTableContext;
-  static propTypes = {
+  static override contextType = ChildTableContext;
+  static override propTypes = {
     from: PropTypes.number,
     viewId: PropTypes.string,
     dataSource: PropTypes.string,
@@ -52,7 +52,7 @@ export default class RelateRecordList extends React.PureComponent<any, any> {
 
   con = React.createRef();
 
-  componentDidMount() {
+  override componentDidMount() {
     const { control, parentWorksheetId } = this.props;
 
     if (control) {
@@ -90,7 +90,7 @@ export default class RelateRecordList extends React.PureComponent<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.keyWords !== prevProps.keyWords) {
         this.handleSearch(this.props.keyWords);
@@ -373,7 +373,7 @@ export default class RelateRecordList extends React.PureComponent<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       appId,
       style,

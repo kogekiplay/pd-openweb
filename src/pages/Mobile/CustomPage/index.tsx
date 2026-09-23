@@ -112,7 +112,7 @@ let CustomPage = class CustomPage extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getPage(this.props);
     this.getPageInfo(this.props);
 
@@ -121,7 +121,7 @@ let CustomPage = class CustomPage extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { params: newParams } = this.props.match;
       const { params } = prevProps.match;
@@ -133,7 +133,7 @@ let CustomPage = class CustomPage extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $(window).off('orientationchange');
     if (!window.IM) return;
     IM.socket.off('workflow_push');
@@ -374,7 +374,7 @@ let CustomPage = class CustomPage extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { pageTitle, appNaviStyle } = this.props;
     const { pageComponents, loading, pageName, apk, urlTemplate } = this.state;
     return (

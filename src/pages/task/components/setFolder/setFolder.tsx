@@ -12,7 +12,7 @@ export default class SetFolder extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     ajaxRequest
       .getFolderConfig({
         folderId: this.props.folderId,
@@ -174,7 +174,7 @@ export default class SetFolder extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const stageAuthSetting = {
       data: [
         {

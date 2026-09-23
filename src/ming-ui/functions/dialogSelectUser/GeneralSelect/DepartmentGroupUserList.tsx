@@ -37,7 +37,7 @@ export default class DepartmentGroupUserList extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     let { list = [] } = this.props.data;
     let { selectedUsers = [], selectedAccountIds = [], tabType } = this.props;
     let { ID, NAME, COUNT } = this.props.getKeys(tabType);

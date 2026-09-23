@@ -21,7 +21,7 @@ const vertical = {
 };
 
 export default class FileComponent extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onReplaceAttachment: PropTypes.func,
   };
   static default = {};
@@ -902,7 +902,7 @@ export default class FileComponent extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     let { data, style, index } = this.props;
     let { progress, base, accountId, sourceID, twice } = data;
 

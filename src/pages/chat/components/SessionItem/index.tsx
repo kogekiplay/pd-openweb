@@ -8,7 +8,7 @@ export default class SessionItem extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     const next = {
       isActive: nextProps.isActive,
       isHover: nextProps.isHover,
@@ -84,7 +84,7 @@ export default class SessionItem extends Component<any, any> {
       }
     }
   }
-  render() {
+  override render() {
     const { item, visible, isActive, isHover } = this.props;
     const { top_info } = item;
     const isPush = 'isPush' in item ? item.isPush : 'weak_count' in item ? item.count : true;

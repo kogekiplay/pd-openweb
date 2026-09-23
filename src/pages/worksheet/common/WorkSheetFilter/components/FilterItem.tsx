@@ -16,7 +16,7 @@ import wrapDisableClick from './wrapDisableClick';
 const NewMenuItem = wrapDisableClick(MenuItem);
 
 export default class FilterItem extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: PropTypes.string,
     showCustomAddCondition: PropTypes.bool,
     isCharge: PropTypes.bool,
@@ -263,7 +263,7 @@ export default class FilterItem extends Component<any, any> {
       onRename(value);
     }
   };
-  render() {
+  override render() {
     const {
       disableSave,
       expanded,

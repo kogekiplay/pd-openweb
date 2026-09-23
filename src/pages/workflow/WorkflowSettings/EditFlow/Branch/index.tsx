@@ -12,7 +12,7 @@ export default class Branch extends Component<any, any> {
     super(props);
   }
 
-  state = {
+  override state = {
     showTips: true,
     showBranchTypeDialog: false,
     gatewayType: 1,
@@ -95,7 +95,7 @@ export default class Branch extends Component<any, any> {
     }, 50);
   }
 
-  render() {
+  override render() {
     const { data, item, hideNodes, disabled } = this.props;
     const { showTips, showBranchTypeDialog, gatewayType } = this.state;
     const showAddBtn = !item.resultTypeId && !disabled;

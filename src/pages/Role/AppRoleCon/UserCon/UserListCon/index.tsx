@@ -475,7 +475,7 @@ export default class UserListCon extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { show, userIds = [] } = this.state;
     const { roleId, appRole = {}, projectId, canEditUser, appId } = this.props;
     const { outsourcing = {}, userList = [], roleInfos = [] } = appRole;

@@ -177,7 +177,7 @@ function getOptionStyle(option, cell) {
 }
 
 export default class Options extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),
     singleLine: PropTypes.bool,
@@ -199,7 +199,7 @@ export default class Options extends React.Component<any, any> {
     this.popupSpecialFilterClassName = `specialFilter${Math.random()}`.replace(/\./g, '');
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value && !this.props.isediting) {
         this.setState({
@@ -213,7 +213,7 @@ export default class Options extends React.Component<any, any> {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     return (
       nextProps.style !== this.props.style ||
       nextProps.isediting !== this.props.isediting ||
@@ -360,7 +360,7 @@ export default class Options extends React.Component<any, any> {
     return option.value;
   }
 
-  render() {
+  override render() {
     const {
       columnStyle = {},
       tableType,

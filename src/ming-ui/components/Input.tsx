@@ -7,7 +7,7 @@ import './less/Input.less';
 const SIZE_LIST = ['small', 'default'];
 
 class Input extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     type: PropTypes.string,
     defaultValue: PropTypes.string,
     value: PropTypes.string,
@@ -61,7 +61,7 @@ class Input extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     /* 【这些是本组件自己的 props，绝不能跟着 ...others 落到 <input> 上】
        原先只摘了 size/type/manualRef/value，于是控制台每次都报两条：
        · valueFilter -> "React does not recognize the `valueFilter` prop on a DOM element"

@@ -4,7 +4,7 @@ import CalendarHeader from './CalendarHeaderOld';
 import DateTable from './DateTable';
 
 class CalendarPart extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     prefixCls: PropTypes.string,
     value: PropTypes.any,
     selectedValue: PropTypes.any,
@@ -15,7 +15,7 @@ class CalendarPart extends Component<any, any> {
     disabledDate: PropTypes.func,
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const { prefixCls, value, disabledDate, selectedValue, direction, locale } = props;
     const rangeClassName = `${prefixCls}-range`;

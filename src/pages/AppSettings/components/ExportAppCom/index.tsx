@@ -22,7 +22,7 @@ export default class ExportAppCom extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getExportLogs();
   }
 
@@ -137,7 +137,7 @@ export default class ExportAppCom extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { appId, projectId } = this.props;
     const { exportAppVisible, records = [], loading } = this.state;
 

@@ -89,14 +89,14 @@ export default class WechatPay extends Component<any, any> {
     };
     this.timeInterval = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId } = _.get(this.props, 'match.params') || {};
 
     if (!projectId || !canPurchase({ projectId })) return;
 
     this.getQRCode();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     clearInterval(this.timeInterval);
   }
 
@@ -145,7 +145,7 @@ export default class WechatPay extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { qrCodeUrl, price, subject = '-', loading, disabledScan } = this.state;
     const { orderId = '-', projectId } = _.get(this.props, 'match.params') || {};
 

@@ -10,7 +10,7 @@ export default class ShareFolderOrTask extends Component<any, any> {
     linkText: '',
   };
 
-  render() {
+  override render() {
     const { shareUrl, shareMessage, linkText } = this.props;
 
     return (

@@ -13,7 +13,7 @@ import './index.less';
 
 const ClickAwayable = ClickAway;
 export default class ActionFields extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.object,
     title: PropTypes.string,
@@ -68,7 +68,7 @@ export default class ActionFields extends Component<any, any> {
    * 点击切换
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.condition.length !== prevProps.condition.length) {
         this.setState({
@@ -87,7 +87,7 @@ export default class ActionFields extends Component<any, any> {
     this.search && this.search.focus();
   };
 
-  render() {
+  override render() {
     const {
       header,
       footer,

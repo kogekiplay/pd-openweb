@@ -89,7 +89,7 @@ class ModalWrap extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { visible, onSelect, onClose, onCustom, opinions = [], inputType } = this.props;
     const { searchValue, opinionList } = this.state;
 

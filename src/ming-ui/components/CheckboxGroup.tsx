@@ -7,7 +7,7 @@ import { default as Checkbox, SIZE_LIST } from './Checkbox';
 import './less/CheckboxGroup.less';
 
 class CheckboxGroup extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({
         text: PropTypes.any, // Raio显示的名称
@@ -41,7 +41,7 @@ class CheckboxGroup extends Component<any, any> {
     this.data = _.cloneDeep(this.state.data);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.checkedValues) {
         this.checkedArraytoData(this.props.checkedValues);
@@ -79,7 +79,7 @@ class CheckboxGroup extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { className, vertical } = this.props;
     const cls = cx('ming CheckboxGroup', {
       [className]: !!className,

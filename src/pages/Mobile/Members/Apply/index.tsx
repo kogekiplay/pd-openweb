@@ -14,13 +14,13 @@ class ApplyList extends React.Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { params } = this.props.match;
     this.props.dispatch(actions.getAppApplyInfo({ appId: params.appId }));
     $('html').addClass('applyCon');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('applyCon');
     this.actionSheetHandler && this.actionSheetHandler.close();
   }
@@ -61,7 +61,7 @@ class ApplyList extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { applyData, isApplyLoading } = this.props;
     const { applyList } = applyData;
     const { params } = this.props.match;

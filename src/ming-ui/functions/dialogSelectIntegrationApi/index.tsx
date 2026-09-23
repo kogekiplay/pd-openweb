@@ -35,7 +35,7 @@ class SelectIntegrationApi extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getLinkList();
   }
 
@@ -176,7 +176,7 @@ class SelectIntegrationApi extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { onClose, excludeTypes = [] } = this.props;
     const {
       linkList = [],

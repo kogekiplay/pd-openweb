@@ -362,7 +362,7 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
     );
   };
 
-  render() {
+  override render() {
     const {
       appId,
       recordId,

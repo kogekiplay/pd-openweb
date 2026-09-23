@@ -33,7 +33,7 @@ const Cover = styled.div(
 `,
 );
 export default class RecordItem extends React.PureComponent<any, any> {
-  static propTypes = {
+  static override propTypes = {
     multiple: PropTypes.bool,
     coverCid: PropTypes.string,
     showControls: PropTypes.string,
@@ -122,7 +122,7 @@ export default class RecordItem extends React.PureComponent<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       titleIsBold,
       active,

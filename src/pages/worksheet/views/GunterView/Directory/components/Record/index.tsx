@@ -120,11 +120,11 @@ let Record = class Record extends Component<any, any> {
     this.debounceUpdateRecordTime = _.debounce(props.updateRecordTime, 500);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     window.addEventListener('popstate', this.onQueryChange);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('popstate', this.onQueryChange);
   }
 
@@ -563,7 +563,7 @@ let Record = class Record extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { recordInfoVisible } = this.state;
     const { row, gunterView, controls } = this.props;
     const { displayControls } = gunterView.viewConfig;

@@ -273,7 +273,7 @@ class EditCon extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { dataByRuleId = [], currentEditRule = {} } = this.props;
     let hiddenList = dataByRuleId.filter(
       it => it.ruleItemType === ruleItemType.self || it.ruleItemType === ruleItemType.whiteList,

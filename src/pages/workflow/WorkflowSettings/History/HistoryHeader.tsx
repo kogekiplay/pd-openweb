@@ -18,7 +18,7 @@ import SerialProcessDialog from './components/SerialProcessDialog';
 import { FLOW_STATUS } from './config';
 
 export default class HistoryHeader extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isPlugin: bool,
     processId: string,
     isSerial: bool,
@@ -36,7 +36,7 @@ export default class HistoryHeader extends Component<any, any> {
     archivedItem: {},
   };
 
-  state = {
+  override state = {
     status: 'all',
     time: ['', ''],
     searchVal: '',
@@ -73,7 +73,7 @@ export default class HistoryHeader extends Component<any, any> {
     this.setState(obj, this.onFilterParaChanged);
   };
 
-  render() {
+  override render() {
     const { onRefresh, isSerial, processId, batchIds, archivedItem, expireType } = this.props;
     const { status, isRefresh, showDialog } = this.state;
     const lang = getCookie('i18n_langtag') || window.getDefaultLangKey();

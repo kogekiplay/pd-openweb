@@ -10,7 +10,7 @@ class Header extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const MONTH_LANG = {
       1: _l('1月'),
       2: _l('2月'),

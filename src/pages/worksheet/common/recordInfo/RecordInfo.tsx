@@ -121,7 +121,7 @@ export default class RecordInfo extends Component<any, any> {
   /** RecordForm 通过 mountRef 回传的 customwidget ref */
   declare recordform: React.RefObject<any>;
 
-  static propTypes = {
+  static override propTypes = {
     width: PropTypes.number,
     visible: PropTypes.bool,
     isCharge: PropTypes.bool,
@@ -172,7 +172,7 @@ export default class RecordInfo extends Component<any, any> {
     currentSheetRows: [],
     hideEditingBar: false,
   };
-  static contextType = SheetContext;
+  static override contextType = SheetContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -220,14 +220,14 @@ export default class RecordInfo extends Component<any, any> {
     this.draftType = 'save'; // save: 保存  submit: 提交,
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     emitter.addListener('RELOAD_RECORD_INFO', this.debounceRefresh);
     window.addEventListener('keydown', this.handleRecordInfoKeyDown);
     this.loadRecord({ recordId: this.state.recordId });
     this.getPayConfig(this.state.recordId);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if ((this.props.recordId !== prevProps.recordId || this.props.flag !== prevProps.flag) && this.props.recordId) {
         this.setState({
@@ -265,7 +265,7 @@ export default class RecordInfo extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('keydown', this.handleRecordInfoKeyDown);
     emitter.removeListener('RELOAD_RECORD_INFO', this.debounceRefresh);
 
@@ -1265,7 +1265,7 @@ export default class RecordInfo extends Component<any, any> {
     this.onSubmit({ draftType: 'submit' });
   };
 
-  render() {
+  override render() {
     const {
       isOpenNewAddedRecord,
       renderHeader,

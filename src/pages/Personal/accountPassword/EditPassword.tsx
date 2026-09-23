@@ -116,7 +116,7 @@ export default class EditPassword extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { isNullCredential } = this.props;
     const { originPassword, newPassword, confirmPassword } = this.state;
     return (

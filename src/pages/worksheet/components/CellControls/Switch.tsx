@@ -13,7 +13,7 @@ import { getSwitchItemNames } from 'src/utils/control';
 import { FROM } from './enum';
 
 export default class Switch extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     from: PropTypes.number,
     className: PropTypes.string,
     style: PropTypes.shape({}),
@@ -30,7 +30,7 @@ export default class Switch extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value) {
         this.setState({
@@ -125,7 +125,7 @@ export default class Switch extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       className,
       recordId,

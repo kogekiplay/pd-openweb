@@ -7,7 +7,7 @@ import { MAX_OPTIONS_COUNT } from 'src/pages/widgetConfig/config';
 import './less/MobileCheckbox.less';
 
 export default class MobileCheckbox extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     allowAdd: PropTypes.bool,
     callback: PropTypes.func,
@@ -24,7 +24,7 @@ export default class MobileCheckbox extends Component<any, any> {
     checked: [],
   };
 
-  state = {
+  override state = {
     visible: false,
     selectChecked: [],
     keywords: '',
@@ -75,7 +75,7 @@ export default class MobileCheckbox extends Component<any, any> {
     callback(selectChecked);
   };
 
-  render() {
+  override render() {
     const {
       disabled,
       allowAdd,

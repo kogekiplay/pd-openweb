@@ -21,7 +21,7 @@ export default class ExecutionDetails extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getRouterList();
   }
 
@@ -464,7 +464,7 @@ export default class ExecutionDetails extends Component<any, any> {
     return <span>{_l(`正在查看历史执行详情（${dayStr} ${time}），本月新增与本月消费为截至此时的累计值`)}</span>;
   };
 
-  render() {
+  override render() {
     let { checkedIds = [], routerList = {} } = this.state;
     const { showHistoryDetail, pageIndex, count = 0 } = this.props;
 

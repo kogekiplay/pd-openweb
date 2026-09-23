@@ -70,7 +70,7 @@ export default class ExclusiveComp extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { refresh, activeKey } = this.state;
     const { projectId, explanId } = _.get(this.props, 'match.params') || {};
     const hasDataBase =

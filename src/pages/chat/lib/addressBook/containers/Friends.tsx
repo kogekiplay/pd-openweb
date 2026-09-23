@@ -49,13 +49,13 @@ export default class Friends extends React.Component<any, any> {
     this.itemClickHandler = this.itemClickHandler.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState(defaultState, this.fetch);
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.abortRequest();
   }
 
@@ -122,7 +122,7 @@ export default class Friends extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { listData, selectedAccountId, isLoading, keywords } = this.state;
     const isSearch = keywords !== '';
     return (

@@ -9,7 +9,7 @@ import Content from './Content';
 import './index.less';
 
 let IndexSide = class IndexSide extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onClose: func,
     posX: number,
     visible: bool,
@@ -18,11 +18,11 @@ let IndexSide = class IndexSide extends Component<any, any> {
     posX: -352,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     document.body && document.body.addEventListener('keydown', this.closeWhenPressEsc);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     document.body && document.body.removeEventListener('keydown', this.closeWhenPressEsc);
   }
 
@@ -32,7 +32,7 @@ let IndexSide = class IndexSide extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { posX } = this.props;
     return (
       <div

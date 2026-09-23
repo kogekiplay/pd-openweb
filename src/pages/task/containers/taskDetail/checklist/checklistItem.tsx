@@ -18,7 +18,7 @@ function getNode(component) {
 }
 
 class ChecklistOperator extends Component<any, any> {
-  render() {
+  override render() {
     return (
       <ClickAwayable
         component="ul"
@@ -187,7 +187,7 @@ let ChecklistItem: any = class ChecklistItem extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { data, connectDragSource, connectDropTarget } = this.props;
 
     if (data.type === 'blank') {

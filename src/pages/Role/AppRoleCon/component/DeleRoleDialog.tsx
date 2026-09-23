@@ -29,7 +29,7 @@ const DELETE_TYPES = {
 };
 
 export default class extends React.PureComponent<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onOk: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     roleList: PropTypes.arrayOf(rolePropType),
@@ -37,7 +37,7 @@ export default class extends React.PureComponent<any, any> {
 
   static defaultProps = {};
 
-  state = {
+  override state = {
     selectedRole: null,
     deleteType: DELETE_TYPES.MOVE,
   };
@@ -106,7 +106,7 @@ export default class extends React.PureComponent<any, any> {
     return onOk(deleteType === DELETE_TYPES.MOVE ? selectedRole || firstRole : '');
   };
 
-  render() {
+  override render() {
     const { onCancel } = this.props;
     const dialogProps = {
       okText: _l('删除'),

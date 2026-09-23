@@ -11,7 +11,7 @@ import { NODE_OPERATOR_TYPE, NODE_STATUS, NODE_TYPE, NODE_VIEW_TYPE } from '../c
 import UploadNewVersion from './UploadNewVersion';
 
 let RightMenu = class RightMenu extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     item: PropTypes.object,
     kcApp: PropTypes.object,
     permission: PropTypes.number,
@@ -30,16 +30,16 @@ let RightMenu = class RightMenu extends React.Component<any, any> {
     handleAddLinkFile: PropTypes.func,
     onAddLinkFile: PropTypes.func,
   };
-  state = {
+  override state = {
     clientX: 0,
     clientY: 0,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.resetPosition();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.resetPosition();
   }
 
@@ -81,7 +81,7 @@ let RightMenu = class RightMenu extends React.Component<any, any> {
     return props;
   }
 
-  render() {
+  override render() {
     const props = this.addHideMenu(this.props);
     const item = props.item;
     const isRecycle = props.isRecycle;

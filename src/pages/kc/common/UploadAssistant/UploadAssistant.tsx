@@ -16,13 +16,13 @@ import { getUrlByBucketName, humanFileSize } from '../../utils';
 import './uploadAssistant.css';
 
 class UploadProgress extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     status: PropTypes.number,
     percentage: PropTypes.number, // 百分比，1 === 100%
     errorText: PropTypes.string,
   };
 
-  render() {
+  override render() {
     let percentage = (parseInt(this.props.percentage * 100, 10) || 0) + '%';
     let colorClass, text, icon;
 
@@ -67,13 +67,13 @@ class UploadProgress extends React.Component<any, any> {
 }
 
 class UploadAction extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     status: PropTypes.number,
     cancelUpload: PropTypes.func,
     retryUpload: PropTypes.func,
   };
 
-  render() {
+  override render() {
     let show = true;
     let icon, action, title;
 
@@ -106,7 +106,7 @@ class UploadAction extends React.Component<any, any> {
 }
 
 class UploadAssistant extends React.Component<any, any> {
-  state = {
+  override state = {
     uploadPath: _l('我的文件'),
     parentId: '',
     rootId: '',
@@ -120,7 +120,7 @@ class UploadAssistant extends React.Component<any, any> {
 
   _isMounted = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     this._isMounted = true;
     const comp = this;
     this.uploader = createUploader({
@@ -341,11 +341,11 @@ class UploadAssistant extends React.Component<any, any> {
     this.selectFile();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.updateMarginRight();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.uploader) {
       this.uploader.destroy();
     }
@@ -452,7 +452,7 @@ class UploadAssistant extends React.Component<any, any> {
     this.setState({ hoverChooseBtn: false });
   };
 
-  render() {
+  override render() {
     return (
       <div
         id="uploadAssistant"

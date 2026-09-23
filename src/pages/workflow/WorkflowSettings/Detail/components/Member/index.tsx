@@ -370,7 +370,7 @@ export default class Member extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { accounts, leastOne, inline } = this.props;
     const nullText = {
       [USER_TYPE.ROLE]: _l('角色下未设置人员'),

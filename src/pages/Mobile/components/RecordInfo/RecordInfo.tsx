@@ -100,7 +100,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
 
   customwidget = React.createRef();
 
-  componentDidMount() {
+  override componentDidMount() {
     emitter.addListener('MOBILE_RELOAD_RECORD_INFO', this.debounceRefresh);
     this.loadRecord();
     this.getPayConfig();
@@ -118,7 +118,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { relationRow } = this.props;
     const { currentTab, isEditRecord } = this.state;
 
@@ -142,7 +142,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.recordEditLock?.destroy();
     emitter.removeListener('MOBILE_RELOAD_RECORD_INFO', this.debounceRefresh);
   }
@@ -1269,7 +1269,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       recordId,
       className,

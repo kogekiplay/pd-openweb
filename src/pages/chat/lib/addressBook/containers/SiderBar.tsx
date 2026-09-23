@@ -7,7 +7,7 @@ import SiderBarTabItem from '../components/SiderBarTabItem';
 import SiderBarTabList from '../components/SiderBarTabList';
 
 export default class SideBar extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     type: PropTypes.string.isRequired,
     projectId: PropTypes.string,
 
@@ -67,7 +67,7 @@ export default class SideBar extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { list } = this.props;
     return (
       <div className="contacts-sidebar">

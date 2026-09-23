@@ -35,13 +35,13 @@ class MemberList extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { params } = this.props.match;
     this.props.dispatch(actions.getMembersList(params.appId, params.roleId));
     $('html').addClass('memberListCon');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('memberListCon');
     if (modal) {
       modal.close();
@@ -595,7 +595,7 @@ class MemberList extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { isListLoading } = this.props;
 
     if (isListLoading) {

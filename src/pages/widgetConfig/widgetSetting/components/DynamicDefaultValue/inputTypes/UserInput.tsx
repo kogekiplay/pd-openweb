@@ -9,7 +9,7 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
 export default class DateInput extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onDynamicValueChange: func,
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
   };
@@ -17,7 +17,7 @@ export default class DateInput extends Component<any, any> {
     onDynamicValueChange: _.noop,
     dynamicValue: [],
   };
-  componentDidMount() {
+  override componentDidMount() {
     const { data, clearOldDefault } = this.props;
     const { defaultMen } = data;
 
@@ -134,7 +134,7 @@ export default class DateInput extends Component<any, any> {
     const { defaultType } = this.props;
     defaultType && this.$wrap.triggerClick();
   };
-  render() {
+  override render() {
     const { defaultType } = this.props;
     return (
       <DynamicValueInputWrap>

@@ -7,7 +7,7 @@ import EmptyStatus from '../../components/Empty';
 import './index.less';
 
 export default class MsgTemplate extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     closeLayer: func,
   };
   static defaultProps = {
@@ -23,7 +23,7 @@ export default class MsgTemplate extends Component<any, any> {
       haveMoreData: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
     this.pending = true;
   }
@@ -111,7 +111,7 @@ export default class MsgTemplate extends Component<any, any> {
       },
     });
   };
-  render() {
+  override render() {
     const { closeLayer } = this.props;
     let { messageTemplateIds = [], isAsc, data } = this.state;
     return (

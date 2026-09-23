@@ -41,7 +41,7 @@ class FolderChart extends Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     import('@antv/g2plot').then(data => {
       this.Column = data.Column;
       this.Pie = data.Pie;
@@ -51,7 +51,7 @@ class FolderChart extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.taskConfig.folderId && this.props.taskConfig.folderId !== prevProps.taskConfig.folderId) {
         setTimeout(() => {
@@ -61,7 +61,7 @@ class FolderChart extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('body').off('.folderChart');
     $(window).off('resize.folderChart');
 
@@ -1294,7 +1294,7 @@ class FolderChart extends Component<any, any> {
     return Math.floor(time / 24);
   }
 
-  render() {
+  override render() {
     return <div id="taskList" />;
   }
 }

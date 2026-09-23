@@ -10,7 +10,7 @@ import RecordInfoWrapper from '../../common/recordInfo/RecordInfoWrapper';
 import { renderCellText } from '../../components/CellControls';
 
 class RelateWorksheet extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),
     cell: PropTypes.shape({}),
@@ -22,7 +22,7 @@ class RelateWorksheet extends Component<any, any> {
       activeRecordId: undefined,
     };
   }
-  render() {
+  override render() {
     const { cell, style, className } = this.props;
     const { activeRecordId } = this.state;
     const { value, dataSource, appId, viewId } = cell;

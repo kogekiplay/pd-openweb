@@ -55,7 +55,7 @@ class TaskList extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
     // 有缓存数据先呈现
     if (!_.isEmpty(this.props.myTaskDataSource)) {
@@ -102,7 +102,7 @@ class TaskList extends Component<any, any> {
     this.props.emitter.addListener('UPDATE_TASK_CHARGE', this.renderChargeHeaderAvatar.bind(this));
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         !this.props.taskConfig.folderId &&
@@ -117,7 +117,7 @@ class TaskList extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
     taskListSettings.taskListPost.abort();
     clearTimeout(taskListSettings.timer);
@@ -1178,7 +1178,7 @@ class TaskList extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { openTaskDetail, taskId, isForceUpdate } = this.state;
 
     return (

@@ -51,7 +51,7 @@ export default class CreateMerchant extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { projectId, currentMerchantInfo = {} } = this.props;
     const { merchantPaymentChannel } = this.state;
 

@@ -30,7 +30,7 @@ export default class Invoice extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { type } = this.props.match.params;
     const myPermissions = getMyPermissions(Config.projectId);
     const tabKeys = TABS.filter(item => hasPermission(myPermissions, item.permissionKeys)).map(item => item.key);
@@ -51,7 +51,7 @@ export default class Invoice extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const {
       loading,
       currentTab,

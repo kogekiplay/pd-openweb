@@ -39,10 +39,10 @@ const AppStatus = styled.div`
   }
 `;
 export default class AppStatusComp extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
-  state = {};
-  render() {
+  override state = {};
+  override render() {
     const { isGoodsStatus, isNew, fixed, isRecent, isUpgrade, className, appStatus } = this.props;
     const isMobile = browserIsMobile();
     const text = getAppStatusText({ isGoodsStatus, isNew, fixed, isUpgrade, appStatus });

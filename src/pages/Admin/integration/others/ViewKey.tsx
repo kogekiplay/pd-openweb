@@ -16,7 +16,7 @@ export default class ViewKey extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getSecretKey();
   }
 
@@ -61,7 +61,7 @@ export default class ViewKey extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { visible } = this.state;
 
     return (

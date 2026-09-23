@@ -94,7 +94,7 @@ export default class Item extends Component<any, any> {
       isEdit: false,
     });
   };
-  render() {
+  override render() {
     const { appId, item, currentViewId, isCharge, getNavigateUrl, fixed = false } = this.props;
     const { isEdit } = this.state;
 

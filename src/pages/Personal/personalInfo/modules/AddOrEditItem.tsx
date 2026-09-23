@@ -141,7 +141,7 @@ export default class AddOrEditItem extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { baseInfo, errorList } = this.state;
     const { type } = this.props;
     return (

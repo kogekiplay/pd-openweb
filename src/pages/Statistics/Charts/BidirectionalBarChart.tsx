@@ -49,7 +49,7 @@ export default class extends Component<any, any> {
     this.g2plotComponent = null;
     this.isUnmounted = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     loadG2Plot().then(data => {
       if (this.isUnmounted) {
         return;
@@ -59,11 +59,11 @@ export default class extends Component<any, any> {
       this.renderBidirectionalBarChart(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     this.destroyBidirectionalBarChart();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { displaySetup, rightY, style } = this.props.reportData;
     const { displaySetup: oldDisplaySetup, rightY: oldRightY, style: oldStyle } = prevProps.reportData;
 
@@ -508,7 +508,7 @@ export default class extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { leftCount, originalLeftCount, rightCount, originalRightCount, dropdownVisible, offset } = this.state;
     const { rightY, summary = {} } = this.props.reportData;
     const dualAxesSwitchChecked = summary.showTotal || (rightY ? rightY.summary.showTotal : null);

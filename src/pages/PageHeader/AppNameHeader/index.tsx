@@ -16,7 +16,7 @@ export default class AppNameHeader extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     api.getApp({ appId: this.props.match.params.apkId }, { silent: true }).then(data => {
       this.setState({
         data: data,
@@ -27,7 +27,7 @@ export default class AppNameHeader extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { iconUrl, name, iconColor } = this.state;
     return (
       <div className="appNameHeaderBox">

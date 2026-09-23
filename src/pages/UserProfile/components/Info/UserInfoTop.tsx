@@ -30,7 +30,7 @@ let InfoTop = class InfoTop extends React.PureComponent<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { userInfo = {}, isMe, dispatch } = this.props;
     const { currentUserCard } = this.state;
     const { userCards = [] } = userInfo;

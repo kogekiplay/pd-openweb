@@ -11,7 +11,7 @@ import MenuItem from './MenuItem';
 import './less/Dropdown.less';
 
 class Dropdown extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 未选择时的默认提示
      */
@@ -256,7 +256,7 @@ class Dropdown extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         this.setState({
@@ -524,7 +524,7 @@ class Dropdown extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { isAppendToBody, className, menuClass, disabled, style, points, offset } = this.props;
     return (
       <div className={`ming Dropdown pointer ${className || ''} ${disabled ? 'disabled' : ''}`} style={style}>

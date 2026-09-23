@@ -402,7 +402,7 @@ class RelationAction extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { title } = this.state;
     const { actionParams, permissionInfo, rowInfo = {}, controlId, base = {} } = this.props;
     const { isEdit } = actionParams;

@@ -35,7 +35,7 @@ class FolderToolbar extends Component<any, any> {
    * 返回当前状态所对应的名称
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.taskConfig, prevProps.taskConfig)) {
         this.setState({
@@ -126,7 +126,7 @@ class FolderToolbar extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { stateConfig } = this.props;
     const { ganttDialogVisible } = this.state;
     const taskStatusList = [

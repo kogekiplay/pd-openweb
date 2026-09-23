@@ -75,7 +75,7 @@ export default class CoverSetting extends React.Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const {
       coverColumns = [],
       currentSheetInfo,

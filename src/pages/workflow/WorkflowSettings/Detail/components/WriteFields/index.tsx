@@ -59,7 +59,7 @@ export default class WriteFields extends Component<any, any> {
     allowExport: false,
   };
 
-  state = {
+  override state = {
     showTableControls: false,
     selectItem: {},
     foldIds: [],
@@ -469,7 +469,7 @@ export default class WriteFields extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const { data, addNotAllowView, showCard, updateSource, hideTypes, allowExport } = this.props;
     const { showTableControls, selectItem } = this.state;
 

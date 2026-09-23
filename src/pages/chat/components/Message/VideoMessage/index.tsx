@@ -20,7 +20,7 @@ export default class VideoMessage extends Component<any, any> {
       loading: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { loading } = this.state;
     const { session, message } = this.props;
     const { video_pic } = message.msg.files;
@@ -53,7 +53,7 @@ export default class VideoMessage extends Component<any, any> {
       image.src = url;
     });
   }
-  render() {
+  override render() {
     const { files } = this.props.message.msg;
     const { video_pic, video_duration, video_width, video_height } = files;
     const size = {

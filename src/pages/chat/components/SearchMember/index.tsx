@@ -56,11 +56,11 @@ class SearchMember extends Component<any, any> {
     };
   }
   inputRef = React.createRef();
-  componentDidMount() {
+  override componentDidMount() {
     this.handleFocus();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.sessionListVisible && !prevProps.sessionListVisible) {
         this.handleFocus();
@@ -292,7 +292,7 @@ class SearchMember extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { value } = this.state;
     return (
       <Fragment>

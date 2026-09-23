@@ -64,7 +64,7 @@ export default class Avatar extends React.Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { accountId, fullname, avatar, applicationType, appId } = this.state;
 
     if (applicationType) {

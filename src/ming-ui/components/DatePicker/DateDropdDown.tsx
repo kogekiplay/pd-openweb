@@ -9,7 +9,7 @@ import locale from './locale/zh_CN';
 import '../less/DateDropdDown.less';
 
 class DateDropdDown extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 日历属性
      */
@@ -219,7 +219,7 @@ class DateDropdDown extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const state = this.state;
 

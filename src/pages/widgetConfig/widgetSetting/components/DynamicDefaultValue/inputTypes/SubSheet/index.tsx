@@ -7,7 +7,7 @@ import { DynamicValueInputWrap } from '../../styled';
 import CustomDefaultValue from './CustomDefaultValue';
 
 export default class SubSheet extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onDynamicValueChange: func,
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
   };
@@ -15,7 +15,7 @@ export default class SubSheet extends Component<any, any> {
     onDynamicValueChange: _.noop,
     dynamicValue: [],
   };
-  state = {
+  override state = {
     recordListVisible: false,
   };
   handleClick = () => {
@@ -44,7 +44,7 @@ export default class SubSheet extends Component<any, any> {
 
     defaultType && this.$wrap.triggerClick();
   };
-  render() {
+  override render() {
     const { defaultType } = this.props;
     const { recordListVisible } = this.state;
     return (

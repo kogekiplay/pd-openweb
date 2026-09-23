@@ -28,7 +28,7 @@ export default class CardMessage extends Component<any, any> {
       taskId: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { message } = this.props;
     const { card } = message;
     const id = Number(message.id);
@@ -354,7 +354,7 @@ export default class CardMessage extends Component<any, any> {
       );
     }
   }
-  render() {
+  override render() {
     const { openTaskDetail, taskId, openRecorDetail } = this.state;
     const { message } = this.props;
     const { card } = message;

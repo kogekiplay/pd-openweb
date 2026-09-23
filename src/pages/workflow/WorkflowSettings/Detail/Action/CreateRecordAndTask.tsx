@@ -31,7 +31,7 @@ export default class CreateRecordAndTask extends Component<any, any> {
    * 切换工作表
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.data.selectNodeId !== prevProps.data.selectNodeId) {
         this.setState({
@@ -58,7 +58,7 @@ export default class CreateRecordAndTask extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { showOtherWorksheet, isBatch } = this.state;
     const { data, updateSource, companyId } = this.props;
     const selectAppItem = data.appList.find(({ id }) => id === data.appId);

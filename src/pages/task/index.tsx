@@ -13,10 +13,10 @@ const MODULE_TO_TITLE = {
 };
 
 class TaskEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppTask');
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppTask');
   }
 
@@ -31,7 +31,7 @@ class TaskEntrypoint extends Component<any, any> {
     const { folderName = '' } = this.props.folderSettings;
     return `${folderName}-任务`;
   };
-  render() {
+  override render() {
     const { pathname } = this.props.location;
     return <UniformRoute title={this.renderPageTitle()} pathname={pathname} emitter={emitter} component={TaskCenter} />;
   }

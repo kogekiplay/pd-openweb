@@ -392,7 +392,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
     return tableWidth;
   };
 
-  render() {
+  override render() {
     const {
       visible,
       createType = 'worksheet',

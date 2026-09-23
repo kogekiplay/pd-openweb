@@ -196,12 +196,12 @@ class TaskNode extends Component<any, any> {
     };
     this.$itemWrap = createRef(null);
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.drawConnector();
   }
   //新增节点
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(_.get(this.props, 'nodeData.pathIds'), _.get(prevProps, 'nodeData.pathIds')) &&
@@ -357,7 +357,7 @@ class TaskNode extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { scale, nodeData = {}, currentId, onChangeCurrentNode, onUpdate, flowData, currentProjectId } = this.props;
     const { visible, popupVisible, showChangeName, showDel } = this.state;
     let yN = 0;

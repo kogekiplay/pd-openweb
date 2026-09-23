@@ -6,7 +6,7 @@ import OpList from './opList';
 import User from './user';
 
 export default class Item extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     add: PropTypes.func,
@@ -59,7 +59,7 @@ export default class Item extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isHighLight, auth } = this.props;
     const { isDisabled } = this.state;
     const itemClassName = cx('node', {

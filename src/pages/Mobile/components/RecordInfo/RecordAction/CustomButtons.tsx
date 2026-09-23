@@ -179,7 +179,7 @@ export default class CustomButtons extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       classNames,
       customBtns = [],

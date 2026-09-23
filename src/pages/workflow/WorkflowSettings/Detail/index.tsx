@@ -10,7 +10,7 @@ import nodeModules from './nodeModules';
 import './index.less';
 
 class Detail extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     companyId: PropTypes.string,
     processId: PropTypes.string,
     relationId: PropTypes.string,
@@ -68,7 +68,7 @@ class Detail extends Component<any, any> {
     this.props.dispatch(updateNodeData(processId, data));
   };
 
-  render() {
+  override render() {
     const { selectNodeId, selectNodeType, flowInfo, instanceId } = this.props;
     const NodeComponent = nodeModules[selectNodeType];
 

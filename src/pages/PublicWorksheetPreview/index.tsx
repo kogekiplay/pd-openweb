@@ -5,7 +5,7 @@ export default class extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const {
       match: {
         params: { worksheetId },

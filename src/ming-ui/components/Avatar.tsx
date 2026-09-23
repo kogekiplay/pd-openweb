@@ -5,7 +5,7 @@ import { normalizeFileUrl } from 'src/utils/fileUrl';
 import './less/Avatar.less';
 
 export default class Avatar extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     src: PropTypes.string,
     size: PropTypes.number,
     shape: PropTypes.string,
@@ -20,7 +20,7 @@ export default class Avatar extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { src, shape, size, className } = this.props;
 
     return (

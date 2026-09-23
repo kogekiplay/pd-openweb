@@ -84,7 +84,7 @@ export default class ExitDialog extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const { needTransfer } = this.props;
     const { userInfo } = this.state;
     return (

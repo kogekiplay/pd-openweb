@@ -45,7 +45,7 @@ function getNowByCurrentStateValue(value) {
 }
 
 let Calendar = class Calendar extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     value: PropTypes.object,
     selectedValue: PropTypes.object,
     defaultValue: PropTypes.object,
@@ -125,7 +125,7 @@ let Calendar = class Calendar extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       let { value } = this.props;
       const { selectedValue } = this.props;
@@ -306,7 +306,7 @@ let Calendar = class Calendar extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const { locale, prefixCls, timePicker, disabledDate, showMinute = true, showSecond = false } = props;
     const state = this.state;

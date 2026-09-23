@@ -57,7 +57,7 @@ export default class AudioMessage extends Component<any, any> {
       });
     }
   }
-  render() {
+  override render() {
     const { message } = this.props;
     const { files } = message.msg;
     const { audioPlaying, isRead } = this.state;

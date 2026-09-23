@@ -11,11 +11,11 @@ class ConfirmButton extends Component<any, any> {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
   }
 
@@ -47,7 +47,7 @@ class ConfirmButton extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     return (
       <Button
         type={this.props.type}

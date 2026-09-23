@@ -41,7 +41,7 @@ const defaultArr = [
 ];
 
 export default class RelationControl extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     title: PropTypes.string,
     sourceId: PropTypes.string,
     sourceType: PropTypes.string, // 后端过滤用 1：任务 2：审批
@@ -84,7 +84,7 @@ export default class RelationControl extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getSources();
   }
 
@@ -318,7 +318,7 @@ export default class RelationControl extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     let types = this.props.types;
 
     if (types.length === 1 && types[0] === 4) {

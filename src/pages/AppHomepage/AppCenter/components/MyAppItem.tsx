@@ -22,7 +22,7 @@ const LoadableExternalLinkDialog = lazy(() => import('./ExternalLinkDialog'));
 const LoadableManageUserDialog = lazy(() => import('src/pages/Role/AppRoleCon/ManageUserDialog.jsx'));
 
 let MyAppItem = class MyAppItem extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     id: string,
     projectId: string,
     icon: string,
@@ -44,7 +44,7 @@ let MyAppItem = class MyAppItem extends Component<any, any> {
     clearNewAppItemId: _.noop,
     newAppItemId: '',
   };
-  state = {
+  override state = {
     editAppVisible: false,
     selectIconVisible: false,
     delAppConfirmVisible: false,
@@ -54,7 +54,7 @@ let MyAppItem = class MyAppItem extends Component<any, any> {
     selectIconLeft: false,
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     const { id } = this.props;
     return (
       compareProps(nextProps, this.props, [
@@ -81,11 +81,11 @@ let MyAppItem = class MyAppItem extends Component<any, any> {
     );
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     clearTimeout(this.clickTimer);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const offsetLeft = _.get(this, '$myAppItem.current.offsetLeft');
 
     this.setState({
@@ -93,7 +93,7 @@ let MyAppItem = class MyAppItem extends Component<any, any> {
     });
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     const newLeft = _.get(this, '$myAppItem.current.offsetLeft') < 414 && 0;
 
     if (this.state.selectIconLeft !== newLeft) {
@@ -184,7 +184,7 @@ let MyAppItem = class MyAppItem extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { editAppVisible, delAppConfirmVisible, copyAppVisible, externalLinkVisible, showRoleDialog } = this.state;
     const {
       groupId,

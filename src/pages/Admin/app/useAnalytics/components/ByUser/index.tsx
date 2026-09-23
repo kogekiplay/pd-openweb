@@ -162,7 +162,7 @@ export default class ByUser extends Component<any, any> {
       },
     ];
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getList();
   }
 
@@ -266,7 +266,7 @@ export default class ByUser extends Component<any, any> {
         this.setState({ disabledExportBtn: false });
       });
   };
-  render() {
+  override render() {
     const { projectId, appId } = this.props;
     let { list = [], loading, pageIndex, userInfo = [], total, disabledExportBtn, dateInfo = {} } = this.state;
     return (

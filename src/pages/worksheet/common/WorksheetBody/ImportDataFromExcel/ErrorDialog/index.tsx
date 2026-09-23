@@ -10,7 +10,7 @@ import WorksheetItem from 'src/pages/worksheet/components/DialogImportExcelCreat
 import './index.less';
 
 class ErrorDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     fileKey: PropTypes.string,
     isBatch: PropTypes.bool,
     isAttachment: PropTypes.bool,
@@ -26,7 +26,7 @@ class ErrorDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.isBatch) {
       this.getBatchErrorLog();
     } else if (this.props.isAttachment) {
@@ -228,7 +228,7 @@ class ErrorDialog extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { isBatch } = this.props;
     const { complete, data, visible } = this.state;
     if (!complete) return null;

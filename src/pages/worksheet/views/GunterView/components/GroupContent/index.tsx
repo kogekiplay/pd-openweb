@@ -11,7 +11,7 @@ let GroupContent = class GroupContent extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { base, group, viewConfig, controls, worksheetInfo } = this.props;
     const { viewControl } = viewConfig;
     const groupControl =

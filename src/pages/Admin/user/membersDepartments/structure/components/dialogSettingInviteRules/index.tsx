@@ -27,7 +27,7 @@ class DialogSettingInviteRules extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -53,7 +53,7 @@ class DialogSettingInviteRules extends React.Component<any, any> {
     $elem.show();
   };
 
-  render() {
+  override render() {
     const { showDialogSettingInviteRules, setValue, projectId, updateAllowProjectCodeJoin = () => {} } = this.props;
     return (
       <Dialog

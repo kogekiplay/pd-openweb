@@ -64,7 +64,7 @@ export default class MessageRefer extends Component<any, any> {
       return undefined;
     }
   }
-  render() {
+  override render() {
     const { message } = this.props;
     const { user, type, iswd } = message;
     return (

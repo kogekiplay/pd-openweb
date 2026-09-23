@@ -4,7 +4,7 @@ import moment from 'moment';
 const DATE_COL_COUNT = 7;
 
 class DateTHead extends Component<any, any> {
-  render() {
+  override render() {
     const props = this.props;
     const value = props.value;
     const localeData = value.localeData();

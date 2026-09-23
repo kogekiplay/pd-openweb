@@ -6,7 +6,7 @@ import Dropdown from 'ming-ui/components/Dropdown';
 import TimePicker from 'ming-ui/components/TimePicker/TimePicker';
 
 class RangeFooter extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     prefixCls: PropTypes.string,
     timePicker: PropTypes.bool,
     /**
@@ -49,7 +49,7 @@ class RangeFooter extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const { startValue, endValue, locale, prefixCls, timePicker } = props;
 

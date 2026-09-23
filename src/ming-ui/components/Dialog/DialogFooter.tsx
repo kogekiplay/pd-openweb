@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
 
 class DialogFooter extends Component<any, any> {
-  render() {
+  override render() {
     const {
       onCancel,
       cancelText,

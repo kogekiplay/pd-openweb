@@ -110,7 +110,7 @@ class App extends Component<any, any> {
     this.isSetScrollTop = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { params } = this.props.match;
     this.props.dispatch(actions.getAppDetail(params.appId, this.detectionUrl));
     $('html').addClass('appListMobile');
@@ -119,7 +119,7 @@ class App extends Component<any, any> {
     window.addEventListener('popstate', this.backDashboard);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     const { appSection } = this.props.appDetail;
     const nextWorksheetId = this.props.match.params.worksheetId;
     const prevWorksheetId = prevProps.match.params.worksheetId;
@@ -171,7 +171,7 @@ class App extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('appListMobile');
     sessionStorage.removeItem('detectionUrl');
     if (modal) {
@@ -985,7 +985,7 @@ class App extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isAppLoading, appDetail } = this.props;
 
     if (isAppLoading) {

@@ -122,7 +122,7 @@ const Danger = styled.span`
 `;
 
 export default class ShareUrl extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     copyShowText: PropTypes.bool,
     url: PropTypes.string,
     theme: PropTypes.string,
@@ -171,7 +171,7 @@ export default class ShareUrl extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const {
       url,
       style,

@@ -38,7 +38,7 @@ class TaskTree extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
     this.init();
     this.bindEvents();
@@ -48,7 +48,7 @@ class TaskTree extends Component<any, any> {
     this.props.emitter.addListener('UPDATE_TASK_CHARGE', this.updateChargeHeaderAvatar.bind(this));
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       // 减少proejctId不同的而发生的请求
       let nextConfig = Object.assign({}, this.props.taskConfig);
@@ -71,7 +71,7 @@ class TaskTree extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
     this.props.emitter.removeListener('CREATE_TASK_TO_TREE', this.quickCreateTaskCallback);
     this.props.emitter.removeListener('UPDATE_TASK_CHARGE', this.updateChargeHeaderAvatar);
@@ -828,7 +828,7 @@ class TaskTree extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { openTaskDetail, taskId, isForceUpdate } = this.state;
 
     return (

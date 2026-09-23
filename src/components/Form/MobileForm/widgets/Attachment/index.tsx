@@ -23,7 +23,7 @@ import { isOpenPermit } from '../../tools/utils';
 import './index.less';
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     advancedSetting: PropTypes.object,
     flag: PropTypes.string,
@@ -70,13 +70,13 @@ export default class Widgets extends Component<any, any> {
     this._isUnmounted = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.state.loading) {
       this.loadAttachments();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.flag !== this.props.flag) {
         const initMobileFiles = {
@@ -103,7 +103,7 @@ export default class Widgets extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this._isUnmounted = true;
   }
 
@@ -576,7 +576,7 @@ export default class Widgets extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       from,
       worksheetId,

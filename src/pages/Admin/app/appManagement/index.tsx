@@ -20,7 +20,7 @@ export default class AppManagement extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { type } = _.get(this.props, 'match.params');
     this.setState({ currentTab: type || 'list' });
     if (this.appListRef && this.appListRef.getAppList) {
@@ -28,7 +28,7 @@ export default class AppManagement extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { type: prevType } = _.get(prevProps, 'match.params');
     const { type } = _.get(this.props, 'match.params');
 
@@ -37,7 +37,7 @@ export default class AppManagement extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { currentTab, listTotalNum } = this.state;
     const { projectId } = _.get(this.props, 'match.params');
 

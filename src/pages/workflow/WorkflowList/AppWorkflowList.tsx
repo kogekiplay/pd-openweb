@@ -215,14 +215,14 @@ class AppWorkflowList extends Component<any, any> {
   ajaxRequest = null;
   requestPending = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     const { appId } = this.props.match.params;
     updateWorkflowMingoStore({ id: appId, ...(window.appInfo || {}) });
     this.getAppDetail();
     this.checkIsAppAdmin();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (window.globalStoreForMingo?.activeModule === 'workflow') {
       updateGlobalStoreForMingo({ activeModule: 'worksheet' });
     }
@@ -235,7 +235,7 @@ class AppWorkflowList extends Component<any, any> {
    * 获取type
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const type = this.getQueryStringType();
 
@@ -1211,7 +1211,7 @@ class AppWorkflowList extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { appId } = this.props.match.params;
     const { type, loading, list, selectItem, appDetail, showTrash } = this.state;
 

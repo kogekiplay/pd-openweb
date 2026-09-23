@@ -18,7 +18,7 @@ const cardTarget = {
   },
 };
 let EmptyItem: any = class EmptyItem extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     connectDropTarget: PropTypes.func.isRequired,
     index: PropTypes.number.isRequired,
     topIndex: PropTypes.number.isRequired,
@@ -30,7 +30,7 @@ let EmptyItem: any = class EmptyItem extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     return this.props.connectDropTarget(<div className="emptyItem" />);
   }
 };

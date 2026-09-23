@@ -121,7 +121,7 @@ export default class orgLog extends React.Component<any, any> {
     });
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchLogs();
     this.fetchHistoryLogs();
   }
@@ -221,7 +221,7 @@ export default class orgLog extends React.Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const {
       isLoading,
       searchValues = {},

@@ -198,7 +198,7 @@ let ChartAnalyse = class ChartAnalyse extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { sourceType, currentReport } = this.props;
     const { reportType } = currentReport;
     return (

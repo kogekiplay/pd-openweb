@@ -24,7 +24,7 @@ export default class Amap extends Component<any, any> {
     mapSearch: true,
   };
 
-  static propTypes = {
+  static override propTypes = {
     /**
      * 地图配置
      */
@@ -94,7 +94,7 @@ export default class Amap extends Component<any, any> {
     this.handleCurrPos = this.handleCurrPos.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { defaultAddress } = this.props;
       const { lng, lat } = defaultAddress || {};
@@ -108,7 +108,7 @@ export default class Amap extends Component<any, any> {
       this.props.onUpdate();
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this._maphHandler) {
       this._maphHandler.destroyMap();
       this._maphHandler = null;
@@ -242,7 +242,7 @@ export default class Amap extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { mapStyle, inputAlign, mapSearch } = this.props;
     const newStyle = Object.assign(
       {

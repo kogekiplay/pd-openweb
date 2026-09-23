@@ -29,7 +29,7 @@ const RoleWrapper = styled.div`
 `;
 
 class AppRole extends Component<any, any> {
-  state = {
+  override state = {
     applyList: undefined,
     appDetail: undefined,
     roles: null,
@@ -42,14 +42,14 @@ class AppRole extends Component<any, any> {
     roleDebug: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.ids = getIds(this.props);
     this.fetchPortalInfo();
     this.getSetting();
     $('html').addClass('roleBody');
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.ids = getIds(prevProps);
       const {
@@ -81,7 +81,7 @@ class AppRole extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('roleBody');
   }
 
@@ -191,7 +191,7 @@ class AppRole extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { appDetail = {}, loading, editType, isOpenPortal, roleDebug } = this.state;
     const { projectId = '' } = appDetail;
     const {

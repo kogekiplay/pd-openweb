@@ -6,7 +6,7 @@ import CascaderDropdown from 'src/components/Form/DesktopForm/widgets/Cascader';
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
 export default class RelateRecord extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
     control: PropTypes.shape({}),
@@ -25,7 +25,7 @@ export default class RelateRecord extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.fullValues?.length !== prevProps.fullValues?.length) {
         this.setState({
@@ -66,7 +66,7 @@ export default class RelateRecord extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { control, disabled, from, worksheetId } = this.props;
     const { records } = this.state;
 

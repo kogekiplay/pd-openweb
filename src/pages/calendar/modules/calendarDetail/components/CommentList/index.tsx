@@ -30,7 +30,7 @@ export default class CalendarCommentList extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const {
       calendar: { title, id, recurTime, discussions },
       change,

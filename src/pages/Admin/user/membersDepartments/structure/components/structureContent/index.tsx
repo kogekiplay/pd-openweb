@@ -26,11 +26,11 @@ class StructureContent extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.loadData();
     (window.platformENV.isOverseas || window.platformENV.isLocal) && this.getPermission();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     localStorage.removeItem('columnsInfoData');
   }
   getPermission = () => {
@@ -145,7 +145,7 @@ class StructureContent extends Component<any, any> {
     this.loadData(page);
   };
 
-  render() {
+  override render() {
     const {
       allCount,
       pageIndex,

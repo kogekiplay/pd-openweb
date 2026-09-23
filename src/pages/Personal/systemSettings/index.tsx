@@ -38,7 +38,7 @@ export default class AccountChart extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
     this.getAvailableMapList();
   }
@@ -150,7 +150,7 @@ export default class AccountChart extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     if (this.state.loading) {
       return <LoadDiv className="mTop40" />;
     }

@@ -114,7 +114,7 @@ const VerifyButton = styled(Button)`
 `;
 
 export default class SelectField extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     fields: arrayOf(shape({ type: number })),
     viewType: oneOf([1, 2, 4, 5, 8]),
     handleSelect: func,
@@ -132,15 +132,15 @@ export default class SelectField extends Component<any, any> {
       checkedValue: _.get(fields, [0, 'value']),
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.removeEvent = this.bindEvent();
     this.computeHeight();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.computeHeight();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeEvent();
   }
   // 绑定事件
@@ -197,7 +197,7 @@ export default class SelectField extends Component<any, any> {
 
     return <ConfigureHierarchyView fields={fields} handleSelect={handleSelect} {...rest} />;
   };
-  render() {
+  override render() {
     const { isCharge, viewType } = this.props;
     const { title, detail, icon, color } = VIEW_TYPE_INFO[String(viewType)];
     return (

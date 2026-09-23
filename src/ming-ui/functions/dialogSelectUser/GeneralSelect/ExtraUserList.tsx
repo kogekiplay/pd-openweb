@@ -14,7 +14,7 @@ export default class ExtraUserList extends Component<any, any> {
     return _.includes(this.props.selectedAccountIds || [], user.accountId);
   }
 
-  render() {
+  override render() {
     let data = this.props.data;
 
     if (data.list && data.list.length) {

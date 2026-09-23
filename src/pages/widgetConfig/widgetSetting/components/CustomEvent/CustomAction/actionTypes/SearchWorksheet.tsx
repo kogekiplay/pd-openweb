@@ -103,7 +103,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setValue();
   }
 
@@ -435,7 +435,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       sheetId,
       appName,

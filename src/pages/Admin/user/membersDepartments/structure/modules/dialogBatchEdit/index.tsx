@@ -168,7 +168,7 @@ export default class DialogBatchEdit extends Component<any, any> {
         emptyUserSet();
       });
   };
-  render() {
+  override render() {
     const { visible, selectedAccountIds = [] } = this.props;
     const { passwordRegexTip } = _.get(md, ['global', 'SysSettings']) || {};
     let {

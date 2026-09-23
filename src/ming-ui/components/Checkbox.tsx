@@ -8,7 +8,7 @@ import './less/Checkbox.less';
 export const SIZE_LIST = ['small', 'default'];
 
 class Checkbox extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * checkbox显示的元素
      */
@@ -89,7 +89,7 @@ class Checkbox extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.checked !== undefined) {
         this.setState({
@@ -113,7 +113,7 @@ class Checkbox extends React.Component<any, any> {
     return undefined;
   }
 
-  render() {
+  override render() {
     const {
       text,
       children,

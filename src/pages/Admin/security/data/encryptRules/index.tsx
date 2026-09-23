@@ -31,7 +31,7 @@ export default class EncryptRules extends Component<any, any> {
     };
     this.promise = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getDataList();
   }
   getDataList = () => {
@@ -103,7 +103,7 @@ export default class EncryptRules extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { onClose, projectId } = this.props;
     const { searchValues, dataSource = [], showAddEditDialog, loading, pageIndex, totalCount } = this.state;
     const { type, state, name } = searchValues;

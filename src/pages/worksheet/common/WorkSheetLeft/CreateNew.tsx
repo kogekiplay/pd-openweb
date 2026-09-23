@@ -126,7 +126,7 @@ const getChatbotRecommendAppItems = () => {
 };
 
 class CreateSheetOrPage extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     type: string,
     onCreate: func,
     onCancel: func,
@@ -136,7 +136,7 @@ class CreateSheetOrPage extends Component<any, any> {
     onCreate: _.noop,
     onCancel: _.noop,
   };
-  state = {
+  override state = {
     value: '',
     remark: '',
     lastRemark: '',
@@ -252,7 +252,7 @@ class CreateSheetOrPage extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { hideHeader = false, type, onCancel, onImportExcel } = this.props;
     const { value, loading, remark } = this.state;
     const { headerText, text, placeholder } = createSheetOrCustomPageConfig[type];
@@ -359,14 +359,14 @@ class CreateSheetOrPage extends Component<any, any> {
 }
 
 class CreateChatbot extends Component<any, any> {
-  state = {
+  override state = {
     name: _l('对话机器人'),
     remark: '',
     generateLoading: true,
     generateChatRobotInfoLoading: false,
     chatRobotInfos: [],
   };
-  componentDidMount() {
+  override componentDidMount() {
     this.handleGenerate();
   }
   handleGenerate = (isReload = false) => {
@@ -443,7 +443,7 @@ class CreateChatbot extends Component<any, any> {
       });
     }
   };
-  render() {
+  override render() {
     const { onCancel } = this.props;
     const { generateChatRobotInfoLoading, remark, generateLoading, chatRobotInfos = [] } = this.state;
 

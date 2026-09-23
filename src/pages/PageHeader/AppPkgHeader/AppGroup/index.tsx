@@ -31,7 +31,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     permissionType: oneOf([0, 1, 2, 3, 100, 200, 300]),
     appStatus: oneOf([0, 1, 2, 3, 4, 5]),
     updateAppGroup: func,
@@ -57,12 +57,12 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData(this.props);
     this.removeEventBind = this.bindEvent();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.ids = getIds(this.props);
       if (
@@ -74,7 +74,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeEventBind && this.removeEventBind();
   } // 当前处理的分组id
 
@@ -428,7 +428,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
         text: name,
       }));
 
-  render() {
+  override render() {
     const {
       permissionType,
       appStatus,

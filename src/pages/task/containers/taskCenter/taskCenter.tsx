@@ -37,7 +37,7 @@ class TaskCenter extends Component<any, any> {
     hideNavigation: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const that = this;
     const $container = $('#container');
 
@@ -205,7 +205,7 @@ class TaskCenter extends Component<any, any> {
       });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const pathname = this.props.pathname || '';
       const folderIndex =
@@ -231,7 +231,7 @@ class TaskCenter extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppTask');
     $('#container').off('.task');
     $('body').off('.task').removeClass('taskDetailOpen');
@@ -422,7 +422,7 @@ class TaskCenter extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     if (!this.props.taskFirstSetStorage) {
       return null;
     }

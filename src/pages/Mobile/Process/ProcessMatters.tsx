@@ -141,7 +141,7 @@ export default class ProcessMatters extends Component<any, any> {
       batchLoadingType: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getTodoList();
     this.getTodoCount();
     verifyPassword({
@@ -817,7 +817,7 @@ export default class ProcessMatters extends Component<any, any> {
       </ScrollView>
     );
   }
-  render() {
+  override render() {
     const {
       batchApproval,
       list,

@@ -12,14 +12,14 @@ export default class CountDown extends Component<any, any> {
       isArrive: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.func();
     timer = setInterval(() => {
       this.func();
     }, 1000);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.endTime !== this.props.endTime) {
         this.setState(
@@ -66,7 +66,7 @@ export default class CountDown extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { className, beforeText, afterText, arriveText } = this.props;
     let { timeStr, isArrive } = this.state;
 

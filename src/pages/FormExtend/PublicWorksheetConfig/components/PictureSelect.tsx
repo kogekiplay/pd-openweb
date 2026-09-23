@@ -66,7 +66,7 @@ const Page = styled.div(
 );
 
 export default class extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     coverUrl: PropTypes.string,
     images: PropTypes.arrayOf(PropTypes.string),
     onChange: PropTypes.func,
@@ -77,7 +77,7 @@ export default class extends React.Component<any, any> {
       pageIndex: 0,
     };
   }
-  render() {
+  override render() {
     const { images, coverUrl = '', onChange = () => {} } = this.props;
     const { pageIndex } = this.state;
     return (

@@ -47,7 +47,7 @@ class MonthTable extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const list = this.renderList();
 
     return <ul className="calendar-month-table">{list}</ul>;

@@ -35,17 +35,17 @@ let Today = class Today extends Component<any, any> {
     this.debounceScroll = _.debounce(this.handleScroll, 500);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { chartScroll } = this.props.gunterView;
     chartScroll.on('scroll', this.debounceScroll);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { chartScroll } = this.props.gunterView;
     chartScroll.off('scroll', this.debounceScroll);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { gunterView } = this.props;
       const { onlyWorkDay, dayOff } = gunterView.viewConfig;
@@ -110,7 +110,7 @@ let Today = class Today extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { todayVisible, disable, direction } = this.state;
     return (
       todayVisible &&

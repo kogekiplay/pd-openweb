@@ -33,7 +33,7 @@ export default class Header extends Component<any, any> {
     this.setState({ isEdit: false });
     this.props.changeCurrentReport({ name });
   };
-  render() {
+  override render() {
     const { appId, report, permissions, currentReport, reportData, themeColor, customPageConfig = {} } = this.props;
     const pageTitleStyles = customPageConfig.titleStyles || {};
     const titleStyles = _.get(currentReport.style, 'titleStyles') || defaultTitleStyles;

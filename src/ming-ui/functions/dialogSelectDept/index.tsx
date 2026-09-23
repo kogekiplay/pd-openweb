@@ -38,12 +38,12 @@ class DialogSelectDept extends React.Component<any, any> {
 
   scroll = React.createRef();
 
-  componentDidMount() {
+  override componentDidMount() {
     document.body.addEventListener('keydown', this.handleKeydown);
     this.fetchData();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.search && this.search.cancel) {
       this.search.cancel();
     }
@@ -596,7 +596,7 @@ class DialogSelectDept extends React.Component<any, any> {
     return !!this.state.selectedDepartment.filter(item => item.departmentId.indexOf('orgs_') > -1).length;
   }
 
-  render() {
+  override render() {
     const { title, width, onClose, className } = this.props;
     const { showProjectAll } = this.state;
     return (

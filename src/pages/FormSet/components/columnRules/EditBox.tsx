@@ -45,7 +45,7 @@ class EditBox extends React.Component<any, any> {
 
   // 筛选条件 // 筛选条件
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectRules.name !== this.state.name) {
         this.setState({
@@ -650,7 +650,7 @@ class EditBox extends React.Component<any, any> {
     return undefined;
   };
 
-  render() {
+  override render() {
     const { selectRules = {}, updateSelectRule } = this.props;
     return (
       <ScrollView className="editRuleBox">

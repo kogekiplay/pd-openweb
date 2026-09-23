@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog } from 'ming-ui';
 
 class DoubleConfirmDialog extends React.Component<any, any> {
-  state = {
+  override state = {
     doubleConfirm: this.props.doubleConfirm || {
       confirmMsg: _l('你确认对记录执行此操作吗？'),
       cancelName: _l('取消'),
@@ -11,7 +11,7 @@ class DoubleConfirmDialog extends React.Component<any, any> {
     showDoubleConfirmDialog: this.props.showDoubleConfirmDialog,
   };
 
-  render() {
+  override render() {
     return (
       <Dialog
         title={_l('二次确认')}

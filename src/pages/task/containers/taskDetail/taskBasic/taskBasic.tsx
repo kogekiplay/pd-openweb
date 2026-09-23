@@ -73,7 +73,7 @@ class TaskBasic extends Component<any, any> {
    * 打开详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { data } = this.props.taskDetails[this.props.taskId];
 
@@ -612,7 +612,7 @@ class TaskBasic extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { taskName, showTags, attachmentData, kcAttachmentData, isEditing } = this.state;
     const { taskId, addTags, closeAddTags } = this.props;
     const { data } = this.props.taskDetails[taskId];

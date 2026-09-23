@@ -35,7 +35,7 @@ export default class ProcessInform extends Component<any, any> {
       queryParam: {},
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getTodoList();
     this.getTodoCount();
     workflowPushSoket();
@@ -300,7 +300,7 @@ export default class ProcessInform extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { currentTab, countData, previewRecord } = this.state;
     return (
       <div className="processContent flexColumn h100">

@@ -83,7 +83,7 @@ export default class ValidateInfoCon extends Component<any, any> {
     this.iti = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { passVerifyPassword, type } = this.props;
 
     if (passVerifyPassword && type === 'mobilePhone') {
@@ -292,7 +292,7 @@ export default class ValidateInfoCon extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { title, des, showStep, type, passVerifyPassword, onCancel = () => {} } = this.props;
     const { nextBtnDisabled, sendCodeLoading, step, sendCodeTxt, submitLoading, email, verifyCode } = this.state;
 

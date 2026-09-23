@@ -43,7 +43,7 @@ const isWx = window.isWeiXin && !window.platformENV.isOverseas && !window.platfo
 const isApp = window.isWxWork || isWx || window.isWeLink || window.isDingTalk || window.isFeiShu || window.isMingDaoApp;
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     from: PropTypes.number,
     disabled: PropTypes.bool,
     value: PropTypes.string,
@@ -53,7 +53,7 @@ export default class Widgets extends Component<any, any> {
     default: PropTypes.string,
   };
 
-  state = {
+  override state = {
     visible: false,
     staticMapFallbackValue: null,
   };
@@ -373,7 +373,7 @@ export default class Widgets extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { disabled, value, enumDefault, enumDefault2, advancedSetting, onChange, strDefault } = this.props;
     const { visible, staticMapFallbackValue } = this.state;
     const onlyCanAppUse = (typeof strDefault === 'string' ? strDefault : '00')[0] === '1';

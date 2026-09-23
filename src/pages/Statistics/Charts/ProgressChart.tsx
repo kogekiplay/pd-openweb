@@ -34,7 +34,7 @@ class ProgressChart extends Component<any, any> {
     this.isUnmounted = false;
     this.renderTimer = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     loadG2Plot().then(data => {
       if (this.isUnmounted) {
         return;
@@ -44,12 +44,12 @@ class ProgressChart extends Component<any, any> {
       this.renderProgressChart(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     clearTimeout(this.renderTimer);
     this.destroyProgressChart();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { displaySetup, style } = this.props.reportData;
     const { displaySetup: oldDisplaySetup, style: oldStyle } = prevProps.reportData;
     const shouldRecreate =
@@ -301,7 +301,7 @@ class ProgressChart extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { mobileCount = 1, layoutType, reportData, isMobile } = this.props;
     const { displaySetup, style } = reportData;
     const { showChartType } = displaySetup;

@@ -92,7 +92,7 @@ class DateTable extends Component<any, any> {
     return trList;
   };
 
-  render() {
+  override render() {
     const thList = this.renderHeadList();
     const trList = this.renderBodyList();
 

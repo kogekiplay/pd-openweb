@@ -28,14 +28,14 @@ export default class PluginContainer extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const request = getRequest();
     $('html').addClass('plugin');
     this.loadPermissions(request.projectId);
     emitter.addListener('CHANGE_CURRENT_PROJECT', () => this.loadPermissions());
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('plugin');
     emitter.removeListener('CHANGE_CURRENT_PROJECT', () => this.loadPermissions());
   }
@@ -56,7 +56,7 @@ export default class PluginContainer extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { currentProjectId, currentProjectName, myPermissions } = this.state;
     // 父路由从 '/plugin/:type?' 改成了 '/plugin/*'（否则内层嵌套 Routes 无段可匹配），
     // 于是 match.params.type 没了。而 SideNav 靠它高亮当前导航项、并写

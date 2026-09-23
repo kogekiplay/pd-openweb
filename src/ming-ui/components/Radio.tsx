@@ -8,7 +8,7 @@ import './less/RadioGroup.less';
 export const SIZE_LIST = ['small', 'default', 'middle'];
 
 class Radio extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 是否没有margin
      */
@@ -55,11 +55,11 @@ class Radio extends Component<any, any> {
     disableTitle: PropTypes.bool,
   };
 
-  state = {
+  override state = {
     checked: this.props.checked || this.props.defaultChecked,
   };
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         checked: this.props.checked,
@@ -75,7 +75,7 @@ class Radio extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { checked } = this.state;
     const { disabled, className, size, icon, text, children, title, disableTitle, noMargin } = this.props;
 

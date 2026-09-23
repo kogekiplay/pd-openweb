@@ -21,7 +21,7 @@ const xssOptions = {
 };
 
 export default class BaseMessageComponent extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isFavorite: PropTypes.oneOf(['0', '1']),
 
     typeName: PropTypes.string,
@@ -64,7 +64,7 @@ export default class BaseMessageComponent extends React.Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { inboxId } = this.props;
 
     $(`.inboxBox .messageItem-${inboxId}`)
@@ -264,7 +264,7 @@ export default class BaseMessageComponent extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     return (
       <div className={`messageItem messageItem-${this.props.inboxId}`}>
         {this.renderAvatar()}

@@ -69,7 +69,7 @@ export default class SendToolbar extends Component<any, any> {
       isHidden: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { isGroup } = this.props.session;
     // 表情
     this.initEmotion();
@@ -80,7 +80,7 @@ export default class SendToolbar extends Component<any, any> {
     // AT
     isGroup && this.initKeyAT();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { session } = this.props;
     const textarea = $(`#ChatPanel-${session.id}`).find('.ChatPanel-textarea textarea').get(0) as MentionsInputElement;
     textarea && textarea.destroy && textarea.destroy();
@@ -400,7 +400,7 @@ export default class SendToolbar extends Component<any, any> {
       </Trigger>
     );
   }
-  render() {
+  override render() {
     const { session } = this.props;
     const { id } = session;
 

@@ -24,7 +24,7 @@ import VideoPlayer from './VideoPlayer';
 import './attachmentsPreview.less';
 
 class AttachmentsPreview extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isShare: PropTypes.bool,
     attachments: PropTypes.array,
     actions: PropTypes.object,
@@ -39,14 +39,14 @@ class AttachmentsPreview extends React.Component<any, any> {
     fullscreen: PropTypes.bool,
   };
 
-  state = {
+  override state = {
     style: { opacity: 0 },
     attInfoFolded: true,
     showThumbnail: false,
     showHtmlSource: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const options = _.assign({}, this.props.options, {
       onClose: this.props.onClose,
     });
@@ -72,7 +72,7 @@ class AttachmentsPreview extends React.Component<any, any> {
     $(document).on('keydown', this.handleKeyDown);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.actions.loading();
     $(document).off('keydown', this.handleKeyDown);
     if (window.closeFns) {
@@ -80,7 +80,7 @@ class AttachmentsPreview extends React.Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.index !== this.props.index && this.state.showHtmlSource) {
       this.setState({ showHtmlSource: false });
     }
@@ -172,7 +172,7 @@ class AttachmentsPreview extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     if (!this.props.attachments.length) {
       return <LoadDiv />;
     }

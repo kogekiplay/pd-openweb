@@ -39,7 +39,7 @@ class Attachment extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getFolderFiles();
 
     const $taskList = $('#taskList');
@@ -124,7 +124,7 @@ class Attachment extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       // 切换项目
       if (this.props.taskConfig.folderId && this.props.taskConfig.folderId !== prevProps.taskConfig.folderId) {
@@ -179,7 +179,7 @@ class Attachment extends Component<any, any> {
       });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('body').off('.taskAttchment');
   }
 
@@ -416,7 +416,7 @@ class Attachment extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { attachmentViewType } = this.props.taskConfig;
     const { dataSource, openTaskDetail, taskId } = this.state;
 

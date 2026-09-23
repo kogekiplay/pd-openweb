@@ -61,7 +61,7 @@ class DepartmentTree extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.init();
     this.lisentHover();
     window.addEventListener('resize', this.handleResize);
@@ -77,7 +77,7 @@ class DepartmentTree extends React.Component<any, any> {
     $(document).off('mouseleave', '.ant-tree-switcher', this.handleTreeSwitcherMouseLeave);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(prevProps.newDepartments, this.props.newDepartments) ||
@@ -103,7 +103,7 @@ class DepartmentTree extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     clearTimeout(this.timer);
     window.removeEventListener('resize', this.handleResize);
     this.handleResize.cancel();
@@ -429,7 +429,7 @@ class DepartmentTree extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { hasDepartmentAuth } = this.props;
     const { newDepartments, expandedKeys, selectedKeys, autoExpandParent, height } = this.state;
 

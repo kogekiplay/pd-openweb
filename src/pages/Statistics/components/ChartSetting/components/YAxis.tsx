@@ -359,7 +359,7 @@ export default class YAxis extends Component<any, any> {
 
     return Content;
   }
-  render() {
+  override render() {
     const { name, currentReport, axisControls, allControls, yaxisList, inheritLastYaxis } = this.props;
     const { reportType, yaxisList: allYaxisList, style = {} } = currentReport;
     const otherProps = {

@@ -39,7 +39,7 @@ const WrapSys = styled.div`
   }
 `;
 export default class Con extends React.Component<any, any> {
-  render() {
+  override render() {
     const {
       appId,
       editCallback,

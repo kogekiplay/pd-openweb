@@ -136,7 +136,7 @@ class DialogCreateAndEditPosition extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { filed, showRoleDialog } = this.props;
     const { jobName } = this.state;
     return (

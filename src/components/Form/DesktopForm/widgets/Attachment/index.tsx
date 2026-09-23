@@ -27,7 +27,7 @@ import { WidgetEventHelper } from '../../../core/useFormEventManager';
 import './index.less';
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     value: PropTypes.any,
     from: PropTypes.number,
@@ -61,7 +61,7 @@ export default class Widgets extends Component<any, any> {
     this.eventHelper = new WidgetEventHelper(props.formItemId);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.state.loading) {
       this.loadAttachments();
     }
@@ -89,7 +89,7 @@ export default class Widgets extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         if (this.checkFileNeedLoad(this.props.value)) {
@@ -619,7 +619,7 @@ export default class Widgets extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       from,
       appId,

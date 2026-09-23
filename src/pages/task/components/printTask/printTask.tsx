@@ -17,7 +17,7 @@ export default class PrintTask extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     postAjax
       .getTaskDetail4Print({
         taskId: this.props.taskId,
@@ -142,7 +142,7 @@ export default class PrintTask extends Component<any, any> {
     navigateTo('/apps/task/center');
   }
 
-  render() {
+  override render() {
     const data = this.state.data;
     const hasQRCode = this.props.options.indexOf('qrCode') >= 0;
     let controls;

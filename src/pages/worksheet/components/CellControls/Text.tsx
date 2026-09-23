@@ -89,8 +89,8 @@ function getPopupContainer(popupContainer, rows, isMultipleLine) {
 }
 
 export default class Text extends React.Component<any, any> {
-  static contextType = ChildTableContext;
-  static propTypes = {
+  static override contextType = ChildTableContext;
+  static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),
     editable: PropTypes.bool,
@@ -122,7 +122,7 @@ export default class Text extends React.Component<any, any> {
 
   tempKey = [];
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const valueChanged = this.props.cell.value !== prevProps.cell.value;
       const rowChanged = !isEqual(get(this.props, 'row.rowid'), get(prevProps, 'row.rowid'));
@@ -180,7 +180,7 @@ export default class Text extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { isSubList, isediting } = this.props;
 
     if (isSubList && isediting && !this.hadBlur) {
@@ -489,7 +489,7 @@ export default class Text extends React.Component<any, any> {
 
     this.setState({ forceShowFullValue: true });
   };
-  render() {
+  override render() {
     const {
       columnIndex,
       className,

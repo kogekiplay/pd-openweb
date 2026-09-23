@@ -33,7 +33,7 @@ export default class PrePayOrder extends Component<any, any> {
     this.conformAction = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.orderId ? this.getData() : this.handlePrePayOrder();
     if (!browserIsMobile()) return;
 
@@ -41,7 +41,7 @@ export default class PrePayOrder extends Component<any, any> {
     window.addEventListener('popstate', this.handleBack, false);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (!browserIsMobile()) return;
     window.removeEventListener('popstate', this.handleBack, false);
   }
@@ -457,7 +457,7 @@ export default class PrePayOrder extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { onCancel = () => {}, notDialog, isPaySuccessAddRecord, isAtOncePayment } = this.props;
     const {
       loading,

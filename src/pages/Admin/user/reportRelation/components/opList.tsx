@@ -4,7 +4,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 
 const ClickAwayable = ClickAway;
 export default class ChecklistOperator extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     toggleList: PropTypes.func,
     showAddBtn: PropTypes.bool,
 
@@ -13,7 +13,7 @@ export default class ChecklistOperator extends Component<any, any> {
     replace: PropTypes.func,
   };
 
-  render() {
+  override render() {
     return (
       <ClickAwayable component="ul" className="itemOpList" onClickAway={() => this.props.toggleList()}>
         {this.props.showAddBtn ? (

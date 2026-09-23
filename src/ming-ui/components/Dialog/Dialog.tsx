@@ -28,7 +28,7 @@ function enterHandle(Comp) {
 }
 
 let Dialog = class Dialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 弹窗叠弹窗错位
      */
@@ -238,7 +238,7 @@ let Dialog = class Dialog extends Component<any, any> {
     this.props.onOk(e);
   }
 
-  render() {
+  override render() {
     const props = this.props;
     const baseProps = {
       autoZIndex: props.autoZIndex,

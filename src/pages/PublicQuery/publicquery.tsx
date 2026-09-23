@@ -116,7 +116,7 @@ class Publicquery extends React.Component<any, any> {
     captcha(callback);
   };
 
-  render() {
+  override render() {
     const { publicqueryRes = {}, querydata = {}, appId } = this.props;
     const { queryControlIds = [], viewId, worksheet = {}, worksheetId = '', visibleType, title } = publicqueryRes;
     const { projectId = '', template = {}, views = [] } = worksheet;

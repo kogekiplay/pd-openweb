@@ -9,7 +9,7 @@ import { formatRecur } from '../../common';
 import { FREQUENCY, RECURLAYERS, RECURTYPE, WEEKDAYS } from '../../constant';
 
 export default class RepeatBox extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     change: PropTypes.func.isRequired,
   };
   constructor(props) {
@@ -233,7 +233,7 @@ export default class RepeatBox extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       calendar: { isChildCalendar, frequency },
     } = this.props;

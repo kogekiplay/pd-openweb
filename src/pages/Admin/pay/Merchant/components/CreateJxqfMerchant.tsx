@@ -82,7 +82,7 @@ export default class CreateJxqfMerchant extends Component<any, any> {
     this.promise = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { merchantStatus } = this.state;
     const { currentMerchantInfo } = this.props;
 
@@ -91,7 +91,7 @@ export default class CreateJxqfMerchant extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.createStep !== prevProps.createStep) {
         this.setState({
@@ -101,7 +101,7 @@ export default class CreateJxqfMerchant extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     clearInterval(this.timeInterval);
 
     this.props.getDataList();
@@ -280,7 +280,7 @@ export default class CreateJxqfMerchant extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { projectId, createStep, onClose = () => {} } = this.props;
     const {
       step,

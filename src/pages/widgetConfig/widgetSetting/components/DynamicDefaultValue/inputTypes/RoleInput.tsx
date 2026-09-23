@@ -33,7 +33,7 @@ export default class RoleInput extends Component<any, any> {
     const { defaultType } = this.props;
     defaultType && this.$wrap.triggerClick();
   };
-  render() {
+  override render() {
     const { defaultType, data = {}, globalSheetInfo: { projectId } = {}, onDynamicValueChange } = this.props;
     return (
       <DynamicValueInputWrap>

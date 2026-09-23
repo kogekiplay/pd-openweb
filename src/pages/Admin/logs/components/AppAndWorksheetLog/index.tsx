@@ -301,10 +301,10 @@ export default class AppAndWorksheetLog extends Component<any, any> {
       .filter(it => (props.appId ? it.dataIndex !== 'appId' : true));
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getLogList();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     localStorage.removeItem('globalLogTab');
   }
 
@@ -769,7 +769,7 @@ export default class AppAndWorksheetLog extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { projectId, appId } = this.props;
     const {
       dataSource = [],

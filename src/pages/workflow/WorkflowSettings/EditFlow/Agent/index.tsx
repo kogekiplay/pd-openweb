@@ -92,7 +92,7 @@ export default class Agent extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple, data, startEventId, moduleType } =
       this.props;
 

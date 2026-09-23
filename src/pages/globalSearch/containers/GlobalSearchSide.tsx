@@ -41,7 +41,7 @@ const GlobalSearchSideCon = styled.ul`
 `;
 
 export default class GlobalSearchSide extends Component<any, any> {
-  render() {
+  override render() {
     const { current = 'all', onChange } = this.props;
     return (
       <GlobalSearchSideCon>

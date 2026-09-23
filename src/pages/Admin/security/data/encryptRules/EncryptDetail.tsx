@@ -50,7 +50,7 @@ class EncryptDetail extends Component<any, any> {
       currentTab: 1,
     };
   }
-  render() {
+  override render() {
     const { onCancel, projectId, encryptRuleId, ruleDetail } = this.props;
     const { currentTab } = this.state;
     const windowHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;

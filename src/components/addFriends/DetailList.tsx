@@ -26,7 +26,7 @@ export default class DetailList extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.searchDataList();
   }
 
@@ -169,7 +169,7 @@ export default class DetailList extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { list = [], loading } = this.state;
     const { detailMode } = this.props;
 

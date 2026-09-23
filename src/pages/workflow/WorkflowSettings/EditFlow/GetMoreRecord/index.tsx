@@ -85,7 +85,7 @@ export default class GetMoreRecord extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
     const isCalibration = item.actionId === ACTION_ID.REFRESH_MULTIPLE_DATA;
 

@@ -31,7 +31,7 @@ let MoreOption = class MoreOption extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       setFn,
       delTxt,

@@ -61,7 +61,7 @@ export default class Ding extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     Ajax.getDDProjectSettingInfo({ projectId: this.props.projectId }).then(res => {
       this.setState({
         pageLoading: false,
@@ -479,7 +479,7 @@ export default class Ding extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     const {
       currentTab,

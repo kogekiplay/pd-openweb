@@ -63,7 +63,7 @@ export default class DingSyncCourse extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('dingSyncBox');
     let match = this.props.match;
 
@@ -171,11 +171,11 @@ export default class DingSyncCourse extends React.Component<any, any> {
     });
   };
 
-  shouldComponentUpdate(_nextProps, nextState) {
+  override shouldComponentUpdate(_nextProps, nextState) {
     return compareProps(this.state, nextState);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('dingSyncBox');
   }
 
@@ -451,7 +451,7 @@ export default class DingSyncCourse extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId, isWX } = this.state;
     const homeUrl = getIntegrationHomeUrl({ projectId, integrationType: isWX ? 3 : 1 });
 

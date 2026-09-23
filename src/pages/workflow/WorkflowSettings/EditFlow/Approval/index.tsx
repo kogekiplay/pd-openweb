@@ -68,7 +68,7 @@ export default class Approval extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
 
     return (

@@ -66,7 +66,7 @@ export default class MemberList extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getGroupsList();
   }
 
@@ -159,7 +159,7 @@ export default class MemberList extends Component<any, any> {
     this.setState({ selectKeys });
   };
 
-  render() {
+  override render() {
     const { selectKeys, pageSize, count, pageIndex, list, loading } = this.state;
     const rowSelection = {
       selectKeys,

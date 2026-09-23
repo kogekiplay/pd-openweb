@@ -45,7 +45,7 @@ export default class InviteOrAddUsers extends Component<any, any> {
     return undefined;
   };
 
-  render() {
+  override render() {
     return (
       <Dropdown
         trigger={['click']}

@@ -24,7 +24,7 @@ let Home = class Home extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { controlId, params } = this.props;
     return (
       <Fragment>

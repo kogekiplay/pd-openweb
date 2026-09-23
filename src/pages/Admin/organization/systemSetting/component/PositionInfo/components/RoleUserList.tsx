@@ -108,7 +108,7 @@ class RoleUserList extends Component<any, any> {
       );
     });
   };
-  render() {
+  override render() {
     const { userList = [] } = this.props;
     return (
       <Fragment>

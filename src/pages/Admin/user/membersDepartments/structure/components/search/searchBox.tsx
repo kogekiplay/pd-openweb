@@ -131,7 +131,7 @@ class SearchBox extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { searchValue } = this.state;
     let clearBtn =
       searchValue !== '' ? (

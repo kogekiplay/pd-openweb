@@ -47,7 +47,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const {
       location: { pathname },
       menuList,
@@ -76,7 +76,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const {
         location: { pathname },
@@ -211,7 +211,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { currentCompanyName, isExtend, subListVisible, menuGroupKey } = this.state;
     const { menuList = [], match, location } = this.props;
     const { params } = match;

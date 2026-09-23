@@ -13,10 +13,10 @@ export default class Controls extends React.Component<any, any> {
     super(props);
     this.state = { height: document.documentElement.clientHeight - 280 };
   }
-  componentDidMount() {
+  override componentDidMount() {
     $(window).on('resize', this.getHeight);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $(window).off('resize', this.getHeight);
   }
   getHeight = () => {
@@ -69,7 +69,7 @@ export default class Controls extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { height } = this.state;
     const { columns, view = {}, formatColumnsListForControls } = this.props;
     const { controls = [] } = view;

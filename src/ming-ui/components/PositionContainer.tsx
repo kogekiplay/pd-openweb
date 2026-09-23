@@ -22,7 +22,7 @@ function getDomNode(node) {
 }
 
 class PositionContainer extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     visible: PropTypes.bool, // 显示隐藏
     bounding: PropTypes.object, // 触发元素的 getBoundingClientRect
     placement: PropTypes.string, // 显示的位置，top，bottom，left，right
@@ -47,7 +47,7 @@ class PositionContainer extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.bounding = this.props.bounding;
     if (this.props.isInit) {
       this.create(this.props);
@@ -70,7 +70,7 @@ class PositionContainer extends Component<any, any> {
     window.addEventListener('resize', this.onWindowResize.bind(this));
     document.body.addEventListener('click', this.newDestroy, false);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.popup) {
       this.popupParentNode.removeChild(this.popup);
       window.removeEventListener('resize', this.onWindowResize.bind(this));
@@ -78,7 +78,7 @@ class PositionContainer extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       let { visible, bounding } = this.props;
       this.bounding = bounding;
@@ -341,7 +341,7 @@ class PositionContainer extends Component<any, any> {
     popup.style.top = '-99999px';
     popup.classList.remove('PositionContainer-active');
   }
-  render() {
+  override render() {
     return <noscript />;
   }
 }

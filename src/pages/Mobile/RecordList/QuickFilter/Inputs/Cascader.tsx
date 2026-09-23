@@ -76,7 +76,7 @@ export default class Cascader extends Component<any, any> {
     this.handleSearch = this.onSearch.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.value, this.props.value)) {
         this.setState({
@@ -458,7 +458,7 @@ export default class Cascader extends Component<any, any> {
       </List>
     );
   }
-  render() {
+  override render() {
     const { control, values = [], isMultiple } = this.props;
     let { visible, loading } = this.state;
     return (

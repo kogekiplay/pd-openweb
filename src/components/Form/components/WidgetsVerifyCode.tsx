@@ -16,7 +16,7 @@ export default class WidgetsVerifyCode extends Component<any, any> {
     this.inputRef = React.createRef();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     if (
       !_.isEqual(_.pick(nextProps, ['verifyCode']), _.pick(this.props, ['verifyCode'])) ||
       !_.isEqual(_.pick(nextState, ['isSubmit', 'count']), _.pick(this.state, ['isSubmit', 'count']))
@@ -117,11 +117,11 @@ export default class WidgetsVerifyCode extends Component<any, any> {
     clearInterval(this.timer);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.handleClear();
   }
 
-  render() {
+  override render() {
     const { size, verifyCode, handleChange } = this.props;
     const { isSubmit, count } = this.state;
 

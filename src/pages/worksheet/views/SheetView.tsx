@@ -479,7 +479,7 @@ class TableViewBase extends React.Component<any, any> {
   declare expandCellAppendWidth: number;
   declare refreshTimer: ReturnType<typeof setTimeout> | null;
 
-  static propTypes = {
+  static override propTypes = {
     isTreeTableView: bool,
     worksheetInfo: PropTypes.shape({}),
     controls: PropTypes.arrayOf(PropTypes.shape({})),
@@ -565,7 +565,7 @@ class TableViewBase extends React.Component<any, any> {
     this.handlePaste = this.handlePaste.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { view, fetchRows, setRowsEmpty, navGroupFilters, noLoadAtDidMount, setViewLayout = () => {} } = this.props;
 
     if (this.chartId) {
@@ -641,7 +641,7 @@ class TableViewBase extends React.Component<any, any> {
     );
   };
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const {
         view,
@@ -824,7 +824,7 @@ class TableViewBase extends React.Component<any, any> {
     );
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     return (
       _.some(
         ['recordInfoVisible', 'disableMaskDataControls', 'buttonsCheckStatus'],
@@ -866,7 +866,7 @@ class TableViewBase extends React.Component<any, any> {
     );
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { abortRequest = () => {} } = this.props;
     document.body?.removeEventListener('click', this.outerClickEvent);
     emitter.removeListener('RELOAD_SHEET_VIEW', this.props.refresh);
@@ -2073,7 +2073,7 @@ class TableViewBase extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       type,
       isCharge,

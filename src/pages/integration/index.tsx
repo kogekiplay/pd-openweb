@@ -108,13 +108,13 @@ export default class HubContainer extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('integration');
     this.loadPermissions();
     emitter.addListener('CHANGE_CURRENT_PROJECT', this.loadPermissions);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('integration');
     emitter.removeListener('CHANGE_CURRENT_PROJECT', this.loadPermissions);
   }
@@ -131,7 +131,7 @@ export default class HubContainer extends React.Component<any, any> {
     this.setState({ currentProjectId: projectInfo.projectId });
   };
 
-  render() {
+  override render() {
     // 父路由从 '/integration/:type?/:listType?' 改成了 '/integration/*'
     //（原来父子深度相同、父会把 URL 吃光，子路由无段可匹配），所以 type 不再
     // 由路由参数提供。它本来就是 /integration/ 之后的那一段，直接从路径取。

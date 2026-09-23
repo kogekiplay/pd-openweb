@@ -19,14 +19,14 @@ import { durDays, momentTime } from './time';
 import './index.less';
 
 export default class GanttDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     folderID: PropTypes.string.isRequired,
     closeLayer: PropTypes.func,
   };
   static defaultProps = {
     closeLayer: () => {},
   };
-  state = {
+  override state = {
     taskID: '',
     name: '',
     beginTime: '',
@@ -41,7 +41,7 @@ export default class GanttDialog extends Component<any, any> {
     errorMsg: '',
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -373,7 +373,7 @@ export default class GanttDialog extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const {
       type,
       data,

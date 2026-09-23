@@ -50,7 +50,7 @@ class GlobalSearch extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const urlParam = getRequest(this.props.search);
 
     this.initParam();
@@ -60,7 +60,7 @@ class GlobalSearch extends Component<any, any> {
     }
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     const urlParam = getRequest(this.props.search);
 
     if (
@@ -581,7 +581,7 @@ class GlobalSearch extends Component<any, any> {
     this.updateSearchParam({ pageIndex: this.state.pageIndex + 1 });
   }, 500);
 
-  render() {
+  override render() {
     const {
       searchKey,
       searchType,

@@ -17,15 +17,15 @@ export default class BranchItem extends Component<any, any> {
     clearBorderType: 0,
   };
 
-  state = {
+  override state = {
     isMove: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.index !== prevProps.index && this.state.isMove) {
         setTimeout(() => {
@@ -38,7 +38,7 @@ export default class BranchItem extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
   }
 
@@ -230,7 +230,7 @@ export default class BranchItem extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { processId, data, item, disabled, renderNode, clearBorderType, openDetail, isCopy, isApproval, isSimple } =
       this.props;
     const { isMove } = this.state;

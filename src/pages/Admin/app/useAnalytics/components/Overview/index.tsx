@@ -182,7 +182,7 @@ export default class Overview extends Component<any, any> {
     this.totalTxtElements = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.appId) {
       return;
     }
@@ -191,7 +191,7 @@ export default class Overview extends Component<any, any> {
     this.getChartData();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     _.keys(this.totalTxtElements).forEach(type => {
       this.updateTotalTxtWidth(type);
     });
@@ -542,7 +542,7 @@ export default class Overview extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     let {
       currentDimension,

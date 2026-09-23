@@ -16,7 +16,7 @@ import './updater.css';
  * 动态发布器
  */
 class Updater extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     defaultGroup: PropTypes.string,
     projectId: PropTypes.string,
   };
@@ -43,7 +43,7 @@ class Updater extends React.Component<any, any> {
 
   _isMounted = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     this._isMounted = true;
     const comp = this;
     $('.myUpdateItem_Content a').each(function (this: HTMLElement) {
@@ -63,7 +63,7 @@ class Updater extends React.Component<any, any> {
     $('#hidden_UpdaterType').val('0');
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     if (
       nextState.temporaryData.length !== this.state.temporaryData.length ||
       nextState.kcAttachmentData.length !== this.state.kcAttachmentData.length ||
@@ -84,7 +84,7 @@ class Updater extends React.Component<any, any> {
     return false;
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this._isMounted = false;
   }
 
@@ -202,7 +202,7 @@ class Updater extends React.Component<any, any> {
 
   handleSelectGroup = value => this.setState({ shareGroup: value });
 
-  render() {
+  override render() {
     const { shareGroup } = this.state;
 
     return (

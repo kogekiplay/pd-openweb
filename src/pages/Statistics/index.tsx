@@ -108,10 +108,10 @@ export default class Statistics extends Component<any, any> {
       showSelf,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     setTimeout(this.getReportConfigList, 250);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     if (this.request) {
       this.request.abort();
@@ -355,7 +355,7 @@ export default class Statistics extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { dialogVisible, newReport, loading, reports, ownerId } = this.state;
     const { worksheetId, viewId, appId, projectId, permissionType } = this.props;
     return (

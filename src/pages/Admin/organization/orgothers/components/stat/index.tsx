@@ -120,7 +120,7 @@ export default class Stat extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { activeTab } = this.state;
     return (
       <Fragment>

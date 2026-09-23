@@ -215,7 +215,7 @@ const WorkSheetContainer = props => {
 };
 
 class WorkSheet extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     sheetList: PropTypes.arrayOf(PropTypes.shape({})),
     sheetListLoading: PropTypes.bool,
   };
@@ -228,7 +228,7 @@ class WorkSheet extends Component<any, any> {
     };
     this.handleMingoCreateRecord = this.handleMingoCreateRecord.bind(this);
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { match, updateBase } = this.props;
     const { body } = document;
 
@@ -264,7 +264,7 @@ class WorkSheet extends Component<any, any> {
     window.isWorksheet = true;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { updateBase, worksheetId, updateWorksheetLoading, views } = this.props;
 
@@ -331,10 +331,10 @@ class WorkSheet extends Component<any, any> {
       // 应用色现在由 AppThemeScope 按路由统一给。
     }
   }
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     return nextProps.sheetListLoading !== this.props.sheetListLoading || !/\/app\/[\w-]+$/.test(location.pathname);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { updateWorksheetLoading } = this.props;
     const { body } = document;
 
@@ -407,7 +407,7 @@ class WorkSheet extends Component<any, any> {
 
     return id;
   }
-  render() {
+  override render() {
     const { sheetList = [], match, appPkg, isCharge, sheetListLoading, sheetListIsUnfold } = this.props;
     const { projectId, currentPcNaviStyle } = appPkg;
     const { navWidth, dragMaskVisible, createRecordSideMaskVisible, createRecordSideMaskBase } = this.state;

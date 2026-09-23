@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import WorkSheet from './WorkSheet';
 
 export default class KcEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppWorkSheet');
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppWorkSheet');
   }
-  render() {
+  override render() {
     return <WorkSheet />;
   }
 }

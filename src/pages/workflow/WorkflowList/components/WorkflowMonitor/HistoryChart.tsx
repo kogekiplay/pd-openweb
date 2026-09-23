@@ -17,7 +17,7 @@ export default class HistoryChart extends PureComponent<any, any> {
     this.lineChart = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     import('@antv/g2plot').then(data => {
       this.g2plotComponent = data;
       this.renderChart();
@@ -262,7 +262,7 @@ export default class HistoryChart extends PureComponent<any, any> {
     this.setState({ accumulateAdd, accumulateConsumer });
   };
 
-  render() {
+  override render() {
     const { showDate, loadingChart, accumulateAdd, accumulateConsumer } = this.state;
 
     return (

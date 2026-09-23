@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import WorksheetShareLand from './pages/WorksheetShareLand';
 
 export default class WorksheetShareLandEntry extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('WorksheetShareApp');
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('WorksheetShareApp');
   }
-  render() {
+  override render() {
     return <WorksheetShareLand worksheetId={this.props.match.params.id} />;
   }
 }

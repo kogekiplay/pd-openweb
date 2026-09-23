@@ -8,7 +8,7 @@ export default class CalendarMain extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { calendar, change, addCalendarMember, changePrivacy, callback } = this.props;
     const {
       id,

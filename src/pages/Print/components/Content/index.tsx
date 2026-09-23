@@ -80,11 +80,11 @@ export default class Con extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.loadWorksheetShortUrl();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (_.get(prevProps, ['printData', 'shareType']) !== _.get(this.props, ['printData', 'shareType'])) {
         this.loadWorksheetShortUrl(this.props);
@@ -1187,7 +1187,7 @@ export default class Con extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { shareUrl } = this.state;
     const { printData, controls, signature, params } = this.props;
     const { workflow = [], approval = [], attributeName, advanceSettings = [] } = printData;

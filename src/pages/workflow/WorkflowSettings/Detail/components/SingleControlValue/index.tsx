@@ -46,7 +46,7 @@ export default class SingleControlValue extends Component<any, any> {
   cacheFile = [];
   updateComponentsKeyMaps = {};
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.item.fieldId !== prevProps.item.fieldId) {
         this.cacheFile = [];
@@ -436,7 +436,7 @@ export default class SingleControlValue extends Component<any, any> {
     this.setState({ keywords });
   }, 500);
 
-  render() {
+  override render() {
     const { controls, item, i, hideOtherField, selectNodeType, moreNodesMenuStyle, hideUserMoreObject } = this.props;
     const { isUploading, search, keywords } = this.state;
     const formulaMap = _.cloneDeep(this.props.formulaMap);

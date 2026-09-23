@@ -18,7 +18,7 @@ class Chat extends Component<{ dispatch: AppDispatch; [key: string]: any }, any>
   constructor(props) {
     super(props);
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (location.href.includes('chat_window')) return;
 
     // 注册事件
@@ -88,7 +88,7 @@ class Chat extends Component<{ dispatch: AppDispatch; [key: string]: any }, any>
       );
     }
   };
-  render() {
+  override render() {
     const { toolbarConfig } = this.props;
     const { isOpenMessageList, isOpenCommonApp, sessionListVisible, hideOpenCommonApp } = toolbarConfig;
     const showMingo = !md.global.SysSettings.hideAIBasicFun;

@@ -24,7 +24,7 @@ export default class AppFilter extends Component<any, any> {
       processId: undefined,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     api.getAllHomeApp().then(data => {
       this.setState({
         dataSource: data.validProject,
@@ -33,7 +33,7 @@ export default class AppFilter extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.apkId !== prevProps.apkId && _.isEmpty(this.props.apkId)) {
         this.setState({
@@ -201,7 +201,7 @@ export default class AppFilter extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { app, menuVisible } = this.state;
     const { apkId } = this.props;
     return (

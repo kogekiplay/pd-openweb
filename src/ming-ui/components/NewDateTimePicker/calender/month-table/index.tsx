@@ -58,7 +58,7 @@ class MonthTable extends Component<any, any> {
     return trList;
   };
 
-  render() {
+  override render() {
     const trList = this.renderBodyList();
 
     return (

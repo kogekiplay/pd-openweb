@@ -60,7 +60,7 @@ export default class LineChart extends React.Component<any, any> {
     this.g2plotComponent = null;
     this.isMountedComponent = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.isMountedComponent = true;
     loadG2Plot().then(data => {
       if (!this.isMountedComponent) return;
@@ -69,7 +69,7 @@ export default class LineChart extends React.Component<any, any> {
       this.renderChart();
     });
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (
       this.g2plotComponent &&
       (!_.isEqual(prevProps.data, this.props.data) ||
@@ -80,7 +80,7 @@ export default class LineChart extends React.Component<any, any> {
       this.renderChart();
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isMountedComponent = false;
     this.destroyChart();
   }
@@ -445,7 +445,7 @@ export default class LineChart extends React.Component<any, any> {
     this.chartType = type;
     this.chart.render();
   };
-  render() {
+  override render() {
     return <div className="w100 h100" ref={ele => { this.lineChartEle = ele; }}></div>;
   }
 }

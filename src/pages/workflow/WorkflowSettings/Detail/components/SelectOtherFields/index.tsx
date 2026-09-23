@@ -13,7 +13,7 @@ import ActionFields from '../ActionFields';
 import './index.less';
 
 export default class SelectOtherFields extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isFilter: PropTypes.bool,
     sourceNodeId: PropTypes.string,
     fieldsVisible: PropTypes.bool,
@@ -65,7 +65,7 @@ export default class SelectOtherFields extends Component<any, any> {
    * 获取更多控件的值
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.item, prevProps.item) || this.props.sourceAppId !== prevProps.sourceAppId) {
         this.setState({
@@ -282,7 +282,7 @@ export default class SelectOtherFields extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { item, openLayer } = this.props;
 
     return (

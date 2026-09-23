@@ -55,7 +55,7 @@ export default class extends Component<any, any> {
       sessionId: Date.now().toString(),
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { action, instance, projectId } = this.props;
     const { encrypt } = (instance || {}).flowNode || {};
 
@@ -72,7 +72,7 @@ export default class extends Component<any, any> {
     this.getOperationDetail();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionHandler && this.actionHandler.close();
   }
 
@@ -708,7 +708,7 @@ export default class extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { backFlowNodesVisible, edit } = this.state;
     const { visible, onHide } = this.props;
     return (

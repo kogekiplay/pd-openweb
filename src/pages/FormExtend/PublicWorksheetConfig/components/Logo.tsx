@@ -44,7 +44,7 @@ const ImgCon = styled.div`
   }
 `;
 export default class Logo extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     url: PropTypes.string,
     onChange: PropTypes.func,
   };
@@ -75,7 +75,7 @@ export default class Logo extends React.Component<any, any> {
     onChange('');
   };
 
-  render() {
+  override render() {
     const { url } = this.props;
     const { isUploading } = this.state;
     return (

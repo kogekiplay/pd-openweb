@@ -31,7 +31,7 @@
     // 所以直接写死，不走任何名单。之后每清完一个开关的欠债就往这里挪一个。
     // 剩下的按代价从低到高（数字是当时实测的增量）：strictBindCallApply 2 / useUnknownInCatchVariables 22 /
     // strictFunctionTypes 23 / noUnusedLocals 34 / noImplicitThis 431 / noImplicitReturns 647 /
-    // noUnusedParameters 730 —— 以上都已打开 —— noImplicitOverride 2900 /
+    // noUnusedParameters 730 / noImplicitOverride 2900 —— 以上都已打开 ——
     // strictNullChecks 10764 / noImplicitAny 38544。
     "alwaysStrict": true,
     "noFallthroughCasesInSwitch": true,
@@ -70,6 +70,10 @@
     // 删了后面的参数会错位；删末尾的会改函数 length（React.forwardRef 的渲染函数 dev 下查参数个数）。
     // 新报出来的先想「是不是该用却没用」—— 这一轮就查出条码打印的 pixelRadio 从来没传进 BarLabel（见 PrintQrBarCode/util.ts）。
     "noUnusedParameters": true,
+    // 2900 处补完后打开（2026-09-23），全是 React Component / PureComponent 子类的 render、生命周期、state。
+    // override 是纯类型修饰符，babel 原样擦掉：改前改后 1153 个文件的转译产物逐字节相同（tools/codemod-override.ts）。
+    // 它的价值在以后：基类改名 / 删掉某个生命周期时，子类里那个悄悄变成「普通方法、再也不会被调用」的成员会当场报错。
+    "noImplicitOverride": true,
 
     // R1 配对开关：.babelrc 的 onlyRemoveTypeImports:true 会把
     // `import { SomeType } from './x'` 原样保留到产物；verbatimModuleSyntax 用 TS1484

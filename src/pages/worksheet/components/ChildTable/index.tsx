@@ -49,7 +49,7 @@ export default class extends React.Component<any, any> {
     this.bindSubscribe();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.control.store && this.props.control.store !== this.store) {
         this.store = this.props.control.store;
@@ -59,7 +59,7 @@ export default class extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (isFunction(get(this, 'props.control.setLoadingInfo'))) {
       this.props.control.setLoadingInfo('loadRows_' + this.props.control.controlId, false);
     }
@@ -94,7 +94,7 @@ export default class extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { registerCell = () => {} } = this.props;
     return (
       <Provider store={this.store}>

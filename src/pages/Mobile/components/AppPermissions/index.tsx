@@ -99,7 +99,7 @@ export class AppPermissionsInfo extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { appStatus } = this.props;
     const { isAppActioning } = this.state;
     const info = STATUS_TO_TEXT[appStatus] || STATUS_TO_TEXT[2];
@@ -189,7 +189,7 @@ const appPermissions = Component => {
         },
       });
     };
-    componentDidMount() {
+    override componentDidMount() {
       const { params, path } = this.props.match;
       const { appId } = params;
 
@@ -273,7 +273,7 @@ const appPermissions = Component => {
           });
         });
     };
-    render() {
+    override render() {
       const { params } = this.props.match;
       const { loading, appStatus, fixedData } = this.state;
       const isNoPublish = window.isMingDaoApp ? fixedData.appDisplay : fixedData.webMobileDisplay;

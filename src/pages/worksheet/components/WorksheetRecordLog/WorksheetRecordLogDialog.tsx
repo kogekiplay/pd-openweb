@@ -9,7 +9,7 @@ import WorksheetRocordLog from './WorksheetRocordLog';
 import './WorksheetRecordLogDialog.less';
 
 class WorksheetRecordLogDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: PropTypes.string,
     controls: PropTypes.array,
     visible: PropTypes.bool,
@@ -26,7 +26,7 @@ class WorksheetRecordLogDialog extends Component<any, any> {
       this.logRef.current.handleScroll();
     }
   });
-  render() {
+  override render() {
     const { appId, controls, visible, onClose, worksheetId, filterUniqueIds, rowId } = this.props;
     if (!worksheetId || !filterUniqueIds || !appId) return null;
 

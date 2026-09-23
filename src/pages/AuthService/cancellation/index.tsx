@@ -28,10 +28,10 @@ export default class Cancellation extends Component<any, any> {
     this.timer = null;
     this.loginStateTimer = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.checkLogoutStatus();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
@@ -242,7 +242,7 @@ export default class Cancellation extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { loading } = this.state;
 
     const { step } = this.state;

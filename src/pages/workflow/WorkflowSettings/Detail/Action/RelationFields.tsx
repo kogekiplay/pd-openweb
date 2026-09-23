@@ -69,7 +69,7 @@ export default class RelationFields extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { data, SelectNodeObjectChange, updateSource } = this.props;
 
     return (

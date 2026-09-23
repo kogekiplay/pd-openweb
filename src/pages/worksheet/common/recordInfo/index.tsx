@@ -4,10 +4,10 @@ import _ from 'lodash';
 import RecordInfo from './RecordInfoWrapper';
 
 export default class Record extends React.Component<any, any> {
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     return this.props.recordId !== nextProps.recordId;
   }
-  render() {
+  override render() {
     return <RecordInfo {...this.props} />;
   }
 }

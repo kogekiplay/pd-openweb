@@ -29,7 +29,7 @@ let UpgradeService = class UpgradeService extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     //是否可以升级
     projectController
       .getProjectLicenseSupportInfo({
@@ -163,7 +163,7 @@ let UpgradeService = class UpgradeService extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const {
       step,
       totalPrice,

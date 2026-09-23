@@ -19,7 +19,7 @@ class WorkflowStepItem extends Component<any, any> {
       visible: false,
     };
   }
-  render() {
+  override render() {
     const { visible } = this.state;
     const { appId, instance, worksheetId, recordId, controls = [], hideStep = false } = this.props;
     const { works, currentWork, currentWorkItem, processId, status, isApproval } = instance;

@@ -589,7 +589,7 @@ let ChartSetting = class ChartSetting extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { currentReport, axisControls, projectId, worksheetInfo, filterItem, sourceType } = this.props;
     const { reportType, displaySetup, filter } = currentReport;
     const { x, y } = getAxisText(reportType, displaySetup ? displaySetup.showChartType : null);

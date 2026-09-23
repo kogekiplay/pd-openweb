@@ -73,7 +73,7 @@ const declareConfirm = Component => {
         declareModal: false,
       };
     }
-    componentDidMount() {
+    override componentDidMount() {
       const { confirm } = this.state;
 
       if (confirm) {
@@ -233,7 +233,7 @@ const declareConfirm = Component => {
       );
     }
 
-    render() {
+    override render() {
       const { loading, confirm } = this.state;
 
       if (loading) {

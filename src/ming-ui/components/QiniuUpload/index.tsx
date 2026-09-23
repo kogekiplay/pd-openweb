@@ -5,7 +5,7 @@ import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
 
 export default class QiniuUpload extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: PropTypes.string,
     bucket: PropTypes.number,
     options: PropTypes.shape({}),
@@ -19,7 +19,7 @@ export default class QiniuUpload extends React.Component<any, any> {
     onUploadComplete: PropTypes.func,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const {
       options,
       onInit = () => {},
@@ -77,13 +77,13 @@ export default class QiniuUpload extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.uploader) {
       this.uploader.destroy();
     }
   }
 
-  render() {
+  override render() {
     const { className, children } = this.props;
     return (
       <div className={`InlineBlock ${className || ''}`} ref={con => { this.upload = con; }}>

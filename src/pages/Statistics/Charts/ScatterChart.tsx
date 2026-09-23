@@ -107,7 +107,7 @@ export default class extends Component<any, any> {
     this.g2plotComponent = null;
     this.isUnmounted = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     Promise.all([loadG2Plot(), import('@antv/util')]).then(data => {
       if (this.isUnmounted) {
         return;
@@ -118,11 +118,11 @@ export default class extends Component<any, any> {
       this.renderScatterChart(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     this.destroyScatterChart();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { displaySetup, style } = this.props.reportData;
     const { displaySetup: oldDisplaySetup, style: oldStyle } = prevProps.reportData;
     const shouldRecreate = this.props.isLinkageData !== prevProps.isLinkageData;
@@ -592,7 +592,7 @@ export default class extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { count, originalCount, dropdownVisible, offset } = this.state;
     const { summary, displaySetup = {} } = this.props.reportData;
     return (

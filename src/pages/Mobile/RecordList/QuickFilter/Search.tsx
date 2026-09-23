@@ -57,7 +57,7 @@ class Search extends Component<any, any> {
       filterIndex: 0,
     };
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.updateFilters({ keyWords: '', quickFilterKeyWords: '', requestParams: {} });
   }
   handleVisibleChange = () => {
@@ -115,7 +115,7 @@ class Search extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { filterIndex } = this.state;
     const { updateFilters, updateQuickFilter, filters, sheetView, textFilters, viewType, base, inputPlaceholder } =
       this.props;

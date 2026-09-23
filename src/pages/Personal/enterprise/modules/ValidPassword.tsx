@@ -69,7 +69,7 @@ export default class ValidPassWord extends Component<any, any> {
     new captcha(throttled);
   }
 
-  render() {
+  override render() {
     const { disabled } = this.state;
     return (
       <div className="pTop15 pBottom15 TxtLeft">

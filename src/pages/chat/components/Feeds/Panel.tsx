@@ -52,7 +52,7 @@ export default class FeedsPanel extends Component<any, any> {
       feeds: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getFeed();
   }
   handleScrollEnd() {
@@ -84,7 +84,7 @@ export default class FeedsPanel extends Component<any, any> {
         });
       });
   }
-  render() {
+  override render() {
     const { feeds, loading } = this.state;
     return (
       <div className="ChatPanel-FeedsPanel">

@@ -68,7 +68,7 @@ class TaskDetail extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
     if (this.props.visible && this.state.taskId) {
       this.init();
@@ -76,7 +76,7 @@ class TaskDetail extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.visible &&
@@ -139,7 +139,7 @@ class TaskDetail extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
     if (this.props.openType === OPEN_TYPE.slide) {
       $('#tasks').removeClass('slideDetail');
@@ -610,7 +610,7 @@ class TaskDetail extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { visible, openType } = this.props;
 
     if (!visible) {

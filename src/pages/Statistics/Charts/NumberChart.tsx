@@ -310,11 +310,11 @@ export default class extends Component<any, any> {
       presetBgImageIndex: null,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.updatePresetBgImage();
     this.updateNumberHeader();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (this.getPresetBgImageIndex(prevProps) !== this.getPresetBgImageIndex(this.props)) {
       this.updatePresetBgImage();
     }
@@ -325,7 +325,7 @@ export default class extends Component<any, any> {
       this.updateNumberHeader();
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
   }
   getPresetBgImageIndex = props => {
@@ -777,7 +777,7 @@ export default class extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { mobileCount = 1, layoutType, reportData, sourceType, isThumbnail, customPageConfig } = this.props;
     const { pageStyleType = 'light' } = customPageConfig;
     const isDark = window.themeMode === 'dark' || (pageStyleType === 'dark' && isThumbnail);

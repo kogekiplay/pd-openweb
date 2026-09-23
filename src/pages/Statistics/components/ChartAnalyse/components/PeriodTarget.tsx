@@ -10,7 +10,7 @@ export default class PeriodTarget extends Component<any, any> {
       lifecycleValue: Number(value.replace(/[^\d.]/g, '')),
     });
   };
-  render() {
+  override render() {
     const { currentReport } = this.props;
     const { displaySetup } = currentReport;
     return (

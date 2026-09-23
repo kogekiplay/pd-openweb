@@ -59,7 +59,7 @@ class Discuss extends Component<any, any> {
       focusUsers: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { params } = this.props.match;
 
     if (_.isEmpty(params.rowId)) {
@@ -79,7 +79,7 @@ class Discuss extends Component<any, any> {
       });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.sheetDiscussions, prevProps.sheetDiscussions)) {
         this.setState(
@@ -234,7 +234,7 @@ class Discuss extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { isModal, onClose, originalData, discussionCount, projectId } = this.props;
     const { params } = this.props.match;
     const { appId, worksheetId, rowId } = params;

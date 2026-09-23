@@ -443,7 +443,7 @@ class UserItem extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       user,
       isChecked,

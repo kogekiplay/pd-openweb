@@ -51,7 +51,7 @@ interface ControlGroup {
 export default class Condition extends Component<any, any> {
   // 纯类型声明（babel 的 TS preset 整条抹掉）；不能写成有初值的类字段，那会覆盖 ref 回调写进去的值
   declare cityPickerSearchRef: any;
-  static propTypes = {
+  static override propTypes = {
     processId: PropTypes.string,
     selectNodeId: PropTypes.string,
     sourceAppId: PropTypes.string,
@@ -105,7 +105,7 @@ export default class Condition extends Component<any, any> {
     this.cityPickerSearchRef = React.createRef();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.controls, prevProps.controls)) {
         this.setState({
@@ -1489,7 +1489,7 @@ export default class Condition extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { Header, data } = this.props;
 
     return (

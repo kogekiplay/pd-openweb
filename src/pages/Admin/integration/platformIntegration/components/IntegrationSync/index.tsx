@@ -107,7 +107,7 @@ export default class IntegrationSync extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId, step, integrationType, syncDisabled, featureType, featureId } = this.props;
     const {
       loading,

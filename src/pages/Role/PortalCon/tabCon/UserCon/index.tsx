@@ -98,7 +98,7 @@ class Con extends React.Component<any, any> {
       keywords: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { portal = {} } = this.props;
     const { roleList = [], quickTag } = portal;
     const listType = _.get(this.props, ['match', 'params', 'listType']);
@@ -116,7 +116,7 @@ class Con extends React.Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { portal = {} } = prevProps;
       const { roleList = [] } = portal;
@@ -343,7 +343,7 @@ class Con extends React.Component<any, any> {
       </React.Fragment>
     );
   };
-  render() {
+  override render() {
     return (
       <Wrap className="flexRow">
         <WrapNav className="flexColumn">{this.renderNav()}</WrapNav>

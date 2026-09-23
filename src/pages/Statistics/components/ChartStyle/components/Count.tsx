@@ -11,7 +11,7 @@ export class Count extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const {
       reportType,
       smallTitle,

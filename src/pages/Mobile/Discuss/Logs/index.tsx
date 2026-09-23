@@ -14,7 +14,7 @@ class Logs extends Component<any, any> {
     this.state = {};
   }
 
-  render() {
+  override render() {
     const { appId, worksheetId, rowId, originalData, refreshDiscussCount } = this.props;
     return (
       <LogsContent>

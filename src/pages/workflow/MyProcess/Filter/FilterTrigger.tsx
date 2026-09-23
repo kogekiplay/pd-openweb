@@ -31,7 +31,7 @@ export default class Filter extends Component<any, any> {
     e.stopPropagation();
     this.props.handleClear();
   };
-  render() {
+  override render() {
     const { visible } = this.props;
     const length = this.getFilterLength();
     return (

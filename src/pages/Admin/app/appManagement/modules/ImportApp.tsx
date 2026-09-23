@@ -41,7 +41,7 @@ export default class ImportApp extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.initUpload();
   }
 
@@ -282,7 +282,7 @@ export default class ImportApp extends React.Component<any, any> {
     return undefined;
   }
 
-  render() {
+  override render() {
     const { matchOffice, step } = this.state;
     return (
       <div className="importAppContainer">

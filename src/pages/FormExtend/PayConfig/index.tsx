@@ -132,7 +132,7 @@ export default class PayConfig extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -549,7 +549,7 @@ export default class PayConfig extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { worksheetInfo = {} } = this.props;
     const { projectId } = worksheetInfo;
     const {

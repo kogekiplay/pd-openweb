@@ -159,7 +159,7 @@ const confirmClick = props => {
 };
 
 export default class CustomButtons extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     iseditting: PropTypes.bool,
     isBatchOperate: PropTypes.bool,
     type: PropTypes.string,
@@ -195,12 +195,12 @@ export default class CustomButtons extends React.Component<any, any> {
     onButtonTriggerFail: () => {},
   };
 
-  state = {};
+  override state = {};
 
-  componentDidMount() {
+  override componentDidMount() {
     emitter.on('RECORD_WORKFLOW_UPDATE', this.handleRecordWorkflowUpdate);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     emitter.off('RECORD_WORKFLOW_UPDATE', this.handleRecordWorkflowUpdate);
   }
 
@@ -904,7 +904,7 @@ export default class CustomButtons extends React.Component<any, any> {
     return undefined;
   };
 
-  render() {
+  override render() {
     const {
       type = 'button',
       showMore,

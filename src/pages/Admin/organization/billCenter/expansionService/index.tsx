@@ -256,7 +256,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
     };
   } //获取余额
 
-  componentDidMount() {
+  override componentDidMount() {
     const { workflowType, dataSyncType } = this.state;
 
     const licenseType = _.get(Config.project || {}, 'licenseType');
@@ -1456,7 +1456,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       step,
       totalPrince,

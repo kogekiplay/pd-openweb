@@ -42,7 +42,7 @@ const verificationDataLength = Component => {
 
       return false;
     }
-    render() {
+    override render() {
       return this.isOverload ? <Overload /> : <Component {...this.props} />;
     }
   }

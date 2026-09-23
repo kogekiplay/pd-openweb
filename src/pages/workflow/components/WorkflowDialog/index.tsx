@@ -4,7 +4,7 @@ import { FullScreenCurtain } from 'ming-ui';
 import WorkflowSettings from '../../WorkflowSettings';
 
 export default class WorkflowDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     needChat: bool,
     flowId: string,
     onBack: func,
@@ -15,7 +15,7 @@ export default class WorkflowDialog extends Component<any, any> {
     onBack: () => {},
   };
 
-  render() {
+  override render() {
     const { flowId, needChat, onBack } = this.props;
     const match = {
       params: {

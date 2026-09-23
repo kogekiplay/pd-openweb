@@ -382,7 +382,7 @@ class TaskNavigation extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 有缓存数据先呈现
     if (!_.isEmpty(this.props.topFolderDataSource)) {
       this.renderSlideTopFolder(this.props.topFolderDataSource);
@@ -392,7 +392,7 @@ class TaskNavigation extends Component<any, any> {
     this.bindTaskNavAllEvents();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.taskConfig.filterUserId !== prevProps.taskConfig.filterUserId) {
         setTimeout(() => {
@@ -2292,7 +2292,7 @@ class TaskNavigation extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { showFolderTemplate, showCopyFolder, folderId, projectId, chargeUser, folderName, isAdmin } = this.state;
 
     return (

@@ -177,7 +177,7 @@ class EarlyWarningDialog extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { type = 'balance', isWarning, onCancel = () => {}, closeWarning = () => {} } = this.props;
     const { notifiers = [], warningValue, noticeTypes, overLimit } = this.state;
     const isWorkflow = type === 'workflow';

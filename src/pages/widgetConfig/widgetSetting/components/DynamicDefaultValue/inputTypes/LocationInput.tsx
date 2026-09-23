@@ -17,7 +17,7 @@ export default class LocationInput extends Component<any, any> {
     const { defaultType } = this.props;
     defaultType && this.$wrap.triggerClick();
   };
-  render() {
+  override render() {
     const { defaultType, enumDefault2, advancedSetting = {}, dynamicValue = [], onDynamicValueChange } = this.props;
     const staticValue = _.get(dynamicValue, '0.staticValue');
     return (

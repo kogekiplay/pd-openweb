@@ -13,7 +13,7 @@ export default class MembersDepartments extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { currentTab, showHeader } = this.state;
     const projectId = Config.projectId;
 

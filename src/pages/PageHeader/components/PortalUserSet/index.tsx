@@ -41,7 +41,7 @@ export default class PortalUserSet extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getInfo();
   }
 
@@ -120,7 +120,7 @@ export default class PortalUserSet extends Component<any, any> {
     return account.getAccountListInfo({});
   }
 
-  render() {
+  override render() {
     const { iconColor = 'var(--color-primary)', showUserInfo, currentData, baseInfo, showBind } = this.state;
     const { isMobile, noAvatar, currentPcNaviStyle, appId, projectId, originalLang } = this.props;
     const color = this.props.iconColor || iconColor;

@@ -467,7 +467,7 @@ export default class ImportDeptAndRole extends Component<any, any> {
       );
     }
   };
-  render() {
+  override render() {
     const { txt, clickBackList = () => {} } = this.props;
     const { actionResultStatus } = this.state;
     return (

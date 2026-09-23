@@ -89,7 +89,7 @@ export default class InboxFilter extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (_.isEmpty(this.props.filter)) {
         this.setState({
@@ -180,7 +180,7 @@ export default class InboxFilter extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { inboxType } = this.props;
     const { userValue, timeLevel } = this.state;
     return (

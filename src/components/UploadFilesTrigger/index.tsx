@@ -36,13 +36,13 @@ export default class UploadFilesTrigger extends Component<any, any> {
     };
     this.id = props.id || generateRandomPassword(16);
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.popupVisible) {
       this.setTriggerPanelVisible(true);
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (_.isBoolean(this.props.popupVisible) && this.props.popupVisible !== prevProps.popupVisible) {
         this.setTriggerPanelVisible(this.props.popupVisible);
@@ -200,7 +200,7 @@ export default class UploadFilesTrigger extends Component<any, any> {
       </ClickAwayable>
     );
   }
-  render() {
+  override render() {
     const { visible } = this.state;
     const { children, getPopupContainer, offset, noWrap, autoDestroy, ...uploadFilesProps } = this.props;
     return (

@@ -8,7 +8,7 @@ import { DEFAULT_COLUMNS } from '../../enum';
 import RelateBox from './RelateBox';
 
 export default class RelateFilter extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     values: PropTypes.arrayOf(PropTypes.string),
     onChange: PropTypes.func,
@@ -75,7 +75,7 @@ export default class RelateFilter extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       disabled,
       currentColumns = [],

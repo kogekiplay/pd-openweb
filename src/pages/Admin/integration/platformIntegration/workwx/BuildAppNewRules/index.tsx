@@ -141,13 +141,13 @@ export default class BuildAppNewRules extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.status !== 0 && this.geterwima();
   }
 
   // 获取二维码链接
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.status, this.props.status)) {
         this.setState({
@@ -232,7 +232,7 @@ export default class BuildAppNewRules extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     let { step } = this.state;
     return (
       <BuildAppBox>

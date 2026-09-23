@@ -29,7 +29,7 @@ const PublicqueryHeader = styled.div`
   }
 `;
 class WorksheetShareHeader extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     switchSearch: PropTypes.func,
     pageSize: PropTypes.number,
     filterControls: PropTypes.array,
@@ -94,7 +94,7 @@ class WorksheetShareHeader extends React.Component<any, any> {
     saveAs(blob, `${publicqueryRes.title}_${date}.xlsx`);
   };
 
-  render() {
+  override render() {
     const { publicqueryRes = {}, exported = false, switchSearch, appId, projectId } = this.props;
 
     return (

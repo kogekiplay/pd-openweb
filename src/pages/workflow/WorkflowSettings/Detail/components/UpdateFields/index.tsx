@@ -147,7 +147,7 @@ export default class UpdateFields extends Component<any, any> {
     this.props.updateSource({ fields });
   }
 
-  render() {
+  override render() {
     const {
       controls,
       fields,

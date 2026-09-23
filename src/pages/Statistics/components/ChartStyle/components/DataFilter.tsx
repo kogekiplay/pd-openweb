@@ -16,7 +16,7 @@ export default class DataFilter extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.showXAxisCount !== prevProps.showXAxisCount) {
         this.setState({
@@ -59,7 +59,7 @@ export default class DataFilter extends Component<any, any> {
       this.props.onChange(showXAxisType ? Math.abs(count) : -Math.abs(count));
     }
   };
-  render() {
+  override render() {
     const { className } = this.props;
     const { count, showXAxisType } = this.state;
     return (

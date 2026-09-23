@@ -41,7 +41,7 @@ const defaultState = {
 };
 
 export default class ProjectGroups extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: PropTypes.string,
   };
 
@@ -65,13 +65,13 @@ export default class ProjectGroups extends React.Component<any, any> {
     this.updateGroupModel = this.updateGroupModel.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState(defaultState, this.fetch.bind(this));
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.abortRequest();
   }
 
@@ -274,7 +274,7 @@ export default class ProjectGroups extends React.Component<any, any> {
     return <GroupDetail group={selectedGroup} groupStatus={groupStatus} updateGroupModel={this.updateGroupModel} />;
   }
 
-  render() {
+  override render() {
     const { listData, isLoading, selectedGroupId, keywords } = this.state;
     return (
       <React.Fragment>

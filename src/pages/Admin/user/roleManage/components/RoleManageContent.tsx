@@ -92,7 +92,7 @@ class RoleManageContent extends Component<any, any> {
     this.props.updateUserPageIndex(page);
     this.props.getUserList({ pageIndex: page, roleId: currentRole.organizeId });
   };
-  render() {
+  override render() {
     const { currentRole, allUserCount, userPageIndex, userLoading, selectUserIds, userList, projectId } = this.props;
     return (
       <Fragment>

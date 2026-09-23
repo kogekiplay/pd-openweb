@@ -28,7 +28,7 @@ export default class SecuritySetting extends Component<any, any> {
       loading: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
   getData() {
@@ -254,7 +254,7 @@ export default class SecuritySetting extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       isTwoauthentication,
       openWeixinLogin,

@@ -31,7 +31,7 @@ const initialState = {
 };
 
 class ImageViewer extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     src: PropTypes.string,
     onError: PropTypes.func,
     con: PropTypes.object,
@@ -60,11 +60,11 @@ class ImageViewer extends React.Component<any, any> {
     quotiety: 0.2, // 放大、缩小系数
   };
 
-  state = { ...initialState };
+  override state = { ...initialState };
 
   _isMounted = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     this._isMounted = true;
     let src;
 
@@ -85,7 +85,7 @@ class ImageViewer extends React.Component<any, any> {
     window.addEventListener('wheel', this.onWheel, { passive: false });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.src !== this.props.src) {
       let src;
 
@@ -104,7 +104,7 @@ class ImageViewer extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     document.removeEventListener('mouseup', this.stopDrag);
     document.removeEventListener('touchend', this.stopDrag);
     document.removeEventListener('mousemove', this.mouseMove);
@@ -369,7 +369,7 @@ class ImageViewer extends React.Component<any, any> {
     return height * scale > rect.height || width * scale > rect.width;
   }
 
-  render() {
+  override render() {
     const { canDownload } = this.props;
     const width = this.state.originSize ? this.state.originSize.width : 0;
     const { scale, left, top, rotate, dragStart } = this.state;

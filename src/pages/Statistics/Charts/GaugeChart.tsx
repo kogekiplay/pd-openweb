@@ -129,7 +129,7 @@ export default class extends Component<any, any> {
     this.isUnmounted = false;
     this.renderTimer = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     loadG2Plot().then(data => {
       if (this.isUnmounted) {
         return;
@@ -139,12 +139,12 @@ export default class extends Component<any, any> {
       this.renderGaugeChart(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     clearTimeout(this.renderTimer);
     this.destroyGaugeChart();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { displaySetup, style } = this.props.reportData;
     const { displaySetup: oldDisplaySetup, style: oldStyle } = prevProps.reportData;
     const shouldRecreate =
@@ -454,7 +454,7 @@ export default class extends Component<any, any> {
 
     return base;
   }
-  render() {
+  override render() {
     return (
       <div className="flex flexColumn chartWrapper">
         <div className="h100" ref={el => { this.chartEl = el; }}></div>

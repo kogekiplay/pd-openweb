@@ -19,7 +19,7 @@ export default class FolderTemplate extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     ajaxRequest.getTemplateTypes({ appid: this.props.appId }).then(source => {
       this.setState({
         selectType: source.data.templateType[0].templateTypeId,
@@ -29,7 +29,7 @@ export default class FolderTemplate extends Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('#folderTemplate_mask, #folderTemplate_container').remove();
   }
 
@@ -110,7 +110,7 @@ export default class FolderTemplate extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const templateType = this.state.templateType;
     const templates = this.state.templates;
     const TYPE_NAME = {

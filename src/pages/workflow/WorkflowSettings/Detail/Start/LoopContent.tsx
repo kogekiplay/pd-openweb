@@ -781,7 +781,7 @@ export default class LoopContent extends Component<any, any> {
     return `UTC${timeZone > 0 ? '+' : '-'}${timeZone / 60}`;
   };
 
-  render() {
+  override render() {
     const { data, updateSource } = this.props;
     const { isOldCustom } = this.state;
     const list = [

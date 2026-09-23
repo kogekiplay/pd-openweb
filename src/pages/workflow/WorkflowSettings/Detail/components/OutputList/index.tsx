@@ -318,7 +318,7 @@ export default class OutputList extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { data, updateSource, outputType } = this.props;
 
     return (

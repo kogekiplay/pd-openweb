@@ -17,13 +17,13 @@ class Root extends React.Component<any, any> {
     this.state = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (location.href.indexOf('importusers') > -1) {
       this.props.updateShowExport(true);
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.isShowExport !== prevProps.isShowExport) {
         this.props.handleShowHeader(!this.props.isShowExport);
@@ -31,7 +31,7 @@ class Root extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { isShowExport, importExportType, authority = [] } = this.props;
 
     return (

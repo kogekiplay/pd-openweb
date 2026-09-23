@@ -14,20 +14,20 @@ const getDays = data =>
   data.sub.reduce((prev, curr) => prev + moment(`${data.pub}${curr}`, 'YYYYM月').daysInMonth(), 0);
 
 export default class TimeHeader extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     const timeBox = document.querySelectorAll('.pubTime');
     this.props.getPosList(timeBox);
   }
-  componentDidUpdate() {
+  override componentDidUpdate() {
     const timeBox = document.querySelectorAll('.pubTime');
     this.props.getPosList(timeBox);
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     return !_.isEqual(this.props.time, nextProps.time);
   }
 
-  render() {
+  override render() {
     const { time, type } = this.props;
     const width = TYPE_TO_WIDTH[type];
     let pubWidth, subWidth;

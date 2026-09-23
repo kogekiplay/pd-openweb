@@ -48,7 +48,7 @@ export default class DepartmentInput extends Component<any, any> {
     const { defaultType } = this.props;
     defaultType && this.$wrap.triggerClick();
   };
-  render() {
+  override render() {
     const { defaultType } = this.props;
     return (
       <DynamicValueInputWrap>

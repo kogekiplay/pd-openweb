@@ -99,7 +99,7 @@ class MultipleDropdownMenu extends Component<any, any> {
     });
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.init(this.props);
   }
 
@@ -107,7 +107,7 @@ class MultipleDropdownMenu extends Component<any, any> {
    * 递归查找指定选项
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         this.initValue(this.props);
@@ -374,7 +374,7 @@ class MultipleDropdownMenu extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     /**
      * 清空按钮
      */

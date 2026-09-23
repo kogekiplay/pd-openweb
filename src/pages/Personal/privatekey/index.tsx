@@ -54,7 +54,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     this.licenseListRequestId = 0;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (!this.state.isApply) {
       this.getLicenseList();
     }
@@ -248,7 +248,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { activeProduct, isApply } = this.state;
     return (
       <div className="card personalEntrypointWrapper">

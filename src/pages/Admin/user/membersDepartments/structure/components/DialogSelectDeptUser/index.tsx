@@ -18,7 +18,7 @@ export default class SelectDeptUser extends Component<any, any> {
       loading: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -76,7 +76,7 @@ export default class SelectDeptUser extends Component<any, any> {
     onCancel();
   };
 
-  render() {
+  override render() {
     const { visible, onCancel = () => {} } = this.props;
     const { dataList, loading, selectedUsersIds, keywords = '' } = this.state;
 

@@ -8,7 +8,7 @@ import { getTabTypeBySelectUser } from 'src/pages/worksheet/common/WorkSheetFilt
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
 export default class Users extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     projectId: PropTypes.string,
     onChange: PropTypes.func,
@@ -195,7 +195,7 @@ export default class Users extends Component<any, any> {
       );
     }
   }
-  render() {
+  override render() {
     const { disabled } = this.props;
     const { users } = this.state;
     return (

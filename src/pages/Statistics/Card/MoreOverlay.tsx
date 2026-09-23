@@ -25,7 +25,7 @@ export default class MoreOverlay extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.favorite !== prevProps.favorite) {
         this.setState({
@@ -383,7 +383,7 @@ export default class MoreOverlay extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { shareVisible, showPageMove, dropdownVisible, placement } = this.state;
     const {
       appId,

@@ -78,7 +78,7 @@ export default class extends Component<any, any> {
     this.DualAxesComponent = null;
     this.isUnmounted = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     loadG2Plot().then(data => {
       if (this.isUnmounted) {
         return;
@@ -88,11 +88,11 @@ export default class extends Component<any, any> {
       this.renderDualAxesChart(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     this.destroyDualAxesChart();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { displaySetup, rightY, style } = this.props.reportData;
     const { displaySetup: oldDisplaySetup, rightY: oldRightY, style: oldStyle } = prevProps.reportData;
 
@@ -824,7 +824,7 @@ export default class extends Component<any, any> {
       return <div>{renderItem(summary)}</div>;
     }
   }
-  render() {
+  override render() {
     const { dropdownVisible, offset, newYaxisList, newRightYaxisList } = this.state;
     const { rightY, summary = {}, displaySetup } = this.props.reportData;
     const dualAxesSwitchChecked = displaySetup.showTotal || (rightY ? rightY.summary.showTotal : null);

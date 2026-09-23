@@ -47,7 +47,7 @@ export default class SelectUser extends Component<any, any> {
       recordPartner: props.recordPartner,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { type, staticAccounts = [], advancedSetting = {}, userType } = this.props;
 
     if (type === 'user') {
@@ -968,7 +968,7 @@ export default class SelectUser extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { selectedUsers, personalInfoVisible, accountId, projectId } = this.state;
     const { type, visible, onClose, onlyOne, appId, hideClearBtn = true } = this.props;
     return (

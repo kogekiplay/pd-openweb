@@ -12,7 +12,7 @@ import DateCalcPicker from './DateCalcPicker';
 import ToTodaySetting from './toTodaySetting';
 
 export default class DateCalc extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     widget: PropTypes.shape({}),
     worksheetData: PropTypes.shape({}),
     editWidgets: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({}))),
@@ -34,7 +34,7 @@ export default class DateCalc extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { widget, onFormulaEditStatusChange, onDataChange } = this.props;
 
     if (widget.data.dot !== 0) {
@@ -46,7 +46,7 @@ export default class DateCalc extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { widget } = this.props;
 
@@ -112,7 +112,7 @@ export default class DateCalc extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       widget,
       editWidgets,

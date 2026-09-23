@@ -37,7 +37,7 @@ export default class EmptyStatus extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { icon, tipTxt } = this.props;
     return (
       <EmptyWrap>

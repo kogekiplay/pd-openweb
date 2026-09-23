@@ -55,7 +55,7 @@ export default class Formula extends React.Component<any, any> {
     this.state.formulaStr = this.getFormulaFromDataSource(this.state.calType, dataSource);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { data } = this.props;
       const { dataSource, controlId } = data;
@@ -255,7 +255,7 @@ export default class Formula extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     let { data, allControls, worksheetData, onChange, fromAggregation, className } = this.props;
     const { selectColumnVisible, showInSideFormulaSelect, shoOutSideFormulaSelect, calType, fnmatch } = this.state;
     const dataSource = data.dataSource || '';

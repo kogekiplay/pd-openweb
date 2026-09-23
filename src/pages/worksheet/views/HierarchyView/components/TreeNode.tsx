@@ -5,10 +5,10 @@ import { getRelateDefaultValue } from '../util';
 import SortableNode from './SortableNode';
 
 export default class TreeNode extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
 
-  render() {
+  override render() {
     const { data, treeData, depth, ...rest } = this.props;
     const { children = [], display, pathId = [], visible = false } = data;
     if (!display) return null;

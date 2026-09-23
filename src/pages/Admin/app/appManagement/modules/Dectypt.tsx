@@ -111,7 +111,7 @@ export default class Dectypt extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { onCancel = () => {} } = this.props;
     const { file = {}, analyzeLoading, checkLoading, importPassword, lockPassword } = this.state;
     const loading = analyzeLoading || checkLoading;

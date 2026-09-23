@@ -13,7 +13,7 @@ class Sidenav extends React.Component<any, any> {
     navigateTo(`/worksheet/formSet/edit/${worksheetId}/${navType}`);
   };
 
-  render() {
+  override render() {
     const { match = { params: {} }, projectId } = this.props;
     const { worksheetId, type = '' } = match.params;
     return (

@@ -110,12 +110,12 @@ export default class PortalProgress extends Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     document.body.removeEventListener('mousemove', this.onMouseMove);
     document.body.removeEventListener('mouseup', this.onMouseUp);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const minX = this.props.payType === 'portalupgrade' ? getMinX(this.props.addUserCount) : 0;
     this.setState({
       userCount: this.props.addUserCount,
@@ -170,7 +170,7 @@ export default class PortalProgress extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       payType,
       effectiveExternalUserCount,

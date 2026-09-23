@@ -95,7 +95,7 @@ export default class HeaderDisplaySetup extends Component<any, any> {
 
     this.props.onUpdateDisplaySetup(newData, name);
   }
-  render() {
+  override render() {
     const { displaySetup, mapKeys, reportType, chartType, title } = this.props;
     const isPile = [reportTypes.LineChart, reportTypes.BarChart].includes(reportType) && mapKeys.length >= 2;
     const isPerPile =

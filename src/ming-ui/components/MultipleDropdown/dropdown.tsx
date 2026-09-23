@@ -56,13 +56,13 @@ class MultipleDropdown extends Component<any, any> {
     }
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     window.addEventListener('click', this.clickListener, true);
 
     window.addEventListener('keydown', this.keyDownListener, false);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('click', this.clickListener, true);
 
     window.removeEventListener('keydown', this.keyDownListener, false);
@@ -81,7 +81,7 @@ class MultipleDropdown extends Component<any, any> {
    * label: label|label[] - 选中选项的 label（单级单选为一个值；多级数据单选为所有层级的 label；多选为多个 label）
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== this.state.value) {
         this.setState({
@@ -151,7 +151,7 @@ class MultipleDropdown extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const classList = ['multi-dropdown'];
 
     if (this.state.menuOpened) {

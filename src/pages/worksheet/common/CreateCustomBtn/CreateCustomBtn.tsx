@@ -48,12 +48,12 @@ class CreateCustomBtnCon extends React.Component<any, any> {
     };
   }
   ajaxRequest = null;
-  componentDidMount() {
+  override componentDidMount() {
     this.initState(this.props);
     $('.Radio').attr('title', '');
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const btnDataInfoPre = prevProps.btnDataInfo || {};
       const btnDataInfoNext = this.props.btnDataInfo || {};
@@ -1013,7 +1013,7 @@ class CreateCustomBtnCon extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { appId, worksheetId, rowId, projectId, columns, sheetSwitchPermit, isListOption } = this.props;
     const {
       btnId,
@@ -1162,7 +1162,7 @@ class CreateCustomBtn extends React.Component<any, any> {
       </div>
     );
   };
-  render() {
+  override render() {
     const { zIndex, onClose, isClickAway, btnI = '' } = this.props;
     return (
       <Drawer

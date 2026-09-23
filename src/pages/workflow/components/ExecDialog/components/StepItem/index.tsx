@@ -87,7 +87,7 @@ const SIGN_COUNTERSIGN_TYPE = {
 const formatTime = time => moment(dateConvertToUserZone(time)).format('YYYY-MM-DD HH:mm:ss');
 
 export default class StepItem extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     data: object,
     currentType: number,
     currentWork: object,
@@ -116,7 +116,7 @@ export default class StepItem extends Component<any, any> {
     onChangeCurrentWork: () => {},
   };
 
-  state = {
+  override state = {
     moreOperationVisible: false,
     showLogDialog: false,
     showMore: false,
@@ -611,7 +611,7 @@ export default class StepItem extends Component<any, any> {
     return isTest ? _l('（原抄送人）') : _l('（没有抄送人）');
   }
 
-  render() {
+  override render() {
     const { data, currentWork, currentType, isLast, status, currents, onChangeCurrentWork, appId, projectId } =
       this.props;
     const { showMore } = this.state;

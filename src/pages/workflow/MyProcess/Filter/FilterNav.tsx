@@ -19,7 +19,7 @@ export default class FilterNav extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.data, prevProps.data)) {
         this.state = {
@@ -28,7 +28,7 @@ export default class FilterNav extends Component<any, any> {
       }
     }
   }
-  render() {
+  override render() {
     const { data } = this.props;
     const { currentIndex } = this.state;
     return (

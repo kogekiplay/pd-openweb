@@ -7,17 +7,17 @@ import ThirdAppGroup from './ThirdAppGroup';
 import './index.less';
 
 export default class ThirdPartyApp extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onCancel: func,
   };
   static defaultProps = {
     onCancel: _.noop,
   };
-  state = {
+  override state = {
     data: {},
     isLoading: true,
   };
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
   getData = () => {
@@ -59,7 +59,7 @@ export default class ThirdPartyApp extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { onCancel } = this.props;
     const { isLoading } = this.state;
     return (

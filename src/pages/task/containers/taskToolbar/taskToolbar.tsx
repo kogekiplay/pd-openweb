@@ -45,7 +45,7 @@ class TaskToolbar extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { folderId } = this.props.taskConfig;
 
     if (folderId === 1) {
@@ -55,7 +55,7 @@ class TaskToolbar extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.taskConfig.folderId !== prevProps.taskConfig.folderId ||
@@ -652,7 +652,7 @@ class TaskToolbar extends Component<any, any> {
     this.props.dispatch(updateStateConfig(taskConfig));
   };
 
-  render() {
+  override render() {
     const { folderId, viewType } = this.props.taskConfig;
 
     // 错误页面

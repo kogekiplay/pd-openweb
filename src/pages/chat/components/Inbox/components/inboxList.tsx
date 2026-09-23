@@ -14,7 +14,7 @@ import { isWithinOneHour } from '../util';
 import Message from './inboxMessage';
 
 let InboxList = class InboxList extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     inboxFavorite: PropTypes.bool,
     type: PropTypes.oneOf(_.values(TYPES)),
   };
@@ -30,11 +30,11 @@ let InboxList = class InboxList extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchInboxList();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(_.omit(this.props, 'count', 'requestNow'), _.omit(prevProps, 'count', 'requestNow')) ||
@@ -184,7 +184,7 @@ let InboxList = class InboxList extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     return (
       <ScrollView className="flex inboxBox" allowance={50} onScrollEnd={this.scrollEvent.bind(this)}>
         {this.renderList()}

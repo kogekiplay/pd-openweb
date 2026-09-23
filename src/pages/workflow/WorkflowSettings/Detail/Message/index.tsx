@@ -82,12 +82,12 @@ export default class Message extends Component<any, any> {
   currentMapId = '';
   mapData = {};
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
     this.getTwilioBaseInfo();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.setState({
@@ -877,7 +877,7 @@ export default class Message extends Component<any, any> {
     this.updateSource({ messageTemplate });
   };
 
-  render() {
+  override render() {
     const { data, addNewTemplate, showSetTemplate } = this.state;
 
     if (_.isEmpty(data)) {

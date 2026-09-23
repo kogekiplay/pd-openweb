@@ -93,7 +93,7 @@ class Search extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { filterIndex, searchVlaue } = this.state;
     const { textFilters } = this.props;
     return (

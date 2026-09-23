@@ -39,7 +39,7 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
 };
 
 class ThumbnailGuide extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     attachments: PropTypes.array,
     index: PropTypes.number,
     changeIndex: PropTypes.func,
@@ -48,7 +48,7 @@ class ThumbnailGuide extends React.Component<any, any> {
     isShare: PropTypes.bool,
   };
 
-  state = {
+  override state = {
     itemWidth: 82,
     marginLeft: 0,
     fitited: false,
@@ -56,11 +56,11 @@ class ThumbnailGuide extends React.Component<any, any> {
     showThumbnail: this.props.isShare,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.calPosition();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         fitited: false,
@@ -123,7 +123,7 @@ class ThumbnailGuide extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { index, attachments, canDownload } = this.props;
     const { showThumbnail } = this.state;
     const currentAttachment = attachments[index];

@@ -34,7 +34,7 @@ export default class UseAnalytics extends Component<any, any> {
     navigateTo(`/admin/analytics/${params.projectId}/${item.key}`);
   };
 
-  render() {
+  override render() {
     const { match = {} } = this.props;
     const { params = {} } = match;
     const { currentTab } = this.state;

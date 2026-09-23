@@ -26,7 +26,7 @@ export default class ApprovalProcess extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -34,7 +34,7 @@ export default class ApprovalProcess extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -253,7 +253,7 @@ export default class ApprovalProcess extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { data } = this.state;
 
     if (_.isEmpty(data)) {

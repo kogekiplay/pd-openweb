@@ -49,7 +49,7 @@ export default class extends React.Component<any, any> {
     this.bindSubscribe();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { onChange } = this.props;
 
@@ -72,7 +72,7 @@ export default class extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (isFunction(this.unsubscribe)) {
       this.unsubscribe();
     }
@@ -107,7 +107,7 @@ export default class extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { registerCell = () => {} } = this.props;
     return (
       <Provider store={this.store}>

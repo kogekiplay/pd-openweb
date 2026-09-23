@@ -10,7 +10,7 @@ import { NODE_OPERATOR_TYPE, NODE_STATUS, NODE_TYPE, NODE_VIEW_TYPE } from '../c
 import UploadNewVersion from './UploadNewVersion';
 
 let KcAppMenu = class KcAppMenu extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     item: PropTypes.object,
     removeNode: PropTypes.func,
     moveOrCopyClick: PropTypes.func,
@@ -23,7 +23,7 @@ let KcAppMenu = class KcAppMenu extends React.Component<any, any> {
     onAddLinkFile: PropTypes.func,
   };
 
-  render() {
+  override render() {
     const item = this.props.item;
     const isFolder = item.type === NODE_TYPE.FOLDER;
     const isUrl = item.viewType === NODE_VIEW_TYPE.LINK;

@@ -38,7 +38,7 @@ export default class AggregationTable extends Component<any, any> {
     this.changeTaskAjax = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId } = this.props.match.params || {};
     const featureType = getFeatureStatus(projectId, VersionProductType.aggregation);
     this.getList();
@@ -186,7 +186,7 @@ export default class AggregationTable extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { match = {} } = this.props;
     const { projectId } = match.params || {};
     const {

@@ -91,7 +91,7 @@ export default class Announce extends Component<any, any> {
       files: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getAnnounce();
   }
 
@@ -279,7 +279,7 @@ export default class Announce extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       content,
       sendEmail,

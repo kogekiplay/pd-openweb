@@ -32,7 +32,7 @@ export default class ProjectInfo extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { changeTab } = this.props;
     const { level } = this.state;
 

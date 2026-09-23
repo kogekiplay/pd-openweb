@@ -111,7 +111,7 @@ export default class ValueAxis extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { name, valueAxis } = this.props;
     return (
       <div className="fieldWrapper mBottom20">

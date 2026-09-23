@@ -25,7 +25,7 @@ class SubordinateMembers extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 竖着滚动对应右侧竖着滚动
     $(this.ganttMembersList).on({
       mouseover() {
@@ -252,7 +252,7 @@ class SubordinateMembers extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const { accountTasksKV } = this.props;
     const builtinPlacements = {
       bottomLeft: {

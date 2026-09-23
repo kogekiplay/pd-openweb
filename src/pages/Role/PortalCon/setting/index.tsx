@@ -130,13 +130,13 @@ class PortalSetting extends React.Component<any, any> {
     this.saveRef = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { portalSet = {} } = this.props;
 
     this.setState({ portalSet });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.portalSet, this.props.portalSet)) {
         this.setState({
@@ -329,7 +329,7 @@ class PortalSetting extends React.Component<any, any> {
       );
     return undefined;
   };
-  render() {
+  override render() {
     const { show, closeSet } = this.props;
     const { type, portalSet = {} } = this.state;
     const Component = TYPE_TO_COMP[type];

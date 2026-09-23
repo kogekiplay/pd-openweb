@@ -90,7 +90,7 @@ export default class MerchantCom extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getDataList();
     this.getMerchantUsage();
   }
@@ -270,7 +270,7 @@ export default class MerchantCom extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId, featureType, myPermissions } = this.props;
     const {
       createMerchantVisible,

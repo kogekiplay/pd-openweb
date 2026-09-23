@@ -74,7 +74,7 @@ export default class AppManagement extends Component<any, any> {
 
   postList = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId, queryString } = this.props;
     const query = qs.parse(queryString);
     let _hasDataBase =
@@ -97,11 +97,11 @@ export default class AppManagement extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     emitter.removeListener('updateState', this.updateState);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.projectId, prevProps.projectId)) {
         this.setState({
@@ -617,7 +617,7 @@ export default class AppManagement extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       status,
       total,

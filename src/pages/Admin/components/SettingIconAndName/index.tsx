@@ -166,7 +166,7 @@ export default class SettingIconAndName extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { iconClassName, className } = this.props;
     const { visible, initIonUrl, initName } = this.state;
 

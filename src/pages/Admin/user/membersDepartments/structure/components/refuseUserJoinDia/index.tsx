@@ -30,7 +30,7 @@ class RefuseUserJoinDia extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.area && this.area.focus();
   }
 
@@ -60,7 +60,7 @@ class RefuseUserJoinDia extends React.Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { onCancel = () => {}, accountIds = [] } = this.props;
     const { refuseMessage } = this.state;
 

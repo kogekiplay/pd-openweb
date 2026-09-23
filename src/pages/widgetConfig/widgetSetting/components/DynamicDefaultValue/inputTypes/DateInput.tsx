@@ -10,7 +10,7 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap, WrapMaxOrMin } from '../styled';
 
 export default class DateInput extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onDynamicValueChange: func,
     data: shape({ enumDefault: number }),
     clearOldDefault: func,
@@ -29,16 +29,16 @@ export default class DateInput extends Component<any, any> {
       clearOldDefault({ default: '', enumDefault: 0 });
     }
   }
-  state = {
+  override state = {
     defValue: '',
     isDynamic: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.updateValue();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.dynamicValue, prevProps.dynamicValue)) {
         this.updateValue(this.props);
@@ -132,7 +132,7 @@ export default class DateInput extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { defaultType } = this.props;
 
     return (

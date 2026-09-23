@@ -40,7 +40,7 @@ export default class PortalSettingDialog extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { onClose, onOk, globalSheetInfo, from, allControls } = this.props;
     const { data = {} } = this.state;
     const { type } = data;

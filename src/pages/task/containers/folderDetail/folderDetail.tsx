@@ -36,12 +36,12 @@ class FolderDetail extends Component<any, any> {
   // 获取详情
   folderPostPromise = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
     this.getFolderDetail();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.taskConfig.folderId && this.props.taskConfig.folderId !== prevProps.taskConfig.folderId) {
         // 解决props未更新问题
@@ -60,7 +60,7 @@ class FolderDetail extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
   }
 
@@ -958,7 +958,7 @@ class FolderDetail extends Component<any, any> {
     return 'icon-charger';
   }
 
-  render() {
+  override render() {
     const { data, isEditing, tabIndex, onlyLook, discussions, logs } = this.state;
     const { folderId } = this.props.taskConfig;
     const { folderName } = this.props.folderSettings;

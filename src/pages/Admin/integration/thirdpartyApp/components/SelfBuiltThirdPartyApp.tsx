@@ -69,7 +69,7 @@ class Moreop extends Component<any, any> {
       menuVisible: false,
     };
   }
-  render() {
+  override render() {
     return (
       <Trigger
         action={['click']}
@@ -120,7 +120,7 @@ class Upload extends Component<any, any> {
       uploadAvatar: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.uploadFile();
   }
   uploadFile() {
@@ -161,7 +161,7 @@ class Upload extends Component<any, any> {
     });
     uploader.init();
   }
-  render() {
+  override render() {
     const { avatarUrl } = this.props;
     const { uploadAvatarUrl } = this.state;
     return (
@@ -209,7 +209,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
       hoveredSecretId: null,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getProjectApplicationList();
   }
   getColumns = () => {
@@ -577,7 +577,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
     this.setState({ dialogVisible: true });
   };
 
-  render() {
+  override render() {
     const { applicationList, loading } = this.state;
     return (
       <ThirdPartyAppWrapper className="orgManagementContent pBottom20">

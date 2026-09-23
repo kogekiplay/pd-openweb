@@ -14,7 +14,7 @@ export default class Label extends Component<any, any> {
       ruleColorModalVisible: false,
     };
   }
-  render() {
+  override render() {
     const { currentReport, onChangeDisplayValue, onChangeDisplaySetup, onChangeYDisplaySetup, onChangeStyle } =
       this.props;
     const { reportType, yaxisList, displaySetup, summary, rightY, style } = currentReport;

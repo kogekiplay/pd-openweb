@@ -29,7 +29,7 @@ export default class VersionUpgrade extends Component<any, any> {
     };
     this.timer = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getUnPaidOrder();
     this.getProjectContractInfo();
     window.addEventListener('scroll', this.handleScroll);
@@ -356,7 +356,7 @@ export default class VersionUpgrade extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId } = getRequest(location.search);
     const {
       selectYear,

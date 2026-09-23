@@ -8,7 +8,7 @@ import { isRelateRecordTableControl } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default class RowDetail extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     widgetStyle: PropTypes.shape({}),
     ignoreLock: PropTypes.bool,
     disabled: PropTypes.bool,
@@ -36,7 +36,7 @@ export default class RowDetail extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.data &&
@@ -121,7 +121,7 @@ export default class RowDetail extends React.Component<any, any> {
     onClose();
   };
 
-  render() {
+  override render() {
     const {
       ignoreLock,
       disabled,

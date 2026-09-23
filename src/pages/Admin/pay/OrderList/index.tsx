@@ -31,7 +31,7 @@ export default class Merchant extends Component<any, any> {
     navigateTo(`/admin/${key}/${projectId}`);
   };
 
-  render() {
+  override render() {
     const { showHeader, disabledExportBtn } = this.state;
     const featureType = getFeatureStatus(Config.projectId, VersionProductType.PAY);
     // 与 systemSetting 同样的处理：当前 Tab 从路径派生，不再存 state。

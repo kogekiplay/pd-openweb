@@ -40,7 +40,7 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
     this.isLock = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getPortalConfigSet();
 
     const { discussionInfo, temporaryDiscuss } = _.get(this.props, 'match.params');
@@ -51,7 +51,7 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
   }
 
@@ -195,7 +195,7 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { value, files, showSelectUser, temporaryDiscuss } = this.state;
     const { projectId, handleTemporaryDiscuss, recordPartner = [] } = this.props;
     const { appId, discussionInfo } = this.props.match.params;

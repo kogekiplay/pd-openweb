@@ -8,7 +8,7 @@ import { ROW_ID_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import SelectControls from './SelectControls';
 
 export default class AddCondition extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     defaultVisible: PropTypes.bool,
     columns: PropTypes.arrayOf(PropTypes.shape({})),
     onAdd: PropTypes.func,
@@ -21,7 +21,7 @@ export default class AddCondition extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.from === 'fastFilter' &&
@@ -35,7 +35,7 @@ export default class AddCondition extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     let {
       disabled,
       from,

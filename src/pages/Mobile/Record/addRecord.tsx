@@ -45,7 +45,7 @@ class AddRecord extends Component<any, any> {
       writeControls: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { params = {} } = this.props.match || {};
     const { btnId } = getRequest();
     const { appId, worksheetId } = this.props;
@@ -92,7 +92,7 @@ class AddRecord extends Component<any, any> {
         }
       });
   }
-  render() {
+  override render() {
     const { params = {} } = this.props.match || {};
     const { appId, worksheetId, viewId, defaultFormData = {}, defaultFormDataEditable } = this.props;
     const { loading, worksheetInfo, writeControls, status } = this.state;

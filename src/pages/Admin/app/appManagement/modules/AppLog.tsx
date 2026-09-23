@@ -56,11 +56,11 @@ export default class AppLog extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getList();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         this.updateState({
@@ -288,7 +288,7 @@ export default class AppLog extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { activeTab, pageIndex, loading } = this.state;
     const isLog = activeTab === 'logs';
     return (

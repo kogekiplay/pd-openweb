@@ -50,7 +50,7 @@ class ContactsHidden extends React.Component<any, any> {
     this.state = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId, dispatch } = this.props;
 
     dispatch(getRulesAll(projectId));
@@ -163,7 +163,7 @@ class ContactsHidden extends React.Component<any, any> {
     this.setState({ errorIds });
   };
 
-  render() {
+  override render() {
     const {
       showEdit = false,
       editType,

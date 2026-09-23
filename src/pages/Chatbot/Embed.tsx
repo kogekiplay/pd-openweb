@@ -66,7 +66,7 @@ class LandChatbot extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     return (
       <Router>
         <Routes>

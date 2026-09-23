@@ -347,7 +347,7 @@ export default class LimitFileDownloadSetting extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { onClose = () => {} } = this.props;
     const { attachmentSettingInfo, initialAttachmentSettingInfo, ipContent } = this.state;
     const { limitType, modelType, useType, status } = attachmentSettingInfo;

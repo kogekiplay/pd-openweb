@@ -96,7 +96,7 @@ class PrintForm extends React.Component<any, any> {
     this.confirmOk = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (location.href.indexOf('printForm') > -1 && browserIsMobile()) {
       this.getParamFn(() => this.getApp(() => this.getWorksheet()));
     } else {
@@ -107,7 +107,7 @@ class PrintForm extends React.Component<any, any> {
     $('html').addClass('printPage');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('printPage');
     window.removeEventListener('keydown', this.handleKeyDown);
   }
@@ -895,7 +895,7 @@ class PrintForm extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const {
       params,
       printData,

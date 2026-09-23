@@ -35,7 +35,7 @@ export default class SheetMove extends Component<any, any> {
       pageValue: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId } = this.props;
     const { projectId } = store.getState().appPkg;
     homeApp.getAllHomeApp().then(result => {
@@ -113,7 +113,7 @@ export default class SheetMove extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { pageId, dialogClasses } = this.props;
     const { appList, appValue, pages, pageValue } = this.state;
     return (

@@ -59,7 +59,7 @@ export default class SelectNodeObject extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isIntegration, appList, selectNodeId, selectNodeObj, onChange, smallBorder, disabled = false } = this.props;
     const list = (appList || []).map(item => {
       return {

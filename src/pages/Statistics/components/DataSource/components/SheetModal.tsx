@@ -94,7 +94,7 @@ export default class SheetModal extends Component<any, any> {
       !featureType ||
       featureType === '2';
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { activeKey, newWorksheetId } = this.state;
     const { appId } = this.props;
     this.getMyApps();
@@ -468,7 +468,7 @@ export default class SheetModal extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { dialogVisible } = this.props;
     return (
       <Modal

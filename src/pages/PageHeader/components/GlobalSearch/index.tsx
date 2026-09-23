@@ -9,7 +9,7 @@ import GlobalSearchAllContent from 'src/pages/globalSearch/containers/GlobalSear
 import './index.less';
 
 class GlobalSearch extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onClose: func,
   };
 
@@ -26,11 +26,11 @@ class GlobalSearch extends Component<any, any> {
 
   isOnComposition = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.removeEscEvent = this.bindEscEvent();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeEscEvent();
   }
 
@@ -65,7 +65,7 @@ class GlobalSearch extends Component<any, any> {
     !this.isOnComposition && this.setState({ searchVal });
   };
 
-  render() {
+  override render() {
     const { searchVal } = this.state;
     return (
       <div className="globalSearchWrap" onClick={this.handleMaskClick}>

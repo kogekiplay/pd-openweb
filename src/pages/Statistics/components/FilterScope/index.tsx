@@ -516,7 +516,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { visible, filterConditions, showFilterConditions, currentRangeType } = this.state;
     const { projectId, worksheetInfo, currentReport } = this.props;
     const { appType = 1 } = currentReport;

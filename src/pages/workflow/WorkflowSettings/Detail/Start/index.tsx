@@ -34,7 +34,7 @@ export default class Start extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail();
   }
 
@@ -42,7 +42,7 @@ export default class Start extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.selectNodeName &&
@@ -397,7 +397,7 @@ export default class Start extends Component<any, any> {
     return !errorKeys.length;
   };
 
-  render() {
+  override render() {
     const { processId, selectNodeId, flowInfo } = this.props;
     const { data } = this.state;
 

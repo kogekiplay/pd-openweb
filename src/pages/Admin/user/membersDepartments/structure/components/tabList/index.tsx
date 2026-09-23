@@ -43,7 +43,7 @@ class TabList extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 【这两个请求原先写在 constructor 里】在生产上实测会各发两次：
     // constructor 属于 render 阶段，React 可以构造一个实例又把它丢掉（Suspense
     // 挂起、渲染被打断都会），重来时再构造一次 —— 实测两次相隔 250ms，
@@ -115,7 +115,7 @@ class TabList extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { typeCursor = 0, approveNumber, inActiveNumber, cursor } = this.props;
     return (
       <React.Fragment>

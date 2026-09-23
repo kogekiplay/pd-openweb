@@ -90,13 +90,13 @@ const Wrap = styled.div`
 `;
 
 class SideNav extends React.Component<any, any> {
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { params = {} } = this.props.match;
       !params.type ? localStorage.removeItem('pluginUrl') : safeLocalStorageSetItem(`pluginUrl`, params.type);
     }
   }
-  render() {
+  override render() {
     const { match = { params: {} }, noAssistantAuth, currentProjectId } = this.props;
     const { type = '' } = match.params;
     const featureType = getFeatureStatus(currentProjectId, VersionProductType.flowPlugin);

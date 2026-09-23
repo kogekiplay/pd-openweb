@@ -109,7 +109,7 @@ const RequiredIcon = styled.div`
 `;
 
 export default class OtherAction extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: string,
     data: object,
     action: oneOf(['after', 'before', 'pass', 'overrule', 'transfer', 'transferApprove', 'addApprove', 'return']),
@@ -172,7 +172,7 @@ export default class OtherAction extends Component<any, any> {
   password = '';
   isNoneVerification = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId, action } = this.props;
     const { encrypt } = (this.props.data || {}).flowNode || {};
 
@@ -675,7 +675,7 @@ export default class OtherAction extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { action, onCancel, projectId } = this.props;
     const { callBackNodeType, opinionTemplate, app = {} } = this.props.data;
     const { auth, encrypt, allowUploadAttachment } = (this.props.data || {}).flowNode || {};

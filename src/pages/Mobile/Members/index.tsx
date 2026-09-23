@@ -18,12 +18,12 @@ class Members extends Component<any, any> {
       checked: this.props.memberData.rolesVisibleConfig === ROLE_CONFIG.REFUSE,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('mobileMembers');
     const { params } = this.props.match;
     this.props.dispatch(actions.getMembers(params.appId));
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('mobileMembers');
   }
   handleExitApp = () => {
@@ -172,7 +172,7 @@ class Members extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { memberData, isMemberLoading } = this.props;
 
     if (isMemberLoading) {

@@ -89,7 +89,7 @@ export default class InterfaceLicense extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getLicenseDetail();
   }
 
@@ -351,7 +351,7 @@ export default class InterfaceLicense extends Component<any, any> {
     return undefined;
   };
 
-  render() {
+  override render() {
     return <Fragment>{this.renderContent()}</Fragment>;
   }
 }

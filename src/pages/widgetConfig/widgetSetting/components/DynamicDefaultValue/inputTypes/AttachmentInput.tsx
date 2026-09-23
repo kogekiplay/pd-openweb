@@ -8,7 +8,7 @@ export default class AttachmentInput extends Component<any, any> {
     this.state = {};
   }
 
-  render() {
+  override render() {
     return (
       <DynamicValueInputWrap>
         <OtherFieldList {...this.props} />

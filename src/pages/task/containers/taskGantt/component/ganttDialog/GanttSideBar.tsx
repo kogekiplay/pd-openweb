@@ -4,7 +4,7 @@ import config from './config';
 
 const INDENT = 20;
 export default class GanttSideBar extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     const $graphWrap = document.querySelector('.graphWrap');
     this.taskList.addEventListener('scroll', e => {
       e.currentTarget.className == config.scrollingEle && ($graphWrap.scrollTop = e.target.scrollTop);
@@ -59,7 +59,7 @@ export default class GanttSideBar extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { data } = this.props;
     return (
       <div className="ganttSideBarWrap flexColumn">

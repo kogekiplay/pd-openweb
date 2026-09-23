@@ -56,7 +56,7 @@ export default class extends React.PureComponent<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (_.isEqual(this.props.fields, prevProps.fields)) {
         this.setState({
@@ -254,7 +254,7 @@ export default class extends React.PureComponent<any, any> {
     );
   }
 
-  render() {
+  override render() {
     return <div>{this.renderContent()}</div>;
   }
 }

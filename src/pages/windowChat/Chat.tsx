@@ -54,13 +54,13 @@ const WindowChat = class WindowChat extends Component<{ dispatch: AppDispatch; [
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     globalEvents();
     socket.socketInitEvent.call(this);
     document.body.addEventListener('keydown', this.closeChatPanel);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     document.body.removeEventListener('keydown', this.closeChatPanel);
   }
 
@@ -71,7 +71,7 @@ const WindowChat = class WindowChat extends Component<{ dispatch: AppDispatch; [
     }
   };
 
-  render() {
+  override render() {
     const { sessionListWidth, dragMaskVisible } = this.state;
     return (
       <Wrap className="flexRow w100 h100 overflowHidden">

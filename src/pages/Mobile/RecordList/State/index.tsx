@@ -42,7 +42,7 @@ export default class WorksheetUnNormal extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { type } = this.props;
     return (
       <Fragment>

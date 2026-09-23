@@ -18,7 +18,7 @@ export default class SaveDia extends React.Component<any, any> {
       views: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { printData, type, viewId, worksheetId } = this.props;
     sheetAjax
       .getWorksheetInfo({
@@ -45,7 +45,7 @@ export default class SaveDia extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { printData, showList, views } = this.state;
     return (
       <Dialog

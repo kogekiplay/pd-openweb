@@ -34,7 +34,7 @@ export default class ReportRelation extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.init();
   }
 
@@ -272,7 +272,7 @@ export default class ReportRelation extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { allowStructureForAll, hasProjectAdminAuth, activeBar, loading } = this.state;
 
     if (loading) {

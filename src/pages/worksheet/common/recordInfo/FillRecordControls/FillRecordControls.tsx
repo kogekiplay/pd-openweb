@@ -29,7 +29,7 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
   // 构造函数里赋的实例字段：带默认值的关联表控件 id 名单，提交时要一并下发
   declare hasDefaultRelateRecordTableControls: string[];
 
-  static propTypes = {
+  static override propTypes = {
     isBatchOperate: PropTypes.bool,
     visible: PropTypes.bool,
     title: PropTypes.string,
@@ -357,7 +357,7 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
     );
   }
 
-  render() {
+  override render() {
     const {
       isCharge,
       widgetStyle = {},

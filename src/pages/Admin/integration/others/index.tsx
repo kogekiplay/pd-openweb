@@ -112,7 +112,7 @@ export default class OtherTool extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { authority } = this.props;
     hasPermission(authority, PERMISSION_ENUM.LDAP_LOGIN) && this.getSettings();
     hasPermission(authority, PERMISSION_ENUM.SSO_LOGIN) && this.getSsoSettings();
@@ -997,7 +997,7 @@ export default class OtherTool extends Component<any, any> {
     this.setState({ level });
   }
 
-  render() {
+  override render() {
     const { level, loading, keyVisible } = this.state;
     const title = headerTitle[level];
 

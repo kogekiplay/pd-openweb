@@ -80,7 +80,7 @@ export default class EditDetail extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { baseInfo, isError, errTxtInfo = [] } = this.state;
     return (
       <div className="baseInfoEditContent textPrimary">
