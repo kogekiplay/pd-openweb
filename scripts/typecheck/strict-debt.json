@@ -1880,7 +1880,6 @@
     "src/pages/chat/lib/addressBook/containers/ProjectContacts.tsx",
     "src/pages/chat/lib/addressBook/containers/SiderBar.tsx",
     "src/pages/chat/lib/addressBook/index.tsx",
-    "src/pages/chat/lib/mp3player/mp3player.ts",
     "src/pages/chat/redux/actions.ts",
     "src/pages/chat/redux/reducers.ts",
     "src/pages/chat/utils/ajax.ts",

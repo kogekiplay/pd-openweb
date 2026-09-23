@@ -8,6 +8,7 @@ import weixinAjax from 'src/api/weixin';
 import saveToKnowledge from 'src/components/kc/saveToKnowledge/saveToKnowledge';
 import { ATTACHMENT_TYPE } from 'src/components/shareAttachment/enum';
 import { downloadFile, formatFileSize, getClassNameByExt, pathCompletion } from 'src/utils/common';
+import defineMethods from 'src/utils/defineMethods';
 import RegExpValidator from 'src/utils/expression';
 import mobileShareHtml from './tpl/mobileShare.htm';
 import './css/mobileShare.less';
@@ -26,7 +27,38 @@ function urlAddParams(originurl, value) {
   return origin + '?' + qs.stringify(Object.assign(query, value)).replace(/=&/g, '&').replace(/=$/g, '');
 }
 
-const MobileSharePreview = function (options) {
+/** 实例上动态挂的字段，按构造函数与各方法里真实的赋值写全。
+ *  不用 [key: string]: any 兜底 —— 那样 noImplicitThis 就白开了：这个文件打开它的当天
+ *  就抓到一个名字对不上的定时器（见 alert 方法）。 */
+interface MobileSharePreviewFields {
+  /** 两个调用方：folderShare 传 { node, container: '#previewCon', shareFolderId }，shareMobile/index 传 { projectId } */
+  options: { container?: string; node?: ApiPayload; shareFolderId?: string; projectId?: string };
+  $container: JQuery;
+  urlParams: ReturnType<typeof qs.parse>;
+  /** 知识中心分享节点或附件信息，接口原样返回 */
+  nodeData?: ApiPayload;
+  sourceData?: ApiPayload;
+  isIOS?: boolean;
+  /** 截止时间：普通附件取接口给的，七牛附件按 genTime + 48 小时算 */
+  deadLine?: Date | string;
+  /** ATTACHMENT_TYPE 的取值 */
+  attachmentType?: number;
+  file?: Record<string, any>;
+  preview?: { width?: number; height: number };
+  $html?: JQuery;
+  $footer?: JQuery;
+  $saveToMingDao?: JQuery;
+  $downloadBtn?: JQuery;
+  $openAPP?: JQuery;
+  $filePreview?: JQuery;
+  $openIniOS?: JQuery;
+  $imageLink?: JQuery;
+  $image?: JQuery;
+  $alert?: JQuery;
+  alertTimer?: ReturnType<typeof setTimeout>;
+}
+
+const MobileSharePreview = function (this: MobileSharePreviewInstance, options) {
   let MSP = this;
   this.options = Object.assign({}, options);
   this.$container = $(this.options.container || '#app');
@@ -75,7 +107,7 @@ const MobileSharePreview = function (options) {
   }
 };
 
-MobileSharePreview.prototype = {
+const mobileSharePreviewMethods = defineMethods<MobileSharePreviewFields>()({
   init: function () {
     let MSP = this;
     MSP.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -84,7 +116,7 @@ MobileSharePreview.prototype = {
     if (MSP.attachmentType === ATTACHMENT_TYPE.COMMON) {
       MSP.deadLine = MSP.nodeData.deadLine;
     } else if (MSP.attachmentType === ATTACHMENT_TYPE.QINIU) {
-      MSP.deadLine = new Date(parseInt(MSP.urlParams.genTime, 10) + 3600 * 1000 * 48);
+      MSP.deadLine = new Date(parseInt(String(MSP.urlParams.genTime), 10) + 3600 * 1000 * 48);
     }
 
     if (!MSP.checkValid()) {
@@ -111,7 +143,7 @@ MobileSharePreview.prototype = {
     } else if (MSP.attachmentType === ATTACHMENT_TYPE.COMMON) {
       return MSP.nodeData.isValid;
     } else if (MSP.attachmentType === ATTACHMENT_TYPE.QINIU) {
-      return (new Date().getTime() - MSP.urlParams.genTime) / (3600 * 1000) < 48;
+      return (new Date().getTime() - Number(MSP.urlParams.genTime)) / (3600 * 1000) < 48;
     }
   },
   setAttachmentType: function () {
@@ -154,7 +186,7 @@ MobileSharePreview.prototype = {
         let urlParams = MSP.urlParams;
         file.name = urlParams.name;
         file.ext = urlParams.ext;
-        file.size = parseInt(urlParams.size, 10);
+        file.size = parseInt(String(urlParams.size), 10);
         file.canDownload = true;
         file.downloadUrl = urlParams.qiniuPath + '?e=' + urlParams.e + '&token=' + urlParams.qiniutoken;
         file.qiniuPath = urlParams.qiniuPath;
@@ -183,7 +215,7 @@ MobileSharePreview.prototype = {
         deadLineStr: MSP.deadLine ? MSP.formatTime(MSP.deadLine) : undefined,
       }),
     );
-    MSP.$container.html(MSP.$html);
+    MSP.$container.empty().append(MSP.$html);
   },
   render: function () {
     let MSP = this;
@@ -199,7 +231,7 @@ MobileSharePreview.prototype = {
         hideOpenApp: !!MSP.options.shareFolderId || MSP.attachmentType === ATTACHMENT_TYPE.COMMON,
       }),
     );
-    MSP.$container.html(MSP.$html);
+    MSP.$container.empty().append(MSP.$html);
     MSP.$footer = MSP.$html.find('.footer');
     MSP.$saveToMingDao = MSP.$html.find('.saveToMingDao');
     MSP.$downloadBtn = MSP.$html.find('.downloadBtn');
@@ -284,7 +316,10 @@ MobileSharePreview.prototype = {
   },
   downloadFile: function (url) {
     let a = document.createElement('a');
-    a.setAttribute('download', true);
+    /* 原先是 setAttribute('download', true)：download 属性的值是【建议的文件名】，
+       于是同源下载、且响应没带 Content-Disposition 文件名时，文件真的会被存成叫 true 的文件。
+       空串才是「用服务端 / URL 给的文件名」的意思。 */
+    a.setAttribute('download', '');
     a.href = url;
     a.click();
   },
@@ -331,7 +366,15 @@ MobileSharePreview.prototype = {
         });
       }
 
-      if (MSP.options.shareFolderId && data.indexOf('owa' > -1)) {
+      /* 【这里原先是 data.indexOf('owa' > -1)，括号放错了，但千万别「顺手改成」indexOf('owa') > -1】
+         'owa' > -1 先算出 false，实际执行的是 data.indexOf(false)：在链接里找 "false"，
+         找不到返回 -1，而 -1 是真值 —— 于是只要在共享文件夹里，所有预览链接都会带上 shareFolderId。
+         而这恰恰是对的：桌面端同一个功能（kc/common/AttachmentsPreview/attachmentsPreview.tsx）
+         就是对共享文件夹里【所有】知识中心文件的预览链接都加 shareFolderId，没有任何 owa 条件。
+         照字面意思修正括号，会让移动端非 Office 文件的共享预览突然不带这个参数。
+         所以改成它实际在做、也本该做的事。顺带：七牛附件那一路 data 是 { viewUrl } 对象，
+         原写法在它身上调 .indexOf 会直接抛错（只是 shareFolderId 与七牛附件不会同时出现）。 */
+      if (MSP.options.shareFolderId) {
         viewUrl = urlAddParams(viewUrl, {
           shareFolderId: MSP.options.shareFolderId,
         });
@@ -419,9 +462,12 @@ MobileSharePreview.prototype = {
       $mask.remove();
     });
   },
-  alert: function (str, time) {
+  alert: function (str, time?) {
     let MSP = this;
-    clearTimeout(MSP.timer);
+    /* 原先清的是 MSP.timer —— 从来没被赋过值，而下面设的是 MSP.alertTimer。
+       于是 3 秒内连弹两次时，第一个定时器清不掉，到点后执行 MSP.$alert.remove()，
+       而那时 MSP.$alert 已经指向第二个提示 —— 第二个提示只显示 2 秒就被提前抹掉。 */
+    clearTimeout(MSP.alertTimer);
     if (MSP.$alert) {
       MSP.$alert.remove();
     }
@@ -462,7 +508,10 @@ MobileSharePreview.prototype = {
         }
       });
   },
-};
+});
+
+MobileSharePreview.prototype = mobileSharePreviewMethods;
+type MobileSharePreviewInstance = MobileSharePreviewFields & typeof mobileSharePreviewMethods;
 
 md.global.Config.disableKf5 = true;
 

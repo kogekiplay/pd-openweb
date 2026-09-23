@@ -24,7 +24,35 @@
  getAllTime --获取总的时长
  getCurrentTime --获取当前播放时长
  */
-function MP3Player(_options) {
+/* 【只剩 HTML5 <audio> 这一条路径，另外两条分支 2026-09-23 删掉了，都是可证明不可达的】
+   1. typeof Worker === 'undefined' 那条：IE 时代 Windows Media Player 的 ActiveX <OBJECT> 写法
+      （this.video.controls.play()、currentMedia）。构建目标已是 Chrome 103+（见 .babelrc），
+      受支持的浏览器全都有 Worker，这条永远走不到。
+   2. $('#' + options.id).length 不为 0 的 else 分支：唯一的调用方（AudioMessage）只传
+      { mp3_url, wav_url, onStop }，不传 id，于是判断的是 $('#undefined')，恒为空。
+      而且那条分支本身就是坏的：拿 mp3_url（一个网址）当 id 选择器，赋进 video 的还是 jQuery 对象，
+      后面却当 DOM 元素调 .play()。
+   不删它们就没法给 video 写出诚实的类型 —— ActiveX 对象和 <audio> 的 API 完全不同。
+   活路径的行为一个字没改（包括每次播放都往 body 追加一个 <audio>、按 name 取第一个这两点）。 */
+interface MP3PlayerOptions {
+  mp3_url: string;
+  wav_url: string;
+  onStop: () => void;
+  onPause: () => void;
+}
+
+interface MP3PlayerInstance {
+  options: MP3PlayerOptions;
+  object: string;
+  video: HTMLAudioElement;
+  play: (this: MP3PlayerInstance) => void;
+  stop: (this: MP3PlayerInstance) => void;
+  pause: (this: MP3PlayerInstance) => void;
+  getAllTime: (this: MP3PlayerInstance) => number;
+  getCurrentTime: (this: MP3PlayerInstance) => number;
+}
+
+function MP3Player(this: MP3PlayerInstance, _options: Partial<MP3PlayerOptions>) {
   const _this = this;
   this.options = $.extend(
     {
@@ -35,108 +63,46 @@ function MP3Player(_options) {
     },
     _options,
   );
-  if ($('#' + this.options.id).length == 0) {
-    this.object = '';
-    if (typeof Worker === 'undefined') {
-      this.object +=
-        '<OBJECT name="' +
-        this.options.mp3_url +
-        '" classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" height="0" width="0" border="0">';
-      this.object += '<param name="URL" value="' + this.options.mp3_url + '">';
-      this.object += '<PARAM NAME="playCount" VALUE="1">';
-      this.object += '<param name="autoStart" value="0">';
-      this.object += '<PARAM NAME="fullScreen" VALUE="0">';
-      this.object += '<PARAM NAME="enableContextMenu" VALUE="0">';
-      this.object += '<PARAM NAME="volume" VALUE="100">';
-      this.object += '</OBJECT>';
-    } else {
-      this.object += '<audio name="' + this.options.mp3_url + '">';
-      this.object += '<source src="' + this.options.mp3_url + '">';
-      this.object += '<source src="' + this.options.wav_url + '">';
-      this.object += '</audio>';
-    }
 
-    $('body').append(this.object);
-    this.video = $("[name='" + this.options.mp3_url + "']")[0];
+  this.object = '';
+  this.object += '<audio name="' + this.options.mp3_url + '">';
+  this.object += '<source src="' + this.options.mp3_url + '">';
+  this.object += '<source src="' + this.options.wav_url + '">';
+  this.object += '</audio>';
 
-    if (typeof Worker === 'undefined') {
-      this.video.addEventListener('PlayStatusChange', state => {
-        switch (state) {
-          case 1:
-            _this.options.onStop();
-            break;
-          case 2:
-            _this.options.onPause();
-            break;
-        }
-      });
-    } else {
-      this.video.addEventListener('ended', () => {
-        _this.options.onStop();
-      });
-      this.video.addEventListener('pause', () => {
-        _this.options.onPause();
-      });
-    }
-  } else {
-    this.video = $('#' + this.options.mp3_url);
-  }
+  $('body').append(this.object);
+  this.video = $("[name='" + this.options.mp3_url + "']")[0] as HTMLAudioElement;
 
-  this.play = function () {
-    if (typeof Worker === 'undefined') {
-      this.video.controls.play();
-    } else {
-      this.video.play();
-    }
+  this.video.addEventListener('ended', () => {
+    _this.options.onStop();
+  });
+  this.video.addEventListener('pause', () => {
+    _this.options.onPause();
+  });
+
+  this.play = function (this: MP3PlayerInstance) {
+    this.video.play();
   };
 
-  this.stop = function () {
-    if (typeof Worker === 'undefined') {
-      this.video.controls.stop();
-    } else {
-      this.video.pause();
-      if (this.video.currentTime > 0) {
-        this.video.currentTime = 0;
-      }
-
-      this.options.onStop();
+  this.stop = function (this: MP3PlayerInstance) {
+    this.video.pause();
+    if (this.video.currentTime > 0) {
+      this.video.currentTime = 0;
     }
+
+    this.options.onStop();
   };
 
-  this.pause = function () {
-    if (typeof Worker === 'undefined') {
-      this.video.controls.pause();
-    } else {
-      this.video.pause();
-    }
+  this.pause = function (this: MP3PlayerInstance) {
+    this.video.pause();
   };
 
-  this.getAllTime = function () {
-    if (typeof Worker === 'undefined') {
-      const media = this.video.currentMedia;
-
-      if (media) {
-        return media.duration;
-      }
-
-      return 0;
-    } else {
-      return this.video.duration;
-    }
+  this.getAllTime = function (this: MP3PlayerInstance) {
+    return this.video.duration;
   };
 
-  this.getCurrentTime = function () {
-    if (typeof Worker === 'undefined') {
-      const media = this.video.currentMedia;
-
-      if (media) {
-        return media.currentTime;
-      }
-
-      return 0;
-    } else {
-      return this.video.currentTime;
-    }
+  this.getCurrentTime = function (this: MP3PlayerInstance) {
+    return this.video.currentTime;
   };
 }
 
