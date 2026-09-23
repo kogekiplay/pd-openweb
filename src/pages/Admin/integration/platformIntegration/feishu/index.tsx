@@ -409,7 +409,7 @@ export default class FeiShu extends React.Component<any, any> {
                 { key: 'base', label: isLark ? _l('Lark集成') : _l('飞书集成') },
                 { key: 'other', label: _l('其他') },
               ].map(({ key, label }) => {
-                if (key === 'other' && !(this.state.status === 1 && !this.state.isCloseDing)) return;
+                if (key === 'other' && !(this.state.status === 1 && !this.state.isCloseDing)) return undefined;
 
                 return (
                   <span

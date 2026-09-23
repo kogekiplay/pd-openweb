@@ -91,7 +91,7 @@ const GMap = forwardRef((props, ref) => {
   }, [isCurrentPosition]);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded) return undefined;
 
     const dargStartListener = mapRef.current.addListener('dragstart', () => {
       resetAddRecordBtn();

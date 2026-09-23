@@ -455,7 +455,7 @@ class App extends Component<any, any> {
     return groupData
       .filter(item => (viewHideNavi ? true : ![2, 4].includes(item.status)))
       .map((v, index) => {
-        if (v.workSheetId === 'other' && _.isEmpty(v.workSheetInfo)) return;
+        if (v.workSheetId === 'other' && _.isEmpty(v.workSheetInfo)) return undefined;
         return (
           <Fragment key={v.workSheetId}>
             {this.renderHeader(v, 'level2', index)}
@@ -905,6 +905,7 @@ class App extends Component<any, any> {
         />
       );
     }
+    return undefined;
   }
 
   renderBody() {

@@ -104,6 +104,7 @@ const Text = props => {
         textRef.current && textRef.current.removeEventListener('scroll', syncScroll);
       };
     }
+    return undefined;
   }, []);
 
   useEffect(() => {

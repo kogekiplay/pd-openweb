@@ -1992,7 +1992,7 @@ export default class DataFormat {
             );
 
             if (control.isImportFromExcel && curValue) {
-              return;
+              return undefined;
             }
 
             return _.some(

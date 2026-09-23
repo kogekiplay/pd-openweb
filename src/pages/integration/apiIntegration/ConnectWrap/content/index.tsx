@@ -204,6 +204,7 @@ export default function Info(props) {
       case 3:
         return <AccountList {...nodeInfo} connectId={connectData.id} hasAuth={connectData.hasAuth} />;
     }
+    return undefined;
   };
 
   return (

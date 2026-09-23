@@ -262,6 +262,7 @@ export default function InfoSet(props) {
 
                 setHs(true);
                 onChangePortalSetModel({ extendAttr });
+                return undefined;
               }}
             />
           </React.Fragment>

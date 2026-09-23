@@ -267,7 +267,7 @@ export default class ApplicationList extends Component<any, any> {
       <Fragment>
         {/* 标星分组 */}
         {markedGroup.map(item => {
-          if ((!item || !item.apps || _.isEmpty(item.apps)) && !canCreateApp) return;
+          if ((!item || !item.apps || _.isEmpty(item.apps)) && !canCreateApp) return undefined;
           return (
             <Fragment key={item.id}>
               {this.renderGroupDetail({

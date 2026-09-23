@@ -138,6 +138,7 @@ export default function BatchSetDialog(props) {
           if (sheetcolumnwidths[o.controlId]) {
             return { cid: o.controlId, width: sheetcolumnwidths[o.controlId] };
           }
+          return undefined;
         })
         .filter(o => !!o),
     loading: false,

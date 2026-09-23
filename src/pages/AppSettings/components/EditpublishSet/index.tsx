@@ -205,6 +205,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
         </Modal>
       );
     }
+    return undefined;
   };
 
   publishSettings = obj => {

@@ -33,6 +33,7 @@ const getDateFilter = id => {
     case 'currentYear':
       return { startDate: formatDate(moment().startOf('year')), endDate: today };
   }
+  return undefined;
 };
 
 export default function DatePickerFilter(props) {

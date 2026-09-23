@@ -617,7 +617,7 @@ const Signature = props => {
   }, []);
 
   useEffect(() => {
-    if (!popupVisible) return;
+    if (!popupVisible) return undefined;
 
     window.addEventListener('resize', resizeCanvas);
     window.addEventListener('orientationchange', resizeCanvas);
@@ -634,7 +634,7 @@ const Signature = props => {
   }, [lastInfo, popupVisible, resizeCanvas]);
 
   useEffect(() => {
-    if (!popupVisible || lastInfo) return;
+    if (!popupVisible || lastInfo) return undefined;
 
     const timer = setTimeout(initCanvas, 300);
 

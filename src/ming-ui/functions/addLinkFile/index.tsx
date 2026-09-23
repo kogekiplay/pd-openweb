@@ -60,6 +60,7 @@ function AddLinkFile(props) {
     }
 
     handleClose();
+    return undefined;
   };
 
   return (

@@ -662,6 +662,7 @@ export default class Workwx extends React.Component<any, any> {
     } else if (currentTab === 'interfaceLicense') {
       return <InterfaceLicense projectId={projectId} />;
     }
+    return undefined;
   };
   render() {
     let { intergrationType, currentTab, status, isProxy } = this.state;
@@ -756,7 +757,7 @@ export default class Workwx extends React.Component<any, any> {
                 )}
                 <div className={cx('tabBox', { singleTab: !(this.state.status === 1 || intergrationType === 2) })}>
                   {TABS.map(({ key, label }) => {
-                    if (key === 'other' && !(this.state.status === 1 || intergrationType === 2)) return;
+                    if (key === 'other' && !(this.state.status === 1 || intergrationType === 2)) return undefined;
 
                     if (
                       key === 'chatSetting' &&
@@ -770,7 +771,7 @@ export default class Workwx extends React.Component<any, any> {
                           window.platformENV.isLocal)
                       )
                     )
-                      return;
+                      return undefined;
 
                     if (
                       key === 'interfaceLicense' &&
@@ -781,7 +782,7 @@ export default class Workwx extends React.Component<any, any> {
                         this.state.status === 1
                       )
                     )
-                      return;
+                      return undefined;
 
                     return (
                       <span

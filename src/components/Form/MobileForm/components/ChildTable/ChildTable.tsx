@@ -1080,6 +1080,7 @@ class ChildTable extends React.Component<any, any> {
     } else {
       return true;
     }
+    return undefined;
   };
 
   // 删除记录

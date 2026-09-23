@@ -313,6 +313,7 @@ export const updateFolderSocketSource = source => (dispatch: AppDispatch, getSta
     type: 'UPDATE_DATA_SOURCE',
     data: accountTasksKV,
   });
+  return undefined;
 };
 
 // 更新下属socket推送过来的数据

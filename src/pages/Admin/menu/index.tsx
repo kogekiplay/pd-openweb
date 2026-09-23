@@ -106,13 +106,13 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
       (window.platformENV.isLocal || window.platformENV.isOverseas) &&
       !window.platformENV.isPlatform
     )
-      return;
+      return undefined;
     if (
       key === 'weixin' &&
       (window.platformENV.isLocal || window.platformENV.isOverseas) &&
       md.global.SysSettings.hideWeixin
     )
-      return;
+      return undefined;
 
     if (
       key === 'platformintegration' &&
@@ -124,7 +124,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
       md.global.SysSettings.hideLark &&
       md.global.SysSettings.hideMicrosoftEntra
     ) {
-      return;
+      return undefined;
     }
 
     const isActive = () => _.some(routes, route => isRoutePathMatched(route.path, pathname));

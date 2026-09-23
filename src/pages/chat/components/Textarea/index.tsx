@@ -46,7 +46,7 @@ export default class TextareaBox extends Component<any, any> {
   }
   handleKeyDown(event) {
     if (event.which === 13) {
-      if (this.isInputComposing(event)) return;
+      if (this.isInputComposing(event)) return undefined;
 
       const { value } = this.state;
       const isSendMsg =
@@ -81,6 +81,7 @@ export default class TextareaBox extends Component<any, any> {
 
       return false;
     }
+    return undefined;
   }
   handleBlur() {
     const { value } = this.state;

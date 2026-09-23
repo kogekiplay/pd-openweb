@@ -187,6 +187,7 @@ export default class CreateFolder extends Component<any, any> {
           alert(_l('操作失败，请稍后再试！'), 2);
         }
       });
+    return undefined;
   }
 
   handleScope = value => this.setState({ scope: value });

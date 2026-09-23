@@ -682,6 +682,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
     this.setState({
       addUserCount: num,
     });
+    return undefined;
   } // 输入框失焦
 
   handleInputBlur() {
@@ -829,7 +830,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
       <Fragment>
         <div className="workflowTypeContent">
           {WORKFLOW_TYPE_LIST.map(item => {
-            if (disabledPurchase && item.key === 1) return;
+            if (disabledPurchase && item.key === 1) return undefined;
             return (
               <div
                 className={cx('workflowTypeItem', {
@@ -1238,6 +1239,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
       case EXPAND_TYPE.CHUNKS:
         return this.renderChunksContent();
     }
+    return undefined;
   } // 第一步禁用时文案异化
 
   renderInfoShow() {
@@ -1357,6 +1359,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
       case EXPAND_TYPE.MERCHANT:
         return this.renderMerchantContent(true);
     }
+    return undefined;
   } //自动订购
 
   renderAutoOrder() {

@@ -290,6 +290,7 @@ function SortableItem({
         </Dropdown>
       );
     }
+    return undefined;
   };
 
   return (

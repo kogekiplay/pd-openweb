@@ -152,6 +152,7 @@ const fileConfirmMethods = defineMethods<FileConfirmFields>()({
         if (e.keyCode === 27) {
           cancel();
         }
+        return undefined;
       });
       FC.previewFile();
       FC.first = true;
@@ -175,6 +176,7 @@ const fileConfirmMethods = defineMethods<FileConfirmFields>()({
       FC.first = false;
       return true;
     }
+    return undefined;
   },
   previewFile: function () {
     var FC = this;

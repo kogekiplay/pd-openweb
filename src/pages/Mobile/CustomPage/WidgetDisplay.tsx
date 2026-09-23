@@ -157,6 +157,7 @@ function WidgetDisplay(props) {
     if (componentType === 'subsection') {
       return <Subsection widget={widget} />;
     }
+    return undefined;
   };
 
   return (

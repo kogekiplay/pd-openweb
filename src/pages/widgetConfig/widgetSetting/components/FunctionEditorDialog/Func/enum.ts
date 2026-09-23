@@ -328,7 +328,7 @@ export const functions = {
   // 求余
   MOD: function (number, divisor) {
     if (typeof number === 'undefined') {
-      return;
+      return undefined;
     }
 
     number = Number(number);
@@ -619,7 +619,7 @@ export const functions = {
     }
 
     if (!(lon1 && lat1 && lon2 && lat2)) {
-      return;
+      return undefined;
     }
 
     if (lat1 === lat2 && lon1 === lon2) {
@@ -692,7 +692,7 @@ export const functions = {
   },
   INCLUDE: function (value, matchStr) {
     if (!value || !matchStr) {
-      return;
+      return undefined;
     }
 
     return String(value).indexOf(matchStr) > -1;
@@ -809,7 +809,7 @@ export const functions = {
   // 工作日计算函数
   WORKDAY: function (start_date, days, holidays = []) {
     if (!start_date) {
-      return;
+      return undefined;
     }
 
     if (!isDateStr(start_date)) {
@@ -841,7 +841,7 @@ export const functions = {
   // 工作日计算函数（支持自定义周末）
   WORKDAY_INTL: function (start_date, days, weekend = 1, holidays = []) {
     if (!start_date) {
-      return;
+      return undefined;
     }
 
     if (!isDateStr(start_date)) {
@@ -907,7 +907,7 @@ export const functions = {
   // 周数计算函数
   WEEKNUM: function (date, return_type = 1) {
     if (!date) {
-      return;
+      return undefined;
     }
 
     if (!isDateStr(date)) {

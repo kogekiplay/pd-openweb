@@ -43,7 +43,7 @@ export default function FeatureListWrap(props) {
 
         const featureType = getFeatureStatus(projectId, featureId);
 
-        if (!_.isUndefined(featureId) && !featureType) return;
+        if (!_.isUndefined(featureId) && !featureType) return undefined;
 
         return (
           <ConfigItemWrap

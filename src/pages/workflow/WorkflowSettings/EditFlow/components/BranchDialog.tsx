@@ -42,6 +42,7 @@ export default ({
         { text: _l('不移动'), value: 0 },
       ];
     }
+    return undefined;
   };
 
   // 结果分支

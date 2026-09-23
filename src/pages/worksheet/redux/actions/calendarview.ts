@@ -154,6 +154,7 @@ const formatData = arr => {
         index = j;
         return true;
       }
+      return undefined;
     });
 
     if (!alreadyExists) {

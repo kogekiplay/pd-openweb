@@ -197,6 +197,7 @@ export default function VersionUpgrade(props) {
     if (versionId === 'professional') {
       return v.type === 'standard' || (period === 'yearly' && v.type === 'professional' && currentTab === 'monthly');
     }
+    return undefined;
   };
 
   const onPurchase = (v?) => {

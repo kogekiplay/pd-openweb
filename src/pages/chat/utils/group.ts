@@ -133,6 +133,7 @@ export const createDiscussion = (accountid, cb) => {
         .then(data => {
           cb && cb(data, true);
         });
+      return undefined;
     },
   });
 };

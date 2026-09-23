@@ -595,6 +595,7 @@ const GroupFilterList = props => {
         </div>
       );
     }
+    return undefined;
   };
 
   const toList = item => {
@@ -678,7 +679,7 @@ const GroupFilterList = props => {
       } else {
         // 显示有数据的项 //排除全部和空
         if (navshow === '1' && count <= 0 && !['null', ''].includes(item.value)) {
-          return;
+          return undefined;
         }
 
         return (

@@ -494,6 +494,7 @@ const folderSelectMethods = defineMethods<FolderSelectFields>()({
                 .catch(function () {
                   alert(_l('操作失败, 请稍后重试'), 3);
                 });
+              return undefined;
             },
           },
           '.sharePermision .shareItem',
@@ -1153,6 +1154,7 @@ const folderSelectMethods = defineMethods<FolderSelectFields>()({
             var parentId = settings.parentId;
             var rootId = rootData ? rootData.id : '';
             folderSelect.handleAddFolder($this, name, parentId, rootId);
+            return undefined;
           },
           keydown: function (evt) {
             if (evt.keyCode == 13) {

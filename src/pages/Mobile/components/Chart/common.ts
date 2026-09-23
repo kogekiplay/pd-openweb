@@ -65,6 +65,7 @@ export const getLegendType = displaySetup => {
   } else {
     return false;
   }
+  return undefined;
 };
 
 /**

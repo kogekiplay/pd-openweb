@@ -74,6 +74,7 @@ const checkErrorPassword = password => {
     alert(passwordRegexTip || _l('密码，至少8-20位，且含字母+数字'), 3);
     return true;
   }
+  return undefined;
 };
 
 const RESULT_OBJ = {

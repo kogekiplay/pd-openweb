@@ -228,11 +228,12 @@ export function DragHeaderItem(props) {
     },
     drop(item, monitor) {
       if (monitor.isOver({ shallow: true })) {
-        if (!pointerDir) return;
+        if (!pointerDir) return undefined;
         const childLength = data.type === 52 ? _.get(putControlByOrder(data.relationControls), 'length') || 1 : 1;
         // 左右插入标签页控件
         return { mode: DRAG_MODE.INSERT_NEW_LINE, rowIndex: pointerDir === 'left' ? row : row + childLength };
       }
+      return undefined;
     },
     collect(monitor) {
       return { isOver: monitor.isOver({ shallow: true }) };

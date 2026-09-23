@@ -528,11 +528,11 @@ export function getRecordColor({
   const colorControl = _.find(controls, { controlId });
 
   if (!colorControl || colorControl.enumDefault2 !== 1) {
-    return;
+    return undefined;
   }
 
   if (!row[colorControl.controlId as string]) {
-    return;
+    return undefined;
   }
 
   let activeKey = safeParse(row[colorControl.controlId as string])[0];
@@ -689,6 +689,7 @@ export function getSubListUniqueError({
         .reduce((a, b) => ({ ...a, ...b })),
     };
   }
+  return undefined;
 }
 
 export async function getRecordLandUrl({
@@ -867,6 +868,7 @@ export async function handleRowData(props: { rowId?: string; worksheetId?: strin
   } else {
     RE_CREATE_ERROR[data.resultCode] && alert(RE_CREATE_ERROR[data.resultCode], 2);
   }
+  return undefined;
 }
 
 /**

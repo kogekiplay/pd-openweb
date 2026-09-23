@@ -180,7 +180,7 @@ export const showArrowSetting = (data, values = [], actionType, from) => {
 export function getTextById(data, controls: FormControl[] = [], actionType, from?) {
   const tree = getNewDropDownData(data, actionType);
   let currentArr = [];
-  if (_.find(tree, i => i.sectionId)) return;
+  if (_.find(tree, i => i.sectionId)) return undefined;
 
   controls.forEach(controlsItem => {
     const { childControlIds = [], controlId = '' } = controlsItem;
@@ -438,6 +438,7 @@ export function checkConditionError(condition) {
         }
       }
   }
+  return undefined;
 }
 
 export function formatFilterValue(condition) {

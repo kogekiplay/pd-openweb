@@ -214,6 +214,7 @@ export default class RepeatBox extends Component<any, any> {
             selectedValue={moment(untilDate)}
             disabledDate={date => {
               if (date.isSameOrBefore(moment(end), 'day')) return true;
+              return undefined;
             }}
             onSelect={selectDate => {
               if (selectDate) {

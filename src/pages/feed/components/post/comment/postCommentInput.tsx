@@ -196,6 +196,7 @@ class PostCommentInput extends React.Component<any, any> {
                   },
                 ),
               );
+              return undefined;
             });
           });
           comp.bound = true;

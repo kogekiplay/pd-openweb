@@ -163,7 +163,7 @@ export default function PhoneNumberInput({
   }, []);
 
   useEffect(() => {
-    if (hiddenCountry || !countryTriggerRef.current) return;
+    if (hiddenCountry || !countryTriggerRef.current) return undefined;
 
     const instance = new DialCodeSelectInstance({
       dom: countryTriggerRef.current,

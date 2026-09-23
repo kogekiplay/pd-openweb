@@ -343,7 +343,7 @@ export default function DisplayItem(props) {
       }
     },
     drop() {
-      if (!location) return;
+      if (!location) return undefined;
       const sectionId = type === 52 && !_.includes(['view_top'], location) ? controlId : data.sectionId || '';
 
       if (includes(['left', 'right'], location)) {

@@ -75,7 +75,7 @@ function getSource() {
   const queryStart = location.href.indexOf('?');
 
   if (queryStart < 0) {
-    return;
+    return undefined;
   }
 
   const query = qs.parse(location.href.slice(location.href.indexOf('?') + 1));

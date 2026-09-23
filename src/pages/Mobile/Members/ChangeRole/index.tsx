@@ -61,7 +61,7 @@ class ChangeRole extends React.Component<any, any> {
           {roleList.list
             .filter(it => !_.includes([100, 2, 1], it.roleType))
             .map(item => {
-              if (!item.canSetMembers) return;
+              if (!item.canSetMembers) return undefined;
               return (
                 <List.Item
                   key={item.roleId}

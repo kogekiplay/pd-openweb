@@ -42,6 +42,7 @@ export const compareWithTime = (start, end, type: string) => {
     case 'isSameAndAfter':
       return startTime >= endTime;
   }
+  return undefined;
 };
 
 export const getRangeErrorType = ({ type, value, advancedSetting = {} }: FormControl) => {

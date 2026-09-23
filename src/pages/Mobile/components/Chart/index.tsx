@@ -104,14 +104,14 @@ function Chart({
     let isMounted = true;
 
     if (!reportType || data.status <= 0) {
-      return;
+      return undefined;
     }
 
     const cachedChart = chartComponentCache[reportType];
 
     if (cachedChart) {
       setChart({ reportType, Component: cachedChart });
-      return;
+      return undefined;
     }
 
     setChart({ reportType, Component: null });

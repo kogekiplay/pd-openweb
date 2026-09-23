@@ -251,7 +251,7 @@ export default function CustomEvent(props) {
         const { fileKey, voicefiles } = advancedSetting;
         const voiceFiles = VOICE_FILE_LIST.concat(safeParse(voicefiles, 'array'));
         const curFile = _.find(voiceFiles, v => v.fileKey === fileKey);
-        if (!fileKey || !curFile) return;
+        if (!fileKey || !curFile) return undefined;
         return <div className="textCon breakAll">{_.get(curFile, 'fileName')}</div>;
       case ACTION_VALUE_ENUM.OPERATION_FLOW:
       case ACTION_VALUE_ENUM.API:
@@ -299,6 +299,7 @@ export default function CustomEvent(props) {
           </Fragment>
         );
     }
+    return undefined;
   };
 
   /**
@@ -374,6 +375,7 @@ export default function CustomEvent(props) {
           </div>
         );
     }
+    return undefined;
   };
 
   /**

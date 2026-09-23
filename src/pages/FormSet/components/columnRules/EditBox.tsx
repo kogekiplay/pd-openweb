@@ -647,6 +647,7 @@ class EditBox extends React.Component<any, any> {
     if (activeTab === TAB_TYPES.LOCK_RULE) {
       return this.renderLockDesc();
     }
+    return undefined;
   };
 
   render() {

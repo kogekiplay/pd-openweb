@@ -90,6 +90,7 @@ export function antAlert(content, alertType = 1) {
     key,
     style,
   });
+  return undefined;
 }
 
 export function destroyAlert(key) {

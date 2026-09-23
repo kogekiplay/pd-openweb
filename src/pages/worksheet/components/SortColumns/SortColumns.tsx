@@ -142,5 +142,6 @@ export default class SortColumns extends React.Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
 }

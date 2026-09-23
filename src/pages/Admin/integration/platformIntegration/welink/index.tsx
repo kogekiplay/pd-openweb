@@ -432,6 +432,7 @@ export default class Welink extends React.Component<any, any> {
                 default:
                   break;
               }
+              return undefined;
             })
           ) : (
             this.state.failedStr

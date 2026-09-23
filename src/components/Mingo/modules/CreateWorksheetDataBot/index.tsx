@@ -203,7 +203,7 @@ async function getPresetDepartmentsAndRoles({ controls, projectId }: { projectId
   const hasDepartment = !!find(controls, { type: WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT });
   const hasOrgRole = !!find(controls, { type: WIDGETS_TO_API_TYPE_ENUM.ORG_ROLE });
 
-  if (!hasDepartment && !hasOrgRole) return;
+  if (!hasDepartment && !hasOrgRole) return undefined;
 
   const [departments, orgRoles] = await Promise.all([
     hasDepartment

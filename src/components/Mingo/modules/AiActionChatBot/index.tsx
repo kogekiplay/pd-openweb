@@ -157,8 +157,8 @@ function contentIsEmpty(content) {
   if (isArray(content)) {
     return (
       content.filter(item => {
-        if (item.type === 'text' && item.text === '') return;
-        if (item.type === 'tool_calls' && filterToolCalls(item.toolCalls).length === 0) return;
+        if (item.type === 'text' && item.text === '') return undefined;
+        if (item.type === 'tool_calls' && filterToolCalls(item.toolCalls).length === 0) return undefined;
         return true;
       }).length === 0
     );
@@ -194,7 +194,7 @@ function getContentOfMessage(message) {
 
 export function formatMessage(message) {
   if (!['user', 'assistant'].includes(message.role)) {
-    return;
+    return undefined;
   }
 
   const result: Record<string, any> = {};
@@ -207,7 +207,7 @@ export function formatMessage(message) {
   result.hasSubmit = message.hasSubmit;
   result.modelMessageId = get(message, 'metadata.id');
   if (isEmpty(result.content) && isEmpty(result.media)) {
-    return;
+    return undefined;
   }
 
   return result;

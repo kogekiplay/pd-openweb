@@ -155,6 +155,7 @@ export default class ProjectGroups extends React.Component<any, any> {
           return group.groupId === groupId;
         });
         if (result) return false;
+        return undefined;
       });
     }
 

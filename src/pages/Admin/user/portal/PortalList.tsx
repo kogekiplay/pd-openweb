@@ -203,7 +203,7 @@ export default class PortalList extends Component<any, any> {
   renderList() {
     const { list, loading } = this.state;
 
-    if (list === null) return;
+    if (list === null) return undefined;
 
     if (!list.length) {
       return (

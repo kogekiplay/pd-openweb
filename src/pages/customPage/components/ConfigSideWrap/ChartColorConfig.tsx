@@ -364,6 +364,7 @@ export default props => {
         background: `linear-gradient(to right, ${iconColor}, ${pageBgColor})`,
       };
     }
+    return undefined;
   };
 
   return (

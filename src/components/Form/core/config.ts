@@ -83,6 +83,7 @@ export const FORM_ERROR_TYPE_TEXT = {
         }
       }
     }
+    return undefined;
   },
   UNIQUE: () => {
     return _l('不允许重复');

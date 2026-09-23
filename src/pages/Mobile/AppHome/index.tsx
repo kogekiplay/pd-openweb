@@ -276,7 +276,7 @@ class AppHome extends React.Component<any, any> {
     const { myPlatformData, myPlatformLang } = this.props;
     let { markedAppItems = [] } = myPlatformData;
     markedAppItems = markedAppItems.filter(o => o && !(window.isMingDaoApp ? o.appDisplay : o.webMobileDisplay));
-    if (_.isEmpty(markedAppItems)) return;
+    if (_.isEmpty(markedAppItems)) return undefined;
 
     return (
       <Fragment>
@@ -318,7 +318,7 @@ class AppHome extends React.Component<any, any> {
       .map(item => _.filter(apps, it => item === it.id)[0])
       .filter(_.identity);
 
-    if (_.isEmpty(recentAppIds) && _.isEmpty(recentAppItems)) return;
+    if (_.isEmpty(recentAppIds) && _.isEmpty(recentAppItems)) return undefined;
     let list =
       recentType === 'app'
         ? recentApps.filter(o => o && !(window.isMingDaoApp ? o.appDisplay : o.webMobileDisplay))
@@ -366,7 +366,7 @@ class AppHome extends React.Component<any, any> {
   renderCollectRecords = () => {
     const { collectRecord = {} } = this.state;
     const { collectRecords = [] } = this.props;
-    if (_.isEmpty(collectRecords)) return;
+    if (_.isEmpty(collectRecords)) return undefined;
 
     const projectObj = getCurrentProject(
       localStorage.getItem('currentProjectId') || (md.global.Account.projects[0] || {}).projectId,
@@ -426,7 +426,7 @@ class AppHome extends React.Component<any, any> {
   // 图表收藏
   renderCollectCharts = () => {
     const { collectCharts } = this.props;
-    if (_.isEmpty(collectCharts)) return;
+    if (_.isEmpty(collectCharts)) return undefined;
 
     return (
       <Fragment>

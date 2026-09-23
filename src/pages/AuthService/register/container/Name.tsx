@@ -118,7 +118,7 @@ export default function (props) {
   email = emailOrTel && RegExpValidator.isEmail(emailOrTel) ? emailOrTel : email;
   const renderWarn = key => {
     const warn = warnList.find(o => o.tipDom === key);
-    if (!warn) return;
+    if (!warn) return undefined;
     return <div className={cx('warnTips')}>{warn.warnTxt}</div>;
   };
 

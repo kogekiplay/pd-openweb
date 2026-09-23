@@ -282,7 +282,7 @@ export default function EditRuleDrawer(props) {
 
   useEffect(() => {
     if (!visible) {
-      return;
+      return undefined;
     }
 
     if (!isEdit) {
@@ -295,7 +295,7 @@ export default function EditRuleDrawer(props) {
         initialRuleSnapshot: null,
         detailLoading: false,
       });
-      return;
+      return undefined;
     }
 
     let ignore = false;

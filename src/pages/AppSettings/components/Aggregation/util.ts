@@ -499,7 +499,7 @@ export function useInterval(callback, delay) {
   }, [callback]);
   useEffect(() => {
     if (!delay && delay !== 0) {
-      return;
+      return undefined;
     }
 
     const id = setInterval(() => savedCallback.current(), delay);

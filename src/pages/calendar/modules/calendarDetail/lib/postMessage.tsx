@@ -85,6 +85,7 @@ export default function ({ id, recurTime, members, address, description, allDay,
               .catch(() => {
                 alert(_l('发送失败'), 3);
               });
+            return undefined;
           }}
         >
           {_l('发送')}

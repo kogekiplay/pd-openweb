@@ -148,10 +148,13 @@ export default function CustomReference(props) {
         <AddFields
           showSys={true}
           handleClick={value => {
-            const totalReference = allControls.reduce((total = [], cur) => {
+            /* 原先不是自定义组件时回调什么都不返回：下一轮 total 就是 undefined，被参数默认值 total = [] 接成空数组 ——
+               前面累加的引用全丢了，只剩最后一个非自定义控件之后的那些，下面按它去重起的别名就可能重名。 */
+            const totalReference = allControls.reduce((total, cur) => {
               if (isCustomWidget(cur)) {
                 return total.concat(JSON.parse(_.get(cur, 'advancedSetting.reference') || '[]'));
               }
+              return total;
             }, []);
             const alias = _.includes(ALL_SYS, value.controlId)
               ? getUnUniqName(totalReference, value.controlId, 'name')

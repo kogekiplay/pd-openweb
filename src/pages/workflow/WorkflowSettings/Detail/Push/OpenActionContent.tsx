@@ -215,6 +215,7 @@ export default class OpenActionContent extends Component<any, any> {
         case PUSH_TYPE.LINK:
           return _.includes([3], value);
       }
+      return undefined;
     };
 
     _.remove(type, item => isRemove(item.value));

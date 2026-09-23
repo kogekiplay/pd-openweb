@@ -386,6 +386,9 @@ const Cascader = React.forwardRef(
             if (_.isUndefined(bIndexArr[i]) || aIndexArr[i] < bIndexArr[i]) return -1;
             if (_.isUndefined(aIndexArr[i]) || aIndexArr[i] > bIndexArr[i]) return 1;
           }
+
+          // 逐位都相等。原先这里掉出函数返回 undefined，按规范 NaN 当 0 处理，结果一样
+          return 0;
         });
       },
       [searchValue],

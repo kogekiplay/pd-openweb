@@ -187,18 +187,18 @@ export default function BatchEditRecord(props) {
 
     if (ownerIsEmpty) {
       alert(_l('拥有者不能为空'), 3);
-      return;
+      return undefined;
     }
 
     if (!needUpdateControls.length) {
       alert(_l('请至少修改一个字段'), 3);
-      return;
+      return undefined;
     }
 
     setIsUpdating(true);
     if (isFunction(triggerBatchUpdateRecords)) {
       triggerBatchUpdateRecords({ needUpdateControls, onClose });
-      return;
+      return undefined;
     }
 
     handleBatchUpdateRecords({
@@ -232,6 +232,7 @@ export default function BatchEditRecord(props) {
       },
       setIsUpdating,
     });
+    return undefined;
   }, [selectedControls, refCache, worksheetInfo]);
   useEffect(() => {
     if (activeControl) {

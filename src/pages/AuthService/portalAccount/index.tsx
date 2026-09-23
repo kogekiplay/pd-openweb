@@ -259,6 +259,7 @@ function ContainerCon(props) {
           cb && cb(res);
         }
       });
+    return undefined;
   };
 
   if (loading) {

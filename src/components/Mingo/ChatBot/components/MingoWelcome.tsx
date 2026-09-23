@@ -428,7 +428,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
       questionAbortRef.current?.abort();
       setQuestions([]);
       setQuestionStatus('idle');
-      return;
+      return undefined;
     }
 
     loadQuestions();

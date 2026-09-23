@@ -91,6 +91,7 @@ export default function ConfigGuide(props) {
       default:
         <div />;
     }
+    return undefined;
   };
 
   return (

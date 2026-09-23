@@ -105,7 +105,7 @@ function ConnectDataBase(props) {
 
   const testConnection = () => {
     const err = check();
-    if (err.length > 0) return;
+    if (err.length > 0) return undefined;
     setPending(true);
     const hostParams =
       addressList.length > 1 ? { hosts: addressList } : { host: addressList[0].host, port: addressList[0].port };

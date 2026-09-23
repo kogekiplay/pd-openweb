@@ -313,7 +313,7 @@ export default class EnterpriseCard extends Component<any, any> {
             </span>
           );
         } else {
-          return;
+          return undefined;
         }
 
       case 'review':
@@ -335,6 +335,7 @@ export default class EnterpriseCard extends Component<any, any> {
       case 'default':
         return null;
     }
+    return undefined;
   }
 
   //开通

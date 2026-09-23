@@ -301,6 +301,7 @@ export default class StepItem extends Component<any, any> {
         );
       }
     }
+    return undefined;
   };
 
   /**

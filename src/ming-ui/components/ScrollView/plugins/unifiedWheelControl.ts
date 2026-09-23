@@ -9,7 +9,7 @@ export default {
     const { customOptions = {} } = osInstance.options();
     const { isMobile, disableParentScroll, enableWheelDirectionControl } = customOptions;
 
-    if (isMobile || (!disableParentScroll && !enableWheelDirectionControl)) return;
+    if (isMobile || (!disableParentScroll && !enableWheelDirectionControl)) return undefined;
 
     const viewport = osInstance.elements().viewport;
     let lastScrollLeft = viewport.scrollLeft;

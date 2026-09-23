@@ -305,7 +305,7 @@ export default class UploadFiles extends Component<any, any> {
         isAvailable = checkFileAvailable(advancedSetting, newKcAttachmentData, temporaryData.length + originCount);
       }
 
-      if (!isAvailable) return;
+      if (!isAvailable) return undefined;
 
       // 最多只能上传20个知识文件
       if (newKcAttachmentData.length > 100) {
@@ -326,6 +326,7 @@ export default class UploadFiles extends Component<any, any> {
           }, 0);
         },
       );
+      return undefined;
     });
   }
   async openPcCameraDialog() {
@@ -720,7 +721,7 @@ export default class UploadFiles extends Component<any, any> {
               _this._uploading = true;
               _this.props.onUploadComplete(false);
             } else {
-              return;
+              return undefined;
             }
 
             // 附件配置控制（包含数量、单个文件大小、类型）
@@ -764,6 +765,7 @@ export default class UploadFiles extends Component<any, any> {
                   _this.onRemoveAll(uploader);
                   return false;
                 }
+                return undefined;
               });
             } else if (!isPublic && !noTotal && !window.isPublicApp) {
               // 判断个人上传流量是否达到上限
@@ -777,6 +779,7 @@ export default class UploadFiles extends Component<any, any> {
                   _this.onRemoveAll(uploader);
                   return false;
                 }
+                return undefined;
               });
             }
 
@@ -814,7 +817,7 @@ export default class UploadFiles extends Component<any, any> {
                 });
                 if (errors.length === files.length) {
                   _this.onRemoveAll(uploader);
-                  return;
+                  return undefined;
                 } else {
                   files.forEach(item => {
                     if (_.find(removeFiles, { id: item.id })) {
@@ -877,6 +880,7 @@ export default class UploadFiles extends Component<any, any> {
             _this.setState({
               temporaryData: _this.state.temporaryData.concat(addFiles),
             });
+            return undefined;
           }}
           onBeforeUpload={uploader => {
             _this.currentFile = uploader;

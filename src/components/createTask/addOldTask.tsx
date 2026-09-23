@@ -197,6 +197,7 @@ const addOldTaskMethods = defineMethods<AddOldTaskFields>()({
       .catch(function () {
         alert(_l('操作失败，请稍后再试'), 2);
       });
+    return undefined;
   },
 });
 

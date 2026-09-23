@@ -205,7 +205,7 @@ export class DialCodeSelectInstance {
   };
 
   _positionPanel = () => {
-    if (!this.element || !this.container) return;
+    if (!this.element || !this.container) return undefined;
     const rect = this.element.getBoundingClientRect();
     const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
     const viewportHeight = document.documentElement.clientHeight || window.innerHeight;

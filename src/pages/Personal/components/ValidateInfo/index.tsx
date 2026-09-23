@@ -147,13 +147,13 @@ export default class ValidateInfoCon extends Component<any, any> {
       if (!email) {
         alert(_l('请输入邮箱'), 3);
         this.email.focus();
-        return;
+        return undefined;
       }
 
       if (!RegExpValidator.isEmail(email)) {
         alert(_l('请输入正确的邮箱'), 3);
         this.email.focus();
-        return;
+        return undefined;
       }
     } else {
       let mobilePhone = this.iti.isValidNumber();
@@ -161,7 +161,7 @@ export default class ValidateInfoCon extends Component<any, any> {
       if (!mobilePhone) {
         alert(_l('请输入正确的手机号码'), 3);
         this.mobile.focus();
-        return;
+        return undefined;
       }
     }
 

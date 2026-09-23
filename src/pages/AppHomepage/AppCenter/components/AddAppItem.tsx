@@ -215,6 +215,7 @@ export default class AddAppItem extends Component<any, any> {
               if (hasDataBase && hasAppResourceAuth) {
                 return this.getMyDbInstances('importApp');
               }
+              return undefined;
             }}
             projectId={projectId}
             groupId={groupId}
@@ -292,6 +293,7 @@ export default class AddAppItem extends Component<any, any> {
         });
       }
     }
+    return undefined;
   };
 
   render() {

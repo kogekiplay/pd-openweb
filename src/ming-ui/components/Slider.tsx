@@ -170,7 +170,7 @@ function getColor(config, value, showAsPercent) {
 
 function getDefaultValue(value) {
   if (_.isUndefined(value) || _.isNull(value) || String(value).trim() === '' || _.isNaN(Number(value))) {
-    return;
+    return undefined;
   } else {
     return Number(value);
   }
@@ -178,7 +178,7 @@ function getDefaultValue(value) {
 
 function formatByStep(num, step, min = 0) {
   if (_.isUndefined(num)) {
-    return;
+    return undefined;
   }
 
   num = num - min;

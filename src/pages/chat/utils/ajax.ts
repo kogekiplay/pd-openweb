@@ -56,6 +56,7 @@ export const chatSessionItem = param => {
       },
     );
   }
+  return undefined;
 };
 
 /**

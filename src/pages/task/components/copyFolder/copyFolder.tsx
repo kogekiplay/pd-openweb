@@ -135,6 +135,7 @@ export default class CopyFolder extends Component<any, any> {
           errorMessage(source.error);
         }
       });
+    return undefined;
   }
 
   /**

@@ -662,6 +662,7 @@ class EditFlow extends Component<any, any> {
                   }
 
                   this.setState({ showThumbnail: !showThumbnail, refreshPosition: +new Date() });
+                  return undefined;
                 }}
               />
             </span>

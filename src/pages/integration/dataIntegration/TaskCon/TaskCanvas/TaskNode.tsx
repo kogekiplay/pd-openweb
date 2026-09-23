@@ -240,7 +240,7 @@ class TaskNode extends Component<any, any> {
     const { pathIds = [], nodeId, y } = nodeData;
 
     if (pathIds.length <= 0) {
-      return;
+      return undefined;
     }
 
     const featureType = getFeatureStatus(currentProjectId, VersionProductType.dataIntegrationETL);

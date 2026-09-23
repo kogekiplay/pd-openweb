@@ -412,6 +412,7 @@ export function handleRemoveNode(args) {
       })
       .catch(() => alert(_l('操作失败，请稍后重试')), 3);
   });
+  return undefined;
 }
 
 /**

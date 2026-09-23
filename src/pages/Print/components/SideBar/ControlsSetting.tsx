@@ -79,6 +79,7 @@ export default function ControlsSetting(props) {
       let isCheckPark = list.length < controls.length;
       return isCheckPark ? !!orderNumberCheck || list.length !== 0 : !orderNumberCheck;
     }
+    return undefined;
   };
 
   const setReceiveControls = (o, checked: boolean) => {

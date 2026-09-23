@@ -9,7 +9,7 @@ export const dateFormat = ({ startData = {}, endData = {}, extendedProps = {} })
   const start = extendedProps[startData.controlId];
   const end = extendedProps[endData.controlId];
 
-  if (!start && !end) return;
+  if (!start && !end) return undefined;
   // 没有结束时间
   if (!end) {
     if (moment().isSame(moment(start), 'year')) {

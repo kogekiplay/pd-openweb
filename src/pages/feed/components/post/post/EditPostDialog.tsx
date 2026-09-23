@@ -156,7 +156,7 @@ export default class EditPostDialog extends React.Component<any, any> {
 
       if (!scope) {
         alert(_l('请选择群组'), 3);
-        return;
+        return undefined;
       }
 
       this.setState({ submitting: true });
@@ -187,6 +187,7 @@ export default class EditPostDialog extends React.Component<any, any> {
           this.setState({ submitting: false });
         },
       );
+      return undefined;
     });
   }
 

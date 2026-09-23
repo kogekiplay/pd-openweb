@@ -49,6 +49,7 @@ export default class UploadFile extends Component<any, any> {
 
           // 开始上传
           isUploading = true;
+          return undefined;
         },
         FileUploaded(up, file, info) {
           up.stop();

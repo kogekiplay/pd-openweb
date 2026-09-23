@@ -300,6 +300,7 @@ export default class GeneraSelect extends Component<any, any> {
         this.toogleUserSelect(flattenResult[this.state.currentIndex]);
       }
     }
+    return undefined;
   };
 
   adjustViewport(direction: string, flattenResult: (SelectUser & SelectDepartment)[]) {
@@ -544,6 +545,7 @@ export default class GeneraSelect extends Component<any, any> {
         this.promiseObj = '';
       });
     }
+    return undefined;
   };
 
   /** 请求部门 */
@@ -635,6 +637,7 @@ export default class GeneraSelect extends Component<any, any> {
           });
         }
       });
+    return undefined;
   }
 
   /** 请求已离职 */
@@ -677,6 +680,7 @@ export default class GeneraSelect extends Component<any, any> {
       });
       this.promiseObj = '';
     });
+    return undefined;
   }
 
   getOriginDepartment(list: SelectDepartment[]) {
@@ -954,6 +958,7 @@ export default class GeneraSelect extends Component<any, any> {
         data: departmentTree,
       },
     });
+    return undefined;
   };
 
   /** 改变字母筛选 */
@@ -1709,6 +1714,7 @@ export default class GeneraSelect extends Component<any, any> {
     } else if (this.state.mainData.renderType === RenderTypes.DEPARTMENT) {
       return this.renderDepartmentContent();
     }
+    return undefined;
   }
 
   render() {

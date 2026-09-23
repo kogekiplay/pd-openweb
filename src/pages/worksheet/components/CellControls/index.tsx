@@ -203,7 +203,7 @@ export default class CellControl extends React.Component<any, any> {
     let newLeft;
     let newTop;
     const cell = document.querySelector(`.worksheetTableComp.id-${tableId}-id .cell-${cellIndex}`);
-    if (!cell) return;
+    if (!cell) return undefined;
     const scrollLeft = cell.parentElement.parentElement.scrollLeft;
     const scrollTop = cell.parentElement.parentElement.scrollTop;
     const gridWidth = cell.parentElement.parentElement.clientWidth;

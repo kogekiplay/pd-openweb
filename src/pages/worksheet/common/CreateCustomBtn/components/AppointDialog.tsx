@@ -129,7 +129,7 @@ class AppointDialog extends React.Component<any, any> {
 
   renderDefCom = (item, index: number, writeControls, data) => {
     if (!DEF_TYPES.concat(DEF_R_TYPES).includes(data.type)) {
-      return;
+      return undefined;
     }
 
     const { writeObject } = this.state;

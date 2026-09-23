@@ -286,7 +286,7 @@ export const getFields = async ({
     _.get(node, ['nodeConfig', 'config']) || {};
 
   if (dsType === DATABASE_TYPE.APPLICATION_WORKSHEET) {
-    if (!workSheetId) return;
+    if (!workSheetId) return undefined;
     const res = await worksheetApi.getWorksheetInfo({ worksheetId: workSheetId, getTemplate: true });
     const resFields = isGetDest
       ? _.get(res, 'template.controls') || []
@@ -311,7 +311,7 @@ export const getFields = async ({
     }
   } else {
     if (!tableName) {
-      return;
+      return undefined;
     }
 
     const params = {
@@ -522,6 +522,7 @@ export const getTimeGroupDropData = jdbcTypeId => {
   if ([91, 93, 2014].includes(jdbcTypeId)) {
     return [...DATE_TIME_DATA_PARTICLE, ...TIME_GATHER_PARTICLE];
   }
+  return undefined;
 };
 
 //获取当前字段的集合配置

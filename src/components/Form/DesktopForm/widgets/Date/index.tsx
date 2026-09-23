@@ -258,6 +258,7 @@ const DateWidgets = props => {
 
                 return allowweek.indexOf(day === 0 ? '7' : day) === -1 || !isBetween;
               }
+              return undefined;
             }}
             disabledTime={current => {
               return {

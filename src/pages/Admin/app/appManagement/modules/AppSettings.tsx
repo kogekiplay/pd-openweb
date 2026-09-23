@@ -153,6 +153,7 @@ export default class AppSettings extends React.Component<any, any> {
         </ScrollView>
       );
     }
+    return undefined;
   }
 
   render() {

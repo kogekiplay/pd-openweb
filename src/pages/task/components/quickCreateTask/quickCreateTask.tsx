@@ -139,6 +139,7 @@ class QuickCreateTask {
             end = end ? end.format('YYYY-MM-DD HH:00') : '';
             $createSingleDate.data('start', start);
             $createSingleDate.data('end', end);
+            return undefined;
           }}
           onClear={() => {
             delete $createSingleDate.data().start;

@@ -331,6 +331,7 @@ class UploadAssistant extends React.Component<any, any> {
       if (comp.state.fileList.find(fileItem => fileItem.status === UPLOAD_STATUS.UPLOADING)) {
         return '有文件正在上传中，确定要放弃上传？';
       }
+      return undefined;
     };
 
     window.onresize = function () {

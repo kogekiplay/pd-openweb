@@ -49,5 +49,6 @@ export default class ProjectInfo extends Component<any, any> {
       case 5:
         return <PositionInfo setLevel={this.setLevel} />;
     }
+    return undefined;
   }
 }

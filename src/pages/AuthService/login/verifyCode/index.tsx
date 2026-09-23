@@ -36,6 +36,7 @@ export default function (props) {
       }, 1000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [timeLeft]);
 
   useEffect(() => {

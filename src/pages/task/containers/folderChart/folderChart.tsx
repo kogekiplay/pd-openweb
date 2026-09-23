@@ -271,6 +271,7 @@ class FolderChart extends Component<any, any> {
       }
 
       that.updateChargeRefreshChart(isAuto, chargeAccountIDs, isDialog);
+      return undefined;
     });
 
     // 点击放大chart

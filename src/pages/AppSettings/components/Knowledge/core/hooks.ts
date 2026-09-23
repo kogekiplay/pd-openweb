@@ -51,7 +51,7 @@ export const useLinkTargetBlank = ({ selector, onlyExternal = false } = {}) => {
 // 只用到 .focus()，收窄到 HTMLElement 就够（input / textarea / contenteditable 都满足）
 export const useAutoFocus = (ref: React.RefObject<HTMLElement | null>, active = true) => {
   useEffect(() => {
-    if (!active) return;
+    if (!active) return undefined;
 
     let frame;
     let count = 0;
@@ -79,7 +79,7 @@ export const useAutoFocus = (ref: React.RefObject<HTMLElement | null>, active = 
 // 监听 Esc 键
 export const useEsc = (callback, active = true) => {
   useEffect(() => {
-    if (!active) return;
+    if (!active) return undefined;
 
     const handleKeyDown = e => {
       if (e.key === 'Escape') {
@@ -101,7 +101,7 @@ export const useKnowledgeUsage = (projectId: string) => {
   const [attachmentEnhancedTip, setAttachmentEnhancedTip] = useState('');
 
   useEffect(() => {
-    if (!projectId) return;
+    if (!projectId) return undefined;
 
     let canceled = false;
 

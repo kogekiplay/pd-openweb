@@ -555,11 +555,11 @@ let AppInfo = class AppInfo extends Component<any, any> {
       permissionType,
     );
 
-    if (type === 'unlockApp' && !(canLock && isPassword)) return;
+    if (type === 'unlockApp' && !(canLock && isPassword)) return undefined;
 
     if (rest.featureId) {
       const featureType = getFeatureStatus(projectId, rest.featureId);
-      if (!featureType) return;
+      if (!featureType) return undefined;
     }
 
     if (_.includes(['appAnalytics', 'copy', 'worksheetapi', 'modifyAppLockPassword'], type)) {

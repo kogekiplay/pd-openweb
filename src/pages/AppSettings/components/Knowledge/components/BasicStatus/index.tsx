@@ -225,6 +225,7 @@ const BasicStatus = props => {
           </Fragment>
         );
     }
+    return undefined;
   };
 
   return (

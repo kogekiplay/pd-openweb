@@ -950,6 +950,7 @@ export default class MyProcess extends Component<any, any> {
         </Fragment>
       );
     }
+    return undefined;
   }
 
   renderSignatureDialog() {

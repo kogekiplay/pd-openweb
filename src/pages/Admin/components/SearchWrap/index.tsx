@@ -205,6 +205,7 @@ export default function SearchWrap(props) {
         );
       default:
     }
+    return undefined;
   };
 
   useEffect(() => {

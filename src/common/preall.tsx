@@ -227,7 +227,7 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
         window.location.reload();
       }
 
-      return;
+      return undefined;
     }
 
     // 设置日期库语言。moment 和 dayjs 的 locale id 完全一致，所以共用一个取值。
@@ -264,11 +264,11 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
 
     if (allowNotLogin) window.allowNotLogin = true;
 
-    if (allowNotLogin || window.isPublicApp || (isMobilePrintForm && !md.global.Account.accountId)) return;
+    if (allowNotLogin || window.isPublicApp || (isMobilePrintForm && !md.global.Account.accountId)) return undefined;
 
     if (!md.global.Account.accountId) {
       navigateToLogin();
-      return;
+      return undefined;
     }
 
     initThemeMode();
@@ -291,13 +291,13 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
           md.global.Account.appId
         ) {
           location.href = pathCompletion(`/portal/${md.global.Account.appId}`);
-          return;
+          return undefined;
         }
 
         location.href = pathCompletion('/dashboard');
       }
 
-      return;
+      return undefined;
     }
 
     // 第一次进入
@@ -323,7 +323,7 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
 
       window.location.reload();
       window.isWaiting = true;
-      return;
+      return undefined;
     }
 
     // 设置网络多语言
@@ -422,6 +422,8 @@ export default function (Comp, { allowNotLogin, requestParams } = {}) {
     // Statistics/PublicShare、Chatbot/PublicShare），改异步要连它们一起动。
     // 这 4 个页面需要真实分享链接才能验证，单独一批做。
     getGlobalMeta({ allowNotLogin, requestParams, sync: true });
+    // 哨兵用法：调用方不要返回值（它们拿到的一直是 undefined）
+    return undefined;
   } else {
     return wrapComponent(Comp, { allowNotLogin, requestParams });
   }

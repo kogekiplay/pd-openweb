@@ -41,4 +41,5 @@ export const canSetGroup = (control: FormControl = {}, worksheetId = '', view: {
       return true;
     }
   }
+  return undefined;
 };

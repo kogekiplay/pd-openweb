@@ -56,6 +56,7 @@ const getExportPeriodList = (type, { startTime, endTime }, viewConfig) => {
   } else if (type === PERIOD_TYPE.year) {
     return getYears(startTime.startOf('Y'), endTime.endOf('Y').add(onlyWorkDay ? 2 : 1, 'Y'), null, viewConfig);
   }
+  return undefined;
 };
 
 let viewRequest = new WeakMap();

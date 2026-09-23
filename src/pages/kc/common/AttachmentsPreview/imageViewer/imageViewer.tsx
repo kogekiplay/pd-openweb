@@ -233,6 +233,7 @@ class ImageViewer extends React.Component<any, any> {
     if (scale > 1.2 && this.state.isThumbnail) {
       this.loadImage(this.props.src, () => this._isMounted && this.setState({ isThumbnail: false }));
     }
+    return undefined;
   }
 
   reSize(showThumbnail) {

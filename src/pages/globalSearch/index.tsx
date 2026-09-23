@@ -384,7 +384,7 @@ class GlobalSearch extends Component<any, any> {
       );
     }
 
-    if (!data && !appData) return;
+    if (!data && !appData) return undefined;
 
     if ((searchType === 'user' || searchType === 'group') && data && data[0]) {
       let _data = {

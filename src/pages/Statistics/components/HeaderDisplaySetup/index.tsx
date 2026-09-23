@@ -68,6 +68,7 @@ export default class HeaderDisplaySetup extends Component<any, any> {
         return true;
       }
     }
+    return undefined;
   }
   handleCheck(name: string, checked: boolean) {
     const { displaySetup } = this.props;

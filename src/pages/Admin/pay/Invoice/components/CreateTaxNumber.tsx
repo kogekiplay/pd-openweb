@@ -257,22 +257,22 @@ export default function CreateTaxNumber(props) {
     if (!window.platformENV.isOverseas && !window.platformENV.isLocal) {
       if (!taxNo) {
         alert(_l('开票主体不能为空'), 3);
-        return;
+        return undefined;
       }
 
       if (!email?.trim()) {
         alert(_l('请输入邮箱'), 3);
-        return;
+        return undefined;
       }
 
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         alert(_l('请输入正确的邮箱'), 3);
-        return;
+        return undefined;
       }
 
       if (!emailCode?.trim()) {
         alert(_l('请输入邮箱验证码'), 3);
-        return;
+        return undefined;
       }
 
       return true;
@@ -280,37 +280,37 @@ export default function CreateTaxNumber(props) {
 
     if (!companyName?.trim()) {
       alert(_l('请输入开票主体'), 3);
-      return;
+      return undefined;
     }
 
     if (!taxNo?.trim()) {
       alert(_l('请输入企业税号'), 3);
-      return;
+      return undefined;
     }
 
     if (!account?.trim()) {
       alert(_l('请输入百望账号'), 3);
-      return;
+      return undefined;
     }
 
     if (!password?.trim()) {
       alert(_l('请输入百望密码'), 3);
-      return;
+      return undefined;
     }
 
     if (!appKey?.trim()) {
       alert(_l('请输入AppKey'), 3);
-      return;
+      return undefined;
     }
 
     if (!appSecret?.trim()) {
       alert(_l('请输入AppSecret'), 3);
-      return;
+      return undefined;
     }
 
     if (!salt?.trim()) {
       alert(_l('请输入用户盐值'), 3);
-      return;
+      return undefined;
     }
 
     return true;

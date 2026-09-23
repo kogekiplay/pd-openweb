@@ -185,7 +185,7 @@ export default class Dectypt extends Component<any, any> {
           {!loading && (importPassword || lockPassword) && <div className="successTxt">{_l('解密成功')}</div>}
           <div className="passwordWrap flexRow mTop80 justifyContentCenter">
             {passwordData.map(item => {
-              if (!this.state[item.key]) return;
+              if (!this.state[item.key]) return undefined;
               return (
                 <div key={item.key} style={{ marginRight: item.key === 'importPassword' ? 68 : 0 }}>
                   <div className="mBottom8 textSecondary Font14">{item.title}</div>

@@ -138,6 +138,7 @@ class Message extends Component<any, any> {
       default:
         break;
     }
+    return undefined;
   }
   renderUserMessage() {
     const { moreVisible } = this.state;

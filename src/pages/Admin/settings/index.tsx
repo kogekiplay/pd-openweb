@@ -129,7 +129,7 @@ export default class GeneralSettings extends Component<any, any> {
             const { key, title, descrption, clickFunc, featureId } = item;
             const featureType = getFeatureStatus(Config.projectId, featureId);
 
-            if (featureId && !featureType) return;
+            if (featureId && !featureType) return undefined;
 
             return (
               <ConfigItemWrap

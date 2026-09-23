@@ -69,7 +69,7 @@ export const getParentDepartments = (node, filter, matcher = defaultMatcher) => 
 
   const runner = node => {
     let lastNode = arr[arr.length - 1] || {};
-    if (!node || lastNode[keyName] === filter) return;
+    if (!node || lastNode[keyName] === filter) return undefined;
     if (_.isArray(node)) {
       return _.each(node, runner);
     }

@@ -13,6 +13,7 @@ export function redirect(url, navigate = toUrl => (location.href = toUrl)) {
       return true;
     }
   }
+  return undefined;
 }
 
 /** 跳转到 url */

@@ -28,7 +28,7 @@ export const getAppConfig = (menus, permissionType) => {
 };
 
 export const getViewIcon = type => {
-  if (_.isUndefined(type)) return;
+  if (_.isUndefined(type)) return undefined;
 
   return (_.find(VIEW_TYPE_ICON, item => item.id === VIEW_DISPLAY_TYPE[type]) || {}).icon;
 };

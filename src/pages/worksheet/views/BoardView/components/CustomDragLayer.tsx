@@ -38,12 +38,12 @@ const CustomDragLayer = () => {
     const node = item?.clonedNode;
     const { width = 280, height = 100 } = item || {};
 
-    if (!container) return;
+    if (!container) return undefined;
 
     // 拖拽结束，清空
     if (!isDragging || !node || !currentOffset) {
       container.innerHTML = '';
-      return;
+      return undefined;
     }
 
     // 设置 container 的宽高与位置

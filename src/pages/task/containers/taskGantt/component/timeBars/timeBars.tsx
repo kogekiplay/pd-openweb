@@ -127,6 +127,7 @@ const ganttSource = {
         }
       }, 200);
     }
+    return undefined;
   },
 
   endDrag(props) {
@@ -487,6 +488,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
         marginLeft: data.arrowStatus === config.ARROW_STATUS.NULL ? this.getTimePosition(data.showStartTime) - 16 : -8,
       };
     }
+    return undefined;
   }
   /**
    * 获取单侧补足线的样式
@@ -560,6 +562,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
         </span>
       );
     }
+    return undefined;
   }
   /**
    * 显示或隐藏任务

@@ -80,6 +80,7 @@ export default function CreateEditRole(props) {
         alert(roleId ? _l('修改失败') : _l('创建失败'), 2);
       }
     });
+    return undefined;
   };
 
   return (

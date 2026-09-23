@@ -341,6 +341,7 @@ export default class AddUser extends Component<any, any> {
           this.setState({ isUploading: false });
         });
     }
+    return undefined;
   };
 
   renderBase = () => {

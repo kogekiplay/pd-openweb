@@ -375,6 +375,7 @@ class FolderDetail extends Component<any, any> {
           </span>
         );
       }
+      return undefined;
     };
 
     return (

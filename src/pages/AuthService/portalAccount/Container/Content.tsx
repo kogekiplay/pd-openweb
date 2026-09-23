@@ -285,4 +285,7 @@ export default function (props) {
         </WrapWXCon>
       );
   }
+
+  // 上面的 switch 没有 default：都不命中时原先是掉出函数返回 undefined，这里写明
+  return undefined;
 }

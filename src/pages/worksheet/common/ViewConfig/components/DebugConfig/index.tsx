@@ -476,6 +476,7 @@ export default function DebugConfig(params) {
           </React.Fragment>
         );
     }
+    return undefined;
   };
 
   return (

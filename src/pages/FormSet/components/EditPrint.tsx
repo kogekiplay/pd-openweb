@@ -157,6 +157,7 @@ class EditPrint extends React.Component<any, any> {
             hasChange: true,
             error: false,
           });
+          return undefined;
         },
         FilesAdded: up => {
           up.setOption('auto_start', true);

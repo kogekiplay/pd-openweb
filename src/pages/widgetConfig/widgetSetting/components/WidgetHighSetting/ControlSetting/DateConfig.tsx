@@ -377,4 +377,5 @@ export default function DateConfig(props) {
       </Fragment>
     );
   }
+  return undefined;
 }

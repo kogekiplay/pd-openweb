@@ -61,7 +61,7 @@ function getCellMaxShowNum(texts = [], { width = 100, maxHeight = 34 } = {}) {
   }
 
   if (!needLimit) {
-    return;
+    return undefined;
   }
 
   const lastHeight = getCellHeight(texts.slice(0, result).concat('='), width);
@@ -150,7 +150,7 @@ function getDefaultRelateSheetValue({ worksheetId, control, recordId, rowFormDat
     };
   } catch (err) {
     console.log(err);
-    return;
+    return undefined;
   }
 }
 

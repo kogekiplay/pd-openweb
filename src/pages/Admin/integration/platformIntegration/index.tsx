@@ -111,6 +111,7 @@ export default class PlatformIntegration extends Component<any, any> {
     }
 
     this.setState({ [`${type}Visible`]: true });
+    return undefined;
   };
 
   handleShowIntegration = () => {
@@ -199,7 +200,7 @@ export default class PlatformIntegration extends Component<any, any> {
               (window.platformENV.isLocal || window.platformENV.isOverseas) &&
               md.global.SysSettings[privatePermission]
             )
-              return;
+              return undefined;
 
             let featureType = getFeatureStatus(projectId, featureId);
             if (!featureType) return null;

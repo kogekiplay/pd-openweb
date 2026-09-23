@@ -390,6 +390,7 @@ class Task extends Component<any, any> {
           />
         );
     }
+    return undefined;
   };
   render() {
     const {

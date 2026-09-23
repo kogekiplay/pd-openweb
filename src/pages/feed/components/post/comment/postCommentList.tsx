@@ -129,6 +129,7 @@ class PostCommentList extends React.Component<any, any> {
               );
             }
           }
+          return undefined;
         })()}
       </div>
     );

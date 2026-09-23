@@ -135,6 +135,7 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
         return 'bottomLeft';
       }
     }
+    return undefined;
   };
 
   const getAvailableControls = () => {

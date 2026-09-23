@@ -1809,6 +1809,7 @@ export function checkTypeSupportForFunction(control: FormControl) {
     // 他表存储 30
     return checkTypeSupportForFunction({ ...control, type: control.sourceControlType });
   }
+  return undefined;
 }
 
 export function convertAiRecommendControlToControlData(

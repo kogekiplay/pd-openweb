@@ -69,7 +69,7 @@ function ColumnVisibilityControl(props) {
 
   // 直接从 DOM 获取当前表的 baseColumnHead 的高度
   useEffect(() => {
-    if (!tableId) return;
+    if (!tableId) return undefined;
     if (resizeObserverRef.current) {
       resizeObserverRef.current.disconnect();
       resizeObserverRef.current = null;

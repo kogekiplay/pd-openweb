@@ -266,6 +266,7 @@ export default class Action extends Component<any, any> {
 
       return <div className="pLeft8 pRight8">{refundType === '1' ? _l('全额退款') : _l('部分退款')}</div>;
     }
+    return undefined;
   }
 
   getMemberName(item) {

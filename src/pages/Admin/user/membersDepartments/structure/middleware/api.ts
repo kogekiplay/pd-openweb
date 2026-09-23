@@ -108,6 +108,7 @@ export default () => next => action => {
         // callback
         afterRequest.call(null);
       }
+      return undefined;
     },
     error =>
       next(

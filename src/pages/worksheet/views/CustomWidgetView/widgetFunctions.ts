@@ -142,6 +142,7 @@ export const utils = {
         } else if (res.action === 'row') {
           return { action: 'update', value: safeParse(res.value)[0] };
         }
+        return undefined;
       });
     }
 
@@ -362,12 +363,13 @@ export const utils = {
         },
       }).then(res => {
         if (res.action === 'close') {
-          return;
+          return undefined;
         } else if (res.action === 'selectRecord') {
           const records: RecordRow[] = safeParse(res.value, 'array');
           emitWidgetAction('select-records', records);
           return records;
         }
+        return undefined;
       });
     }
 
@@ -402,7 +404,7 @@ export const utils = {
         },
       }).then(res => {
         if (res.action === 'close') {
-          return;
+          return undefined;
         } else if (res.action === 'map') {
           const value = safeParse(res.value);
           const location = !isEmpty(value)
@@ -416,6 +418,7 @@ export const utils = {
           emitWidgetAction('select-location', [location]);
           return location;
         }
+        return undefined;
       });
     }
 

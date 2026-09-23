@@ -263,7 +263,7 @@ let RecordForm = class RecordForm extends Component<any, any> {
       !window.isPublicApp;
 
     if ((!formCoverVisible && isCoverid) || (formCoverVisible && !isCoverid)) {
-      return;
+      return undefined;
     }
 
     const sheetInfo = (

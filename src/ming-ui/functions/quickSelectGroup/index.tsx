@@ -268,7 +268,7 @@ export function SelectGroup(props) {
   };
 
   const renderCommonList = () => {
-    if (!commonList.length) return;
+    if (!commonList.length) return undefined;
 
     return (
       <Fragment>

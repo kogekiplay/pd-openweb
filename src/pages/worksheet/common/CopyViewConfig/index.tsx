@@ -360,6 +360,7 @@ export default function CopyViewConfig(props) {
                   </Fragment>
                 );
               }
+              return undefined;
             })}
           </div>
           <div>

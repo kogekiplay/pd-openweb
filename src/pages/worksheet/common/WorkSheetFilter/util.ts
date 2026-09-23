@@ -735,6 +735,7 @@ function getDefaultFilterType(control, from) {
 
     return FILTER_CONDITION_TYPE.EQ_FOR_SINGLE;
   }
+  return undefined;
 }
 
 export function getDefaultCondition(control, from?) {

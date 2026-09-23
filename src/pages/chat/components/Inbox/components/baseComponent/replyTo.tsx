@@ -73,6 +73,7 @@ export default class ReplyTo extends React.Component<any, any> {
         }
       });
     }
+    return undefined;
   }
 
   render() {

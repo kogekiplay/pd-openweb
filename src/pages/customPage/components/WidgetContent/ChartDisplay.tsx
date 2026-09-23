@@ -32,7 +32,7 @@ const ChartDisplay = props => {
 
     if (!customPageContent || customPageContent.classList.contains('adjustScreen')) {
       setVisible(true);
-      return;
+      return undefined;
     }
 
     const chart = customPageContent.querySelector(`.widgetContent .analysis-${widget.id}`);

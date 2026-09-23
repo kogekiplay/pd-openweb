@@ -233,7 +233,7 @@ class TaskList extends Component<any, any> {
       let metaKeyType;
 
       if ($(event.target).hasClass('markTask') || $(event.target).hasClass('taskStar')) {
-        return;
+        return undefined;
       }
 
       if ((event.ctrlKey || event.metaKey) && event.shiftKey) {
@@ -392,6 +392,7 @@ class TaskList extends Component<any, any> {
           top: offset.top + 40,
         });
       }
+      return undefined;
     });
 
     $('.myTaskSettingList li').on('click', function (this: HTMLElement) {
@@ -641,6 +642,7 @@ class TaskList extends Component<any, any> {
         flag = true;
         return false;
       }
+      return undefined;
     });
     // 是否继续加载
     if (!flag) {
@@ -691,6 +693,7 @@ class TaskList extends Component<any, any> {
         errorMessage(source.error);
       }
     });
+    return undefined;
   }
 
   /**
@@ -797,6 +800,7 @@ class TaskList extends Component<any, any> {
       } else {
         taskListSettings.myTaskIsMore[v] = false;
       }
+      return undefined;
     });
   }
 
@@ -855,6 +859,7 @@ class TaskList extends Component<any, any> {
           floatingHeader.css({
             visibility: 'hidden',
           });
+          return undefined;
         });
       });
     }

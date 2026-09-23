@@ -260,7 +260,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
       };
     } catch (err) {
       console.log(err);
-      return;
+      return undefined;
     }
   }
 

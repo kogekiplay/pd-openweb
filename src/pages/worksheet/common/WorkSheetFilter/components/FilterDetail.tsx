@@ -208,13 +208,14 @@ export default function FilterDetail(props) {
             onChange={value => {
               if (value.trim() === '') {
                 alert(_l('名称不能为空'), 3);
-                return;
+                return undefined;
               }
 
               if (filter.name !== value.trim()) {
                 actions.changeEditingFilter({ name: value.trim() });
                 return true;
               }
+              return undefined;
             }}
           />
         </Header>

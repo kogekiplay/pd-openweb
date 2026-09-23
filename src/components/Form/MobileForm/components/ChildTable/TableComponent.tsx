@@ -295,7 +295,7 @@ function TableComponent(props) {
 
     if (!showExpand || total <= INITIAL_EXPAND_RENDER_COUNT) {
       setRenderState({ key: renderKey, count: total });
-      return;
+      return undefined;
     }
 
     const useAnimationFrame = typeof window.requestAnimationFrame === 'function';

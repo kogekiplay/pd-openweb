@@ -58,6 +58,7 @@ export const canNavGroup = (control, worksheetId: string) => {
       return true;
     }
   }
+  return undefined;
 };
 
 const OPTIONS_TYPE = [

@@ -119,13 +119,13 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
 
       const result = _.uniq(keys).filter(key => {
         if (window.platformENV.isOverseas || window.platformENV.isLocal) {
-          if (key === 'aggregationTable' && !md.global.Config.EnableDataPipeline) return;
-          if (key === 'billinfo' && !window.platformENV.isPlatform) return;
-          if (key === 'weixin' && md.global.SysSettings.hideWeixin) return;
-          if (key === 'platformintegration' && allPlatformsHidden()) return;
+          if (key === 'aggregationTable' && !md.global.Config.EnableDataPipeline) return undefined;
+          if (key === 'billinfo' && !window.platformENV.isPlatform) return undefined;
+          if (key === 'weixin' && md.global.SysSettings.hideWeixin) return undefined;
+          if (key === 'platformintegration' && allPlatformsHidden()) return undefined;
         }
 
-        if (!window.platformENV.isOverseas && !window.platformENV.isLocal && key === 'quota') return;
+        if (!window.platformENV.isOverseas && !window.platformENV.isLocal && key === 'quota') return undefined;
         const itemMenu = subMenuArray.filter(sub => sub.key === key)[0] || {};
         let featureType = getFeatureStatus(projectId, itemMenu.featureId);
         let hasFeatureIdsAuth = false;
@@ -150,6 +150,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
 
       return result;
     }
+    return undefined;
   }
 
   renderHomeContent(routes) {

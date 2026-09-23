@@ -108,7 +108,7 @@ function Edit(params) {
           info.sourceControlType !== 29 &&
           _.get(info, 'advancedSetting.allowitem') != '1'
         ) {
-          return;
+          return undefined;
         }
 
         if (info.type === 6 && ['defsource'].includes(o)) {
@@ -271,11 +271,11 @@ function Edit(params) {
       case 'showtype':
         if (info.type === 11 && ['direction'].includes(o) && _.get(info, 'advancedSetting.checktype') !== '1') {
           //枚举值  显示方式非平铺 不显示排列方式
-          return;
+          return undefined;
         }
 
         if (info.type === 200 && info.sourceControlType === 29) {
-          return;
+          return undefined;
         }
 
         let dataList = ALLOW_ITEM_TYPES;
@@ -314,7 +314,7 @@ function Edit(params) {
         );
       case 'controls':
       case 'showControls':
-        if (info.type === 200 && info.sourceControlType === 29 && o === 'controls') return;
+        if (info.type === 200 && info.sourceControlType === 29 && o === 'controls') return undefined;
         let values = _.get(info, [o]) || [];
         return (
           <React.Fragment>
@@ -459,6 +459,7 @@ function Edit(params) {
       default:
         break;
     }
+    return undefined;
   };
 
   return (

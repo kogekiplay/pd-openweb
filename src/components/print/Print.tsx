@@ -475,6 +475,7 @@ export default class Print extends Component<any, any> {
               case 7:
                 return _l('重复日程') + '：';
             }
+            return undefined;
           };
 
           const relationshipItem = (relationValueItem: RecordRow, index: number) => {

@@ -663,6 +663,7 @@ class Header extends Component<any, any> {
     } else {
       execFunc();
     }
+    return undefined;
   };
 
   /**

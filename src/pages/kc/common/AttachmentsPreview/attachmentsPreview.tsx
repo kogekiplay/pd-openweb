@@ -520,6 +520,7 @@ class AttachmentsPreview extends React.Component<any, any> {
                               </Button>
                             );
                           }
+                          return undefined;
                         })()}
                         <p className="detail">
                           {_l('大小：')}

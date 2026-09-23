@@ -312,6 +312,7 @@ export default function HistorySide({
                                 renameInputRef.current && renameInputRef.current.focus();
                                 return false;
                               }
+                              return undefined;
                             },
                           });
                         }}

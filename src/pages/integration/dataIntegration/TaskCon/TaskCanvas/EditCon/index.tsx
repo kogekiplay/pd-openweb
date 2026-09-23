@@ -393,6 +393,7 @@ export default class EditorCon extends Component<any, any> {
       case 'AGGREGATE':
         return <Aggregate {...info} />;
     }
+    return undefined;
   };
 
   refresh = () => {
@@ -666,6 +667,7 @@ export default class EditorCon extends Component<any, any> {
           </WrapR>
         );
     }
+    return undefined;
   };
   render() {
     const { onUpdate } = this.props;

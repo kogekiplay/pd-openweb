@@ -26,7 +26,7 @@ const ViewDisplay = props => {
 
     if (!customPageContent || customPageContent.classList.contains('adjustScreen')) {
       setVisible(true);
-      return;
+      return undefined;
     }
 
     const view = customPageContent.querySelector(`.widgetContent .view-${setting.id}`);

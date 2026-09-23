@@ -253,7 +253,7 @@ export default function ChildTableFlatComp(props) {
   useEffect(() => {
     if (isEdit && expandRowIndex !== undefined && rowRefs.current[expandRowIndex]) {
       const element = rowRefs.current[expandRowIndex];
-      if (!element) return;
+      if (!element) return undefined;
 
       // 当展开内容较长时，需要等待内容完全渲染
       // 使用多重 requestAnimationFrame + setTimeout 确保 DOM 和内容都渲染完成
@@ -279,6 +279,7 @@ export default function ChildTableFlatComp(props) {
         if (timeoutId) clearTimeout(timeoutId);
       };
     }
+    return undefined;
   }, [expandRowIndex, isEdit, expandIds]);
 
   useEffect(() => {

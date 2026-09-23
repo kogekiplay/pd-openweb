@@ -176,7 +176,7 @@ function ConnectAuth(props) {
   const renderBasic = () => {
     if (!node.appId) {
       //还未配置过
-      return;
+      return undefined;
     }
 
     return (
@@ -536,7 +536,7 @@ function ConnectAuth(props) {
       );
     } else {
       if ((node.webHookNodes || []).length <= 0) {
-        return;
+        return undefined;
       }
 
       return (node.controls || []).length > 0 ? (

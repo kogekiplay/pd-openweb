@@ -88,6 +88,7 @@ class Switch extends Component<any, any> {
       });
       this.props.onClick(checked, this.props.value);
     }
+    return undefined;
   }
 
   render() {

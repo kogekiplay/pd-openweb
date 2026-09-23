@@ -21,7 +21,7 @@ export function EnlargeImage(props) {
   const { url, visible = true, onCancel } = props;
 
   useEffect(() => {
-    if (!url || !visible) return;
+    if (!url || !visible) return undefined;
 
     const handleKeyDown = event => {
       if (event.key !== 'Escape' && event.keyCode !== 27) return;

@@ -37,6 +37,7 @@ const renderTimeConsuming = (createDate, completeDate) => {
       </div>
     );
   }
+  return undefined;
 };
 
 const renderState = data => {
@@ -101,6 +102,7 @@ const renderState = data => {
       </div>
     );
   }
+  return undefined;
 };
 
 const renderSurplusTime = data => {

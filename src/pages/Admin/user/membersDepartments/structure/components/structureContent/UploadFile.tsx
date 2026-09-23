@@ -43,6 +43,7 @@ export default class UploadFile extends Component<any, any> {
             });
             return false; // 阻止文件选择弹层
           }
+          return undefined;
         },
         BeforeUpload: function (up, file) {
           // 导入过程进行锁定，文件上传功能失效
@@ -65,6 +66,7 @@ export default class UploadFile extends Component<any, any> {
 
           // 开始上传
           isUploading = true;
+          return undefined;
         },
         FileUploaded(up, file, info) {
           up.stop();

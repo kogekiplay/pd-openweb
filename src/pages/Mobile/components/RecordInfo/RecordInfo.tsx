@@ -1155,6 +1155,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
 
   loadSwitchRecord = props => {

@@ -318,7 +318,7 @@ export default function BillInfo({ match }) {
   };
 
   const fetchAiBenefitData = useCallback(() => {
-    if (!isSaas) return;
+    if (!isSaas) return undefined;
 
     setAiBenefitLoading(true);
     const { page, size, startDate: sd, endDate: ed } = aiBenefitParas;
@@ -592,6 +592,7 @@ export default function BillInfo({ match }) {
       const timer = setTimeout(fetchAiBenefitData, 0);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [fetchAiBenefitData, isSaas, displayRecordType]);
 
   const renderPay = ({ status, payAccountInfo = {}, orderId, recordType }) => {

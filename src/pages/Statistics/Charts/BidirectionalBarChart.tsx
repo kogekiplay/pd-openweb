@@ -368,6 +368,7 @@ export default class extends Component<any, any> {
               value: style.tooltipValueType ? labelValue : value,
             };
           }
+          return undefined;
         },
         domStyles: isDark
           ? {

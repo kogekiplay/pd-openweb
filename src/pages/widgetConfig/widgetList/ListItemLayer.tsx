@@ -84,7 +84,7 @@ export default function ListItemLayer(props) {
       );
     }
 
-    if (isEmpty(DEFAULT_CONFIG[enumType])) return;
+    if (isEmpty(DEFAULT_CONFIG[enumType])) return undefined;
     const { icon, widgetName } = DEFAULT_CONFIG[enumType];
     return (
       <div className="content">

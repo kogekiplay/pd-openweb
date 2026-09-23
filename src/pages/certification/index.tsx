@@ -209,6 +209,7 @@ export default function Certification(props) {
       }, 1000);
       return () => clearInterval(interval);
     }
+    return undefined;
   }, [currentPage, certStatus, token]);
 
   useEffect(() => {

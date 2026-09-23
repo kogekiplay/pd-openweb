@@ -158,7 +158,7 @@ export default class ResetPassword extends React.Component<any, any> {
 
     const renderWarn = key => {
       const warn = warnList.find(o => o.tipDom === key);
-      if (!warn) return;
+      if (!warn) return undefined;
       return <div className={cx('warnTips')}>{warn.warnTxt}</div>;
     };
 

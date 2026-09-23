@@ -433,7 +433,7 @@ function HoverPreviewPanel(props) {
   };
 
   useEffect(() => {
-    if (!imageUrl) return;
+    if (!imageUrl) return undefined;
     let canceled = false;
     const image = new Image();
 

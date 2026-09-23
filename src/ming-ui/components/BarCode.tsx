@@ -83,5 +83,6 @@ export default class Barcode extends Component<any, any> {
     } else if (renderer === 'img') {
       return <img ref={this.handleBarcode} alt="" />;
     }
+    return undefined;
   }
 }

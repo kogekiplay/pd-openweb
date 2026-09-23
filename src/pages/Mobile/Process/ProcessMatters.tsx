@@ -658,6 +658,7 @@ export default class ProcessMatters extends Component<any, any> {
         return countData.waitingApproval > 0 ? `(${countData.waitingApproval})` : null;
       }
     }
+    return undefined;
   }
   renderInput() {
     const { searchValue, sortVisible, filterVisible, bottomTab, topTab, queryParam, sortParam } = this.state;

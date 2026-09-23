@@ -256,6 +256,7 @@ class ViewConfigCon extends Component<any, any> {
             />
           );
       }
+      return undefined;
     };
 
     const renderTitleSet = () => {

@@ -290,7 +290,7 @@ export default function FieldMappingList(props) {
 
   const renderSelectType = data => {
     const { sourceField } = data;
-    if (!matchedTypes) return;
+    if (!matchedTypes) return undefined;
     const options = (matchedTypes[sourceField.id] || []).map((o, i) => {
       return {
         ...o,
@@ -323,7 +323,7 @@ export default function FieldMappingList(props) {
   const renderCheckbox = (data, key: string) => {
     const destField = data.destField || {};
     const sourceField = data.sourceField || {};
-    if (!matchedTypes) return;
+    if (!matchedTypes) return undefined;
     const isNotSupport = isNotSupportField(sourceField, matchedTypes);
 
     return (
@@ -347,7 +347,7 @@ export default function FieldMappingList(props) {
     const destField = data.destField || {};
     const sourceField = data.sourceField || {};
     const isValidField = isValidName(sourceField.name) || !sourceData.isDbType;
-    if (!matchedTypes) return;
+    if (!matchedTypes) return undefined;
     const matchedTypeIds = _.uniq((matchedTypes[sourceField.id] || []).map(type => type.dataType));
     const matchedMdTypeIds = _.uniq((matchedTypes[sourceField.id] || []).map(type => type.mdType));
     const isNotSupport = isNotSupportField(sourceField, matchedTypes);
@@ -484,7 +484,7 @@ export default function FieldMappingList(props) {
           flex: 3,
           render: data => {
             const sourceField = data.sourceField;
-            if (!matchedTypes) return;
+            if (!matchedTypes) return undefined;
             const isNotSupport = isNotSupportField(sourceField, matchedTypes);
 
             return (
@@ -562,7 +562,7 @@ export default function FieldMappingList(props) {
           flex: 9,
           render: data => {
             const sourceField = data.sourceField;
-            if (!matchedTypes) return;
+            if (!matchedTypes) return undefined;
             const isNotSupport = isNotSupportField(sourceField, matchedTypes);
 
             return (

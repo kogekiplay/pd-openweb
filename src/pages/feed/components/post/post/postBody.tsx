@@ -197,6 +197,7 @@ class PostBody extends React.Component<any, any> {
                   </div>
                 );
               }
+              return undefined;
             })()}
           </PostMain>
         </div>

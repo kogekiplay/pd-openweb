@@ -348,6 +348,7 @@ export default class InterfaceLicense extends Component<any, any> {
       case 3:
         return this.renderOrderDetail();
     }
+    return undefined;
   };
 
   render() {

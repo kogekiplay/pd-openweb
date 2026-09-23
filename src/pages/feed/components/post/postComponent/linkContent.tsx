@@ -32,6 +32,7 @@ class LinkContent extends React.Component<any, any> {
               </div>
             );
           }
+          return undefined;
         })()}
         {linkItem.linkDesc && <div className="textPrimary mTop5">{linkItem.linkDesc.toLowerCase()}</div>}
       </div>

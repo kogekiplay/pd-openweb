@@ -146,6 +146,7 @@ const getLocationTypes = locationType => {
     ];
     return columnLocationTypes;
   }
+  return undefined;
 };
 
 export const Location = ({ summary, locationType, onChangeSummary }) => {

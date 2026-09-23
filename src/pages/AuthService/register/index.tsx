@@ -293,6 +293,7 @@ export default function () {
       case 'inviteLinkExpirate':
         return <InviteLinkExpirate />;
     }
+    return undefined;
   };
 
   if (state.loading) return <LoadDiv className="mTop80" />;

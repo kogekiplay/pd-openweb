@@ -25,7 +25,7 @@ export const formatDateWithWeekday = dateStr => {
 };
 
 export const getWeekTitle = dates => {
-  if (!dates.length) return;
+  if (!dates.length) return undefined;
   // 周的第一天
   const start = dates[0];
   // 周的最后一天

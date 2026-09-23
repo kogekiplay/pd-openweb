@@ -323,6 +323,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
         </Dropdown>
       );
     }
+    return undefined;
   }
 
   renderDynamicFilter() {

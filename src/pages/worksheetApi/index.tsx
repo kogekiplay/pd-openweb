@@ -1580,7 +1580,7 @@ class WorksheetApi extends Component<any, any> {
     const { showMoreOption, appKey = '' } = this.state;
 
     if (!showMoreOption || appKey !== data.appKey) {
-      return;
+      return undefined;
     }
 
     return (

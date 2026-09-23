@@ -205,6 +205,7 @@ const editFolderMethods = defineMethods<EditFolderFields>()({
           alert(_l('操作失败，请稍后再试'), 2);
         }
       });
+    return undefined;
   },
 });
 

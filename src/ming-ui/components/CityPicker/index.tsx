@@ -384,7 +384,7 @@ export default function CityPicker(props) {
         {search ? (
           <CascaderSearchSelectWrap>
             {data.map(item => {
-              if (!item.path) return;
+              if (!item.path) return undefined;
 
               return (
                 <li

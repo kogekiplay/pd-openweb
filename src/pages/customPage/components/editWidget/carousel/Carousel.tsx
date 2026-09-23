@@ -383,6 +383,7 @@ export default function CarouselPreview(props) {
         </div>
       );
     }
+    return undefined;
   };
 
   const renderFileImage = (record, data) => {

@@ -91,7 +91,7 @@ export const useWidgetEvent = (controlId: string, callback) => {
   const unsubscribeRef = useRef(null);
 
   useEffect(() => {
-    if (!controlId) return;
+    if (!controlId) return undefined;
 
     const unsubscribe = widgetEventManager.subscribe(controlId, data => {
       if (callback) callback(data);
@@ -372,7 +372,7 @@ export const useFormEventManager = ({ containerRef, stateRef, from, disabledTabs
 
   // 注册事件监听器
   useEffect(() => {
-    if (browserIsMobile()) return;
+    if (browserIsMobile()) return undefined;
 
     window.addEventListener('keydown', handleTabChange);
     document.body?.addEventListener('click', handleClickOutSide);

@@ -254,6 +254,7 @@ function DeskFormWidget(props) {
         triggerCustomEvent({ ...item, triggerType: ADD_EVENT_ENUM.HIDE });
       };
     }
+    return undefined;
   }, [formDidMountFlag]);
 
   useEffect(() => {

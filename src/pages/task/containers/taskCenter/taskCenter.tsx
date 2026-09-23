@@ -380,6 +380,7 @@ class TaskCenter extends Component<any, any> {
     if (viewType === config.folderViewType.folderChart) {
       return <FolderChart />;
     }
+    return undefined;
   }
 
   /**

@@ -110,6 +110,7 @@ class Checkbox extends React.Component<any, any> {
       });
       this.props.onClick(checked, this.props.value, event);
     }
+    return undefined;
   }
 
   render() {

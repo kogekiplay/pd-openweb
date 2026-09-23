@@ -170,7 +170,7 @@ export default class HubContainer extends React.Component<any, any> {
 
     if ((type === 'dataMirror' && menuAuth.noMirrorMenu) || (type === 'stats' && menuAuth.noStatsMenu)) {
       navigateTo('/integration');
-      return;
+      return undefined;
     }
 
     if (
@@ -186,7 +186,7 @@ export default class HubContainer extends React.Component<any, any> {
             ? '/integration/source'
             : '/integration';
       navigateTo(navigateLink);
-      return;
+      return undefined;
     }
 
     return (

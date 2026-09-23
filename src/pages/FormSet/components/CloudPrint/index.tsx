@@ -207,6 +207,7 @@ const CloudPrint = props => {
       setOriginalData('');
       updateRenderData(result);
     }
+    return undefined;
   };
 
   const handleSave = () => {

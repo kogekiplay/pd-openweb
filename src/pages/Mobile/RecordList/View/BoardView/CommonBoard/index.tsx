@@ -58,7 +58,7 @@ const CommonBoard = props => {
     return (
       <Fragment>
         {viewData.map(item => {
-          if (item.key === '-1' && !item.rows?.length) return;
+          if (item.key === '-1' && !item.rows?.length) return undefined;
           return (
             <div key={item.key} className="groupHeaderItemWrap">
               <GroupByControl
@@ -83,7 +83,7 @@ const CommonBoard = props => {
     return (
       <Fragment>
         {viewData.map(item => {
-          if (item.key === '-1' && !item.rows?.length) return;
+          if (item.key === '-1' && !item.rows?.length) return undefined;
           return (
             <RecordList
               key={`recordItem-${item.key}`}
