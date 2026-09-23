@@ -323,7 +323,12 @@ export function isPseudoControl(
 }
 
 export interface RecordRow {
-  rowid?: string;
+  // 常从接口数据逐字段拷出来（rowid: item.rowid），拷的时候可能就是 undefined
+  rowid?: string | undefined;
+  /** 树形表格：父记录的 rowid */
+  pid?: string | undefined;
+  /** 树形表格：子记录 rowid 数组的 JSON 串 */
+  childrenids?: string | undefined;
   [controlId: string]: any;
 }
 

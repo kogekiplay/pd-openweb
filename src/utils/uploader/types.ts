@@ -41,7 +41,8 @@ export interface UploaderFile {
   serverName?: string;
   /** 服务端给的文件名（与 name 不同，name 是用户本地的） */
   fileName?: string;
-  url?: string;
+  /** 上传完按服务端返回改写；两边都没有时就是 undefined（见 createUploader 的 finishFile） */
+  url?: string | undefined;
   /** 从剪贴板粘进来的 */
   isFromClipBoard?: boolean;
   /** 校验不通过的原因分类，见 constants 的 UPLOAD_ERROR */
@@ -131,16 +132,19 @@ export interface UploadedFileResponse {
   fileName?: string;
   filePath?: string;
   originalFileName?: string;
-  serverName?: string;
+  /** 从队列文件上照抄，文件上没有时就是 undefined（见 createUploader 的 finishFile） */
+  serverName?: string | undefined;
 }
 
 export interface UploadErrorInfo {
-  code?: number;
+  /** 取凭证失败这类本地错误可能没有错误码，显式给 undefined（见 triggerUploadError） */
+  code?: number | undefined;
   message?: string;
   status?: number;
   /** HTTP 错误时后端返回体，本仓只读其中的 error 文案；返回体解析失败时显式给 undefined（见 qiniuV1 的 httpError） */
   response?: { error?: string } | undefined;
-  file?: UploaderFile;
+  /** 与具体文件无关的错误（如整批取凭证失败）显式给 undefined */
+  file?: UploaderFile | undefined;
   details?: string;
 }
 
@@ -190,7 +194,14 @@ export interface UploaderOption {
    *（10 个调用点都在用这条契约，见 createUploader.ts 的 uploadOne）。
    * 值一律是字符串：token/key 来自 UploaderFile，x: 那几个是 buildCustomVars 拼的。
    */
-  multipart_params?: Record<string, string | undefined>;
+  multipart_params?: { token?: string | undefined; key?: string | undefined; [name: string]: string | undefined };
+  /** 没给 drop_element 时，是否把 browse_button 也当拖放区（plupload 的同名选项，默认 true） */
+  dragdrop?: boolean;
+  /**
+   * 'h5' = 移动端 H5：FilesAdded 多给第三个参数 start，调用方做完压缩 / 加水印再调它开始上传
+   *（见 Mobile/components/AttachmentFiles）
+   */
+  source?: 'h5';
   /** 开始上传前的检查，返回 false 或 reject 即中止 */
   before_upload_check?: (up: Uploader, files: UploaderFile[]) => unknown;
   /** 校验失败 / 超数量时回调 */

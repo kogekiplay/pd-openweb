@@ -849,9 +849,10 @@ export default class TransactionDetails extends Component<any, any> {
       return (
         <Empty
           className="flex"
-          descClassName="textDisabled"
           detail={{
             desc: _l('您的账户目前暂无订单明细'),
+            // 原来写在 Empty 的顶层属性上，而 TableEmpty 只从 detail 里读 —— 一直没生效
+            descClassName: 'textDisabled',
             customIcon: <img className="customIcon" src={transactionEmptyImg} />,
           }}
         />

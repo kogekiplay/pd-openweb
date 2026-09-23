@@ -28,7 +28,7 @@ import type {
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 
-export function filterEmptyChildTableRows<T extends { rowid?: string }>(rows: T[] = []): T[] {
+export function filterEmptyChildTableRows<T extends { rowid?: string | undefined }>(rows: T[] = []): T[] {
   try {
     return rows.filter(row => !(row.rowid || '').startsWith('empty'));
   } catch (err) {
@@ -525,7 +525,9 @@ export function getRecordColor({
   colorItems?: string[] | '';
   row: RecordRow;
 }) {
-  const colorControl = _.find(controls, { controlId });
+  // 【不写成 _.find(controls, { controlId })】controlId 可能是 undefined，
+  // 那样的简写对不上 lodash 的「部分匹配」重载，会退到按对象取值的重载，推出一串数组方法的联合类型
+  const colorControl = _.find(controls, c => c.controlId === controlId);
 
   if (!colorControl || colorControl.enumDefault2 !== 1) {
     return undefined;
@@ -652,7 +654,9 @@ export function getSubListUniqueError({
   badData?: string[];
 }) {
   if (badData[0]) {
-    const [childTableControlId, controlId, value = ''] = badData[0].split(':');
+    // 服务端给的是「子表:控件:重复值」三段。缺控件段时按空串 —— 原来是 undefined，
+    // 拿它去取 r[controlId] 一样取不到，行为不变
+    const [childTableControlId, controlId = '', value = ''] = badData[0].split(':');
     const state = store.getState();
     let rows: RecordRow[] = state.rows;
 
@@ -933,9 +937,8 @@ export function sendCloudPrint({
 export function getRecordControlStyles(ruleControlAdvancedSettings: {
   [rowIdAndControlId: string]: ControlAdvancedSetting;
 }) {
-  return Object.keys(ruleControlAdvancedSettings).map(key => {
+  return Object.entries(ruleControlAdvancedSettings).map(([key, advancedSetting]) => {
     const [rowId, controlId] = [key.slice(0, key.lastIndexOf('-')), key.slice(key.lastIndexOf('-') + 1)];
-    const advancedSetting = ruleControlAdvancedSettings[key];
     const valueStyle = getValueStyle({
       type: 2,
       enumDefault: 1,

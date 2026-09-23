@@ -69,8 +69,10 @@ function parseSize(size: string | number | undefined): number {
   if (!size) return 0;
   const m = /^(\d+(?:\.\d+)?)\s*([kmg]?)b?$/i.exec(String(size).trim());
   if (!m) return 0;
-  const n = parseFloat(m[1]);
-  const unit = m[2].toLowerCase();
+  // 两个分组匹配上了就一定参与（第二个可以是空串），默认值只是给类型看的
+  const [, num = '', suffix = ''] = m;
+  const n = parseFloat(num);
+  const unit = suffix.toLowerCase();
   const factor = unit === 'g' ? 1024 ** 3 : unit === 'm' ? 1024 ** 2 : unit === 'k' ? 1024 : 1;
   return Math.round(n * factor);
 }
@@ -193,8 +195,10 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
     removeFile(target) {
       const id = typeof target === 'string' ? target : target && target.id;
       const idx = files.findIndex(f => f.id === id);
-      if (idx < 0) return;
-      const [removed] = files.splice(idx, 1);
+      // 没找到时 idx 是 -1，files[-1] 是 undefined —— 与原来的 idx < 0 同一个判据
+      const removed = files[idx];
+      if (!removed) return;
+      files.splice(idx, 1);
       const task = tasks.get(id);
       if (task) {
         task.abort();

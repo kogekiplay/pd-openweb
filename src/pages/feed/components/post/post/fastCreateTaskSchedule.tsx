@@ -9,7 +9,14 @@ import createCalendar from 'src/components/createCalendar/load';
 import createTask from 'src/components/createTask/load';
 import './postOperateList.css';
 
-class FastCreateTaskSchedule extends React.Component<any, any> {
+interface FastCreateTaskScheduleProps {
+  /** 动态正文里选中的文字，作为新任务描述 / 日程内容 */
+  selectText: string;
+  handFastCreate?: (() => void) | undefined;
+  style?: React.CSSProperties | undefined;
+}
+
+class FastCreateTaskSchedule extends React.Component<FastCreateTaskScheduleProps> {
   static override propTypes = {
     selectText: PropTypes.any.isRequired,
     handFastCreate: PropTypes.func,

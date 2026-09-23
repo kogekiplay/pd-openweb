@@ -14,12 +14,13 @@
  * 也就不再需要 refresh。
  */
 
+// 这几项由 createUploader 从 UploaderOption 原样转过来，调用方没给就是 undefined
 export interface FileSelectOption {
-  browseButton?: HTMLElement | string;
-  dropElement?: HTMLElement | string;
-  pasteElement?: HTMLElement | string;
-  multiple?: boolean;
-  accept?: string;
+  browseButton?: HTMLElement | string | undefined;
+  dropElement?: HTMLElement | string | undefined;
+  pasteElement?: HTMLElement | string | undefined;
+  multiple?: boolean | undefined;
+  accept?: string | undefined;
   /** 选到文件时回调。来源用于区分粘贴（需要打 isFromClipBoard 标记） */
   onFiles: (files: File[], source: 'browse' | 'drop' | 'paste') => void;
   /** 点击选择按钮时回调（对应 plupload 的 Browse 事件） */
