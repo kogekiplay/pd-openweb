@@ -2,7 +2,6 @@ import React, { lazy, PureComponent, Suspense } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Route, Routes } from 'react-router';
 import _ from 'lodash';
-import { navigateTo } from 'router/navigateTo';
 import { LoadDiv, WaterMark } from 'ming-ui';
 import withoutPermission from 'src/pages/worksheet/assets/withoutPermission.png';
 import expandRoutePaths from 'src/router/expandRoutePaths';
@@ -18,6 +17,7 @@ import ApplyRole from './organization/roleAuth/apply';
 import MyRole from './organization/roleAuth/myRole';
 import { menuList } from './router.config.js';
 import { allPlatformsHidden } from './util';
+import RedirectTo from 'src/router/RedirectTo';
 import './index.less';
 
 // 【按工厂缓存，不要每次渲染都 lazy() 一个新的】本函数是在 render 里被调的
@@ -237,6 +237,9 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
     return !currentItem.length;
   }
 
+  /* 下面几处「判断完要跳走」原先是在 render 里直接 navigateTo(...) 再 return null ——
+     渲染期间改路由状态，React 报「Cannot update a component (BrowserRouter) while rendering」。
+     改成返回 <RedirectTo>，在提交之后再调同一个 navigateTo，跳转逻辑一点没变。 */
   render() {
     const { authority = [], isLoading, routeKeys } = this.state;
     let { isSuperAdmin } = getCurrentProject(Config.projectId, true);
@@ -254,26 +257,22 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
     } //没有权限，可以申请管理员
 
     if (authority.includes(PERMISSION_ENUM.SHOW_APPLY) && !location.href.includes('admin/apply')) {
-      navigateTo('/admin/apply/' + Config.projectId);
-      return null;
+      return <RedirectTo url={'/admin/apply/' + Config.projectId} />;
     } //有权限，但是没有组织后台菜单权限
 
     if (authority.includes(PERMISSION_ENUM.SHOW_MY_CHARACTER) && !location.href.includes('admin/mycharacter')) {
-      navigateTo('/admin/mycharacter/' + Config.projectId);
-      return null;
+      return <RedirectTo url={'/admin/mycharacter/' + Config.projectId} />;
     } //超管跳转到首页
 
     if ((location.href.includes('admin/index') || location.href.includes('admin/apply')) && isSuperAdmin) {
-      navigateTo('/admin/home/' + Config.projectId);
-      return null;
+      return <RedirectTo url={'/admin/home/' + Config.projectId} />;
     }
 
     if (
       this.getCurrentAuth(routeKeys) &&
       routeKeys.filter(route => !ROUTE_CONFIG[PERMISSION_ENUM.CAN_PURCHASE].includes(route)).length
     ) {
-      navigateTo('/admin/' + (routeKeys.includes('home') ? 'home' : routeKeys[0]) + '/' + Config.projectId);
-      return null;
+      return <RedirectTo url={'/admin/' + (routeKeys.includes('home') ? 'home' : routeKeys[0]) + '/' + Config.projectId} />;
     }
 
     return this.renderRoutes();

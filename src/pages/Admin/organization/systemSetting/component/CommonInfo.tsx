@@ -211,7 +211,7 @@ export default class CommonInfo extends Component<any, any> {
     if (Config.project.licenseType === 0) {
       return (
         <div className="logoBoxBorder">
-          <img src={logo} alt="avatar" />
+          <img src={logo || undefined} alt="avatar" />
           <div
             className="logoIconBox"
             id="upload_image"
@@ -246,7 +246,7 @@ export default class CommonInfo extends Component<any, any> {
         onError={() => {}}
       >
         <div className="logoBoxBorder">
-          <img src={logo} alt="avatar" />
+          <img src={logo || undefined} alt="avatar" />
           <div className="logoIconBox" id="upload_image">
             <span className="Font15 icon-upload_pictures"></span>
           </div>

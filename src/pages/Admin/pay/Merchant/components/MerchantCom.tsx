@@ -122,9 +122,18 @@ export default class MerchantCom extends Component<any, any> {
     if (!window.platformENV.isOverseas && !window.platformENV.isLocal) return;
 
     const { projectId } = this.props;
-    paymentAjax.getMerchantUsage({ projectId }).then(res => {
-      this.setState({ merchantUsage: res });
-    });
+    /* silent + catch：这只是一个可选的数量提示，拿不到就不显示。
+       实测（2026-09-23）本部署上这个接口带着正确的 projectId 也返回异常「组织编号不能为空」——
+       是服务端没配它依赖的东西，前端没传错。原先既没 silent 也没 catch：
+       mdyAPI 遇到异常默认弹错误提示，于是每次打开商户页都弹一条用户无能为力的「组织编号不能为空」，
+       弹提示用的 antd 静态 message 又报「Static function can not consume context」，
+       加上这个 promise 没人接，控制台再多一条 Uncaught (in promise)。 */
+    paymentAjax
+      .getMerchantUsage({ projectId }, { silent: true })
+      .then(res => {
+        this.setState({ merchantUsage: res });
+      })
+      .catch(() => {});
   };
 
   onClickTrial = record => {
