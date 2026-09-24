@@ -6,7 +6,30 @@ export { treeTableViewData } from 'worksheet/common/TreeTableHelper/index.js';
 
 // 表视图表格属性
 
-const initialSheetViewConfig = {
+/** 表格列样式：advancedSetting.liststyle 里解析出来的一项（按 cid 建索引）；全仓读到的只有下面这些字段 */
+export interface SheetColumnStyle {
+  cid?: string | undefined;
+  width?: number | undefined;
+  /** 对齐：没配时数值类字段默认 2（右对齐），其余 0 */
+  direction?: number | undefined;
+  showtype?: number | undefined;
+  coverFillType?: number | undefined;
+}
+
+export interface SheetViewConfigState {
+  fixedColumnCount: number;
+  defaultScrollLeft: number;
+  /** 列宽：controlId → px */
+  sheetColumnWidths: Record<string, number>;
+  sheetColumnWidthsMap: Record<string, number>;
+  /** 临时隐藏的列（controlId） */
+  sheetHiddenColumns: string[];
+  allWorksheetIsSelected: boolean;
+  sheetSelectedRows: RecordRow[];
+  columnStyles: Record<string, SheetColumnStyle>;
+}
+
+const initialSheetViewConfig: SheetViewConfigState = {
   fixedColumnCount: 0,
   defaultScrollLeft: 0,
   sheetColumnWidths: {},
@@ -17,7 +40,7 @@ const initialSheetViewConfig = {
   columnStyles: {},
 };
 
-export function sheetViewConfig(state = initialSheetViewConfig, action: ReduxAction) {
+export function sheetViewConfig(state = initialSheetViewConfig, action: ReduxAction): SheetViewConfigState {
   switch (action.type) {
     // 记录选择逻辑
     case 'WORKSHEET_SHEETVIEW_SELECT_ALL':
@@ -62,13 +85,20 @@ export function sheetViewConfig(state = initialSheetViewConfig, action: ReduxAct
 
 // 表视图数据请求参数
 
-const initialSheetFetchParams = {
+export interface SheetFetchParamsState {
+  pageIndex: number;
+  pageSize: number;
+  /** 当前排序（至多一项，见 WORKSHEET_SHEETVIEW_UPDATE_SORTS） */
+  sortControls: { controlId?: string | undefined; datatype?: number | undefined; isAsc?: boolean | undefined }[];
+}
+
+const initialSheetFetchParams: SheetFetchParamsState = {
   pageIndex: 1,
   pageSize: 50,
   sortControls: [],
 };
 
-export function sheetFetchParams(state = initialSheetFetchParams, action: ReduxAction) {
+export function sheetFetchParams(state = initialSheetFetchParams, action: ReduxAction): SheetFetchParamsState {
   switch (action.type) {
     case 'WORKSHEET_SHEETVIEW_CHANGE_PAGEINDEX':
       return { ...state, pageIndex: action.pageIndex };
@@ -89,7 +119,21 @@ export function sheetFetchParams(state = initialSheetFetchParams, action: ReduxA
 
 // 表视图数据请
 
-const initialSheetViewData = {
+export interface SheetViewDataState {
+  loading: boolean;
+  rows: RecordRow[];
+  count: number;
+  /** 视图统计：types 是 controlId → 统计方式；values 是 controlId → 统计值（报表接口的原样值，没核对过） */
+  rowsSummary: { types: Record<string, number>; values: Record<string, ApiPayload> };
+  /** 分组统计：groupKey → { values }，另有一个固定的 types 键（见 WORKSHEET_SHEETVIEW_FETCH_REPORT_SUCCESS） */
+  groupRowsSummary: { types?: Record<string, number> | undefined; [groupKey: string]: ApiPayload };
+  /** 各视图的批量编辑权限：viewId → getViewPermission 的 view */
+  permission: Record<string, HapApi.MD.Entity.Role.AppRoleGrpcModel.ViewPermission>;
+  refreshFlag?: number | undefined;
+  pageCountAbnormal?: boolean | undefined;
+}
+
+const initialSheetViewData: SheetViewDataState = {
   // 表视图loading
   loading: true,
   // 表视图记录数据
@@ -104,7 +148,7 @@ const initialSheetViewData = {
   permission: {},
 };
 
-export function sheetViewData(state = initialSheetViewData, action: ReduxAction) {
+export function sheetViewData(state = initialSheetViewData, action: ReduxAction): SheetViewDataState {
   switch (action.type) {
     // 开始获取记录数据
     case 'WORKSHEET_SHEETVIEW_FETCH_ROWS_START':

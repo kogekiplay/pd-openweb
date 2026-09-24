@@ -384,6 +384,13 @@ export interface RecordRow {
   isCopy?: boolean | undefined;
   /** 子表行上改动过的控件 id，提交时只带这些（见 Form/core/utils 的子表增量） */
   updatedControlIds?: string[] | undefined;
+  // ── 分组表格里的伪行（rowid 为 'groupTitle' / 'loadGroupMore'），见 worksheet/redux/actions/sheetview 的分组逻辑 ──
+  /** 伪行所属分组的 key */
+  groupKey?: string | undefined;
+  /** 「加载更多」行正在加载 */
+  isLoading?: boolean | undefined;
+  /** 分组标题行：分组字段的控件类型 */
+  controlType?: number | undefined;
   [controlId: string]: any;
 }
 
