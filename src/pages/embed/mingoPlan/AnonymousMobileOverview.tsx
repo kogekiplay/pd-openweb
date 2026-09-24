@@ -1,7 +1,11 @@
 import React, { useCallback, useRef, useState } from 'react';
 import OverviewPopup, { OverviewController } from 'src/pages/Mobile/Mingo/components/OverviewPopup';
 
-export default function AnonymousMobileOverview({ autoOpenOnReady = false }) {
+export interface AnonymousMobileOverviewProps {
+  autoOpenOnReady?: boolean | undefined;
+}
+
+export default function AnonymousMobileOverview({ autoOpenOnReady = false }: AnonymousMobileOverviewProps) {
   const filesRef = useRef({});
   const autoOpenedRef = useRef(false);
   const [visible, setVisible] = useState(false);

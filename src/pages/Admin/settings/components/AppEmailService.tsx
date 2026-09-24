@@ -81,7 +81,11 @@ const mergeExpandedState = (nextServices = [], prevServices = []) => {
   }));
 };
 
-export default function AppEmailService(props) {
+export interface AppEmailServiceProps {
+  projectId: string;
+}
+
+export default function AppEmailService(props: AppEmailServiceProps) {
   const { projectId } = props;
   const [loading, setLoading] = useState(true);
   const [filterSceneEntityIds, setFilterSceneEntityIds] = useState([]);

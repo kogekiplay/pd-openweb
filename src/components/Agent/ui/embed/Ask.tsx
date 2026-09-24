@@ -414,7 +414,11 @@ const Skel = styled.div`
   animation-delay: ${p => p.$delay || 0}ms;
 `;
 
-export function AskSkeleton({ docked = true }) {
+export interface AskSkeletonProps {
+  docked?: boolean | undefined;
+}
+
+export function AskSkeleton({ docked = true }: AskSkeletonProps) {
   return (
     <Card $docked={docked}>
       <Header>

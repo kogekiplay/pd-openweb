@@ -85,7 +85,14 @@ const Wrap = styled.div`
   }
 `;
 
-function Option(props) {
+export interface OptionProps {
+  refreshToken: () => void;
+  onDel: () => void;
+  onReName: () => void;
+  onLog: () => void;
+}
+
+function Option(props: OptionProps) {
   const { refreshToken, onDel, onReName, onLog } = props;
   const [{ popupVisible }, setState] = useSetState({
     popupVisible: false,

@@ -106,7 +106,11 @@ export function FixedIcon(props) {
   );
 }
 
-export function CloseIcon(props) {
+export interface CloseIconProps {
+  onClose: () => void;
+}
+
+export function CloseIcon(props: CloseIconProps) {
   return (
     <IconWrap className="closeIcon" onClick={() => props.onClose()} isActive={true}>
       <Icon icon="close" className="Font16" />

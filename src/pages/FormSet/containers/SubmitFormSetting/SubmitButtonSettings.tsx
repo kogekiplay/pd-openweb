@@ -9,7 +9,12 @@ import { getShowViews } from 'src/pages/worksheet/views/util';
 import { btnList, SUBMIT_NEXT_ACTION_LIST } from './config';
 import { Wrap } from './style';
 
-const InputComponent = ({ str, handleBlur }) => {
+export interface InputComponentProps {
+  str: string;
+  handleBlur: React.FocusEventHandler<HTMLInputElement>;
+}
+
+const InputComponent = ({ str, handleBlur }: InputComponentProps) => {
   return (
     <Wrap>
       <p className="Font13">{_l('按钮名称')}</p>

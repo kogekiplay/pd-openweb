@@ -112,7 +112,14 @@ const DropdownBtn = styled(FlexCenter)`
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 `;
 
-function StaticInput(props) {
+export interface StaticInputProps {
+  value: string | number | readonly string[];
+  isEditing: boolean | undefined;
+  onChange: (value: string) => void;
+  onBlur: () => void;
+}
+
+function StaticInput(props: StaticInputProps) {
   const { value, isEditing, onChange, onBlur } = props;
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {

@@ -2,7 +2,12 @@
 import PropTypes from 'prop-types';
 import './mdLeftNav.css';
 
-function MDLeftNav(props) {
+export interface MDLeftNavProps {
+  className: string;
+  children: React.ReactNode;
+}
+
+function MDLeftNav(props: MDLeftNavProps) {
   return <div className={cx('Fixed mdLeftNav clearfix', props.className)}>{props.children}</div>;
 }
 

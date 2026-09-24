@@ -1,6 +1,10 @@
 import { Tooltip } from 'ming-ui/antd-components';
 
-export default function UpgradeIcon(props) {
+export interface UpgradeIconProps {
+  className?: string | undefined;
+}
+
+export default function UpgradeIcon(props: UpgradeIconProps) {
   const { className } = props;
 
   return (

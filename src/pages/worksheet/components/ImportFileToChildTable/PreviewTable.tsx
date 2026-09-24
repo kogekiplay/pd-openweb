@@ -112,7 +112,11 @@ function checkCellFullVisible(element) {
   };
 }
 
-function ControlTooltip(props) {
+export interface ControlTooltipProps {
+  control: FormControl;
+}
+
+function ControlTooltip(props: ControlTooltipProps) {
   const { control } = props;
 
   if (!includes([WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT, WIDGETS_TO_API_TYPE_ENUM.USER_PICKER], control.type)) {

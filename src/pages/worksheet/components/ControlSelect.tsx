@@ -38,7 +38,11 @@ const ControlIconItemCon = styled.div`
   }
 `;
 
-function ControlIconItem(props) {
+export interface ControlIconItemProps {
+  control?: FormControl | undefined;
+}
+
+function ControlIconItem(props: ControlIconItemProps) {
   const { control = {} } = props;
   const iconName = getIconByType(control.type);
   return (

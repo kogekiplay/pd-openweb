@@ -58,7 +58,13 @@ const CONFIG_DATA = {
   },
 };
 
-export default function EmptyIndexContent(props) {
+export interface EmptyIndexContentProps {
+  type?: string | undefined;
+  onBtnClick?: (() => void) | undefined;
+  hideBtn?: boolean | undefined;
+}
+
+export default function EmptyIndexContent(props: EmptyIndexContentProps) {
   const { type = 'merchant', onBtnClick = () => {}, hideBtn = false } = props;
   const data = CONFIG_DATA[type] || {};
 

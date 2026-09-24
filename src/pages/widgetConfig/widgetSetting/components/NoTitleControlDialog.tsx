@@ -26,7 +26,11 @@ const NoTitleControlWrap = styled.div`
   }
 `;
 
-export default function NoTitleControlDialog({ onClose }) {
+export interface NoTitleControlDialogProps {
+  onClose: () => void;
+}
+
+export default function NoTitleControlDialog({ onClose }: NoTitleControlDialogProps) {
   return (
     <Dialog
       visible

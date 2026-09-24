@@ -49,7 +49,11 @@ const SkeletonWrap = styled.div`
   }
 `;
 
-export default function AppGroupSkeleton({ isIndexPage }) {
+export interface AppGroupSkeletonProps {
+  isIndexPage?: boolean | undefined;
+}
+
+export default function AppGroupSkeleton({ isIndexPage }: AppGroupSkeletonProps) {
   return (
     <SkeletonWrap className={cx({ isIndexPage })}>
       <div className="wrap">

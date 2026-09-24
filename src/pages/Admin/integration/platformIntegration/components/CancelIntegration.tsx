@@ -13,7 +13,11 @@ const Wrap = styled.div`
   cursor: pointer;
 `;
 
-export default function CancelIntegration(props) {
+export interface CancelIntegrationProps {
+  clickCancel?: (() => void) | undefined;
+}
+
+export default function CancelIntegration(props: CancelIntegrationProps) {
   const { clickCancel = () => {} } = props;
 
   return (

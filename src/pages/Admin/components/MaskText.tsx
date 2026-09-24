@@ -18,7 +18,11 @@ const MaskTextWrap = styled.span`
   }
 `;
 
-export default function MaskText({ text }) {
+export interface MaskTextProps {
+  text: string;
+}
+
+export default function MaskText({ text }: MaskTextProps) {
   const [isMasked, setIsMasked] = useState(true);
 
   const handleMask = () => setIsMasked(!isMasked);

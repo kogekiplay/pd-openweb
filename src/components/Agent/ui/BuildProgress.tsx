@@ -231,7 +231,11 @@ const Dots = styled.span`
   }
 `;
 
-function DotsIndicator({ active }) {
+export interface DotsIndicatorProps {
+  active?: boolean | undefined;
+}
+
+function DotsIndicator({ active }: DotsIndicatorProps) {
   return (
     <Dots $active={active}>
       <span />

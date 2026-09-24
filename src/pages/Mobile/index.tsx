@@ -108,7 +108,11 @@ let App = class App extends Component<any, any> {
   }
 };
 
-function MobileFallback({ isPortal }) {
+export interface MobileFallbackProps {
+  isPortal: boolean;
+}
+
+function MobileFallback({ isPortal }: MobileFallbackProps) {
   const location = useLocation();
 
   // 原来这段是写在 <Route render={...}> 里的，也就是【渲染期间】直接调 navigateTo。

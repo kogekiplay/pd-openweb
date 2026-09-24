@@ -129,7 +129,13 @@ const LogItem = styled.div`
   }
 `;
 
-export default function VarLog(props) {
+export interface VarLogProps {
+  onClose: () => void;
+  variableId: string;
+  projectId?: string | undefined;
+}
+
+export default function VarLog(props: VarLogProps) {
   const { onClose, variableId, projectId = '' } = props;
   const selectUserRef = useRef<HTMLSpanElement>(null);
   const [{ selectUser, selectDate }, setFilter] = useSetState({

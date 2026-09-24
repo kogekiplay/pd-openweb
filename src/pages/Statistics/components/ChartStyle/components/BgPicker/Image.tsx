@@ -35,7 +35,11 @@ const Wrap = styled.div`
 
 export const images = require.context('./images', false, /\.jpg$/);
 
-const LoadImage = props => {
+export interface LoadImageProps {
+  index: number;
+}
+
+const LoadImage = (props: LoadImageProps) => {
   const { index } = props;
   const src = images(`./${index}.jpg`);
   return <div className="w100 h100 image" style={{ backgroundImage: `url(${src})` }} />;

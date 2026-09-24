@@ -376,7 +376,12 @@ function MobileUpdateUserDialog(props) {
   );
 }
 
-export function TaskRevokeAction(props) {
+export interface TaskRevokeActionProps {
+  className: string;
+  onClick: () => void;
+}
+
+export function TaskRevokeAction(props: TaskRevokeActionProps) {
   const { className, onClick } = props;
   return (
     <WrapCon className={cx('flexRow valignWrapper approveBtnWrapper', className, { hoverBtnWrap: !isMobile })}>

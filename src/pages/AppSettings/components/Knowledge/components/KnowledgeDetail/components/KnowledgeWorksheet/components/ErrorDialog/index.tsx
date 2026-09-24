@@ -79,7 +79,12 @@ const ErrorDialogWrap = styled.div`
   }
 `;
 
-const ErrorDialog = props => {
+export interface ErrorDialogProps {
+  visible: boolean;
+  onCancel: () => void;
+}
+
+const ErrorDialog = (props: ErrorDialogProps) => {
   const { visible, onCancel } = props;
 
   if (!visible) return null;

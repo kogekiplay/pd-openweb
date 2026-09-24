@@ -87,11 +87,16 @@ function navigateInFrame(win, path, refreshFirst = false) {
   }
 }
 
+export interface PreviewFrameProps {
+  src: string;
+  refreshFirst?: boolean | undefined;
+}
+
 // 预览策略：iframe 只在首次冷启动一次整段 SPA；之后 src 变化全部走前端路由 history.push（软导航），
 // 避免每次切页都整页 reload（慢 + 白屏闪烁）。SPA 尚未就绪时短暂轮询等待，超时兜底整页加载。
 // refreshFirst：自定义页面这类「iframe 内 sheetList 还没有的新页面」，push 前先 await 刷新应用结构，
 // 让 WorkSheet 能识别并渲染它（详见 navigateInFrame）——仍是软导航，不整页 reload。
-export default function PreviewFrame({ src, refreshFirst = false }) {
+export default function PreviewFrame({ src, refreshFirst = false }: PreviewFrameProps) {
   const containerRef = useRef(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const pendingRef = useRef(null);

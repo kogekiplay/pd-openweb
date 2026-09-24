@@ -238,12 +238,19 @@ function useStickyScroll(visible: boolean, focus, focusedContent) {
   return [ref, reset] as const;
 }
 
+export interface AppBuilderProps {
+  visible?: boolean | undefined;
+  isSingleMingoPlan?: boolean | undefined;
+  split?: boolean | undefined;
+  sidebarCollapsed?: boolean | undefined;
+}
+
 export default function AppBuilder({
   visible = true,
   isSingleMingoPlan = false,
   split = false,
   sidebarCollapsed = false,
-}) {
+}: AppBuilderProps) {
   const bus = useAgentBus();
   const { files, focus, setFocus, sidebarItems } = useFileStore();
   const [appMeta, setAppMeta] = useState({

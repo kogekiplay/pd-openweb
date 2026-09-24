@@ -3,7 +3,11 @@ import { emitter } from 'src/utils/common';
 
 const GlobalStoreContext = createContext();
 
-export const GlobalStoreProvider = ({ children }) => {
+export interface GlobalStoreProviderProps {
+  children: React.ReactNode;
+}
+
+export const GlobalStoreProvider = ({ children }: GlobalStoreProviderProps) => {
   const [store, setStore] = useState({});
 
   const setValue = (key, value) => {

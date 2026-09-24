@@ -142,8 +142,13 @@ const Content = styled.div`
   }
 `;
 
+export interface RenderBlankBlockProps {
+  columnSize: number;
+  number: number;
+}
+
 // 渲染占位块
-const RenderBlankBlock = ({ columnSize, number }) => {
+const RenderBlankBlock = ({ columnSize, number }: RenderBlankBlockProps) => {
   const list = [];
 
   if (!number) return null;

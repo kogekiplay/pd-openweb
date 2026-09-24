@@ -41,7 +41,11 @@ const JoinGroupCon = styled.div`
   }
 `;
 
-export default function NoProjectsStatus(props) {
+export interface NoProjectsStatusProps {
+  hasExternalApps?: boolean | undefined;
+}
+
+export default function NoProjectsStatus(props: NoProjectsStatusProps) {
   const { hasExternalApps } = props;
 
   if (hasExternalApps) {

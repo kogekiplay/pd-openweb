@@ -43,7 +43,12 @@ const DialogWrap = styled(Dialog)`
   }
 `;
 
-export default function HapAiDialog({ visible, onCancel = () => {} }) {
+export interface HapAiDialogProps {
+  visible: boolean;
+  onCancel?: (() => void) | undefined;
+}
+
+export default function HapAiDialog({ visible, onCancel = () => {} }: HapAiDialogProps) {
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 

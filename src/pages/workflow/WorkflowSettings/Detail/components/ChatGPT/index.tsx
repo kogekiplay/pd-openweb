@@ -191,7 +191,11 @@ const Cursor = styled.span`
   vertical-align: top;
 `;
 
-const NullContent = ({ codeType }) => {
+export interface NullContentProps {
+  codeType: number;
+}
+
+const NullContent = ({ codeType }: NullContentProps) => {
   return (
     <Null className="flexColumn alignItemsCenter justifyContentCenter flex h100">
       <div className="TxtCenter animation">

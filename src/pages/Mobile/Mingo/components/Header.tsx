@@ -14,7 +14,21 @@ function ToolbarActions({ onOpenHistory, onNewChat }) {
   );
 }
 
-export default function Header({ isChatting, disableProjectSelect, onOpenHistory, onFocusInput, onProjectChange }) {
+export interface HeaderProps {
+  isChatting: boolean;
+  disableProjectSelect: boolean;
+  onOpenHistory: () => void;
+  onFocusInput: () => void;
+  onProjectChange: () => void;
+}
+
+export default function Header({
+  isChatting,
+  disableProjectSelect,
+  onOpenHistory,
+  onFocusInput,
+  onProjectChange,
+}: HeaderProps) {
   if (isChatting) {
     return (
       <div className="mobileAiHeader flexRow">
