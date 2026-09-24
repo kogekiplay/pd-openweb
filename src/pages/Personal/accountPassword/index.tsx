@@ -194,7 +194,7 @@ export default class AccountChart extends React.Component<any, any> {
   }
 
   //微信或qq解绑
-  cancelBindAccount(state, type) {
+  cancelBindAccount(state, type: string) {
     account
       .unBindAccount({
         state: state,

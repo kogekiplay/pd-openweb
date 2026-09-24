@@ -107,7 +107,7 @@ export const updateTaskStatus = (listStatus: number, listSort: number) => (dispa
 };
 
 // 切换项目下的搜索范围
-export const updateFolderRange = folderSearchRange => {
+export const updateFolderRange = (folderSearchRange: number) => {
   return {
     type: 'UPDATE_FOLDER_RANGE',
     folderSearchRange,

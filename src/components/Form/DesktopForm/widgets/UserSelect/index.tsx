@@ -62,7 +62,7 @@ const UserSelect = props => {
     }, []),
   );
 
-  const onSave = (users, replaceItem) => {
+  const onSave = (users, replaceItem: SelectedEntityValue | undefined) => {
     const currentValue = currentValueRef.current;
 
     const newAccounts =

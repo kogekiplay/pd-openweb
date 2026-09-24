@@ -431,7 +431,7 @@ class TaskBasic extends Component<any, any> {
   /**
    * 成员 opHtml
    */
-  renderMemberOpHtml(account, hasAuth, isApply: boolean) {
+  renderMemberOpHtml(account, hasAuth: boolean, isApply: boolean) {
     // 无权限经过我自己
     if (!hasAuth && md.global.Account.accountId === account.accountId) {
       return (

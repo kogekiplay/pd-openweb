@@ -360,7 +360,7 @@ class App extends Component<any, any> {
     safeLocalStorageSetItem('currentNavWorksheetId', item.workSheetId);
   };
 
-  renderList(data, level) {
+  renderList(data, level: string) {
     const { viewHideNavi } = this.state;
     const { appDetail } = this.props;
     const { detail } = appDetail;
@@ -497,7 +497,7 @@ class App extends Component<any, any> {
       });
   }
 
-  renderHeader(data, level, index?: number | undefined) {
+  renderHeader(data, level: string, index?: number | undefined) {
     const { appDetail } = this.props;
     const { id, appNaviStyle } = appDetail.detail;
     const { expandGroupKeys = [], level2ExpandKeys = [] } = this.state;

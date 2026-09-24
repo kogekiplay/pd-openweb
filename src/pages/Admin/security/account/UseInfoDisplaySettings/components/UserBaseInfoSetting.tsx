@@ -102,7 +102,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     this.setState({ cardSettingData: copyData });
   };
 
-  renderAddFields = isCard => {
+  renderAddFields = (isCard: boolean) => {
     const typeFields = isCard ? 'cardSettingData' : 'baseSettingData';
     const selectIds = this.state[typeFields].map(v => v.id);
     const fields = getFieldsData(isCard);

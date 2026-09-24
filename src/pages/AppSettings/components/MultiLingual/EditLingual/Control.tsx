@@ -35,7 +35,7 @@ export default function Control(props) {
     );
   }
 
-  const handlePositionControl = c => {
+  const handlePositionControl = (c: FormControl) => {
     const el = document.querySelector(`.navItem-${c.controlId}`);
     const className = 'highlight';
     const highlightEl = el.querySelector('.itemName');

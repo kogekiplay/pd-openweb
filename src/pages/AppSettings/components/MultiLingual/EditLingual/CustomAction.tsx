@@ -14,7 +14,7 @@ export default function CustomAction(props) {
   const [sheetBtns, setSheetBtns] = useState<HapApi.MD.Entity.Worksheet.WorksheetBtnEntity[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const scrollViewRef = useRef<any>(undefined);
-  const [optionsEditDialogVisible, setOptionsEditDialogVisible] = useState('');
+  const [optionsEditDialogVisible, setOptionsEditDialogVisible] = useState<string | undefined>('');
 
   useEffect(() => {
     setLoading(true);
@@ -44,7 +44,7 @@ export default function CustomAction(props) {
     );
   }
 
-  const handlePositionItem = item => {
+  const handlePositionItem = (item: HapApi.MD.Entity.Worksheet.WorksheetBtnEntity) => {
     const el = document.querySelector(`.navItem-${item.btnId}`);
     const className = 'highlight';
     const highlightEl = el.querySelector('.itemName');

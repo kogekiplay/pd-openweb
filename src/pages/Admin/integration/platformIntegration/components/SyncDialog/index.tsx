@@ -329,7 +329,7 @@ export default class SyncDialog extends Component<any, any> {
     });
   };
 
-  getUserList = type => {
+  getUserList = (type: number) => {
     const { logDetailItems = [] } = this.state;
 
     return (

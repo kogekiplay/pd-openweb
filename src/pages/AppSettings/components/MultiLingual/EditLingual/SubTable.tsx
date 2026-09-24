@@ -32,7 +32,7 @@ export default function SubTable(props) {
   const controls: FormControl[] = (_.get(sheetInfo, 'template.controls') || []).filter(c => !ALL_SYS.includes(c.controlId));
 
   const renderSubTableDialog = () => {
-    const handlePositionControl = c => {
+    const handlePositionControl = (c: FormControl) => {
       const el = document.querySelector(`.navItem-${c.controlId}`);
       const className = 'highlight';
       const highlightEl = el.querySelector('.itemName');

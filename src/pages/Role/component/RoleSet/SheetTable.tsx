@@ -13,7 +13,7 @@ const Wrap = styled.div`
   flex: 52;
 `;
 
-export const changeSheetModel = (sheet, type, checked: boolean) => {
+export const changeSheetModel = (sheet, type: string, checked: boolean) => {
   const KEYS = {
     READ: 'canRead',
     EDIT: 'canEdit',

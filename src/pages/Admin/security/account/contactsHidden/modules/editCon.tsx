@@ -39,7 +39,7 @@ class EditCon extends React.Component<any, EditConState> {
     dispatch(updateRulesByRuleId(data));
   };
 
-  addUser = (_data, type) => {
+  addUser = (_data, type: number) => {
     const $this = this;
     const { projectId } = this.props;
     const SelectUserSettingsForAdd = {
@@ -62,7 +62,7 @@ class EditCon extends React.Component<any, EditConState> {
     });
   };
 
-  addDept = (_data, type) => {
+  addDept = (_data, type: number) => {
     const { projectId } = this.props;
     const $this = this;
 
@@ -78,7 +78,7 @@ class EditCon extends React.Component<any, EditConState> {
     });
   };
 
-  addOrgRoles = type => {
+  addOrgRoles = (type: number) => {
     const { projectId } = this.props;
     dialogSelectOrgRole({
       projectId,
@@ -125,7 +125,7 @@ class EditCon extends React.Component<any, EditConState> {
     this.updateData(dataByRuleId.concat(ids));
   };
 
-  renderRuleItem = (list, type) => {
+  renderRuleItem = (list, type: number) => {
     const { dataByRuleId, errorIds, projectId } = this.props;
     return (
       <div className={cx({ mBottom15: list.length })}>

@@ -19,7 +19,7 @@ const iteratee = item => {
   return item.parentId + '|' + item.id;
 };
 
-const filterByAppId = (list = [], appId: string, appType, subModule: number) => {
+const filterByAppId = (list = [], appId: string, appType: string, subModule: number) => {
   const filterList = list.filter(r => {
     if (appType === 'sub') return r.appId === appId;
     if (appType === 'subList') return !r.appId;
@@ -132,7 +132,9 @@ function WorksheetReferenceDialog(props) {
   }, [subModule, appType]);
 
   // 获取工作流
-  const getWorkflowReferences = options => {
+  const getWorkflowReferences = (
+    options: { appId: string; isRefresh: boolean } | { isRefresh: boolean } | { appId: string } | undefined,
+  ) => {
     return workflowAjax.getWorksheetReferences({
       worksheetId,
       worksheetName,
@@ -145,7 +147,9 @@ function WorksheetReferenceDialog(props) {
   };
 
   // 获取字段、业务规则、视图
-  const getWorksheetReferences = options => {
+  const getWorksheetReferences = (
+    options: { appId: string; isRefresh: boolean } | { isRefresh: boolean } | undefined,
+  ) => {
     return worksheetAjax.getWorksheetReferences({
       worksheetId,
       controlId,

@@ -21,7 +21,17 @@ function execFunc(this: unknown, func, ...args) {
  * @param  {int} bHeight The height of the second object
  * @return {bool}
  */
-function coordsCollide(aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight, tolerance) {
+function coordsCollide(
+  aTop,
+  aLeft,
+  bTop: number,
+  bLeft: number,
+  aWidth,
+  aHeight,
+  bWidth: number,
+  bHeight: number,
+  tolerance,
+) {
   if (typeof tolerance === 'undefined') {
     tolerance = 0;
   }

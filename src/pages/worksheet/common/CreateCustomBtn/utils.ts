@@ -35,7 +35,7 @@ export const getSectionId = controls => {
   return sectionIds;
 };
 
-export const getRealData = (control, controls: FormControl[], allControls: FormControl[], isAdd) => {
+export const getRealData = (control, controls: FormControl[], allControls: FormControl[], isAdd: boolean) => {
   //自身是子集
   if (control.sectionId) {
     //新增

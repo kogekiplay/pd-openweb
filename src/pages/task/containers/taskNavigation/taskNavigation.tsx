@@ -1362,7 +1362,7 @@ class TaskNavigation extends Component<any, TaskNavigationState> {
   /**
    * 渲染项目数据
    */
-  renderSlideFolder(data, projectId: string, callback) {
+  renderSlideFolder(data, projectId: string, callback: (() => void) | undefined) {
     const singleFolderTpl = singleFolder.replace('#include.singleFolderComm', singleFolderComm);
     const projectFolderTpl = projectFolder.replace('#include.singleFolderComm', singleFolderComm);
     const $folderList = projectId

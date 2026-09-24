@@ -282,7 +282,7 @@ export async function ensureAnonymousSession() {
 
 // 匿名漏斗语音凭证：复用同一个匿名 sessionId，凭证不长期缓存；登录态录音仍走 Recorder 默认 Mingo/GetFederationToken。
 export async function requestAnonymousVoiceToken(sessionId: string, { onSessionRefresh } = {}) {
-  async function request(sid) {
+  async function request(sid: string | undefined) {
     const res = await withCaptcha(extra =>
       agentRequest(
         { agentName: ANON_AGENT, sessionId: sid, ...(extra || {}) },

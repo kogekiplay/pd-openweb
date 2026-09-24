@@ -43,7 +43,7 @@ const ChunkPreview = props => {
   const [chunkDetailLoading, setChunkDetailLoading] = useState(false);
   const [chunkDetailTotal, setChunkDetailTotal] = useState(0);
   const [chunkDetailPageIndex, setChunkDetailPageIndex] = useState(1);
-  const [attachmentTypes, setAttachmentTypes] = useState([]);
+  const [attachmentTypes, setAttachmentTypes] = useState<string[]>([]);
   const [showAttachmentTypesFilter, setShowAttachmentTypesFilter] = useState(false);
 
   const debouncedSearch = useMemo(

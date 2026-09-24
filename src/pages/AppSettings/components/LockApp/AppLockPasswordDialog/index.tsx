@@ -62,7 +62,7 @@ const IconWrap = styled.div`
   margin-right: var(--space-3);
 `;
 
-const checkErrorPassword = password => {
+const checkErrorPassword = (password: string | undefined) => {
   const { passwordRegexTip } = md.global.SysSettings;
 
   if (!password) {

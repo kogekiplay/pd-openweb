@@ -47,7 +47,7 @@ export default props => {
     }
   };
 
-  const updateName = newName => {
+  const updateName = (newName: string) => {
     const { workSheetId, isActive, appItem, groupId } = props;
     const name = (newName || originalName).slice(0, 100);
     const { currentPcNaviStyle } = store.getState().appPkg;

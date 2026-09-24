@@ -216,7 +216,7 @@ const formatByGroup = (info, view, controls, gridTimes, currentTime: string | nu
   );
 };
 
-const formatRows = (item, view, controls, gridTimes, mustParse = true, currentTime) => {
+const formatRows = (item, view, controls, gridTimes, mustParse = true, currentTime: string | null) => {
   const rows: RecordRow[] = (item.rows || []).map(row => {
     let data = {
       ...formatRecordTime(mustParse ? JSON.parse(row) : row, view, controls), // startTime, endTime

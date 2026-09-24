@@ -43,7 +43,7 @@ function WorksheetRecordLogSelectTags(props) {
   } = props;
   const isMobile = browserIsMobile();
   const [preview, setPreview] = useState<boolean | number>(false);
-  const [preType, setPreType] = useState(undefined);
+  const [preType, setPreType] = useState<{ type: string; index: number } | undefined>(undefined);
   const [recordInfo, setRecordInfo] = useState(undefined);
   const [showMaskData, setShowMaskData] = useState(false);
   const [maskList, setMaskList] = useState([]);

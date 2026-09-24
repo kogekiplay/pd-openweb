@@ -305,7 +305,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     this.handleUpdateRecordTime(start, end);
   }
 
-  getStartTime(value) {
+  getStartTime(value: number) {
     const { row, viewConfig } = this.props;
     const { minDayWidth, onlyWorkDay, periodType, startType, startFormat, dayOff } = viewConfig;
 
@@ -357,7 +357,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     this.handleUpdateRecordTime(start, end);
   }
 
-  getEndTime(value) {
+  getEndTime(value: number) {
     const { row, viewConfig } = this.props;
     const { minDayWidth, onlyWorkDay, periodType, endType, endFormat, dayOff } = viewConfig;
 

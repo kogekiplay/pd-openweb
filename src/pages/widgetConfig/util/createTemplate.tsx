@@ -161,7 +161,7 @@ function isWorksheetRoleControl(control: FormControl = {}) {
   return _.includes(WORKSHEET_ROLE_CONTROL_TYPES, control.type);
 }
 
-function getWorksheetIdByControl(allControls, control: FormControl = {}) {
+function getWorksheetIdByControl(allControls: FormControl[], control: FormControl = {}) {
   const parsedDataSource = parseDataSource(control.dataSource);
 
   if (_.includes([WIDGETS_TO_API_TYPE_ENUM.SHEET_FIELD, WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL], control.type)) {
@@ -204,7 +204,7 @@ function supportReferencedTemplateControl(control = {}) {
   return !isBlankSubListControl(control);
 }
 
-function normalizeTemplateControl(allControls, control: FormControl = {}) {
+function normalizeTemplateControl(allControls: FormControl[], control: FormControl = {}) {
   if (control.type === WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL && isBlankSubListRoleControl(allControls, control)) {
     return {
       ...control,
@@ -323,7 +323,7 @@ function getControlBySearchworksheet(allControls, dynamicsrc, queryConfigs = [])
 }
 
 // 解析默认值，获取控件
-function getControlByDefault(allControls, control, queryConfigs) {
+function getControlByDefault(allControls: FormControl[], control, queryConfigs) {
   let referencedControls = [];
   let worksheetRoleControls = [];
 

@@ -237,7 +237,7 @@ class TaskControl extends Component<any, any> {
   /**
    * 更新控件的值
    */
-  updateControlValue(id, value, opts = '', isAttachment = false) {
+  updateControlValue(id: string, value, opts = '', isAttachment = false) {
     this.props.dispatch(updateControlValue(this.props.taskId, id, value, opts, isAttachment));
   }
 

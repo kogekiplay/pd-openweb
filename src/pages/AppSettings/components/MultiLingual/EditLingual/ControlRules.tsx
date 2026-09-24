@@ -42,7 +42,7 @@ export default function ControlRules(props) {
     );
   }
 
-  const handlePositionItem = item => {
+  const handlePositionItem = (item: HapApi.MD.Entity.Worksheet.ControlRuleEntity) => {
     const el = document.querySelector(`.navItem-${item.ruleId}`);
     const className = 'highlight';
     const highlightEl = el.querySelector('.itemName');

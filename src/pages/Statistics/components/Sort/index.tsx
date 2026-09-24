@@ -303,7 +303,7 @@ export default class Sort extends Component<any, any> {
       visible,
     });
   };
-  getDropdownBoundaryLeft = triggerNode => {
+  getDropdownBoundaryLeft = (triggerNode: EventTarget & HTMLElement) => {
     const boundaryNode = triggerNode.closest('.StatisticsPanel, .GlobalStatisticsPanel, .chartModal, .statisticsCard');
 
     if (!boundaryNode) {

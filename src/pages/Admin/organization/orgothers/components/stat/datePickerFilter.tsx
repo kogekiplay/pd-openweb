@@ -14,7 +14,7 @@ const DATE_FILTER = [
 
 const formatDate = date => date.format('YYYY-MM-DD');
 
-const getDateFilter = id => {
+const getDateFilter = (id: string) => {
   const today = formatDate(moment());
   const beginOfCurrentMonth = moment().startOf('M');
 

@@ -8,7 +8,12 @@ import { renderText } from 'src/pages/Role/PortalCon/tabCon/util';
 import { getTranslateInfo } from 'src/utils/app';
 import { userStatusList } from './config';
 
-const renderHeader = (filterStatus, setFilterStatus, setFastFilters, filterStatusNum) => {
+const renderHeader = (
+  filterStatus: string,
+  setFilterStatus: React.Dispatch<React.SetStateAction<string>>,
+  setFastFilters,
+  filterStatusNum,
+) => {
   return (
     <React.Fragment>
       <Dropdown

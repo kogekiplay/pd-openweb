@@ -72,7 +72,7 @@ class Members extends Component<any, MembersState> {
       },
     });
   };
-  renderCard = (data, isAdmin) => {
+  renderCard = (data, isAdmin: boolean) => {
     const { params } = this.props.match;
 
     return data.map(item => {

@@ -472,7 +472,7 @@ function loadMoreAttachments(state, dispatch, isPre?: boolean | undefined) {
   }
 }
 
-function preLoadMoreAttachments(state, dispatch) {
+function preLoadMoreAttachments(state, dispatch: AttachmentsPreviewDispatch) {
   loadMoreAttachments(state, dispatch, true);
 }
 

@@ -390,7 +390,7 @@ export function getCompressedFontSize(value, width: number, options = {}) {
 
 const BAR_FONT_SIZE = 15;
 
-function parseToCode128(value) {
+function parseToCode128(value: string) {
   const parsed = JsBarcode({}, value, {
     format: 'CODE128',
   });

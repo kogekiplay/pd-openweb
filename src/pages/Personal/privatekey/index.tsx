@@ -91,7 +91,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
       });
   };
 
-  reloadLicenseList = state => {
+  reloadLicenseList = (state: { activeProduct: string; licenseCount: number; pageIndex: number } | { pageIndex: number }) => {
     this.setState({ licenseList: [], loading: true, ...state }, this.getLicenseList);
   };
 

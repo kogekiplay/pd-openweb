@@ -442,7 +442,7 @@ export default class Welink extends React.Component<any, any> {
     );
   };
 
-  editWXProjectSettingStatus = (tag, callback: () => void) => {
+  editWXProjectSettingStatus = (tag: number, callback: () => void) => {
     // 状态：0 提交申请；2关闭集成；1重新开启集成 tag
     Ajax.editWelinkProjectSettingStatus({
       projectId: this.props.projectId,

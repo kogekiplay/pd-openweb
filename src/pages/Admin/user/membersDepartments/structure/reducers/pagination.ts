@@ -16,7 +16,7 @@ import { CUSTOM_LIST } from '../actions/search';
 import { PAGE_SIZE } from '../constant';
 import type { ReduxAction } from 'src/redux/types';
 
-const mergeUserList = (action, type) => {
+const mergeUserList = (action: ReduxAction, type: string) => {
   const { response, departmentId, pageIndex } = action;
   let userList = [];
   let allCountNum = 0;

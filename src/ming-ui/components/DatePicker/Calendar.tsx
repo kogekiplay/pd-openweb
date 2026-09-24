@@ -199,7 +199,7 @@ let Calendar = class Calendar extends Component<any, any> {
       this.props.onChange(value);
     }
   };
-  setSelectedValue = (selectedValue, cause) => {
+  setSelectedValue = (selectedValue, cause: { source: string }) => {
     if (!('selectedValue' in this.props)) {
       this.setState({
         selectedValue,

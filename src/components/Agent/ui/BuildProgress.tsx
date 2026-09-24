@@ -437,7 +437,7 @@ function formatDuration(ms: number) {
 
 // 并行分支结果里的命名实体列表 [{ name, ... }]：用于把单 agent 分支结果合成成可折叠子项。
 // 自定义页面分支 → result.customPageContext；对话机器人分支 → result.chatbotContext。
-function namedListOf(step, key) {
+function namedListOf(step, key: string) {
   const list = step && step.result && step.result[key];
 
   return Array.isArray(list) ? list : [];

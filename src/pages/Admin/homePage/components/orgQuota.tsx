@@ -41,7 +41,7 @@ export default function orgQuota(props) {
     return false;
   };
 
-  const getCountProcess = (key, limit) => {
+  const getCountProcess = (key: string, limit: string) => {
     if (getValue(data[limit]) === '-' || getNoLimit(limit)) return 1;
 
     let percent = 0;
@@ -79,7 +79,7 @@ export default function orgQuota(props) {
     }
   };
 
-  const getUsage = key => {
+  const getUsage = (key: string) => {
     if (getValue(data[key]) === '-' || getNoLimit(key)) return _l('不限');
 
     let value = key === 'effectiveApkStorageCount' ? formatFileSize(data[key]) : getValue(data[key]);

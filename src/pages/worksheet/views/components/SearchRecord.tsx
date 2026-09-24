@@ -57,7 +57,7 @@ const InputWrapper = styled.div`
   }
 `;
 
-const highlightMessageText = (keyword, content) => {
+const highlightMessageText = (keyword: string, content) => {
   content = htmlDecodeReg(content);
   const reg = new RegExp(_.escapeRegExp(keyword), 'gi');
   const newKeyword = reg.exec(content)[0];

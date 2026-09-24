@@ -195,7 +195,7 @@ export default function (props) {
     );
   };
 
-  const otherSet = type => {
+  const otherSet = (type: string) => {
     return (
       <React.Fragment>
         <p className="mBottom0 mTop24 textSecondary">{_l('其他')}</p>

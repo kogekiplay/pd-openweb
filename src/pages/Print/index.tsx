@@ -116,7 +116,7 @@ class PrintForm extends React.Component<any, any> {
 
   getClientId = () => _.get(this.state, 'params.clientId') || window.clientId || sessionStorage.getItem('clientId');
 
-  setAppInfo = (data: Record<string, any> = {}, cb) => {
+  setAppInfo = (data: Record<string, any> = {}, cb: () => void) => {
     const { params } = this.state;
     const { type, from, appId, printType } = params;
 

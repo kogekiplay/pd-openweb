@@ -85,7 +85,7 @@ const DepartmentSelect = props => {
     destoryRef.current = destory;
   };
 
-  const onSave = (data, isCancel = false, replaceItem) => {
+  const onSave = (data, isCancel = false, replaceItem: SelectedEntityValue | undefined) => {
     const valueArr = currentValueRef.current;
     const lastIds = _.sortedUniq(valueArr.map(l => l.departmentId));
     const newIds = _.sortedUniq(data.map(l => l.departmentId));

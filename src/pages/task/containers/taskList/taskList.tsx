@@ -916,7 +916,7 @@ class TaskList extends Component<any, TaskListState> {
   /**
    * `我的任务` preload
    */
-  myTaskPreLoad($List) {
+  myTaskPreLoad($List: JQuery<HTMLElement>) {
     const $taskList = $('#taskList');
     const $trs = $taskList.find('table tr').filter(':visible');
 

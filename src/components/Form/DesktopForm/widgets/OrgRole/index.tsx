@@ -81,7 +81,7 @@ const OrgRole = props => {
     destoryRef.current = destory;
   };
 
-  const onSave = (data, isCancel = false, replaceItem) => {
+  const onSave = (data, isCancel = false, replaceItem: SelectedEntityValue | undefined) => {
     const valueArr = currentValueRef.current;
     const lastIds = _.sortedUniq(valueArr.map(l => l.organizeId));
     const newIds = _.sortedUniq(data.map(l => l.organizeId));

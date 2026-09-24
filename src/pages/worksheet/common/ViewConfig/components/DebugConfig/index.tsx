@@ -229,7 +229,7 @@ export default function DebugConfig(params) {
     );
   };
 
-  const renderNextStep = i => {
+  const renderNextStep = (i: number) => {
     return (
       <div className="nextStep mTop20">
         <span

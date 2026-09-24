@@ -39,7 +39,7 @@ export default function WeChatSettings(props) {
     titleFolded,
     boundControlIds,
   } = data;
-  const [addControl, setAddControl] = useState({ visible: false });
+  const [addControl, setAddControl] = useState<{ visible: boolean; key?: string | undefined }>({ visible: false });
 
   const getDropdownOptions = (key: string, hasClear: boolean) => {
     const needFilterIds = Object.values(weChatSetting.fieldMaps || {})

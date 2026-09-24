@@ -752,7 +752,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 添加项目人员
    */
-  addFolderMembers(users, isAdmin, callbackInviteResult?) {
+  addFolderMembers(users, isAdmin: boolean, callbackInviteResult?) {
     const userIdArr = [];
     const specialAccounts = {};
 

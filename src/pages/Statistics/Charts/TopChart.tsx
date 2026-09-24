@@ -53,7 +53,7 @@ const getProgressControlId = (sorts, yaxisList) => {
   return _.find(yaxisList, { controlId: sortId }) ? sortId : _.get(yaxisList[0], 'controlId');
 };
 
-const getProgressWidth = (value, maxValue) => {
+const getProgressWidth = (value, maxValue: number) => {
   value = Number(value);
   maxValue = Number(maxValue);
 
