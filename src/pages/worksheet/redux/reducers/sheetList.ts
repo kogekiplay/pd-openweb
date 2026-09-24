@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import type { AppPkgData } from 'src/pages/worksheet/types';
 import type { ReduxAction } from 'src/redux/types';
 
 function data(state = [], action: ReduxAction) {
@@ -49,7 +50,9 @@ function isCharge(state = false, action: ReduxAction<{ isCharge: boolean }>) {
   }
 }
 
-function appPkgData(state = false, action: ReduxAction) {
+// 初值原来是 false，实际存的是 { appRoleType, isLock }（两处写入都走 updateAppPkgData：AppGroup、actions/sheetList）；
+// 读的地方只读这两个字段、没有按真假判断的，false 和 {} 上读属性都是 undefined，所以初值改成 {} 行为不变
+function appPkgData(state: AppPkgData = {}, action: ReduxAction<{ appPkgData: AppPkgData }>): AppPkgData {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_APPPKGDATA':
       return action.appPkgData;

@@ -16,7 +16,7 @@ import { refreshBtnData } from 'src/pages/FormSet/util';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { formatSearchConfigs } from 'src/pages/widgetConfig/util';
 import { AREA } from 'src/pages/worksheet/common/Sheet/GroupFilter/constants.js';
-import type { WorksheetView } from 'src/pages/worksheet/types';
+import type { AppPkgData, WorksheetView } from 'src/pages/worksheet/types';
 import type { AppDispatch, GetState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { getHighAuthControls } from 'src/utils/control';
@@ -207,7 +207,7 @@ export const updateWorksheetSomeControls = controls => ({
 });
 
 export const updateIsCharge = (isCharge: boolean) => ({ type: 'WORKSHEET_UPDATE_IS_CHARGE', isCharge });
-export const updateAppPkgData = appPkgData => ({ type: 'WORKSHEET_UPDATE_APPPKGDATA', appPkgData });
+export const updateAppPkgData = (appPkgData: AppPkgData) => ({ type: 'WORKSHEET_UPDATE_APPPKGDATA', appPkgData });
 
 export const updateWorksheetLoading = (loading: boolean) => ({ type: 'WORKSHEET_UPDATE_LOADING', loading });
 
@@ -278,7 +278,7 @@ export function loadWorksheet(worksheetId: string, setRequest) {
         }
 
         const manageView =
-          viewId === worksheetId && appPkgData.appRoleType > 99
+          viewId === worksheetId && (appPkgData.appRoleType ?? 0) > 99
             ? _.find(views, l => l.viewId === worksheetId)
             : undefined;
 
@@ -1059,7 +1059,8 @@ export function loadManageView(worksheetId: string, callback) {
     const { base = {}, appPkgData = {} } = getState().sheet;
     const { appId } = base;
 
-    if (!worksheetId || appPkgData.appRoleType < 100) return;
+    // 角色还没取到（appRoleType 为 undefined）时原来就不拦，照旧放行，由接口自己判权限
+    if (!worksheetId || (appPkgData.appRoleType !== undefined && appPkgData.appRoleType < 100)) return;
 
     worksheetAjax
       .getWorksheetViewById({

@@ -105,6 +105,13 @@ export interface WorksheetInfo {
   isRequestingRelationControls?: boolean;
 }
 
+/** 当前应用里我的角色信息（redux 的 sheet.appPkgData / sheetList.appPkgData 切片） */
+export interface AppPkgData {
+  /** 应用角色类型（应用的 permissionType），判定见 isHaveCharge / canEditApp */
+  appRoleType?: number | undefined;
+  isLock?: boolean | undefined;
+}
+
 /**
  * 当前打开的这张表 / 这个视图的定位信息（redux 的 sheet.base 切片）。
  */
