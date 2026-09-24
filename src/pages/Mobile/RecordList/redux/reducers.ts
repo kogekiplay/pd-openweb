@@ -12,7 +12,7 @@ export const base = (state = {}, action: ReduxAction) => {
   }
 };
 
-export const workSheetLoading = (state = true, action: ReduxAction) => {
+export const workSheetLoading = (state = true, action: ReduxAction<{ loading: boolean }>) => {
   switch (action.type) {
     case 'MOBILE_WORK_SHEET_UPDATE_LOADING':
       return action.loading;
@@ -121,7 +121,7 @@ export const sheetView = (
   }
 };
 
-export const viewResultCode = (state = 1, action: ReduxAction) => {
+export const viewResultCode = (state = 1, action: ReduxAction<{ value: number }>) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_VIEW_CODE':
       return action.value;
@@ -130,7 +130,7 @@ export const viewResultCode = (state = 1, action: ReduxAction) => {
   }
 };
 
-export const isCharge = (state = false, action: ReduxAction) => {
+export const isCharge = (state = false, action: ReduxAction<{ value: boolean }>) => {
   switch (action.type) {
     case 'MOBILE_UPDATE_IS_CHARGE':
       return action.value;
@@ -148,7 +148,10 @@ export const appColor = (state = '#1677ff', action: ReduxAction) => {
   }
 };
 
-export const sheetSwitchPermit = (state = [], action: ReduxAction) => {
+export const sheetSwitchPermit = (
+  state = [],
+  action: ReduxAction<{ value: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] }>,
+) => {
   switch (action.type) {
     case 'MOBILE_SHEET_PERMISSION_INIT':
       return action.value;
@@ -195,7 +198,7 @@ export const batchOptVisible = (state = false, action: ReduxAction) => {
   }
 };
 
-export const batchCheckAll = (state = false, action: ReduxAction) => {
+export const batchCheckAll = (state = false, action: ReduxAction<{ data: boolean }>) => {
   switch (action.type) {
     case 'UPDATE_BATCH_CHECK_ALL':
       return action.data;
@@ -233,7 +236,7 @@ export const filterControls = (state = [], action: ReduxAction) => {
   }
 };
 
-export const isPullRefreshing = (state = false, action: ReduxAction) => {
+export const isPullRefreshing = (state = false, action: ReduxAction<{ flag: boolean }>) => {
   switch (action.type) {
     case 'MOBILE_IS_PULL_REFRESHING':
       return action.flag;
@@ -389,7 +392,10 @@ export const calenderNotScheduled = (
   }
 };
 
-export function sheetButtons(state = [], action: ReduxAction) {
+export function sheetButtons(
+  state = [],
+  action: ReduxAction<{ buttons: HapApi.MD.Entity.Worksheet.WorksheetBtnEntity[] }>,
+) {
   switch (action.type) {
     case 'MOBILE_WORKSHEET_UPDATE_SHEET_BUTTONS':
       return action.buttons;
@@ -425,7 +431,10 @@ export function buttonsCheckStatus(state = {}, action: ReduxAction) {
   }
 }
 
-export const viewPermission = (state = {}, action: ReduxAction) => {
+export const viewPermission = (
+  state = {},
+  action: ReduxAction<{ data: HapApi.MD.Entity.Role.AppRoleGrpcModel.ViewPermission }>,
+) => {
   switch (action.type) {
     case 'UPDATE_MOBILEVIEW_PERMISSION':
       return action.data;

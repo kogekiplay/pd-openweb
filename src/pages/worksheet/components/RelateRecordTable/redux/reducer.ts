@@ -196,7 +196,7 @@ function records(state = [], action: ReduxAction) {
   }
 }
 
-export function initialized(state = false, action: ReduxAction) {
+export function initialized(state = false, action: ReduxAction<{ value: boolean }>) {
   switch (action.type) {
     case 'UPDATE_INIT_STATE':
       return action.value;

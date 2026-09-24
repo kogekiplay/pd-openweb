@@ -71,7 +71,7 @@ export function calenderEventList(state = stateInit, action: ReduxAction) {
   }
 }
 
-export function editable(state = true, action: ReduxAction) {
+export function editable(state = true, action: ReduxAction<{ data: boolean }>) {
   const { type, data } = action;
 
   switch (type) {

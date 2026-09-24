@@ -136,7 +136,7 @@ export function hasNew(state = false, action: ReduxAction) {
   }
 }
 
-export function hasMore(state = false, action: ReduxAction) {
+export function hasMore(state = false, action: ReduxAction<{ hasMore: boolean }>) {
   switch (action.type) {
     case 'POST_RELOAD_START':
       return false;
@@ -150,7 +150,7 @@ export function hasMore(state = false, action: ReduxAction) {
   }
 }
 
-export function loading(state = true, action: ReduxAction) {
+export function loading(state = true, action: ReduxAction<{ isLoading: boolean }>) {
   switch (action.type) {
     case 'POST_RELOAD_FAIL':
     case 'POST_RELOAD_SUCCESS':
@@ -191,7 +191,7 @@ export function pageIndex(state = 1, action: ReduxAction) {
 
 export function fontSize(
   state = parseInt(window.localStorage.getItem(_.get(md, 'global.Account.accountId') + '_fontsize') || 13, 10),
-  action,
+  action: ReduxAction<{ fontSize: number }>,
 ) {
   switch (action.type) {
     case 'POST_CHANGE_FONT_SIZE':
@@ -221,7 +221,7 @@ export function searchKeywords(state = null, action: ReduxAction) {
   }
 }
 
-export function title(state = _l('动态墙'), action: ReduxAction) {
+export function title(state = _l('动态墙'), action: ReduxAction<{ title: string }>) {
   switch (action.type) {
     case 'POST_CHANGE_TITLE':
       return action.title;

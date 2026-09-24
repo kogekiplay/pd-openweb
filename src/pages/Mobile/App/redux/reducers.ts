@@ -38,7 +38,7 @@ export const isQuitSuccess = (state = true, action: ReduxAction) => {
   }
 };
 
-export const debugRoles = (state = [], action: ReduxAction) => {
+export const debugRoles = (state = [], action: ReduxAction<{ data: HapApi.MD.Web.Ajax.ResultModel.App.GetDto_SelectedRole[] }>) => {
   switch (action.type) {
     case 'DEBUG_ROLE_LIST':
       return action.data;

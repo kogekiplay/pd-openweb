@@ -191,7 +191,7 @@ const bottomUnreadMessage = (state = {}, action: ReduxAction) => {
  * @param {*} state
  * @param {*} action
  */
-const isWindow = (state = false, action: ReduxAction) => {
+const isWindow = (state = false, action: ReduxAction<{ result: boolean }>) => {
   switch (action.type) {
     case 'UPDATE_IS_WINDOW':
       return action.result;
@@ -219,7 +219,7 @@ const showAddressBook = (state = false, action: ReduxAction) => {
  * @param {*} state (0：正常、1：正在重连、2：重连失败)
  * @param {*} action
  */
-const socketState = (state = 0, action: ReduxAction) => {
+const socketState = (state = 0, action: ReduxAction<{ result: number }>) => {
   switch (action.type) {
     case 'UPDATE_SOCKET_STATE':
       return action.result;

@@ -31,7 +31,7 @@ function appSectionDetail(state = [], action: ReduxAction) {
   }
 }
 
-function loading(state = true, action: ReduxAction) {
+function loading(state = true, action: ReduxAction<{ loading: boolean }>) {
   switch (action.type) {
     case 'SHEET_LIST_UPDATE_LOADING':
       return action.loading;
@@ -40,7 +40,7 @@ function loading(state = true, action: ReduxAction) {
   }
 }
 
-function isCharge(state = false, action: ReduxAction) {
+function isCharge(state = false, action: ReduxAction<{ isCharge: boolean }>) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_IS_CHARGE':
       return action.isCharge;
@@ -58,7 +58,10 @@ function appPkgData(state = false, action: ReduxAction) {
   }
 }
 
-function isUnfold(state = !(localStorage.getItem('sheetListIsUnfold') === 'false'), action: ReduxAction) {
+function isUnfold(
+  state = !(localStorage.getItem('sheetListIsUnfold') === 'false'),
+  action: ReduxAction<{ isUnfold: boolean }>,
+) {
   switch (action.type) {
     case 'SHEET_LIST_UPDATE_IS_UNFOLD':
       return action.isUnfold;

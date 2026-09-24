@@ -416,7 +416,7 @@ export function hierarchyDataStatus(state = { loading: false, hasMoreData: true,
   }
 }
 
-export function hierarchyTopLevelDataCount(state = 0, action: ReduxAction) {
+export function hierarchyTopLevelDataCount(state = 0, action: ReduxAction<{ count: number }>) {
   switch (action.type) {
     case 'CHANGE_HIERARCHY_TOP_LEVEL_DATA_COUNT':
       return action.count;

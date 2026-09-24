@@ -5,7 +5,7 @@ import { browserIsMobile } from 'src/utils/common';
 import type { RecordRow } from 'src/utils/controlTypes';
 import type { ReduxAction } from 'src/redux/types';
 
-function dataLoading(state = true, action: ReduxAction) {
+function dataLoading(state = true, action: ReduxAction<{ value: boolean }>) {
   switch (action.type) {
     case 'UPDATE_DATA_LOADING':
       return action.value;
@@ -14,7 +14,7 @@ function dataLoading(state = true, action: ReduxAction) {
   }
 }
 
-function baseLoading(state = true, action: ReduxAction) {
+function baseLoading(state = true, action: ReduxAction<{ value: boolean }>) {
   switch (action.type) {
     case 'UPDATE_BASE_LOADING':
       return action.value;
@@ -232,7 +232,7 @@ function pagination(state = { pageIndex: 1, pageSize: 20, count: 0 }, action: Re
 // 子表"未筛选时的真实总行数"：筛选态下 state.rows 只是服务端筛选后的子集，
 // 无法据此判空触发必填，故由 actions 在未筛选加载时落总数、筛选态下按本地增删增量维护。
 // 默认 null = 未知（从未在未筛选态加载过），判空时回退旧的安全策略，避免误报必填。
-function realCount(state = null, action: ReduxAction) {
+function realCount(state = null, action: ReduxAction<{ value: number }>) {
   switch (action.type) {
     case 'SET_REAL_COUNT':
       return _.isNumber(action.value) ? Math.max(0, action.value) : null;

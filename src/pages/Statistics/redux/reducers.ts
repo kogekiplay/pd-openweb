@@ -92,7 +92,7 @@ const filterItem = (state = [], action: ReduxAction) => {
   }
 };
 
-const detailLoading = (state = true, action: ReduxAction) => {
+const detailLoading = (state = true, action: ReduxAction<{ data: boolean }>) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_DETAIL_LOADING':
       return action.data;
@@ -103,7 +103,7 @@ const detailLoading = (state = true, action: ReduxAction) => {
   }
 };
 
-const loading = (state = true, action: ReduxAction) => {
+const loading = (state = true, action: ReduxAction<{ data: boolean }>) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_LOADING':
       return action.data;
@@ -114,7 +114,7 @@ const loading = (state = true, action: ReduxAction) => {
   }
 };
 
-const reportSingleCacheLoading = (state = true, action: ReduxAction) => {
+const reportSingleCacheLoading = (state = true, action: ReduxAction<{ data: boolean }>) => {
   switch (action.type) {
     case 'CHANGE_STATISTICS_REPORTSINGLECACHE_LOADING':
       return action.data;

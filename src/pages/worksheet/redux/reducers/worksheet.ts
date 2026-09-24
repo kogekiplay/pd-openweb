@@ -3,7 +3,7 @@ import type { WorksheetInfo } from 'src/pages/worksheet/types';
 import type { ReduxAction } from 'src/redux/types';
 import type { FormControl } from 'src/utils/controlTypes';
 
-export function loading(state = true, action: ReduxAction) {
+export function loading(state = true, action: ReduxAction<{ loading: boolean }>) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_LOADING':
       return action.loading;
@@ -17,7 +17,7 @@ export function loading(state = true, action: ReduxAction) {
   }
 }
 
-export function operateButtonLoading(state = true, action: ReduxAction) {
+export function operateButtonLoading(state = true, action: ReduxAction<{ loading: boolean }>) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_OPERATE_BUTTON_LOADING':
       return action.loading;

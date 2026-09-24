@@ -19,7 +19,7 @@ export const isHomeLoading = (state = true, action: ReduxAction) => {
   }
 };
 
-export const platformSetting = (state = {}, action: ReduxAction) => {
+export const platformSetting = (state = {}, action: ReduxAction<{ data: HapApi.MD.Web.Ajax.ResultModel.App.HomePlatformSettingDto }>) => {
   switch (action.type) {
     case 'PLATE_FORM_SETTING':
       return action.data;

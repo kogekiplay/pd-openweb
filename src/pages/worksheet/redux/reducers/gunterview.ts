@@ -19,7 +19,7 @@ export function chartScroll(state = { on: _.noop, off: _.noop }, action: ReduxAc
   }
 }
 
-export function loading(state = true, action: ReduxAction) {
+export function loading(state = true, action: ReduxAction<{ data: boolean }>) {
   switch (action.type) {
     case 'CHANGE_GUNTER_LOADINNG':
       return action.data;
@@ -37,7 +37,7 @@ export function grouping(state = [], action: ReduxAction) {
   }
 }
 
-export function groupingVisible(state = true, action: ReduxAction) {
+export function groupingVisible(state = true, action: ReduxAction<{ data: boolean }>) {
   switch (action.type) {
     case 'CHANGE_GUNTER_GROUPING_VISIBLE':
       return action.data;
@@ -73,7 +73,7 @@ export function periodParentList(state = [], action: ReduxAction) {
   }
 }
 
-export function isRefresh(state = false, action: ReduxAction) {
+export function isRefresh(state = false, action: ReduxAction<{ data: boolean }>) {
   switch (action.type) {
     case 'CHANGE_GUNTER_IS_REFRESH':
       return action.data;
@@ -91,7 +91,7 @@ export function viewConfig(state = {}, action: ReduxAction) {
   }
 }
 
-export function editIndex(state = null, action: ReduxAction) {
+export function editIndex(state = null, action: ReduxAction<{ data: number }>) {
   switch (action.type) {
     case 'CHANGE_GUNTER_EDIT_INDEX':
       return action.data;
@@ -121,7 +121,7 @@ export function searchRecordId(state = null, action: ReduxAction) {
   }
 }
 
-export function zoom(state = null, action: ReduxAction) {
+export function zoom(state = null, action: ReduxAction<{ data: number }>) {
   switch (action.type) {
     case 'CHANGE_GUNTER_ZOOM':
       return action.data;

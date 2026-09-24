@@ -52,7 +52,7 @@ function base(state: WorksheetBase = {}, action: ReduxAction) {
   }
 }
 
-function isCharge(state = false, action: ReduxAction) {
+function isCharge(state = false, action: ReduxAction<{ isCharge: boolean }>) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_IS_CHARGE':
       return action.isCharge;
@@ -94,7 +94,7 @@ function fieldShowCount(state = 0, action: ReduxAction) {
   }
 }
 
-function saveViewSetLoading(state = false, action: ReduxAction) {
+function saveViewSetLoading(state = false, action: ReduxAction<{ saveViewSetLoading: boolean }>) {
   switch (action.type) {
     case 'VIEW_UPDATE_VIEW_SET_LOADING':
       return action.saveViewSetLoading || false;

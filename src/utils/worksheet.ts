@@ -138,7 +138,12 @@ export function getCardWidth(view) {
   return positionIsLeftOrRight ? cardWidth + 96 : cardWidth;
 }
 
-export function getSheetOperatesButtons(view, { buttons = [], printList = [] } = {}) {
+// 【按钮 / 打印模板用泛型】函数只读按钮的 btnId、status 和打印模板的 id、name，其余字段原样带进结果；
+// 用泛型把调用方自己的元素类型保住。默认值 [] 不写类型的话会被推成 never[]，调用方一旦传进有类型的数组就报错。
+export function getSheetOperatesButtons<
+  B extends { btnId?: string | undefined; status?: number | undefined },
+  P extends { id?: string | undefined; name?: string | undefined },
+>(view, { buttons = [], printList = [] }: { buttons?: B[] | undefined; printList?: P[] | undefined } = {}) {
   const actionColumn = safeParse(get(view, 'advancedSetting.actioncolumn'), 'array');
   let result = [];
   actionColumn.forEach(c => {
@@ -219,7 +224,13 @@ export function getSheetOperatesButtons(view, { buttons = [], printList = [] } =
   return result.filter(identity);
 }
 
-export function getSheetOperateButtonIds(buttons = []) {
+export function getSheetOperateButtonIds(
+  buttons: {
+    type?: string | undefined;
+    btnId?: string | undefined;
+    buttons?: { btnId?: string | undefined }[] | undefined;
+  }[] = [],
+) {
   return _.flatMap(buttons, button =>
     button.type === 'group_ref' && _.isArray(button.buttons)
       ? button.buttons.map(member => member.btnId)
@@ -329,7 +340,9 @@ export function getOperatesButtonsWidth({ buttons, style, visibleNum, showIcon }
 export interface SheetSwitchPermitItem {
   type?: number;
   state?: boolean;
-  viewIds?: string[];
+  // 接口模型（HapApi.MD.Entity.Worksheet.SwitchPermitModel）写的是 string[] | undefined；
+  // 「没有这个字段」和「值是 undefined」对 isOpenPermit 是一回事
+  viewIds?: string[] | undefined;
 }
 
 // 【按钮用泛型而不是 any[]】函数只读 button.type，其余字段原样带出去，
