@@ -53,7 +53,7 @@ export default function PlayVoice(props) {
         title={_l('播放声音')}
         onCancel={() => {
           setState({ visible: false });
-          window.customEditPlayer = '';
+          window.customEditPlayer = undefined; // 原来置成 ''，只表示「已释放」：关掉弹窗后不会再读（'' 和 undefined 上设 .src 一样会抛）
         }}
         overlayClosable={false}
         onOk={() => {

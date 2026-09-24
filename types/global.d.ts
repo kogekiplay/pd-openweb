@@ -624,6 +624,98 @@ interface Window {
   /** 表单设计器最近一次加字段是不是 Mingo 发起的 */
   lastAddWidgetsTriggerByMingo?: boolean;
 
+  // ---- 应用代码自己挂到 window 上的状态 / 回调（类型取自全仓 window.X = … 的赋值，2026-09-24 按赋值处推出）----
+  // 只收「每处赋值都推得出具体类型」的；宿主 / 原生 App 注入、赋值是 any 的仍走下面的索引签名。
+  // 都是可选的：读的时候不一定已经赋过值。
+  /** 赋值处：src/pages/integration/svgIcon.ts:1 */
+  _iconfont_svg_string_3909252?: string;
+  /** 赋值处：src/common/preall.tsx:271 */
+  allowNotLogin?: boolean;
+  /** 赋值处：src/pages/worksheet/components/CellControls/index.tsx:591、src/pages/worksheet/components/CellControls/index.tsx:699 */
+  cellisediting?: boolean;
+  /** 赋值处：src/pages/worksheet/components/WorksheetTable/index.tsx:523、src/pages/worksheet/components/WorksheetTable/index.tsx:885 */
+  cellisfocus?: boolean;
+  /** 赋值处：src/pages/worksheet/components/CellControls/Text.tsx:424、src/pages/worksheet/components/CellControls/index.tsx:462 */
+  cellLastKey?: string | undefined;
+  /** 赋值处：src/pages/worksheet/components/CellControls/Text.tsx:322 */
+  cellTextIsBlurringTimer?: NodeJS.Timeout;
+  /** 赋值处：src/components/Form/core/authentication.ts:194、src/components/Form/core/authentication.ts:203 */
+  configLoading?: boolean;
+  /** 赋值处：src/components/Form/core/authentication.ts:193、src/components/Form/core/authentication.ts:204 */
+  configSuccess?: boolean;
+  /** 赋值处：src/components/Mingo/modules/CreateRecordBot/index.tsx:259、src/components/Mingo/modules/CreateRecordBot/index.tsx:422 */
+  crateRecordInput?: string | undefined;
+  /** 赋值处：src/pages/PageHeader/components/PortalUserSet/DelDialog.tsx:45、src/pages/PageHeader/components/PortalUserSet/index.tsx:101 等 4 处 */
+  currentLeave?: boolean;
+  /** 赋值处：src/components/Form/core/authentication.ts:192 */
+  currentUrl?: string;
+  /** 赋值处：src/pages/widgetConfig/widgetSetting/components/CustomEvent/CustomAction/actionTypes/PlayVoice.tsx:24、src/pages/widgetConfig/widgetSetting/components/CustomEvent/CustomAction/actionTypes/PlayVoice.tsx:56 */
+  customEditPlayer?: HTMLAudioElement | undefined;
+  /** 赋值处：src/components/Form/core/customEvent.tsx:789 */
+  customEventAudioPlayer?: HTMLAudioElement;
+  /** 赋值处：src/pages/AppHomepage/AppCenter/appHomeReducer.tsx:472 */
+  dashboardAjax?: ApiResult;
+  /** 赋值处：src/pages/worksheet/components/BaseColumnHead/BaseColumnHead.tsx:63、src/pages/worksheet/components/BaseColumnHead/BaseColumnHead.tsx:76 等 3 处 */
+  dragclicktimer?: NodeJS.Timeout | undefined;
+  /** 赋值处：src/pages/customPage/pageContent/CustomPageHeader.tsx:81 */
+  editCustomPage?: () => void;
+  /** 赋值处：src/pages/worksheet/components/WorksheetTable/index.tsx:829、src/pages/worksheet/components/WorksheetTable/index.tsx:857 等 3 处 */
+  enterColumnPopup?: boolean;
+  /** 赋值处：src/components/DateFilter/index.tsx:107 */
+  feedSelectDate?: string | number;
+  /** 赋值处：src/ming-ui/components/WaterMark.tsx:152、src/ming-ui/components/WaterMark.tsx:154 */
+  hadWaterMark?: boolean;
+  /** 赋值处：src/pages/worksheet/common/FreeFieldSandbox/messageBridge.ts:30 */
+  handleFreeFieldWindowEventBonded?: boolean;
+  /** 赋值处：src/pages/worksheet/components/CellControls/index.tsx:488、src/pages/worksheet/components/CellControls/index.tsx:572 */
+  hasEditingCell?: boolean;
+  /** 赋值处：src/components/Mingo/modules/CreateWorksheetBot/index.tsx:513 */
+  hideAllPanels?: boolean;
+  /** 赋值处：src/pages/ViewLand/index.tsx:86、src/pages/ViewLand/index.tsx:90 */
+  hideColumnHeadFilter?: boolean;
+  /** 赋值处：src/pages/agent/AgentLand.tsx:88 */
+  hideHeader?: boolean;
+  /** 赋值处：src/pages/AppHomepage/AppCenter/appHomeReducer.tsx:521 */
+  homeGetMyAppAjax?: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.MyAppDto>;
+  /** 赋值处：src/pages/customPage/pageContent/CustomPageHeader.tsx:377、src/pages/customPage/pageContent/CustomPageHeader.tsx:382 */
+  inFull?: boolean;
+  /** 赋值处：src/pages/worksheet/views/ResourceView/ConTimegrid/index.tsx:366、src/pages/worksheet/views/ResourceView/ConTimegrid/index.tsx:369 */
+  isCanvasTime?: boolean;
+  /** 赋值处：src/common/global.ts:377 */
+  isNewTab?: () => boolean;
+  /** 赋值处：src/pages/Personal/systemSettings/index.tsx:235、src/pages/chat/containers/SettingDrawer/Base.tsx:158 */
+  isOpenMessageSound?: boolean;
+  /** 赋值处：src/pages/Personal/systemSettings/index.tsx:250、src/pages/chat/containers/SettingDrawer/Base.tsx:173 */
+  isOpenMessageTwinkle?: boolean;
+  /** 赋值处：src/pages/embed/mingoEntry/widgetEntry.ts:441 */
+  isProduction?: boolean;
+  /** 赋值处：src/components/Mingo/ChatBot/components/TryTry.tsx:74 */
+  isTryRefreshClicked?: boolean;
+  /** 赋值处：src/pages/worksheet/WorkSheet.tsx:264、src/pages/worksheet/WorkSheet.tsx:350 */
+  isWorksheet?: boolean;
+  /** 赋值处：src/pages/widgetConfig/widgetDisplay/components/BottomDragPointer.tsx:99 */
+  mingoPendingCreateWorksheetTaskStatus?: number;
+  /** 赋值处：src/pages/worksheet/common/newRecord/NewRecordContent.tsx:817、src/pages/worksheet/common/newRecord/NewRecordContent.tsx:821 */
+  newRecordActive?: boolean;
+  /** 赋值处：src/pages/worksheet/common/Sheet/Sheet.tsx:354 */
+  openViewConfig?: () => void;
+  /** 赋值处：src/components/Mingo/modules/CreateWorksheetBot/MingoGeneratedWidgetsSelector.tsx:537、src/components/Mingo/modules/CreateWorksheetBot/MingoGeneratedWidgetsSelector.tsx:551 等 3 处 */
+  pendingSaveWidgetConfigFunction?: (() => void) | undefined;
+  /** 赋值处：src/components/Mingo/modules/CreateWorksheetBot/index.tsx:593 */
+  pendingTaskForEditWorksheet?: () => void;
+  /** 赋值处：src/router/navigateTo.ts:22 */
+  redirected?: boolean;
+  /** 赋值处：src/pages/FormExtend/PublicWorksheetConfig/PublicWorksheetConfigForm.tsx:90 */
+  scrollToFormEnd?: () => void;
+  /** 赋值处：src/ming-ui/components/AutoSize.tsx:156 */
+  sheetAutoSized?: boolean;
+  /** 赋值处：src/router/globalEvents.ts:139、src/router/globalEvents.ts:143 */
+  themeModeVisible?: boolean;
+  /** 赋值处：src/pages/AppHomepage/AppCenter/appHomeReducer.tsx:924 */
+  time?: number;
+  /** 赋值处：src/pages/worksheet/components/CellControls/index.tsx:596 */
+  timer?: number;
+
   // !! 测量污染开关 !!
   // 全仓有 4076 处 window.X 访问、276 个不同属性名，其中最热的
   // platformENV(801)/isMingDaoApp(135)/isPublicApp(125)/shareState(123)/
