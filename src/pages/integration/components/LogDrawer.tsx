@@ -152,7 +152,8 @@ export default function (props) {
     isAll: false,
     keyWord: '', //
     type: '', //日志类型
-    status: '', //状态
+    // '' 是「全部」，其余是数字状态值（和下拉项的 value 一致）
+    status: '' as '' | number, //状态
     time: ['', ''],
     user: {},
   });
@@ -337,7 +338,8 @@ export default function (props) {
     >
       <Wrap className="213 h100">
         <div className="flexRow mTop12">
-          <Dropdown
+          {/* 项里 '' 是「全部」、其余是数字 —— 值类型混在一起时推不出来，这里写明 */}
+          <Dropdown<'' | number>
             value={status}
             className="statusDropdown mLeft10 Width200"
             onChange={value => {

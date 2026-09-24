@@ -521,7 +521,8 @@ export default class Formula extends Component<any, any> {
           ]}
           value={data.unit}
           border
-          onChange={(unit: string) => this.updateSource({ unit })}
+          // 下拉项的 value 是数字（1 / 3 / 8 / 9），原来把参数标成了 string
+          onChange={unit => this.updateSource({ unit })}
         />
 
         {_.includes([1, 3], data.unit) && this.renderDateType('showFormat', true)}

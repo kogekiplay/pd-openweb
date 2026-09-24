@@ -25,7 +25,7 @@ export default class SelectTimezone extends PureComponent<any, any> {
         <div className="timezoneLabel textTertiary">{_l('时区')}</div>
         <Dropdown
           className="timezoneDropdown"
-          isAppendBody
+          isAppendToBody
           data={data}
           onChange={this.handleChange}
           placeholder={text}

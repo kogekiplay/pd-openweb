@@ -74,7 +74,7 @@ export default function RegionDropdown(props) {
       onSearch={handleSearch}
       onChange={onChangRegionCode}
       noData={keywords && _.isEmpty(searchResultCountry) ? _l('暂无搜索结果') : _l('无数据')}
-      loading={loading}
+      itemLoading={loading}
       placeholder={_l('请选择')}
       onVisibleChange={visible => {
         onVisibleChange(visible);

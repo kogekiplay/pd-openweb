@@ -155,7 +155,8 @@ export default function MapSetting(props) {
           className="dropdownSelectFields"
           hoverTheme
           renderTitle={obj => {
-            const { icon, text } = obj || {};
+            const icon = obj?.icon;
+            const text = obj?.text;
             return (
               <SelectValue>
                 <Icon icon={icon} />
@@ -241,7 +242,8 @@ export default function MapSetting(props) {
               value={advancedSetting.tagcolorid}
               className="allColorSelectFields"
               renderTitle={obj => {
-                const { icon, text } = obj || {};
+                const icon = obj?.icon;
+                const text = obj?.text;
                 return (
                   <SelectValue>
                     <Icon icon={icon} />

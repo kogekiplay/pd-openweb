@@ -419,7 +419,8 @@ const createCalendarMethods = defineMethods<CreateCalendarFields>()({
           var $remindBox = $('#remindTextLableCreate');
           var $telRemid = $('#telRemindLabel');
 
-          if (value == 0) {
+          // 下拉项的 value 都是字符串（'0' 是「无」）；原来写 == 0 靠隐式转换
+          if (value === '0') {
             $remindBox.hide();
             $remindText.hide();
             $telRemid.addClass('Hidden').removeClass('InlineBlock');
@@ -504,10 +505,11 @@ const createCalendarMethods = defineMethods<CreateCalendarFields>()({
           { text: _l('每月'), value: '2' },
           { text: _l('每年'), value: '3' },
         ]}
-        defaultValue={$('.repeatDialogConfirm #tab_repeatType').val()}
+        // #tab_repeatType 是隐藏的文本 input，val() 一定是字符串（jQuery 的类型把多选 select 的 string[] 也算进去了）
+        defaultValue={$('.repeatDialogConfirm #tab_repeatType').val() as string}
         isAppendToBody
         onChange={value => {
-          if (value == 1) {
+          if (value === '1') {
             $('.repeatDialogConfirm #repeatTypeGroup').show();
           } else {
             $('.repeatDialogConfirm #repeatTypeGroup').hide();
@@ -593,7 +595,7 @@ const createCalendarMethods = defineMethods<CreateCalendarFields>()({
           { text: _l('次数'), value: '1' },
           { text: _l('日期'), value: '2' },
         ]}
-        defaultValue={$('.repeatDialogConfirm #tab_repeatTime').val()}
+        defaultValue={$('.repeatDialogConfirm #tab_repeatTime').val() as string}
         isAppendToBody
         onChange={value => {
           switch (parseInt(value, 10)) {

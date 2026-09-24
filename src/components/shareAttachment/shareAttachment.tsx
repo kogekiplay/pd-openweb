@@ -706,7 +706,8 @@ const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
         isAppendToBody
         menuStyle={{ width: 110 }}
         onChange={value => {
-          SA.activeSendToOther(parseInt(value, 10));
+          // 项的 value 本来就是数字；parseInt 要的是字符串（对整数两者结果一样）
+          SA.activeSendToOther(Number(value));
         }}
       />,
     );

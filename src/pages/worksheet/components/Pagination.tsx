@@ -442,8 +442,8 @@ export default class Pagination extends React.Component<any, any> {
         </PageList>
         {allowChangePageSize && (
           <PageSizeConfig>
+            {/* 原来还传了 width={90}：Dropdown 没有这个属性、一直被忽略，删掉而不是挪进 style —— 那会改变现在的宽度 */}
             <Dropdown
-              width={90}
               style={{ marginRight: 10, height: 28 }}
               isAppendToBody
               border

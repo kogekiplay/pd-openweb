@@ -33,7 +33,8 @@ export default ({ projectId, processId, relationId, selectNodeId, data, text, mi
         data={UNIT_List}
         value={data.unit}
         border
-        onChange={(unit: string) => {
+        // UNIT_List 的 value 是数字，原来把参数标成了 string
+        onChange={unit => {
           onChange(Object.assign({}, data, { unit }));
         }}
       />

@@ -169,7 +169,8 @@ export default class CardAppearance extends Component<any, any> {
                 className="allCanSelectFields"
                 hoverTheme
                 renderTitle={obj => {
-                  const { icon, text } = obj || {};
+                  const icon = obj?.icon;
+                  const text = obj?.text;
                   const groupControl = worksheetControls.find((o: FormControl) => o.controlId === viewControl);
                   const isErr = viewControl && !groupControl;
                   return (

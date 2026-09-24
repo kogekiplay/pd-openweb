@@ -273,7 +273,7 @@ export default function RelateOperate(props) {
             border
             className="flex"
             cancelAble
-            loading={loading}
+            itemLoading={loading}
             placeholder={
               selectedOpenViewIsDelete || selectedViewIsDeleted ? (
                 <span className="Red">{_l('已删除')}</span>

@@ -217,7 +217,7 @@ export default function BatchSetDialog(props) {
                         <BatchShowtypeDrop
                           border
                           placeholder={_l('样式')}
-                          menuStyle={{ width: 'auto', 'min-width': '110px' }}
+                          menuStyle={{ width: 'auto', minWidth: '110px' }}
                           className="flex w100"
                           info={info}
                           control={o}
@@ -238,7 +238,7 @@ export default function BatchSetDialog(props) {
                         border
                         isAppendToBody
                         className={'flex w100'}
-                        menuStyle={{ width: 'auto', 'min-width': '110px' }}
+                        menuStyle={{ width: 'auto', minWidth: '110px' }}
                         value={info.direction}
                         data={directionDataConfig}
                         renderItem={item => {

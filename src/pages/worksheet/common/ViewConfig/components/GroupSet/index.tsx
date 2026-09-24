@@ -156,7 +156,8 @@ export default function (props) {
                   className="allCanSelectFields"
                   hoverTheme
                   renderTitle={obj => {
-                    const { icon, text } = obj || {};
+                    const icon = obj?.icon;
+                    const text = obj?.text;
                     return (
                       <SelectValue className={cx({ Red: !isValidField })}>
                         <Icon icon={isValidField ? icon : 'error1'} className={cx({ Red: !isValidField })} />

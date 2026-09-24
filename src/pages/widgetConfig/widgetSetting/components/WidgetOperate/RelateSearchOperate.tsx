@@ -47,7 +47,7 @@ export default function RelateSearchOperate(props) {
             border
             className="flex"
             cancelAble={!disableOpenViewDrop}
-            loading={loading}
+            itemLoading={loading}
             placeholder={
               selectedOpenViewIsDelete || selectedViewIsDeleted ? (
                 <span className="Red">{_l('已删除')}</span>

@@ -345,7 +345,7 @@ export default class OtherTool extends Component<any, any> {
             border
             style={{ width: '40%' }}
             menuClass="w100"
-            isAppendBody
+            isAppendToBody
             data={accountTxtInfo}
             value={this.state[key]}
             onChange={value => this.setState({ [key]: value })}
