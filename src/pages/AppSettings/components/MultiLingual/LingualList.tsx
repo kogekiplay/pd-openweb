@@ -89,6 +89,15 @@ export default function LingualList(props) {
   };
 
   const asyncLangs = () => {
+    // 既没设基准语言、也没加其他语言时，同步没有任何目标语言。接口照样受理（提示「同步中」），
+    // 服务端随后异步失败，只往收件箱发一句「跨应用语言资源同步失败，请稍后再试」，看不出原因
+    // （2026-09-24 生产上一个没加其他语言的应用连续两次这样失败，设好基准语言后再点立即同步完成）。
+    // 只拦这一种组合：有其他语言、没设基准语言时服务端怎么处理没有证据，不替它猜。
+    if (!(originalLang || app.originalLang) && !langs.length) {
+      alert(_l('请先设置基准语言'), 3);
+      return;
+    }
+
     appManagementApi
       .loadRelationLangData({
         appId: app.id,
