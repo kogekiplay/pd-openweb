@@ -10,7 +10,7 @@ const scheduleJob = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  get: function (args, options) {
+  get: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJob/get';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleJobget', JSON.stringify(args), $.extend(base, options));
@@ -25,7 +25,7 @@ const scheduleJob = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  trigger: function (args, options) {
+  trigger: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJob/trigger';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleJobtrigger', JSON.stringify(args), $.extend(base, options));
@@ -41,7 +41,7 @@ const scheduleJob = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateStatus: function (args, options) {
+  updateStatus: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJob/updateStatus';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleJobupdateStatus', JSON.stringify(args), $.extend(base, options));
@@ -65,7 +65,7 @@ const scheduleJob = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  update: function (args, options) {
+  update: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJob/update';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleJobupdate', JSON.stringify(args), $.extend(base, options));
@@ -79,7 +79,7 @@ const scheduleJob = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNextTimes: function (args, options) {
+  getNextTimes: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJob/getNextTimes';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleJobgetNextTimes', JSON.stringify(args), $.extend(base, options));
@@ -93,7 +93,7 @@ const scheduleJob = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  resumeAll: function (args, options) {
+  resumeAll: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJob/resumeAll';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleJobresumeAll', JSON.stringify(args), $.extend(base, options));
@@ -107,7 +107,7 @@ const scheduleJob = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pauseAll: function (args, options) {
+  pauseAll: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJob/pauseAll';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleJobpauseAll', JSON.stringify(args), $.extend(base, options));
@@ -128,7 +128,7 @@ const scheduleJob = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  page: function (args, options) {
+  page: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJob/page';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleJobpage', JSON.stringify(args), $.extend(base, options));
@@ -142,7 +142,7 @@ const scheduleJob = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteAll: function (args, options) {
+  deleteAll: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJob/deleteAll';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleJobdeleteAll', JSON.stringify(args), $.extend(base, options));
@@ -166,7 +166,7 @@ const scheduleJob = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  add: function (args, options) {
+  add: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJob/add';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleJobadd', JSON.stringify(args), $.extend(base, options));

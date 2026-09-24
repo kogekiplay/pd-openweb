@@ -13,7 +13,7 @@ const health = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  healthCheck: function (args, options) {
+  healthCheck: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/health';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'healthHealthCheck', JSON.stringify(args), $.extend(base, options));

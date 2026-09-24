@@ -11,7 +11,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  createKnowledgeBase: function (args, options = {}) {
+  createKnowledgeBase: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + '/knowledgeBase';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'knowledgeBase', args, $.extend(base, options));
@@ -24,7 +24,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  getKnowledgeBase: function (args, options = {}) {
+  getKnowledgeBase: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + '/knowledgeBase';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'knowledgeBase', args, $.extend(base, options));
@@ -37,7 +37,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  getKnowledgeBaseDetail: function (args, options = {}) {
+  getKnowledgeBaseDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + `/knowledgeBase/${args.id}`;
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'knowledgeBase', {}, $.extend(base, options));
@@ -50,7 +50,7 @@ export default {
    * @param {string} args.name 名称
    * @param {string} args.description 描述
    */
-  updateKnowledgeBase: function (args, options = {}) {
+  updateKnowledgeBase: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + `/knowledgeBase/${args.id}/update`;
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'knowledgeBase', args, $.extend(base, options));
@@ -63,7 +63,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  deleteKnowledgeBase: function (args, options = {}) {
+  deleteKnowledgeBase: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + `/knowledgeBase/${args.id}/delete`;
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'knowledgeBase', {}, $.extend(base, options));
@@ -76,7 +76,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  getKnowledgeBaseChunksStatistics: function (args, options = {}) {
+  getKnowledgeBaseChunksStatistics: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + '/knowledgeBase/chunks/statistics';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'knowledgeBase', args, $.extend(base, options));
@@ -96,7 +96,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  getKnowledgeBaseSearch: function (args, options = {}) {
+  getKnowledgeBaseSearch: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + '/knowledgeBase/search';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'knowledgeBase', args, $.extend(base, options));
@@ -109,7 +109,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  getKnowledgeBaseUsage: function (args, options = {}) {
+  getKnowledgeBaseUsage: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + '/knowledgeBase/usage';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'knowledgeBase', args, $.extend(base, options));
@@ -122,7 +122,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  resetData: function (args, options = {}) {
+  resetData: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + `/knowledgeBase/${args.id}/resetData`;
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'knowledgeBase', args, $.extend(base, options));

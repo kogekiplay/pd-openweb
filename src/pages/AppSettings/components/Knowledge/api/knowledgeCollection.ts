@@ -14,7 +14,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  createKnowledgeCollection: function (args, options = {}) {
+  createKnowledgeCollection: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + '/knowledgeCollection';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'knowledgeCollection', args, $.extend(base, options));
@@ -35,7 +35,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  updateKnowledgeCollection: function (args, options = {}) {
+  updateKnowledgeCollection: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + `/knowledgeCollection/${args.id}/update`;
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'knowledgeCollection', args, $.extend(base, options));
@@ -48,7 +48,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  deleteKnowledgeCollection: function (args, options = {}) {
+  deleteKnowledgeCollection: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + `/knowledgeCollection/${args.id}/delete`;
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'knowledgeCollection', {}, $.extend(base, options));

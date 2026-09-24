@@ -11,7 +11,7 @@ const reportSort = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  updateReportSort: function (args, options?) {
+  updateReportSort: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/reportSort/updateReportSort';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportSortupdateReportSort', JSON.stringify(args), $.extend(base, options));

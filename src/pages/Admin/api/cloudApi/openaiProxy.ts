@@ -13,7 +13,7 @@ const openaiProxy = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOpenaiClientKeyValidate: function (args, options) {
+  getOpenaiClientKeyValidate: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/openai/client/key/validate';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(
@@ -32,7 +32,7 @@ const openaiProxy = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOpenaiClientModels: function (args, options) {
+  getOpenaiClientModels: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/openai/client/models';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'openaiProxyGetOpenaiClientModels', JSON.stringify(args), $.extend(base, options));
@@ -47,7 +47,7 @@ const openaiProxy = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOpenaiV1: function (args, options) {
+  getOpenaiV1: function (args: ApiArgs, options?: ApiOptions) {
     const { path, ...rest } = args;
     base.ajaxOptions.url =
       base.server(options) + '/openai/v1/' + path.split('/').map(encodeURIComponent).join('/') + '';
@@ -64,7 +64,7 @@ const openaiProxy = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  openaiV1: function (args, options) {
+  openaiV1: function (args: ApiArgs, options?: ApiOptions) {
     const { path, ...rest } = args;
     base.ajaxOptions.url =
       base.server(options) + '/openai/v1/' + path.split('/').map(encodeURIComponent).join('/') + '';

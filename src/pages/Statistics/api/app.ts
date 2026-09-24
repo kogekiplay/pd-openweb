@@ -14,7 +14,7 @@ const app = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getDate: function (args, options) {
+  getDate: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/app/getDate';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'appgetDate', args, $.extend(base, options));
@@ -26,7 +26,7 @@ const app = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getReport: function (args, options) {
+  getReport: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/app/getReport';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'appgetReport', args, $.extend(base, options));
@@ -38,7 +38,7 @@ const app = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getTemplate: function (args, options) {
+  getTemplate: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/app/getReportConfigDetail';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'appgetReportConfigDetail', args, $.extend(base, options));

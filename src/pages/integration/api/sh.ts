@@ -15,7 +15,7 @@ const sh = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getStorehouseInfo: function (args, options) {
+  getStorehouseInfo: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'sh/getStorehouseInfo';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'shgetStorehouseInfo', JSON.stringify(args), $.extend(base, options));
@@ -35,7 +35,7 @@ const sh = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  delTableCache: function (args, options) {
+  delTableCache: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'sh/delTableCache';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'shdelTableCache', JSON.stringify(args), $.extend(base, options));
@@ -49,7 +49,7 @@ const sh = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  delSh: function (args, options) {
+  delSh: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'sh/delSh';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'shdelSh', JSON.stringify(args), $.extend(base, options));
@@ -69,7 +69,7 @@ const sh = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkDatabaseForData: function (args, options) {
+  checkDatabaseForData: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'sh/checkDatabaseForData';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'shcheckDatabaseForData', JSON.stringify(args), $.extend(base, options));
@@ -89,7 +89,7 @@ const sh = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  status: function (args, options) {
+  status: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'sh/status';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'shstatus', JSON.stringify(args), $.extend(base, options));
@@ -109,7 +109,7 @@ const sh = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSyncFlag: function (args, options) {
+  getSyncFlag: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'sh/getSyncFlag';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'shgetSyncFlag', JSON.stringify(args), $.extend(base, options));
@@ -129,7 +129,7 @@ const sh = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  delShByOne: function (args, options) {
+  delShByOne: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'sh/delShByOne';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'shdelShByOne', JSON.stringify(args), $.extend(base, options));

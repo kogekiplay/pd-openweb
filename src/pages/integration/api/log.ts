@@ -15,7 +15,7 @@ const log = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getErrorDetailByJobId: function (args, options) {
+  getErrorDetailByJobId: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'log/getErrorDetailByJobId';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'loggetErrorDetailByJobId', JSON.stringify(args), $.extend(base, options));
@@ -35,7 +35,7 @@ const log = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLog: function (args, options?) {
+  getLog: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'log/getLog';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'loggetLog', JSON.stringify(args), $.extend(base, options));
@@ -55,7 +55,7 @@ const log = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getErrorDetail: function (args, options) {
+  getErrorDetail: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'log/getErrorDetail';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'loggetErrorDetail', JSON.stringify(args), $.extend(base, options));
@@ -75,7 +75,7 @@ const log = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getErrorLog: function (args, options) {
+  getErrorLog: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'log/getErrorLog';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'loggetErrorLog', JSON.stringify(args), $.extend(base, options));

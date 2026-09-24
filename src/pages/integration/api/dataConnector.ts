@@ -10,7 +10,7 @@ const dataConnector = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCommonTypes: function (args, options?) {
+  getCommonTypes: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'dataConnector/getCommonTypes';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'dataConnectorgetCommonTypes', JSON.stringify(args), $.extend(base, options));

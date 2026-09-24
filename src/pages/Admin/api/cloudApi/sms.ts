@@ -16,7 +16,7 @@ const sms = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendSms: function (args, options) {
+  sendSms: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/sms/v1/send';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'smsSendSms', JSON.stringify(args), $.extend(base, options));

@@ -12,7 +12,7 @@ const resource = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  addProcess: function (args, options?) {
+  addProcess: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/resource/addProcess';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'resourceaddProcess', JSON.stringify(args), $.extend(base, options));
@@ -25,7 +25,7 @@ const resource = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getCountByResourceId: function (args, options?) {
+  getCountByResourceId: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/resource/getProcessCount';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'resourcegetProcessCount', JSON.stringify(args), $.extend(base, options));
@@ -38,7 +38,7 @@ const resource = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getProcessList: function (args, options?) {
+  getProcessList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/resource/getProcessList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'resourcegetProcessList', JSON.stringify(args), $.extend(base, options));
@@ -51,7 +51,7 @@ const resource = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  moveProcess: function (args, options?) {
+  moveProcess: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/resource/moveProcess';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'resourcemoveProcess', JSON.stringify(args), $.extend(base, options));

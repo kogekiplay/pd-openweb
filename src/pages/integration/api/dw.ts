@@ -26,7 +26,7 @@ const dw = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFieldsInfo: function (args, options?) {
+  getFieldsInfo: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'dw/getFieldsInfo';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'dwgetFieldsInfo', JSON.stringify(args), $.extend(base, options));
@@ -57,7 +57,7 @@ const dw = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  preview: function (args, options?) {
+  preview: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'dw/preview';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'dwpreview', JSON.stringify(args), $.extend(base, options));
@@ -88,7 +88,7 @@ const dw = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createJob: function (args, options?) {
+  createJob: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'dw/createJob';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'dwcreateJob', JSON.stringify(args), $.extend(base, options));
@@ -119,7 +119,7 @@ const dw = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getErrorLog: function (args, options) {
+  getErrorLog: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'dw/getErrorLog';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'dwgetErrorLog', JSON.stringify(args), $.extend(base, options));
@@ -150,7 +150,7 @@ const dw = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkTableMirrorDataList: function (args, options?) {
+  getWorkTableMirrorDataList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'dw/getWorkTableMirrorDataList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'dwgetWorkTableMirrorDataList', JSON.stringify(args), $.extend(base, options));
@@ -181,7 +181,7 @@ const dw = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkTableExists: function (args, options?) {
+  checkTableExists: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'dw/checkTableExists';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'dwcheckTableExists', JSON.stringify(args), $.extend(base, options));
@@ -212,7 +212,7 @@ const dw = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  delete: function (args, options?) {
+  delete: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'dw/delete';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'dwdelete', JSON.stringify(args), $.extend(base, options));

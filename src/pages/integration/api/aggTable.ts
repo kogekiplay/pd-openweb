@@ -12,7 +12,7 @@ const aggTable = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPreviewTaskStatus: function (args, options) {
+  getPreviewTaskStatus: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'aggTable/getPreviewTaskStatus';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'aggTablegetPreviewTaskStatus', JSON.stringify(args), $.extend(base, options));
@@ -29,7 +29,7 @@ const aggTable = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  undoChange: function (args, options) {
+  undoChange: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'aggTable/undoChange';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'aggTableundoChange', JSON.stringify(args), $.extend(base, options));
@@ -47,7 +47,7 @@ const aggTable = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  publishTask: function (args, options) {
+  publishTask: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'aggTable/publishTask';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'aggTablepublishTask', JSON.stringify(args), $.extend(base, options));
@@ -65,7 +65,7 @@ const aggTable = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  initEmpty: function (args, options) {
+  initEmpty: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'aggTable/initEmpty';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'aggTableinitEmpty', JSON.stringify(args), $.extend(base, options));
@@ -84,7 +84,7 @@ const aggTable = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateNode: function (args, options) {
+  updateNode: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'aggTable/updateNode';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'aggTableupdateNode', JSON.stringify(args), $.extend(base, options));
@@ -101,7 +101,7 @@ const aggTable = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  reSync: function (args, options) {
+  reSync: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'aggTable/reSync';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'aggTablereSync', JSON.stringify(args), $.extend(base, options));
@@ -118,7 +118,7 @@ const aggTable = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAggTable: function (args, options) {
+  getAggTable: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'aggTable/getAggTable';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'aggTablegetAggTable', JSON.stringify(args), $.extend(base, options));
@@ -136,7 +136,7 @@ const aggTable = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  copy: function (args, options) {
+  copy: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'aggTable/copy';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'aggTablecopy', JSON.stringify(args), $.extend(base, options));
@@ -153,7 +153,7 @@ const aggTable = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  move: function (args, options) {
+  move: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'aggTable/move';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'aggTablemove', JSON.stringify(args), $.extend(base, options));
@@ -170,7 +170,7 @@ const aggTable = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  preReSyncCheck: function (args, options) {
+  preReSyncCheck: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'aggTable/preReSyncCheck';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'aggTablepreReSyncCheck', JSON.stringify(args), $.extend(base, options));
@@ -185,7 +185,7 @@ const aggTable = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAggTableSources: function (args, options) {
+  getAggTableSources: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'aggTable/getAggTableSources';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'aggTablegetAggTableSources', args, $.extend(base, options));

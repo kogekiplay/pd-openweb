@@ -12,7 +12,7 @@ const worksheetReference = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getWorksheetReferences: function (args, options?) {
+  getWorksheetReferences: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/worksheetReference/GetWorksheetReferences';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(

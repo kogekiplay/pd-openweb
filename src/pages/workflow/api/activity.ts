@@ -14,7 +14,7 @@ const activity = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getList: function (args, options?) {
+  getList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/activity/getList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'activitygetList', args, $.extend(base, options));
@@ -27,7 +27,7 @@ const activity = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  remove: function (args, options?) {
+  remove: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/activity/remove';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'activityremove', JSON.stringify(args), $.extend(base, options));
