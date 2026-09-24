@@ -49,7 +49,7 @@ let DataSource = class DataSource extends Component<any, any> {
     this.scrollViewRef = React.createRef();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const newViewId = _.get(this.props, ['currentReport', 'filter', 'viewId']);
       const newFormulasLength = _.get(this.props, ['currentReport', 'formulas', 'length']);
@@ -545,7 +545,7 @@ let DataSource = class DataSource extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { dataIsUnfold, ownerId, base } = this.props;
     const { appType } = base;
     return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import _ from 'lodash';
 import { Dialog, Radio } from 'ming-ui';
 import { ACTION_ID, NODE_TYPE } from '../../enum';
@@ -42,6 +42,7 @@ export default ({
         { text: _l('不移动'), value: 0 },
       ];
     }
+    return undefined;
   };
 
   // 结果分支

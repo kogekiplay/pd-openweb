@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Popup, Tabs } from 'antd-mobile';
@@ -24,7 +24,10 @@ const tabs = md.global.Account.isPortal
       { title: _l('日志'), type: 3 },
     ];
 
-const getGroupId = (appSectionDetail, worksheetId: string) => {
+const getGroupId = (
+  appSectionDetail: HapApi.MD.Entity.Apk.AppSectionDomainModel[] | undefined,
+  worksheetId: string,
+) => {
   let groupId = null;
 
   for (let i = 0; i < appSectionDetail.length; i++) {
@@ -59,7 +62,7 @@ class Discuss extends Component<any, any> {
       focusUsers: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { params } = this.props.match;
 
     if (_.isEmpty(params.rowId)) {
@@ -79,7 +82,7 @@ class Discuss extends Component<any, any> {
       });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.sheetDiscussions, prevProps.sheetDiscussions)) {
         this.setState(
@@ -177,7 +180,7 @@ class Discuss extends Component<any, any> {
         ),
       //内部讨论 未配置外部人员可参与讨论 或配置了外部成员不可见内部讨论 不能@外部用户
     );
-    const hash = {};
+    const hash: Record<string, boolean> = {};
     const data2 = data.reduce((result, current) => {
       if (!hash[current.accountId]) {
         hash[current.accountId] = true; // 标记已存在
@@ -234,7 +237,7 @@ class Discuss extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { isModal, onClose, originalData, discussionCount, projectId } = this.props;
     const { params } = this.props.match;
     const { appId, worksheetId, rowId } = params;

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
@@ -42,6 +42,8 @@ const TAB_TYPE = {
 };
 
 class TaskDetail extends Component<any, any> {
+  declare mounted: boolean | undefined;
+
   static defaultProps = {
     visible: false,
     taskId: '',
@@ -68,7 +70,7 @@ class TaskDetail extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
     if (this.props.visible && this.state.taskId) {
       this.init();
@@ -76,7 +78,7 @@ class TaskDetail extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.visible &&
@@ -139,7 +141,7 @@ class TaskDetail extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
     if (this.props.openType === OPEN_TYPE.slide) {
       $('#tasks').removeClass('slideDetail');
@@ -394,7 +396,13 @@ class TaskDetail extends Component<any, any> {
   /**
    * 滚动到固定位置
    */
-  scrollToFixedPosition({ scrollTo, scrollTop }) {
+  scrollToFixedPosition({
+    scrollTo,
+    scrollTop,
+  }: {
+    scrollTop?: number | undefined;
+    scrollTo?: JQuery<HTMLElement> | undefined;
+  }) {
     if (scrollTo) {
       scrollTo[0]?.scrollIntoView();
     } else {
@@ -610,7 +618,7 @@ class TaskDetail extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { visible, openType } = this.props;
 
     if (!visible) {

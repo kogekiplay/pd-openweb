@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Dropdown } from 'antd';
 import api from 'api/homeApp';
 import cx from 'classnames';
@@ -73,12 +73,13 @@ export default class AppFilter extends Component<any, any> {
       searchValue: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     api.getAllHomeApp().then(data => {
-      data.validProject.push({
+      data.validProject?.push({
         projectId: 'validProject',
         projectName: _l('外部协作应用'),
         projectApps: data.externalApps,
+        hasApps: !!data.externalApps?.length,
       });
       this.setState({
         dataSource: data.validProject,
@@ -169,7 +170,7 @@ export default class AppFilter extends Component<any, any> {
       </AppFilterWrap>
     );
   }
-  render() {
+  override render() {
     const { app, menuVisible } = this.state;
     const { apkId } = this.props;
     return (

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Component } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -244,7 +244,7 @@ export async function handleTemplateRecordPrint({
 }
 
 export default class PrintList extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isCharge: PropTypes.bool,
     type: PropTypes.string, // 显示样式 0 显示在menuItem中 1 显示为按钮 2 只显示系统打印
     viewId: PropTypes.string,
@@ -266,18 +266,18 @@ export default class PrintList extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
     emitter.on('RELOAD_RECORD_INFO_PRINT_LIST', this.getData);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (this.props.worksheetId !== prevProps.worksheetId || this.props.recordId !== prevProps.recordId) {
       this.getData();
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     emitter.off('RELOAD_RECORD_INFO_PRINT_LIST', this.getData);
   }
 
@@ -355,7 +355,7 @@ export default class PrintList extends Component<any, any> {
     });
   }
 
-  renderPrintTemplate = templateType => {
+  renderPrintTemplate = (templateType: string) => {
     const {
       isCharge,
       viewId,
@@ -462,7 +462,7 @@ export default class PrintList extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { viewId, sheetSwitchPermit, type = 0, onItemClick = () => {} } = this.props;
     const { tempList, showPrintGroup } = this.state;
 

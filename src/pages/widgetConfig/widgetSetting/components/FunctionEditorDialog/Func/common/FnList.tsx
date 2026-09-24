@@ -1,4 +1,3 @@
-import React from 'react';
 import { Collapse } from 'antd';
 
 // import 'antd/lib/collapse/style/index.css';

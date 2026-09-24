@@ -1,4 +1,3 @@
-import React from 'react';
 import { ActionSheet } from 'antd-mobile';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';

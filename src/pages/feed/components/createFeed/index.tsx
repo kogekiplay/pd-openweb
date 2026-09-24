@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import doT from 'dot';
 import _ from 'lodash';
@@ -249,7 +248,7 @@ export default function (options) {
           var voteData = VoteUpdater.getData($('#MDUpdater_Vote_updater'));
           if (voteData.invalid) {
             alert(_l('投票项内容不能为空'), 3);
-            return;
+            return undefined;
           }
 
           // 验证投票是否有选项
@@ -275,7 +274,7 @@ export default function (options) {
           };
         } else {
           alert(_l('请选择群组'), 3);
-          return;
+          return undefined;
         }
 
         // 知识门户
@@ -286,7 +285,7 @@ export default function (options) {
           .then(function (result) {
             if (!result.success) {
               alert(_l('发布动态失败'), 2);
-              return;
+              return undefined;
             }
 
             if (MDUpdater.options.createShare) {
@@ -316,11 +315,13 @@ export default function (options) {
 
             MDUpdater.resetUpdater(null, true);
             MDUpdater.renderSelectGroup(MDUpdater.options.selectGroupOptions);
+            return undefined;
           })
           .finally(function () {
             $(obj).removeAttr('disabled').removeClass('Disabled');
             $('.easyDialogBoxMDUpdater')[0] && $('.easyDialogBoxMDUpdater').parent().remove();
           });
+        return undefined;
       };
 
       if (_.isFunction(mdUpdaterTextareaUpdaterEl.val)) {
@@ -619,6 +620,7 @@ export default function (options) {
             $btnShare.prop('disabled', false).removeClass('Disabled');
           },
         });
+        return undefined;
       });
 
       // 发布

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -31,12 +31,12 @@ let MonitorTimeDot = class MonitorTimeDot extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { chartScroll } = this.props;
     chartScroll.on('scroll', this.handleScroll);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { chartScroll } = this.props;
     chartScroll.off('scroll', this.handleScroll);
   }
@@ -69,7 +69,7 @@ let MonitorTimeDot = class MonitorTimeDot extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { position } = this.state;
     const { top, row, onPositionRow } = this.props;
     return (
@@ -161,7 +161,7 @@ let TimeDot = class TimeDot extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { grouping } = this.props.gunterView;
     return (
       <TimeDotWrapper className="timeDotWrapper">{grouping.map(item => this.renderGroupingItem(item))}</TimeDotWrapper>

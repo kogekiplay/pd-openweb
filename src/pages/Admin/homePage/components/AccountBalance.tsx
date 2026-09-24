@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';
@@ -152,7 +152,7 @@ export default function AccountBalance(props) {
           closeDialog,
         });
       },
-      closeWarning: (warningValue, notifiers, noticeTypes, closeDialog) => {
+      closeWarning: (_warningValue, notifiers, noticeTypes, closeDialog) => {
         setBalanceLimitNotice({
           noticeEnabled: false,
           balanceLimit: 0,

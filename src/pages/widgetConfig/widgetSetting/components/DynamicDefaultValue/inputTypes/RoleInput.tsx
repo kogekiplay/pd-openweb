@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import { dialogSelectOrgRole } from 'ming-ui/functions';
@@ -6,6 +6,8 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
 export default class RoleInput extends Component<any, any> {
+  declare $wrap: SelectOtherField | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -33,7 +35,7 @@ export default class RoleInput extends Component<any, any> {
     const { defaultType } = this.props;
     defaultType && this.$wrap.triggerClick();
   };
-  render() {
+  override render() {
     const { defaultType, data = {}, globalSheetInfo: { projectId } = {}, onDynamicValueChange } = this.props;
     return (
       <DynamicValueInputWrap>

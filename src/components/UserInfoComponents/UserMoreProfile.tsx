@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import moment from 'moment';
@@ -56,7 +55,7 @@ const renderEducationList = eduLists => {
             </div>
             <div>
               <span className="mRight5 textSecondary">{_l('描述：')}</span>
-              <span className={`mRight10 ${item.description ? '' : 'textDisabled'}`}>
+              <span className={`mRight10 ${item.description ? '' : 'textTertiary'}`}>
                 {item.description || _l('未填写')}
               </span>
             </div>
@@ -102,7 +101,7 @@ export default function UserMoreProfile(props) {
               </div>
               <div>
                 <span className="mRight5 textSecondary">{_l('描述：')}</span>
-                <span className={`mRight10 ${item.description ? '' : 'textDisabled'}`}>
+                <span className={`mRight10 ${item.description ? '' : 'textTertiary'}`}>
                   {item.description || _l('未填写')}
                 </span>
               </div>
@@ -138,7 +137,7 @@ export default function UserMoreProfile(props) {
                   ) : userInfo[item.id] ? (
                     userInfo[item.id]
                   ) : (
-                    <span className="textDisabled">{_l('未填写')}</span>
+                    <span className="textTertiary">{_l('未填写')}</span>
                   )}
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { Dialog } from 'ming-ui';
 import process from '../../../api/process';
@@ -38,7 +38,7 @@ export default class CopyFlowBtn extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { isConvertSubProcess, isConvertPBP } = this.props;
 
     return (

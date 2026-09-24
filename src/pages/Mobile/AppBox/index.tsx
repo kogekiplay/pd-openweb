@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import withRouter from '../../../router/withRouter';
 import AppWarehouse from 'src/pages/AppHomepage/AppLib';
 import './index.less';
@@ -12,7 +12,7 @@ let AddBox = class AddBox extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     return (
       <div className="appBox h100">
         <div className="content">

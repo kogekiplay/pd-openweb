@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
@@ -101,7 +101,8 @@ export default function () {
     const s = request.s || '';
 
     if (s) {
-      safeLocalStorageSetItem('RegFrom', s);
+      // URL 参数重复出现时 query-string 给的是数组；localStorage 本来就会把它转成 'a,b'
+      safeLocalStorageSetItem('RegFrom', String(s));
     }
 
     //私有部署关闭注册入口，跳转到/login
@@ -293,6 +294,7 @@ export default function () {
       case 'inviteLinkExpirate':
         return <InviteLinkExpirate />;
     }
+    return undefined;
   };
 
   if (state.loading) return <LoadDiv className="mTop80" />;

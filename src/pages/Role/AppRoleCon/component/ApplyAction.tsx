@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -38,13 +38,13 @@ export default class ApplyAction extends PureComponent<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({
       roles: this.props.roles,
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.roles, this.props.roles)) {
         this.setState({
@@ -97,7 +97,7 @@ export default class ApplyAction extends PureComponent<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { getPopupContainer } = this.props;
     const triggerProps = {
       popupClassName: 'Normal',

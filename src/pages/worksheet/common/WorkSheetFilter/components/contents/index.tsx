@@ -1,4 +1,3 @@
-import React from 'react';
 import _, { includes } from 'lodash';
 import { CONTROL_FILTER_WHITELIST, FILTER_CONDITION_TYPE } from '../../enum';
 import Cascader from './Cascader';

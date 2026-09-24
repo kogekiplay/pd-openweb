@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
@@ -160,13 +160,13 @@ export default class EnterpriseCard extends Component<any, any> {
     });
   }
 
-  onCancelExit(item, closeProject) {
+  onCancelExit(item, closeProject: boolean) {
     if (!closeProject) return;
 
     navigateTo(`/admin/sysinfo/${item.projectId}`);
   }
 
-  onOkExit(item, isLastSuperAdmin, isClose) {
+  onOkExit(item, isLastSuperAdmin: boolean, isClose) {
     const { card } = this.props;
 
     if (!isLastSuperAdmin) {
@@ -301,7 +301,7 @@ export default class EnterpriseCard extends Component<any, any> {
   };
 
   //操作行为
-  renderOption(type) {
+  renderOption(type: string) {
     const { card } = this.props;
 
     switch (type) {
@@ -313,7 +313,7 @@ export default class EnterpriseCard extends Component<any, any> {
             </span>
           );
         } else {
-          return;
+          return undefined;
         }
 
       case 'review':
@@ -335,6 +335,7 @@ export default class EnterpriseCard extends Component<any, any> {
       case 'default':
         return null;
     }
+    return undefined;
   }
 
   //开通
@@ -381,7 +382,7 @@ export default class EnterpriseCard extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { showItem, userInfo, loading, hasProjectAdminAuth } = this.state;
     const { departmentInfos = [], jobInfos = [] } = userInfo;
     const { card, DragHandle, isClose } = this.props;

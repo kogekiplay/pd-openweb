@@ -120,7 +120,7 @@ const genTree = (
   for (let i = 0; i < data.length; i++) {
     const rowId = _.isString(data[i]) ? data[i] : data[i].rowid;
     const node = treeData[rowId] || {};
-    if (!node.rowid) return;
+    if (!node.rowid) return undefined;
     const currentPath = path.concat([i]);
     const currentPathId = pathId.concat([rowId]);
     const childrenData = genTree({

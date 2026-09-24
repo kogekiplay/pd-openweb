@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useSetState } from 'react-use';
 import { Select } from 'antd';
 import styled from 'styled-components';

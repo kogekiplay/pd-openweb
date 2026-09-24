@@ -69,7 +69,7 @@ export const getPrintAuthInfo = async ({ appId, worksheetId, viewId, rowIds = []
   };
 };
 
-const safeClose = win => {
+const safeClose = (win: Window | null) => {
   if (!win) return;
   try {
     win.close();

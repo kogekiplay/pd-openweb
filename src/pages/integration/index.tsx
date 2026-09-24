@@ -10,7 +10,7 @@ import { upgradeVersionDialog } from 'src/components/upgradeVersion';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import { integrationConfig } from 'src/pages/integration/config.js';
 import { navigateTo } from 'src/router/navigateTo';
-import { addSubPathOfRoute, emitter } from 'src/utils/common';
+import { emitter } from 'src/utils/common';
 import { VersionProductType } from 'src/utils/enum';
 import { getCurrentProject } from 'src/utils/project';
 import { getFeatureStatus } from 'src/utils/project';
@@ -25,7 +25,7 @@ import TaskCon from './dataIntegration/TaskCon';
 import Sidenav from './Sidenav';
 import './svgIcon';
 
-const ROUTE_CONFIG_PATH = {
+const ROUTE_CONFIG_PATH: Record<string, string> = {
   connectList: 'connectList',
   dataConnect: 'dataConnect',
   taskCon: 'taskCon',
@@ -46,7 +46,7 @@ const TYPE_TO_COMP = {
 const ENABLE_DATAPIPELINE_KEYS = ['dataConnect', 'taskCon', 'task', 'source', 'dataMirror', 'stats'];
 
 const getRoutes = param => {
-  let components = [];
+  let components: React.JSX.Element[] = [];
   _.keys(ROUTE_CONFIG_PATH).forEach((key, i) => {
     const path = ROUTE_CONFIG_PATH[key];
     const Component = TYPE_TO_COMP[key];
@@ -108,13 +108,13 @@ export default class HubContainer extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('integration');
     this.loadPermissions();
     emitter.addListener('CHANGE_CURRENT_PROJECT', this.loadPermissions);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('integration');
     emitter.removeListener('CHANGE_CURRENT_PROJECT', this.loadPermissions);
   }
@@ -131,7 +131,7 @@ export default class HubContainer extends React.Component<any, any> {
     this.setState({ currentProjectId: projectInfo.projectId });
   };
 
-  render() {
+  override render() {
     // 父路由从 '/integration/:type?/:listType?' 改成了 '/integration/*'
     //（原来父子深度相同、父会把 URL 吃光，子路由无段可匹配），所以 type 不再
     // 由路由参数提供。它本来就是 /integration/ 之后的那一段，直接从路径取。
@@ -170,7 +170,7 @@ export default class HubContainer extends React.Component<any, any> {
 
     if ((type === 'dataMirror' && menuAuth.noMirrorMenu) || (type === 'stats' && menuAuth.noStatsMenu)) {
       navigateTo('/integration');
-      return;
+      return undefined;
     }
 
     if (
@@ -186,7 +186,7 @@ export default class HubContainer extends React.Component<any, any> {
             ? '/integration/source'
             : '/integration';
       navigateTo(navigateLink);
-      return;
+      return undefined;
     }
 
     return (

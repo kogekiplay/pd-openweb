@@ -1,9 +1,11 @@
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Popover } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { SortableList } from 'ming-ui';
+import type { SortableRenderItemOptions } from 'ming-ui/components/SortableList';
+import type { SelectedEntityValue } from 'src/utils/controlTypes';
 import { quickSelectRole } from 'ming-ui/functions';
 import DisabledDepartmentAndRoleName from 'src/components/DisabledDepartmentAndRoleName';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
@@ -12,9 +14,9 @@ import QuickOperate from '../UserSelect/QuickOperate';
 
 const OrgRole = props => {
   const { disabled, enumDefault, onChange, value, projectId, formData, formItemId } = props;
-  const [showId, setShowId] = useState('');
-  const pickRef = useRef(null);
-  const destoryRef = useRef(null);
+  const [showId, setShowId] = useState<string | undefined>('');
+  const pickRef = useRef<HTMLDivElement | null>(null);
+  const destoryRef = useRef<(() => void) | null>(null);
   const currentValueRef = useRef(safeParse(value || '[]'));
 
   const currentValue = useMemo(() => {
@@ -50,7 +52,7 @@ const OrgRole = props => {
   /**
    * 选择组织角色
    */
-  const pickOrgRole = (replaceItem?) => {
+  const pickOrgRole = (replaceItem?: SelectedEntityValue | undefined) => {
     if (!_.find(md.global.Account.projects, item => item.projectId === projectId)) {
       alert(_l('您不是该组织成员，无法获取其组织角色列表，请联系组织管理员'), 3);
       return;
@@ -79,7 +81,7 @@ const OrgRole = props => {
     destoryRef.current = destory;
   };
 
-  const onSave = (data, isCancel = false, replaceItem) => {
+  const onSave = (data, isCancel = false, replaceItem: SelectedEntityValue | undefined) => {
     const valueArr = currentValueRef.current;
     const lastIds = _.sortedUniq(valueArr.map(l => l.organizeId));
     const newIds = _.sortedUniq(data.map(l => l.organizeId));
@@ -106,12 +108,12 @@ const OrgRole = props => {
   /**
    * 删除组织角色
    */
-  const removeOrgRole = organizeId => {
+  const removeOrgRole = (organizeId: string | undefined) => {
     const newValue = JSON.parse(value).filter(item => item.organizeId !== organizeId);
     onChange(JSON.stringify(newValue));
   };
 
-  const renderItem = ({ item, dragging, items = [], isLayer }) => {
+  const renderItem = ({ item, dragging, items = [], isLayer }: SortableRenderItemOptions<SelectedEntityValue>) => {
     const disablePopover = disabled || dragging || isLayer;
     const showMenu = showId === item.organizeId && !disablePopover;
 

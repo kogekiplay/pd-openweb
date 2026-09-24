@@ -299,6 +299,7 @@ export default function Card(props) {
           </div>
         );
     }
+    return undefined;
   };
 
   const renderBtn = () => {
@@ -324,6 +325,7 @@ export default function Card(props) {
 
         return _l('编辑');
     }
+    return undefined;
   };
 
   const renderTips = () => {

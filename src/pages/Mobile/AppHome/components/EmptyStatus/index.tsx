@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import processTodoEmpty from '../../img/processTodoEmpty.png';
 import recentEmpty from '../../img/recentEmpty.png';
@@ -14,7 +13,12 @@ const IMAGES = {
   recent: recentEmpty,
 };
 
-export default function EmptyStatus(props) {
+export interface EmptyStatusProps {
+  emptyType: string;
+  emptyTxt: string;
+}
+
+export default function EmptyStatus(props: EmptyStatusProps) {
   const { emptyType, emptyTxt } = props;
   return (
     <Wrap className="w100 h100 flexColumn alignItemsCenter justifyContentCenter">

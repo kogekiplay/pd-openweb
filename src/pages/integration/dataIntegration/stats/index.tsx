@@ -92,7 +92,7 @@ export default function (props) {
     getDetailInfo();
   };
 
-  const getDetailInfo = (dimension?) => {
+  const getDetailInfo = (dimension?: number | undefined) => {
     getHistory(dimension);
   };
 
@@ -358,9 +358,9 @@ export default function (props) {
                 {keyWords ? _l('暂无搜索结果') : _l('暂无相关数据')}
               </div>
             )}
-            {list.map(o => {
+            {list.map((o, index) => {
               return (
-                <div className={cx('trCon flexRow alignItemsCenter')}>
+                <div key={index} className={cx('trCon flexRow alignItemsCenter')}>
                   <div
                     className={cx('item flex Bold', { 'hoverColorPrimary Hand': !o.isDelete })}
                     onClick={() => {

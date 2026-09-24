@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Tree } from 'antd';
@@ -111,7 +111,7 @@ const DefaultGroup = {
 };
 
 // 导入角色模版
-const roleTemplatePaths = {
+const roleTemplatePaths: Record<number, string> = {
   0: '/staticfiles/template/orgRoleImportTemplate/组织角色导入模板.xlsx',
   1: '/staticfiles/template/orgRoleImportTemplate/Role Import Template.xlsx',
   2: '/staticfiles/template/orgRoleImportTemplate/役割インポートテンプレート.xlsx',
@@ -121,6 +121,9 @@ const roleTemplatePaths = {
 };
 
 class RoleManage extends Component<any, any> {
+  declare promise:
+    ((args: ApiArgs, options?: ApiOptions) => ApiResult) | ((args: ApiArgs, options?: ApiOptions) => ApiResult) | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -147,7 +150,7 @@ class RoleManage extends Component<any, any> {
     this.promise = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { match } = this.props;
     const { params = {} } = match;
     this.props.updateIsRequestList(true);
@@ -158,7 +161,7 @@ class RoleManage extends Component<any, any> {
     this.init(false, true);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.updateUserLoading(true);
   }
 
@@ -174,14 +177,14 @@ class RoleManage extends Component<any, any> {
         includeDisabled: showDisabledOrgRole,
       })
       .then(res => {
+        // 「默认」分组在前、接口给的分组在后；两边字段可空性不同，用展开拼成一个数组（和原来的 concat 等价）
         data = [
           {
             ...DefaultGroup,
             children:
               onlyRefreshGroup && treeData[0] && treeData[0].key === DefaultGroup.key ? treeData[0].children : [],
           },
-        ].concat(
-          res.map(l => {
+          ...res.map(l => {
             let data = treeData.find(o => o.orgRoleGroupId === l.orgRoleGroupId);
             return {
               ...l,
@@ -192,7 +195,7 @@ class RoleManage extends Component<any, any> {
               children: onlyRefreshGroup && data ? data.children : [],
             };
           }),
-        );
+        ];
         if (!onlyRefreshGroup) {
           this.updateChildren(data, [data[0].orgRoleGroupId], true, initFlag);
         } else {
@@ -357,7 +360,7 @@ class RoleManage extends Component<any, any> {
   };
 
   // 新增编辑角色
-  createAndEdit = filed => {
+  createAndEdit = (filed: string) => {
     this.setState({ showRoleDialog: true, filed });
   };
 
@@ -883,7 +886,7 @@ class RoleManage extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { roleList = [], currentRole = {}, projectId, isImportRole, searchValue, authority } = this.props;
     let {
       showRoleDialog,

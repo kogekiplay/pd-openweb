@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import { find, get } from 'lodash';
 import { TagTextarea } from 'ming-ui';
@@ -19,7 +19,7 @@ export default function Concatenate({
   withSYS = true,
   placeholder,
 }) {
-  const $tagtextarea = useRef(null);
+  const $tagtextarea = useRef<TagTextarea | null | undefined>(null);
   const $settingContent = useRef<HTMLDivElement>(null);
   const { controlId, dataSource } = data;
   const [visible, setVisible] = useState(false);

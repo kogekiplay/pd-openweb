@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Button, Dialog, Icon, LoadDiv, Support, SvgIcon } from 'ming-ui';
@@ -9,6 +9,9 @@ import successImg from '../images/succuss.png';
 import './index.less';
 
 export default class DialogCreateApp extends Component<any, any> {
+  declare inputBox: HTMLLabelElement | null | undefined;
+  declare editInput: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -16,7 +19,7 @@ export default class DialogCreateApp extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { appInfo = {} } = this.props;
 
     if (this.inputBox) {
@@ -58,7 +61,7 @@ export default class DialogCreateApp extends Component<any, any> {
 
     this.setState({ isEditSheetName: false });
   };
-  render() {
+  override render() {
     const {
       visible,
       projectId,
@@ -200,9 +203,9 @@ export default class DialogCreateApp extends Component<any, any> {
           )}
           {!createAppStatus && !createAppLoading && (
             <div className="sheetInfo">
-              {importSheets.map(item => {
+              {importSheets.map((item, index) => {
                 return (
-                  <div className="sheetInfoItem flexRow">
+                  <div key={index} className="sheetInfoItem flexRow">
                     {item.sheetId === currentSheetId && isEditSheetName ? (
                       <div className="flex">
                         <input

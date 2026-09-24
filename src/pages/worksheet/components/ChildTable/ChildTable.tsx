@@ -228,8 +228,8 @@ class ChildTable extends React.Component<any, any> {
   /** 展开态单元格额外占用的宽度 */
   declare expandCellAppendWidth: number;
 
-  static contextType = RecordInfoContext;
-  static propTypes = {
+  static override contextType = RecordInfoContext;
+  static override propTypes = {
     mode: PropTypes.string,
     entityName: PropTypes.string,
     recordId: PropTypes.string,
@@ -312,7 +312,7 @@ class ChildTable extends React.Component<any, any> {
     this.rowsLoading = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { control, recordId, needResetControls } = this.props;
     this.updateDefsourceOfControl();
 
@@ -336,7 +336,7 @@ class ChildTable extends React.Component<any, any> {
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.refreshFlag && this.props.refreshFlag !== prevProps.refreshFlag) {
         this.refresh();
@@ -459,7 +459,7 @@ class ChildTable extends React.Component<any, any> {
     updateTreeTableViewData();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     if (!_.isEqual(this.state, nextState)) {
       return true;
     }
@@ -478,7 +478,7 @@ class ChildTable extends React.Component<any, any> {
     );
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { mode, control } = this.props;
 
     if (mode !== 'dialog' && _.isFunction(control.addRefreshEvents)) {
@@ -1447,6 +1447,7 @@ class ChildTable extends React.Component<any, any> {
     } else {
       return true;
     }
+    return undefined;
   };
 
   handleMouseEnter = e => {
@@ -1595,7 +1596,7 @@ class ChildTable extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       mode,
       maxHeight,

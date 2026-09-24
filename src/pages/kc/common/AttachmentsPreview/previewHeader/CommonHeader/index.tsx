@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Trigger from '@rc-component/trigger';
@@ -123,7 +123,7 @@ export default function CommonHeader(props) {
 
   const [showKcVersionList, setShowKcVersionList] = useState(false);
   const [showSaveTo, setShowSaveTo] = useState(false);
-  const eleKcVersionList = useRef(null);
+  const eleKcVersionList = useRef<HTMLElement | null>(null);
   const isMobile = browserIsMobile();
   const showWpsPreview =
     !window.platformENV.isOverseas &&

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, useLocation } from 'react-router';
 import { withoutHeaderUrl } from '../config';
 import genRouteComponent from '../genRouteComponent';

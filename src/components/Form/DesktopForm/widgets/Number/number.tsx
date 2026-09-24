@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -122,7 +122,7 @@ const NumberComp = props => {
     return val;
   };
 
-  const handleControl = action => {
+  const handleControl = (action: string) => {
     const { numinterval = '1' } = advancedSetting;
 
     if (!numinterval || disabled) return null;

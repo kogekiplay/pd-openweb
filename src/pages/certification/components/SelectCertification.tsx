@@ -79,7 +79,7 @@ function SelectCertification(props) {
       onCancel={onClose}
     >
       {certList.map((item, index: number) => (
-        <React.Fragment>
+        <React.Fragment key={index}>
           <div
             className={cx('certItem', {
               isActive: current.entityId === item.entityId && current.authType === item.authType,

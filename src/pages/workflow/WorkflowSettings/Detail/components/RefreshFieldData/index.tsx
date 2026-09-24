@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import { Checkbox } from 'ming-ui';
 import { getIconByType } from 'src/pages/widgetConfig/util';

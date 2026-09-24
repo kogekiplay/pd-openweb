@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from 'react';
+import { Fragment, memo } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -58,7 +58,7 @@ const CheckboxWidget = props => {
     props.onChange(JSON.stringify(values));
   };
 
-  const handleSelectAll = (options = [], isChecked) => {
+  const handleSelectAll = (options = [], isChecked: boolean) => {
     const checkIds = safeParse(value, 'array');
 
     // 多选平铺, 多选选中则清空
@@ -158,8 +158,8 @@ const CheckboxWidget = props => {
     );
   };
 
-  const renderDropdown = checkIds => {
-    let sources = [];
+  const renderDropdown = (checkIds: string[]) => {
+    let sources: { key: string; color: string; value: string }[] = [];
 
     checkIds.forEach(item => {
       if ((item || '').toString().indexOf('add_') > -1) {

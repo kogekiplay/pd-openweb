@@ -12,7 +12,7 @@ const oauth2 = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  authorize: function (args, options) {
+  authorize: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/oauth2/authorize';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'oauth2authorize', JSON.stringify(args), $.extend(base, options));
@@ -25,7 +25,7 @@ const oauth2 = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getAllTokenList: function (args, options) {
+  getAllTokenList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/oauth2/getAllAccessTokenList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'oauth2getAllAccessTokenList', JSON.stringify(args), $.extend(base, options));
@@ -38,7 +38,7 @@ const oauth2 = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getMyTokenList: function (args, options) {
+  getMyTokenList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/oauth2/getMyAccessTokenList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'oauth2getMyAccessTokenList', JSON.stringify(args), $.extend(base, options));
@@ -51,7 +51,7 @@ const oauth2 = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getRefreshClientCredentialsLogs: function (args, options) {
+  getRefreshClientCredentialsLogs: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/oauth2/getRefreshClientCredentialsLogs';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(
@@ -69,7 +69,7 @@ const oauth2 = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getRefreshTokenLogs: function (args, options) {
+  getRefreshTokenLogs: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/oauth2/getRefreshTokenLogs';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'oauth2getRefreshTokenLogs', JSON.stringify(args), $.extend(base, options));
@@ -82,7 +82,7 @@ const oauth2 = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  refreshAuthorize: function (args, options) {
+  refreshAuthorize: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/oauth2/refreshAuthorize';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'oauth2refreshAuthorize', JSON.stringify(args), $.extend(base, options));
@@ -95,7 +95,7 @@ const oauth2 = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  refreshClientCredentials: function (args, options) {
+  refreshClientCredentials: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/oauth2/refreshClientCredentials';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'oauth2refreshClientCredentials', JSON.stringify(args), $.extend(base, options));
@@ -108,7 +108,7 @@ const oauth2 = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  refreshToken: function (args, options) {
+  refreshToken: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/oauth2/refreshToken';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'oauth2refreshToken', JSON.stringify(args), $.extend(base, options));
@@ -121,7 +121,7 @@ const oauth2 = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  updateAccessToken: function (args, options) {
+  updateAccessToken: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/oauth2/updateAccessToken';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'oauth2updateAccessToken', JSON.stringify(args), $.extend(base, options));

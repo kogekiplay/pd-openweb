@@ -21,19 +21,19 @@ class ChangeRole extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { params } = this.props.match;
     $('html').addClass('changeRoleCon');
     this.props.dispatch({ type: 'MOBILE_ROLE_MOVE_FETCH_START' });
     this.props.dispatch(actions.getMembersList(params.appId, params.roleId, params.accountId));
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.dispatch({ type: 'MOBILE_ROLE_MOVE_FETCH_START' });
     $('html').removeClass('changeRoleCon');
   }
 
-  render() {
+  override render() {
     const { isRoleListLoading, roleList, moveRoleFetch } = this.props;
     let accountIds = _.map(this.state.users, ({ accountId }) => accountId);
     let departmentIds = _.map(this.state.departmentsInfos, ({ departmentId }) => departmentId);
@@ -61,7 +61,7 @@ class ChangeRole extends React.Component<any, any> {
           {roleList.list
             .filter(it => !_.includes([100, 2, 1], it.roleType))
             .map(item => {
-              if (!item.canSetMembers) return;
+              if (!item.canSetMembers) return undefined;
               return (
                 <List.Item
                   key={item.roleId}

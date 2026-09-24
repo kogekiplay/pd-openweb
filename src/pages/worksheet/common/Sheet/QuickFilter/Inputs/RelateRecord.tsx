@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useMeasure } from 'react-use';
 import cx from 'classnames';
 import _, { find } from 'lodash';

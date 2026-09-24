@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import { Icon, RadioGroup } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -38,10 +38,11 @@ export default function TableConfig(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('类型')}</div>
         <DisplayMode>
-          {DIRECTION_DISPLAY_TYPE.map(item => {
+          {DIRECTION_DISPLAY_TYPE.map((item, index) => {
             const isActive = direction === item.value;
             return (
               <div
+                key={index}
                 className={cx('displayItem', { active: isActive })}
                 onClick={() => {
                   if (isActive) return;

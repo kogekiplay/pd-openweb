@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from 'react';
+import { Fragment, PureComponent } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { Dropdown, LoadDiv } from 'ming-ui';
@@ -6,6 +6,8 @@ import flowMonitor from 'src/pages/workflow/api/processVersion.js';
 import { formatter } from './enum';
 
 export default class HistoryChart extends PureComponent<any, any> {
+  declare chantRef: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -17,7 +19,7 @@ export default class HistoryChart extends PureComponent<any, any> {
     this.lineChart = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     import('@antv/g2plot').then(data => {
       this.g2plotComponent = data;
       this.renderChart();
@@ -262,7 +264,7 @@ export default class HistoryChart extends PureComponent<any, any> {
     this.setState({ accumulateAdd, accumulateConsumer });
   };
 
-  render() {
+  override render() {
     const { showDate, loadingChart, accumulateAdd, accumulateConsumer } = this.state;
 
     return (

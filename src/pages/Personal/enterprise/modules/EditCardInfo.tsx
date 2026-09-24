@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Input } from 'antd';
 import account from 'src/api/account';
 import './index.less';
@@ -19,7 +19,7 @@ export default class EditCardInfo extends Component<any, any> {
     };
   }
 
-  renderResult(item) {
+  renderResult(item: { label: string; key: string }) {
     const { userInfo } = this.props;
     const currentItem = userInfo[item.key];
 
@@ -62,16 +62,16 @@ export default class EditCardInfo extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const { contactPhone } = this.state;
     return (
       <div className="editEnterpriseCardInfo clearfix">
         <div className="Font17 Bold textPrimary">{_l('编辑名片')}</div>
         <div className="textTertiary mTop6">{_l('名片是您在该组织下的个人信息，只在本组织中展示。')}</div>
         <div className="mTop24">
-          {userInfoList.map(item => {
+          {userInfoList.map((item, index) => {
             return (
-              <Fragment>
+              <Fragment key={index}>
                 <div className="textSecondary">{item.label}</div>
                 <div className="mTop6 mBottom16 textPrimary">{this.renderResult(item)}</div>
               </Fragment>

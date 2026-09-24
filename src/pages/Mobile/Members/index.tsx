@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Card, Dialog, Input, SpinLoading } from 'antd-mobile';
 import _ from 'lodash';
@@ -11,19 +11,23 @@ import Back from '../components/Back';
 import * as actions from './redux/actions';
 import './index.less';
 
-class Members extends Component<any, any> {
+export interface MembersState {
+  checked: boolean;
+}
+
+class Members extends Component<any, MembersState> {
   constructor(props) {
     super(props);
     this.state = {
       checked: this.props.memberData.rolesVisibleConfig === ROLE_CONFIG.REFUSE,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('mobileMembers');
     const { params } = this.props.match;
     this.props.dispatch(actions.getMembers(params.appId));
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('mobileMembers');
   }
   handleExitApp = () => {
@@ -68,7 +72,7 @@ class Members extends Component<any, any> {
       },
     });
   };
-  renderCard = (data, isAdmin) => {
+  renderCard = (data, isAdmin: boolean) => {
     const { params } = this.props.match;
 
     return data.map(item => {
@@ -114,7 +118,7 @@ class Members extends Component<any, any> {
       );
     });
   };
-  renderRoleList(data, isAdmin) {
+  renderRoleList(data, isAdmin: boolean) {
     const sysList = data.filter(o => sysRoleType.includes(o.roleType));
     const otherList = data.filter(o => !sysRoleType.includes(o.roleType));
 
@@ -172,7 +176,7 @@ class Members extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { memberData, isMemberLoading } = this.props;
 
     if (isMemberLoading) {

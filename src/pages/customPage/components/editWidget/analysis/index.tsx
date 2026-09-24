@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';

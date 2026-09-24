@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { useDrag } from 'react-dnd';
 import { Dropdown, Menu } from 'antd';
@@ -15,7 +15,7 @@ function ActionItemRow({ btn, editBtn, deleteBtn, handleCopy, toggleEnable, disa
   const isDisabled = status === 0;
   const moreKey = `btn:${btnId}`;
 
-  const handleDropdownVisibleChange = visible => {
+  const handleDropdownVisibleChange = (visible: boolean) => {
     setOpenMoreKey(prev => getNextOpenMoreKey(prev, visible, moreKey));
   };
 

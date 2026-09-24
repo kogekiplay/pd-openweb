@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import CarouselPreview from 'src/pages/customPage/components/editWidget/carousel/Carousel';
@@ -157,6 +156,7 @@ function WidgetDisplay(props) {
     if (componentType === 'subsection') {
       return <Subsection widget={widget} />;
     }
+    return undefined;
   };
 
   return (

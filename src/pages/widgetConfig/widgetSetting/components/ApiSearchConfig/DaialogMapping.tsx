@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Dialog, Dropdown, Icon, ScrollView, Support } from 'ming-ui';
@@ -11,7 +11,7 @@ import { getMapControls } from '../DynamicDefaultValue/util';
 import './DialogMapping.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
-const renderHeader = (showSupport?) => {
+const renderHeader = (showSupport?: boolean | undefined) => {
   return (
     <div className={cx('mappingHeader mBottom20', { mTop44: !showSupport })}>
       <span className="Font14 Bold">
@@ -104,9 +104,9 @@ export default function DialogMapping(props) {
             />
           )}
         </div>
-        {list.map(item => {
+        {list.map((item, index) => {
           return (
-            <Fragment>
+            <Fragment key={index}>
               {renderItem(item)}
               {item.child && item.child.map(c => renderItem(c))}
             </Fragment>
@@ -176,7 +176,7 @@ export default function DialogMapping(props) {
     return _.flatten(result);
   };
 
-  const handleChange = (value, item, parentId) => {
+  const handleChange = (value: string | undefined, item, parentId) => {
     let newItem: Record<string, any> = {};
 
     if (item.dataSource) {
@@ -205,7 +205,7 @@ export default function DialogMapping(props) {
     let newResponseMap = [];
 
     if (_.isUndefined(value)) {
-      newResponseMap = mappingData.filter((i, idx) => idx !== index);
+      newResponseMap = mappingData.filter((_i, idx) => idx !== index);
     } else {
       newResponseMap =
         index > -1

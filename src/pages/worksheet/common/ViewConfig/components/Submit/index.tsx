@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -131,9 +131,10 @@ function ActionCon(props) {
                 ? true
                 : o.key !== 'publish',
             )
-            .map(a => {
+            .map((a, index) => {
               return (
                 <div
+                  key={index}
                   className={cx('Hand Font14 flexRow alignItemsCenter pLeft12', { del: a.key === 'delete' })}
                   onClick={e => {
                     setState({ visible: false });
@@ -177,7 +178,7 @@ function ActionCon(props) {
   );
 }
 
-const handleCopy = content => {
+const handleCopy = (content: string) => {
   copy(content);
   alert(_l('复制成功'));
 };
@@ -216,7 +217,7 @@ export default function SubmitConfig(params) {
     });
   }, [params]);
 
-  const handleScroll = (pageIndex: number, reGet?) => {
+  const handleScroll = (pageIndex: number, reGet?: boolean | undefined) => {
     if (!_.get(view, 'pluginInfo.id')) {
       return;
     }
@@ -322,9 +323,9 @@ export default function SubmitConfig(params) {
           </div>
           <WrapList className="flexColumn mTop12">
             <div className="con mTop10 flex">
-              {list.map(o => {
+              {list.map((o, index) => {
                 return (
-                  <div className="flexRow conLi alignItemsCenter">
+                  <div key={index} className="flexRow conLi alignItemsCenter">
                     <Radio
                       className=""
                       checked={o.id === CommitId}
@@ -383,7 +384,7 @@ export default function SubmitConfig(params) {
                 );
               })}
               {list.length <= 0 && !loading && (
-                <div className="textDisabled nullCon TxtCenter pTop10">{_l('还没有提交')}</div>
+                <div className="textTertiary nullCon TxtCenter pTop10">{_l('还没有提交')}</div>
               )}
               {loading && <LoadDiv />}
             </div>

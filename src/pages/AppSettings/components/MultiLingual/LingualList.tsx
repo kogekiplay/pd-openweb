@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dropdown, Menu, Select } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';

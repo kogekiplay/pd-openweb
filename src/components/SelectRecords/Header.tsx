@@ -89,7 +89,7 @@ export default function Header(props) {
     onNewRecord,
     onExpandFastFilters,
   }: { controls: FormControl[]; [key: string]: any } = props;
-  const inputRef = createRef();
+  const inputRef = createRef<HTMLInputElement>();
   const [keyword, setKeyword] = useState('');
   const searchControl = searchConfig.searchControl || _.find(controls, { attribute: 1 }) || {};
   useEffect(() => {

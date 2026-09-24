@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Table } from 'antd';
@@ -293,7 +293,7 @@ const SuccessInfo = styled.div`
 `;
 
 // 导入部门模版
-const dptTemplatePaths = {
+const dptTemplatePaths: Record<number, string> = {
   0: '/staticfiles/template/departmentImportTemplate/部门导入模板.xlsx',
   1: '/staticfiles/template/departmentImportTemplate/Department Import Template.xlsx',
   2: '/staticfiles/template/departmentImportTemplate/部門インポートテンプレート.xlsx',
@@ -315,7 +315,7 @@ class ImportDepAndPosition extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.importExportResult, this.props.importExportResult)) {
         let { actionResult } = this.props.importExportResult;
@@ -499,7 +499,7 @@ class ImportDepAndPosition extends Component<any, any> {
       );
     }
   };
-  render() {
+  override render() {
     const { importExportType } = this.props;
     let { actionResultStatus } = this.state;
     return (

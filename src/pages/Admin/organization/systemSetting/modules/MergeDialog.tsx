@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Radio } from 'antd';
 import { Dialog } from 'ming-ui';
 import workSiteController from 'src/api/workSite';
@@ -38,7 +38,7 @@ export default class MergeDialog extends Component<any, any> {
     } else alert(_l('请选择合并到哪个工作地点'), 3);
   }
 
-  render() {
+  override render() {
     const { options = [] } = this.props;
     return (
       <Dialog

@@ -65,7 +65,7 @@ function SettingMenu(props) {
     return isOpenPermit(permitList.viewExportSwitch, sheetSwitchPermit, item.viewId);
   };
 
-  const handleExport = it => {
+  const handleExport = (it: { name: string; icon: string; exportType: number; key: string }) => {
     if (window.isPublicApp) {
       alert(_l('预览模式下，不能操作'), 3);
       return;
@@ -158,7 +158,7 @@ function SettingMenu(props) {
     handleClose();
   };
 
-  const handleCopyConfig = type => {
+  const handleCopyConfig = (type: number) => {
     onCopyConfig(item, type);
     handleClose();
   };
@@ -279,7 +279,7 @@ function SettingMenu(props) {
                       key: 'exportAttachment',
                     },
                   ].map(it => {
-                    if (it.exportType === 2 && _.isEmpty(getAttachmentControls())) return;
+                    if (it.exportType === 2 && _.isEmpty(getAttachmentControls())) return undefined;
                     return (
                       <MenuItem
                         key={it.key}

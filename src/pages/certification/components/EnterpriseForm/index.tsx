@@ -119,7 +119,7 @@ export default function EnterpriseForm(props) {
   }, [enterpriseType]);
 
   // 验证执照或证书
-  const onValidateBizLicenseOCR = (first, value) => {
+  const onValidateBizLicenseOCR = (_first, value) => {
     return new Promise((resolve, reject) => {
       const { key, url } = value || {};
 

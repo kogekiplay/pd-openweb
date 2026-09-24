@@ -121,7 +121,7 @@ export default class RecordInfo extends Component<any, any> {
   /** RecordForm 通过 mountRef 回传的 customwidget ref */
   declare recordform: React.RefObject<any>;
 
-  static propTypes = {
+  static override propTypes = {
     width: PropTypes.number,
     visible: PropTypes.bool,
     isCharge: PropTypes.bool,
@@ -172,7 +172,7 @@ export default class RecordInfo extends Component<any, any> {
     currentSheetRows: [],
     hideEditingBar: false,
   };
-  static contextType = SheetContext;
+  static override contextType = SheetContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -220,14 +220,14 @@ export default class RecordInfo extends Component<any, any> {
     this.draftType = 'save'; // save: 保存  submit: 提交,
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     emitter.addListener('RELOAD_RECORD_INFO', this.debounceRefresh);
     window.addEventListener('keydown', this.handleRecordInfoKeyDown);
     this.loadRecord({ recordId: this.state.recordId });
     this.getPayConfig(this.state.recordId);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if ((this.props.recordId !== prevProps.recordId || this.props.flag !== prevProps.flag) && this.props.recordId) {
         this.setState({
@@ -265,7 +265,7 @@ export default class RecordInfo extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('keydown', this.handleRecordInfoKeyDown);
     emitter.removeListener('RELOAD_RECORD_INFO', this.debounceRefresh);
 
@@ -619,7 +619,8 @@ export default class RecordInfo extends Component<any, any> {
           this.loadTempValue({ updateTime: data.updateTime });
         },
       );
-    } catch (res) {
+    } catch (thrown) {
+      const res = thrown as ApiRejection;
       if (instanceId && workId && res.errorCode === 10) {
         onError(res);
       }
@@ -752,7 +753,7 @@ export default class RecordInfo extends Component<any, any> {
           recordId,
           updateType: this.state.isRecordLock ? 42 : 41,
         },
-        (err, resdata) => {
+        (_err, resdata) => {
           if (resdata) {
             const changedValue = { sys_lock: resdata.sys_lock };
             updateRows([recordId], _.omit(resdata, ['allowedit', 'allowdelete']), changedValue);
@@ -927,7 +928,7 @@ export default class RecordInfo extends Component<any, any> {
     if (error && !ignoreError) {
       callback({ error: true });
       this.setState({ submitLoading: false });
-      return;
+      return undefined;
     }
 
     const {
@@ -963,7 +964,7 @@ export default class RecordInfo extends Component<any, any> {
         submitLoading: false,
       });
       callback();
-      return;
+      return undefined;
     }
 
     this.abortChildTable();
@@ -1020,7 +1021,7 @@ export default class RecordInfo extends Component<any, any> {
           }
         },
       );
-      return;
+      return undefined;
     }
 
     updateRecord(
@@ -1131,6 +1132,7 @@ export default class RecordInfo extends Component<any, any> {
         }
       },
     );
+    return undefined;
   };
 
   updateRecordOwner = (newOwner, record) => {
@@ -1263,7 +1265,7 @@ export default class RecordInfo extends Component<any, any> {
     this.onSubmit({ draftType: 'submit' });
   };
 
-  render() {
+  override render() {
     const {
       isOpenNewAddedRecord,
       renderHeader,
@@ -1628,7 +1630,7 @@ export default class RecordInfo extends Component<any, any> {
                   min={450}
                   max={width - formSectionWidth - SIDE_MIN_WIDTH}
                   onChange={value => {
-                    safeLocalStorageSetItem('RECORD_INFO_SIDE_WIDTH', width - value - formSectionWidth);
+                    safeLocalStorageSetItem('RECORD_INFO_SIDE_WIDTH', String(width - value - formSectionWidth));
                     this.setState({ dragMaskVisible: false, sideWidth: width - value - formSectionWidth });
                   }}
                 />
@@ -1798,7 +1800,7 @@ export default class RecordInfo extends Component<any, any> {
                   }}
                   onDBClick={() => {
                     // set min width and save to local storage
-                    safeLocalStorageSetItem('RECORD_INFO_SIDE_WIDTH', SIDE_MIN_WIDTH);
+                    safeLocalStorageSetItem('RECORD_INFO_SIDE_WIDTH', String(SIDE_MIN_WIDTH));
                     this.setState({ sideWidth: SIDE_MIN_WIDTH, dragMaskVisible: false });
                   }}
                 />

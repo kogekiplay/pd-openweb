@@ -17,7 +17,7 @@ const email = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sendEmail: function (args, options) {
+  sendEmail: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/email/v1/send';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'emailSendEmail', JSON.stringify(args), $.extend(base, options));

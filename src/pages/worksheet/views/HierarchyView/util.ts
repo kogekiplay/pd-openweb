@@ -106,7 +106,7 @@ export const getRelateDefaultValue = (item, { worksheetControls, currentView }) 
 };
 
 export const hierarchyViewCanSelectFields = ({ controls, worksheetId }: { worksheetId?: string; [key: string]: any }) => {
-  const getRelationName = parent => {
+  const getRelationName = (parent: FormControl) => {
     const { controlName, sourceControlId } = parent;
     const { controlName: subName } = _.find(controls, item => item.controlId === sourceControlId) || {};
     return `${controlName}-${subName}`;

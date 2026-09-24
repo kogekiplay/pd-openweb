@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import _ from 'lodash';
 import { Checkbox, Dropdown, RadioGroup } from 'ming-ui';
 import { getTimeZoneText } from 'src/utils/control';
@@ -35,7 +35,7 @@ const DATE_TIME_DISPLAY_OPTION = [
   { value: '6', text: _l('时:分:秒') },
 ];
 
-const getTimeZoneDisplay = timeZoneText => {
+const getTimeZoneDisplay = (timeZoneText: string) => {
   return [
     { value: '0', text: _l('跟随当前用户的个人时区') },
     { value: '1', text: _l('跟随应用时区%0', timeZoneText) },

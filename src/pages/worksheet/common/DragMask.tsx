@@ -27,7 +27,10 @@ const DragV = styled.div`
 `;
 
 export default class DragMast extends React.Component<any, any> {
-  static propTypes = {
+  declare random: number;
+  declare prevBodyUserSelect: string | undefined;
+
+  static override propTypes = {
     direction: PropTypes.string,
     value: PropTypes.number,
     min: PropTypes.number,
@@ -45,7 +48,7 @@ export default class DragMast extends React.Component<any, any> {
     this.random = Math.random();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { min = 280, max = 800, direction } = this.props;
 
     // 拖拽期间禁用文本选择，避免鼠标移动时选中详情内文本
@@ -78,7 +81,7 @@ export default class DragMast extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     document.body.removeEventListener('mouseup', this.handleChange);
     document.body.style.userSelect = this.prevBodyUserSelect || '';
   }
@@ -88,7 +91,7 @@ export default class DragMast extends React.Component<any, any> {
     onChange(this.value);
   };
 
-  render() {
+  override render() {
     const { direction, style = {} } = this.props;
     return (
       <Mask

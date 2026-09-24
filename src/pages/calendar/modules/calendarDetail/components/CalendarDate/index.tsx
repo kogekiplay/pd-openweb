@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import CheckBox from 'ming-ui/components/Checkbox';
@@ -10,6 +10,8 @@ import RepeatBox from './RepeatBox';
 
 const RangePicker = DatePicker.RangePicker;
 let EditBlock = class EditBlock extends Component<any, any> {
+  declare box: HTMLDivElement | null | undefined;
+
   constructor() {
     super();
     this.state = {
@@ -62,7 +64,7 @@ let EditBlock = class EditBlock extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       calendar: { start, allDay, end, isChildCalendar },
       change,
@@ -117,7 +119,13 @@ let EditBlock = class EditBlock extends Component<any, any> {
   }
 };
 EditBlock = ClickAway.wrap(EditBlock);
-export default class CalendarDate extends Component<any, any> {
+export interface CalendarDateState {
+  isEditing: boolean;
+}
+
+export default class CalendarDate extends Component<any, CalendarDateState> {
+  declare elem: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -125,12 +133,12 @@ export default class CalendarDate extends Component<any, any> {
     };
   }
 
-  getSnapshotBeforeUpdate() {
+  override getSnapshotBeforeUpdate() {
     if (!this.elem) return null;
     return $(this.elem).height();
   }
 
-  componentDidUpdate(prevProps, prevState, prevHeight) {
+  override componentDidUpdate(_prevProps, _prevState, prevHeight) {
     if (!this.elem || prevHeight === null) return;
     var $elem = $(this.elem);
     var height = prevHeight;
@@ -165,16 +173,17 @@ export default class CalendarDate extends Component<any, any> {
         isEditing: true,
       });
     }
+    return undefined;
   }
 
   renderShowBlock() {
     const { calendar } = this.props;
+    // formatRecur 在「不重复 / 频率为无」时返回 false：那种情况不显示这一行（原先会显示成「重复：false」）
+    const recurText = calendar.isRecur && !calendar.isChildCalendar ? formatRecur(calendar) : false;
     return (
       <div onClick={this.handleClick.bind(this)} className="pTop5 pBottom5 w100">
         <div className="calLine">{formatShowTime(calendar)}</div>
-        {calendar.isRecur && !calendar.isChildCalendar ? (
-          <div className="calLine">{_l('重复：%0', formatRecur(calendar))}</div>
-        ) : null}
+        {recurText ? <div className="calLine">{_l('重复：%0', recurText)}</div> : null}
       </div>
     );
   }
@@ -196,7 +205,7 @@ export default class CalendarDate extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isEditing } = this.state;
     return (
       <div

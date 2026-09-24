@@ -77,27 +77,28 @@ export const deleteRules = (projectId: string, ruleId) => dispatch => {
 };
 
 //获取单条规则
-export const getRulesByRuleId = ruleId => (dispatch: ContactsHiddenDispatch, getState: ContactsHiddenGetState) => {
-  dispatch({
-    type: 'ACTION_ING',
-  });
-  //获取单条规则
-  projectUserRule
-    .getRule({
-      projectId: getState().contact.projectId,
-      ruleId,
-    })
-    .then(data => {
-      dispatch({
-        type: 'ACTION_END',
-      });
-      dispatch({
-        type: 'RULES_BY_RULEID',
-        ruleId,
-        data,
-      });
+export const getRulesByRuleId =
+  (ruleId: string) => (dispatch: ContactsHiddenDispatch, getState: ContactsHiddenGetState) => {
+    dispatch({
+      type: 'ACTION_ING',
     });
-};
+    //获取单条规则
+    projectUserRule
+      .getRule({
+        projectId: getState().contact.projectId,
+        ruleId,
+      })
+      .then(data => {
+        dispatch({
+          type: 'ACTION_END',
+        });
+        dispatch({
+          type: 'RULES_BY_RULEID',
+          ruleId,
+          data,
+        });
+      });
+  };
 
 //update单条规则
 export const updateRulesByRuleId = data => dispatch => {

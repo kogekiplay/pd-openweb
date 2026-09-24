@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { has } from 'lodash';
@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Dialog, Dropdown, Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import worksheetAjax from 'src/api/worksheet';
+import { OptionChip } from 'src/components/OptionChip';
 import SelectOtherWorksheetDialog from 'src/pages/worksheet/components/SelectWorksheet/SelectOtherWorksheetDialog';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util.js';
 import AutoIcon from '../../../components/Icon';
@@ -120,12 +121,8 @@ const OptionListItem = styled.div`
     align-items: center;
     justify-content: space-between;
     line-height: 30px;
-    .colorWrap {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      margin-right: 6px;
-    }
+    /* 彩色选项画成 24px 高的标签后，flex 行的高度由标签决定，靠 min-height 保住原来的行距 */
+    min-height: 30px;
     i {
       &:hover {
         color: var(--color-primary-text) !important;
@@ -322,7 +319,7 @@ export default function SelectOptions(props) {
                   {!deleteStatus ? (
                     <span className="textSecondary">{optionList.appName}</span>
                   ) : (
-                    <span className="textDisabled">{_l('无所属应用')}</span>
+                    <span className="textTertiary">{_l('无所属应用')}</span>
                   )}
                 </div>
                 <div className="operate flexCenter">
@@ -387,17 +384,22 @@ export default function SelectOptions(props) {
               <ul>
                 {optionList.options
                   .filter(item => !item.isDeleted)
-                  .map(({ color, value, score, key }) => {
+                  .map(({ color, value, score, key }, index) => {
                     // 从options里取值，选项集不变
                     const hide = _.get(
                       _.find(options, i => i.key === key),
                       'hide',
                     );
                     return (
-                      <li>
+                      <li key={index}>
                         <div className="flexCenter flex overflow_ellipsis">
-                          {optionList.colorful && <div className="colorWrap" style={{ backgroundColor: color }}></div>}
-                          <div className="name flex overflow_ellipsis">{value}</div>
+                          {optionList.colorful ? (
+                            <OptionChip color={color} title={value}>
+                              {value}
+                            </OptionChip>
+                          ) : (
+                            <div className="name flex overflow_ellipsis">{value}</div>
+                          )}
                         </div>
                         <div className="flexCenter">
                           {fromPortal ? null : (

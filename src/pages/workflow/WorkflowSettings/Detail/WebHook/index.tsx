@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -47,7 +47,7 @@ export default class WebHook extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -55,7 +55,7 @@ export default class WebHook extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -445,7 +445,7 @@ export default class WebHook extends Component<any, any> {
             type={2}
             content={data.body}
             formulaMap={data.formulaMap}
-            onChange={(err, value) => this.updateSource({ body: value })}
+            onChange={(_err, value) => this.updateSource({ body: value })}
             updateSource={this.updateSource}
           />
         )}
@@ -506,7 +506,7 @@ export default class WebHook extends Component<any, any> {
               height={0}
               content={data.sendContent}
               formulaMap={data.formulaMap}
-              onChange={(err, value) => this.updateSource({ sendContent: value })}
+              onChange={(_err, value) => this.updateSource({ sendContent: value })}
               updateSource={this.updateSource}
             />
           </div>
@@ -802,7 +802,7 @@ export default class WebHook extends Component<any, any> {
   deleteErrorMsg(i) {
     const errorMsgArray = _.cloneDeep(this.state.errorMsgArray);
 
-    _.remove(errorMsgArray, (o, index) => index === i);
+    _.remove(errorMsgArray, (_o, index) => index === i);
     this.setState({ errorMsgArray });
   }
 
@@ -863,7 +863,7 @@ export default class WebHook extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { data } = this.state;
 
     if (_.isEmpty(data)) {

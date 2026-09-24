@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -21,6 +21,8 @@ const IconWrap = styled(Icon)`
   }
 `;
 let Zoom = class Zoom extends Component<any, any> {
+  declare isMobile: boolean;
+
   constructor(props) {
     super(props);
     window.isZoom = true;
@@ -78,7 +80,7 @@ let Zoom = class Zoom extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { periodType } = this.props;
     const { minDayWidth, defaultMinDayWidth } =
       _.find(PERIODS, {

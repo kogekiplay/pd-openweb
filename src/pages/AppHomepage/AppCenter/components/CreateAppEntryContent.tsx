@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
@@ -217,7 +217,7 @@ export default function CreateAppEntryContent(props) {
                 existingFiles={draftAttachments}
                 allowMimeTypes={ALLOWED_MIME_TYPES}
                 dropElementId={inputId}
-                onAdd={(up, files) => {
+                onAdd={(_up, files) => {
                   setDraftAttachments(prev => [
                     ...prev,
                     ...files.map(f => ({
@@ -230,14 +230,14 @@ export default function CreateAppEntryContent(props) {
                     })),
                   ]);
                 }}
-                onUploadProgress={(up, file) => {
+                onUploadProgress={(_up, file) => {
                   const progress = ((file.loaded / file.size) * 100).toFixed(0);
 
                   setDraftAttachments(prev =>
                     prev.map(f => (f.id === file.id ? { ...f, status: 'uploading', file, progress } : f)),
                   );
                 }}
-                onUploaded={(up, file, response) => {
+                onUploaded={(_up, file, response) => {
                   const commonAttachment = formatResponseData(file, response);
 
                   setDraftAttachments(prev =>

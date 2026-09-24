@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { ActionSheet, Button, Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -20,7 +20,7 @@ export default function RowDetailModal(props) {
     isExceed,
     isEditCurrentRow,
   } = props;
-  const formContent = useRef(null);
+  const formContent = useRef<RowDetail | null>(null);
   const rowId = data.rowid || '';
   const type = mobileIsEdit
     ? (rowId.includes('temp') || rowId.includes('default')) && !isEditCurrentRow
@@ -31,7 +31,7 @@ export default function RowDetailModal(props) {
   let deleteConformAction = null;
 
   // 切换上一条/下一条
-  const handleSwitch = type => {
+  const handleSwitch = (type: string) => {
     if ($('.childTableRowDetailMobileDialog').find('.fileUpdateLoading').length) {
       alert(_l('附件正在上传，请稍后'), 3);
       return;
@@ -112,7 +112,9 @@ export default function RowDetailModal(props) {
           {!isExceed && (
             <Button
               className="flex mRight6 bold textSecondary Font13"
-              onClick={() => formContent.current.handleSave(true)}
+              onClick={() => {
+                formContent.current?.handleSave(true);
+              }}
             >
               {_l('继续创建')}
             </Button>
@@ -120,7 +122,9 @@ export default function RowDetailModal(props) {
           <Button
             color="primary"
             className="flex mLeft6 mRight6 bold Font13"
-            onClick={() => formContent.current.handleSave()}
+            onClick={() => {
+              formContent.current?.handleSave();
+            }}
           >
             {_l('确认')}
           </Button>

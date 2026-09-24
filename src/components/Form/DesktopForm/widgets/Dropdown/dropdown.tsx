@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -30,7 +30,8 @@ const DropdownComp = props => {
 
   const [keywords, setKeywords] = useState('');
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState('');
+  // 收起状态下值里有多个选项时切成多选展示（见下方 useEffect），否则保持单选
+  const [mode, setMode] = useState<'multiple' | ''>('');
   const selectRef = useRef(null);
 
   useWidgetEvent(
@@ -196,7 +197,9 @@ const DropdownComp = props => {
         onOpenChange={handleDropdownVisibleChange}
         onChange={handleSelectChange}
         onKeyDown={createEventHandler}
-        {...selectProps}
+        // noPushAdd_ 是给本控件自己看的开关（见上面的 add_ 选项处理），不是 Select 的属性；
+        // 原样展开会被 rc-select 透传到 DOM，React 报 "does not recognize the `noPushAdd_` prop"
+        {..._.omit(selectProps, 'noPushAdd_')}
       >
         {!keywords.length && advancedSetting.allowadd === '1' && canAddOption && (
           <Select.Option disabled className="cursorDefault">

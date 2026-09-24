@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, Divider } from 'antd';
 import cx from 'classnames';
@@ -54,7 +54,7 @@ const Wrap = styled.div`
 const remarkMaxLength = 150;
 
 export default class Editor extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     cacheKey: PropTypes.string, // 缓存内容key
     isEditing: PropTypes.bool, // 编辑状态
     auth: PropTypes.bool, // 权限
@@ -96,7 +96,7 @@ export default class Editor extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // a 链接点击
     $('body').on('click.editor', '.mdEditorContent a', function (this: HTMLElement, e) {
       e.stopPropagation();
@@ -112,7 +112,7 @@ export default class Editor extends Component<any, any> {
     this.onChange(summary);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { cacheKey, summary } = this.props;
       const cacheSummary = localStorage.getItem('mdEditor_' + cacheKey);
@@ -125,7 +125,7 @@ export default class Editor extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('body').off('.editor');
   }
 
@@ -299,7 +299,7 @@ export default class Editor extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { showType, remark, aiCreateLoading } = this.state;
     const {
       isEditing,

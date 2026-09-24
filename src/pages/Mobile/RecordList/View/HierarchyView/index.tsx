@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -13,7 +13,7 @@ const LoadableHierarchyMixView = lazy(() => import('src/pages/worksheet/views/Hi
 const LoadableHierarchyView = lazy(() => import('src/pages/worksheet/views/HierarchyView'));
 
 class MobileHierarchyView extends Component<any, any> {
-  render() {
+  override render() {
     const { view = {}, controls = [] } = this.props;
 
     const hierarchyViewType = _.get(view, 'advancedSetting.hierarchyViewType');

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -25,7 +25,7 @@ export default class SelectUserDropDown extends Component<any, any> {
    * 获取节点人员数据
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.nodeId !== prevProps.nodeId || this.props.specialType !== prevProps.specialType) {
         this.setState({
@@ -373,7 +373,7 @@ export default class SelectUserDropDown extends Component<any, any> {
     updateSource({ accounts: unique ? members : accounts.concat(members) });
   };
 
-  render() {
+  override render() {
     const { visible, appId, companyId, onClose, unique, disabledNodeRole } = this.props;
     const { fieldsData, showSelectAppUserDialog } = this.state;
 

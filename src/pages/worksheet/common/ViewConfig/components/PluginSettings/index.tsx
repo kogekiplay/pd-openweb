@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
 import Trigger from '@rc-component/trigger';
@@ -130,7 +130,7 @@ function PluginSettings(params) {
   };
 
   const openEdit = n => {
-    setState({ editInfo: paramSettings.find((o, i) => i === n), showEdit: true });
+    setState({ editInfo: paramSettings.find((_o, i) => i === n), showEdit: true });
   };
 
   const onEdit = (info, n) => {
@@ -156,7 +156,7 @@ function PluginSettings(params) {
     const { view } = params;
     onChangeView(
       {
-        paramSettings: paramSettings.filter((o, i) => i !== n),
+        paramSettings: paramSettings.filter((_o, i) => i !== n),
       },
       true,
     );
@@ -164,7 +164,7 @@ function PluginSettings(params) {
     onChangeView(
       {
         plugin_map: JSON.stringify({
-          ..._.omit(safeParse(plugin_map), [(paramSettings.find((o, i) => i === n) || {}).fieldId]),
+          ..._.omit(safeParse(plugin_map), [(paramSettings.find((_o, i) => i === n) || {}).fieldId]),
         }),
       },
       false,
@@ -323,9 +323,10 @@ function PluginSettings(params) {
             // }}
             popup={
               <WrapPopup>
-                {PARAM_TYPES.map(o => {
+                {PARAM_TYPES.map((o, index) => {
                   return (
                     <div
+                      key={index}
                       className="Hand Font14"
                       onClick={() => {
                         let num = paramSettings.filter(a => a.fieldId === o.fieldId).length;

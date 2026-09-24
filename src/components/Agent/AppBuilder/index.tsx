@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
+import { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import homeAppAjax from 'src/api/homeApp';
@@ -76,7 +76,7 @@ const PreviewWrap = styled.div`
 `;
 
 // build agent step → sidebar tab：拿到 appId 后自动 setFocus 让 iframe 跟随
-const STEP_TO_SIDEBAR_KEY = {
+const STEP_TO_SIDEBAR_KEY: Record<string, string> = {
   'step-build-worksheets': 'worksheets',
   // 补表关联仍在工作表上加字段，停留在工作表 tab 让用户看到关联字段陆续出现
   'step-build-relations': 'worksheets',
@@ -91,7 +91,7 @@ const STEP_TO_SIDEBAR_KEY = {
 // activeKey + 已知 ID 组合出 iframe src
 // iframe 嵌入应用必须带 ?rp=no，避免主应用层的页头/侧栏在 iframe 内重复渲染
 function buildPreviewUrl(
-  activeKey,
+  activeKey: string,
   {
     appId,
     sectionIdByName,
@@ -106,7 +106,7 @@ function buildPreviewUrl(
   // sys_lang：与搭建应用 build stream 透传的 appLanguage（app.json.language）保持一致，
   // 让预览 iframe 按搭建语言渲染，避免预览语言与目标应用语言不一致。
   const withLang = appLanguage ? `&sys_lang=${encodeURIComponent(appLanguage)}` : '';
-  const withRp = path => `${path}?rp=no${withLang}`;
+  const withRp = (path: string) => `${path}?rp=no${withLang}`;
   // 应用根这类静态预览 URL 不随产物变化，附加 nonce 让 src 变化以触发 PreviewFrame 重新导航刷新
   const withRefresh = (path: string) => `${withRp(path)}${previewNonce ? `&_r=${previewNonce}` : ''}`;
 
@@ -196,7 +196,7 @@ const PANEL_BY_KEY = {
   aiAssistants: ({ parsed }) => <AiAssistantsPanel pages={parsed || []} />,
 };
 
-function useStickyScroll(visible, focus, focusedContent) {
+function useStickyScroll(visible: boolean, focus, focusedContent) {
   const ref = useRef(null);
   const stickRef = useRef(true);
 
@@ -238,12 +238,19 @@ function useStickyScroll(visible, focus, focusedContent) {
   return [ref, reset] as const;
 }
 
+export interface AppBuilderProps {
+  visible?: boolean | undefined;
+  isSingleMingoPlan?: boolean | undefined;
+  split?: boolean | undefined;
+  sidebarCollapsed?: boolean | undefined;
+}
+
 export default function AppBuilder({
   visible = true,
   isSingleMingoPlan = false,
   split = false,
   sidebarCollapsed = false,
-}) {
+}: AppBuilderProps) {
   const bus = useAgentBus();
   const { files, focus, setFocus, sidebarItems } = useFileStore();
   const [appMeta, setAppMeta] = useState({
@@ -257,7 +264,7 @@ export default function AppBuilder({
     versionId: '',
   });
   // build 费用预估（信用点）：null = 未返回 / 取不到（渲染「计算中…」）；loading 控制提交后到返回前的过渡
-  const [estimateCredits, setEstimateCredits] = useState(null);
+  const [estimateCredits, setEstimateCredits] = useState<number | null>(null);
   const [estimateLoading, setEstimateLoading] = useState(false);
   const [buildPhase, setBuildPhase] = useState('idle'); // 'idle' | 'building' | 'completed' | 'failed'
   const [showRawJson, setShowRawJson] = useState(false);
@@ -390,8 +397,8 @@ export default function AppBuilder({
 
   // ESC 关闭：预览 overlay 打开时先关 overlay，否则关闭整个搭建/预览面板（等价右上角 X）
   useEffect(() => {
-    if (!visible) return;
-    const onKeyDown = e => {
+    if (!visible) return undefined;
+    const onKeyDown = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
       if (overlayOpen) setOverlayOpen(false);
       else bus.emit('builder:close');

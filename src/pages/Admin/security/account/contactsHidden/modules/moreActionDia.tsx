@@ -1,8 +1,17 @@
 import React from 'react';
 import ClickAway from 'ming-ui/components/ClickAway';
 
-let MoreActionDia = class MoreActionDia extends React.Component<any, any> {
-  render() {
+interface MoreActionDiaProps {
+  showMoreAction?: boolean | undefined;
+  addUser: () => void;
+  addDept: () => void;
+  addOrgRoles: () => void;
+  // ClickAway.wrap 包出来的组件还收 onClickAway 等
+  [key: string]: unknown;
+}
+
+let MoreActionDia = class MoreActionDia extends React.Component<MoreActionDiaProps> {
+  override render() {
     if (!this.props.showMoreAction) {
       return '';
     }

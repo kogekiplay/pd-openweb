@@ -1,4 +1,3 @@
-import React from 'react';
 import { func, number, string } from 'prop-types';
 import styled from 'styled-components';
 import { Input } from 'ming-ui';

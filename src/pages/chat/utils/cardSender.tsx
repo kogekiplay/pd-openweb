@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import moment from 'moment';
 import createCalendar from 'src/components/createCalendar/load';
@@ -98,6 +97,7 @@ export const newTask = (acceptor, options: CardSenderOptions = {}) => {
           },
         };
         resolve(message);
+        return undefined;
       },
     }).catch(reject);
   });
@@ -209,7 +209,7 @@ export const selectSchedule = () => {
  * @param {*} acceptor
  * @param {*} options
  */
-export const newVote = (acceptor, options) => {
+export const newVote = (acceptor, options: { showSuccessTip: boolean }) => {
   return new Promise(resolve => {
     _initPost(
       acceptor,

@@ -6,7 +6,7 @@ import marketplaceApi from 'src/api/marketplace';
 import marketplacePaymentApi from 'src/api/marketplacePayment';
 import './index.less';
 
-const planTypes = { 0: _l('免费'), 1: _l('试用'), 2: _l('固定价格'), 3: _l('按使用人数订阅') };
+const planTypes: Record<number, string> = { 0: _l('免费'), 1: _l('试用'), 2: _l('固定价格'), 3: _l('按使用人数订阅') };
 
 export default function ProductLicenseInfo(props) {
   const { children, popupAlign = {}, license = {}, data = {}, type = 'app' } = props;
@@ -63,7 +63,7 @@ export default function ProductLicenseInfo(props) {
     }
 
     marketplaceApi.setSecretKeyForApp({ key: socket, appId: id }).then(data => {
-      const alertMessage = {
+      const alertMessage: Record<number, string> = {
         1: _l('更新成功'),
         2: _l('密钥错误'),
         3: _l('应用已删除'),

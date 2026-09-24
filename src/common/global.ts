@@ -20,7 +20,7 @@ function testApiPath(apiPath, url) {
   return new RegExp(apiPath + '$').test(apiPathOfRequest);
 }
 
-function changeRequestData(config, apiPath, changes = {}) {
+function changeRequestData(config, apiPath: () => boolean, changes = {}) {
   const needChange = isFunction(apiPath) ? apiPath() : testApiPath(apiPath, config.url);
 
   if (needChange) {
@@ -116,7 +116,8 @@ window._l = function (key, ...args) {
   // 含有0%、1%等内容参数替换
   if (args.length > 0) {
     for (let i = 0; i < args.length; i++) {
-      content = content.replace(new RegExp(`%${i}`, 'g'), args[i]);
+      // 参数可能是数字：replace 本来就会把替换值 String() 化，这里显式写出来
+      content = content.replace(new RegExp(`%${i}`, 'g'), String(args[i]));
     }
   } else if (/.*%\d{5}/.test(content)) {
     // 处理特殊多语境单词问题
@@ -509,7 +510,7 @@ const disposeRequestParams = (controllerName, actionName, data, ajaxOptions) => 
 
   if (window.apireply_forbid) {
     // AES-256-CBC 加密函数
-    const encryptAES256CBC = plainText => {
+    const encryptAES256CBC = (plainText: string) => {
       // 将密钥和 IV 转换为 CryptoJS 的 WordArray
       const keyWordArray = CryptoJS.enc.Hex.parse(window.apireply_hex_key);
       const ivWordArray = CryptoJS.enc.Hex.parse(window.apireply_hex_iv);
@@ -669,7 +670,7 @@ window.clearLocalDataTime = ({ controllerName, actionName, requestData = {}, cle
     appLangId: requestData.langId || requestData.targetLangId,
     worksheetId: requestData.worksheetId || requestData.workSheetId || requestData.sourceId,
   });
-  const localKeys = [];
+  const localKeys: string[] = [];
 
   Object.keys(CACHE_PARAMS).forEach(currentKey => {
     if (CACHE_PARAMS[currentKey].clearInterface.includes(key) || _.includes(clearSpecificKeys, currentKey)) {
@@ -1011,7 +1012,7 @@ window.agentAPI = (args: Record<string, unknown> = {}, options: AgentApiOptions 
   arr.forEach(function (item) {
     item.prepend =
       item.prepend ||
-      function () {
+      function (this: Element | Document | DocumentFragment) {
         const argArr = Array.prototype.slice.call(arguments),
           docFrag = document.createDocumentFragment();
 

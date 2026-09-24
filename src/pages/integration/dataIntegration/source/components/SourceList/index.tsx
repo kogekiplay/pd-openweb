@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -230,7 +230,7 @@ const NoDataWrapper = styled.div`
   }
 `;
 
-let ajaxPromise;
+let ajaxPromise: ApiResult | undefined;
 let sortFlag = 0;
 
 const sortTypes = [null, SORT_TYPE.ASC, SORT_TYPE.DESC];

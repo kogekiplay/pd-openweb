@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -10,7 +10,8 @@ import SelectUser from 'src/pages/Admin/components/SelectUser';
 import { dateConvertToUserZone } from 'src/utils/project';
 import AppDisplay from './modules/AppDisplay';
 
-const STATUS = [
+// '' 是「全部状态」，其余是数字状态值
+const STATUS: { text: string; value: '' | number }[] = [
   { text: _l('全部状态'), value: '' },
   { text: _l('进行中'), value: 1 },
   { text: _l('完成'), value: 0 },
@@ -34,9 +35,10 @@ export default function UpgradeRecords({ projectId, type }: { projectId?: string
     total: 0,
     userInfo: [],
     appId: '',
-    status: '',
+    // '' 是「全部」，其余是数字状态值（和下拉项的 value 一致）
+    status: '' as '' | number,
   });
-  const promiseRef = useRef(null);
+  const promiseRef = useRef<ApiResult | null>(null);
 
   const getDataList = useCallback(
     (params: Record<string, any> = {}) => {
@@ -153,7 +155,8 @@ export default function UpgradeRecords({ projectId, type }: { projectId?: string
             isAdmin
             changeData={data => setState({ userInfo: data, pageIndex: 1 })}
           />
-          <Dropdown
+          {/* 项里 '' 是「全部」、其余是数字 —— 值类型混在一起时推不出来，这里写明 */}
+          <Dropdown<'' | number>
             className="w180 mLeft15"
             placeholder={_l('全部状态')}
             data={STATUS}

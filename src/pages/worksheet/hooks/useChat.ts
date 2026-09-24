@@ -20,10 +20,10 @@ function useChat({
   const [messages, setMessages] = useState(defaultMessages);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [activeMessageId, setActiveMessageId] = useState(null);
+  const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
   const [isRequesting, setIsRequesting] = useState(false);
   // 使用 ref 存储当前的 AbortController
-  const abortControllerRef = useRef(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const streamReaderRef = useRef(null);
   const parserRef = useRef(null);
 
@@ -279,7 +279,8 @@ function useChat({
       } else {
         onMessageDone();
       }
-    } catch (error) {
+    } catch (thrown) {
+      const error = thrown as Partial<Error>;
       if (error.name === 'AbortError') {
         console.log('Request aborted:', error.message);
       } else {

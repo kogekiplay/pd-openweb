@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { SortableList } from 'ming-ui';
 
@@ -51,7 +50,6 @@ export default function SortableTags() {
                 backgroundColor: 'var(--color-background-disabled)',
               }}
               key={index}
-              index={index}
             >
               {item.name}
             </div>

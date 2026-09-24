@@ -13,7 +13,10 @@ const ChildTableComp = connect((state: RootState) => ({
   base: state.base,
   rows: state.rows,
   lastAction: state.lastAction,
-}))(props => {
+/* 内联组件的 props 必须写类型：隐式 any 时，react-redux 的 ConnectedComponent 推导在
+   strictFunctionTypes 下会塌成 ComponentType<never>，结果「不能当 JSX 组件用」。
+   这里只读 baseLoading，其余原样透传给 ChildTable。 */
+}))((props: { baseLoading?: boolean; [key: string]: any }) => {
   const { baseLoading } = props;
 
   if (baseLoading) {
@@ -46,7 +49,7 @@ export default class extends React.Component<any, any> {
     this.bindSubscribe();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { onChange } = this.props;
 
@@ -69,7 +72,7 @@ export default class extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (isFunction(this.unsubscribe)) {
       this.unsubscribe();
     }
@@ -104,7 +107,7 @@ export default class extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { registerCell = () => {} } = this.props;
     return (
       <Provider store={this.store}>

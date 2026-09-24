@@ -4,7 +4,7 @@ import { Toast } from 'antd-mobile';
 import { browserIsMobile } from 'src/utils/common';
 
 function getIcon(type = 'success', isMobile = false) {
-  const config = {
+  const config: Record<string, { name: string; color: string }> = {
     success: {
       name: 'Finish',
       color: 'var(--color-success-text)',
@@ -90,6 +90,7 @@ export function antAlert(content, alertType = 1) {
     key,
     style,
   });
+  return undefined;
 }
 
 export function destroyAlert(key) {

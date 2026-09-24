@@ -141,8 +141,8 @@ export function updateTreeNodeExpansion(
   };
 }
 
-export const initGroupFolded = (view, groups, controls) => {
-  const value = {};
+export const initGroupFolded = (view, groups, controls: FormControl[]) => {
+  const value: Record<string, boolean> = {};
   const groupKeys = _.map(sortDataByGroupItems(groups, view, controls), 'key');
   const groupFoldedType = _.get(view, 'advancedSetting.groupopen') || '2';
 
@@ -263,7 +263,7 @@ export const fetchRows = ({
       args.pageSize = maxCount;
     }
 
-    if (forcePageSize && !groupControlId) {
+    if (forcePageSize && view?.viewType === 0 && !groupControlId) {
       savedPageSize = undefined;
       args.pageSize = forcePageSize;
       dispatch({ type: 'WORKSHEET_SHEETVIEW_CHANGE_PAGESIZE', pageSize: forcePageSize, pageIndex: args.pageIndex });
@@ -1262,7 +1262,7 @@ export function updateColumnStyles(changes) {
 }
 
 export function saveColumnStylesToLocal(changes) {
-  return (dispatch: AppDispatch, getState: GetState) => {
+  return (_dispatch: AppDispatch, getState: GetState) => {
     const { sheetview, base } = getState().sheet;
     const viewId = get(base, 'viewId');
 
@@ -1603,7 +1603,7 @@ export function refreshTreeOfTreeTableView(cb = () => {}) {
       type: 'UPDATE_TREE_TABLE_VIEW_DATA',
       value: {
         maxLevel,
-        treeMap: forEach(treeMap, (value, key) => {
+        treeMap: forEach(treeMap, (_value, key) => {
           try {
             treeMap[key].folded = get(oldTreeMap, key + '.folded');
           } catch (err) {

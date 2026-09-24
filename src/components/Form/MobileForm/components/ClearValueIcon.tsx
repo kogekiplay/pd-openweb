@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Icon } from 'ming-ui';
 
-const CONTROL_HEIGHT_MAP = {
+const CONTROL_HEIGHT_MAP: Record<string, number> = {
   '1em': 39,
   '1.2em': 44,
   '1.4em': 49,
   '1.6em': 53,
   '1.8em': 58,
 };
-const ICON_SIZE_MAP = {
+const ICON_SIZE_MAP: Record<string, number> = {
   '1em': 28,
   '1.2em': 30,
   '1.4em': 32,

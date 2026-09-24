@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { SpinLoading } from 'antd-mobile';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -45,7 +45,7 @@ class AddRecord extends Component<any, any> {
       writeControls: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { params = {} } = this.props.match || {};
     const { btnId } = getRequest();
     const { appId, worksheetId } = this.props;
@@ -92,7 +92,7 @@ class AddRecord extends Component<any, any> {
         }
       });
   }
-  render() {
+  override render() {
     const { params = {} } = this.props.match || {};
     const { appId, worksheetId, viewId, defaultFormData = {}, defaultFormDataEditable } = this.props;
     const { loading, worksheetInfo, writeControls, status } = this.state;
@@ -151,7 +151,7 @@ class AddRecord extends Component<any, any> {
                 addType={2}
                 notDialog={true}
                 changeWorksheetStatusCode={() => this.setState({ status: STATUS.ERROR })}
-                onAdd={(data, { continueAdd }) => {
+                onAdd={(_data, { continueAdd }) => {
                   if (!continueAdd) {
                     this.setState({ status: STATUS.SUCCESS });
                   }

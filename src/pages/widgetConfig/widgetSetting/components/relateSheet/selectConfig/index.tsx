@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -59,7 +59,7 @@ const RECORD_DISPLAY_OPTIONS = [
   },
 ];
 
-const getTabsDisplay = isDropdown => {
+const getTabsDisplay = (isDropdown: boolean) => {
   return [
     { text: _l('过滤选择范围'), value: 0 },
     isDropdown ? { text: _l('下拉框设置'), value: 2 } : { text: _l('弹层设置'), value: 2 },
@@ -163,6 +163,7 @@ function SelectConfig(props) {
     } else if (showTab === 4) {
       return <SortConfig {...editProps} />;
     }
+    return undefined;
   };
 
   return (
@@ -185,11 +186,12 @@ function SelectConfig(props) {
       ) : (
         <SelectConfigWrap>
           <DisplayTabs>
-            {getTabsDisplay(isDropdown).map(item => {
+            {getTabsDisplay(isDropdown).map((item, index) => {
               const active = showTab === item.value;
               if (_.includes([3, 4], item.value) && (data.enumDefault === 1 || showtype === '3')) return null;
               return (
                 <div
+                  key={index}
                   className={cx('tabItem', { active })}
                   onClick={() => {
                     if (active) return;

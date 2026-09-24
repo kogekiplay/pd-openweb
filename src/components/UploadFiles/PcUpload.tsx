@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -199,13 +199,13 @@ const CAMERA_STATUS = {
 const MAX_PHOTO_COUNT = 10;
 
 function PcUpload(props) {
-  const [cameraStatus, setCameraStatus] = useState(null);
-  const [photoList, setPhotoList] = useState([]);
+  const [cameraStatus, setCameraStatus] = useState<number | null>(null);
+  const [photoList, setPhotoList] = useState<File[]>([]);
   const [previewIndex, setPreviewIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canvasContextRef = useRef(null);
-  const streamRef = useRef(null);
+  const canvasContextRef = useRef<CanvasRenderingContext2D | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
     const initCamera = async () => {
@@ -245,7 +245,7 @@ function PcUpload(props) {
 
   useEffect(() => {
     if (!(cameraStatus === CAMERA_STATUS.CAMERA_OPENED && streamRef.current && videoRef.current)) {
-      return;
+      return undefined;
     }
 
     const video = videoRef.current;
@@ -312,7 +312,7 @@ function PcUpload(props) {
   };
 
   const handleDelete = () => {
-    const newPhotoList = photoList.filter((i, index) => index !== previewIndex);
+    const newPhotoList = photoList.filter((_i, index) => index !== previewIndex);
     setPhotoList(newPhotoList);
 
     if (_.isEmpty(newPhotoList)) {

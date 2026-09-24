@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { BgIconButton, Skeleton } from 'ming-ui';
 import { AGENT_ATTACHMENT_MIME_TYPES } from 'src/components/Agent/agentService';

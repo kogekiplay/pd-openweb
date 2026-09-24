@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import styled from 'styled-components';
@@ -54,7 +54,7 @@ export default function Areas(props) {
   const [active, setActive] = useState<boolean | undefined>();
   const [search, setSearch] = useState(undefined);
   const [keywords, setKeywords] = useState('');
-  const [defaultValue, setDefaultValue] = useState(null);
+  const [defaultValue, setDefaultValue] = useState<string | null>(null);
   // 搜索命中后暂存的那一项，确认时才并进 values
   const tempArea = useRef<{ name?: string; id?: string } | undefined>(undefined);
   const { enumDefault2, advancedSetting: { chooserange = 'CN', commcountries } = {} } = control;

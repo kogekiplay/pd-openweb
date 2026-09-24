@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { func } from 'prop-types';
@@ -7,7 +7,9 @@ import EmptyStatus from '../../components/Empty';
 import './index.less';
 
 export default class MsgTemplate extends Component<any, any> {
-  static propTypes = {
+  declare pending: boolean | undefined;
+
+  static override propTypes = {
     closeLayer: func,
   };
   static defaultProps = {
@@ -23,7 +25,7 @@ export default class MsgTemplate extends Component<any, any> {
       haveMoreData: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
     this.pending = true;
   }
@@ -63,7 +65,7 @@ export default class MsgTemplate extends Component<any, any> {
     }
   };
 
-  handleSorter = params => {
+  handleSorter = (params: { isAsc: boolean | undefined; sortId: string | undefined; pageIndex: number }) => {
     const { pageIndex, isAsc, sortId } = params;
     this.setState(
       {
@@ -111,7 +113,7 @@ export default class MsgTemplate extends Component<any, any> {
       },
     });
   };
-  render() {
+  override render() {
     const { closeLayer } = this.props;
     let { messageTemplateIds = [], isAsc, data } = this.state;
     return (

@@ -11,7 +11,9 @@ import createLinksForMessage from 'src/utils/createLinksForMessage';
  * 动态内容
  */
 class PostMessage extends React.Component<any, any> {
-  static propTypes = {
+  declare messageNode: HTMLElement | null | undefined;
+
+  static override propTypes = {
     postItem: PropTypes.object,
     renderFace: PropTypes.bool, // 是否渲染表情
     inline: PropTypes.bool, // true: 显示为inline false: 显示为block
@@ -24,16 +26,16 @@ class PostMessage extends React.Component<any, any> {
 
   _isMounted = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     this._isMounted = true;
     this.bindEvents();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.bindEvents();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this._isMounted = false;
   }
 
@@ -44,7 +46,7 @@ class PostMessage extends React.Component<any, any> {
 
     $(this.messageNode)
       .find('[data-accountid]')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         const accountId = $(ele).attr('data-accountid');
         $(ele).removeAttr('data-accountid');
 
@@ -59,7 +61,7 @@ class PostMessage extends React.Component<any, any> {
 
     $(this.messageNode)
       .find('[data-groupid]')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         const groupid = $(ele).attr('data-groupid');
         $(ele).removeAttr('data-groupid');
 
@@ -89,7 +91,7 @@ class PostMessage extends React.Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const postItem = this.props.postItem;
     let message = postItem.message;
 

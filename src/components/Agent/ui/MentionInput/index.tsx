@@ -1,4 +1,4 @@
-import React, { forwardRef, Suspense, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, Suspense, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -107,7 +107,7 @@ function createMentionNode(app) {
   return span;
 }
 
-export function applySelectionRange(range) {
+export function applySelectionRange(range: Range) {
   const sel = window.getSelection && window.getSelection();
 
   if (!sel) return;
@@ -136,14 +136,14 @@ function MentionInput(
   const editorRef = useRef<HTMLDivElement | null>(null);
   const isComposingRef = useRef(false);
   // 失焦延迟关闭浮层的定时器；重新聚焦时需取消，避免点 @ 按钮后浮层被旧定时器关掉
-  const blurTimerRef = useRef(null);
+  const blurTimerRef = useRef<NodeJS.Timeout | null>(null);
   // 最近一次检测到的 @ 上下文：{ node, atIndex, caretOffset }，供插入 chip 时定位
-  const mentionCtxRef = useRef(null);
+  const mentionCtxRef = useRef<{ node: Node; atIndex: number; caretOffset: number; query: string } | null>(null);
 
   const [isEmpty, setIsEmpty] = useState(true);
   const [focused, setFocused] = useState(false);
   const [popupOpen, setPopupOpen] = useState(false);
-  const [popupRect, setPopupRect] = useState(null);
+  const [popupRect, setPopupRect] = useState<DOMRect | null>(null);
   const [query, setQuery] = useState('');
   const [apps, setApps] = useState([]);
   const [loading, setLoading] = useState(false);

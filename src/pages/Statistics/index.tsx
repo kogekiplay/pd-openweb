@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -16,7 +16,7 @@ const ChartDialog = lazy(() => import('./ChartDialog'));
 const ClickAwayable = ClickAway;
 let globalStatisticsRoot = null;
 let globalStatisticsContainer: HTMLElement | null = null;
-let globalStatisticsResize = null;
+let globalStatisticsResize: _.DebouncedFunc<() => void> | null = null;
 
 const exceptions = [
   '.mui-dialog-container',
@@ -90,6 +90,9 @@ const renderGlobalStatisticsPanel = node => {
 };
 
 export default class Statistics extends Component<any, any> {
+  declare isUnmounted: boolean;
+  declare request: ApiResult | undefined;
+
   constructor(props) {
     super();
     this.isUnmounted = false;
@@ -108,10 +111,10 @@ export default class Statistics extends Component<any, any> {
       showSelf,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     setTimeout(this.getReportConfigList, 250);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     if (this.request) {
       this.request.abort();
@@ -355,7 +358,7 @@ export default class Statistics extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { dialogVisible, newReport, loading, reports, ownerId } = this.state;
     const { worksheetId, viewId, appId, projectId, permissionType } = this.props;
     return (

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -6,7 +6,9 @@ import PropTypes from 'prop-types';
 import './index.less';
 
 export default class SearchInput extends Component<any, any> {
-  static propTypes = {
+  declare inputEl: HTMLInputElement | null | undefined;
+
+  static override propTypes = {
     active: PropTypes.bool,
     className: PropTypes.string,
     focusedClass: PropTypes.string,
@@ -36,7 +38,7 @@ export default class SearchInput extends Component<any, any> {
     }, props.debounceTime);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (typeof this.props.active !== 'undefined') {
         this.setState({
@@ -53,13 +55,13 @@ export default class SearchInput extends Component<any, any> {
       }
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.handleDebouncedOk.cancel();
   }
   clear() {
     this.setState({ value: '' });
   }
-  render() {
+  override render() {
     const { inputWidth, focusedClass, style, searchIcon } = this.props;
     const { value, isFocus } = this.state;
     const { className, keyWords, onOk, onClear, onFocus, onBlur, placeholder, triggerWhenBlurWithEmpty } = this.props;

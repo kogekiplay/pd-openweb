@@ -50,7 +50,7 @@ export const updateSettings =
       });
   };
 
-function updateBaseConfig(dispatch, getState, value, cb?) {
+function updateBaseConfig(_dispatch: AppDispatch, getState: GetState, value, cb?: ((worksheetId: string) => void) | undefined) {
   const {
     publicWorksheet: {
       worksheetInfo: { worksheetId, projectId },

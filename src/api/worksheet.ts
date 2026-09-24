@@ -9,7 +9,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getViewPermission: function (args: ApiArgs, options: ApiOptions = {}) {
+  getViewPermission: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Role.AppRoleGrpcModel.ViewRoleModel> {
     return mdyAPI('Worksheet', 'GetViewPermission', args, options);
   },
   /**
@@ -21,7 +24,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppExtendAttr: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppExtendAttr: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.GetAppExtendAttrResponse> {
     return mdyAPI('Worksheet', 'GetAppExtendAttr', args, options);
   },
   /**
@@ -161,7 +167,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetModel> {
     return mdyAPI('Worksheet', 'GetWorksheetInfo', args, options);
   },
   /**
@@ -185,7 +194,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetBaseInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetBaseInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetModel> {
     return mdyAPI('Worksheet', 'GetWorksheetBaseInfo', args, options);
   },
   /**
@@ -387,7 +399,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRowDetail: function (args: ApiArgs, options: ApiOptions = {}) {
+  getRowDetail: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Worksheet.RowDetailData> {
     return mdyAPI('Worksheet', 'GetRowDetail', args, options);
   },
   /**
@@ -471,7 +486,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRowRelationRows: function (args: ApiArgs, options: ApiOptions = {}) {
+  getRowRelationRows: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> {
     return mdyAPI('Worksheet', 'GetRowRelationRows', args, options);
   },
   /**
@@ -821,7 +839,10 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getFilterRows: function (args: ApiArgs, options: ApiOptions = {}) {
+  getFilterRows: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> {
     return mdyAPI('Worksheet', 'GetFilterRows', args, options);
   },
   /**
@@ -1028,7 +1049,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetOperationLogs: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetOperationLogs: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.GetWorksheetOpeationLogsResponse> {
     return mdyAPI('Worksheet', 'GetWorksheetOperationLogs', args, options);
   },
   /**
@@ -1284,7 +1308,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetViews: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetViews: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Worksheet.WorksheetViewEntity[]> {
     return mdyAPI('Worksheet', 'GetWorksheetViews', args, options);
   },
   /**
@@ -1297,7 +1324,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetViewById: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetViewById: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Worksheet.WorksheetViewEntity> {
     return mdyAPI('Worksheet', 'GetWorksheetViewById', args, options);
   },
   /**
@@ -1404,7 +1434,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetBtns: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetBtns: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Worksheet.WorksheetBtnEntity[]> {
     return mdyAPI('Worksheet', 'GetWorksheetBtns', args, options);
   },
   /**
@@ -1543,7 +1576,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getControlRules: function (args: ApiArgs, options: ApiOptions = {}) {
+  getControlRules: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Worksheet.ControlRuleEntity[]> {
     return mdyAPI('Worksheet', 'GetControlRules', args, options);
   },
   /**
@@ -1639,7 +1675,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetControls: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetControls: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<{
+    code: number;
+    msg?: string | undefined;
+    data?: HapApi.MD.Entity.Worksheet.ControlTemplateEntity | undefined;
+  }> {
     return mdyAPI('Worksheet', 'GetWorksheetControls', args, options);
   },
   /**
@@ -1739,7 +1782,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetsControls: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetsControls: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<{
+    code: number;
+    msg?: string | undefined;
+    data?: HapApi.MD.Entity.Worksheet.ControlTemplateEntity[] | undefined;
+  }> {
     return mdyAPI('Worksheet', 'GetWorksheetsControls', args, options);
   },
   /**
@@ -1880,7 +1930,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetReferences: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetReferences: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.ReturnResult> {
     return mdyAPI('Worksheet', 'GetWorksheetReferences', args, options);
   },
   /**
@@ -1935,7 +1988,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFormComponent: function (args: ApiArgs, options: ApiOptions = {}) {
+  getFormComponent: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Worksheet.FormComponentModel> {
     return mdyAPI('Worksheet', 'GetFormComponent', args, options);
   },
   /**
@@ -2200,7 +2256,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRowIndexes: function (args: ApiArgs, options: ApiOptions = {}) {
+  getRowIndexes: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.GetRowIndexesResult> {
     return mdyAPI('Worksheet', 'GetRowIndexes', args, options);
   },
   /**
@@ -2297,7 +2356,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFormSubmissionSettings: function (args: ApiArgs, options: ApiOptions = {}) {
+  getFormSubmissionSettings: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.GetFormSubmissionSettingsResponse> {
     return mdyAPI('Worksheet', 'GetFormSubmissionSettings', args, options);
   },
   /**
@@ -2323,7 +2385,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSwitch: function (args: ApiArgs, options: ApiOptions = {}) {
+  getSwitch: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.SwitchConfigDto[]> {
     return mdyAPI('Worksheet', 'GetSwitch', args, options);
   },
   /**
@@ -2363,7 +2428,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSwitchPermit: function (args: ApiArgs, options: ApiOptions = {}) {
+  getSwitchPermit: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Worksheet.SwitchPermitModel[]> {
     return mdyAPI('Worksheet', 'GetSwitchPermit', args, options);
   },
   /**
@@ -2376,7 +2444,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetApiInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetApiInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetApiModel[]> {
     return mdyAPI('Worksheet', 'GetWorksheetApiInfo', args, options);
   },
   /**
@@ -2588,7 +2659,10 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getQueryBySheetId: function (args: ApiArgs, options: ApiOptions = {}) {
+  getQueryBySheetId: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.DefultQueryDto> {
     return mdyAPI('Worksheet', 'GetQueryBySheetId', args, options);
   },
   /**
@@ -2828,7 +2902,10 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetCurrencyInfos: function (args?: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetCurrencyInfos: function (
+    args?: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetCurrencyInfosModel[]> {
     return mdyAPI('Worksheet', 'GetWorksheetCurrencyInfos', args, options);
   },
   /**
@@ -2858,7 +2935,10 @@ remark:待识别文件url ，图片的 Url 地址。要求图片经Base64编码�
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFollower: function (args: ApiArgs, options: ApiOptions = {}) {
+  getFollower: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.SetFollowDto> {
     return mdyAPI('Worksheet', 'GetFollower', args, options);
   },
 };

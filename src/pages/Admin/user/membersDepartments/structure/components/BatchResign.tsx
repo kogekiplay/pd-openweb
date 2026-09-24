@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Dropdown, Menu } from 'antd';
 import _ from 'lodash';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -359,7 +359,7 @@ export default class BatchResign extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     return (
       <Fragment>
         <BatchResignDialogStyle />

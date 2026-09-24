@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Input, Space } from 'antd';
 import _ from 'lodash';
 import { Checkbox, Dropdown } from 'ming-ui';

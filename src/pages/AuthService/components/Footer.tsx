@@ -87,7 +87,7 @@ export default function Footer() {
           <React.Fragment>
             {links.map((o, i) => {
               return (
-                <React.Fragment>
+                <React.Fragment key={i}>
                   <span
                     className={cx(
                       'linkCon Hand',

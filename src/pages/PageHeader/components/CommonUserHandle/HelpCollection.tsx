@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -105,7 +105,12 @@ const CollectionWrap = styled.div`
   }
 `;
 
-export default function HelpCollection(props) {
+export interface HelpCollectionProps {
+  hapAIPosition: string;
+  updatePopupVisible?: ((value: boolean) => void) | undefined;
+}
+
+export default function HelpCollection(props: HelpCollectionProps) {
   const { hapAIPosition, updatePopupVisible = () => {} } = props;
   const isTop = hapAIPosition === 'top';
   const [showHapAi, setShowHapAi] = useState(false);

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import cx from 'classnames';
@@ -147,6 +147,8 @@ const getPointData = reportData => {
 };
 
 export default class extends Component<any, any> {
+  declare chartEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -160,7 +162,7 @@ export default class extends Component<any, any> {
     this.scene = null;
     this.g2plotComponent = {};
   }
-  componentDidMount() {
+  override componentDidMount() {
     Promise.all([import('@antv/l7'), import('@antv/l7-maps')]).then(([l7, maps]) => {
       const { LayerPopup, PointLayer, Scene } = l7;
       const { GaodeMap } = maps;
@@ -171,11 +173,11 @@ export default class extends Component<any, any> {
       this.renderWorldMap(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.scene && this.scene.destroy();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { style = {}, displaySetup = {} } = this.props.reportData;
       const { style: oldStyle = {}, displaySetup: oldDisplaySetup = {} } = prevProps.reportData;
@@ -416,7 +418,7 @@ export default class extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { count, originalCount, dropdownVisible, offset } = this.state;
     const { summary, displaySetup = {} } = this.props.reportData;
     return (

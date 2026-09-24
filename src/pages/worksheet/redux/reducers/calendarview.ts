@@ -1,5 +1,6 @@
-import type { ReduxAction } from 'src/redux/types';
-export function calendarLoading(state = false, action: ReduxAction) {
+import type { DataAction, ReduxAction } from 'src/redux/types';
+
+export function calendarLoading(state = false, action: DataAction<boolean>) {
   const { type } = action;
 
   switch (type) {
@@ -10,7 +11,7 @@ export function calendarLoading(state = false, action: ReduxAction) {
   }
 }
 
-export function calendarIsOver(state = false, action: ReduxAction) {
+export function calendarIsOver(state = false, action: DataAction<boolean>) {
   const { type } = action;
 
   switch (type) {
@@ -21,7 +22,7 @@ export function calendarIsOver(state = false, action: ReduxAction) {
   }
 }
 
-export function calendarViewStart(state = '', action: ReduxAction) {
+export function calendarViewStart(state = '', action: DataAction<string>) {
   const { type } = action;
 
   switch (type) {
@@ -32,7 +33,7 @@ export function calendarViewStart(state = '', action: ReduxAction) {
   }
 }
 
-export function calendarViewEnd(state = '', action: ReduxAction) {
+export function calendarViewEnd(state = '', action: DataAction<string>) {
   const { type } = action;
 
   switch (type) {
@@ -104,7 +105,7 @@ export function calendarEventIsAdd(state = false, action: ReduxAction) {
 }
 
 //日历视图数据
-export function calendar(state = [], action: ReduxAction) {
+export function calendar(state: ApiPayload[] = [], action: DataAction<ApiPayload[]>) {
   const { type } = action;
 
   switch (type) {
@@ -116,7 +117,7 @@ export function calendar(state = [], action: ReduxAction) {
 }
 
 //格式化后日历视图数据
-export function calendarFormatData(state = [], action: ReduxAction) {
+export function calendarFormatData(state: ApiPayload[] = [], action: DataAction<ApiPayload[]>) {
   const { type } = action;
 
   switch (type) {

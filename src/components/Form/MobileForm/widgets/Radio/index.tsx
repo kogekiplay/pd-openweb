@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -16,7 +16,7 @@ const RadioWidget = props => {
     item => !item.isDeleted && (_.includes(checkIds, item.key) || (!item.hide && readOnlyShow)),
   );
 
-  const renderItem = (item, checkIds) => {
+  const renderItem = (item, checkIds: string[]) => {
     const { otherValue } = getCheckAndOther(value);
     const content = otherValue && disabled ? otherValue : item.value;
 
@@ -50,11 +50,11 @@ const RadioWidget = props => {
       {displayOptions.map((item, index: number) => {
         return (
           <div
+            key={index}
             className="flexColumn"
             style={{ width: item.key === 'other' && checkIds.includes('other') && !disabled ? '100%' : 'auto' }}
           >
             <Radio
-              needDefaultUpdate
               key={index}
               disabled={disabled}
               text={renderItem(item, checkIds)}

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Dialog } from 'ming-ui';
 import { checkConditionCanSave } from 'src/pages/FormSet/components/columnRules/config';
-import { ROW_ID_CONTROL } from '../../../../../config/widget';
 import ApiSearchConfig from '../../../ApiSearchConfig';
 import { CustomActionWrap } from '../../style';
 import type { FormControl } from 'src/utils/controlTypes';

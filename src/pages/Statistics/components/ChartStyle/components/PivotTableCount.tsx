@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Checkbox, Collapse, Input, Switch } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -113,7 +113,7 @@ export default function pivotTableCountPanelGenerator(props) {
           <Switch
             size="small"
             checked={switchChecked}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -160,7 +160,7 @@ export default function pivotTableCountPanelGenerator(props) {
           <Switch
             size="small"
             checked={showLineTotal}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -285,7 +285,7 @@ export default function pivotTableCountPanelGenerator(props) {
     const { showColumnTotal, columnSummary = {} } = pivotTable;
     const { controlList = [], rename } = columnSummary;
 
-    const onChangeCountVisible = (id, checked: boolean, data) => {
+    const onChangeCountVisible = (id, checked: boolean, data: { number: boolean; percent: boolean } | undefined) => {
       if (checked) {
         const control = {
           controlId: id,
@@ -307,7 +307,8 @@ export default function pivotTableCountPanelGenerator(props) {
           true,
         );
       } else {
-        this.props.changeCurrentReport(
+        // 原先写成 this.props.changeCurrentReport：这是函数不是类组件，取消勾选时直接 TypeError、勾掉没效果
+        changeCurrentReport(
           {
             pivotTable: {
               ...pivotTable,
@@ -405,7 +406,7 @@ export default function pivotTableCountPanelGenerator(props) {
           <Switch
             size="small"
             checked={showColumnTotal}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {

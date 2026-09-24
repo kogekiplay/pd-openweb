@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -41,7 +41,7 @@ const GlobalSearchSideCon = styled.ul`
 `;
 
 export default class GlobalSearchSide extends Component<any, any> {
-  render() {
+  override render() {
     const { current = 'all', onChange } = this.props;
     return (
       <GlobalSearchSideCon>

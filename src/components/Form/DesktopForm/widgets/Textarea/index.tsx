@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -56,7 +56,7 @@ const Text = props => {
   const [isEditing, setIsEditing] = useState(false);
   const [originValue, setOriginValue] = useState('');
 
-  const textRef = useRef(null);
+  const textRef = useRef<HTMLTextAreaElement | null>(null);
   const boxRef = useRef<HTMLDivElement | null>(null);
   const valueRef = useRef(value);
 
@@ -104,6 +104,7 @@ const Text = props => {
         textRef.current && textRef.current.removeEventListener('scroll', syncScroll);
       };
     }
+    return undefined;
   }, []);
 
   useEffect(() => {
@@ -255,7 +256,7 @@ const Text = props => {
         className="customFormTextarea escclose"
         minHeight={enumDefault === 1 ? minHeight : 36}
         {...(isSingleLine ? {} : { maxHeight })}
-        manualRef={con => (textRef.current = con)}
+        manualRef={con => { textRef.current = con; }}
         placeholder={isEditing ? hint : ''}
         spellCheck={false}
         onFocus={handleFocus}

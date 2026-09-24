@@ -50,7 +50,7 @@ class GlobalSearch extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const urlParam = getRequest(this.props.search);
 
     this.initParam();
@@ -60,7 +60,7 @@ class GlobalSearch extends Component<any, any> {
     }
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     const urlParam = getRequest(this.props.search);
 
     if (
@@ -332,7 +332,7 @@ class GlobalSearch extends Component<any, any> {
     } else if (type === 'record') {
       startType = _list[0] ? _list[0].type : '';
     } else {
-      let obj = _list.find((l, index: number) => index !== 0 && _list[index - 1].type === type);
+      let obj = _list.find((_l, index: number) => index !== 0 && _list[index - 1].type === type);
       startType = obj ? obj.type : '';
     }
 
@@ -384,7 +384,7 @@ class GlobalSearch extends Component<any, any> {
       );
     }
 
-    if (!data && !appData) return;
+    if (!data && !appData) return undefined;
 
     if ((searchType === 'user' || searchType === 'group') && data && data[0]) {
       let _data = {
@@ -445,6 +445,7 @@ class GlobalSearch extends Component<any, any> {
 
             let buttons = [
               <OrgSelect
+                key="0"
                 style={{ marginLeft: '18px' }}
                 currentProjectId={(item === 'apps' ? appProjectId : projectId) || getCurrentProjectId()}
                 needAll={false}
@@ -517,9 +518,10 @@ class GlobalSearch extends Component<any, any> {
           {data &&
             data
               .filter(l => l.type !== 'user' && l.type !== 'group')
-              .map(item => {
+              .map((item, index) => {
                 return (
                   <List
+                    key={index}
                     className="globalSearchAllContentItem"
                     data={item}
                     dataKey={item.type}
@@ -535,7 +537,7 @@ class GlobalSearch extends Component<any, any> {
           {data &&
             data
               .filter(l => l.type === 'user' || l.type === 'group')
-              .map(item => {
+              .map((item, index) => {
                 let _data = {
                   allCount: item.count,
                   type: item.type,
@@ -543,6 +545,7 @@ class GlobalSearch extends Component<any, any> {
                 };
                 return (
                   <UserList
+                    key={index}
                     needDesc={false}
                     data={{ ..._data }}
                     type={item.type === 'user' ? 0 : 1}
@@ -578,7 +581,7 @@ class GlobalSearch extends Component<any, any> {
     this.updateSearchParam({ pageIndex: this.state.pageIndex + 1 });
   }, 500);
 
-  render() {
+  override render() {
     const {
       searchKey,
       searchType,
@@ -725,8 +728,9 @@ class GlobalSearch extends Component<any, any> {
               <ScrollView onScrollEnd={this.handleScrollEnd}>
                 {searchKey && searchKey.trim() && (
                   <React.Fragment>
-                    {[...new Array(5)].map((item, index) => (
+                    {[...new Array(5)].map((_item, index) => (
                       <Skeleton
+                        key={index}
                         className="mBottom20 scrollListskeleton"
                         active={true}
                         round={true}

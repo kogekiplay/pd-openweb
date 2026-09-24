@@ -28,7 +28,8 @@ export const getMembers = (appId: string) => dispatch => {
     // 获取成员是否可角色见列表状态
     window.isPublicApp ? undefined : ajaxRequest.getAppRoleSetting({ appId }).then(),
   ]).then(result => {
-    const [detail, list, rolesVisibleConfig = {}] = result;
+    // 公开应用不取角色可见设置（第三项是 undefined）
+    const [detail, list, rolesVisibleConfig] = result;
     const isAdmin =
       detail.permissionType === APP_ROLE_TYPE.POSSESS_ROLE || detail.permissionType === APP_ROLE_TYPE.ADMIN_ROLE;
     const listData = list.map(
@@ -61,7 +62,7 @@ export const getMembers = (appId: string) => dispatch => {
       data: {
         detail,
         listData,
-        rolesVisibleConfig: rolesVisibleConfig.appSettingsEnum,
+        rolesVisibleConfig: rolesVisibleConfig?.appSettingsEnum,
       },
     });
     if (isAdmin) {

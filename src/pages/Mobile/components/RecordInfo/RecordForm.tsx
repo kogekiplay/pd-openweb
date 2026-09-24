@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -37,6 +37,10 @@ const LockWrap = styled.div`
   }
 `;
 let RecordForm = class RecordForm extends Component<any, any> {
+  declare isLoadApprove: boolean;
+  declare formWrap: HTMLDivElement | null | undefined;
+  declare con: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -50,7 +54,7 @@ let RecordForm = class RecordForm extends Component<any, any> {
       !window.isPublicApp;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.isLoadApprove) {
       this.getApproveTodoList();
     } // 兼容ios返回关闭确认支付弹层
@@ -58,7 +62,7 @@ let RecordForm = class RecordForm extends Component<any, any> {
     window.addEventListener('pagehide', this.handlePageHide);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('pagehide', this.handlePageHide);
   }
 
@@ -263,7 +267,7 @@ let RecordForm = class RecordForm extends Component<any, any> {
       !window.isPublicApp;
 
     if ((!formCoverVisible && isCoverid) || (formCoverVisible && !isCoverid)) {
-      return;
+      return undefined;
     }
 
     const sheetInfo = (
@@ -448,7 +452,7 @@ let RecordForm = class RecordForm extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       isModal,
       isEditRecord,

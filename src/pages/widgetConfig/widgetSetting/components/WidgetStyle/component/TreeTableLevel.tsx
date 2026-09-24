@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { AnimationWrap, SettingItem } from 'src/pages/widgetConfig/styled';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util/setting';
@@ -6,7 +5,7 @@ import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../../util
 export default function TreeTableLevel(props) {
   const { data, onChange } = props;
   const { defaultlayer } = getAdvanceSetting(data);
-  const LEVEL_SETTING_LIST = Array.from({ length: 5 }).map((item, index) => ({
+  const LEVEL_SETTING_LIST = Array.from({ length: 5 }).map((_item, index) => ({
     text: `${index + 1}`,
     value: `${index + 1}`,
   }));
@@ -15,9 +14,10 @@ export default function TreeTableLevel(props) {
     <SettingItem>
       <div className="settingItemTitle">{_l('默认展开层级')}</div>
       <AnimationWrap>
-        {LEVEL_SETTING_LIST.map(({ text, value }) => {
+        {LEVEL_SETTING_LIST.map(({ text, value }, index) => {
           return (
             <div
+              key={index}
               className={cx('animaItem overflow_ellipsis', { active: defaultlayer === value })}
               onClick={() => onChange(handleAdvancedSettingChange(data, { defaultlayer: value }))}
             >

@@ -346,7 +346,7 @@ export const getTypeList = (data = {}) => {
   }
 };
 
-export const getOtherSelectField = (control, value) => {
+export const getOtherSelectField = (control, value: string) => {
   let data = [];
 
   if (control.type === 45 && control.enumDefault === 1) {

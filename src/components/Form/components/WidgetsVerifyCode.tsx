@@ -6,7 +6,14 @@ import { telIsValidNumber } from 'ming-ui/components/PhoneNumberInput/util';
 import { captcha } from 'ming-ui/functions';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
 
-export default class WidgetsVerifyCode extends Component<any, any> {
+export interface WidgetsVerifyCodeState {
+  isSubmit: boolean;
+  count: number;
+}
+
+export default class WidgetsVerifyCode extends Component<any, WidgetsVerifyCodeState> {
+  declare timer: NodeJS.Timeout | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -16,7 +23,7 @@ export default class WidgetsVerifyCode extends Component<any, any> {
     this.inputRef = React.createRef();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     if (
       !_.isEqual(_.pick(nextProps, ['verifyCode']), _.pick(this.props, ['verifyCode'])) ||
       !_.isEqual(_.pick(nextState, ['isSubmit', 'count']), _.pick(this.state, ['isSubmit', 'count']))
@@ -117,11 +124,11 @@ export default class WidgetsVerifyCode extends Component<any, any> {
     clearInterval(this.timer);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.handleClear();
   }
 
-  render() {
+  override render() {
     const { size, verifyCode, handleChange } = this.props;
     const { isSubmit, count } = this.state;
 

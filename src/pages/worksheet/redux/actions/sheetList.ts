@@ -46,7 +46,7 @@ export const formatLeftSectionDetail = data => {
   });
 };
 
-let getAppSectionDetailRequest;
+let getAppSectionDetailRequest: ApiResultOf<HapApi.MD.Entity.Apk.AppSectionDomainModel> | undefined;
 
 export function getSheetList(args) {
   return function (dispatch) {
@@ -255,7 +255,7 @@ export function updateSheetListIsUnfold(visible) {
   };
 }
 
-export function updateAppItemInfo(id, type, name: string) {
+export function updateAppItemInfo(_id, type, name: string) {
   return function (dispatch) {
     if (type) {
       dispatch(updatePageInfo({ pageName: name }));
@@ -592,12 +592,12 @@ export function addAppSection(args) {
   };
 }
 
-const iconMap = {
+const iconMap: Record<string, string> = {
   worksheet: 'table',
   customPage: 'dashboard',
   chatbot: 'sys_17_6_reddit',
 };
-const enumTypeMap = {
+const enumTypeMap: Record<string, number> = {
   worksheet: 0,
   customPage: 1,
   chatbot: 3,

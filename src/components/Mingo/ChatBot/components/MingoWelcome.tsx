@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
@@ -300,7 +300,7 @@ const APP_QUICK_ACTIONS = [
 // 3) 随机一条 TryTry 问题 → 聚焦并填入
 // 嵌入态（embed）：@ mention 呼出应用选择浮层在 iframe 内不适用，整列统一为最后一类（TryTry 推荐问题，
 // type=fill 点击直接发起对话），去掉 @ 与搭建样例，取 3 条不重复。
-function buildTrySamples(embed) {
+function buildTrySamples(embed: boolean) {
   if (embed) {
     return pickRandomSamples(3, TRY_TRY_LIST).map(item => ({ type: 'fill', text: (item || {}).text || '' }));
   }
@@ -328,7 +328,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
   const [activeTab, setActiveTab] = useState('ask');
   const [questions, setQuestions] = useState([]);
   const [questionStatus, setQuestionStatus] = useState('idle'); // idle | loading | done | error
-  const questionAbortRef = useRef(null);
+  const questionAbortRef = useRef<AbortController | null>(null);
   const promptInputRef = useRef(null);
   // 欢迎动图重播：Mingo 抽屉 destroyOnClose=false，关闭不销毁、重开不会重渲染，play-once gif 会停在末帧。
   // 用 IntersectionObserver 观察稳定容器，每次重新可见就给 <img> 换 key（重建元素）→ 从头再播一次。
@@ -428,7 +428,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
       questionAbortRef.current?.abort();
       setQuestions([]);
       setQuestionStatus('idle');
-      return;
+      return undefined;
     }
 
     loadQuestions();
@@ -549,7 +549,10 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
   }, [appId]);
 
   // 点击"试一试"：第 1 条（mention）聚焦并呼出 @ 浮层；下面两条（搭建示例 / 推荐问题）直接提交消息
-  function handleTrySelect(sample) {
+  function handleTrySelect(
+    sample:
+      { type: string; text: string | undefined; isNew: boolean } | { type: string; text: string; isNew?: undefined },
+  ) {
     if (sample.type === 'mention') {
       promptInputRef.current?.insertAt();
       return;
@@ -614,7 +617,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
               existingFiles={draftAttachments}
               allowMimeTypes={AGENT_ATTACHMENT_MIME_TYPES}
               dropElementId={PROMPT_INPUT_ID}
-              onAdd={(up, files) => {
+              onAdd={(_up, files) => {
                 setDraftAttachments(prev => [
                   ...prev,
                   ...files.map(f => ({
@@ -629,14 +632,14 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
                 // 选完文件把焦点交回输入框，便于继续输入
                 setTimeout(() => promptInputRef.current && promptInputRef.current.focus(), 0);
               }}
-              onUploadProgress={(up, file) => {
+              onUploadProgress={(_up, file) => {
                 const progress = ((file.loaded / file.size) * 100).toFixed(0);
 
                 setDraftAttachments(prev =>
                   prev.map(f => (f.id === file.id ? { ...f, status: 'uploading', file, progress } : f)),
                 );
               }}
-              onUploaded={(up, file, response) => {
+              onUploaded={(_up, file, response) => {
                 const commonAttachment = formatResponseData(file, response);
 
                 setDraftAttachments(prev =>

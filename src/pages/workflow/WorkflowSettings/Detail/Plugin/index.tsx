@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { LoadDiv, ScrollView } from 'ming-ui';
@@ -15,7 +15,7 @@ export default class Plugin extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -23,7 +23,7 @@ export default class Plugin extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -127,7 +127,7 @@ export default class Plugin extends Component<any, any> {
     this.setState({ saveRequest: true });
   };
 
-  render() {
+  override render() {
     const { data } = this.state;
 
     if (_.isEmpty(data)) {

@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import worksheetAjax from 'src/api/worksheet';

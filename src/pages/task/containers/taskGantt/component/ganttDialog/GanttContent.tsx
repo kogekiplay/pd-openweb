@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import moment from 'moment';
 import config from './config';
 import GraphBg from './GraphBg';
@@ -9,18 +9,22 @@ import TimeHeader from './TimeHeader';
 
 const { TYPE_TO_WIDTH } = config;
 export default class ganttContent extends Component<any, any> {
+  declare graphWrap: HTMLDivElement | null | undefined;
+
   /**
    * 组件成功挂载
    * 1. 绑定滚动事件以实现同步滚动
    * 2. 重新计算甘特图的背景高度
    */
-  componentDidMount() {
+  override componentDidMount() {
     const $taskList = document.querySelector('.taskListWrap');
-    this.graphWrap.addEventListener('scroll', e => {
-      e.currentTarget.className == config.scrollingEle && ($taskList.scrollTop = e.target.scrollTop);
+    const { graphWrap } = this;
+    // 监听挂在 graphWrap 自己身上（scroll 不冒泡），e.target / e.currentTarget 都是它
+    graphWrap.addEventListener('scroll', () => {
+      graphWrap.className == config.scrollingEle && ($taskList.scrollTop = graphWrap.scrollTop);
     });
-    this.graphWrap.addEventListener('mouseover', e => {
-      config.scrollingEle = e.currentTarget.className;
+    graphWrap.addEventListener('mouseover', () => {
+      config.scrollingEle = graphWrap.className;
     });
 
     this.computeBgHeight();
@@ -68,11 +72,11 @@ export default class ganttContent extends Component<any, any> {
     $bg.style.height = $taskListWrap.style.height = Math.max(contentHeight, wrapHeight) + 'px';
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.computeBgHeight();
   }
 
-  render() {
+  override render() {
     const { type, beginTime, endTime, ...rest } = this.props;
 
     /**

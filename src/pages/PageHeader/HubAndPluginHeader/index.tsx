@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { string } from 'prop-types';
 import styled from 'styled-components';
@@ -45,14 +45,20 @@ const Wrap = styled.div`
     line-height: 30px;
   }
 `;
-export default class HubAndPluginHeader extends Component<any, any> {
-  static propTypes = {
+export interface HubAndPluginHeaderState {
+  indexSideVisible: boolean;
+}
+
+export default class HubAndPluginHeader extends Component<any, HubAndPluginHeaderState> {
+  declare timer: NodeJS.Timeout | undefined;
+
+  static override propTypes = {
     path: string,
   };
   static defaultProps = {
     path: 'integration',
   };
-  state = { indexSideVisible: false };
+  override state = { indexSideVisible: false };
 
   changeIndexVisible = (visible = true) => {
     this.timer = setTimeout(() => {
@@ -60,7 +66,7 @@ export default class HubAndPluginHeader extends Component<any, any> {
     }, 100);
   };
 
-  render() {
+  override render() {
     const { indexSideVisible } = this.state;
     const { path = '' } = this.props;
     const isPlugin = _.includes('/plugin', path);

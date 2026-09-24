@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import moment from 'moment';
 import { DatePicker } from 'ming-ui';
 import { DatePickerFilterWrap } from 'src/pages/Admin/common/styled';
@@ -14,7 +14,7 @@ const DATE_FILTER = [
 
 const formatDate = date => date.format('YYYY-MM-DD');
 
-const getDateFilter = id => {
+const getDateFilter = (id: string) => {
   const today = formatDate(moment());
   const beginOfCurrentMonth = moment().startOf('M');
 
@@ -33,6 +33,7 @@ const getDateFilter = id => {
     case 'currentYear':
       return { startDate: formatDate(moment().startOf('year')), endDate: today };
   }
+  return undefined;
 };
 
 export default function DatePickerFilter(props) {
@@ -40,16 +41,17 @@ export default function DatePickerFilter(props) {
   const $ref = useRef(null);
   let _endDate = formatDate(moment());
 
-  const handleClick = id => {
+  const handleClick = (id: string) => {
     const data = getDateFilter(id);
     updateData(data);
   };
 
   return (
     <DatePickerFilterWrap ref={$ref}>
-      {DATE_FILTER.map(({ id, text }) =>
+      {DATE_FILTER.map(({ id, text }, index) =>
         id === 'custom' ? (
           <DatePicker.RangePicker
+            key={index}
             offset={{ left: -533, top: -220 }}
             popupParentNode={() => $ref.current}
             max={moment(_endDate)}

@@ -97,11 +97,10 @@ const webpackCompile = (err, stats) => {
 
   console.log('[webpack]', output);
 
+  /* 这里原先还有一段 console.log(chalk.yellow(json.warnings.join('\n')))。webpack 5 的 toJson().warnings
+     是 { message, ... } 对象不是字符串，每次编译完终端里就多出几行黄色的 [object Object]；
+     而这些告警上面的 stats.toString 已经完整打印过一遍（WARNING in ...），不需要再印。 */
   const json = stats.toJson();
-
-  if (json.warnings && json.warnings.length) {
-    console.log(chalk.yellow(json.warnings.join('\n')));
-  }
 
   const isError = !!json.errors.length;
   let title;

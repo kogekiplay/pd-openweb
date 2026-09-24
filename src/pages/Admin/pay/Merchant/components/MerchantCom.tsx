@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -90,7 +90,7 @@ export default class MerchantCom extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getDataList();
     this.getMerchantUsage();
   }
@@ -122,9 +122,18 @@ export default class MerchantCom extends Component<any, any> {
     if (!window.platformENV.isOverseas && !window.platformENV.isLocal) return;
 
     const { projectId } = this.props;
-    paymentAjax.getMerchantUsage({ projectId }).then(res => {
-      this.setState({ merchantUsage: res });
-    });
+    /* silent + catch：这只是一个可选的数量提示，拿不到就不显示。
+       实测（2026-09-23）本部署上这个接口带着正确的 projectId 也返回异常「组织编号不能为空」——
+       是服务端没配它依赖的东西，前端没传错。原先既没 silent 也没 catch：
+       mdyAPI 遇到异常默认弹错误提示，于是每次打开商户页都弹一条用户无能为力的「组织编号不能为空」，
+       弹提示用的 antd 静态 message 又报「Static function can not consume context」，
+       加上这个 promise 没人接，控制台再多一条 Uncaught (in promise)。 */
+    paymentAjax
+      .getMerchantUsage({ projectId }, { silent: true })
+      .then(res => {
+        this.setState({ merchantUsage: res });
+      })
+      .catch(() => {});
   };
 
   onClickTrial = record => {
@@ -261,7 +270,7 @@ export default class MerchantCom extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId, featureType, myPermissions } = this.props;
     const {
       createMerchantVisible,
@@ -285,7 +294,7 @@ export default class MerchantCom extends Component<any, any> {
         dataIndex: 'merchantPaymentChannel',
         ellipsis: true,
         width: 200,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { merchantPaymentChannel } = record;
           return PAY_CHANNEL_TXT[merchantPaymentChannel] || '';
         },
@@ -293,7 +302,7 @@ export default class MerchantCom extends Component<any, any> {
       {
         title: _l('状态'),
         dataIndex: 'status',
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <Fragment>
               <span
@@ -333,7 +342,7 @@ export default class MerchantCom extends Component<any, any> {
       {
         title: _l('支付渠道'),
         dataIndex: 'paymentMethod',
-        render: (text, record) => {
+        render: (_text, record) => {
           const { aliPayStatus, wechatPayStatus } = record;
 
           if (_.includes([1, 2], aliPayStatus) && _.includes([1, 2], wechatPayStatus)) {
@@ -351,7 +360,7 @@ export default class MerchantCom extends Component<any, any> {
         title: _l('操作人'),
         dataIndex: 'accountInfo',
         width: 160,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { createAccount = {} } = record;
           const { accountId, fullname, avatar } = createAccount;
           return (
@@ -375,7 +384,7 @@ export default class MerchantCom extends Component<any, any> {
         dataIndex: 'accountId',
         width: 'fit-content',
         fixed: 'right',
-        render: (text, record) => {
+        render: (_text, record) => {
           const { status, merchantPaymentChannel } = record;
 
           // 0-注册中 1-待开通 2-开通中 3-已开通 4-已禁用
@@ -491,6 +500,7 @@ export default class MerchantCom extends Component<any, any> {
                 </Fragment>
               );
           }
+          return undefined;
         },
       },
     ];

@@ -97,7 +97,10 @@ const formatScanQRCodeResult = resultStr => {
 };
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  declare id: string;
+  declare animationFrame: number | null;
+
+  static override propTypes = {
     projectId: PropTypes.string,
     disablePhoto: PropTypes.bool,
     onChange: PropTypes.func,
@@ -130,13 +133,13 @@ export default class Widgets extends Component<any, any> {
     this.zxingComponent = null;
     this.zxingCodeReader = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     // if (window.isDingTalk || window.isWeLink || isWx || window.isWxWork || window.isFeiShu || window.customScan) {
     //   return;
     // }
     // this.loadBuildInScan(false);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.clearQrcode();
   }
   get formatsToSupport() {
@@ -216,6 +219,7 @@ export default class Widgets extends Component<any, any> {
     if (scantype === '2') {
       return ['qrCode'];
     }
+    return undefined;
   };
   // 加载内置的扫码
   loadBuildInScan = () => {
@@ -439,7 +443,7 @@ export default class Widgets extends Component<any, any> {
       })
       .catch(() => {});
   };
-  handleScanFile = e => {
+  handleScanFile = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
     if (e.target.files.length == 0) {
       return;
     }
@@ -816,7 +820,7 @@ export default class Widgets extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { visible, isError, scanShape, uploadFile, loadShadeRegion } = this.state;
     const { className, disablePhoto, children, scantype = '0' } = this.props;
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import axios from 'axios';
 import cx from 'classnames';
@@ -176,7 +176,7 @@ const Signature = props => {
 
   const $ref = useRef(null);
   const signatureRef = useRef<HTMLCanvasElement | null>(null);
-  const signaturePadRef = useRef(null);
+  const signaturePadRef = useRef<SignaturePad | null>(null);
   const valueRef = useRef(value);
 
   useEffect(() => {
@@ -246,7 +246,7 @@ const Signature = props => {
     }
   };
 
-  const showPopup = visible => {
+  const showPopup = (visible: boolean) => {
     getPopupDirection();
     if (visible) {
       setTimeout(initCanvas, 100);

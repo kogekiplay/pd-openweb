@@ -15,7 +15,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addTaskFlow: function (args, options) {
+  addTaskFlow: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/addTaskFlow';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowaddTaskFlow', JSON.stringify(args), $.extend(base, options));
@@ -32,7 +32,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNodeInfo: function (args, options?) {
+  getNodeInfo: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/getNodeInfo';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowgetNodeInfo', JSON.stringify(args), $.extend(base, options));
@@ -52,7 +52,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveConfig: function (args, options?) {
+  saveConfig: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/saveConfig';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowsaveConfig', JSON.stringify(args), $.extend(base, options));
@@ -66,7 +66,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  upgradeTaskFlow: function (args, options) {
+  upgradeTaskFlow: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/upgradeTaskFlow';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowupgradeTaskFlow', JSON.stringify(args), $.extend(base, options));
@@ -86,7 +86,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateTaskFlow: function (args, options) {
+  updateTaskFlow: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/updateTaskFlow';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowupdateTaskFlow', JSON.stringify(args), $.extend(base, options));
@@ -103,7 +103,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteNode: function (args, options?) {
+  deleteNode: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/deleteNode';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowdeleteNode', JSON.stringify(args), $.extend(base, options));
@@ -119,7 +119,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteTaskFlow: function (args, options) {
+  deleteTaskFlow: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/deleteTaskFlow';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowdeleteTaskFlow', JSON.stringify(args), $.extend(base, options));
@@ -134,7 +134,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskFlowForTest: function (args, options) {
+  getTaskFlowForTest: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/getTaskFlowForTest';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'taskFlowgetTaskFlowForTest', args, $.extend(base, options));
@@ -151,7 +151,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  nodeDataPreview: function (args, options?) {
+  nodeDataPreview: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/nodeDataPreview';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlownodeDataPreview', JSON.stringify(args), $.extend(base, options));
@@ -174,7 +174,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateNode: function (args, options?) {
+  updateNode: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/updateNode';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowupdateNode', JSON.stringify(args), $.extend(base, options));
@@ -188,7 +188,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  recoverTaskFlow: function (args, options) {
+  recoverTaskFlow: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/recoverTaskFlow';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowrecoverTaskFlow', JSON.stringify(args), $.extend(base, options));
@@ -212,7 +212,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  publishTask: function (args, options?) {
+  publishTask: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/publishTask';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowpublishTask', JSON.stringify(args), $.extend(base, options));
@@ -234,7 +234,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  initEmpty: function (args, options?) {
+  initEmpty: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/initEmpty';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowinitEmpty', JSON.stringify(args), $.extend(base, options));
@@ -250,7 +250,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  list: function (args, options) {
+  list: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/list';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowlist', JSON.stringify(args), $.extend(base, options));
@@ -272,7 +272,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  init: function (args, options?) {
+  init: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/init';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowinit', JSON.stringify(args), $.extend(base, options));
@@ -294,7 +294,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  createSyncTasks: function (args, options?) {
+  createSyncTasks: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/createSyncTasks';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowcreateSyncTasks', JSON.stringify(args), $.extend(base, options));
@@ -310,7 +310,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskFlow: function (args, options?) {
+  getTaskFlow: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/getTaskFlow';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowgetTaskFlow', JSON.stringify(args), $.extend(base, options));
@@ -329,7 +329,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  renameNode: function (args, options?) {
+  renameNode: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/renameNode';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowrenameNode', JSON.stringify(args), $.extend(base, options));
@@ -346,7 +346,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  copy: function (args, options) {
+  copy: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/copy';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowcopy', JSON.stringify(args), $.extend(base, options));
@@ -367,7 +367,7 @@ const taskFlow = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addNode: function (args, options?) {
+  addNode: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlow/addNode';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'taskFlowaddNode', JSON.stringify(args), $.extend(base, options));

@@ -1,4 +1,4 @@
-import React, {
+import {
   forwardRef,
   useCallback,
   useEffect,
@@ -155,8 +155,8 @@ function FixedTable(props, ref) {
   window.cache = cache;
   const tableSize = useMemo(
     () => ({
-      width: sum([...new Array(columnCount)].map((a, i) => getColumnWidth(i) || 200)),
-      height: sum([...new Array(rowCount)].map((a, i) => getRowHeight(i) || 34)) - (hasSubListFooter ? 8 : 0),
+      width: sum([...new Array(columnCount)].map((_a, i) => getColumnWidth(i) || 200)),
+      height: sum([...new Array(rowCount)].map((_a, i) => getRowHeight(i) || 34)) - (hasSubListFooter ? 8 : 0),
     }),
     [getRowHeight, columnCount, rowCount, sheetColumnWidths, width],
   );

@@ -1,4 +1,4 @@
-﻿import React, { useCallback, useEffect, useState } from 'react';
+﻿import { useCallback, useEffect, useState } from 'react';
 import cx from 'classnames';
 import { find } from 'lodash';
 import styled from 'styled-components';
@@ -75,7 +75,6 @@ const NewConversationButton = styled.div`
 `;
 
 function ConversationList({
-  name,
   appId,
   isMobile,
   isCharge,

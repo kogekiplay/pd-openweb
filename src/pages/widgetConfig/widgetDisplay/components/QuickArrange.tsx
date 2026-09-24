@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import { flatten, head, isEmpty, last } from 'lodash';
@@ -36,7 +36,7 @@ export default function QuickArrange({ widgets, setWidgets, status }) {
     $originWidgets.current = widgets;
   }, [status.saveIndex]);
 
-  const quickArrange = columnNumber => {
+  const quickArrange = (columnNumber: number) => {
     if (activeColumn !== columnNumber) {
       setActive(columnNumber);
     }
@@ -100,7 +100,8 @@ export default function QuickArrange({ widgets, setWidgets, status }) {
   // 还原
   const restore = e => {
     e.stopPropagation();
-    const controls = flatten(widgets);
+    // widgets 是没类型的 prop，lodash 的 flatten 由此推出 unknown[]；这里只依赖 controlId
+    const controls = flatten<{ controlId?: string }>(widgets);
     const nextWidgets = $originWidgets.current.map(row =>
       row.map(item => {
         const data = controls.find(({ controlId }) => item.controlId === controlId);

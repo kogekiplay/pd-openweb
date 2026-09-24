@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import Icon from 'ming-ui/components/Icon';
@@ -28,7 +28,11 @@ const getCalendarAtData = ({ createUser, members = [] }) => {
     .slice(0, 20);
 };
 
-export default class CalendarCommenter extends Component<any, any> {
+export interface CalendarCommenterState {
+  showCount: boolean;
+}
+
+export default class CalendarCommenter extends Component<any, CalendarCommenterState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,7 +40,7 @@ export default class CalendarCommenter extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const {
       calendar: { id, title, discussions, recurTime },
       change,

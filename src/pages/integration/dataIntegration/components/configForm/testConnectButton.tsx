@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Icon, LoadDiv } from 'ming-ui';
 import { TEST_STATUS } from '../../constant';
@@ -60,7 +59,13 @@ const TestButton = styled.div`
   }
 `;
 
-export default function TestConnectButton(props) {
+export interface TestConnectButtonProps {
+  testStatus: { className: string; text: string };
+  onTestConnect: () => void;
+  className: string;
+}
+
+export default function TestConnectButton(props: TestConnectButtonProps) {
   const { testStatus, onTestConnect, className } = props;
 
   return (

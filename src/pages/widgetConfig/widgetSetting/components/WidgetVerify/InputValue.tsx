@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import _ from 'lodash';
 import { Input } from 'ming-ui';
 import { formatNumberThousand } from 'src/utils/control';
@@ -24,7 +24,7 @@ const displayValue = value => {
 export default function InputValue({ type, value, className, onChange, onBlur, placeholder }: { className?: string; placeholder?: string; [key: string]: any }) {
   const [isEditing, setEditing] = useState(false);
 
-  const parseValue = value => {
+  const parseValue = (value: string) => {
     const dealValue = [2, 10].includes(type)
       ? value.replace(/[^\d]/g, '')
       : value

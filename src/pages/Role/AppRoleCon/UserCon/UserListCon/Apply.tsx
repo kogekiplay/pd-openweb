@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useSetState } from 'react-use';
@@ -73,7 +73,7 @@ function Apply(props) {
       name: _l('申请人'),
       className: 'nameWrapTr',
       minW: 240,
-      render: (text, data) => {
+      render: (_text, data) => {
         const user = data.accountInfo;
         return (
           <div className={cx('name flexRow alignItemsCenter')}>
@@ -100,7 +100,7 @@ function Apply(props) {
     {
       id: 'remark',
       name: _l('申请说明'),
-      render: (text, data) => {
+      render: (_text, data) => {
         return (
           <div className="overflow_ellipsis breakAll" title={data.remark}>
             {data.remark}
@@ -114,7 +114,7 @@ function Apply(props) {
       sorter: true,
       className: 'timeTr',
       minW: 130,
-      render: (text, data) => {
+      render: (_text, data) => {
         return createTimeSpan(data.createTime);
       },
     },
@@ -122,7 +122,7 @@ function Apply(props) {
       id: 'option',
       name: '',
       className: 'optionWrapTr',
-      render: (text, data) => {
+      render: (_text, data) => {
         return (
           <div className="">
             {renderAction({
@@ -191,7 +191,7 @@ function Apply(props) {
       title: _l('拒绝'),
       closable: false,
       anim: false,
-      description: <Textarea height={120} id="applyRoleRefuse" placeholder={_l('请填写拒绝原因')} />,
+      description: <Textarea minHeight={120} id="applyRoleRefuse" placeholder={_l('请填写拒绝原因')} />,
       onOk: () => {
         const remark = document.getElementById('applyRoleRefuse').value.trim();
         appManagementAjax

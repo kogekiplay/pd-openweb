@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import kc from 'src/api/kc';
 import RegExpValidator from 'src/utils/expression';
@@ -9,11 +9,11 @@ export default class KcFileMessage extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.getNodeDetail();
     }
@@ -43,7 +43,7 @@ export default class KcFileMessage extends Component<any, any> {
     message.kcFile = kcFile;
     return message;
   }
-  render() {
+  override render() {
     const { message, session } = this.props;
     const { title } = message.card;
     const isPicture = RegExpValidator.fileIsPicture(`.${RegExpValidator.getExtOfFileName(title)}`);

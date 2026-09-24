@@ -1,4 +1,4 @@
-import React, { isValidElement, useState } from 'react';
+import { isValidElement, useState } from 'react';
 import { CheckCircleIcon, CircleIcon, Clock3Icon, XCircleIcon } from 'lucide-react';
 import styled from 'styled-components';
 import { CodeBlock } from './CodeBlock';
@@ -154,7 +154,7 @@ const RunningState = styled.div`
   }
 `;
 
-function inferLanguage(value) {
+function inferLanguage(value: string) {
   const normalized = value.trim();
 
   if (!normalized) return 'text';

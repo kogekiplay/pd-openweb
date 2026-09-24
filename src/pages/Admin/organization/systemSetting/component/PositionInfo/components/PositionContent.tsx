@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -89,7 +89,7 @@ class PositionContent extends Component<any, any> {
     this.props.updateUserPageIndex(page);
     this.props.getUserList({ pageIndex: page, jobId: currentPosition.jobId });
   };
-  render() {
+  override render() {
     const { currentPosition, allUserCount, userPageIndex, userLoading, selectUserIds, projectId } = this.props;
     return (
       <Fragment>

@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState } from 'react';
+import { Component, Fragment, useState } from 'react';
 import { Input } from 'antd';
 import styled from 'styled-components';
 import { ColorPicker } from 'ming-ui';
@@ -61,7 +61,7 @@ export default class Quadrant extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  renderQuadrantItem(data) {
+  renderQuadrantItem(data: { textKey: string; bgColorKey: string; name: string }) {
     const { quadrant, onChangeQuadrant } = this.props;
     return (
       <Fragment>
@@ -85,7 +85,7 @@ export default class Quadrant extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { quadrant, onChangeQuadrant } = this.props;
     return (
       <Fragment>

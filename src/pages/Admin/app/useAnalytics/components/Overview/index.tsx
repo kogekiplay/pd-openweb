@@ -182,7 +182,7 @@ export default class Overview extends Component<any, any> {
     this.totalTxtElements = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.appId) {
       return;
     }
@@ -191,7 +191,7 @@ export default class Overview extends Component<any, any> {
     this.getChartData();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     _.keys(this.totalTxtElements).forEach(type => {
       this.updateTotalTxtWidth(type);
     });
@@ -327,7 +327,8 @@ export default class Overview extends Component<any, any> {
     return formatFileSize(total, 2);
   };
 
-  updateChartData = ({ workflow = {}, record = {}, app = {}, attachment = {}, isFilterByDepartment }) => {
+  // isFilterByDepartment 可以不传（应用分析页刷新图表时就不传），按不筛部门算
+  updateChartData = ({ workflow = {}, record = {}, app = {}, attachment = {}, isFilterByDepartment = false }) => {
     const { totalNumberOfexecute = 0, statisticsResult: workflowStatisticsResult } = workflow;
     const {
       totalNumberOfRow = 0,
@@ -529,7 +530,7 @@ export default class Overview extends Component<any, any> {
       },
     });
   };
-  linkHref = type => {
+  linkHref = (type: string) => {
     const { projectId } = this.props;
     location.assign(pathCompletion(`/admin/${type}/${projectId}`));
   };
@@ -542,7 +543,7 @@ export default class Overview extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     let {
       currentDimension,

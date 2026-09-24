@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Checkbox } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -53,7 +53,7 @@ export default class WaitingPay extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (!orderId) {
       alert(_l('传入参数无效'), 3);
       return false;
@@ -75,6 +75,7 @@ export default class WaitingPay extends Component<any, any> {
           }
         });
       });
+    return undefined;
   }
 
   getHidBalance = () => {
@@ -106,7 +107,7 @@ export default class WaitingPay extends Component<any, any> {
   viewByCurrRecordObj() {
     const { currRecordObj } = this.state;
     const { ReCharge, Ultimate, Enterprise } = billCommon.orderRecordType || {};
-    if (!currRecordObj) return;
+    if (!currRecordObj) return undefined;
     const { status, recordType, price } = currRecordObj;
     const hasFinanceAuth = checkPermission(Config.projectId, PERMISSION_ENUM.FINANCE); //是否有财务权限
 
@@ -142,6 +143,7 @@ export default class WaitingPay extends Component<any, any> {
       payStyle: firstItem,
       loading: false,
     });
+    return undefined;
   }
 
   renderTitle() {
@@ -318,7 +320,7 @@ export default class WaitingPay extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { payStyle, balanceNotEnough, currRecordObj, needEmail, isPay, loading, balance } = this.state;
 
     if (loading) {

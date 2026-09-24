@@ -1,4 +1,3 @@
-import React from 'react';
 import { CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, InfoCircleFilled } from '@ant-design/icons';
 import _ from 'lodash';
 import { isUnTextWidget } from 'src/components/Form/core/utils';

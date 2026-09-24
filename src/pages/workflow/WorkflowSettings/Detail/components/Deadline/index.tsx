@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Dropdown } from 'ming-ui';
 import Time from 'ming-ui/components/NewTimePicker';
 import { TIME_TYPE, TIME_TYPE_NAME } from '../../../enum';
@@ -33,7 +33,8 @@ export default ({ projectId, processId, relationId, selectNodeId, data, text, mi
         data={UNIT_List}
         value={data.unit}
         border
-        onChange={(unit: string) => {
+        // UNIT_List 的 value 是数字，原来把参数标成了 string
+        onChange={unit => {
           onChange(Object.assign({}, data, { unit }));
         }}
       />
@@ -71,7 +72,7 @@ export default ({ projectId, processId, relationId, selectNodeId, data, text, mi
                 minute: data.dayTime ? parseInt(data.dayTime.split(':')[1]) : 0,
                 second: 0,
               }}
-              onChange={(event, value) => {
+              onChange={(_event, value) => {
                 onChange(
                   Object.assign({}, data, {
                     dayTime: value.hour.toString().padStart(2, '0') + ':' + value.minute.toString().padStart(2, '0'),

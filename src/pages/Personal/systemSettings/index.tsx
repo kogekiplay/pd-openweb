@@ -38,7 +38,7 @@ export default class AccountChart extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
     this.getAvailableMapList();
   }
@@ -59,7 +59,7 @@ export default class AccountChart extends React.Component<any, any> {
     });
 
     fixedDataApi.loadTimeZones().then(res => {
-      const timeZones = [];
+      const timeZones: { text: string; value: number }[] = [];
 
       Object.keys(res).forEach(key => {
         timeZones.push({ text: res[key], value: parseInt(key) });
@@ -93,7 +93,7 @@ export default class AccountChart extends React.Component<any, any> {
   };
 
   // common修改
-  sureSettings(settingNum: string, value, successCallback) {
+  sureSettings(settingNum: string, value, successCallback: () => void) {
     accountSetting
       .editAccountSetting({
         settingType: common.settingOptions[settingNum],
@@ -150,7 +150,7 @@ export default class AccountChart extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     if (this.state.loading) {
       return <LoadDiv className="mTop40" />;
     }

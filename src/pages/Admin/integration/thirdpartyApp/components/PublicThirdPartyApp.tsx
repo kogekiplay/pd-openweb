@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -104,7 +104,7 @@ const PublicThirdPartyApp = forwardRef((props, ref) => {
       dataSourceLoading: true,
       patEnabled: false,
     });
-  const ajaxRef = useRef(null);
+  const ajaxRef = useRef<ApiResult | null>(null);
 
   useImperativeHandle(
     ref,
@@ -121,7 +121,7 @@ const PublicThirdPartyApp = forwardRef((props, ref) => {
         dataIndex: 'name',
         title: _l('应用名称'),
         className: 'flex minWidth120',
-        render: (text, item) => {
+        render: (_text, item) => {
           return (
             <div className="flexRow alignItemsCenter">
               <div className="iconWrap">
@@ -137,7 +137,7 @@ const PublicThirdPartyApp = forwardRef((props, ref) => {
         title: _l('说明'),
         width: 200,
         ellipsis: true,
-        render: (text, item) => {
+        render: (_text, item) => {
           const { desc } = item;
           return (
             <div className="ellipsis">
@@ -152,7 +152,7 @@ const PublicThirdPartyApp = forwardRef((props, ref) => {
         dataIndex: 'scopeType',
         title: _l('使用范围'),
         width: 150,
-        render: (text, item) => {
+        render: (_text, item) => {
           return item.scopeType === 1 ? _l('全部应用') : _l('指定应用');
         },
       },
@@ -160,7 +160,7 @@ const PublicThirdPartyApp = forwardRef((props, ref) => {
         dataIndex: 'status',
         title: _l('是否启用'),
         width: 150,
-        render: (text, item) => {
+        render: (_text, item) => {
           const { status, scopeType, appIds, name } = item;
           return (
             <div>
@@ -195,7 +195,7 @@ const PublicThirdPartyApp = forwardRef((props, ref) => {
         title: _l('操作'),
         width: 100,
         fixed: 'right',
-        render: (text, item) => {
+        render: (_text, item) => {
           return (
             <span className="colorPrimary Hand hoverColorPrimaryLight" onClick={() => setState({ currentItem: item })}>
               {_l('配置范围')}
@@ -224,7 +224,7 @@ const PublicThirdPartyApp = forwardRef((props, ref) => {
   };
 
   /* 设置组织第三方应用开关 */
-  const editSetting = enabled => {
+  const editSetting = (enabled: boolean) => {
     VerifyPasswordConfirm.confirm({
       onOk: () => {
         openAuthorAjax.editSetting({ projectId, enabled, patEnabled }).then(res => {

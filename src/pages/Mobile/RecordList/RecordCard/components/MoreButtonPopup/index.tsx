@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from 'react';
+import { Fragment, memo } from 'react';
 import { useSetState } from 'react-use';
 import styled from 'styled-components';
 import { Icon, PopupWrapper } from 'ming-ui';

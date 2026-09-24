@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon, Skeleton, SvgIcon } from 'ming-ui';
@@ -142,7 +142,13 @@ const Wrap = styled.div`
   }
 `;
 
-export default class UpgradeStatus extends Component<any, any> {
+export interface UpgradeStatusState {
+  indexSideVisible?: boolean | undefined;
+}
+
+export default class UpgradeStatus extends Component<any, UpgradeStatusState> {
+  declare timer: NodeJS.Timeout | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -275,7 +281,7 @@ export default class UpgradeStatus extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { appPkg } = this.props;
     const { pcNaviStyle } = appPkg;
 

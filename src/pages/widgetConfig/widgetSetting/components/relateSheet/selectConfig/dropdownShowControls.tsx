@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';

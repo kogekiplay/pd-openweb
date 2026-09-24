@@ -9,7 +9,7 @@ const scheduleJobLog = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  get: function (args, options) {
+  get: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJobLog/get';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'scheduleJobLogget', args, $.extend(base, options));
@@ -31,7 +31,7 @@ const scheduleJobLog = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  page: function (args, options) {
+  page: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleJobLog/page';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'scheduleJobLogpage', args, $.extend(base, options));

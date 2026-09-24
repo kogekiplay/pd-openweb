@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import styled from 'styled-components';
@@ -53,7 +53,7 @@ function loadCkeditor() {
 }
 
 // CKEditor 的语言标识与 HAP 系统语言 key 不完全一致，需要在这里统一映射。
-const CKEDITOR_LANGUAGE_MAP = {
+const CKEDITOR_LANGUAGE_MAP: Record<string, string> = {
   en: 'en',
   ja: 'ja',
   ms: 'ms',
@@ -315,6 +315,8 @@ const Wrapper = styled.div(
 `,
 );
 class MyUploadAdapter {
+  declare xhr: XMLHttpRequest | undefined;
+
   constructor(loader, tokenArgs, options = {}) {
     this.loader = loader;
     this.tokenArgs = tokenArgs;
@@ -345,7 +347,7 @@ class MyUploadAdapter {
   }
 
   // Initializes XMLHttpRequest listeners.
-  _initListeners(resolve, reject) {
+  _initListeners(_resolve, reject) {
     const xhr = this.xhr;
     const loader = this.loader;
     const genericErrorText = "Couldn't upload file:" + ` ${loader.file.name}.`;
@@ -724,7 +726,7 @@ const RichText = forwardRef((props, ref) => {
           }
 
           if (get(editorDom, 'current.editor.editing.view.document')) {
-            editorDom.current.editor.editing.view.document.on('clipboardInput', (evt, data) => {
+            editorDom.current.editor.editing.view.document.on('clipboardInput', (_evt, data) => {
               const clipboardData = data.dataTransfer.getData('text/html'); // 获取粘贴的 HTML 内容
 
               if (clipboardData && isWordContent(clipboardData)) {
@@ -757,7 +759,7 @@ const RichText = forwardRef((props, ref) => {
 
           lastSavedContentRef.current = editor.getData();
         }}
-        onChange={(event, editor) => {
+        onChange={(_event, editor) => {
           const currentData = editor.getData();
           if (normalizeContent(currentData) === normalizeContent(lastSavedContentRef.current)) return;
           changeSetting && changeSetting(true);
@@ -765,7 +767,7 @@ const RichText = forwardRef((props, ref) => {
             onActualSave(currentData);
           }
         }}
-        onBlur={(event, editor) => {
+        onBlur={(_event, editor) => {
           window.richTextDialogIsActive = false;
           const currentData = editor.getData();
 

@@ -7,7 +7,7 @@ import previewAttachments, { transformQiniuUrl } from 'src/components/previewAtt
  * 单条投票项
  */
 class VoteItem extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     voteID: PropTypes.string,
     checked: PropTypes.bool,
     option: PropTypes.object,
@@ -15,7 +15,7 @@ class VoteItem extends React.Component<any, any> {
     changeSelect: PropTypes.func,
   };
 
-  render() {
+  override render() {
     const { voteID, option, optionType, checked, changeSelect, ...restProps } = this.props;
     const itemDomId = voteID + option.optionIndex + Math.random();
     return (

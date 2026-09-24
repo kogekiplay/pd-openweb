@@ -1,11 +1,15 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
 import './ProjectSelect.less';
 
-export default class ProjectSelect extends Component<any, any> {
-  static propTypes = {
+export interface ProjectSelectState {
+  isSlideDown: boolean;
+}
+
+export default class ProjectSelect extends Component<any, ProjectSelectState> {
+  static override propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func,
   };
@@ -33,7 +37,7 @@ export default class ProjectSelect extends Component<any, any> {
       </MenuItem>
     ));
   }
-  render() {
+  override render() {
     const { value, onChange } = this.props;
     const { isSlideDown } = this.state;
     return (

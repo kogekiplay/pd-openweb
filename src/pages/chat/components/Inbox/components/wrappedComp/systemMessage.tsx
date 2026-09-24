@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, PureComponent, Suspense } from 'react';
+import { Fragment, lazy, PureComponent, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { match } from 'path-to-regexp';
 import styled from 'styled-components';
@@ -38,7 +38,7 @@ const Done = styled.span`
 const LoadableExecDialog = lazy(() => import('src/pages/workflow/components/ExecDialog'));
 const LoadableAddressBook = lazy(() => import('src/pages/chat/lib/addressBook'));
 
-const removeWebUrlPrefix = href => {
+const removeWebUrlPrefix = (href: string | undefined) => {
   const url = (href || '').toLocaleLowerCase();
   const webUrl = (md.global.Config.WebUrl || '').toLocaleLowerCase().replace(/\/+$/, '');
 
@@ -55,12 +55,14 @@ const removeWebUrlPrefix = href => {
  */
 
 export default class SystemMessage extends PureComponent<any, any> {
-  state = {
+  declare msg: HTMLSpanElement | null | undefined;
+
+  override state = {
     showAddressBook: false,
     processInfo: null,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const that = this;
 
     if (this.msg) {
@@ -250,7 +252,7 @@ export default class SystemMessage extends PureComponent<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { Message = {}, createTime, inboxType, app = null, processId = null, status, readTime } = this.props;
     const { showAddressBook, processInfo } = this.state;
     const { typeName, isFavorite, inboxId } = formatInboxItem(this.props);

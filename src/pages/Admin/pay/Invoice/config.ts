@@ -6,7 +6,7 @@ export const TABS = [
 ];
 
 // 税号状态文本
-export const TAX_STATUS_TEXT = { 0: _l('试用中'), 5: _l('已付费'), 99: _l('已过期') };
+export const TAX_STATUS_TEXT: Record<number, string> = { 0: _l('试用中'), 5: _l('已付费'), 99: _l('已过期') };
 
 export const STEPS = [{ title: _l('填写开票税号') }, { title: _l('完善开票配置') }, { title: _l('导入商品管理表') }];
 
@@ -18,7 +18,7 @@ export const STATISTIC = [
   { id: 'waitInvoiceAmount', text: _l('未开票金额') },
 ];
 
-export const INVOICE_TYPE = {
+export const INVOICE_TYPE: Record<number, string> = {
   1: _l('数电专票'),
   2: _l('数电普票'),
 };

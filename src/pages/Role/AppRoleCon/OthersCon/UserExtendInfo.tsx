@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -126,7 +126,7 @@ export default function UserExtendInfo(props) {
       .catch(err => alert(err));
   };
 
-  const handleChange = (id, value, isAnd) => {
+  const handleChange = (id, value: number | undefined, isAnd) => {
     const currentValue = isAnd ? 1 : 0;
 
     if (value === currentValue) return;

@@ -45,7 +45,7 @@ export default class Con extends React.Component<any, any> {
     this.props.onAction(action, data);
   };
 
-  render() {
+  override render() {
     const { appId, dataList, roleId, isForPortal, roleList } = this.props;
     const sysList = roleList.filter(o => sysRoleType.includes(o.roleType));
     const List = roleList.filter(o => !sysRoleType.includes(o.roleType));
@@ -54,10 +54,11 @@ export default class Con extends React.Component<any, any> {
       <ul>
         {!isForPortal && sysList.length > 0 && <Wrap>{_l('系统')}</Wrap>}
         {!isForPortal &&
-          sysList.map(o => {
+          sysList.map((o, index) => {
             // item, dataList, onAction, roleId, onChoose, isForPortal
             return (
               <ItemCon
+                key={index}
                 appId={appId}
                 item={o}
                 onChoose={roleId => {

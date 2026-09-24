@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { bool, func, number, oneOfType, shape, string } from 'prop-types';
 import styled from 'styled-components';
@@ -346,7 +346,7 @@ export default function Steps(props) {
             >
               {filterOptions.map((option, index: number) => {
                 return (
-                  <div className="portraitPointItem">
+                  <div key={option.key} className="portraitPointItem">
                     <Tooltip
                       title={(from === 'recordInfo' && disabled) || !showTip ? '' : <span>{option.value}</span>}
                       placement={tipDirection || 'top'}
@@ -374,7 +374,7 @@ export default function Steps(props) {
               <div className="portraitScaleContent">
                 {filterOptions.map((option, index: number) => {
                   return (
-                    <span className="portraitContentItem">
+                    <span key={option.key} className="portraitContentItem">
                       <span
                         style={{
                           color: index <= currentValue ? 'var(--color-text-title)' : 'var(--color-text-tertiary)',
@@ -470,7 +470,7 @@ export default function Steps(props) {
           >
             {filterOptions.map((option, index: number) => {
               return (
-                <div className="pointItem">
+                <div key={option.key} className="pointItem">
                   <Tooltip
                     title={(from === 'recordInfo' && disabled) || !showTip ? '' : <span>{option.value}</span>}
                     placement={tipDirection || 'top'}
@@ -502,7 +502,7 @@ export default function Steps(props) {
             <div className="scaleContent">
               {filterOptions.map((option, index: number) => {
                 return (
-                  <span className="contentItem">
+                  <span key={option.key} className="contentItem">
                     <span
                       style={{
                         color: index <= currentValue ? 'var(--color-text-title)' : 'var(--color-text-tertiary)',

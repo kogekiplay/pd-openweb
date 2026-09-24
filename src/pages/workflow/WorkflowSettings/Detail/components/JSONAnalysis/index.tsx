@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import { JSONPath } from 'jsonpath-plus';
 import _ from 'lodash';
@@ -12,7 +12,7 @@ export default ({ list, isIntegration = false, json }) => {
       }
 
       return (
-        <Fragment>
+        <Fragment key={i}>
           <li className="flexRow" key={i}>
             <div className={cx('w180 ellipsis', { pLeft20: item.dataSource })}>{item.controlName || ''}</div>
             {isIntegration && <div className="w120 ellipsis">{getControlTypeName(item)}</div>}

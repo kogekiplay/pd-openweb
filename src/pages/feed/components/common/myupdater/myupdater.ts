@@ -108,6 +108,7 @@ const MyUpdater = {
               $(this).parent().next().find("input[type='button']").click();
               return false;
             }
+            return undefined;
           });
         } else if (targetDivID == '#Vote_updater') {
           $('#voteLastHour').val(new Date().getHours());
@@ -178,7 +179,7 @@ const MyUpdater = {
     let $textareaUpdater = $('#textarea_Updater');
     let textareaUpdaterEl = $textareaUpdater.get(0) as MentionsInputElement;
 
-    const updateTextareaHeight = minHeight => {
+    const updateTextareaHeight = (minHeight: number) => {
       if (typeof $textareaUpdater.autoTextarea === 'function') {
         $textareaUpdater.autoTextarea({
           maxHeight: 220,
@@ -404,6 +405,7 @@ const MyUpdater = {
         $btnShare.prop('disabled', false).removeClass('Disabled');
       },
     });
+    return undefined;
   },
   PostUpdater: function (result, obj, successCallback) {
     document.querySelector('#textarea_Updater').val(data => {
@@ -450,7 +452,7 @@ const MyUpdater = {
         // 验证投票是否有选项
         if (voteData.invalid) {
           VoteUpdater.alertInvalidData($voteUpdater);
-          return;
+          return undefined;
         }
 
         rData.voteOptions = voteData.voteOptions;
@@ -467,7 +469,7 @@ const MyUpdater = {
           rData.scope = result.scope;
         } else {
           alert(_l('请选择群组'), 3);
-          return;
+          return undefined;
         }
       }
 
@@ -586,6 +588,7 @@ const MyUpdater = {
           $(obj).removeAttr('disabled').removeClass('Disabled');
         },
       );
+      return undefined;
     });
   },
 };

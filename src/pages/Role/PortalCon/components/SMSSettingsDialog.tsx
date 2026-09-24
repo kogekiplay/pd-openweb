@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -78,7 +78,7 @@ export default function Con(props) {
   const { portalSetModel = {} } = props.portalSet;
   const { defaultApprovedSms, defaultRefusedSms, defaultInviteSms } = portalSetModel;
   const isMingdaoSaas = getIsMingdaoSaas();
-  const [focusId, setFocusId] = useState('');
+  const [focusId, setFocusId] = useState<string | number>('');
   const [approvedSms, setapprovedSms] = useState('');
   const [refusedSms, setrefusedSms] = useState('');
   const [inviteSms, setinviteSms] = useState('');

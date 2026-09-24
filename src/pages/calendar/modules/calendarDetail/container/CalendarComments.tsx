@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import FileList from 'src/components/comment/FileList';
 import { CalendarCommentList } from '../components';
 
 export default class CalendarComments extends Component<any, any> {
+  declare tab: HTMLUListElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -11,7 +13,7 @@ export default class CalendarComments extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const $tab = $(this.tab);
     const $bottomLine = $tab.find('.bottomLine');
     $tab.find('li').hover(
@@ -24,7 +26,7 @@ export default class CalendarComments extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { ...others } = this.props;
     const { id, recurTime } = this.props.calendar;
     const sourceId = recurTime ? `${id}|${recurTime}` : id;

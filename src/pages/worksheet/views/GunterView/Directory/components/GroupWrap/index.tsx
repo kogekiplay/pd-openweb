@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -32,7 +32,7 @@ let GroupWrap = class GroupWrap extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const scroll = new GunterScroll(this.$groupingWrapperRef.current, {
       scrollX: true,
       scrollY: true,
@@ -59,7 +59,7 @@ let GroupWrap = class GroupWrap extends Component<any, any> {
     this.props.updateGroupingScroll(scroll);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.loading !== prevProps.loading || !_.isEqual(this.props.widthConfig, prevProps.widthConfig)) {
         setTimeout(() => {
@@ -70,7 +70,7 @@ let GroupWrap = class GroupWrap extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { groupingScroll } = this.props;
 
     if (groupingScroll) {
@@ -180,7 +180,7 @@ let GroupWrap = class GroupWrap extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { loading } = this.props;
     return (
       <div className="flex Relative overflowHidden">

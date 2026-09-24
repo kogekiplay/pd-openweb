@@ -164,7 +164,7 @@ function NewRecordForm(props) {
   const [originFormdata, setOriginFormdata] = useState([]);
   const [formdata, setFormdata] = useState([]);
   const { projectId, publicShareUrl, visibleType } = worksheetInfo;
-  const [formError, setFormError] = useState();
+  const [formError, setFormError] = useState<string | undefined>();
   const [errorVisible, setErrorVisible] = useState<boolean | undefined>();
   const [random, setRandom] = useState<number | string | undefined>();
   const [requesting, setRequesting] = useState<boolean | undefined>();
@@ -187,7 +187,7 @@ function NewRecordForm(props) {
       if (!customwidget.current?.dataFormat) {
         // loading 已经提前打开，这里必须收尾，否则遮罩关不掉
         onSubmitEnd();
-        return;
+        return undefined;
       }
 
       if (options.rowStatus === 21) {
@@ -291,22 +291,27 @@ function NewRecordForm(props) {
           },
           ..._.pick(props, ['notDialog', 'addWorksheetRow', 'masterRecord', 'addType', 'updateWorksheetControls']),
         });
-        return;
+        return undefined;
       }
 
       cache.current.newRecordOptions = options;
       customwidget.current.submitFormData();
+      return undefined;
     }
 
     // loading 必须在延迟之前打开：延迟期间遮罩不出现，提交按钮可以被连点，会叠加出多次提交
     onSubmitBegin();
-    setTimeout(handleSubmit, this.hasFocusingRelateRecordTags || window.cellTextIsBlurring ? 1000 : 0);
+    /* 原先是 this.hasFocusingRelateRecordTags || window.cellTextIsBlurring。那个标记是 RecordInfo（类组件）
+       在保存按钮 onMouseDown 时置在自己实例上的；这里 newRecord 经 registerFunc 交出去、以
+       newRecordContent.current.newRecord() 调用，this 是那个普通对象，身上从来没有这个字段，恒为 undefined。
+       按实际效果去掉，行为不变。 */
+    setTimeout(handleSubmit, window.cellTextIsBlurring ? 1000 : 0);
   }
 
   async function onSave(error, { data = [], handleRuleError, handleServiceError, alertLockError } = {}) {
     if (error) {
       onSubmitEnd();
-      return;
+      return undefined;
     }
 
     let hasError;
@@ -334,7 +339,7 @@ function NewRecordForm(props) {
           console.log(err);
           submitLock.current = false;
           onSubmitEnd();
-          return;
+          return undefined;
         }
       }
 
@@ -528,6 +533,7 @@ function NewRecordForm(props) {
         ..._.pick(props, ['notDialog', 'addWorksheetRow', 'masterRecord', 'addType', 'updateWorksheetControls']),
       });
     }
+    return undefined;
   }
 
   registerFunc({ newRecord, setRestoreVisible });

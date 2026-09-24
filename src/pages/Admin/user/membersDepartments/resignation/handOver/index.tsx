@@ -13,7 +13,9 @@ import Detail from './detail';
 import './style.less';
 
 export default class HandOver extends React.Component<any, any> {
-  static propTypes = {
+  declare ajax: ApiResult | undefined;
+
+  static override propTypes = {
     keywords: PropTypes.string,
     projectId: PropTypes.string.isRequired,
     setLevel: PropTypes.func.isRequired,
@@ -38,11 +40,11 @@ export default class HandOver extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchList();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.activeTab !== prevProps.activeTab || this.props.level !== prevProps.level) {
         this.setState(
@@ -55,7 +57,7 @@ export default class HandOver extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.abortRequest();
   }
 
@@ -243,7 +245,7 @@ export default class HandOver extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { selectAccount } = this.state;
     const { visible, onCancel = () => {} } = this.props;
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -23,7 +23,7 @@ const CustomScoreIcon = styled.div`
 `;
 
 class CustomScore extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 配置信息
      */
@@ -74,7 +74,7 @@ class CustomScore extends Component<any, any> {
     this.onSelect = this.onSelect.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if ('score' in this.props) {
         this.setState({
@@ -109,7 +109,7 @@ class CustomScore extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { score, lastScore } = this.state;
     const { className, data = {}, hideTip, hideText = false, from, backgroundColor } = this.props;
     const isOldData = !(data.advancedSetting || {}).itemicon;
@@ -131,7 +131,7 @@ class CustomScore extends Component<any, any> {
 
     return (
       <div className={cx('Score-wrapper customScoreWrap', className)}>
-        {list.map((item, index) => {
+        {list.map((_item, index) => {
           const tipText = `${_.get(itemnames[index], 'value') || index + 1}`;
           let tipProps = { placement: 'top', offset: [0, 1] };
 

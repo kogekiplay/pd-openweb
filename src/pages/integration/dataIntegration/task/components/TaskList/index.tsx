@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Switch } from 'antd';
 import Trigger from '@rc-component/trigger';
@@ -311,9 +311,9 @@ const SelectedWrapper = styled.div`
 const sortTypes = [null, SORT_TYPE.ASC, SORT_TYPE.DESC];
 
 export default function TaskList({ projectId, onRefreshComponents }: { projectId?: string; [key: string]: any }) {
-  const ajaxPromise = useRef(null);
-  const statusAjaxPromise = useRef(null);
-  const batchAjaxPromise = useRef(null);
+  const ajaxPromise = useRef<ApiResult | null>(null);
+  const statusAjaxPromise = useRef<ApiResult | null>(null);
+  const batchAjaxPromise = useRef<ApiResult | null>(null);
   const sortFlag = useRef(0);
   const [taskList, setTaskList] = useState([]);
   const [errorInfoVisible, setErrorInfoVisible] = useSetState({});
@@ -446,7 +446,7 @@ export default function TaskList({ projectId, onRefreshComponents }: { projectId
       });
   };
 
-  const batchStartEndTasks = isStart => {
+  const batchStartEndTasks = (isStart: boolean) => {
     if (batchAjaxPromise.current) return;
 
     const taskIds = selectedTasks
@@ -905,7 +905,7 @@ export default function TaskList({ projectId, onRefreshComponents }: { projectId
             <TaskListBox>
               {taskList.map((sourceItem, index) => {
                 return (
-                  <div className="itemWrapper">
+                  <div key={index} className="itemWrapper">
                     <div key={index} className="rowItem">
                       {columns.map((item, i) => {
                         return (

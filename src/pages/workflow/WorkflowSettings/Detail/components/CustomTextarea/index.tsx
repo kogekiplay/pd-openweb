@@ -1,14 +1,59 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { TagTextarea } from 'ming-ui';
+import type { TagTextareaChange } from 'ming-ui/components/TagTextarea';
 import { handleGlobalVariableName } from '../../../utils';
 import SelectOtherFields from '../SelectOtherFields';
 import Tag from '../Tag';
 
-export default class CustomTextarea extends Component<any, any> {
-  static propTypes = {
+/** 文本里引用到的节点、字段的显示信息 */
+export interface FormulaMapEntry {
+  /** 节点：节点类型；字段：字段类型（从 SelectOtherFields 的「清空」写进来时是 null / ''） */
+  type?: number | '' | null | undefined;
+  appType?: number | null | undefined;
+  actionId?: string | undefined;
+  name?: string | undefined;
+  sourceType?: number | undefined;
+}
+/** 键是节点 id，或 `${节点 id}-${字段 id}` */
+export type FormulaMap = Record<string, FormulaMapEntry>;
+
+interface CustomTextareaProps {
+  projectId?: string | undefined;
+  processId?: string | undefined;
+  relationId?: string | undefined;
+  selectNodeId?: string | undefined;
+  sourceAppId?: string | undefined;
+  isIntegration?: boolean | undefined;
+  isPlugin?: boolean | undefined;
+  /** 交给 SelectOtherFields 按类型筛可选的值 */
+  type: number;
+  height?: number | undefined;
+  content?: string | undefined;
+  formulaMap: FormulaMap;
+  /** 挂载后给出里面的 TagTextarea 实例 */
+  getRef?: ((tagtextarea: TagTextarea | undefined) => void) | undefined;
+  onFocus?: (() => void) | undefined;
+  onBlur?: (() => void) | undefined;
+  /** onlyOneValue 时点删除图标也会触发，那时没有第三个参数 */
+  onChange: (err: null, value: string, change?: TagTextareaChange) => void;
+  /** 选了节点对象的值之后，先把显示信息合进 formulaMap，回调里再插入标签 */
+  updateSource: (obj: { formulaMap: FormulaMap }, callback: () => void) => void;
+  operatorsSetMargin?: boolean | undefined;
+  className?: string | undefined;
+  showCurrent?: boolean | undefined;
+  /** 只能放一个值：选新值会替换掉原来的，并显示删除图标 */
+  onlyOneValue?: boolean | undefined;
+  errorMessage?: string | undefined;
+  showNodeDataSelect?: boolean | undefined;
+}
+
+export default class CustomTextarea extends Component<CustomTextareaProps, { fieldsVisible: boolean }> {
+  declare tagtextarea: TagTextarea | undefined;
+
+  static override propTypes = {
     projectId: PropTypes.string,
     processId: PropTypes.string,
     relationId: PropTypes.string,
@@ -46,15 +91,16 @@ export default class CustomTextarea extends Component<any, any> {
     showNodeDataSelect: false,
   };
 
-  state = {
+  override state = {
     fieldsVisible: false,
   };
 
-  componentDidMount() {
-    this.props.getRef(this.tagtextarea);
+  override componentDidMount() {
+    // getRef 运行时一定有（defaultProps 给了空函数），?. 只是因为类型上它是可选属性
+    this.props.getRef?.(this.tagtextarea);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: CustomTextareaProps) {
     const editor = this.tagtextarea;
 
     if (editor && editor.view && prevProps.content !== this.props.content) {
@@ -62,7 +108,7 @@ export default class CustomTextarea extends Component<any, any> {
       // 所以先取 lineAt(cursor)，不能再直接比 cursor.line。
       const cursor = editor.getCursor();
       const scrollPos = editor.getScrollPos();
-      const wasOnLastLine = editor.lineAt(cursor).line === editor.lineCount() - 1;
+      const wasOnLastLine = editor.lineAt(cursor)?.line === editor.lineCount() - 1;
 
       editor.setValue(this.props.content);
       editor.setCursor(cursor);
@@ -76,7 +122,7 @@ export default class CustomTextarea extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       projectId,
       processId,
@@ -101,7 +147,7 @@ export default class CustomTextarea extends Component<any, any> {
       showNodeDataSelect,
     } = this.props;
     const { fieldsVisible } = this.state;
-    const params = isIntegration ? { maxHeight: 'auto' } : {};
+    const params = isIntegration ? { maxHeight: 'auto' as const } : {};
     return (
       <div className="flexRow mTop10 relative">
         <TagTextarea
@@ -120,7 +166,7 @@ export default class CustomTextarea extends Component<any, any> {
           renderTag={tag => {
             const key = tag.replace(/^\$|\$$/g, '');
             const ids = key.split(/([a-zA-Z0-9#]{24,32})-/).filter(item => item);
-            const nodeObj = formulaMap[ids[0]] || {};
+            const nodeObj = formulaMap[ids[0] ?? ''] || {};
             const controlObj = formulaMap[key] || {};
 
             return (

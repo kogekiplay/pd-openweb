@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Button, Dialog } from 'ming-ui';
@@ -14,7 +14,7 @@ export default class IntegrationSync extends Component<any, any> {
     };
   }
 
-  checkSyncFn = showSyncDiaLog => {
+  checkSyncFn = (showSyncDiaLog: boolean) => {
     const { projectId, integrationType } = this.props;
 
     this.setState({ loading: true });
@@ -107,7 +107,7 @@ export default class IntegrationSync extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId, step, integrationType, syncDisabled, featureType, featureId } = this.props;
     const {
       loading,

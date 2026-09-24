@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { emitter } from 'src/utils/common';
 
-export default function useListenedValue(key) {
+export default function useListenedValue(key: string) {
   const [value, setValue] = useState();
   const handleCacheUpdate = useCallback(newValue => {
     setValue(newValue);

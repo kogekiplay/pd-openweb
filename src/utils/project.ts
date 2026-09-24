@@ -98,10 +98,15 @@ export function getFeatureStatus(projectId: string | undefined, featureId) {
  * @param {Object} params - 额外的参数，用于记录日志的详细信息。
  * @param {boolean} isLinkVisited - 是否通过链接访问
  */
-export const addBehaviorLog = (type, entityId, params: Record<string, unknown> = {}, isLinkVisited?) => {
+export const addBehaviorLog = (
+  type,
+  entityId,
+  params: Record<string, unknown> = {},
+  isLinkVisited?: boolean | undefined,
+) => {
   if (!get(md, 'global.Account.accountId')) return;
 
-  const typeObj = {
+  const typeObj: Record<string, number> = {
     app: 1, // 应用
     worksheet: 2, // 工作表
     customPage: 3, // 自定义页面
@@ -270,7 +275,7 @@ function contactInfoIsFresh(contactInfo, key?: string) {
   // 掩码校验：Account 里存的是 138****5678 这种打码值，拿缓存里的明文按位填回去应当相等。
   // 不相等说明用户在别处改了手机号/邮箱，缓存过期了。只有传了 key 才有得比。
   if (key && contactInfo[key] && md.global.Account[key]) {
-    const restored = md.global.Account[key].replace(/\*/g, (a, b) => contactInfo[key][b]);
+    const restored = md.global.Account[key].replace(/\*/g, (_a, b) => contactInfo[key][b]);
     if (restored !== contactInfo[key]) return false;
   }
 
@@ -278,10 +283,10 @@ function contactInfoIsFresh(contactInfo, key?: string) {
 }
 
 /** 后台取一次联系方式并写回 localStorage。并发调用只跑一次。 */
-let contactInfoRequest: Promise<Record<string, unknown>> | null = null;
+let contactInfoRequest: Promise<object> | null = null;
 
-// 返回的是后端给的联系方式对象，本仓只把它整个塞进 localStorage，不读具体字段
-export const prefetchContactInfo = (): Promise<Record<string, unknown>> => {
+// 返回的是后端给的联系方式对象（取不到时是 {}），本仓只把它整个塞进 localStorage，不读具体字段
+export const prefetchContactInfo = (): Promise<object> => {
   if (!md.global.Account.accountId) return Promise.resolve({});
   if (contactInfoRequest) return contactInfoRequest;
 
@@ -314,7 +319,7 @@ export const prefetchContactInfo = (): Promise<Record<string, unknown>> => {
  * 而 preall 启动时会 await prefetchContactInfo()（见那边的调用点），
  * 所以正常进入任何表单之前缓存一定是热的，第三条分支实际走不到。
  */
-export const getContactInfo = key => {
+export const getContactInfo = (key: string) => {
   const contactInfo = safeParse(window.localStorage.getItem('contactInfo') || '{}');
 
   if (!md.global.Account.accountId) return '';

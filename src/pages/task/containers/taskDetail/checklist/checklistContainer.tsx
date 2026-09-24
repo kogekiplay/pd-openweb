@@ -36,7 +36,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const source = _.cloneDeep(this.props.taskChecklists[this.props.taskId] || []);
       this.setState({
@@ -52,7 +52,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 记录鼠标按下的位置
     $(document).on('mousedown.checklistDrag', '.taskChecklistBox .taskChecklist', event => {
       config.mouseOffset = {
@@ -62,7 +62,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $(document).off('.checklistDrag');
   }
   /**
@@ -307,7 +307,7 @@ let ChecklistContainer = class ChecklistContainer extends Component<any, any> {
     this.props.dispatch(taskFoldStatus(this.props.taskId, checklistId));
   }
 
-  render() {
+  override render() {
     const { source, showAddItemChecklistId } = this.state;
     const taskFoldStatus = this.props.taskFoldStatus[this.props.taskId] || [];
     return (

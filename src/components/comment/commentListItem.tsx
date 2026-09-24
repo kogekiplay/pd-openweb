@@ -36,7 +36,10 @@ const newWhiteList = Object.assign({}, whiteList, { img: ['src', 'alt', 'title',
 
 // 评论内容列表
 export default class CommentListItem extends React.Component<any, any> {
-  static propTypes = {
+  declare ajax: ApiResult | undefined;
+  declare singleTalk: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     children: PropTypes.element,
     comment: PropTypes.shape({
       discussionId: PropTypes.string,
@@ -67,7 +70,7 @@ export default class CommentListItem extends React.Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.ajax && this.ajax.abort) {
       this.ajax.abort();
     }
@@ -123,6 +126,7 @@ export default class CommentListItem extends React.Component<any, any> {
         alert(_l('获取回复内容失败'), 2);
       }
     });
+    return undefined;
   }
 
   renderMoreAction() {
@@ -151,7 +155,7 @@ export default class CommentListItem extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { comment, sourceType, children } = this.props;
     const { popupVisible } = this.state;
     const { createAccount = {}, replyAccount = {}, replyId, location, extendsId } = comment;

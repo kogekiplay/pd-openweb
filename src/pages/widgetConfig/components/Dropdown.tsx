@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Dropdown } from 'antd';
 import _ from 'lodash';
 import { isEmptyValue } from 'src/utils/control';
@@ -76,9 +76,10 @@ export default function DropdownWrapper(props) {
           )}
           <div className="dropdownContent">
             {filterData.length > 0 ? (
-              filterData.map(item => {
+              filterData.map((item, index) => {
                 return (
                   <div
+                    key={index}
                     {..._.pick(item, ['style'])}
                     className={`overflow_ellipsis ${item.className || 'item'}`}
                     title={item.text}

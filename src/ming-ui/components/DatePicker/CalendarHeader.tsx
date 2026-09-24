@@ -30,7 +30,7 @@ class CalendarHeader extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     let beginEnd;
 
     if (this.props.direction === 'left') {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Collapse } from 'antd';
 import { arrayOf, func, shape, string } from 'prop-types';
 import styled from 'styled-components';

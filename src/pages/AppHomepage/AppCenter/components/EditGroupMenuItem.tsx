@@ -137,7 +137,7 @@ function EditPanel(props) {
           </React.Fragment>
         )}
         {!filteredPersonalGroups.length && !filteredProjectGroups.length && (
-          <div className="Font13 textDisabled TxtCenter mTop20 mBottom10">{_l('没有搜索结果')}</div>
+          <div className="Font13 textTertiary TxtCenter mTop20 mBottom10">{_l('没有搜索结果')}</div>
         )}
       </div>
     </EditPanelCon>

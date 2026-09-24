@@ -12,7 +12,10 @@ import { WidgetEventHelper } from '../../../core/useFormEventManager';
 import type { RecordRow } from 'src/utils/controlTypes';
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  declare eventHelper: WidgetEventHelper;
+  declare isFromDefault: boolean | undefined;
+
+  static override propTypes = {
     // disabled: PropTypes.bool,
     isEditing: PropTypes.bool,
     appId: PropTypes.string, // 他表字段被关联表所在应用 id
@@ -40,7 +43,7 @@ export default class Widgets extends Component<any, any> {
 
   cardsComp = React.createRef();
 
-  componentDidMount() {
+  override componentDidMount() {
     this.eventHelper.subscribe(data => {
       const { triggerType } = data;
       const { advancedSetting = {}, formItemId } = this.props;
@@ -97,7 +100,7 @@ export default class Widgets extends Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.eventHelper) {
       this.eventHelper.destroy();
     }
@@ -114,7 +117,7 @@ export default class Widgets extends Component<any, any> {
     return parseInt(showtype, 10) === RELATE_RECORD_SHOW_TYPE.CARD;
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     if (!this.isCard) return true;
     if (nextProps.value === this.props.value) return true;
 
@@ -202,7 +205,7 @@ export default class Widgets extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const {
       isEditing,
       appId,

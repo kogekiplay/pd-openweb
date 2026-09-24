@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
 import _ from 'lodash';
@@ -219,7 +219,7 @@ const APP_SCOPE_OPTIONS = [
   },
 ];
 
-const BRAND_ICONS = {
+const BRAND_ICONS: Record<number, { icon: string; color: string }> = {
   1: { icon: 'icon-chatgpt', color: '#000' },
   2: { icon: 'icon-Qwen', color: '#615ced' },
   3: { icon: 'icon-deepseek', color: '#4d6bfe' },
@@ -282,7 +282,7 @@ export default function EditRuleDrawer(props) {
 
   useEffect(() => {
     if (!visible) {
-      return;
+      return undefined;
     }
 
     if (!isEdit) {
@@ -295,7 +295,7 @@ export default function EditRuleDrawer(props) {
         initialRuleSnapshot: null,
         detailLoading: false,
       });
-      return;
+      return undefined;
     }
 
     let ignore = false;
@@ -385,10 +385,10 @@ export default function EditRuleDrawer(props) {
   return (
     <DrawerWrap
       title={title}
-      width={660}
+      size={660}
       open={visible}
       onClose={onClose}
-      destroyOnClose
+      destroyOnHidden
       footer={
         <div className="flexRow">
           <Button type="primary" disabled={saveDisabled} onClick={handleSave}>

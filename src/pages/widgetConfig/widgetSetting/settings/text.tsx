@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Popover } from 'antd';
 import cx from 'classnames';
 import img from 'staticfiles/images/markdown.png';
@@ -66,9 +66,10 @@ export default function Text(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('类型')}</div>
         <DisplayMode>
-          {DISPLAY_OPTIONS.map(item => {
+          {DISPLAY_OPTIONS.map((item, index) => {
             return (
               <Popover
+                key={index}
                 color="black"
                 classNames={{ root: 'textMarkdownTipsContainer' }}
                 content={item.value === 3 ? <MarkdownTips /> : ''}

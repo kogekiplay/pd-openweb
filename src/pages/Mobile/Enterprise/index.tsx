@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { SpinLoading } from 'antd-mobile';
 import _ from 'lodash';
 import moment from 'moment';
@@ -54,7 +54,13 @@ const BottomSpace = styled.div`
   height: 30px;
 `;
 
-class ProjectCard extends Component<any, any> {
+interface ProjectCardState {
+  loading: boolean;
+  visible: boolean;
+  userInfo: HapApi.MD.Web.Ajax.ResultModel.User.UserModel | null | undefined;
+}
+
+class ProjectCard extends Component<any, ProjectCardState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -125,7 +131,7 @@ class ProjectCard extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { item, checkedProjectId } = this.props;
     const { visible, loading } = this.state;
     return (
@@ -192,7 +198,7 @@ class Enterprise extends Component<any, any> {
       checkedProjectId: currentProject.projectId,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getProjectList();
   }
 
@@ -250,7 +256,7 @@ class Enterprise extends Component<any, any> {
       </Fragment>
     );
   };
-  render() {
+  override render() {
     const { loading, projectList = [], checkedProjectId } = this.state;
     const projectObj = getCurrentProject(
       localStorage.getItem('currentProjectId') || (md.global.Account.projects[0] || {}).projectId,

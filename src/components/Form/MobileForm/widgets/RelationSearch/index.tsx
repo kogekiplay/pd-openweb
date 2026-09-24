@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
@@ -47,7 +47,7 @@ export default function RelationSearch(props) {
     showAll: isDialog,
   });
   const [recordInfoVisible, setRecordInfoVisible] = useState(false);
-  const [worksheetAllowAdd, setWorksheetAllowAdd] = useState(true);
+  const [worksheetAllowAdd, setWorksheetAllowAdd] = useState<boolean | undefined>(true);
   const [openRecordId, setOpenRecordId] = useState('');
   const {
     loading = true,

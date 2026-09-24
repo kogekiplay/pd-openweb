@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -16,12 +16,12 @@ const Box = styled(ScanQRCode)`
 `;
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: PropTypes.string,
     disablePhoto: PropTypes.bool,
     onChange: PropTypes.func,
   };
-  render() {
+  override render() {
     const { onChange, ...otherProps } = this.props;
     return (
       <Box onScanQRCodeResult={onChange} {...otherProps}>

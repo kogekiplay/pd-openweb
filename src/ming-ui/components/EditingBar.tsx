@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useKey } from 'react-use';
 import cx from 'classnames';
 import { includes } from 'lodash';
@@ -95,7 +95,7 @@ export default function EditingBar(props) {
   } = props;
   const cache = useRef({ saveShortCut, okDisabled });
 
-  const handleSave = e => {
+  const handleSave = (e: KeyboardEvent) => {
     if (!cache.current.saveShortCut || !(window.isMacOs ? e.metaKey : e.ctrlKey)) return;
     if (window.richTextDialogIsActive) {
       e.stopPropagation();

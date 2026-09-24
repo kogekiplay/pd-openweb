@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Menu, Switch } from 'antd';
@@ -93,8 +93,8 @@ function OperateMenu(props) {
   const { appList, groupList } = valueList;
   const { appId, groupId } = ids;
 
-  const formatApps = function (validProject) {
-    const appList = [];
+  const formatApps = function (validProject: HapApi.MD.Entity.HomeApp.ProjectForApp[] | undefined) {
+    const appList: { text: string | undefined; value: string | undefined }[] = [];
     const project = validProject.filter(item => item.projectId === projectId)[0];
 
     if (project && project.projectApps && project.projectApps.length) {

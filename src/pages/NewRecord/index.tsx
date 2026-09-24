@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -51,11 +51,11 @@ let NewRecordLand = class NewRecordLand extends Component<any, any> {
     this.handleWorksheetInfoReady = this.handleWorksheetInfoReady.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     emitter.on('MINGO_CREATE_RECORD_ACTIVE', this.handleMingoCreateRecordActive);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     emitter.off('MINGO_CREATE_RECORD_ACTIVE', this.handleMingoCreateRecordActive);
   }
 
@@ -85,7 +85,7 @@ let NewRecordLand = class NewRecordLand extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const {
       match = {},
       appPkg = {},
@@ -148,7 +148,7 @@ let NewRecordLand = class NewRecordLand extends Component<any, any> {
               icon={isLarge ? 'worksheet_narrow' : 'worksheet_enlarge'}
               tooltip={isLarge ? _l('缩小') : _l('放大')}
               onClick={() => {
-                safeLocalStorageSetItem('NEW_RECORD_IS_LARGE', !isLarge);
+                safeLocalStorageSetItem('NEW_RECORD_IS_LARGE', String(!isLarge));
                 this.setState({
                   isLarge: !isLarge,
                 });

@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import DynamicDefaultValue from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue';

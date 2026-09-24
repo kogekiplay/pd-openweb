@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -37,8 +37,12 @@ const Box = styled.div`
     }
   }
 `;
-export default class HistoryList extends Component<any, any> {
-  static propTypes = {
+export interface HistoryListState {
+  showList: boolean;
+}
+
+export default class HistoryList extends Component<any, HistoryListState> {
+  static override propTypes = {
     processId: string,
     data: any,
     accumulation: any,
@@ -59,7 +63,7 @@ export default class HistoryList extends Component<any, any> {
     onUpdateBatchIds: () => {},
   };
 
-  state = {
+  override state = {
     showList: false,
   };
 
@@ -233,7 +237,7 @@ export default class HistoryList extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { data, isChatbot, ...res } = this.props;
 
     return (

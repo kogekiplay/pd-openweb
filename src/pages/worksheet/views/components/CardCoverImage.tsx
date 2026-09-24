@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import cx from 'classnames';
 import { head, includes } from 'lodash';
 import _ from 'lodash';
@@ -142,18 +142,18 @@ const CoverImageWrap = styled.div`
   }
 `;
 
-const COVER_TYPE_TO_BACKGROUND_SIZE = {
+const COVER_TYPE_TO_BACKGROUND_SIZE: Record<number, string> = {
   2: 'circle',
   3: 'square',
 };
 
-const COVER_IMAGE_POSITION = {
+const COVER_IMAGE_POSITION: Record<number, string> = {
   2: 'top',
   1: 'left',
   0: 'right',
 };
 
-const COVER_FILL_TYPE_BACKGROUND_SIZE = {
+const COVER_FILL_TYPE_BACKGROUND_SIZE: Record<number, string> = {
   0: 'cover',
   1: 'contain',
 };

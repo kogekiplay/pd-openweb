@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, FunctionWrap, Icon, Input, LoadDiv, Textarea } from 'ming-ui';
@@ -21,7 +21,7 @@ class SetOrgNameMultipleLanguages extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getProjectLangs();
   }
 
@@ -91,7 +91,7 @@ class SetOrgNameMultipleLanguages extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { onCancel = () => {}, currentLangName, type } = this.props;
     const { loading, settingLanguageData = [] } = this.state;
     const defaultLangCode = md.global.SysSettings.defaultLang;

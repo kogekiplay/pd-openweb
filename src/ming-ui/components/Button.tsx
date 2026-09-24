@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Icon from './Icon';
@@ -16,8 +16,16 @@ export const BUTTON_TYPE_LIST = [
 ];
 export const BUTTON_SIZE_LIST = ['tiny', 'small', 'medium', 'large', 'mdnormal', 'mdbig']; // 'mini', 'huge', 'massive'
 
-export default class Button extends Component<any, any> {
-  static propTypes = {
+export interface ButtonState {
+  loading: boolean;
+}
+
+export default class Button extends Component<any, ButtonState> {
+  declare width: number | undefined;
+  declare mounted: boolean | undefined;
+  declare button: HTMLButtonElement | null | undefined;
+
+  static override propTypes = {
     /**
      * 按钮子节点
      */
@@ -74,11 +82,11 @@ export default class Button extends Component<any, any> {
     radius: false,
   };
 
-  state = {
+  override state = {
     loading: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     if (!this.props.loading && !this.state.loading) {
       setTimeout(() => this.computeWidth(), 0);
     }
@@ -86,7 +94,7 @@ export default class Button extends Component<any, any> {
     this.mounted = true;
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (
       this.props.children !== prevProps.children ||
       ((this.props.loading || this.state.loading) && !(prevProps.loading || prevState.loading))
@@ -95,7 +103,7 @@ export default class Button extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
   }
 
@@ -126,7 +134,7 @@ export default class Button extends Component<any, any> {
     if (onClick) onClick.apply(this, args);
   }
 
-  render() {
+  override render() {
     const loading = this.props.loading || this.state.loading;
     const {
       disabled,

@@ -78,11 +78,11 @@ export const getCurrentId = cb => {
 };
 
 // 重新验证必须刷新整页以丢弃 PC 扫码状态，不能保留 mdAppId/wxState/status 等回调模式。
-export function restartPortalLogin(appId: string, customLink) {
+export function restartPortalLogin(appId: string, customLink: string) {
   const loginUrl = new URL(pathCompletion('/login', { hasDomain: false }), location.origin);
   const source = new URL(location.href);
   const appUrl = new URL(`app/${encodeURIComponent(appId)}`, loginUrl);
-  const isLocalEntry = url =>
+  const isLocalEntry = (url: URL) =>
     url.origin === location.origin &&
     ['http:', 'https:'].includes(url.protocol) &&
     !/\/(login|network|wxauth|wxscanauth)\/?$/.test(url.pathname);

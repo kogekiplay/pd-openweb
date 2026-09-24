@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -74,9 +74,9 @@ export function getVersion() {
   const { Versions = [] } = md.global || {};
   let upgradeName;
 
-  const TYPE_NAME = { 1: _l('标准版'), 2: _l('专业版'), 3: _l('旗舰版') };
+  const TYPE_NAME: Record<string, string> = { 1: _l('标准版'), 2: _l('专业版'), 3: _l('旗舰版') };
 
-  const getFeatureType = versionIdV2 => {
+  const getFeatureType = (versionIdV2: string) => {
     const versionInfo = _.find(Versions || [], item => item.VersionIdV2 === versionIdV2) || {};
     return {
       versionName: TYPE_NAME[versionIdV2],
@@ -202,7 +202,7 @@ export default function MobilePrintList(props) {
 
   const closePrintList = () => setShowPrintListVisible(false);
 
-  const getPrintPreviewUrl = (printKey, printType = 'preview') =>
+  const getPrintPreviewUrl = (printKey: string, printType = 'preview') =>
     pathCompletion(`/printForm/${appId}/${workId ? 'flow' : 'worksheet'}/${printType}/print/${printKey}`);
 
   const getTemplatePrintData = template => ({
@@ -476,7 +476,7 @@ export default function MobilePrintList(props) {
     return null;
   }
 
-  const renderPrintTemplate = templateType => {
+  const renderPrintTemplate = (templateType: string) => {
     const defaultTempList = printList.filter(it => DEFAULT_TEMPLATE_TYPES.includes(it.type));
     const codeTempList = printList.filter(it => CODE_TEMPLATE_TYPES.includes(it.type));
     const cloudTempList = printList.filter(it => it.type === PRINT_TYPE.CLOUD_PRINT);

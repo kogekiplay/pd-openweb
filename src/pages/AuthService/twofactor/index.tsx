@@ -33,7 +33,7 @@ export default class TwofactorContainer extends React.Component<any, any> {
     this.twofactorRef = React.createRef();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getTwofactorSettingInfo();
   }
 
@@ -276,7 +276,7 @@ export default class TwofactorContainer extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     return (
       <WrapCom>
         <DocumentTitle title={_l('两步验证')} />

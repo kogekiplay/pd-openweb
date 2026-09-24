@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { generate } from '@ant-design/colors';
 import Trigger from '@rc-component/trigger';
@@ -234,7 +234,7 @@ export default function ExternalLinkDialog(props) {
                   return <TagWrapper className="overflow_ellipsis">{tagName}</TagWrapper>;
                 }}
                 ref={tagTextAreaRef}
-                onChange={(err, value) => setAppInfo({ urlTemplate: value.trim() })}
+                onChange={(_err, value) => setAppInfo({ urlTemplate: value.trim() })}
               />
               <Trigger
                 action={['click']}

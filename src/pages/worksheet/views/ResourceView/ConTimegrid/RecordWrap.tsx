@@ -69,7 +69,7 @@ export default function RecordWrap(props) {
         {data.map((o, i) => {
           const hoverHandlers = getResourceRowHoverHandlers(viewId, i);
           return (
-            <div className="thByGroup" id={`resourceRow_${viewId}_${i}`} {...hoverHandlers}>
+            <div key={i} className="thByGroup" id={`resourceRow_${viewId}_${i}`} {...hoverHandlers}>
               <div className="lineTimeHr Relative" style={{ height: o.height }}>
                 {o.rows.map((it: RecordRow) => {
                   return (

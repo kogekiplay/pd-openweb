@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import html2canvas from 'html2canvas';
 import moment from 'moment';
@@ -32,7 +32,7 @@ class ContractCom extends Component<any, any> {
     this.state = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getOrderContractInfo();
   }
 
@@ -152,7 +152,7 @@ class ContractCom extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { user = {}, order = {} } = this.state;
 
     return (
@@ -184,12 +184,12 @@ class ContractCom extends Component<any, any> {
               {_l('联系人信息')} <span className="mLeft5 mRight5">CONTACT</span> INFORMATION
             </div>
             <table cellpadding="0" cellspacing="0" className="contactTable LineHeight30">
-              {contactInfo.map(item => {
+              {contactInfo.map((item, index) => {
                 return (
-                  <tr>
-                    {item.map(v => {
+                  <tr key={index}>
+                    {item.map((v, index) => {
                       return (
-                        <Fragment>
+                        <Fragment key={index}>
                           <td className="label">{v.text}</td>
                           <td className="value">{user[v.key]}</td>
                         </Fragment>

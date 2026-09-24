@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderToString } from 'react-dom/server';
 import doT from 'dot';
 import _ from 'lodash';
@@ -246,7 +245,7 @@ export const afterUpdateTaskDateInfo = (taskId: string, startTime, deadline, act
 };
 
 // 改变锁的状态后处理
-export const afterUpdateLock = (taskId: string, locked) => {
+export const afterUpdateLock = (taskId: string, locked: boolean) => {
   const $elem = getTrOrLi(taskId);
   const $markTask = $elem.find('.markTask:first');
 
@@ -348,7 +347,7 @@ export const afterDeleteTask = (taskIdArray, parentTaskId?) => {
       if (taskIdArray.length === 1 && $subTask.length > 0) {
         let $item;
 
-        $subTask.children('li').each((i, item) => {
+        $subTask.children('li').each((_i, item) => {
           $item = $(item);
 
           // 存在子任务
@@ -490,7 +489,7 @@ export const afterDeleteTask = (taskIdArray, parentTaskId?) => {
   }
 
   // 清除localStorage中的评论
-  $.each(taskIdArray, (index: number, v) => {
+  $.each(taskIdArray, (_index: number, v) => {
     const localStorageKey = 'task_' + v;
     window.localStorage.removeItem(localStorageKey);
   });
@@ -531,7 +530,7 @@ export const afterDeep = ($item, deep) => {
 };
 
 // 更改项目后处理
-export const afterUpdateTaskFolder = (taskId: string, parentTaskId) => {
+export const afterUpdateTaskFolder = (taskId: string, parentTaskId: string) => {
   const { viewType, folderId } = Store.getState().task.taskConfig;
 
   if (folderId && viewType === 1) {
@@ -629,7 +628,7 @@ export const afterUpdateTaskParent = (taskId: string, parentId, oldParentId, dat
 };
 
 // 更新母任务后列表处理
-const afterUpdateTaskParentList = (taskId: string, parentId, oldParentId) => {
+const afterUpdateTaskParentList = (_taskId: string, parentId, oldParentId) => {
   const $tr = getTrOrLi(oldParentId);
 
   if ($tr.length > 0) {
@@ -665,7 +664,7 @@ const afterUpdateTaskParentList = (taskId: string, parentId, oldParentId) => {
 };
 
 // 更新母任务后操作
-const afterUpdateTaskParentComm = (taskId: string, parentId, oldParentId, $dyLi?) => {
+const afterUpdateTaskParentComm = (taskId: string, parentId, _oldParentId, $dyLi?) => {
   let $li = getTrOrLi(taskId);
   let $singleFolderTask = $li.closest('.singleFolderTask');
   const $oldParent = $li.parent();
@@ -926,7 +925,7 @@ export const afterUpdateTaskName = (taskId: string, taskName: string) => {
 };
 
 // 加星后处理
-export const afterUpdateTaskStar = (taskId: string, hasStar) => {
+export const afterUpdateTaskStar = (taskId: string, hasStar: boolean) => {
   const $el = getTrOrLi(taskId).find('.taskStar');
 
   if (hasStar) {
@@ -1001,7 +1000,7 @@ export const createFolder = (data, isOpen = true) => {
 };
 
 // 项目置顶
-export const updateFolderTop = (folderId, isTop: boolean, callback) => {
+export const updateFolderTop = (folderId, isTop: boolean, callback: () => void) => {
   ajaxRequest
     .updateFolderTop({
       folderID: folderId,
@@ -1141,7 +1140,12 @@ export const exitFolder = (folderId, hideNavigation?) => {
 };
 
 // 项目归档
-export const updateFolderArchived = (projectId: string, folderId, pigeonhole: boolean, callback?) => {
+export const updateFolderArchived = (
+  projectId: string,
+  folderId,
+  pigeonhole: boolean,
+  callback?: (() => void) | undefined,
+) => {
   ajaxRequest
     .updateFolderArchived({
       folderID: folderId,

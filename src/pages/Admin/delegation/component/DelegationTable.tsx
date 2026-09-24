@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import Trigger from '@rc-component/trigger';
@@ -68,7 +68,7 @@ function DeputeTable(props) {
       dataIndex: 'id',
       key: 'principal',
       width: 'auto',
-      render: (id, record) => renderUser(record.principal, record.companyId),
+      render: (_id, record) => renderUser(record.principal, record.companyId),
     },
     {
       title: '',
@@ -82,7 +82,7 @@ function DeputeTable(props) {
       dataIndex: 'id',
       key: ' trustee',
       width: 'auto',
-      render: (id, record) => renderUser(record.trustee, record.companyId),
+      render: (_id, record) => renderUser(record.trustee, record.companyId),
     },
     {
       title: _l('委托时间'),
@@ -102,7 +102,7 @@ function DeputeTable(props) {
       dataIndex: 'apks',
       key: 'apks',
       width: 120,
-      render: (id, record) => <div>{!record.apks ? _l('所有工作流') : _l('%0个应用', record.apks.length)}</div>,
+      render: (_id, record) => <div>{!record.apks ? _l('所有工作流') : _l('%0个应用', record.apks.length)}</div>,
     },
     {
       title: _l('创建时间'),
@@ -119,7 +119,7 @@ function DeputeTable(props) {
       dataIndex: 'createBy',
       key: 'createBy',
       width: 'auto',
-      render: (id, record) => renderUser(record.createBy, record.companyId),
+      render: (_id, record) => renderUser(record.createBy, record.companyId),
     },
   ];
 
@@ -149,7 +149,7 @@ function DeputeTable(props) {
       });
   };
 
-  const onClickOp = (opType, item) => {
+  const onClickOp = (opType: number, item) => {
     setShowMenu(false);
 
     if (opType === 1) {
@@ -174,7 +174,7 @@ function DeputeTable(props) {
       });
   };
 
-  const onChange = (pagination, filters, sorter) => {
+  const onChange = (_pagination, _filters, sorter) => {
     if (_.isEmpty(data)) return;
 
     if (!_.isEmpty(sorter)) {

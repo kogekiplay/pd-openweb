@@ -62,7 +62,7 @@ export default function SideNav(props) {
     },
   ];
 
-  const getHtml = type => {
+  const getHtml = (type: string) => {
     let btnCount = 0;
 
     if (type === 'ActionSet') {

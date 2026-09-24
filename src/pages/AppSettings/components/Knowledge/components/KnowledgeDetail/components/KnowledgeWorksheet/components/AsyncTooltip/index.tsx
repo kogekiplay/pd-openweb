@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { Tooltip } from 'ming-ui/antd-components';
 import { fetchFilterData, formatFilterConditionToText } from '../../../../../../core/utils';
 import type { FormControl } from 'src/utils/controlTypes';
@@ -18,7 +18,7 @@ const AsyncTooltip = props => {
   const [visible, setVisible] = useState(false);
   const [formattedCondition, setFormattedCondition] = useState('');
 
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   // 组件是否卸载
   const mountedRef = useRef(true);
   // 防止重复请求

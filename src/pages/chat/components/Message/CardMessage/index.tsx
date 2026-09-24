@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -28,7 +28,7 @@ export default class CardMessage extends Component<any, any> {
       taskId: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { message } = this.props;
     const { card } = message;
     const id = Number(message.id);
@@ -44,7 +44,10 @@ export default class CardMessage extends Component<any, any> {
         if (card.md === 'task') {
           this.setCardDetails(result.tasks[0]);
         } else if (card.md === 'calendar') {
-          const calendar = result.calendars[0];
+          // 卡片展示用的起止时间是前端算好后挂在日程对象上的（_startTime / _endTime），接口本身不给
+          const calendar:
+            | (HapApi.MD.Web.Ajax.ResultModel.Chat.CalendarCardModel & { _startTime?: string; _endTime?: string })
+            | undefined = result.calendars[0];
 
           if (calendar) {
             let _startTime = '';
@@ -192,7 +195,7 @@ export default class CardMessage extends Component<any, any> {
         break;
     }
   }
-  renderMember(members, textInfo) {
+  renderMember(members, textInfo: string) {
     return (
       <div className="Message-cardItem Message-cardItem-membersItem">
         <span>{`${textInfo}/${_l('成员')}：`}</span>
@@ -209,7 +212,7 @@ export default class CardMessage extends Component<any, any> {
       </div>
     );
   }
-  renderDate(deadline, textInfo) {
+  renderDate(deadline, textInfo: string) {
     return (
       <div className="Message-cardItem">
         <span>{`${textInfo}：`}</span>
@@ -354,7 +357,7 @@ export default class CardMessage extends Component<any, any> {
       );
     }
   }
-  render() {
+  override render() {
     const { openTaskDetail, taskId, openRecorDetail } = this.state;
     const { message } = this.props;
     const { card } = message;

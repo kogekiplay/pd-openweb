@@ -1,4 +1,3 @@
-import React from 'react';
 import Trigger from '@rc-component/trigger';
 import { Dialog, Icon } from 'ming-ui';
 import MoreOption from './MoreOption';

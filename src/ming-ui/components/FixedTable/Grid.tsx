@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo, useRef } from 'react';
+import { Fragment, useCallback, useMemo, useRef } from 'react';
 import { Grid as WindowGrid } from 'react-window';
 import { includes, isFunction } from 'lodash';
 import { normalizeGridCellStyle, RESET_V2_CONTAINER_BOX } from '../gridCellStyle';
@@ -39,15 +39,15 @@ export default function Grid(props) {
     cache,
   } = props;
   let leftFixedCount = props.leftFixedCount;
-  let leftFixedWidth = leftFixedCount ? sum([...new Array(leftFixedCount)].map((n, i) => getColumnWidth(i))) : 0;
+  let leftFixedWidth = leftFixedCount ? sum([...new Array(leftFixedCount)].map((_n, i) => getColumnWidth(i))) : 0;
 
   if (leftFixedWidth > width && leftFixedCount > 2) {
     leftFixedCount = isGroupTableView ? 2 : 1;
-    leftFixedWidth = leftFixedCount ? sum([...new Array(leftFixedCount)].map((n, i) => getColumnWidth(i))) : 0;
+    leftFixedWidth = leftFixedCount ? sum([...new Array(leftFixedCount)].map((_n, i) => getColumnWidth(i))) : 0;
   }
 
   const rightFixedWidth = rightFixedCount
-    ? sum([...new Array(rightFixedCount)].map((n, i) => getColumnWidth(columnCount - rightFixedCount + i)))
+    ? sum([...new Array(rightFixedCount)].map((_n, i) => getColumnWidth(columnCount - rightFixedCount + i)))
     : 0;
   let topFixedHeight = topFixedCount ? topFixedCount * columnHeadHeight : 0;
   let bottomFixedHeight = bottomFixedCount ? bottomFixedCount * 28 : 0;
@@ -158,7 +158,7 @@ export default function Grid(props) {
   );
 
   if (!config.width || !config.height) {
-    return;
+    return undefined;
   }
 
   return (

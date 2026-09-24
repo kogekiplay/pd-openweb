@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { Modal } from 'antd';
 import { Icon, RichText } from 'ming-ui';
 import EditIntro from 'src/pages/PageHeader/AppPkgHeader/AppDetail/EditIntro';

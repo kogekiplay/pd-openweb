@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -41,7 +41,7 @@ const defaultArr = [
 ];
 
 export default class RelationControl extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     title: PropTypes.string,
     sourceId: PropTypes.string,
     sourceType: PropTypes.string, // 后端过滤用 1：任务 2：审批
@@ -84,7 +84,7 @@ export default class RelationControl extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getSources();
   }
 
@@ -119,7 +119,7 @@ export default class RelationControl extends Component<any, any> {
     const { sourceId, sourceType } = this.props;
     const pageSize = selectIndex === 3 || selectIndex === 6 ? 10 : 20;
 
-    const listMsg = key => {
+    const listMsg = (key: string) => {
       return list.length ? list[list.length - 1][key] : '';
     };
 
@@ -162,7 +162,7 @@ export default class RelationControl extends Component<any, any> {
    * @param  {array} types
    */
   returnTypes(types) {
-    let typeArr = [];
+    let typeArr: { name: string; icon: string; value: number; searchText: string; sortText: string }[] = [];
 
     types.forEach(type => {
       defaultArr.forEach(item => {
@@ -318,7 +318,7 @@ export default class RelationControl extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     let types = this.props.types;
 
     if (types.length === 1 && types[0] === 4) {

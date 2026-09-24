@@ -33,7 +33,7 @@ class DateTimePicker extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== this.state.value) {
         const value = this.props.value || new Date();
@@ -79,7 +79,7 @@ class DateTimePicker extends Component<any, any> {
     };
   };
 
-  dateOnChange = (event, value) => {
+  dateOnChange = (_event, value) => {
     const newValue = new Date(this.state.value);
 
     newValue.setFullYear(value.getFullYear(), value.getMonth(), value.getDate());
@@ -134,7 +134,7 @@ class DateTimePicker extends Component<any, any> {
     );
   };
 
-  timeOnChange = (event, value) => {
+  timeOnChange = (_event, value) => {
     const newValue = new Date(this.state.value);
 
     newValue.setHours(value.hour);
@@ -181,7 +181,7 @@ class DateTimePicker extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const dateType = this.props.type === 'datetime' ? 'date' : this.props.type;
 
     let timePicker: React.JSX.Element | null = null;

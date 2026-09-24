@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useEffect } from 'react';
+import { Component, Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import update from 'immutability-helper';
@@ -69,6 +69,8 @@ const dealRelationControls = (controls: FormControl[] = []) => {
 };
 
 class SearchWorksheetActionDialog extends Component<any, any> {
+  declare box: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     const {
@@ -103,7 +105,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setValue();
   }
 
@@ -168,7 +170,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
     worksheetAjax
       .getWorksheetInfo({ worksheetId: sheetId, getTemplate: true, getSwitchPermit: true, appId, getViews: true })
       .then(res => {
-        const { controls = [] }: { controls: FormControl[]; [key: string]: any } = res.template || {};
+        const controls: FormControl[] = res.template?.controls || [];
         this.setState({
           controls: controls,
           sheetName: res.name,
@@ -435,7 +437,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       sheetId,
       appName,
@@ -527,9 +529,10 @@ class SearchWorksheetActionDialog extends Component<any, any> {
                           }
                         >
                           {sheetList.length > 0 ? (
-                            sheetList.map(item => {
+                            sheetList.map((item, index) => {
                               return (
                                 <MenuItem
+                                  key={index}
                                   onClick={() => {
                                     if (item.sheetId === sheetId) return;
                                     this.setState(

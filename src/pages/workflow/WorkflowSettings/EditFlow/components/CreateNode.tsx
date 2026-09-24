@@ -1,10 +1,16 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { Menu, MenuItem } from 'ming-ui';
 import { NODE_TYPE } from '../../enum';
 import BranchDialog from './BranchDialog';
 
-export default class CreateNode extends Component<any, any> {
+export interface CreateNodeState {
+  showOptions: boolean;
+  branchDialogModel: number;
+  showBranchDialog?: boolean | undefined;
+}
+
+export default class CreateNode extends Component<any, CreateNodeState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -114,7 +120,7 @@ export default class CreateNode extends Component<any, any> {
   /**
    * 更多操作点击
    */
-  moreOptionsAction(o) {
+  moreOptionsAction(o: { type: number; name: string; iconColor: string; iconName: string }) {
     const { processId, addFlowNode, item, selectAddNodeId, selectCopy, removeCopyBtn } = this.props;
 
     if (_.includes([NODE_TYPE.WRITE, NODE_TYPE.APPROVAL, NODE_TYPE.CC], o.type)) {
@@ -174,7 +180,7 @@ export default class CreateNode extends Component<any, any> {
     this.setState({ showBranchDialog: false });
   };
 
-  render() {
+  override render() {
     const { data, item, className = '' } = this.props;
     const { branchDialogModel } = this.state;
 

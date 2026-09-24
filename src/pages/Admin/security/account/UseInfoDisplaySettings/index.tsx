@@ -1,10 +1,12 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Button } from 'ming-ui';
 import projectSettingAjax from 'src/api/projectSetting';
 import UserBaseInfoSetting from './components/UserBaseInfoSetting';
 import './index.less';
 
 export default class UseInfoDisplaySettings extends Component<any, any> {
+  declare settingEle: UserBaseInfoSetting | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -18,7 +20,7 @@ export default class UseInfoDisplaySettings extends Component<any, any> {
     this.settingEle = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getUserFieldSettings();
   }
 
@@ -69,7 +71,7 @@ export default class UseInfoDisplaySettings extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { projectId, onClose = () => {} } = this.props;
     const { flag, settings, editStatus, saveLoading } = this.state;
     return (

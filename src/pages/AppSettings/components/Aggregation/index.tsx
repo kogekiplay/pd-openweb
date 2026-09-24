@@ -100,7 +100,7 @@ const ArrowDown = styled.span`
 let ajaxPromise: ApiResult | null = null;
 const pageSize = 40;
 
-const renderNull = txt => {
+const renderNull = (txt: string | null) => {
   return (
     <React.Fragment>
       <div className="emptyIcon flexRow alignItemsCenter TxtCenter">

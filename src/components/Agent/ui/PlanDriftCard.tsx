@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
 import { Icon } from 'ming-ui';
 import { colors, radii, spacing } from './tokens';
@@ -6,12 +5,12 @@ import { colors, radii, spacing } from './tokens';
 // plan 漂移确认卡片：build "继续" 时后端检测到本次方案与上次中断时的方案不一致（plan hash 不同），
 // 暂停主流程等用户二选一。action 取值对应后端 WorkflowConstants.PlanDriftActions。
 // 视觉语言对齐 PlanCard：左侧 IconBox + 右侧 Body，操作走 pill 描边风格（与 BuildProgress 的 DonePill 一致）。
-const ACTION_LABELS = {
+const ACTION_LABELS: Record<string, string> = {
   rebuild: _l('重新搭建'),
   resume_with_old_plan: _l('按原方案继续'),
 };
 
-const ACTION_HINTS = {
+const ACTION_HINTS: Record<string, string> = {
   rebuild: _l('放弃已建内容，按新方案从头创建一个新应用'),
   resume_with_old_plan: _l('忽略本次方案改动，沿用上次方案接着搭建'),
 };

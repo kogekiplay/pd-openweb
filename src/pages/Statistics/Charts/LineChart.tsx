@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Dropdown, Menu } from 'antd';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
@@ -123,7 +123,7 @@ export const formatChartData = (data, yaxisList, { isPile, isAccumulate, accumul
   return result;
 };
 
-const getLineValue = value => {
+const getLineValue = (value: number) => {
   if (value) {
     return [
       {
@@ -141,6 +141,9 @@ const getLineValue = value => {
 };
 
 export default class extends Component<any, any> {
+  declare isUnmounted: boolean;
+  declare chartEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -155,7 +158,7 @@ export default class extends Component<any, any> {
     this.g2plotComponent = null;
     this.isUnmounted = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     loadG2Plot().then(data => {
       if (this.isUnmounted) {
         return;
@@ -165,11 +168,11 @@ export default class extends Component<any, any> {
       this.renderLineChart(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     this.destroyLineChart();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { displaySetup, style } = this.props.reportData;
     const { displaySetup: oldDisplaySetup, style: oldStyle } = prevProps.reportData;
     const shouldRecreate =
@@ -733,8 +736,8 @@ export default class extends Component<any, any> {
               {renderItem(summary)}
             </div>
           )}
-          {controlList.map(data => (
-            <div className="flexRow mRight10" style={{ alignItems: 'baseline' }}>
+          {controlList.map((data, index) => (
+            <div key={index} className="flexRow mRight10" style={{ alignItems: 'baseline' }}>
               {renderItem({
                 ...data,
                 name: data.name || _.get(_.find(yaxisList, { controlId: data.controlId }), 'controlName'),
@@ -747,7 +750,7 @@ export default class extends Component<any, any> {
       return <div className="pBottom10">{renderItem(summary)}</div>;
     }
   }
-  render() {
+  override render() {
     const { dropdownVisible, offset } = this.state;
     const { displaySetup = {} } = this.props.reportData;
     return (

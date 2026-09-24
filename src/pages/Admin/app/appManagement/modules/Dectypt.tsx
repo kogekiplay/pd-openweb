@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -63,6 +63,8 @@ const Wrap = styled.div`
 `;
 
 export default class Dectypt extends Component<any, any> {
+  declare uploaderWrap: QiniuUpload | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -111,7 +113,7 @@ export default class Dectypt extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { onCancel = () => {} } = this.props;
     const { file = {}, analyzeLoading, checkLoading, importPassword, lockPassword } = this.state;
     const loading = analyzeLoading || checkLoading;
@@ -146,7 +148,7 @@ export default class Dectypt extends Component<any, any> {
               this.setState({ analyzeLoading: true });
               up.disableBrowse();
             }}
-            onBeforeUpload={(up, file) => {
+            onBeforeUpload={(_up, file) => {
               this.setState({ file });
             }}
             onUploaded={(up, file, response) => {
@@ -185,7 +187,7 @@ export default class Dectypt extends Component<any, any> {
           {!loading && (importPassword || lockPassword) && <div className="successTxt">{_l('解密成功')}</div>}
           <div className="passwordWrap flexRow mTop80 justifyContentCenter">
             {passwordData.map(item => {
-              if (!this.state[item.key]) return;
+              if (!this.state[item.key]) return undefined;
               return (
                 <div key={item.key} style={{ marginRight: item.key === 'importPassword' ? 68 : 0 }}>
                   <div className="mBottom8 textSecondary Font14">{item.title}</div>

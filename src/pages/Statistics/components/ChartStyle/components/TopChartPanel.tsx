@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Checkbox, Collapse, Switch } from 'antd';
 import cx from 'classnames';
 import goldCrown from 'statistics/assets/topChart/gold_crown.png';
@@ -77,7 +77,7 @@ export default function topChartPanelGenerator(props) {
           <Switch
             size="small"
             checked={valueProgressVisible}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -96,7 +96,7 @@ export default function topChartPanelGenerator(props) {
           <Switch
             size="small"
             checked={topStyle}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {

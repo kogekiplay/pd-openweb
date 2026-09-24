@@ -5,7 +5,7 @@ import Commenter from 'src/components/comment/commenter';
 
 export default class WorkSheetCommenter extends Component<any, any> {
   commentRef = React.createRef();
-  render() {
+  override render() {
     const {
       worksheet: { worksheetId, rowId, title, appId, name, appSectionId, viewId },
       change,

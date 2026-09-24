@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { includes } from 'lodash';
 import PropTypes from 'prop-types';
 import { RadioGroup } from 'ming-ui';
@@ -6,7 +6,7 @@ import { getSwitchItemNames } from 'src/utils/control';
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
 export default class YesNo extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
     control: PropTypes.shape({}),
@@ -48,7 +48,7 @@ export default class YesNo extends Component<any, any> {
     return type === FILTER_CONDITION_TYPE.HASVALUE ? 1 : 0;
   };
 
-  getFilterTypeByCheckedValue = value => {
+  getFilterTypeByCheckedValue = (value: number) => {
     const { control } = this.props;
 
     if (control.type === 36) {
@@ -57,7 +57,7 @@ export default class YesNo extends Component<any, any> {
 
     return value ? FILTER_CONDITION_TYPE.HASVALUE : FILTER_CONDITION_TYPE.ISNULL;
   };
-  render() {
+  override render() {
     const { disabled, control, type, onChange } = this.props;
     const data = this.getRadioGroupData(control.type);
     return (

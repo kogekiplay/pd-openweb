@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 // 切换/加载历史会话期间的消息区占位：右侧用户气泡 + 左侧助手段落，

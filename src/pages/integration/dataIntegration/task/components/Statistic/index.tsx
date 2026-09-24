@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import syncTaskApi from '../../../../api/syncTask';
 
@@ -49,7 +49,7 @@ const StatisticContent = styled.div`
   }
 `;
 
-let ajaxPromise;
+let ajaxPromise: ApiResult | null | undefined;
 
 export default ({ projectId, flag }: { projectId?: string; [key: string]: any }) => {
   const [statisticData, setStatisticData] = useState({});

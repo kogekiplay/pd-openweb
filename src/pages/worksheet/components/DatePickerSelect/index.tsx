@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import moment from 'moment';
 import { DatePicker } from 'ming-ui';
 import './index.less';
@@ -73,7 +73,7 @@ function getCustomRangeLabel(value, timeMode) {
 
 export default function DatePickSelect(props) {
   const { options = DEFAULT_OPTIONS, onChange, selectedValue, timePicker = false, timeMode = 'minute' } = props;
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   return (
     <ul className="worksheet-data-pick-select">

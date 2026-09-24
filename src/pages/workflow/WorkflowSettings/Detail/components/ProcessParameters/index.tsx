@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { NODE_TYPE } from '../../../enum';

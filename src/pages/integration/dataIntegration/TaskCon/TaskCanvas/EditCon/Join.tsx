@@ -116,9 +116,10 @@ export default function Join(props) {
   const renderPopup = () => {
     return (
       <PopupWrap className="flexRow alignItemsCenter">
-        {JOIN_TYPE.map(o => {
+        {JOIN_TYPE.map((o, index) => {
           return (
             <li
+              key={index}
               className={cx('Hand Relative', { isCur: o.type === joinType })}
               onClick={() => {
                 setState({
@@ -217,7 +218,7 @@ export default function Join(props) {
         ].map((o, i) => {
           let typeData = JOIN_TYPE.find(it => it.type === joinType) || {};
           return (
-            <React.Fragment>
+            <React.Fragment key={i}>
               <div
                 className="flex"
                 onClick={() => {
@@ -257,7 +258,7 @@ export default function Join(props) {
       {(conditions || []).map((o, i) => {
         const { leftField, rightField } = o;
         return (
-          <div className="joinCondition flexRow alignItemsCenter mTop16">
+          <div key={i} className="joinCondition flexRow alignItemsCenter mTop16">
             <Dropdown
               placeholder={_l('请选择')}
               value={leftField.id}
@@ -347,7 +348,7 @@ export default function Join(props) {
                       ...(node.nodeConfig || {}),
                       config: {
                         ...(_.get(node, 'nodeConfig.config') || {}),
-                        conditions: (conditions || []).filter((a, index) => i !== index),
+                        conditions: (conditions || []).filter((_a, index) => i !== index),
                       },
                     },
                   });

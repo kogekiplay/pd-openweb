@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Select } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
@@ -19,8 +19,15 @@ import './index.less';
 
 const { Option } = Select;
 
-export default class EncryptRules extends Component<any, any> {
-  constructor(props) {
+export interface EncryptRulesProps {
+  projectId: string;
+  onClose: () => void;
+}
+
+export default class EncryptRules extends Component<EncryptRulesProps, any> {
+  declare promise: ApiResult | null;
+
+  constructor(props: EncryptRulesProps) {
     super(props);
     this.state = {
       loading: false,
@@ -31,7 +38,7 @@ export default class EncryptRules extends Component<any, any> {
     };
     this.promise = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getDataList();
   }
   getDataList = () => {
@@ -103,7 +110,7 @@ export default class EncryptRules extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { onClose, projectId } = this.props;
     const { searchValues, dataSource = [], showAddEditDialog, loading, pageIndex, totalCount } = this.state;
     const { type, state, name } = searchValues;
@@ -180,8 +187,8 @@ export default class EncryptRules extends Component<any, any> {
               ) : _.isEmpty(dataSource) ? (
                 <Empty className="w100 h100" detail={{ icon: 'icon-verify', desc: _l('无数据') }} />
               ) : (
-                dataSource.map(item => (
-                  <div className="flexRow listItem">
+                dataSource.map((item, index) => (
+                  <div key={index} className="flexRow listItem">
                     <div className="flex ellipsis">
                       {item.name}
                       {!!item.remark && (

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -16,11 +16,11 @@ export default class Guidance extends Component<any, any> {
       guide: guide ? Number(guide) : 1,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.saveGuide();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.sheetListVisible !== this.props.sheetListVisible) {
         setTimeout(() => {
@@ -31,7 +31,7 @@ export default class Guidance extends Component<any, any> {
       }
     }
   }
-  getGuideTextList(guide) {
+  getGuideTextList(guide: number) {
     const guideTextList = [
       {
         title: _l('你好，%0！', md.global.Account.fullname),
@@ -279,7 +279,7 @@ export default class Guidance extends Component<any, any> {
 
     return <Fragment />;
   }
-  render() {
+  override render() {
     const { guide } = this.state;
     const guideText = this.getGuideTextList(guide - 1);
     return (

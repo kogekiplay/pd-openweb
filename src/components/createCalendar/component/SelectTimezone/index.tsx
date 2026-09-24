@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import Dropdown from 'ming-ui/components/Dropdown';
 import './index.less';
 
@@ -17,7 +17,7 @@ export default class SelectTimezone extends PureComponent<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { data } = this.props;
     let { value, text } = this.getDefaultTimezone();
     return (
@@ -25,7 +25,7 @@ export default class SelectTimezone extends PureComponent<any, any> {
         <div className="timezoneLabel textTertiary">{_l('时区')}</div>
         <Dropdown
           className="timezoneDropdown"
-          isAppendBody
+          isAppendToBody
           data={data}
           onChange={this.handleChange}
           placeholder={text}

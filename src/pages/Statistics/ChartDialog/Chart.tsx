@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment, lazy, Suspense } from 'react';
+import { Component, createRef, Fragment, lazy, Suspense } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -59,11 +59,11 @@ let Chart = class Chart extends Component<any, any> {
     this.$chartRef = createRef(null);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.changeDragValue(this.props.direction);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.scopeVisible !== prevProps.scopeVisible || this.props.direction !== prevProps.direction) {
         setTimeout(() => {
@@ -220,9 +220,10 @@ let Chart = class Chart extends Component<any, any> {
       const params = { ...currentReport, map, contrast, contrastMap };
       return <Chart {...props} reportData={params} />;
     }
+    return undefined;
   }
 
-  render() {
+  override render() {
     const {
       loading,
       base,
@@ -324,7 +325,7 @@ let Chart = class Chart extends Component<any, any> {
                       }
                     },
                   );
-                  safeLocalStorageSetItem(`${direction}ChartSheetSheetSize`, sheetSize);
+                  safeLocalStorageSetItem(`${direction}ChartSheetSheetSize`, String(sheetSize));
                 }}
               />
             )}

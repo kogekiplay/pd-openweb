@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import 'src/pages/PageHeader/components/NetState/index.less';
@@ -36,6 +35,7 @@ export const upgradeVersionDialog = options => {
     description: descFunc(),
     noFooter: true,
   });
+  return undefined;
 };
 
 /**

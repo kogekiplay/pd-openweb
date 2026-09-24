@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -258,7 +258,7 @@ export const CodeSnippetEdit = ({
   );
 };
 
-const TITLE = {
+const TITLE: Record<number, string> = {
   0: _l('选择代码片段'),
   1: _l('插入JavaScript代码片段'),
   2: _l('插入Python代码片段'),
@@ -290,7 +290,7 @@ const CodeSnippet = ({
   const [selectId, setSelectId] = useState('');
   const [editCodeId, setEditCodeId] = useState('');
   const inputName = useRef<HTMLInputElement | null>(null);
-  const tagtextarea = useRef(null);
+  const tagtextarea = useRef<TagTextarea | null | undefined>(null);
   const hasAppResourceAuth = checkPermission(projectId, PERMISSION_ENUM.APP_RESOURCE_SERVICE);
 
   if (window.platformENV.isOverseas || window.platformENV.isLocal) {
@@ -538,7 +538,8 @@ const CodeSnippet = ({
                   getRef={tag => (tagtextarea.current = tag)}
                   lineNumbers
                   readonly
-                  maxHeight
+                  // 原来写的是 maxHeight（= true）：按数字算出来的是 -1 和 "truepx"，结果是不封顶，和 'auto' 相同
+                  maxHeight="auto"
                 />
               </ScrollView>
             )}

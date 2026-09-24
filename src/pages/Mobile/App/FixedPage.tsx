@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import Back from '../components/Back';
@@ -40,7 +40,7 @@ const FixedContent = styled.div`
 `;
 
 export default class FixedPage extends Component<any, any> {
-  render() {
+  override render() {
     const { fixAccount = {}, fixRemark, isNoPublish, backVisible = true } = this.props;
     const { fullName } = fixAccount;
 

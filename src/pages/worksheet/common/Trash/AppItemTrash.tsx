@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { string } from 'prop-types';
@@ -106,6 +106,7 @@ export default function AppItemTrash(props) {
   const data = appItems.map(appItem => [
     [
       <SvgIcon
+        key={'0'}
         url={
           appItem.iconUrl.startsWith('http')
             ? appItem.iconUrl
@@ -115,15 +116,16 @@ export default function AppItemTrash(props) {
         size={34}
         className="InlineBlock"
       />,
-      <span className="mLeft20 ellipsis" style={{ maxWidth: 250 }}>
+      <span key={'1'} className="mLeft20 ellipsis" style={{ maxWidth: 250 }}>
         {appItem.name}
       </span>,
     ],
-    <span className="ellipsis">
+    <span key={'1'} className="ellipsis">
       {appItem.type === 0 ? _l('工作表') : appItem.type === 1 ? _l('自定义页面') : _l('对话机器人')}
     </span>,
     [
       <UserHead
+        key={'0'}
         projectId={projectId}
         className="cellUserHead"
         user={{
@@ -133,11 +135,13 @@ export default function AppItemTrash(props) {
         appId={appId}
         size={24}
       />,
-      <span className="mLeft8 ellipsis">
+      <span key={'1'} className="mLeft8 ellipsis">
         {_.get(appItem, 'deletePerson.fullname') || _.get(appItem, 'deletePerson.fullName')}
       </span>,
     ],
-    <span className="textTertiary">{createTimeSpan(dateConvertToUserZone(appItem.deleteTime))}</span>,
+    <span key={'3'} className="textTertiary">
+      {createTimeSpan(dateConvertToUserZone(appItem.deleteTime))}
+    </span>,
   ]);
 
   function setPendingCache(key, value: boolean) {
@@ -176,7 +180,7 @@ export default function AppItemTrash(props) {
       });
   }
 
-  function onRestore(itemIndex) {
+  function onRestore(itemIndex: number) {
     const appItem = appItems[itemIndex];
 
     if (cache.current['pending_' + appItem.id]) {
@@ -209,7 +213,7 @@ export default function AppItemTrash(props) {
       });
   }
 
-  function onDelete(itemIndex) {
+  function onDelete(itemIndex: number) {
     const needDeleteItem = appItems[itemIndex];
     Dialog.confirm({
       title: (

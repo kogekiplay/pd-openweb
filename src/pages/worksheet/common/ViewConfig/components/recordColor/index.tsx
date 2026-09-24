@@ -370,7 +370,7 @@ export default function (props) {
   const [openList, setState] = useState(['record', 'control']);
   const tabName = _l('颜色');
 
-  const renderHead = key => {
+  const renderHead = (key: string) => {
     return (
       <div
         className="headerCon Hand mTop24"
@@ -384,7 +384,7 @@ export default function (props) {
     );
   };
 
-  const onChangeControlByKey = key => {
+  const onChangeControlByKey = (key: string) => {
     updateCurrentView({
       ...view,
       appId,

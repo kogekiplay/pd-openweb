@@ -1,26 +1,9 @@
-// import moment from 'moment';
-// import 'moment/locale/zh-cn'; // 会导致 node_modules/moment 被 require 进来
-// import DatePicker from './DatePicker';
-// import RangePicker from './RangePicker';
-// import DateDropdDown from './DateDropdDown';
-// import moment from 'moment';
-// import 'moment/locale/zh-cn'; // 会导致 node_modules/moment 被 require 进来
-// import DatePicker from './DatePicker';
-// import RangePicker from './RangePicker';
-// import DateDropdDown from './DateDropdDown';
-// import moment from 'moment';
-// import 'moment/locale/zh-cn'; // 会导致 node_modules/moment 被 require 进来
-// import DatePicker from './DatePicker';
-// import RangePicker from './RangePicker';
-// import DateDropdDown from './DateDropdDown';
-// import moment from 'moment';
-// import 'moment/locale/zh-cn'; // 会导致 node_modules/moment 被 require 进来
-// import DatePicker from './DatePicker';
-// import RangePicker from './RangePicker';
-// import DateDropdDown from './DateDropdDown';
-import DatePicker from 'ming-ui/components/NewDateTimePicker/date-time';
+import DateTime from 'ming-ui/components/NewDateTimePicker/date-time';
 import RangePicker from 'ming-ui/components/NewDateTimePicker/date-time-range';
 
-DatePicker.RangePicker = RangePicker;
+// 调用方写的是 DatePicker.RangePicker。原来是 DatePicker.RangePicker = RangePicker 事后挂上去，
+// 类型里没有这个静态成员（15 处 TS2339）。Object.assign 做的是同一件事（改的就是 DateTime 本身），
+// 只是返回值带上了 RangePicker 的类型
+const DatePicker = Object.assign(DateTime, { RangePicker });
 
 export default DatePicker;

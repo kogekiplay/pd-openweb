@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';

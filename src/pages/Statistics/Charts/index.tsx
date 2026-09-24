@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Loading } from '../components/ChartStatus';
 import { reportTypes } from './reportTypes';
 import VerificationDataLength from './VerificationDataLength';

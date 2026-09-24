@@ -1,16 +1,34 @@
-import React, { cloneElement, Component } from 'react';
+import { cloneElement, Component } from 'react';
+import type { MouseEventHandler, ReactElement } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Item from './Item';
+import type { ItemProps } from './Item';
 import './less/MenuItem.less';
 
-class MenuItem extends Component<any, any> {
+/** 子菜单（一个 <Menu>）上由 MenuItem 注入的属性 */
+interface SubMenuInjectedProps {
+  isSubMenu?: boolean | undefined;
+  subMenuVisible?: boolean | undefined;
+  getParentMenuItemNode?: (() => HTMLLIElement | null) | undefined;
+  className?: string | undefined;
+}
+
+// 其余属性经 Item 落到 <li> 上
+interface MenuItemProps extends Omit<ItemProps, 'subMenu' | 'setRef'> {
+  /** 悬停本项时展开的子菜单 */
+  subMenu?: ReactElement<SubMenuInjectedProps> | undefined;
+  /** 拿 <li> 节点 */
+  setRef?: ((node: HTMLLIElement | null) => void) | undefined;
+}
+
+class MenuItem extends Component<MenuItemProps, { showSubMenu: boolean }> {
   // 用 declare：只声明类型、不生成运行时字段（babel 的 TS preset 会整行擦掉）。
   // nativeElement 是 @rc-component/trigger 取 DOM 节点的约定入口，见 setItemRef。
-  declare menuItemNode: HTMLElement | null;
-  declare nativeElement: HTMLElement | null;
+  declare menuItemNode: HTMLLIElement | null;
+  declare nativeElement: HTMLLIElement | null;
 
-  static propTypes = {
+  static override propTypes = {
     icon: PropTypes.element,
     iconAtEnd: PropTypes.bool,
     subMenu: PropTypes.element,
@@ -23,11 +41,11 @@ class MenuItem extends Component<any, any> {
     setRef: PropTypes.func,
   };
 
-  state = {
+  override state = {
     showSubMenu: false,
   };
 
-  setItemRef = node => {
+  setItemRef = (node: HTMLLIElement | null) => {
     this.menuItemNode = node;
     // 【rc-component 取 DOM 节点的约定】MenuItem 常被当作 <Trigger> 的直接子元素
     //（如视图右键菜单里的「导出」，见 worksheet/components/ViewItems/SettingMenu.tsx）。
@@ -45,20 +63,20 @@ class MenuItem extends Component<any, any> {
     }
   };
 
-  handleMouseEnter(...args) {
+  handleMouseEnter(...args: Parameters<MouseEventHandler<HTMLLIElement>>) {
     this.setState({ showSubMenu: true });
     if (this.props.onMouseEnter) {
       this.props.onMouseEnter.apply(this, args);
     }
   }
-  handleMouseLeave(...args) {
+  handleMouseLeave(...args: Parameters<MouseEventHandler<HTMLLIElement>>) {
     this.setState({ showSubMenu: false });
     if (this.props.onMouseLeave) {
       this.props.onMouseLeave.apply(this, args);
     }
   }
 
-  render() {
+  override render() {
     let { subMenu } = this.props;
 
     if (subMenu) {

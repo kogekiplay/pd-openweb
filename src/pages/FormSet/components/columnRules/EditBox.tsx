@@ -33,6 +33,9 @@ import * as actions from './redux/actions/columnRules';
 import * as columnRules from './redux/actions/columnRules';
 
 class EditBox extends React.Component<any, any> {
+  declare addField: HTMLDivElement | null | undefined;
+  declare addAction: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -45,7 +48,7 @@ class EditBox extends React.Component<any, any> {
 
   // 筛选条件 // 筛选条件
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectRules.name !== this.state.name) {
         this.setState({
@@ -215,7 +218,7 @@ class EditBox extends React.Component<any, any> {
           const queryId = i.type === '2' && _.get(safeParse(i.value), 'id');
           const error = setValueError[`${actionIndex}-${childIndex}`];
           return (
-            <div className="flexColumn mBottom12">
+            <div key={childIndex} className="flexColumn mBottom12">
               <div className="setFieldContainer mBottom12">
                 <div className="fieldItem overflowEllipsis" key={i.controlId}>
                   <span className={cx({ Red: !control })}>{control ? control.controlName : _l('字段已删除')}</span>
@@ -226,7 +229,7 @@ class EditBox extends React.Component<any, any> {
                   onClick={() => {
                     const newActionData = {
                       ...currentActionData,
-                      controls: (currentActionData.controls || []).filter((c, cIndex) => cIndex !== childIndex),
+                      controls: (currentActionData.controls || []).filter((_c, cIndex) => cIndex !== childIndex),
                     };
                     controls.length === 1
                       ? ruleItems.splice(actionIndex, 1)
@@ -313,7 +316,7 @@ class EditBox extends React.Component<any, any> {
         {ruleItems.map((actionItem, actionIndex) => {
           const actionError = (ruleError.actionError || {})[actionIndex] || false;
           return (
-            <div className="actionItemCon">
+            <div key={actionIndex} className="actionItemCon">
               <Select
                 className={cx('ruleListSelect', { flexItem: _.includes([7], actionItem.type) })}
                 classNames={{ popup: { root: 'ruleListSelectDropdown' } }}
@@ -384,8 +387,9 @@ class EditBox extends React.Component<any, any> {
           popupAlign={{ points: ['tl', 'bl'], offset: [0, 4] }}
           popup={() => (
             <Fragment>
-              {listData.map(i => (
+              {listData.map((i, index) => (
                 <div
+                  key={index}
                   onClick={() =>
                     updateSelectRule('ruleItems', ruleItems.concat({ ...originActionItem, type: i.value }))
                   }
@@ -459,7 +463,7 @@ class EditBox extends React.Component<any, any> {
             values={controls}
             activeTab={activeTab}
             dropDownData={dropData}
-            onChange={(key, value) => {
+            onChange={(_key, value) => {
               const newVal = [{ controls: value, message, type: 6 }];
               updateSelectRule('ruleItems', newVal);
             }}
@@ -599,7 +603,7 @@ class EditBox extends React.Component<any, any> {
             values={controls}
             activeTab={activeTab}
             dropDownData={dropData}
-            onChange={(key, value) => {
+            onChange={(_key, value) => {
               const newVal = [{ controls: value, message, type: 11 }];
               updateSelectRule('ruleItems', newVal);
             }}
@@ -646,9 +650,10 @@ class EditBox extends React.Component<any, any> {
     if (activeTab === TAB_TYPES.LOCK_RULE) {
       return this.renderLockDesc();
     }
+    return undefined;
   };
 
-  render() {
+  override render() {
     const { selectRules = {}, updateSelectRule } = this.props;
     return (
       <ScrollView className="editRuleBox">

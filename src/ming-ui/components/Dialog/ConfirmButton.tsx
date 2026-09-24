@@ -1,8 +1,14 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
 
-class ConfirmButton extends Component<any, any> {
+export interface ConfirmButtonState {
+  loading: boolean;
+}
+
+class ConfirmButton extends Component<any, ConfirmButtonState> {
+  declare mounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -11,11 +17,11 @@ class ConfirmButton extends Component<any, any> {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
   }
 
@@ -47,7 +53,7 @@ class ConfirmButton extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     return (
       <Button
         type={this.props.type}

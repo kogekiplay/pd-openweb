@@ -33,6 +33,8 @@ import './index.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
 class PrintForm extends React.Component<any, any> {
+  declare confirmOk: boolean;
+
   constructor(props) {
     super(props);
     const { match = {} } = this.props;
@@ -96,7 +98,7 @@ class PrintForm extends React.Component<any, any> {
     this.confirmOk = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (location.href.indexOf('printForm') > -1 && browserIsMobile()) {
       this.getParamFn(() => this.getApp(() => this.getWorksheet()));
     } else {
@@ -107,14 +109,14 @@ class PrintForm extends React.Component<any, any> {
     $('html').addClass('printPage');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('printPage');
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
   getClientId = () => _.get(this.state, 'params.clientId') || window.clientId || sessionStorage.getItem('clientId');
 
-  setAppInfo = (data: Record<string, any> = {}, cb) => {
+  setAppInfo = (data: Record<string, any> = {}, cb: () => void) => {
     const { params } = this.state;
     const { type, from, appId, printType } = params;
 
@@ -133,7 +135,7 @@ class PrintForm extends React.Component<any, any> {
     });
   };
 
-  getApp = cb => {
+  getApp = (cb: () => void) => {
     const { params, cacheData } = this.state;
     const { appId } = params;
     const appDetail = _.get(cacheData, 'appDetail.detail') || _.get(cacheData, 'appDetail');
@@ -148,7 +150,7 @@ class PrintForm extends React.Component<any, any> {
     });
   };
 
-  getParamFn = (cb?) => {
+  getParamFn = (cb?: (() => void) | undefined) => {
     if (location.href.indexOf('printForm') > -1) {
       const { params = {} } = this.state;
       const { key } = params;
@@ -270,7 +272,7 @@ class PrintForm extends React.Component<any, any> {
       });
   };
 
-  handleKeyDown = evt => {
+  handleKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === 'Escape') {
       this.setState({ showPdf: false, showHeader: true });
     }
@@ -546,7 +548,7 @@ class PrintForm extends React.Component<any, any> {
           (['2', '5', '6'].includes(o.advancedSetting.showtype) || [34, 51].includes(o.type)) //关联表列表||子表||查询列表
         ) {
           //关联表 列表
-          let relations = [];
+          let relations: Pick<FormControl, "type" | "controlId">[] = [];
           o.relationControls.map(it => {
             if (it.checked) {
               relations.push(_.pick(it, ['controlId', 'type']));
@@ -823,6 +825,7 @@ class PrintForm extends React.Component<any, any> {
         },
       });
     }
+    return undefined;
   };
 
   onClickPrint = () => {
@@ -895,7 +898,7 @@ class PrintForm extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const {
       params,
       printData,

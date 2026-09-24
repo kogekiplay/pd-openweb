@@ -38,10 +38,11 @@ AdminCommon.getAuthority = async () => {
     const showManager = hasBackStageAdminAuth({ myPermissions });
     const hasPurchaseAuth = canPurchase({ myPermissions });
 
+    // 结果里既有权限 id（数字），也有前端自己的标记（PERMISSION_ENUM 里的字符串），用展开拼（和原来的 concat 等价）
     res.push(
-      ...myPermissions
-        .concat(hasPurchaseAuth ? PERMISSION_ENUM.CAN_PURCHASE : [])
-        .concat(showManager ? PERMISSION_ENUM.SHOW_MANAGER : PERMISSION_ENUM.SHOW_MY_CHARACTER),
+      ...myPermissions,
+      ...(hasPurchaseAuth ? [PERMISSION_ENUM.CAN_PURCHASE] : []),
+      showManager ? PERMISSION_ENUM.SHOW_MANAGER : PERMISSION_ENUM.SHOW_MY_CHARACTER,
     );
   } else {
     // 是否允许申请管理员

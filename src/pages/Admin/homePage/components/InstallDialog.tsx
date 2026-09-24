@@ -1,4 +1,4 @@
-import React, { Fragment, useRef } from 'react';
+import { Fragment, useRef } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Button } from 'ming-ui';
@@ -7,7 +7,7 @@ import projectAjax from 'src/api/project';
 import { pathCompletion } from 'src/utils/common';
 import copy from 'src/utils/copyToClipboard';
 
-const TYPE_CONFIG = {
+const TYPE_CONFIG: Record<string, { title: string; explain: string; text: string }> = {
   desktop: {
     title: _l('安装桌面客户端'),
     explain: _l('为您的成员安装桌面客户端，支持MAC或者Windows系统'),
@@ -92,7 +92,7 @@ export default ({ projectId, type, onClose }: { projectId?: string; [key: string
   const { AjaxApiUrl } = _.get(md, ['global', 'Config']);
   const isDesktop = type === 'desktop';
   const $ref = useRef(null);
-  const $copy = useRef(null);
+  const $copy = useRef<Button | null>(null);
   const downloadUrl = pathCompletion('/download');
 
   const handleSelectUser = () => {

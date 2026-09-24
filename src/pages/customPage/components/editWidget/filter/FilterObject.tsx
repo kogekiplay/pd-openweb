@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Checkbox, Divider, Dropdown, Input, Space } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';

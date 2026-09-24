@@ -6,7 +6,7 @@ import googleIcon from './img/google.svg';
 import microsoftIcon from './img/microsoft.png';
 import { getWorkWeiXinCorpInfoByApp } from './util';
 
-const integrationInto = {
+const integrationInto: Record<string, { iconClassName: string; text: string }> = {
   1: { iconClassName: 'dingIcon', text: _l('钉钉登录') },
   3: { iconClassName: 'workWeixinIcon', text: _l('企业微信登录') },
   6: { iconClassName: 'feishuIcon', text: _l('飞书登录') },
@@ -95,7 +95,7 @@ export default function (props) {
       <a
         onClick={() => {
           if (_.includes([1, 6, 7], projectIntergrationType)) {
-            const authPathMap = { 1: 'dingding', 6: 'feishu', 7: 'microsoft' };
+            const authPathMap: Record<number, string> = { 1: 'dingding', 6: 'feishu', 7: 'microsoft' };
             location.href = pathCompletion(`/auth/${authPathMap[projectIntergrationType]}?p=${projectId}`);
           } else {
             const request = getRequest();
@@ -166,9 +166,9 @@ export default function (props) {
             </a>
           )}
           {!_.isEmpty(googleSsoSet) &&
-            googleSsoSet.map(o => {
+            googleSsoSet.map((o, index) => {
               return (
-                <a href={isMobile ? o.h5IndexUrl : o.webIndexUrl} className="w100 flexRow alignItemsCenter">
+                <a key={index} href={isMobile ? o.h5IndexUrl : o.webIndexUrl} className="w100 flexRow alignItemsCenter">
                   {o.tpType === 13 ? (
                     <React.Fragment>
                       <img src={googleIcon} width="20px" className="mRight8" />

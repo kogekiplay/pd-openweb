@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { Checkbox, Dialog } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

@@ -29,7 +29,7 @@ let SelectionIndicator = class SelectionIndicator extends React.Component<any, a
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { groupingScroll, grouping } = this.props;
 
@@ -43,7 +43,7 @@ let SelectionIndicator = class SelectionIndicator extends React.Component<any, a
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { chartScroll, groupingScroll, base } = this.props;
     this.gunterViewEl = document.querySelector(`.gunterView-${base.viewId}`);
     this.gunterViewEl && this.gunterViewEl.addEventListener('mousemove', this.handleMouseMove);
@@ -54,7 +54,7 @@ let SelectionIndicator = class SelectionIndicator extends React.Component<any, a
     groupingScroll && groupingScroll.on('scrollStart', this.handleMouseLeave);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { chartScroll, groupingScroll } = this.props;
     this.gunterViewEl && this.gunterViewEl.removeEventListener('mousemove', this.handleMouseMove);
     this.gunterViewEl && this.gunterViewEl.removeEventListener('mouseleave', this.handleMouseLeave);
@@ -115,7 +115,7 @@ let SelectionIndicator = class SelectionIndicator extends React.Component<any, a
     }
   };
 
-  render() {
+  override render() {
     const { editIndex, searchRecordId, chartScroll } = this.props;
     const { top, height } = this.state;
     return (

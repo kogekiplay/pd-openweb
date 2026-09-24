@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -8,7 +8,9 @@ import { getTabTypeBySelectUser } from 'src/pages/worksheet/common/WorkSheetFilt
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
 export default class Users extends Component<any, any> {
-  static propTypes = {
+  declare userscon: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     disabled: PropTypes.bool,
     projectId: PropTypes.string,
     onChange: PropTypes.func,
@@ -195,7 +197,7 @@ export default class Users extends Component<any, any> {
       );
     }
   }
-  render() {
+  override render() {
     const { disabled } = this.props;
     const { users } = this.state;
     return (

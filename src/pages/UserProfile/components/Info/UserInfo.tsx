@@ -3,9 +3,9 @@ import UserMoreProfile from 'src/components/UserInfoComponents/UserMoreProfile.j
 import InfoTop from './UserInfoTop';
 
 class Info extends Component<any, any> {
-  state = {};
+  override state = {};
 
-  render() {
+  override render() {
     return (
       <React.Fragment>
         <div className="userInfoBox card BoderRadAll_5">

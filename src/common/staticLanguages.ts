@@ -416,11 +416,12 @@ const staticLanguages: Record<string, LangMap> = {
 
 /** 选语言：cookie 优先，其次按浏览器语言归一，最后兜底英文 */
 function detectLang(): LangTag {
-  const cookieMatch = document.cookie.match(new RegExp('(^| )i18n_langtag=([^;]*)(;|$)'));
+  // 第 2 个捕获组只要匹配上就一定有值（可能是空串）
+  const cookieValue = document.cookie.match(new RegExp('(^| )i18n_langtag=([^;]*)(;|$)'))?.[2];
 
-  if (cookieMatch) {
+  if (cookieValue !== undefined) {
     // cookie 里可以是任何值；取不到译文时下面会自己回落到 en，所以这里断言是安全的
-    return decodeURIComponent(cookieMatch[2]) as LangTag;
+    return decodeURIComponent(cookieValue) as LangTag;
   }
 
   switch (navigator.language) {
@@ -450,6 +451,7 @@ const lang = detectLang();
 function transformFunc(elements: ArrayLike<Element>): void {
   for (let i = 0; i < elements.length; i++) {
     const element = elements[i];
+    if (!element) continue; // i < length，恒有值；只为类型如实
     const content = element.getAttribute('content') || element.innerHTML;
     const langMap = staticLanguages[content];
 

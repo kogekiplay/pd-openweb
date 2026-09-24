@@ -49,7 +49,7 @@ export function getDefaultText({
     };
   }
 
-  return;
+  return undefined;
 }
 
 const DPI_MM = 8;
@@ -199,9 +199,11 @@ export function createBarLabeObjectFromConfig(
   config: PrintLabelConfig = {},
   value: string,
   texts = [],
-  // 调用点除了 isPreview 还会传 pixelRadio（print.ts 的条码分支传 1.5），
-  // 这一项直接并进 BarLabel 的配置里，所以类型取 BarLabelOptions 的子集。
-  { isPreview = false, ...restLabelOptions }: BarLabelOptions = {},
+  /* 调用点除了 isPreview 还会传 pixelRadio（print.ts 的条码分支传 1.5），所以类型取 BarLabelOptions 的子集。
+     【注意：pixelRadio 在这里没有生效】下面 new BarLabel 从来没收它（上游原本就只解构了 isPreview），
+     条码标签一直按 BarLabel 的默认 2 倍渲染；二维码那一路（createQrLabeObjectFromConfig）是 ...options 透传的，1.5 生效。
+     透下去会把已经用了很久的条码打印分辨率从 2 倍降到 1.5 倍 —— 对要上扫码枪的条码是实打实的风险，没有顺手改。 */
+  { isPreview = false }: BarLabelOptions = {},
 ) {
   let width, height;
 
@@ -388,14 +390,14 @@ export function getCompressedFontSize(value, width: number, options = {}) {
 
 const BAR_FONT_SIZE = 15;
 
-function parseToCode128(value) {
+function parseToCode128(value: string) {
   const parsed = JsBarcode({}, value, {
     format: 'CODE128',
   });
   return _.get(parsed, '_encodings.0.0');
 }
 
-function getBarcodeBase64(value, { width = 100, height = 100 } = {}) {
+function getBarcodeBase64(value: string, { width = 100, height = 100 } = {}) {
   const canvas = document.createElement('canvas');
   const fontSize = Math.max((height / 100) * 7, BAR_FONT_SIZE);
   const code128 = parseToCode128(value);
@@ -576,7 +578,7 @@ export class BarLabel {
       this._height - 2 * paddingY * this.unitSize,
     );
   }
-  drawImageUrl(url, { x, y, width, height } = {}) {
+  drawImageUrl(url: string, { x, y, width, height } = {}) {
     return new Promise(resolve => {
       const image = new Image();
 
@@ -643,7 +645,7 @@ export class BarLabel {
         : this._height - (paddingY + height * 1.08) * this.unitSize,
     );
   }
-  measureTextWidth(value, fontSize: number) {
+  measureTextWidth(value: string, fontSize: number) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     ctx.font = fontSize + 'px sans-serif';
@@ -852,10 +854,28 @@ export class QrLabel {
     this.ctx.fillStyle = color;
     this.ctx.fillText(content, isCenter && !forceInLine ? x + width / 2 : x, y + (fontSize - textFontSize) / 2);
   }
-  renderVerticalTexts({ x = 0, y = 0, fontSize, textList, color = '#222', width, firstIsBold }) {
+  renderVerticalTexts({
+    x = 0,
+    y = 0,
+    fontSize,
+    textList,
+    color = '#222',
+    width,
+    firstIsBold,
+  }: {
+    textList: CanvasLabelText[];
+    x: number;
+    y: number;
+    width: number;
+    fontSize: number;
+    firstIsBold: boolean;
+    color?: string | undefined;
+  }) {
     const { isPreview } = this.options;
     let textTop = y;
-    const texts = _.flatten(
+    /* 泛型必须显式写：map 的回调要么返回单个对象、要么返回对象数组，
+       lodash 的 flatten 从这个并集推不出元素类型，会得到 unknown[] */
+    const texts = _.flatten<{ text?: string; forceInLine?: boolean; isBold?: boolean }>(
       textList.map(({ text, forceInLine } = {}, i) =>
         forceInLine
           ? { text, forceInLine, isBold: this.firstIsTitle && i === 0 }

@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Input } from 'antd';
 
 export default class MeasureAxis extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { currentReport, onChangeDisplayValue } = this.props;
     const { displaySetup } = currentReport;
     const { ydisplay } = displaySetup;

@@ -21,7 +21,7 @@ import { SelectValue, Wrap } from './style';
 import { canSetGroup } from './util';
 import type { FormControl } from 'src/utils/controlTypes';
 
-const NAV_GROUP_MAPPING = {
+const NAV_GROUP_MAPPING: Record<string, string> = {
   navfilters: 'groupfilters',
   navshow: 'groupshow',
   navsorts: 'groupsorts',
@@ -156,7 +156,8 @@ export default function (props) {
                   className="allCanSelectFields"
                   hoverTheme
                   renderTitle={obj => {
-                    const { icon, text } = obj || {};
+                    const icon = obj?.icon;
+                    const text = obj?.text;
                     return (
                       <SelectValue className={cx({ Red: !isValidField })}>
                         <Icon icon={isValidField ? icon : 'error1'} className={cx({ Red: !isValidField })} />

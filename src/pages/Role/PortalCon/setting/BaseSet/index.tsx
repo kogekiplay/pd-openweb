@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox, PriceTip, Radio } from 'ming-ui';
@@ -55,7 +55,13 @@ export default function BaseSet(props) {
     setInternalControls((portalSetModel.internalControls || []).filter(l => _controls.find(m => m.value === l)));
   }, [_.get(props, ['portalSet', 'portalSetModel'])]);
 
-  const changeMode = (checked: boolean, oKey: string, key: string, WAY, cb) => {
+  const changeMode = (
+    checked: boolean,
+    oKey: string,
+    key: string,
+    WAY: { key: string; txt: string }[],
+    cb: () => void,
+  ) => {
     const { portalSet = {} } = props;
     const { portalSetModel = {} } = portalSet;
     let num = 0;
@@ -118,12 +124,13 @@ export default function BaseSet(props) {
         />
         <h6 className={cx('Font16 textPrimary Bold mBottom0 mTop24', { mTop24: isFrontDomain })}>{_l('注册方式')}</h6>
         <div className="">
-          {REJISTER_WAY.map(o => {
+          {REJISTER_WAY.map((o, index) => {
             const { portalSet = {} } = props;
             const { portalSetModel = {} } = portalSet;
             const { registerMode = {} } = portalSetModel;
             return (
               <Checkbox
+                key={index}
                 className="mTop16 InlineBlock mRight60 setCheckbox"
                 text={o.txt}
                 checked={registerMode[o.key]}
@@ -142,12 +149,13 @@ export default function BaseSet(props) {
         </div>
         <h6 className={cx('Font16 textPrimary Bold mBottom0 mTop24', { mTop24: isFrontDomain })}>{_l('登录方式')}</h6>
         <div className="">
-          {LOGIN_WAY_LIST.map(o => {
+          {LOGIN_WAY_LIST.map((o, index) => {
             const { portalSet = {} } = props;
             const { portalSetModel = {} } = portalSet;
             const { loginMode = {} } = portalSetModel;
             return (
               <Checkbox
+                key={index}
                 className="mTop16 InlineBlock mRight60 setCheckbox"
                 text={o.txt}
                 checked={loginMode[o.key]}
@@ -203,6 +211,7 @@ export default function BaseSet(props) {
           {ALLOW_TYPE.map((o, i) => {
             return (
               <Radio
+                key={i}
                 className=""
                 text={o}
                 checked={allowUserType === (i + 1) * 3}

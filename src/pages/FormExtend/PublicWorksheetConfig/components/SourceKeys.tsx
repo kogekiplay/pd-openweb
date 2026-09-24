@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { TextBlock } from 'worksheet/components/Basics';
@@ -69,7 +69,7 @@ export default function ({
   };
 
   return sourceKeys.map((key, index: number) => (
-    <Fragment>
+    <Fragment key={index}>
       <Con key={key} className="mBottom6 flexRow">
         <No>
           <span className="index">{index + 1}</span>

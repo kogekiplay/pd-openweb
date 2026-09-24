@@ -99,6 +99,11 @@ export function applyAppTheme(seed: string): void {
   repaint();
 }
 
+/** 当前生效的种子色（不在应用里时是平台色）。给渲染在 React 树之外的 antd 静态方法用，见 staticHolderTheme.tsx */
+export function currentThemeSeed(): string {
+  return activeSeed || PLATFORM_PRIMARY;
+}
+
 /** 离开应用时调 —— 不是「清空」，是「还原成平台色」。 */
 export function resetToPlatformTheme(): void {
   if (activeSeed === null) return;

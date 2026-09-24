@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Skeleton } from 'ming-ui';
@@ -202,7 +202,7 @@ export default function PrintQrBarCode(props) {
   const maxLineNumber = (labelObject || {}).maxLineNumber || 0;
 
   function handlePrint() {
-    const printTypeObj = { 1: 'printQRCode', 3: 'printBarCode' };
+    const printTypeObj: Record<number, string> = { 1: 'printQRCode', 3: 'printBarCode' };
     addBehaviorLog(printTypeObj[config.printType], worksheetId, { msg: [allowLoadMore ? count : selectedRows.length] }); // 埋点
 
     generatePdf({
@@ -222,7 +222,7 @@ export default function PrintQrBarCode(props) {
     });
   }
 
-  function handleKeyDown(e) {
+  function handleKeyDown(e: KeyboardEvent) {
     if (e.keyCode === 27) {
       onClose();
     }

@@ -53,7 +53,9 @@ const PlaceHolder = styled.div`
 const MAX_COUNT = 50;
 
 export default class RelateRecordDropdown extends React.Component<any, any> {
-  static propTypes = {
+  declare isAssignedSearchControl: boolean | undefined;
+
+  static override propTypes = {
     disableNewRecord: PropTypes.bool,
     isQuickFilter: PropTypes.bool,
     insheet: PropTypes.bool,
@@ -99,7 +101,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
     this.focusInput = this.focusInput.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.isediting) {
       if (this.canSelect) {
         setTimeout(() => {
@@ -120,7 +122,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       // 表格内退出编辑态，提交面板内累积的变更
       if (prevProps.isediting && !this.props.isediting) {
@@ -260,7 +262,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
       };
     } catch (err) {
       console.log(err);
-      return;
+      return undefined;
     }
   }
 
@@ -827,7 +829,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
     );
   }
 
-  renderSelected(free?) {
+  renderSelected(free?: boolean | undefined) {
     const {
       control,
       recordId,
@@ -950,7 +952,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       from,
       appId,

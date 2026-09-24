@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox, Dialog, FunctionWrap, LoadDiv, ScrollView } from 'ming-ui';
@@ -6,6 +6,8 @@ import JobController from 'src/api/job';
 import './style.less';
 
 class DialogSelectJob extends Component<any, any> {
+  declare searchRequst: _.DebouncedFuncLeading<() => void> | undefined;
+
   static defaultProps = {
     projectId: '',
     unique: false,
@@ -13,7 +15,7 @@ class DialogSelectJob extends Component<any, any> {
     onClose: () => {},
   };
 
-  state = {
+  override state = {
     data: [],
     selectData: [],
     loading: true,
@@ -24,7 +26,7 @@ class DialogSelectJob extends Component<any, any> {
 
   promise = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchData();
   }
 
@@ -126,7 +128,7 @@ class DialogSelectJob extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { onClose, projectId, onSave, showCompanyName, overlayClosable, visible } = this.props;
     const { keywords, selectData } = this.state;
 

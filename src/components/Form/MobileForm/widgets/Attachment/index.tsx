@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -23,7 +23,9 @@ import { isOpenPermit } from '../../tools/utils';
 import './index.less';
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  declare _isUnmounted: boolean;
+
+  static override propTypes = {
     disabled: PropTypes.bool,
     advancedSetting: PropTypes.object,
     flag: PropTypes.string,
@@ -70,13 +72,13 @@ export default class Widgets extends Component<any, any> {
     this._isUnmounted = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.state.loading) {
       this.loadAttachments();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.flag !== this.props.flag) {
         const initMobileFiles = {
@@ -103,7 +105,7 @@ export default class Widgets extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this._isUnmounted = true;
   }
 
@@ -576,7 +578,7 @@ export default class Widgets extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       from,
       worksheetId,

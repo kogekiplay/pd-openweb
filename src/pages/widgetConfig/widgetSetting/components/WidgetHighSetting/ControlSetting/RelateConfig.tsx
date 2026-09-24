@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
@@ -71,8 +71,8 @@ export default function RelateConfig(props) {
           className="w100"
           menuClass="w100"
           style={{ marginTop: '8px' }}
-          loading={loading}
-          noneContent={_l('请先选择关联表')}
+          itemLoading={loading}
+          noData={_l('请先选择关联表')}
           placeholder={
             selectedViewIsDeleted ? <span className="Red">{_l('视图已删除，请重新选择')}</span> : _l('选择视图')
           }

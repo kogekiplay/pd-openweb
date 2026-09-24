@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { Button, Icon, LoadDiv } from 'ming-ui';
 import projectController from 'src/api/project';
@@ -7,7 +7,19 @@ import { pathCompletion } from 'src/utils/common';
 import { getCurrentProject } from 'src/utils/project';
 import Config from '../../../config';
 
-export default class CloseNet extends Component<any, any> {
+export interface CloseNetState {
+  isLoading: boolean;
+  effectiveApkCount: number | undefined;
+  effectiveWorksheetCount: number | undefined;
+  effectiveWorksheetRowCount: number | undefined;
+  disabled: boolean;
+}
+
+export interface CloseNetProps {
+  setLevel: (value: number) => void;
+}
+
+export default class CloseNet extends Component<CloseNetProps, CloseNetState> {
   constructor() {
     super();
     this.state = {
@@ -19,7 +31,7 @@ export default class CloseNet extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -41,7 +53,7 @@ export default class CloseNet extends Component<any, any> {
       });
   }
 
-  getFormatText = num => {
+  getFormatText = (num: number | undefined) => {
     return this.state.isLoading || !_.isNumber(num) ? '-' : formatValue(num);
   };
 
@@ -69,7 +81,7 @@ export default class CloseNet extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { isLoading, effectiveApkCount, effectiveWorksheetCount, effectiveWorksheetRowCount, disabled } = this.state;
     const currentProject = getCurrentProject(Config.projectId);
 

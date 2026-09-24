@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -37,6 +37,8 @@ const ByUserWrap = styled.div`
 `;
 
 export default class ByUser extends Component<any, any> {
+  declare ajaxRequst: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -56,7 +58,7 @@ export default class ByUser extends Component<any, any> {
         className: 'flex minWidth120 pLeft10',
         render: item => {
           const { user } = item;
-          if (!user) return;
+          if (!user) return undefined;
           return (
             <div className="flexRow userInfo">
               <UserHead
@@ -89,9 +91,9 @@ export default class ByUser extends Component<any, any> {
                     {departments.map((v, depIndex) => {
                       const fullName = (this.state.fullDepartmentInfo[v.departmentId] || '').split('/');
                       return (
-                        <div className={cx({ mBottom8: depIndex < departments.length - 1 })}>
+                        <div key={depIndex} className={cx({ mBottom8: depIndex < departments.length - 1 })}>
                           {fullName.map((n, i) => (
-                            <span>
+                            <span key={i}>
                               {n}
                               {fullName.length - 1 > i && <span className="mLeft8 mRight8">/</span>}
                             </span>
@@ -162,7 +164,7 @@ export default class ByUser extends Component<any, any> {
       },
     ];
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getList();
   }
 
@@ -266,7 +268,7 @@ export default class ByUser extends Component<any, any> {
         this.setState({ disabledExportBtn: false });
       });
   };
-  render() {
+  override render() {
     const { projectId, appId } = this.props;
     let { list = [], loading, pageIndex, userInfo = [], total, disabledExportBtn, dateInfo = {} } = this.state;
     return (

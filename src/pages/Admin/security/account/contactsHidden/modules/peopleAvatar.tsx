@@ -9,7 +9,7 @@ const UserHeadWrap = styled(UserHead)`
 `;
 
 export default class PeopleAvatar extends React.Component<any, any> {
-  render() {
+  override render() {
     const { user = {}, projectId } = this.props;
 
     return (

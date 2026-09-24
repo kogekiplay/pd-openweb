@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Button, ConfigProvider, Modal, Select, Tabs } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -71,6 +71,8 @@ const Wrap = styled.div`
 `;
 
 export default class SheetModal extends Component<any, any> {
+  declare hideAggregation: boolean;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -94,7 +96,7 @@ export default class SheetModal extends Component<any, any> {
       !featureType ||
       featureType === '2';
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { activeKey, newWorksheetId } = this.state;
     const { appId } = this.props;
     this.getMyApps();
@@ -158,7 +160,13 @@ export default class SheetModal extends Component<any, any> {
         });
       });
   }
-  setViewsData = (worksheetId: string, data) => {
+  setViewsData = (
+    worksheetId: string,
+    data:
+      | { show: boolean }
+      | { loading: boolean }
+      | { views: HapApi.MD.Entity.Worksheet.WorksheetViewEntity[]; show: boolean; loading: boolean },
+  ) => {
     const { viewsData } = this.state;
     this.setState({
       viewsData: {
@@ -468,7 +476,7 @@ export default class SheetModal extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { dialogVisible } = this.props;
     return (
       <Modal

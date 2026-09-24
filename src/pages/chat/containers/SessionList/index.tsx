@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
@@ -21,16 +21,18 @@ import './index.less';
 
 const ClickAwayable = ClickAway;
 class ContextMenu extends Component<any, any> {
+  declare popup: HTMLDivElement | undefined;
+
   constructor(props) {
     super(props);
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.popup = document.createElement('div');
     this.popup.className = 'ChatList-ContextMenu';
     document.querySelector('body').appendChild(this.popup);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         this.renderLayer(this.props);
@@ -55,7 +57,7 @@ class ContextMenu extends Component<any, any> {
       this.handleShow(offset);
     }, 200);
   }
-  render() {
+  override render() {
     return <noscript />;
   }
 }
@@ -90,6 +92,11 @@ const getOffsetData = function (rootW: number, rootH: number, nativeEvent) {
 };
 
 class SessionList extends Component<any, any> {
+  declare isWindowChat: boolean;
+  declare resizeObserver: ResizeObserver | undefined;
+  declare sessionListWrap: HTMLDivElement | null | undefined;
+  declare loading: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -106,7 +113,7 @@ class SessionList extends Component<any, any> {
     };
     this.isWindowChat = location.href.includes('windowChat');
   }
-  componentDidMount() {
+  override componentDidMount() {
     // const { visible } = this.props;
     // 会话列表
     this.getChatSessionList(this.state.pageIndex);
@@ -114,11 +121,11 @@ class SessionList extends Component<any, any> {
     window.handleOpenChatPanel = this.handleOpenChatPanel.bind(this);
     // !visible && this.handleResizeObserver();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.resizeObserver && this.resizeObserver.unobserve(this.sessionListWrap);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { chatCount } = this.state;
       const { sessionList, currentSession } = this.props;
@@ -660,7 +667,7 @@ class SessionList extends Component<any, any> {
       );
     }
   }
-  render() {
+  override render() {
     const { loading, menuVisible, offset, hoverItem, isClear, chatCount } = this.state;
     const { currentSession, visible, sessionList, isOpenCommonApp } = this.props;
     return (

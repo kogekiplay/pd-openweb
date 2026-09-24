@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { LoadDiv, ScrollView } from 'ming-ui';
 import { getPrintLayoutConfig } from '../../core/layout';

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { RefreshFieldData, SelectNodeObject } from '../components';
 
 export default ({ data, SelectNodeObjectChange, updateSource }) => {

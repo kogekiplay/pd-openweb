@@ -11,7 +11,7 @@ const scheduleConfig = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  delete: function (args, options?) {
+  delete: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleConfig/delete';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleConfigdelete', JSON.stringify(args), $.extend(base, options));
@@ -36,7 +36,7 @@ const scheduleConfig = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  update: function (args, options?) {
+  update: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleConfig/update';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleConfigupdate', JSON.stringify(args), $.extend(base, options));
@@ -55,7 +55,7 @@ const scheduleConfig = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  find: function (args, options?) {
+  find: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleConfig/find';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleConfigfind', JSON.stringify(args), $.extend(base, options));
@@ -75,7 +75,7 @@ const scheduleConfig = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLastValue: function (args, options?) {
+  getLastValue: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleConfig/getLastValue';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleConfiggetLastValue', JSON.stringify(args), $.extend(base, options));
@@ -99,7 +99,7 @@ const scheduleConfig = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  add: function (args, options) {
+  add: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleConfig/add';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleConfigadd', JSON.stringify(args), $.extend(base, options));
@@ -115,7 +115,7 @@ const scheduleConfig = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  get: function (args, options?) {
+  get: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleConfig/get';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleConfigget', JSON.stringify(args), $.extend(base, options));
@@ -135,7 +135,7 @@ const scheduleConfig = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  list: function (args, options?) {
+  list: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'scheduleConfig/list';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'scheduleConfiglist', JSON.stringify(args), $.extend(base, options));

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, Checkbox, ConfigProvider, Dropdown, Form, Input, Menu, Modal, Select } from 'antd';
 import _ from 'lodash';
@@ -110,7 +110,7 @@ class LineConfigModal extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible && !prevProps.visible) {
         this.setState({
@@ -148,7 +148,7 @@ class LineConfigModal extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { lineConfig } = this.state;
     const { visible, onCancel, yaxisList, rightYaxisList, reportType } = this.props;
     const { type } = lineConfig;
@@ -244,8 +244,8 @@ class LineConfigModal extends Component<any, any> {
                     this.handleChangeConfig({ controlId: value });
                   }}
                 >
-                  {allYaxisList.map(item => (
-                    <Select.Option className="selectOptionWrapper" value={item.controlId}>
+                  {allYaxisList.map((item, index) => (
+                    <Select.Option key={index} className="selectOptionWrapper" value={item.controlId}>
                       {item.controlName || <span className="Red">{_l('当前字段已删除')}</span>}
                     </Select.Option>
                   ))}
@@ -418,7 +418,7 @@ export default class AuxiliaryLine extends Component<any, any> {
       </Menu>
     );
   };
-  render() {
+  override render() {
     const { currentReport } = this.props;
     const { displaySetup, yaxisList, rightY, reportType } = currentReport;
     const rightYaxisList = _.get(rightY, ['yaxisList']);

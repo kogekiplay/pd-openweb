@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 
@@ -19,10 +19,30 @@ async function getMermaid() {
     m.initialize({
       startOnLoad: false,
       theme: 'neutral',
+      /* 【layout / look 这两条是 mermaid 12 升级时补的，不能删】
+         v12 把 ELK 换成了默认布局引擎（flowchart / state / class / ER / requirement 全部），
+         并把默认外观换成了 neo —— 两者都不报错，只是**同一段图源会排出不一样的版面、
+         画出不一样的配色**。历史对话里已经渲染过的图会跟着变样。
+         显式钉回 dagre + classic，升级就只是升版本，不附带视觉变更。
+         这两个键在 v11 里也存在（且就是当时的默认值），所以写上去是向下兼容的。 */
+      layout: 'dagre',
+      look: 'classic',
       fontFamily: "'PingFang SC', 'Microsoft YaHei', sans-serif",
       er: { useMaxWidth: true, diagramPadding: 16 },
-      // htmlLabels=false：流程图标签改用纯 SVG 文本而非 foreignObject(HTML)，
-      // 否则导出 PNG 时 foreignObject 内的 HTML 无法被 canvas 正确绘制，标签会丢失。
+      /* 【htmlLabels: false 只有一半生效，但保留——删掉会改变连线标签的渲染】
+         这里原先的注释写着「否则导出 PNG 时 foreignObject 内的 HTML 画不出来、标签会丢失」，
+         **那是错的**。2026-09-23 拿本文件下面 downloadDiagramPng 的真实导出路径实测过
+         （mermaid 11.17.2 与 12.0.0 各一遍，同一段图源、同一份 config）：导出的 PNG 里
+         6 个标签一个不少 —— Chromium 会把 data:URL 里的 foreignObject 照常画进 canvas。
+         它只有一半生效的原因：mermaid 早已把 flowchart.htmlLabels 标成 deprecated
+         （FLOWCHART_HTML_LABELS_DEPRECATED），真正的开关是**顶层** htmlLabels。
+         下面这三个名字里只有 getEffectiveHtmlLabels 能在装好的包里搜到
+         （node_modules/mermaid/dist/mermaid.core.mjs）；另两个是 mermaid 源码里的名字，
+         压缩产物里已经没有了，别照着 grep node_modules 然后以为注释在瞎说。
+         节点标签走 labelHelper()，那里只读 getConfig().htmlLabels，我们没设这个键，
+         而 evaluate(undefined) 判定为 true —— 所以节点标签照旧是 foreignObject；
+         只有连线标签走 getEffectiveHtmlLabels()（它才会回退到 flowchart.htmlLabels）变成 <text>。
+         别把它"修"成顶层 htmlLabels: false：那不解决任何问题，却会把节点标签也换成 SVG 文本、改掉版面。 */
       flowchart: { useMaxWidth: true, htmlLabels: false },
       maxTextSize: 99999,
     });
@@ -268,7 +288,7 @@ export function MermaidBlock({ code, isStreaming }) {
   const [svg, setSvg] = useState('');
   const [error, setError] = useState(null);
   const [fullscreen, setFullscreen] = useState(false);
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   // 内嵌 / 全屏两处 SVG 容器，下载时从中取真实 <svg> 节点导出
   const inlineRef = useRef(null);
   const fullscreenRef = useRef(null);
@@ -323,7 +343,7 @@ export function MermaidBlock({ code, isStreaming }) {
 
   useEffect(() => {
     if (!fullscreen) return undefined;
-    const onKey = e => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setFullscreen(false);
     };
 

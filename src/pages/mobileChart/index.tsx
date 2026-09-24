@@ -35,7 +35,7 @@ class MobileChart extends React.Component<any, any> {
       filters: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const run = () => {
       if (getFilters === 'true') {
         mdAppResponse({ type: 'getFilters' }).then(data => {
@@ -77,7 +77,7 @@ class MobileChart extends React.Component<any, any> {
       run();
     }
   }
-  render() {
+  override render() {
     const { loading, filters } = this.state;
     const paddingHorizontal = 15 * 2;
     const paddingVertical = 8 * 2;

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Dialog, Radio } from 'ming-ui';
@@ -12,7 +12,7 @@ export default class Branch extends Component<any, any> {
     super(props);
   }
 
-  state = {
+  override state = {
     showTips: true,
     showBranchTypeDialog: false,
     gatewayType: 1,
@@ -78,7 +78,7 @@ export default class Branch extends Component<any, any> {
   /**
    * 切换网关类型
    */
-  switchBranchType = gatewayType => {
+  switchBranchType = (gatewayType: number) => {
     const { processId, item, updateBranchGatewayType } = this.props;
 
     updateBranchGatewayType(processId, item.id, gatewayType);
@@ -95,7 +95,7 @@ export default class Branch extends Component<any, any> {
     }, 50);
   }
 
-  render() {
+  override render() {
     const { data, item, hideNodes, disabled } = this.props;
     const { showTips, showBranchTypeDialog, gatewayType } = this.state;
     const showAddBtn = !item.resultTypeId && !disabled;

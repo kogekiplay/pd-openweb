@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { LoadDiv, ScrollView } from 'ming-ui';
@@ -25,7 +25,7 @@ export default class Notice extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -33,7 +33,7 @@ export default class Notice extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -134,7 +134,7 @@ export default class Notice extends Component<any, any> {
           type={2}
           content={data.sendContent}
           formulaMap={data.formulaMap}
-          onChange={(err, value) => this.updateSource({ sendContent: value })}
+          onChange={(_err, value) => this.updateSource({ sendContent: value })}
           updateSource={this.updateSource}
         />
 
@@ -183,7 +183,7 @@ export default class Notice extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { data } = this.state;
 
     if (_.isEmpty(data)) {

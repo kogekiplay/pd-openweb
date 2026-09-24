@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { Dialog } from 'ming-ui';
 import { addToken } from 'src/utils/common';
@@ -37,7 +37,7 @@ export default class ExportFolder extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('.exportFolder').on('click', '.printOperation .checkOperation', function (this: HTMLElement) {
       $(this).toggleClass('checked');
     });
@@ -53,7 +53,7 @@ export default class ExportFolder extends Component<any, any> {
     window.open(addToken(`${md.global.Config.AjaxApiUrl}download/exportFolderToExcel?${obj}`));
   }
 
-  render() {
+  override render() {
     return (
       <Dialog
         visible

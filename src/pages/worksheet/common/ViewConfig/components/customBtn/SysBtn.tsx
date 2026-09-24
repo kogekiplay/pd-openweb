@@ -75,10 +75,10 @@ export default function ActionBtn(props) {
       <Wrap>
         {actions
           .filter(o => (props.isListOption ? !['share'].includes(o.value) : !['edit', 'export'].includes(o.value)))
-          .map(o => {
+          .map((o, index) => {
             const data = props.data || [];
             return (
-              <div className="flexRow alignItemsCenter actionLi">
+              <div key={index} className="flexRow alignItemsCenter actionLi">
                 <Icon className={cx('Font18 mRight12', o.value !== 'delete' ? 'textSecondary' : 'Red')} type={o.icon} />
                 <span className="flex Bold Font13">{o.text}</span>
                 <SwitchStyle>

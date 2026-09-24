@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import worksheetAjax from 'src/api/worksheet';
@@ -40,7 +39,7 @@ export default function DetailItem(props) {
   if (coverData.type === 45) {
     //嵌入字段 dataSource需要转换
     let dataSource = transferValue(coverData.value);
-    let urlList = [];
+    let urlList: string[] = [];
     dataSource.map(o => {
       if (o.staticValue) {
         urlList.push(o.staticValue);

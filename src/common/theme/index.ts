@@ -13,10 +13,12 @@ export {
   applyThemeVars,
   clearThemeVars,
   currentThemeMode,
+  currentThemeSeed,
   installPlatformTheme,
   resetToPlatformTheme,
 } from './applyThemeVars';
 export type { ElementLike } from './applyThemeVars';
+export { installStaticHolderTheme } from './staticHolderTheme';
 export {
   default as AppThemeScope,
   getAppIdFromLocation,

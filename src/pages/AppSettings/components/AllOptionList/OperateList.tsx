@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import update from 'immutability-helper';
 import _ from 'lodash';
@@ -90,7 +90,7 @@ export default function OperateList(props) {
   };
 
   // 删除/停用选项集
-  const deleteOptions = ({ status, fail = () => {} }) => {
+  const deleteOptions = ({ status, fail = () => {} }: { status: number; fail: () => void }) => {
     worksheetAjax.deleteOptionsCollection({ appId, collectionId, status }).then(({ data }) => {
       if (data) {
         const nextItems = update(items, { $splice: [[index, 1]] });

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -40,7 +40,14 @@ const tabs = [
   { key: 1, label: _l('总览') },
   { key: 2, label: _l('按成员') },
 ];
-export default class AppAnalytics extends Component<any, any> {
+export interface AppAnalyticsState {
+  currentTab: number;
+  isAuthority: boolean;
+}
+
+export default class AppAnalytics extends Component<any, AppAnalyticsState> {
+  declare analysisEle: Overview | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -48,10 +55,10 @@ export default class AppAnalytics extends Component<any, any> {
       isAuthority: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
-  componentDidUpdate() {
+  override componentDidUpdate() {
     if (this.state.currentTab === 1) {
       this.getData();
     }
@@ -73,7 +80,7 @@ export default class AppAnalytics extends Component<any, any> {
       });
     }
   };
-  render() {
+  override render() {
     const { projectId, appId } = _.get(this.props, 'match.params') || {};
     let { currentTab, isAuthority } = this.state;
 

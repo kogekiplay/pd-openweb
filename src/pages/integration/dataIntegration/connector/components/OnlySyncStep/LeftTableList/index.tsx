@@ -235,7 +235,7 @@ export default function LeftTableList(props) {
 
   const getRepeatTableNameInfo = () => {
     const repeatInfo = [];
-    const countObj = {};
+    const countObj: Record<string, number> = {};
     submitData
       .filter(item => !!_.get(item, ['destNode', 'config', 'createTable']) && !isDestAppType)
       .forEach(item => {

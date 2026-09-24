@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 
@@ -19,7 +19,7 @@ export default class OperatorIcon extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { isMobile, onClose, defaultLocation, setPosition, setZoom } = this.props;
     return (
       <Fragment>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -190,7 +190,7 @@ function AddUserByTelDialog(props) {
         <div className="list">
           {list.map((o, i) => {
             return (
-              <div className="row">
+              <div key={i} className="row">
                 {effectiveType === 0 ? (
                   <Tel
                     data={o}
@@ -285,7 +285,7 @@ function AddUserByTelDialog(props) {
                   icon="trash"
                   onClick={() => {
                     if (i !== 0) {
-                      setList(list.filter((o, index) => index !== i));
+                      setList(list.filter((_o, index) => index !== i));
                     }
                   }}
                 />

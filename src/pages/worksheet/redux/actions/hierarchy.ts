@@ -10,7 +10,7 @@ import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
 const MULTI_RELATE_MAX_PAGE_SIZE = 500;
-let hierarchyPromiseObj;
+let hierarchyPromiseObj: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined;
 let hierarchyPromiseViewIds = [];
 
 const getTotalDataIds = (hierarchyViewData = {}, total = 0) => {
@@ -348,7 +348,7 @@ const isAncestor = (src, target) => {
 };
 
 const isSibling = (src, target) => {
-  if (!Array.isArray(src) || !Array.isArray(target)) return;
+  if (!Array.isArray(src) || !Array.isArray(target)) return undefined;
   return JSON.stringify(src.slice(0, -1)) === JSON.stringify(target.slice(0, -1));
 };
 
@@ -517,6 +517,7 @@ export function getAssignChildren({ path = [], pathId = [], callback, ...args },
           pageSize: 1000,
         };
       }
+      return undefined;
     };
 
     args = {

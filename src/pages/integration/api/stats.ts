@@ -17,7 +17,7 @@ const stats = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  history: function (args, options?) {
+  history: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'stats/history';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'statshistory', JSON.stringify(args), $.extend(base, options));
@@ -39,7 +39,7 @@ const stats = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  realtime: function (args, options?) {
+  realtime: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'stats/realtime';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'statsrealtime', JSON.stringify(args), $.extend(base, options));
@@ -61,7 +61,7 @@ const stats = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  details: function (args, options?) {
+  details: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'stats/details';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'statsdetails', JSON.stringify(args), $.extend(base, options));

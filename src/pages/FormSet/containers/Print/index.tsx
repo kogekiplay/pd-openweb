@@ -19,7 +19,7 @@ import './style.less';
 
 const MAX_PRINT_COUNT = 500;
 
-const PRINT_TYPE_CLASSIFY = {
+const PRINT_TYPE_CLASSIFY: Record<string, number[]> = {
   0: [PRINT_TYPE.SYS_PRINT, PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT],
   1: [PRINT_TYPE.QR_CODE_PRINT, PRINT_TYPE.BAR_CODE_PRINT],
   6: [PRINT_TYPE.CLOUD_PRINT],
@@ -30,7 +30,7 @@ class CreatePrintDrawer extends React.Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const {
       worksheetProjectId,
       onCloseDrawer,
@@ -147,7 +147,7 @@ class Print extends React.Component<any, any> {
       showCloudPrint: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { worksheetId } = this.props;
     this.loadPrint({ worksheetId: worksheetId }); // 获取当前模板
     this.checkedCloudPrint();
@@ -167,7 +167,7 @@ class Print extends React.Component<any, any> {
       });
   };
 
-  addDrawerPrintTemp = fileType => {
+  addDrawerPrintTemp = (fileType: string) => {
     if (this.checkedPrintTempCount()) return;
 
     const { worksheetInfo } = this.props;
@@ -197,7 +197,7 @@ class Print extends React.Component<any, any> {
     });
   };
 
-  onSortEnd = (newItems = [], type) => {
+  onSortEnd = (newItems = [], type: number) => {
     const { printData } = this.state;
     const { worksheetInfo = {}, worksheetId } = this.props;
     const defaultTypes = _.reduce(
@@ -480,7 +480,7 @@ class Print extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       loading,
       previewRowId = '',

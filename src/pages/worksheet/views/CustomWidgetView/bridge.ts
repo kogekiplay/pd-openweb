@@ -3,6 +3,9 @@ import _ from 'lodash';
 import { api, mainWebApi, utils } from './widgetFunctions';
 
 export default class WidgetBridge {
+  declare onLoad: (() => void) | undefined;
+  declare onLoadError: (() => void) | undefined;
+
   constructor(options) {
     this.cache = options.cache;
     this.containerId = options.containerId;

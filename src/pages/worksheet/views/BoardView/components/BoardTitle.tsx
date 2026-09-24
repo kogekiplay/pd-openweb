@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -74,7 +74,7 @@ const RecordCount = styled.div`
 `;
 
 export default class BoardTitle extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
 
   renderBoardTitle = () => {
@@ -138,7 +138,7 @@ export default class BoardTitle extends Component<any, any> {
       </div>
     );
   };
-  render() {
+  override render() {
     const { count } = this.props;
     return (
       <BoardTitleWrap className="boardTitleWrap">

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Popup } from 'antd-mobile';
 import _ from 'lodash';
 import { QuickFilter } from 'mobile/RecordList/QuickFilter';

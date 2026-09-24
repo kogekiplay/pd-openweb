@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { ConfigProvider, Input, Spin, Table } from 'antd';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
@@ -48,7 +48,7 @@ export default class MemberList extends Component<any, any> {
       {
         title: _l('操作'),
         dataIndex: 'option',
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <div
               className="Hand colorPrimary Font13 adminHoverColor"
@@ -66,7 +66,7 @@ export default class MemberList extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getGroupsList();
   }
 
@@ -86,7 +86,8 @@ export default class MemberList extends Component<any, any> {
       pageIndex: this.state.pageIndex,
       pageSize: this.state.pageSize,
       groupId: this.props.groupId,
-      keywords: this.state.keyword,
+      // 原来读的是 this.state.keyword（少个 s），state 里只有 keywords —— 群组成员的搜索框输什么都不筛
+      keywords: this.state.keywords,
       type: 1,
       projectId: Config.projectId,
     };
@@ -159,7 +160,7 @@ export default class MemberList extends Component<any, any> {
     this.setState({ selectKeys });
   };
 
-  render() {
+  override render() {
     const { selectKeys, pageSize, count, pageIndex, list, loading } = this.state;
     const rowSelection = {
       selectKeys,

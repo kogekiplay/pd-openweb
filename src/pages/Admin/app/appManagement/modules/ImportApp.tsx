@@ -9,7 +9,7 @@ import RegExpValidator from 'src/utils/expression';
 import Config from '../../../config';
 import './index.less';
 
-const ERRORMSG = {
+const ERRORMSG: Record<number, string> = {
   3: _l('密码错误，验证失败'),
   4: _l('失败次数过多，请于15分钟后尝试'),
   6: _l('导入失败，导入将导致目标网络的工作表总数超过上限'),
@@ -20,12 +20,14 @@ const ERRORMSG = {
   33: _l('该应用在组织下已存在，如需使用请从回收站内恢复”'),
 };
 
-const ALERTMSG = {
+const ALERTMSG: Record<number, string> = {
   1: _l('导入失败，组织下应用数量已达上限'),
   6: _l('导入失败，导入将导致目标网络的工作表总数超过上限'),
 };
 
 export default class ImportApp extends React.Component<any, any> {
+  declare uploadFile: HTMLButtonElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -41,7 +43,7 @@ export default class ImportApp extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.initUpload();
   }
 
@@ -57,21 +59,22 @@ export default class ImportApp extends React.Component<any, any> {
         mime_types: [{ extensions: 'mdy' }],
       },
       init: {
-        BeforeUpload: (up, file) => {
+        BeforeUpload: (_up, file) => {
           if (RegExpValidator.getExtOfFileName(file.name) != 'mdy') {
             alert(_l('上传失败，文件类型错误'), 2);
             return false;
           }
 
           this.setState({ file: file });
+          return undefined;
         },
         FilesAdded: up => {
           up.setOption('auto_start', true);
         },
-        UploadProgress: (uploader, file) => {
+        UploadProgress: (_uploader, file) => {
           this.setState({ file });
         },
-        FileUploaded: (up, file, info) => {
+        FileUploaded: (_up, file, info) => {
           const { key } = info.response;
           this.setState(
             {
@@ -278,9 +281,10 @@ export default class ImportApp extends React.Component<any, any> {
           </div>
         );
     }
+    return undefined;
   }
 
-  render() {
+  override render() {
     const { matchOffice, step } = this.state;
     return (
       <div className="importAppContainer">

@@ -1,4 +1,3 @@
-import React from 'react';
 import { ActionSheet, Button } from 'antd-mobile';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';

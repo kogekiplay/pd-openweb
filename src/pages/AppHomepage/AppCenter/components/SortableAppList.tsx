@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _, { isEmpty } from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import { SortableList } from 'ming-ui';
@@ -6,7 +6,7 @@ import { canEditApp } from 'src/pages/worksheet/redux/actions/util.js';
 import AddAppItem from './AddAppItem';
 import MyAppItem from './MyAppItem';
 
-const SORT_TYPE = {
+const SORT_TYPE: Record<string, number> = {
   star: 1,
   project: 2,
   personal: 3,
@@ -17,7 +17,7 @@ const SORT_TYPE = {
 };
 
 export default class SortableComponent extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     items: arrayOf(
       shape({
         icon: string,
@@ -43,7 +43,7 @@ export default class SortableComponent extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.items.length !== this.props.items.length) {
       this.setState({ sortedIds: this.props.items.map(item => item.id) });
     }
@@ -57,7 +57,7 @@ export default class SortableComponent extends Component<any, any> {
     this.props.onAppSorted({ appIds: sortedAppIds, projectId, sortType: SORT_TYPE[type], groupId });
   };
 
-  render() {
+  override render() {
     const {
       items,
       allowCreate,

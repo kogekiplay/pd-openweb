@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -228,6 +228,7 @@ export default function FilterSetting(props) {
         if (o.keys.includes(dataType)) {
           return renderDrop(o);
         }
+        return undefined;
       })}
       {DATE_GRANULARITY_TYPE.keys.includes(dataType) &&
         [FILTER_CONDITION_TYPE.DATEENUM].includes(filter.filterType) &&
@@ -236,6 +237,7 @@ export default function FilterSetting(props) {
         if (o.keys.includes(dataType)) {
           return renderShowType(o);
         }
+        return undefined;
       })}
       {DATE_RANGE.keys.includes(dataType) && renderTimeType()}
     </Fragment>

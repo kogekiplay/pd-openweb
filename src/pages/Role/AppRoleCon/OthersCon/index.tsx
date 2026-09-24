@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { LoadDiv, Support } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';
@@ -141,7 +141,9 @@ function OthersCon(props) {
   const { appId, projectId } = props;
   // 0: 说明 1: 创建 2: 编辑 3: 结果回现
   const [step, setStep] = useState(0);
-  const [data, setData] = useState(undefined);
+  const [data, setData] = useState<HapApi.MD.Web.Ajax.ResultModel.Worksheet.GetAppExtendAttrResponse | undefined>(
+    undefined,
+  );
   const [loading, setLoading] = useState(true);
   const currentProjectId =
     projectId || localStorage.getItem('currentProjectId') || md.global.Account.projects[0].projectId;
@@ -253,6 +255,7 @@ function OthersCon(props) {
         if (!data) return null;
         return <UserExtendInfo {...params} data={data} onChangeStep={changeStep} />;
     }
+    return undefined;
   };
 
   return (

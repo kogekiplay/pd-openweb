@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Button, Checkbox, Dialog, LoadDiv, SvgIcon } from 'ming-ui';
@@ -117,7 +117,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getCount();
     this.getList();
     this.getApps();
@@ -134,7 +134,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
     }
   };
 
-  getApps = (showLoading?) => {
+  getApps = (showLoading?: boolean | undefined) => {
     const { transferor = {}, projectId } = this.props;
 
     if (showLoading) {
@@ -179,7 +179,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
   };
 
   // 获取交接列表
-  getList = (init?) => {
+  getList = (init?: boolean | undefined) => {
     const { transferor = {}, projectId } = this.props;
     const { activeTab } = this.state;
 
@@ -193,7 +193,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
         init,
       })
       .then(res => {
-        const getData = type => {
+        const getData = (type: number) => {
           return res
             .map(item => ({
               ...item,
@@ -401,11 +401,11 @@ export default class WorkHandoverDialog extends Component<any, any> {
   renderAppMember = () => {
     const { appsMemberData, currentAppId, selectAppMemberData } = this.state;
 
-    return appsMemberData.map(item => {
+    return appsMemberData.map((item, index) => {
       const checked = !!_.find(selectAppMemberData, l => l.appId === item.appId);
 
       return (
-        <div className="appWrap">
+        <div key={index} className="appWrap">
           <AppItem
             key={`work-handle-over-${item.appId}`}
             className="pLeft16"
@@ -429,7 +429,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { visible, transferor = {}, onCancel = () => {} } = this.props;
     const { fullname } = transferor;
     const {
@@ -467,8 +467,9 @@ export default class WorkHandoverDialog extends Component<any, any> {
       >
         <div className="flexColumn overflowHidden" style={{ height: `${windowHeight - 180}px` }}>
           <div className="tabBox flexRow">
-            {TAB_LIST.map(item => (
+            {TAB_LIST.map((item, index) => (
               <div
+                key={index}
                 className={cx('tabItem', { active: item.tab === activeTab })}
                 onClick={() =>
                   this.setState({

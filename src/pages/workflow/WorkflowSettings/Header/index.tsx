@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -158,7 +158,7 @@ class Header extends Component<any, any> {
 
   closeTestDialog = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     const that = this;
 
     $('.AppAdminWorkflowEdit').on('click', '.publishDialogOpenHistory', () => {
@@ -173,7 +173,7 @@ class Header extends Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     IM.socket.off('workflow_running');
   }
 
@@ -663,6 +663,7 @@ class Header extends Component<any, any> {
     } else {
       execFunc();
     }
+    return undefined;
   };
 
   /**
@@ -733,7 +734,7 @@ class Header extends Component<any, any> {
               <Button
                 size="large"
                 onClick={() => {
-                  const switchList = [];
+                  const switchList: { state: boolean; type: number; roleType: number }[] = [];
 
                   if (showApprovalFields) {
                     switchList.push({ state: true, type: 40, roleType: 0 });
@@ -870,7 +871,7 @@ class Header extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { tabIndex, switchTabs, flowInfo, isIntegration, isPlugin, openFlowInfo, isAIActions } = this.props;
     const { publishErrorVisible, errorInfo, isProgressing, showTestFlow, showChatbotDialog } = this.state;
     const tabs = TABS_OPTS.filter(

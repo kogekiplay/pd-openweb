@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -27,6 +27,8 @@ const builtinPlacements = {
 };
 
 export default class UploadFilesTrigger extends Component<any, any> {
+  declare textarea: HTMLTextAreaElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -36,13 +38,13 @@ export default class UploadFilesTrigger extends Component<any, any> {
     };
     this.id = props.id || generateRandomPassword(16);
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.popupVisible) {
       this.setTriggerPanelVisible(true);
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (_.isBoolean(this.props.popupVisible) && this.props.popupVisible !== prevProps.popupVisible) {
         this.setTriggerPanelVisible(this.props.popupVisible);
@@ -200,7 +202,7 @@ export default class UploadFilesTrigger extends Component<any, any> {
       </ClickAwayable>
     );
   }
-  render() {
+  override render() {
     const { visible } = this.state;
     const { children, getPopupContainer, offset, noWrap, autoDestroy, ...uploadFilesProps } = this.props;
     return (

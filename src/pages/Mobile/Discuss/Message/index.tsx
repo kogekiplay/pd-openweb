@@ -11,7 +11,7 @@ export default class extends Component<any, any> {
     this.textRef = React.createRef();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { openPersonalInfoPopup } = this.props;
 
     if (this.textRef?.current && openPersonalInfoPopup) {
@@ -19,7 +19,7 @@ export default class extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     // 清除事件监听
     if (this.textRef.current) {
       this.textRef.current.removeEventListener('click', this.handleClick);
@@ -62,7 +62,7 @@ export default class extends Component<any, any> {
       />
     );
   }
-  render() {
+  override render() {
     return <div>{this.renderMessage()}</div>;
   }
 }

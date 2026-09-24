@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Dialog, UserCard } from 'ming-ui';
 import service from '../../api/service';
 import { htmlEncodeReg, pathCompletion } from 'src/utils/common';
@@ -49,8 +49,8 @@ function logDesc(log) {
       return (
         <Fragment>
           <span className="mRight5">{_l('添加了成员')}</span>
-          {log.content.memberArr.map(member => (
-            <UserCard sourceId={member.accountId} disabled={!member.accountId}>
+          {log.content.memberArr.map((member, index) => (
+            <UserCard key={index} sourceId={member.accountId} disabled={!member.accountId}>
               <span>
                 <a
                   className="memberName"
@@ -72,8 +72,8 @@ function logDesc(log) {
       return (
         <Fragment>
           <span className="mRight5">{_l('邀请了成员')}</span>
-          {log.content.memberArr.map(member => (
-            <UserCard sourceId={member.accountId} disabled={!member.accountId}>
+          {log.content.memberArr.map((member, index) => (
+            <UserCard key={index} sourceId={member.accountId} disabled={!member.accountId}>
               <span>
                 <a
                   className="memberName"
@@ -93,8 +93,8 @@ function logDesc(log) {
       return (
         <Fragment>
           <span className="mRight5">{_l('删除了成员')}</span>
-          {log.content.memberArr.map(member => (
-            <UserCard sourceId={member.accountId} disabled={!member.accountId}>
+          {log.content.memberArr.map((member, index) => (
+            <UserCard key={index} sourceId={member.accountId} disabled={!member.accountId}>
               <a
                 className="memberName"
                 href={member.accountId ? pathCompletion(`/user_${member.accountId}`) : 'javascript:void(0);'}
@@ -110,10 +110,10 @@ function logDesc(log) {
     case ROOT_LOG_TYPE.SHARE: {
       return (
         <Fragment>
-          {log.content.changeMemberArr.map(change => {
+          {log.content.changeMemberArr.map((change, index) => {
             if (change.permission === ROOT_PERMISSION_TYPE.OWNER) {
               return (
-                <Fragment>
+                <Fragment key={index}>
                   <span className="mRight5">{_l('将')}</span>
                   {change.memberArr.map(member => memberLinkHtml(member, log.content))}
                   <span className="mLeft5">{_l('设为共享文件夹')}</span>
@@ -124,7 +124,7 @@ function logDesc(log) {
               );
             } else {
               return (
-                <Fragment>
+                <Fragment key={index}>
                   <span className="mRight5">{_l('将')}</span>
                   {change.memberArr.map(member => memberLinkHtml(member, log.content))}
                   {_l('的权限')}
@@ -175,7 +175,7 @@ export function getRootLog(rootName, rootId) {
         <ul class="rootLog">
           {result.logCount ? (
             <Fragment>
-              {result.logContent.map(item => {
+              {result.logContent.map((item, index) => {
                 let logTypeName;
 
                 if (item.type === ROOT_LOG_TYPE.CREATE || item.type === ROOT_LOG_TYPE.CHILDADD) {
@@ -192,7 +192,7 @@ export function getRootLog(rootName, rootId) {
                 }
 
                 return (
-                  <li>
+                  <li key={index}>
                     <i className={`rootLogType ${logTypeName}`}></i>
                     <div className="rootLogTitle">
                       <UserCard sourceId={item.handleUser.accountId}>

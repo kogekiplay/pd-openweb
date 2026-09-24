@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Checkbox, Dropdown } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';
@@ -111,7 +111,7 @@ export default function SubListOperate(props) {
               className="mTop10 w100"
               isAppendToBody
               placeholder={_l('选择子表中的关联记录字段')}
-              noneContent={_l('没有可选字段')}
+              noData={_l('没有可选字段')}
               value={batchcids[0] || undefined}
               data={worksheetControls}
               onChange={value => {

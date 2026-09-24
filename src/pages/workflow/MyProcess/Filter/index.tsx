@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { DatePicker, Select } from 'antd';
 import en_US from 'antd/es/date-picker/locale/en_US';
@@ -64,6 +64,9 @@ const statusData = [
 ];
 
 export default class Filter extends Component<any, any> {
+  declare request: ApiResult | undefined;
+  declare owner: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -82,7 +85,7 @@ export default class Filter extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.isResetFilter) {
         this.handleReset();
@@ -129,7 +132,7 @@ export default class Filter extends Component<any, any> {
       }
     }
   }
-  getTodoListFilter = props => {
+  getTodoListFilter = (props = this.props) => {
     const { loading } = this.state;
     const { param } = props || this.props;
 
@@ -373,7 +376,7 @@ export default class Filter extends Component<any, any> {
           }}
         >
           {operationTypeData.map((item, index) => (
-            <Select.Option className="processOptionWrapper" value={index}>
+            <Select.Option key={index} className="processOptionWrapper" value={index}>
               {item.text}
             </Select.Option>
           ))}
@@ -398,7 +401,7 @@ export default class Filter extends Component<any, any> {
           }}
         >
           {statusData.map((item, index) => (
-            <Select.Option className="processOptionWrapper" value={index}>
+            <Select.Option key={index} className="processOptionWrapper" value={index}>
               {item.text}
             </Select.Option>
           ))}
@@ -501,8 +504,8 @@ export default class Filter extends Component<any, any> {
           <Select.Option className="processOptionWrapper" value="">
             {_l('全部')}
           </Select.Option>
-          {projects.map(item => (
-            <Select.Option className="processOptionWrapper" value={item.projectId}>
+          {projects.map((item, index) => (
+            <Select.Option key={index} className="processOptionWrapper" value={item.projectId}>
               {item.companyName}
             </Select.Option>
           ))}
@@ -619,7 +622,7 @@ export default class Filter extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     return <div className="processFilterDrawerWrapper">{this.renderDrawerContent()}</div>;
   }
 }

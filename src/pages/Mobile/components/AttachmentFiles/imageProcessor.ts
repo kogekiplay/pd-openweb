@@ -17,7 +17,8 @@ function isIOSH5() {
 }
 
 function loadImageFromFile(file) {
-  return new Promise((resolve, reject) => {
+  // objectUrl 可选：浏览器不支持 createObjectURL 时走下面 FileReader 那条兜底路径，只 resolve { image }
+  return new Promise<{ image: HTMLImageElement; objectUrl?: string }>((resolve, reject) => {
     const urlCreator = window.URL || window.webkitURL;
 
     if (!urlCreator || !urlCreator.createObjectURL) {
@@ -49,7 +50,7 @@ function loadImageFromFile(file) {
   });
 }
 
-function getResizeSize(width: number, height: number, maxSide) {
+function getResizeSize(width: number, height: number, maxSide: number | undefined) {
   if (!maxSide || Math.max(width, height) <= maxSide) {
     return { width, height };
   }
@@ -67,7 +68,7 @@ function getCanvasSafeMaxSide(width: number, height: number, needCompress) {
   }
 
   if (!isIOSH5() || width * height <= IOS_CANVAS_SAFE_MAX_PIXELS) {
-    return;
+    return undefined;
   }
 
   return Math.floor(Math.max(width, height) * Math.sqrt(IOS_CANVAS_SAFE_MAX_PIXELS / (width * height)));
@@ -81,7 +82,7 @@ function getCanvasOutputType(fileType, needCompress) {
   return /^image\/(jpeg|jpg|png|webp)$/i.test(fileType) ? fileType : 'image/jpeg';
 }
 
-function canvasToBlob(canvas, type, quality) {
+function canvasToBlob(canvas: HTMLCanvasElement, type, quality) {
   return new Promise(resolve => {
     try {
       canvas.toBlob(blob => resolve(blob), type, quality);
@@ -92,7 +93,7 @@ function canvasToBlob(canvas, type, quality) {
   });
 }
 
-function releaseImageResource(image, objectUrl, canvas?) {
+function releaseImageResource(image: HTMLImageElement, objectUrl: string | undefined, canvas?: HTMLCanvasElement | undefined) {
   const urlCreator = window.URL || window.webkitURL;
 
   if (objectUrl && urlCreator && urlCreator.revokeObjectURL) {
@@ -123,7 +124,7 @@ function getDynamicWrapTxt(dynamicTxt, canvasWidth, ctx, fontSize: number) {
 
   ctx.font = `${fontSize}px 'Fira Sans'`;
   var paragraphs = dynamicTxt.split('\n');
-  const txtList = [];
+  const txtList: string[] = [];
   paragraphs.forEach(function (paragraph) {
     paragraph = paragraph.trim();
 

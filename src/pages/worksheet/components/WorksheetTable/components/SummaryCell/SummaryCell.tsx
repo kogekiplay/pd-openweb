@@ -12,7 +12,7 @@ import './SummaryCell.less';
 const ClickAwayable = ClickAway;
 
 export default class extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     style: PropTypes.shape({}),
     control: PropTypes.shape({}),
     summaryType: PropTypes.number,
@@ -27,7 +27,7 @@ export default class extends React.Component<any, any> {
     };
   }
 
-  handleChange = value => {
+  handleChange = (value: number) => {
     const { control, changeWorksheetSheetViewSummaryType } = this.props;
     this.setState({
       menuVisible: false,
@@ -61,7 +61,7 @@ export default class extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       disabled,
       isChildTableSummaryCell,

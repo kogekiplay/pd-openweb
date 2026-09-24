@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -97,7 +97,7 @@ const AccountWrap = styled.div`
 const AccountDialogWrap = styled.div``;
 let sendVerifyCodeTimer: NodeJS.Timeout | null = null;
 
-const isPasswordRule = str => {
+const isPasswordRule = (str: string) => {
   return RegExpValidator.isPasswordValid(str);
 };
 
@@ -262,7 +262,9 @@ export default function TelDialog(props) {
         .then(data => {
           thenFn(data);
         })
-        .catch(() => this.setState({ verifyCodeLoading: false }));
+        // 原先写成 this.setState：函数组件里 this 是 undefined，发验证码失败时 catch 自己又抛 TypeError，
+        // 「获取验证码」的 loading 永远复位不了。setState 是上面 useSetState 给的
+        .catch(() => setState({ verifyCodeLoading: false }));
     };
 
     new captcha(callback);

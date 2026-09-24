@@ -254,9 +254,15 @@ export default function NavGroup(params) {
   let [filterData, setDatas] = useState();
   let [usenav, setUsenav] = useState<string | undefined>(); //空或者0：不使用筛选条件作为默认值 1：使用筛选条件作为默认值 ，老数据后端回兼容，新配置需要前端把这个值设为1
   let [showAddCondition, setShowAddCondition] = useState<boolean | undefined>();
-  const [relateSheetInfo, setRelateSheetInfo] = useState([]);
-  const [relateControls, setRelateControls] = useState([]);
-  const [{ navshow, navfilters, navwidth, appnavtype }, setState] = useSetState({
+  const [relateSheetInfo, setRelateSheetInfo] = useState<{ value: string | undefined; text: string | undefined }[]>([]);
+  const [relateControls, setRelateControls] = useState<FormControl[]>([]);
+  // navwidth 输入过程中存的是输入框里的原文（字符串），失焦 / 回车时才在 updateWidth 里夹到上下限并保存
+  const [{ navshow, navfilters, navwidth, appnavtype }, setState] = useSetState<{
+    navshow: number | string;
+    navfilters: string;
+    navwidth: number | string;
+    appnavtype: string;
+  }>({
     navshow: 0,
     navfilters: '[]',
     navwidth: defaultNavOpenW,
@@ -402,7 +408,7 @@ export default function NavGroup(params) {
 
   const renderDrop = data => {
     let htmlData = getSetHtmlData(data.type);
-    return htmlData.map(o => {
+    return htmlData.map((o, index) => {
       if (o.key === 'viewId' && data.type === 29) {
         o.types = relateSheetInfo;
         if (relateSheetInfo.length <= 0) {
@@ -434,7 +440,7 @@ export default function NavGroup(params) {
       if (o.key === 'isAsc') return null; //排序合并到显示项处理
       if (o.key === 'navshow') {
         return (
-          <WrapDrop>
+          <WrapDrop key={index}>
             <NavShow
               canShowAll
               canShowNull
@@ -481,7 +487,7 @@ export default function NavGroup(params) {
                 (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {})
                   .sourceControlType,
               )) &&
-              !['2'].includes(navshow) && (
+              !['2'].includes(String(navshow)) && (
                 <NavSort
                   view={view}
                   customitemsKey={'customnavs'}
@@ -526,7 +532,7 @@ export default function NavGroup(params) {
       }
 
       return (
-        <React.Fragment>
+        <React.Fragment key={index}>
           {o.txt && <div className="title mTop30 textPrimary Bold">{o.txt}</div>}
           {o.des && <div className="des mTop5 textSecondary">{o.des}</div>}
           <Dropdown
@@ -638,10 +644,11 @@ export default function NavGroup(params) {
                     { text: 3, value: '3' },
                     { text: 4, value: '4' },
                     { text: 5, value: '5' },
-                  ].map(item => {
+                  ].map((item, index) => {
                     const navlayer = _.get(view, 'advancedSetting.navlayer') || '1';
                     return (
                       <div
+                        key={index}
                         className={cx('animaItem overflow_ellipsis', {
                           active: navlayer === item.value,
                         })}

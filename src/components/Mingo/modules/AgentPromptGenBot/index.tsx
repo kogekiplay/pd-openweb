@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { isFunction } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -65,7 +65,7 @@ function AgentPromptGenBot(props, ref) {
   const [error, setError] = useState<StreamError | undefined>();
   const speechSynthesizer = useRef(new SpeechSynthesizer({ bufferDelay: 2000 }));
   const { messages, sendMessage, loading, activeMessageId, isRequesting, abortRequest, clearMessages } = useChat({
-    aiCompletionApi: async (messages, { abortController, agentParams }) => {
+    aiCompletionApi: async (_messages, { abortController, agentParams }) => {
       const {
         userLanguage = '',
         nodeName = '',

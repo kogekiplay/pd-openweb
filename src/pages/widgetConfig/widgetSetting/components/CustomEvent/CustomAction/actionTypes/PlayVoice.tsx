@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -53,7 +53,7 @@ export default function PlayVoice(props) {
         title={_l('播放声音')}
         onCancel={() => {
           setState({ visible: false });
-          window.customEditPlayer = '';
+          window.customEditPlayer = undefined; // 原来置成 ''，只表示「已释放」：关掉弹窗后不会再读（'' 和 undefined 上设 .src 一样会抛）
         }}
         overlayClosable={false}
         onOk={() => {
@@ -64,11 +64,12 @@ export default function PlayVoice(props) {
         <CustomActionWrap>
           <SettingItem className="mTop0">
             <div className="settingItemTitle">{_l('声音')}</div>
-            {VOICE_FILE_LIST.concat(voiceFiles).map(item => {
+            {VOICE_FILE_LIST.concat(voiceFiles).map((item, index) => {
               const isActive = item.fileKey === advancedSetting.fileKey;
               const isUpload = _.get(item, 'fileKey.length') > 3;
               return (
                 <div
+                  key={index}
                   className={cx('alertContent overflow_ellipsis mBottom8', {
                     active: isActive,
                   })}

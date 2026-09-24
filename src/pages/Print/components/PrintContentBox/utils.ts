@@ -160,7 +160,7 @@ export const getAllRelationRows = ({ params, relationControls, controlProcessedM
   const { worksheetId, rowIds } = params;
 
   const promiseList = relationControls.map(control => {
-    const requestRowIds = [];
+    const requestRowIds: string[] = [];
     const filtersMap = rowIds.reduce((acc, rowId: string) => {
       const filters = getFilter({
         control: { ...control, recordId: rowId },

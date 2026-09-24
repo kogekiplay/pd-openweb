@@ -8,7 +8,12 @@ import { renderText } from 'src/pages/Role/PortalCon/tabCon/util';
 import { getTranslateInfo } from 'src/utils/app';
 import { userStatusList } from './config';
 
-const renderHeader = (filterStatus, setFilterStatus, setFastFilters, filterStatusNum) => {
+const renderHeader = (
+  filterStatus: string,
+  setFilterStatus: React.Dispatch<React.SetStateAction<string>>,
+  setFastFilters,
+  filterStatusNum,
+) => {
   return (
     <React.Fragment>
       <Dropdown
@@ -35,7 +40,7 @@ const renderHeader = (filterStatus, setFilterStatus, setFastFilters, filterStatu
   );
 };
 
-const renderControl = (text, data) => {
+const renderControl = (_text, data) => {
   let portal_status = safeParse(data.portal_status, 'array')[0];
 
   //正常、未激活（添加用户后用户未注册）停用
@@ -49,8 +54,8 @@ const renderControl = (text, data) => {
 export const getColumns = (
   controls,
   roleList,
-  filterStatus,
-  setFilterStatus,
+  filterStatus: string,
+  setFilterStatus: React.Dispatch<React.SetStateAction<string>>,
   setFastFilters,
   filterStatusNum,
   appId: string,
@@ -73,7 +78,7 @@ export const getColumns = (
         className: 'nameWrapTr',
         name: _l('用户'),
         minW: 240,
-        render: (text, data) => {
+        render: (_text, data) => {
           return (
             <div className="userImgBox Hand flex overflowHidden">
               <span className="name overflow_ellipsis Block TxtLeft breakAll">{data['portal_name']}</span>
@@ -92,7 +97,7 @@ export const getColumns = (
         ...o,
         id: o.controlId,
         name: _l('邮箱'),
-        render: (text, data) => {
+        render: (_text, data) => {
           return (
             <div className="flex overflowHidden">
               <div className="overflow_ellipsis Block breakAll" title={data['portal_email']}>
@@ -107,7 +112,7 @@ export const getColumns = (
         ...o,
         id: o.controlId,
         name: _l('角色'),
-        render: (text, data) => {
+        render: (_text, data) => {
           let role = '';
 
           try {
@@ -144,7 +149,7 @@ export const getColumns = (
         name: o.controlName,
         className: [15, 16].includes(o.type) ? 'timeTr' : '',
         sorter: [15, 16].includes(o.type),
-        render: (text, data) => {
+        render: (_text, data) => {
           return <div className="ellipsis TxtMiddle">{renderText({ ...o, value: data[o.controlId] })}</div>;
         },
       });
@@ -170,7 +175,7 @@ export const getColumnsShowControls = ({
       id: 'option',
       className: 'optionWrapTr',
       name: '',
-      render: (text, data) => {
+      render: (_text, data) => {
         let dataList = [];
         let portal_status = safeParse(data.portal_status, 'array')[0];
 

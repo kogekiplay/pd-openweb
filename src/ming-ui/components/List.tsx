@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import './less/List.less';
 
 class List extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     children: PropTypes.node,
     className: PropTypes.string,
     header: PropTypes.element,
     footer: PropTypes.element,
     bodyMaxHeight: PropTypes.number,
   };
-  render() {
+  override render() {
     let iconAtFront = false;
     let iconAtEnd = false;
     const items = React.Children.map(this.props.children, item => {

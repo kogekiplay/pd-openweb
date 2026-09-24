@@ -3,12 +3,24 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './index.less';
 
-export default class TableEmpty extends React.Component<any, any> {
-  static propTypes = {
+interface TableEmptyProps {
+  detail: {
+    /** 图标类名，如 icon-aggregate_table */
+    icon?: string | undefined;
+    desc?: React.ReactNode;
+    /** 给了就不画默认图标 */
+    customIcon?: React.ReactNode;
+    descClassName?: string | undefined;
+  };
+  className?: string | undefined;
+}
+
+export default class TableEmpty extends React.Component<TableEmptyProps> {
+  static override propTypes = {
     detail: PropTypes.object,
   };
 
-  render() {
+  override render() {
     const { icon, desc, customIcon, descClassName } = this.props.detail;
     const { className } = this.props;
 

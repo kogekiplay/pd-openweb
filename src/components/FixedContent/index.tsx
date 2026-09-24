@@ -5,7 +5,7 @@ import 'src/components/UnusualContent/index.less';
 import { pathCompletion } from 'src/utils/common';
 
 export default class FixedContent extends Component<any, any> {
-  render() {
+  override render() {
     const { appPkg, showLeftSkeleton = true, isNoPublish, hideFixAccount } = this.props;
     const { fixRemark, fixAccount = {}, currentPcNaviStyle } = appPkg;
     const fixAccountUrl = pathCompletion(`/user_${fixAccount.accountId}`, { hasDomain: false });

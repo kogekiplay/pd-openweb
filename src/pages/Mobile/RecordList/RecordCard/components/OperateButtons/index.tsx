@@ -1,4 +1,4 @@
-import React, { memo, useContext, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import MobileSheetContext from 'mobile/RecordList/MobileSheetContext';

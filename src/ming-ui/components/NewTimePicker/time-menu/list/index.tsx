@@ -8,7 +8,7 @@ class List extends Component<any, any> {
     this.timeRef = React.createRef();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.scrollToVisibleRange();
   }
 
@@ -22,7 +22,7 @@ class List extends Component<any, any> {
     $parent.scrollTop = scrollTop;
   };
 
-  itemOnClick = (event, item) => {
+  itemOnClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, item) => {
     if (item.disabled) {
       return;
     }
@@ -32,7 +32,7 @@ class List extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const items = this.props.data.map(item => {
       const classList = [];
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { TimePicker } from 'antd';
 import localeEn from 'antd/es/date-picker/locale/en_US';
@@ -78,7 +78,7 @@ export default function (props) {
       <Wrap className="flexColumn h100">
         {showtime.map((o, n) => {
           return (
-            <div className="flexRow timeCon alignItemsCenter">
+            <div key={n} className="flexRow timeCon alignItemsCenter">
               <TimePicker.RangePicker
                 className={cx('rangePicker w100 borderAll3 flex', { mTop12: n !== 0 })}
                 format="HH:mm"
@@ -124,7 +124,7 @@ export default function (props) {
                 className={cx('delete Hand InlineBlock mTop6 Bold TxtCenter mLeft10')}
                 onClick={() => {
                   setState({
-                    showtime: showtime.filter((o, i) => i !== n),
+                    showtime: showtime.filter((_o, i) => i !== n),
                   });
                 }}
               >

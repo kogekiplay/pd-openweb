@@ -45,7 +45,7 @@ function getNowByCurrentStateValue(value) {
 }
 
 let Calendar = class Calendar extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     value: PropTypes.object,
     selectedValue: PropTypes.object,
     defaultValue: PropTypes.object,
@@ -125,7 +125,7 @@ let Calendar = class Calendar extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       let { value } = this.props;
       const { selectedValue } = this.props;
@@ -145,7 +145,7 @@ let Calendar = class Calendar extends Component<any, any> {
     }
   }
 
-  onSelect = (value, cause) => {
+  onSelect = (value, cause: { source: string }) => {
     if (value) {
       this.setValue(value);
     }
@@ -199,7 +199,7 @@ let Calendar = class Calendar extends Component<any, any> {
       this.props.onChange(value);
     }
   };
-  setSelectedValue = (selectedValue, cause) => {
+  setSelectedValue = (selectedValue, cause: { source: string }) => {
     if (!('selectedValue' in this.props)) {
       this.setState({
         selectedValue,
@@ -208,7 +208,7 @@ let Calendar = class Calendar extends Component<any, any> {
 
     this.props.onSelect(selectedValue, cause);
   };
-  renderRoot = newProps => {
+  renderRoot = (newProps: { children: React.JSX.Element }) => {
     const { prefixCls, className, style } = this.props;
     const classes = {
       [prefixCls]: 1,
@@ -275,7 +275,7 @@ let Calendar = class Calendar extends Component<any, any> {
       });
     }
   };
-  yearChanged = (event, value) => {
+  yearChanged = (_event, value) => {
     let view = 'year';
 
     if (this.props.mode === 'month') {
@@ -291,7 +291,7 @@ let Calendar = class Calendar extends Component<any, any> {
       source: 'yearTable',
     });
   };
-  monthChanged = (event, value) => {
+  monthChanged = (_event, value) => {
     let view = 'month';
 
     if (this.props.mode === 'date' || this.props.mode === 'datetime') {
@@ -306,7 +306,7 @@ let Calendar = class Calendar extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const { locale, prefixCls, timePicker, disabledDate, showMinute = true, showSecond = false } = props;
     const state = this.state;

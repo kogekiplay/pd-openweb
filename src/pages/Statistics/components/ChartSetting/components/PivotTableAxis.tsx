@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Divider, Dropdown, Menu } from 'antd';
 import _ from 'lodash';
@@ -678,7 +678,7 @@ let PivotTableAxis = class PivotTableAxis extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { type, name, list, axisControls, allControls, disableParticleSizeTypes, verifyNumber } = this.props;
     const otherProps = {
       type,

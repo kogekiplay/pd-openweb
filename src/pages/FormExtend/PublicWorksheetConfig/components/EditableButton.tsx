@@ -21,8 +21,14 @@ const SubmitButton = styled(Button)`
   }
 `;
 
-export default class EditableButton extends React.Component<any, any> {
-  static propTypes = {
+export interface EditableButtonState {
+  isEditing: boolean;
+}
+
+export default class EditableButton extends React.Component<any, EditableButtonState> {
+  declare con: HTMLInputElement | null | undefined;
+
+  static override propTypes = {
     name: PropTypes.string,
     onChange: PropTypes.func,
     themeBgColor: PropTypes.string,
@@ -35,14 +41,14 @@ export default class EditableButton extends React.Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { name, onChange, themeBgColor } = this.props;
     const { isEditing } = this.state;
     return (
       <div>
         {isEditing ? (
           <Input
-            manualRef={con => (this.con = con)}
+            manualRef={con => { this.con = con; }}
             defaultValue={name}
             onBlur={e => {
               if (e.target.value.trim() === '') {

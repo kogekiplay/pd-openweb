@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Select } from 'antd';
 import cx from 'classnames';
@@ -46,6 +46,8 @@ const typeList = [
 ];
 
 class AdminWorkflowList extends Component<any, any> {
+  declare workflowMonotor: WorkflowMonitor | null | undefined;
+
   constructor(props) {
     super(props);
     const workflowTab = localStorage.getItem('workflowTab');
@@ -76,7 +78,7 @@ class AdminWorkflowList extends Component<any, any> {
 
   postList = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId } = this.props.match.params;
 
     this.getList();
@@ -84,7 +86,7 @@ class AdminWorkflowList extends Component<any, any> {
     this.getAutoOrderStatus(projectId);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props, prevProps)) {
         this.setState(
@@ -113,7 +115,7 @@ class AdminWorkflowList extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     localStorage.removeItem('workflowTab');
   }
 
@@ -351,7 +353,7 @@ class AdminWorkflowList extends Component<any, any> {
     this.getList();
   }, 200);
 
-  changeTab = tab => {
+  changeTab = (tab: string) => {
     safeLocalStorageSetItem('workflowTab', tab);
     this.setState({ activeTab: tab });
   };
@@ -399,7 +401,7 @@ class AdminWorkflowList extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { params } = this.props.match;
     const {
       pageIndex,

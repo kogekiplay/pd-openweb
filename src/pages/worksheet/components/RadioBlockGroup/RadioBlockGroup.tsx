@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './RadioBlockGroup.less';
 
 export default class RadioBlockGroup extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({})),
     value: PropTypes.number,
     onChange: PropTypes.func,
   };
-  render() {
+  override render() {
     const { data, value, onChange } = this.props;
     return (
       <div className="radioBlockGroup">

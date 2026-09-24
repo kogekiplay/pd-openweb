@@ -1,4 +1,3 @@
-import React from 'react';
 import { Switch } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';

@@ -371,7 +371,7 @@ function upsertPlanDrift(parts, data) {
 }
 
 // 用户点选后把 plan-drift part 标记为已决策，禁用按钮、展示选择结果。
-export function resolvePlanDrift(message, chosenAction) {
+export function resolvePlanDrift(message, chosenAction: string) {
   const parts = message.parts || [];
   const idx = parts.findIndex(p => p.kind === 'plan-drift');
 
@@ -509,7 +509,7 @@ export function appendEventToParts(message, event) {
   return message;
 }
 
-export function ensureCompletedText(message, text) {
+export function ensureCompletedText(message, text: string) {
   const parts = message.parts || [];
 
   if (parts.some(p => p.kind === 'text')) return message;
@@ -538,7 +538,7 @@ export function markBuildProgressAborted(message) {
 
 // build agent 的 completed 顶层直接铺 appName；plan agent 在 artifact.name 下。
 // 同时把 appName 落到 build-progress part（如果存在），让 BuildProgress 标题用到
-export function applyCompletedAppName(message, appName) {
+export function applyCompletedAppName(message, appName: string) {
   if (!appName) return message;
   const parts = message.parts || [];
   const idx = parts.findIndex(p => p.kind === 'build-progress');

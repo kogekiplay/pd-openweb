@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import PropTypes from 'prop-types';
@@ -78,7 +77,7 @@ export default function QrPopup(props) {
     link: data,
   });
 
-  const handleVisible = newVisible => {
+  const handleVisible = (newVisible: boolean) => {
     if (newVisible && !link && getLink) {
       setState({ popupVisible: newVisible });
       getLink().then(res => setState({ link: res.linkUrl, loading: false }));

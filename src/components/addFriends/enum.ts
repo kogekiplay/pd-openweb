@@ -16,7 +16,7 @@ export const DETAIL_MODE = {
   INVITE: 2, // 邀请记录
 };
 
-export const DETAIL_MODE_TEXT = {
+export const DETAIL_MODE_TEXT: Record<number, string> = {
   1: _l('查看使用中的链接'),
   2: _l('邀请记录'),
 };
@@ -27,7 +27,7 @@ export const TABS = [
   { text: _l('从通讯录邀请'), value: 3 },
 ];
 
-export const INVITE_FAILED_REASON = {
+export const INVITE_FAILED_REASON: Record<string, string> = {
   removed: _l('成员已离职，不能重复邀请'),
   exist: _l('成员已存在，不能重复邀请'),
   limit: _l('超过邀请数量限制，无法邀请'),

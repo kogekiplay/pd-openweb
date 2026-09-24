@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _, { identity } from 'lodash';
@@ -90,8 +90,8 @@ const OperateWrap = styled.div`
 `;
 
 class RelateRecordCards extends Component<any, any> {
-  static contextType = ChildTableContext;
-  static propTypes = {
+  static override contextType = ChildTableContext;
+  static override propTypes = {
     editable: PropTypes.bool,
     multiple: PropTypes.bool,
     control: PropTypes.shape({
@@ -159,7 +159,7 @@ class RelateRecordCards extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { count = 0, records = [], control = {} } = this.props;
 
     if (this.state.sheetTemplateLoading) {
@@ -185,7 +185,7 @@ class RelateRecordCards extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const control = this.props.control || {};
 
@@ -392,14 +392,12 @@ class RelateRecordCards extends Component<any, any> {
             pageIndex,
             isLoadingMore: false,
             showLoadMore: newRecords.length < res.count && data.length > 0,
-          };
-
-          if (
-            _.includes(['2', '5'], _.get(advancedSetting, 'showtype')) &&
+            // 列表形态（showtype 2 / 5）在表单里、记录详情里才带上总数
+            ...(_.includes(['2', '5'], _.get(advancedSetting, 'showtype')) &&
             _.includes([FROM.H5_EDIT, FROM.RECORDINFO], from)
-          ) {
-            newState.count = res.count;
-          }
+              ? { count: res.count }
+              : {}),
+          };
 
           return newState;
         });
@@ -597,7 +595,7 @@ class RelateRecordCards extends Component<any, any> {
       };
     } catch (err) {
       console.log(err);
-      return;
+      return undefined;
     }
   }
 
@@ -816,7 +814,7 @@ class RelateRecordCards extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { control, formDisabled } = this.props;
     const {
       appId,

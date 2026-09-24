@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import aiModelAuthAjax from 'src/api/dataLimit.js';
 import projectSettingController from 'src/api/projectSetting';
@@ -23,7 +23,7 @@ export default class SecurityOthers extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getEnabledNoneVerification();
     this.getOnlyManagerSettings();
     this.getAIModelAuthRuleList();
@@ -102,7 +102,7 @@ export default class SecurityOthers extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const projectId = Config.projectId;
     const {
       noneVerificationEnabled,
@@ -132,7 +132,7 @@ export default class SecurityOthers extends Component<any, any> {
       );
     }
 
-    const limitInfo = {
+    const limitInfo: Record<string, string> = {
       onlyManagerCreateApp: _l('创建应用'),
       apiIntgOnlyManager: _l('创建 API 连接'),
       // dataPipeOnlyManager: _l('数据集成'),

@@ -45,10 +45,10 @@ export const FORM_ERROR_TYPE_TEXT = {
       }
     }
 
-    return `${_l('请填写%0', label)}`;
+    return `${_l('请填写%0', label ?? '')}`;
   },
   REQUIRED_SELECT: ({ controlName: label }: FormControl) => {
-    return `${_l('请选择%0', label)}`;
+    return `${_l('请选择%0', label ?? '')}`;
   },
   MOBILE_PHONE: _l('不是有效的手机号码'),
   TEL_PHONE: _l('不是有效的座机号码'),
@@ -77,12 +77,13 @@ export const FORM_ERROR_TYPE_TEXT = {
 
       if (_.isNumber(rowsLength) && !_.isNaN(rowsLength)) {
         if (_.isNumber(Number(min)) && !_.isNaN(Number(min)) && rowsLength < Number(min)) {
-          return `${_l('请至少输入%0条记录', min)}`;
+          return `${_l('请至少输入%0条记录', min ?? '')}`;
         } else if (_.isNumber(Number(max)) && !_.isNaN(Number(max)) && rowsLength > Number(max)) {
-          return `${_l('最多输入%0条记录', max)}`;
+          return `${_l('最多输入%0条记录', max ?? '')}`;
         }
       }
     }
+    return undefined;
   },
   UNIQUE: () => {
     return _l('不允许重复');
@@ -93,26 +94,28 @@ export const FORM_ERROR_TYPE_TEXT = {
     const showMin = numshow === '1' ? `${Number(min || 0) * 100}%` : min;
     const showMax = numshow === '1' ? `${Number(max || 0) * 100}%` : max;
 
-    if (max === min) return _l('请输入%0', showMin);
+    if (max === min) return _l('请输入%0', showMin ?? '');
     if (max && min) {
-      if (+value > +max || +value < +min) return _l('请输入%0到%1之间的数值', showMin, showMax);
+      if (+value > +max || +value < +min) return _l('请输入%0到%1之间的数值', showMin ?? '', showMax ?? '');
     }
 
-    if (min && +value < +min) return _l('请输入大于等于%0的数', showMin);
-    if (max && +value > +max) return _l('请输入小于等于%0的数', showMax);
+    if (min && +value < +min) return _l('请输入大于等于%0的数', showMin ?? '');
+    if (max && +value > +max) return _l('请输入小于等于%0的数', showMax ?? '');
+    return undefined;
   },
   MULTI_SELECT_RANGE: ({ value, advancedSetting = {} }: FormControl) => {
     const { min, max } = advancedSetting;
     const selectItemsCount = JSON.parse(value || '[]').length;
 
-    if (max === min) return _l('请选择%0项', min);
+    if (max === min) return _l('请选择%0项', min ?? '');
     if (max && min) {
       if (selectItemsCount > +max || selectItemsCount < +min) return _l('请选择%0~%1项', min, max);
-      return;
+      return undefined;
     }
 
     if (min && selectItemsCount < +min) return _l('最少选择%0项', min);
     if (max && selectItemsCount > +max) return _l('最多选择%0项', max);
+    return undefined;
   },
   DATE: ({ advancedSetting = {} }: FormControl) => {
     const allowweek = advancedSetting.allowweek || '1234567';
@@ -139,24 +142,27 @@ export const FORM_ERROR_TYPE_TEXT = {
       );
     }
   },
+  // 默认值与校验处（formUtils 里判定 DATE_TIME 的地方）保持一致。没配 allowtime 时按全天算，
+  // 那样永远不会判出 DATE_TIME，所以实际走到这里时 allowtime 一定有值；兜底只为类型如实。
   DATE_TIME: ({ advancedSetting = {} }: FormControl) =>
     _l(
       '请填写（%0 ~ %1）范围内的时间',
-      advancedSetting.allowtime.split('-')[0],
-      advancedSetting.allowtime.split('-')[1],
+      (advancedSetting.allowtime || '00:00-24:00').split('-')[0] ?? '',
+      (advancedSetting.allowtime || '00:00-24:00').split('-')[1] ?? '',
     ),
   TEXT_RANGE: ({ value, advancedSetting = {} }: FormControl) => {
     const { min, max } = advancedSetting;
     const stringSize = (value || '').length;
 
-    if (max === min) return _l('请输入%0个字', min);
+    if (max === min) return _l('请输入%0个字', min ?? '');
     if (max && min) {
       if (stringSize > +max || stringSize < +min) return _l('请输入%0~%1个字', min, max);
-      return;
+      return undefined;
     }
 
     if (min && stringSize < +min) return _l('最少输入%0个字', min);
     if (max && stringSize > +max) return _l('最多输入%0个字', max);
+    return undefined;
   },
   DATE_TIME_RANGE: (value: string, min?: string, max?: string, isTime?: boolean) => {
     function computerValue(val?: string) {
@@ -164,15 +170,16 @@ export const FORM_ERROR_TYPE_TEXT = {
       return moment(val, mode);
     }
 
-    if (max === min) return _l('请填写%0', min);
+    if (max === min) return _l('请填写%0', min ?? '');
     if (max && min) {
       if (computerValue(value) > computerValue(max) || computerValue(value) < computerValue(min))
         return _l('请填写%0 ~ %1范围内的时间', min, max);
-      return;
+      return undefined;
     }
 
     if (min && computerValue(value) < computerValue(min)) return _l('时间不能早于%0', min);
     if (max && computerValue(value) > computerValue(max)) return _l('时间不能晚于%0', max);
+    return undefined;
   },
 };
 
@@ -228,6 +235,14 @@ export const WIDGET_VALUE_ID: { [controlType: number]: string } = {
   35: 'sid',
   48: 'organizeId',
 };
+
+/**
+ * 取某类控件的取值 id（人员 accountId、部门 departmentId…）。
+ * 不认识的类型给空串：拿它去取值一样是 undefined，和原来按 undefined 取键的结果相同。
+ */
+export function getWidgetValueId(type: number | undefined): string {
+  return (type === undefined ? undefined : WIDGET_VALUE_ID[type]) ?? '';
+}
 
 // 掩码配置相关属性
 export const MASK_ADVANCEDSETTING = [

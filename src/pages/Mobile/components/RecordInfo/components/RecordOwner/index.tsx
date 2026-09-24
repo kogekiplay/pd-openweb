@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from 'react';
+import { Fragment, memo } from 'react';
 import { useSetState } from 'react-use';
 import { Popup } from 'antd-mobile';
 import _ from 'lodash';
@@ -68,13 +68,13 @@ const RecordOwner = props => {
     ownerOptionVisible: false,
   });
 
-  const switchPersonalInfoPopup = bool => {
+  const switchPersonalInfoPopup = (bool: boolean) => {
     setState({
       personalInfoVisible: bool,
     });
   };
 
-  const switchOwnerOptionPopup = bool => {
+  const switchOwnerOptionPopup = (bool: boolean) => {
     setState({
       ownerOptionVisible: bool,
     });
@@ -90,7 +90,8 @@ const RecordOwner = props => {
       });
       updateRecordDialogOwner(account, record);
       alert(_l('修改成功'));
-    } catch (err) {
+    } catch (thrown) {
+      const err = thrown as ApiRejection;
       if (err && err.resultCode === 72) {
         alert(_l('%0已锁定，修改失败', entityName), 3);
         return;

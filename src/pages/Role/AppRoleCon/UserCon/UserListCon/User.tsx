@@ -218,7 +218,7 @@ const builtinPlacements = {
 };
 
 function User(props) {
-  const ajaxRef = useRef(null);
+  const ajaxRef = useRef<ApiResult | null>(null);
   const {
     appRole = {},
     SetAppRolePagingModel,
@@ -347,7 +347,7 @@ function User(props) {
           </div>
         );
       },
-      render: (text, data) => {
+      render: (_text, data) => {
         const isHead = data.isRoleCharger; // 角色负责人
         return (
           <div className={cx('name flexRow alignItemsCenter', { pLeft40: !canEdit })}>
@@ -425,7 +425,7 @@ function User(props) {
         );
       },
 
-      render: (text, data) => {
+      render: (_text, data) => {
         return (
           <div className="flex">
             <span className="memberType">{userStatusList.find(o => o.value === data.memberType).text}</span>
@@ -438,7 +438,7 @@ function User(props) {
       name: _l('角色'),
       className: 'nameWrapTr roleTr',
       minW: 240,
-      render: (text, data) => {
+      render: (_text, data) => {
         const roleNames = getTranslatedRoleNames(data.roleName, roleInfos, appId);
         const roleName = roleNames.join('；');
 
@@ -454,7 +454,7 @@ function User(props) {
     {
       id: 'operater',
       name: _l('操作人'),
-      render: (text, data) => {
+      render: (_text, data) => {
         return <div className="WordBreak ellipsis">{data.operater}</div>;
       },
     },
@@ -465,7 +465,7 @@ function User(props) {
       // sorterType: 'ascend',
       className: 'operateTime timeTr',
       minW: 130,
-      render: (text, data) => {
+      render: (_text, data) => {
         return createTimeSpan(dateConvertToUserZone(data.operateTime));
       },
     },
@@ -473,7 +473,7 @@ function User(props) {
       id: 'option',
       className: 'optionWrapTr',
       name: '',
-      render: (text, data) => {
+      render: (_text, data) => {
         const isHead = data.isRoleCharger; // 角色负责人
         let dataList = [
           {
@@ -571,6 +571,7 @@ function User(props) {
 
                   break;
               }
+              return undefined;
             }}
             popupAlign={{
               points: ['tr', 'br'],
@@ -583,7 +584,7 @@ function User(props) {
   ];
 
   //取消或设置成为角色负责人
-  const changeIsRoleManager = (param, isRoleCharger, cb?) => {
+  const changeIsRoleManager = (param, isRoleCharger: boolean, cb?: (() => void) | undefined) => {
     if (ajaxRef.current) {
       ajaxRef.current.abort();
     }

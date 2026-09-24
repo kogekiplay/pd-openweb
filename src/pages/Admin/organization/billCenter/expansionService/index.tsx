@@ -92,7 +92,7 @@ const HeaderSubTitle = {
   chunks: _l('扩充向量知识库分块数'),
 }; //总计接口
 
-const GET_ORDER_PRICE = {
+const GET_ORDER_PRICE: Record<string, (args: ApiArgs, options?: ApiOptions) => ApiResult> = {
   user: orderController.getPersonOrderPrice,
   workflow: orderController.getWorkflowOrderPrice,
   dataSync: orderController.getDataPipelineOrderPrice,
@@ -110,7 +110,7 @@ const GET_ORDER_PRICE = {
   chunks: orderController.getVectorKnowledgeChunkOrderPrice,
 }; //下单接口
 
-const ADD_ORDER_PRICE = {
+const ADD_ORDER_PRICE: Record<string, (args: ApiArgs, options?: ApiOptions) => ApiResult> = {
   user: orderController.addPersonOrder,
   workflow: orderController.addWorkflowOrder,
   dataSync: orderController.addDataPipelineOrder,
@@ -179,7 +179,7 @@ const MERCHANT_TYPE_LIST = [
   },
 ];
 
-const getFormatCount = count => {
+const getFormatCount = (count: number | undefined) => {
   let formatCount = count % 100 || 100;
 
   if (formatCount > 0) {
@@ -196,6 +196,8 @@ const getFormatCount = count => {
 };
 
 let ExpansionService = class ExpansionService extends Component<any, any> {
+  declare isPortalUser: boolean;
+
   constructor() {
     super();
     this.expandType = Config.params[3];
@@ -256,7 +258,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
     };
   } //获取余额
 
-  componentDidMount() {
+  override componentDidMount() {
     const { workflowType, dataSyncType } = this.state;
 
     const licenseType = _.get(Config.project || {}, 'licenseType');
@@ -682,6 +684,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
     this.setState({
       addUserCount: num,
     });
+    return undefined;
   } // 输入框失焦
 
   handleInputBlur() {
@@ -829,7 +832,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
       <Fragment>
         <div className="workflowTypeContent">
           {WORKFLOW_TYPE_LIST.map(item => {
-            if (disabledPurchase && item.key === 1) return;
+            if (disabledPurchase && item.key === 1) return undefined;
             return (
               <div
                 className={cx('workflowTypeItem', {
@@ -966,6 +969,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
       case EXPAND_TYPE.PORTALUPGRADE:
         return '';
     }
+    return undefined;
   } // 购买专属算力
 
   renderExclusiveContent() {
@@ -1238,6 +1242,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
       case EXPAND_TYPE.CHUNKS:
         return this.renderChunksContent();
     }
+    return undefined;
   } // 第一步禁用时文案异化
 
   renderInfoShow() {
@@ -1357,6 +1362,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
       case EXPAND_TYPE.MERCHANT:
         return this.renderMerchantContent(true);
     }
+    return undefined;
   } //自动订购
 
   renderAutoOrder() {
@@ -1453,7 +1459,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       step,
       totalPrince,

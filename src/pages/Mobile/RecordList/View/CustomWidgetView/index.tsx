@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { LoadDiv } from 'ming-ui';
 
 const LoadableCustomWidgetView = lazy(() => import('src/pages/worksheet/views/CustomWidgetView'));

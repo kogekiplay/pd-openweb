@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import JsBarcode from 'jsbarcode';
 
 export default class Barcode extends Component<any, any> {
@@ -24,7 +24,7 @@ export default class Barcode extends Component<any, any> {
     this.update = this.update.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.renderWidth && this.barcode) {
       this.barcode.width = this.props.renderWidth;
     }
@@ -32,7 +32,7 @@ export default class Barcode extends Component<any, any> {
     this.update();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.update();
   }
 
@@ -73,7 +73,7 @@ export default class Barcode extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { renderer } = this.props;
 
     if (renderer === 'svg') {
@@ -83,5 +83,6 @@ export default class Barcode extends Component<any, any> {
     } else if (renderer === 'img') {
       return <img ref={this.handleBarcode} alt="" />;
     }
+    return undefined;
   }
 }

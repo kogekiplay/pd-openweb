@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { Button, Dropdown, Icon, Input, RadioGroup } from 'ming-ui';
 import privateGuide from 'src/api/privateGuide';
@@ -80,7 +80,7 @@ export default class ApplyPrivateKey extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { serverId, product, projectName, job, scaleId, licenseVersion, submitLoading } = this.state;
     const privateVersion = getRequest().v;
     const showVersion = privateVersion && parseFloat(privateVersion) >= 5.3;

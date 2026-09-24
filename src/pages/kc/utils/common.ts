@@ -412,6 +412,7 @@ export function handleRemoveNode(args) {
       })
       .catch(() => alert(_l('操作失败，请稍后重试')), 3);
   });
+  return undefined;
 }
 
 /**
@@ -654,28 +655,23 @@ export function handleRestoreNode(args) {
       success: _l('还原成功'),
       noExistPath: _l('原存储位置已不存在，还原到对应根目录下'),
     };
-    // 在途 ajax 句柄；初值 '' 会把它推成 string
-    let ajax: ApiResult | string = '';
-
-    if (selectAll) {
-      // 全选
-      ajax = kcService.restoreNodeByParentId({
-        parentId: getParentId(folder, root),
-        locationType: getLocationType(folder, root),
-        keywords,
-        excludeNodeIds:
-          list.size !== selectedItems.size
-            ? list
-                .filter(item => !selectedItems.some(selectedItem => selectedItem.id === item.id))
-                .map(item => item.id)
-                .toArray()
-            : null,
-      });
-    } else {
-      ajax = kcService.restoreNode({
-        ids: selectedItems.map(item => item.id).toArray(),
-      });
-    }
+    const ajax = selectAll
+      ? // 全选
+        kcService.restoreNodeByParentId({
+          parentId: getParentId(folder, root),
+          locationType: getLocationType(folder, root),
+          keywords,
+          excludeNodeIds:
+            list.size !== selectedItems.size
+              ? list
+                  .filter(item => !selectedItems.some(selectedItem => selectedItem.id === item.id))
+                  .map(item => item.id)
+                  .toArray()
+              : null,
+        })
+      : kcService.restoreNode({
+          ids: selectedItems.map(item => item.id).toArray(),
+        });
 
     ajax
       .then(result => {

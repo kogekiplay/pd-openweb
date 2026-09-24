@@ -1,9 +1,9 @@
-import React, { useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 const DOUBLE_CLICK_DELAY = 200; // 双击判定时间阈值（毫秒）
 
 export default function DragCore({ className, style, setRef, children, onDrag, onDBClick, ...props }) {
-  const clickTimerRef = useRef(null);
+  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastClickTimeRef = useRef(0);
   const isWaitingForDoubleClickRef = useRef(false);
 

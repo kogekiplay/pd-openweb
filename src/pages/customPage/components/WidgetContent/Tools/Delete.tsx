@@ -1,4 +1,3 @@
-import React from 'react';
 import { useToggle } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 import copy from 'src/utils/copyToClipboard';
@@ -157,13 +156,14 @@ Toolbar.Event = function () {
 
     setTimeout(() => {
       if (!Toolbar.Comm.settings.categorys.length) {
-        var categorysArray = [];
+        var categorysArray: (string | undefined)[] = [];
         $('.allowDrop').each(function (this: HTMLElement) {
           if ($(this).find('.iconTickStyle').hasClass('icon-calendar-check')) {
             categorysArray.push($(this).attr('catid'));
           }
         });
-        safeLocalStorageSetItem('categorys', categorysArray);
+        // 读取处按逗号 split（见 comm.tsx）：和原来数组隐式 toString 的结果一样
+        safeLocalStorageSetItem('categorys', categorysArray.join(','));
         Toolbar.Comm.settings.categorys = categorysArray;
       }
 
@@ -645,7 +645,7 @@ Toolbar.Method = {
 
           $('#invitedCalendars')
             .find('.showBusinessCard')
-            .each((i, ele) => {
+            .each((_i, ele) => {
               var $this = $(ele);
               if (!$this.data('hasbusinesscard')) {
                 var accountId = $this.parents('.addOtherUser').attr('data-id') || $this.attr('data-id');
@@ -710,6 +710,7 @@ Toolbar.Method = {
       default:
         break;
     }
+    return undefined;
   },
 
   // 不同颜色class 返回不同的值
@@ -732,6 +733,7 @@ Toolbar.Method = {
       default:
         break;
     }
+    return undefined;
   },
 
   // 未确认日程颜色
@@ -800,7 +802,7 @@ Toolbar.Method = {
       $('#calendarType').scrollTop($('#calendarType')[0].scrollHeight);
     }
 
-    $('#calendarMenu .addOtherUserHeadImg.noInsert').each((i, ele) => {
+    $('#calendarMenu .addOtherUserHeadImg.noInsert').each((_i, ele) => {
       const accountId = $(ele).parent().attr('data-id');
       const avatar = $(ele).attr('data-src');
       $(ele).removeClass('noInsert');

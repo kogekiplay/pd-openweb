@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -60,7 +60,7 @@ export default class Con extends PureComponent<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { sheet, isForPortal } = this.props;
     worksheetApi.getExtendAttrOptionalControl({ worksheetId: sheet.sheetId, isPortal: isForPortal }).then(res => {
       this.setState({
@@ -78,9 +78,10 @@ export default class Con extends PureComponent<any, any> {
       case 2:
         return <ControlSet {...this.props} />;
     }
+    return undefined;
   };
 
-  render() {
+  override render() {
     const { showRoleSet, onClose, sheet, projectId, appId } = this.props;
     const { iconUrl, sheetName, sheetId } = sheet;
     const { tab = 0 } = this.state;
@@ -127,6 +128,7 @@ export default class Con extends PureComponent<any, any> {
               {tabList.map((o, i) => {
                 return (
                   <li
+                    key={i}
                     className={cx('Hand Font15 mRight24', { cur: i === tab })}
                     onClick={() => {
                       this.setState({

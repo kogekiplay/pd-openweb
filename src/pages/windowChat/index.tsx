@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import preall from 'src/common/preall';
@@ -18,7 +18,7 @@ class WindowChat extends Component<any, any> {
     };
     Object.assign(window, settings);
   }
-  render() {
+  override render() {
     return (
       <Provider store={store}>
         <Chat />

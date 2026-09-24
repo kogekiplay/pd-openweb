@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import Icon from 'ming-ui/components/Icon';
 import Member from './member';
@@ -25,7 +25,7 @@ export default class CalendarMembers extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { members, thirdUser, createUser, editable, addCalendarMember, callback, argProps } = this.props;
     const creator = _.find(members, m => m.accountID === createUser);
     const others = _.filter(members, m => m.accountID !== createUser);

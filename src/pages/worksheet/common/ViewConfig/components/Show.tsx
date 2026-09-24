@@ -36,12 +36,12 @@ export default class Show extends React.Component<any, any> {
       height: document.documentElement.clientHeight - 323,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.initState(this.props);
     $(window).on('resize', this.getHeight);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { view } = this.props;
 
@@ -50,7 +50,7 @@ export default class Show extends React.Component<any, any> {
       }
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $(window).off('resize', this.getHeight);
   }
   initState = props => {
@@ -70,7 +70,7 @@ export default class Show extends React.Component<any, any> {
     });
   };
 
-  onChange = type => {
+  onChange = (type: string) => {
     const { updateCurrentView, view, columns, appId } = this.props;
     const { customShowControls, showControls } = this.state;
 
@@ -145,7 +145,7 @@ export default class Show extends React.Component<any, any> {
       });
     }
   };
-  render() {
+  override render() {
     const { height, customdisplay, showControls = [] } = this.state;
     const { columns = [], view, sheetSwitchPermit } = this.props;
     const { controls = [] } = view;

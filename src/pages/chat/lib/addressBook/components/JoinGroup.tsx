@@ -4,7 +4,7 @@ import Icon from 'ming-ui/components/Icon';
 import { joinGroup } from '../api';
 
 export default class JoinGroup extends React.Component<any, any> {
-  render() {
+  override render() {
     const { groupId } = this.props;
     return (
       <div className="contacts-add-friend">

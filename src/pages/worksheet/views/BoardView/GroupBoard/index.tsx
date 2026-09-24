@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -47,7 +47,7 @@ const GroupBoard = props => {
   const isManualExpand = useRef(false);
   const [, drop] = useDrop({
     accept: ITEM_TYPE.RECORD,
-    hover(props, monitor) {
+    hover(_props, monitor) {
       handleAutoScroll(scrollViewRef, monitor);
     },
   });
@@ -119,10 +119,10 @@ const GroupBoard = props => {
   const renderBoardTitle = () => {
     return (
       <Fragment>
-        {viewData.map(item => {
-          if (item.key === '-1' && !hasNoFirstGroup) return;
+        {viewData.map((item, index) => {
+          if (item.key === '-1' && !hasNoFirstGroup) return undefined;
           return (
-            <div className="groupHeaderItemWrap">
+            <div key={index} className="groupHeaderItemWrap">
               <BoardTitle
                 count={boardViewRecordCount[item.key] || 0}
                 showRecordInfo={showRecordInfo}
@@ -141,7 +141,7 @@ const GroupBoard = props => {
 
   const renderGroupBoardContent = () => {
     return groupOptions.map((opt, optIndex) => {
-      if (!_.has(groupViewData, opt.key)) return;
+      if (!_.has(groupViewData, opt.key)) return undefined;
       const groupData = groupViewData[opt.key] || {};
       const allowOperation = canEditForGroupControl({
         allowAdd: worksheetInfo?.allowAdd,
@@ -181,7 +181,7 @@ const GroupBoard = props => {
           {openKeys.includes(opt.key) && (
             <div className="secondGroupRow" key={`secondGroupRow-${opt.key}`}>
               {firstGroupKeys.map((groupKey, groupIndex) => {
-                if (groupKey === '-1' && !hasNoFirstGroup) return;
+                if (groupKey === '-1' && !hasNoFirstGroup) return undefined;
                 return (
                   <SecondGroupItem
                     key={`secondGroupItem-${opt.key}-${optIndex}-${groupKey}-${groupIndex}`}

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import moment from 'moment';
 import ajaxRequest from 'src/api/calendar';
@@ -22,7 +22,7 @@ class CalendarShare extends Component<any, any> {
 
   requesting = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.init();
   }
 
@@ -111,7 +111,7 @@ class CalendarShare extends Component<any, any> {
               if (weekDay.length === 5 && weekDay[0] == 1 && weekDay[4] == 5) {
                 messages += '工作日';
               } else {
-                weekDay.forEach((item, index: number) => {
+                weekDay.forEach((_item, index: number) => {
                   if (index === 0) {
                     messages += '星期';
                   } else {
@@ -389,6 +389,7 @@ class CalendarShare extends Component<any, any> {
         window.location.href = addToken(
           `${md.global.Config.AjaxApiUrl}download/exportSharedCalendar?token=${settings.token}&thirdId=${settings.thirdID}`,
         );
+        return undefined;
       });
 
     // 微信加入日程按钮提示浏览器打开
@@ -513,7 +514,7 @@ class CalendarShare extends Component<any, any> {
   /**
    * 返回大小
    */
-  filesize(size, accuracy) {
+  filesize(size, accuracy: number) {
     var units = ['B', 'KB', 'MB', 'GB', 'TB'];
     if (!size) {
       return '0' + units[0];
@@ -523,7 +524,7 @@ class CalendarShare extends Component<any, any> {
     return (size / Math.pow(1024, i)).toFixed(accuracy) * 1 + units[i];
   }
 
-  render() {
+  override render() {
     return (
       <Fragment>
         <div className="w100" id="loading">

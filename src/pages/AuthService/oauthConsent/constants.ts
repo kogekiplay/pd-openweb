@@ -15,7 +15,7 @@ export const ERROR_MSG = {
 };
 
 /** 与后端枚举一致：code -> displayName（用于授权页展示） */
-export const SCOPES = {
+export const SCOPES: Record<number, string> = {
   200000: _l('用户'),
   200100: _l('获取组织列表'),
   200200: _l('获取信息'),

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button } from 'antd-mobile';
@@ -26,7 +26,7 @@ class RelationAction extends Component<any, any> {
       showConfirmPopup: false,
     };
   }
-  handleSetEdit = value => {
+  handleSetEdit = (value: boolean) => {
     this.props.updateActionParams({
       isEdit: value,
       selectedRecordIds: [],
@@ -138,7 +138,7 @@ class RelationAction extends Component<any, any> {
     const newRelationRows = items.concat(relationRows);
     updateRelationRows(newRelationRows, items.length);
   }
-  handleSetShowRelevanceRecord = visible => {
+  handleSetShowRelevanceRecord = (visible: boolean) => {
     const { relationRow } = this.props;
     const entityName = relationRow.worksheet.entityName || _l('记录');
     this.setState({
@@ -402,7 +402,7 @@ class RelationAction extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { title } = this.state;
     const { actionParams, permissionInfo, rowInfo = {}, controlId, base = {} } = this.props;
     const { isEdit } = actionParams;

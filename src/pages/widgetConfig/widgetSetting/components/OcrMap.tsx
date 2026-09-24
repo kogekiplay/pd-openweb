@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { Dropdown } from 'antd';
 import cx from 'classnames';
 import update from 'immutability-helper';
@@ -244,8 +244,8 @@ export default function OcrMap({ data, onChange, onClose, ...rest }) {
     return (
       <Fragment>
         {title && <div className="title textSecondary">{title}</div>}
-        {items.map(item => {
-          return <MapItem {...rest} {...item} withSubList={withSubList} ocrMap={ocrMap} setMap={setMap} />;
+        {items.map((item, index) => {
+          return <MapItem key={index} {...rest} {...item} withSubList={withSubList} ocrMap={ocrMap} setMap={setMap} />;
         })}
       </Fragment>
     );

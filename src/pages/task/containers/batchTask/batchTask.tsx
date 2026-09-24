@@ -124,9 +124,10 @@ function SearchFolder() {
           <li className="emptyItem">{_l('没有搜索到相关结果')}</li>
         ) : (
           <React.Fragment>
-            {data.map(item => {
+            {data.map((item, index) => {
               return (
                 <li
+                  key={index}
                   data-folderid={item.folderID}
                   onClick={() => {
                     if (item.folderID) {
@@ -309,7 +310,7 @@ BatchTask.initEvent = function () {
   $batchTask.on('click', '.batchCharge', function () {
     let size = 0;
     let projectId = $('.selectTask:first').attr('data-projectid');
-    $.map($('.selectTask'), (_this: HTMLElement) => {
+    $.map($('.selectTask').toArray(), (_this: HTMLElement) => {
       if ($(_this).attr('data-projectid') === projectId) {
         size++;
       }
@@ -344,9 +345,9 @@ BatchTask.initEvent = function () {
     };
 
     let size = 0;
-    const existsIds = [];
+    const existsIds: (string | undefined)[] = [];
     let projectId = $('.selectTask:first').attr('data-projectid');
-    $.map($('.selectTask'), (_this: HTMLElement) => {
+    $.map($('.selectTask').toArray(), (_this: HTMLElement) => {
       if ($(_this).attr('data-projectid') === projectId) {
         size++;
       }
@@ -431,7 +432,7 @@ BatchTask.loadBatchData = function (auth: number) {
 
   // 列表
   if (!folderId) {
-    $.each($tasks, (i: number, item: HTMLElement) => {
+    $.each($tasks, (_i: number, item: HTMLElement) => {
       $item = $(item);
       BatchTask.Settings.TaskIds.push($item.data('taskid'));
       itemAuth = $item.data('auth');
@@ -453,7 +454,7 @@ BatchTask.loadBatchData = function (auth: number) {
       }
     });
   } else if (viewType === config.folderViewType.treeView) {
-    $.each($tasks, (i: number, item: HTMLElement) => {
+    $.each($tasks, (_i: number, item: HTMLElement) => {
       $item = $(item);
       $itemParent = $item.parent();
       BatchTask.Settings.TaskIds.push($itemParent.data('taskid'));
@@ -472,7 +473,7 @@ BatchTask.loadBatchData = function (auth: number) {
       }
     });
   } else {
-    $.each($tasks, (i: number, item: HTMLElement) => {
+    $.each($tasks, (_i: number, item: HTMLElement) => {
       $item = $(item);
       BatchTask.Settings.TaskIds.push($item.data('taskid'));
       itemAuth = $item.data('auth');
@@ -500,7 +501,7 @@ BatchTask.bindDialog = function () {
     .html(renderToString(<LoadDiv />));
 
   let lockedSize = 0;
-  $.map($('.selectTask'), (_this: HTMLElement) => {
+  $.map($('.selectTask').toArray(), (_this: HTMLElement) => {
     if ($(_this).find('.lockToOtherTask').length) {
       lockedSize++;
     }
@@ -540,7 +541,7 @@ BatchTask.renderSelectTags = () => {
 
 BatchTask.getAllTaskIds = function () {
   const allTaskIds = [];
-  $.map($('.selectTask'), (_this: HTMLElement) => {
+  $.map($('.selectTask').toArray(), (_this: HTMLElement) => {
     allTaskIds.push($(_this).data('taskid'));
   });
 
@@ -638,7 +639,7 @@ BatchTask.DelTask = function () {
         const allTask = source.DeleteTaskID;
 
         if (allTask) {
-          $.each(allTask, (i: number, taskId: string) => {
+          $.each(allTask, (_i: number, taskId: string) => {
             afterDeleteTask([taskId]);
           });
         }
@@ -654,7 +655,7 @@ BatchTask.DelTask = function () {
             alert(_l('删除失败'), 3);
           } else {
             if (source.data.success.length) {
-              $.each(source.data.success, (i: number, taskId: string) => {
+              $.each(source.data.success, (_i: number, taskId: string) => {
                 afterDeleteTask([taskId]);
               });
               alert(_l('删除成功'));
@@ -696,7 +697,7 @@ BatchTask.updateTasksActualStartTime = function () {
           alert(_l('操作成功'));
         }
 
-        const successIds = [];
+        const successIds: { taskId: string }[] = [];
         BatchTask.Settings.TaskIds.forEach((id: string) => {
           if (!_.includes(noAuth, id)) {
             successIds.push({ taskId: id });
@@ -834,16 +835,16 @@ BatchTask.updateCharge = function (account: TaskMember) {
 
 // 批量添加任务成员
 BatchTask.addMembers = function (users: TaskMember[], callbackInviteResult?: (res: any) => void) {
-  const userIdArr = [];
-  const specialAccounts = {};
+  const userIdArr: (string | undefined)[] = [];
+  const specialAccounts: Record<string, string | undefined> = {};
 
   // 外部用户
   if (_.isFunction(callbackInviteResult)) {
-    $.each(users, (i: number, item: TaskMember) => {
+    $.each(users, (_i: number, item: TaskMember) => {
       specialAccounts[item.account] = item.fullname;
     });
   } else {
-    $.each(users, (i: number, item: TaskMember) => {
+    $.each(users, (_i: number, item: TaskMember) => {
       userIdArr.push(item.accountId);
     });
   }
@@ -972,8 +973,8 @@ BatchTask.taskAuth = function (type: string, title: string, args?: any, minorCon
         <React.Fragment>
           <div className="tipTitle">{_l('有%0条任务被锁定且你不具有负责人权限，无法被修改', taskCount)}</div>
           <div className="authTaskBox">
-            {BatchTask.Settings.authTask.map((item: BatchAuthTask) => (
-              <div className="authTask">
+            {BatchTask.Settings.authTask.map((item: BatchAuthTask, index) => (
+              <div key={index} className="authTask">
                 <span className="markTask lockTask"></span>
                 <img className="circle batchAvatar" src={item.avatar} />
                 <span className="batchName overflow_ellipsis">{item.TaskName}</span>
@@ -1002,7 +1003,7 @@ BatchTask.builAuthTask = function (data, args, type, title: string) {
     const authObj = [];
     let avatar;
 
-    $.each($selectTasks, (i, item) => {
+    $.each($selectTasks, (_i, item) => {
       $item = $(item);
       // 项目
       if (!folderId) {
@@ -1109,8 +1110,8 @@ BatchTask.showAuthTask = function (authObj, title: string, type) {
             <div className="tipTitle">{_l('有%0条任务被锁定且你不具有负责人权限，无法被修改', taskCount)}</div>
           )}
           <div className="authTaskBox">
-            {authObj.map(item => (
-              <div className="authTask">
+            {authObj.map((item, index) => (
+              <div key={index} className="authTask">
                 {type !== 'UpdateActualStartTime' && <span className="markTask lockTask"></span>}
                 <img className="circle batchAvatar" src={item.avatar} />
                 <span className="batchName overflow_ellipsis">{item.TaskName}</span>

@@ -137,7 +137,7 @@ export default function (props) {
             break;
         }
       })
-      .catch(error => {
+      .catch(_error => {
         onChange({ loginDisabled: false });
       });
   };

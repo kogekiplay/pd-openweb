@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class YearTable extends Component<any, any> {
@@ -54,7 +54,7 @@ class YearTable extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     // list items
     const list = this.renderList();
 

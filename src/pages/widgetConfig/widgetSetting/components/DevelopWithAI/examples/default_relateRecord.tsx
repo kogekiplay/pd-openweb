@@ -9,8 +9,9 @@ function RelateRecordList({ value, onChange }) {
   }, []);
   return (
     <div class="grid grid-cols-[repeat(auto-fill,minmax(100px,200px))] gap-3">
-      {records.map(r => (
+      {records.map((r, index) => (
         <div
+          key={index}
           className={
             'p-4 mb-2 border border-gary-400 rounded' +
             (selectedRecordIds.indexOf(r.rowid) > -1 ? ' border-blue-500' : '')

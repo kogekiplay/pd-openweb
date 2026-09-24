@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, ConfigProvider, Dropdown, Input, Menu, Modal } from 'antd';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -36,6 +36,8 @@ const calculateControlNormTypes = normTypes.map(item => {
 const textControlNormTypes = textNormTypes.filter(n => n.value !== 7);
 
 class CalculateControl extends Component<any, any> {
+  declare tagtextarea: TagTextarea | undefined;
+
   constructor(props) {
     super(props);
     const { editCalculateControl } = props;
@@ -106,7 +108,7 @@ class CalculateControl extends Component<any, any> {
 
     this.props.onChangeDialogVisible(false);
   };
-  handleChange = (err, value, obj) => {
+  handleChange = (err, value: string, obj) => {
     if (err) {
       // this.handleError(err);
       return;
@@ -172,7 +174,7 @@ class CalculateControl extends Component<any, any> {
       </Menu>
     );
   }
-  genControlTag = (axisControls, id) => {
+  genControlTag = (axisControls, id: string) => {
     const control = _.find(axisControls, { controlId: id.replace(/-\w/, '') }) || {};
     const invalid = _.isEmpty(control);
     const type = id.replace(/\w+-/, '');
@@ -252,7 +254,7 @@ class CalculateControl extends Component<any, any> {
       });
     }
   };
-  render() {
+  override render() {
     const { axisControls } = this.props;
     const { controlName, formulaStr, dot, dropdownVisible } = this.state;
     return (
@@ -340,6 +342,8 @@ class CalculateControl extends Component<any, any> {
 }
 
 export default class CalculateControlModal extends Component<any, any> {
+  declare calculateControlEl: CalculateControl | null | undefined;
+
   constructor(props) {
     super(props);
   }
@@ -367,7 +371,7 @@ export default class CalculateControlModal extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { dialogVisible } = this.props;
     return (
       <Modal

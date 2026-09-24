@@ -181,7 +181,7 @@ function PendingReview(props) {
             className: 'nameWrapTr',
             name: _l('用户'),
             minW: 240,
-            render: (control, data) => {
+            render: (_control, data) => {
               return (
                 <div className="userImgBox overflowHidden">
                   <span className="name overflow_ellipsis Block TxtLeft breakAll" title={data['portal_name']}>
@@ -202,7 +202,7 @@ function PendingReview(props) {
             ...o,
             id: o.controlId,
             name: _l('邮箱'),
-            render: (text, data) => {
+            render: (_text, data) => {
               return (
                 <div className="flex overflowHidden">
                   <div className="overflow_ellipsis Block breakAll" title={data['portal_email']}>
@@ -220,7 +220,7 @@ function PendingReview(props) {
             id: o.controlId,
             name: o.controlName,
             sorter: [15, 16].includes(o.type),
-            render: (control, data) => {
+            render: (_control, data) => {
               return (
                 <div className="ellipsis TxtMiddle" title={renderCellText({ ...o, value: data[o.controlId] })}>
                   {renderText({ ...o, value: data[o.controlId] })}
@@ -234,7 +234,7 @@ function PendingReview(props) {
       id: 'action',
       name: _l('操作'),
       fixed: 'right',
-      render: (text, data) => {
+      render: (_text, data) => {
         return (
           <React.Fragment>
             <div
@@ -278,7 +278,7 @@ function PendingReview(props) {
 
   const rejectDialog = (rowIds?) => {
     if (selectedIds.length <= 0 && (rowIds || []).length <= 0) {
-      return;
+      return undefined;
     }
 
     return Dialog.confirm({
@@ -380,7 +380,7 @@ function PendingReview(props) {
         handleChangeSortHeader={sorter => {
           handleChangeSort(sorter, 3);
         }}
-        clickRow={(info, id) => {
+        clickRow={(_info, id) => {
           let data = controls.map(it => {
             return { ...it, value: (props.portal.list.find(item => item.rowid === id) || {})[it.controlId] };
           });

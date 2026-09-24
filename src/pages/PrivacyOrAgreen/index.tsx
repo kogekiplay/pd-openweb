@@ -57,6 +57,8 @@ const Wrap = styled.div`
   }
 `;
 class PrivacyOrAgreen extends React.Component<any, any> {
+  declare ajax: ApiResult | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -68,7 +70,7 @@ class PrivacyOrAgreen extends React.Component<any, any> {
       loading: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId = '' } = getRequest();
     this.ajax = null;
     if (location.pathname.indexOf('privacy') < 0) {
@@ -96,7 +98,7 @@ class PrivacyOrAgreen extends React.Component<any, any> {
       });
     });
   }
-  render() {
+  override render() {
     const { summary, logoImageUrl, customizeName, appColor, appLogoUrl, loading } = this.state;
 
     if (loading) {

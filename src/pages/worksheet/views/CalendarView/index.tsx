@@ -118,7 +118,6 @@ const MemoFullCalendar = React.memo(
     others,
     currentView,
     appId,
-    unselectAuto,
     hour24,
   }: any) {
     /* 【设置里的「排序」在这里才真正接上】此前 eventOrder 写死 'start'，抽屉里那一栏
@@ -514,7 +513,7 @@ class RecordCalendarBase extends Component<any, any> {
       isMove: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({
       canNew: getCanCreateRecord(this.props),
     });
@@ -524,7 +523,7 @@ class RecordCalendarBase extends Component<any, any> {
     this.getEventsFn();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { base, calendarview = {}, height, sheetSwitchPermit } = this.props;
 
@@ -922,7 +921,7 @@ class RecordCalendarBase extends Component<any, any> {
     this.props.fetchExternal();
   };
 
-  render() {
+  override render() {
     const {
       toCustomWidget,
       worksheetInfo,
@@ -934,7 +933,6 @@ class RecordCalendarBase extends Component<any, any> {
       setViewConfigVisible,
     } = this.props;
     const { calendarData = {}, calenderEventList = {} } = calendarview;
-    const { eventScheduled = [] } = calenderEventList;
     const { appId, worksheetId, viewId } = base;
     const currentView = getCurrentView(this.props);
     let {
@@ -959,7 +957,8 @@ class RecordCalendarBase extends Component<any, any> {
     }
 
     const { recordInfoVisible, recordId, isLoading, rows = [], showPrevNext = false, random } = this.state;
-    const typeEvent = readInitType();
+    // 返回值这里用不上，但调用不能删：它在 localStorage 没有值时会写入默认的展示类型
+    readInitType();
     const { calendarInfo = [], unweekday = '', btnList, initialView } = calendarData;
     const { height, calendarFormatData } = this.state;
     let isDelete =
@@ -1134,7 +1133,7 @@ class RecordCalendarBase extends Component<any, any> {
             recordId={recordId}
             worksheetId={worksheetId}
             rules={worksheetInfo.rules}
-            updateSuccess={(ids, updated) => {
+            updateSuccess={(_ids, updated) => {
               let attribute = controls.find((o: FormControl) => o.attribute === 1);
 
               // 更改了 开始时间/结束时间/标题字段/颜色 =>更新日历视图数据

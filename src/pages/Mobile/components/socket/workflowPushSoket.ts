@@ -98,7 +98,7 @@ export default () => {
       }
 
       if (pushType === PUSH_TYPE.NOTIFICATION) {
-        const functionName = { 1: 'success', 2: 'error', 3: 'warning', 4: 'info' };
+        const functionName: Record<number, string> = { 1: 'success', 2: 'error', 3: 'warning', 4: 'info' };
         modalMessage({
           title,
           type: functionName[promptType],

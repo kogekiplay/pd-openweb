@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Select } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -62,6 +62,9 @@ const Wrap = styled.div`
   }
 `;
 export default class EncryptFieldList extends Component<any, any> {
+  declare promise: ApiResult | null;
+  declare appPromise: ApiResult | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -76,7 +79,7 @@ export default class EncryptFieldList extends Component<any, any> {
     this.promise = null;
     this.appPromise = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getAppList();
     this.getList();
   }
@@ -191,7 +194,7 @@ export default class EncryptFieldList extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     const { appList, worksheetList, searchParams, dataList, loading, isMoreApp } = this.state;
     return (

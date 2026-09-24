@@ -62,13 +62,24 @@ const filterAllCanSelectInBoardControls = item =>
     SELECTABLE_FIELDS_TYPE_IN_BOARD.includes(item.sourceControlType) &&
     (item.strDefault || '').split('')[0] !== '1');
 const defaultFormatter = ({ controlName, controlId }: { controlId?: string; [key: string]: any }) => ({ value: controlId, text: controlName });
-export const filterAndFormatterControls = (
-  { controls = [], filter = filterAllCanSelectInBoardControls, formatter = defaultFormatter } = {
-    controls: [],
-    filter: filterAllCanSelectInBoardControls,
-    formatter: defaultFormatter,
-  },
-) => _.filter(controls, filter).map(formatter);
+/**
+ * 按 filter 挑出控件，再用 formatter 转成下拉项。返回值的类型跟着 formatter 走 ——
+ * 原来参数类型是从默认值推出来的，返回值永远是 defaultFormatter 的形状，
+ * 调用方 formatter 多带的 icon 在类型上就丢了（看板 / 层级视图选字段的下拉里读 icon 全报「不存在」）。
+ */
+// 用 function 声明而不是泛型箭头：本仓 babel 给 .ts 也开了 JSX，<R>(…) => 会被当成 JSX 标签解析，构建直接失败
+export function filterAndFormatterControls<R = ReturnType<typeof defaultFormatter>>({
+  controls = [],
+  filter = filterAllCanSelectInBoardControls,
+  // 默认值只在没传 formatter 时生效，那时 R 正是它的返回类型（类型参数的默认值）
+  formatter = defaultFormatter as (control: FormControl) => R,
+}: {
+  controls?: FormControl[] | undefined;
+  filter?: ((control: FormControl) => boolean) | undefined;
+  formatter?: ((control: FormControl) => R) | undefined;
+} = {}): R[] {
+  return _.filter(controls, filter).map(formatter);
+}
 
 export const RELATION_SHEET_TYPE = 29;
 
@@ -222,7 +233,7 @@ export const getSearchData = sheet => {
   return { queryKey: titleControlId, data };
 };
 
-export const renderTitleByViewtitle = (row, controls, view, useDateConvertToServerZone?) => {
+export const renderTitleByViewtitle = (row, controls, view, useDateConvertToServerZone?: boolean | undefined) => {
   const viewtitle = _.get(view, 'advancedSetting.viewtitle');
   const controlFields = viewtitle.match(FIELD_REG_EXP) || [];
   const defaultValue = _.filter(viewtitle.split('$'), v => !_.isEmpty(v));
@@ -282,7 +293,7 @@ export const getCardTitleFieldForView = (row = {}, worksheetControls: FormContro
   );
 
   if (!titleControl) {
-    return;
+    return undefined;
   }
 
   return {

@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Select } from 'antd';
 import _ from 'lodash';
 import { Icon, Input, Radio } from 'ming-ui';
@@ -141,7 +141,7 @@ export default function DynamicRender(props) {
             </div>
             {_.isNumber(lastMasterFieldIndex) ? <div className="Font13 bold mBottom15">{item.masterDesc}</div> : null}
             {item.value.map((fromFieldItem, fieldIndex) => {
-              const fromFieldDesc = _.find(item.fromField?.fields, (v, i) => i === fieldIndex)?.desc;
+              const fromFieldDesc = _.find(item.fromField?.fields, (_v, i) => i === fieldIndex)?.desc;
               const options = fromFieldItem.toControlOptions || [];
               const isDelete =
                 !!fromFieldItem.toControlId && !_.find(options, option => option.value === fromFieldItem.toControlId);
@@ -175,7 +175,7 @@ export default function DynamicRender(props) {
                             ]
                           : options
                       }
-                      onChange={(value, data) => handleChange(data, type, fieldKey, fieldIndex)}
+                      onChange={(_value, data) => handleChange(data, type, fieldKey, fieldIndex)}
                     />
                   </div>
                 </Fragment>)

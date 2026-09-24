@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { assign } from 'lodash';
 import PropTypes from 'prop-types';
@@ -10,7 +10,7 @@ let Menu = class Menu extends Component<any, any> {
   /** 菜单根节点，由 ref 回填；定位时量它的 rect */
   menuNode?: HTMLElement | null;
 
-  static propTypes = {
+  static override propTypes = {
     fixedHeader: PropTypes.any,
     parentMenuItem: PropTypes.any,
     isSubMenu: PropTypes.bool,
@@ -23,15 +23,15 @@ let Menu = class Menu extends Component<any, any> {
     getParentMenuItemNode: PropTypes.func,
     subMenuVisible: PropTypes.bool,
   };
-  state = {
+  override state = {
     pos: undefined,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.calcPos();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     // 二级菜单是父 MenuItem <li> 的子节点，React 先跑子节点的 layout effect 再挂父节点的 ref，
     // 所以它 mount 时还拿不到父菜单项 DOM，calcPos 会跳过定位、菜单退化成静态定位显示在下方。
     // 这里在二级菜单由隐藏切到显示时再算一次，既能拿到父节点，也能跟上父菜单的滚动位置。
@@ -125,7 +125,7 @@ let Menu = class Menu extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     let style = this.props.style || {};
 
     if (this.state.pos) {

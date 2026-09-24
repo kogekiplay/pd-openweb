@@ -2,7 +2,8 @@ import React from 'react';
 import { assign } from 'lodash';
 import PropTypes from 'prop-types';
 
-function execFunc(func, ...args) {
+// 原样把调用方的 this 转给 func
+function execFunc(this: unknown, func, ...args) {
   if (typeof func === 'function') {
     return func.call(this, ...args);
   }
@@ -20,7 +21,17 @@ function execFunc(func, ...args) {
  * @param  {int} bHeight The height of the second object
  * @return {bool}
  */
-function coordsCollide(aTop, aLeft, bTop, bLeft, aWidth, aHeight, bWidth, bHeight, tolerance) {
+function coordsCollide(
+  aTop,
+  aLeft,
+  bTop: number,
+  bLeft: number,
+  aWidth,
+  aHeight,
+  bWidth: number,
+  bHeight: number,
+  tolerance,
+) {
   if (typeof tolerance === 'undefined') {
     tolerance = 0;
   }
@@ -58,7 +69,7 @@ function getBoundsForNode(node: HTMLElement) {
  * @param  {Object|HTMLElement} b
  * @return {bool}
  */
-function objectsCollide(a, b, tolerance) {
+function objectsCollide(a, b: HTMLDivElement | null | undefined, tolerance) {
   const aObj = a instanceof HTMLElement ? getBoundsForNode(a) : a;
   const bObj = b instanceof HTMLElement ? getBoundsForNode(b) : b;
 
@@ -96,7 +107,13 @@ function getDomNode(node) {
 }
 
 class DragSelect extends React.Component<any, any> {
-  static propTypes = {
+  declare started: boolean | undefined;
+  declare endPos: { x: number; y: number } | { x: number; y: number } | undefined;
+  declare dragging: boolean | undefined;
+  declare startPos: { x: number; y: number } | undefined;
+  declare selectionEl: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     component: PropTypes.any,
     selectionStyle: PropTypes.object, // 选择框样式
     manuallyStart: PropTypes.bool, // 如果为 true，需要手动调用组件的 startDragSelect 方法开始框选
@@ -113,20 +130,20 @@ class DragSelect extends React.Component<any, any> {
   setRootNode = node => {
     this.rootNode = node;
   };
-  setChildNode = (i, node) => {
+  setChildNode = (i: number, node) => {
     this.dragSelectItemNodes = this.dragSelectItemNodes || {};
     this.dragSelectItemNodes[i] = node;
   };
   getRootNode = () => this.rootNode;
   getChildNode = (i: number) =>
     getDomNode((this.dragSelectItemNodes || {})[i]) || getDomNode(this['dragSelectItem$' + i]);
-  componentDidMount() {
+  override componentDidMount() {
     const fn = this.handleMouseDown.bind(this);
     const container = this.getContainer();
     container.addEventListener('mousedown', fn);
     this.removeMouseDownHandler = () => container.removeEventListener('mousedown', fn);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeMouseDownHandler();
     this.clear();
   }
@@ -143,7 +160,7 @@ class DragSelect extends React.Component<any, any> {
 
     return container;
   };
-  handleMouseMove = evt => {
+  handleMouseMove = (evt: MouseEvent) => {
     if (this.started) {
       const rootNode = this.getRootNode();
 
@@ -216,14 +233,14 @@ class DragSelect extends React.Component<any, any> {
 
     execFunc(this.props.onDragSelectEnd);
   };
-  cancelDragSelect = evt => {
+  cancelDragSelect = (evt: KeyboardEvent) => {
     if (evt.which !== 27 /* Esc*/) {
       return;
     }
 
     this.clear();
   };
-  finishDragSelect = evt => {
+  finishDragSelect = (evt: MouseEvent) => {
     if (evt.button !== 0) {
       return;
     }
@@ -267,7 +284,11 @@ class DragSelect extends React.Component<any, any> {
 
     execFunc(this.props.onDragSelectStart, evt);
   };
-  calcRect(startPos, endPos, range?) {
+  calcRect(
+    startPos: { x: number; y: number } | undefined,
+    endPos: { x: number; y: number } | { x: number; y: number },
+    range?,
+  ) {
     const el = this.getRootNode();
     let left = startPos.x < endPos.x ? startPos.x : endPos.x;
     let right = el.clientWidth - (startPos.x > endPos.x ? startPos.x : endPos.x);
@@ -295,7 +316,7 @@ class DragSelect extends React.Component<any, any> {
     execFunc(!this.props.manuallyStart && !this.selectionEl && this.startDragSelect, ...args);
     execFunc(this.props.onMouseDown, ...args);
   }
-  render() {
+  override render() {
     // 【自己的 prop 必须解构掉，不能进 ...rest】默认渲染成 <div>，
     // 而 ...rest 会原样落到真实 DOM 上，于是 React 逐个报
     //   Unknown event handler property `onDragSelectStart`. It will be ignored.

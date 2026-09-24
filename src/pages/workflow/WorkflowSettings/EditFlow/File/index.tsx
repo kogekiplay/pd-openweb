@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { CreateNode, NodeOperate, WorksheetMessage } from '../components';
 
@@ -38,7 +38,7 @@ export default class File extends Component<any, any> {
     return <WorksheetMessage item={{ ...item, appTypeName: _l('工作表') }} />;
   }
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
 
     return (

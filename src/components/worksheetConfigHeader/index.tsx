@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Tabs } from 'ming-ui';
 import { useGlobalStore } from 'src/common/GlobalStore';
@@ -25,7 +25,9 @@ export default function WorksheetConfigHeader(props) {
 }
 
 class WorksheetConfigHeaderComponent extends Component<any, any> {
-  static propTypes = {
+  declare editPageUrl: string;
+
+  static override propTypes = {
     appId: PropTypes.string,
     worksheetId: PropTypes.string,
     showSaveButton: PropTypes.bool,
@@ -55,7 +57,7 @@ class WorksheetConfigHeaderComponent extends Component<any, any> {
     const sheetConfigNavInfoStr = localStorage.getItem('sheetConfigNavInfo');
     const sheetConfigNavInfo = sheetConfigNavInfoStr ? safeParse(sheetConfigNavInfoStr) || {} : {};
     const { extensionNav, settingNav } = sheetConfigNavInfo[worksheetId] || {};
-    const urlSet = {
+    const urlSet: Record<string, string> = {
       form: `/worksheet/form/edit/${worksheetId}${extensionNav ? '/' + extensionNav : ''}`,
       formSet: `/worksheet/formSet/edit/${worksheetId}${settingNav ? '/' + settingNav : ''}`,
     };
@@ -88,7 +90,7 @@ class WorksheetConfigHeaderComponent extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { showSaveButton, saveLoading, worksheetName, onBack, onSave, onClose, mingoCreateWorksheetAction } =
       this.props;
     return (

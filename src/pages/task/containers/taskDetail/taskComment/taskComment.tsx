@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import Icon from 'ming-ui/components/Icon';
@@ -39,7 +39,11 @@ const getTaskAtData = data => {
     .slice(0, 20);
 };
 
-class TaskComment extends Component<any, any> {
+export interface TaskCommentState {
+  showCount: boolean;
+}
+
+class TaskComment extends Component<any, TaskCommentState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -61,7 +65,7 @@ class TaskComment extends Component<any, any> {
     this.props.scrollToComment();
   };
 
-  render() {
+  override render() {
     const { taskId, taskDetails } = this.props;
     const { data } = taskDetails[taskId] || {};
 

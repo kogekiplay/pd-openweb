@@ -1,4 +1,4 @@
-import React, { Fragment, useLayoutEffect } from 'react';
+import { Fragment, useLayoutEffect } from 'react';
 import _ from 'lodash';
 import { browserIsMobile } from 'src/utils/common';
 import StepItem from './components/StepItem';

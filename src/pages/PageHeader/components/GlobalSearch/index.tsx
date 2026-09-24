@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -9,7 +9,9 @@ import GlobalSearchAllContent from 'src/pages/globalSearch/containers/GlobalSear
 import './index.less';
 
 class GlobalSearch extends Component<any, any> {
-  static propTypes = {
+  declare removeEscEvent: (() => void) | undefined;
+
+  static override propTypes = {
     onClose: func,
   };
 
@@ -26,11 +28,11 @@ class GlobalSearch extends Component<any, any> {
 
   isOnComposition = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.removeEscEvent = this.bindEscEvent();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeEscEvent();
   }
 
@@ -39,7 +41,7 @@ class GlobalSearch extends Component<any, any> {
     return () => document.body.removeEventListener('keydown', this.closeGlobalSearch);
   };
 
-  closeGlobalSearch = e => {
+  closeGlobalSearch = (e: KeyboardEvent) => {
     if (e.key === 'Escape' || e.keyCode === 26) {
       this.props.onClose();
     }
@@ -65,7 +67,7 @@ class GlobalSearch extends Component<any, any> {
     !this.isOnComposition && this.setState({ searchVal });
   };
 
-  render() {
+  override render() {
     const { searchVal } = this.state;
     return (
       <div className="globalSearchWrap" onClick={this.handleMaskClick}>

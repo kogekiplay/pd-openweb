@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -31,7 +31,7 @@ const convertToMinutes = (remindType, value) => {
 };
 
 export default class CalendarRemind extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     id: PropTypes.string.isRequired,
     change: PropTypes.func.isRequired, // callback
     remindTime: PropTypes.number,
@@ -47,7 +47,7 @@ export default class CalendarRemind extends Component<any, any> {
 
   // 修改日程提醒类型 // 修改日程提醒类型
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         value: convert(this.props.remindType, this.props.remindTime),
@@ -137,7 +137,7 @@ export default class CalendarRemind extends Component<any, any> {
     this.setState({ value });
   };
 
-  render() {
+  override render() {
     const { remindType, editable, voiceRemind } = this.props;
     const dropDownProps = {
       data: [

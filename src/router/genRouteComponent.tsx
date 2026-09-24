@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 import { Navigate, Route } from 'react-router';
 import _ from 'lodash';
 import expandRoutePaths from './expandRoutePaths';

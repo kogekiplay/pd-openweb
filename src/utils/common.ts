@@ -1,4 +1,3 @@
-import { TinyColor } from '@ctrl/tinycolor';
 import dayjs from 'dayjs';
 import EventEmitter from 'events';
 import JSEncrypt from 'jsencrypt';
@@ -103,7 +102,7 @@ export function KVGet(key: string) {
  * 清空
  */
 
-export function KVClear(key) {
+export function KVClear(key: string) {
   return webCache.clear({ key, moduleType: 2 }, { silent: true });
 }
 
@@ -141,6 +140,7 @@ export function saveTempRecordValueToLocal(key: string, id, value: string, max =
     safeLocalStorageSetItem(key, JSON.stringify(savedIds));
     safeLocalStorageSetItem(`${key}_${id}`, value);
   }
+  return undefined;
 }
 
 export function removeTempRecordValueFromLocal(key: string, id) {
@@ -376,7 +376,7 @@ export function calcDate(date, expression) {
  * 调用：accMul(arg1,arg2)
  * 返回值：arg1乘以arg2的精确结果
  */
-export function accMul(arg1, arg2) {
+export function accMul(arg1, arg2: number) {
   let m = 0,
     s1 = arg1.toString(),
     s2 = arg2.toString();
@@ -435,7 +435,7 @@ export function accDiv(arg1, arg2: number) {
  * 调用：accAdd(arg1,arg2)
  * 返回值：arg1加上arg2的精确结果
  */
-export function accAdd(arg1: number, arg2) {
+export function accAdd(arg1: number, arg2: number) {
   let r1, r2, m;
 
   try {
@@ -465,7 +465,7 @@ export function accSub(arg1: number, arg2: number) {
   return accAdd(arg1, -arg2);
 }
 
-export function countChar(str = '', char) {
+export function countChar(str = '', char: string) {
   if (!str || !char) {
     return 0;
   }
@@ -582,7 +582,14 @@ export const encrypt = text => {
  * @return {string}
  */
 export const htmlEncodeReg = str => {
-  const encodeHTMLRules = { '&': '&#38;', '<': '&lt;', '>': '&gt;', '"': '&#34;', "'": '&#39;', '/': '&#47;' };
+  const encodeHTMLRules: Record<string, string> = {
+    '&': '&#38;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&#34;',
+    "'": '&#39;',
+    '/': '&#47;',
+  };
   const matchHTML = /&(?!#?\w+;)|<|>|"|'|\//g;
   return str
     ? str.toString().replace(matchHTML, function (m) {
@@ -597,7 +604,7 @@ export const htmlEncodeReg = str => {
  * @return {string}
  */
 export const htmlDecodeReg = str => {
-  const decodeHTMLRules = {
+  const decodeHTMLRules: Record<string, string> = {
     '&#38;': '&',
     '&amp;': '&',
     '&#60;': '<',
@@ -625,7 +632,7 @@ export const htmlDecodeReg = str => {
  * @param  {Array}  units 自定义文件大小单位的数组，默认为 ['B', 'KB', 'MB', 'GB', 'TB']
  * @return {String}       可读的格式
  */
-export const formatFileSize = (size, accuracy?, space?, units?) => {
+export const formatFileSize = (size, accuracy?: number | undefined, space?, units?) => {
   units = units || ['B', 'KB', 'MB', 'GB', 'TB'];
   space = space || ' ';
   accuracy = (accuracy && typeof accuracy === 'number' && accuracy) || 0;
@@ -1047,7 +1054,7 @@ export const getUnUniqName = (data, name = '', key = 'name') => {
  * @param {number} length - 密码长度。
  * @returns {string} - 随机生成的密码。
  */
-export const generateRandomPassword = length => {
+export const generateRandomPassword = (length: number) => {
   const chars = {
     uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
     lowercase: 'abcdefghijklmnopqrstuvwxyz',
@@ -1123,10 +1130,11 @@ export function getTemporaryAttachmentFromUrl({
   fileSize,
   fileExt,
 }: {
-  fileUrl?: string;
-  fileName?: string;
-  fileSize?: number;
-  fileExt?: string;
+  // 调用方多是把模型 / 接口给的字段原样转过来，没给就是 undefined（fileName 的默认值照样生效）
+  fileUrl?: string | undefined;
+  fileName?: string | undefined;
+  fileSize?: number | undefined;
+  fileExt?: string | undefined;
 } = {}) {
   const urlObj = new URL(String(fileUrl));
   const name = fileName.replace(/\.[^.]+$/, '');

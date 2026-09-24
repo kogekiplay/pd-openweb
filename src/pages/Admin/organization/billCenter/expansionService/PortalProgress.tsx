@@ -1,4 +1,4 @@
-﻿import React, { Component, Fragment } from 'react';
+﻿import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import { Radio } from 'ming-ui';
@@ -64,7 +64,7 @@ const subscribeTypes = [
 ];
 
 // 获取基础信息
-const getBaseInfo = moveX => {
+const getBaseInfo = (moveX: number) => {
   if (moveX <= 135) {
     return { itemWidth: 15, stepCount: 100, baseLeft: 0 };
   } else if (moveX > 135 && moveX <= 315) {
@@ -72,11 +72,12 @@ const getBaseInfo = moveX => {
   } else if (moveX > 315) {
     return { itemWidth: 40, stepCount: 10000, baseLeft: 315 };
   }
+  return undefined;
 };
 
 // 根据基础信息计算用户人数，离左侧距离
 const formatValue = (moveX: number) => {
-  if (moveX < 0 || moveX > 675) return;
+  if (moveX < 0 || moveX > 675) return undefined;
   const { itemWidth, stepCount, baseLeft } = getBaseInfo(moveX);
   const value = moveX < 15 ? 1 : Math.round((moveX - baseLeft) / itemWidth) + 1;
   return { userCount: value * stepCount, left: (value - 1) * itemWidth + baseLeft };
@@ -109,12 +110,12 @@ export default class PortalProgress extends Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     document.body.removeEventListener('mousemove', this.onMouseMove);
     document.body.removeEventListener('mouseup', this.onMouseUp);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const minX = this.props.payType === 'portalupgrade' ? getMinX(this.props.addUserCount) : 0;
     this.setState({
       userCount: this.props.addUserCount,
@@ -133,7 +134,7 @@ export default class PortalProgress extends Component<any, any> {
     document.body.addEventListener('mouseup', this.onMouseUp);
   };
 
-  onMouseMove = e => {
+  onMouseMove = (e: MouseEvent) => {
     const { status, initX, minX } = this.state;
 
     if (status) {
@@ -169,7 +170,7 @@ export default class PortalProgress extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       payType,
       effectiveExternalUserCount,
@@ -201,9 +202,10 @@ export default class PortalProgress extends Component<any, any> {
             expandType === 'portalupgrade' && (
               <div className="flexRow payType">
                 {_l('购买方式')}
-                {DISPLAY_OPTIONS.map(item => {
+                {DISPLAY_OPTIONS.map((item, index) => {
                   return (
                     <Radio
+                      key={index}
                       className="mLeft32"
                       text={item.text}
                       checked={payType === item.value}
@@ -217,8 +219,9 @@ export default class PortalProgress extends Component<any, any> {
             <Fragment>
               <div className="textSecondary mBottom12">{_l('订阅方式')}</div>
               <div className="mBottom32">
-                {subscribeTypes.map(item => (
+                {subscribeTypes.map((item, index) => (
                   <Radio
+                    key={index}
                     text={item.text}
                     checked={externalType === item.value}
                     onClick={() => handleChange('externalType', item.value)}
@@ -233,8 +236,8 @@ export default class PortalProgress extends Component<any, any> {
           <div className="portal-ant-slider" onMouseUp={this.onMouseUp}>
             <div className="portal-ant-slider-bg" style={{ width: `${moveX}px` }}></div>
             <div className="portal-ant-slider-step" id="portal-ant-slider-step" onClick={this.handleClick}>
-              {marks.map(item => (
-                <span className={cx('portal-ant-slider-dot', { active: userCount >= item.value })}></span>
+              {marks.map((item, index) => (
+                <span key={index} className={cx('portal-ant-slider-dot', { active: userCount >= item.value })}></span>
               ))}
             </div>
             <Tooltip title={_l('%0人', userCount)} placement="top">
@@ -246,9 +249,12 @@ export default class PortalProgress extends Component<any, any> {
             </Tooltip>
             {!window.platformENV.isOverseas && (
               <div className="portal-ant-slider-mark">
-                {marks.map(item => {
+                {marks.map((item, index) => {
                   return (
-                    <span className={cx('portal-ant-slider-mark-text', { InlineBlock: item.value <= userCount })}>
+                    <span
+                      key={index}
+                      className={cx('portal-ant-slider-mark-text', { InlineBlock: item.value <= userCount })}
+                    >
                       {item.label}
                     </span>
                   );

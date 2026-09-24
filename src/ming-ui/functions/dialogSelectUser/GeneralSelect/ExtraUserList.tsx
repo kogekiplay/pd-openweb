@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import NoData from './NoData';
 import User from './User';
@@ -14,12 +14,12 @@ export default class ExtraUserList extends Component<any, any> {
     return _.includes(this.props.selectedAccountIds || [], user.accountId);
   }
 
-  render() {
+  override render() {
     let data = this.props.data;
 
     if (data.list && data.list.length) {
       const currentId = _.get(
-        _.find(data.list || [], (i, idx) => idx === this.props.currentIndex),
+        _.find(data.list || [], (_i, idx) => idx === this.props.currentIndex),
         'accountId',
       );
 

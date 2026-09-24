@@ -1,9 +1,11 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createPortal } from 'react-dom';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import './index.less';
 
 export default class FullScreenCurtain extends Component<any, any> {
+  declare container: HTMLDivElement;
+
   constructor(props) {
     super(props);
     this.container = document.createElement('div');
@@ -15,10 +17,10 @@ export default class FullScreenCurtain extends Component<any, any> {
       document.body.appendChild(this.container);
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.container.parentNode && this.container.parentNode.removeChild(this.container);
   }
-  render() {
+  override render() {
     const { children, documentTitle } = this.props;
     const Curtain = documentTitle ? (
       <DocumentTitle title={documentTitle}>{children}</DocumentTitle>

@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Button, Icon } from 'ming-ui';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import AdminTitle from 'src/pages/Admin/common/AdminTitle';
 import { navigateTo } from 'src/router/navigateTo';
-import { addSubPathOfRoute } from 'src/utils/common';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import Config from '../../config';
@@ -13,7 +12,7 @@ import { TABS } from '../config';
 import RefundOrder from './components/RefundOrder';
 import TransactionDetails from './components/TransactionDetails';
 
-const Comp = {
+const Comp: Record<string, typeof RefundOrder | typeof TransactionDetails> = {
   transaction: TransactionDetails,
   refund: RefundOrder,
 };
@@ -32,7 +31,7 @@ export default class Merchant extends Component<any, any> {
     navigateTo(`/admin/${key}/${projectId}`);
   };
 
-  render() {
+  override render() {
     const { showHeader, disabledExportBtn } = this.state;
     const featureType = getFeatureStatus(Config.projectId, VersionProductType.PAY);
     // 与 systemSetting 同样的处理：当前 Tab 从路径派生，不再存 state。

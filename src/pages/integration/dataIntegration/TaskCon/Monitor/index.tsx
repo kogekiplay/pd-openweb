@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -413,9 +413,9 @@ function Monitor(props) {
             {list.length <= 0 && (
               <div className="TxtCenter pTop80 pBottom140 Font17 textTertiary">{_l('暂无相关数据')}</div>
             )}
-            {list.map(o => {
+            {list.map((o, index) => {
               return (
-                <div className={cx('trCon flexRow alignItemsCenter')}>
+                <div key={index} className={cx('trCon flexRow alignItemsCenter')}>
                   <div className="item flex">{moment(Number(o.createTime)).format('YYYY-MM-DD HH:mm')}</div>
                   <div className="item flex">{!o.ip ? o.operator : `${o.operator}（${o.ip}）`}</div>
                   <div className="item flex2 WordBreak">{o.center}</div>

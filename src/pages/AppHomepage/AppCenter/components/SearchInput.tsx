@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import propTypes from 'prop-types';
 import styled from 'styled-components';
 import { FlexCenter, VerticalMiddle } from 'worksheet/components/Basics';

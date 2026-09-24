@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { useInView } from 'react-intersection-observer';
@@ -140,7 +140,7 @@ export default function DraggableRecord(props) {
       return data;
     },
 
-    end(item, monitor) {
+    end(_item, monitor) {
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;
       const draggingItem = safeParse(localStorage.getItem('draggingHierarchyItem'));

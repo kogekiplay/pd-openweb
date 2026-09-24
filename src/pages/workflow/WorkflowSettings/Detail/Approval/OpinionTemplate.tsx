@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
@@ -124,7 +124,7 @@ export default ({
             className="icon-trash Font16 textSecondary pointer mLeft10"
             onClick={() => {
               const newSource = _.cloneDeep(items);
-              _.remove(newSource, (o, i) => i === index);
+              _.remove(newSource, (_o, i) => i === index);
               setData(Object.assign({}, data, { [sourceKey]: newSource }));
             }}
           />

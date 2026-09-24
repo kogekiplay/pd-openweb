@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
 import cx from 'classnames';
@@ -115,7 +115,7 @@ const Markdown = forwardRef((props, ref) => {
   });
   MdEditor.useLocale('md_lang');
 
-  const handleImageUpload = file => {
+  const handleImageUpload = (file: File) => {
     return new Promise((resolve, reject) => {
       const data = new FormData();
       let fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;

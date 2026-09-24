@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import FocusLock from 'react-focus-lock';
 import { useSetState } from 'react-use';
 import { Popup } from 'antd-mobile';
@@ -47,44 +47,44 @@ export default function Apply(props) {
   }, []);
 
   // ESC关闭弹窗
-  const keyDownListener = e => {
+  const keyDownListener = (e: KeyboardEvent) => {
     e.keyCode === 27 && _.isFunction(onCancel) && onCancel();
   };
 
   const onValidate = () => {
     if (!price) {
       alert(_l('开票金额不能为0'), 3);
-      return;
+      return undefined;
     }
 
     if (!formData.invoiceTitle) {
       alert(_l('请输入发票抬头'), 3);
-      return;
+      return undefined;
     }
 
     if (formData.invoiceOutputType === 1 && !formData.taxPayerNo) {
       alert(_l('请输入税号'), 3);
-      return;
+      return undefined;
     }
 
     if (window.isPublicWorksheet && !formData.email) {
       alert(_l('请输入邮箱'), 3);
-      return;
+      return undefined;
     }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       alert(_l('请输入正确的邮箱'), 3);
-      return;
+      return undefined;
     }
 
     if (formData.bankCode && !/^\d+$/.test(formData.bankCode)) {
       alert(_l('请输入正确的开户行账号'), 3);
-      return;
+      return undefined;
     }
 
     if (formData.phoneNumber && !/^(1[3-9]\d{9}|0\d{2,3}-?\d{7,8})$/.test(formData.phoneNumber)) {
       alert(_l('请输入正确的电话'), 3);
-      return;
+      return undefined;
     }
 
     return true;

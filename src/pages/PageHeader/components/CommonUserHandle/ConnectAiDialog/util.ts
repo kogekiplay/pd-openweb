@@ -27,7 +27,7 @@ export const buildPersonalConfig = (tokenItem, needMask = false) => {
 };
 
 export const buildAppConfig = (appItem, authItem, needMask = false) => {
-  const maskAppCredential = (str, startW: number, endW, middleW: number) => {
+  const maskAppCredential = (str, startW: number, endW: number, middleW: number) => {
     if (typeof str !== 'string') return '';
     const start = str.slice(0, startW);
     const end = str.slice(-endW);
@@ -112,7 +112,7 @@ export const getInstallMsg = ({ tab, mcpJson, withSkills, selectedSkillModules }
   return getSkillDialogCommand(selectedSkillModules);
 };
 
-export const getSkillManualCommandText = cliDisabled =>
+export const getSkillManualCommandText = (cliDisabled: boolean) =>
   SKILL_MANUAL_COMMAND_BLOCKS.filter(item => !cliDisabled || !item.cliRequired)
     .map(item => `${item.title}\n${item.command}`)
     .join('\n\n');
@@ -127,6 +127,16 @@ export const getInstallData = ({
   selectedSkillModules,
   mcpJsonText,
   showMcpJson,
+}: {
+  activeTab: string;
+  installMode: string;
+  projectId: string | undefined;
+  cliEnabled: boolean;
+  selectedTool: string;
+  withSkills: boolean;
+  selectedSkillModules: string[];
+  mcpJsonText: string;
+  showMcpJson: boolean;
 }) => {
   const isMcpTab = activeTab === 'MCP';
   const isCliTab = activeTab === 'CLI';

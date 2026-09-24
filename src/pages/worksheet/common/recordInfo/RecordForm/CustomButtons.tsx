@@ -159,7 +159,7 @@ const confirmClick = props => {
 };
 
 export default class CustomButtons extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     iseditting: PropTypes.bool,
     isBatchOperate: PropTypes.bool,
     type: PropTypes.string,
@@ -195,12 +195,12 @@ export default class CustomButtons extends React.Component<any, any> {
     onButtonTriggerFail: () => {},
   };
 
-  state = {};
+  override state = {};
 
-  componentDidMount() {
+  override componentDidMount() {
     emitter.on('RECORD_WORKFLOW_UPDATE', this.handleRecordWorkflowUpdate);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     emitter.off('RECORD_WORKFLOW_UPDATE', this.handleRecordWorkflowUpdate);
   }
 
@@ -292,7 +292,7 @@ export default class CustomButtons extends React.Component<any, any> {
       }
     }
 
-    function verifyConform(removeNoneVerification) {
+    function verifyConform(removeNoneVerification: boolean) {
       VerifyPasswordConfirm.confirm({
         allowNoVerify: !removeNoneVerification,
         isRequired: true,
@@ -723,7 +723,7 @@ export default class CustomButtons extends React.Component<any, any> {
     }
   }
 
-  addRelateRecordRelateRecord(relationControl, relationControlrelationControlId) {
+  addRelateRecordRelateRecord(relationControl: FormControl, relationControlrelationControlId) {
     let controldata;
 
     try {
@@ -789,7 +789,7 @@ export default class CustomButtons extends React.Component<any, any> {
     });
   }
 
-  setStateFn = (args, fn?) => {
+  setStateFn = (args, fn?: (() => void) | undefined) => {
     const { setCustomButtonActive } = this.props;
 
     if (typeof args.fillRecordControlsVisible !== 'undefined') {
@@ -901,9 +901,10 @@ export default class CustomButtons extends React.Component<any, any> {
     } else if (isFunction(button.onClick)) {
       button.onClick(button);
     }
+    return undefined;
   };
 
-  render() {
+  override render() {
     const {
       type = 'button',
       showMore,
@@ -1029,13 +1030,13 @@ export default class CustomButtons extends React.Component<any, any> {
 
         if (button.desc && type === 'button' && button.style !== 'icon') {
           return (
-            <Tooltip placement="bottom" title={button.desc}>
+            <Tooltip key={i} placement="bottom" title={button.desc}>
               {buttonComponent}
             </Tooltip>
           );
         } else if (button.style === 'icon') {
           return (
-            <Tooltip placement="bottom" title={button.name}>
+            <Tooltip key={i} placement="bottom" title={button.name}>
               {buttonComponent}
             </Tooltip>
           );
@@ -1044,8 +1045,8 @@ export default class CustomButtons extends React.Component<any, any> {
         }
       });
     } else if (type === 'iconText') {
-      buttonComponents = buttons.map(button => (
-        <Tooltip placement="bottom" title={button.desc}>
+      buttonComponents = buttons.map((button, index) => (
+        <Tooltip key={index} placement="bottom" title={button.desc}>
           <span>
             <IconText
               title={button.name}

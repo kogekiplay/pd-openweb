@@ -1,7 +1,10 @@
-import React from 'react';
 import './css/noData.less';
 
-const NoData = props => {
+export interface NoDataProps {
+  children: React.ReactNode;
+}
+
+const NoData = (props: NoDataProps) => {
   return (
     <div className="GSelect-NoData">
       <i className="icon-person GSelect-iconNoData" />

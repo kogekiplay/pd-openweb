@@ -1,4 +1,4 @@
-import React, { Fragment, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useLayoutEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { Dropdown, TagTextarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -29,7 +29,7 @@ export default function FormulaDate(props) {
   const sourceControlId = parseDataSource(data.sourceControlId);
   const dataSource = parseDataSource(data.dataSource);
   const [selectControlVisible, setVisible] = useState(false);
-  const $ref = useRef(null);
+  const $ref = useRef<TagTextarea | null | undefined>(null);
 
   useLayoutEffect(() => {
     if ($ref.current) {
@@ -179,6 +179,7 @@ export default function FormulaDate(props) {
     if (enumDefault === 3) {
       return <ToTodaySetting {...props} />;
     }
+    return undefined;
   };
 
   return (

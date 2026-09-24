@@ -1,4 +1,3 @@
-import React from 'react';
 import copy from 'src/utils/copyToClipboard';
 import styled from 'styled-components';
 import { FunctionWrap, PopupWrapper } from 'ming-ui';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import update from 'immutability-helper';
 import _ from 'lodash';
@@ -20,7 +20,7 @@ const Config: { text: string; key: 'app' | 'sheet'; disabled?: boolean; filter?:
   },
 ];
 
-const idContrast = {
+const idContrast: Record<string, string> = {
   app: 'appId',
   sheet: 'sheetId',
 };
@@ -66,7 +66,7 @@ export default function SelectWorksheetDialog(props) {
   });
   const { appId, sheetId, appName = '' } = ids;
 
-  const isDelete = key => {
+  const isDelete = (key: string) => {
     const currentData = data[key] || [];
     return ids[idContrast[key]] && !_.find(currentData, da => da.value === ids[idContrast[key]]);
   };
@@ -75,8 +75,10 @@ export default function SelectWorksheetDialog(props) {
     appManagementAjax.getAppForManager({ projectId, type: 0 }).then(res => {
       const getFormatApps = () => {
         const currentIndex = _.findIndex(res, item => item.appId === globalSheetInfo.appId);
-        const currentApp = currentIndex > -1 ? res[currentIndex] : [];
-        const appList = [currentApp].concat(update(res, { $splice: [[currentIndex, 1]] }));
+        // 当前应用排到第一个。原来没找到时补的是 []（下拉里多出一个空选项），
+        // 同时 $splice 的起点是 -1，会把列表最后一个应用删掉
+        const appList =
+          currentIndex > -1 ? [res[currentIndex]].concat(update(res, { $splice: [[currentIndex, 1]] })) : res;
         if (appList.length < 1) return [];
         return appList.map(({ appName, appId }) =>
           appId === currentAppId

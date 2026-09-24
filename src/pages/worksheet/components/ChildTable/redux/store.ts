@@ -13,7 +13,6 @@ import { handleUpdateDefsourceOfControl } from 'src/utils/record';
 import { clearRows, loadRows, resetRows, updateTreeTableViewData } from './actions';
 import reducer from './reducer';
 import type { FormControl } from 'src/utils/controlTypes';
-import type { ReduxAction } from 'src/redux/types';
 
 function loadWorksheetInfo(worksheetId: string, { controlId, relationWorksheetId, recordId, instanceId, workId } = {}) {
   const args = { worksheetId, getTemplate: true, getRules: true, relationWorksheetId };

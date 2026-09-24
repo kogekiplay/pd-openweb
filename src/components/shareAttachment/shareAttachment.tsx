@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import copy from 'src/utils/copyToClipboard';
 import doT from 'dot';
@@ -16,6 +15,7 @@ import createFeed from 'src/pages/feed/components/createFeed/load';
 import { getClassNameByExt } from 'src/utils/common';
 import { formatFileSize } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
+import defineMethods from 'src/utils/defineMethods';
 import { _convertToOtherAttachment, _getChatList, _getMyTaskList, createNewChat, createNewTask } from './ajax';
 import { ATTACHMENT_TYPE, CHAT_CARD_TYPE, NODE_VISIBLE_TYPE, SEND_TO_TYPE, WORKSHEET_VISIBLE_TYPE } from './enum';
 import toMobileDailog from './toMobile';
@@ -28,8 +28,36 @@ var mainTpl = doT.template(mainHtml);
 var listTpl = doT.template(searchListHtml);
 var listItemTpl = doT.template(searchListItemHtml);
 
+/** 「发消息 / 发任务」时选目标聊天或任务的搜索列表。type 只会是 SEND_TO_TYPE.CHAT 或 TASK
+ *  （见 ShareAttachment.activeSendToOther），fetch / create / formatTpl / defaultStr 按它二选一。 */
+interface SelectSendToFields {
+  options: { el: string; type: number };
+  /** 选中一项后回调，参数是列表里那一项的原始数据 */
+  callback: (selected: ApiPayload) => void;
+  fetch: (params: { keywords: string; size: number; projectId?: string }) => Promise<ApiPayload>;
+  /** 列表项展示用的字段名：value 是标题字段，headUrl 是头像字段（只有聊天有） */
+  formatTpl: { value: string; headUrl?: string };
+  create: () => Promise<ApiPayload>;
+  defaultStr: { footerStr: string; placeholderStr: string };
+  elements: {
+    $searchListCon: JQuery;
+    $searchInput: JQuery;
+    $selected: JQuery;
+    $listPanel: JQuery;
+    $searchList: JQuery;
+    $footerBtn: JQuery;
+  };
+  isHoverList?: boolean;
+  keywordsCache?: string;
+  /** 第一次展开时拉到的列表，用来判断「再次展开要不要重新拉」 */
+  defaultListData?: ApiPayload[];
+  listData?: ApiPayload[];
+  listTplData?: { value?: string; headUrl?: string }[];
+  selectedData?: ApiPayload;
+}
+
 // 目的地选择列表组件
-var SelectSendTo = function (options, callback) {
+function SelectSendTo(this: SelectSendToInstance, options: SelectSendToFields['options'], callback) {
   this.options = options;
   this.callback = callback;
   if (this.options.type === SEND_TO_TYPE.TASK) {
@@ -56,34 +84,49 @@ var SelectSendTo = function (options, callback) {
   }
 
   this.init();
-};
+}
 
-SelectSendTo.prototype = {
+const selectSendToMethods = defineMethods<SelectSendToFields>()({
   init: function () {
     var ST = this;
     var options = ST.options;
     var $selectSendTo = $(options.el);
     var $sendTo = $(listTpl(this.defaultStr));
     $selectSendTo.after($sendTo);
-    ST.elements = {};
-    ST.elements.$searchListCon = $sendTo.find('.searchListCon');
-    ST.elements.$searchInput = $sendTo.find('.searchInput');
-    ST.elements.$selected = $sendTo.find('.selected');
-    ST.elements.$listPanel = $sendTo.find('.listPanel');
-    ST.elements.$searchList = $sendTo.find('.searchList');
-    ST.elements.$footerBtn = $sendTo.find('.footerBtn');
+    ST.elements = {
+      // 模板的根节点本身就是 .searchListCon。原先写的 $sendTo.find('.searchListCon') 只找后代，
+      // 拿到的一直是空集（好在从没被用过）；现在 bindEvent 要靠它判断列表还在不在页面上
+      $searchListCon: $sendTo,
+      $searchInput: $sendTo.find('.searchInput'),
+      $selected: $sendTo.find('.selected'),
+      $listPanel: $sendTo.find('.listPanel'),
+      $searchList: $sendTo.find('.searchList'),
+      $footerBtn: $sendTo.find('.footerBtn'),
+    };
     ST.bindEvent();
   },
   bindEvent: function () {
     var ST = this;
-    // 点击其它关闭搜索列表
-    $(document).on('click.hideShareAttSearchList', function (e) {
-      if (!$(e.target).closest('.searchListCon').length) {
-        ST.hideList();
-      }
+    /* 点击其它关闭搜索列表。
+       【这里原先会泄漏，并且截停全站的 click】处理器挂在 document 上、从不解绑：每次点「发消息 / 发任务」
+       都会新建一个实例、再挂一个，弹窗关掉也还在。末尾那句 e.stopPropagation() 在 document 这一层
+       唯一的效果就是不让事件冒泡到 window —— 于是用过一次之后，整个会话里 window 上的 click 监听
+       全部失灵，直到刷新页面。实际受害的是「选择文件夹」对话框（kc/folderSelectDialog）：它靠 window
+       的 click 收起「共享权限」小浮层，从这个分享弹窗的「存入知识」进去就正好撞上。
+       现在：先解掉上一个实例的；列表已经不在页面上（弹窗关了 / 切到了别的目标）就把自己也解掉；
+       去掉 stopPropagation —— 打开列表和点选列表项的那两个 click 在元素上已经各自截停，不会走到这里。 */
+    $(document)
+      .off('click.hideShareAttSearchList')
+      .on('click.hideShareAttSearchList', function (e) {
+        if (!document.contains(ST.elements.$searchListCon[0])) {
+          $(document).off('click.hideShareAttSearchList');
+          return;
+        }
 
-      e.stopPropagation();
-    });
+        if (!$(e.target).closest('.searchListCon').length) {
+          ST.hideList();
+        }
+      });
     // 按键up触发搜索
     ST.elements.$searchInput.on(
       'keyup',
@@ -131,7 +174,8 @@ SelectSendTo.prototype = {
     );
     // 点击搜索栏触发搜索
     ST.elements.$selected.on('click', function (e) {
-      ST.elements.$listPanel.show(0, 0, function () {
+      // 原先写的 show(0, 0, fn)：第二个参数是缓动函数名，传 0 和不传一样
+      ST.elements.$listPanel.show(0, function () {
         if (!ST.defaultListData) {
           ST.fetchList(true);
         }
@@ -146,9 +190,10 @@ SelectSendTo.prototype = {
       var key = $this.data('key');
       ST.select(key);
     });
-    ST.elements.$searchList.on('wheel', function (e) {
-      e = e.originalEvent;
-      var target = e.currentTarget;
+    ST.elements.$searchList.on('wheel', function (event) {
+      // 滚到头 / 滚到底时拦掉原生滚轮事件，免得带着外层一起滚
+      var e = event.originalEvent as WheelEvent;
+      var target = e.currentTarget as HTMLElement;
       var clientHeight = target.clientHeight;
       var scrollTop = target.scrollTop;
       var scrollHeight = target.scrollHeight;
@@ -174,7 +219,7 @@ SelectSendTo.prototype = {
         });
     });
   },
-  fetchList: function (isFirst) {
+  fetchList: function (isFirst?: boolean) {
     var ST = this;
     ST.elements.$searchList.html(
       listItemTpl({
@@ -182,7 +227,7 @@ SelectSendTo.prototype = {
       }),
     );
     ST.fetch({
-      keywords: _.trim(ST.elements.$searchInput.val()),
+      keywords: _.trim(String(ST.elements.$searchInput.val() ?? '')),
       size: 20,
       projectId: ST.options.type === SEND_TO_TYPE.CHAT ? undefined : 'all',
     })
@@ -266,9 +311,110 @@ SelectSendTo.prototype = {
     ST.elements.$searchInput.hide();
     ST.elements.$selected.show();
   },
-};
+});
 
-var ShareAttachment = function (options, callbacks) {
+SelectSendTo.prototype = selectSendToMethods;
+type SelectSendToInstance = SelectSendToFields & typeof selectSendToMethods;
+
+/** 知识节点 / 文件夹的归属，决定「本网络可见」那一档的文案 */
+interface ShareRootInfo {
+  project?: { companyDisplayName?: string };
+  owner?: { fullname?: string };
+}
+
+/** 被分享的对象。三种来源：知识节点（调用方传入或 KcController.getNodeDetail）、普通附件
+ *  （AttachmentController.shareAttachmentByPost）、七牛附件（formatQiniuPath 拼出来的），
+ *  字段是三者的并集，只列这个文件里真正读写过的。 */
+interface ShareNode {
+  id?: string;
+  name?: string;
+  ext?: string;
+  size?: number;
+  /** 知识节点类型，1 是文件夹 */
+  type?: number;
+  /** 见 enum.ts NODE_VISIBLE_TYPE / WORKSHEET_VISIBLE_TYPE */
+  visibleType?: number;
+  isOpenShare?: boolean;
+  shareUrl?: string;
+  viewUrl?: string;
+  rootInfo?: ShareRootInfo;
+  canChangeSharable?: boolean;
+  canChangeEditable?: boolean;
+  canDownload?: boolean;
+  allowDown?: boolean;
+  fileID?: string;
+  originalFileName?: string;
+  fileName?: string;
+  fileExt?: string;
+  filePath?: string;
+  fileSize?: number;
+  serverName?: string;
+  key?: string;
+}
+
+/** 调用方给的参数（7 个调用方都是动态 import 后 share.default(options, callbacks)），
+ *  加上构造函数补的默认值和运行中写回来的字段。 */
+interface ShareAttachmentOptions {
+  /** 见 enum.ts ATTACHMENT_TYPE */
+  attachmentType: number;
+  /** 知识节点 id / 附件 fileID / 工作表 id；七牛附件没有 */
+  id?: string;
+  name: string;
+  /** 扩展名，调用方带不带前导点的都有（file.ext 在构造函数里统一去掉） */
+  ext: string;
+  size?: number;
+  imgSrc?: string;
+  qiniuPath?: string;
+  /** 调用方给的初始节点。previewHeader 的普通附件分支传的是空串 —— 普通附件在 fetchBaseData 里会被接口结果覆盖 */
+  node?: ShareNode;
+  isKcFolder?: boolean;
+  dialogTitle?: string;
+  rootInfo?: ShareRootInfo;
+  // 工作表 / 工作表行（这 7 个调用方都没用到这两种，入口在别处）
+  appId?: string;
+  viewId?: string;
+  rowId?: string;
+  shareRange?: number;
+  visibleType?: number;
+  canChangeSharable?: boolean;
+  /** 构造函数给的默认值，实际没被读过 —— 读的是实例上的 sendToTargetType */
+  sendToTargetType?: number;
+  /** 七牛附件换成私有空间地址后的结果 */
+  priviteBucketUrl?: string;
+}
+
+interface ShareAttachmentFields {
+  options: ShareAttachmentOptions;
+  callbacks: {
+    /** 知识节点的分享范围改了之后通知调用方，参数是新的 visibleType */
+    performUpdateItem?: (visibleType: number) => void;
+    updateView?: (view: { shareRange: number }) => void;
+    updateShareRangeOfRecord?: (visibleType: number) => void;
+  };
+  file: { ext: string; name: string; size?: number; imgSrc?: string };
+  $dialog: JQuery;
+  dialogEle: {
+    $fileName: JQuery;
+    $fileNameText: JQuery;
+    $canDownloadSwitch: JQuery;
+    $fileIcon: JQuery;
+    $fileSize: JQuery;
+    $thumbnailCon: JQuery;
+    $thumbnail: JQuery;
+  };
+  /** 用户在文件名输入框里改过的名字 */
+  newFileName?: string;
+  /** 当前选中的发送目标，见 enum.ts SEND_TO_TYPE */
+  sendToTargetType?: number;
+  /** 选中的聊天：列表项或 createNewChat 的结果，type 1 是单聊、2 是群组，value 是对方 accountId / groupId */
+  selectedChat?: { type: number; value: string };
+  selectedTask?: { taskID: string; taskName?: string };
+  /** 「存入知识」选中的目标文件夹（folderSelectDialog 的返回值，原样交给 saveToKnowledge().save） */
+  kcPath?: ApiPayload;
+  sendToMobileDialog?: unknown;
+}
+
+function ShareAttachment(this: ShareAttachmentInstance, options, callbacks) {
   this.options = _.assign(
     {},
     {
@@ -285,9 +431,9 @@ var ShareAttachment = function (options, callbacks) {
     imgSrc: options.imgSrc,
   };
   this.init();
-};
+}
 
-ShareAttachment.prototype = {
+const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
   init: function () {
     var SA = this;
     var options = SA.options;
@@ -316,10 +462,16 @@ ShareAttachment.prototype = {
 
     setTimeout(() => {
       SA.$dialog = $('.' + dialogBoxID);
-      SA.dialogEle = {};
-      SA.dialogEle.$fileName = SA.$dialog.find('#fileName');
-      SA.dialogEle.$fileNameText = SA.$dialog.find('.fileNameText');
-      SA.dialogEle.$canDownloadSwitch = SA.$dialog.find('#canDownload');
+      SA.dialogEle = {
+        $fileName: SA.$dialog.find('#fileName'),
+        $fileNameText: SA.$dialog.find('.fileNameText'),
+        $canDownloadSwitch: SA.$dialog.find('#canDownload'),
+        // 下面四个原先在 previewFile 里才查；提到这里一次建全，previewFile 之前的步骤不增删这几个节点
+        $fileIcon: SA.$dialog.find('.fileIcon'),
+        $fileSize: SA.$dialog.find('.fileSize'),
+        $thumbnailCon: SA.$dialog.find('.thumbnailCon'),
+        $thumbnail: SA.$dialog.find('.thumbnail'),
+      };
       if (
         options.attachmentType === ATTACHMENT_TYPE.KC ||
         options.attachmentType === ATTACHMENT_TYPE.WORKSHEET ||
@@ -351,7 +503,7 @@ ShareAttachment.prototype = {
   bindEvent: function () {
     var SA = this;
     SA.$dialog.on('change', '#fileName', function (this: HTMLElement) {
-      SA.newFileName = $(this).val();
+      SA.newFileName = String($(this).val() ?? '');
     });
     SA.$dialog.on('click', '.shareAttachmentFooter .yes', function () {
       SA.share();
@@ -367,7 +519,7 @@ ShareAttachment.prototype = {
       $('#shareDesc').focus();
     });
   },
-  checkClose(type) {
+  checkClose(type?: number) {
     var SA = this;
     var options = SA.options;
     const visibleType = type || options.node.visibleType;
@@ -401,7 +553,7 @@ ShareAttachment.prototype = {
   },
   updateWorkshhetShareUrl(type = 1, callback) {
     var SA = this;
-    const args = {
+    const args: { worksheetId: string; appId: string; viewId: string; objectType: number; rowId?: string } = {
       worksheetId: SA.options.id,
       appId: SA.options.appId,
       viewId: SA.options.viewId,
@@ -554,7 +706,8 @@ ShareAttachment.prototype = {
         isAppendToBody
         menuStyle={{ width: 110 }}
         onChange={value => {
-          SA.activeSendToOther(parseInt(value, 10));
+          // 项的 value 本来就是数字；parseInt 要的是字符串（对整数两者结果一样）
+          SA.activeSendToOther(Number(value));
         }}
       />,
     );
@@ -604,7 +757,7 @@ ShareAttachment.prototype = {
     var $changeShare = SA.$dialog.find('.changeShare');
     var $closedTip = SA.$dialog.find('.closedTip');
     var $linkContent = SA.$dialog.find('#linkContent');
-    var rootInfo = SA.options.rootInfo || SA.options.node.rootInfo || {};
+    var rootInfo: ShareRootInfo = SA.options.rootInfo || SA.options.node.rootInfo || {};
     var shareVisibleArea = _l('允许所有联系人查看');
     var permissionList;
     $changeShare.removeClass('hide');
@@ -789,7 +942,7 @@ ShareAttachment.prototype = {
     SA.options.node.allowDown = true;
     var shareDesc;
     if (SA.$dialog.find('#shareDesc').is(':visible')) {
-      shareDesc = SA.$dialog.find('#shareDesc').val().trim();
+      shareDesc = String(SA.$dialog.find('#shareDesc').val() ?? '').trim();
     }
 
     // 删除消息和任务已选择的数据
@@ -826,7 +979,12 @@ ShareAttachment.prototype = {
 
       case SEND_TO_TYPE.FEED: {
         $sendToContent.empty();
-        var sObj = {
+        var sObj: {
+          callback: () => void;
+          defaultAttachmentData?: ShareNode[];
+          defaultKcAttachmentData?: ShareNode[];
+          postMsg?: string;
+        } = {
           callback: function () {
             if ($('.shareAttachmentDialog')[0]) {
               $('.shareAttachmentDialog').parent().remove();
@@ -880,7 +1038,12 @@ ShareAttachment.prototype = {
 
       case SEND_TO_TYPE.CALENDAR: {
         $sendToContent.empty();
-        var cObj = {
+        var cObj: {
+          callback: (source) => void;
+          defaultAttachmentData?: ShareNode[];
+          defaultKcAttachmentData?: ShareNode[];
+          Message?: string;
+        } = {
           callback: function (source) {
             if (source && $('.shareAttachmentDialog')[0]) {
               $('.shareAttachmentDialog').parent().remove();
@@ -1013,7 +1176,7 @@ ShareAttachment.prototype = {
               .data()
               .select.setValue(NODE_VISIBLE_TYPE.PUBLIC, _l('允许任何人查看'));
             if (SA.callbacks.performUpdateItem) {
-              SA.callbacks.performUpdateItem(parseInt(NODE_VISIBLE_TYPE.PUBLIC, 10));
+              SA.callbacks.performUpdateItem(NODE_VISIBLE_TYPE.PUBLIC);
             }
           });
         }
@@ -1048,7 +1211,7 @@ ShareAttachment.prototype = {
     var node = SA.options.node;
     var allowDown = true;
     var attachmentType = SA.options.attachmentType;
-    var shareDesc = SA.$dialog.find('#shareDesc').val().trim();
+    var shareDesc = String(SA.$dialog.find('#shareDesc').val() ?? '').trim();
     var params: Record<string, any> = {};
     var files;
     if (SA.options.attachmentType !== ATTACHMENT_TYPE.KC && SA.dialogEle.$canDownloadSwitch.length) {
@@ -1067,7 +1230,7 @@ ShareAttachment.prototype = {
           PERSON: 1,
           GROUP: 2,
         };
-        var selectedChatType = (SA.selectedChat || {}).type;
+        var selectedChatType = SA.selectedChat?.type;
         var sendPromise;
         if (attachmentType === ATTACHMENT_TYPE.COMMON) {
           if (SA.newFileName) {
@@ -1090,7 +1253,7 @@ ShareAttachment.prototype = {
             toAccountId: '',
             toGroupId: '',
           };
-          params[selectedChatType === CHAT_TYPE.PERSON ? 'toAccountId' : 'toGroupId'] = (SA.selectedChat || {}).value;
+          params[selectedChatType === CHAT_TYPE.PERSON ? 'toAccountId' : 'toGroupId'] = SA.selectedChat?.value;
           sendPromise = ChatController.sendFileToChat(params);
         } else if (attachmentType === ATTACHMENT_TYPE.KC) {
           var cards = [
@@ -1107,7 +1270,7 @@ ShareAttachment.prototype = {
             toAccountId: '',
             toGroupId: '',
           };
-          params[selectedChatType === CHAT_TYPE.PERSON ? 'toAccountId' : 'toGroupId'] = (SA.selectedChat || {}).value;
+          params[selectedChatType === CHAT_TYPE.PERSON ? 'toAccountId' : 'toGroupId'] = SA.selectedChat?.value;
           sendPromise = ChatController.sendCardToChat(params);
         } else if (attachmentType === ATTACHMENT_TYPE.QINIU) {
           var originalFileName = SA.options.name;
@@ -1129,7 +1292,7 @@ ShareAttachment.prototype = {
             toAccountId: '',
             toGroupId: '',
           };
-          params[selectedChatType === CHAT_TYPE.PERSON ? 'toAccountId' : 'toGroupId'] = (SA.selectedChat || {}).value;
+          params[selectedChatType === CHAT_TYPE.PERSON ? 'toAccountId' : 'toGroupId'] = SA.selectedChat?.value;
           sendPromise = ChatController.sendFileToChat(params);
         } else if (attachmentType === ATTACHMENT_TYPE.WORKSHEET || attachmentType === ATTACHMENT_TYPE.WORKSHEETROW) {
           params = {
@@ -1163,7 +1326,7 @@ ShareAttachment.prototype = {
             toAccountId: '',
             toGroupId: '',
           };
-          params[selectedChatType === CHAT_TYPE.PERSON ? 'toAccountId' : 'toGroupId'] = (SA.selectedChat || {}).value;
+          params[selectedChatType === CHAT_TYPE.PERSON ? 'toAccountId' : 'toGroupId'] = SA.selectedChat?.value;
           sendPromise = ChatController.sendCardToChat(params);
         }
 
@@ -1174,8 +1337,10 @@ ShareAttachment.prototype = {
               $('.shareAttachmentDialog').parent().remove();
             }
           })
-          .catch(function (err) {
-            alert(_l('发送失败'), err);
+          .catch(function () {
+            // 第二个参数是提示类型（2 = 错误图标）。原先传的是错误对象：antAlert 按 [type - 1] 取图标，
+            // NaN 取不到就兜底成 'success' —— 「发送失败」一直带着绿色的成功对勾
+            alert(_l('发送失败'), 2);
           });
         break;
       }
@@ -1188,6 +1353,9 @@ ShareAttachment.prototype = {
       case SEND_TO_TYPE.TASK: {
         if (!SA.selectedTask) {
           alert(_l('请选择要发送到的任务'), 3);
+          // 原先漏了这个 return（消息、知识两个分支都有）：没选任务点「确定」，提示之后紧接着
+          // 读 SA.selectedTask.taskID，控制台多一条未捕获的 TypeError
+          return;
         }
 
         params = {
@@ -1236,8 +1404,8 @@ ShareAttachment.prototype = {
               $('.shareAttachmentDialog').parent().remove();
             }
           })
-          .catch(function (err) {
-            alert(_l('分享失败'), err);
+          .catch(function () {
+            alert(_l('分享失败'), 2); // 同上，原先传的是错误对象，显示成了成功图标
           });
         break;
       }
@@ -1318,10 +1486,6 @@ ShareAttachment.prototype = {
   },
   previewFile: function () {
     var SA = this;
-    SA.dialogEle.$fileIcon = SA.$dialog.find('.fileIcon');
-    SA.dialogEle.$fileSize = SA.$dialog.find('.fileSize');
-    SA.dialogEle.$thumbnailCon = SA.$dialog.find('.thumbnailCon');
-    SA.dialogEle.$thumbnail = SA.$dialog.find('.thumbnail');
     if (RegExpValidator.fileIsPicture('.' + SA.file.ext) && SA.file.imgSrc) {
       SA.loadPicture();
     } else {
@@ -1451,7 +1615,10 @@ ShareAttachment.prototype = {
   getExt: function (ext) {
     return !ext ? '' : ext[0] === '.' ? ext.slice(1) : ext;
   },
-};
+});
+
+ShareAttachment.prototype = shareAttachmentMethods;
+type ShareAttachmentInstance = ShareAttachmentFields & typeof shareAttachmentMethods;
 
 export default function (options, callbacks?) {
   return new ShareAttachment(options, callbacks);

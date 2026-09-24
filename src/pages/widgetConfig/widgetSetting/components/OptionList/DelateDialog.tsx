@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import cx from 'classnames';
+import { useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
-import { isLightColor } from 'src/utils/control';
+import { OptionChip } from 'src/components/OptionChip';
 import { MAX_OPTIONS_COUNT } from '../../../config';
 
 const DelateDialogWrap = styled.ul`
@@ -15,25 +14,11 @@ const DelateDialogWrap = styled.ul`
     padding: 0px 8;
     border-bottom: 1px solid var(--color-border-primary);
     line-height: 36px;
+    /* 同上：彩色选项是 24px 高的标签，保住原来的 36px 行高 */
+    min-height: 36px;
     .name {
       display: flex;
       align-items: center;
-      .colorWrap {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        margin-right: var(--space-3);
-        .tri {
-          width: 0;
-          height: 0;
-          border: 4px solid transparent;
-          border-top-color: var(--color-background-primary);
-          &.isLight {
-            border-top-color: rgba(0, 0, 0, 0.7);
-          }
-          transform: translate(5px, 8px);
-        }
-      }
     }
     i {
       font-size: var(--font-lg);
@@ -62,16 +47,17 @@ export default function DelateDialog({ options = [], colorful, onOk, onCancel })
       onCancel={onCancel}
     >
       <DelateDialogWrap>
-        {deleteOptions.map(item => {
+        {deleteOptions.map((item, index) => {
           return (
-            <li>
+            <li key={index}>
               <div className="name flex ellipsis">
-                {colorful && (
-                  <div className="colorWrap" style={{ backgroundColor: item.color }}>
-                    <div className={cx('tri', { isLight: isLightColor(item.color) })}></div>
-                  </div>
+                {colorful ? (
+                  <OptionChip color={item.color} title={item.value}>
+                    {item.value}
+                  </OptionChip>
+                ) : (
+                  <div className="flex overflow_ellipsis">{item.value}</div>
                 )}
-                <div className="flex overflow_ellipsis">{item.value}</div>
               </div>
               <Tooltip title={_l('恢复')} placement="bottom">
                 <Icon

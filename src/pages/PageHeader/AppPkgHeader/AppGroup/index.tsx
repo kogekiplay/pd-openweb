@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import api from 'api/homeApp';
@@ -31,7 +31,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
-  static propTypes = {
+  declare removeEventBind: (() => void) | undefined;
+
+  static override propTypes = {
     permissionType: oneOf([0, 1, 2, 3, 100, 200, 300]),
     appStatus: oneOf([0, 1, 2, 3, 4, 5]),
     updateAppGroup: func,
@@ -57,12 +59,12 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData(this.props);
     this.removeEventBind = this.bindEvent();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.ids = getIds(this.props);
       if (
@@ -74,7 +76,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeEventBind && this.removeEventBind();
   } // 当前处理的分组id
 
@@ -120,7 +122,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     );
   }; // 函数节流
 
-  throttleFunc = fn => _.throttle(fn); // 绑定事件
+  throttleFunc = (fn: () => void) => _.throttle(fn); // 绑定事件
 
   bindEvent = () => {
     const throttledEnsurePointerVisible = this.throttleFunc(this.ensurePointerVisible);
@@ -137,7 +139,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
       this.ensurePointerVisible();
     }
   };
-  switchVisible = (obj, cb?) => {
+  switchVisible = (obj: { appItemIntroVisible: boolean } | { delAppItemVisible: boolean }, cb?) => {
     this.setState(obj, cb);
   };
   onSortEnd = newList => {
@@ -205,7 +207,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
       isAppItemOverflow: offsetWidth < scrollWidth,
     });
   };
-  scrollEle = ($ele, distance: number) => {
+  scrollEle = ($ele: Element | null, distance: number) => {
     if (!$ele) return;
     $ele.scrollLeft = distance;
   }; // 滚动指示器点击
@@ -428,7 +430,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
         text: name,
       }));
 
-  render() {
+  override render() {
     const {
       permissionType,
       appStatus,

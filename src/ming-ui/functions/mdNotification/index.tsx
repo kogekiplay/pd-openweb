@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import antNotification from '../../components/antNotification';
@@ -21,8 +20,9 @@ const Btn = styled.div`
 export function renderBtnList(list) {
   return (
     <div>
-      {list.reverse().map(btn => (
+      {list.reverse().map((btn, index) => (
         <Btn
+          key={index}
           title={typeof btn.text === 'string' ? btn.text : ''}
           className={`${btn.className || ''} ellipsis`}
           onClick={btn.onClick || (() => {})}

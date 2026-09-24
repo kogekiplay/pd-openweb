@@ -1,4 +1,4 @@
-const errorMap = {
+const errorMap: Record<string, string> = {
   MARKER_ID_CONFLICT: 'Marker 的 id 属性重复',
   MARKER_ID_REQUIRED: '每一个 Marker 必需有一个 id 属性',
   MAP_INSTANCE_REQUIRED: '没有地图实例；组件必须作为 Map 的子组件使用',

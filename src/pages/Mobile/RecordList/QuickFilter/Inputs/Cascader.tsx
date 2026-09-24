@@ -56,6 +56,9 @@ const CascaderItem = styled.span`
 `;
 
 export default class Cascader extends Component<any, any> {
+  declare ajax: string | ApiResult;
+  declare handleSearch: () => void;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -76,7 +79,7 @@ export default class Cascader extends Component<any, any> {
     this.handleSearch = this.onSearch.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.value, this.props.value)) {
         this.setState({
@@ -272,7 +275,7 @@ export default class Cascader extends Component<any, any> {
 
   formatSearchData = (item, keywords: string) => {
     const searchPath = safeParse(item.searchPath) || [];
-    const nodes = [];
+    const nodes: (string | React.JSX.Element)[] = [];
 
     searchPath.forEach((part, idx) => {
       if (idx > 0) {
@@ -458,7 +461,7 @@ export default class Cascader extends Component<any, any> {
       </List>
     );
   }
-  render() {
+  override render() {
     const { control, values = [], isMultiple } = this.props;
     let { visible, loading } = this.state;
     return (

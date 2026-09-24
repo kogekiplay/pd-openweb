@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import kcCtrl from 'src/api/kc';
@@ -357,6 +356,8 @@ export const checkFileExt = (filetype = '', fileExt = '') => {
       if (_.includes(['0', '2'], type)) {
         return (total = total.concat(FileExts[cur]));
       }
+      // 走到这个分支时 type 一定是 '2'，上面的条件恒为真；补上累加器，免得这个 reduce 看起来会丢数据
+      return total;
     }, []);
     verifyExt = tempFileExts.every(i => !(fileExt.toLowerCase() === i.toLowerCase()));
   }

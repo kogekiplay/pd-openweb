@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Route, Routes } from 'react-router';
 import { Popover } from 'antd';
 import _ from 'lodash';
@@ -36,7 +36,7 @@ class App extends Component<any, any> {
     !window.isPublicApp && socketInit();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     // 【主题由路由驱动】App 外层套了 withRouter，导航时会拿到新的 location。
     // 在这里按 URL 重算，跳到「属于应用但不在 Application 路由树里」的页面
     // （字段编辑、表单设计…）时主题才不会掉回平台色。
@@ -48,7 +48,7 @@ class App extends Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 全局注入事件
     globalEvents();
 
@@ -126,7 +126,7 @@ class App extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { rp, ch } = getAppFeaturesVisible();
 
     if (md.global.Account.isPortal) {

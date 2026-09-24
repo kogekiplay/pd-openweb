@@ -185,7 +185,14 @@ const DelNode = styled.div`
   }
 `;
 
-class TaskNode extends Component<any, any> {
+export interface TaskNodeState {
+  visible: boolean;
+  popupVisible: boolean;
+  showChangeName: boolean;
+  showDel: boolean;
+}
+
+class TaskNode extends Component<any, TaskNodeState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -196,12 +203,12 @@ class TaskNode extends Component<any, any> {
     };
     this.$itemWrap = createRef(null);
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.drawConnector();
   }
   //新增节点
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(_.get(this.props, 'nodeData.pathIds'), _.get(prevProps, 'nodeData.pathIds')) &&
@@ -240,7 +247,7 @@ class TaskNode extends Component<any, any> {
     const { pathIds = [], nodeId, y } = nodeData;
 
     if (pathIds.length <= 0) {
-      return;
+      return undefined;
     }
 
     const featureType = getFeatureStatus(currentProjectId, VersionProductType.dataIntegrationETL);
@@ -248,9 +255,9 @@ class TaskNode extends Component<any, any> {
     return (
       <WrapAct>
         <ul>
-          {ACTION_LIST.map(o => {
+          {ACTION_LIST.map((o, index) => {
             return (
-              <React.Fragment>
+              <React.Fragment key={index}>
                 <li
                   className={'flexRow alignItemsCenter Hand'}
                   onClick={() => {
@@ -357,7 +364,7 @@ class TaskNode extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { scale, nodeData = {}, currentId, onChangeCurrentNode, onUpdate, flowData, currentProjectId } = this.props;
     const { visible, popupVisible, showChangeName, showDel } = this.state;
     let yN = 0;

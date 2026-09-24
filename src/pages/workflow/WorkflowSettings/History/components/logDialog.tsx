@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import JsonView from '@mingdaocom/json-view';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -117,7 +117,7 @@ const MODEL_ICON = {
 const LogDialog = props => {
   const { processId, nodeId, instanceId, onClose } = props;
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  const [folds, setFolds] = useState([]);
+  const [folds, setFolds] = useState<number[]>([]);
   const [list, setList] = useState(null);
   const [showConfigInfo, setShowConfigInfo] = useState(false);
   const [model, setModel] = useState('');
@@ -197,7 +197,7 @@ const LogDialog = props => {
         color: 'rgba(0, 0, 0, 0.5)',
       };
     })();
-    const TEXT = {
+    const TEXT: Record<string, string> = {
       memory: _l('记忆'),
       agent: _l('Agent'),
       ocr: _l('解析文件链接'),

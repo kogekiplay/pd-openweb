@@ -9,7 +9,7 @@ const job = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  job: function (args, options) {
+  job: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'job/';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'jobjob', JSON.stringify(args), $.extend(base, options));
@@ -23,7 +23,7 @@ const job = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelAll: function (args, options) {
+  cancelAll: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'job/cancelAll';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'jobcancelAll', JSON.stringify(args), $.extend(base, options));
@@ -37,7 +37,7 @@ const job = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  run: function (args, options) {
+  run: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'job/run';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'jobrun', JSON.stringify(args), $.extend(base, options));

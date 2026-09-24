@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export const displayFieldForNameInfo = {
+export const displayFieldForNameInfo: Record<number, { id: string; text: string }> = {
   1: { id: 'department', text: _l('部门') },
   3: { id: 'job', text: _l('职位') },
   4: { id: 'jobNumber', text: _l('工号') },

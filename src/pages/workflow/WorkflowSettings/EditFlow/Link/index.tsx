@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import { ACTION_ID } from '../../enum';
 import { CreateNode, NodeOperate, WorksheetMessage } from '../components';
@@ -13,7 +13,7 @@ export default class Link extends Component<any, any> {
    */
   renderContent() {
     const { item } = this.props;
-    const LINK_TYPE_TEXT = {
+    const LINK_TYPE_TEXT: Record<number, string> = {
       1: _l('获取记录分享链接'),
       2: _l('获取记录填写链接'),
       3: _l('带支付按钮的记录链接'),
@@ -60,7 +60,7 @@ export default class Link extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
 
     return (

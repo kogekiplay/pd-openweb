@@ -9,7 +9,7 @@ import { dateConvertToUserZone } from 'src/utils/project';
 import { lineBottomHeight, lineHeight, minHeightObj, timeWidth, timeWidthHalf, types } from './config';
 
 //获取年的时间数组
-export const getTimesByYear = dateData => {
+export const getTimesByYear = (dateData: moment.Moment) => {
   const month = [];
 
   for (let i = 0; i < 12; i++) {
@@ -24,7 +24,7 @@ export const getTimesByYear = dateData => {
 };
 
 //获取某年的日历数组
-export const getViewTimesByYear = (view, date = moment()) => {
+export const getViewTimesByYear = (_view, date = moment()) => {
   return {
     list: [
       {
@@ -37,10 +37,10 @@ export const getViewTimesByYear = (view, date = moment()) => {
 };
 
 //获取某个月的日历数组
-export const getViewTimesByMonth = (view, time) => {
+export const getViewTimesByMonth = (view: WorksheetView, time) => {
   const month = time ? moment(time).month() + 1 : moment().month() + 1;
   const year = time ? moment(time).year() : moment().year();
-  const getAllDaysInMonth = (month, year) =>
+  const getAllDaysInMonth = (month: number, year: number) =>
     Array.from({ length: new Date(year, month, 0).getDate() }, (_, i) => ({
       date: new Date(year, month - 1, i + 1),
       dateStr: new Date(year, month - 1, i + 1).getDate(),
@@ -59,7 +59,7 @@ export const getViewTimesByMonth = (view, time) => {
 
 //获取某个周时间数组
 export const getViewTimesByWeek = (view, date = moment()) => {
-  function getWeekDates(date, firstDayOfWeek) {
+  function getWeekDates(date: moment.Moment, firstDayOfWeek: number) {
     // 设置周几为一周的第一天
     let startOfWeek = moment(date).weekday(firstDayOfWeek - 1); // weekday() 方法返回的周几是从0开始的，所以需要减1
 
@@ -108,7 +108,7 @@ export const getViewTimesByWeek = (view, date = moment()) => {
   };
 };
 
-function isTimeInRange(timeToCheck, timeRangesStr) {
+function isTimeInRange(timeToCheck: string, timeRangesStr) {
   if (!timeRangesStr) {
     return true;
   }
@@ -136,7 +136,7 @@ function isTimeInRange(timeToCheck, timeRangesStr) {
 }
 
 //获取天的时间数组
-export const getViewTimes = (view, dateData) => {
+export const getViewTimes = (view, dateData: moment.Moment) => {
   const showtime = _.get(view, 'advancedSetting.showtime') ? getRuleTimes(view) : '';
   const isHour24 = _.get(view, 'advancedSetting.hour24') === '1';
   const hours = [];
@@ -210,14 +210,14 @@ export const formatRecordTime = (row, view, controls: FormControl[] = []) => {
 /**
  * 处理记录位置
  */
-export const formatRecordPoint = (row, view, list = [], controls, currentTime) => {
+export const formatRecordPoint = (row, view, list = [], controls, currentTime: string | null) => {
   let { startTime, endTime } = row;
   const type =
     localStorage.getItem(`${view.viewId}_resource_type`) || types[_.get(view, 'advancedSetting.calendarType') || 0];
 
-  const getTimeConfig = (time, isEnd?) => {
+  const getTimeConfig = (time, isEnd?: boolean | undefined) => {
     let n = -1;
-    list.forEach((o, i) => {
+    list.forEach((_o, i) => {
       const key = type === 'Week' ? 'h' : type === 'Month' ? 'd' : 'm';
 
       // 和当前时间相等
@@ -351,7 +351,7 @@ export const formatRecordPoint = (row, view, list = [], controls, currentTime) =
       (currentTime ? moment(currentTime) : moment()).endOf('year'),
     ];
   } else if (type === 'Week') {
-    function getWeekDates(date, firstDayOfWeek) {
+    function getWeekDates(date: moment.Moment, firstDayOfWeek: number) {
       // 设置周几为一周的第一天
       let startOfWeek = moment(date).weekday(firstDayOfWeek - 1); // weekday() 方法返回的周几是从0开始的，所以需要减1
 
@@ -604,7 +604,7 @@ export const getResourceRowHoverHandlers = (viewId: string, index: number) => {
   const resourceRowId = `resourceRow_${viewId}_${index}`;
   const resourceGroupId = `resourceGroup_${viewId}_${index}`;
 
-  const setBackground = isEnter => {
+  const setBackground = (isEnter: boolean) => {
     const bg = isEnter ? 'rgba(0,0,0,0.04)' : 'transparent';
     const resourceRow = document.getElementById(resourceRowId);
     const resourceGroup = document.getElementById(resourceGroupId);

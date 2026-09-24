@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv, ScrollView } from 'ming-ui';
@@ -30,7 +30,7 @@ export default class RecordCollect extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -58,7 +58,7 @@ export default class RecordCollect extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { markedAppItems, langItems, loading } = this.state;
 
     return (

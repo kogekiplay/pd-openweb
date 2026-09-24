@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { Dialog, Icon } from 'ming-ui';
@@ -14,10 +14,20 @@ import UserCard from './components/UserCard';
 import VersionCard from './components/VersionCard';
 import { HomePageWrap } from './styled';
 
+/** 页面数据：组织许可证信息（getProjectLicenseSupportInfo，分两次取基本信息和用量），外加余额设置和界面状态 */
+type HomePageData = Partial<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectModel> & {
+  basicLoading: boolean;
+  hideBalance: boolean;
+  balanceManageVisible?: boolean | undefined;
+  /** getOnlyManagerSettings 的 balanceLimitNotice / allowMingoAgentCharge（那个接口还没核对过类型） */
+  balanceInfo?: ApiPayload;
+  allowMingoAgentCharge?: ApiPayload;
+};
+
 export default function HomePage({ match, location: routerLocation, authority }) {
   const { projectId } = _.get(match, 'params');
   const { companyName } = getCurrentProject(projectId);
-  const [data, setData] = useSetState({ basicLoading: true, hideBalance: true });
+  const [data, setData] = useSetState<HomePageData>({ basicLoading: true, hideBalance: true });
   const [refreshing, setRefreshing] = useState(false);
   const [refreshFlag, setRefreshFlag] = useState(0);
   const isTrial = data.licenseType === 2;
@@ -51,8 +61,7 @@ export default function HomePage({ match, location: routerLocation, authority })
         'effectiveDataPipelineRowCount',
         'effectiveAggregationTableCount',
       ]);
-      resData.basicLoading = false;
-      setData(resData);
+      setData({ ...resData, basicLoading: false });
     });
   }, [projectId, setData]);
 

@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, memo, Suspense, useEffect, useRef, useState } from 'react';
+import { Fragment, lazy, memo, Suspense, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ReactSVG } from 'react-svg';

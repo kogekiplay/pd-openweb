@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import { Button, Dialog, Icon, Input, LoadDiv, Support, Switch, UpgradeIcon } from 'ming-ui';
@@ -51,7 +51,7 @@ export default function Microsoft(props) {
     entraOnlyLogin: false,
   });
   const { tenantId, state } = getRequest() || {};
-  const onlyLoginAjax = useRef(null);
+  const onlyLoginAjax = useRef<ApiResult | null>(null);
 
   useEffect(() => {
     getSetting();
@@ -121,7 +121,7 @@ export default function Microsoft(props) {
     });
   };
 
-  const onChangeEntraOnlyLogin = value => {
+  const onChangeEntraOnlyLogin = (value: number) => {
     if (onlyLoginAjax.current) {
       onlyLoginAjax.current.abort();
     }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Select } from 'antd';
 import Trigger from '@rc-component/trigger';
@@ -103,7 +103,7 @@ export default function SelectType(props) {
       });
   };
 
-  const onPopupVisibleChange = visible => {
+  const onPopupVisibleChange = (visible: boolean) => {
     setVisible(visible);
     if (!visible) {
       const needSetPrecision = !!currentOption.maxLength && !destField.precision;

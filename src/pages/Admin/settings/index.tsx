@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -61,7 +61,7 @@ export default class GeneralSettings extends Component<any, any> {
     Config.setPageTitle(_l('应用管理 - 通用设置'));
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { uploadSvg, customColor, appEmailService } = this.state;
 
     if (uploadSvg || customColor || appEmailService) {
@@ -106,7 +106,7 @@ export default class GeneralSettings extends Component<any, any> {
     toLink && navigateTo(`/admin/settings/${this.state.projectId}/appemailservice`);
   };
 
-  render() {
+  override render() {
     let { uploadSvg, customColor, appEmailService } = this.state;
 
     if (uploadSvg) {
@@ -129,7 +129,7 @@ export default class GeneralSettings extends Component<any, any> {
             const { key, title, descrption, clickFunc, featureId } = item;
             const featureType = getFeatureStatus(Config.projectId, featureId);
 
-            if (featureId && !featureType) return;
+            if (featureId && !featureType) return undefined;
 
             return (
               <ConfigItemWrap

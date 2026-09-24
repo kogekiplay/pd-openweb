@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import { Dropdown } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -144,7 +144,7 @@ export default ({
                         minute: data.endTime ? parseInt(data.endTime.split(':')[1]) : 0,
                         second: 0,
                       }}
-                      onChange={(event, value) => {
+                      onChange={(_event, value) => {
                         updateSource({
                           endTime:
                             value.hour.toString().padStart(2, '0') + ':' + value.minute.toString().padStart(2, '0'),

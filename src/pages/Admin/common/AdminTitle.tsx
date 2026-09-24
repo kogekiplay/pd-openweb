@@ -1,9 +1,12 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import Config from '../config';
 
-function AdminTitle({ prefix = '' }) {
+export interface AdminTitleProps {
+  prefix?: string | undefined;
+}
+
+function AdminTitle({ prefix = '' }: AdminTitleProps) {
   const title = Config.getTitle(prefix);
   return <DocumentTitle title={title} />;
 }

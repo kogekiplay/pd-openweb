@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { useDrag } from 'react-dnd';
 import cx from 'classnames';
@@ -71,7 +71,7 @@ export default function DraggableItem(props) {
 
     previewOptions: { captureDraggingState: true },
 
-    end(obj, monitor) {
+    end(_obj, monitor) {
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;
       handleAdd(dropResult);

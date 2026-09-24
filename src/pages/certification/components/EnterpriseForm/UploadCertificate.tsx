@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Button, Icon, QiniuUpload } from 'ming-ui';
 
@@ -112,7 +112,7 @@ export default function UploadCertificate(props) {
           setUploading(true);
           up.disableBrowse();
         }}
-        onError={(up, err, errTip) => {
+        onError={(_up, _err, errTip) => {
           alert(errTip, 2);
         }}
       >

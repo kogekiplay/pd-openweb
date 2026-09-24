@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Dropdown, Input } from 'antd';
 import cx from 'classnames';
@@ -112,8 +112,10 @@ export function ShowFormatDialog(props) {
             <Support href="https://help.mingdao.com/worksheet/date-format/" type={3} text={_l('帮助')} />
           </div>
           <ul className="list">
-            {CUSTOM_SHOW_FORMAT.map(item => (
-              <li onClick={() => setValue(item)}>{moment('2020-01-02').format(item)}</li>
+            {CUSTOM_SHOW_FORMAT.map((item, index) => (
+              <li key={index} onClick={() => setValue(item)}>
+                {moment('2020-01-02').format(item)}
+              </li>
             ))}
           </ul>
         </div>
@@ -375,4 +377,5 @@ export default function DateConfig(props) {
       </Fragment>
     );
   }
+  return undefined;
 }

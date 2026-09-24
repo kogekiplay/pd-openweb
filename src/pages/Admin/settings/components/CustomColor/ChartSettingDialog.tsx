@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TinyColor } from '@ctrl/tinycolor';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -265,12 +265,13 @@ export default function ChartSettingDialog(props) {
       <CustomColorsWrap>
         <div className="title Font14 bold textPrimary">{_l('自定义主题颜色')}</div>
         <div className="customColors">
-          {colors.map(item => {
+          {colors.map((item, index) => {
             const selected = themeColors.includes(item.color);
             const disabled = otherThemeColors.includes(item.color);
 
             return (
               <div
+                key={index}
                 className={cx('colorItem', {
                   selected: selected,
                   disabled: disabled,
@@ -332,7 +333,7 @@ export default function ChartSettingDialog(props) {
           className="nameInput placeholderColor"
           value={name}
           onChange={value => setName(value)}
-          maxlength="15"
+          maxLength={15}
           manualRef={inputRef}
         />
         <div className="label mBottom16 mTop24">{_l('颜色')}</div>
@@ -346,7 +347,7 @@ export default function ChartSettingDialog(props) {
                   <Icon
                     icon="delete_12"
                     className="textTertiary deleteIcon"
-                    onClick={() => setColors(colors.filter((l, i) => i !== index))}
+                    onClick={() => setColors(colors.filter((_l, i) => i !== index))}
                   />
                 </Tooltip>
               )}
@@ -368,8 +369,8 @@ export default function ChartSettingDialog(props) {
           </div>
         </IllustrationTrigger>
         <div className="themeList">
-          {themeColors.map(color => (
-            <div className={cx('colorItem', { disable: !editable })}>
+          {themeColors.map((color, index) => (
+            <div key={index} className={cx('colorItem', { disable: !editable })}>
               <div className="colorBg" style={{ background: color }}></div>
               {editable && (
                 <i

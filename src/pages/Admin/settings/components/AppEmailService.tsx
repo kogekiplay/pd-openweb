@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -81,7 +81,11 @@ const mergeExpandedState = (nextServices = [], prevServices = []) => {
   }));
 };
 
-export default function AppEmailService(props) {
+export interface AppEmailServiceProps {
+  projectId: string;
+}
+
+export default function AppEmailService(props: AppEmailServiceProps) {
   const { projectId } = props;
   const [loading, setLoading] = useState(true);
   const [filterSceneEntityIds, setFilterSceneEntityIds] = useState([]);
@@ -124,7 +128,7 @@ export default function AppEmailService(props) {
     setServiceLoading(data => ({ ...data, [serviceId]: value }));
   };
 
-  const getBindingPayload = (serviceId, sceneEntityIds) => ({
+  const getBindingPayload = (serviceId, sceneEntityIds: string[]) => ({
     id: serviceId,
     projectId,
     sceneType: APP_EMAIL_SCENE_TYPE,

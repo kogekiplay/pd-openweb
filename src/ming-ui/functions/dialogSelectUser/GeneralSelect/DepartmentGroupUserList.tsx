@@ -1,7 +1,7 @@
 /**
  * 选择成员（按部门或群组）
  */
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox } from 'ming-ui';
@@ -31,13 +31,13 @@ export default class DepartmentGroupUserList extends Component<any, any> {
 
   onlyShowJoinGroup = (checked: boolean) => {
     this.setState({ onlyJoinGroupChecked: !checked });
-    safeLocalStorageSetItem('isCheckedGroupOnlyMyJoin', !checked);
+    safeLocalStorageSetItem('isCheckedGroupOnlyMyJoin', String(!checked));
     if (_.isFunction(this.props.userAction)) {
       this.props.userAction();
     }
   };
 
-  render() {
+  override render() {
     let { list = [] } = this.props.data;
     let { selectedUsers = [], selectedAccountIds = [], tabType } = this.props;
     let { ID, NAME, COUNT } = this.props.getKeys(tabType);

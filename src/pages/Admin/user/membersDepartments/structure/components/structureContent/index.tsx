@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -17,7 +17,13 @@ import ApprovalContent from '../ApprovalContent';
 import BatchResign from '../BatchResign';
 import UserTable from '../userList/userTable';
 
-class StructureContent extends Component<any, any> {
+interface StructureContentState {
+  batchEditVisible: boolean;
+  isSuperAdmin: boolean;
+  openChangeUserInfoDrawer?: boolean | undefined;
+}
+
+class StructureContent extends Component<any, StructureContentState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,11 +32,11 @@ class StructureContent extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.loadData();
     (window.platformENV.isOverseas || window.platformENV.isLocal) && this.getPermission();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     localStorage.removeItem('columnsInfoData');
   }
   getPermission = () => {
@@ -145,7 +151,7 @@ class StructureContent extends Component<any, any> {
     this.loadData(page);
   };
 
-  render() {
+  override render() {
     const {
       allCount,
       pageIndex,
@@ -162,7 +168,9 @@ class StructureContent extends Component<any, any> {
       removeUserFromSet = () => {},
       authority = [],
     } = this.props;
-    let { batchEditVisible, batchResetPasswordVisible, openChangeUserInfoDrawer } = this.state;
+    // 原来还解构了 batchResetPasswordVisible 并在下面 && this.renderBatchResetPassword()：
+    // 这个 state 从没被设过、renderBatchResetPassword 也不存在，是一段走不到的死代码，删掉
+    let { batchEditVisible, openChangeUserInfoDrawer } = this.state;
     return (
       <Fragment>
         {!isSearch ? (
@@ -275,8 +283,6 @@ class StructureContent extends Component<any, any> {
             }}
           />
         )}
-        {batchResetPasswordVisible && this.renderBatchResetPassword()}
-
         {openChangeUserInfoDrawer && (
           <AddUser
             projectId={projectId}

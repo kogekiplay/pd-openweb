@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Dropdown, Menu } from 'antd';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
@@ -92,7 +92,7 @@ export default class GroupingAxis extends Component<any, any> {
       particleSizeType: value,
     });
   };
-  handleChangeEmptyType = value => {
+  handleChangeEmptyType = (value: number) => {
     this.props.onChangeCurrentReport({
       emptyType: value,
     });
@@ -235,7 +235,7 @@ export default class GroupingAxis extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { name, split, yaxisList, reportType } = this.props;
     const visible = [
       reportTypes.BarChart,

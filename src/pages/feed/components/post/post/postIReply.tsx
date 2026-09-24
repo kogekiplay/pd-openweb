@@ -8,17 +8,22 @@ import PostFooter from './postFooter';
 import PostMain from './postMain';
 import PostMessage from './postMessage';
 
+interface PostIReplyState {
+  selectedOperation: string | undefined;
+  focusCommentBox?: boolean | undefined;
+}
+
 /**
  * 动态卡片内部内容, 包括动态、相应类型动态的附加信息、操作项、回复/标签等
  */
-class PostIReply extends React.Component<any, any> {
-  static propTypes = {
+class PostIReply extends React.Component<any, PostIReplyState> {
+  static override propTypes = {
     postItem: PropTypes.any.isRequired,
     className: PropTypes.string,
     isSummary: PropTypes.bool,
   };
 
-  state = {
+  override state = {
     selectedOperation:
       !this.props.isSummary && parseInt(this.props.postItem.commentCount, 10)
         ? postEnum.OPERATE_TYPE.comment
@@ -40,7 +45,7 @@ class PostIReply extends React.Component<any, any> {
     window.location.href = pathCompletion('/feeddetail?itemID=' + this.props.postItem.postID);
   };
 
-  render() {
+  override render() {
     const postItem = this.props.postItem;
     const sourceType = postItem.forComment === 'True' ? _l('回复') : _l('动态');
 

@@ -1,4 +1,4 @@
-import React, { Fragment, useRef } from 'react';
+import { Fragment, useRef } from 'react';
 import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
@@ -117,7 +117,7 @@ const ActionLogWrap = styled.div`
   }
 `;
 
-const OPERATION_DATA_LIST = {
+const OPERATION_DATA_LIST: Record<number, string> = {
   6: _l('用备份还原了新应用'),
   1: _l('将应用备份为'),
   2: _l('将应用还原为'),

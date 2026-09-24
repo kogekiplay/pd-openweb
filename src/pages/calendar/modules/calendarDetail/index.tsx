@@ -22,9 +22,9 @@ class Container extends Component<any, any> {
       data: null,
     };
   }
-  dialogRef = React.createRef();
+  dialogRef = React.createRef<React.ComponentRef<typeof Dialog>>();
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchData(true);
     const { exitCallback, saveCallback, deleteCallback } = Config;
     const dialog = $('.calendarEdit')[0];
@@ -53,7 +53,7 @@ class Container extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.calendarId !== prevProps.calendarId || this.props.recurTime !== prevProps.recurTime) {
         this.fetchData(true, this.props);
@@ -103,7 +103,7 @@ class Container extends Component<any, any> {
     return <CalendarDetail data={data} reFetchData={this.fetchData.bind(this)} />;
   }
 
-  render() {
+  override render() {
     const { data } = this.state;
     let title = _l('日程详情');
 

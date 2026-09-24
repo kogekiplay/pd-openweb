@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useKey } from 'react-use';
 import cx from 'classnames';
 import _, { get, includes } from 'lodash';
@@ -122,7 +122,7 @@ const FullScreenTopOffsetStyle = createGlobalStyle`
   }
 `;
 
-function hasNoRelationRelateControl(controls) {
+function hasNoRelationRelateControl(controls: FormControl[]) {
   return !!_.find(controls, c => c.type === 29 && _.isEmpty(c.relationControls));
 }
 
@@ -163,7 +163,7 @@ export default function ChildTableDialog(props) {
   const maxShowRowCount = Math.floor((maxHeight - 30 - 40) / rowHeight);
   const width = window.innerWidth - 32 * 2 > 1600 ? 1600 : window.innerWidth - 32 * 2;
 
-  function handleSave(close?) {
+  function handleSave(close?: boolean | undefined) {
     function submit() {
       if (cache.current.isSaving) {
         return;
@@ -356,7 +356,7 @@ export default function ChildTableDialog(props) {
                     fieldPermission: '100',
                   }),
               worksheetId,
-              addRefreshEvents: (name: string, value) => {
+              addRefreshEvents: (_name: string, value) => {
                 cache.current.reload = value;
               },
             }}

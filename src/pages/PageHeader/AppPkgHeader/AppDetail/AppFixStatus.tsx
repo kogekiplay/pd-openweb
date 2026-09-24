@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { Button, Dialog, Textarea } from 'ming-ui';
 import homeApp from 'src/api/homeApp';
@@ -16,7 +16,7 @@ export default class AppFixStatus extends Component<any, any> {
       fixRemark: props.fixRemark || '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     let appFixTextarea = document.getElementById('appFixTextarea');
     appFixTextarea.focus();
   }
@@ -83,7 +83,7 @@ export default class AppFixStatus extends Component<any, any> {
       );
     }
   }
-  render() {
+  override render() {
     const { fixRemark } = this.state;
     const { fixed, onCancel } = this.props;
     const options = {

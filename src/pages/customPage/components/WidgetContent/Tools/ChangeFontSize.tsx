@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Input, Popover, Slider } from 'antd';
 import cx from 'classnames';
 import { formatNumberFromInput } from 'src/utils/control';

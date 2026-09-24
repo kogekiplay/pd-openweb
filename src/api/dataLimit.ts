@@ -7,7 +7,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachmentSetting: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAttachmentSetting: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.DataLimit.AttachmentSettingDto> {
     return mdyAPI('DataLimit', 'GetAttachmentSetting', args, options);
   },
   /**
@@ -271,7 +274,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListPage: function (args: ApiArgs, options: ApiOptions = {}) {
+  getListPage: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.DataLimit.GetListPageDto> {
     return mdyAPI('DataLimit', 'GetListPage', args, options);
   },
   /**
@@ -313,7 +319,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLimitRowTotal: function (args: ApiArgs, options: ApiOptions = {}) {
+  getLimitRowTotal: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.DataLimit.GetLimitRowTotalDto> {
     return mdyAPI('DataLimit', 'GetLimitRowTotal', args, options);
   },
   /**

@@ -1,10 +1,11 @@
-import React, { createRef, useEffect, useState } from 'react';
+import { createRef, Fragment, useEffect, useState } from 'react';
 import { Dropdown } from 'antd';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import { find, head, includes, isEmpty } from 'lodash';
 import _ from 'lodash';
 import styled from 'styled-components';
+import { OptionChip } from 'src/components/OptionChip';
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
 import { DropdownContent, SettingItem } from '../../../../styled';
 import { getOptions, handleAdvancedSettingChange } from '../../../../util/setting';
@@ -14,13 +15,6 @@ import { OptionControl } from '../styled';
 export const DefaultOptionSetting = styled(SettingItem)`
   .holder {
     height: 34px;
-  }
-  .colorWrap {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    margin-right: 6px;
-    flex-shrink: 0;
   }
   .content {
     display: flex;
@@ -52,6 +46,8 @@ export const DefaultOptionsMenu = styled(DropdownContent)`
     display: flex;
     align-items: center;
     line-height: 36px;
+    /* 彩色选项画成 24px 高的标签后，flex 行的高度由标签决定，靠 min-height 保住原来的 36px */
+    min-height: 36px;
     padding: 0 var(--space-3);
     cursor: pointer;
     transition: background-color 0.25s;
@@ -69,12 +65,6 @@ export const DefaultOptionsMenu = styled(DropdownContent)`
       font-size: var(--font-xl);
       color: var(--color-primary-text);
     }
-  }
-  .colorWrap {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    margin-right: 6px;
   }
   .emptyOption {
     border-top: 1px solid rgba(0, 0, 0, 0.09);
@@ -210,29 +200,35 @@ export default function DefaultOptions(props) {
                 >
                   {_l('清除')}
                 </div>
-                {options.map(({ key, color, value }) => {
+                {options.map(({ key, color, value }, index) => {
                   const checked = includes(checkedValue, key);
                   const isEmpty = key === 'isEmpty' && from === DYNAMIC_FROM_MODE.FAST_FILTER;
                   return (
-                    <>
+                    <Fragment key={index}>
                       {isEmpty && <div className="emptyOption" />}
                       <div className={cx('optionItem', { checked })} key={key} onClick={() => switchChecked(key)}>
-                        {colorful && color && <div className="colorWrap" style={{ backgroundColor: color }}></div>}
-                        <div className="text overflow_ellipsis">{value}</div>
+                        {colorful && color ? (
+                          <OptionChip color={color} title={value}>
+                            {value}
+                          </OptionChip>
+                        ) : (
+                          <div className="text overflow_ellipsis">{value}</div>
+                        )}
                         {checked && <i className="icon-done"></i>}
                       </div>
                       {isEmpty && <div className="emptyOption" />}
-                    </>
+                    </Fragment>
                   );
                 })}
               </DefaultOptionsMenu>
             )}
           >
             <div className="defaultOptionsWrap">
-              {dynamicValue.map(({ cid, rcid, staticValue }) => {
+              {dynamicValue.map(({ cid, rcid, staticValue }, index) => {
                 if (cid) {
                   return (
                     <OtherField
+                      key={index}
                       {...props}
                       item={{ cid, rcid }}
                       className={cx({ singleOption: includes([9, 11], type) })}
@@ -243,11 +239,17 @@ export default function DefaultOptions(props) {
                 if (staticValue) {
                   const option = find(options, item => item.key === staticValue) || {};
                   return (
-                    <OptionControl className={cx('option pointer overflow_ellipsis', { isDeleted: isEmpty(option) })}>
-                      {colorful && option.color && (
-                        <div className="colorWrap" style={{ backgroundColor: option.color }}></div>
+                    <OptionControl
+                      key={index}
+                      className={cx('option pointer overflow_ellipsis', { isDeleted: isEmpty(option) })}
+                    >
+                      {colorful && option.color ? (
+                        <OptionChip color={option.color} title={option.value}>
+                          {option.value}
+                        </OptionChip>
+                      ) : (
+                        <div className="text overflow_ellipsis">{option.value || _l('已删除')}</div>
                       )}
-                      <div className="text overflow_ellipsis">{option.value || _l('已删除')}</div>
                       <i
                         className="icon-close"
                         onClick={e => {

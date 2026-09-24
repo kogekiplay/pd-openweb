@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -54,6 +54,8 @@ const Department = styled.div`
 // import './css/user.less';
 
 export default class DepartmentTree extends Component<any, any> {
+  declare departAjax: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     const project = _.find(md.global.Account.projects, { projectId: props.projectId });
@@ -74,7 +76,7 @@ export default class DepartmentTree extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.defaultCheckedDepId) {
       this.handleSelectGroup(this.props.defaultCheckedDepId);
     }
@@ -290,7 +292,7 @@ export default class DepartmentTree extends Component<any, any> {
 
   onlyShowJoinDepartment = (checked: boolean) => {
     this.setState({ onlyJoinDepartmentChecked: !checked });
-    safeLocalStorageSetItem('isCheckedOnlyMyJoin', !checked);
+    safeLocalStorageSetItem('isCheckedOnlyMyJoin', String(!checked));
     this.props.userAction();
   };
 
@@ -397,7 +399,7 @@ export default class DepartmentTree extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     let { departmentLoading, department = [] } = this.state;
     return (
       <div className="flexRow h100">

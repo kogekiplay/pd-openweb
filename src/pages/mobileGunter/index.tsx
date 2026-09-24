@@ -11,7 +11,7 @@ class MobileGunter extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     return (
       <Provider store={store}>
         <GunterView />

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { arrayOf, func, number, oneOf, shape } from 'prop-types';
 import styled from 'styled-components';
@@ -7,7 +7,7 @@ import { Button, FlexCenter, RevertButton, Text } from 'worksheet/styled';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
 import ConfigureHierarchyView from './configureHierarchyView';
 
-const VIEW_TYPE_INFO = {
+const VIEW_TYPE_INFO: Record<string, { icon: string; color: string; title: string; detail: string }> = {
   1: {
     icon: 'kanban',
     color: '#00BCD4',
@@ -114,7 +114,9 @@ const VerifyButton = styled(Button)`
 `;
 
 export default class SelectField extends Component<any, any> {
-  static propTypes = {
+  declare removeEvent: (() => void) | undefined;
+
+  static override propTypes = {
     fields: arrayOf(shape({ type: number })),
     viewType: oneOf([1, 2, 4, 5, 8]),
     handleSelect: func,
@@ -132,15 +134,15 @@ export default class SelectField extends Component<any, any> {
       checkedValue: _.get(fields, [0, 'value']),
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.removeEvent = this.bindEvent();
     this.computeHeight();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.computeHeight();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeEvent();
   }
   // 绑定事件
@@ -197,7 +199,7 @@ export default class SelectField extends Component<any, any> {
 
     return <ConfigureHierarchyView fields={fields} handleSelect={handleSelect} {...rest} />;
   };
-  render() {
+  override render() {
     const { isCharge, viewType } = this.props;
     const { title, detail, icon, color } = VIEW_TYPE_INFO[String(viewType)];
     return (

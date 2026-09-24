@@ -1,4 +1,4 @@
-﻿import React, { Component, Fragment } from 'react';
+﻿import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Button, Checkbox, Dialog, Dropdown, Icon, LoadDiv, RadioGroup, ScrollView } from 'ming-ui';
@@ -13,7 +13,7 @@ import { isRelateRecordTableControl } from 'src/utils/control';
 import './ExportSheet.less';
 
 export default class ExportSheet extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     allCount: PropTypes.number,
     sheetHiddenColumns: PropTypes.array,
     // 同上：PropTypes.boolean 不存在，正确是 bool。
@@ -67,7 +67,7 @@ export default class ExportSheet extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { columns, worksheetId, exportView, isCharge } = this.props;
     let { columnsSelected } = this.state;
     let exportId = false;
@@ -342,9 +342,9 @@ export default class ExportSheet extends Component<any, any> {
    */
   saveConfig = () => {
     const { columnsSelected } = this.state;
-    const exportControlsId = [];
+    const exportControlsId: string[] = [];
 
-    _.forEach(columnsSelected, (value, key) => {
+    _.forEach(columnsSelected, (_value, key) => {
       columnsSelected[key] && exportControlsId.push(key);
     });
 
@@ -393,7 +393,7 @@ export default class ExportSheet extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { allCount, onClose, allWorksheetIsSelected, selectRowIds, hideStatistics, isCharge, columns } = this.props;
     const {
       type,
@@ -664,8 +664,8 @@ export default class ExportSheet extends Component<any, any> {
                   </div>
 
                   {exportRelationalSheet &&
-                    exportMoreRecord.map(column => (
-                      <div className="flexRow">
+                    exportMoreRecord.map((column, index) => (
+                      <div key={index} className="flexRow">
                         <div className="flex mLeft25">
                           <Checkbox
                             key={column.controlId}

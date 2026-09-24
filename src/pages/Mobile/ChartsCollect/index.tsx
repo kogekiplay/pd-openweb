@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
@@ -42,7 +42,7 @@ export default class ChartCollect extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -62,7 +62,7 @@ export default class ChartCollect extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { collectCharts, loading } = this.state;
 
     return (

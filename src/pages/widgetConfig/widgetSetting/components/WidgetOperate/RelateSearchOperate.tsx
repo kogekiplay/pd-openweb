@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import { Checkbox, Dropdown } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -34,7 +34,7 @@ export default function RelateSearchOperate(props) {
         <Checkbox
           size="small"
           text={_l('允许打开记录')}
-          checked={+allowlink}
+          checked={!!+allowlink}
           onClick={(checked: boolean) =>
             onChange(handleAdvancedSettingChange(data, { allowlink: +!checked, openview: checked ? '' : openview }))
           }
@@ -47,7 +47,7 @@ export default function RelateSearchOperate(props) {
             border
             className="flex"
             cancelAble={!disableOpenViewDrop}
-            loading={loading}
+            itemLoading={loading}
             placeholder={
               selectedOpenViewIsDelete || selectedViewIsDeleted ? (
                 <span className="Red">{_l('已删除')}</span>

@@ -14,12 +14,14 @@ import larkSyncApproval from './img/larkSyncApproval.png';
 import syncApproval from './img/syncApproval.png';
 import './style.less';
 
-const PlatformName = {
+const PlatformName: Record<string, string> = {
   feishu: _l('飞书'),
   lark: 'Lark',
 };
 
 export default class WorkwxSyncCourse extends React.Component<any, any> {
+  declare syncApprovalRef: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +32,7 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { position } = this.state;
     let match = this.props.match;
 
@@ -59,7 +61,7 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
     });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(_nextProps, nextState) {
     return compareProps(this.state, nextState);
   }
 
@@ -253,7 +255,7 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     if (this.state.loading) {
       return (
         <div className="feishuSyncBox card">

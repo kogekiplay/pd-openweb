@@ -1,4 +1,4 @@
-import React from 'react';
+import defineMethods from 'src/utils/defineMethods';
 import { createRoot } from 'react-dom/client';
 import doT from 'dot';
 import _ from 'lodash';
@@ -36,7 +36,26 @@ var ACCOUNT_STATUS = {
   INACTIVE: 3, /// 未激活的
 };
 
-function RootSettings(settings) {
+/** RootSettings 实例唯一的字段 settings：defaults 与调用方参数合并而成（见文件尾导出函数的参数说明）。
+ *  resolve / reject 来自导出函数里那个 new Promise。 */
+interface RootSettingsFields {
+  settings: {
+    /** 是否是编辑共享文件夹（否则是新建） */
+    isEdit: boolean;
+    /** root.id */
+    id: string;
+    isStared: boolean;
+    name: string;
+    /** 共享文件夹成员列表，接口原样返回 */
+    members: ApiPayload[];
+    projectId?: string;
+    appId?: string;
+    resolve: (value: unknown) => void;
+    reject: (reason?: unknown) => void;
+  };
+}
+
+function RootSettings(this: RootSettingsInstance, settings) {
   var defaults = {
     isEdit: false,
     id: '',
@@ -48,7 +67,7 @@ function RootSettings(settings) {
   this.init();
 }
 
-$.extend(RootSettings.prototype, {
+const rootSettingsMethods = defineMethods<RootSettingsFields>()({
   init: function () {
     var _this = this,
       isEdit = _this.settings.isEdit,
@@ -182,6 +201,7 @@ $.extend(RootSettings.prototype, {
               })
               .catch(_this.settings.reject);
           }
+          return undefined;
         },
       });
 
@@ -503,7 +523,7 @@ $.extend(RootSettings.prototype, {
         Dialog.confirm({
           zIndex: 1009,
           title: _l('操作提示'),
-          children: <div class="Font14">{_l('拒绝后将移除该用户')}</div>,
+          children: <div className="Font14">{_l('拒绝后将移除该用户')}</div>,
           onOk: () => {
             kcAjax
               .removeRootMember({ id: rootId, memberId: memberId })
@@ -666,7 +686,7 @@ $.extend(RootSettings.prototype, {
             if (membersLi.length) {
               Dialog.confirm({
                 title: _l('归属变更'),
-                children: <div class="Font14">{_l('您变更了文件夹的归属,要清空成员列表吗?')}</div>,
+                children: <div className="Font14">{_l('您变更了文件夹的归属,要清空成员列表吗?')}</div>,
                 okText: _l('清空成员'),
                 onOk: () => {
                   membersLi.slideUp(function (this: HTMLElement) {
@@ -689,7 +709,7 @@ $.extend(RootSettings.prototype, {
     //成员名片层
     $('.folderMemberBox ul')
       .find('.imgMemberBox[data-account-id]')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         const root = createRoot(ele);
         root.render(
           <UserHead
@@ -730,7 +750,7 @@ $.extend(RootSettings.prototype, {
           Dialog.confirm({
             title: _l('操作提示'),
             zIndex: 1003,
-            children: <div class="Font14">{conFirmStr}</div>,
+            children: <div className="Font14">{conFirmStr}</div>,
             onOk: () => {
               kcAjax
                 .removeRootMember({ id: rootId, memberID: removeMemberId })
@@ -850,7 +870,7 @@ $.extend(RootSettings.prototype, {
           });
       });
   },
-  addRootMemers: function (users, root, isInvite, callbackInviteResult) {
+  addRootMemers: function (users, root, isInvite?, callbackInviteResult?) {
     var uidCount = users.length;
     var user,
       isExistes,
@@ -877,6 +897,7 @@ $.extend(RootSettings.prototype, {
             existingUsers.push(user);
             return false;
           }
+          return undefined;
         });
       }
 
@@ -903,7 +924,7 @@ $.extend(RootSettings.prototype, {
         $('.folderMembers .folderMemberBox ul').append(memberHtml);
         $('.folderMemberBox ul')
           .find('.imgMemberBox[data-account-id]:last')
-          .each((i, ele) => {
+          .each((_i, ele) => {
             const root = createRoot(ele);
             root.render(
               <UserHead
@@ -978,7 +999,7 @@ $.extend(RootSettings.prototype, {
               $('.folderMembers .folderMemberBox ul').append(memberHtml);
               $('.folderMemberBox ul')
                 .find('.imgMemberBox[data-account-id]:last')
-                .each((i, ele) => {
+                .each((_i, ele) => {
                   const root = createRoot(ele);
                   root.render(
                     <UserHead
@@ -1055,6 +1076,9 @@ $.extend(RootSettings.prototype, {
     return true;
   },
 });
+
+$.extend(RootSettings.prototype, rootSettingsMethods);
+type RootSettingsInstance = RootSettingsFields & typeof rootSettingsMethods;
 
 export default function (param) {
   return new Promise((resolve, reject) => {

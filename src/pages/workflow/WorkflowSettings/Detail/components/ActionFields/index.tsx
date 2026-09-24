@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -12,8 +12,15 @@ import selectToolsFields from './selectToolsFields';
 import './index.less';
 
 const ClickAwayable = ClickAway;
-export default class ActionFields extends Component<any, any> {
-  static propTypes = {
+export interface ActionFieldsState {
+  activeIndex: number;
+  keywords: string;
+}
+
+export default class ActionFields extends Component<any, ActionFieldsState> {
+  declare search: HTMLInputElement | null | undefined;
+
+  static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.object,
     title: PropTypes.string,
@@ -68,7 +75,7 @@ export default class ActionFields extends Component<any, any> {
    * 点击切换
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.condition.length !== prevProps.condition.length) {
         this.setState({
@@ -87,7 +94,7 @@ export default class ActionFields extends Component<any, any> {
     this.search && this.search.focus();
   };
 
-  render() {
+  override render() {
     const {
       header,
       footer,

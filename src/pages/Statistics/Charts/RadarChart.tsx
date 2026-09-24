@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Dropdown, Menu } from 'antd';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
@@ -83,6 +83,9 @@ const formatChartData = (data, yaxisList, splitControlId, xaxesControlId, minVal
 };
 
 export default class extends Component<any, any> {
+  declare isUnmounted: boolean;
+  declare chartEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -97,7 +100,7 @@ export default class extends Component<any, any> {
     this.RadarComponent = null;
     this.isUnmounted = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     loadG2Plot().then(data => {
       if (this.isUnmounted) {
         return;
@@ -107,11 +110,11 @@ export default class extends Component<any, any> {
       this.renderRadarChart(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     this.destroyRadarChart();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { displaySetup, style } = this.props.reportData;
     const { displaySetup: oldDisplaySetup, style: oldStyle } = prevProps.reportData;
     const shouldRecreate = this.props.isLinkageData !== prevProps.isLinkageData;
@@ -490,7 +493,7 @@ export default class extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { count, originalCount, dropdownVisible, offset } = this.state;
     const { summary, displaySetup = {} } = this.props.reportData;
     return (

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dropdown } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -104,7 +104,7 @@ export const EditExternalLink = props => {
   );
 };
 
-const genControlTag = id => {
+const genControlTag = (id: string) => {
   const res = _.flatten(LINK_PARA_FIELDS.map(data => data.fields));
   const field = _.find(res, { value: id });
   return (
@@ -120,7 +120,7 @@ const ExternalLink = props => {
   const [openType, setOpenType] = useState(configuration.openType || '1');
   const [hideHeaderBar, setHideHeaderBar] = useState(configuration.hideHeaderBar || '0');
   const [urlTemplate, setUrlTemplate] = useState(props.urlTemplate || '');
-  const [ref, setRef] = useState('');
+  const [ref, setRef] = useState<TagTextarea | undefined>();
 
   useEffect(() => {
     onChange({
@@ -133,7 +133,7 @@ const ExternalLink = props => {
     });
   }, [customPageType, openType, hideHeaderBar, urlTemplate]);
 
-  const handleChange = (err, value) => {
+  const handleChange = (err, value: string) => {
     if (err) {
       return;
     }
@@ -193,7 +193,7 @@ const ExternalLink = props => {
                               key={value}
                               className="item"
                               onClick={() => {
-                                ref.insertColumnTag(value);
+                                ref?.insertColumnTag(value);
                               }}
                             >
                               {text}

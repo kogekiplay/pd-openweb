@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -49,7 +49,7 @@ export default function ExportTrigger(props) {
   const [visible, setVisible] = useState(false);
   const featureStatus = getFeatureStatus(projectId, VersionProductType.batchDownloadFiles);
 
-  const onExport = type => {
+  const onExport = (type: string) => {
     setVisible(!visible);
     DownloadAjax.exportWorksheetOperationLogs({
       worksheetId,
@@ -63,7 +63,7 @@ export default function ExportTrigger(props) {
     });
   };
 
-  const changeVisible = value => {
+  const changeVisible = (value: boolean) => {
     if (value === true && featureStatus === '2') {
       buriedUpgradeVersionDialog(projectId, VersionProductType.batchDownloadFiles);
       return;

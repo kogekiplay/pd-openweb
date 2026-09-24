@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -102,7 +102,7 @@ export default function LayoutChangedIcon(props) {
               onOk: () => {
                 onSave({ closePopup, isApplyAll: cache.current.isApplyAll });
               },
-              onCancel: onCancel.bind(this, { closePopup }),
+              onCancel: onCancel.bind(null, { closePopup }),
             });
           }}
         ></i>
@@ -119,10 +119,10 @@ export default function LayoutChangedIcon(props) {
                 {description || _l('保存当前表格的列宽、列冻结、列隐藏配置，并应用给所有用户')}
               </div>
               <div className="buttons">
-                <Button size="mdnormal" type="ghostgray" onClick={onCancel.bind(this, { closePopup })}>
+                <Button size="mdnormal" type="ghostgray" onClick={onCancel.bind(null, { closePopup })}>
                   {_l('取消')}
                 </Button>
-                <Button size="mdnormal" onClick={onSave.bind(this, { closePopup })}>
+                <Button size="mdnormal" onClick={onSave.bind(null, { closePopup })}>
                   {_l('保存')}
                 </Button>
               </div>

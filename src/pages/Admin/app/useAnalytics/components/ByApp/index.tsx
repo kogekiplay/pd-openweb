@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -106,6 +106,9 @@ const tabs = [
 ];
 
 export default class ByApp extends Component<any, any> {
+  declare ajaxRequst: ApiResult | null;
+  declare useageRequest: ApiResult | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -193,7 +196,7 @@ export default class ByApp extends Component<any, any> {
         title: '',
         className: 'width50',
         render: item => {
-          if (!item.appId) return;
+          if (!item.appId) return undefined;
           return (
             <Tooltip title={_l('使用分析')}>
               <Icon
@@ -340,7 +343,7 @@ export default class ByApp extends Component<any, any> {
         className: 'width50',
         render: item => {
           const { app } = item;
-          if (!app.name) return;
+          if (!app.name) return undefined;
           return (
             <Tooltip title={_l('使用分析')}>
               <Icon
@@ -367,7 +370,7 @@ export default class ByApp extends Component<any, any> {
     this.useageRequest = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getList();
   }
 
@@ -499,7 +502,7 @@ export default class ByApp extends Component<any, any> {
     }
   };
 
-  changeTab = item => {
+  changeTab = (item: { tab: number; name: string }) => {
     const { pageIndex, useagePageIndex, list = [], useageList = [] } = this.state;
 
     if (
@@ -547,7 +550,7 @@ export default class ByApp extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     let {
       currentTab,
       list = [],

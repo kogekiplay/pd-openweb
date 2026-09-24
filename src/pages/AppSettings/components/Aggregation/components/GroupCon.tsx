@@ -151,9 +151,10 @@ export default function GroupCon(props) {
                       }}
                       popup={
                         <WrapS className="Relative">
-                          {getDefaultOperationForGroup(item).map(o => {
+                          {getDefaultOperationForGroup(item).map((o, index) => {
                             return (
                               <MenuItem
+                                key={index}
                                 className={cx('settingSheet flexRow Font14', {
                                   colorPrimary: o.value === _.get(item, 'resultField.aggFuncType'),
                                 })}
@@ -234,9 +235,10 @@ export default function GroupCon(props) {
                       }}
                       popup={
                         <WrapS className="Relative">
-                          {arraySplitList.map(o => {
+                          {arraySplitList.map((o, index) => {
                             return (
                               <MenuItem
+                                key={index}
                                 className={cx('settingSheet flexRow Font14', {
                                   colorPrimary: !o.value === !item.arraySplit,
                                 })}

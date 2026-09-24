@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import Trigger from '@rc-component/trigger';
@@ -26,6 +26,8 @@ const PersonalStatusWrap = styled(PersonalStatus)`
 const { GROUPACTION } = Constant;
 
 class ChatPanelHeader extends Component<any, any> {
+  declare input: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -36,7 +38,7 @@ class ChatPanelHeader extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!this.props.searchText) {
         this.setState({
@@ -285,7 +287,7 @@ class ChatPanelHeader extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { infoVisible, session, isWindow, isOpenFile, socketState } = this.props;
     const { searchVisible, focus, value } = this.state;
     const name = session.name || session.fullname;

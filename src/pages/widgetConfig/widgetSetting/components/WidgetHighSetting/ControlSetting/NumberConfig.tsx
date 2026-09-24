@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import _ from 'lodash';
 import { Checkbox } from 'ming-ui';
 import { EditInfo } from '../../../../styled';

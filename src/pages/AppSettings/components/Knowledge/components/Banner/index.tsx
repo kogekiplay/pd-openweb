@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import styled, { css, keyframes } from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -15,7 +14,7 @@ const typeStyleMap = {
   `,
 };
 
-const iconColorMap = {
+const iconColorMap: Record<string, string> = {
   warning: 'var(--color-warning)',
   error: 'var(--color-error)',
   primary: 'var(--color-primary)',

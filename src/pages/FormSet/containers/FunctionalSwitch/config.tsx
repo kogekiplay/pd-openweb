@@ -1,6 +1,5 @@
-import React from 'react';
 
-export const listConfigStr = {
+export const listConfigStr: Record<number, string> = {
   10: _l('显示创建按钮'),
   // 工作表维度 都是1开头
   11: _l('讨论'), //工作表讨论

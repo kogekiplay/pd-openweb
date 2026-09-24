@@ -138,7 +138,7 @@ const getIsOverOneDay = (beginValue, endValue) => {
   return endDate - beginDate >= 1 || moment(endValue).diff(moment(beginValue), 'minutes') >= 1439;
 };
 
-const getTitleControls = worksheetControls => {
+const getTitleControls = (worksheetControls: FormControl[]) => {
   return worksheetControls.find((item: FormControl) => item.attribute === 1);
 };
 
@@ -337,14 +337,16 @@ export const isIllegalFormat = (calendarInfo = []) => {
   return calendarInfo.some(o => [o.endData, o.startData].some(item => isIllegal(item)));
 };
 
-export const setSysWorkflowTimeControlFormat = (
-  controls: FormControl[] = [],
+// 也有调用方拿它过滤下拉项（key 传 'value'），所以元素类型跟着入参走。
+// 用 function 声明而不是泛型箭头：本仓 babel 给 .ts 也开了 JSX，<T>(…) => 会被当成 JSX 标签解析
+export function setSysWorkflowTimeControlFormat<T extends object = FormControl>(
+  controls: T[] = [],
   sheetSwitchPermit = [],
   key = 'controlId',
-) => {
+): T[] {
   const isPermitted = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit);
-  return controls.filter((o: FormControl) => isPermitted || !SYS_CONTROLS_WORKFLOW.includes(o[key]));
-};
+  return controls.filter(o => isPermitted || !SYS_CONTROLS_WORKFLOW.includes((o as Record<string, any>)[key]));
+}
 
 export const getCurrentView = props => {
   const { views = [], base = {} } = props;
@@ -417,7 +419,7 @@ export const formatTimeForSave = (value: Date, data: FormControl = {}, appId: st
   return value;
 };
 
-export const changeEndStr = (end, allDay, calendarview) => {
+export const changeEndStr = (end: Date | null, allDay: boolean, calendarview) => {
   const { endFormat } = calendarview.calendarData || {};
   return allDay ? `${moment(end).subtract(1, 'day').format('YYYY-MM-DD')} 23:59:59` : moment(end).format(endFormat);
 };
@@ -460,7 +462,7 @@ export const resetFcEventDraggingPoint = () => {
   }
 };
 
-export const setShowTip = (event, flag, canNew) => {
+export const setShowTip = (event, flag: boolean, canNew) => {
   const myTips = document.getElementById('mytips');
   if (!myTips || document.querySelector('.customPageContent')) return;
   if (!flag || !canNew) {

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 
@@ -25,12 +24,23 @@ const EmptyStatusWrap = styled.div`
     .emptyTxt {
       margin-top: var(--space-3);
       font-size: 15px;
-      color: var(--color-text-disabled);
+      /* 【空态文案不是禁用态】disabled 档对白底只有 1.88，
+         WCAG 豁免的是【禁用控件】，不是"要读的空态说明"。
+         上面那个 .icon 是插画，留 disabled 档没问题。 */
+      color: var(--color-text-tertiary);
     }
   }
 `;
 
-export default function EmptyStatus(props) {
+export interface EmptyStatusProps {
+  emptyTxt: string;
+  icon: string;
+  radiusSize: number;
+  emptyTxtClassName: string;
+  iconClassName: string;
+}
+
+export default function EmptyStatus(props: EmptyStatusProps) {
   const { emptyTxt, icon, radiusSize, emptyTxtClassName, iconClassName } = props;
   return (
     <EmptyStatusWrap radiusSize={radiusSize}>

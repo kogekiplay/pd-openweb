@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Checkbox, Collapse, Input, Select, Switch } from 'antd';
 import cx from 'classnames';
 import { Icon } from 'ming-ui';
@@ -8,7 +8,7 @@ class YAxis extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { ydisplay, onChangeDisplayValue, onChangeCurrentReport, isRight, reportType, yreportType, isDualAxes } =
       this.props;
     return (
@@ -277,7 +277,7 @@ export default function yAxisPanelGenerator(props) {
           <Switch
             size="small"
             checked={switchChecked}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -321,7 +321,7 @@ export default function yAxisPanelGenerator(props) {
             <Switch
               size="small"
               checked={rightYSwitchChecked}
-              onClick={(checked, event) => {
+              onClick={(_checked, event) => {
                 event.stopPropagation();
               }}
               onChange={checked => {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { useSetState } from 'react-use';
@@ -44,7 +44,7 @@ export default function Content(props) {
   }, [globalSheetInfo.worksheetId]);
 
   useEffect(() => {
-    const handleKeyDown = e => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       const { key, metaKey, ctrlKey } = e;
 
       if (!widgetPanelFixed && (window.isMacOs ? metaKey : ctrlKey) && key === '/') {
@@ -77,7 +77,7 @@ export default function Content(props) {
   }, [mingoCreateWorksheetAction]);
 
   useEffect(() => {
-    const handleKeyDown = e => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       const { code, metaKey, ctrlKey } = e;
 
       if (!fixedInfo.widgetPanelFixed && (window.isMacOs ? metaKey : ctrlKey) && code === 'Slash') {
@@ -144,7 +144,7 @@ export default function Content(props) {
   };
 
   const renderWidgetSetting = () => {
-    function handleClose(target) {
+    function handleClose(target: EventTarget | null) {
       const $el = $(target);
 
       if (

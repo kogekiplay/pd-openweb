@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon, RichText } from 'ming-ui';
@@ -34,7 +34,7 @@ export default class EditDes extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({
       summary: this.props.summary,
     });
@@ -51,7 +51,7 @@ export default class EditDes extends Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('body').off('.editor');
   }
 
@@ -66,7 +66,7 @@ export default class EditDes extends Component<any, any> {
     this.props.onSave(summary);
   };
 
-  render() {
+  override render() {
     const { canEditing, className, summary, title, maxHeight, minHeight } = this.props;
     const { isEditing } = this.state;
     const clientHeight = document.body.clientHeight;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
 import { pathCompletion } from 'src/utils/common';
@@ -43,7 +43,12 @@ const DialogWrap = styled(Dialog)`
   }
 `;
 
-export default function HapAiDialog({ visible, onCancel = () => {} }) {
+export interface HapAiDialogProps {
+  visible: boolean;
+  onCancel?: (() => void) | undefined;
+}
+
+export default function HapAiDialog({ visible, onCancel = () => {} }: HapAiDialogProps) {
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
@@ -60,6 +65,7 @@ export default function HapAiDialog({ visible, onCancel = () => {} }) {
         iframe.removeEventListener('load', () => setIframeLoaded(false));
       };
     }
+    return undefined;
   }, [visible]);
 
   return (

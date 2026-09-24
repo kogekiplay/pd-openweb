@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useDeepCompareEffect } from 'react-use';
@@ -107,7 +107,7 @@ function ChartComponent(props) {
     filtersGroup: filtersGroup.length ? filtersGroup : undefined,
   };
 
-  const request = useRef(null);
+  const request = useRef<ApiResult | null>(null);
 
   useDeepCompareEffect(() => {
     handleReportRequest();
@@ -338,7 +338,7 @@ function ChartContent(props) {
 
     if (!customPageContent) {
       setVisible(true);
-      return;
+      return undefined;
     }
 
     const chart = customPageContent.querySelector(`.widgetContent .analysis-${widget.id}`);

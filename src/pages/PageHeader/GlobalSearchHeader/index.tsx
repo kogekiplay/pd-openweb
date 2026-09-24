@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import withRouter from '../../../router/withRouter';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -25,7 +25,7 @@ const HomeEntry = styled.div`
     color: var(--color-primary-text);
   }
 `;
-const MODULE_TO_TEXT = {
+const MODULE_TO_TEXT: Record<string, string> = {
   account: _l('个人账户'),
   admin: _l('组织管理'),
   user: _l('个人资料'),
@@ -40,15 +40,15 @@ const PAGE_HEADER_ROUTE = {
   search: ['/search'],
 };
 let GlobalSearchHeader = class GlobalSearchHeader extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
-  state = {
+  override state = {
     indexSideVisible: false,
     searchValue: undefined,
     searchKey: undefined,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const urlParam = getRequest(this.props.search);
     this.setState({
       searchKey: urlParam.search_key || undefined,
@@ -66,7 +66,7 @@ let GlobalSearchHeader = class GlobalSearchHeader extends Component<any, any> {
     if (_.includes(PAGE_HEADER_ROUTE.search, path)) return 'search';
     return '';
   };
-  onSearchChange = value =>
+  onSearchChange = (value: string) =>
     this.setState({
       searchValue: value,
     });
@@ -84,7 +84,7 @@ let GlobalSearchHeader = class GlobalSearchHeader extends Component<any, any> {
       searchValue: '',
     });
 
-  render() {
+  override render() {
     const text = MODULE_TO_TEXT[this.getModule()];
     const { searchValue } = this.state;
     return (

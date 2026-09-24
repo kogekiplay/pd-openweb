@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import WidgetConfigRuleItem from '../../../../FormSet/components/columnRules/WidgetConfigRuleItem';

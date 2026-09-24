@@ -1,7 +1,7 @@
 /**
  * 工作表控件-关联他表
  */
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -10,7 +10,7 @@ import RecordInfoWrapper from '../../common/recordInfo/RecordInfoWrapper';
 import { renderCellText } from '../../components/CellControls';
 
 class RelateWorksheet extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),
     cell: PropTypes.shape({}),
@@ -22,7 +22,7 @@ class RelateWorksheet extends Component<any, any> {
       activeRecordId: undefined,
     };
   }
-  render() {
+  override render() {
     const { cell, style, className } = this.props;
     const { activeRecordId } = this.state;
     const { value, dataSource, appId, viewId } = cell;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDrop } from 'react-dnd';
 import _ from 'lodash';
 import NewRecord from 'worksheet/common/newRecord/NewRecord';

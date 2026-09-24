@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Dialog } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { dialogSelectUser } from 'ming-ui/functions';
@@ -6,7 +6,13 @@ import ajaxRequest from 'src/api/taskCenter';
 import { errorMessage } from '../../../utils/utils';
 import './less/copyTask.less';
 
-export default class CopyTask extends Component<any, any> {
+export interface CopyTaskState {
+  accountId: string;
+  avatar: string;
+  visible: boolean;
+}
+
+export default class CopyTask extends Component<any, CopyTaskState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,7 +22,7 @@ export default class CopyTask extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const that = this;
     $('.copyTask').on('click', '.checkOperation:not(.noClick)', function (this: HTMLElement) {
       $(this).toggleClass('checked');
@@ -76,7 +82,7 @@ export default class CopyTask extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     return (
       <Dialog
         visible={this.state.visible}

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -92,11 +92,11 @@ export default function PhoneNumberInput({
   const [isEditing, setIsEditing] = useState(false);
   const [numberValue, setNumberValue] = useState('');
   const inputRef = useRef(null);
-  const dialCodeRef = useRef(null);
+  const dialCodeRef = useRef<DialCodeSelectInstance | null>(null);
   const countryTriggerRef = useRef<HTMLDivElement | null>(null);
   const handleCodeClickRef = useRef(() => {});
   const isSelectingCountryRef = useRef(false);
-  const selectingTimerRef = useRef(null);
+  const selectingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const { value = '', hint, enumDefault, disabled, advancedSetting = {} } = control;
 
@@ -163,7 +163,7 @@ export default function PhoneNumberInput({
   }, []);
 
   useEffect(() => {
-    if (hiddenCountry || !countryTriggerRef.current) return;
+    if (hiddenCountry || !countryTriggerRef.current) return undefined;
 
     const instance = new DialCodeSelectInstance({
       dom: countryTriggerRef.current,

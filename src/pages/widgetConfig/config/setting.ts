@@ -12,13 +12,13 @@ export const RELATE_COUNT = [
   { text: _l('多条'), value: 2 },
 ];
 
-export const RELATE_COUNT_TEXT = {
+export const RELATE_COUNT_TEXT: Record<number, string> = {
   0: _l('子表'),
   1: _l('单条'),
   2: _l('多条'),
 };
 
-export const DISPLAY_TYPE_TEXT = {
+export const DISPLAY_TYPE_TEXT: Record<number, string> = {
   1: _l('卡片'),
   2: _l('列表'),
   3: _l('下拉框'),
@@ -84,7 +84,7 @@ export const RELATION_OPTIONS = [
   },
 ];
 
-export const DEFAULT_TEXT = {
+export const DEFAULT_TEXT: Record<number, { key: string; value: string }[]> = {
   1: [
     { key: '1', value: _l('开启') },
     { key: '0', value: _l('关闭') },
@@ -259,7 +259,7 @@ export const DISPLAY_RC_TITLE_STYLE = [
   { icon: 'align_vertical_center', value: '1', text: _l('居中对齐') },
 ];
 
-export const DISPLAY_FROZEN_LIST = Array.from({ length: 11 }).map((item, index) => ({
+export const DISPLAY_FROZEN_LIST = Array.from({ length: 11 }).map((_item, index) => ({
   value: `${index}`,
   text: !index ? _l('不冻结') : _l('%0列', index),
 }));

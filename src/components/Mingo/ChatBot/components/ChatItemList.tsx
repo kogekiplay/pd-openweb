@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -7,7 +7,7 @@ import { Dialog, Icon, Input, Menu, MenuItem, MobileConfirmPopup, PopupWrapper, 
 import ScrollView from 'ming-ui/components/ScrollView';
 import appManagementApi from 'src/api/appManagement';
 import { getPublicShare, updatePublicShareStatus } from 'src/pages/worksheet/components/Share/controller';
-import { browserIsMobile, pathCompletion } from 'src/utils/common';
+import { browserIsMobile } from 'src/utils/common';
 import copy from 'src/utils/copyToClipboard';
 import { compatibleMDJS } from 'src/utils/project';
 import 'rc-trigger/assets/index.css';
@@ -99,7 +99,7 @@ function ChatHistoryItem({
   const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const itemRef = useRef(null);
-  const cache = useRef({});
+  const cache = useRef<{ input?: HTMLInputElement | null | undefined }>({});
   useClickAway(itemRef, e => {
     if (e.target.closest('.MenuItem')) {
       return;
@@ -192,7 +192,7 @@ function ChatHistoryItem({
                       placeholder={_l('请输入对话名称')}
                       className="w100 textPrimary"
                       defaultValue={item.title}
-                      manualRef={ref => (cache.current.input = ref)}
+                      manualRef={ref => { cache.current.input = ref; }}
                     />
                   ),
                   onOk: () => {
@@ -203,6 +203,7 @@ function ChatHistoryItem({
                       cache.current.input.focus();
                       return false;
                     }
+                    return undefined;
                   },
                 });
               }}

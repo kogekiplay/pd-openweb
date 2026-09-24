@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
@@ -57,7 +57,7 @@ export default class WeiXin extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { state, auth_code } = getRequest();
 
     if (window.platformENV.isPlatform && auth_code) {
@@ -85,7 +85,7 @@ export default class WeiXin extends Component<any, any> {
     });
   }
 
-  handleClick(clickKey, data: Record<string, any> = {}) {
+  handleClick(clickKey: string | undefined, data: Record<string, any> = {}) {
     const { weiXinInfo } = this.state;
 
     if (clickKey === 'view') {
@@ -113,9 +113,9 @@ export default class WeiXin extends Component<any, any> {
       root.render(
         <Dialog {...options}>
           <ul>
-            {AUTH_OPTIONS.map(item => {
+            {AUTH_OPTIONS.map((item, index) => {
               return (
-                <li className={cx('mTop10 textPrimary', { Hidden: !_.includes(data.funcInfo || [], item.value) })}>
+                <li key={index} className={cx('mTop10 textPrimary', { Hidden: !_.includes(data.funcInfo || [], item.value) })}>
                   {item.text}
                 </li>
               );
@@ -221,7 +221,7 @@ export default class WeiXin extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { authLoading } = this.props;
     const { loading, currentAppId, weiXinInfo } = this.state;
 

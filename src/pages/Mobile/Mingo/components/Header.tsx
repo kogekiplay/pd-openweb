@@ -1,8 +1,12 @@
-import React from 'react';
 import { Icon } from 'ming-ui';
 import SelectProject from 'mobile/components/SelectProject';
 
-function ToolbarActions({ onOpenHistory, onNewChat }) {
+export interface ToolbarActionsProps {
+  onOpenHistory: () => void;
+  onNewChat: () => void;
+}
+
+function ToolbarActions({ onOpenHistory, onNewChat }: ToolbarActionsProps) {
   return (
     <div className="toolbarActions flexRow">
       <div className="toolbarIconBtn historyBtn" onClick={onOpenHistory}>
@@ -15,7 +19,21 @@ function ToolbarActions({ onOpenHistory, onNewChat }) {
   );
 }
 
-export default function Header({ isChatting, disableProjectSelect, onOpenHistory, onFocusInput, onProjectChange }) {
+export interface HeaderProps {
+  isChatting: boolean;
+  disableProjectSelect: boolean;
+  onOpenHistory: () => void;
+  onFocusInput: () => void;
+  onProjectChange: () => void;
+}
+
+export default function Header({
+  isChatting,
+  disableProjectSelect,
+  onOpenHistory,
+  onFocusInput,
+  onProjectChange,
+}: HeaderProps) {
   if (isChatting) {
     return (
       <div className="mobileAiHeader flexRow">

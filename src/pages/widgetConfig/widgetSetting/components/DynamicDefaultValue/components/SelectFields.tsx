@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -31,9 +31,9 @@ const filterSys = (controls: FormControl[] = [], fromCustomEventApi?) => {
 };
 
 let SelectFields = class SelectFields extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
-  state = {
+  override state = {
     searchValue: '',
   }; // 省略掉自身和循环引用
 
@@ -208,7 +208,7 @@ let SelectFields = class SelectFields extends Component<any, any> {
     }, 0);
   };
 
-  render() {
+  override render() {
     const { searchValue } = this.state;
     const { onClick, data, dynamicValue, from, hideRelateSheetHeader } = this.props;
     const otherList = getOtherSelectField(data, searchValue);
@@ -299,9 +299,10 @@ let SelectFields = class SelectFields extends Component<any, any> {
                     <span>{name}</span>
                   </div>
                   <ul className="fieldList">
-                    {list.map(({ text, id }) => {
+                    {list.map(({ text, id }, index) => {
                       return (
                         <li
+                          key={index}
                           className="overflow_ellipsis"
                           onClick={() =>
                             onClick({

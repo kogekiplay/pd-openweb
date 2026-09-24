@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from 'react';
+import { Fragment, memo } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Icon } from 'ming-ui';
 import { KNOWLEDGE_STATUS, STATUS_FROM } from '../../core/config';
@@ -225,6 +225,7 @@ const BasicStatus = props => {
           </Fragment>
         );
     }
+    return undefined;
   };
 
   return (

@@ -10,7 +10,12 @@ import { openPrintPageInBrowser } from './CopyPrintLinkPopup';
 import { isThirdPartyBrowser, requestExportWord } from './utils';
 import './index.less';
 
-class Header extends React.Component<any, any> {
+export interface HeaderState {
+  isEdit: boolean;
+  exportLoading: boolean;
+}
+
+class Header extends React.Component<any, HeaderState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,7 +61,7 @@ class Header extends React.Component<any, any> {
       let width = 621;
       let height = 400;
       let scaleBy = 2;
-      let promiseList = [];
+      let promiseList: Promise<Node>[] = [];
       let isTainted = false;
 
       statisticsCardList.forEach((ele, index) => {
@@ -81,7 +86,8 @@ class Header extends React.Component<any, any> {
 
           try {
             dataUrl = canvasData.toDataURL('image/jpeg');
-          } catch (error) {
+          } catch (thrown) {
+            const error = thrown as Partial<Error>;
             if (error?.name === 'SecurityError' || /tainted canvases/i.test(error?.message)) {
               isTainted = true;
             }
@@ -198,9 +204,10 @@ class Header extends React.Component<any, any> {
     }
 
     window.print();
+    return undefined;
   };
 
-  render() {
+  override render() {
     const {
       params,
       printData,

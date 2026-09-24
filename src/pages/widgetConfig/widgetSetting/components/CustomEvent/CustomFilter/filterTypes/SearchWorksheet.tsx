@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { DYNAMIC_FROM_MODE } from '../../../DynamicDefaultValue/config';

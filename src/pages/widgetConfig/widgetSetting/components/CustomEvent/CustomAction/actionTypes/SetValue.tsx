@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -70,7 +70,7 @@ export default function SetValue(props) {
               const isDelete = !_.get(currentControl, 'controlName');
               const queryId = item.type === '2' && _.get(safeParse(item.value), 'id');
               return (
-                <div className="setItem">
+                <div key={index} className="setItem">
                   <div className="itemFiled itemFiledTitle ">
                     {icon && <Icon className="mRight8 Font14 textSecondary" icon={icon} />}
                     <span
@@ -130,7 +130,7 @@ export default function SetValue(props) {
                     icon="trash"
                     className="Font16 deleteBtn"
                     onClick={() => {
-                      setState({ actionItems: actionItems.filter((i, idx) => idx !== index) });
+                      setState({ actionItems: actionItems.filter((_i, idx) => idx !== index) });
                     }}
                   />
                 </div>

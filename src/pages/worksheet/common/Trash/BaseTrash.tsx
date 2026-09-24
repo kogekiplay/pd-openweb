@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { arrayOf, bool, func, shape, string } from 'prop-types';

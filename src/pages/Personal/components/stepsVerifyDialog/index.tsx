@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, Icon, Input, LoadDiv, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -232,7 +232,11 @@ export default function StepsVerifyDialog(props) {
     });
   };
 
-  const handleSwitch = item => {
+  const handleSwitch = (
+    item:
+      | { label: string; value: string; checked: string; desc?: undefined }
+      | { label: string; value: string; desc: string; checked: string },
+  ) => {
     const enabledAuthenticationCount = [
       twoAuthenticationMobilePhoneEnabled,
       twoAuthenticationEmailEnabled,
@@ -302,7 +306,7 @@ export default function StepsVerifyDialog(props) {
             desc: _l('使用手机上的身份验证器应用获得验证码'),
             checked: 'twoAuthenticationTotpEnabled',
           },
-        ].map(item => {
+        ].map((item, index) => {
           const disabled =
             (item.value === 'authenticator' &&
               !twoAuthenticationEmailEnabled &&
@@ -313,7 +317,7 @@ export default function StepsVerifyDialog(props) {
                 !twoAuthenticationEmailEnabled) ||
                 (item.value === 'email' && twoAuthenticationEmailEnabled && !twoAuthenticationMobilePhoneEnabled)));
           return (
-            <div className="methodItem">
+            <div key={index} className="methodItem">
               {disabled ? (
                 <Tooltip
                   title={

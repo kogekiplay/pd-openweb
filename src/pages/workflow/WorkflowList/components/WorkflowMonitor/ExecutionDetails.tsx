@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Button, Dropdown, Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -21,12 +21,12 @@ export default class ExecutionDetails extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getRouterList();
   }
 
   // 批量设置（暂停、恢复）流程
-  batchPauseRecover = (isPause: boolean, hours?) => {
+  batchPauseRecover = (isPause: boolean, hours?: number | undefined) => {
     const { checkedIds = [] } = this.state;
     const { detailList, projectId } = this.props;
 
@@ -464,7 +464,7 @@ export default class ExecutionDetails extends Component<any, any> {
     return <span>{_l(`正在查看历史执行详情（${dayStr} ${time}），本月新增与本月消费为截至此时的累计值`)}</span>;
   };
 
-  render() {
+  override render() {
     let { checkedIds = [], routerList = {} } = this.state;
     const { showHistoryDetail, pageIndex, count = 0 } = this.props;
 
@@ -515,8 +515,8 @@ export default class ExecutionDetails extends Component<any, any> {
               </Button>
               {window.platformENV.isOverseas ||
                 (window.platformENV.isLocal &&
-                  Object.keys(routerList).map(v => (
-                    <Button type="ghostgray" className="mRight10" onClick={() => this.updateRouterIndex(v)}>
+                  Object.keys(routerList).map((v, index) => (
+                    <Button key={index} type="ghostgray" className="mRight10" onClick={() => this.updateRouterIndex(v)}>
                       {_l(`通道：${routerList[v]}`)}
                     </Button>
                   )))}

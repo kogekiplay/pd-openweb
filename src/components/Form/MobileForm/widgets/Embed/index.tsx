@@ -1,4 +1,4 @@
-import React, { lazy, memo, Suspense, useCallback, useEffect, useRef } from 'react';
+import { lazy, memo, Suspense, useCallback, useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -77,7 +77,7 @@ const Embed = props => {
     flag,
   } = props;
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const embedWatch = useRef(null);
+  const embedWatch = useRef<NodeJS.Timeout | null>(null);
   const viewControlsRef = useRef([]);
   const currentTimeRef = useRef(new Date());
   const latestResultData = useRef('');

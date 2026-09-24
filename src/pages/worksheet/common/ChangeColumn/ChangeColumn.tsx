@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -10,7 +10,7 @@ import SortableColumn from './SortableColumn';
 import './ChangeColumn.less';
 
 export default class ChangeColumn extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     placeholder: PropTypes.string,
     layout: PropTypes.number, // 呈现方式 1 dropdown 2 平铺
     noShowCount: PropTypes.bool,
@@ -52,7 +52,7 @@ export default class ChangeColumn extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.controlsSorts, this.props.controlsSorts)) {
         this.setState({
@@ -196,7 +196,7 @@ export default class ChangeColumn extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       placeholder,
       layout,

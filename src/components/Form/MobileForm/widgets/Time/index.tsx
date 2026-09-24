@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useEffect, useState } from 'react';
+import { Fragment, memo, useEffect, useState } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -13,7 +13,7 @@ const Time = props => {
     timeInterval === 1 ? new Date() : moment().minute(currentMinute - (currentMinute % timeInterval));
   const formatMode = unit === '6' ? 'HH:mm:ss' : 'HH:mm';
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [currentValue, setCurrentValue] = useState('');
+  const [currentValue, setCurrentValue] = useState<string | moment.Moment>('');
   const [minDate, setMinDate] = useState(null);
   const [maxDate, setMaxDate] = useState(null);
 
@@ -78,7 +78,7 @@ const Time = props => {
         }}
       >
         <span className={cx('flex ellipsis', { customFormPlaceholder: !currentValue })}>
-          {currentValue && currentValue.format ? currentValue.format(formatMode) : _l('请选择时间')}
+          {moment.isMoment(currentValue) ? currentValue.format(formatMode) : _l('请选择时间')}
         </span>
         {(!disabled || !formDisabled) && <Icon icon="arrow-right-border" className="Font16 textDisabled" />}
       </div>

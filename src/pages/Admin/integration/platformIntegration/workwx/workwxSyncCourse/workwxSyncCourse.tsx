@@ -39,7 +39,7 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     let match = this.props.match;
 
     if (!match.params.projectId) {
@@ -72,7 +72,7 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
     });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(_nextProps, nextState) {
     return compareProps(this.state, nextState);
   }
 
@@ -233,7 +233,7 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     if (this.state.loading) {
       return (
         <div className="workwxSyncBox card">

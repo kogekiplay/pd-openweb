@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import tabBottomImg from '/staticfiles/images/tab_bottom.png';
 import tabLeftImg from '/staticfiles/images/tab_left.png';
 import tabTopImg from '/staticfiles/images/tab_top.png';
@@ -38,10 +38,11 @@ function AddTabWidget(props) {
         <div className="addTabWidgetLeftWrap">
           <div className="textSecondary mRight12">{_l('标签页位置')}</div>
           <div className="tabPositionWrap">
-            {TAB_POSITION_TYPE.map(item => {
+            {TAB_POSITION_TYPE.map((item, index) => {
               const active = item.value === position;
               return (
                 <div
+                  key={index}
                   className={cx('tabPositionItem', { active })}
                   onClick={() => {
                     if (active) return;

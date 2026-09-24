@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import TaskDetail from 'src/pages/task/containers/taskDetail/taskDetail';
 import toolBar from './modules/toolbar/toolbar';
@@ -6,7 +6,12 @@ import { destroyCalendar } from './modules/calendar/fcInstance';
 import './modules/calendarControl/css/fullcalendar.less';
 import './modules/css/share.less';
 
-export default class CalendarEntrypoint extends Component<any, any> {
+export interface CalendarEntrypointState {
+  openTaskDetail: boolean;
+  taskId: string;
+}
+
+export default class CalendarEntrypoint extends Component<any, CalendarEntrypointState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,7 +21,7 @@ export default class CalendarEntrypoint extends Component<any, any> {
     // v2 时代这里要先把 vendor 进来的 fullcalendar 注册成 jQuery 插件（fullCalendar()）。
     // v7 是正常的 npm 包，由 modules/calendar/fcInstance 负责创建实例，这里不用做任何事。
   }
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppCalendar');
     toolBar.bindEvent();
 
@@ -26,15 +31,15 @@ export default class CalendarEntrypoint extends Component<any, any> {
     toolBar.init();
 
     const _this = this;
-    $('#calendar').on('openTask', function (event, taskId: string) {
+    $('#calendar').on('openTask', function (_event, taskId: string) {
       _this.setState({ openTaskDetail: true, taskId });
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppCalendar');
     destroyCalendar();
   }
-  render() {
+  override render() {
     const { openTaskDetail, taskId } = this.state;
 
     return (

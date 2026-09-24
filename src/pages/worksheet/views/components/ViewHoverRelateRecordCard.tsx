@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
@@ -120,7 +120,7 @@ export default class ViewHoverRelateRecordCard extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { popupVisible, previewRecordId } = this.state;
     const { children, control = {} } = this.props;
     const { showControls = [], advancedSetting } = control;

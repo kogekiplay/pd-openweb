@@ -62,7 +62,7 @@ const Wrap = styled.div`
   }
 `;
 class AppointDialog extends React.Component<any, any> {
-  state = {
+  override state = {
     showAppointDialog: this.props.showAppointDialog,
     writeObject: this.props.writeObject || 1,
     writeType: this.props.writeType || 1,
@@ -77,7 +77,7 @@ class AppointDialog extends React.Component<any, any> {
     showChooseWidgetDialog: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     $('.Radio').attr('title', '');
     $(document).find('.iconErr').click();
   }
@@ -129,7 +129,7 @@ class AppointDialog extends React.Component<any, any> {
 
   renderDefCom = (item, index: number, writeControls, data) => {
     if (!DEF_TYPES.concat(DEF_R_TYPES).includes(data.type)) {
-      return;
+      return undefined;
     }
 
     const { writeObject } = this.state;
@@ -245,7 +245,7 @@ class AppointDialog extends React.Component<any, any> {
 
               if (sectionIds.includes(item.controlId)) {
                 return (
-                  <div className="itemBox mTop10">
+                  <div key={index} className="itemBox mTop10">
                     <Icon icon={getIconByType(type)} className={cx('Font14 textTertiary mRight15')} />
                     <span className="" title={controlName}>
                       {controlName}
@@ -257,7 +257,7 @@ class AppointDialog extends React.Component<any, any> {
               const fieldLabel = controlName || (type === 22 ? _l('分段') : _l('备注'));
 
               return (
-                <div className="itemBox mTop10">
+                <div key={index} className="itemBox mTop10">
                   <span
                     className={cx('widget controlname textPrimary Font13 WordBreak overflow_ellipsis Relative', {
                       isErr: canNotForWrite,
@@ -335,7 +335,7 @@ class AppointDialog extends React.Component<any, any> {
     return '';
   };
 
-  render = () => {
+  override render = () => {
     const {
       btnId,
       workflowType,

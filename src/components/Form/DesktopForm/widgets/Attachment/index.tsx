@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -27,7 +27,10 @@ import { WidgetEventHelper } from '../../../core/useFormEventManager';
 import './index.less';
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  declare eventHelper: WidgetEventHelper;
+  declare fileBox: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     disabled: PropTypes.bool,
     value: PropTypes.any,
     from: PropTypes.number,
@@ -61,7 +64,7 @@ export default class Widgets extends Component<any, any> {
     this.eventHelper = new WidgetEventHelper(props.formItemId);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.state.loading) {
       this.loadAttachments();
     }
@@ -89,7 +92,7 @@ export default class Widgets extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         if (this.checkFileNeedLoad(this.props.value)) {
@@ -619,7 +622,7 @@ export default class Widgets extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       from,
       appId,

@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Icon, LoadDiv, QiniuUpload } from 'ming-ui';
@@ -27,8 +27,8 @@ const OCR = props => {
   const { requestmap, authaccount } = advancedSetting || {};
   const requestMap = safeParse(advancedSetting.requestmap || '[]');
 
-  const fileRef = useRef(null);
-  const postList = useRef(null);
+  const fileRef = useRef<QiniuUpload | null>(null);
+  const postList = useRef<ApiResult | null>(null);
   const cacheFile = useRef([]);
   const [isUploading, setIsUploading] = useState(false);
   const [sessionId, setSessionId] = useState('');
@@ -372,16 +372,17 @@ const OCR = props => {
         setIsUploading(true);
         up.disableBrowse();
       }}
-      onError={(up, err, errorTip) => {
+      onError={(up, _err, errorTip) => {
         alert(errorTip || _l('上传失败'), 2);
         handleClear(up);
       }}
       onInit={() => {
         if (_.get(props, 'strDefault') === '10') {
           // 是否禁用相册
-          const ele = fileRef.current.upload.nextSibling.querySelector('input');
-          ele.setAttribute('accept', 'image/*');
-          ele.setAttribute('capture', 'environment');
+          // plupload 把文件 input 的 shim 容器插在上传按钮后面（原先用 nextSibling，它在这里总是元素节点）
+          const ele = fileRef.current?.upload?.nextElementSibling?.querySelector('input');
+          ele?.setAttribute('accept', 'image/*');
+          ele?.setAttribute('capture', 'environment');
         }
       }}
     >

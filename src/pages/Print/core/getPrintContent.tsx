@@ -51,8 +51,8 @@ const renderRecordAttachments = (value, isRelateMultipleSheet, fileStyle = '0') 
               ...new Array(
                 isRelateMultipleSheet ? pictureAttachments.length : Math.ceil(pictureAttachments.length / 2) * 2,
               ),
-            ].map((a, index) => (
-              <div>
+            ].map((_a, index) => (
+              <div key={index}>
                 {pictureAttachments[index] && (
                   <div
                     className="imgCon"
@@ -106,10 +106,10 @@ const renderRecordAttachments = (value, isRelateMultipleSheet, fileStyle = '0') 
                 width: '100%',
               }}
             >
-              {[...new Array(Math.ceil(pictureAttachments.length / 2))].map((a, index) => (
-                <tr>
-                  {[0, 1].map(i => (
-                    <td width="50%" style={{ textAlign: 'center', border: 'none' }}>
+              {[...new Array(Math.ceil(pictureAttachments.length / 2))].map((_a, index) => (
+                <tr key={index}>
+                  {[0, 1].map((i, idx) => (
+                    <td key={idx} width="50%" style={{ textAlign: 'center', border: 'none' }}>
                       {pictureAttachments[index * 2 + i] && (
                         <img
                           style={{
@@ -129,8 +129,8 @@ const renderRecordAttachments = (value, isRelateMultipleSheet, fileStyle = '0') 
         ))}
       {isRelateMultipleSheet ? (
         <div className="recordAttachmentPictures">
-          {otherAttachments.map(item => (
-            <div className="pictureAttachment onlyText">
+          {otherAttachments.map((item, index) => (
+            <div key={index} className="pictureAttachment onlyText">
               <p className="imageAttachmentName ellipsis preWrap"> {item.originalFilename + item.ext} </p>
             </div>
           ))}
@@ -300,7 +300,7 @@ const getPrintContent = (item, sourceControlType?, valueItem?) => {
         return _.isArray(records) && records.length > 0 ? (
           <table className="relaList" style={STYLE_PRINT.table} border="0" cellPadding="0" cellSpacing="0">
             <tbody>
-              {records.map(da => {
+              {records.map((da, index) => {
                 let data = da;
                 let coverCid = coverCidData.length > 0 ? coverCidData[0].controlId || '' : '';
                 let cover = coverCid ? JSON.parse(data[coverCid] || '[]') : [];
@@ -315,7 +315,7 @@ const getPrintContent = (item, sourceControlType?, valueItem?) => {
                     : item.sourceControlType;
 
                 return (
-                  <tr>
+                  <tr key={index}>
                     <td className="listTextDiv">
                       {list.type === 38
                         ? renderCellText(item.controls.find(it => it.attribute === 1)) || placeholderMode
@@ -327,7 +327,7 @@ const getPrintContent = (item, sourceControlType?, valueItem?) => {
                               value: data[list.controlId],
                               advancedSetting: _.get(dataItem.sourceControl, 'advancedSetting'),
                             }) || _l('未命名')}
-                      {showControlsList.map(it => {
+                      {showControlsList.map((it, index) => {
                         if (it.type === 41 || it.type === 22) {
                           return placeholderMode;
                         }
@@ -351,7 +351,7 @@ const getPrintContent = (item, sourceControlType?, valueItem?) => {
                         }
 
                         return (
-                          <div>
+                          <div key={index}>
                             {it.controlName || _l('未命名')}
                             {' : '}
                             <div className="listRight">
@@ -506,14 +506,14 @@ const getPrintContent = (item, sourceControlType?, valueItem?) => {
         return _.isArray(records) && records.length > 0 ? (
           <table className="relaList" style={STYLE_PRINT.table} border="0" cellPadding="0" cellSpacing="0">
             <tbody>
-              {records.map(da => {
+              {records.map((da, index) => {
                 let data = da;
                 let coverCid = coverCidData.length > 0 ? coverCidData[0].controlId || '' : '';
                 let cover = coverCid ? JSON.parse(data[coverCid] || '[]') : [];
                 let coverData = cover.length > 0 ? cover[0] : '';
 
                 return (
-                  <tr>
+                  <tr key={index}>
                     <td className="listTextDiv">
                       {list.type === 38
                         ? renderCellText(item.controls.find(it => it.attribute === 1))
@@ -525,7 +525,7 @@ const getPrintContent = (item, sourceControlType?, valueItem?) => {
                               value: data[list.controlId],
                               advancedSetting: _.get(dataItem.sourceControl, 'advancedSetting'),
                             }) || _l('未命名')}
-                      {showControlsList.map(it => {
+                      {showControlsList.map((it, index) => {
                         if (it.type === 41 || it.type === 22) {
                           return placeholderMode;
                         }
@@ -549,7 +549,7 @@ const getPrintContent = (item, sourceControlType?, valueItem?) => {
                         }
 
                         return (
-                          <div>
+                          <div key={index}>
                             {it.controlName || _l('未命名')}
                             {' : '}
                             <div className="listRight">
@@ -702,7 +702,7 @@ const getPrintContent = (item, sourceControlType?, valueItem?) => {
 
         return dataItem.options
           .filter(l => !l.isDeleted)
-          .map(o => {
+          .map((o, index) => {
             let str = '';
             if (type === 10 && o.hide && !selectedKeys.includes(o.key)) return placeholderMode;
 
@@ -713,7 +713,7 @@ const getPrintContent = (item, sourceControlType?, valueItem?) => {
             }
 
             return (
-              <span className="InlineBlock pTop0 pBottom0" style={{ marginRight: 14 }}>
+              <span key={index} className="InlineBlock pTop0 pBottom0" style={{ marginRight: 14 }}>
                 <b className="InlineBlock TxtTop TxtCenter">{str}</b>
                 {o.value}
               </span>

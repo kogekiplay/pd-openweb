@@ -192,8 +192,12 @@ const pageSizeNums = [
   { text: 200, value: 200 },
 ];
 
-export default class Pagination extends React.Component<any, any> {
-  static propTypes = {
+export interface PaginationState {
+  popupVisible: boolean;
+}
+
+export default class Pagination extends React.Component<any, PaginationState> {
+  static override propTypes = {
     appendToBody: PropTypes.bool,
     disabled: PropTypes.bool,
     abnormalMode: PropTypes.bool,
@@ -236,11 +240,11 @@ export default class Pagination extends React.Component<any, any> {
   // getPopupContainer 补上了准确签名 ((node: HTMLElement) => HTMLElement)，
   // 于是 `() => this.xxx.current` 成了 TS2740。2.6.5 那边这个 prop 无类型，看不出来。
   conRef = React.createRef<HTMLElement>();
-  jumpInputRef = React.createRef();
+  jumpInputRef = React.createRef<HTMLInputElement>();
   /** bar 形态自己的跳页输入框 ref。【不复用 jumpInputRef】：
       两种形态虽然不会同时渲染（bar 走 early return、根本不产出 popup），
       但共用一个 ref 是个等着被踩的雷 —— 哪天有人让两者共存就会互相覆盖。 */
-  barJumpRef = React.createRef<{ value?: string }>();
+  barJumpRef = React.createRef<HTMLInputElement>();
 
   /** 跳到指定页。越界或非数字时提示，不静默吞掉。 */
   jumpTo(raw?: string) {
@@ -414,7 +418,7 @@ export default class Pagination extends React.Component<any, any> {
             </div>
           )}
           {[...new Array(abnormalMode ? 7 : isEnd ? 6 : 5)]
-            .map((a, i) => minShowPage + i)
+            .map((_a, i) => minShowPage + i)
             .filter(page => page < this.pageNum || abnormalMode)
             .map((page, i) => (
               <div
@@ -442,8 +446,8 @@ export default class Pagination extends React.Component<any, any> {
         </PageList>
         {allowChangePageSize && (
           <PageSizeConfig>
+            {/* 原来还传了 width={90}：Dropdown 没有这个属性、一直被忽略，删掉而不是挪进 style —— 那会改变现在的宽度 */}
             <Dropdown
-              width={90}
               style={{ marginRight: 10, height: 28 }}
               isAppendToBody
               border
@@ -472,7 +476,7 @@ export default class Pagination extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       disabled,
       abnormalMode,

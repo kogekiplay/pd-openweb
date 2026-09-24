@@ -15,11 +15,11 @@ const segmentation = columns => {
 };
 
 class ShowBtnFilterDialog extends React.Component<any, any> {
-  state = {
+  override state = {
     filters: this.props.filters || [],
   };
 
-  render() {
+  override render() {
     const {
       setValue,
       isShowBtnFilterDialog,

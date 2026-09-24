@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import LoadingDots from 'src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/LoadingDots';
 import { STEP_STATUS } from './config';
@@ -21,7 +20,7 @@ export function getStepStatusText(stepStatus: number) {
       return _l('生成表单字段');
   }
 
-  return;
+  return undefined;
 }
 
 export default function LoadingWithSteps({ stepStatus }) {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Popup } from 'antd-mobile';
 import { QuickFilter } from 'mobile/RecordList/QuickFilter';
 import type { FormControl } from 'src/utils/controlTypes';

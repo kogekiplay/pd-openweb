@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { List } from 'antd-mobile';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -6,8 +6,13 @@ import { MobileSearch, PopupWrapper, Radio } from 'ming-ui';
 import { MAX_OPTIONS_COUNT } from 'src/pages/widgetConfig/config';
 import './less/MobileCheckbox.less';
 
-export default class MobileRadio extends Component<any, any> {
-  static propTypes = {
+export interface MobileRadioState {
+  visible: boolean;
+  keywords: string;
+}
+
+export default class MobileRadio extends Component<any, MobileRadioState> {
+  static override propTypes = {
     disabled: PropTypes.bool,
     allowAdd: PropTypes.bool,
     callback: PropTypes.func,
@@ -24,7 +29,7 @@ export default class MobileRadio extends Component<any, any> {
     value: [],
   };
 
-  state = {
+  override state = {
     visible: false,
     keywords: '',
   };
@@ -39,7 +44,7 @@ export default class MobileRadio extends Component<any, any> {
     this.setState({ visible: false });
   };
 
-  render() {
+  override render() {
     const { disabled, allowAdd, children, value, renderText, controlName, delOptions = [] } = this.props;
     let { data } = this.props;
     const { visible, keywords } = this.state;
@@ -52,8 +57,12 @@ export default class MobileRadio extends Component<any, any> {
           {children ||
             data
               .filter(item => _.some(value, v => _.isEqual(v, item)))
-              .map(item => {
-                return <span className="ellipsis Font15">{item.value}</span>;
+              .map((item, index) => {
+                return (
+                  <span key={index} className="ellipsis Font15">
+                    {item.value}
+                  </span>
+                );
               })}
         </span>
 

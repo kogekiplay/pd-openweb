@@ -30,7 +30,7 @@ const listType = [
 // 附件 检查框 地区 地区 地区
 const listControlType = [API_ENUM_TO_TYPE.ATTACHMENT, API_ENUM_TO_TYPE.SWITCH, API_ENUM_TO_TYPE.LOCATION];
 export default class Condition extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isRules: PropTypes.bool,
     projectId: PropTypes.string,
     canEdit: PropTypes.bool,
@@ -51,7 +51,7 @@ export default class Condition extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.state = {
       isDynamicsource: this.isCanDynamicsource(this.props) && this.setIsDynamicsourceFn(), // 是否动态筛选值
     };
@@ -135,7 +135,7 @@ export default class Condition extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       isRules,
       projectId,

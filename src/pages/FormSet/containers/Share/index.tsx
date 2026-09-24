@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon, LoadDiv, Radio, ScrollView, Switch } from 'ming-ui';
@@ -348,9 +348,10 @@ const SharingSettings = props => {
           <span className="Font17 Bold flex Height36">{_l('公开分享')}</span>
         </div>
         <Tabs>
-          {TYPES.map(o => {
+          {TYPES.map((o, index) => {
             return (
               <Tab
+                key={index}
                 className={cx('Bold Font14 hoverText', activeTab === o.key ? 'colorPrimary curTab' : 'textSecondary')}
                 onClick={() => setActiveTab(o.key)}
               >

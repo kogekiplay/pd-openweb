@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -27,7 +27,9 @@ const LoadWrap = styled.div`
 `;
 
 class Node extends Component<any, any> {
-  static propTypes = {
+  declare node: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     subordinates: PropTypes.arrayOf(PropTypes.string),
     isFirst: PropTypes.bool,
     isLast: PropTypes.bool,
@@ -97,6 +99,7 @@ class Node extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
 
   toggle() {
@@ -124,6 +127,7 @@ class Node extends Component<any, any> {
         />
       );
     }
+    return undefined;
   }
 
   add() {
@@ -207,11 +211,11 @@ class Node extends Component<any, any> {
     return <Item {...itemProps} />;
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     return !_.isEqual(this.props, nextProps);
   }
 
-  render() {
+  override render() {
     const { isFirst, isLast, id, subordinates, auth, isLoading, pageIndex } = this.props;
 
     if (isLoading && !id && pageIndex === 1) {

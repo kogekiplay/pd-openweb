@@ -53,7 +53,7 @@ export default function ActionSet(props) {
   const isTableRowAction = isSheetView || (viewType === '2' && advancedSetting.hierarchyViewType === '3');
   const batchBtnList = btnList.filter(o => !((o.writeObject === 2 || o.writeType === 2) && o.clickType === 3));
 
-  const toggleOpen = key => {
+  const toggleOpen = (key: string) => {
     setState({
       openList: openList.includes(key) ? openList.filter(o => o !== key) : openList.concat(key),
     });
@@ -75,7 +75,7 @@ export default function ActionSet(props) {
     });
   };
 
-  const getActionColumnWithGroupPriority = (layoutItems, source) => {
+  const getActionColumnWithGroupPriority = (layoutItems, source: string) => {
     const currentActionColumn = safeParse(actioncolumn, 'array');
     const selectedGroupIds = currentActionColumn
       .filter(o => o.type === 'group' && (o.source || 'list') === source)

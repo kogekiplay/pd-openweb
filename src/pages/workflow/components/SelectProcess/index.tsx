@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Button, Dialog, Dropdown, LoadDiv } from 'ming-ui';
@@ -7,7 +7,7 @@ import ajaxRequest from 'src/api/appManagement';
 import '../SelectUsersFromApp/index.less';
 
 export default class SelectProcess extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: PropTypes.string,
     companyId: PropTypes.string.isRequired,
     processListType: PropTypes.string.isRequired,
@@ -33,7 +33,7 @@ export default class SelectProcess extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { selectAppId } = this.state;
 
     this.getAppList();
@@ -50,7 +50,8 @@ export default class SelectProcess extends Component<any, any> {
     const { selectAppId } = this.state;
 
     ajaxRequest.getManagerApps({ projectId: this.props.companyId }).then(result => {
-      result = result.map(({ appId, appName }: { appId?: string; [key: string]: any }) => {
+      // 接口给的是应用列表，这里转成下拉选项；另起一个变量，不复用 result（两者形状不同）
+      const appList = result.map(({ appId, appName }) => {
         if (selectAppId === appId) {
           appName += _l('（本应用）');
         }
@@ -61,11 +62,11 @@ export default class SelectProcess extends Component<any, any> {
         };
       });
 
-      this.setState({ appList: result });
+      this.setState({ appList });
 
-      if (!selectAppId && result.length) {
-        this.setState({ selectAppId: result[0].value });
-        this.getProcessByApp(result[0].value);
+      if (!selectAppId && appList.length) {
+        this.setState({ selectAppId: appList[0].value });
+        this.getProcessByApp(appList[0].value);
       }
     });
   }
@@ -162,7 +163,7 @@ export default class SelectProcess extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { onCancel, processListType } = this.props;
     const { appList } = this.state;
 

@@ -20,7 +20,7 @@ const Wrap = styled.div`
 `;
 
 export default function DestEdit(props) {
-  const inputRef = createRef();
+  const inputRef = createRef<HTMLInputElement>();
   const { onChangeInfo, list, state, flowData, loading } = props;
   const { srcIsDb } = flowData;
   const { node = {}, matchedTypes = {}, fileList = [], sheetName } = state;

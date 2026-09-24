@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import { find } from 'lodash';
 import _ from 'lodash';
@@ -38,10 +38,11 @@ function MultiSelect({ data, fromType }) {
             <span>{hint || _l('请选择')}</span>
           ) : (
             <Fragment>
-              {checkedValue.map(id => {
+              {checkedValue.map((id, index) => {
                 const item = find(options, option => option.key === id) || {};
                 return (
                   <OptionWrap
+                    key={index}
                     className={cx('optionItem', {
                       withoutColor: data.enumDefault2 !== 1,
                     })}

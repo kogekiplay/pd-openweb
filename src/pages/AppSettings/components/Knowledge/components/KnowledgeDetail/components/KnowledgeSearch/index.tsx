@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useState } from 'react';
+import { Fragment, memo, useState } from 'react';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import knowledgeAjax from '../../../../api/knowledge';
 import attachmentAjax from 'src/api/attachment';

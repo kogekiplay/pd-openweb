@@ -4,7 +4,9 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 
 class EditableBlock extends React.Component<any, any> {
-  static propTypes = {
+  declare inputFileName: HTMLInputElement | null | undefined;
+
+  static override propTypes = {
     value: PropTypes.string,
     className: PropTypes.string,
     onChange: PropTypes.func,
@@ -23,7 +25,7 @@ class EditableBlock extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         value: this.props.value,
@@ -47,9 +49,10 @@ class EditableBlock extends React.Component<any, any> {
     this.setState({
       isEditing: false,
     });
+    return undefined;
   }
 
-  render() {
+  override render() {
     const isEditing = this.state.isEditing;
     const extOfShow = this.props.ext === '.' ? '' : this.props.ext;
     return (

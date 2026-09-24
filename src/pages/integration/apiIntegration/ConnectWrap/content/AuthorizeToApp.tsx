@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { ConfigProvider, Table } from 'antd';
 import styled from 'styled-components';
@@ -222,7 +222,7 @@ function AuthorizeToApp(props) {
     {
       title: _l('应用名称'),
       dataIndex: 'name',
-      render: (text, record) => {
+      render: (_text, record) => {
         return (
           <div className="flexRow alignItemsCenter WordBreak">
             <div className="logo iconWrap flexRow alignItemsCenter" style={{ backgroundColor: record.iconColor }}>
@@ -236,14 +236,14 @@ function AuthorizeToApp(props) {
     {
       title: _l('创建时间'),
       dataIndex: 'createDate',
-      render: (text, record) => {
+      render: (_text, record) => {
         return <div className="textSecondary">{record.createDate}</div>;
       },
     },
     {
       title: _l('拥有者'),
       dataIndex: 'owner',
-      render: (text, record) => {
+      render: (_text, record) => {
         return (
           <div className="flexRow ownerInfo alignItemsCenter WordBreak">
             <UserHead
@@ -261,7 +261,7 @@ function AuthorizeToApp(props) {
     {
       title: _l('操作'),
       dataIndex: 'option',
-      render: (text, record) => {
+      render: (_text, record) => {
         // 安装的不可复制和删除、自定义的可以复制与删除
         return (
           <div className="optionCon">

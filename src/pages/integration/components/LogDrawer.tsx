@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { ConfigProvider, Drawer, Table } from 'antd';
 import cx from 'classnames';
@@ -152,7 +152,8 @@ export default function (props) {
     isAll: false,
     keyWord: '', //
     type: '', //日志类型
-    status: '', //状态
+    // '' 是「全部」，其余是数字状态值（和下拉项的 value 一致）
+    status: '' as '' | number, //状态
     time: ['', ''],
     user: {},
   });
@@ -209,7 +210,7 @@ export default function (props) {
     {
       title: _l('状态'),
       dataIndex: 'status',
-      render: (text, record) => {
+      render: (_text, record) => {
         return (
           <span className={cx({ Red: record.completeType !== 1 })}>
             {record.completeType === 1 ? _l('完成') : _l('未完成')}
@@ -220,14 +221,14 @@ export default function (props) {
     {
       title: _l('时间'),
       dataIndex: 'createDate',
-      render: (text, record) => {
+      render: (_text, record) => {
         return <span className="textTertiary">{record.createdDate}</span>;
       },
     },
     {
       title: _l('耗时'),
       dataIndex: 'take',
-      render: (text, record) => {
+      render: (_text, record) => {
         if (!record.completeDate) {
           return '';
         }
@@ -238,7 +239,7 @@ export default function (props) {
     {
       title: _l('详情'),
       dataIndex: 'option',
-      render: (text, record) => {
+      render: (_text, record) => {
         return (
           <div className="optionCon">
             <span
@@ -310,7 +311,7 @@ export default function (props) {
     }
   };
 
-  const formatTime = time => time.map(item => item && moment(item).format('YYYY/MM/DD HH:mm'));
+  const formatTime = (time: string[]) => time.map(item => item && moment(item).format('YYYY/MM/DD HH:mm'));
 
   const renderTimePlaceholder = () => {
     const [startTime, endTime] = formatTime(time);
@@ -337,7 +338,8 @@ export default function (props) {
     >
       <Wrap className="213 h100">
         <div className="flexRow mTop12">
-          <Dropdown
+          {/* 项里 '' 是「全部」、其余是数字 —— 值类型混在一起时推不出来，这里写明 */}
+          <Dropdown<'' | number>
             value={status}
             className="statusDropdown mLeft10 Width200"
             onChange={value => {

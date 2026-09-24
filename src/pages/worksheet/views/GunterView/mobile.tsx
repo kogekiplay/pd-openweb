@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { SpinLoading } from 'antd-mobile';
@@ -19,11 +19,11 @@ let MobileGunter = class MobileGunter extends Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.initMobileGunter(data);
   }
 
-  render() {
+  override render() {
     const { loading, views, controls } = this.props;
 
     if (loading) {

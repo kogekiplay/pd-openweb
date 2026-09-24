@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import cx from 'classnames';
 import moment from 'moment';
@@ -11,7 +11,7 @@ import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import { mdAppResponse } from 'src/utils/project';
 import { Wrap } from './style.jsx';
 
-const actionMsg = {
+const actionMsg: Record<number, string> = {
   0: _l('操作失败'),
   1: _l('操作成功'),
   2: _l('验证密码错误！'),
@@ -20,6 +20,9 @@ const actionMsg = {
   5: _l('state过期或错误！'),
 };
 export default class Cancellation extends Component<any, any> {
+  declare timer: NodeJS.Timeout | null;
+  declare loginStateTimer: NodeJS.Timeout | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -28,10 +31,10 @@ export default class Cancellation extends Component<any, any> {
     this.timer = null;
     this.loginStateTimer = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.checkLogoutStatus();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
@@ -242,7 +245,7 @@ export default class Cancellation extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { loading } = this.state;
 
     const { step } = this.state;

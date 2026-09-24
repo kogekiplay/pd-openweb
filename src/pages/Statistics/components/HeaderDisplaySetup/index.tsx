@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import { reportTypes } from '../../Charts/common';
 
@@ -68,6 +68,7 @@ export default class HeaderDisplaySetup extends Component<any, any> {
         return true;
       }
     }
+    return undefined;
   }
   handleCheck(name: string, checked: boolean) {
     const { displaySetup } = this.props;
@@ -94,7 +95,7 @@ export default class HeaderDisplaySetup extends Component<any, any> {
 
     this.props.onUpdateDisplaySetup(newData, name);
   }
-  render() {
+  override render() {
     const { displaySetup, mapKeys, reportType, chartType, title } = this.props;
     const isPile = [reportTypes.LineChart, reportTypes.BarChart].includes(reportType) && mapKeys.length >= 2;
     const isPerPile =

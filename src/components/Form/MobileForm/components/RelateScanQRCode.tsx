@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
@@ -8,7 +8,7 @@ import { compatibleMDJS } from 'src/utils/project';
 import ScanQRCode from './ScanQRCode';
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: PropTypes.string,
     onChange: PropTypes.func,
     children: PropTypes.element,
@@ -186,7 +186,7 @@ export default class Widgets extends Component<any, any> {
       }
     }
   };
-  render() {
+  override render() {
     const { className, projectId, children, control } = this.props;
     return (
       <ScanQRCode

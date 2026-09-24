@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, Fragment, useImperativeHandle, useRef, useState } from 'react';
 import { useCallback } from 'react';
 import styled from 'styled-components';
 import { QiniuUpload } from 'ming-ui';
@@ -69,7 +69,7 @@ function UploadImage(
   { dropElementId, dropElement, onUploaded = () => {}, onBegin = () => {}, onError = () => {} },
   ref,
 ) {
-  const uploaderRef = useRef(null);
+  const uploaderRef = useRef<QiniuUpload | null>(null);
   const [status, setStatus] = useState('init'); // init, uploading, uploaded
   const [file, setFile] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState('');
@@ -106,7 +106,7 @@ function UploadImage(
           },
         }}
         bucket={4}
-        onUploaded={(up, file) => {
+        onUploaded={(_up, file) => {
           setStatus('uploaded');
           onUploaded({
             url: file.url,

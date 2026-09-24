@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import DropdownWrapper from '../../../components/Dropdown';
@@ -60,7 +60,7 @@ export default function SearchMapping(props) {
   const [visible, setVisible] = useState(false);
   const [mapVisible, setMapVisible] = useState(false);
 
-  const getMapData = type => {
+  const getMapData = (type: number) => {
     let filterData = [];
     let dropValue = '';
 
@@ -88,7 +88,7 @@ export default function SearchMapping(props) {
     };
   };
 
-  const handleChange = (value, item) => {
+  const handleChange = (value, item: { required: boolean; label: string; placeholder: string; type: number; key: string }) => {
     if (item.type === 1) {
       onChange(
         handleAdvancedSettingChange(data, {

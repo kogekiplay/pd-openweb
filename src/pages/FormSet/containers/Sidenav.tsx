@@ -6,14 +6,14 @@ import { getFeatureStatus } from 'src/utils/project';
 import { saveSelectExtensionNavType } from 'src/utils/worksheet';
 
 class Sidenav extends React.Component<any, any> {
-  handleClickNav = navType => {
+  handleClickNav = (navType: string) => {
     const { match = { params: {} } } = this.props;
     const { worksheetId } = match.params;
     saveSelectExtensionNavType(worksheetId, 'settingNav', navType);
     navigateTo(`/worksheet/formSet/edit/${worksheetId}/${navType}`);
   };
 
-  render() {
+  override render() {
     const { match = { params: {} }, projectId } = this.props;
     const { worksheetId, type = '' } = match.params;
     return (

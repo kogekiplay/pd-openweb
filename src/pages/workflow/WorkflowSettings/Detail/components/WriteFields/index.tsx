@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -59,7 +59,7 @@ export default class WriteFields extends Component<any, any> {
     allowExport: false,
   };
 
-  state = {
+  override state = {
     showTableControls: false,
     selectItem: {},
     foldIds: [],
@@ -89,7 +89,7 @@ export default class WriteFields extends Component<any, any> {
   /**
    * 全选操作
    */
-  updateAllSettings({ key, checked }) {
+  updateAllSettings({ key, checked }: { key: string; checked: string | boolean }) {
     const { data, updateSource } = this.props;
     const { showTableControls, selectItem } = this.state;
     const formProperties = _.cloneDeep(showTableControls ? selectItem.subFormProperties : data);
@@ -206,7 +206,7 @@ export default class WriteFields extends Component<any, any> {
     }
   }
 
-  onChangeCard(id, showCard) {
+  onChangeCard(id, showCard: number) {
     const { data, updateSource } = this.props;
     const formProperties = _.cloneDeep(data);
 
@@ -335,7 +335,7 @@ export default class WriteFields extends Component<any, any> {
   /**
    * 渲染字段
    */
-  renderField(data, showCard, isChildTable, isSubData?) {
+  renderField(data, showCard, isChildTable, isSubData?: boolean | undefined) {
     const { hideTypes, selectNodeType } = this.props;
     const { foldIds, keywords } = this.state;
 
@@ -469,7 +469,7 @@ export default class WriteFields extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const { data, addNotAllowView, showCard, updateSource, hideTypes, allowExport } = this.props;
     const { showTableControls, selectItem } = this.state;
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog, Icon, SortableList, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import departmentAjax from 'src/api/department';

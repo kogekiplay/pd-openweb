@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { checkIsAppAdmin } from 'ming-ui/functions';
@@ -19,6 +19,9 @@ const MonitorWrap = styled.div`
   position: relative;
 `;
 export default class WorkflowMonitor extends Component<any, any> {
+  declare realTimeDataRef: RealTimeData | null | undefined;
+  declare historyChartRef: HistoryChart | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +36,7 @@ export default class WorkflowMonitor extends Component<any, any> {
     };
     this.lineChart = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getFlowList();
   }
 
@@ -154,7 +157,7 @@ export default class WorkflowMonitor extends Component<any, any> {
     this.setState({ detailList });
   };
 
-  render() {
+  override render() {
     let { pageIndex, count, loading, detailList = [], showHistoryDetail, dateStr, historyDetailList } = this.state;
     const { projectId } = this.props.match.params;
 

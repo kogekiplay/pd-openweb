@@ -119,6 +119,8 @@ const SETTYPE = [_l('基础设置'), _l('信息收集'), _l('自定义登录界�
 const TYPE_TO_COMP = [BaseSet, InfoSet, LoginSet, TextMessage];
 
 class PortalSetting extends React.Component<any, any> {
+  declare saveRef: HTMLSpanElement | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -130,13 +132,13 @@ class PortalSetting extends React.Component<any, any> {
     this.saveRef = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { portalSet = {} } = this.props;
 
     this.setState({ portalSet });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.portalSet, this.props.portalSet)) {
         this.setState({
@@ -165,6 +167,7 @@ class PortalSetting extends React.Component<any, any> {
     } else {
       callback && callback();
     }
+    return undefined;
   };
 
   closePortal = () => {
@@ -177,7 +180,7 @@ class PortalSetting extends React.Component<any, any> {
     });
   };
 
-  editPortal = (noClose?) => {
+  editPortal = (noClose?: boolean | undefined) => {
     const { portalSet = {} } = this.state;
     const { closeSet, appPkg = {} } = this.props;
     const { portalSetModel = {}, controlTemplate = {}, authorizerInfo = {}, epDiscussWorkFlow = {} } = portalSet;
@@ -327,8 +330,9 @@ class PortalSetting extends React.Component<any, any> {
           this.setState({ saveLoading: false });
         },
       );
+    return undefined;
   };
-  render() {
+  override render() {
     const { show, closeSet } = this.props;
     const { type, portalSet = {} } = this.state;
     const Component = TYPE_TO_COMP[type];
@@ -362,6 +366,7 @@ class PortalSetting extends React.Component<any, any> {
               {SETTYPE.map((o, i) => {
                 return (
                   <li
+                    key={i}
                     className={cx('Hand', { current: i === type })}
                     onClick={() => {
                       this.setState({ type: i });

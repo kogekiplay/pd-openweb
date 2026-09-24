@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -186,6 +186,7 @@ export default function WidgetSection(props) {
         />
       );
     }
+    return undefined;
   };
 
   if (!activeControl) {

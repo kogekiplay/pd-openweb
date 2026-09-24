@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { CreateNode, NodeOperate } from '../components';
 
@@ -29,7 +29,7 @@ export default class JSONParse extends Component<any, any> {
     return <div className="workflowContentInfo ellipsis">{_l('%0个输出参数', item.count || 0)}</div>;
   }
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
 
     return (

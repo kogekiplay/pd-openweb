@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -29,7 +29,7 @@ const LiCon = styled.li`
   }
 `;
 let SortableAppItem = class SortableAppItem extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     value: shape({
       name: string,
       appSectionId: string,
@@ -58,13 +58,13 @@ let SortableAppItem = class SortableAppItem extends Component<any, any> {
     this.$nameRef = createRef();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.ids = getIds(this.props);
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     const { appSectionId } = this.props.value;
     const { groupId: currentGroupId } = this.ids;
     const { groupId: nextGroupId } = getIds(nextProps);
@@ -78,7 +78,7 @@ let SortableAppItem = class SortableAppItem extends Component<any, any> {
     );
   }
 
-  switchVisible = (obj, cb?) => {
+  switchVisible = (obj: { visible: boolean }, cb?) => {
     this.setState(obj, cb);
   };
   handleFocus = () => {
@@ -162,7 +162,7 @@ let SortableAppItem = class SortableAppItem extends Component<any, any> {
     return false;
   };
 
-  render() {
+  override render() {
     const {
       value = {},
       focusGroupId,

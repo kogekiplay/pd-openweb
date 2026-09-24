@@ -1,4 +1,3 @@
-import React from 'react';
 import { Checkbox } from 'ming-ui';
 import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';
 

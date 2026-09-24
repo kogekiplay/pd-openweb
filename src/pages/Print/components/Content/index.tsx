@@ -80,11 +80,11 @@ export default class Con extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.loadWorksheetShortUrl();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (_.get(prevProps, ['printData', 'shareType']) !== _.get(this.props, ['printData', 'shareType'])) {
         this.loadWorksheetShortUrl(this.props);
@@ -268,6 +268,7 @@ export default class Con extends React.Component<any, any> {
 
           return (
             <table
+              key={tableIndex}
               style={{
                 ...STYLE_PRINT.table,
                 fontSize: printData.font || DEFAULT_FONT_SIZE,
@@ -279,9 +280,9 @@ export default class Con extends React.Component<any, any> {
             >
               {Array(6)
                 .fill(6)
-                .map((l, i) => {
+                .map((_l, i) => {
                   return (
-                    <React.Fragment>
+                    <React.Fragment key={i}>
                       <col key={2 * i} width={(2 * i) % 3 === 0 || (2 * i) % 4 === 0 ? nameWidth : valueWidth} />
                       <col
                         key={2 * i + 1}
@@ -351,7 +352,7 @@ export default class Con extends React.Component<any, any> {
                     (item[0].type === 2 && item[0].enumDefault === 3 && item.length === 1 && hideTitle)
                   ) {
                     return (
-                      <Fragment>
+                      <Fragment key={itemIndex}>
                         {!hideTitle && (
                           <tr style={STYLE_PRINT.controlDiv} className="trFlex trFlex01">
                             <td
@@ -444,7 +445,7 @@ export default class Con extends React.Component<any, any> {
 
                   if (data.length > 0) {
                     return (
-                      <React.Fragment>
+                      <React.Fragment key={itemIndex}>
                         <tr
                           style={STYLE_PRINT.controlDiv}
                           className={`trFlex trFlex04 ${hasEmbedControl ? 'printEmbedRow' : ''}`}
@@ -453,7 +454,7 @@ export default class Con extends React.Component<any, any> {
                             let span = 12 * (it.size / allCountSize);
                             const hideTitle = _.get(it, 'advancedSetting.hidetitle') === '1';
                             return (
-                              <React.Fragment>
+                              <React.Fragment key={i}>
                                 <td
                                   width={nameWidth}
                                   style={{
@@ -539,9 +540,9 @@ export default class Con extends React.Component<any, any> {
     let list = relationsList.data || [];
     const fontType = FONT_STYLE[printData.font || DEFAULT_FONT_SIZE];
     const fileStyle = safeParse((advanceSettings.find(l => l.key === 'atta_style') || {}).value);
-    const relationFileStyle = _.pickBy(fileStyle, (value, key) => _.startsWith(key, `${tableList.controlId}_`));
+    const relationFileStyle = _.pickBy(fileStyle, (_value, key) => _.startsWith(key, `${tableList.controlId}_`));
     const user_info = safeParse((advanceSettings.find(l => l.key === 'user_info') || {}).value);
-    const relationUserInfo = _.pickBy(user_info, (value, key) => _.startsWith(key, `${tableList.controlId}_`));
+    const relationUserInfo = _.pickBy(user_info, (_value, key) => _.startsWith(key, `${tableList.controlId}_`));
 
     //空置隐藏则不显示
     if (isHideNull && list.length <= 0) {
@@ -587,7 +588,7 @@ export default class Con extends React.Component<any, any> {
     );
     let relationStyleNum = relationStyle.find(it => it.controlId === tableList.controlId) || [];
 
-    let setStyle = type => {
+    let setStyle = (type: number) => {
       let data = [];
       let isData = relationStyle.map(it => it.controlId).includes(tableList.controlId);
 
@@ -640,6 +641,7 @@ export default class Con extends React.Component<any, any> {
                 const isActive = relationStyleNum.type ? l.value === relationStyleNum.type : i === 0;
                 return (
                   <li
+                    key={i}
                     className={`typeItem ${isActive ? 'active' : ''}`}
                     style={{
                       ...STYLE_PRINT.relations_Ul_Li,
@@ -711,7 +713,7 @@ export default class Con extends React.Component<any, any> {
                 });
 
                 return (
-                  <React.Fragment>
+                  <React.Fragment key={i}>
                     {orderNumberCheck && (
                       <h5
                         style={{
@@ -771,7 +773,7 @@ export default class Con extends React.Component<any, any> {
                                 };
 
                           return (
-                            <tr className="trFlex trFlex05">
+                            <tr key={index} className="trFlex trFlex05">
                               <td
                                 style={{
                                   ...STYLE_PRINT.controlDiv_span_title,
@@ -825,8 +827,9 @@ export default class Con extends React.Component<any, any> {
             marginTop: 5,
           }}
         >
-          {images.map(l => (
+          {images.map((l, index) => (
             <img
+              key={index}
               onLoad={e => {
                 let width = e.target.width;
                 let height = e.target.height;
@@ -981,8 +984,8 @@ export default class Con extends React.Component<any, any> {
                                   </span>
                                   {workItemLog &&
                                     workItemLog.fields &&
-                                    workItemLog.fields.map(({ name, toValue }: { name?: string; [key: string]: any }) => (
-                                      <span>
+                                    workItemLog.fields.map(({ name, toValue }: { name?: string; [key: string]: any }, index) => (
+                                      <span key={index}>
                                         {name}：{toValue}
                                       </span>
                                     ))}
@@ -1027,8 +1030,9 @@ export default class Con extends React.Component<any, any> {
                   {deep_signatures.map((tdList, index) => {
                     return (
                       <tr key={`approvalSignature-${name}-tr-${index}`}>
-                        {[0, 1, 2, 3, 4].map(tdItem => (
+                        {[0, 1, 2, 3, 4].map((tdItem, idx) => (
                           <td
+                            key={idx}
                             width={160}
                             style={{
                               width: 160,
@@ -1084,10 +1088,10 @@ export default class Con extends React.Component<any, any> {
       <React.Fragment>
         {visibleItem.length > 0 && (
           <React.Fragment>
-            {visibleItem.map(item => {
+            {visibleItem.map((item, index) => {
               return (
-                <div className="approval">
-                  {item.child.map(l => {
+                <div key={index} className="approval">
+                  {item.child.map((l, index) => {
                     let _workList = l.processInfo.works.map(m => {
                       return {
                         ...m,
@@ -1096,7 +1100,7 @@ export default class Con extends React.Component<any, any> {
                     });
 
                     return (
-                      <React.Fragment>
+                      <React.Fragment key={index}>
                         {this.renderWorks(_workList, l.processInfo.processName, l.processInfo.parentId)}
                       </React.Fragment>
                     );
@@ -1164,7 +1168,7 @@ export default class Con extends React.Component<any, any> {
           fontSize: printData.font || DEFAULT_FONT_SIZE,
         }}
       >
-        {sysFeild.map(it => {
+        {sysFeild.map((it, index) => {
           if (!it) return null;
           const formatText = _.get(
             (printData.advanceSettings || []).find(l => l.key === it),
@@ -1173,7 +1177,7 @@ export default class Con extends React.Component<any, any> {
           const isSysFormatTime = _.endsWith(it, 'Time');
 
           return (
-            <span>
+            <span key={index}>
               {SYST_PRINT_TXT[it]}
               {isSysFormatTime && formatText ? getDateToEn(formatText, printData[it]) : printData[it]}
             </span>
@@ -1183,7 +1187,7 @@ export default class Con extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { shareUrl } = this.state;
     const { printData, controls, signature, params } = this.props;
     const { workflow = [], approval = [], attributeName, advanceSettings = [] } = printData;
@@ -1271,8 +1275,9 @@ export default class Con extends React.Component<any, any> {
             ).map((tdList, index) => {
               return (
                 <tr key={`signature-tr-${index}`} style={{ verticalAlign: 'top' }}>
-                  {[0, 1, 2, 3].map(tdIndex => (
+                  {[0, 1, 2, 3].map((tdIndex, index) => (
                     <td
+                      key={index}
                       width={168}
                       style={{
                         width: 168,

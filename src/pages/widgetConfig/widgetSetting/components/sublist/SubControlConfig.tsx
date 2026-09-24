@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { SETTING_MODE_DISPLAY } from '../../../config/setting';

@@ -1,8 +1,8 @@
-import React from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
 import filterXSS from 'xss';
+import { OptionChip } from 'src/components/OptionChip';
 import { checkCellIsEmpty, renderText as renderCellText } from 'src/utils/control';
 import { getDatePickerConfigs } from '../../../../util/setting';
 import { DynamicTextWrap, FieldInfo, OptionControl, RelateControl } from '../styled';
@@ -27,7 +27,7 @@ export default ({ dynamicValue = [], data = {}, ...rest }) => {
 
   return (
     <DynamicTextWrap>
-      {dynamicValue.map(item => {
+      {dynamicValue.map((item, index) => {
         if (!checkCellIsEmpty(item.staticValue)) {
           const type = getControlType(data);
 
@@ -127,10 +127,13 @@ export default ({ dynamicValue = [], data = {}, ...rest }) => {
                 <OptionControl
                   className={cx('option pointer overflow_ellipsis mRight6', { isDeleted: _.isEmpty(option) })}
                 >
-                  {data.enumDefault2 === 1 && option.color && (
-                    <div className="colorWrap" style={{ backgroundColor: option.color }}></div>
+                  {data.enumDefault2 === 1 && option.color ? (
+                    <OptionChip color={option.color} title={option.value}>
+                      {option.value}
+                    </OptionChip>
+                  ) : (
+                    <div className="text overflow_ellipsis">{option.value || _l('已删除')}</div>
                   )}
-                  <div className="text overflow_ellipsis">{option.value || _l('已删除')}</div>
                 </OptionControl>
               );
             }
@@ -149,7 +152,7 @@ export default ({ dynamicValue = [], data = {}, ...rest }) => {
             return null;
           }
         } else {
-          return <OtherField dynamicValue={dynamicValue} data={data} item={item} {...rest} />;
+          return <OtherField key={index} dynamicValue={dynamicValue} data={data} item={item} {...rest} />;
         }
       })}
     </DynamicTextWrap>

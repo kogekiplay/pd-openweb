@@ -42,7 +42,7 @@ export const getDataByFilterXSS = url => {
   }
 };
 
-const isMingoAnonymousUrl = url => {
+const isMingoAnonymousUrl = (url: URL | null) => {
   try {
     const target = typeof url === 'string' ? new URL(url) : url;
 
@@ -114,7 +114,7 @@ export const cacheDefaultCountry = ({ emailOrTel = '', dialCode = '' } = {}) => 
 };
 
 //  注册流程后登录成功跳转
-export const registerSuc = (registerData, action?) => {
+export const registerSuc = (registerData, action?: string | undefined) => {
   const { emailOrTel, dialCode, password } = registerData;
   let request = getRequest();
   let returnUrl = getDataByFilterXSS(request.ReturnUrl || '');

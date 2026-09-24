@@ -185,7 +185,7 @@ export function SelectGroup(props) {
     onChange(selectObj, list.length > 0 ? list : { ...item, checked: checked });
   };
 
-  const handleExpand = (item, expand) => {
+  const handleExpand = (item, expand: boolean) => {
     setExpandKeys(expand ? expandKeys.concat(item.projectId) : expandKeys.filter(l => l !== item.projectId));
 
     if (groupData[item.projectId]) return;
@@ -268,7 +268,7 @@ export function SelectGroup(props) {
   };
 
   const renderCommonList = () => {
-    if (!commonList.length) return;
+    if (!commonList.length) return undefined;
 
     return (
       <Fragment>

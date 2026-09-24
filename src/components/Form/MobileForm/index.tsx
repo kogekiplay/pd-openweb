@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useEffect, useRef } from 'react';
+import { Fragment, memo, useEffect, useRef } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -17,7 +17,7 @@ import RefreshBtn from './components/RefreshBtn';
 import { getValueStyle } from './tools/utils';
 import './style.less';
 
-const CONTROL_HEIGHT_MAP = {
+const CONTROL_HEIGHT_MAP: Record<string, string> = {
   '1em': '39px',
   '1.2em': '44px',
   '1.4em': '49px',
@@ -94,7 +94,7 @@ const MobileForm = props => {
     const { instanceId, workId } = mobileApprovalRecordInfo;
     const formList = [];
     let prevRow = -1;
-    let preIsSection;
+    let preIsSection: boolean | undefined;
     let firstFieldRendered = false;
     let data = [].concat(renderData).filter(item => !item.hidden && controlState(item, from).visible);
     const richTextControlCount = data.filter(c => c.type === 41).length;

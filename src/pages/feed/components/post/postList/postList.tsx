@@ -14,7 +14,7 @@ import PostMoreLoader from './postLoader';
 import './postList.css';
 
 class PostList extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     dispatch: PropTypes.func,
     postIds: PropTypes.arrayOf(PropTypes.string),
     postsById: PropTypes.object,
@@ -31,7 +31,7 @@ class PostList extends React.Component<any, any> {
     }),
   };
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     delete window.feedSelectDate;
     delete window.feedCustomDate;
   }
@@ -41,7 +41,7 @@ class PostList extends React.Component<any, any> {
   //   if (!this.props.postIds.length) this.props.dispatch(loading());
   //   this.props.dispatch(reload());
   // }
-  render() {
+  override render() {
     const postList =
       this.props.options.listType === 'ireply'
         ? _.chain(this.props.ireplyPostIds)

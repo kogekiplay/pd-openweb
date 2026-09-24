@@ -60,7 +60,7 @@ function getSelectedOptions(options = [], value, control) {
   }
 }
 
-function transformLat(lng, lat) {
+function transformLat(lng: number, lat: number) {
   let pi = 3.14159265358979324;
   let dLat = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat + 0.2 * Math.sqrt(Math.abs(lng));
   dLat += ((20.0 * Math.sin(6.0 * lng * pi) + 20.0 * Math.sin(2.0 * lng * pi)) * 2.0) / 3.0;
@@ -69,7 +69,7 @@ function transformLat(lng, lat) {
   return dLat;
 }
 
-function transformLng(lng, lat) {
+function transformLng(lng: number, lat: number) {
   let pi = 3.14159265358979324;
   let dLng = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng + 0.1 * lng * lat + 0.1 * Math.sqrt(Math.abs(lng));
   dLng += ((20.0 * Math.sin(6.0 * lng * pi) + 20.0 * Math.sin(2.0 * lng * pi)) * 2.0) / 3.0;
@@ -129,7 +129,7 @@ export function calcDate(date, expression) {
   }
 }
 
-export function countChar(str = '', char) {
+export function countChar(str = '', char: string) {
   if (!str || !char) {
     return 0;
   }

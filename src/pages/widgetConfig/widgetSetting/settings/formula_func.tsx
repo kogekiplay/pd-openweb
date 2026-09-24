@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { get } from 'lodash';
 import _ from 'lodash';
 import { Checkbox, Dropdown } from 'ming-ui';
@@ -70,6 +70,7 @@ export default function FormulaFunc(props) {
         />
       );
     }
+    return undefined;
   };
 
   let supportDebug = !props.subListData;

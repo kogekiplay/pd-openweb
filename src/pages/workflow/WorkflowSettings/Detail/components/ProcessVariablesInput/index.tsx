@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import process from '../../../../api/process';

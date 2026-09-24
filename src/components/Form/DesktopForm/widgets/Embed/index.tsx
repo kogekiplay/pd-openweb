@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -74,7 +74,7 @@ const Embed = props => {
   const [needUpdate, setNeedUpdate] = useState(Math.random());
   const [viewType, setViewType] = useState('');
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const embedWatchRef = useRef(null);
+  const embedWatchRef = useRef<NodeJS.Timeout | null>(null);
   const viewControlsRef = useRef([]);
   const currentTimeRef = useRef(new Date());
   const latestResultData = useRef(resultData);

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -231,7 +231,7 @@ export default function Ask({ data, docked = false }) {
   // answers 按题目位置 index 键入（不用 q.id：上游数据可能给出重复 id，否则会多题共用同一份作答而串选）
   // answers: { [index]: { selected: string[](label), custom: string } }
   const [answers, setAnswers] = useState({});
-  const advanceTimer = useRef(null);
+  const advanceTimer = useRef<NodeJS.Timeout | null>(null);
 
   // 卸载时清掉未触发的自动翻页定时器，避免在已卸载组件上 setState（如选中后立即提交、dock 收起）
   useEffect(() => () => clearTimeout(advanceTimer.current), []);
@@ -292,7 +292,7 @@ export default function Ask({ data, docked = false }) {
 
   // 收集回传：每题保留占位；无任何作答（未选且未填）视为跳过。
   // answersOverride 用于"点选即提交"等场景：setTimeout 里闭包的 answers 是旧值，需显式传入刚选的结果。
-  function collect(skipCurrent, answersOverride) {
+  function collect(skipCurrent: boolean, answersOverride) {
     const src = answersOverride || answers;
 
     return questions.map((item, idx) => {
@@ -414,7 +414,11 @@ const Skel = styled.div`
   animation-delay: ${p => p.$delay || 0}ms;
 `;
 
-export function AskSkeleton({ docked = true }) {
+export interface AskSkeletonProps {
+  docked?: boolean | undefined;
+}
+
+export function AskSkeleton({ docked = true }: AskSkeletonProps) {
   return (
     <Card $docked={docked}>
       <Header>

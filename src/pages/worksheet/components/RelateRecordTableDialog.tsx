@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useKey } from 'react-use';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';

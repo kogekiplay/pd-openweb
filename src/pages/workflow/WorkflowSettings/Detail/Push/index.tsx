@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -99,7 +99,7 @@ export default class Push extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -107,7 +107,7 @@ export default class Push extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -405,12 +405,12 @@ export default class Push extends Component<any, any> {
 
             {(data.buttons || []).map((button, index: number) => {
               return (
-                <BtnContent>
+                <BtnContent key={index}>
                   <div className="workflowMessageTitle">{_l('按钮%0', index + 1)}</div>
                   <i
                     className="icon-trash workflowMessageDelete"
                     onClick={() => {
-                      this.updateSource({ buttons: data.buttons.filter((o, i) => i !== index) });
+                      this.updateSource({ buttons: data.buttons.filter((_o, i) => i !== index) });
                     }}
                   />
 
@@ -594,7 +594,7 @@ export default class Push extends Component<any, any> {
   /**
    * 渲染事件列表
    */
-  renderEventList(pushType, buttonIndex?) {
+  renderEventList(pushType, buttonIndex?: number | undefined) {
     const pushList = _.cloneDeep(PUSH_LIST);
 
     if (buttonIndex !== undefined) {
@@ -686,7 +686,7 @@ export default class Push extends Component<any, any> {
         {...height}
         content={data[key]}
         formulaMap={data.formulaMap}
-        onChange={(err, value) => this.updateSource({ [key]: value })}
+        onChange={(_err, value) => this.updateSource({ [key]: value })}
         updateSource={this.updateSource}
       />
     );
@@ -759,7 +759,7 @@ export default class Push extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { data } = this.state;
 
     if (_.isEmpty(data)) {

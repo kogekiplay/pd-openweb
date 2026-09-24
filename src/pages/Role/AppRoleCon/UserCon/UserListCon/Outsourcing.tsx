@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useSetState } from 'react-use';
@@ -96,7 +96,7 @@ function Others(props) {
           </div>
         );
       },
-      render: (text, data) => {
+      render: (_text, data) => {
         return (
           <div className={cx('name flexRow alignItemsCenter', { pLeft40: !canEdit })}>
             {data.memberType === 5 ? (
@@ -140,7 +140,7 @@ function Others(props) {
       name: _l('角色'),
       minW: 240,
       className: 'nameWrapTr roleTr',
-      render: (text, data) => {
+      render: (_text, data) => {
         return (
           <div className="flex flexRow">
             <span className="roleName overflow_ellipsis breakAll" title={data.roleName.join('；')}>
@@ -153,7 +153,7 @@ function Others(props) {
     {
       id: 'operater',
       name: _l('操作人'),
-      render: (text, data) => {
+      render: (_text, data) => {
         return <div className="WordBreak ellipsis">{data.operater}</div>;
       },
     },
@@ -163,7 +163,7 @@ function Others(props) {
       // sorter: true,
       className: 'timeTr',
       minW: 130,
-      render: (text, data) => {
+      render: (_text, data) => {
         return createTimeSpan(data.operateTime);
       },
     },
@@ -171,7 +171,7 @@ function Others(props) {
       id: 'option',
       name: '',
       className: 'optionWrapTr',
-      render: (text, data) => {
+      render: (_text, data) => {
         const dataList = [
           {
             value: 0,

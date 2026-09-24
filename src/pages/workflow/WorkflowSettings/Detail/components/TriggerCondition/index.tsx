@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import Condition from './Condition';
 import './index.less';
 
@@ -15,7 +15,7 @@ export default props => {
         return item;
       });
     } else {
-      newData = props.data.filter((item, index: number) => i !== index);
+      newData = props.data.filter((_item, index: number) => i !== index);
     }
 
     props.updateSource(newData);

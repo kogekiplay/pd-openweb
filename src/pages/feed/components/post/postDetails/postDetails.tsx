@@ -12,14 +12,16 @@ import '../../app/style.css';
 import './detailStyle.css';
 
 class PostDetails extends React.Component<any, any> {
-  static propTypes = {
+  declare _mounted: boolean | undefined;
+
+  static override propTypes = {
     postItem: PropTypes.object,
     onRemove: PropTypes.func,
   };
 
-  state = { postItem: this.props.postItem };
+  override state = { postItem: this.props.postItem };
 
-  componentDidMount() {
+  override componentDidMount() {
     this._mounted = true;
     if (this.props.postItem) {
       store.dispatch(addSuccess(this.props.postItem, false));
@@ -34,7 +36,7 @@ class PostDetails extends React.Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.postItem) {
         this.listenToRemove(this.props.postItem.postID);
@@ -42,7 +44,7 @@ class PostDetails extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this._mounted = false;
     this.unsubscribeOnUpdate();
   }
@@ -70,7 +72,7 @@ class PostDetails extends React.Component<any, any> {
     emitter.addListener('POST_REMOVE_SUCCESS', this.onRemoveListener);
   };
 
-  render() {
+  override render() {
     if (!this.state.postItem) {
       return (
         <div>

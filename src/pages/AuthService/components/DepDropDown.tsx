@@ -7,7 +7,7 @@ import { Icon } from 'ming-ui';
 import departmentAjax from 'src/api/department';
 
 export default class DepDropDown extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     popupClassName: PropTypes.string,
     treePopupAlign: PropTypes.shape({}),
     onChange: PropTypes.func,
@@ -189,7 +189,7 @@ export default class DepDropDown extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { popupClassName, treePopupAlign } = this.props;
     const { options, searchOptions, keywords, isError, value } = this.state;
     return (

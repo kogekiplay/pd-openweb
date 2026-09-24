@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -85,9 +85,10 @@ export default function DropChoose(props) {
               {list.length <= 0 ? (
                 <div className="TxtCenter pTop45 pBottom50 textTertiary">{_l('暂无相关内容')}</div>
               ) : (
-                list.map(o => {
+                list.map((o, index) => {
                   return (
                     <li
+                      key={index}
                       onClick={() => {
                         if (o.disabled) {
                           return;

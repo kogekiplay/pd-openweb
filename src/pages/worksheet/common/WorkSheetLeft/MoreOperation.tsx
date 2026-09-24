@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -36,9 +36,9 @@ const Operation = styled(Menu)`
 const CopySheetConfirmDescription = props => {
   const { workSheetId, type, workSheetName } = props;
   const [loading, setLoading] = useState(true);
-  const [controls, setControls] = useState([]);
+  const [controls, setControls] = useState<FormControl[]>([]);
   const [isCopyRelevance, setIsCopyRelevance] = useState(false);
-  const [selectIds, setSelectIds] = useState([]);
+  const [selectIds, setSelectIds] = useState<(string | undefined)[]>([]);
   const [name, setName] = useState(workSheetName);
 
   useEffect(() => {
@@ -100,7 +100,7 @@ const CopySheetConfirmDescription = props => {
             <Fragment>
               <Checkbox
                 checked={selectIds.length === controls.length}
-                indeterminate={selectIds.length === controls.length ? false : selectIds.length}
+                indeterminate={selectIds.length !== controls.length && selectIds.length > 0}
                 className="mBottom10"
                 text={
                   <Fragment>
@@ -144,12 +144,12 @@ const CopySheetConfirmDescription = props => {
 
 const handleDeleteWorkSheet = ({ projectId, appId, groupId, appItem, sheetListActions }: { projectId?: string; appId?: string; groupId?: string; [key: string]: any }) => {
   const { workSheetName: name, type } = appItem;
-  const nameMap = {
+  const nameMap: Record<number, string> = {
     0: _l('工作表'),
     1: _l('自定义页面'),
     3: _l('对话机器人'),
   };
-  const titleMap = {
+  const titleMap: Record<number, string> = {
     0: _l('删除工作表 “%0”', name),
     1: _l('删除自定义页面 “%0”', name),
     3: _l('删除对话机器人 “%0”', name),
@@ -293,7 +293,7 @@ const handleCopyWorkSheet = props => {
     dialogConfirm();
   };
 
-  const nameMap = {
+  const nameMap: Record<number, string> = {
     0: _l('工作表'),
     1: _l('自定义页面'),
     3: _l('对话机器人'),
@@ -348,7 +348,7 @@ const handleUpdateWorksheetStatus = (status: number, props) => {
     });
 };
 
-const deleteText = {
+const deleteText: Record<number, string> = {
   0: _l('删除工作表%02029'),
   1: _l('删除自定义页面'),
   2: _l('删除分组%02012'),

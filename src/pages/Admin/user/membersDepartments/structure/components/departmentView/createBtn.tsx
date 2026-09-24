@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Trigger from '@rc-component/trigger';
@@ -30,7 +30,11 @@ const MenuWrap = styled(Menu)`
   }
 `;
 
-class CreateBtn extends Component<any, any> {
+export interface CreateBtnState {
+  popupVisible: boolean;
+}
+
+class CreateBtn extends Component<any, CreateBtnState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,7 +44,7 @@ class CreateBtn extends Component<any, any> {
     emitter.addListener('handleClick', this.handleClick);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { autoShow, updateAutoShow = () => {} } = this.props;
 
     if (autoShow) {
@@ -51,7 +55,7 @@ class CreateBtn extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     emitter.removeListener('handleClick', this.handleClick);
   }
 
@@ -104,7 +108,7 @@ class CreateBtn extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const {
       showDisabledDepartment,
       newDepartments,

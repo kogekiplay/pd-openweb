@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 
 export default class EmailInput extends Component<any, any> {
-  render() {
+  declare input: HTMLInputElement | null | undefined;
+
+  override render() {
     const { inputClassName, onInputKeydown, clickCallback } = this.props;
 
     return (

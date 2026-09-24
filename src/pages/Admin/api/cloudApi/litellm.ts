@@ -13,7 +13,7 @@ const litellm = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  litellmCallbackBilling: function (args, options) {
+  litellmCallbackBilling: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/litellm/callback/billing';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'litellmLitellmCallbackBilling', JSON.stringify(args), $.extend(base, options));

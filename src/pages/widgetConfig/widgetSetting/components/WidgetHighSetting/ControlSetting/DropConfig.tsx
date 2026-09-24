@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import _ from 'lodash';
 import { Checkbox } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -46,6 +46,7 @@ export default function DropConfig(props) {
       {visible && (
         <AssignValue
           options={options}
+          colorful={data.enumDefault2 === 1}
           enableScore={enumDefault === 1}
           onOk={({ options, enableScore }) => {
             onChange({ options, enumDefault: +enableScore });

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -24,7 +24,7 @@ let Home = class Home extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { controlId, params } = this.props;
     return (
       <Fragment>

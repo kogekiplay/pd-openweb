@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import Trigger from '@rc-component/trigger';
 import privateRequest from 'src/api/private';
@@ -16,7 +16,7 @@ export default class AppInstallSetting extends Component<any, any> {
       downloadAppQrCodeUrl: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     privateRequest.getAPIUrl().then(({ url, qrCodeUrl, downloadAppQrCodeUrl }) => {
       this.setState({
         url,
@@ -101,7 +101,7 @@ export default class AppInstallSetting extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     return (
       <div className="appInstallSettingWrapper card mAll15 pAll15">
         {this.renderTitle()}

@@ -2,7 +2,7 @@
 export const existAccountHint = function (result) {
   const inviteNoticeMessage = function (title: string, accounts) {
     if (!accounts.length) return '';
-    const USER_STATUS = {
+    const USER_STATUS: Record<number, string> = {
       2: _l('（被拒绝加入，需从后台恢复权限）'),
       3: _l('（待审批）'),
       4: _l('（被暂停权限，需从后台恢复权限）'),
@@ -45,7 +45,7 @@ export const existAccountHint = function (result) {
 
   if (result.sendMessageResult === SendMessageResult.Failed) {
     alert(_l('邀请失败'), 2);
-    return;
+    return undefined;
   }
 
   let accountInfos = []; // 成功

@@ -6,7 +6,6 @@ import { isRelateRecordTableControl } from 'src/utils/control';
 import { init, updateTreeTableViewData } from './action';
 import reducer from './reducer';
 import type { FormControl } from 'src/utils/controlTypes';
-import type { ReduxAction } from 'src/redux/types';
 
 export default function generateStore(
   control: FormControl,
@@ -25,20 +24,20 @@ export default function generateStore(
     isDraft,
     openFrom,
   }: {
-    mode?: string;
-    from?: number;
-    isCharge?: boolean;
-    appId?: string;
-    recordId?: string;
-    allowEdit?: boolean;
-    worksheetId?: string;
+    mode?: string | undefined;
+    from?: number | undefined;
+    isCharge?: boolean | undefined;
+    appId?: string | undefined;
+    recordId?: string | undefined;
+    allowEdit?: boolean | undefined;
+    worksheetId?: string | undefined;
     /** 父表单的整份控件数组 */
-    formData?: FormControl[];
-    instanceId?: string;
-    pageSize?: number;
-    workId?: string;
-    isDraft?: boolean;
-    openFrom?: string;
+    formData?: FormControl[] | undefined;
+    instanceId?: string | undefined;
+    pageSize?: number | undefined;
+    workId?: string | undefined;
+    isDraft?: boolean | undefined;
+    openFrom?: string | undefined;
   } = {},
 ) {
   if (!pageSize) {

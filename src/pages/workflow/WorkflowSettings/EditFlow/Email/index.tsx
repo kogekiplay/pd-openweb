@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { replaceField } from '../../utils';
 import { CreateNode, MembersName, NodeOperate } from '../components';
@@ -37,7 +37,7 @@ export default class Email extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
 
     return (

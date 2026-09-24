@@ -97,6 +97,7 @@ export default function ControlsDataTable(props) {
     } else if (isAsc === false) {
       return <i className="icon icon-score-down sortIcon" />;
     }
+    return undefined;
   };
 
   return (

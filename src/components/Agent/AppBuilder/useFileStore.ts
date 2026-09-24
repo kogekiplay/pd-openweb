@@ -17,7 +17,7 @@ function tryParse(entry, content) {
 // 侧栏数量：多数面板 parsed 是扁平数组，length 即条数；
 // 自定义动作（custom-actions.json）是「按工作表分组」结构 [{ worksheet, actions: [...] }]，
 // 数量需取各组 actions 之和，否则显示的是分组数而非实际动作数。
-function countSidebarItems(key, parsed) {
+function countSidebarItems(key: string, parsed) {
   if (key === 'customActions') {
     return parsed.reduce((sum, group) => sum + (Array.isArray(group && group.actions) ? group.actions.length : 0), 0);
   }

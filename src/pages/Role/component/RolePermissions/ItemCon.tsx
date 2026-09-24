@@ -7,7 +7,7 @@ import DropOption from 'src/pages/Role/PortalCon/components/DropOption';
 import { getTranslateInfo } from 'src/utils/app';
 
 export default class Con extends React.Component<any, any> {
-  render() {
+  override render() {
     const { appId, item, dataList, onAction, roleId, onChoose, isForPortal, DragHandle } = this.props;
     return (
       <li

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { Collapse } from 'antd';
 import { LoadDiv } from 'ming-ui';

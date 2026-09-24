@@ -270,9 +270,9 @@ export default function (props) {
     };
   };
 
-  const renderWarn = key => {
+  const renderWarn = (key: string) => {
     const warn = warnList.find(o => o.tipDom === key);
-    if (!warn) return;
+    if (!warn) return undefined;
     return <div className={cx('warnTips')}>{warn.warnTxt}</div>;
   };
 
@@ -313,8 +313,8 @@ export default function (props) {
                 <Dropdown
                   showItemTitle
                   value={jobId || undefined}
-                  onBlur={() => setState({ focusDiv: '' })}
-                  onFocus={() => setState({ focusDiv: 'jobId' })}
+                  // Dropdown 没有 onFocus / onBlur（原来传了也不会被调用，这一栏的聚焦样式从没出现过），用展开 / 收起代替
+                  onVisibleChange={visible => setState({ focusDiv: visible ? 'jobId' : '' })}
                   onChange={value => {
                     updateCompany({ jobId: value });
                     setState({ warnList: _.filter(warnList, it => it.tipDom !== 'jobId') });
@@ -333,8 +333,8 @@ export default function (props) {
                 <Dropdown
                   showItemTitle
                   value={workSiteId || undefined}
-                  onBlur={() => setState({ focusDiv: '' })}
-                  onFocus={() => setState({ focusDiv: 'workSiteId' })}
+                  // Dropdown 没有 onFocus / onBlur（原来传了也不会被调用，这一栏的聚焦样式从没出现过），用展开 / 收起代替
+                  onVisibleChange={visible => setState({ focusDiv: visible ? 'workSiteId' : '' })}
                   onChange={value => {
                     updateCompany({ workSiteId: value });
                     setState({ warnList: _.filter(warnList, it => it.tipDom !== 'workSiteId') });

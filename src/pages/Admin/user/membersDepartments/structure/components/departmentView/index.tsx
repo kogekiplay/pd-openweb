@@ -35,6 +35,9 @@ const loop = (data, key, callback) => {
 
 const { DirectoryTree } = Tree;
 class DepartmentTree extends React.Component<any, any> {
+  declare timer: NodeJS.Timeout | null;
+  declare handleResize: _.DebouncedFuncLeading<() => void>;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -61,7 +64,7 @@ class DepartmentTree extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.init();
     this.lisentHover();
     window.addEventListener('resize', this.handleResize);
@@ -77,7 +80,7 @@ class DepartmentTree extends React.Component<any, any> {
     $(document).off('mouseleave', '.ant-tree-switcher', this.handleTreeSwitcherMouseLeave);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(prevProps.newDepartments, this.props.newDepartments) ||
@@ -103,7 +106,7 @@ class DepartmentTree extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     clearTimeout(this.timer);
     window.removeEventListener('resize', this.handleResize);
     this.handleResize.cancel();
@@ -186,7 +189,7 @@ class DepartmentTree extends React.Component<any, any> {
       sortedDepartmentIds = [];
       let ar;
       let i;
-      loop(data, dropKey, (item, index: number, arr) => {
+      loop(data, dropKey, (_item, index: number, arr) => {
         ar = arr;
         i = index;
       });
@@ -273,7 +276,7 @@ class DepartmentTree extends React.Component<any, any> {
           if (!props.departmentId) {
             list = list.concat(subDepartments);
           } else {
-            loop(list, props.departmentId, (item, index: number, arr) => {
+            loop(list, props.departmentId, (_item, index: number, arr) => {
               arr[index].subDepartments = subDepartments;
             });
           }
@@ -422,14 +425,14 @@ class DepartmentTree extends React.Component<any, any> {
     return nodes;
   };
 
-  onExpand = expandedKeys => {
+  onExpand = (expandedKeys: React.Key[]) => {
     this.props.expandedKeysUpdate(expandedKeys);
     this.setState({
       autoExpandParent: false,
     });
   };
 
-  render() {
+  override render() {
     const { hasDepartmentAuth } = this.props;
     const { newDepartments, expandedKeys, selectedKeys, autoExpandParent, height } = this.state;
 

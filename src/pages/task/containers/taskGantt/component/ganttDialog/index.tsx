@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import axios from 'axios';
 import html2canvas from 'html2canvas';
 import _ from 'lodash';
@@ -18,15 +18,20 @@ import GanttSideBar from './GanttSideBar';
 import { durDays, momentTime } from './time';
 import './index.less';
 
-export default class GanttDialog extends Component<any, any> {
-  static propTypes = {
+export interface GanttDialogProps {
+  closeLayer?: ((value: boolean) => void) | undefined;
+  folderID: string;
+}
+
+export default class GanttDialog extends Component<GanttDialogProps, any> {
+  static override propTypes = {
     folderID: PropTypes.string.isRequired,
     closeLayer: PropTypes.func,
   };
   static defaultProps = {
     closeLayer: () => {},
   };
-  state = {
+  override state = {
     taskID: '',
     name: '',
     beginTime: '',
@@ -41,7 +46,7 @@ export default class GanttDialog extends Component<any, any> {
     errorMsg: '',
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -110,7 +115,7 @@ export default class GanttDialog extends Component<any, any> {
    * @param {Array} data
    */
   dealWithData(data) {
-    if (!Array.isArray(data)) return;
+    if (!Array.isArray(data)) return undefined;
     data.forEach(item => {
       item.child && (item.childrenVisible = true);
       this.dealWithData(item.child);
@@ -373,7 +378,7 @@ export default class GanttDialog extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const {
       type,
       data,

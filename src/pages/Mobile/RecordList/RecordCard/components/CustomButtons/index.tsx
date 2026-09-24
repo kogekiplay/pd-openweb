@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useRef } from 'react';
+import { Fragment, memo, useRef } from 'react';
 import cx from 'classnames';
 import { includes, isFunction, isUndefined } from 'lodash';
 import styled from 'styled-components';
@@ -91,7 +91,7 @@ const CustomButtons = props => {
   const isRecordLock = row.sys_lock;
   const recordId = row.rowid;
   const { entityName = _l('记录'), switches } = worksheetInfo;
-  const recordRef = useRef(null);
+  const recordRef = useRef<RecordAction | null>(null);
 
   const getButtonName = button => {
     const translateInfo = getTranslateInfo(appId, null, button.btnId);
@@ -182,6 +182,7 @@ const CustomButtons = props => {
     } else if (isFunction(button.onClick)) {
       button.onClick(button);
     }
+    return undefined;
   };
 
   const triggerCustomBtn = btn => {

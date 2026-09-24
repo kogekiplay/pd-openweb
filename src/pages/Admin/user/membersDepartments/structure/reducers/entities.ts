@@ -42,7 +42,7 @@ const mergeDepartmentUsers = (department, payload) => {
   }
 };
 
-const mergeDepartments = (state, action) => {
+const mergeDepartments = (state, action: ReduxAction) => {
   const { departmentId, response, type } = action;
   const { departments } = state;
   const department = departments[departmentId];
@@ -103,7 +103,7 @@ const mergeDepartments = (state, action) => {
   }
 };
 
-const editDepartment = (state, action) => {
+const editDepartment = (state, action: ReduxAction) => {
   const { newDepartments, expandedKeys = [] } = action;
   return { ...state, newDepartments, expandedKeys };
 };

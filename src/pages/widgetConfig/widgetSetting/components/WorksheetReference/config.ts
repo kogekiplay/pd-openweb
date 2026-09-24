@@ -28,7 +28,7 @@ export const SUBNAV_LIST = [
   { text: _l('空白子表'), value: 'subList' },
 ];
 
-export const REFERENCE_TYPE = {
+export const REFERENCE_TYPE: Record<number, string> = {
   10101: _l('筛选'),
   10102: _l('默认值'),
   10103: _l('其他'),

@@ -1,42 +1,35 @@
 import { generate } from '@ant-design/colors';
 import { TinyColor } from '@ctrl/tinycolor';
+import { rampLevel } from 'src/common/theme/palette';
 
 /**
  * 选项色标签（chip）的配色。
  *
- * 【解决的是什么】选项色是**用户自己选的业务数据**（20 色色板，还能自定义），
- * 而标签一直是「实心原色底 + 黑或白字」。实测 20 色里 7 色不达标，
- * 最差的是白字压在黄色上只有 1.42 —— 基本看不清。
- * 而且黑白两种字色都救不了其中 5 色（蓝/红/粉那几档两边都只有 3.9~4.3）：
- * 只要底色是原色，字色怎么翻都过不了 4.5。
+ * 【规则（2026-09-23 用户定）】底色 = 用户选的颜色，原样使用，明暗两套主题相同 ——
+ * 设置时看到的颜色就是显示出来的颜色。字色自动挑：
+ *   1. 同色系深字（antd 色阶第 8~10 级里第一个够 4.5 的）够得着就用它：黄底配棕字、浅蓝底配深蓝字；
+ *   2. 够不着就看近黑字够不够 4.5，够就近黑，不够就白。
+ * 近中性色（灰）没有色相可用，直接走第 2 步。
  *
- * 【改成什么】浅底 + 同色深字（GitHub 标签那种）：
- *   底 = 原色按 22% 叠在当前表面上（用 color-mix，所以明暗两套主题各自叠各自的底）
- *   字 = antd 色阶里【第一个够 4.5 的那一档】
- * 20 色实测全过，色相识别也保住 —— 黄标签仍是黄的，只是不再是荧光块配白字。
+ * 【已知取舍】底色既然是原色，内置 20 色里饱和的蓝、红、粉三色不管配什么字
+ * 都到不了 4.5（白字 4.10 / 4.09 / 3.90），这三色给白字，理由见 pickText。原版 HAP 是 7 色不达标 ——
+ * 旧的 isLightColor（一张手工名单 + TinyColor 亮度 128 一刀切）让橙、绿、青、黄都配白字，
+ * 白字压黄底只有 1.42；现在按对比度挑，这几色配的是同色深字。
  *
- * 【为什么字色按对比度挑档、而不是固定取第 8 级】不同色相的色阶深浅不一样：
- * 蓝色第 8 级就有 7.3，黄色第 8 级只有 3.29、得往下走一档。
- * 固定下标等于赌每个色相都一样，实测就是不一样。
- *
- * 【近中性色不造色相】灰色的 HSL 色相是没有意义的（TinyColor 给 0，也就是红），
- * 直接把浅灰交给 generate() 会得到一条【红色】色阶 —— 灰标签配深红字。
- * 所以饱和度低于阈值的一律走中性文字档。
+ * 【为什么不是之前那版】2026-09-22 曾改成「原色 22% 的浅底 + 同色深字」，20 色全部达标，
+ * 但设置时选的颜色和实际显示的底色对不上（显示的是淡了很多的同色），用户决定以一致为先。
+ * 不要为了那 3 色把底色再调淡 —— 那正是被否掉的方案。
  */
 
-export type ThemeMode = 'light' | 'dark';
-
-/** 底色占比。16% 也能全过，取 22% 是为了标签本身看得出颜色（对白底 1.09~1.53）。 */
-const TINT = 0.22;
-
-/** 低于这个饱和度就认为「没有色相」，走中性文字档，不要拿 HSL 的 h 去造色 */
+/** 低于这个饱和度就认为「没有色相」，不拿 HSL 的 h 去造同色深字（灰的 h 是 0，会造出红色阶） */
 const ACHROMATIC_S = 0.12;
 
 /** 正文判据。标签字号普遍 12~13px，按正文算。 */
 const AA_BODY = 4.5;
 
-/** 两套主题各自的页面底色，用来把半透明的标签底算成实色再判对比度。 */
-const SURFACE: Record<ThemeMode, string> = { light: '#ffffff', dark: '#161616' };
+/** 近黑字：antd 正文色（88% 不透明的黑）叠在白底上的实色 */
+const NEAR_BLACK = '#1f1f1f';
+const WHITE = '#ffffff';
 
 export interface OptionChipStyle {
   /** 直接给 background 用 */
@@ -47,8 +40,11 @@ export interface OptionChipStyle {
 
 function relativeLuminance(hex: string): number {
   const { r, g, b } = new TinyColor(hex).toRgb();
-  const lin = [r, g, b].map(v => v / 255).map(v => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
-  return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+  const lin = (channel: number) => {
+    const v = channel / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
 }
 
 function contrast(a: string, b: string): number {
@@ -57,14 +53,13 @@ function contrast(a: string, b: string): number {
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
 
-/** 把前景按 alpha 叠到底色上，得到实色 —— 用来判对比度，不用来渲染 */
-function flatten(color: string, surface: string, alpha: number): string {
-  const f = new TinyColor(color).toRgb();
-  const b = new TinyColor(surface).toRgb();
+/** 把前景按 alpha 叠到白底上，得到实色 —— 只用来判对比度，不用来渲染 */
+function flattenOnWhite(color: TinyColor): string {
+  const { r, g, b, a } = color.toRgb();
   return new TinyColor({
-    r: f.r * alpha + b.r * (1 - alpha),
-    g: f.g * alpha + b.g * (1 - alpha),
-    b: f.b * alpha + b.b * (1 - alpha),
+    r: r * a + 255 * (1 - a),
+    g: g * a + 255 * (1 - a),
+    b: b * a + 255 * (1 - a),
   }).toHexString();
 }
 
@@ -72,8 +67,7 @@ function flatten(color: string, surface: string, alpha: number): string {
  * 归一成「antd 色阶第 6 档该长的样子」再交给 generate()。
  *
  * generate() 是按【饱和的种子色】设计的：把色板前半截那些已经很淡的颜色直接喂进去，
- * 整条色阶会跟着一起变淡，第 8 级只有 3.07，怎么挑都不够。
- * 所以先把亮度/饱和度拉回中间档，色相保持不变。
+ * 整条色阶会跟着一起变淡，深档不够深。所以先把亮度/饱和度拉回中间档，色相保持不变。
  *
  * 返回 null 表示这个颜色近中性、没有色相可用。
  */
@@ -86,20 +80,30 @@ function saturatedSeed(color: string): string | null {
   return new TinyColor({ h, s: Math.max(s, 0.72), l: 0.5 }).toHexString();
 }
 
+/** 在实色底上挑字色 */
+function pickText(solid: string): string {
+  const seed = saturatedSeed(solid);
+  if (seed) {
+    const ramp = generate(seed);
+    const sameHue = [7, 8, 9].map(i => rampLevel(ramp, i)).find(c => contrast(c, solid) >= AA_BODY);
+    if (sameHue) return sameHue;
+  }
+  // 近黑和白不可能同时够 4.5（近黑要底色亮度 ≥ 0.237，白要 ≤ 0.183），所以这一行就是「挑够 4.5 的那个」。
+  // 两个都够不着的是亮度落在两者之间的一窄条（饱和的蓝、红、粉），这里给白字：WCAG 2 下两者只差零点几，
+  // 按感知对比度 APCA 算，白字 Lc 约 71、近黑只有约 35 —— WCAG 2 在中间调上会高估深字，这是它的已知缺陷。
+  // 原版 HAP 和 antd 在这几色上也都是白字。
+  return contrast(NEAR_BLACK, solid) >= AA_BODY ? NEAR_BLACK : WHITE;
+}
+
 const cache = new Map<string, OptionChipStyle>();
 
 /**
- * 给一个选项色，算出标签用的底色和文字色。
+ * 给一个选项色，算出标签用的底色和文字色。结果与明暗主题无关。
  *
- * @param color 用户选的选项色，任何 TinyColor 认得的写法
- * @param mode  当前主题。默认读 documentElement 的 data-theme
+ * @param color 用户选的选项色。选项色板的 ColorPicker 存的是 8 位 hex（#rrggbbaa），也可能带透明度
  */
-export function getOptionChipStyle(color: string, mode?: ThemeMode): OptionChipStyle {
-  const themeMode: ThemeMode =
-    mode || (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
-
-  const key = `${color}|${themeMode}`;
-  const hit = cache.get(key);
+export function getOptionChipStyle(color: string): OptionChipStyle {
+  const hit = cache.get(color);
   if (hit) return hit;
 
   const parsed = new TinyColor(color);
@@ -109,38 +113,18 @@ export function getOptionChipStyle(color: string, mode?: ThemeMode): OptionChipS
       background: 'var(--color-background-secondary)',
       color: 'var(--color-text-title)',
     };
-    cache.set(key, fallback);
+    cache.set(color, fallback);
     return fallback;
   }
 
-  const hex = parsed.toHexString();
-  // 用 color-mix 而不是算好的实色：明暗两套主题各自叠各自的表面色，
-  // 标签放在卡片上还是页面上也都对。
-  const background = `color-mix(in srgb, ${hex} ${Math.round(TINT * 100)}%, transparent)`;
-  // 判对比度得用实色，这里按页面底色估一个最坏情况
-  const flat = flatten(hex, SURFACE[themeMode], TINT);
-
-  const seed = saturatedSeed(hex);
-  let text = 'var(--color-text-title)';
-  if (seed) {
-    const ramp =
-      themeMode === 'dark' ? generate(seed, { theme: 'dark', backgroundColor: SURFACE.dark }) : generate(seed);
-    // 从第 8 级往末尾找第一个够 4.5 的。两套主题的下标范围相同不是巧合：
-    // antd 的暗色阶本来就是反着排的（下标越大越亮），所以"往对比度更高的方向走"
-    // 在两边都是下标递增。
-    const picked = [7, 8, 9].map(i => ramp[i]).find(c => contrast(c, flat) >= AA_BODY);
-    text = picked || ramp[9];
-  }
-
-  const style: OptionChipStyle = { background, color: text };
-  cache.set(key, style);
+  const opaque = parsed.getAlpha() >= 1;
+  const style: OptionChipStyle = opaque
+    ? { background: parsed.toHexString(), color: pickText(parsed.toHexString()) }
+    : // 半透明的选项色照原样半透明着画；字色按叠在白底上的样子挑（表单和表格的底都是白的）
+      { background: parsed.toRgbString(), color: pickText(flattenOnWhite(parsed)) };
+  cache.set(color, style);
   return style;
 }
 
-/** 供 spec 和调试用：算出标签底色叠成实色之后的值 */
-export function flattenedChipBackground(color: string, mode: ThemeMode = 'light'): string {
-  return flatten(new TinyColor(color).toHexString(), SURFACE[mode], TINT);
-}
-
 /** 供 spec 用 */
-export const __internal = { contrast, saturatedSeed, TINT, AA_BODY, SURFACE };
+export const __internal = { contrast, saturatedSeed, AA_BODY, NEAR_BLACK, WHITE };

@@ -206,7 +206,7 @@ export default function GroupCon(props) {
   useEffect(() => {
     let w = widthConfig[0] || minControlWidth;
     const controlList = getControls(props);
-    controlList.map((o, i) => {
+    controlList.map((_o, i) => {
       w = w + (widthConfig[i + 1] || minControlWidth);
     });
     setState({
@@ -232,7 +232,7 @@ export default function GroupCon(props) {
         [index]: width,
       };
       let w = widthConfig[0] || minControlWidth;
-      displayControlsInfo.map((o, i) => {
+      displayControlsInfo.map((_o, i) => {
         w = w + (widthConfig[i + 1] || minControlWidth);
       });
       setState({
@@ -399,7 +399,7 @@ export default function GroupCon(props) {
   let scrollLeftNum = headContainer.current && headContainer.current.scrollLeft;
   const allW = _.sum([
     displayControlsInfo.length <= 0 ? props.directoryWidth : widthConfig[0] || minControlWidth,
-    ...displayControlsInfo.map((o, index) => widthConfig[index + 1] || minControlWidth),
+    ...displayControlsInfo.map((_o, index) => widthConfig[index + 1] || minControlWidth),
   ]);
   return (
     <Wrap
@@ -442,6 +442,7 @@ export default function GroupCon(props) {
             {displayControlsInfo.map((o, index) => {
               return (
                 <TbWrap
+                  key={index}
                   className="tb Relative flexRow alignItemsCenter h100"
                   style={{ width: isM ? '100%' : widthConfig[index + 1] || minControlWidth }}
                 >
@@ -567,6 +568,7 @@ export default function GroupCon(props) {
             const hoverHandlers = getResourceRowHoverHandlers(viewId, i);
             return (
               <div
+                key={i}
                 className="th flexRow alignItemsCenter Relative"
                 id={`resourceGroup_${viewId}_${i}`}
                 style={{
@@ -608,6 +610,7 @@ export default function GroupCon(props) {
                       : widthConfig[index + 1] || minControlWidth;
                   return (
                     <TbWrap
+                      key={index}
                       className={cx('tb overflow_ellipsis WordBreak h100 flexRow alignItemsCenter')}
                       style={{
                         width: tbW,

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _, { get } from 'lodash';
@@ -53,7 +53,7 @@ export default class Formula extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -61,7 +61,7 @@ export default class Formula extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.setState({
@@ -269,7 +269,7 @@ export default class Formula extends Component<any, any> {
   /**
    * formula handle change
    */
-  handleChange(err, value, obj, isNumber) {
+  handleChange(_err, value: string, obj, isNumber: boolean) {
     // 数字/金额
     if (isNumber) {
       const { fnmatch } = this.state;
@@ -521,7 +521,8 @@ export default class Formula extends Component<any, any> {
           ]}
           value={data.unit}
           border
-          onChange={(unit: string) => this.updateSource({ unit })}
+          // 下拉项的 value 是数字（1 / 3 / 8 / 9），原来把参数标成了 string
+          onChange={unit => this.updateSource({ unit })}
         />
 
         {_.includes([1, 3], data.unit) && this.renderDateType('showFormat', true)}
@@ -1074,7 +1075,7 @@ export default class Formula extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { selectNodeType } = this.props;
     const { data, showOtherWorksheet } = this.state;
 

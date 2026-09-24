@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -19,7 +19,7 @@ const iteratee = item => {
   return item.parentId + '|' + item.id;
 };
 
-const filterByAppId = (list = [], appId: string, appType, subModule: number) => {
+const filterByAppId = (list = [], appId: string, appType: string, subModule: number) => {
   const filterList = list.filter(r => {
     if (appType === 'sub') return r.appId === appId;
     if (appType === 'subList') return !r.appId;
@@ -31,7 +31,7 @@ const filterByAppId = (list = [], appId: string, appType, subModule: number) => 
   });
 };
 
-const showNav = (subModule, list = [], appType) => {
+const showNav = (subModule: number, list = [], appType: string) => {
   if (
     (subModule !== SUB_MODULE_TYPES.WIDGET && appType === 'subList') ||
     (subModule === SUB_MODULE_TYPES.WIDGET && appType === 'subList' && list.every(l => !!l.appId))
@@ -93,7 +93,7 @@ function WorksheetReferenceDialog(props) {
   const count = getGroupCount(references, type === 2 ? SUB_MODULE_TYPES.WORKFLOW : subModule);
   const windowHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
 
-  const handleSideClick = key => {
+  const handleSideClick = (key: number) => {
     if (subModule === key) return;
     const isWorkflow = key === SUB_MODULE_TYPES.WORKFLOW;
     setState({
@@ -132,7 +132,9 @@ function WorksheetReferenceDialog(props) {
   }, [subModule, appType]);
 
   // 获取工作流
-  const getWorkflowReferences = options => {
+  const getWorkflowReferences = (
+    options: { appId: string; isRefresh: boolean } | { isRefresh: boolean } | { appId: string } | undefined,
+  ) => {
     return workflowAjax.getWorksheetReferences({
       worksheetId,
       worksheetName,
@@ -145,7 +147,9 @@ function WorksheetReferenceDialog(props) {
   };
 
   // 获取字段、业务规则、视图
-  const getWorksheetReferences = options => {
+  const getWorksheetReferences = (
+    options: { appId: string; isRefresh: boolean } | { isRefresh: boolean } | undefined,
+  ) => {
     return worksheetAjax.getWorksheetReferences({
       worksheetId,
       controlId,
@@ -158,7 +162,7 @@ function WorksheetReferenceDialog(props) {
     });
   };
 
-  const getReferenceList = (options?) => {
+  const getReferenceList = (options?: { appId: string; isRefresh: boolean } | { isRefresh: boolean } | undefined) => {
     if (loading) return;
 
     setState({ loading: true });
@@ -299,6 +303,7 @@ function WorksheetReferenceDialog(props) {
         case SUB_MODULE_TYPES.VIEW:
           return _l('当前字段正被以下视图的筛选条件、专属配置使用');
       }
+      return undefined;
     };
 
     return (
@@ -310,7 +315,7 @@ function WorksheetReferenceDialog(props) {
   };
 
   const renderTopBar = () => {
-    const getNavCount = value => {
+    const getNavCount = (value: string) => {
       if (_.includes([SUB_MODULE_TYPES.WORKFLOW], subModule) && appType !== value) return null;
 
       const filterList = filterByAppId(references, appId, value, subModule);
@@ -332,11 +337,12 @@ function WorksheetReferenceDialog(props) {
         )}
         {_.includes([SUB_MODULE_TYPES.WIDGET, SUB_MODULE_TYPES.WORKFLOW, SUB_MODULE_TYPES.VIEW], subModule) && (
           <div className="subnavContainer">
-            {SUBNAV_LIST.map(item => {
+            {SUBNAV_LIST.map((item, index) => {
               if (!showNav(subModule, references, item.value)) return null;
               const navCount = getNavCount(item.value);
               return (
                 <div
+                  key={index}
                   className={cx('subnavItem', { active: appType === item.value })}
                   onClick={() => {
                     if (appType === item.value) return;
@@ -396,10 +402,11 @@ function WorksheetReferenceDialog(props) {
     >
       <ReferenceWrap height={windowHeight - 72 - 50}>
         <div className="sidebarContainer">
-          {(type === 2 ? SIDEBAR_LIST_BY_WORKSHEET : SIDEBAR_LIST).map(item => {
+          {(type === 2 ? SIDEBAR_LIST_BY_WORKSHEET : SIDEBAR_LIST).map((item, index) => {
             const isActive = subModule === item.value;
             return (
               <div
+                key={index}
                 className={cx('sidebarItem overflow_ellipsis', { active: isActive })}
                 onClick={() => handleSideClick(item.value)}
               >

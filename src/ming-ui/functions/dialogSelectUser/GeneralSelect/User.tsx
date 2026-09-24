@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox, UserHead } from 'ming-ui';
@@ -6,6 +6,9 @@ import { Tooltip } from 'ming-ui/antd-components';
 import departmentAjax from 'src/api/department.js';
 
 export default class User extends Component<any, any> {
+  declare promise: ApiResult | null;
+  declare timer: NodeJS.Timeout | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -40,7 +43,7 @@ export default class User extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     let {
       projectId,
       user,

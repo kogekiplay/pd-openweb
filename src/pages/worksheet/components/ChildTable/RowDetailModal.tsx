@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { Button, Modal, ScrollView } from 'ming-ui';
@@ -20,7 +20,7 @@ export default function RowDetailModal(props) {
     onDelete,
     onSwitch,
   } = props;
-  const formContent = useRef(null);
+  const formContent = useRef<RowDetail | null>(null);
   const isMobile = browserIsMobile();
 
   // 保存和恢复 window.activeTableId 以解决焦点问题

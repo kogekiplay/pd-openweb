@@ -1,4 +1,4 @@
-﻿import React, { useRef, useState } from 'react';
+﻿import { useRef, useState } from 'react';
 import { Input } from 'antd';
 // import 'antd/es/input/style/css';
 
@@ -55,7 +55,7 @@ export default function CreateVerticalRecord(props) {
   const { itemData, data, removeHierarchyTempItem, createTextTitleRecord, handleAddRecord } = props;
   const { rowId, pathId } = itemData;
   const [value, setValue] = useState('');
-  const $itemWrap = useRef(null);
+  const $itemWrap = useRef<HTMLDivElement | null>(null);
   const getLinesValue = () => value.trim().split('\n');
   const lines = getLinesValue();
 

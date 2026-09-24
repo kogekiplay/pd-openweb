@@ -52,7 +52,7 @@ const moreErrorDialog = (startTime, updateTypes, callback) => {
     children: (
       <React.Fragment>
         {updateTypes.map((item, i) => (
-          <div className="tanttRadio" data-type={item}>
+          <div key={i} className="tanttRadio" data-type={item}>
             <span
               className="tanttRadioItem"
               onClick={e => {
@@ -113,7 +113,7 @@ export const updateTimeError = source => {
 /**
  * 修改任务状态二次确认
  */
-export const updateTaskErrorDialog = callback => {
+export const updateTaskErrorDialog = (callback: () => void) => {
   Dialog.confirm({
     closable: false,
     title: _l('任务还未开始，是否仍要完成此任务？'),

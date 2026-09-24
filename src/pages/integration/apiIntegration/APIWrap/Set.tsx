@@ -69,7 +69,7 @@ export default function Set(props) {
     getList(startEventId);
     let list = l.filter(o => [23, 8, 21, 14].includes(o.typeId));
     const i = list.findIndex(it => it.typeId === 23);
-    list = list.filter((o, index) => index >= i);
+    list = list.filter((_o, index) => index >= i);
     //过滤掉 输入参数 前面的节点
     setList(list);
   }, []);
@@ -123,7 +123,7 @@ export default function Set(props) {
         if ([23, 8, 21].includes(o.typeId)) {
           let desInfo = CARD_TYE_LIST.find(item => o.typeId === item.typeId);
           return (
-            <React.Fragment>
+            <React.Fragment key={i}>
               <Card
                 {...props}
                 nodeInfo={o}
@@ -175,6 +175,7 @@ export default function Set(props) {
         } else if (o.typeId == 14) {
           return (
             <ItemCon
+              key={i}
               {...props}
               isNew={false}
               prveId={o.prveId}
@@ -191,6 +192,7 @@ export default function Set(props) {
             />
           );
         }
+        return undefined;
       })}
     </Wrap>
   );

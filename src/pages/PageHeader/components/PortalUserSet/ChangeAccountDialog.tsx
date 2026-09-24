@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import cx from 'classnames';
 import { Button, Dialog } from 'ming-ui';
 import externalPortalAjax from 'src/api/externalPortal';

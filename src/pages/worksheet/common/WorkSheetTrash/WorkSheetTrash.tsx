@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import { arrayOf, bool, func, shape, string } from 'prop-types';
@@ -158,7 +158,7 @@ export default function WorkSheetTrash(props) {
   const needRestoreRelation = useRef(true);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
-  const [selectRows, setSelectRows] = useState([]);
+  const [selectRows, setSelectRows] = useState<RecordRow[]>([]);
   // 排序状态：未排序时为 undefined，排序后是 { 字段, 升序? }
   const [sortControl, setSortControl] = useState<{ controlId?: string; isAsc?: boolean } | undefined>();
   const [disableMaskDataControls, setDisableMaskDataControls] = useState({});
@@ -460,7 +460,7 @@ export default function WorkSheetTrash(props) {
                       setSelectRows([]);
                     }}
                     onSelect={newSelected => {
-                      let newSelectRows = [];
+                      let newSelectRows: RecordRow[] = [];
 
                       if (isAll) {
                         newSelected.forEach(() => {

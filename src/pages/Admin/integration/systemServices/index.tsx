@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import withRouter from '../../../../router/withRouter';
 import { Icon, LoadDiv, Support } from 'ming-ui';
 import projectAjax from 'src/api/project';
@@ -72,7 +72,7 @@ class SystemServices extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getWeiXinBindInfo();
     this.getPrintList();
     if (showTwilioSystemService) {
@@ -105,7 +105,7 @@ class SystemServices extends Component<any, any> {
       });
   };
 
-  handleCardClick = serviceKey => {
+  handleCardClick = (serviceKey: string) => {
     const { weiXinInfo, printList } = this.state;
 
     if (serviceKey === 'weixin') {
@@ -144,7 +144,7 @@ class SystemServices extends Component<any, any> {
     this.setState({ currentService: serviceKey });
   };
 
-  handleEditClick = (e, serviceKey) => {
+  handleEditClick = (e, serviceKey: string) => {
     e.stopPropagation(); // 阻止事件冒泡，避免触发卡片点击
     this.setState({ currentService: serviceKey });
   };
@@ -157,7 +157,7 @@ class SystemServices extends Component<any, any> {
 
   getTwilioProvider = () => {
     if (!this.props.location.pathname.includes('systemservice')) {
-      return;
+      return undefined;
     }
 
     return smsAjax
@@ -295,7 +295,7 @@ class SystemServices extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { loading, currentService, authLoading, printList } = this.state;
 
     if (loading) {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRef } from 'react';
 import { useDragLayer } from 'react-dnd';
 import cx from 'classnames';
@@ -84,7 +84,7 @@ export default function ListItemLayer(props) {
       );
     }
 
-    if (isEmpty(DEFAULT_CONFIG[enumType])) return;
+    if (isEmpty(DEFAULT_CONFIG[enumType])) return undefined;
     const { icon, widgetName } = DEFAULT_CONFIG[enumType];
     return (
       <div className="content">

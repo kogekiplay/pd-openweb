@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
@@ -38,7 +38,13 @@ const taskStageSettings = {
   ajaxPost: '' as ApiResult | string,
 };
 
-class TaskStage extends Component<any, any> {
+export interface TaskStageState {
+  openTaskDetail: boolean;
+  taskId: string;
+  isForceUpdate: boolean;
+}
+
+class TaskStage extends Component<any, TaskStageState> {
   /** 组件是否仍挂载；异步回调里用来避免对已卸载组件 setState */
   mounted = false;
 
@@ -51,7 +57,7 @@ class TaskStage extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
     this.init();
     this.bindEvents();
@@ -61,7 +67,7 @@ class TaskStage extends Component<any, any> {
     this.props.emitter.addListener('UPDATE_TASK_CHARGE', this.renderChargeHeaderAvatar.bind(this));
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       // 减少proejctId不同的而发生的请求
       const nextConfig = Object.assign({}, this.props.taskConfig);
@@ -77,7 +83,7 @@ class TaskStage extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
     this.props.emitter.removeListener('CREATE_TASK_TO_STAGE', this.quickCreateTaskCallback);
     this.props.emitter.removeListener('UPDATE_TASK_CHARGE', this.renderChargeHeaderAvatar);
@@ -132,7 +138,7 @@ class TaskStage extends Component<any, any> {
   }
 
   renderStageChargeUser() {
-    $('#taskList .singleStage .stageChargeAvatar').each((i, ele) => {
+    $('#taskList .singleStage .stageChargeAvatar').each((_i, ele) => {
       let $ele = $(ele);
       if ($ele.data('hasbusinesscard')) return;
       const accountId = $ele.closest('.singleStage').data('chargeid');
@@ -153,7 +159,7 @@ class TaskStage extends Component<any, any> {
   }
   renderChargeHeaderAvatar(params?) {
     const { taskConfig } = this.props;
-    $('#tasks .listStageContent .chargeHeaderAvatar').each((i, ele) => {
+    $('#tasks .listStageContent .chargeHeaderAvatar').each((_i, ele) => {
       let $ele = $(ele);
 
       if ($ele.data('hasbusinesscard')) return;
@@ -300,7 +306,7 @@ class TaskStage extends Component<any, any> {
 
           // 右键 || 标记完成
           if (event.button === 2 || $target.is('.markTask')) {
-            return;
+            return undefined;
           }
 
           // 原本的阶段ID
@@ -327,14 +333,14 @@ class TaskStage extends Component<any, any> {
           taskStageSettings.timer = null;
           const _this = $(this);
           let isMuil = false;
-          let metaKeyType;
+          let metaKeyType: string | undefined;
 
           if (
             _this.hasClass('addNewTask') ||
             $(event.target).hasClass('markTask') ||
             $(event.target).hasClass('taskStar')
           ) {
-            return;
+            return undefined;
           }
 
           if ((event.ctrlKey || event.metaKey) && event.shiftKey) {
@@ -378,6 +384,7 @@ class TaskStage extends Component<any, any> {
           if ($('#taskList .addNewTask').length > 0) {
             that.canelCreateStageTask($('#taskList .addNewTask').closest('li.singleStage'));
           }
+          return undefined;
         },
       },
       '.singleStage .listStageContent li.singleTaskStage',
@@ -466,7 +473,7 @@ class TaskStage extends Component<any, any> {
             $(event.target).is('.icon-arrow-down-border') ||
             $(event.target).closest('.listStageDownOperator').length
           ) {
-            return;
+            return undefined;
           }
 
           const $singleStage = $(this).closest('li.singleStage');
@@ -522,7 +529,7 @@ class TaskStage extends Component<any, any> {
         this.state.openTaskDetail &&
         !$(event.target).closest('.singleTaskStage, .addNewTask, .stageHeader, .bottomNewBox').length
       ) {
-        return;
+        return undefined;
       }
 
       const $listStage = $('#taskList .listStage');
@@ -537,7 +544,7 @@ class TaskStage extends Component<any, any> {
         listStageWidth > listStageContentWidth ||
         $('.singleStage .txtAddNew').length
       ) {
-        return;
+        return undefined;
       }
 
       taskStageSettings.pointGapX = event.clientX;
@@ -662,6 +669,7 @@ class TaskStage extends Component<any, any> {
       }
 
       event.stopPropagation();
+      return undefined;
     });
 
     // 创建新阶段
@@ -685,7 +693,7 @@ class TaskStage extends Component<any, any> {
    */
   returnCustomFilterArray() {
     const { customFilter } = this.props.taskConfig.filterSettings;
-    const customFilters = {};
+    const customFilters: Record<string, string> = {};
 
     Object.keys(customFilter).forEach(item => {
       let keys = '';
@@ -735,7 +743,7 @@ class TaskStage extends Component<any, any> {
    * 评分控件
    */
   customScore() {
-    $('.listStageCustomItemStar[data-type=score]').map((i, item) => {
+    $('.listStageCustomItemStar[data-type=score]').map((_i, item) => {
       if (!$(item).find('.Score-wrapper').length) {
         const type = $(item).data('enum');
         const score = $(item).data('score');
@@ -847,7 +855,7 @@ class TaskStage extends Component<any, any> {
   /**
    * 取消阶段创建任务
    */
-  canelCreateStageTask($li) {
+  canelCreateStageTask($li: JQuery<HTMLElement>) {
     $li.find('li.addNewTask:last').hide();
     $li.find('.bottomNewBox').show();
     $li.find('.stageContentBox').removeClass('addNewTask');
@@ -1059,6 +1067,7 @@ class TaskStage extends Component<any, any> {
 
           return false;
         }
+        return undefined;
       });
     }
   }
@@ -1181,7 +1190,7 @@ class TaskStage extends Component<any, any> {
   /**
    * 页面滚动条
    */
-  movePageScroll(event) {
+  movePageScroll(event: JQuery.MouseMoveEvent<Document, undefined, Document, Document>) {
     const gap = event.clientX - taskStageSettings.pointGapX;
     const $listStage = $('#taskList .listStage');
     const oldScrollLeft = $listStage.scrollLeft();
@@ -1287,6 +1296,7 @@ class TaskStage extends Component<any, any> {
               end = end ? end.format('YYYY-MM-DD HH:00') : '';
               $stageDate.data('start', start);
               $stageDate.data('end', end);
+              return undefined;
             }}
             onClear={() => {
               delete $stageDate.data().start;
@@ -1387,7 +1397,7 @@ class TaskStage extends Component<any, any> {
    */
   insetVirtualElemByTask() {
     const that = this;
-    let $currentElem = null;
+    let $currentElem: JQuery<HTMLElement> | null = null;
     const eventY = taskStageSettings.globalEvent.clientY;
     const eventX = taskStageSettings.globalEvent.clientX;
     // 所有阶段
@@ -1457,6 +1467,7 @@ class TaskStage extends Component<any, any> {
 
               return false;
             }
+            return undefined;
           });
 
           // 没有找到元素
@@ -1467,6 +1478,7 @@ class TaskStage extends Component<any, any> {
             }
           }
         }
+        return undefined;
       });
     }
   }
@@ -1757,7 +1769,7 @@ class TaskStage extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { openTaskDetail, taskId, isForceUpdate } = this.state;
 
     return (

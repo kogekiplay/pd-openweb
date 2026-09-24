@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import { navigateTo } from 'src/router/navigateTo';
 import TaskGantt from '../taskGantt/containers/taskGantt/taskGantt';
 import './subordinate.less';
@@ -11,7 +11,7 @@ export default class Subordinate extends Component<any, any> {
     navigateTo('/personal?type=enterprise');
   }
 
-  render() {
+  override render() {
     // 不存在网络
     if (!md.global.Account.projects.length) {
       return (

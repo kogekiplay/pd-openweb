@@ -1,4 +1,3 @@
-import React from 'react';
 import { arrayOf, func, shape } from 'prop-types';
 import styled from 'styled-components';
 import CascaderDropdown from 'src/components/Form/DesktopForm/widgets/Cascader';

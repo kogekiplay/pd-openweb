@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -11,10 +11,10 @@ import EditInput from './EditInput';
 export default function CustomAction(props) {
   const { app, selectNode, translateData, comparisonLangId, comparisonLangData, onEditAppLang } = props;
   const [loading, setLoading] = useState(true);
-  const [sheetBtns, setSheetBtns] = useState([]);
+  const [sheetBtns, setSheetBtns] = useState<HapApi.MD.Entity.Worksheet.WorksheetBtnEntity[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const scrollViewRef = useRef<any>(undefined);
-  const [optionsEditDialogVisible, setOptionsEditDialogVisible] = useState('');
+  const [optionsEditDialogVisible, setOptionsEditDialogVisible] = useState<string | undefined>('');
 
   useEffect(() => {
     setLoading(true);
@@ -44,7 +44,7 @@ export default function CustomAction(props) {
     );
   }
 
-  const handlePositionItem = item => {
+  const handlePositionItem = (item: HapApi.MD.Entity.Worksheet.WorksheetBtnEntity) => {
     const el = document.querySelector(`.navItem-${item.btnId}`);
     const className = 'highlight';
     const highlightEl = el.querySelector('.itemName');
@@ -58,7 +58,7 @@ export default function CustomAction(props) {
     }
   };
 
-  const renderNav = item => {
+  const renderNav = (item: HapApi.MD.Entity.Worksheet.WorksheetBtnEntity) => {
     const data = _.find(translateData, { correlationId: item.btnId }) || {};
     const translateInfo = data.data || {};
     return (
@@ -72,7 +72,7 @@ export default function CustomAction(props) {
     );
   };
 
-  const renderContent = btn => {
+  const renderContent = (btn: HapApi.MD.Entity.Worksheet.WorksheetBtnEntity) => {
     const data = _.find(translateData, { correlationId: btn.btnId }) || {};
     const translateInfo = data.data || {};
     const comparisonLangInfo = getTranslateInfo(app.id, null, btn.btnId, comparisonLangData);
@@ -88,7 +88,9 @@ export default function CustomAction(props) {
     const remark = comparisonLangId ? comparisonLangInfo.remark : _.get(btn.advancedSetting, 'remarkname');
     const hintText = comparisonLangId ? comparisonLangInfo.hintText : _.get(btn.advancedSetting, 'remarkhint');
     const remarkoptions = _.get(JSON.parse(_.get(btn.advancedSetting, 'remarkoptions') || '{}'), 'template') || [];
-    const withoutRemarkoptions = remarkoptions.filter((item, index: number) => !translateInfo[`templateName_${index}`]);
+    const withoutRemarkoptions = remarkoptions.filter(
+      (_item, index: number) => !translateInfo[`templateName_${index}`],
+    );
 
     const handleSave = info => {
       onEditAppLang({

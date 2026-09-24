@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import _, { filter, find } from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';

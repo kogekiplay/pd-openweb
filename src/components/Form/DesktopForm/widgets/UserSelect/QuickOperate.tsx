@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Popover } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -130,7 +130,9 @@ export default function QuickOperate(props) {
 
     const res = await UserController.getAccountBaseInfo({
       accountId: item.accountId,
-      appId: appId.includes('#') ? this.state.appId : undefined,
+      // 原先是 this.state.appId：这段是从 UserCard（类组件，state.appId 就是 props.appId）照抄过来的，
+      // 函数组件里 this 是 undefined —— appId 带 # 时这里抛 TypeError，「发消息 / 发邮件」点了没反应
+      appId: appId.includes('#') ? appId : undefined,
       refresh: false,
       onProjectId: projectId.includes('#') ? undefined : projectId,
     }).catch(() => ({}));

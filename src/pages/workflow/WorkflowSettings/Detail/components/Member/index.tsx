@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Dropdown, UserHead } from 'ming-ui';
@@ -16,7 +16,7 @@ export default class Member extends Component<any, any> {
   removeMember = (index: number) => {
     const accounts = _.cloneDeep(this.props.accounts);
 
-    _.remove(accounts, (obj, i) => i === index);
+    _.remove(accounts, (_obj, i) => i === index);
     this.props.updateSource({ accounts });
   };
 
@@ -88,7 +88,7 @@ export default class Member extends Component<any, any> {
     ];
 
     if (!item.roleTypeId) {
-      _.remove(list, (o, i) => i === 1);
+      _.remove(list, (_o, i) => i === 1);
     }
 
     // 部门控件
@@ -185,7 +185,7 @@ export default class Member extends Component<any, any> {
    * 渲染额外扩展信息
    */
   renderExtensionInfo(item, index: number) {
-    const roleExtension = {
+    const roleExtension: Record<number, { placeholder: string; delText: string; action: (index: number) => void }> = {
       14: {
         placeholder: _l('选择职位'),
         delText: _l('职位已删除'),
@@ -330,7 +330,7 @@ export default class Member extends Component<any, any> {
     ];
 
     if (!item.roleTypeId) {
-      _.remove(list, (o, i) => i === 1);
+      _.remove(list, (_o, i) => i === 1);
     }
 
     return (
@@ -370,7 +370,7 @@ export default class Member extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { accounts, leastOne, inline } = this.props;
     const nullText = {
       [USER_TYPE.ROLE]: _l('角色下未设置人员'),

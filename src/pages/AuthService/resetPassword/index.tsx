@@ -52,7 +52,7 @@ export default class ResetPassword extends React.Component<any, any> {
     this.password = React.createRef();
     this.passwordCopy = React.createRef();
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (!request.state) {
       return alert(_l('当前地址错误'), 3);
     } else {
@@ -156,9 +156,9 @@ export default class ResetPassword extends React.Component<any, any> {
   renderCon = () => {
     const { type, warnList, focusDiv, password, passwordCopy, sending } = this.state;
 
-    const renderWarn = key => {
+    const renderWarn = (key: string) => {
       const warn = warnList.find(o => o.tipDom === key);
-      if (!warn) return;
+      if (!warn) return undefined;
       return <div className={cx('warnTips')}>{warn.warnTxt}</div>;
     };
 
@@ -253,7 +253,7 @@ export default class ResetPassword extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { loading } = this.state;
     return (
       <WrapCom className="flexColumn">

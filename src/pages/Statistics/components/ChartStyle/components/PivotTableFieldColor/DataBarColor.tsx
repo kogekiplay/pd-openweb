@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, Checkbox, ConfigProvider, Input, Modal, Select } from 'antd';
 import { ColorPicker, Icon } from 'ming-ui';
@@ -18,7 +18,7 @@ export default class DataBarColor extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         const { colorRule } = this.props;
@@ -158,7 +158,7 @@ export default class DataBarColor extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { visible, onCancel } = this.props;
     return (
       <Modal

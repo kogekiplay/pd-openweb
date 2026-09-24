@@ -38,6 +38,10 @@ function genFunctionWorker() {
 }
 
 class Runner {
+  declare max: number;
+  declare runningCount: number;
+  declare isRunning: boolean;
+
   constructor({ max = 10 } = {}) {
     this.max = max;
     this.runningCount = 0;
@@ -85,7 +89,7 @@ class Runner {
       this.run();
     };
 
-    let timer;
+    let timer: NodeJS.Timeout | undefined;
 
     workerObj.worker.onmessage = msg => {
       if (msg.data.type === 'begin') {
@@ -144,7 +148,8 @@ function replaceControlIdToValue(expression, formData, nullzero = '0', inString?
     const control = _.find(formData, obj => obj.controlId === controlId);
 
     if (!control) {
-      return;
+      // 找不到控件：原先 return 了 undefined，replace 会把它转成字符串 'undefined' 插进表达式，求值时就是 JS 的 undefined。写明，行为不变
+      return 'undefined';
     }
 
     let value = formatControlValue(control, nullzero);
@@ -191,7 +196,7 @@ function formatFunctionResult(control, value) {
             .toFixed(12)
             .toString()
             .match(/^-?[\d.]+/)[0];
-          result = (result || '').replace(/\.([0-9]*[1-9])0+$|\.0+$/, (match, group) => {
+          result = (result || '').replace(/\.([0-9]*[1-9])0+$|\.0+$/, (_match, group) => {
             return group ? `.${group}` : '';
           });
         }
@@ -309,7 +314,7 @@ export default function (
             ? ''
             : String(formatFunctionResult(control, result)),
         );
-        return;
+        return undefined;
       }
 
       if (type === 'lib' || forceSyncRun) {

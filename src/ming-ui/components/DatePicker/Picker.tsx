@@ -9,7 +9,8 @@ function createChainedFunction(...argsOuter) {
     return argsOuter[0];
   }
 
-  return function chainedFunction(...argsInner) {
+  // 原样把调用方的 this 转给每个被串起来的函数
+  return function chainedFunction(this: unknown, ...argsInner) {
     for (let i = 0; i < argsOuter.length; i++) {
       if (argsOuter[i] && argsOuter[i].apply) {
         argsOuter[i].apply(this, argsInner);
@@ -19,7 +20,7 @@ function createChainedFunction(...argsOuter) {
 }
 
 class Picker extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     panelCls: PropTypes.string,
     className: PropTypes.string,
     disabled: PropTypes.bool,
@@ -53,13 +54,13 @@ class Picker extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.defaultVisible) {
       this.onClick();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         value: this.props.defaultValue,
@@ -119,7 +120,7 @@ class Picker extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const state = this.state;
     const { className, disabled } = this.props;

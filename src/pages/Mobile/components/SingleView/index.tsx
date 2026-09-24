@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react';
 import { Provider } from 'react-redux';
 import { updateBase } from 'mobile/RecordList/redux/actions';
 import { configureStore } from 'src/redux/configureStore';

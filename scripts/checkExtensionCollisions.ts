@@ -77,7 +77,15 @@ function findStrayJs(files) {
 function listTrackedFiles() {
   // 【扫全仓不只是 src】后缀并存只在 src 有意义，但「不准出现 .js」要管 scripts/
   // CI/ tools/ 和根目录的配置文件 —— 回流最常发生的恰恰是那些地方。
-  return execFileSync('git', ['ls-files', '-z'], { cwd: ROOT_PATH, maxBuffer: 64 * 1024 * 1024 })
+  //
+  // 【未跟踪的新文件也要算】--others --exclude-standard：没被 .gitignore 忽略的新文件一并扫。
+  // 2026-09-23 新写的 tools/audit-jsx-key.mjs、codemod-jsx-key.cjs 就是这么漏过去的：
+  // 提交前跑门禁时它们还没 git add，只查已跟踪文件的门禁看不见，提交之后 main 上这道门禁才变红。
+  // strict 欠债闸门（tsc-strict-gate.ts）列文件用的也是这个口径。
+  return execFileSync('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard'], {
+    cwd: ROOT_PATH,
+    maxBuffer: 64 * 1024 * 1024,
+  })
     .toString()
     .split('\0')
     .filter(Boolean);

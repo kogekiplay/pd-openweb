@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { CaretRightOutlined } from '@ant-design/icons';
@@ -475,7 +475,7 @@ function TemplatePanelHeader(props) {
   const moreBtnRef = useRef<HTMLElement | null>(null);
   const [dropdownPlacement, setDropdownPlacement] = useState('bottomRight');
 
-  const handleDropdownVisibleChange = visible => {
+  const handleDropdownVisibleChange = (visible: boolean) => {
     if (visible && moreBtnRef.current) {
       const rect = moreBtnRef.current.getBoundingClientRect();
       const spaceBelow = window.innerHeight - rect.bottom;
@@ -503,7 +503,7 @@ function TemplatePanelHeader(props) {
     },
     canDrag: () => !_.isEmpty(controls),
     previewOptions: { captureDraggingState: true },
-    end(obj, monitor) {
+    end(_obj, monitor) {
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;
       onAdd(item, dropResult);
@@ -639,7 +639,7 @@ export default function List(props) {
   };
 
   // 判断某个 widget 是否应该被显示
-  const shouldShowWidget = (key, widget) => {
+  const shouldShowWidget = (key: string, widget) => {
     const featureType = getFeatureType(widget['featureId']);
     if (_.includes(['SEARCH_BTN', 'SEARCH'], key) && !featureType) return false;
     // if (!md.global.SysSettings.enableMap && key === 'LOCATION') return;
@@ -808,7 +808,7 @@ export default function List(props) {
     });
   };
 
-  const handleSwitchWidgetTab = tabValue => {
+  const handleSwitchWidgetTab = (tabValue: number) => {
     setActiveDropdownKey('');
     setActiveWidgetTab(tabValue);
 

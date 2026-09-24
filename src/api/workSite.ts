@@ -12,7 +12,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkSites: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorkSites: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ListModel_WorkSiteModel> {
     return mdyAPI('WorkSite', 'GetWorkSites', args, options);
   },
   /**
@@ -77,7 +80,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorkSiteUsers: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorkSiteUsers: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ListModel_UserModel> {
     return mdyAPI('WorkSite', 'GetWorkSiteUsers', args, options);
   },
   /**

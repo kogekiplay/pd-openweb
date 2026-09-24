@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { SpinLoading } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -60,7 +60,7 @@ const VERIFY_CHART_TYPES = [
 
 const chartComponentCache = {};
 
-const loadChartComponent = reportType => {
+const loadChartComponent = (reportType: number) => {
   const normalizedReportType = Number(reportType);
 
   if (chartComponentCache[normalizedReportType]) {
@@ -104,14 +104,14 @@ function Chart({
     let isMounted = true;
 
     if (!reportType || data.status <= 0) {
-      return;
+      return undefined;
     }
 
     const cachedChart = chartComponentCache[reportType];
 
     if (cachedChart) {
       setChart({ reportType, Component: cachedChart });
-      return;
+      return undefined;
     }
 
     setChart({ reportType, Component: null });
@@ -314,12 +314,12 @@ function ChartWrapper(props) {
                   <Icon
                     icon="navigate_before"
                     className={cx('Font24 textTertiary mRight10', { allow: beforeAllow })}
-                    onClick={beforeAllow && onLoadBeforeData.bind(this, index - 1)}
+                    onClick={beforeAllow && onLoadBeforeData.bind(null, index - 1)}
                   />
                   <Icon
                     icon="navigate_next"
                     className={cx('Font24 textTertiary mRight20', { allow: nextAllow })}
-                    onClick={nextAllow && onLoadNextData.bind(this, index + 1)}
+                    onClick={nextAllow && onLoadNextData.bind(null, index + 1)}
                   />
                 </Fragment>
               )}

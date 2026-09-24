@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Popup } from 'antd-mobile';
 import styled from 'styled-components';
 import { Button, Dialog, FunctionWrap, LoadDiv, MobilePersonalInfo, Textarea, UserName } from 'ming-ui';
@@ -23,7 +23,7 @@ const PopupWrapper = styled.div`
   }
 `;
 
-const textInfo = {
+const textInfo: Record<number, { title: string; desc: string; okText: string }> = {
   1: { title: _l('反馈'), desc: _l('描述使用过程中遇到的问题，反馈通知给流程拥有者'), okText: _l('发送') },
   2: {
     title: _l('反馈给平台'),
@@ -107,7 +107,7 @@ function GetHelp(props) {
           placeholder={_l('请输入描述')}
           value={content}
           onChange={value => setContent(value)}
-          manualRef={con => (textareaRef.current = con)}
+          manualRef={con => { textareaRef.current = con; }}
         />
       </Fragment>
     );

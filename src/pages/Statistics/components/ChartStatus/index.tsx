@@ -1,4 +1,3 @@
-import React from 'react';
 import { Icon } from 'ming-ui';
 import loading from './loading.svg';
 

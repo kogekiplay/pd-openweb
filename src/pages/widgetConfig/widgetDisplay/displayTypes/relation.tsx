@@ -1,4 +1,3 @@
-import React from 'react';
 import { CommonDisplay } from '../../styled';
 import { getRelationText } from '../../util/index';
 

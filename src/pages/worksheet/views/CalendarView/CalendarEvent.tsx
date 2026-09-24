@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Popover } from 'antd';
 import _ from 'lodash';
@@ -54,7 +54,7 @@ const EventCardContent = ({
 
   if (coverData.type === 45) {
     let dataSource = transferValue(coverData.value);
-    let urlList = [];
+    let urlList: string[] = [];
     dataSource.forEach(o => {
       if (o.staticValue) {
         urlList.push(o.staticValue);
@@ -347,7 +347,7 @@ export const eventDidMount = (
   sheetSwitchPermit,
   isCharge: boolean,
   props,
-  eventClick,
+  eventClick: () => void,
   isMove,
   getButtonsCheckStatus,
 ) => {

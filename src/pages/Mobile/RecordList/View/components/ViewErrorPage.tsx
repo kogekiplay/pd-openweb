@@ -1,7 +1,6 @@
 /**
  * h5看板、日历视图配置错误提示页
  */
-import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 
@@ -32,7 +31,14 @@ const ViewErrorPageContainer = styled.div`
   }
 `;
 
-export default function ViewErrorPage(props) {
+export interface ViewErrorPageProps {
+  icon: string;
+  viewName: string;
+  color: string;
+  errorInfo?: string | undefined;
+}
+
+export default function ViewErrorPage(props: ViewErrorPageProps) {
   const { icon, viewName, color, errorInfo = _l('视图配置错误，请联系管理员') } = props;
   return (
     <ViewErrorPageContainer className="flexColumn valignWrapper">

@@ -50,13 +50,13 @@ class ContactsHidden extends React.Component<any, any> {
     this.state = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId, dispatch } = this.props;
 
     dispatch(getRulesAll(projectId));
   }
 
-  renderList = (type, ruleType) => {
+  renderList = (type: string, ruleType: number | undefined) => {
     const { data = [], dispatch, projectId } = this.props;
     const rulesData = _.filter(data, it => it.ruleType === ruleType);
     return _.map(rulesData, (item, i) => {
@@ -116,10 +116,10 @@ class ContactsHidden extends React.Component<any, any> {
 
   renderCon = () => {
     const { data = [], dispatch } = this.props;
-    return rules.map(item => {
-      if (item.type === 'hiddeRules') return;
+    return rules.map((item, index) => {
+      if (item.type === 'hiddeRules') return undefined;
       return (
-        <div className="ruleItem">
+        <div key={index} className="ruleItem">
           <h6 className="textPrimary Font15">{item.title}</h6>
           <p className={cx('textTertiary Font13 mTop12', { mBottom10: data.length > 0 })}>{item.description}</p>
           {this.renderList(item.type, item.ruleType)}
@@ -163,7 +163,7 @@ class ContactsHidden extends React.Component<any, any> {
     this.setState({ errorIds });
   };
 
-  render() {
+  override render() {
     const {
       showEdit = false,
       editType,

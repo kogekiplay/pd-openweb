@@ -13,6 +13,7 @@ export function redirect(url, navigate = toUrl => (location.href = toUrl)) {
       return true;
     }
   }
+  return undefined;
 }
 
 /** 跳转到 url */
@@ -58,7 +59,7 @@ export function navigateTo(url, isReplace = false, noRedirect = false) {
 }
 
 /** 获取登录地址  */
-const getLoginUrl = (redirectUrl?) => {
+const getLoginUrl = (redirectUrl?: string | undefined) => {
   if (redirectUrl) return redirectUrl;
 
   if (_.get(md, 'global.Account.isSSO') && _.get(md, 'global.SysSettings.enableSso')) {
@@ -69,9 +70,16 @@ const getLoginUrl = (redirectUrl?) => {
 };
 
 /** 跳转到 登录页 */
-let pendingCheckLogin;
+let pendingCheckLogin: string | NodeJS.Timeout | undefined;
 
-export function navigateToLogin({ needSecondCheck, needReturnUrl = true, redirectUrl } = {}) {
+/* 参数类型必须显式写：「解构 + = {} 默认值」只会把带默认值的 needReturnUrl 推进参数类型，
+   needSecondCheck / redirectUrl 被整个丢掉，于是全仓传这两个选项的调用点都报「不是已知属性」——
+   可函数体里明明读了它们。 */
+export function navigateToLogin({
+  needSecondCheck,
+  needReturnUrl = true,
+  redirectUrl,
+}: { needSecondCheck?: boolean; needReturnUrl?: boolean; redirectUrl?: string } = {}) {
   const handleNavigate = (newTab = false) => {
     const link = needReturnUrl ? `?ReturnUrl=${encodeURIComponent(location.href)}` : ``;
     let isSubDomain = true;

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { ActionSheet, Button, Checkbox, Popup, Tabs } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -107,6 +107,9 @@ const tabs = [
 ];
 
 export default class ProcessMatters extends Component<any, any> {
+  declare request: ApiResult | undefined;
+  declare signature: Signature | null | undefined;
+
   constructor(props) {
     super(props);
     const { tab } = props.match.params;
@@ -141,7 +144,7 @@ export default class ProcessMatters extends Component<any, any> {
       batchLoadingType: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getTodoList();
     this.getTodoCount();
     verifyPassword({
@@ -658,6 +661,7 @@ export default class ProcessMatters extends Component<any, any> {
         return countData.waitingApproval > 0 ? `(${countData.waitingApproval})` : null;
       }
     }
+    return undefined;
   }
   renderInput() {
     const { searchValue, sortVisible, filterVisible, bottomTab, topTab, queryParam, sortParam } = this.state;
@@ -816,7 +820,7 @@ export default class ProcessMatters extends Component<any, any> {
       </ScrollView>
     );
   }
-  render() {
+  override render() {
     const {
       batchApproval,
       list,

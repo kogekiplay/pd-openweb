@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Drawer } from 'antd';
 import cx from 'classnames';
@@ -19,6 +19,10 @@ import TextInput from '../TextInput';
 import './index.less';
 
 export default class AddUser extends Component<any, any> {
+  declare mobile: HTMLInputElement | null | undefined;
+  declare autonomously: HTMLInputElement | null | undefined;
+  declare baseFormInfo: BaseFormInfo | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -32,11 +36,11 @@ export default class AddUser extends Component<any, any> {
     this.itiInvite = null;
     this.itiAutonomously = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.itiFn();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.addUserVisible !== this.props.addUserVisible) {
         this.setState({
@@ -45,7 +49,7 @@ export default class AddUser extends Component<any, any> {
       }
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.iti && this.iti.destroy();
     this.itiInvite && this.itiInvite.destroy();
     this.itiAutonomously && this.itiAutonomously.destroy();
@@ -118,7 +122,7 @@ export default class AddUser extends Component<any, any> {
       isClickSubmit: false,
     });
   };
-  clearError = field => {
+  clearError = (field: string) => {
     const { errors = {} } = this.state;
     delete errors[field];
     this.setState({ errors });
@@ -167,16 +171,14 @@ export default class AddUser extends Component<any, any> {
           return;
         }
 
-        let user = {
+        const data: Partial<HapApi.MD.Web.Ajax.ResultModel.User.UserModel> = _.get(res, 'userCardModel.user') || {};
+        // 先放查询结果里的基本信息，再用用户卡片覆盖，最后补上部门 id 列表（和原来两步赋值的结果一样）
+        const user = {
           accountId: res.accountId,
           fullname: res.name,
           mobile: res.phone,
           email: res.email,
           avatar: res.avatar,
-        };
-        const data = _.get(res, 'userCardModel.user') || {};
-        user = {
-          ...user,
           ...data,
           departmentIds: (data.departmentInfos || []).map(it => it.departmentId),
         };
@@ -341,6 +343,7 @@ export default class AddUser extends Component<any, any> {
           this.setState({ isUploading: false });
         });
     }
+    return undefined;
   };
 
   renderBase = () => {
@@ -469,13 +472,13 @@ export default class AddUser extends Component<any, any> {
               className={cx('formControl', {
                 error: errors['mobile'] && !!checkForm['mobile'](mobile, this.iti),
               })}
-              manualRef={ele => (this.mobile = ele)}
+              manualRef={ele => { this.mobile = ele; }}
               placeholder={_l('成员会收到邀请链接，验证后可加入组织')}
               onFocus={() => {
                 this.clearError('mobile');
               }}
               onInput={e => {
-                const val = e.target.value.replace(/ +/g, '');
+                const val = e.currentTarget.value.replace(/ +/g, '');
                 this.changeFormInfo(val, 'mobile');
               }}
               onBlur={e => {
@@ -520,10 +523,10 @@ export default class AddUser extends Component<any, any> {
               className={cx('formControl input', {
                 error: errors['autonomously'] && checkForm['autonomously'](autonomously),
               })}
-              manualRef={ele => (this.autonomously = ele)}
+              manualRef={ele => { this.autonomously = ele; }}
               onChange={e => this.changeFormInfo(e, 'autonomously')}
               onInput={e => {
-                const val = e.target.value.replace(/ +/g, '');
+                const val = e.currentTarget.value.replace(/ +/g, '');
 
                 if ((val.length <= 3 || isNaN(Number(val))) && this.itiAutonomously) {
                   this.itiAutonomously.destroy();
@@ -579,7 +582,7 @@ export default class AddUser extends Component<any, any> {
     this.setState({ openChangeUserInfoDrawer: !this.state.openChangeUserInfoDrawer });
   };
 
-  render() {
+  override render() {
     const {
       actType,
       typeCursor,

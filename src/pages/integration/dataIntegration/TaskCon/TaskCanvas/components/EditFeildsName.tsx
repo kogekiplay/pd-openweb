@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import styled from 'styled-components';
 import { Input } from 'ming-ui';
@@ -36,7 +36,7 @@ export default function EditFeildsName(props) {
             onKeyDown={event => {
               if (event.which === 13) {
                 setState({
-                  title: event.target.value,
+                  title: event.currentTarget.value,
                 });
               }
             }}

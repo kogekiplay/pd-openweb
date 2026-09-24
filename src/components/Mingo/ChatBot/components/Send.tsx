@@ -1,4 +1,4 @@
-import React, { cloneElement, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { cloneElement, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -83,7 +83,7 @@ function Send(
   },
   ref,
 ) {
-  const cache = useRef({});
+  const cache = useRef<{ isRecording?: boolean | undefined }>({});
   const [dropFileElementId] = useState(uuidv4());
   const [files, setFiles] = useState([]);
   const [focused, updateFocused] = useState(false);

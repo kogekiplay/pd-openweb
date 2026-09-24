@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
 import Trigger from '@rc-component/trigger';
@@ -41,7 +41,7 @@ import {
 import InvoiceSetting from './invoiceSetting';
 import 'rc-trigger/assets/index.css';
 
-const licenseSupportInfoCache = {};
+const licenseSupportInfoCache: Record<string, HapApi.MD.Web.Ajax.ResultModel.Project.ProjectModel> = {};
 
 const AgentBillingDetailWrap = styled.div`
   height: 100%;
@@ -191,7 +191,7 @@ const getBillingAccountName = createAccountInfo => {
   return createAccountInfo.fullName || createAccountInfo.fullname || createAccountInfo.accountId || _l('未知成员');
 };
 
-const getAgentBillingCacheKey = (projectId: string, traceId) => `${projectId}_${traceId}`;
+const getAgentBillingCacheKey = (projectId: string, traceId: string) => `${projectId}_${traceId}`;
 
 const formatMsDate = dateStr => {
   if (!dateStr) return '-';
@@ -318,7 +318,7 @@ export default function BillInfo({ match }) {
   };
 
   const fetchAiBenefitData = useCallback(() => {
-    if (!isSaas) return;
+    if (!isSaas) return undefined;
 
     setAiBenefitLoading(true);
     const { page, size, startDate: sd, endDate: ed } = aiBenefitParas;
@@ -418,7 +418,7 @@ export default function BillInfo({ match }) {
     }
   };
 
-  const handleClick = type => {
+  const handleClick = (type: string) => {
     if (type === 'recharge') {
       location.href = pathCompletion(`/admin/valueaddservice/${projectId}`);
     }
@@ -486,7 +486,7 @@ export default function BillInfo({ match }) {
     return (
       <AgentBillingDetailDrawer
         open
-        width={980}
+        size={980}
         title={
           <div className="agentBillingDetailTitle">
             <span className="agentBillingTitleText">{_l('扣费明细')}</span>
@@ -509,7 +509,7 @@ export default function BillInfo({ match }) {
           </div>
         }
         placement="right"
-        destroyOnClose
+        destroyOnHidden
         onClose={() => {
           agentBillingDetailCacheKeyRef.current = '';
           setAgentBillingDetail({ visible: false, loading: false, list: [], traceId: '' });
@@ -592,6 +592,7 @@ export default function BillInfo({ match }) {
       const timer = setTimeout(fetchAiBenefitData, 0);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [fetchAiBenefitData, isSaas, displayRecordType]);
 
   const renderPay = ({ status, payAccountInfo = {}, orderId, recordType }) => {

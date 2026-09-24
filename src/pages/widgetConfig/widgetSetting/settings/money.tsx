@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dropdown } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -71,7 +71,7 @@ export default function Money(props) {
   const { data = {}, onChange, globalSheetInfo = {} } = props;
   const { currency, showformat = '0', suffix, prefix } = getAdvanceSetting(data);
   const { currencycode } = safeParse(currency || '{}');
-  const [currencyList, setList] = useState([]);
+  const [currencyList, setList] = useState<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetCurrencyInfosModel[]>([]);
   const [visible, setVisible] = useState(false);
   const currentCurrency = _.find(currencyList, c => c.currencyCode === currencycode);
   const lang = getCurrentLangCode();
@@ -181,10 +181,11 @@ export default function Money(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('显示方式')}</div>
         <AnimationWrap>
-          {DISPLAY_OPTIONS.map(({ text, value }) => {
+          {DISPLAY_OPTIONS.map(({ text, value }, index) => {
             const isActive = showformat === value;
             return (
               <div
+                key={index}
                 className={cx('animaItem breakText', { active: isActive })}
                 onClick={() => {
                   if (isActive) return;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Input, Popover } from 'antd';
 import { filter, get, pick } from 'lodash';
 import _ from 'lodash';
@@ -51,8 +51,8 @@ export default function ResetAutoNumber(props) {
   const controls: FormControl[] = get(worksheetInfo, ['template', 'controls']);
   const autoNumberControls = filter(controls, item => item.type === 33);
   const [activeIndex, setIndex] = useState(-1);
-  const [initNum, setNum] = useState(1);
-  const [startNum, setStartNum] = useState(1);
+  const [initNum, setNum] = useState<string | number>(1);
+  const [startNum, setStartNum] = useState<string | number>(1);
 
   const handleReset = (controlId: string) => {
     setIndex(-1);
@@ -60,7 +60,8 @@ export default function ResetAutoNumber(props) {
       .resetControlIncrease({
         ...pick(worksheetInfo, ['appId', 'worksheetId']),
         controlId,
-        initNum: initNum - startNum + 1,
+        // 两个值都可能是补过零的字符串（'0005'），这里按数值算，和原先 JS 隐式转换的结果一样
+        initNum: Number(initNum) - Number(startNum) + 1,
       })
       .then(res => {
         alert(res ? _l('重置成功') : _l('重置失败'));
@@ -115,7 +116,9 @@ export default function ResetAutoNumber(props) {
                             className="flex textTertiary"
                             onChange={e => setNum(e.target.value.replace(/[^\d]/g, ''))}
                             onBlur={() => {
-                              if (initNum < startNum) {
+                              // 必须按数值比：开始值是补零串（'0010'），用户输入不带前导零（'5'），
+                              // 按字符串比 '5' < '0010' 是 false，小于开始值的编号就被放过去了
+                              if (Number(initNum) < Number(startNum)) {
                                 setNum(startNum);
                               }
                             }}

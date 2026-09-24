@@ -8,15 +8,19 @@ import { getAdvanceSetting } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
 // 字段
-export default class Controls extends React.Component<any, any> {
+export interface ControlsState {
+  height: number;
+}
+
+export default class Controls extends React.Component<any, ControlsState> {
   constructor(props) {
     super(props);
     this.state = { height: document.documentElement.clientHeight - 280 };
   }
-  componentDidMount() {
+  override componentDidMount() {
     $(window).on('resize', this.getHeight);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $(window).off('resize', this.getHeight);
   }
   getHeight = () => {
@@ -69,7 +73,7 @@ export default class Controls extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { height } = this.state;
     const { columns, view = {}, formatColumnsListForControls } = this.props;
     const { controls = [] } = view;

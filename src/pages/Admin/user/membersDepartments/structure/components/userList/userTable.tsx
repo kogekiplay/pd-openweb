@@ -74,7 +74,11 @@ const refreshData = (departmentId, typeCursor, projectId: string, pageIndex: num
 };
 
 class UserTable extends React.Component<any, any> {
-  state = {
+  declare tbodyContainer: HTMLDivElement | null | undefined;
+  declare headContainer: HTMLDivElement | null | undefined;
+  declare tableContent: HTMLDivElement | null | undefined;
+
+  override state = {
     columnsInfo: [
       { value: 'name', label: _l('姓名'), checked: true, width: 200 },
       { value: 'department', label: _l('部门'), checked: true, width: 160 },
@@ -287,15 +291,15 @@ class UserTable extends React.Component<any, any> {
     return visibleColumnsWidth + CHECKBOX_COLUMN_WIDTH + actionWidth > tableClientWidth;
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.updateScrollbarWidth();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     clearActiveDialog(this.props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { isLoading, typeCursor } = this.props;
     const { savedScrollLeft } = this.state;
 
@@ -356,7 +360,7 @@ class UserTable extends React.Component<any, any> {
     return false;
   };
 
-  updateFixedColumnState = (scrollContainer, scrollLeft) => {
+  updateFixedColumnState = (scrollContainer: HTMLDivElement | null | undefined, scrollLeft: number) => {
     const $tableContent = this.tableContent ? $(this.tableContent) : null;
 
     if (!$tableContent || !scrollContainer) return;
@@ -494,7 +498,7 @@ class UserTable extends React.Component<any, any> {
       return true;
     });
   };
-  handleVisibleChange = flag => {
+  handleVisibleChange = (flag: boolean) => {
     this.setState({ dropDownVisible: flag });
   };
 
@@ -605,7 +609,7 @@ class UserTable extends React.Component<any, any> {
 
     this.updateFixedColumnState(this.headContainer, headScrollLeft);
   };
-  render() {
+  override render() {
     const {
       isLoading,
       projectId,

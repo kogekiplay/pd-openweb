@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, useEffect, useImperativeHandle, useState } from 'react';
+import { forwardRef, Fragment, useEffect, useImperativeHandle, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -46,11 +46,11 @@ const InvoiceList = forwardRef((props, ref) => {
   const [searchValues, setSearchValues] = useState({});
   const [fetchAppState, setFetchAppState] = useSetState({ appPageIndex: 1, loading: false, hasMore: true });
   const [appList, setAppList] = useState([]);
-  const [worksheetList, setWorksheetList] = useState([]);
+  const [worksheetList, setWorksheetList] = useState<{ label: string | undefined; value: string | undefined }[]>([]);
   const [exporting, setExporting] = useState(false);
   const [syncingInvoiceId, setSyncingInvoiceId] = useState('');
   const [detailVisibleId, setDetailVisibleId] = useState('');
-  const [reversalReason, setReversalReason] = useState(1);
+  const [reversalReason, setReversalReason] = useState<number | undefined>(1);
   const [reversalOrderId, setReversalOrderId] = useState('');
   const [reversalLoading, setReversalLoading] = useState(false);
 
@@ -431,7 +431,7 @@ const InvoiceList = forwardRef((props, ref) => {
       fixed: 'right',
       width: 'auto',
       minWidth: 108,
-      render: (value, record) => {
+      render: (_value, record) => {
         return (
           <div className="flexRow alignItemsCenter">
             <span className="colorPrimary Hand Hover_51" onClick={() => setDetailVisibleId(record.invoiceId)}>

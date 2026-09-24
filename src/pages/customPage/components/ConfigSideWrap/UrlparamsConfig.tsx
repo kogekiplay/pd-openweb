@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Input } from 'antd';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -40,7 +40,7 @@ export default props => {
         )}
       </div>
       {urlParams.map((value, index: number) => (
-        <div className="flexRow alignItemsCenter mBottom10 urlParamsWrap">
+        <div key={index} className="flexRow alignItemsCenter mBottom10 urlParamsWrap">
           <Input
             placeholder={_l('请输入参数名')}
             className="pageInput"

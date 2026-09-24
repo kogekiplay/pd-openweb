@@ -88,10 +88,10 @@ const widgetEventManager = new WidgetEventManager();
  * @returns {Object} - 发布事件的函数
  */
 export const useWidgetEvent = (controlId: string, callback) => {
-  const unsubscribeRef = useRef(null);
+  const unsubscribeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    if (!controlId) return;
+    if (!controlId) return undefined;
 
     const unsubscribe = widgetEventManager.subscribe(controlId, data => {
       if (callback) callback(data);
@@ -115,6 +115,8 @@ export const useWidgetEvent = (controlId: string, callback) => {
  * 为 Class 组件事件提供
  */
 export class WidgetEventHelper {
+  declare controlId: string;
+
   constructor(controlId: string) {
     this.controlId = controlId;
     this.callback = null;
@@ -372,7 +374,7 @@ export const useFormEventManager = ({ containerRef, stateRef, from, disabledTabs
 
   // 注册事件监听器
   useEffect(() => {
-    if (browserIsMobile()) return;
+    if (browserIsMobile()) return undefined;
 
     window.addEventListener('keydown', handleTabChange);
     document.body?.addEventListener('click', handleClickOutSide);

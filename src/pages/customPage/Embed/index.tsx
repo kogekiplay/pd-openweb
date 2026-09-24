@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { LoadDiv } from 'ming-ui';
@@ -17,6 +17,9 @@ import './index.less';
 const isMobile = browserIsMobile();
 
 export default class EmbedPage extends Component<any, any> {
+  declare appId: string;
+  declare pageId: string;
+
   constructor(props) {
     super(props);
     const pathname = location.pathname.split(/.*\/embed\/page\/(.*?)\//).filter(o => o);
@@ -28,7 +31,7 @@ export default class EmbedPage extends Component<any, any> {
     this.appId = appId;
     this.pageId = pageId;
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId } = this;
     homeAppApi
       .checkApp({ appId })
@@ -75,7 +78,7 @@ export default class EmbedPage extends Component<any, any> {
       return <CustomPageContent ids={{ appId: this.appId, worksheetId: this.pageId }} id={this.pageId} />;
     }
   }
-  render() {
+  override render() {
     const { loading } = this.state;
     return <Provider store={store}>{loading ? <LoadDiv /> : this.renderPage()}</Provider>;
   }

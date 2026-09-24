@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import SortableAppList from './SortableAppList';
 import './AppList.less';

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import MobilePopup from 'ming-ui/components/MobilePopup';

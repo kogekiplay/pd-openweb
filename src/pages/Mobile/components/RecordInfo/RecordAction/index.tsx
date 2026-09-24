@@ -32,6 +32,9 @@ const CUSTOM_BUTTOM_CLICK_TYPE = {
 };
 
 class RecordAction extends Component<any, any> {
+  declare isSubList: boolean;
+  declare editable: boolean;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -61,20 +64,20 @@ class RecordAction extends Component<any, any> {
     this.editable = editable == 'true';
     this.actionDeleteHandler = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.isBatchOperate && !this.props.recordActionVisible) return;
     customBtnWorkflow();
     emitter.on('RECORD_WORKFLOW_UPDATE', this.handleRecordWorkflowUpdate);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.recordActionVisible !== prevProps.recordActionVisible && prevProps.isBatchOperate) {
         customBtnWorkflow();
       }
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionDeleteHandler && this.actionDeleteHandler.close();
     emitter.off('RECORD_WORKFLOW_UPDATE', this.handleRecordWorkflowUpdate);
 
@@ -949,7 +952,7 @@ class RecordAction extends Component<any, any> {
       />
     );
   };
-  render() {
+  override render() {
     const { isViewCard } = this.props;
     return (
       <div ref={this.recef}>

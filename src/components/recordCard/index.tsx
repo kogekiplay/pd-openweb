@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -22,8 +22,12 @@ function getCoverControlData(data) {
   return _.find(data, file => RegExpValidator.fileIsPicture(file.ext));
 }
 
-export default class RecordCard extends Component<any, any> {
-  static propTypes = {
+export interface RecordCardState {
+  forceShowFullValue: boolean | null;
+}
+
+export default class RecordCard extends Component<any, RecordCardState> {
+  static override propTypes = {
     from: PropTypes.number,
     disabled: PropTypes.bool,
     selected: PropTypes.bool,
@@ -39,7 +43,7 @@ export default class RecordCard extends Component<any, any> {
     from: 1,
     showControls: [],
   };
-  state = {
+  override state = {
     forceShowFullValue: null,
   };
 
@@ -91,7 +95,7 @@ export default class RecordCard extends Component<any, any> {
       .map(scid => _.find(allControls, c => c.controlId === scid))
       .filter(c => (showTitleId ? showTitleId !== c.controlId : c && c.attribute !== 1));
   }
-  render() {
+  override render() {
     const {
       from = 1,
       disabled,

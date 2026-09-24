@@ -69,7 +69,8 @@ interface ApiSideItem {
 /** 接口文档正文里的一个节点（分组、视图、字段说明都走这个形状） */
 interface ApiDocNode {
   type?: number;
-  desc?: string;
+  // 多数是文字说明；viewId 参数的说明是「视图名 → viewId」对照表（见 List 接口那段），渲染时按 object 转成 JSON
+  desc?: string | Record<string, string | undefined>[];
   items?: ApiDocNode[];
   data?: ApiDocNode[];
   views?: ApiDocNode[];
@@ -86,6 +87,8 @@ interface ApiField {
 }
 
 class WorksheetApi extends Component<any, any> {
+  declare canScroll: boolean;
+
   /** IP 白名单输入框（Textarea），由 manualRef 回填 */
   whiteList?: { value: string };
 
@@ -134,7 +137,7 @@ class WorksheetApi extends Component<any, any> {
     this.handleGetId = this.getId.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getAppInfo();
   }
 
@@ -316,11 +319,12 @@ class WorksheetApi extends Component<any, any> {
       }),
     ])
       .then(result => {
-        let [data = [], list = {}] = result;
+        // list 是 getWorksheetInfo 的结果；原来默认成 {}，下面改用可选链读
+        let [data = [], list] = result;
         const isDataPipeline = selectId.includes('dataPipeline');
 
-        if (list.alias) {
-          data = data.map((o: ApiDocNode) => {
+        if (list?.alias) {
+          data = data.map(o => {
             return { ...o, alias: list.alias };
           });
         }
@@ -344,10 +348,10 @@ class WorksheetApi extends Component<any, any> {
         this.setState(
           {
             [isDataPipeline ? 'dataPipelineData' : 'data']: data,
-            templateControls: list.template.controls || [],
-            sheetSwitchPermit: list.switches,
+            templateControls: list?.template?.controls || [],
+            sheetSwitchPermit: list?.switches,
             loading: false,
-            alias: list.alias,
+            alias: list?.alias,
           },
           () => {
             this.scrollToFixedPosition();
@@ -616,9 +620,10 @@ class WorksheetApi extends Component<any, any> {
           {title}
         </div>
         {isOpen &&
-          list.map((item: ApiSideItem) => {
+          list.map((item: ApiSideItem, index) => {
             return (
               <div
+                key={index}
                 className={cx('worksheetApiMenuItem pLeft58 overflow_ellipsis', {
                   active: item.id === selectWorkflowId,
                 })}
@@ -991,13 +996,13 @@ class WorksheetApi extends Component<any, any> {
     let outputExample = {};
 
     const renderInputs = (source: ApiField[]) => {
-      return source.map((o: ApiField) => {
+      return source.map((o: ApiField, index) => {
         if (o.dataSource && _.find(workflowInfo.inputs, item => item.controlId === o.dataSource).type === 10000007) {
           return null;
         }
 
         return (
-          <Fragment>
+          <Fragment key={index}>
             <div key={o.controlId} className="flexRow worksheetApiLine flexRowHeight">
               <div className="w32">
                 {o.dataSource && <span className="pLeft20" />}
@@ -1014,13 +1019,13 @@ class WorksheetApi extends Component<any, any> {
     };
 
     const renderOutputs = (source: ApiField[]) => {
-      return source.map((o: ApiField) => {
+      return source.map((o: ApiField, index) => {
         if (o.dataSource && _.find(workflowInfo.outputs, item => item.controlId === o.dataSource).type === 10000007) {
           return null;
         }
 
         return (
-          <Fragment>
+          <Fragment key={index}>
             <div key={o.controlId} className="flexRow worksheetApiLine flexRowHeight">
               <div className="w32">
                 {o.dataSource && <span className="pLeft20" />}
@@ -1167,7 +1172,7 @@ class WorksheetApi extends Component<any, any> {
           });
 
           return (
-            <div className="flexRow worksheetApiLi" id={id + '-content'}>
+            <div key={i} className="flexRow worksheetApiLi" id={id + '-content'}>
               <div className="worksheetApiContent1">
                 {i === 0 && <div className="Font22 bold mBottom40">{_l('应用角色')}</div>}
                 <div className="Font17 bold">{title}</div>
@@ -1246,7 +1251,9 @@ class WorksheetApi extends Component<any, any> {
                 {!!headerData.length && (
                   <div className="flexRow worksheetApiLine flexRowHeight bold mTop25">
                     {headerData.map((header: ApiDocNode, headerIdx: number) => (
-                      <div className={cx(`w${header.width}`, { mLeft30: headerIdx > 0 })}>{header.title}</div>
+                      <div key={headerIdx} className={cx(`w${header.width}`, { mLeft30: headerIdx > 0 })}>
+                        {header.title}
+                      </div>
                     ))}
                   </div>
                 )}
@@ -1260,7 +1267,7 @@ class WorksheetApi extends Component<any, any> {
                       )}
                       {child.type && <div className={cx(`mLeft30 w${getWidth(headerData, 'type')}`)}>{child.type}</div>}
                       <div className={cx(`mLeft30 w${getWidth(headerData, 'desc')}`)}>
-                        {child.desc}
+                        {typeof child.desc === 'object' ? JSON.stringify(child.desc) : child.desc}
                         {child.linkid && (
                           <a className="colorPrimary" onClick={() => this.scrollToFixedPosition(child.linkid)}>
                             {_l('附录')}
@@ -1577,7 +1584,7 @@ class WorksheetApi extends Component<any, any> {
     const { showMoreOption, appKey = '' } = this.state;
 
     if (!showMoreOption || appKey !== data.appKey) {
-      return;
+      return undefined;
     }
 
     return (
@@ -1866,7 +1873,7 @@ class WorksheetApi extends Component<any, any> {
   };
 
   fillFilters() {
-    return new Array(3).fill(1).map((o, i) => {
+    return new Array(3).fill(1).map((_o, i) => {
       return {
         controlId: `control${i + 1}`,
         dataType: 6,
@@ -1926,7 +1933,7 @@ class WorksheetApi extends Component<any, any> {
     let totalHeight = 0;
     let isExist = false;
 
-    $('.scrollViewContainer .worksheetApiLi').map((index: number, el) => {
+    $('.scrollViewContainer .worksheetApiLi').map((_index: number, el) => {
       heightArr.push({
         id: $(el).attr('id').replace('-content', ''),
         h: $(el).height(),
@@ -1954,7 +1961,7 @@ class WorksheetApi extends Component<any, any> {
         {OPTIONS_FUNCTION_LIST.map(({ id, title, data = [], apiName, requestData, successData, errorData }, i) => {
           const url = appInfo.apiUrl + apiName;
           return (
-            <div className="flexRow worksheetApiLi" id={id + '-content'}>
+            <div key={i} className="flexRow worksheetApiLi" id={id + '-content'}>
               <div className="worksheetApiContent1">
                 {i === 0 && <div className="Font22 bold mBottom40">{_l('选项集')}</div>}
                 <div className="Font17 bold">{title}</div>
@@ -2035,7 +2042,7 @@ class WorksheetApi extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       data = [],
       loading,

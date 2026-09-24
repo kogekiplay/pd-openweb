@@ -206,12 +206,12 @@ function Controls(props) {
       },
     ];
 
-    const renderChild = (sourceItem, isLast) => {
+    const renderChild = (sourceItem, isLast: boolean) => {
       return (
         <div className="flexRow alignItemsCenter w100 isChild controlL">
-          {columnPopup.map(item => {
+          {columnPopup.map((item, index) => {
             return (
-              <div className={cx(`${item.dataIndex} flex flexShrink0`)}>
+              <div key={index} className={cx(`${item.dataIndex} flex flexShrink0`)}>
                 {item.render ? item.render(sourceItem, isLast) : sourceItem[item.dataIndex]}
               </div>
             );
@@ -244,7 +244,7 @@ function Controls(props) {
               <ListBox className="">
                 {(data || []).map((sourceItem, i) => {
                   return (
-                    <React.Fragment>
+                    <React.Fragment key={i}>
                       <div key={i} className="flexRow alignItemsCenter w100 controlL">
                         {columnPopup.map((item, j) => {
                           return (
@@ -315,7 +315,7 @@ export default function Tables(props) {
     checkTableExists(cache.current.doubleWriteTables, true);
   };
 
-  const checkTableExists = (data?, nextCreate?) => {
+  const checkTableExists = (data?, nextCreate?: boolean | undefined) => {
     const tableNames = (data || doubleWriteTables).map(o => o.tableName);
     onChange(null, false, true);
     dataMirrorAjax

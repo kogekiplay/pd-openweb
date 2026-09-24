@@ -100,7 +100,14 @@ const TimeSelect = ({
   );
 };
 
-const SelectRow = ({ label, children, hasValue = false, className = '' }) => (
+export interface SelectRowProps {
+  label: string;
+  children: React.ReactNode;
+  hasValue?: boolean | undefined;
+  className?: string | undefined;
+}
+
+const SelectRow = ({ label, children, hasValue = false, className = '' }: SelectRowProps) => (
   <div className={cx('startCom flexRow alignItemsCenter', className)}>
     <span className={cx('tag', { has: hasValue })} />
     <span className="txt">{label}</span>

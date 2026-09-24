@@ -65,7 +65,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectLicenseSupportInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectLicenseSupportInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectModel> {
     return mdyAPI('Project', 'GetProjectLicenseSupportInfo', args, options);
   },
   /**
@@ -243,7 +246,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDBInstanceLimit: function (args: ApiArgs, options: ApiOptions = {}) {
+  getDBInstanceLimit: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<number> {
     return mdyAPI('Project', 'GetDBInstanceLimit', args, options);
   },
   /**
@@ -413,7 +416,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetProjectInfoModel> {
     return mdyAPI('Project', 'GetProjectInfo', args, options);
   },
   /**
@@ -424,7 +430,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectLimitationInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectLimitationInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectLimitationModel> {
     return mdyAPI('Project', 'GetProjectLimitationInfo', args, options);
   },
   /**
@@ -459,7 +468,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectSubDomainInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectSubDomainInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectSubDomainModel> {
     return mdyAPI('Project', 'GetProjectSubDomainInfo', args, options);
   },
   /**
@@ -517,7 +529,7 @@ export default {
   /**
    * 获取是否线下订单 true 线下
    * @param {Object} args 请求参数
-  * @param {string} args.projectId 组织ID
+   * @param {string} args.projectId 组织ID
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
@@ -536,7 +548,10 @@ export default {
   getManageSubscriptionUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetManageSubscriptionUrl', args, options);
   },
-  getProjectSource: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectSource: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Enum.ProjectIntergrationType> {
     return mdyAPI('Project', 'GetProjectSource', args, options);
   },
 };

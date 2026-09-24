@@ -1,27 +1,28 @@
 /**
  * getOptionChipStyle 的行为 spec。
  *
- * 【守的是什么】选项色是用户自己选的业务数据，代码没法挑颜色，只能挑**怎么配**。
- * 这份 spec 拿产品内置的 20 色色板逐个算，钉死两件事：
- *   1. 明暗两套主题下，20 色的标签文字对标签底色都够 4.5；
- *   2. 近中性色不去造色相 —— 灰色的 HSL 色相是 0（红），
- *      把灰直接喂给 antd 的 generate() 会得到一条红色阶，灰标签配深红字。
- *
- * 还有一条反向断言：**原来那套「实心原色底 + 黑或白字」做不到同样的事**。
- * 这条防的是「觉得浅底太素、改回实心底」—— 实测 20 色里有 5 色黑白两种字色
- * 都够不着 4.5，只要底是原色就无解，不是调一调字色能救的。
+ * 【守的是什么】选项色是用户自己选的业务数据。2026-09-23 用户定了「底色 = 选的颜色」，
+ * 代码只负责挑字色。这份 spec 拿产品内置的 20 色色板逐个算，钉死：
+ *   1. 底色就是选的颜色，实色、不随主题变 —— 防有人为了对比度把底再调淡（那是被用户否掉的方案）；
+ *   2. 字色是实色、不是主题变量 —— 底色不随主题变，字色要是跟着主题翻，暗色下浅底会配上浅字；
+ *   3. 能到 4.5 的颜色都到 4.5；到不了的只允许是已知的那 3 色，而且给白字；
+ *   4. 近中性色不去造色相 —— 灰色的 HSL 色相是 0（红），直接喂 generate() 会得到灰底配深红字。
  */
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const { transformFileSync } = require('../../scripts/spec-harness.ts');
 
-type ThemeMode = 'light' | 'dark';
 type OptionChipStyle = { background: string; color: string };
 type Mod = {
-  getOptionChipStyle: (color: string, mode?: ThemeMode) => OptionChipStyle;
-  flattenedChipBackground: (color: string, mode?: ThemeMode) => string;
-  __internal: { contrast: (a: string, b: string) => number; saturatedSeed: (c: string) => string | null };
+  getOptionChipStyle: (color: string) => OptionChipStyle;
+  __internal: {
+    contrast: (a: string, b: string) => number;
+    saturatedSeed: (c: string) => string | null;
+    AA_BODY: number;
+    NEAR_BLACK: string;
+    WHITE: string;
+  };
 };
 
 function load(): Mod {
@@ -35,8 +36,8 @@ function load(): Mod {
   return mod.exports as unknown as Mod;
 }
 
-const { getOptionChipStyle, flattenedChipBackground, __internal } = load();
-const { contrast } = __internal;
+const { getOptionChipStyle, __internal } = load();
+const { contrast, AA_BODY, NEAR_BLACK, WHITE } = __internal;
 const { TinyColor } = require('@ctrl/tinycolor');
 
 /** 产品内置的选项色板 —— 从源文件读，色板改了这份 spec 自动跟着测新色 */
@@ -46,91 +47,66 @@ const PALETTE: string[] = JSON.parse(
 );
 assert.ok(PALETTE.length >= 20, `色板只解析出 ${PALETTE.length} 色，解析逻辑该修了`);
 
-/** 两套主题的文字档字面值，从 Less 源文件读 —— 近中性色走的就是这一档 */
-function readVar(file: string, name: string): string {
-  const src = fs
-    .readFileSync(path.join(__dirname, '../common/mdcss/themes', file), 'utf8')
-    .replace(/\/\*[\s\S]*?\*\//g, '');
-  const m = src.match(new RegExp(`(^|[\\s;{])${name}\\s*:\\s*([^;]+);`));
-  assert.ok(m, `${name} 在 ${file} 里没有定义`);
-  return m![2].trim();
-}
-const TITLE = {
-  light: readVar('theme-default.less', '--color-text-title'),
-  dark: readVar('theme-dark.less', '--color-text-title'),
-};
+const isLiteral = (c: string) => new TinyColor(c).isValid && !/var\(|color-mix/.test(c);
 
-/** 把 style 里的文字色解析成实际颜色（可能是 CSS 变量名） */
-function resolveText(style: OptionChipStyle, mode: ThemeMode): string {
-  if (style.color === 'var(--color-text-title)') return TITLE[mode];
-  return style.color;
+// 1. 底色 = 选的颜色：实色、与输入同一个颜色。ColorPicker 存的是 8 位 hex，也要认。
+for (const color of PALETTE) {
+  const { background } = getOptionChipStyle(color);
+  assert.ok(isLiteral(background), `${color} 的底色不是实色：${background}`);
+  assert.strictEqual(background, new TinyColor(color).toHexString(), `${color} 的底色被改过了：${background}`);
+  assert.strictEqual(getOptionChipStyle(color.toLowerCase() + 'ff').background, background, '8 位 hex 不认');
 }
 
-// 1. 【核心】20 色 × 明暗两套，标签文字对标签底色都够 4.5。
-for (const mode of ['light', 'dark'] as ThemeMode[]) {
+// 2. 字色必须是实色，不能是主题变量（底色不随主题变，字色也不能变）。
+for (const color of PALETTE) {
+  const { color: text } = getOptionChipStyle(color);
+  assert.ok(isLiteral(text), `${color} 的字色用了 ${text} —— 暗色主题下会翻成浅字`);
+}
+
+// 3. 对比度。黑白两种字都到不了 4.5 的颜色只能是这 3 个（亮度落在两者之间那一窄条），给白字，
+//    理由见 optionColor.ts 的 pickText。色板改了、或者有人换了 NEAR_BLACK 让这个名单变长，这里会报。
+const HOPELESS = ['#1677ff', '#F52222', '#EB2F96'];
+{
+  const hopeless = PALETTE.filter(c => Math.max(contrast(WHITE, c), contrast(NEAR_BLACK, c)) < AA_BODY);
+  assert.deepStrictEqual(hopeless, HOPELESS, `黑白都到不了 4.5 的颜色变了：${hopeless.join(', ')}`);
   for (const color of PALETTE) {
-    const style = getOptionChipStyle(color, mode);
-    const bg = flattenedChipBackground(color, mode);
-    const ratio = contrast(resolveText(style, mode), bg);
-    assert.ok(
-      ratio >= 4.5,
-      `${mode} 模式下选项色 ${color} 的标签只有 ${ratio.toFixed(2)}（字 ${style.color} / 底 ${bg}）`,
-    );
+    const style = getOptionChipStyle(color);
+    const ratio = contrast(style.color, style.background);
+    if (HOPELESS.includes(color)) {
+      assert.strictEqual(style.color, WHITE, `${color} 应当给白字（与原版一致，APCA 下也是白字清楚）`);
+    } else {
+      assert.ok(ratio >= AA_BODY, `选项色 ${color} 的标签只有 ${ratio.toFixed(2)}（字 ${style.color}）`);
+    }
   }
 }
 
-// 2. 【反向断言】老做法（实心原色底 + 黑或白字）救不回来 —— 这条防「改回实心底」。
-//    20 色里必须确实存在若干色：黑白两种字色对原色底都够不着 4.5。
-{
-  const hopeless = PALETTE.filter(c => {
-    const white = contrast('#ffffff', c);
-    const dark = contrast(TITLE.light, c);
-    return Math.max(white, dark) < 4.5;
-  });
-  assert.ok(
-    hopeless.length > 0,
-    '色板里已经没有"黑白都不够"的颜色了 —— 若确是色板改过，这条反向断言可以删；' +
-      '但在那之前，它挡的是"把标签改回实心原色底"这种回退',
-  );
+// 4. 有色相的颜色，同色深字够得着时用的是同色字，不是黑白（黄底配棕字，而不是黄底配黑字）。
+for (const color of ['#C9E6FC', '#FEF6C6', '#FAD714', '#FF9300', '#00C345']) {
+  const { color: text } = getOptionChipStyle(color);
+  assert.ok(text !== NEAR_BLACK && text !== WHITE, `${color} 应当配同色深字，实际是 ${text}`);
+  const dh = Math.abs(new TinyColor(text).toHsl().h - new TinyColor(color).toHsl().h);
+  assert.ok(Math.min(dh, 360 - dh) < 30, `${color} 配的 ${text} 色相差了 ${dh.toFixed(0)}°`);
 }
 
-// 3. 近中性色不造色相：灰色必须走中性文字档，不能得到一条红色阶。
-//    （TinyColor 对灰给出的 HSL 色相是 0，也就是红 —— 直接喂 generate() 就是灰标签配深红字。）
+// 5. 近中性色不造色相：灰色只能配近黑或白，不能得到一条红色阶。
 for (const grey of ['#d3d3d3', '#484848', '#ffffff', '#000000', '#7f7f7f']) {
   assert.strictEqual(__internal.saturatedSeed(grey), null, `${grey} 被当成有色相了，会造出一条假色阶`);
-  assert.strictEqual(getOptionChipStyle(grey, 'light').color, 'var(--color-text-title)');
+  const { color: text } = getOptionChipStyle(grey);
+  assert.ok(text === NEAR_BLACK || text === WHITE, `${grey} 配了 ${text}`);
 }
 
-// 4. 底色用 color-mix 而不是算好的实色 —— 明暗两套主题、以及标签放在卡片还是页面上，
-//    都靠浏览器按当前表面去叠。写成实色就会在暗色下变成一块浅斑。
+// 6. 半透明的选项色照原样半透明（底 = 选的颜色），字色按叠在白底上挑。
 {
-  const style = getOptionChipStyle('#1677ff', 'light');
-  assert.ok(
-    /^color-mix\(in srgb, #1677ff \d+%, transparent\)$/.test(style.background),
-    `底色应该是 color-mix 的形式，实际是 ${style.background}`,
-  );
-  assert.strictEqual(
-    getOptionChipStyle('#1677ff', 'dark').background,
-    style.background,
-    '底色的写法明暗两套应当相同（差异交给 color-mix 在运行期解决）',
-  );
+  const style = getOptionChipStyle('#1677ff33');
+  assert.strictEqual(style.background, 'rgba(22, 119, 255, 0.2)');
+  assert.ok(contrast(style.color, '#d0e4ff') >= AA_BODY, `半透明蓝的字色 ${style.color} 不够`);
 }
 
-// 5. 文字色明暗两套必须【不同方向】：亮色下比原色深，暗色下比原色亮。
-//    写反了是这类改动最容易犯的错，而且暗色下不一定第一眼看出来。
-for (const color of ['#1677ff', '#00C345', '#FF9300']) {
-  const base = new TinyColor(color).getLuminance();
-  const lightText = new TinyColor(getOptionChipStyle(color, 'light').color).getLuminance();
-  const darkText = new TinyColor(getOptionChipStyle(color, 'dark').color).getLuminance();
-  assert.ok(lightText < base, `亮色下 ${color} 的标签文字应该比原色更深`);
-  assert.ok(darkText > base, `暗色下 ${color} 的标签文字应该比原色更亮`);
-}
-
-// 6. 非法颜色不能产出 NaN 颜色（那会让标签变透明块，比报错更难查）。
+// 7. 非法颜色不能产出 NaN 颜色（那会让标签变透明块，比报错更难查）。
 for (const bad of ['', 'not-a-color', 'undefined']) {
-  const style = getOptionChipStyle(bad, 'light');
+  const style = getOptionChipStyle(bad);
   assert.ok(!/NaN/.test(style.background + style.color), `${JSON.stringify(bad)} 产出了 NaN：${JSON.stringify(style)}`);
   assert.strictEqual(style.color, 'var(--color-text-title)');
 }
 
-console.log(`optionColor spec 通过（色板 ${PALETTE.length} 色 × 明暗两套）`);
+console.log(`optionColor spec 通过（色板 ${PALETTE.length} 色，其中 ${HOPELESS.length} 色到不了 4.5、按原版给白字）`);

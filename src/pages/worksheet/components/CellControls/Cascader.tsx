@@ -11,7 +11,7 @@ import { renderText } from 'src/utils/control';
 import EditableCellCon from '../EditableCellCon';
 
 export default class Cascader extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),
     editable: PropTypes.bool,
@@ -29,7 +29,7 @@ export default class Cascader extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value) {
         this.setState({
@@ -70,7 +70,7 @@ export default class Cascader extends React.Component<any, any> {
     this.handleChange('');
   };
 
-  render() {
+  override render() {
     const {
       from,
       className,

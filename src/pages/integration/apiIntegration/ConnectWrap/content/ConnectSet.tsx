@@ -164,7 +164,7 @@ function ConnectSet(props) {
     return <LoadDiv />;
   }
 
-  const renderFlowDts = (data, notAuthCode: boolean, index?) => {
+  const renderFlowDts = (data, notAuthCode: boolean, index?: number | undefined) => {
     if (data.appType === 30) {
       return null;
     }

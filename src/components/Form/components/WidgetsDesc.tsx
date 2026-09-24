@@ -5,7 +5,15 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { browserIsMobile } from 'src/utils/common';
 import { FROM } from '../core/config';
 
-class WidgetsDesc extends React.Component<any, any> {
+export interface WidgetsDescState {
+  isShow: boolean;
+}
+
+class WidgetsDesc extends React.Component<any, WidgetsDescState> {
+  declare formcon: HTMLSpanElement | null | undefined;
+  declare formconMoreDesc: HTMLSpanElement | null | undefined;
+  declare formconBox: HTMLSpanElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -13,13 +21,13 @@ class WidgetsDesc extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.formcon && this.formcon.clientHeight <= 48 && this.formconMoreDesc) {
       this.formconMoreDesc.style.display = 'none';
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     if (
       !_.isEqual(_.pick(nextProps, ['desc']), _.pick(this.props, ['desc'])) ||
       !_.isEqual(_.pick(nextState, ['isShow']), _.pick(this.state, ['isShow']))
@@ -30,7 +38,7 @@ class WidgetsDesc extends React.Component<any, any> {
     return false;
   }
 
-  render() {
+  override render() {
     const { item, from } = this.props;
     const { isShow } = this.state;
     const isMobile = browserIsMobile();

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useDrag, useDrop } from 'react-dnd';
@@ -186,7 +186,7 @@ const Drag = props => {
   });
   drag(drop(ref));
 
-  const onMoveGroup = (dragData, targetData, pushGroup) => {
+  const onMoveGroup = (dragData, targetData, pushGroup: boolean) => {
     const sheetList = [1, 3].includes(currentPcNaviStyle)
       ? props.appSectionDetail.map(data => {
           return {

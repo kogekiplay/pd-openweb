@@ -265,6 +265,6 @@ export const improveKnowledgeBasePlan = async (dispatch, { itemRecommend, appId 
   }
 };
 
-export const setWorksheetIsLoaded = (dispatch, { loaded }) => {
+export const setWorksheetIsLoaded = (dispatch, { loaded }: { loaded: boolean }) => {
   dispatch({ type: 'SET_WORKSHEET_IS_LOADED', loaded });
 };

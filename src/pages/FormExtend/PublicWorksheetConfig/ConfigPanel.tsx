@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
 import update from 'immutability-helper';
-import { head, isEmpty, last, pick } from 'lodash';
+import { head, isEmpty, last } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Dialog, ScrollView, Skeleton, Switch } from 'ming-ui';
@@ -158,8 +158,13 @@ const ColumnSettingWrap = styled.div`
   }
 `;
 
-class ConfigPanel extends React.Component<any, any> {
-  static propTypes = {
+interface ConfigPanelState {
+  publicConfigVisible: boolean;
+  activeColumn: number;
+}
+
+class ConfigPanel extends React.Component<any, ConfigPanelState> {
+  static override propTypes = {
     worksheetInfo: PropTypes.shape({}),
     worksheetSettings: PropTypes.shape({}),
     shareUrl: PropTypes.string,
@@ -192,7 +197,7 @@ class ConfigPanel extends React.Component<any, any> {
     });
   };
 
-  onChangeColumn = columnNumber => {
+  onChangeColumn = (columnNumber: number) => {
     const { changeControls, controls, originalControls } = this.props;
     let newControls: FormControl[] = [];
     const data = originalControls
@@ -272,7 +277,7 @@ class ConfigPanel extends React.Component<any, any> {
     this.setState({ activeColumn: -1 });
   };
 
-  render() {
+  override render() {
     const {
       loading,
       worksheetInfo,

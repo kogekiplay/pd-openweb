@@ -421,7 +421,7 @@ function ConnectCon(props) {
               <div className="tabCon">
                 {
                   <ul>
-                    {tabList.map(o => {
+                    {tabList.map((o, index) => {
                       if (actionId !== '523' && o.tab === 3) {
                         //OAuth 2.0 认证（授权码）=>有账户
                         return null;
@@ -429,6 +429,7 @@ function ConnectCon(props) {
 
                       return (
                         <li
+                          key={index}
                           className={cx('Hand', { isCur: tab === o.tab, disble: !nodeInfo.startEventId })}
                           onClick={() => {
                             if (!nodeInfo.startEventId) {

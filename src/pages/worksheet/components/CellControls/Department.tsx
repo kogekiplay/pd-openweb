@@ -14,7 +14,9 @@ const ClickAwayable = ClickAway;
 
 // enumDefault 单选 0 多选 1
 export default class Text extends React.Component<any, any> {
-  static propTypes = {
+  declare isSelecting: boolean | undefined;
+
+  static override propTypes = {
     className: PropTypes.string,
     singleLine: PropTypes.bool,
     style: PropTypes.shape({}),
@@ -36,7 +38,7 @@ export default class Text extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value) {
         this.setState({
@@ -188,7 +190,7 @@ export default class Text extends React.Component<any, any> {
     );
   };
 
-  renderDepartmentTag(department, allowDelete?) {
+  renderDepartmentTag(department, allowDelete?: boolean | undefined) {
     const { style, isediting, cell = {} } = this.props;
     const needRTL = _.get(cell, 'advancedSetting.allpath') === '1' && !department.isDelete;
     const renderName = needRTL ? <bdi dir="ltr">{department.departmentName}</bdi> : department.departmentName;
@@ -217,7 +219,7 @@ export default class Text extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       className,
       style,

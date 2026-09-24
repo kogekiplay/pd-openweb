@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, Icon, Radio } from 'ming-ui';
@@ -65,7 +65,7 @@ export default function BtnRangeDrop(props) {
   const isAllList = viewSheetIds.length > 0 && viewSheetIds.every(o => listviews.includes(o));
   const hsList = viewSheetIds.some(o => listviews.includes(o));
 
-  const updateAdvancedSetting = patch => {
+  const updateAdvancedSetting = (patch: { detailviews: string } | { listviews: string }) => {
     onChange({
       ...data,
       advancedSetting: { ...advancedSetting, ...patch },

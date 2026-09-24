@@ -145,9 +145,9 @@ export default function (props) {
       <React.Fragment>
         <div className="mTop20">
           {actionList.length > 0 &&
-            actionList.map(o => {
+            actionList.map((o, index) => {
               return (
-                <div className="rolePermissionInlineRow">
+                <div key={index} className="rolePermissionInlineRow">
                   <Checkbox
                     checked={(sheet[o.key] || {}).enable}
                     onChange={() => {
@@ -195,7 +195,7 @@ export default function (props) {
     );
   };
 
-  const otherSet = type => {
+  const otherSet = (type: string) => {
     return (
       <React.Fragment>
         <p className="mBottom0 mTop24 textSecondary">{_l('其他')}</p>
@@ -223,7 +223,7 @@ export default function (props) {
     );
   };
 
-  const renderCon = type => {
+  const renderCon = (type: string) => {
     const value = [20, 30].includes(sheet[`${type}Level`])
       ? 'user'
       : [100].includes(sheet[`${type}Level`])
@@ -243,8 +243,9 @@ export default function (props) {
         <div className="radioCon">
           <div className="conRadioGroup">
             <div className="flexRow alignItemsCenter">
-              {(type === 'read' ? dataPermissionOptions : operationPermissionOptions).map(option => (
+              {(type === 'read' ? dataPermissionOptions : operationPermissionOptions).map((option, index) => (
                 <MDRadio
+                  key={index}
                   className="InlineFlex cascaderRadio textPrimary"
                   text={option.label}
                   checked={option.value === value}
@@ -276,7 +277,7 @@ export default function (props) {
     );
   };
 
-  const hasSet = (actionList, value: string) => {
+  const hasSet = (actionList: { key: string; txt: string }[], value: string) => {
     if (value === 'clear') return true;
     let isSet = false;
     actionList.map(o => {
@@ -287,7 +288,7 @@ export default function (props) {
     return isSet;
   };
 
-  const renderPermissionSection = type => {
+  const renderPermissionSection = (type: string) => {
     const list = type === 'worksheet' ? sheetActionLists : recordActionLists;
     const key = type === 'worksheet' ? worksheet : record;
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, Menu, MenuItem, Modal } from 'ming-ui';
@@ -111,7 +111,7 @@ function DraftModal(props) {
           }
         : c,
     );
-  const recordInfoRef = useRef(null);
+  const recordInfoRef = useRef<RecordInfo | null>(null);
   const numberWidth = 16;
 
   useEffect(() => {
@@ -396,7 +396,7 @@ function WorksheetDraft(props) {
   } = props;
   const { worksheetId } = worksheetInfo;
   const [total, setTotal] = useState(_.get(window, `draftTotalNumInfo[${worksheetId}]`));
-  const draftEntryRef = useRef(null);
+  const draftEntryRef = useRef<HTMLDivElement | null>(null);
 
   // 获取草稿箱计数
   const loadDraftDataCount = () => {

@@ -129,7 +129,7 @@ export function deleteAttachment(docVersionID, fileID, sourceID, commentID, from
   );
 }
 
-export function updateAllowDownload(docVersionID, allowDownload) {
+export function updateAllowDownload(docVersionID, allowDownload: boolean) {
   return rejectErr(
     attachmentAjax.update({
       docVersionID,

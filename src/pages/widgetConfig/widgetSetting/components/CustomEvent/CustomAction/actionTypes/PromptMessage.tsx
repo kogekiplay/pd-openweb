@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -44,9 +44,10 @@ export default function PromptMessage(props) {
         <SettingItem className="mTop0">
           <div className="settingItemTitle">{_l('提示类型')}</div>
           <div className="flexCenter">
-            {ALERT_TYPE_OPTIONS.map(item => {
+            {ALERT_TYPE_OPTIONS.map((item, index) => {
               return (
                 <div
+                  key={index}
                   className={cx('alertContent mRight10', { active: item.value === advancedSetting.alerttype })}
                   onClick={() => {
                     setState({ advancedSetting: { ...advancedSetting, alerttype: item.value } });

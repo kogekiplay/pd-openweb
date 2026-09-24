@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -65,7 +65,12 @@ export default function PrivateAuthDialog(props) {
   const [state, setState] = useState({ name: '', appId: '', appSecret: '' });
   const { name, appId, appSecret } = state;
 
-  const changeFormData = (value, item) => {
+  const changeFormData = (
+    value: string,
+    item:
+      | { key: string; label: string; type: string; description?: undefined }
+      | { key: string; label: string; type: string; description: string },
+  ) => {
     setState({ ...state, [item.key]: value, [`${item.key}Error`]: false });
   };
 
@@ -96,8 +101,8 @@ export default function PrivateAuthDialog(props) {
         )}
       </div>
       <div className="formGroup">
-        {FORM_CONFIG.map(item => (
-          <Fragment>
+        {FORM_CONFIG.map((item, index) => (
+          <Fragment key={index}>
             <div className="mTop20 mBottom10 TxtLeft">
               <span className="required">*</span>
               {item.label}
@@ -114,7 +119,6 @@ export default function PrivateAuthDialog(props) {
                   type="password"
                   autoComplete="new-password"
                   onChange={val => changeFormData(val, item)}
-                  visibilityToggle={false}
                 />
               )}
             </div>

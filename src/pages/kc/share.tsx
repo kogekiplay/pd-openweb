@@ -1,15 +1,15 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import NodeShare from './common/NodeShare';
 import './main.css';
 
 export default class KcShareEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppKc AppKcShare');
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppKc AppKcShare');
   }
-  render() {
+  override render() {
     return <NodeShare />;
   }
 }

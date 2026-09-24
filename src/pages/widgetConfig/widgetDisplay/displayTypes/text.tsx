@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { CommonDisplay } from '../../styled';
 import { getAdvanceSetting } from '../../util';

@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useRef } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
 import _ from 'lodash';
@@ -278,16 +278,14 @@ export default function EditAIActionDrawer(props) {
       <DrawerWrapper
         className="Absolute editAIActionDrawer"
         showChatbotDialog={showChatbotDialog}
-        width={showChatbotDialog ? 1200 : 800}
+        size={showChatbotDialog ? 1200 : 800}
         open
         mask={false}
         placement="right"
         closable={false}
-        maskClosable={false}
         zIndex={2}
         getContainer={false}
-        bodyStyle={{ padding: 0 }}
-        maskStyle={{ background: 'rgba(0, 0, 0, 0.32)' }}
+        styles={{ body: { padding: 0 }, mask: { background: 'rgba(0, 0, 0, 0.32)' } }}
         style={{ transform: 'translateX(1px)' }}
         onClose={onClose}
       >
@@ -373,9 +371,9 @@ export default function EditAIActionDrawer(props) {
                       <div className="flexRow mTop30">
                         <div className="label">{_l('工具')}</div>
                         <div className="flex">
-                          {tools.map(v => {
+                          {tools.map((v, index) => {
                             return (
-                              <div className="flexRow alignItemsCenter LineHeight30">
+                              <div key={index} className="flexRow alignItemsCenter LineHeight30">
                                 <i className={`toolTxtColor Font16 mRight5 ${AGENT_TOOLS[v.type]?.icon}`} />
                                 <span className="bold">{AGENT_TOOLS[v.type]?.displayName}</span>
                                 <span className="toolTxtColor">

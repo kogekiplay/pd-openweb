@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment } from 'react';
+import { Component, createRef, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, Dialog, LoadDiv, QiniuUpload, UpgradeIcon, VerifyPasswordConfirm } from 'ming-ui';
 import projectController from 'src/api/project';
@@ -34,11 +34,11 @@ export default class CommonInfo extends Component<any, any> {
     this.uploaderWrap = createRef(null);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getAllData();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.level !== prevProps.level) {
         this.getAllData();
@@ -138,7 +138,7 @@ export default class CommonInfo extends Component<any, any> {
   }
 
   // 1: 名称, 2: 所在地，3: 行业
-  updateVisible(visibleType) {
+  updateVisible(visibleType: number) {
     this.setState({ visibleType });
   }
 
@@ -211,7 +211,7 @@ export default class CommonInfo extends Component<any, any> {
     if (Config.project.licenseType === 0) {
       return (
         <div className="logoBoxBorder">
-          <img src={logo} alt="avatar" />
+          <img src={logo || undefined} alt="avatar" />
           <div
             className="logoIconBox"
             id="upload_image"
@@ -246,7 +246,7 @@ export default class CommonInfo extends Component<any, any> {
         onError={() => {}}
       >
         <div className="logoBoxBorder">
-          <img src={logo} alt="avatar" />
+          <img src={logo || undefined} alt="avatar" />
           <div className="logoIconBox" id="upload_image">
             <span className="Font15 icon-upload_pictures"></span>
           </div>
@@ -255,7 +255,7 @@ export default class CommonInfo extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { onViewCert } = this.props;
     const {
       isDefaultLogo,

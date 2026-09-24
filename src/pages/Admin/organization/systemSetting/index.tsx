@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import AdminTitle from 'src/pages/Admin/common/AdminTitle';
@@ -27,7 +27,7 @@ export default class SystemSetting extends Component<any, any> {
     navigateTo(`/admin/${key}/${projectId}`);
   };
 
-  render() {
+  override render() {
     const { showHeader } = this.state;
     // 从路径派生而不是存 state：原来内层用两条 <Route> 来决定渲染哪个 Tab
     //（state 只是同步用的）。路由迁到 v7 后这两条没法保留 —— 它们的判别段

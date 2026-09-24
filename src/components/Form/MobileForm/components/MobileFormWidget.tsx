@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
@@ -146,6 +146,7 @@ export default function MobileFormWidget(props) {
         triggerCustomEvent({ ...item, triggerType: ADD_EVENT_ENUM.HIDE });
       };
     }
+    return undefined;
   }, [formDidMountFlag]);
 
   useEffect(() => {

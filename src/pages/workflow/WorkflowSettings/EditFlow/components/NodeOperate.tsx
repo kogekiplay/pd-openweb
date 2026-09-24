@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -50,7 +50,15 @@ const TestResultBox = styled.div`
   }
 `;
 
-export default class NodeOperate extends Component<any, any> {
+export interface NodeOperateState {
+  isEdit: boolean;
+  showDelete: boolean;
+  showOperate: boolean;
+}
+
+export default class NodeOperate extends Component<any, NodeOperateState> {
+  declare workflowNodeName: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -315,12 +323,12 @@ export default class NodeOperate extends Component<any, any> {
 
     // 触发节点没有删除 || 禁用删除
     if (item.typeId === NODE_TYPE.FIRST || noDelete) {
-      _.remove(list, (o, index) => index === 4);
+      _.remove(list, (_o, index) => index === 4);
     }
 
     // 只有分支节点有复制
     if (item.typeId !== NODE_TYPE.BRANCH_ITEM) {
-      _.remove(list, (o, index) => _.includes([2, 3], index));
+      _.remove(list, (_o, index) => _.includes([2, 3], index));
     }
 
     // 当前分支节点的位置
@@ -380,7 +388,7 @@ export default class NodeOperate extends Component<any, any> {
   /**
    * 调整分支顺序
    */
-  updateBranchSort = type => {
+  updateBranchSort = (type: number) => {
     const { processId, item, flowIds, updateBranchSort } = this.props;
     const currentIndex = _.findIndex(flowIds, o => o === item.id);
 
@@ -454,7 +462,7 @@ export default class NodeOperate extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { item, nodeClassName, noCopy, nodeStyle = {} } = this.props;
 
     return (

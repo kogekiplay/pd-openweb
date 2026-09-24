@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import { Dropdown, Radio } from 'ming-ui';
 import { APP_TYPE, TRIGGER_ID } from '../../enum';

@@ -1,4 +1,4 @@
-﻿import React, { Component, lazy, Suspense } from 'react';
+﻿import { Component, lazy, Suspense } from 'react';
 import styled from 'styled-components';
 import { Button, LoadDiv } from 'ming-ui';
 import accountAjax from 'src/api/account';
@@ -43,6 +43,10 @@ const Wrap = styled.div`
 `;
 
 export default class AvatarEditor extends Component<any, any> {
+  declare isUnmounted: boolean | undefined;
+  declare avatarLoadKey: string | undefined;
+  declare avatarObjectUrl: string | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -60,7 +64,7 @@ export default class AvatarEditor extends Component<any, any> {
 
   static isUploading = false;
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     this.avatarLoadKey = '';
     this.revokeAvatarObjectUrl();
@@ -131,7 +135,7 @@ export default class AvatarEditor extends Component<any, any> {
     };
   };
 
-  getAvatarImageSrc = image => {
+  getAvatarImageSrc = (image: HTMLImageElement) => {
     const editorSize = this.getEditorSize();
     const imageWidth = image.naturalWidth || image.width;
     const imageHeight = image.naturalHeight || image.height;
@@ -245,7 +249,7 @@ export default class AvatarEditor extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { from, label } = this.props;
     const { avatar, preview, src, editorImageWidth, editorCropRadius, minCropRadius } = this.state;
     const isMobile = browserIsMobile();

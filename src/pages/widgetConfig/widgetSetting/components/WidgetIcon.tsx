@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -60,9 +59,10 @@ export default function WidgetIcon({ data, onChange }) {
       <DropdownWrapper
         downElement={
           <WidgetIconStyle>
-            {DISPLAY_ICON.map(item => {
+            {DISPLAY_ICON.map((item, index) => {
               return (
                 <div
+                  key={index}
                   className={cx('icon_item', { active: itemicon === item.name })}
                   onClick={() => {
                     onChange(handleAdvancedSettingChange(data, { itemicon: item.name }));

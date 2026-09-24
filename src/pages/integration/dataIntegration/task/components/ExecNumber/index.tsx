@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { Dialog, Switch } from 'ming-ui';
 import projectSettingAjax from 'src/api/projectSetting';

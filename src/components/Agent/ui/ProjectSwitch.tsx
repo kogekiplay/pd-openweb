@@ -57,7 +57,7 @@ export default function ProjectSwitch({ value, onChange = () => {}, placement = 
   // 点击浮层与触发器之外关闭（mousedown 捕获阶段，先于 React click，避免误判）
   useEffect(() => {
     if (!visible) return undefined;
-    const onDocMouseDown = e => {
+    const onDocMouseDown = (e: MouseEvent) => {
       if (wrapRef.current && !wrapRef.current.contains(e.target)) setVisible(false);
     };
 

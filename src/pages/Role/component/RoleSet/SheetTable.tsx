@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -13,8 +13,8 @@ const Wrap = styled.div`
   flex: 52;
 `;
 
-export const changeSheetModel = (sheet, type, checked: boolean) => {
-  const KEYS = {
+export const changeSheetModel = (sheet, type: string, checked: boolean) => {
+  const KEYS: Record<string, string> = {
     READ: 'canRead',
     EDIT: 'canEdit',
     REMOVE: 'canRemove',
@@ -83,18 +83,18 @@ const getViewSize = (views, keyName: string) => {
 };
 
 export default class extends PureComponent<any, any> {
-  state = {
+  override state = {
     show: false,
     showRoleSet: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({
       show: this.props.isShow,
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.isShow !== this.props.isShow) {
         this.setState({
@@ -116,12 +116,12 @@ export default class extends PureComponent<any, any> {
     return { readSize, editSize, removeSize, showRead, showEdit, showRemove };
   };
 
-  toggleViewAuth = (key, checked: boolean) => {
+  toggleViewAuth = (key: string, checked: boolean) => {
     const { sheet, onChange } = this.props;
     onChange(changeSheetModel(sheet, key, checked));
   };
 
-  toggleViewLevel = (viewId: string, payload, isAllNoRead?) => {
+  toggleViewLevel = (viewId: string, payload, isAllNoRead?: boolean | undefined) => {
     const { sheet, onChange } = this.props;
     onChange(changeViewModel({ ...sheet, canAdd: isAllNoRead ? false : sheet.canAdd }, viewId, payload));
   };
@@ -148,7 +148,7 @@ export default class extends PureComponent<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { showRoleSet } = this.state;
     const { sheet, updateLookPages, updateNavigateHide, projectId, appId } = this.props;
     const { readSize, editSize, removeSize, showRead, showEdit, showRemove } = this.formatViews(sheet.views);
@@ -219,7 +219,7 @@ export default class extends PureComponent<any, any> {
                         item.key === 'ADD' ? (readSize <= 0 ? false : sheet.canAdd) : item.size === viewList.length
                       }
                       clearselected={item.key !== 'ADD' && item.size > 0 && item.size !== viewList.length}
-                      onClick={(checked: boolean, value, event) => {
+                      onClick={(checked: boolean, _value, event) => {
                         this.toggleViewAuth(item.key, !checked);
                         event.stopPropagation();
                       }}

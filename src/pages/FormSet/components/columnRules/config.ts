@@ -180,7 +180,7 @@ export const showArrowSetting = (data, values = [], actionType, from) => {
 export function getTextById(data, controls: FormControl[] = [], actionType, from?) {
   const tree = getNewDropDownData(data, actionType);
   let currentArr = [];
-  if (_.find(tree, i => i.sectionId)) return;
+  if (_.find(tree, i => i.sectionId)) return undefined;
 
   controls.forEach(controlsItem => {
     const { childControlIds = [], controlId = '' } = controlsItem;
@@ -242,7 +242,7 @@ function formatSectionData(data = []) {
 }
 
 export function getNewDropDownData(controls: FormControl[] = [], actionType) {
-  let filterControls = [];
+  let filterControls: number[] = [];
 
   if (_.includes([3, 4, 5], actionType)) {
     // 公式 汇总 文本组合 自动编号 他表字段 分割线 大写金额 备注 文本识别
@@ -252,7 +252,7 @@ export function getNewDropDownData(controls: FormControl[] = [], actionType) {
     }
   }
 
-  function filterRelations(item) {
+  function filterRelations(item: FormControl) {
     return (item.relationControls || []).filter(re => {
       return (
         _.includes(item.showControls || [], re.controlId) &&
@@ -438,6 +438,7 @@ export function checkConditionError(condition) {
         }
       }
   }
+  return undefined;
 }
 
 export function formatFilterValue(condition) {
@@ -484,7 +485,7 @@ export function filterDeleteOptions(items, controls: FormControl[] = []) {
   });
 }
 
-export const filterText = (key, filterData, control) => {
+export const filterText = (key, filterData, control: FormControl) => {
   const { filterType = '' } = filterData;
 
   if (filterType === FILTER_CONDITION_TYPE.ISNULL || filterType === FILTER_CONDITION_TYPE.HASVALUE) {
@@ -714,7 +715,7 @@ export const filterData = (
   return dataList;
 };
 
-const OCR_ICON_WHITELIST = {
+const OCR_ICON_WHITELIST: Record<number, string> = {
   1: 'ocr',
   2: 'ocr_id_card',
   3: 'ocr_invoice',
@@ -727,7 +728,7 @@ export function getNewIconByType(control = {}) {
 }
 
 // 业务规则默认名称
-export function getDefaultRuleName(data = [], activeTab) {
+export function getDefaultRuleName(data = [], activeTab: number) {
   const displayNum = data.filter(i => i.type === activeTab).length + 1;
   return getUnUniqName(
     data,
@@ -756,7 +757,7 @@ export function getActionError(value = {}) {
 
 // 对比是否有变更
 // 只按 ruleId 比对：带 '-' 的是还没保存过的新规则，一律当作有改动
-export function hasRuleChanged(data = [], selectRule: { ruleId?: string } = {}, passAlert?) {
+export function hasRuleChanged(data = [], selectRule: { ruleId?: string } = {}, passAlert?: boolean | undefined) {
   const originData = _.find(data, i => i.ruleId === selectRule.ruleId);
   const { ruleId = '' } = selectRule;
 
@@ -770,14 +771,14 @@ export function hasRuleChanged(data = [], selectRule: { ruleId?: string } = {}, 
 
 // 符合错误提示配置的指定字段
 export const getErrorControls = (controls: FormControl[] = []) => {
-  const filterControl = i => {
+  const filterControl = (i: FormControl) => {
     if (_.includes(SYS_CONTROLS.concat(SYS), i.controlId)) return false;
     if (_.includes([29, 51], i.type) && _.includes(['2', '5', '6'], _.get(i, 'advancedSetting.showtype'))) return false;
     if (_.includes([22, 43, 45, 47, 49, 10010], i.type)) return false;
     return true;
   };
 
-  const newData = [];
+  const newData: FormControl[] = [];
   controls
     .map(i => (i.type === 52 ? i : { ...i, relationControls: [] }))
     .forEach(i => {

@@ -6,7 +6,7 @@ import { emitter } from 'src/utils/common';
 import postEnum from '../constants/postEnum';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
-function handleMdAjaxFail(dispatch, actionType: string, payload = {}) {
+function handleMdAjaxFail(dispatch: AppDispatch, actionType: string, payload = {}) {
   return result => {
     if (result && result.status === 0) {
       dispatch(Object.assign({ type: actionType + '_ABORTED' }, payload));
@@ -16,7 +16,7 @@ function handleMdAjaxFail(dispatch, actionType: string, payload = {}) {
   };
 }
 
-let ajaxObj;
+let ajaxObj: ApiResult | undefined;
 
 /**
  * 加载动态列表
@@ -69,24 +69,20 @@ function loadPosts(options, pageOptions, currentCount = 0) {
     return ajaxObj.then(res => (res.success ? res : Promise.reject(res)));
   }
 
-  return postAjax.getIRepliedList(options).then(
-    res => {
-      try {
-        return {
-          postList: _.map(res.list || [], item => {
-            item.isIReply = true;
-            return item;
-          }),
-          more: parseInt(res.count, 10) > currentCount,
-        };
-      } catch (e) {
-        throw new Error(e);
-      }
-    },
-    e => {
-      throw new Error(e);
-    },
-  );
+  /* 【这里原先成功、失败两头都套了一层 throw new Error(e)，已去掉】
+     失败那头是真 bug：接口 reject 出来的是普通对象（取消时是 { status: 0 }，
+     业务异常是 { errorCode, errorMessage }），包成 new Error 之后 message 变成
+     "[object Object]"，而且 status 字段丢了 —— 下游 handleMdAjaxFail 靠
+     result.status === 0 区分「被取消」和「真失败」，于是这一路永远判成失败。
+     成功那头包的是纯数据映射的同步异常，包一层只会丢掉原始堆栈。
+     现在两头都让原始的值原样往下传。 */
+  return postAjax.getIRepliedList(options).then(res => ({
+    postList: _.map(res.list || [], item => {
+      item.isIReply = true;
+      return item;
+    }),
+    more: parseInt(res.count, 10) > currentCount,
+  }));
 }
 
 function getLastPostAutoID(postIds, postsById) {
@@ -99,7 +95,7 @@ function getMaxCommentId(postIds, postsById) {
   return postItem && postItem.commentID;
 }
 
-export function loading(isLoading) {
+export function loading(isLoading: boolean) {
   return {
     type: 'POST_LOADING',
     isLoading,
@@ -146,20 +142,32 @@ export function loadMore() {
             lastPostAutoID: getLastPostAutoID(post.postIds, post.postsById),
           },
       options,
-      // 【已知 bug，先不动行为】lenth 是 length 的笔误，这里一直传的是 undefined
-      (post.postIds as any).lenth,
-    ).then(({ postList, more }) => {
-      // 【已知 bug，先不动行为】dispatch 只收一个参数，第二个失败回调从来没生效过
-      (dispatch as any)(
-        {
+      /* 【已知 bug，刻意没修】lenth 是 length 的笔误，这里一直传的是 undefined，
+         于是 loadPosts 里 currentCount 恒为默认值 0，「我回复的」模式下 more 等价于 count > 0。
+         没修是因为「修成什么」查不实：
+           - 该模式下累加的列表是 ireplyPostIds 而不是 postIds（见 postReducers），
+             照拼写改成 postIds.length 很可能换来一个同样错的数；
+           - more 的算法对不对，取决于接口返回的 count 是「总数」还是「本页条数」，
+             而 swagger 里 Post/GetIRepliedList 的响应声明成无类型的 JToken，
+             实测又需要登录态（2026-09-23 试过，新会话直接 401）。
+         现状最坏是「最后多点一次拿到空页」；猜错却可能让加载提前停止、把数据藏起来。
+         查实 count 语义之后再改。 */
+      (post.postIds as unknown as { lenth?: number }).lenth,
+    ).then(
+      ({ postList, more }) => {
+        dispatch({
           type: 'POST_LOAD_MORE_SUCCESS',
           options,
           postList,
           hasMore: !!more,
-        },
-        handleMdAjaxFail(dispatch, 'POST_LOAD_MORE', { options }),
-      );
-    });
+        });
+      },
+      /* 【2026-09-23 修掉】失败回调原先被当成 dispatch 的第二个参数传进去，
+         dispatch 只收一个参数，于是它从来没生效过 —— reducer 里三处
+         POST_LOAD_MORE_FAIL 的处理一直等着却没人触发，加载更多失败时界面永远停在加载中。
+         对照上面 reload() 的写法，本意就是 .then(成功, 失败)。 */
+      handleMdAjaxFail(dispatch, 'POST_LOAD_MORE', { options }),
+    );
   };
 }
 
@@ -197,7 +205,7 @@ export function loadTop(projectId?) {
 }
 
 export function changeFontSize(fontSize: number) {
-  safeLocalStorageSetItem(md.global.Account.accountId + '_fontsize', fontSize);
+  safeLocalStorageSetItem(md.global.Account.accountId + '_fontsize', String(fontSize));
   return {
     type: 'POST_CHANGE_FONT_SIZE',
     fontSize,
@@ -289,7 +297,7 @@ export function filter(inputOptions) {
   };
 }
 
-export function getPostDetail(postId, knowledgeId?, projectId?) {
+export function getPostDetail(postId, knowledgeId?, projectId?: string | undefined) {
   return dispatch => {
     dispatch({ type: 'POST_GET_POST_DETAIL_START', postId });
     postAjax.getPostDetail({ postId, knowledgeId, projectId }).then(

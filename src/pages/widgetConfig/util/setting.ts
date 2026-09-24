@@ -308,7 +308,7 @@ export const getDefaultOptions = () => {
   ];
 };
 
-export const getDefaultCheckedOption = options => {
+export const getDefaultCheckedOption = (options: { key: string; value: string; isDeleted: boolean; index: number; checked: boolean; color: string }[]) => {
   if (isEmpty(options)) return '';
   return JSON.stringify([head(options).key]);
 };

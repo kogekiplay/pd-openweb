@@ -7,7 +7,7 @@ import { getClassNameByExt } from 'src/utils/common';
 import { FROM } from '../../../../core/config';
 import './style.less';
 
-const Icons = {
+const Icons: Record<number, string> = {
   0: '',
   1: 'icon-task-responsible',
   2: 'icon-knowledge_file',
@@ -31,7 +31,7 @@ const relationDelArr = [
 const RelationList = props => {
   const { data, from, disabled, onDelete } = props;
 
-  const handleLinkClick = (item, e) => {
+  const handleLinkClick = (item, e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     const { type } = item;
 
     // 分享禁止点击

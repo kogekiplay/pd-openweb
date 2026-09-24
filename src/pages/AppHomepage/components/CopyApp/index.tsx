@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
@@ -16,17 +16,24 @@ const Title = styled.span`
 
 const DataDBInstances = [{ label: _l('系统默认数据库'), value: '' }];
 
-export default class CopyApp extends Component<any, any> {
-  static propTypes = {};
+interface CopyAppState {
+  pending: boolean;
+  DBInstancesDialog: boolean;
+  dataDBInstances: { label: string; value: string }[];
+  visible: boolean;
+}
+
+export default class CopyApp extends Component<any, CopyAppState> {
+  static override propTypes = {};
   static defaultProps = {};
-  state = {
+  override state = {
     pending: false,
     DBInstancesDialog: false,
     dataDBInstances: [],
     visible: true,
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(_nextProps, nextState) {
     return (
       !_.isEqual(nextState.pending, this.state.pending) ||
       !_.isEqual(nextState.DBInstancesDialog, this.state.DBInstancesDialog)
@@ -101,7 +108,7 @@ export default class CopyApp extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { title, ...rest } = this.props;
     const { pending, visible, DBInstancesDialog, dataDBInstances } = this.state;
     return (

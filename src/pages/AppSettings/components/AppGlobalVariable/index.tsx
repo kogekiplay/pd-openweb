@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import variableApi from 'src/api/variable';
@@ -75,8 +75,9 @@ export default function AppGlobalVariable(props) {
         }}
       />
       <div className="tabWrap">
-        {tabInfos.map(item => (
+        {tabInfos.map((item, index) => (
           <div
+            key={index}
             className={cx('tabItem Hand', { active: item.value === currentTab })}
             onClick={() => setCurrentTab(item.value)}
           >

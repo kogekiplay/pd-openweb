@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Route, Routes } from 'react-router';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import preall from 'src/common/preall';

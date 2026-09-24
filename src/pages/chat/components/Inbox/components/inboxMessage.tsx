@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { MSGTYPES } from '../constants';
 import * as Components from './wrappedComp';

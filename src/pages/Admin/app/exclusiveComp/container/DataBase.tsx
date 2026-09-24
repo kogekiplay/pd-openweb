@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Dialog, Icon, LoadDiv } from 'ming-ui';
@@ -63,7 +63,8 @@ function DataBase(props) {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [popupVisibleId, setPopupVisibleId] = useState(undefined);
-  const [limit, setLimit] = useState('-');
+  // 接口回来之前显示 '-'，之后是接口给的数字
+  const [limit, setLimit] = useState<number | string>('-');
 
   const getLimit = useCallback(() => {
     projectAjax.getDBInstanceLimit({ projectId }).then(res => {
@@ -222,11 +223,11 @@ function DataBase(props) {
                 </div>
               </div>
               <div className="content Font13 valignWrapper">
-                {DISPLAY_DATA.map(l => {
+                {DISPLAY_DATA.map((l, index) => {
                   const itemValue = item[l.key] || l.defaultValue;
 
                   return (
-                    <div>
+                    <div key={index}>
                       <div className="label textTertiary mBottom8">{l.label}</div>
                       <div className="value">{l.format ? l.format(itemValue) : itemValue}</div>
                     </div>

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Popup } from 'antd-mobile';
 import _ from 'lodash';
@@ -39,7 +39,7 @@ export default function InvoiceConfirm(props) {
   }, []);
 
   // ESC关闭弹窗
-  const keyDownListener = e => {
+  const keyDownListener = (e: KeyboardEvent) => {
     e.keyCode === 27 && _.isFunction(onCancel) && onCancel();
   };
 

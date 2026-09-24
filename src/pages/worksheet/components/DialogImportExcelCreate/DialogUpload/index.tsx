@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Dialog } from 'ming-ui';
 import UploadFile from './UploadFile';
 import './index.less';
@@ -11,7 +11,7 @@ export default class DialogUpload extends Component<any, any> {
   fileUploaded = file => {
     this.props.fileUploaded(file);
   };
-  render() {
+  override render() {
     const { visible } = this.props;
     return (
       <Dialog

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -46,7 +46,7 @@ export default class Back extends Component<any, any> {
       </Content>
     );
   }
-  render() {
+  override render() {
     const { pc_slide = '' } = getRequest();
 
     // 钉钉、企微、飞书客户端内在侧边栏打开记录详情时，显示返回按钮

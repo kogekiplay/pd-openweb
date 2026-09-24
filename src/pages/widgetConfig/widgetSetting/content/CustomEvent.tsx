@@ -1,6 +1,5 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
-import { Collapse } from 'antd';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -35,9 +34,8 @@ import DynamicText from '../components/DynamicDefaultValue/components/DynamicTex
 import WidgetWarning from '../components/WidgetBase/WidgetWarning';
 import { SettingCollapseWrap } from './styled';
 
-const { Panel } = Collapse;
 
-const renderDefaultFilter = showSplice => {
+const renderDefaultFilter = (showSplice: boolean) => {
   return (
     <Fragment>
       <ActionWrap>{_l('在详情页新建或打开记录')}</ActionWrap>
@@ -194,9 +192,9 @@ export default function CustomEvent(props) {
       case ACTION_VALUE_ENUM.ERROR:
         return (
           <Fragment>
-            {actionItems.map(i => {
+            {actionItems.map((i, index) => {
               return (
-                <div className="textCon LineHeight30">
+                <div key={index} className="textCon LineHeight30">
                   <span>{_.get(getTextById(allControls, [i], actionType) || [], '0.name')}</span>
                   <span className="title mLeft10 mRight10">{_l('提示')}</span>
                   {renderDynamicValue(i.value)}
@@ -208,15 +206,15 @@ export default function CustomEvent(props) {
       case ACTION_VALUE_ENUM.SET_VALUE:
         return (
           <Fragment>
-            {actionItems.map(i => {
+            {actionItems.map((i, index) => {
               const controlInfo = _.head(getTextById(allControls, [i], 1)) || {};
 
               if (controlInfo.isDel) {
-                return <div className="textCon LineHeight30 Red">{_l('字段已删除')}</div>;
+                return <div key={index} className="textCon LineHeight30 Red">{_l('字段已删除')}</div>;
               }
 
               return (
-                <div className="textCon LineHeight30">
+                <div key={index} className="textCon LineHeight30">
                   <span className="title">{_l('将')}</span>
                   <span className="Max215 mLeft10 mRight10 overflow_ellipsis" title={_.get(controlInfo, 'name')}>
                     {_.get(controlInfo, 'name')}
@@ -253,7 +251,7 @@ export default function CustomEvent(props) {
         const { fileKey, voicefiles } = advancedSetting;
         const voiceFiles = VOICE_FILE_LIST.concat(safeParse(voicefiles, 'array'));
         const curFile = _.find(voiceFiles, v => v.fileKey === fileKey);
-        if (!fileKey || !curFile) return;
+        if (!fileKey || !curFile) return undefined;
         return <div className="textCon breakAll">{_.get(curFile, 'fileName')}</div>;
       case ACTION_VALUE_ENUM.OPERATION_FLOW:
       case ACTION_VALUE_ENUM.API:
@@ -301,6 +299,7 @@ export default function CustomEvent(props) {
           </Fragment>
         );
     }
+    return undefined;
   };
 
   /**
@@ -376,6 +375,7 @@ export default function CustomEvent(props) {
           </div>
         );
     }
+    return undefined;
   };
 
   /**
@@ -399,7 +399,7 @@ export default function CustomEvent(props) {
           const hasFilters = filters.length > 0;
 
           return (
-            <EventActionWrap eventColor={color} bgColor={bgColor}>
+            <EventActionWrap key={index} eventColor={color} bgColor={bgColor}>
               {isClose ? null : <div className="eventLine" />}
               <div className="eventHeader">
                 <div
@@ -465,7 +465,7 @@ export default function CustomEvent(props) {
                 {/**渲染filters */}
                 {filters.map((itemFilter, filterIndex) => {
                   return (
-                    <Fragment>
+                    <Fragment key={filterIndex}>
                       <ActionWrap>
                         <div className="actionHeader">
                           <span className="title">
@@ -505,7 +505,7 @@ export default function CustomEvent(props) {
                 {/**渲染actions */}
                 {actions.map((itemAction, actionIndex) => {
                   return (
-                    <ActionWrap>
+                    <ActionWrap key={actionIndex}>
                       <div className="actionHeader">
                         <span className="title">{getActionTextByValue(itemAction.actionType)}</span>
                         <EventOptions
@@ -545,8 +545,9 @@ export default function CustomEvent(props) {
     const disabled = !FILTER_EVENT_DISPLAY.length;
     const menu = (
       <Menu style={{ width: 310, position: 'relative' }}>
-        {dealEventDisplay(data, FILTER_EVENT_DISPLAY).map(item => (
+        {dealEventDisplay(data, FILTER_EVENT_DISPLAY).map((item, index) => (
           <MenuItem
+            key={index}
             onClick={() => {
               setVisible(false);
               const newCustomEvent = customEvent.concat([

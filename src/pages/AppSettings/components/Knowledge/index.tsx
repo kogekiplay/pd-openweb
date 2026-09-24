@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Support } from 'ming-ui';
 import KnowledgeDetail from './components/KnowledgeDetail';
 import KnowledgeList from './components/KnowledgeList';

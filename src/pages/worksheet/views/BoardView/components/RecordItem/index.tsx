@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useDrag } from 'react-dnd';
@@ -229,6 +229,7 @@ function SortableRecordItem(props) {
     } catch (error) {
       console.log(error);
     }
+    return undefined;
   };
 
   const updateTitleControlData = control => {

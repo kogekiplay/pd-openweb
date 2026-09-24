@@ -1,8 +1,13 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Checkbox } from 'ming-ui';
 import Tooltip from 'ming-ui/antd-components/Tooltip';
 
-export default function EnabledWebProxy(props) {
+export interface EnabledWebProxyProps {
+  isProxy: boolean;
+  handleChangeProxy?: ((value: boolean) => void) | undefined;
+}
+
+export default function EnabledWebProxy(props: EnabledWebProxyProps) {
   const { isProxy, handleChangeProxy = () => {} } = props;
 
   if (!window.platformENV.isOverseas && !window.platformENV.isLocal) {

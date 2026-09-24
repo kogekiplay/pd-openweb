@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import _, { find, isEqual } from 'lodash';
 import { arrayOf, func, string } from 'prop-types';
 import styled from 'styled-components';
@@ -195,14 +195,14 @@ export default function Users(props) {
         {!isMultiple && !!values.length ? (
           <SingleUserItem className="singleUserItem">{values[0].fullname || nullitemname || _l('为空')}</SingleUserItem>
         ) : (
-          values.map(user => {
+          values.map((user, index) => {
             if (user.accountId === 'isEmpty' && !user.avatar && !user.fullname) {
               user.avatar = emptyAvatar;
               user.fullname = nullitemname || _l('为空');
             }
 
             return (
-              <UserItem className="ellipsis">
+              <UserItem key={index} className="ellipsis">
                 <UserHead
                   className="userHead"
                   user={{

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSetState } from 'react-use';
 import { Dialog } from 'ming-ui';
 import openAuthorAjax from 'src/api/openAuthor';
@@ -24,7 +24,7 @@ export default function AuthorizedApp() {
     currentItem: {},
   });
 
-  const promiseRef = useRef(null);
+  const promiseRef = useRef<ApiResult | null>(null);
 
   const columns = useMemo(
     () => [
@@ -56,7 +56,7 @@ export default function AuthorizedApp() {
         title: '',
         dataIndex: 'prompt',
         width: 180,
-        render: (text, record) => (
+        render: (_text, record) => (
           <span className="textError">
             {record.oAuthAppStatus === 0
               ? _l('集成应用已被停用')
@@ -71,7 +71,7 @@ export default function AuthorizedApp() {
         dataIndex: 'action',
         width: 150,
         fixed: 'right',
-        render: (text, record) => (
+        render: (_text, record) => (
           <div>
             <span
               className="colorPrimary hoverColorPrimaryLight Hand mRight20"

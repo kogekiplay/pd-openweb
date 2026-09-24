@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dialog } from 'ming-ui';
 import CreateAppEntryContent from './CreateAppEntryContent';
 

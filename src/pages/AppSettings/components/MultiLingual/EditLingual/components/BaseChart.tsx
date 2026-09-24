@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Input } from 'antd';
 import _ from 'lodash';
 import { reportTypes } from 'statistics/Charts/common';

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
 import Trigger from '@rc-component/trigger';
@@ -85,7 +85,7 @@ export default function BatchImportApp(props) {
         popup={() => {
           return (
             <ul className="optionPanelTrigger moreOptionPanelTrigger">
-              {optionData.map(item => {
+              {optionData.map((item, index) => {
                 const featureType = getFeatureStatus(projectId, item.featureId);
 
                 // 私有部署支持迁移模式、公有云使用应用访问策略指标（用于测试）
@@ -95,13 +95,14 @@ export default function BatchImportApp(props) {
                     : window.platformENV.isLocal && !window.platformENV.isOverseas && !window.platformENV.isPlatform;
 
                 if (_.includes(['handleExportAll', 'openAppTrash', 'handleUpdateAll'], item.action) && !featureType) {
-                  return;
+                  return undefined;
                 }
 
                 if (item.action === 'handleUpdateAll' && featureType !== '2' && isSupportMigrateMode) {
                   // 仅私有部署支持迁移模式
                   return (
                     <Trigger
+                      key={index}
                       action={['hover']}
                       popupVisible={importAppPopupVisible}
                       onPopupVisibleChange={visible => setData({ importAppPopupVisible: visible })}

@@ -97,7 +97,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPublicWorksheetInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getPublicWorksheetInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.PublicForm.PublicFormDomainDto> {
     return mdyAPI('PublicWorksheet', 'GetPublicWorksheetInfo', args, options);
   },
   /**
@@ -108,7 +111,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPublicQuery: function (args: ApiArgs, options: ApiOptions = {}) {
+  getPublicQuery: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Worksheet.PublicForm.PublicQueryDomain> {
     return mdyAPI('PublicWorksheet', 'GetPublicQuery', args, options);
   },
   /**

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, MdLink, SvgIcon } from 'ming-ui';
@@ -30,7 +30,7 @@ const AppItem = props => {
 
   const handleNewOpen = () => {
     const dataSource = transferValue(urlTemplate);
-    const urlList = [];
+    const urlList: string[] = [];
     dataSource.map(o => {
       if (o.staticValue) {
         urlList.push(o.staticValue);

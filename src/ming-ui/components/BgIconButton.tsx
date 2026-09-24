@@ -1,4 +1,5 @@
-import React from 'react';
+import type { CSSProperties, MouseEvent, ReactNode } from 'react';
+import type { TooltipProps } from 'antd';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -53,6 +54,29 @@ const Con = styled.div`
     `}
 `;
 
+interface BgIconButtonProps {
+  disabled?: boolean | undefined;
+  className?: string | undefined;
+  iconClassName?: string | undefined;
+  style?: CSSProperties | undefined;
+  iconStyle?: CSSProperties | undefined;
+  /** 'small' 用小一号的图标和文字 */
+  size?: 'normal' | 'small' | undefined;
+  /** 图标名，渲染成 icon-<icon>；给了 iconComponent 就不用它（propTypes 里标了必填，实际有调用方只给 iconComponent） */
+  icon?: string | undefined;
+  /** 自定义图标节点，优先于 icon */
+  iconComponent?: ReactNode;
+  text?: ReactNode;
+  /** 挂在 mousedown 上；disabled 或给了 nativeOnClick 时不挂 */
+  onClick?: ((e: MouseEvent<HTMLDivElement>) => void) | undefined;
+  /** 挂在真正的 click 上 */
+  nativeOnClick?: ((e: MouseEvent<HTMLDivElement>) => void) | undefined;
+  tooltip?: ReactNode;
+  popupPlacement?: TooltipProps['placement'] | undefined;
+  /** 提示框里跟在文字后面显示的快捷键 */
+  shortcut?: ReactNode;
+}
+
 function BgIconButton({
   disabled,
   className,
@@ -68,7 +92,7 @@ function BgIconButton({
   tooltip,
   popupPlacement = 'bottom',
   shortcut,
-}) {
+}: BgIconButtonProps) {
   return (
     <Tooltip
       title={tooltip && !isMobile ? <span>{tooltip}</span> : null}

@@ -224,10 +224,10 @@ export default function BulletinSetting(props) {
     setEditStatus({ editing: false, saved: false });
   };
 
-  const onDelete = currentIndex => {
+  const onDelete = (currentIndex: number | undefined) => {
     const isAdded = bulletins.length > bulletinBoards.length && currentIndex === bulletins.length - 1;
 
-    const deleteItem = (isUpdate?) => {
+    const deleteItem = (isUpdate?: boolean | undefined) => {
       const newBulletins = bulletins.filter((_, index: number) => index !== currentIndex);
       setActiveIndex(0);
       setBulletins(newBulletins);
@@ -409,7 +409,7 @@ export default function BulletinSetting(props) {
                 setUploadLoading(true);
                 up.disableBrowse();
               }}
-              onError={(up, err, errTip) => {
+              onError={(_up, _err, errTip) => {
                 alert(errTip, 2);
               }}
             >

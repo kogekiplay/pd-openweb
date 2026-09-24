@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Checkbox, Collapse, Input, Radio, Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -88,7 +88,7 @@ class Unit extends Component<any, any> {
       true,
     );
   };
-  render() {
+  override render() {
     const { data, currentReport = {} } = this.props;
     const { reportType, pivotTable = {} } = currentReport;
     const {
@@ -420,8 +420,8 @@ export default function unitPanelGenerator(props) {
         <Collapse.Panel header={_l('值')} key="pivotTableUnit" {...collapseProps}>
           {yaxisList
             .filter(data => data.normType !== 7)
-            .map(item => (
-              <Fragment>
+            .map((item, index) => (
+              <Fragment key={index}>
                 <div className="mBottom12 Bold textSecondary">{item.controlName}</div>
                 <Unit
                   currentReport={currentReport}

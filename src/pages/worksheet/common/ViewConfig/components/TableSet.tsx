@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, Radio } from 'ming-ui';
@@ -12,7 +12,7 @@ export default function TableSet(props) {
   const { appId, view, updateCurrentView } = props;
   const isManageView = view.viewId === view.worksheetId;
 
-  const handleChange = (obj, editAttrs?) => {
+  const handleChange = (obj, editAttrs?: string[] | undefined) => {
     if (editAttrs) {
       updateCurrentView({
         ...view,

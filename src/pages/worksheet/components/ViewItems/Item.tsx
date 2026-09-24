@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -13,7 +13,12 @@ import SettingMenu from './SettingMenu';
 import 'rc-trigger/assets/index.css';
 import './ViewItems.less';
 
-export default class Item extends Component<any, any> {
+export interface ItemState {
+  visible: boolean;
+  isEdit: boolean;
+}
+
+export default class Item extends Component<any, ItemState> {
   static defaultProps = {
     item: {},
   };
@@ -94,7 +99,7 @@ export default class Item extends Component<any, any> {
       isEdit: false,
     });
   };
-  render() {
+  override render() {
     const { appId, item, currentViewId, isCharge, getNavigateUrl, fixed = false } = this.props;
     const { isEdit } = this.state;
 

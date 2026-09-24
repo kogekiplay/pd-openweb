@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 export const PERMISSION_WAYS = {
@@ -234,7 +233,7 @@ export const sysRoleList = [
   },
 ];
 
-export const ICON_ROLE_TYPE = {
+export const ICON_ROLE_TYPE: Record<number, string> = {
   100: 'manage_accounts', // 管理员
   2: 'account_box', // 运营者
   1: 'construction', // 开发者

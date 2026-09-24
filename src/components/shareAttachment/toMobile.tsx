@@ -1,17 +1,37 @@
-import React from 'react';
 import doT from 'dot';
 import _ from 'lodash';
 import qs from 'query-string';
 import Dialog from 'ming-ui/components/Dialog';
 import attachmentController from 'src/api/attachment';
 import { pathCompletion } from 'src/utils/common';
+import defineMethods from 'src/utils/defineMethods';
 import { ATTACHMENT_TYPE } from './enum';
 import mobileDialogHtml from './tpl/mobileDialog.htm';
 import './style.less';
 
 var dialogTpl = doT.template(mobileDialogHtml);
 
-var ToMobileDialog = function (options) {
+/** 「发到手机」二维码弹层（shareAttachment 的 sendToMobile 用；那个入口在模板里目前是注释掉的）。
+ *  file 由 sendToMobile 按附件类型拼：普通附件给 fileID，知识 / 工作表给 shareUrl，七牛给 qiniuPath + name/ext/size。 */
+interface ToMobileDialogFields {
+  options: {
+    sendToType: number;
+    attachmentType: number;
+    file: {
+      fullName?: string;
+      fileID?: string;
+      shareUrl?: string;
+      qiniuPath?: string;
+      name?: string;
+      ext?: string;
+      size?: number;
+    };
+  };
+  $dialog: JQuery;
+  $QRCode: JQuery;
+}
+
+function ToMobileDialog(this: ToMobileDialogInstance, options) {
   var DEFAULTS = {
     sendToType: 1,
     attachmentType: 1,
@@ -19,9 +39,9 @@ var ToMobileDialog = function (options) {
   };
   this.options = _.assign({}, DEFAULTS, options);
   this.openDialog();
-};
+}
 
-ToMobileDialog.prototype = {
+const toMobileDialogMethods = defineMethods<ToMobileDialogFields>()({
   getTip(type) {
     switch (type) {
       case ATTACHMENT_TYPE.COMMON:
@@ -162,7 +182,10 @@ ToMobileDialog.prototype = {
     );
     return img;
   },
-};
+});
+
+ToMobileDialog.prototype = toMobileDialogMethods;
+type ToMobileDialogInstance = ToMobileDialogFields & typeof toMobileDialogMethods;
 
 export default function (options) {
   return new ToMobileDialog(options);

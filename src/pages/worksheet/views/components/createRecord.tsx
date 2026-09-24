@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from 'antd';
 import Trigger from '@rc-component/trigger';
 // import 'antd/es/input/style/css';

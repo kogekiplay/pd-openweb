@@ -29,7 +29,7 @@ let _popstateListenerBound = false;
 let _pendingHistoryLayerPopstates = 0;
 let _seqCounter = 0;
 
-const _getUrlWithParams = urlParams => {
+const _getUrlWithParams = (urlParams: Record<string, string | null | undefined> | undefined) => {
   if (!window.isMingDaoApp || !urlParams || !Object.keys(urlParams).length) return '';
 
   const url = new URL(window.location.href);
@@ -86,7 +86,8 @@ const _bindPopstateOnce = () => {
 };
 
 /** 判断本次 popstate 是否由移动端弹层返回栈消费 */
-export const isHistoryLayerPopstate = event => Boolean(event && _historyLayerPopstateEvents.has(event));
+export const isHistoryLayerPopstate = (event: PopStateEvent) =>
+  Boolean(event && _historyLayerPopstateEvents.has(event));
 
 /**
  * 把弹层入栈，并 push 一帧 history，state 中带唯一 __layerSeq 用于 popstate 判定。
@@ -148,7 +149,7 @@ export const getHistoryLayerDepth = () => _layerStack.length;
  * 返回栈中是否包含某个 layerId
  * 在 onClose 里需要知道"自己是否还在栈中"时使用
  */
-export const hasHistoryLayer = id => _layerStack.some(s => s.id === id);
+export const hasHistoryLayer = (id: string) => _layerStack.some(s => s.id === id);
 
 /**
  * @deprecated 旧 API，保留向后兼容；内部转发到 pushHistoryLayer

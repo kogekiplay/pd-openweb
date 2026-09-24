@@ -1,14 +1,40 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+import type { ReactNode } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import { isFunction } from 'lodash';
 import PropTypes from 'prop-types';
 import './less/RadioGroup.less';
 
-export const SIZE_LIST = ['small', 'default', 'middle'];
+export const SIZE_LIST = ['small', 'default', 'middle'] as const;
+export type RadioSize = (typeof SIZE_LIST)[number];
 
-class Radio extends Component<any, any> {
-  static propTypes = {
+export interface RadioProps<V = any> {
+  /** 去掉右边距 */
+  noMargin?: boolean | undefined;
+  /** 显示的名称 */
+  text?: ReactNode;
+  /** 点击时原样交给 onClick */
+  value?: V;
+  checked?: boolean | undefined;
+  defaultChecked?: boolean | undefined;
+  /** 点击（禁用时不触发），参数是 value */
+  onClick?: ((value: V) => void) | undefined;
+  disabled?: boolean | undefined;
+  /** 跟在 text 后面 */
+  children?: ReactNode;
+  size?: RadioSize | undefined;
+  className?: string | undefined;
+  /** 悬停提示，不给就用 text（text 是字符串或数字时） */
+  title?: string | undefined;
+  /** 不显示悬停提示 */
+  disableTitle?: boolean | undefined;
+  /** 文字前的图标，写图标类名，如 icon-edit */
+  icon?: string | undefined;
+}
+
+class Radio<V = any> extends Component<RadioProps<V>, { checked: boolean | undefined }> {
+  static override propTypes = {
     /**
      * 是否没有margin
      */
@@ -55,11 +81,11 @@ class Radio extends Component<any, any> {
     disableTitle: PropTypes.bool,
   };
 
-  state = {
+  override state = {
     checked: this.props.checked || this.props.defaultChecked,
   };
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: RadioProps<V>) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         checked: this.props.checked,
@@ -71,24 +97,29 @@ class Radio extends Component<any, any> {
     const { onClick, value, disabled } = this.props;
     if (disabled) return;
     if (isFunction(onClick)) {
-      onClick(value);
+      // value 是可选属性：没传时回调收到 undefined，和原来一样
+      onClick(value as V);
     }
   };
 
-  render() {
+  override render() {
     const { checked } = this.state;
     const { disabled, className, size, icon, text, children, title, disableTitle, noMargin } = this.props;
+    // 原来是 title={!disableTitle && (title || text)}：disableTitle 时给 <label> 传 false，
+    // React 在开发环境逐个报「Received `false` for a non-boolean attribute `title`」；
+    // text 是 JSX 时悬停提示会显示成 [object Object]。只拿字符串、数字的 text 兜底
+    const hint = title || (typeof text === 'string' || typeof text === 'number' ? String(text) : undefined);
 
     return (
       <label
-        checked={checked}
+        // 原来还有 checked={checked}：<label> 没有这个属性，React 不会把它写进 DOM，也没有样式或代码读它
         className={cx('ming Radio', { 'Radio--disabled': disabled, checked }, className)}
         onClick={this.handleClick}
-        title={!disableTitle && (title || text)}
+        title={disableTitle ? undefined : hint}
         style={noMargin ? { marginRight: 0 } : {}}
       >
         <span
-          className={cx(SIZE_LIST.includes(size) ? 'Radio-box--' + size : '', 'Radio-box')}
+          className={cx(size && SIZE_LIST.includes(size) ? 'Radio-box--' + size : '', 'Radio-box')}
           style={noMargin ? { marginRight: 0 } : {}}
         >
           <span className="Radio-box-round" />

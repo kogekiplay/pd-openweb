@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { func, object, oneOf, string } from 'prop-types';
@@ -109,7 +109,9 @@ const RequiredIcon = styled.div`
 `;
 
 export default class OtherAction extends Component<any, any> {
-  static propTypes = {
+  declare signature: Signature | null | undefined;
+
+  static override propTypes = {
     projectId: string,
     data: object,
     action: oneOf(['after', 'before', 'pass', 'overrule', 'transfer', 'transferApprove', 'addApprove', 'return']),
@@ -172,7 +174,7 @@ export default class OtherAction extends Component<any, any> {
   password = '';
   isNoneVerification = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId, action } = this.props;
     const { encrypt } = (this.props.data || {}).flowNode || {};
 
@@ -453,7 +455,7 @@ export default class OtherAction extends Component<any, any> {
     const { projectId, action, data } = this.props;
     const { nextUserRange } = this.state;
     const { operationUserRange } = data;
-    const TYPES = {
+    const TYPES: Record<string, number> = {
       transferApprove: 6,
       addApprove: 16,
       after: 7,
@@ -490,7 +492,7 @@ export default class OtherAction extends Component<any, any> {
     });
   };
 
-  getCode(fixedSignMode?) {
+  getCode(fixedSignMode?: string | number | undefined) {
     const { action, workId } = this.props;
     const { auth } = (this.props.data || {}).flowNode || {};
     let signMode;
@@ -675,7 +677,7 @@ export default class OtherAction extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { action, onCancel, projectId } = this.props;
     const { callBackNodeType, opinionTemplate, app = {} } = this.props.data;
     const { auth, encrypt, allowUploadAttachment } = (this.props.data || {}).flowNode || {};

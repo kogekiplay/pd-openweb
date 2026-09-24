@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
@@ -7,12 +7,14 @@ import InvitationController from 'src/api/invitation';
 import ProjectController from 'src/api/project';
 import { existAccountHint } from 'src/utils/inviteCommon';
 
-const Tips = {
+const Tips: Record<number, string> = {
   1: _l('暂无使用中的邀请链接'),
   2: _l('暂无邀请记录'),
 };
 
 export default class DetailList extends Component<any, any> {
+  declare postList: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -26,7 +28,7 @@ export default class DetailList extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.searchDataList();
   }
 
@@ -169,7 +171,7 @@ export default class DetailList extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { list = [], loading } = this.state;
     const { detailMode } = this.props;
 

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Checkbox, Tabs } from 'antd';
 import cx from 'classnames';
 import { Icon, RadioGroup } from 'ming-ui';
@@ -17,7 +17,7 @@ export default function NavigationConfig(props) {
   const [displayIcon, setDisplayIcon] = useState(app.displayIcon || '011');
   const [hideFirstSection, setHideFirstSection] = useState(app.hideFirstSection || false);
 
-  const renderNavStyleConfig = type => {
+  const renderNavStyleConfig = (type: string) => {
     return (
       <Fragment>
         <div className="content mBottom24">
@@ -34,11 +34,12 @@ export default function NavigationConfig(props) {
     );
   };
 
-  const renderDisplayIcon = list => {
+  const renderDisplayIcon = (list: { name: string; show: boolean }[]) => {
     return (
       <Fragment>
         {list.map((item, index: number) => (
           <Checkbox
+            key={index}
             className={cx('mLeft0 mRight10', { hide: !item.show })}
             checked={displayIcon.split('')[index] === '1'}
             onChange={e => {

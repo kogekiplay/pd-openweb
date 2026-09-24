@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -11,7 +11,7 @@ import type { RecordRow } from 'src/utils/controlTypes';
 const titleLineArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const ClickAwayable = ClickAway;
 export default class ImportConfig extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     hideImportConfig: PropTypes.func,
     nextStep: PropTypes.func,
     fileList: PropTypes.any,
@@ -203,7 +203,7 @@ export default class ImportConfig extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { fileName, fileList, hideImportConfig } = this.props;
     const { importSheetIndex, titleLine, selectRow, showCancelDialog, hoverIndex } = this.state;
     const selectSheet = _.find(fileList, item => item.sheetNumber === importSheetIndex) || {};
@@ -236,11 +236,12 @@ export default class ImportConfig extends Component<any, any> {
                   {fileName}
                 </div>
                 <ScrollView className="flex mTop15">
-                  {fileList.map(item => {
+                  {fileList.map((item, index) => {
                     const disabled =
                       !item.state || item.total > md.global.SysSettings.worksheetExcelImportDataLimitCount;
                     return (
                       <Radio
+                        key={index}
                         className={cx('sheetItem Block', {
                           bgColorPrimaryTransparent: !disabled && item.sheetNumber === importSheetIndex,
                         })}

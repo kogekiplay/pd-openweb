@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class DropdownGroup extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     children: PropTypes.any,
     className: PropTypes.string,
   };
@@ -11,7 +11,7 @@ class DropdownGroup extends Component<any, any> {
     children: [],
   };
 
-  render() {
+  override render() {
     return (
       <div className={`ming DropdownGroup ${this.props.className}`}>
         {this.props.children[0]}

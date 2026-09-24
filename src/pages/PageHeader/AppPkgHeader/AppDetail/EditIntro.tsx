@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { bool, func, string } from 'prop-types';
 import { compareProps } from '../../util';
@@ -6,7 +6,7 @@ import Editor from './EditorDiaLogContent';
 import './index.less';
 
 export default class AppIntro extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isEditing: bool,
     description: string,
     onSave: func,
@@ -26,7 +26,7 @@ export default class AppIntro extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.isEditing !== this.props.isEditing) {
       this.setState({
         isEditing: this.props.isEditing,
@@ -34,7 +34,7 @@ export default class AppIntro extends Component<any, any> {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     const props = this.props || {};
     const state = this.state || {};
     return compareProps(props, nextProps, ['description', 'isEditing']) || nextState.isEditing !== state.isEditing;
@@ -47,7 +47,7 @@ export default class AppIntro extends Component<any, any> {
     // this.setState({ isEditing: false });
   };
 
-  render() {
+  override render() {
     const {
       description: summary,
       resume,

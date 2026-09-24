@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -64,7 +64,7 @@ function WaterMarkSettingDialog(props) {
   const $tagTextarea = useRef(null);
   const [requestLoading, setRequestLoading] = useState(false);
 
-  const onClick = item => {
+  const onClick = (item: { controlId: string; controlName: string }) => {
     $tagTextarea.current.insertColumnTag(item.controlId);
   };
 
@@ -84,8 +84,8 @@ function WaterMarkSettingDialog(props) {
       <SelectFieldsWrap>
         <div className="fieldsWrap" style={{ width: '430px' }}>
           <ul className="fieldList">
-            {CONTROLS.map(item => (
-              <li onClick={() => onClick(item)} style={{ maxWidth: '100%' }}>
+            {CONTROLS.map((item, index) => (
+              <li key={index} onClick={() => onClick(item)} style={{ maxWidth: '100%' }}>
                 {item.controlName}
               </li>
             ))}

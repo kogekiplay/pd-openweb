@@ -6,7 +6,9 @@ import log from './utils/log';
 import { MarkerAllProps, MarkerConfigurableProps, renderMarkerComponent } from './utils/markerUtils';
 
 class Marker extends React.Component<any, any> {
-  static propTypes = {
+  declare contentWrapper: HTMLDivElement | undefined;
+
+  static override propTypes = {
     map: PropTypes.object,
     element: HTMLDivElement,
     marker: PropTypes.object,
@@ -26,7 +28,7 @@ class Marker extends React.Component<any, any> {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     if (this.map) {
       this.refreshMarkerLayout(nextProps);
     }
@@ -34,7 +36,7 @@ class Marker extends React.Component<any, any> {
     return false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.map) {
       this.setChildComponent(this.props);
     }
@@ -141,7 +143,7 @@ class Marker extends React.Component<any, any> {
   }
 
   // 获取设置属性的方法
-  getSetterName(key) {
+  getSetterName(key: string) {
     switch (key) {
       case 'zIndex':
         return 'setzIndex';
@@ -175,11 +177,11 @@ class Marker extends React.Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     return null;
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.marker.hide();
     this.map.remove(this.marker);
     delete this.marker;

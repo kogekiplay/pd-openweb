@@ -8,13 +8,33 @@
 // CM5 的 mode 是全局注册制（import 一下就把自己塞进 CodeMirror.modes），
 // CM6 改成了显式的 LanguageSupport 值——所以这里返回 mode 对应的扩展本身，
 // 由调用方拼进 extensions 数组。
-let corePromise;
-const langPromises = {};
+import type { LanguageSupport } from '@codemirror/language';
+
+interface CodeMirrorCore {
+  state: typeof import('@codemirror/state');
+  view: typeof import('@codemirror/view');
+  language: typeof import('@codemirror/language');
+  commands: typeof import('@codemirror/commands');
+}
+
+/** loadCodeMirror 的结果：四个核心子包，加上 mode 对应的语言扩展（没有就是 null） */
+export interface CodeMirrorModules extends CodeMirrorCore {
+  lang: LanguageSupport | null;
+}
 
 const LANG_LOADERS = {
   javascript: () => import('@codemirror/lang-javascript').then(m => m.javascript()),
   xml: () => import('@codemirror/lang-xml').then(m => m.xml()),
 };
+
+type LangMode = keyof typeof LANG_LOADERS;
+
+let corePromise: Promise<CodeMirrorCore> | undefined;
+const langPromises: { [mode in LangMode]?: Promise<LanguageSupport> | undefined } = {};
+
+function isLangMode(mode: string): mode is LangMode {
+  return Object.prototype.hasOwnProperty.call(LANG_LOADERS, mode);
+}
 
 /* 【失败的 promise 一定不能留在缓存里】这里的 corePromise / langPromises 是「只算一次」
    的缓存，原先无论成败都留着。可 webpack 的 chunk 加载是会失败的（发布时那一下原子换目录、
@@ -29,20 +49,23 @@ const LANG_LOADERS = {
    刷新页面能好，也是因为模块作用域重建、缓存跟着没了 —— 所以它表现为「时好时坏」。
 
    改法：失败就把缓存清掉并把错误抛出去，下一次挂载重新试。 */
-function loadLang(mode) {
-  if (!mode || !LANG_LOADERS[mode]) return Promise.resolve(null);
+function loadLang(mode: string | undefined): Promise<LanguageSupport | null> {
+  if (!mode || !isLangMode(mode)) return Promise.resolve(null);
 
-  if (!langPromises[mode]) {
-    langPromises[mode] = LANG_LOADERS[mode]().catch(err => {
+  let promise = langPromises[mode];
+
+  if (!promise) {
+    promise = LANG_LOADERS[mode]().catch(err => {
       langPromises[mode] = undefined;
       throw err;
     });
+    langPromises[mode] = promise;
   }
 
-  return langPromises[mode];
+  return promise;
 }
 
-function loadCore() {
+function loadCore(): Promise<CodeMirrorCore> {
   if (!corePromise) {
     // CM5 那边还要额外 import placeholder addon 和 codemirror.css；
     // CM6 的 placeholder 在 @codemirror/view 里内置，样式也由 EditorView 自带的
@@ -63,6 +86,6 @@ function loadCore() {
   return corePromise;
 }
 
-export default function loadCodeMirror(mode) {
+export default function loadCodeMirror(mode: string | undefined): Promise<CodeMirrorModules> {
   return Promise.all([loadCore(), loadLang(mode)]).then(([core, lang]) => ({ ...core, lang }));
 }

@@ -36,7 +36,7 @@ export default class FindPassword extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     document.addEventListener('keypress', this.handleEnterKey);
   }
 
@@ -44,7 +44,7 @@ export default class FindPassword extends React.Component<any, any> {
     document.removeEventListener('keypress', this.handleEnterKey);
   }
 
-  handleEnterKey = e => {
+  handleEnterKey = (e: KeyboardEvent) => {
     if (e.keyCode === 13 && !hasCaptcha()) {
       this.onBtn();
     }
@@ -204,7 +204,7 @@ export default class FindPassword extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     return (
       <WrapCom>
         <DocumentTitle title={_l('找回密码')} />

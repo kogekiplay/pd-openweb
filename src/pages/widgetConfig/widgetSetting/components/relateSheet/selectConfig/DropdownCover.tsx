@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { RadioGroup } from 'ming-ui';
 import { COVER_FILL_TYPES } from '../../../../config/setting';
@@ -43,9 +42,10 @@ export default function DropdownCover(props) {
       />
       <div className="flexCenter mTop20">
         <span className="textSecondary mRight20">{_l('填充方式')}</span>
-        {COVER_FILL_TYPES.map(item => {
+        {COVER_FILL_TYPES.map((item, index) => {
           return (
             <span
+              key={index}
               className={cx('coverType Hand', { active: item.value === covertype })}
               onClick={() => handleChange(handleAdvancedSettingChange(data, { covertype: item.value }))}
             >

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import cx from 'classnames';
 import { find, get, isFunction, omit, uniq } from 'lodash';
 import _ from 'lodash';
@@ -122,7 +122,7 @@ const TestCon = styled.div`
   }
 `;
 
-function changeControlType(control) {
+function changeControlType(control: FormControl) {
   const { type } = control;
   return (
     {
@@ -152,7 +152,7 @@ export default function TestFunctionDialog(props) {
   const [expression, setExpression] = useState(value);
   const controlIdsInExpression = uniq((expression.match(/\$(.+?)\$/g) || []).map(id => id.slice(1, -1)));
   const [testFormValues, setTestFormValues] = useState({});
-  const [formFlag, setFormFlag] = useState(null);
+  const [formFlag, setFormFlag] = useState<number | null>(null);
   const [testError, setTestError] = useState(false);
   const [testResultValue, setTestResultValue] = useState('');
   const formData = controlIdsInExpression

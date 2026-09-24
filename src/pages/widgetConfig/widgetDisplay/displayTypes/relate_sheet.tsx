@@ -1,4 +1,3 @@
-import React from 'react';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
 import { SYSTEM_FIELD_TO_TEXT } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
@@ -22,7 +21,7 @@ export default function RelateSheet({ data = {}, isTab }) {
     const widths = getAdvanceSetting(data, 'widths') || [];
     if (isEmpty(widths)) return showControls.map(() => 160);
     if (widths.length === showControls.length) return widths;
-    return showControls.map((v, i) => widths[i] || 160);
+    return showControls.map((_v, i) => widths[i] || 160);
   };
 
   const widths = getWidths();

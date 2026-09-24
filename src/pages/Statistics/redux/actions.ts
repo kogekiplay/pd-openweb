@@ -32,7 +32,7 @@ export const changeBase = data => {
 
 let reportConfigDetailRequest: ApiResult | null = null;
 
-export const getReportConfigDetail = (data, callBack?) => {
+export const getReportConfigDetail = (data, callBack?: (() => void) | undefined) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { reportId, reportType, appId, customPageConfig = {} } = data;
     const { currentReport: oldReport, base } = getState().statistics;

@@ -22,6 +22,7 @@ import {
 } from '../../../utils';
 import ActionFields from '../ActionFields';
 import SelectOtherFields from '../SelectOtherFields';
+import type { SelectedFieldValue } from '../SelectOtherFields';
 import Tag from '../Tag';
 import TagInput from '../TagInput';
 
@@ -51,7 +52,7 @@ interface ControlGroup {
 export default class Condition extends Component<any, any> {
   // 纯类型声明（babel 的 TS preset 整条抹掉）；不能写成有初值的类字段，那会覆盖 ref 回调写进去的值
   declare cityPickerSearchRef: any;
-  static propTypes = {
+  static override propTypes = {
     processId: PropTypes.string,
     selectNodeId: PropTypes.string,
     sourceAppId: PropTypes.string,
@@ -105,7 +106,7 @@ export default class Condition extends Component<any, any> {
     this.cityPickerSearchRef = React.createRef();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.controls, prevProps.controls)) {
         this.setState({
@@ -204,7 +205,7 @@ export default class Condition extends Component<any, any> {
     } = this.props;
     let controlNumber;
     let conditionData = [];
-    let conditionIndex;
+    let conditionIndex: number | undefined;
     let single;
 
     if (isNodeHeader) {
@@ -705,7 +706,7 @@ export default class Condition extends Component<any, any> {
     if (filedTypeId === 15 || filedTypeId === 16) {
       const showType = _.get(currentControl || {}, 'advancedSetting.showtype');
       const mode = { 3: 'date', 4: 'month', 5: 'year' };
-      const dateList = [];
+      const dateList: { text: string; value: number }[][] = [];
       const showTimePicker = filedTypeId === 16 && !_.includes(['9', '10'], item.conditionId);
       const timeMode =
         _.includes(['ctime', 'utime'], filedId) || showType === '6' ? 'second' : showType === '2' ? 'hour' : 'minute';
@@ -726,12 +727,12 @@ export default class Condition extends Component<any, any> {
 
       // 显示类型是年月
       if (showType === '4') {
-        _.remove(dateList, (o, index) => _.includes([0, 1], index));
+        _.remove(dateList, (_o, index) => _.includes([0, 1], index));
       }
 
       // 显示类型是年
       if (showType === '5') {
-        _.remove(dateList, (o, index) => _.includes([0, 1, 2, 3], index));
+        _.remove(dateList, (_o, index) => _.includes([0, 1, 2, 3], index));
       }
 
       if (_.includes(['9', '10', '17', '18', '39', '40', '41', '42'], item.conditionId)) {
@@ -1033,7 +1034,7 @@ export default class Condition extends Component<any, any> {
                   value={
                     conditionValues[0] && conditionValues[0].value ? dayjs(conditionValues[0].value, timeFormat) : null
                   }
-                  onChange={(time, timeString) => this.updateConditionDateValue({ value: timeString, i, j })}
+                  onChange={(_time, timeString) => this.updateConditionDateValue({ value: timeString, i, j })}
                 />
               </div>
             )}
@@ -1061,7 +1062,7 @@ export default class Condition extends Component<any, any> {
                         ? dayjs(conditionValues[1].value, timeFormat)
                         : null
                     }
-                    onChange={(time, timeString) =>
+                    onChange={(_time, timeString) =>
                       this.updateConditionDateValue({ value: timeString, i, j, second: true })
                     }
                   />
@@ -1073,6 +1074,7 @@ export default class Condition extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
 
   /**
@@ -1146,7 +1148,7 @@ export default class Condition extends Component<any, any> {
   /**
    * 成员选择
    */
-  selectUser(evt: React.MouseEvent, users: any[], i: number, j: number, unique?: boolean) {
+  selectUser(_evt: React.MouseEvent, users: any[], i: number, j: number, unique?: boolean) {
     dialogSelectUser({
       title: _l('选择人员'),
       SelectUserSettings: {
@@ -1288,7 +1290,7 @@ export default class Condition extends Component<any, any> {
 
     // 人员 || 部门 || 组织角色
     if (_.includes([26, 27, 48, 10000001], filedTypeId)) {
-      const KEY = {
+      const KEY: Record<number, { id: string; name: string }> = {
         26: { id: 'accountId', name: 'fullname' },
         27: { id: 'departmentId', name: 'departmentName' },
         48: { id: 'organizeId', name: 'organizeName' },
@@ -1407,6 +1409,11 @@ export default class Condition extends Component<any, any> {
     second,
     isDel,
     sourceType,
+  }: Partial<SelectedFieldValue> & {
+    i: number;
+    j: number;
+    second?: boolean | undefined;
+    isDel?: boolean | undefined;
   }) => {
     const data = _.cloneDeep(this.props.data);
     const { updateSource } = this.props;
@@ -1488,7 +1495,7 @@ export default class Condition extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { Header, data } = this.props;
 
     return (

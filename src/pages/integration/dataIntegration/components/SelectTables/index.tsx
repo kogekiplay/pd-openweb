@@ -87,7 +87,7 @@ export default function SelectTables(props) {
     fetchState.tableName && fetchTables(0);
   }, [fetchState.tableName]);
 
-  const fetchTables = pageNo => {
+  const fetchTables = (pageNo: number) => {
     if (!dbName || isAppType) {
       return;
     }

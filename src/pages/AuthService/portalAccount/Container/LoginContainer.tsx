@@ -27,14 +27,14 @@ const WrapCon = styled.div`
   }
 `;
 
-function useInterval(callback, delay) {
+function useInterval(callback: () => void, delay: number | null) {
   const savedCallback = useRef(callback);
   useEffect(() => {
     savedCallback.current = callback;
   }, [callback]);
   useEffect(() => {
     if (!delay && delay !== 0) {
-      return;
+      return undefined;
     }
 
     const id = setInterval(() => savedCallback.current(), delay);
@@ -486,13 +486,14 @@ export default function (props) {
             LOGIN_WAY.filter(o => loginMode[o.key]).length > 1 && (
               <React.Fragment>
                 <ul className="flexRow mTop32 alignItemsCenter justifyContentCenter loginWays">
-                  {LOGIN_WAY.map(o => {
+                  {LOGIN_WAY.map((o, index) => {
                     if (!loginMode[o.key]) {
                       return '';
                     }
 
                     return (
                       <li
+                        key={index}
                         className={cx('Hand')}
                         onClick={() => {
                           setState({ type: o.key, sending: false, isRegister: false });

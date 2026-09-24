@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Checkbox, Collapse, Input, Select, Switch } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -547,7 +547,7 @@ export function numberSummaryPanelGenerator(props) {
         <Switch
           size="small"
           checked={switchChecked}
-          onClick={(checked, event) => {
+          onClick={(_checked, event) => {
             event.stopPropagation();
           }}
           onChange={checked => {
@@ -579,8 +579,8 @@ export function numberSummaryPanelGenerator(props) {
         >
           {normTypes
             .filter(n => ![5, 6].includes(n.value))
-            .map(item => (
-              <Select.Option className="selectOptionWrapper" value={item.value}>
+            .map((item, index) => (
+              <Select.Option key={index} className="selectOptionWrapper" value={item.value}>
                 {item.alias || item.text}
               </Select.Option>
             ))}
@@ -637,7 +637,7 @@ export default function numberStylePanelGenerator(props) {
             <Switch
               size="small"
               checked={numberChartStyle.iconVisible}
-              onClick={(checked, event) => {
+              onClick={(_checked, event) => {
                 event.stopPropagation();
               }}
               onChange={checked => {

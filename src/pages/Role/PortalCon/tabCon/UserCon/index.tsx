@@ -98,7 +98,7 @@ class Con extends React.Component<any, any> {
       keywords: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { portal = {} } = this.props;
     const { roleList = [], quickTag } = portal;
     const listType = _.get(this.props, ['match', 'params', 'listType']);
@@ -116,7 +116,7 @@ class Con extends React.Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { portal = {} } = prevProps;
       const { roleList = [] } = portal;
@@ -198,9 +198,10 @@ class Con extends React.Component<any, any> {
         <WrapL className="">
           <div className="navCon bTBorder">
             <ul>
-              {list.map(o => {
+              {list.map((o, index) => {
                 return (
                   <li
+                    key={index}
                     className={cx('flexRow alignItemsCenter', { cur: roleId === o.roleId })}
                     onClick={() => {
                       this.setState(
@@ -245,9 +246,9 @@ class Con extends React.Component<any, any> {
         <div className="navCon navConList">
           <ul>
             {navList.length <= 0 ? (
-              <div className="TxtCenter textDisabled mTop20">{_l('无相关角色')}</div>
+              <div className="TxtCenter textTertiary mTop20">{_l('无相关角色')}</div>
             ) : (
-              navList.map(o => {
+              navList.map((o, index) => {
                 let optList = [];
                 optList = [
                   ...optList,
@@ -270,6 +271,7 @@ class Con extends React.Component<any, any> {
                 const roleDescription = getTranslatedRoleDescription(appId, o);
                 return (
                   <li
+                    key={index}
                     className={cx('flexRow alignItemsCenter navRoleLi', { cur: roleId === o.roleId })}
                     onClick={() => {
                       this.props.setQuickTag({ roleId: o.roleId, tab: 'user' });
@@ -341,7 +343,7 @@ class Con extends React.Component<any, any> {
       </React.Fragment>
     );
   };
-  render() {
+  override render() {
     return (
       <Wrap className="flexRow">
         <WrapNav className="flexColumn">{this.renderNav()}</WrapNav>

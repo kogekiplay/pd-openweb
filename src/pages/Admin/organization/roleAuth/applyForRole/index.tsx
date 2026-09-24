@@ -6,6 +6,8 @@ import PaginationWrap from '../../../components/PaginationWrap';
 import './style.less';
 
 export default class ApplyForRole extends React.Component<any, any> {
+  declare promise: Promise<void> | undefined;
+
   constructor() {
     super();
     this.state = {
@@ -19,7 +21,7 @@ export default class ApplyForRole extends React.Component<any, any> {
     this.fetchData = this.fetchData.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchData();
   }
 
@@ -139,7 +141,7 @@ export default class ApplyForRole extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { visible, onOk, onClose } = this.props;
     const { isLoading, list, totalCount, pageSize } = this.state;
     const dialogProps = {

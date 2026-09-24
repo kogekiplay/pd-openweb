@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './less/Switch.less';
 
 class Switch extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 点击事件,参数(checked, value)
      */
@@ -55,7 +55,7 @@ class Switch extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.checked !== undefined) {
         this.setState({
@@ -88,9 +88,10 @@ class Switch extends Component<any, any> {
       });
       this.props.onClick(checked, this.props.value);
     }
+    return undefined;
   }
 
-  render() {
+  override render() {
     const { disabled, text, size, primaryColor } = this.props;
     const { checked, needAnimate } = this.state;
     return (

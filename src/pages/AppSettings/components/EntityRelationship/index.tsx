@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { register } from '@antv/x6-react-shape';
 import _ from 'lodash';
 import moment from 'moment';
@@ -10,13 +10,13 @@ import sheetAjax from 'src/api/worksheet';
 import CreateNew from 'worksheet/common/WorkSheetLeft/CreateNew';
 import { getTranslateInfo } from 'src/utils/app';
 import { controlState } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import AppSettingHeader from '../AppSettingHeader';
 import CustomErNode from './component/CustomErNode';
 import Search from './component/Search';
 import { stylesheet_er } from './config';
 import { createLabelOption, HIDE_FIELDS, isBothWayRelate, LINE_HEIGHT, NODE_WIDTH } from './utils';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 // x6 3.x 把原来的独立插件包（x6-plugin-export / x6-plugin-scroller 等）并进了核心包，
 // 所以 Export / Scroller 现在从 '@antv/x6' 取。必须跟着走这个动态 import——
@@ -194,7 +194,7 @@ function EntityRelationship(props) {
     onLayout(allData.current);
   };
 
-  const handleKeyDown = event => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     const keyCode = event.keyCode || event.which || event.charCode;
     const ctrlKey = event.ctrlKey || event.metaKey;
 
@@ -245,7 +245,7 @@ function EntityRelationship(props) {
     setFilterWorksheet(undefined);
   };
 
-  const onLayout = (list, options = {}) => {
+  const onLayout = async (list, options = {}) => {
     const { light = undefined } = options;
 
     const data = list.map(l => ({
@@ -272,7 +272,7 @@ function EntityRelationship(props) {
     sortData.forEach((item, dataIndex) => {
       const controls: FormControl[] = item.controls.filter(l => !HIDE_FIELDS.includes(l.type));
 
-      let items = _.fill(Array(item.start + item.end), 0).map((l, index) => ({
+      let items = _.fill(Array(item.start + item.end), 0).map((_l, index) => ({
         id: `${item.worksheetId}-${index}`,
         group: 'port1',
       }));
@@ -400,16 +400,34 @@ function EntityRelationship(props) {
       });
     });
 
+    /* 【@antv/layout 0.3 -> 2.0 的接口换了三处】
+       1) `layout(data)` 同步返回 model 的用法没了 —— 现在是 `execute(data)` 返回 Promise，
+          结果留在实例内部，要用 forEachNode 取。所以 onLayout 跟着变成 async
+          （7 个调用点都不取返回值，改成异步是安全的）。
+       2) 拿到的 GraphNode 只有 id/x/y/size，原始节点在 `_original` 上 ——
+          x6 的 fromJSON 需要 shape/width/height/data 那一整套，必须从 _original 铺回来。
+       3) 节点尺寸原先是 dagre 自己从 node.width/height 读的，2.0 要显式给 nodeSize。
+       `type: 'dagre'` 这个字段也没用了（类本身就是 dagre）。 */
     const dagreLayout = new layoutModuleRef.current.DagreLayout({
-      type: 'dagre',
       rankdir: 'LR',
       align: 'UL',
       ranksep: 65,
+      nodeSize: node => [node.width, node.height],
+      /* 【这条不加，图会塌成一列】边用的是 x6 的形状
+         `source: { cell, port }` / `target: { cell, port }`，而 2.0 要的是 ID。
+         0.3 能容忍这种写法，2.0 读不到 —— 于是一条边都不成立，
+         所有节点落在同一层、x 全相同，再经下面按 x 分列的逻辑就叠成了一根竖条。
+         **它不报错、图照样画出来**，只是全错，所以必须实测坐标而不是看截图。 */
+      edge: e => ({ id: e.id, source: e.source?.cell ?? e.source, target: e.target?.cell ?? e.target }),
     });
 
-    const model = dagreLayout.layout({ nodes, edges });
+    await dagreLayout.execute({ nodes, edges });
+
+    const laidOut = [];
+    dagreLayout.forEachNode(node => laidOut.push({ ...node._original, x: node.x, y: node.y }));
+
     const positionX = {};
-    const newNodes = model.nodes.map(l => {
+    const newNodes = laidOut.map(l => {
       const y = positionX[l.x] !== undefined ? positionX[l.x] + 20 : 0;
 
       positionX[l.x] = positionX[l.x] !== undefined ? positionX[l.x] + l.height + 20 : l.height;
@@ -420,10 +438,12 @@ function EntityRelationship(props) {
       };
     });
 
-    graphRef.current.fromJSON({ nodes: newNodes, edges: model.edges });
+    // 边不再从 layout 的返回值取：dagre 不改边，而 x6 需要的是原始那套
+    // router/connector 配置，直接用入参更忠实。
+    graphRef.current.fromJSON({ nodes: newNodes, edges });
   };
 
-  const onCreate = async (type, param) => {
+  const onCreate = async (_type, param) => {
     const { name, remark } = param;
     const res = await appManagementApi.addWorkSheet({
       appId,
@@ -455,7 +475,7 @@ function EntityRelationship(props) {
     onCenterCell(res.workSheetId);
   };
 
-  const setGraphZoom = type => {
+  const setGraphZoom = (type: boolean) => {
     //type false sub   true add
     const lastZoom = graphRef.current.zoom();
 

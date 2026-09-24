@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { SHARECARDTYPS } from 'src/components/ShareCardConfig/config';
 import ShareCardSetting from 'src/pages/FormSet/containers/Share/ShareCardSet';
 import SectionTitle from './SectionTitle';

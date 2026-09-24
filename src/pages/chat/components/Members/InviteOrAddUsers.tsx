@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Dropdown, Menu } from 'antd';
 import addFriends from 'src/components/addFriends';
 import Constant from '../../utils/constant';
@@ -16,6 +16,8 @@ const ITEMS = [
 ];
 
 export default class InviteOrAddUsers extends Component<any, any> {
+  declare $wrap: HTMLSpanElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -42,9 +44,10 @@ export default class InviteOrAddUsers extends Component<any, any> {
         fromText: name,
       });
     }
+    return undefined;
   };
 
-  render() {
+  override render() {
     return (
       <Dropdown
         trigger={['click']}

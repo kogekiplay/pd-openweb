@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AutoComplete, Dropdown } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -57,7 +57,7 @@ const InputWrapper = styled.div`
   }
 `;
 
-const highlightMessageText = (keyword, content) => {
+const highlightMessageText = (keyword: string, content) => {
   content = htmlDecodeReg(content);
   const reg = new RegExp(_.escapeRegExp(keyword), 'gi');
   const newKeyword = reg.exec(content)[0];
@@ -66,7 +66,7 @@ const highlightMessageText = (keyword, content) => {
   return content;
 };
 
-const searchResult = (query, queryKey, data) => {
+const searchResult = (query: string, queryKey, data) => {
   const list = data[0] && data[0].rowid ? _.uniqBy(data, 'rowid') : data;
 
   return list
@@ -100,7 +100,7 @@ const SearchRecord = props => {
     setSearchRecord(null);
   }, [viewId]);
 
-  const handleSearch = value => {
+  const handleSearch = (value: string) => {
     if (value) {
       setOptions(searchResult(value, queryKey, data));
     } else {
@@ -112,7 +112,7 @@ const SearchRecord = props => {
     setOpen(true);
   };
 
-  const onSelect = (data, { record }) => {
+  const onSelect = (_data: string, { record }) => {
     onSearch(record);
     setSearchRecord(record);
     setOpen(false);

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
 import { IconClose, IconFile } from './icons';
 import { colors, radii, spacing, transitions, typography } from './tokens';

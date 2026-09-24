@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { ActionSheet, Button, Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -25,7 +25,7 @@ export default function RowDetailModal(props) {
     deleteRow = () => {},
   } = props;
   const [errorConfirmVisible, setErrorConfirmVisible] = useState(false);
-  const formContent = useRef(null);
+  const formContent = useRef<RowDetail | null>(null);
   const rowId = data.rowid || '';
   const type = mobileIsEdit
     ? (rowId.includes('temp') || rowId.includes('default')) && !isEditCurrentRow
@@ -36,7 +36,7 @@ export default function RowDetailModal(props) {
   let closeConfirmFunc = null;
 
   // 切换上一条/下一条
-  const handleSwitch = type => {
+  const handleSwitch = (type: string) => {
     if ($('.mobileChildTableRowDetailDialog').find('.fileUpdateLoading').length) {
       alert(_l('附件正在上传，请稍后'), 3);
       return;

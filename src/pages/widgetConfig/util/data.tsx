@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   adjustControlSize,
   checkWidgetMaxNumErr,
@@ -330,7 +329,7 @@ const canSelectedControls = (controls: FormControl[], data: FormControl) => {
   return controls.filter(item => item.controlId !== data.controlId && !includes(CAN_NOT_AS_TEXT_GROUP, item.type));
 };
 
-const isSingleRelateSheet = data => data.type === 29 && data.enumDefault === 1;
+const isSingleRelateSheet = (data: FormControl) => data.type === 29 && data.enumDefault === 1;
 
 // 获取文本组合可选取的控件
 export const getConcatenateControls = (controls: FormControl[], data: FormControl) => {
@@ -1041,7 +1040,7 @@ export const dealRequestControls = (controls: FormControl[], needChild?: boolean
 
 // 处理自定义事件--查询api成立条件filters里控件type
 export const getFilterControls = (controls: FormControl[] = []) => {
-  const result = [];
+  const result: FormControl[] = [];
   if (_.isEmpty(controls)) return result;
   controls.forEach(c => {
     if (!c.dataSource) {
@@ -1096,7 +1095,7 @@ type WidgetsChangedCallback = (result?: { newWidgets?: FormControl[][] }) => voi
 export const clearAndSetWidgets = (
   data: FormControl[],
   // 【这个形参没有被用到】函数体里一次都没读，保留是为了不动 3 个调用点的实参位置
-  para: unknown,
+  _para: unknown,
   widgetProps: WidgetProps,
   callback?: WidgetsChangedCallback,
 ) => {
@@ -1419,7 +1418,7 @@ export const dealCopyWidgetId = (data: FormControl = {}) => {
     advancedSetting: { ...data.advancedSetting, custom_event: '', ...getCopyDefaultSetting(data.advancedSetting) },
   };
 
-  let ids = {};
+  let ids: Record<string, string> = {};
 
   if (
     data.type === 34 &&

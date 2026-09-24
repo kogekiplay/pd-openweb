@@ -34,13 +34,13 @@ function WorksheetRecordLogThumbnail(props) {
         <WorksheetRecordLogSelectTags
           type="rect"
           oldValue={oldList
-            .filter((m, index: number) => open || index < 8)
+            .filter((_m, index: number) => open || index < 8)
             .map(l => (type === 14 ? l.originalFilename + l.ext : _l('签名.jpg')))}
           newValue={newList
-            .filter((m, index: number) => open || index < 8 - oldList.length)
+            .filter((_m, index: number) => open || index < 8 - oldList.length)
             .map(l => (type === 14 ? l.originalFilename + l.ext : _l('签名.jpg')))}
           defaultValue={defaultList
-            .filter((m, index: number) => open || index < 8 - oldList.length - newList.length)
+            .filter((_m, index: number) => open || index < 8 - oldList.length - newList.length)
             .map(l => (type === 14 ? l.originalFilename + l.ext : _l('签名.jpg')))}
         />
         {count > 8 && (
@@ -85,8 +85,9 @@ function WorksheetRecordLogThumbnail(props) {
       ));
     }
 
-    return list.map(item => (
+    return list.map((item, index) => (
       <Trigger
+        key={index}
         action={['hover']}
         getPopupContainer={() => document.body}
         autoDestroy
@@ -143,15 +144,15 @@ function WorksheetRecordLogThumbnail(props) {
   return (
     <div className="WorksheetRecordLogThumbnail paddingLeft27">
       {renderList(
-        oldList.filter((m, index: number) => open || index < 8),
+        oldList.filter((_m, index: number) => open || index < 8),
         'oldBackground',
       )}
       {renderList(
-        newList.filter((m, index: number) => open || index < 8 - oldList.length),
+        newList.filter((_m, index: number) => open || index < 8 - oldList.length),
         'newBackground',
       )}
       {renderList(
-        defaultList.filter((m, index: number) => open || index < 8 - oldList.length - newList.length),
+        defaultList.filter((_m, index: number) => open || index < 8 - oldList.length - newList.length),
         'defaultBackground',
       )}
       {count > 8 && (

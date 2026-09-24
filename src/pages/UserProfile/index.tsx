@@ -6,7 +6,9 @@ import { getAppFeaturesVisible } from 'src/utils/common';
 import UserProfile from './components/Profile';
 
 export default class UserEntryPoint extends React.PureComponent<any, any> {
-  state = {
+  declare request: ApiResult | undefined;
+
+  override state = {
     accountId: '',
     isMe: false,
     isLoading: true,
@@ -16,12 +18,12 @@ export default class UserEntryPoint extends React.PureComponent<any, any> {
     isTask: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppUser');
     this.getAccountId();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppUser');
     if (this.request && this.request.abort) {
       this.request.abort();
@@ -84,7 +86,7 @@ export default class UserEntryPoint extends React.PureComponent<any, any> {
       .catch();
   };
 
-  render() {
+  override render() {
     const { isFriend, userInfo } = this.state;
     return (
       <ScrollView>

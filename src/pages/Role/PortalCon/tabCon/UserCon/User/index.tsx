@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -110,7 +110,7 @@ function User(props) {
         appId,
       })
       .then(res => {
-        const { controls, showControlIds = [] }: { controls: FormControl[]; [key: string]: any } = res;
+        const { controls, showControlIds = [] } = res;
         setHideIds(showControlIds);
         setControls(translatePortalRoleOptions(appId, controls));
       });
@@ -223,7 +223,7 @@ function User(props) {
           handleChangeSort(sorter);
         }}
         loading={props.portal.loading}
-        clickRow={(info, id) => {
+        clickRow={(_info, id) => {
           setCurrentId(id);
           let data = controls.map(it => {
             return { ...it, value: (list.find(item => item.rowid === id) || {})[it.controlId] };

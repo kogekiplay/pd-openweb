@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -61,7 +61,7 @@ function ExportDialog(props) {
   const keys = [
     {
       key: 'checkCon',
-      render: (item, selectedList, handleSelect, isCheckAll, notCheck) => {
+      render: (item, selectedList, _handleSelect, isCheckAll, notCheck) => {
         const disabled = notCheck && !item.enabled;
         return (
           <Checkbox

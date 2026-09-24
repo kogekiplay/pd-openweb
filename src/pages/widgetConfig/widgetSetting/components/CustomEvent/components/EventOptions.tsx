@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -103,8 +103,9 @@ export default function EventOptions(props) {
   if (eventKey === 'filters') {
     const filterMenu = (
       <Menu style={{ width: 200 }}>
-        {FILTER_VALUE_TYPE.map(i => (
+        {FILTER_VALUE_TYPE.map((i, index) => (
           <MenuItem
+            key={index}
             onClick={e => {
               e.stopPropagation();
               renderCustomFilter({
@@ -147,8 +148,9 @@ export default function EventOptions(props) {
 
     const actionMenu = (
       <Menu style={{ width: 286, position: 'relative' }}>
-        {ACTION_DISPLAY.filter(v => !(v.value === '8' && md.global.SysSettings.hideIntegration)).map(i => (
+        {ACTION_DISPLAY.filter(v => !(v.value === '8' && md.global.SysSettings.hideIntegration)).map((i, index) => (
           <MenuItem
+            key={index}
             onClick={e => {
               e.stopPropagation();
               renderCustomAction({

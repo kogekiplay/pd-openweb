@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import filterXSS from 'xss';
 import LoadDiv from 'ming-ui/components/LoadDiv';
@@ -13,7 +13,7 @@ export default class TaskDetail extends Component<any, any> {
       getSuccess: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getTaskLog();
     if (this.props.manualRef) {
       this.props.manualRef(this);
@@ -67,9 +67,10 @@ export default class TaskDetail extends Component<any, any> {
     } else if (type === 14 || type === 99) {
       return 'icon-trash';
     }
+    return undefined;
   }
 
-  render() {
+  override render() {
     const { logs, getSuccess } = this.state;
 
     // 空状态

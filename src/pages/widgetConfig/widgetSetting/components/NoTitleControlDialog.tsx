@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import styled from 'styled-components';
 import { Button, Dialog, Support } from 'ming-ui';
 import img from '../../image/setAsTitle.png';
@@ -26,7 +26,11 @@ const NoTitleControlWrap = styled.div`
   }
 `;
 
-export default function NoTitleControlDialog({ onClose }) {
+export interface NoTitleControlDialogProps {
+  onClose: () => void;
+}
+
+export default function NoTitleControlDialog({ onClose }: NoTitleControlDialogProps) {
   return (
     <Dialog
       visible

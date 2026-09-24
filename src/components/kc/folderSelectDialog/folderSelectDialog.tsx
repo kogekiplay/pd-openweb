@@ -1,4 +1,4 @@
-import React from 'react';
+import defineMethods from 'src/utils/defineMethods';
 import { renderToString } from 'react-dom/server';
 import doT from 'dot';
 import _ from 'lodash';
@@ -49,7 +49,45 @@ var SELECT_TYPE = {
   FILE: 2,
 };
 
-var FolderSelect = function (param) {
+/** FolderSelect 实例唯一的字段 settings：由 dafaults、options 与调用方参数深合并而成，方法里既读又改。
+ *  知识中心节点一类的值都是接口或 jQuery .data() 原样拿来的，所以是 ApiPayload。 */
+interface FolderSelectFields {
+  settings: {
+    dialogTitle: string;
+    btnName: string;
+    /** SELECT_TYPE：0 所有 / 1 仅文件夹 / 2 仅文件 */
+    isFolderNode: number;
+    selectedItems: string[] | null;
+    appointRoot: ApiPayload;
+    appointFolder?: ApiPayload;
+    reRootName: boolean;
+    /** 默认项的注释写着「确定选择的文件的回调」，但整个模块从来没读过它 —— 死选项 */
+    callback?: unknown;
+    visibleType: { name: string; desc: string | { account: string; project: string }; id: number }[];
+    folderNode: ApiPayload;
+    /** PICK_TYPE 的取值 */
+    rootType: number | null;
+    parentId: string | null;
+    keywords: string | null;
+    parentCount: number | null;
+    skip: number;
+    limit: number;
+    zIndex?: number;
+    dialog?: null;
+    currentRoot?: ApiPayload;
+    rootFolder?: ApiPayload;
+    currentFolder?: ApiPayload;
+    roots?: ApiPayload;
+    /** 来自外层 select() 里那个 new Promise */
+    resolve: (value: unknown) => void;
+    reject: (reason?: unknown) => void;
+  };
+  isLoading?: boolean;
+  /** 进行中的「取节点列表」请求句柄，翻页 / 切目录时要先 abort 掉上一个 */
+  getNodesListAjax?: ApiResult;
+}
+
+var FolderSelect = function (this: FolderSelectInstance, param) {
   var dafaults = {
     dialogTitle: _l('选择文件'), //弹层title
     btnName: _l('确定'), // 弹层确定按钮的文字
@@ -94,7 +132,7 @@ var FolderSelect = function (param) {
 };
 
 var $folderContent = null;
-$.extend(FolderSelect.prototype, {
+const folderSelectMethods = defineMethods<FolderSelectFields>()({
   init: function () {
     var folderSelect = this;
     var settings = folderSelect.settings;
@@ -318,9 +356,10 @@ $.extend(FolderSelect.prototype, {
           false,
         );
       } else if (settings.isFolderNode === SELECT_TYPE.FILE && 1) {
-        var lastPos = localStorage.getItem('last_select_pos_' + md.global.Account.accountId);
-        if (lastPos) {
-          lastPos = JSON.parse(lastPos);
+        const lastPosStr = localStorage.getItem('last_select_pos_' + md.global.Account.accountId);
+        if (lastPosStr) {
+          // 原先是同一个变量先装字符串、再装 JSON.parse 的结果；TS 按初始化把它钉成 string，后面取属性全报错
+          const lastPos = JSON.parse(lastPosStr);
           settings.rootType = lastPos.rootFolder.id ? PICK_TYPE.ROOT : PICK_TYPE.MYFILE;
           settings.currentRoot = lastPos.currentRoot;
           folderSelect.getRootList(function () {
@@ -383,7 +422,7 @@ $.extend(FolderSelect.prototype, {
           $folderContent
             .find('.folderUrl .positionUrl span.flex')
             .prevAll()
-            .each(function (i, v) {
+            .each(function (_i, v) {
               prevWidth += $(v).width();
             });
           $positionUrl.css({ 'margin-left': '-' + prevWidth + 'px' });
@@ -454,6 +493,7 @@ $.extend(FolderSelect.prototype, {
                 .catch(function () {
                   alert(_l('操作失败, 请稍后重试'), 3);
                 });
+              return undefined;
             },
           },
           '.sharePermision .shareItem',
@@ -480,7 +520,7 @@ $.extend(FolderSelect.prototype, {
     }, 200);
   },
   //获取全部根目录
-  getRootList: function (callback) {
+  getRootList: function (callback?) {
     var folderSelect = this;
 
     if (!$folderContent) {
@@ -566,7 +606,7 @@ $.extend(FolderSelect.prototype, {
       });
   },
   // 要选择的文件节点列表
-  getNodeList: function (type, rootNode, isClickPath, isScroll, extra) {
+  getNodeList: function (type, rootNode, isClickPath?, isScroll?, extra?) {
     // 判断付费版是否到期
     if (this.settings.isFolderNode == SELECT_TYPE.FOLDER && type === PICK_TYPE.ROOT && !isScroll) {
       expireDialogAsync(rootNode.projectId || '').catch(function () {
@@ -904,7 +944,7 @@ $.extend(FolderSelect.prototype, {
 
         // 添加 title (tips)
         let html = '';
-        $folderPath.children().each(function (i, el) {
+        $folderPath.children().each(function (_i, el) {
           el = $(el);
           html += el.attr('title') ? el.attr('title') : $(el).html();
         });
@@ -1068,7 +1108,7 @@ $.extend(FolderSelect.prototype, {
               var rootData = $this.data('node');
               //如果选择的是文件
               if (rootData && rootData.type == NODE_TYPE.FILE && settings.isFolderNode == SELECT_TYPE.FILE) {
-                settings.resolve({ type: parseInt(PICK_TYPE.CHILDNODE), node: [rootData] });
+                settings.resolve({ type: PICK_TYPE.CHILDNODE, node: [rootData] });
                 folderSelect.savePos();
                 $('.folderSelectDialog').parent().remove();
               } else {
@@ -1113,6 +1153,7 @@ $.extend(FolderSelect.prototype, {
             var parentId = settings.parentId;
             var rootId = rootData ? rootData.id : '';
             folderSelect.handleAddFolder($this, name, parentId, rootId);
+            return undefined;
           },
           keydown: function (evt) {
             if (evt.keyCode == 13) {
@@ -1252,7 +1293,7 @@ $.extend(FolderSelect.prototype, {
       });
   },
   //保存位置
-  savePos: function (resObj, isFolder) {
+  savePos: function (_resObj?, isFolder?) {
     var folderSelect = this;
     var settings = folderSelect.settings;
     if (isFolder) {
@@ -1380,6 +1421,9 @@ $.extend(FolderSelect.prototype, {
     return shareHtml;
   },
 });
+
+$.extend(FolderSelect.prototype, folderSelectMethods);
+type FolderSelectInstance = FolderSelectFields & typeof folderSelectMethods;
 
 function select(param) {
   return new Promise((resolve, reject) => {

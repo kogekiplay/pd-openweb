@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import homeAppAjax from 'src/api/homeApp';
 import worksheetAjax from 'src/api/worksheet';
@@ -8,7 +8,7 @@ export default class WorksheetFileMessage extends Component<any, any> {
     super(props);
     this.state = {};
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.loadFrom();
   }
   handleOpenWorksheet() {
@@ -44,7 +44,7 @@ export default class WorksheetFileMessage extends Component<any, any> {
         }),
       );
   }
-  render() {
+  override render() {
     const { card } = this.props.message;
     return (
       <div className="Message-file" onClick={this.handleOpenWorksheet.bind(this)}>

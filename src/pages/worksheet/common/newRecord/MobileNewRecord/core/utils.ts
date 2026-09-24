@@ -9,7 +9,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 
 const IMAGE_FILE_EXTS = ['.jpg', '.jpeg', '.png', '.heic'];
 
-const normalizeFileExt = fileExt => {
+const normalizeFileExt = (fileExt: string | undefined) => {
   if (!fileExt) return '';
   return String(fileExt).startsWith('.') ? String(fileExt).toLowerCase() : `.${String(fileExt).toLowerCase()}`;
 };
@@ -112,7 +112,7 @@ export const generateRecord = ({
     });
 };
 
-export function secondToMMSS(seconds) {
+export function secondToMMSS(seconds: number) {
   const minutes = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;

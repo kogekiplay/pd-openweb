@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -230,7 +230,7 @@ export default class LimitFileDownloadSetting extends Component<any, any> {
     this.setState({ attachmentSettingInfo: { ...attachmentSettingInfo, whiteList: whiteList.concat(addData) } });
   };
 
-  handleSave = isClose => {
+  handleSave = (isClose: boolean) => {
     const { projectId } = this.props;
     const { attachmentSettingInfo, initialAttachmentSettingInfo, ipContent } = this.state;
     const { whiteList = [], limitType, useType, modelType, ipList } = attachmentSettingInfo;
@@ -347,7 +347,7 @@ export default class LimitFileDownloadSetting extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { onClose = () => {} } = this.props;
     const { attachmentSettingInfo, initialAttachmentSettingInfo, ipContent } = this.state;
     const { limitType, modelType, useType, status } = attachmentSettingInfo;

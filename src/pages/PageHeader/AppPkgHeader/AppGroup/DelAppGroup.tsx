@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { Dialog, Icon, ScrollView } from 'ming-ui';
 
 export default class DelAppGroup extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
-  state = {
+  override state = {
     searchValue: '',
     sourceAppSectionId: '',
   };
@@ -33,7 +33,7 @@ export default class DelAppGroup extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { onOk, onCancel, data } = this.props;
     const { sourceAppSectionId, searchValue } = this.state;
     return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Select } from 'antd';
 import _ from 'lodash';
@@ -55,7 +55,7 @@ const FormItem = styled.div`
   }
 `;
 
-const compareVersion = (newVersion, oldVersion) => {
+const compareVersion = (newVersion: string, oldVersion) => {
   const newParts = newVersion.split('.').map(part => parseInt(part) || 0);
   const oldParts = oldVersion.split('.').map(part => parseInt(part) || 0);
 
@@ -122,7 +122,7 @@ export default function PublishVersion(props) {
       });
   };
 
-  const onChangeVersionValue = (value, objName: string) => {
+  const onChangeVersionValue = (value: string, objName: string) => {
     if (!value) {
       setFormData({ [objName]: '' });
       return;
@@ -136,12 +136,12 @@ export default function PublishVersion(props) {
   const onValidate = () => {
     if (!isWorkflowPlugin && !formData.commitId) {
       alert(_l('请选择一个已提交的代码'), 3);
-      return;
+      return undefined;
     }
 
     if (_.includes([formData.v1, formData.v2, formData.v3], '')) {
       alert(_l('请正确填写版本号'), 3);
-      return;
+      return undefined;
     }
 
     if (latestVersion) {
@@ -149,18 +149,18 @@ export default function PublishVersion(props) {
 
       if (!compareVersion(newVersion, latestVersion)) {
         alert(_l(`版本号必须大于${latestVersion}`), 3);
-        return;
+        return undefined;
       }
     }
 
     if (!formData.description) {
       alert(_l('发布说明不能为空'), 3);
-      return;
+      return undefined;
     }
 
     if (formData.description.length > 150) {
       alert(_l('发布说明最多150个字符'), 3);
-      return;
+      return undefined;
     }
 
     if (
@@ -170,7 +170,7 @@ export default function PublishVersion(props) {
       _.isEmpty(safeParse(formData.configuration))
     ) {
       alert(_l('发布配置格式不正确,请输入JSON格式'), 3);
-      return;
+      return undefined;
     }
 
     return true;

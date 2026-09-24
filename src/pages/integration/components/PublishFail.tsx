@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
 
@@ -24,9 +23,9 @@ export default function PublishFail(props) {
       }}
     >
       <EditShowNameCon>
-        {errorMsgList.map(o => {
+        {errorMsgList.map((o, index) => {
           return (
-            <div className="mTop16">
+            <div key={index} className="mTop16">
               <i className="icon-report Font18 Red TxtMiddle"></i>{' '}
               <span className="TxtMiddle textSecondary mLeft8 Font14">{o}</span>
             </div>

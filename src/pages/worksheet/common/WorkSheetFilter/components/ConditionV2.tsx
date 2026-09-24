@@ -63,7 +63,7 @@ const ParamsDropdown = styled(Dropdown)`
   }
 `;
 export default class Condition extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isRules: PropTypes.bool,
     projectId: PropTypes.string,
     canEdit: PropTypes.bool,
@@ -84,7 +84,7 @@ export default class Condition extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.state = {
       isDynamicsource: this.isCanDynamicsource() && this.setIsDynamicsourceFn(), // 是否动态筛选值
       valueType: this.getValueType(this.props),
@@ -298,7 +298,7 @@ export default class Condition extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       isRules,
       canEdit,

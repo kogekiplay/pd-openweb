@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Component, Fragment, lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -49,7 +49,7 @@ let RecordWrapper = class RecordWrapper extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { recordInfoVisible } = this.state;
     const { row, style, groupKey, buttonsCheckStatus } = this.props;
     return (

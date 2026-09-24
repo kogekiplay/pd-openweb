@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { ACTION_ID, APP_TYPE } from '../../enum';
@@ -57,7 +57,7 @@ export default class Write extends Component<any, any> {
     return <div className="pLeft8 pRight8 ellipsis textSecondary">{_l('发送自定义请求')}</div>;
   }
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
     const isPush = item.actionId === ACTION_ID.PBC_OUT;
 

@@ -10,13 +10,13 @@ import VoteItem from './voteItem';
  * 投票项列表
  */
 class VoteList extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     dispatch: PropTypes.func,
     voteItem: PropTypes.object.isRequired,
     handleShowResult: PropTypes.func.isRequired,
   };
 
-  state = {
+  override state = {
     checkedOptions: _.map(
       _.filter(this.props.voteItem.Options, o => _.some(o.member, m => m.aid === md.global.Account.accountId)),
       'optionIndex',
@@ -70,7 +70,7 @@ class VoteList extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const voteItem = this.props.voteItem;
     return (
       <div>

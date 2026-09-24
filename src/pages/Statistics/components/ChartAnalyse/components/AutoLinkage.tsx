@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Button, Checkbox, ConfigProvider, Modal } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -62,7 +62,7 @@ export default class AutoLinkage extends Component<any, any> {
     };
     this.customPage = customPage || {};
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { reportId, worksheetInfo, currentReport } = this.props;
     const { autoLinkageChartObjectIds } = currentReport.style;
     reportApi
@@ -128,7 +128,7 @@ export default class AutoLinkage extends Component<any, any> {
         className="chartModal"
         open={modalVisible}
         centered={true}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         closeIcon={<Icon icon="close" className="Font20 pointer textTertiary" />}
         footer={this.renderFooter()}
         onCancel={() => this.setState({ modalVisible: false })}
@@ -198,7 +198,7 @@ export default class AutoLinkage extends Component<any, any> {
 
     return config.autoLinkage ? _l('自动联动') : _l('未设置');
   }
-  render() {
+  override render() {
     return (
       <Fragment>
         <div

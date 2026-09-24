@@ -1,7 +1,13 @@
 import { combineReducers } from 'redux';
-import type { ReduxAction } from 'src/redux/types';
+import type { DataAction, ReduxAction } from 'src/redux/types';
 
-export function projectId(state = '', action: ReduxAction) {
+/** 列表分页状态 */
+export interface PageInfo {
+  pageIndex: number;
+  isMore: boolean;
+}
+
+export function projectId(state = '', action: ReduxAction<{ projectId: string }>) {
   switch (action.type) {
     case 'CHANGE_PROJECT_ID':
       return action.projectId;
@@ -10,7 +16,7 @@ export function projectId(state = '', action: ReduxAction) {
   }
 }
 
-export function isLoading(state = false, action: ReduxAction) {
+export function isLoading(state = false, action: ReduxAction<{ isLoading: boolean }>) {
   switch (action.type) {
     case 'UPDATE_IS_LOADING':
       return action.isLoading;
@@ -19,7 +25,7 @@ export function isLoading(state = false, action: ReduxAction) {
   }
 }
 
-export function positionList(state = [], action: ReduxAction) {
+export function positionList(state: ApiPayload[] = [], action: ReduxAction<{ positionList: ApiPayload[] }>) {
   switch (action.type) {
     case 'UPDATE_POSITION_LIST':
       return action.positionList;
@@ -28,7 +34,7 @@ export function positionList(state = [], action: ReduxAction) {
   }
 }
 
-export function positionPageInfo(state = { pageIndex: 1, isMore: false }, action: ReduxAction) {
+export function positionPageInfo(state: PageInfo = { pageIndex: 1, isMore: false }, action: DataAction<PageInfo>) {
   switch (action.type) {
     case 'UPDATE_POSITION_PAGE_INFO':
       return action.data;
@@ -37,7 +43,7 @@ export function positionPageInfo(state = { pageIndex: 1, isMore: false }, action
   }
 }
 
-export function currentPosition(state = {}, action: ReduxAction) {
+export function currentPosition(state: ApiPayload = {}, action: ReduxAction<{ currentPosition: ApiPayload }>) {
   switch (action.type) {
     case 'UPDATE_CURRENT_POSITION':
       return action.currentPosition;
@@ -46,7 +52,7 @@ export function currentPosition(state = {}, action: ReduxAction) {
   }
 }
 
-export function searchValue(state = '', action: ReduxAction) {
+export function searchValue(state = '', action: ReduxAction<{ searchValue: string }>) {
   switch (action.type) {
     case 'UPDATE_SEARCH_VALUE':
       return action.searchValue;
@@ -55,7 +61,7 @@ export function searchValue(state = '', action: ReduxAction) {
   }
 }
 
-export function userPageIndex(state = 1, action: ReduxAction) {
+export function userPageIndex(state = 1, action: ReduxAction<{ userPageIndex: number }>) {
   switch (action.type) {
     case 'UPDATE_USER_PAGE_INDEX':
       return action.userPageIndex;
@@ -64,7 +70,7 @@ export function userPageIndex(state = 1, action: ReduxAction) {
   }
 }
 
-export function userList(state = [], action: ReduxAction) {
+export function userList(state: ApiPayload[] = [], action: ReduxAction<{ userList: ApiPayload[] }>) {
   switch (action.type) {
     case 'UPDATE_USER_LIST':
       return action.userList;
@@ -73,7 +79,7 @@ export function userList(state = [], action: ReduxAction) {
   }
 }
 
-export function userLoading(state = true, action: ReduxAction) {
+export function userLoading(state = true, action: ReduxAction<{ userLoading: boolean }>) {
   switch (action.type) {
     case 'UPDATE_USER_LOADING':
       return action.userLoading;
@@ -82,7 +88,7 @@ export function userLoading(state = true, action: ReduxAction) {
   }
 }
 
-export function allUserCount(state = 0, action: ReduxAction) {
+export function allUserCount(state = 0, action: ReduxAction<{ allUserCount: number }>) {
   switch (action.type) {
     case 'UPDATE_USER_COUNT':
       return action.allUserCount;
@@ -91,7 +97,7 @@ export function allUserCount(state = 0, action: ReduxAction) {
   }
 }
 
-export function selectUserIds(state = [], action: ReduxAction) {
+export function selectUserIds(state: string[] = [], action: ReduxAction<{ selectUserIds: string[] }>) {
   switch (action.type) {
     case 'UPDATE_SELECT_USER_IDS':
       return action.selectUserIds;
@@ -100,7 +106,7 @@ export function selectUserIds(state = [], action: ReduxAction) {
   }
 }
 
-export function isImportRole(state = false, action: ReduxAction) {
+export function isImportRole(state = false, action: DataAction<boolean>) {
   switch (action.type) {
     case 'UPDATE_IS_IMPORT_ROLE':
       return action.data;

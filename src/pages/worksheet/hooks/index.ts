@@ -39,7 +39,7 @@ export function useRefStore(initialValue = {}) {
 
 export function usePasteText(onPaste = () => {}, ...args) {
   useEffect(() => {
-    const handlePaste = e => {
+    const handlePaste = (e: ClipboardEvent) => {
       const text = e.clipboardData.getData('text');
       onPaste(text);
     };

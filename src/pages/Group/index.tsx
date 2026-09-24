@@ -18,13 +18,13 @@ export default class GroupValidate extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.init(_.get(this.props, 'location.search'));
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.init();
   }
 
@@ -147,7 +147,7 @@ export default class GroupValidate extends React.Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { result } = this.state;
 
     return <div className="groupValidate-wrapper card">{result ? this.renderContent() : undefined}</div>;

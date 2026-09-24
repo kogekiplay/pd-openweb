@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { Dialog, FunctionWrap } from 'ming-ui';
 import { dialogSelectDept } from 'ming-ui/functions';
@@ -27,7 +27,7 @@ export default class CreateEditDeptDialog extends Component<any, any> {
       submitLoading: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.type === 'create') return;
     this.getDeptInfo();
   }
@@ -183,7 +183,7 @@ export default class CreateEditDeptDialog extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { projectId, type, visible, onCancel = () => {} } = this.props;
     const { departmentInfo, parentDepartment, chargeUsers, submitLoading } = this.state;
     const { companyName } = _.find(md.global.Account.projects, item => item.projectId === projectId) || {};
@@ -235,10 +235,10 @@ export default class CreateEditDeptDialog extends Component<any, any> {
                 <span className="infoLabel">{_l('部门负责人')}</span>
                 <div className="mTop10">
                   <span className="chargerUserBox">
-                    {chargeUsers.map(item => {
+                    {chargeUsers.map((item, index) => {
                       const { avatar, fullname } = item;
                       return (
-                        <div className="chargerUserItem">
+                        <div key={index} className="chargerUserItem">
                           <img src={avatar} alt={fullname} className="chargeUserAvatar" />
                           <span className="TxtMiddle chargeUserName">{fullname}</span>
                           <i

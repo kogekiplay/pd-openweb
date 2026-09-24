@@ -19,7 +19,13 @@ const ruleItemType = {
   extra: 15,
   whiteList: 20,
 };
-class EditCon extends React.Component<any, any> {
+export interface EditConState {
+  showMoreActionSelf: boolean;
+  showMoreActionExtra: boolean;
+  showMoreActionWhiteList?: boolean | undefined;
+}
+
+class EditCon extends React.Component<any, EditConState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +39,7 @@ class EditCon extends React.Component<any, any> {
     dispatch(updateRulesByRuleId(data));
   };
 
-  addUser = (data, type) => {
+  addUser = (_data, type: number) => {
     const $this = this;
     const { projectId } = this.props;
     const SelectUserSettingsForAdd = {
@@ -56,7 +62,7 @@ class EditCon extends React.Component<any, any> {
     });
   };
 
-  addDept = (data, type) => {
+  addDept = (_data, type: number) => {
     const { projectId } = this.props;
     const $this = this;
 
@@ -72,7 +78,7 @@ class EditCon extends React.Component<any, any> {
     });
   };
 
-  addOrgRoles = type => {
+  addOrgRoles = (type: number) => {
     const { projectId } = this.props;
     dialogSelectOrgRole({
       projectId,
@@ -82,7 +88,7 @@ class EditCon extends React.Component<any, any> {
     });
   };
 
-  addDataFn = (datas, type, tTData: number) => {
+  addDataFn = (datas, type: number, tTData: number) => {
     const { dataByRuleId } = this.props;
     let ids = [];
     _.map(datas, user => {
@@ -119,7 +125,7 @@ class EditCon extends React.Component<any, any> {
     this.updateData(dataByRuleId.concat(ids));
   };
 
-  renderRuleItem = (list, type) => {
+  renderRuleItem = (list, type: number) => {
     const { dataByRuleId, errorIds, projectId } = this.props;
     return (
       <div className={cx({ mBottom15: list.length })}>
@@ -160,7 +166,7 @@ class EditCon extends React.Component<any, any> {
     );
   };
 
-  rulesCon = (data, type) => {
+  rulesCon = (data, type: number) => {
     const { currentEditRule } = this.props;
     const depOrRoleIndex = _.findIndex(
       data,
@@ -273,7 +279,7 @@ class EditCon extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { dataByRuleId = [], currentEditRule = {} } = this.props;
     let hiddenList = dataByRuleId.filter(
       it => it.ruleItemType === ruleItemType.self || it.ruleItemType === ruleItemType.whiteList,

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import { TagTextarea } from 'ming-ui';
@@ -7,7 +7,10 @@ import { DynamicValueInputWrap } from '../styled';
 import { transferValue } from '../util';
 
 export default class ArrayInput extends Component<any, any> {
-  static propTypes = {
+  declare $tagtextarea: TagTextarea | undefined;
+  declare $wrap: SelectOtherField | null | undefined;
+
+  static override propTypes = {
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
     onDynamicValueChange: func,
     clearOldDefault: func,
@@ -18,7 +21,7 @@ export default class ArrayInput extends Component<any, any> {
     dynamicValue: [],
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const { dynamicValue, data, clearOldDefault, onDynamicValueChange } = this.props;
     const { default: defaultValue } = data;
 
@@ -30,7 +33,7 @@ export default class ArrayInput extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (JSON.stringify(this.props.dynamicValue) !== JSON.stringify(prevProps.dynamicValue)) {
       if (this.$tagtextarea) {
         // 光标现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}
@@ -60,7 +63,7 @@ export default class ArrayInput extends Component<any, any> {
     }
   };
   // 输入普通字符串时数据转换
-  transferValue = value => {
+  transferValue = (value: string | undefined) => {
     const defsource = transferValue(value);
     this.props.onDynamicValueChange(defsource);
   };
@@ -80,7 +83,7 @@ export default class ArrayInput extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { defaultType } = this.props;
     return (
       <DynamicValueInputWrap ref={con => { this.$textinput = con; }} triggerStyle={true}>
@@ -95,7 +98,7 @@ export default class ArrayInput extends Component<any, any> {
               return <OtherField className="tagTextField overflow_ellipsis" item={{ cid, rcid }} {...this.props} />;
             }}
             getRef={tagtextarea => (this.$tagtextarea = tagtextarea)}
-            onChange={(err, value) => {
+            onChange={(_err, value) => {
               this.transferValue(value.trim());
             }}
           />

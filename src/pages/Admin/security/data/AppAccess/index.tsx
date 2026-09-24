@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
@@ -47,7 +47,7 @@ export default function AppAccess(props) {
         dataIndex: 'condition',
         title: _l('条件'),
         width: 300,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { accessType, accessPass, ipRule, hearderRule, addressRule, clientRule } = record;
           return (
             <div className="w100 ellipsis">
@@ -72,7 +72,7 @@ export default function AppAccess(props) {
         dataIndex: 'limitAction',
         title: _l('动作'),
         width: 120,
-        render: (text, record) => {
+        render: (_text, record) => {
           return _.find(POLICY_ACTION_ENUM, { value: record.limitAction })?.text;
         },
       },
@@ -80,7 +80,7 @@ export default function AppAccess(props) {
         dataIndex: 'extraSetting',
         title: _l('黑/白名单'),
         width: 130,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { limitAction, whiteApps = [], blackApps = [] } = record;
           return (
             <div className="w100 ellipsis">
@@ -97,7 +97,7 @@ export default function AppAccess(props) {
         dataIndex: 'advancedSetting',
         title: _l('高级配置'),
         width: 220,
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <div className="w100 ellipsis">
               {ADVANCED_SETTING_ENUM.filter(item => record[item.value])
@@ -112,7 +112,7 @@ export default function AppAccess(props) {
         title: _l('状态'),
         width: 80,
         fixed: 'right',
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <Switch
               checked={record.isEnable}
@@ -159,7 +159,7 @@ export default function AppAccess(props) {
         title: '',
         width: 50,
         fixed: 'right',
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <Trigger
               action={['click']}

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -42,6 +42,8 @@ const getOrderPayParams = () => {
 };
 
 export default class OrderPay extends Component<any, any> {
+  declare timer: NodeJS.Timeout | null;
+
   constructor(props) {
     super(props);
 
@@ -53,7 +55,7 @@ export default class OrderPay extends Component<any, any> {
     this.timer = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 手机后台切换页面返回当前页时重新获取数据确保支付信息显示准确
     if (browserIsMobile()) {
       window.addEventListener('visibilitychange', this.handleVisibilityChange);
@@ -62,7 +64,7 @@ export default class OrderPay extends Component<any, any> {
     this.getData();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     clearTimeout(this.timer);
     window.removeEventListener('visibilitychange', this.handleVisibilityChange);
   }
@@ -439,7 +441,7 @@ export default class OrderPay extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const params = getOrderPayParams();
     const { loading, orderInfo = {}, orderStatus, payLoading, expireCountdown, errorMessage } = this.state;
     const {

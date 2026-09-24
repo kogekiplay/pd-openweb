@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Button, Popup } from 'antd-mobile';
 
@@ -6,7 +6,7 @@ class ModalWrap extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { visible, onClose } = this.props;
     return (
       <Popup visible={visible} onClose={onClose} className="mobileModal full">

@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -135,7 +135,7 @@ const DateWidgets = props => {
     return null;
   };
 
-  const renderValue = (showformat, value) => {
+  const renderValue = (showformat: string, value) => {
     const { hint = '' } = props;
 
     return (
@@ -258,6 +258,7 @@ const DateWidgets = props => {
 
                 return allowweek.indexOf(day === 0 ? '7' : day) === -1 || !isBetween;
               }
+              return undefined;
             }}
             disabledTime={current => {
               return {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, Input } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';
@@ -16,7 +16,7 @@ const Content = styled.div`
 function ConfirmMoveDialog(props) {
   const { visible = false, type = 'move', projectId, dataBaseInfo = {}, appInfo = {}, onClose } = props;
 
-  const [name, setName] = useState(undefined);
+  const [name, setName] = useState<string | undefined>(undefined);
 
   const handleOk = () => {
     appManagementAjax

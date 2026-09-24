@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import appManagementAjax from 'src/api/appManagement.js';
 import type { AppDispatch, GetState } from 'src/redux/types';
+import { initData } from '../UserCon/config';
+import type { AppRolePagingModel } from './reduces';
 
 export const setLoading = data => {
   return dispatch => {
@@ -73,7 +75,7 @@ export const SetAppRolePagingModel = data => {
 
 let ajaxOut: ApiResult | null = null;
 
-export const getOutList = (props, isOut) => {
+export const getOutList = (props, isOut: boolean) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { appId } = props;
     const { appRolePagingModel = {} } = getState().appRole;
@@ -121,7 +123,7 @@ export const getRoleSummary = (appId: string, cb?, loading?) => {
 
 let ajaxApply: ApiResult | null = null;
 
-export const getApplyList = (props, isApply) => {
+export const getApplyList = (props, isApply: boolean) => {
   return dispatch => {
     const { appId } = props;
     isApply && dispatch({ type: 'UPDATE_ROLE_LOADING', data: true });
@@ -141,7 +143,7 @@ export const getApplyList = (props, isApply) => {
 
 let ajax: ApiResult | null = null;
 
-const isDefaultPagingModel = (appRolePagingModel = {}) => {
+const isDefaultPagingModel = (appRolePagingModel: Partial<AppRolePagingModel> = {}) => {
   const { keywords = '', searchMemberType = 0 } = appRolePagingModel;
 
   return !keywords && !searchMemberType;
@@ -150,7 +152,8 @@ const isDefaultPagingModel = (appRolePagingModel = {}) => {
 export const getUserList = (props, isUserList) => {
   // isAllCount 用于左侧nav的计数 全部
   return (dispatch: AppDispatch, getState: GetState) => {
-    const { appRolePagingModel = {}, roleId = 'all', userList = [] } = getState().appRole;
+    // 默认值永远用不到（reducer 初值就是 initData），写成同一个值只为类型如实
+    const { appRolePagingModel = initData, roleId = 'all', userList = [] } = getState().appRole;
     const { pageIndex = 1 } = appRolePagingModel;
     const { appId } = props;
     isUserList && dispatch({ type: 'UPDATE_ROLE_LOADING', data: true });

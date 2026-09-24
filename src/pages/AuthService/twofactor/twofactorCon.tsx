@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import cx from 'classnames';
 import { get } from 'lodash';
 import styled from 'styled-components';
@@ -38,14 +38,14 @@ const MethodItem = styled.div`
   `}
 `;
 
-function useInterval(callback, delay) {
+function useInterval(callback: () => void, delay: number | null) {
   const savedCallback = useRef(callback);
   useEffect(() => {
     savedCallback.current = callback;
   }, [callback]);
   useEffect(() => {
     if (delay === null) {
-      return;
+      return undefined;
     }
 
     const id = setInterval(() => savedCallback.current(), delay);

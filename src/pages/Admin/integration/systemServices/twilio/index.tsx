@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { Button, Dialog, Icon, Input, Support, Switch } from 'ming-ui';
 import smsAjax from 'src/api/sms';
@@ -8,8 +8,14 @@ import Config from '../../../config';
 const FORM_KEYS = ['keySid', 'keySecret', 'verifyServiceSid', 'messagingServiceSid'];
 const SECRET_KEYS = ['KeySid', 'KeySecret'];
 
+export interface FieldRowProps {
+  label: string;
+  hint?: string | undefined;
+  children: React.ReactNode;
+}
+
 /** 共用：单行字段容器（标签 + 可选 hint + 内容） */
-function FieldRow({ label, hint, children }) {
+function FieldRow({ label, hint, children }: FieldRowProps) {
   return (
     <div className="mBottom16">
       <div className="mBottom8 Font14">{label}</div>
@@ -66,7 +72,7 @@ export default function Twilio(props) {
     return () => setIsEditSecret(false);
   }, []);
 
-  const handleInputChange = (field: string, value) => setForm(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
 
   const handleCancel = () => {
     if (initialFormRef.current) setForm(initialFormRef.current);

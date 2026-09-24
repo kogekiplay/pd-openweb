@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { Pagination } from 'antd';
 import styled from 'styled-components';
 
@@ -77,7 +77,7 @@ const Wrap = styled.div`
 const PaginationWrap = props => {
   const { className, total, pageSize = 50, pageIndex = 1, onChange = () => {}, ...rest } = props;
 
-  const itemRender = useCallback((current, type, originalElement) => {
+  const itemRender = useCallback((_current, type, originalElement) => {
     if (type === 'prev') {
       return <a className="page">{_l('上一页')}</a>;
     }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Dropdown, Menu } from 'antd';
@@ -19,7 +19,7 @@ import PositionContent from './components/PositionContent';
 import './index.less';
 
 // 导入职位模版
-const positionTemplatePaths = {
+const positionTemplatePaths: Record<number, string> = {
   0: '/staticfiles/template/positionImportTemplate/职位导入模板.xlsx',
   1: '/staticfiles/template/positionImportTemplate/Position Import Template.xlsx',
   2: '/staticfiles/template/positionImportTemplate/ポジションインポートテンプレート.xlsx',
@@ -28,18 +28,26 @@ const positionTemplatePaths = {
   5: '/staticfiles/template/positionImportTemplate/Templat Import Jawatan.xlsx',
 };
 
-class PositionInfo extends Component<any, any> {
+interface PositionInfoState {
+  showRoleDialog: boolean;
+  filed?: string | undefined;
+}
+
+class PositionInfo extends Component<any, PositionInfoState> {
+  declare ajaxObj: ApiResult | null;
+  declare input: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = { showRoleDialog: false };
     this.ajaxObj = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.props.updatePositionPageInfo({ pageIndex: 1, isMore: false });
     this.props.updateProjectId(Config.projectId);
     this.props.getPositionList();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.updateUserloading(true);
   }
   // 导出职位列表
@@ -71,7 +79,7 @@ class PositionInfo extends Component<any, any> {
     }
   };
   // 新增编辑职位
-  createAndEdit = filed => {
+  createAndEdit = (filed: string) => {
     this.setState({ showRoleDialog: true, filed });
   };
   handleSearch = _.throttle(value => {
@@ -118,7 +126,7 @@ class PositionInfo extends Component<any, any> {
       </div>
     );
   };
-  render() {
+  override render() {
     const { positionList = [], isLoading = false, currentPosition, projectId, isImportRole, searchValue } = this.props;
     let { showRoleDialog, filed } = this.state;
 

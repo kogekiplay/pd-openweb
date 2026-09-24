@@ -1,4 +1,3 @@
-import React from 'react';
 import { Input } from 'antd';
 import _ from 'lodash';
 import { getTranslateInfo } from 'src/utils/app';
@@ -10,7 +9,7 @@ export default function Workflow(props) {
   const data = _.find(translateData, { correlationId: selectNode.key }) || {};
   const translateInfo = data.data || {};
 
-  const handleSave = info => {
+  const handleSave = (info: { name: string | undefined }) => {
     onEditAppLang({
       id: data.id,
       parentId: app.id,

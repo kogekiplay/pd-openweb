@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import styled from 'styled-components';
+﻿import styled from 'styled-components';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { pathCompletion } from 'src/utils/common';
 
@@ -19,7 +18,7 @@ export default function ({
   [key: string]: any;
 }) {
   const handleMicrosoftLogin = () => {
-    const authPathMap = { 1: 'dingding', 6: 'feishu', 7: 'microsoft' };
+    const authPathMap: Record<number, string> = { 1: 'dingding', 6: 'feishu', 7: 'microsoft' };
     location.href = pathCompletion(
       `/auth/${authPathMap[integrationAccountType]}?p=${projectId}` + (appscheme ? '&appscheme=' + appscheme : ''),
     );

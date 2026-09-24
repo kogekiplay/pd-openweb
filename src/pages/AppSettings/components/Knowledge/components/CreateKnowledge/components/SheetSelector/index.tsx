@@ -35,7 +35,7 @@ const SheetSelector = () => {
   };
 
   /** 更新左右按钮显示 */
-  const updateButtons = nextOffset => {
+  const updateButtons = (nextOffset: number) => {
     const maxOffset = getMaxOffset();
 
     // 没有可滚动内容 → 全部隐藏
@@ -61,7 +61,7 @@ const SheetSelector = () => {
     return cardWidth + gap;
   };
 
-  const clampOffset = value => {
+  const clampOffset = (value: number) => {
     const maxOffset = getMaxOffset();
     return Math.max(-maxOffset, Math.min(value, 0));
   };

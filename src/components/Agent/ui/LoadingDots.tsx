@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const LoadingDots = ({ className, dotNumber = 6 }: { className?: string; [key: string]: any }) => {
   const [dotCount, setDotCount] = useState(1);

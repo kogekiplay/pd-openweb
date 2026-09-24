@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import withRouter from '../../../../router/withRouter';
 import cx from 'classnames';
 import { Icon } from 'ming-ui';
@@ -11,7 +11,7 @@ let TabBar = class TabBar extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { action, history } = this.props;
     return (
       <div className="appTabBar">

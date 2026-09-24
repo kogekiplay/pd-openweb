@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import AdminCommon from 'src/pages/Admin/common/common';
 import Config from '../../config';
 import Announce from './components/Announce';
@@ -60,7 +60,7 @@ export default class Orgothers extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { level, exportVisible } = this.state;
 
     return (
@@ -73,9 +73,9 @@ export default class Orgothers extends Component<any, any> {
           <Fragment>
             <div className="orgManagementHeader">{_l('其他')}</div>
             <div className="orgManagementContent pTop0">
-              {indexConfig.map(item => {
+              {indexConfig.map((item, index) => {
                 return (
-                  <div className="toolItem">
+                  <div key={index} className="toolItem">
                     <div className="toolItemLabel">{item.label}</div>
                     <div className="toolItemRight">
                       <div>

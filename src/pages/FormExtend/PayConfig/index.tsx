@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Select, Tag } from 'antd';
 import cx from 'classnames';
 import _, { isArray } from 'lodash';
@@ -20,7 +20,7 @@ import '../common/payAndInvoice.less';
 import './index.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
-const PAYMENT_CHANNEL = { 0: _l('聚合支付'), 2: _l('微信支付'), 1: _l('支付宝支付') };
+const PAYMENT_CHANNEL: Record<number, string> = { 0: _l('聚合支付'), 2: _l('微信支付'), 1: _l('支付宝支付') };
 
 const filterDeleteFields = (fieldMaps, controls) => {
   fieldMaps = !_.isEmpty(fieldMaps)
@@ -132,7 +132,7 @@ export default class PayConfig extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -438,13 +438,13 @@ export default class PayConfig extends Component<any, any> {
         {[
           { key: 'internalUser', text: _l('应用内成员可用') },
           { key: 'externalUser', text: _l('外部门户用户可用') },
-        ].map(item => {
+        ].map((item, index) => {
           const { key, text } = item;
           const { isEnable, viewIds, filter = [] } = this.state[key] || {};
           const hasFilters = !_.isEmpty(filter);
 
           return (
-            <Fragment>
+            <Fragment key={index}>
               <div className="flexRow" key={key}>
                 {key === 'externalUser' && !isEnabledExternalPortal && !isEnable ? (
                   <Tooltip title={_l('请先开启外部门户功能')} placement="bottom">
@@ -549,7 +549,7 @@ export default class PayConfig extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { worksheetInfo = {} } = this.props;
     const { projectId } = worksheetInfo;
     const {

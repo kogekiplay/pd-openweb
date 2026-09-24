@@ -130,7 +130,7 @@ const BusinessCardWrap = styled.div`
   }
 `;
 
-const DisplayFieldForNameInfo = {
+const DisplayFieldForNameInfo: Record<number, string> = {
   51: 'currentDepartmentName',
   52: 'currentDepartmentFullName',
   53: 'currentJobTitleName',
@@ -144,7 +144,9 @@ const DisplayFieldForNameInfo = {
 };
 
 class UserCard extends React.Component<any, any> {
-  static propTypes = {
+  declare promise: ApiResult | undefined;
+
+  static override propTypes = {
     projectId: PropTypes.string,
     appId: PropTypes.string,
     sourceId: PropTypes.string,
@@ -176,14 +178,14 @@ class UserCard extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.state.visible) {
       this.fetchData();
       this.addOutsideMouseDownListener();
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     const { data, preSourceId, visible, enlargeImageVisible } = this.state;
 
     if (
@@ -204,7 +206,7 @@ class UserCard extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeOutsideMouseDownListener();
   }
 
@@ -260,7 +262,7 @@ class UserCard extends React.Component<any, any> {
     this.closeCard();
   };
 
-  setEnlargeImageVisible = enlargeImageVisible => {
+  setEnlargeImageVisible = (enlargeImageVisible: boolean) => {
     if (this.state.enlargeImageVisible === enlargeImageVisible) return;
 
     this.setState({ enlargeImageVisible });
@@ -290,7 +292,7 @@ class UserCard extends React.Component<any, any> {
     );
   }
 
-  formatData = function (result) {
+  formatData = result => {
     const { type, sourceId = '', accountId, groupId } = this.props;
     const id = (type === 1 ? accountId : groupId) || sourceId;
 
@@ -584,7 +586,7 @@ class UserCard extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { isMobile, visible, wrapKey, enlargeImageVisible } = this.state;
     const { className, disabled } = this.props;
     const isPublic = location.pathname.includes('/public/') || location.href.includes('#publicapp');

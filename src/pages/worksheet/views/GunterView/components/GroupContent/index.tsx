@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -11,7 +11,7 @@ let GroupContent = class GroupContent extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { base, group, viewConfig, controls, worksheetInfo } = this.props;
     const { viewControl } = viewConfig;
     const groupControl =

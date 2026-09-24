@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -79,7 +79,7 @@ export default function MobileConfig(props) {
   const { appnavwidth = 60 } = advancedSetting;
   const [width, setWidth] = useState(appnavwidth);
 
-  const changeWidth = value => {
+  const changeWidth = (value: string) => {
     let val = value
       .replace(/[^-\d.]/g, '')
       .replace(/^\./g, '')

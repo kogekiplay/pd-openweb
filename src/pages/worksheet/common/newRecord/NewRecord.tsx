@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useKey } from 'react-use';
 import cx from 'classnames';
@@ -64,7 +64,7 @@ function NewRecord(props) {
   } = props;
   const didMountTimestamp = useRef(props.didMountTimestamp || Date.now());
   const newRecordContent = useRef(null);
-  const cache = useRef({});
+  const cache = useRef<{ formChanged?: boolean | undefined }>({});
   const scrollViewRef = useRef(null);
   const recordContentRef = useRef(null);
   const [shareVisible, setShareVisible] = useState<boolean | undefined>();
@@ -313,7 +313,7 @@ function NewRecord(props) {
 
   // 根据条件获取要显示的图标按钮
   const getVisibleIconButtons = () => {
-    const allowedTypes = [];
+    const allowedTypes: string[] = [];
 
     if (showMingoCreate && !md.global.SysSettings.hideAIBasicFun) {
       allowedTypes.push('mingoCreate');

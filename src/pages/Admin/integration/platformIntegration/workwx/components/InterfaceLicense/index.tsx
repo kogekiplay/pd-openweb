@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
 import { Button, Icon, LoadDiv, ScrollView } from 'ming-ui';
 import workWeiXinAjax from 'src/api/workWeiXin';
 
-const orderTypes = { 1: _l('购买账号'), 2: _l('续期账号'), 5: _l('历史企业迁移订单') };
-const orderStatus = {
+const orderTypes: Record<number, string> = { 1: _l('购买账号'), 2: _l('续期账号'), 5: _l('历史企业迁移订单') };
+const orderStatus: Record<number, string> = {
   0: _l('待支付'),
   1: _l('已支付'),
   2: _l('已取消'),
@@ -89,7 +89,7 @@ export default class InterfaceLicense extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getLicenseDetail();
   }
 
@@ -103,7 +103,7 @@ export default class InterfaceLicense extends Component<any, any> {
   };
 
   //  购买/增购
-  clickBuy = buyMore => {
+  clickBuy = (buyMore: boolean) => {
     const { projectId } = this.props;
     this.setState({ loading: true, step: 2 });
     workWeiXinAjax.getWorkWxLicenseCreateOrderDetailByApp({ projectId }).then(res => {
@@ -348,9 +348,10 @@ export default class InterfaceLicense extends Component<any, any> {
       case 3:
         return this.renderOrderDetail();
     }
+    return undefined;
   };
 
-  render() {
+  override render() {
     return <Fragment>{this.renderContent()}</Fragment>;
   }
 }

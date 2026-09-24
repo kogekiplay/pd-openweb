@@ -1,18 +1,26 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import './index.less';
 
-export default class MessageRetry extends Component<any, any> {
+export interface MessageRetryState {
+  status: string | false;
+}
+
+export default class MessageRetry extends Component<any, MessageRetryState> {
+  declare loadingTime: NodeJS.Timeout | undefined;
+  declare errorTime: NodeJS.Timeout | undefined;
+  declare retry: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
       status: false, // 'loading' & 'error'
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.setStatus();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.loadingTime && clearTimeout(this.loadingTime);
     this.errorTime && clearTimeout(this.errorTime);
   }
@@ -40,7 +48,7 @@ export default class MessageRetry extends Component<any, any> {
     this.setStatus();
     this.props.onRetry();
   }
-  render() {
+  override render() {
     const { status } = this.state;
     return (
       <div

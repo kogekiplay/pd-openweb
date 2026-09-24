@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -199,21 +199,21 @@ function SelectTag(props) {
       ref={selectRef}
       mode="tags"
       className=""
-      dropdownClassName={cx({ hide: !searchValue && !tagList.length })}
+      classNames={{ popup: { root: cx({ hide: !searchValue && !tagList.length }) } }}
       loading={loading}
-      bordered={false}
+      variant="borderless"
       labelInValue
       placeholder={_l('+添加标签')}
       disabled={false}
       value={value}
-      searchValue={searchValue}
+      // tags 模式恒开搜索，传对象同样是开，所以并进来等价
+      showSearch={{ searchValue, onSearch }}
       style={{ width: '100%' }}
       fieldNames={{ label: 'tagName', value: 'tagID' }}
-      onSearch={onSearch}
       tokenSeparators={[',']}
       options={[]}
       tagRender={tagRender}
-      dropdownRender={() => dropdownRender()}
+      popupRender={() => dropdownRender()}
       onFocus={() => getTags()}
     />
   );

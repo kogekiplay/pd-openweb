@@ -3,6 +3,8 @@
  * 它可以从不完整的JSON对象字符串中提取出已经完整的键值对。
  */
 class PartialJsonParser {
+  declare jsonPairRegex: RegExp;
+
   constructor() {
     // 存储已接收到的数据流
     this.buffer = '';

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Checkbox, Select, Switch } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -73,8 +73,8 @@ export default props => {
               });
             }}
           >
-            {refreshs.map(data => (
-              <Select.Option className="selectOptionWrapper" value={data.value}>
+            {refreshs.map((data, index) => (
+              <Select.Option key={index} className="selectOptionWrapper" value={data.value}>
                 {data.name}
               </Select.Option>
             ))}

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Checkbox, Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -79,7 +78,10 @@ const PreinstallStyle = props => {
   const iconColor = _.get(store.getState().appPkg, 'iconColor');
   const { pivoTableColor, pivoTableColorIndex = 1 } = customPageConfig;
 
-  const handleChangePivotTableStyle = (data, isRequest?) => {
+  const handleChangePivotTableStyle = (
+    data: { columnTextColor: string; columnBgColor: string; lineTextColor: string; lineBgColor: string },
+    isRequest?,
+  ) => {
     const config = {
       ...pivotTableStyle,
       ...data,

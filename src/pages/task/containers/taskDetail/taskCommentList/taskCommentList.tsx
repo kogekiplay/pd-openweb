@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import Commenter from 'src/components/comment/commenter';
@@ -13,7 +13,11 @@ import {
 } from '../../../redux/actions';
 import './taskCommentList.less';
 
-class TaskCommentList extends Component<any, any> {
+export interface TaskCommentListState {
+  onlyLookMe: boolean;
+}
+
+class TaskCommentList extends Component<any, TaskCommentListState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,7 +63,7 @@ class TaskCommentList extends Component<any, any> {
     this.props.dispatch(removeTaskDiscussions(this.props.taskId, discussionId));
   };
 
-  render() {
+  override render() {
     const { onlyLookMe } = this.state;
     const { taskId, taskDetails, manualRef } = this.props;
     const { data } = taskDetails[taskId];

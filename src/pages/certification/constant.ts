@@ -13,7 +13,7 @@ export const TYPES = [
   },
 ];
 
-export const SOURCE_TYPE = {
+export const SOURCE_TYPE: Record<string, number> = {
   personal: 0,
   project: 1,
   market: 2,
@@ -67,7 +67,7 @@ export const ENTERPRISE_FIELD_LABEL = {
   },
 };
 
-export const RESULT_TYPES = {
+export const RESULT_TYPES: Record<number, string> = {
   //个人认证错误码包含：0，2，8，9，16
   0: _l('认证失败'),
   2: _l('此证照已被其他组织认证使用，请勿重复认证'),
@@ -88,7 +88,7 @@ export const RESULT_TYPES = {
   20: _l('联系人手机号码与姓名和身份证不一致'),
 };
 
-export const FACE_CERT_RESULT_TYPES = {
+export const FACE_CERT_RESULT_TYPES: Record<number, string> = {
   2: _l('图形验证码错误'),
   3: _l('今天人脸识别次数已用完'),
   5: _l('操作频繁，5分钟后再试'),
@@ -101,7 +101,7 @@ export const VERIFY_STATUS = {
   RE_SCAN: 'reScan',
 };
 
-export const CERT_PAGE_TITLE = {
+export const CERT_PAGE_TITLE: Record<string, string> = {
   personal: _l('个人认证'),
   enterprise: _l('企业认证'),
   success: _l('认证成功'),

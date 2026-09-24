@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import DialogBase from 'ming-ui/components/Dialog/DialogBase';
@@ -64,7 +64,7 @@ export default class CreateFolder extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const that = this;
 
     $('#folderName').select();
@@ -187,11 +187,12 @@ export default class CreateFolder extends Component<any, any> {
           alert(_l('操作失败，请稍后再试！'), 2);
         }
       });
+    return undefined;
   }
 
   handleScope = value => this.setState({ scope: value });
 
-  render() {
+  override render() {
     const sliderHeight = {
       height: $(window).height() - 180,
       overflow: 'hidden',
@@ -216,7 +217,7 @@ export default class CreateFolder extends Component<any, any> {
             </div>
             <div className="createFolderSlider">
               {this.props.materials
-                .filter((o, index: number) => index === 0)
+                .filter((_o, index: number) => index === 0)
                 .map((material, i) => {
                   return (
                     <div style={{ ...sliderHeight }} key={i}>

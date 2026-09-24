@@ -1,4 +1,4 @@
-﻿import React, { forwardRef, Fragment, useEffect, useImperativeHandle, useRef, useState } from 'react';
+﻿import { forwardRef, Fragment, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -126,7 +126,7 @@ const Recorder = forwardRef(
     const [loading, setLoading] = useState(true);
     const [authConfig, setAuthConfig] = useState({});
     const [status, setStatus] = useState('');
-    const [error, setError] = useState();
+    const [error, setError] = useState<string | undefined>();
     const [recognizedText, setRecognizedText] = useState('');
     const coreRef = useRef(null);
     const callbacksRef = useRef({ onStop, onUnavailable });

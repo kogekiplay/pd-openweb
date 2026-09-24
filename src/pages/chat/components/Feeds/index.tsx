@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Dialog, LoadDiv } from 'ming-ui';
 import postAjax from 'src/api/post';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
@@ -151,7 +151,7 @@ export class FeesItem extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { item } = this.props;
     return (
       <div>
@@ -176,7 +176,7 @@ export default class Feeds extends Component<any, any> {
       loading: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { session } = this.props;
     ajax
       .getFeed({
@@ -193,7 +193,7 @@ export default class Feeds extends Component<any, any> {
         });
       });
   }
-  render() {
+  override render() {
     const { loading, postList } = this.state;
     return (
       <div className="ChatPanel-Feeds ChatPanel-sessionInfo-item">

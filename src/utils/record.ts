@@ -28,7 +28,7 @@ import type {
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 
-export function filterEmptyChildTableRows<T extends { rowid?: string }>(rows: T[] = []): T[] {
+export function filterEmptyChildTableRows<T extends { rowid?: string | undefined }>(rows: T[] = []): T[] {
   try {
     return rows.filter(row => !(row.rowid || '').startsWith('empty'));
   } catch (err) {
@@ -42,9 +42,9 @@ export function getNewRecordPageUrl({
   worksheetId,
   viewId,
 }: {
-  appId?: string;
-  worksheetId?: string;
-  viewId?: string;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
 }) {
   return pathCompletion(`/app/${appId}/newrecord/${worksheetId}/${viewId}/`);
 }
@@ -525,14 +525,16 @@ export function getRecordColor({
   colorItems?: string[] | '';
   row: RecordRow;
 }) {
-  const colorControl = _.find(controls, { controlId });
+  // 【不写成 _.find(controls, { controlId })】controlId 可能是 undefined，
+  // 那样的简写对不上 lodash 的「部分匹配」重载，会退到按对象取值的重载，推出一串数组方法的联合类型
+  const colorControl = _.find(controls, c => c.controlId === controlId);
 
   if (!colorControl || colorControl.enumDefault2 !== 1) {
-    return;
+    return undefined;
   }
 
   if (!row[colorControl.controlId as string]) {
-    return;
+    return undefined;
   }
 
   let activeKey = safeParse(row[colorControl.controlId as string])[0];
@@ -626,7 +628,7 @@ export const handleRecordClick = (
 // control 只在 resultCode 11 的提示里用到，多数调用点只传 resultCode，所以标成可选
 export function handleRecordError(resultCode?: number, control?: FormControl, isNewRecord = false) {
   if (resultCode === 11) {
-    alert(_l('编辑失败，%0不允许重复', control ? control.controlName : ''), 2);
+    alert(_l('编辑失败，%0不允许重复', (control && control.controlName) ?? ''), 2);
   } else if (resultCode === 31) {
     alert(_l('记录提交失败：有必填字段未填写'), 2);
   } else if (resultCode === 22) {
@@ -652,7 +654,9 @@ export function getSubListUniqueError({
   badData?: string[];
 }) {
   if (badData[0]) {
-    const [childTableControlId, controlId, value = ''] = badData[0].split(':');
+    // 服务端给的是「子表:控件:重复值」三段。缺控件段时按空串 —— 原来是 undefined，
+    // 拿它去取 r[controlId] 一样取不到，行为不变
+    const [childTableControlId, controlId = '', value = ''] = badData[0].split(':');
     const state = store.getState();
     let rows: RecordRow[] = state.rows;
 
@@ -677,7 +681,12 @@ export function getSubListUniqueError({
       'controlName',
     );
     alert(
-      _l('记录提交失败：%0中第%1行记录的%2与已有记录重复', control.controlName, lastRowBaIndex + 1, controlName),
+      _l(
+        '记录提交失败：%0中第%1行记录的%2与已有记录重复',
+        control.controlName ?? '',
+        lastRowBaIndex + 1,
+        controlName ?? '',
+      ),
       2,
     );
     return {
@@ -689,6 +698,7 @@ export function getSubListUniqueError({
         .reduce((a, b) => ({ ...a, ...b })),
     };
   }
+  return undefined;
 }
 
 export async function getRecordLandUrl({
@@ -767,7 +777,8 @@ export async function fillRowRelationRows(
       pageSize: 200,
       getWorksheet: true,
     })
-    .then((res: { resultCode?: number; template?: { controls?: FormControl[] }; data?: RecordRow[] }) => {
+    // 返回值的类型来自接口（WorksheetRowsResult），原来这里手写的一份不带 | undefined，和它对不上
+    .then(res => {
       if (res.resultCode === 1) {
         const subControls = ((res.template || {}).controls || []).filter(
           c => !_.includes(SYSTEM_FIELD_IDS, c.controlId),
@@ -867,6 +878,7 @@ export async function handleRowData(props: { rowId?: string; worksheetId?: strin
   } else {
     RE_CREATE_ERROR[data.resultCode] && alert(RE_CREATE_ERROR[data.resultCode], 2);
   }
+  return undefined;
 }
 
 /**
@@ -931,9 +943,8 @@ export function sendCloudPrint({
 export function getRecordControlStyles(ruleControlAdvancedSettings: {
   [rowIdAndControlId: string]: ControlAdvancedSetting;
 }) {
-  return Object.keys(ruleControlAdvancedSettings).map(key => {
+  return Object.entries(ruleControlAdvancedSettings).map(([key, advancedSetting]) => {
     const [rowId, controlId] = [key.slice(0, key.lastIndexOf('-')), key.slice(key.lastIndexOf('-') + 1)];
-    const advancedSetting = ruleControlAdvancedSettings[key];
     const valueStyle = getValueStyle({
       type: 2,
       enumDefault: 1,

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import _ from 'lodash';
 import { Dropdown } from 'ming-ui';
 import { SettingItem } from '../../styled';
@@ -13,7 +13,7 @@ const DISPLAY_OPTIONS = [
   { text: _l('繁体大写'), value: '3' },
 ];
 
-const relateMoneyControl = (value, controls: FormControl[] = []) => {
+const relateMoneyControl = (value: string | undefined, controls: FormControl[] = []) => {
   return _.find(controls, a => a.controlId === value) || {};
 };
 

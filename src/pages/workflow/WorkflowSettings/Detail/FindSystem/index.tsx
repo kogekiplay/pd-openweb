@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { Checkbox, LoadDiv, ScrollView } from 'ming-ui';
@@ -23,7 +23,7 @@ export default class FindSystem extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -31,7 +31,7 @@ export default class FindSystem extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -53,7 +53,7 @@ export default class FindSystem extends Component<any, any> {
   /**
    * 获取节点详情
    */
-  getNodeDetail(props, sId?, fields?) {
+  getNodeDetail(props, sId?, fields?: string | undefined) {
     const { processId, selectNodeId, selectNodeType, instanceId } = props;
     const { data } = this.state;
 
@@ -364,7 +364,7 @@ export default class FindSystem extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { selectNodeType } = this.props;
     const { data } = this.state;
 

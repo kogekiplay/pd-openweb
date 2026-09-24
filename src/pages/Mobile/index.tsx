@@ -21,7 +21,7 @@ import './index.less';
 let App = class App extends Component<any, any> {
   genRouteComponent = genRouteComponent();
 
-  componentDidMount() {
+  override componentDidMount() {
     this.switchPath(this.props.location);
     this.initPageEnv();
     this.initSession();
@@ -29,7 +29,7 @@ let App = class App extends Component<any, any> {
     this.registerMobileNavigateTo();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.location.pathname !== prevProps.location.pathname) {
         Dialog.clear();
@@ -92,7 +92,7 @@ let App = class App extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const isPortal = md.global.Account.isPortal;
     const ROUTER = isPortal ? _.pick(ROUTE_CONFIG, PORTAL) : ROUTE_CONFIG;
     return (
@@ -108,7 +108,11 @@ let App = class App extends Component<any, any> {
   }
 };
 
-function MobileFallback({ isPortal }) {
+export interface MobileFallbackProps {
+  isPortal: boolean;
+}
+
+function MobileFallback({ isPortal }: MobileFallbackProps) {
   const location = useLocation();
 
   // 原来这段是写在 <Route render={...}> 里的，也就是【渲染期间】直接调 navigateTo。
@@ -119,7 +123,7 @@ function MobileFallback({ isPortal }) {
     const page = '/mobile/recordList/';
     const record = '/mobile/record/';
     const pathname = getPathWithoutSubPath(location.pathname);
-    const setHash = url => navigateTo(url + decodeURIComponent(location.hash), true);
+    const setHash = (url: string) => navigateTo(url + decodeURIComponent(location.hash), true);
 
     if (pathname.includes(record)) {
       const param = pathname.replace(record, '').split('/');
@@ -140,7 +144,7 @@ function MobileFallback({ isPortal }) {
 App = preall(withRouter(DeclareConfirm(App)));
 
 class Mobile extends Component<any, any> {
-  render() {
+  override render() {
     return (
       <Provider store={store}>
         <Router>

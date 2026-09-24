@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { string } from 'prop-types';
@@ -12,16 +12,22 @@ import { NATIVE_MODULES } from '../config';
 import { compareProps } from '../util';
 import './index.less';
 
-export default class NativeHeader extends Component<any, any> {
-  static propTypes = {
+export interface NativeHeaderState {
+  indexSideVisible: boolean;
+}
+
+export default class NativeHeader extends Component<any, NativeHeaderState> {
+  declare timer: NodeJS.Timeout | undefined;
+
+  static override propTypes = {
     path: string,
   };
   static defaultProps = {
     path: 'feed',
   };
-  state = { indexSideVisible: false };
+  override state = { indexSideVisible: false };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     return compareProps(this.state, nextState) || compareProps(this.props, nextProps, ['path']);
   }
   switchIndexSideVisible = (visible = true) => {
@@ -30,7 +36,7 @@ export default class NativeHeader extends Component<any, any> {
     }, 100);
   };
 
-  render() {
+  override render() {
     const { path } = this.props;
     const { indexSideVisible } = this.state;
     return (

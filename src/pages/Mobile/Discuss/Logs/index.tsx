@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from 'styled-components';
 import WorksheetRocordLog from 'src/pages/worksheet/components/WorksheetRecordLog/WorksheetRocordLog';
 
@@ -14,7 +14,7 @@ class Logs extends Component<any, any> {
     this.state = {};
   }
 
-  render() {
+  override render() {
     const { appId, worksheetId, rowId, originalData, refreshDiscussCount } = this.props;
     return (
       <LogsContent>

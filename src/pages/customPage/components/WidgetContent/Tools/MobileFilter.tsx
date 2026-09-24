@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dropdown, Menu } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -21,7 +21,7 @@ export default props => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [placement, setPlacement] = useState('bottom');
 
-  const onChangeHeight = value => {
+  const onChangeHeight = (value: number) => {
     updateWidget({
       widget,
       mobile: {
@@ -34,7 +34,7 @@ export default props => {
     });
   };
 
-  const handleUpdateDropdownVisible = visible => {
+  const handleUpdateDropdownVisible = (visible: boolean) => {
     setDropdownVisible(visible);
     if (visible) {
       const className = `filter-${widget.id || widget.uuid}`;

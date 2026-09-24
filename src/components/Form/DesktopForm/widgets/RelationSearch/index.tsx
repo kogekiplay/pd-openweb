@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { useMeasure } from 'react-use';
 import cx from 'classnames';
 import _, { identity } from 'lodash';
@@ -91,7 +91,7 @@ const EmptyTag = styled.span`
     border-radius: var(--radius-sm);
 }`;
 
-function getCoverUrl(coverId, record, controls) {
+function getCoverUrl(coverId, record: RecordRow, controls: FormControl[]) {
   const coverControl = _.find(controls, c => c.controlId && c.controlId === coverId);
 
   if (!coverControl) {
@@ -298,7 +298,7 @@ function RelationSearch(props) {
   const [state, setState] = useState({
     showAll: isDialog,
   });
-  const [worksheetAllowAdd, setWorksheetAllowAdd] = useState(true);
+  const [worksheetAllowAdd, setWorksheetAllowAdd] = useState<boolean | undefined>(true);
   const {
     loading = true,
     entityName,

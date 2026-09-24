@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { RadioGroup } from 'ming-ui';
 import { SettingItem } from '../../styled';
 import { isCustomWidget } from '../../util';

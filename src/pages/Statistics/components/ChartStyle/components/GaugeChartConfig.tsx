@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Checkbox, Collapse, ConfigProvider, Input, Modal, Radio, Switch } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -501,7 +501,7 @@ export function scalePanelGenerator(props) {
         <Switch
           size="small"
           checked={!!scaleType}
-          onClick={(checked, event) => {
+          onClick={(_checked, event) => {
             event.stopPropagation();
           }}
           onChange={checked => {
@@ -564,7 +564,7 @@ export function indicatorPanelGenerator(props) {
         <Switch
           size="small"
           checked={indicatorVisible}
-          onClick={(checked, event) => {
+          onClick={(_checked, event) => {
             event.stopPropagation();
           }}
           onChange={checked => {

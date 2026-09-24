@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 
@@ -33,11 +33,16 @@ const EmptyWrap = styled.div`
   }
 `;
 
-export default class EmptyStatus extends Component<any, any> {
-  constructor(props) {
+export interface EmptyStatusProps {
+  icon: string;
+  tipTxt: string;
+}
+
+export default class EmptyStatus extends Component<EmptyStatusProps, any> {
+  constructor(props: EmptyStatusProps) {
     super(props);
   }
-  render() {
+  override render() {
     const { icon, tipTxt } = this.props;
     return (
       <EmptyWrap>

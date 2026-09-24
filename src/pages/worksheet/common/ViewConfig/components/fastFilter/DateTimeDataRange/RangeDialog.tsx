@@ -15,7 +15,7 @@ export default function (props) {
   const [{ daterange }, setState] = useSetState({
     daterange: props.daterange,
   });
-  const [startIndex, setStartIndex] = useState(null);
+  const [startIndex, setStartIndex] = useState<number | null>(null);
 
   const defaultRange = getDefaultDateRange(
     dateRangeType === 0 || !dateRangeType ? showType : getShowtypeByDateRangeType(dateRangeType),
@@ -87,20 +87,20 @@ export default function (props) {
             // if (aa.length <= 0) return '';
             return (
               <div className="flex" key={`${i}_rangeC`}>
-                {it.map(item => {
+                {it.map((item, index) => {
                   // if (!defaultRange.includes(item.value)) return '';
                   return (
-                    <React.Fragment>
+                    <React.Fragment key={index}>
                       <Checkbox
                         className="checkBox mBottom10 noSelect"
                         text={item.text}
                         disabled={!defaultRange.includes(item.value)}
                         key={`${i}_rangeItem`}
                         checked={(isAllRange || daterange.includes(item.value)) && defaultRange.includes(item.value)}
-                        onClick={(a, s, event) => {
+                        onClick={(_a, _s, event) => {
                           if (event.shiftKey && startIndex !== null) {
                             // 计算选中范围
-                            function sliceBetweenValues(arr, startValue, endValue) {
+                            function sliceBetweenValues(arr: number[], startValue: number, endValue: number) {
                               const startIndex = _.findIndex(arr, value => value === startValue);
                               const endIndex = _.findLastIndex(arr, value => value === endValue);
                               return arr.slice(startIndex, endIndex + 1);

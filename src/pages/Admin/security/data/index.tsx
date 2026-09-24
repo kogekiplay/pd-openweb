@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { Dialog, LoadDiv, Support, Switch, VerifyPasswordConfirm } from 'ming-ui';
 import dataLimitAjax from 'src/api/dataLimit';
@@ -50,7 +50,7 @@ export default class DataCom extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getEnabledWatermark();
     this.getApiProxyState();
     this.getAttachmentSetting();
@@ -382,7 +382,7 @@ export default class DataCom extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       showEncryptRules,
       enabledWatermark,

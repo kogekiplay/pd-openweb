@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Button, Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -178,7 +178,7 @@ export default function DelegationConfigModal(props) {
   const [scope, setScope] = useState(!entrustData.apks ? 1 : 2);
 
   const formatDate = date => {
-    if (!date) return;
+    if (!date) return undefined;
     return moment(date).format('YYYY-MM-DD HH:mm');
   };
 

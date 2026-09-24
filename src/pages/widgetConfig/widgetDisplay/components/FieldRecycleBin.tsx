@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Dialog, Icon, LoadDiv, UpgradeIcon, UserHead } from 'ming-ui';
@@ -265,7 +265,7 @@ export default class FieldRecycleBin extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { globalSheetInfo: { projectId } = {} } = this.props;
     const { visible } = this.state;
     const isFree =

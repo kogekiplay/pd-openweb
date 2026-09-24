@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import axios from 'axios';
 import { get, isFunction, replace } from 'lodash';
 // signature_pad 5 的 exports 映射只有 '.'，深子路径 dist/signature_pad 已被封死。
@@ -44,7 +44,9 @@ const SignatureBox = styled.div`
 `;
 
 export default class Signature extends Component<any, any> {
-  state = {
+  declare signaturePad: SignaturePad | undefined;
+
+  override state = {
     isEdit: false,
     signature: '',
     key: '',
@@ -53,7 +55,7 @@ export default class Signature extends Component<any, any> {
 
   isComplete = true;
 
-  componentDidMount() {
+  override componentDidMount() {
     setTimeout(() => {
       this.initCanvas();
     }, 100);
@@ -99,7 +101,11 @@ export default class Signature extends Component<any, any> {
     return !isEdit && !signature;
   }
 
-  saveSignature = (callback = () => {}, { getTokenFn } = {}) => {
+  /** 保存签名：callback 收到七牛上的 { bucket, key }，新画的签名还带上传后的 url */
+  saveSignature = (
+    callback: (signature: { bucket: number; key: string; url?: string | undefined }) => void = () => {},
+    { getTokenFn }: { getTokenFn?: typeof getToken | undefined } = {},
+  ) => {
     const { signature, key } = this.state;
 
     if (signature) {
@@ -148,7 +154,7 @@ export default class Signature extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { showUploadFromMobile, worksheetId, viewId, canvasStyle = {} } = this.props;
     const { isEdit, signature, showButton } = this.state;
 

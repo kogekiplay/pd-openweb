@@ -19,7 +19,7 @@ class MobileFlowChart extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     return (
       <LayoutContent className="flowChartModal h100">
         <FlowChart processId={processId} instanceId={instanceId} selectNodeId={selectNodeId} />

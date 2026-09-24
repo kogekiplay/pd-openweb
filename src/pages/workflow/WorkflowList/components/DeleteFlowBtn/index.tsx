@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Confirm from 'ming-ui/components/Dialog/Confirm';
 import process from '../../../api/process';
 
@@ -24,7 +24,7 @@ export default class DeleteFlowBtn extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     return (
       <div onClick={this.delFlow} style={{ color: 'var(--color-error-text)' }}>
         <span className="icon-trash Font16 pLeft12 mRight10" />

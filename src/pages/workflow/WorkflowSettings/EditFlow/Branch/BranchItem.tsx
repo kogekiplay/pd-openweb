@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -8,7 +8,13 @@ import { NODE_TYPE } from '../../enum';
 import { getFilterText } from '../../utils';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class BranchItem extends Component<any, any> {
+export interface BranchItemState {
+  isMove: boolean;
+}
+
+export default class BranchItem extends Component<any, BranchItemState> {
+  declare mounted: boolean | undefined;
+
   constructor(props) {
     super(props);
   }
@@ -17,15 +23,15 @@ export default class BranchItem extends Component<any, any> {
     clearBorderType: 0,
   };
 
-  state = {
+  override state = {
     isMove: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.index !== prevProps.index && this.state.isMove) {
         setTimeout(() => {
@@ -38,7 +44,7 @@ export default class BranchItem extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
   }
 
@@ -150,7 +156,7 @@ export default class BranchItem extends Component<any, any> {
   /**
    * 渲染或 或者 且
    */
-  renderOrAnd(item, text?) {
+  renderOrAnd(item, text?: string | undefined) {
     const conditionValues = this.getValidConditionValues(item.conditionValues);
 
     return (
@@ -230,11 +236,11 @@ export default class BranchItem extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { processId, data, item, disabled, renderNode, clearBorderType, openDetail, isCopy, isApproval, isSimple } =
       this.props;
     const { isMove } = this.state;
-    const resultTypeText = {
+    const resultTypeText: Record<number, string> = {
       1: _l('同意'),
       2: _l('拒绝'),
       3: _l('有数据'),

@@ -343,7 +343,7 @@ export const replaceField = (text, fieldMap, connector = '>') => {
   if (!Object.keys(fieldMap).length) return text;
   const reg = /\$(\w+-\w+)\$/;
   if (!reg.test(text)) return text;
-  const handledText = text.replace(reg, ($0, $1) => {
+  const handledText = text.replace(reg, (_$0, $1) => {
     const ids = $1.split(/([a-zA-Z0-9#]{24,32})-/).filter(item => item);
     const value = ids.map((v, index: number) => fieldMap[index === 0 ? v : ids.join('-')].name);
     return ` (${value.join(connector)}) `;
@@ -463,7 +463,7 @@ export const getConditionList = (type, enumDefault: number) => {
 /**
  * 获取筛选的控件条件的个数
  */
-export const getConditionNumber = id => {
+export const getConditionNumber = (id: string) => {
   let count;
 
   switch (id) {
@@ -594,7 +594,7 @@ export const handleGlobalVariableName = (nodeId, sourceType, name?) => {
 /**
  * 检测筛选条件是否允许值为空
  */
-export const checkConditionAllowEmpty = (type, conditionId) => {
+export const checkConditionAllowEmpty = (type: number, conditionId: string) => {
   let list;
 
   switch (type) {
@@ -652,7 +652,7 @@ export const clearFlowNodeMapParameter = flowNodeMap => {
  * 处理执行的返回值
  */
 export const handleExecReturnValue = item => {
-  const MAP = {
+  const MAP: Record<number, string[]> = {
     14: ['originalFilename', 'ext'],
     26: ['fullName'],
     27: ['departmentName'],

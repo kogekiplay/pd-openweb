@@ -27,9 +27,9 @@ const getNumFetch = async (worksheetId: string) => {
 
 function Preview(props) {
   const cache = useRef({});
-  const ajaxPromise = useRef(null);
-  const ajaxPromisePublish = useRef(null);
-  const ajaxPromiseStatus = useRef(null);
+  const ajaxPromise = useRef<ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | null>(null);
+  const ajaxPromisePublish = useRef<ApiResult | null>(null);
+  const ajaxPromiseStatus = useRef<ApiResult | null>(null);
   const { projectId, appId, onChangePreview } = props;
   const [
     {

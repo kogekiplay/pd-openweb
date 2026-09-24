@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Popup, SpinLoading } from 'antd-mobile';
 import _ from 'lodash';
 import styled from 'styled-components';

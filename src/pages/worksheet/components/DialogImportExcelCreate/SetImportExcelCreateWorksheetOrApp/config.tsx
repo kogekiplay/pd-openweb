@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { DEFAULT_CONFIG } from 'src/pages/widgetConfig/config/widget';
 import { enumWidgetType, getIconByType } from 'src/pages/widgetConfig/util';
@@ -33,7 +32,7 @@ const relateItem = [
   },
 ];
 
-export const getList = (step, worksheetList) => {
+export const getList = (step: number, worksheetList) => {
   if (step === 2) {
     return backItem.concat(worksheetList.map(i => ({ text: i.workSheetName, value: i.workSheetId })));
   }

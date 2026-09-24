@@ -12,7 +12,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  getChunkList: function (args, options = {}) {
+  getChunkList: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + '/chunks/list';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chunks', args, $.extend(base, options));
@@ -31,7 +31,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  getChunkDetail: function (args, options = {}) {
+  getChunkDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + '/chunks/detail';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chunks', args, $.extend(base, options));

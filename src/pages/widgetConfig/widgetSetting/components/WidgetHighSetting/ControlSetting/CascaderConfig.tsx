@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox, Dropdown } from 'ming-ui';
@@ -32,7 +32,7 @@ const LEVEL_OPTIONS = [
   { text: _l('任意选择'), value: '0' },
 ];
 
-const LAYER_OPTIONS = Array.from({ length: 10 }).map((item, index) => ({
+const LAYER_OPTIONS = Array.from({ length: 10 }).map((_item, index) => ({
   value: `${index + 1}`,
   text: `${index + 1}层`,
 }));
@@ -78,7 +78,7 @@ export default function CascaderConfig(props) {
   const filters = getAdvanceSetting(data, 'filters');
   const isEndLayer = Number(limitlayer) > 0;
 
-  const renderFilter = key => {
+  const renderFilter = (key: string) => {
     const visibleKey = `${key}Visible`;
     const filterData = getAdvanceSetting(data, key) || [];
     return (

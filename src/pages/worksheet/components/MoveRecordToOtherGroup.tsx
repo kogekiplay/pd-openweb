@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import _, { get } from 'lodash';
 import styled from 'styled-components';
 import { Input, ScrollView } from 'ming-ui';

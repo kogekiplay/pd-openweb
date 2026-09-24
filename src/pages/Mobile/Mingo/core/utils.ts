@@ -23,7 +23,7 @@ export function syncCreateAppProjectFromUrl({
   return project.projectId;
 }
 
-export function pickRandom(list) {
+export function pickRandom(list: { id: number; text: string }[]) {
   return list[Math.floor(Math.random() * list.length)];
 }
 

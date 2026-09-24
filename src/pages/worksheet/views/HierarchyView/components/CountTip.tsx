@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { FlexCenter } from 'worksheet/styled';
 import { browserIsMobile } from 'src/utils/common';

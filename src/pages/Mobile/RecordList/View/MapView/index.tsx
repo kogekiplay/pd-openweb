@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';

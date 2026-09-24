@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import _ from 'lodash';
 import { Gmap, GmapOverlayView } from 'ming-ui/components/amap/components/GoogleMap';
 import PinMarker from '../components/PinMarker';
@@ -91,7 +91,7 @@ const GMap = forwardRef((props, ref) => {
   }, [isCurrentPosition]);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded) return undefined;
 
     const dargStartListener = mapRef.current.addListener('dragstart', () => {
       resetAddRecordBtn();

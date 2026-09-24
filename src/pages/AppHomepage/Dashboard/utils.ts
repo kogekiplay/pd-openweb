@@ -58,7 +58,7 @@ const textTone = (color: string) => generate(color)[7];
 /** 平台默认色，和 theme-default.less 的 --color-primary 一致 */
 const DEFAULT_THEME = '#1677ff';
 
-export const getDashboardColor = color => {
+export const getDashboardColor = (color: string | undefined) => {
   //默认主题
   if (!color || (!_.includes(themeColors, color) && !color.startsWith('#'))) {
     return {
@@ -79,7 +79,7 @@ export const getDashboardColor = color => {
   };
 };
 
-export const urlToBase64 = url => {
+export const urlToBase64 = (url: string) => {
   return fetch(url)
     .then(response => response.blob())
     .then(blob => {

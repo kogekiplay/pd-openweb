@@ -3,7 +3,7 @@ import projectSettingController from 'src/api/projectSetting';
 import structureController from 'src/api/structure';
 import Config from '../../config';
 
-export function setStructureForAll(params) {
+export function setStructureForAll(params: { forAll: boolean }) {
   return projectSettingController
     .setStructureForAll({
       projectId: Config.projectId,
@@ -19,7 +19,7 @@ export function setStructureForAll(params) {
     );
 }
 
-export function setStructureSelfEdit(params) {
+export function setStructureSelfEdit(params: { isAllowStructureSelfEdit: boolean }) {
   return projectSettingController
     .setStructureSelfEdit({
       projectId: Config.projectId,

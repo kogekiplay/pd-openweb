@@ -234,9 +234,10 @@ export default function FilledRecord(props) {
     return (
       <React.Fragment>
         <ScrollView className="flex" onScrollEnd={onScrollEnd}>
-          {filledRecord.list.map(item => {
+          {filledRecord.list.map((item, index) => {
             return (
               <div
+                key={index}
                 className="recordItem"
                 onClick={() =>
                   setRecordDetail({

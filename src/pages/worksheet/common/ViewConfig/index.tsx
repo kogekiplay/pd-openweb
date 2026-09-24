@@ -9,6 +9,8 @@ import ViewConfigCon from './ViewConfig';
 import './ViewConfig.less';
 
 let ViewConfig = class ViewConfig extends React.Component<any, any> {
+  declare inputEl: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     const { view, worksheetId } = props;
@@ -18,7 +20,7 @@ let ViewConfig = class ViewConfig extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { view, worksheetId } = this.props;
 
@@ -31,7 +33,7 @@ let ViewConfig = class ViewConfig extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.inputEl && document.activeElement === this.inputEl) {
       const value = this.inputEl.value.trim();
 
@@ -133,7 +135,7 @@ let ViewConfig = class ViewConfig extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     return (
       <div className="worksheetViewConfig">
         <div>

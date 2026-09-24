@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { DndProvider } from 'react-dnd';
@@ -154,11 +154,11 @@ function MapView(props) {
   const [markers, setMarkers] = useState([]);
   const [mapViewConfig, setMapViewConfig] = useState({});
   const [recordInfoRowId, setRecordInfoRowId] = useState(null);
-  const [mobileCloseCard, setMobileCloseCard] = useState(0);
+  const [mobileCloseCard, setMobileCloseCard] = useState<number | boolean>(0);
   const [isCurrentPosition, setIsCurrentPosition] = useState(false);
   const [clickLnglat, setClickLnglat] = useState(null);
   const [mapControl, setMapControl] = useState({});
-  const mapViewRequest = useRef(null);
+  const mapViewRequest = useRef<string | null>(null);
   const mapViewConfigRef = useRef(mapViewConfig);
 
   const resetAddRecordBtn = useCallback(() => {
@@ -174,7 +174,7 @@ function MapView(props) {
 
         if (_.isUndefined(validZoom) || validZoom === getLocalMapZoom(viewId)) return;
 
-        safeLocalStorageSetItem(getMapZoomStorageKey(viewId), validZoom);
+        safeLocalStorageSetItem(getMapZoomStorageKey(viewId), String(validZoom));
       }, 500),
     [viewId],
   );

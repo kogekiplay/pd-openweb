@@ -54,7 +54,7 @@ export default function (props) {
               <div className="mTop8 mLeft8">
                 {DIS_SET.map((o, i) => {
                   return (
-                    <div className="">
+                    <div key={i} className="">
                       <Radio
                         className="Font13"
                         text={o}

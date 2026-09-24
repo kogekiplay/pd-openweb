@@ -10,11 +10,11 @@ import 'src/components/autoTextarea/autoTextarea';
 import { SOURCE_TYPE } from 'src/components/comment/config';
 import Emotion from 'src/components/emotion/emotion';
 import MentionsInput from 'src/components/MentionsInput';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 import UploadFiles from 'src/components/UploadFiles';
 import { addComment } from '../../../redux/postActions';
 
 const LET_ME_REPLY = _l('我来回复');
-const TEXT_AREA_MIN_HEIGHT_COLLAPSE = 22;
 const TEXT_AREA_MIN_HEIGHT_EXPAND = 50;
 const TEXT_AREA_MAX_HEIGHT = 180;
 
@@ -22,14 +22,22 @@ const TEXT_AREA_MAX_HEIGHT = 180;
  * 动态回复输入框
  */
 class PostCommentInput extends React.Component<any, any> {
-  static propTypes = {
+  declare bound: boolean | undefined;
+
+  // initMentionsInput 往这个 textarea 上挂了 val / reset / destroy 等方法
+  declare textarea: MentionsInputElement | null | undefined;
+  declare button: HTMLInputElement | null | undefined;
+  declare faceBtn: HTMLAnchorElement | null | undefined;
+  declare replyFrame: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     postItem: PropTypes.object,
     onPublished: PropTypes.func,
     focus: PropTypes.bool,
     isPostDetail: PropTypes.bool,
   };
 
-  state = {
+  override state = {
     isEditing: false,
     isReshare: false,
     uploadAttachmentObj: undefined,
@@ -44,11 +52,11 @@ class PostCommentInput extends React.Component<any, any> {
     },
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.initTextarea();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     const postItem = this.props.postItem;
     const isToComment = !!postItem.commentID;
 
@@ -81,7 +89,7 @@ class PostCommentInput extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const textarea = this.textarea;
     const button = this.button;
     textarea.destroy && textarea.destroy();
@@ -197,6 +205,7 @@ class PostCommentInput extends React.Component<any, any> {
                   },
                 ),
               );
+              return undefined;
             });
           });
           comp.bound = true;
@@ -319,7 +328,7 @@ class PostCommentInput extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const postItem = this.props.postItem;
     const isToComment = !!postItem.commentID;
     const dropElementID = 'text_' + postItem.postID + '_' + postItem.commentID + 'C';

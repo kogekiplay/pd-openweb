@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import LoadDiv from 'ming-ui/components/LoadDiv';
@@ -12,11 +12,11 @@ import Constant from '../../utils/constant';
 import './index.less';
 
 export const splitFiles = list => {
-  const ranges = {};
+  const ranges: Record<string, moment.Moment[]> = {};
   ranges[_l('今天')] = [moment().startOf('day'), moment().endOf('day')];
   ranges[_l('最近七天')] = [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')];
   ranges[_l('本月')] = [moment().startOf('month'), moment().endOf('day')];
-  const oSplit = {};
+  const oSplit: Record<string, boolean> = {};
   list.forEach(file => {
     if (file.type === 2) {
       file.previewUrl = `${file.url}&imageView2/0/w/100/h/100/q/90`;
@@ -103,7 +103,7 @@ export class FileItem extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { fileType, item } = this.props;
 
     if (fileType === 2) {
@@ -145,7 +145,7 @@ export default class Files extends Component<any, any> {
       loading: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { session } = this.props;
     ajax
       .getFileList({
@@ -161,7 +161,7 @@ export default class Files extends Component<any, any> {
         });
       });
   }
-  render() {
+  override render() {
     const { loading, files } = this.state;
     const { session } = this.props;
     return (

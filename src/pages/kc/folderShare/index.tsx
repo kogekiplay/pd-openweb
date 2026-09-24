@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderToString } from 'react-dom/server';
 import doT from 'dot';
 import _ from 'lodash';
@@ -10,6 +9,7 @@ import preall from 'src/common/preall';
 import saveToKnowledge from 'src/components/kc/saveToKnowledge/saveToKnowledge';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
 import { browserIsMobile, downloadFile, getClassNameByExt, pathCompletion } from 'src/utils/common';
+import defineMethods from 'src/utils/defineMethods';
 import RegExpValidator from 'src/utils/expression';
 import MobileSharePreview from '../shareMobile/shareMobile';
 import fileItemHtml from './tpl/fileItem.html';
@@ -21,7 +21,33 @@ var fileItemTpl = doT.template(fileItemHtml);
 
 const loading = renderToString(<LoadDiv />);
 
-var ShareFolder = function (options?) {
+/** 公开共享文件夹页（/apps/kcshareFolder/:shareId，访客可匿名打开）。节点都是接口原样返回的知识节点 */
+interface ShareFolderFields {
+  data: {
+    currentFolderId: string;
+    isLoadingMore: boolean;
+    page: number;
+    pageNum: number;
+    /** 当前文件夹已加载的节点（翻页时累加） */
+    list: ApiPayload[];
+    listCount: number;
+    isTouching?: boolean;
+    startPos?: { x: number; y: number };
+  };
+  urlParams: ReturnType<typeof qs.parse>;
+  options: { isMobile: boolean };
+  $container: JQuery;
+  /** getShareFolder 的返回：node 是被分享的根文件夹，active 为假表示分享已关闭 */
+  sourceData: ApiPayload;
+  rootNode: ApiPayload;
+  $fileList: JQuery;
+  $previewCon?: JQuery;
+  $globalLoading?: JQuery;
+  $alert?: JQuery;
+  alertTimer?: ReturnType<typeof setTimeout>;
+}
+
+function ShareFolder(this: ShareFolderInstance, options?) {
   var SF = this;
   var DEFAULTS = {
     isMobile: browserIsMobile(),
@@ -66,9 +92,9 @@ var ShareFolder = function (options?) {
       }
     });
   }
-};
+}
 
-ShareFolder.prototype = {
+const shareFolderMethods = defineMethods<ShareFolderFields>()({
   init: function () {
     var SF = this;
     this.renderFrame();
@@ -78,27 +104,25 @@ ShareFolder.prototype = {
       var hashParams = this.getHashParams();
       var hashId = hashParams.folderId;
       if (hashId) {
-        if (hashParams.preview) {
-          shareFolderAjax
-            .getNodeDetail({
-              id: hashParams.preview,
-              shareFolderId: SF.data.currentFolderId,
-            })
-            .then(node => {
-              if (SF.options.isMobile) {
-                SF.preview();
-              } else {
-                previewAttachments({
-                  callFrom: 'kc',
-                  attachments: [node],
-                  showThumbnail: true,
-                  shareFolderId: SF.rootNode.id,
-                });
-              }
-            });
-        }
-
-        this.openFolder(hashId);
+        /* 【带 preview 的链接原先一打开就整页崩】这里原先调 shareFolderAjax.getNodeDetail 取要预览的文件：
+           上游 5.2.0（2024-02）已经从 src/api/shareFolder 里删掉了这个接口，运行时是 undefined，
+           抛 TypeError 之后下面的打开文件夹、bindEvent 全都没执行。移动端点开文件后刷新、或把这个地址发给别人，
+           看到的就是一个空壳页。
+           现在等文件夹列表加载完，从列表里取这个节点，走和在列表里点击完全相同的预览调用（shareFolderId 放在第二个
+           参数里 —— 预览组件只从那里读，原先这里放在第一个参数里，是读不到的）。目标不在第一页里就只打开文件夹。 */
+        this.openFolder(hashId).then(() => {
+          if (!hashParams.preview) return;
+          const node = SF.data.list.find(item => item.id === hashParams.preview);
+          if (!node) return;
+          if (SF.options.isMobile) {
+            SF.preview(node);
+          } else {
+            previewAttachments(
+              { callFrom: 'kc', attachments: [node], showThumbnail: true },
+              { shareFolderId: SF.rootNode.id },
+            );
+          }
+        });
       } else {
         this.renderList([this.rootNode]);
         this.$container.find('.path').text(_l('全部文件'));
@@ -146,7 +170,6 @@ ShareFolder.prototype = {
       var contentHeight = $('.shareFolderCon .main .fileList').height();
       var listCount = SF.data.listCount;
       var renderedCount = SF.data.list.length;
-      console.log(contentHeight - scrollTop - conHeight);
       if (contentHeight - scrollTop - conHeight < 30) {
         if (!SF.data.isLoadingMore && renderedCount < listCount) {
           SF.loadMoreNodes();
@@ -192,7 +215,6 @@ ShareFolder.prototype = {
     window.addEventListener(
       'hashchange',
       function () {
-        console.log(window.location.hash);
         var hashParams = SF.getHashParams();
         var id = hashParams.folderId;
         SF.$container.show();
@@ -230,7 +252,7 @@ ShareFolder.prototype = {
 
         var attachment = SF.rootNode;
         import('src/components/shareAttachment/shareAttachment').then(share => {
-          var params = {
+          var params: Record<string, any> = {
             attachmentType: 2,
             isKcFolder: true,
           };
@@ -264,16 +286,19 @@ ShareFolder.prototype = {
       });
     }
   },
-  preview: function () {
+  /** 移动端预览。node 不传时按地址里的 preview 参数从已加载的列表里找 */
+  preview: function (node?: ApiPayload) {
     var SF = this;
     var hashParams = SF.getHashParams();
     SF.$previewCon = $('<div id="previewCon"></div>');
     $('body').append(SF.$previewCon);
     SF.$container.hide();
     new MobileSharePreview({
-      node: SF.data.list.filter(function (node) {
-        return node.id === hashParams.preview;
-      })[0],
+      node:
+        node ||
+        SF.data.list.filter(function (item) {
+          return item.id === hashParams.preview;
+        })[0],
       container: '#previewCon',
       shareFolderId: SF.rootNode.id,
     });
@@ -286,7 +311,7 @@ ShareFolder.prototype = {
     SF.data.isLoadingMore = true;
     SF.getNodes(currentId, page, 20)
       .then(function (data) {
-        SF.$container.find('#loadingCon').remove;
+        SF.$container.find('#loadingCon').remove();
         SF.data.list = SF.data.list.concat(data.list);
         SF.renderList(SF.data.list);
         SF.data.isLoadingMore = false;
@@ -335,7 +360,7 @@ ShareFolder.prototype = {
 
     function getPathWidth() {
       return _.sum(
-        $path.map(function (index: number, ele) {
+        $path.map(function (_index: number, ele) {
           return $(ele).width();
         }),
       );
@@ -372,11 +397,12 @@ ShareFolder.prototype = {
       })
       .join('');
   },
+  /** 返回加载完成的 Promise（失败也会 resolve），init 里带 preview 的链接要等列表到了再预览 */
   openFolder: function (id) {
     var SF = this;
     this.data.currentFolderId = id;
     SF.globalLoading();
-    SF.getNodes(id, 0, 20)
+    return SF.getNodes(id, 0, 20)
       .then(function (data) {
         SF.data.list = data.list;
         SF.renderList(SF.data.list);
@@ -485,14 +511,16 @@ ShareFolder.prototype = {
       window.location.href = pathCompletion('/login?ReturnUrl=' + encodeURIComponent(window.location.href));
     }
   },
-  alert: function (str, time) {
+  alert: function (str, time?: number) {
     var SF = this;
     if (!SF.options.isMobile) {
       alert(str);
       return;
     }
 
-    clearTimeout(SF.timer);
+    // 原先清的是 SF.timer（从没赋过值），设的却是 alertTimer：3 秒内连弹两次时，第一个定时器会把第二个提示提前抹掉。
+    // 和 kc/shareMobile 里修过的是同一个问题（那个文件是这段的原型）
+    clearTimeout(SF.alertTimer);
     if (SF.$alert) {
       SF.$alert.remove();
     }
@@ -503,7 +531,10 @@ ShareFolder.prototype = {
       SF.$alert.remove();
     }, time || 3000);
   },
-};
+});
+
+ShareFolder.prototype = shareFolderMethods;
+type ShareFolderInstance = ShareFolderFields & typeof shareFolderMethods;
 
 preall({ type: 'function' }, { allowNotLogin: true });
 window.hello = new ShareFolder();

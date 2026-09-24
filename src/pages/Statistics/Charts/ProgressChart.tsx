@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Col, Row } from 'antd';
 import { TinyColor } from '@ctrl/tinycolor';
 import cx from 'classnames';
@@ -22,6 +22,10 @@ const getControlMinAndMax = map => {
 };
 
 class ProgressChart extends Component<any, any> {
+  declare isUnmounted: boolean;
+  declare renderTimer: NodeJS.Timeout | null;
+  declare chartEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +38,7 @@ class ProgressChart extends Component<any, any> {
     this.isUnmounted = false;
     this.renderTimer = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     loadG2Plot().then(data => {
       if (this.isUnmounted) {
         return;
@@ -44,12 +48,12 @@ class ProgressChart extends Component<any, any> {
       this.renderProgressChart(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     clearTimeout(this.renderTimer);
     this.destroyProgressChart();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { displaySetup, style } = this.props.reportData;
     const { displaySetup: oldDisplaySetup, style: oldStyle } = prevProps.reportData;
     const shouldRecreate =
@@ -301,7 +305,7 @@ class ProgressChart extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { mobileCount = 1, layoutType, reportData, isMobile } = this.props;
     const { displaySetup, style } = reportData;
     const { showChartType } = displaySetup;

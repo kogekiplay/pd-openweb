@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import { isEmpty } from 'lodash';
@@ -64,10 +64,10 @@ function OperateDialog(props) {
   return (
     <Dialog width={480} visible={true} title={_l('批量操作设置')} onCancel={onClose} onOk={() => onOk(batchInfo)}>
       <div className="flexColumn pTop8">
-        {BATCH_OPTIONS.map(item => {
+        {BATCH_OPTIONS.map((item, index) => {
           const defaultValue = getAdvanceSetting(data)[item.disabledKey] || '1';
           return (
-            <div className="labelWrap mBottom10 ">
+            <div key={index} className="labelWrap mBottom10 ">
               <Checkbox
                 size="small"
                 {...(item.disabledKey ? { disabled: getAdvanceSetting(data, [item.disabledKey]) === 0 } : {})}
@@ -79,9 +79,9 @@ function OperateDialog(props) {
             </div>
           );
         })}
-        {BATCH_OPTIONS_RELATE_VIEW.map(item => {
+        {BATCH_OPTIONS_RELATE_VIEW.map((item, index) => {
           return (
-            <div className="labelWrap mBottom10 flexCenter">
+            <div key={index} className="labelWrap mBottom10 flexCenter">
               <Checkbox
                 size="small"
                 disabled={!isRelateView}
@@ -260,7 +260,7 @@ export default function RelateOperate(props) {
         <Checkbox
           size="small"
           text={_l('允许打开记录')}
-          checked={+allowlink}
+          checked={!!+allowlink}
           onClick={(checked: boolean) =>
             onChange(handleAdvancedSettingChange(data, { allowlink: +!checked, openview: checked ? '' : openview }))
           }
@@ -273,7 +273,7 @@ export default function RelateOperate(props) {
             border
             className="flex"
             cancelAble
-            loading={loading}
+            itemLoading={loading}
             placeholder={
               selectedOpenViewIsDelete || selectedViewIsDeleted ? (
                 <span className="Red">{_l('已删除')}</span>

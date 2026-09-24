@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, Fragment, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, LoadDiv, QiniuUpload } from 'ming-ui';
@@ -114,7 +114,7 @@ const ShareCardSet = forwardRef((props, ref) => {
             setIsUploading(true);
             up.disableBrowse();
           }}
-          onError={(up, err) => {
+          onError={(_up, err) => {
             if (err.code === -600) alert(_l('上传失败，只允许上传1M以内的文件'), 2);
           }}
         >

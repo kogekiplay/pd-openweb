@@ -11,7 +11,7 @@ const report = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  export: function (args, options?) {
+  export: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/report/export';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportexport', JSON.stringify(args), $.extend(base, options));
@@ -24,7 +24,7 @@ const report = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  exportReport: function (args, options) {
+  exportReport: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/report/exportReport';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'reportexportReport', args, $.extend(base, options));
@@ -319,7 +319,7 @@ const report = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getReportData: function (args, options) {
+  getReportData: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/report/get';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportget', JSON.stringify(args), $.extend(base, options));
@@ -614,7 +614,7 @@ const report = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getData: function (args, options?) {
+  getData: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/report/getData';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportgetData', JSON.stringify(args), $.extend(base, options));
@@ -909,7 +909,7 @@ const report = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getFavoriteData: function (args, options) {
+  getFavoriteData: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/report/getFavoriteData';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportgetFavoriteData', JSON.stringify(args), $.extend(base, options));
@@ -921,7 +921,7 @@ const report = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getReportSingleCacheId: function (args, options?) {
+  getReportSingleCacheId: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/report/getReportSingleCacheId';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportgetReportSingleCacheId', JSON.stringify(args), $.extend(base, options));
@@ -1216,7 +1216,7 @@ const report = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getTableData: function (args, options?) {
+  getTableData: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/report/getTableData';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportgetTableData', JSON.stringify(args), $.extend(base, options));
@@ -1232,7 +1232,7 @@ const report = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  list: function (args, options?) {
+  list: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/report/list';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'reportlist', args, $.extend(base, options));
@@ -1244,7 +1244,7 @@ const report = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  listByPageId: function (args, options?) {
+  listByPageId: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/report/listByPageId';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'reportlistByPageId', args, $.extend(base, options));
@@ -1539,12 +1539,12 @@ const report = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  refreshData: function (args, options) {
+  refreshData: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/report/refreshData';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportrefreshData', JSON.stringify(args), $.extend(base, options));
   },
-  getReports: function (args, options?) {
+  getReports: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/report/getReports';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportgetReports', JSON.stringify(args), $.extend(base, options));

@@ -22,7 +22,13 @@ const DialogWrap = styled(Dialog)`
   }
 `;
 
-class RefuseUserJoinDia extends React.Component<any, any> {
+export interface RefuseUserJoinDiaState {
+  refuseMessage: string;
+}
+
+class RefuseUserJoinDia extends React.Component<any, RefuseUserJoinDiaState> {
+  declare area: HTMLTextAreaElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +36,7 @@ class RefuseUserJoinDia extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.area && this.area.focus();
   }
 
@@ -60,7 +66,7 @@ class RefuseUserJoinDia extends React.Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { onCancel = () => {}, accountIds = [] } = this.props;
     const { refuseMessage } = this.state;
 
@@ -83,7 +89,6 @@ class RefuseUserJoinDia extends React.Component<any, any> {
         <textarea
           name="refuseUserJoinDia"
           autoComplete="off"
-          type="textarea"
           className="test-textarea mTop10"
           value={refuseMessage || ''}
           ref={area => {

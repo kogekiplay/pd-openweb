@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Divider, Select } from 'antd';
 import Trigger from '@rc-component/trigger';
@@ -59,6 +59,9 @@ const DelIconWrap = styled.div`
 `;
 
 export default class BaseFormInfo extends Component<any, any> {
+  declare ajaxRequest: ApiResult | undefined;
+  declare worksiteRequest: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -70,7 +73,7 @@ export default class BaseFormInfo extends Component<any, any> {
       departmentInfos: props.actType === 'add' && props.departmentInfos ? [props.departmentInfos] : [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { typeCursor, editCurrentUser = {}, actType } = this.props;
 
     if (typeCursor === 2 || actType === 'add') {
@@ -81,7 +84,7 @@ export default class BaseFormInfo extends Component<any, any> {
     actType === 'edit' && this.updateBaseInfo(this.props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.baseInfo, prevProps.baseInfo)) {
         this.setState({
@@ -375,7 +378,7 @@ export default class BaseFormInfo extends Component<any, any> {
   renderMoreOption = (item, i) => {
     const { visible, currentDepartmentId, departmentInfos = [], departmentJobInfos = [], useMultiJobs } = this.state;
 
-    const onMoveDepart = action => {
+    const onMoveDepart = (action: string) => {
       const currentItem = useMultiJobs ? departmentJobInfos.filter(it => it.key === item.key)[0] || {} : item;
       const list = useMultiJobs ? departmentJobInfos : departmentInfos;
       list.splice(i, 1);
@@ -462,7 +465,7 @@ export default class BaseFormInfo extends Component<any, any> {
     );
   };
 
-  renderDepartmentJob = (type = 'single', departmentItem: Record<string, any> = {}, index?) => {
+  renderDepartmentJob = (type = 'single', departmentItem: Record<string, any> = {}, index?: number | undefined) => {
     const { typeCursor, projectId, authority = [] } = this.props;
     const {
       departmentInfos = [],
@@ -579,19 +582,19 @@ export default class BaseFormInfo extends Component<any, any> {
               this.select = select;
             }}
             className={cx('w100 mdAntSelect', { noBorder: typeCursor === 2 })}
-            showSearch
+            showSearch={{
+              filterOption: () => true,
+              onSearch: (keywords: string) =>
+                this.setState({ keywords, jobIds: jobIds.filter(item => item.indexOf('add_') === -1) }),
+            }}
             allowClear={type === 'multiple' ? departmentItem.jobIds.length > 0 : jobIds.length > 0}
             listHeight={285}
             optionLabelProp="label"
             value={type === 'multiple' ? departmentItem.jobIds : jobIds}
             placeholder={_l('请选择')}
             suffixIcon={<Icon icon="arrow-down-border Font14" />}
-            filterOption={() => true}
             notFoundContent={<span className="textTertiary">{_l('可直接输入创建新的职位')}</span>}
-            onSearch={(keywords: string) =>
-              this.setState({ keywords, jobIds: jobIds.filter(item => item.indexOf('add_') === -1) })
-            }
-            onDropdownVisibleChange={open => {
+            onOpenChange={open => {
               this.setState({ keywords: '' });
               !open && this.select.blur();
             }}
@@ -620,7 +623,7 @@ export default class BaseFormInfo extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { typeCursor, projectId, authority = [] } = this.props;
     const {
       worksiteList = [],

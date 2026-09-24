@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import registerAjax from 'src/api/register';
 
@@ -20,7 +20,7 @@ const Abnormal = styled.div`
 export default function createPermissionCheckWrapper(Comp) {
   return function (props) {
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState();
+    const [error, setError] = useState<string | undefined>();
 
     useEffect(() => {
       registerAjax

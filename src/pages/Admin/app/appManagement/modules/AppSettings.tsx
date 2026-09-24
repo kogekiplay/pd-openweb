@@ -30,7 +30,7 @@ export default class AppSettings extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.list !== prevProps.list) {
         this.setState({
@@ -48,7 +48,7 @@ export default class AppSettings extends React.Component<any, any> {
         <ScrollView className="singleItemAppContent">
           {entities.map((entity, index: number) => {
             return (
-              <div className="singleItemHeader mBottom10">
+              <div key={index} className="singleItemHeader mBottom10">
                 <div className="singleItemLeft">
                   <div className="mLeft35">{entity.worksheetName}</div>
                   <div className="Font12 textTertiary">{`（${entity.totalRecordNum}）`}</div>
@@ -153,9 +153,10 @@ export default class AppSettings extends React.Component<any, any> {
         </ScrollView>
       );
     }
+    return undefined;
   }
 
-  render() {
+  override render() {
     const { activeId, list } = this.state;
 
     if (!list.length) {
@@ -164,9 +165,9 @@ export default class AppSettings extends React.Component<any, any> {
 
     return (
       <Fragment>
-        {list.map(item => {
+        {list.map((item, index) => {
           return (
-            <div className="singleItemOption">
+            <div key={index} className="singleItemOption">
               <div className="singleItemHeader">
                 <div className="singleItemLeft">
                   <div className="mRight15 svgBox" style={{ backgroundColor: item.iconColor }}>

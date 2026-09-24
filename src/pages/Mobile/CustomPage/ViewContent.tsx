@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { SpinLoading } from 'antd-mobile';
 import _ from 'lodash';
@@ -19,7 +19,7 @@ function ViewContent(props) {
 
     if (!customPageContent) {
       setVisible(true);
-      return;
+      return undefined;
     }
 
     const view = customPageContent.querySelector(`.widgetContent .view-${setting.id}`);

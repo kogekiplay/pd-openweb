@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import { Dialog as MobileDialog } from 'antd-mobile';
+﻿import { Dialog as MobileDialog } from 'antd-mobile';
 import _, { isEmpty } from 'lodash';
 import { Dialog } from 'ming-ui';
 import sheetAjax from 'src/api/worksheet';
@@ -51,7 +50,7 @@ export const updateActiveTabControlIdAction = (dispatch, id) => {
   });
 };
 
-export const updateConfigLockAction = (dispatch, lock) => {
+export const updateConfigLockAction = (dispatch, lock: boolean) => {
   dispatch({
     type: 'SET_CONFIG_LOCK',
     payload: lock,
@@ -243,15 +242,15 @@ export const updateErrorStateAction = (dispatch, { getState, isShow, controlId }
 /**
  * 提交错误信息弹层
  */
-export const errorDialog = errors => {
+export const errorDialog = (errors: string[]) => {
   const isMobile = browserIsMobile();
 
   if (isMobile) {
     MobileDialog.alert({
       content: (
         <div>
-          {errors.map(item => (
-            <div className="textSecondary mBottom6 WordBreak">{item}</div>
+          {errors.map((item, index) => (
+            <div key={index} className="textSecondary mBottom6 WordBreak">{item}</div>
           ))}
         </div>
       ),
@@ -263,8 +262,8 @@ export const errorDialog = errors => {
       title: <span className="Bold Font17 Red">{_l('错误提示')}</span>,
       description: (
         <div>
-          {errors.map(item => (
-            <div className="textSecondary mBottom6 WordBreak">{item}</div>
+          {errors.map((item, index) => (
+            <div key={index} className="textSecondary mBottom6 WordBreak">{item}</div>
           ))}
         </div>
       ),

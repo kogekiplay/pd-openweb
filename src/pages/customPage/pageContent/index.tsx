@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useRef } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useFullscreen, useToggle } from 'react-use';
@@ -268,7 +268,7 @@ function CustomPageContent(props) {
   const renderContent = () => {
     if (urlTemplate) {
       const dataSource = transferValue(urlTemplate);
-      const urlList = [];
+      const urlList: string[] = [];
       dataSource.map(o => {
         if (o.staticValue) {
           urlList.push(o.staticValue);

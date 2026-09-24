@@ -40,7 +40,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserBusyStatus: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUserBusyStatus: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Entity.ReturnResult> {
     return mdyAPI('Calendar', 'GetUserBusyStatus', args, options);
   },
   /**
@@ -429,7 +429,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserAllCalCategories: function (args?: ApiArgs, options: ApiOptions = {}) {
+  getUserAllCalCategories: function (
+    args?: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.ReturnResult> {
     return mdyAPI('Calendar', 'GetUserAllCalCategories', args, options);
   },
 };

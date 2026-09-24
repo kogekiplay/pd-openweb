@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { find, get, isFunction, pick } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -44,7 +44,7 @@ function pickControl(control: FormControl = {}) {
 }
 
 function formatFormData(formData) {
-  const result = {};
+  const result: Record<string, Pick<FormControl, 'type' | 'controlId' | 'controlName' | 'value' | 'options'>> = {};
   formData.forEach((item: FormControl) => {
     result[item.controlId] = pickControl(item);
   });

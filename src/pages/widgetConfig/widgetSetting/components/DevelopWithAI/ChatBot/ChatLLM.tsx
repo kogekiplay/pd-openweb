@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import { get, isFunction } from 'lodash';
 import PropTypes from 'prop-types';
@@ -254,7 +254,7 @@ function ChatLLM(
   // AI 生成字段属单轮旧功能，sessionId 加 session-bot- 前缀以便从历史会话列表排除（见 fetchAgentSessions）；
   // 仍以 controlId 收尾，保持同一控件对话的稳定续接。
   const sessionId = `session-bot-${control.controlId}`;
-  const cache = useRef({});
+  const cache = useRef<{ isOnComposition?: boolean | undefined }>({});
   const uploadImageRef = useRef(null);
   const [messageListLoading, setMessageListLoading] = useState(true);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -291,7 +291,7 @@ function ChatLLM(
         ),
       },
     ],
-    onError: (error, eventData) => {
+    onError: (_error, eventData) => {
       setError({
         errorMsg: _l('模型调用失败'),
         sourceData: eventData,

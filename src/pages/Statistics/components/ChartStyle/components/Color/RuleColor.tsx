@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState } from 'react';
+import { Component, Fragment, useState } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, Checkbox, ConfigProvider, Input, Modal, Radio, Select } from 'antd';
 import cx from 'classnames';
@@ -263,7 +263,7 @@ class ColorLevel extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { yaxisList, reportType } = this.props;
     const { min, center, max, centerVisible, controlId, applyValue } = this.state;
     const filterYaxisList = _.uniqBy(yaxisList, 'controlId').filter(data => data.normType !== 7);
@@ -424,7 +424,7 @@ class ColorScope extends Component<any, any> {
       scopeRules,
     });
   };
-  render() {
+  override render() {
     const { isPercent, yaxisList } = this.props;
     const { scopeRules, controlId } = this.state;
     const otherProps = {
@@ -490,6 +490,8 @@ class ColorScope extends Component<any, any> {
 }
 
 export default class RuleColor extends Component<any, any> {
+  declare colorLevelEl: ColorLevel | ColorScope | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -497,7 +499,7 @@ export default class RuleColor extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         const { model = 1 } = this.props.colorRule || {};
@@ -536,7 +538,7 @@ export default class RuleColor extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const {
       visible,
       onCancel,

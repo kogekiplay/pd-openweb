@@ -5,9 +5,9 @@ import roleApi from 'src/api/role';
 import versionApi from 'src/api/version';
 import { PERMISSION_ENUM, ROUTE_CONFIG } from 'src/pages/Admin/enum';
 
-let cachePermission = {};
+let cachePermission: Record<string, { data: number[]; time: string; version: string }> = {};
 
-const setCacheData = (projectId: string, data, version: string) => {
+const setCacheData = (projectId: string, data: number[], version: string) => {
   cachePermission[projectId] = {
     data,
     time: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -81,7 +81,10 @@ export const hasPermission = (userPermissionIds, needPermission) => {
  * 所以正常渲染时缓存一定是热的。会走到这一分支的只有【不属于本账号的项目】——
  * 那种情况下权限本来就该当成空。
  */
-export const getMyPermissions = (projectId: string, isSync = true) => {
+// 同步调用（默认）直接给权限 id 数组；传 false 时给 Promise（调用方一律写字面量 false）
+export function getMyPermissions(projectId: string, isSync?: true): number[];
+export function getMyPermissions(projectId: string, isSync: false): Promise<number[]>;
+export function getMyPermissions(projectId: string, isSync = true) {
   const cache = cachePermission[projectId];
 
   if (cache) {
@@ -96,7 +99,7 @@ export const getMyPermissions = (projectId: string, isSync = true) => {
   const pending = prefetchMyPermissions(projectId);
 
   return isSync ? [] : pending;
-};
+}
 
 //校验权限--需要获取权限
 export const checkPermission = (projectId: string, needPermission: number | number[]) => {

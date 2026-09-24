@@ -4,6 +4,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Dialog, Textarea } from 'ming-ui';
 import { SelectGroupTrigger } from 'ming-ui/functions/quickSelectGroup';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 import UploadFiles from 'src/components/UploadFiles';
 import { htmlDecodeReg } from 'src/utils/common';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
@@ -16,6 +17,9 @@ const FooterWrap = styled.div`
 `;
 
 export default class EditPostDialog extends React.Component<any, any> {
+  // initMentionsInput 往这个 textarea 上挂了 val / reset / destroy 等方法
+  declare textarea: MentionsInputElement | null | undefined;
+
   static show(postItem, dispatch) {
     const div = document.createElement('div');
 
@@ -35,7 +39,7 @@ export default class EditPostDialog extends React.Component<any, any> {
     );
   }
 
-  state = {
+  override state = {
     visible: true,
     kcAttachmentData: [],
     temporaryData: [],
@@ -61,7 +65,7 @@ export default class EditPostDialog extends React.Component<any, any> {
       });
     }
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.setContent(this.props.postItem);
   }
   formatAttachment(attachment) {
@@ -156,7 +160,7 @@ export default class EditPostDialog extends React.Component<any, any> {
 
       if (!scope) {
         alert(_l('请选择群组'), 3);
-        return;
+        return undefined;
       }
 
       this.setState({ submitting: true });
@@ -187,6 +191,7 @@ export default class EditPostDialog extends React.Component<any, any> {
           this.setState({ submitting: false });
         },
       );
+      return undefined;
     });
   }
 
@@ -202,7 +207,7 @@ export default class EditPostDialog extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { postItem } = this.props;
 
     if (!postItem) return false;

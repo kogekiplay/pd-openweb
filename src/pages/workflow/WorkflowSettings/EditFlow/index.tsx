@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -46,7 +46,7 @@ class EditFlow extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { selectNodeId } = this.state;
 
     this.changeScreenWidth();
@@ -59,7 +59,7 @@ class EditFlow extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(prevProps, this.props) || prevState.scale !== this.state.scale) {
       this.changeScreenWidth();
       this.setViewCenter();
@@ -98,7 +98,7 @@ class EditFlow extends Component<any, any> {
     const $content = $box.find('.workflowEditContent');
     let maxWidth = $box.width();
 
-    $content.find('> .flexColumn > .workflowBranch, > .flexColumn > .approvalProcessBoxBox').map((i, item) => {
+    $content.find('> .flexColumn > .workflowBranch, > .flexColumn > .approvalProcessBoxBox').map((_i, item) => {
       if (maxWidth < ($(item).innerWidth() * this.state.scale) / 100) {
         maxWidth = ($(item).innerWidth() * this.state.scale) / 100;
       }
@@ -314,7 +314,7 @@ class EditFlow extends Component<any, any> {
     let pluginInputNode;
     let pluginOutputNode;
     let pluginInputNodeProps;
-    const nodeList = getSameLevelIds(data, firstId, excludeFirstId).map(id => {
+    const nodeList = getSameLevelIds(data, firstId, excludeFirstId).map((id, index) => {
       const props = {
         key: id,
         companyId: flowInfo.companyId,
@@ -374,7 +374,7 @@ class EditFlow extends Component<any, any> {
         return null;
       }
 
-      return <NodeComponent {...props} />;
+      return <NodeComponent key={index} {...props} />;
     });
 
     // 插件
@@ -567,7 +567,7 @@ class EditFlow extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { flowInfo, workflowDetail, urlParams, isPlugin } = this.props;
     const {
       nodeId,
@@ -662,6 +662,7 @@ class EditFlow extends Component<any, any> {
                   }
 
                   this.setState({ showThumbnail: !showThumbnail, refreshPosition: +new Date() });
+                  return undefined;
                 }}
               />
             </span>

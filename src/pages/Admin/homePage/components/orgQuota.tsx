@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Progress } from 'antd';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
@@ -20,7 +20,7 @@ export default function orgQuota(props) {
   const hasBalance = IsPlatformLocal && authority.includes(PERMISSION_ENUM.FINANCE);
   const isCloseProject = !_.find(md.global.Account.projects, l => l.projectId === projectId);
 
-  const getNoLimit = key => {
+  const getNoLimit = (key: string) => {
     if (isCloseProject) return false;
 
     switch (key) {
@@ -41,7 +41,7 @@ export default function orgQuota(props) {
     return false;
   };
 
-  const getCountProcess = (key, limit) => {
+  const getCountProcess = (key: string, limit: string) => {
     if (getValue(data[limit]) === '-' || getNoLimit(limit)) return 1;
 
     let percent = 0;
@@ -69,7 +69,7 @@ export default function orgQuota(props) {
     return percent;
   };
 
-  const getAllowAdd = key => {
+  const getAllowAdd = (key: string) => {
     switch (key) {
       case 'limitExternalUserCount':
       case 'limitVectorKnowledgeChunkCount':
@@ -79,7 +79,7 @@ export default function orgQuota(props) {
     }
   };
 
-  const getUsage = key => {
+  const getUsage = (key: string) => {
     if (getValue(data[key]) === '-' || getNoLimit(key)) return _l('不限');
 
     let value = key === 'effectiveApkStorageCount' ? formatFileSize(data[key]) : getValue(data[key]);
@@ -130,7 +130,7 @@ export default function orgQuota(props) {
     }
   };
 
-  const getCountText = (key, limit) => {
+  const getCountText = (key: string, limit: string) => {
     const isAttachmentUpload = key === 'effectiveApkStorageCount'; // 附件上传量
     const percentValue =
       getValue(data[limit]) === '-' || getNoLimit(limit) || data[limit] === 0 ? undefined : getCountProcess(key, limit);
@@ -173,7 +173,7 @@ export default function orgQuota(props) {
                   item => {
                     const { key, limit, text, link, click, featureId, routePath = undefined, autoPurchase } = item;
 
-                    if (featureId && !getFeatureStatus(projectId, featureId)) return;
+                    if (featureId && !getFeatureStatus(projectId, featureId)) return undefined;
 
                     const percentValue = data[key] === 0 ? 0 : getCountProcess(key, limit);
 

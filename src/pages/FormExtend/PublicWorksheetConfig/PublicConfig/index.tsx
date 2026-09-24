@@ -46,7 +46,7 @@ const AddControl = styled.div`
   }
 `;
 
-const DEFAULT_TEXT = {
+const DEFAULT_TEXT: Record<string, string> = {
   ipControlId: _l('IP地址'),
   browserControlId: _l('浏览器'),
   deviceControlId: _l('设备'),
@@ -54,7 +54,9 @@ const DEFAULT_TEXT = {
   extendSourceId: _l('扩展值'),
 };
 class PublicConfig extends React.Component<any, any> {
-  static propTypes = {
+  declare keyinput: HTMLInputElement | null | undefined;
+
+  static override propTypes = {
     originalControls: PropTypes.arrayOf(PropTypes.shape({})),
     worksheetSettings: PropTypes.shape({}),
     shareUrl: PropTypes.string,
@@ -472,7 +474,7 @@ class PublicConfig extends React.Component<any, any> {
     this.handleChange('sourceKeys', update(sourceKeys, { $splice: [[index, 1]] }));
   };
 
-  handleShowControl = key => {
+  handleShowControl = (key: string) => {
     this.setState({ addControlVisible: true, activeSourceKey: key });
   };
 
@@ -542,7 +544,7 @@ class PublicConfig extends React.Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const {
       onClose,
       shareUrl,
@@ -761,8 +763,8 @@ class PublicConfig extends React.Component<any, any> {
                 { name: _l('浏览器'), key: 'browserControlId' },
                 { name: _l('设备'), key: 'deviceControlId' },
                 { name: _l('系统'), key: 'systemControlId' },
-              ].map(item => (
-                <React.Fragment>
+              ].map((item, index) => (
+                <React.Fragment key={index}>
                   <div className="mBottom8">{item.name}</div>
                   <NewDropdown
                     isAppendToBody

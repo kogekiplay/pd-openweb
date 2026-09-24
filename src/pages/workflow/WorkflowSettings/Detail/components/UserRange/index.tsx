@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { RELATION_TYPE } from '../../../enum';
 import Member from '../Member';
 import SelectUserDropDown from '../SelectUserDropDown';

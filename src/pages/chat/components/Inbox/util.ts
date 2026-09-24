@@ -272,7 +272,12 @@ export function isWithinOneHour(timestamp) {
   return Math.abs(currentTime - timestamp) <= oneHour;
 }
 
-function makeAnchor(doc, url, text, opts) {
+function makeAnchor(
+  doc: Document,
+  url: string,
+  text: string,
+  opts: { target: string; rel: string; className: string; ignoreTags: Set<string> },
+) {
   const a = doc.createElement('a');
   a.setAttribute('href', pathCompletion(url));
   a.textContent = text;
@@ -286,7 +291,7 @@ function makeAnchor(doc, url, text, opts) {
 
 const DEFAULT_IGNORE = new Set(['A', 'CODE', 'PRE', 'SCRIPT', 'STYLE', 'TEXTAREA']);
 
-export function linkifySanitizedHtml(sanitizedHtml, options = {}) {
+export function linkifySanitizedHtml(sanitizedHtml: string, options = {}) {
   const opts = {
     target: '_blank',
     rel: 'noopener noreferrer',

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -15,8 +15,15 @@ import wrapDisableClick from './wrapDisableClick';
 
 const NewMenuItem = wrapDisableClick(MenuItem);
 
-export default class FilterItem extends Component<any, any> {
-  static propTypes = {
+export interface FilterItemState {
+  nameIsEditing: boolean;
+  operateVisible: boolean;
+}
+
+export default class FilterItem extends Component<any, FilterItemState> {
+  declare title: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     projectId: PropTypes.string,
     showCustomAddCondition: PropTypes.bool,
     isCharge: PropTypes.bool,
@@ -190,8 +197,8 @@ export default class FilterItem extends Component<any, any> {
                   },
                   () => {
                     if (this.title) {
-                      this.title.querySelector('.filterNameInput').select();
-                      this.title.querySelector('.filterNameInput').focus();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput').select();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput').focus();
                     }
                   },
                 );
@@ -248,7 +255,7 @@ export default class FilterItem extends Component<any, any> {
     return !!availableConditions.length;
   }
 
-  renameFilter = value => {
+  renameFilter = (value: string) => {
     const { filter, onRename } = this.props;
 
     if (!value) {
@@ -263,7 +270,7 @@ export default class FilterItem extends Component<any, any> {
       onRename(value);
     }
   };
-  render() {
+  override render() {
     const {
       disableSave,
       expanded,
@@ -338,11 +345,11 @@ export default class FilterItem extends Component<any, any> {
                   e.stopPropagation();
                 }}
                 onBlur={e => {
-                  this.renameFilter(e.target.value.trim());
+                  this.renameFilter(e.currentTarget.value.trim());
                 }}
                 onKeyDown={e => {
                   if (e.keyCode === 13) {
-                    this.renameFilter(e.target.value.trim());
+                    this.renameFilter(e.currentTarget.value.trim());
                   }
                 }}
               />
@@ -357,8 +364,8 @@ export default class FilterItem extends Component<any, any> {
                   e.stopPropagation();
                   this.setState({ nameIsEditing: true }, () => {
                     if (this.title) {
-                      this.title.querySelector('.filterNameInput').select();
-                      this.title.querySelector('.filterNameInput').focus();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput').select();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput').focus();
                     }
                   });
                 }}

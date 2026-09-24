@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import moment from 'moment';
@@ -32,7 +32,7 @@ function APISetting(props) {
   });
 
   useEffect(() => {
-    const keyDownListener = e => {
+    const keyDownListener = (e: KeyboardEvent) => {
       if (
         e.keyCode === 27 // ESC
       ) {
@@ -234,6 +234,7 @@ function APISetting(props) {
       case 2:
         return <Log hasManageAuth={hasManageAuth} processId={data.id} connectInfo={apkInfo} />;
     }
+    return undefined;
   };
 
   if (loading) {

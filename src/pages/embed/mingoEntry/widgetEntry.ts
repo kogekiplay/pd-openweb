@@ -2,7 +2,7 @@ import { ensureThirdPartyIntegrationFlags } from './env';
 
 const DEFAULT_UPLOAD_HOST = 'https://upload.qiniup.com';
 const DEFAULT_LANG = 'zh-Hans';
-const LANG_PATH_MAP = {
+const LANG_PATH_MAP: Record<string, string> = {
   en: 'en',
   'zh-Hans': 'zh_Hans',
   'zh-Hant': 'zh_Hant',
@@ -10,7 +10,7 @@ const LANG_PATH_MAP = {
   th: 'th',
   ms: 'ms',
 };
-const LANG_ALIAS_MAP = {
+const LANG_ALIAS_MAP: Record<string, string> = {
   zh: 'zh-Hans',
   'zh-cn': 'zh-Hans',
   zh_cn: 'zh-Hans',
@@ -39,7 +39,8 @@ const LANG_ALIAS_MAP = {
   ms_my: 'ms',
 };
 const localePromises = {};
-let previousTranslate;
+let previousTranslate:
+  (((key: string, ...args: (string | number)[]) => string) & { __mingoEntryLite?: boolean }) | undefined;
 let explicitAgentUrl = '';
 
 function trimSlash(url = '') {
@@ -93,7 +94,7 @@ function getEntryLang(options: Record<string, any> = {}) {
   );
 }
 
-function getLocaleScriptUrl(lang, options: Record<string, any> = {}) {
+function getLocaleScriptUrl(lang: string, options: Record<string, any> = {}) {
   const localePath = LANG_PATH_MAP[lang] || LANG_PATH_MAP[DEFAULT_LANG];
 
   if (options.localeUrl) {
@@ -142,7 +143,7 @@ function installEntryTranslator() {
   window._l = translator;
 }
 
-function loadLocaleScript(lang, options = {}) {
+function loadLocaleScript(lang: string, options = {}) {
   const currentLang = normalizeLang(lang);
 
   if (currentLang === DEFAULT_LANG) {
@@ -217,7 +218,7 @@ function loadLocaleScript(lang, options = {}) {
   return localePromises[currentLang];
 }
 
-function readJson(response) {
+function readJson(response: Response) {
   return response
     .json()
     .catch(() => null)
@@ -268,7 +269,7 @@ function createEntryAlert(content, type = 1) {
   }, 3000);
 }
 
-function createMdyAPI(apiServer) {
+function createMdyAPI(apiServer: string) {
   const mdyAPI = (controllerName, actionName, requestData, options: Record<string, any> = {}) => {
     const controller = options.abortController || new AbortController();
     const ajaxOptions = options.ajaxOptions || {};

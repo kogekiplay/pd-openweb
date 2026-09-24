@@ -1,5 +1,5 @@
 ﻿export default function (arr: string[]) {
-  const obj = {};
+  const obj: Record<string, string | undefined> = {};
 
   if (!arr) {
     return obj;

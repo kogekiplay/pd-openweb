@@ -52,7 +52,7 @@ class DoubleConfirmDialog extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.info, this.props.info)) {
         const { info } = this.props;
@@ -68,7 +68,7 @@ class DoubleConfirmDialog extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { advancedSetting = {}, showApprovalTemplate } = this.state;
     const { cloneInfo } = this.props;
     const {

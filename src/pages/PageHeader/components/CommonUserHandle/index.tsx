@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import withRouter from '../../../../router/withRouter';
 import { Popover } from 'antd';
 import cx from 'classnames';
@@ -50,17 +50,17 @@ const EntryWrap = styled.div`
   }
 `;
 let CommonUserHandle = class CommonUserHandle extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     type: string,
     currentProject: PropTypes.shape({}),
   };
-  state = {
+  override state = {
     addMenuVisible: false,
     newVersion: null,
     isLicense: true,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     if ((window.platformENV.isOverseas || window.platformENV.isLocal) && md.global.Account.superAdmin) {
       privateGuideApi.getPlatformRemindInfo().then(data => {
         this.setState({
@@ -77,7 +77,7 @@ let CommonUserHandle = class CommonUserHandle extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { newVersion, isLicense } = this.state;
     const { type, currentProject = {} } = this.props;
     const hasProjectAdminAuth =
@@ -192,14 +192,14 @@ let CommonUserHandle = class CommonUserHandle extends Component<any, any> {
 CommonUserHandle = withRouter(CommonUserHandle);
 export default CommonUserHandle;
 let LeftCommonUserHandle = class LeftCommonUserHandle extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     type: string,
   };
-  state = {
+  override state = {
     roleEntryVisible: true,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const { id, permissionType, isLock } = this.props.data;
 
     if (!canEditData(permissionType) && !canEditApp(permissionType, isLock)) {
@@ -216,7 +216,7 @@ let LeftCommonUserHandle = class LeftCommonUserHandle extends Component<any, any
     }
   }
 
-  render() {
+  override render() {
     const { roleEntryVisible } = this.state;
     const { data, sheet, match } = this.props;
     const { projectId, id, permissionType, isLock, appStatus, sourceType } = data;

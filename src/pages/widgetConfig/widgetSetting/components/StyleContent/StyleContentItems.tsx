@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox, Icon } from 'ming-ui';
@@ -79,12 +79,13 @@ const StyleDefault = props => {
           />
 
           <AnimationWrap className="flex mLeft8">
-            {DISPLAY_STYLE_TYPES.map(({ icon, value }) => {
+            {DISPLAY_STYLE_TYPES.map(({ icon, value }, idx) => {
               if (_.includes(ignoreFormat, value)) return null;
               const styleValues = defaultConfig.style || '0000';
               const isActive = styleValues[value] === '1';
               return (
                 <div
+                  key={idx}
                   className={cx('animaItem', { active: isActive })}
                   onClick={() => {
                     const result = updateConfig({
@@ -117,8 +118,9 @@ const StyleDefault = props => {
         <SectionItem className="mTop10">
           <div className="label textSecondary">{_l('字号')}</div>
           <AnimationWrap className="flex">
-            {DISPLAY_SIZE_TYPES.map(({ text, value }) => (
+            {DISPLAY_SIZE_TYPES.map(({ text, value }, index) => (
               <div
+                key={index}
                 className={cx('animaItem', {
                   active: sizeResult === value,
                 })}
@@ -156,9 +158,10 @@ const PositionDefault = props => {
     <SettingItem>
       <div className="settingItemTitle">{_l('样式')}</div>
       <DisplayMode className="flex">
-        {DISPLAY_POSITION_TYPES.map(({ text, value, icon }) => {
+        {DISPLAY_POSITION_TYPES.map(({ text, value, icon }, idx) => {
           return (
             <div
+              key={idx}
               className={cx('displayItem', { active: direction === value })}
               onClick={() => {
                 onChange(
@@ -207,11 +210,11 @@ const OtherDefault = props => {
   const defaultConfig = getAdvanceSetting(data, [editKey]);
   return (
     <div className="flexRow flexCenter">
-      {DISPLAY_OTHER_COLOR_TYPES.map(({ text, key, isDefault }) => {
+      {DISPLAY_OTHER_COLOR_TYPES.map(({ text, key, isDefault }, index) => {
         const color =
           isDefault && _.isUndefined(defaultConfig[key]) ? 'var(--color-border-secondary)' : defaultConfig[key];
         return (
-          <div className="flexRow flexCenter flex">
+          <div key={index} className="flexRow flexCenter flex">
             <Checkbox
               className="mRight20"
               size="small"

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Skeleton } from 'antd-mobile';
 import styled from 'styled-components';
@@ -37,7 +37,7 @@ const SkeletonWrap = styled.div`
 
 const RecordCardIO = props => {
   const { viewRootEl, colNum, ...rest } = props;
-  const recordCardRef = useRef(null);
+  const recordCardRef = useRef<RecordCard | null>(null);
   const [observerEnabled, setObserverEnabled] = useState(false);
 
   const skeletonHeight = props.view?.displayControls?.length * 30 || 200;

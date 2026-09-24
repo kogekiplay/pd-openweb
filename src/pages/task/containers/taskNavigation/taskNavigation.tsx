@@ -98,7 +98,7 @@ function SearchFolder(props) {
     id: 0,
     data: {},
   });
-  const requestRef = useRef(null);
+  const requestRef = useRef<ApiResult | null>(null);
   const requestIdRef = useRef(0);
 
   const hideSearch = () => {
@@ -155,7 +155,7 @@ function SearchFolder(props) {
     [handleSearch],
   );
 
-  const handleSearchChange = value => {
+  const handleSearchChange = (value: string) => {
     const trimmedValue = value.trim();
     const requestId = requestIdRef.current + 1;
 
@@ -183,7 +183,7 @@ function SearchFolder(props) {
     handleSearch(trimmedValue, requestId);
   };
 
-  const handleKeyDown = e => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!visible) return;
 
     switch (e.keyCode) {
@@ -266,8 +266,9 @@ function SearchFolder(props) {
                 <span className="icon-search icon" title={_l('搜索')}></span>
                 {_l('搜索和“%0”相关的任务>', search)}
               </li>
-              {data.folders.map(folder => (
+              {data.folders.map((folder, index) => (
                 <li
+                  key={index}
                   className={cx('searchFolders', { selected: highlight.id === folder.folderID })}
                   data-type="folder"
                   data-id={folder.folderID}
@@ -297,8 +298,9 @@ function SearchFolder(props) {
                   {folder.folderName}
                 </li>
               ))}
-              {data.labels.map(label => (
+              {data.labels.map((label, index) => (
                 <li
+                  key={index}
                   className={cx('searchCategorys', { selected: highlight.id === label.categoryID })}
                   data-type="category"
                   data-id={label.categoryID}
@@ -366,7 +368,17 @@ function SearchFolder(props) {
   );
 }
 
-class TaskNavigation extends Component<any, any> {
+export interface TaskNavigationState {
+  showFolderTemplate: boolean;
+  showCopyFolder: boolean;
+  folderId: string;
+  projectId: string;
+  folderName: string;
+  chargeUser: string;
+  isAdmin: boolean;
+}
+
+class TaskNavigation extends Component<any, TaskNavigationState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -380,7 +392,7 @@ class TaskNavigation extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 有缓存数据先呈现
     if (!_.isEmpty(this.props.topFolderDataSource)) {
       this.renderSlideTopFolder(this.props.topFolderDataSource);
@@ -390,7 +402,7 @@ class TaskNavigation extends Component<any, any> {
     this.bindTaskNavAllEvents();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.taskConfig.filterUserId !== prevProps.taskConfig.filterUserId) {
         setTimeout(() => {
@@ -401,7 +413,7 @@ class TaskNavigation extends Component<any, any> {
   }
 
   renderFolderAvatar() {
-    $('#taskNavigator .folderCharge').each((i, ele) => {
+    $('#taskNavigator .folderCharge').each((_i, ele) => {
       const $ele = $(ele);
       if ($ele.data('hasbusinesscard')) return;
 
@@ -972,7 +984,7 @@ class TaskNavigation extends Component<any, any> {
             let sb = '';
             let $item;
             let fileName;
-            $.each($projectFolder, (i, item) => {
+            $.each($projectFolder, (_i, item) => {
               $item = $(item);
               if ((fileId && $item.data('fileid') == fileId) || !$item.find('.txtProjectNameEdit').val().trim()) {
                 return true;
@@ -986,6 +998,7 @@ class TaskNavigation extends Component<any, any> {
               ${fileName}
               </li>
               `;
+              return undefined;
             });
 
             if (sb.length > 0) {
@@ -1101,7 +1114,7 @@ class TaskNavigation extends Component<any, any> {
         // 直接移出
         if ($(this).data('type') == 'exitfile') {
           that.updateFolderIntoFile(projectId, folderId, '');
-          return;
+          return undefined;
         }
 
         // 点击移动title
@@ -1112,6 +1125,7 @@ class TaskNavigation extends Component<any, any> {
         // 移动文件夹
         that.updateFolderIntoFile(projectId, folderId, fileId);
       }
+      return undefined;
     });
 
     // 项目文件夹弹出层
@@ -1187,7 +1201,7 @@ class TaskNavigation extends Component<any, any> {
           }
 
           if (taskNavigationSettings.isBlur) {
-            return;
+            return undefined;
           }
 
           taskNavigationSettings.isBlur = true;
@@ -1199,6 +1213,7 @@ class TaskNavigation extends Component<any, any> {
           } else {
             that.addUserFolderFile($this);
           }
+          return undefined;
         },
         focus() {
           $(this).addClass('bgColorPrimaryTransparent textPrimary');
@@ -1315,7 +1330,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 获取各个网络数据
    */
-  getNetworkData(projectId: string, folders, callback?) {
+  getNetworkData(projectId: string, folders, callback?: (() => void) | undefined) {
     const { filterUserId } = this.props.taskConfig;
 
     ajaxRequest
@@ -1347,7 +1362,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 渲染项目数据
    */
-  renderSlideFolder(data, projectId: string, callback) {
+  renderSlideFolder(data, projectId: string, callback: (() => void) | undefined) {
     const singleFolderTpl = singleFolder.replace('#include.singleFolderComm', singleFolderComm);
     const projectFolderTpl = projectFolder.replace('#include.singleFolderComm', singleFolderComm);
     const $folderList = projectId
@@ -1454,7 +1469,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 生成项目文件夹
    */
-  builFileFolder(data, projectFolderTpl, projectId: string) {
+  builFileFolder(data, projectFolderTpl: string, projectId: string) {
     const { folderId } = this.props.taskConfig;
 
     // 存在
@@ -1477,7 +1492,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 生成项目
    */
-  buildFolders(data, singleFolderTpl, projectId: string) {
+  buildFolders(data, singleFolderTpl: string, projectId: string) {
     if (data.folderList && data.folderList.length > 0) {
       const { folderId } = this.props.taskConfig;
       const allFolders = doT.template(singleFolderTpl)(data.folderList); // 数据
@@ -1502,7 +1517,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 生成项目列表数据模板
    */
-  buildFolderListModule(data, $el) {
+  buildFolderListModule(data, $el: JQuery<HTMLElement>) {
     const { folderId } = this.props.taskConfig;
     const singleFolderTpl = singleFolder.replace('#include.singleFolderComm', singleFolderComm);
     const source = { folderList: data };
@@ -1528,7 +1543,7 @@ class TaskNavigation extends Component<any, any> {
   setNetworkState() {
     const $networks = $('#taskNavigator .networkFolderList');
     const networkArr = [];
-    $.each($networks, (i, e) => {
+    $.each($networks, (_i, e) => {
       if ($(e).find('.folderList').is(':visible')) {
         networkArr.push($(e).data('projectid'));
       }
@@ -1542,7 +1557,7 @@ class TaskNavigation extends Component<any, any> {
   setFolderState = function () {
     const $folders = $('#taskNavigator .folderList .projectFolder');
     const folderArr = [];
-    $.each($folders, (i, e) => {
+    $.each($folders, (_i, e) => {
       if ($(e).find('.projectFolderUl').is(':visible')) {
         folderArr.push($(e).data('fileid'));
       }
@@ -1733,6 +1748,7 @@ class TaskNavigation extends Component<any, any> {
         }
       }
     }
+    return undefined;
   }
 
   /**
@@ -1846,7 +1862,7 @@ class TaskNavigation extends Component<any, any> {
     const projectId = $projectFolder.closest('.networkFolderList').attr('data-projectid');
     const fileName = $this.val().trim();
 
-    $.each($lis, (i, item) => {
+    $.each($lis, (_i, item) => {
       folderIdArr.push($(item).data('id'));
     });
 
@@ -1950,7 +1966,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 获取指定文件下下的所有项目
    */
-  getMainFolderListInFile(projectID, fileID) {
+  getMainFolderListInFile(projectID: string, fileID) {
     const { filterUserId } = this.props.taskConfig;
 
     ajaxRequest
@@ -1975,7 +1991,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 获取归档项目list
    */
-  getArchiveFolderList(projectID) {
+  getArchiveFolderList(projectID: string) {
     const { filterUserId } = this.props.taskConfig;
 
     ajaxRequest
@@ -1998,7 +2014,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 获取隐藏项目list
    */
-  getHiddenFolderList(projectID) {
+  getHiddenFolderList(projectID: string) {
     const { filterUserId } = this.props.taskConfig;
 
     ajaxRequest
@@ -2021,7 +2037,7 @@ class TaskNavigation extends Component<any, any> {
   /**
    * 隐藏项目
    */
-  updateFolderDisplay(projectId: string, folderId, isHidden) {
+  updateFolderDisplay(projectId: string, folderId, isHidden: boolean) {
     const that = this;
 
     ajaxRequest
@@ -2286,7 +2302,7 @@ class TaskNavigation extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { showFolderTemplate, showCopyFolder, folderId, projectId, chargeUser, folderName, isAdmin } = this.state;
 
     return (

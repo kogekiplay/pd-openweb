@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Progress } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -100,11 +100,11 @@ export default class UploadFile extends Component<any, any> {
   uploader;
   uploadMp3;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.initUpload();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(_prevProps, prevState) {
     if (prevState.isComplete !== this.state.isComplete) {
       this.initUpload();
     }
@@ -123,7 +123,7 @@ export default class UploadFile extends Component<any, any> {
       },
       type: 0,
       init: {
-        Error: (up, err) => {
+        Error: (_up, err) => {
           const {
             file: { name },
             code,
@@ -147,7 +147,7 @@ export default class UploadFile extends Component<any, any> {
           newFiles = newFiles.filter(i => !_.includes(this.deleteFileKey, i.key));
           this.setState({ files: newFiles, dragOver: false });
         },
-        FileUploaded: (up, file, info) => {
+        FileUploaded: (up, _file, info) => {
           this.cacheFile.push(info);
 
           if (this.cacheFile.length === up.files.length) {
@@ -164,7 +164,7 @@ export default class UploadFile extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { files = [], dragOver } = this.state;
 
     if (files.length) {
@@ -179,7 +179,7 @@ export default class UploadFile extends Component<any, any> {
           <div className="listContent">
             {files.map((file, index: number) => {
               return (
-                <div className="uploadItem">
+                <div key={index} className="uploadItem">
                   <div className="flex flexCenter flexRow overflow_ellipsis">
                     <div className="mRight20 fileIcon-mp3 mp3Icon" />
                     <span className="flex overflow_ellipsis pRight16">{file.name}</span>
@@ -200,7 +200,7 @@ export default class UploadFile extends Component<any, any> {
                       className="deleteIcon Font16 pointer"
                       onClick={() => {
                         this.deleteFileKey.push(file.key);
-                        const newFiles = files.filter((i, idx) => idx !== index);
+                        const newFiles = files.filter((_i, idx) => idx !== index);
                         this.setState({ files: newFiles }, () => {
                           if (_.isEmpty(newFiles)) {
                             this.setState({ isComplete: false });

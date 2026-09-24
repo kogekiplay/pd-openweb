@@ -13,7 +13,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  cover: function (args, options) {
+  cover: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/cover';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v2instancecover', args, $.extend(base, options));
@@ -27,7 +27,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  get2: function (args, options?) {
+  get2: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/get';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v2instanceget', args, $.extend(base, options));
@@ -54,7 +54,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getTodoCount2: function (args, options?) {
+  getTodoCount2: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/getTodoCount';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v2instancegetTodoCount', args, $.extend(base, options));
@@ -67,7 +67,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getTodoList2: function (args, options?) {
+  getTodoList2: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/getTodoList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v2instancegetTodoList', JSON.stringify(args), $.extend(base, options));
@@ -80,7 +80,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  batch: function (args, options?) {
+  batch: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v1/instance/batch';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1instancebatch', JSON.stringify(args), $.extend(base, options));
@@ -93,7 +93,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  batch2: function (args, options?) {
+  batch2: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/batch';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v2instancebatch', JSON.stringify(args), $.extend(base, options));
@@ -106,7 +106,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  pass2: function (args, options?) {
+  pass2: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/pass';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancepass', JSON.stringify(args), $.extend(base, options));
@@ -119,7 +119,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  overrule2: function (args, options?) {
+  overrule2: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/overrule';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instanceoverrule', JSON.stringify(args), $.extend(base, options));
@@ -132,7 +132,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  endInstance: function (args, options?) {
+  endInstance: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v1/instance/endInstance';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1instanceendInstance', args, $.extend(base, options));
@@ -145,7 +145,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  endInstanceList: function (args, options?) {
+  endInstanceList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v1/instance/endInstanceList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1instanceendInstanceList', JSON.stringify(args), $.extend(base, options));
@@ -159,7 +159,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  get: function (args, options?) {
+  get: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v1/instance/get';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1instanceget', args, $.extend(base, options));
@@ -172,7 +172,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getTodoCount: function (args, options?) {
+  getTodoCount: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v1/instance/getTodoCount';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1instancegetTodoCount', args, $.extend(base, options));
@@ -185,7 +185,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getTodoList: function (args, options?) {
+  getTodoList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v1/instance/getTodoList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1instancegetTodoList', JSON.stringify(args), $.extend(base, options));
@@ -198,7 +198,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getTodoListFilter: function (args, options?) {
+  getTodoListFilter: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v1/instance/getTodoListFilter';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1instancegetTodoListFilter', JSON.stringify(args), $.extend(base, options));
@@ -212,7 +212,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getWorkItem: function (args, options) {
+  getWorkItem: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v1/instance/getWorkItem';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1instancegetWorkItem', args, $.extend(base, options));
@@ -225,7 +225,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  resetInstance: function (args, options) {
+  resetInstance: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v1/instance/resetInstance';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v1instanceresetInstance', args, $.extend(base, options));
@@ -238,7 +238,7 @@ const instanceVersion = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  resetInstanceList: function (args, options?) {
+  resetInstanceList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/v1/instance/resetInstanceList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v1instanceresetInstanceList', JSON.stringify(args), $.extend(base, options));

@@ -1,22 +1,46 @@
-﻿import React from 'react';
-import doT from 'dot';
+﻿import doT from 'dot';
 import { Button, Dialog } from 'ming-ui';
 import kcAjax from 'src/api/kc';
 import { formatFileSize, getClassNameByExt } from 'src/utils/common';
+import defineMethods from 'src/utils/defineMethods';
 import RegExpValidator from 'src/utils/expression';
 import { getUrlByBucketName } from '../../utils';
 import mainTpl from './tpl/main.html';
 import './style.less';
 
-var UploadNewVersion = function (item, file, callback) {
+/** 知识中心「上传新版本」弹层。上传由调用方驱动：进度走 setProcess、传完调 uploaded，这里只管确认和提交 */
+interface UploadNewVersionFields {
+  /** 要追加版本的那个知识节点 */
+  item: { id: string };
+  /** plupload 的文件对象 */
+  file: { name: string; size?: number; getNative: () => Blob };
+  callback?: (data: ApiPayload) => void;
+  /** 扩展名（小写、不带点）；文件名里没有点时为 undefined */
+  ext?: string;
+  name: string;
+  dialogBoxID: string;
+  /** 传完之后的文件地址；没有它不许提交 */
+  filePath?: string;
+  $dialog: JQuery;
+  $fileIcon: JQuery;
+  $fileSize: JQuery;
+  $thumbnail: JQuery;
+  $process: JQuery;
+  $processContent: JQuery;
+  $processPercent: JQuery;
+  $newVersionFileName: JQuery;
+  $newVersionFileDetail: JQuery;
+}
+
+function UploadNewVersion(this: UploadNewVersionInstance, item, file, callback) {
   var NV = this;
   NV.item = item;
   NV.file = file;
   NV.callback = callback;
   this.init();
-};
+}
 
-UploadNewVersion.prototype = {
+const uploadNewVersionMethods = defineMethods<UploadNewVersionFields>()({
   init: function () {
     var NV = this;
     NV.dialog();
@@ -78,8 +102,8 @@ UploadNewVersion.prototype = {
   },
   addAsNewVersion: function () {
     var NV = this;
-    var versionDes = NV.$newVersionFileDetail ? (NV.$newVersionFileDetail.val() || '').trim() : '';
-    var versionName = NV.$newVersionFileName ? (NV.$newVersionFileName.val() || '').trim() : '';
+    var versionDes = NV.$newVersionFileDetail ? String(NV.$newVersionFileDetail.val() ?? '').trim() : '';
+    var versionName = NV.$newVersionFileName ? String(NV.$newVersionFileName.val() ?? '').trim() : '';
     if (!NV.filePath) {
       alert(_l('正在上传中，无法执行此操作'), 3);
       return false;
@@ -109,6 +133,7 @@ UploadNewVersion.prototype = {
           NV.callback(data);
         }
       });
+    return undefined;
   },
   setProcess: function (percent) {
     var NV = this;
@@ -145,7 +170,7 @@ UploadNewVersion.prototype = {
     reader.addEventListener(
       'load',
       function () {
-        img.src = reader.result;
+        img.src = reader.result as string; // readAsDataURL 的结果一定是字符串
       },
       false,
     );
@@ -165,7 +190,10 @@ UploadNewVersion.prototype = {
 
     return true;
   },
-};
+});
+
+UploadNewVersion.prototype = uploadNewVersionMethods;
+type UploadNewVersionInstance = UploadNewVersionFields & typeof uploadNewVersionMethods;
 
 export default function (item, file, callback) {
   var uploadNewVersion = new UploadNewVersion(item, file, callback);

@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -16,7 +15,11 @@ const Wrap = styled.div`
   }
 `;
 
-export default function AttachmentTooltip({ max }) {
+export interface AttachmentTooltipProps {
+  max: number;
+}
+
+export default function AttachmentTooltip({ max }: AttachmentTooltipProps) {
   return (
     <Wrap>
       <div className="title">{_l('上传附件（最多 %0 个）', max)}</div>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Dialog, Icon, Support } from 'ming-ui';
@@ -8,7 +8,7 @@ import { VIEW_DISPLAY_TYPE, VIEW_TYPE_ICON } from 'src/pages/worksheet/constants
 import './index.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
-const CONFIG = {
+const CONFIG: Record<string, { title: string; desc: string; helpLink: string }> = {
   control: {
     title: _l('设置字段别名'),
     desc: _l('字段别名仅允许使用字母（不区分大小写）、数字和下划线组合，且必须以字母开头，不可重复。'),

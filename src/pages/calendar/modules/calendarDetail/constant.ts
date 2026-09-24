@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-export const WEEKDAYS = _.map(new Array(7), (value, index) => {
+export const WEEKDAYS = _.map(new Array(7), (_value, index) => {
   return moment().day(index).format('dd');
 });
 

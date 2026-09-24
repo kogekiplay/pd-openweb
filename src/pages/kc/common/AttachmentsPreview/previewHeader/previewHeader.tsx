@@ -20,7 +20,7 @@ import CommonHeader from './CommonHeader';
 import 'rc-trigger/assets/index.css';
 
 class PreviewHeader extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     attachment: PropTypes.object,
     onClose: PropTypes.func,
     renameFile: PropTypes.func,
@@ -46,7 +46,7 @@ class PreviewHeader extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.changePreviewService('original');
   }
 
@@ -116,7 +116,7 @@ class PreviewHeader extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const {
       attachment,
       fromType,

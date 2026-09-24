@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { Dropdown } from 'ming-ui';
 import flowNode from '../../../api/flowNode';
@@ -69,7 +69,7 @@ export default class RelationFields extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { data, SelectNodeObjectChange, updateSource } = this.props;
 
     return (

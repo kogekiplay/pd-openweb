@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -59,7 +59,7 @@ const FormItem = styled.div`
     border: 1px solid var(--color-primary);
   }
 `;
-const errors = {
+const errors: Record<number, string> = {
   0: _l('新建失败'),
   3: _l('名称重复'),
   21: _l('Key无效'),
@@ -79,7 +79,7 @@ export default class AddEditRulesDialog extends Component<any, any> {
       cipherMode: 1,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.handleDefaultRuleName();
   }
 
@@ -272,7 +272,7 @@ export default class AddEditRulesDialog extends Component<any, any> {
     this.setState({ ruleName });
   };
 
-  render() {
+  override render() {
     const { type, visible, projectId, onCancel } = this.props;
     const {
       status,

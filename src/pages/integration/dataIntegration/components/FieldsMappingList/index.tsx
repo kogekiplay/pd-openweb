@@ -177,7 +177,7 @@ export default function FieldMappingList(props) {
     return systemFieldsExceptRowId.includes((sourceField.fid || '').split('_')[0]);
   };
 
-  const isCheckAll = (isSystemFields?) => {
+  const isCheckAll = (isSystemFields?: boolean | undefined) => {
     return (
       fieldsMapping.filter(
         item =>
@@ -188,7 +188,7 @@ export default function FieldMappingList(props) {
     );
   };
 
-  const onCheckAll = (checked: boolean, isSystemFields?) => {
+  const onCheckAll = (checked: boolean, isSystemFields?: boolean | undefined) => {
     const newFieldsMapping = fieldsMapping.map(item => {
       const { sourceField = {}, destField = {} } = item;
       return (isSystemFields ? isSystemField(item.sourceField) : !isSystemField(item.sourceField))
@@ -290,7 +290,7 @@ export default function FieldMappingList(props) {
 
   const renderSelectType = data => {
     const { sourceField } = data;
-    if (!matchedTypes) return;
+    if (!matchedTypes) return undefined;
     const options = (matchedTypes[sourceField.id] || []).map((o, i) => {
       return {
         ...o,
@@ -323,7 +323,7 @@ export default function FieldMappingList(props) {
   const renderCheckbox = (data, key: string) => {
     const destField = data.destField || {};
     const sourceField = data.sourceField || {};
-    if (!matchedTypes) return;
+    if (!matchedTypes) return undefined;
     const isNotSupport = isNotSupportField(sourceField, matchedTypes);
 
     return (
@@ -347,7 +347,7 @@ export default function FieldMappingList(props) {
     const destField = data.destField || {};
     const sourceField = data.sourceField || {};
     const isValidField = isValidName(sourceField.name) || !sourceData.isDbType;
-    if (!matchedTypes) return;
+    if (!matchedTypes) return undefined;
     const matchedTypeIds = _.uniq((matchedTypes[sourceField.id] || []).map(type => type.dataType));
     const matchedMdTypeIds = _.uniq((matchedTypes[sourceField.id] || []).map(type => type.mdType));
     const isNotSupport = isNotSupportField(sourceField, matchedTypes);
@@ -484,7 +484,7 @@ export default function FieldMappingList(props) {
           flex: 3,
           render: data => {
             const sourceField = data.sourceField;
-            if (!matchedTypes) return;
+            if (!matchedTypes) return undefined;
             const isNotSupport = isNotSupportField(sourceField, matchedTypes);
 
             return (
@@ -562,7 +562,7 @@ export default function FieldMappingList(props) {
           flex: 9,
           render: data => {
             const sourceField = data.sourceField;
-            if (!matchedTypes) return;
+            if (!matchedTypes) return undefined;
             const isNotSupport = isNotSupportField(sourceField, matchedTypes);
 
             return (
@@ -834,7 +834,7 @@ export default function FieldMappingList(props) {
     return columns;
   };
 
-  const renderMappingList = isSystemFields => {
+  const renderMappingList = (isSystemFields: boolean) => {
     const data = (fieldsMapping || []).filter(field => {
       const originId = (field.sourceField.fid || '').split('_')[0];
       return isSystemFields
@@ -867,7 +867,7 @@ export default function FieldMappingList(props) {
           data.map((field, i) => {
             const sourceField = field.sourceField || {};
             return (
-              <div className="itemWrapper">
+              <div key={i} className="itemWrapper">
                 <div key={i} className="dataItem">
                   {getColumns().map((column, j) => {
                     return (

@@ -70,7 +70,7 @@ export default class Workwx extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     Ajax.getWXProjectSettingInfo({ projectId: this.props.projectId }).then(res => {
       this.setState({
         pageLoading: false,
@@ -210,7 +210,7 @@ export default class Workwx extends React.Component<any, any> {
     return newStr;
   };
 
-  editDingStatus = num => {
+  editDingStatus = (num: number) => {
     this.editWXProjectSettingStatus(num, () => {
       this.setState({
         isCloseDing: !this.state.isCloseDing,
@@ -218,7 +218,7 @@ export default class Workwx extends React.Component<any, any> {
     });
   };
 
-  inputRender = (strId: string, w: number, img1: number, img2?) => {
+  inputRender = (strId: string, w: number, img1: number, img2?: number | undefined) => {
     return (
       <React.Fragment>
         <div className="inputTitleBox">
@@ -421,7 +421,7 @@ export default class Workwx extends React.Component<any, any> {
       }
     });
   };
-  changeTab = key => {
+  changeTab = (key: string) => {
     this.setState({ currentTab: key });
     if (key === 'other') {
       this.getInitialPassword();
@@ -662,8 +662,9 @@ export default class Workwx extends React.Component<any, any> {
     } else if (currentTab === 'interfaceLicense') {
       return <InterfaceLicense projectId={projectId} />;
     }
+    return undefined;
   };
-  render() {
+  override render() {
     let { intergrationType, currentTab, status, isProxy } = this.state;
     const { projectId } = this.props;
 
@@ -756,7 +757,7 @@ export default class Workwx extends React.Component<any, any> {
                 )}
                 <div className={cx('tabBox', { singleTab: !(this.state.status === 1 || intergrationType === 2) })}>
                   {TABS.map(({ key, label }) => {
-                    if (key === 'other' && !(this.state.status === 1 || intergrationType === 2)) return;
+                    if (key === 'other' && !(this.state.status === 1 || intergrationType === 2)) return undefined;
 
                     if (
                       key === 'chatSetting' &&
@@ -770,7 +771,7 @@ export default class Workwx extends React.Component<any, any> {
                           window.platformENV.isLocal)
                       )
                     )
-                      return;
+                      return undefined;
 
                     if (
                       key === 'interfaceLicense' &&
@@ -781,7 +782,7 @@ export default class Workwx extends React.Component<any, any> {
                         this.state.status === 1
                       )
                     )
-                      return;
+                      return undefined;
 
                     return (
                       <span

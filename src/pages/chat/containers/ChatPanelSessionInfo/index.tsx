@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -25,7 +25,7 @@ class ChatPanelSessionInfo extends Component<any, any> {
     this.first = this.props.infoVisible;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       // 展开和收起
       if (this.props.infoVisible) {
@@ -106,7 +106,7 @@ class ChatPanelSessionInfo extends Component<any, any> {
       this.props.dispatch(actions.addUserSession(accountId, msg));
     }
   }
-  render() {
+  override render() {
     const { session, infoVisible, searchText } = this.props;
     const { panelType, panelVisible } = this.state;
     const shouldRenderSessionInfo = infoVisible || this.first;
@@ -134,7 +134,6 @@ class ChatPanelSessionInfo extends Component<any, any> {
           {!session.isPost && shouldRenderSessionInfo && (
             <DiscussionAnnouncement
               session={session}
-              onSetPanelVisible={this.handleSetPanelVisible.bind(this, 'feeds')}
               onChangeIsPost={(projectId: string) => {
                 this.props.dispatch(actions.resetGroupIsPost(session.groupId, projectId));
               }}

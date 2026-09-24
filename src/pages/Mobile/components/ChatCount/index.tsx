@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -34,7 +34,7 @@ export default class ChatCount extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { autoOpenDiscuss } = this.props;
     this.getDiscussionsCount();
     if (autoOpenDiscuss) {
@@ -62,7 +62,7 @@ export default class ChatCount extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const {
       appId,
       worksheetId,

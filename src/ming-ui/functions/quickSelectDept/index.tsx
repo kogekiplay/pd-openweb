@@ -405,9 +405,10 @@ export function DeptSelect(props) {
     setState({
       list: departmentTree,
     });
+    return undefined;
   };
 
-  const setMoreList = (departmentId, isDelete) => {
+  const setMoreList = (departmentId, isDelete: boolean) => {
     let moreData = departmentMoreIds.find(o => o.departmentId === departmentId);
 
     if (isDelete) {
@@ -510,7 +511,7 @@ export function DeptSelect(props) {
     }
   };
 
-  const handleSearch = evt => {
+  const handleSearch = (evt: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
     setState({ keywords: evt.target.value });
   };
 
@@ -570,10 +571,10 @@ export function DeptSelect(props) {
   const renderList = data => {
     return (
       <div className="QSelect-departmentList">
-        {data.map(item => {
+        {data.map((item, index) => {
           const checked = getChecked(item);
           return (
-            <React.Fragment>
+            <React.Fragment key={index}>
               <div className={cx('quick-department', { active: checked, disabled: !!item.disabled })}>
                 {departrangetype !== '1' && (
                   <div

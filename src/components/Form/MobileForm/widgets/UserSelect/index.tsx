@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useMemo, useState } from 'react';
+import { Fragment, memo, useMemo, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -75,7 +75,7 @@ function UserSelect(props) {
   const selectUsers = useMemo(() => getUserValue(value), [value]);
   const [showSelectUser, setShowSelectUser] = useState(false);
   const [personalInfoVisible, setPersonalInfoVisible] = useState(false);
-  const [accountId, setAccountId] = useState(null);
+  const [accountId, setAccountId] = useState<string | null | undefined>(null);
   const isUnique = enumDefault === 0;
 
   const pickUser = () => {

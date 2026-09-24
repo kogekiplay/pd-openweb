@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import cx from 'classnames';
 import _, { includes } from 'lodash';
 import { arrayOf, bool, func, shape } from 'prop-types';
@@ -127,9 +127,9 @@ function Func(props, ref) {
   }
 
   const codeEditor = useRef<any>(undefined);
-  const loadingTimerRef = useRef(null);
+  const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const editorFunctions = key => {
+  const editorFunctions = (key: string) => {
     return (...args) => {
       if (codeEditor.current) {
         codeEditor.current[key](...args);

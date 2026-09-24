@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -80,7 +80,7 @@ const Wrap = styled.div`
   }
 `;
 
-const DEFAULT_TOOLS_NAMES = {
+const DEFAULT_TOOLS_NAMES: Record<number, string> = {
   1: _l('新增记录'),
   2: _l('更新记录'),
   3: _l('查询记录'),
@@ -166,7 +166,7 @@ const Edit = props => {
             onAdd={up => {
               up.disableBrowse();
             }}
-            onError={(up, err, errTip) => {
+            onError={(_up, _err, errTip) => {
               alert(errTip, 2);
             }}
           >

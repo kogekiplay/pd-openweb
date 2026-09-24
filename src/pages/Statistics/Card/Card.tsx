@@ -1,4 +1,4 @@
-import React, { Component, forwardRef, lazy, Suspense, useImperativeHandle, useMemo } from 'react';
+import { Component, forwardRef, lazy, Suspense, useImperativeHandle, useMemo } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Provider } from 'react-redux';
 import { Popover } from 'antd';
@@ -28,6 +28,9 @@ const ChartDialog = lazy(() => import('../ChartDialog'));
 let isCheckLogin = true;
 
 class Card extends Component<any, any> {
+  declare timer: NodeJS.Timeout | undefined;
+  declare request: ApiResult | undefined;
+
   static defaultProps = {
     needEnlarge: true,
     needTimingRefresh: true,
@@ -48,11 +51,11 @@ class Card extends Component<any, any> {
     };
     this.isPublicShare = window.shareAuthor || _.get(window, 'shareState.shareId');
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getData(this.props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.needUpdate !== prevProps.needUpdate ||
@@ -63,7 +66,7 @@ class Card extends Component<any, any> {
       }
     }
   }
-  componentWillUnmount = () => {
+  override componentWillUnmount = () => {
     clearInterval(this.timer);
     this.abortRequest();
   };
@@ -295,6 +298,7 @@ class Card extends Component<any, any> {
     if ([reportTypes.PivotTable].includes(reportType)) {
       return _.isEmpty(data.data) ? <WithoutData /> : this.renderChart();
     }
+    return undefined;
   }
   renderBody() {
     const { loading, reportData } = this.state;
@@ -305,7 +309,7 @@ class Card extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { dialogVisible, reportData, settingVisible, scopeVisible, sheetVisible, activeData, isLinkageFilter } =
       this.state;
     const { showTitle = true } = reportData.displaySetup || {};
@@ -430,8 +434,8 @@ class Card extends Component<any, any> {
                     <div className="Font14 bold mBottom5">
                       {_l('作用于图表的条件')} · <span>{initiateChartInfo.length}</span>
                     </div>
-                    {initiateChartInfo.map(item => (
-                      <div className="linkageFilter">
+                    {initiateChartInfo.map((item, idx) => (
+                      <div key={idx} className="linkageFilter">
                         {item.filters.map((n, index: number) => (
                           <div className="flexRow alignItemsCenter" key={n.controlId}>
                             {!index && (

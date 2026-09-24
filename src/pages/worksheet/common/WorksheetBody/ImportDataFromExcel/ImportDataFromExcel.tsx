@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { antNotification } from 'ming-ui';
@@ -73,7 +73,7 @@ export const wsexcelSocketInit = () => {
 };
 
 export default class ImportDataFromExcel extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isCharge: PropTypes.bool,
     hideImportDataFromExcel: PropTypes.func,
     appId: PropTypes.string,
@@ -97,7 +97,7 @@ export default class ImportDataFromExcel extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const {
       isCharge,
       isFromRelateRecord = false,

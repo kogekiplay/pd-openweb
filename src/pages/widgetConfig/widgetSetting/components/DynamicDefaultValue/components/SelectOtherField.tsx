@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment } from 'react';
+import { Component, createRef, Fragment } from 'react';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import { func } from 'prop-types';
@@ -42,8 +42,16 @@ const MenuStyle = styled.div`
   }
 `;
 
-export default class SelectOtherField extends Component<any, any> {
-  static propTypes = { onTriggerClick: func };
+export interface SelectOtherFieldState {
+  isDynamic: boolean;
+  filedVisible: boolean;
+  searchVisible: boolean;
+  fxVisible: boolean;
+  showPopupType: string;
+}
+
+export default class SelectOtherField extends Component<any, SelectOtherFieldState> {
+  static override propTypes = { onTriggerClick: func };
   static defaultProps = {
     onTriggerClick: _.noop,
   };
@@ -51,7 +59,7 @@ export default class SelectOtherField extends Component<any, any> {
     super(props);
     this.$wrap = createRef(null);
   }
-  state = {
+  override state = {
     isDynamic: false,
     filedVisible: false,
     searchVisible: false,
@@ -267,7 +275,7 @@ export default class SelectOtherField extends Component<any, any> {
     return types;
   };
 
-  render() {
+  override render() {
     const { isDynamic, filedVisible, fxVisible, searchVisible, showPopupType } = this.state;
     const {
       data,
@@ -298,9 +306,10 @@ export default class SelectOtherField extends Component<any, any> {
         case 'DY_DATE':
           return (
             <Menu style={{ maxHeight: 200, overflowY: 'auto' }}>
-              {getDaterange(data.advancedSetting || {}).map(o => {
+              {getDaterange(data.advancedSetting || {}).map((o, index) => {
                 return (
                   <MenuItem
+                    key={index}
                     className="overflow_ellipsis"
                     onClick={e => {
                       this.handleActionForDY(o);
@@ -317,9 +326,10 @@ export default class SelectOtherField extends Component<any, any> {
         case 'DY_LINK':
           return linkParams.length > 0 ? (
             <Menu>
-              {linkParams.map(item => {
+              {linkParams.map((item, index) => {
                 return (
                   <MenuItem
+                    key={index}
                     className="overflow_ellipsis"
                     onClick={e => {
                       this.handleActionForLinkParam(item);
@@ -384,9 +394,9 @@ export default class SelectOtherField extends Component<any, any> {
         />
       ) : (
         <Menu>
-          {filterTypes.map(item => {
+          {filterTypes.map((item, index) => {
             return (
-              <MenuItem className="overflow_ellipsis" onClick={() => this.handleAction(item)}>
+              <MenuItem key={index} className="overflow_ellipsis" onClick={() => this.handleAction(item)}>
                 <MenuStyle>
                   {from !== DYNAMIC_FROM_MODE.CUSTOM_PHP && <i className={`${item.icon} Font20 mRight15`}></i>}
                   {item.text}

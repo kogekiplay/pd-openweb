@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Drawer } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -102,7 +102,7 @@ export default function UserInfoWrap(props) {
                 return { ...o, size: 12 }; //全部按整行显示
               })
               .filter(o => !['avatar'].includes(o.alias))}
-            onChange={(data, ids) => {
+            onChange={(_data, ids) => {
               setIds(ids);
             }}
           />

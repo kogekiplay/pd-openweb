@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import _ from 'lodash';
 import styled, { css, keyframes } from 'styled-components';
@@ -533,7 +533,7 @@ export function Chart({ data: spec, isStreaming }) {
   const canvasRef = useRef(null);
   const plotRef = useRef(null);
   const plotTypeRef = useRef(null);
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const fullscreenBoxRef = useRef(null);
   const fullscreenCanvasRef = useRef(null);
   const [renderable, setRenderable] = useState(() => !!buildPlot(spec));
@@ -662,7 +662,7 @@ export function Chart({ data: spec, isStreaming }) {
   // Esc 关闭全屏
   useEffect(() => {
     if (!fullscreen) return undefined;
-    const onKey = e => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setFullscreen(false);
     };
 

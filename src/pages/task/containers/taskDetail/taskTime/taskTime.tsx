@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import moment from 'moment';
@@ -17,7 +17,7 @@ const TASK_STATUS = {
   completed: 1,
 };
 
-const TASK_STATUS_TEXT = {
+const TASK_STATUS_TEXT: Record<string, string> = {
   '-1': _l('未开始'),
   0: _l('进行中'),
   1: _l('已完成'),
@@ -124,7 +124,7 @@ class TaskTime extends Component<any, any> {
   /**
    * 格式化开始时间
    */
-  formatStartTimeText(diff) {
+  formatStartTimeText(diff: number) {
     const year = Math.floor(diff / 24 / 365);
     const month = Math.floor(diff / 24 / 30);
     const day = Math.floor(diff / 24);
@@ -147,7 +147,7 @@ class TaskTime extends Component<any, any> {
   /**
    * 格式化结束时间
    */
-  formatEndTimeText(diff) {
+  formatEndTimeText(diff: number) {
     const year = Math.floor(diff / 24 / 365);
     const month = Math.floor(diff / 24 / 30);
     const day = Math.floor(diff / 24);
@@ -359,7 +359,7 @@ class TaskTime extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { taskId } = this.props;
     const { data } = this.props.taskDetails[taskId];
     const hasAuth = data.auth === config.auth.Charger || data.auth === config.auth.Member;

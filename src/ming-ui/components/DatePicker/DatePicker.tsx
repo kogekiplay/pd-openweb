@@ -5,7 +5,7 @@ import locale from './locale/zh_CN';
 import Picker from './Picker';
 
 class DatePicker extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 占位符
      */
@@ -132,7 +132,7 @@ class DatePicker extends Component<any, any> {
     return props.placeholder;
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const { offsetTop, offsetLeft, panelCls, className, popupParentNode, children, defaultVisible, ...other } = props;
     const formatVal = this.getFormat();

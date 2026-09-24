@@ -17,7 +17,7 @@ import DrawerFooter from './DrawerFooter';
 import PrintTemSetting from './PrintTemSetting';
 import './editPrint.less';
 
-const SUFFIX = {
+const SUFFIX: Record<string, string> = {
   Word: 'docx',
   Excel: 'xlsx',
 };
@@ -62,11 +62,11 @@ class EditPrint extends React.Component<any, any> {
     this.con = React.createRef();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setData();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.templateId !== prevProps.templateId ||
@@ -83,7 +83,7 @@ class EditPrint extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.uploaderDestroy();
   }
 
@@ -142,7 +142,7 @@ class EditPrint extends React.Component<any, any> {
       },
       type: 33,
       init: {
-        BeforeUpload: (up, file) => {
+        BeforeUpload: (_up, file) => {
           if (RegExpValidator.getExtOfFileName(file.name).toLocaleLowerCase() !== SUFFIX[fileType]) {
             alert(_l('上传失败，文件错误'), 3);
             return false;
@@ -157,12 +157,13 @@ class EditPrint extends React.Component<any, any> {
             hasChange: true,
             error: false,
           });
+          return undefined;
         },
         FilesAdded: up => {
           up.setOption('auto_start', true);
           up.disableBrowse();
         },
-        UploadProgress: (uploader, file) => {
+        UploadProgress: (_uploader, file) => {
           this.setState({ loading: true, suc: false, loadPer: file.percent });
         },
         FileUploaded: (up, file, info) => {
@@ -181,7 +182,7 @@ class EditPrint extends React.Component<any, any> {
           );
           up.disableBrowse(false);
         },
-        Error: (up, err, errTip) => {
+        Error: (_up, _err, errTip) => {
           this.setState({
             loading: false,
             suc: false,
@@ -256,7 +257,7 @@ class EditPrint extends React.Component<any, any> {
       });
   };
 
-  onCreateEdit = item => {
+  onCreateEdit = (item: { label: string; value: number }) => {
     const { worksheetId, downLoadUrl, fileType = 'Word', refreshFn } = this.props;
     const { allowDownloadPermission, allowEditAfterPrint, templateName, advanceSettings } = this.state;
 
@@ -404,7 +405,7 @@ class EditPrint extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       loading,
       loadPer,

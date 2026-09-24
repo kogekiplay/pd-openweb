@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox, Dialog, FunctionWrap, LoadDiv, Radio, ScrollView } from 'ming-ui';
@@ -7,7 +7,7 @@ import homeApp from 'src/api/homeApp';
 const SelectWorksheet = props => {
   const { appId, selectIds = [], onOk, onClose } = props;
   const [type, setType] = useState(selectIds.length ? 1 : 0);
-  const [worksheetList, setWorksheetList] = useState([]);
+  const [worksheetList, setWorksheetList] = useState<HapApi.MD.Entity.Apk.EntityInfo[]>([]);
   const [worksheetIds, setWorksheetIds] = useState(selectIds);
   const TYPES = [
     { type: 0, name: _l('应用所有工作表') },
@@ -45,8 +45,9 @@ const SelectWorksheet = props => {
                 {!worksheetList.length ? (
                   <LoadDiv className="mTop15" />
                 ) : (
-                  worksheetList.map(o => (
+                  worksheetList.map((o, index) => (
                     <Checkbox
+                      key={index}
                       className="mTop15 mLeft30"
                       text={o.workSheetName}
                       checked={_.includes(worksheetIds, o.workSheetId)}

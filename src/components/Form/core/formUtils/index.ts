@@ -306,10 +306,10 @@ export const formatSearchResultValue = ({
   controls = [],
   searchResult = '',
 }: {
-  targetControl?: FormControl;
-  currentControl?: FormControl;
-  controls?: FormControl[];
-  searchResult?: ControlValue;
+  targetControl?: FormControl | undefined;
+  currentControl?: FormControl | undefined;
+  controls?: FormControl[] | undefined;
+  searchResult?: ControlValue | undefined;
 }) => {
   if (_.includes([9, 10, 11], currentControl.type)) {
     return getControlValue(controls, currentControl, targetControl.controlId, searchResult);
@@ -739,9 +739,18 @@ export function calcDefaultValueFunction({ formData, fnControl, forceSyncRun = f
   } else {
     return String(_.isUndefined(result.value) ? '' : result.value);
   }
+  return undefined;
 }
 
-export function asyncUpdateMdFunction({ formData, fnControl, update }) {
+export function asyncUpdateMdFunction({
+  formData,
+  fnControl,
+  update,
+}: {
+  formData: FormControl[];
+  fnControl: FormControl;
+  update: (v: ControlValue) => void;
+}) {
   try {
     execValueFunction(fnControl, formData, { update });
   } catch (err) {
@@ -879,7 +888,7 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
     const unit = parseInt(currentItem.unit);
 
     if (!startTime || !endTime) {
-      return;
+      return undefined;
     }
 
     // 天、时、分 工作日的逻辑
@@ -952,12 +961,12 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
     let hasUndefinedColumn;
 
     if (!currentItem.sourceControlId) {
-      return;
+      return undefined;
     } else if (/^\$[a-z0-9]{24}\$$/.test(currentItem.sourceControlId)) {
       const column = _.find(data, item => item.controlId === currentItem.sourceControlId.slice(1, -1));
 
       if (!column) {
-        return;
+        return undefined;
       } else {
         try {
           formatMode = getShowFormat(column);
@@ -974,7 +983,7 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
     } else if (moment.isDate(new Date(currentItem.sourceControlId))) {
       date = currentItem.sourceControlId;
     } else {
-      return;
+      return undefined;
     }
 
     const expression = currentItem.dataSource.replace(/\$.+?\$/g, matched => {
@@ -1009,7 +1018,7 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
     let time = moment(getTime(currentItem.sourceControlId, 'start'));
 
     if (!today || !time) {
-      return;
+      return undefined;
     }
 
     if (
@@ -1068,11 +1077,11 @@ export const onValidator = ({
   appId,
 }: {
   item: FormControl;
-  data?: FormControl[];
-  masterData?: MasterData;
-  ignoreRequired?: boolean;
-  verifyAllControls?: boolean;
-  appId?: string;
+  data?: FormControl[] | undefined;
+  masterData?: MasterData | undefined;
+  ignoreRequired?: boolean | undefined;
+  verifyAllControls?: boolean | undefined;
+  appId?: string | undefined;
 }) => {
   let errorType = '';
   let errorText = '';

@@ -377,7 +377,7 @@ function WorksheetTable(props, ref) {
     (direction === 'vertical' && cellProps.renderVerticalAddLine ? 1 : 0);
   let tableHeight = height;
   const YIsScroll =
-    _.sum(new Array(tableRowCount).fill(0).map((a, i) => getRowHeight(i) || 34)) >
+    _.sum(new Array(tableRowCount).fill(0).map((_a, i) => getRowHeight(i) || 34)) >
     height - (direction === 'vertical' ? 0 : 34) - (showSummary ? 28 : 0);
   // 计算 useTableWidth 的参数
   const tableWidthParams = useMemo(
@@ -418,7 +418,7 @@ function WorksheetTable(props, ref) {
       _.sum(
         new Array(direction === 'horizontal' ? visibleColumns.length : columnsCount)
           .fill(0)
-          .map((a, i) => getColumnWidth(i, true) || 200),
+          .map((_a, i) => getColumnWidth(i, true) || 200),
       ) > width;
 
     if (xIsScroll !== XIsScroll) {
@@ -426,7 +426,7 @@ function WorksheetTable(props, ref) {
     }
 
     tableHeight =
-      _.sum(new Array(tableRowCount).fill(0).map((a, i) => getRowHeight(i) || 34)) +
+      _.sum(new Array(tableRowCount).fill(0).map((_a, i) => getRowHeight(i) || 34)) +
       (showHead && direction === 'horizontal' ? columnHeadHeight : 0) +
       (XIsScroll ? getScrollBarWidth() : 0);
     if (showSummary) {
@@ -728,7 +728,7 @@ function WorksheetTable(props, ref) {
      行为和原来一致。列数只有十几个，算这个签名的成本可以忽略。 */
   const columnWidthsKey = new Array(columnsCount)
     .fill(0)
-    .map((a, i) => getColumnWidth(i))
+    .map((_a, i) => getColumnWidth(i))
     .join(',');
 
   useEffect(() => {
@@ -1103,7 +1103,7 @@ function WorksheetTable(props, ref) {
         // 空状态
         renderEmpty={({ style }) => {
           if (keyWords && showSearchEmpty) {
-            return;
+            return undefined;
           }
 
           return (

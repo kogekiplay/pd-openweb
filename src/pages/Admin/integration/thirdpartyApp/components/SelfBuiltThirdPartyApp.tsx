@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -7,7 +7,6 @@ import { Tooltip } from 'ming-ui/antd-components';
 import application from 'src/api/application';
 import PageTableCon from 'src/pages/Admin/components/PageTableCon';
 import { handleMask } from 'src/pages/Admin/util';
-import { getToken } from 'src/utils/common';
 import copy from 'src/utils/copyToClipboard';
 import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
@@ -63,14 +62,23 @@ const ApplicationTriggerWrapper = styled.div`
   }
 `;
 
-class Moreop extends Component<any, any> {
-  constructor(props) {
+export interface MoreopState {
+  menuVisible: boolean;
+}
+
+export interface MoreopProps {
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+class Moreop extends Component<MoreopProps, MoreopState> {
+  constructor(props: MoreopProps) {
     super(props);
     this.state = {
       menuVisible: false,
     };
   }
-  render() {
+  override render() {
     return (
       <Trigger
         action={['click']}
@@ -112,7 +120,15 @@ class Moreop extends Component<any, any> {
   }
 }
 
-class Upload extends Component<any, any> {
+export interface UploadState {
+  loading: boolean;
+  uploadAvatarUrl: string;
+  uploadAvatar: string;
+}
+
+class Upload extends Component<any, UploadState> {
+  declare uploadFileEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -121,7 +137,7 @@ class Upload extends Component<any, any> {
       uploadAvatar: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.uploadFile();
   }
   uploadFile() {
@@ -144,7 +160,7 @@ class Upload extends Component<any, any> {
         FilesAdded() {
           _this.setState({ loading: true });
         },
-        FileUploaded(up, file, res) {
+        FileUploaded(_up, _file, res) {
           // 【这里不再 JSON.parse】plupload 给的是原始响应字符串，
           // createUploader 给的是已经解析并补好字段的对象。
           const data = res.response;
@@ -162,7 +178,7 @@ class Upload extends Component<any, any> {
     });
     uploader.init();
   }
-  render() {
+  override render() {
     const { avatarUrl } = this.props;
     const { uploadAvatarUrl } = this.state;
     return (
@@ -210,7 +226,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
       hoveredSecretId: null,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getProjectApplicationList();
   }
   getColumns = () => {
@@ -220,7 +236,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
         dataIndex: 'appName',
         className: 'flex minWidth0',
         ellipsis: true,
-        render: (text, item) => {
+        render: (_text, item) => {
           return (
             <div className="appName overflow_ellipsis flexRow valignWrapper">
               <img className="avatarUrl" src={item.avatarUrl} />
@@ -234,7 +250,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
         dataIndex: 'about',
         className: 'flex minWidth0',
         ellipsis: true,
-        render: (text, item) => {
+        render: (_text, item) => {
           return <div className="about overflow_ellipsis">{item.about || '-'}</div>;
         },
       },
@@ -249,7 +265,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
         dataIndex: 'appSecret',
         width: 330,
         ellipsis: true,
-        render: (text, item) => {
+        render: (_text, item) => {
           const { appSecretVisible } = item;
           const isHovered = this.state.hoveredSecretId === item.appId;
 
@@ -296,7 +312,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
         dataIndex: 'operation',
         width: 60,
         fixed: 'right',
-        render: (text, record) => {
+        render: (_text, record) => {
           return <Moreop onEdit={() => this.handleEdit(record)} onDelete={() => this.handleDelete(record)} />;
         },
       },
@@ -578,7 +594,7 @@ export default class SelfBuiltThirdPartyApp extends Component<any, any> {
     this.setState({ dialogVisible: true });
   };
 
-  render() {
+  override render() {
     const { applicationList, loading } = this.state;
     return (
       <ThirdPartyAppWrapper className="orgManagementContent pBottom20">

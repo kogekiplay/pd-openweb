@@ -16,7 +16,7 @@ function safeParse(str) {
 }
 
 export default class RelateRecord extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
     control: PropTypes.shape({}),
@@ -69,7 +69,7 @@ export default class RelateRecord extends React.Component<any, any> {
     onChange({ values: newRecords.map(r => r.id), fullValues: newRecords.map(v => JSON.stringify(v)) });
   };
 
-  render() {
+  override render() {
     const { control, worksheetId, disabled } = this.props;
     const { records } = this.state;
     return (

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Checkbox, ConfigProvider, Modal, Radio, Space } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -90,7 +90,7 @@ export default class Accumulate extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { allControls, currentReport } = this.props;
     const { showControlVisible, showOptionIds } = this.state;
     const { xaxes, displaySetup } = currentReport;

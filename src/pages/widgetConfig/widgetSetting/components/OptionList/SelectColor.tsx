@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { arrayOf, func, string } from 'prop-types';
@@ -66,7 +66,7 @@ const SelectColorWrap = styled.div`
 `;
 
 export default class SelectColor extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     colors: arrayOf(string),
     color: string,
     onChange: func,
@@ -77,7 +77,7 @@ export default class SelectColor extends Component<any, any> {
     onChange: _.noop,
   };
 
-  render() {
+  override render() {
     const { colors, color, onChange } = this.props;
     return (
       <SelectColorWrap>

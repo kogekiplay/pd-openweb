@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
@@ -42,7 +42,13 @@ const taskListSettings = {
   taskListPost: null,
 };
 
-class TaskList extends Component<any, any> {
+export interface TaskListState {
+  openTaskDetail: boolean;
+  taskId: string;
+  isForceUpdate: boolean;
+}
+
+class TaskList extends Component<any, TaskListState> {
   /** 组件是否仍挂载；异步回调里用来避免对已卸载组件 setState */
   mounted = false;
 
@@ -55,7 +61,7 @@ class TaskList extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
     // 有缓存数据先呈现
     if (!_.isEmpty(this.props.myTaskDataSource)) {
@@ -102,7 +108,7 @@ class TaskList extends Component<any, any> {
     this.props.emitter.addListener('UPDATE_TASK_CHARGE', this.renderChargeHeaderAvatar.bind(this));
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         !this.props.taskConfig.folderId &&
@@ -117,7 +123,7 @@ class TaskList extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
     taskListSettings.taskListPost.abort();
     clearTimeout(taskListSettings.timer);
@@ -157,7 +163,7 @@ class TaskList extends Component<any, any> {
 
   renderChargeHeaderAvatar(params?) {
     const { taskConfig } = this.props;
-    $('#tasks .listStageTaskContent tr .chargeTd').each((i, ele) => {
+    $('#tasks .listStageTaskContent tr .chargeTd').each((_i, ele) => {
       let $ele = $(ele);
       if ($ele.data('hasbusinesscard')) return;
       const folderId = taskConfig.folderId;
@@ -230,10 +236,10 @@ class TaskList extends Component<any, any> {
     $taskList.on('click', '.listStageTaskContent tr', function (this: HTMLElement, event) {
       const _this = $(this);
       let isMuil = false;
-      let metaKeyType;
+      let metaKeyType: string | undefined;
 
       if ($(event.target).hasClass('markTask') || $(event.target).hasClass('taskStar')) {
-        return;
+        return undefined;
       }
 
       if ((event.ctrlKey || event.metaKey) && event.shiftKey) {
@@ -341,7 +347,7 @@ class TaskList extends Component<any, any> {
           // 下标就跟 classify 编号对不上了。可靠的键是模板写在表格上的 data-type
           //（见 tpl/taskClassify.html：`<table … data-type="{{=key}}">`，key 就是
           // classify 编号，与 updateMyTaskIsMore 写入时用的是同一套）。
-          .each((index, el) => {
+          .each((_index, el) => {
             const classifyType = $(el).find('table').attr('data-type');
             if (classifyType !== undefined && taskListSettings.myTaskIsMore[classifyType]) {
               myTaskIsMore = true;
@@ -392,6 +398,7 @@ class TaskList extends Component<any, any> {
           top: offset.top + 40,
         });
       }
+      return undefined;
     });
 
     $('.myTaskSettingList li').on('click', function (this: HTMLElement) {
@@ -635,12 +642,13 @@ class TaskList extends Component<any, any> {
       classify.push(0);
     }
 
-    $.each(classify, (i, v) => {
+    $.each(classify, (_i, v) => {
       // 存在 有打开的分类 没有加载完 则继续加载
       if (taskListSettings.myTaskIsMore[v]) {
         flag = true;
         return false;
       }
+      return undefined;
     });
     // 是否继续加载
     if (!flag) {
@@ -691,6 +699,7 @@ class TaskList extends Component<any, any> {
         errorMessage(source.error);
       }
     });
+    return undefined;
   }
 
   /**
@@ -781,7 +790,7 @@ class TaskList extends Component<any, any> {
       遍历未关闭的列表数据 返回数据任务数目>=PageSize => 该分类还有个更多 一个分类未完时是不会返回下个分类的 break loop
       若分类已完成 将isMore 设为false
       */
-    $.each(classify, (item, v) => {
+    $.each(classify, (_item, v) => {
       const arr = data.data['classify_' + v];
 
       for (let i = 0; i < v + 1; i++) {
@@ -797,6 +806,7 @@ class TaskList extends Component<any, any> {
       } else {
         taskListSettings.myTaskIsMore[v] = false;
       }
+      return undefined;
     });
   }
 
@@ -855,6 +865,7 @@ class TaskList extends Component<any, any> {
           floatingHeader.css({
             visibility: 'hidden',
           });
+          return undefined;
         });
       });
     }
@@ -863,7 +874,7 @@ class TaskList extends Component<any, any> {
   /**
    * `我的任务`分页加载`逻辑
    */
-  myTaskManipulation($List) {
+  myTaskManipulation($List: JQuery<HTMLElement>) {
     const $taskList = $('#taskList');
     const $types = $taskList.find('.taskListFolderName[data-type]').not('.floatingHeader');
     // 忽略的`我的任务`分类 reset
@@ -905,7 +916,7 @@ class TaskList extends Component<any, any> {
   /**
    * `我的任务` preload
    */
-  myTaskPreLoad($List) {
+  myTaskPreLoad($List: JQuery<HTMLElement>) {
     const $taskList = $('#taskList');
     const $trs = $taskList.find('table tr').filter(':visible');
 
@@ -995,7 +1006,7 @@ class TaskList extends Component<any, any> {
     $title.parents('.persist-area').removeClass('Hidden');
     $newCount.html((count <= 0 ? 0 : count) + taskArray.length);
 
-    $.each(taskArray, (i, v) => {
+    $.each(taskArray, (_i, v) => {
       $('#taskList tr[data-taskid=' + v + ']')
         .find('.myTaskTag')
         .html(buildMyTaskIcon(type));
@@ -1173,7 +1184,7 @@ class TaskList extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { openTaskDetail, taskId, isForceUpdate } = this.state;
 
     return (

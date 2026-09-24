@@ -50,6 +50,7 @@ export default function LogDialog(props) {
           {TABLIST.map((o, i) => {
             return (
               <li
+                key={i}
                 className={cx('Hand Font15', { isCur: tab === i })}
                 onClick={() => {
                   setState({ tab: i });

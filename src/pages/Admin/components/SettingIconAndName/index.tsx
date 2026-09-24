@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from 'styled-components';
 import { Button, Dialog, Icon, Input, QiniuUpload } from 'ming-ui';
 import dingIcon from '../../integration/platformIntegration/images/ding.png';
@@ -97,11 +97,11 @@ export default class SettingIconAndName extends Component<any, any> {
         bucket: 4,
         type: 4,
       },
-      onUploaded: (up, file) => {
+      onUploaded: (_up, file) => {
         const { serverName, key, fileName } = file;
         this.setState({ iconUrl: `${serverName}${key}`, icon: fileName, file });
       },
-      onError: (up, err, errTip) => {
+      onError: (_up, _err, errTip) => {
         alert(errTip, 2);
       },
     };
@@ -166,7 +166,7 @@ export default class SettingIconAndName extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { iconClassName, className } = this.props;
     const { visible, initIonUrl, initName } = this.state;
 

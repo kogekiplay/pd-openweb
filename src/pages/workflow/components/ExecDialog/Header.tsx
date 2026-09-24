@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -19,7 +19,7 @@ import { ACTION_LIST, ACTION_TO_METHOD, OPERATION_LIST } from './config';
 import { canDirectSubmitApproveAction } from './utils';
 
 export default class Header extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: string,
     data: shape({
       flowNode: shape({ name: string, type: number }),
@@ -42,7 +42,7 @@ export default class Header extends Component<any, any> {
     onRefresh: () => {},
   };
 
-  state = {
+  override state = {
     action: '',
     moreOperationVisible: false,
     addApproveWayVisible: false,
@@ -56,7 +56,7 @@ export default class Header extends Component<any, any> {
   /**
    * 头部更多操作的处理逻辑
    */
-  handleMoreOperation = action => {
+  handleMoreOperation = (action: string) => {
     if (action === 'addApprove') {
       this.setState({ action, otherActionVisible: true });
     }
@@ -289,7 +289,7 @@ export default class Header extends Component<any, any> {
   /**
    * 验证码弹层
    */
-  verifyPasswordDialog(removeNoneVerification, callback = () => {}) {
+  verifyPasswordDialog(removeNoneVerification: boolean, callback = () => {}) {
     const { projectId } = this.props;
 
     Dialog.confirm({
@@ -346,7 +346,7 @@ export default class Header extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       projectId,
       currentWorkItem,

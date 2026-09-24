@@ -31,7 +31,7 @@ const Wrap = styled.div`
   }
 `;
 export default class InviteLinkExpirate extends React.Component<any, any> {
-  render() {
+  override render() {
     return (
       <Wrap>
         <div className="TxtCenter">

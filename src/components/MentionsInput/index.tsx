@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -108,7 +108,7 @@ const MentionsInput = props => {
   const mentionAllSyntax =
     sourceType === SOURCE_TYPE.POST ? _.template('<%= type %>:<%= id %>') : _.template('[all]<%= id %>[/all]');
   const rect = input.getBoundingClientRect();
-  const timerId = useRef(null);
+  const timerId = useRef<NodeJS.Timeout | null>(null);
   const debouncedSearch = useRef(null);
   const mentionState = useRef({
     isAt: false,
@@ -150,7 +150,7 @@ const MentionsInput = props => {
     return mentionsCollection;
   };
 
-  const updateTriggerPopupVisible = visible => {
+  const updateTriggerPopupVisible = (visible: boolean) => {
     if (!visible) {
       createRequestId();
     }
@@ -501,7 +501,7 @@ const MentionsInput = props => {
     }
   };
 
-  const adjustViewport = direction => {
+  const adjustViewport = (direction: string) => {
     const wrapEl = popupRef.current;
     const activeEl = wrapEl ? wrapEl.querySelector('.mentionItem.active') : null;
 
@@ -725,8 +725,8 @@ const MentionsInput = props => {
         );
       }
 
-      let atDataIndex = null;
-      let userIndex = null;
+      let atDataIndex: number | null = null;
+      let userIndex: number | null = null;
 
       responseData.accounts = responseData.accounts.map((item, index: number) => {
         if (item.isAtData && atDataIndex == null && props.forReacordDiscussion && !query) {
@@ -762,7 +762,7 @@ const MentionsInput = props => {
     });
   };
 
-  const populateDropdown = (query, results) => {
+  const populateDropdown = (_query, results) => {
     const { accounts = [], categorys = [] } = results;
     const id = _.get(accounts[0] || categorys[0], 'id');
     setActiveId(id);

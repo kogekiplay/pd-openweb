@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Dialog } from 'ming-ui';
@@ -23,7 +23,7 @@ export default class CustomDefaultValue extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { onClose, data = {}, globalSheetInfo = {}, appId, onChange } = this.props;
     const { filterRows = [], rowData = [] } = this.state;
     const controls: FormControl[] = (data.relationControls || []).map(i => ({

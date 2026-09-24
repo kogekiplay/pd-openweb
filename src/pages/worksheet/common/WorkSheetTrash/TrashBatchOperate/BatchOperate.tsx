@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Dialog } from 'ming-ui';
 import DropMotion from 'worksheet/components/Animations/DropMotion';
@@ -7,7 +7,7 @@ import './BatchOperate.less';
 
 export default function BatchOperate(props) {
   const { isAll, isCharge, selectedLength, onRestore, onHardDelete, onCancel, entityName } = props;
-  const [state, setState] = useState({});
+  const [state, setState] = useState<{ select1000?: boolean | undefined }>({});
   const { select1000 } = state;
   return (
     <DropMotion

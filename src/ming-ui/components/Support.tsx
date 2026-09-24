@@ -1,11 +1,11 @@
-import React, { cloneElement, Component } from 'react';
+import { cloneElement, Component } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 
 export default class Support extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 链接
      */
@@ -26,7 +26,7 @@ export default class Support extends Component<any, any> {
     title: PropTypes.string,
   };
 
-  render() {
+  override render() {
     const { href, text, type = 2, className, style, title, children } = this.props;
 
     if (md.global.SysSettings.hideHelpTip) return null;

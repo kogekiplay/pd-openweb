@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Checkbox, Dialog } from 'ming-ui';
 import { getStrBytesLength } from 'src/pages/Role/PortalCon/tabCon/util-pure.js';
@@ -48,7 +48,7 @@ const defaultNames = [
 ];
 
 export default function ScoreConfig({ data, onChange }) {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState<boolean | { visible: boolean }>(false);
   const { showvalue, max } = getAdvanceSetting(data);
   const itemnames = getAdvanceSetting(data, 'itemnames') || [];
   const [names, setNames] = useState(itemnames);
@@ -56,7 +56,7 @@ export default function ScoreConfig({ data, onChange }) {
   const getNames = () => {
     return itemnames.length
       ? itemnames
-      : Array.from({ length: max }).map((i, index) => ({ key: `${index + 1}`, value: '' }));
+      : Array.from({ length: max }).map((_i, index) => ({ key: `${index + 1}`, value: '' }));
   };
 
   useEffect(() => {
@@ -147,9 +147,9 @@ export default function ScoreConfig({ data, onChange }) {
             <div>{_l('等级')}</div>
             <div>{_l('文字')}</div>
           </ItemName>
-          {names.map(it => {
+          {names.map((it, index) => {
             return (
-              <ItemName>
+              <ItemName key={index}>
                 <div className="scoreIndex">{it.key}</div>
                 <input
                   name="controlSettingScoreConfig"

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { pathCompletion } from 'src/utils/common';
 import { ACTION_ID } from '../../enum';
 import { LoopProcessParameters } from '../components';

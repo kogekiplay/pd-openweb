@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';
@@ -42,6 +42,9 @@ export default function Login() {
     loadProjectName: false,
     projectNameLang: '', // 组织简称多语言翻译
     verifyResult: '',
+    googleSsoSet: undefined, // 海外 / 私有部署下取到的 Google SSO 配置（BtnList 用）
+    homeImage: undefined as string | undefined, // 登录页背景图，取到组织登录配置后才有
+    integrationAccountType: undefined as number | undefined, // 只允许集成账号登录时的账号类型
 
     projectId: request.projectId || request.projectid || '',
     dialCode: '',
@@ -168,7 +171,7 @@ export default function Login() {
         host: location.host,
         projectId: request.projectId || request.projectid || '', //'167046ff-fe94-4d7d-8a5e-b9148be9c13f', //
       })
-      .then(async (res = {}) => {
+      .then(async (res: Partial<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectSubDomainModel> = {}) => {
         //request.loginMode === 'systemLogin' 指定平台账号登录方式
         if (request.loginMode === 'systemLogin') {
           res.openLDAP = false;

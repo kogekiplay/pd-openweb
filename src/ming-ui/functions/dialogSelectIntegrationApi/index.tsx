@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Dialog, FunctionWrap, LoadDiv, ScrollView, SvgIcon } from 'ming-ui';
@@ -17,6 +17,9 @@ const totalItem = [{ id: '', name: _l('全部'), iconName: 'icon-apps' }];
 const pageSize = 100;
 
 class SelectIntegrationApi extends Component<any, any> {
+  declare postList: ApiResult | undefined;
+  declare apiPostList: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -35,7 +38,7 @@ class SelectIntegrationApi extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getLinkList();
   }
 
@@ -176,7 +179,7 @@ class SelectIntegrationApi extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { onClose, excludeTypes = [] } = this.props;
     const {
       linkList = [],
@@ -204,8 +207,9 @@ class SelectIntegrationApi extends Component<any, any> {
           <div className="linkContent">
             <div className="title">{_l('选择API')}</div>
             <div className="linkBox">
-              {LINK_TYPES.filter(l => !excludeTypes.includes(l.value)).map(l => (
+              {LINK_TYPES.filter(l => !excludeTypes.includes(l.value)).map((l, index) => (
                 <div
+                  key={index}
                   className={cx('linkItem', { active: linkType === l.value })}
                   onClick={() =>
                     this.setState(

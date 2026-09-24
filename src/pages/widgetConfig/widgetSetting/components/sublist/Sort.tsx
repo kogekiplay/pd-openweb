@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import SortConditions from 'src/pages/worksheet/common/ViewConfig/components/SortConditions';

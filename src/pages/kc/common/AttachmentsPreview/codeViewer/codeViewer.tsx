@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { any, func, string } from 'prop-types';
 import styled from 'styled-components';
 import LoadDiv from 'ming-ui/components/LoadDiv';

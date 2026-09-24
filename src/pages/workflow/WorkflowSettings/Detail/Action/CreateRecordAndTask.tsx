@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -17,7 +17,12 @@ const getAppList = data =>
       value: id,
     }));
 
-export default class CreateRecordAndTask extends Component<any, any> {
+export interface CreateRecordAndTaskState {
+  showOtherWorksheet: boolean;
+  isBatch: boolean;
+}
+
+export default class CreateRecordAndTask extends Component<any, CreateRecordAndTaskState> {
   constructor(props) {
     super(props);
 
@@ -31,7 +36,7 @@ export default class CreateRecordAndTask extends Component<any, any> {
    * 切换工作表
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.data.selectNodeId !== prevProps.data.selectNodeId) {
         this.setState({
@@ -58,7 +63,7 @@ export default class CreateRecordAndTask extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { showOtherWorksheet, isBatch } = this.state;
     const { data, updateSource, companyId } = this.props;
     const selectAppItem = data.appList.find(({ id }) => id === data.appId);
@@ -73,7 +78,7 @@ export default class CreateRecordAndTask extends Component<any, any> {
         className: 'textSecondary',
       },
     ];
-    const invoiceMessage = {
+    const invoiceMessage: Record<string, string> = {
       amount: _l('开票金额不是 0 或者 负数'),
       productId: _l('组织后台上传的商品管理表中的税收服务简称'),
       price: _l('单价为含税单价'),

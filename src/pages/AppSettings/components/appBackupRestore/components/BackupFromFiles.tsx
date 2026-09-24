@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -35,6 +35,9 @@ const SupportWrap = styled(Support)`
 `;
 
 class BackupFromFilesCom extends Component<any, any> {
+  declare timer: NodeJS.Timeout | null;
+  declare uploaderWrap: QiniuUpload | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -48,7 +51,7 @@ class BackupFromFilesCom extends Component<any, any> {
     this.timer = null;
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.timer && clearTimeout(this.timer);
   }
 
@@ -129,12 +132,12 @@ class BackupFromFilesCom extends Component<any, any> {
         onAdd={() => {
           this.setState({ isEncrypt: false, errTip: '' });
         }}
-        onBeforeUpload={(up, file) => {
+        onBeforeUpload={(_up, file) => {
           setTimeout(() => {
             this.setState({ file, analyzeLoading: true });
           }, 200);
         }}
-        onUploaded={(up, file, response) => {
+        onUploaded={(_up, file, response) => {
           const { key } = response;
           this.setState(
             {
@@ -198,7 +201,7 @@ class BackupFromFilesCom extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { onCancel = () => {}, appName, validLimit, currentValid } = this.props;
     const {
       file,

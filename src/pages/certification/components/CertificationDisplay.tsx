@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';
 import certificationApi from '../../../api/certification';

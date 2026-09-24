@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal } from 'antd';
 import { Button } from 'ming-ui';
 import externalPortalAjax from 'src/api/externalPortal';
@@ -48,7 +48,7 @@ export default function (props) {
       mask={{ closable: false }} // 禁用遮罩层点击关闭
       keyboard={false} // 禁用ESC关闭
       footer={[
-        <Button type={'primary'} disabled={!isValidNumber || !code} onClick={handleSubmit}>
+        <Button key="0" type={'primary'} disabled={!isValidNumber || !code} onClick={handleSubmit}>
           {_l('绑定')}
         </Button>,
       ]}

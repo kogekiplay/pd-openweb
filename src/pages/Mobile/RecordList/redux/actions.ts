@@ -213,7 +213,10 @@ export const loadWorksheet = noNeedGetApp => (dispatch: AppDispatch, getState: G
       }
 
       const sheetTranslateInfo = getTranslateInfo(appId, null, base.worksheetId);
-      const { advancedSetting = {}, template = {}, switches = [] } = workSheetInfo;
+      const { advancedSetting = {}, switches = [] } = workSheetInfo;
+      // 原来 template 默认成 {}，下面读 template.controls；改成直接取 controls，缺省时同样是空
+      //（这里取的是翻译前的；下面 fireWhenViewLoaded 要的是翻译后的，那边直接读 workSheetInfo.template）
+      const templateControls = workSheetInfo.template?.controls;
       workSheetInfo.name = sheetTranslateInfo.name || workSheetInfo.name;
       workSheetInfo.entityName = sheetTranslateInfo.recordName || workSheetInfo.entityName;
       workSheetInfo.advancedSetting = {
@@ -253,7 +256,7 @@ export const loadWorksheet = noNeedGetApp => (dispatch: AppDispatch, getState: G
         workSheetInfo.template.controls = replaceControlsTranslateInfo(
           appId,
           workSheetInfo.worksheetId,
-          template.controls || [],
+          templateControls || [],
         );
       }
 
@@ -279,7 +282,7 @@ export const loadWorksheet = noNeedGetApp => (dispatch: AppDispatch, getState: G
       });
       dispatch({ type: 'MOBILE_WORK_SHEET_UPDATE_LOADING', loading: false });
       dispatch({ type: 'WORKSHEET_UPDATE_FILTERS', filters: { ...filters, filterControls } });
-      dispatch(fireWhenViewLoaded(view, { controls: template.controls }));
+      dispatch(fireWhenViewLoaded(view, { controls: workSheetInfo.template?.controls }));
     });
   if (noNeedGetApp) return;
 
@@ -339,7 +342,7 @@ export const loadSavedFilters = (worksheetId: string) => (dispatch: AppDispatch)
   });
 };
 
-const promiseRequests = {};
+const promiseRequests: Record<string, ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined> = {};
 
 export const fetchSheetRows =
   (param: Record<string, any> = {}) =>
@@ -677,7 +680,7 @@ export const changePageIndex = (pageIndex: number) => (dispatch: AppDispatch, ge
 };
 
 export const updateQuickFilter =
-  (filter = [], view, { noLoad } = {}) =>
+  (filter = [], _view, { noLoad } = {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, worksheetInfo = {} } = getState().mobile;
     const view = _.find(worksheetInfo.views || [], item => base.viewId === item.viewId) || {};
@@ -842,7 +845,7 @@ export const changeBatchOptVisible = flag => (dispatch: AppDispatch) => {
   dispatch(changeBatchOptData([]));
 };
 
-export const updateBatchCheckAll = isAll => (dispatch: AppDispatch, getState: GetState) => {
+export const updateBatchCheckAll = (isAll: boolean) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSheetRows, groupDataInfo, base, worksheetInfo } = getState().mobile;
   const { groupData, unfoldedKeys } = groupDataInfo;
   const view = _.find(worksheetInfo.views || [], v => v.viewId === base.viewId);
@@ -881,7 +884,7 @@ export const updateFilterControls = filterControls => (dispatch: AppDispatch) =>
   dispatch({ type: 'MOBILE_UPDATE_FILTER_CONTROLS', filterControls });
 };
 
-export const updateIsPullRefreshing = flag => (dispatch: AppDispatch) => {
+export const updateIsPullRefreshing = (flag: boolean) => (dispatch: AppDispatch) => {
   dispatch({ type: 'MOBILE_IS_PULL_REFRESHING', flag });
 };
 

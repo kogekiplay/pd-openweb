@@ -39,7 +39,7 @@ const updatePeriodList = ({ result, parent }) => {
   };
 };
 
-const getExportPeriodList = (type, { startTime, endTime }, viewConfig) => {
+const getExportPeriodList = (type: number, { startTime, endTime }, viewConfig) => {
   const { onlyWorkDay } = viewConfig;
   startTime = moment(startTime);
   endTime = moment(endTime);
@@ -56,6 +56,7 @@ const getExportPeriodList = (type, { startTime, endTime }, viewConfig) => {
   } else if (type === PERIOD_TYPE.year) {
     return getYears(startTime.startOf('Y'), endTime.endOf('Y').add(onlyWorkDay ? 2 : 1, 'Y'), null, viewConfig);
   }
+  return undefined;
 };
 
 let viewRequest = new WeakMap();
@@ -281,7 +282,7 @@ export const updateGroupingVisible = data => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, gunterView } = getState().sheet;
     const value = _.isBoolean(data) ? data : !gunterView.groupingVisible;
-    safeLocalStorageSetItem(`gunterGroupingVisible-${base.viewId}`, value);
+    safeLocalStorageSetItem(`gunterGroupingVisible-${base.viewId}`, String(value));
     dispatch({ type: 'CHANGE_GUNTER_GROUPING_VISIBLE', data: value });
   };
 };
@@ -619,7 +620,7 @@ export const addRecord = (cell, row) => {
           dispatch(updateGroupingRow(data.data, row.rowid));
         }
 
-        const errors = {
+        const errors: Record<number, string> = {
           11: _l('创建失败，%0不允许重复', titleControl.controlName || ''),
           22: _l('创建失败，子表字段存在重复数据'),
         };
@@ -889,7 +890,7 @@ export const updateGroupingRow = (data, id) => {
   };
 };
 
-export const moveGroupingRow = (data, newKey, oldKey) => {
+export const moveGroupingRow = (data, newKey: string, oldKey) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     const { grouping, periodList, viewConfig } = gunterView;
@@ -1012,7 +1013,7 @@ export const updateGroupSubVisible = id => {
         const key = `gunter-sub-visible-${id}`;
 
         if (subVisible) {
-          safeLocalStorageSetItem(key, true);
+          safeLocalStorageSetItem(key, String(true));
         } else {
           localStorage.removeItem(key);
         }

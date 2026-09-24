@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import { dialogSelectDept } from 'ming-ui/functions';
@@ -6,6 +6,8 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
 export default class DepartmentInput extends Component<any, any> {
+  declare $wrap: SelectOtherField | null | undefined;
+
   // 成员多选数据处理
   removeItem = id => {
     const { dynamicValue, onDynamicValueChange } = this.props;
@@ -48,7 +50,7 @@ export default class DepartmentInput extends Component<any, any> {
     const { defaultType } = this.props;
     defaultType && this.$wrap.triggerClick();
   };
-  render() {
+  override render() {
     const { defaultType } = this.props;
     return (
       <DynamicValueInputWrap>

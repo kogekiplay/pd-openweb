@@ -66,7 +66,10 @@ export default function Set(props) {
   const { changeSheetOptionInfo, projectId } = props;
   const [sheet, setState] = useState(props.sheet);
   const [loading, setLoading] = useState(true);
-  const [componentData, setComponentData] = useState({});
+  const [componentData, setComponentData] = useState<{
+    customeButtons?: HapApi.MD.Entity.Worksheet.ComponentDetail[] | undefined;
+    printTempletes?: HapApi.MD.Entity.Worksheet.ComponentDetail[] | undefined;
+  }>({});
   const [showRecordLoggingDialog, setShowRecordLoggingDialog] = useState(false);
   useEffect(() => {
     setState(props.sheet);
@@ -84,7 +87,10 @@ export default function Set(props) {
       });
   };
 
-  const renderList = (title: string, actionList) => {
+  const renderList = (
+    title: string,
+    actionList: ({ key: string; txt: string; tips?: undefined } | { key: string; txt: string; tips: string })[],
+  ) => {
     let isNotAll = actionList.filter(o => !(sheet[o.key] || {}).enable).length > 0;
     return (
       <React.Fragment>
@@ -118,9 +124,9 @@ export default function Set(props) {
         </div>
         <div className="">
           {actionList.length > 0 &&
-            actionList.map(o => {
+            actionList.map((o, index) => {
               return (
-                <div className="rolePermissionInlineRow">
+                <div key={index} className="rolePermissionInlineRow">
                   <Checkbox
                     className="TxtMiddle"
                     checked={(sheet[o.key] || {}).enable}
@@ -198,14 +204,14 @@ export default function Set(props) {
         </div>
         <div className="OptionInfo">
           {actionList.length > 0 &&
-            actionList.map(o => {
+            actionList.map((o, index) => {
               if (md.global.SysSettings.hideAIBasicFun && o.btnType === 1 && 'unableCustomButtons' === key) {
                 //过滤掉 Ai 动作
                 return null;
               }
 
               return (
-                <div className="subCheckbox InlineBlock flexRow alignItemsCenter">
+                <div key={index} className="subCheckbox InlineBlock flexRow alignItemsCenter">
                   <Checkbox
                     className={'mTop20 InlineBlock TxtMiddle'}
                     checked={!unableList.includes(o.id)}

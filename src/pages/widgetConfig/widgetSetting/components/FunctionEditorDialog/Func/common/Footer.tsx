@@ -1,4 +1,3 @@
-import React from 'react';
 import { func } from 'prop-types';
 import styled from 'styled-components';
 import { Button, Support } from 'ming-ui';

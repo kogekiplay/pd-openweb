@@ -27,6 +27,7 @@ import { assign, endsWith, find, forEach } from 'lodash';
 import { getToken } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import { FileStatus, UPLOAD_ERROR, UploadError, UploaderState } from './uploader/constants';
+import type { UploadErrorValue } from './uploader/constants';
 import { createFileSelect } from './uploader/fileSelect';
 import { uploadToQiniu } from './uploader/qiniuV1';
 import type { QiniuUploadTask } from './uploader/qiniuV1';
@@ -69,8 +70,10 @@ function parseSize(size: string | number | undefined): number {
   if (!size) return 0;
   const m = /^(\d+(?:\.\d+)?)\s*([kmg]?)b?$/i.exec(String(size).trim());
   if (!m) return 0;
-  const n = parseFloat(m[1]);
-  const unit = m[2].toLowerCase();
+  // 两个分组匹配上了就一定参与（第二个可以是空串），默认值只是给类型看的
+  const [, num = '', suffix = ''] = m;
+  const n = parseFloat(num);
+  const unit = suffix.toLowerCase();
   const factor = unit === 'g' ? 1024 ** 3 : unit === 'm' ? 1024 ** 2 : unit === 'k' ? 1024 : 1;
   return Math.round(n * factor);
 }
@@ -129,7 +132,27 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
   const requestedChunk = parseSize(option.chunk_size);
   option.chunk_size = requestedChunk > MAX_CHUNK_SIZE ? 0 : MAX_CHUNK_SIZE;
 
+  // plupload 的 filters。换掉 plupload 时（2026-09-16）这一项整个漏了，
+  // 于是 OCR 只收图片、门户导入只收 Excel、打印模板只收对应格式这类限制全部失效。
+  // 写成数组时 plupload 当作 mime_types（Admin 的两个导入就是这么写的）
+  const filters = Array.isArray(option.filters) ? { mime_types: option.filters } : option.filters || {};
+  if (inputOption.max_file_size === undefined && filters.max_file_size !== undefined) {
+    option.max_file_size = filters.max_file_size;
+  }
   const maxFileSize = parseSize(option.max_file_size);
+
+  // 后缀白名单。匹配规则照 plupload：extensions 拼成 /\.(jpg|png)$/i 去比文件名，'*' 表示不限
+  const allowedExtensions = (filters.mime_types || [])
+    .flatMap(t => String(t.extensions || '').split(','))
+    .map(ext => ext.trim())
+    .filter(Boolean);
+  const extensionRegExp =
+    allowedExtensions.length && !allowedExtensions.includes('*')
+      ? new RegExp(
+          '\\.(' + allowedExtensions.map(ext => ext.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')$',
+          'i',
+        )
+      : null;
 
   // 调用方传进来的事件处理器。【要先拷出来】—— 内部逻辑（取凭证、拼参数）
   // 必须先于调用方的回调执行，所以这几个不走 bind，由下面显式转发。
@@ -193,8 +216,10 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
     removeFile(target) {
       const id = typeof target === 'string' ? target : target && target.id;
       const idx = files.findIndex(f => f.id === id);
-      if (idx < 0) return;
-      const [removed] = files.splice(idx, 1);
+      // 没找到时 idx 是 -1，files[-1] 是 undefined —— 与原来的 idx < 0 同一个判据
+      const removed = files[idx];
+      if (!removed) return;
+      files.splice(idx, 1);
       const task = tasks.get(id);
       if (task) {
         task.abort();
@@ -337,7 +362,22 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
   function handleFiles(natives: File[], source: 'browse' | 'drop' | 'paste') {
     if (destroyed || !natives.length) return;
 
-    const wrapped = natives.map(f => wrapFile(f, source));
+    // 后缀不在白名单里的、和队列里已有文件重复的：和 plupload 一样逐个报错，不进队列、也不占数量上限
+    const wrapped = natives
+      .map(f => wrapFile(f, source))
+      .filter(f => {
+        let code: UploadErrorValue | undefined;
+        if (extensionRegExp && !extensionRegExp.test(f.name)) code = UploadError.FILE_EXTENSION_ERROR;
+        else if (filters.prevent_duplicates && files.some(q => q.name === f.name && q.size === f.size)) {
+          code = UploadError.FILE_DUPLICATE_ERROR;
+        }
+        if (code === undefined) return true;
+        f.status = FileStatus.FAILED;
+        emitError({ file: f, code });
+        return false;
+      });
+    if (!wrapped.length) return;
+
     const validFiles: UploaderFile[] = [];
     const invalidFiles: UploaderFile[] = [];
     const tokenFiles: Array<{ bucket: number; ext: string }> = [];
@@ -539,7 +579,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
         fname: file.name,
       },
       {
-        onProgress(loaded, total, percent) {
+        onProgress(loaded, _total, percent) {
           file.loaded = loaded;
           file.percent = Math.round(percent);
           trigger('UploadProgress', uploader, file);
@@ -614,7 +654,8 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
     dropElement: option.drop_element || (option.dragdrop ? option.browse_button : undefined),
     pasteElement: option.paste_element,
     multiple: option.multi_selection,
-    accept: option.accept,
+    // plupload 在给了 filters.mime_types 时也会据此设 accept
+    accept: option.accept || (extensionRegExp ? allowedExtensions.map(ext => '.' + ext).join(',') : undefined),
     onFiles: handleFiles,
     onBrowse: () => {
       trigger('Browse', uploader);

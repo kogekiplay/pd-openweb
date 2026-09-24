@@ -1,4 +1,3 @@
-import React from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import PropTypes from 'prop-types';

@@ -1,4 +1,3 @@
-import React from 'react';
 import _, { find, flatten, get, includes } from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -16,14 +15,19 @@ import {
   getDateCompareRangeValues,
 } from '../../enum';
 
-function getPicker(type) {
+function getPicker(type: string) {
   return {
     4: 'month',
     5: 'year',
   }[type];
 }
 
-function getDateOptionsByCompareType(type, dateOptions) {
+function getDateOptionsByCompareType(
+  type,
+  dateOptions: (
+    { text: string; value: number; dateRangeType?: undefined } | { text: string; value: number; dateRangeType: number }
+  )[][],
+) {
   const allowedValues = [18].concat(getDateCompareRangeValues(type));
 
   // 比较规则只展示当前方向支持的动态时间点，并复写“过去/将来”范围文案。

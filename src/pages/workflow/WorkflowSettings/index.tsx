@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -25,7 +25,7 @@ class WorkflowSettings extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.checkIsAppAdmin();
     $('html').addClass('AppAdminWorkflowEdit');
 
@@ -34,7 +34,7 @@ class WorkflowSettings extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.dispatch(clearSource());
     $('html').removeClass('AppAdminWorkflowEdit');
   }
@@ -64,7 +64,7 @@ class WorkflowSettings extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { tabIndex, noAuth, infoVisible } = this.state;
     const { flowInfo, onBack, match } = this.props;
     const isPlugin = location.href.indexOf('workflowplugin') > -1;

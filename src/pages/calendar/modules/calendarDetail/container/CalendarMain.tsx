@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import * as components from '../components';
 
 const { CalendarDate, CalendarRemind, CalendarAddress, CalendarMembers, CalendarSummary, CalendarPrivate } = components;
@@ -8,7 +8,7 @@ export default class CalendarMain extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { calendar, change, addCalendarMember, changePrivacy, callback } = this.props;
     const {
       id,

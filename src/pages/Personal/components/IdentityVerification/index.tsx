@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Dialog, VerifyPasswordInput } from 'ming-ui';
 import FunctionWrap from 'ming-ui/components/FunctionWrap';
 import accountAjax from 'src/api/account';
@@ -59,4 +59,5 @@ export default function IdentityVerification(props) {
   );
 }
 
-export const identityVerificationFunc = props => FunctionWrap(IdentityVerification, props);
+export const identityVerificationFunc = (props: { verificationSuccess: () => void }) =>
+  FunctionWrap(IdentityVerification, props);

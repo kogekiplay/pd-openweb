@@ -4,9 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import worksheetAjax from 'src/api/worksheet';
 import { createRequestPool } from 'worksheet/api/standard';
 import { getTreeExpandSize, handleUpdateTreeNodeExpansion, treeDataUpdater } from 'worksheet/common/TreeTableHelper';
-import type { RuleFilterItem } from 'src/components/Form/core/types';
+import type { MasterData, RuleFilterItem } from 'src/components/Form/core/types';
 import { postWithToken } from 'src/utils/common';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import type { ChildTableDispatch, ChildTableGetState } from './types';
 
@@ -138,7 +138,7 @@ export const updateCellErrors = (errors, { persisted } = {}) => {
   };
 };
 
-function getChangesControlIds(oldRow, newRow, controls) {
+function getChangesControlIds(oldRow, newRow: RecordRow, controls) {
   if (!oldRow || !newRow) {
     return [];
   }
@@ -200,7 +200,7 @@ export const setFilterControls =
 
 // 按本地增删维护 realCount(未筛选真实总数)。仅在真实总数已知(由未筛选加载落过)时增量维护，
 // 用增量而非按 rows 重算，避免分页只加载首页时按子集重算导致少算。
-export const adjustRealCount = delta => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+export const adjustRealCount = (delta: number) => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
   const { realCount } = getState();
 
   if (_.isNumber(realCount) && delta) {
@@ -224,7 +224,7 @@ export const addRow = (row, insertRowId) => (dispatch: ChildTableDispatch, getSt
 
 export const deleteRow = (rowid: string) => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
   const { cellErrors } = getState();
-  dispatch({ type: 'UPDATE_CELL_ERRORS', value: _.omitBy(cellErrors, (value, key) => key.startsWith(`${rowid}-`)) });
+  dispatch({ type: 'UPDATE_CELL_ERRORS', value: _.omitBy(cellErrors, (_value, key) => key.startsWith(`${rowid}-`)) });
   // 先减 realCount，再 DELETE_ROW（见 addRow 注释）
   dispatch(adjustRealCount(-1));
   dispatch({ type: 'DELETE_ROW', rowid });
@@ -247,7 +247,7 @@ export const deleteRows =
 
     dispatch({
       type: 'UPDATE_CELL_ERRORS',
-      value: _.omitBy(cellErrors, (value, key) => filteredRowIds.some((rowId: string) => key.startsWith(`${rowId}-`))),
+      value: _.omitBy(cellErrors, (_value, key) => filteredRowIds.some((rowId: string) => key.startsWith(`${rowId}-`))),
     });
     // 先减 realCount，再 DELETE_ROWS（见 addRow 注释）：否则批量删空筛选态时，
     // DELETE_ROWS 同步触发的实时校验读到的还是旧 realCount，必填判为非空、保存不拦。
@@ -509,6 +509,8 @@ export const updatePagination = pagination => (dispatch: ChildTableDispatch) => 
 };
 
 class RowData {
+  declare addTime: number | undefined;
+
   constructor(args = {}) {
     this.args = args;
     this.init();
@@ -602,6 +604,23 @@ class RowData {
   }
 }
 
+/** setRowsFromStaticRows 的入参。DataFormat 按分支往上挂 staticRows / type / isSetValueFrom*，所以都是可选 */
+export interface SetRowsFromStaticRowsParams {
+  recordId?: string | undefined;
+  masterData?: MasterData | undefined;
+  /** 要写进子表的行 */
+  staticRows?: RecordRow[] | undefined;
+  abortController?: AbortController | undefined;
+  /** 'append' = 追加在现有行后面；不给就是整体替换 */
+  type?: 'append' | undefined;
+  allowEdit?: boolean | undefined;
+  isDefaultValue?: boolean | undefined;
+  isQueryWorksheetFill?: boolean | undefined;
+  isSetValueFromEvent?: boolean | undefined;
+  isSetValueFromRule?: boolean | undefined;
+  triggerSubListControlValueChange?: ((controlValue?: ControlValue) => void) | undefined;
+}
+
 export function setRowsFromStaticRows({
   recordId,
   masterData,
@@ -613,8 +632,8 @@ export function setRowsFromStaticRows({
   isQueryWorksheetFill = true,
   isSetValueFromEvent = false,
   isSetValueFromRule = false,
-  triggerSubListControlValueChange = (controlValue?: any) => {},
-} = {}) {
+  triggerSubListControlValueChange = (_controlValue?: ControlValue) => {},
+}: SetRowsFromStaticRowsParams = {}) {
   return (getState, dispatch, DataFormat) => {
     const { base } = getState();
     const { controls, projectId, searchConfig, initRowIsCreate, max }: { controls: FormControl[]; [key: string]: any } =

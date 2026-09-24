@@ -12,7 +12,7 @@ import { LoadDiv } from 'ming-ui';
 import accountSetting from 'src/api/accountSetting';
 import global from 'src/api/global';
 import shouldForwardProp from 'src/common/shouldForwardProp';
-import { installPlatformTheme, syncThemeFromLocation } from 'src/common/theme';
+import { installPlatformTheme, installStaticHolderTheme, syncThemeFromLocation } from 'src/common/theme';
 import { prefetchMyPermissions } from 'src/components/checkPermission';
 import { resetPortalUrl } from 'src/pages/AuthService/portalAccount/util.js';
 import { initThemeMode } from 'src/router/globalEvents';
@@ -27,9 +27,31 @@ import { getPssId, setPssId } from 'src/utils/pssId';
 // 装完之后 theme-default.less / theme-dark.less 里那些主色字面值就只剩
 // 「JS 还没执行时那一帧的兜底」这一个作用了 —— inline style 恒压过它们。
 installPlatformTheme();
+// antd 静态方法（全局 alert 用的 message 等）渲染在 React 树外，也让它们走同一个主题入口
+installStaticHolderTheme();
 // 首屏按 URL 认领应用色。覆盖的是那批「属于应用、却不在 Application 路由树里」
 // 的顶层页面（字段编辑、表单设计、打印…），它们刷新时没有 appPkg 可用。
 syncThemeFromLocation();
+
+// 「请求被取消」不该刷控制台。
+//
+// src/common/global.ts 里 `errorCode: textStatus === 'abort' ? 1 : jqXHR.status` ——
+// **errorCode 1 有且只有「被 abort」这一个含义**（HTTP 状态码不可能是 1），
+// 所以按 errorCode === 1 来判是精确的，不会误吞真错误。
+//
+// 整页跳转时浏览器会把在途 XHR 全 abort 掉，这些 rejection 落在一个正在拆掉的
+// 页面里、没有任何人接，于是控制台每次硬跳转都留下几条
+// "Uncaught (in promise) {errorCode: 1, errorMessage: 请求被取消}"。
+//
+// 【为什么放全局而不是继续一处处加 .catch】仓库里已经这么修过 6 处
+// （integration 三处、worksheet 的 WorkSheet/galleryview/actions），每处一段同样的注释。
+// 但 unhandledrejection 只对【没人接的】rejection 触发 —— 组件自己 catch 的照样能拿到，
+// 所以放这里既覆盖全部调用点（含以后新写的），又不会改变任何现有行为。
+window.addEventListener('unhandledrejection', event => {
+  if (event.reason && event.reason.errorCode === 1) {
+    event.preventDefault();
+  }
+});
 
 /** 存储分发类入口 状态 和 分享id */
 const parseShareId = () => {
@@ -134,7 +156,7 @@ const normalizeUrls = obj => {
   return obj;
 };
 
-const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {}) => {
+const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguageReload = false }: any = {}) => {
   // 处理location.href方法异步的问题
   window.isWaiting = false;
 
@@ -190,9 +212,15 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
 
     // 设置默认语言
     if (!lang) {
-      window.isWaiting = true;
       const sysDefaultLang = window.getDefaultLangKey();
 
+      // SSO 回调由调用方跳转目标页，使语言生效，避免刷新后重复登录。（上游 7.4.5）
+      if (skipLanguageReload) {
+        setCookie('i18n_langtag', sysDefaultLang);
+        return undefined;
+      }
+
+      window.isWaiting = true;
       if (
         (location.pathname.includes('/public/') && !isPublicMingoPlan()) ||
         location.pathname.includes('/recordfileupload')
@@ -205,7 +233,7 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
         window.location.reload();
       }
 
-      return;
+      return undefined;
     }
 
     // 设置日期库语言。moment 和 dayjs 的 locale id 完全一致，所以共用一个取值。
@@ -242,11 +270,11 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
 
     if (allowNotLogin) window.allowNotLogin = true;
 
-    if (allowNotLogin || window.isPublicApp || (isMobilePrintForm && !md.global.Account.accountId)) return;
+    if (allowNotLogin || window.isPublicApp || (isMobilePrintForm && !md.global.Account.accountId)) return undefined;
 
     if (!md.global.Account.accountId) {
       navigateToLogin();
-      return;
+      return undefined;
     }
 
     initThemeMode();
@@ -269,13 +297,13 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
           md.global.Account.appId
         ) {
           location.href = pathCompletion(`/portal/${md.global.Account.appId}`);
-          return;
+          return undefined;
         }
 
         location.href = pathCompletion('/dashboard');
       }
 
-      return;
+      return undefined;
     }
 
     // 第一次进入
@@ -293,6 +321,8 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
     ) {
       setCookie('i18n_langtag', md.global.Account.lang);
 
+      if (skipLanguageReload) return undefined;
+
       if (window.top !== window.self) {
         localStorage.setItem('i18n_reload', true);
       } else {
@@ -301,7 +331,7 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
 
       window.location.reload();
       window.isWaiting = true;
-      return;
+      return undefined;
     }
 
     // 设置网络多语言
@@ -358,15 +388,19 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false }: any = {})
   return global.getGlobalMeta(args).then(finish);
 };
 
+export interface PreState {
+  loading: boolean;
+}
+
 const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
-  class Pre extends React.Component<any, any> {
+  class Pre extends React.Component<any, PreState> {
     constructor(props) {
       super(props);
       this.state = {
         loading: true,
       };
     }
-    componentDidMount() {
+    override componentDidMount() {
       // 【等取完再放行】getGlobalMeta 以前是同步 XHR，所以下面这句 setState 紧跟着写也没事；
       // 现在改成异步，正好用上这个组件本来就有的 loading 态 —— 期间显示 <LoadDiv>，
       // 被包的 Comp 在 md.global 填好之前不会渲染。
@@ -375,7 +409,7 @@ const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
       });
     }
 
-    render() {
+    override render() {
       const { loading } = this.state;
 
       if (window.isDingTalk) {
@@ -393,13 +427,27 @@ const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
   return Pre;
 };
 
-export default function (Comp, { allowNotLogin, requestParams } = {}) {
+export default function (
+  Comp,
+  {
+    allowNotLogin,
+    requestParams,
+    skipLanguageReload = false,
+  }: {
+    allowNotLogin?: boolean;
+    requestParams?: Record<string, unknown>;
+    /** SSO 回调用（上游 7.4.5）：语言只写 cookie 不刷新页面，由调用方自己跳转，避免刷新后重复登录 */
+    skipLanguageReload?: boolean;
+  } = {},
+) {
   if (_.isObject(Comp) && Comp.type === 'function') {
     // 【这条分支只能同步】4 个 share 页用 preall({ type: 'function' }) 当哨兵，
     // 调完紧接着就 new 出页面对象去读 md.global（见 kc/folderShare、kc/shareMobile、
     // Statistics/PublicShare、Chatbot/PublicShare），改异步要连它们一起动。
     // 这 4 个页面需要真实分享链接才能验证，单独一批做。
-    getGlobalMeta({ allowNotLogin, requestParams, sync: true });
+    getGlobalMeta({ allowNotLogin, requestParams, sync: true, skipLanguageReload });
+    // 哨兵用法：调用方不要返回值（它们拿到的一直是 undefined）
+    return undefined;
   } else {
     return wrapComponent(Comp, { allowNotLogin, requestParams });
   }

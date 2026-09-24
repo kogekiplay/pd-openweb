@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import api from 'api/homeApp';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
@@ -21,8 +21,9 @@ export default function SideContent(props) {
   const { posX, visible, onClose } = props;
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const [expandKeys, setExpandKeys] = useState([]);
+  // 原来初始值写的是 []：接口给的是对象（按分组取 markedApps、validProject…），isEmpty / pick 两种初始值结果一样
+  const [data, setData] = useState<Partial<HapApi.MD.Entity.HomeApp.HomeAppModel>>({});
+  const [expandKeys, setExpandKeys] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const getData = () => {
@@ -84,7 +85,7 @@ export default function SideContent(props) {
   };
 
   const getStorageKeys = () => {
-    let keys = [];
+    let keys: string[] = [];
     const allTypes = ['markedApps'].concat(GROUP_TYPES);
 
     allTypes.forEach(type => {
@@ -106,13 +107,13 @@ export default function SideContent(props) {
   const onExpandCollapse = (key?) => {
     if (key) {
       const isExpand = expandKeys.includes(key);
-      safeLocalStorageSetItem(key, !isExpand);
+      safeLocalStorageSetItem(key, String(!isExpand));
       setExpandKeys(isExpand ? expandKeys.filter(item => item !== key) : expandKeys.concat(key));
     } else {
       const storageKeys = getStorageKeys();
       setExpandKeys(expandKeys.length === 0 ? storageKeys : []);
       storageKeys.forEach(key => {
-        safeLocalStorageSetItem(key, expandKeys.length === 0 ? true : false);
+        safeLocalStorageSetItem(key, String(expandKeys.length === 0 ? true : false));
       });
     }
   };

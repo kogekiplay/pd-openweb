@@ -92,7 +92,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     (async () => {
       // 显示模板打印弹框
       $('html').addClass('uploadTemplateSheet');
@@ -106,8 +106,16 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
         worksheetId: worksheetId,
       });
 
-      const { template = [] } = res;
-      const { controls = [] } = template;
+      // 接口给的控件，加上本页自己挂上去的几项（见下面两段循环）
+      const controls: (FormControl & {
+        /** 空白创建的子表（子表那张表的 type 是 2） */
+        isEmptyControl?: boolean | undefined;
+        /** 关联表的全部字段 */
+        controlList?: FormControl[] | undefined;
+        /** 界面状态：是否展开、是否弹出选字段 */
+        expandControls?: boolean | undefined;
+        showDialog?: boolean | undefined;
+      })[] = res.template?.controls || [];
 
       // 获取子表
       for (let i = 0; i < controls.length; i++) {
@@ -190,7 +198,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     })().catch(console.error);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('uploadTemplateSheet');
   }
 
@@ -216,7 +224,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     });
   };
 
-  onCopy = text => {
+  onCopy = (text: string) => {
     copy(text, {
       format: 'text/plain',
     });
@@ -550,7 +558,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
 
             {/* 关联记录（列表）、子表中的字段列表 */}
             {cardControls.map((it, i) => (
-              <React.Fragment>
+              <React.Fragment key={i}>
                 {/** 分割线 */}
                 {i + 1 <= cardControls.length && i > 0 && <p className="line" />}
 
@@ -631,9 +639,9 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
 
     return (
       <div className="listCon">
-        {approvalList.map(item => {
+        {approvalList.map((item, index) => {
           return (
-            <React.Fragment>
+            <React.Fragment key={index}>
               <p
                 className="mTop20 Bold Font13 pointer"
                 style={{ left: '-1em', position: 'relative' }}
@@ -648,12 +656,12 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
 
               {item.expandControls && (
                 <React.Fragment>
-                  {APPROVAL_SYS.map(l => {
+                  {APPROVAL_SYS.map((l, index) => {
                     const fieldCode = `#{[Approval]${item.name}.${l.key}${l.key === 'signature' ? '$[48*20]$' : ''}}`;
                     const fieldAlias = `#{[Approval]${item.id}.${l.key}}`;
 
                     return (
-                      <div className="list">
+                      <div key={index} className="list">
                         <span className="textIndent">{`${l.name}`}</span>
                         <span className="copySpan">
                           {fieldCode}
@@ -691,7 +699,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     $('#forms').submit().remove();
   };
 
-  onEdit = type => {
+  onEdit = (type: number) => {
     const { popupVisible, downLoadUrl, worksheetName } = this.state;
     this.setState({ popupVisible: false });
 
@@ -748,7 +756,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { worksheetName } = this.state;
     return (
       <React.Fragment>

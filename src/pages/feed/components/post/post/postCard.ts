@@ -3,11 +3,15 @@ import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 
+export interface PostCardState {
+  leaving: boolean;
+}
+
 /**
  * 动态基础卡片样式
  */
-class PostCard extends React.Component<any, any> {
-  static propTypes = {
+class PostCard extends React.Component<any, PostCardState> {
+  static override propTypes = {
     component: PropTypes.any,
     className: PropTypes.string,
     children: PropTypes.any,
@@ -20,13 +24,13 @@ class PostCard extends React.Component<any, any> {
     ]),
   };
 
-  state = { leaving: false };
+  override state = { leaving: false };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.bindComponentWillLeave();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       this.bindComponentWillLeave();
     }
@@ -48,7 +52,7 @@ class PostCard extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const props = _.assign({}, this.props);
     props.className = cx(
       'card postCard clearfix',

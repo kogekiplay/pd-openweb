@@ -21,7 +21,7 @@ class ColumnRulesCon extends React.Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.clearColumnRules();
     this.props.updateActiveTab(0);
   }
@@ -76,7 +76,7 @@ class ColumnRulesCon extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       saveLoading,
       addColumnRules,
@@ -106,10 +106,11 @@ class ColumnRulesCon extends React.Component<any, any> {
             )}
           </div>
           <div className="columnRuleTabs">
-            {TABS_DISPLAY.map(item => {
+            {TABS_DISPLAY.map((item, index) => {
               const list = columnRulesListData.filter(i => i.type === item.value);
               return (
                 <div
+                  key={index}
                   className={cx('tabItem', { active: activeTab === item.value })}
                   onClick={() => {
                     if (hasRuleChanged(columnRulesListData, selectRules)) return;

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Dropdown, Icon } from 'ming-ui';
@@ -94,7 +94,7 @@ export default function SubListSummaryWidget(props) {
                 .filter(_.identity)
                 .map(i => ({ text: i.label, value: i.value }));
               return (
-                <div className="summaryItem">
+                <div key={index} className="summaryItem">
                   <div className="summaryControlName overflow_ellipsis">
                     <span className="mLeft12 mRight12">{currentControl.controlName}</span>
                   </div>
@@ -113,7 +113,7 @@ export default function SubListSummaryWidget(props) {
                     icon="delete1"
                     className="Font18 pointer mLeft14"
                     onClick={() => {
-                      const newList = settingList.filter((i, idx) => idx !== index);
+                      const newList = settingList.filter((_i, idx) => idx !== index);
                       setSettingList(newList);
                     }}
                   />

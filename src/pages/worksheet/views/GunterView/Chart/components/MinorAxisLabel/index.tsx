@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
 import { PERIOD_TYPE } from 'worksheet/views/GunterView/config';

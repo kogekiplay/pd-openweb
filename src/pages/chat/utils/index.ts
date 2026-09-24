@@ -485,7 +485,7 @@ export const highlightMessage = id => {
  * 高亮dom
  * @param {*} el
  */
-const highlight = el => {
+const highlight = (el: JQuery<HTMLElement>) => {
   const className = 'highlight';
   el.addClass(className).on(
     'webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend',
@@ -595,7 +595,7 @@ export const playSystemNewMsgAudio = () => playPromptAudio('systemNewMsgAudio');
  * @param {*} id
  * @param {*} isGroup
  */
-export const windowOpen = (id, name: string, isGroup) => {
+export const windowOpen = (id, name: string, isGroup: boolean) => {
   const type = isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER;
   const iTop = (window.screen.availHeight - 660) / 2; // 获得窗口的垂直位置;
   const iLeft = (window.screen.availWidth - 930) / 2; // 获得窗口的水平位置;
@@ -608,7 +608,7 @@ export const windowOpen = (id, name: string, isGroup) => {
  */
 export const chatWindow = {
   set(id) {
-    safeLocalStorageSetItem(`chat_window_${id}`, true);
+    safeLocalStorageSetItem(`chat_window_${id}`, String(true));
   },
   remove(id) {
     localStorage.removeItem(`chat_window_${id}`);

@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import _ from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
@@ -148,7 +148,7 @@ const NumberValue = styled.span`
   ${({ disabled }) => (disabled ? 'color: rgba(0,0,0,.3);' : '')}
 `;
 
-function getColor(config, value, showAsPercent) {
+function getColor(config, value: number | undefined, showAsPercent) {
   if (config.type === 1) {
     return config.color;
   } else if (config.type === 2) {
@@ -170,7 +170,7 @@ function getColor(config, value, showAsPercent) {
 
 function getDefaultValue(value) {
   if (_.isUndefined(value) || _.isNull(value) || String(value).trim() === '' || _.isNaN(Number(value))) {
-    return;
+    return undefined;
   } else {
     return Number(value);
   }
@@ -178,7 +178,7 @@ function getDefaultValue(value) {
 
 function formatByStep(num, step, min = 0) {
   if (_.isUndefined(num)) {
-    return;
+    return undefined;
   }
 
   num = num - min;

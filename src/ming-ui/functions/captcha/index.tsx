@@ -1,10 +1,10 @@
-﻿import React, { Fragment } from 'react';
+﻿import { Fragment } from 'react';
 import { Dialog } from 'ming-ui';
 import { generateRandomPassword } from 'src/utils/common';
 import './index.less';
 
 const TENCENT_CAPTCHA_SCRIPT_URL = 'https://turing.captcha.qcloud.com/TJCaptcha.js';
-const LANG_MAPS = {
+const LANG_MAPS: Record<string, string> = {
   'zh-Hans': 'zh-cn',
   'zh-Hant': 'zh-hk',
   ja: 'en',
@@ -34,7 +34,19 @@ function loadTencentCaptcha() {
   return tencentCaptchaLoaderPromise;
 }
 
-export default function captcha(callback = () => {}, onCancel = () => {}) {
+/** 验证通过后的结果：图片验证码是 { ret: 0, 用户输入的 ticket, 本地随机串 }，腾讯验证码是它回调给的对象 */
+export interface CaptchaResult {
+  /** 0 = 通过；腾讯验证码里 2 = 用户把验证框关了 */
+  ret: number;
+  ticket?: string;
+  randstr?: string;
+}
+
+export default function captcha(
+  callback: (res: CaptchaResult) => void = () => {},
+  // 图片验证码弹窗关闭时由 Dialog.confirm 调用，带着「是不是点确定关掉的」；腾讯验证码加载失败时不带参数
+  onCancel: (isOkBtn?: boolean) => void = () => {},
+) {
   const randstr = generateRandomPassword(16);
 
   const getImgLink = () => {

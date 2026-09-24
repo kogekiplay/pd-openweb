@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _, { find, get, identity, includes, isEmpty } from 'lodash';
@@ -161,8 +161,8 @@ export function getCardColNum({ width, isMobile, enumDefault }: { enumDefault?: 
 }
 
 class RelateRecordCards extends Component<any, any> {
-  static contextType = ChildTableContext;
-  static propTypes = {
+  static override contextType = ChildTableContext;
+  static override propTypes = {
     editable: PropTypes.bool,
     multiple: PropTypes.bool,
     control: PropTypes.shape({
@@ -231,7 +231,7 @@ class RelateRecordCards extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { count = 0, records = [], control = {} } = this.props;
 
     if (this.state.sheetTemplateLoading) {
@@ -258,7 +258,7 @@ class RelateRecordCards extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const control = this.props.control || {};
 
@@ -658,7 +658,7 @@ class RelateRecordCards extends Component<any, any> {
       };
     } catch (err) {
       console.log(err);
-      return;
+      return undefined;
     }
   }
 
@@ -941,7 +941,7 @@ class RelateRecordCards extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { control, allowOpenRecord } = this.props;
     const {
       appId,

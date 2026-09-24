@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import _, { get, identity, isEmpty } from 'lodash';
 import styled from 'styled-components';
@@ -9,7 +8,7 @@ import { getRecordCardStyle } from 'src/utils/control';
 import { checkCellIsEmpty, checkControlCanSetStyle } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
-function getCellContentPaddingTop(control, isNotEmpty) {
+function getCellContentPaddingTop(control: FormControl, isNotEmpty: boolean) {
   if (!isNotEmpty) {
     return 4;
   }

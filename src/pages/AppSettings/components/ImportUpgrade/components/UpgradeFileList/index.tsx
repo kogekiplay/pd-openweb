@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -78,7 +78,7 @@ const FileItemWrap = styled.div`
   }
 `;
 
-const CHECK_FILE_ERROR_TEXT = {
+const CHECK_FILE_ERROR_TEXT: Record<string, string> = {
   '-1': _l('请求校验异常'),
   1: _l('文件中包含多个应用'),
   4: _l('重试超过6次'),

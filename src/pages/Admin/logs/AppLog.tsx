@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import AdminTitle from 'src/pages/Admin/common/AdminTitle';
@@ -23,7 +23,12 @@ const AppLogWrap = styled.div`
   }
 `;
 
-export default class AppLog extends Component<any, any> {
+export interface AppLogState {
+  currentTab: number;
+  disabledExportBtn: boolean;
+}
+
+export default class AppLog extends Component<any, AppLogState> {
   constructor(props) {
     super(props);
     const globalLogTab = localStorage.getItem('globalLogTab');
@@ -33,7 +38,7 @@ export default class AppLog extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { appId, projectId, worksheetId } = _.get(this.props, 'match.params') || '';
 
     return (

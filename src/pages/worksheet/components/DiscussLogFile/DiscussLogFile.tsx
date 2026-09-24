@@ -12,7 +12,7 @@ import WorkSheetComment from './WorkSheetComment';
 import './DiscussLogFile.less';
 
 class DiscussLogFile extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     workflow: PropTypes.element,
     approval: PropTypes.element,
     hiddenTabs: PropTypes.arrayOf(PropTypes.string),
@@ -35,7 +35,7 @@ class DiscussLogFile extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     emitter.addListener('RELOAD_RECORD_INFO_LOG', this.reloadLog);
     setTimeout(() => {
       if (this.state.doNotLoadAtDidMount) {
@@ -44,7 +44,7 @@ class DiscussLogFile extends Component<any, any> {
     }, 1000);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.hiddenTabs !== prevProps.hiddenTabs || this.props.workflowStatus !== prevProps.workflowStatus) {
         this.getShowTabs(this.props);
@@ -61,7 +61,7 @@ class DiscussLogFile extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     emitter.removeListener('RELOAD_RECORD_INFO_LOG', this.reloadLog);
   }
 
@@ -99,7 +99,7 @@ class DiscussLogFile extends Component<any, any> {
     ].filter(tab => !_.find(props.hiddenTabs, tname => tname === tab.name));
   };
 
-  render() {
+  override render() {
     const { configLoading, workflow, approval, forReacordDiscussion, isWorksheetDiscuss } = this.props;
     const { status, loading, doNotLoadAtDidMount } = this.state;
 

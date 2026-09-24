@@ -1,9 +1,11 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Popover } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { SortableList, UserHead } from 'ming-ui';
+import type { SortableRenderItemOptions } from 'ming-ui/components/SortableList';
+import type { SelectedEntityValue } from 'src/utils/controlTypes';
 import { quickSelectUser } from 'ming-ui/functions';
 import { getTabTypeBySelectUser } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { FROM } from '../../../core/config';
@@ -27,9 +29,9 @@ const UserSelect = props => {
     dataSource,
   } = props;
 
-  const [showId, setShowId] = useState('');
-  const pickRef = useRef(null);
-  const destoryRef = useRef(null);
+  const [showId, setShowId] = useState<string | undefined>('');
+  const pickRef = useRef<HTMLDivElement | null>(null);
+  const destoryRef = useRef<(() => void) | null>(null);
   const currentValueRef = useRef(getUserValue(value));
 
   const currentValue = useMemo(() => {
@@ -60,7 +62,7 @@ const UserSelect = props => {
     }, []),
   );
 
-  const onSave = (users, replaceItem) => {
+  const onSave = (users, replaceItem: SelectedEntityValue | undefined) => {
     const currentValue = currentValueRef.current;
 
     const newAccounts =
@@ -84,7 +86,7 @@ const UserSelect = props => {
   /**
    * 选择用户
    */
-  const pickUser = (replaceItem?) => {
+  const pickUser = (replaceItem?: SelectedEntityValue | undefined) => {
     const selectedAccountIds = (currentValueRef.current || []).map(item => item.accountId);
     const tabType = getTabTypeBySelectUser(props);
 
@@ -144,7 +146,7 @@ const UserSelect = props => {
     destoryRef.current = destory;
   };
 
-  const renderItem = ({ item, dragging, isLayer }) => {
+  const renderItem = ({ item, dragging, isLayer }: SortableRenderItemOptions<SelectedEntityValue>) => {
     if (!item) return null;
     const disablePopover = disabled || dragging || isLayer;
     const showMenu = showId === item.accountId && !disablePopover;
@@ -175,8 +177,8 @@ const UserSelect = props => {
       >
         <div className={cx('customFormControlTags userSelectTag', { clickActive: showMenu })} key={item.accountId}>
           {from === FROM.SHARE || from === FROM.WORKFLOW ? (
-            <div class="cursorDefault userHead InlineBlock" style={{ width: 26, height: 26 }}>
-              <img class="circle" width="26" height="26" src={item.avatar} />
+            <div className="cursorDefault userHead InlineBlock" style={{ width: 26, height: 26 }}>
+              <img className="circle" width="26" height="26" src={item.avatar} />
             </div>
           ) : (
             <UserHead

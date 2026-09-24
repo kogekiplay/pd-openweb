@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import type { RootState } from 'src/redux/types';
@@ -6,17 +6,17 @@ import UniformRoute from 'src/router/withTitle';
 import { emitter } from 'src/utils/common';
 import TaskCenter from './containers/taskCenter/taskCenter';
 
-const MODULE_TO_TITLE = {
+const MODULE_TO_TITLE: Record<string, string> = {
   center: _l('任务'),
   star: _l('星标任务-任务'),
   subordinate: _l('下属任务-任务'),
 };
 
 class TaskEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppTask');
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppTask');
   }
 
@@ -31,7 +31,7 @@ class TaskEntrypoint extends Component<any, any> {
     const { folderName = '' } = this.props.folderSettings;
     return `${folderName}-任务`;
   };
-  render() {
+  override render() {
     const { pathname } = this.props.location;
     return <UniformRoute title={this.renderPageTitle()} pathname={pathname} emitter={emitter} component={TaskCenter} />;
   }

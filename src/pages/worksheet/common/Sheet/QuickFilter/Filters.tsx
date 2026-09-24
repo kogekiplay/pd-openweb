@@ -1,4 +1,3 @@
-import React from 'react';
 import propTypes from 'prop-types';
 import QuickFilter from './QuickFilter';
 import type { FormControl } from 'src/utils/controlTypes';

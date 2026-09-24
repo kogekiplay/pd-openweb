@@ -27,10 +27,10 @@ function CustomBtnFormSet(props) {
       sortDirection: '',
       searchKeywords: '',
     });
-  const ajaxRef = useRef(null);
+  const ajaxRef = useRef<ApiResultOf<HapApi.MD.Entity.Worksheet.WorksheetBtnEntity[]> | null>(null);
 
   useEffect(() => {
-    if (!worksheetId) return;
+    if (!worksheetId) return undefined;
     getSheetBtns();
 
     return () => {

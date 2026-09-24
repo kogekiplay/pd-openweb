@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -136,7 +136,7 @@ export default function InvoiceForm(props) {
     [],
   );
 
-  const renderFieldComponent = key => {
+  const renderFieldComponent = (key: string) => {
     if (isConfirmOrTest && !(type === 'test' && key === 'email')) {
       switch (key) {
         case 'invoiceOutputType':
@@ -298,8 +298,8 @@ export default function InvoiceForm(props) {
 
         {(isExpand || isConfirmOrTest) &&
           formData.invoiceOutputType === 1 &&
-          optionalFields.map(item => (
-            <div className="formItem">
+          optionalFields.map((item, index) => (
+            <div key={index} className="formItem">
               <div className="label">{item.label}</div>
               {renderFieldComponent(item.key)}
             </div>

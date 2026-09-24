@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Switch } from 'antd';
 import cx from 'classnames';

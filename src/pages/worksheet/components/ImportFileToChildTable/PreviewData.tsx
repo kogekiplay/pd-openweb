@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { arrayOf, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
@@ -71,7 +71,7 @@ const ConvertingMask = styled.div`
 `;
 
 function getMapConfigByExcel(controls: FormControl[] = [], excelData = []) {
-  const result = {};
+  const result: Record<number, string | undefined> = {};
 
   if (excelData.length < controls.length) {
     excelData = excelData.concat(new Array(controls.length - excelData.length).fill(''));
@@ -90,7 +90,7 @@ function getMapConfigByExcel(controls: FormControl[] = [], excelData = []) {
 
 function getDefaultMap(controls: FormControl[]) {
   return [...new Array(controls.length)]
-    .map((a, i) => ({ [i]: _.get(controls, `${i}.controlId`) }))
+    .map((_a, i) => ({ [i]: _.get(controls, `${i}.controlId`) }))
     .reduce((a, b) => Object.assign({}, a, b));
 }
 
@@ -113,8 +113,8 @@ export default function PreviewData(props) {
   const [tableLoading, setTableLoading] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
   const [cellsData, setCellsData] = useState(props.cellsData || []);
-  const [headRowIndex, setHeadRowIndex] = useState(1);
-  const [sheetIndex, setSheetIndex] = useState(0);
+  const [headRowIndex, setHeadRowIndex] = useState<number | undefined>(1);
+  const [sheetIndex, setSheetIndex] = useState<number | undefined>(0);
   const needImportCellData = (dataFrom === 'excel' ? cellsData.slice(headRowIndex) : cellsData).slice(
     0,
     maxCount - dataCount,
@@ -157,7 +157,7 @@ export default function PreviewData(props) {
                     value={headRowIndex}
                     data={new Array(cellsData.length < 10 ? cellsData.length : 10)
                       .fill()
-                      .map((e, i) => ({ text: i === 0 ? _l('没有表头行') : _l('第%0行', i), value: i }))}
+                      .map((_e, i) => ({ text: i === 0 ? _l('没有表头行') : _l('第%0行', i), value: i }))}
                     onChange={setHeadRowIndex}
                   />
                   <Tooltip title={_l('只有表头下方的数据才会被导入')} placement="bottom">

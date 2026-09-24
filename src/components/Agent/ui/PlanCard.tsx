@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { SvgIcon } from 'ming-ui';
 import { colors, radii, spacing } from './tokens';
@@ -118,7 +117,7 @@ const VersionBadge = styled.span`
   color: ${colors.textMuted};
 `;
 
-function statusLabel(status) {
+function statusLabel(status: string) {
   if (status === 'writing-overview') return _l('正在撰写总览...');
   if (status === 'writing-details') return _l('正在生成详细配置');
   if (status === 'committing') return _l('正在保存版本...');

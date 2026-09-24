@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Dropdown, Menu } from 'antd';
 import { TinyColor } from '@ctrl/tinycolor';
 import _ from 'lodash';
@@ -119,6 +119,9 @@ export const formatChartData = (data, yaxisList, splitControlId?, xaxesControlId
 };
 
 export default class extends Component<any, any> {
+  declare isUnmounted: boolean;
+  declare chartEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -132,7 +135,7 @@ export default class extends Component<any, any> {
     this.g2plotComponent = null;
     this.isUnmounted = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     loadG2Plot().then(data => {
       if (this.isUnmounted) {
         return;
@@ -142,11 +145,11 @@ export default class extends Component<any, any> {
       this.renderBarChart(this.props);
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     this.destroyBarChart();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { displaySetup, style } = this.props.reportData;
     const { displaySetup: oldDisplaySetup, style: oldStyle } = prevProps.reportData;
     const shouldRecreate =
@@ -789,8 +792,8 @@ export default class extends Component<any, any> {
               {renderItem(summary)}
             </div>
           )}
-          {controlList.map(data => (
-            <div className="flexRow mRight10" style={{ alignItems: 'baseline' }}>
+          {controlList.map((data, index) => (
+            <div key={index} className="flexRow mRight10" style={{ alignItems: 'baseline' }}>
               {renderItem({
                 ...data,
                 name: data.name || _.get(_.find(yaxisList, { controlId: data.controlId }), 'controlName'),
@@ -803,7 +806,7 @@ export default class extends Component<any, any> {
       return <div className="pBottom10">{renderItem(summary)}</div>;
     }
   }
-  render() {
+  override render() {
     const { dropdownVisible, offset } = this.state;
     const { displaySetup = {} } = this.props.reportData;
     return (

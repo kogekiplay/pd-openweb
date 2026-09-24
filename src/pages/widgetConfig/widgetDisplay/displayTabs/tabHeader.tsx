@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { Dropdown } from 'antd';
 import cx from 'classnames';
@@ -200,7 +200,7 @@ export function DragHeaderItem(props) {
       id: data.controlId,
     },
 
-    end(obj, monitor) {
+    end(_obj, monitor) {
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;
       const { rowIndex } = dropResult;
@@ -226,13 +226,14 @@ export function DragHeaderItem(props) {
         }
       }
     },
-    drop(item, monitor) {
+    drop(_item, monitor) {
       if (monitor.isOver({ shallow: true })) {
-        if (!pointerDir) return;
+        if (!pointerDir) return undefined;
         const childLength = data.type === 52 ? _.get(putControlByOrder(data.relationControls), 'length') || 1 : 1;
         // 左右插入标签页控件
         return { mode: DRAG_MODE.INSERT_NEW_LINE, rowIndex: pointerDir === 'left' ? row : row + childLength };
       }
+      return undefined;
     },
     collect(monitor) {
       return { isOver: monitor.isOver({ shallow: true }) };

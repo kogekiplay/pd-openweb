@@ -20,11 +20,13 @@ const ControlLabel = styled.div`
     if (displayRow) {
       return `width: ${titlewidth_app}px !important;`;
     }
+    return undefined;
   }}
   ${({ hasContent, displayRow, titlewidth_pc }) => {
     if (displayRow && hasContent) {
       return titlewidth_pc === '0' ? 'width: auto !important;padding-right: 10px;' : 'padding-right: 10px;';
     }
+    return undefined;
   }}
   ${({ displayRow }) => (displayRow ? 'padding-top: 6px !important;padding-bottom: 6px !important;' : '')}
   line-height: ${({ valuesize }) => {
@@ -44,6 +46,7 @@ const ControlLabel = styled.div`
           return 'visibility: hidden;';
         }
       }
+      return undefined;
     }}
     font-size: ${props => props.titleSize || '0.8em'}!important;
     color: ${props => props.titleColor || 'var(--color-text-title)'};
@@ -83,7 +86,7 @@ function FormErrorMessage({
   targetRef,
   updateErrorState = () => {},
 }: FormErrorMessageProps) {
-  const [portalStyle, setPortalStyle] = useState(null);
+  const [portalStyle, setPortalStyle] = useState<React.CSSProperties | null>(null);
 
   const updatePortalPosition = useCallback(() => {
     const target = targetRef.current;
@@ -107,7 +110,7 @@ function FormErrorMessage({
   }, [targetRef]);
 
   useEffect(() => {
-    if (!inBody || !errorMessage) return;
+    if (!inBody || !errorMessage) return undefined;
 
     updatePortalPosition();
 
@@ -132,7 +135,7 @@ function FormErrorMessage({
         isChildTable: currentErrorItem.isChildTable,
         ignoreErrorMessage: currentErrorItem.ignoreErrorMessage,
       })}
-      style={inBody ? portalStyle : undefined}
+      style={inBody ? (portalStyle ?? undefined) : undefined}
     >
       <span>
         {errorMessage}

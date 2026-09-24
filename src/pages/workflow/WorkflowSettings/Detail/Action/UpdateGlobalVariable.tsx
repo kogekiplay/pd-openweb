@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import { Dropdown } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -85,7 +85,7 @@ export default props => {
 
       {data.fields.map((item, i) => {
         return (
-          <Fragment>
+          <Fragment key={i}>
             <ul className="flowDetailMembers">
               <li className="flexRow">
                 <Tag

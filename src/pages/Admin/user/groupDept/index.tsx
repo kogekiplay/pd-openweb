@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Icon } from 'ming-ui';
 import Config from '../../config';
 import GroupsList from './GroupList';
@@ -20,7 +20,7 @@ export default class GroupDept extends Component<any, any> {
     this.setState({ level, name, groupId });
   }
 
-  render() {
+  override render() {
     const { level, name, groupId } = this.state;
     return (
       <div id="groupDept" className="orgManagementWrap">

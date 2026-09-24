@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
@@ -12,7 +12,7 @@ import ViewErrorPage from '../components/ViewErrorPage';
 const LoadableGunterView = lazy(() => import('src/pages/worksheet/views/GunterView'));
 
 class MobileGunterView extends Component<any, any> {
-  render() {
+  override render() {
     const { view = {}, controls = [] } = this.props;
     const { begindate = '', enddate = '' } = getAdvanceSetting(view);
     const groupControl = controls.find(item => item.controlId === view.viewControl);

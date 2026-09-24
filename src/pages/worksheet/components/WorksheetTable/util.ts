@@ -79,6 +79,19 @@ export function handleLifeEffect(
     focusCell,
     handleTableKeyDown,
     onOuterClick = () => {},
+  }: {
+    /* 【这个类型必须显式写】原先靠「解构 + = {} 默认值」让 TS 推断，而那种写法只会把
+       带默认值的字段推进参数类型 —— 下面这 4 个和 setScroll / focusCell 等没默认值的字段
+       被整个丢掉。strictBindCallApply 打开后，WorksheetTable 里
+       handleLifeEffect.bind(null, tableId, { ..., tableType, ... }) 会校验实参，
+       当场报「tableType 不是已知属性」—— 可它明明在函数体里用了 3 次。 */
+    tableType?: string;
+    isSubList?: boolean;
+    formItemId?: string;
+    isRelateRecordList?: boolean;
+    // 其余是回调与共享的 cache 对象。它们原先推出来的是 () => void，却带着参数在调，
+    // 那个推断本身就是错的；精确化留给 noImplicitAny 那一轮（写窄了会在 strictFunctionTypes 下反咬调用方）。
+    [key: string]: any;
   } = {},
 ) {
   const tableElement = document.querySelector(`.sheetViewTable.id-${tableId}-id`);
@@ -371,7 +384,7 @@ export function getControlFieldPermissionsAfterRules(row, controls, rules) {
     data: controls.map((c: FormControl) => ({ ...c, value: row[c.controlId] })),
   });
   const isLock = !/^(temp|default)/.test(row.rowid) && checkRuleLocked(rules, formData, row.rowid);
-  const fieldPermissions = {};
+  const fieldPermissions: Record<string, string> = {};
   const ruleControlAdvancedSettings = {};
   formData.forEach((item: FormControl) => {
     const permKey = row.rowid + '-' + item.controlId;

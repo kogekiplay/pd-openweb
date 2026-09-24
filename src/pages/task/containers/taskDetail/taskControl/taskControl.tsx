@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -21,7 +21,7 @@ class TaskControl extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.formatData(this.props.taskControls[this.props.taskId] || []);
   }
 
@@ -29,7 +29,7 @@ class TaskControl extends Component<any, any> {
    * 格式化数据
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.taskControls[this.props.taskId], prevProps.taskControls[prevProps.taskId])) {
         this.formatData(this.props.taskControls[this.props.taskId] || []);
@@ -206,7 +206,7 @@ class TaskControl extends Component<any, any> {
   /**
    * 更新关联控件的值
    */
-  updateRelationValue(id, values) {
+  updateRelationValue(id: string, values) {
     const controls: FormControl[] = this.props.taskControls[this.props.taskId];
     const relations = JSON.parse(_.find(controls, item => item.controlId === id).value);
     const diffItem: Record<string, any> = {};
@@ -237,7 +237,7 @@ class TaskControl extends Component<any, any> {
   /**
    * 更新控件的值
    */
-  updateControlValue(id, value, opts = '', isAttachment = false) {
+  updateControlValue(id: string, value, opts = '', isAttachment = false) {
     this.props.dispatch(updateControlValue(this.props.taskId, id, value, opts, isAttachment));
   }
 
@@ -248,7 +248,7 @@ class TaskControl extends Component<any, any> {
     this.props.dispatch(taskFoldStatus(this.props.taskId, 'control'));
   };
 
-  render() {
+  override render() {
     const { flag, controlData } = this.state;
     const isHidden = _.includes(this.props.taskFoldStatus[this.props.taskId] || [], 'control');
 
@@ -283,7 +283,7 @@ class TaskControl extends Component<any, any> {
               disableRules={true}
               data={controlData}
               widgetStyle={{ align_pc: '1', titlelayout_pc: '2', titlewidth_pc: '84' }}
-              onChange={(values, ids, { controlId }: { controlId?: string; [key: string]: any }) => this.updateFieldsData({ controlId })}
+              onChange={(_values, _ids, { controlId }: { controlId?: string; [key: string]: any }) => this.updateFieldsData({ controlId })}
               onBlur={(controlId: string) => this.updateFieldsData({ isBlur: true, controlId })}
             />
           </div>

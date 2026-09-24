@@ -13,7 +13,7 @@ import {
 import { DEFAULT_DATA } from 'src/pages/widgetConfig/config/widget.js';
 import { canSetAsTitle, enumWidgetType } from 'src/pages/widgetConfig/util';
 
-export const getInitFieldsMapping = (sourceFields, isSourceAppType, destDsType) => {
+export const getInitFieldsMapping = (sourceFields, isSourceAppType: boolean, destDsType) => {
   const isDestAppType = destDsType === DATABASE_TYPE.APPLICATION_WORKSHEET;
   const needReplace = !isSourceAppType || !isDestAppType;
   const isExistJoinPk = !!(sourceFields || []).filter(item => item.isUniquePk).length;
@@ -88,7 +88,7 @@ export const getInitWorkSheetFields = (
   controls,
   isGetDest,
   isSourceAppType,
-  isDestAppType,
+  isDestAppType: boolean,
   workSheetId,
   withRowId?,
   withSys?,
@@ -200,7 +200,7 @@ export const getInitWorkSheetFields = (
   return isSourceAppType || withRowId ? rowIDField.concat(initWorkSheetFields) : initWorkSheetFields;
 };
 
-export const getMatchedFieldsOptions = (types, sourceField, destFields, isSourceAppType, isDestAppType) => {
+export const getMatchedFieldsOptions = (types, sourceField, destFields, _isSourceAppType, isDestAppType) => {
   const matchedTypeIds = _.uniq(((types || {})[sourceField.id]) || []).map(type => type.dataType);
   const matchedMdTypeIds = _.uniq(((types || {})[sourceField.id]) || []).map(type => type.mdType);
 
@@ -219,7 +219,7 @@ export const getDefaultData = (
   isDestAppType,
   notCanvas?: boolean,
 ) => {
-  let hasSetFields = {};
+  let hasSetFields: Record<string, number> = {};
   let isSetTitle = false; //是否已经设置过标题默认值
 
   const newFieldsMapping = (mapping || []).map(item => {

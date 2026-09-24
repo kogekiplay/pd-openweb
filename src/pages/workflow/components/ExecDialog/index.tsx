@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { bool, func, string } from 'prop-types';
 import { Icon, ScrollView } from 'ming-ui';
@@ -50,7 +50,7 @@ const WorkflowHistory = props => {
 };
 
 export default class ExecDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     id: string,
     isLand: bool,
     workId: string,
@@ -69,7 +69,7 @@ export default class ExecDialog extends Component<any, any> {
     onClose: () => {},
   };
 
-  state = {
+  override state = {
     data: {},
     works: [],
     currentWork: {},
@@ -84,7 +84,7 @@ export default class ExecDialog extends Component<any, any> {
     worksheetLoading: true,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
     this.getPermit();
   }
@@ -221,7 +221,7 @@ export default class ExecDialog extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { id, workId, isLand, onClose } = this.props;
     const {
       data,

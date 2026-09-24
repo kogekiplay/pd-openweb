@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Checkbox } from 'ming-ui';
@@ -20,14 +19,14 @@ const CompConfig = {
   46: DateVerify,
 };
 
-const TYPE_TO_TEXT = {
+const TYPE_TO_TEXT: Record<number, { title: string; placeholder: string[] }> = {
   2: { title: _l('限定字数'), placeholder: [_l('最小'), _l('最大')] },
   6: { title: _l('限定数值范围'), placeholder: [_l('最小'), _l('最大')] },
   8: { title: _l('限定金额范围'), placeholder: [_l('最小'), _l('最大')] },
   10: { title: _l('限定可选项数'), placeholder: [_l('最少'), _l('最多')] },
 };
 
-const SWITCH_TYPE_TO_TEXT = {
+const SWITCH_TYPE_TO_TEXT: Record<number, string> = {
   0: _l('必须选中'),
   1: _l('必须开启'),
   2: _l('必须选是'),

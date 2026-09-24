@@ -3,27 +3,120 @@
 // 全仓无 ts-loader / fork-ts-checker，所以「webpack 绿」和「tsc 干净」是两件独立的事。
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    // tsc 在这里只做检查不产出（noEmit），target 只影响检查口径。ESNext 的一个实际效果是
+    // useDefineForClassFields 默认为 true —— 与真实运行时一致：babel 的 preset-env 目标是
+    // Chrome 103，类字段原生支持、不转译，走的就是 [[Define]] 语义。
+    "target": "ESNext",
+    // 【lib 故意不跟 target 开到 ESNext】.babelrc 只按 Chrome 103 转语法、没配 core-js / useBuiltIns，
+    // 不补任何 API，所以 lib 是全仓唯一挡住「用了 Chrome 103 没有的 API」的防线。
+    // 生产的真实下限是一台停在 Chrome 103 的员工手机（访问日志核实过）。Chrome 103 完整支持到 ES2022
+    // （at / Object.hasOwn / replaceAll / Error cause），ES2023 起的 toSorted（110）、
+    // Object.groupBy（117）、Set 方法（122）都没有 —— 开成 ESNext，这些会通过类型检查、在那台手机上直接抛错。
+    // 要放开，先加 polyfill（core-js usage 模式）或 eslint-plugin-es-x 之类的替代防线。
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    // 【module / moduleResolution 故意不用 NodeNext】模块解析是 webpack 做的，bundler 才是它的真实模型：
+    // 不要求相对导入写扩展名、认目录入口、按 browser / import 条件取 exports。
+    // 实测改成 NodeNext 新增 54089 条：package.json 没有 "type": "module"，全部 .ts 被当成 CommonJS
+    // （TS1295 × 46698），再往下是相对导入缺扩展名、目录导入不合法。那是另一套运行时的规则，
+    // 硬满足它等于让 tsc 检查一个和实际构建不一样的程序。
     "module": "ESNext",
     "moduleResolution": "bundler",
+    // 每个文件都按模块处理，不再靠「有没有 import/export」猜。本仓没有要当全局脚本的源文件
+    //（全局声明都在 types/*.d.ts，声明文件不受这一条影响），实测 0 条新增。
+    "moduleDetection": "force",
+    // 下面两条只放宽「能写成什么样」，不影响已有代码：允许 import './x.ts' 这种带扩展名的写法
+    //（仅在 noEmit 下合法），以及用 x.d.less.ts 这类声明文件给非 JS 资源配类型。
+    "allowImportingTsExtensions": true,
+    "allowArbitraryExtensions": true,
 
-    // 用 classic（"react"）而不是 "react-jsx"：.babelrc 的 @babel/preset-react 没配
-    // runtime，babel 7 默认即 classic；eslint.config.js 也把 react/react-in-jsx-scope
-    // 设为 error，说明全仓 JSX 文件都显式 import React。React 运行时 18.3.1。
-    // 选 "react-jsx" 会与真实构建产物不一致。
-    "jsx": "react",
+    // 和 .babelrc 的 @babel/preset-react { runtime: 'automatic' } 一致（2026-09-23 一起从 classic 切过来）：
+    // JSX 编译成 react/jsx-runtime 的 jsx() / jsxs()，只为 JSX 而写的 import React 已由
+    // tools/codemod-drop-unused-react-import.ts 删掉（2494 个文件）。两边必须一起改 ——
+    // 只改这里，tsc 会把 babel 仍在用的 React 判成未使用；只改 babel，产物会找不到 React。
+    "jsx": "react-jsx",
 
     // 【allowJs 已移除】全仓被 tsc 解析到的 .js 只剩 3 个，全是 vendor/生成物，
     // 各自配了同名 .d.ts（applibrary_v2 / svgIcon / Recorder/lib），
     // 模块解析走声明文件，不需要 tsc 去读那三个 .js 本身。
     // 我们自己写的那一个（原 src/library/plupload/createUploader.js）已转成 .ts
     // 并移到 src/utils/ —— 它原先躺在被门禁整目录剔噪的 src/library/ 下，一直没被检查过。
-    "noEmit": true,
+    //
+    // 【只输出声明】原先是 noEmit。按终点配置改成只产 .d.ts（JS 仍然只由 babel 产出），
+    // 写到 node_modules/.cache 下、不进仓库，也没有消费方 —— 要的是它附带的那道检查：
+    // 导出的东西的类型必须写得出名字（TS4082 用了私有名字 / TS2883 引用了不可移植的路径）。
+    // 这类诊断在 noEmit 下根本不算，2026-09-23 真输出一次才量出 25 条，清完后打开。
+    // fast 门禁不带 --noEmit，每次都会真的输出并检查；strict 门禁和探针带 --noEmit ——
+    // TS7 下 noEmit 优先，与这里不冲突，也不会输出。
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "node_modules/.cache/tsc-dts",
+    "noEmitOnError": false,
 
     "strict": false,
     "noImplicitAny": false,
     "skipLibCheck": true,
+
+    // ── 通往 strict:true 的路上，已经永久打开的检查 ─────────────────────────
+    // 最终目标是 strict 全开 + noImplicitReturns + TS 7 的其余有价值检查。
+    // 2026-09-23 逐开关实测过代价（基线 13182 条），下面这七个【单开、合开增量都是 0】，
+    // 所以直接写死，不走任何名单。之后每清完一个开关的欠债就往这里挪一个。
+    // 剩下的按代价从低到高（数字是当时实测的增量）：strictBindCallApply 2 / useUnknownInCatchVariables 22 /
+    // strictFunctionTypes 23 / noUnusedLocals 34 / noImplicitThis 431 / noImplicitReturns 647 /
+    // noUnusedParameters 730 / noImplicitOverride 2900 —— 以上都已打开 ——
+    // strictNullChecks 10764 / noImplicitAny 38544。
+    //
+    // 2026-09-23 终点改成用户给的那份配置（tsc --init 模板 + 全部严格性选项），在当时的基础上重新实测：
+    //   strictNullChecks +13000（strictPropertyInitialization 叠在它上面 +0）
+    //     ├ exactOptionalPropertyTypes 再 +255 ┐ 这两个都要求先开 strictNullChecks，
+    //     └ noUncheckedIndexedAccess   再 +3734 ┘ 单开几乎量不出东西
+    //   noImplicitAny +38712（其中参数隐式 any 30178）
+    //   noPropertyAccessFromIndexSignature +17156
+    //   strict:true 合计 +47743；终点全开合计 +69593，涉及 3749 个文件
+    //   declaration（真正输出 .d.ts 时才报）+25 —— 已打开
+    //   jsx: react-jsx +2507（2494 条是 import React 变成未使用）—— 已打开，连同 babel 的 automatic runtime
+    "alwaysStrict": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    // 这两条和构建链是同一个前提：babel 逐文件擦类型、不做跨文件分析，
+    // 所以 const enum / namespace / 参数属性这类「需要编译器生成代码」的语法
+    // 在本仓本来就用不了。写上它们只是把这个事实交给 tsc 来守。
+    "isolatedModules": true,
+    "erasableSyntaxOnly": true,
+    "strictBuiltinIteratorReturn": true,
+    // 2026-09-23 清掉 35 处后打开。要注意的是「算了却没用」不一定是垃圾：
+    // 这一轮里有一处（VectorKnowledge 的 rrfK）是上游漏接进界面的字段，
+    // 删之前先确认是死代码还是断掉的功能。
+    "noUnusedLocals": true,
+    // catch 变量从 any 变成 unknown。修法统一是「catch (thrown) 后第一行按真实形状绑回原名」，
+    // 纯类型断言、运行期零变化 —— 不用 instanceof 收窄，因为 mdyAPI reject 的是普通对象不是 Error。
+    // 接口错误的形状见 types/global.d.ts 的 ApiRejection。
+    "useUnknownInCatchVariables": true,
+    "strictBindCallApply": true,
+    // 23 条里一大半是 new Promise(resolve => ...) 没写类型参数、于是全是 Promise<unknown>，
+    // 回调一解构就在逆变检查下报错。修法是在【源头】写出 resolve 的真实形状，不在每个 .then 上打补丁；
+    // 接口原样透传的值用 types/global.d.ts 的 ApiPayload（= Awaited<ApiResult>）。
+    "strictFunctionTypes": true,
+    // 432 条清完后打开（2026-09-23）。老式 Ctor.prototype = {...} / 单例对象模块用 src/utils/defineMethods
+    // 标注：字段按真实赋值写全，方法集合由 TS 推出。注意 ThisType<T> 只在这个开关打开时才生效 ——
+    // 没开时对象字面量方法里的 this 一律是 any，那些方法体等于没受检查；清这批的途中在里面挖出了二十多个真 bug。
+    // 函数组件里的 this 是 undefined（ES 模块是严格模式），报这条的多半是类组件改函数组件时漏改的真崩溃，别用标注糊过去。
+    "noImplicitThis": true,
+    // 642 条清完后打开（2026-09-23）。绝大多数是有意的「这条路径不返回」，统一写成 return undefined
+    // （tools/codemod-implicit-returns.ts，与掉出函数末尾逐位等价；没用 return null —— 解构默认值和 defaultProps
+    // 只对 undefined 生效）。这个开关真正要抓的是「该返回却漏了」：reduce 丢累加器、比较函数漏分支、
+    // replace 回调插进字符串 "undefined"。新报出来的先想是不是这种，再决定补什么，别顺手补 undefined。
+    "noImplicitReturns": true,
+    // 730 条清完后打开（2026-09-23）。占位用的参数（(e, index) => index）一律改名成 _名字，不删：
+    // 删了后面的参数会错位；删末尾的会改函数 length（React.forwardRef 的渲染函数 dev 下查参数个数）。
+    // 新报出来的先想「是不是该用却没用」—— 这一轮就查出条码打印的 pixelRadio 从来没传进 BarLabel（见 PrintQrBarCode/util.ts）。
+    "noUnusedParameters": true,
+    // 2900 处补完后打开（2026-09-23），全是 React Component / PureComponent 子类的 render、生命周期、state。
+    // override 是纯类型修饰符，babel 原样擦掉：改前改后 1153 个文件的转译产物逐字节相同（tools/codemod-override.ts）。
+    // 它的价值在以后：基类改名 / 删掉某个生命周期时，子类里那个悄悄变成「普通方法、再也不会被调用」的成员会当场报错。
+    "noImplicitOverride": true,
+    // 副作用导入（import './index.less'）也要能解析到文件或声明，路径写错不再静默放过。实测 0 条新增。
+    "noUncheckedSideEffectImports": true,
 
     // R1 配对开关：.babelrc 的 onlyRemoveTypeImports:true 会把
     // `import { SomeType } from './x'` 原样保留到产物；verbatimModuleSyntax 用 TS1484
@@ -33,7 +126,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": false,
+    // macOS 默认大小写不敏感，import 路径大小写写错本机照样跑、到 Linux 的构建机上才炸。实测 0 条新增。
+    "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
 
     // TS 7 不再像 5.x 那样自动把 node_modules/@types/* 全都纳入全局。
@@ -42,10 +136,12 @@
     // 使用的，不提供全局声明，不需要出现在这里。
     "types": ["node"],
     "paths": {
-      // 这 4 条 alias（5 个 key）沿自迁移前的 jsconfig.json（该文件已随迁移完成删除）。
-      // 注意 webpack 侧 resolve.alias（CI/webpack.config.js:419-423）只有
+      // 这 4 条 alias 沿自迁移前的 jsconfig.json（该文件已随迁移完成删除），每条两个 key。
+      // 注意 webpack 侧 resolve.alias（CI/webpack.config.ts 的 resolve.alias）只有
       // worksheet / mobile / statistics 三条，ming-ui 是靠 resolve.modules 的
       // PATHS.src 解析的；这里显式写出，效果等价。
+      // webpack 的 alias 不带 $ 时同时匹配裸名和「名字/子路径」，所以这三条各要两个 key：
+      // 原先只有 /* 形式，SheetHeader 的 import Statistics from 'statistics' 在 tsc 下解析不到。
       // styled-components 6 自带完整类型，但本仓在 4.4.1 时代从未装过
       // @types/styled-components（styled 一直是隐式 any）。直接启用会新增
       // 5633 条原始诊断，那是一件独立的大工程。这里把它指向本仓的下限声明，
@@ -53,8 +149,11 @@
       "styled-components": ["./types/styled-components.d.ts"],
       "ming-ui": ["./src/ming-ui"],
       "ming-ui/*": ["./src/ming-ui/*"],
+      "worksheet": ["./src/pages/worksheet"],
       "worksheet/*": ["./src/pages/worksheet/*"],
+      "mobile": ["./src/pages/Mobile"],
       "mobile/*": ["./src/pages/Mobile/*"],
+      "statistics": ["./src/pages/Statistics"],
       "statistics/*": ["./src/pages/Statistics/*"],
 
       // 镜像 CI/webpack.config.js:425 的

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Checkbox, Input } from 'antd';
 import styled from 'styled-components';
 import { Button, Icon, LoadDiv, Switch } from 'ming-ui';
@@ -94,7 +94,7 @@ export default class WebProxySetting extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     projectSettingController
       .getApiProxySettings({
         projectId: this.props.projectId,
@@ -119,7 +119,7 @@ export default class WebProxySetting extends Component<any, any> {
       });
   }
 
-  handleSaveWebProxy = isEnable => {
+  handleSaveWebProxy = (isEnable: boolean) => {
     const { http, https, ip, portNumber, openIdentityValidate, userName, webProxyPassword } = this.state;
     this.setState({ isSaveWebProxy: true });
     if (
@@ -189,7 +189,7 @@ export default class WebProxySetting extends Component<any, any> {
     this.setState({ [field]: value });
   };
 
-  render() {
+  override render() {
     const { onClose = () => {}, apiProxyEnabled } = this.props;
     const { http, https, ip, portNumber, openIdentityValidate, userName, webProxyPassword, isSaveWebProxy, loading } =
       this.state;

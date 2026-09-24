@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import _, { get, includes, isEmpty } from 'lodash';
 import styled from 'styled-components';
@@ -91,7 +91,15 @@ const getDefaultUnit = selectedControl => {
   }
 };
 
-const getTotalType = control => {
+/** 汇总方式的一项；「去重计数」那几项带悬停说明 */
+interface TotalTypeOption {
+  text: string;
+  value: number;
+  tips?: string;
+}
+
+// 写明返回类型：几个常量数组的项形状不齐（只有部分带 tips），不写的话下拉那边推不出项的类型
+const getTotalType = (control): TotalTypeOption[] => {
   if (isEmpty(control)) return COMMON_TYPE;
 
   // 汇总选择汇总字段

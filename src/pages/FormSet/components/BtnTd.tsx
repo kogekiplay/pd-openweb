@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -29,7 +29,7 @@ export default function BtnTd(props) {
       input.current.focus();
     }
   }, [isRename]);
-  const editBtn = (obj, cb?) => {
+  const editBtn = (obj, cb?: (() => void) | undefined) => {
     sheetAjax
       .saveWorksheetBtn({
         btnId: it.btnId,

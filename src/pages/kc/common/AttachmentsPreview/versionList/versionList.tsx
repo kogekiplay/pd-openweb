@@ -7,7 +7,7 @@ import kcAjax from 'src/api/kc';
 import { downloadFile } from 'src/utils/common';
 
 class VersionList extends React.Component<any, any> {
-  static propTypes() {
+  static override propTypes() {
     return {
       attachment: PropTypes.object,
       callback: PropTypes.func,
@@ -18,12 +18,12 @@ class VersionList extends React.Component<any, any> {
     };
   }
 
-  state = {
+  override state = {
     versionList: null,
     activeVersionId: this.props.attachment.versionId || '',
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchList();
   }
 
@@ -163,7 +163,7 @@ class VersionList extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     let listContent;
 
     if (!this.state.versionList) {

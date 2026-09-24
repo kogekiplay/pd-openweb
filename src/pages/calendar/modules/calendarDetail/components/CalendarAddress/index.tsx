@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 
 export default class CalendarAddress extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     change: PropTypes.func.isRequired, // callback
     address: PropTypes.string,
   };
@@ -19,7 +19,7 @@ export default class CalendarAddress extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { address, editable, canLook } = this.props;
     return (
       <div className="calendarAddress calRow">

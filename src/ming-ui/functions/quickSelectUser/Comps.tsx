@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -150,7 +150,7 @@ export function UserItem(props) {
           {type === 'external'
             ? phone
             : [department, job].filter(_.identity).map((text, i) => (
-                <Fragment>
+                <Fragment key={i}>
                   {i !== 0 && <span className="splitter">|</span>}
                   {text}
                 </Fragment>
@@ -318,8 +318,8 @@ export function Tabs(props) {
       {[
         { key: 0, text: _l('常规') },
         { key: 1, text: _l('外部门户') },
-      ].map(item => (
-        <span className={`tab ${item.key === active ? 'active' : ''}`} onClick={() => onActive(item.key)}>
+      ].map((item, index) => (
+        <span key={index} className={`tab ${item.key === active ? 'active' : ''}`} onClick={() => onActive(item.key)}>
           {item.text}
         </span>
       ))}

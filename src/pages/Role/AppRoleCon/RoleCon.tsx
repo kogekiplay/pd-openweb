@@ -24,7 +24,7 @@ class Con extends React.Component<any, any> {
       showDeleRoleByMoveUser: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appRole = {}, canEditUser } = this.props;
     const { roleInfos = [] } = appRole;
     // const { roleId } = quickTag;
@@ -60,7 +60,7 @@ class Con extends React.Component<any, any> {
 
   //复制角色到外部门户
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { appRole = {} } = this.props;
       const { roleInfos = [] } = appRole;
@@ -142,7 +142,7 @@ class Con extends React.Component<any, any> {
   quickTag = data => {
     this.props.setQuickTag(data);
   };
-  render() {
+  override render() {
     const { showRoleSet, getRoleSummary, isOpenPortal, appId, projectId, editType } = this.props;
     const { dataList = [], copyData, roleList = [], loading, roleId, showDeleRoleByMoveUser } = this.state;
 

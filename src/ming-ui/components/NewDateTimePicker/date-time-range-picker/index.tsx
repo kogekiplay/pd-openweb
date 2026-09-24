@@ -18,7 +18,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     this.state = this.generateState(props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState(this.generateState(this.props));
     }
@@ -121,7 +121,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     this.dateOnChange(event, range, i);
   };
 
-  dateOnChange = (event, value, i) => {
+  dateOnChange = (_event, value, i: number) => {
     const start = new Date(this.state.value[0]);
 
     start.setFullYear(value[0].getFullYear(), value[0].getMonth(), value[0].getDate());
@@ -216,7 +216,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     );
   };
 
-  timeOnChange = (event, value, index: number, halfData?) => {
+  timeOnChange = (_event, value, index: number, halfData?) => {
     const newValue = new Date(this.state.value[index]);
 
     newValue.setHours(value.hour);
@@ -348,7 +348,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     }
   };
 
-  checkboxOnChange = target => {
+  checkboxOnChange = (target: string) => {
     const data = {};
     data[target] = !this.state[target];
 
@@ -395,7 +395,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     this.timeOnChange(null, time, index, halfData);
   };
 
-  render() {
+  override render() {
     const classList = ['mui-datetimerangepicker'];
 
     if (this.props.show) {

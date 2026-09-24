@@ -53,7 +53,7 @@ import NavigationConfig from './NavigationConfig';
 import RoleSelect from './RoleSelect';
 import './index.less';
 
-const APP_STATUS_TEXT = {
+const APP_STATUS_TEXT: Record<number, string> = {
   11: _l('还原中'),
   12: _l('迁移中'),
 };
@@ -105,8 +105,25 @@ let mousePosition = {
   x: 139,
   y: 23,
 };
+
+/** 接口返回的应用详情，加上 getAppDetail 取到之后自己算出来挂上去的几项 */
+type AppDetailData = HapApi.MD.Web.Ajax.ResultModel.App.GetDto & {
+  /** 实际生效的 PC 导航样式：记录详情页、或不在可选列表里时退回 0 */
+  currentPcNaviStyle?: number | undefined;
+  /** 暗色模式会把 navColor 换成固定色，这里留着接口给的原值 */
+  lightThemeModeNavColor?: string | undefined;
+  /** 取到这份数据的时间戳，下游据此认出是新的一份 */
+  needUpdate?: number | undefined;
+  workflowAgentFeatureType?: ReturnType<typeof getFeatureStatus> | undefined;
+  themeType?: 'light' | 'black' | 'theme' | undefined;
+};
 let AppInfo = class AppInfo extends Component<any, any> {
-  static propTypes = {
+  declare appDetailRequestId: number;
+  declare unmounted: boolean;
+  declare isAIPreview: boolean;
+  declare timer: NodeJS.Timeout | undefined;
+
+  static override propTypes = {
     appStatus: oneOf([0, 1, 2, 3, 4, 5]),
     updateColor: func,
     updateNavColor: func,
@@ -166,7 +183,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     this.checkNavigationStyle(_.get(this.state.data, 'currentPcNaviStyle'));
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.unmounted = false;
     this.ids = getIds(this.props);
     this.getData();
@@ -182,7 +199,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     emitter.addListener('REFRESH_APP_DETAIL', this.getData);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.ids = getIds(this.props);
       const { data } = this.state;
@@ -238,7 +255,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.unmounted = true;
     clearTimeout(this.timer);
     $('[rel="icon"]').attr('href', '/favicon.png?t=' + Date.now());
@@ -283,7 +300,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
 
     return 'theme';
   };
-  translateDebugRoles = (data, appId: string) => {
+  translateDebugRoles = (data: AppDetailData, appId: string) => {
     const selectedRoles = _.get(data, 'debugRole.selectedRoles') || [];
 
     if (!selectedRoles.length) return;
@@ -319,7 +336,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     let { appId, worksheetId } = this.ids;
     if (!appId || appId === 'id') return;
     appId = md.global.Account.isPortal ? md.global.Account.appId : appId;
-    const data = await api.getApp(
+    const data: AppDetailData = await api.getApp(
       {
         appId,
         getSection: true,
@@ -487,7 +504,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
       });
   }; // 编辑应用详情
 
-  handleEditApp = (type, obj) => {
+  handleEditApp = (type: string, obj) => {
     this.switchVisible({
       [type]: false,
       isShowAppIntroFirst: false,
@@ -511,7 +528,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     this.props.syncAppDetail(obj);
     this.updateData(obj);
   };
-  handleAppNameClick = e => {
+  handleAppNameClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     const { currentPcNaviStyle } = this.state.data;
     const { location, sheet, sheetList } = this.props;
@@ -555,11 +572,11 @@ let AppInfo = class AppInfo extends Component<any, any> {
       permissionType,
     );
 
-    if (type === 'unlockApp' && !(canLock && isPassword)) return;
+    if (type === 'unlockApp' && !(canLock && isPassword)) return undefined;
 
     if (rest.featureId) {
       const featureType = getFeatureStatus(projectId, rest.featureId);
-      if (!featureType) return;
+      if (!featureType) return undefined;
     }
 
     if (_.includes(['appAnalytics', 'copy', 'worksheetapi', 'modifyAppLockPassword'], type)) {
@@ -1029,7 +1046,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { appStatus, ...props } = this.props;
     const {
       indexSideVisible,

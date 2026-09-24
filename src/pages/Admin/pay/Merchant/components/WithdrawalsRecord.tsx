@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, LoadDiv, UserHead, UserName } from 'ming-ui';
@@ -46,6 +46,9 @@ const FlexWrap = styled.div`
 `;
 
 export default class WithdrawalsRecord extends Component<any, any> {
+  declare isInit: boolean;
+  declare tableWrap: PageTableCon | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -78,7 +81,7 @@ export default class WithdrawalsRecord extends Component<any, any> {
         title: _l('操作人'),
         dataIndex: 'accountId',
         width: 120,
-        render: (text, record) => {
+        render: (_text, record) => {
           const { payAccountInfo = {} } = record;
           const { accountId, fullname, avatar } = payAccountInfo;
           return (
@@ -110,7 +113,7 @@ export default class WithdrawalsRecord extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getMerchantBalance();
     this.getDataList();
   }
@@ -193,7 +196,7 @@ export default class WithdrawalsRecord extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     const { loading, list, searchValues, pageIndex, count, balanceLoading } = this.state;
     const { status = '' } = searchValues || {};

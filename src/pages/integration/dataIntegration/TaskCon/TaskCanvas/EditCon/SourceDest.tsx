@@ -67,11 +67,11 @@ export default class SourceDest extends Component<any, any> {
       childSections: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.initData(this.props, true);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         _.get(this.props, ['node', 'nodeConfig', 'config', 'dsType']) !==
@@ -368,7 +368,7 @@ export default class SourceDest extends Component<any, any> {
     return { idsMD, idsDB, dBs, sourceTables };
   };
 
-  filterSheet = (sheetList = [], withoutAdd?) => {
+  filterSheet = (sheetList = [], withoutAdd?: boolean | undefined) => {
     const { node = {} } = this.props;
     const { dsType } = _.get(node, ['nodeConfig', 'config']) || {};
     const { idsMD, idsDB } = this.getAllSource();
@@ -491,7 +491,7 @@ export default class SourceDest extends Component<any, any> {
       );
     }
   };
-  render() {
+  override render() {
     const { currentProjectId: projectId } = this.props;
     const { node = {} } = this.state;
     const { dbList = [], sheetList = [], schemaList = [], appInfo = {}, loading } = this.state;

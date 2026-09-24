@@ -19,7 +19,7 @@ let mapConfigRequest: Promise<Record<string, unknown>> | null = null;
  * 两个调用点都不取返回值（可以直接改 async）。
  * 配置取回来后进程内缓存，并发调用共用同一个请求。
  */
-export const getMapKey = async keyName => {
+export const getMapKey = async (keyName: string) => {
   if (!mapConfig) {
     if (!mapConfigRequest) {
       mapConfigRequest = global

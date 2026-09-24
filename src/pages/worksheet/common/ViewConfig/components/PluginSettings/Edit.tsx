@@ -20,7 +20,7 @@ import {
 } from './config';
 import { Wrap } from './editStyle';
 
-const setOptions = values => {
+const setOptions = (values: string) => {
   return values
     .split(/[\r\n]/)
     .filter(o => o.trim())
@@ -56,7 +56,7 @@ function Edit(params) {
   const WIDGETS_TO_API_TYPE_ENUM_KEYS = Object.keys(ALL_WIDGETS_TYPE).filter(o =>
     controlTypeList.includes(WIDGETS_TO_API_TYPE_ENUM[o]),
   );
-  let WIDGETS_TO_API_TYPE_ENUM_VALUESKEY = {};
+  let WIDGETS_TO_API_TYPE_ENUM_VALUESKEY: Record<number, string> = {};
   _.forEach(WIDGETS_TO_API_TYPE_ENUM, function (value, key) {
     WIDGETS_TO_API_TYPE_ENUM_VALUESKEY[value] = key;
   });
@@ -108,7 +108,7 @@ function Edit(params) {
           info.sourceControlType !== 29 &&
           _.get(info, 'advancedSetting.allowitem') != '1'
         ) {
-          return;
+          return undefined;
         }
 
         if (info.type === 6 && ['defsource'].includes(o)) {
@@ -271,11 +271,11 @@ function Edit(params) {
       case 'showtype':
         if (info.type === 11 && ['direction'].includes(o) && _.get(info, 'advancedSetting.checktype') !== '1') {
           //枚举值  显示方式非平铺 不显示排列方式
-          return;
+          return undefined;
         }
 
         if (info.type === 200 && info.sourceControlType === 29) {
-          return;
+          return undefined;
         }
 
         let dataList = ALLOW_ITEM_TYPES;
@@ -314,7 +314,7 @@ function Edit(params) {
         );
       case 'controls':
       case 'showControls':
-        if (info.type === 200 && info.sourceControlType === 29 && o === 'controls') return;
+        if (info.type === 200 && info.sourceControlType === 29 && o === 'controls') return undefined;
         let values = _.get(info, [o]) || [];
         return (
           <React.Fragment>
@@ -367,9 +367,9 @@ function Edit(params) {
                 renderTitle={() => {
                   return (
                     <div className="">
-                      {(values || []).map(it => {
+                      {(values || []).map((it, index) => {
                         return (
-                          <div className="itemT InlineBlock">
+                          <div key={index} className="itemT InlineBlock">
                             {ALL_WIDGETS_TYPE[WIDGETS_TO_API_TYPE_ENUM_VALUESKEY[it]].widgetName}
                             <Icon
                               icon={'close'}
@@ -459,6 +459,7 @@ function Edit(params) {
       default:
         break;
     }
+    return undefined;
   };
 
   return (
@@ -469,8 +470,8 @@ function Edit(params) {
           <Icon icon={'close'} className="Font20 Hand textTertiary hoverColorPrimary" onClick={() => onClose()} />
         </div>
         <div className="flex editCon">
-          {keys.map(o => {
-            return <React.Fragment>{renderContent(o)}</React.Fragment>;
+          {keys.map((o, index) => {
+            return <React.Fragment key={index}>{renderContent(o)}</React.Fragment>;
           })}
         </div>
       </div>

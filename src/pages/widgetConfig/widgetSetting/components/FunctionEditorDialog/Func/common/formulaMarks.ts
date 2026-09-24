@@ -125,12 +125,12 @@ export function findBadEndMarks(text) {
 
 // 括号未闭合。CM5: markUnclosedBrackets()
 export function findUnclosedBracketMarks(text, inString) {
-  const stack = [];
+  const stack: { bracketFrom: number; fnFrom: number | null }[] = [];
   const lines = text.split('\n');
   let lineStart = 0;
 
   // 从 '(' 往前吃掉连续的 [A-Z_]，得到函数名起点。CM5 原样如此，只认大写与下划线。
-  const findFunctionStart = (line, bracketIndex) => {
+  const findFunctionStart = (line, bracketIndex: number) => {
     let start = bracketIndex;
 
     while (start > 0) {

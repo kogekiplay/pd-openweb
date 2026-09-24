@@ -3,12 +3,11 @@
 //   - worksheets.json:  type = 'worksheet'
 //   - custom-pages.json: type ∈ { 'dashboard', 'workspace', 'aiAssistant' }
 // 本 module 渲染一份 items 数组（已按 type 过滤），按 groupName 分组卡片化展示。
-import React from 'react';
 import styled from 'styled-components';
 import { Icon, SvgIcon } from 'ming-ui';
 import { CardEditButton, PanelWrap, parseCompactList, parseCompactStr } from './_shared';
 
-const TYPE_BADGE = {
+const TYPE_BADGE: Record<string, { label: string; color: string; border: string; bg: string }> = {
   worksheet: {
     label: _l('工作表'),
     color: 'var(--color-warning-text)',
@@ -35,14 +34,14 @@ const TYPE_BADGE = {
   },
 };
 
-const DEFAULT_ICON = {
+const DEFAULT_ICON: Record<string, string> = {
   worksheet: 'bookmark',
   dashboard: 'dashboard',
   workspace: 'desktop_windows',
   aiAssistant: 'AI_Agent',
 };
 
-const DEFAULT_COLOR = {
+const DEFAULT_COLOR: Record<string, string> = {
   worksheet: '#277B2B',
   dashboard: '#3154EC',
   workspace: '#4CAF50',
@@ -56,7 +55,7 @@ const customIconUrl = fileName => `https://fp1.mingdaoyun.cn/customIcon/${fileNa
 // 统计图表类型 → HAP 图表图标（与 statistics/Charts/reportTypeIcons 对齐，均为 HAP iconfont 字体名）。
 // 之前用的是 Material 图标名（pie_chart/show_chart 等），HAP 字体里没有对应 glyph 故不显示。
 // plan 的 Column/Area/Ranking 等别名归一到 HAP 对应类型。
-const CHART_ICONS = {
+const CHART_ICONS: Record<string, string> = {
   NumberChart: 'stats_numerical_chart',
   BarChart: 'stats_bar_chart',
   ColumnChart: 'stats_bar_chart',
@@ -80,7 +79,7 @@ const CHART_ICONS = {
 const CHART_FALLBACK_ICON = 'stats_bar_chart';
 
 // workspace.components 紧凑字符串 Type → 组件类型图标（与 customPage/enum widgets 对齐，HAP iconfont 字体名）。
-const COMPONENT_ICONS = {
+const COMPONENT_ICONS: Record<string, string> = {
   Button: 'custom_actions',
   View: 'view_eye',
   Text: 'richtext',

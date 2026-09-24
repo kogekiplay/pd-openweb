@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class MonthTable extends Component<any, any> {
@@ -39,7 +39,7 @@ class MonthTable extends Component<any, any> {
   /**
    * 选择月
    */
-  itemOnClick = (event, month) => {
+  itemOnClick = (event, month: number) => {
     if (month !== this.props.value && this.props.onChange) {
       this.props.onChange(event, month, {
         prevValue: this.props.value,
@@ -47,7 +47,7 @@ class MonthTable extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const list = this.renderList();
 
     return <ul className="calendar-month-table">{list}</ul>;

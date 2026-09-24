@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActionSheet } from 'antd-mobile';
 import { get } from 'lodash';
 import { Icon, LoadDiv } from 'ming-ui';
@@ -51,7 +51,7 @@ function getCreatableProjects() {
   return projects.filter(item => !item.cannotCreateApp);
 }
 
-function replaceCreateAppRoute(sessionId) {
+function replaceCreateAppRoute(sessionId: string) {
   if (!sessionId || !window.history || !window.history.replaceState) return;
   window.history.replaceState(
     null,

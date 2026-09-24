@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
@@ -8,7 +8,7 @@ export default class AttachmentInput extends Component<any, any> {
     this.state = {};
   }
 
-  render() {
+  override render() {
     return (
       <DynamicValueInputWrap>
         <OtherFieldList {...this.props} />

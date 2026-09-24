@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import filterXSS from 'xss';
 import { whiteList } from 'xss/lib/default';
@@ -62,7 +62,7 @@ export default ({
     return source;
   }, []);
 
-  const renderList = (source, isFile?) => {
+  const renderList = (source, isFile?: boolean | undefined) => {
     return source.map((key, index: number) => {
       const [nodeId, controlId] = parseId(key);
 
@@ -149,7 +149,7 @@ export default ({
               setUploadingIndex(index);
               up.disableBrowse();
             }}
-            onError={(up, err, errTip) => {
+            onError={(_up, _err, errTip) => {
               alert(errTip, 2);
             }}
           >
@@ -163,7 +163,7 @@ export default ({
     );
   };
 
-  const getPreviewContent = content => {
+  const getPreviewContent = (content: string) => {
     testArray.forEach(key => {
       const [nodeId, controlId] = parseId(key);
 

@@ -1,13 +1,12 @@
 /**
  * 工作表控件-关联
  */
-import React from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { UserHead } from 'ming-ui';
 import { FROM, RELATION_TYPE_NAME } from './enum';
 
-const Icons = {
+const Icons: Record<number, string> = {
   0: '',
   1: 'icon-task-responsible',
   2: 'icon-knowledge_file',
@@ -50,7 +49,9 @@ function Relation(props) {
                     </span>
                   </a>
                 ) : (
-                  <span className="relatioName">{`[${RELATION_TYPE_NAME[relation.type]}]` + _l('已删除')}</span>
+                  <span key={index} className="relatioName">
+                    {`[${RELATION_TYPE_NAME[relation.type]}]` + _l('已删除')}
+                  </span>
                 ),
               )}
         </div>

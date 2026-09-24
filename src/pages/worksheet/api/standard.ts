@@ -3,6 +3,8 @@ function mdPost({ action, controller, data, abortController } = {}) {
 }
 
 export class RequestPool {
+  declare maxConcurrentRequests: number;
+
   queues = {};
   constructor({ abortController, maxConcurrentRequests = 3 } = {}) {
     this.abortController = abortController;
@@ -98,16 +100,15 @@ export class RequestPool {
 
 export function createRequestPool({
   abortController,
-  maxConcurrentRequests,
 }: {
-  abortController?: AbortController;
+  abortController?: AbortController | undefined;
   /**
    * 调用方传得到，但【这里没有往下透】—— new RequestPool 只收了 abortController，
    * 所以并发数始终是 RequestPool 的默认值 3。
    * 透下去会真的把并发从 3 提到 6，是线上请求量的变化，不在类型改造的范围里，
    * 留给单独评估。（当前唯一传它的地方：ChildTable/redux/actions 的 setRowsFromStaticRows）
    */
-  maxConcurrentRequests?: number;
+  maxConcurrentRequests?: number | undefined;
 } = {}) {
   const requestPool = new RequestPool({ abortController });
   return {

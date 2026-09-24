@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { FlexCenter, Text } from 'worksheet/styled';
@@ -19,7 +18,11 @@ const VerticalItem = styled.div`
   width: 10px;
   height: ${props => props.height || '100%'};
 `;
-export const BoardIcon = ({ size }) => (
+export interface BoardIconProps {
+  size: string;
+}
+
+export const BoardIcon = ({ size }: BoardIconProps) => (
   <BoardIconWrap size={size}>
     <VerticalItem height="50%" />
     <VerticalItem />

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -27,6 +27,9 @@ import { errorMessage, setStateToStorage } from '../../utils/utils';
 
 const ClickAwayable = ClickAway;
 class Filter extends Component<any, any> {
+  declare mounted: boolean | undefined;
+  declare search: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -40,7 +43,7 @@ class Filter extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { folderId, filterUserId, taskFilter } = this.props.taskConfig;
 
     // 获取标签
@@ -95,7 +98,7 @@ class Filter extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!this.props.taskConfig.searchKeyWords) {
         this.search.value = '';
@@ -108,7 +111,7 @@ class Filter extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('#taskList .listStage').css('paddingRight', 0);
     this.mounted = false;
   }
@@ -198,14 +201,14 @@ class Filter extends Component<any, any> {
   /**
    * 项目下的搜索范围
    */
-  switchFolderRange(folderSearchRange) {
+  switchFolderRange(folderSearchRange: number) {
     this.props.dispatch(updateFolderRange(folderSearchRange));
   }
 
   /**
    * 更新项目搜索内容
    */
-  updateKeyWords(value) {
+  updateKeyWords(value: string) {
     if (!value && this.search.value) {
       this.search.value = '';
     }
@@ -216,7 +219,7 @@ class Filter extends Component<any, any> {
   /**
    * 切换任务状态
    */
-  switchTaskStatus = listStatus => {
+  switchTaskStatus = (listStatus: number) => {
     let { listSort, folderId, taskFilter, filterUserId } = this.props.taskConfig;
 
     // 非进行中且现在排序是优先级 或 截止日期
@@ -342,7 +345,7 @@ class Filter extends Component<any, any> {
   /**
    * 任务归属
    */
-  renderTaskAscription(item, i) {
+  renderTaskAscription(item: { value: string; taskFilter: number }, i: number) {
     const { taskFilter } = this.props.taskConfig;
     return (
       <span
@@ -358,7 +361,7 @@ class Filter extends Component<any, any> {
   /**
    * 切换任务归属
    */
-  switchTaskAscription = taskFilter => {
+  switchTaskAscription = (taskFilter: number) => {
     setStateToStorage(taskFilter, Object.assign({}, this.props.taskConfig, { taskFilter }));
     this.props.dispatch(updateTaskAscription(taskFilter));
   };
@@ -517,7 +520,7 @@ class Filter extends Component<any, any> {
   /**
    * 切换标签
    */
-  switchTags = (evt, ids) => {
+  switchTags = (_evt, ids) => {
     this.props.dispatch(updateTaskTags(ids));
   };
 
@@ -562,7 +565,7 @@ class Filter extends Component<any, any> {
             label={label}
             multipleLevel={false}
             multipleHideDropdownNav
-            onChange={(evt, keys) => this.switchCustoms(item.controlId, keys)}
+            onChange={(_evt, keys) => this.switchCustoms(item.controlId, keys)}
           />
           <div className="mTop10">
             {customs.map((key, i) =>
@@ -659,7 +662,7 @@ class Filter extends Component<any, any> {
     this.props.taskFilterLeave();
   };
 
-  render() {
+  override render() {
     const { searchKeyWords, folderId, filterSettings, listStatus, taskFilter, filterUserId } = this.props.taskConfig;
     const { folderSearchRange } = filterSettings;
     const { customs, overNotStarted, expiredUnfinished } = this.state;

@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useState } from 'react';
+import { Fragment, lazy, Suspense, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import update from 'immutability-helper';

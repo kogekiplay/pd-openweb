@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Dialog } from 'ming-ui';
 import fixedDataAjax from 'src/api/fixedData.js';
 import workSiteController from 'src/api/workSite';
 
 export default class SiteName extends Component<any, any> {
+  declare processName: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.dialogtype = this.props.workSiteId ? _l('编辑') : _l('创建');
@@ -13,7 +15,7 @@ export default class SiteName extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         workSiteName: this.props.workSiteId ? this.props.workSiteName : '',
@@ -60,14 +62,14 @@ export default class SiteName extends Component<any, any> {
     }
   }
 
-  showMes(str) {
+  showMes(str: string) {
     $('.existResult').fadeIn().html(str);
     setTimeout(function () {
       $('.existResult').fadeOut().html('');
     }, 3000);
   }
 
-  render() {
+  override render() {
     return (
       <Dialog
         visible={this.props.visible}

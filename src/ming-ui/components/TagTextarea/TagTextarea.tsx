@@ -1,13 +1,76 @@
 import React from 'react';
+import type { MouseEventHandler, ReactElement } from 'react';
 import { createRoot } from 'react-dom/client';
+import type { Root } from 'react-dom/client';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import type {
+  AnnotationType,
+  EditorState,
+  Extension,
+  StateEffectType,
+  StateField,
+  Transaction,
+  TransactionSpec,
+} from '@codemirror/state';
+import type { DecorationSet, EditorView, ViewUpdate, WidgetType } from '@codemirror/view';
 import { Tooltip } from 'ming-ui/antd-components';
 import { MODE } from './enum';
 import loadCodeMirror from './loadCodeMirror';
+import type { CodeMirrorModules } from './loadCodeMirror';
 import { computeTagMarks, sanitizeInput } from './tagMarks';
+import type { TagMark } from './tagMarks';
 import './TagTextarea.less';
+
+/**
+ * onChange 的第三个参数：CM5 change 事件对象的形状（见 toChangeObj）。
+ * 工作流公式读 origin / text[0] / removed[0] 维护函数联想的匹配串。
+ */
+export interface TagTextareaChange {
+  /** CM5 时代的 origin 字符串：'+input' '+delete' 'paste' 'undo' 'inserttag'，或 replaceRange 传进来的自定义值 */
+  origin: string;
+  /** 插入的内容，按行切开 */
+  text: string[];
+  /** 删掉的内容，按行切开 */
+  removed: string[];
+  /** 第一段改动的起止（全文绝对 offset） */
+  from: number | null;
+  to: number | null;
+}
+
+interface TagTextareaProps {
+  className?: string | undefined;
+  /** 见 ./enum 的 MODE：公式 / 日期模式过滤输入字符，ONLYTAG 只能插字段 */
+  mode?: number | undefined;
+  defaultValue?: string | undefined;
+  placeholder?: string | undefined;
+  readonly?: boolean | undefined;
+  /** 隐藏光标（readonly 时也隐藏） */
+  noCursor?: boolean | undefined;
+  /** 编辑器高度，数字按 px */
+  height?: number | string | undefined;
+  /** 到了就固定高度出滚动条，默认 500（px）；'auto' 表示不封顶 */
+  maxHeight?: number | 'auto' | undefined;
+  /** 操作符（+-* / ( ) ,）也渲染成带间距的块，公式 / 日期模式下总是这样 */
+  operatorsSetMargin?: boolean | undefined;
+  /** 公式模式下紧跟在字段后面插字段时，先补一个逗号 */
+  autoComma?: boolean | undefined;
+  /** @codemirror/lang-* 的语言：'javascript' | 'xml' */
+  codeMirrorMode?: string | undefined;
+  lineNumbers?: boolean | undefined;
+  /** 右侧显示「添加字段」按钮 */
+  rightIcon?: boolean | undefined;
+  onAddClick?: MouseEventHandler<HTMLSpanElement> | undefined;
+  /** 把 $id$ 渲染成标签：返回 React 元素或 DOM 节点；不给就原样显示 id */
+  renderTag?: ((tag: string, options: { isLast: boolean }) => ReactElement | Node | null | undefined) | undefined;
+  /** 挂载时给出组件实例（用它的 setValue / insertColumnTag / getCursor 等方法），卸载时给 undefined */
+  getRef?: ((instance: TagTextarea | undefined) => void) | undefined;
+  /** 第一个参数恒为 null（沿用旧签名）；setValue 引起的改动不触发 */
+  onChange?: ((err: null, value: string, change: TagTextareaChange) => void) | undefined;
+  onFocus?: (() => void) | undefined;
+  onBlur?: (() => void) | undefined;
+}
 
 // CodeMirror 6。CM5 → CM6 迁移的第 3 步（最后一步）。
 //
@@ -25,21 +88,27 @@ import './TagTextarea.less';
 // 我们自己发起的改动带上 CM5 时代的 origin 字符串。
 // 不能只靠 CM6 的 Transaction.userEvent：外部 replaceRange 会传 'insertfn'
 // 'insertfield' 这类自定义 origin，而消费方（工作流公式）拿 origin 做分支判断。
-let CM5_ORIGIN = null;
-let MarkWidget = null;
+let CM5_ORIGIN: AnnotationType<string> | null = null;
+type MarkWidgetClass = new (owner: TagTextarea, mark: TagMark) => WidgetType;
+let MarkWidget: MarkWidgetClass | null = null;
+
+/** 带上 origin 注解。编辑器建好之前 initCmGlobals 一定已经跑过，所以有 view 时 CM5_ORIGIN 一定有值 */
+function withOrigin(origin: string) {
+  return CM5_ORIGIN ? [CM5_ORIGIN.of(origin)] : [];
+}
 
 // CM6 的 WidgetType 要在模块异步加载完之后才拿得到，所以这两个只能延迟构造。
-function initCmGlobals({ state, view }) {
-  if (!CM5_ORIGIN) CM5_ORIGIN = state.Annotation.define();
+function initCmGlobals({ state, view }: Pick<CodeMirrorModules, 'state' | 'view'>): MarkWidgetClass {
+  if (!CM5_ORIGIN) CM5_ORIGIN = state.Annotation.define<string>();
 
-  if (MarkWidget) return;
+  if (MarkWidget) return MarkWidget;
 
   MarkWidget = class extends view.WidgetType {
-    owner;
-    mark;
-    root;
+    owner: TagTextarea;
+    mark: TagMark;
+    root: Root | null;
 
-    constructor(owner, mark) {
+    constructor(owner: TagTextarea, mark: TagMark) {
       super();
       this.owner = owner;
       this.mark = mark;
@@ -54,11 +123,11 @@ function initCmGlobals({ state, view }) {
     // 返回 true 的话，字段列表更新之后 tag 会停在旧样子。
     // 代价（每次输入重建 React root）与 CM5 完全相同——CM5 也是每个 marker
     // 每次都 createRoot + render，所以不是新增开销。
-    eq() {
+    override eq() {
       return false;
     }
 
-    toDOM() {
+    override toDOM() {
       const { mark, owner } = this;
 
       if (mark.kind === 'operator') {
@@ -96,7 +165,7 @@ function initCmGlobals({ state, view }) {
       return node;
     }
 
-    destroy() {
+    override destroy() {
       // CM5 的 markText 从来没 unmount 过这些 React root（clear() 只丢 DOM），
       // 也就是每次输入都漏一个 root。CM6 给了 destroy 钩子，顺手补上。
       // 延到微任务：CM6 可能在自己的 update 周期里调 destroy，
@@ -111,14 +180,16 @@ function initCmGlobals({ state, view }) {
     // （点 tag 会正常落光标）。CM6 的 ignoreEvent 默认返回 true（编辑器不管），
     // 要返回 false 才等价。tag 上的 Tooltip 靠 mouseenter/leave，
     // 不在编辑器处理的事件集合里，不受影响。
-    ignoreEvent() {
+    override ignoreEvent() {
       return false;
     }
   };
+
+  return MarkWidget;
 }
 
-export default class TagTextarea extends React.Component<any, any> {
-  static propTypes = {
+export default class TagTextarea extends React.Component<TagTextareaProps, { active: boolean }> {
+  static override propTypes = {
     noCursor: PropTypes.bool,
     className: PropTypes.string,
     mode: PropTypes.number,
@@ -153,33 +224,35 @@ export default class TagTextarea extends React.Component<any, any> {
 
   // 这些原来都是隐式挂上去的。TS 下不声明会变成 TS2339，
   // 而 babel 只做类型擦除、不会报错，属于「构建绿但类型不干净」那一类。
-  cmcon;
-  view;
-  cm;
-  cmRetried;
-  unmounted;
-  pendingValue;
-  tempValue;
-  tempObj;
-  marksField;
-  forceRemark;
-  heightRaf;
+  // 类型里都带 undefined：它们是没有初始值的普通字段（运行时初始化成 undefined），到用时才赋值
+  cmcon: HTMLDivElement | null | undefined;
+  view: EditorView | null | undefined;
+  cm: CodeMirrorModules | undefined;
+  cmRetried: boolean | undefined;
+  unmounted: boolean | undefined;
+  pendingValue: string | undefined;
+  tempValue: string | undefined;
+  tempObj: TagTextareaChange | undefined;
+  marksField: StateField<DecorationSet> | undefined;
+  forceRemark: StateEffectType<null> | undefined;
+  heightRaf: number | null | undefined;
 
-  constructor(props) {
+  constructor(props: TagTextareaProps) {
     super(props);
     this.state = {
       active: false,
     };
   }
 
-  componentDidMount() {
-    this.props.getRef(this);
+  // getRef / onFocus / onBlur / onChange 运行时一定有（defaultProps 给了空函数），?. 只是因为类型上它们是可选属性
+  override componentDidMount() {
+    this.props.getRef?.(this);
     this.initCodeMirror();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.unmounted = true;
-    this.props.getRef(undefined);
+    this.props.getRef?.(undefined);
 
     if (this.heightRaf) {
       cancelAnimationFrame(this.heightRaf);
@@ -201,7 +274,7 @@ export default class TagTextarea extends React.Component<any, any> {
     loadCodeMirror(codeMirrorMode).then(cm => {
       if (this.unmounted || !this.cmcon) return;
 
-      initCmGlobals(cm);
+      const Widget = initCmGlobals(cm);
       this.cm = cm;
 
       const { EditorState, StateField, StateEffect, RangeSetBuilder } = cm.state;
@@ -211,12 +284,12 @@ export default class TagTextarea extends React.Component<any, any> {
 
       const nextValue = _.isUndefined(this.pendingValue) ? defaultValue : this.pendingValue;
 
-      const buildDecorations = state => {
+      const buildDecorations = (state: EditorState): DecorationSet => {
         const { mode, operatorsSetMargin } = this.props;
-        const withOperators = mode === MODE.FORMULA || mode === MODE.DATE || operatorsSetMargin;
-        const builder = new RangeSetBuilder();
+        const withOperators = mode === MODE.FORMULA || mode === MODE.DATE || !!operatorsSetMargin;
+        const builder = new RangeSetBuilder<ReturnType<typeof Decoration.replace>>();
         computeTagMarks(state.doc.toString(), { withOperators }).forEach(mark => {
-          builder.add(mark.from, mark.to, Decoration.replace({ widget: new MarkWidget(this, mark) }));
+          builder.add(mark.from, mark.to, Decoration.replace({ widget: new Widget(this, mark) }));
         });
 
         return builder.finish();
@@ -225,8 +298,8 @@ export default class TagTextarea extends React.Component<any, any> {
       // updateTextareaView() 是对外的公开方法（工作流消息节点在 props 变化后会调它
       // 强制重画 tag）。CM6 的 StateField 只在文档变化时重算，所以还需要一个
       // 显式的「重画」信号。
-      const forceRemark = StateEffect.define();
-      const marksField = StateField.define({
+      const forceRemark = StateEffect.define<null>();
+      const marksField = StateField.define<DecorationSet>({
         create: buildDecorations,
         update: (deco, tr) =>
           tr.docChanged || tr.effects.some(e => e.is(forceRemark)) ? buildDecorations(tr.state) : deco,
@@ -235,7 +308,7 @@ export default class TagTextarea extends React.Component<any, any> {
       this.forceRemark = forceRemark;
       this.marksField = marksField;
 
-      const extensions = [
+      const extensions: Extension[] = [
         // CM5 的 lineWrapping: true
         EditorView.lineWrapping,
         marksField,
@@ -250,7 +323,7 @@ export default class TagTextarea extends React.Component<any, any> {
           focus: () => {
             if (this.cmcon) this.cmcon.classList.add('active');
 
-            this.props.onFocus();
+            this.props.onFocus?.();
 
             return false;
           },
@@ -258,7 +331,7 @@ export default class TagTextarea extends React.Component<any, any> {
             if (this.cmcon) this.cmcon.classList.remove('active');
 
             this.flushComposition();
-            this.props.onBlur();
+            this.props.onBlur?.();
 
             return false;
           },
@@ -335,7 +408,7 @@ export default class TagTextarea extends React.Component<any, any> {
   /** 光标位置（全文绝对 offset）。编辑器还没就绪时返回 undefined。 */
   getCursor = () => (this.view ? this.view.state.selection.main.head : undefined);
 
-  setCursor = offset => {
+  setCursor = (offset: number | undefined) => {
     if (!this.view) return;
 
     const max = this.view.state.doc.length;
@@ -346,12 +419,13 @@ export default class TagTextarea extends React.Component<any, any> {
   };
 
   /** offset 换行列，给少数确实需要行号的调用点（如按行定位联想弹层） */
-  lineAt = offset => {
+  lineAt = (offset: number | undefined) => {
     if (!this.view) return undefined;
 
     const line = this.view.state.doc.lineAt(Math.min(Math.max(offset || 0, 0), this.view.state.doc.length));
 
-    return { line: line.number - 1, ch: offset - line.from, from: line.from, to: line.to, text: line.text };
+    // ch 用原始 offset 算（和原来一样）：offset 没给时是 NaN
+    return { line: line.number - 1, ch: (offset ?? NaN) - line.from, from: line.from, to: line.to, text: line.text };
   };
 
   lineCount = () => (this.view ? this.view.state.doc.lines : 0);
@@ -360,7 +434,7 @@ export default class TagTextarea extends React.Component<any, any> {
    * 替换 [from, to) 为 text。to 省略时为纯插入。
    * origin 会原样出现在 onChange 第三个参数的 origin 上（沿用 CM5 的那套字符串）。
    */
-  replaceRange = (text, from, to, origin) => {
+  replaceRange = (text: string | number, from: number | undefined, to?: number, origin?: string) => {
     if (!this.view) return;
 
     const max = this.view.state.doc.length;
@@ -373,7 +447,7 @@ export default class TagTextarea extends React.Component<any, any> {
       // 而 CM5 的 replaceRange 把光标留在插入内容之后。必须显式指定，
       // 否则连续插入会得到反序的结果（第 2 步 FunctionEditor 上踩过这个坑）。
       selection: { anchor: f + insert.length },
-      annotations: CM5_ORIGIN.of(origin || '+input'),
+      annotations: withOrigin(origin || '+input'),
       scrollIntoView: true,
     });
   };
@@ -383,8 +457,8 @@ export default class TagTextarea extends React.Component<any, any> {
   };
 
   /** scrollToEnd 的通用形式；目前只被它用到，留着是因为 offset 版滚动是个自然的原语 */
-  scrollIntoView = (offset, margin) => {
-    if (!this.view) return;
+  scrollIntoView = (offset: number | undefined, margin?: number) => {
+    if (!this.view || !this.cm) return;
 
     const max = this.view.state.doc.length;
     this.view.dispatch({
@@ -406,7 +480,7 @@ export default class TagTextarea extends React.Component<any, any> {
   getScrollPos = () =>
     this.view ? { left: this.view.scrollDOM.scrollLeft, top: this.view.scrollDOM.scrollTop } : null;
 
-  setScrollPos = pos => {
+  setScrollPos = (pos: { left?: number; top?: number } | null | undefined) => {
     if (!this.view || !pos) return;
 
     this.view.scrollDOM.scrollLeft = pos.left || 0;
@@ -414,8 +488,8 @@ export default class TagTextarea extends React.Component<any, any> {
   };
 
   /** CM6 的 userEvent / 自定义注解 → CM5 时代的 origin 字符串 */
-  originOf = tr => {
-    const own = tr.annotation(CM5_ORIGIN);
+  originOf = (tr: Transaction): string => {
+    const own = CM5_ORIGIN && tr.annotation(CM5_ORIGIN);
 
     if (own) return own;
 
@@ -436,7 +510,7 @@ export default class TagTextarea extends React.Component<any, any> {
    * CM5 beforeChange 的等价物。
    * 返回 tr 放行，返回 [] 取消，返回新的 spec 则改写这次改动。
    */
-  filterTransaction = tr => {
+  filterTransaction = (tr: Transaction): TransactionSpec | readonly TransactionSpec[] => {
     if (!tr.docChanged) return tr;
 
     const origin = this.originOf(tr);
@@ -457,9 +531,9 @@ export default class TagTextarea extends React.Component<any, any> {
 
     const kind = mode === MODE.FORMULA ? 'formula' : 'date';
     const isPaste = origin === 'paste';
-    const changes = [];
+    const changes: { from: number; to: number; insert: string }[] = [];
     let dirty = false;
-    tr.changes.iterChanges((fromA, toA, fromB, toB, inserted) => {
+    tr.changes.iterChanges((fromA, toA, _fromB, _toB, inserted) => {
       const raw = inserted.toString();
       const next = sanitizeInput(raw, { mode: kind, isPaste });
 
@@ -482,10 +556,10 @@ export default class TagTextarea extends React.Component<any, any> {
 
     // 返回新 spec 会丢掉原 tr 上的注解，得把 origin 带回去，
     // 否则 handleUpdate 里认不出这是 paste 还是 +input。
-    return { changes, selection: { anchor }, scrollIntoView: tr.scrollIntoView, annotations: CM5_ORIGIN.of(origin) };
+    return { changes, selection: { anchor }, scrollIntoView: tr.scrollIntoView, annotations: withOrigin(origin) };
   };
 
-  handleUpdate = update => {
+  handleUpdate = (update: ViewUpdate) => {
     if (!update.docChanged) return;
 
     this.scheduleHeightSync();
@@ -508,13 +582,14 @@ export default class TagTextarea extends React.Component<any, any> {
       return;
     }
 
-    this.props.onChange(null, value, obj);
+    this.props.onChange?.(null, value, obj);
   };
 
   flushComposition = () => {
-    if (_.isUndefined(this.tempValue)) return;
+    // tempValue 和 tempObj 总是一起赋值、一起清空
+    if (_.isUndefined(this.tempValue) || !this.tempObj) return;
 
-    this.props.onChange(null, this.tempValue, this.tempObj);
+    this.props.onChange?.(null, this.tempValue, this.tempObj);
     this.tempValue = undefined;
     this.tempObj = undefined;
   };
@@ -526,15 +601,15 @@ export default class TagTextarea extends React.Component<any, any> {
    * workflow/Detail/Formula 会读 obj.origin / obj.text[0] / obj.removed[0]
    * 来维护函数联想的匹配串。CM5 的 text / removed 是【按行切开的数组】。
    */
-  toChangeObj = update => {
+  toChangeObj = (update: ViewUpdate): TagTextareaChange => {
     const origin = update.transactions.length
       ? update.transactions.map(this.originOf).find(Boolean) || '+input'
       : '+input';
-    const text = [];
-    const removed = [];
-    let from = null;
-    let to = null;
-    update.changes.iterChanges((fromA, toA, fromB, toB, inserted) => {
+    const text: string[] = [];
+    const removed: string[] = [];
+    let from: number | null = null;
+    let to: number | null = null;
+    update.changes.iterChanges((fromA, toA, _fromB, _toB, inserted) => {
       if (from === null) {
         // from / to 也是全文绝对 offset（CM5 时代是 {line, ch}）。
         // 目前没有消费方读它们——工作流公式只读 origin / text[0] / removed[0]——
@@ -572,7 +647,8 @@ export default class TagTextarea extends React.Component<any, any> {
 
     if (!content) return;
 
-    if (content.clientHeight >= maxHeight - 2) {
+    // 'auto' 不封顶（原来是 'auto' - 2 得 NaN、比较恒为 false，效果相同）
+    if (maxHeight !== 'auto' && content.clientHeight >= maxHeight - 2) {
       this.cmcon.classList.remove('autoHeight');
       this.cmcon.style.height = maxHeight + 'px';
     } else {
@@ -604,12 +680,12 @@ export default class TagTextarea extends React.Component<any, any> {
 
   /** 强制重画全部 tag（props 变了但文档没变时用） */
   updateTextareaView = () => {
-    if (!this.view) return;
+    if (!this.view || !this.forceRemark) return;
 
     this.view.dispatch({ effects: this.forceRemark.of(null) });
   };
 
-  setValue = value => {
+  setValue = (value: string | null | undefined) => {
     this.pendingValue = value || '';
 
     if (!this.view) return;
@@ -627,11 +703,11 @@ export default class TagTextarea extends React.Component<any, any> {
 
     this.view.dispatch({
       changes: { from: 0, to: current.length, insert: next },
-      annotations: CM5_ORIGIN.of('setValue'),
+      annotations: withOrigin('setValue'),
     });
   };
 
-  insertColumnTag = id => {
+  insertColumnTag = (id: string) => {
     if (!this.view) return;
 
     const { mode, autoComma } = this.props;
@@ -644,7 +720,7 @@ export default class TagTextarea extends React.Component<any, any> {
       changes: { from: at, to: at, insert },
       // 同 replaceRange：CM6 默认把光标映射到插入内容之前
       selection: { anchor: at + insert.length },
-      annotations: CM5_ORIGIN.of('inserttag'),
+      annotations: withOrigin('inserttag'),
       scrollIntoView: true,
     });
     this.view.focus();
@@ -658,7 +734,7 @@ export default class TagTextarea extends React.Component<any, any> {
     this.setState({ active: false });
   };
 
-  render() {
+  override render() {
     const { className, maxHeight, rightIcon, onAddClick, noCursor, readonly } = this.props;
     return (
       <div className={cx('tagInputarea', className, { flexRow: rightIcon })}>

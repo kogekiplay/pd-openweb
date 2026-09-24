@@ -67,7 +67,7 @@ export const DATE_COMPARE_PAST_RANGE_VALUES = [1, 2, 101, 21, 22, 23];
 export const DATE_COMPARE_FUTURE_RANGE_VALUES = [1, 3, 102, 31, 32, 33];
 
 // 比较规则内将原有“过去7天/将来7天”文案转成“7天前/7天后”，避免被理解成范围筛选。
-export const DATE_COMPARE_RANGE_LABELS = {
+export const DATE_COMPARE_RANGE_LABELS: Record<number, string> = {
   21: _l('7天前'),
   22: _l('14天前'),
   23: _l('30天前'),
@@ -269,7 +269,7 @@ export function getControlSelectType(control) {
   return { isMultiple, isSingle };
 }
 
-export function getFilterTypeLabel(typeKey, type, control) {
+export function getFilterTypeLabel(typeKey: string | undefined, type, control) {
   const isNumber = typeKey === 'NUMBER';
   const isDate = typeKey === 'DATE';
   const isCascader = control && control.type === 35;

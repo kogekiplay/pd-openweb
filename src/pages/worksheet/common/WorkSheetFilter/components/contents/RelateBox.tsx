@@ -11,14 +11,14 @@ import { isSheetDisplay } from '../../../../../widgetConfig/util';
 import { API_ENUM_TO_TYPE, DEFAULT_COLUMNS, FILTER_CONDITION_TYPE } from '../../enum';
 
 let RelateBox = class RelateBox extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     values: PropTypes.arrayOf(PropTypes.string),
   };
   static defaultProps = {
     values: [],
   };
-  renderLi = (item, i: number, onChangeFn) => {
+  renderLi = (item, i: number, onChangeFn: () => void) => {
     return (
       <React.Fragment>
         {item.isNavGroup && i !== 0 && <div className="BorderTopGrayC"></div>}
@@ -29,7 +29,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
       </React.Fragment>
     );
   };
-  renderCustom = (data, type, isTop?) => {
+  renderCustom = (data, type, isTop?: boolean | undefined) => {
     const id = _.includes([2, 15, 16, 26, 46], type)
       ? _.get(
           _.find(DEFAULT_COLUMNS, d => d.type === type),
@@ -57,7 +57,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
     );
   }; // 符合动态值的本表字段异化，关联记录筛选用
 
-  filterDynamicControls = (isGlobal?) => {
+  filterDynamicControls = (isGlobal?: boolean | undefined) => {
     const {
       conditionType,
       columns,
@@ -107,7 +107,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
     return avaControls;
   };
 
-  render() {
+  override render() {
     const {
       showUl,
       onChangeFn,

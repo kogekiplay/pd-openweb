@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -31,7 +31,7 @@ const statusTip = [
 
 // 单条子任务
 class SingleItem extends Component<any, any> {
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     if (_.isEqual(nextProps, this.props)) {
       return false;
     }
@@ -65,7 +65,7 @@ class SingleItem extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { item } = this.props;
     const { charge, status, startTime, deadline, actualStartTime, completeTime, taskName, auth, locked, taskID } = item;
     const hasAuth = auth === config.auth.Charger || auth === config.auth.Member;
@@ -170,7 +170,7 @@ class Subtask extends Component<any, any> {
    * 更改任务状态
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.addSubTask) {
         this.setState({
@@ -412,7 +412,7 @@ class Subtask extends Component<any, any> {
     this.props.dispatch(taskFoldStatus(this.props.taskId, 'subTask'));
   };
 
-  render() {
+  override render() {
     const { addSubTask } = this.state;
     const { data } = this.props.taskDetails[this.props.taskId];
     const subTask = data.subTask || [];

@@ -60,7 +60,7 @@ export const getDynamicColors = (colors, max) => {
   if (colors && colors.length === max && colors.length > 0) {
     return colors;
   } else {
-    return Array.from({ length: max }).map((item, index) => ({ key: `${index + 1}`, value: COLOR_FED156 }));
+    return Array.from({ length: max }).map((_item, index) => ({ key: `${index + 1}`, value: COLOR_FED156 }));
   }
 };
 

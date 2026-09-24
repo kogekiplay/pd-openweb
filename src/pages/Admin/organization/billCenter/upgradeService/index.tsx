@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import withRouter from '../../../../../router/withRouter';
 import { Checkbox } from 'antd';
 import cx from 'classnames';
@@ -29,7 +29,7 @@ let UpgradeService = class UpgradeService extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     //是否可以升级
     projectController
       .getProjectLicenseSupportInfo({
@@ -98,6 +98,7 @@ let UpgradeService = class UpgradeService extends Component<any, any> {
           });
         }
       });
+    return undefined;
   }
 
   handleBack() {
@@ -162,7 +163,7 @@ let UpgradeService = class UpgradeService extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const {
       step,
       totalPrice,
@@ -321,6 +322,7 @@ let UpgradeService = class UpgradeService extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
 };
 UpgradeService = withRouter(UpgradeService);

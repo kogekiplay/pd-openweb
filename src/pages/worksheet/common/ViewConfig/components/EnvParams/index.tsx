@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -75,7 +75,7 @@ export default function (props) {
     );
   };
 
-  const updateAdvancedSetting = (data, cb) => {
+  const updateAdvancedSetting = (data: { environmentparams: string }, cb: () => void) => {
     updateCurrentView(
       Object.assign(view, {
         advancedSetting: data,

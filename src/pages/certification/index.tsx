@@ -165,7 +165,7 @@ export default function Certification(props) {
   const [certState, setCertState] = useState('');
   const [token, setToken] = useState('');
   const [certInfo, setCertInfo] = useState({});
-  const [controller, setController] = useState(null);
+  const [controller, setController] = useState<AbortController | null>(null);
 
   const [form] = Form.useForm();
 
@@ -209,6 +209,7 @@ export default function Certification(props) {
       }, 1000);
       return () => clearInterval(interval);
     }
+    return undefined;
   }, [currentPage, certStatus, token]);
 
   useEffect(() => {

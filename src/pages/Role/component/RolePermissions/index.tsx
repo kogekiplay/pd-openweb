@@ -38,7 +38,7 @@ export default class Con extends React.Component<any, any> {
       roleListClone: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { roleList = [], dataList = [], roleId } = this.props;
     this.setState({
       roleId: roleId || (roleList.length > 0 ? roleList[0].roleId : ''),
@@ -49,7 +49,7 @@ export default class Con extends React.Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { roleList = [], roleId } = prevProps;
 
@@ -69,7 +69,7 @@ export default class Con extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { roleId, roleList, loading, keywords, dataList, roleListClone } = this.state;
     return (
       <Wrap className="flexRow">

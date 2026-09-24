@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment, useEffect, useState } from 'react';
+import { Component, createRef, Fragment, useEffect, useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -62,7 +62,7 @@ const IconWrap = styled.div`
   margin-right: var(--space-3);
 `;
 
-const checkErrorPassword = password => {
+const checkErrorPassword = (password: string | undefined) => {
   const { passwordRegexTip } = md.global.SysSettings;
 
   if (!password) {
@@ -74,9 +74,10 @@ const checkErrorPassword = password => {
     alert(passwordRegexTip || _l('密码，至少8-20位，且含字母+数字'), 3);
     return true;
   }
+  return undefined;
 };
 
-const RESULT_OBJ = {
+const RESULT_OBJ: Record<number, string> = {
   0: _l('设置失败'),
   1: _l('设置成功'),
   2: _l('密码错误'),
@@ -87,7 +88,7 @@ const RESULT_OBJ = {
   7: _l('您输入的新密码与旧密码一样'),
 };
 
-const ACTION_TEXT = {
+const ACTION_TEXT: Record<string, string> = {
   editLockPassword: _l('密码修改成功，需重新解锁'),
   resetLock: _l('您在应用下的操作权限已恢复锁定'),
   unlock: _l('您在应用下的操作权限已解锁'),
@@ -227,7 +228,11 @@ function LockApp(props) {
 }
 
 // 解锁应用
-class UnLockDialog extends Component<any, any> {
+export interface UnLockDialogState {
+  lockPassword?: string | undefined;
+}
+
+class UnLockDialog extends Component<any, UnLockDialogState> {
   constructor(props) {
     super(props);
     this.state = {};
@@ -247,7 +252,7 @@ class UnLockDialog extends Component<any, any> {
     graphicVertify(() => handleRequest('unlock', { appId, password: lockPassword }, this.props));
   };
 
-  render() {
+  override render() {
     const { visible, onCancel = () => {}, sourceType, isOwner, appId, isLock } = this.props;
     const { lockPassword } = this.state;
     const isNormalApp = sourceType === 1;
@@ -338,7 +343,7 @@ function AppLockPasswordDialog(props) {
   }, []);
 
   // 修改密码
-  const confirmModifyPassword = (originPassword, newPassword) => {
+  const confirmModifyPassword = (originPassword: string, newPassword: string) => {
     if (!originPassword) return alert(_l('请输入旧密码'), 3);
     if (checkErrorPassword(newPassword)) return;
     if (_.trim(originPassword) === _.trim(newPassword)) {

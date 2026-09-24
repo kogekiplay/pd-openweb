@@ -2,7 +2,13 @@ import _ from 'lodash';
 import { DATABASE_TYPE } from '../../constant';
 import { ROLE_TYPE } from '../../constant';
 
-export const customFormData = (databaseType, dbRoleType, isCreateConnector, formData = {}, allFieldDisabled) => {
+export const customFormData = (
+  databaseType,
+  dbRoleType,
+  isCreateConnector,
+  formData = {},
+  allFieldDisabled: boolean,
+) => {
   const pg_sql = [DATABASE_TYPE.POSTGRESQL, DATABASE_TYPE.ALIYUN_POSTGRES, DATABASE_TYPE.TENCENT_POSTGRES];
 
   const getPostHintText = () => {

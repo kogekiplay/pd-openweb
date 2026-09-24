@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import ProcessBar from './ProcessBar';
@@ -121,7 +121,7 @@ export default class GraphContent extends Component<any, any> {
       );
     });
   }
-  render() {
+  override render() {
     const { data } = this.props;
     return <div className="graphContent">{this.renderProcess(data)}</div>;
   }

@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useEffect, useRef, useState } from 'react';
+import { Fragment, memo, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, LoadDiv, PopupWrapper } from 'ming-ui';
@@ -14,7 +14,7 @@ const MobileSearch = props => {
   const [visible, setVisible] = useState(false);
   const [mobileSearchResult, setMobileSearchResult] = useState([]);
 
-  const searchRealTime = value => {
+  const searchRealTime = (value: string) => {
     if (clicksearch === '1') {
       props.realTimeSearch(value);
     } else {
@@ -30,7 +30,7 @@ const MobileSearch = props => {
     return _.get(searchInput.current || {}, 'value') && enumDefault === 1 && _.isEmpty(mobileSearchResult) ? (
       <div className="w100 h100 flexColumn alignItemsCenter justifyContentCenter">
         <Icon icon="h5_search" className="Font50" />
-        <div className="textDisabled Font17 Bold mTop40">{_l('没有搜索结果')}</div>
+        <div className="textTertiary Font17 Bold mTop40">{_l('没有搜索结果')}</div>
       </div>
     ) : (
       <div className="flex searchResult">

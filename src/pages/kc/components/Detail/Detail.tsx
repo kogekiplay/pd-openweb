@@ -12,7 +12,12 @@ import { humanDateTime, humanFileSize, shallowEqual } from '../../utils';
 import './Detail.css';
 
 class Detail extends React.Component<any, any> {
-  static propTypes = {
+  declare _isMounted: boolean;
+  declare editDownloadablePromise: string | Promise<void> | undefined;
+  declare editEditablePromise: string | Promise<void> | undefined;
+  declare editNodePrimise: string | Promise<void> | undefined;
+
+  static override propTypes = {
     data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   };
   constructor(props) {
@@ -30,7 +35,7 @@ class Detail extends React.Component<any, any> {
     this._isMounted = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this._isMounted = true;
     this.getNodesTotalFolderCountAndFileSize(this.props);
 
@@ -62,7 +67,7 @@ class Detail extends React.Component<any, any> {
     );
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     return (
       !shallowEqual(this.props, nextProps) ||
       !shallowEqual(this.state, nextState) ||
@@ -70,7 +75,7 @@ class Detail extends React.Component<any, any> {
     );
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!shallowEqual(prevProps, this.props)) {
         this.getNodesTotalFolderCountAndFileSize(this.props);
@@ -122,7 +127,7 @@ class Detail extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this._isMounted = false;
   }
 
@@ -242,7 +247,9 @@ class Detail extends React.Component<any, any> {
     }
   };
 
-  editNodeAttribute = attrubuteObj => {
+  editNodeAttribute = (
+    attrubuteObj: { isDownloadable: boolean } | { isEditable: boolean } | { visibleType: number },
+  ) => {
     // attrubuteObj = $.extend({}, { isDownloadable , isEditable , visibleType });
     let item = this.props.data;
 
@@ -367,6 +374,7 @@ class Detail extends React.Component<any, any> {
         case NODE_VISIBLE_TYPE.PUBLIC:
           return _l('任何人都可以查看');
       }
+      return undefined;
     };
 
     switch (log.type) {
@@ -436,10 +444,11 @@ class Detail extends React.Component<any, any> {
           </span>
         );
     }
+    return undefined;
   };
 
   genPreviewLink = (name: string, versionId, nodeId) => {
-    let isOldest;
+    let isOldest: boolean | undefined;
 
     if (versionId === 'oldest') {
       isOldest = true;
@@ -477,7 +486,7 @@ class Detail extends React.Component<any, any> {
     this.props.updateDetailAttachmentsPreviewState(!!item);
   };
 
-  render() {
+  override render() {
     const { previewFile } = this.state;
     const selectedOneItem = !!this.props.data.id;
     const data = selectedOneItem ? this.props.data : '';
@@ -666,24 +675,14 @@ class Detail extends React.Component<any, any> {
             )}
           </div>
           <span className="pinDetailCon">
-            <Checkbox
-              text={_l('保持展开')}
-              size="middle"
-              checked={this.props.isPinned}
-              onClick={this.props.togglePinned}
-            />
+            <Checkbox text={_l('保持展开')} checked={this.props.isPinned} onClick={this.props.togglePinned} />
           </span>
         </div>
       </div>
     ) : (
       <div className="slideDetail flexColumn">
         <span className="pinDetailCon abs">
-          <Checkbox
-            text={_l('保持展开')}
-            size="middle"
-            checked={this.props.isPinned}
-            onClick={this.props.togglePinned}
-          />
+          <Checkbox text={_l('保持展开')} checked={this.props.isPinned} onClick={this.props.togglePinned} />
         </span>
         {!this.props.data.size ? (
           <div className="slideDetailNoItem Font14">
@@ -706,13 +705,13 @@ class Detail extends React.Component<any, any> {
 }
 
 class AttributePair extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     name: PropTypes.string.isRequired,
     value: PropTypes.any,
     hide: PropTypes.bool,
   };
 
-  render() {
+  override render() {
     return (
       <li className={cx('boxSizing ellipsis', { hide: this.props.hide })}>
         <span className="attributeLeft">

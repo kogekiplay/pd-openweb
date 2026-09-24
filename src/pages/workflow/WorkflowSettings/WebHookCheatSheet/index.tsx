@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import JsonView from '@mingdaocom/json-view';
 import { LoadDiv, ScrollView } from 'ming-ui';
 import api from '../../api/flowNode';
@@ -16,7 +16,7 @@ export default class WebHookCheatSheet extends Component<any, any> {
       errorState: !selectNodeId || !processId,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { processId, currentNodeId: nodeId, selectNodeId } = this.props.match.params;
 
     if (processId && selectNodeId) {
@@ -28,7 +28,7 @@ export default class WebHookCheatSheet extends Component<any, any> {
   goIndex = () => {
     location.href = pathCompletion('/');
   };
-  render() {
+  override render() {
     const { apiData, loading, errorState } = this.state;
     const { app, process, data, formatData } = apiData;
     if (errorState) return <ErrorState text={_l('参数错误')} />;

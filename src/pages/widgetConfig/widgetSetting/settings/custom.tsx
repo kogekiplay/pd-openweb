@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { getAdvanceSetting } from 'src/pages/widgetConfig/util/setting';
 import { AddCustomDialog } from '../components/CustomWidget';

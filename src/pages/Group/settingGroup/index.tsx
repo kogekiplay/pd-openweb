@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect } from 'react';
+import { Fragment, useCallback, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -652,7 +652,7 @@ function SettingGroup(props) {
   };
 
   const renderUsers = (users, editable: boolean) => {
-    if (!users) return;
+    if (!users) return undefined;
 
     return (
       <div
@@ -815,11 +815,11 @@ function SettingGroup(props) {
             </div>
           </div>
         )}
-        {GROUP_INFOS.filter(l => !l.isPost || groupInfo.isPost).map(item => {
+        {GROUP_INFOS.filter(l => !l.isPost || groupInfo.isPost).map((item, index) => {
           if (item.require && !_.get(groupInfo, item.key)) return null;
 
           return (
-            <div className="groupItem">
+            <div key={index} className="groupItem">
               <div className="label">
                 {item.label}
                 {item.key === 'users' && _l('（%0人）', _.get(groupInfo, 'groupMemberCount'))}
@@ -1028,7 +1028,7 @@ function SettingGroup(props) {
               </div>
               <div className="userList minHeight0">
                 {_.isEmpty(userList) ? (
-                  <div className="textDisabled Font13 mTop32 TxtCenter">{_l('无匹配结果')}</div>
+                  <div className="textTertiary Font13 mTop32 TxtCenter">{_l('无匹配结果')}</div>
                 ) : (
                   <ScrollView onScrollEnd={onScrollEnd}>{userList.map(l => renderUserItem(l))}</ScrollView>
                 )}

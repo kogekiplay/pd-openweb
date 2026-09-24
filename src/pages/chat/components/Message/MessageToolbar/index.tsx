@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
@@ -53,7 +53,10 @@ const formatMessage = (id, res) => {
   };
 };
 
-export const handleMessageFilePreview = function () {
+/** 由 File / Image / VideoMessage 以 handleMessageFilePreview.call(this) 调用，this 是那个类组件实例。
+ *  三个宿主都是 Component<any, any>，React 19 的类型里 Readonly<any> 是索引签名、满足不了必填属性，
+ *  所以这里如实写成「一个类组件实例」，读 props.message / props.session。 */
+export const handleMessageFilePreview = function (this: Component<any, any>) {
   const { message, session } = this.props;
   const { id } = message;
 
@@ -321,7 +324,7 @@ export default class MessageToolbar extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { message, session, isDuplicated } = this.props;
     const isAdmin = session.isAdmin || false;
     const differenceTime = moment(getCurrentTime()).valueOf() - moment(message.time).valueOf() <= 300 * 1000;

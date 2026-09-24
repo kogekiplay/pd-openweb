@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -134,7 +134,7 @@ export default ({
     changeData(Object.assign({}, data, { actions: newActions }));
   };
 
-  const renderDeadlineContent = (item, autoPass?) => {
+  const renderDeadlineContent = (item, autoPass?: boolean | undefined) => {
     return (
       <div className="mTop10 flexRow alignItemsCenter">
         <div>{_l('在截止时刻')}</div>
@@ -295,7 +295,7 @@ export default ({
             showDialog(false);
           }}
           onOk={() => {
-            const accountNullIndex = [];
+            const accountNullIndex: number[] = [];
             const actions = data.actions || [];
 
             actions
@@ -446,7 +446,7 @@ export default ({
                         type={2}
                         content={item.message}
                         formulaMap={formulaMap}
-                        onChange={(err, value) => changeAction(item.id, { message: value })}
+                        onChange={(_err, value) => changeAction(item.id, { message: value })}
                         updateSource={updateSource}
                       />
                     </div>

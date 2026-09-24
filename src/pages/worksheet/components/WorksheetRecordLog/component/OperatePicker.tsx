@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -74,9 +74,9 @@ function OperatePicker(props) {
       popupAlign={{ points: ['tl', 'bl'], offset: [0, 5] }}
       popup={
         <OptionWrap>
-          {OPTIONS.map(l => {
+          {OPTIONS.map((l, index) => {
             return (
-              <div className="optionItem" onClick={() => onSelect(l)}>
+              <div key={index} className="optionItem" onClick={() => onSelect(l)}>
                 {l.label}
               </div>
             );

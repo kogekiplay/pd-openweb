@@ -2,7 +2,7 @@
 import './attachmentsLoading.css';
 
 class AttachmentsLoading extends React.Component<any, any> {
-  render() {
+  override render() {
     return (
       <div className="attachmentsLoading">
         <div className="bounceWrap">

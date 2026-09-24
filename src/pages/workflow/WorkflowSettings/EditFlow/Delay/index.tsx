@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import { TIME_TYPE_NAME } from '../../enum';
 import { CreateNode, NodeOperate } from '../components';
 
-const EXECUTE_TYPE_TEXT = {
+const EXECUTE_TYPE_TEXT: Record<number, string> = {
   0: _l('当天'),
   1: _l('之前'),
   2: _l('之后'),
@@ -58,7 +58,7 @@ export default class Delay extends Component<any, any> {
   renderDelayTimeText(timerNode) {
     const { numberFieldValue, hourFieldValue, minuteFieldValue, secondFieldValue } = timerNode;
 
-    const getDesc = ({ fieldValue, fieldControlId, fieldControlName }, label) => {
+    const getDesc = ({ fieldValue, fieldControlId, fieldControlName }, label: string) => {
       if (!fieldValue && !fieldControlId) {
         return '';
       }
@@ -101,7 +101,7 @@ export default class Delay extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
 
     return (

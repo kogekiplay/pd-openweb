@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
@@ -8,9 +8,11 @@ import UploadFiles from 'src/components/UploadFiles';
 import { SOURCE_TYPE } from './config';
 
 export default class FileList extends Component<any, any> {
+  declare promise: ApiResult | undefined;
+
   static TYPES = SOURCE_TYPE;
 
-  static propTypes = {
+  static override propTypes = {
     sourceType: PropTypes.oneOf(_.values(SOURCE_TYPE)),
     sourceId: PropTypes.string.isRequired,
     appId: PropTypes.string.isRequired,
@@ -36,7 +38,7 @@ export default class FileList extends Component<any, any> {
     this.cancel = this.cancel.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getFiles();
     this.props.manualRef(this);
   }
@@ -125,7 +127,7 @@ export default class FileList extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isLoading, isShowBtns } = this.state;
     return (
       <div className="fileContent mTop10">

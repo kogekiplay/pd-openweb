@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -66,7 +66,7 @@ const Box = styled.div`
   }
 `;
 
-const LIST_URL_PRE = {
+const LIST_URL_PRE: Record<string, { pre: string; idKey: string }> = {
   post: {
     pre: '/feeddetail?itemID=',
     idKey: 'postID',
@@ -101,7 +101,7 @@ export default function List(props) {
   const [keyCodeStart, setKeyCodeStart] = useState(start);
   const [current, setCurrent] = useState(-1);
   const [countFlag, setCountFlag] = useState(0);
-  const [keyCode, setKeyCode] = useState(null);
+  const [keyCode, setKeyCode] = useState<number | null>(null);
   let count = 0;
 
   useEffect(() => {
@@ -177,7 +177,7 @@ export default function List(props) {
     setCurrent(_index);
   };
 
-  const switchHandle = e => {
+  const switchHandle = (e: KeyboardEvent) => {
     e.stopPropagation();
     if ([38, 40, 13].indexOf(e.keyCode) > -1) {
       setKeyCode(e.keyCode);

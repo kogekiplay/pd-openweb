@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import { times } from 'lodash';
@@ -25,7 +25,7 @@ class Panel extends Component<any, any> {
     onChange: () => {},
   };
 
-  static propTypes = {
+  static override propTypes = {
     placeholder: PropTypes.string,
     panelCls: PropTypes.string,
     format: PropTypes.func,
@@ -52,7 +52,7 @@ class Panel extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { value, format } = this.props;
       this.setState({
@@ -167,7 +167,7 @@ class Panel extends Component<any, any> {
     return null;
   };
 
-  render() {
+  override render() {
     const { panelCls, placeholder, showSecond, showMinute, showHour } = this.props;
     const hours = this.renderHour();
     const minutes = this.renderMinute();

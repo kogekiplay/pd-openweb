@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Dropdown, Input, Menu } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -31,9 +31,9 @@ const NodeTagTextarea = props => {
     id: key,
     ...value,
   }));
-  const tagTextareaRef = useRef(null);
+  const tagTextareaRef = useRef<TagTextarea | null | undefined>(null);
 
-  const renderTag = id => {
+  const renderTag = (id: string) => {
     const data = formulaMap[id];
     return <ControlTag>{data.name}</ControlTag>;
   };

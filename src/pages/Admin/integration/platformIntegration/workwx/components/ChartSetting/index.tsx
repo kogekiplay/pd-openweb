@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -25,7 +25,7 @@ const Wrap = styled.div`
 export default function ChartSetting(props) {
   const { projectId } = props;
   const [copyValue, setCopyValue] = useState();
-  const [url, setUrl] = useState();
+  const [url, setUrl] = useState<string>();
   const inputRef = useRef<any>(undefined);
   const newURL = _.trim(url);
 

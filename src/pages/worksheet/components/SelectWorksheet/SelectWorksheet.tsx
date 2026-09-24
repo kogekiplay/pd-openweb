@@ -56,8 +56,9 @@ function WorksheetList(props) {
             </SearchWrap>
           )}
           <ScrollView style={{ maxHeight: 200 }}>
-            {filterSheets().map(worksheet => (
+            {filterSheets().map((worksheet, index) => (
               <div
+                key={index}
                 className={cx(
                   'worksheetItem overflow_ellipsis ',
                   filterIds.includes(worksheet.workSheetId) ? 'disable' : 'Hand',
@@ -103,7 +104,7 @@ WorksheetList.propTypes = {
 };
 
 export default class SelectWroksheet extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: PropTypes.string, // 当前网络 id
     worksheetType: PropTypes.number, // 工作表类型 0: 工作表 1: 自定义页面
     appId: PropTypes.string, // 当前应用 id
@@ -126,12 +127,12 @@ export default class SelectWroksheet extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { appId, value, worksheetType } = this.props;
     this.loadWorksheets(appId, value, worksheetType);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.appId !== prevProps.appId || this.props.worksheetType !== prevProps.worksheetType) {
         this.loadWorksheets(this.props.appId, this.props.value, this.props.worksheetType);
@@ -236,7 +237,7 @@ export default class SelectWroksheet extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { dialogClassName, projectId, appId, currentWorksheetId, hint, from, worksheetType, dropdownElement } =
       this.props;
     const { loading, worksheets, selectOtherVisible, selectedWorksheet } = this.state;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import { DateTime } from 'ming-ui/components/NewDateTimePicker';
@@ -6,7 +6,11 @@ import { handleGlobalVariableName } from '../../../utils';
 import SelectOtherFields from '../SelectOtherFields';
 import Tag from '../Tag';
 
-export default class SpecificFieldsValue extends Component<any, any> {
+export interface SpecificFieldsValueState {
+  fieldsVisible: boolean;
+}
+
+export default class SpecificFieldsValue extends Component<any, SpecificFieldsValueState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -122,7 +126,7 @@ export default class SpecificFieldsValue extends Component<any, any> {
 
   renderNumber() {
     const { type, data, updateSource, hasOtherField, min, max, isDecimal, dot } = this.props;
-    const PLACEHOLDER = {
+    const PLACEHOLDER: Record<string, string> = {
       numberFieldValue: _l('填写天数'),
       hourFieldValue: _l('填写小时数'),
       minuteFieldValue: _l('填写分钟数'),
@@ -183,7 +187,7 @@ export default class SpecificFieldsValue extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { data, type, hasOtherField } = this.props;
 
     return (

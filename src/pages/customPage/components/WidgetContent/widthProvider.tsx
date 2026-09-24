@@ -1,15 +1,17 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 
 export default function widthProvider(GridOutComponent) {
   return class WidthProvider extends Component<any, any> {
-    state = {
+    declare resizeObserver: ResizeObserver | undefined;
+
+    override state = {
       width: 1280,
       ready: false,
     };
     mounted = false;
 
-    componentDidMount() {
+    override componentDidMount() {
       this.mounted = true;
       this.wrapEl = document.querySelector('.CustomPageContentWrap .content');
       if (this.wrapEl) {
@@ -23,7 +25,7 @@ export default function widthProvider(GridOutComponent) {
       this.onWindowResize();
     }
 
-    componentDidUpdate(prevProps) {
+    override componentDidUpdate(prevProps) {
       if (!shallowEqual(prevProps, this.props)) {
         if (this.props.sheetListVisible !== prevProps.sheetListVisible) {
           // 增减左侧列表展开收起之间的宽度差值
@@ -45,7 +47,7 @@ export default function widthProvider(GridOutComponent) {
       }
     }
 
-    componentWillUnmount() {
+    override componentWillUnmount() {
       this.mounted = false;
       delete window.customPageWindowResize;
       this.resizeObserver && this.resizeObserver.disconnect();
@@ -69,7 +71,7 @@ export default function widthProvider(GridOutComponent) {
         this.setState({ ready: true });
       }
     };
-    render() {
+    override render() {
       const { ready, ...state } = this.state;
 
       if (!ready) {

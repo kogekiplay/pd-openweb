@@ -9,6 +9,7 @@ import * as socketEvent from 'src/pages/chat/utils/socketEvent.js';
 import PortalMg from 'src/pages/Portal/PortalMg.jsx';
 import type { RootState } from 'src/redux/types';
 import { getAppFeaturesVisible } from 'src/utils/common';
+import type { AppDispatch } from 'src/redux/types';
 import './index.less';
 
 const Wrap = styled.div`
@@ -40,20 +41,21 @@ const Wrap = styled.div`
   }
 `;
 
-class PortalMessage extends Component<any, any> {
+// connect 包过、会收到 dispatch；socketEvent 里的函数用 .call(this) 调，要求 this.props.dispatch 存在
+class PortalMessage extends Component<{ dispatch: AppDispatch; [key: string]: any }, any> {
   constructor(props) {
     super(props);
     this.state = {
       count: 0,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     // 注册事件
     socketEvent.socketInitEvent.call(this);
     this.getChatCount();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { sessionList = [] } = this.props;
       const count = (sessionList.find(o => o.value === 'worksheet') || {}).count;
@@ -82,7 +84,7 @@ class PortalMessage extends Component<any, any> {
         }
       });
   };
-  render() {
+  override render() {
     const { rp } = getAppFeaturesVisible();
     const { isMobile, color } = this.props;
     const { count = 0 } = this.state;

@@ -114,6 +114,8 @@ const renderSortableItem = ({ item, DragHandle }) => {
 };
 
 export default class Sort extends Component<any, any> {
+  declare isRenderSort: boolean | undefined;
+
   constructor(props) {
     super(props);
     const { rightY } = props.currentReport;
@@ -129,7 +131,7 @@ export default class Sort extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { rightY } = this.props.currentReport;
       this.setState({
@@ -296,12 +298,12 @@ export default class Sort extends Component<any, any> {
 
     this.setState({ currentCustomSort: null, visible: true });
   };
-  handleChangeVisible = visible => {
+  handleChangeVisible = (visible: boolean) => {
     this.setState({
       visible,
     });
   };
-  getDropdownBoundaryLeft = triggerNode => {
+  getDropdownBoundaryLeft = (triggerNode: EventTarget & HTMLElement) => {
     const boundaryNode = triggerNode.closest('.StatisticsPanel, .GlobalStatisticsPanel, .chartModal, .statisticsCard');
 
     if (!boundaryNode) {
@@ -310,7 +312,7 @@ export default class Sort extends Component<any, any> {
 
     return Math.max(boundaryNode.getBoundingClientRect().left, 0);
   };
-  updateDropdownPlacement = triggerNode => {
+  updateDropdownPlacement = (triggerNode: EventTarget & HTMLElement) => {
     if (!triggerNode || !triggerNode.getBoundingClientRect) {
       return;
     }
@@ -688,7 +690,7 @@ export default class Sort extends Component<any, any> {
       reportTypes.CountryLayer,
     ].includes(reportType);
   };
-  render() {
+  override render() {
     const { visible, currentCustomSort, customSortValue, sortList, customSortLoading, dropdownPlacement } = this.state;
     const sortListHeight = sortList.length * 38;
     const Content = this.renderContent();

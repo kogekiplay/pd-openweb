@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -18,6 +18,7 @@ const checkFuncs = {
         return _l('手机号码格式错误');
       }
     }
+    return undefined;
   },
   newPwd: pwd => {
     const { md = {} } = window;
@@ -32,6 +33,9 @@ const checkFuncs = {
 };
 
 export default class InitBindAccountDialog extends Component<any, any> {
+  declare verifyCodeTimer: NodeJS.Timeout | undefined;
+  declare mobile: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     const { md = {} } = window;
@@ -54,11 +58,11 @@ export default class InitBindAccountDialog extends Component<any, any> {
     this.clearError = this.clearError.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.itiFn();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.verifyCodeTimer) {
       clearInterval(this.verifyCodeTimer);
     }
@@ -202,7 +206,7 @@ export default class InitBindAccountDialog extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { title, showFooter, onCancel = () => {} } = this.props;
     const { account, verifyCode, newPwd, errorMsg = {}, isSendVerify, seconds, loading } = this.state;
     const disabled = account && verifyCode && newPwd && !_.keys(errorMsg).length && !loading;
@@ -286,4 +290,4 @@ export default class InitBindAccountDialog extends Component<any, any> {
   }
 }
 
-export const initBindAcoount = props => FunctionWrap(InitBindAccountDialog, props);
+export const initBindAcoount = (props: { title: string; showFooter: boolean; getData: () => void }) => FunctionWrap(InitBindAccountDialog, props);

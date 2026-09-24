@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
@@ -41,12 +41,12 @@ export default class Entry extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  componentDidMount() {
+  override componentDidMount() {
     getTodoCount().then(countData => {
       this.props.updateCountData(countData);
     });
   }
-  render() {
+  override render() {
     const { countData, onClick, type, renderContent, className } = this.props;
     const count = countData ? (countData.waitingDispose > 99 ? '99+' : countData.waitingDispose) : 0;
     const { waitingExamine = 0 } = countData || {};

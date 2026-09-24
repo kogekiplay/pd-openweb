@@ -102,6 +102,7 @@ const getKeyAndName = data => {
     if ([9, 11].includes(type)) {
       return { targetKey: firstItem };
     }
+    return undefined;
   };
 
   if ([9, 11, 26, 29].includes(type)) {

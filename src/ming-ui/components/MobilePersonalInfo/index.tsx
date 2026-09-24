@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Popup } from 'antd-mobile';
 import cx from 'classnames';
@@ -117,7 +117,7 @@ const MobilePersonalInfo = props => {
       if (id === 'currentDepartmentFullName') {
         if (!userInfo.departmentInfos?.length) return null;
 
-        return <DepartmentFullName projectId={projectId} departmentInfos={userInfo.departmentInfos} />;
+        return <DepartmentFullName key={id} projectId={projectId} departmentInfos={userInfo.departmentInfos} />;
       }
 
       return (

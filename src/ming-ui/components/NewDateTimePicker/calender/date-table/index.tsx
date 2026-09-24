@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class DateTable extends Component<any, any> {
@@ -92,7 +92,7 @@ class DateTable extends Component<any, any> {
     return trList;
   };
 
-  render() {
+  override render() {
     const thList = this.renderHeadList();
     const trList = this.renderBodyList();
 

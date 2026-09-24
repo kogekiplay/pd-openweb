@@ -126,7 +126,7 @@ export function getSubListError({ rows, rules }, controls: FormControl[] = [], s
   }
 }
 
-export const addWidthToColumns = (columns, dataSource) => {
+export const addWidthToColumns = (columns, dataSource: RecordRow[]) => {
   // 创建一个隐藏的 div 用来计算文字宽度
   const wrapper = document.createElement('div');
   wrapper.style.position = 'absolute';

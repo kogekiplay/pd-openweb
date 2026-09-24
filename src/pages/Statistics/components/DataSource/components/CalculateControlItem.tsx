@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { useDrag } from 'react-dnd';
 import { Checkbox } from 'antd';
 import cx from 'classnames';

@@ -13,7 +13,7 @@ Config.AdminController = AdminController;
 Config.getParams = function () {
   const reqArray = location.pathname.split('/');
   const controlIndex = _.indexOf(reqArray, 'admin');
-  let arr = [];
+  let arr: string[] = [];
 
   reqArray.forEach(function (item, index) {
     if (index >= controlIndex) {

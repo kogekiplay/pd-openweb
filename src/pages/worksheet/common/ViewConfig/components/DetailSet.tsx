@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import { Icon, Radio } from 'ming-ui';
 import { SwitchStyle } from './style';
@@ -6,7 +6,7 @@ import { SwitchStyle } from './style';
 export default function DetailSet(props) {
   const { appId, view, updateCurrentView } = props;
 
-  const handleChange = value => {
+  const handleChange = (value: number) => {
     updateCurrentView({
       ...view,
       appId,

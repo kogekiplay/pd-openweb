@@ -59,7 +59,9 @@ const ButtonsCon = styled.div`
   }
 `;
 class BatchOperate extends React.Component<any, any> {
-  static propTypes = {
+  declare getWorksheetBtnsAjax: ApiResult | undefined;
+
+  static override propTypes = {
     isCharge: PropTypes.bool,
     appId: PropTypes.string,
     worksheetId: PropTypes.string,
@@ -89,7 +91,7 @@ class BatchOperate extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { onlyShowCustomButtons } = this.props;
     const selectedRow = this.props.selectedRows.length === 1 && this.props.selectedRows[0];
 
@@ -98,7 +100,7 @@ class BatchOperate extends React.Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { appId, worksheetId, viewId, permission, updateViewPermission = () => {} } = prevProps;
 
@@ -405,7 +407,7 @@ class BatchOperate extends React.Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const {
       type,
       buttonType,

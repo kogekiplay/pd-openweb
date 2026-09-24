@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -12,6 +12,8 @@ import AppDetail from './AppDetail';
 import './index.less';
 
 let AppPkgHeader = class AppPkgHeader extends Component<any, any> {
+  declare isRequest: boolean;
+
   constructor(props) {
     super(props);
     this.isRequest = false;
@@ -37,7 +39,7 @@ let AppPkgHeader = class AppPkgHeader extends Component<any, any> {
 
   // 兼容形如 /worksheet/:worksheetId?的旧工作表路由
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { appId, groupId, worksheetId } = getIds(this.props);
 
@@ -101,7 +103,7 @@ let AppPkgHeader = class AppPkgHeader extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { ...props } = this.props;
     return <AppDetail {...props} />;
   }

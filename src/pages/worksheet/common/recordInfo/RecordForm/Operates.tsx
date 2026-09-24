@@ -6,8 +6,8 @@ import RecordInfoContext from '../RecordInfoContext';
 import CustomButtonsAutoWidth from './CustomButtonsAutoWidth';
 
 export default class Operates extends Component<any, any> {
-  static contextType = RecordInfoContext;
-  static propTypes = {
+  static override contextType = RecordInfoContext;
+  static override propTypes = {
     iseditting: PropTypes.bool,
     recordbase: PropTypes.shape({}),
     recordinfo: PropTypes.shape({}),
@@ -22,12 +22,12 @@ export default class Operates extends Component<any, any> {
     hideFav: PropTypes.bool,
   };
 
-  state = {
+  override state = {
     btnDisable: {},
     customBtns: [],
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.loadBtns();
     this.props.setRef(this);
     this.props.addRefreshEvents('loadcustombtns', () => {
@@ -38,7 +38,7 @@ export default class Operates extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.recordbase.recordId !== prevProps.recordbase.recordId ||
@@ -52,7 +52,7 @@ export default class Operates extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.resizeOb) {
       this.resizeOb.unobserve(this.customButtonsCon.current);
       this.resizeOb.disconnect();
@@ -79,7 +79,7 @@ export default class Operates extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       isCharge,
       iseditting,

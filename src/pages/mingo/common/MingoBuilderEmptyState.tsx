@@ -125,7 +125,12 @@ export function useMingoAppBuilderVisible(
   return disabled ? false : visible;
 }
 
-export default function MingoBuilderEmptyState({ rightOffset = 0, compact = false }) {
+export interface MingoBuilderEmptyStateProps {
+  rightOffset?: number | undefined;
+  compact?: boolean | undefined;
+}
+
+export default function MingoBuilderEmptyState({ rightOffset = 0, compact = false }: MingoBuilderEmptyStateProps) {
   return (
     <Wrap $rightOffset={rightOffset} $compact={compact} data-mingo-builder-empty-state="true">
       <div>

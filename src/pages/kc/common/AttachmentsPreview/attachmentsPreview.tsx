@@ -24,7 +24,15 @@ import VideoPlayer from './VideoPlayer';
 import './attachmentsPreview.less';
 
 class AttachmentsPreview extends React.Component<any, any> {
-  static propTypes = {
+  declare id: number | undefined;
+  declare timer: NodeJS.Timeout | undefined;
+  declare btnNext: HTMLSpanElement | null | undefined;
+  declare btnPrev: HTMLSpanElement | null | undefined;
+  declare refImageViewer: ImageViewer | null | undefined;
+  declare refPreviewCon: HTMLDivElement | null | undefined;
+  declare refIconCon: HTMLAnchorElement | null | undefined;
+
+  static override propTypes = {
     isShare: PropTypes.bool,
     attachments: PropTypes.array,
     actions: PropTypes.object,
@@ -39,14 +47,14 @@ class AttachmentsPreview extends React.Component<any, any> {
     fullscreen: PropTypes.bool,
   };
 
-  state = {
+  override state = {
     style: { opacity: 0 },
     attInfoFolded: true,
     showThumbnail: false,
     showHtmlSource: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const options = _.assign({}, this.props.options, {
       onClose: this.props.onClose,
     });
@@ -72,7 +80,7 @@ class AttachmentsPreview extends React.Component<any, any> {
     $(document).on('keydown', this.handleKeyDown);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.actions.loading();
     $(document).off('keydown', this.handleKeyDown);
     if (window.closeFns) {
@@ -80,13 +88,13 @@ class AttachmentsPreview extends React.Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.index !== this.props.index && this.state.showHtmlSource) {
       this.setState({ showHtmlSource: false });
     }
   }
 
-  onWheel = evt => {
+  onWheel = (evt: React.WheelEvent<HTMLDivElement>) => {
     // 浏览PDF时，禁止滚动
     const { index, attachments } = this.props;
     const { ext } = attachments[index];
@@ -172,7 +180,7 @@ class AttachmentsPreview extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     if (!this.props.attachments.length) {
       return <LoadDiv />;
     }
@@ -520,6 +528,7 @@ class AttachmentsPreview extends React.Component<any, any> {
                               </Button>
                             );
                           }
+                          return undefined;
                         })()}
                         <p className="detail">
                           {_l('大小：')}

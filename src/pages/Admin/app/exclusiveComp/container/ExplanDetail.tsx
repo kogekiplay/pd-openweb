@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { ConfigProvider, Empty, Select, Table } from 'antd';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -190,7 +190,7 @@ function ExplanDetail(props) {
       title: _l('类型'),
       dataIndex: 'id',
       width: 150,
-      render: (value, record) => {
+      render: (_value, record) => {
         return (
           <div className="columnType">
             {(START_APP_TYPE[record.process.child ? 'subprocess' : record.process.startAppType] || {}).text}
@@ -207,7 +207,7 @@ function ExplanDetail(props) {
       title: _l('添加人'),
       dataIndex: 'id',
       width: 300,
-      render: (value, record) => {
+      render: (_value, record) => {
         return (
           <div className="flexRow textSecondary">
             <UserHead
@@ -224,7 +224,7 @@ function ExplanDetail(props) {
       title: '',
       width: 50,
       dataIndex: 'id',
-      render: (value, record, index: number) => {
+      render: (_value, record, index: number) => {
         return (
           <Trigger
             popupVisible={actionOp === index}
@@ -287,7 +287,10 @@ function ExplanDetail(props) {
                   .find(item => item.value === option.value)
                   .label.toLowerCase()
                   .indexOf(inputValue.toLowerCase()) > -1,
-              onSearch: _.debounce(val => this.setState({ keyword: val }, () => getAppList()), 500),
+              /* 这里原先还有 onSearch: _.debounce(val => this.setState({ keyword: val }, () => getAppList()), 500)。
+                 函数组件里 this 是 undefined，每输入一次（防抖后）就是一条未捕获的 TypeError；就算能执行也不对 ——
+                 getAppList 的 keyword 写死为空、结果是 concat 到现有列表上，再拉一次只会让每个应用重复一遍。
+                 筛选一直是上面的 filterOption 在前端做的（一次拉全量），去掉之后用户看到的行为不变。 */
             }}
             defaultValue={filters.apkId}
             options={appList}

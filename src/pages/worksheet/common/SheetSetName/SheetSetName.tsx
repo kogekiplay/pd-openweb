@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Dialog } from 'ming-ui';
 import Input from 'ming-ui/components/Input';
 import sheetAjax from 'src/api/worksheet';
@@ -43,7 +43,7 @@ export default class SheetSetName extends Component<any, any> {
 
     this.props.onHide();
   }
-  render() {
+  override render() {
     const { visible } = this.props;
     const { entityName } = this.state;
     return (

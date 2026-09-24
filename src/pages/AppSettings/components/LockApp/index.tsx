@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import styled from 'styled-components';
 import { Button, Switch } from 'ming-ui';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';

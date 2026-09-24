@@ -27,7 +27,7 @@ class DialogSettingInviteRules extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -49,11 +49,11 @@ class DialogSettingInviteRules extends React.Component<any, any> {
     });
   };
 
-  tipAnimation = $elem => {
+  tipAnimation = ($elem: JQuery<HTMLElement>) => {
     $elem.show();
   };
 
-  render() {
+  override render() {
     const { showDialogSettingInviteRules, setValue, projectId, updateAllowProjectCodeJoin = () => {} } = this.props;
     return (
       <Dialog

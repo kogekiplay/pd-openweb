@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -46,7 +46,7 @@ function ConnectDataBase(props) {
     status: 0,
     remark: undefined,
   });
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState<string[]>([]);
   const [pending, setPending] = useState(false);
   const [addressList, setAddressList] = useState([{ host: '', port: 27017 }]);
   const hostInputRefs = useRef([]);
@@ -70,7 +70,7 @@ function ConnectDataBase(props) {
 
   const check = () => {
     const request = ['name', 'account', 'password', 'dbName'];
-    const _errors = [];
+    const _errors: string[] = [];
     request.forEach(key => {
       if (!data[key]) _errors.push(key);
     });
@@ -105,7 +105,7 @@ function ConnectDataBase(props) {
 
   const testConnection = () => {
     const err = check();
-    if (err.length > 0) return;
+    if (err.length > 0) return undefined;
     setPending(true);
     const hostParams =
       addressList.length > 1 ? { hosts: addressList } : { host: addressList[0].host, port: addressList[0].port };
@@ -133,7 +133,7 @@ function ConnectDataBase(props) {
     return false;
   };
 
-  const clearError = key => {
+  const clearError = (key: string) => {
     setErrors(errors.filter(l => l !== key));
   };
 

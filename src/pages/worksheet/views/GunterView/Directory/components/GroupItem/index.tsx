@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Component, Fragment, lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Dropdown, Menu } from 'antd';
@@ -61,7 +61,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
       }
     }, 100);
   };
-  handleCreateRecord = (groupId: string, isMilepost?) => {
+  handleCreateRecord = (groupId: string, isMilepost?: boolean | undefined) => {
     const { base, grouping, controls, viewConfig, sheetSwitchPermit } = this.props;
     const { viewControl, milepost, navTitle } = viewConfig;
 
@@ -259,7 +259,7 @@ let GroupItem = class GroupItem extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { createRecordVisible } = this.state;
     return (
       <Fragment>

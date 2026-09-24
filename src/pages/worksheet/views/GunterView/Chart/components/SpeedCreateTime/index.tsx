@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -138,7 +138,7 @@ let SpeedCreateTime = class SpeedCreateTime extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { gunterView } = this.props;
 
@@ -153,7 +153,7 @@ let SpeedCreateTime = class SpeedCreateTime extends Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { gunterView, base } = this.props;
     const { viewConfig } = gunterView;
     const { startId, endId } = viewConfig;
@@ -170,7 +170,7 @@ let SpeedCreateTime = class SpeedCreateTime extends Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { chartScroll } = this.props.gunterView;
     if (this.gunterViewEl) {
       this.gunterViewEl.removeEventListener('mousemove', this.debounceHandleMouseMove);
@@ -303,7 +303,7 @@ let SpeedCreateTime = class SpeedCreateTime extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { disable, left, top, width, records, hoverIndex, isMilepost } = this.state;
     const record = records[hoverIndex];
     const style = {

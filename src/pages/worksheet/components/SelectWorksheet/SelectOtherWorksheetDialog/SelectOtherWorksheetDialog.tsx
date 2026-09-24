@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -9,7 +9,7 @@ import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
 import './SelectOtherWorksheetDialog.less';
 
 export default class extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     projectId: PropTypes.string,
     worksheetType: PropTypes.number, // 工作表类型 0: 工作表 1: 自定义页面 2: 聚合表
     selectedAppId: PropTypes.string, // 已选中的应用id
@@ -31,7 +31,7 @@ export default class extends Component<any, any> {
       selectedWorksheetId: props.selectedWorksheetId,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId, currentAppId } = this.props;
     homeAppAjax.getAllHomeApp().then(data => {
       let apps = [];
@@ -81,7 +81,7 @@ export default class extends Component<any, any> {
       });
     }
   }
-  render() {
+  override render() {
     const { visible, onHide, worksheetType, onOk, className, onlyApp, title, description, hideAppLabel, disabled } =
       this.props;
     const { myApps, worksheetsOfSelectedApp, selectedAppId, selectedWorksheetId } = this.state;

@@ -13,6 +13,7 @@ import postAjax from 'src/api/post';
 import 'src/components/autoTextarea/autoTextarea';
 import Emotion from 'src/components/emotion/emotion';
 import MentionsInput from 'src/components/MentionsInput';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 import UploadFiles from 'src/components/UploadFiles';
 import { generateRandomPassword } from 'src/utils/common';
 import { AT_ALL_TEXT } from './config';
@@ -21,7 +22,12 @@ import './css/commenter.less';
 
 const ClickAwayable = ClickAway;
 class Commenter extends React.Component<any, any> {
-  static propTypes = {
+  declare textareaId: string;
+  // initMentionsInput 往这个 textarea 上挂了 val / reset / destroy 等方法
+  declare textarea: MentionsInputElement | null | undefined;
+  declare faceBtn: HTMLSpanElement | null | undefined;
+
+  static override propTypes = {
     placeholder: PropTypes.string,
     activePlaceholder: PropTypes.string,
     textareaMaxHeight: PropTypes.number,
@@ -94,7 +100,7 @@ class Commenter extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { textarea, faceBtn } = this;
     const { textareaMaxHeight, textareaMinHeight, projectId } = this.props;
     const comp = this;
@@ -169,7 +175,7 @@ class Commenter extends React.Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.storageId && this.props.storageId !== prevProps.storageId) {
         this.textarea.value = window.localStorage.getItem('commenter-' + this.props.storageId) || '';
@@ -206,7 +212,7 @@ class Commenter extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.textarea.destroy && this.textarea.destroy();
   }
 
@@ -255,8 +261,8 @@ class Commenter extends React.Component<any, any> {
     const textarea = this.textarea;
     const $textarea = $(textarea);
     const getMessagePromise = this.props.disableMentions
-      ? Promise.resolve($textarea.val())
-      : new Promise(resolve => {
+      ? Promise.resolve(String($textarea.val() ?? ''))
+      : new Promise<string>(resolve => {
           textarea.val(data => resolve(data));
         });
     getMessagePromise.then(data => {
@@ -363,7 +369,9 @@ class Commenter extends React.Component<any, any> {
           });
         }
       }
+      return undefined;
     });
+    return undefined;
   }
 
   clearLocalStorage = (status = true) => {
@@ -416,7 +424,7 @@ class Commenter extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       canAddLink,
       projectId,
@@ -432,7 +440,7 @@ class Commenter extends React.Component<any, any> {
     const hasAttachment = attachmentData.length || kcAttachmentData.length;
     const style = !isEditing && !hasAttachment ? { display: 'none' } : {};
 
-    const onFocus = e => {
+    const onFocus = (e: React.FocusEvent<HTMLTextAreaElement, Element>) => {
       if (activePlaceholder) {
         e.target.placeholder = activePlaceholder;
       }
@@ -446,7 +454,7 @@ class Commenter extends React.Component<any, any> {
       }
     };
 
-    function onBlur(e) {
+    function onBlur(e: React.FocusEvent<HTMLTextAreaElement, Element>) {
       if (activePlaceholder) {
         e.target.placeholder = placeholder;
       }

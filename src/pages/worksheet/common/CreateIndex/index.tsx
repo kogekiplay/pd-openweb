@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Input, Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -10,7 +10,7 @@ import './index.less';
 
 const { Option } = Select;
 
-const RULES = {
+const RULES: Record<number, ({ value: number; txt: string } | { value: string; txt: string })[]> = {
   0: [
     { value: 1, txt: _l('A → Z%02058') },
     { value: -1, txt: _l('Z → A%02059') },
@@ -301,7 +301,7 @@ export default class CreateIndex extends Component<any, any> {
     this.setState({ selectedIndexList: copySelectedIndexList });
   };
 
-  openAndClose = num => {
+  openAndClose = (num: number) => {
     let temp = [...this.state.showQAList];
 
     if (_.includes(temp, num)) {
@@ -313,7 +313,7 @@ export default class CreateIndex extends Component<any, any> {
     this.setState({ showQAList: temp });
   };
 
-  render() {
+  override render() {
     const {
       currentIndexInfo,
       worksheetAvailableFields,
@@ -462,9 +462,9 @@ export default class CreateIndex extends Component<any, any> {
               )}
             </div>
 
-            {QA_TEXT.map(v => {
+            {QA_TEXT.map((v, index) => {
               return (
-                <Fragment>
+                <Fragment key={index}>
                   <div className="desTitle  mTop16" onClick={() => this.openAndClose(v.qa)}>
                     <span className="Hand"> {v.title}</span>
                   </div>

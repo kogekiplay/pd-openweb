@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import _, { get } from 'lodash';
 import { motion } from 'motion/react';
@@ -541,7 +541,7 @@ export default function Conditions(props) {
               showQueryBtn={showQueryBtn}
               onClick={() => {
                 setFullShow(!fullShow);
-                safeLocalStorageSetItem('QUICK_FILTER_FULL_SHOW', !fullShow);
+                safeLocalStorageSetItem('QUICK_FILTER_FULL_SHOW', String(!fullShow));
               }}
             >
               {/* 这里没有别的 transform，Motion 自己合成 rotate() 与原来手写的等价 */}

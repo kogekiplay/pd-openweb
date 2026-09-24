@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useMeasure } from 'react-use';
 import cx from 'classnames';
 import { chain, find, findLast, findLastIndex, flatten, get, identity, isArray, isEmpty, omit } from 'lodash';
@@ -157,8 +157,8 @@ function contentIsEmpty(content) {
   if (isArray(content)) {
     return (
       content.filter(item => {
-        if (item.type === 'text' && item.text === '') return;
-        if (item.type === 'tool_calls' && filterToolCalls(item.toolCalls).length === 0) return;
+        if (item.type === 'text' && item.text === '') return undefined;
+        if (item.type === 'tool_calls' && filterToolCalls(item.toolCalls).length === 0) return undefined;
         return true;
       }).length === 0
     );
@@ -194,7 +194,7 @@ function getContentOfMessage(message) {
 
 export function formatMessage(message) {
   if (!['user', 'assistant'].includes(message.role)) {
-    return;
+    return undefined;
   }
 
   const result: Record<string, any> = {};
@@ -207,7 +207,7 @@ export function formatMessage(message) {
   result.hasSubmit = message.hasSubmit;
   result.modelMessageId = get(message, 'metadata.id');
   if (isEmpty(result.content) && isEmpty(result.media)) {
-    return;
+    return undefined;
   }
 
   return result;
@@ -720,7 +720,7 @@ function MingoContent(props, ref) {
   const handleDragChange = useCallback(value => {
     const newWidth = window.innerWidth - value;
     const clampedWidth = Math.min(Math.max(newWidth, MINGO_MIN_WIDTH), MINGO_MAX_WIDTH);
-    safeLocalStorageSetItem('AI_ACTION_CHATBOT_WIDTH', clampedWidth);
+    safeLocalStorageSetItem('AI_ACTION_CHATBOT_WIDTH', String(clampedWidth));
     setPanelWidth(clampedWidth);
     setDragMaskVisible(false);
   }, []);
@@ -736,7 +736,7 @@ function MingoContent(props, ref) {
           setRef={dragRef}
           onDrag={handleDragMouseDown}
           onDBClick={() => {
-            safeLocalStorageSetItem('AI_ACTION_CHATBOT_WIDTH', MINGO_MIN_WIDTH);
+            safeLocalStorageSetItem('AI_ACTION_CHATBOT_WIDTH', String(MINGO_MIN_WIDTH));
             setPanelWidth(MINGO_MIN_WIDTH);
             setDragMaskVisible(false);
           }}

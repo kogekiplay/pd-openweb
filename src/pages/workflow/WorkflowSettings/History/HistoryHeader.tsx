@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { DatePicker } from 'antd';
 import en_US from 'antd/es/date-picker/locale/en_US';
 import ja_JP from 'antd/es/date-picker/locale/ja_JP';
@@ -18,7 +18,7 @@ import SerialProcessDialog from './components/SerialProcessDialog';
 import { FLOW_STATUS } from './config';
 
 export default class HistoryHeader extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isPlugin: bool,
     processId: string,
     isSerial: bool,
@@ -36,7 +36,7 @@ export default class HistoryHeader extends Component<any, any> {
     archivedItem: {},
   };
 
-  state = {
+  override state = {
     status: 'all',
     time: ['', ''],
     searchVal: '',
@@ -52,7 +52,7 @@ export default class HistoryHeader extends Component<any, any> {
       .map(key => ({ ...data[key], value: key }));
   };
 
-  formatTime = time => time.map(item => item && moment(item).format('YYYY/MM/DD HH:mm'));
+  formatTime = (time: string[]) => time.map(item => item && moment(item).format('YYYY/MM/DD HH:mm'));
 
   handlePara = () => {
     const { status, time, searchVal } = this.state;
@@ -73,7 +73,7 @@ export default class HistoryHeader extends Component<any, any> {
     this.setState(obj, this.onFilterParaChanged);
   };
 
-  render() {
+  override render() {
     const { onRefresh, isSerial, processId, batchIds, archivedItem, expireType } = this.props;
     const { status, isRefresh, showDialog } = this.state;
     const lang = getCookie('i18n_langtag') || window.getDefaultLangKey();

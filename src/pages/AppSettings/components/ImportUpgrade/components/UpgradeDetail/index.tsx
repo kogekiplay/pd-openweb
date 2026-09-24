@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Drawer } from 'antd';
 import cx from 'classnames';
@@ -37,7 +37,7 @@ export default class UpgradeDetail extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { worksheetDetailData, currentWorksheet } = this.props;
 
     if (!_.isEmpty(worksheetDetailData)) {
@@ -47,7 +47,7 @@ export default class UpgradeDetail extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.worksheetDetailData, this.props.worksheetDetailData)) {
         const { worksheetDetailData, currentWorksheet } = this.props;
@@ -59,7 +59,7 @@ export default class UpgradeDetail extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { visible, modelType, onClose = () => {} } = this.props;
     const { data = {}, tabType } = this.state;
     const { controls = [], views = [] }: { controls: FormControl[]; [key: string]: any } = data;

@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useEffect, useMemo, useState } from 'react';
+import { Fragment, memo, useEffect, useMemo, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -63,9 +63,6 @@ const deleteKeyFromMap = (mapSetter, key) => {
     return next;
   });
 };
-const handleViewRule = () => {
-  window.open(FIELD_RULE_TIP_URL, '_blank');
-};
 
 const KnowledgeWorksheet = props => {
   const { appId, projectId, knowledgeId, backToList, openChunkPreview } = props;
@@ -74,7 +71,7 @@ const KnowledgeWorksheet = props => {
   const disabledKnowledge = isDisabledKnowledge(projectId, true);
   const knowledgeOverLimit = disabledKnowledge ? false : overLimit;
 
-  const [allWorksheetList, setAllWorksheetList] = useState([]);
+  const [allWorksheetList, setAllWorksheetList] = useState<{ worksheetId: string | undefined; worksheetName: string | undefined; worksheet: HapApi.MD.Entity.Apk.EntityInfo }[]>([]);
   const [currentCollection, setCurrentCollection] = useState({});
   const [activeId, setActiveId] = useState(null);
   const [formattedCollection, setFormattedCollection] = useState({});

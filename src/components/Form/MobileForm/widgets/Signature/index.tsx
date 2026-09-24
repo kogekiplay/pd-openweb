@@ -1,9 +1,9 @@
-import React, { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Popup } from 'antd-mobile';
 import axios from 'axios';
 import _ from 'lodash';
 // signature_pad 5 的 exports 映射只有 '.'，深子路径 dist/signature_pad 已被封死。
-import SignaturePad from 'signature_pad';
+import SignaturePad, { type BasicPoint } from 'signature_pad';
 import styled from 'styled-components';
 import { Button, Icon } from 'ming-ui';
 import accountSettingAjax from 'src/api/accountSetting';
@@ -165,13 +165,13 @@ const Signature = props => {
   } = props;
   const signatureRef = useRef<HTMLCanvasElement | null>(null);
   const signatureContentRef = useRef(null);
-  const signaturePad = useRef(null);
-  const removeCanvasTouchBlockRef = useRef(null);
-  const resizeTimerRef = useRef(null);
+  const signaturePad = useRef<SignaturePad | null>(null);
+  const removeCanvasTouchBlockRef = useRef<(() => void) | null>(null);
+  const resizeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const keepSignatureOnInitRef = useRef(false);
   const signatureDataUrlRef = useRef('');
   const restoringSignatureRef = useRef(false);
-  const initCanvasRef = useRef(null);
+  const initCanvasRef = useRef<(() => void) | null>(null);
   const [isEdit, setIsEdit] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
   const [isLandscape, setIsLandscape] = useState(
@@ -278,12 +278,17 @@ const Signature = props => {
     }
 
     if (isRotateLandscape) {
-      const createPoint = signaturePad.current._createPoint.bind(signaturePad.current);
+      // _createPoint 在 signature_pad 5 里是 private（.d.ts 里只剩一个没有类型的名字），横屏要改写它的坐标换算
+      // 只能覆盖这个私有方法。签名照 v5 源码写：_createPoint(x, y, pressure): Point，Point 实现了导出的 BasicPoint。
+      const pad = signaturePad.current as unknown as {
+        _createPoint: (x: number, y: number, pressure: number) => BasicPoint;
+      };
+      const createPoint = pad._createPoint.bind(pad);
 
       // v5 的内部调用是 _createPoint(event.x, event.y, event.pressure)，比早先多了第三个
       // 压感参数。原来的两参覆盖会把 pressure 丢成 undefined，笔画粗细就不再随压感变化，
       // 所以这里把它原样透传下去。
-      signaturePad.current._createPoint = (clientX, clientY, pressure) => {
+      pad._createPoint = (clientX, clientY, pressure) => {
         const content = signatureContentRef.current;
 
         if (!content) {
@@ -617,7 +622,7 @@ const Signature = props => {
   }, []);
 
   useEffect(() => {
-    if (!popupVisible) return;
+    if (!popupVisible) return undefined;
 
     window.addEventListener('resize', resizeCanvas);
     window.addEventListener('orientationchange', resizeCanvas);
@@ -634,7 +639,7 @@ const Signature = props => {
   }, [lastInfo, popupVisible, resizeCanvas]);
 
   useEffect(() => {
-    if (!popupVisible || lastInfo) return;
+    if (!popupVisible || lastInfo) return undefined;
 
     const timer = setTimeout(initCanvas, 300);
 

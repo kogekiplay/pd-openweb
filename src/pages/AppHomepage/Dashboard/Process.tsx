@@ -251,7 +251,7 @@ export default function Process(props) {
     setFlag,
     currentTheme,
   } = props;
-  const [myProcess, setMyProcess] = useState({
+  const [myProcess, setMyProcess] = useState<{ visible: boolean; activeTab?: number | undefined }>({
     visible: false,
   });
   const [currentTab, setCurrentTab] = useState(0);

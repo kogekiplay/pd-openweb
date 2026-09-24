@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class DialogHeader extends Component<any, any> {
-  render() {
+interface DialogHeaderProps {
+  title?: React.ReactNode;
+}
+
+class DialogHeader extends Component<DialogHeaderProps> {
+  override render() {
     if (!this.props.title) {
       return null;
     }

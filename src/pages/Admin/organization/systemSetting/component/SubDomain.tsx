@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Input } from 'antd';
 import _ from 'lodash';
 import { Dialog, Icon, LoadDiv, QiniuUpload } from 'ming-ui';
@@ -6,8 +6,14 @@ import projectSettingController from 'src/api/projectSetting';
 import Config from '../../../config';
 import './index.less';
 
-export default class SubDomain extends Component<any, any> {
-  constructor(props) {
+export interface SubDomainProps {
+  setLevel: (value: number) => void;
+}
+
+export default class SubDomain extends Component<SubDomainProps, any> {
+  declare upload: HTMLInputElement | null | undefined;
+
+  constructor(props: SubDomainProps) {
     super(props);
     this.images = [];
     this.state = {
@@ -23,11 +29,11 @@ export default class SubDomain extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({ isLoading: true });
     Promise.all([this.getSubDomainInfo(), this.getSysColor()]).then(([res, { homeImage }]) => {
       const attUrl = `${md.global.FileStoreConfig.pictureHost}/ProjectLogo/`;
-      this.images = new Array(5).fill(1).map(function (item, index) {
+      this.images = new Array(5).fill(1).map(function (_item, index) {
         return `${attUrl}HomeImage_1${index + 1}.jpg?imageView2/2/w/194/h/52/q/90`;
       });
       const splitHome = homeImage.split('/') || [];
@@ -178,7 +184,7 @@ export default class SubDomain extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { domainName, isLoading, currentHomeImage, visible } = this.state;
     return (
       <div className="orgManagementWrap">

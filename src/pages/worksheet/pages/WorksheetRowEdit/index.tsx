@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Component, Fragment, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import { LoadDiv, ScrollView } from 'ming-ui';
@@ -55,13 +55,13 @@ const LoadableMobileRecordInfoModal = lazy(() =>
 const LoadableRecordInfoWrapper = lazy(() => import('worksheet/common/recordInfo/RecordInfoWrapper'));
 
 class WorksheetRowEdit extends Component<any, any> {
-  state = {
+  override state = {
     loading: true,
     isError: false,
     data: {},
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getLinkDetail();
   }
   /**
@@ -160,7 +160,7 @@ class WorksheetRowEdit extends Component<any, any> {
       return (
         <VerificationPass
           validatorPassPromise={(value, captchaResult) => {
-            return new Promise((resolve, reject) => {
+            return new Promise((_resolve, reject) => {
               if (value) {
                 this.getLinkDetail({
                   password: value,
@@ -209,7 +209,7 @@ class WorksheetRowEdit extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { loading, data, isError } = this.state;
     const isMobile = browserIsMobile();
     const RecordInfo = isMobile ? LoadableMobileRecordInfoModal : LoadableRecordInfoWrapper;

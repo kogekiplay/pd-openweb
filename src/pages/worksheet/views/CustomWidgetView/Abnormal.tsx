@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { isFunction } from 'lodash';
 import { includes } from 'lodash';

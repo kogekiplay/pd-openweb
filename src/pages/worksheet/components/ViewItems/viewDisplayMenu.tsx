@@ -5,10 +5,10 @@ import { Icon } from 'ming-ui';
 import { VIEW_TYPE_ICON } from 'src/pages/worksheet/constants/enum.js';
 
 export default class ViewDisplayMenu extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
-  state = {};
-  render() {
+  override state = {};
+  override render() {
     const { onClick, viewType, ...rest } = this.props;
     return (
       // antd 5 起 Menu 的 children 写法已弃用（控制台报 `children` is deprecated，

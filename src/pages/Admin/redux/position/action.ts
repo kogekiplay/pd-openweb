@@ -9,7 +9,12 @@ export const updateProjectId = (projectId: string) => dispatch => {
 };
 
 export const getPositionList = () => (dispatch: AppDispatch, getState: GetState) => {
-  const { positionPageInfo = {}, projectId, positionList = [], searchValue } = getState().orgManagePage.position;
+  const {
+    positionPageInfo = { pageIndex: 1, isMore: false },
+    projectId,
+    positionList = [],
+    searchValue,
+  } = getState().orgManagePage.position;
   const { pageIndex } = positionPageInfo;
   let extra = searchValue ? { keywords: searchValue } : { pageIndex: pageIndex || 1, pageSize: PAGE_SIZE };
   jobAjax
@@ -49,11 +54,11 @@ export const updatePositionList = list => dispatch => {
   });
 };
 
-export const updatePositionPageInfo = data => dispatch => {
+export const updatePositionPageInfo = (data: { isMore: boolean | undefined; pageIndex: number }) => dispatch => {
   dispatch({ type: 'UPDATE_POSITION_PAGE_INFO', data });
 };
 
-export const updateCurrentPosition = currentPosition => dispatch => {
+export const updateCurrentPosition = (currentPosition: HapApi.MD.Web.Ajax.ResultModel.Project.JobModel) => dispatch => {
   dispatch({ type: 'UPDATE_CURRENT_POSITION', currentPosition });
 };
 
@@ -65,7 +70,7 @@ export const updateUserPageIndex = userPageIndex => dispatch => {
   dispatch({ type: 'UPDATE_USER_PAGE_INDEX', userPageIndex });
 };
 
-export const getUserList = params => (dispatch: AppDispatch, getState: GetState) => {
+export const getUserList = (params: { jobId: string | undefined }) => (dispatch: AppDispatch, getState: GetState) => {
   const { jobId = '' } = params;
   const { projectId, userPageIndex } = getState().orgManagePage.position;
   dispatch({ type: 'UPDATE_USER_LOADING', userLoading: true });

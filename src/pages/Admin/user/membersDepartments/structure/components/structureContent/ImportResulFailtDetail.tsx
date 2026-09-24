@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -81,7 +81,7 @@ const ImportError = styled.div`
   }
 `;
 
-const userTemplatePaths = {
+const userTemplatePaths: Record<number, string> = {
   0: '/staticfiles/template/importUserTemplate/导入用户.xlsx',
   1: '/staticfiles/template/importUserTemplate/import user.xlsx',
   2: '/staticfiles/template/importUserTemplate/ユーザーをインポートする.xlsx',
@@ -104,7 +104,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 160,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.account || record.mobile || '';
           },
         },
@@ -115,7 +115,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 200,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.fullname || record.fullName || '';
           },
         },
@@ -125,7 +125,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 160,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.job || record.jobStr || '';
           },
         },
@@ -135,7 +135,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 160,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.department || record.departmentStr || '';
           },
         },
@@ -145,7 +145,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 160,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.orgRole || record.orgRoleStr || '';
           },
         },
@@ -157,7 +157,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
           ellipsis: true,
           width: 160,
           show: true,
-          render: (t, record) => {
+          render: (_t, record) => {
             return record.contactPhone || record.workPhone || '';
           },
         },
@@ -194,7 +194,7 @@ export default class ImportResulFailtDetail extends Component<any, any> {
       exportFileName: fileName,
     });
   };
-  render() {
+  override render() {
     const { resultDetail = {}, currentTab, importError } = this.props;
     let { dataSource = [] } = this.state;
     const { successCount } = resultDetail;

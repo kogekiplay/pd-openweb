@@ -201,7 +201,7 @@ function SelectWorksheet(props) {
     });
   };
 
-  const expandApp = (e, app) => {
+  const expandApp = (e: React.MouseEvent<HTMLElement, MouseEvent>, app) => {
     e.stopPropagation();
     const isExpand = _.includes(expandIds, app.appId);
     const newIds = isExpand ? expandIds.filter(item => item !== app.appId) : expandIds.concat(app.appId);
@@ -262,7 +262,7 @@ function SelectWorksheet(props) {
           const isExpand = _.includes(expandIds, app.appId);
           const isAppChecked = !!_.find(selectApps, item => item.appId === app.appId);
           return (
-            <React.Fragment>
+            <React.Fragment key={index}>
               <Item key={index} onClick={() => handleSelectApps(app)}>
                 <Icon
                   icon={isExpand ? 'arrow-down' : 'arrow-right-tip'}
@@ -279,11 +279,11 @@ function SelectWorksheet(props) {
                 itemLoading[app.appId] ? (
                   <LoadDiv size="small" />
                 ) : items[app.appId] && items[app.appId].length ? (
-                  items[app.appId].map(item => {
+                  items[app.appId].map((item, index) => {
                     const isItemChecked = !!_.find(selectWorksheets, v => v.workSheetId === item.workSheetId);
 
                     return (
-                      <Item className="isItem" onClick={() => handleSelectWorksheets(item, app)}>
+                      <Item key={index} className="isItem" onClick={() => handleSelectWorksheets(item, app)}>
                         <Checkbox className="mRight10" checked={isItemChecked} />
                         <SvgIcon url={item.iconUrl} fill={app.iconColor} size={16} />
                         <div className="overflow_ellipsis mLeft6">{item.workSheetName}</div>

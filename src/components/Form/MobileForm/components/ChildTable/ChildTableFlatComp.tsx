@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -166,13 +166,13 @@ export default function ChildTableFlatComp(props) {
   const [maxShowLength, setMaxShowLength] = useState(defaultMaxLength);
   const [expandRowIndex, setExpandRowIndex] = useState<number | undefined>();
   const [random, setRandom] = useState(Date.now());
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const customWidgetRefs = useRef([]);
   const rowRefs = useRef([]);
 
   const showRows = isEdit || showExpand ? rows : rows.slice(0, maxShowLength);
 
-  const [expandIds, setExpandIds] = useState([]);
+  const [expandIds, setExpandIds] = useState<(string | undefined)[]>([]);
 
   const isShowAll = maxShowLength === rows.length;
 
@@ -196,7 +196,7 @@ export default function ChildTableFlatComp(props) {
   };
 
   // 编辑平铺记录
-  const handleChangeFlattenRow = (data, ids, item, customWidgetRef) => {
+  const handleChangeFlattenRow = (data, _ids, item: RecordRow, customWidgetRef) => {
     if (!customWidgetRef) return;
     const updateControlIds = customWidgetRef.dataFormat.getUpdateControlIds();
     const row = [{}, ...data].reduce((a = {}, b = {}) => Object.assign(a, { [b.controlId]: b.value }));
@@ -241,7 +241,7 @@ export default function ChildTableFlatComp(props) {
     : showFields;
 
   // 平铺展开收起
-  const handleExpandFlat = (isExpand, index: number, rowid: string) => {
+  const handleExpandFlat = (isExpand: boolean, index: number, rowid: string) => {
     setRandom(Date.now());
     setExpandRowIndex(!isExpand ? index : undefined);
     // 呈现&编辑均可同时展开多条
@@ -253,11 +253,11 @@ export default function ChildTableFlatComp(props) {
   useEffect(() => {
     if (isEdit && expandRowIndex !== undefined && rowRefs.current[expandRowIndex]) {
       const element = rowRefs.current[expandRowIndex];
-      if (!element) return;
+      if (!element) return undefined;
 
       // 当展开内容较长时，需要等待内容完全渲染
       // 使用多重 requestAnimationFrame + setTimeout 确保 DOM 和内容都渲染完成
-      let rafId1, rafId2, timeoutId;
+      let rafId1, rafId2: number | undefined, timeoutId: NodeJS.Timeout | undefined;
 
       rafId1 = requestAnimationFrame(() => {
         rafId2 = requestAnimationFrame(() => {
@@ -279,6 +279,7 @@ export default function ChildTableFlatComp(props) {
         if (timeoutId) clearTimeout(timeoutId);
       };
     }
+    return undefined;
   }, [expandRowIndex, isEdit, expandIds]);
 
   useEffect(() => {

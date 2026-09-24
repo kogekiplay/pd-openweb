@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import en_US from 'antd/es/date-picker/locale/en_US';
 import ja_JP from 'antd/es/date-picker/locale/ja_JP';
 import zh_CN from 'antd/es/date-picker/locale/zh_CN';
@@ -63,7 +63,7 @@ const dateMenu = [
   },
 ];
 
-let lastSelectId = null;
+let lastSelectId: string | number | null = null;
 
 const DateFilter = props => {
   const { noClear, onChange, popupContainer } = props;
@@ -72,7 +72,8 @@ const DateFilter = props => {
   const [customDate, setCustomDate] = useState(window.feedCustomDate || []);
 
   useEffect(() => {
-    const { getDate } = _.find(dateMenu, { id: selectId }) || {};
+    // 用谓词而不是 { id } 简写：selectId 可能是数字或字符串（'custom' / 'clear'），简写会让 lodash 的重载推乱
+    const { getDate } = _.find(dateMenu, item => item.id === selectId) || {};
 
     if (selectId !== 'custom') {
       setVisible(false);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import sheetApi from 'src/api/worksheet';
@@ -35,7 +35,7 @@ export default function Control(props) {
     );
   }
 
-  const handlePositionControl = c => {
+  const handlePositionControl = (c: FormControl) => {
     const el = document.querySelector(`.navItem-${c.controlId}`);
     const className = 'highlight';
     const highlightEl = el.querySelector('.itemName');
@@ -52,7 +52,7 @@ export default function Control(props) {
   const { template = {} } = sheetInfo;
   const controls: FormControl[] = (template.controls || []).filter(c => !ALL_SYS.includes(c.controlId));
 
-  const renderControlNav = c => {
+  const renderControlNav = (c: FormControl) => {
     const data = _.find(translateData, { correlationId: c.controlId, parentId: selectNode.workSheetId }) || {};
     const translateInfo = data.data || {};
     return (
@@ -92,8 +92,9 @@ export default function Control(props) {
       </div>
       <ScrollView className="h100" ref={scrollViewRef}>
         <div className="pLeft20 pRight20">
-          {controls.map(c => (
+          {controls.map((c, index) => (
             <ControlContent
+              key={index}
               app={app}
               control={c}
               selectNode={selectNode}

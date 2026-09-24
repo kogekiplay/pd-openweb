@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -22,7 +22,11 @@ const DetailViewWrap = styled.div`
   }
 `;
 
-class DetailView extends Component<any, any> {
+export interface DetailViewState {
+  loading: boolean;
+}
+
+class DetailView extends Component<any, DetailViewState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +34,7 @@ class DetailView extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         _.get(this.props, 'view.childType') === 1 &&
@@ -74,7 +78,7 @@ class DetailView extends Component<any, any> {
       </Fragment>
     );
   };
-  render() {
+  override render() {
     const {
       view,
       currentSheetRows = [],

@@ -56,7 +56,9 @@ const LoadMask = styled.div`
 `;
 
 export default class FillWorksheet extends React.Component<any, any> {
-  static propTypes = {
+  declare issubmitting: boolean | undefined;
+
+  static override propTypes = {
     loading: PropTypes.bool,
     rules: PropTypes.arrayOf(PropTypes.shape({})),
     publicWorksheetInfo: PropTypes.shape({}),
@@ -74,7 +76,7 @@ export default class FillWorksheet extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const request = getRequest();
 
     if (!this.props.isPreview && !request.isMDClient) {
@@ -107,15 +109,15 @@ export default class FillWorksheet extends React.Component<any, any> {
 
   onSave = (error, { data, handleRuleError, handleServiceError, alertLockError }) => {
     if (this.issubmitting) {
-      return;
+      return undefined;
     }
 
     if (error) {
       this.setState({ submitLoading: false });
-      return;
+      return undefined;
     }
 
-    if (!this.customwidget.current) return;
+    if (!this.customwidget.current) return undefined;
     const { publicWorksheetInfo = {}, onSubmit } = this.props;
     const {
       shareId,
@@ -247,6 +249,7 @@ export default class FillWorksheet extends React.Component<any, any> {
         submit();
       }
     }
+    return undefined;
   };
 
   renderFormSection = () => {
@@ -275,7 +278,7 @@ export default class FillWorksheet extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { loading, publicWorksheetInfo = {}, rules, status, isPreview, themeBgColor } = this.props;
     const { submitLoading, formData, showError, submitBtnLoading } = this.state;
     const {

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -100,10 +100,11 @@ export default function RoleHeader(props) {
         <WrapTabCon className="editTypeTab">
           {[0, 1]
             .filter(o => (canEnterPortal ? true : o !== 1))
-            .map(o => {
-              if (o === 1 && !featureType) return;
+            .map((o, index) => {
+              if (o === 1 && !featureType) return undefined;
               return (
                 <span
+                  key={index}
                   className={cx('editTypeTabLi Hand Bold Font14', { current: editType === o })}
                   onClick={() => {
                     if (o === editType) return;

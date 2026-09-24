@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -87,7 +87,7 @@ export default function SelectCount({
   const [visible, setVisible] = useState(false);
   const getList = () =>
     (needCloseSelect ? [CLOSE_SECTION.value] : []).concat(
-      Array.from({ length: maxCount - minCount + 1 }).map((v, i) => i + minCount),
+      Array.from({ length: maxCount - minCount + 1 }).map((_v, i) => i + minCount),
     );
   return (
     <SelectCountWrap ref={$ref}>

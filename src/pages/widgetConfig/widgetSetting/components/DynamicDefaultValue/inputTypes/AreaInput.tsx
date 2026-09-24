@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import _ from 'lodash';
 import CityPicker from 'ming-ui/components/CityPicker';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';

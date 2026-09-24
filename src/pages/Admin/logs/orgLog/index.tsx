@@ -27,6 +27,9 @@ const FlexWrap = styled.div`
 `;
 
 export default class orgLog extends React.Component<any, any> {
+  declare seatchWrap: HTMLDivElement | null | undefined;
+  declare tableWrap: PageTableCon | null | undefined;
+
   constructor(props) {
     super(props);
     const columns =
@@ -121,7 +124,7 @@ export default class orgLog extends React.Component<any, any> {
     });
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchLogs();
     this.fetchHistoryLogs();
   }
@@ -148,8 +151,8 @@ export default class orgLog extends React.Component<any, any> {
         operateType,
         accountIds: selectUserInfo.map(item => item.accountId),
       })
-      .then(({ data } = {}) => {
-        const { totalCount, list } = data || {};
+      .then(res => {
+        const { totalCount, list } = res?.data || {};
         this.setState({
           isLoading: false,
           totalCount: totalCount || 0,
@@ -221,7 +224,7 @@ export default class orgLog extends React.Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const {
       isLoading,
       searchValues = {},

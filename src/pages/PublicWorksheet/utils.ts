@@ -7,7 +7,8 @@ const userAgent = navigator.userAgent;
 
 function getBrowserInfo() {
   let browser = _l('未知');
-  const browsers = [
+  // [浏览器名, 匹配 UA 的正则]
+  const browsers: [string, RegExp][] = [
     ['Android', /Android\s([0-9.]+)/],
     ['iOS', /Version\/([0-9._]+).*Mobile.*Safari.*/],
     ['Firefox', /Firefox\/([0-9.]+)(?:\s|$)/],
@@ -75,7 +76,7 @@ function getSource() {
   const queryStart = location.href.indexOf('?');
 
   if (queryStart < 0) {
-    return;
+    return undefined;
   }
 
   const query = qs.parse(location.href.slice(location.href.indexOf('?') + 1));

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { arrayOf, shape } from 'prop-types';
 import styled from 'styled-components';
@@ -73,7 +73,7 @@ const Info = styled.div`
   }
 `;
 
-function getRefreshControls(controls) {
+function getRefreshControls(controls: FormControl[]) {
   return controls.filter(
     (c: FormControl) =>
       _.includes(
@@ -89,7 +89,7 @@ function getRefreshControls(controls) {
   );
 }
 
-function getRefreshSortControls(controls) {
+function getRefreshSortControls(controls: FormControl[]) {
   return controls.filter((c: FormControl) =>
     _.includes(
       [
@@ -102,7 +102,7 @@ function getRefreshSortControls(controls) {
   );
 }
 
-function getOtherTableControls(controls) {
+function getOtherTableControls(controls: FormControl[]) {
   const list = controls.filter(
     (l: FormControl) =>
       l.dataSource &&
@@ -272,8 +272,8 @@ export default function RefreshRecordDialog(props) {
     });
   };
 
-  const handleAllChecked = (controls, checked: boolean) => {
-    const value = {};
+  const handleAllChecked = (controls: FormControl[] | undefined, checked: boolean) => {
+    const value: Record<string, boolean> = {};
     controls.forEach((l: FormControl) => {
       value[l.controlId] = checked;
     });

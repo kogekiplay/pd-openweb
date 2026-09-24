@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { Dialog, FunctionWrap } from 'ming-ui';
 import './css/userCard.less';
@@ -21,9 +21,9 @@ export function EnlargeImage(props) {
   const { url, visible = true, onCancel } = props;
 
   useEffect(() => {
-    if (!url || !visible) return;
+    if (!url || !visible) return undefined;
 
-    const handleKeyDown = event => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape' && event.keyCode !== 27) return;
 
       event.stopPropagation();

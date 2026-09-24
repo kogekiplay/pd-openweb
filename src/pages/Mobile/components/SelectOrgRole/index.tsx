@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment } from 'react';
+import { Component, createRef, Fragment } from 'react';
 import { Checkbox } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -22,7 +22,7 @@ export default class SelectOrgRole extends Component<any, any> {
     };
     this.searchRef = createRef();
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.init();
   }
 
@@ -36,20 +36,23 @@ export default class SelectOrgRole extends Component<any, any> {
         projectId,
       })
       .then(res => {
-        let groups = [
+        // 「默认」分组是前端补的，只有名字和空 id（没有 sortIndex / disabled）；和接口给的分组放进同一个数组
+        const defaultGroups: (
+          | HapApi.MD.Web.Ajax.ResultModel.Organize.OrgRoleGroupModel
+          | { orgRoleGroupName: string; orgRoleGroupId: string }
+        )[] = [
           {
             orgRoleGroupName: _l('默认'),
             orgRoleGroupId: '',
           },
-        ]
-          .concat(res)
-          .map(l => {
-            return {
-              ...l,
-              children: [],
-              fetched: false,
-            };
-          });
+        ];
+        let groups = defaultGroups.concat(res).map(l => {
+          return {
+            ...l,
+            children: [],
+            fetched: false,
+          };
+        });
         !appointedOrganizeIds && this.setState({ expendTreeNodeKey: [groups[0].orgRoleGroupId] });
         this.getData(groups, groups[0].orgRoleGroupId);
       });
@@ -250,7 +253,7 @@ export default class SelectOrgRole extends Component<any, any> {
     ) {
       return (
         <div className="emptyWrap h100 flexCenter justifyContentCenter">
-          <div className="textDisabled Font14">{_l('没有可选组织角色')}</div>
+          <div className="textTertiary Font14">{_l('没有可选组织角色')}</div>
         </div>
       );
     }
@@ -314,7 +317,7 @@ export default class SelectOrgRole extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { visible, onClose, unique, hideClearBtn = true } = this.props;
     const { selectedOrgRole } = this.state;
     return (

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useSetState } from 'react-use';
 import { Checkbox, Divider, Radio, Space } from 'antd';
@@ -280,8 +280,8 @@ function BtnSetting(props) {
   useEffect(() => {
     appManagementAjax.getAppForManager({ projectId }).then(data => {
       if (Array.isArray(data)) {
-        let sheets = [];
-        let pageList = [];
+        let sheets: HapApi.MD.Entity.Apk.EntityInfo[] = [];
+        let pageList: HapApi.MD.Entity.Apk.EntityInfo[] = [];
         _.forEach(data, ({ workSheetInfo }) => {
           _.forEach(workSheetInfo, item => {
             if (item.type === 1) pageList.push(item);

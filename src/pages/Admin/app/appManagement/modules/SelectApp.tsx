@@ -11,6 +11,8 @@ import './index.less';
 const MAX_EXPORT_NUM = 20;
 
 export default class SelectApp extends React.Component<any, any> {
+  declare postList: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -24,7 +26,7 @@ export default class SelectApp extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getList();
   }
 
@@ -67,11 +69,11 @@ export default class SelectApp extends React.Component<any, any> {
   renderList() {
     const { list, loading, selectList = [], keyword } = this.state;
 
-    if (list === null) return;
+    if (list === null) return undefined;
 
     if (keyword && !list.length) {
       return (
-        <div className="manageListNull textDisabled mBottom20">
+        <div className="manageListNull textTertiary mBottom20">
           {_l('未找到 "%0" 相关应用，请更换关键词试试', keyword)}
         </div>
       );
@@ -79,10 +81,11 @@ export default class SelectApp extends React.Component<any, any> {
 
     return (
       <ScrollView className="flex mBottom12" onScrollEnd={this.searchDataList}>
-        {list.map(item => {
+        {list.map((item, index) => {
           const isSelect = _.findIndex(selectList, app => app.appId === item.appId) > -1;
           return (
             <Checkbox
+              key={index}
               className="TxtMiddle selectAppSortableItem"
               checked={isSelect}
               onClick={() => this.updateSelectList(isSelect, item)}
@@ -168,7 +171,7 @@ export default class SelectApp extends React.Component<any, any> {
     this.getList();
   }, 200);
 
-  render() {
+  override render() {
     const { selectList } = this.state;
 
     return (

@@ -54,7 +54,7 @@ export function editRoot(rootId, successCb, progressCb) {
  * @param  {[Boolean]} isCreator
  * @param  {[Boolean]} isPermanent
  */
-export function removeRoot(item, isCreator, isPermanent, cb) {
+export function removeRoot(item, isCreator, isPermanent: boolean, cb) {
   isPermanent = true;
   const rootId = item.id;
   let messageTitle;

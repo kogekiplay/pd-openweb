@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Dropdown } from 'ming-ui';
 import Time from 'ming-ui/components/NewTimePicker';
@@ -6,6 +6,8 @@ import { EXEC_TIME_TYPE, TIME_TYPE, TIME_TYPE_NAME } from '../../../enum';
 import './index.less';
 
 export default class TimeSelect extends Component<any, any> {
+  declare text: HTMLInputElement | null | undefined;
+
   static defaultProps = {
     dateNoTime: true,
   };
@@ -17,7 +19,7 @@ export default class TimeSelect extends Component<any, any> {
    * 修改类型
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.text && this.text.value !== this.props.data.number) {
         this.text.value = this.props.data.number;
@@ -50,7 +52,7 @@ export default class TimeSelect extends Component<any, any> {
   /**
    * 验证数值金额控件
    */
-  checkNumberControl(evt, isBlur?) {
+  checkNumberControl(evt, isBlur?: boolean | undefined) {
     const num = evt.target.value.replace(/[^\d]/g, '');
 
     evt.target.value = num;
@@ -60,7 +62,7 @@ export default class TimeSelect extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { data, dateNoTime, updateSource } = this.props;
     const list = [
       {
@@ -147,7 +149,7 @@ export default class TimeSelect extends Component<any, any> {
                 minute: data.time ? parseInt(data.time.split(':')[1]) : 0,
                 second: 0,
               }}
-              onChange={(event, value) => {
+              onChange={(_event, value) => {
                 updateSource({
                   time: value.hour.toString().padStart(2, '0') + ':' + value.minute.toString().padStart(2, '0'),
                 });

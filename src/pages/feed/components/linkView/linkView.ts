@@ -2,7 +2,22 @@
 import postController from 'src/api/post';
 import './style.css';
 
-var LinkView = function (el, param) {
+/** 发动态时的链接预览卡片。方法都是在构造函数里现挂到实例上的（没有用原型） */
+interface LinkViewInstance {
+  init: () => void;
+  getLinkViewData: () => void;
+  createLinkViewHtml: (data) => void;
+  bindEvent: () => void;
+  changeLinkThumb: (type: 'prev' | 'next') => void;
+  editLink: () => void;
+  saveLink: () => void;
+  cancelLink: () => void;
+  withLinkImg: () => void;
+  createXML: (str: string) => unknown;
+  clear: () => void;
+}
+
+function LinkView(this: LinkViewInstance, el, param) {
   var _this = this;
   var defaults = {
     viewUrl: '',
@@ -80,6 +95,7 @@ var LinkView = function (el, param) {
           options.callback(options.linkViewData);
         }
       });
+    return undefined;
   };
 
   _this.createLinkViewHtml = function (data) {
@@ -346,7 +362,7 @@ var LinkView = function (el, param) {
   };
 
   _this.init();
-};
+}
 
 export default (el, param) => {
   return new LinkView(el, param);

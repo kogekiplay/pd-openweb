@@ -22,7 +22,7 @@ export default class ImportExcel extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const comp = this;
     this.uploader = createUploader({
       runtimes: 'html5',
@@ -44,7 +44,7 @@ export default class ImportExcel extends React.Component<any, any> {
         }
       },
       init: {
-        FilesAdded(up, files) {
+        FilesAdded(_up, files) {
           let { fileList } = comp.state;
           _.forEach(files, file => {
             fileList = fileList.set(file.id, {
@@ -59,7 +59,7 @@ export default class ImportExcel extends React.Component<any, any> {
 
           comp.setState({ fileList });
         },
-        FilesRemoved(up, files) {
+        FilesRemoved(_up, files) {
           let { fileList } = comp.state;
           _.forEach(files, file => {
             fileList = fileList.delete(file.id);
@@ -67,7 +67,7 @@ export default class ImportExcel extends React.Component<any, any> {
 
           comp.setState({ fileList });
         },
-        Error(up, err, errTip) {
+        Error(_up, err, errTip) {
           if (err.code === UploadError.FILE_SIZE_ERROR) {
             alert(_l('单个文件大小超过10MB，无法支持上传'), 2);
           } else {
@@ -82,7 +82,7 @@ export default class ImportExcel extends React.Component<any, any> {
           });
           comp.setState({ fileList });
         },
-        UploadProgress(up, file: UploaderFile) {
+        UploadProgress(_up, file: UploaderFile) {
           const fileList = comp.state.fileList.update(file.id, fileItem => {
             if (!fileItem) return fileItem;
             fileItem.loaded = file?.loaded;
@@ -92,7 +92,7 @@ export default class ImportExcel extends React.Component<any, any> {
 
           comp.setState({ fileList });
         },
-        FileUploaded(up, file, info) {
+        FileUploaded(_up, file, info) {
           const { key } = info.response;
           const filePaths = comp.state.filePaths.concat();
           filePaths.push({ id: md.global.FileStoreConfig.documentHost + '/' + key, type: 1, name: file.name });
@@ -176,7 +176,7 @@ export default class ImportExcel extends React.Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { hideUploadExcel } = this.props;
     const { fileList } = this.state;
     const { worksheetExcelImportDataLimitCount } = md.global.SysSettings;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -15,7 +15,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { row } = this.props;
     this.props.updateEditIndex(row.rowid);
   }
@@ -30,7 +30,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     return rows;
   }
 
-  render() {
+  override render() {
     const { row, isCharge, base, worksheetInfo, sheetSwitchPermit, hideRecord, onClose, view } = this.props;
 
     if (isMobile) {
@@ -62,7 +62,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
           currentSheetRows={this.getCurrentSheetRows()}
           hideRecordInfo={onClose}
           hideRows={rowIds => hideRecord(rowIds[0])}
-          updateRows={(ids, newItem, updateControls) => {
+          updateRows={(_ids, newItem, updateControls) => {
             this.props.updateRecord(row, updateControls, newItem);
           }}
           isCharge={isCharge}

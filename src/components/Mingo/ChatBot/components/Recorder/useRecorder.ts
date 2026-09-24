@@ -23,8 +23,8 @@ const asrParams = {
 export default function useRecorder({ authConfig, onStop = () => {}, onError = () => {} }) {
   const [status, setStatus] = useState('ready'); // ready, connecting, recording, error
   const [recognizedText, setRecognizedText] = useState('');
-  const [mediaStream, setMediaStream] = useState(null);
-  const [audioContext, setAudioContext] = useState(null);
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
+  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [volume, setVolume] = useState(0); // 音量百分比 0-100
   const [recordTime, setRecordTime] = useState(0); // 录音时间（秒）
 
@@ -33,10 +33,10 @@ export default function useRecorder({ authConfig, onStop = () => {}, onError = (
   const isCanSendDataRef = useRef(false);
   const isCanStopRef = useRef(false);
   const resultTextRef = useRef('');
-  const analyserRef = useRef(null);
-  const volumeCheckIntervalRef = useRef(null);
-  const recordTimeIntervalRef = useRef(null);
-  const recordStartTimeRef = useRef(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const volumeCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const recordTimeIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const recordStartTimeRef = useRef<number | null>(null);
   const cache = useRef({});
 
   const isDebug = false;

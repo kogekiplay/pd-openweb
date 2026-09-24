@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -59,7 +59,7 @@ class ImportAndExport extends Component<any, any> {
     };
   }
 
-  changeTab = currentTab => {
+  changeTab = (currentTab: string) => {
     this.setState({ currentTab, fileName: '', fileUrl: '' });
   };
 
@@ -237,7 +237,7 @@ class ImportAndExport extends Component<any, any> {
       </div>
     );
   };
-  renderUpload = type => {
+  renderUpload = (type: string) => {
     let { fileName } = this.state;
     const { projectId } = this.props;
 
@@ -255,7 +255,7 @@ class ImportAndExport extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     let { currentTab, isShowFailList, fileName, importFileLoading } = this.state;
     return (
       <div className="exportContainer flexColumn">

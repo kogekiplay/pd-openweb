@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Steps } from 'ming-ui';
 import Dropdown from './dropdown';
 

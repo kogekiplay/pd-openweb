@@ -7,8 +7,10 @@ import { WidgetEventHelper } from '../../../core/useFormEventManager';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export default class SubList extends React.Component<any, any> {
-  static contextType = RecordInfoContext;
-  static propTypes = {
+  declare eventHelper: WidgetEventHelper;
+
+  static override contextType = RecordInfoContext;
+  static override propTypes = {
     from: PropTypes.number,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
     worksheetId: PropTypes.string,
@@ -131,7 +133,7 @@ export default class SubList extends React.Component<any, any> {
     }
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     // 子表 Tab 焦点：Enter 新建一行并进入表格内部键盘逻辑
     this.eventHelper.subscribe(data => {
       const { triggerType } = data;
@@ -151,13 +153,13 @@ export default class SubList extends React.Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.eventHelper) {
       this.eventHelper.destroy();
     }
   }
 
-  render() {
+  override render() {
     const {
       from,
       formItemId,

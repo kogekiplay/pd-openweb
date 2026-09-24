@@ -52,7 +52,12 @@ function CollapsedGroupDropStrip({
   );
 }
 
-function AddGroupButton({ showDivider, onAddGroup }) {
+export interface AddGroupButtonProps {
+  showDivider: boolean;
+  onAddGroup: () => void;
+}
+
+function AddGroupButton({ showDivider, onAddGroup }: AddGroupButtonProps) {
   return (
     <Fragment>
       {showDivider && <div className="customBtnGroupedBlockDivider mTop2 mBottom2" aria-hidden="true" />}

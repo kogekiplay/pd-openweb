@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, ConfigProvider, Form, Input } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -35,7 +35,7 @@ const VerificationPassWrap = styled.div`
   }
 `;
 
-export const SHARE_STATE = {
+export const SHARE_STATE: Record<number, string> = {
   4: _l('数据不存在'),
   7: _l('无权限'),
   8: _l('分享已关闭'),

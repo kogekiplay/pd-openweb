@@ -1,9 +1,17 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 
-export default class ViewGroup extends PureComponent<any, any> {
-  static propTypes = {
+export interface ViewGroupProps {
+  hasViews: boolean;
+  className: string;
+  children: React.ReactNode;
+}
+
+export default class ViewGroup extends PureComponent<ViewGroupProps, any> {
+  declare list: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     hasViews: PropTypes.bool,
     className: PropTypes.string,
     children: PropTypes.any,
@@ -25,7 +33,7 @@ export default class ViewGroup extends PureComponent<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { className } = this.props;
     return (
       <div

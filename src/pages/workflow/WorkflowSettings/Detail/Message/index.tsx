@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -51,6 +51,9 @@ const SmsServiceTipsCard = styled.div`
 `;
 
 export default class Message extends Component<any, any> {
+  declare tagBox: TagTextarea | undefined;
+  declare tagtextarea: TagTextarea | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -82,12 +85,12 @@ export default class Message extends Component<any, any> {
   currentMapId = '';
   mapData = {};
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
     this.getTwilioBaseInfo();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.setState({
@@ -491,7 +494,7 @@ export default class Message extends Component<any, any> {
   /**
    * 获取模板列表内容
    */
-  getTemplateListContent(content, referenceValue = {}) {
+  getTemplateListContent(content: string, referenceValue = {}) {
     Object.keys(referenceValue).forEach(key => {
       content = content.replace(
         new RegExp(key.replace(/\$/g, '\\$').replace(/\(/g, '\\(').replace(/\)/g, '\\)'), 'g'),
@@ -604,7 +607,7 @@ export default class Message extends Component<any, any> {
           type={2}
           content={messageContent}
           formulaMap={data.formulaMap}
-          onChange={(err, value) => this.setState({ messageContent: value.replace(/【/g, '[').replace(/】/g, ']') })}
+          onChange={(_err, value) => this.setState({ messageContent: value.replace(/【/g, '[').replace(/】/g, ']') })}
           updateSource={this.updateSource}
         />
 
@@ -820,7 +823,7 @@ export default class Message extends Component<any, any> {
   /**
    * 插入字段
    */
-  insertFields(currentMapId) {
+  insertFields(currentMapId: string) {
     const { processId, selectNodeId } = this.props;
 
     this.currentMapId = currentMapId;
@@ -877,7 +880,7 @@ export default class Message extends Component<any, any> {
     this.updateSource({ messageTemplate });
   };
 
-  render() {
+  override render() {
     const { data, addNewTemplate, showSetTemplate } = this.state;
 
     if (_.isEmpty(data)) {

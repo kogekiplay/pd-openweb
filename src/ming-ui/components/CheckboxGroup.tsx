@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -7,7 +7,7 @@ import { default as Checkbox, SIZE_LIST } from './Checkbox';
 import './less/CheckboxGroup.less';
 
 class CheckboxGroup extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({
         text: PropTypes.any, // Raio显示的名称
@@ -41,7 +41,7 @@ class CheckboxGroup extends Component<any, any> {
     this.data = _.cloneDeep(this.state.data);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.checkedValues) {
         this.checkedArraytoData(this.props.checkedValues);
@@ -49,7 +49,7 @@ class CheckboxGroup extends Component<any, any> {
     }
   }
 
-  handleClick(checked: boolean, value) {
+  handleClick(_checked: boolean, value) {
     const { onChange } = this.props;
 
     if (onChange) {
@@ -79,7 +79,7 @@ class CheckboxGroup extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { className, vertical } = this.props;
     const cls = cx('ming CheckboxGroup', {
       [className]: !!className,
@@ -90,7 +90,7 @@ class CheckboxGroup extends Component<any, any> {
         {this.state.data.map((props, index: number) => (
           <Checkbox
             {...props}
-            onClick={(...arg) => this.handleClick(...arg)}
+            onClick={(checked, value) => this.handleClick(checked, value)}
             key={index}
             size={this.props.size}
             disabled={this.props.disabled}

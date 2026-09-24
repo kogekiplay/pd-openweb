@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Trigger from '@rc-component/trigger';
@@ -49,7 +49,12 @@ const Mask = styled.div`
   left: 0;
 `;
 
-class Search extends Component<any, any> {
+export interface SearchState {
+  visible: boolean;
+  filterIndex: number;
+}
+
+class Search extends Component<any, SearchState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -57,7 +62,7 @@ class Search extends Component<any, any> {
       filterIndex: 0,
     };
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.updateFilters({ keyWords: '', quickFilterKeyWords: '', requestParams: {} });
   }
   handleVisibleChange = () => {
@@ -115,7 +120,7 @@ class Search extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { filterIndex } = this.state;
     const { updateFilters, updateQuickFilter, filters, sheetView, textFilters, viewType, base, inputPlaceholder } =
       this.props;

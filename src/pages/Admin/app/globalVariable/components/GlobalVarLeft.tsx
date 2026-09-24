@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -71,9 +71,10 @@ export default function GlobalVarLeft(props) {
                 {fetchState.keyWords ? _l('暂无搜索结果') : _l('暂无应用')}
               </div>
             ) : (
-              appList.map(app => {
+              appList.map((app, index) => {
                 return (
                   <div
+                    key={index}
                     className={cx('listItem', { isActive: activeItem === app.appId })}
                     onClick={() => onSelect(app.appId)}
                   >

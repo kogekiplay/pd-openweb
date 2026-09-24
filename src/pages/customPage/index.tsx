@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import update from 'immutability-helper';
@@ -62,20 +62,20 @@ const mapStateToProps = ({ customPage, sheet, appPkg }: RootState) => ({ ...cust
 const mapDispatchToProps = dispatch => bindActionCreators({ ...actions, updateSheetListAppItem }, dispatch);
 
 let CustomPage = class CustomPage extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
-  state = {
+  override state = {
     displayType: 'web',
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.updatePageInfo({
       loadFilterComponentCount: 0,
     });
     this.getPageData();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.updatePageInfo({
       loadFilterComponentCount: 0,
     });
@@ -638,7 +638,7 @@ let CustomPage = class CustomPage extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { loading, name, ...rest } = this.props;
     const { displayType } = this.state;
     const Comp = TYPE_TO_COMP[displayType];

@@ -17,6 +17,7 @@ export const CustomFormItemControlWrap = styled.div`
           props.height - 14
         }px !important;padding-top: ${paddingValue}px !important;padding-bottom: ${paddingValue}px !important;`;
       }
+      return undefined;
     }}
     ${props => (props.size ? `font-size: ${props.size} !important;` : '')}
   ${props => (_.includes([25, 31, 32, 33, 37, 38, 53], props.type) ? props.valueStyle : '')}
@@ -82,11 +83,13 @@ export const ControlLabel = styled.div`
     if (displayRow) {
       return `width:${titlewidth_pc}px !important;`;
     }
+    return undefined;
   }}
   ${({ hasContent, displayRow, titlewidth_pc }) => {
     if (displayRow && hasContent) {
       return titlewidth_pc === '0' ? 'width: auto !important;padding-right: 10px;' : 'padding-right: 10px;';
     }
+    return undefined;
   }}
 ${({ displayRow }) => (displayRow ? 'padding-top: 6px !important;padding-bottom: 6px !important;' : '')}
 line-height: ${({ titlesize }) => {
@@ -108,6 +111,7 @@ ${({ item, showTitle }) =>
           return 'visibility: hidden;';
         }
       }
+      return undefined;
     }}
     font-size: ${props => props.titleSize} !important;
     color: ${props => props.titleColor} !important;

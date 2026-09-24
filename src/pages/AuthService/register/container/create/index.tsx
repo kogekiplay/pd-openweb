@@ -54,7 +54,7 @@ export default function (props) {
       onChange({ lineLoading: false });
     };
 
-    const handleValidation = res => {
+    const handleValidation = (res: boolean) => {
       if (!res) {
         resetSubmitting();
         return;
@@ -232,7 +232,7 @@ export default function (props) {
               {_l('国家和地区')}
             </div>
           </div>
-          {extraList.map(o => {
+          {extraList.map((o, index) => {
             //id：自定义，字符串不重复
             //name：前端显示字段名称
             //required：1代表必填；0代表可不填。注意：后端不会进行校验，前端要校验
@@ -240,7 +240,10 @@ export default function (props) {
             // （multiple：1代表可多选；0代表单选）
             if (o.type === 3) {
               return (
-                <div className={cx(`mesDiv mesDivDrop mesDivDrop_${o.id}`, renderClassName(o.id, extraDatas[o.id]))}>
+                <div
+                  key={index}
+                  className={cx(`mesDiv mesDivDrop mesDivDrop_${o.id}`, renderClassName(o.id, extraDatas[o.id]))}
+                >
                   <CompanyDrop
                     extraDatas={extraDatas || {}}
                     extraList={extraList || []}
@@ -260,7 +263,7 @@ export default function (props) {
               );
             } else {
               return (
-                <div className={cx('mesDiv', renderClassName(o.id, extraDatas[o.id]))}>
+                <div key={index} className={cx('mesDiv', renderClassName(o.id, extraDatas[o.id]))}>
                   <input
                     name="containerCreate2"
                     type="text"

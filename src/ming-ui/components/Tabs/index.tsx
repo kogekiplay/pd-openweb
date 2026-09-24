@@ -34,7 +34,7 @@ const Tab = styled.div`
 `;
 
 export default class Tabs extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: PropTypes.string,
     center: PropTypes.bool, // 是否居中 默认 是
     tabStyle: PropTypes.shape({}), // 覆盖 tab 样式
@@ -49,7 +49,7 @@ export default class Tabs extends React.Component<any, any> {
     onChange: () => {},
   };
 
-  render() {
+  override render() {
     const { tabs, active, className, tabStyle, center, onChange } = this.props;
     return (
       <TabsCon className={className} center={center}>

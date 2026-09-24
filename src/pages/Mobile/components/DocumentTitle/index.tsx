@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { string } from 'prop-types';
 import ReactDocumentTitle from 'ming-ui/components/DocumentTitle';
 
 const MAX_RETRY_TIMES = 20;
 const RETRY_INTERVAL = 300;
-let titleTimer;
+let titleTimer: NodeJS.Timeout | undefined;
 let latestTitle = '';
 
 export function setDingTalkNavigationTitle(title: string) {
@@ -49,28 +49,32 @@ export function setDingTalkNavigationTitle(title: string) {
   updateTitle(0);
 }
 
-export default class DocumentTitle extends Component<any, any> {
-  static propTypes = {
+export interface DocumentTitleProps {
+  title: string;
+}
+
+export default class DocumentTitle extends Component<DocumentTitleProps, any> {
+  static override propTypes = {
     title: string,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     setDingTalkNavigationTitle(this.props.title);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DocumentTitleProps) {
     if (prevProps.title !== this.props.title) {
       setDingTalkNavigationTitle(this.props.title);
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     setTimeout(() => {
       setDingTalkNavigationTitle(document.title);
     });
   }
 
-  render() {
+  override render() {
     return <ReactDocumentTitle title={this.props.title} />;
   }
 }

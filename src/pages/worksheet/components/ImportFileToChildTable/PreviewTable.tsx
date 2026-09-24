@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { includes } from 'lodash';
@@ -112,7 +112,11 @@ function checkCellFullVisible(element) {
   };
 }
 
-function ControlTooltip(props) {
+export interface ControlTooltipProps {
+  control: FormControl;
+}
+
+function ControlTooltip(props: ControlTooltipProps) {
   const { control } = props;
 
   if (!includes([WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT, WIDGETS_TO_API_TYPE_ENUM.USER_PICKER], control.type)) {
@@ -155,7 +159,7 @@ renderNormalHead.propTypes = {
   columnIndex: number,
 };
 
-function getCellWidth(width: number, columnCount, showNumber) {
+function getCellWidth(width: number, columnCount: number, showNumber) {
   const averageWidth = (showNumber ? width - 60 : width) / (columnCount - (showNumber ? 1 : 0));
   return averageWidth > 150 ? averageWidth : 150;
 }

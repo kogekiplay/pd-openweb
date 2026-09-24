@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Popup } from 'antd-mobile';
 import useHistoryBackClose, { getHistoryLayerDepth } from 'src/utils/mobileNavigation';
 import { compatibleMDJS } from 'src/utils/project';

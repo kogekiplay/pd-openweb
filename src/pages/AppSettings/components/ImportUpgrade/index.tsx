@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import appManagementAjax from 'src/api/appManagement';
@@ -33,7 +33,7 @@ export default class AppImportUpgrade extends Component<any, any> {
       logList: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getUpgradeLogs();
   }
   renderEmpty = () => {
@@ -43,7 +43,7 @@ export default class AppImportUpgrade extends Component<any, any> {
         radiusSize={130}
         iconClassName="Font50 textTertiary"
         emptyTxt={_l('暂无升级记录')}
-        emptyTxtClassName="Font17 textDisabled mTop15"
+        emptyTxtClassName="Font17 textTertiary mTop15"
       />
     );
   };
@@ -73,7 +73,7 @@ export default class AppImportUpgrade extends Component<any, any> {
 
     this.setState({ showUpgradeProcess: true });
   };
-  render() {
+  override render() {
     const { projectId, data } = this.props;
     const { showUpgradeProcess, loading, logList } = this.state;
 
@@ -88,10 +88,10 @@ export default class AppImportUpgrade extends Component<any, any> {
         />
         {!loading && !_.isEmpty(logList) ? (
           <LogsWrap>
-            {logList.map(item => {
+            {logList.map((item, index) => {
               const { fileName, createTime, creater = {} } = item;
               return (
-                <div className="logsItem">
+                <div key={index} className="logsItem">
                   <img className="avatar" src={creater.avatar} />
                   <div className="flex flexColumn pTop2">
                     <div className="textTertiary mBottom8">

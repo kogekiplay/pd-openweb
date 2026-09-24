@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -7,7 +7,7 @@ import { taskTabList } from 'src/pages/integration/config.js';
 import 'src/pages/workflow/components/Switch/index.less';
 import { navigateTo } from 'src/router/navigateTo';
 
-const STATUS2TEXT = {
+const STATUS2TEXT: Record<string, string> = {
   active: _l('运行中'),
   close: _l('已关闭'),
 };
@@ -136,7 +136,7 @@ export default function Header(props) {
             onKeyDown={event => {
               if (event.which === 13) {
                 setState({
-                  title: event.target.value,
+                  title: event.currentTarget.value,
                 });
               }
             }}
@@ -155,9 +155,10 @@ export default function Header(props) {
         )}
       </div>
       <ul className="tabCon">
-        {taskTabList.map(o => {
+        {taskTabList.map((o, index) => {
           return (
             <li
+              key={index}
               className={cx('Hand Font16', { isCur: tab === o.type })}
               onClick={() => {
                 if (tab === o.type) {

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Button, Checkbox, Input, Modal, Select } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import _ from 'lodash';
@@ -110,7 +110,7 @@ export default class TimeModal extends Component<any, any> {
   renderScope() {
     const { appId } = this.props;
     const { today, rangeType, rangeValue } = this.state;
-    const pastAndFutureText = {
+    const pastAndFutureText: Record<number, string> = {
       18: _l('过去'),
       19: _l('将来'),
     };
@@ -370,7 +370,7 @@ export default class TimeModal extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { dropdownVisible } = this.state;
     const { visible, onCancel } = this.props;
     return (

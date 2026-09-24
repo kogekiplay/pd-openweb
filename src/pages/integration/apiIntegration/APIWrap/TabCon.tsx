@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 
@@ -24,7 +23,7 @@ function TabCon({ data, info, tab, setTab, forPage }) {
   return (
     <TabConWrap className={cx('TxtCenter BorderBottom pLeft40 pRight24 Top0', { TxtLeft: !forPage })}>
       <ul>
-        {TABLIST.filter((o, i) => (!info.startEventId ? [0].includes(i) : true)).map((o, i) => {
+        {TABLIST.filter((_o, i) => (!info.startEventId ? [0].includes(i) : true)).map((o, i) => {
           return (
             <li
               key={i}

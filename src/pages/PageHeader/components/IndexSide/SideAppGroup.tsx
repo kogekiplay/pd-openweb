@@ -1,9 +1,9 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import cx from 'classnames';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
 import SideAppItem from './SideAppItem';
 
-const TYPE_TO_TITLE = {
+const TYPE_TO_TITLE: Record<string, string> = {
   markedApps: _l('应用收藏'),
   aloneApps: _l('个人'),
   expireProject: _l('过期应用'),
@@ -11,18 +11,18 @@ const TYPE_TO_TITLE = {
 };
 
 export default class SideAppGroup extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
   constructor(props) {
     super(props);
     this.$appGroupWrap = createRef();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.computeMaxHeight();
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     const { items, value, expandKeys } = this.props;
     if (expandKeys !== nextProps.expandKeys) return true;
     if (items.length !== nextProps.items.length) return true;
@@ -32,7 +32,7 @@ export default class SideAppGroup extends Component<any, any> {
     return false;
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.computeMaxHeight();
   }
 
@@ -48,7 +48,7 @@ export default class SideAppGroup extends Component<any, any> {
     $ele.style.transition = `all ${Math.min(Math.max($ele.scrollHeight * 0.0005, 0.1), 0.6)}s ease-in`;
   };
 
-  render() {
+  override render() {
     let { type, projectName, items = [], expandKeys, onExpandCollapse, projectId = '@INIT', ...props } = this.props;
     const isShow = expandKeys.includes(`${type}/${projectId}`);
     items = items.filter(o => !o.pcDisplay || canEditApp(o.permissionType)); //排除pc端未发布的

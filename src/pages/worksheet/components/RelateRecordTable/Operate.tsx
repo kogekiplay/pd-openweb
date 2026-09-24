@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Trigger from '@rc-component/trigger';
@@ -25,6 +25,7 @@ import * as actions from './redux/action';
 import { initialChanges } from './redux/reducer';
 import RelateRecordBtn from './RelateRecordBtn';
 import { getVisibleControls } from './utils';
+import type { RelateRecordTableState } from './redux/types';
 
 const Con = styled.div`
   display: flex;
@@ -599,7 +600,7 @@ function Operate(props) {
                   if (!records.length) {
                     cb();
                     alert(_l('数据为空，暂不支持导出！'), 3);
-                    return;
+                    return undefined;
                   }
 
                   return exportRelateRecordRecords({
@@ -727,9 +728,12 @@ Operate.propTypes = {
 };
 
 export default connect(
-  // react-redux 9 把 mapStateToProps 的 state 推断为 unknown（v7 给的是 any），
-  // 展开 unknown 会报 TS2698。本仓没有类型化的 root state，这里把原来隐式的 any 写明。
-  (state: any) => ({ ...state }),
+  /* state 必须写成这个 store 的真实类型，不能写 any。
+     写 any 时 mapState 的返回值也是 any，react-redux 会认为组件的【所有】props 都由它注入，
+     own props 被算成空集 —— 父组件传 view / tableId 等任何一个都报「不是已知属性」。
+     这里原先的注释说「本仓没有类型化的 root state」，那是写的时候的事实；
+     后来 redux/types.ts 补了 RelateRecordTableState（ReturnType<typeof reducer>），这两处没跟着换。 */
+  (state: RelateRecordTableState) => ({ ...state }),
   dispatch => ({
     appendRecords: bindActionCreators(actions.appendRecords, dispatch),
     updatePageIndex: bindActionCreators(actions.updatePageIndex, dispatch),

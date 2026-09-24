@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -23,13 +23,15 @@ import * as socket from '../../utils/socket';
 import './index.less';
 
 class Message extends Component<any, any> {
+  declare avatar: HTMLImageElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
       moreVisible: false,
     };
   }
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     const { currentSession } = this.props;
 
     if (currentSession.value == nextProps.currentSession.value) {
@@ -138,6 +140,7 @@ class Message extends Component<any, any> {
       default:
         break;
     }
+    return undefined;
   }
   renderUserMessage() {
     const { moreVisible } = this.state;
@@ -213,7 +216,7 @@ class Message extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { message, session } = this.props;
     const { sysType, iswd } = message;
     return (

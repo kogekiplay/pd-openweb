@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Checkbox, Input, Popover, Switch } from 'antd';
 import cx from 'classnames';
 import { v4 as uuidv4 } from 'uuid';

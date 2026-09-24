@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, FunctionWrap, LoadDiv } from 'ming-ui';
 import flowNode from '../../../api/flowNode';

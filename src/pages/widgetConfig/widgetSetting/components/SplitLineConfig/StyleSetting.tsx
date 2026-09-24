@@ -5,7 +5,7 @@ import DropComponent from 'src/pages/widgetConfig/components/Dropdown';
 import { DefaultEmpty, SectionItemWrap } from './style';
 import './index.less';
 
-const THEME_COLORS = {
+const THEME_COLORS: Record<number, string> = {
   0: 'var(--color-warning)',
   1: 'var(--color-primary)',
   2: 'var(--color-success)',
@@ -44,7 +44,7 @@ const renderItem = newVal => {
 };
 
 const getDropData = () => {
-  return Array.from({ length: 3 }).map((item, index) => {
+  return Array.from({ length: 3 }).map((_item, index) => {
     const newVal = String(index);
     return {
       value: newVal,

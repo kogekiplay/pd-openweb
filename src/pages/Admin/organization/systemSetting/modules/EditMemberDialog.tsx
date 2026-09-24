@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { Dialog, LoadDiv, ScrollView } from 'ming-ui';
@@ -20,11 +20,11 @@ export default class EditMemberDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getUserList();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.workSiteId !== prevProps.workSiteId) {
         this.getUserList();
@@ -172,7 +172,7 @@ export default class EditMemberDialog extends Component<any, any> {
     this.setState({ memberKeywords: e.target.value }, this.getUserList);
   }, 200);
 
-  render() {
+  override render() {
     const { userCount } = this.props;
     return (
       <Dialog

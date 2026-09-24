@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import update from 'immutability-helper';
@@ -67,7 +67,8 @@ const ConfigWrap = styled.div`
   }
 `;
 
-const renderViewMenu = (item, isDisplay) => {
+// 当 renderItem 用时只收到 item；自己调时第二个参数传 true 表示「已选中项」的显示形态
+const renderViewMenu = (item, isDisplay?: boolean) => {
   const viewType = VIEW_DISPLAY_TYPE[item.viewType];
   const { color, icon } = _.find(VIEW_TYPE_ICON, v => v.id === viewType) || {};
   return (
@@ -115,8 +116,9 @@ export default function RelateSearchConfig(props) {
     }
   };
 
+  // 返回布尔：原来直接返回 encryId 字符串，被当成 Radio 的 disabled、JSX 的 && 条件用
   const isForbidEncry = (id?) => {
-    return _.get(
+    return !!_.get(
       _.find(controls, i => i.controlId === (id || searchcontrol)),
       'encryId',
     );
@@ -310,8 +312,8 @@ export default function RelateSearchConfig(props) {
                   isAppendToBody
                   value={fastfiltersview || undefined}
                   data={fastViews.map(i => ({ text: i.name, value: i.viewId, ..._.pick(i, ['viewType', 'name']) }))}
-                  renderTitle={({ value } = {}) => {
-                    const currenView = _.find(fastViews, f => f.viewId === value);
+                  renderTitle={selected => {
+                    const currenView = _.find(fastViews, f => f.viewId === selected?.value);
                     if (!fastfiltersview) return <span className="textDisabled">{_l('请选择')}</span>;
                     if (fastfiltersview && !currenView) return <span className="Red">{_l('已删除')}</span>;
                     return renderViewMenu(currenView, true);

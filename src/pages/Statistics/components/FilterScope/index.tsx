@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Dropdown, Input, Menu, Select } from 'antd';
@@ -323,6 +323,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
         </Dropdown>
       );
     }
+    return undefined;
   }
 
   renderDynamicFilter() {
@@ -515,7 +516,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { visible, filterConditions, showFilterConditions, currentRangeType } = this.state;
     const { projectId, worksheetInfo, currentReport } = this.props;
     const { appType = 1 } = currentReport;

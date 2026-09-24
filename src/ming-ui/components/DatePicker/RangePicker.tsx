@@ -8,7 +8,7 @@ import '../less/dateRangePicker.less';
 import '../less/Rangepicker.less';
 
 class RangePicker extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     /**
      * 占位符
      */
@@ -134,7 +134,7 @@ class RangePicker extends Component<any, any> {
     return <span>{props.placeholder}</span>;
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const { offsetTop, offsetLeft, panelCls, className, popupParentNode, children, defaultVisible, ...other } = props;
     const formatVal = this.getFormat();

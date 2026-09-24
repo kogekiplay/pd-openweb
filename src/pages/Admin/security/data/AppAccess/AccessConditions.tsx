@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Select } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -28,7 +28,7 @@ const SelectWrap = styled(Select)`
 export default function AccessConditions(props) {
   const { actionRecord = {}, updateData = () => {} } = props;
   const [accessType, setAccessType] = useState(0);
-  const [accessPass, setAccessPass] = useState(0);
+  const [accessPass, setAccessPass] = useState<number | undefined>(0);
   const [ipRule, setIpRule] = useState([]);
   const [hearderRule, setHearderRule] = useState([{ index: 0, key: '', value: '' }]);
   const [addressRule, setAdressRule] = useState([]);
@@ -111,8 +111,8 @@ export default function AccessConditions(props) {
       case 1:
         return (
           <Fragment>
-            {hearderRule.map(item => (
-              <div className="flexRow alignItemsCenter mBottom8">
+            {hearderRule.map((item, idx) => (
+              <div key={idx} className="flexRow alignItemsCenter mBottom8">
                 <Input
                   className="keyInput mRight8"
                   placeholder={_l('Key')}
@@ -148,7 +148,7 @@ export default function AccessConditions(props) {
         return (
           <Fragment>
             {addressRule.map((item, index) => (
-              <div className="flexRow alignItemsCenter mBottom8">
+              <div key={index} className="flexRow alignItemsCenter mBottom8">
                 <Input
                   className="flex"
                   value={item}
@@ -157,7 +157,7 @@ export default function AccessConditions(props) {
                 {addressRule.length > 1 && (
                   <span
                     className="delete mLeft8 Hand"
-                    onClick={() => setAdressRule(addressRule.filter((v, i) => index !== i))}
+                    onClick={() => setAdressRule(addressRule.filter((_v, i) => index !== i))}
                   >
                     <Icon icon="delete1" />
                   </span>
@@ -174,7 +174,6 @@ export default function AccessConditions(props) {
         return (
           <div className="w100">
             <SelectWrap
-              showArrow
               allowClear
               mode="multiple"
               options={DEVICE_ENUM}
@@ -182,12 +181,15 @@ export default function AccessConditions(props) {
               placeholder={_l('请选择')}
               value={clientRule}
               suffixIcon={<Icon icon="arrow-down-border" className="textTertiary Font14" />}
-              filterOption={(inputValue, option) => {
-                return (
-                  DEVICE_ENUM.find(item => item.value === option.value)
-                    .label.toLowerCase()
-                    .indexOf(inputValue.toLowerCase()) > -1
-                );
+              // 多选且没写 showSearch 时 rc-select 默认就开搜索，传对象同样是开，所以并进来等价
+              showSearch={{
+                filterOption: (inputValue, option) => {
+                  return (
+                    DEVICE_ENUM.find(item => item.value === option.value)
+                      .label.toLowerCase()
+                      .indexOf(inputValue.toLowerCase()) > -1
+                  );
+                },
               }}
               onChange={value => setDeviceList(value)}
             ></SelectWrap>

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo } from 'react';
+import { Fragment, useEffect, useMemo } from 'react';
 import { useSetState } from 'react-use';
 import { Select } from 'antd';
 import _ from 'lodash';

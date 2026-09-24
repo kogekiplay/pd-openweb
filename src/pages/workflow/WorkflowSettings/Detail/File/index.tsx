@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -16,7 +16,7 @@ export default class File extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -24,7 +24,7 @@ export default class File extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -180,7 +180,7 @@ export default class File extends Component<any, any> {
           height={0}
           content={data.fileName}
           formulaMap={data.formulaMap}
-          onChange={(err, value) => this.updateSource({ fileName: value })}
+          onChange={(_err, value) => this.updateSource({ fileName: value })}
           updateSource={this.updateSource}
         />
 
@@ -209,7 +209,7 @@ export default class File extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { data } = this.state;
 
     if (_.isEmpty(data)) {

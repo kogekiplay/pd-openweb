@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Checkbox } from 'ming-ui';
 import { switchFilterConditions } from '../../../utils';
 import Sort from '../Sort';

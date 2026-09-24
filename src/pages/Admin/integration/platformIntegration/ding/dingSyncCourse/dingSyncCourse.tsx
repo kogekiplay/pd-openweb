@@ -36,12 +36,14 @@ import wx7Png from './img/wx/7.png';
 import wx8Png from './img/wx/8.png';
 import './style.less';
 
-const passApplyConfig = {
+const passApplyConfig: Record<number, string> = {
   1: 'dingAppCourse',
   3: 'weixinAppCourse',
 };
 
 export default class DingSyncCourse extends React.Component<any, any> {
+  declare appIconForDown: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -63,7 +65,7 @@ export default class DingSyncCourse extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('dingSyncBox');
     let match = this.props.match;
 
@@ -171,11 +173,11 @@ export default class DingSyncCourse extends React.Component<any, any> {
     });
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(_nextProps, nextState) {
     return compareProps(this.state, nextState);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('dingSyncBox');
   }
 
@@ -451,7 +453,7 @@ export default class DingSyncCourse extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId, isWX } = this.state;
     const homeUrl = getIntegrationHomeUrl({ projectId, integrationType: isWX ? 3 : 1 });
 

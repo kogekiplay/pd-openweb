@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { motion } from 'motion/react';
@@ -155,7 +155,7 @@ export function renderTabs(props) {
 
         const titleStyle = getTitleStyle(control.advancedSetting.titlestyle);
         return (
-          <Tooltip placement="right" title={!showTip ? '' : control.controlName}>
+          <Tooltip key={i} placement="right" title={!showTip ? '' : control.controlName}>
             <Tab
               key={i}
               titleStyle={titleStyle}

@@ -189,7 +189,40 @@ const getLangDataIndex = langData => {
  * getTranslateInfo(...).title / .sub / .btnname 一律报 TS2339。
  * 在源头标一次，下游全部消解。
  */
-export type TranslateInfo = Record<string, string>;
+/**
+ * 某个实体（应用 / 工作表 / 视图 / 字段 / 按钮…）在当前语言下的译文表：字段名 → 译文。
+ * 键集合按实体类型不同而不同，所以保留索引签名；下面列的是全仓按点访问过的键（2026-09-23 统计），
+ * 终点配置（noPropertyAccessFromIndexSignature）下点访问必须是已声明的键。查不到译文时这些键就是 undefined，
+ * 调用方一律写成 info.name || 原文。
+ */
+export interface TranslateInfo {
+  name?: string;
+  description?: string;
+  recordName?: string;
+  nodename?: string;
+  title?: string;
+  mobileTitle?: string;
+  hintText?: string;
+  btndescmap?: string;
+  sureName?: string;
+  remark?: string;
+  confirmMsg?: string;
+  confirmContent?: string;
+  cancelName?: string;
+  createBtnName?: string;
+  summaryName?: string;
+  formTitle?: string;
+  formSub?: string;
+  formContinue?: string;
+  completeText?: string;
+  ydisplayTitle?: string;
+  targetValueName?: string;
+  suffix?: string;
+  sendmessage?: string;
+  rightYdisplayTitle?: string;
+  rightYSummaryName?: string;
+  [key: string]: string | undefined;
+}
 
 export const getTranslateInfo = (appId: string, parentId, id, data?): TranslateInfo => {
   const langData = data || window[`langData-${appId}`] || [];

@@ -86,7 +86,7 @@ export const DATE_SHOW_TYPE = {
   QUARTER: '11',
 };
 
-export const DATE_FORMAT_BY_DATERANGETYPE = {
+export const DATE_FORMAT_BY_DATERANGETYPE: Record<number, string> = {
   5: 'YYYY',
   4: 'YYYY-MM',
   3: 'YYYY-MM-DD',

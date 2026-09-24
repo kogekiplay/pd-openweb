@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { Checkbox, Radio, Textarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -16,6 +16,8 @@ const STATUS = {
 };
 
 export default class WebhookContent extends Component<any, any> {
+  declare setInterval: NodeJS.Timeout | undefined;
+
   constructor(props) {
     super(props);
 
@@ -27,7 +29,7 @@ export default class WebhookContent extends Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     clearInterval(this.setInterval);
   }
 
@@ -101,7 +103,7 @@ export default class WebhookContent extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { data, updateSource, onSave } = this.props;
     const { type, count, maxCount, contentType } = this.state;
     const overtime = !data.controls.length && count >= maxCount;
@@ -364,7 +366,7 @@ export default class WebhookContent extends Component<any, any> {
                       type={2}
                       content={data.returnJson}
                       formulaMap={data.formulaMap}
-                      onChange={(err, value) => updateSource({ returnJson: value })}
+                      onChange={(_err, value) => updateSource({ returnJson: value })}
                       updateSource={updateSource}
                     />
                   )}

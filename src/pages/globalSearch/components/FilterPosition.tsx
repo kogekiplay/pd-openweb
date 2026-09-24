@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -184,11 +184,11 @@ export default function FilterPosition(props) {
             <Fragment>
               {data.app.length !== 0 || data.table.length !== 0 ? (
                 <ScrollView>
-                  {['app', 'table'].map(listKey => {
+                  {['app', 'table'].map((listKey, index) => {
                     if (data[listKey].length === 0) return null;
                     const list = data[listKey];
                     return (
-                      <Fragment>
+                      <Fragment key={index}>
                         <div className="listTitle">{listKey === 'app' ? _l('应用') : _l('工作表')}</div>
                         {list.map(item => (
                           <div className="listItem" key={`filterAppListItem-${item.itemId}`}>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import withRouter from '../../../router/withRouter';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
@@ -147,14 +147,14 @@ function getEntriesFromUrlMap(urlByPath) {
   return FILE_ENTRIES.filter(entry => urlByPath.has(entry.file));
 }
 
-function getFirstRestoredSidebarPath(filesToRestore) {
+function getFirstRestoredSidebarPath(filesToRestore: { path: string; content: string }[]) {
   const restoredPaths = new Set((filesToRestore || []).map(item => item.path));
   const firstSidebarItem = SIDEBAR_ITEMS.find(item => item.file && restoredPaths.has(item.file));
 
   return firstSidebarItem ? firstSidebarItem.file : '';
 }
 
-function getPlanAppMeta(content) {
+function getPlanAppMeta(content: string) {
   const json = safeParse(content, 'object');
 
   if (!json || typeof json !== 'object') return null;
@@ -253,7 +253,7 @@ async function getAnonymousHistoryState(sessionId) {
   }
 }
 
-function getMingoChatUrl(sessionId, isMobile) {
+function getMingoChatUrl(sessionId: string, isMobile: boolean) {
   return pathCompletion(
     isMobile
       ? `/mobile/mingo/create-app/${encodeURIComponent(sessionId)}?anon=1`

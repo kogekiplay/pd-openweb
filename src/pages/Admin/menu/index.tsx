@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { generatePath, matchPath } from 'react-router';
 import cx from 'classnames';
@@ -47,7 +47,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const {
       location: { pathname },
       menuList,
@@ -76,7 +76,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const {
         location: { pathname },
@@ -106,13 +106,13 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
       (window.platformENV.isLocal || window.platformENV.isOverseas) &&
       !window.platformENV.isPlatform
     )
-      return;
+      return undefined;
     if (
       key === 'weixin' &&
       (window.platformENV.isLocal || window.platformENV.isOverseas) &&
       md.global.SysSettings.hideWeixin
     )
-      return;
+      return undefined;
 
     if (
       key === 'platformintegration' &&
@@ -124,7 +124,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
       md.global.SysSettings.hideLark &&
       md.global.SysSettings.hideMicrosoftEntra
     ) {
-      return;
+      return undefined;
     }
 
     const isActive = () => _.some(routes, route => isRoutePathMatched(route.path, pathname));
@@ -211,7 +211,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { currentCompanyName, isExtend, subListVisible, menuGroupKey } = this.state;
     const { menuList = [], match, location } = this.props;
     const { params } = match;

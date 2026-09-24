@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { MdLink } from 'ming-ui';
@@ -22,7 +22,7 @@ export const FLOW_TYPE = {
   AI_ACTIONS: '15',
 };
 
-export const FLOW_TYPE_NULL = {
+export const FLOW_TYPE_NULL: Record<number, { icon: string; text: string }> = {
   1: {
     icon: 'sheet',
     text: _l('当新增记录或已有记录发生修改时运行流程'),
@@ -187,13 +187,13 @@ export const TYPES = [
 
 export const getActionTypeContent = (type, item, disable?) => {
   const days = [_l('星期日'), _l('星期一'), _l('星期二'), _l('星期三'), _l('星期四'), _l('星期五'), _l('星期六')];
-  const triggerText = {
+  const triggerText: Record<number, string> = {
     1: _l('仅新增记录时'),
     2: _l('当新增或更新记录时'),
     3: _l('当删除记录时'),
     4: _l('当更新记录时'),
   };
-  const userTriggerText = {
+  const userTriggerText: Record<number, { 1: string; 3: string } | { 1: string; 3: string; 4: string; 105: string }> = {
     20: {
       1: _l('当新人入职时'),
       3: _l('当人员离职时'),

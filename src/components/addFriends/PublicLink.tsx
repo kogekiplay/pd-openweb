@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import { Dropdown, Icon, LoadDiv } from 'ming-ui';
@@ -29,7 +29,7 @@ export default class PublicLink extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getInfo();
   }
 
@@ -81,7 +81,7 @@ export default class PublicLink extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId, fromType, setDetailMode, code, url, showInviteRules } = this.props;
     const { loading, expireHours, showDialogSettingInviteRules } = this.state;
     const isProject = fromType === FROM_TYPE.NORMAL;

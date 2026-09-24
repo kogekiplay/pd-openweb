@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { ActionSheet, List } from 'antd-mobile';
 import localForage from 'localforage';
 import _ from 'lodash';
@@ -98,7 +98,7 @@ class MyHome extends Component<any, any> {
     // window.location.reload();
   };
 
-  render() {
+  override render() {
     const projectObj = getCurrentProject(
       localStorage.getItem('currentProjectId') || (md.global.Account.projects[0] || {}).projectId,
     );

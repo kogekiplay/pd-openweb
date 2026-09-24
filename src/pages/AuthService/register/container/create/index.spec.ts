@@ -1,6 +1,6 @@
 const assert = require('assert');
 const path = require('path');
-const { transformFileSync } = require('../../../../../../scripts/spec-harness.ts');
+const { jsxRuntimeFrom, transformFileSync } = require('../../../../../../scripts/spec-harness.ts');
 
 const ReactMock = {
   Fragment: 'Fragment',
@@ -26,6 +26,8 @@ function requireCreateComponent({ checkSensitive, createCompany }) {
   });
 
   function mockRequire(name) {
+    // JSX 走 automatic runtime（与 .babelrc 一致），jsx() 也要落到 ReactMock.createElement
+    if (name === 'react/jsx-runtime') return jsxRuntimeFrom(ReactMock.createElement, ReactMock.Fragment);
     if (name === 'react') {
       return {
         __esModule: true,

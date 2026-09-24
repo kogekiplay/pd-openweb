@@ -1,4 +1,4 @@
-import React, { cloneElement, Fragment, useCallback, useEffect, useState } from 'react';
+import { cloneElement, Fragment, useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Drawer } from 'antd';
@@ -32,7 +32,7 @@ const Drag = styled.div(
 const defaultWidth = 400;
 const rightToolbarWidth = 52;
 // 拖拽可调宽的上下限（抽屉宽度本身）。mingo 侧滑层最大 640，其余抽屉沿用 800。
-const MAX_DRAWER_WIDTH_BY_TYPE = { mingo: 640 };
+const MAX_DRAWER_WIDTH_BY_TYPE: Record<string, number> = { mingo: 640 };
 const DEFAULT_MAX_DRAWER_WIDTH = 800;
 const MIN_DRAWER_WIDTH = 250;
 const getBodyWidth = () => _.get(document.body, 'clientWidth', window.innerWidth || 0);
@@ -46,7 +46,7 @@ const ToolbarDrawer = props => {
   // dragLeft 越小抽屉越宽，故抽屉最大宽 → dragLeft 下界 minDrawerWidht。
   const minDrawerWidht = bodyWidth - maxDrawerWidth - rightToolbarWidth;
   const maxDrawerWidht = bodyWidth - MIN_DRAWER_WIDTH - rightToolbarWidth;
-  const clampDragLeft = v => Math.min(Math.max(v, minDrawerWidht), maxDrawerWidht);
+  const clampDragLeft = (v: number) => Math.min(Math.max(v, minDrawerWidht), maxDrawerWidht);
   const drawerWidth = bodyWidth - width - rightToolbarWidth;
   // 初始按上限 clamp：之前拖到超过新上限（如 mingo 历史宽 > 640）的，打开即收回到上限
   const [dragLeft, setDragLeft] = useState(clampDragLeft(drawerWidth));

@@ -192,8 +192,9 @@ export const Contact = {
    */
   setCurrentChat(contact) {
     if (contact && contact.value) {
-      contact.id = contact.value;
-      IM.socket.emit('current chat', contact, () => {});
+      // 发给 socket 的载荷照旧带 id = value，但不再往入参上写：调用方传的常常是 chat.sessionList 里的对象，
+      // 原先的 contact.id = contact.value 就是在两次 dispatch 之间改 store（见 actions.ts setNewCurrentSession）
+      IM.socket.emit('current chat', { ...contact, id: contact.value }, () => {});
     } else {
       IM.socket.emit('clear chat', {}, () => {});
     }
@@ -249,7 +250,7 @@ export const Contact = {
  */
 export const fetchUploadToken = param => {
   return new Promise((resolve, reject) => {
-    IM.socket.emit('upload token', param, (err, data) => {
+    IM.socket.emit('upload token', param, (_err, data) => {
       if (data.token && data.key) {
         resolve(data);
       } else {

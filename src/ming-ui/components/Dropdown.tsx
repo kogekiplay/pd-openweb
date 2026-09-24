@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import Trigger from '@rc-component/trigger';
+import type { TriggerRef } from '@rc-component/trigger';
+import type { CSSProperties, ReactNode } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -10,8 +12,125 @@ import Menu from './Menu';
 import MenuItem from './MenuItem';
 import './less/Dropdown.less';
 
-class Dropdown extends Component<any, any> {
-  static propTypes = {
+/** 下拉里的一项（value 的类型见 DropdownOption）。data 里也可以直接放一组项（数组），组与组之间画分隔线 */
+export interface DropdownItem {
+  text?: ReactNode;
+  /** text 不是字符串时，搜索按它匹配 */
+  searchText?: string | undefined;
+  disabled?: boolean | undefined;
+  /** 在这一项上方画一行灰色小标题 */
+  title?: ReactNode;
+  /** 只当一行提示文字显示，不能选 */
+  isTip?: boolean | undefined;
+  className?: string | undefined;
+  /** 左侧图标名（icon 是旧名字，两者都认） */
+  iconName?: string | undefined;
+  icon?: string | undefined;
+  iconAtEnd?: boolean | undefined;
+  iconHint?: string | undefined;
+  /** 取选中项的显示文字时会往下找的子项 */
+  children?: DropdownItem[] | undefined;
+}
+
+/**
+ * Item 推不出来时的兜底（data 还是 any）：项上可以有任意字段 —— 和 V 退回 any 同一个道理，
+ * 调用方的数据本身没类型，renderItem 里读 item.hasPay 这类自带字段就不该凭空报错。
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type UntypedDropdownItem = DropdownItem & { [field: string]: any };
+
+/** 一项 = 调用方自己的项类型 Item（可以带任意额外字段）+ 值类型为 V 的 value */
+export type DropdownOption<V, Item extends DropdownItem = DropdownItem> = Item & { value?: V };
+
+/**
+ * 两个类型参数都从调用点推出来：
+ * - V（值的类型）从 data 里项的 value、value / defaultValue、onChange 回调的参数标注里推；
+ * - Item 从 data 推，调用方项上带的额外字段在 renderItem / renderTitle 里照样有类型。
+ * 什么都推不出来（data 还是 any、又没给 value）时 V 退回 any —— 这时候调用方的数据本身就没类型，
+ * 这里跟着是 any，不另外制造 unknown 逼调用方先去写 data 的类型。
+ */
+interface DropdownProps<V, Item extends DropdownItem> {
+  // 平铺数组和「含分组的数组」分成两支写：写成一个 (项 | 项[])[] 时，项的形状不齐（有的带 disabled、有的不带）
+  // 的 data 推不出 Item，会整个报错
+  data?: readonly DropdownOption<V, Item>[] | readonly (DropdownOption<V, Item> | readonly DropdownOption<V, Item>[])[] | undefined;
+  value?: V | undefined;
+  defaultValue?: V | undefined;
+  /**
+   * 参数是选中项的 value。可能是 undefined：给了 cancelAble 时点清除按钮，或者选中的项本身没写 value。
+   */
+  onChange?: ((value: V | undefined) => void) | undefined;
+  /** 输入框右侧带清除按钮 */
+  cancelAble?: boolean | undefined;
+  placeholder?: ReactNode;
+  onVisibleChange?: ((visible: boolean) => void) | undefined;
+  /** 给了就由调用方搜：打开时调一次（不带参数），之后每次输入带上关键字 */
+  onSearch?: ((keywords?: string) => void) | undefined;
+  renderItem?: ((item: DropdownOption<V, Item>) => ReactNode) | undefined;
+  /** 输入框里显示什么；参数是选中的那一项（在 data 里没找到时是 undefined） */
+  renderTitle?: ((selected: DropdownOption<V, Item> | undefined) => ReactNode) | undefined;
+  /** 当前值不在 data 里时显示什么 */
+  renderError?: (() => ReactNode) | undefined;
+  /** 没给 renderTitle 时的显示模板，{{value}} 换成选中项的 text；默认 '{{value}}' */
+  renderValue?: string | undefined;
+  /** 完全自定义输入框那一块 */
+  renderPointer?: (() => ReactNode) | undefined;
+  noData?: ReactNode;
+  /** 本地搜索搜不到时显示什么 */
+  searchNull?: (() => ReactNode) | undefined;
+  itemLoading?: boolean | undefined;
+  disabled?: boolean | undefined;
+  /** 选了之后不改自己显示的值（完全跟外部 value 走） */
+  noChangeValue?: boolean | undefined;
+  /** 选完是否收起，默认收起 */
+  selectClose?: boolean | undefined;
+  /** 由外部控制是否展开 */
+  popupVisible?: boolean | undefined;
+  /** 每一项带上 title，悬停看全文 */
+  showItemTitle?: ReactNode;
+  /** 当前选中项额外加的类名 */
+  currentItemClass?: string | undefined;
+  /** value 在这里面的项不显示 */
+  hiddenValue?: V[] | undefined;
+  maxHeight?: number | undefined;
+  menuStyle?: CSSProperties | undefined;
+  menuClass?: string | undefined;
+  children?: ReactNode;
+  /** 下拉层挂到 body 上（用 Trigger 定位）；否则跟在输入框下面 */
+  isAppendToBody?: boolean | undefined;
+  /** 下拉顶部带搜索框 */
+  openSearch?: boolean | undefined;
+  dropIcon?: string | undefined;
+  /** 点在这些元素（选择器）上时不展开 */
+  disabledClickElement?: string | undefined;
+  /** 悬停时变主题色 */
+  hoverTheme?: boolean | undefined;
+  border?: boolean | undefined;
+  className?: string | undefined;
+  style?: CSSProperties | undefined;
+  /** isAppendToBody 时的对齐点，默认 ['tl', 'bl'] */
+  points?: string[] | undefined;
+  /** isAppendToBody 时的偏移，默认 [0, 1] */
+  offset?: number[] | undefined;
+  name?: string | undefined;
+}
+
+interface DropdownState<V> {
+  value: V | undefined;
+  showMenu: boolean;
+  keywords: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- V 的兜底，见 DropdownProps 的说明
+class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends Component<
+  DropdownProps<V, Item>,
+  DropdownState<V>
+> {
+  // 下面三个都在 ref 回调里赋值
+  declare search?: HTMLInputElement | null;
+  declare _input?: HTMLDivElement | null;
+  declare trigger?: TriggerRef | null;
+
+  static override propTypes = {
     /**
      * 未选择时的默认提示
      */
@@ -172,9 +291,9 @@ class Dropdown extends Component<any, any> {
     disabledClickElement: '',
   };
 
-  constructor(props) {
+  constructor(props: DropdownProps<V, Item>) {
     super(props);
-    let value;
+    let value: V | undefined;
 
     if (props.defaultValue !== undefined) {
       value = props.defaultValue;
@@ -191,7 +310,7 @@ class Dropdown extends Component<any, any> {
     };
   }
 
-  getTextFromDataById(data, value) {
+  getTextFromDataById(data: readonly DropdownOption<V, Item>[] | readonly (DropdownOption<V, Item> | readonly DropdownOption<V, Item>[])[] | undefined, value: V | undefined) {
     let text = this.props.placeholder;
 
     const getTextFromList = list => {
@@ -204,6 +323,7 @@ class Dropdown extends Component<any, any> {
         } else if (_.isArray(item)) {
           getTextFromList(item);
         }
+        return undefined;
       });
     };
 
@@ -232,7 +352,7 @@ class Dropdown extends Component<any, any> {
     }
   }
 
-  handleChange(event, item) {
+  handleChange(_event: React.MouseEvent<HTMLLIElement, MouseEvent>, item) {
     if (item.disabled) {
       return;
     }
@@ -255,7 +375,7 @@ class Dropdown extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         this.setState({
@@ -366,7 +486,7 @@ class Dropdown extends Component<any, any> {
       itemLoading,
     } = this.props;
 
-    const searchData = [];
+    const searchData: (DropdownOption<V, Item> | readonly DropdownOption<V, Item>[])[] = [];
 
     (data || []).forEach(item => {
       if (_.isArray(item)) {
@@ -475,13 +595,14 @@ class Dropdown extends Component<any, any> {
                   hoverBorderColorPrimary: this.props.hoverTheme,
                 })}
               >
-                {this.props.renderError && !this.props.data.map(o => o.value).includes(value)
+                {this.props.renderError && !this.props.data.map(o => (_.isArray(o) ? undefined : o.value)).includes(value)
                   ? this.props.renderError()
                   : this.props.renderTitle
                     ? this.props.renderTitle(selectedData)
                     : this.props.renderValue.replace(
                         /{{value}}/g,
-                        this.getTextFromDataById(this.props.data, this.state.value),
+                        // text 可能是节点；replace 本来就会把它转成字符串，这里只是写明
+                        String(this.getTextFromDataById(this.props.data, this.state.value)),
                       )}
               </span>
             ) : (
@@ -523,7 +644,7 @@ class Dropdown extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { isAppendToBody, className, menuClass, disabled, style, points, offset } = this.props;
     return (
       <div className={`ming Dropdown pointer ${className || ''} ${disabled ? 'disabled' : ''}`} style={style}>

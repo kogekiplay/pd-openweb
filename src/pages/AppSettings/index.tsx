@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Component, Fragment, lazy, Suspense } from 'react';
 import { shallowEqual } from 'react-redux';
 import homeAppApi from 'api/homeApp';
 import cx from 'classnames';
@@ -60,7 +60,7 @@ class AppSettings extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
 
     if (this.props.location.search === '?backup') {
@@ -70,7 +70,7 @@ class AppSettings extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.location.search === '?backup') {
         this.setState({
@@ -238,7 +238,7 @@ class AppSettings extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       currentConfigType,
       data,
@@ -285,12 +285,14 @@ class AppSettings extends Component<any, any> {
               .map(item => {
                 const { type, icon, text } = item;
                 return (
-                  <Fragment>
+                  /* 【key 要挂在 map 返回的那一层】原先挂在里面的 configItem 上，
+                     而列表子元素是这个 Fragment —— React 看不到 key，
+                     每次进应用设置都报一条 "Each child in a list should have a unique key"。 */
+                  <Fragment key={type}>
                     {_.includes(['publish', 'language', 'recyclebin', 'appOfflineSubmit'], type) && (
                       <div className="line"></div>
                     )}
                     <div
-                      key={type}
                       className={cx(`configItem ${type}`, {
                         active: type === currentConfigType,
                         collapseItem: collapseAppManageNav,
@@ -353,7 +355,7 @@ class AppSettings extends Component<any, any> {
                 icon={!collapseAppManageNav ? 'menu_left' : 'menu_right'}
                 className="Font20 textTertiary pointer collapseWrapIcon"
                 onClick={() => {
-                  safeLocalStorageSetItem('collapseAppManageNav', !collapseAppManageNav);
+                  safeLocalStorageSetItem('collapseAppManageNav', String(!collapseAppManageNav));
                   this.setState({
                     collapseAppManageNav: !collapseAppManageNav,
                   });

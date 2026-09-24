@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Tabs } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -16,6 +16,8 @@ import { formatQueryParam } from './utils';
 import './index.less';
 
 export default class ProcessInform extends Component<any, any> {
+  declare request: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     const { tab } = props.match.params;
@@ -35,7 +37,7 @@ export default class ProcessInform extends Component<any, any> {
       queryParam: {},
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getTodoList();
     this.getTodoCount();
     workflowPushSoket();
@@ -300,7 +302,7 @@ export default class ProcessInform extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { currentTab, countData, previewRecord } = this.state;
     return (
       <div className="processContent flexColumn h100">

@@ -185,7 +185,7 @@ export default class GroupDetail extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     if (!this.props.group) return null;
     return (
       <ScrollView>

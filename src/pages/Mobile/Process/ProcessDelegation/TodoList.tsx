@@ -11,7 +11,7 @@ const DEFAULT_TODO_PAGE_INFO = {
   moreLoading: false,
 };
 
-const getDefaultTodoPageInfo = hasMore => ({
+const getDefaultTodoPageInfo = (hasMore: boolean) => ({
   ...DEFAULT_TODO_PAGE_INFO,
   hasMore,
 });

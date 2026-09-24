@@ -25,6 +25,8 @@ import * as actions from './redux/actions';
 import './index.less';
 
 class AppHome extends React.Component<any, any> {
+  declare isSetScrollTop: boolean;
+
   constructor(props) {
     super(props);
 
@@ -43,7 +45,7 @@ class AppHome extends React.Component<any, any> {
     this.handleScroll = _.debounce(this.handleScroll.bind(this), 300);
     this.isSetScrollTop = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('appHomeMobile');
     this.getProject();
 
@@ -52,12 +54,12 @@ class AppHome extends React.Component<any, any> {
     // 清除工作表滚动条高度
     this.props.updateAppScrollY(0);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('appHomeMobile');
     window.removeEventListener('popstate', this.closePage);
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     const { isHomeLoading, appHomeScrollY } = this.props;
 
     if (
@@ -188,7 +190,7 @@ class AppHome extends React.Component<any, any> {
       return (
         <div className="flexColumn emptyWrap flex alignItemsCenter justifyContentCenter textTertiary">
           <Icon icon="h5_search" className="Font50" />
-          <div className="textDisabled Font17 Bold">{_l('没有搜索结果')}</div>
+          <div className="textTertiary Font17 Bold">{_l('没有搜索结果')}</div>
         </div>
       );
     }
@@ -224,7 +226,17 @@ class AppHome extends React.Component<any, any> {
   };
 
   // 应用收藏/最近使用/记录收藏 title
-  renderTitle = ({ type = 'collectAppList', wrapTitle, icon, showMore, moreText, iconClass }: { icon?: string; [key: string]: any }) => {
+  renderTitle = ({
+    type = 'collectAppList',
+    wrapTitle,
+    icon,
+    showMore,
+    moreText,
+    iconClass,
+  }: {
+    icon?: string;
+    [key: string]: any;
+  }) => {
     const projectObj = getCurrentProject(
       localStorage.getItem('currentProjectId') || (md.global.Account.projects[0] || {}).projectId,
     );
@@ -266,7 +278,7 @@ class AppHome extends React.Component<any, any> {
     const { myPlatformData, myPlatformLang } = this.props;
     let { markedAppItems = [] } = myPlatformData;
     markedAppItems = markedAppItems.filter(o => o && !(window.isMingDaoApp ? o.appDisplay : o.webMobileDisplay));
-    if (_.isEmpty(markedAppItems)) return;
+    if (_.isEmpty(markedAppItems)) return undefined;
 
     return (
       <Fragment>
@@ -308,7 +320,7 @@ class AppHome extends React.Component<any, any> {
       .map(item => _.filter(apps, it => item === it.id)[0])
       .filter(_.identity);
 
-    if (_.isEmpty(recentAppIds) && _.isEmpty(recentAppItems)) return;
+    if (_.isEmpty(recentAppIds) && _.isEmpty(recentAppItems)) return undefined;
     let list =
       recentType === 'app'
         ? recentApps.filter(o => o && !(window.isMingDaoApp ? o.appDisplay : o.webMobileDisplay))
@@ -356,7 +368,7 @@ class AppHome extends React.Component<any, any> {
   renderCollectRecords = () => {
     const { collectRecord = {} } = this.state;
     const { collectRecords = [] } = this.props;
-    if (_.isEmpty(collectRecords)) return;
+    if (_.isEmpty(collectRecords)) return undefined;
 
     const projectObj = getCurrentProject(
       localStorage.getItem('currentProjectId') || (md.global.Account.projects[0] || {}).projectId,
@@ -416,7 +428,7 @@ class AppHome extends React.Component<any, any> {
   // 图表收藏
   renderCollectCharts = () => {
     const { collectCharts } = this.props;
-    if (_.isEmpty(collectCharts)) return;
+    if (_.isEmpty(collectCharts)) return undefined;
 
     return (
       <Fragment>
@@ -544,7 +556,7 @@ class AppHome extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { searchValue } = this.state;
 
     const projectObj = getCurrentProject(

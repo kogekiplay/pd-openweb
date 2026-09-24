@@ -16,13 +16,13 @@ import { getUrlByBucketName, humanFileSize } from '../../utils';
 import './uploadAssistant.css';
 
 class UploadProgress extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     status: PropTypes.number,
     percentage: PropTypes.number, // 百分比，1 === 100%
     errorText: PropTypes.string,
   };
 
-  render() {
+  override render() {
     let percentage = (parseInt(this.props.percentage * 100, 10) || 0) + '%';
     let colorClass, text, icon;
 
@@ -67,13 +67,13 @@ class UploadProgress extends React.Component<any, any> {
 }
 
 class UploadAction extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     status: PropTypes.number,
     cancelUpload: PropTypes.func,
     retryUpload: PropTypes.func,
   };
 
-  render() {
+  override render() {
     let show = true;
     let icon, action, title;
 
@@ -106,7 +106,7 @@ class UploadAction extends React.Component<any, any> {
 }
 
 class UploadAssistant extends React.Component<any, any> {
-  state = {
+  override state = {
     uploadPath: _l('我的文件'),
     parentId: '',
     rootId: '',
@@ -120,7 +120,7 @@ class UploadAssistant extends React.Component<any, any> {
 
   _isMounted = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     this._isMounted = true;
     const comp = this;
     this.uploader = createUploader({
@@ -144,7 +144,7 @@ class UploadAssistant extends React.Component<any, any> {
             break;
         }
       },
-      before_upload_check: (up, files) =>
+      before_upload_check: (_up, files) =>
         service.getUsage().then(usage => {
           if (usage.used + files.reduce((total, file) => total + (file.size || 0), 0) > usage.total) {
             throw _l('选择的文件超过本月上传流量上限');
@@ -172,7 +172,7 @@ class UploadAssistant extends React.Component<any, any> {
           });
         },
         FilesAdded(up, files) {
-          function testFolder(nativeFile) {
+          function testFolder(nativeFile: File) {
             return new Promise((resolve, reject) => {
               if (nativeFile && nativeFile.size % 4096 == 0 && nativeFile.size <= 102400) {
                 const reader = new FileReader();
@@ -224,14 +224,14 @@ class UploadAssistant extends React.Component<any, any> {
           });
           comp._isMounted && comp.setState({ fileList });
         },
-        FilesRemoved(up, files) {
+        FilesRemoved(_up, files) {
           let { fileList } = comp.state;
           _.forEach(files, file => {
             fileList = fileList.delete(file.id);
           });
           comp._isMounted && comp.setState({ fileList });
         },
-        Error(up, err, errTip) {
+        Error(_up, err, errTip) {
           if (errTip) {
             alert(errTip);
           }
@@ -244,7 +244,7 @@ class UploadAssistant extends React.Component<any, any> {
           });
           comp._isMounted && comp.setState({ fileList });
         },
-        UploadProgress(up, file) {
+        UploadProgress(_up, file) {
           const fileList = comp.state.fileList.update(file.id, fileItem => {
             if (!fileItem) fileItem = {};
             fileItem.loaded = file && file['loaded'];
@@ -253,7 +253,7 @@ class UploadAssistant extends React.Component<any, any> {
           });
           comp._isMounted && comp.setState({ fileList });
         },
-        FileUploaded(up, file, info) {
+        FileUploaded(_up, file, info) {
           const { bucket, key, fsize } = info.response;
           const item = comp.state.fileList.get(file.id);
           service
@@ -331,6 +331,7 @@ class UploadAssistant extends React.Component<any, any> {
       if (comp.state.fileList.find(fileItem => fileItem.status === UPLOAD_STATUS.UPLOADING)) {
         return '有文件正在上传中，确定要放弃上传？';
       }
+      return undefined;
     };
 
     window.onresize = function () {
@@ -340,11 +341,11 @@ class UploadAssistant extends React.Component<any, any> {
     this.selectFile();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.updateMarginRight();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.uploader) {
       this.uploader.destroy();
     }
@@ -451,7 +452,7 @@ class UploadAssistant extends React.Component<any, any> {
     this.setState({ hoverChooseBtn: false });
   };
 
-  render() {
+  override render() {
     return (
       <div
         id="uploadAssistant"

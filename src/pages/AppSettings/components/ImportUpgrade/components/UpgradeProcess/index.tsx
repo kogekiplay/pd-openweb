@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Steps } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -33,6 +33,8 @@ import type { FormControl } from 'src/utils/controlTypes';
 export const detailTypeList = UPGRADE_DETAIL_TYPE_LIST.map(v => v.type);
 export const upgradeTypeList = UPGARADE_TYPE_LIST.map(v => v.type);
 export default class UpgradeProcess extends Component<any, any> {
+  declare uploaderWrap: QiniuUpload | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -67,7 +69,7 @@ export default class UpgradeProcess extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.state.batchUpdate) {
       appManagementAjax
         .getBatchId({ projectId: this.props.projectId, upgradeModel: this.state.upgradeModel })
@@ -225,7 +227,7 @@ export default class UpgradeProcess extends Component<any, any> {
     this.destroyUploadWrap();
   };
 
-  batchCheckUpgrade = (i, upgrade?) => {
+  batchCheckUpgrade = (i, upgrade?: boolean | undefined) => {
     const { files } = this.state;
 
     if (files[i].index !== undefined && !upgrade) {
@@ -315,7 +317,7 @@ export default class UpgradeProcess extends Component<any, any> {
         onAdd={() => {
           this.setState({ isEncrypt: false, errTip: '' });
         }}
-        onBeforeUpload={(up, file) => {
+        onBeforeUpload={(_up, file) => {
           setTimeout(() => {
             !this.state.analyzeLoading && this.setState({ file: batchUpdate ? {} : file, analyzeLoading: true });
           }, 200);
@@ -478,7 +480,7 @@ export default class UpgradeProcess extends Component<any, any> {
     return result;
   };
 
-  getParams = type => {
+  getParams = (type: string) => {
     const { batchUpdate, files, currentAppIndex, modelType } = this.state;
     const contrasts = (batchUpdate ? files[currentAppIndex].contrasts : this.state.contrasts) || {};
 
@@ -538,7 +540,7 @@ export default class UpgradeProcess extends Component<any, any> {
     type === '2' && onCancel();
   };
 
-  selectAllSettings = value => {
+  selectAllSettings = (value: boolean) => {
     this.setState({
       upgradeName: value,
       upgradeHide: value,
@@ -683,7 +685,7 @@ export default class UpgradeProcess extends Component<any, any> {
             <div className="textTertiary Font13 TxtCenter">{_l('数据正在加载中...')}</div>
           </div>
         ) : (
-          UPGARADE_TYPE_LIST.map(item => {
+          UPGARADE_TYPE_LIST.map((item, index) => {
             const { type } = item;
             const itemList = (contrasts[type] || []).filter(v => (!modelType && v.upgradeType !== 4) || modelType);
             const isExpand = _.includes(expandTypeList, item.type);
@@ -692,6 +694,7 @@ export default class UpgradeProcess extends Component<any, any> {
 
             return (
               <UpgradeItemWrap
+                key={index}
                 modelType={modelType}
                 isWorksheetDetail={false}
                 itleClassName="Font15"
@@ -787,6 +790,7 @@ export default class UpgradeProcess extends Component<any, any> {
       case 1:
         return _.some(files, l => l.type === undefined) && upgradeModel !== 1;
     }
+    return undefined;
   };
 
   updateFiles = files => this.setState({ files });
@@ -803,7 +807,7 @@ export default class UpgradeProcess extends Component<any, any> {
 
   renderFooter = () => {
     const { current, batchUpdate, batchCheckUpgradeLoading, modelType, files, upgradeModel } = this.state;
-    const items = ITEMS.filter((l, index) => index !== 1 || (batchUpdate && upgradeModel !== 1));
+    const items = ITEMS.filter((_l, index) => index !== 1 || (batchUpdate && upgradeModel !== 1));
     const isUpgradeScope = items[current].key === 'renderUpgradeScope';
     const isAllNew = batchUpdate && files.every(item => item.type === 1);
 
@@ -844,7 +848,7 @@ export default class UpgradeProcess extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { appDetail = {} } = this.props;
     const {
       current,
@@ -858,7 +862,7 @@ export default class UpgradeProcess extends Component<any, any> {
       modelType,
       upgradeModel,
     } = this.state;
-    const items = ITEMS.filter((l, index) => index !== 1 || (batchUpdate && upgradeModel === 0));
+    const items = ITEMS.filter((_l, index) => index !== 1 || (batchUpdate && upgradeModel === 0));
     const appInfo = _.get(files[currentAppIndex], 'selectApp') || _.get(files[currentAppIndex], 'apps[0]');
 
     return (

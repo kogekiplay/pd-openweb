@@ -1,4 +1,4 @@
-import React, { Component, Fragment, memo } from 'react';
+import { Component, Fragment, memo } from 'react';
 import { Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -72,14 +72,14 @@ const Legend = styled.div`
 `;
 
 export class FlowChart extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: string.isRequired,
     processId: string.isRequired,
     instanceId: string.isRequired,
     selectNodeId: string,
   };
 
-  state = {
+  override state = {
     scale: 100,
     parentId: '',
     startEventId: '',
@@ -89,7 +89,7 @@ export class FlowChart extends Component<any, any> {
     execLineComplete: false,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const { processId, instanceId } = this.props;
 
     flowNode.get({ processId, instanceId }).then(result => {
@@ -103,7 +103,7 @@ export class FlowChart extends Component<any, any> {
     });
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     const { execIds, execPendingIds } = this.state;
 
     if (!this.state.execLineComplete) {
@@ -121,7 +121,7 @@ export class FlowChart extends Component<any, any> {
     const $content = $box.find('.workflowEditContent');
     let maxWidth = $box.width();
 
-    $content.find('> .flexColumn > .workflowBranch').map((i, item) => {
+    $content.find('> .flexColumn > .workflowBranch').map((_i, item) => {
       if (maxWidth < $(item).innerWidth()) {
         maxWidth = $(item).innerWidth();
       }
@@ -272,7 +272,7 @@ export class FlowChart extends Component<any, any> {
       }
     });
 
-    $('.workflowExecLine').each((item, el) => {
+    $('.workflowExecLine').each((_item, el) => {
       const $el = $(el);
 
       $el.height(_.max([$el.closest('.executed').innerHeight(), $el.closest('.workflowBoxPending').innerHeight()]));
@@ -285,7 +285,7 @@ export class FlowChart extends Component<any, any> {
   renderNode = ({ processId, data, firstId, excludeFirstId = false }) => {
     const { parentId } = this.state;
     const { appId } = this.props;
-    return getSameLevelIds(data, firstId, excludeFirstId).map(id => {
+    return getSameLevelIds(data, firstId, excludeFirstId).map((id, index) => {
       const item = data[id];
 
       if (
@@ -308,7 +308,7 @@ export class FlowChart extends Component<any, any> {
 
       const NodeComponent = nodeModules[item.typeId];
 
-      return <NodeComponent {...props} />;
+      return <NodeComponent key={index} {...props} />;
     });
   };
 
@@ -328,7 +328,7 @@ export class FlowChart extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { processId } = this.props;
     const { scale, startEventId, flowNodeMap, execPendingIds } = this.state;
     const isMobile = browserIsMobile();

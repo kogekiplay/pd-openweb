@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, ConfigProvider, Modal, Radio } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -207,7 +207,7 @@ export default class BaseColor extends Component<any, any> {
             className="textTertiary Font20 deleteIcon"
             onClick={() => {
               this.setState({
-                customColors: customColors.filter((c, i) => i !== index),
+                customColors: customColors.filter((_c, i) => i !== index),
               });
             }}
           />
@@ -215,7 +215,7 @@ export default class BaseColor extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { visible, onCancel } = this.props;
     const { type, customColors, controlColors } = this.state;
     const isOptionColor = !_.isEmpty(controlColors);

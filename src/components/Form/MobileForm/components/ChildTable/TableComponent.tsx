@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Table } from 'antd';
@@ -194,14 +194,14 @@ const Pagination = styled.div`
 const INITIAL_EXPAND_RENDER_COUNT = 50;
 const EXPAND_RENDER_STEP = 50;
 
-const getWidthDataSource = (dataSource, showExpand) => {
+const getWidthDataSource = (dataSource: RecordRow[], showExpand) => {
   if (!showExpand || dataSource.length <= INITIAL_EXPAND_RENDER_COUNT) return dataSource;
 
   const step = Math.ceil(dataSource.length / INITIAL_EXPAND_RENDER_COUNT);
-  return dataSource.filter((item, index: number) => index % step === 0).slice(0, INITIAL_EXPAND_RENDER_COUNT);
+  return dataSource.filter((_item, index: number) => index % step === 0).slice(0, INITIAL_EXPAND_RENDER_COUNT);
 };
 
-const lineHeightInfo = { 0: 'compactness', 1: 'mediumTable', 2: 'heightTable', 3: 'adaptive' }; // h5height: 0=>紧凑 1=>中等 2=>高 3=>自适应
+const lineHeightInfo: Record<number, string> = { 0: 'compactness', 1: 'mediumTable', 2: 'heightTable', 3: 'adaptive' }; // h5height: 0=>紧凑 1=>中等 2=>高 3=>自适应
 const getCurrentViewportSize = () => {
   const viewport = window.visualViewport;
 
@@ -270,7 +270,7 @@ function TableComponent(props) {
     return addWidthToColumns(visibleColumns, widthDataSource);
   }, [allowcancel, controls, disabled, isEdit, recordId, rows, showControls, useUserPermission, widthDataSource]);
   const tableScrollX = _.sumBy(columns, item => item.width || 180);
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const tableRef = useRef<HTMLDivElement | null>(null);
   const touchRef = useRef(null);
   const rowRuleDataMap = useMemo(() => {
@@ -295,12 +295,12 @@ function TableComponent(props) {
 
     if (!showExpand || total <= INITIAL_EXPAND_RENDER_COUNT) {
       setRenderState({ key: renderKey, count: total });
-      return;
+      return undefined;
     }
 
     const useAnimationFrame = typeof window.requestAnimationFrame === 'function';
     let nextCount = INITIAL_EXPAND_RENDER_COUNT;
-    let frame;
+    let frame: number | undefined;
 
     setRenderState({ key: renderKey, count: nextCount });
 
@@ -328,7 +328,7 @@ function TableComponent(props) {
     };
   }, [dataSource.length, renderKey, showExpand]);
 
-  const changePage = type => {
+  const changePage = (type: string) => {
     if ((type === 'prev' && pageIndex === 1) || (type === 'next' && pageIndex >= totalPage)) {
       return;
     }
@@ -437,7 +437,7 @@ function TableComponent(props) {
                 },
               };
             },
-            render: (text, record) => {
+            render: (_text, record) => {
               if (item.controlId === 'delete') {
                 const allowDelete =
                   /^temp/.test(record.rowid) ||
@@ -508,7 +508,7 @@ function TableComponent(props) {
               );
             },
           }))}
-          onRow={(record, index: number) => {
+          onRow={(_record, index: number) => {
             return {
               onClick: event => {
                 event.stopPropagation();

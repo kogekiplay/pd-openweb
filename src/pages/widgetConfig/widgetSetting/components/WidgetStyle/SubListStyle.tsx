@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox, Dropdown, Icon } from 'ming-ui';
@@ -117,10 +117,11 @@ export default function SubListStyle(props) {
       <SettingItem hidden={direction === '1'}>
         <div className="settingItemTitle">{_l('显示方式')}</div>
         <AnimationWrap>
-          {DISPLAY_LIST.map(({ text, value }) => {
+          {DISPLAY_LIST.map(({ text, value }, index) => {
             const disabled = value === '2' && layercontrolid;
             return (
               <div
+                key={index}
                 className={cx('animaItem overflow_ellipsis', {
                   active: showtype === value,
                   disabled: disabled,
@@ -215,9 +216,9 @@ export default function SubListStyle(props) {
             </div>
             {titlewrap === '1' && (
               <AnimationWrap style={{ width: '112px' }}>
-                {DISPLAY_RC_TITLE_STYLE.map(({ icon, text, value }) => {
+                {DISPLAY_RC_TITLE_STYLE.map(({ icon, text, value }, index) => {
                   return (
-                    <Tooltip title={text}>
+                    <Tooltip key={index} title={text}>
                       <div
                         className={cx('animaItem', { active: rctitlestyle === value })}
                         onClick={() => {

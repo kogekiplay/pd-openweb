@@ -1,11 +1,11 @@
-import React, { forwardRef, Fragment, memo, useEffect, useImperativeHandle, useState } from 'react';
+import { forwardRef, Fragment, memo, useEffect, useImperativeHandle, useState } from 'react';
 import cx from 'classnames';
 import { VOICE_STEP } from '../../core/config';
 import ConfirmAction from '../CompositeInput/ConfirmAction';
 import { useVoice } from '../VoiceProvider';
 import VoiceToText from '../VoiceToText';
 
-const VoiceInput = forwardRef((props, ref) => {
+const VoiceInput = forwardRef((_props, ref) => {
   const { step, text, loading, onStart, onReset, onGenerateRecord } = useVoice();
 
   const [visible, setVisible] = useState(false);

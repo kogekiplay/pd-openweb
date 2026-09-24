@@ -1,4 +1,3 @@
-import React from 'react';
 import MobileAttachment from './MobileAttachment';
 import MobileInput from './MobileInput';
 import MobileOcr from './MobileOcr';

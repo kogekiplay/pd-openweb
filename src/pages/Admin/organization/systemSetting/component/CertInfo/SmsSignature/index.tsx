@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, LoadDiv, Menu, MenuItem, VerifyPasswordConfirm } from 'ming-ui';
@@ -43,7 +43,7 @@ export default function SmsSignature(props) {
       .catch(() => setLoading(false));
   };
 
-  const onMenuClick = (key, item) => {
+  const onMenuClick = (key: string, item) => {
     setPopupVisibleId('');
     switch (key) {
       case 'smsTest':
@@ -170,7 +170,7 @@ export default function SmsSignature(props) {
                     <MenuItem
                       key={menu.key}
                       onClick={() => onMenuClick(menu.key, item)}
-                      className={{ Red: menu.key === 'delete' }}
+                      className={cx({ Red: menu.key === 'delete' })}
                     >
                       {menu.key === 'switch' ? (item.disable ? _l('启用') : _l('停用')) : menu.text}
                     </MenuItem>

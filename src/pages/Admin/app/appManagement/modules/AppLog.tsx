@@ -23,7 +23,7 @@ const optionTypeData = [
   { label: _l('恢复'), type: 8 },
 ];
 
-const optionTypeIcon = {
+const optionTypeIcon: Record<number, string> = {
   1: 'icon-add1',
   2: 'icon-ic_toggle_on',
   3: 'icon-ic_toggle_off',
@@ -34,6 +34,9 @@ const optionTypeIcon = {
 };
 
 export default class AppLog extends React.Component<any, any> {
+  declare postList: ApiResult | undefined;
+  declare search: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -56,11 +59,11 @@ export default class AppLog extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getList();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         this.updateState({
@@ -117,7 +120,7 @@ export default class AppLog extends React.Component<any, any> {
     this.setState({ list: null, pageIndex: 1, ...obj }, this.searchDataList);
   };
 
-  renderSearchBar(isLog) {
+  renderSearchBar(isLog: boolean) {
     const { handleTypeLabel, visible, datePickerVisible, start, end, searchVisible, keyword } = this.state;
     return (
       <div className={cx('searchBarContainer', searchVisible ? 'extand' : 'close')}>
@@ -230,7 +233,7 @@ export default class AppLog extends React.Component<any, any> {
 
   renderList() {
     const { list, loading } = this.state;
-    if (list === null) return;
+    if (list === null) return undefined;
 
     if (!list.length) {
       return (
@@ -255,14 +258,14 @@ export default class AppLog extends React.Component<any, any> {
     const { list } = this.state;
     return (
       <Fragment>
-        {list.map(item => {
+        {list.map((item, index) => {
           const isAppItem = !!item.appItem;
           const message = createLinksForMessage({
             message: item.message,
             rUserList: [item.operator],
           });
           return (
-            <div className="appLogListItem">
+            <div key={index} className="appLogListItem">
               <div className="appLogListItemTop textTertiary">
                 <span className="flexCenter">
                   <span className={cx('Font15 mRight10 mBottom2', optionTypeIcon[item.handleType])}></span>
@@ -288,7 +291,7 @@ export default class AppLog extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { activeTab, pageIndex, loading } = this.state;
     const isLog = activeTab === 'logs';
     return (

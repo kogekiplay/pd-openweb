@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import config from './config';
 
 const { TYPE_TO_WIDTH } = config;
 export default class GraphBg extends Component<any, any> {
-  shouldComponentUpdate(nextProp) {
+  override shouldComponentUpdate(nextProp) {
     return !_.isEqual(nextProp.time, this.props.time);
   }
 
-  render() {
+  override render() {
     const { time, type, durFromBeginToToday } = this.props;
     const width = TYPE_TO_WIDTH[type];
     let subWidth = width;

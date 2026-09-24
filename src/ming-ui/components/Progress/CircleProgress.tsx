@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import '../less/Progress.less';
 
 class CircleProgress extends Component<any, any> {
-  static propTypes = {
+  declare _circlePath: SVGCircleElement | null | undefined;
+
+  static override propTypes = {
     /**
      * 进度条类名
      */
@@ -56,11 +58,11 @@ class CircleProgress extends Component<any, any> {
     isAnimation: true,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setStrokeDashoffset();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.setStrokeDashoffset();
   }
 
@@ -85,7 +87,7 @@ class CircleProgress extends Component<any, any> {
     };
   };
 
-  render() {
+  override render() {
     const {
       className,
       diameter,

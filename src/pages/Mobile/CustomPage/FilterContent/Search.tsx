@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -93,7 +93,7 @@ class Search extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { filterIndex, searchVlaue } = this.state;
     const { textFilters } = this.props;
     return (

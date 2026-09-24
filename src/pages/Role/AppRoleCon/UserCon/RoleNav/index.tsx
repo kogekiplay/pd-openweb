@@ -122,7 +122,7 @@ export default class Con extends React.Component<any, any> {
         </WrapL>
         <div className="navCon flex navConList">
           {roleList.length <= 0 ? (
-            <div className="TxtCenter textDisabled mTop20">{_l('无相关角色')}</div>
+            <div className="TxtCenter textTertiary mTop20">{_l('无相关角色')}</div>
           ) : (
             <ul>
               {sysList.length > 0 && <Wrap>{_l('系统')}</Wrap>}
@@ -177,7 +177,7 @@ export default class Con extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     return <WrapNav className="flexColumn">{this.renderNav()}</WrapNav>;
   }
 }

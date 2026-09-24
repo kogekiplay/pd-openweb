@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -20,6 +20,8 @@ import {
 } from '../components';
 
 export default class Link extends Component<any, any> {
+  declare isOnComposition: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +31,7 @@ export default class Link extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -37,7 +39,7 @@ export default class Link extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -278,7 +280,7 @@ export default class Link extends Component<any, any> {
                 height={0}
                 content={data.linkName}
                 formulaMap={data.formulaMap}
-                onChange={(err, value) => this.updateSource({ linkName: value })}
+                onChange={(_err, value) => this.updateSource({ linkName: value })}
                 updateSource={this.updateSource}
               />
             </div>
@@ -458,7 +460,7 @@ export default class Link extends Component<any, any> {
   /**
    * 切换链接方式
    */
-  switchLinkType(linkType) {
+  switchLinkType(linkType: number) {
     const { data } = this.state;
     const formProperties = _.cloneDeep(data.formProperties);
 
@@ -499,7 +501,7 @@ export default class Link extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { data } = this.state;
 
     if (_.isEmpty(data)) {

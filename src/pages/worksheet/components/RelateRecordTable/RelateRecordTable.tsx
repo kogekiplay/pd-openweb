@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useKey } from 'react-use';
@@ -83,7 +83,7 @@ function RelateRecordTable(props) {
         relationWorksheetId: base.worksheetId,
         rules: relateWorksheetInfo.rules,
         isDraft,
-        updateRows: (ids, newRecord) => {
+        updateRows: (_ids, newRecord) => {
           updateRecord(newRecord);
         },
         projectId: relateWorksheetInfo.projectId,

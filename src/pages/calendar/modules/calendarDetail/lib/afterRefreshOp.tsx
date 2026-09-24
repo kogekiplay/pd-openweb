@@ -1,4 +1,3 @@
-import React from 'react';
 import doT from 'dot';
 import { Dialog } from 'ming-ui';
 import tpl from './template/reInvited.html';

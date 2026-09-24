@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Dropdown } from 'antd';
 import cx from 'classnames';
@@ -151,7 +151,7 @@ export default function SheetField(props) {
     });
   };
 
-  const updateValue = value => {
+  const updateValue = (value: string) => {
     onChange({ strDefault: updateConfig({ config: strDefault || '00', value, index: 0 }) });
   };
 

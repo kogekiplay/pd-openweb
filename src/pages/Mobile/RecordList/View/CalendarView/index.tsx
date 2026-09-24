@@ -76,7 +76,7 @@ const Calendar = memo(
     const weeklyCalendarRef = useRef(null);
     const dailyScheduleRef = useRef(null);
     const lastClickTimeRef = useRef(0);
-    const clickTimerRef = useRef(null);
+    const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
     const [
       {
         calendarTitle,
@@ -140,7 +140,7 @@ const Calendar = memo(
     };
 
     // 上月、下月、今天
-    const navigateByType = action => {
+    const navigateByType = (action: string) => {
       setState({ isChangeWeekOrMonth: action !== 'today' });
 
       if (dimension === 'month') {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -19,6 +19,11 @@ import './index.less';
 import { UploadError } from 'src/utils/uploader/constants';
 
 export class UploadFileWrapper extends Component<any, any> {
+  declare id: string;
+  declare uploading: boolean;
+  declare uploadContainer: HTMLDivElement | null | undefined;
+  declare uploadFileEl: HTMLSpanElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +34,7 @@ export class UploadFileWrapper extends Component<any, any> {
     this.uploading = false;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.files.length !== prevProps.files.length) {
         this.setState({
@@ -234,7 +239,7 @@ export class UploadFileWrapper extends Component<any, any> {
       onBeforeUpload(uploader) {
         self.currentFile = uploader;
       },
-      onUploadProgress(uploader, file) {
+      onUploadProgress(_uploader, file) {
         const loaded = file.loaded || 0;
         const size = file.size || 0;
         const uploadPercent = ((loaded / size) * 100).toFixed(1);
@@ -293,8 +298,8 @@ export class UploadFileWrapper extends Component<any, any> {
         // type: '1'->图片, '2'->文档 ,‘3’-> 音频 ,‘4’->视频 ,  '0'->自定义
 
         // 上传附件
-        const accept = { 0: '*', 1: 'image/*', 2: 'video/*' };
-        const fileTypeObj = { 1: 'image/*', 2: 'application/*', 3: 'audio/*', 4: 'video/*' };
+        const accept: Record<number, string> = { 0: '*', 1: 'image/*', 2: 'video/*' };
+        const fileTypeObj: Record<number, string> = { 1: 'image/*', 2: 'application/*', 3: 'audio/*', 4: 'video/*' };
 
         if (ele) {
           // 拍照 or 拍摄
@@ -339,7 +344,7 @@ export class UploadFileWrapper extends Component<any, any> {
   onRemoveAll(uploader) {
     this.removeFiles(uploader, uploader.files);
   }
-  render() {
+  override render() {
     const { appId, worksheetId, projectId } = this.props;
     const { children, qiniuUploadClassName, className, style } = this.props;
     return (
@@ -502,7 +507,7 @@ export default class AttachmentList extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { attachments } = this.props;
     const emptys = Array.from({ length: 6 });
     return (
@@ -514,7 +519,7 @@ export default class AttachmentList extends Component<any, any> {
               ? this.renderImage(item, index)
               : this.renderFile(item, index),
         )}
-        {emptys.map((item, index) => (
+        {emptys.map((_item, index) => (
           <div key={index} className="fileWrapper fileEmpty"></div>
         ))}
       </div>

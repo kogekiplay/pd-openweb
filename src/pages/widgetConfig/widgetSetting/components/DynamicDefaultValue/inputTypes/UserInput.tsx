@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
@@ -9,7 +9,9 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
 export default class DateInput extends Component<any, any> {
-  static propTypes = {
+  declare $wrap: SelectOtherField | null | undefined;
+
+  static override propTypes = {
     onDynamicValueChange: func,
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
   };
@@ -17,7 +19,7 @@ export default class DateInput extends Component<any, any> {
     onDynamicValueChange: _.noop,
     dynamicValue: [],
   };
-  componentDidMount() {
+  override componentDidMount() {
     const { data, clearOldDefault } = this.props;
     const { defaultMen } = data;
 
@@ -62,9 +64,9 @@ export default class DateInput extends Component<any, any> {
       )
       .map(i => JSON.parse(i.staticValue || '{}').accountId);
 
-    const getUsers = usersId => {
+    const getUsers = (usersId: { cid: string; rcid: string; staticValue: string }[]) => {
       // 人员去重
-      const getId = item => _.get(item, ['staticValue', 'accountId']);
+      const getId = (item: { cid: string; rcid: string; staticValue: string }) => _.get(item, ['staticValue', 'accountId']);
       const existUser = dynamicValue
         .filter(item => item.staticValue)
         .map(item => JSON.parse(item.staticValue || '{}').accountId);
@@ -134,7 +136,7 @@ export default class DateInput extends Component<any, any> {
     const { defaultType } = this.props;
     defaultType && this.$wrap.triggerClick();
   };
-  render() {
+  override render() {
     const { defaultType } = this.props;
     return (
       <DynamicValueInputWrap>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, ConfigProvider, Input } from 'antd';
 import styled from 'styled-components';
@@ -22,7 +22,7 @@ export default class ChartDesc extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.desc !== prevProps.desc) {
         this.setState({
@@ -55,7 +55,7 @@ export default class ChartDesc extends Component<any, any> {
       onClose();
     }
   };
-  render() {
+  override render() {
     const { desc } = this.state;
     return (
       <Con className="bgCard z-depth-2 boderRadAll_4" style={{ width: 300, padding: 12 }}>

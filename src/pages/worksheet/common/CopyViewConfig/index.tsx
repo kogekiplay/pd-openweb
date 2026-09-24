@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { Fragment, useRef } from 'react';
 import { useSetState } from 'react-use';
 import { Select } from 'antd';
 import cx from 'classnames';
@@ -170,7 +170,7 @@ export default function CopyViewConfig(props) {
     .filter(l => l.viewId !== view.viewId);
   const inputRef = useRef<any>(undefined);
 
-  const getConfigs = (viewId?) => {
+  const getConfigs = (viewId?: string | undefined) => {
     const currentViewConfigs = COPY_CONFIGS.filter(l => !getFilters(view).includes(l.key));
     const currentViewId = viewId || selectViewId[0];
 
@@ -206,7 +206,7 @@ export default function CopyViewConfig(props) {
 
   const filterFun = l => !keywords || _.toLower(l.name).includes(_.toLower(keywords));
 
-  const onBatchConfigs = type => {
+  const onBatchConfigs = (type: string) => {
     if (isCopyFrom && _.isEmpty(selectViewId)) return;
 
     setState({ selectConfigs: type === 'clear' ? [] : getConfigs().map(l => l.key) });
@@ -327,16 +327,16 @@ export default function CopyViewConfig(props) {
         <div className="Font13 textPrimary mBottom16 bold">{_l('选择要复制的配置项')}</div>
         <div className="flexRow">
           <div className="flex">
-            {COPY_CONFIGS_BY_GROUP.map(o => {
+            {COPY_CONFIGS_BY_GROUP.map((o, index) => {
               let list = configs.filter(it => o.types.includes(it.key));
 
               if (list.length > 0) {
                 return (
-                  <>
+                  <Fragment key={index}>
                     <div className="pBottom10 textSecondary">{o.title}</div>
-                    {list.map(l => {
+                    {list.map((l, index) => {
                       return (
-                        <div className="valignWrapper mBottom12">
+                        <div key={index} className="valignWrapper mBottom12">
                           <Checkbox
                             text={
                               <div className="inlineFlexRow alignItemsCenter mTop2">
@@ -357,9 +357,10 @@ export default function CopyViewConfig(props) {
                         </div>
                       );
                     })}
-                  </>
+                  </Fragment>
                 );
               }
+              return undefined;
             })}
           </div>
           <div>

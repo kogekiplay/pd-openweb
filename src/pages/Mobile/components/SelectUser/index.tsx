@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { List } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -14,6 +14,8 @@ import UserOrDepartmentItem from './components/UserOrDepartmentItem';
 import './index.less';
 
 export default class SelectUser extends Component<any, any> {
+  declare request: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     const { selectedUsers } = props;
@@ -47,7 +49,7 @@ export default class SelectUser extends Component<any, any> {
       recordPartner: props.recordPartner,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { type, staticAccounts = [], advancedSetting = {}, userType } = this.props;
 
     if (type === 'user') {
@@ -968,7 +970,7 @@ export default class SelectUser extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { selectedUsers, personalInfoVisible, accountId, projectId } = this.state;
     const { type, visible, onClose, onlyOne, appId, hideClearBtn = true } = this.props;
     return (

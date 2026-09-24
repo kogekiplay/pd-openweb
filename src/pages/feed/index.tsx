@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import qs from 'query-string';
 import Feed from './components/app/feed';
@@ -6,16 +6,16 @@ import postEnum from './constants/postEnum';
 import { changeListType, changeTitle } from './redux/postActions';
 
 let CalendarEntrypoint = class CalendarEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppFeed');
     this.handleUpdate();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.handleUpdate();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppFeed');
   }
 
@@ -45,7 +45,7 @@ let CalendarEntrypoint = class CalendarEntrypoint extends Component<any, any> {
     this.props.dispatch(changeTitle(null));
   }
 
-  render() {
+  override render() {
     return <Feed />;
   }
 };

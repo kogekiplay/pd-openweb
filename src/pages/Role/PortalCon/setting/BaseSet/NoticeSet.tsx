@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSetState } from 'react-use';
 import { Icon } from 'ming-ui';
 import externalPortalAjax from 'src/api/externalPortal';

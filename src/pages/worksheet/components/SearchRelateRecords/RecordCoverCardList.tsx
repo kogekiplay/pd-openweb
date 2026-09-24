@@ -1,4 +1,3 @@
-import React from 'react';
 import { find, get, identity } from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';

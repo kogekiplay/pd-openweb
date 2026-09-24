@@ -4,7 +4,7 @@ import config from '../config/config';
 import utils from '../utils/utils';
 
 // 改变当前任务状态
-export const changeTaskStatus = status => {
+export const changeTaskStatus = (status: number) => {
   return {
     type: 'CHANGE_TASK_STATUS',
     status,
@@ -12,7 +12,7 @@ export const changeTaskStatus = status => {
 };
 
 // 改变当前视图
-export const changeView = viewType => {
+export const changeView = (viewType: number) => {
   return {
     type: 'CHANGE_VIEW',
     viewType,
@@ -20,7 +20,7 @@ export const changeView = viewType => {
 };
 
 // 是否过滤周末不显示
-export const changeFilterWeekend = filter => {
+export const changeFilterWeekend = (filter: boolean) => {
   return {
     type: 'CHANGE_FILTER_WEEKEND',
     filter,
@@ -28,7 +28,7 @@ export const changeFilterWeekend = filter => {
 };
 
 // 切换显示子任务的层级
-export const changeSubTaskLevel = level => {
+export const changeSubTaskLevel = (level: number) => {
   return {
     type: 'CHANGE_SUB_TASK_LEVEL',
     level,
@@ -137,7 +137,7 @@ export const ganttDragRecordIndex = (index: number) => {
 
 // 拖拽单侧调整视图呈现
 export const updateStartTimeAndEndTime =
-  (id, index: number, time, type, isReset) => (dispatch: AppDispatch, getState: GetState) => {
+  (id: string, index: number, time, type, isReset: boolean) => (dispatch: AppDispatch, getState: GetState) => {
     let { accountTasksKV, stateConfig } = getState().task;
     accountTasksKV = _.cloneDeep(accountTasksKV);
 
@@ -313,6 +313,7 @@ export const updateFolderSocketSource = source => (dispatch: AppDispatch, getSta
     type: 'UPDATE_DATA_SOURCE',
     data: accountTasksKV,
   });
+  return undefined;
 };
 
 // 更新下属socket推送过来的数据
@@ -450,7 +451,7 @@ export const removeFollowMembers = (accountId: string) => (dispatch: AppDispatch
 };
 
 // 修改用户配置展开缩起状态
-export const updateUserStatus = (accountId: string, hidden) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateUserStatus = (accountId: string, hidden: boolean) => (dispatch: AppDispatch, getState: GetState) => {
   let { accountTasksKV } = getState().task;
   accountTasksKV = _.cloneDeep(accountTasksKV);
 

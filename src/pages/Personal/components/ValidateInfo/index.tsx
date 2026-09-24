@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { Button, Dialog, VerifyPasswordInput } from 'ming-ui';
 import FunctionWrap from 'ming-ui/components/FunctionWrap';
@@ -83,7 +83,7 @@ export default class ValidateInfoCon extends Component<any, any> {
     this.iti = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { passVerifyPassword, type } = this.props;
 
     if (passVerifyPassword && type === 'mobilePhone') {
@@ -147,13 +147,13 @@ export default class ValidateInfoCon extends Component<any, any> {
       if (!email) {
         alert(_l('请输入邮箱'), 3);
         this.email.focus();
-        return;
+        return undefined;
       }
 
       if (!RegExpValidator.isEmail(email)) {
         alert(_l('请输入正确的邮箱'), 3);
         this.email.focus();
-        return;
+        return undefined;
       }
     } else {
       let mobilePhone = this.iti.isValidNumber();
@@ -161,7 +161,7 @@ export default class ValidateInfoCon extends Component<any, any> {
       if (!mobilePhone) {
         alert(_l('请输入正确的手机号码'), 3);
         this.mobile.focus();
-        return;
+        return undefined;
       }
     }
 
@@ -292,7 +292,7 @@ export default class ValidateInfoCon extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { title, des, showStep, type, passVerifyPassword, onCancel = () => {} } = this.props;
     const { nextBtnDisabled, sendCodeLoading, step, sendCodeTxt, submitLoading, email, verifyCode } = this.state;
 

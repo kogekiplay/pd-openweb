@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
@@ -68,7 +68,7 @@ const GroupFilter = props => {
   });
 
   const getDefaultValueInCreate = () => {
-    if (_.isEmpty(mobileNavGroupFilters)) return;
+    if (_.isEmpty(mobileNavGroupFilters)) return undefined;
     let data = mobileNavGroupFilters[0];
 
     if ([9, 10, 11, 28].includes(data.dataType)) {
@@ -95,6 +95,7 @@ const GroupFilter = props => {
         ]),
       };
     }
+    return undefined;
   };
 
   return (

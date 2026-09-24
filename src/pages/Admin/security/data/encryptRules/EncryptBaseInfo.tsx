@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment, useEffect, useState } from 'react';
+import { Component, createRef, Fragment, useEffect, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Icon, Input, Textarea } from 'ming-ui';
@@ -40,13 +40,13 @@ const Wrap = styled.div`
   }
 `;
 
-const errors = { 0: _l('保存失败'), 3: _l('名称重复'), 21: _l('Key无效'), 22: _l('IV无效') };
+const errors: Record<number, string> = { 0: _l('保存失败'), 3: _l('名称重复'), 21: _l('Key无效'), 22: _l('IV无效') };
 
 function EditBaseInfo(props) {
   const { visible, onCancel, ruleDetail = {}, projectId, getDetail = () => {}, updateCurrentRow = () => {} } = props;
   const [ruleName, setRuleName] = useState(ruleDetail.name);
   const [remark, setRemark] = useState(ruleDetail.remark);
-  const ruleNameInput = createRef();
+  const ruleNameInput = createRef<HTMLInputElement>();
 
   useEffect(() => {
     if (ruleNameInput && ruleNameInput.current) {
@@ -121,7 +121,7 @@ export default class EncryptBaseInfo extends Component<any, any> {
       maskToken: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.ruleDetail) {
       this.setState({ ruleDetail: this.props.ruleDetail });
     } else {
@@ -138,7 +138,7 @@ export default class EncryptBaseInfo extends Component<any, any> {
         this.setState({ ruleDetail: res.encryptRule });
       });
   };
-  render() {
+  override render() {
     const {
       showEditBaseInfo,
       ruleDetail = {},

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -145,6 +145,9 @@ const func = (ids, limits) => {
 };
 
 export default class LimitAttachmentUpload extends Component<any, any> {
+  declare appPromise: ApiResult | null;
+  declare savePromise: ApiResult | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -165,7 +168,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
     this.savePromise = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 【私有部署】管理额度工作表行记录数上限通过接口获取，超过上限保存拦截
     if ((window.platformENV.isLocal || window.platformENV.isOverseas) && this.props.businessType === 2) {
       this.getLimitRowTotal();
@@ -526,8 +529,6 @@ export default class LimitAttachmentUpload extends Component<any, any> {
     let text = '';
     const { businessType } = this.props;
 
-    const limitSize = md.global.SysSettings.fileUploadLimitSize || 4 * 1024;
-
     switch (businessType) {
       case 1:
         const limitSize = md.global.SysSettings.fileUploadLimitSize || 4 * 1024;
@@ -695,7 +696,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { title, columns = [], businessType, onClose = () => {} } = this.props;
     const {
       size,
@@ -713,7 +714,6 @@ export default class LimitAttachmentUpload extends Component<any, any> {
       total,
       initialTotal,
       appPageIndex,
-      limitRowTotal,
     } = this.state;
     const disabled = _.isEqual(initialLimits, limits) && _.isEqual(size, initialSize);
 
@@ -753,7 +753,9 @@ export default class LimitAttachmentUpload extends Component<any, any> {
                   value={appIds}
                   mode="multiple"
                   maxTagCount="responsive"
-                  notFoundContent={() => <span className="textTertiary">{_l('无搜索结果')}</span>}
+                  // 原来传的是 () => <span>…：antd 的 notFoundContent 要的是节点不是函数，React 不渲染函数子节点，
+                  // 于是搜不到结果时下拉里一片空白、「无搜索结果」从没显示过（原版就是这样）。下面工作表那个同理
+                  notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
                   onClear={() =>
                     this.setState({ appPageIndex: 1, keyword: '', worksheetIds: [] }, () => {
                       this.getAppList();
@@ -804,7 +806,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
                     mode="multiple"
                     maxTagCount="responsive"
                     disabled={_.isEmpty(appIds)}
-                    notFoundContent={() => <span className="textTertiary">{_l('无搜索结果')}</span>}
+                    notFoundContent={<span className="textTertiary">{_l('无搜索结果')}</span>}
                     onClear={() => this.setState({ worksheetIds: [] })}
                     onChange={value => this.setState({ worksheetIds: value })}
                   >
@@ -844,7 +846,7 @@ export default class LimitAttachmentUpload extends Component<any, any> {
             </div>
             <div className="add" onClick={this.showAddAppList}>
               <i className="icon icon-plus" />
-              <san>{businessType === 2 ? _l('工作表') : _l('应用')}</san>
+              <span>{businessType === 2 ? _l('工作表') : _l('应用')}</span>
             </div>
           </div>
           <div className="list">

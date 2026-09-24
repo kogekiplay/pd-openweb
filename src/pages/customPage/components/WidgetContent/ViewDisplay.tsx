@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
@@ -26,7 +26,7 @@ const ViewDisplay = props => {
 
     if (!customPageContent || customPageContent.classList.contains('adjustScreen')) {
       setVisible(true);
-      return;
+      return undefined;
     }
 
     const view = customPageContent.querySelector(`.widgetContent .view-${setting.id}`);

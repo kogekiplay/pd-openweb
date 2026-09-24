@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -108,7 +108,7 @@ class RoleUserList extends Component<any, any> {
       );
     });
   };
-  render() {
+  override render() {
     const { userList = [] } = this.props;
     return (
       <Fragment>

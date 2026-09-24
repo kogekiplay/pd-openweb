@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
@@ -91,14 +91,14 @@ export default function Quota(props) {
             <div className="setting"></div>
           </div>
           <div className="listContent">
-            {QUOTA_LIST_CONTENT.map(item => {
+            {QUOTA_LIST_CONTENT.map((item, index) => {
               let size = handleSettingData({ data, type: item.type, isKey: true });
               const extra = handleSettingData({ data, type: item.type, isKey: false });
 
               size = item.businessType === 1 && size === 0 ? -1 : size; // 历史数据兼容
 
               return (
-                <div className="flexRow listContentItem">
+                <div key={index} className="flexRow listContentItem">
                   <div className="flex pLeft10">
                     <div className="Font14 textPrimary bold mBottom5">{item.title}</div>
                     <div className="textTertiary">{item.desc}</div>

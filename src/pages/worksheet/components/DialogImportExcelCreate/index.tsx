@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -30,7 +30,7 @@ import SetImportExcelCreateWorksheetOrApp from './SetImportExcelCreateWorksheetO
 import type { RecordRow } from 'src/utils/controlTypes';
 
 class DialogImportExcelCreate extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     createType: PropTypes.string,
     appId: PropTypes.string,
     projectId: PropTypes.string,
@@ -42,10 +42,10 @@ class DialogImportExcelCreate extends Component<any, any> {
       DBInstancesDialog: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.props.changeDialogUploadVisible(true);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.onCancel();
     this.props.changeDialogUploadVisible(false);
     this.props.changeSetDataDialogVisible(false);
@@ -209,7 +209,7 @@ class DialogImportExcelCreate extends Component<any, any> {
     });
   };
 
-  getParams = (isMore?) => {
+  getParams = (isMore?: boolean | undefined) => {
     const { id, filePath, freeRowCount } = this.state;
     const {
       createType,
@@ -432,7 +432,7 @@ class DialogImportExcelCreate extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { createAppStatus, importLoading, versionLimitSheetCount, currentSheetCount, freeRowCount } = this.state;
     const {
       projectId,

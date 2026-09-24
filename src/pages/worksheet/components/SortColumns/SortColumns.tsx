@@ -7,7 +7,7 @@ import './index.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default class SortColumns extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     // 无显示字段时展示内容
     placeholder: PropTypes.string,
     layout: PropTypes.number, // 呈现方式 1 dropdown 2 平铺
@@ -41,7 +41,7 @@ export default class SortColumns extends React.Component<any, any> {
     onChange: () => {},
   };
 
-  render() {
+  override render() {
     const {
       placeholder,
       layout,
@@ -142,5 +142,6 @@ export default class SortColumns extends React.Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
 }

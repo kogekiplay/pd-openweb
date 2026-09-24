@@ -163,8 +163,12 @@ export default function FiltersGenerate(props) {
                   {[
                     { value: 'apiV2', label: 'API2.0' },
                     { value: 'apiV3', label: 'API3.0' },
-                  ].map(item => (
-                    <Select.Option className={apiVersion === item.value ? 'selectOptionActive' : ''} value={item.value}>
+                  ].map((item, index) => (
+                    <Select.Option
+                      key={index}
+                      className={apiVersion === item.value ? 'selectOptionActive' : ''}
+                      value={item.value}
+                    >
                       <span className="label">{item.label}</span>
                     </Select.Option>
                   ))}

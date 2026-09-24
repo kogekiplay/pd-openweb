@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -18,7 +18,7 @@ import Constant from '../../utils/constant';
 import fileConfirm from '../fileConfirm/fileConfirm';
 import './index.less';
 
-const recurShowFileConfirm = (up, files, i, length, cb) => {
+const recurShowFileConfirm = (up, files, i: number, length, cb) => {
   if (i >= length) {
     // 最后一次调用时启动重新开始上传
     up.start();
@@ -54,9 +54,12 @@ const recurShowFileConfirm = (up, files, i, length, cb) => {
       }
     },
   });
+  return undefined;
 };
 
 export default class SendToolbar extends Component<any, any> {
+  declare at: HTMLDivElement | null | undefined;
+
   // 这些原来都是隐式挂上去的，TS 下不声明就是 TS2339
   emotion;
   uploadFile;
@@ -68,7 +71,7 @@ export default class SendToolbar extends Component<any, any> {
       isHidden: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { isGroup } = this.props.session;
     // 表情
     this.initEmotion();
@@ -79,7 +82,7 @@ export default class SendToolbar extends Component<any, any> {
     // AT
     isGroup && this.initKeyAT();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { session } = this.props;
     const textarea = $(`#ChatPanel-${session.id}`).find('.ChatPanel-textarea textarea').get(0) as MentionsInputElement;
     textarea && textarea.destroy && textarea.destroy();
@@ -95,7 +98,7 @@ export default class SendToolbar extends Component<any, any> {
       showAru: true,
       offset: isFileTrsnsfer ? 313 : 263,
       relatedLeftSpace: isFileTrsnsfer ? -304 : -264,
-      onMDBearSelect: (name: string, src, targetEmotionSrc) => {
+      onMDBearSelect: (name: string, _src, targetEmotionSrc) => {
         // 注意：ft 这个字段是作为七牛文件存储的类型判断的，所以要注意加上这个字段
         // 1.图片 2.附件 3.音频
         name = name == 'null' ? null : name;
@@ -114,7 +117,7 @@ export default class SendToolbar extends Component<any, any> {
         };
         this.props.onSendEmotionPicMsg(message);
       },
-      onSelect: (name: string, value, emotionText) => {
+      onSelect: (name: string, _value, emotionText) => {
         this.props.onSendEmotionTextMsg(emotionText || name);
       },
     });
@@ -193,6 +196,7 @@ export default class SendToolbar extends Component<any, any> {
           // 并把 token/key/serverName/fileName 挂到同一批文件对象上。
           // 确认流程本身不需要凭证，最后那次 up.start() 也不怕早于凭证（见上面的说明）。
           recurShowFileConfirm(uploader, files, 0, files.length, _this.props.onPrepareUpload.bind(this));
+          return undefined;
         },
         BeforeUpload(uploader, file) {
           const fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;
@@ -208,12 +212,12 @@ export default class SendToolbar extends Component<any, any> {
           const cb = window[`chatBeforeUpload${file.id}`];
           cb && cb(uploader);
         },
-        UploadProgress(uploader, file) {
+        UploadProgress(_uploader, file) {
           const uploadPercent = ((file.loaded / file.size) * 100).toFixed(1);
           const cb = window[`chatUploadProgress${file.id}`];
           cb && cb(uploadPercent);
         },
-        FileUploaded(uploader, file, response) {
+        FileUploaded(_uploader, file, response) {
           // 【不再 JSON.parse】plupload 给的是原始响应字符串，createUploader 给的是
           // 已解析并补好 fileExt/fileName/filePath/serverName 的对象。
           const uploadFile = response.response;
@@ -232,7 +236,7 @@ export default class SendToolbar extends Component<any, any> {
 
           _this.props.onSendFileMsg({ file: uploadFile, type }, msg);
         },
-        Error(uploader, error) {
+        Error(_uploader, error) {
           if (error.code === UploadError.FILE_SIZE_ERROR) {
             alert(_l('单个文件大小超过%0MB，无法支持上传', fileUploadLimitSize), 2);
           } else {
@@ -398,7 +402,7 @@ export default class SendToolbar extends Component<any, any> {
       </Trigger>
     );
   }
-  render() {
+  override render() {
     const { session } = this.props;
     const { id } = session;
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { APPLICATION_ICON } from 'src/utils/enum';
 import { config } from '../config';

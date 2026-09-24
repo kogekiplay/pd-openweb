@@ -1,5 +1,5 @@
 // 微信支付 or 支付宝支付
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import CryptoJS from 'crypto-js';
@@ -155,7 +155,7 @@ export default function CreateWechatOrAliMerchant(props) {
   };
 
   // 验证&创建&保存商户
-  const checkMerchant = type => {
+  const checkMerchant = (type: string) => {
     if (
       (!isCreate && type === 'save' && !shortName) ||
       ((isCreate || type === 'check') &&
@@ -244,7 +244,7 @@ export default function CreateWechatOrAliMerchant(props) {
     return <LoadDiv className="mTop90" />;
   }
 
-  const renderAppId = item => {
+  const renderAppId = (item: { label: string; field: string; placeholder: string }) => {
     if (!formData?.appId && weChatServiceAccounts.length > 1) {
       return (
         <div
@@ -300,7 +300,7 @@ export default function CreateWechatOrAliMerchant(props) {
     );
   };
 
-  const renderFormInfo = forData => {
+  const renderFormInfo = (forData: { label: string; field: string; placeholder: string }[]) => {
     return forData.map(item => {
       return (
         <div
@@ -419,8 +419,8 @@ export default function CreateWechatOrAliMerchant(props) {
             <div className="textSecondary mBottom5 bold">{_l('密钥信息')}</div>
             <div className="secretWrap flexRow Relative">
               <div className="flex">
-                {secretFormInfo.map(item => (
-                  <div className="flexRow mBottom10">
+                {secretFormInfo.map((item, index) => (
+                  <div key={index} className="flexRow mBottom10">
                     <div>{item.label}：</div>
                     <div className="flex ellipsis">{initData[item.field]}</div>
                   </div>

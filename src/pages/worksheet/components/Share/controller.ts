@@ -13,7 +13,7 @@ import { getNewRecordPageUrl, getRecordLandUrl } from 'src/utils/record';
  * 统计图 report [OK]
  */
 
-const SHARE_SOURCE_TYPE = {
+const SHARE_SOURCE_TYPE: Record<string, number> = {
   worksheetApi: 45,
   customPage: 21,
   report: 31,

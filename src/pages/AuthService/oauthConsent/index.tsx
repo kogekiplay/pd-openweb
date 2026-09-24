@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import { Button, Icon, LoadDiv } from 'ming-ui';
@@ -25,7 +25,7 @@ function OAuthConsentPage() {
     response_type: responseType,
   } = getRequest() || {};
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<{ title: string; desc: string } | null>(null);
   const [appInfo, setAppInfo] = useState(null);
   const [authorizeLoading, setAuthorizeLoading] = useState(false);
 

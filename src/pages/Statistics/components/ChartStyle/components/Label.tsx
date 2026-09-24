@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Checkbox, Input, Select, Tag } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -7,14 +7,18 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { reportTypes, roundTypes } from 'statistics/Charts/common';
 import RuleColor from './Color/RuleColor';
 
-export default class Label extends Component<any, any> {
+export interface LabelState {
+  ruleColorModalVisible: boolean;
+}
+
+export default class Label extends Component<any, LabelState> {
   constructor(props) {
     super(props);
     this.state = {
       ruleColorModalVisible: false,
     };
   }
-  render() {
+  override render() {
     const { currentReport, onChangeDisplayValue, onChangeDisplaySetup, onChangeYDisplaySetup, onChangeStyle } =
       this.props;
     const { reportType, yaxisList, displaySetup, summary, rightY, style } = currentReport;

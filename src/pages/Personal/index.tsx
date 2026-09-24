@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
@@ -34,15 +34,15 @@ const getLazyComponent = factory => {
   return lazyCache.get(factory);
 };
 export default class PersonalEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppPersonal');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppPersonal');
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     if (nextProps.location.search !== this.props.location.search) {
       return true;
     }
@@ -50,7 +50,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     return false;
   }
 
-  handleClick(type) {
+  handleClick(type: string[]) {
     const defaultType = type[0];
     navigateTo(
       common.url({
@@ -59,7 +59,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const menus =
       (!window.platformENV.isOverseas && !window.platformENV.isLocal) ||
       ((window.platformENV.isOverseas || window.platformENV.isLocal) && md.global.Config.ShowLicense)

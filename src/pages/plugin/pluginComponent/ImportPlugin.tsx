@@ -124,8 +124,10 @@ function ExistPluginDialog(props) {
         <Select
           className="selectItem"
           allowClear={true}
-          options={[{ label: _l('创建新插件'), value: 'create' }].concat(
-            pluginList.map(item => {
+          // 「创建新插件」的 label 是文案，已有插件的 label 是元素：用展开拼（和 concat 等价）
+          options={[
+            { label: _l('创建新插件'), value: 'create' },
+            ...pluginList.map(item => {
               return {
                 label: (
                   <span>
@@ -135,7 +137,7 @@ function ExistPluginDialog(props) {
                 value: item.id,
               };
             }),
-          )}
+          ]}
           notFoundContent={_l('暂无发布历史')}
           value={pluginId}
           onChange={value => setPluginId(value)}
@@ -159,7 +161,7 @@ function ImportPlugin(props) {
 
   const pluginApi = pluginApiConfig[pluginType];
 
-  const onCheckFile = async (url: string, alertError?) => {
+  const onCheckFile = async (url: string, alertError?: boolean | undefined) => {
     setFileChecking(true);
     let checkSuccess = false;
     await fileApi
@@ -216,7 +218,7 @@ function ImportPlugin(props) {
     }
   };
 
-  const renderUpload = children => {
+  const renderUpload = (children: React.JSX.Element) => {
     return (
       <QiniuUpload
         className="mTop24"
@@ -231,7 +233,7 @@ function ImportPlugin(props) {
           setErrorTip('');
           setIsEncrypt(false);
         }}
-        onUploaded={(up, file, response) => {
+        onUploaded={(_up, file, response) => {
           setUploading(false);
           setFile({ ...file, key: response.key });
           const url = md.global.FileStoreConfig.documentHost + '/' + response.key;

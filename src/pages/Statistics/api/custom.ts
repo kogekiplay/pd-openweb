@@ -11,7 +11,7 @@ const custom = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getPage: function (args, options?) {
+  getPage: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/custom/getPage';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'customgetPage', args, $.extend(base, options));
@@ -23,7 +23,7 @@ const custom = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getReportsByWorksheetId: function (args, options?) {
+  getReportsByWorksheetId: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/custom/getReportsByWorksheetId';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'customgetReportsByWorksheetId', args, $.extend(base, options));
@@ -35,7 +35,7 @@ const custom = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  savePage: function (args, options?) {
+  savePage: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/custom/savePage';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'customsavePage', JSON.stringify(args), $.extend(base, options));
@@ -47,7 +47,7 @@ const custom = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  transformControlValue: function (args, options?) {
+  transformControlValue: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/custom/transformControlValue';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'customtransformControlValue', JSON.stringify(args), $.extend(base, options));
@@ -59,7 +59,7 @@ const custom = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  updatePage: function (args, options?) {
+  updatePage: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/custom/updatePage';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'customupdatePage', JSON.stringify(args), $.extend(base, options));

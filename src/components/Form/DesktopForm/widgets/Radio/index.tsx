@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useCallback, useRef, useState } from 'react';
+import { Fragment, memo, useCallback, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -40,7 +40,7 @@ const RadioWidget = props => {
     formItemId,
   } = props;
   const [activeIndex, setActiveIndex] = useState(0);
-  const radioRef = useRef(null);
+  const radioRef = useRef<HTMLDivElement | null>(null);
 
   const { direction = '2', width = '200', readonlyshowall } = advancedSetting || {};
   const { checkIds } = getCheckAndOther(value);
@@ -69,7 +69,7 @@ const RadioWidget = props => {
           break;
         case 'Enter':
           setActiveIndex(prevIndex => {
-            const optionElements = radioRef.current.querySelectorAll('.ming.Radio');
+            const optionElements = radioRef.current?.querySelectorAll<HTMLElement>('.ming.Radio') ?? [];
             const options = [...optionElements];
             const activeElement = options[prevIndex - 1];
 
@@ -101,12 +101,12 @@ const RadioWidget = props => {
   /**
    * 渲染列表
    */
-  const renderList = (item, checkIds) => {
+  const renderList = (item, checkIds: string[]) => {
     return (
       <span
         className={cx('ellipsis customRadioItem', { 'pLeft12 pRight12': enumDefault2 === 1 || checkIds.length > 1 })}
         style={
-          // 选项色配色交给 getOptionChipStyle（浅底 + 同色深字），见 src/utils/optionColor.ts
+          // 选项色配色交给 getOptionChipStyle（底 = 选的颜色，字色按对比度挑），见 src/utils/optionColor.ts
           enumDefault2 === 1
             ? getOptionChipStyle(item.color)
             : { background: checkIds.length > 1 ? 'var(--color-border-secondary)' : '' }
@@ -153,7 +153,6 @@ const RadioWidget = props => {
                 <div className="flexColumn" style={direction === '0' ? { width: getItemWidth(displayOptions) } : {}}>
                   <div className="flexColumn" style={direction === '0' ? { width: `${width}px` } : {}}>
                     <Radio
-                      needDefaultUpdate
                       disabled={disabled}
                       text={renderList(item, checkIds)}
                       value={item.key}

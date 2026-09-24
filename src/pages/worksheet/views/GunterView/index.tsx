@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -41,7 +41,7 @@ let Gunter = class Gunter extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { view, updateViewConfig, noLoadAtDidMount } = this.props;
     const { calendartype } = view.advancedSetting;
     updateViewConfig();
@@ -72,11 +72,11 @@ let Gunter = class Gunter extends Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.destroyGunterView();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { view } = this.props;
 
@@ -161,7 +161,7 @@ let Gunter = class Gunter extends Component<any, any> {
     return isGunterExport ? 570 : gunterDirectoryWidth ? Number(gunterDirectoryWidth) : contentBoxWidth;
   }
 
-  render() {
+  override render() {
     const { view, loading, groupingVisible, layoutType } = this.props;
     const { directoryWidth, dragMaskVisible, maxWidth } = this.state;
     const isMobile = browserIsMobile() || layoutType === 'mobile';

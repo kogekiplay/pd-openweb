@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { Radio } from 'ming-ui';
 import Ajax from 'src/api/workWeiXin';
@@ -11,7 +10,7 @@ const messageLinkTypes = [
 function SettingLinkOpen(props) {
   const { value, disabled, projectId, className = '', onChange = () => {} } = props;
 
-  const handleChange = status => {
+  const handleChange = (status: number) => {
     Ajax.editDDMessagUrlPcSlide({
       projectId: projectId,
       status,
@@ -27,9 +26,10 @@ function SettingLinkOpen(props) {
   return (
     <div className={cx('stepItem', className)}>
       <h3 className="stepTitle Font16 textPrimary pBottom5">{_l('消息链接')}</h3>
-      {messageLinkTypes.map(item => {
+      {messageLinkTypes.map((item, index) => {
         return (
           <Radio
+            key={index}
             className="Block mTop20"
             disabled={disabled}
             checked={value === item.key}

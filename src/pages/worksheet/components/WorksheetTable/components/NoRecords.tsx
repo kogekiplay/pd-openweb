@@ -1,4 +1,3 @@
-import React from 'react';
 import { useMeasure } from 'react-use';
 import cx from 'classnames';
 import PropTypes from 'prop-types';

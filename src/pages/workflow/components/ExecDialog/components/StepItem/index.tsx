@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { renderToString } from 'react-dom/server';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -21,12 +21,12 @@ const CANCEL_ENTRUST_OPERATION_CODE = 14;
 const OVERRULE = 5;
 
 const getWaitText = (type, principal) => {
-  const WAIT_TEXT = {
+  const WAIT_TEXT: Record<number, string> = {
     3: _l('等我填写...'),
     4: _l('等我审批...'),
     5: _l('等我查看...'),
   };
-  const ENTRUST_WAIT_TEXT = {
+  const ENTRUST_WAIT_TEXT: Record<number, string> = {
     3: _l('%0委托我填写...', principal?.fullName),
     4: _l('%0委托我审批...', principal?.fullName),
     5: _l('%0委托我查看...', principal?.fullName),
@@ -35,18 +35,18 @@ const getWaitText = (type, principal) => {
   return principal ? ENTRUST_WAIT_TEXT[type] : WAIT_TEXT[type];
 };
 
-const SIGN_TYPE = {
+const SIGN_TYPE: Record<number, string> = {
   1: _l('需全员通过'),
   2: _l('只需一人通过，需全员否决'),
   4: _l('及以上的成员通过后即视为节点通过'),
 };
 
-const MULTIPLE_OPERATION = {
+const MULTIPLE_OPERATION: Record<number, string> = {
   3: _l('设置多个填写人,由任意一人进行填写'),
   4: _l('设置多个审批人,由任意一人进行审批'),
 };
 
-const OPERATION_LOG_ACTION = {
+const OPERATION_LOG_ACTION: Record<number, string> = {
   0: _l('发起'),
   1: _l('填写'),
   2: _l('转交'),
@@ -65,17 +65,17 @@ const OPERATION_LOG_ACTION = {
   22: _l('无需审批'),
 };
 
-const UNNECESSARY_OPERATION = {
+const UNNECESSARY_OPERATION: Record<number, string> = {
   3: _l('无需填写'),
   4: _l('无需审批'),
 };
 
-const START_TYPE_TEXT = {
+const START_TYPE_TEXT: Record<number, string> = {
   1: _l('新增记录'),
   2: _l('新增或更新记录'),
 };
 
-const SIGN_COUNTERSIGN_TYPE = {
+const SIGN_COUNTERSIGN_TYPE: Record<number, string> = {
   1: _l('会签'),
   2: _l('会签'),
   3: _l('或签'),
@@ -86,8 +86,14 @@ const SIGN_COUNTERSIGN_TYPE = {
  */
 const formatTime = time => moment(dateConvertToUserZone(time)).format('YYYY-MM-DD HH:mm:ss');
 
-export default class StepItem extends Component<any, any> {
-  static propTypes = {
+export interface StepItemState {
+  moreOperationVisible: boolean;
+  showLogDialog: boolean;
+  showMore: boolean;
+}
+
+export default class StepItem extends Component<any, StepItemState> {
+  static override propTypes = {
     data: object,
     currentType: number,
     currentWork: object,
@@ -116,7 +122,7 @@ export default class StepItem extends Component<any, any> {
     onChangeCurrentWork: () => {},
   };
 
-  state = {
+  override state = {
     moreOperationVisible: false,
     showLogDialog: false,
     showMore: false,
@@ -301,6 +307,7 @@ export default class StepItem extends Component<any, any> {
         );
       }
     }
+    return undefined;
   };
 
   /**
@@ -344,7 +351,7 @@ export default class StepItem extends Component<any, any> {
   renderAdditionalContent(item) {
     const { operationTime, opinion, opinionType, workItemLog, signature, logIds, updateTime, files } = item;
     const { action, fields } = workItemLog || {};
-    const SYSTEM_TEXT = {
+    const SYSTEM_TEXT: Record<number, string> = {
       1: _l('自动通过'),
       2: _l('限时自动通过'),
       3: '',
@@ -471,8 +478,8 @@ export default class StepItem extends Component<any, any> {
     const workItems = ((data || {}).workItems || []).filter(
       item => _.includes([3, 4], item.type) && !_.includes([2, 8, 9, 10, 22], _.get(item, 'workItemLog.action')),
     );
-    const timeConsuming = [];
-    const endTimeConsuming = [];
+    const timeConsuming: number[] = [];
+    const endTimeConsuming: number[] = [];
 
     if (!workItems.length) return null;
 
@@ -531,7 +538,7 @@ export default class StepItem extends Component<any, any> {
   /**
    * 转换输出时间
    */
-  covertTime(time, isUp = false) {
+  covertTime(time: number, isUp = false) {
     if (time < 0) time = time * -1;
 
     const day = Math.floor(time / 24 / 60 / 60 / 1000);
@@ -589,7 +596,7 @@ export default class StepItem extends Component<any, any> {
   /**
    * 渲染操作副标题
    */
-  renderOperatorSubtitle(type, key, debugEventDump) {
+  renderOperatorSubtitle(type, key: string, debugEventDump) {
     const isTest =
       _.includes(['1', '2', '3'], key) && debugEventDump && debugEventDump[key] && !!debugEventDump[key].length;
 
@@ -610,7 +617,7 @@ export default class StepItem extends Component<any, any> {
     return isTest ? _l('（原抄送人）') : _l('（没有抄送人）');
   }
 
-  render() {
+  override render() {
     const { data, currentWork, currentType, isLast, status, currents, onChangeCurrentWork, appId, projectId } =
       this.props;
     const { showMore } = this.state;

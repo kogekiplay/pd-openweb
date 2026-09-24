@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -74,7 +74,7 @@ const allocationTask = (result: { data?: any; [key: string]: any }) => {
 };
 
 export default class Print extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     reqId: PropTypes.string,
   };
   constructor(props) {
@@ -111,7 +111,7 @@ export default class Print extends Component<any, any> {
       workflow: [],
     };
   }
-  componentDidMount = () => {
+  override componentDidMount = () => {
     const { params } = this.props.match;
 
     if (params.printType === 'worksheet') {
@@ -238,7 +238,7 @@ export default class Print extends Component<any, any> {
         });
       });
   }
-  componentDidUpdate = function (this: Print) {
+  override componentDidUpdate = function (this: Print) {
     $('#container, .AppHr form').addClass('hrApprovalBox');
     $('html.AppHr').addClass('hrApprovalAppHr');
   };
@@ -331,7 +331,7 @@ export default class Print extends Component<any, any> {
         let text = '';
 
         if (value) {
-          const keys = [];
+          const keys: string[] = [];
 
           for (let i = 0; i < value.length; i++) {
             if (value[i] !== '0') {
@@ -475,6 +475,7 @@ export default class Print extends Component<any, any> {
               case 7:
                 return _l('重复日程') + '：';
             }
+            return undefined;
           };
 
           const relationshipItem = (relationValueItem: RecordRow, index: number) => {
@@ -614,8 +615,8 @@ export default class Print extends Component<any, any> {
               ...new Array(
                 isRelateMultipleSheet ? pictureAttachments.length : Math.ceil(pictureAttachments.length / 2) * 2,
               ),
-            ].map((a, index) => (
-              <div className="pictureAttachment">
+            ].map((_a, index) => (
+              <div key={index} className="pictureAttachment">
                 {pictureAttachments[index] && (
                   <div className="imgCon">
                     <img
@@ -635,8 +636,8 @@ export default class Print extends Component<any, any> {
         )}
         {isRelateMultipleSheet ? (
           <div className="recordAttachmentPictures">
-            {otherAttachments.map((item: PrintAttachment) => (
-              <div className="pictureAttachment onlyText">
+            {otherAttachments.map((item: PrintAttachment, index) => (
+              <div key={index} className="pictureAttachment onlyText">
                 <p className="imageAttachmentName ellipsis"> {item.originalFilename + item.ext} </p>
               </div>
             ))}
@@ -659,15 +660,17 @@ export default class Print extends Component<any, any> {
     return detailsType === 2 ? (
       <table className="detailsTable" style={{ tableLayout: 'fixed' }} cellpadding="0" cellspacing="0">
         <tr>
-          {[<td width="20"></td>].concat(
-            controls.map(c => <th style={c.type === 14 ? { width: 200 } : {}}>{c.controlName || ''}</th>),
+          {/* 前导格与映射出的表头 concat 进同一个数组，key 要在合并后的数组里唯一：
+              表头按字段 controlId（天然唯一），前导格用固定字符串，两者不会撞 */}
+          {[<td key="rowNumber" width="20"></td>].concat(
+            controls.map(c => <th key={c.controlId} style={c.type === 14 ? { width: 200 } : {}}>{c.controlName || ''}</th>),
           )}
         </tr>
         {relateRecord.data.map((item: RecordRow, i: number) => (
-          <tr>
-            {[<td> {i + 1} </td>].concat(
+          <tr key={i}>
+            {[<td key="rowNumber"> {i + 1} </td>].concat(
               controls.map(c => (
-                <td className="textPreLine">
+                <td key={c.controlId} className="textPreLine">
                   {this.getShowContent(Object.assign({}, c, { value: item[c.controlId], isRelateMultipleSheet: true }))}
                 </td>
               )),
@@ -678,9 +681,9 @@ export default class Print extends Component<any, any> {
     ) : (
       <div className="verticalLayout">
         {relateRecord.data.map((item: RecordRow, i: number) => (
-          <table className="detailItem" cellpadding="0" cellspacing="0" style={{ tableLayout: 'fixed' }}>
+          <table key={i} className="detailItem" cellpadding="0" cellspacing="0" style={{ tableLayout: 'fixed' }}>
             {_.chunk(controls, 4).map((rowData, rowIndex) => (
-              <tr className="detailItemControlRow">
+              <tr key={rowIndex} className="detailItemControlRow">
                 {rowIndex === 0 && (
                   <td
                     rowSpan={Math.ceil(controls.length / 4)}
@@ -690,8 +693,8 @@ export default class Print extends Component<any, any> {
                     {i + 1}
                   </td>
                 )}
-                {[...new Array(4)].map((c, colIndex) => (
-                  <td className="detailRowItem">
+                {[...new Array(4)].map((_c, colIndex) => (
+                  <td key={colIndex} className="detailRowItem">
                     <span className="Bold TxtMiddle mLeft10">
                       {rowData[colIndex] && (rowData[colIndex].controlName || '')}
                     </span>
@@ -719,7 +722,7 @@ export default class Print extends Component<any, any> {
     const evaluateType = mapControl.enumDefault2;
     const showMoney = mapControl.enumDefault;
     const { unit, dot } = mapControl;
-    const controlArray = [];
+    const controlArray: number[] = [];
     controls.forEach(item => {
       controlArray.push(
         Number((item.filter(controlItem => controlItem.controlId === controlId)[0] || { value: '' }).value),
@@ -934,6 +937,7 @@ export default class Print extends Component<any, any> {
       case 6:
         return _l('乘积');
     }
+    return undefined;
   };
   beforeControlIsDetail = function (this: Print, key: string) {
     const { type } = this.state;
@@ -1638,7 +1642,7 @@ export default class Print extends Component<any, any> {
       </table>
     );
   }
-  render() {
+  override render() {
     const { params } = this.props.match;
     const { task, configOptions, rowInfo } = this.state;
     let { logo } = this.state;

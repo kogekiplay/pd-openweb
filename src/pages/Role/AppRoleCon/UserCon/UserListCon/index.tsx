@@ -53,7 +53,7 @@ export default class UserListCon extends React.Component<any, any> {
     const { memberModels = [] } = outsourcing;
     let dataList = [...memberModels, ...userList];
 
-    const getData = type => {
+    const getData = (type: number) => {
       return userIds
         .filter(item => {
           let data = dataList.find(o => {
@@ -70,6 +70,7 @@ export default class UserListCon extends React.Component<any, any> {
           if (data) {
             return true;
           }
+          return undefined;
         })
         .map(o => o.split('_')[0]);
     };
@@ -474,7 +475,7 @@ export default class UserListCon extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { show, userIds = [] } = this.state;
     const { roleId, appRole = {}, projectId, canEditUser, appId } = this.props;
     const { outsourcing = {}, userList = [], roleInfos = [] } = appRole;

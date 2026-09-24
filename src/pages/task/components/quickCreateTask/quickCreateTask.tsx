@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import doT from 'dot';
 import { UserHead } from 'ming-ui';
@@ -58,7 +57,7 @@ class QuickCreateTask {
     const _this = this;
     $('.createNewSingle')
       .find('.chargeImgWrapQuick[data-id]')
-      .each((index: number, ele) => {
+      .each((_index: number, ele) => {
         let $ele = $(ele);
         if ($ele.data('hasbusinesscard')) return;
         let avatar = $ele.data('avatar');
@@ -139,6 +138,7 @@ class QuickCreateTask {
             end = end ? end.format('YYYY-MM-DD HH:00') : '';
             $createSingleDate.data('start', start);
             $createSingleDate.data('end', end);
+            return undefined;
           }}
           onClear={() => {
             delete $createSingleDate.data().start;

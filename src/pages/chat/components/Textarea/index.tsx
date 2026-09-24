@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Textarea from 'ming-ui/components/Textarea';
 import { getCaretPosition, setCaretPosition } from 'src/utils/common';
 import * as utils from '../../utils/';
@@ -7,6 +7,13 @@ import Constant from '../../utils/constant';
 import './index.less';
 
 export default class TextareaBox extends Component<any, any> {
+  declare lastHeight: number | undefined;
+  declare currentHeight: number | undefined;
+  declare isComposing: boolean;
+  declare compositionEndTime: number;
+  declare textareaWrapper: HTMLDivElement | null | undefined;
+  declare messageRefer: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -46,7 +53,7 @@ export default class TextareaBox extends Component<any, any> {
   }
   handleKeyDown(event) {
     if (event.which === 13) {
-      if (this.isInputComposing(event)) return;
+      if (this.isInputComposing(event)) return undefined;
 
       const { value } = this.state;
       const isSendMsg =
@@ -81,6 +88,7 @@ export default class TextareaBox extends Component<any, any> {
 
       return false;
     }
+    return undefined;
   }
   handleBlur() {
     const { value } = this.state;
@@ -136,7 +144,7 @@ export default class TextareaBox extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { value } = this.state;
     const { referMessage, disabled, placeholder } = this.props;
     return (

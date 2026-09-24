@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useEffect, useRef } from 'react';
+import { Fragment, memo, useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import { Icon, LoadDiv, MobileSearch, PopupWrapper, ScrollView } from 'ming-ui';
 import RecordCard from 'mobile/RecordList/RecordCard';

@@ -292,7 +292,7 @@ export function initConfigDetail(id, data, currentReport, customPageConfig) {
       result.displaySetup.showPileTotal = false;
       result.displaySetup.hideOverlapText = false;
       result.displaySetup.showDimension = false;
-      result.yaxisList = currentReport.yaxisList.filter((n, index: number) => index < 3);
+      result.yaxisList = currentReport.yaxisList.filter((_n, index: number) => index < 3);
     }
 
     if (reportTypes.DualAxes === reportType) {
@@ -982,7 +982,7 @@ export const checkedDropdownItem = (value, list) => {
  * 格式化统计范围时间文案
  */
 
-function getFontRect(sum, el, px) {
+function getFontRect(sum, el, px: number) {
   var span = document.createElement('span');
   span.style.visibility = 'hidden';
   span.style.lineHeight = '1';
@@ -1028,7 +1028,7 @@ export function getPerfectFontSize(el, sum, size) {
   return Math.floor(fontSize);
 }
 
-const rgbToHex = (r, g, b) => {
+const rgbToHex = (r: number, g: number, b: number) => {
   var hex = ((r << 16) | (g << 8) | b).toString(16);
   return '#' + new Array(Math.abs(hex.length - 7)).join('0') + hex;
 };

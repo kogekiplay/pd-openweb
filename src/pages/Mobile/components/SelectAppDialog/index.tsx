@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect } from 'react';
+import { Fragment, useEffect, useMemo } from 'react';
 import { useSetState } from 'react-use';
 import { Button, Popup } from 'antd-mobile';
 import _ from 'lodash';
@@ -47,10 +47,14 @@ export default function SelectAppDialog(props) {
     });
   };
 
-  const onSearch = useCallback(
-    _.debounce(value => {
-      setStateData(NO_PAGE.includes(ajaxFun) ? { keyWords: value } : { loading: true, pageIndex: 1, keyWords: value });
-    }, 500),
+  // 原来是 useCallback(_.debounce(…)) 且没给依赖数组：每次渲染都新建一个防抖函数，
+  // 只是因为搜索框不受控、打字不触发重渲染才碰巧有效。改成按 ajaxFun 缓存同一个（setStateData 本身是稳定的）
+  const onSearch = useMemo(
+    () =>
+      _.debounce((value: string) => {
+        setStateData(NO_PAGE.includes(ajaxFun) ? { keyWords: value } : { loading: true, pageIndex: 1, keyWords: value });
+      }, 500),
+    [ajaxFun],
   );
 
   const onScrollEnd = () => {

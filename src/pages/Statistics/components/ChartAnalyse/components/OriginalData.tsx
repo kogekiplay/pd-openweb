@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Button, ConfigProvider, Modal, Radio, Space } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -162,7 +162,7 @@ export default class OriginalData extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { style, viewId, worksheetInfo } = this.props;
     const { views } = worksheetInfo;
     const view = _.find(views, { viewId });

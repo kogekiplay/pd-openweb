@@ -157,7 +157,7 @@ const LayoutSettingWrap = styled.div`
 `;
 
 class AppearanceConfig extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     open: PropTypes.bool,
     worksheetInfo: PropTypes.shape({}),
     updateWorksheetInfo: PropTypes.func,
@@ -252,11 +252,15 @@ class AppearanceConfig extends React.Component<any, any> {
       <LayoutSettingWrap>
         <H3 className="mBottom16">{_l('布局方式')}</H3>
         <div className="flexRow">
-          {LAYOUT_OPTIONS.map(l => {
+          {LAYOUT_OPTIONS.map((l, index) => {
             const checked = config.layout === l.value;
 
             return (
-              <div className="flex Hand" onClick={() => !checked && this.handleChangePageConfig({ layout: l.value })}>
+              <div
+                key={index}
+                className="flex Hand"
+                onClick={() => !checked && this.handleChangePageConfig({ layout: l.value })}
+              >
                 <div>
                   <img className="explainImg" src={checked ? l.bgActive : l.bg} />
                 </div>
@@ -305,7 +309,7 @@ class AppearanceConfig extends React.Component<any, any> {
             this.setState({ isUploading: true });
             up.disableBrowse();
           }}
-          onError={(up, err) => {
+          onError={(_up, err) => {
             if (err.code === -600) alert(_l('上传失败，只允许上传5M以内的文件'), 2);
           }}
         >
@@ -340,7 +344,7 @@ class AppearanceConfig extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { open, worksheetInfo, onClose, theme, pageConfigs = '[]', pageConfigKey = '' } = this.props;
     const { projectId } = worksheetInfo;
     const COLORS = getThemeColors(projectId);

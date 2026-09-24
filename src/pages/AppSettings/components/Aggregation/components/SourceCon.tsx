@@ -174,7 +174,7 @@ export default function SourceCon(props) {
           const filters = _.get(o, 'filterConfig.items') || [];
           const canChange = (sourceTablesData.length === 1 || !o.workSheetId) && !o.isRelative;
           return (
-            <React.Fragment>
+            <React.Fragment key={index}>
               <div className="topCon" onClick={e => e.stopPropagation()} />
               <WrapWorksheet
                 className={cx('Relative hoverBoxShadow', {

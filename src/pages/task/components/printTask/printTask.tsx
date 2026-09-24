@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import LoadDiv from 'ming-ui/components/LoadDiv';
@@ -17,7 +17,7 @@ export default class PrintTask extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     postAjax
       .getTaskDetail4Print({
         taskId: this.props.taskId,
@@ -73,7 +73,7 @@ export default class PrintTask extends Component<any, any> {
 
     // 复选框
     if (item.type === 10) {
-      const key = [];
+      const key: string[] = [];
 
       for (let i = 0; i < item.value.length; i++) {
         if (item.value.substr(i, 1) !== '0') {
@@ -142,7 +142,7 @@ export default class PrintTask extends Component<any, any> {
     navigateTo('/apps/task/center');
   }
 
-  render() {
+  override render() {
     const data = this.state.data;
     const hasQRCode = this.props.options.indexOf('qrCode') >= 0;
     let controls;

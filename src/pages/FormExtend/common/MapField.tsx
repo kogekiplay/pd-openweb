@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Dropdown, Icon } from 'ming-ui';
@@ -22,7 +22,14 @@ const Row = styled.div`
   }
 `;
 
-const fieldsConfig = {
+const fieldsConfig: Record<
+  string,
+  (
+    | { isTitle: boolean; title: string }
+    | { controlId: string; controlName: string; type: number[] }
+    | { controlId: string; controlName: string; type: number[]; desc: string }
+  )[]
+> = {
   pay: [
     { isTitle: true, title: _l('订单明细（注意：不能选择已在公开表单配置过映射的字段）') },
     { controlId: 'orderNo', controlName: _l('订单编号'), type: [2] },
@@ -78,7 +85,7 @@ export default class MapField extends Component<any, any> {
     this.state = { showDialog: false, mapFields: fieldsConfig[props.type] };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { fieldMaps } = this.props;
     const { mapFields = [] } = this.state;
     this.setState({
@@ -169,7 +176,7 @@ export default class MapField extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { fieldMaps } = this.props;
     const { mapFields, showDialog } = this.state;
     const isEmptyField = Object.keys(fieldMaps).every(v => !fieldMaps[v]);

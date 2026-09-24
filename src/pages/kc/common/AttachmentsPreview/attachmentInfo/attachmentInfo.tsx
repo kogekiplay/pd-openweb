@@ -14,7 +14,7 @@ import * as Actions from '../actions/action';
 import { FROM_TYPE } from '../constant/enum';
 
 class attachmentInfo extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     attachments: PropTypes.array,
     index: PropTypes.number,
     imageViewerFn: PropTypes.object,
@@ -25,7 +25,7 @@ class attachmentInfo extends React.Component<any, any> {
     visible: PropTypes.bool,
   };
 
-  state = {
+  override state = {
     attachments: this.props.attachments,
     index: this.props.index,
     postDetails: this.props.extra.postDetails,
@@ -34,7 +34,7 @@ class attachmentInfo extends React.Component<any, any> {
     showDetailLink: true,
   };
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         visible: this.props.visible,
@@ -99,7 +99,7 @@ class attachmentInfo extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     if (!this.state.visible) {
       return (
         <div className="attachmentInfo" style={{ width: 0 }}>

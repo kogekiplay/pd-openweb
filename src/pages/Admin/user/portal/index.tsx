@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import AdminTitle from 'src/pages/Admin/common/AdminTitle';
 import OutsourcingList from './OutsourcingList.jsx';
@@ -15,14 +15,18 @@ const routeList = [
   },
 ];
 
-export default class Portal extends Component<any, any> {
+export interface PortalState {
+  currentTab: string;
+}
+
+export default class Portal extends Component<any, PortalState> {
   constructor(props) {
     super(props);
     this.state = {
       currentTab: 'portal',
     };
   }
-  render() {
+  override render() {
     const { currentTab } = this.state;
     const { projectId } = this.props.match.params;
 

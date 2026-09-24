@@ -124,7 +124,7 @@ export default function SlideLayerTem(props) {
     });
   };
 
-  const renderTemplate = (fields = [], isAppWorksheet: boolean, cb, hideIsNull?) => {
+  const renderTemplate = (fields = [], isAppWorksheet: boolean, cb, hideIsNull?: boolean | undefined) => {
     const canCheckFields = fields.filter(o => ![22].includes(o.mdType));
     const hasUnsupportedFields = canCheckFields.length < fields.length; // 是否存在不可选字段
     const isAll = canCheckFields.filter(o => o.isCheck).length >= canCheckFields.length;
@@ -163,10 +163,10 @@ export default function SlideLayerTem(props) {
           )}
           <div className="itemBox textSecondary">{_l('重命名')}</div>
         </div>
-        {fields.map(item => {
+        {fields.map((item, index) => {
           const isNotSupport = [22].includes(item.mdType); //排除分段
           return (
-            <div className="tableCon flexRow alignItemsCenter">
+            <div key={index} className="tableCon flexRow alignItemsCenter">
               {item.isErr && (
                 <Icon
                   className="deleteIcon"
@@ -314,7 +314,7 @@ export default function SlideLayerTem(props) {
           const leftField = _.get(item, ['leftField']) || {};
           const rightField = _.get(item, ['rightField']) || {};
           return (
-            <div className="tableCon flexRow alignItemsCenter">
+            <div key={i} className="tableCon flexRow alignItemsCenter">
               <div className="itemBox itemBoxCheck">
                 <Checkbox
                   className="TxtMiddle InlineBlock mRight0 checked_selected checkBox "
@@ -528,6 +528,7 @@ export default function SlideLayerTem(props) {
           </WrapCon>
         );
     }
+    return undefined;
   };
 
   return <React.Fragment>{renderCon()}</React.Fragment>;

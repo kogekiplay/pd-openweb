@@ -147,7 +147,7 @@ function AuthParam(props) {
     );
   };
 
-  const renderUrl = withTime => {
+  const renderUrl = (withTime: boolean) => {
     return (
       <div className=" pLeft20 pRight20">
         <div className="flexRow mBottom20 breakAll">{renderValue(_.get(node, 'webHookNodes[0].url'), node)}</div>
@@ -202,7 +202,7 @@ function AuthParam(props) {
             content={_.get(cache, 'current.node.sendContent')}
             formulaMap={_.get(cache, 'current.node.formulaMap')}
             isIntegration={true}
-            onChange={(err, value) => {
+            onChange={(_err, value) => {
               cache.current.node = { ...cache.current.node, sendContent: value };
               setNode(cache.current.node);
             }}

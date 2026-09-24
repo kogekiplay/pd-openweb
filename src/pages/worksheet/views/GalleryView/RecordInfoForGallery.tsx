@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import RecordInfoWrapper from 'src/pages/worksheet/common/recordInfo/RecordInfoWrapper';
 import type { RecordRow } from 'src/utils/controlTypes';
@@ -37,7 +36,7 @@ function RecordInfoForGallery(props) {
       view={currentView}
       recordId={recordId}
       rules={worksheetInfo.rules}
-      updateSuccess={(ids, updated, data) => {
+      updateSuccess={(_ids, _updated, data) => {
         props.updateRow(data, rowKey);
       }}
       onDeleteSuccess={() => {
@@ -54,7 +53,7 @@ function RecordInfoForGallery(props) {
           recordIds.forEach(props.deleteRow);
         }, 100);
       }}
-      updateRows={(ids, newItem) => {
+      updateRows={(_ids, newItem) => {
         newItem?.rowid && props.updateRow(newItem, rowKey);
       }}
     />

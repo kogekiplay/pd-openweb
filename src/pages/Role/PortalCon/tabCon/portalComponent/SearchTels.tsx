@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
@@ -22,7 +22,7 @@ function SearchTelsDialog(props) {
   const { portal = {}, show, setShow, setTelFilters } = props;
   const [tels, setTels] = useState(portal.telFilters || '');
 
-  const onChange = value => {
+  const onChange = (value: string) => {
     setTels(value);
   };
 

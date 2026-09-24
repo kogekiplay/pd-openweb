@@ -15,7 +15,7 @@ const isDevelopment = process.env.NODE_ENV === 'development';
  * 获取会话列表
  * @param {*} param
  */
-export const chatSessionList = param => {
+export const chatSessionList = (param: { pageIndex: number; pageSize: number }) => {
   return window.mdyAPI('', '', param, {
     customParseResponse: true,
     ajaxOptions: {
@@ -56,6 +56,7 @@ export const chatSessionItem = param => {
       },
     );
   }
+  return undefined;
 };
 
 /**

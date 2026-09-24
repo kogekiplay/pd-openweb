@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -34,7 +34,7 @@ export default class ChartSort extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { rightY } = this.props.currentReport;
       this.setState({
@@ -380,7 +380,7 @@ export default class ChartSort extends Component<any, any> {
       )
     );
   }
-  render() {
+  override render() {
     const { rightYaxisList } = this.state;
     const { currentReport } = this.props;
     const { xaxes, yaxisList = [], split, rightY, reportType } = currentReport;

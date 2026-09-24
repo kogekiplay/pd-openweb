@@ -225,7 +225,7 @@ const GuildText = {
 const LoadableLottie = lazy(() => import('react-lottie'));
 const LOTTIE_EVENT_LISTENERS = [];
 export default class AddViewDisplayMenu extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
 
   constructor(props) {
@@ -239,7 +239,7 @@ export default class AddViewDisplayMenu extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { canAddCustomView } = this.props;
 
     if (canAddCustomView) {
@@ -249,7 +249,7 @@ export default class AddViewDisplayMenu extends Component<any, any> {
 
   //或是自定义列表，更新customList //或是自定义列表，更新customList
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { canAddCustomView, popupVisible } = this.props;
 
@@ -277,18 +277,19 @@ export default class AddViewDisplayMenu extends Component<any, any> {
         });
       });
   };
-  onClickGroup = key => {
+  onClickGroup = (key: string) => {
     const { retract } = this.state;
     this.setState({
       retract: retract.includes(key) ? retract.filter(item => item !== key) : [...retract, key],
     });
   };
-  renderCon = (info, isDev?) => {
+  renderCon = (info, isDev?: boolean | undefined) => {
     const { onClick } = this.props;
-    return info.map(o => {
+    return info.map((o, index) => {
       const { icon, id, iconColor = 'var(--color-cyan-dark)', name, iconUrl } = o;
       return (
         <div
+          key={index}
           className="valignWrapper flex Hand"
           onClick={() =>
             // pluginSource 插件来源 0:开发 1:已发布
@@ -316,7 +317,7 @@ export default class AddViewDisplayMenu extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { onClick, canAddCustomView, projectId, ...rest } = this.props;
     const { myPlugins = [], orgPlugins = [], loading, retract } = this.state;
     const hasPluginAuth =
@@ -330,8 +331,9 @@ export default class AddViewDisplayMenu extends Component<any, any> {
           <div className="title Bold Font15">{_l('默认视图')}</div>
           {VIEW_TYPE_ICON.filter(
             o => o.id !== 'customize' && (!md.global.SysSettings.enableMap ? o.id !== 'map' : true),
-          ).map(({ icon, text, id, color, isNew }) => (
+          ).map(({ icon, text, id, color, isNew }, index) => (
             <Trigger
+              key={index}
               popup={
                 <GuildWrap className="guildWrap">
                   <div className="left">

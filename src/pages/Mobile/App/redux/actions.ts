@@ -146,7 +146,7 @@ export const updateAppMark = (appId: string, projectId: string, isMarked) => (di
     });
 };
 
-export const editAppInfo = (viewHideNavi, callback) => (dispatch: AppDispatch, getState: GetState) => {
+export const editAppInfo = (viewHideNavi, callback: () => void) => (_dispatch: AppDispatch, getState: GetState) => {
   const { detail } = _.get(getState(), 'mobile.appDetail');
   const params = _.pick(detail, ['projectId', 'iconColor', 'navColor', 'icon', 'description', 'name']);
   homeAppApi.editAppInfo({ ...params, appId: detail.id, viewHideNavi }).then(res => {

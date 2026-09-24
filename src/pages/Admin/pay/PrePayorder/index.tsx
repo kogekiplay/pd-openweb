@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { ActionSheet } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -33,7 +33,7 @@ export default class PrePayOrder extends Component<any, any> {
     this.conformAction = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.orderId ? this.getData() : this.handlePrePayOrder();
     if (!browserIsMobile()) return;
 
@@ -41,7 +41,7 @@ export default class PrePayOrder extends Component<any, any> {
     window.addEventListener('popstate', this.handleBack, false);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (!browserIsMobile()) return;
     window.removeEventListener('popstate', this.handleBack, false);
   }
@@ -64,7 +64,8 @@ export default class PrePayOrder extends Component<any, any> {
         { worksheetId, projectId, appId },
         { silent: true },
       );
-    } catch ({ errorCode, errorMessage }) {
+    } catch (thrown) {
+      const { errorCode, errorMessage } = thrown as ApiRejection;
       this.setState({ orderStatus: errorCode ? errorCode : -1, errorMessage, loading: false });
       return;
     }
@@ -456,7 +457,7 @@ export default class PrePayOrder extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { onCancel = () => {}, notDialog, isPaySuccessAddRecord, isAtOncePayment } = this.props;
     const {
       loading,
@@ -526,9 +527,9 @@ export default class PrePayOrder extends Component<any, any> {
                     <div className="line"></div>
                     <div className="TxtLeft">{_l('支付方式')}</div>
                     <div className="mobilePayChannel flex">
-                      {payChannels.map(item => {
+                      {payChannels.map((item, index) => {
                         return (
-                          <div className="mobilePayChannelItem flexCenter">
+                          <div key={index} className="mobilePayChannelItem flexCenter">
                             <div
                               className={cx('channelIcon', {
                                 wechatBgColor: item.value === 2,
@@ -554,9 +555,10 @@ export default class PrePayOrder extends Component<any, any> {
                   </Fragment>
                 ) : (
                   <div className="payChannel valignWrapper justifyContentCenter">
-                    {payChannels.map(item => {
+                    {payChannels.map((item, index) => {
                       return (
                         <div
+                          key={index}
                           className={cx('payChannelItem valignWrapper justifyContentCenter Relative Hand', {
                             activePayChannel: activePayChannel === item.value,
                           })}

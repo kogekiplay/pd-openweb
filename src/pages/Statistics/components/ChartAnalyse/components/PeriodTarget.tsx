@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Input } from 'antd';
 
 export default class PeriodTarget extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  handleUpdateLifecycleValue = value => {
+  handleUpdateLifecycleValue = (value: string) => {
     this.props.onChangeDisplaySetup({
       lifecycleValue: Number(value.replace(/[^\d.]/g, '')),
     });
   };
-  render() {
+  override render() {
     const { currentReport } = this.props;
     const { displaySetup } = currentReport;
     return (

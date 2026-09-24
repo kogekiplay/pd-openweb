@@ -3,7 +3,7 @@ import RegExpValidator from 'src/utils/expression';
 
 export const PAGE_SIZE = 50;
 
-export const IMPORT_EXPORT_SHOWLIST = {
+export const IMPORT_EXPORT_SHOWLIST: Record<string, string> = {
   importDepartment: _l('导入部门'),
   exportDepartment: _l('导出部门'),
   importPosition: _l('导入职位'),
@@ -80,7 +80,7 @@ export const checkForm = {
   },
 };
 
-export const feedbackTypes = {
+export const feedbackTypes: Record<number, string> = {
   2: _l('用户已存在当前组织'),
   3: _l('用户未激活'),
   4: _l('用户待审核'),

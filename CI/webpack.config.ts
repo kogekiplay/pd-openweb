@@ -107,8 +107,14 @@ const getModuleRules = () => {
       include: /node_modules\/(@ctrl\/tinycolor)/,
       use: {
         loader: 'babel-loader',
+        /* 目标要和 .babelrc 的两个 env 块保持一致（全仓共四处写死了这个版本号）。
+           取 103 的依据是生产 nginx 访问日志：2026-09-03 ~ 09-23 共 314 个去重会话，
+           排掉扫描器之后最老的真实客户端是一台 OPPO PEQM00（Android 13）上的
+           Mingdao Application WebView，停在 Chrome 103 不更新。
+           再往上调没有任何收益 —— 实测 preset-env 在 103 / 138 / 152 三档下
+           产出逐字节相同，而 58 那一档会把同一段源码膨胀到 17 倍。 */
         options: {
-          presets: [['@babel/preset-env', { targets: { chrome: '58' } }]],
+          presets: [['@babel/preset-env', { targets: { chrome: '103' } }]],
         },
       },
     },
@@ -450,6 +456,33 @@ module.exports = function (alonePath = '') {
       rules: getModuleRules(),
     },
     plugins: getPlugins(alonePath),
+    // 产物体积棘轮。
+    //
+    // 【为什么不是关掉】webpack 默认预算是 244 KiB —— 那是给小站点定的，
+    // 这个 72 入口的企业 SPA 每次构建都会超标一大片（实测 60 多条），
+    // 全是永远修不掉的噪音，结果是所有人连带忽略真正的构建输出。
+    // 但直接 `performance: false`（mingo-entry-widget 那个配置就是这么写的）
+    // 又把这层网整个撤掉了。这里改成【卡在当前水位上的棘轮】：
+    // 平时一声不响，谁把包做大了才报。
+    //
+    // 【只查 JS/CSS】图片/字体/音频的体积是内容决定的，不是解析成本，
+    // 而这条提示本来就是冲着解析和传输去的。默认只排除了 .map，这里把它们一并排掉
+    // —— 否则 60 多条里有 20 条是截图和音效，纯噪音。
+    //
+    // 【阈值怎么来的】2026-09-22 实测全部输出目录的最大值：
+    // 单个 JS 6.63MB（singleExtractModules 的 1212 chunk）、入口合计 13.4MB
+    // （README / index 这几个单页，它们把 worksheet + node_modules + common 全捆在一起）。
+    // 各留约 12% 余量。调大之前请先问一句「是不是有东西不该进这个包」。
+    //
+    // 【量的时候别只看主站】一次 release 有三套输出目录：dist/pack（主站）、
+    // dist/single/pack、dist/singleExtractModules/pack。最大的那个在第三套里，
+    // 只量主站会把阈值定低 2MB，改完照样报警 —— 我就这么返工过一次。
+    performance: {
+      hints: 'warning',
+      assetFilter: (assetFilename: string) => /\.(js|css)$/.test(assetFilename),
+      maxAssetSize: 7.5 * 1024 * 1024,
+      maxEntrypointSize: 15 * 1024 * 1024,
+    },
     resolve: {
       alias: {
         worksheet: 'src/pages/worksheet',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import homeAppApi from 'api/homeApp';
 import cx from 'classnames';
@@ -37,7 +37,9 @@ export default function ViewLand() {
   const [appId, worksheetId, viewId] = pathname;
   const [loading, setLoading] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
-  const [worksheetInfo, setWorksheetInfo] = useState();
+  const [worksheetInfo, setWorksheetInfo] = useState<
+    { worksheetName: string | undefined; viewName: string; appColor: string | undefined } | undefined
+  >();
   const isMobile = browserIsMobile();
   const Component = isMobile ? MobileSingleView : SingleView;
 
@@ -67,12 +69,12 @@ export default function ViewLand() {
         worksheetInfo.views.forEach(view => {
           view.name = getTranslateInfo(appId, worksheetId, view.viewId).name || view.name;
         });
-        const view = _.find(worksheetInfo.views, v => v.viewId === viewId) || {};
+        const view = _.find(worksheetInfo.views, v => v.viewId === viewId);
         const isSingleRecordDetailView = _.get(view, 'viewType') === 6 && String(_.get(view, 'childType')) === '1';
         setShowHeader(isMobile ? true : !isSingleRecordDetailView);
         setWorksheetInfo({
           worksheetName: worksheetInfo.name,
-          viewName: view.name || '',
+          viewName: view?.name || '',
           appColor: data.iconColor,
         });
         setLoading(false);

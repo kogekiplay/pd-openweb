@@ -13,7 +13,7 @@ export const getRoleList =
   (isAdd, orgRoleGroupId = '') =>
   (dispatch: AppDispatch, getState: GetState) => {
     const {
-      rolePageInfo = {},
+      rolePageInfo = { pageIndex: 1, isMore: false },
       projectId,
       roleList = [],
       searchValue,
@@ -83,7 +83,7 @@ export const updateSearchValue = searchValue => dispatch => {
   dispatch({ type: 'UPDATE_ROLE_PAGE_INFO', data: { pageIndex: 1, isMore: false } });
 };
 
-export const updateUserPageIndex = userPageIndex => dispatch => {
+export const updateUserPageIndex = (userPageIndex: number) => dispatch => {
   dispatch({ type: 'UPDATE_USER_PAGE_INDEX', userPageIndex });
 };
 

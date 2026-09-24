@@ -15,15 +15,15 @@ export default class ContactsHiddenWrap extends React.Component<any, any> {
     super();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppAdminContactsHidden');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppAdminContactsHidden');
   }
 
-  render() {
+  override render() {
     store.dispatch(updateProjectId(this.props.projectId));
 
     return (

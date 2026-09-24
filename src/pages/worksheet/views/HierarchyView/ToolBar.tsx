@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Select } from 'antd';
 import { ActionSheet } from 'antd-mobile';
 import cx from 'classnames';
@@ -110,7 +110,11 @@ const DISPLAY_HIERARCHY = [
   { value: 4, name: _l('4级') },
   { value: 5, name: _l('5级') },
 ];
-export default class ToolBar extends Component<any, any> {
+export interface ToolBarState {
+  initExport: boolean;
+}
+
+export default class ToolBar extends Component<any, ToolBarState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -118,7 +122,7 @@ export default class ToolBar extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 初始化时不显示导出图片
     setTimeout(() => {
       this.setState({
@@ -127,7 +131,7 @@ export default class ToolBar extends Component<any, any> {
     }, 200);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
   }
 
@@ -142,7 +146,7 @@ export default class ToolBar extends Component<any, any> {
     this.updateStorage({ level: value, levelUpdateTime: Date.now() });
   };
 
-  adjustSize = type => {
+  adjustSize = (type: string) => {
     const { scale, onClick } = this.props;
     const nextScale = type === 'shrink' ? Math.max(SCALE_LIMIT.min, scale - 10) : Math.min(SCALE_LIMIT.max, scale + 10);
     onClick('adjustScale', { scale: nextScale });
@@ -163,15 +167,15 @@ export default class ToolBar extends Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, index) => {
-        const value = (_.find(DISPLAY_HIERARCHY, (v, i) => i === index) || []).value;
+      onAction: (_action, index) => {
+        const value = (_.find(DISPLAY_HIERARCHY, (_v, i) => i === index) || []).value;
         this.changeDisplayLevel(value);
         this.actionSheetHandler.close();
       },
     });
   };
 
-  render() {
+  override render() {
     const {
       className,
       style = {},

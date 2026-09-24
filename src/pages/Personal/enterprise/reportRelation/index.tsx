@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { navigateTo } from 'router/navigateTo';
@@ -34,7 +34,7 @@ export default class ReportRelation extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.init();
   }
 
@@ -101,7 +101,7 @@ export default class ReportRelation extends Component<any, any> {
     });
   }
 
-  handleChangeBar(value) {
+  handleChangeBar(value: string) {
     this.setState({ activeBar: value });
   }
 
@@ -272,7 +272,7 @@ export default class ReportRelation extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { allowStructureForAll, hasProjectAdminAuth, activeBar, loading } = this.state;
 
     if (loading) {

@@ -1,9 +1,13 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 
-export default class FilterNav extends Component<any, any> {
+export interface FilterNavState {
+  currentIndex: number;
+}
+
+export default class FilterNav extends Component<any, FilterNavState> {
   constructor(props) {
     super(props);
     let currentIndex = 0;
@@ -19,7 +23,7 @@ export default class FilterNav extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.data, prevProps.data)) {
         this.state = {
@@ -28,7 +32,7 @@ export default class FilterNav extends Component<any, any> {
       }
     }
   }
-  render() {
+  override render() {
     const { data } = this.props;
     const { currentIndex } = this.state;
     return (

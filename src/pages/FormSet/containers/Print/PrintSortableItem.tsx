@@ -131,7 +131,7 @@ export default function PrintSortableItem(props) {
     return filtersLength === 0 ? '' : `(${filtersLength})`;
   };
 
-  const editPrintName = e => {
+  const editPrintName = (e: React.FocusEvent<HTMLInputElement, Element>) => {
     e.stopPropagation();
     if (_.isEqual(inputName, item.name)) {
       setIsRename(false);
@@ -199,7 +199,7 @@ export default function PrintSortableItem(props) {
     });
   };
 
-  const editPrintRange = showDropOption => {
+  const editPrintRange = (showDropOption: boolean) => {
     setShowDropOption(showDropOption);
 
     if (isChangeDrop) {

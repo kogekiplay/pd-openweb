@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -40,12 +40,12 @@ export default class Messages extends Component<any, any> {
       messages: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { searchText } = this.props;
     this.updateMessages(searchText);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.searchText !== prevProps.searchText) {
         this.setState(
@@ -108,7 +108,7 @@ export default class Messages extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { messages, loading } = this.state;
     return (
       <ScrollView

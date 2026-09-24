@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
 import { UploadError } from 'src/utils/uploader/constants';
 
 export default class UploadFile extends Component<any, any> {
+  declare con: HTMLButtonElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.uploadFile();
   }
   uploadFile() {
@@ -49,6 +51,7 @@ export default class UploadFile extends Component<any, any> {
 
           // 开始上传
           isUploading = true;
+          return undefined;
         },
         FileUploaded(up, file, info) {
           up.stop();
@@ -59,7 +62,7 @@ export default class UploadFile extends Component<any, any> {
 
           isUploading = false;
         },
-        Error(up, error) {
+        Error(_up, error) {
           if (error.code === UploadError.FILE_SIZE_ERROR) {
             alert(_l('单个文件大小超过4MB，无法支持上传'), 2);
           } else {
@@ -69,7 +72,7 @@ export default class UploadFile extends Component<any, any> {
       },
     });
   }
-  render() {
+  override render() {
     const { fileName } = this.props;
     return (
       <button

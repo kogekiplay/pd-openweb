@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Drawer } from 'antd';
@@ -25,6 +25,8 @@ const PluginIcon = styled.div`
 `;
 
 class WorkflowInfo extends Component<any, any> {
+  declare name: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -42,7 +44,7 @@ class WorkflowInfo extends Component<any, any> {
    * 确定按钮点击事件
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         this.setState({
@@ -82,7 +84,7 @@ class WorkflowInfo extends Component<any, any> {
     onClose();
   };
 
-  render() {
+  override render() {
     const { flowInfo, visible, isPlugin, onClose } = this.props;
     const { explain, name, iconColor, iconName } = this.state;
 

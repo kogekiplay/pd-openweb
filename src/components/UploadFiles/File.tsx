@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -20,8 +20,23 @@ const vertical = {
   WebkitBoxOrient: 'vertical',
 };
 
-export default class FileComponent extends Component<any, any> {
-  static propTypes = {
+export interface FileComponentState {
+  isEdit: boolean;
+  menuVisible: boolean;
+  penelVisible: boolean;
+  moreVisible: boolean;
+  imageSrc: boolean;
+  imageWidth: boolean;
+  viewImage: boolean;
+  isDelete: boolean;
+}
+
+export default class FileComponent extends Component<any, FileComponentState> {
+  declare editInput: HTMLInputElement | null | undefined;
+  declare linkCon: false | HTMLDivElement | null | undefined;
+  declare UploadFile: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     onReplaceAttachment: PropTypes.func,
   };
   static default = {};
@@ -72,7 +87,7 @@ export default class FileComponent extends Component<any, any> {
       this.handleEdit(event);
     }
   };
-  handleDownload = (event, isDownload, url) => {
+  handleDownload = (event, isDownload: boolean, url: boolean) => {
     event.stopPropagation();
     if (!isDownload) {
       alert(_l('您权限不足，无法下载，请联系管理员或文件上传者'), 3);
@@ -88,7 +103,7 @@ export default class FileComponent extends Component<any, any> {
     });
     handleOpenControlAttachmentInNewTab();
   };
-  handleShare = (event, isDownload) => {
+  handleShare = (event, isDownload: boolean) => {
     event.stopPropagation();
 
     if (!md.global.Account.accountId) {
@@ -153,7 +168,7 @@ export default class FileComponent extends Component<any, any> {
       });
     });
   };
-  handleSaveToKc = (event, isDownload) => {
+  handleSaveToKc = (event, isDownload: boolean) => {
     event.stopPropagation();
 
     if (!md.global.Account.accountId) {
@@ -265,7 +280,7 @@ export default class FileComponent extends Component<any, any> {
       isDelete: false,
     });
   };
-  renderPreview(fileResponse, fileClassName, isDoc, isVid, isKc) {
+  renderPreview(fileResponse, fileClassName: string, isDoc: boolean, _isVid: boolean, isKc: boolean) {
     return isDoc ? (
       <Fragment>
         <div className={cx(fileClassName, 'UploadFiles-fileIcon', 'UploadFiles-previewIcon')} />
@@ -477,7 +492,7 @@ export default class FileComponent extends Component<any, any> {
       </div>
     );
   }
-  renderView(fileResponse, isKc?) {
+  renderView(fileResponse, isKc?: boolean | undefined) {
     let fileClassName = getClassNameByExt(fileResponse.fileExt);
     let isPicture = RegExpValidator.fileIsPicture(fileResponse.fileExt);
     let isMDLink = fileResponse.viewType === 5;
@@ -527,7 +542,7 @@ export default class FileComponent extends Component<any, any> {
       </div>
     );
   }
-  renderPenel(fileResponse, index: number, isKc?) {
+  renderPenel(fileResponse, index: number, isKc?: boolean | undefined) {
     let { isEdit, penelVisible } = this.state;
     let isPicture = RegExpValidator.fileIsPicture(fileResponse.fileExt);
     let penelClass = cx(
@@ -539,7 +554,7 @@ export default class FileComponent extends Component<any, any> {
       colorPrimary: !isPicture,
     });
 
-    let handleOpen = (event, isEdit) => {
+    let handleOpen = (event, isEdit: boolean) => {
       event.stopPropagation();
       if (!isEdit) {
         this.props.onPreview(fileResponse.fileID, index, event);
@@ -902,7 +917,7 @@ export default class FileComponent extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     let { data, style, index } = this.props;
     let { progress, base, accountId, sourceID, twice } = data;
 

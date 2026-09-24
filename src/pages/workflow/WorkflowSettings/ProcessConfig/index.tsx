@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -27,7 +27,7 @@ const TRIGGER_TYPE = {
 };
 
 class ProcessConfig extends Component<any, any> {
-  state = {
+  override state = {
     data: {},
     showWorkflow: false,
     showSelectUserDialog: false,
@@ -35,7 +35,7 @@ class ProcessConfig extends Component<any, any> {
     errorItems: {},
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const { flowInfo } = this.props;
 
     process.getProcessConfig({ processId: flowInfo.id }).then(data => {
@@ -822,7 +822,7 @@ class ProcessConfig extends Component<any, any> {
                   type={2}
                   content={data.value}
                   formulaMap={data.formulaMap}
-                  onChange={(err, value) => this.updateSource({ value })}
+                  onChange={(_err, value) => this.updateSource({ value })}
                   updateSource={this.updateSource}
                 />
               </div>
@@ -862,7 +862,7 @@ class ProcessConfig extends Component<any, any> {
                   type={2}
                   content={data.endValue}
                   formulaMap={data.formulaMap}
-                  onChange={(err, value) => this.updateSource({ endValue: value })}
+                  onChange={(_err, value) => this.updateSource({ endValue: value })}
                   updateSource={this.updateSource}
                 />
               </div>
@@ -966,7 +966,7 @@ class ProcessConfig extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { flowInfo } = this.props;
     const isWebhook = _.includes([7], flowInfo.startAppType) && !flowInfo.child;
     const isPBC = _.includes([17], flowInfo.startAppType) && !flowInfo.child;

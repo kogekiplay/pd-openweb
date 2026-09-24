@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { match } from 'path-to-regexp';
 import { antNotification, Icon } from 'ming-ui';

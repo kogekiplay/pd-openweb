@@ -17,7 +17,9 @@ import { FROM } from './enum';
 
 const ClickAwayable = ClickAway;
 export default class MobilePhone extends React.Component<any, any> {
-  static propTypes = {
+  declare postBlurUntil: number | null | undefined;
+
+  static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),
     editable: PropTypes.bool,
@@ -39,7 +41,7 @@ export default class MobilePhone extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       // 子表场景：失焦后 ChildTable 的 300ms debounce + DataFormat 清洗会让 cell.value 异步回灌；
       // 这段窗口内阻断 props → state 同步，避免清洗后的空值覆盖用户输入；窗口结束后正常同步，
@@ -232,7 +234,7 @@ export default class MobilePhone extends React.Component<any, any> {
     this.setState({ forceShowFullValue: true });
   };
 
-  render() {
+  override render() {
     const {
       tableType,
       className,

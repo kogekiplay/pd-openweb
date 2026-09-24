@@ -74,7 +74,7 @@ let RangeDrop = class RangeDrop extends React.Component<any, any> {
     return list.filter(l => l.viewId !== l.worksheetId);
   }
 
-  render() {
+  override render() {
     const { printData, views, setData, className } = this.props;
     const viewList = this.getViews(views);
     return (
@@ -112,9 +112,10 @@ let RangeDrop = class RangeDrop extends React.Component<any, any> {
           {printData.range === 3 && (
             <div className="viewList">
               <div className="viewListLi">
-                {viewList.map(it => {
+                {viewList.map((it, index) => {
                   return (
                     <Checkbox
+                      key={index}
                       className="mTop15 mLeft25"
                       text={it.name}
                       checked={printData.views.map(o => o.viewId).includes(it.viewId)}

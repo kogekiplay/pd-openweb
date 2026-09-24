@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Provider } from 'react-redux';
 import cx from 'classnames';
 import functionWrap from 'ming-ui/components/FunctionWrap';

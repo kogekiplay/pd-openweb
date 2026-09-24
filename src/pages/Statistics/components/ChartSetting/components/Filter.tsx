@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { Dialog } from 'ming-ui';
@@ -53,7 +53,7 @@ export default class Filter extends Component<any, any> {
         this.props.onChangeFilterItem(items, formatValuesOfOriginConditions(conditions));
       });
   };
-  render() {
+  override render() {
     const { filter = {}, projectId, worksheetInfo, filterItem, sourceType } = this.props;
     const urlParams = _.get(store.getState(), 'customPage.urlParams') || [];
     const { visible } = this.state;

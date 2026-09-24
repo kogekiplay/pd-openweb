@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import qs from 'query-string';
@@ -10,12 +10,12 @@ import { changePostDetailId, clearPostDetail } from './redux/postDetailActions';
 import './feeddetail.css';
 
 let FeedDetailEntrypoint = class FeedDetailEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppFeed AppFeedDetail');
     this.handleQueryChange(this.props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.location.search !== this.props.location.search) {
         this.handleQueryChange(this.props);
@@ -23,7 +23,7 @@ let FeedDetailEntrypoint = class FeedDetailEntrypoint extends Component<any, any
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppFeed AppFeedDetail');
     this.props.dispatch(clearPostDetail());
   }
@@ -72,7 +72,7 @@ let FeedDetailEntrypoint = class FeedDetailEntrypoint extends Component<any, any
     );
   }
 
-  render() {
+  override render() {
     return (
       <ScrollView className="relative">
         <div id="postDetail" className={this.props.error ? 'card' : ''}>

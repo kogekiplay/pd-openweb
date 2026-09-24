@@ -43,7 +43,7 @@ export const controlTypeList = [
   2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 15, 16, 19, 23, 24, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 41,
   42, 46, 48,
 ];
-export const controlKeyNames = {
+export const controlKeyNames: Record<string, string> = {
   controlName: _l('名称'),
   desc: _l('说明'),
   des: _l('内容'),
@@ -70,7 +70,7 @@ export const controlKeys = {
   group: ['controlName', 'fieldId', 'desc'], //分组标题
 };
 
-export const defaultData = (type, info) => {
+export const defaultData = (type: number, info) => {
   let data = info;
 
   switch (type) {

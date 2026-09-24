@@ -224,8 +224,8 @@ function SecretKeyDialog(props) {
         <SecretDetailItem>
           <div className="labelText">{_l('授权给指定组织')}</div>
           <div className="flex">
-            {projects.map(item => (
-              <div>{item}</div>
+            {projects.map((item, index) => (
+              <div key={index}>{item}</div>
             ))}
           </div>
         </SecretDetailItem>
@@ -281,7 +281,7 @@ export default function DetailList(props) {
   const pluginApi = pluginApiConfig[pluginType];
   const isWorkflowPlugin = pluginType === PLUGIN_TYPE.WORKFLOW;
 
-  const onDel = (type, id) => {
+  const onDel = (type: string, id) => {
     Dialog.confirm({
       title: type === pluginConfigType.commit ? _l('删除提交') : _l('删除历史版本'),
       buttonType: 'danger',
@@ -585,7 +585,8 @@ export default function DetailList(props) {
               .map((item, i) => {
                 return (
                   <div key={i} className={`${item.dataIndex}`}>
-                    {item.renderTitle ? item.renderTitle() : item.title}
+                    {/* 各类列表的列定义形状不一，只有部分列有 renderTitle：先用 in 收窄 */}
+                    {'renderTitle' in item && typeof item.renderTitle === 'function' ? item.renderTitle() : item.title}
                   </div>
                 );
               })}

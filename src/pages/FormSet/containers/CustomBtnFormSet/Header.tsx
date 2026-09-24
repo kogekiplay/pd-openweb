@@ -1,4 +1,3 @@
-import React from 'react';
 import { Icon, UpgradeIcon } from 'ming-ui';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import { VersionProductType } from 'src/utils/enum';

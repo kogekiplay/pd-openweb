@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from 'antd';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -114,7 +114,7 @@ export default function WidgetOperation(props) {
     globalSheetInfo = {},
     rest,
   } = props;
-  const { type, controlId, attribute, dataSource, sourceControl, size, advancedSetting = {} } = data;
+  const { type, controlId, attribute, dataSource, sourceControl, size } = data;
   const { widgets } = rest || {};
   const availableWidth = adjustWidthList(widgets, data);
 

@@ -121,7 +121,7 @@ const CommonHeader = props => {
   const theme = document.documentElement.getAttribute('data-theme') || 'light';
   const [shareVisible, setShareVisible] = useState(false);
 
-  const externalLink = e => {
+  const externalLink = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     const lang = window.getCurrentLang();
     window.open(

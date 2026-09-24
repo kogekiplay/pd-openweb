@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Dialog, Dropdown, FunctionWrap, LoadDiv, Support } from 'ming-ui';
@@ -14,7 +14,7 @@ const NoData = styled.div`
 
 const SelectToolsFields = props => {
   const { subFlowNodeApps = [], toolsFunction, onOk, onClose } = props;
-  const [selectNodeId, setSelectNodeId] = useState('');
+  const [selectNodeId, setSelectNodeId] = useState<string | undefined>('');
   const [selectControlId, setSelectControlId] = useState('');
   const [list, setList] = useState(null);
 

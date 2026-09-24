@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { find, flatten, get, includes, isEmpty, isFunction, isObject, last, uniq } from 'lodash';
@@ -203,7 +203,7 @@ async function getPresetDepartmentsAndRoles({ controls, projectId }: { projectId
   const hasDepartment = !!find(controls, { type: WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT });
   const hasOrgRole = !!find(controls, { type: WIDGETS_TO_API_TYPE_ENUM.ORG_ROLE });
 
-  if (!hasDepartment && !hasOrgRole) return;
+  if (!hasDepartment && !hasOrgRole) return undefined;
 
   const [departments, orgRoles] = await Promise.all([
     hasDepartment
@@ -262,7 +262,7 @@ async function getPresetRelatedRecords({ controls, worksheetId }: { worksheetId?
     .catch(() => undefined);
 }
 
-function getDefaultValueOfMessagesOfMingoCreateWorksheetDataBot(storageKey, worksheetId: string) {
+function getDefaultValueOfMessagesOfMingoCreateWorksheetDataBot(storageKey: string, worksheetId: string) {
   if (!storageKey || !localStorage.getItem(storageKey)) {
     return {};
   }
@@ -281,6 +281,9 @@ function getDefaultValueOfMessagesOfMingoCreateWorksheetDataBot(storageKey, work
 }
 
 class PromiseQueue {
+  declare concurrency: number;
+  declare running: number;
+
   constructor(concurrency = 5) {
     this.concurrency = concurrency;
     this.queue = [];
@@ -460,7 +463,7 @@ function MingoContent(props, ref) {
         { abortController },
       );
     },
-    onMessagePipe: (messageContent, messageData, messageId) => {
+    onMessagePipe: (messageContent, _messageData, messageId) => {
       setSelectedDataMessageId(prev => uniq([...prev, messageId]));
       const jsonlBlockFence = '```custom_block_mingo_create_worksheet_data_jsonl\n';
 

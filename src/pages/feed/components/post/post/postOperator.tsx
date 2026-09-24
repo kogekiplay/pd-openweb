@@ -11,7 +11,9 @@ import PostOperateList from './postOperateList';
  * 动态右上角的操作项
  */
 class PostOperator extends React.Component<any, any> {
-  static propTypes = {
+  declare toggleBtn: HTMLSpanElement | null | undefined;
+
+  static override propTypes = {
     dispatch: PropTypes.func,
     postItem: PropTypes.object.isRequired,
     isShowOperate: PropTypes.bool,
@@ -66,7 +68,7 @@ class PostOperator extends React.Component<any, any> {
     this.setState({ showOperateList: false });
   };
 
-  render() {
+  override render() {
     let dropBtn;
 
     if (!this.props.isShowOperate) {

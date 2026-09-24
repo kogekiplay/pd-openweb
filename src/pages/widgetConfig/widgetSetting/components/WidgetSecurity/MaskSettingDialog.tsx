@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -222,7 +222,8 @@ export default function MaskSettingDialog(props) {
           maxHeight={385}
           value={masktype}
           renderTitle={(i: Record<string, any> = {}) => i.text}
-          data={[DISPLAY_MASK.map(item => ({ text: renderShowValue(item), value: item.value }))].concat(CUSTOM_DISPLAY)}
+          // 第一组是内置脱敏方式，后面接「自定义规则」；两边 text 的类型不同（元素 / 文案），用展开拼（和 concat 等价）
+          data={[DISPLAY_MASK.map(item => ({ text: renderShowValue(item), value: item.value })), ...CUSTOM_DISPLAY]}
           onChange={value => {
             setDetail({ masktype: value });
             setTestInfo({ text: '', status: false });
@@ -247,11 +248,11 @@ export default function MaskSettingDialog(props) {
 
           {detail.defaultmask === '1' && (
             <Fragment>
-              {Setting_Config.map(({ text, dropdownKey, inputKey, data, errKey }) => {
+              {Setting_Config.map(({ text, dropdownKey, inputKey, data, errKey }, index) => {
                 const dropValue = detail[dropdownKey] || '0';
                 const inputValue = detail[inputKey];
                 return (
-                  <div className="flexCenter mTop12">
+                  <div key={index} className="flexCenter mTop12">
                     <span className="InlineBlock Width100 mRight10">{text}</span>
                     <Dropdown
                       className="Width200"

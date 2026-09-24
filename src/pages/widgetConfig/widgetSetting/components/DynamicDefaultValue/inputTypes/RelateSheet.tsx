@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import { getCurrentValue } from 'src/components/Form/core/formUtils';
@@ -6,8 +6,14 @@ import { selectRecords } from 'src/components/SelectRecords';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class RelateSheet extends Component<any, any> {
-  static propTypes = {
+export interface RelateSheetState {
+  recordListVisible: boolean;
+}
+
+export default class RelateSheet extends Component<any, RelateSheetState> {
+  declare $wrap: SelectOtherField | null | undefined;
+
+  static override propTypes = {
     onDynamicValueChange: func,
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
   };
@@ -81,7 +87,7 @@ export default class RelateSheet extends Component<any, any> {
     const { defaultType } = this.props;
     defaultType && this.$wrap.triggerClick();
   };
-  render() {
+  override render() {
     const { data, defaultType } = this.props;
     const titleControl = _.find(data.relationControls || [], re => re.attribute === 1);
     return (

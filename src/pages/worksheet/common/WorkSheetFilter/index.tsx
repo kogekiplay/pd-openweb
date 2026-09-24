@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useReducer } from 'react';
+import { forwardRef, useImperativeHandle, useReducer } from 'react';
 import FiltersPopup from './FiltersPopup';
 import { createActions, createReducer, initialState } from './model';
 

@@ -58,9 +58,8 @@ export interface GunterScrollOptions {
 const SCROLL_END_IDLE = 120;
 
 export default class GunterScroll {
-  /** 宿主元素（原 iScroll 的 wrapper），OverlayScrollbars 会在它内部插入 viewport */
-  private host: HTMLElement;
-  /** 真正发生滚动的元素 —— 不是 host，是 OverlayScrollbars 造的 viewport */
+  /** 真正发生滚动的元素 —— 不是构造时传进来的宿主元素（原 iScroll 的 wrapper），
+   *  而是 OverlayScrollbars 在宿主内部插入的 viewport */
   private viewport: HTMLElement;
   private os: ReturnType<typeof OverlayScrollbars>;
   private listeners: Record<GunterScrollEventName, Listener[]> = {
@@ -82,7 +81,6 @@ export default class GunterScroll {
   enabled = true;
 
   constructor(element: HTMLElement, options: GunterScrollOptions = {}) {
-    this.host = element;
     this.os = OverlayScrollbars(element, {
       overflow: { x: 'scroll', y: 'scroll' },
       scrollbars: {

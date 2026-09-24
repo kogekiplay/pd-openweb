@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -295,6 +295,7 @@ export default class Start extends Component<any, any> {
         </Fragment>
       );
     }
+    return undefined;
   }
 
   openDocument = evt => {
@@ -304,7 +305,7 @@ export default class Start extends Component<any, any> {
     window.open(pathCompletion(`/worksheetapi/${relationId}`));
   };
 
-  render() {
+  override render() {
     const {
       processId,
       item,

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -79,9 +79,10 @@ export default function Attachment(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('显示方式')}</div>
         <DisplayMode>
-          {DISPLAY_TYPE.map(item => {
+          {DISPLAY_TYPE.map((item, index) => {
             return (
               <div
+                key={index}
                 className={cx('displayItem', { active: showtype === item.value })}
                 onClick={() => {
                   let resProps: Record<string, any> = {};
@@ -111,8 +112,9 @@ export default function Attachment(props) {
         <SectionItem>
           <div className="label Width100">{_l('填充方式')}</div>
           <AnimationWrap className="flex">
-            {FILL_TYPE.map(item => (
+            {FILL_TYPE.map((item, index) => (
               <div
+                key={index}
                 className={cx('animaItem', { active: covertype === item.value })}
                 onClick={() => {
                   onChange(handleAdvancedSettingChange(data, { covertype: item.value }));

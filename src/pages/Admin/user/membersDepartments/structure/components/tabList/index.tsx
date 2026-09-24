@@ -33,7 +33,13 @@ const shouldLoadDepartments = props => {
   return isExpired || (haveSubDepartment && !subDepartments.length);
 };
 
-class TabList extends React.Component<any, any> {
+export interface TabListState {
+  showPositionDialog: boolean;
+  isNew: boolean;
+  hasDepartmentAuth: boolean;
+}
+
+class TabList extends React.Component<any, TabListState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,7 +49,7 @@ class TabList extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 【这两个请求原先写在 constructor 里】在生产上实测会各发两次：
     // constructor 属于 render 阶段，React 可以构造一个实例又把它丢掉（Suspense
     // 挂起、渲染被打断都会），重来时再构造一次 —— 实测两次相隔 250ms，
@@ -58,7 +64,7 @@ class TabList extends React.Component<any, any> {
     this.setState({ hasDepartmentAuth });
   }
 
-  handleClick = typeCursor => {
+  handleClick = (typeCursor: number) => {
     const {
       projectId,
       updateCursor = () => {},
@@ -75,7 +81,7 @@ class TabList extends React.Component<any, any> {
     updateCursor('');
     updateTypeCursor(typeCursor);
 
-    const segmentMap = { 2: 'inactive', 3: 'approve' };
+    const segmentMap: Record<number, string> = { 2: 'inactive', 3: 'approve' };
     const segment = segmentMap[typeCursor];
     const base = `/admin/structure/${projectId}`;
     history.pushState(null, '', pathCompletion(segment ? `${base}/${segment}` : base, { hasDomain: false }));
@@ -115,7 +121,7 @@ class TabList extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { typeCursor = 0, approveNumber, inActiveNumber, cursor } = this.props;
     return (
       <React.Fragment>

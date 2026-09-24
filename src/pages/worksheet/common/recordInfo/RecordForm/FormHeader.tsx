@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -118,7 +118,7 @@ export default function FormHeader(props) {
                         ownerAccountId: ownerAccount.accountId,
                         projectId,
                         target: ownerRef.current,
-                        changeOwner: async (users, accountId) => {
+                        changeOwner: async (_users, accountId) => {
                           try {
                             const { account, record } = await updateRecordOwner({
                               worksheetId,
@@ -128,7 +128,8 @@ export default function FormHeader(props) {
                             });
                             updateRecordDialogOwner(account, record);
                             alert(_l('修改成功'));
-                          } catch (err) {
+                          } catch (thrown) {
+                            const err = thrown as ApiRejection;
                             if (err && err.resultCode === 72) {
                               alert(_l('%0已锁定，修改失败', entityName), 3);
                               return;

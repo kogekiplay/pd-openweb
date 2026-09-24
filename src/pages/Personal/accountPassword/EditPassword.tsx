@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Input } from 'antd';
 import _ from 'lodash';
 import userPassword from 'src/api/account';
@@ -116,7 +116,7 @@ export default class EditPassword extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { isNullCredential } = this.props;
     const { originPassword, newPassword, confirmPassword } = this.state;
     return (

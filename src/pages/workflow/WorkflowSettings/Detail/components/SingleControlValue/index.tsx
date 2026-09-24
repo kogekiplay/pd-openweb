@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { TimePicker } from 'antd';
 import cx from 'classnames';
@@ -28,6 +28,8 @@ import SelectOtherFields from '../SelectOtherFields';
 import Tag from '../Tag';
 
 export default class SingleControlValue extends Component<any, any> {
+  declare tagtextarea: TagTextarea | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -46,7 +48,7 @@ export default class SingleControlValue extends Component<any, any> {
   cacheFile = [];
   updateComponentsKeyMaps = {};
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.item.fieldId !== prevProps.item.fieldId) {
         this.cacheFile = [];
@@ -209,7 +211,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 验证号码控件  只能输入数字  做最简单验证
    */
-  checkPhoneNumberControl(evt, isBlur?, i?) {
+  checkPhoneNumberControl(evt, isBlur?: boolean | undefined, i?) {
     const num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -221,7 +223,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 成员选择
    */
-  selectUser(evt, item, i, unique) {
+  selectUser(_evt, item, i, unique: boolean) {
     dialogSelectUser({
       title: _l('选择人员'),
       showMoreInvite: false,
@@ -254,7 +256,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 部门选择
    */
-  selectDepartment(item, i, unique) {
+  selectDepartment(item, i, unique: boolean) {
     dialogSelectDept({
       projectId: this.props.companyId,
       selectedDepartment: [],
@@ -288,7 +290,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 组织角色选择
    */
-  selectRole(item, i, unique) {
+  selectRole(item, i, unique: boolean) {
     dialogSelectOrgRole({
       projectId: this.props.companyId,
       unique,
@@ -334,7 +336,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 验证数值金额控件
    */
-  checkNumberControl(evt, isBlur?, i?) {
+  checkNumberControl(evt, isBlur?: boolean | undefined, i?) {
     let num = evt.target.value
       .replace(/[^-\d.]/g, '')
       .replace(/^\./g, '')
@@ -436,7 +438,7 @@ export default class SingleControlValue extends Component<any, any> {
     this.setState({ keywords });
   }, 500);
 
-  render() {
+  override render() {
     const { controls, item, i, hideOtherField, selectNodeType, moreNodesMenuStyle, hideUserMoreObject } = this.props;
     const { isUploading, search, keywords } = this.state;
     const formulaMap = _.cloneDeep(this.props.formulaMap);
@@ -519,7 +521,7 @@ export default class SingleControlValue extends Component<any, any> {
                 />
               );
             }}
-            onChange={(err, value) => {
+            onChange={(_err, value) => {
               this.updateSingleControlValue({ fieldValue: value, fieldValueId: '', nodeAppId: '' }, i);
             }}
           />
@@ -771,7 +773,7 @@ export default class SingleControlValue extends Component<any, any> {
               multipleLevel={false}
               multipleHideDropdownNav
               filter
-              onChange={(e, ids) => this.updateSingleControlValue({ fieldValue: ids.join(',') }, i)}
+              onChange={(_e, ids) => this.updateSingleControlValue({ fieldValue: ids.join(',') }, i)}
             />
           )}
           {this.renderOtherFields(item, i)}
@@ -798,7 +800,8 @@ export default class SingleControlValue extends Component<any, any> {
                     .map(o => parseInt(o.fileSize || o.filesize))
                     .reduce((o, count) => count + o, 0);
 
-                  if (currentTotalSize + parseInt(file.size) > 50 * 1024 * 1024) {
+                  // file.size 本来就是整数字节数；parseInt 要的是字符串（结果一样）
+                  if (currentTotalSize + file.size > 50 * 1024 * 1024) {
                     alert(_l('部分附件上传失败，总大小超过50MB'), 2);
                     return;
                   }
@@ -810,7 +813,7 @@ export default class SingleControlValue extends Component<any, any> {
                   this.setState({ isUploading: true });
                   up.disableBrowse();
                 }}
-                onError={(up, err, errTip) => {
+                onError={(_up, _err, errTip) => {
                   alert(errTip, 2);
                 }}
               />
@@ -853,7 +856,7 @@ export default class SingleControlValue extends Component<any, any> {
                         onClick={() => {
                           const newFieldValue = JSON.parse(item.fieldValue);
 
-                          _.remove(newFieldValue, (obj, objIndex) => objIndex === fileIndex);
+                          _.remove(newFieldValue, (_obj, objIndex) => objIndex === fileIndex);
 
                           this.cacheFile = newFieldValue;
                           this.updateSingleControlValue({ fieldValue: JSON.stringify(newFieldValue) }, i);
@@ -883,8 +886,8 @@ export default class SingleControlValue extends Component<any, any> {
           _.find(controls, obj => obj.controlId === item.fieldId),
           'advancedSetting.showtype',
         ) || 1;
-      const mode = { 3: 'date', 4: 'month', 5: 'year' };
-      const timeMode = { 1: 'minute', 2: 'hour', 6: 'second' };
+      const mode: Record<number, string> = { 3: 'date', 4: 'month', 5: 'year' };
+      const timeMode: Record<number, string> = { 1: 'minute', 2: 'hour', 6: 'second' };
 
       return (
         <div className="mTop8 flexRow relative">
@@ -1028,7 +1031,7 @@ export default class SingleControlValue extends Component<any, any> {
     // 人员 || 部门 || 组织角色
     if (item.type === 26 || item.type === 27 || item.type === 48) {
       const unique = (_.find(controls, obj => obj.controlId === item.fieldId) || {}).enumDefault === 0;
-      const TYPES = {
+      const TYPES: Record<number, { name: string; id: string; placeholder: string }> = {
         26: {
           name: 'fullName',
           id: 'accountId',
@@ -1241,7 +1244,7 @@ export default class SingleControlValue extends Component<any, any> {
                 placeholder={_l('请选择时间')}
                 format={timeFormat}
                 value={item.fieldValue ? dayjs(item.fieldValue, timeFormat) : null}
-                onChange={(time, timeString) => this.updateSingleControlValue({ fieldValue: timeString }, i)}
+                onChange={(_time, timeString) => this.updateSingleControlValue({ fieldValue: timeString }, i)}
               />
             </div>
           )}

@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 
 const useHoverDelay = ($ref, isDisabled = false, delay = 300) => {
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const onMouseEnter = useCallback(() => {
     if (isDisabled) return;

@@ -14,16 +14,16 @@ export default class App extends React.Component<any, any> {
     Config.setPageTitle(_l('用户 - 成员与部门'));
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppAdminStructure');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     store.dispatch({ type: 'PROJECT_ID_CHANGED' });
     $('html').removeClass('AppAdminStructure');
   }
 
-  render() {
+  override render() {
     store.dispatch(updateProjectId(this.props.projectId));
 
     return (

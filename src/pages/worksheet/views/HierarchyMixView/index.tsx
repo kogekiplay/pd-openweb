@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { DndProvider, useDrop } from 'react-dnd';
@@ -137,7 +137,7 @@ function HierarchyMix(props) {
 
   const [, drop] = useDrop({
     accept: ITEM_TYPE.ITEM,
-    hover(item, monitor) {
+    hover(_item, monitor) {
       function scroll() {
         const $wrap = document.querySelector('.hierarchyViewMinWrap');
         const pos = $wrap.getBoundingClientRect();
@@ -247,9 +247,13 @@ function HierarchyMix(props) {
     }
 
     if (type === 'toOrigin') {
-      const $wrap = _.get(this.$wrap, 'current');
-      $wrap.scrollLeft = 0;
-      $wrap.scrollTop = 0;
+      // 原先是 _.get(this.$wrap, 'current')：类组件时代的写法，函数组件里 this 是 undefined，
+      // 点工具栏「回到原点」直接 TypeError。$wrapRef 就是它（挂在滚动容器上，本组件别处也都这么取）
+      const $wrap = _.get($wrapRef, 'current');
+      if ($wrap) {
+        $wrap.scrollLeft = 0;
+        $wrap.scrollTop = 0;
+      }
     }
 
     if (type === 'adjustScale') {
@@ -381,7 +385,7 @@ function HierarchyMix(props) {
 
   const createTextTitleRecord = (value, spliceTempRecord = false) => {
     const idPara = _.pick(props, ['appId', 'viewId']);
-    const isTextTitle = item => item.attribute === 1 && item.type === 2;
+    const isTextTitle = (item: FormControl) => item.attribute === 1 && item.type === 2;
     const { viewControl } = view;
     const filteredControls = _.filter(
       controls,

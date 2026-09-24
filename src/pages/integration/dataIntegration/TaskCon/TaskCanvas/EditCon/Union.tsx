@@ -44,7 +44,7 @@ export default function Union(props) {
       unionType,
     });
   }, [props.node]);
-  const renderPopup = o => {
+  const renderPopup = (o: { type: string; txt: string; tips: string; Er: string; img: string; tipImg: string; h: number }) => {
     return (
       <PopupWrap class="toolTipCon">
         <div className="Bold TxtLeft textPrimary Font13 titleTips">{o.txt}</div>
@@ -63,7 +63,7 @@ export default function Union(props) {
       <div className="con flexRow alignItemsCenter">
         {[leftNode, rightNode].map((o, i) => {
           return (
-            <React.Fragment>
+            <React.Fragment key={i}>
               <div
                 className="flex"
                 onClick={() => {
@@ -86,9 +86,10 @@ export default function Union(props) {
       </div>
       <div className="title mTop20">{_l('合并方式')}</div>
       <ul className="unionC flexRow alignItemsCenter">
-        {UNION_TYPE_LIST.map(o => {
+        {UNION_TYPE_LIST.map((o, index) => {
           return (
             <Trigger
+              key={index}
               action={['hover']}
               popup={renderPopup(o)}
               mouseLeaveDelay={0.2}

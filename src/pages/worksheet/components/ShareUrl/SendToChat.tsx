@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { debounce } from 'lodash';
@@ -78,7 +78,7 @@ export default function SendToChat(props) {
   const [selectedUser, setSelectedUser] = useState();
   const [listActive, setListActive] = useState(false);
   const [list, setList] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean | undefined>();
   const scrollViewRef = useRef<any>(undefined);
   const descriptionRef = useRef<HTMLInputElement>(null);
@@ -174,6 +174,7 @@ export default function SendToChat(props) {
               <ScrollView className="flex" ref={scrollViewRef}>
                 {list.map((account, index) => (
                   <AccountItem
+                    key={index}
                     className={cx({ active: index === activeIndex })}
                     onClick={() => {
                       setSelectedUser(account);

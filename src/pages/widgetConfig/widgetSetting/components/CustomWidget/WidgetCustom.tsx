@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import { DEFAULT_DATA } from 'src/pages/widgetConfig/config/widget';
 import { enumWidgetType } from 'src/pages/widgetConfig/util';

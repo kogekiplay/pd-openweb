@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -7,7 +7,7 @@ import { Dialog } from 'ming-ui';
 import process from 'src/pages/workflow/api/process';
 import { pathCompletion } from 'src/utils/common';
 
-const STATUS_TEXT = {
+const STATUS_TEXT: Record<number, string> = {
   1: _l('执行成功'),
   2: _l('执行成功'),
   3: _l('执行失败'),
@@ -81,13 +81,13 @@ const STATUS = [
 ];
 
 class WorkflowHistory extends Component<any, any> {
-  static propTypes = {};
+  static override propTypes = {};
   static defaultProps = {};
-  state = {
+  override state = {
     activeStatus: 'success',
     data: {},
   };
-  componentDidMount() {
+  override componentDidMount() {
     const { storeId } = this.props;
     process.getStore({ storeId }).then(data => {
       const filtered = _.filter(data, item => !!item.checked);
@@ -97,10 +97,10 @@ class WorkflowHistory extends Component<any, any> {
       this.setState({ data: { success, failure, unFiltered } });
     });
   }
-  switchStatus = id => {
+  switchStatus = (id: string) => {
     this.setState({ activeStatus: id });
   };
-  render() {
+  override render() {
     const { title, ...rest } = this.props;
     const { activeStatus, data } = this.state;
     return (
@@ -118,11 +118,11 @@ class WorkflowHistory extends Component<any, any> {
         {...rest}
       >
         <StatusWrap>
-          {STATUS.map(item => {
+          {STATUS.map((item, index) => {
             const { id } = item;
             const list = data[id] || [];
             return (
-              <li className={cx(id, { active: activeStatus === id })} onClick={() => this.switchStatus(id)}>
+              <li key={index} className={cx(id, { active: activeStatus === id })} onClick={() => this.switchStatus(id)}>
                 {item.text}
                 {<span>{`(${list.length})`}</span>}
               </li>

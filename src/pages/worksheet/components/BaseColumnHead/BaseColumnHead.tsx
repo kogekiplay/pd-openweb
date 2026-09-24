@@ -11,8 +11,14 @@ import { fieldCanSort } from 'src/utils/control';
 import getTableColumnWidth from './getTableColumnWidth';
 import './style.less';
 
-export default class BaseColumnHead extends React.Component<any, any> {
-  static propTypes = {
+export interface BaseColumnHeadState {
+  listVisible?: boolean | undefined;
+}
+
+export default class BaseColumnHead extends React.Component<any, BaseColumnHeadState> {
+  declare drag: HTMLSpanElement | null | undefined;
+
+  static override propTypes = {
     disabled: PropTypes.bool,
     canDrag: PropTypes.bool,
     className: PropTypes.string,
@@ -37,7 +43,7 @@ export default class BaseColumnHead extends React.Component<any, any> {
     this.state = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.drag) {
       this.drag.addEventListener('mousedown', this.handleMouseDown);
     }
@@ -49,7 +55,7 @@ export default class BaseColumnHead extends React.Component<any, any> {
     }
   }
 
-  handleMouseDown = e => {
+  handleMouseDown = (e: MouseEvent) => {
     const { worksheetId, control, columnStyle, updateSheetColumnWidths, rows = [] } = this.props;
     e.preventDefault();
     if (window.dragclicktimer) {
@@ -119,6 +125,7 @@ export default class BaseColumnHead extends React.Component<any, any> {
     } else if (isAsc === false) {
       return <i className="icon icon-score-down sortIcon" />;
     }
+    return undefined;
   }
 
   handleChangeSort = () => {
@@ -134,7 +141,7 @@ export default class BaseColumnHead extends React.Component<any, any> {
     changeSort(newSortType);
   };
 
-  render() {
+  override render() {
     const {
       disabled,
       disableSort,

@@ -19,7 +19,9 @@
 /// <reference types="jquery" />
 
 // ---- 由 src/common/global.js 在启动时挂到 window 上 ----
-declare var _l: any; // src/common/global.js:108 `window._l = function (key, ...args) {`（i18n）
+// 多语言翻译（src/common/global.ts 的 window._l）：key 查翻译表、查不到回落到 key 本身；
+// 参数按顺序替换文案里的 %0、%1……（替换时被 String() 化，所以数字也可以）。返回的永远是字符串。
+declare var _l: (key: string, ...args: (string | number)[]) => string;
 /**
  * 全局配置树。【形状取自生产运行时，不是照文档抄的】——
  * 2026-09-16 在 oa.tlytelec.com 上把 md.global 逐层 dump 下来生成。
@@ -304,7 +306,22 @@ declare var md: {
  * 调用点 `.then(res => ...)` 的 res 就成了隐式 any —— 光 res/result/data/response
  * 四个名字就 3745 条 TS7006。交集写法能保住 .then 的上下文类型。
  */
-declare type ApiResult = Promise<any> & { [key: string]: any };
+// abort：异步路径（绝大多数调用）在返回的 promise 上挂了 promise.abort = () => controller.abort()
+// （src/common/global.ts 的 window.mdyAPI）。显式写出来，调用点 req.abort() 才不算「从索引签名取属性」。
+declare type ApiResult = Promise<any> & { abort: () => void; [key: string]: any };
+
+/**
+ * 带数据类型的接口返回值：resolve 的是 mdyAPI 解开 { state, data, exception } 信封之后的 data。
+ * T 由 tools/gen-api-types.ts 从后端 swagger 快照生成（types/hap-api.d.ts 的 HapApi 命名空间）。
+ * 交集里那个索引签名和 ApiResult 一样，给 abort() 这类挂在返回值上的东西留口子。
+ */
+declare type ApiResultOf<T> = Promise<T> & { abort: () => void; [key: string]: any };
+
+// 接口 resolve 出来的值的类型 —— 就是 ApiResult 解包之后的那个（目前是 any，见上面那段说明）。
+// 用在「把接口返回值原样转手 resolve 出去」的地方，比如 new Promise<{ data: ApiPayload }>(...)。
+// 【为什么不直接写 any】它引用的是既有声明而不是新造一个 any：哪天 ApiResult 精确化了，
+// 这些转手的地方自动跟上；而且一眼能看出「这里是接口原样透传」，不是没人管的漏网之鱼。
+declare type ApiPayload = Awaited<ApiResult>;
 
 declare var mdyAPI: (...args: any[]) => ApiResult;
 declare var agentAPI: (args?: Record<string, unknown>, options?: AgentApiOptions) => ApiResult;
@@ -321,15 +338,19 @@ declare var agentAPI: (args?: Record<string, unknown>, options?: AgentApiOptions
  */
 declare var safeParse: any;
 declare var createTimeSpan: any; // src/common/global.js:291 `window.createTimeSpan = (dateStr, showType = 1) =>`
-declare var getCurrentLang: any; // src/common/global.js:74 `window.getCurrentLang = () => {`
-declare var getCurrentLangCode: any; // src/common/global.js:82 `window.getCurrentLangCode = lang => {`
+// src/common/global.ts 的 window.getCurrentLang：URL 上的 sys_lang 优先，否则取 cookie i18n_langtag（都没有时是 null）
+declare var getCurrentLang: () => string | null;
+// window.getCurrentLangCode：语言 key（不传就用当前语言）在 langConfig 里对应的数字 code，找不到时 undefined
+declare var getCurrentLangCode: (lang?: string | null) => number | undefined;
 declare var destroyAlert: any; // src/common/global.js:248 `window.destroyAlert = destroyAlert;`
 
 // ---- 由 src/common/cookies.js 挂到 window 上 ----
-declare var getCookie: any; // src/common/cookies.js:51
-declare var setCookie: any; // src/common/cookies.js:22
-declare var delCookie: any; // src/common/cookies.js:70
-declare var safeLocalStorageSetItem: any; // src/common/cookies.js:8
+// src/common/cookies.ts：读不到时 null；expire 交给 moment() 解析（Date / 日期字符串 / 时间戳），不传就是 10 天
+declare var getCookie: (name: string) => string | null;
+declare var setCookie: (name: string, value: string, expire?: Date | string | number) => void;
+declare var delCookie: (name: string) => void;
+// localStorage.setItem 包一层 try/catch（隐私模式 / 配额满时不抛）
+declare var safeLocalStorageSetItem: (key: string, value: string) => void;
 
 // ---- 由构建期/宿主页注入，不是模块 ----
 declare var __api_server__: any; // CI/generate.js:123 生成 `var __api_server__ = ...` 内联进 HTML；消费点 src/common/global.js:433
@@ -402,24 +423,298 @@ declare var ActiveXObject: any; // 旧版 IE 宿主对象；TS 只在 lib.script
 
 interface Window {
   // 与上面同源的 window.X 形态访问点（src/common/global.js、src/common/cookies.js）
-  _l: any;
+  // 嵌入式入口（src/pages/embed/mingoEntry/widgetEntry.ts）会换上自己的精简翻译函数，并打上这个标记防止重复安装
+  _l: typeof _l & { __mingoEntryLite?: boolean };
   md: any;
   mdyAPI: any;
   agentAPI: any;
   safeParse: any;
-  safeLocalStorageSetItem: any;
-  getCookie: any;
-  setCookie: any;
-  delCookie: any;
+  safeLocalStorageSetItem: typeof safeLocalStorageSetItem;
+  getCookie: typeof getCookie;
+  setCookie: typeof setCookie;
+  delCookie: typeof delCookie;
   createTimeSpan: any;
-  getCurrentLang: any;
-  getCurrentLangCode: any;
+  getCurrentLang: typeof getCurrentLang;
+  getCurrentLangCode: typeof getCurrentLangCode;
   destroyAlert: any;
   translations: any;
   __api_server__: any;
   // 与上面的全局声明保持同一个类型，否则 window.$ 和裸 $ 会是两种东西
   $: JQueryStatic;
   jQuery: JQueryStatic;
+
+  // ---- 按「赋值处的真实类型」逐个登记（2026-09-23 起，终点配置 noPropertyAccessFromIndexSignature 要求）----
+  // 全部登记完之后删掉最下面那条索引签名；新加的 window.X 请在这里补一行，写明是谁写入的。
+
+  // src/common/global.ts 启动时按 UA 算好的环境标志
+  isDingTalk: boolean;
+  isMacOs: boolean;
+  isMingDaoApp: boolean;
+  isMiniProgram: boolean;
+  isWxWork: boolean;
+  isWeLink: boolean;
+  isFeiShu: boolean;
+  isWeiXin: boolean;
+  isIphone: boolean;
+  isAndroid: boolean;
+  isChrome: boolean;
+  isFirefox: boolean;
+  isEdge: boolean;
+  isSafari: boolean;
+  isMDClient: boolean;
+  isWindows: boolean;
+  isIPad: boolean;
+  /** 部署形态开关，src/common/global.ts 设初值（嵌入式 Mingo 入口 widgetEntry 自己兜底一份） */
+  platformENV: { isOverseas: boolean; isLocal: boolean; isPlatform: boolean };
+  /** 被自定义 alert 覆盖之前的原生 window.alert（src/common/global.ts 的 customAlert，启动时必定写入） */
+  nativeAlert: Window['alert'];
+  /** 公开表单页标记（PublicWorksheet 写入；预览态为 false） */
+  isPublicWorksheet?: boolean;
+  /** 移动端路由跳转：移动端根组件（src/pages/Mobile/index.tsx）在所有移动端路由之前注入，也只在移动端页面里调用 */
+  mobileNavigateTo: (url: string, isReplace?: boolean) => void;
+  /** 飞书客户端注入的 JSSDK；本仓只用 config / ready 两个方法 */
+  h5sdk?: { config: (options: Record<string, unknown>) => void; ready: (callback: () => void) => void };
+  /** 打开 Mingo 时要直接进入的任务：各入口写入，Mingo 挂载或 handleStartPendingTask 时消费后清成 null */
+  mingoPendingStartTask?: {
+    /** MINGO_TASK_TYPE 里的值 */
+    type?: number;
+    params?: unknown;
+    base?: Record<string, unknown>;
+    callFromHelp?: boolean;
+  } | null;
+  /**
+   * 【全仓（含上游）从没被赋值过】mingo 的 Header 用 !window.callFromHelp 决定显不显示「复制链接」，
+   * 于是那个条件恒为真。帮助面板写的是 mingoPendingStartTask.callFromHelp，而那个对象用完即清。
+   */
+  callFromHelp?: boolean;
+  /** 聊天语音播放器的构造函数（mp3player.ts 默认导出，同时挂到 window 上兼容全局访问） */
+  MP3Player?: typeof import('src/pages/chat/lib/mp3player/mp3player').default;
+  /** 表格单元格复制出来的内容，JSON 串（control.ts / CellControls 写入，粘贴时读取） */
+  tempCopyForSheetView?: string;
+
+  // ---- 第二批（2026-09-23 傍晚）----
+  /**
+   * 分发类入口（公开表单 / 视图 / 记录 / 页面 / 图表…）的状态与分享 id。
+   * src/common/preall.tsx 的 parseShareId 启动时按路径写入（初值是 {}，所以字段全可选）；
+   * 嵌入式 Mingo 入口（widgetEntry）自己兜底一个空对象。
+   */
+  shareState: {
+    /** 从 /public/<类型>/<id> 路径里取：公开表单 32 位，其余 24 位 */
+    shareId?: string | undefined;
+    isPublicPrint?: boolean | undefined;
+    isPublicQuery?: boolean | undefined;
+    isPublicForm?: boolean | undefined;
+    /** 公开表单的预览态（门户账号信息页会按上下文改写） */
+    isPublicFormPreview?: boolean | undefined;
+    isPublicView?: boolean | undefined;
+    isPublicRecord?: boolean | undefined;
+    isPublicWorkflowRecord?: boolean | undefined;
+    isPublicPage?: boolean | undefined;
+    isPublicChart?: boolean | undefined;
+    isPublicChatbot?: boolean | undefined;
+    isPublicApidoc?: boolean | undefined;
+  };
+  /** 公开应用（/public/app/...）标记，src/common/preall.tsx 写入 */
+  isPublicApp?: boolean;
+  /**
+   * 用户选的主题，'system' 表示跟随系统。router/globalEvents 启动时按 localStorage 写入，
+   * 个人设置（桌面 / 门户 / 移动端）切换时改写。
+   */
+  themeMode?: 'light' | 'dark' | 'system';
+  /** 系统默认语言的 key（如 'zh-Hans'），src/common/global.ts */
+  getDefaultLangKey: () => string;
+  /** 可设置的语言列表（SysSettings.defaultAllowLangs 过滤后的 langConfig），src/common/global.ts */
+  getAllowLangConfig: () => typeof import('src/common/langConfig').default;
+  /**
+   * 指定接口编辑后清掉本地缓存的时间戳，让下次读取走接口（src/common/global.ts）。
+   * requestData 是那次请求的参数，用来拼缓存键。
+   */
+  clearLocalDataTime: (options: {
+    // 这两个拼成「接口名」去匹配各缓存的 clearInterface；多数调用方只按 clearSpecificKeys 清，不给
+    controllerName?: string;
+    actionName?: string;
+    requestData?: ApiArgs;
+    clearSpecificKeys?: string[];
+  }) => void;
+  /**
+   * 按 ESC 关闭的弹层登记表：Modal / Dialog / 附件预览打开时登记、关闭时删掉，
+   * router/globalEvents 收到 ESC 时调 index 最大那一项的 fn。
+   * fn 写成方法签名是有意的：登记进来的是各组件的 onCancel / onClose，参数类型各写各的，
+   * 而这里实际传进去的一律是 keydown 事件。
+   */
+  closeFns: {
+    // Modal 的 id 是 Math.random() 算出来的数，Dialog / 附件预览是字符串
+    [id: string]: { id: string | number; className?: string | undefined; index?: number | undefined; fn?(e: KeyboardEvent): void };
+  };
+  /** closeFns 的层级计数，打开一层 +1、全关时归零（首次打开前是 undefined） */
+  closeindex?: number;
+  /** 启动时从 global meta 取到的系统配置：preall 的 finish 写入（SSO、公开表单各自再写一次） */
+  config: {
+    /** IM 长连接退回轮询 */
+    SocketPolling?: boolean | undefined;
+    /** 文件访问前缀 */
+    FilePath?: string | undefined;
+    /** 头像等附件访问前缀 */
+    AttrPath?: string | undefined;
+    /** IM 服务地址 */
+    SERVER_NAME?: string | undefined;
+    /** 自定义视图插件（WidgetView）在 iframe 里时，postMessage 回宿主要带的容器 id；本仓只有读、没有写入点 */
+    containerId?: string | undefined;
+  };
+  /** 公开分享 / 开放接口文档页拿到授权后写入的 clientId */
+  clientId?: string;
+  /** 移动端记录列表：点开记录时是否新开页（View 组件按视图配置写入，离开时清成 undefined） */
+  APP_OPEN_NEW_PAGE?: boolean | undefined;
+  /** 当前激活的表格实例 id：表单里有多个子表 / 关联表时，键盘和点击外部的处理只认它 */
+  activeTableId?: string | undefined;
+  /** 错开弹出的 Modal 已叠了几层（dislocate 的 Modal 每多一层往右错 10px，全关时归零） */
+  dislocateCount?: number;
+  /** 为 true 时应用页头的应用导航浮层不弹出（角色页、Chatbot、工作表头的某些操作期间写 true） */
+  disabledSideButton?: boolean;
+  /** 公开表单的分享 id（PublicWorksheet 写入） */
+  publicWorksheetShareId?: string;
+  /** 工作表左侧分组 mousedown 的时间戳，按住移动超过 50ms 才算拖拽；松开清成 null */
+  dragNow?: number | null;
+  /** 单元格编辑器正在失焦保存：子表弹窗的提交要等它 1 秒 */
+  cellTextIsBlurring?: boolean;
+  /** 页面马上要跳走（改语言后重载、跳登录等）：preall 置 true，根组件只渲染加载中 */
+  isWaiting?: boolean;
+  /** 各工作表的草稿条数，键是 worksheetId */
+  draftTotalNumInfo?: { [worksheetId: string]: number };
+  /** 表单设计器 / 函数编辑器挂出来的全局事件总线（就是 src/utils/common 的 emitter） */
+  emitter?: import('events').EventEmitter;
+  /** 知识库上传助手的弹出窗口（window.open 的返回值） */
+  uploadAssistantWindow?: Window | null;
+  /** 自定义页面的重排函数：页面组件挂上去，页头切换全屏 / 收起时调它 */
+  customPageWindowResize?: () => void;
+  /** 打开 Mingo 时预填的输入框文字 */
+  mingoInitialMessage?: string;
+  /** 打开 Mingo 时要进入的会话 */
+  mingoInitialSessionId?: string | undefined;
+  /** 从别处交接到 Mingo 时的交接键 */
+  mingoInitialHandoffKey?: string;
+  /** 打开 Mingo 时要进入的分组 */
+  mingoInitialGroupId?: string;
+  /** 公开表单 / 公开查询 / 记录填写链接的分享者（接口返回的 shareAuthor）；图表按「有值即公开分享」判断 */
+  shareAuthor?: string;
+  /** 工作流推送的提示音播放器（桌面 / 移动端的 workflow socket 各建一个 audio 元素） */
+  workflowAudioPlayer?: HTMLAudioElement;
+  /** 拖拽排序时被拖元素的尺寸，占位块照它画（SortableList、自定义按钮分组写入，拖完清成 undefined） */
+  MD_DRAG_ITEM?: { width: number; height: number } | undefined;
+  /** 已渲染的表单实例 id：useFormEventManager 挂载时追加、卸载时摘掉，用来隔离各表单的键盘事件 */
+  FormActiveTabId?: string[];
+  /** 刷新应用页头的分组 / 应用详情（AppDetail、LeftAppGroup 挂载时挂上） */
+  updateAppGroups?: () => void;
+  /** 有自定义视图插件（iframe）挂着：WidgetContainer 挂载置 true、卸载置 false */
+  customWidgetViewIsActive?: boolean;
+  /** 表格单元格正在被主动聚焦（WorksheetTable / CellControls 置 true，10ms 后没进编辑就清回 false） */
+  handFocusCell?: boolean;
+  /** 甘特图能否响应缩放：Zoom 工具条挂载和图表重绘完成时置 true，缩放进行中置 false（防连点） */
+  isZoom?: boolean;
+  /** 集成场景由宿主注入的访问令牌（本仓只有读取点）；有值且没有 pssid 时请求头用它 */
+  access_token?: string;
+  /** 公开应用的授权串：URL hash 形如 #publicapp<授权串>，preall 截出来（去掉 #isPrivateBuild） */
+  publicAppAuthorization?: string;
+  /** 富文本编辑器处于聚焦状态（名字里的 dialog 是历史叫法；CKEditor 的 onFocus / onBlur 维护） */
+  richTextDialogIsActive?: boolean;
+  /** 部署在子路径下时的路径前缀，由页面外部注入（本仓只有读取点，spec 里置空串） */
+  __customSubPath__?: string;
+  /** 刷新工作表左侧导航（新建应用项后调） */
+  __worksheetLeftReLoad?: () => void;
+  /** 表单设计器最近一次加字段是不是 Mingo 发起的 */
+  lastAddWidgetsTriggerByMingo?: boolean;
+
+  // ---- 应用代码自己挂到 window 上的状态 / 回调（类型取自全仓 window.X = … 的赋值，2026-09-24 按赋值处推出）----
+  // 只收「每处赋值都推得出具体类型」的；宿主 / 原生 App 注入、赋值是 any 的仍走下面的索引签名。
+  // 都是可选的：读的时候不一定已经赋过值。
+  /** 赋值处：src/pages/integration/svgIcon.ts:1 */
+  _iconfont_svg_string_3909252?: string;
+  /** 赋值处：src/common/preall.tsx:271 */
+  allowNotLogin?: boolean;
+  /** 赋值处：src/pages/worksheet/components/CellControls/index.tsx:591、src/pages/worksheet/components/CellControls/index.tsx:699 */
+  cellisediting?: boolean;
+  /** 赋值处：src/pages/worksheet/components/WorksheetTable/index.tsx:523、src/pages/worksheet/components/WorksheetTable/index.tsx:885 */
+  cellisfocus?: boolean;
+  /** 赋值处：src/pages/worksheet/components/CellControls/Text.tsx:424、src/pages/worksheet/components/CellControls/index.tsx:462 */
+  cellLastKey?: string | undefined;
+  /** 赋值处：src/pages/worksheet/components/CellControls/Text.tsx:322 */
+  cellTextIsBlurringTimer?: NodeJS.Timeout;
+  /** 赋值处：src/components/Form/core/authentication.ts:194、src/components/Form/core/authentication.ts:203 */
+  configLoading?: boolean;
+  /** 赋值处：src/components/Form/core/authentication.ts:193、src/components/Form/core/authentication.ts:204 */
+  configSuccess?: boolean;
+  /** 赋值处：src/components/Mingo/modules/CreateRecordBot/index.tsx:259、src/components/Mingo/modules/CreateRecordBot/index.tsx:422 */
+  crateRecordInput?: string | undefined;
+  /** 赋值处：src/pages/PageHeader/components/PortalUserSet/DelDialog.tsx:45、src/pages/PageHeader/components/PortalUserSet/index.tsx:101 等 4 处 */
+  currentLeave?: boolean;
+  /** 赋值处：src/components/Form/core/authentication.ts:192 */
+  currentUrl?: string;
+  /** 赋值处：src/pages/widgetConfig/widgetSetting/components/CustomEvent/CustomAction/actionTypes/PlayVoice.tsx:24、src/pages/widgetConfig/widgetSetting/components/CustomEvent/CustomAction/actionTypes/PlayVoice.tsx:56 */
+  customEditPlayer?: HTMLAudioElement | undefined;
+  /** 赋值处：src/components/Form/core/customEvent.tsx:789 */
+  customEventAudioPlayer?: HTMLAudioElement;
+  /** 赋值处：src/pages/AppHomepage/AppCenter/appHomeReducer.tsx:472 */
+  dashboardAjax?: ApiResult;
+  /** 赋值处：src/pages/worksheet/components/BaseColumnHead/BaseColumnHead.tsx:63、src/pages/worksheet/components/BaseColumnHead/BaseColumnHead.tsx:76 等 3 处 */
+  dragclicktimer?: NodeJS.Timeout | undefined;
+  /** 赋值处：src/pages/customPage/pageContent/CustomPageHeader.tsx:81 */
+  editCustomPage?: () => void;
+  /** 赋值处：src/pages/worksheet/components/WorksheetTable/index.tsx:829、src/pages/worksheet/components/WorksheetTable/index.tsx:857 等 3 处 */
+  enterColumnPopup?: boolean;
+  /** 赋值处：src/components/DateFilter/index.tsx:107 */
+  feedSelectDate?: string | number;
+  /** 赋值处：src/ming-ui/components/WaterMark.tsx:152、src/ming-ui/components/WaterMark.tsx:154 */
+  hadWaterMark?: boolean;
+  /** 赋值处：src/pages/worksheet/common/FreeFieldSandbox/messageBridge.ts:30 */
+  handleFreeFieldWindowEventBonded?: boolean;
+  /** 赋值处：src/pages/worksheet/components/CellControls/index.tsx:488、src/pages/worksheet/components/CellControls/index.tsx:572 */
+  hasEditingCell?: boolean;
+  /** 赋值处：src/components/Mingo/modules/CreateWorksheetBot/index.tsx:513 */
+  hideAllPanels?: boolean;
+  /** 赋值处：src/pages/ViewLand/index.tsx:86、src/pages/ViewLand/index.tsx:90 */
+  hideColumnHeadFilter?: boolean;
+  /** 赋值处：src/pages/agent/AgentLand.tsx:88 */
+  hideHeader?: boolean;
+  /** 赋值处：src/pages/AppHomepage/AppCenter/appHomeReducer.tsx:521 */
+  homeGetMyAppAjax?: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.MyAppDto>;
+  /** 赋值处：src/pages/customPage/pageContent/CustomPageHeader.tsx:377、src/pages/customPage/pageContent/CustomPageHeader.tsx:382 */
+  inFull?: boolean;
+  /** 赋值处：src/pages/worksheet/views/ResourceView/ConTimegrid/index.tsx:366、src/pages/worksheet/views/ResourceView/ConTimegrid/index.tsx:369 */
+  isCanvasTime?: boolean;
+  /** 赋值处：src/common/global.ts:377 */
+  isNewTab?: () => boolean;
+  /** 赋值处：src/pages/Personal/systemSettings/index.tsx:235、src/pages/chat/containers/SettingDrawer/Base.tsx:158 */
+  isOpenMessageSound?: boolean;
+  /** 赋值处：src/pages/Personal/systemSettings/index.tsx:250、src/pages/chat/containers/SettingDrawer/Base.tsx:173 */
+  isOpenMessageTwinkle?: boolean;
+  /** 赋值处：src/pages/embed/mingoEntry/widgetEntry.ts:441 */
+  isProduction?: boolean;
+  /** 赋值处：src/components/Mingo/ChatBot/components/TryTry.tsx:74 */
+  isTryRefreshClicked?: boolean;
+  /** 赋值处：src/pages/worksheet/WorkSheet.tsx:264、src/pages/worksheet/WorkSheet.tsx:350 */
+  isWorksheet?: boolean;
+  /** 赋值处：src/pages/widgetConfig/widgetDisplay/components/BottomDragPointer.tsx:99 */
+  mingoPendingCreateWorksheetTaskStatus?: number;
+  /** 赋值处：src/pages/worksheet/common/newRecord/NewRecordContent.tsx:817、src/pages/worksheet/common/newRecord/NewRecordContent.tsx:821 */
+  newRecordActive?: boolean;
+  /** 赋值处：src/pages/worksheet/common/Sheet/Sheet.tsx:354 */
+  openViewConfig?: () => void;
+  /** 赋值处：src/components/Mingo/modules/CreateWorksheetBot/MingoGeneratedWidgetsSelector.tsx:537、src/components/Mingo/modules/CreateWorksheetBot/MingoGeneratedWidgetsSelector.tsx:551 等 3 处 */
+  pendingSaveWidgetConfigFunction?: (() => void) | undefined;
+  /** 赋值处：src/components/Mingo/modules/CreateWorksheetBot/index.tsx:593 */
+  pendingTaskForEditWorksheet?: () => void;
+  /** 赋值处：src/router/navigateTo.ts:22 */
+  redirected?: boolean;
+  /** 赋值处：src/pages/FormExtend/PublicWorksheetConfig/PublicWorksheetConfigForm.tsx:90 */
+  scrollToFormEnd?: () => void;
+  /** 赋值处：src/ming-ui/components/AutoSize.tsx:156 */
+  sheetAutoSized?: boolean;
+  /** 赋值处：src/router/globalEvents.ts:139、src/router/globalEvents.ts:143 */
+  themeModeVisible?: boolean;
+  /** 赋值处：src/pages/AppHomepage/AppCenter/appHomeReducer.tsx:924 */
+  time?: number;
+  /** 赋值处：src/pages/worksheet/components/CellControls/index.tsx:596 */
+  timer?: number;
 
   // !! 测量污染开关 !!
   // 全仓有 4076 处 window.X 访问、276 个不同属性名，其中最热的
@@ -522,6 +817,27 @@ declare interface ApiOptions {
   /** Agent 服务：不走 {state,data,exception} 契约 */
   agent?: boolean;
   [key: string]: any;
+}
+
+// 业务代码 catch 到的「接口错误」。useUnknownInCatchVariables 打开后 catch 变量是 unknown，
+// 各处要把它当成下面这个形状来读。【字段是按真实来源取的并集，不是猜的】：
+//   - errorCode / errorMessage / errorData：window.mdyAPI 遇到 responseData.exception 时
+//       reject({ errorCode: responseData.state, errorMessage: responseData.exception, errorData: responseData })
+//       （src/common/global.ts，mdyAPI 的 promise 体内）
+//   - status / data / response：HTTP 层失败时 reject 的是 axios 的 error.response，
+//       或者拿不到 response 时的原始 axios error（后者的 response 字段才有值）
+//   - resultCode：工作表行接口成功时 resolve 的是带 resultCode 的对象，
+//       不少调用方在 resultCode !== 1 时把它原样 throw 出去，于是 catch 里也会见到它
+// 全部可选：同一个 catch 可能接到上面任一种，也可能接到别的东西。
+// 这里只描述形状、不做运行期判断 —— 调用处原有的 err && ... 防御照旧保留。
+declare interface ApiRejection {
+  errorCode?: number;
+  errorMessage?: string;
+  errorData?: unknown;
+  resultCode?: number;
+  status?: number;
+  data?: unknown;
+  response?: { status?: number; data?: unknown };
 }
 
 /** window.agentAPI 的第二个参数。Agent 服务自己一套，与 ApiOptions 不通用。 */

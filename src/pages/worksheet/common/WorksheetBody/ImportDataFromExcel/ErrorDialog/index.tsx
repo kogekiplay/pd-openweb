@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -10,7 +10,7 @@ import WorksheetItem from 'src/pages/worksheet/components/DialogImportExcelCreat
 import './index.less';
 
 class ErrorDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     fileKey: PropTypes.string,
     isBatch: PropTypes.bool,
     isAttachment: PropTypes.bool,
@@ -26,7 +26,7 @@ class ErrorDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.isBatch) {
       this.getBatchErrorLog();
     } else if (this.props.isAttachment) {
@@ -228,7 +228,7 @@ class ErrorDialog extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { isBatch } = this.props;
     const { complete, data, visible } = this.state;
     if (!complete) return null;
@@ -250,17 +250,23 @@ class ErrorDialog extends Component<any, any> {
       );
     }
 
+    // 原来这里写的是 <Dialog.confirm …>：Dialog.confirm 是命令式函数（自己 createRoot 画一个弹窗、返回关闭函数），
+    // 当 JSX 组件用等于在 render 里调它 —— 每渲染一次就另起一个弹窗，组件本身还把一个函数当渲染结果交给 React。
+    // 现在和上面批量那一支一样直接画 Dialog（原版就是这样；这一支只在数据到了之后渲染一次，所以生产上没叠出多个）
     return (
-      <Dialog.confirm
+      <Dialog
         className="importErrorDialog"
-        visible={true}
+        visible={visible}
         width="640"
         title={_l('错误报告')}
-        noFooter={true}
+        footer={null}
         anim={false}
+        onCancel={() => {
+          this.setState({ visible: false });
+        }}
       >
         <div className="flexColumn h100">{this.renderErrorContent(data.excelLogs)}</div>
-      </Dialog.confirm>
+      </Dialog>
     );
   }
 }

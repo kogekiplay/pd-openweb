@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Input } from 'antd';
 import cx from 'classnames';
@@ -10,6 +10,8 @@ import { INTEGRATION_INFO } from '../../config';
 import './index.less';
 
 export default class SyncDialog extends Component<any, any> {
+  declare input: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +29,7 @@ export default class SyncDialog extends Component<any, any> {
     this.ajaxWorkWXUsers = null;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         (!_.isEqual(prevProps.isBindRelationship, this.props.isBindRelationship) && this.props.isBindRelationship) ||
@@ -220,7 +222,7 @@ export default class SyncDialog extends Component<any, any> {
   };
 
   // 搜索组织用户
-  searchProjecUsers = value => {
+  searchProjecUsers = (value: string) => {
     this.setState({ platformKeyword: value });
     if (!value) {
       this.getBindList({
@@ -232,7 +234,7 @@ export default class SyncDialog extends Component<any, any> {
   };
 
   // 搜索用户
-  searchWorkwxUsers = value => {
+  searchWorkwxUsers = (value: string) => {
     this.setState({ workwxKeyword: value });
     if (!value) {
       this.getBindList({
@@ -327,7 +329,7 @@ export default class SyncDialog extends Component<any, any> {
     });
   };
 
-  getUserList = type => {
+  getUserList = (type: number) => {
     const { logDetailItems = [] } = this.state;
 
     return (
@@ -338,7 +340,7 @@ export default class SyncDialog extends Component<any, any> {
     );
   };
 
-  getCount = type => {
+  getCount = (type: number) => {
     if (type === 6) return _.difference(this.getUserList(type), this.getUserList(5)).length;
 
     return this.getUserList(type).length;
@@ -603,7 +605,7 @@ export default class SyncDialog extends Component<any, any> {
       </Dialog>
     );
   };
-  render() {
+  override render() {
     return (
       <Fragment>
         {this.renderSyncInfo()}

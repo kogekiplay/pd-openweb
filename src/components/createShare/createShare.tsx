@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
@@ -90,7 +90,7 @@ function CreateShare(props) {
 
   const openDialog = () => setVisible(true);
 
-  const copyHtml = url => {
+  const copyHtml = (url: string) => {
     return (
       htmlEncodeReg(setting.name) +
       '\n' +

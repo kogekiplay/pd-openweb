@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { Input } from 'antd';
 import _ from 'lodash';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
@@ -22,7 +22,7 @@ export default function (props) {
     onDynamicValueChange(newValue || []);
   };
 
-  const handleChange = (value, withValueChange = true) => {
+  const handleChange = (value: string, withValueChange = true) => {
     setValue(value);
     withValueChange && onDynamicValueChange(value ? [{ cid: '', rcid: '', staticValue: value }] : []);
   };

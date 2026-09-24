@@ -121,8 +121,13 @@ const Danger = styled.span`
   color: var(--color-error);
 `;
 
-export default class ShareUrl extends React.Component<any, any> {
-  static propTypes = {
+export interface ShareUrlState {
+  showinput: boolean;
+  chatVisible?: boolean | undefined;
+}
+
+export default class ShareUrl extends React.Component<any, ShareUrlState> {
+  static override propTypes = {
     copyShowText: PropTypes.bool,
     url: PropTypes.string,
     theme: PropTypes.string,
@@ -171,7 +176,7 @@ export default class ShareUrl extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const {
       url,
       style,

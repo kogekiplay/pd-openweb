@@ -110,7 +110,7 @@ export function replaceMjmlFormulaForPreview(value = '', formulaMap = {}) {
 
   if (!text || !formulaMap || !Object.keys(formulaMap).length) return text;
 
-  const replaceWithName = (match, nodeId, fieldValueId) => {
+  const replaceWithName = (match: string, nodeId, fieldValueId) => {
     const nodeName = (formulaMap[nodeId] || {}).name;
     const fieldValueName = (formulaMap[`${nodeId}-${fieldValueId}`] || {}).name;
 

@@ -5,6 +5,7 @@ import { arrayOf, bool, shape, string } from 'prop-types';
 import { navigateTo } from 'router/navigateTo';
 import styled from 'styled-components';
 import { Dialog, ScrollView, SortableList } from 'ming-ui';
+import type { SortableRenderItemOptions } from 'ming-ui/components/SortableList';
 import homeAppAjax from 'src/api/homeApp';
 import { FlexCenter, VerticalMiddle } from 'worksheet/components/Basics';
 import { hasPermission } from 'src/components/checkPermission';
@@ -67,7 +68,7 @@ const BaseBtnCon = styled(FlexCenter)`
   }
 `;
 
-function getSortType(type) {
+function getSortType(type: string) {
   return { star: 1, project: 2, personal: 3 }[type];
 }
 
@@ -158,7 +159,11 @@ export default function Groups(props) {
     );
   }
 
-  const renderItem = ({ item, listItem, dragging }) => {
+  const renderItem = ({
+    item,
+    listItem,
+    dragging,
+  }: SortableRenderItemOptions<(typeof list)[number]['groups'][number]> & { listItem: (typeof list)[number] }) => {
     const { id, name, isMarked, groupType } = item;
 
     const onDelete = (deleteId, groupType) => {

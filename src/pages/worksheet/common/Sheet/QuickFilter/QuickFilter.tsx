@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
@@ -94,7 +94,16 @@ function QuickFilter(props) {
 
   let operateIsNewLine = false;
 
-  try {
+  /* 【visibleFilters 为空时必须跳过，保持 false】
+     原先这段包在 try/catch 里、没有这个判断：为空时 _.last([]) 是 undefined，
+     isFullLine(undefined) 去读 .advancedSetting 当场抛 TypeError，被 catch 吞掉后 console.log 出来
+     —— 每次渲染都往控制台打一条。那个 try/catch 存在的唯一理由就是这里，所以一并拿掉了：
+     同一个 isFullLine 在上面对 filters 逐项调用、外面从来没有 try/catch，说明元素不会是空值。
+     什么时候会空：showQueryBtn 且 colNum 为 1 时 slice(0, 0)，窄布局下筛选项全收进「展开」，
+     首行只剩操作按钮。
+     注意不能简单把 isFullLine 改成对 undefined 安全：那样顺着算下去 0 % colNum === 0 会得 true，
+     而原先靠异常得到的是 false（按钮留在首行，也就是用户一直看到的样子）。 */
+  if (visibleFilters.length) {
     const lastIsFullLine = isFullLine(_.last(visibleFilters));
 
     if (lastIsFullLine) {
@@ -106,8 +115,6 @@ function QuickFilter(props) {
       operateIsNewLine =
         _.sum(visibleFilters.slice(lastFullLineIndex + 1).map(f => (isFullLine(f) ? colNum : 1))) % colNum === 0;
     }
-  } catch (err) {
-    console.log(err);
   }
 
   useEffect(() => {

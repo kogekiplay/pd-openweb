@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { ConfigProvider, Dropdown, Input, Select, Spin, Table } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
@@ -16,7 +16,7 @@ import './index.less';
 
 const { Search } = Input;
 
-const sortFieldTrans = {
+const sortFieldTrans: Record<string, number> = {
   name: 0,
   isVerified: 8,
   status: 11,
@@ -127,7 +127,7 @@ export default class GroupsList extends Component<any, any> {
         title: _l('操作'),
         dataIndex: 'option',
         width: 60,
-        render: (text, record) => {
+        render: (_text, record) => {
           const menu = (
             <div className="menuOption">
               {record.isVerified ? (
@@ -159,7 +159,7 @@ export default class GroupsList extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getGroupsList();
   }
 
@@ -199,7 +199,7 @@ export default class GroupsList extends Component<any, any> {
   }
 
   //排序
-  handleChangeSort(pagination, filters, sorter) {
+  handleChangeSort(_pagination, _filters, sorter) {
     const { field, order } = sorter;
     const sortType = order === 'ascend' ? 1 : 0;
     this.setState(
@@ -400,7 +400,7 @@ export default class GroupsList extends Component<any, any> {
     this.setState({ selectKeys });
   };
 
-  render() {
+  override render() {
     const { selectKeys, types, status, loading, list, count, pageSize, pageIndex } = this.state;
     const rowSelection = {
       selectedRowKeys: selectKeys,

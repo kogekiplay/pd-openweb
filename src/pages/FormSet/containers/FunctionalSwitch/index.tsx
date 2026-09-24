@@ -60,13 +60,18 @@ function FunctionalSwitch(props) {
 
   const getSwitchData = () => {
     sheetAjax.getSwitch({ worksheetId: info.worksheetId }).then(res => {
-      let data = res.concat({
-        view: [],
-        state: res.filter(o => statistics.includes(o.type) && o.state).length > 0,
-        type: statisticsConst, //统计
-        roleType: 0,
-        viewIds: [],
-      });
+      // 末尾拼一个前端自己的「统计」总开关：type 500 不在后端的 SwitchType 枚举里，所以用展开而不是 concat
+      // （concat 要求元素类型和接口返回的完全一致；两种写法运行时等价）
+      let data = [
+        ...res,
+        {
+          view: [],
+          state: res.filter(o => statistics.includes(o.type) && o.state).length > 0,
+          type: statisticsConst, //统计
+          roleType: 0,
+          viewIds: [],
+        },
+      ];
       setInfo({
         ...info,
         loading: false,
@@ -145,7 +150,7 @@ function FunctionalSwitch(props) {
       });
   };
 
-  const strRight = (key, data) => {
+  const strRight = (key: string, data) => {
     const { viewIds = [] } = data;
     let len = viewIds.length;
     let Ids = views.map(o => o.viewId);
@@ -158,6 +163,7 @@ function FunctionalSwitch(props) {
       case '3':
         return len <= 0 ? _l('所有记录') : _l('%0个视图下的记录', l);
     }
+    return undefined;
   };
 
   const closeRangeDiaFn = info => {
@@ -183,7 +189,7 @@ function FunctionalSwitch(props) {
         onClick={() => {
           if (info.showDialog) {
             //使用范围未关闭 不可点击其他开关的状态时
-            return;
+            return undefined;
           }
 
           if ([20, 30].includes(o.type) && o.state) {
@@ -205,6 +211,7 @@ function FunctionalSwitch(props) {
               roleType: o.roleType,
             });
           }
+          return undefined;
         }}
         className="mRight18"
       />
@@ -221,7 +228,7 @@ function FunctionalSwitch(props) {
             <div className="switchBoxCon">
               <h5 className="Bold">{_l('功能开关')}</h5>
               <p>{_l('设置启用的系统功能和使用范围')}</p>
-              {allSwitch.map(o => {
+              {allSwitch.map((o, index) => {
                 const key = o.key;
                 let batchNum = info.data.filter(
                   item => batch.includes(item.type) && info.data.find(a => a.type === item.type).state,
@@ -232,12 +239,12 @@ function FunctionalSwitch(props) {
                 ).length;
                 let noStatistics = statisticsNum <= 0;
                 return (
-                  <React.Fragment>
+                  <React.Fragment key={index}>
                     <h6 className="Font13 mTop24 textPrimary Bold">{o.txt}</h6>
                     <ul className="mTop12">
                       {o.list
                         .filter(it => !hideList.includes(it))
-                        .map(oo => {
+                        .map((oo, index) => {
                           const o = info.data.find(a => a.type === oo) || {};
 
                           if (
@@ -250,7 +257,10 @@ function FunctionalSwitch(props) {
                           }
 
                           return (
-                            <li className={cx({ current: (info.showData.type || '') === o.type, isOpen: o.state })}>
+                            <li
+                              key={index}
+                              className={cx({ current: (info.showData.type || '') === o.type, isOpen: o.state })}
+                            >
                               {/* batch,statistics内的操作左侧没有开关*/}
                               {![...batch, ...statistics].includes(oo) ? (
                                 renderSwitch(o)

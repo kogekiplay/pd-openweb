@@ -51,9 +51,9 @@ export const useLinkTargetBlank = ({ selector, onlyExternal = false } = {}) => {
 // 只用到 .focus()，收窄到 HTMLElement 就够（input / textarea / contenteditable 都满足）
 export const useAutoFocus = (ref: React.RefObject<HTMLElement | null>, active = true) => {
   useEffect(() => {
-    if (!active) return;
+    if (!active) return undefined;
 
-    let frame;
+    let frame: number | undefined;
     let count = 0;
 
     const tryFocus = () => {
@@ -79,9 +79,9 @@ export const useAutoFocus = (ref: React.RefObject<HTMLElement | null>, active = 
 // 监听 Esc 键
 export const useEsc = (callback, active = true) => {
   useEffect(() => {
-    if (!active) return;
+    if (!active) return undefined;
 
-    const handleKeyDown = e => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         callback?.(e);
       }
@@ -101,7 +101,7 @@ export const useKnowledgeUsage = (projectId: string) => {
   const [attachmentEnhancedTip, setAttachmentEnhancedTip] = useState('');
 
   useEffect(() => {
-    if (!projectId) return;
+    if (!projectId) return undefined;
 
     let canceled = false;
 
@@ -144,7 +144,7 @@ export const usePolling = ({
   slowInterval = 5000, // 降频间隔
   slowAfter = 150, // 多少次后降频
 }) => {
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const countRef = useRef(0);
   const mountedRef = useRef(true);
   const runningRef = useRef(false); // 防止重复启动

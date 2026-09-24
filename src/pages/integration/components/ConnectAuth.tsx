@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useRef } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -90,9 +90,9 @@ const renderList = fields => {
           <div className="flex textTertiary">{_l('参数名')}</div>
           <div className="flex textTertiary">{_l('参考值')}</div>
         </div>
-        {fields.map(o => {
+        {fields.map((o, index) => {
           return (
-            <div className="flexRow line">
+            <div key={index} className="flexRow line">
               <div className="flex WordBreak">{o.controlName}</div>
               <div className="flex WordBreak">{o.value}</div>
             </div>
@@ -114,7 +114,7 @@ function ConnectAuth(props) {
     tokenLoading: false,
   });
   const testIndex = 0;
-  const refreshTime = useRef(null);
+  const refreshTime = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     getNodeInfo();
   }, []); // 获取连接详情
@@ -176,7 +176,7 @@ function ConnectAuth(props) {
   const renderBasic = () => {
     if (!node.appId) {
       //还未配置过
-      return;
+      return undefined;
     }
 
     return (
@@ -237,7 +237,7 @@ function ConnectAuth(props) {
       });
   };
 
-  const checkNumberControl = (evt, isBlur?) => {
+  const checkNumberControl = (evt, isBlur?: boolean | undefined) => {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -536,7 +536,7 @@ function ConnectAuth(props) {
       );
     } else {
       if ((node.webHookNodes || []).length <= 0) {
-        return;
+        return undefined;
       }
 
       return (node.controls || []).length > 0 ? (

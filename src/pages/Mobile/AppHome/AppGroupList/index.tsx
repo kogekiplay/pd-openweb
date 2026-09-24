@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -9,7 +9,7 @@ import Back from '../../components/Back';
 import * as actions from '../redux/actions';
 import './index.less';
 
-const groupTitleList = {
+const groupTitleList: Record<string, string> = {
   markedGroup: _l('星标'),
   personalGroups: _l('个人'),
   projectGroups: _l('组织'),
@@ -20,7 +20,7 @@ class AppGroupList extends Component<any, any> {
     super(props);
     this.state = {};
   }
-  componentDidMount() {
+  override componentDidMount() {
     const projectObj = getCurrentProject(
       localStorage.getItem('currentProjectId') || (md.global.Account.projects[0] || {}).projectId,
     );
@@ -80,7 +80,7 @@ class AppGroupList extends Component<any, any> {
       </div>
     );
   };
-  render() {
+  override render() {
     const { myAppData = {} } = this.props;
     const { markedGroup = [], personalGroups = [], projectGroups = [] } = myAppData;
     return (

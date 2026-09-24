@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Popup, SpinLoading } from 'antd-mobile';
@@ -79,7 +79,7 @@ class SheetView extends Component<any, any> {
     super(props);
     this.state = { deleteVisible: false };
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.changeBatchOptVisible(false);
   }
   renderWithoutRows() {
@@ -396,7 +396,7 @@ class SheetView extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       view,
       worksheetInfo,

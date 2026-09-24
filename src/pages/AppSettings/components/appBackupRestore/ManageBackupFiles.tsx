@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Drawer } from 'antd';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
@@ -77,7 +77,7 @@ export default function ManageBackupFiles(props) {
   const [showLog, setShowLog] = useState(false);
   const [countLoading, setCountLoading] = useState(true);
   const [backupInfo, setBackupInfo] = useState({ isLoading: false, fileList: [], pageIndex: 1 });
-  const [backupTask, setBackupTask] = useState({});
+  const [backupTask, setBackupTask] = useState<{ status?: number | undefined }>({});
   const [popupVisible, setPopupVisible] = useState(false);
   const [backupTaskText, setBackupTaskText] = useState<string | undefined>();
   const { isLoading, fileList } = backupInfo;
@@ -323,7 +323,7 @@ export default function ManageBackupFiles(props) {
           title={_l('操作日志')}
           onClose={() => setShowLog(false)}
           open={showLog}
-          headerStyle={{ display: 'none' }}
+          styles={{ header: { display: 'none' } }}
         >
           <ActionLogs projectId={projectId} appId={appId} onClose={() => setShowLog(false)} />
         </DrawerWrap>

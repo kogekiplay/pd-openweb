@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { Input, LoadDiv, Switch } from 'ming-ui';
 import workWeiXinAjax from 'src/api/workWeiXin';

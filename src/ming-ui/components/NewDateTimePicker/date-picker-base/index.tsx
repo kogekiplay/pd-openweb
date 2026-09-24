@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import Calender from 'ming-ui/components/NewDateTimePicker/calender';
@@ -20,7 +20,7 @@ class DatePickerBase extends Component<any, any> {
     this.state = state;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState(this.generateState(this.props));
     }
@@ -46,7 +46,7 @@ class DatePickerBase extends Component<any, any> {
     return state;
   };
 
-  headerButtonOnClick = (event, action) => {
+  headerButtonOnClick = (_event, action) => {
     // 头部按钮会改这三样：切换年/月/日视图、挪光标日期、换翻页步长
     const data: { mode?: string; cursor?: Date; step?: number } = {};
 
@@ -149,7 +149,7 @@ class DatePickerBase extends Component<any, any> {
     this.setState(newData);
   };
 
-  render() {
+  override render() {
     return (
       <div className="mui-datepickerbase">
         <Header

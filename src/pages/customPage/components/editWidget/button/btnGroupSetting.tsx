@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Button } from 'ming-ui';
@@ -152,8 +152,8 @@ export default function BtnGroupSetting(props) {
           ))}
         </ul>
         <ul className="btnStyle">
-          {(btnType === 1 ? BTN_STYLE : BTN_STYLE2).map(({ icon, value, tip }) => (
-            <Tooltip title={tip}>
+          {(btnType === 1 ? BTN_STYLE : BTN_STYLE2).map(({ icon, value, tip }, index) => (
+            <Tooltip key={index} title={tip}>
               <li className={cx({ active: value === style })} key={value} onClick={() => setSetting({ style: value })}>
                 <i className={`icon-${icon}`}></i>
               </li>
@@ -164,8 +164,8 @@ export default function BtnGroupSetting(props) {
           <Fragment>
             <div className="itemTitle overflow_ellipsis">{_l('宽度')}</div>
             <ul className="btnWidth">
-              {BTN_WIDTH.map(({ icon, value, tip }) => (
-                <Tooltip title={tip}>
+              {BTN_WIDTH.map(({ icon, value, tip }, index) => (
+                <Tooltip key={index} title={tip}>
                   <li
                     className={cx({ active: value === width })}
                     key={value}
@@ -181,8 +181,8 @@ export default function BtnGroupSetting(props) {
           <Fragment>
             <div className="itemTitle overflow_ellipsis">{_l('方向')}</div>
             <ul className="btnWidth">
-              {BTN_DIRECTION.map(({ icon, value, tip }) => (
-                <Tooltip title={tip}>
+              {BTN_DIRECTION.map(({ icon, value, tip }, index) => (
+                <Tooltip key={index} title={tip}>
                   <li
                     className={cx({ active: value === direction })}
                     key={value}

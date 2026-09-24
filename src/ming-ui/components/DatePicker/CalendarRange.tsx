@@ -40,13 +40,15 @@ function momentize(obj) {
   return obj ? moment(obj) : obj;
 }
 
-function normalizeAnchor(props, init) {
+function normalizeAnchor(props, init: number) {
   const normalizedValue = momentize(getValueFromSelectedValue(props.selectedValue));
   return !isEmptyArray(normalizedValue) ? normalizedValue : init && [getNow(), getNow()];
 }
 
 class CalendarRange extends Component<any, any> {
-  static propTypes = {
+  declare _root: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     prefixCls: PropTypes.string,
     timePicker: PropTypes.bool,
     /**
@@ -95,7 +97,7 @@ class CalendarRange extends Component<any, any> {
     this.halfData = this.props.halfData;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const newState: { selectedValue?: unknown } = {};
 
@@ -106,7 +108,7 @@ class CalendarRange extends Component<any, any> {
     }
   }
 
-  onDateSelect(index: number, value, options?) {
+  onDateSelect(index: number, value, options?: { source: string } | undefined) {
     const selectedValue = [...this.state.selectedValue];
     const rememberedValue = [...this.state.rememberedValue];
     selectedValue[index] = value;
@@ -148,14 +150,14 @@ class CalendarRange extends Component<any, any> {
     this.props.onOk(selectedValue, this.halfData);
   };
 
-  onStartValueChange = leftValue => {
+  onStartValueChange = (leftValue: moment.Moment) => {
     const state = this.state;
     const value = [...state.value];
     value[0] = leftValue;
     return this.fireValueChange(value);
   };
 
-  onEndValueChange = rightValue => {
+  onEndValueChange = (rightValue: moment.Moment) => {
     const state = this.state;
     const value = [...state.value];
     value[1] = rightValue;
@@ -200,7 +202,7 @@ class CalendarRange extends Component<any, any> {
     return v1.diff(v2, 'days');
   };
 
-  fireSelectValueChange = (selectedValue, direct) => {
+  fireSelectValueChange = (selectedValue, direct: boolean) => {
     if (!('selectedValue' in this.props)) {
       this.setState({
         selectedValue,
@@ -240,7 +242,7 @@ class CalendarRange extends Component<any, any> {
   /**
    * 任务模式，切换开始和结束的选中状态
    */
-  toggleValue = (type, checked: boolean) => {
+  toggleValue = (type: string, checked: boolean) => {
     const value = checked ? moment(this.state.rememberedValue[type === 'start' ? 0 : 1] || new Date()) : null;
 
     if (type === 'start') {
@@ -266,7 +268,7 @@ class CalendarRange extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const state = this.state;
     const { prefixCls, timePicker, className, locale } = props;

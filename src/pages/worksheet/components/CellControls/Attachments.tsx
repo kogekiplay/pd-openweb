@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -433,7 +433,7 @@ function HoverPreviewPanel(props) {
   };
 
   useEffect(() => {
-    if (!imageUrl) return;
+    if (!imageUrl) return undefined;
     let canceled = false;
     const image = new Image();
 
@@ -608,7 +608,7 @@ function Attachment(props) {
     : previewUrl.replace(/imageView2\/\d\/w\/\d+\/h\/\d+(\/q\/\d+)?/, 'imageView2/2/h/' + fileHeight);
 
   const isSingleFile = attachments.length === 1;
-  const clickTimeoutRef = useRef(null);
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleClick = e => {
     e.stopPropagation();

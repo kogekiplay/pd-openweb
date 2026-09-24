@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import Config from '../../config';
 import Resigned from './resignation';
@@ -13,7 +13,7 @@ export default class MembersDepartments extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { currentTab, showHeader } = this.state;
     const projectId = Config.projectId;
 

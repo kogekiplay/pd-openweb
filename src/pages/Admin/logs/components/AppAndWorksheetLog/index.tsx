@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -120,13 +120,17 @@ const AvatarWrap = styled.div`
   background: var(--color-background-secondary);
 `;
 const PAGE_SIZE = 50;
-const SOURCE_TYPE_LABEL = {
+const SOURCE_TYPE_LABEL: Record<number, string> = {
   1: _l('界面操作'),
   3: _l('个人访问令牌'),
   4: _l('应用密钥'),
   5: 'HAP-CLI',
 };
 export default class AppAndWorksheetLog extends Component<any, any> {
+  declare appPromise: ApiResult | undefined;
+  declare tableWrap: PageTableCon | null | undefined;
+  declare seatchWrap: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     const columns =
@@ -301,10 +305,10 @@ export default class AppAndWorksheetLog extends Component<any, any> {
       .filter(it => (props.appId ? it.dataIndex !== 'appId' : true));
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getLogList();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     localStorage.removeItem('globalLogTab');
   }
 
@@ -566,7 +570,7 @@ export default class AppAndWorksheetLog extends Component<any, any> {
         value: integrationApp,
         loading: this.state.LoadingIntegrationApp,
         filterOption: (inputValue, option) => option.children.toLowerCase().includes(inputValue.toLowerCase()),
-        onDropdownVisibleChange: visible => {
+        onOpenChange: visible => {
           if (visible) {
             if (integrationAppList.length) {
               return;
@@ -769,7 +773,7 @@ export default class AppAndWorksheetLog extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { projectId, appId } = this.props;
     const {
       dataSource = [],

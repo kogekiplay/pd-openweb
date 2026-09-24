@@ -23,7 +23,7 @@ const Abnormal = styled.div`
 `;
 
 class NodeShare extends React.Component<any, any> {
-  state = {
+  override state = {
     node: null,
     currentAccountId: null,
     loading: true,
@@ -31,7 +31,7 @@ class NodeShare extends React.Component<any, any> {
 
   _isMounted = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     this._isMounted = true;
     getAttachment()
       .then(({ node, attachments, fileId, allowDownload = true } = {}) => {
@@ -58,11 +58,11 @@ class NodeShare extends React.Component<any, any> {
       });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this._isMounted = false;
   }
 
-  render() {
+  override render() {
     const { loading, allowDownload, attachments, fileId } = this.state;
     const projectId = this.state.node?.projectId || this.props.projectId;
 

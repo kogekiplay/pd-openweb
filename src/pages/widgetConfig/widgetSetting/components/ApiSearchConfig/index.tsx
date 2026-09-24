@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -178,8 +178,8 @@ export default function ApiSearchConfig(props) {
   const { authaccount } = getAdvanceSetting(data);
   const [loading, setLoading] = useState(false);
   const [apiInfo, setApiInfo] = useState({});
-  const [requestControls, setRequestControls] = useState([]);
-  const [responseControls, setResponseControls] = useState([]);
+  const [requestControls, setRequestControls] = useState<FormControl[]>([]);
+  const [responseControls, setResponseControls] = useState<FormControl[]>([]);
   const [originResponseControls, setOriginResponseControls] = useState([]);
   const [flowList, setList] = useState([]);
   const [enabled, setEnabled] = useState(true);

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Dropdown, QiniuUpload, Radio } from 'ming-ui';
@@ -236,7 +236,7 @@ export default ({ companyId, processId, relationId, selectNodeId, promptSound, f
                 setUploading(true);
                 up.disableBrowse();
               }}
-              onError={(up, err, errTip) => {
+              onError={(_up, _err, errTip) => {
                 alert(errTip, 2);
               }}
             >
@@ -288,7 +288,7 @@ export default ({ companyId, processId, relationId, selectNodeId, promptSound, f
             type={2}
             content={promptSound.content}
             formulaMap={formulaMap}
-            onChange={(err, value) => updateSource({ promptSound: { ...promptSound, content: value } })}
+            onChange={(_err, value) => updateSource({ promptSound: { ...promptSound, content: value } })}
             updateSource={updateSource}
           />
 

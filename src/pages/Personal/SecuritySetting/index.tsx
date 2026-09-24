@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -28,7 +28,7 @@ export default class SecuritySetting extends Component<any, any> {
       loading: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
   getData() {
@@ -76,7 +76,7 @@ export default class SecuritySetting extends Component<any, any> {
     });
   };
 
-  sureSettings(settingNum: string, value: number, successCallback) {
+  sureSettings(settingNum: string, value: number, successCallback: () => void) {
     accountSetting
       .editAccountSetting({
         settingType: common.settingOptions[settingNum],
@@ -254,7 +254,7 @@ export default class SecuritySetting extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       isTwoauthentication,
       openWeixinLogin,
@@ -288,7 +288,7 @@ export default class SecuritySetting extends Component<any, any> {
       _.includes([2, 3], md.global?.SysSettings?.twoFactorAuthenticationSwitchType);
     // 构建优先级顺序文案：TOTP > 配置的类型 > 其他类型
     const priorityType = md.global?.SysSettings?.twoFactorAuthenticationPriorityType;
-    const priorityTypeMap = {
+    const priorityTypeMap: Record<number, string> = {
       1: _l('短信'),
       2: _l('邮箱'),
       3: _l('TOTP'),
@@ -345,9 +345,9 @@ export default class SecuritySetting extends Component<any, any> {
                               desc: _l('使用手机上的身份验证器应用获得验证码'),
                               checked: 'twoAuthenticationTotpEnabled',
                             },
-                          ].map(item => {
+                          ].map((item, index) => {
                             return (
-                              <div className="flexRow LineHeight30">
+                              <div key={index} className="flexRow LineHeight30">
                                 <div className="checkedIcon">
                                   {this.state[item.checked] && <Icon icon="done" className="Font16" />}
                                 </div>

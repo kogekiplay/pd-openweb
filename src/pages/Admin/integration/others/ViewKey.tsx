@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import { Dialog, VerifyPasswordConfirm } from 'ming-ui';
@@ -16,7 +16,7 @@ export default class ViewKey extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getSecretKey();
   }
 
@@ -61,7 +61,7 @@ export default class ViewKey extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { visible } = this.state;
 
     return (

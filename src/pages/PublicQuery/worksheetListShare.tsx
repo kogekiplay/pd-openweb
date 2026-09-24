@@ -65,7 +65,7 @@ class WorksheetListShare extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       cardControls,
       rowsList = [],
@@ -156,7 +156,7 @@ class WorksheetListShare extends React.Component<any, any> {
           <div className="recordCardList">
             {rowsList.map((record, i) => {
               return (
-                <Suspense fallback={null}>
+                <Suspense key={i} fallback={null}>
                   <LoadableRecordCard
                     disableDownload={!recordAttachmentSwitch}
                     key={i}

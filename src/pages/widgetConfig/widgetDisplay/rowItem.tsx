@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import cx from 'classnames';
 import _, { head, isEmpty, some } from 'lodash';
@@ -57,10 +57,11 @@ export default function RowItem({ row, displayItemType, sectionId, index, ...res
           setPointerDir('right');
         }
       }
+      return undefined;
     },
-    drop(item, monitor) {
+    drop(_item, monitor) {
       if (monitor.isOver({ shallow: true })) {
-        if (!pointerDir) return;
+        if (!pointerDir) return undefined;
         if (pointerDir === 'right') {
           return { mode: DRAG_MODE.INSERT_TO_ROW_END, rowIndex: index, sectionId, activePath: [index, row.length - 1] };
         }
@@ -74,6 +75,7 @@ export default function RowItem({ row, displayItemType, sectionId, index, ...res
           displayItemType,
         };
       }
+      return undefined;
     },
     collect(monitor) {
       return { isOver: monitor.canDrop() && monitor.isOver({ shallow: true }) };

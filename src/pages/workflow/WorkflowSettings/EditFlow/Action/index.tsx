@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { ACTION_ID, APP_TYPE } from '../../enum';
@@ -266,6 +266,7 @@ export default class Action extends Component<any, any> {
 
       return <div className="pLeft8 pRight8">{refundType === '1' ? _l('全额退款') : _l('部分退款')}</div>;
     }
+    return undefined;
   }
 
   getMemberName(item) {
@@ -278,7 +279,7 @@ export default class Action extends Component<any, any> {
     return item.fieldValueId ? `${item.nodeName}-${item.fieldValueName}` : '';
   }
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
     const bgClassName = _.includes(
       [APP_TYPE.INVOICE, APP_TYPE.REFUND, APP_TYPE.PROCESS, APP_TYPE.GLOBAL_VARIABLE],

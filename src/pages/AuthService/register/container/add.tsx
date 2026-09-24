@@ -104,11 +104,11 @@ export default function (props) {
     const { regcode, onChange = () => {} } = props;
 
     const renderWarn = () => {
-      if (!warnTxt) return;
+      if (!warnTxt) return undefined;
       return <div className={cx('warnTips')} dangerouslySetInnerHTML={{ __html: warnTxt }}></div>;
     };
 
-    const renderClassName = (key, value) => {
+    const renderClassName = (key: string, value) => {
       const warn = warnTxt;
       return {
         hasValue: !!value || focusDiv === key,
@@ -145,7 +145,7 @@ export default function (props) {
     );
   };
 
-  const onSubmit = (isFrequentLoginError?) => {
+  const onSubmit = (isFrequentLoginError?: boolean | undefined) => {
     let callback = (res: Record<string, any> = {}) => {
       if (isFrequentLoginError && res.ret !== 0) return;
       doAddProjectCode(res);

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
@@ -22,7 +22,11 @@ function getDomNode(node) {
 }
 
 class PositionContainer extends Component<any, any> {
-  static propTypes = {
+  declare popupBounding: DOMRect | undefined;
+  declare hasTop: boolean | undefined;
+  declare popup: HTMLDivElement | undefined;
+
+  static override propTypes = {
     visible: PropTypes.bool, // 显示隐藏
     bounding: PropTypes.object, // 触发元素的 getBoundingClientRect
     placement: PropTypes.string, // 显示的位置，top，bottom，left，right
@@ -47,7 +51,7 @@ class PositionContainer extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.bounding = this.props.bounding;
     if (this.props.isInit) {
       this.create(this.props);
@@ -70,7 +74,7 @@ class PositionContainer extends Component<any, any> {
     window.addEventListener('resize', this.onWindowResize.bind(this));
     document.body.addEventListener('click', this.newDestroy, false);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.popup) {
       this.popupParentNode.removeChild(this.popup);
       window.removeEventListener('resize', this.onWindowResize.bind(this));
@@ -78,7 +82,7 @@ class PositionContainer extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       let { visible, bounding } = this.props;
       this.bounding = bounding;
@@ -214,7 +218,7 @@ class PositionContainer extends Component<any, any> {
 
     return result;
   }
-  getVerticalSpace(bounding, popupBounding) {
+  getVerticalSpace(bounding, popupBounding: DOMRect) {
     let { clientHeight } = document.body;
 
     let isTop = bounding.top - popupBounding.height >= 0 ? true : false;
@@ -250,7 +254,7 @@ class PositionContainer extends Component<any, any> {
       bottomSpace,
     };
   }
-  getHorizontalSpace(bounding, popupBounding) {
+  getHorizontalSpace(bounding, popupBounding: DOMRect) {
     let { clientWidth } = document.body;
 
     let left = bounding.left - popupBounding.width;
@@ -341,7 +345,7 @@ class PositionContainer extends Component<any, any> {
     popup.style.top = '-99999px';
     popup.classList.remove('PositionContainer-active');
   }
-  render() {
+  override render() {
     return <noscript />;
   }
 }

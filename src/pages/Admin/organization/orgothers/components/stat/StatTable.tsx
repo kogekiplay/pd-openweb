@@ -190,7 +190,7 @@ const SORT_TYPES = {
 export default class StatTable extends React.Component<any, any> {
   static REPOREPORT_TYPES = REPOREPORT_TYPES;
 
-  static propTypes = {
+  static override propTypes = {
     reportType: PropTypes.oneOf(_.values(REPOREPORT_TYPES)),
     startDate: PropTypes.string,
     endDate: PropTypes.string,
@@ -211,11 +211,11 @@ export default class StatTable extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchData();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         prevProps.reportType !== this.props.reportType ||
@@ -441,7 +441,7 @@ export default class StatTable extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { isLoading, list, allCount, pageSize, pageIndex } = this.state;
     const { reportType } = this.props;
     const fields = SORT_FILEDS[reportType];

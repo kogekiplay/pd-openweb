@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { getControlByControlId } from '../../../util';
 import { getAdvanceSetting } from '../../../util/setting';
@@ -26,7 +25,7 @@ export default function FilterText({ data, allControls }) {
         const { controlId } = item;
         const { controlName } = getControlByControlId(allControls, controlId);
         return (
-          <div className="filterItem">
+          <div key={index} className="filterItem">
             {index > 0 && <div className="filterMode">{filters[index - 1].spliceType === 1 ? _l('且') : _l('或')}</div>}
             <div className="controlName">{controlName}</div>
             <div className="filterType"></div>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { Popup } from 'antd-mobile';
 import cx from 'classnames';
@@ -24,6 +24,9 @@ const formatEmpty = value => {
 };
 
 let AddDiscuss = class AddDiscuss extends Component<any, any> {
+  declare isLock: boolean;
+  declare textarea: HTMLTextAreaElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -40,7 +43,7 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
     this.isLock = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getPortalConfigSet();
 
     const { discussionInfo, temporaryDiscuss } = _.get(this.props, 'match.params');
@@ -51,7 +54,7 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
   }
 
@@ -76,7 +79,7 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
       });
   };
 
-  handlePushValue(text) {
+  handlePushValue(text: string) {
     text = text + ' ';
     const { value = '', temporaryDiscuss } = this.state;
 
@@ -195,7 +198,7 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { value, files, showSelectUser, temporaryDiscuss } = this.state;
     const { projectId, handleTemporaryDiscuss, recordPartner = [] } = this.props;
     const { appId, discussionInfo } = this.props.match.params;
@@ -211,7 +214,7 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
           <Icon icon="cancel" className="close Font22 textTertiary" onClick={this.props.onClose} />
         </div>
         <Textarea
-          manualRef={ele => (this.textarea = ele)}
+          manualRef={ele => { this.textarea = ele; }}
           isFocus
           className="contentInput"
           minHeight={72}

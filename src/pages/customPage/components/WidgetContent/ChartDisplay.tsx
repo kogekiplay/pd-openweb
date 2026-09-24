@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -32,7 +32,7 @@ const ChartDisplay = props => {
 
     if (!customPageContent || customPageContent.classList.contains('adjustScreen')) {
       setVisible(true);
-      return;
+      return undefined;
     }
 
     const chart = customPageContent.querySelector(`.widgetContent .analysis-${widget.id}`);

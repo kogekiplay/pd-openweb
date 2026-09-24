@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { DATABASE_TYPE } from '../../constant';
@@ -91,6 +91,7 @@ export default function ConfigGuide(props) {
       default:
         <div />;
     }
+    return undefined;
   };
 
   return (

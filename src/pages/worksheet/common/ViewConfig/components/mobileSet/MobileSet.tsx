@@ -33,7 +33,7 @@ export default class MobileSet extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { appshowtype = '0', checkradioid = '' } = getAdvanceSetting(this.props.view);
 
@@ -186,7 +186,7 @@ export default class MobileSet extends React.Component<any, any> {
     );
   };
 
-  changeShowType = type => {
+  changeShowType = (type: string) => {
     const { view, appId } = this.props;
     this.setState(
       {
@@ -252,7 +252,7 @@ export default class MobileSet extends React.Component<any, any> {
 
   renderCon = () => {
     const { appshowtype } = this.state;
-    const iconMaps = {
+    const iconMaps: Record<number, string> = {
       1: 'App_Card1',
       2: 'App_Card2',
       0: 'App_Card3',
@@ -268,9 +268,10 @@ export default class MobileSet extends React.Component<any, any> {
         <div className="commonConfigItem Font13 bold">{_l('卡片模板')}</div>
         <div className="commonConfigItem mBottom32">
           <ul className="cardUl">
-            {[1, 2, 0].map(it => {
+            {[1, 2, 0].map((it, index) => {
               return (
                 <li
+                  key={index}
                   className={cx('mTop12 Hand', {
                     current: appshowtype === it + '',
                     mRight12: it === 1,
@@ -293,7 +294,7 @@ export default class MobileSet extends React.Component<any, any> {
     );
   };
   // 移动端显示
-  render() {
+  override render() {
     const { view } = this.props;
     const isGallery = VIEW_DISPLAY_TYPE[view.viewType] === 'gallery';
 

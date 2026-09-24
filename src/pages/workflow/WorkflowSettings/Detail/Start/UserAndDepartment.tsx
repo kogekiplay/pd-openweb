@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import { Radio } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -6,7 +6,7 @@ import { TRIGGER_ID } from '../../enum';
 import { TriggerCondition } from '../components';
 
 export default ({ data, updateSource, processId, selectNodeId, companyId, renderConditionBtn, relationId }) => {
-  const TYPES = {
+  const TYPES: Record<number, { icon: string; title: string; actions: { text: string; value: string }[] }> = {
     20: {
       icon: 'icon-hr_structure',
       title: _l('人员'),

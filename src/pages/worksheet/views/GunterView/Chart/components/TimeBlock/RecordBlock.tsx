@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment } from 'react';
+import { Component, createRef, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -66,6 +66,9 @@ const getLastWorkEndTime = (time, dayOff) => {
 };
 
 let RowBlock = class RowBlock extends Component<any, any> {
+  declare isScroll: boolean;
+  declare timer: NodeJS.Timeout | null;
+
   constructor(props) {
     super(props);
     const { base } = props;
@@ -83,7 +86,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     this.gunterChartWrapperEl = document.querySelector(`.gunterView-${base.viewId} .gunterChartWrapper`);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.style, prevProps.style)) {
         this.$ref.current.style.transform = null;
@@ -97,13 +100,13 @@ let RowBlock = class RowBlock extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeDocumentDragListeners();
     setRecordDragging(false);
     clearInterval(this.timer);
   }
 
-  setDocumentDragListeners = (onMouseMove, onMouseUp) => {
+  setDocumentDragListeners = (onMouseMove, onMouseUp: () => void) => {
     this.removeDocumentDragListeners();
     this.documentDragListeners = { onMouseMove, onMouseUp };
     document.addEventListener('mousemove', onMouseMove);
@@ -185,7 +188,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     clearInterval(this.timer);
   }
 
-  handleAutoUpdateTime = value => {
+  handleAutoUpdateTime = (value: number) => {
     const { row } = this.props;
     const { dragStartTime, dragEndTime } = this.state;
     this.props.updateRecordDragTime(row, dragStartTime, dragEndTime, value);
@@ -297,12 +300,12 @@ let RowBlock = class RowBlock extends Component<any, any> {
     }
   }
 
-  handleChangeStart(value) {
+  handleChangeStart(value: number) {
     const [start, end] = this.getStartTime(value);
     this.handleUpdateRecordTime(start, end);
   }
 
-  getStartTime(value) {
+  getStartTime(value: number) {
     const { row, viewConfig } = this.props;
     const { minDayWidth, onlyWorkDay, periodType, startType, startFormat, dayOff } = viewConfig;
 
@@ -349,12 +352,12 @@ let RowBlock = class RowBlock extends Component<any, any> {
     }
   }
 
-  handleChangeEnd(value) {
+  handleChangeEnd(value: number) {
     const [start, end] = this.getEndTime(value);
     this.handleUpdateRecordTime(start, end);
   }
 
-  getEndTime(value) {
+  getEndTime(value: number) {
     const { row, viewConfig } = this.props;
     const { minDayWidth, onlyWorkDay, periodType, endType, endFormat, dayOff } = viewConfig;
 
@@ -722,7 +725,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     return <span className="recordTitle overflow_ellipsis">{title || emptyValue}</span>;
   }
 
-  render() {
+  override render() {
     const { tooltipVisible } = this.state;
     const { row, style, onClick, viewConfig, searchRecordId, disable } = this.props;
     const { milepost, startDisable, endDisable } = viewConfig;

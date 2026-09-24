@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -8,7 +8,7 @@ import { DateTimeRange } from 'ming-ui/components/NewDateTimePicker';
 import { FROM } from '../../../core/config';
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     from: PropTypes.number,
     type: PropTypes.number,
     disabled: PropTypes.bool,
@@ -60,7 +60,7 @@ export default class Widgets extends Component<any, any> {
     return lengthText;
   }
 
-  render() {
+  override render() {
     const { disabled, type, from } = this.props;
     const value = JSON.parse(this.props.value || JSON.stringify(['', '']));
     const start = value[0] ? moment(value[0]) : null;

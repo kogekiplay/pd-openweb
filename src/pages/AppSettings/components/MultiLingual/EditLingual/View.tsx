@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -71,7 +71,7 @@ export default function View(props) {
     const translateInfo = data.data || {};
     const comparisonLangInfo = getTranslateInfo(app.id, null, item.viewId, comparisonLangData);
 
-    const handleSave = info => {
+    const handleSave = (info: { name: string | undefined }) => {
       onEditAppLang({
         id: data.id,
         parentId: selectNode.workSheetId,

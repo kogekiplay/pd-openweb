@@ -53,6 +53,9 @@ const getDualAxesData = (data = []) => {
 };
 
 export default class LineChart extends React.Component<any, any> {
+  declare isMountedComponent: boolean;
+  declare lineChartEle: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.chart = null;
@@ -60,7 +63,7 @@ export default class LineChart extends React.Component<any, any> {
     this.g2plotComponent = null;
     this.isMountedComponent = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.isMountedComponent = true;
     loadG2Plot().then(data => {
       if (!this.isMountedComponent) return;
@@ -69,7 +72,7 @@ export default class LineChart extends React.Component<any, any> {
       this.renderChart();
     });
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (
       this.g2plotComponent &&
       (!_.isEqual(prevProps.data, this.props.data) ||
@@ -80,7 +83,7 @@ export default class LineChart extends React.Component<any, any> {
       this.renderChart();
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isMountedComponent = false;
     this.destroyChart();
   }
@@ -109,7 +112,7 @@ export default class LineChart extends React.Component<any, any> {
 
     return Math.ceil(max) * Math.pow(10, bite);
   };
-  getLegendOffsetX = defaultOffset => {
+  getLegendOffsetX = (defaultOffset: number) => {
     const totalTxtWidth = Number(_.get(this.props, 'chartInfo.totalTxtWidth')) || 0;
 
     return totalTxtWidth ? totalTxtWidth + 12 : defaultOffset;
@@ -199,7 +202,7 @@ export default class LineChart extends React.Component<any, any> {
             position: 'top-left',
             offsetX: legendOffsetX,
             itemName: {
-              formatter: (text, item, index: number) => {
+              formatter: (text, _item, index: number) => {
                 let total = index === 0 ? total1 : total2;
                 return text + '：' + total;
               },
@@ -366,7 +369,7 @@ export default class LineChart extends React.Component<any, any> {
             position: 'top-left',
             offsetX: attachmentLegendOffsetX,
             itemName: {
-              formatter: (text, item, index: number) => {
+              formatter: (text, _item, index: number) => {
                 const total = (_.find(subTypeTotal, v => v.subType === index + 1) || { size: 0 }).size;
                 return text + '：' + formatFileSize(total, 2);
               },
@@ -445,7 +448,7 @@ export default class LineChart extends React.Component<any, any> {
     this.chartType = type;
     this.chart.render();
   };
-  render() {
+  override render() {
     return <div className="w100 h100" ref={ele => { this.lineChartEle = ele; }}></div>;
   }
 }

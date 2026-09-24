@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { AnimationWrap, SettingItem } from '../../../styled';
 import { adjustWidthList } from '../../../util/setting';
@@ -37,11 +36,12 @@ export default function WidgetWidth({ data, widgets, handleClick }) {
     <SettingItem>
       <div className="settingItemTitle">{_l('宽度（占比）')}</div>
       <AnimationWrap>
-        {WIDTH_SETTING_LIST.map(({ text, value }) => {
+        {WIDTH_SETTING_LIST.map(({ text, value }, index) => {
           const disabled = !availableWidth.includes(value);
           const isActive = size === value;
           return (
             <div
+              key={index}
               className={cx('animaItem overflow_ellipsis', { active: isActive, disabled })}
               onClick={() => {
                 if (isActive || disabled) return;

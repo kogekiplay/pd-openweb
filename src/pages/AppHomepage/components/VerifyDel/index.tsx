@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { func, string } from 'prop-types';
@@ -6,7 +6,7 @@ import { Dialog, Input } from 'ming-ui';
 import './index.less';
 
 export default class VerifyDel extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     name: string,
     onOk: func,
     onCancel: func,
@@ -21,12 +21,12 @@ export default class VerifyDel extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  state = {
+  override state = {
     isDelChecked: false,
     value: '',
     delObj: {},
   };
-  componentDidMount() {
+  override componentDidMount() {
     const { para = {}, mode } = this.props;
 
     if (mode) {
@@ -40,7 +40,7 @@ export default class VerifyDel extends Component<any, any> {
       isDelChecked: !this.state.isDelChecked,
     });
   };
-  render() {
+  override render() {
     const { onOk, onCancel, cancelText, name, mode } = this.props;
     const { value, delObj = {} } = this.state;
     const currentName = (mode ? delObj.name : name) || '';

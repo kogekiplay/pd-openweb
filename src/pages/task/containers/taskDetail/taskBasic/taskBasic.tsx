@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -39,7 +39,7 @@ import { checkIsProject } from '../../../utils/utils';
 import SelectTag from '../SelectTag';
 import './taskBasic.less';
 
-const FROM_TYPE = {
+const FROM_TYPE: Record<number, { icon: string; text: string }> = {
   1: {
     icon: 'icon-bellSchedule',
     text: _l('日程转为的任务'),
@@ -73,7 +73,7 @@ class TaskBasic extends Component<any, any> {
    * 打开详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { data } = this.props.taskDetails[this.props.taskId];
 
@@ -235,7 +235,7 @@ class TaskBasic extends Component<any, any> {
   /**
    * 渲染母任务列表
    */
-  renderParentItem(item, i, showBtn) {
+  renderParentItem(item, i, showBtn: boolean) {
     return (
       <li key={i} className="flexRow">
         <div
@@ -402,7 +402,7 @@ class TaskBasic extends Component<any, any> {
   /**
    * 任务成员item
    */
-  renderMemberItem(item, i, hasAuth) {
+  renderMemberItem(item, i, hasAuth: boolean) {
     if (item.type !== 0 || item.status === 2) {
       return null;
     }
@@ -431,7 +431,7 @@ class TaskBasic extends Component<any, any> {
   /**
    * 成员 opHtml
    */
-  renderMemberOpHtml(account, hasAuth, isApply) {
+  renderMemberOpHtml(account, hasAuth: boolean, isApply: boolean) {
     // 无权限经过我自己
     if (!hasAuth && md.global.Account.accountId === account.accountId) {
       return (
@@ -612,7 +612,7 @@ class TaskBasic extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { taskName, showTags, attachmentData, kcAttachmentData, isEditing } = this.state;
     const { taskId, addTags, closeAddTags } = this.props;
     const { data } = this.props.taskDetails[taskId];

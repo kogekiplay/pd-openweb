@@ -8,17 +8,19 @@ export { default as Tab } from './tab';
  * tab
  */
 export class Tabs extends React.Component<any, any> {
-  static propTypes = {
+  declare indicator: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     children: PropTypes.any,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.currentTab) {
       this.setIndicatorStyle();
     }
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     if (this.currentTab) {
       this.setIndicatorStyle();
     }
@@ -37,7 +39,7 @@ export class Tabs extends React.Component<any, any> {
 
   getIndicatorPosition = () => {
     const currentTab = this.currentTab;
-    if (!currentTab) return;
+    if (!currentTab) return undefined;
 
     const tabWidth = currentTab.offsetWidth;
     const tabLeft = currentTab.offsetLeft;
@@ -46,7 +48,7 @@ export class Tabs extends React.Component<any, any> {
     return { left, width };
   };
 
-  render() {
+  override render() {
     return (
       <div className="mmTab">
         <ul>

@@ -1,9 +1,12 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useDragLayer } from 'react-dnd';
+import type { DragLayerMonitor } from 'react-dnd';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
+import type { SortableListProps } from './index';
 
 const ItemLayer = styled.div`
   position: fixed;
@@ -24,12 +27,25 @@ const ItemLayer = styled.div`
   }
 `;
 
-function ListItemLayer(props) {
+type ListItemLayerProps<T> = Pick<
+  SortableListProps<T>,
+  'helperClass' | 'itemClassName' | 'useDragHandle' | 'renderBody' | 'renderItem'
+> & { dragging: boolean };
+
+/** 拖动中 react-dnd 里的那份数据（见 index.tsx 的 DragObject） */
+interface LayerDragObject<T> {
+  type: string;
+  index: number;
+  item: T;
+}
+
+function ListItemLayer<T>(props: ListItemLayerProps<T>) {
   const { dragging, helperClass, itemClassName, useDragHandle = false, renderBody, renderItem } = props;
-  const $init = useRef(null);
+  // 最近一次拖起时的数据：松手后 item 变成 null，浮层还要靠它渲染完最后一帧
+  const $init = useRef<{ initialClientOffset: unknown; item: LayerDragObject<T> } | null>(null);
 
   const { isDragging, item, itemType, initialClientOffset, currentOffset, initialSourceClientOffset } = useDragLayer(
-    monitor => {
+    (monitor: DragLayerMonitor<LayerDragObject<T> | null>) => {
       const data = {
         isDragging: monitor.isDragging(),
         // 拖动开始时鼠标位置
@@ -50,16 +66,17 @@ function ListItemLayer(props) {
     $init.current = { initialClientOffset, item };
   }
 
-  const DragHandle = ({ children }) => <span style={{ cursor: 'move' }}>{children}</span>;
+  const DragHandle = ({ children }: { children?: ReactNode }) => <span style={{ cursor: 'move' }}>{children}</span>;
 
   const renderContent = () => {
-    if (!item && !$init.current) return null;
+    // 有 item 时上面已经写进 $init，所以只看 $init
+    if (!$init.current) return null;
 
     return renderItem({ ...$init.current.item, DragHandle, isLayer: true });
   };
 
   const getItemStyle = () => {
-    if (!initialClientOffset || !currentOffset || !item) {
+    if (!initialClientOffset || !currentOffset || !initialSourceClientOffset || !item) {
       return {
         display: 'none !important',
       };

@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { Input } from 'antd';
 import { getAdvanceSetting } from 'src/pages/widgetConfig/util';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
@@ -19,7 +19,7 @@ export default function (props) {
     onDynamicValueChange(newValue || []);
   };
 
-  const handleChange = value => {
+  const handleChange = (value: string) => {
     onDynamicValueChange(value ? [{ cid: '', rcid: '', staticValue: Math.min(parseFloat(value), maxValue) }] : []);
   };
 

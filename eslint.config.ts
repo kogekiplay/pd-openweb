@@ -90,9 +90,13 @@ module.exports = [
 
     rules: {
       // React rules
-      'react/jsx-uses-react': 'error',
+      // JSX 走 automatic runtime（.babelrc / tsconfig 的 jsx: react-jsx，2026-09-23 起），
+      // 写 JSX 不再需要 React 在作用域里 —— 这两条是 classic runtime 专用的，开着会逼人加回无用的 import React
+      'react/jsx-uses-react': 'off',
       'react/jsx-uses-vars': 'error',
-      'react/react-in-jsx-scope': 'error',
+      'react/react-in-jsx-scope': 'off',
+      // 2026-09-23 全仓清零（579 处）后打开；零容忍门禁是 bun run check:jsx-key，这里是给编辑器即时标红用的
+      'react/jsx-key': ['error', { checkFragmentShorthand: true, warnOnDuplicates: true }],
 
       // React Hooks recommended rules run as warnings before React Compiler adoption.
       ...reactHooksRecommendedRules,

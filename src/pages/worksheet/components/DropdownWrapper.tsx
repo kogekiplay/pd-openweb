@@ -5,8 +5,12 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import './DropdownWrapper.less';
 
 const ClickAwayable = ClickAway;
-export default class DropdownWrapper extends Component<any, any> {
-  static propTypes = {
+export interface DropdownWrapperState {
+  visible: boolean;
+}
+
+export default class DropdownWrapper extends Component<any, DropdownWrapperState> {
+  static override propTypes = {
     visible: PropTypes.bool,
     downElement: PropTypes.element,
   };
@@ -16,7 +20,7 @@ export default class DropdownWrapper extends Component<any, any> {
       visible: false,
     };
   }
-  render() {
+  override render() {
     const { children, downElement, className, disabled } = this.props;
     const { visible } = this.state;
     return (

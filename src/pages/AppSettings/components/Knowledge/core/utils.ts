@@ -17,7 +17,7 @@ export const getFileIcon = fileName => {
 
   const ext = fileName.split('.').pop().toLowerCase();
 
-  const map = {
+  const map: Record<string, string> = {
     doc: 'fileIcon-word',
     docx: 'fileIcon-word',
     xls: 'fileIcon-excel',
@@ -170,7 +170,7 @@ export const externalSupportField = control => {
 export const isCustomField = ({ advancedSetting }: Partial<FormControl>) => ['1', '2'].includes(advancedSetting?.customtype);
 
 export async function fetchFilterData({ worksheetId, filterId, setWorksheetControlsMap, setFilterConditionsMap }: { worksheetId?: string; [key: string]: any }) {
-  if (!filterId) return;
+  if (!filterId) return undefined;
 
   try {
     const [worksheetInfo, filterData] = await Promise.all([
@@ -178,8 +178,7 @@ export async function fetchFilterData({ worksheetId, filterId, setWorksheetContr
       worksheetAjax.getWorksheetFilterById({ filterId }),
     ]);
 
-    const { template = {} } = worksheetInfo;
-    const { controls = [] }: { controls: FormControl[]; [key: string]: any } = template;
+    const controls: FormControl[] = worksheetInfo.template?.controls || [];
 
     const dataFilterFields = controls.filter(isSupportFilterField);
 

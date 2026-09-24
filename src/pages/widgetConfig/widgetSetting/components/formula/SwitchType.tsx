@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { CALC_TYPE, OUTPUT_FORMULA_FUNC } from 'src/pages/widgetConfig/config/setting';
@@ -24,7 +24,7 @@ export default function SwitchType({ data, fromAggregation, onChange }) {
   const { controlId, enumDefault2 } = data;
   const isSaved = controlId && !controlId.includes('-');
 
-  const handleChange = type => {
+  const handleChange = (type: number) => {
     const nextData = {
       type,
       sourceControlId: '',
@@ -105,11 +105,12 @@ export default function SwitchType({ data, fromAggregation, onChange }) {
         <Fragment>
           <div className="settingItemTitle">{_l('计算方式')}</div>
           <AnimationWrap>
-            {FORMULA_TYPES.map(({ text, value }) => {
-              if (fromAggregation && value === 38) return;
+            {FORMULA_TYPES.map(({ text, value }, index) => {
+              if (fromAggregation && value === 38) return undefined;
               const isActive = data.type === value;
               return (
                 <div
+                  key={index}
                   className={cx('animaItem overflow_ellipsis', { active: isActive })}
                   onClick={() => {
                     if (isActive) return;

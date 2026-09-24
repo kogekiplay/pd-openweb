@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';
@@ -59,8 +59,9 @@ export default function SplitLine(props) {
         <div className="settingItemTitle">{_l('默认状态')}</div>
         <SectionItem className="mTop0">
           <div className="selectWrap">
-            {FOLD_DISPLAY.map(item => (
+            {FOLD_DISPLAY.map((item, index) => (
               <div
+                key={index}
                 className={cx('animaItem', { active: item.value === enumDefault2 })}
                 onClick={() => onChange({ enumDefault2: item.value })}
               >

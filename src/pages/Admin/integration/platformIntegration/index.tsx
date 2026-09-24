@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { LoadDiv, UpgradeIcon } from 'ming-ui';
 import roleAjax from 'src/api/role';
@@ -78,7 +78,7 @@ export default class PlatformIntegration extends Component<any, any> {
     Config.setPageTitle(_l('集成 - 企业身份'));
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId, type } = _.get(this.props, 'match.params') || {};
 
     if (type === 'microsoft') {
@@ -111,6 +111,7 @@ export default class PlatformIntegration extends Component<any, any> {
     }
 
     this.setState({ [`${type}Visible`]: true });
+    return undefined;
   };
 
   handleShowIntegration = () => {
@@ -172,7 +173,7 @@ export default class PlatformIntegration extends Component<any, any> {
     return null;
   };
 
-  render() {
+  override render() {
     const { projectId } = _.get(this.props, 'match.params') || {};
     const { loading } = this.state;
 
@@ -191,7 +192,7 @@ export default class PlatformIntegration extends Component<any, any> {
         <div className="platformIntegrationWrap">
           <div className="mBottom16 Font22 bold TxtCenter">{_l('企业身份集成')}</div>
           <div className="textTertiary Font14 mBottom40 TxtCenter">{_l('从第三方同步通讯录，只能集成一个平台')}</div>
-          {configs.map(item => {
+          {configs.map((item, index) => {
             const { src, text, featureId, privatePermission } = item;
 
             if (
@@ -199,7 +200,7 @@ export default class PlatformIntegration extends Component<any, any> {
               (window.platformENV.isLocal || window.platformENV.isOverseas) &&
               md.global.SysSettings[privatePermission]
             )
-              return;
+              return undefined;
 
             let featureType = getFeatureStatus(projectId, featureId);
             if (!featureType) return null;
@@ -208,6 +209,7 @@ export default class PlatformIntegration extends Component<any, any> {
 
             return (
               <div
+                key={index}
                 className="integrationItem flexRow alignItemsCenter Hand"
                 onClick={() => this.handleClick({ featureType, ...item })}
               >

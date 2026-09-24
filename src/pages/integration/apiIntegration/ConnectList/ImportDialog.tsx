@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import { Progress } from 'antd';
 import cx from 'classnames';
@@ -168,7 +168,7 @@ export default function ImportDialog(props) {
     }
   };
 
-  const onUploadComplete = (up, file, response) => {
+  const onUploadComplete = (_up, file, response) => {
     const { key } = response;
     checkUpgrade({ ...file, key });
   };
@@ -236,7 +236,7 @@ export default function ImportDialog(props) {
           onAdd={() => {
             setState({ errTip: '', upgradeId: '' });
           }}
-          onBeforeUpload={(up, file) => {
+          onBeforeUpload={(_up, file) => {
             !analyzeLoading && setState({ file: file, analyzeLoading: true, upgradeId: '' });
           }}
           onUploaded={onUploadComplete}

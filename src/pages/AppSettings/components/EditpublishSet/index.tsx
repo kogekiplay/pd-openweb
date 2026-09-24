@@ -109,7 +109,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
     this.saveRef = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { fixRemark, fixed, ssoAddress } = this.props.data || {};
     this.setState({ fixed, fixRemark, ssoAddress });
   }
@@ -205,6 +205,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
         </Modal>
       );
     }
+    return undefined;
   };
 
   publishSettings = obj => {
@@ -230,7 +231,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
   };
 
   // 应用维护
-  fixedApp = (fixed, isSave?) => {
+  fixedApp = (fixed: boolean, isSave?: boolean | undefined) => {
     const { projectId, appId, onChangeData } = this.props;
     const { fixRemark } = this.state;
     homeAppAjax
@@ -259,7 +260,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { projectId, appId, data } = this.props;
     const { appDisplay, webMobileDisplay, pcDisplay } = data;
     const { fixRemark, fixed, ssoAddress } = this.state;
@@ -274,7 +275,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
           </p>
           <div className="con">
             <ul>
-              {[1, 2, 3].map(o => {
+              {[1, 2, 3].map((o, index) => {
                 let cur = false;
                 let s = ['pcCon', 'webCon', 'appCon'][o - 1];
 
@@ -293,6 +294,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
                 s = !cur ? s + 'hover' : s;
                 return (
                   <li
+                    key={index}
                     onClick={() => {
                       let curData = {};
 

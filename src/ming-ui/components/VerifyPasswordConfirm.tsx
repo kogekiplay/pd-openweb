@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { bool, func, number, string } from 'prop-types';
 import { Dialog, VerifyPasswordInput } from 'ming-ui';
 import functionWrap from 'ming-ui/components/FunctionWrap';
@@ -37,7 +37,7 @@ export default function VerifyPasswordConfirm(props) {
   }, [isRequired, password, isNoneVerification, closeImageValidation]);
 
   useEffect(() => {
-    function handleKeyDown(event) {
+    function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Enter') {
         event.preventDefault();
         handleConfirm();

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -22,7 +22,7 @@ export default class ApplicationList extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const dashboardHideGroup = localStorage.getItem(`dashboardExpandGroup_${md.global.Account.accountId}`);
 
     if (dashboardHideGroup) {
@@ -30,7 +30,7 @@ export default class ApplicationList extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
   }
 
@@ -107,7 +107,17 @@ export default class ApplicationList extends Component<any, any> {
     this.actionSheetHandler = showAddAppActionSheet();
   };
 
-  forTitle = ({ type, name, icon, iconUrl, showExpandIcon = true }: { name?: string; icon?: string; [key: string]: any }) => {
+  forTitle = ({
+    type,
+    name,
+    icon,
+    iconUrl,
+    showExpandIcon = true,
+  }: {
+    name?: string;
+    icon?: string;
+    [key: string]: any;
+  }) => {
     const { dashboardHideGroup = [] } = this.state;
 
     if (_.includes(['apps', 'externalApps'], type)) {
@@ -168,7 +178,7 @@ export default class ApplicationList extends Component<any, any> {
           {this.forTitle({ type, name, icon, iconUrl, showExpandIcon })}
         </div>
         {type === 'externalApps' && _.isEmpty(apps) ? (
-          <div className="textDisabled bold mLeft30 mTop20" style={{ paddingLeft: `${distance}px` }}>
+          <div className="textTertiary bold mLeft30 mTop20" style={{ paddingLeft: `${distance}px` }}>
             {_l('暂无外部协作者的应用')}
           </div>
         ) : _.includes(dashboardHideGroup, type) ? null : (
@@ -195,7 +205,7 @@ export default class ApplicationList extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { myAppData = {}, projectId, projectGroupsNameLang } = this.props;
     const {
       markedGroup = [],
@@ -257,7 +267,7 @@ export default class ApplicationList extends Component<any, any> {
       <Fragment>
         {/* 标星分组 */}
         {markedGroup.map(item => {
-          if ((!item || !item.apps || _.isEmpty(item.apps)) && !canCreateApp) return;
+          if ((!item || !item.apps || _.isEmpty(item.apps)) && !canCreateApp) return undefined;
           return (
             <Fragment key={item.id}>
               {this.renderGroupDetail({

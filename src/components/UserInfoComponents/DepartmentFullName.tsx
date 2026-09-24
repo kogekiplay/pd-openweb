@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -145,4 +145,5 @@ export default function DepartmentFullName(props) {
       </DepartmentFullNameWrapper>
     );
   }
+  return undefined;
 }

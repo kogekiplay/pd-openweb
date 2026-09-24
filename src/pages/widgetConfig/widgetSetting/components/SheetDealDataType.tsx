@@ -1,9 +1,9 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Checkbox } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../util/setting';
 
-const TIPS = {
+const TIPS: Record<number, string[]> = {
   2: [
     _l('勾选后，在移动端App创建记录时会首先调取扫码输入。此功能在自定义按钮填写时也会生效。'),
     _l(

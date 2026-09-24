@@ -214,7 +214,7 @@ function PluginConfig(props) {
     commitList: [],
     exportHistoryList: [],
   });
-  const [appList, setAppList] = useState();
+  const [appList, setAppList] = useState<{ text: string | undefined; value: string | undefined }[]>();
   const [editingName, setEditingName] = useState(false);
   const [currentTab, setCurrentTab] = useState(
     configType === pluginConfigType.create ? pluginConfigType.debugEnv : configType,

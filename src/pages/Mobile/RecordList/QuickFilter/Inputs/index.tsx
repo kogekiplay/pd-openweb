@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { shape } from 'prop-types';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';

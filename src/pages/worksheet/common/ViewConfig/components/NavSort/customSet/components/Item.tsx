@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, UserHead } from 'ming-ui';
@@ -11,7 +11,7 @@ import './index.less';
 
 export default function (props) {
   const { setting } = props;
-  const $ref = useRef(null);
+  const $ref = useRef<HTMLDivElement | null>(null);
   const valueRef = useRef<any>(undefined);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function (props) {
   const { onAdd, onDelete, item, onUpdate, projectId, appId, DragHandle, maxCount } = props;
   const { num, info } = item;
 
-  const addUser = (isMultiple = true, tabType, cb) => {
+  const addUser = (isMultiple = true, tabType: number, cb) => {
     quickSelectUser($ref.current, {
       showMoreInvite: false,
       isTask: false,

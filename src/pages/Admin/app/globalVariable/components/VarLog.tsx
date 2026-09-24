@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
 import Trigger from '@rc-component/trigger';
@@ -129,7 +129,13 @@ const LogItem = styled.div`
   }
 `;
 
-export default function VarLog(props) {
+export interface VarLogProps {
+  onClose: () => void;
+  variableId: string;
+  projectId?: string | undefined;
+}
+
+export default function VarLog(props: VarLogProps) {
   const { onClose, variableId, projectId = '' } = props;
   const selectUserRef = useRef<HTMLSpanElement>(null);
   const [{ selectUser, selectDate }, setFilter] = useSetState({
@@ -211,7 +217,7 @@ export default function VarLog(props) {
   return (
     <LogDrawer
       open
-      width={470}
+      size={470}
       placement="right"
       title={_l('日志')}
       closeIcon={<i className="icon-close Font18" />}

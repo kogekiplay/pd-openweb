@@ -1,4 +1,3 @@
-import React from 'react';
 import doT from 'dot';
 import _ from 'lodash';
 import Dialog from 'ming-ui/components/Dialog';
@@ -65,6 +64,7 @@ Comm.inviteCalendar = {
         }
 
         Comm.confirmOrUnconfirmInviteMe(calendarId, 2, reason, recurTime, '');
+        return undefined;
       },
     });
 

@@ -17,7 +17,9 @@ import './postFilter.css';
  * 首页动态列表的头部筛选器
  */
 class HomePostFilter extends React.Component<any, any> {
-  static propTypes = {
+  declare searchInput: HTMLInputElement | null | undefined;
+
+  static override propTypes = {
     dispatch: PropTypes.func,
     fontSize: PropTypes.number,
     searchKeywords: PropTypes.string,
@@ -33,13 +35,13 @@ class HomePostFilter extends React.Component<any, any> {
     }),
   };
 
-  state = {
+  override state = {
     isSearchInputExpand: !_.isNull(this.props.searchKeywords),
   };
 
   _isMounted = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     this._isMounted = true;
     this.postType = this.props.options.postType;
     if (this.state.isSearchInputExpand) {
@@ -48,13 +50,13 @@ class HomePostFilter extends React.Component<any, any> {
     }
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     if (this.searchInput && this.props.searchKeywords !== this.searchInput.value) {
       this.searchInput.value = this.props.searchKeywords;
     }
   }
 
-  setFontSize = step => {
+  setFontSize = (step: number) => {
     const fontSize = this.props.fontSize + step;
     this.props.dispatch(changeFontSize(fontSize));
   };
@@ -82,19 +84,19 @@ class HomePostFilter extends React.Component<any, any> {
     this.searchInput.focus();
   };
 
-  blurSearchInput = evt => {
+  blurSearchInput = (evt: React.FocusEvent<HTMLInputElement, Element>) => {
     if (!evt.target.value) {
       this.setState({ isSearchInputExpand: false });
     }
   };
 
-  keyupSearchInput = evt => {
+  keyupSearchInput = (evt: React.KeyboardEvent<HTMLInputElement>) => {
     if (evt.which === 13) {
       this.searchPost();
     }
   };
 
-  changeSearchKeywords = e => {
+  changeSearchKeywords = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
     this.props.dispatch(changeSearchKeywords(e.target.value));
   };
 
@@ -116,7 +118,7 @@ class HomePostFilter extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const allowDecreaseFontSize = (md.cheat && md.cheat.unlimitFontSize) || this.props.fontSize > 12;
     const allowIncreaseFontSize = (md.cheat && md.cheat.unlimitFontSize) || this.props.fontSize < 14;
     const postTypes = [

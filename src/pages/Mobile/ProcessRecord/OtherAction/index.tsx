@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { ActionSheet, TextArea } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -14,6 +14,8 @@ import functionTemplateModal from '../FunctionTemplateModal';
 import './index.less';
 
 export default class extends Component<any, any> {
+  declare signature: Signature | null | undefined;
+
   constructor(props) {
     super(props);
     const { instance } = this.props;
@@ -55,7 +57,7 @@ export default class extends Component<any, any> {
       sessionId: Date.now().toString(),
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { action, instance, projectId } = this.props;
     const { encrypt } = (instance || {}).flowNode || {};
 
@@ -72,7 +74,7 @@ export default class extends Component<any, any> {
     this.getOperationDetail();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionHandler && this.actionHandler.close();
   }
 
@@ -360,6 +362,7 @@ export default class extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
   renderSignType() {
     const { selectedUser, countersignType } = this.state;
@@ -400,13 +403,14 @@ export default class extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
   renderSelectUser() {
     const { projectId, action, instance } = this.props;
     const { selectUserVisible, selectedUser, nextUserRange } = this.state;
 
     if (selectUserVisible) {
-      const TYPES = {
+      const TYPES: Record<string, number> = {
         transferApprove: 6,
         addApprove: 16,
         after: 7,
@@ -439,6 +443,7 @@ export default class extends Component<any, any> {
         />
       );
     }
+    return undefined;
   }
   renderSignature() {
     return (
@@ -530,6 +535,7 @@ export default class extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
   renderContent() {
     const { action, instance, projectId } = this.props;
@@ -704,7 +710,7 @@ export default class extends Component<any, any> {
       </Fragment>
     );
   }
-  render() {
+  override render() {
     const { backFlowNodesVisible, edit } = this.state;
     const { visible, onHide } = this.props;
     return (

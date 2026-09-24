@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -206,7 +206,7 @@ export default function RowHead(props) {
           removeRecords([row]);
         }}
         onRecreate={onRecreate}
-        onUpdate={(rowdata, row) => {
+        onUpdate={(_rowdata, row) => {
           updateRows(_.omit(row, ['allowedit', 'allowdelete']));
         }}
       />

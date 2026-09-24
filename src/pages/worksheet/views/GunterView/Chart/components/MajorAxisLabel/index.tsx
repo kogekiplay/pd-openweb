@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment } from 'react';
+import { Component, createRef, Fragment } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -20,6 +20,8 @@ const YearLabel = styled.div`
 const paddingLeft = 15;
 const isGunterExport = location.href.includes('gunterExport');
 let MajorAxisLabel = class MajorAxisLabel extends Component<any, any> {
+  declare yearLabelWidth: number;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +33,7 @@ let MajorAxisLabel = class MajorAxisLabel extends Component<any, any> {
     this.yearLabelWidth = 0;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { chartScroll } = this.props;
 
     if (!isGunterExport) {
@@ -44,7 +46,7 @@ let MajorAxisLabel = class MajorAxisLabel extends Component<any, any> {
     this.yearLabelWidth = (_.get(this.$yearRef, 'current.offsetWidth') || 52) - paddingLeft;
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { chartScroll } = this.props;
     chartScroll.off('scroll', this.onScroll);
   }
@@ -110,7 +112,7 @@ let MajorAxisLabel = class MajorAxisLabel extends Component<any, any> {
     return m;
   }
 
-  render() {
+  override render() {
     const { item, periodType } = this.props;
     return (
       <Fragment>

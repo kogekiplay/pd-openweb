@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Checkbox, Dropdown, Menu } from 'antd';
 import { ActionSheet, Button, Dialog as MobileDialog, Popup } from 'antd-mobile';
 import cx from 'classnames';
@@ -376,7 +376,12 @@ function MobileUpdateUserDialog(props) {
   );
 }
 
-export function TaskRevokeAction(props) {
+export interface TaskRevokeActionProps {
+  className: string;
+  onClick: () => void;
+}
+
+export function TaskRevokeAction(props: TaskRevokeActionProps) {
   const { className, onClick } = props;
   return (
     <WrapCon className={cx('flexRow valignWrapper approveBtnWrapper', className, { hoverBtnWrap: !isMobile })}>
@@ -448,7 +453,7 @@ export default function WorkflowAction(props) {
     }
   };
 
-  const renderDropdownOverlay = ({ width }) => {
+  const renderDropdownOverlay = ({ width }: { width: string | number }) => {
     return (
       <Menu style={{ width, borderRadius: 4 }}>
         <MenuItem

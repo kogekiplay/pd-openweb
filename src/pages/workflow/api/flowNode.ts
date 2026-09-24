@@ -12,7 +12,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  add: function (args, options?) {
+  add: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/add';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodeadd', JSON.stringify(args), $.extend(base, options));
@@ -25,7 +25,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  delete: function (args, options?) {
+  delete: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/delete';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodedelete', JSON.stringify(args), $.extend(base, options));
@@ -40,7 +40,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  get: function (args, options?) {
+  get: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/get';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodeget', args, $.extend(base, options));
@@ -57,7 +57,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getAppTemplateControls: function (args, options?) {
+  getAppTemplateControls: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getAppTemplateControls';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetAppTemplateControls', args, $.extend(base, options));
@@ -73,7 +73,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getCallBackNodeNames: function (args, options?) {
+  getCallBackNodeNames: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getCallBackNodeNames';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetCallBackNodeNames', args, $.extend(base, options));
@@ -93,7 +93,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getFlowAppDtos: function (args, options) {
+  getFlowAppDtos: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getFlowAppDtos';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetFlowAppDtos', args, $.extend(base, options));
@@ -114,7 +114,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getFlowNodeAppDtos: function (args, options?) {
+  getFlowNodeAppDtos: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getFlowNodeAppDtos';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetFlowNodeAppDtos', args, $.extend(base, options));
@@ -135,7 +135,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getNodeDetail: function (args, options?) {
+  getNodeDetail: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getNodeDetail';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetNodeDetail', args, $.extend(base, options));
@@ -150,12 +150,12 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getNodeDetailHistory: function (args, options?) {
+  getNodeDetailHistory: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getNodeDetailHistory';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetNodeDetailHistory', args, $.extend(base, options));
   },
-  getAgentNodeDetailHistory: function (args, options) {
+  getAgentNodeDetailHistory: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getAgentNodeDetailHistory';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'getAgentNodeDetailHistory', args, $.extend(base, options));
@@ -170,7 +170,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getNodeFormProperty: function (args, options) {
+  getNodeFormProperty: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getNodeFormProperty';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetNodeFormProperty', args, $.extend(base, options));
@@ -188,7 +188,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getStartEventDeploy: function (args, options?) {
+  getStartEventDeploy: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getStartEventDeploy';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetStartEventDeploy', args, $.extend(base, options));
@@ -202,7 +202,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getSubProcessList: function (args, options) {
+  getSubProcessList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getSubProcessList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetSubProcessList', args, $.extend(base, options));
@@ -218,7 +218,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getUserAppDtos: function (args, options?) {
+  getUserAppDtos: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getUserAppDtos';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetUserAppDtos', args, $.extend(base, options));
@@ -231,7 +231,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  nodeDesc: function (args, options?) {
+  nodeDesc: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/nodeDesc';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodenodeDesc', JSON.stringify(args), $.extend(base, options));
@@ -254,7 +254,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  saveNode: function (args, options?) {
+  saveNode: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/saveNode';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodesaveNode', JSON.stringify(args), $.extend(base, options));
@@ -267,7 +267,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  updateFlowNodeName: function (args, options?) {
+  updateFlowNodeName: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/updateFlowNodeName';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodeupdateFlowNodeName', JSON.stringify(args), $.extend(base, options));
@@ -280,7 +280,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  aigcTest: function (args, options) {
+  aigcTest: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/aigcTest';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodeaigcTest', JSON.stringify(args), $.extend(base, options));
@@ -293,7 +293,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  basicAuthTest: function (args, options) {
+  basicAuthTest: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/basicAuthTest';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodebasicAuthTest', JSON.stringify(args), $.extend(base, options));
@@ -306,7 +306,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  codeTest: function (args, options) {
+  codeTest: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/codeTest';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodecodeTest', JSON.stringify(args), $.extend(base, options));
@@ -321,7 +321,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getWebHookData: function (args, options?) {
+  getWebHookData: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getWebHookData';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetWebHookData', args, $.extend(base, options));
@@ -334,7 +334,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  jsonToControls: function (args, options?) {
+  jsonToControls: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/jsonToControls';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodejsonToControls', JSON.stringify(args), $.extend(base, options));
@@ -347,7 +347,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  webHookTestRequest: function (args, options) {
+  webHookTestRequest: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/webHookTestRequest';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodewebHookTestRequest', JSON.stringify(args), $.extend(base, options));
@@ -360,7 +360,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  createCodeTemplate: function (args, options) {
+  createCodeTemplate: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/createCodeTemplate';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodecreateCodeTemplate', JSON.stringify(args), $.extend(base, options));
@@ -373,7 +373,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  createSMSTemplate: function (args, options?) {
+  createSMSTemplate: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/createSMSTemplate';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodecreateSMSTemplate', JSON.stringify(args), $.extend(base, options));
@@ -386,7 +386,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  deleteSMSTemplate: function (args, options) {
+  deleteSMSTemplate: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/deleteSMSTemplate';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodedeleteSMSTemplate', JSON.stringify(args), $.extend(base, options));
@@ -403,7 +403,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getAllSMSTemplateList: function (args, options) {
+  getAllSMSTemplateList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getAllSMSTemplateList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetAllSMSTemplateList', args, $.extend(base, options));
@@ -420,7 +420,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getCodeTemplateList: function (args, options) {
+  getCodeTemplateList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/getCodeTemplateList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'flowNodegetCodeTemplateList', args, $.extend(base, options));
@@ -433,7 +433,7 @@ const flowNode = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  updateCodeTemplate: function (args, options) {
+  updateCodeTemplate: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/flowNode/updateCodeTemplate';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'flowNodeupdateCodeTemplate', JSON.stringify(args), $.extend(base, options));

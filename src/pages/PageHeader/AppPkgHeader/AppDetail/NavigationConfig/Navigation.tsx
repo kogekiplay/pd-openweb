@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import cx from 'classnames';
@@ -11,6 +11,28 @@ import homeAppApi from 'src/api/homeApp';
 import { getTranslateInfo } from 'src/utils/app';
 
 const dndAccept = 'navigationGroup';
+
+/**
+ * 导航配置里的节点：接口给的分组 / 应用项，统一补上 id、name、items 这三个树结构要用的键。
+ * 接口字段都写成可选 —— 新建分组时是在本地直接拼一个 { id, name, type: 2, items: [] } 塞进来的
+ */
+type NavigationItem = Partial<HapApi.MD.Entity.Apk.EntityInfo> & {
+  id?: string | undefined;
+  name?: string | undefined;
+  /** 应用项里的子分组（type 2）才有 */
+  items?: NavigationItem[] | undefined;
+};
+type NavigationGroup = Partial<HapApi.MD.Entity.Apk.AppSectionDomainModel> & {
+  id?: string | undefined;
+  type?: number | undefined;
+  items?: NavigationItem[] | undefined;
+};
+
+const toNavigationItem = (appItem: HapApi.MD.Entity.Apk.EntityInfo): NavigationItem => ({
+  ...appItem,
+  id: appItem.workSheetId,
+  name: appItem.workSheetName,
+});
 
 const updateTarget = (groups, targetId, data) => {
   return groups.map(item => {
@@ -354,7 +376,7 @@ const Group = props => {
 const Container = props => {
   const { app } = props;
   const [loading, setLoading] = useState(true);
-  const [navigationGroup, setNavigationGroup] = useState([]);
+  const [navigationGroup, setNavigationGroup] = useState<NavigationGroup[]>([]);
 
   const handleSetNavigationGroup = data => {
     setNavigationGroup(data);
@@ -367,28 +389,20 @@ const Container = props => {
         getSection: true,
       })
       .then(data => {
-        const { sections } = data;
+        const { sections = [] } = data;
         setLoading(false);
-        setNavigationGroup(
-          sections.map(data => {
-            data.items = data.workSheetInfo.map(appItem => {
-              if (appItem.type === 2) {
-                const { workSheetInfo = [] } = _.find(data.childSections, { appSectionId: appItem.workSheetId }) || {};
-                appItem.items = workSheetInfo.map(appItem => {
-                  appItem.id = appItem.workSheetId;
-                  appItem.name = appItem.workSheetName;
-                  return appItem;
-                });
-              }
+        // 原来是在接口对象上原地补 id / name / items；改成拷贝出新对象，形状不变
+        const groups: NavigationGroup[] = sections.map(section => ({
+          ...section,
+          id: section.appSectionId,
+          items: (section.workSheetInfo || []).map(appItem => {
+            if (appItem.type !== 2) return toNavigationItem(appItem);
 
-              appItem.id = appItem.workSheetId;
-              appItem.name = appItem.workSheetName;
-              return appItem;
-            });
-            data.id = data.appSectionId;
-            return data;
+            const { workSheetInfo = [] } = _.find(section.childSections, { appSectionId: appItem.workSheetId }) || {};
+            return { ...toNavigationItem(appItem), items: workSheetInfo.map(toNavigationItem) };
           }),
-        );
+        }));
+        setNavigationGroup(groups);
       });
   }, []);
 

@@ -11,7 +11,7 @@ const reportConfig = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  copyReport: function (args, options?) {
+  copyReport: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/reportConfig/copy';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportConfigcopy', JSON.stringify(args), $.extend(base, options));
@@ -23,7 +23,7 @@ const reportConfig = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  customSort: function (args, options?) {
+  customSort: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/reportConfig/customSort';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportConfigcustomSort', JSON.stringify(args), $.extend(base, options));
@@ -35,7 +35,7 @@ const reportConfig = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  deleteReport: function (args, options?) {
+  deleteReport: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/reportConfig/deleteReport';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportConfigdeleteReport', JSON.stringify(args), $.extend(base, options));
@@ -47,7 +47,7 @@ const reportConfig = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getData: function (args, options?) {
+  getData: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/reportConfig/getData';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportConfiggetData', JSON.stringify(args), $.extend(base, options));
@@ -63,7 +63,7 @@ const reportConfig = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getReportConfigDetail: function (args, options?) {
+  getReportConfigDetail: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/reportConfig/getReportConfigDetail';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'reportConfiggetReportConfigDetail', args, $.extend(base, options));
@@ -75,7 +75,7 @@ const reportConfig = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getTableData: function (args, options?) {
+  getTableData: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/reportConfig/getTableData';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportConfiggetTableData', JSON.stringify(args), $.extend(base, options));
@@ -87,7 +87,7 @@ const reportConfig = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  saveReportConfig: function (args, options?) {
+  saveReportConfig: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/reportConfig/saveReportConfig';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportConfigsaveReportConfig', JSON.stringify(args), $.extend(base, options));
@@ -99,7 +99,7 @@ const reportConfig = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  updateOwnerId: function (args, options?) {
+  updateOwnerId: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/reportConfig/updateOwnerId';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportConfigupdateOwnerId', JSON.stringify(args), $.extend(base, options));
@@ -111,7 +111,7 @@ const reportConfig = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  updateReportDesc: function (args, options) {
+  updateReportDesc: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/reportConfig/updateReportDesc';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportConfigupdateReportDesc', JSON.stringify(args), $.extend(base, options));
@@ -123,7 +123,7 @@ const reportConfig = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  updateReportName: function (args, options?) {
+  updateReportName: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server() + '/reportConfig/updateReportName';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'reportConfigupdateReportName', JSON.stringify(args), $.extend(base, options));

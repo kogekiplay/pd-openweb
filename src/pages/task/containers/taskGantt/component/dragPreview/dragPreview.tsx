@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import moment from 'moment';
 import './dragPreview.less';
 
@@ -7,7 +7,7 @@ export default class DragPreview extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { data, preview } = this.props;
     return (
       <div id="ganttDragPreview">

@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import Icon from 'ming-ui/components/Icon';
 import { ACTION_ID, APP_TYPE } from '../../enum';

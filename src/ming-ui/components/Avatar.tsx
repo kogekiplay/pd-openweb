@@ -1,11 +1,18 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { normalizeFileUrl } from 'src/utils/fileUrl';
 import './less/Avatar.less';
 
-export default class Avatar extends Component<any, any> {
-  static propTypes = {
+export interface AvatarProps {
+  size?: number | undefined;
+  shape?: string | undefined;
+  src: string;
+  className?: string | undefined;
+}
+
+export default class Avatar extends Component<AvatarProps, any> {
+  static override propTypes = {
     src: PropTypes.string,
     size: PropTypes.number,
     shape: PropTypes.string,
@@ -16,11 +23,11 @@ export default class Avatar extends Component<any, any> {
     shape: 'circle',
   };
 
-  constructor(props) {
+  constructor(props: AvatarProps) {
     super(props);
   }
 
-  render() {
+  override render() {
     const { src, shape, size, className } = this.props;
 
     return (

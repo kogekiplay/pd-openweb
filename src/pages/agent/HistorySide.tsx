@@ -166,7 +166,7 @@ export default function HistorySide({
   const pageRef = useRef(1);
   const seqRef = useRef(0); // 每次关键词检索/会话切换自增，用于丢弃过期的“加载更多”响应
   const loadingMoreRef = useRef(false); // 同步防抖，避免触底事件重复触发
-  const renameInputRef = useRef(null); // 重命名弹层里 Input 的非受控引用
+  const renameInputRef = useRef<HTMLInputElement | null>(null); // 重命名弹层里 Input 的非受控引用
 
   // 搜索已移到弹窗（SessionHistory），左栏列表常显全部；currentSessionId / refreshKey 变化（新建、切换、一轮结束）刷新列表
   useEffect(() => {
@@ -213,7 +213,7 @@ export default function HistorySide({
       });
   };
 
-  const doRename = (item, newTitle) => {
+  const doRename = (item, newTitle: string) => {
     renameAgentSession(item.sessionId, newTitle)
       .then(resultTitle => {
         setSessions(prev => prev.map(s => (s.sessionId === item.sessionId ? { ...s, title: resultTitle } : s)));
@@ -299,7 +299,7 @@ export default function HistorySide({
                                 placeholder={_l('请输入对话名称')}
                                 className="w100 textPrimary"
                                 defaultValue={item.title}
-                                manualRef={ref => (renameInputRef.current = ref)}
+                                manualRef={ref => { renameInputRef.current = ref; }}
                               />
                             ),
                             onOk: () => {
@@ -312,6 +312,7 @@ export default function HistorySide({
                                 renameInputRef.current && renameInputRef.current.focus();
                                 return false;
                               }
+                              return undefined;
                             },
                           });
                         }}

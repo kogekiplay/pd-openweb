@@ -69,7 +69,7 @@ export default class PostReply extends React.Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     return <BaseMessageComponent {...this.state} />;
   }
 }

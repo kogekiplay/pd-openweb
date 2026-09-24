@@ -1,16 +1,24 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import { Dialog } from 'ming-ui';
 import './shareFolderOrTask.less';
 
-export default class ShareFolderOrTask extends Component<any, any> {
+interface ShareFolderOrTaskProps {
+  shareUrl?: string;
+  shareMessage?: string;
+  linkText?: string;
+  onClose?: () => void;
+  [key: string]: unknown;
+}
+
+export default class ShareFolderOrTask extends Component<ShareFolderOrTaskProps> {
   static defaultProps = {
     shareUrl: '',
     shareMessage: '',
     linkText: '',
   };
 
-  render() {
+  override render() {
     const { shareUrl, shareMessage, linkText } = this.props;
 
     return (

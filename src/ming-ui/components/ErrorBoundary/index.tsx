@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import * as Sentry from '@sentry/react';
 import PropTypes from 'prop-types';
 import copy from 'src/utils/copyToClipboard';

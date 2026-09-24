@@ -57,7 +57,7 @@ export const GET_SYSTEM_USER = () => {
   };
 };
 
-export const FILTER_FIELD_BY_ATTR = {
+export const FILTER_FIELD_BY_ATTR: Record<number, string[]> = {
   27: ['departmentId', 'departmentName'],
   26: ['accountId', 'fullname'],
   48: ['organizeId', 'organizeName'],
@@ -69,7 +69,7 @@ export const RECT_TAGS_CONTROL_TYPE = [
 ];
 export const RETURN_OBJECT_CONTROL_TYPE = [26, 27, 48];
 
-export const UPDATA_ITEM_CLASSNAME_BY_TYPE = {
+export const UPDATA_ITEM_CLASSNAME_BY_TYPE: Record<string, string> = {
   remove: 'oldBackground',
   add: 'newBackground',
   update: 'defaultBackground',
@@ -86,7 +86,7 @@ export const LOG_SOURCE = {
   3: _l('自定义动作'),
 };
 
-export const SOURCE_INFO = {
+export const SOURCE_INFO: Record<number, string> = {
   1: _l('提交按钮'),
   2: _l('工作流'),
   3: _l('自定义动作'),
@@ -96,7 +96,7 @@ export const SOURCE_INFO = {
   11: _l('数据集成'),
 };
 
-export const EDIT_TYPE_TEXT = {
+export const EDIT_TYPE_TEXT: Record<number, string> = {
   12: _l('编辑了附件'),
   13: _l('下载了附件'),
   22: _l('下载了'),

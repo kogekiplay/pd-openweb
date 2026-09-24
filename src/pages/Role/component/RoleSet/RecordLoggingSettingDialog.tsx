@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -93,7 +92,7 @@ function RecordLoggingSettingDialog({ visible = false, value = DEFAULT_LOGGING_V
 
   const logging = normalizeRecordLoggingSetting(value);
 
-  const handleRangeChange = nextRange => {
+  const handleRangeChange = (nextRange: number) => {
     onChange({
       ...logging,
       Range: nextRange,

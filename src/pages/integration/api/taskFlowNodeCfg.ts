@@ -10,7 +10,7 @@ const taskFlowNodeCfg = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  agg: function (args, options) {
+  agg: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlowNodeCfg/agg';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'taskFlowNodeCfgagg', args, $.extend(base, options));
@@ -25,7 +25,7 @@ const taskFlowNodeCfg = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  dest: function (args, options) {
+  dest: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlowNodeCfg/dest';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'taskFlowNodeCfgdest', args, $.extend(base, options));
@@ -40,7 +40,7 @@ const taskFlowNodeCfg = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  union: function (args, options) {
+  union: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlowNodeCfg/union';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'taskFlowNodeCfgunion', args, $.extend(base, options));
@@ -55,7 +55,7 @@ const taskFlowNodeCfg = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  filter: function (args, options) {
+  filter: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlowNodeCfg/filter';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'taskFlowNodeCfgfilter', args, $.extend(base, options));
@@ -70,7 +70,7 @@ const taskFlowNodeCfg = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  join: function (args, options) {
+  join: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlowNodeCfg/join';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'taskFlowNodeCfgjoin', args, $.extend(base, options));
@@ -85,7 +85,7 @@ const taskFlowNodeCfg = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  src: function (args, options) {
+  src: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'taskFlowNodeCfg/src';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'taskFlowNodeCfgsrc', args, $.extend(base, options));

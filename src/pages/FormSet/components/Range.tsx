@@ -74,19 +74,19 @@ let Range = class Range extends React.Component<any, any> {
   el = null;
   containerRef = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.updatePosition();
     this.containerRef = document.querySelector('.switchBoxCon');
     window.addEventListener('resize', this.handleResize);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.top !== this.props.top) {
       this.updatePosition();
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
   }
 
@@ -110,7 +110,7 @@ let Range = class Range extends React.Component<any, any> {
     }, 0);
   };
 
-  render() {
+  override render() {
     const { data = {}, diaRang } = this.props;
     const { viewIds = [] } = data;
     return (

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { Checkbox, Dialog, UserHead, VerifyPasswordConfirm } from 'ming-ui';
@@ -15,7 +15,7 @@ class UserBoardDialog extends Component<any, any> {
       selected: props.accountIds,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getUserList();
   }
 
@@ -66,7 +66,7 @@ class UserBoardDialog extends Component<any, any> {
     this.props.onCancel();
     this.props.updateSelectUserIds();
   };
-  render() {
+  override render() {
     const { selected = [], userList = [] } = this.state;
     const isChecked = selected.length === userList.length;
 

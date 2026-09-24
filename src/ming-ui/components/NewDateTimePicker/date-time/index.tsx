@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -7,7 +7,16 @@ import PositionContainer from 'ming-ui/components/PositionContainer';
 import LibCalender from '../lib/calender';
 import './style.less';
 
-class DateTime extends Component<any, any> {
+export interface DateTimeState {
+  value: Date | null;
+  label: string;
+  menuOpened: boolean;
+  bounding: DOMRect | null;
+}
+
+class DateTime extends Component<any, DateTimeState> {
+  declare _picker: HTMLSpanElement | null | undefined;
+
   constructor(props) {
     super(props);
 
@@ -32,13 +41,13 @@ class DateTime extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.defaultVisible) {
       this.showMenu();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectedValue !== prevProps.selectedValue) {
         const mode = this.props.timePicker ? 'datetime' : this.props.mode;
@@ -76,7 +85,7 @@ class DateTime extends Component<any, any> {
     });
   };
 
-  onChange = (event, value) => {
+  onChange = (_event, value) => {
     let newValue = null;
     let label = '';
     const mode = this.props.timePicker ? 'datetime' : this.props.mode;
@@ -93,7 +102,7 @@ class DateTime extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const min = this.props.min ? this.props.min.toDate() : null;
     const max = this.props.max ? this.props.max.toDate() : null;
 

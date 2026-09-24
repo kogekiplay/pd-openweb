@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Dropdown, Menu } from 'antd';
 import _ from 'lodash';
@@ -91,7 +91,7 @@ const InputWrap = styled.div`
   }
 `;
 
-const isVisible = control => {
+const isVisible = (control: FormControl) => {
   let { fieldPermission = '111' } = control;
   const [visible] = fieldPermission.split('');
 
@@ -135,6 +135,7 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
         return 'bottomLeft';
       }
     }
+    return undefined;
   };
 
   const getAvailableControls = () => {
@@ -163,7 +164,7 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
       });
   };
 
-  const addViewControl = item => {
+  const addViewControl = (item: FormControl) => {
     worksheetAjax.getWorksheetInfo({ worksheetId: item.dataSource, getTemplate: true }).then(data => {
       const controls: FormControl[] = data.template.controls;
       const coverControls = filterAndFormatterControls({

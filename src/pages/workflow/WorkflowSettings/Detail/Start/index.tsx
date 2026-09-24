@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -34,7 +34,7 @@ export default class Start extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail();
   }
 
@@ -42,7 +42,7 @@ export default class Start extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.selectNodeName &&
@@ -371,14 +371,14 @@ export default class Start extends Component<any, any> {
    * 验证定时触发配置是否正确
    */
   checkTimingTriggerConfig = config => {
-    const errorText = {
+    const errorText: Record<string, string> = {
       minute: _l('分钟'),
       hour: _l('小时'),
       day: _l('天'),
       week: _l('星期'),
       month: _l('月'),
     };
-    const errorKeys = [];
+    const errorKeys: string[] = [];
 
     Object.keys(config).forEach(key => {
       if ((config[key].type === 2 || config[key].type === 4) && (!config[key].values[0] || !config[key].values[1])) {
@@ -397,7 +397,7 @@ export default class Start extends Component<any, any> {
     return !errorKeys.length;
   };
 
-  render() {
+  override render() {
     const { processId, selectNodeId, flowInfo } = this.props;
     const { data } = this.state;
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import hoistStatics from 'hoist-non-react-statics';
 import { useRouteProps } from './routeProps';
 

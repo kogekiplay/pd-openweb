@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import Icon from 'ming-ui/components/Icon';
 
@@ -13,7 +13,7 @@ export default class GanttHeader extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { type, data, name, switchDisplayType, refresh, exportData, closeLayer, scrollToToday } = this.props;
     return (
       <div className="ganttHeader flexRow">

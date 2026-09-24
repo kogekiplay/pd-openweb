@@ -78,7 +78,7 @@ const Wrap = styled.div(
 const keysDef = [
   {
     key: 'checkCon',
-    render: (item, selectedList, handleSelect, isCheckAll) => {
+    render: (item, selectedList, _handleSelect, isCheckAll) => {
       return (
         <Checkbox
           className="mLeft5"
@@ -173,9 +173,9 @@ function APITable(props) {
                       handleSelect(item.id);
                     }}
                   >
-                    {keys.map(o => {
+                    {keys.map((o, index) => {
                       return (
-                        <div className={`${o.key}`}>
+                        <div key={index} className={`${o.key}`}>
                           {o.render
                             ? o.render(item, selectedList, handleSelect, props.isCheckAll, props.notCheck)
                             : item[o.key]}

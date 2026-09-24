@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
 import appManagementApi from 'src/api/appManagement';
@@ -8,7 +8,7 @@ import { getRequest } from 'src/utils/common';
 import EditLingual from './EditLingual';
 import LingualList from './LingualList';
 
-const keys = {
+const keys: Record<string, string> = {
   'zh-Hans': 'zh_hansName',
   'zh-Hant': 'zh_hantName',
   en: 'enName',
@@ -24,7 +24,7 @@ export default function MultiLingual(props) {
   const [loading, setLoading] = useState(true);
   const [langs, setLangs] = useState([]);
   const [langInfo, setLangInfo] = useState(null);
-  const [allLangList, setAllLangList] = useState([]);
+  const [allLangList, setAllLangList] = useState<HapApi.MD.Caching.FixedDataCache.LangConfig[]>([]);
   const { langId, flag } = getRequest();
   const currentLangKey = keys[getCookie('i18n_langtag')];
 

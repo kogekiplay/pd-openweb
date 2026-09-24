@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -51,7 +51,7 @@ export default class CreateMerchant extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { projectId, currentMerchantInfo = {} } = this.props;
     const { merchantPaymentChannel } = this.state;
 

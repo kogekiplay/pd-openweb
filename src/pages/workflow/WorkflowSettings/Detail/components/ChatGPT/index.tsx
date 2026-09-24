@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 // remarkable 2 去掉了 default export，Remarkable 改为具名导出。
 import { Remarkable, utils } from 'remarkable';
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -191,7 +191,11 @@ const Cursor = styled.span`
   vertical-align: top;
 `;
 
-const NullContent = ({ codeType }) => {
+export interface NullContentProps {
+  codeType: number;
+}
+
+const NullContent = ({ codeType }: NullContentProps) => {
   return (
     <Null className="flexColumn alignItemsCenter justifyContentCenter flex h100">
       <div className="TxtCenter animation">
@@ -222,9 +226,9 @@ const NullContent = ({ codeType }) => {
 export default ({ processId, nodeId, codeType = 1, onSave = () => {}, onClose = () => {} }) => {
   const [keywords, setKeywords] = useState('');
   const [list, setList] = useState([]);
-  const [controller, setController] = useState(null);
+  const [controller, setController] = useState<AbortController | null>(null);
   const [clearParams, setClearParams] = useState(true);
-  const [error, setError] = useState();
+  const [error, setError] = useState<{ errorMsg: string; sourceData: string } | undefined>();
 
   const generateCode = async () => {
     if (!list.length || !controller) return;
@@ -419,7 +423,7 @@ export default ({ processId, nodeId, codeType = 1, onSave = () => {}, onClose = 
                                 <UseBtn
                                   className="colorPrimary mLeft20"
                                   onClick={() => {
-                                    const inputData = {};
+                                    const inputData: Record<string, string> = {};
 
                                     if (codeType === 1) {
                                       (code.match(/input\..*?[),;\n ]/g) || []).forEach(key => {
@@ -494,7 +498,7 @@ export default ({ processId, nodeId, codeType = 1, onSave = () => {}, onClose = 
             onChange={setKeywords}
             onKeyDown={event => {
               if (!event.shiftKey && event.keyCode === 13 && !controller) {
-                if (event.target.value.trim().replace(/\r\n/, '')) {
+                if (event.currentTarget.value.trim().replace(/\r\n/, '')) {
                   setController(new AbortController());
                   setList(
                     list.concat([

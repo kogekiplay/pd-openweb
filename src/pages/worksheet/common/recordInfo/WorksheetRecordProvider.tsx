@@ -6,7 +6,7 @@ import { getRowDetail } from 'worksheet/api';
 
 export default Component =>
   class WorksheetRecordProvider extends React.Component<any, any> {
-    static propTypes = {
+    static override propTypes = {
       loadWorksheetInfo: PropTypes.bool,
       loadWorksheetRecord: PropTypes.bool,
       worksheetId: PropTypes.string,
@@ -22,7 +22,7 @@ export default Component =>
       };
     }
 
-    componentDidMount() {
+    override componentDidMount() {
       const { loadWorksheetInfo, loadWorksheetRecord, worksheetId, appId, rowId, viewId } = this.props;
 
       if (loadWorksheetInfo) {
@@ -51,7 +51,7 @@ export default Component =>
       }
     }
 
-    render() {
+    override render() {
       const { loadWorksheetInfo, loadWorksheetRecord, ...rest } = this.props;
       const { loading, worksheetinfo } = this.state;
       return (!(loadWorksheetInfo || loadWorksheetRecord) || !loading) && <Component {...rest} {...worksheetinfo} />;

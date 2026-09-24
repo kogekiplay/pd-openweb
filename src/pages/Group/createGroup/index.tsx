@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -225,8 +225,9 @@ function CreateGroup(props) {
   const renderGroupType = () => {
     return (
       <Fragment>
-        {GROUP_TYPES.map(l => (
+        {GROUP_TYPES.map((l, index) => (
           <Radio
+            key={index}
             text={l.label}
             value={l.value}
             checked={type === l.value}

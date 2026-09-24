@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { ActionSheet, List, SpinLoading } from 'antd-mobile';
 import cx from 'classnames';
@@ -24,10 +24,10 @@ class DiscussList extends Component<any, any> {
       accountId: null,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getSheetDiscussion(this.state.pageIndex);
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
     this.props.dispatch(actions.emptySheetDiscussion());
   }
@@ -79,7 +79,7 @@ class DiscussList extends Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, index) => {
+      onAction: (_action, index) => {
         if (index === 0) {
           this.props.dispatch(actions.removeSheetDiscussion(discussionId, rowId));
         }
@@ -150,7 +150,7 @@ class DiscussList extends Component<any, any> {
       </List.Item>
     );
   }
-  render() {
+  override render() {
     const { loading, isMore, personalInfoVisible, accountId } = this.state;
     const { sheetDiscussions, appId, projectId } = this.props;
 

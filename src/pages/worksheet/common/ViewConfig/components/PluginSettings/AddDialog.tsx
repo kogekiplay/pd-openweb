@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, Textarea } from 'ming-ui';
 
@@ -9,7 +9,12 @@ const AddContent = styled.div`
   }
 `;
 
-export default function AddDialog(props) {
+export interface AddDialogProps {
+  onCancel: () => void;
+  onOk: (value: string) => void;
+}
+
+export default function AddDialog(props: AddDialogProps) {
   const { onCancel, onOk } = props;
   const [value, setValue] = useState('');
   return (

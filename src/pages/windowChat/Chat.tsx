@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ import ChatPanel from 'src/pages/chat/containers/ChatPanel';
 import SessionListDrawer from 'src/pages/chat/containers/SessionListDrawer';
 import * as socket from 'src/pages/chat/utils/socketEvent';
 import globalEvents from 'src/router/globalEvents';
+import type { AppDispatch } from 'src/redux/types';
 
 const Wrap = styled.div`
   .sessionListWrap {
@@ -43,7 +44,8 @@ const Drag = styled.div(
   }
 `,
 );
-let WindowChat = class WindowChat extends Component<any, any> {
+// connect 包过、会收到 dispatch；socketEvent 里的函数用 .call(this) 调，要求 this.props.dispatch 存在
+const WindowChat = class WindowChat extends Component<{ dispatch: AppDispatch; [key: string]: any }, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -52,24 +54,24 @@ let WindowChat = class WindowChat extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     globalEvents();
     socket.socketInitEvent.call(this);
     document.body.addEventListener('keydown', this.closeChatPanel);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     document.body.removeEventListener('keydown', this.closeChatPanel);
   }
 
-  closeChatPanel = e => {
+  closeChatPanel = (e: KeyboardEvent) => {
     if ((e.key === 'Escape' || e.keyCode === 26) && _.isEmpty(window.closeFns)) {
       const closeEl = document.querySelector('.ChatPanel .icon-close');
       closeEl && closeEl.click();
     }
   };
 
-  render() {
+  override render() {
     const { sessionListWidth, dragMaskVisible } = this.state;
     return (
       <Wrap className="flexRow w100 h100 overflowHidden">
@@ -120,5 +122,7 @@ let WindowChat = class WindowChat extends Component<any, any> {
     );
   }
 };
-WindowChat = connect()(WindowChat);
-export default WindowChat;
+/* 原先是 let WindowChat 再重新赋值成 connect()(WindowChat) 后导出：运行时导出的是 connect 过的组件，
+   但 TS 按 let 的声明类型（原始类）看导出，于是认为使用方要自己传 dispatch。直接导出 connect 的结果，
+   运行时导出的仍是同一个东西。 */
+export default connect()(WindowChat);

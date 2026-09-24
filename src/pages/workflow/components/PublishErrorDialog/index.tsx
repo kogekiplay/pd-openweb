@@ -1,11 +1,10 @@
-import React from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import Dialog from 'ming-ui/components/Dialog';
 import Icon from 'ming-ui/components/Icon';
 import './index.less';
 
-const warnTypes = {
+const warnTypes: Record<number, string> = {
   99: _l('你的流程中未包含可执行操作的节点,请至少添加一个'),
   100: _l('未设置流程的触发方式'),
   102: _l('个节点未进行配置'),

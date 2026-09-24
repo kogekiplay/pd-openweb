@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
 import departmentAjax from 'src/api/department';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import homeAppApi from 'api/homeApp';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -130,7 +130,7 @@ export default props => {
   const { visible, requestAppId, apkId, onChange } = props;
   const [loading, setLoading] = useState(true);
   const [selectInfo, setSelectInfo] = useState({});
-  const [validProject, setValidProject] = useState([]);
+  const [validProject, setValidProject] = useState<HapApi.MD.Entity.HomeApp.ProjectForApp[]>([]);
   const [processList, setProcessList] = useState([]);
   const [appVisible, setAppVisible] = useState(false);
   const [processTypeVisible, setProcessTypeVisible] = useState(false);

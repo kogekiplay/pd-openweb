@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import type { RootState } from 'src/redux/types';
@@ -7,14 +7,14 @@ import TaskDetail from '../containers/taskDetail/taskDetail';
 import './index.less';
 
 class TaskDetailEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppTaskDetail');
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppTaskDetail');
     $('body').off('.task');
   }
-  render() {
+  override render() {
     const { taskDetails, match } = this.props;
     const { id } = match.params;
     let title = _l('任务详情-任务');

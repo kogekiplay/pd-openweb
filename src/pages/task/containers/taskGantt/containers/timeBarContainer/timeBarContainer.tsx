@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import ajaxRequest from 'src/api/taskCenter';
@@ -19,7 +19,14 @@ import {
 import utils from '../../utils/utils';
 import './timeBarContainer.less';
 
-class TimeBarContainer extends Component<any, any> {
+export interface TimeBarContainerState {
+  openTaskDetail: boolean;
+  taskId: string;
+}
+
+class TimeBarContainer extends Component<any, TimeBarContainerState> {
+  declare timeBarContainer: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -28,7 +35,7 @@ class TimeBarContainer extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const that = this;
     // 竖着滚动对应左侧竖着滚动  横向滚动对应时间条滚动
     $(this.timeBarContainer).on({
@@ -252,7 +259,7 @@ class TimeBarContainer extends Component<any, any> {
     this.setState({ openTaskDetail: true, taskId });
   };
 
-  render() {
+  override render() {
     const { accountTasksKV, stateConfig, timeAxisSource } = this.props;
     const currentView = stateConfig.currentView;
     const filterWeekend = stateConfig.filterWeekend;

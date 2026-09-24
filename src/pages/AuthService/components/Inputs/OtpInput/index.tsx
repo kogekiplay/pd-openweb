@@ -6,7 +6,7 @@ import { TwofactorType } from 'src/pages/AuthService/twofactor/config';
 import { WrapCon } from './styled';
 
 // 发送状态管理 hook
-function useOtpSending(timeLeft, hasSend, onSend) {
+function useOtpSending(timeLeft, _hasSend, onSend) {
   const [internalSending, setInternalSending] = React.useState(false);
   const isSendingRef = useRef(false);
   const prevTimeLeftRef = useRef(timeLeft);
@@ -53,7 +53,7 @@ function useOtpSending(timeLeft, hasSend, onSend) {
 }
 
 // 处理粘贴文本
-const processPasteText = (pastedText, value, verifyLen, startIndex, onChange, focusInput) => {
+const processPasteText = (pastedText, value, verifyLen, startIndex: number, onChange, focusInput: (index: number, delay?: number, shouldSelect?: boolean) => void) => {
   const digits = pastedText.replace(/[^\d]/g, '');
   if (!digits) return;
   const newValue = (value.slice(0, startIndex) + digits).slice(0, verifyLen);

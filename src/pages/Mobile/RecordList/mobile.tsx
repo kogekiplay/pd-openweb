@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -31,7 +31,7 @@ let RecordList = class RecordList extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { getFilters } = getRequest();
 
     if (getFilters === 'true') {
@@ -66,7 +66,7 @@ let RecordList = class RecordList extends Component<any, any> {
     props.loadWorksheet();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { params: newParams } = this.props.match;
       const { params } = prevProps.match;
@@ -86,7 +86,7 @@ let RecordList = class RecordList extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.emptySheetControls();
   }
 
@@ -189,7 +189,7 @@ let RecordList = class RecordList extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { worksheetInfo, workSheetLoading, appDetail = {} } = this.props;
     const { detail = {}, appName } = appDetail;
     const { webMobileDisplay, appDisplay } = detail;

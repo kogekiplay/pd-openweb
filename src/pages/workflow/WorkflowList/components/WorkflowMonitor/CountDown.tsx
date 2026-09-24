@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import moment from 'moment';
 
 export default class CountDown extends Component<any, any> {
+  declare interval: NodeJS.Timeout | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -10,12 +12,12 @@ export default class CountDown extends Component<any, any> {
     this.interval = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.func();
     this.startTimer();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.endDate !== this.props.endDate) {
       this.setState(
         {
@@ -29,7 +31,7 @@ export default class CountDown extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.clearTimer();
   }
 
@@ -68,7 +70,7 @@ export default class CountDown extends Component<any, any> {
     this.setState({ timeStr: this.formatValue(d, h, m, s) });
   };
 
-  formatValue = (d, h, m, s) => {
+  formatValue = (d: number, h: number, m: number, s: number) => {
     if (d > 0) {
       return _l('%0天%1时%2分', d, h, m);
     } else if (h > 0 && !m) {
@@ -78,12 +80,12 @@ export default class CountDown extends Component<any, any> {
     } else if (m > 0) {
       return _l(`%0分钟`, m);
     } else if (s < 0) {
-      return;
+      return undefined;
     } else {
       return _l('1分钟');
     }
   };
-  render() {
+  override render() {
     let { timeStr } = this.state;
     return (
       <span>

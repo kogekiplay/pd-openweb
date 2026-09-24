@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, Input } from 'antd';
 import cx from 'classnames';
@@ -56,7 +56,7 @@ export default class IntegrationSetPassword extends Component<any, any> {
 
   // 改变初始密码值
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.isSetPassword, this.props.isSetPassword)) {
         this.setState({
@@ -108,7 +108,7 @@ export default class IntegrationSetPassword extends Component<any, any> {
       this.setState({ passwordError: true });
     }
   };
-  render() {
+  override render() {
     let { disabled } = this.props;
     const { passwordRegexTip } = md.global.SysSettings;
 

@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import cx from 'classnames';
 import Trigger from '@rc-component/trigger';
 import { Icon, Menu, MenuItem } from 'ming-ui';
@@ -42,7 +42,7 @@ export default function CreateAppItem(props) {
     setCreateType('');
   };
 
-  const handleSwitchCreateType = type => {
+  const handleSwitchCreateType = (type: string) => {
     if (type === 'importExcel') {
       setCreateMenuVisible(false);
       setDialogImportExcel(true);

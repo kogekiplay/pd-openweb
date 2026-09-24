@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Progress } from 'antd';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -33,12 +33,14 @@ const UploadSuccess = styled.div`
 `;
 
 export default class UploadFile extends Component<any, any> {
+  declare uplaodaExcel: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.initUpload();
   }
 
@@ -56,7 +58,7 @@ export default class UploadFile extends Component<any, any> {
       },
       type,
       init: {
-        Error: (up, err) => {
+        Error: (_up, err) => {
           const {
             file: { name },
             code,
@@ -80,17 +82,17 @@ export default class UploadFile extends Component<any, any> {
           up.setOption('auto_start', true);
           onFilesAdded(up);
         },
-        UploadProgress: (uploader, file) => {
+        UploadProgress: (_uploader, file) => {
           this.setState({ file });
         },
-        FileUploaded: (up, file, info) => {
+        FileUploaded: (_up, file, info) => {
           this.setState({ file });
           fileUploaded({ ...file, key: info.response.key });
         },
       },
     });
   }
-  render() {
+  override render() {
     const { style } = this.props;
     const { file = {} } = this.state;
     return file.name ? (

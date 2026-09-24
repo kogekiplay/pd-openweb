@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 // react-dnd v14 删除了 DragSource / DropTarget 装饰器且没有官方替代，
 // 这里用 v16 的 hooks 重建了一份语义一致的（含 spec 第三参 component）。
@@ -16,7 +16,7 @@ import './timeBars.less';
 
 let root;
 const ganttSource = {
-  beginDrag(props, monitor, component) {
+  beginDrag(props, _monitor, component) {
     // 触发拖拽单侧的时候也触发了拖拽整个的bug
     if (config.isSingleDrag) {
       return {};
@@ -127,6 +127,7 @@ const ganttSource = {
         }
       }, 200);
     }
+    return undefined;
   },
 
   endDrag(props) {
@@ -147,6 +148,8 @@ const ganttSource = {
   },
 };
 let TimeBars: any = class TimeBars extends Component<any, any> {
+  declare timeBars: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -154,11 +157,11 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.noDateListAlignLeft();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     if (
       _.isEqual(nextProps.data, this.props.data) &&
       this.props.viewType === nextProps.viewType &&
@@ -176,7 +179,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
     return true;
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.noDateListAlignLeft();
   }
 
@@ -323,7 +326,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
    * @param  {object} evt
    */
 
-  dragTriggerScroll(evt) {
+  dragTriggerScroll(evt: JQuery.MouseMoveEvent<Document, undefined, Document, Document>) {
     // 处理滚动条滚动
     config.setInterval = setInterval(() => {
       const $scroll = $('.ganttMain .timeBarContainer');
@@ -487,6 +490,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
         marginLeft: data.arrowStatus === config.ARROW_STATUS.NULL ? this.getTimePosition(data.showStartTime) - 16 : -8,
       };
     }
+    return undefined;
   }
   /**
    * 获取单侧补足线的样式
@@ -560,6 +564,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
         </span>
       );
     }
+    return undefined;
   }
   /**
    * 显示或隐藏任务
@@ -685,7 +690,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { data, viewType, connectDragSource, dragTaskId } = this.props;
     const timeBarStyle = this.getColorBlockStyle();
     const offset = [this.state.offsetX, 1];

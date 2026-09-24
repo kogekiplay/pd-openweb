@@ -105,17 +105,19 @@ export default class FilterItemTexts extends React.Component<any, any> {
         </span>
         {item.type ? <span className="Bold LineHeight19 mRight10 textPrimary Font13">{item.type.text}</span> : null}
         {item.value && item.value.type === 'dynamicSource' ? (
-          item.value.data.map(it => {
+          item.value.data.map((it, index) => {
             const isParam = _.includes(['url'], it.rName);
 
             if (!it.name) {
               return (
-                <span className="isWrong dynamicsourceSpan">{isParam ? _l('该参数已删除') : _l('该字段已删除')}</span>
+                <span key={index} className="isWrong dynamicsourceSpan">
+                  {isParam ? _l('该参数已删除') : _l('该字段已删除')}
+                </span>
               );
             }
 
             return (
-              <span className="dynamicsourceSpan breakAll">
+              <span key={index} className="dynamicsourceSpan breakAll">
                 {it.name}
                 {_.includes(['fastFilter'], fromCondition) || isParam
                   ? ''
@@ -129,7 +131,7 @@ export default class FilterItemTexts extends React.Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     let {
       data = {},
       allControls = [],
@@ -173,7 +175,7 @@ export default class FilterItemTexts extends React.Component<any, any> {
             filterItemTexts.map((item, index: number) => {
               if (item.isGroup) {
                 return (
-                  <div className="filterGroup flexRow">
+                  <div key={index} className="filterGroup flexRow">
                     {index === 0 && <span className="spliceText mTop6 pRight5">{_l('当')}</span>}
                     {index > 0 && (
                       <span className="spliceText mTop6 pRight5">{item.spliceType == 1 ? _l('且') : _l('或')}</span>

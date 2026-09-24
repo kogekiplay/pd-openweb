@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import variableApi from 'src/api/variable';
 import AdminTitle from 'src/pages/Admin/common/AdminTitle';
 import GlobalVarLeft from './components/GlobalVarLeft';

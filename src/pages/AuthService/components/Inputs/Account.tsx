@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { createIntlTelInput } from 'ming-ui/components/PhoneNumberInput/util';

@@ -132,7 +132,7 @@ const Cell = styled.div`
 
 const LoadableRecordInfoWrapper = lazy(() => import('src/pages/worksheet/common/recordInfo/RecordInfoWrapper'));
 
-let request;
+let request: ApiResult | undefined;
 let currentProjectId;
 
 function RecordFav(props) {
@@ -288,8 +288,12 @@ function RecordFav(props) {
                     <React.Fragment>
                       <div className="Font15 Bold mLeft15 mTop30">{_l('按应用')}</div>
                       <ScrollView className="navList flex mTop15 pRight24">
-                        {[...favApps.map(o => o[0])].map(o => {
-                          return <div className="mBottom10">{renderNavItem(o)}</div>;
+                        {[...favApps.map(o => o[0])].map((o, index) => {
+                          return (
+                            <div key={index} className="mBottom10">
+                              {renderNavItem(o)}
+                            </div>
+                          );
                         })}
                       </ScrollView>
                     </React.Fragment>
@@ -406,8 +410,9 @@ function RecordFav(props) {
               onSortEnd={onUpdateTopSort}
             />
             {!props.forCard && appId === 'all' && !!topList.length && <div className="rowDivider" />}
-            {recordList.map(item => (
+            {recordList.map((item, index) => (
               <Item
+                key={index}
                 {...item}
                 forCard={props.forCard}
                 remove={() => onDel(item)}

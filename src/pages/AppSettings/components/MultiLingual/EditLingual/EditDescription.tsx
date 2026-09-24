@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Input, Modal } from 'antd';
 import { RichText } from 'ming-ui';
 import EditAppIntro from 'src/pages/PageHeader/AppPkgHeader/AppDetail/EditIntro';

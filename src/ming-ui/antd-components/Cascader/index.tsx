@@ -386,6 +386,9 @@ const Cascader = React.forwardRef(
             if (_.isUndefined(bIndexArr[i]) || aIndexArr[i] < bIndexArr[i]) return -1;
             if (_.isUndefined(aIndexArr[i]) || aIndexArr[i] > bIndexArr[i]) return 1;
           }
+
+          // 逐位都相等。原先这里掉出函数返回 undefined，按规范 NaN 当 0 处理，结果一样
+          return 0;
         });
       },
       [searchValue],
@@ -401,7 +404,7 @@ const Cascader = React.forwardRef(
 
           if (text.search(new RegExp(searchValue.trim().replace(/([,.+?:()*[\]^$|{}\\-])/g, '\\$1'), 'i')) !== -1) {
             return (
-              <React.Fragment>
+              <React.Fragment key={i}>
                 <span className="colorPrimary">{text}</span>
                 {!isLast && <span> / </span>}
               </React.Fragment>
@@ -409,7 +412,7 @@ const Cascader = React.forwardRef(
           }
 
           return (
-            <React.Fragment>
+            <React.Fragment key={i}>
               {text}
               {!isLast && <span> / </span>}
             </React.Fragment>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Input } from 'antd';
 import _ from 'lodash';
 import { ScrollView } from 'ming-ui';
@@ -14,7 +13,7 @@ export default function Collections(props) {
   const comparisonLangInfo = getTranslateInfo(app.id, null, selectNode.key, comparisonLangData);
   const { name, options = [] } = _.find(collections, { collectionId: selectNode.key }) || {};
 
-  const handleSave = info => {
+  const handleSave = (info: { [x: number]: string | undefined } | { name: string | undefined }) => {
     onEditAppLang({
       id: data.id,
       parentId: app.id,

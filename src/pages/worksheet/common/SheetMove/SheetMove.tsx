@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Button, Dialog, Dropdown, Icon, ScrollView, SvgIcon } from 'ming-ui';
@@ -7,8 +7,8 @@ import { canEditApp } from 'worksheet/redux/actions/util';
 import store from 'src/redux/configureStore';
 import './SheetMove.less';
 
-const formatApps = function (validProject, projectId: string) {
-  const appList = [];
+const formatApps = function (validProject: HapApi.MD.Entity.HomeApp.ProjectForApp[] | undefined, projectId: string) {
+  const appList: { text: string | undefined; value: string | undefined }[] = [];
   const project = validProject.filter(item => item.projectId === projectId)[0];
 
   if (project && project.projectApps && project.projectApps.length) {
@@ -38,7 +38,7 @@ export default class SheetMove extends Component<any, any> {
       searchValue: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId } = this.props;
     const { projectId } = store.getState().appPkg;
     homeApp.getAllHomeApp().then(result => {
@@ -64,10 +64,8 @@ export default class SheetMove extends Component<any, any> {
       .then(result => {
         const { sections } = result;
         this.setState({
-          grouping: sections.map(data => {
-            data.subVisible = true;
-            return data;
-          }),
+          // 原来在接口对象上原地加 subVisible，改成拷贝出新对象
+          grouping: sections.map(data => ({ ...data, subVisible: true })),
         });
       });
   }
@@ -149,7 +147,7 @@ export default class SheetMove extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { appItem } = this.props;
     const { appList, appValue, grouping, searchValue } = this.state;
     const { workSheetName, iconUrl, type } = appItem;
@@ -215,8 +213,8 @@ export default class SheetMove extends Component<any, any> {
                   name: _.get(_.find(appList, { value: appValue }), 'text') || '',
                   subName: _l('(作为一级分组移动)'),
                 })}
-              {grouping.map(data => (
-                <Fragment>
+              {grouping.map((data, index) => (
+                <Fragment key={index}>
                   {this.renderGroupingItem(data)}
                   {type !== 2 &&
                     data.subVisible &&

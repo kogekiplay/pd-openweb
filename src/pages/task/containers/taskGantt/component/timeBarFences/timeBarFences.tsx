@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import config from '../../config/config';
@@ -11,7 +11,7 @@ export default class TimeBarFences extends Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const scrollLeft = this.getTimePosition();
 
     // 今天如何在视图上 视图进入默认今天靠左
@@ -82,9 +82,10 @@ export default class TimeBarFences extends Component<any, any> {
 
       return 'transparent';
     }
+    return undefined;
   }
 
-  render() {
+  override render() {
     const { timeAxisSource, viewType, filterWeekend } = this.props;
     const fencesArr = [];
 

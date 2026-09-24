@@ -25,7 +25,7 @@ export const downloadFile = ({ url, params, exportFileName, callback = () => {} 
 };
 
 // 平台类型与系统设置的映射
-const PLATFORM_HIDE_MAP = {
+const PLATFORM_HIDE_MAP: Record<string, string> = {
   microsoft: 'hideMicrosoftEntra',
   workwx: 'hideWorkWeixin',
   ding: 'hideDingding',
@@ -35,7 +35,7 @@ const PLATFORM_HIDE_MAP = {
 };
 
 //判断指定平台是否被隐藏
-export const isPlatformHidden = platformType => {
+export const isPlatformHidden = (platformType: string) => {
   const settingKey = PLATFORM_HIDE_MAP[platformType];
   if (!settingKey) return false;
   return !!md.global.SysSettings[settingKey];

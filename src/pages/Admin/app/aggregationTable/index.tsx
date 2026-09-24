@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -23,6 +23,9 @@ import SelectUser from '../../components/SelectUser';
 import './index.less';
 
 export default class AggregationTable extends Component<any, any> {
+  declare ajaxPromise: ApiResult | null;
+  declare changeTaskAjax: ApiResult | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -38,7 +41,7 @@ export default class AggregationTable extends Component<any, any> {
     this.changeTaskAjax = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId } = this.props.match.params || {};
     const featureType = getFeatureStatus(projectId, VersionProductType.aggregation);
     this.getList();
@@ -186,7 +189,7 @@ export default class AggregationTable extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { match = {} } = this.props;
     const { projectId } = match.params || {};
     const {
@@ -341,7 +344,7 @@ export default class AggregationTable extends Component<any, any> {
               />
             ) : (
               <ScrollView className="w100 h100">
-                {list.map(item => {
+                {list.map((item, index) => {
                   const {
                     name,
                     appName,
@@ -356,7 +359,7 @@ export default class AggregationTable extends Component<any, any> {
                   } = item;
 
                   return (
-                    <div className="flexRow alignItemsCenter listContent">
+                    <div key={index} className="flexRow alignItemsCenter listContent">
                       <div
                         className={cx('flex flexRow pLeft10 ', {
                           'Hand hoverColorPrimary': aggTableTaskStatus !== 0 && !!worksheetId,

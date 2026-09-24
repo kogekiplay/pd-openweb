@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -38,7 +38,7 @@ function WaterMarkDialog(props) {
     onClose();
   };
 
-  const insertTag = item => {
+  const insertTag = (item: FormControl) => {
     $tagTextarea.current?.insertColumnTag(item.controlId);
   };
 

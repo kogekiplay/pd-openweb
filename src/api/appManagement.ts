@@ -296,7 +296,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppRoleSetting: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppRoleSetting: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Roles.GetAppRoleSettingResponse> {
     return mdyAPI('AppManagement', 'GetAppRoleSetting', args, options);
   },
   /**
@@ -334,7 +337,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTotalMember: function (args: ApiArgs, options: ApiOptions = {}) {
+  getTotalMember: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppRole.GetTotalMemberResult> {
     return mdyAPI('AppManagement', 'GetTotalMember', args, options);
   },
   /**
@@ -360,7 +366,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOutsourcingMembers: function (args: ApiArgs, options: ApiOptions = {}) {
+  getOutsourcingMembers: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppRole.GetOutsourcingMembersResult> {
     return mdyAPI('AppManagement', 'GetOutsourcingMembers', args, options);
   },
   /**
@@ -372,7 +381,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppRoleSummary: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppRoleSummary: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppRole.GetAppRoleSummaryResult> {
     return mdyAPI('AppManagement', 'GetAppRoleSummary', args, options);
   },
   /**
@@ -383,7 +395,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDebugRoles: function (args: ApiArgs, options: ApiOptions = {}) {
+  getDebugRoles: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppRole.GetDebugRolesResult> {
     return mdyAPI('AppManagement', 'GetDebugRoles', args, options);
   },
   /**
@@ -400,7 +415,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMembersByRole: function (args: ApiArgs, options: ApiOptions = {}) {
+  getMembersByRole: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppRole.GetMembersByRoleResult> {
     return mdyAPI('AppManagement', 'GetMembersByRole', args, options);
   },
   /**
@@ -466,7 +484,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppForManager: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppForManager: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Apk.AppForManagerModel[]> {
     return mdyAPI('AppManagement', 'GetAppForManager', args, options);
   },
   /**
@@ -478,7 +499,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getManagerApps: function (args: ApiArgs, options: ApiOptions = {}) {
+  getManagerApps: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Apk.AppForManagerModel[]> {
     return mdyAPI('AppManagement', 'GetManagerApps', args, options);
   },
   /**
@@ -562,7 +586,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppsForProject: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppsForProject: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ProjectAppsModel> {
     return mdyAPI('AppManagement', 'GetAppsForProject', args, options);
   },
   /**
@@ -584,7 +611,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppsByProject: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppsByProject: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ProjectAppsModel> {
     return mdyAPI('AppManagement', 'GetAppsByProject', args, options);
   },
   /**
@@ -598,7 +628,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppItems: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppItems: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<Record<string, HapApi.MD.Entity.Apk.EntityInfo[]>> {
     return mdyAPI('AppManagement', 'GetAppItems', args, options);
   },
   /**
@@ -681,7 +714,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkAppAdminForUser: function (args: ApiArgs, options: ApiOptions = {}) {
+  checkAppAdminForUser: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     return mdyAPI('AppManagement', 'CheckAppAdminForUser', args, options);
   },
   /**
@@ -1180,7 +1213,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLogs: function (args: ApiArgs, options: ApiOptions = {}) {
+  getLogs: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppLogDto> {
     return mdyAPI('AppManagement', 'GetLogs', args, options);
   },
   /**
@@ -1326,7 +1362,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppSupportInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppSupportInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.GetAppSupportInfo> {
     return mdyAPI('AppManagement', 'GetAppSupportInfo', args, options);
   },
   /**
@@ -1353,7 +1392,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getValidBackupFileInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getValidBackupFileInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.GetValidBackupFileInfoResponse> {
     return mdyAPI('AppManagement', 'GetValidBackupFileInfo', args, options);
   },
   /**
@@ -1496,7 +1538,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  isFirstInactiveUsers: function (args: ApiArgs, options: ApiOptions = {}) {
+  isFirstInactiveUsers: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     return mdyAPI('AppManagement', 'IsFirstInactiveUsers', args, options);
   },
   /**
@@ -1508,7 +1550,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  queryInactiveUsers: function (args: ApiArgs, options: ApiOptions = {}) {
+  queryInactiveUsers: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.UsageAnalysis.QueryInactiveUsersResponse> {
     return mdyAPI('AppManagement', 'QueryInactiveUsers', args, options);
   },
   /**
@@ -1610,7 +1655,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetsUnderTheApp: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetsUnderTheApp: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<Record<string, HapApi.MD.Entity.Worksheet.WorksheetEasy[]>> {
     return mdyAPI('AppManagement', 'GetWorksheetsUnderTheApp', args, options);
   },
   /**
@@ -1827,7 +1875,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUpgradeLogsByProject: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUpgradeLogsByProject: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.GetUpgradeLogsByProjectDto> {
     return mdyAPI('AppManagement', 'GetUpgradeLogsByProject', args, options);
   },
   /**
@@ -2043,7 +2094,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppStructureForER: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppStructureForER: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppStructureDto[]> {
     return mdyAPI('AppManagement', 'GetAppStructureForER', args, options);
   },
   /**
@@ -2153,7 +2207,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getBackupTask: function (args: ApiArgs, options: ApiOptions = {}) {
+  getBackupTask: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.BackupTaskDto> {
     return mdyAPI('AppManagement', 'GetBackupTask', args, options);
   },
   /**

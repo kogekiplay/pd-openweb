@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Icon, Input, SortableList } from 'ming-ui';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
@@ -15,8 +15,8 @@ const Item = data => {
   const { item, onEdit, openEdit, onDelete, list, key, DragHandle } = data;
   const { type, controlName, fieldId, num, sourceControlType } = item;
 
-  const $ref = useRef(null);
-  const $refFieldId = useRef(null);
+  const $ref = useRef<HTMLInputElement | null>(null);
+  const $refFieldId = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     setTimeout(() => {
       const $dom = $ref.current;
@@ -139,7 +139,7 @@ function SettingList(props) {
         props.onSortEnd(newItems, false);
       }}
       itemClassName="boderRadAll_4"
-      renderItem={options => <Item {...props} {...options} key={'item_' + options.num} list={props.items} />}
+      renderItem={options => <Item {...props} {...options} list={props.items} />}
     />
   );
 }

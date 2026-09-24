@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -90,7 +90,7 @@ export default class Approval extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -98,7 +98,7 @@ export default class Approval extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -965,7 +965,7 @@ export default class Approval extends Component<any, any> {
   /**
    * 意见必填修改
    */
-  opinionRequiredChange(checked: boolean, key: string, value?) {
+  opinionRequiredChange(checked: boolean, key: string, value?: number | undefined) {
     const { data } = this.state;
     const currentAuth = [].concat(data.auth[key]);
 
@@ -1153,9 +1153,9 @@ export default class Approval extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { data, showCallbackDialog, tabIndex, showApprovalTemplate, selectMsgKey } = this.state;
-    const authTypeListText = {
+    const authTypeListText: Record<number, string> = {
       1: _l('签名'),
       2: _l('四级：实名'),
       3: _l('三级：实名+实人'),
@@ -1404,7 +1404,7 @@ export default class Approval extends Component<any, any> {
                     height={0}
                     content={data.explain}
                     formulaMap={data.formulaMap}
-                    onChange={(err, value) => this.updateSource({ explain: value })}
+                    onChange={(_err, value) => this.updateSource({ explain: value })}
                     updateSource={this.updateSource}
                   />
 

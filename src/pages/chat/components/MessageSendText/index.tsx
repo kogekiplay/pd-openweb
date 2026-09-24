@@ -1,9 +1,13 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Tooltip } from 'ming-ui/antd-components';
 import config from '../../utils/config';
 import Constant from '../../utils/constant';
 
-export default class MessageSendText extends Component<any, any> {
+export interface MessageSendTextState {
+  type: number;
+}
+
+export default class MessageSendText extends Component<any, MessageSendTextState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,9 +21,9 @@ export default class MessageSendText extends Component<any, any> {
       type: newType,
     });
     config.inputMode = newType;
-    safeLocalStorageSetItem('im_input_mode', newType);
+    safeLocalStorageSetItem('im_input_mode', String(newType));
   }
-  render() {
+  override render() {
     const { type } = this.state;
     const { value, socketState = 0 } = this.props;
     return (

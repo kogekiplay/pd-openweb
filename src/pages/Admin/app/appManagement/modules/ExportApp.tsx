@@ -29,6 +29,8 @@ const configs = [
 ];
 let timeout: NodeJS.Timeout | null = null;
 export default class ExportApp extends React.Component<any, any> {
+  declare settings: AppSettings | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -43,7 +45,7 @@ export default class ExportApp extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { appIds = [] } = this.props;
     ajaxRequest.getApps({ appIds }).then(({ data, relation, token }) => {
       if (token) {
@@ -267,7 +269,7 @@ export default class ExportApp extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { relation, disabledExportBtn = false } = this.state;
     const options = {
       title: this.renderHeader(),

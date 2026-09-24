@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -36,7 +36,7 @@ export default function OrgSelect(props) {
 
   const [orgList, setOrgList] = useState(md.global.Account.projects || []);
   const [selected, setSelected] = useState(undefined);
-  const [search, setSearch] = useState(undefined);
+  const [search, setSearch] = useState<string | undefined>(undefined);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function OrgSelect(props) {
     onChange(item.projectId);
   };
 
-  const searchHandle = value => {
+  const searchHandle = (value: string) => {
     let list = md.global.Account.projects;
     setSearch(value);
     if (!value || !value.trim()) {

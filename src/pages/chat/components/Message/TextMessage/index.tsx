@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import * as utils from '../../../utils';
 import './index.less';
 
@@ -6,7 +6,7 @@ export default class TextMessage extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { message } = this.props;
     return (
       <span

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -288,7 +288,7 @@ export default function CityPicker(props) {
   };
 
   // 37: left 38: up 39: right 40: down 13: enter
-  const handleKeydown = e => {
+  const handleKeydown = (e: KeyboardEvent) => {
     if (![37, 38, 39, 40, 13].includes(e.keyCode) || !data.length || !popupRef.current) return;
     if (search && [37, 39].includes(e.keyCode)) return;
 
@@ -384,7 +384,7 @@ export default function CityPicker(props) {
         {search ? (
           <CascaderSearchSelectWrap>
             {data.map(item => {
-              if (!item.path) return;
+              if (!item.path) return undefined;
 
               return (
                 <li
@@ -414,7 +414,7 @@ export default function CityPicker(props) {
                 let levelIndex = index + 1;
 
                 return (
-                  <ul className="CascaderSelectWrap-List">
+                  <ul key={index} className="CascaderSelectWrap-List">
                     {list.map(item => {
                       return (
                         <li

@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { SortableList } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';

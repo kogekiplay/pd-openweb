@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { BarCode, Qr } from 'ming-ui';
@@ -8,7 +8,7 @@ import emptyCover from 'src/pages/worksheet/assets/emptyCover.png';
 import { FROM } from '../../../core/config';
 import { getBarCodeValue } from '../../../core/utils';
 
-const QRErrorCorrectLevel = {
+const QRErrorCorrectLevel: Record<string, number> = {
   '7%': 1,
   '15%': 0,
   '25%': 3,
@@ -57,7 +57,7 @@ export default function BarCodeWidgets(props) {
   } = props;
 
   const [value, setValue] = useState('');
-  const barIdRef = useRef(null);
+  const barIdRef = useRef<NodeJS.Timeout | null>(null);
   const imgCodeRef = useRef(null);
 
   const updateValue = data => {

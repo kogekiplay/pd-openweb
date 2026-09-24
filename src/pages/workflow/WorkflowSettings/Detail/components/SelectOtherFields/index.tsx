@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -12,8 +12,60 @@ import { getControlTypeName } from '../../../utils';
 import ActionFields from '../ActionFields';
 import './index.less';
 
-export default class SelectOtherFields extends Component<any, any> {
-  static propTypes = {
+/**
+ * handleFieldClick 收到的「节点对象的值」。点「清空」时各字段都是空值、isClear 为 true
+ * （那一支的 fieldValueType、isSourceApp 给的是 ''，nodeTypeId、appType 给的是 null）。
+ */
+export interface SelectedFieldValue {
+  nodeId: string;
+  nodeName: string;
+  nodeTypeId: number | null;
+  appType: number | null;
+  actionId: string;
+  isSourceApp: boolean | '';
+  fieldValueId: string;
+  fieldValueName: string;
+  fieldValueType: number | '';
+  /** 成员 / 部门字段（type 26、27）是 '[]'，其余 '' */
+  fieldValue: string;
+  sourceType?: number | undefined;
+  isClear?: boolean | undefined;
+}
+
+interface SelectOtherFieldsProps {
+  /** 当前在配置的字段：按它的类型筛可选的值 */
+  item: {
+    type: number;
+    enumDefault?: number | undefined;
+    fieldValueId?: string | undefined;
+    fieldValue?: string | undefined;
+  };
+  fieldsVisible?: boolean | undefined;
+  openLayer: () => void;
+  closeLayer: () => void;
+  handleFieldClick: (field: SelectedFieldValue) => void;
+  projectId?: string | undefined;
+  processId?: string | undefined;
+  relationId?: string | undefined;
+  selectNodeId?: string | undefined;
+  sourceNodeId?: string | undefined;
+  sourceAppId?: string | undefined;
+  conditionId?: string | undefined;
+  dataSource?: string | undefined;
+  /** 取值接口换成 getFlowAppDtos（筛选条件里用） */
+  isFilter?: boolean | undefined;
+  isIntegration?: boolean | undefined;
+  isPlugin?: boolean | undefined;
+  showClear?: boolean | undefined;
+  showCurrent?: boolean | undefined;
+  /** 不请求可选的节点对象（列表恒为空） */
+  disabledInterface?: boolean | undefined;
+  filterType?: number | undefined;
+  showNodeDataSelect?: boolean | undefined;
+}
+
+export default class SelectOtherFields extends Component<SelectOtherFieldsProps, { fieldsData: any[] | null }> {
+  static override propTypes = {
     isFilter: PropTypes.bool,
     sourceNodeId: PropTypes.string,
     fieldsVisible: PropTypes.bool,
@@ -54,7 +106,7 @@ export default class SelectOtherFields extends Component<any, any> {
     showNodeDataSelect: false,
   };
 
-  constructor(props) {
+  constructor(props: SelectOtherFieldsProps) {
     super(props);
     this.state = {
       fieldsData: null,
@@ -65,7 +117,7 @@ export default class SelectOtherFields extends Component<any, any> {
    * 获取更多控件的值
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: SelectOtherFieldsProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.item, prevProps.item) || this.props.sourceAppId !== prevProps.sourceAppId) {
         this.setState({
@@ -153,7 +205,7 @@ export default class SelectOtherFields extends Component<any, any> {
    */
   header() {
     const { projectId, relationId, item, handleFieldClick, closeLayer, isIntegration, isPlugin } = this.props;
-    let filterTypes = [];
+    let filterTypes: number[] = [];
 
     if (!_.includes([1, 2, 3, 4, 5, 6, 7, 8, 33, 41], item.type) || isIntegration || isPlugin) return null;
 
@@ -282,7 +334,7 @@ export default class SelectOtherFields extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { item, openLayer } = this.props;
 
     return (
@@ -292,12 +344,14 @@ export default class SelectOtherFields extends Component<any, any> {
             className="actionControlMore colorPrimary"
             onClick={() => {
               openLayer();
-              this.getFlowNodeAppDtos(item.type, item.enumDefault);
+              // 原来还传了 item.type、item.enumDefault：getFlowNodeAppDtos 不收参数，自己从 props 读
+              this.getFlowNodeAppDtos();
             }}
           >
             <i
               className={
-                item.fieldValueId || /\$.*\$/.test(item.fieldValue)
+                // fieldValue 没有时原来是 test(undefined)，即拿字符串 'undefined' 去匹配，结果同样是 false
+                item.fieldValueId || /\$.*\$/.test(item.fieldValue ?? '')
                   ? 'icon-workflow_ok colorPrimary'
                   : 'icon-workflow_other'
               }

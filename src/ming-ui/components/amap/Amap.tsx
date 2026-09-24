@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -14,6 +14,10 @@ import '../less/Amap.less';
  * 高德地图key = 9aedaf173cec6f03d4b9ce7c8a9159c5;
  */
 export default class Amap extends Component<any, any> {
+  declare _MapLoader: MapLoader;
+  declare _maphHandler: MapHandler | null | undefined;
+  declare _mapContainer: HTMLDivElement | null | undefined;
+
   static defaultProps = {
     mapTools: false,
     mapOptions: { zoom: 18 },
@@ -24,7 +28,7 @@ export default class Amap extends Component<any, any> {
     mapSearch: true,
   };
 
-  static propTypes = {
+  static override propTypes = {
     /**
      * 地图配置
      */
@@ -94,7 +98,7 @@ export default class Amap extends Component<any, any> {
     this.handleCurrPos = this.handleCurrPos.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { defaultAddress } = this.props;
       const { lng, lat } = defaultAddress || {};
@@ -108,7 +112,7 @@ export default class Amap extends Component<any, any> {
       this.props.onUpdate();
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this._maphHandler) {
       this._maphHandler.destroyMap();
       this._maphHandler = null;
@@ -242,7 +246,7 @@ export default class Amap extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { mapStyle, inputAlign, mapSearch } = this.props;
     const newStyle = Object.assign(
       {

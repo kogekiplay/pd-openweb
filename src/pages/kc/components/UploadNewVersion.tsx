@@ -10,14 +10,14 @@ class UploadNewVersion extends React.Component<any, any> {
   uploader;
   con;
 
-  static propTypes() {
+  static override propTypes() {
     return {
       item: React.propTypes.object,
       callback: React.propTypes.func,
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const _this = this;
     const MAX_FILE_COUNT = 1;
     this.uploader = createUploader({
@@ -37,7 +37,7 @@ class UploadNewVersion extends React.Component<any, any> {
             break;
         }
       },
-      before_upload_check: (up, files) =>
+      before_upload_check: (_up, files) =>
         service.getUsage().then(usage => {
           if (usage.used + files.reduce((total, file) => total + (file.size || 0), 0) > usage.total) {
             throw _l('选择的文件超过本月上传流量上限');
@@ -68,17 +68,17 @@ class UploadNewVersion extends React.Component<any, any> {
           _this.dialog = uploadNewVersionDailog(item, file, _this.props.callback);
         },
         Error() {},
-        UploadProgress(up, file) {
+        UploadProgress(_up, file) {
           _this.dialog.setProcess((file.loaded / file.size) * 100);
         },
-        FileUploaded(up, file, info) {
+        FileUploaded(_up, _file, info) {
           _this.dialog.uploaded(info.response);
         },
       },
     });
   }
 
-  render() {
+  override render() {
     return (
       <span
         className="newVersionFile"

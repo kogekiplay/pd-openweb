@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { isValidPhoneNumber } from 'libphonenumber-js/max';
 import _ from 'lodash';
@@ -48,6 +47,8 @@ export interface DialCodeSelectOptions {
   preferredCountries?: CountryInput[];
   onlyCountries?: CountryInput[];
   locale?: LocaleTag;
+  /** 展开面板时读取当前区号（上游 7.4.5）：避免初始化号码覆盖后来的选择；不给就按 value 解析 */
+  getCode?: () => string;
   onSelectCode?: (code: string) => void;
 }
 
@@ -65,7 +66,7 @@ export interface IntlTelInputOptions {
   customPlaceholder?: () => string;
 }
 
-const normalizeCode = code => {
+const normalizeCode = (code: string) => {
   if (!code) return '';
   return String(code).startsWith('+') ? String(code) : `+${code}`;
 };
@@ -83,6 +84,7 @@ export class DialCodeSelectInstance {
   declare preferredCountries: CountryInput[];
   declare onlyCountries: CountryInput[];
   declare locale: LocaleTag;
+  declare getCode: (() => string) | undefined;
   declare onSelectCode: (code: string) => void;
   /** 当前区号，形如 '+86' */
   declare code: string;
@@ -93,7 +95,8 @@ export class DialCodeSelectInstance {
   declare panelLayout: DialCodePanelLayout;
   declare _onTriggerClick: (event: MouseEvent) => void;
   declare _onTriggerKeydown: (event: KeyboardEvent) => void;
-  declare _onOutsideClick: (event: MouseEvent) => void;
+  // 同时注册给 mousedown 与 touchstart（见 _openPanel），触屏上收到的是 TouchEvent；两者都有 target，只用到它
+  declare _onOutsideClick: (event: MouseEvent | TouchEvent) => void;
   declare _onEsc: (event: KeyboardEvent) => void;
   declare _onReposition: () => void;
   declare _destroy: () => void;
@@ -106,6 +109,7 @@ export class DialCodeSelectInstance {
     this.preferredCountries = options.preferredCountries || [];
     this.onlyCountries = options.onlyCountries || [];
     this.locale = options.locale;
+    this.getCode = options.getCode;
     this.onSelectCode = options.onSelectCode || (() => {});
     this.code = parseDialCode({
       value: this.value,
@@ -204,7 +208,7 @@ export class DialCodeSelectInstance {
   };
 
   _positionPanel = () => {
-    if (!this.element || !this.container) return;
+    if (!this.element || !this.container) return undefined;
     const rect = this.element.getBoundingClientRect();
     const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
     const viewportHeight = document.documentElement.clientHeight || window.innerHeight;
@@ -281,7 +285,7 @@ export class DialCodeSelectInstance {
     if (!this.element || this.isOpen) return;
     this.isOpen = true;
     this._ensurePanel();
-    this._syncCodeByValue(this._getCurrentValue());
+    this._syncCodeByValue(this.getCode?.() || this._getCurrentValue());
     this._positionPanel();
     this._renderPanel();
     this._positionPanelAfterRender();
@@ -324,7 +328,7 @@ export class DialCodeSelectInstance {
     });
   };
 
-  _getCountryByCode = code => {
+  _getCountryByCode = (code: string) => {
     // 兜底要带类型：写成裸 {} 的话返回类型变成 CountryOption | {}，
     // 调用点读 .localName / .iso2 全部报 TS2339。
     return this.getCountryOptions().find(option => option.code === code) || ({} as CountryOption);
@@ -426,6 +430,8 @@ export class IntlTelInputAdapter {
       preferredCountries: this.preferredCountries,
       onlyCountries: this.onlyCountries,
       locale: this.locale,
+      // 展开时读取当前区号，避免初始化号码覆盖后续选择。
+      getCode: () => this.code,
       onSelectCode: nextCode => {
         const prevCode = this.code;
         this.code = nextCode;
@@ -468,7 +474,7 @@ export class IntlTelInputAdapter {
     this.updateDialCodeInput();
   }
 
-  _getCountryByCode = code => {
+  _getCountryByCode = (code: string) => {
     return this.countryOptions.find(item => item.code === code) || ({} as CountryOption);
   };
 
@@ -568,7 +574,7 @@ export class IntlTelInputAdapter {
     return `${this.code || getDefaultCode(this.defaultCountry)}${localNumber}`;
   };
 
-  setNumber = value => {
+  setNumber = (value: string) => {
     const raw = String(value || '').trim();
     const parsed = parseFullNumberInput({
       inputValue: raw,

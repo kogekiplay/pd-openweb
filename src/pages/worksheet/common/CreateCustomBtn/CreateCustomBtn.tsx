@@ -25,6 +25,8 @@ import { COLORS, ICONS } from './config';
 import './CreateCustomBtn.less';
 
 class CreateCustomBtnCon extends React.Component<any, any> {
+  declare inputEl: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -48,12 +50,12 @@ class CreateCustomBtnCon extends React.Component<any, any> {
     };
   }
   ajaxRequest = null;
-  componentDidMount() {
+  override componentDidMount() {
     this.initState(this.props);
     $('.Radio').attr('title', '');
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const btnDataInfoPre = prevProps.btnDataInfo || {};
       const btnDataInfoNext = this.props.btnDataInfo || {};
@@ -686,7 +688,7 @@ class CreateCustomBtnCon extends React.Component<any, any> {
                   } else {
                     const controlName = writeControlsData && writeControlsData.controlName;
                     return (
-                      <React.Fragment>
+                      <React.Fragment key={i}>
                         <span className="Bold WordBreak">
                           {controlName || (writeControlsData.type === 22 ? _l('分割线') : _l('备注'))}
                         </span>
@@ -913,9 +915,10 @@ class CreateCustomBtnCon extends React.Component<any, any> {
           onPopupVisibleChange={visible => this.setState({ showCustomIcon: visible })}
           popup={
             <ul className="buttonTrigger">
-              {ICONS.map(item => {
+              {ICONS.map((item, index) => {
                 return (
                   <li
+                    key={index}
                     className={cx('buttonSetLi iconLi Hand', {
                       current: item === icon && !!item,
                       Font20: !item,
@@ -1012,7 +1015,7 @@ class CreateCustomBtnCon extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { appId, worksheetId, rowId, projectId, columns, sheetSwitchPermit, isListOption } = this.props;
     const {
       btnId,
@@ -1161,7 +1164,7 @@ class CreateCustomBtn extends React.Component<any, any> {
       </div>
     );
   };
-  render() {
+  override render() {
     const { zIndex, onClose, isClickAway, btnI = '' } = this.props;
     return (
       <Drawer

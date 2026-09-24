@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
@@ -77,6 +77,8 @@ const WecharPayWrap = styled.div`
 `;
 
 export default class WechatPay extends Component<any, any> {
+  declare timeInterval: NodeJS.Timeout | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -89,14 +91,14 @@ export default class WechatPay extends Component<any, any> {
     };
     this.timeInterval = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId } = _.get(this.props, 'match.params') || {};
 
     if (!projectId || !canPurchase({ projectId })) return;
 
     this.getQRCode();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     clearInterval(this.timeInterval);
   }
 
@@ -122,7 +124,7 @@ export default class WechatPay extends Component<any, any> {
   };
 
   // 轮询获取订单状态
-  pollFetch = delayTime => {
+  pollFetch = (delayTime: number) => {
     this.timeInterval = setInterval(this.getPayStatus, delayTime);
   };
 
@@ -145,7 +147,7 @@ export default class WechatPay extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { qrCodeUrl, price, subject = '-', loading, disabledScan } = this.state;
     const { orderId = '-', projectId } = _.get(this.props, 'match.params') || {};
 

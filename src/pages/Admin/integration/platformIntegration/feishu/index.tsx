@@ -47,7 +47,7 @@ export default class FeiShu extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getFeishuProjectSettingInfo();
   }
 
@@ -365,14 +365,14 @@ export default class FeiShu extends React.Component<any, any> {
     });
   };
 
-  changeTab = key => {
+  changeTab = (key: string) => {
     this.setState({ currentTab: key });
     if (key === 'other') {
       this.getInitialPassword();
     }
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     const {
       currentTab,
@@ -409,7 +409,7 @@ export default class FeiShu extends React.Component<any, any> {
                 { key: 'base', label: isLark ? _l('Lark集成') : _l('飞书集成') },
                 { key: 'other', label: _l('其他') },
               ].map(({ key, label }) => {
-                if (key === 'other' && !(this.state.status === 1 && !this.state.isCloseDing)) return;
+                if (key === 'other' && !(this.state.status === 1 && !this.state.isCloseDing)) return undefined;
 
                 return (
                   <span

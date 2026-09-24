@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { every, isEmpty } from 'lodash';
 import _ from 'lodash';
@@ -70,7 +70,7 @@ function CommonBoard(props) {
 
   const [, drop] = useDrop({
     accept: ITEM_TYPE.RECORD,
-    hover(props, monitor) {
+    hover(_props, monitor) {
       function scroll() {
         const $wrap = _.get($listWrapRef, 'current');
         const offset = monitor.getClientOffset();

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
@@ -23,12 +23,12 @@ function Header() {
   );
 }
 
-const handleCopy = text => {
+const handleCopy = (text: string) => {
   copy(text);
   alert(_l('已复制'));
 };
 
-const renderFieldLabel = text => (
+const renderFieldLabel = (text: string) => (
   <div className="fieldLabel">
     <span className="required">*</span>
     {text}
@@ -50,7 +50,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
   const [selectedSkillModules, setSelectedSkillModules] = useState(SKILL_MODULES.map(item => item.key));
   const [cliEnabled, setCliEnabled] = useState(true);
   const ajaxRef = useRef({});
-  const refreshFromCreateRef = useRef(null);
+  const refreshFromCreateRef = useRef<(() => void) | null>(null);
 
   const request = useCallback((key: string, promise) => {
     ajaxRef.current[key]?.abort?.();
@@ -199,11 +199,11 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
     window.location.assign(tool.getChatUrl(installData.installMessage));
   };
 
-  const toggleSkillModule = key => {
+  const toggleSkillModule = (key: string) => {
     setSelectedSkillModules(list => (list.includes(key) ? list.filter(item => item !== key) : list.concat(key)));
   };
 
-  const renderSelectExtra = type => (
+  const renderSelectExtra = (type: string) => (
     <div
       onMouseDown={e => e.preventDefault()}
       className="extraCreate"

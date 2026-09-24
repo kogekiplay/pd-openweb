@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Dropdown, Menu } from 'antd';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
@@ -82,7 +82,7 @@ const getEmptyTypes = reportType => {
   return emptyTypes;
 };
 
-const getIsEmptyType = (reportType, { isTime, isOption }) => {
+const getIsEmptyType = (reportType, { isTime, isOption }: { isTime: boolean; isOption: boolean }) => {
   if (
     [
       reportTypes.BarChart,
@@ -470,7 +470,7 @@ export default class XAxis extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { name, currentReport } = this.props;
     return (
       <div className="fieldWrapper mBottom20">

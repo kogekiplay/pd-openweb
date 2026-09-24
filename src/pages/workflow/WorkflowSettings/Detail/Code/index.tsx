@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -27,6 +27,8 @@ const CodeSnippetButton = styled.div`
 `;
 
 export default class Code extends Component<any, any> {
+  declare editorChangedCode: string | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -42,11 +44,11 @@ export default class Code extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -330,7 +332,7 @@ export default class Code extends Component<any, any> {
         }}
         lineNumbers
         maxHeight={10000000}
-        onChange={(err, value) => {
+        onChange={(_err, value) => {
           if (value === this.state.data.code) {
             return;
           }
@@ -347,7 +349,7 @@ export default class Code extends Component<any, any> {
    */
   selectCodeCallback = ({ clearParams, inputData, code }) => {
     const { data } = this.state;
-    const newInputData = [];
+    const newInputData: { name: string; value: string }[] = [];
 
     Object.keys(inputData).forEach(name => {
       newInputData.push({ name, value: '' });
@@ -368,7 +370,7 @@ export default class Code extends Component<any, any> {
     this.setState({ showCodeSnippetDialog: false, showChatGPTDialog: false });
   };
 
-  render() {
+  override render() {
     const { data, msg, isFullCode, showCodeSnippetDialog, showTestDialog, showChatGPTDialog } = this.state;
     const testMapList = (data.inputDatas || []).filter(item => item.name && item.value && !/\$.*?\$/.test(item.value));
 

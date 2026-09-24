@@ -47,7 +47,7 @@ let PortalMg = class PortalMg extends Component<any, any> {
     e.stopPropagation && e.stopPropagation();
   };
 
-  render() {
+  override render() {
     const { currentSession } = this.props;
     const exceptions = [
       '.dialogScroll',

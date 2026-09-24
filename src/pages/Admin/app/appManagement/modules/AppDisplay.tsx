@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -47,7 +47,7 @@ export default function AppDisplay(props) {
 
   const app = apps.length ? apps[0] : {};
 
-  const handleClick = (app, multiple?) => {
+  const handleClick = (app, multiple?: boolean | undefined) => {
     if (multiple) {
       return;
     }

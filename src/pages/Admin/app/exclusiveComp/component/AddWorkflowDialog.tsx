@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Input, Select } from 'antd';
 import _ from 'lodash';
@@ -256,7 +256,7 @@ function AddWorkflowDialog(props) {
     if (checkedDialog.list.length === 0) return;
   }, [checkedDialog.list]);
 
-  const getAppList = (pageIndex?, keywords?) => {
+  const getAppList = (pageIndex?: number | undefined, keywords?) => {
     const _pageIndex = pageIndex || appIndex;
 
     if ((_pageIndex > 1 && appList.length >= total) || appLoading) return;
@@ -557,9 +557,9 @@ function AddWorkflowDialog(props) {
           >
             {appList
               .filter(l => l.appName.toLowerCase().indexOf(searchApp ? searchApp.toLowerCase() : '') > -1)
-              .map(item => {
+              .map((item, index) => {
                 return (
-                  <Select.Option value={item.appId}>
+                  <Select.Option key={index} value={item.appId}>
                     <SelectAppOption>
                       <span className="imgCon" style={{ background: item.iconColor }}>
                         <SvgIcon url={item.iconUrl} fill="#FFF" size={16} />
@@ -681,7 +681,7 @@ function AddWorkflowDialog(props) {
                 }
                 text={null}
                 value={checkedDialog.list.map(l => l.id)}
-                onClick={(checkd, value) => {
+                onClick={(_checkd, value) => {
                   setCheckedDialog({
                     ...checkedDialog,
                     checked: value,

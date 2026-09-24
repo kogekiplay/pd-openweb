@@ -30,7 +30,7 @@ let InfoTop = class InfoTop extends React.PureComponent<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { userInfo = {}, isMe, dispatch } = this.props;
     const { currentUserCard } = this.state;
     const { userCards = [] } = userInfo;
@@ -54,7 +54,7 @@ let InfoTop = class InfoTop extends React.PureComponent<any, any> {
             onClick={async () => {
               const accountInfo = await userAjax
                 .getAccountBaseInfo({ accountId: userInfo.accountId, refresh: false })
-                .catch(() => ({}));
+                .catch((): Partial<HapApi.MD.Web.Ajax.ResultModel.Account.AccountSimpleModel> => ({}));
               openEnlargeImage({
                 url: accountInfo.avatar || userInfo.avatar,
               });

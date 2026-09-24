@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Dropdown } from 'antd';
 import cx from 'classnames';
 import update from 'immutability-helper';
@@ -36,7 +36,7 @@ export default function UserConfig(props) {
   const userType = getAdvanceSetting(data, 'usertype');
   const [overlayVisible, setVisible] = useState(false);
 
-  const handleClick = item => {
+  const handleClick = (item: { id: string; type: number; value: string; text: string }) => {
     setVisible(false);
 
     if (item.id === 'assignGroup') {
@@ -212,8 +212,8 @@ export default function UserConfig(props) {
                 open={overlayVisible}
                 onOpenChange={setVisible}
                 popupRender={() => <DropdownContent>
-                    {USER_RANGE.map(item => (
-                      <div className="item" onClick={() => handleClick(item)}>
+                    {USER_RANGE.map((item, index) => (
+                      <div key={index} className="item" onClick={() => handleClick(item)}>
                         {item.text}
                       </div>
                     ))}
@@ -222,10 +222,11 @@ export default function UserConfig(props) {
                 <div className="defaultOptionsWrap">
                   {chooseRange.length > 0 ? (
                     <Fragment>
-                      {chooseRange.map(item => {
+                      {chooseRange.map((item, index) => {
                         if (item.type === 4) {
                           return (
                             <OtherField
+                              key={index}
                               {...props}
                               dynamicValue={chooseRange}
                               controls={props.allControls || []}

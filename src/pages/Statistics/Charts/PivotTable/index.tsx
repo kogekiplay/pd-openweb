@@ -192,7 +192,7 @@ class PivotTable extends Component<any, any> {
     this.cache = {};
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { style } = this.props.reportData;
       const { style: oldStyle } = prevProps.reportData;
@@ -272,7 +272,7 @@ class PivotTable extends Component<any, any> {
 
     const { data, yaxisList } = this.props.reportData;
     return this.getCacheValue('controlMinAndMax', [data.data, yaxisList, controlIds], () => {
-      const controlIdMap = {};
+      const controlIdMap: Record<string, boolean> = {};
       controlIds.forEach(id => {
         controlIdMap[id] = true;
       });
@@ -1287,7 +1287,7 @@ class PivotTable extends Component<any, any> {
 
     return data;
   }
-  renderLineTd(data, row, index: number, control, diffWidth, linesData = []) {
+  renderLineTd(data, _row, _index: number, control, diffWidth, linesData = []) {
     const { style } = this.props.reportData;
     const { pivotTableUnilineShow } = style ? style : {};
     const { controlType, fields, displayMode = 'text' } = control;
@@ -1567,7 +1567,7 @@ class PivotTable extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { dragValue, pageSize, dropdownVisible, offset, pageIndex } = this.state;
     const { themeColor, customPageConfig, reportData, linkageMatch = {}, sourceType } = this.props;
     const { reportId, yaxisList, columns, lines, style, pivotTable } = reportData;

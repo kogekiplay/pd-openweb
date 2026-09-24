@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Select } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';

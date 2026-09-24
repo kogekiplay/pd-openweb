@@ -16,8 +16,15 @@ import KcAppMenu from './KcAppMenu';
 const ONE_PX_IMG =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBAQUA+v8A/////wn7A/2j0UkKAAAAAElFTkSuQmCC';
 
-export default class KcAppItem extends React.Component<any, any> {
-  static propTypes = {
+export interface KcAppItemState {
+  clickMoreActionsBtn: boolean;
+  hoverMoreActionsBtn: boolean;
+}
+
+export default class KcAppItem extends React.Component<any, KcAppItemState> {
+  declare moreActions: HoverState | null | undefined;
+
+  static override propTypes = {
     path: PropTypes.string,
     baseUrl: PropTypes.string,
     keywords: PropTypes.bool,
@@ -40,12 +47,12 @@ export default class KcAppItem extends React.Component<any, any> {
     setRef: PropTypes.func,
   };
 
-  state = {
+  override state = {
     clickMoreActionsBtn: false,
     hoverMoreActionsBtn: false,
   };
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectedItems.size > 1) {
         this.setState({
@@ -55,7 +62,7 @@ export default class KcAppItem extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       className,
       path,

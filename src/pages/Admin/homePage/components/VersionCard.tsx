@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useEffect, useState } from 'react';
+﻿import { Fragment, useEffect, useState } from 'react';
 import { Button, Modal } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -39,7 +39,7 @@ export default function VersionCard(props) {
   const [freeTrialVisible, setVisible] = useState(_.includes(routerLocation.pathname, 'showInvite'));
   const [versionInfo, setVersionInfo] = useState({ loading: isNocolySaas });
 
-  const handleClick = type => {
+  const handleClick = (type: string) => {
     switch (type) {
       case 'upgrade':
         location.assign(pathCompletion(`/admin/upgradeservice/${projectId}`));

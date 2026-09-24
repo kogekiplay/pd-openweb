@@ -268,7 +268,7 @@ export default function DashboardSetting(props) {
       : color
     : currentTheme.themeKey;
 
-  const updateLogo = logoName => {
+  const updateLogo = (logoName: string | undefined) => {
     projectSettingApi.setLogo({ logoName, projectId: currentProject.projectId }).then(res => {
       if (res) {
         updatePlatformSetting({ logo: logoName, editingKey: 'logo' });
@@ -280,8 +280,8 @@ export default function DashboardSetting(props) {
     <React.Fragment>
       <SettingDrawer
         open
-        maskStyle={{ backgroundColor: 'transparent' }}
-        width={480}
+        styles={{ mask: { backgroundColor: 'transparent' } }}
+        size={480}
         title={_l('自定义工作台')}
         placement="right"
         afterOpenChange={visible => setEnableSlider(visible)}
@@ -344,7 +344,7 @@ export default function DashboardSetting(props) {
                         onAdd={up => {
                           up.disableBrowse();
                         }}
-                        onError={(up, err, errTip) => {
+                        onError={(_up, _err, errTip) => {
                           alert(errTip, 2);
                         }}
                       >

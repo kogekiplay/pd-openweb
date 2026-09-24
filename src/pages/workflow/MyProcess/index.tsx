@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Component, Fragment, lazy, Suspense } from 'react';
 import { Checkbox, Popover } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -50,6 +50,11 @@ const SECOND_TABS = {
 };
 const LoadableExecDialog = lazy(() => import('src/pages/workflow/components/ExecDialog'));
 export default class MyProcess extends Component<any, any> {
+  declare removeEscEvent: (() => void) | undefined;
+  declare filterEl: FilterConTent | null | undefined;
+  declare request: ApiResult | undefined;
+  declare signature: Signature | null | undefined;
+
   static defaultProps = {
     countData: {},
     updateCountData: () => {},
@@ -113,7 +118,7 @@ export default class MyProcess extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getTodoList();
     getTodoCount().then(countData => {
       this.updateCountData(countData);
@@ -121,14 +126,14 @@ export default class MyProcess extends Component<any, any> {
     this.removeEscEvent = this.bindEscEvent();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(_prevProps, prevState) {
     if (prevState.visible !== this.state.visible) {
       const key = 'myProcessFilterOpen';
       this.state.visible ? localStorage.setItem(key, 'true') : localStorage.removeItem(key);
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeEscEvent();
   }
 
@@ -163,7 +168,7 @@ export default class MyProcess extends Component<any, any> {
     document.body.addEventListener('keydown', this.closeGlobalSearch);
     return () => document.body.removeEventListener('keydown', this.closeGlobalSearch);
   };
-  closeGlobalSearch = e => {
+  closeGlobalSearch = (e: KeyboardEvent) => {
     if (e.key === 'Escape' || e.keyCode === 26) {
       const { selectCard } = this.state;
       _.isEmpty(selectCard) && this.props.onCancel();
@@ -950,6 +955,7 @@ export default class MyProcess extends Component<any, any> {
         </Fragment>
       );
     }
+    return undefined;
   }
 
   renderSignatureDialog() {
@@ -1162,7 +1168,7 @@ export default class MyProcess extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       stateTab,
       selectCard,

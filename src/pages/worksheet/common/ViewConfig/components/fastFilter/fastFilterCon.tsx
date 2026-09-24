@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon, SortableList } from 'ming-ui';
@@ -214,7 +214,6 @@ export default function FastFilterCon(params) {
         <div className="hasData">
           <div className="mTop24">
             <SortableList
-              worksheetControls={worksheetControls}
               items={fastFilterDataControls}
               itemKey="controlId"
               useDragHandle

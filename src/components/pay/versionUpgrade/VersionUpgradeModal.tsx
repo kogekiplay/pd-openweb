@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -197,9 +197,21 @@ export default function VersionUpgrade(props) {
     if (versionId === 'professional') {
       return v.type === 'standard' || (period === 'yearly' && v.type === 'professional' && currentTab === 'monthly');
     }
+    return undefined;
   };
 
-  const onPurchase = (v?) => {
+  const onPurchase = (
+    v?:
+      | {
+          type: string;
+          name: string;
+          description: string;
+          price: { monthly: number; yearly: number };
+          featureTitle: string;
+          featureList: string[];
+        }
+      | undefined,
+  ) => {
     if ((!type && hasUpgraded(v)) || showOffLine) {
       return;
     }
@@ -257,8 +269,12 @@ export default function VersionUpgrade(props) {
   return (
     <DialogWrap visible width={1100} showFooter={false} onCancel={onCancel}>
       <div className="headerTab">
-        {SUBSCRIPTION_TABS.map(item => (
-          <div className={cx('tabItem', { isActive: currentTab === item.key })} onClick={() => setCurrentTab(item.key)}>
+        {SUBSCRIPTION_TABS.map((item, index) => (
+          <div
+            key={index}
+            className={cx('tabItem', { isActive: currentTab === item.key })}
+            onClick={() => setCurrentTab(item.key)}
+          >
             {item.text}
           </div>
         ))}

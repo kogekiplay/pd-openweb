@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
 import { Input } from 'ming-ui';

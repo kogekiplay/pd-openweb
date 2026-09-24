@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 
 export default class SiderTabList extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     name: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
     children: PropTypes.node,
@@ -25,7 +25,7 @@ export default class SiderTabList extends React.Component<any, any> {
     }));
   }
 
-  render() {
+  override render() {
     const { name, children } = this.props;
     const { isOpen } = this.state;
     const cls = cx('list-arrow', 'textTertiary', 'TxtMiddle', {

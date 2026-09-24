@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { get } from 'lodash';
 import { getRecorderAuthConfig } from 'src/components/Mingo/ChatBot/components/Recorder/index';
 import { VOICE_STEP } from '../../core/config';
@@ -16,7 +16,7 @@ const VoiceProvider = ({ children, onGenerateRecord, onAbort }) => {
     // 没有开启语音转文字
     if (!get(md, 'global.Account.accountId') || !md.global.SysSettings.enableVoiceToText) {
       setLoading(false);
-      return;
+      return undefined;
     }
 
     getRecorderAuthConfig()

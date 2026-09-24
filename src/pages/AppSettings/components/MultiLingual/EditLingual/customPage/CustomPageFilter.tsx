@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -88,7 +88,9 @@ export default function CustomPageFilter(props) {
     const translateInfo = data.data || {};
     const comparisonLangInfo = getTranslateInfo(app.id, null, item.id, comparisonLangData);
 
-    const handleSave = info => {
+    const handleSave = (
+      info: { title: string | undefined } | { mobileTitle: string | undefined } | { [x: number]: string | undefined },
+    ) => {
       onEditAppLang({
         id: data.id,
         parentId: selectNode.workSheetId,

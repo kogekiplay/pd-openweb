@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useClickAway } from 'react-use';
 import cx from 'classnames';
@@ -127,20 +127,23 @@ export function RoleSelect(props) {
         projectId,
       })
       .then(res => {
-        let groups = [
+        // 「默认」分组是前端补的，只有名字和空 id（没有 sortIndex / disabled）；和接口给的分组放进同一个数组
+        const defaultGroups: (
+          | HapApi.MD.Web.Ajax.ResultModel.Organize.OrgRoleGroupModel
+          | { orgRoleGroupName: string; orgRoleGroupId: string }
+        )[] = [
           {
             orgRoleGroupName: _l('默认'),
             orgRoleGroupId: '',
           },
-        ]
-          .concat(res)
-          .map(l => {
-            return {
-              ...l,
-              children: [],
-              fetched: false,
-            };
-          });
+        ];
+        let groups = defaultGroups.concat(res).map(l => {
+          return {
+            ...l,
+            children: [],
+            fetched: false,
+          };
+        });
         !appointedOrganizeIds.length && setExpendTreeNodeKey([groups[0].orgRoleGroupId]);
         fetchData(groups, groups[0].orgRoleGroupId);
       });
@@ -295,7 +298,7 @@ export function RoleSelect(props) {
     ) {
       return (
         <div className="emptyWrap">
-          <div className="textDisabled Font14">{_l('没有可选组织角色')}</div>
+          <div className="textTertiary Font14">{_l('没有可选组织角色')}</div>
         </div>
       );
     }

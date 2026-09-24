@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { Dialog, Dropdown } from 'ming-ui';
 import 'src/pages/worksheet/components/DialogImportExcelCreate/SetImportExcelCreateWorksheetOrApp/index.less';
@@ -118,6 +118,7 @@ export default function Score({ data, onChange }) {
             {colors.map((item, index) => {
               return (
                 <WidgetColor
+                  key={index}
                   isNormal={false}
                   color={item.value}
                   text={`${index + 1}`}

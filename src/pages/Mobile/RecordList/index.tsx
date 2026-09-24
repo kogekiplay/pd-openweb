@@ -30,6 +30,8 @@ import View from './View';
 import './index.less';
 
 let RecordList = class RecordList extends Component<any, any> {
+  declare hideAddRecord: string | (string | null)[] | null;
+
   constructor(props) {
     super(props);
     const { hideAddRecord } = getRequest();
@@ -41,7 +43,7 @@ let RecordList = class RecordList extends Component<any, any> {
     this.viewRef = React.createRef();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { getFilters } = getRequest();
 
     if (getFilters === 'true') {
@@ -79,7 +81,7 @@ let RecordList = class RecordList extends Component<any, any> {
     props.loadWorksheet();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { params: newParams } = this.props.match;
       const { params } = prevProps.match;
@@ -105,7 +107,7 @@ let RecordList = class RecordList extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.emptySheetControls();
     window.removeEventListener('pageshow', this.handleCloseRecordModal);
   }
@@ -404,7 +406,7 @@ let RecordList = class RecordList extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { worksheetInfo, workSheetLoading, appDetail = {} } = this.props;
     const { detail = {}, appName } = appDetail;
     const { webMobileDisplay, appDisplay } = detail;

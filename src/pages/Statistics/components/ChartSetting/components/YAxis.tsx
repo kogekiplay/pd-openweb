@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Checkbox, Dropdown, Menu } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -184,7 +184,11 @@ const renderSortableItem = props => {
   );
 };
 
-export default class YAxis extends Component<any, any> {
+export interface YAxisState {
+  currentControlId: string | null;
+}
+
+export default class YAxis extends Component<any, YAxisState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -295,7 +299,7 @@ export default class YAxis extends Component<any, any> {
       yaxisList: newYaxisList,
     });
   };
-  handleSortEnd = (list, newIndex, oldIndex) => {
+  handleSortEnd = (list, newIndex: number, oldIndex: number | undefined) => {
     const { currentReport, onChangeCurrentReport } = this.props;
     const { reportType, config } = currentReport;
     const data = { yaxisList: list };
@@ -359,7 +363,7 @@ export default class YAxis extends Component<any, any> {
 
     return Content;
   }
-  render() {
+  override render() {
     const { name, currentReport, axisControls, allControls, yaxisList, inheritLastYaxis } = this.props;
     const { reportType, yaxisList: allYaxisList, style = {} } = currentReport;
     const otherProps = {
@@ -396,6 +400,7 @@ export default class YAxis extends Component<any, any> {
                   >
                     {allYaxisList.map((item, index: number) => (
                       <Menu.Item
+                        key={index}
                         style={{
                           color: index === inheritLastYaxisIndex ? 'var(--color-primary-text) !important' : null,
                         }}

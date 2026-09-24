@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { get, isEmpty } from 'lodash';
@@ -141,7 +141,7 @@ export default function RelateRecordBtn(props) {
   // （否则 undefined→false 会把 Trigger 从非受控切成受控、弹层再也打不开）。
   // rc-trigger 5 给回调补上准确类型之后才暴露出来。
   const [menuVisible, setMenuVisible] = useState(false);
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  const [selectedRecords, setSelectedRecords] = useState<RecordRow[]>([]);
   const conRef = useRef<HTMLDivElement>(null);
   const btnText = addVisible ? btnName || entityName : _l('选择%0', entityName);
   const iconName = addVisible ? 'icon-plus' : 'icon-link_record';

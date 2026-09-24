@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -21,7 +21,9 @@ const SCORE_TEXT = [
   _l('十级'),
 ];
 export default class Options extends Component<any, any> {
-  static propTypes = {
+  declare con: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
     control: PropTypes.shape({}),
@@ -40,7 +42,7 @@ export default class Options extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.fullValues, prevProps.fullValues)) {
         this.setState({
@@ -309,7 +311,7 @@ export default class Options extends Component<any, any> {
           .sort((a, b) => a.index - b.index)
           .map(option => ({ id: option.key, name: option.value }));
       } else if (control.type === 28) {
-        options = Array.from({ length: (control.advancedSetting || {}).max }).map((v, i) => ({
+        options = Array.from({ length: (control.advancedSetting || {}).max }).map((_v, i) => ({
           id: i + 1 + '',
           name: SCORE_TEXT[i],
         }));
@@ -365,7 +367,7 @@ export default class Options extends Component<any, any> {
       );
     }
   };
-  render() {
+  override render() {
     return (
       <div
         className="worksheetFilterOptionsCondition"

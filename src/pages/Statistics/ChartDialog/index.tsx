@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Component, Fragment, lazy, Suspense } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -30,7 +30,7 @@ import './index.less';
 const LoadableEditorPanel = lazy(() => import('./EditorPanel'));
 const LoadableFilterScope = lazy(() => import('../components/FilterScope'));
 let ChartDialog = class ChartDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: PropTypes.string,
     projectId: PropTypes.string,
     worksheetId: PropTypes.string,
@@ -67,7 +67,7 @@ let ChartDialog = class ChartDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getReportConfigDetail();
 
     if (!window.shareState.shareId) {
@@ -75,12 +75,12 @@ let ChartDialog = class ChartDialog extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.destroy();
     delete window[`filterReportId-${this.state.reportId}`];
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { activeData } = this.state;
 
@@ -499,7 +499,7 @@ let ChartDialog = class ChartDialog extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { nodialog, detailLoading, className } = this.props;
     const content = detailLoading ? <Loading /> : this.renderContent();
 

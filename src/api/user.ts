@@ -22,7 +22,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserCard: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUserCard: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.UserCardModel> {
     return mdyAPI('User', 'GetUserCard', args, options);
   },
   /**
@@ -38,7 +41,10 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getAccountBaseInfo: function (args?: ApiArgs, options: ApiOptions = {}) {
+  getAccountBaseInfo: function (
+    args?: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccountSimpleModel> {
     return mdyAPI('User', 'GetAccountBaseInfo', args, options);
   },
   /**
@@ -55,7 +61,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  checkAccountSecured: function (args: ApiArgs, options: ApiOptions = {}) {
+  checkAccountSecured: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     return mdyAPI('User', 'CheckAccountSecured', args, options);
   },
   /**
@@ -102,7 +108,10 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getOftenMetionedUser: function (args: ApiArgs, options: ApiOptions = {}) {
+  getOftenMetionedUser: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.UserModel[]> {
     return mdyAPI('User', 'GetOftenMetionedUser', args, options);
   },
   /**
@@ -171,7 +180,10 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getProjectContactUserListByApp: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectContactUserListByApp: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.ContactUserModel> {
     return mdyAPI('User', 'GetProjectContactUserListByApp', args, options);
   },
   /**
@@ -266,7 +278,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserOrgState: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUserOrgState: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.GetUserOrgStateResponse> {
     return mdyAPI('User', 'GetUserOrgState', args, options);
   },
   /**

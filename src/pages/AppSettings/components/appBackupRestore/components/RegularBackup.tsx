@@ -1,5 +1,5 @@
 // 定期备份
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -118,8 +118,9 @@ export default function RegularBackup(props) {
   const renderDay = () => {
     return (
       <DaySelectWrap>
-        {Days.map(item => (
+        {Days.map((item, index) => (
           <div
+            key={index}
             className={cx('dayItem Hand', { active: Number(item) === cycleValue })}
             onClick={() => updateData({ cycleValue: Number(item) })}
           >

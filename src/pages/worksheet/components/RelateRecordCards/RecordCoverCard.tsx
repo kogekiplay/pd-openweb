@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import cx from 'classnames';
 import _, { get, identity } from 'lodash';
 import PropTypes from 'prop-types';

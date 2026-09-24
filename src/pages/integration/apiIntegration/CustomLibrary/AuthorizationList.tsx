@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
 import _ from 'lodash';
@@ -98,7 +98,7 @@ export default function AuthorizationList(props) {
   const { hasManageAuth, companyId, onClose, onApproveSuccess } = props;
   const [fetchState, setFetchState] = useSetState({ loading: true, pageIndex: 1, noMore: false });
   const [authorizationList, setAuthorizationList] = useState([]);
-  const statusObj = {
+  const statusObj: Record<number, { color: string; text: string }> = {
     0: { color: 'reject', text: _l('已拒绝') },
     1: { color: 'reviewing', text: _l('待审核') },
     3: { color: 'agree', text: _l('已同意') },
@@ -211,7 +211,7 @@ export default function AuthorizationList(props) {
     <AuthListDrawer
       open
       title={_l('API 申请使用审核')}
-      width={840}
+      size={840}
       placement="right"
       closeIcon={<i className="icon-close Font18" />}
       onClose={onClose}
@@ -234,7 +234,7 @@ export default function AuthorizationList(props) {
         <ScrollView className="flex" onScrollEnd={onScrollEnd}>
           {authorizationList.map((dataItem, i) => {
             return (
-              <ListItem>
+              <ListItem key={i}>
                 {columns
                   .filter(item => hasManageAuth || !_.includes(['applyUser', 'operate'], item.dataIndex))
                   .map((item, j) => {

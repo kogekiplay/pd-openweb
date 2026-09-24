@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Dialog, Dropdown } from 'ming-ui';
@@ -215,7 +215,7 @@ export default props => {
               height={0}
               content={cacheKeywords}
               formulaMap={props.formulaMap}
-              onChange={(err, value) => setCacheKeywords(value)}
+              onChange={(_err, value) => setCacheKeywords(value)}
               updateSource={onChange}
             />
           )}

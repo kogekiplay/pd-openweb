@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
 import { PriceTip, RadioGroup } from 'ming-ui';

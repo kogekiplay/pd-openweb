@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import loadScript from 'load-script';
 import _ from 'lodash';
@@ -91,7 +91,7 @@ function APILibraryCon(props) {
       ? 'projectLib'
       : match.params.listType || window.localStorage.getItem('apiLibTab') || 'commonLib',
   );
-  const [loadMore, setLoadMore] = useState('');
+  const [loadMore, setLoadMore] = useState<string | number>('');
   const [hasMore, setHasMore] = useState(false);
 
   const renderLibCon = () => {

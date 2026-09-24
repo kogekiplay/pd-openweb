@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button, Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -78,7 +78,7 @@ function RefundConfirm(props) {
   const [isFocus, setIsFocus] = useState(false);
   const inputRef = useRef<any>(undefined);
 
-  const onChange = value => {
+  const onChange = (value: string) => {
     let val = value
       .replace(/[^-\d.]/g, '')
       .replace(/^\./g, '')

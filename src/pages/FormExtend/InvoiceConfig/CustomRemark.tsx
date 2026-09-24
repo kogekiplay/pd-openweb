@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -67,7 +67,7 @@ const Wrapper = styled.div`
 export default function SelectWithRefer(props) {
   const { value, onChange, controlList = [] }: { controlList: FormControl[]; [key: string]: any } = props;
   const [visible, setVisible] = useState(false);
-  const tagTextareaRef = useRef(null);
+  const tagTextareaRef = useRef<TagTextarea | null>(null);
   const popupContainerRef = useRef(null);
 
   return (

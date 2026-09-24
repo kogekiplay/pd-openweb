@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
@@ -122,10 +122,11 @@ export default function RoleConfig(props) {
           <div className="defaultOptionsWrap">
             {chooseRange.length > 0 ? (
               <Fragment>
-                {chooseRange.map(item => {
+                {chooseRange.map((item, index) => {
                   if (item.type === 4) {
                     return (
                       <OtherField
+                        key={index}
                         {...props}
                         from={DYNAMIC_FROM_MODE.ORG_CONFIG}
                         dynamicValue={chooseRange}

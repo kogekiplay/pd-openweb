@@ -45,7 +45,7 @@ export const orderRecordType = enumObj({
   Mingo: 37,
 });
 
-export const orderTypeText = {
+export const orderTypeText: Record<string, string> = {
   SMS: _l('短信发送'),
   ReCharge: _l('充值'),
   Upgrade: _l('开通标准版'),
@@ -92,14 +92,14 @@ export const enumInvoiceStatus = enumObj({
   invoiced: 3, // 已开票
 });
 
-export const invoiceTypeText = {
+export const invoiceTypeText: Record<string, string> = {
   empty: _l('无需开票'),
   notApply: _l('未申请'),
   applied: _l('已申请'),
   invoiced: _l('已开票'),
 };
 
-export const orderRecordStatus = {
+export const orderRecordStatus: Record<string, number> = {
   waiting: 1, // 等待支付
   success: 2, // 交易成功
   failure: 3, // 交易失败
@@ -108,7 +108,7 @@ export const orderRecordStatus = {
   // troubling: 6, // 质疑中
 };
 
-export const orderRecordText = {
+export const orderRecordText: Record<string, string> = {
   waiting: _l('等待支付'),
   success: _l('交易成功'),
   failure: _l('交易失败'),
@@ -179,7 +179,7 @@ export const DATE_FILTER = [
   { id: 'custom', text: _l('自定义日期') },
 ];
 
-export const PAY_TYPE = {
+export const PAY_TYPE: Record<number, string> = {
   1: _l('银行转账'),
   2: _l('现金'),
   3: _l('支票'),

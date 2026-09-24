@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, LoadDiv } from 'ming-ui';
 import functionWrap from 'ming-ui/components/FunctionWrap';
@@ -139,7 +139,7 @@ export default function KeyboardShortcuts(props) {
     );
   };
 
-  const renderSection = (section, sectionIndex) => {
+  const renderSection = (section, sectionIndex: number) => {
     return (
       <div key={sectionIndex} className="shortcutSection">
         <div className="Font18 bold mTop18 mBottom8">{section.section}</div>

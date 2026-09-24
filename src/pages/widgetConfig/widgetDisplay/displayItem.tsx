@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import cx from 'classnames';
 import update from 'immutability-helper';
@@ -155,7 +155,7 @@ export default function DisplayItem(props) {
   };
 
   // 判断是否能同级拖拽,
-  const isCanDragSameRow = item => {
+  const isCanDragSameRow = (item: WidgetDragItem) => {
     if (item.type === DRAG_ITEMS.DISPLAY_ITEM) {
       if (item.id === controlId) return false;
 
@@ -183,7 +183,7 @@ export default function DisplayItem(props) {
       data,
       widgetType: data.type,
     },
-    end(item, monitor) {
+    end(_item, monitor) {
       if (!monitor.didDrop()) return;
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;
@@ -343,7 +343,7 @@ export default function DisplayItem(props) {
       }
     },
     drop() {
-      if (!location) return;
+      if (!location) return undefined;
       const sectionId = type === 52 && !_.includes(['view_top'], location) ? controlId : data.sectionId || '';
 
       if (includes(['left', 'right'], location)) {

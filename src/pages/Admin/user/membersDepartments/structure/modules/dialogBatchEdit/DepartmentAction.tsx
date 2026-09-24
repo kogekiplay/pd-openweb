@@ -6,7 +6,7 @@ let DepartmentAction = class DepartmentAction extends React.Component<any, any> 
     super(props);
   }
 
-  render() {
+  override render() {
     const { isShowAct = false, isTop = false, isPosition = false, deleteFn, setToTop } = this.props;
 
     if (!isShowAct) {

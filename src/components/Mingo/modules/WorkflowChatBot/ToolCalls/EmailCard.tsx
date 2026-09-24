@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { get, isEmpty } from 'lodash';
 import styled from 'styled-components';
 import { LoadDiv } from 'ming-ui';
@@ -113,8 +113,8 @@ function EmailCard({ chatbotId, conversationId, functionData = {} }) {
         <div className="data-item">
           <div className="data-item-label">{_l('收件人')}</div>
           <div className="data-item-value users">
-            {data.receiverList.map(receiver => (
-              <div className="user">
+            {data.receiverList.map((receiver, index) => (
+              <div key={index} className="user">
                 {receiver.type === 'account' ? get(receiver, 'value.fullName') : receiver.value}
               </div>
             ))}
@@ -131,8 +131,10 @@ function EmailCard({ chatbotId, conversationId, functionData = {} }) {
         <div className="data-item">
           <div className="data-item-label">{_l('发件人')}</div>
           <div className="data-item-value users">
-            {data.senderList.map(sender => (
-              <div className="user">{sender.type === 'account' ? get(sender, 'value.fullName') : sender.value}</div>
+            {data.senderList.map((sender, index) => (
+              <div key={index} className="user">
+                {sender.type === 'account' ? get(sender, 'value.fullName') : sender.value}
+              </div>
             ))}
           </div>
         </div>

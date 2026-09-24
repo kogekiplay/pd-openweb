@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Button, Dialog, UserHead } from 'ming-ui';
 import Confirm from 'ming-ui/components/Dialog/Confirm';
@@ -364,9 +363,10 @@ function AddUserFeedback(props) {
 
       default:
     }
+    return undefined;
   };
 
-  if (!actionResult) return;
+  if (!actionResult) return undefined;
 
   return (
     <FeedbackDialog

@@ -1,4 +1,3 @@
-import React from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -80,10 +79,11 @@ export default function ScoreInput(props) {
       action={['click']}
       popup={
         <DropWrap className="dropList">
-          {list.fill(1).map((o, i) => {
+          {list.fill(1).map((_o, i) => {
             let num = i + 1;
             return (
               <div
+                key={i}
                 className={cx('flexRow dropLi Hand', { cur: (props.values || []).includes(num + '') })}
                 onClick={() => {
                   if ((props.values || []).includes(num + '')) {

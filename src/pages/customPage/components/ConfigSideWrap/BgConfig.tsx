@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { ReactSVG } from 'react-svg';
 import { generate } from '@ant-design/colors';
 import { Popover } from 'antd';

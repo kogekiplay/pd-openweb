@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Pagination } from 'antd';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
@@ -54,7 +54,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     this.licenseListRequestId = 0;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (!this.state.isApply) {
       this.getLicenseList();
     }
@@ -91,11 +91,11 @@ export default class PersonalEntrypoint extends Component<any, any> {
       });
   };
 
-  reloadLicenseList = state => {
+  reloadLicenseList = (state: { activeProduct: string; licenseCount: number; pageIndex: number } | { pageIndex: number }) => {
     this.setState({ licenseList: [], loading: true, ...state }, this.getLicenseList);
   };
 
-  handleChangeProduct = activeProduct => {
+  handleChangeProduct = (activeProduct: string) => {
     if (activeProduct === this.state.activeProduct) return;
 
     this.reloadLicenseList({ activeProduct, licenseCount: 0, pageIndex: 1 });
@@ -107,7 +107,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     this.reloadLicenseList({ pageIndex });
   };
 
-  handleSetVisible = (hide, targetIndex) => {
+  handleSetVisible = (hide, targetIndex: number) => {
     const { licenseList } = this.state;
     this.setState({
       licenseList: licenseList.map((item, inde) => {
@@ -120,7 +120,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     });
   };
 
-  handleCloseApply = (event, result) => {
+  handleCloseApply = (_event, result) => {
     location.hash = '';
     this.setState({ isApply: false, loading: true, ...(result ? { pageIndex: 1 } : {}) }, () => {
       this.getLicenseList(() => {
@@ -248,7 +248,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { activeProduct, isApply } = this.state;
     return (
       <div className="card personalEntrypointWrapper">

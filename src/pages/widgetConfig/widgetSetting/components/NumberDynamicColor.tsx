@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -73,7 +73,7 @@ export default function NumberDynamicColor(props) {
         {dynamicColor.map((item, index: number) => {
           const deleteDisabled = dynamicColor.length === 1;
           return (
-            <DynamicColorWrap>
+            <DynamicColorWrap key={index}>
               <span>{_l('当数值≤')}</span>
               <input
                 name="numberDynamicColor"
@@ -98,7 +98,7 @@ export default function NumberDynamicColor(props) {
                 className={cx('icon-remove_circle_outline iconOp mLeft20', { disabled: deleteDisabled })}
                 onClick={() => {
                   if (deleteDisabled) return;
-                  setDynamicColor(dynamicColor.filter((i, dx) => dx !== index));
+                  setDynamicColor(dynamicColor.filter((_i, dx) => dx !== index));
                 }}
               ></span>
               <span

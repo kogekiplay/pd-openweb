@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -13,7 +13,7 @@ let TimeCanvas = class TimeCanvas extends Component<any, any> {
     this.debounceUpdateHeight = _.debounce(this.updateHeight, 500);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(this.props.grouping, prevProps.grouping) ||
@@ -31,12 +31,12 @@ let TimeCanvas = class TimeCanvas extends Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.updateHeight();
     window.addEventListener('resize', this.debounceUpdateHeight);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('resize', this.debounceUpdateHeight);
   }
 
@@ -66,7 +66,7 @@ let TimeCanvas = class TimeCanvas extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { periodType, periodList, viewConfig } = this.props;
     return (
       <div className="timeCanvasWrapper flexRow" ref={this.$ref}>

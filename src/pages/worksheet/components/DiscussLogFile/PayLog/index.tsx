@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Popup } from 'antd-mobile';
 import Trigger from '@rc-component/trigger';
@@ -321,7 +321,7 @@ export default function PayLog(props) {
         <div className="iconWrap flexRow justifyContentCenter alignItemsCenter">
           <i className="icon icon-sp_account_balance_wallet_white Font50 textWhite" />
         </div>
-        <div className="Font15 textDisabled mTop20 bold">{isMobile ? _l('暂无付款') : _l('暂无订单')}</div>
+        <div className="Font15 textTertiary mTop20 bold">{isMobile ? _l('暂无付款') : _l('暂无订单')}</div>
       </EmptyWrap>
     );
   };
@@ -450,15 +450,15 @@ export default function PayLog(props) {
         {refundInfoKeys.map((a, i) => {
           if (![2].includes(o.status) && a.key === 'refundTime') {
             //只有已退款才有退款时间
-            return;
+            return undefined;
           }
 
           if (a.key === 'operatorAccountInfo' && !_.get(o, `operatorAccountInfo.accountId`)) {
-            return;
+            return undefined;
           }
 
           return (
-            <div className={cx('flexRow alignItemsCenter', { mBottom12: i < refundInfoKeys.length - 1 })}>
+            <div key={i} className={cx('flexRow alignItemsCenter', { mBottom12: i < refundInfoKeys.length - 1 })}>
               <span className={cx('payTitle textSecondary Bold')}>{a.txt}</span>
               <span className={cx('con mLeft15 WordBreak textPrimary')}>
                 {['createTime', 'refundTime'].includes(a.key)
@@ -539,7 +539,7 @@ export default function PayLog(props) {
               ([0, 4, 7].includes(payOrder.status) && ['settlementAmount', 'taxAmount'].includes(o.key)) || //待支付/支付超时/已取消结算金额和手续费显示-
               (!payOrder[o.key] && payOrder[o.key] !== 0); //已支付/已退款/部分退款直接显示结算金额和手续费
             return (
-              <div className={cx('flexRow alignItemsCenter', { mBottom12: i < list.length - 1 })}>
+              <div key={i} className={cx('flexRow alignItemsCenter', { mBottom12: i < list.length - 1 })}>
                 <span className={cx('payTitle textSecondary Bold')}>{o.txt}</span>
                 <span className={cx('con mLeft15 WordBreak textPrimary')}>
                   {o.key === 'sourceType'

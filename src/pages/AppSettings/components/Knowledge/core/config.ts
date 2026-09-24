@@ -135,7 +135,7 @@ export const RRF_K_RANGE = {
   step: 1,
 };
 
-export const SPLICE_TYPE = {
+export const SPLICE_TYPE: Record<number, string> = {
   1: '且',
   2: '或',
 };

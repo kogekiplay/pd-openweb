@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
@@ -26,7 +26,7 @@ let GunterEnter = class GunterEnter extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const {
       isCharge,
       noLoadAtDidMount,

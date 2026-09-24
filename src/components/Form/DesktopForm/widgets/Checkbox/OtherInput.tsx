@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import cx from 'classnames';
 import { Textarea } from 'ming-ui';
 import { getCheckAndOther } from '../../../core/utils';
 
 export default function OtherInput(props) {
-  const textRef = useRef(null);
+  const textRef = useRef<HTMLTextAreaElement | null>(null);
   const isOnCompositionRef = useRef(false);
 
   const {
@@ -64,7 +64,7 @@ export default function OtherInput(props) {
             mTop10: isSelect,
             'controlDisabled controlOtherDisabled': disabled,
           })}
-          manualRef={ref => (textRef.current = ref)}
+          manualRef={ref => { textRef.current = ref; }}
           minHeight={36}
           maxHeight={400}
           spellCheck={false}

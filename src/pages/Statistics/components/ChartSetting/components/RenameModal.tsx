@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, ConfigProvider, Input, Modal } from 'antd';
 import { Icon } from 'ming-ui';
@@ -11,7 +11,7 @@ export default class RenameModal extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.rename !== prevProps.rename) {
         this.setState({
@@ -44,7 +44,7 @@ export default class RenameModal extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { dialogVisible } = this.props;
     const { rename } = this.state;
     return (

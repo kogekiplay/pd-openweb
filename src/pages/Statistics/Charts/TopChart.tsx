@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import { TinyColor } from '@ctrl/tinycolor';
@@ -53,7 +53,7 @@ const getProgressControlId = (sorts, yaxisList) => {
   return _.find(yaxisList, { controlId: sortId }) ? sortId : _.get(yaxisList[0], 'controlId');
 };
 
-const getProgressWidth = (value, maxValue) => {
+const getProgressWidth = (value, maxValue: number) => {
   value = Number(value);
   maxValue = Number(maxValue);
 
@@ -143,6 +143,8 @@ const TopChartContent = styled.div`
 `;
 
 export default class extends Component<any, any> {
+  declare chartWrapEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -155,11 +157,11 @@ export default class extends Component<any, any> {
       newYaxisList: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.setCount(this.props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.reportData.yaxisList, prevProps.reportData.yaxisList)) {
         this.setCount(this.props);
@@ -322,7 +324,7 @@ export default class extends Component<any, any> {
       </div>
     );
   }
-  renderItem(data, index: number, progressControlId, maxValue) {
+  renderItem(data, index: number, progressControlId, maxValue: number) {
     const { projectId, reportData, isViewOriginalData, isLinkageData, isThumbnail, sourceType } = this.props;
     const { style = {}, yaxisList, displaySetup, xaxes } = reportData;
     const { valueProgressVisible } = style;
@@ -429,7 +431,7 @@ export default class extends Component<any, any> {
       </TopChartContent>
     );
   }
-  render() {
+  override render() {
     const { count, originalCount, dropdownVisible, offset } = this.state;
     const { summary, displaySetup = {} } = this.props.reportData;
     const showTotal = displaySetup.showTotal && !_.isEmpty(summary);

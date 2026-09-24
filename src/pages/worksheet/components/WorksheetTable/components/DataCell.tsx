@@ -1,4 +1,3 @@
-import React from 'react';
 import { find } from 'lodash';
 import CellControl from 'worksheet/components/CellControls';
 

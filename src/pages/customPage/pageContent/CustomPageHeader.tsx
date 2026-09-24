@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { Popover } from 'antd';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -100,7 +100,8 @@ export default function CustomPageHeader(props) {
       .then(([{ saveAs }, { createFontLink, exportImage }]) => {
         return createFontLink()
           .then(
-            exportImage.bind(this, {
+            // 函数组件里 this 本来就是 undefined；exportImage 是只收一个参数的箭头函数，绑什么都一样
+            exportImage.bind(null, {
               pageBgColor: pageConfig.pageBgColor,
               isUserWatermark,
               currentProject:

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { ConfigProvider, Input, Spin, Table } from 'antd';
 import cx from 'classnames';
 import { LoadDiv } from 'ming-ui';
@@ -105,7 +105,7 @@ export default class OutsourcingList extends Component<any, any> {
       {
         title: _l('操作'),
         dataIndex: 'option',
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <div className="adminHoverDeleteColor" onClick={() => this.handleDelete(record.accountId)}>
               {_l('移除')}
@@ -116,7 +116,7 @@ export default class OutsourcingList extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getGroupsList();
   }
 
@@ -235,7 +235,7 @@ export default class OutsourcingList extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { selectKeys, count, pageSize, pageIndex, loading, list } = this.state;
     const rowSelection = {
       selectKeys,

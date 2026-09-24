@@ -318,6 +318,7 @@ const isApplyStyle = (applyValue, recordKey) => {
   if (applyValue === 3) {
     return recordKey === 'sum';
   }
+  return undefined;
 };
 
 const getCompiledScopeRuleColor = (value, controlMinAndMax: Record<string, any> = {}, scopeRules = [], emptyShowType) => {
@@ -469,9 +470,9 @@ export const getStyleRuleValue = ({ rule, value, controlId, columnIndex, record,
 
 export const compileColorRuleConfig = (yaxisList, colorRules = []) => {
   const yaxisMap = {};
-  const yaxisIndexMap = {};
+  const yaxisIndexMap: Record<string, number> = {};
   const colorRuleMap = {};
-  const rangeControlIdMap = {};
+  const rangeControlIdMap: Record<string, boolean> = {};
 
   const addRangeControlId = id => {
     if (id) {

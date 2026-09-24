@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo, useRef } from 'react';
+import { Fragment, useCallback, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -112,7 +112,7 @@ const DesktopForm = props => {
     } = props;
     const formList = [];
     let prevRow = -1;
-    let preIsSection;
+    let preIsSection: boolean | undefined;
     let data = [].concat(formData).filter(item => !item.hidden && controlState(item, from).visible);
     const richTextControlCount = data.filter(c => c.type === 41).length;
 

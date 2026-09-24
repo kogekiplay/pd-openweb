@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import Trigger from '@rc-component/trigger';
@@ -76,7 +76,7 @@ export default class FilesPanel extends Component<any, any> {
       },
     ];
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getFiles();
   }
   handleScrollEnd() {
@@ -258,7 +258,7 @@ export default class FilesPanel extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { files, loading, fileType, fromUser } = this.state;
     return (
       <div className="ChatPanel-FilesPanel">

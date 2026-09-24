@@ -479,7 +479,7 @@ class TableViewBase extends React.Component<any, any> {
   declare expandCellAppendWidth: number;
   declare refreshTimer: ReturnType<typeof setTimeout> | null;
 
-  static propTypes = {
+  static override propTypes = {
     isTreeTableView: bool,
     worksheetInfo: PropTypes.shape({}),
     controls: PropTypes.arrayOf(PropTypes.shape({})),
@@ -565,7 +565,7 @@ class TableViewBase extends React.Component<any, any> {
     this.handlePaste = this.handlePaste.bind(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { view, fetchRows, setRowsEmpty, navGroupFilters, noLoadAtDidMount, setViewLayout = () => {} } = this.props;
 
     if (this.chartId) {
@@ -641,7 +641,7 @@ class TableViewBase extends React.Component<any, any> {
     );
   };
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const {
         view,
@@ -770,7 +770,7 @@ class TableViewBase extends React.Component<any, any> {
                 btnIds: this.getOperateButtonCheckIds(operatesButtons),
               })
               .then(data => {
-                const buttonsCheckStatus = {};
+                const buttonsCheckStatus: Record<string, boolean> = {};
                 data.forEach((item: SheetButtonRowState) => {
                   item.rowIds.forEach((rowId: string) => {
                     buttonsCheckStatus[`${rowId}-${item.btnId}`] = true;
@@ -824,7 +824,7 @@ class TableViewBase extends React.Component<any, any> {
     );
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     return (
       _.some(
         ['recordInfoVisible', 'disableMaskDataControls', 'buttonsCheckStatus'],
@@ -866,7 +866,7 @@ class TableViewBase extends React.Component<any, any> {
     );
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { abortRequest = () => {} } = this.props;
     document.body?.removeEventListener('click', this.outerClickEvent);
     emitter.removeListener('RELOAD_SHEET_VIEW', this.props.refresh);
@@ -1014,7 +1014,7 @@ class TableViewBase extends React.Component<any, any> {
     addRecord(record);
   };
 
-  handleCellClick = (cell: FormControl | undefined, row: RecordRow, rowIndex?: number) => {
+  handleCellClick = (cell: FormControl | undefined, row: RecordRow, _rowIndex?: number) => {
     const { allowOpenRecord = true } = this.props;
 
     if (!row || !row.rowid) {
@@ -1671,7 +1671,7 @@ class TableViewBase extends React.Component<any, any> {
       isDraft,
       printCharge,
     } = this.props;
-    const { allWorksheetIsSelected, sheetSelectedRows, sheetHiddenColumns } = sheetViewConfig;
+    const { allWorksheetIsSelected, sheetSelectedRows } = sheetViewConfig;
     const showNumber = (get(view, 'advancedSetting.showno') || '1') === '1' && !isTreeTableView;
     const showOperate = (get(view, 'advancedSetting.showquick') || '1') === '1';
 
@@ -2073,7 +2073,7 @@ class TableViewBase extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       type,
       isCharge,
@@ -2414,10 +2414,10 @@ class TableViewBase extends React.Component<any, any> {
             allowAdjustScale={false}
             allowExportAsImage={false}
             customButtons={[
-              <span className="mLeft10 mRight20 Hand" onClick={expandAllTreeTableViewNode}>
+              <span key={'0'} className="mLeft10 mRight20 Hand" onClick={expandAllTreeTableViewNode}>
                 {_l('展开全部')}
               </span>,
-              <span className="Hand" onClick={collapseAllTreeTableViewNode}>
+              <span key={'1'} className="Hand" onClick={collapseAllTreeTableViewNode}>
                 {_l('收起全部')}
               </span>,
             ]}

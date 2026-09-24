@@ -14,7 +14,9 @@ const discussTypes = [
   { id: 2, name: 'discussPortal', text: _l('外部门户') },
 ];
 export default class WorkSheetComment extends React.Component<any, any> {
-  static propTypes = {
+  declare $scrollCon: HTMLElement | undefined;
+
+  static override propTypes = {
     appId: PropTypes.string,
     worksheetId: PropTypes.string,
     appSectionId: PropTypes.string,
@@ -30,7 +32,7 @@ export default class WorkSheetComment extends React.Component<any, any> {
       disType: md.global.Account.isPortal && props.exAccountDiscussEnum === 1 ? 2 : 1, //外部门户且不可见内部讨论 则直接显示外部讨论
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId, worksheetId, appSectionId, disableScroll } = this.props;
 
     if (this.scrollView && disableScroll) {
@@ -49,14 +51,14 @@ export default class WorkSheetComment extends React.Component<any, any> {
     this.getAtData();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.formFlag !== prevProps.formFlag || !_.isEqual(prevProps.formdata, this.props.formdata)) {
         this.getAtData(this.props);
       }
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.$scrollCon) {
       this.$scrollCon.removeEventListener('scroll', this.handleRecordRightContentScroll);
     }
@@ -123,7 +125,7 @@ export default class WorkSheetComment extends React.Component<any, any> {
         ),
       //内部讨论 未配置外部人员可参与讨论 或配置了外部成员不可见内部讨论 不能@外部用户
     );
-    const hash = {};
+    const hash: Record<string, boolean> = {};
     const data2 = data.reduce((result, current) => {
       if (!hash[current.accountId]) {
         hash[current.accountId] = true; // 标记已存在
@@ -152,7 +154,7 @@ export default class WorkSheetComment extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       instanceId,
       workId,
@@ -216,9 +218,10 @@ export default class WorkSheetComment extends React.Component<any, any> {
           {/* 内部成员，且外部门户支持参与讨论，但不可见内部讨论 */}
           {!md.global.Account.isPortal && allowExAccountDiscuss && exAccountDiscussEnum === 1 && (
             <div className="discussType flexRow alignItemsCenter">
-              {discussTypes.map(o => {
+              {discussTypes.map((o, index) => {
                 return (
                   <div
+                    key={index}
                     className={cx('discuss TxtCenter flex Bold Hand', { isCur: disType === o.id })}
                     onClick={() => {
                       this.setState({ disType: o.id }, () => {

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Dialog, FunctionWrap, Icon } from 'ming-ui';
@@ -32,7 +32,7 @@ class AddFriends extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId } = this.props;
     const { Account: { projects = [] } = {} } = md.global;
     const myPermissions = projectId ? getMyPermissions(projectId) : [];
@@ -182,7 +182,7 @@ class AddFriends extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { onClose, projectId } = this.props;
     const { detailMode } = this.state;
 
@@ -254,7 +254,7 @@ class SelectProject extends Component<any, any> {
     FunctionWrap(AddFriends, { ...this.props, onClose: () => {}, fromType: projectId ? 4 : 0, projectId });
   }
 
-  render() {
+  override render() {
     const { friendVisible, onClose } = this.props;
 
     return (

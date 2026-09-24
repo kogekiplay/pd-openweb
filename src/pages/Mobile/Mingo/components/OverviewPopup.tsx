@@ -303,7 +303,7 @@ export function OverviewController({
 
     const handleWrite = payload => {
       if (!payload?.path) return;
-      updateFile(payload.path, (entry, cur) => {
+      updateFile(payload.path, (_entry, cur) => {
         const parsed = tryParseFile(payload.path, payload.content || '');
 
         return {
@@ -320,7 +320,7 @@ export function OverviewController({
 
     const handleEnd = payload => {
       if (!payload?.path) return;
-      updateFile(payload.path, (entry, cur) => {
+      updateFile(payload.path, (_entry, cur) => {
         const parsed = tryParseFile(payload.path, cur.content || '');
 
         return { ...cur, parsed: parsed !== undefined ? parsed : cur.parsed, status: 'ready' };
@@ -386,7 +386,7 @@ function GenerateBar({ filesRef, ready, generating, onGenerateStart }) {
   );
 }
 
-function getCount(key, parsed) {
+function getCount(key: string, parsed) {
   if (!Array.isArray(parsed)) return null;
 
   if (key === 'customActions') {
@@ -443,7 +443,7 @@ export default function OverviewPopup({
   const stickToBottomRef = useRef(true);
   const lastScrollTopRef = useRef(0);
   const userScrollIntentRef = useRef(false);
-  const userScrollTimerRef = useRef(null);
+  const userScrollTimerRef = useRef<NodeJS.Timeout | null>(null);
   const generatedItems = getGeneratedItems(filesRef, content);
 
   useEffect(() => {

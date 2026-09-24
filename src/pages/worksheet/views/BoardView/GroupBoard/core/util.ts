@@ -9,7 +9,7 @@ const extraFieldGenerators = {
   48: item => ({ organizeName: item.name, organizeId: item.id }),
 };
 
-const typeRules = {
+const typeRules: Record<number, { idKey: string; nameKey: string }> = {
   26: { idKey: 'accountId', nameKey: 'fullname' },
   27: { idKey: 'departmentId', nameKey: 'departmentName' },
   48: { idKey: 'organizeId', nameKey: 'organizeName' },
@@ -26,7 +26,7 @@ const generateKeyValuePairs = strNum => {
 };
 
 // 转换等级字段的值，向下取整，小于1的认为是空，大于max的转成max
-const processGradeFieldValue = (value, max = '10') => {
+const processGradeFieldValue = (value: string, max = '10') => {
   const num = _.toNumber(value);
   const maxNum = _.toNumber(max);
 
@@ -120,7 +120,7 @@ export const groupByOptionKey = (viewData, view, control, options) => {
 
   const keySet = new Set(options.map(opt => opt.key));
   const groupViewData = {};
-  const secondGroupTotal = {};
+  const secondGroupTotal: Record<string, number> = {};
 
   for (const key of keySet) {
     groupViewData[key] = {};

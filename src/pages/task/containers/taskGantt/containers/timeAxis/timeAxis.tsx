@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import type { RootState } from 'src/redux/types';
@@ -7,12 +7,14 @@ import utils from '../../utils/utils';
 import './timeAxis.less';
 
 class TimeAxis extends Component<any, any> {
+  declare currentYear: number;
+
   constructor(props) {
     super(props);
     this.currentYear = moment().isoWeekYear();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     utils.syncUpdateScroll();
   }
 
@@ -145,7 +147,7 @@ class TimeAxis extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { stateConfig, timeAxisSource } = this.props;
     const { currentView } = stateConfig;
 

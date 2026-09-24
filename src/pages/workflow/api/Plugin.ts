@@ -12,7 +12,7 @@ const Plugin = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  create: function (args, options) {
+  create: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/Plugin/Create';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'PluginCreate', JSON.stringify(args), $.extend(base, options));
@@ -25,7 +25,7 @@ const Plugin = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  edit: function (args, options) {
+  edit: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/Plugin/Edit';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'PluginEdit', JSON.stringify(args), $.extend(base, options));
@@ -38,7 +38,7 @@ const Plugin = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getAll: function (args, options) {
+  getAll: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/Plugin/GetAll';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'PluginGetAll', JSON.stringify(args), $.extend(base, options));
@@ -51,7 +51,7 @@ const Plugin = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getDetail: function (args, options) {
+  getDetail: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/Plugin/GetDetail';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'PluginGetDetail', JSON.stringify(args), $.extend(base, options));
@@ -64,7 +64,7 @@ const Plugin = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getList: function (args, options) {
+  getList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/Plugin/GetList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'PluginGetList', JSON.stringify(args), $.extend(base, options));
@@ -77,7 +77,7 @@ const Plugin = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getReleaseHistory: function (args, options) {
+  getReleaseHistory: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/Plugin/GetReleaseHistory';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'PluginGetReleaseHistory', JSON.stringify(args), $.extend(base, options));
@@ -90,7 +90,7 @@ const Plugin = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getUseDetail: function (args, options) {
+  getUseDetail: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/Plugin/GetUseDetail';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'PluginGetUseDetail', JSON.stringify(args), $.extend(base, options));
@@ -103,7 +103,7 @@ const Plugin = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  release: function (args, options) {
+  release: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/Plugin/Release';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'PluginRelease', JSON.stringify(args), $.extend(base, options));
@@ -116,7 +116,7 @@ const Plugin = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  remove: function (args, options) {
+  remove: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/Plugin/Remove';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'PluginRemove', JSON.stringify(args), $.extend(base, options));
@@ -129,7 +129,7 @@ const Plugin = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  rollback: function (args, options) {
+  rollback: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/Plugin/Rollback';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'PluginRollback', JSON.stringify(args), $.extend(base, options));

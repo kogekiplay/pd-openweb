@@ -1,7 +1,11 @@
-import React from 'react';
 import { Icon } from 'ming-ui';
 
-export default function SearchBox({ value, onChange }) {
+export interface SearchBoxProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export default function SearchBox({ value, onChange }: SearchBoxProps) {
   return (
     <div className="customBtnSearch flexRow alignItemsCenter">
       <Icon icon="search" className="searchIcon Font20" />

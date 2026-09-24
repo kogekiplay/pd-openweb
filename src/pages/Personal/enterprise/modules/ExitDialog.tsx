@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Dialog } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import account from 'src/api/account';
@@ -84,7 +84,7 @@ export default class ExitDialog extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const { needTransfer } = this.props;
     const { userInfo } = this.state;
     return (

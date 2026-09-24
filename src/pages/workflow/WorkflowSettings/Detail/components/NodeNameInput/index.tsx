@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 export default class NodeNameInput extends Component<any, any> {
   cacheName = '';
 
-  render() {
+  override render() {
     const { name, disabled, updateSource } = this.props;
 
     return (

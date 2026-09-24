@@ -34,7 +34,7 @@ export async function handleShare({
         rowId: recordId,
         title: recordTitle,
       },
-      getCopyContent: (type, url) => `${url} ${row.entityName}：${recordTitle}`,
+      getCopyContent: (_type, url) => `${url} ${row.entityName}：${recordTitle}`,
     });
   } catch (err) {
     alert(_l('分享失败'), 2);

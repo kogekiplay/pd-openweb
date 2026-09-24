@@ -53,28 +53,28 @@ let accountList =
         { key: 'workBind', iconIsImage: true, label: _l('企业微信'), needHide: true, img: workwxImg },
       ];
 
-const tipsConfig = {
+const tipsConfig: Record<string, string> = {
   mobilePhone: _l(
     '绑定手机号作为你的登录账号。同时也是管理个人账户和使用系统服务的重要依据。为便于您以后的操作及账户安全，请您尽快绑定。',
   ),
   isTwoauthentication: _l('两步验证是在输入账号密码后，额外增加一道安全屏障（手机短信或邮箱验证码），保障您的账号安全'),
 };
 
-const ERROR_MESSAGE = {
+const ERROR_MESSAGE: Record<number, string> = {
   0: _l('解绑失败'),
   5: _l('解绑失败，账号不存在'),
   6: _l('解绑失败，密码错误'),
   7: _l('解绑失败，邮箱和手机，请至少保留其一'),
 };
 
-const TPType = {
+const TPType: Record<string, number> = {
   weiXinBind: 1,
   qqBind: 2,
   googleBind: 13,
   microsoftBind: 14,
 };
 
-const WORKBINDOPTION = state => {
+const WORKBINDOPTION = (state: number) => {
   switch (state) {
     case 1:
       return { icon: 'invite-ding', label: _l('钉钉'), iconIsImage: false };
@@ -89,6 +89,7 @@ const WORKBINDOPTION = state => {
     case 7:
       return { label: _l('Microsoft'), img: microsoftImg, iconIsImage: true };
   }
+  return undefined;
 };
 
 export default class AccountChart extends React.Component<any, any> {
@@ -113,7 +114,7 @@ export default class AccountChart extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -150,7 +151,7 @@ export default class AccountChart extends React.Component<any, any> {
   }
 
   //微信或qq绑定
-  handleBind(type) {
+  handleBind(type: string) {
     const currentType = this.state[type] || {};
 
     if (!currentType.state) {
@@ -193,7 +194,7 @@ export default class AccountChart extends React.Component<any, any> {
   }
 
   //微信或qq解绑
-  cancelBindAccount(state, type) {
+  cancelBindAccount(state, type: string) {
     account
       .unBindAccount({
         state: state,
@@ -286,7 +287,7 @@ export default class AccountChart extends React.Component<any, any> {
   }
 
   // common修改
-  sureSettings(settingNum: string, value, successCallback) {
+  sureSettings(settingNum: string, value, successCallback: () => void) {
     accountSetting
       .editAccountSetting({
         settingType: common.settingOptions[settingNum],
@@ -358,7 +359,7 @@ export default class AccountChart extends React.Component<any, any> {
   };
 
   // 取消绑定手机或邮箱红点提示
-  handleCancelRed(type) {
+  handleCancelRed(type: string) {
     accountGuideController
       .setAccountGuide({
         userGuideSetting: common.guideType[type],
@@ -412,7 +413,7 @@ export default class AccountChart extends React.Component<any, any> {
     );
   }
 
-  renderTips = key => {
+  renderTips = (key: string) => {
     return (
       <Tooltip placement="top" title={tipsConfig[key]}>
         <span className="icon-help textDisabled Hand mLeft5 Font15"></span>
@@ -444,7 +445,7 @@ export default class AccountChart extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       email,
       mobilePhone,

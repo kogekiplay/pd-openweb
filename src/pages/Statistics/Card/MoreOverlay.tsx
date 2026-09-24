@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Divider, Dropdown, Menu } from 'antd';
 import _ from 'lodash';
@@ -25,7 +25,7 @@ export default class MoreOverlay extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.favorite !== prevProps.favorite) {
         this.setState({
@@ -34,7 +34,7 @@ export default class MoreOverlay extends Component<any, any> {
       }
     }
   }
-  handleExportExcel = exportType => {
+  handleExportExcel = (exportType: number) => {
     const { report, pageId, exportData, filter, sourceType } = this.props;
     const {
       filters = [],
@@ -130,7 +130,7 @@ export default class MoreOverlay extends Component<any, any> {
       accountId: createdAccountId,
     });
   };
-  handleChangeFavorite = favorite => {
+  handleChangeFavorite = (favorite: boolean) => {
     const { report, worksheetId, projectId, pageId, onCancelFavorite } = this.props;
     const params = {
       type: 2,
@@ -207,7 +207,9 @@ export default class MoreOverlay extends Component<any, any> {
     const isFavorite =
       _.find(md.global.Account.projects, { projectId }) &&
       !window.isPublicApp &&
-      !window.shareState.id &&
+      // 原来写的是 shareState.id —— 全仓（含上游）从没人写过这个字段，条件恒为真，
+      // 登录用户打开公开图表 / 公开页面链接时照样看得到「收藏」。分享 id 一直叫 shareId
+      !window.shareState.shareId &&
       !md.global.Account.isPortal &&
       sourceType !== 2;
     return (
@@ -383,7 +385,7 @@ export default class MoreOverlay extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { shareVisible, showPageMove, dropdownVisible, placement } = this.state;
     const {
       appId,

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -157,10 +157,11 @@ export default function Area(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('选择范围')}</div>
         <AnimationWrap>
-          {INTERNATIONAL_AREA_TYPE.map(item => {
+          {INTERNATIONAL_AREA_TYPE.map((item, index) => {
             const active = enumDefault === item.value;
             return (
               <div
+                key={index}
                 className={cx('animaItem', { active })}
                 onClick={() => {
                   if (active) return;

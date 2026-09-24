@@ -8,8 +8,6 @@ import { fillRecordTimeBlockColor, sortGrouping } from 'src/pages/worksheet/view
 import {
   kanbanSize,
   pageSize,
-  timeWidth,
-  timeWidthHalf,
   types,
 } from 'src/pages/worksheet/views/ResourceView/config.js';
 import {
@@ -193,10 +191,7 @@ export const getRelationControls = (appId: string, sourceId) => {
   };
 };
 
-const formatByGroup = (info, view, controls, gridTimes, currentTime) => {
-  const type =
-    localStorage.getItem(`${view.viewId}_resource_type`) || types[_.get(view, 'advancedSetting.calendarType') || 0];
-  const oneWidth = type !== 'Day' ? timeWidth : timeWidthHalf;
+const formatByGroup = (info, view, controls, gridTimes, currentTime: string | null) => {
   const groupControl = _.find(controls, { controlId: view.viewControl });
   return sortGrouping(
     info
@@ -206,7 +201,7 @@ const formatByGroup = (info, view, controls, gridTimes, currentTime) => {
           _.get(view, 'advancedSetting.begindate') && _.get(view, 'advancedSetting.enddate') //未配置开始和结束时间，不显示时间块
             ? formatRows(item, view, controls, gridTimes, true, currentTime)
             : [];
-        const { data, totalHeight } = calculateTop(rows, view, gridTimes * oneWidth);
+        const { data, totalHeight } = calculateTop(rows, view);
 
         if (_.get(groupControl, 'options.length')) {
           item.name = _.get(_.find(groupControl.options, { key: item.key }), 'value') || item.name;
@@ -221,7 +216,7 @@ const formatByGroup = (info, view, controls, gridTimes, currentTime) => {
   );
 };
 
-const formatRows = (item, view, controls, gridTimes, mustParse = true, currentTime) => {
+const formatRows = (item, view, controls, gridTimes, mustParse = true, currentTime: string | null) => {
   const rows: RecordRow[] = (item.rows || []).map(row => {
     let data = {
       ...formatRecordTime(mustParse ? JSON.parse(row) : row, view, controls), // startTime, endTime
@@ -461,10 +456,7 @@ export const updateByKey = (key, rowsData, key1?, rowsData1?) => {
         rows: rowsData,
       };
       const rows: RecordRow[] = formatRows(item, view, controls, gridTimes, false, currentTime);
-      const type =
-        localStorage.getItem(`${view.viewId}_resource_type`) || types[_.get(view, 'advancedSetting.calendarType') || 0];
-      const oneWidth = type !== 'Day' ? timeWidth : timeWidthHalf;
-      const { data, totalHeight } = calculateTop(rows, view, gridTimes * oneWidth);
+      const { data, totalHeight } = calculateTop(rows, view);
       return {
         ...item,
         rows: data,

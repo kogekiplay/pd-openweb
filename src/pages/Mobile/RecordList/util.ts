@@ -142,7 +142,7 @@ export const getViewActionInfo = ({
 };
 
 export const getDefaultValueInCreate = (mobileNavGroupFilters = []) => {
-  if (_.isEmpty(mobileNavGroupFilters)) return;
+  if (_.isEmpty(mobileNavGroupFilters)) return undefined;
   let data = mobileNavGroupFilters[0];
 
   if ([9, 10, 11, 28].includes(data.dataType)) {
@@ -169,6 +169,7 @@ export const getDefaultValueInCreate = (mobileNavGroupFilters = []) => {
       ]),
     };
   }
+  return undefined;
 };
 
 // 分组数据平铺

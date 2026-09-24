@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import _, { get, identity } from 'lodash';
 import styled from 'styled-components';

@@ -18,6 +18,8 @@ const LoadablePublicQuery = lazy(() => import('./publicquery'));
 const LoadableWorksheetListShare = lazy(() => import('./worksheetListShare'));
 
 class WorksheetSahre extends React.Component<any, any> {
+  declare promiseRowsData: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -48,7 +50,7 @@ class WorksheetSahre extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('WorksheetSharePage');
     this.getShareInfo(this.state.shareId);
   }
@@ -240,7 +242,7 @@ class WorksheetSahre extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const {
       isSearch,
       loading,

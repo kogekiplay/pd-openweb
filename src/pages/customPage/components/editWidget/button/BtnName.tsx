@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Input, Space } from 'antd';
 import styled from 'styled-components';
 import { Icon, SvgIcon } from 'ming-ui';

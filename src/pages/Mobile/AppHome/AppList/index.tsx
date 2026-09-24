@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { Icon, LoadDiv, SvgIcon } from 'ming-ui';
 import homeAppAjax from 'src/api/homeApp';
@@ -19,10 +19,10 @@ class AppList extends Component<any, any> {
       loading: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getAppListInfo();
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
   }
   getAppListInfo = () => {
@@ -67,7 +67,7 @@ class AppList extends Component<any, any> {
   showActionSheet = () => {
     this.actionSheetHandler = showAddAppActionSheet();
   };
-  render() {
+  override render() {
     let { currentGroupList, loading, groupInfo = {} } = this.state;
     currentGroupList = currentGroupList.filter(it => !(window.isMingDaoApp ? it.appDisplay : it.webMobileDisplay));
     const currentProject = getCurrentProject(

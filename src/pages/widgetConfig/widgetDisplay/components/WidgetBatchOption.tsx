@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dropdown } from 'antd';
 import _, { find, flatten } from 'lodash';
 import styled from 'styled-components';
@@ -94,7 +93,7 @@ function WidgetBatch(props) {
     return { isAll, isNotAll };
   };
 
-  const getDisabledStatus = mode => {
+  const getDisabledStatus = (mode: string) => {
     if (mode === 'readonly') {
       const unReadOnly = [31, 33, 25, 32, 38, 43, 47, 45, 30, 51, 37, 22, 52, 53, 54, 10010];
       return batchActive.some(i => _.includes(unReadOnly, i.type));
@@ -124,9 +123,9 @@ function WidgetBatch(props) {
                 <DropdownOverlay>
                   <div className="dropdownContent Width250">
                     {sectionData.length > 0 ? (
-                      sectionData.map(item => {
+                      sectionData.map((item, index) => {
                         return (
-                          <div className="item " onClick={() => handleOperate('move', item.controlId)}>
+                          <div key={index} className="item " onClick={() => handleOperate('move', item.controlId)}>
                             <div className="text overflow_ellipsis">{item.controlName}</div>
                           </div>
                         );
@@ -175,10 +174,10 @@ function WidgetBatch(props) {
 
         <SettingItem>
           <div className="settingItemTitle">{_l('字段属性')}</div>
-          {PERMISSION_OPTIONS.map(option => {
+          {PERMISSION_OPTIONS.map((option, idx) => {
             const { index, text, tips, mode } = option;
             return (
-              <div className="labelWrap">
+              <div key={idx} className="labelWrap">
                 <Checkbox
                   size="small"
                   className="customWidgetCheckbox"

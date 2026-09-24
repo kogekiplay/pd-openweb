@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
 import Trigger from '@rc-component/trigger';
@@ -16,7 +16,7 @@ const STATUS_FILTERS = [
   { text: _l('已失效'), value: 3 },
 ];
 
-const STATUS = {
+const STATUS: Record<number, { text: string; className: string }> = {
   1: { text: _l('生效中'), className: 'active' },
   2: { text: _l('已过期'), className: 'expired' },
   3: { text: _l('已失效'), className: 'invalid' },
@@ -29,10 +29,10 @@ const formatMaskedToken = rawToken => {
 };
 
 export default function PersonalAccessToken() {
-  const ajaxRef = useRef(null);
+  const ajaxRef = useRef<ApiResult | null>(null);
   const [tokens, setTokens] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [statusFilter, setStatusFilter] = useState(0);
+  const [statusFilter, setStatusFilter] = useState<number | undefined>(0);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [editingTokenId, setEditingTokenId] = useState(null);
   const [successToken, setSuccessToken] = useState('');
@@ -165,13 +165,13 @@ export default function PersonalAccessToken() {
       title: _l('名称'),
       dataIndex: 'name',
       width: 200,
-      render: (text, record) => <div className="ellipsis">{record.name}</div>,
+      render: (_text, record) => <div className="ellipsis">{record.name}</div>,
     },
     {
       title: _l('令牌'),
       dataIndex: 'rawToken',
       width: '32%',
-      render: (text, record) => {
+      render: (_text, record) => {
         const visible = visibleTokenIds.includes(record.id);
         const tokenText = visible ? record.rawToken : formatMaskedToken(record.rawToken);
 
@@ -210,7 +210,7 @@ export default function PersonalAccessToken() {
       title: _l('状态'),
       dataIndex: 'status',
       width: '10%',
-      render: (text, record) => (
+      render: (_text, record) => (
         <div className="status">
           <span className={`statusBadge ${STATUS[record.status]?.className}`}>{STATUS[record.status]?.text}</span>
           {record.status === 3 && (
@@ -238,7 +238,7 @@ export default function PersonalAccessToken() {
       dataIndex: 'actions',
       width: '6%',
       align: 'right',
-      render: (text, record) => (
+      render: (_text, record) => (
         <div className="actions">
           <Trigger
             action={['click']}

@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, Fragment, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { useKey } from 'react-use';
 import cx from 'classnames';
@@ -61,7 +61,7 @@ function getCellMaxShowNum(texts = [], { width = 100, maxHeight = 34 } = {}) {
   }
 
   if (!needLimit) {
-    return;
+    return undefined;
   }
 
   const lastHeight = getCellHeight(texts.slice(0, result).concat('='), width);
@@ -150,7 +150,7 @@ function getDefaultRelateSheetValue({ worksheetId, control, recordId, rowFormDat
     };
   } catch (err) {
     console.log(err);
-    return;
+    return undefined;
   }
 }
 
@@ -180,7 +180,7 @@ export default forwardRef(function RelateRecordTags(props, ref) {
   const [addedIds, setAddedIds] = useState(props.addedIds || []);
   const [deletedIds, setDeletedIds] = useState(props.deletedIds || []);
   const conRef = useRef(null);
-  const cache = useRef({});
+  const cache = useRef<{ isActive?: boolean | undefined }>({});
   const allowNewRecord = control.enumDefault2 !== 1 && control.enumDefault2 !== 11 && !window.isPublicWorksheet;
   const multiple = control.enumDefault === 2;
   const allowRemove = control.advancedSetting.allowcancel !== '0' || !multiple;

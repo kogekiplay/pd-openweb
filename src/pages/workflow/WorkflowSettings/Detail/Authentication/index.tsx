@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { Checkbox, Dropdown, LoadDiv, RadioGroup, ScrollView } from 'ming-ui';
@@ -16,6 +16,8 @@ import {
 } from '../components';
 
 export default class Authentication extends Component<any, any> {
+  declare refreshTime: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -28,7 +30,7 @@ export default class Authentication extends Component<any, any> {
 
   testIndex = 0;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -36,7 +38,7 @@ export default class Authentication extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -280,7 +282,7 @@ export default class Authentication extends Component<any, any> {
         </div>
         {data.webHookNodes.map((item, i) => {
           return (
-            <Fragment>
+            <Fragment key={i}>
               <div className="flexRow">
                 <Dropdown
                   className="flowDropdown mRight10 mTop10"
@@ -301,7 +303,7 @@ export default class Authentication extends Component<any, any> {
                     height={0}
                     content={item.url}
                     formulaMap={data.formulaMap}
-                    onChange={(err, value) => this.updateAjaxParameter({ url: value }, i)}
+                    onChange={(_err, value) => this.updateAjaxParameter({ url: value }, i)}
                     updateSource={this.updateSource}
                   />
                 </div>
@@ -380,9 +382,9 @@ export default class Authentication extends Component<any, any> {
   /**
    * 渲染OAuth2参数
    */
-  renderOAuth2Parameter(item, index: number, key) {
+  renderOAuth2Parameter(item, index: number, key: string) {
     const { data } = this.state;
-    const TABS = {
+    const TABS: Record<string, { sourceKey: string; btnText: string }> = {
       Params: {
         sourceKey: 'params',
         btnText: '+ Query Param',
@@ -409,7 +411,7 @@ export default class Authentication extends Component<any, any> {
                 { text: 'raw(JSON)', value: 2, checked: item.contentType === 2 },
               ]}
               onChange={value => {
-                const newObj = { contentType: value };
+                const newObj: { contentType: number; formControls?: []; body?: string } = { contentType: value };
 
                 if (value === 0) {
                   newObj.formControls = [];
@@ -460,7 +462,7 @@ export default class Authentication extends Component<any, any> {
               type={2}
               content={item.body}
               formulaMap={data.formulaMap}
-              onChange={(err, value) => this.updateAjaxParameter({ body: value }, index)}
+              onChange={(_err, value) => this.updateAjaxParameter({ body: value }, index)}
               updateSource={this.updateSource}
             />
           </div>
@@ -595,7 +597,7 @@ export default class Authentication extends Component<any, any> {
   /**
    * 验证数值控件
    */
-  checkNumberControl(evt, isBlur?) {
+  checkNumberControl(evt, isBlur?: boolean | undefined) {
     let num = evt.target.value.replace(/[^\d]/g, '');
 
     evt.target.value = num;
@@ -705,7 +707,7 @@ export default class Authentication extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { data, showTestDialog, testArray } = this.state;
 
     if (_.isEmpty(data)) {

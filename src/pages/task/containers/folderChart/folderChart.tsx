@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 import { shallowEqual } from 'react-redux';
@@ -41,7 +41,7 @@ class FolderChart extends Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     import('@antv/g2plot').then(data => {
       this.Column = data.Column;
       this.Pie = data.Pie;
@@ -51,7 +51,7 @@ class FolderChart extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.taskConfig.folderId && this.props.taskConfig.folderId !== prevProps.taskConfig.folderId) {
         setTimeout(() => {
@@ -61,7 +61,7 @@ class FolderChart extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('body').off('.folderChart');
     $(window).off('resize.folderChart');
 
@@ -242,7 +242,7 @@ class FolderChart extends Component<any, any> {
     $('body').on('click.folderChart', '.folderChartChargeYes', function (this: HTMLElement) {
       const $folderChartChargeList = $(this).closest('.folderChartChargeList');
       let isAuto = false;
-      const chargeAccountIDs = [];
+      const chargeAccountIDs: (string | undefined)[] = [];
       const isDialog = $(this).closest('.folderChartMaxView').length;
 
       if (!$folderChartChargeList.find('.folderChartSelect.bgColorPrimary').length) {
@@ -256,7 +256,7 @@ class FolderChart extends Component<any, any> {
       if ($folderChartChargeList.find('.folderChartSelectAll.bgColorPrimary').length) {
         isAuto = true;
       } else {
-        $folderChartChargeList.find('.folderChartSelect.bgColorPrimary').each((i, item) => {
+        $folderChartChargeList.find('.folderChartSelect.bgColorPrimary').each((_i, item) => {
           chargeAccountIDs.push($(item).attr('data-id'));
         });
       }
@@ -271,6 +271,7 @@ class FolderChart extends Component<any, any> {
       }
 
       that.updateChargeRefreshChart(isAuto, chargeAccountIDs, isDialog);
+      return undefined;
     });
 
     // 点击放大chart
@@ -1063,7 +1064,7 @@ class FolderChart extends Component<any, any> {
   }
 
   folderChartsCustom() {
-    $('.folderChartBoxModel .folderChartModel[data-model=custom]').map((i, item) => {
+    $('.folderChartBoxModel .folderChartModel[data-model=custom]').map((_i, item) => {
       const id = $(item).data('id');
       const type = $(item).data('type');
       const source = _.find(folderChartSettings.data, ({ controlId }) => controlId === id);
@@ -1293,7 +1294,7 @@ class FolderChart extends Component<any, any> {
     return Math.floor(time / 24);
   }
 
-  render() {
+  override render() {
     return <div id="taskList" />;
   }
 }

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -40,14 +40,14 @@ const Mingo = props => {
   const { mingoVisible } = toolbarConfig;
   const { isOpenMingoAI } = toolbarConfig;
 
-  const [hoverNow, setHoverNow] = useState(null);
-  const [clickNow, setClickNow] = useState(null);
+  const [hoverNow, setHoverNow] = useState<number | null>(null);
+  const [clickNow, setClickNow] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const wrapRef = useRef(null);
   // 首次访问引导气泡：提示右下角 mingo 可以搭建应用；点击 mingo 后写 localStorage，不再显示
   const [buildTipVisible, setBuildTipVisible] = useState(() => !localStorage.getItem('mingoBuildTipDismissed'));
-  const [buildTipPos, setBuildTipPos] = useState(null);
+  const [buildTipPos, setBuildTipPos] = useState<{ left: number; top: number } | null>(null);
 
   const { aiBrandName, aiBrandLogoUrl, aiBrandThemeColor } = md.global.SysSettings;
   const showBuildTip = isOpenMingoAI && !mingoVisible && buildTipVisible;

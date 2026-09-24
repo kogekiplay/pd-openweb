@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import JsonView from '@mingdaocom/json-view';
 import cx from 'classnames';
@@ -98,7 +98,7 @@ export default class JSONParse extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -106,7 +106,7 @@ export default class JSONParse extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -310,7 +310,7 @@ export default class JSONParse extends Component<any, any> {
                   height={0}
                   content={data.errorMessage}
                   formulaMap={data.formulaMap}
-                  onChange={(err, value) => this.updateSource({ errorMessage: value })}
+                  onChange={(_err, value) => this.updateSource({ errorMessage: value })}
                   updateSource={this.updateSource}
                 />
                 {!isIntegration && (
@@ -594,7 +594,7 @@ export default class JSONParse extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { data } = this.state;
 
     if (_.isEmpty(data)) {

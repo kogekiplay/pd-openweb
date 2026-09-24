@@ -4,8 +4,13 @@ import { navigateToLogin } from 'src/router/navigateTo';
 import { getPssId } from 'src/utils/pssId';
 import * as actions from '../redux/actions';
 import { removeFlashTitle } from './index';
+import type { AppDispatch } from 'src/redux/types';
 
-export const socketInitEvent = function () {
+/** 这些函数都是在聊天组件（ChatList / ChatWindow）里用 xxx.call(this) 调的，
+ *  this 就是那个 React 组件实例。整个文件只从它身上取了 props.dispatch。 */
+type SocketEventHost = { props: { dispatch: AppDispatch } };
+
+export const socketInitEvent = function (this: SocketEventHost) {
   $(sessionNewMsgAudio).appendTo('html > body');
   $(systemNewMsgAudio).appendTo('html > body');
 
@@ -30,7 +35,7 @@ export const socketInitEvent = function () {
   });
 };
 
-export const groupInit = function () {
+export const groupInit = function (this: SocketEventHost) {
   // 创建群组
   IM.socket.on('new group', message => {
     this.props.dispatch(actions.newGroup(message));
@@ -102,7 +107,7 @@ export const groupInit = function () {
   });
 };
 
-export const userInit = function () {
+export const userInit = function (this: SocketEventHost) {
   // 新的个人信息
   IM.socket.on('new message', message => {
     this.props.dispatch(actions.newUserMessage(message));
@@ -126,14 +131,14 @@ export const userInit = function () {
   });
 };
 
-export const notifyInit = function () {
+export const notifyInit = function (this: SocketEventHost) {
   // 新的系统消息
   IM.socket.on('new notify', message => {
     this.props.dispatch(actions.newNotifyMessage(message));
   });
 };
 
-export const stateInit = function () {
+export const stateInit = function (this: SocketEventHost) {
   const reconnectDelayTime = 10000;
   let disconnectTime = 0;
   let isOpen = true;
@@ -214,7 +219,7 @@ export const stateInit = function () {
   });
 };
 
-export const sync = function () {
+export const sync = function (this: SocketEventHost) {
   // 清除单个会话 其他页面接收到推送
   IM.socket.on('session removed', message => {
     this.props.dispatch(actions.sessionRemoved(message));

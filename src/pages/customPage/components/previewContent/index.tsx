@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -111,6 +111,7 @@ function PreviewContent(props) {
     if (hrefReg.test(value)) {
       return <iframe ref={ref} allow={CUSTOM_PAGE_IFRAME_ALLOW} allowFullScreen src={parseLink(value)}></iframe>;
     }
+    return undefined;
   };
 
   return <PreviewWrap>{renderContent()}</PreviewWrap>;

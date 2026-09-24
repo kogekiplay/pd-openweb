@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import EmptyImg from '../image/empty.png';
 
@@ -21,7 +20,12 @@ const Container = styled.div`
   }
 `;
 
-export default function GlobalSearchEmpty(props) {
+export interface GlobalSearchEmptyProps {
+  text?: string | undefined;
+  positionStyle?: { top: string; transform: string } | undefined;
+}
+
+export default function GlobalSearchEmpty(props: GlobalSearchEmptyProps) {
   const { text, positionStyle } = props;
 
   return (

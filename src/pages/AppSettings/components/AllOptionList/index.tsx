@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import update from 'immutability-helper';
@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { Icon, LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import worksheetAjax from 'src/api/worksheet';
+import { OptionChip } from 'src/components/OptionChip';
 import EditOptionList from 'src/pages/widgetConfig/widgetSetting/components/OptionList/EditOptionList';
 import { getTranslateInfo } from 'src/utils/app';
 import { getOptions } from '../../../widgetConfig/util/setting';
@@ -77,13 +78,9 @@ const ListItem = styled.div`
     display: flex;
     align-items: center;
     line-height: 30px;
+    /* 彩色选项画成 24px 高的标签后，flex 行的高度由标签决定，靠 min-height 保住原来的行距 */
+    min-height: 30px;
 
-    .colorWrap {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      margin-right: 6px;
-    }
     &.more {
       position: absolute;
       width: 100%;
@@ -127,10 +124,15 @@ const OptionItem = props => {
       <ul>
         {options
           .filter(item => !item.isDeleted)
-          .map(({ color, value }) => (
-            <li>
-              {colorful && <div className="colorWrap" style={{ backgroundColor: color }}></div>}
-              <div className="name ellipsis flex">{value}</div>
+          .map(({ color, value }, index) => (
+            <li key={index}>
+              {colorful ? (
+                <OptionChip color={color} title={value}>
+                  {value}
+                </OptionChip>
+              ) : (
+                <div className="name ellipsis flex">{value}</div>
+              )}
             </li>
           ))}
         {options.length > 15 && <li className="more">{_l('更多 ...')}</li>}
@@ -185,6 +187,7 @@ export default function AllOptionList(props) {
     });
 
     setPos(pos);
+    return undefined;
   };
 
   useEffect(() => {
@@ -257,6 +260,7 @@ export default function AllOptionList(props) {
 
     return items.map((item, index) => (
       <OptionItem
+        key={index}
         {...item}
         status={currentTab}
         index={index}
@@ -297,8 +301,9 @@ export default function AllOptionList(props) {
         {[
           { label: _l('启用'), value: 1 },
           { label: _l('停用'), value: 9 },
-        ].map(item => (
+        ].map((item, index) => (
           <div
+            key={index}
             className={cx('tabItem Hand', { active: item.value === currentTab })}
             onClick={() => {
               setCurrentTab(item.value);

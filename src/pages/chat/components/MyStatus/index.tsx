@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -91,7 +91,10 @@ const DialogWrap = styled(Dialog)`
 
 export default function MyStatus() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({});
+  const [data, setData] = useState<{
+    onStatusOption?: HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption | null | undefined;
+    statusOptions?: HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption[] | undefined;
+  }>({});
   const [visible, setVisible] = useState(false);
   const [statusList, setStatusList] = useState([]);
   const [currentIndex, setCurrentIndex] = useState<number | undefined>();
@@ -112,7 +115,7 @@ export default function MyStatus() {
           history: false,
           hideClassic: true,
           placement: 'left bottom',
-          onSelect: (name: string, value, emotionText) => {
+          onSelect: (name: string, _value, emotionText) => {
             setCurrentIndex(refIndex);
             setStatusList(prevList => {
               const copyList = _.cloneDeep(prevList);

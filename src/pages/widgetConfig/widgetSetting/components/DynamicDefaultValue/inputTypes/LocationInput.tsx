@@ -1,11 +1,17 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import MDMap from 'ming-ui/components/amap/MDMap';
 import { getMapConfig } from 'src/utils/control';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class LocationInput extends Component<any, any> {
+export interface LocationInputState {
+  visible: boolean;
+}
+
+export default class LocationInput extends Component<any, LocationInputState> {
+  declare $wrap: SelectOtherField | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -17,7 +23,7 @@ export default class LocationInput extends Component<any, any> {
     const { defaultType } = this.props;
     defaultType && this.$wrap.triggerClick();
   };
-  render() {
+  override render() {
     const { defaultType, enumDefault2, advancedSetting = {}, dynamicValue = [], onDynamicValueChange } = this.props;
     const staticValue = _.get(dynamicValue, '0.staticValue');
     return (

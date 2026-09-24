@@ -195,7 +195,7 @@ export default function AppList(props) {
   const [keyCodeStart, setKeyCodeStart] = useState(start);
   const [current, setCurrent] = useState(-1);
   const [countFlag, setCountFlag] = useState(0);
-  const [keyCode, setKeyCode] = useState(null);
+  const [keyCode, setKeyCode] = useState<number | null>(null);
   const [buttons, setButtons] = useState(undefined);
   const [timeKey, setTimeKey] = useState(sortTime);
   const [id, setId] = useState();
@@ -295,7 +295,7 @@ export default function AppList(props) {
     setCurrent(_index);
   };
 
-  const switchHandle = e => {
+  const switchHandle = (e: KeyboardEvent) => {
     e.stopPropagation();
     if ([38, 40, 13].indexOf(e.keyCode) > -1) {
       setKeyCode(e.keyCode);
@@ -338,7 +338,7 @@ export default function AppList(props) {
 
     if (dataKey === 'app') {
       //埋点
-      const typeObj = { 0: 'worksheet', 1: 'customPage', 2: 'app', 3: 'app' };
+      const typeObj: Record<number, string> = { 0: 'worksheet', 1: 'customPage', 2: 'app', 3: 'app' };
       addBehaviorLog(typeObj[item.itemType], item.itemType === 3 || item.itemType === 2 ? item.appId : item.itemId);
 
       const parameter = [
@@ -357,7 +357,7 @@ export default function AppList(props) {
     window.open(url);
   };
 
-  const setFilter = (item, isApp?) => {
+  const setFilter = (item, isApp?: boolean | undefined) => {
     const { itemType, itemId, appId } = item;
 
     smartSearchAjax

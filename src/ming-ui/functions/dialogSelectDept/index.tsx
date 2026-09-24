@@ -10,6 +10,8 @@ import DepartmentList from '../dialogSelectUser/GeneralSelect/DepartmentList';
 import './style.less';
 
 class DialogSelectDept extends React.Component<any, any> {
+  declare search: _.DebouncedFunc<() => void>;
+
   constructor(props) {
     super(props);
 
@@ -38,12 +40,12 @@ class DialogSelectDept extends React.Component<any, any> {
 
   scroll = React.createRef();
 
-  componentDidMount() {
+  override componentDidMount() {
     document.body.addEventListener('keydown', this.handleKeydown);
     this.fetchData();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.search && this.search.cancel) {
       this.search.cancel();
     }
@@ -371,9 +373,10 @@ class DialogSelectDept extends React.Component<any, any> {
     this.setState({
       list: departmentTree,
     });
+    return undefined;
   }
 
-  setMoreList = (departmentId, isDelete) => {
+  setMoreList = (departmentId, isDelete: boolean) => {
     const { departmentMoreIds = [] } = this.state;
     let moreData = departmentMoreIds.find(o => o.departmentId === departmentId);
 
@@ -595,7 +598,7 @@ class DialogSelectDept extends React.Component<any, any> {
     return !!this.state.selectedDepartment.filter(item => item.departmentId.indexOf('orgs_') > -1).length;
   }
 
-  render() {
+  override render() {
     const { title, width, onClose, className } = this.props;
     const { showProjectAll } = this.state;
     return (

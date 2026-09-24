@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { ConfigProvider, Dropdown, Table } from 'antd';
 import cx from 'classnames';
@@ -23,7 +23,7 @@ export default class PageTableCon extends Component<any, any> {
 
   // 分页
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.paginationInfo !== this.props.paginationInfo) {
         this.setState({
@@ -108,7 +108,7 @@ export default class PageTableCon extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       className,
       loading,
@@ -149,13 +149,30 @@ export default class PageTableCon extends Component<any, any> {
             fixed: 'right',
             align: 'right',
             dataIndex: 'moreAction',
-            render: (text, record) => {
+            render: (_text, record) => {
               if (!moreActionContent) return;
               return moreActionContent(record);
             },
           })
         : columns;
-    const scrollWidth = _.reduce(columns, (total, item) => total + item.width, 0);
+    const sumWidth = _.reduce(columns, (total, item) => total + item.width, 0);
+    /* 【有列没写 width 时这里会得到 NaN】total + undefined = NaN，antd 把它原样写成 <table> 的
+       style.width，React 每次渲染都警告「NaN is an invalid value for the width css style property」。
+       换成 undefined 而不是按 150 补齐：原先的 NaN 对 antd 是假值、不开横向滚动，表格按自然宽度排；
+       补成真数字会强制表格宽度、可能凭空冒出横向滚动条，那是可见的布局变化。undefined 同样是假值，布局不变。
+       另：传 width: 'fit-content' 的两个调用方（pay/Merchant、pay/Invoice）在这里走的是字符串拼接，
+       得到 "150fit-content" 这种坏值 —— React 不警告但同样无效，没在这次一并改。 */
+    const scrollWidth = Number.isNaN(sumWidth) ? undefined : sumWidth;
+
+    /* 【默认 rowKey：按下标】24 个调用方里只有 2 个经 tableSetting 传了 rowKey，其余数据也没有 key 字段，
+       于是 antd 生成的每一行都没有 key —— React 在 tbody 上报「Each child in a list should have a unique key」，
+       并退回按下标对齐。这里补的默认值就是下标，与原先行为逐位等价，只是不再警告；
+       记录自带 key 字段时仍用它（antd 的默认 rowKey 本来就是 'key'）。
+       不能写成 (record, index) => index：antd 6 只要看到 rowKey 声明了第二个参数，
+       就报「index parameter of rowKey function is deprecated」，等于把一条警告换成另一条。
+       所以先按对象身份建一张「记录 -> 下标」表，rowKey 只收一个参数。 */
+    const rowIndexOf = new Map(dataSource.map((record, i) => [record, i]));
+    const defaultRowKey = record => (record && record.key !== undefined ? record.key : rowIndexOf.get(record));
 
     const scroll = _.isEmpty(dataSource)
       ? { x: scrollWidth }
@@ -181,6 +198,8 @@ export default class PageTableCon extends Component<any, any> {
               )}
             >
               <Table
+                // 必须写在 {...tableSetting} 之前：调用方经 tableSetting 传的 rowKey（如 'id'）要能覆盖它
+                rowKey={defaultRowKey}
                 {...tableSetting}
                 columns={columns.map(item => ({
                   ...item,

@@ -96,7 +96,7 @@ export const isRelation = control => {
   );
 };
 
-export const isRToC = control => {
+export const isRToC = (control: FormControl) => {
   return [21, 29, 34, 51].includes(control.type) && _.get(control, 'advancedSetting.direction') === '1';
 };
 

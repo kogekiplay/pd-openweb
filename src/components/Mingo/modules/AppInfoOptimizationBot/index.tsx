@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import { isFunction } from 'lodash';
@@ -107,7 +107,7 @@ function MingoContent(props, ref) {
     includeAppName: true,
     includeAppIcon: true,
   });
-  const configSnapshotRef = useRef(null);
+  const configSnapshotRef = useRef<{ includeAppName: boolean; includeAppIcon: boolean } | null>(null);
   const configByMessageIdRef = useRef({});
   const messageListRef = useRef(null);
   const cache = useRef({
@@ -136,7 +136,7 @@ function MingoContent(props, ref) {
       //       `,
       //     },
     ],
-    aiCompletionApi: async (messages, { abortController, agentParams = {} }) => {
+    aiCompletionApi: async (_messages, { abortController, agentParams = {} }) => {
       configSnapshotRef.current = { ...config };
       //  0全部 1优化应用名称项 2优化应用项图标
       let optimizeType = 0;

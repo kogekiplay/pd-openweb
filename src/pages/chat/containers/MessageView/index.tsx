@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -29,7 +29,7 @@ class MessageView extends Component<any, any> {
       errorParam: false,
     };
   }
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     const { session } = this.props;
 
     if (session.id === nextProps.currentSession.value) {
@@ -38,7 +38,7 @@ class MessageView extends Component<any, any> {
 
     return false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { session, sessionList } = this.props;
     const topUnread = sessionList.filter(item => item.value == session.id)[0];
     const type = session.isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER;
@@ -71,12 +71,12 @@ class MessageView extends Component<any, any> {
       this.props.dispatch(actions.setMessage(session.id, utils.formatMessages(res)));
     });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { session } = this.props;
     delete window[`scrollView-${session.id}`];
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { session, sessionList, currentSession, gotoMessage } = this.props;
       const gotoMessageId = gotoMessage[session.id]; // 右侧点击了搜索消息
@@ -413,6 +413,7 @@ class MessageView extends Component<any, any> {
         return false;
       }
     }
+    return undefined;
   };
   renderInviteMessage() {
     const { session } = this.props;
@@ -538,7 +539,7 @@ class MessageView extends Component<any, any> {
       <div className="ChatPanel-iconBottom icon-bottom colorPrimary hidden" onClick={this.handleBottomEnd.bind(this)} />
     );
   }
-  render() {
+  override render() {
     const { isMore, isDownLoadingMessage } = this.state;
     const { session, messages, bottomUnreadMessage } = this.props;
     const bottomUnread = bottomUnreadMessage[session.id] || [];

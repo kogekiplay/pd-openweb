@@ -298,7 +298,7 @@ export const addGroupSession =
  * @param {*} cb
  */
 export const addUserSession =
-  (id, msg: Record<string, any> = {}, isOpen = true, cb?) =>
+  (id, msg: Record<string, any> = {}, isOpen = true, cb?: (() => void) | undefined) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     // if (utils.chatWindow.is(id)) {
@@ -439,7 +439,7 @@ export const operate = status => (dispatch: AppDispatch, getState: GetState) => 
  * 发送设置置顶的会话
  * @param {*} message
  */
-export const sendSetTop = message => (dispatch: AppDispatch, getState: GetState) => {
+export const sendSetTop = message => (_dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const { isTop } = message;
 
@@ -617,6 +617,15 @@ export const closeSessionPanel = () => (dispatch: AppDispatch, getState: GetStat
  * @param {*} result
  */
 export const setNewCurrentSession = result => (dispatch: AppDispatch) => {
+  /* 【点会话列表时 dev 下报 A state mutation was detected ... 'chat.sessionList.N.id'】
+     result 常常直接是 chat.sessionList 里的对象（SessionList.handleOpenPanel 只在带 showBadge 时才拷一份），
+     原先 setCurrentChat 在它身上写 id = value，RTK 的不可变检查在 dev 下抛错、会话面板打不开；生产没有这个检查，
+     但 sessionList 元素上的 id（updateSessionList 写进去的最后一条消息 id）会被悄悄覆盖成会话 id。
+     下游读 currentSession.id 的地方（SessionList 的切换判断、新窗口地址等）拿到的一直是 value，这里拷一份补上，行为不变。 */
+  if (result && result.value) {
+    result = { ...result, id: result.value };
+  }
+
   socket.Contact.setCurrentChat(result);
   dispatch({
     type: 'SET_CURRENT_SESSION',
@@ -639,11 +648,12 @@ export const setCurrentSessionId =
   (id, message = {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
-    const session = sessionList.filter(item => item.value === id)[0];
+    const found = sessionList.filter(item => item.value === id)[0];
+    // 同上：session 取自 sessionList（store 里的对象），不能原地 assign；id = value 原先是 setCurrentChat 顺手写上的
+    const session = found && found.value ? { ...found, id: found.value } : found;
     socket.Contact.setCurrentChat(session);
     dispatch({
       type: 'SET_CURRENT_SESSION',
-      // 同上：session 取自 sessionList（store 里的对象），不能原地 assign
       result: { ...session, ...message },
     });
   };
@@ -883,20 +893,21 @@ export const updateGroupPushNotice = (groupId: string, isPushNotice) => (dispatc
  * @param {*} groupId
  * @param {*} isForbidInvite
  */
-export const updateForbIdInvite = (groupId: string, isForbidInvite) => (dispatch: AppDispatch, getState: GetState) => {
-  const { currentSessionList } = getState().chat;
-  const newCurrentSessionList = currentSessionList.map(item => {
-    if (item.id === groupId) {
-      item.isForbidInvite = isForbidInvite;
-    }
+export const updateForbIdInvite =
+  (groupId: string, isForbidInvite: boolean) => (dispatch: AppDispatch, getState: GetState) => {
+    const { currentSessionList } = getState().chat;
+    const newCurrentSessionList = currentSessionList.map(item => {
+      if (item.id === groupId) {
+        item.isForbidInvite = isForbidInvite;
+      }
 
-    return item;
-  });
-  dispatch({
-    type: 'UPDATE_CURRENT_SESSION',
-    result: newCurrentSessionList,
-  });
-};
+      return item;
+    });
+    dispatch({
+      type: 'UPDATE_CURRENT_SESSION',
+      result: newCurrentSessionList,
+    });
+  };
 
 /**
  * 设为官方群组
@@ -1152,6 +1163,9 @@ export const updateMessage = message => (dispatch: AppDispatch, getState: GetSta
     .filter(item => item)
     .map(item => {
       if (item.waitingId === waitingid) {
+        // item 是 chat.messages 里的对象（store 里的）：先拷一份再改，嵌套的 msg 也一样，
+        // 否则 dev 下发消息收到回执时会被 RTK 的不可变检查拦下（生产得到的结果值与原先相同）
+        item = { ...item, msg: item.msg && { ...item.msg } };
         item.id = message.id;
         // 替换成服务器的时间
         if (socket && socket.time) {
@@ -1744,7 +1758,7 @@ export const removeGotoMessage = id => {
  * 更新是否在标签页聊天的状态
  * @param {*} isWindow
  */
-export const setIsWindow = isWindow => {
+export const setIsWindow = (isWindow: boolean) => {
   return {
     type: 'UPDATE_IS_WINDOW',
     result: isWindow,
@@ -1884,7 +1898,7 @@ export const setSlience = message => (dispatch: AppDispatch, getState: GetState)
  * 更新 socket 状态
  * @param {*} state
  */
-export const setSocketState = state => {
+export const setSocketState = (state: number) => {
   return {
     type: 'UPDATE_SOCKET_STATE',
     result: state,

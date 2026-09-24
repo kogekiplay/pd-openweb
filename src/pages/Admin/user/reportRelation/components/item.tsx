@@ -1,12 +1,17 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 import OpList from './opList';
 import User from './user';
 
-export default class Item extends Component<any, any> {
-  static propTypes = {
+export interface ItemState {
+  isDisabled: boolean;
+  showOpList: boolean;
+}
+
+export default class Item extends Component<any, ItemState> {
+  static override propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     add: PropTypes.func,
@@ -25,7 +30,7 @@ export default class Item extends Component<any, any> {
   }
 
   renderOpList() {
-    const toggleList = (flag?) => {
+    const toggleList = (flag?: boolean | undefined) => {
       if (flag === undefined) {
         this.setState({
           showOpList: !this.state.showOpList,
@@ -59,7 +64,7 @@ export default class Item extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isHighLight, auth } = this.props;
     const { isDisabled } = this.state;
     const itemClassName = cx('node', {

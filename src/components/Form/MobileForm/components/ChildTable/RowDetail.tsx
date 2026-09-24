@@ -7,8 +7,12 @@ import CustomFields from 'src/components/Form';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
-export default class RowDetail extends React.Component<any, any> {
-  static propTypes = {
+export interface RowDetailState {
+  flag: number;
+}
+
+export default class RowDetail extends React.Component<any, RowDetailState> {
+  static override propTypes = {
     widgetStyle: PropTypes.shape({}),
     ignoreLock: PropTypes.bool,
     disabled: PropTypes.bool,
@@ -36,7 +40,7 @@ export default class RowDetail extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.data &&
@@ -57,7 +61,8 @@ export default class RowDetail extends React.Component<any, any> {
     return this.handleSave(false, false, false, true);
   };
 
-  handleSave = (nextContinue, isSwitchSave: boolean, ignoreAlert: boolean, isCopy = false, extraParams: Record<string, any> = {}) => {
+  // 前三个开关都可省略（调用方有 handleSave()、handleSave(true)、handleSave(false, true) 几种写法），省略即 false
+  handleSave = (nextContinue?: boolean, isSwitchSave?: boolean, ignoreAlert?: boolean, isCopy = false, extraParams: Record<string, any> = {}) => {
     if (!this.customwidget.current) {
       return;
     }
@@ -176,7 +181,7 @@ export default class RowDetail extends React.Component<any, any> {
     onClose();
   };
 
-  render() {
+  override render() {
     const {
       ignoreLock,
       disabled,

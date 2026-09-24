@@ -1,11 +1,13 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Dialog, Input, RadioGroup } from 'ming-ui';
 import './SaveWorksheetFilter.less';
 
 export default class SaveWorksheetFilter extends Component<any, any> {
-  static propTypes = {
+  declare form: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     title: PropTypes.string,
     visible: PropTypes.bool,
     isCharge: PropTypes.bool,
@@ -21,12 +23,12 @@ export default class SaveWorksheetFilter extends Component<any, any> {
       filterType: props.filterType || 1,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.form) {
-      this.form.querySelector('.sheetName').focus();
+      this.form.querySelector<HTMLInputElement>('.sheetName').focus();
     }
   }
-  render() {
+  override render() {
     const { title, visible, isCharge, onClose, onSave } = this.props;
     const { filterName, filterType } = this.state;
     return (

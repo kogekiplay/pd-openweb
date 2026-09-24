@@ -16,7 +16,7 @@ import { accountTxtInfo, formListBottom, formListTop, loginSetting } from './for
 import ViewKeyDialog from './ViewKey';
 import './index.less';
 
-const headerTitle = {
+const headerTitle: Record<string, string> = {
   index: _l('其他'),
   effective: _l('LDAP登录'),
   sso: _l('SSO'),
@@ -74,6 +74,8 @@ const AUTH_MAPPING = {
 };
 
 export default class OtherTool extends Component<any, any> {
+  declare customNameInput: HTMLInputElement | null | undefined;
+
   constructor() {
     super();
     Config.setPageTitle(_l('集成 - 其他'));
@@ -112,7 +114,7 @@ export default class OtherTool extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { authority } = this.props;
     hasPermission(authority, PERMISSION_ENUM.LDAP_LOGIN) && this.getSettings();
     hasPermission(authority, PERMISSION_ENUM.SSO_LOGIN) && this.getSsoSettings();
@@ -217,7 +219,7 @@ export default class OtherTool extends Component<any, any> {
       });
   };
 
-  enableForm(key) {
+  enableForm(key: string) {
     this.setState(
       {
         [key]: !this.state[key],
@@ -333,7 +335,7 @@ export default class OtherTool extends Component<any, any> {
 
   changeAccountTxtInfo = () => {};
 
-  renderCompType(key, compType = 'input', inputDisabled, placeholder: string) {
+  renderCompType(key, compType = 'input', inputDisabled: boolean, placeholder: string) {
     const { searchRange, DNGroupList = [], errorInfo = {} } = this.state;
 
     switch (compType) {
@@ -345,7 +347,7 @@ export default class OtherTool extends Component<any, any> {
             border
             style={{ width: '40%' }}
             menuClass="w100"
-            isAppendBody
+            isAppendToBody
             data={accountTxtInfo}
             value={this.state[key]}
             onChange={value => this.setState({ [key]: value })}
@@ -404,7 +406,7 @@ export default class OtherTool extends Component<any, any> {
             </div>
             {DNGroupList.map((it, i) => {
               return (
-                <div className="groupItem mBottom16">
+                <div key={i} className="groupItem mBottom16">
                   <div className="flex">
                     <Input
                       style={{ height: 36 }}
@@ -464,6 +466,7 @@ export default class OtherTool extends Component<any, any> {
           </div>
         );
     }
+    return undefined;
   }
 
   renderFormCommon(list) {
@@ -473,8 +476,8 @@ export default class OtherTool extends Component<any, any> {
       <Fragment>
         {list &&
           list.map(({ label, key, compType, errorMsg, desc, showCheckbox, checkedField, placeholder }) => {
-            if (key === 'domainPath' && searchRange !== 0) return;
-            if (key === 'DNGroup' && searchRange !== 1) return;
+            if (key === 'domainPath' && searchRange !== 0) return undefined;
+            if (key === 'DNGroup' && searchRange !== 1) return undefined;
             return (
               <div className="formItem" key={key}>
                 <div className={cx('formLabel', { flexRow: showCheckbox })}>
@@ -751,7 +754,7 @@ export default class OtherTool extends Component<any, any> {
 
     return (
       <Fragment>
-        {DATA_INFO.map(item => {
+        {DATA_INFO.map((item, index) => {
           const { key, featureId, docLink, showSetting, description, showCustomName, label, iconClassName } = item;
           const featureType = getFeatureStatus(Config.projectId, featureId);
           if ((item.featureId && !featureType) || !hasPermission(authority, AUTH_MAPPING[item.key])) return null;
@@ -759,7 +762,7 @@ export default class OtherTool extends Component<any, any> {
           if (key === 'sso') return null;
 
           return (
-            <div className="toolItem">
+            <div key={index} className="toolItem">
               <div className="toolItemLabel">
                 {item.label}
                 {(featureType === '2' || (key === 'sso' && licenseType === 0)) && <UpgradeIcon />}
@@ -772,7 +775,7 @@ export default class OtherTool extends Component<any, any> {
                       onClick={() => {
                         if (featureType === '2') {
                           buriedUpgradeVersionDialog(Config.projectId, featureId);
-                          return;
+                          return undefined;
                         }
 
                         if (key === 'sso' && licenseType === 0) {
@@ -784,6 +787,7 @@ export default class OtherTool extends Component<any, any> {
                         }
 
                         this.enableForm(key);
+                        return undefined;
                       }}
                     />
                   )}
@@ -807,7 +811,7 @@ export default class OtherTool extends Component<any, any> {
                       onClick={() => {
                         if (featureType === '2') {
                           buriedUpgradeVersionDialog(Config.projectId, featureId);
-                          return;
+                          return undefined;
                         }
 
                         if (key === 'sso' && licenseType === 0) {
@@ -822,6 +826,7 @@ export default class OtherTool extends Component<any, any> {
                           default:
                             this.toggleComp(key);
                         }
+                        return undefined;
                       }}
                     >
                       {_l('设置')}
@@ -927,6 +932,7 @@ export default class OtherTool extends Component<any, any> {
       // case 'isSingleLogin':
       //   return this.renderLogin();
     }
+    return undefined;
   }
 
   renderSSO = () => {
@@ -993,7 +999,7 @@ export default class OtherTool extends Component<any, any> {
     this.setState({ level });
   }
 
-  render() {
+  override render() {
     const { level, loading, keyVisible } = this.state;
     const title = headerTitle[level];
 

@@ -6,7 +6,7 @@ import type { RecordRow } from 'src/utils/controlTypes';
 export const getActionColumnKey = item =>
   `${item.type}:${item.type === 'group' ? item.source || 'list' : ''}:${item.id}`;
 
-function isTypedActionGroupLayout(rows) {
+function isTypedActionGroupLayout(rows: RecordRow[]) {
   const arr = parseJsonArray(rows);
 
   if (!arr.length) {

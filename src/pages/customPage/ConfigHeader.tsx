@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef, useState } from 'react';
+import { lazy, Suspense, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -215,8 +215,8 @@ export default props => {
       </div>
       <div className="flex"></div>
       <ul className="displayType">
-        {DisplayType.map(({ type, icon, text }) => (
-          <Tooltip title={text}>
+        {DisplayType.map(({ type, icon, text }, index) => (
+          <Tooltip key={index} title={text}>
             <li className={cx({ highlight: type === displayType })} key={type} onClick={() => switchType(type)}>
               <i className={`icon-${icon}`}></i>
             </li>

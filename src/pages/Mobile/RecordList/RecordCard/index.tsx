@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import { Checkbox } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -42,7 +42,7 @@ function getCoverControlData(data) {
   );
 }
 
-const coverTypes = {
+const coverTypes: Record<number, string> = {
   0: 'fill',
   1: 'full',
   2: 'circle',
@@ -50,6 +50,8 @@ const coverTypes = {
 };
 
 export default class RecordCard extends Component<any, any> {
+  // 卡片外层 Con（styled.div）的 DOM 节点；RecordCardIO 靠它量真实卡片高度
+  declare cardWrap: HTMLDivElement | null | undefined;
   constructor(props) {
     super(props);
     const { data, view } = props;
@@ -59,7 +61,7 @@ export default class RecordCard extends Component<any, any> {
       appshowtype: _.includes([1, 3, 4, 6], view.viewType) ? '1' : _.get(view, 'advancedSetting.appshowtype') || '0',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.cardWrap) {
       const { view } = this.props;
 
@@ -73,7 +75,7 @@ export default class RecordCard extends Component<any, any> {
       }
     }
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { data, view } = this.props;
     const prevCoverCid = prevProps.view.coverCid;
     const coverCid = view.coverCid;
@@ -463,7 +465,7 @@ export default class RecordCard extends Component<any, any> {
       changeBatchOptData(copyBatchOptCheckedData);
     }
   };
-  render() {
+  override render() {
     const {
       className,
       view,

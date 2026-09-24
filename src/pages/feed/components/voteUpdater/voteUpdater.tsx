@@ -1,23 +1,29 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import doT from 'dot';
 import _ from 'lodash';
 import moment from 'moment';
 import { DatePicker, QiniuUpload } from 'ming-ui';
+import defineMethods from 'src/utils/defineMethods';
 import './voteUpdater.css';
 
-const VoteUpdater = {
+/** 单例：动态发布框里的投票编辑区。方法里的 this 就是 VoteUpdater 本身 */
+interface VoteUpdaterFields {
+  /** 截止日期 'YYYY-MM-DD'；init / reset 时置为明天，日期选择器改过之后是选中的那天 */
+  voteLastTime?: string;
+}
+
+const VoteUpdater = defineMethods<VoteUpdaterFields>()({
   init: function ($el) {
     const _this = this;
 
-    return $el.each(function (i, el) {
+    return $el.each(function (_i, el) {
       var idPrefix = Math.random().toString(36).substring(7);
       var $el = $(el);
       if (!$el.attr('id')) {
         $el.attr('id', idPrefix + 'Vote_updater');
       }
 
-      var addItem = function (canClose?) {
+      var addItem = function (canClose?: boolean | undefined) {
         var $options = $el.find('.voteOptions');
         var $items = $options.find('li');
         var voteCount = $items.length;
@@ -141,15 +147,14 @@ const VoteUpdater = {
           selectedValue={moment(_this.voteLastTime)}
           onOk={value => {
             _this.voteLastTime = moment(value).format('YYYY-MM-DD');
-            var voteLastTime = value;
-            voteLastTime = new Date(voteLastTime);
+            var voteLastTime = new Date(value);
             var today = new Date(new Date().getTime() - (new Date().getTime() % 86400000));
-            if (today - voteLastTime === 0) {
+            if (today.getTime() - voteLastTime.getTime() === 0) {
               var hour = new Date().getHours();
               $el
                 .find('.voteLastHour')
                 .find('option')
-                .each(function (hourOptionIndex, option) {
+                .each(function (_hourOptionIndex, option) {
                   var disabled = parseInt($(option).val(), 10) <= hour;
                   if (disabled) $(option).hide();
                   $(option).prop('disabled', disabled);
@@ -316,7 +321,7 @@ const VoteUpdater = {
   reset: function ($el) {
     var _this = this;
 
-    return $el.each(function (i, el) {
+    return $el.each(function (_i, el) {
       var $el = $(el);
       if ($el.find('.voteOptions input').length > 0) {
         $el.find('.voteOptions input[type = "text"]').addClass('textPlaceholder').val(_l('请输入投票项'));
@@ -359,8 +364,10 @@ const VoteUpdater = {
     var voteOptionFiles = '';
     var voteLastTime = this.voteLastTime;
     var voteLastHour = '';
-    var voteAvailableNumber = '';
+    var voteAvailableNumber = 0;
     var voteAnonymous = false;
+    /* 原先是 voteVisble = voteAnonymous.length > 0：voteAnonymous 已经是 .prop('checked') 取出的布尔值，
+       布尔值没有 length，结果恒为 false。服务端接口注释写明这个参数「目前没用，所有人都可见」，按它一直以来的值写死 */
     var voteVisble = false;
 
     $voteItems.each(function (i) {
@@ -377,7 +384,6 @@ const VoteUpdater = {
     voteLastHour = $el.find('.voteLastHour').val();
     voteAvailableNumber = parseInt($el.find('.voteAvailableNumber').val() || '0', 10);
     voteAnonymous = $el.find('.voteAnonymous').prop('checked');
-    voteVisble = voteAnonymous.length > 0;
 
     return {
       invalid: _.filter($voteItems, function (voteItem) {
@@ -397,13 +403,13 @@ const VoteUpdater = {
   alertInvalidData: function ($el) {
     var $emptyInput = _.filter($el.find('.voteOptions li input[type = "text"]'), function (voteItemInput) {
       var $voteItemInput = $(voteItemInput);
-      $voteItemInput.val(_.trim($voteItemInput.val()));
+      $voteItemInput.val(_.trim(String($voteItemInput.val() ?? '')));
       return $voteItemInput.val() === '' || $voteItemInput.val() === _l('请输入投票项');
     });
     if ($emptyInput.length) {
       alert(_l('投票项内容不能为空'), 3);
     }
   },
-};
+});
 
 export default VoteUpdater;

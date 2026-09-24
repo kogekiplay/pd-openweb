@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
@@ -56,7 +56,7 @@ class TaskCanvas extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { flowData = {}, flowId } = this.props;
     const { flowNodes, firstNodeId } = flowData;
     this.setState({
@@ -70,7 +70,7 @@ class TaskCanvas extends Component<any, any> {
 
   //删除节点
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.curId) {
         this.setState({
@@ -171,7 +171,7 @@ class TaskCanvas extends Component<any, any> {
 
       if (res.failed) {
         alert(res.errorMsg, 2);
-        return;
+        return undefined;
       }
 
       if (_.get(node, 'nodeConfig.config.scheduleConfig.isUpdate')) {
@@ -210,6 +210,7 @@ class TaskCanvas extends Component<any, any> {
           okText: _l('关闭'),
         });
       }
+      return undefined;
     });
   };
   genScreenshot = () => {
@@ -259,7 +260,7 @@ class TaskCanvas extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { loading, scale, list, currentId, flowNodes } = this.state;
     return (
       <Wrap className="taskContainer Relative flex">

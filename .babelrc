@@ -38,14 +38,14 @@
           {
             "modules": false,
             "targets": {
-              "chrome": "58"
+              "chrome": "103"
             }
           }
         ],
         [
           "@babel/preset-react",
           {
-            "runtime": "classic"
+            "runtime": "automatic"
           }
         ],
         [
@@ -63,14 +63,14 @@
           {
             "modules": false,
             "targets": {
-              "chrome": "58"
+              "chrome": "103"
             }
           }
         ],
         [
           "@babel/preset-react",
           {
-            "runtime": "classic"
+            "runtime": "automatic"
           }
         ],
         [

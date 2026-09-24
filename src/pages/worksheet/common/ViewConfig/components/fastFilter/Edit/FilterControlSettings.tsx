@@ -63,6 +63,7 @@ export default function FilterControlSettings(props) {
             />
           );
         }
+        return undefined;
       })}
       {/* 日期“等于”条件下额外提供日期粒度。 */}
       {DATE_GRANULARITY_TYPE.keys.includes(dataType) &&
@@ -103,6 +104,7 @@ export default function FilterControlSettings(props) {
             />
           );
         }
+        return undefined;
       })}
       {[MULTI_SELECT_FILTER_TYPE].map(o => {
         // 多选类型字段且允许选择数量为多选时，支持设置筛选方式。
@@ -124,6 +126,7 @@ export default function FilterControlSettings(props) {
             />
           );
         }
+        return undefined;
       })}
       {/* 方向和关联记录显示内容属于展示配置，统一交给 ShowTypeCom 保存到 advancedSetting。 */}
       {[DIRECTION_TYPE, SHOW_RELATE_TYPE].map(o => {
@@ -138,6 +141,7 @@ export default function FilterControlSettings(props) {
             />
           );
         }
+        return undefined;
       })}
       {/* 日期范围组件负责维护 daterange，与 dateRangeType 一起决定默认勾选范围。 */}
       {DATE_RANGE.keys.includes(dataType) && (

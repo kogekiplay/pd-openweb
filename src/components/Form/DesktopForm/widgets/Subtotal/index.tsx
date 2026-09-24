@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -86,7 +86,7 @@ const Subtotal = ({ value, dot, unit, advancedSetting = {}, enumDefault2, enumDe
     content = content + (unit ? ` ${unit}` : '');
   }
 
-  if (!_.isUndefined(value) && _.includes([15, 16], enumDefault2) && _.includes([2, 3], enumDefault)) {
+  if (!_.isUndefined(value) && (enumDefault2 === 15 || enumDefault2 === 16) && _.includes([2, 3], enumDefault)) {
     const { formatMode } = getDatePickerConfigs({
       type: enumDefault2,
       advancedSetting: { showtype: unit },

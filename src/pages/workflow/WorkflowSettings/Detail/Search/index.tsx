@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -31,7 +31,7 @@ export default class Search extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -39,7 +39,7 @@ export default class Search extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -669,7 +669,7 @@ export default class Search extends Component<any, any> {
             height={0}
             content={data.link}
             formulaMap={data.formulaMap}
-            onChange={(err, value) => this.updateSource({ link: value })}
+            onChange={(_err, value) => this.updateSource({ link: value })}
             updateSource={this.updateSource}
           />
         </div>
@@ -735,7 +735,7 @@ export default class Search extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { data, showOtherWorksheet } = this.state;
 
     if (_.isEmpty(data)) {

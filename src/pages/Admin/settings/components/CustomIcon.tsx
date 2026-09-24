@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import { saveAs } from 'file-saver';
 import _ from 'lodash';
@@ -9,7 +9,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import './index.less';
 
 export default class CustomIcon extends Component<any, any> {
-  state = {
+  override state = {
     selected: [],
     data: null,
     preserveColor: false,
@@ -19,7 +19,7 @@ export default class CustomIcon extends Component<any, any> {
   cacheData = [];
   uploadLoadingKey = undefined;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getList();
   }
 
@@ -96,7 +96,7 @@ export default class CustomIcon extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     const { selected, data, preserveColor, cacheKey } = this.state;
 
@@ -138,7 +138,7 @@ export default class CustomIcon extends Component<any, any> {
               getTokenParam={{
                 extend: preserveColor ? 'preserve' : '',
               }}
-              onUploaded={(up, files) => {
+              onUploaded={(_up, files) => {
                 this.cacheData.push(files);
                 !this.uploadLoadingKey && this.startLoading();
               }}
@@ -158,7 +158,7 @@ export default class CustomIcon extends Component<any, any> {
                   });
                 }
               }}
-              onError={(up, err, errTip) => {
+              onError={(_up, _err, errTip) => {
                 alert(errTip, 2);
               }}
             >

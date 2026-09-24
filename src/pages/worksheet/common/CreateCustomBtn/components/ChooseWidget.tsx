@@ -117,7 +117,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     this.chooseDia = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { writeControls = [] } = this.props;
     this.setState({
       keyWords: '',
@@ -129,7 +129,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     $('.cursorText').focus();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { writeControls = [], writeObject, relationControls, widgetList } = this.props;
 
@@ -170,7 +170,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     }: { relationControls: FormControl[]; [key: string]: any } = props;
     return (writeObject !== 1 ? relationControls : widgetList).filter(o => !canNotForCustomWrite(o));
   };
-  handSet = (item, isAdd) => {
+  handSet = (item, isAdd: boolean) => {
     const controls: FormControl[] = this.getData(this.props);
     const writeControlsIds = this.state.writeControls.map(it => it.controlId);
     const list = getRealData(
@@ -187,7 +187,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
         : this.state.writeControls.filter(o => !othersDel.map(it => it.controlId).includes(o.controlId)),
     );
   };
-  selectOrClearAll = (isSelect?) => {
+  selectOrClearAll = (isSelect?: boolean | undefined) => {
     if (!isSelect) {
       this.setState({
         writeControls: [],
@@ -273,7 +273,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { onClose } = this.props;
     const { data = [], keyWords, initData = [] } = this.state;
     const list = keyWords ? data : formatControlsChildBySectionId(data);

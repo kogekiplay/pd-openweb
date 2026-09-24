@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Popup } from 'antd-mobile';
 import cx from 'classnames';
@@ -21,7 +21,7 @@ import {
 import './index.less';
 
 class NetState extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onClose: func,
     /**
      * 10: 应用数
@@ -42,9 +42,9 @@ class NetState extends Component<any, any> {
     moduleType: 20,
   };
 
-  state = { visible: true, projectInfo: {} };
+  override state = { visible: true, projectInfo: {} };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getProjectLicenseInfo();
   }
 
@@ -180,7 +180,7 @@ class NetState extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { visible } = this.state;
     const isMobile = browserIsMobile();
 

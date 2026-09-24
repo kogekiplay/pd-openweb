@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { TinyColor } from '@ctrl/tinycolor';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -23,12 +23,16 @@ export function convertColor(colorStr) {
   return colorStr ? new TinyColor(colorStr).setAlpha(0.1) : 'var(--color-primary-transparent)';
 }
 
-export default class WorkSheetItem extends Component<any, any> {
+export interface WorkSheetItemState {
+  flag?: number | undefined;
+}
+
+export default class WorkSheetItem extends Component<any, WorkSheetItemState> {
   constructor(props) {
     super(props);
     this.state = {};
   }
-  svgColor(isActive) {
+  svgColor(isActive: boolean) {
     const { iconColor, currentPcNaviStyle, themeType } = this.props.appPkg;
     const darkColor = [1, 3].includes(currentPcNaviStyle) && !['light'].includes(themeType);
 
@@ -40,7 +44,7 @@ export default class WorkSheetItem extends Component<any, any> {
       return isActive ? iconColor : 'var(--color-text-secondary)';
     }
   }
-  textColor(isActive) {
+  textColor(isActive: boolean) {
     const { currentPcNaviStyle, themeType } = this.props.appPkg;
     const darkColor = [1, 3].includes(currentPcNaviStyle) && !['light'].includes(themeType);
     /* 【选中项的文字走 --color-primary-text，不要直接用 appPkg.iconColor】
@@ -64,7 +68,7 @@ export default class WorkSheetItem extends Component<any, any> {
       return convertColor(iconColor);
     }
   }
-  getNavigateUrl(isActive) {
+  getNavigateUrl(isActive: boolean) {
     const { appId, groupId, appItem } = this.props;
     const { workSheetId } = appItem;
     const storage = JSON.parse(localStorage.getItem(`mdAppCache_${md.global.Account.accountId}_${appId}`)) || {};
@@ -79,7 +83,7 @@ export default class WorkSheetItem extends Component<any, any> {
 
     return url;
   }
-  render() {
+  override render() {
     const {
       projectId,
       appId,
@@ -106,7 +110,7 @@ export default class WorkSheetItem extends Component<any, any> {
 
     const handleNewOpen = () => {
       const dataSource = transferValue(urlTemplate);
-      const urlList = [];
+      const urlList: string[] = [];
       dataSource.map(o => {
         if (o.staticValue) {
           urlList.push(o.staticValue);

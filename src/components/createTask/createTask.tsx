@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import doT from 'dot';
 import _ from 'lodash';
@@ -17,10 +16,61 @@ import { addTask } from 'src/pages/task/redux/actions';
 import { formatTaskTime } from 'src/pages/task/utils/utils';
 import Store from 'src/redux/configureStore';
 import { htmlEncodeReg, pathCompletion } from 'src/utils/common';
+import defineMethods from 'src/utils/defineMethods';
 import taskHtml from './tpl/createTask.html';
 import './css/createTask.css';
 
-var CreateTask = function (opts) {
+/** 创建任务弹层的全部状态：构造函数里 defaults 与调用方参数合并而成。
+ *  实例上的 settings 和静态的 CreateTask.settings 是同一个对象（静态那份给 CreateTask.Motheds 用）。 */
+interface CreateTaskSettings {
+  frameid: string;
+  TaskName: string;
+  Description: string;
+  /** 关联的项目。列表项上取的是 jQuery .data('folderid')，纯数字的串会被转成数字，所以两种都有；1 表示不关联 */
+  FolderID: string | number;
+  /** 所属网络：null 表示还没定（init 里按上次用过的 / 第一个网络补上），'' 表示个人 */
+  ProjectID: string | null;
+  folderName: string;
+  PostID: string;
+  /** 日程转任务时的日程 id */
+  CalenderID: string;
+  recurTime: string;
+  worksheetAndRowId: string;
+  DialogName: string;
+  Deadlines: string;
+  StageID: string;
+  StageName: string;
+  /** 给聊天用：创建成功后是否弹分享层 */
+  createShare: boolean | null;
+  isFromPost: boolean;
+  taskTreeView: boolean;
+  /** 负责人，只取第一个 */
+  ChargeArray: { accountId: string; fullname?: string; avatar: string }[];
+  MemberArray: { accountId?: string; fullname?: string; avatar?: string }[];
+  createTaskAttachments: { attachmentData: ApiPayload[]; kcAttachmentData: ApiPayload[] };
+  /** 创建完回调：检查项转任务时不带参数，其余带接口返回 */
+  callback: ((result?: ApiPayload) => void) | null;
+  shareCallback: ((result: ApiPayload) => void) | null;
+  /** 分享弹层「发任务 → 创建新任务」用：拿到新任务后由调用方接管，不弹分享层 */
+  relationCallback: ((task: ApiPayload) => void) | null;
+  /** 检查项转任务时的检查项 id */
+  itemId: string;
+  // 运行中补上的
+  companyName?: string;
+  pageIndex?: number;
+  /** 项目列表是否还有下一页 */
+  isMore?: boolean;
+  /** 附件是否都传完了 */
+  isComplete?: boolean;
+}
+
+interface CreateTaskFields {
+  settings: CreateTaskSettings;
+}
+
+/* 从 var CreateTask = function 改成函数声明：下面往它身上挂了静态的 Motheds，
+   TS 只认函数声明（和 const 函数表达式）上的这种属性赋值，原先全文件的 CreateTask.Motheds.xxx 都报「属性不存在」。 */
+function CreateTask(this: CreateTaskInstance, opts) {
   var _this = this;
   // 默认参数
   var defaults = {
@@ -79,9 +129,9 @@ var CreateTask = function (opts) {
 
   CreateTask.settings = settings;
   _this.init();
-};
+}
 
-$.extend(CreateTask.prototype, {
+const createTaskMethods = defineMethods<CreateTaskFields>()({
   // 初始化
   init: function () {
     var _this = this;
@@ -197,7 +247,8 @@ $.extend(CreateTask.prototype, {
     // 回车创建
     $('#txtTaskName').on('keypress', function (event) {
       if (event.keyCode === 13) {
-        $('#' + settings.frameid)
+        // frameid 是弹层的 class（见 init 里的 dialogClasses），原先按 id 找：页面上没有 #createTask，回车一直没反应
+        $('.' + settings.frameid)
           .find('#taskSubmitBtn')
           .click();
       }
@@ -212,6 +263,7 @@ $.extend(CreateTask.prototype, {
         }
 
         $(this).toggleClass('bgColorPrimaryDark bgColorPrimary');
+        return undefined;
       },
       mouseout: function () {
         // 禁用
@@ -220,6 +272,7 @@ $.extend(CreateTask.prototype, {
         }
 
         $(this).toggleClass('bgColorPrimaryDark bgColorPrimary');
+        return undefined;
       },
       click: function () {
         if ($(this).attr('disabled')) {
@@ -228,30 +281,35 @@ $.extend(CreateTask.prototype, {
 
         $(this).attr('disabled', 'disabled');
         CreateTask.Motheds.send();
+        return undefined;
       },
     });
 
-    $(document).on('click', function (event) {
-      var $target = $(event.target);
+    // 点空白处收起网络 / 项目列表。挂在 document 上：先解掉上一次打开弹层时挂的（原先每开一次就多挂一个、从不解绑）
+    $(document)
+      .off('click.createTaskPopups')
+      .on('click.createTaskPopups', function (event) {
+        var $target = $(event.target);
 
-      // 隐藏所属网络
-      if (!$target.closest('#createTaskNetworkList').length && !$target.closest('#createTaskNetwork').length) {
-        $('#createTaskNetworkList').addClass('Hidden');
-      }
+        // 隐藏所属网络
+        if (!$target.closest('#createTaskNetworkList').length && !$target.closest('#createTaskNetwork').length) {
+          $('#createTaskNetworkList').addClass('Hidden');
+        }
 
-      // 隐藏项目列表
-      if (!$target.closest('#txtTaskFolder').length && !$('#txtTaskFolder').is(':focus')) {
-        $('.linkageFolder').addClass('Hidden');
-      }
-    });
+        // 隐藏项目列表
+        if (!$target.closest('#txtTaskFolder').length && !$('#txtTaskFolder').is(':focus')) {
+          $('.linkageFolder').addClass('Hidden');
+        }
+      });
   },
 
-  //更新userHead
-  updateUserCard: function (user) {
+  // 给负责人 / 成员头像挂上用户卡片（悬停出名片）。user：刚选的人，头像用它的，其余从页面上的 img 取
+  updateUserCard: function (user?: { accountId: string; avatar: string }) {
     var settings = this.settings;
-    $('#' + settings.frameid)
+    // 同上，frameid 是 class。原先按 id 找一个都找不到，头像上的用户卡片从来没挂上过
+    $('.' + settings.frameid)
       .find('#taskUserBox,.imgMemberBox')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         var $this = $(ele);
         var accountId = $this.attr('data-id').replace(/@|\+/gi, '');
         if ($this.data('bind')) {
@@ -262,7 +320,9 @@ $.extend(CreateTask.prototype, {
         var avatar = user && user.accountId === accountId ? user.avatar : $this.find('.imgWidth').attr('src');
         var ext = {};
         if (type === 2) ext['data-id'] = accountId;
-        const root = createRoot(ele);
+        // 换负责人时会清掉 bind 标记再进来一次：同一个元素要复用已有的根，再 createRoot 一次 React 会报警告
+        const root = $this.data('userCardRoot') || createRoot(ele);
+        $this.data('userCardRoot', root);
         root.render(
           <UserCard sourceId={accountId} disabled={accountId === 'user-undefined'}>
             <span>
@@ -310,7 +370,12 @@ $.extend(CreateTask.prototype, {
           .attr('data-id', md.global.Account.accountId)
           .find('.imgWidth')
           .attr('src', md.global.Account.avatar);
-        $('.createTaskAddMemberBox .imgMemberBox').remove(md.global.Account.avatar);
+        /* 这里原先还有一行 $('.createTaskAddMemberBox .imgMemberBox').remove(md.global.Account.avatar)。
+           jQuery 把 remove 的参数当选择器过滤，头像 URL 不是合法选择器，每次切网络都在那一行抛 Syntax error，
+           下面重置项目 / 阶段、收起网络列表的几行从来没执行过。那一行本身也从没删掉过任何成员
+           （2021 年开源的第一个版本起就这样，当年的 Sizzle 对这种串同样抛错），用户一直看到的是「切网络后成员保留」。
+           它原意是清空全部成员还是只去掉和负责人重复的自己，已经无从考证，两种都是用户没见过的新行为，
+           所以只去掉这行抛错的调用，成员的表现保持不变。 */
         $('.createTaskFolderName').html('...').removeClass('Hidden');
         $('#txtTaskFolder').val('').addClass('Hidden');
         $('#createTaskStage').addClass('Hidden');
@@ -536,13 +601,17 @@ $.extend(CreateTask.prototype, {
     var newMember = [];
     var memberArr = settings.MemberArray;
     var has;
-    var i;
+    var i: number | undefined;
     var _that = this;
-    var newMemberCheckFun = function (index: number, item) {
+    var newMemberCheckFun = function (
+      _index: number,
+      item: { accountId?: string; fullname?: string; avatar?: string },
+    ) {
       if (item.accountId === memberArr[i].accountId) {
         has = true;
         return false;
       }
+      return undefined;
     };
 
     for (i = 0; i < memberArr.length; i++) {
@@ -589,7 +658,7 @@ $.extend(CreateTask.prototype, {
     $('#taskMembersBox .createTaskAddMember').on({
       click: function () {
         var _this = $(this);
-        var existsIds = [];
+        var existsIds: (string | undefined)[] = [];
         // 页面上已经存在的成员
         $('.createTaskAddMemberBox .createTaskMember').each(function (this: HTMLElement) {
           existsIds.push($(this).attr('data-id'));
@@ -602,7 +671,7 @@ $.extend(CreateTask.prototype, {
           memberList = '';
           var isExistes;
           var accountId = '';
-          var existsIdsCheckFun = function (index: number, id) {
+          var existsIdsCheckFun = function (_index: number, id) {
             if (id.split('MD_SpecialAccounts')[0] === accountId.split('MD_SpecialAccounts')[0]) {
               if (!users[i].accountId) {
                 $('.createTaskAddMemberBox .imgMemberBox[data-id=' + id + ']')
@@ -614,6 +683,7 @@ $.extend(CreateTask.prototype, {
               isExistes = true;
               return false;
             }
+            return undefined;
           };
 
           for (i = 0; i < users.length; i++) {
@@ -708,6 +778,7 @@ $.extend(CreateTask.prototype, {
             $('#txtLastDateText').html(
               !start && !end ? _l('未指定起止时间') : formatTaskTime(false, start, end, '', '', true),
             );
+            return undefined;
           }}
           onClear={() => {
             delete $txtLastDate.data().start;
@@ -759,6 +830,14 @@ $.extend(CreateTask.prototype, {
   },
 });
 
+$.extend(CreateTask.prototype, createTaskMethods);
+type CreateTaskInstance = CreateTaskFields & typeof createTaskMethods;
+
+// 静态的 settings（最近一次打开的弹层）是在构造函数体内赋值的，TS 不把函数体里的属性赋值当声明，这里补上类型
+declare namespace CreateTask {
+  let settings: CreateTaskSettings;
+}
+
 CreateTask.Motheds = {
   // 获取项目列表
   searchTaskFolder: function () {
@@ -775,7 +854,7 @@ CreateTask.Motheds = {
           var folderList = '';
           CreateTask.settings.isMore = source.data && source.data.length === 20;
           if (source.data) {
-            $.each(source.data, function (index: number, item) {
+            $.each(source.data, function (_index: number, item) {
               folderList +=
                 '<li class="item overflow_ellipsis bgColorPrimary" data-folderid="' +
                 item.folderID +
@@ -807,8 +886,10 @@ CreateTask.Motheds = {
             $('.linkageFolder').addClass('Hidden');
           } else {
             $('.linkageFolder').removeClass('Hidden');
+            // 原先写的是 !keyWords && !CreateTask.settings.folderId：小写的 folderId 从没被赋过值（全文件用的是 FolderID），
+            // 后半截恒为真。按它一直以来的实际效果写，免得「改对」拼写反而改了显隐
             $('.linkageFolder .nullFolder')
-              .toggleClass('Hidden', !keyWords && !CreateTask.settings.folderId)
+              .toggleClass('Hidden', !keyWords)
               .toggleClass('clearBorder', !listSize)
               .find('.folderListName')
               .html(htmlEncodeReg(keyWords));
@@ -900,8 +981,8 @@ CreateTask.Motheds = {
     var folderName = String($('#txtTaskFolder').val() ?? '').trim();
     var toUserID = $('#taskUserBox').attr('data-id');
     var stageId = String($('#folderStage').val() ?? '').trim();
-    var members = [];
-    var specialAccounts = {};
+    var members: string[] = [];
+    var specialAccounts: Record<string, string | undefined> = {};
 
     // 成员
     $('.createTaskAddMemberBox .createTaskMember').each(function (this: HTMLElement) {
@@ -946,9 +1027,14 @@ CreateTask.Motheds = {
           }
 
           $('.createTaskConfirm').parent().remove();
+        })
+        // 原先没有 catch：请求失败时是一条未捕获的 Promise 拒绝，按钮一直灰着。与下面 addTask 的处理一致
+        .catch(function () {
+          $submitBtn.removeAttr('disabled');
+          alert(_l('操作失败，请稍后再试'), 2);
         });
 
-      return;
+      return undefined;
     }
 
     ajaxRequest
@@ -1039,12 +1125,17 @@ CreateTask.Motheds = {
           }
 
           $('.createTaskConfirm').parent().remove();
+        } else {
+          // 接口说没建成：把点击时置上的 disabled 放开，否则按钮一直灰着、只能关掉重填（原先只有 catch 分支会放开）
+          $submitBtn.removeAttr('disabled');
         }
+        return undefined;
       })
       .catch(function () {
         $submitBtn.removeAttr('disabled');
         alert(_l('操作失败，请稍后再试'), 2);
       });
+    return undefined;
   },
 
   // 验证当前用户是否在该网络

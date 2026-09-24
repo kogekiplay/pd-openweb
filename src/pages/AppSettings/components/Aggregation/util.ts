@@ -289,7 +289,7 @@ export const extractBetweenDollars = str => {
   return matches ? matches.map(match => match.slice(1, -1)) : [];
 };
 
-export const getRuleAlias = (alias, flowData, isRule?: boolean, getLen?) => {
+export const getRuleAlias = (alias, flowData, isRule?: boolean, getLen?: boolean | undefined) => {
   const groupDt = getNodeInfo(flowData, 'GROUP');
   const aggregateDt = getNodeInfo(flowData, 'AGGREGATE');
   const groupFields = _.get(groupDt, 'nodeConfig.config.groupFields') || [];
@@ -499,7 +499,7 @@ export function useInterval(callback, delay) {
   }, [callback]);
   useEffect(() => {
     if (!delay && delay !== 0) {
-      return;
+      return undefined;
     }
 
     const id = setInterval(() => savedCallback.current(), delay);
@@ -817,7 +817,7 @@ export const setGroupFields = (groupDt, sourceInfos, flowData) => {
 };
 
 //聚合字段配置处理
-export const formatAggConfig = (it, isAdd?) => {
+export const formatAggConfig = (it, isAdd?: boolean | undefined) => {
   const dot = ['COUNT', 'DISTINCT_COUNT'].includes(it.aggFuncType)
     ? undefined
     : isAdd
@@ -890,7 +890,7 @@ export const formatGroupConfig = fields => {
 
 export const setResultFieldSettingByAggFuncType = data => {
   if ([15, 16, 17, 18].includes(_.get(data, 'controlSetting.type'))) {
-    const DATE_VALUE = { CUR_YEAR: '5', CUR_MONTH: '4', TODAY: '3', CUR_HOUR: '2', CUR_MINUTE: '1' };
+    const DATE_VALUE: Record<string, string> = { CUR_YEAR: '5', CUR_MONTH: '4', TODAY: '3', CUR_HOUR: '2', CUR_MINUTE: '1' };
     let datatype = DATE_VALUE[data.aggFuncType];
 
     if (!_.get(data, 'controlSetting.advancedSetting')) {
@@ -907,7 +907,7 @@ export const setResultFieldSettingByAggFuncType = data => {
   ) {
     // { text: _l('时:分'), value: '8' },
     // { text: _l('时:分:秒'), value: '9' },
-    const DATE_VALUE = { CUR_MINUTE: '8' };
+    const DATE_VALUE: Record<string, string> = { CUR_MINUTE: '8' };
     let datatype = DATE_VALUE[data.aggFuncType];
     data.controlSetting.unit = datatype;
     if (!_.get(data, 'controlSetting.advancedSetting')) {

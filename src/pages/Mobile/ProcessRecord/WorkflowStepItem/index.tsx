@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import Steps from 'src/pages/workflow/components/ExecDialog/Steps';
@@ -12,14 +12,18 @@ const Wrap = styled.ul`
   background-color: var(--color-background-secondary);
 `;
 
-class WorkflowStepItem extends Component<any, any> {
+export interface WorkflowStepItemState {
+  visible: boolean;
+}
+
+class WorkflowStepItem extends Component<any, WorkflowStepItemState> {
   constructor(props) {
     super(props);
     this.state = {
       visible: false,
     };
   }
-  render() {
+  override render() {
     const { visible } = this.state;
     const { appId, instance, worksheetId, recordId, controls = [], hideStep = false } = this.props;
     const { works, currentWork, currentWorkItem, processId, status, isApproval } = instance;

@@ -10,7 +10,7 @@ export default props => {
   const originalName = props.name;
   const originalIcon = props.icon;
 
-  const onChange = (newName, newIcon) => {
+  const onChange = (newName: string, newIcon) => {
     const { appItem, workSheetId, appId, groupId, icon } = props;
 
     if (appItem.type === 2) {
@@ -47,7 +47,7 @@ export default props => {
     }
   };
 
-  const updateName = newName => {
+  const updateName = (newName: string) => {
     const { workSheetId, isActive, appItem, groupId } = props;
     const name = (newName || originalName).slice(0, 100);
     const { currentPcNaviStyle } = store.getState().appPkg;

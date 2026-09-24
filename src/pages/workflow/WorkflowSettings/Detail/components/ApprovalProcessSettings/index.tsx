@@ -5,6 +5,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, Dropdown, Icon, Menu, MenuItem, Radio, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { SortableRenderItemOptions } from 'ming-ui/components/SortableList';
 import { quickSelectUser } from 'ming-ui/functions';
 import sheetAjax from 'src/api/worksheet';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
@@ -274,7 +275,8 @@ export default props => {
     });
   };
 
-  const renderPrintItem = ({ items, item, DragHandle, dragging }) => {
+  // printIds 是打印模板 id 的数组；useDragHandle 所以 DragHandle 一定有
+  const renderPrintItem = ({ items, item, DragHandle, dragging }: SortableRenderItemOptions<string>) => {
     const selectItem = _.find(printList, o => o.id === item);
 
     return (
@@ -400,7 +402,7 @@ export default props => {
         showCurrent
         content={data.processConfig.recordTitle}
         formulaMap={data.processConfig.formulaMap}
-        onChange={(err, value) =>
+        onChange={(_err, value) =>
           updateSource({
             processConfig: Object.assign({}, data.processConfig, { recordTitle: value }),
           })

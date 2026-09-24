@@ -155,7 +155,7 @@ export default function TimingSetting(props) {
     });
   };
 
-  const onChangeReadType = value => {
+  const onChangeReadType = (value: number) => {
     if (value === setting.readType) return;
 
     onChangeSetting({ readType: value, config: {} });
@@ -163,7 +163,7 @@ export default function TimingSetting(props) {
     value === 1 && !fields && onSetSourceFields();
   };
 
-  const onChangeField = (value, option) => {
+  const onChangeField = (_value, option) => {
     onChangeSetting({ config: { basisField: option.field } });
     scheduleConfigApi
       .getLastValue({
@@ -234,7 +234,7 @@ export default function TimingSetting(props) {
               format="HH:mm"
               placeholder="HH:mm"
               value={setting.readTime ? dayjs(setting.readTime, 'HH:mm') : null}
-              onChange={(time, timeString) => {
+              onChange={(_time, timeString) => {
                 onChangeSetting({ readTime: timeString });
               }}
             />

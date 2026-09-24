@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -17,7 +17,13 @@ import { addFollowMembers, removeFollowMembers, updateUserStatus } from '../../r
 import './subordinateMembers.less';
 
 const ClickAwayable = ClickAway;
-class SubordinateMembers extends Component<any, any> {
+export interface SubordinateMembersState {
+  showNetwork: boolean;
+}
+
+class SubordinateMembers extends Component<any, SubordinateMembersState> {
+  declare ganttMembersList: HTMLUListElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +31,7 @@ class SubordinateMembers extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 竖着滚动对应右侧竖着滚动
     $(this.ganttMembersList).on({
       mouseover() {
@@ -92,7 +98,7 @@ class SubordinateMembers extends Component<any, any> {
    * @param  {string} accountId
    * @param  {boolean} hidden
    */
-  updateUserStatus(accountId: string, hidden) {
+  updateUserStatus(accountId: string, hidden: boolean) {
     ajaxRequest.updateUserStatusOfSetting({
       projectId: config.projectId,
       accountId,
@@ -252,7 +258,7 @@ class SubordinateMembers extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const { accountTasksKV } = this.props;
     const builtinPlacements = {
       bottomLeft: {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, Icon, LoadDiv } from 'ming-ui';
 import { dialogSelectApp } from 'ming-ui/functions';
@@ -113,9 +113,9 @@ export default function Apply(props) {
       {loading ? (
         <LoadDiv className="mTop10" />
       ) : (
-        apiList.map(item => {
+        apiList.map((item, index) => {
           return (
-            <Item className="flexRow alignItemsCenter">
+            <Item key={index} className="flexRow alignItemsCenter">
               <div className="Width110 ellipsis" title={item.name}>
                 {item.name}
               </div>

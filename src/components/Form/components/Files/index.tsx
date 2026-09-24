@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ConfigProvider } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -20,14 +20,14 @@ import SmallCard from './SmallCard';
 import WaitingUpload from './WaitingUpload';
 import './index.less';
 
-const showTypes = {
+const showTypes: Record<number, string> = {
   1: 'imageFilesWrap',
   2: 'smallFilesWrap',
   3: 'listFilesWrap',
   4: 'largeImageFilesWrap',
 };
 
-const showCardTypes = {
+const showCardTypes: Record<number, string> = {
   1: 'attachmentImageCard',
   2: 'attachmentSmallCard',
   3: 'attachmentListCard',
@@ -41,7 +41,7 @@ const CardComponent = {
   4: LargeImageCard,
 };
 
-const heights = {
+const heights: Record<number, number> = {
   1: 130 + 6, // height + marginBottom
   2: 56 + 6,
   3: 52,

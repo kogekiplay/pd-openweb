@@ -205,7 +205,7 @@ export function initialized(state = false, action: ReduxAction) {
   }
 }
 
-function lastAction(state, action: ReduxAction) {
+function lastAction(_state, action: ReduxAction) {
   return action;
 }
 

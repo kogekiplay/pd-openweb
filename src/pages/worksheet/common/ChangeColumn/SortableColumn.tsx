@@ -38,7 +38,7 @@ export default function SortableColumn(props) {
   }
 
   const listRef = useRef<HTMLDivElement | null>(null);
-  const scrollTopRef = useRef(null);
+  const scrollTopRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (forbiddenScroll && scrollTopRef.current && listRef.current) {

@@ -44,7 +44,7 @@ export default class PersonalInfo extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -91,7 +91,7 @@ export default class PersonalInfo extends React.Component<any, any> {
     });
   }
 
-  detailItem = (item, valueType: string) => {
+  detailItem = (item: { label: string; key: string; filter: string } | { label: string; key: string; filter?: undefined }, valueType: string) => {
     const detail = this.state[valueType] || {};
     return (
       <div className="mBottom10" key={item.key}>
@@ -108,7 +108,7 @@ export default class PersonalInfo extends React.Component<any, any> {
   }
 
   transFormGender(value) {
-    const genderObj = { 1: _l('男'), 2: _l('女') };
+    const genderObj: Record<number, string> = { 1: _l('男'), 2: _l('女') };
     return genderObj[value];
   }
 
@@ -311,7 +311,7 @@ export default class PersonalInfo extends React.Component<any, any> {
     });
   }
 
-  handleDeleteItem(type, id) {
+  handleDeleteItem(type: number, id) {
     if (confirm(_l('确认删除') + '?')) {
       account
         .delAccountDetail({
@@ -390,7 +390,7 @@ export default class PersonalInfo extends React.Component<any, any> {
     alert(_l('复制成功'));
   };
 
-  render() {
+  override render() {
     const { accountInfo, loading, educationList, workList, baseDetail, editFullName, isErr } = this.state;
 
     if (loading) {

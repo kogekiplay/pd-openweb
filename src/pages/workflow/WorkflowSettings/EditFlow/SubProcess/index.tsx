@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import { pathCompletion } from 'src/utils/common';
 import { CreateNode, NodeOperate } from '../components';
@@ -57,7 +57,7 @@ export default class SubProcess extends Component<any, any> {
     window.open(pathCompletion(`/workflowedit/${item.subProcessId}`));
   };
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
 
     return (

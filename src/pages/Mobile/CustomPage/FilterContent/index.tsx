@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Popup, SpinLoading } from 'antd-mobile';
@@ -176,7 +176,7 @@ function FilterContent(props) {
             {otherFiltersGroup.length ? (
               <div className="nowrap Font13 bold">{filtersText.join('; ')}</div>
             ) : (
-              <span className="textDisabled">{_l('无筛选内容')}</span>
+              <span className="textTertiary">{_l('无筛选内容')}</span>
             )}
           </div>
         )}

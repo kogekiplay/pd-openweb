@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Input, Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -341,7 +341,7 @@ export default props => {
 
   const { name, showColors } = getColorConfig();
 
-  const getBgColor = titleStyle => {
+  const getBgColor = (titleStyle: number) => {
     const value = _.isNumber(titleStyle) ? titleStyle : config.titleStyle || 0;
 
     if (value === 0 || value === 3) {
@@ -364,6 +364,7 @@ export default props => {
         background: `linear-gradient(to right, ${iconColor}, ${pageBgColor})`,
       };
     }
+    return undefined;
   };
 
   return (
@@ -417,8 +418,8 @@ export default props => {
               });
             }}
           >
-            {titleStyles.map(data => (
-              <Select.Option className="selectTitleOptionWrapper" value={data.value}>
+            {titleStyles.map((data, index) => (
+              <Select.Option key={index} className="selectTitleOptionWrapper" value={data.value}>
                 <div className="flexRow alignItemsCenter">
                   <TemplateTitleWrap className="Relative" style={getBgColor(data.value)}>
                     {_l('标题')}

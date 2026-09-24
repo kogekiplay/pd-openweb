@@ -578,7 +578,7 @@ export function getPublicWorksheet(params, cb = () => {}) {
     });
 }
 
-function getInfoControl(formData, publicWorksheetInfo) {
+function getInfoControl(_formData, publicWorksheetInfo) {
   const info = getInfo();
   const { originalControls } = publicWorksheetInfo;
   const staticControlIds = [
@@ -601,7 +601,7 @@ function getInfoControl(formData, publicWorksheetInfo) {
 }
 
 // 举报表单 自动填充
-function fillReportSource(receiveControls, publicWorksheetInfo) {
+function fillReportSource(receiveControls: FormControl[], publicWorksheetInfo) {
   const { originalControls } = publicWorksheetInfo;
   const fromUrlControl = _.find(originalControls, oc => oc.controlName.indexOf('违规表单链接') > -1);
 
@@ -630,7 +630,7 @@ function fillReportSource(receiveControls, publicWorksheetInfo) {
   }
 }
 
-function formatFileControls(controls) {
+function formatFileControls(controls: FormControl[]) {
   return controls.map(control => {
     if (control.type === 14 && control.value && !_.isEmpty(safeParse(control.value))) {
       const parsed = safeParse(control.value);

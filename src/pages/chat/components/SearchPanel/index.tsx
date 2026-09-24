@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import * as ajax from '../../utils/ajax';
@@ -46,11 +46,11 @@ export default class SearchPanel extends Component<any, any> {
       type: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.updateTabCount(this.props.searchText);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.searchText) {
         this.updateTabCount(this.props.searchText);
@@ -94,7 +94,7 @@ export default class SearchPanel extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { type } = this.state;
     const { searchText, session } = this.props;
     return (

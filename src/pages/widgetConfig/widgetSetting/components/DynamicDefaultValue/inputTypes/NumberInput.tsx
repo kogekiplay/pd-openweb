@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { Input } from 'antd';
 import _ from 'lodash';
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
@@ -11,7 +11,7 @@ export default function NumberInput(props) {
     props;
   const { cid = '' } = dynamicValue[0] || {};
   const [value, setValue] = useState('');
-  const [isDynamic, setDynamic] = useState(false);
+  const [isDynamic, setDynamic] = useState<false | { isDynamic: boolean }>(false);
   const $wrap = createRef(null);
   const isStep = _.get(data, 'type') === 6 && _.get(data, 'advancedSetting.showtype') === '2';
   const maxValue = _.get(data, 'advancedSetting.max');
@@ -21,7 +21,7 @@ export default function NumberInput(props) {
     onDynamicValueChange(newValue || []);
   };
 
-  const handleChange = (value, noChange?) => {
+  const handleChange = (value, noChange?: boolean | undefined) => {
     const parsedValue = formatNumberFromInput(value);
     setValue(parsedValue);
     !noChange && onDynamicValueChange(value ? [{ cid: '', rcid: '', staticValue: parsedValue }] : []);

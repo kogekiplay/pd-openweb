@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import Dialog from 'ming-ui/components/Dialog';
@@ -14,7 +13,7 @@ export const errorMessage = error => {
 };
 
 // 获取storage
-export const getTaskStorage = key => {
+export const getTaskStorage = (key: string) => {
   const storage = window.localStorage.getItem(md.global.Account.accountId + key);
 
   if (storage) {
@@ -200,7 +199,7 @@ const getTimeInfo = (start, end, isCompleteAppear: boolean) => {
  */
 export const formatTaskTime = (status, startTime, endTime, actualStartTime, completeTime, isCreate = false) => {
   const currentTime = getCurrentTime();
-  const render = (text, color: string, className = '') => `<span style="color:${color};" class="${className}">${text}</span>`;
+  const render = (text: string, color: string, className = '') => `<span style="color:${color};" class="${className}">${text}</span>`;
   const COLORS = {
     gray: 'var(--color-text-secondary)',
     blue: '#1677ff',
@@ -366,7 +365,7 @@ export const buildMyTaskIcon = (type, isBatch?) => {
 };
 
 // 修改任务状态为未完成时出现弹层
-export const taskStatusDialog = (status, callback) => {
+export const taskStatusDialog = (status, callback: () => void) => {
   if (status) {
     callback();
   } else {
@@ -398,7 +397,7 @@ export const returnCustonValue = item => {
 
   // 复选框
   if (item.type === 10) {
-    const key = [];
+    const key: string[] = [];
 
     for (let i = 0; i < item.value.length; i++) {
       if (item.value.substr(i, 1) !== '0') {

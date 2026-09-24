@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import withRouter from '../../router/withRouter';
 import qs from 'query-string';
 import KcLeft from './common/KcLeft';
@@ -6,15 +6,15 @@ import KcMain from './common/KcMain';
 import './Kc.less';
 
 let KcEntrypoint = class KcEntrypoint extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('AppKc');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('AppKc');
   }
 
-  render() {
+  override render() {
     const {
       match: { params },
     } = this.props;

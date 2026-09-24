@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Popover } from 'antd';
@@ -137,7 +137,7 @@ const Apps = props => {
   }, []);
 
   useEffect(() => {
-    if (typeof ResizeObserver === 'undefined') return;
+    if (typeof ResizeObserver === 'undefined') return undefined;
 
     const resizeObserver = new ResizeObserver(() => {
       if (appsWrap.current) {
@@ -195,8 +195,9 @@ const Apps = props => {
                       overflowY: 'auto',
                     }}
                   >
-                    {popoverApps.map(app => (
+                    {popoverApps.map((app, index) => (
                       <div
+                        key={index}
                         className={cx('itemWrap pointer flexRow alignItemsCenter', { active: appId === app.id })}
                         onClick={() => handleOpenApp(app)}
                       >

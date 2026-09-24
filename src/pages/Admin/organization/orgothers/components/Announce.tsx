@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -70,8 +70,12 @@ const AttachmentList = styled.div`
   }
 `;
 
-export default class Announce extends Component<any, any> {
-  constructor(props) {
+export interface AnnounceProps {
+  onClose: () => void;
+}
+
+export default class Announce extends Component<AnnounceProps, any> {
+  constructor(props: AnnounceProps) {
     super(props);
     this.state = {
       announceVisible: false,
@@ -91,7 +95,7 @@ export default class Announce extends Component<any, any> {
       files: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getAnnounce();
   }
 
@@ -142,7 +146,7 @@ export default class Announce extends Component<any, any> {
     });
   };
 
-  handleCheck = (value, key: string) => {
+  handleCheck = (value: boolean, key: string) => {
     this.setState({
       [key]: !value,
     });
@@ -247,6 +251,7 @@ export default class Announce extends Component<any, any> {
           alert(_l('发送失败'), 2);
         }
       });
+    return undefined;
   };
 
   renderAttachmentList = () => {
@@ -278,7 +283,7 @@ export default class Announce extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       content,
       sendEmail,

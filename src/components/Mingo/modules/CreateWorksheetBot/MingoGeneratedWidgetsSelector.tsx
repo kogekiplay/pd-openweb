@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import { difference, filter, find, get, isEmpty, isEqual, sortBy, uniq } from 'lodash';
 import styled, { keyframes } from 'styled-components';
@@ -377,7 +377,7 @@ function WidgetList({
         const isRelatedTable = item.type === 'relatedTable' || item.type === 'multiRelated' || item.type === 'related';
         const isDisabled = disabled || isExist;
         return (
-          <Tooltip title={item.description}>
+          <Tooltip key={i} title={item.description}>
             <div
               className="widget-item t-flex t-flex-col"
               key={item.id || `widget-${i}`}
@@ -611,7 +611,7 @@ export default function MingoGeneratedWidgetsSelector({
                       const relateWorksheetIds = uniq(
                         relateControlsWithExistWorksheet.map(c => c.dataSource).filter(Boolean),
                       );
-                      const worksheetControlsMap = {};
+                      const worksheetControlsMap: Record<string, FormControl[]> = {};
                       await Promise.all(
                         relateWorksheetIds.map(relatedWorksheetId =>
                           worksheetAjax

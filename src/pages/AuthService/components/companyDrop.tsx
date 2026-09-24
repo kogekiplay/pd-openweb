@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -131,9 +131,9 @@ function Drop(props) {
           if (info.multiple === 1) {
             return (
               <div className="">
-                {ids.map(it => {
+                {ids.map((it, index) => {
                   return (
-                    <div className="itemT InlineBlock">
+                    <div key={index} className="itemT InlineBlock">
                       {(info.options.find(a => it === a.id) || {}).name}
                       <Icon
                         icon={'close'}

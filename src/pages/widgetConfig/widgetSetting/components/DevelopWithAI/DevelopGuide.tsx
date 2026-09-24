@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 // remarkable 2 去掉了 default export，Remarkable 改为具名导出。
 import { Remarkable } from 'remarkable';
 import { highlight, languages } from 'prismjs/components/prism-core';

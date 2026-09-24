@@ -1,9 +1,10 @@
-import React, { Fragment, memo, useEffect, useRef, useState } from 'react';
+import { Fragment, memo, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import nzh from 'nzh';
 import PropTypes from 'prop-types';
 import { Checkbox, Icon, LoadDiv, MobileSearch, PopupWrapper, Radio, ScrollView } from 'ming-ui';
+import type { MobileSearchHandle } from 'ming-ui/components/MobileSearch';
 import sheetAjax from 'src/api/worksheet';
 import RestrictAccessStatus from 'src/components/restrictAccessStatus';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
@@ -57,10 +58,11 @@ const Cascader = props => {
   const limitLayer = Number(limitlayer);
   const minLayer = Number(minlayer);
   const isMultiple = enumDefault === 2;
-  const ajax = useRef(null);
+  const ajax = useRef<ApiResult | null>(null);
   const cacheData = useRef([]);
   const sourcePath = useRef({});
-  const searchRef = useRef({});
+  // 原来初值是 {}，读 keywords 时和 null 一样落到空串
+  const searchRef = useRef<MobileSearchHandle>(null);
   const [visible, setVisible] = useState(false);
   const [options, setOptions] = useState(null);
   const [operatePath, setOperatePath] = useState([]);
@@ -211,7 +213,7 @@ const Cascader = props => {
             setLayersName((_.find(result.worksheet.views, item => item.viewId === viewId) || {}).layersName || []);
           }
 
-          ajax.current = '';
+          ajax.current = null;
           cacheData.current = keywords ? result.data : _.uniqBy(cacheData.current.concat(result.data), 'rowid');
           deepDataUpdate(_.cloneDeep(options), data, rowId);
           if (isFirstLoad) {
@@ -360,7 +362,7 @@ const Cascader = props => {
   };
 
   // 简单展示内容
-  const renderSimpleContent = (item, keywords?) => {
+  const renderSimpleContent = (item, keywords?: string | undefined) => {
     return (
       <OptionWrap
         onClick={

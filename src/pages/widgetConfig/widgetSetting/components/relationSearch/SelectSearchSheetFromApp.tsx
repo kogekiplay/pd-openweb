@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import { Button, ConfigProvider } from 'antd';
 import Trigger from '@rc-component/trigger';
@@ -151,9 +151,10 @@ export default function SelectSheetFromApp(props) {
     return (
       <SelectSheetWrap>
         <div className="tabNav">
-          {initConfig.map(({ value, text }) => {
+          {initConfig.map(({ value, text }, index) => {
             return (
               <div
+                key={index}
                 className={cx('navItem', { active: queryType === value })}
                 onClick={() => {
                   const currentSheets = getCurrentSheets(value);
@@ -219,8 +220,10 @@ export default function SelectSheetFromApp(props) {
 
       const getFormatApps = () => {
         const currentIndex = _.findIndex(res, item => item.appId === currentAppId);
-        const currentApp = currentIndex > -1 ? res[currentIndex] : [];
-        const appList = [currentApp].concat(update(res, { $splice: [[currentIndex, 1]] }));
+        // 当前应用排到第一个。原来没找到时补的是 []（下拉里多出一个空选项），
+        // 同时 $splice 的起点是 -1，会把列表最后一个应用删掉
+        const appList =
+          currentIndex > -1 ? [res[currentIndex]].concat(update(res, { $splice: [[currentIndex, 1]] })) : res;
         if (appList.length < 1) return [];
         if (sheetId) {
           appList.forEach(i => {
@@ -241,7 +244,7 @@ export default function SelectSheetFromApp(props) {
     });
   }, []);
 
-  const getList = (key?) => {
+  const getList = (key?: string | undefined) => {
     if (!appId || loading) return;
     const currentType = key || queryType;
     setData({ loading: true });

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
 import FunctionWrap from 'ming-ui/components/FunctionWrap';

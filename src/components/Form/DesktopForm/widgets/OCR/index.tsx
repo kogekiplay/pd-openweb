@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Icon, QiniuUpload } from 'ming-ui';
@@ -25,8 +25,8 @@ const OCR = props => {
   } = props;
   const [isUploading, setIsUploading] = useState(false);
   const [width, setWidth] = useState(0);
-  const fileRef = useRef(null);
-  const postListRef = useRef(null);
+  const fileRef = useRef<QiniuUpload | null>(null);
+  const postListRef = useRef<ApiResult | null>(null);
   const cacheFileRef = useRef([]);
 
   useEffect(() => {
@@ -342,7 +342,7 @@ const OCR = props => {
         setIsUploading(true);
         up.disableBrowse();
       }}
-      onError={(up, err, errorTip) => {
+      onError={(up, _err, errorTip) => {
         alert(errorTip || _l('上传失败'), 2);
         handleClear(up);
       }}

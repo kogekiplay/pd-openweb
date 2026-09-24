@@ -23,7 +23,7 @@
  */
 const assert = require('assert');
 const path = require('path');
-const { transformFileSync, readSource, ROOT } = require('../../scripts/spec-harness.ts');
+const { jsxRuntimeFrom, transformFileSync, readSource, ROOT } = require('../../scripts/spec-harness.ts');
 
 global._l = global._l || ((s, ...args) => args.reduce((acc, a, i) => acc.replace('%' + i, a), String(s)));
 global.window = global.window || {};
@@ -39,7 +39,8 @@ function loadGenRouteComponent() {
   const { code } = transformFileSync(path.join(__dirname, 'genRouteComponent.jsx'), {
     babelrc: false,
     configFile: false,
-    presets: [[require.resolve('@babel/preset-react'), { runtime: 'classic' }]],
+    // JSX 的 runtime 交给 harness，与 .babelrc（automatic）一致
+    presets: [require.resolve('@babel/preset-react')],
     plugins: ['@babel/plugin-transform-modules-commonjs'],
   });
 
@@ -55,6 +56,7 @@ function loadGenRouteComponent() {
   };
   const stubs = {
     react: fakeReact,
+    'react/jsx-runtime': jsxRuntimeFrom(fakeReact.createElement),
     'react-router': { Route: 'Route', Navigate: 'Navigate' },
     lodash: require('lodash'),
     './expandRoutePaths': require('./expandRoutePaths.ts'),

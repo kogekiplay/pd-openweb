@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 
 export default ({ width, left, state, className, status }: { className?: string; [key: string]: any }) => {

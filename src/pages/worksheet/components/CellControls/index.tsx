@@ -106,7 +106,10 @@ function mergeControlAdvancedSetting(control: FormControl = {}, advancedSetting 
 }
 
 export default class CellControl extends React.Component<any, any> {
-  static propTypes = {
+  declare id: string;
+  declare clicktimer: NodeJS.Timeout | null | undefined;
+
+  static override propTypes = {
     isSubList: PropTypes.bool,
     disableValidate: PropTypes.bool,
     className: PropTypes.string,
@@ -141,7 +144,7 @@ export default class CellControl extends React.Component<any, any> {
     cellUniqueValidate: () => true,
     registerRef: () => {},
   };
-  static contextType = SheetContext;
+  static override contextType = SheetContext;
 
   constructor(props) {
     super(props);
@@ -157,7 +160,7 @@ export default class CellControl extends React.Component<any, any> {
     }
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     if (!_.isUndefined(this.props.isediting)) {
       this.setState({ isediting: this.props.isediting });
     }
@@ -169,7 +172,7 @@ export default class CellControl extends React.Component<any, any> {
     this.handleRegisterRef(this.props.registerRef, this);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.state.error && !this.props.error) {
         this.setState({
@@ -183,11 +186,11 @@ export default class CellControl extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.handleRegisterRef(this.props.registerRef, undefined);
   }
 
-  componentDidCatch(error, errorInfo) {
+  override componentDidCatch(error, errorInfo) {
     console.error(error, errorInfo);
   }
 
@@ -203,7 +206,7 @@ export default class CellControl extends React.Component<any, any> {
     let newLeft;
     let newTop;
     const cell = document.querySelector(`.worksheetTableComp.id-${tableId}-id .cell-${cellIndex}`);
-    if (!cell) return;
+    if (!cell) return undefined;
     const scrollLeft = cell.parentElement.parentElement.scrollLeft;
     const scrollTop = cell.parentElement.parentElement.scrollTop;
     const gridWidth = cell.parentElement.parentElement.clientWidth;
@@ -269,7 +272,7 @@ export default class CellControl extends React.Component<any, any> {
     return errorType;
   }
 
-  getErrorText(errorType, cell) {
+  getErrorText(errorType: string, cell) {
     const { isSubList } = this.props;
 
     if (typeof FORM_ERROR_TYPE_TEXT[errorType] === 'string') {
@@ -699,7 +702,7 @@ export default class CellControl extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const {
       direction,
       tableId,

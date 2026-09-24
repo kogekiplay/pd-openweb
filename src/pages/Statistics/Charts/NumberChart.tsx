@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { generate } from '@ant-design/colors';
 import { Col, Dropdown, Menu, Row } from 'antd';
 import cx from 'classnames';
@@ -298,6 +298,8 @@ export const replaceColor = (data, customPageConfig = {}, themeColor) => {
 };
 
 export default class extends Component<any, any> {
+  declare isUnmounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -310,11 +312,11 @@ export default class extends Component<any, any> {
       presetBgImageIndex: null,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.updatePresetBgImage();
     this.updateNumberHeader();
   }
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (this.getPresetBgImageIndex(prevProps) !== this.getPresetBgImageIndex(this.props)) {
       this.updatePresetBgImage();
     }
@@ -325,7 +327,7 @@ export default class extends Component<any, any> {
       this.updateNumberHeader();
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
   }
   getPresetBgImageIndex = props => {
@@ -747,8 +749,8 @@ export default class extends Component<any, any> {
                   controlId: data.controlId,
                   isContrastValue: true,
                 })}
-              {minorList.map(data => (
-                <div className="w100 flexRow textWrap minorWrap Font14">
+              {minorList.map((data, index) => (
+                <div key={index} className="w100 flexRow textWrap minorWrap Font14">
                   <div className="mRight5 textSecondary name">{data.name}</div>
                   <div>{formatrChartValue(data.value, false, newYaxisList, data.controlId)}</div>
                 </div>
@@ -777,7 +779,7 @@ export default class extends Component<any, any> {
       </Menu>
     );
   }
-  render() {
+  override render() {
     const { mobileCount = 1, layoutType, reportData, sourceType, isThumbnail, customPageConfig } = this.props;
     const { pageStyleType = 'light' } = customPageConfig;
     const isDark = window.themeMode === 'dark' || (pageStyleType === 'dark' && isThumbnail);

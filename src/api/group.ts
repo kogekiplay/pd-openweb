@@ -11,7 +11,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupsSearch: function (args: ApiArgs, options: ApiOptions = {}) {
+  getGroupsSearch: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Group.GroupSearchModel> {
     return mdyAPI('Group', 'GetGroupsSearch', args, options);
   },
   /**
@@ -23,7 +26,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupsNameAndIsVerified: function (args: ApiArgs, options: ApiOptions = {}) {
+  getGroupsNameAndIsVerified: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ListModel_GroupModel> {
     return mdyAPI('Group', 'GetGroupsNameAndIsVerified', args, options);
   },
   /**
@@ -69,7 +75,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroups: function (args: ApiArgs, options: ApiOptions = {}) {
+  getGroups: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ListModel_GroupModel> {
     return mdyAPI('Group', 'GetGroups', args, options);
   },
   /**

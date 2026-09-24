@@ -13,7 +13,7 @@ import PostCommentInput from './postCommentInput';
  * 动态回复列表
  */
 class PostCommentList extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     dispatch: PropTypes.func,
     postItem: PropTypes.object.isRequired,
     defaultCount: PropTypes.number, // 默认呈现回复条数
@@ -35,13 +35,13 @@ class PostCommentList extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.showLikedUsers && !this.state.likedUsers) {
       this.fetchLikedUsers();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const postItem = this.props.postItem;
       const defaultCount = this.props.defaultCount;
@@ -74,7 +74,7 @@ class PostCommentList extends React.Component<any, any> {
     this.props.dispatch(loadMoreComments(this.props.postItem.postID));
   };
 
-  render() {
+  override render() {
     const postItem = this.props.postItem;
     const totalCount = parseInt(postItem.commentCount, 10);
     const comments = postItem.comments || [];
@@ -129,6 +129,7 @@ class PostCommentList extends React.Component<any, any> {
               );
             }
           }
+          return undefined;
         })()}
       </div>
     );

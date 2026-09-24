@@ -1,9 +1,11 @@
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Popover } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { SortableList } from 'ming-ui';
+import type { SortableRenderItemOptions } from 'ming-ui/components/SortableList';
+import type { SelectedEntityValue } from 'src/utils/controlTypes';
 import { quickSelectDept } from 'ming-ui/functions';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
 import { dealRenderValue, dealUserRange } from '../../../core/utils';
@@ -13,10 +15,10 @@ import DepartmentTooltip from './DepartmentTooltip';
 const DepartmentSelect = props => {
   const { disabled, value, projectId, enumDefault, onChange, advancedSetting = {}, formData, formItemId } = props;
 
-  const [showId, setShowId] = useState('');
+  const [showId, setShowId] = useState<string | undefined>('');
 
-  const pickRef = useRef(null);
-  const destoryRef = useRef(null);
+  const pickRef = useRef<HTMLDivElement | null>(null);
+  const destoryRef = useRef<(() => void) | null>(null);
   const currentValueRef = useRef(safeParse(value || '[]'));
 
   const currentValue = useMemo(() => {
@@ -52,7 +54,7 @@ const DepartmentSelect = props => {
   /**
    * 选择部门
    */
-  const pickDepartment = (replaceItem?) => {
+  const pickDepartment = (replaceItem?: SelectedEntityValue | undefined) => {
     if (!_.find(md.global.Account.projects, item => item.projectId === projectId)) {
       alert(_l('您不是该组织成员，无法获取其部门列表，请联系组织管理员'), 3);
       return;
@@ -83,7 +85,7 @@ const DepartmentSelect = props => {
     destoryRef.current = destory;
   };
 
-  const onSave = (data, isCancel = false, replaceItem) => {
+  const onSave = (data, isCancel = false, replaceItem: SelectedEntityValue | undefined) => {
     const valueArr = currentValueRef.current;
     const lastIds = _.sortedUniq(valueArr.map(l => l.departmentId));
     const newIds = _.sortedUniq(data.map(l => l.departmentId));
@@ -108,7 +110,7 @@ const DepartmentSelect = props => {
   /**
    * 删除部门
    */
-  const removeDepartment = departmentId => {
+  const removeDepartment = (departmentId: string | undefined) => {
     const newValue = departmentId
       ? currentValue.filter(item => item.departmentId !== departmentId)
       : currentValue.filter(i => !i.isDelete);
@@ -116,7 +118,7 @@ const DepartmentSelect = props => {
     onChange(JSON.stringify(newValue));
   };
 
-  const renderItem = ({ item, items = [], dragging, isLayer }) => {
+  const renderItem = ({ item, items = [], dragging, isLayer }: SortableRenderItemOptions<SelectedEntityValue>) => {
     const { allpath } = advancedSetting;
     const disablePopover = disabled || dragging || isLayer || item.isDelete;
     const showMenu = showId === item.departmentId && !disablePopover;

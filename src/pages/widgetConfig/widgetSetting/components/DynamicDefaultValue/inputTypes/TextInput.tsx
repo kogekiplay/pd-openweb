@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import { TagTextarea } from 'ming-ui';
@@ -9,7 +9,7 @@ import { DynamicValueInputWrap } from '../styled';
 import { transferValue } from '../util';
 
 export default class TextInput extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
     onDynamicValueChange: func,
     clearOldDefault: func,
@@ -26,7 +26,7 @@ export default class TextInput extends Component<any, any> {
   $textinput;
   $wrap;
 
-  componentDidMount() {
+  override componentDidMount() {
     const { dynamicValue, data, onChange } = this.props;
     const { default: defaultValue } = data;
 
@@ -48,7 +48,7 @@ export default class TextInput extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (JSON.stringify(this.props.dynamicValue) !== JSON.stringify(prevProps.dynamicValue)) {
       if (this.$tagtextarea) {
         // 光标现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}。
@@ -118,7 +118,7 @@ export default class TextInput extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { defaultType, from } = this.props;
     return (
       <DynamicValueInputWrap ref={con => { this.$textinput = con; }} triggerStyle={true}>
@@ -133,7 +133,7 @@ export default class TextInput extends Component<any, any> {
               return <OtherField className="tagTextField overflow_ellipsis" item={{ cid, rcid }} {...this.props} />;
             }}
             getRef={tagtextarea => (this.$tagtextarea = tagtextarea)}
-            onChange={(err, value) => {
+            onChange={(_err, value) => {
               from !== DYNAMIC_FROM_MODE.FAST_FILTER && this.transferValue(value.trim());
             }}
             onBlur={() => {

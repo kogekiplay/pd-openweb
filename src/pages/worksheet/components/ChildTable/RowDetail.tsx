@@ -7,8 +7,12 @@ import CustomFields from 'src/components/Form';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
-export default class RowDetail extends React.Component<any, any> {
-  static propTypes = {
+export interface RowDetailState {
+  flag: number;
+}
+
+export default class RowDetail extends React.Component<any, RowDetailState> {
+  static override propTypes = {
     widgetStyle: PropTypes.shape({}),
     ignoreLock: PropTypes.bool,
     disabled: PropTypes.bool,
@@ -36,7 +40,7 @@ export default class RowDetail extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.data &&
@@ -67,14 +71,15 @@ export default class RowDetail extends React.Component<any, any> {
     onSave({ ...data, ...row, empty: false }, updateControlIds);
   };
 
-  handleSave = (nextContinue, isSwitchSave, ignoreAlert) => {
+  // 三个开关都可省略（调用方有 handleSave()、handleSave(true)、handleSave(false, true) 几种写法），省略即 false
+  handleSave = (nextContinue?: boolean, isSwitchSave?: boolean, ignoreAlert?: boolean) => {
     if (!this.customwidget.current) {
-      return;
+      return undefined;
     }
 
     if ($(this.formcon.current).find('.Progress--circle').length > 0) {
       alert(_l('附件正在上传，请稍后'), 3);
-      return;
+      return undefined;
     }
 
     const { data, onSave, onClose, openNextRecord } = this.props;
@@ -88,7 +93,7 @@ export default class RowDetail extends React.Component<any, any> {
       const row = [{}, ...formdata].reduce((a = {}, b = {}) => Object.assign(a, { [b.controlId]: b.value }));
       onSave({ ...data, ...row, empty: false }, updateControlIds);
       if (isSwitchSave) {
-        return;
+        return undefined;
       } else if (nextContinue) {
         this.setState({ flag: Math.random() }, () => {
           if (this.formcon.current) {
@@ -107,6 +112,7 @@ export default class RowDetail extends React.Component<any, any> {
         onClose();
       }
     }
+    return undefined;
   };
 
   handleClose = () => {
@@ -120,7 +126,7 @@ export default class RowDetail extends React.Component<any, any> {
     onClose();
   };
 
-  render() {
+  override render() {
     const {
       ignoreLock,
       disabled,

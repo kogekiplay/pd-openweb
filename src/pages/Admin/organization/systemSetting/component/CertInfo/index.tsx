@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Icon, LoadDiv } from 'ming-ui';
 import certificationApi from 'src/api/certification';

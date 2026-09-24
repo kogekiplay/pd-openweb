@@ -735,6 +735,7 @@ function getDefaultFilterType(control, from) {
 
     return FILTER_CONDITION_TYPE.EQ_FOR_SINGLE;
   }
+  return undefined;
 }
 
 export function getDefaultCondition(control, from?) {
@@ -1109,13 +1110,13 @@ export function getFilter({
   appId,
   currentTimeForSecond,
 }: {
-  control?: FormControl;
-  formData?: FormControl[];
+  control?: FormControl | undefined;
+  formData?: FormControl[] | undefined;
   /** advancedSetting 里存筛选条件的键名，查询配置用 'filters' 之外的值 */
-  filterKey?: string;
-  ignoreEmptyRule?: boolean;
-  appId?: string;
-  currentTimeForSecond?: boolean;
+  filterKey?: string | undefined;
+  ignoreEmptyRule?: boolean | undefined;
+  appId?: string | undefined;
+  currentTimeForSecond?: boolean | undefined;
 }) {
   if (
     !control ||

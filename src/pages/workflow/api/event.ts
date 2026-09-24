@@ -12,7 +12,7 @@ const event = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  subscribe: function (args, options) {
+  subscribe: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/event/subscribe';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'eventsubscribe', JSON.stringify(args), $.extend(base, options));
@@ -25,7 +25,7 @@ const event = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  unsubscribe: function (args, options) {
+  unsubscribe: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/event/unsubscribe';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'eventunsubscribe', JSON.stringify(args), $.extend(base, options));

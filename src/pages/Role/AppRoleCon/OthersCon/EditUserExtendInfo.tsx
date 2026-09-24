@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Select } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -70,11 +70,11 @@ export default function EditUserExtendInfo(props) {
   const { step, appId, onChangeStep, value, onChangeData, result, appProjectId } = props;
 
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [appList, setAppList] = useState([]);
+  const [appList, setAppList] = useState<HapApi.MD.Entity.Apk.AppForManagerModel[]>([]);
   const [loading, setLoading] = useState(false);
-  const [worksheetList, setWorksheetList] = useState([]);
+  const [worksheetList, setWorksheetList] = useState<HapApi.MD.Entity.Apk.EntityInfo[]>([]);
   const [controls, setControls] = useState([]);
-  const [appName, setAppName] = useState('');
+  const [appName, setAppName] = useState<string | undefined>('');
   const [data, setData] = useState({
     worksheetId: value.worksheetId || undefined,
     controlId: value.controlId || undefined,
@@ -119,7 +119,7 @@ export default function EditUserExtendInfo(props) {
       .catch(() => setLoading(false));
   }, [data.worksheetId]);
 
-  const saveFn = statusFlag => {
+  const saveFn = (statusFlag: number) => {
     if (statusFlag === 9 && !data.controlId) {
       return alert(_l('无扩展信息表'), 3);
     }

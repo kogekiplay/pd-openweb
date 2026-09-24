@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { addFriendConfirm } from 'ming-ui/functions';
@@ -46,7 +46,7 @@ export default class SystemMessage extends Component<any, any> {
       textarea.focus();
     }, 0);
   };
-  render() {
+  override render() {
     const { message, session } = this.props;
     const isFileTransfer = session.id === 'file-transfer';
     return (

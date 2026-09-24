@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
 import FunctionWrap from 'ming-ui/components/FunctionWrap';
@@ -77,7 +76,7 @@ const mathods = [
 export default function PurchaseMethodModal(props) {
   const { onCancel, projectId, select, isTrial } = props;
 
-  const handleClick = it => {
+  const handleClick = (it: { type: string; icon: string; iconColor: string; title: string; description: string }) => {
     if (it.type === 'payOnline') {
       location.assign(pathCompletion(`/upgrade/choose?projectId=${projectId}${select ? '&select=' + select : ''}`));
     } else if (it.type === 'partner') {

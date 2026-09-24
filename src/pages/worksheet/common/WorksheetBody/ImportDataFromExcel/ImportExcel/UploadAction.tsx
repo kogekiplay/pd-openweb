@@ -4,14 +4,14 @@ import { Icon } from 'ming-ui';
 import { UPLOAD_STATUS } from 'src/pages/kc/constant/enum';
 
 export default class UploadAction extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     status: PropTypes.number,
     cancelUpload: PropTypes.func,
     retryUpload: PropTypes.func,
     deleteFile: PropTypes.func,
   };
 
-  render() {
+  override render() {
     const { status, cancelUpload, retryUpload, deleteFile } = this.props;
     let show = true;
     let icon, action, title;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { assign, isEmpty, isObject, trim } from 'lodash';
 import _ from 'lodash';
 import moment from 'moment';
@@ -6,7 +5,7 @@ import qs from 'query-string';
 import Dialog from 'ming-ui/components/Dialog';
 import { NODE_SORT_BY, NODE_SORT_TYPE, PICK_TYPE, ROOT_PERMISSION_TYPE } from '../constant/enum';
 
-function smi(i32) {
+function smi(i32: number) {
   return ((i32 >>> 1) & 0x40000000) | (i32 & 0xbfffffff);
 }
 
@@ -113,7 +112,8 @@ export function humanFileSize(size, accuracy = 0, space = ' ', units = ['B', 'KB
   return (size / Math.pow(1024, i)).toFixed(accuracy) * 1 + space + units[i];
 }
 
-export function IdItem(item) {
+/** 配合 new 使用：把 item 的字段拷到实例上，原型上补 hashCode / equals（按 id） */
+export function IdItem(this: { id?: string }, item) {
   return assign(this, item);
 }
 
@@ -261,9 +261,9 @@ export function getDefaultSortType(sortBy) {
 export function confirm(
   header: string,
   content: string,
-  showClose: boolean,
-  ckText: string,
-  minorContent: string,
+  _showClose: boolean,
+  _ckText: string,
+  _minorContent: string,
   yesText = undefined,
   noText = undefined,
 ) {
@@ -387,7 +387,7 @@ export function getFileIconNameByExt(ext) {
   }
 }
 
-export function isOffice(fileExt) {
+export function isOffice(fileExt: string) {
   var fileExts = ['.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx'];
   if (fileExt) {
     fileExt = fileExt.toLowerCase();

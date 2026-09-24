@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -215,14 +215,14 @@ class AppWorkflowList extends Component<any, any> {
   ajaxRequest = null;
   requestPending = false;
 
-  componentDidMount() {
+  override componentDidMount() {
     const { appId } = this.props.match.params;
     updateWorkflowMingoStore({ id: appId, ...(window.appInfo || {}) });
     this.getAppDetail();
     this.checkIsAppAdmin();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (window.globalStoreForMingo?.activeModule === 'workflow') {
       updateGlobalStoreForMingo({ activeModule: 'worksheet' });
     }
@@ -235,7 +235,7 @@ class AppWorkflowList extends Component<any, any> {
    * 获取type
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const type = this.getQueryStringType();
 
@@ -711,7 +711,7 @@ class AppWorkflowList extends Component<any, any> {
    */
   renderListItem(item) {
     const { type, selectFlowId, appDetail, sortType } = this.state;
-    const ICON = {
+    const ICON: Record<string, string> = {
       timer: 'icon-access_alarm',
       User: 'icon-hr_structure',
       ExternalUser: 'icon-language',
@@ -800,7 +800,7 @@ class AppWorkflowList extends Component<any, any> {
    */
   column3Content(item) {
     const { type, list, displayType } = this.state;
-    let text;
+    let text: string | undefined;
 
     if (type !== FLOW_TYPE.OTHER_APP) {
       return (
@@ -1211,7 +1211,7 @@ class AppWorkflowList extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { appId } = this.props.match.params;
     const { type, loading, list, selectItem, appDetail, showTrash } = this.state;
 

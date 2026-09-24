@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, memo, useEffect, useImperativeHandle } from 'react';
+import { forwardRef, Fragment, memo, useEffect, useImperativeHandle } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import moment from 'moment';

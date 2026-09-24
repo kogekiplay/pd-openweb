@@ -20,6 +20,8 @@ import { checkIsProject, errorMessage } from '../../utils/utils';
 import './folderDetail.less';
 
 class FolderDetail extends Component<any, any> {
+  declare mounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -36,12 +38,12 @@ class FolderDetail extends Component<any, any> {
   // 获取详情
   folderPostPromise = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
     this.getFolderDetail();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.taskConfig.folderId && this.props.taskConfig.folderId !== prevProps.taskConfig.folderId) {
         // 解决props未更新问题
@@ -60,7 +62,7 @@ class FolderDetail extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
   }
 
@@ -375,6 +377,7 @@ class FolderDetail extends Component<any, any> {
           </span>
         );
       }
+      return undefined;
     };
 
     return (
@@ -506,7 +509,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 添加项目人员事件
    */
-  addFolderMembersEvents(evt: React.MouseEvent<HTMLElement, MouseEvent>, isAdmin) {
+  addFolderMembersEvents(evt: React.MouseEvent<HTMLElement, MouseEvent>, isAdmin: boolean) {
     const { data } = this.state;
     const { folderId, projectId } = this.props.taskConfig;
     let existsIds = [];
@@ -594,7 +597,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 设为成员和管理员
    */
-  updateFolderMemberAuth(accountId: string, avatar, fullname: string, isAdmin) {
+  updateFolderMemberAuth(accountId: string, avatar, fullname: string, isAdmin: boolean) {
     ajaxRequest
       .updateFolderMemberAuth({
         folderID: this.props.taskConfig.folderId,
@@ -749,7 +752,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 添加项目人员
    */
-  addFolderMembers(users, isAdmin, callbackInviteResult?) {
+  addFolderMembers(users, isAdmin: boolean, callbackInviteResult?) {
     const userIdArr = [];
     const specialAccounts = {};
 
@@ -957,7 +960,7 @@ class FolderDetail extends Component<any, any> {
     return 'icon-charger';
   }
 
-  render() {
+  override render() {
     const { data, isEditing, tabIndex, onlyLook, discussions, logs } = this.state;
     const { folderId } = this.props.taskConfig;
     const { folderName } = this.props.folderSettings;

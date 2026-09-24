@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { getOptionChipStyle } from 'src/utils/optionColor';
@@ -13,7 +12,7 @@ export default function (props) {
   const data = props.controlInfo.options.find(o => o.key === props.item) || {};
 
   if (_.get(props, 'controlInfo.enumDefault2') === 1) {
-    // 配色交给 getOptionChipStyle（浅底 + 同色深字），见 src/utils/optionColor.ts
+    // 配色交给 getOptionChipStyle（底 = 选的颜色，字色按对比度挑），见 src/utils/optionColor.ts
     style = getOptionChipStyle(data.color);
   }
 

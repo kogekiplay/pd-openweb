@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
@@ -14,7 +14,7 @@ let AppLib = class AppLib extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('.loadBoxForWarehouse').hide();
     const { md = {} } = window;
     const { global = {} } = md;
@@ -60,7 +60,7 @@ let AppLib = class AppLib extends Component<any, any> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     let divStr = $(`script[src="${this.state.str}"]`);
     divStr.length > 0 && divStr.remove();
     $('html').removeClass('appListPage');
@@ -75,7 +75,7 @@ let AppLib = class AppLib extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     return (
       <div id="containerAppLib">
         <LoadDiv

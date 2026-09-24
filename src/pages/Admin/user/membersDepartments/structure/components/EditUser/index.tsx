@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Drawer } from 'antd';
 import cx from 'classnames';
@@ -17,6 +17,14 @@ import TextInput from '../TextInput';
 import './index.less';
 
 export default class EditUser extends Component<any, any> {
+  declare baseFormInfo: BaseFormInfo | null | undefined;
+
+  // declare 是纯类型声明，babel 整行擦除，运行时无影响
+  /** 手机号输入框上挂的区号控件；输入框随表单重新挂载时要跟着重建（见 componentDidUpdate） */
+  declare iti: ReturnType<typeof createIntlTelInput> | null;
+  /** 手机号输入框（TextInput 经 manualRef 交出来） */
+  declare mobilePhone: HTMLInputElement | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -25,9 +33,9 @@ export default class EditUser extends Component<any, any> {
       baseInfo: {},
       agreeLoading: false,
     };
-    this.it = null;
+    this.iti = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { typeCursor, editCurrentUser = {} } = this.props;
     typeCursor !== 2 && this.getUserData();
     if (typeCursor === 2) {
@@ -46,16 +54,11 @@ export default class EditUser extends Component<any, any> {
         mobile: mobilePhone,
         email,
         status,
-        isUploading: false,
       });
     }
-
-    setTimeout(() => {
-      this.itiFn();
-    }, 500);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.typeCursor !== 0 && !_.isEqual(prevProps.editCurrentUser, this.props.editCurrentUser)) {
         const { fullname, mobilePhone, email, jobNumber, contactPhone } = this.props;
@@ -70,25 +73,35 @@ export default class EditUser extends Component<any, any> {
       }
     }
 
-    !this.iti && this.itiFn();
+    if (this.iti?.element !== this.mobilePhone) {
+      this.itiFn();
+    }
+  }
+  override componentWillUnmount() {
+    this.iti?.element.removeEventListener('countrychange', this.changeCountry);
+    this.iti?.destroy();
   }
   itiFn = () => {
+    this.iti?.element.removeEventListener('countrychange', this.changeCountry);
+    this.iti?.destroy();
+    this.iti = null;
+
     if (this.mobilePhone) {
-      this.iti && this.iti.destroy();
+      // 用完整号码恢复区号，避免表单重新挂载后回到默认区号。
+      this.mobilePhone.value = this.state.mobilePhone || '';
       this.iti = createIntlTelInput(this.mobilePhone, {
         customPlaceholder: '',
         separateDialCode: true,
         showSelectedDialCode: true,
+        showDialCodeInput: true,
       });
-
-      this.mobilePhone.addEventListener('countrychange', () => {
-        const { dialCode } = (this.iti && this.iti.getSelectedCountryData()) || {};
-
-        if (!this.state.mobilePhone.includes(`+${dialCode}`)) {
-          this.setState({ mobilePhone: this.state.mobilePhone.replace('+', '') });
-        }
-      });
+      this.mobilePhone.value = this.fromatMobilePhoe(this.state.mobilePhone) || '';
+      this.mobilePhone.addEventListener('countrychange', this.changeCountry);
     }
+  };
+  changeCountry = () => {
+    // 输入框只保留号码本体，使用新选区号生成完整号码。
+    this.setState({ mobilePhone: this.iti.getNumber() });
   };
   getUserData = () => {
     const { accountId, projectId, typeCursor, editCurrentUser } = this.props;
@@ -99,7 +112,8 @@ export default class EditUser extends Component<any, any> {
         projectId,
       })
       .then(data => {
-        let { user = {}, jobs = [], workSites = [] } = data;
+        // 接口没给 user 时按「全部字段可缺」处理（null 属性不输出）
+        let { user = {} as Partial<HapApi.MD.Web.Ajax.ResultModel.User.UserModel>, jobs = [], workSites = [] } = data;
         this.setState({
           isUploading: false,
           userName: user.fullname || '',
@@ -125,7 +139,7 @@ export default class EditUser extends Component<any, any> {
   };
   changeFormInfo = (e, field: string) => {
     this.setState({
-      [field]: field === 'mobilePhone' ? e.target.value.replace(/ +/g, '') : e.target.value,
+      [field]: field === 'mobilePhone' ? this.iti.getNumber(e.target.value.replace(/ +/g, '')) : e.target.value,
       isClickSubmit: false,
     });
   };
@@ -140,7 +154,7 @@ export default class EditUser extends Component<any, any> {
 
     return value;
   };
-  clearError = field => {
+  clearError = (field: string) => {
     const { errors = {} } = this.state;
     delete errors[field];
     this.setState({ errors });
@@ -216,7 +230,7 @@ export default class EditUser extends Component<any, any> {
 
     if (useMultiJobs && !!departmentJobInfos.filter(item => !item.departmentId).length) {
       alert(_l('多任职信息中部门不能为空'), 3);
-      return;
+      return undefined;
     }
 
     if (window.platformENV.isPlatform) {
@@ -252,7 +266,7 @@ export default class EditUser extends Component<any, any> {
           },
         );
     } else {
-      const { userName, email, mobilePhone } = this.state;
+      const { userName, email, mobilePhone, companyName } = this.state;
       const errors = {
         ...this.state.errors,
         userName: !!checkForm['userName'](userName),
@@ -310,13 +324,11 @@ export default class EditUser extends Component<any, any> {
                 this.setState({ isUploading: false });
               } else {
                 alert(_l('保存失败'), 2);
-                // 接口调用失败：表单会随 isUploading 翻回 false 重新挂载，
-                // 等下一帧 DOM 拿到新 ref 后再重建 iti，避免它仍绑在已卸载的 input 上
-                this.setState({ isUploading: false }, () => this.itiFn());
+                this.setState({ isUploading: false });
               }
             })
             .catch(() => {
-              this.setState({ isUploading: false }, () => this.itiFn());
+              this.setState({ isUploading: false });
             });
         } else {
           alert(_l('输入内容包含敏感词，请重新填写'), 3);
@@ -324,6 +336,7 @@ export default class EditUser extends Component<any, any> {
         }
       });
     }
+    return undefined;
   };
   renderBaseUserInfo = () => {
     const { typeCursor, projectId } = this.props;
@@ -362,8 +375,10 @@ export default class EditUser extends Component<any, any> {
                 className={cx('formControl input', {
                   error: errors['mobilePhone'] && !!checkForm['mobilePhone'](mobilePhone, this.iti),
                 })}
-                value={this.fromatMobilePhoe(mobilePhone)}
-                manualRef={ele => (this.mobilePhone = ele)}
+                // iti 还没建好时 fromatMobilePhoe 原样返回；接口没给手机号时那就是 undefined / null，
+                // 输入框会先非受控、iti 建好后再变受控（原因同 TextInput）
+                value={this.fromatMobilePhoe(mobilePhone) ?? ''}
+                manualRef={ele => { this.mobilePhone = ele; }}
                 onInput={e => this.changeFormInfo(e, 'mobilePhone')}
                 placeholder={_l('请输入')}
                 onFocus={() => {
@@ -411,7 +426,7 @@ export default class EditUser extends Component<any, any> {
       </Fragment>
     );
   };
-  render() {
+  override render() {
     const {
       actType,
       typeCursor,

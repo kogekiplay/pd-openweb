@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -184,7 +184,7 @@ export default function RelationSearch(props) {
     }
   }, [loading]);
 
-  const getShowControls = (reControls, needDefault?) => {
+  const getShowControls = (reControls, needDefault?: boolean | undefined) => {
     if (_.isEmpty(showControls) && needDefault) return reControls.slice(0, 4).map(item => item.controlId);
     // 删除掉showControls 中已经被删掉的控件
     const allControlId = reControls.map(item => item.controlId);
@@ -226,9 +226,10 @@ export default function RelationSearch(props) {
         />
         <div className="flexCenter mTop20">
           <span className="textSecondary mRight20">{_l('填充方式')}</span>
-          {FILL_TYPES.map(item => {
+          {FILL_TYPES.map((item, index) => {
             return (
               <span
+                key={index}
                 className={cx('coverType Hand', { active: item.value === covertype })}
                 onClick={() => onChange(handleAdvancedSettingChange(data, { covertype: item.value }))}
               >
@@ -390,8 +391,9 @@ export default function RelationSearch(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('显示查询结果')}</div>
         <AnimationWrap>
-          {SEARCH_RESULT_TYPES.map(({ text, value }) => (
+          {SEARCH_RESULT_TYPES.map(({ text, value }, index) => (
             <div
+              key={index}
               className={cx('animaItem', { active: enumDefault === value })}
               onClick={() => {
                 let nextData = { ...data, enumDefault: value };
@@ -525,7 +527,7 @@ export default function RelationSearch(props) {
             value={maxcount || undefined}
             className="w100 Font13"
             type={2}
-            placeholder={showtype === '3' ? 50 : _l('全部')}
+            placeholder={showtype === '3' ? '50' : _l('全部')}
             onChange={value => {
               onChange(handleAdvancedSettingChange(data, { maxcount: `${value}` }));
             }}

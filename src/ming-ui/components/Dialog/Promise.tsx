@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import ConfirmButton from './ConfirmButton';
 import Dialog from './Dialog';
@@ -17,7 +16,7 @@ export default function promise(props) {
   return new Promise((resolve, reject) => {
     step = (async function* () {
       // 关闭弹框处理函数
-      const handlerClose = value => {
+      const handlerClose = (value: boolean) => {
         // 判断用户点击确定还是取消
         confirm = value;
 

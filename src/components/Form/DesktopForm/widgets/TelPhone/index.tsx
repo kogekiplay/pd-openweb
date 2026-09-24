@@ -66,7 +66,7 @@ const TelPhone = props => {
     }, []),
   );
 
-  const handleFocus = e => {
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement, Element>) => {
     setOriginValue(e.target.value.trim());
     setIsEditing(true);
     if (_.isFunction(triggerCustomEvent)) {
@@ -92,7 +92,7 @@ const TelPhone = props => {
     }
   };
 
-  const handleBlur = event => {
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement, Element>) => {
     setIsEditing(false);
     if (event.target.value.trim() !== originValue) {
       onChange(event.target.value.trim());

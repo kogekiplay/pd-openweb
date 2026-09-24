@@ -49,7 +49,7 @@ class RoleUserList extends Component<any, any> {
       selectedDepartment: (item?.orgRoleChargeDepartments || []).map(l => {
         return { ...l, checkIncludeChilren: true };
       }),
-      selectFn: (dep, dep2) => {
+      selectFn: (_dep, dep2) => {
         const departmentIds = dep2.map(l => ({ departmentId: l.departmentId, isIncludeSub: true }));
         OrganizeAjax.setOrgRoleChargeDepartment({
           projectId,
@@ -108,8 +108,8 @@ class RoleUserList extends Component<any, any> {
               ) : (
                 <div>
                   {(departmentsPath.find(l => l.accountId === item.accountId) || { departments: [] }).departments.map(
-                    l => (
-                      <div>{l.name}</div>
+                    (l, index) => (
+                      <div key={index}>{l.name}</div>
                     ),
                   )}
                 </div>
@@ -267,7 +267,7 @@ class RoleUserList extends Component<any, any> {
     });
   };
 
-  handleScroll = type => {
+  handleScroll = (type: number) => {
     const ref = type === 0 ? this.scrollNullHeadRef : this.scrollRef;
     if (!ref.current) return;
 
@@ -286,7 +286,7 @@ class RoleUserList extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { userList = [] } = this.props;
 
     return (

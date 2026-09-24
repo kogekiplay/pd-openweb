@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Dropdown, Menu } from 'antd';
 import cx from 'classnames';
 import { bool, func, number } from 'prop-types';
@@ -9,7 +9,7 @@ import Content from './Content';
 import './index.less';
 
 let IndexSide = class IndexSide extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onClose: func,
     posX: number,
     visible: bool,
@@ -18,21 +18,21 @@ let IndexSide = class IndexSide extends Component<any, any> {
     posX: -352,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     document.body && document.body.addEventListener('keydown', this.closeWhenPressEsc);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     document.body && document.body.removeEventListener('keydown', this.closeWhenPressEsc);
   }
 
-  closeWhenPressEsc = e => {
+  closeWhenPressEsc = (e: KeyboardEvent) => {
     if (e.key === 'Escape' || e.keyCode === 27) {
       this.props.onClose();
     }
   };
 
-  render() {
+  override render() {
     const { posX } = this.props;
     return (
       <div

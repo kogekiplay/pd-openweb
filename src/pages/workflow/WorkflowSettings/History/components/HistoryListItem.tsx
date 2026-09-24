@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -31,7 +31,7 @@ export default ({
   const { color } = STATUS2COLOR[FLOW_STATUS[isDelete ? -1 : status].status];
   const displayedDate = moment(createDate);
   const [isRetry, setRetry] = useState(false);
-  const [versionDate, setVersion] = useState('');
+  const [versionDate, setVersion] = useState<string | true>('');
   const [currentWorkflowId, setWorkflowId] = useState('');
   const showRetry = _.includes([3, 4], status) && !_.includes([6666, 7777], cause);
   const showSuspend = status === 1;
@@ -43,7 +43,7 @@ export default ({
         {status === 2 || cause === 7777 || isDelete ? null : (
           <Checkbox
             checked={!!batchIds.find(o => o.id === id)}
-            onClick={(checked: boolean, value, e) => {
+            onClick={(checked: boolean, _value, e) => {
               e.stopPropagation();
               onUpdateBatchIds(
                 !checked ? batchIds.concat({ id, status, cause, instanceType }) : batchIds.filter(o => o.id !== id),

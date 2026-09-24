@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class HoverState extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     component: PropTypes.any,
     thisArg: PropTypes.object.isRequired, // 需要调用 setState 的 this 对象
     hoverStateName: PropTypes.string.isRequired, // 需要设置的 state key，onMouseEnter 时设为 true, onMouseLeave 时设为 false
@@ -20,7 +20,7 @@ class HoverState extends React.Component<any, any> {
     this.props.thisArg.setState(state);
   }
 
-  render() {
+  override render() {
     const rest = { ...this.props };
     const Component = rest.component || 'div';
     delete rest.component;

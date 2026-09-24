@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Checkbox, Select } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import _ from 'lodash';
@@ -194,7 +194,7 @@ export default class DataContrast extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { contrastVisible, isNumberChart } = this.props;
     return (
       <Fragment>

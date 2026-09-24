@@ -21,6 +21,11 @@ const MAP_TYPE = [
 ];
 
 class GDMap extends Component<any, any> {
+  declare _MapLoader: MapLoader | undefined;
+  declare _maphHandler: MapHandler | null | undefined;
+  declare _mapContainer: HTMLDivElement | null | undefined;
+  declare searchRef: HTMLInputElement | null | undefined;
+
   static defaultProps = {
     isMobile: false,
     distance: 0,
@@ -42,7 +47,7 @@ class GDMap extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this._MapLoader = new MapLoader();
     this._MapLoader.loadJs().then(() => {
       this.initMapObject();
@@ -54,7 +59,7 @@ class GDMap extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this._maphHandler) {
       this._maphHandler.destroyMap();
       this._maphHandler = null;
@@ -266,9 +271,10 @@ class GDMap extends Component<any, any> {
 
     return (
       <AnimationWrap className={cx('mLeft16 mRight16', { mTop16: !isMobile })}>
-        {MAP_TYPE.map(item => {
+        {MAP_TYPE.map((item, index) => {
           return (
             <div
+              key={index}
               className={cx('animaItem', { active: this.state.tab === item.value })}
               onClick={() => {
                 this.setState({ tab: item.value }, () => {
@@ -353,7 +359,7 @@ class GDMap extends Component<any, any> {
         {(keywords ? list : defaultList).map((item, index: number) => {
           if (item.address && typeof item.address === 'string') {
             return (
-              <div className="MDMapList">
+              <div key={index} className="MDMapList">
                 <div
                   key={index}
                   className="flexColumn flex ellipsis"
@@ -412,7 +418,7 @@ class GDMap extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isMobile, distance, onClose = () => {} } = this.props;
     const { defaultLocation, locationFailedDialogVisible } = this.state;
 
@@ -545,7 +551,7 @@ export default class MDMap extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const MapComponent = getMapConfig() ? GoogleMap : GDMap;
     return <MapComponent {...this.props} />;
   }

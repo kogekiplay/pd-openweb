@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -142,8 +142,13 @@ const Content = styled.div`
   }
 `;
 
+export interface RenderBlankBlockProps {
+  columnSize: number;
+  number: number;
+}
+
 // 渲染占位块
-const RenderBlankBlock = ({ columnSize, number }) => {
+const RenderBlankBlock = ({ columnSize, number }: RenderBlankBlockProps) => {
   const list = [];
 
   if (!number) return null;
@@ -155,7 +160,7 @@ const RenderBlankBlock = ({ columnSize, number }) => {
   return list;
 };
 
-let ajaxRequest = null;
+let ajaxRequest: string | ApiResult | null = null;
 
 export default function CustomLibrary(props) {
   const { width, currentProjectId, loadMore, setHasMore, myPermissions } = props;
@@ -199,7 +204,7 @@ export default function CustomLibrary(props) {
   }, [loadMore]);
 
   // 列表
-  const getList = (designatedPageNo?) => {
+  const getList = (designatedPageNo?: number | undefined) => {
     setLoading(true);
 
     ajaxRequest = packageVersionAjax.getList(

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -44,8 +44,15 @@ const errorCode = {
 };
 
 export default class UploadFiles extends Component<any, any> {
-  static contextType = RecordInfoContext;
-  static propTypes = {
+  declare id: string;
+  declare _uploading: boolean | undefined;
+  declare qiniuUploadRef: QiniuUpload | null | undefined;
+  declare nativeFile: HTMLDivElement | null | undefined;
+  declare uploadFilesWrapper: HTMLDivElement | null | undefined;
+  declare filesWrapper: HTMLDivElement | null | undefined;
+
+  static override contextType = RecordInfoContext;
+  static override propTypes = {
     /**
      * 不限制上传的量
      */
@@ -193,7 +200,7 @@ export default class UploadFiles extends Component<any, any> {
     this.tokens = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { temporaryData, kcAttachmentData } = this.state;
     const { isInitCall } = this.props;
 
@@ -203,7 +210,7 @@ export default class UploadFiles extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if ('attachmentData' in this.props && !this._uploading) {
         this.setState({
@@ -264,7 +271,7 @@ export default class UploadFiles extends Component<any, any> {
     this.props.onUploadComplete(true);
   }
 
-  removeErrorFile = (uploader, fileId) => {
+  removeErrorFile = (uploader, fileId: string | undefined) => {
     if (fileId && uploader.removeFile) {
       uploader.removeFile({ id: fileId });
     }
@@ -305,7 +312,7 @@ export default class UploadFiles extends Component<any, any> {
         isAvailable = checkFileAvailable(advancedSetting, newKcAttachmentData, temporaryData.length + originCount);
       }
 
-      if (!isAvailable) return;
+      if (!isAvailable) return undefined;
 
       // 最多只能上传20个知识文件
       if (newKcAttachmentData.length > 100) {
@@ -326,6 +333,7 @@ export default class UploadFiles extends Component<any, any> {
           }, 0);
         },
       );
+      return undefined;
     });
   }
   async openPcCameraDialog() {
@@ -483,7 +491,7 @@ export default class UploadFiles extends Component<any, any> {
       },
     );
   }
-  onMDPreview(id, index: number) {
+  onMDPreview(_id, index: number) {
     const currentFile = this.state.attachmentData[index];
 
     if (!currentFile) {
@@ -530,7 +538,7 @@ export default class UploadFiles extends Component<any, any> {
         hideFunctions: hideFunctions,
       },
       {
-        deleteCallback: (docversionid, fileId) => {
+        deleteCallback: (_docversionid, fileId) => {
           const newAttachmentData = this.state.attachmentData.filter(item => item.fileID !== fileId);
           this.setState({
             attachmentData: newAttachmentData,
@@ -556,7 +564,7 @@ export default class UploadFiles extends Component<any, any> {
       },
     );
   }
-  onPreview(id, index: number, event) {
+  onPreview(id, _index: number, event) {
     if (event.target.classList.contains('UploadFiles-editInput')) {
       return;
     }
@@ -720,7 +728,7 @@ export default class UploadFiles extends Component<any, any> {
               _this._uploading = true;
               _this.props.onUploadComplete(false);
             } else {
-              return;
+              return undefined;
             }
 
             // 附件配置控制（包含数量、单个文件大小、类型）
@@ -764,6 +772,7 @@ export default class UploadFiles extends Component<any, any> {
                   _this.onRemoveAll(uploader);
                   return false;
                 }
+                return undefined;
               });
             } else if (!isPublic && !noTotal && !window.isPublicApp) {
               // 判断个人上传流量是否达到上限
@@ -777,6 +786,7 @@ export default class UploadFiles extends Component<any, any> {
                   _this.onRemoveAll(uploader);
                   return false;
                 }
+                return undefined;
               });
             }
 
@@ -814,7 +824,7 @@ export default class UploadFiles extends Component<any, any> {
                 });
                 if (errors.length === files.length) {
                   _this.onRemoveAll(uploader);
-                  return;
+                  return undefined;
                 } else {
                   files.forEach(item => {
                     if (_.find(removeFiles, { id: item.id })) {
@@ -853,7 +863,7 @@ export default class UploadFiles extends Component<any, any> {
               }
             }
 
-            const addFiles = [];
+            const addFiles: { id: string; fileSize: number; progress: number; base: { isPic: boolean; fileExt: string; fileName: string; id: string } }[] = [];
             // 渲染图片列表
             files.forEach(item => {
               let fileExt = `.${RegExpValidator.getExtOfFileName(item.name)}`;
@@ -877,11 +887,12 @@ export default class UploadFiles extends Component<any, any> {
             _this.setState({
               temporaryData: _this.state.temporaryData.concat(addFiles),
             });
+            return undefined;
           }}
           onBeforeUpload={uploader => {
             _this.currentFile = uploader;
           }}
-          onUploadProgress={(uploader, file) => {
+          onUploadProgress={(_uploader, file) => {
             const loaded = file.loaded || 0;
             const size = file.size || 0;
             const uploadPercent = ((loaded / size) * 100).toFixed(1);
@@ -899,7 +910,7 @@ export default class UploadFiles extends Component<any, any> {
               temporaryData: newTemporaryData,
             });
           }}
-          onUploaded={(uploader, file, response) => {
+          onUploaded={(_uploader, file, response) => {
             // 上传完成，取消进度条
             const newTemporaryData = _this.state.temporaryData.map(item => {
               if (file.id == item.id && 'progress' in item) {
@@ -927,7 +938,10 @@ export default class UploadFiles extends Component<any, any> {
 
             if ((window.platformENV.isOverseas || window.platformENV.isLocal) && error.response) {
               try {
-                const res = JSON.parse(error.response);
+                // 上传层（uploader/qiniuV1 的 httpError）已经把返回体解析成对象了。原来这里再 JSON.parse 一次，
+                // 对象转成 "[object Object]" 必然抛错落进 catch —— 换掉 plupload 以后，私有部署下服务端给的
+                // 具体原因（50001 带的 message、errorCode 里那些）一次都没弹出来过，一律成了「上传失败」
+                const res = error.response;
 
                 if (res.code === 50001) {
                   alert(res.message, 2);
@@ -962,7 +976,7 @@ export default class UploadFiles extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     let {
       advancedSetting = {},
       controlId,
@@ -1141,7 +1155,7 @@ export default class UploadFiles extends Component<any, any> {
                 : {})}
             />
           ))}
-          {emptys.map((item, index) => (
+          {emptys.map((_item, index) => (
             <div style={style} key={index} className="UploadFiles-file-wrapper UploadFiles-fileEmpty" />
           ))}
         </div>

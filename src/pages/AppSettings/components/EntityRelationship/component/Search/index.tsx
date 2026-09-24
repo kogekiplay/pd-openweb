@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -92,7 +92,7 @@ function Search(props) {
             );
           })}
         {options.filter(l => l.label.toLowerCase().includes(searchValue.toLowerCase())).length === 0 && (
-          <div className="emptyWrap Font13 textDisabled">{_l('无匹配结果')}</div>
+          <div className="emptyWrap Font13 textTertiary">{_l('无匹配结果')}</div>
         )}
       </ul>
     </Wrap>

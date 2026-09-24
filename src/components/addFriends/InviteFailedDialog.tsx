@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, FunctionWrap } from 'ming-ui';
@@ -60,10 +60,10 @@ function InviteFailedDialog(props) {
       <div className="mBottom16">
         <div className="mBottom12 bold">{INVITE_FAILED_REASON[failedType]}</div>
         <div className="users">
-          {accountInfos.map(user => {
+          {accountInfos.map((user, index) => {
             if (failedType === 'removed') {
               return (
-                <div className="flexRow">
+                <div key={index} className="flexRow">
                   <UserItem {...user} key={user.accountId} />
                   <span
                     className="mLeft20 LineHeight28 Hand colorPrimary Hover_51"

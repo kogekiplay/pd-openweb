@@ -88,7 +88,7 @@ export default {
       keyword?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.GetAppCoveryRecordResponse[]> {
     return mdyAPI('HomeApp', 'GetAppRecoveryRecordList', args, options);
   },
   /**
@@ -398,7 +398,7 @@ export default {
       containsLinks?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Entity.HomeApp.HomeAppModel> {
     return mdyAPI('HomeApp', 'GetAllHomeApp', args, options);
   },
   /**
@@ -418,7 +418,7 @@ export default {
       getAlias?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Entity.Apk.EntityInfo[]> {
     return mdyAPI('HomeApp', 'GetWorksheetsByAppId', args, options);
   },
   /**
@@ -529,7 +529,7 @@ export default {
       isMobile?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.GetDto> {
     return mdyAPI('HomeApp', 'GetApp', args, options);
   },
   /**
@@ -601,7 +601,7 @@ export default {
       appSectionId?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Entity.HomeApp.AppStatusModel> {
     return mdyAPI('HomeApp', 'GetAppFirstInfo', args, options);
   },
   /**
@@ -617,7 +617,7 @@ export default {
       workSheetId?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Entity.HomeApp.HomeAppSimpleDto> {
     return mdyAPI('HomeApp', 'GetAppSimpleInfo', args, options);
   },
   /**
@@ -635,7 +635,7 @@ export default {
       appSectionId?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Entity.Apk.AppSectionDomainModel> {
     return mdyAPI('HomeApp', 'GetAppSectionDetail', args, options);
   },
   /**
@@ -803,7 +803,7 @@ export default {
       notOnSettingPage?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppApiDto> {
     return mdyAPI('HomeApp', 'GetApiInfo', args, options);
   },
   /**
@@ -823,7 +823,7 @@ export default {
       getMarkApp?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.MyAppDto> {
     return mdyAPI('HomeApp', 'GetMyApp', args, options);
   },
   /**
@@ -1157,7 +1157,7 @@ export default {
       keywords?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto[]> {
     return mdyAPI('HomeApp', 'SearchMyApps', args, options);
   },
   /**
@@ -1204,7 +1204,7 @@ export default {
       tradeId?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Entity.Apk.EntityInfo[]> {
     return mdyAPI('HomeApp', 'GetAppItems', args, options);
   },
   /**
@@ -1222,7 +1222,7 @@ export default {
       noCache?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.HomePlatformSettingDto> {
     return mdyAPI('HomeApp', 'GetHomePlatformSetting', args, options);
   },
   /**
@@ -1240,7 +1240,7 @@ export default {
       noCache?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto[]> {
     return mdyAPI('HomeApp', 'GetOwnedApp', args, options);
   },
   /**

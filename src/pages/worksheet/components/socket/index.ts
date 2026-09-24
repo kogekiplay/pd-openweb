@@ -7,14 +7,14 @@ import { equalToLocalPushUniqueId, getDataFromLocalPushUniqueId } from 'src/util
 import workflowHistory from './workflowHistory';
 import './index.less';
 
-const STATUS = {
+const STATUS: Record<number, { id: string; text: string; action: string; promptType: number }> = {
   0: { id: 'closed', text: _l('流程未启用'), action: 'error', promptType: 2 },
   1: { id: 'pending', text: _l('正在执行...'), action: 'info', promptType: 5 },
   2: { id: 'success', text: _l('操作成功'), action: 'success', promptType: 1 },
   3: { id: 'stop', text: _l('执行失败'), action: 'error', promptType: 3 },
   4: { id: 'failure', text: _l('操作失败'), action: 'error', promptType: 2 },
 };
-const TYPES = {
+const TYPES: Record<number, string> = {
   3: _l('填写...'),
   4: _l('审批...'),
 };

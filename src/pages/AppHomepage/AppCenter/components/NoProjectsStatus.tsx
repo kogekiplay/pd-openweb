@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { FlexCenter } from 'worksheet/components/Basics';
@@ -42,7 +41,11 @@ const JoinGroupCon = styled.div`
   }
 `;
 
-export default function NoProjectsStatus(props) {
+export interface NoProjectsStatusProps {
+  hasExternalApps?: boolean | undefined;
+}
+
+export default function NoProjectsStatus(props: NoProjectsStatusProps) {
   const { hasExternalApps } = props;
 
   if (hasExternalApps) {

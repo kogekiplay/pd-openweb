@@ -62,7 +62,7 @@ let Result = class Result extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { keywords, data = {}, isSearching, showResult } = this.props;
 
     if (!showResult) {

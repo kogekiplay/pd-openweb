@@ -4,11 +4,11 @@ const state = {
   recordDragging: false,
 };
 
-export const setChartScrollLock = locked => {
+export const setChartScrollLock = (locked: boolean) => {
   state.chartScrollLocked = locked;
 };
 
-export const setGroupingScrollLock = locked => {
+export const setGroupingScrollLock = (locked: boolean) => {
   state.groupingScrollLocked = locked;
 };
 
@@ -16,7 +16,7 @@ export const isChartScrollLocked = () => state.chartScrollLocked;
 
 export const isGroupingScrollLocked = () => state.groupingScrollLocked;
 
-export const setRecordDragging = dragging => {
+export const setRecordDragging = (dragging: boolean) => {
   state.recordDragging = dragging;
 };
 

@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import SelectItem from './SelectItem';
 import { scrollTo } from './utils';
 
 class PanelSelect extends Component<any, any> {
-  static propTypes = {
+  declare _select: HTMLUListElement | null | undefined;
+
+  static override propTypes = {
     options: PropTypes.arrayOf(PropTypes.string),
     onSelect: PropTypes.func,
     type: PropTypes.string,
@@ -12,8 +14,8 @@ class PanelSelect extends Component<any, any> {
     disabledSelect: PropTypes.arrayOf(PropTypes.number),
   };
 
-  componentDidMount() {
-    const selectedItem = this._select.querySelector('.TimePicker-select-item.actived');
+  override componentDidMount() {
+    const selectedItem = this._select.querySelector<HTMLElement>('.TimePicker-select-item.actived');
 
     if (selectedItem) {
       const dis = this._select.scrollTop + (selectedItem.offsetTop - this._select.scrollTop);
@@ -27,7 +29,7 @@ class PanelSelect extends Component<any, any> {
     this.props.onSelect(this.props.type, value);
   };
 
-  render() {
+  override render() {
     const { options, selectedIndex, disabledSelect } = this.props;
     return (
       <div className="TimePicker-panel-item">

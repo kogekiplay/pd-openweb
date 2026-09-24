@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { Dialog, Dropdown } from 'ming-ui';
@@ -14,6 +14,7 @@ const checkFuncs = {
         msg: _l('企业简称不能为空'),
       };
     }
+    return undefined;
   },
   companyName: companyName => {
     if (!companyName.trim()) {
@@ -21,10 +22,13 @@ const checkFuncs = {
         msg: _l('企业全称不能为空'),
       };
     }
+    return undefined;
   },
 };
 
 export default class SetInfoDialog extends Component<any, any> {
+  declare searchRequest: ApiResult | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -45,14 +49,14 @@ export default class SetInfoDialog extends Component<any, any> {
     this.searchRequest = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getRegionConfigInfos();
     this.getTimeZones();
   }
 
   // 获取时区数据
   getTimeZones() {
-    const timeZones = [];
+    const timeZones: { text: string; value: number }[] = [];
     fixedDataAjax.loadTimeZones().then(res => {
       Object.keys(res).forEach(key => {
         timeZones.push({ text: res[key], value: parseInt(key) });
@@ -324,7 +328,7 @@ export default class SetInfoDialog extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { visible } = this.state;
     return (
       <Dialog

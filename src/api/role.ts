@@ -48,7 +48,10 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getRoleStandardPermission: function (args: ApiArgs, options: ApiOptions = {}) {
+  getRoleStandardPermission: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Roles.RoleStandardPermissionModel> {
     return mdyAPI('Role', 'GetRoleStandardPermission', args, options);
   },
   /**
@@ -61,7 +64,10 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getRoleHRPermission: function (args: ApiArgs, options: ApiOptions = {}) {
+  getRoleHRPermission: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Roles.RoleStandardPermissionModel> {
     return mdyAPI('Role', 'GetRoleHRPermission', args, options);
   },
   /**
@@ -237,7 +243,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUnauditedUserCount: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUnauditedUserCount: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<number> {
     return mdyAPI('Role', 'GetUnauditedUserCount', args, options);
   },
   /**
@@ -274,7 +280,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  isSuperAdmin: function (args: ApiArgs, options: ApiOptions = {}) {
+  isSuperAdmin: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     return mdyAPI('Role', 'IsSuperAdmin', args, options);
   },
   /**
@@ -285,7 +291,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  isLastSuperAdmin: function (args: ApiArgs, options: ApiOptions = {}) {
+  isLastSuperAdmin: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     return mdyAPI('Role', 'IsLastSuperAdmin', args, options);
   },
   /**
@@ -307,7 +313,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectPermissionsByUser: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectPermissionsByUser: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Roles.ProjectPermissionsByUserModel> {
     return mdyAPI('Role', 'GetProjectPermissionsByUser', args, options);
   },
   /**
@@ -318,7 +327,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMyPermissions: function (args: ApiArgs, options: ApiOptions = {}) {
+  getMyPermissions: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Roles.MyPermissionsModel> {
     return mdyAPI('Role', 'GetMyPermissions', args, options);
   },
 };

@@ -11,8 +11,8 @@ export default function RoleItem(props) {
   const { role, projectId, isApply, onRefreshRoleList, onOpenDrawer, selectedRole } = props;
   const [hasApply, setHasApply] = useState(false);
   const [popupVisibleId, setPopupVisibleId] = useState(null);
-  const [isMembersOverflow, setIsMembersOverflow] = useState(false);
-  const [isAuthOverflow, setIsAuthOverflow] = useState(false);
+  const [isMembersOverflow, setIsMembersOverflow] = useState<boolean | null>(false);
+  const [isAuthOverflow, setIsAuthOverflow] = useState<boolean | null>(false);
   const { isHrVisible, isSuperAdmin, projectStatus } = getCurrentProject(projectId, true);
   const membersRef = useRef<HTMLSpanElement>(null);
   const authRef = useRef<HTMLSpanElement>(null);
@@ -25,7 +25,7 @@ export default function RoleItem(props) {
     setIsAuthOverflow(authRef.current && authRef.current.scrollHeight > 40);
   }, [authRef.current]);
 
-  const onClickHandle = (e, type: string) => {
+  const onClickHandle = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, type: string) => {
     e.stopPropagation();
 
     switch (type) {

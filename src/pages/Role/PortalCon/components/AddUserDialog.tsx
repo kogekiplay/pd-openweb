@@ -30,7 +30,7 @@ const Wrap = styled.div`
   }
 `;
 
-const downLoadByUrl = url => {
+const downLoadByUrl = (url: string) => {
   window
     .mdyAPI(
       '',
@@ -169,7 +169,7 @@ function AddUserDialog(props) {
                 setLoading(true);
                 up.disableBrowse();
               }}
-              onBeforeUpload={(up, file) => {
+              onBeforeUpload={(_up, file) => {
                 setState({ file });
               }}
               onUploaded={(up, file) => {

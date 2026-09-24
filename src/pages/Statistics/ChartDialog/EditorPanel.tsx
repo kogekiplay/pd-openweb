@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { Tabs } from 'antd';
@@ -160,7 +160,7 @@ export default class EditorPanel extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       dataIsUnfold,
       permissionType,

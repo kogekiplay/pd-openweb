@@ -7,12 +7,14 @@ import PositionContainer from 'ming-ui/components/PositionContainer';
 import Panel from './Panel';
 import '../less/TimePicker.less';
 
-const getComputedStyle = (element, attr) => {
+const getComputedStyle = (element, attr: string) => {
   return window.getComputedStyle(element, null).getPropertyValue(attr);
 };
 
 class TimePicker extends Component<any, any> {
-  static propTypes = {
+  declare clickHandler: { remove(): void } | undefined;
+
+  static override propTypes = {
     /**
      * 时间选择器类名
      */
@@ -110,11 +112,11 @@ class TimePicker extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.clickHandler = this.addEvent(document, 'click', this.withClickAway);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if ('value' in this.props) {
         this.setState({
@@ -128,7 +130,7 @@ class TimePicker extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.clickHandler) {
       this.clickHandler.remove();
     }
@@ -180,7 +182,7 @@ class TimePicker extends Component<any, any> {
     }
   };
 
-  addEvent(element, type: string, handler) {
+  addEvent(element: Document, type: string, handler) {
     element.addEventListener(type, handler);
     return {
       remove() {
@@ -233,7 +235,7 @@ class TimePicker extends Component<any, any> {
     this.setState({ visible: false });
   };
 
-  render() {
+  override render() {
     const { placeholder, className, popupParentNode, children, ...others } = this.props;
     const { visible, bounding, value } = this.state;
 

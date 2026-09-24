@@ -11,12 +11,12 @@ import './style.css';
 import './userFeed.css';
 
 class UserFeed extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     accountId: PropTypes.string,
     title: PropTypes.string,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     store.dispatch(
       changeListType({
         listType: postEnum.LIST_TYPE.user,
@@ -26,7 +26,7 @@ class UserFeed extends React.Component<any, any> {
     store.dispatch(changeTitle(this.props.title));
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.accountId !== this.props.accountId || prevProps.title !== this.props.title) {
         store.dispatch(
@@ -40,7 +40,7 @@ class UserFeed extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     return (
       <Provider store={store}>
         <div className="userFeed userFeedContainer">

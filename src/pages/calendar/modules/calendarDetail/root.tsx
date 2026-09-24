@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -76,7 +76,12 @@ const getStateIsShowUpdateBar = (oldState, state) => {
 };
 
 export default class CalendarDetail extends Component<any, any> {
-  static propTypes = {
+  declare omitKeys: string[];
+  declare EVENT_KEY: number;
+  declare calendarDetail: HTMLDivElement | null | undefined;
+  declare throttled: _.DebouncedFuncLeading<() => void> | undefined;
+
+  static override propTypes = {
     data: PropTypes.object,
   };
 
@@ -105,7 +110,7 @@ export default class CalendarDetail extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const {
         data: { calendar, keyStatus, token, thirdUser },
@@ -140,7 +145,7 @@ export default class CalendarDetail extends Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.changeDialogHeight();
 
     if (Config.isDetailPage) {
@@ -150,7 +155,7 @@ export default class CalendarDetail extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (Config.isDetailPage) {
       $(window).off('resize.' + this.EVENT_KEY);
       this.throttled && this.throttled.cancel();
@@ -574,7 +579,7 @@ export default class CalendarDetail extends Component<any, any> {
     return <CalendarCommenter {...props} />;
   }
 
-  render() {
+  override render() {
     return (
       <div
         className={cx('calendarDetail', { noPadding: !this.state.canLook })}

@@ -107,7 +107,7 @@ export const updateTaskStatus = (listStatus: number, listSort: number) => (dispa
 };
 
 // 切换项目下的搜索范围
-export const updateFolderRange = folderSearchRange => {
+export const updateFolderRange = (folderSearchRange: number) => {
   return {
     type: 'UPDATE_FOLDER_RANGE',
     folderSearchRange,
@@ -587,7 +587,7 @@ export const updateTaskName =
 
 // 更改任务星标
 export const updateTaskMemberStar =
-  (taskId: string, star, callback = () => {}) =>
+  (taskId: string, star: boolean, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateTaskMemberStar({ taskID: taskId, star }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -614,7 +614,7 @@ export const updateTaskMemberStar =
 
 // 更改任务负责人
 export const updateTaskCharge =
-  (taskId: string, user, subTaskId, callback = () => {}) =>
+  (taskId: string, user, subTaskId: string, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateTaskCharge({ taskID: subTaskId || taskId, charge: user.accountId }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -779,7 +779,7 @@ export const refuseJoinTask = (taskId: string, accountId: string) => (dispatch: 
 
 // 添加子任务
 export const addSubTask =
-  (taskId: string, taskName, accountId: string, projectId: string, callback = () => {}) =>
+  (taskId: string, taskName: string, accountId: string, projectId: string, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.addTask({ taskName, chargeAccountID: accountId, parentID: taskId, projectId }).then((result: TaskApiResult) => {
       if (result.status) {
@@ -823,7 +823,7 @@ export const getCheckListsWithItemsInTask =
   };
 
 // 添加清单
-export const addCheckList = (taskId: string, value) => (dispatch: AppDispatch) => {
+export const addCheckList = (taskId: string, value: string) => (dispatch: AppDispatch) => {
   ajaxRequest.addCheckList({ taskId, name: value }).then((result: TaskApiResult) => {
     if (result.status) {
       if (result.data.overflow) {
@@ -843,7 +843,7 @@ export const addCheckList = (taskId: string, value) => (dispatch: AppDispatch) =
 
 // 修改清单顺序
 export const updateCheckListIndex =
-  (taskId: string, currentCheckListId, previousCheckListId, insertIndex) => (dispatch: AppDispatch, getState: GetState) => {
+  (taskId: string, currentCheckListId, previousCheckListId: string, insertIndex) => (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateCheckListIndex({ currentCheckListId, previousCheckListId }).then((result: TaskApiResult) => {
       if (result.status) {
         const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
@@ -907,7 +907,7 @@ export const removeCheckList = (taskId: string, checkListId: string) => (dispatc
 
 // 修改检查项顺序
 export const updateItemIndex =
-  (taskId: string, currentItemId, previousItemId, targetCheckListId, insertIndex) => (dispatch: AppDispatch, getState: GetState) => {
+  (taskId: string, currentItemId, previousItemId: string, targetCheckListId, insertIndex) => (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateItemIndex({ currentItemId, previousItemId, targetCheckListId }).then((result: TaskApiResult) => {
       if (result.status) {
         const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
@@ -1080,7 +1080,7 @@ export const getTaskControls =
   };
 
 // 自定义字段值更新
-export const updateControlValue = (taskId: string, controlId: string, value, opts, isAttachment) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateControlValue = (taskId: string, controlId: string, value, opts: string, isAttachment: boolean) => (dispatch: AppDispatch, getState: GetState) => {
   ajaxRequest.updateControlValue({ taskId, controlId, value, knowledgeAtt: isAttachment ? opts : '' }).then((result: TaskApiResult) => {
     if (result.status) {
       const controls: FormControl[] = _.cloneDeep(getState().task.taskControls[taskId]);

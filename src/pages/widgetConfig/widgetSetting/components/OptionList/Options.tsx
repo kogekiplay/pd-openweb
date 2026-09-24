@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, Fragment, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import update from 'immutability-helper';
@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { ColorPicker, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import { EditableOptionChip } from 'src/components/OptionChip';
 import 'src/pages/widgetConfig/styled/style.less';
 import { getUnUniqName } from 'src/utils/common';
 import { isLightColor } from 'src/utils/control';
@@ -114,6 +115,13 @@ const DragItem = styled.div`
   .optionName {
     flex: 1;
     padding: 0 var(--space-2);
+    /* 彩色：里面是一个和文字等宽的标签，行高仍保持 37px */
+    &.colorfulName {
+      display: flex;
+      align-items: center;
+      min-height: 37px;
+      cursor: text;
+    }
     &.repeatError {
       input {
         color: var(--color-error-text);
@@ -175,6 +183,51 @@ function OptionItem({
     return true;
   };
 
+  // 彩色 / 非彩色两种画法共用同一套输入行为
+  const inputProps = {
+    id: key,
+    autoFocus: isFocus,
+    value,
+    onFocus: () => {
+      setValue(value);
+      setIndex(index);
+    },
+    onKeyDown: e => {
+      if (e.key === 'Enter' && !isOther) {
+        if (handleBlurCheck()) {
+          addOption(false, index + 1);
+        }
+      }
+
+      // focus上、下
+      if (e.which === 38 || e.which === 40) {
+        if (handleBlurCheck()) {
+          let nextIndex =
+            e.which === 38
+              ? focusIndex === 0
+                ? options.length - 1
+                : focusIndex - 1
+              : focusIndex === options.length - 1
+                ? 0
+                : focusIndex + 1;
+          setIndex(nextIndex);
+          const timer = setTimeout(() => {
+            const optionEl = document.getElementById(_.get(options[nextIndex], 'key'));
+            optionEl && optionEl.select();
+            clearTimeout(timer);
+          }, 50);
+        }
+      }
+    },
+    onChange: e => updateOption(index, { value: e.target.value }),
+    onBlur: e => {
+      if (handleBlurCheck()) {
+        setIndex(-1);
+        updateOption(index, { value: e.target.value, key }, true);
+      }
+    },
+  };
+
   return (
     <DragItem isOther={isOther} isFocus={isFocus} key={optionKey}>
       {!isDeleted && (
@@ -197,50 +250,35 @@ function OptionItem({
               </ColorPicker>
             )}
             <Tooltip title={noDelRepeat.length ? _l('选项重复') : ''}>
-              <div className={cx('optionName', { repeatError: !!noDelRepeat.length })}>
-                <input
-                  id={key}
-                  autoFocus={isFocus}
-                  value={value}
-                  onFocus={() => {
-                    setValue(value);
-                    setIndex(index);
-                  }}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && !isOther) {
-                      if (handleBlurCheck()) {
-                        addOption(false, index + 1);
-                      }
-                    }
+              <div
+                className={cx('optionName', { repeatError: !!noDelRepeat.length, colorfulName: colorful })}
+                // 彩色时标签只和文字一样宽。点在输入框以外（标签的内边距、标签右边的空白）也要进入编辑，
+                // 并且像普通输入框那样按点击位置放光标：点在文字左边放最前，点在右边放最后。
+                // mousedown 先拦住默认行为：否则已经在编辑时会先失焦（触发一次提交）再重新聚焦
+                onMouseDown={e => {
+                  if (colorful && !(e.target instanceof HTMLInputElement)) {
+                    e.preventDefault();
+                  }
+                }}
+                onClick={e => {
+                  const input = e.currentTarget.querySelector('input');
 
-                    // focus上、下
-                    if (e.which === 38 || e.which === 40) {
-                      if (handleBlurCheck()) {
-                        let nextIndex =
-                          e.which === 38
-                            ? focusIndex === 0
-                              ? options.length - 1
-                              : focusIndex - 1
-                            : focusIndex === options.length - 1
-                              ? 0
-                              : focusIndex + 1;
-                        setIndex(nextIndex);
-                        const timer = setTimeout(() => {
-                          const optionEl = document.getElementById(_.get(options[nextIndex], 'key'));
-                          optionEl && optionEl.select();
-                          clearTimeout(timer);
-                        }, 50);
-                      }
-                    }
-                  }}
-                  onChange={e => updateOption(index, { value: e.target.value })}
-                  onBlur={e => {
-                    if (handleBlurCheck()) {
-                      setIndex(-1);
-                      updateOption(index, { value: e.target.value, key }, true);
-                    }
-                  }}
-                />
+                  if (!colorful || !input || e.target === input) return;
+
+                  const caret = e.clientX < input.getBoundingClientRect().left ? 0 : input.value.length;
+                  input.focus();
+                  input.setSelectionRange(caret, caret);
+                }}
+              >
+                {colorful ? (
+                  // 彩色选项直接按实际渲染的样子画（浅底 + 同色深字的标签），编辑时就能看到最终效果
+                  <EditableOptionChip
+                    color={color || OPTION_COLORS_LIST[index % OPTION_COLORS_LIST.length]}
+                    {...inputProps}
+                  />
+                ) : (
+                  <input {...inputProps} />
+                )}
               </div>
             </Tooltip>
             <Tooltip title={_l('删除')} placement="bottom">
@@ -273,7 +311,7 @@ function SelectOptions(props, ref) {
   const { onChange, options, data = {}, showAssign = false, fromPortal, enableScore, className, isDialog } = props;
   const [focusIndex, setIndex] = useState(-1);
   const [isDrag, setIsDrag] = useState(false);
-  const [focusIndexs, setIndexs] = useState([]);
+  const [focusIndexs, setIndexs] = useState<number[]>([]);
   const wrapRef = useRef(null);
   const hasOther = _.find(options, i => i.key === 'other' && !i.isDeleted);
   const findOther = _.findIndex(options, i => i.key === 'other');
@@ -294,12 +332,12 @@ function SelectOptions(props, ref) {
   }));
 
   useEffect(() => {
-    if (!isDrag || !wrapRef.current) return;
+    if (!isDrag || !wrapRef.current) return undefined;
 
     const scrollEl = findScrollableParent(wrapRef.current);
-    let animationId;
+    let animationId: number | undefined;
 
-    const handleDragOver = e => {
+    const handleDragOver = (e: DragEvent) => {
       cancelAnimationFrame(animationId);
       const threshold = 60;
       const speed = 10;
@@ -482,6 +520,7 @@ function SelectOptions(props, ref) {
       {assignValueVisible && (
         <AssignValue
           options={options}
+          colorful={props.colorful}
           enableScore={enableScore}
           onOk={({ options, enableScore }) => {
             onChange({ options, enableScore });

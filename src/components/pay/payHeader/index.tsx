@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import mdImg from 'staticfiles/images/mingdao.png';
 import styled from 'styled-components';
 import projectSettingController from 'src/api/projectSetting';
@@ -34,7 +34,7 @@ const PayHeaderWrap = styled.div`
 
 export default function PayHeader(props) {
   const { projectId, title } = props;
-  const [logo, setLogo] = useState();
+  const [logo, setLogo] = useState<string | undefined>();
 
   // 获取组织logo
   const getLogo = () => {

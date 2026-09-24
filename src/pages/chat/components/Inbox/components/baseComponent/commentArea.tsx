@@ -158,7 +158,11 @@ const getComponentProps = function (props) {
   return $.extend(true, commonProps, map[sourceType]);
 };
 
-class CommentItem extends React.Component<any, any> {
+export interface CommentItemState {
+  showCommenter: boolean;
+}
+
+class CommentItem extends React.Component<any, CommentItemState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -166,11 +170,11 @@ class CommentItem extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { replyId } = this.props;
     $(`.inboxBox .commentItem-${replyId}`)
       .find('[data-accountid],[data-groupid]')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         if ($(ele).attr('bindUserCard')) return;
         $(ele).attr('bindUserCard', 'true');
         let accountId = $(ele).attr('data-accountid');
@@ -293,6 +297,7 @@ class CommentItem extends React.Component<any, any> {
           );
         }
       }
+      return undefined;
     };
 
     return (
@@ -331,7 +336,7 @@ class CommentItem extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { createAccount, addCallback, replyId } = this.props;
     const { showCommenter } = this.state;
 
@@ -367,7 +372,7 @@ class CommentItem extends React.Component<any, any> {
 }
 
 export default class CommentArea extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     commentsProps: PropTypes.shape({
       comments: PropTypes.array,
       commentsCount: PropTypes.number,
@@ -511,9 +516,10 @@ export default class CommentArea extends React.Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
 
-  render() {
+  override render() {
     return (
       <div className="Font12">
         <div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import { Checkbox, Dropdown, Icon } from 'ming-ui';

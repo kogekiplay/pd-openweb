@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Select } from 'antd';
 import cx from 'classnames';
@@ -142,9 +142,10 @@ export default function ResourceSet(props) {
             { text: _l('中等'), value: 1 }, // 50
             { text: _l('宽松'), value: 2 }, // 70
             // { text: _l('超高'), value: 3 }, // 100
-          ].map(item => {
+          ].map((item, index) => {
             return (
               <div
+                key={index}
                 className={cx('animaItem overflow_ellipsis', {
                   active: rowHeight === item.value,
                 })}
@@ -170,12 +171,13 @@ export default function ResourceSet(props) {
       <div className="commonConfigItem Font13 bold mTop24">{_l('默认视图')}</div>
       <div className="commonConfigItem mTop6">
         <AnimationWrap>
-          {resourceTypes.map(item => {
+          {resourceTypes.map((item, index) => {
             const calendarType = !_.get(props, 'view.advancedSetting.calendarType')
               ? '0'
               : _.get(props, 'view.advancedSetting.calendarType');
             return (
               <div
+                key={index}
                 className={cx('animaItem overflow_ellipsis', {
                   active: calendarType === item.value,
                 })}
@@ -262,6 +264,7 @@ export default function ResourceSet(props) {
               let n = i + 1;
               return (
                 <div
+                  key={i}
                   className={cx('animaItem overflow_ellipsis', {
                     active: (_.get(props, 'view.advancedSetting.unweekday') || '').indexOf(n) < 0,
                   })}
@@ -317,8 +320,12 @@ export default function ResourceSet(props) {
       {!!_.get(props, 'view.advancedSetting.showtime') && (
         <div className="showtimeCon mTop10" onClick={() => setState({ show: true })}>
           <div className="flex LineHeight22">
-            {(_.get(props, 'view.advancedSetting.showtime') || '').split('|').map(o => {
-              return <div className="textPrimary ">{o}</div>;
+            {(_.get(props, 'view.advancedSetting.showtime') || '').split('|').map((o, index) => {
+              return (
+                <div key={index} className="textPrimary ">
+                  {o}
+                </div>
+              );
             })}
           </div>
           <div class="edit LineHeight22">

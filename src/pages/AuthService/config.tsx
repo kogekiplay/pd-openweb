@@ -1,4 +1,3 @@
-import React from 'react';
 
 export const SupportFindVerifyCodeUrl = () => {
   const href = 'https://help.mingdao.com/faq/sms-emali-service-failure';

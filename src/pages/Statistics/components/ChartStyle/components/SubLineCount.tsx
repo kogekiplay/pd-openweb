@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Checkbox, Input } from 'antd';
 
 export default class SubLineCount extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { currentReport, onChangeCurrentReport } = this.props;
     const { yaxisList = [] } = currentReport;
     const { lines } = currentReport.pivotTable;

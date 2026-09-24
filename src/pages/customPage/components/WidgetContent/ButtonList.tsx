@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Dialog as MobileDialog, Toast } from 'antd-mobile';
 import _ from 'lodash';
@@ -115,7 +115,16 @@ export function ButtonList({
   themeColor,
   customPageConfig,
 }) {
-  const [createRecordInfo, setInfo] = useState({
+  // 「新建记录」按钮弹出的新建窗口：关掉时只传 { visible: false }，其余字段打开时才有
+  const [createRecordInfo, setInfo] = useState<{
+    visible: boolean;
+    value?: string | undefined;
+    viewId?: string | undefined;
+    appId?: string | undefined;
+    name?: string | undefined;
+    writeControls?: HapApi.MD.Entity.Worksheet.WriteControlEntity[] | undefined;
+    sheetSwitchPermit?: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] | undefined;
+  }>({
     visible: false,
     value: '',
     viewId: '',

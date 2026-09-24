@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -51,7 +51,7 @@ const getDefaultParameters = () => {
   };
 };
 
-const PROCESS_TYPE = {
+const PROCESS_TYPE: Record<number, { title: string; desc: string }> = {
   1: {
     title: _l('工作流'),
     desc: _l('节点'),
@@ -62,7 +62,7 @@ const PROCESS_TYPE = {
   },
 };
 
-const PLACEHOLDER = {
+const PLACEHOLDER: Record<string, string> = {
   2: _l('默认值'),
   6: _l('默认值'),
   9: _l('默认选项值'),
@@ -342,7 +342,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
     );
   };
 
-  const renderControlRequired = (item, showText?) => {
+  const renderControlRequired = (item, showText?: boolean | undefined) => {
     return (
       <Checkbox
         className="InlineBlock Font12 TxtMiddle LineHeight20"
@@ -424,7 +424,9 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
   const defaultValue =
     selectItem && ((JSON.parse(_.get(selectItem, 'advancedSetting.defsource') || '[]')[0] || {}).staticValue || '');
 
-  const updateControlAdvancedSetting = value => {
+  const updateControlAdvancedSetting = (
+    value: { defsource: string } | { showtype: string } | { direction: string },
+  ) => {
     updateControls('advancedSetting', Object.assign({}, _.get(selectItem, 'advancedSetting'), value), selectItem);
   };
 
@@ -591,7 +593,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
                   <i
                     className="icon-trash Font16 textSecondary hoverColorPrimary mLeft10 pointer"
                     onClick={() => {
-                      let newOptions = selectItem.options.filter((o, i) => i !== index);
+                      let newOptions = selectItem.options.filter((_o, i) => i !== index);
 
                       if (!newOptions.length) {
                         newOptions = newOptions.concat({ key: '', value: '' });
@@ -704,9 +706,9 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
                 {[
                   { text: selectItem.type === 9 ? _l('下拉框') : _l('勾选框'), value: '0' },
                   { text: selectItem.type === 9 ? _l('平铺') : _l('开关'), value: '1' },
-                ].map(item => {
+                ].map((item, index) => {
                   return (
-                    <div className="mRight20" style={{ width: 200 }}>
+                    <div key={index} className="mRight20" style={{ width: 200 }}>
                       <Radio
                         key={item.value}
                         checked={item.value === (_.get(selectItem, 'advancedSetting.showtype') || '0')}
@@ -727,9 +729,9 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
                 {[
                   { text: _l('横向排列'), value: '2' },
                   { text: _l('纵向排列'), value: '1' },
-                ].map(item => {
+                ].map((item, index) => {
                   return (
-                    <div className="mRight20" style={{ width: 200 }}>
+                    <div key={index} className="mRight20" style={{ width: 200 }}>
                       <Radio
                         key={item.value}
                         checked={item.value === (_.get(selectItem, 'advancedSetting.direction') || '2')}

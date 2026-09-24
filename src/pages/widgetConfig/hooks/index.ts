@@ -72,7 +72,7 @@ export const useRect = () => {
 };
 
 export const useGetApps = (para, dep = []) => {
-  const [apps, setApps] = useState([]);
+  const [apps, setApps] = useState<HapApi.MD.Entity.Apk.AppForManagerModel[]>([]);
   useEffect(() => {
     appManagementAjax.getAppForManager(para).then(data => {
       setApps(data);
@@ -83,7 +83,7 @@ export const useGetApps = (para, dep = []) => {
 
 // 获取选项集
 export const useGetOptionList = (para, dep = []) => {
-  const [list, setList] = useState([]);
+  const [list, setList] = useState<HapApi.MD.Entity.Apk.AppForManagerModel[]>([]);
   useEffect(() => {
     appManagementAjax.getAppForManager(para).then(data => {
       setList(data);

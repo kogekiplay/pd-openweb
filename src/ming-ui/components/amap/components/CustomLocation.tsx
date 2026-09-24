@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Input } from 'antd';
 import _ from 'lodash';
@@ -52,13 +52,13 @@ export default class CustomLocation extends Component<any, any> {
     return null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({
       customLocation: this.props.customLocation || this.formatDefault() || this.formatCurrent() || null,
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       // 经纬度不同才赋值，防止name被冲掉
       if (
@@ -75,7 +75,7 @@ export default class CustomLocation extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { allowCustom, setPosition = () => {} } = this.props;
     const customLocation = this.state.customLocation || {};
     const { lng = '', lat = '' } = customLocation;
@@ -88,10 +88,10 @@ export default class CustomLocation extends Component<any, any> {
       <Fragment>
         <div className="MDMapCustom">
           <div className="Font17 bold">{_l('添加当前位置')}</div>
-          {filterOptions.map(item => {
+          {filterOptions.map((item, index) => {
             const isLatLng = _.includes(['lat', 'lng'], item.key);
             return (
-              <Fragment>
+              <Fragment key={index}>
                 <div className="mBottom4 mTop16 bold textSecondary">{item.title}</div>
                 <Input
                   disabled={item.disabled}

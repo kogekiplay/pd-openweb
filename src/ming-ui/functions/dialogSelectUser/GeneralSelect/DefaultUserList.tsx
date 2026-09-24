@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Collapse, Icon } from 'ming-ui';
@@ -28,7 +28,13 @@ const TitleWrapper = styled.div`
   }
 `;
 
-export default class DefaultUserList extends Component<any, any> {
+export interface DefaultUserListState {
+  manageOftenUserVisible: boolean;
+  oftenUsersCollapseOpen: boolean;
+  usersCollapseOpen: boolean;
+}
+
+export default class DefaultUserList extends Component<any, DefaultUserListState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,10 +65,10 @@ export default class DefaultUserList extends Component<any, any> {
   };
 
   renderOftenEmpty = () => {
-    return <div className="textDisabled mTop16 mBottom16">{_l('暂无最常协作人员')}</div>;
+    return <div className="textTertiary mTop16 mBottom16">{_l('暂无最常协作人员')}</div>;
   };
 
-  render() {
+  override render() {
     const { hideOftenUsers, keywords } = this.props;
     const { oftenUsersCollapseOpen, usersCollapseOpen } = this.state;
     let data = this.props.data;
@@ -80,7 +86,7 @@ export default class DefaultUserList extends Component<any, any> {
       const { manageOftenUserVisible } = this.state;
       const totalList = (_.get(data, 'oftenUsers.list') || []).concat(_.get(data, 'users.list') || []);
       const currentId = _.get(
-        _.find(totalList, (i, idx) => idx === this.props.currentIndex),
+        _.find(totalList, (_i, idx) => idx === this.props.currentIndex),
         'accountId',
       );
       const isOften = this.props.currentIndex <= (_.get(data, 'oftenUsers.list') || []).length - 1;

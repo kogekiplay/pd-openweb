@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
@@ -40,7 +40,7 @@ export default class PortalSettingDialog extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { onClose, onOk, globalSheetInfo, from, allControls } = this.props;
     const { data = {} } = this.state;
     const { type } = data;

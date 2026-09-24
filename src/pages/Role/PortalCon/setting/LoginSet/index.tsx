@@ -5,7 +5,7 @@ import { BGTYPE, COLORS } from 'src/pages/Role/PortalCon/tabCon/util';
 import { formatNumberFromInput } from 'src/utils/control';
 import { Wrap, WrapCon, WrapDemo } from './style';
 
-function parseLogoHeightPx(text) {
+function parseLogoHeightPx(text: string) {
   const n = Math.round(Number(formatNumberFromInput(text, false).trim() || 40));
   return Math.min(72, Math.max(16, Number.isFinite(n) ? n : 40));
 }
@@ -205,9 +205,10 @@ export default function LoginSet(props) {
         )}
         <h6 className="Font16 textPrimary Bold mBottom0 mTop24">{_l('登录页面结构')}</h6>
         <ul className="pageMode mTop16">
-          {[0, 1].map(o => {
+          {[0, 1].map((o, index) => {
             return (
               <li
+                key={index}
                 className={cx('InlineBlock center', {
                   rightIconBox: o === 1,
                   current: portalSetModel.pageMode / 3 - 1 === o,
@@ -251,6 +252,7 @@ export default function LoginSet(props) {
               {BGTYPE.map((o, i) => {
                 return (
                   <li
+                    key={i}
                     className={cx('InlineBlock bgTypeUlLi Hand', {
                       current: portalSetModel.backGroundType / 3 - 1 === i,
                     })}
@@ -274,6 +276,7 @@ export default function LoginSet(props) {
                   {COLORS.map((item, i) => {
                     return (
                       <li
+                        key={i}
                         className={cx('colorLi InlineBlock Hand', { current: portalSetModel.backColor === item })}
                         style={{ backgroundColor: item }}
                         onClick={() => {

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { FullScreenCurtain } from 'ming-ui';
 import ConnectCon from './ConnectCon';
 
 // 连接详情弹层
 export default class ConnectWrap extends Component<any, any> {
-  render() {
+  override render() {
     return (
       <FullScreenCurtain>
         <ConnectCon {...this.props} />

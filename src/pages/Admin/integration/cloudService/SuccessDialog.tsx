@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Button, Dialog, Icon } from 'ming-ui';
 import copy from 'src/utils/copyToClipboard';

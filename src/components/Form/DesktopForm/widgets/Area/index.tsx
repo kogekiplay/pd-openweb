@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -20,7 +20,7 @@ export default function AreaWidgets(props) {
     createEventHandler = () => {},
   } = props;
 
-  const [search, setSearch] = useState(undefined);
+  const [search, setSearch] = useState<string | undefined>(undefined);
   const [keywords, setKeywords] = useState('');
   const [visible, setVisible] = useState(false);
   const inputRef = useRef(null);

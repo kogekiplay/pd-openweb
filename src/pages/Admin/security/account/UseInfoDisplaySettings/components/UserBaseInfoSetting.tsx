@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Dropdown, Radio, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import userAjax from 'src/api/user';
@@ -24,11 +24,11 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getUserCardInfo();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.flag !== this.props.flag) {
         this.setState({
@@ -64,7 +64,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     });
   };
 
-  changeCardDepartmentTYpeId = typeId => {
+  changeCardDepartmentTYpeId = (typeId: number) => {
     const { cardSettingData } = this.state;
     const index = _.findIndex(cardSettingData, v => _.includes([51, 52], v.typeId));
     cardSettingData[index] = {
@@ -102,7 +102,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     this.setState({ cardSettingData: copyData });
   };
 
-  renderAddFields = isCard => {
+  renderAddFields = (isCard: boolean) => {
     const typeFields = isCard ? 'cardSettingData' : 'baseSettingData';
     const selectIds = this.state[typeFields].map(v => v.id);
     const fields = getFieldsData(isCard);
@@ -220,7 +220,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     );
   };
 
-  renderAddAction = isCard => {
+  renderAddAction = (isCard: boolean) => {
     const typeFields = isCard ? 'basePopupVisible' : 'cardPopupVisible';
     const { editStatus } = this.props;
 
@@ -281,7 +281,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     );
   };
 
-  renderPreviewValue = (item, underName?) => {
+  renderPreviewValue = (item, underName?: boolean | undefined) => {
     if (!item) return null;
     const { userInfo = {} } = this.state;
     let content = '';
@@ -323,7 +323,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
         content = userInfo[item.id];
     }
 
-    return underName ? content : content || <span className="textDisabled">{_l('未填写')}</span>;
+    return underName ? content : content || <span className="textTertiary">{_l('未填写')}</span>;
   };
 
   // 名片层
@@ -415,7 +415,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     return (
       <Fragment>
         {this.renderPersonalProfile()}

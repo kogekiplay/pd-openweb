@@ -1,7 +1,10 @@
-import React from 'react';
 import { pathCompletion } from 'src/utils/common';
 
-export default function PriceTip(props) {
+export interface PriceTipProps {
+  text?: string | undefined;
+}
+
+export default function PriceTip(props: PriceTipProps) {
   const { text } = props;
   const url = pathCompletion('/billingrules');
   return (

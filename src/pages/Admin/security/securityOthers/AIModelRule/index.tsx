@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo } from 'react';
+import { Fragment, useEffect, useMemo } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -192,13 +192,13 @@ export default function AIModelRule(props) {
         dataIndex: 'status',
         title: _l('状态'),
         width: 100,
-        render: (text, record) => <Switch checked={record.isEnable} onClick={() => handleToggleStatus(record)} />,
+        render: (_text, record) => <Switch checked={record.isEnable} onClick={() => handleToggleStatus(record)} />,
       },
       {
         dataIndex: 'action',
         title: _l('操作'),
         width: 120,
-        render: (text, record) => (
+        render: (_text, record) => (
           <div className="flexRow" style={{ gap: 16 }}>
             <span
               className="colorPrimary Hand Font13"

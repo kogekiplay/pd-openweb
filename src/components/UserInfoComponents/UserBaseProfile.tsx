@@ -240,7 +240,7 @@ export default function UserBaseProfile(props) {
                           {item.jobs.map(job => job.name).join(';')}
                         </div>
                       ) : (
-                        <div className="textDisabled">{_l('未填写')}</div>
+                        <div className="textTertiary">{_l('未填写')}</div>
                       )}
                     </div>
                   </div>
@@ -299,7 +299,7 @@ export default function UserBaseProfile(props) {
                     currentUserProject[item.id]
                   )
                 ) : (
-                  <span className="textDisabled">{_l('未填写')}</span>
+                  <span className="textTertiary">{_l('未填写')}</span>
                 )}
 
                 {_.includes(['mobilePhone', 'email'], item.id) && item.isMask && !noProject && userInfo[item.id] && (

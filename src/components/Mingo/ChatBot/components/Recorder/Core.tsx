@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, Fragment, useEffect, useImperativeHandle, useRef } from 'react';
 import cx from 'classnames';
 import { Tooltip } from 'ming-ui/antd-components';
 import { browserIsMobile } from 'src/utils/common';
@@ -7,7 +7,7 @@ import VolumeBar from './VolumeBar';
 
 const isMobile = browserIsMobile();
 
-function secondToMMSS(seconds) {
+function secondToMMSS(seconds: number) {
   const minutes = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
@@ -25,7 +25,7 @@ const Core = forwardRef(
         onStop();
       },
     });
-    const cache = useRef({});
+    const cache = useRef<{ didMount?: boolean | undefined; autoStopTimer?: NodeJS.Timeout | undefined }>({});
     useEffect(() => {
       updateStatus(status);
     }, [status, updateStatus]);

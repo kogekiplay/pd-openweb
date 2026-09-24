@@ -40,7 +40,11 @@ const routeList = [
   },
 ];
 
-export default class Stat extends React.Component<any, any> {
+export interface StatProps {
+  onClose: () => void;
+}
+
+export default class Stat extends React.Component<StatProps, any> {
   constructor() {
     super();
 
@@ -104,6 +108,7 @@ export default class Stat extends React.Component<any, any> {
         case 'docstat':
           return StatTable.REPOREPORT_TYPES.DOC;
       }
+      return undefined;
     })();
     const projectId = Config.projectId;
     return (
@@ -119,7 +124,7 @@ export default class Stat extends React.Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { activeTab } = this.state;
     return (
       <Fragment>

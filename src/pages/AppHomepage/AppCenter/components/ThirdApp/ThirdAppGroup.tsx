@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { array, shape, string } from 'prop-types';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import placeholderPic from '../../assets/thirdAppPlaceholder.png';
 
-const TYPE_TO_TITLE = {
+const TYPE_TO_TITLE: Record<string, string> = {
   account: _l('个人应用'),
   top: _l('置顶应用'),
 };
@@ -44,14 +44,14 @@ const ThirdAppItem = ({ onSetTopClick, appId, projectId, appName, avatar, isTop,
   </div>
 );
 export default class ThirdAppGroup extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     data: shape({
       apps: array,
       companyName: string,
       type: string,
     }),
   };
-  render() {
+  override render() {
     const {
       data: { apps = [], companyName, type = '' },
       ...rest

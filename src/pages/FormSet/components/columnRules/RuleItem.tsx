@@ -76,7 +76,7 @@ function renderFilterItemTexts(filters = [], disabled = false, worksheetControls
     <React.Fragment>
       {filterItemTexts.map((item, index) => {
         return (
-          <span className={cx({ textDisabled: disabled })}>
+          <span key={index} className={cx({ textDisabled: disabled })}>
             {filterItemTexts.length > 1 ? <span className="textTertiary mRight2">(</span> : null}
             {(item.groupFilters || []).map((child, childIdx) => {
               return renderItemText(child, childIdx);
@@ -101,7 +101,7 @@ class RuleItems extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (_.get(this.props, 'ruleData.name') !== this.state.name) {
         this.setState({
@@ -144,13 +144,13 @@ class RuleItems extends React.Component<any, any> {
       if (actionItem.type === 9) {
         return (
           <span className={cx('detailValue mTop6', { textDisabled: disabled })}>
-            {currentArr.map(cur => {
+            {currentArr.map((cur, index) => {
               if (cur.isDel) {
-                return <span className="detailValueCon LineHeight30 Red">{_l('字段已删除')}</span>;
+                return <span key={index} className="detailValueCon LineHeight30 Red">{_l('字段已删除')}</span>;
               }
 
               return (
-                <div className="detailValueCon LineHeight30">
+                <div key={index} className="detailValueCon LineHeight30">
                   <span className="title">{_l('将')}</span>
                   <span className="mLeft10 mRight10" title={_.get(cur, 'name')}>
                     {_.get(cur, 'name')}
@@ -210,7 +210,7 @@ class RuleItems extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       selectColumnRules,
       deleteControlRules,

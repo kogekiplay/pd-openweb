@@ -127,6 +127,8 @@ const ResignedTab = {
 };
 
 export default class GeneraSelect extends Component<any, any> {
+  declare _resultScrollView: HTMLDivElement | null | undefined;
+
   // 上游 7.4.4 新增了这两个实例字段。<any, any> 只放开 props/state，
   // 实例字段仍要声明，否则 this.xxx = 会报 TS2339。
   boxRef: any;
@@ -188,7 +190,7 @@ export default class GeneraSelect extends Component<any, any> {
     return this.promiseObj;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const needUpdate =
         this.props.commonSettings.projectId !== this.commonSettings.projectId ||
@@ -204,13 +206,13 @@ export default class GeneraSelect extends Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown, false);
     this.defaultAction();
     this.focusSearchInput();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
@@ -300,6 +302,7 @@ export default class GeneraSelect extends Component<any, any> {
         this.toogleUserSelect(flattenResult[this.state.currentIndex]);
       }
     }
+    return undefined;
   };
 
   adjustViewport(direction: string, flattenResult: (SelectUser & SelectDepartment)[]) {
@@ -544,6 +547,7 @@ export default class GeneraSelect extends Component<any, any> {
         this.promiseObj = '';
       });
     }
+    return undefined;
   };
 
   /** 请求部门 */
@@ -635,6 +639,7 @@ export default class GeneraSelect extends Component<any, any> {
           });
         }
       });
+    return undefined;
   }
 
   /** 请求已离职 */
@@ -677,6 +682,7 @@ export default class GeneraSelect extends Component<any, any> {
       });
       this.promiseObj = '';
     });
+    return undefined;
   }
 
   getOriginDepartment(list: SelectDepartment[]) {
@@ -884,7 +890,7 @@ export default class GeneraSelect extends Component<any, any> {
    * @param {*选择类型} chooseType
    * @param {*实体} data
    */
-  addData = (chooseType, data) => {
+  addData = (chooseType: string, data: SelectUser | SelectDepartment) => {
     let selectedArr = [...this.state.selectedData];
 
     if (chooseType === ChooseType.USER && this.userSettings.unique) {
@@ -954,6 +960,7 @@ export default class GeneraSelect extends Component<any, any> {
         data: departmentTree,
       },
     });
+    return undefined;
   };
 
   /** 改变字母筛选 */
@@ -1709,9 +1716,10 @@ export default class GeneraSelect extends Component<any, any> {
     } else if (this.state.mainData.renderType === RenderTypes.DEPARTMENT) {
       return this.renderDepartmentContent();
     }
+    return undefined;
   }
 
-  render() {
+  override render() {
     return (
       <div className="GSelect-box" ref={this.boxRef}>
         <div className="GSelect-head">{this.renderHead()}</div>

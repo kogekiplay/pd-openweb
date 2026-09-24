@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { Button, Dialog, Dropdown } from 'ming-ui';
 import reportConfig from '../../api/reportConfig';
@@ -6,8 +6,12 @@ import homeApp from 'src/api/homeApp';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
 import store from 'src/redux/configureStore';
 
-const formatApps = function (validProject, projectId: string, appId: string) {
-  const appList = [];
+const formatApps = function (
+  validProject: HapApi.MD.Entity.HomeApp.ProjectForApp[] | undefined,
+  projectId: string,
+  appId: string,
+) {
+  const appList: { text: string | undefined; value: string | undefined }[] = [];
   const project = validProject.filter(item => item.projectId === projectId)[0];
 
   if (project && project.projectApps && project.projectApps.length) {
@@ -35,7 +39,7 @@ export default class SheetMove extends Component<any, any> {
       pageValue: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId } = this.props;
     const { projectId } = store.getState().appPkg;
     homeApp.getAllHomeApp().then(result => {
@@ -81,7 +85,7 @@ export default class SheetMove extends Component<any, any> {
         type: 1,
       })
       .then(res => {
-        res = res
+        const pages = res
           .filter(item => !item.urlTemplate)
           .map(item => {
             return {
@@ -90,8 +94,8 @@ export default class SheetMove extends Component<any, any> {
             };
           });
         this.setState({
-          pages: res,
-          pageValue: res.length ? pageId || res[0].value : '',
+          pages,
+          pageValue: pages.length ? pageId || pages[0].value : '',
         });
       });
   }
@@ -113,7 +117,7 @@ export default class SheetMove extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { pageId, dialogClasses } = this.props;
     const { appList, appValue, pages, pageValue } = this.state;
     return (

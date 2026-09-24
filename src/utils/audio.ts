@@ -9,6 +9,15 @@ export interface SpeechSynthesizerOptions {
 }
 
 export class SpeechSynthesizer {
+  declare voice: SpeechSynthesisVoice | null;
+  declare synth: SpeechSynthesis;
+  declare hasUtteranceSupport: boolean;
+  declare speaking: boolean;
+  declare bufferTimer: NodeJS.Timeout | null;
+  declare bufferDelay: number;
+  declare minChunkLength: number;
+  declare defaultOptions: { bufferDelay?: number; lang: string; pitch: number; rate: number; volume: number };
+
   constructor(options: SpeechSynthesizerOptions = {}) {
     this.synth = window.speechSynthesis;
     this.hasUtteranceSupport = typeof window.SpeechSynthesisUtterance === 'function';

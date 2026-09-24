@@ -1,10 +1,43 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { Popup } from 'antd-mobile';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';
 import useHistoryBackClose from 'src/utils/mobileNavigation';
 import './index.less';
+
+interface PopupWrapperProps {
+  visible: boolean;
+  title?: ReactNode;
+  /** 禁用确定按钮 */
+  confirmDisable?: boolean | undefined;
+  /** 确定按钮文字，默认「确定」 */
+  confirmText?: ReactNode;
+  /** 禁用清除按钮 */
+  clearDisable?: boolean | undefined;
+  /** 取消：左上角「取消」、点遮罩、withIcon 头部的关闭图标，以及浏览器返回 */
+  onClose?: (() => void) | undefined;
+  /** 给了就把左上角的「取消」换成「返回」 */
+  onBack?: (() => void) | undefined;
+  onConfirm?: (() => void) | undefined;
+  onClear?: (() => void) | undefined;
+  className?: string | undefined;
+  bodyClassName?: string | undefined;
+  bodyStyle?: CSSProperties | undefined;
+  maskClassName?: string | undefined;
+  maskStyle?: CSSProperties | undefined;
+  mask?: boolean | undefined;
+  /** default：表单内弹层用得多；withIcon：头部用图标按钮，视图里用得多 */
+  headerType?: 'default' | 'withIcon' | undefined;
+  /** headerType 为 withIcon 时标题的对齐方式 */
+  headerTitleAlign?: 'left' | 'center' | undefined;
+  children?: ReactNode;
+  /** 多层弹层叠放时的层 id，浏览器返回按栈顶顺序关 */
+  layerId?: string | undefined;
+  /** 明道云 App 内打开弹层时同步到地址栏的参数（值为空表示从地址栏删掉这个参数） */
+  historyUrlParams?: Record<string, string | null | undefined> | undefined;
+}
 
 const PopupWrapper = ({
   visible,
@@ -27,7 +60,7 @@ const PopupWrapper = ({
   children,
   layerId,
   historyUrlParams,
-}) => {
+}: PopupWrapperProps) => {
   const handleConfirm = () => {
     if (confirmDisable) return;
     onConfirm();
@@ -50,8 +83,8 @@ const PopupWrapper = ({
       bodyStyle={bodyStyle}
       maskClassName={maskClassName}
       maskStyle={maskStyle}
+      // layerId 只给上面的 useHistoryBackClose 用；原来也往 Popup 上传，但 antd-mobile 的 Popup 没有这个属性、也不读它
       mask={mask}
-      layerId={layerId}
     >
       <div className="popupWrapper">
         {headerType === 'default' && (

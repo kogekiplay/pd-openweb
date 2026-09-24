@@ -37,7 +37,7 @@ export default class Star extends React.Component<any, any> {
         });
     };
   }
-  render() {
+  override render() {
     const { isFavorite } = this.state;
 
     if (md.global.Account.isPortal && browserIsMobile()) {

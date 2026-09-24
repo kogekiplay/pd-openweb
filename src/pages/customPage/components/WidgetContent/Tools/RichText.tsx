@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Popover } from 'antd';
 import cx from 'classnames';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -13,7 +13,7 @@ export default props => {
   const { showType = 2 } = componentConfig;
   const [popoverVisible, setPopoverVisible] = useState(false);
 
-  const handleChangeConfig = data => {
+  const handleChangeConfig = (data: { showType: number }) => {
     props.handleToolClick(type, {
       componentConfig: {
         ...componentConfig,

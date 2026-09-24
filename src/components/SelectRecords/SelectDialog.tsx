@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { useKeyPressEvent } from 'react-use';
 import cx from 'classnames';
 import {
@@ -571,7 +571,7 @@ export default function SelectDialog({ ...args }) {
           isFiltered={isFiltered}
           onExpandFastFilters={() => {
             setFiltersVisible(prev => !prev);
-            safeLocalStorageSetItem('selectDialogFiltersVisible', !filtersVisible);
+            safeLocalStorageSetItem('selectDialogFiltersVisible', String(!filtersVisible));
           }}
           onSearch={debounce(handleUpdateKeyWords, 500)}
           onNewRecord={() => {
@@ -693,7 +693,7 @@ export default function SelectDialog({ ...args }) {
                       sheetViewHighlightRows={
                         activeRowIndex > -1 && records[activeRowIndex] ? { [records[activeRowIndex].rowid]: true } : {}
                       }
-                      onCellClick={(clickedControl, clickedRow, rowIndex) => {
+                      onCellClick={(_clickedControl, clickedRow, rowIndex) => {
                         handleToggleSelect(clickedRow.rowid, rowIndex);
                       }}
                       renderColumnHead={({ control, ...rest }) => {

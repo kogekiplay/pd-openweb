@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ConfigProvider, Pagination, Table } from 'antd';
 import styled from 'styled-components';
 
@@ -163,14 +163,14 @@ function PorTalTable(props) {
           dataSource={listCell}
           bordered
           size="small"
-          locale={_l('暂无数据')}
+          locale={{ emptyText: _l('暂无数据') }}
           rowKey={record => record.rowid}
           pagination={false}
           scroll={{
             x: props.width - 1,
           }}
           showSorterTooltip={false}
-          onChange={(pagination, filters, sorter) => {
+          onChange={(_pagination, _filters, sorter) => {
             props.handleChangeSortHeader(sorter);
           }}
           onRow={data => {

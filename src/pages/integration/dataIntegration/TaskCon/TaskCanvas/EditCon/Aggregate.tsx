@@ -70,7 +70,7 @@ export default function Aggregate(props) {
       <div className="groupCon">
         {groupFields.map((o, item) => {
           return (
-            <span className="itemOp mTop12 flexRow alignItemsCenter">
+            <span key={item} className="itemOp mTop12 flexRow alignItemsCenter">
               {!preFields.find(it => it.id === o.id) ? (
                 <React.Fragment>
                   <span className="Red">{_l('字段已删除')}</span>
@@ -161,7 +161,7 @@ export default function Aggregate(props) {
         {aggregateFields.map((o, item) => {
           let str = getAggData(o).text;
           return (
-            <span className="itemOp mTop12">
+            <span key={item} className="itemOp mTop12">
               {!preFields.find(it => it.id === o.id) && !o.isRowsCount ? (
                 <React.Fragment>
                   <span className="Red">{_l('字段已删除')}</span>
@@ -208,7 +208,7 @@ export default function Aggregate(props) {
                 className="icon icon-clear_bold mLeft8 InlineBlock Hand"
                 onClick={() => {
                   setData({
-                    aggregateFields: aggregateFields.filter((a, i) => item !== i),
+                    aggregateFields: aggregateFields.filter((_a, i) => item !== i),
                   });
                 }}
               />

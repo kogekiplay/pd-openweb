@@ -13,7 +13,9 @@ import RecordInfo from './RecordInfo';
 const AutoSizeRecordInfo = autoSize(RecordInfo);
 
 export default class RecordInfoWrapper extends Component<any, any> {
-  static propTypes = {
+  declare didMountTimestamp: number;
+
+  static override propTypes = {
     from: PropTypes.number,
     notDialog: PropTypes.bool,
     visible: PropTypes.bool,
@@ -39,7 +41,7 @@ export default class RecordInfoWrapper extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.state.loading) {
       this.init();
     }
@@ -105,7 +107,7 @@ export default class RecordInfoWrapper extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { notDialog, width, visible, from, instanceId, workId, allowAiAction = true } = this.props;
     const { loading, error, errorMsg, worksheetId, recordId, viewId, modalRightComp } = this.state;
     const extendsProps: {

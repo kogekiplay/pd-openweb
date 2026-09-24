@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -46,7 +46,7 @@ export default class PBC extends Component<any, any> {
 
   cacheItem = {};
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -54,7 +54,7 @@ export default class PBC extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -888,7 +888,7 @@ export default class PBC extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { data } = this.state;
     const isPBCOut = data.actionId === ACTION_ID.PBC_OUT;
 

@@ -17,7 +17,7 @@ import type {
   SubListStore,
 } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows, getNewRecordPageUrl, getRelateRecordCountFromValue } from 'src/utils/record';
-import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, FROM, WIDGET_VALUE_ID } from './config';
+import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, FROM, getWidgetValueId } from './config';
 
 export function validate(id = '') {
   return !/^(temp|default|public-temp|deleterowids)/.test(id.toLowerCase());
@@ -197,13 +197,13 @@ function formatRowToServer(
  * 只列 formatControlToServer 真正写进去的键 —— 加字段就往这里补一行。
  */
 export interface ServerControl {
-  controlId?: string;
-  type?: FormControl['type'];
-  value?: ControlValue;
-  controlName?: string;
-  dot?: number;
+  controlId?: string | undefined;
+  type?: FormControl['type'] | undefined;
+  value?: ControlValue | undefined;
+  controlName?: string | undefined;
+  dot?: number | undefined;
   /** 增量更新方式：0 覆盖、2 删除、9 增删差异；不走增量时不下发 */
-  editType?: number;
+  editType?: number | undefined;
 }
 
 /**
@@ -214,15 +214,15 @@ export interface ServerControl {
  */
 interface FormatControlOptions {
   /** 子表整行复制，value 里的行 id 要重新生成 */
-  isSubListCopy?: boolean;
-  isDraft?: boolean;
-  isSubList?: boolean;
-  isFromMingoData?: boolean;
-  isNewRecord?: boolean;
-  needSourceValue?: boolean;
-  needFullUpdate?: boolean;
+  isSubListCopy?: boolean | undefined;
+  isDraft?: boolean | undefined;
+  isSubList?: boolean | undefined;
+  isFromMingoData?: boolean | undefined;
+  isNewRecord?: boolean | undefined;
+  needSourceValue?: boolean | undefined;
+  needFullUpdate?: boolean | undefined;
   /** 带默认值的关联表控件 id，新建记录时要一并提交 */
-  hasDefaultRelateRecordTableControls?: string[];
+  hasDefaultRelateRecordTableControls?: string[] | undefined;
 }
 
 /**
@@ -802,9 +802,10 @@ export const dealUserRange = (
     return curKey;
   }
 
-  // chooserange 的一项：type 4 表示「取某个控件的值做范围」，此时带 rcid（关联控件）/ cid（目标控件）
+  // chooserange 的一项：type 4 表示「取某个控件的值做范围」，此时带 rcid（关联控件）/ cid（目标控件）；
+  // 其余是静态范围（type 1 人员、2 部门、其他 组织角色），staticValue 是选定那一项的 JSON 对象串
   JSON.parse(_.get(control, 'advancedSetting.chooserange') || '[]').map(
-    (item: { type?: number; rcid?: string; cid?: string; [key: string]: ControlValue }) => {
+    (item: { type?: number; rcid?: string; cid?: string; staticValue?: string; [key: string]: ControlValue }) => {
       if (item.type === 4) {
         if (item.rcid && item.rcid !== masterData.worksheetId) {
           const parentControl = _.find(data, i => i.controlId === item.rcid) || {};
@@ -821,7 +822,7 @@ export const dealUserRange = (
             const arrKey = getArrKey(currentItem);
             ranges[arrKey] = _.uniq(
               (ranges[arrKey] || []).concat(
-                sourceVal.map((s: Record<string, ControlValue>) => s[WIDGET_VALUE_ID[currentItem.type as number]]),
+                sourceVal.map((s: Record<string, ControlValue>) => s[getWidgetValueId(currentItem.type)]),
               ),
             );
           }
@@ -836,7 +837,7 @@ export const dealUserRange = (
             ranges[arrKey] = _.uniq(
               (ranges[arrKey] || []).concat(
                 JSON.parse(currentItem.value || '[]').map(
-                  (i: Record<string, ControlValue>) => i[WIDGET_VALUE_ID[currentItem.type as number]],
+                  (i: Record<string, ControlValue>) => i[getWidgetValueId(currentItem.type)],
                 ),
               ),
             );
@@ -846,7 +847,7 @@ export const dealUserRange = (
         const arrKey = getArrKey(item);
         const userInfo = safeParse(item.staticValue || '{}');
         const chooseId = item.type === 1 ? 26 : item.type === 2 ? 27 : 48;
-        const chooseValue = _.get(userInfo, [WIDGET_VALUE_ID[chooseId]]);
+        const chooseValue = _.get(userInfo, [getWidgetValueId(chooseId)]);
 
         if (chooseValue) {
           ranges[arrKey] = _.uniq((ranges[arrKey] || []).concat(chooseValue));
@@ -935,8 +936,7 @@ export const getControlsByTab = (
 
   controls.forEach((item: FormControl) => {
     if (item.sectionId) {
-      sectionControlsMap[item.sectionId] = sectionControlsMap[item.sectionId] || [];
-      sectionControlsMap[item.sectionId].push(item);
+      (sectionControlsMap[item.sectionId] ??= []).push(item);
     }
   });
 
@@ -1010,7 +1010,7 @@ export const getControlsByTab = (
     });
     commonData = commonData.map(v => updateMobileControls(v));
     if (_.isEmpty(commonData) && _.isEmpty(otherTabs) && tabData.length === 1) {
-      commonData = tabData[0].child || [];
+      commonData = tabData[0]?.child || [];
       tabData = [];
     }
   }
@@ -1086,7 +1086,7 @@ export const getArrBySpliceType = (filters: { spliceType?: number }[] = []) => {
   let num = 0;
   return Object.values(
     filters.reduce((res: { [group: number]: { spliceType?: number }[] }, item) => {
-      res[num] ? res[num].push(item) : (res[num] = [item]);
+      (res[num] ??= []).push(item);
       if (item.spliceType === 2) {
         num++;
       }
@@ -1100,7 +1100,7 @@ export const getArrBySpliceType = (filters: { spliceType?: number }[] = []) => {
 export const formatControlValue = (value: string, type?: number) => {
   if (_.includes([26, 27, 29, 48], type)) {
     return safeParse(value.startsWith('deleteRowIds') ? '[]' : value || '[]')
-      .map((ac: Record<string, ControlValue>) => ac[WIDGET_VALUE_ID[type as number]])
+      .map((ac: Record<string, ControlValue>) => ac[getWidgetValueId(type)])
       .join('');
   }
 
@@ -1188,7 +1188,7 @@ export function calcSubTotalCount(
         return safeValue.map((i: string) => (i.indexOf('other') > -1 ? 'other' : i));
       }
 
-      const value = safeValue.map((i: Record<string, ControlValue>) => i[WIDGET_VALUE_ID[control.type as number]]);
+      const value = safeValue.map((i: Record<string, ControlValue>) => i[getWidgetValueId(control.type)]);
       return unique ? value.sort() : value;
     }
 

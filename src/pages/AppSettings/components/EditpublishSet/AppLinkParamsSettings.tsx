@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -91,7 +91,7 @@ export default function AppLinkParamsSettings(props) {
                 const { text, value } = item;
 
                 return (
-                  <div className={cx({ mBottom15: index < LinkParams.length - 1 })}>
+                  <div key={index} className={cx({ mBottom15: index < LinkParams.length - 1 })}>
                     <Checkbox
                       key={value}
                       checked={params[value]}

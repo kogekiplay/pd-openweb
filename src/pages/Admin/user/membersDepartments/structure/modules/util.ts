@@ -69,7 +69,7 @@ export const getParentDepartments = (node, filter, matcher = defaultMatcher) => 
 
   const runner = node => {
     let lastNode = arr[arr.length - 1] || {};
-    if (!node || lastNode[keyName] === filter) return;
+    if (!node || lastNode[keyName] === filter) return undefined;
     if (_.isArray(node)) {
       return _.each(node, runner);
     }
@@ -89,7 +89,7 @@ export const formatSearchDeptData = (data, keywords: string) => {
     const children = dept.subs || [];
     const parent = dept.parent || {};
     const parentName = htmlEncodeReg(parent.name);
-    const nameArr = [];
+    const nameArr: string[] = [];
     let curName = htmlEncodeReg(dept.name);
     let _curName = curName;
 

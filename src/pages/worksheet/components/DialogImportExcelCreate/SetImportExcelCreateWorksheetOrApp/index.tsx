@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Select } from 'antd';
 import Trigger from '@rc-component/trigger';
@@ -45,6 +45,8 @@ const getWorksheetList = (list = []) => {
 
 const { Option } = Select;
 let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrApp extends Component<any, any> {
+  declare tableWrap: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -392,7 +394,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
     return tableWidth;
   };
 
-  render() {
+  override render() {
     const {
       visible,
       createType = 'worksheet',
@@ -405,7 +407,7 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
     } = this.props;
     const { rows = [], selectCells = [], rowNum }: { rows: RecordRow[]; [key: string]: any } = currentSheetInfo;
     const cells = rows.length ? rows[0].cells : [];
-    const showRows = rows.filter((it, index) => index === 0).concat(rows.slice(rowNum, rowNum + 10));
+    const showRows = rows.filter((_it, index) => index === 0).concat(rows.slice(rowNum, rowNum + 10));
     return (
       <Fragment>
         {importLoading && createType === 'worksheet' && (
@@ -490,8 +492,8 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
                       {rows.length
                         ? rows
                             .slice(0, 11)
-                            .map(v =>
-                              v.rowNumber === 0 ? '' : <Option value={v.rowNumber}>{_l('第%0行', v.rowNumber)}</Option>,
+                            .map((v, index) =>
+                              v.rowNumber === 0 ? '' : <Option key={index} value={v.rowNumber}>{_l('第%0行', v.rowNumber)}</Option>,
                             )
                         : ''}
                     </Select>

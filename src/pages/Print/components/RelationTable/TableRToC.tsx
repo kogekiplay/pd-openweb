@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import BaseColumnHead from 'worksheet/components/BaseColumnHead';
 import { BASE_PRINT_CONTENT_WIDTH } from '../../core/config';
 import STYLE_PRINT from '../../core/exportWordPrintTemCssString';

@@ -22,7 +22,7 @@ export default function InfoSet(props) {
   const { groupId, name, projectId, worksheetId } = portal.baseInfo || {};
   const [showId, setShowId] = useState<boolean | string>(false);
   const [controls, setControls] = useState([]);
-  const [controlsFilter, setControlsFilter] = useState([]);
+  const [controlsFilter, setControlsFilter] = useState<FormControl[]>([]);
   const [allControl, setAllControl] = useState([]);
   const [hs, setHs] = useState(false);
 
@@ -173,7 +173,7 @@ export default function InfoSet(props) {
         <div className="">
           <SortableList
             itemKey="controlId"
-            items={controls.filter((o, i) => i !== 0)}
+            items={controls.filter((_o, i) => i !== 0)}
             useDragHandle
             onSortEnd={handleSortEnd}
             helperClass={'portalList'}
@@ -262,6 +262,7 @@ export default function InfoSet(props) {
 
                 setHs(true);
                 onChangePortalSetModel({ extendAttr });
+                return undefined;
               }}
             />
           </React.Fragment>

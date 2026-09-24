@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -54,7 +54,7 @@ function ColumnVisibilityControl(props) {
   const [columnHeadHeight, setColumnHeadHeight] = useState(columnHeadHeightProp || 34);
   const [tableVisibleHeight, setTableVisibleHeight] = useState(0);
   const triggerRef = useRef(null);
-  const resizeObserverRef = useRef(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
   // 判断对齐方式（rctitlestyle === '1' 表示垂直居中对齐）
   const headTitleCenter = (_.get(view, 'advancedSetting.rctitlestyle') || '0') === '1';
@@ -69,7 +69,7 @@ function ColumnVisibilityControl(props) {
 
   // 直接从 DOM 获取当前表的 baseColumnHead 的高度
   useEffect(() => {
-    if (!tableId) return;
+    if (!tableId) return undefined;
     if (resizeObserverRef.current) {
       resizeObserverRef.current.disconnect();
       resizeObserverRef.current = null;

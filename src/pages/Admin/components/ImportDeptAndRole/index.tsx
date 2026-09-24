@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Table } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -467,7 +467,7 @@ export default class ImportDeptAndRole extends Component<any, any> {
       );
     }
   };
-  render() {
+  override render() {
     const { txt, clickBackList = () => {} } = this.props;
     const { actionResultStatus } = this.state;
     return (

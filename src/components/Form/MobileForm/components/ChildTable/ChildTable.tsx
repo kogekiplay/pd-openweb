@@ -116,8 +116,14 @@ const DEFAULT_TABLE_PAGE_SIZE = 20;
 const EXPAND_TABLE_PAGE_SIZE = 200;
 
 class ChildTable extends React.Component<any, any> {
-  static contextType = RecordInfoContext;
-  static propTypes = {
+  // 原来是 typeof AbortController !== 'undefined' && new AbortController()：支持的浏览器（Chrome 103 起）都有 AbortController
+  declare abortController: AbortController;
+  declare viewportResizeTimer: NodeJS.Timeout | null;
+  declare expandPaginationFrame: number | null;
+  declare showLoadingMask: boolean | undefined;
+
+  static override contextType = RecordInfoContext;
+  static override propTypes = {
     mode: PropTypes.string,
     entityName: PropTypes.string,
     recordId: PropTypes.string,
@@ -162,7 +168,7 @@ class ChildTable extends React.Component<any, any> {
       viewportSize: getViewportSize(),
     };
     this.controls = props.controls;
-    this.abortController = typeof AbortController !== 'undefined' && new AbortController();
+    this.abortController = new AbortController();
     this.requestPool = createRequestPool({ abortController: this.abortController });
     const _handleUpdateCell = this.handleUpdateCell.bind(this);
 
@@ -180,7 +186,7 @@ class ChildTable extends React.Component<any, any> {
     this.expandPaginationFrame = null;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { control, recordId, needResetControls } = this.props;
     this.updateDefsourceOfControl();
     if (recordId) {
@@ -194,7 +200,7 @@ class ChildTable extends React.Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.refreshFlag && this.props.refreshFlag !== prevProps.refreshFlag) {
         this.refresh();
@@ -256,7 +262,7 @@ class ChildTable extends React.Component<any, any> {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     if (!_.isEqual(this.state, nextState)) {
       return true;
     }
@@ -277,7 +283,7 @@ class ChildTable extends React.Component<any, any> {
     );
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { mode, control } = this.props;
 
     if (mode !== 'dialog' && _.isFunction(control.addRefreshEvents)) {
@@ -482,7 +488,7 @@ class ChildTable extends React.Component<any, any> {
 
   updateAbortController = () => {
     this.abortController && this.abortController.abort && this.abortController.abort();
-    this.abortController = typeof AbortController !== 'undefined' && new AbortController();
+    this.abortController = new AbortController();
     this.requestPool = createRequestPool({ abortController: this.abortController });
     this.dataFormatCacheMap.clear();
   };
@@ -961,7 +967,7 @@ class ChildTable extends React.Component<any, any> {
     }
 
     const newCellErrors = validateAll
-      ? _.omitBy(cellErrors, (value, key) => key.startsWith(`${rowid}-`))
+      ? _.omitBy(cellErrors, (_value, key) => key.startsWith(`${rowid}-`))
       : _.omit(
           cellErrors,
           updatedControlIds.map(controlId => `${rowid}-${controlId}`),
@@ -1080,6 +1086,7 @@ class ChildTable extends React.Component<any, any> {
     } else {
       return true;
     }
+    return undefined;
   };
 
   // 删除记录
@@ -1151,7 +1158,7 @@ class ChildTable extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       cellErrors,
       from,

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -9,7 +9,9 @@ import { formatRecur } from '../../common';
 import { FREQUENCY, RECURLAYERS, RECURTYPE, WEEKDAYS } from '../../constant';
 
 export default class RepeatBox extends Component<any, any> {
-  static propTypes = {
+  declare untilDateBox: HTMLSpanElement | null | undefined;
+
+  static override propTypes = {
     change: PropTypes.func.isRequired,
   };
   constructor(props) {
@@ -34,12 +36,16 @@ export default class RepeatBox extends Component<any, any> {
   }
 
   // 修改星期
-  changeWeekDay(event) {
+  changeWeekDay(dayIndex: number) {
     const {
       calendar: { weekDay },
     } = this.props;
     let weekDayArray = weekDay ? weekDay.split(',').sort((a, b) => a - b) : [];
-    const value = event.target.getAttribute('value');
+    /* 原先是把 index 写成 <span value={index}>（span 没有 value 属性，React 把它原样
+       落成 DOM 属性），点击时再从 event.target 上把这个属性读回来。现在直接传进来。
+       转成字符串是因为 weekDayArray 里存的是 weekDay.split(',') 的字符串，
+       下面 indexOf / _.without 都靠严格相等比较 —— 原先 DOM 读回来的本来也是字符串。 */
+    const value = String(dayIndex);
     const isInArray = weekDayArray.indexOf(value) !== -1;
 
     if (isInArray) {
@@ -142,8 +148,7 @@ export default class RepeatBox extends Component<any, any> {
           return (
             <span
               className={cx('weekday', { bgColorPrimary: isSelected })}
-              onClick={this.changeWeekDay.bind(this)}
-              value={index}
+              onClick={() => this.changeWeekDay(index)}
               key={index}
             >
               {day}
@@ -211,6 +216,7 @@ export default class RepeatBox extends Component<any, any> {
             selectedValue={moment(untilDate)}
             disabledDate={date => {
               if (date.isSameOrBefore(moment(end), 'day')) return true;
+              return undefined;
             }}
             onSelect={selectDate => {
               if (selectDate) {
@@ -229,7 +235,7 @@ export default class RepeatBox extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const {
       calendar: { isChildCalendar, frequency },
     } = this.props;

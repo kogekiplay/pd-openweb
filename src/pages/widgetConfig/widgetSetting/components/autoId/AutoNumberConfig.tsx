@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Input } from 'antd';
 import { parseInt } from 'lodash';
@@ -86,7 +86,7 @@ const RESET_TYPE = [
     text: _l('每年重置'),
   },
 ];
-const TYPE_TO_TEXT = {
+const TYPE_TO_TEXT: Record<number, string> = {
   1: _l('每天00:00, 自动从初始值开始编号'),
   2: _l('每周一的00:00, 自动从初始值开始编号'),
   3: _l('每月第一天的00:00, 自动从初始值开始编号'),

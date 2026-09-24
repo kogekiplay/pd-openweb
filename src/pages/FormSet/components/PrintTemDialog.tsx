@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { func } from 'prop-types';
 import { FullScreenCurtain } from 'ming-ui';
 import PrintForm from 'src/pages/Print';
 
 export default class PrintTemDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     onBack: func,
   };
 
@@ -12,7 +12,7 @@ export default class PrintTemDialog extends Component<any, any> {
     onBack: () => {},
   };
 
-  render() {
+  override render() {
     const {
       onBack,
       isDefault,

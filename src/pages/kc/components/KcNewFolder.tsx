@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class KcNewFolder extends Component<any, any> {
-  static propTypes = {
+  declare input: HTMLInputElement | null | undefined;
+
+  static override propTypes = {
     isList: PropTypes.bool,
     addNewFolder: PropTypes.func,
     onHideAddNewFolder: PropTypes.func,
@@ -14,7 +16,7 @@ export default class KcNewFolder extends Component<any, any> {
       folderName: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.input) {
       this.input.focus();
     }
@@ -50,7 +52,7 @@ export default class KcNewFolder extends Component<any, any> {
       evt.stopPropagation();
     }
   };
-  render() {
+  override render() {
     const { isList, setRef } = this.props;
     const { folderName } = this.state;
     return isList ? (

@@ -1,4 +1,3 @@
-import React from 'react';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import { FILTER_VALUE_ENUM } from '../config';
 import IntegratedApi from '../CustomAction/actionTypes/IntegratedApi';
@@ -23,6 +22,7 @@ const CustomFilterConfig = props => {
     case FILTER_VALUE_ENUM.CUSTOM_FUN:
       return <FunctionEditor {...props} />;
   }
+  return undefined;
 };
 
 export default props => functionWrap(CustomFilterConfig, { ...props });

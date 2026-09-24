@@ -253,7 +253,7 @@ const checkTime = (startTime, endTime, filterWeekend?) => {
  */
 const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
   // 不同视图下任务名称代表多少小时
-  let taskNameTime;
+  let taskNameTime: number | undefined;
 
   if (viewType === VIEWTYPE.DAY) {
     taskNameTime = TASK_NAME_SIZE / GRANULARITY.DAY;
@@ -497,7 +497,7 @@ const singleTaskSourceUpdate = (tasks, task, status, filterWeekend, level) => {
  * @param  {object} task  单条任务
  * @param  {number} level  当前层级
  */
-const singleTaskArrow = (tasks, task, level) => {
+const singleTaskArrow = (tasks, task, level: number) => {
   // 无子任务
   if (task.subTaskIds.length === 0) {
     task.arrowStatus = ARROW_STATUS.NULL;
@@ -556,7 +556,7 @@ const getDaysTime = filterWeekend => {
     : moment(config.minStartTime).format('YYYY-MM-DD');
   const endTime = moment(config.maxEndTime).add(28, 'd').format('YYYY-MM-DD');
   const timeDiff = (moment(endTime) - moment(startTime)) / 24 / 60 / 60 / 1000;
-  const result = {};
+  const result: Record<string, string[]> = {};
 
   for (let i = 0; i <= timeDiff; i++) {
     const momentObj = moment(startTime).add(i, 'd');
@@ -646,7 +646,7 @@ const getMonthsTime = () => {
   const startTime = config.folderId ? moment(config.minStartTime).add(-1, 'M') : moment(config.minStartTime);
   const endTime = moment(config.maxEndTime).add(6, 'M');
   const timeDiff = (endTime.year() - startTime.year()) * 12 + (endTime.month() - startTime.month());
-  const result = {};
+  const result: Record<string, string[]> = {};
 
   for (let i = 0; i <= timeDiff; i++) {
     const momentObj = moment(startTime).add(i, 'M');
@@ -686,6 +686,7 @@ const getTimeAxisSource = (viewType, filterWeekend) => {
   if (viewType === VIEWTYPE.MONTH) {
     return getMonthsTime();
   }
+  return undefined;
 };
 
 /**
@@ -705,6 +706,7 @@ const getOneHourWidth = viewType => {
   if (viewType === VIEWTYPE.MONTH) {
     return GRANULARITY.MONTH;
   }
+  return undefined;
 };
 
 /**
@@ -724,6 +726,7 @@ const singleDayWidth = viewType => {
   if (viewType === VIEWTYPE.MONTH) {
     return workingSumHours * GRANULARITY.MONTH;
   }
+  return undefined;
 };
 
 /**
@@ -762,6 +765,7 @@ const singleTableWidth = (viewType, filterWeekend?, month?) => {
 
     return days * singleDayWidth(viewType);
   }
+  return undefined;
 };
 
 /**
@@ -812,7 +816,7 @@ const getViewSumWidth = (viewType, timeAxisSource, filterWeekend) => {
  * @param  {[]} lefts
  * @return {number}
  */
-const getScrollIndex = (value, lefts) => {
+const getScrollIndex = (value: number, lefts: JQuery<number>) => {
   let index = 0;
 
   while (lefts[index] <= value) {
@@ -833,7 +837,7 @@ const syncUpdateScroll = () => {
   // timeAxisMonths 类上文字的宽度
   const textWith = 65;
   const monthsEls = $('.timeAxisContent .timeAxisMonths');
-  const monthsLeft = monthsEls.map((index: number, el) => {
+  const monthsLeft = monthsEls.map((_index: number, el) => {
     return el.offsetLeft;
   });
   const index = getScrollIndex(value, monthsLeft);
@@ -929,7 +933,7 @@ const getDays = hour => {
  * @param  {boolean} filterWeekend 是否过滤周末
  * @return {string}
  */
-const offsetDay = (currentTime, day: number, filterWeekend) => {
+const offsetDay = (currentTime: moment.Moment, day: number, filterWeekend) => {
   // 如果不包含周末
   if (!filterWeekend) {
     currentTime = currentTime.add(day, 'd');
@@ -953,7 +957,7 @@ const offsetDay = (currentTime, day: number, filterWeekend) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetStartPositiveHour = (currentTime, hour) => {
+const offsetStartPositiveHour = (currentTime: moment.Moment, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {
@@ -986,7 +990,7 @@ const offsetStartPositiveHour = (currentTime, hour) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetStartNegativeHour = (currentTime, hour: number) => {
+const offsetStartNegativeHour = (currentTime: moment.Moment, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {
@@ -1020,7 +1024,7 @@ const offsetStartNegativeHour = (currentTime, hour: number) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetEndPositiveHour = (currentTime, hour: number) => {
+const offsetEndPositiveHour = (currentTime: moment.Moment, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {
@@ -1055,7 +1059,7 @@ const offsetEndPositiveHour = (currentTime, hour: number) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetEndNegativeHour = (currentTime, hour) => {
+const offsetEndNegativeHour = (currentTime: moment.Moment, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {

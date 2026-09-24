@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Dialog } from 'ming-ui';
@@ -43,14 +43,18 @@ const TabList = [
   { tab: 2, title: _l('已加密字段') },
 ];
 
-class EncryptDetail extends Component<any, any> {
+export interface EncryptDetailState {
+  currentTab: number;
+}
+
+class EncryptDetail extends Component<any, EncryptDetailState> {
   constructor(props) {
     super(props);
     this.state = {
       currentTab: 1,
     };
   }
-  render() {
+  override render() {
     const { onCancel, projectId, encryptRuleId, ruleDetail } = this.props;
     const { currentTab } = this.state;
     const windowHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;

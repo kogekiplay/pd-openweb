@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { RadioGroup } from 'ming-ui';
 import SortColumns from 'src/pages/worksheet/components/SortColumns/SortColumns';
 import { SettingItem } from '../../../../styled';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dialog, Switch } from 'ming-ui';
 import Ajax from 'src/api/workWeiXin';
 

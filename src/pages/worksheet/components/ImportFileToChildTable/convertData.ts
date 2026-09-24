@@ -5,7 +5,7 @@ import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget.j
 import { postWithToken } from 'src/utils/common';
 import type { RecordRow } from 'src/utils/controlTypes';
 
-function getSelectedOptionKeys(text = '', options, isMultiple?) {
+function getSelectedOptionKeys(text = '', options, isMultiple?: boolean | undefined) {
   if (!text.trim()) {
     return '';
   }
@@ -60,7 +60,7 @@ function getDateStringValue(dateString) {
     return moment(dateString, showFormat).format();
   }
 
-  return;
+  return undefined;
 }
 
 async function convert({ projectId, worksheetId, controlId, mapConfig = [], controls = [], data = [] }: { projectId?: string; worksheetId?: string; controlId?: string; [key: string]: any }) {

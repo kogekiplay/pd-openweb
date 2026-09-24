@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -65,7 +65,7 @@ function ImportAttachments(props) {
   const [isComplete, setIsComplete] = useState(true);
   const [isDrag, setIsDrag] = useState(false);
   const [importLoading, setImportLoading] = useState(false);
-  const textareaRef = useRef(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const dropPasteId = `dropTextarea-${generateRandomPassword(16)}`;
 
   const dialogProps = {

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox, Dropdown, Icon } from 'ming-ui';
@@ -139,9 +139,9 @@ export default function RelateStyle(props) {
             </div>
             {titlewrap === '1' && (
               <AnimationWrap style={{ width: '112px' }}>
-                {DISPLAY_RC_TITLE_STYLE.map(({ icon, value, text }) => {
+                {DISPLAY_RC_TITLE_STYLE.map(({ icon, value, text }, index) => {
                   return (
-                    <Tooltip title={text}>
+                    <Tooltip key={index} title={text}>
                       <div
                         className={cx('animaItem', { active: rctitlestyle === value })}
                         onClick={() => {

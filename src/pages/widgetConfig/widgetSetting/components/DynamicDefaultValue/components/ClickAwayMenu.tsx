@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Menu, MenuItem } from 'ming-ui';
@@ -10,7 +10,7 @@ const ClearSelect = styled.div`
   cursor: pointer;
 `;
 let ClickAwayMenu = class ClickAwayMenu extends Component<any, any> {
-  render() {
+  override render() {
     const { types, handleTimeSelect, dynamicValue, showClear = true } = this.props;
     return (
       <Menu

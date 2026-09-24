@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { Dropdown, Menu } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -190,7 +190,7 @@ export default function Tools(props) {
   const containerComponents = allComponents.filter(c => [9, 10, 'tabs', 'card'].includes(c.type));
   const TOOLS = getTools({ widget, widgetType, layoutType, reportType, containerComponents });
 
-  const handleUpdateDropdownVisible = visible => {
+  const handleUpdateDropdownVisible = (visible: boolean) => {
     setDropdownVisible(visible);
     if (visible) {
       const className = `${widgetType}-${['tabs', 'card'].includes(widgetType) ? objectId : widget.id || widget.uuid}`;
@@ -239,7 +239,7 @@ export default function Tools(props) {
     return tip;
   };
 
-  const getIcon = (type, icon: string, next?) => {
+  const getIcon = (type, icon: string, next?: boolean | undefined) => {
     if (isSwitchButton(type)) {
       const value =
         widgetType === 'button' ? _.get(widget, ['button', 'mobileCount']) : _.get(widget, ['config', 'mobileCount']);

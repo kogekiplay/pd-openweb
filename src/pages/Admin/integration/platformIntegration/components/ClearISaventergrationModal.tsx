@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dialog, Radio, VerifyPasswordConfirm } from 'ming-ui';
 import FunctionWrap from 'ming-ui/components/FunctionWrap';
 import workwxAjax from 'src/api/workWeiXin';

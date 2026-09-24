@@ -6,7 +6,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSettingDefualtProjectId: function (args?: ApiArgs, options: ApiOptions = {}) {
+  getSettingDefualtProjectId: function (
+    args?: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.TaskCenter.ReturnTemplate> {
     return mdyAPI('TaskCenter', 'GetSettingDefualtProjectId', args, options);
   },
   /**
@@ -17,7 +20,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSetting: function (args: ApiArgs, options: ApiOptions = {}) {
+  getSetting: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.TaskCenter.ReturnTemplate> {
     return mdyAPI('TaskCenter', 'GetSetting', args, options);
   },
   /**
@@ -68,7 +74,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSubordinateTaskGantt: function (args: ApiArgs, options: ApiOptions = {}) {
+  getSubordinateTaskGantt: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.TaskCenter.ReturnTemplate> {
     return mdyAPI('TaskCenter', 'GetSubordinateTaskGantt', args, options);
   },
   /**
@@ -381,7 +390,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLeftMenu: function (args: ApiArgs, options: ApiOptions = {}) {
+  getLeftMenu: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.TaskCenter.ReturnTemplate> {
     return mdyAPI('TaskCenter', 'GetLeftMenu', args, options);
   },
   /**
@@ -464,7 +476,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaskListWithStar: function (args: ApiArgs, options: ApiOptions = {}) {
+  getTaskListWithStar: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.TaskCenter.ReturnTemplate> {
     return mdyAPI('TaskCenter', 'GetTaskListWithStar', args, options);
   },
   /**
@@ -532,7 +547,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMyTaskList: function (args: ApiArgs, options: ApiOptions = {}) {
+  getMyTaskList: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.TaskCenter.ReturnTemplate> {
     return mdyAPI('TaskCenter', 'GetMyTaskList', args, options);
   },
   /**
@@ -999,7 +1017,10 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectsFolderNotice: function (args?: ApiArgs, options: ApiOptions = {}) {
+  getProjectsFolderNotice: function (
+    args?: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.TaskCenter.ReturnTemplate> {
     return mdyAPI('TaskCenter', 'GetProjectsFolderNotice', args, options);
   },
   /**
@@ -1037,7 +1058,10 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getHiddenFolderList: function (args: ApiArgs, options: ApiOptions = {}) {
+  getHiddenFolderList: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.TaskCenter.ReturnTemplate> {
     return mdyAPI('TaskCenter', 'GetHiddenFolderList', args, options);
   },
   /**
@@ -1049,7 +1073,10 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getArchiveFolderList: function (args: ApiArgs, options: ApiOptions = {}) {
+  getArchiveFolderList: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.TaskCenter.ReturnTemplate> {
     return mdyAPI('TaskCenter', 'GetArchiveFolderList', args, options);
   },
   /**
@@ -1060,7 +1087,10 @@ adder: suncheng date: 2017年11月29日
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTopFolderList: function (args: ApiArgs, options: ApiOptions = {}) {
+  getTopFolderList: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.TaskCenter.ReturnTemplate> {
     return mdyAPI('TaskCenter', 'GetTopFolderList', args, options);
   },
   /**

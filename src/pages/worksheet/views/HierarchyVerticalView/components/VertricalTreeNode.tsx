@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { browserIsMobile } from 'src/utils/common';
@@ -208,7 +208,7 @@ function VertricalTreeNode(props) {
             // 上 2 86 左 1 125 右 0 125
 
             return (
-              <Fragment>
+              <Fragment key={index}>
                 <div className={`mixTreeNode ${isNarrow ? 'coverpositionTop' : 'coverpositionAlign'}`}>
                   <TreeNode
                     {...props}

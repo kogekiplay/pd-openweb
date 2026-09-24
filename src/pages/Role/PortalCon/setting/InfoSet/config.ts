@@ -30,7 +30,7 @@ export const WIDGETS_TO_API_TYPE = [
   'RELATE_SHEET',
 ].filter(key => !(md.global?.SysSettings?.hideWorksheetControl || []).includes(key));
 
-export const WIDGETS_TO_API_TYPE_ENUM_N = {
+export const WIDGETS_TO_API_TYPE_ENUM_N: Record<number, string> = {
   2: 'TEXT',
   3: 'MOBILE_PHONE',
   4: 'TELEPHONE',

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { formatFileSize } from 'src/utils/common';
 
-const subTypeNames = {
+const subTypeNames: Record<number, string> = {
   1: _l('成员'),
   2: _l('外部门户用户'),
   3: _l('工作流'),
@@ -28,7 +28,7 @@ export const dateDimension = [
 export const formatter = v => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 const units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-export const formatChartData = (type, initData = [], isFilterByDepartment) => {
+export const formatChartData = (type: string, initData = [], isFilterByDepartment: boolean) => {
   let data = [];
 
   switch (type) {

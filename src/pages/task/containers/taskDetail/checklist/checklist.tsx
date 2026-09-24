@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 // react-dnd v14 删除了 DragSource / DropTarget 装饰器且没有官方替代，
 // 这里用 v16 的 hooks 重建了一份语义一致的（含 spec 第三参 component）。
@@ -23,7 +23,7 @@ function getNode(component) {
 }
 
 class ChecklistOperator extends Component<any, any> {
-  componentDidMount() {
+  override componentDidMount() {
     const { isShowOperator } = this.props;
     const clipboardText = this.props.data.name;
 
@@ -40,7 +40,7 @@ class ChecklistOperator extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     return (
       <ClickAwayable
         component="ul"
@@ -73,7 +73,7 @@ class ChecklistOperator extends Component<any, any> {
 }
 
 const checklistSource = {
-  beginDrag(props, monitor, component) {
+  beginDrag(props, _monitor, component) {
     const node = getNode(component);
     if (!node) return { index: props.index };
     const preview = node.outerHTML;
@@ -239,7 +239,7 @@ let Checklist: any = class Checklist extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { data, connectDragSource, connectDropTarget } = this.props;
     const items = data.items || [];
     const sum = items.length;

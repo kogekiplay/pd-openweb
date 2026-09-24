@@ -118,12 +118,13 @@ function parseUrlValue({ value, control, filterType, dateRangeType } = {}) {
       value: 1,
     };
   }
+  return undefined;
 }
 
 function parseDynamicSource({ dynamicSource, control, filterType, dateRangeType } = {}) {
   const urlParams = getRequest();
   return dynamicSource.map(item => {
-    if (item.rcid !== 'url' || !item.cid || !urlParams[item.cid]) return;
+    if (item.rcid !== 'url' || !item.cid || !urlParams[item.cid]) return undefined;
     const changes = parseUrlValue({
       value: urlParams[item.cid],
       control: redefineComplexControl(control),

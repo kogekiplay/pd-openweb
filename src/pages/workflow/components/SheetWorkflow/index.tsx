@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Drawer } from 'antd';
 import { ActionSheet } from 'antd-mobile';
 import Trigger from '@rc-component/trigger';
@@ -37,6 +37,7 @@ const renderTimeConsuming = (createDate, completeDate) => {
       </div>
     );
   }
+  return undefined;
 };
 
 const renderState = data => {
@@ -101,6 +102,7 @@ const renderState = data => {
       </div>
     );
   }
+  return undefined;
 };
 
 const renderSurplusTime = data => {
@@ -153,8 +155,8 @@ function CurrentWorkItems(props) {
       <div className="flexRow valignWrapper mBottom12">
         <div className="Font13 textSecondary label">{type === 4 ? _l('审批人') : _l('填写人')}</div>
         <div className="flex flexRow valignWrapper flexWrap" ref={wrapRef}>
-          {currentWorkItems.map(data => (
-            <span className="InlineBlock Relative mRight8">
+          {currentWorkItems.map((data, index) => (
+            <span key={index} className="InlineBlock Relative mRight8">
               {data.workItemAccount.accountId === md.global.Account.accountId ? (
                 <div className="flexRow valignWrapper myAvatar">{_l('我')}</div>
               ) : (
@@ -398,7 +400,7 @@ export default function SheetWorkflow(props) {
   const [viewWorkflow, setViewWorkflow] = useState(null);
   const [actionVisible, setActionVisible] = useState(false);
   const [allowTaskRevokeBackNodeId, setAllowTaskRevokeBackNodeId] = useState(null);
-  const [archivedList, setArchivedList] = useState([]);
+  const [archivedList, setArchivedList] = useState<{ id: string; text: string }[]>([]);
   const [selecteArchived, setSelecteArchived] = useState({});
   const [filterVisible, setFilterVisible] = useState(false);
 
@@ -1081,10 +1083,10 @@ export default function SheetWorkflow(props) {
             ) : isMobile ? (
               <div className="flexColumn valignWrapper h100 withoutData">
                 <Icon className="Font70" icon="examination_approval_color" />
-                <div className="Font18 textDisabled mTop20">{_l('暂无审批流程')}</div>
+                <div className="Font18 textTertiary mTop20">{_l('暂无审批流程')}</div>
               </div>
             ) : (
-              <div className="mTop5 mLeft4 textDisabled Font13">{_l('暂无审批流程')}</div>
+              <div className="mTop5 mLeft4 textTertiary Font13">{_l('暂无审批流程')}</div>
             )}
           </div>
         </Wrap>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { match } from 'path-to-regexp';
 import styled from 'styled-components';
@@ -25,7 +25,7 @@ const HomeEntry = styled.div`
   }
 `;
 
-const MODULE_TO_TEXT = {
+const MODULE_TO_TEXT: Record<string, string> = {
   account: _l('个人账户'),
   admin: _l('组织管理'),
   user: _l('个人资料'),
@@ -52,10 +52,14 @@ const PAGE_HEADER_ROUTE = {
 // 报 TS2345。数组形态只有重复段（*x / {…}*）才会出现，这个 pattern 是两个普通
 // 段，写清楚实际形状比在调用处 String() 强转诚实。
 const fn = match<{ roleType: string; projectId: string }>('/admin/:roleType/:projectId', { decode: false });
-export default class NetManageHeader extends Component<any, any> {
-  static propTypes = {};
+export interface NetManageHeaderState {
+  indexSideVisible: boolean;
+}
+
+export default class NetManageHeader extends Component<any, NetManageHeaderState> {
+  static override propTypes = {};
   static defaultProps = {};
-  state = {
+  override state = {
     indexSideVisible: false,
   };
 
@@ -71,7 +75,7 @@ export default class NetManageHeader extends Component<any, any> {
     if (_.includes(PAGE_HEADER_ROUTE.certification, path)) return 'certification';
     return '';
   };
-  render() {
+  override render() {
     const text = MODULE_TO_TEXT[this.getModule()];
     return (
       <div className="netManageHeaderWrap">

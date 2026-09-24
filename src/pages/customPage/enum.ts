@@ -37,7 +37,7 @@ export const widgets = {
   },
 };
 
-export const containerWidgets = {
+export const containerWidgets: Record<string, { icon: string; name: string }> = {
   tabs: {
     icon: 'tab_page',
     name: _l('标签页'),

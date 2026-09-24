@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { TinyColor } from '@ctrl/tinycolor';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -85,7 +85,7 @@ export default class CustomColor extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getColorSettings();
   }
 
@@ -115,7 +115,7 @@ export default class CustomColor extends Component<any, any> {
     });
   };
 
-  setColorSetting = (key, value, group: string) => {
+  setColorSetting = (key: string, value, group: string) => {
     const { projectId } = this.props;
     const { mdProjectColorIndex } = this.state;
     projectAjax
@@ -157,7 +157,7 @@ export default class CustomColor extends Component<any, any> {
     this.setState({ customChartDialog: { visible: false, data: null, editable: false, id: null } });
   };
 
-  selected = (item, key) => {
+  selected = (item, key: string) => {
     const { system_color, custom_color } = this.state;
 
     if (!item.enable && this.isMax()) {
@@ -265,6 +265,7 @@ export default class CustomColor extends Component<any, any> {
         {list.map((item, index: number) => {
           return (
             <ChartColorSetting
+              key={index}
               name={item.name}
               editable={editable}
               selected={item.enable}
@@ -320,7 +321,7 @@ export default class CustomColor extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { system_color, custom_color, system_char, custom_char, customChartDialog } = this.state;
 
     return (

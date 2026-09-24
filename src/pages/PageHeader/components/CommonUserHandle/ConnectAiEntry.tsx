@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -46,7 +46,7 @@ export default function ConnectAiEntry({ projectId }: { projectId?: string; [key
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [initialPersonalTokens, setInitialPersonalTokens] = useState(null);
-  const ajaxRef = useRef(null);
+  const ajaxRef = useRef<ApiResult | null>(null);
 
   useEffect(() => {
     return () => {

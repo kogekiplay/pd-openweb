@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSetState } from 'react-use';
 import styled from 'styled-components';
 import { Dialog, FunctionWrap, Input } from 'ming-ui';
@@ -37,27 +37,27 @@ function EditContactInfo(props) {
   const onValidate = () => {
     if (!data.contactName) {
       alert(_l('请输入联系人姓名'), 3);
-      return;
+      return undefined;
     }
 
     if (!data.contactIdNumber) {
       alert(_l('请输入联系人身份证号'), 3);
-      return;
+      return undefined;
     }
 
     if (!/(^\d{15}$)|(^\d{17}(\d|X|x)$)/.test(data.contactIdNumber)) {
       alert(_l('请输入有效的身份证号码'), 3);
-      return;
+      return undefined;
     }
 
     if (!data.contactMobile) {
       alert(_l('请输入联系人手机号'), 3);
-      return;
+      return undefined;
     }
 
     if (!/^1[2-9]\d{9}$/.test(data.contactMobile)) {
       alert(_l('请输入有效的手机号'), 3);
-      return;
+      return undefined;
     }
 
     return true;

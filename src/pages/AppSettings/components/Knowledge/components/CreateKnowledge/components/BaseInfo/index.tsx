@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Icon } from 'ming-ui';
 import { useAutoFocus } from '../../../../core/hooks';
 import { useCreateKnowledgeStore } from '../../index';
@@ -15,11 +15,11 @@ const BaseInfo = () => {
 
   useAutoFocus(inputRef);
 
-  const handleSetKnowledgeName = value => {
+  const handleSetKnowledgeName = (value: string) => {
     setKnowledgeName(dispatch, { name: value });
   };
 
-  const handleSetKnowledgeDesc = value => {
+  const handleSetKnowledgeDesc = (value: string) => {
     setKnowledgeDesc(dispatch, { desc: value });
   };
 

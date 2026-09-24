@@ -1,4 +1,4 @@
-export const FORMULA = {
+export const FORMULA: Record<string, { fnName: string; type: number }> = {
   CUSTOM: {
     fnName: _l('自定义'),
     type: 1,

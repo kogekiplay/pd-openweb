@@ -126,6 +126,7 @@ export function registerNodeItemEvent(element, args) {
         } else {
           handlePreview(item, evt);
         }
+        return undefined;
       },
     },
     '.nodeItem',
@@ -153,7 +154,7 @@ export function registerNodeItemEvent(element, args) {
     {
       blur(evt) {
         if (updating) {
-          return;
+          return undefined;
         }
 
         updating = true;
@@ -161,7 +162,7 @@ export function registerNodeItemEvent(element, args) {
         const item = findItemById($target.closest('.nodeItem').attr('data-id'));
 
         if (!item) {
-          return;
+          return undefined;
         }
 
         const originName = item.name;
@@ -216,6 +217,7 @@ export function registerNodeItemEvent(element, args) {
           showListName();
           updating = false;
         }
+        return undefined;
       },
       keydown(evt) {
         if (evt.keyCode === 13 /* Enter*/) {
@@ -258,6 +260,7 @@ export function registerNodeItemEvent(element, args) {
     if ($target.is('.rightMenu,.noContextMenu') || $target.closest('.rightMenu,.noContextMenu').length) {
       return false;
     }
+    return undefined;
   };
 }
 

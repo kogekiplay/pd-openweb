@@ -12,7 +12,9 @@ import EditableCellCon from '../EditableCellCon';
 
 const ClickAwayable = ClickAway;
 export default class Text extends React.Component<any, any> {
-  static propTypes = {
+  declare isSelecting: boolean | undefined;
+
+  static override propTypes = {
     className: PropTypes.string,
     singleLine: PropTypes.bool,
     style: PropTypes.shape({}),
@@ -34,7 +36,7 @@ export default class Text extends React.Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.cell.value !== prevProps.cell.value) {
         this.setState({
@@ -178,7 +180,7 @@ export default class Text extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       className,
       style,
@@ -208,8 +210,8 @@ export default class Text extends React.Component<any, any> {
             minHeight: rowHeight,
           }}
         >
-          {value.map(organize => (
-            <span className="cellDepartment" style={{ maxWidth: style.width - 20 }}>
+          {value.map((organize, index) => (
+            <span key={index} className="cellDepartment" style={{ maxWidth: style.width - 20 }}>
               <div className="flexRow">
                 {organize.disabled ? (
                   <DisabledDepartmentAndRoleName
@@ -268,8 +270,8 @@ export default class Text extends React.Component<any, any> {
           >
             {!!value && (
               <div className={cx('cellDepartments cellControl', { singleLine })}>
-                {value.map(organize => (
-                  <span className="cellDepartment" style={{ maxWidth: style.width - 20 }}>
+                {value.map((organize, index) => (
+                  <span key={index} className="cellDepartment" style={{ maxWidth: style.width - 20 }}>
                     <div className="flexRow">
                       {organize.disabled ? (
                         <DisabledDepartmentAndRoleName

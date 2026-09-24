@@ -7,7 +7,7 @@ import DisplayControl from './DisplayControl';
 import TitleControl from './TitleControl';
 import type { FormControl } from 'src/utils/controlTypes';
 
-const isVisible = control => {
+const isVisible = (control: FormControl) => {
   let { fieldPermission = '111' } = control;
   const [visible] = fieldPermission.split('');
 
@@ -18,7 +18,7 @@ const isVisible = control => {
   return true;
 };
 
-const excludeTitleControls = controls => controls.filter((item: FormControl) => item.attribute !== 1);
+const excludeTitleControls = (controls: FormControl[]) => controls.filter((item: FormControl) => item.attribute !== 1);
 
 // 默认取标题控件 和 前三个控件
 const getDefaultShowControls = controls => {

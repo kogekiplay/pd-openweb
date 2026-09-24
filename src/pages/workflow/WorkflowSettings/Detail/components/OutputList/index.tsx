@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -223,7 +223,7 @@ export default class OutputList extends Component<any, any> {
     action: string,
     value,
     { controlId, type, dataSource }: { controlId?: string; [key: string]: any },
-    isBlur?,
+    isBlur?: boolean | undefined,
   ) {
     const { outputType, data, updateSource } = this.props;
     const { outputs } = data;
@@ -308,7 +308,7 @@ export default class OutputList extends Component<any, any> {
   /**
    * 生成普通数组的对象
    */
-  generationOrdinaryArrayObject(dataSource) {
+  generationOrdinaryArrayObject(dataSource: string | undefined) {
     return {
       controlId: uuidv4(),
       type: 2,
@@ -318,7 +318,7 @@ export default class OutputList extends Component<any, any> {
     };
   }
 
-  render() {
+  override render() {
     const { data, updateSource, outputType } = this.props;
 
     return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { LoadDiv, UserHead } from 'ming-ui';
 import chatbotAjax from 'src/pages/workflow/apiV2/chatbot';
@@ -75,8 +75,8 @@ function NotificationCard({ chatbotId, conversationId, functionData = {} }) {
       <div className="data-item">
         <div className="data-item-label">{_l('通知人')}</div>
         <div className="data-item-value users">
-          {data.users.map(user => (
-            <div className="user">
+          {data.users.map((user, index) => (
+            <div key={index} className="user">
               <UserHead
                 user={{
                   userHead: user.avatarSmall || user.avatar,

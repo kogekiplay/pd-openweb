@@ -170,7 +170,7 @@ function renderFilterItemTexts(filters = [], disabled = false, worksheetControls
     <React.Fragment>
       {filterItemTexts.map((item, index) => {
         return (
-          <span className={cx({ textDisabled: disabled })}>
+          <span key={index} className={cx({ textDisabled: disabled })}>
             {filterItemTexts.length > 1 ? <span className="textTertiary mRight2">(</span> : null}
             {(item.groupFilters || []).map((child, childIdx) => {
               return renderItemText(child, childIdx);
@@ -194,18 +194,18 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.clearColumnRules();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { initGlobalRuleInfo, initWorksheetRuleList } = this.props;
 
     initGlobalRuleInfo(this.props);
     initWorksheetRuleList(this.props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { initGlobalRuleInfo, initWorksheetRuleList, ruleList, saveIndex } = this.props;
 
@@ -310,7 +310,7 @@ class WidgetConfigRuleItem extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       columnRulesListData = [],
       addColumnRules,

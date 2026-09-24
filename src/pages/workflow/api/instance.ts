@@ -11,7 +11,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  count: function (args, options) {
+  count: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/count';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancecount', args, $.extend(base, options));
@@ -24,7 +24,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  forward: function (args, options?) {
+  forward: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/forward';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instanceforward', JSON.stringify(args), $.extend(base, options));
@@ -36,7 +36,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getArchivedList: function (args?, options?) {
+  getArchivedList: function (args?: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/getArchivedList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetArchivedList', args, $.extend(base, options));
@@ -49,7 +49,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getHistoryDetail: function (args, options) {
+  getHistoryDetail: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/getHistoryDetail';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetHistoryDetail', args, $.extend(base, options));
@@ -71,7 +71,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getHistoryList: function (args, options) {
+  getHistoryList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/getHistoryList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetHistoryList', args, $.extend(base, options));
@@ -84,7 +84,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getInstance: function (args, options?) {
+  getInstance: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/getInstance';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetInstance', args, $.extend(base, options));
@@ -98,7 +98,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getOperationDetail: function (args, options) {
+  getOperationDetail: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/getOperationDetail';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetOperationDetail', args, $.extend(base, options));
@@ -111,7 +111,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  getOperationHistoryList: function (args, options) {
+  getOperationHistoryList: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/getOperationHistoryList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetOperationHistoryList', args, $.extend(base, options));
@@ -124,7 +124,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  operation: function (args, options) {
+  operation: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/operation';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instanceoperation', JSON.stringify(args), $.extend(base, options));
@@ -137,7 +137,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  overrule: function (args, options) {
+  overrule: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/overrule';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instanceoverrule', JSON.stringify(args), $.extend(base, options));
@@ -150,7 +150,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  pass: function (args, options) {
+  pass: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/pass';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancepass', JSON.stringify(args), $.extend(base, options));
@@ -163,7 +163,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  restart: function (args, options) {
+  restart: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/restart';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancerestart', JSON.stringify(args), $.extend(base, options));
@@ -176,7 +176,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  revoke: function (args, options) {
+  revoke: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/revoke';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancerevoke', JSON.stringify(args), $.extend(base, options));
@@ -189,7 +189,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  signTask: function (args, options) {
+  signTask: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/sign';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancesign', JSON.stringify(args), $.extend(base, options));
@@ -202,7 +202,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  submit: function (args, options) {
+  submit: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/submit';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancesubmit', JSON.stringify(args), $.extend(base, options));
@@ -215,7 +215,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  taskRevoke: function (args, options?) {
+  taskRevoke: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/taskRevoke';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancetaskRevoke', JSON.stringify(args), $.extend(base, options));
@@ -228,7 +228,7 @@ const instance = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  transfer: function (args, options?) {
+  transfer: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/instance/transfer';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancetransfer', JSON.stringify(args), $.extend(base, options));

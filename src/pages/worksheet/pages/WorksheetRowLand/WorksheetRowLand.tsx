@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -29,7 +29,7 @@ class WorksheetRowLand extends Component<any, any> {
       loadingSwitchPermit: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { loading, appId, worksheetId, rowId } = this.state;
     worksheetAjax
       .getSwitchPermit({
@@ -51,7 +51,7 @@ class WorksheetRowLand extends Component<any, any> {
       });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const params = prevProps.match.params;
       const nextParams = this.props.match.params;
@@ -78,7 +78,7 @@ class WorksheetRowLand extends Component<any, any> {
       }
     });
   }
-  render() {
+  override render() {
     const { loading, worksheetId, rowId, appId, viewId, loadingSwitchPermit, landRightComp } = this.state;
     const { appPkg } = this.props;
     const { fixed, permissionType, pcDisplay, projectId } = appPkg;

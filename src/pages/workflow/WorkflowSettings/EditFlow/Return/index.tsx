@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Icon } from 'ming-ui';
 import { SimplifyNode } from '../components';
 
 export default class Return extends Component<any, any> {
-  render() {
+  override render() {
     const { item } = this.props;
 
     return (

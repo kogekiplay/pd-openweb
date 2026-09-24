@@ -100,7 +100,7 @@ export const GLOBAL_SEARCH_LIST_SETTING = {
 
 export const NEED_ALL_ORG_TAB = ['user', 'group', 'kcnode', 'task'];
 
-export const SEARCH_APP_SEARCH_TYPE = {
+export const SEARCH_APP_SEARCH_TYPE: Record<string, number> = {
   app: 7,
   record: 8,
   all: 0,

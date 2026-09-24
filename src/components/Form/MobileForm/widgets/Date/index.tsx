@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useEffect, useMemo, useState } from 'react';
+import { Fragment, memo, useEffect, useMemo, useState } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import PropTypes from 'prop-types';

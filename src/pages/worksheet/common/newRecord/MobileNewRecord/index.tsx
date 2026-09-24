@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { ActionSheet, Button } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -93,7 +93,7 @@ function NewRecord(props) {
   } = props;
   const { appId, worksheetId, worksheetInfo = {} } = rest;
   const newRecordContent = useRef(null);
-  const cache = useRef({});
+  const cache = useRef<{ formChanged?: boolean | undefined }>({});
   const photoRecognitionRef = useRef(null);
   const mingoCreationRef = useRef(null);
   const compositeInputRef = useRef(null);
@@ -102,7 +102,7 @@ function NewRecord(props) {
   const propsRef = useRef(props);
 
   const [loading, setLoading] = useState<boolean | undefined>();
-  const [autoFill, setAutoFill] = useState(null);
+  const [autoFill, setAutoFill] = useState<boolean | null | undefined>(null);
   // worksheetInfo 异步加载后 worksheetId 可能从空值变为真实值；固定 layerId，避免 Hook 将其误判为旧层卸载并触发 history.go。
   const [historyLayerId] = useState(
     () => `newRecord-${worksheetId || worksheetInfo.worksheetId || _.uniqueId('unknown-')}`,

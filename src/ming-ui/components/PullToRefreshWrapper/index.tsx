@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { PullToRefresh } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import './index.less';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useDrop } from 'react-dnd';
 import cx from 'classnames';
 import { get } from 'lodash';
@@ -15,7 +14,7 @@ export default function LeftBoundary(props) {
       const $wrap = document.querySelector('.hierarchyViewWrap');
       return (get(data, 'path') || []).length > 1 && $wrap.scrollLeft === 0;
     },
-    drop(item, monitor) {
+    drop(_item, monitor) {
       const data = monitor.getItem();
       if (!data) return;
       if (data.path.length > 1) {

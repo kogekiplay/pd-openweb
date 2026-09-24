@@ -33,7 +33,7 @@ export default class AccountChart extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -222,7 +222,7 @@ export default class AccountChart extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { loading, isEnterprise, authCount, dialog } = this.state;
     const canCreateProject = md.global.Account.superAdmin || md.global.SysSettings.enableCreateProject;
 

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import { Checkbox, Icon, PriceTip } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';

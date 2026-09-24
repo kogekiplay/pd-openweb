@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Dialog } from 'ming-ui';
@@ -52,7 +51,7 @@ const dealDataPermission = props => {
         break;
     }
 
-    item.eventPermissions = eventPermissions.replace(/x/g, (a, b) => {
+    item.eventPermissions = eventPermissions.replace(/x/g, (_a, b) => {
       return (item.fieldPermission || '111')[b];
     });
   }
@@ -287,7 +286,7 @@ const handleUpdateSearchResult = async props => {
                 })
               : searchResult;
 
-            const newValue = [];
+            const newValue: { rowid: string; allowedit: boolean; addTime: number }[] = [];
 
             if (subResult.length) {
               subResult.forEach(item => {

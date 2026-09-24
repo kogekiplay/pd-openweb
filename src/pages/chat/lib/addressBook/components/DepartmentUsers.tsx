@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -85,7 +85,7 @@ export default class DepartmentUsers extends Component<any, any> {
     this.state = { showDetail: props.selectedAccountId ? true : false, selectedAccountId: props.selectedAccountId };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.groupId, this.props.groupId)) {
         this.setState({
@@ -114,7 +114,7 @@ export default class DepartmentUsers extends Component<any, any> {
       }
     }
   };
-  render() {
+  override render() {
     const { usersLoading, groupList = [], allCount, groupName } = this.props;
     let { showDetail, selectedAccountId } = this.state;
     return (

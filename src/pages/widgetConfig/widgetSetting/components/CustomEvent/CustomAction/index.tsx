@@ -1,4 +1,3 @@
-import React from 'react';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import { ACTION_VALUE_ENUM } from '../config';
 import ActivateTab from './actionTypes/ActivateTab';
@@ -60,6 +59,7 @@ const CustomActionConfig = props => {
     case ACTION_VALUE_ENUM.SEARCH_WORKSHEET:
       return <SearchWorksheet {...props} />;
   }
+  return undefined;
 };
 
 export default props => functionWrap(CustomActionConfig, { ...props });

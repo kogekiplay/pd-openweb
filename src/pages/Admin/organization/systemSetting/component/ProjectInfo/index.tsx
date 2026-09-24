@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import CloseNet from '../CloseNet';
 import CommonInfo from '../CommonInfo';
 import PositionInfo from '../PositionInfo';
@@ -32,7 +32,7 @@ export default class ProjectInfo extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { changeTab } = this.props;
     const { level } = this.state;
 
@@ -49,5 +49,6 @@ export default class ProjectInfo extends Component<any, any> {
       case 5:
         return <PositionInfo setLevel={this.setLevel} />;
     }
+    return undefined;
   }
 }

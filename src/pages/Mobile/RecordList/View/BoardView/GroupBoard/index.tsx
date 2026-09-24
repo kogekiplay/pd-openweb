@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { ScrollView } from 'ming-ui';
@@ -57,7 +57,7 @@ const GroupBoard = props => {
     return (
       <Fragment>
         {viewData.map(item => {
-          if (item.key === '-1' && !hasNoFirstGroup) return;
+          if (item.key === '-1' && !hasNoFirstGroup) return undefined;
           return (
             <div key={item.key} className="groupHeaderItemWrap">
               <GroupByControl
@@ -81,7 +81,7 @@ const GroupBoard = props => {
 
   const renderGroupBoardContent = () => {
     return groupOptions.map((opt, optIndex) => {
-      if (!_.has(groupViewData, opt.key)) return;
+      if (!_.has(groupViewData, opt.key)) return undefined;
       const groupData = groupViewData[opt.key] || {};
       const allowOperation = canEditForGroupControl({
         allowAdd: worksheetInfo?.allowAdd,
@@ -109,7 +109,7 @@ const GroupBoard = props => {
           {openKeys.includes(opt.key) && (
             <div className="secondGroupRow" key={`secondGroupRow-${opt.key}`}>
               {firstGroupKeys.map((groupKey, groupIndex) => {
-                if (groupKey === '-1' && !hasNoFirstGroup) return;
+                if (groupKey === '-1' && !hasNoFirstGroup) return undefined;
                 return (
                   <SecondGroupItem
                     key={`secondGroupItem-${opt.key}-${optIndex}-${groupKey}-${groupIndex}`}

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -29,7 +29,7 @@ const DropdownWrap = styled.div`
 `;
 
 export default class Text extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     values: PropTypes.arrayOf(PropTypes.string),
     onChange: PropTypes.func,
@@ -45,7 +45,7 @@ export default class Text extends Component<any, any> {
     };
   }
 
-  onSearch = value => this.setState({ searchValue: value });
+  onSearch = (value: string) => this.setState({ searchValue: value });
 
   onChange = value => {
     this.props.onChange({ values: value });
@@ -90,7 +90,7 @@ export default class Text extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { searchValue, values } = this.state;
     const { disabled } = this.props;
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
 import { formatFileSize, getClassNameByExt } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
@@ -6,7 +6,15 @@ import Constant from '../../../utils/constant';
 import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
 
-export default class FileMessage extends Component<any, any> {
+export interface FileMessageState {
+  progress: number;
+  cancel: boolean;
+  cancelShow: boolean;
+}
+
+export default class FileMessage extends Component<any, FileMessageState> {
+  declare iconClassName: string;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -18,7 +26,7 @@ export default class FileMessage extends Component<any, any> {
     this.iconClassName = getClassNameByExt(RegExpValidator.getExtOfFileName((files || {}).name));
     this.uploader = null;
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { message } = this.props;
     const { files } = message.msg;
     const { aid } = files;
@@ -78,7 +86,7 @@ export default class FileMessage extends Component<any, any> {
       handleMessageFilePreview.call(this);
     }
   }
-  render() {
+  override render() {
     const { message } = this.props;
     const { files = {} } = message.msg;
     const { progress, cancel, cancelShow } = this.state;

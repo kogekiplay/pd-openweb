@@ -9,8 +9,46 @@ import MenuItem from 'ming-ui/components/MenuItem';
 import { NODE_OPERATOR_TYPE, NODE_STATUS, NODE_TYPE, NODE_VIEW_TYPE } from '../constant/enum';
 import UploadNewVersion from './UploadNewVersion';
 
-let KcAppMenu = class KcAppMenu extends React.Component<any, any> {
-  static propTypes = {
+/** 节点（文件夹 / 文件）来自接口；这里只列出菜单读到的字段，其余原样带着 */
+interface KcMenuNode {
+  /** NODE_TYPE */
+  type: number;
+  /** NODE_VIEW_TYPE */
+  viewType: number;
+  isStared?: boolean | undefined;
+  canEdit?: boolean | undefined;
+  isAdmin?: boolean | undefined;
+  canDownload?: boolean | undefined;
+  rootId?: string | undefined;
+  [key: string]: unknown;
+}
+
+interface KcAppMenuProps {
+  item: KcMenuNode;
+  /** 参数是 NODE_STATUS */
+  removeNode: (status: number) => void;
+  /** 第一个参数是 NODE_OPERATOR_TYPE；移动时非管理员限定在本根目录下 */
+  moveOrCopyClick: (type: number, rootId?: string | null) => void;
+  updateNodeName: (item: KcMenuNode) => void;
+  /** 上传新版本成功后的回调，原样交给 UploadNewVersion（参数是接口返回的新节点） */
+  updateNodeItem?: ((data: ApiPayload) => void) | undefined;
+  onShareNode: (item: KcMenuNode) => void;
+  onStarNode: (item: KcMenuNode) => void;
+  download: (item: KcMenuNode) => void;
+  permission?: number | undefined;
+  onAddLinkFile: (isEdit: boolean, item: KcMenuNode) => void;
+  isCreateUser?: boolean | undefined;
+  isList?: boolean | undefined;
+  onClickAway?: (() => void) | undefined;
+  /** 交给 Menu 的定位容器选择器 */
+  con?: string | undefined;
+  showDetail?: (() => void) | undefined;
+  // ClickAway.wrap 包出来的组件还收 onClickAwayExceptions 等
+  [key: string]: unknown;
+}
+
+let KcAppMenu = class KcAppMenu extends React.Component<KcAppMenuProps> {
+  static override propTypes = {
     item: PropTypes.object,
     removeNode: PropTypes.func,
     moveOrCopyClick: PropTypes.func,
@@ -23,7 +61,7 @@ let KcAppMenu = class KcAppMenu extends React.Component<any, any> {
     onAddLinkFile: PropTypes.func,
   };
 
-  render() {
+  override render() {
     const item = this.props.item;
     const isFolder = item.type === NODE_TYPE.FOLDER;
     const isUrl = item.viewType === NODE_VIEW_TYPE.LINK;

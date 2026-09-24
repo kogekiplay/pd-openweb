@@ -18,7 +18,7 @@ const MaxLineWrap = styled.div`
 
 // 摘要
 export default class Abstract extends React.Component<any, any> {
-  render() {
+  override render() {
     const { worksheetControls = [], advancedSetting = {}, handleChange } = this.props;
     const { abstract, maxlinenum = 3 } = advancedSetting;
     let abstractControls = filterAndFormatterControls({

@@ -43,11 +43,11 @@ let DiaActionTree = class DiaActionTree extends React.Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('.departmentTreeBox').addClass('actinNow');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('.departmentTreeBox').removeClass('actinNow');
   }
 
@@ -90,7 +90,7 @@ let DiaActionTree = class DiaActionTree extends React.Component<any, any> {
     });
   };
 
-  clearDepartmentCache = e => {
+  clearDepartmentCache = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     e.stopPropagation();
     const { departmentId, projectId } = this.props;
     this.props.closeAction();
@@ -168,7 +168,7 @@ let DiaActionTree = class DiaActionTree extends React.Component<any, any> {
     dispatch(disabledAndEnabledDepartments(departmentId, department.disabled, parentData.departmentId));
   };
 
-  render() {
+  override render() {
     const { item, hasDepartmentAuth, departmentId } = this.props;
 
     if (!hasDepartmentAuth) {

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Checkbox, Input } from 'antd';
 import cx from 'classnames';
 import { Icon } from 'ming-ui';
@@ -10,7 +10,7 @@ export default class XAxis extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { currentReport, onChangeDisplayValue, onChangeStyle } = this.props;
     const { reportType, displaySetup, style } = currentReport;
     const { xdisplay } = displaySetup;

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Input, Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -11,7 +11,7 @@ export class Count extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const {
       reportType,
       smallTitle,
@@ -90,8 +90,8 @@ export class Count extends Component<any, any> {
               {(isCalculateMode && yAxis.controlType === 10000001
                 ? normTypes.filter(n => ![6].includes(n.value))
                 : normTypes.filter(n => ![5, 6].includes(n.value))
-              ).map(item => (
-                <Select.Option className="selectOptionWrapper" value={item.value}>
+              ).map((item, index) => (
+                <Select.Option key={index} className="selectOptionWrapper" value={item.value}>
                   {item.value === 5 ? _l('计算') : item.alias || item.text}
                 </Select.Option>
               ))}
@@ -146,6 +146,7 @@ const getLocationTypes = locationType => {
     ];
     return columnLocationTypes;
   }
+  return undefined;
 };
 
 export const Location = ({ summary, locationType, onChangeSummary }) => {

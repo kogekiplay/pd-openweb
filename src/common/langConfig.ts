@@ -51,16 +51,16 @@ const config = [
 
 export default config;
 
-const APP_LANG_TO_SYSTEM_LANG = {
+const APP_LANG_TO_SYSTEM_LANG: Record<string, string> = {
   zh_hans: 'zh-Hans',
   zh_hant: 'zh-Hant',
 };
 
-const SYSTEM_LANG_TO_APP_LANG = {
+const SYSTEM_LANG_TO_APP_LANG: Record<string, string> = {
   'zh-Hans': 'zh_hans',
   'zh-Hant': 'zh_hant',
 };
 
 export const getSystemLangKey = lang => APP_LANG_TO_SYSTEM_LANG[lang] || lang;
 
-export const getAppLangCode = lang => SYSTEM_LANG_TO_APP_LANG[lang] || lang;
+export const getAppLangCode = (lang: string | null) => SYSTEM_LANG_TO_APP_LANG[lang] || lang;

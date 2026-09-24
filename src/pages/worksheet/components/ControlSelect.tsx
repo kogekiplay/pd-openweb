@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
@@ -39,7 +38,11 @@ const ControlIconItemCon = styled.div`
   }
 `;
 
-function ControlIconItem(props) {
+export interface ControlIconItemProps {
+  control?: FormControl | undefined;
+}
+
+function ControlIconItem(props: ControlIconItemProps) {
   const { control = {} } = props;
   const iconName = getIconByType(control.type);
   return (

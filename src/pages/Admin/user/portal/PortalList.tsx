@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -28,8 +28,14 @@ const getValue = (value, type: string) => {
   return value ? `${value} 23:59` : value;
 };
 
-export default class PortalList extends Component<any, any> {
-  constructor(props) {
+export interface PortalListProps {
+  projectId: string;
+}
+
+export default class PortalList extends Component<PortalListProps, any> {
+  declare dateInput: HTMLDivElement | null | undefined;
+
+  constructor(props: PortalListProps) {
     super(props);
     this.state = {
       list: null,
@@ -59,7 +65,7 @@ export default class PortalList extends Component<any, any> {
 
   postList = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     const { projectId } = this.props;
     projectAjax.getProjectLicenseSupportInfo({ projectId }).then(res => {
       this.setState(
@@ -203,7 +209,7 @@ export default class PortalList extends Component<any, any> {
   renderList() {
     const { list, loading } = this.state;
 
-    if (list === null) return;
+    if (list === null) return undefined;
 
     if (!list.length) {
       return (
@@ -309,7 +315,7 @@ export default class PortalList extends Component<any, any> {
     this.setState({ pageIndex: page }, this.getPortalList);
   };
 
-  render() {
+  override render() {
     const {
       loading,
       pageIndex,
@@ -391,12 +397,12 @@ export default class PortalList extends Component<any, any> {
               cancelAble
               onChange={(appId: string) => this.updateState({ appId })}
             />
-            {DATE_TYPE.map(item => {
+            {DATE_TYPE.map((item, index) => {
               const [startDateKey, endDateKey] = item.key;
               const startDate = this.state[startDateKey];
               const endDate = this.state[endDateKey];
               return (
-                <span className="InlineBlock mLeft12">
+                <span key={index} className="InlineBlock mLeft12">
                   <DatePicker.RangePicker
                     selectedValue={[startDate ? moment(startDate) : '', endDate ? moment(endDate) : '']}
                     onClear={() =>

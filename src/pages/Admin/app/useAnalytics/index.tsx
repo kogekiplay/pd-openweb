@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
@@ -26,7 +26,7 @@ export default class UseAnalytics extends Component<any, any> {
       currentTab: type || 'overview',
     };
   }
-  changeTab = item => {
+  changeTab = (item: { key: string; label: string }) => {
     const { match = {} } = this.props;
     const { params = {} } = match;
 
@@ -34,7 +34,7 @@ export default class UseAnalytics extends Component<any, any> {
     navigateTo(`/admin/analytics/${params.projectId}/${item.key}`);
   };
 
-  render() {
+  override render() {
     const { match = {} } = this.props;
     const { params = {} } = match;
     const { currentTab } = this.state;

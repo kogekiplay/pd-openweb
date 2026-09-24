@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -104,9 +104,9 @@ export const WorksheetField = props => {
   const renderItem = i => {
     return (
       <Fragment>
-        {(i.references || []).map(item => {
+        {(i.references || []).map((item, index) => {
           return (
-            <div className="referenceItem">
+            <div key={index} className="referenceItem">
               <div className="textSecondary overflow_ellipsis flexCenter">
                 <Icon icon="worksheet" className="Font16 mRight8" />
                 {_.get(item, 'parentName')}
@@ -143,9 +143,9 @@ export const WorksheetField = props => {
 const renderWorkflowItem = item => {
   return (
     <Fragment>
-      {(item.references || []).map(i => {
+      {(item.references || []).map((i, index) => {
         return (
-          <div className="referenceItem">
+          <div key={index} className="referenceItem">
             <div className="ruleContent">
               <div className="flex overflow_ellipsis textPrimary Bold">{i.parentName}</div>
               <div className="ruleStatus flexCenter justifyContentRight">
@@ -156,9 +156,10 @@ const renderWorkflowItem = item => {
                 <div className="mLeft6">{i.enabled ? _l('开启') : _l('关闭')}</div>
               </div>
             </div>
-            {(i.referenceItems || []).map(r => {
+            {(i.referenceItems || []).map((r, index) => {
               return (
                 <div
+                  key={index}
                   className="flexCenter overflow_ellipsis mTop8 pointer controlName"
                   onClick={() => window.open(pathCompletion(`/workflowedit/${i.parentId}/1/${r.type}/${r.id}`))}
                 >
@@ -228,9 +229,9 @@ export const WorksheetWorkflow = props => {
 const renderRuleItem = i => {
   return (
     <Fragment>
-      {(i.references || []).map(item => {
+      {(i.references || []).map((item, index) => {
         return (
-          <div className="referenceItem">
+          <div key={index} className="referenceItem">
             <div
               className="flex overflow_ellipsis Bold pointer hoverColorPrimary"
               onClick={() => window.open(pathCompletion(`/worksheet/formSet/edit/${item.parentId}/display`))}
@@ -288,11 +289,11 @@ export const WorksheetView = props => {
   const renderItem = i => {
     return (
       <Fragment>
-        {(i.references || []).map(item => {
+        {(i.references || []).map((item, index) => {
           const viewType = VIEW_DISPLAY_TYPE[item.type];
           const { color, icon } = _.find(VIEW_TYPE_ICON, v => v.id === viewType) || {};
           return (
-            <div className="referenceItem">
+            <div key={index} className="referenceItem">
               <div className="textSecondary overflow_ellipsis flexCenter">
                 <Icon icon="worksheet" className="Font16 mRight8" />
                 {item.parentName}

@@ -21,6 +21,9 @@ import './GlobalSearchAllContent.less';
 
 const ClickAwayable = ClickAway;
 export default class GlobalSearchAllContent extends Component<any, any> {
+  declare leftAjax: ApiResult | null | undefined;
+  declare rightAjax: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -43,7 +46,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.requestDebounce(this.props.searchKeyword);
     this.getFilterCount();
 
@@ -52,7 +55,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.searchKeyword !== prevProps.searchKeyword) {
         const { searchKeyword } = this.props;
@@ -252,7 +255,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
     } else if (type === 'record') {
       startType = _list[0] ? _list[0].type : '';
     } else {
-      let obj = _list.find((l, index: number) => index !== 0 && _list[index - 1].type === type);
+      let obj = _list.find((_l, index: number) => index !== 0 && _list[index - 1].type === type);
       startType = obj ? obj.type : '';
     }
 
@@ -288,8 +291,9 @@ export default class GlobalSearchAllContent extends Component<any, any> {
             title={{ width: '78px' }}
             paragraph={false}
           />
-          {[0, 1, 2, 3].map(() => (
+          {[0, 1, 2, 3].map((_item, index) => (
             <Skeleton
+              key={index}
               className="mBottom14"
               loading={true}
               active={true}
@@ -361,8 +365,9 @@ export default class GlobalSearchAllContent extends Component<any, any> {
             title={{ width: '78px' }}
             paragraph={false}
           />
-          {[0, 1, 2, 3].map(() => (
+          {[0, 1, 2, 3].map((_item, index) => (
             <Skeleton
+              key={index}
               className="mBottom20"
               loading={true}
               active={true}
@@ -405,6 +410,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
               searchScope === 'all'
                 ? [
                     <OrgSelect
+                      key={'0'}
                       style={{ marginLeft: '18px' }}
                       currentProjectId={appProjectId}
                       needAll={false}
@@ -440,6 +446,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
               searchScope === 'all'
                 ? [
                     <OrgSelect
+                      key={'0'}
                       style={{ marginLeft: '18px' }}
                       currentProjectId={recordProjectId}
                       needAll={false}
@@ -450,7 +457,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
                         })
                       }
                     />,
-                    <div className="mLeftAuto valignWrapper">
+                    <div key={'1'} className="mLeftAuto valignWrapper">
                       <FilterPosition
                         className="mRight20"
                         projectId={recordProjectId}
@@ -475,7 +482,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
                     </div>,
                   ]
                 : [
-                    <div className="mLeftAuto valignWrapper">
+                    <div key={'0'} className="mLeftAuto valignWrapper">
                       <FilterPosition
                         className="mRight20"
                         projectId={recordProjectId}
@@ -539,7 +546,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
     });
   }
 
-  searchScopeChange = type => {
+  searchScopeChange = (type: string) => {
     const { searchScope } = this.state;
 
     if (type === searchScope) return;
@@ -567,7 +574,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
     safeLocalStorageSetItem('GLOBAL_SEARCH_SCOPE_MING', type);
   };
 
-  render() {
+  override render() {
     const { searchScope, isApp } = this.state;
     return (
       <ClickAwayable id="GlobalSearchAllContentDiv" onClickAwayExceptions={['#GlobalSearch']}>

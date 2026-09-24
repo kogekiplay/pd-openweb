@@ -42,7 +42,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserAgreement: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUserAgreement: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ExternalPortal.UserAgreementResult> {
     return mdyAPI('ExternalPortal', 'GetUserAgreement', args, options);
   },
   /**
@@ -54,7 +57,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrivacyTerms: function (args: ApiArgs, options: ApiOptions = {}) {
+  getPrivacyTerms: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ExternalPortal.PrivacyTermsResult> {
     return mdyAPI('ExternalPortal', 'GetPrivacyTerms', args, options);
   },
   /**
@@ -91,7 +97,10 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getConfig: function (args: ApiArgs, options: ApiOptions = {}) {
+  getConfig: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.ExternalPortal.PortalDiscussConfig> {
     return mdyAPI('ExternalPortal', 'GetConfig', args, options);
   },
   /**
@@ -250,7 +259,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserActionLogs: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUserActionLogs: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.ReturnResult_ActionLogListWithTotalCountModel> {
     return mdyAPI('ExternalPortal', 'GetUserActionLogs', args, options);
   },
   /**
@@ -477,7 +489,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getViewShowControls: function (args: ApiArgs, options: ApiOptions = {}) {
+  getViewShowControls: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetViewShowControlsDto> {
     return mdyAPI('ExternalPortal', 'GetViewShowControls', args, options);
   },
   /**
@@ -501,7 +516,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getExAccountCategoryCount: function (args: ApiArgs, options: ApiOptions = {}) {
+  getExAccountCategoryCount: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetExAccountCategoryCountResult> {
     return mdyAPI('ExternalPortal', 'GetExAccountCategoryCount', args, options);
   },
   /**
@@ -584,7 +602,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUsers: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUsers: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetUsersDto> {
     return mdyAPI('ExternalPortal', 'GetUsers', args, options);
   },
   /**
@@ -625,7 +646,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppInfoByProject: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppInfoByProject: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetAppInfoByProjectDto> {
     return mdyAPI('ExternalPortal', 'GetAppInfoByProject', args, options);
   },
   /**

@@ -169,7 +169,7 @@ function DetailView(props) {
     }
   };
 
-  const changeGroupStatus = isOpen => {
+  const changeGroupStatus = (isOpen: boolean) => {
     setIsOpenGroup(isOpen);
     setGroupFilterWidth(
       isOpen ? cardWidth || window.localStorage.getItem(`detailGroupWidth_${viewId}`) || (coverCid ? 335 : 240) : 32,
@@ -183,7 +183,7 @@ function DetailView(props) {
     [],
   );
 
-  const handleKeyDown = e => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     const editingElements = document.getElementsByClassName('editingBar');
     const isEditing = !![...editingElements].filter(el => el.style.overflow === '').length;
 
@@ -235,9 +235,10 @@ function DetailView(props) {
       )
     ) : (
       <ScrollView id="detailNavList" className="flex" onScrollEnd={onScrollEnd}>
-        {detailViewRows.map(item => {
+        {detailViewRows.map((item, index) => {
           return (
             <DetailItem
+              key={index}
               {...props}
               itemData={item}
               currentRecordId={currentRecord.rowid}
@@ -253,7 +254,7 @@ function DetailView(props) {
 
                 setCurrentRecord(item);
               }}
-              onUpdateFn={(updated, item) => {
+              onUpdateFn={(_updated, item) => {
                 updateRow(item);
                 if (item.rowid === currentRecord.rowid) {
                   setFlag(+new Date());
@@ -364,7 +365,7 @@ function DetailView(props) {
               worksheetId={worksheetId}
               rules={worksheetInfo.rules}
               isWorksheetQuery={worksheetInfo.isWorksheetQuery}
-              updateSuccess={(ids, updated, data) => updateRow(data)}
+              updateSuccess={(_ids, _updated, data) => updateRow(data)}
               onDeleteSuccess={() => deleteRow(currentRecord.rowid)}
               handleAddSheetRow={data => {
                 updateRow(data);

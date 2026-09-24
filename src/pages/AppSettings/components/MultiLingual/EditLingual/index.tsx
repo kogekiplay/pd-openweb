@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Popover, Select } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -98,7 +98,7 @@ export default function Edit(props) {
     setSelectedKeys(selectedKeys);
   };
 
-  const handleChangeComparisonLangId = id => {
+  const handleChangeComparisonLangId = (id: string) => {
     setComparisonLangId(id);
     if (id) {
       appManagementApi

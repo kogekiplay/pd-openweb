@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import { func, string } from 'prop-types';
 import { FullScreenCurtain, Icon, Support } from 'ming-ui';
 import api from '../../../api/process';
@@ -69,7 +69,7 @@ const WORKFLOW_TRIGGER_MODE = [
   },
 ];
 export default class CreateFlow extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: string.isRequired,
     onBack: func,
     flowName: string,
@@ -91,7 +91,7 @@ export default class CreateFlow extends Component<any, any> {
 
   requestPending = false;
 
-  createFlow = startEventAppType => {
+  createFlow = (startEventAppType: number) => {
     const { appId } = this.props;
     const { flowName } = this.state;
     this.requestPending = true;
@@ -118,7 +118,7 @@ export default class CreateFlow extends Component<any, any> {
     focus ? $ele.classList.add('borderColorPrimary') : $ele.classList.remove('borderColorPrimary');
   };
 
-  render() {
+  override render() {
     const { flowName } = this.state;
     return (
       <FullScreenCurtain>

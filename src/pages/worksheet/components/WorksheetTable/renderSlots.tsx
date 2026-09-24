@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from 'react';
 
 /**
  * 把「render prop」从单元格 memo 比较的数据里摘出去。

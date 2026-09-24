@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { func, string } from 'prop-types';
@@ -7,7 +7,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import appGroupIntroPic from './images/appGroupIntro.gif';
 
 let AppGroupIntro = class AppGroupIntro extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: string,
     addAppGroup: func,
     onClose: func,
@@ -16,21 +16,21 @@ let AppGroupIntro = class AppGroupIntro extends Component<any, any> {
     addAppGroup: _.noop,
     onClose: _.noop,
   };
-  state = {};
+  override state = {};
 
-  componentDidMount() {
+  override componentDidMount() {
     document.body.addEventListener('keydown', this.closeWhenPressEsc);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     document.body && document.body.removeEventListener('keydown', this.closeWhenPressEsc);
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     return this.props.className !== nextProps.className;
   }
 
-  closeWhenPressEsc = e => {
+  closeWhenPressEsc = (e: KeyboardEvent) => {
     if (e.key === 'Escape' || e.keyCode === 27) {
       this.props.onClose();
     }
@@ -40,7 +40,7 @@ let AppGroupIntro = class AppGroupIntro extends Component<any, any> {
     this.props.onClose();
   };
 
-  render() {
+  override render() {
     const { addAppGroup, className } = this.props;
     return (
       <div className={cx('appGroupIntro', className)}>

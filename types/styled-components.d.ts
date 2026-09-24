@@ -54,9 +54,15 @@ declare module 'styled-components' {
     <P>(strings: TemplateStringsArray, ...interpolations: any[]): StyledResult;
   }
 
-  interface StyledInterface {
+  // 【标签名逐个列出，不用 [tagName: string] 索引签名】键取自 React 的 JSX.IntrinsicElements，
+  // 即 styled.xxx 真正能用的 HTML / SVG 标签全集。原先的索引签名在终点配置下是系统性的噪声源：
+  // noPropertyAccessFromIndexSignature 让每个 styled.div 报 TS4111（约 2800 条），
+  // noUncheckedIndexedAccess 让它变成 StyledTemplate | undefined、一调用就报 TS2349（2823 条）。
+  // 列出来之后这两类都没了，拼错的标签名（styled.dvi）也第一次会被抓住。
+  type StyledTags = { readonly [Tag in keyof import('react').JSX.IntrinsicElements]: StyledTemplate };
+
+  interface StyledInterface extends StyledTags {
     (component: any): StyledTemplate;
-    [tagName: string]: StyledTemplate;
   }
 
   const styled: StyledInterface;

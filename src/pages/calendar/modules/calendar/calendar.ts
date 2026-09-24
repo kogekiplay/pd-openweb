@@ -26,8 +26,6 @@ import {
   getDate as fcGetDate,
   getViewName as fcGetViewName,
   refetchEvents as fcRefetchEvents,
-  renderCalendar as fcRender,
-  getCalendar,
   toV2View,
   toV7View,
 } from './fcInstance';
@@ -49,15 +47,6 @@ interface FcEvent {
   title?: string;
   start?: any;
   end?: any;
-  [key: string]: any;
-}
-
-/** v3 回调里的 element 是 jQuery 包装对象；本仓没装 @types/jquery，写出用到的那几个方法 */
-interface JQueryLike {
-  find(selector: string): JQueryLike;
-  addClass(cls: string): JQueryLike;
-  removeClass(cls: string): JQueryLike;
-  attr(...args: any[]): any;
   [key: string]: any;
 }
 
@@ -454,7 +443,7 @@ Calendar.Method = {
     }
 
     var $container = $('#container');
-    var hoverTitleTimer;
+    var hoverTitleTimer: NodeJS.Timeout | undefined;
 
     // 鼠标经过提示双击创建
     $container.on(
@@ -732,6 +721,7 @@ Calendar.Method = {
         event.stopPropagation();
         return false;
       }
+      return undefined;
     });
   },
 
@@ -876,6 +866,7 @@ Calendar.Method = {
         return '#DADADA';
       }
     }
+    return undefined;
   },
 
   // 离开颜色
@@ -921,10 +912,11 @@ Calendar.Method = {
         return '#E6E6E6';
       }
     }
+    return undefined;
   },
 
   // 0 选中状态 1 离开状态
-  changeEventColor: function (event, jsEvent, type) {
+  changeEventColor: function (_event, jsEvent, type) {
     if (jsEvent.currentTarget == document) return;
     if (!$(jsEvent.currentTarget).hasClass('notAllDayOver')) {
       var rgbColor = $(jsEvent.currentTarget).css('background-color');
@@ -1064,6 +1056,7 @@ Calendar.Method = {
       default:
         break;
     }
+    return undefined;
   },
 };
 
@@ -1105,6 +1098,7 @@ Calendar.Event = function () {
           );
         },
       });
+      return undefined;
     })
     .on('click', '#calendarListMore', function (this: HTMLElement) {
       var startDate2 = $(this).attr('queryend');

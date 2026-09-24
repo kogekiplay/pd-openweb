@@ -15,7 +15,7 @@ export default class Card extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     return (
       !_.isEqual(this.props.item.id, nextProps.item.id) ||
       this.props.approveChecked !== nextProps.approveChecked ||
@@ -228,8 +228,8 @@ export default class Card extends Component<any, any> {
     const workItems = (workItem?.workId ? [workItem] : []).filter(
       item => _.includes([3, 4], item.type) && item.operationTime,
     );
-    const timeConsuming = [];
-    const endTimeConsuming = [];
+    const timeConsuming: number[] = [];
+    const endTimeConsuming: number[] = [];
 
     if (!workItems.length) return null;
 
@@ -371,7 +371,7 @@ export default class Card extends Component<any, any> {
       </div>
     );
   }
-  renderControl(item) {
+  renderControl(item: FormControl) {
     const { controls }: { controls: FormControl[]; [key: string]: any } = this.props.item;
     return (
       <div key={item.controlId} className={cx('controlWrapper flexColumn mTop10', { flex: controls.length <= 1 })}>
@@ -388,7 +388,7 @@ export default class Card extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { onClick, approveChecked } = this.props;
     return (
       <div className="cardWrapper pointer" onClick={onClick}>

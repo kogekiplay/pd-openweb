@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -18,13 +18,13 @@ const recordObj = {
   value: 'rowid',
 };
 
-const handleEnumText = {
+const handleEnumText: Record<number, string> = {
   1: _l('跳过'),
   2: _l('覆盖'),
   3: _l('仅更新'),
 };
 export default class ConfigControl extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     appId: PropTypes.string,
     worksheetId: PropTypes.string,
     isFromRelateRecord: PropTypes.bool,
@@ -107,7 +107,7 @@ export default class ConfigControl extends Component<any, any> {
   cacheSource = null;
   hasRecordId = {};
 
-  componentDidMount() {
+  override componentDidMount() {
     const { appId, worksheetId } = this.props;
     this.getWorksheetInfo({ appId, worksheetId });
   }
@@ -134,8 +134,9 @@ export default class ConfigControl extends Component<any, any> {
       const { worksheetId, name } = data;
       const { worksheetControls, controlMapping } = this.state;
 
-      // 关联表字段
-      const controls = data.template.controls
+      // 关联表字段（下面还会在最前面插一项「记录ID」，它没有 attribute）
+      const controls: { text?: string | undefined; value?: string | undefined; attribute?: number | undefined; label?: string }[] =
+        data.template.controls
         .filter((item: FormControl) => _.includes([2, 3, 4, 5, 7, 32, 33], item.type))
         .map(item => {
           return {
@@ -767,7 +768,7 @@ export default class ConfigControl extends Component<any, any> {
       { text: _l('覆盖'), value: 2 },
       { text: _l('仅更新，不新增记录'), value: 3 },
     ];
-    const ERROR_SKIP = {
+    const ERROR_SKIP: Record<number, { text: string; desc: string }> = {
       1: { text: _l('必填'), desc: _l('为空') },
       2: { text: _l('数值'), desc: _l('格式错误') },
       3: { text: _l('金额'), desc: _l('格式错误') },
@@ -821,7 +822,7 @@ export default class ConfigControl extends Component<any, any> {
                   multipleHideDropdownNav
                   maxSelectNum={5}
                   filter
-                  onChange={(e, controlIds) => {
+                  onChange={(_e, controlIds) => {
                     this.setState({
                       repeatConfig: Object.assign({}, repeatConfig, {
                         controlIds,
@@ -1109,7 +1110,7 @@ export default class ConfigControl extends Component<any, any> {
       .join('、');
   }
 
-  render() {
+  override render() {
     const { onCancel, isCharge } = this.props;
     const {
       dropDownData,

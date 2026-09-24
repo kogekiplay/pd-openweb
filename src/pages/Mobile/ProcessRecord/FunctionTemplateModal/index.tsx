@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Button, Popup } from 'antd-mobile';
 import styled from 'styled-components';
@@ -89,7 +89,7 @@ class ModalWrap extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { visible, onSelect, onClose, onCustom, opinions = [], inputType } = this.props;
     const { searchValue, opinionList } = this.state;
 

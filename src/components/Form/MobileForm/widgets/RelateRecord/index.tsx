@@ -9,7 +9,9 @@ import RelateRecordCards from '../../components/RelateRecordCards';
 import type { RecordRow } from 'src/utils/controlTypes';
 
 export default class Widgets extends Component<any, any> {
-  static propTypes = {
+  declare isFromDefault: boolean | undefined;
+
+  static override propTypes = {
     // disabled: PropTypes.bool,
     appId: PropTypes.string, // 他表字段被关联表所在应用 id
     viewId: PropTypes.string, // 他表字段被关联表所在应用所在视图 id
@@ -45,7 +47,7 @@ export default class Widgets extends Component<any, any> {
     return parseInt(showtype, 10) === RELATE_RECORD_SHOW_TYPE.CARD;
   }
 
-  shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps) {
     if (!this.isCard) return true;
     if (nextProps.value === this.props.value) return true;
 
@@ -137,7 +139,7 @@ export default class Widgets extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { appId, flag, from, recordId, enumDefault, advancedSetting, formDisabled, instanceId, workId, projectId } =
       this.props;
     let { showtype = RELATE_RECORD_SHOW_TYPE.LIST } = advancedSetting; // 1 卡片 2 列表 3 下拉

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Button, Icon, RadioGroup, Support } from 'ming-ui';
@@ -100,7 +100,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
     });
   };
 
-  invite = (accounts, cb?) => {
+  invite = (accounts, cb?: (() => void) | undefined) => {
     const { projectId, onCancel, fromType } = this.props;
 
     InviteController.inviteUser({
@@ -214,7 +214,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
           onClick={() => {
             if (index !== 0) {
               this.setState({
-                list: this.state.list.filter((o, i) => i !== index),
+                list: this.state.list.filter((_o, i) => i !== index),
               });
             }
           }}
@@ -239,7 +239,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId, fromType, setDetailMode, showInviteRules } = this.props;
     const { selectType, list, loading, keywords, searchData, showDialogSettingInviteRules } = this.state;
 

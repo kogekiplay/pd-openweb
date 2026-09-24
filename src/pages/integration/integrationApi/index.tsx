@@ -20,15 +20,15 @@ export default class IntegrationApi extends React.Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     $('html').addClass('integrationApi');
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('integrationApi');
   }
 
-  render() {
+  override render() {
     const { match = {} } = this.props;
     const { params = {} } = match;
     const { apiId } = params;

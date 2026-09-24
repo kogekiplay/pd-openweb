@@ -12,7 +12,7 @@ const fieldReference = {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
-  initProcessFieldReference: function (args, options) {
+  initProcessFieldReference: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + '/fieldReference/initProcessFieldReference';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(

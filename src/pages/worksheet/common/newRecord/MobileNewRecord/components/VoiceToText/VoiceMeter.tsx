@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const bounce = keyframes`

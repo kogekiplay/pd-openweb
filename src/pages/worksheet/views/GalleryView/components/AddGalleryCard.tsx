@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import addRecord from 'worksheet/common/newRecord/addRecord';
 import { getDefaultValue } from 'src/pages/worksheet/components/GroupByControl.jsx';

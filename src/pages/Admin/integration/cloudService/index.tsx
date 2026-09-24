@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import _ from 'lodash';
 import apiKeyAjax from 'src/pages/Admin/api/cloudApi/apiKey';
 import { checkCertification } from 'src/components/checkCertification';

@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useCallback, useRef, useState } from 'react';
+import { Fragment, memo, useCallback, useRef, useState } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -146,7 +146,7 @@ const CheckboxWidgets = props => {
             'pLeft12 pRight12': enumDefault2 === 1,
           })}
           style={{
-            // 选项色配色交给 getOptionChipStyle（浅底 + 同色深字），见 src/utils/optionColor.ts
+            // 选项色配色交给 getOptionChipStyle（底 = 选的颜色，字色按对比度挑），见 src/utils/optionColor.ts
             ...(enumDefault2 === 1 ? getOptionChipStyle(item.color) : {}),
             maxWidth: noMaxWidth ? 'auto' : 140,
           }}
@@ -178,7 +178,7 @@ const CheckboxWidgets = props => {
     onSave(checkIds);
   };
 
-  const handleSelectAll = (options = [], isChecked?) => {
+  const handleSelectAll = (options = [], isChecked?: boolean | undefined) => {
     // 多选平铺, 多选选中则清空
     if (type === 10 && checktype !== '1' && isChecked) {
       onChange('');
@@ -285,7 +285,7 @@ const CheckboxWidgets = props => {
     );
   };
 
-  const dropdownContent = checkIds => {
+  const dropdownContent = (checkIds: string[]) => {
     let noDelOptions = options.filter(item => !item.isDeleted && !item.hide);
     const canAddOption = noDelOptions.length < MAX_OPTIONS_COUNT;
 

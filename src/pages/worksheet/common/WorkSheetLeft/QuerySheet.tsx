@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';
@@ -9,7 +9,9 @@ import WorkSheetItem from './WorkSheetItem';
 
 const ClickAwayable = ClickAway;
 export default class QuerySheet extends Component<any, any> {
-  static propTypes = {
+  declare searchSheet: _.DebouncedFunc<() => void>;
+
+  static override propTypes = {
     sheetActions: PropTypes.object,
   };
   constructor(props) {
@@ -22,9 +24,9 @@ export default class QuerySheet extends Component<any, any> {
     };
     this.searchSheet = _.debounce(this.getSearchData, 500);
   }
-  hideSearchList = function () {
+  hideSearchList = () => {
     this.setState({ listVisible: false });
-  }.bind(this);
+  };
   renderSheetList() {
     const { workSheetList } = this.state;
     return workSheetList.map(
@@ -48,7 +50,7 @@ export default class QuerySheet extends Component<any, any> {
         ),
     );
   }
-  getSearchData = function () {
+  getSearchData = () => {
     this.setState({ listVisible: !!this.state.keyWords, isLoading: true });
     sheetAjax.getWorksheets({ keyWords: this.state.keyWords }).then(data => {
       this.setState({
@@ -57,8 +59,8 @@ export default class QuerySheet extends Component<any, any> {
         isLoading: false,
       });
     });
-  }.bind(this);
-  render() {
+  };
+  override render() {
     const { workSheetList, isLoading, listVisible } = this.state;
     return (
       <div className="querySheet Relative">
@@ -130,7 +132,7 @@ export default class QuerySheet extends Component<any, any> {
               (workSheetList.filter(item => item.worksheets.length > 0).length > 0 ? (
                 <div className="sheetList">{this.renderSheetList()}</div>
               ) : (
-                <div className="empty textDisabled">{_l('无匹配的工作表')}</div>
+                <div className="empty textTertiary">{_l('无匹配的工作表')}</div>
               ))}
           </ClickAwayable>
         )}

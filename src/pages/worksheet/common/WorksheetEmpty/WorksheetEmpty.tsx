@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Trigger from '@rc-component/trigger';
@@ -19,8 +19,15 @@ const createWorksheetList = [
   { type: 'importExcel', icon: 'new_excel', createType: 'importExcel', name: _l('从Excel创建') },
 ];
 
-class WorksheetEmpty extends Component<any, any> {
-  static propTypes = {
+export interface WorksheetEmptyState {
+  createType: string;
+  flag: boolean;
+  dialogImportExcel?: boolean | undefined;
+  visible?: boolean | undefined;
+}
+
+class WorksheetEmpty extends Component<any, WorksheetEmptyState> {
+  static override propTypes = {
     dispatch: PropTypes.func,
   };
   constructor(props) {
@@ -104,8 +111,9 @@ class WorksheetEmpty extends Component<any, any> {
                 action={['click']}
                 popup={
                   <div className="createlist">
-                    {createWorksheetList.map(item => (
+                    {createWorksheetList.map((item, index) => (
                       <div
+                        key={index}
                         className="createWorksheetItem Hand"
                         onClick={() => {
                           if (item.createType === 'importExcel') {
@@ -203,7 +211,7 @@ class WorksheetEmpty extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { isValidAppSectionId } = this.props;
     return (
       <div className="worksheetEmpty noneData">

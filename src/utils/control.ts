@@ -153,9 +153,10 @@ export function formatFormulaDate({
   dot = 0,
 }: {
   value?: ControlValue;
-  unit?: string;
-  hideUnitStr?: boolean;
-  dot?: number;
+  // 调用方常把控件上的 unit / dot 原样转过来，没配就是 undefined —— 解构默认值照样生效
+  unit?: string | undefined;
+  hideUnitStr?: boolean | undefined;
+  dot?: number | undefined;
 }) {
   const isNegative = value < 0; // 处理负数
   value = toFixed(Math.floor(value * Math.pow(10, dot)) / Math.pow(10, dot), dot);
@@ -172,25 +173,25 @@ export function formatFormulaDate({
   const unitStr = unitType.text;
   // 逐级进位规则：12 月 = 1 年、30 天 = 1 月、24 时 = 1 天、60 分 = 1 时、60 秒 = 1 分
   // 年必须按 12 个月折算，否则与月的进位基数不自洽（如 120 月会算成 9 年 10 月）
-  const unitTimes: { [unit: number]: number } = {
-    6: 1, // 秒
-    5: 12 * 30 * 24 * 60 * 60, // 年
-    4: 30 * 24 * 60 * 60, // 月
-    3: 24 * 60 * 60, // 天
-    2: 60 * 60, // 时
-    1: 60, // 分
-  };
-  let allSeconds = Number(value) * unitTimes[Number(unit)];
-  const years = Math.floor(allSeconds / unitTimes[5]);
-  allSeconds -= years * unitTimes[5];
-  const months = Math.floor(allSeconds / unitTimes[4]);
-  allSeconds -= months * unitTimes[4];
-  const days = Math.floor(allSeconds / unitTimes[3]);
-  allSeconds -= days * unitTimes[3];
-  const hours = Math.floor(allSeconds / unitTimes[2]);
-  allSeconds -= hours * unitTimes[2];
-  const minutes = Math.floor(allSeconds / unitTimes[1]);
-  allSeconds -= minutes * unitTimes[1];
+  const MINUTE = 60;
+  const HOUR = 60 * MINUTE;
+  const DAY = 24 * HOUR;
+  const MONTH = 30 * DAY;
+  const YEAR = 12 * MONTH;
+  // 键是 UNIT_TYPE 的 value：6 秒 5 年 4 月 3 天 2 时 1 分
+  const unitTimes: { [unit: number]: number } = { 6: 1, 5: YEAR, 4: MONTH, 3: DAY, 2: HOUR, 1: MINUTE };
+  // 不认识的 unit 上面已经按 UNIT_TYPE 挡掉了，这里一定取得到；?? NaN 只是给类型看的
+  let allSeconds = Number(value) * (unitTimes[Number(unit)] ?? NaN);
+  const years = Math.floor(allSeconds / YEAR);
+  allSeconds -= years * YEAR;
+  const months = Math.floor(allSeconds / MONTH);
+  allSeconds -= months * MONTH;
+  const days = Math.floor(allSeconds / DAY);
+  allSeconds -= days * DAY;
+  const hours = Math.floor(allSeconds / HOUR);
+  allSeconds -= hours * HOUR;
+  const minutes = Math.floor(allSeconds / MINUTE);
+  allSeconds -= minutes * MINUTE;
   let result = [
     { value: years, unit: _l('年') },
     { value: months, unit: _l('月') },
@@ -667,7 +668,7 @@ export function formatControlValue(cell?: FormControl & { sourceControl?: FormCo
         );
       case 35: // CASCADER 级联
         const cascaderItems: { name?: string }[] = JSON.parse(value);
-        return _.isArray(cascaderItems) && cascaderItems.length ? cascaderItems[0].name : undefined;
+        return _.isArray(cascaderItems) && cascaderItems.length ? cascaderItems[0]?.name : undefined;
       case 29: // RELATESHEET 关联表
         // 【这里的类型故意是 unknown[] | false】非数组时那个 && 会算出 false，
         // 接着 .slice 抛 TypeError 由外层 catch 接住 —— 是既有行为，照搬。
@@ -752,7 +753,8 @@ export function wgs84togcj02(longitude: number | string, latitude: number | stri
   return [mgLng, mgLat];
 }
 
-export const getValueStyle = (data?: FormControl & { sourceControl?: FormControl; titleStyle?: string }) => {
+// sourceControl 本来就在 FormControl 上，这里只补 titleStyle
+export const getValueStyle = (data?: FormControl & { titleStyle?: string | undefined }) => {
   const item = Object.assign({}, data);
   let type = item.type;
   let { valuecolor = 'var(--color-text-primary)', valuesize = '0', valuestyle = '0000' } = item.advancedSetting || {};
@@ -873,7 +875,7 @@ export function getTitleTextFromControls(
   controls: FormControl[] = [],
   data?: RecordRow,
   titleSourceControlType?: number,
-  options: Record<string, ControlValue> = {},
+  options: RenderTextOptions = {},
 ) {
   let titleControl: FormControl = _.find(controls, control => control.attribute === 1) || {};
 
@@ -907,7 +909,7 @@ export function getTitleTextFromControls(
 export function getTitleTextFromRelateControl(
   control: FormControl = {},
   data?: RecordRow,
-  options: Record<string, ControlValue> = {},
+  options: RenderTextOptions = {},
 ) {
   let newTitleControlId = control.advancedSetting?.showtitleid;
 
@@ -951,7 +953,21 @@ export function getTitleTextFromRelateControl(
   return getTitleTextFromControls(relationControls, data, control.sourceControlType, options);
 }
 
-export function renderText(cell: FormControl, options: Record<string, ControlValue> = {}) {
+/** renderText 的第二个参数（取标题的两个函数原样往下传）。各开关默认都不开 */
+export interface RenderTextOptions {
+  /** 不带单位、前后缀（打印的「不显示单位」） */
+  noUnit?: boolean | undefined;
+  /** 数值不按千分位分隔 */
+  noSplit?: boolean | undefined;
+  /** 不走掩码，显示完整值 */
+  noMask?: boolean | undefined;
+  /** 日期不做时区换算（传进来的已经是换算过的值） */
+  doNotHandleTimeZone?: boolean | undefined;
+  /** 应用 id：取应用时区（window.timeZone_<appId>）和时区文案 */
+  appId?: string | undefined;
+}
+
+export function renderText(cell: FormControl, options: RenderTextOptions = {}) {
   try {
     if (!cell) {
       return '';
@@ -1656,7 +1672,8 @@ export const getSwitchItemNames = (
 
 function hexWithAlphaMixWhiteToHex(hex: string) {
   try {
-    let [r, g, b, a] = (hex.replace('#', '').match(/../g) || []).map((a: string) => parseInt(a, 16));
+    // 唯一的调用方（getButtonColor）只在 #rrggbbaa 时调它，四段一定都在；默认值只是给类型看的
+    let [r = 0, g = 0, b = 0, a = 255] = (hex.replace('#', '').match(/../g) || []).map((a: string) => parseInt(a, 16));
     a = a / 255;
     const finalR = Math.round(r * a + 255 * (1 - a));
     const finalG = Math.round(g * a + 255 * (1 - a));
@@ -1809,6 +1826,7 @@ export function checkTypeSupportForFunction(control: FormControl) {
     // 他表存储 30
     return checkTypeSupportForFunction({ ...control, type: control.sourceControlType });
   }
+  return undefined;
 }
 
 export function convertAiRecommendControlToControlData(
@@ -2077,7 +2095,7 @@ export function convertControlTypeToAiRecommendControlType(control?: FormControl
  * aiGeneratedControls 会被加入到字段列表里，但是别名是不可以重复的
  * 这个函数的目的就是处理 aiGeneratedControls 的 code 属性，当这个 别名在 existingControls 里存在时，自动在 code 后面加上 _1, _2, _3, ...
  */
-export function changeCodeOfAIGenControl(existingControls: FormControl[], aiGeneratedControls: FormControl[]) {
+export function changeCodeOfAIGenControl(_existingControls: FormControl[], aiGeneratedControls: FormControl[]) {
   return aiGeneratedControls;
   // if (!aiGeneratedControls || !Array.isArray(aiGeneratedControls)) {
   //   return aiGeneratedControls;

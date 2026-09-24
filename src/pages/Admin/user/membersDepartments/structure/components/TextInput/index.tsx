@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import { checkForm } from '../../constant';
 
@@ -7,7 +6,10 @@ export default function TextInput(props) {
     props;
   const inputProps = {
     ref,
-    value,
+    // 调用方（AddUser / EditUser / BaseFormInfo）全都是受控用法，但字段往往要等接口回来才有值，
+    // 首帧是 undefined —— 输入框先按非受控挂上、数据到了再变受控，React 会报 uncontrolled → controlled。
+    // 兜底成 '' 与首帧显示一致（非受控的空输入框本来就显示空）；下面的校验提示仍用原始 value。
+    value: value ?? '',
     disabled,
     placeholder,
     onChange,

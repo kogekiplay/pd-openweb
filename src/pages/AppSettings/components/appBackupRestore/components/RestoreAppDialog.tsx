@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { useSetState } from 'react-use';
 import cx from 'classnames';

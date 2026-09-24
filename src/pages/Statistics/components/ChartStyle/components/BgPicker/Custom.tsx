@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -154,7 +154,7 @@ export default props => {
           onAdd={up => {
             up.disableBrowse();
           }}
-          onError={(up, err, errTip) => {
+          onError={(_up, _err, errTip) => {
             alert(errTip, 2);
           }}
         >

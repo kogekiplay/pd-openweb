@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -153,7 +153,7 @@ export default class CardToolbar extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { visible } = this.state;
 
     if (!this.toolItems.length) {

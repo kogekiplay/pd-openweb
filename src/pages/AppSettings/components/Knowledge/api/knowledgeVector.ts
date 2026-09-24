@@ -9,7 +9,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  startKnowledgeVector: function (args, options = {}) {
+  startKnowledgeVector: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + '/knowledgeVector/start';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'knowledgeVector', args, $.extend(base, options));
@@ -22,7 +22,7 @@ export default {
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    **/
-  cancelKnowledgeVector: function (args, options = {}) {
+  cancelKnowledgeVector: function (args: ApiArgs, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server() + '/knowledgeVector/cancel';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'knowledgeVector', args, $.extend(base, options));

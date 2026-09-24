@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { omit } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -54,10 +54,10 @@ const SignatureComp = ({
 
   // 阻止整个签名区域（含 padding）左滑触发 iOS 浏览器返回手势（仅 H5 环境）
   useEffect(() => {
-    if (!browserIsMobile()) return;
+    if (!browserIsMobile()) return undefined;
 
     const el = wrapRef.current;
-    if (!el) return;
+    if (!el) return undefined;
 
     const blockSwipeBack = e => {
       if (e.target.closest('button, a, [role="button"]')) return;

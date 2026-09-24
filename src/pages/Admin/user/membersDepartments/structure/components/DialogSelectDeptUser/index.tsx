@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import { Dialog, LoadDiv, ScrollView } from 'ming-ui';
 import Checkbox from 'ming-ui/components/Checkbox';
@@ -18,7 +18,7 @@ export default class SelectDeptUser extends Component<any, any> {
       loading: true,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -76,7 +76,7 @@ export default class SelectDeptUser extends Component<any, any> {
     onCancel();
   };
 
-  render() {
+  override render() {
     const { visible, onCancel = () => {} } = this.props;
     const { dataList, loading, selectedUsersIds, keywords = '' } = this.state;
 
@@ -110,10 +110,10 @@ export default class SelectDeptUser extends Component<any, any> {
           ) : (
             <div className="selectDepartmentUserContent">
               <ScrollView className="h100" onScrollEnd={this.onScrollEnd}>
-                {dataList.map(item => {
+                {dataList.map((item, index) => {
                   const { accountId, avatar, fullname, job } = item;
                   return (
-                    <div className="userItem">
+                    <div key={index} className="userItem">
                       <Checkbox
                         checked={_.includes(selectedUsersIds, accountId)}
                         onClick={(checked: boolean) => this.checkedCurrentUser(checked, item)}

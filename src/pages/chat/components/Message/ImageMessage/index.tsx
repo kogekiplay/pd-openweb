@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -11,6 +11,8 @@ import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
 
 export default class ImageMessage extends Component<any, any> {
+  declare _isMounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -19,7 +21,7 @@ export default class ImageMessage extends Component<any, any> {
       isError: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { session, message, messageLength } = this.props;
     const { files } = message.msg;
     const previewUrl = message.kcFile ? files.url : _.get(files, 'thumbs.web_1') || files.url;
@@ -44,7 +46,7 @@ export default class ImageMessage extends Component<any, any> {
         this.setState({ isError: true });
       });
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this._isMounted = false;
   }
   handleLoadImage(url) {
@@ -78,7 +80,7 @@ export default class ImageMessage extends Component<any, any> {
       handleMessageFilePreview.call(this);
     }
   }
-  render() {
+  override render() {
     const { loading, previewUrl, isError } = this.state;
     const { message, session } = this.props;
     const { files } = message.msg;

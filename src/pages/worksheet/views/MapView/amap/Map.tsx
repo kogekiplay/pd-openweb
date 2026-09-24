@@ -83,7 +83,9 @@ const defaultOpts = {
 };
 
 class Map extends Component<any, any> {
-  static propTypes = {
+  declare mapWrapper: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     pluginMap: PropTypes.object,
     loader: PropTypes.object,
     map: PropTypes.object,
@@ -101,11 +103,11 @@ class Map extends Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.loadMap();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.loader.then(() => {
         if (this.map) {
@@ -359,7 +361,7 @@ class Map extends Component<any, any> {
     return props[key];
   }
 
-  getSetterName(key) {
+  getSetterName(key: string) {
     switch (key) {
       case 'labelzIndex':
         return 'setlabelzIndex';
@@ -412,7 +414,7 @@ class Map extends Component<any, any> {
     this.removeOrDisablePlugins(pluginList);
   }
 
-  removeOrDisablePlugins(plugins) {
+  removeOrDisablePlugins(plugins: string[]) {
     if (plugins && plugins.length) {
       plugins.forEach(p => {
         if (p in this.pluginMap) {
@@ -499,7 +501,7 @@ class Map extends Component<any, any> {
     document.getElementById('mapWrap') && document.getElementById('mapWrap').remove();
   }
 
-  render() {
+  override render() {
     return (
       <div id="mapWrap" style={wrapperStyle}>
         <div
@@ -515,7 +517,7 @@ class Map extends Component<any, any> {
     );
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.map && this.handleResetAddRecordBtn) {
       this.map.off('dragstart', this.handleResetAddRecordBtn);
       this.map.off('zoomstart', this.handleResetAddRecordBtn);

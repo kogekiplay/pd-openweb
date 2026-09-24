@@ -9,6 +9,8 @@ import { typeForCon } from '../../core/config';
 import './index.less';
 
 export default class SaveDia extends React.Component<any, any> {
+  declare name: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     const { printData } = props;
@@ -18,7 +20,7 @@ export default class SaveDia extends React.Component<any, any> {
       views: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { printData, type, viewId, worksheetId } = this.props;
     sheetAjax
       .getWorksheetInfo({
@@ -45,7 +47,7 @@ export default class SaveDia extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { printData, showList, views } = this.state;
     return (
       <Dialog
@@ -123,9 +125,9 @@ export default class SaveDia extends React.Component<any, any> {
                 }}
                 className="itemList"
               >
-                {printData.views.map(it => {
+                {printData.views.map((it, index) => {
                   return (
-                    <div class="item">
+                    <div key={index} class="item">
                       {it.name}
                       <a
                         href="javascript:void(0)"

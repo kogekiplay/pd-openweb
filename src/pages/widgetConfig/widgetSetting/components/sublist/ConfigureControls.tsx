@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useSetState } from 'react-use';
 import { Dropdown } from 'antd';
@@ -138,7 +138,7 @@ const ConfigureWrap = styled.div`
   padding-right: var(--space-2);
 `;
 
-const getFilterData = value => {
+const getFilterData = (value: string) => {
   if (!value) return WIDGET_GROUP_TYPE;
   let filterData = {};
 
@@ -389,7 +389,7 @@ export default function ConfigureControl(props) {
     onChange(updateControlsWithSorts(newRelationControls));
   };
 
-  const handleControlDataChange = (id, obj) => {
+  const handleControlDataChange = (_id, obj) => {
     onChange({
       relationControls: update(controls, {
         [activeWidgetIndex]: { $apply: item => ({ ...item, ...obj }) },

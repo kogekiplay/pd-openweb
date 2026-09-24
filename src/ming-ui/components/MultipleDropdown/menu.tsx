@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 
 class MultipleDropdownMenu extends Component<any, any> {
+  declare search: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
 
@@ -99,7 +101,7 @@ class MultipleDropdownMenu extends Component<any, any> {
     });
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     this.init(this.props);
   }
 
@@ -107,7 +109,7 @@ class MultipleDropdownMenu extends Component<any, any> {
    * 递归查找指定选项
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         this.initValue(this.props);
@@ -153,7 +155,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 展开显示子选项
    */
-  showSubItems = (e, item) => {
+  showSubItems = (e: React.MouseEvent<HTMLElement, MouseEvent>, item) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -183,7 +185,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 点击选项
    */
-  itemOnClick = (e, item) => {
+  itemOnClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, item) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -258,7 +260,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 取消选中制定项目
    */
-  unCheckItem = (e, item) => {
+  unCheckItem = (e: React.MouseEvent<HTMLElement, MouseEvent>, item) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -295,7 +297,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 清空已选中的项目
    */
-  clearCheckedItems = e => {
+  clearCheckedItems = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -309,7 +311,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 返回上一级选项
    */
-  back = e => {
+  back = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -335,7 +337,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 更新筛选文本
    */
-  updateFilterText = event => {
+  updateFilterText = (event: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
     const text = event.target.value;
 
     this.setState(
@@ -374,7 +376,7 @@ class MultipleDropdownMenu extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     /**
      * 清空按钮
      */

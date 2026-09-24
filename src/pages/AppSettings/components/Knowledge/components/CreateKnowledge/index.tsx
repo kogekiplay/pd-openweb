@@ -1,4 +1,4 @@
-import React, { createContext, Fragment, useContext, useEffect, useMemo, useReducer } from 'react';
+import { createContext, Fragment, useContext, useEffect, useMemo, useReducer } from 'react';
 import { Modal } from 'ming-ui';
 import knowledgeAjax from '../../api/knowledge';
 import worksheetAjax from 'src/api/worksheet';

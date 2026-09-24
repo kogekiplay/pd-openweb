@@ -1,10 +1,19 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import ClickAway from 'ming-ui/components/ClickAway';
 
 const ClickAwayable = ClickAway;
-export default class ChecklistOperator extends Component<any, any> {
-  static propTypes = {
+interface ChecklistOperatorProps {
+  // propTypes 里都没写 isRequired，但下面是直接调用的，缺了点击就崩 —— 按实际要求写成必填
+  toggleList: () => void;
+  showAddBtn?: boolean | undefined;
+  add: () => void;
+  remove: () => void;
+  replace: () => void;
+}
+
+export default class ChecklistOperator extends Component<ChecklistOperatorProps> {
+  static override propTypes = {
     toggleList: PropTypes.func,
     showAddBtn: PropTypes.bool,
 
@@ -13,7 +22,7 @@ export default class ChecklistOperator extends Component<any, any> {
     replace: PropTypes.func,
   };
 
-  render() {
+  override render() {
     return (
       <ClickAwayable component="ul" className="itemOpList" onClickAway={() => this.props.toggleList()}>
         {this.props.showAddBtn ? (

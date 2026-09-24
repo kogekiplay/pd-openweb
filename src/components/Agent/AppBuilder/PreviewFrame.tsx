@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { pathCompletion } from 'src/utils/common';
 
@@ -41,7 +41,7 @@ const Container = styled.div`
 // AI 实时预览场景下，工作表/视图是分两步建出来的：建表成功 ~ 建视图成功之间，工作表 views 为空，
 // 默认会渲染「无视图」错误页。给 iframe 内所有页面统一打上 previewMode=ai 标记，
 // 让工作表渲染层（src/pages/worksheet/common/Sheet/Sheet.jsx）识别后给出一个伪「全部」表格视图兜底。
-function withPreviewMode(path) {
+function withPreviewMode(path: string) {
   if (!path) return path;
   if (/[?&]previewMode=ai(?:&|$)/.test(path)) return path;
   return `${path}${path.includes('?') ? '&' : '?'}previewMode=ai`;
@@ -87,13 +87,18 @@ function navigateInFrame(win, path, refreshFirst = false) {
   }
 }
 
+export interface PreviewFrameProps {
+  src: string;
+  refreshFirst?: boolean | undefined;
+}
+
 // 预览策略：iframe 只在首次冷启动一次整段 SPA；之后 src 变化全部走前端路由 history.push（软导航），
 // 避免每次切页都整页 reload（慢 + 白屏闪烁）。SPA 尚未就绪时短暂轮询等待，超时兜底整页加载。
 // refreshFirst：自定义页面这类「iframe 内 sheetList 还没有的新页面」，push 前先 await 刷新应用结构，
 // 让 WorkSheet 能识别并渲染它（详见 navigateInFrame）——仍是软导航，不整页 reload。
-export default function PreviewFrame({ src, refreshFirst = false }) {
+export default function PreviewFrame({ src, refreshFirst = false }: PreviewFrameProps) {
   const containerRef = useRef(null);
-  const iframeRef = useRef(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const pendingRef = useRef(null);
   // 用 ref 读最新 refreshFirst，避免把它加进 effect 依赖导致 src 未变时多余触发；
   // 同步写放在 effect 中（react-hooks/refs 禁止渲染期写 ref），且必须声明在下方主 effect 之前，

@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
 export default class Number extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
     value: PropTypes.number,
@@ -22,7 +22,7 @@ export default class Number extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.value !== prevProps.value ||
@@ -82,7 +82,7 @@ export default class Number extends Component<any, any> {
     newValues[key] = value;
     this.setState(newValues);
   };
-  render() {
+  override render() {
     const { type, disabled } = this.props;
     const { value = '', maxValue = '', minValue = '' } = this.state;
     return (

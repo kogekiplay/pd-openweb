@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { bool, func, string } from 'prop-types';
@@ -92,7 +92,7 @@ export default function AppTrash(props) {
         keyword={keyword}
         data={apps.map(app => [
           [
-            <AppIcon color={app.iconColor}>
+            <AppIcon key={'0'} color={app.iconColor}>
               <SvgIcon
                 url={
                   app.iconUrl.startsWith('http')
@@ -104,7 +104,7 @@ export default function AppTrash(props) {
                 className="InlineBlock"
               />
             </AppIcon>,
-            <span className="mLeft20 ellipsis" style={{ maxWidth: 250 }}>
+            <span key={'1'} className="mLeft20 ellipsis" style={{ maxWidth: 250 }}>
               {app.appName}
             </span>,
           ],
@@ -112,6 +112,7 @@ export default function AppTrash(props) {
           app.deletePerson
             ? [
                 <UserHead
+                  key={'0'}
                   projectId={projectId}
                   className="cellUserHead"
                   user={{
@@ -121,13 +122,19 @@ export default function AppTrash(props) {
                   appId={app.appId}
                   size={24}
                 />,
-                <span className="mLeft8 ellipsis">{app.deletePerson.fullname || app.deletePerson.fullName}</span>,
+                <span key={'1'} className="mLeft8 ellipsis">
+                  {app.deletePerson.fullname || app.deletePerson.fullName}
+                </span>,
               ]
             : [
-                <i className="icon icon-system Font24 textSecondary" />,
-                <span className="mLeft8 LineHeight24">{_l('系统')}</span>,
+                <i key={'0'} className="icon icon-system Font24 textSecondary" />,
+                <span key={'1'} className="mLeft8 LineHeight24">
+                  {_l('系统')}
+                </span>,
               ],
-          <span className="textTertiary">{moment(app.deleteTime).format('YYYY-MM-DD HH:mm:ss')}</span>,
+          <span key={'3'} className="textTertiary">
+            {moment(app.deleteTime).format('YYYY-MM-DD HH:mm:ss')}
+          </span>,
         ])}
         onScrollEnd={() => {
           if (!loading && !loadOuted) {

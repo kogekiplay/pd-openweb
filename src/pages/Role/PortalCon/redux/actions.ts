@@ -284,7 +284,7 @@ export const setDefaultFastFilters = () => {
   };
 };
 
-export const setSortControls = (data, cb) => {
+export const setSortControls = (data, cb: () => void) => {
   return dispatch => {
     dispatch({ type: 'UPDATE_SORTCONTROLS', data });
     cb && cb();
@@ -333,7 +333,7 @@ export const handleChangeSort = (sorter, PotralStatus = 0) => {
   };
 };
 
-const getFilterTels = telFilters => {
+const getFilterTels = (telFilters: string) => {
   if (!telFilters) {
     return '';
   }
@@ -413,7 +413,7 @@ export const setQuickTag = (data: { roleId?: string } = {}) => {
   };
 };
 
-export const setRoleId = data => {
+export const setRoleId = (data: string) => {
   return dispatch => {
     dispatch({ type: 'UPDATE_DEFAULT_ROLEID', data });
   };

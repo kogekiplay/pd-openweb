@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Dialog, UserHead } from 'ming-ui';
@@ -10,11 +10,13 @@ import { addMembers } from '../../redux/actions';
 import './members.less';
 
 class Members extends Component<any, any> {
+  declare ganttMembersList: HTMLUListElement | null | undefined;
+
   constructor(props) {
     super(props);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // 竖着滚动对应右侧竖着滚动
     $(this.ganttMembersList).on({
       mouseover() {
@@ -118,7 +120,7 @@ class Members extends Component<any, any> {
     return count;
   }
 
-  render() {
+  override render() {
     const { accountTasksKV } = this.props;
     return (
       <div className="ganttMembers">

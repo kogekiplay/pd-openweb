@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
@@ -31,7 +31,7 @@ export default class Filter extends Component<any, any> {
     e.stopPropagation();
     this.props.handleClear();
   };
-  render() {
+  override render() {
     const { visible } = this.props;
     const length = this.getFilterLength();
     return (

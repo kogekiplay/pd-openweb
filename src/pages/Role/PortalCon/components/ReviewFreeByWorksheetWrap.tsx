@@ -30,14 +30,14 @@ export default function ReviewFreeByWorksheetWrap(props) {
   const { appId, projectId, onChange, query, canChooseOtherApp } = props;
   const [showMenu, setShowMenu] = useState(false);
   const [visible, setvisible] = useState(false);
-  const [sheetList, setSheetList] = useState([]);
+  const [sheetList, setSheetList] = useState<HapApi.MD.Entity.Apk.EntityInfo[]>([]);
   const [sheetId, setSheetId] = useState('');
-  const [controls, setControls] = useState([]);
-  const [allControls, setAllControls] = useState([]);
+  const [controls, setControls] = useState<FormControl[]>([]);
+  const [allControls, setAllControls] = useState<FormControl[]>([]);
   const [sheetName, setSheetName] = useState('');
   const [appName, setAppName] = useState('');
   const [items, setItems] = useState([]);
-  const [originSheetList, setOriginSheetList] = useState([]);
+  const [originSheetList, setOriginSheetList] = useState<HapApi.MD.Entity.Apk.EntityInfo[]>([]);
   const [clear, setClear] = useState(false);
   const [loading, setLoading] = useState(true);
   const [{ getNameLoading, isSheetDelete }, setState] = useSetState({
@@ -139,9 +139,10 @@ export default function ReviewFreeByWorksheetWrap(props) {
                     }
                   >
                     {sheetList.length > 0 ? (
-                      sheetList.map(item => {
+                      sheetList.map((item, index) => {
                         return (
                           <MenuItem
+                            key={index}
                             onClick={() => {
                               setClear(true);
                               setSheetId(item.workSheetId);

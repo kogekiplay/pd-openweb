@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { number, shape, string } from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
@@ -26,7 +26,7 @@ const MSG_TEMPLATE_STATUS_TO_TEXT = {
 };
 
 export default class StatusIcon extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     config: shape({ icon: string, text: string, size: number, color: string }),
     status: number,
     className: string,
@@ -35,7 +35,7 @@ export default class StatusIcon extends Component<any, any> {
     config: MSG_TEMPLATE_STATUS_TO_TEXT,
     status: 0,
   };
-  render() {
+  override render() {
     const { config, status, className } = this.props;
     const { text, icon, size = 16, color = 'var(--color-text-secondary)' } = config[status];
     return (

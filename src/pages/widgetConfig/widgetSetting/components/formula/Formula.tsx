@@ -40,6 +40,9 @@ const CalItem = styled.div`
 `;
 
 export default class Formula extends React.Component<any, any> {
+  declare tagtextarea: TagTextarea | undefined;
+  declare formulaBox: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     const { dataSource } = props.data;
@@ -55,7 +58,7 @@ export default class Formula extends React.Component<any, any> {
     this.state.formulaStr = this.getFormulaFromDataSource(this.state.calType, dataSource);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { data } = this.props;
       const { dataSource, controlId } = data;
@@ -78,7 +81,7 @@ export default class Formula extends React.Component<any, any> {
     }
   }
 
-  getFormulaFromDataSource(calType, dataSource) {
+  getFormulaFromDataSource(_calType, dataSource) {
     return dataSource;
   }
 
@@ -195,7 +198,7 @@ export default class Formula extends React.Component<any, any> {
     }
   };
 
-  handleChange = (err, value, obj) => {
+  handleChange = (err, value: string, obj) => {
     if (err) {
       this.handleError(err);
       return;
@@ -255,7 +258,7 @@ export default class Formula extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     let { data, allControls, worksheetData, onChange, fromAggregation, className } = this.props;
     const { selectColumnVisible, showInSideFormulaSelect, shoOutSideFormulaSelect, calType, fnmatch } = this.state;
     const dataSource = data.dataSource || '';
@@ -286,9 +289,10 @@ export default class Formula extends React.Component<any, any> {
           <div className="formulaCon">
             <div className="customTip">{_l('输入英文+、-、*、/、( ) 进行运算')}</div>
             <CalItem className="formulaBtns">
-              {CAL_LIST.map(calItem => {
+              {CAL_LIST.map((calItem, index) => {
                 return (
                   <div
+                    key={index}
                     onClick={() => {
                       this.tagtextarea.focus();
                       const cursor = this.tagtextarea.getCursor();

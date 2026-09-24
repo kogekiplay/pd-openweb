@@ -1,7 +1,13 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Icon, Linkify, Textarea } from 'ming-ui';
 
-export default class CalendarSummary extends Component<any, any> {
+export interface CalendarSummaryState {
+  isFocus: boolean;
+}
+
+export default class CalendarSummary extends Component<any, CalendarSummaryState> {
+  declare attachmentBox: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
 
@@ -16,9 +22,10 @@ export default class CalendarSummary extends Component<any, any> {
     this.props.change({
       description: value,
     });
+    return undefined;
   }
 
-  render() {
+  override render() {
     const { editable, attachments } = this.props;
     const { isFocus } = this.state;
 

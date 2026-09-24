@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useEffect, useMemo, useState } from 'react';
+import { Fragment, memo, useEffect, useMemo, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -43,7 +43,7 @@ const ChunkPreview = props => {
   const [chunkDetailLoading, setChunkDetailLoading] = useState(false);
   const [chunkDetailTotal, setChunkDetailTotal] = useState(0);
   const [chunkDetailPageIndex, setChunkDetailPageIndex] = useState(1);
-  const [attachmentTypes, setAttachmentTypes] = useState([]);
+  const [attachmentTypes, setAttachmentTypes] = useState<string[]>([]);
   const [showAttachmentTypesFilter, setShowAttachmentTypesFilter] = useState(false);
 
   const debouncedSearch = useMemo(
@@ -73,7 +73,7 @@ const ChunkPreview = props => {
     setChunkHeader({});
   };
 
-  const handleTabChange = value => {
+  const handleTabChange = (value: string) => {
     if (activeTab === value) return;
 
     setActiveTab(value);
@@ -201,7 +201,7 @@ const ChunkPreview = props => {
     });
   };
 
-  const handleAttachmentTypesFilterClick = value => {
+  const handleAttachmentTypesFilterClick = (value: string) => {
     resetSideBar();
     setAttachmentTypes(prev => (prev.includes(value) ? prev.filter(item => item !== value) : [...prev, value]));
   };

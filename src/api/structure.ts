@@ -12,7 +12,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAllowChooseUsers: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAllowChooseUsers: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ListModel_UserModel> {
     return mdyAPI('Structure', 'GetAllowChooseUsers', args, options);
   },
   /**

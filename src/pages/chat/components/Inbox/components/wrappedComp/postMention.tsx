@@ -195,9 +195,10 @@ export default class PostMention extends React.Component<any, any> {
       default:
         break;
     }
+    return undefined;
   }
 
-  render() {
+  override render() {
     return <BaseMessageComponent {...this.state}>{this.renderAccessory()}</BaseMessageComponent>;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { DndProvider } from 'react-dnd';
@@ -71,7 +71,7 @@ const InputWrapper = styled.div`
   }
 `;
 
-const highlightMessageText = (keyword, content) => {
+const highlightMessageText = (keyword: string, content) => {
   content = htmlDecodeReg(content);
   const reg = new RegExp(_.escapeRegExp(keyword), 'gi');
   const newKeyword = reg.exec(content)[0];
@@ -80,7 +80,7 @@ const highlightMessageText = (keyword, content) => {
   return content;
 };
 
-const searchResult = (query, queryKey, data) => {
+const searchResult = (query: string, queryKey, data) => {
   return data
     .filter(item => {
       const target = item[queryKey].toLowerCase();
@@ -122,7 +122,7 @@ function SearchRecord(props) {
     updateSearchRecord(view, activeRecord);
   }, [activeRecord]);
 
-  const handleSearch = value => {
+  const handleSearch = (value: string) => {
     if (value) {
       setOptions(searchResult(value, queryKey, searchRecordData));
     } else {
@@ -133,7 +133,7 @@ function SearchRecord(props) {
     setOpen(true);
   };
 
-  const onSelect = (data, { record }) => {
+  const onSelect = (_data: string, { record }) => {
     setSearchRecord(record);
     setOpen(false);
   };

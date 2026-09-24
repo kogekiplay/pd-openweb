@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import { any, bool, element, func, string } from 'prop-types';
 import styled from 'styled-components';

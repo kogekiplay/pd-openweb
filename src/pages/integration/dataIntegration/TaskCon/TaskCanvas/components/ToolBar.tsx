@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -57,12 +57,12 @@ const ToolBarWrap = styled.div`
 `;
 
 export default class ToolBar extends Component<any, any> {
-  adjustSize = type => {
+  adjustSize = (type: string) => {
     const { scale, onClick } = this.props;
     const nextScale = type === 'shrink' ? Math.max(SCALE_LIMIT.min, scale - 10) : Math.min(SCALE_LIMIT.max, scale + 10);
     onClick('adjustScale', { scale: nextScale });
   };
-  render() {
+  override render() {
     const { scale, onClick, isOpenEdit } = this.props;
     return (
       <ToolBarWrap className={cx('flexRow valignWrappe', { isOpenEdit })}>

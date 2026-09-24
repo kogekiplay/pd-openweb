@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon, LoadDiv, Menu, MenuItem, Switch } from 'ming-ui';
@@ -45,7 +45,7 @@ export default function CloudPrint(props) {
       });
   };
 
-  const changeSystemIntegrationStatus = (id, isOpen) => {
+  const changeSystemIntegrationStatus = (id, isOpen: boolean) => {
     systemIntegrationAjax.changeSystemIntegrationStatus({ projectId: Config.projectId, isOpen, id }).then(res => {
       if (res) {
         setPrintList(printList.map(item => (item.id === id ? { ...item, isOpen } : item)));

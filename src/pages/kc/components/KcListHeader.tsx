@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -13,7 +13,7 @@ import { NODE_STATUS, PICK_TYPE } from '../constant/enum';
 import HoverState from '../decorators/withHoverState';
 
 export default class KcListHeader extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     currentRoot: PropTypes.oneOfType([PropTypes.number, PropTypes.shape({})]),
     baseUrl: PropTypes.string,
     currentFolder: PropTypes.shape({}),
@@ -59,7 +59,7 @@ export default class KcListHeader extends Component<any, any> {
       this.setState({ showAddNodeBtnMenu: true });
     }
   };
-  render() {
+  override render() {
     const {
       currentRoot,
       isGlobalSearch,
@@ -136,7 +136,11 @@ export default class KcListHeader extends Component<any, any> {
                     </span>
                   );
                 } else if (i === 2) {
-                  return <span className="positionSpan">&nbsp;{'>'} ...</span>;
+                  return (
+                    <span key={i} className="positionSpan">
+                      &nbsp;{'>'} ...
+                    </span>
+                  );
                 }
 
                 return '';

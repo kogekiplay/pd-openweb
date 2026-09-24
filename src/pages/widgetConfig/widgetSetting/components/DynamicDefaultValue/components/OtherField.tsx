@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
@@ -117,7 +117,7 @@ export default function OtherField(props) {
     );
   };
 
-  const getFieldNameById = (item, controls) => {
+  const getFieldNameById = (item, controls: FormControl[]) => {
     const { cid, rcid } = item;
     const filterControls = getControls({ data, controls, isCurrent: true, from });
 

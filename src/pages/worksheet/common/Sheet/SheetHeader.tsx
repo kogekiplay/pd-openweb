@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useKey } from 'react-use';
@@ -188,7 +188,7 @@ function SheetHeader(props) {
       appId,
       groupId,
       workSheetId: worksheetId,
-      updateWorksheetInfo: (id, data) => {
+      updateWorksheetInfo: (_id, data) => {
         updateWorksheetInfo(data);
       },
       updateSheetListAppItem: updateSheetListAppItem,

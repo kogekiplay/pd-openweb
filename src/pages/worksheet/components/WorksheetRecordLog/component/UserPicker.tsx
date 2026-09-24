@@ -96,7 +96,8 @@ export default function UserPicker(props) {
     });
   };
 
-  const clearSelectUser = e => changeSelect(e, { selectUsers: undefined }, { opeartorIds: undefined, requestType: 0 });
+  const clearSelectUser = (e: React.MouseEvent<HTMLElement, MouseEvent>) =>
+    changeSelect(e, { selectUsers: undefined }, { opeartorIds: undefined, requestType: 0 });
 
   const renderPopup = () => {
     return (

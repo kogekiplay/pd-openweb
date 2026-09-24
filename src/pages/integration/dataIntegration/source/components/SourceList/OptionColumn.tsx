@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';

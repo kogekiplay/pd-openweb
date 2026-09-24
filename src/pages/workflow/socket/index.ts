@@ -11,7 +11,8 @@ import { PUSH_TYPE } from '../WorkflowSettings/enum';
 import { playPromptSound } from './promptSound';
 
 const getWorksheetInfo = (worksheetId: string) => {
-  return new Promise(resolve => {
+  // 失败时 resolve 的是空串 —— 调用方照样解构 { appId }，从 '' 上取到 undefined，不会抛
+  return new Promise<ApiPayload | ''>(resolve => {
     sheetAjax.getWorksheetInfo({ worksheetId }).then(result => {
       if (result.resultCode === 1) {
         resolve(result);
@@ -23,7 +24,7 @@ const getWorksheetInfo = (worksheetId: string) => {
 };
 
 const getAppSimpleInfo = workSheetId => {
-  return new Promise(resolve => {
+  return new Promise<ApiPayload>(resolve => {
     homeAppAjax.getAppSimpleInfo({ workSheetId }, { silent: true }).then(result => {
       resolve(result);
     });
@@ -191,7 +192,7 @@ export default () => {
     }
 
     if (pushType === PUSH_TYPE.NOTIFICATION) {
-      const functionName = { 1: 'success', 2: 'error', 3: 'warning', 4: 'info' };
+      const functionName: Record<number, string> = { 1: 'success', 2: 'error', 3: 'warning', 4: 'info' };
 
       mdNotification[functionName[promptType]]({
         key: CryptoJS.SHA1(JSON.stringify(result[pushType])).toString(),

@@ -12,7 +12,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTypes: function (args, options?) {
+  getTypes: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/getTypes';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcegetTypes', JSON.stringify(args), $.extend(base, options));
@@ -28,7 +28,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDatasource: function (args, options?) {
+  getDatasource: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/getDatasource';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcegetDatasource', JSON.stringify(args), $.extend(base, options));
@@ -49,7 +49,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTables: function (args, options) {
+  getTables: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/getTables';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcegetTables', JSON.stringify(args), $.extend(base, options));
@@ -66,7 +66,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSchemas: function (args, options?) {
+  getSchemas: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/getSchemas';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcegetSchemas', JSON.stringify(args), $.extend(base, options));
@@ -93,7 +93,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  test: function (args, options?) {
+  test: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/test';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcetest', JSON.stringify(args), $.extend(base, options));
@@ -108,7 +108,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  repair: function (args, options) {
+  repair: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/repair';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'datasourcerepair', args, $.extend(base, options));
@@ -126,7 +126,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  fieldsDataTypeMatch: function (args, options?) {
+  fieldsDataTypeMatch: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/fieldsDataTypeMatch';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcefieldsDataTypeMatch', JSON.stringify(args), $.extend(base, options));
@@ -149,7 +149,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  list: function (args, options?) {
+  list: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/list';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcelist', JSON.stringify(args), $.extend(base, options));
@@ -177,7 +177,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  addDatasource: function (args, options?) {
+  addDatasource: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/addDatasource';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourceaddDatasource', JSON.stringify(args), $.extend(base, options));
@@ -193,7 +193,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  deleteDatasource: function (args, options?) {
+  deleteDatasource: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/deleteDatasource';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcedeleteDatasource', JSON.stringify(args), $.extend(base, options));
@@ -222,7 +222,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateDatasource: function (args, options?) {
+  updateDatasource: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/updateDatasource';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourceupdateDatasource', JSON.stringify(args), $.extend(base, options));
@@ -243,7 +243,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTablePages: function (args, options?) {
+  getTablePages: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/getTablePages';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcegetTablePages', JSON.stringify(args), $.extend(base, options));
@@ -257,7 +257,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  sshServerEnable: function (args?, options?) {
+  sshServerEnable: function (args?: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/sshServerEnable';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'datasourcesshServerEnable', args, $.extend(base, options));
@@ -273,7 +273,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDatabases: function (args, options?) {
+  getDatabases: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/getDatabases';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcegetDatabases', JSON.stringify(args), $.extend(base, options));
@@ -289,7 +289,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  dataTypeMatch: function (args, options) {
+  dataTypeMatch: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/dataTypeMatch';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcedataTypeMatch', JSON.stringify(args), $.extend(base, options));
@@ -303,7 +303,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  whitelistIp: function (args?, options?) {
+  whitelistIp: function (args?: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/whitelistIp';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'datasourcewhitelistIp', args, $.extend(base, options));
@@ -323,7 +323,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTableFields: function (args, options?) {
+  getTableFields: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/getTableFields';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcegetTableFields', JSON.stringify(args), $.extend(base, options));
@@ -339,7 +339,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDatasources: function (args, options?) {
+  getDatasources: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/getDatasources';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcegetDatasources', JSON.stringify(args), $.extend(base, options));
@@ -356,7 +356,7 @@ const datasource = {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  fillJdbcType: function (args, options?) {
+  fillJdbcType: function (args: ApiArgs, options?: ApiOptions) {
     base.ajaxOptions.url = base.server(options) + 'datasource/fillJdbcType';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'datasourcefillJdbcType', JSON.stringify(args), $.extend(base, options));

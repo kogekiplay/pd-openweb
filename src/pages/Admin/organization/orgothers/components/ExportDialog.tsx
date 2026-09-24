@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Checkbox } from 'antd';
 import Trigger from '@rc-component/trigger';
 import moment from 'moment';
@@ -75,7 +75,7 @@ export default class ExportDialog extends Component<any, any> {
     };
   }
 
-  onChange(value) {
+  onChange(value: string[]) {
     this.setState({
       typeList: value,
     });
@@ -98,7 +98,7 @@ export default class ExportDialog extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { datePickerVisible, startDate, endDate, typeList } = this.state;
     let outPutList = '';
     typeList.forEach(item => {

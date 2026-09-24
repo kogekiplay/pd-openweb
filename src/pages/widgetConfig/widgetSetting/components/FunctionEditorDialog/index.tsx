@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef } from 'react';
+import { lazy, Suspense, useRef } from 'react';
 import { func } from 'prop-types';
 import { Dialog, Modal } from 'ming-ui';
 
@@ -7,7 +7,7 @@ const LoadableFunction = lazy(() => import('./Func'));
 export default function FunctionEditorDialog(props) {
   const { onClose } = props;
   const editor = useRef({});
-  const cache = useRef({});
+  const cache = useRef<{ changed?: boolean | undefined }>({});
   let width = 960;
   let height = 600;
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { pathCompletion } from 'src/utils/common';
 import { CreateNode, NodeOperate } from '../components';
@@ -46,7 +46,7 @@ export default class ApiPackage extends Component<any, any> {
     window.open(pathCompletion(`/integrationConnect/${item.appId}`));
   };
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple } = this.props;
 
     return (

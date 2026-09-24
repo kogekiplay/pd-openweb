@@ -444,7 +444,7 @@ export function error() {
   };
 }
 
-function loadMoreAttachments(state, dispatch, isPre?) {
+function loadMoreAttachments(state, dispatch: AttachmentsPreviewDispatch, isPre?: boolean | undefined) {
   const { extra, isLoadingMore, loadMoreFinished } = state;
   const loadAjaxName = isPre ? 'preLoadMoreAttachments' : 'loadMoreAttachments';
 
@@ -472,11 +472,17 @@ function loadMoreAttachments(state, dispatch, isPre?) {
   }
 }
 
-function preLoadMoreAttachments(state, dispatch) {
+function preLoadMoreAttachments(state, dispatch: AttachmentsPreviewDispatch) {
   loadMoreAttachments(state, dispatch, true);
 }
 
-function changeIndexThunk(dispatch, getState, index: number, flag, extra = {}) {
+function changeIndexThunk(
+  dispatch: AttachmentsPreviewDispatch,
+  getState: AttachmentsPreviewGetState,
+  index: number,
+  flag: string,
+  extra = {},
+) {
   const state = getState();
   const options = { ...(state.extra || {}), ...extra };
 
@@ -667,7 +673,7 @@ function selectFolder() {
 }
 
 export function saveToKnowlwdge(savePath) {
-  return (dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
+  return (_dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
     const state = getState();
     const index = state.index;
     const currentAttachment = state.attachments[index];
@@ -755,7 +761,7 @@ export function changeStateOfAttachment(attachment, index: number) {
 }
 
 export function onClose() {
-  return (dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
+  return (_dispatch: AttachmentsPreviewDispatch, getState: AttachmentsPreviewGetState) => {
     const state = getState();
 
     if (state.onClose) {

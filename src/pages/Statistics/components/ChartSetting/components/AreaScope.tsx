@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Checkbox, Select } from 'antd';
 import _ from 'lodash';
 import { CityPicker, Icon, Input } from 'ming-ui';
@@ -81,7 +81,7 @@ export default class extends Component<any, any> {
       true,
     );
   };
-  render() {
+  override render() {
     const { country, style, onChangeCurrentReport } = this.props;
     const level = country.particleSizeType - 1;
     const scopeLevel = country.particleSizeType == 1 ? '' : country.particleSizeType;

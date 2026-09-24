@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -21,7 +21,9 @@ import './ActionDropDown.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default class DropDownItem extends Component<any, any> {
-  static propTypes = {
+  declare box: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     values: PropTypes.arrayOf(PropTypes.shape({})),
     dropDownData: PropTypes.array,
     onChange: PropTypes.func,
@@ -42,7 +44,7 @@ export default class DropDownItem extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { dropDownData = [], actionType } = this.props;
     const newDropDownData = getNewDropDownData(dropDownData, actionType);
     this.setState({
@@ -51,7 +53,7 @@ export default class DropDownItem extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { dropDownData = [], actionType } = this.props;
 
@@ -194,9 +196,9 @@ export default class DropDownItem extends Component<any, any> {
     const currentArr = getTextById(dropDownData, values, actionType, from) || [];
     return (
       <Fragment>
-        {currentArr.map(item => {
+        {currentArr.map((item, index) => {
           return (
-            <span className={cx('valueText', { disabled: item.isDelete })}>
+            <span key={index} className={cx('valueText', { disabled: item.isDelete })}>
               <Tooltip title={!item.isDel ? '' : <span>{_l('ID: %0', item.controlId)}</span>} placement="bottom">
                 <span className="ellipsis controlNameBox">{item.name}</span>
               </Tooltip>
@@ -271,7 +273,7 @@ export default class DropDownItem extends Component<any, any> {
       <Checkbox
         checked={!!checked}
         disabled={disabled}
-        onClick={(checked: boolean, value, e) => {
+        onClick={(_checked: boolean, _value, e) => {
           e.stopPropagation();
           if (disabled) return;
           this.updateValues(hasParentControl ? parentControl.controlId : '', item.controlId);
@@ -280,7 +282,7 @@ export default class DropDownItem extends Component<any, any> {
     );
   }
 
-  updateSelectAll(item, isChecked?) {
+  updateSelectAll(item, isChecked?: boolean | undefined) {
     const { values, onChange } = this.props;
     const index = _.findIndex(values, v => v.controlId === item.controlId);
     const ids = (item.relationControls || []).map(i => i.controlId);
@@ -298,7 +300,7 @@ export default class DropDownItem extends Component<any, any> {
     onChange('controls', newControls);
   }
 
-  renderItem(item: Record<string, any> = {}, parentControl: Record<string, any> = {}, deepIndex) {
+  renderItem(item: Record<string, any> = {}, parentControl: Record<string, any> = {}, deepIndex: number) {
     const { values = [], actionType, from } = this.props;
     const { extendId = [] } = this.state;
     // 子表、关联表格可编辑不显示下拉
@@ -371,9 +373,9 @@ export default class DropDownItem extends Component<any, any> {
     const { values = [], actionType, from } = this.props;
     const { extendId } = this.state;
 
-    return dropData.map(item => {
+    return dropData.map((item, index) => {
       return (
-        <Fragment>
+        <Fragment key={index}>
           {this.renderItem(item, parentControl, deepIndex)}
           {!_.isEmpty(_.get(item, 'relationControls')) &&
           _.includes(extendId, item.controlId) &&
@@ -433,7 +435,7 @@ export default class DropDownItem extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { values = [], actionError, activeTab = 0, disabled } = this.props;
     const { keyword, visible, dropDownData } = this.state;
     const menu = (

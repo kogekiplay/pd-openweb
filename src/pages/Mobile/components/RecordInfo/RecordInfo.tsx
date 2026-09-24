@@ -40,6 +40,10 @@ import './RecordInfo.less';
 
 const imgAndVideoReg = /(swf|avi|flv|mpg|rm|mov|wav|asf|3gp|mkv|rmvb|mp4|gif|png|jpg|jpeg|webp|svg|psd|bmp|tif|tiff)/i;
 let RecordInfo = class RecordInfo extends Component<any, any> {
+  declare submitType: string;
+  declare ignoreUpdateRelationCount: boolean | undefined;
+  declare recordEditLock: RecordEditLock | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -100,7 +104,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
 
   customwidget = React.createRef();
 
-  componentDidMount() {
+  override componentDidMount() {
     emitter.addListener('MOBILE_RELOAD_RECORD_INFO', this.debounceRefresh);
     this.loadRecord();
     this.getPayConfig();
@@ -118,7 +122,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     const { relationRow } = this.props;
     const { currentTab, isEditRecord } = this.state;
 
@@ -142,7 +146,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.recordEditLock?.destroy();
     emitter.removeListener('MOBILE_RELOAD_RECORD_INFO', this.debounceRefresh);
   }
@@ -332,7 +336,8 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
           }
         },
       );
-    } catch (err) {
+    } catch (thrown) {
+      const err = thrown as ApiRejection;
       console.error(err);
 
       if (err && err.resultCode === 4) {
@@ -359,7 +364,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
           ..._.pick(this.props, ['appId', 'viewId', 'worksheetId', 'recordId']),
           updateType: this.state.isRecordLock ? 42 : 41,
         },
-        (err, resdata) => {
+        (_err, resdata) => {
           if (resdata) {
             this.setState({
               isRecordLock: resdata.sys_lock,
@@ -1154,6 +1159,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
         </div>
       );
     }
+    return undefined;
   }
 
   loadSwitchRecord = props => {
@@ -1267,7 +1273,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       recordId,
       className,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
 import { Button, Dialog, Input, LoadDiv, Menu, MenuItem, ScrollView, Support, SvgIcon, Switch } from 'ming-ui';
@@ -11,7 +11,7 @@ import './index.less';
 export default function AppOfflineSubmit(props) {
   const { appId } = props;
   const [loading, setLoading] = useState(true);
-  const [sheetData, setSheetData] = useState([]);
+  const [sheetData, setSheetData] = useState<HapApi.MD.Entity.Apk.EntityInfo[]>([]);
   const [offlineItems, setOfflineItems] = useState([]);
   const [keyword, setKeyword] = useState('');
   const offlineItemIds = offlineItems.map(v => v.worksheetId);

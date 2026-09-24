@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Dialog, FunctionWrap, Icon, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import LinkImg from './image/link.png';
@@ -60,6 +60,7 @@ function AddLinkFile(props) {
     }
 
     handleClose();
+    return undefined;
   };
 
   return (
@@ -110,7 +111,8 @@ function AddLinkFile(props) {
               value={link}
               onChange={value => setLink(value)}
               onMouseUp={evt => {
-                var target = evt.target;
+                // <input> 没有子元素，currentTarget 就是 target；只有 currentTarget 在类型上是 HTMLInputElement
+                var target = evt.currentTarget;
                 if (target.selectionEnd - target.selectionStart === 0) {
                   target.select();
                 }

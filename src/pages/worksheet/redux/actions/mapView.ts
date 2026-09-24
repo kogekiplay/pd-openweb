@@ -5,7 +5,7 @@ import { formatQuickFilter } from 'src/utils/filter';
 import { getCurrentView } from '../util';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
-const mapViewRequest = {};
+const mapViewRequest: Record<string, ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | null> = {};
 
 const getMapViewPara = (sheet: Record<string, any> = {}, view) => {
   const { base, navGroupFilters = [], quickFilter = [] } = sheet;

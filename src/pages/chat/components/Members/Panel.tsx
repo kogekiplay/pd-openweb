@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import { ScrollView } from 'ming-ui';
@@ -11,7 +11,7 @@ export class Member extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     const { item } = this.props;
     const { accountId } = md.global.Account;
     return (
@@ -55,7 +55,7 @@ export default class MembersPanel extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { session } = this.props;
 
@@ -73,7 +73,7 @@ export default class MembersPanel extends Component<any, any> {
       }
     }
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getGroupUsers();
   }
   getGroupUsers() {
@@ -119,7 +119,7 @@ export default class MembersPanel extends Component<any, any> {
     this.getGroupUsers();
   }
 
-  render() {
+  override render() {
     const { dropdownValue, dropdownData, loading, members } = this.state;
     const { session } = this.props;
     const { groupMemberCount } = session;

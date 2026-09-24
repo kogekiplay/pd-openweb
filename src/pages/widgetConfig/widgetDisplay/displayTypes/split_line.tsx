@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import _, { head } from 'lodash';
 import { genWidgetRowAndCol } from '../../util';
 import SplitLineSection from '../../widgetSetting/components/SplitLineConfig/SplitLineSection';

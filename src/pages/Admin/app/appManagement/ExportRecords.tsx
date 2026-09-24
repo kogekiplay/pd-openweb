@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import styled from 'styled-components';
@@ -39,7 +39,7 @@ export default function ExportRecords({ projectId, type }: { projectId?: string;
     total: 0,
     userInfo: [],
   });
-  const promiseRef = useRef(null);
+  const promiseRef = useRef<ApiResult | null>(null);
 
   const getDataList = useCallback(
     (params: Record<string, any> = {}) => {
@@ -210,14 +210,14 @@ export default function ExportRecords({ projectId, type }: { projectId?: string;
         dataIndex: 'exportPassword',
         width: 150,
         ellipsis: true,
-        render: (text, record) => renderPassword(record, 'exportPassword'),
+        render: (_text, record) => renderPassword(record, 'exportPassword'),
       },
       {
         title: _l('应用锁密码'),
         dataIndex: 'lockPassword',
         width: 150,
         ellipsis: true,
-        render: (text, record) => renderPassword(record, 'lockPassword'),
+        render: (_text, record) => renderPassword(record, 'lockPassword'),
       },
       {
         title: '',

@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { UserCard } from 'ming-ui';
 import { MEMBER_STATUS } from '../../constant';
 
 export default class Member extends Component<any, any> {
-  render() {
+  declare memberItem: HTMLSpanElement | null | undefined;
+
+  override render() {
     const {
       member: { head, memberName, status, face, nickName, accountID, thirdID },
       isCreateUser,

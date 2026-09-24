@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import LibCalender from '../../NewDateTimePicker/lib/calender';
@@ -12,7 +12,7 @@ class TimeMenu extends Component<any, any> {
     this.state = this.init(props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState(this.init(this.props));
     }
@@ -173,7 +173,7 @@ class TimeMenu extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const classList = ['mui-timemenu'];
 
     if (this.props.show) {

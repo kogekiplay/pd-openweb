@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Carousel } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -221,7 +221,7 @@ export default function FormCover(props) {
     showthumbnail = '1',
   } = widgetStyle;
   const [imageData, setImageData] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>(0);
   const isMobile = browserIsMobile();
   const $cover = useRef(null);
   const isCurVideo = videoReg(imageData[currentIndex]);

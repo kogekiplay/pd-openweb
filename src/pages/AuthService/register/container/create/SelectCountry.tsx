@@ -1,4 +1,4 @@
-﻿import React, { useCallback, useEffect, useRef } from 'react';
+﻿import { useCallback, useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { Dropdown } from 'ming-ui';
@@ -52,7 +52,7 @@ export default function RegionDropdown(props) {
     onChange(code);
   };
 
-  const handleSearch = newKeywords => {
+  const handleSearch = (newKeywords: string | undefined) => {
     setState({ keywords: newKeywords });
     if (newKeywords) {
       searchRef.current(newKeywords);
@@ -74,7 +74,7 @@ export default function RegionDropdown(props) {
       onSearch={handleSearch}
       onChange={onChangRegionCode}
       noData={keywords && _.isEmpty(searchResultCountry) ? _l('暂无搜索结果') : _l('无数据')}
-      loading={loading}
+      itemLoading={loading}
       placeholder={_l('请选择')}
       onVisibleChange={visible => {
         onVisibleChange(visible);

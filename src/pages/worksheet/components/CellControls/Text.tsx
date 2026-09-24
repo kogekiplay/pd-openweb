@@ -69,7 +69,7 @@ Input.propTypes = {
   onChange: PropTypes.func,
 };
 
-function getPopupContainer(popupContainer, rows, isMultipleLine) {
+function getPopupContainer(popupContainer, rows, isMultipleLine: boolean) {
   // 表格 main-center 设置了 overflow:hidden，多行文本编辑弹层超出单元格高度时会被裁剪，
   // 也会被底部统计行/footer 遮挡。逃逸到外层 .customFieldsContainer 可绕开裁剪。
   if (isMultipleLine) {
@@ -89,8 +89,11 @@ function getPopupContainer(popupContainer, rows, isMultipleLine) {
 }
 
 export default class Text extends React.Component<any, any> {
-  static contextType = ChildTableContext;
-  static propTypes = {
+  declare postBlurUntil: number | null | undefined;
+  declare hadBlur: boolean | undefined;
+
+  static override contextType = ChildTableContext;
+  static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),
     editable: PropTypes.bool,
@@ -122,7 +125,7 @@ export default class Text extends React.Component<any, any> {
 
   tempKey = [];
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const valueChanged = this.props.cell.value !== prevProps.cell.value;
       const rowChanged = !isEqual(get(this.props, 'row.rowid'), get(prevProps, 'row.rowid'));
@@ -180,7 +183,7 @@ export default class Text extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { isSubList, isediting } = this.props;
 
     if (isSubList && isediting && !this.hadBlur) {
@@ -489,7 +492,7 @@ export default class Text extends React.Component<any, any> {
 
     this.setState({ forceShowFullValue: true });
   };
-  render() {
+  override render() {
     const {
       columnIndex,
       className,
@@ -604,9 +607,11 @@ export default class Text extends React.Component<any, any> {
               cellControlErrorStatus: error,
               ignoreErrorMessage,
             })}
-            {...editProps}
+            // 不把 editProps.ref 给 Textarea：那样拿到的是 Textarea 组件实例，而下面 manualRef 会把 this.input
+            // 换成指向真正 textarea DOM 的对象 —— 后面读 value / focus / setSelectionRange 用的都是它
+            {..._.omit(editProps, 'ref')}
             value={String(_.isUndefined(editProps.value) ? '' : editProps.value)}
-            manualRef={ref => (this.input = { current: ref })}
+            manualRef={ref => { this.input = { current: ref }; }}
             style={{
               width: style.width,
               minHeight: rowHeight,

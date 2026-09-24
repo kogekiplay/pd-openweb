@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -50,12 +50,12 @@ export default function WeekdaySetting({ data, onChange }) {
   const [visible, setVisible] = useState(false);
   const weekdayArr = weekday.split('');
 
-  const handleChange = value => {
+  const handleChange = (value: string) => {
     onChange(handleAdvancedSettingChange(data, { weekday: value }));
   };
 
   const formatWeekdayToText = () => {
-    let weekdayText = [];
+    let weekdayText: string[] = [];
     let isContinue = true;
     weekdayArr.map((item, index: number) => {
       if (index !== weekdayArr.length - 1 && Number(item) + 1 !== Number(weekdayArr[index + 1])) {
@@ -84,10 +84,11 @@ export default function WeekdaySetting({ data, onChange }) {
         }}
       >
         <WeekdayWrap>
-          {WEEKDAY_TYPE.map(({ text, value }) => {
+          {WEEKDAY_TYPE.map(({ text, value }, index) => {
             const isSelect = _.includes(weekdayArr, value);
             return (
               <li
+                key={index}
                 className={cx({ active: isSelect })}
                 onClick={() => {
                   const newVal = isSelect ? weekdayArr.filter(i => i !== value) : weekdayArr.concat([value]);

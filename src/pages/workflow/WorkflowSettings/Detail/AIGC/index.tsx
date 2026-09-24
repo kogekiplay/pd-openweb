@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 // remarkable 2 去掉了 default export，Remarkable 改为具名导出。
 import { Remarkable, utils } from 'remarkable';
@@ -83,7 +83,7 @@ export default class AIGC extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -91,7 +91,7 @@ export default class AIGC extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -372,7 +372,7 @@ export default class AIGC extends Component<any, any> {
           height={0}
           content={data[key]}
           formulaMap={data.formulaMap}
-          onChange={(err, value) => this.updateSource({ [key]: value })}
+          onChange={(_err, value) => this.updateSource({ [key]: value })}
           updateSource={this.updateSource}
         />
       </Fragment>
@@ -478,7 +478,7 @@ export default class AIGC extends Component<any, any> {
     return filterXss(md.render(text));
   };
 
-  render() {
+  override render() {
     const { selectNodeType } = this.props;
     const { data } = this.state;
 

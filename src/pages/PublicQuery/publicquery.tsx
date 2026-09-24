@@ -82,7 +82,7 @@ const Con = styled.div`
     }
   }
 `;
-const ErrText = {
+const ErrText: Record<number, string> = {
   1: _l('查询不存在或已关闭!'),
   2: _l('未设置可用的查询条件'),
   3: _l('数据源已删除'),
@@ -95,7 +95,7 @@ class Publicquery extends React.Component<any, any> {
     props.onRef(this);
   }
 
-  renderErr = errCode => {
+  renderErr = (errCode: number) => {
     return <div className="err">{ErrText[errCode]}</div>;
   }; //查询
 
@@ -116,7 +116,7 @@ class Publicquery extends React.Component<any, any> {
     captcha(callback);
   };
 
-  render() {
+  override render() {
     const { publicqueryRes = {}, querydata = {}, appId } = this.props;
     const { queryControlIds = [], viewId, worksheet = {}, worksheetId = '', visibleType, title } = publicqueryRes;
     const { projectId = '', template = {}, views = [] } = worksheet;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -19,7 +19,7 @@ const Wrap = styled.div`
 `;
 
 export default class DepartmentList extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     selectedDepartment: PropTypes.array,
     toogleDepargmentSelect: PropTypes.func,
     onChangeSelectedOnly: PropTypes.func,
@@ -66,7 +66,7 @@ export default class DepartmentList extends Component<any, any> {
   getDisable = department => {
     return this.props.checkIncludeChilren && this.getIsIncludesByParent(department);
   };
-  render() {
+  override render() {
     const { activeIds = [] } = this.props;
     let departments = this.props.data;
 
@@ -106,7 +106,7 @@ class Department extends Component<any, any> {
   static defaultProps = {
     showUserCount: true,
   };
-  static propTypes = {
+  static override propTypes = {
     toogleDepargmentSelect: PropTypes.func,
     toggleDepartmentList: PropTypes.func,
     selectedDepartment: PropTypes.array,
@@ -124,7 +124,7 @@ class Department extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.departmentMoreIds, this.props.departmentMoreIds)) {
         this.setState({
@@ -151,7 +151,7 @@ class Department extends Component<any, any> {
     event.stopPropagation();
     this.props.toggleDepartmentList(this.props.department.departmentId);
   };
-  render() {
+  override render() {
     const { moreIdLoading } = this.state;
     let { active, department, checked, keywords, isIncludesByParent, checkIncludeChilren } = this.props;
     let { haveSubDepartment, subDepartments, disabled, open, departmentName } = department;
@@ -219,7 +219,7 @@ class Department extends Component<any, any> {
                   !(this.props.selectedDepartment.find(o => o.departmentId === department.departmentId) || {})
                     .checkIncludeChilren
                     ? 'light'
-                    : ''
+                    : undefined
                 }
                 checked={checked}
               />

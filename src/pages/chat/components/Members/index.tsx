@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -8,11 +8,13 @@ import InviteOrAddUsers from './InviteOrAddUsers';
 import './index.less';
 
 class Avatar extends Component<any, any> {
+  declare avatar: HTMLImageElement | null | undefined;
+
   constructor(props) {
     super(props);
   }
 
-  render() {
+  override render() {
     const { id, avatar, projectId } = this.props;
 
     return (
@@ -38,7 +40,7 @@ export default class Members extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { session } = this.props;
 
@@ -47,7 +49,7 @@ export default class Members extends Component<any, any> {
       }
     }
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { groupMemberCount, groupUsers } = this.props.session;
     this.setState({
       loading: false,
@@ -71,7 +73,7 @@ export default class Members extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { session } = this.props;
     const { groupMemberCount, isPost } = session;
     const { loading, members } = this.state;

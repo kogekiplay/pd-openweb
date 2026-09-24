@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import { ScrollView } from 'ming-ui';
@@ -7,11 +7,11 @@ import * as ajax from '../../utils/ajax';
 import { FeesItem, formatFeeds } from './index';
 
 const splitFeeds = list => {
-  const ranges = {};
+  const ranges: Record<string, moment.Moment[]> = {};
   ranges[_l('今天')] = [moment().startOf('day'), moment().endOf('day')];
   ranges[_l('最近七天')] = [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')];
   ranges[_l('本月')] = [moment().startOf('month'), moment().endOf('day')];
-  const oSplit = {};
+  const oSplit: Record<string, boolean> = {};
   list.forEach(feed => {
     const feedTime = moment(feed.createTime);
     let i;
@@ -52,7 +52,7 @@ export default class FeedsPanel extends Component<any, any> {
       feeds: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getFeed();
   }
   handleScrollEnd() {
@@ -84,7 +84,7 @@ export default class FeedsPanel extends Component<any, any> {
         });
       });
   }
-  render() {
+  override render() {
     const { feeds, loading } = this.state;
     return (
       <div className="ChatPanel-FeedsPanel">

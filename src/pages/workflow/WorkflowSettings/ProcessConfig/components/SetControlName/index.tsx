@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -127,7 +127,7 @@ export default ({ data = [], list = [], errorItems, setErrorItems, updateSource 
       }
 
       return (
-        <Fragment>
+        <Fragment key={index}>
           <li className="flexRow relative" key={obj.controlId}>
             {obj.dataSource && (
               <div className="w20 relative">{index !== source.length - 1 && <span className="clearLine" />}</div>
@@ -163,7 +163,7 @@ export default ({ data = [], list = [], errorItems, setErrorItems, updateSource 
                   }
 
                   const others = list.filter(o => o.controlId !== obj.controlId);
-                  let repeatControl = {};
+                  let repeatControl: Record<string, string | number> = {};
                   others.forEach(element => {
                     if (!_.find(others, o => o.alias === element.alias && o.controlId !== element.controlId)) {
                       repeatControl[element.controlId] = errorItems[element.controlId] === 1 ? 1 : '';

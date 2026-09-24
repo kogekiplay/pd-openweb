@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function ListNull(props) {
   const { isSearch, type } = props;
@@ -32,4 +31,5 @@ export default function ListNull(props) {
       );
     }
   }
+  return undefined;
 }

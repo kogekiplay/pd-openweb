@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import { ColorPicker, Icon } from 'ming-ui';
 import { SCORE_COLORS_LIST } from '../../config/score';
@@ -13,7 +13,7 @@ export default function ColorSelectWrap({ color: activeColor, handleChange }) {
     setCustomColor(JSON.parse(window.localStorage.getItem('customColor') || '[]'));
   }, []);
 
-  const getColorList = (customIcon?) => {
+  const getColorList = (customIcon?: boolean | undefined) => {
     const list = customIcon ? customColor : SCORE_COLORS_LIST;
     return (
       <ul>

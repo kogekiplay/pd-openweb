@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -63,7 +63,7 @@ const NOTICE_METHOD_OPTIONS = [
   { value: '3', label: _l('邮件') },
 ];
 
-const ALERT_TIP = {
+const ALERT_TIP: Record<string, string> = {
   workflow: _l('请输入整数，数值必须 大于0，小于 100001'),
   balance: _l('输入金额错误，输入的金额范围在10到100,000之间'),
 };
@@ -103,7 +103,7 @@ class EarlyWarningDialog extends Component<any, any> {
     this.setState({ warningValue: val });
   };
 
-  onChangeNoticeTypes = value => {
+  onChangeNoticeTypes = (value: string) => {
     const { noticeTypes } = this.state;
 
     this.setState({
@@ -164,6 +164,7 @@ class EarlyWarningDialog extends Component<any, any> {
               : true,
           ).map((item, index) => (
             <Checkbox
+              key={index}
               checked={noticeTypes.includes(item.value)}
               disabled={index === 0}
               onClick={() => this.onChangeNoticeTypes(item.value)}
@@ -176,7 +177,7 @@ class EarlyWarningDialog extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { type = 'balance', isWarning, onCancel = () => {}, closeWarning = () => {} } = this.props;
     const { notifiers = [], warningValue, noticeTypes, overLimit } = this.state;
     const isWorkflow = type === 'workflow';
@@ -245,9 +246,9 @@ class EarlyWarningDialog extends Component<any, any> {
         <NotifierCon>
           <span className="txtMiddle mRight20 pTop5">{_l('通知')}</span>
           <div className="notifierUsers">
-            {notifiers.map(it => {
+            {notifiers.map((it, index) => {
               return (
-                <NotifierItem>
+                <NotifierItem key={index}>
                   <UserHead
                     className="circle"
                     user={{

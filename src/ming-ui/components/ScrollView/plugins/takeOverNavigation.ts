@@ -6,7 +6,7 @@ export default {
     const { customOptions = {} } = osInstance.options();
     const { enableSwipeBack, isMobile } = customOptions || {};
 
-    if (!isMobile || enableSwipeBack) return;
+    if (!isMobile || enableSwipeBack) return undefined;
 
     const viewport = osInstance.elements().viewport;
 

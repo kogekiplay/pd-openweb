@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { get, head } from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, RadioGroup, Switch as SwitchComponent } from 'ming-ui';

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -11,7 +11,7 @@ import EditInput from './EditInput';
 export default function ControlRules(props) {
   const { app, selectNode, translateData, comparisonLangId, comparisonLangData, onEditAppLang } = props;
   const [loading, setLoading] = useState(true);
-  const [rules, setRules] = useState([]);
+  const [rules, setRules] = useState<HapApi.MD.Entity.Worksheet.ControlRuleEntity[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const scrollViewRef = useRef<any>(undefined);
 
@@ -42,7 +42,7 @@ export default function ControlRules(props) {
     );
   }
 
-  const handlePositionItem = item => {
+  const handlePositionItem = (item: HapApi.MD.Entity.Worksheet.ControlRuleEntity) => {
     const el = document.querySelector(`.navItem-${item.ruleId}`);
     const className = 'highlight';
     const highlightEl = el.querySelector('.itemName');
@@ -56,7 +56,7 @@ export default function ControlRules(props) {
     }
   };
 
-  const renderNav = item => {
+  const renderNav = (item: HapApi.MD.Entity.Worksheet.ControlRuleEntity) => {
     return (
       <div
         className="navItem flexRow alignItemsCenter pointer"
@@ -68,12 +68,12 @@ export default function ControlRules(props) {
     );
   };
 
-  const renderContent = item => {
+  const renderContent = (item: HapApi.MD.Entity.Worksheet.ControlRuleEntity) => {
     const data = _.find(translateData, { correlationId: item.ruleId }) || {};
     const translateInfo = data.data || {};
     const comparisonLangInfo = getTranslateInfo(app.id, selectNode.workSheetId, item.ruleId, comparisonLangData);
 
-    const handleSave = info => {
+    const handleSave = (info: { message: string | undefined }) => {
       onEditAppLang({
         id: data.id,
         parentId: selectNode.workSheetId,

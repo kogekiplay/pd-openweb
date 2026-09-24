@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -257,7 +257,7 @@ export default function RelateSheet(props) {
   };
 
   // 显示字段
-  const renderShowControl = (isExtra, hideTitle?) => {
+  const renderShowControl = (isExtra: boolean, hideTitle?) => {
     const coverId = isExtra ? choosecoverid : coverCid;
 
     const renderCover = () => {
@@ -306,9 +306,10 @@ export default function RelateSheet(props) {
           />
           <div className="flexCenter mTop20">
             <span className="textSecondary mRight20">{_l('填充方式')}</span>
-            {COVER_FILL_TYPES.map(item => {
+            {COVER_FILL_TYPES.map((item, index) => {
               return (
                 <span
+                  key={index}
                   className={cx('coverType Hand', { active: item.value === coverType })}
                   onClick={() => onChange(handleAdvancedSettingChange(data, { [typeKey]: item.value }))}
                 >
@@ -425,8 +426,9 @@ export default function RelateSheet(props) {
       <SettingItem>
         <div className="settingItemTitle">{_l('关联记录数量')}</div>
         <AnimationWrap>
-          {DISPLAY_COUNT.map(({ text, value }) => (
+          {DISPLAY_COUNT.map(({ text, value }, index) => (
             <div
+              key={index}
               className={cx('animaItem', { active: enumDefault === value })}
               onClick={() => {
                 if (value === 1) {
@@ -465,8 +467,9 @@ export default function RelateSheet(props) {
         <div className="settingItemTitle">{enumDefault === 1 ? _l('记录选择方式') : _l('记录显示方式')}</div>
         {enumDefault === 1 ? (
           <AnimationWrap>
-            {DISPLAY_CHOOSE.map(({ text, value }) => (
+            {DISPLAY_CHOOSE.map(({ text, value }, idx) => (
               <div
+                key={idx}
                 className={cx('animaItem', { active: showtype === value })}
                 onClick={() => {
                   if (value !== showtype) {

@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -29,14 +29,25 @@ const SearchWrapper = styled.div`
   }
 `;
 
-const MobileSearch = forwardRef((props, ref) => {
+interface MobileSearchProps {
+  placeholder?: string | undefined;
+  /** 停止输入 600ms 后、或按回车时回调，参数是当前关键字 */
+  onSearch?: ((keywords: string) => void) | undefined;
+}
+
+/** ref 上能读到当前输入框里的关键字 */
+export interface MobileSearchHandle {
+  keywords: string;
+}
+
+const MobileSearch = forwardRef<MobileSearchHandle, MobileSearchProps>((props, ref) => {
   const { placeholder, onSearch = () => {} } = props;
   const isFirstRun = useRef(true);
   const latestOnSearch = useRef(onSearch);
   const [keywords, setKeywords] = useState('');
 
   const debouncedSearch = useRef(
-    _.debounce(kw => {
+    _.debounce((kw: string) => {
       latestOnSearch.current(kw);
     }, 600),
   ).current;

@@ -1,4 +1,3 @@
-import React from 'react';
 import './css/result.less';
 
 export default function (props) {

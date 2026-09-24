@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import AnonAttachmentSlot from 'src/components/Agent/ui/AnonAttachmentSlot';
 import PromptInput from 'src/components/Agent/ui/PromptInput';
@@ -339,7 +339,7 @@ export default function EntryWidget({
     }
   }
 
-  function fillSample(text) {
+  function fillSample(text: string) {
     setDraft(text);
     promptRef.current && promptRef.current.setInputValue(text);
     promptRef.current && promptRef.current.focus();

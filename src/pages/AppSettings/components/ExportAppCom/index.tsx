@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, LoadDiv, ScrollView, UserHead, UserName } from 'ming-ui';
@@ -22,7 +22,7 @@ export default class ExportAppCom extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getExportLogs();
   }
 
@@ -137,7 +137,7 @@ export default class ExportAppCom extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { appId, projectId } = this.props;
     const { exportAppVisible, records = [], loading } = this.state;
 
@@ -186,16 +186,16 @@ export default class ExportAppCom extends Component<any, any> {
                   radiusSize={132}
                   icon="import"
                   iconClassName="textTertiary Font50"
-                  emptyTxtClassName="textDisabled mTop18 Font17"
+                  emptyTxtClassName="textTertiary mTop18 Font17"
                   emptyTxt={_l('暂无导出记录')}
                 />
               ) : (
                 <ScrollView className="h100" onScrollEnd={this.onScrollEnd}>
-                  {records.map(item => {
+                  {records.map((item, index) => {
                     const { operator = {}, createTime, apps = [], downLoadUrl } = item;
                     const appNames = apps.map((v, i) => (i < apps.length - 1 ? v.appName + ';' : v.appName)).join('');
                     return (
-                      <div className="row flexRow">
+                      <div key={index} className="row flexRow">
                         <div className="operator flexRow">
                           <UserHead
                             className="circle mRight8"

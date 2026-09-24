@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { SpinLoading } from 'antd-mobile';
@@ -77,7 +77,7 @@ class MobileGalleryView extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { view, currentSheetRows, sheetRowLoading, sheetView, quickFilter, isPullRefreshing } = this.props;
     const wWidth = window.innerWidth;
     const needClickToSearch = _.get(view, 'advancedSetting.clicksearch') === '1';

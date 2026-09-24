@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { Routes } from 'react-router';
@@ -27,7 +27,7 @@ let Application = class Application extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     let { appId, worksheetId } = this.props.match.params;
 
     if (md.global.Account.isPortal) {
@@ -45,7 +45,7 @@ let Application = class Application extends Component<any, any> {
     this.syncAppScopeClass();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     document.body.classList.remove('inAppScope');
   }
 
@@ -70,7 +70,7 @@ let Application = class Application extends Component<any, any> {
    * 检测应用有效性
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     this.syncAppScopeClass();
 
     if (!shallowEqual(prevProps, this.props)) {
@@ -149,7 +149,7 @@ let Application = class Application extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     // 【应用主题色的唯一注入点】一处输入，两路输出：
     //   · ConfigProvider -> antd 组件自己的 token 系统
     //   · AppThemeScope  -> 我们那套 CSS 变量（渲染 null，只有副作用）

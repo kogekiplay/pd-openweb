@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -6,7 +6,11 @@ import { Dropdown, Icon, RadioGroup } from 'ming-ui';
 import { DateTime } from 'ming-ui/components/NewDateTimePicker';
 import { DATE_TYPE } from '../../enum';
 
-export default class LoopContent extends Component<any, any> {
+export interface LoopContentState {
+  isOldCustom: boolean;
+}
+
+export default class LoopContent extends Component<any, LoopContentState> {
   constructor(props) {
     super(props);
 
@@ -124,7 +128,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证数值控件
    */
-  checkNumberControl(evt, isBlur?) {
+  checkNumberControl(evt, isBlur?: boolean | undefined) {
     const { updateSource } = this.props;
     let num = evt.target.value.replace(/[^\d]/g, '');
 
@@ -191,7 +195,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 切换周
    */
-  switchWeek(value) {
+  switchWeek(value: number) {
     const { data, updateSource } = this.props;
     const weekDays = _.cloneDeep(data.weekDays);
 
@@ -473,7 +477,7 @@ export default class LoopContent extends Component<any, any> {
    */
   renderRangeContent(key: string) {
     const { data } = this.props;
-    const KEYS_ENUM = {
+    const KEYS_ENUM: Record<string, { min: number; max: number }> = {
       minute: {
         min: 0,
         max: 59,
@@ -527,7 +531,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证范围开始值、结束值
    */
-  checkRangeNumber(evt, key?: string, min?, max?, isEnd?) {
+  checkRangeNumber(evt, key?: string, min?, max?, isEnd?: boolean | undefined) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -570,7 +574,7 @@ export default class LoopContent extends Component<any, any> {
   renderFixedContent(key: string) {
     const { data } = this.props;
     const values = data.config[key].values;
-    const KEYS_ENUM = {
+    const KEYS_ENUM: Record<string, { min: number; max: number }> = {
       minute: {
         min: 0,
         max: 59,
@@ -665,7 +669,7 @@ export default class LoopContent extends Component<any, any> {
    */
   renderIncrementContent(key: string) {
     const { data } = this.props;
-    const KEYS_ENUM = {
+    const KEYS_ENUM: Record<string, { text1: string; text2: string; min: number; max: number }> = {
       minute: {
         text1: _l('分开始，每隔'),
         text2: _l('分钟'),
@@ -725,7 +729,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证增量开始值
    */
-  checkIncrementStartNumber(evt, key?, min?, max?) {
+  checkIncrementStartNumber(evt, key?: string | undefined, min?, max?) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -753,7 +757,7 @@ export default class LoopContent extends Component<any, any> {
   /**
    * 验证增量值
    */
-  checkIncrementNumber(evt, key?) {
+  checkIncrementNumber(evt, key?: string | undefined) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -781,7 +785,7 @@ export default class LoopContent extends Component<any, any> {
     return `UTC${timeZone > 0 ? '+' : '-'}${timeZone / 60}`;
   };
 
-  render() {
+  override render() {
     const { data, updateSource } = this.props;
     const { isOldCustom } = this.state;
     const list = [

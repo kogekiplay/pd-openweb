@@ -342,9 +342,10 @@ export default function AggregationCon(props) {
                         popup={
                           <WrapS className="Relative">
                             {/* 数值类字段配置：求和（默认）、最大值、最小值、平均值 ｜ 非数值字段配置：计数、去重计数 */}
-                            {getDefaultOperationDatas(_.get(item, 'controlSetting')).map(o => {
+                            {getDefaultOperationDatas(_.get(item, 'controlSetting')).map((o, index) => {
                               return (
                                 <MenuItem
+                                  key={index}
                                   className={cx('settingSheet flexRow Font14', {
                                     colorPrimary: o.value === item.aggFuncType,
                                   })}
@@ -429,7 +430,7 @@ export default function AggregationCon(props) {
               icon="clear"
               className="clearIcon Hand textTertiary del hoverColorPrimary mLeft8 Font16"
               onClick={() => {
-                onUpdate(items.filter((o, i) => i !== num));
+                onUpdate(items.filter((_o, i) => i !== num));
               }}
             />
           </Tooltip>

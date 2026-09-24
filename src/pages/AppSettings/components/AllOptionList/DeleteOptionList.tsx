@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -139,7 +139,7 @@ export default function DeleteOptionList({
               <div className="emptyIconWrap">
                 <i className="icon icon-link_record Font50 textTertiary" />
               </div>
-              <div className="textDisabled mTop18 Font17">{_l('暂无引用字段')}</div>
+              <div className="textTertiary mTop18 Font17">{_l('暂无引用字段')}</div>
             </Empty>
           ) : (
             Object.values(dataInfo).map(info => {

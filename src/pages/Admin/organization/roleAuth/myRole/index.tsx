@@ -61,7 +61,7 @@ export default class MyRole extends React.Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     return (
       <Wrap>
         <div className="roleAuthHeader">

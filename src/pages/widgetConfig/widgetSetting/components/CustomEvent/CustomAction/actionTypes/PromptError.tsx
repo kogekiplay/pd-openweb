@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -65,7 +65,7 @@ export default function PromptError(props) {
               const { icon, currentControl } = getDetail(item.controlId);
               const isDelete = _.isEmpty(currentControl);
               return (
-                <div className="setItem">
+                <div key={index} className="setItem">
                   <div className="itemFiled itemFiledTitle ">
                     {icon && <Icon className="mRight8 Font14 textSecondary" icon={icon} />}
                     <span className={cx('flex overflow_ellipsis', { Red: isDelete })}>
@@ -101,7 +101,7 @@ export default function PromptError(props) {
                     icon="trash"
                     className="Font16 deleteBtn"
                     onClick={() => {
-                      setState({ actionItems: actionItems.filter((i, idx) => idx !== index) });
+                      setState({ actionItems: actionItems.filter((_i, idx) => idx !== index) });
                     }}
                   />
                 </div>

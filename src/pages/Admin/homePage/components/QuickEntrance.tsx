@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import addFriends from 'src/components/addFriends';
 import { hasPermission } from 'src/components/checkPermission';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
@@ -11,7 +11,7 @@ export default function QuickEntrance(props) {
   const { projectId, authority } = props;
   const [installType, setType] = useState('');
 
-  const handleActionClick = action => {
+  const handleActionClick = (action: string) => {
     switch (action) {
       case 'addPerson':
         addFriends({

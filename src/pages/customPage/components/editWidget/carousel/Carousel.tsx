@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Carousel } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -194,7 +194,7 @@ export default function CarouselPreview(props) {
   const [loading, setLoading] = useState(true);
   const [imageData, setImageData] = useState([]);
   const [rowData, setRowData] = useState([]);
-  const [controls, setControls] = useState([]);
+  const [controls, setControls] = useState<FormControl[]>([]);
   const [previewRecord, setPreviewRecord] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [code, setCode] = useState(0);
@@ -383,6 +383,7 @@ export default function CarouselPreview(props) {
         </div>
       );
     }
+    return undefined;
   };
 
   const renderFileImage = (record, data) => {

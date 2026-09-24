@@ -48,10 +48,8 @@ export default function SheetGroupSelect(props) {
     !!appId &&
       homeApp.getApp({ appId, getSection: true }).then(result => {
         setGroups(
-          result.sections.map(item => {
-            item.subVisible = true;
-            return item;
-          }),
+          // 原来在接口对象上原地加 subVisible，改成拷贝出新对象
+          (result.sections || []).map(item => ({ ...item, subVisible: true })),
         );
       });
   }, [appId]);
@@ -134,8 +132,8 @@ export default function SheetGroupSelect(props) {
           {groups.length ? (
             <div className="contentWrapper">
               <ScrollView>
-                {groups.map(group => (
-                  <React.Fragment>
+                {groups.map((group, index) => (
+                  <React.Fragment key={index}>
                     {renderGroupItem(group)}
                     {group.subVisible && group.childSections.map(subGroup => renderGroupItem(subGroup))}
                   </React.Fragment>

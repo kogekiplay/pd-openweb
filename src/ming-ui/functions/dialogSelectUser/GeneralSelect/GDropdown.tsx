@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
@@ -7,7 +7,9 @@ import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
 
 class Dropdown extends Component<any, any> {
-  static propTypes = {
+  declare _input: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     /** 点击方法，返回true才显示下拉菜单 */
     onClick: PropTypes.func,
     /**
@@ -102,7 +104,7 @@ class Dropdown extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value != undefined) {
         this.setState({
@@ -123,6 +125,7 @@ class Dropdown extends Component<any, any> {
         } else if (item.children) {
           getTextFromList(item.children);
         }
+        return undefined;
       });
     };
 
@@ -138,7 +141,7 @@ class Dropdown extends Component<any, any> {
     }
   }
 
-  handleChange(event, value) {
+  handleChange(_event, value) {
     if (this.props.value == undefined) {
       this.setState({
         value,
@@ -153,7 +156,7 @@ class Dropdown extends Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const props = this.props;
     const state = this.state;
     const { value } = state;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import _ from 'lodash';
 import onlySyncBg from 'staticfiles/images/onlySync.png';
 import syncWithDealBg from 'staticfiles/images/syncWithDeal.png';

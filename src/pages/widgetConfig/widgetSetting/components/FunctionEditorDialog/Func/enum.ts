@@ -68,21 +68,21 @@ export const functions = {
 
     if (result > 7) {
       const startWorkDayLength = [...new Array(7 - startWeekDay)]
-        .map((d, i) => startWeekDay + i)
+        .map((_d, i) => startWeekDay + i)
         .filter(d => _.includes(workDays, d)).length;
       const endWorkDayLength = [...new Array(endWeekDay)]
-        .map((d, i) => i + 1)
+        .map((_d, i) => i + 1)
         .filter(d => _.includes(workDays, d)).length;
       result =
         _.intersection(
-          [1, 2, 3, 4, 5, 6, 7].map((d, i) => i),
+          [1, 2, 3, 4, 5, 6, 7].map((_d, i) => i),
           workDays,
         ).length *
           Math.floor((result - (7 - startWeekDay) - endWeekDay) / 7) +
         startWorkDayLength +
         endWorkDayLength;
     } else {
-      const days = [...new Array(result)].map((d, i) => Number((startWeekDay + i).toString(7).slice(-1)));
+      const days = [...new Array(result)].map((_d, i) => Number((startWeekDay + i).toString(7).slice(-1)));
       result = days.filter(d => _.includes(workDays, d)).length;
     }
 
@@ -135,7 +135,7 @@ export const functions = {
   },
   // 为日期加减时间
   DATEADD: function (date, expression, format = 1) {
-    expression = expression.replace(/\+\(undefined\)/g, '').replace(/\((\d+)\)/, ($0, $1) => $1);
+    expression = expression.replace(/\+\(undefined\)/g, '').replace(/\((\d+)\)/, (_$0, $1) => $1);
     expression = expression.replace(/\w\w:\w\w:\w\w/g, timeStr => {
       const [h, m, s] = dayjs(timeStr, 'HH:mm:ss').format('HH:mm:ss').split(':').map(Number);
       return `${h}h+${m}m+${s}s`;
@@ -328,7 +328,7 @@ export const functions = {
   // 求余
   MOD: function (number, divisor) {
     if (typeof number === 'undefined') {
-      return;
+      return undefined;
     }
 
     number = Number(number);
@@ -619,7 +619,7 @@ export const functions = {
     }
 
     if (!(lon1 && lat1 && lon2 && lat2)) {
-      return;
+      return undefined;
     }
 
     if (lat1 === lat2 && lon1 === lon2) {
@@ -692,7 +692,7 @@ export const functions = {
   },
   INCLUDE: function (value, matchStr) {
     if (!value || !matchStr) {
-      return;
+      return undefined;
     }
 
     return String(value).indexOf(matchStr) > -1;
@@ -809,7 +809,7 @@ export const functions = {
   // 工作日计算函数
   WORKDAY: function (start_date, days, holidays = []) {
     if (!start_date) {
-      return;
+      return undefined;
     }
 
     if (!isDateStr(start_date)) {
@@ -841,7 +841,7 @@ export const functions = {
   // 工作日计算函数（支持自定义周末）
   WORKDAY_INTL: function (start_date, days, weekend = 1, holidays = []) {
     if (!start_date) {
-      return;
+      return undefined;
     }
 
     if (!isDateStr(start_date)) {
@@ -907,7 +907,7 @@ export const functions = {
   // 周数计算函数
   WEEKNUM: function (date, return_type = 1) {
     if (!date) {
-      return;
+      return undefined;
     }
 
     if (!isDateStr(date)) {
@@ -1050,7 +1050,7 @@ export const functions = {
   },
 };
 
-export const functionTypes = {
+export const functionTypes: Record<string, string> = {
   math: _l('数学函数'),
   date: _l('日期函数'),
   string: _l('文本函数'),

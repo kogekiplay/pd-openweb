@@ -1,19 +1,19 @@
-import React, { useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { useDragLayer, useDrop } from 'react-dnd';
 import cx from 'classnames';
 import { type CustomBtnDragItem, ITEM_TYPE, ITEM_TYPE_GROUP } from './constants';
 
-function getActiveDropPlacement(activeDropPlacementRef, item) {
+function getActiveDropPlacement(activeDropPlacementRef, item: CustomBtnDragItem) {
   const placement = activeDropPlacementRef.current;
 
   return placement && placement.layoutId === item.layoutId && placement.itemType === item.type ? placement : null;
 }
 
-function createBoundaryPlacement(layoutId, itemType, insertBefore) {
+function createBoundaryPlacement(layoutId, itemType: string, insertBefore) {
   return { kind: 'boundary', layoutId, itemType, insertBefore };
 }
 
-function createInsidePlacement(layoutId, itemType, segmentIndex, gapIndex) {
+function createInsidePlacement(layoutId, itemType: string, segmentIndex, gapIndex) {
   return { kind: 'inside', layoutId, itemType, segmentIndex, gapIndex };
 }
 

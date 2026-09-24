@@ -43,11 +43,12 @@ function getShowTypeData(control) {
   } else if (control.type === WIDGETS_TO_API_TYPE_ENUM.MULTI_SELECT) {
     return showTypeData.filter(a => [0, 7].includes(a.value));
   }
+  return undefined;
 }
 
 class ColumnHead extends Component<any, any> {
-  static contextType = SheetContext;
-  static propTypes = {
+  static override contextType = SheetContext;
+  static override propTypes = {
     rowIsSelected: PropTypes.bool,
     readonly: PropTypes.bool,
     disabledFunctions: PropTypes.arrayOf(PropTypes.string),
@@ -168,7 +169,7 @@ class ColumnHead extends Component<any, any> {
     updateColumnStyles({ [controlId]: { [key]: value } });
   };
 
-  render() {
+  override render() {
     const {
       className,
       type = '',
@@ -656,7 +657,7 @@ class ColumnHead extends Component<any, any> {
                       }}
                       onKeyDown={e => {
                         if (e.key === 'Enter') {
-                          let newWidth = Number(e.target.value);
+                          let newWidth = Number(e.currentTarget.value);
 
                           if (isNaN(newWidth)) {
                             return;

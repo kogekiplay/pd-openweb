@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Button, ConfigProvider, Modal, Select } from 'antd';
 import cx from 'classnames';
@@ -112,7 +112,7 @@ export default class ShowControlModal extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.dialogVisible && !prevProps.dialogVisible) {
         const columns = this.props.relationControls
@@ -238,7 +238,7 @@ export default class ShowControlModal extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { dialogVisible, relationControls } = this.props;
     const { searchValue, columns, selected } = this.state;
     const filteredColumns = columns.filter(column =>

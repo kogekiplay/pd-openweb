@@ -2,8 +2,8 @@ import MapHandler from 'src/ming-ui/components/amap/MapHandler';
 import MapLoader from 'src/ming-ui/components/amap/MapLoader';
 
 let pendingLocationPromise = null;
-let mapLoader = null;
-let mapHandler = null;
+let mapLoader: MapLoader | null = null;
+let mapHandler: MapHandler | null = null;
 let formRefCount = 0;
 let lifecycleVersion = 0;
 

@@ -127,7 +127,7 @@ class Con extends React.Component<any, any> {
       selectDebugRole: [],
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const {
       setRoleId,
       appRole = {},
@@ -166,7 +166,7 @@ class Con extends React.Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.appRole.pageLoading !== prevProps.appRole.pageLoading ||
@@ -289,7 +289,7 @@ class Con extends React.Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { roleList, showDeleRoleByMoveUser, delId, selectDebugRole } = this.state;
     const { appRole = {} } = this.props;
     const { pageLoading } = appRole;

@@ -1,4 +1,3 @@
-import React from 'react';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import { SOURCE_TYPE } from '../../constants';
 import { buildSourceLink, formatInboxItem } from '../../util';

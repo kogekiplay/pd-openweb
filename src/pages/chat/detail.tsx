@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import qs from 'query-string';
@@ -11,7 +11,7 @@ export default class ChatWindowEntrypoint extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const data = qs.parse(location.search.slice(1));
     return (
       <DocumentTitle title={String(data.name || '')}>

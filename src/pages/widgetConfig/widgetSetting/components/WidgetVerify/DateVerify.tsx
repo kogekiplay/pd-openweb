@@ -52,7 +52,7 @@ const TIME_FIELD = [
   '23:00',
   '24:00',
 ];
-const WEEKDAYS = {
+const WEEKDAYS: Record<string, string> = {
   1: _l('周一'),
   2: _l('周二'),
   3: _l('周三'),
@@ -77,7 +77,7 @@ export default function DateVerify({ data, onChange }) {
     endTime: originEnd,
   });
 
-  const handleWeekChange = key => {
+  const handleWeekChange = (key: string) => {
     const weeks = allowweek.split('');
 
     if (isEmpty(weeks)) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { arrayOf, func, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import ControlList from './ControlList';

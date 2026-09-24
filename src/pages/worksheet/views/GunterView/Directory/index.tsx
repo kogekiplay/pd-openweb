@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Dropdown, Menu } from 'antd';
@@ -64,7 +64,7 @@ let GunterDirectory = class GunterDirectory extends Component<any, any> {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.removeDocumentDragListeners();
   }
 
@@ -260,7 +260,7 @@ let GunterDirectory = class GunterDirectory extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { width, loading, base } = this.props;
     const { widthConfig } = this.state;
     return (

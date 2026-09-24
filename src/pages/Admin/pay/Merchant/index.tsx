@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Button, Icon, UpgradeIcon } from 'ming-ui';
@@ -18,6 +18,8 @@ const CreateButton = styled(Button)`
 `;
 
 export default class Merchant extends Component<any, any> {
+  declare com: MerchantCom | null | undefined;
+
   constructor(props) {
     super(props);
     const { iscreate } = getRequest();
@@ -27,11 +29,11 @@ export default class Merchant extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setState({ myPermissions: getMyPermissions(Config.projectId) });
   }
 
-  render() {
+  override render() {
     const { showHeader, showCreateMerchant, myPermissions } = this.state;
     const { iscreate } = getRequest();
     const featureType = getFeatureStatus(Config.projectId, VersionProductType.PAY);

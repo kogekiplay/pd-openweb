@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, SvgIcon } from 'ming-ui';

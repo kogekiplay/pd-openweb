@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -117,7 +116,7 @@ const MultipleValueWrap = styled.div`
   line-height: 20px;
 `;
 
-const fieldConfigs = {
+const fieldConfigs: Record<number, { controlName: string; icon: string }> = {
   10: { controlName: _l('多选'), icon: 'multi_select' },
   26: { controlName: _l('成员'), icon: 'account_circle' },
   27: { controlName: _l('部门'), icon: 'department' },

@@ -81,7 +81,7 @@ export default function (props) {
     }
   };
 
-  const footerNotice = (isScanLogin?) => {
+  const footerNotice = (isScanLogin?: boolean | undefined) => {
     let isNoRightTime =
       //开启了注册时间验证
       !!_.get(registerInfo, 'enable') &&
@@ -113,7 +113,7 @@ export default function (props) {
     }
   };
 
-  const footer = (keys: string[], findPassword?) => {
+  const footer = (keys: string[], findPassword?: boolean | undefined) => {
     return (
       <React.Fragment>
         {!paramForPcWx && (
@@ -158,12 +158,7 @@ export default function (props) {
           <div className="mTop40">
             {termsAndAgreementEnable && (
               <div className="mTop12 textPrimary Bold Font14 TxtTop LineHeight22 flexRow">
-                <Checkbox
-                  checked={hasCheck}
-                  onClick={() => setState({ hasCheck: !hasCheck })}
-                  className="Hand"
-                  name=""
-                />
+                <Checkbox checked={hasCheck} onClick={() => setState({ hasCheck: !hasCheck })} className="Hand" />
                 <div className="flex alignItemsCenter">
                   {_l('同意')}
                   <span
@@ -189,7 +184,7 @@ export default function (props) {
             {!paramForPcWx && autoLogin && (
               <div className="mTop12 flexRow alignItemsCenter">
                 <div className="flexRow alignItemsCenter" onClick={() => setAutoLogin(!isAutoLogin)}>
-                  <Checkbox checked={isAutoLogin} className="Hand" name="" />
+                  <Checkbox checked={isAutoLogin} className="Hand" />
                   <span className="textPrimary Font14 Bold Hand">{_l('7天内免登录')}</span>
                 </div>
               </div>
@@ -277,7 +272,7 @@ export default function (props) {
               className="mTop32 flexRow alignItemsCenter Hand justifyContentCenter"
               onClick={() => setAutoLogin(!isAutoLogin)}
             >
-              <Checkbox checked={isAutoLogin} className="" name="" />
+              <Checkbox checked={isAutoLogin} className="" />
               <span className="textTertiary Font14 Bold Hand">{_l('7天内免登录')}</span>
             </div>
           )}
@@ -285,4 +280,7 @@ export default function (props) {
         </WrapWXCon>
       );
   }
+
+  // 上面的 switch 没有 default：都不命中时原先是掉出函数返回 undefined，这里写明
+  return undefined;
 }

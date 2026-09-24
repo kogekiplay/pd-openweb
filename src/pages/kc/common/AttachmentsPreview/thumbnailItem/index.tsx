@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { getFileIconNameByExt } from '../../../utils';
 import { PREVIEW_TYPE } from '../constant/enum';
 
-const typeColors = {
+const typeColors: Record<string, string> = {
   '7z': '#FBC02d',
   ai: '#ff9100',
   cal: '#9c27b0',
@@ -24,18 +24,22 @@ const typeColors = {
   link: '#00bcd4',
 };
 
-class ThumbnailItem extends React.Component<any, any> {
-  static propTypes = {
+export interface ThumbnailItemState {
+  error: boolean;
+}
+
+class ThumbnailItem extends React.Component<any, ThumbnailItemState> {
+  static override propTypes = {
     attachment: PropTypes.object,
     current: PropTypes.bool,
     onClick: PropTypes.func,
   };
 
-  state = {
+  override state = {
     error: false,
   };
 
-  render() {
+  override render() {
     const MAX_IMG_VIEW_SIZE = 20971520;
     const attachment = this.props.attachment;
     const { previewType, size, name } = attachment;

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { SpinLoading } from 'antd-mobile';
 import _ from 'lodash';
 import sheetApi from 'src/api/worksheet';
@@ -44,7 +44,7 @@ class Search extends Component<any, any> {
       pageIndex: 1,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { params } = this.props.match;
     const { filterId } = getRequest();
 
@@ -181,7 +181,7 @@ class Search extends Component<any, any> {
       />
     );
   };
-  render() {
+  override render() {
     const { loading, isMore, rows } = this.state;
     return (
       <div className="searchRecordWrapper flexColumn h100">

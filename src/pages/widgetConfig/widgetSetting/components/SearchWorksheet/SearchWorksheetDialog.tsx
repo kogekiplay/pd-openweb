@@ -71,6 +71,8 @@ const dealRelationControls = (controls: FormControl[] = []) => {
 };
 
 export default class SearchWorksheetDialog extends Component<any, any> {
+  declare box: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     const {
@@ -104,7 +106,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setValue();
   }
 
@@ -180,7 +182,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
     worksheetAjax
       .getWorksheetInfo({ worksheetId: sheetId, getTemplate: true, getSwitchPermit: true, appId, getViews: true })
       .then(res => {
-        const { controls = [] }: { controls: FormControl[]; [key: string]: any } = res.template || {};
+        const controls: FormControl[] = res.template?.controls || [];
         this.setState({
           controls: controls,
           sheetName: res.name,
@@ -261,7 +263,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
   }, 300);
 
   // 获取子表下拉数据或查询表下拉数据
-  getDropData = (controls: FormControl[] = [], control: Record<string, any> = {}, hasRowId?) => {
+  getDropData = (controls: FormControl[] = [], control: Record<string, any> = {}, hasRowId?: boolean | undefined) => {
     let filterControls = getControls({
       data: control,
       controls,
@@ -313,7 +315,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
           // 查询表字段已删除
           const isDelete = item.subCid && !_.find(subControls, subControl => subControl.value === item.subCid);
           return (
-            <div className="mappingItem">
+            <div key={index} className="mappingItem">
               <div className="mappingControlName overflow_ellipsis">
                 {_.get(selectControl, 'controlName') || (
                   <Tooltip title={_l('ID: %0', item.cid)} placement="bottom">
@@ -350,7 +352,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                 className="mLeft15"
                 onClick={() =>
                   this.setState({
-                    configs: configs.filter((c, idx) => idx !== index),
+                    configs: configs.filter((_c, idx) => idx !== index),
                   })
                 }
               >
@@ -363,7 +365,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       sheetId,
       appName,
@@ -492,9 +494,10 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                           }
                         >
                           {sheetList.length > 0 ? (
-                            sheetList.map(item => {
+                            sheetList.map((item, index) => {
                               return (
                                 <MenuItem
+                                  key={index}
                                   onClick={() => {
                                     if (item.sheetId === sheetId) return;
                                     this.setState(

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox, Dialog, FunctionWrap, Icon, LoadDiv, Radio, ScrollView } from 'ming-ui';
@@ -16,7 +16,7 @@ class DialogSelectOrgRole extends Component<any, any> {
     onClose: () => {},
   };
 
-  state = {
+  override state = {
     selectData: [],
     loading: true,
     keywords: '',
@@ -29,7 +29,7 @@ class DialogSelectOrgRole extends Component<any, any> {
 
   promise = null;
 
-  componentDidMount() {
+  override componentDidMount() {
     this.init();
   }
 
@@ -40,20 +40,23 @@ class DialogSelectOrgRole extends Component<any, any> {
         projectId,
       })
       .then(res => {
-        let groups = [
+        // 「默认」分组是前端补的，只有名字和空 id（没有 sortIndex / disabled）；和接口给的分组放进同一个数组
+        const defaultGroups: (
+          | HapApi.MD.Web.Ajax.ResultModel.Organize.OrgRoleGroupModel
+          | { orgRoleGroupName: string; orgRoleGroupId: string }
+        )[] = [
           {
             orgRoleGroupName: _l('默认'),
             orgRoleGroupId: '',
           },
-        ]
-          .concat(res)
-          .map(l => {
-            return {
-              ...l,
-              children: [],
-              fetched: false,
-            };
-          });
+        ];
+        let groups = defaultGroups.concat(res).map(l => {
+          return {
+            ...l,
+            children: [],
+            fetched: false,
+          };
+        });
         !appointedOrganizeIds && this.setState({ expendTreeNodeKey: [groups[0].orgRoleGroupId] });
         this.fetchData(groups, groups[0].orgRoleGroupId);
       });
@@ -228,7 +231,7 @@ class DialogSelectOrgRole extends Component<any, any> {
     ) {
       return (
         <div className="emptyWrap">
-          <p className="textDisabled Font14">{_l('没有可选组织角色')}</p>
+          <p className="textTertiary Font14">{_l('没有可选组织角色')}</p>
         </div>
       );
     }
@@ -237,7 +240,7 @@ class DialogSelectOrgRole extends Component<any, any> {
       return (
         <div className="GSelect-NoData">
           <i className="icon-search GSelect-iconNoData" />
-          <p className="GSelect-noDataText textDisabled">{_l('搜索无结果')}</p>
+          <p className="GSelect-noDataText textTertiary">{_l('搜索无结果')}</p>
         </div>
       );
     }
@@ -313,7 +316,7 @@ class DialogSelectOrgRole extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { onClose, projectId, onSave, showCompanyName, orgRoleDialogVisible, overlayClosable } = this.props;
     const { keywords, selectData } = this.state;
     let isShowRole =

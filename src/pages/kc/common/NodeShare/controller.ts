@@ -76,7 +76,7 @@ export function getAttachment() {
     case 'record_share':
       if (!_.get(md, 'global.Account.accountId')) {
         login();
-        return;
+        return undefined;
       }
 
       return worksheetAjax
@@ -99,7 +99,7 @@ export function getAttachment() {
                 recordAttachmentSwitch && allowdownload === '1' && !!get(res, 'attachmentDetail.allowDown'),
             };
           } else {
-            return;
+            return undefined;
           }
         })
         .catch(err => {
@@ -109,7 +109,7 @@ export function getAttachment() {
     case 'record_share_files':
       if (!_.get(md, 'global.Account.accountId')) {
         login();
-        return;
+        return undefined;
       }
 
       return worksheetAjax
@@ -130,6 +130,7 @@ export function getAttachment() {
               allowDownload: allowdownload === '1',
             };
           }
+          return undefined;
         });
     default:
       throw new Error();

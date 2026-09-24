@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -141,7 +141,7 @@ export default function MoreAction(props) {
         .getApp({
           appId: detail.id,
         })
-        .then((data = {}) => data.originalLang || '')
+        .then(data => data?.originalLang || '')
         .catch(() => ''),
     ]).then(values => {
       if (currentAppIdRef.current !== currentAppId) return;
@@ -175,9 +175,9 @@ export default function MoreAction(props) {
         .getAppRoleSetting({
           appId: detail.id,
         })
-        .then((data = {}) => {
+        .then(data => {
           if (currentAppIdRef.current !== currentAppId) return;
-          const { appSettingsEnum } = data;
+          const appSettingsEnum = data?.appSettingsEnum;
           setRoleEntryVisible(appSettingsEnum === 1);
         })
         .catch(() => {});

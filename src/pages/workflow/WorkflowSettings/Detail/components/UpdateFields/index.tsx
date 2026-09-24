@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { Dropdown } from 'ming-ui';
 import { getControlTypeName } from '../../../utils';
@@ -94,7 +94,7 @@ export default class UpdateFields extends Component<any, any> {
   delFields(i) {
     const fields = _.cloneDeep(this.props.fields);
 
-    _.remove(fields, (item, index) => index === i);
+    _.remove(fields, (_item, index) => index === i);
     this.props.updateSource({ fields });
   }
 
@@ -147,7 +147,7 @@ export default class UpdateFields extends Component<any, any> {
     this.props.updateSource({ fields });
   }
 
-  render() {
+  override render() {
     const {
       controls,
       fields,

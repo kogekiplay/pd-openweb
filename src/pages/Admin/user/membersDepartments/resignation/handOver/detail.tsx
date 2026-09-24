@@ -34,7 +34,7 @@ const typeNames = {
   [TYPES.WORKSHEET_ALL]: _l('工作表'),
 };
 
-const oaTypeNames = {
+const oaTypeNames: Record<number, string> = {
   1: _l('申请记录'),
   2: _l('审批流程'),
   3: _l('审批角色'),
@@ -77,7 +77,9 @@ export const callDialogSelectUser = function (projectId: string, callback = () =
 };
 
 export default class Detail extends React.Component<any, any> {
-  static propTypes = {
+  declare ajax: ApiResult | undefined;
+
+  static override propTypes = {
     user: PropTypes.shape({
       avatar: PropTypes.string,
       accountId: PropTypes.string,
@@ -105,7 +107,7 @@ export default class Detail extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.fetchList();
   }
 
@@ -649,6 +651,7 @@ export default class Detail extends React.Component<any, any> {
         if (currentType === TYPES.GROUP) return _l('群组名称');
         if (currentType === TYPES.KC) return _l('共享文件夹名称');
       }
+      return undefined;
     })();
 
     const isAllChecked = !!(_.isArray(list) && list.length && _.every(list, item => !!selectItems[item.sourceId]));
@@ -719,7 +722,7 @@ export default class Detail extends React.Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { returnCallback, projectId } = this.props;
     return (
       <div className="transferDetail">

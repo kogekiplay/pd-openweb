@@ -182,6 +182,7 @@ export const getTodayTooltip = ({ rangeType, rangeValue }) => {
   if (rangeType === 19) {
     return _l('未勾选时, 表示统计从明天开始到将来%0天数据, 勾选时, 表示统计从今天开始到将来%0天的数据。', rangeValue);
   }
+  return undefined;
 };
 
 /**
@@ -612,7 +613,10 @@ export const timeGatherParticle = [
 /**
  * 过滤集合粒度
  */
-export const filterTimeGatherParticle = (data, { showtype, controlType }) => {
+export const filterTimeGatherParticle = (
+  data: { text: string; value: number; getTime: () => string }[],
+  { showtype, controlType },
+) => {
   let timeGatherParticle = [];
 
   if (controlType === WIDGETS_TO_API_TYPE_ENUM.TIME) {
@@ -677,7 +681,7 @@ export const formatrChartTimeText = ({ rangeType, rangeValue, dynamicFilter, tod
  * 根据文字内容获取尺寸
  */
 
-export const formatterTooltipTitle = (xaxes, key?) => {
+export const formatterTooltipTitle = (xaxes, key?: string | undefined) => {
   if (isTimeControl(xaxes.controlType) && xaxes.particleSizeType === 2) {
     return (title: string, data) => {
       const value = key ? data[key] : title;

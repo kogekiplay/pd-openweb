@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { createParser } from 'eventsource-parser';
-import { find, findLast, get, omit } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import agentApi from 'src/api/agent';
-import sseAjax from 'src/api/sse';
-import { MESSAGE_TYPE } from './enum';
 
 // 在文件顶部添加 ChunkLoader 类
 class ChunkLoader {
+  declare chunkSize: number;
+  declare interval: number;
+  declare isProcessing: boolean;
+  declare decoder: TextDecoder;
+
   constructor(feedFn, chunkSize = 4, interval = 30) {
     this.feedFn = feedFn;
     this.chunkSize = chunkSize;
@@ -39,15 +41,15 @@ class ChunkLoader {
 }
 
 function useChatBot({ sessionId, params = [], defaultMessages = [], currentCode, onError = () => {} }) {
-  const [firstInputMessage, setFirstInputMessage] = useState<string | undefined>();
+  const [, setFirstInputMessage] = useState<string | undefined>();
   const [messages, setMessages] = useState(defaultMessages);
   const [code, setCode] = useState(currentCode);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [activeMessageId, setActiveMessageId] = useState(null);
+  const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
   const [isRequesting, setIsRequesting] = useState(false);
   // 使用 ref 存储当前的 AbortController
-  const abortControllerRef = useRef(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const streamReaderRef = useRef(null);
 
   useEffect(() => {
@@ -76,7 +78,7 @@ function useChatBot({ sessionId, params = [], defaultMessages = [], currentCode,
     setLoading(false);
   };
 
-  const sendMessage = async (content, { noCode = false, attachment } = {}) => {
+  const sendMessage = async (content, { attachment } = {}) => {
     const text = (content || '').trim();
     if (!text && !attachment) return;
 
@@ -214,7 +216,8 @@ function useChatBot({ sessionId, params = [], defaultMessages = [], currentCode,
         if (done) break;
         await loader.feed(value);
       }
-    } catch (error) {
+    } catch (thrown) {
+      const error = thrown as Partial<Error>;
       if (error.name === 'AbortError') {
         console.log('Request aborted:', error.message);
       } else {

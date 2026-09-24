@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -27,7 +27,11 @@ import './index.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default class RecordCardListDialog extends Component<any, any> {
-  static propTypes = {
+  declare clickSearch: boolean;
+  declare isOnComposition: boolean;
+  declare inputRef: HTMLInputElement | null | undefined;
+
+  static override propTypes = {
     from: PropTypes.number, // 来源
     appId: PropTypes.string, // 他表字段被关联表所在应用id
     viewId: PropTypes.string, // 他表字段被关联表所在应用所在视图id
@@ -81,7 +85,7 @@ export default class RecordCardListDialog extends Component<any, any> {
     this.clickSearch = clickSearch;
     this.isOnComposition = false;
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { control, keyWords, parentWorksheetId, staticRecords = [], isScan } = this.props;
 
     if (!_.isEmpty(staticRecords)) {
@@ -142,7 +146,7 @@ export default class RecordCardListDialog extends Component<any, any> {
     if (this.inputRef && keyWords) this.inputRef.value = keyWords;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.keyWords !== this.props.keyWords) {
         this.setState({
@@ -917,7 +921,7 @@ export default class RecordCardListDialog extends Component<any, any> {
       </ScrollView>
     );
   }
-  render() {
+  override render() {
     const {
       visible,
       onClose = () => {},

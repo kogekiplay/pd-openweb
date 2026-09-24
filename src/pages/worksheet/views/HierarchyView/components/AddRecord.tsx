@@ -1,4 +1,3 @@
-import React from 'react';
 import { AddRecord } from '../styled';
 
 export default ({ onAdd }) => (

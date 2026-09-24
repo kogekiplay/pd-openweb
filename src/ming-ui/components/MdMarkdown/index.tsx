@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -217,7 +217,7 @@ function MdMarkdown(props) {
   const customUpload = files => {
     return new Promise((resolve, reject) => {
       const urlList = [];
-      const showList = [];
+      const showList: string[] = [];
 
       files.forEach(file => {
         const formData = new FormData();

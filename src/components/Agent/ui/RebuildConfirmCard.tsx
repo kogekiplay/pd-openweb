@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
 import { Icon } from 'ming-ui';
 import { colors, radii, spacing } from './tokens';
@@ -7,13 +6,13 @@ import { colors, radii, spacing } from './tokens';
 // 判 rebuild / 低置信 / unrelated 后经 completed{status:awaiting_rebuild_confirmation} 弹层让用户定夺。
 // action 取值对应后端 confirmation.action：resume / rebuild / none_of_these。
 // options 由后端按 build 状态动态下发（未完成给 resume，已完成不给；rebuild 始终给；逃生口给 none_of_these）。
-const ACTION_LABELS = {
+const ACTION_LABELS: Record<string, string> = {
   resume: _l('继续生成'),
   rebuild: _l('重新生成'),
   none_of_these: _l('都不是'),
 };
 
-const ACTION_HINTS = {
+const ACTION_HINTS: Record<string, string> = {
   resume: _l('从上次中断处接着搭建'),
   rebuild: _l('放弃已建内容，重新搭建'),
   none_of_these: _l('我想做点别的'),

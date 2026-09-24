@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import homeAppApi from 'api/homeApp';
 import { LoadDiv } from 'ming-ui';
@@ -15,6 +15,10 @@ import './index.less';
 const isMobile = browserIsMobile();
 
 export default class EmbedChart extends Component<any, any> {
+  declare appId: string;
+  declare chartId: string;
+  declare pageId: string | (string | null)[] | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +35,7 @@ export default class EmbedChart extends Component<any, any> {
     exportPivotTableSocket();
     customNotice();
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { appId } = this;
     homeAppApi
       .getApp({
@@ -58,7 +62,7 @@ export default class EmbedChart extends Component<any, any> {
         window[`timeZone_${this.appId}`] = data.timeZone;
       });
   }
-  render() {
+  override render() {
     const { loading, appInfo } = this.state;
 
     if (loading) {

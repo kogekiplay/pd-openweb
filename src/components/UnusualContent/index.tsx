@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { oneOf } from 'prop-types';
 import { Button, Dialog, Skeleton, SvgIcon, Textarea, UserHead } from 'ming-ui';
@@ -24,10 +24,10 @@ const STATUS_TO_TEXT = {
 };
 
 export default class UnusualContent extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     status: oneOf([2, 3, 4, 5]),
   };
-  state = {
+  override state = {
     remark: '',
     applyJoinAppVisible: false,
     reinstallLoading: false,
@@ -105,7 +105,7 @@ export default class UnusualContent extends Component<any, any> {
       </Fragment>
     );
   };
-  render() {
+  override render() {
     const { status, appPkg } = this.props;
     const { src, text } = STATUS_TO_TEXT[status] || {};
     const { applyJoinAppVisible, remark, reinstallLoading } = this.state;
@@ -182,7 +182,7 @@ export default class UnusualContent extends Component<any, any> {
             okText={_l('申请加入')}
           >
             <Textarea
-              height={120}
+              minHeight={120}
               value={remark}
               onChange={value => this.setState({ remark: value })}
               placeholder={_l('填写申请说明')}

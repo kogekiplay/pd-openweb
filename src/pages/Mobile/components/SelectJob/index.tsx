@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Checkbox, Popup } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -15,7 +15,7 @@ export default class SelectJob extends Component<any, any> {
       isMore: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
   getData = () => {
@@ -166,7 +166,7 @@ export default class SelectJob extends Component<any, any> {
       </div>
     );
   };
-  render() {
+  override render() {
     const { visible, onClose } = this.props;
     return (
       <Popup visible={visible} onClose={onClose} className="mobileModal full">

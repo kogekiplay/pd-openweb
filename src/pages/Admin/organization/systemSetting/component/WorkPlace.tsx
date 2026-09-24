@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { ConfigProvider, Spin, Table } from 'antd';
 import _ from 'lodash';
 import { Dialog, Icon, LoadDiv } from 'ming-ui';
@@ -10,7 +10,13 @@ import EditMemberDialog from '../modules/EditMemberDialog';
 import MergeDialog from '../modules/MergeDialog';
 import './index.less';
 
-export default class WorkPlace extends Component<any, any> {
+export interface WorkPlaceProps {
+  setLevel: (value: number) => void;
+}
+
+export default class WorkPlace extends Component<WorkPlaceProps, any> {
+  declare box: HTMLDivElement | null | undefined;
+
   constructor() {
     super();
     this.state = {
@@ -38,7 +44,7 @@ export default class WorkPlace extends Component<any, any> {
         title: _l('操作'),
         dataIndex: 'workSiteId',
         key: 'workSiteId',
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <div className="colorPrimary">
               <button
@@ -69,7 +75,7 @@ export default class WorkPlace extends Component<any, any> {
     ];
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
   }
 
@@ -99,7 +105,11 @@ export default class WorkPlace extends Component<any, any> {
     this.setState({ selectedRowKeys });
   };
 
-  showSiteDialog({ workSiteName, workSiteId }) {
+  /* 不传参 = 新建（两个字段都是 undefined）；编辑时传整条 record。
+     新建按钮原先把 showSiteDialog 直接 bind 给 onClick，于是 MouseEvent 被当成
+     这个参数传进来，从事件对象上取 workSiteName / workSiteId 碰巧都是 undefined ——
+     行为对，但全靠 MouseEvent 恰好没有这两个属性。strictBindCallApply 打开后当场报出来。 */
+  showSiteDialog({ workSiteName, workSiteId }: { workSiteName?: string; workSiteId?: string } = {}) {
     this.setState({
       siteVisible: true,
       workSiteName,
@@ -204,7 +214,7 @@ export default class WorkPlace extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const {
       keywords,
       loading,
@@ -289,7 +299,7 @@ export default class WorkPlace extends Component<any, any> {
                 ) : (
                   <button
                     className="ming Button Button--primary Button--small itemCreate"
-                    onClick={this.showSiteDialog.bind(this)}
+                    onClick={() => this.showSiteDialog()}
                   >
                     {_l('新建')}
                   </button>
@@ -343,7 +353,7 @@ export default class WorkPlace extends Component<any, any> {
                                 this.getData();
                               });
                             },
-                            itemRender: (current, type, originalElement) => {
+                            itemRender: (_current, type, originalElement) => {
                               if (type === 'prev') {
                                 return <a className="page">{_l('上一页')}</a>;
                               }

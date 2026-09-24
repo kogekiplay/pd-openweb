@@ -5,13 +5,13 @@ import { Icon } from 'ming-ui';
 import { UPLOAD_STATUS } from 'src/pages/kc/constant/enum';
 
 export default class UploadProgress extends React.Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     status: PropTypes.number,
     percentage: PropTypes.number, // 百分比，1 === 100%
     errorText: PropTypes.string,
   };
 
-  render() {
+  override render() {
     const { status, errorText } = this.props;
     let percentage = (parseInt(this.props.percentage * 100, 10) || 0) + '%';
     let colorClass, text, icon;

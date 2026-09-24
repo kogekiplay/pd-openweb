@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -10,7 +10,10 @@ import { completeAdminLogLinks } from '../../utils';
 const PAGE_SIZE = 30;
 
 export default class Discuss extends Component<any, any> {
-  static propTypes = {
+  declare scrollView: HTMLDivElement | null | undefined;
+  declare $scrollCon: HTMLElement | undefined;
+
+  static override propTypes = {
     worksheetId: PropTypes.string,
     rowId: PropTypes.string,
     disableScroll: PropTypes.bool,
@@ -26,7 +29,7 @@ export default class Discuss extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { disableScroll } = this.props;
     this.loadLog(_.pick(this.props, ['worksheetId', 'rowId']));
     if (this.scrollView && disableScroll) {
@@ -37,7 +40,7 @@ export default class Discuss extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.worksheetId !== prevProps.worksheetId || this.props.rowId !== prevProps.rowId) {
         this.loadLog({ ..._.pick(this.props, ['worksheetId', 'rowId']), pageIndex: 1 });
@@ -45,7 +48,7 @@ export default class Discuss extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.$scrollCon) {
       this.$scrollCon.removeEventListener('scroll', this.handleScroll);
     }
@@ -92,7 +95,7 @@ export default class Discuss extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { disableScroll } = this.props;
     const { loading, discussList, pageIndex } = this.state;
     const children = (

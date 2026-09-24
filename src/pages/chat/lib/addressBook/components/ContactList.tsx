@@ -5,6 +5,8 @@ import ContactItem from './ContactItem';
 import ListNull from './ListNull';
 
 export default class ContactList extends React.Component<any, any> {
+  declare debouncedScroll: _.DebouncedFuncLeading<() => void>;
+
   constructor() {
     super();
 
@@ -13,11 +15,11 @@ export default class ContactList extends React.Component<any, any> {
     });
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.props.fetch();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.debouncedScroll.cancel();
   }
 
@@ -87,7 +89,7 @@ export default class ContactList extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     const { searchDepartmentUsers } = this.props;
     return (
       <ScrollView className="h100" onScrollEnd={searchDepartmentUsers ? () => {} : this.debouncedScroll}>

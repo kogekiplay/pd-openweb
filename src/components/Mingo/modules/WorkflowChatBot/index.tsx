@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { useMeasure } from 'react-use';
 import cx from 'classnames';
 import { chain, findLast, findLastIndex, flatten, get, identity, isArray, isEmpty, omit } from 'lodash';
@@ -140,8 +140,8 @@ function contentIsEmpty(content) {
   if (isArray(content)) {
     return (
       content.filter(item => {
-        if (item.type === 'text' && item.text === '') return;
-        if (item.type === 'tool_calls' && filterToolCalls(item.toolCalls).length === 0) return;
+        if (item.type === 'text' && item.text === '') return undefined;
+        if (item.type === 'tool_calls' && filterToolCalls(item.toolCalls).length === 0) return undefined;
         return true;
       }).length === 0
     );
@@ -188,7 +188,7 @@ interface RawChatMessage {
 
 export function formatMessage(message: RawChatMessage) {
   if (!['user', 'assistant'].includes(message.role)) {
-    return;
+    return undefined;
   }
 
   // 逐个字段拼出来，键在下面几行才补齐，所以先把形状写出来
@@ -211,7 +211,7 @@ export function formatMessage(message: RawChatMessage) {
   result.hasSubmit = message.hasSubmit;
   result.modelMessageId = get(message, 'metadata.id');
   if (isEmpty(result.content) && isEmpty(result.media)) {
-    return;
+    return undefined;
   }
 
   return result;
@@ -520,7 +520,7 @@ function MingoContent(props, ref) {
   // 发送报错等场景下服务端未下发 conversationId，URL 仍停留在空会话，点「新对话」navigate 到
   // 同一地址不会触发上面的 [props.conversationId] 重置副作用，需由会话列表广播事件主动重置。
   useEffect(() => {
-    if (showMessagesOnly) return;
+    if (showMessagesOnly) return undefined;
     const handleNewConversation = (payload: Record<string, any> = {}) => {
       if (payload.chatbotId && payload.chatbotId !== chatbotId) return;
       resetToNewConversation();
@@ -546,21 +546,20 @@ function MingoContent(props, ref) {
       setHasMore(false);
       setHasScrolledToBottom(false);
       let conversationIdForShare;
-      Promise.all(
-        (isEmpty(props.chatbotConfig) ? [processApi.getChatbotConfig({ chatbotId })] : [{}]).concat([
-          shareId
-            ? chatbotAjax.shareToConversation({ chatbotId, shareConversationId: shareId }).then(res => {
-                conversationIdForShare = res.conversationId;
-                return res.messages;
-              })
-            : chatbotAjax.getMessageList({
-                chatbotId,
-                conversationId: props.conversationId,
-                pageIndex: 1,
-                pageSize: 50,
-              }),
-        ]),
-      ).then(([chatbotConfigData, getMessageListData]) => {
+      Promise.all([
+        isEmpty(props.chatbotConfig) ? processApi.getChatbotConfig({ chatbotId }) : {},
+        shareId
+          ? chatbotAjax.shareToConversation({ chatbotId, shareConversationId: shareId }).then(res => {
+              conversationIdForShare = res.conversationId;
+              return res.messages;
+            })
+          : chatbotAjax.getMessageList({
+              chatbotId,
+              conversationId: props.conversationId,
+              pageIndex: 1,
+              pageSize: 50,
+            }),
+      ]).then(([chatbotConfigData, getMessageListData]) => {
         if (!isEmpty(chatbotConfigData)) {
           setChatbotConfig(chatbotConfigData);
         }
@@ -619,7 +618,7 @@ function MingoContent(props, ref) {
             {!!messages.length && (
               <BgIconButton
                 icon="clean"
-                title={_l('清空')}
+                tooltip={_l('清空')}
                 onClick={() => {
                   // cleanMessages();
                   setError();
@@ -632,7 +631,7 @@ function MingoContent(props, ref) {
             )}
             <BgIconButton
               icon="close"
-              title={_l('关闭')}
+              tooltip={_l('关闭')}
               onClick={() => {
                 onClose();
               }}

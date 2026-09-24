@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { arrayOf, bool, object, oneOf, string } from 'prop-types';
 import './index.less';
 
 export default class Skeleton extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     className: string,
     // 占位条方向
     direction: oneOf(['column', 'row']),
@@ -22,7 +22,7 @@ export default class Skeleton extends Component<any, any> {
     widths: ['100%', '50%', '100%', '50%'],
     active: false,
   };
-  render() {
+  override render() {
     const { className, direction, height, widths, style, itemStyle, itemClassName, active } = this.props;
     return (
       <div className={cx('loadingSkeleton', className, { active })} style={style}>

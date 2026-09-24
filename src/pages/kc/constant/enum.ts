@@ -27,7 +27,7 @@ export const ROOT_PERMISSION_TYPE = {
   READONLY: 4, // 只读
 };
 
-export const PERMISSION_TYPE_NAME = {
+export const PERMISSION_TYPE_NAME: Record<number, string> = {
   1: '拥有者',
   2: '管理员',
   3: '可编辑',

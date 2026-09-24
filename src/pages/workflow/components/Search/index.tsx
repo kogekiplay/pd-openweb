@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -7,7 +7,7 @@ import Icon from 'ming-ui/components/Icon';
 import './index.less';
 
 export default class Search extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     handleChange: func,
     className: string,
     placeholder: string,
@@ -17,9 +17,9 @@ export default class Search extends Component<any, any> {
     handleChange: _.noop,
     onFocus: _.noop,
   };
-  state = { value: '' };
+  override state = { value: '' };
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         this.setState({
@@ -28,11 +28,11 @@ export default class Search extends Component<any, any> {
       }
     }
   }
-  handleChange = value => {
+  handleChange = (value: string) => {
     this.setState({ value });
     this.props.handleChange(value);
   };
-  render() {
+  override render() {
     const { className, placeholder = _l('搜索名称'), onFocus } = this.props;
     const { value } = this.state;
     return (

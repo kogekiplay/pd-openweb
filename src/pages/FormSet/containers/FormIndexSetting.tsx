@@ -179,7 +179,7 @@ const ArrowDown = styled.span`
   }
 `;
 
-const sortRules = { 1: _l('升序'), '-1': _l('降序'), text: _l('文本索引') };
+const sortRules: Record<string, string> = { 1: _l('升序'), '-1': _l('降序'), text: _l('文本索引') };
 const FILTER_TYPE_LIST = [40, 42, 43, 21, 25, 45, 14, 34, 22, 10010, 30, 47, 49, 50, 51, 52, 54];
 
 function FormIndexSetting(props) {
@@ -199,7 +199,9 @@ function FormIndexSetting(props) {
   const [showMoreOption, setShowMoreOption] = useState(false);
   const [isloading, setIsloading] = useState(true);
   const [selectedIndexList, setSelectedIndexList] = useState([{}]);
-  const [worksheetAvailableFields, setWorksheetAvailableFields] = useState([]);
+  const [worksheetAvailableFields, setWorksheetAvailableFields] = useState<
+    HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetAvailableFieldModel[]
+  >([]);
   const [worksheetRowIndexLimit, setWorksheetRowIndexLimit] = useState(0);
   const [sort, setSort] = useState('');
 

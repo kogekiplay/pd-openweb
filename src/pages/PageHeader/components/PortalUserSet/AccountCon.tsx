@@ -119,7 +119,17 @@ const AccountWrap = styled.div`
   }
 `;
 let sendVerifyCodeTimer: NodeJS.Timeout | null = null;
-class TelCon extends React.Component<any, any> {
+interface TelConState {
+  loading: boolean;
+  verifyCodeText: string;
+  verifyCodeLoading: boolean;
+  focusDiv: string;
+}
+
+class TelCon extends React.Component<any, TelConState> {
+  declare mobile: HTMLInputElement | null | undefined;
+  declare code: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.iti = null;
@@ -130,13 +140,13 @@ class TelCon extends React.Component<any, any> {
       focusDiv: '',
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     if (this.props.inputType === 'phone' && !this.props.account) {
       this.itiFn();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.type !== prevProps.type) {
         sendVerifyCodeTimer && clearInterval(sendVerifyCodeTimer);
@@ -159,7 +169,7 @@ class TelCon extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.iti && this.iti.destroy();
   }
 
@@ -329,7 +339,7 @@ class TelCon extends React.Component<any, any> {
     setIsValidNumber(isPhone && this.iti ? this.iti.isValidNumber() : this.isValidEmail(e.target.value.trim()));
   };
 
-  render() {
+  override render() {
     const { account, setCode, inputType, hidTel } = this.props;
     const { verifyCodeLoading, verifyCodeText } = this.state;
     const accountInput = (

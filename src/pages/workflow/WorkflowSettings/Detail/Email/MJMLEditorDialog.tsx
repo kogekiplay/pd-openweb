@@ -205,7 +205,7 @@ export default function MJMLEditorDialog({
       });
   };
 
-  const insertFieldCode = text => {
+  const insertFieldCode = (text: string) => {
     const editor = editorRef.current;
 
     if (editor && editor.view) {
@@ -263,7 +263,7 @@ export default function MJMLEditorDialog({
               codeMirrorMode="xml"
               lineNumbers
               maxHeight={10000000}
-              onChange={(err, nextValue) => setMjmlValue(nextValue)}
+              onChange={(_err, nextValue) => setMjmlValue(nextValue)}
             />
           )}
           {!readOnly &&

@@ -1,11 +1,11 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Select } from 'antd';
 import _ from 'lodash';
 import { Icon, SortableList, Switch } from 'ming-ui';
 import homeAppApi from 'src/api/homeApp';
 
-const getWorksheetList = (sections = [], viewHideNavi, isAuthorityApp) => {
+const getWorksheetList = (sections = [], viewHideNavi, isAuthorityApp: boolean) => {
   let list = _.reduce(
     sections,
     (result, item) => {
@@ -142,7 +142,7 @@ export default function MobileCustomNav(props) {
                   !_.isEmpty(searchList) ? (
                     searchList.map(item => renderAppItem({ item }))
                   ) : (
-                    <div className="textDisabled mTop20 mBottom30 TxtCenter">{_l('没有搜索结果')}</div>
+                    <div className="textTertiary mTop20 mBottom30 TxtCenter">{_l('没有搜索结果')}</div>
                   )
                 ) : (
                   <Fragment>

@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+﻿import { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import CheckBox from 'ming-ui/components/Checkbox';
@@ -6,7 +6,11 @@ import Commenter from 'src/components/comment/commenter';
 import CommentList from 'src/components/comment/commentList';
 import { htmlDecodeReg } from 'src/utils/common';
 
-export default class CalendarCommentList extends Component<any, any> {
+export interface CalendarCommentListState {
+  isOnlyMe: boolean;
+}
+
+export default class CalendarCommentList extends Component<any, CalendarCommentListState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +34,7 @@ export default class CalendarCommentList extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const {
       calendar: { title, id, recurTime, discussions },
       change,

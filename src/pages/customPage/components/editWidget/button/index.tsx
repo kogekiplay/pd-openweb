@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSetState } from 'react-use';
 import { Button, ConfigProvider, Modal } from 'antd';
 import update from 'immutability-helper';
@@ -58,7 +58,7 @@ export default function Btn(props) {
   const { buttonList, config } = btnSetting;
 
   const [activeIndex, setIndex] = useState(0);
-  const [errorBtns, setErrorBtns] = useState([]);
+  const [errorBtns, setErrorBtns] = useState<number[]>([]);
 
   const [visible, setVisible] = useState(_.isEmpty(button));
 
@@ -115,7 +115,7 @@ export default function Btn(props) {
   const handleSave = () => {
     // 验证业务流程是否有必填项
     const { buttonList } = btnSetting;
-    const emptyParamBtns = [];
+    const emptyParamBtns: number[] = [];
     buttonList.forEach((btn, index: number) => {
       const { inputs } = btn.config || {};
       const requiredInput = _.find(inputs, { required: true });

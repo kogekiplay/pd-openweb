@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import * as utils from '../../../utils/';
 import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
@@ -13,14 +13,20 @@ const formatTime = (seconds = 0) => {
   return `${minute}:${second}`;
 };
 
-export default class VideoMessage extends Component<any, any> {
+export interface VideoMessageState {
+  loading: boolean;
+}
+
+export default class VideoMessage extends Component<any, VideoMessageState> {
+  declare _isMounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     const { loading } = this.state;
     const { session, message } = this.props;
     const { video_pic } = message.msg.files;
@@ -53,7 +59,7 @@ export default class VideoMessage extends Component<any, any> {
       image.src = url;
     });
   }
-  render() {
+  override render() {
     const { files } = this.props.message.msg;
     const { video_pic, video_duration, video_width, video_height } = files;
     const size = {

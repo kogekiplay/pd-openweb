@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Button, Icon } from 'ming-ui';
@@ -29,7 +29,12 @@ const PopupCon = styled.div`
   }
 `;
 
-export default function ChangedIcon(props) {
+export interface ChangedIconProps {
+  onOk?: (() => void) | undefined;
+  skipConfirm?: boolean | undefined;
+}
+
+export default function ChangedIcon(props: ChangedIconProps) {
   const { onOk = () => {}, skipConfirm = false } = props;
   // 必须给初值 false：不给的话状态类型被推成 undefined，setX(true/false) 全是 TS2345。
   // 运行时等价——每个传 popupVisible 的站点都把 onPopupVisibleChange 接回了 state

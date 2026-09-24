@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
 import cx from 'classnames';
@@ -46,7 +46,7 @@ export const FILL_COLOR = [
   { value: '4', text: _l('模糊图片'), img: img },
 ];
 
-const AUTO_PLAY = Array.from({ length: 11 }).map((item, index) => ({
+const AUTO_PLAY = Array.from({ length: 11 }).map((_item, index) => ({
   value: `${index}`,
   text: index ? _l('%0秒', index) : _l('关闭'),
 }));
@@ -106,7 +106,11 @@ export function FixedIcon(props) {
   );
 }
 
-export function CloseIcon(props) {
+export interface CloseIconProps {
+  onClose: () => void;
+}
+
+export function CloseIcon(props: CloseIconProps) {
   return (
     <IconWrap className="closeIcon" onClick={() => props.onClose()} isActive={true}>
       <Icon icon="close" className="Font16" />
@@ -172,7 +176,7 @@ export function WidgetStyleSetting(props) {
   const titleControl = _.find(allControls, a => a.attribute === 1);
 
   // 关联表支持搜索的控件
-  const relateSearchUnSupport = (controlData?) => {
+  const relateSearchUnSupport = (controlData?: FormControl | undefined) => {
     const tempData = controlData || titleControl;
     return tempData && !_.includes(SUPPORT_RELATE_SEARCH, _.get(tempData, 'type'));
   };

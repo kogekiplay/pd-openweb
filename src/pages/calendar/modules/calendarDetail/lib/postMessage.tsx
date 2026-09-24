@@ -1,4 +1,3 @@
-import React from 'react';
 import doT from 'dot';
 import _ from 'lodash';
 import { Button, Dialog } from 'ming-ui';
@@ -49,7 +48,7 @@ export default function ({ id, recurTime, members, address, description, allDay,
         <Button
           type="primary"
           onClick={() => {
-            var ids = [];
+            var ids: (string | undefined)[] = [];
             $('.postMessageList .markCompletedSmall').each(function (this: HTMLElement) {
               var $this = $(this).parent();
               if ($this.attr('uid')) {
@@ -85,6 +84,7 @@ export default function ({ id, recurTime, members, address, description, allDay,
               .catch(() => {
                 alert(_l('发送失败'), 3);
               });
+            return undefined;
           }}
         >
           {_l('发送')}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import update from 'immutability-helper';
@@ -41,7 +41,7 @@ const initialConfig = [
   },
 ];
 
-const idContrast = {
+const idContrast: Record<string, string> = {
   app: 'appId',
   sheet: 'sheetId',
   view: 'viewId',
@@ -65,8 +65,10 @@ export default function SelectSheetFromApp(props) {
 
       const getFormatApps = () => {
         const currentIndex = _.findIndex(res, item => item.appId === currentAppId);
-        const currentApp = currentIndex > -1 ? res[currentIndex] : [];
-        const appList = [currentApp].concat(update(res, { $splice: [[currentIndex, 1]] }));
+        // 当前应用排到第一个。原来没找到时补的是 []（下拉里多出一个空选项），
+        // 同时 $splice 的起点是 -1，会把列表最后一个应用删掉
+        const appList =
+          currentIndex > -1 ? [res[currentIndex]].concat(update(res, { $splice: [[currentIndex, 1]] })) : res;
         if (appList.length < 1) return [];
         if (sheetId) {
           appList.forEach(i => {

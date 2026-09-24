@@ -18,7 +18,9 @@ import MDLeftNavSearch from '../common/mdLeftNav/mdLeftNavSearch';
 import './feedLeftNav.css';
 
 class FeedLeftNav extends React.Component<any, any> {
-  static propTypes = {
+  declare locatedDefaultGroup: boolean | undefined;
+
+  static override propTypes = {
     dispatch: PropTypes.func,
     hasNew: PropTypes.bool,
     defaultGroups: PropTypes.array,
@@ -75,7 +77,7 @@ class FeedLeftNav extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const foldedProjects = this.state.foldedProjects.toArray();
     if (
       foldedProjects.indexOf('') > -1 &&
@@ -96,11 +98,11 @@ class FeedLeftNav extends React.Component<any, any> {
       });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps, nextState) {
     return !shallowEqual(nextState, this.state) || !shallowEqual(nextProps, this.props);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.options.keywords !== this.state.searchAllKeywords) {
         this.setState({
@@ -131,7 +133,7 @@ class FeedLeftNav extends React.Component<any, any> {
     );
   };
 
-  fetchGroupsByProjectId = (projectId: string, openProject) => {
+  fetchGroupsByProjectId = (projectId: string, openProject: boolean) => {
     if (!this.state.loadingProjects.includes(projectId)) {
       const loadingProjects = this.state.loadingProjects.add(projectId);
       let foldedProjects = this.state.foldedProjects;
@@ -167,7 +169,7 @@ class FeedLeftNav extends React.Component<any, any> {
     });
   };
 
-  createGroup = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, projectId?) => {
+  createGroup = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, projectId?: string | undefined) => {
     e.preventDefault();
     e.stopPropagation();
     createGroup({
@@ -313,7 +315,7 @@ class FeedLeftNav extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     return (
       <MDLeftNav className="feedLeftNav bgPrimary">
         <MDLeftNavSearch

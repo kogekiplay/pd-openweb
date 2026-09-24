@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -41,7 +41,7 @@ export default class Snapshot extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
   }
 
@@ -49,7 +49,7 @@ export default class Snapshot extends Component<any, any> {
    * 获取节点详情
    */
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -180,7 +180,7 @@ export default class Snapshot extends Component<any, any> {
    */
   renderContent() {
     const { data } = this.state;
-    const TEXT = {
+    const TEXT: Record<number, string> = {
       1: _l('获取自定义页面的快照图片，供流程中其他节点使用。'),
       2: _l('获取统计图表的快照图片，供流程中其他节点使用。'),
       3: _l('通过链接地址获取页面的快照图片，供流程中其他节点使用。'),
@@ -272,7 +272,7 @@ export default class Snapshot extends Component<any, any> {
                 content={data.appId}
                 formulaMap={data.formulaMap}
                 getRef={tagtextarea => (this.urlTextarea = tagtextarea)}
-                onChange={(err, value) => this.updateSource({ appId: value })}
+                onChange={(_err, value) => this.updateSource({ appId: value })}
                 updateSource={this.updateSource}
               />
             </div>
@@ -347,7 +347,7 @@ export default class Snapshot extends Component<any, any> {
    * dropdown title
    */
   renderTitle(actionId) {
-    const TYPES = {
+    const TYPES: Record<number, { icon: string; text: string }> = {
       1: { icon: 'icon-dashboard', text: _l('自定义页面') },
       2: { icon: 'icon-worksheet_column_chart', text: _l('统计图表') },
       3: { icon: 'icon-link1', text: _l('链接地址') },
@@ -361,7 +361,7 @@ export default class Snapshot extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { data, showCustomPage, showStatisticalCharts } = this.state;
 
     if (_.isEmpty(data)) {

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Dropdown, Select } from 'antd';
 import api from 'api/homeApp';
@@ -24,7 +24,7 @@ export default class AppFilter extends Component<any, any> {
       processId: undefined,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     api.getAllHomeApp().then(data => {
       this.setState({
         dataSource: data.validProject,
@@ -33,7 +33,7 @@ export default class AppFilter extends Component<any, any> {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.apkId !== prevProps.apkId && _.isEmpty(this.props.apkId)) {
         this.setState({
@@ -172,8 +172,8 @@ export default class AppFilter extends Component<any, any> {
             );
           }}
         >
-          {TYPES.map(item => (
-            <Select.Option className="processOptionWrapper" value={item.value}>
+          {TYPES.map((item, index) => (
+            <Select.Option key={index} className="processOptionWrapper" value={item.value}>
               <div className="flexRow valignWrapper">
                 <i className={`icon ${item.icon} textTertiary Font18 mRight5`} />
                 {item.text}
@@ -192,8 +192,8 @@ export default class AppFilter extends Component<any, any> {
             this.props.onChange(app.id, value);
           }}
         >
-          {processList.map(item => (
-            <Select.Option className="processOptionWrapper" value={item.id}>
+          {processList.map((item, index) => (
+            <Select.Option key={index} className="processOptionWrapper" value={item.id}>
               {item.name}
             </Select.Option>
           ))}
@@ -201,7 +201,7 @@ export default class AppFilter extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { app, menuVisible } = this.state;
     const { apkId } = this.props;
     return (

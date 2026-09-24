@@ -89,6 +89,8 @@ const getBottomTabSheetList = ({ appSection = [], detail = {}, viewHideNavi, isA
 };
 
 class App extends Component<any, any> {
+  declare isSetScrollTop: boolean;
+
   constructor(props) {
     super(props);
     const { match, history } = props;
@@ -110,7 +112,7 @@ class App extends Component<any, any> {
     this.isSetScrollTop = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { params } = this.props.match;
     this.props.dispatch(actions.getAppDetail(params.appId, this.detectionUrl));
     $('html').addClass('appListMobile');
@@ -119,7 +121,7 @@ class App extends Component<any, any> {
     window.addEventListener('popstate', this.backDashboard);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps, prevState) {
     const { appSection } = this.props.appDetail;
     const nextWorksheetId = this.props.match.params.worksheetId;
     const prevWorksheetId = prevProps.match.params.worksheetId;
@@ -171,7 +173,7 @@ class App extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     $('html').removeClass('appListMobile');
     sessionStorage.removeItem('detectionUrl');
     if (modal) {
@@ -182,7 +184,7 @@ class App extends Component<any, any> {
     window.removeEventListener('popstate', this.backDashboard);
   }
 
-  backDashboard = event => {
+  backDashboard = (event: PopStateEvent) => {
     // 弹层关闭也会触发 popstate，此时只应关闭弹层，不能按页面返回跳转到工作台。
     if (isHistoryLayerPopstate(event)) return;
 
@@ -305,7 +307,7 @@ class App extends Component<any, any> {
     const { appNaviStyle } = _.get(this.props, 'appDetail.detail') || {};
 
     if (appNaviStyle === 2) {
-      safeLocalStorageSetItem('preventBrowserBack', true);
+      safeLocalStorageSetItem('preventBrowserBack', String(true));
     }
 
     if (item.type === 0) {
@@ -322,7 +324,7 @@ class App extends Component<any, any> {
       if (urlTemplate && configuration.openType == '2') {
         const { detail } = this.props.appDetail;
         const dataSource = transferValue(urlTemplate);
-        const urlList = [];
+        const urlList: string[] = [];
         dataSource.map(o => {
           if (o.staticValue) {
             urlList.push(o.staticValue);
@@ -358,7 +360,7 @@ class App extends Component<any, any> {
     safeLocalStorageSetItem('currentNavWorksheetId', item.workSheetId);
   };
 
-  renderList(data, level) {
+  renderList(data, level: string) {
     const { viewHideNavi } = this.state;
     const { appDetail } = this.props;
     const { detail } = appDetail;
@@ -455,7 +457,7 @@ class App extends Component<any, any> {
     return groupData
       .filter(item => (viewHideNavi ? true : ![2, 4].includes(item.status)))
       .map((v, index) => {
-        if (v.workSheetId === 'other' && _.isEmpty(v.workSheetInfo)) return;
+        if (v.workSheetId === 'other' && _.isEmpty(v.workSheetInfo)) return undefined;
         return (
           <Fragment key={v.workSheetId}>
             {this.renderHeader(v, 'level2', index)}
@@ -495,7 +497,7 @@ class App extends Component<any, any> {
       });
   }
 
-  renderHeader(data, level, index?) {
+  renderHeader(data, level: string, index?: number | undefined) {
     const { appDetail } = this.props;
     const { id, appNaviStyle } = appDetail.detail;
     const { expandGroupKeys = [], level2ExpandKeys = [] } = this.state;
@@ -629,7 +631,7 @@ class App extends Component<any, any> {
     );
   }
 
-  renderSection(data, level) {
+  renderSection(data, level: string) {
     const { appDetail } = this.props;
     const { appNaviStyle } = appDetail.detail;
     const { viewHideNavi } = this.state;
@@ -905,6 +907,7 @@ class App extends Component<any, any> {
         />
       );
     }
+    return undefined;
   }
 
   renderBody() {
@@ -984,7 +987,7 @@ class App extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { isAppLoading, appDetail } = this.props;
 
     if (isAppLoading) {

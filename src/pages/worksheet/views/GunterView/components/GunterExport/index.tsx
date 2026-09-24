@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -20,13 +20,13 @@ let GunterExport = class GunterExport extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { match } = this.props;
     this.props.updateBase(match.params);
     this.props.loadWorksheet(match.params.worksheetId);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { loading, views, base } = this.props;
 
@@ -95,7 +95,7 @@ let GunterExport = class GunterExport extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     return (
       <Fragment>
         {this.renderContent()}

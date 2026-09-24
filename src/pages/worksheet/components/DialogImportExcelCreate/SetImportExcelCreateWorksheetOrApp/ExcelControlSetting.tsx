@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Input } from 'antd';
 import cx from 'classnames';
@@ -48,7 +48,14 @@ const ExcelControlSettingWrap = styled.div`
   }
 `;
 
-export default class ExcelControlSetting extends Component<any, any> {
+export interface ExcelControlSettingState {
+  step: number;
+  visible: boolean;
+  controls: { value: string | undefined; text: string | undefined }[];
+  loading: boolean;
+}
+
+export default class ExcelControlSetting extends Component<any, ExcelControlSettingState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,7 +66,7 @@ export default class ExcelControlSetting extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     if (this.fieldName) {
       this.fieldName.focus();
     }
@@ -71,7 +78,7 @@ export default class ExcelControlSetting extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { data: { type, dataSource } = {} } = this.props;
 
@@ -127,7 +134,7 @@ export default class ExcelControlSetting extends Component<any, any> {
     return _.find(list, i => (i.total ? _.includes(i.total, value) : i.value === value));
   }
 
-  render() {
+  override render() {
     const { data = {}, worksheetList = [], createType, projectId, appId } = this.props;
     const { step, visible, controls, loading } = this.state;
     const { type, controlName, dataSource, sourceConfig = {} } = data;

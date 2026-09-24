@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { Dialog, FunctionWrap, LoadDiv } from 'ming-ui';
 import merchantInvoiceApi from 'src/api/merchantInvoice';

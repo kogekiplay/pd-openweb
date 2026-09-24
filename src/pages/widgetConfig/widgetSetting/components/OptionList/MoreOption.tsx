@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -49,7 +49,7 @@ export default function MoreOption(props) {
   // 已删除控件
   const deleteOptions = options.filter(i => i.isDeleted);
 
-  const sortOptions = isAsc => {
+  const sortOptions = (isAsc: boolean) => {
     const newOptions = options.sort(
       ({ value: aValue = '', key: aKey = '' } = {}, { value: bValue = '', key: bKey = '' } = {}) => {
         if (aKey === 'other' && bKey !== 'other') return 1;

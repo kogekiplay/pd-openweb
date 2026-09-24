@@ -34,12 +34,12 @@ export function getNavigationBlockMessage(): string {
 
 export default function NavigationPrompt({ when, message }: { when: boolean; message: string }) {
   useEffect(() => {
-    if (!when) return;
+    if (!when) return undefined;
 
     const getMessage = () => message;
     blockers.add(getMessage);
 
-    const onBeforeUnload = e => {
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       // 现代浏览器会忽略自定义文案、只显示自己的通用提示，设 returnValue 仍是触发它的必要条件
       e.returnValue = message;

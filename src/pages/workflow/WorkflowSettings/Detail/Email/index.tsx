@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import { Checkbox, Dropdown, LoadDiv, PriceTip, Radio, RichText, ScrollView } from 'ming-ui';
@@ -31,6 +31,8 @@ import {
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default class Email extends Component<any, any> {
+  declare mounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -51,13 +53,13 @@ export default class Email extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.mounted = true;
     this.getNodeDetail(this.props);
     emitter.addListener('CHANGE_THEME_MODE', this.handleMJMLPreviewThemeChange);
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -76,7 +78,7 @@ export default class Email extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
     emitter.removeListener('CHANGE_THEME_MODE', this.handleMJMLPreviewThemeChange);
   }
@@ -224,7 +226,8 @@ export default class Email extends Component<any, any> {
         const result = await this.convertMjml(mjmlValue);
 
         mjmlHtml = result.html;
-      } catch (err) {
+      } catch (thrown) {
+        const err = thrown as Partial<Error>;
         this.setState({ saveRequest: false });
         alert(err.message || _l('MJML 格式错误，请修正后再保存'), 2);
         return;
@@ -774,7 +777,7 @@ export default class Email extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const { data } = this.state;
 
     if (_.isEmpty(data)) {

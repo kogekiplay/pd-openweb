@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { PRINT_TYPE } from './enum';
 import img1 from './images/1x1.png';

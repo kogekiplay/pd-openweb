@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Checkbox, Collapse, Input, Switch } from 'antd';
 import _ from 'lodash';
 import { isNumberControl } from 'statistics/common/controlUtils';
@@ -18,7 +18,7 @@ export default function allCountPanelGenerator(props) {
         <Switch
           size="small"
           checked={totalSwitch}
-          onClick={(checked, event) => {
+          onClick={(_checked, event) => {
             event.stopPropagation();
           }}
           onChange={checked => {

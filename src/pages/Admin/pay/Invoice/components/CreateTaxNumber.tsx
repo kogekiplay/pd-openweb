@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useSetState } from 'react-use';
 import { Select } from 'antd';
 import _ from 'lodash';
@@ -257,22 +257,22 @@ export default function CreateTaxNumber(props) {
     if (!window.platformENV.isOverseas && !window.platformENV.isLocal) {
       if (!taxNo) {
         alert(_l('开票主体不能为空'), 3);
-        return;
+        return undefined;
       }
 
       if (!email?.trim()) {
         alert(_l('请输入邮箱'), 3);
-        return;
+        return undefined;
       }
 
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         alert(_l('请输入正确的邮箱'), 3);
-        return;
+        return undefined;
       }
 
       if (!emailCode?.trim()) {
         alert(_l('请输入邮箱验证码'), 3);
-        return;
+        return undefined;
       }
 
       return true;
@@ -280,37 +280,37 @@ export default function CreateTaxNumber(props) {
 
     if (!companyName?.trim()) {
       alert(_l('请输入开票主体'), 3);
-      return;
+      return undefined;
     }
 
     if (!taxNo?.trim()) {
       alert(_l('请输入企业税号'), 3);
-      return;
+      return undefined;
     }
 
     if (!account?.trim()) {
       alert(_l('请输入百望账号'), 3);
-      return;
+      return undefined;
     }
 
     if (!password?.trim()) {
       alert(_l('请输入百望密码'), 3);
-      return;
+      return undefined;
     }
 
     if (!appKey?.trim()) {
       alert(_l('请输入AppKey'), 3);
-      return;
+      return undefined;
     }
 
     if (!appSecret?.trim()) {
       alert(_l('请输入AppSecret'), 3);
-      return;
+      return undefined;
     }
 
     if (!salt?.trim()) {
       alert(_l('请输入用户盐值'), 3);
-      return;
+      return undefined;
     }
 
     return true;
@@ -593,8 +593,8 @@ export default function CreateTaxNumber(props) {
                     <div className="textSecondary mBottom5 bold">{_l('百望账户信息')}</div>
                     <div className="secretWrap flexRow Relative">
                       <div className="flex">
-                        {privateFields.map(item => (
-                          <div className="flexRow mBottom10">
+                        {privateFields.map((item, index) => (
+                          <div key={index} className="flexRow mBottom10">
                             <div>{item.label}：</div>
                             <div className="flex ellipsis">********************</div>
                           </div>
@@ -748,8 +748,8 @@ export default function CreateTaxNumber(props) {
                     setData({ account: '', password: '', appKey: '', appSecret: '', salt: '' });
                   }}
                 >
-                  {privateFields.map(item => (
-                    <Fragment>
+                  {privateFields.map((item, index) => (
+                    <Fragment key={index}>
                       <div className="textSecondary bold mTop4 mBottom6">
                         <span>{item.label}</span>
                         <span className="Red bold Font14">*</span>
@@ -819,7 +819,7 @@ export default function CreateTaxNumber(props) {
                     setUploading(true);
                     up.disableBrowse();
                   }}
-                  onError={(up, err, errTip) => {
+                  onError={(_up, _err, errTip) => {
                     alert(errTip, 2);
                   }}
                 >

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Support } from 'ming-ui';
@@ -22,7 +22,7 @@ export default class ExclusiveComp extends Component<any, any> {
     };
   }
 
-  onClick = active => {
+  onClick = (active: string) => {
     const { match } = this.props;
 
     if (active === this.state.activeKey) return;
@@ -70,7 +70,7 @@ export default class ExclusiveComp extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { refresh, activeKey } = this.state;
     const { projectId, explanId } = _.get(this.props, 'match.params') || {};
     const hasDataBase =

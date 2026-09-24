@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from 'react';
+import { Fragment, PureComponent } from 'react';
 import _ from 'lodash';
 import flowMonitor from 'src/pages/workflow/api/processVersion.js';
 import { settingEarlyWarning } from './EarlyWarningDialog';
@@ -18,7 +18,7 @@ export default class RealTimeData extends PureComponent<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getRealTimeData();
     this.getWarningSetting();
   }
@@ -105,7 +105,7 @@ export default class RealTimeData extends PureComponent<any, any> {
     );
   };
 
-  render() {
+  override render() {
     return (
       <Fragment>
         <div className="subTitle">{_l('实时')}</div>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
@@ -115,7 +115,7 @@ export default function SelectAvatarTrigger(props) {
             setState({ loading: false });
             up.disableBrowse(false);
           }}
-          onError={(up, err, errTip) => {
+          onError={(up, _err, errTip) => {
             setState({ loading: false });
             alert(errTip, 2);
             up.disableBrowse(false);

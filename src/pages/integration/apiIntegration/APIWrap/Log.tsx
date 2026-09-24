@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { ConfigProvider, Table } from 'antd';
 import cx from 'classnames';
@@ -171,7 +171,8 @@ export default function Log(props) {
     pageIndex: 1,
     isAll: false,
     keyWord: '', //
-    type: '', //日志类型
+    // '' 是「全部」，其余是数字日志类型（和下拉项的 value 一致）
+    type: '' as '' | number, //日志类型
     status: '', //状态
     time: ['', ''],
     user: {},
@@ -244,7 +245,7 @@ export default function Log(props) {
     {
       title: _l('来源'),
       dataIndex: 'title',
-      render: (text, record) => {
+      render: (_text, record) => {
         // 来源有工作表和工作流，需要同时显示应用名称。显示为链接 ，点击可以跳转到对应的工作表和工作流；
         return (
           <div className="Bold WordBreak fromTxt">
@@ -268,7 +269,7 @@ export default function Log(props) {
     {
       title: _l('触发数据'),
       dataIndex: 'status',
-      render: (text, record) => {
+      render: (_text, record) => {
         return (
           <Tooltip title={record.title}>
             <div className="WordBreak fromTxt">{record.title}</div>
@@ -279,7 +280,7 @@ export default function Log(props) {
     {
       title: _l('状态'),
       dataIndex: 'status',
-      render: (text, record) => {
+      render: (_text, record) => {
         return <span className={cx({ Red: record.status === 4 })}>{FLOW_STATUS[record.status].text}</span>;
       },
     },
@@ -287,7 +288,7 @@ export default function Log(props) {
       title: _l('触发者'),
       dataIndex: 'user',
       width: 10,
-      render: (text, record) => {
+      render: (_text, record) => {
         return (
           <UserHead
             user={{
@@ -303,14 +304,14 @@ export default function Log(props) {
     {
       title: _l('时间'),
       dataIndex: 'createDate',
-      render: (text, record) => {
+      render: (_text, record) => {
         return <span className="textTertiary">{record.createDate}</span>;
       },
     },
     {
       title: _l('耗时'),
       dataIndex: 'take',
-      render: (text, record) => {
+      render: (_text, record) => {
         if (!record.completeDate) {
           return '';
         }
@@ -323,7 +324,7 @@ export default function Log(props) {
       title: _l('详情'),
       dataIndex: 'option',
       className: 'optionConTb',
-      render: (text, record) => {
+      render: (_text, record) => {
         // 非超级管理员和拥有者
         // 只能查看触发者是自己的日志详情
         if (!(
@@ -405,7 +406,7 @@ export default function Log(props) {
     }
   };
 
-  const formatTime = time => time.map(item => item && moment(item).format('YYYY/MM/DD HH:mm'));
+  const formatTime = (time: string[]) => time.map(item => item && moment(item).format('YYYY/MM/DD HH:mm'));
 
   const renderTimePlaceholder = () => {
     const [startTime, endTime] = formatTime(time);
@@ -428,7 +429,8 @@ export default function Log(props) {
           className="logSearch"
           placeholder={_l('搜索来源/数据')}
         />
-        <Dropdown
+        {/* 项里 '' 是「全部」、其余是数字 —— 值类型混在一起时推不出来，这里写明 */}
+        <Dropdown<'' | number>
           value={type}
           className="dropSearchType mLeft10"
           onChange={value => {

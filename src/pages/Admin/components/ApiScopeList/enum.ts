@@ -1,4 +1,4 @@
-export const SCOPES = {
+export const SCOPES: Record<number, string> = {
   200000: _l('用户'),
   200100: _l('获取用户所在组织列表'),
   200200: _l('获取用户信息'),

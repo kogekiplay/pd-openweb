@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import MdMarkdown from '.';
 import styled from 'styled-components';
 import { Modal } from 'ming-ui';

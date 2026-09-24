@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -51,7 +51,7 @@ const Wrap = styled.div`
 `;
 
 export default function (props) {
-  const $ref = useRef(null);
+  const $ref = useRef<HTMLSpanElement | null>(null);
   const {
     view,
     controlInfo,
@@ -134,7 +134,7 @@ export default function (props) {
 
     if (isSameType([28], controlInfo)) {
       const list = [...new Array(parseInt(_.get(controlInfo, ['advancedSetting', 'max']) || '1', 10))].map(
-        (o, i) => i + 1 + '',
+        (_o, i) => i + 1 + '',
       );
       formatSettingData(list);
     }
@@ -166,7 +166,7 @@ export default function (props) {
     });
   };
 
-  const addUser = (isMultiple = true, tabType) => {
+  const addUser = (isMultiple = true, tabType: number) => {
     quickSelectUser($ref.current, {
       showMoreInvite: false,
       isTask: false,

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -188,6 +188,8 @@ const NO_CONFIRM_TOOL_TYPES = [3, 4, 9, 10];
 const EDITABLE_TOOL_TYPES = [5, 6, 7, 8, 9];
 
 export default class Agent extends Component<any, any> {
+  declare mounted: boolean | undefined;
+
   constructor(props) {
     super(props);
 
@@ -201,12 +203,12 @@ export default class Agent extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getNodeDetail(this.props);
     this.mounted = true;
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.selectNodeId !== prevProps.selectNodeId) {
         this.getNodeDetail(this.props);
@@ -225,7 +227,7 @@ export default class Agent extends Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.mounted = false;
   }
 
@@ -560,7 +562,7 @@ export default class Agent extends Component<any, any> {
           showNodeDataSelect={key === 'prompt'}
           content={data[key]}
           formulaMap={data.formulaMap}
-          onChange={(err, value) => this.updateSource({ [key]: value })}
+          onChange={(_err, value) => this.updateSource({ [key]: value })}
           updateSource={this.updateSource}
         />
       </Fragment>
@@ -992,7 +994,7 @@ export default class Agent extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { data, showVectorDialog, toolNode } = this.state;
 
     if (_.isEmpty(data)) {

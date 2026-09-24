@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import Trigger from '@rc-component/trigger';
@@ -9,7 +9,12 @@ import { defaultTitleStyles, replaceTitleStyle } from 'src/pages/customPage/comp
 import { getTranslateInfo } from 'src/utils/app';
 import ChartDesc from '../components/ChartDesc';
 
-export default class Header extends Component<any, any> {
+export interface HeaderState {
+  isEdit: boolean;
+  editDescVisible: boolean;
+}
+
+export default class Header extends Component<any, HeaderState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +38,7 @@ export default class Header extends Component<any, any> {
     this.setState({ isEdit: false });
     this.props.changeCurrentReport({ name });
   };
-  render() {
+  override render() {
     const { appId, report, permissions, currentReport, reportData, themeColor, customPageConfig = {} } = this.props;
     const pageTitleStyles = customPageConfig.titleStyles || {};
     const titleStyles = _.get(currentReport.style, 'titleStyles') || defaultTitleStyles;

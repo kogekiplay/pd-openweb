@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -80,14 +80,14 @@ export default ({
     updateSource({ [sourceKey]: items });
   };
 
-  const deleteKeys = i => {
+  const deleteKeys = (i: number) => {
     const items = _.cloneDeep(source);
 
-    _.remove(items, (obj, index) => index === i);
+    _.remove(items, (_obj, index) => index === i);
     updateSource({ [sourceKey]: items });
   };
 
-  const renderTag = (tag, i) => {
+  const renderTag = (tag, i: number) => {
     const key = tag.replace(/^\$|\$$/g, '');
     const ids = key.split(/([a-zA-Z0-9#]{24,32})-/).filter(item => item);
     const nodeObj = formulaMap[ids[0]] || {};
@@ -150,7 +150,7 @@ export default ({
     );
   };
 
-  const renderNodeList = (selected, i) => {
+  const renderNodeList = (selected: boolean, i: number) => {
     const onHideMenu = () => {
       setIndex(-1);
     };
@@ -281,7 +281,7 @@ export default ({
                   height={0}
                   content={item.value}
                   formulaMap={formulaMap}
-                  onChange={(err, value) => updateKeyValues({ key: pairsName, value, i })}
+                  onChange={(_err, value) => updateKeyValues({ key: pairsName, value, i })}
                   updateSource={updateSource}
                 />
               )}

@@ -39,7 +39,13 @@ const STATUS_TO_TEXT = {
   31: { src: noAppImg, text: _l('应用已被彻底删除，如需使用请重新安装') },
 };
 
-export class AppPermissionsInfo extends React.Component<any, any> {
+export interface AppPermissionsInfoState {
+  isAppActioning: boolean;
+  applyJoinAppVisible?: boolean | undefined;
+  remark?: string | undefined;
+}
+
+export class AppPermissionsInfo extends React.Component<any, AppPermissionsInfoState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -79,7 +85,7 @@ export class AppPermissionsInfo extends React.Component<any, any> {
       >
         <div className="bold mBottom10">{_l('申请加入应用')}</div>
         <Textarea
-          height={120}
+          minHeight={120}
           value={remark}
           onChange={value => this.setState({ remark: value })}
           placeholder={_l('填写申请说明')}
@@ -99,7 +105,7 @@ export class AppPermissionsInfo extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { appStatus } = this.props;
     const { isAppActioning } = this.state;
     const info = STATUS_TO_TEXT[appStatus] || STATUS_TO_TEXT[2];
@@ -189,7 +195,7 @@ const appPermissions = Component => {
         },
       });
     };
-    componentDidMount() {
+    override componentDidMount() {
       const { params, path } = this.props.match;
       const { appId } = params;
 
@@ -273,7 +279,7 @@ const appPermissions = Component => {
           });
         });
     };
-    render() {
+    override render() {
       const { params } = this.props.match;
       const { loading, appStatus, fixedData } = this.state;
       const isNoPublish = window.isMingDaoApp ? fixedData.appDisplay : fixedData.webMobileDisplay;

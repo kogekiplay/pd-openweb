@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './errorPage.less';
 
 export default class ErrorState extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     text: PropTypes.string,
     showBtn: PropTypes.bool,
     className: PropTypes.string,
@@ -24,7 +24,7 @@ export default class ErrorState extends Component<any, any> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { text, btnText, showBtn, callback, className, iconClassName } = this.props;
 
     return (

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -24,7 +24,7 @@ import {
 } from './config';
 
 export default class HistoryDetail extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     isPlugin: bool,
     id: string,
     moduleType: number,
@@ -37,7 +37,7 @@ export default class HistoryDetail extends Component<any, any> {
     openNodeDetail: () => {},
   };
 
-  state = {
+  override state = {
     data: {},
     isRetry: false,
     processInfo: {},
@@ -45,7 +45,7 @@ export default class HistoryDetail extends Component<any, any> {
 
   retryPosition = '';
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getData();
     this.getProcessPublish();
   }
@@ -72,7 +72,7 @@ export default class HistoryDetail extends Component<any, any> {
       const index = _.findIndex(works, o => _.includes([flowId, id], o.flowNode.prveId));
 
       if (currentIndex !== index && index !== -1) {
-        works = works.filter((o, i) => i !== currentIndex);
+        works = works.filter((_o, i) => i !== currentIndex);
         works.splice(index - (currentIndex < index ? 1 : 0), 0, item);
       }
     });
@@ -88,7 +88,7 @@ export default class HistoryDetail extends Component<any, any> {
     });
   };
 
-  renderOperationInfo = (item, isLast) => {
+  renderOperationInfo = (item, isLast: boolean) => {
     const { cause, causeMsg, causeAccount } = this.state.data.instanceLog;
     const {
       flowNode,
@@ -127,10 +127,11 @@ export default class HistoryDetail extends Component<any, any> {
             type === 0 && workItemAccount.accountId === 'user-undefined' ? _l('发起人为空') : workItemAccount.fullName,
         };
       }
+      return undefined;
     });
 
     const isApproval = appType === 9 && type === 0;
-    const ERROR_LABELS = {
+    const ERROR_LABELS: Record<string, string> = {
       102: _l('发送邮件，'),
     };
 
@@ -214,6 +215,7 @@ export default class HistoryDetail extends Component<any, any> {
                   <div key={key} />
                 );
               }
+              return undefined;
             }))}
 
         {!!updateWorks && (
@@ -315,7 +317,7 @@ export default class HistoryDetail extends Component<any, any> {
     return null;
   }
 
-  operationInstance = ajax => {
+  operationInstance = (ajax: (args: ApiArgs, options?: ApiOptions) => ApiResult) => {
     const { isRetry } = this.state;
     const { id } = this.props;
 
@@ -363,7 +365,7 @@ export default class HistoryDetail extends Component<any, any> {
     return level > 9 ? 9 : level;
   }
 
-  render() {
+  override render() {
     const { onClick, id, openNodeDetail, isPlugin, moduleType } = this.props;
     const { data, isRetry, processInfo } = this.state;
 
@@ -373,7 +375,7 @@ export default class HistoryDetail extends Component<any, any> {
     const { cause, nodeName, causeMsg } = instanceLog;
     const { status } = FLOW_STATUS[data.status];
     const { color, bgColor } = STATUS2COLOR[status];
-    const resultTypeText = {
+    const resultTypeText: Record<number, string> = {
       1: _l('同意'),
       2: _l('拒绝'),
       3: _l('有数据'),

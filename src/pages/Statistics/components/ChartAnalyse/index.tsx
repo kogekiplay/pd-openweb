@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Collapse, Switch } from 'antd';
@@ -70,7 +70,7 @@ let ChartAnalyse = class ChartAnalyse extends Component<any, any> {
           <Switch
             size="small"
             checked={displaySetup.showRowList}
-            onClick={(checked, event) => {
+            onClick={(_checked, event) => {
               event.stopPropagation();
             }}
             onChange={checked => {
@@ -134,7 +134,7 @@ let ChartAnalyse = class ChartAnalyse extends Component<any, any> {
               size="small"
               checked={switchChecked}
               disabled={!rangeType}
-              onClick={(checked, event) => {
+              onClick={(_checked, event) => {
                 event.stopPropagation();
               }}
               onChange={checked => {
@@ -198,7 +198,7 @@ let ChartAnalyse = class ChartAnalyse extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { sourceType, currentReport } = this.props;
     const { reportType } = currentReport;
     return (

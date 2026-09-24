@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Radio } from 'ming-ui';
 
 export default ({ execute, onChange, isFormula = false }) => {

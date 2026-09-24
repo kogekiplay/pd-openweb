@@ -239,7 +239,7 @@ export default function DataCollectionSettings(props) {
   const [daySelectPopupVisible, setDaySelectPopupVisible] = useState(false);
   const locale = locales[md.global.Account.lang] || localeEn;
 
-  const onRangeInputChange = (value, type, from: string) => {
+  const onRangeInputChange = (value: string, type: string, from: string) => {
     if (parseInt(value) || parseInt(value) === 0 || value === '') {
       const newTimeRange = _.cloneDeep(timeRange);
       const maxValue = type === TIME_TYPE.MONTH ? 12 : 31;
@@ -257,7 +257,7 @@ export default function DataCollectionSettings(props) {
     }
   };
 
-  const onRangeInputBlur = type => {
+  const onRangeInputBlur = (type: string) => {
     if (timeRange[type].start && timeRange[type].end) {
       const newTimeRange = _.cloneDeep(timeRange);
 
@@ -285,7 +285,7 @@ export default function DataCollectionSettings(props) {
     setState({ timeRange: newTimeRange });
   };
 
-  const renderTimePeriodItem = (itemProps, index: number) => {
+  const renderTimePeriodItem = (itemProps: { type: string; text: string }, index: number) => {
     const { type, text } = itemProps;
     const selectedMonths = limitWriteTime.monthSetting.defineMonth || [];
     const selectedDays = limitWriteTime.daySetting.defineDay || [];
@@ -368,10 +368,11 @@ export default function DataCollectionSettings(props) {
             }}
             popup={
               <DaySelectContainer>
-                {Array.from(Array(31), (_, i) => i + 1).map(item => {
+                {Array.from(Array(31), (_, i) => i + 1).map((item, index) => {
                   const isSelected = _.includes(selectedDays, item);
                   return (
                     <div
+                      key={index}
                       className={cx('dayItem', { active: isSelected })}
                       onClick={() => {
                         const newLimitWriteTime = _.cloneDeep(limitWriteTime);
@@ -453,7 +454,7 @@ export default function DataCollectionSettings(props) {
                     suffixIcon={null}
                     disabledTime={() => getDisabledTime('start', item)}
                     value={item.start ? dayjs(item.start, 'HH:mm') : null}
-                    onChange={(time, timeString) => onTimeChange(timeString, index, 'start')}
+                    onChange={(_time, timeString) => onTimeChange(timeString, index, 'start')}
                   />
                   <Icon icon="minus textSecondary Font12 mLeft4 mRight4" />
                   <CustomTimePicker
@@ -463,7 +464,7 @@ export default function DataCollectionSettings(props) {
                     suffixIcon={null}
                     disabledTime={() => getDisabledTime('end', item)}
                     value={item.end ? dayjs(item.end, 'HH:mm') : null}
-                    onChange={(time, timeString) => onTimeChange(timeString, index, 'end')}
+                    onChange={(_time, timeString) => onTimeChange(timeString, index, 'end')}
                   />
                   <Icon
                     icon={index === 0 ? 'add_circle_outline' : 'remove_circle_outline'}

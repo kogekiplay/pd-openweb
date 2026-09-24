@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -7,7 +7,7 @@ import { Switch } from 'ming-ui';
 import process from '../../../api/process';
 import PublishErrorDialog from '../../../components/PublishErrorDialog';
 
-const publishStatus2Text = {
+const publishStatus2Text: Record<number, string> = {
   0: _l('创建'),
   1: _l('更新未发布'),
   2: _l('发布'),
@@ -15,7 +15,7 @@ const publishStatus2Text = {
 };
 
 export default class PublishBtn extends Component<any, any> {
-  state = {
+  override state = {
     publishing: false,
     publishData: {},
     dialogVisible: false,
@@ -85,7 +85,7 @@ export default class PublishBtn extends Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { disabled = false, item, showTime, showCreateTime } = this.props;
     const { publishData, dialogVisible } = this.state;
 

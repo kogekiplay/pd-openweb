@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -23,7 +23,12 @@ const EntranceWrapper = styled.div`
   }
 `;
 
-export default class ColorEntrance extends Component<any, any> {
+export interface ColorEntranceState {
+  baseColorModalVisible: boolean;
+  ruleColorModalVisible: boolean;
+}
+
+export default class ColorEntrance extends Component<any, ColorEntranceState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -154,7 +159,7 @@ export default class ColorEntrance extends Component<any, any> {
       />
     );
   }
-  render() {
+  override render() {
     const name = this.getColorName();
     const { displaySetup } = this.props.currentReport;
     const ruleVisible = this.getRuleVisible();

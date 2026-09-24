@@ -1,17 +1,21 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import { bool, func, string } from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 import './index.less';
 
-const STATUS2TEXT = {
+const STATUS2TEXT: Record<string, string> = {
   active: _l('运行中%03001'),
   close: _l('已关闭%03002'),
 };
 
-export default class Switch extends Component<any, any> {
-  static propTypes = {
+export interface SwitchState {
+  disabled: boolean;
+}
+
+export default class Switch extends Component<any, SwitchState> {
+  static override propTypes = {
     /** 是否禁止关闭 */
     disabledClose: bool,
     /** 流程运行状态 */
@@ -42,11 +46,11 @@ export default class Switch extends Component<any, any> {
     refreshPublish: () => {},
   };
 
-  state = {
+  override state = {
     disabled: false,
   };
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!this.props.pending && prevProps.pending) {
         this.setState({
@@ -56,7 +60,7 @@ export default class Switch extends Component<any, any> {
     }
   }
 
-  handleClick = type => {
+  handleClick = (type: string) => {
     const { publishFlow, switchStatus, refreshPublish } = this.props;
 
     this.setState({ disabled: true });
@@ -66,7 +70,7 @@ export default class Switch extends Component<any, any> {
     if (type === 'refreshPublish') refreshPublish();
   };
 
-  render() {
+  override render() {
     const { disabledClose, pending, status, isNew, isRefresh, className } = this.props;
     const { disabled } = this.state;
 

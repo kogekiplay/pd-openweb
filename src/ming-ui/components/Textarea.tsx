@@ -1,11 +1,32 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+import type { ChangeEvent, CSSProperties, TextareaHTMLAttributes } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './less/Textarea.less';
 
-class Textarea extends Component<any, any> {
-  static propTypes = {
+// 其余属性原样落到 <textarea> 上
+interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
+  /** 自动撑高的上下限，原样写进 style，默认 100 / 10000（px） */
+  minHeight?: CSSProperties['minHeight'] | undefined;
+  maxHeight?: CSSProperties['maxHeight'] | undefined;
+  /** 挂载后全选文字 */
+  isSelect?: boolean | undefined;
+  /** 挂载时、以及由 false 变成 true 时聚焦并把光标放到末尾 */
+  isFocus?: boolean | undefined;
+  /** 参数是输入后的文字 */
+  onChange?: ((value: string, event: ChangeEvent<HTMLTextAreaElement>) => void) | undefined;
+  /** 失焦时也重算一次高度 */
+  resizeAfterBlur?: boolean | undefined;
+  manualRef?: ((textarea: HTMLTextAreaElement | null) => void) | undefined;
+  /** 聊天输入框用：算高度前多归零一次（adjustHeight 开头已统一归零，现在和不传效果相同） */
+  chat?: boolean | undefined;
+}
+
+class Textarea extends Component<TextareaProps, { defaultValue?: TextareaProps['defaultValue'] }> {
+  declare textarea: HTMLTextAreaElement | null;
+
+  static override propTypes = {
     minHeight: PropTypes.number,
     maxHeight: PropTypes.number,
     maxLength: PropTypes.number,
@@ -32,8 +53,11 @@ class Textarea extends Component<any, any> {
     manualRef: () => {},
   };
 
-  componentDidMount() {
-    const $textarea = $(this.textarea);
+  override componentDidMount() {
+    const { textarea } = this;
+    // ref 在 componentDidMount 之前就挂上了，这里只是让类型知道它不是 null
+    if (!textarea) return;
+    const $textarea = $(textarea);
     const events = this.props.resizeAfterBlur ? 'input keyup blur' : 'input keyup';
     const { chat } = this.props;
     this.adjustHeight($textarea, chat);
@@ -46,8 +70,8 @@ class Textarea extends Component<any, any> {
     }
 
     if (this.props.isFocus) {
-      this.textarea.focus({ preventScroll: true });
-      this.moveCaretToEnd($textarea[0]);
+      textarea.focus({ preventScroll: true });
+      this.moveCaretToEnd(textarea);
     }
 
     setTimeout(() => {
@@ -56,7 +80,7 @@ class Textarea extends Component<any, any> {
   }
 
   // 获取最近的滚动容器
-  getScrollParent(element) {
+  getScrollParent(element: HTMLElement | null) {
     if (!element) return null;
     let parent = element.parentElement;
 
@@ -74,7 +98,7 @@ class Textarea extends Component<any, any> {
   }
 
   // 调整高度时保持滚动位置
-  adjustHeight($textarea, chat) {
+  adjustHeight($textarea: JQuery<HTMLTextAreaElement>, chat: boolean | undefined) {
     if (!this.textarea) return;
     const scrollParent = this.getScrollParent(this.textarea);
     const scrollTop = scrollParent ? scrollParent.scrollTop : 0;
@@ -99,16 +123,19 @@ class Textarea extends Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: TextareaProps) {
+    const { textarea } = this;
+    // 下面的 setState 只为在回调里做 DOM 操作（render 不读 state），没有 textarea 时整段都是空转
+    if (!textarea) return;
     if (!shallowEqual(prevProps, this.props)) {
-      const $textarea = $(this.textarea); // 处理 isFocus 变化
+      const $textarea = $(textarea);
 
       // 处理 isFocus 变化
       if (this.props.isFocus && !prevProps.isFocus) {
-        this.textarea.focus({
+        textarea.focus({
           preventScroll: true,
         });
-        this.moveCaretToEnd($textarea[0]);
+        this.moveCaretToEnd(textarea);
       }
 
       this.setState(
@@ -116,31 +143,25 @@ class Textarea extends Component<any, any> {
           defaultValue: this.props.defaultValue,
         },
         () => {
-          $(this.textarea).trigger('input');
+          $textarea.trigger('input');
           this.adjustHeight($textarea, prevProps.chat);
         },
       );
     }
   }
 
-  moveCaretToEnd(el) {
-    if (typeof el.selectionStart === 'number') {
-      el.selectionStart = el.selectionEnd = el.value.length;
-    } else if (typeof el.createTextRange !== 'undefined') {
-      el.focus({ preventScroll: true });
-      var range = el.createTextRange();
-      range.collapse(false);
-      range.select();
-    }
+  // 原来还有 IE 的 createTextRange 分支：textarea 的 selectionStart 在所有支持的浏览器里都是数字，那一支走不到
+  moveCaretToEnd(el: HTMLTextAreaElement) {
+    el.selectionStart = el.selectionEnd = el.value.length;
   }
 
-  onChange(event) {
+  onChange(event: ChangeEvent<HTMLTextAreaElement>) {
     if (this.props.onChange) {
       this.props.onChange(event.target.value, event);
     }
   }
 
-  render() {
+  override render() {
     // 【isSelect / isFocus / resizeAfterBlur / chat 也要解构掉】它们都在上面的 propTypes 里，
     // 是本组件自己消费的（见 componentDidMount / onBlur / 样式分支），
     // 漏掉就会随 ...rest 落到真实 <textarea> 上，React 逐个报
@@ -171,7 +192,8 @@ class Textarea extends Component<any, any> {
         className={cx('ming Textarea', className)}
         ref={textarea => {
           this.textarea = textarea;
-          manualRef(textarea);
+          // 运行时一定有（defaultProps 给了空函数），?. 只是因为类型上它是可选属性
+          manualRef?.(textarea);
         }}
         onChange={event => this.onChange(event)}
         style={{

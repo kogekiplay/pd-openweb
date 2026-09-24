@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { renderText as renderCellText } from 'src/utils/control';
@@ -54,7 +54,7 @@ const parseValue = value => {
 };
 
 const getPlaceHolder = data => {
-  const text = {
+  const text: Record<number, string> = {
     14: _l('请选择'),
     16: _l('请输入日期'),
     26: _l('请输入人员'),
@@ -85,7 +85,7 @@ export default ({
         <span className="textPlaceholder LineHeight20 mTop5">{getPlaceHolder(data)}</span>
       ) : (
         <Fragment>
-          {dynamicValue.map(item => {
+          {dynamicValue.map((item, index) => {
             if (item.staticValue) {
               const type = getControlType(data);
 
@@ -236,7 +236,7 @@ export default ({
                   const removeValue = item.staticValue;
 
                   if (_.isArray(parsedValue)) {
-                    return parsedValue.map(item => {
+                    return parsedValue.map((item, index) => {
                       let name;
 
                       if (_.isObject(item)) {
@@ -258,7 +258,7 @@ export default ({
                       }
 
                       return (
-                        <RelateControl>
+                        <RelateControl key={index}>
                           <i
                             className={`${type === 'cascader' ? 'icon-cascade_selection' : 'icon-link-worksheet-relate'}`}
                           />
@@ -298,7 +298,7 @@ export default ({
                 return null;
               }
             } else {
-              return <OtherField dynamicValue={dynamicValue} data={data} item={item} {...rest} />;
+              return <OtherField key={index} dynamicValue={dynamicValue} data={data} item={item} {...rest} />;
             }
           })}
         </Fragment>

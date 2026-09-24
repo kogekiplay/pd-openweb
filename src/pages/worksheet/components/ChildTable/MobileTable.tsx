@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { ActionSheet, Button } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -191,7 +191,7 @@ export default function MobileTable(props) {
   };
 
   // 编辑平铺记录
-  const handleChangeFlattenRow = (data, ids, item, customWidgetRef) => {
+  const handleChangeFlattenRow = (data, _ids, item: RecordRow, customWidgetRef) => {
     if (!customWidgetRef) return;
     const updateControlIds = customWidgetRef.dataFormat.getUpdateControlIds();
     const row = [{}, ...data].reduce((a = {}, b = {}) => Object.assign(a, { [b.controlId]: b.value }));

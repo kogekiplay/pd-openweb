@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Checkbox, Input, Popover, Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -143,7 +143,7 @@ export default props => {
           handleChangeConfig({ imageUploadLoading: true });
           up.disableBrowse();
         }}
-        onError={(up, err, errTip) => {
+        onError={(_up, _err, errTip) => {
           handleChangeConfig({ imageUploadLoading: false });
           alert(errTip, 2);
         }}

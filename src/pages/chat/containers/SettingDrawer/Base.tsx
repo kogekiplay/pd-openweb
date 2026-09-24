@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Checkbox, Dropdown, LoadDiv, RadioGroup } from 'ming-ui';
 import fixedDataApi from 'src/api/fixedData';
@@ -20,12 +20,12 @@ export default props => {
   const [loading, setLoading] = useState(true);
   const [currentTimeZone, setCurrentTimeZone] = useState(md.global.Account.timeZone);
   const [map, setMap] = useState(md.global.Account.map || 0);
-  const [timeZones, setTimeZones] = useState([]);
+  const [timeZones, setTimeZones] = useState<{ text: string; value: number }[]>([]);
   const [mapList, setMapList] = useState([]);
 
   useEffect(() => {
     fixedDataApi.loadTimeZones().then(res => {
-      const timeZones = [];
+      const timeZones: { text: string; value: number }[] = [];
       Object.keys(res).forEach(key => {
         timeZones.push({ text: res[key], value: parseInt(key) });
       });

@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import GridLayout from 'react-grid-layout/legacy';
@@ -348,8 +348,9 @@ export const Tabs = props => {
         })}
       >
         {tabs.length ? (
-          tabs.map(tab => (
+          tabs.map((tab, index) => (
             <div
+              key={index}
               className={cx('tab disableDrag Font15 bold pointer', `tab-${tab.id}`, {
                 active: tab.id === currentTab,
               })}

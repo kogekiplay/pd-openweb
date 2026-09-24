@@ -33,7 +33,90 @@ export type SubListStore = any;
 
 /** 控件的高级设置。键极多且按控件类型各不相同，值统一是字符串（后端就是这么存的）。 */
 export interface ControlAdvancedSetting {
-  [key: string]: string;
+  // 下面这些键是【已经被按点访问、且值确实落在本类型上】的（2026-09-23 在终点配置下由 TS4111 收集）。
+  // 接口给的值一律是字符串（开关是 '1' / '0'，复杂配置是 JSON 串）。
+  // 控件和视图（WorksheetView.advancedSetting）共用这个类型。不一次性把全仓 grep 到的 324 个键都塞进来：
+  // 那些访问大多发生在类型还是 any 的对象上，并不能证明值落在这里；等对应文件被类型化、
+  // 诊断落到这个类型上时再补 —— 登记的键必须有真实出处。
+  /** 子表：允许新增 */
+  allowadd?: string | undefined;
+  /** 子表：允许删除 */
+  allowcancel?: string | undefined;
+  allowdelete?: string | undefined;
+  /** 子表：允许编辑 */
+  allowedit?: string | undefined;
+  allowlink?: string | undefined;
+  /** 子表：允许单条添加 */
+  allowsingle?: string | undefined;
+  allowtime?: string | undefined;
+  allowweek?: string | undefined;
+  autocarry?: string | undefined;
+  /** 子表：从这些字段批量添加记录（JSON 数组串） */
+  batchcids?: string | undefined;
+  /** 子表：默认空行数 */
+  blankrow?: string | undefined;
+  btnname?: string | undefined;
+  /** 多选的显示方式：'0' 平铺（默认）/ '1' 下拉菜单 */
+  checktype?: string | undefined;
+  checkusertype?: string | undefined;
+  chooserange?: string | undefined;
+  continue?: string | undefined;
+  currency?: string | undefined;
+  customtype?: string | undefined;
+  dateformulatype?: string | undefined;
+  defaultfunc?: string | undefined;
+  /** 子表树形：默认展开层级 */
+  defaultlayer?: string | undefined;
+  defaulttype?: string | undefined;
+  defsource?: string | undefined;
+  deftabname?: string | undefined;
+  dotformat?: string | undefined;
+  /** 子表：限制行数（配合 min / max） */
+  enablelimit?: string | undefined;
+  filterregex?: string | undefined;
+  filters?: string | undefined;
+  /** 子表移动端：摘要字段（JSON 数组串） */
+  h5abstractids?: string | undefined;
+  /** 子表移动端显示样式：'1' 列表 / '2' 平铺 */
+  h5showtype?: string | undefined;
+  hide?: string | undefined;
+  /** 子表：隐藏序号 */
+  hidenumber?: string | undefined;
+  increase?: string | undefined;
+  itemnames?: string | undefined;
+  max?: string | undefined;
+  min?: string | undefined;
+  navshow?: string | undefined;
+  nullzero?: string | undefined;
+  numshow?: string | undefined;
+  ocrcid?: string | undefined;
+  prefix?: string | undefined;
+  required?: string | undefined;
+  roundtype?: string | undefined;
+  /** 子表：行高档位 */
+  rowheight?: string | undefined;
+  /** 子表：最大高度行数 / 每页行数 */
+  rownum?: string | undefined;
+  showformat?: string | undefined;
+  showinput?: string | undefined;
+  showtimezone?: string | undefined;
+  showtitleid?: string | undefined;
+  showtype?: string | undefined;
+  /** 少一个 t 不是这里的笔误：写入侧（widgetConfig）和读取侧（子表 / 关联表）全仓都是这个拼法，是存下来的真实键名 */
+  statisticsseting?: string | undefined;
+  sub?: string | undefined;
+  suffix?: string | undefined;
+  summaryresult?: string | undefined;
+  timezonetype?: string | undefined;
+  title?: string | undefined;
+  titlecolor?: string | undefined;
+  titlestyle?: string | undefined;
+  /** 子表：同一条记录内不允许重复的字段（JSON 数组串） */
+  uniquecontrols?: string | undefined;
+  usertype?: string | undefined;
+  widths?: string | undefined;
+  // 动态访问（advancedSetting[key]）仍然走这里；终点配置下它会带上 | undefined
+  [key: string]: string | undefined;
 }
 
 /** 控件权限位。 */
@@ -46,155 +129,155 @@ export interface ControlPermissions {
  * 递归字段（relationControls / showControls）用自身类型，子表控件靠它们描述内层结构。
  */
 export interface FormControl {
-  controlId?: string;
+  controlId?: string | undefined;
   /** 控件类型，见 src/utils/enum 的控件类型表 */
-  type?: number;
-  controlName?: string;
-  value?: ControlValue;
-  advancedSetting?: ControlAdvancedSetting;
+  type?: number | undefined;
+  controlName?: string | undefined;
+  value?: ControlValue | undefined;
+  advancedSetting?: ControlAdvancedSetting | undefined;
   /**
    * 自定义事件算出来的权限位，【是个三字符串】而不是对象：
    * 第 0 位可编辑、第 1 位可见，'x' 表示"该位没被事件动过"，默认 'xxx'。
    * 拼装在 Form/core/customEvent.tsx 的 replaceStr 那几行。
    */
-  eventPermissions?: string;
+  eventPermissions?: string | undefined;
   /** 打印里标记这个关联控件是「关联多条·列表」形态 */
-  isRelateMultipleSheet?: boolean;
+  isRelateMultipleSheet?: boolean | undefined;
   /** 关联记录控件指定的关联视图 */
-  viewId?: string;
+  viewId?: string | undefined;
   /** 关联记录控件指向的应用 */
-  appId?: string;
+  appId?: string | undefined;
   /** 移动端卡片给控件挂的外层 class */
-  className?: string;
+  className?: string | undefined;
   /** 卡片/详情里给控件挂的可编辑标记 */
-  canEdit?: boolean;
+  canEdit?: boolean | undefined;
   /** 卡片单元格自带的写回函数 */
-  updateCell?: (data: UpdateCellData) => void;
+  updateCell?: ((data: UpdateCellData) => void) | undefined;
   /** 打印时是否隐藏这个控件 */
-  printHide?: boolean;
+  printHide?: boolean | undefined;
   /** 该控件在当前视图是否可见（自定义动作/打印模板按它过滤） */
-  viewDisplay?: boolean;
+  viewDisplay?: boolean | undefined;
   /** 应用升级 / 公式编辑器挂的原始控件类型，和 originType 不是一回事 */
-  originalType?: number;
+  originalType?: number | undefined;
   /** 关联表控件上挂的被关联表控件列表（另有同义的 relationControls） */
-  relateControls?: FormControl[];
+  relateControls?: FormControl[] | undefined;
   /** 打印明细时这个控件是否参与统计计算 */
-  needEvaluate?: boolean;
+  needEvaluate?: boolean | undefined;
   /** 打印模块给控件挂的：明细表打印形态 */
-  printDetailType?: number;
+  printDetailType?: number | undefined;
   /** 打印配置/字段选择器里给控件挂的勾选态 */
-  checked?: boolean;
+  checked?: boolean | undefined;
   /** Mingo AI 建表时标记这个控件是 AI 智能填充出来的 */
-  isSmartFill?: boolean;
+  isSmartFill?: boolean | undefined;
   /** Mingo AI 建表时给出的理由 */
-  Reason?: string;
+  Reason?: string | undefined;
   /** 关联记录控件上的「新建」按钮文案 */
-  sourceBtnName?: string;
+  sourceBtnName?: string | undefined;
   /** 他表字段/快速筛选里挂着的源控件 */
-  sourceControl?: FormControl;
+  sourceControl?: FormControl | undefined;
   /** 子表/关联表的行存储，由 setSubListStore 挂上 */
-  store?: SubListStore;
+  store?: SubListStore | undefined;
   /** 复制控件时的原始 controlId */
-  cid?: string;
-  sid?: string;
-  rcid?: string;
-  rowid?: string;
-  enumDefault?: number;
-  enumDefault2?: number;
+  cid?: string | undefined;
+  sid?: string | undefined;
+  rcid?: string | undefined;
+  rowid?: string | undefined;
+  enumDefault?: number | undefined;
+  enumDefault2?: number | undefined;
   /** 关联表的字段列表 */
-  relationControls?: FormControl[];
+  relationControls?: FormControl[] | undefined;
   /** 分段控件（type 52）下挂的子控件，由 getControlsByTab 按 sectionId 归拢出来 */
-  child?: FormControl[];
+  child?: FormControl[] | undefined;
   /** 关联记录在表单上展示的字段 */
-  showControls?: string[];
-  dataSource?: string;
+  showControls?: string[] | undefined;
+  dataSource?: string | undefined;
   /** 动态默认值配置 */
-  dynamicSource?: ControlValue[];
-  defsource?: string;
-  sourcevalue?: string;
-  sourceControlId?: string;
+  dynamicSource?: ControlValue[] | undefined;
+  defsource?: string | undefined;
+  sourcevalue?: string | undefined;
+  sourceControlId?: string | undefined;
   /** 关联表里作为标题显示的字段 */
-  sourceTitleControlId?: string;
-  sourceControlType?: number;
+  sourceTitleControlId?: string | undefined;
+  sourceControlType?: number | undefined;
   /** 汇总/公式控件里指向的原始控件类型（注意大小写与 sourceControlType 不同，后端就是两个键） */
-  sourceControltype?: number;
+  sourceControltype?: number | undefined;
   /** 他表字段的原始控件类型 */
-  originType?: number;
-  strDefault?: string;
-  storeFromDefault?: boolean;
-  fieldPermission?: string;
+  originType?: number | undefined;
+  strDefault?: string | undefined;
+  storeFromDefault?: boolean | undefined;
+  fieldPermission?: string | undefined;
   /**
    * 权限位，后端存成 '111' 这样的三位字符串，全仓都是按下标取字符
    * （controlPermissions[0] / [1] / [2]）。
    * 不要写成 `string | ControlPermissions`：对象那一支没有任何读取点，
    * 只会让每个下标访问都要先判别一次类型。
    */
-  controlPermissions?: string;
+  controlPermissions?: string | undefined;
   /** 人员控件的用途：2 表示这一列里的人是记录拥有者 */
-  userPermission?: number;
+  userPermission?: number | undefined;
   /** 关联记录/附件等多值控件的条数，由 getRowDetail 从 rq{controlId} 拼上来 */
-  count?: number;
+  count?: number | undefined;
   /** 手机号等掩码字段：解码后是否展示全值 */
-  showMaskValue?: boolean;
+  showMaskValue?: boolean | undefined;
   /** 业务规则里这一项覆盖的子控件 id（分段/子表展开后的成员） */
-  childControlIds?: string[];
+  childControlIds?: string[] | undefined;
   /** 业务规则赋予该控件的权限位 */
-  permission?: number | string;
+  permission?: number | string | undefined;
   /** 该字段不允许重复（全表唯一） */
-  unique?: boolean;
+  unique?: boolean | undefined;
   /** 该字段在同一条记录的子表内不允许重复 */
-  uniqueInRecord?: boolean;
+  uniqueInRecord?: boolean | undefined;
   /** 业务规则里标记为自定义项 */
-  isCustom?: boolean;
+  isCustom?: boolean | undefined;
   /** 该控件来自主记录（子表/自定义动作里用来区分主表字段） */
-  fromMaster?: boolean;
+  fromMaster?: boolean | undefined;
   /** 加密字段的标识，有值即表示该字段加密 */
-  encryId?: string;
+  encryId?: string | undefined;
   /**
    * 刷新记录弹层把关联字段展开成树时挂上的子节点。
    * 与 child（分段控件的成员）不是一回事：那个由 getControlsByTab 归拢，这个是刷新弹层自己拼的。
    */
-  children?: FormControl[];
+  children?: FormControl[] | undefined;
   /** 选项类控件被写入默认值时，同时落一份到 default（见 FillRecordControls） */
-  default?: ControlValue;
+  default?: ControlValue | undefined;
   /** 表格列宽（视图里可拖拽调整后落到控件上） */
-  width?: number;
+  width?: number | undefined;
   /** 展开态单元格额外占用的宽度 */
-  appendWidth?: number;
-  disabled?: boolean;
-  required?: boolean;
-  sectionId?: string;
-  id?: string;
-  editType?: number;
-  size?: number;
-  options?: ControlOption[];
-  isSubList?: boolean;
-  dot?: number;
-  unit?: string;
-  hint?: string;
-  desc?: string;
-  attribute?: number;
-  row?: number;
-  col?: number;
-  half?: boolean;
+  appendWidth?: number | undefined;
+  disabled?: boolean | undefined;
+  required?: boolean | undefined;
+  sectionId?: string | undefined;
+  id?: string | undefined;
+  editType?: number | undefined;
+  size?: number | undefined;
+  options?: ControlOption[] | undefined;
+  isSubList?: boolean | undefined;
+  dot?: number | undefined;
+  unit?: string | undefined;
+  hint?: string | undefined;
+  desc?: string | undefined;
+  attribute?: number | undefined;
+  row?: number | undefined;
+  col?: number | undefined;
+  half?: boolean | undefined;
   /** 生成来源（如 AI 推荐的原始描述），保留备查 */
-  source?: ControlValue;
-  isRequired?: boolean;
-  isHeading?: boolean;
-  description?: string;
-  code?: string;
-  alias?: string;
+  source?: ControlValue | undefined;
+  isRequired?: boolean | undefined;
+  isHeading?: boolean | undefined;
+  description?: string | undefined;
+  code?: string | undefined;
+  alias?: string | undefined;
   /** 子表控件的行数据 */
-  data?: ControlValue;
+  data?: ControlValue | undefined;
   /** 规则求值前的原始状态，用于还原 */
-  defaultState?: ControlValue;
-  hidden?: boolean;
+  defaultState?: ControlValue | undefined;
+  hidden?: boolean | undefined;
   /** 规则把控件置灰时不参与必填校验 */
-  ignoreDisabled?: boolean;
+  ignoreDisabled?: boolean | undefined;
   /** 由 Excel 导入创建，跳过部分校验 */
-  isImportFromExcel?: boolean;
+  isImportFromExcel?: boolean | undefined;
   /** 移动端规则锁，避免重复触发 */
-  mobileCheckRuleLocked?: boolean;
+  mobileCheckRuleLocked?: boolean | undefined;
 }
 
 /**
@@ -240,11 +323,11 @@ export interface WorksheetCustomBtn {
 
 export interface ControlOption {
   key: string;
-  value?: string;
-  index?: number;
-  isDeleted?: boolean;
-  color?: string;
-  score?: number;
+  value?: string | undefined;
+  index?: number | undefined;
+  isDeleted?: boolean | undefined;
+  color?: string | undefined;
+  score?: number | undefined;
   [key: string]: any;
 }
 
@@ -270,7 +353,20 @@ export function isPseudoControl(
 }
 
 export interface RecordRow {
-  rowid?: string;
+  // 常从接口数据逐字段拷出来（rowid: item.rowid），拷的时候可能就是 undefined
+  rowid?: string | undefined;
+  /** 树形表格：父记录的 rowid */
+  pid?: string | undefined;
+  /** 树形表格：子记录 rowid 数组的 JSON 串 */
+  childrenids?: string | undefined;
+  /** 关联记录没带 sourcevalue 时拼出来的行（{ rowid, titleValue }），标题在这里（见 RelateRecord 控件） */
+  titleValue?: string | undefined;
+  /** 关联记录的值元素里服务端给的标题 */
+  name?: string | undefined;
+  /** 子表整行复制出来的行（ChildTable 复制时打的标记，提交时 value 里的行 id 要重新生成） */
+  isCopy?: boolean | undefined;
+  /** 子表行上改动过的控件 id，提交时只带这些（见 Form/core/utils 的子表增量） */
+  updatedControlIds?: string[] | undefined;
   [controlId: string]: any;
 }
 
@@ -280,25 +376,29 @@ export interface RecordRow {
  * 字段按各控件类型不同只出现其中几个，所以全部可选。
  */
 export interface SelectedEntityValue {
-  id?: string;
-  sid?: string;
-  accountId?: string;
-  departmentId?: string;
-  organizeId?: string;
-  name?: string;
-  value?: ControlValue;
+  id?: string | undefined;
+  sid?: string | undefined;
+  accountId?: string | undefined;
+  departmentId?: string | undefined;
+  organizeId?: string | undefined;
+  name?: string | undefined;
+  value?: ControlValue | undefined;
   /* 展示名按控件类型各叫各的：成员是 fullname、部门是 departmentName、组织角色是 organizeName。
      渲染时都要判「取不到就显示『已删除』」，所以都在这里列出来。 */
-  fullname?: string;
-  avatar?: string;
-  departmentName?: string;
-  organizeName?: string;
+  fullname?: string | undefined;
+  /** 有的来源拼成 fullName（成员控件渲染时两种都兜） */
+  fullName?: string | undefined;
+  avatar?: string | undefined;
+  departmentName?: string | undefined;
+  organizeName?: string | undefined;
   /** 已删除的成员/部门/角色仍会留在值里，渲染时按这个标记显示「已删除」并计数 */
-  isDelete?: boolean;
+  isDelete?: boolean | undefined;
   /** 「显示已删除」开关下，把所有已删除项折成一条时挂的条数 */
-  deleteCount?: number;
+  deleteCount?: number | undefined;
   /** 部门控件开「显示完整层级」时带的路径，按 depth 从深到浅排 */
-  departmentPath?: DepartmentPathItem[];
+  departmentPath?: DepartmentPathItem[] | undefined;
+  /** 部门 / 组织角色：DepartmentSelect、单元格的部门控件把它作为 disabledDepartmentOrRole 交给详情卡片 */
+  disabled?: boolean | undefined;
 }
 
 /** 部门层级路径上的一节。 */
@@ -316,25 +416,25 @@ export interface DepartmentPathItem {
  * 地址有 fileUrl、fileRealPath、filepath+filename 三种给法），所以都留着且都可选。
  */
 export interface AttachmentValue {
-  fileID?: string;
-  fileId?: string;
+  fileID?: string | undefined;
+  fileId?: string | undefined;
   /** 有 refId 的是「引用的附件」，渲染时会被过滤掉 */
-  refId?: string;
-  originalFilename?: string;
-  filename?: string;
-  filepath?: string;
-  fileUrl?: string;
-  fileRealPath?: string;
-  previewUrl?: string;
-  viewUrl?: string;
-  ext?: string;
+  refId?: string | undefined;
+  originalFilename?: string | undefined;
+  filename?: string | undefined;
+  filepath?: string | undefined;
+  fileUrl?: string | undefined;
+  fileRealPath?: string | undefined;
+  previewUrl?: string | undefined;
+  viewUrl?: string | undefined;
+  ext?: string | undefined;
   /** 提交给后端时用的扩展名字段名（由 ext 复制过来） */
-  fileExt?: string;
-  filesize?: number;
+  fileExt?: string | undefined;
+  filesize?: number | undefined;
   /** 知识库引用类附件才有 */
-  refType?: number;
+  refType?: number | undefined;
   /** 本次提交里这条是不是新编辑的 */
-  isEdit?: boolean;
+  isEdit?: boolean | undefined;
 }
 
 /**

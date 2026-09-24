@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useEffect, useRef, useState } from 'react';
+﻿import { Fragment, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { ScrollView } from 'ming-ui';
@@ -58,7 +58,7 @@ const CommonBoard = props => {
     return (
       <Fragment>
         {viewData.map(item => {
-          if (item.key === '-1' && !item.rows?.length) return;
+          if (item.key === '-1' && !item.rows?.length) return undefined;
           return (
             <div key={item.key} className="groupHeaderItemWrap">
               <GroupByControl
@@ -83,7 +83,7 @@ const CommonBoard = props => {
     return (
       <Fragment>
         {viewData.map(item => {
-          if (item.key === '-1' && !item.rows?.length) return;
+          if (item.key === '-1' && !item.rows?.length) return undefined;
           return (
             <RecordList
               key={`recordItem-${item.key}`}

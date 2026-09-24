@@ -8,7 +8,12 @@ import { dateConvertToUserZone } from 'src/utils/project';
 import { completeAdminLogLinks } from '../utils';
 import './style.less';
 
-export default class HistoryLogs extends React.Component<any, any> {
+export interface HistoryLogsState {
+  pageIndex: number;
+  pageSize: number;
+}
+
+export default class HistoryLogs extends React.Component<any, HistoryLogsState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -37,7 +42,7 @@ export default class HistoryLogs extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { onClose = () => {}, historyLogInfo = {} } = this.props;
     const { isLoading, allCount, list } = historyLogInfo;
     const { pageSize, pageIndex } = this.state;

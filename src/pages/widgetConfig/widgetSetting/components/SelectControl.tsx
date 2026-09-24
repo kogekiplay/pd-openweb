@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
@@ -38,8 +38,9 @@ export default function SelectControl({ className, list, searchable = true, onCl
       ) : (
         <div className="fieldsWrap">
           <ul className="fieldList">
-            {controls.map(item => (
+            {controls.map((item, index) => (
               <li
+                key={index}
                 onClick={() => {
                   onClick(item);
                 }}

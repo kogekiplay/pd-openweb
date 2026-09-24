@@ -20,8 +20,15 @@ const xssOptions = {
   whiteList: Object.assign({}, whiteList, { img: ['src', 'alt', 'title', 'width', 'height', 'class'] }),
 };
 
-export default class BaseMessageComponent extends React.Component<any, any> {
-  static propTypes = {
+export interface BaseMessageComponentState {
+  showBtn: boolean;
+  expanded: boolean;
+  /** 消息超长、折叠显示时才有 */
+  partMsg?: string | undefined;
+}
+
+export default class BaseMessageComponent extends React.Component<any, BaseMessageComponentState> {
+  static override propTypes = {
     isFavorite: PropTypes.oneOf(['0', '1']),
 
     typeName: PropTypes.string,
@@ -64,12 +71,12 @@ export default class BaseMessageComponent extends React.Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { inboxId } = this.props;
 
     $(`.inboxBox .messageItem-${inboxId}`)
       .find('[data-accountid],[data-groupid]')
-      .each((i, ele) => {
+      .each((_i, ele) => {
         if ($(ele).attr('bindUserCard')) return;
         $(ele).attr('bindUserCard', 'true');
         let accountId = $(ele).attr('data-accountid');
@@ -264,7 +271,7 @@ export default class BaseMessageComponent extends React.Component<any, any> {
     }
   }
 
-  render() {
+  override render() {
     return (
       <div className={`messageItem messageItem-${this.props.inboxId}`}>
         {this.renderAvatar()}

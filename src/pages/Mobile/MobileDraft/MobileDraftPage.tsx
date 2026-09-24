@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
@@ -16,7 +16,7 @@ export default class MobileDraftList extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.getWorksheetInfo();
     this.getDraftData();
   }
@@ -47,7 +47,7 @@ export default class MobileDraftList extends Component<any, any> {
       });
   };
 
-  render() {
+  override render() {
     const { appId, worksheetId } = _.get(this.props, 'match.params');
     const { loading, draftData, worksheetInfo = {} } = this.state;
 

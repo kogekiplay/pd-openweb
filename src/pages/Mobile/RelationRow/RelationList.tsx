@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -22,14 +22,14 @@ class RelationList extends Component<any, any> {
       previewRecordId: undefined,
     };
   }
-  componentDidMount() {
+  override componentDidMount() {
     this.loadData(this.props);
     if (location.search.indexOf('relateRecord') === -1) {
       localStorage.removeItem('openRecordDetailIds');
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (prevProps.controlId !== this.props.controlId) {
         this.props.reset && this.props.reset();
@@ -40,7 +40,7 @@ class RelationList extends Component<any, any> {
       }
     }
   }
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.reset && this.props.reset();
   }
 
@@ -70,7 +70,7 @@ class RelationList extends Component<any, any> {
     props.updateBase(newParams);
     props.loadRow({ ...control, formData }, from);
   };
-  handleSelect = (record, selected) => {
+  handleSelect = (record, selected: boolean) => {
     const { relationRow, actionParams, updateActionParams, permissionInfo } = this.props;
     const { worksheet } = relationRow;
     const { isEdit, selectedRecordIds } = actionParams;
@@ -148,7 +148,7 @@ class RelationList extends Component<any, any> {
     updateRelationRows(updatedRecords, 0);
   };
 
-  render() {
+  override render() {
     const { rowInfo, controlId, relationRow, relationRows, loadParams, actionParams, permissionInfo } = this.props;
     const { count } = this.props.control || {};
     const { loading, pageIndex, isMore } = loadParams;

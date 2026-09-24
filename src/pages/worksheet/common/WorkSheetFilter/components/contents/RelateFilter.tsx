@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -7,8 +7,13 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { DEFAULT_COLUMNS } from '../../enum';
 import RelateBox from './RelateBox';
 
-export default class RelateFilter extends Component<any, any> {
-  static propTypes = {
+export interface RelateFilterState {
+  keywords: string;
+  showUl: boolean;
+}
+
+export default class RelateFilter extends Component<any, RelateFilterState> {
+  static override propTypes = {
     disabled: PropTypes.bool,
     values: PropTypes.arrayOf(PropTypes.string),
     onChange: PropTypes.func,
@@ -44,14 +49,14 @@ export default class RelateFilter extends Component<any, any> {
 
   remove = num => {
     const { dynamicSource = {}, onChange } = this.props;
-    const dy = dynamicSource.filter((u, i) => i !== num);
+    const dy = dynamicSource.filter((_u, i) => i !== num);
     onChange({
       dynamicSource: [...dy],
       isDynamicsource: true,
     });
   };
 
-  renderName = (item, nameList, i, isParent?) => {
+  renderName = (item, nameList, i, isParent?: boolean | undefined) => {
     if (!nameList) {
       return (
         <Tooltip title={_l('ID: %0', item.cid)} placement="bottom">
@@ -75,7 +80,7 @@ export default class RelateFilter extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       disabled,
       currentColumns = [],

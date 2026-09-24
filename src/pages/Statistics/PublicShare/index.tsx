@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import cx from 'classnames';
@@ -16,13 +16,16 @@ import './index.less';
 
 const { hideHeader } = getRequest();
 const LoadableChartDialog = lazy(() => import('../ChartDialog'));
-const SHARE_REFRESH_INTERVAL = 3 * 60 * 60 * 1000;
+const SHARE_REFRESH_INTERVAL = 58 * 60 * 1000;
 
 if (hideHeader === 'true') {
   setCookie('i18n_langtag', 'zh-Hans');
 }
 
 export default class PublicShareChart extends Component<any, any> {
+  declare isUnmounted: boolean;
+  declare refreshTimer: NodeJS.Timeout | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -32,14 +35,14 @@ export default class PublicShareChart extends Component<any, any> {
     this.isUnmounted = false;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.refreshShareInfo();
     this.refreshTimer = setInterval(() => {
       this.refreshShareInfo({ showLoading: true });
     }, SHARE_REFRESH_INTERVAL);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.isUnmounted = true;
     clearInterval(this.refreshTimer);
   }
@@ -152,7 +155,7 @@ export default class PublicShareChart extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { loading, errorCode } = this.state;
 
     if (errorCode === 300016) {

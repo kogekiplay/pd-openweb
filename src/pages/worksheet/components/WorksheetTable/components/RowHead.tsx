@@ -360,7 +360,7 @@ export default function RowHead(props) {
                     recordId: row.rowid,
                     updateType: row.sys_lock ? 42 : 41,
                   },
-                  (err, resdata) => {
+                  (_err, resdata) => {
                     if (resdata.isviewdata) {
                       updateRows([row.rowid], {
                         ...resdata,
@@ -495,7 +495,7 @@ export default function RowHead(props) {
                       ? !selectedIds.length
                       : !!dataLength && selectedIds.length === dataLength
                   }
-                  onClick={(checked: boolean, value, e) => {
+                  onClick={(_checked: boolean, _value, e) => {
                     e.stopPropagation();
                     handleCheckAll();
                   }}

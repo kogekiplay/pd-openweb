@@ -83,7 +83,10 @@ const PERMISSION_WAYS_WITH_UNCHECKED = [
 ];
 
 export default class extends PureComponent<any, any> {
-  static propTypes = {
+  declare input: HTMLInputElement | null | undefined;
+  declare container: HTMLDivElement | null | undefined;
+
+  static override propTypes = {
     loading: PropTypes.bool,
     roleDetail: roleDetailPropType,
     onChange: PropTypes.func,
@@ -101,7 +104,7 @@ export default class extends PureComponent<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (prevProps.loading && !this.props.loading && !_.get(prevProps, 'roleDetail.roleId') && this.input) {
       this.input.select();
     }
@@ -280,8 +283,8 @@ export default class extends PureComponent<any, any> {
                   </span>
                 </div>
                 <div className="right mLeft40" style={{ display: 'flex', gap: '10px 46px', flexWrap: 'wrap' }}>
-                  {optionalControls.map(item => (
-                    <span className="flexRow alignItemsCenter">
+                  {optionalControls.map((item, index) => (
+                    <span key={index} className="flexRow alignItemsCenter">
                       <Checkbox
                         className="InlineBlock"
                         checked={extendAttrs.indexOf(item.id) > -1}
@@ -337,9 +340,9 @@ export default class extends PureComponent<any, any> {
                   </span>
                 </div>
                 <div className="actionListCon">
-                  {this.state.actionList.map(o => {
+                  {this.state.actionList.map((o, index) => {
                     return (
-                      <div className="mRight30 mTop20 InlineFlex flexRow alignItemsCenter">
+                      <div key={index} className="mRight30 mTop20 InlineFlex flexRow alignItemsCenter">
                         <Checkbox
                           className={'subCheckbox TxtMiddle'}
                           disabled={o.key === 'generalAdd' && PERMISSION_WAYS.OnlyViewAllRecord === permissionWay} //对所有记录只有查看权限 同时 操作权限 不可新增
@@ -582,7 +585,7 @@ export default class extends PureComponent<any, any> {
     );
   }
 
-  toggleAllViewAuth(key, checked: boolean) {
+  toggleAllViewAuth(key: string, checked: boolean) {
     const { roleDetail, onChange } = this.props;
     const sheets = (roleDetail.sheets || []).map(item => changeSheetModel(item, key, checked));
 
@@ -633,7 +636,7 @@ export default class extends PureComponent<any, any> {
     onChange({ [type]: data });
   };
 
-  render() {
+  override render() {
     let {
       roleDetail: { name, description, roleId, hideAppForMembers } = {},
       loading,

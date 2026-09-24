@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Dropdown, Radio } from 'ming-ui';
@@ -9,13 +9,13 @@ import { PUSH_TYPE } from '../../enum';
 import { CustomTextarea, SelectNodeObject, SpecificFieldsValue } from '../components';
 
 export default class OpenActionContent extends Component<any, any> {
-  state = {
+  override state = {
     showOtherWorksheet: false,
     otherAppName: '',
     worksheetInfo: null,
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     const { data } = this.props;
 
     if (data.appId) {
@@ -205,7 +205,7 @@ export default class OpenActionContent extends Component<any, any> {
       { text: _l('推送模态窗口'), value: 4 },
     ];
 
-    const isRemove = value => {
+    const isRemove = (value: number) => {
       switch (data.pushType) {
         case PUSH_TYPE.DETAIL:
           return _.includes([1, 4], value);
@@ -215,6 +215,7 @@ export default class OpenActionContent extends Component<any, any> {
         case PUSH_TYPE.LINK:
           return _.includes([3], value);
       }
+      return undefined;
     };
 
     _.remove(type, item => isRemove(item.value));
@@ -290,7 +291,7 @@ export default class OpenActionContent extends Component<any, any> {
         type={2}
         content={data.content}
         formulaMap={formulaMap}
-        onChange={(err, value) => updateSource({ [key]: value })}
+        onChange={(_err, value) => updateSource({ [key]: value })}
         updateSource={updateRootSource}
       />
     );
@@ -306,7 +307,7 @@ export default class OpenActionContent extends Component<any, any> {
     switchWorksheet(appId);
   };
 
-  render() {
+  override render() {
     const { data } = this.props;
     const { showOtherWorksheet } = this.state;
 

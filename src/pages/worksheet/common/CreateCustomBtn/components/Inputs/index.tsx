@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'lodash';
 import DynamicDefaultValue from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue';
 import './style.less';

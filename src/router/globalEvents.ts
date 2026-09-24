@@ -7,7 +7,7 @@ export default () => {
   window.closeindex = 0;
   window.closeFns = {};
 
-  const parseUrl = url => {
+  const parseUrl = (url: string) => {
     var a = document.createElement('a');
     a.href = url;
     return {
@@ -22,7 +22,7 @@ export default () => {
   };
 
   // 验证客户端是否新开窗口
-  const checkClientOpenWindow = url => {
+  const checkClientOpenWindow = (url: string) => {
     const clientOpenList = localStorage.getItem('clientOpenList')
       ? JSON.parse(localStorage.getItem('clientOpenList'))
       : [];
@@ -149,8 +149,9 @@ export const initThemeMode = () => {
       localStorage.setItem('themeMode', getDefaultThemeMode());
     }
 
-    if (['dark', 'light'].includes(localStorage.getItem('themeMode'))) {
-      window.themeMode = localStorage.getItem('themeMode');
+    const savedThemeMode = localStorage.getItem('themeMode');
+    if (savedThemeMode === 'dark' || savedThemeMode === 'light') {
+      window.themeMode = savedThemeMode;
       setBodyThemeMode(window.themeMode);
     } else {
       window.themeMode = e.matches ? 'dark' : 'light';

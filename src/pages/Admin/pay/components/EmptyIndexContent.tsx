@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Button, Icon } from 'ming-ui';
 import invoiceEmpty from '../images/invoiceEmpty.png';
@@ -59,7 +58,13 @@ const CONFIG_DATA = {
   },
 };
 
-export default function EmptyIndexContent(props) {
+export interface EmptyIndexContentProps {
+  type?: string | undefined;
+  onBtnClick?: (() => void) | undefined;
+  hideBtn?: boolean | undefined;
+}
+
+export default function EmptyIndexContent(props: EmptyIndexContentProps) {
   const { type = 'merchant', onBtnClick = () => {}, hideBtn = false } = props;
   const data = CONFIG_DATA[type] || {};
 

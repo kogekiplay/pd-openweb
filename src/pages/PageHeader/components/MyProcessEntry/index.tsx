@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useState } from 'react';
+import { Fragment, lazy, Suspense, useState } from 'react';
 import { createPortal } from 'react-dom';
 import MyProcessEntry from 'src/pages/workflow/MyProcess/Entry';
 

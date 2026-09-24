@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import withRouter from '../../../../../router/withRouter';
 import { Checkbox } from 'antd';
 import cx from 'classnames';
@@ -47,7 +47,7 @@ let ValueAddService = class ValueAddService extends Component<any, any> {
     };
   } //获取余额
 
-  componentDidMount() {
+  override componentDidMount() {
     Config.AdminController.getHidBalance({
       projectId: Config.projectId,
     }).then(balance => {
@@ -81,7 +81,7 @@ let ValueAddService = class ValueAddService extends Component<any, any> {
       });
   }
 
-  handleChange(productPrice) {
+  handleChange(productPrice: number) {
     this.setState({
       productPrice,
       isInput: false,
@@ -158,7 +158,7 @@ let ValueAddService = class ValueAddService extends Component<any, any> {
       });
   }
 
-  render() {
+  override render() {
     const { step, productPrice, inputValue, isInput, balance, aiWelfarePointBalance, needSalesAssistance, isPay } =
       this.state;
     const currentPrice = isInput ? inputValue : productPrice;

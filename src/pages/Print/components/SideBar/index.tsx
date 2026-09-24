@@ -231,7 +231,7 @@ class SideNav extends React.Component<any, any> {
     const { printData = [], handChange } = this.props;
     const { receiveControls = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
     let dataOther = [];
-    let isCheck;
+    let isCheck: boolean | undefined;
     let sectionOrder = [];
 
     receiveControls.map(item => {
@@ -307,7 +307,7 @@ class SideNav extends React.Component<any, any> {
   };
 
   //全选/取消
-  checkAll = isReceiveControls => {
+  checkAll = (isReceiveControls: boolean) => {
     const { receiveControlsCheckAll, workflowCheckAll } = this.state;
     const { handChange, printData } = this.props;
     const { receiveControls = [], workflow = [], systemControl = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
@@ -353,7 +353,7 @@ class SideNav extends React.Component<any, any> {
     }
   };
 
-  changeCloseList = str => {
+  changeCloseList = (str: string) => {
     const { closeList } = this.state;
 
     this.setState({
@@ -377,7 +377,7 @@ class SideNav extends React.Component<any, any> {
     });
   };
 
-  isShowSetting = key => {
+  isShowSetting = (key: string) => {
     const { params, printData, sheetSwitchPermit } = this.props;
     const { type, from, viewId } = params;
     const { workflow = [], approval = [] } = printData;
@@ -397,7 +397,7 @@ class SideNav extends React.Component<any, any> {
     }
   };
 
-  renderContentBox = key => {
+  renderContentBox = (key: string) => {
     const { handChange, params, printData, systemControl, controls = [], signature = [] } = this.props;
     const { closeList = [] } = this.state;
     const hide = closeList.includes(key);
@@ -415,7 +415,7 @@ class SideNav extends React.Component<any, any> {
         );
       case 'setting':
         const advanceSettingMap = _.keyBy(printData.advanceSettings || [], 'key');
-        const getAdvanceValue = key => advanceSettingMap[key]?.value;
+        const getAdvanceValue = (key: string) => advanceSettingMap[key]?.value;
         return (
           <BasicsSetting
             hide={hide}
@@ -475,9 +475,10 @@ class SideNav extends React.Component<any, any> {
           />
         );
     }
+    return undefined;
   };
 
-  render() {
+  override render() {
     const { handChange, printData } = this.props;
     const { approvePosition = 0 } = printData;
     const { closeList = [] } = this.state;

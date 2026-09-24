@@ -16,7 +16,7 @@ import { formatQuickFilter } from 'src/utils/filter';
 import type { FormControl } from 'src/utils/controlTypes';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
-let getRows;
+let getRows: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined;
 let getRowsIds = [];
 
 export const fetch = searchArgs => {
@@ -138,7 +138,7 @@ export const fetchExternal = () => {
   };
 };
 
-export const updataEditable = data => {
+export const updataEditable = (data: boolean) => {
   return dispatch => {
     dispatch({ type: 'CHANGE_CALENDAR_EDITABLE', data: data });
   };
@@ -154,6 +154,7 @@ const formatData = arr => {
         index = j;
         return true;
       }
+      return undefined;
     });
 
     if (!alreadyExists) {
@@ -323,7 +324,7 @@ export function getCalendarData() {
    已改成纯函数 readInitType，见 views/CalendarView/util.ts。 */
 
 // 获取已排期
-export const getEventScheduledData = type => {
+export const getEventScheduledData = (type: string) => {
   return dispatch => {
     if (type === 'eventScheduled') {
       // 早于今天的第一页数据
@@ -351,7 +352,7 @@ export const getEventScheduledData = type => {
   };
 };
 
-let getFilterRows;
+let getFilterRows: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined;
 let getFilterRowsIds = [];
 
 export function getEventList({

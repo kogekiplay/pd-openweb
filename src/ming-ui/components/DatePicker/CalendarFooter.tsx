@@ -19,7 +19,7 @@ class CalendarFooter extends Component<any, any> {
     }
   };
 
-  render() {
+  override render() {
     const props = this.props;
     const { locale, prefixCls, timePicker } = props;
 

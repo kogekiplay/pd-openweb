@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -400,6 +400,7 @@ export default function Timegrid(props) {
                   );
                   return (
                     <GridOne
+                      key={i}
                       className={cx('gridOneCon h100 Relative', {
                         isBg: ['Month'].includes(type) && [6, 7].includes(o.dayOfWeek),
                       })}
@@ -486,9 +487,9 @@ export default function Timegrid(props) {
     const { list = [] } = timeList;
     return (
       <div className="flexRow con h100">
-        {list.map(o => {
+        {list.map((o, index) => {
           return (
-            <div className="flexColumn">
+            <div key={index} className="flexColumn">
               <div className="gridOne TxtCenter Font12">
                 {o.dateStr}
                 {weekObj[o.dayOfWeek - 1]}
@@ -506,12 +507,12 @@ export default function Timegrid(props) {
     const { list = [] } = timeList;
     return (
       <div className="flexRow con h100">
-        {list.map(o => {
+        {list.map((o, index) => {
           return (
-            <div className="flexRow flex gridDayCon">
-              {(o.times || []).map(it => {
+            <div key={index} className="flexRow flex gridDayCon">
+              {(o.times || []).map((it, index) => {
                 return (
-                  <div className="timeG">
+                  <div key={index} className="timeG">
                     <div className="TxtCenter LineHeight28 timeGTxt Font12">
                       {it.time}
                       {it.amOrPm}
@@ -532,14 +533,14 @@ export default function Timegrid(props) {
     const { list = [] } = timeList;
     return (
       <div className="flexRow con h100 Relative">
-        {list.map(o => {
+        {list.map((o, index) => {
           return (
-            <div className="flexColumn">
+            <div key={index} className="flexColumn">
               <div className="gridYear TxtCenter flexColumn h100">
                 <div className="flexRow flex gridWeekCon">
-                  {(o.times || []).map(it => {
+                  {(o.times || []).map((it, index) => {
                     return (
-                      <div className="timeG">
+                      <div key={index} className="timeG">
                         <div className="gridYearOne TxtCenter Font12">
                           {it.time}
                           {_l('月')}
@@ -562,9 +563,9 @@ export default function Timegrid(props) {
     const { list = [] } = timeList;
     return (
       <div className="flexRow con h100 Relative">
-        {list.map(o => {
+        {list.map((o, index) => {
           return (
-            <div className="flexColumn">
+            <div key={index} className="flexColumn">
               <div className="gridWeek TxtCenter flexColumn h100">
                 <div className="">
                   <span className="weekTxt TxtCenter">

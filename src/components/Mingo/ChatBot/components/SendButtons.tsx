@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import cx from 'classnames';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
@@ -177,13 +177,14 @@ function SendButtons(
           <UploadFiles
             disabled={disabled}
             ref={uploadFileRef}
-            maxFileLength={maxFileLength}
+            // 原来写成 maxFileLength（UploadFiles 不认），上限一直按 UploadFiles 自己的默认值 5 算
+            maxFilesLength={maxFileLength}
             tokenType={tokenType}
             existingFiles={existingFiles}
             allowMimeTypes={allowMimeTypes}
             allowMultiSelection={allowMultiSelection}
             dropElementId={dropFileElementId}
-            onAdd={(uploader, files) => {
+            onAdd={(_uploader, files) => {
               focusSendTextArea();
               onUpdateFiles(oldFiles => [
                 ...oldFiles,
@@ -197,13 +198,13 @@ function SendButtons(
                 })),
               ]);
             }}
-            onUploadProgress={(uploader, file) => {
+            onUploadProgress={(_uploader, file) => {
               const progress = ((file.loaded / file.size) * 100).toFixed(0);
               onUpdateFiles(oldFiles => [
                 ...oldFiles.map(f => (f.id === file.id ? { ...f, status: 'uploading', file, progress } : f)),
               ]);
             }}
-            onUploaded={(uploader, file, response) => {
+            onUploaded={(_uploader, file, response) => {
               const commonAttachment = formatResponseData(file, response);
               const isImage = /^image\//.test(file.type) || /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name);
               const shouldOcr = needOcr && !(mingoOcr && isImage);

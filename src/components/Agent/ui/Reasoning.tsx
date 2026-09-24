@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IconChevronDown, IconChevronRight } from './icons';
 import { MarkdownText } from './MarkdownText';
@@ -124,7 +124,7 @@ function formatDuration(ms: number) {
 export function Reasoning({ children, streaming = false, defaultOpen = false, className, startedAt, finishedAt }: { className?: string; [key: string]: any }) {
   const startRef = useRef(Date.now());
   const [now, setNow] = useState(() => Date.now());
-  const [endTs, setEndTs] = useState(null);
+  const [endTs, setEndTs] = useState<number | null>(null);
   const [open, setOpen] = useState(streaming || defaultOpen);
   const prevStreamingRef = useRef(streaming);
   const contentRef = useRef(null);

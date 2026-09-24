@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { useKey } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -11,8 +11,8 @@ import { getOptionChipStyle } from 'src/utils/optionColor';
 import { FROM } from './enum';
 
 function getOptionStyle(option, cell) {
-  // 选项色是用户自选的业务数据，配色交给 getOptionChipStyle（浅底 + 同色深字）。
-  // 原来是「实心原色底 + 黑或白字」，20 色色板里 7 色不达标，见 src/utils/optionColor.ts。
+  // 选项色是用户自选的业务数据，配色交给 getOptionChipStyle（底 = 选的颜色，字色按对比度挑），
+  // 见 src/utils/optionColor.ts。
   return cell.enumDefault2 === 1 && option.color ? getOptionChipStyle(option.color) : {};
 }
 

@@ -1,6 +1,6 @@
 const assert = require('assert');
 const path = require('path');
-const { transformFileSync } = require('../../../../../../scripts/spec-harness.ts');
+const { jsxRuntimeFrom, transformFileSync } = require('../../../../../../scripts/spec-harness.ts');
 
 function createElement(type, props, ...children) {
   return { type, props: props || {}, children: children.flat() };
@@ -17,6 +17,8 @@ function requireArea() {
   });
 
   function localRequire(importPath) {
+    // JSX 走 automatic runtime（与 .babelrc 一致），jsx() 也要落到假 createElement
+    if (importPath === 'react/jsx-runtime') return jsxRuntimeFrom(createElement);
     if (importPath === 'react') {
       return {
         __esModule: true,

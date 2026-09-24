@@ -23,7 +23,7 @@ const LoadableExternalLinkDialog = lazy(() => import('./ExternalLinkDialog'));
 const LoadableImportApp = lazy(() => import('src/pages/Admin/app/appManagement/modules/ImportApp.jsx'));
 
 export default class AddAppItem extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     createAppFromEmpty: func,
     projectId: string,
     type: string,
@@ -37,7 +37,7 @@ export default class AddAppItem extends Component<any, any> {
     DBInstances: [],
   };
 
-  state = { createEntryVisible: false, externalLinkDialogVisible: false, createAppDialogVisible: false };
+  override state = { createEntryVisible: false, externalLinkDialogVisible: false, createAppDialogVisible: false };
 
   // AI 创建：把首条消息（与已上传附件）交给全局 Mingo 抽屉内的 Agent，唤起后自动提交进入 plan 流程
   handleAiSubmit = (text, attachments) => {
@@ -215,6 +215,7 @@ export default class AddAppItem extends Component<any, any> {
               if (hasDataBase && hasAppResourceAuth) {
                 return this.getMyDbInstances('importApp');
               }
+              return undefined;
             }}
             projectId={projectId}
             groupId={groupId}
@@ -268,12 +269,12 @@ export default class AddAppItem extends Component<any, any> {
     );
   };
 
-  handleAddAppItemClick = e => {
+  handleAddAppItemClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     this.setState({ createEntryVisible: true });
   };
 
-  getMyDbInstances = async from => {
+  getMyDbInstances = async (from: string) => {
     const res = await homeAppAjax.getMyDbInstances({
       projectId: this.props.projectId,
     });
@@ -292,9 +293,10 @@ export default class AddAppItem extends Component<any, any> {
         });
       }
     }
+    return undefined;
   };
 
-  render() {
+  override render() {
     const { inline, groupId, projectId, groupType, children, className = '', createAppFromEmpty } = this.props;
     const { createEntryVisible, dialogImportExcel, externalLinkDialogVisible, createAppDialogVisible } = this.state;
 

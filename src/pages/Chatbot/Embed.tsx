@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import { Component, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { Route, BrowserRouter as Router, Routes } from 'react-router';
@@ -66,7 +66,7 @@ class LandChatbot extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  render() {
+  override render() {
     return (
       <Router>
         <Routes>

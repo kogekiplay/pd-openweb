@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Trigger from '@rc-component/trigger';
@@ -69,7 +69,7 @@ function CreateAppItem(props) {
     setCreateType('');
   };
 
-  const handleSwitchCreateType = type => {
+  const handleSwitchCreateType = (type: string) => {
     if (type === 'importExcel') {
       setCreateMenuVisible(false);
       setDialogImportExcel(true);

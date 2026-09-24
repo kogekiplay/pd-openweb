@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Component, Fragment, lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
@@ -110,6 +110,8 @@ const LoadableRecordInfo = lazy(() => import('worksheet/views/GunterView/compone
 const LoadableRecordOperate = lazy(() => import('worksheet/components/RecordOperate'));
 const LoadableCellControls = lazy(() => import('worksheet/components/CellControls'));
 let Record = class Record extends Component<any, any> {
+  declare clicktimer: true | NodeJS.Timeout | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -120,11 +122,11 @@ let Record = class Record extends Component<any, any> {
     this.debounceUpdateRecordTime = _.debounce(props.updateRecordTime, 500);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     window.addEventListener('popstate', this.onQueryChange);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener('popstate', this.onQueryChange);
   }
 
@@ -150,7 +152,8 @@ let Record = class Record extends Component<any, any> {
         });
 
         if (this.clicktimer) {
-          clearTimeout(this.clicktimer);
+          // 点标题旁的编辑图标时会先把它置成 true，让这里当作双击直接进编辑；那时没有定时器可清
+          if (this.clicktimer !== true) clearTimeout(this.clicktimer);
           this.clicktimer = null;
           this.canedit &&
             titleControl.type === 2 &&
@@ -419,7 +422,7 @@ let Record = class Record extends Component<any, any> {
                 recordId: row.rowid,
                 updateType: row.sys_lock ? 42 : 41,
               },
-              (err, resdata) => {
+              (_err, resdata) => {
                 if (resdata) {
                   this.props.updateRecord(row, [], { ...row, sys_lock: resdata.sys_lock });
 
@@ -563,7 +566,7 @@ let Record = class Record extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { recordInfoVisible } = this.state;
     const { row, gunterView, controls } = this.props;
     const { displayControls } = gunterView.viewConfig;

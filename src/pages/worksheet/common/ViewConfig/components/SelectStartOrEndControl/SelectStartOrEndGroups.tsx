@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -273,7 +273,7 @@ export default function SelectStartOrEndGroups(props) {
                 }
 
                 handleChange({
-                  calendarcids: JSON.stringify(calendarcids.filter((item, n) => n !== i)),
+                  calendarcids: JSON.stringify(calendarcids.filter((_item, n) => n !== i)),
                 });
               }}
             />
@@ -292,9 +292,10 @@ export default function SelectStartOrEndGroups(props) {
             <Wrap>
               {timeControls
                 .filter(o => !calendarIds.includes(o.controlId))
-                .map(o => {
+                .map((o, index) => {
                   return (
                     <div
+                      key={index}
                       className="Hand WordBreak overflow_ellipsis"
                       onClick={() => {
                         handleChange({

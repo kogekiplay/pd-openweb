@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -172,7 +172,7 @@ const ContentBox = styled.div`
   }
 `;
 
-const PERFORMANCE_ENUM = {
+const PERFORMANCE_ENUM: Record<number, string> = {
   1: _l('高'),
   2: _l('中'),
   3: _l('低'),
@@ -226,7 +226,7 @@ const getModelPriceValue = (model, field: string) => {
 };
 
 // 内置模型描述配置（以模型名称 name 作为唯一标识）
-const MODEL_DESCRIPTIONS = {
+const MODEL_DESCRIPTIONS: Record<string, string> = {
   // OpenAI 模型
   'GPT-5': _l('高度通用，理解能力强，适合长对话及复杂推理任务，支持丰富的图像与工具交互。'),
   'GPT-5-mini': _l('性价比高，适合快速响应的通用任务，处理高并发时表现优异。'),
@@ -244,7 +244,7 @@ const MODEL_DESCRIPTIONS = {
 };
 
 class SelectAIModelDialog extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     showAutoModel: PropTypes.bool,
     isMultiple: PropTypes.bool,
     selectedModels: PropTypes.array, // isMultiple 模式下回显已选：[{ modelId, developerId, ... }]
@@ -272,7 +272,7 @@ class SelectAIModelDialog extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { showAutoModel, projectId, appId } = this.props;
     const request =
       projectId && appId
@@ -361,7 +361,7 @@ class SelectAIModelDialog extends Component<any, any> {
                   <Checkbox
                     size="small"
                     checked={checkedModelIds.has(item.id)}
-                    onClick={(checked: boolean, value, e) => {
+                    onClick={(_checked: boolean, _value, e) => {
                       e.stopPropagation();
                       this.toggleModel(item.id);
                       this.setState({ selectModel: item.id });
@@ -493,7 +493,7 @@ class SelectAIModelDialog extends Component<any, any> {
   }
 
   renderModelIcon(developer) {
-    const ICONS = {
+    const ICONS: Record<number, { icon: string; color: string }> = {
       1: {
         icon: 'icon-chatgpt',
         color: '#000',
@@ -519,7 +519,7 @@ class SelectAIModelDialog extends Component<any, any> {
     );
   }
 
-  render() {
+  override render() {
     const { showAutoModel, isMultiple, onOk, onClose } = this.props;
     const { list, selectVendor, selectModel, checkedModelIds } = this.state;
 
@@ -609,7 +609,7 @@ class SelectAIModelDialog extends Component<any, any> {
                           size="small"
                           checked={brandState === 'all'}
                           clearselected={brandState === 'some'}
-                          onClick={(checked: boolean, value, e) => {
+                          onClick={(_checked: boolean, _value, e) => {
                             e.stopPropagation();
                             this.toggleBrand(item.developer.id);
                           }}

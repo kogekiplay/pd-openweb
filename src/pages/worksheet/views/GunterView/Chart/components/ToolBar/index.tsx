@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Select } from 'antd';
@@ -77,7 +77,7 @@ let ToolBar = class ToolBar extends Component<any, any> {
     super(props);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionSheetHandler && this.actionSheetHandler.close();
   }
 
@@ -124,15 +124,15 @@ let ToolBar = class ToolBar extends Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, index) => {
-        const value = (_.find(PERIODS, (v, i) => i === index) || []).value;
+      onAction: (_action, index) => {
+        const value = (_.find(PERIODS, (_v, i) => i === index) || []).value;
         changeViewType(value);
         this.actionSheetHandler.close();
       },
     });
   };
 
-  render() {
+  override render() {
     const { searchData, isMobile, mobileViewType, periodType } = this.props;
     const isMobileSingleView = mobileViewType == 'single';
     return (

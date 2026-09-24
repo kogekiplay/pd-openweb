@@ -141,7 +141,7 @@ const OPTIONS = [
   },
 ];
 
-const handleCopy = content => {
+const handleCopy = (content: string) => {
   copy(content);
   alert(_l('复制成功'));
 };
@@ -201,7 +201,7 @@ export default function DebugConfig(params) {
     );
   };
 
-  const renderHeader = (o, i) => {
+  const renderHeader = (o: { title: string }, i: number) => {
     return (
       <React.Fragment>
         <h5 className={cx('Bold Font14 pTop16', {})}>{o.title}</h5>
@@ -229,7 +229,7 @@ export default function DebugConfig(params) {
     );
   };
 
-  const renderNextStep = i => {
+  const renderNextStep = (i: number) => {
     return (
       <div className="nextStep mTop20">
         <span
@@ -278,7 +278,7 @@ export default function DebugConfig(params) {
     );
   };
 
-  const renderContent = i => {
+  const renderContent = (i: number) => {
     let serverHost;
 
     if (
@@ -415,7 +415,8 @@ export default function DebugConfig(params) {
               <Input
                 className="flex"
                 value={customViewDebugUrl}
-                disabled={localStorageCustomViewDebugUrl}
+                // 存了调试地址就锁住输入框（原来直接把地址字符串当 disabled 传，效果一样）
+                disabled={!!localStorageCustomViewDebugUrl}
                 onChange={customViewDebugUrl => {
                   setState({
                     customViewDebugUrl,
@@ -476,6 +477,7 @@ export default function DebugConfig(params) {
           </React.Fragment>
         );
     }
+    return undefined;
   };
 
   return (
@@ -483,7 +485,7 @@ export default function DebugConfig(params) {
       <ul>
         {devTapList.map((o, i) => {
           return (
-            <li className="Relative flexRow">
+            <li key={i} className="Relative flexRow">
               {i < 3 && <div className="leftLine"></div>}
               <div className={cx('tabCon Bold', { hs: stepState >= i, cur: cur === i })}>
                 {stepState < i || cur === i ? i + 1 : <Icon className="Font14" icon={'done'} />}

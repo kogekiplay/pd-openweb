@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import { Drawer } from 'antd';
 import cx from 'classnames';
@@ -45,7 +45,7 @@ export default function WorksheetLogDrawer(props) {
       });
   };
 
-  const handleSearch = val => {
+  const handleSearch = (val: string) => {
     const searchValue = _.trim(val);
     const list = worksheetList.filter(item => item.workSheetName.toLowerCase().includes(searchValue.toLowerCase()));
     setData({ searchWorksheetList: list, selectWorksheetId: _.get(list, '[0].workSheetId'), searchValue: val });

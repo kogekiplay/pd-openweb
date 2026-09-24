@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -43,7 +43,7 @@ export default function FeatureListWrap(props) {
 
         const featureType = getFeatureStatus(projectId, featureId);
 
-        if (!_.isUndefined(featureId) && !featureType) return;
+        if (!_.isUndefined(featureId) && !featureType) return undefined;
 
         return (
           <ConfigItemWrap

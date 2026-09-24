@@ -57,7 +57,7 @@ class Con extends React.Component<any, any> {
     const { setQuickTag } = props;
     setQuickTag();
   }
-  componentDidMount() {
+  override componentDidMount() {
     const {
       match: {
         params: { appId },
@@ -77,7 +77,7 @@ class Con extends React.Component<any, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.appRole.quickTag, this.props.appRole.quickTag) && !!this.props.appRole.quickTag.tab) {
         this.setState({
@@ -87,7 +87,7 @@ class Con extends React.Component<any, any> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     const { setAppRoleSummary, setUserList, SetAppRolePagingModel } = this.props;
     setUserList([]);
     setAppRoleSummary([]);
@@ -178,7 +178,7 @@ class Con extends React.Component<any, any> {
       },
     });
   };
-  render() {
+  override render() {
     const {
       canEditApp,
       canEditUser,

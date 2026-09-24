@@ -39,7 +39,7 @@ export default class Welink extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     Ajax.getWelinkProjectSettingInfo({ projectId: this.props.projectId }).then(res => {
       this.setState({
         pageLoading: false,
@@ -116,7 +116,7 @@ export default class Welink extends React.Component<any, any> {
     return newStr;
   };
 
-  editDingStatus = num => {
+  editDingStatus = (num: number) => {
     this.editWXProjectSettingStatus(num, () => {
       this.setState({
         isCloseDing: !this.state.isCloseDing,
@@ -187,7 +187,7 @@ export default class Welink extends React.Component<any, any> {
     );
   };
 
-  syncFn = isCheck => {
+  syncFn = (isCheck: boolean) => {
     if (isCheck) {
       this.setState({
         isLoading: true,
@@ -432,6 +432,7 @@ export default class Welink extends React.Component<any, any> {
                 default:
                   break;
               }
+              return undefined;
             })
           ) : (
             this.state.failedStr
@@ -441,7 +442,7 @@ export default class Welink extends React.Component<any, any> {
     );
   };
 
-  editWXProjectSettingStatus = (tag, callback) => {
+  editWXProjectSettingStatus = (tag: number, callback: () => void) => {
     // 状态：0 提交申请；2关闭集成；1重新开启集成 tag
     Ajax.editWelinkProjectSettingStatus({
       projectId: this.props.projectId,
@@ -455,7 +456,7 @@ export default class Welink extends React.Component<any, any> {
     });
   };
 
-  render() {
+  override render() {
     const { CorpId, Secret } = this.state;
 
     if (this.state.pageLoading) {

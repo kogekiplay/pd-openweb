@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { ActionSheet, Button } from 'antd-mobile';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -23,17 +23,17 @@ export default class Footer extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     customBtnWorkflow();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.actionVerifyPasswordHandler && this.actionVerifyPasswordHandler.close();
     this.actionOperationHandler && this.actionOperationHandler.close();
     this.actionSelectOperationHandler && this.actionSelectOperationHandler.close();
   }
 
-  writeVerifyPassword = removeNoneVerification => {
+  writeVerifyPassword = (removeNoneVerification: boolean) => {
     this.actionVerifyPasswordHandler = ActionSheet.show({
       actions: [],
       extra: (
@@ -99,7 +99,7 @@ export default class Footer extends Component<any, any> {
       },
     });
   };
-  handleClick = id => {
+  handleClick = (id: string) => {
     const { onSubmit, instance } = this.props;
     const { ignoreRequired, encrypt, auth } = (instance || {}).flowNode || {};
     const btnDescMap = (instance || {}).btnDescMap || {};
@@ -328,7 +328,7 @@ export default class Footer extends Component<any, any> {
               </div>
             </div>
           ),
-          onAction: (action, index) => {
+          onAction: (_action, index) => {
             if (index === 0) {
               run('after');
             }
@@ -370,7 +370,7 @@ export default class Footer extends Component<any, any> {
           </div>
         </div>
       ),
-      onAction: (action, index) => {
+      onAction: (_action, index) => {
         this.handleOperation(buttons[index].id);
         this.actionSelectOperationHandler.close();
       },
@@ -420,7 +420,7 @@ export default class Footer extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { isRequest, isUrged, submitAction, otherActionVisible } = this.state;
     const { instance, instanceId, workId } = this.props;
     const { btnMap = {} } = instance;

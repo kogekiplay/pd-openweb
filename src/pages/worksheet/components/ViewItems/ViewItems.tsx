@@ -30,6 +30,10 @@ const EmptyData = styled.div`
 `;
 const confirm = Dialog.confirm;
 let ViewItems = class ViewItems extends Component<any, any> {
+  declare flag: boolean | null | undefined;
+  declare containerWrapper: HTMLElement | null | undefined;
+  declare scrollWraperEl: HTMLDivElement | null | undefined;
+
   static defaultProps = {
     viewList: [],
   };
@@ -51,7 +55,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     this.searchRef = React.createRef();
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.sheetInfoLoading && !prevProps.sheetInfoLoading) {
         this.flag = null;
@@ -86,17 +90,17 @@ let ViewItems = class ViewItems extends Component<any, any> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.containerWrapper = document.getElementById('wrapper');
     this.containerWrapper && this.containerWrapper.addEventListener('click', this.clickDrawerArea);
     this.computeViewItemActiveLeft();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.containerWrapper && this.containerWrapper.removeEventListener('click', this.clickDrawerArea);
   }
 
-  clickDrawerArea = e => {
+  clickDrawerArea = (e: PointerEvent) => {
     const { setWorksheetHidden } = this.state;
     this.setState({
       hasClickDrawe: false,
@@ -296,7 +300,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
 
   computeDirectionVisible() {
     if (!this.scrollWraperEl) return;
-    const viewsScrollEl = this.scrollWraperEl.querySelector('.viewsScroll');
+    const viewsScrollEl = this.scrollWraperEl.querySelector<HTMLElement>('.viewsScroll');
 
     if (viewsScrollEl) {
       const { offsetWidth, scrollWidth } = viewsScrollEl;
@@ -309,11 +313,11 @@ let ViewItems = class ViewItems extends Component<any, any> {
 
   computeViewItemActiveLeft(delay = 300) {
     if (!this.scrollWraperEl) return;
-    const viewsScrollEl = this.scrollWraperEl.querySelector('.viewsScroll');
+    const viewsScrollEl = this.scrollWraperEl.querySelector<HTMLElement>('.viewsScroll');
 
     if (viewsScrollEl) {
       setTimeout(() => {
-        const activeEl = viewsScrollEl.querySelector('.workSheetViewItem.active');
+        const activeEl = viewsScrollEl.querySelector<HTMLElement>('.workSheetViewItem.active');
 
         if (activeEl) {
           if (activeEl.offsetLeft + activeEl.clientWidth > viewsScrollEl.clientWidth) {
@@ -328,13 +332,13 @@ let ViewItems = class ViewItems extends Component<any, any> {
     if (!this.scrollWraperEl) return;
     const { clientWidth } = this.scrollWraperEl;
     const distance = direction ? clientWidth / 2 : -(clientWidth / 2);
-    const viewsScrollEl = this.scrollWraperEl.querySelector('.viewsScroll');
+    const viewsScrollEl = this.scrollWraperEl.querySelector<HTMLElement>('.viewsScroll');
     const { scrollLeft } = viewsScrollEl;
     viewsScrollEl.scrollLeft = scrollLeft + distance;
   };
   updateScrollBtnState = () => {
     const { hideDirection } = this.state;
-    const viewsScrollEl = this.scrollWraperEl.querySelector('.viewsScroll');
+    const viewsScrollEl = this.scrollWraperEl.querySelector<HTMLElement>('.viewsScroll');
     const { scrollWidth, scrollLeft, offsetWidth } = viewsScrollEl;
     const width = scrollLeft + offsetWidth;
 
@@ -549,9 +553,10 @@ let ViewItems = class ViewItems extends Component<any, any> {
         </div>
         {expandRecycle && (
           <ul className="drawerWorksheetRecycleList">
-            {data.map(l => {
+            {data.map((l, index) => {
               return (
                 <HideItem
+                  key={index}
                   item={l}
                   appId={appId}
                   style={{
@@ -574,7 +579,8 @@ let ViewItems = class ViewItems extends Component<any, any> {
     navigateTo(getNavigateUrl(manageView));
     !isToView && this.handleOpenView(manageView);
   };
-  handleManageItem = (e, type) => {
+  // 设置图标直接把它当 onClick（只收到事件，type 为空 = 进管理）；进视图的那个入口显式传 'toView'
+  handleManageItem = (e: React.MouseEvent, type?: 'toView') => {
     e.stopPropagation();
     const manageView = this.getManageView();
     const isToView = type === 'toView';
@@ -670,7 +676,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const {
       directionVisible,
       hideDirection,

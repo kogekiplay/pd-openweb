@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import PDFObject from 'pdfobject';
 import styled from 'styled-components';
 import { FlexCenter, rotate } from 'worksheet/components/Basics';
@@ -128,7 +128,7 @@ export default function GeneratingPopup(props) {
       PDFObject.embed(embedUrl, embedRef.current);
     }
   }, [loading]);
-  function handleKeyDown(e) {
+  function handleKeyDown(e: KeyboardEvent) {
     e.stopPropagation();
     if (e.keyCode === 27) {
       onClose();

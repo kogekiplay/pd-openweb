@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Dropdown, Icon } from 'ming-ui';
@@ -80,7 +80,10 @@ const generateFields = data => {
     auto: fields,
     vector: [...fields, topK],
     keyword: [...fields, topK, minRelevance],
-    hybrid: [...fields, topK],
+    /* rrfK 只在混合检索下有意义（说明写的就是「用于融合向量+全文的排序」）。
+       上游 7.3.0 连同定义、说明、下面保存逻辑里的读取一起引入它，唯独漏了这一行，
+       截至 7.4.4 仍未接上 —— 界面上永远不显示，保存时恒走默认值 60。2026-09-23 补上。 */
+    hybrid: [...fields, topK, rrfK],
   }[data.searchMode];
 };
 
@@ -183,7 +186,7 @@ export default props => {
               height={0}
               content={data.query}
               formulaMap={data.formulaMap}
-              onChange={(err, value) => updateSource({ query: value })}
+              onChange={(_err, value) => updateSource({ query: value })}
               updateSource={updateSource}
             />
           </div>

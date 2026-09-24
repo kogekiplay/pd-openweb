@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import _, { filter, find, findIndex, isEmpty } from 'lodash';
 import styled from 'styled-components';
@@ -331,7 +331,7 @@ export default function SubListSetting(props) {
     );
   };
 
-  const renderUniqText = (isGlobal?) => {
+  const renderUniqText = (isGlobal?: boolean | undefined) => {
     const textControls = isGlobal ? globalUniqControlIds : showUniqueControls;
     const textArr = textControls
       .map(i => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';

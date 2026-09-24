@@ -61,7 +61,7 @@ export default class Ding extends React.Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     Ajax.getDDProjectSettingInfo({ projectId: this.props.projectId }).then(res => {
       this.setState({
         pageLoading: false,
@@ -153,7 +153,7 @@ export default class Ding extends React.Component<any, any> {
     return newStr;
   };
 
-  inputRender = (strId: string, w: number, labelId: string) => {
+  inputRender = (strId: string, _w: number, labelId: string) => {
     return (
       <React.Fragment>
         <div className="inputTitleBox">
@@ -366,7 +366,7 @@ export default class Ding extends React.Component<any, any> {
   /**
    * 编辑钉钉客户端打开方式
    */
-  handleChangePattern(value) {
+  handleChangePattern(value: number) {
     Ajax.editDDProjectClientWorkingPattern({
       projectId: this.props.projectId,
       status: value,
@@ -405,7 +405,7 @@ export default class Ding extends React.Component<any, any> {
     });
   };
 
-  changeTab = key => {
+  changeTab = (key: string) => {
     this.setState({ currentTab: key });
     if (key === 'other') {
       this.getInitialPassword();
@@ -438,7 +438,7 @@ export default class Ding extends React.Component<any, any> {
     this.editDDAppNoticeSetting({ isEnableRobot: !isEnableRobot, robotCode });
   };
 
-  handleRobotCode = e => {
+  handleRobotCode = (e: React.FocusEvent<HTMLInputElement, Element>) => {
     const { isEnableRobot } = this.state;
     const value = (e.target.value || '').trim();
 
@@ -479,7 +479,7 @@ export default class Ding extends React.Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { projectId } = this.props;
     const {
       currentTab,
@@ -507,7 +507,7 @@ export default class Ding extends React.Component<any, any> {
             )}
             <div className={cx('tabBox', { singleTab: !(this.state.status === 1 && !this.state.isCloseDing) })}>
               {TABS.map(({ key, label }) => {
-                if (key === 'other' && !(this.state.status === 1 && !this.state.isCloseDing)) return;
+                if (key === 'other' && !(this.state.status === 1 && !this.state.isCloseDing)) return undefined;
 
                 return (
                   <span
@@ -556,9 +556,10 @@ export default class Ding extends React.Component<any, any> {
               )}
               <div className="stepItem">
                 <h3 className="stepTitle Font16 textPrimary pBottom5">{_l('应用在钉钉PC端打开方式')}</h3>
-                {optionTypes.map(item => {
+                {optionTypes.map((item, index) => {
                   return (
                     <Radio
+                      key={index}
                       className="Block mTop20"
                       disabled={this.state.isCloseDing}
                       checked={this.state.intergrationClientWorkingPattern === item.key}

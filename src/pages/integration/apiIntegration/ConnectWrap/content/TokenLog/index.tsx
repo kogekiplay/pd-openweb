@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { ConfigProvider, Table } from 'antd';
 import cx from 'classnames';
@@ -228,7 +228,7 @@ export default function Log(props) {
     {
       title: _l('状态'),
       dataIndex: 'completeType',
-      render: (text, record) => {
+      render: (_text, record) => {
         return (
           <span className={cx({ Red: record.completeType === 0 })}>
             {record.completeType === 1 ? _l('完成') : _l('未完成')}
@@ -239,14 +239,14 @@ export default function Log(props) {
     {
       title: _l('时间'),
       dataIndex: 'createdDate',
-      render: (text, record) => {
+      render: (_text, record) => {
         return <span className="textTertiary">{record.createdDate}</span>;
       },
     },
     {
       title: _l('耗时'),
       dataIndex: 'take',
-      render: (text, record) => {
+      render: (_text, record) => {
         if (!record.completeDate) {
           return '';
         }
@@ -257,7 +257,7 @@ export default function Log(props) {
     {
       title: _l('详情'),
       dataIndex: 'option',
-      render: (text, record) => {
+      render: (_text, record) => {
         return (
           <div className="optionCon">
             <span
@@ -329,7 +329,7 @@ export default function Log(props) {
     }
   };
 
-  const formatTime = time => time.map(item => item && moment(item).format('YYYY-MM-DD HH:mm:ss'));
+  const formatTime = (time: string[]) => time.map(item => item && moment(item).format('YYYY-MM-DD HH:mm:ss'));
 
   const renderTimePlaceholder = () => {
     const [startTime, endTime] = formatTime(time);

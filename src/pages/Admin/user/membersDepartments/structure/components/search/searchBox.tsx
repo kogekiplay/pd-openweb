@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { debounce } from 'lodash';
 import { updateCursor, updateSelectedAccountIds, updateType, updateTypeCursor } from '../../actions/current';
@@ -6,7 +6,15 @@ import { expandedKeysUpdate, getFullTree, loadAllUsers, loadDepartments } from '
 import { clearSearchKeywords, fetchSearchResult, getCustomList } from '../../actions/search';
 import Result from './searchResult';
 
-class SearchBox extends Component<any, any> {
+export interface SearchBoxState {
+  showResult: boolean;
+  searchValue: string | undefined;
+}
+
+class SearchBox extends Component<any, SearchBoxState> {
+  declare input: HTMLInputElement | null | undefined;
+  declare box: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.ajaxObj = null;
@@ -131,7 +139,7 @@ class SearchBox extends Component<any, any> {
     );
   };
 
-  render() {
+  override render() {
     const { searchValue } = this.state;
     let clearBtn =
       searchValue !== '' ? (

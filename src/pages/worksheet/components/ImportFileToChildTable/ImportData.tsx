@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+﻿import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { useKey } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -243,7 +243,7 @@ Input.propTypes = {
 
 function PasteEdit(props) {
   const { dialogHeight, importDataActiveType, controls, onParsePaste } = props;
-  const [splitCharType, setSplitCharType] = useState(1);
+  const [splitCharType, setSplitCharType] = useState<number | undefined>(1);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const cacheStoreStack = useRef([[]]);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { formatResponseData } from 'src/components/UploadFiles/utils';
 import { compatibleMDJS } from 'src/utils/project';
 import UploadFiles from './UploadFiles';

@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment } from 'react';
+import { Component, createRef, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -37,7 +37,7 @@ const VerticalSortableRecordItemWrap = styled.div`
 `;
 
 export default class VerticalSortableRecordItem extends Component<any, any> {
-  static propTypes = {
+  static override propTypes = {
     index: number,
     parentId: string,
     toggleChildren: func,
@@ -58,7 +58,7 @@ export default class VerticalSortableRecordItem extends Component<any, any> {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.recordInfoId &&
@@ -149,7 +149,7 @@ export default class VerticalSortableRecordItem extends Component<any, any> {
     return _.sortBy(newRows, 'index').map(i => i.row);
   };
 
-  render() {
+  override render() {
     const {
       appId,
       data,

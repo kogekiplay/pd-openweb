@@ -8,6 +8,7 @@ import organizeAjax from 'src/api/organize';
 import { createRequestPool } from 'worksheet/api/standard';
 import { getFilter } from 'worksheet/common/WorkSheetFilter/util';
 import { setRowsFromStaticRows } from 'worksheet/components/ChildTable/redux/actions';
+import type { SetRowsFromStaticRowsParams } from 'worksheet/components/ChildTable/redux/actions';
 import generateSubListStore from 'worksheet/components/ChildTable/redux/store';
 import generateRelateRecordTableStore from 'worksheet/components/RelateRecordTable/redux/store.js';
 import { RELATE_RECORD_SHOW_TYPE, SYSTEM_CONTROLS } from 'worksheet/constants/enum';
@@ -75,41 +76,41 @@ import type { RecordRow } from 'src/utils/controlTypes';
  * 缺省值都写在解构里。
  */
 interface DataFormatOptions {
-  projectId?: string;
-  isCharge?: boolean;
-  appId?: string;
-  worksheetId?: string;
-  recordId?: string;
-  instanceId?: string;
-  workId?: string;
+  projectId?: string | undefined;
+  isCharge?: boolean | undefined;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  recordId?: string | undefined;
+  instanceId?: string | undefined;
+  workId?: string | undefined;
   /** 子表控件创建行存储的工厂，由外部注入 */
-  setSubListStore?: (...args: ControlValue[]) => ControlValue;
-  requestPool?: ReturnType<typeof createRequestPool>;
-  abortController?: AbortController;
-  data?: FormControl[];
-  rules?: FormRule[];
+  setSubListStore?: ((...args: ControlValue[]) => ControlValue) | undefined;
+  requestPool?: ReturnType<typeof createRequestPool> | undefined;
+  abortController?: AbortController | undefined;
+  data?: FormControl[] | undefined;
+  rules?: FormRule[] | undefined;
   /** 构造时就同步初始化 store，而不是等第一次读 */
-  forceSync?: boolean;
-  isCreate?: boolean;
-  disabled?: boolean;
-  ignoreLock?: boolean;
-  ignoreRequired?: boolean;
-  verifyAllControls?: boolean;
-  noAutoSubmit?: boolean;
-  recordCreateTime?: string;
-  masterRecordRowId?: string;
-  masterData?: ControlValue;
+  forceSync?: boolean | undefined;
+  isCreate?: boolean | undefined;
+  disabled?: boolean | undefined;
+  ignoreLock?: boolean | undefined;
+  ignoreRequired?: boolean | undefined;
+  verifyAllControls?: boolean | undefined;
+  noAutoSubmit?: boolean | undefined;
+  recordCreateTime?: string | undefined;
+  masterRecordRowId?: string | undefined;
+  masterData?: ControlValue | undefined;
   /** 见 core/config 的 FROM */
-  from?: number;
-  isDraft?: boolean;
-  storeCenter?: Record<string, SubListStore>;
-  loadRowsWhenChildTableStoreCreated?: boolean;
-  searchConfig?: ControlValue[];
-  embedData?: Record<string, ControlValue>;
-  ignoreHiddenRequired?: boolean;
-  onAsyncChange?: (...args: ControlValue[]) => ControlValue;
-  updateLoadingItems?: (...args: ControlValue[]) => ControlValue;
-  activeTrigger?: (...args: ControlValue[]) => ControlValue;
+  from?: number | undefined;
+  isDraft?: boolean | undefined;
+  storeCenter?: Record<string, SubListStore> | undefined;
+  loadRowsWhenChildTableStoreCreated?: boolean | undefined;
+  searchConfig?: ControlValue[] | undefined;
+  embedData?: Record<string, ControlValue> | undefined;
+  ignoreHiddenRequired?: boolean | undefined;
+  onAsyncChange?: ((...args: ControlValue[]) => ControlValue) | undefined;
+  updateLoadingItems?: ((...args: ControlValue[]) => ControlValue) | undefined;
+  activeTrigger?: ((...args: ControlValue[]) => ControlValue) | undefined;
 }
 
 export default class DataFormat {
@@ -119,20 +120,20 @@ export default class DataFormat {
   // declare 是纯类型声明，babel 的 TS preset 整行擦除，运行时零影响。
   // 这几个的来源（构造入参）本来就是可选的：子表、工作流节点、公开表单各传一部分。
   // 字段类型要跟着如实可选，不然构造函数里赋值就是 TS2322。
-  declare appId?: string;
-  declare projectId?: string;
-  declare worksheetId?: string;
-  declare recordId?: string;
-  declare instanceId?: string;
-  declare workId?: string;
-  declare masterRecordRowId?: string;
-  declare recordCreateTime?: string;
+  declare appId?: string | undefined;
+  declare projectId?: string | undefined;
+  declare worksheetId?: string | undefined;
+  declare recordId?: string | undefined;
+  declare instanceId?: string | undefined;
+  declare workId?: string | undefined;
+  declare masterRecordRowId?: string | undefined;
+  declare recordCreateTime?: string | undefined;
   /** 调试用：recordId + 随机数，区分同一条记录的多个实例 */
   declare _debug_flag: string;
 
-  declare isCharge?: boolean;
-  declare disabled?: boolean;
-  declare noAutoSubmit?: boolean;
+  declare isCharge?: boolean | undefined;
+  declare disabled?: boolean | undefined;
+  declare noAutoSubmit?: boolean | undefined;
   declare isDraft: boolean;
   declare isMobile: boolean;
   declare loadRowsWhenChildTableStoreCreated: boolean;
@@ -161,7 +162,7 @@ export default class DataFormat {
   /** 规则求值时的调用栈，用来挡住循环依赖 */
   declare loopList: ControlValue[];
 
-  declare abortController?: AbortController;
+  declare abortController?: AbortController | undefined;
   declare requestPool: ReturnType<typeof createRequestPool>;
   /** key -> 防抖后的函数，debounceByKey 用它做缓存 */
   declare debounceMap: Map<string, (...args: ControlValue[]) => void>;
@@ -651,7 +652,7 @@ export default class DataFormat {
     controlId,
     value,
     notInsertControlIds = false,
-    removeUniqueItem = (controlId?: string) => {},
+    removeUniqueItem = (_controlId?: string) => {},
     data,
     isInit = false,
     isDefaultValue = false,
@@ -659,17 +660,17 @@ export default class DataFormat {
     userTriggerChange = false,
     ignoreSearch = false, // 禁止触发查询工作表
   }: {
-    controlId?: string;
-    value?: ControlValue;
-    notInsertControlIds?: boolean;
-    removeUniqueItem?: (controlId?: string) => void;
+    controlId?: string | undefined;
+    value?: ControlValue | undefined;
+    notInsertControlIds?: boolean | undefined;
+    removeUniqueItem?: ((controlId?: string) => void) | undefined;
     /** 直接给出整份控件数据（子表回填等场景），不传则用 this.data */
-    data?: FormControl[];
-    isInit?: boolean;
-    isDefaultValue?: boolean;
-    searchByChange?: boolean;
-    userTriggerChange?: boolean;
-    ignoreSearch?: boolean;
+    data?: FormControl[] | undefined;
+    isInit?: boolean | undefined;
+    isDefaultValue?: boolean | undefined;
+    searchByChange?: boolean | undefined;
+    userTriggerChange?: boolean | undefined;
+    ignoreSearch?: boolean | undefined;
   }) {
     this.asyncControls = {};
 
@@ -692,9 +693,8 @@ export default class DataFormat {
                 console.log(err);
               }
 
-              // 下面按分支往上挂 staticRows / type / isSetValueFromEvent…，
-              // 推断出的闭合对象类型接不住
-              const params: Record<string, ControlValue> = {
+              // 下面按分支往上挂 staticRows / type / isSetValueFromEvent…，所以得标出完整的入参类型
+              const params: SetRowsFromStaticRowsParams = {
                 recordId: this.recordId,
                 masterData: {
                   worksheetId: this.worksheetId,
@@ -1737,8 +1737,8 @@ export default class DataFormat {
     if (hasRelate && !isGet && sid && !sid.includes('temp')) {
       this.setLoadingInfo(controlId, true);
 
-      // 下面按场景改 getType、挂 shareId，推断出的闭合对象类型接不住
-      const params: ApiArgs = {
+      // 下面按场景改 getType、挂 shareId，所以标出完整形状（getType：1 普通、3 公开表单、13 填写链接）
+      const params: { getType: number; worksheetId?: string | undefined; rowId?: string | undefined; shareId?: string } = {
         getType: 1,
         worksheetId,
         rowId: sid,
@@ -1804,7 +1804,9 @@ export default class DataFormat {
             getDynamicValue(
               this.data,
               Object.assign({}, item, {
-                advancedSetting: { defsource: item.advancedSetting?.defsource.replace(/isAsync/gi, 'async') },
+                // asyncControls 只收 advancedSetting.defsource 为真的控件（见上面收集它的 _.filter），
+                // 这里的 ?? '' 永远走不到，只为类型如实
+                advancedSetting: { defsource: (item.advancedSetting?.defsource ?? '').replace(/isAsync/gi, 'async') },
               }),
               this.masterData,
             ),
@@ -1838,8 +1840,8 @@ export default class DataFormat {
             };
 
             const infoObj = INFO_OPTIONS[item.type as keyof typeof INFO_OPTIONS];
-            // includePath 只在部门那一支挂，推断出的闭合对象类型接不住
-            const ajaxParams: ApiArgs = {
+            // includePath 只在部门那一支挂，所以标出完整形状
+            const ajaxParams: { projectId?: string | undefined; accountIds: string[]; includePath?: boolean } = {
               projectId: this.projectId,
               accountIds: accounts.map((o: ControlValue) => o.accountId),
             };
@@ -1992,7 +1994,7 @@ export default class DataFormat {
             );
 
             if (control.isImportFromExcel && curValue) {
-              return;
+              return undefined;
             }
 
             return _.some(

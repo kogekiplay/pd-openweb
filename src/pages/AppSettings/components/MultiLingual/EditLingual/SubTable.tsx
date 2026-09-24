@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { Dialog, Icon, ScrollView } from 'ming-ui';
 import sheetApi from 'src/api/worksheet';
@@ -32,7 +32,7 @@ export default function SubTable(props) {
   const controls: FormControl[] = (_.get(sheetInfo, 'template.controls') || []).filter(c => !ALL_SYS.includes(c.controlId));
 
   const renderSubTableDialog = () => {
-    const handlePositionControl = c => {
+    const handlePositionControl = (c: FormControl) => {
       const el = document.querySelector(`.navItem-${c.controlId}`);
       const className = 'highlight';
       const highlightEl = el.querySelector('.itemName');
@@ -46,7 +46,7 @@ export default function SubTable(props) {
       }
     };
 
-    const renderControlNav = c => {
+    const renderControlNav = (c: FormControl) => {
       const data = _.find(translateData, { correlationId: c.controlId }) || {};
       const translateInfo = data.data || {};
       return (

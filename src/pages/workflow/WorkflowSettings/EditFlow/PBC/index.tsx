@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import { pathCompletion } from 'src/utils/common';
 import { ACTION_ID } from '../../enum';
@@ -55,7 +55,7 @@ export default class PBC extends Component<any, any> {
     window.open(pathCompletion(`/workflowedit/${item.appId}`));
   };
 
-  render() {
+  override render() {
     const { processId, item, disabled, selectNodeId, openDetail, isSimple, isCopy, isPlugin } = this.props;
     const isPBCExport = item.actionId === ACTION_ID.PBC_OUT;
 

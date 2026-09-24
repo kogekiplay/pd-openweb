@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import preall from 'src/common/preall';
@@ -11,10 +11,12 @@ import Constant from '../../utils/constant';
 import * as socket from '../../utils/socket';
 import * as socketEvent from '../../utils/socketEvent';
 import ChatPanelSession from '../ChatPanelSession';
+import type { AppDispatch } from 'src/redux/types';
 import '../ChatPanel/index.less';
 
 let hasMounted = false;
-let ChatWindow = class ChatWindow extends Component<any, any> {
+// connect 包过、会收到 dispatch；socketEvent 里的函数用 .call(this) 调，要求 this.props.dispatch 存在
+let ChatWindow = class ChatWindow extends Component<{ dispatch: AppDispatch; [key: string]: any }, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,7 +24,7 @@ let ChatWindow = class ChatWindow extends Component<any, any> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { session } = this.props;
     const { id, type } = session;
     if (hasMounted) return;
@@ -89,7 +91,7 @@ let ChatWindow = class ChatWindow extends Component<any, any> {
     });
   }
 
-  render() {
+  override render() {
     const { loading } = this.state;
     const { currentSessionList } = this.props;
     return (

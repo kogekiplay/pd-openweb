@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import Agent from 'src/components/Agent';
+﻿import Agent from 'src/components/Agent';
 // import CustomBot from './modules/CustomBot';
 import MingoWelcome from './ChatBot/components/MingoWelcome';
 import { MINGO_TASK_TYPE } from './ChatBot/enum';

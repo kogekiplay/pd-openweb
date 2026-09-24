@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Pagination } from 'antd';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -70,7 +70,7 @@ export default class PaginationWrap extends Component<any, any> {
     this.state = {};
   }
 
-  itemRender(current, type, originalElement) {
+  itemRender(_current: number, type: 'next' | 'prev' | 'page' | 'jump-prev' | 'jump-next', originalElement) {
     if (type === 'prev') {
       return <a className="page">{_l('上一页')}</a>;
     }
@@ -82,7 +82,7 @@ export default class PaginationWrap extends Component<any, any> {
     return originalElement;
   }
 
-  render() {
+  override render() {
     const { className, total, pageSize, pageIndex, onChange = () => {} } = this.props;
     return (
       <Wrap className={className}>

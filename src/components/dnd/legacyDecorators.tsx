@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import hoistStatics from 'hoist-non-react-statics';
 
@@ -86,7 +86,7 @@ export function DragSource(type: string, spec, collect) {
           type: resolveType(type, latest.current.props),
           item: monitor =>
             spec.beginDrag ? spec.beginDrag(latest.current.props, monitor, instance.current) : {},
-          end: (item, monitor) =>
+          end: (_item, monitor) =>
             spec.endDrag && spec.endDrag(latest.current.props, monitor, instance.current),
           canDrag: monitor => (spec.canDrag ? spec.canDrag(latest.current.props, monitor) : true),
           isDragging: monitor =>
@@ -122,10 +122,10 @@ export function DropTarget(type: string, spec, collect) {
       const [collected, connectDrop] = useDrop(
         () => ({
           accept: resolveType(type, latest.current.props),
-          hover: (item, monitor) => spec.hover && spec.hover(latest.current.props, monitor, instance.current),
-          drop: (item, monitor) =>
+          hover: (_item, monitor) => spec.hover && spec.hover(latest.current.props, monitor, instance.current),
+          drop: (_item, monitor) =>
             spec.drop ? spec.drop(latest.current.props, monitor, instance.current) : undefined,
-          canDrop: (item, monitor) => (spec.canDrop ? spec.canDrop(latest.current.props, monitor) : true),
+          canDrop: (_item, monitor) => (spec.canDrop ? spec.canDrop(latest.current.props, monitor) : true),
           collect: monitor => (collect ? collect({ dropTarget: () => dropProxy }, monitor) : {}),
         }),
         [],

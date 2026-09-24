@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { get } from 'lodash';
@@ -228,7 +228,7 @@ const GroupedIconTextCon = styled.div`
   }
 `;
 
-function getButtonWidth(button, type, maxNameWidth?) {
+function getButtonWidth(button, type, maxNameWidth?: number | undefined) {
   if (!document.body) return 0;
   const isDebug = window.isDebug;
   let result;
@@ -299,7 +299,7 @@ function renderGroupIcon(group) {
 }
 
 /** 把布局段平铺为可渲染单元；组内动作全部停用/不可见后无按钮的空组直接过滤，不再渲染占位 */
-function buildItems(buttons, layoutGroupRaw, layoutFlatRaw, btnDisable, hideDisabled) {
+function buildItems(buttons, layoutGroupRaw, layoutFlatRaw, btnDisable, hideDisabled: boolean) {
   const visibleButtons = hideDisabled
     ? buttons.filter(button => !(btnDisable[button.btnId] || button.disabled))
     : buttons;

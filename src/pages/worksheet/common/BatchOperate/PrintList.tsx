@@ -11,11 +11,11 @@ import IconText from 'worksheet/components/IconText';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import { PRINT_TEMP, PRINT_TYPE, PRINT_TYPE_STYLE } from 'src/pages/Print/core/config';
 import { pathCompletion } from 'src/utils/common';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { addBehaviorLog, getFeatureStatus } from 'src/utils/project';
 import { sendCloudPrint } from 'src/utils/record';
 import { generatePdf } from '../PrintQrBarCode/GeneratingPdf';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   position: relative;
@@ -222,7 +222,7 @@ export default function PrintList(props) {
     }
   }
 
-  const renderBatchPrint = templateType => {
+  const renderBatchPrint = (templateType: string) => {
     const defaultTempList = templateList.filter(it =>
       [PRINT_TYPE.SYS_PRINT, PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(it.type),
     );
@@ -385,7 +385,7 @@ export default function PrintList(props) {
           <TemplateList className="tempList">
             {loading && <LoadDiv size="small" />}
             {!loading && !!featureType && templateList.length === 0 && !showCodePrint && (
-              <div className="textDisabled Font13 LineHeight36 pLeft16">{_l('暂无可用模版')}</div>
+              <div className="textTertiary Font13 LineHeight36 pLeft16">{_l('暂无可用模版')}</div>
             )}
             {!loading &&
               !!featureType &&

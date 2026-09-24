@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import { Icon, LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -36,6 +36,7 @@ export default function (props) {
       }, 1000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [timeLeft]);
 
   useEffect(() => {
@@ -65,7 +66,7 @@ export default function (props) {
       })
       .then(res => {
         const { actionResult } = res;
-        const errorMessages = {
+        const errorMessages: Record<number, string> = {
           8: _l('发送验证码过于频繁'),
           5: _l('账号不正确'),
           21: _l('当前账户已锁定，验证码发送失败'),
@@ -95,7 +96,7 @@ export default function (props) {
   };
 
   //图形验证
-  const onSend = (codeType?, isfrequentLogin?) => {
+  const onSend = (codeType?: number | undefined, isfrequentLogin?: boolean | undefined) => {
     if (timeLeft > 0 && !isfrequentLogin) {
       return;
     }

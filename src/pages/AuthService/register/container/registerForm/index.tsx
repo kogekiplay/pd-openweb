@@ -33,9 +33,9 @@ export default function (props) {
     loading,
   } = props;
 
-  const cache = useRef({});
+  const cache = useRef<{ onRegister?: (() => Promise<void>) | undefined }>({});
 
-  const [keys, setKeys] = useState([]);
+  const [keys, setKeys] = useState<string[]>([]);
   const type = isLink ? (loginForAdd ? 'login' : 'invite') : 'register';
 
   const [{ itiType, loadProjectName, projectNameLang }, setState] = useSetState({
@@ -90,7 +90,7 @@ export default function (props) {
       });
   };
 
-  const doCaptchaFn = isFrequentLoginError => {
+  const doCaptchaFn = (isFrequentLoginError: boolean) => {
     if (createAccountLoading && !isFrequentLoginError) return;
     const callback = (res: Record<string, any> = {}) => {
       if (isFrequentLoginError && res.ret !== 0) return;

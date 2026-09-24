@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import _ from 'lodash';
 import { arrayOf, func, shape } from 'prop-types';
 import MobileRecordCardListDialog from 'mobile/components/RecordCardListDialog';
@@ -37,7 +37,7 @@ const getDefaultRelateSheetValue = () => {
     };
   } catch (err) {
     console.log(err);
-    return;
+    return undefined;
   }
 };
 

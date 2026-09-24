@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import { LoadDiv } from 'ming-ui';
@@ -15,7 +15,7 @@ const Entry = () => {
   const [loading, setLoading] = useState(true);
   const [share, setShare] = useState({});
   let shareId;
-  let printId;
+  let printId: string | undefined;
 
   if (location.pathname.indexOf('public/print') >= 0) {
     const ids = location.pathname.match(/.*\/public\/print\/(.*)/)[1].split('&&');

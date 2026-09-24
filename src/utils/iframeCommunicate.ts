@@ -1,5 +1,9 @@
 // for iframe 页面
 export class ParentBridge {
+  declare _messageIdCounter: number;
+  declare timeout: number;
+  declare tunnelId: string;
+
   constructor({ tunnelId = 'global' } = {}) {
     // 使用 Symbol 作为 key 来确保唯一性
     this._messageIdCounter = 0;
@@ -87,6 +91,8 @@ export class ParentBridge {
 
 // for 主页面
 export class MessageHandler {
+  declare tunnelId: string;
+
   constructor({ tunnelId = 'global' } = {}) {
     this.handlers = new Map();
     // 添加请求去重和并发控制
@@ -131,7 +137,8 @@ export class MessageHandler {
         },
         '*',
       );
-    } catch (error) {
+    } catch (thrown) {
+      const error = thrown as Partial<Error>;
       event.source.postMessage(
         {
           type: 'IFRAME_RESPONSE',

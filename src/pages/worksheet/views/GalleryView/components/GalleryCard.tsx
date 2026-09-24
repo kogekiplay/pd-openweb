@@ -1,4 +1,3 @@
-import React from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { getAdvanceSetting } from 'src/utils/control';
@@ -25,7 +24,7 @@ const GalleryCard = props => {
         key={`galleryItem-${item.rowid}`}
         {...props}
         data={data}
-        onUpdateFn={(updated, item) => {
+        onUpdateFn={(_updated, item) => {
           // 修改分组字段后记录归属会变化，需要同步目标分组并从原分组移除。
           if (
             !!item?.group?.key &&

@@ -71,8 +71,8 @@ export default class Card extends Component<any, any> {
     const workItems = (workItem.workId ? [workItem] : []).filter(
       item => _.includes([3, 4], item.type) && item.operationTime,
     );
-    const timeConsuming = [];
-    const endTimeConsuming = [];
+    const timeConsuming: number[] = [];
+    const endTimeConsuming: number[] = [];
 
     if (!workItems.length) return null;
 
@@ -337,7 +337,7 @@ export default class Card extends Component<any, any> {
       </div>
     );
   }
-  render() {
+  override render() {
     const { otherActionVisible, action, instance } = this.state;
     const {
       item,
