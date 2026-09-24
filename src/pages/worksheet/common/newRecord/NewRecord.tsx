@@ -64,7 +64,7 @@ function NewRecord(props) {
   } = props;
   const didMountTimestamp = useRef(props.didMountTimestamp || Date.now());
   const newRecordContent = useRef(null);
-  const cache = useRef({});
+  const cache = useRef<{ formChanged?: boolean | undefined }>({});
   const scrollViewRef = useRef(null);
   const recordContentRef = useRef(null);
   const [shareVisible, setShareVisible] = useState<boolean | undefined>();

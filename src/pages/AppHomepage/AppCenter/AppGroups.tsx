@@ -23,7 +23,7 @@ function AppGroups(props) {
   const activeGroupType = _.get(props, 'match.params.groupType');
   const isOwnedApp = getPathWithoutSubPath(location.pathname).includes('/app/my/owned');
   const { currentProject, projectId, dashboardColor, myPermissions = [] } = props;
-  const cache = useRef({});
+  const cache = useRef<{ projectLoaded?: boolean | undefined }>({});
   const [state, dispatch] = useReducer(reducer, initialState);
   const actions = useMemo(() => new CreateActions({ dispatch, state }), [state]);
   const {

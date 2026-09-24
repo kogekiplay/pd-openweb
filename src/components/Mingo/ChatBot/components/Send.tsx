@@ -83,7 +83,7 @@ function Send(
   },
   ref,
 ) {
-  const cache = useRef({});
+  const cache = useRef<{ isRecording?: boolean | undefined }>({});
   const [dropFileElementId] = useState(uuidv4());
   const [files, setFiles] = useState([]);
   const [focused, updateFocused] = useState(false);

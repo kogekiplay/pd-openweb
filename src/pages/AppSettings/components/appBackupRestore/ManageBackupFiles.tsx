@@ -77,7 +77,7 @@ export default function ManageBackupFiles(props) {
   const [showLog, setShowLog] = useState(false);
   const [countLoading, setCountLoading] = useState(true);
   const [backupInfo, setBackupInfo] = useState({ isLoading: false, fileList: [], pageIndex: 1 });
-  const [backupTask, setBackupTask] = useState({});
+  const [backupTask, setBackupTask] = useState<{ status?: number | undefined }>({});
   const [popupVisible, setPopupVisible] = useState(false);
   const [backupTaskText, setBackupTaskText] = useState<string | undefined>();
   const { isLoading, fileList } = backupInfo;

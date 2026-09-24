@@ -64,7 +64,7 @@ export default function Header({
   onBack = () => {},
   onClose = () => {},
 }) {
-  const cache = useRef({});
+  const cache = useRef<{ aiActionDisableClearConfirm?: boolean | undefined }>({});
 
   const renderRecordTitle = () => {
     if (!title) return null;

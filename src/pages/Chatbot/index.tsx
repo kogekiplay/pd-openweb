@@ -76,7 +76,7 @@ const Chatbot = props => {
   const [navVisible, setNavVisible] = useState(localStorage.getItem(`chatbotNavVisible`) ? true : false);
   const [editVisible, setEditVisible] = useState(sessionStorage.getItem(`chatbotNewCreate-${chatbotId}`));
   const [chatbotAppItem, setChatbotAppItem] = useState({});
-  const requestRef = useRef({});
+  const requestRef = useRef<{ appItemRequest?: ApiResult | undefined; configRequest?: ApiResult | undefined }>({});
   const isDark = _.get(chatbotConfig.config, 'isDark') || false;
   const isCharge = canEditApp(appPkg.permissionType);
   const appId = appPkg.id || data.appId;

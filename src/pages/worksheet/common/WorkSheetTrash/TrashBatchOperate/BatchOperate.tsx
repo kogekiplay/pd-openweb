@@ -7,7 +7,7 @@ import './BatchOperate.less';
 
 export default function BatchOperate(props) {
   const { isAll, isCharge, selectedLength, onRestore, onHardDelete, onCancel, entityName } = props;
-  const [state, setState] = useState({});
+  const [state, setState] = useState<{ select1000?: boolean | undefined }>({});
   const { select1000 } = state;
   return (
     <DropMotion

@@ -13,7 +13,7 @@ const Con = styled.div`
 
 export default function DropMotion(props) {
   const { style = {}, visible, children, animateOffset, duration = 300 } = props;
-  const cache = useRef({});
+  const cache = useRef<{ timer?: NodeJS.Timeout | undefined }>({});
   const [childrenVisible, setChildrenVisible] = useState(props.visible);
   useEffect(() => {
     if (cache.current.timer) {

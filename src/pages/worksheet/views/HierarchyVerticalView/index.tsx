@@ -171,7 +171,7 @@ function HierarchyVertical(props) {
 
   const { viewControl, viewControls } = view;
   const $wrapRef = useRef(null);
-  const cache = useRef({});
+  const cache = useRef<{ didMount?: boolean | undefined }>({});
   const [refreshFlag, setRefreshFlag] = useState<number | undefined>();
   const [scrollMiddleSign, setScrollMiddleSign] = useState(false);
 

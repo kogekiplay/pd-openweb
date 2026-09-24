@@ -33,7 +33,7 @@ export default function (props) {
     loading,
   } = props;
 
-  const cache = useRef({});
+  const cache = useRef<{ onRegister?: (() => Promise<void>) | undefined }>({});
 
   const [keys, setKeys] = useState([]);
   const type = isLink ? (loginForAdd ? 'login' : 'invite') : 'register';

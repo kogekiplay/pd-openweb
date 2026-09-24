@@ -72,7 +72,7 @@ const scanId = (location.pathname.match(/(\w{16})$/) || '')[0];
 const UPDATE_STATUS_INTERVAL = 1000;
 
 const ScanQrUploadFile = () => {
-  const cache = useRef({});
+  const cache = useRef<{ timer?: NodeJS.Timeout | undefined }>({});
   const [status, setStatus] = useState(STATUS.ONLINE);
   const [type, setType] = useState(UPLOAD_TYPE.SIGNATURE);
   const [loading, setLoading] = useState(true);

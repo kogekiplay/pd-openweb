@@ -93,7 +93,7 @@ function NewRecord(props) {
   } = props;
   const { appId, worksheetId, worksheetInfo = {} } = rest;
   const newRecordContent = useRef(null);
-  const cache = useRef({});
+  const cache = useRef<{ formChanged?: boolean | undefined }>({});
   const photoRecognitionRef = useRef(null);
   const mingoCreationRef = useRef(null);
   const compositeInputRef = useRef(null);

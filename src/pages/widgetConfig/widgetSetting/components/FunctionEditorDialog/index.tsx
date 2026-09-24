@@ -7,7 +7,7 @@ const LoadableFunction = lazy(() => import('./Func'));
 export default function FunctionEditorDialog(props) {
   const { onClose } = props;
   const editor = useRef({});
-  const cache = useRef({});
+  const cache = useRef<{ changed?: boolean | undefined }>({});
   let width = 960;
   let height = 600;
 

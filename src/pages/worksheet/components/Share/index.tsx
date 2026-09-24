@@ -62,7 +62,7 @@ export default function Share(props) {
   const [urlVisible, setUrlVisible] = useState(false);
   const [isPublic, setIsPublic] = useState(props.isPublic);
   const [publicUrl, setPublicUrl] = useState(isPublic && props.publicUrl);
-  const [shareData, setShareData] = useState({});
+  const [shareData, setShareData] = useState<{ pageTitle?: string | undefined }>({});
   const privateVisible =
     from === 'report'
       ? params.privateVisible

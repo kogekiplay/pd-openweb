@@ -99,7 +99,7 @@ function ChatHistoryItem({
   const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const itemRef = useRef(null);
-  const cache = useRef({});
+  const cache = useRef<{ input?: HTMLInputElement | null | undefined }>({});
   useClickAway(itemRef, e => {
     if (e.target.closest('.MenuItem')) {
       return;

@@ -180,7 +180,7 @@ export default forwardRef(function RelateRecordTags(props, ref) {
   const [addedIds, setAddedIds] = useState(props.addedIds || []);
   const [deletedIds, setDeletedIds] = useState(props.deletedIds || []);
   const conRef = useRef(null);
-  const cache = useRef({});
+  const cache = useRef<{ isActive?: boolean | undefined }>({});
   const allowNewRecord = control.enumDefault2 !== 1 && control.enumDefault2 !== 11 && !window.isPublicWorksheet;
   const multiple = control.enumDefault === 2;
   const allowRemove = control.advancedSetting.allowcancel !== '0' || !multiple;

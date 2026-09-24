@@ -1603,7 +1603,6 @@
     "src/pages/Role/component/Table.tsx",
     "src/pages/Role/index.tsx",
     "src/pages/ScanQrUploadFile/Attachments.tsx",
-    "src/pages/ScanQrUploadFile/ScanQrUploadFile.tsx",
     "src/pages/ScanQrUploadFile/Signature.tsx",
     "src/pages/ScanQrUploadFile/index.tsx",
     "src/pages/Statistics/Card/Card.tsx",

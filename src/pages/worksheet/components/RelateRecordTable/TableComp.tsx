@@ -184,7 +184,7 @@ function TableComp(props) {
     originalRecords = [],
   } = tableState;
   const worksheetTableRef = useRef<any>(undefined);
-  const dataCache = useRef({});
+  const dataCache = useRef<{ expandCellAppendWidth?: number | undefined }>({});
   const columns = useMemo(() => {
     const visibleControls = getVisibleControls(control, controls, sheetHiddenColumnIds, disableMaskDataControls);
 

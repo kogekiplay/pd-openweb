@@ -25,7 +25,7 @@ const Core = forwardRef(
         onStop();
       },
     });
-    const cache = useRef({});
+    const cache = useRef<{ didMount?: boolean | undefined; autoStopTimer?: NodeJS.Timeout | undefined }>({});
     useEffect(() => {
       updateStatus(status);
     }, [status, updateStatus]);
