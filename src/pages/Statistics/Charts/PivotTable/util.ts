@@ -470,9 +470,9 @@ export const getStyleRuleValue = ({ rule, value, controlId, columnIndex, record,
 
 export const compileColorRuleConfig = (yaxisList, colorRules = []) => {
   const yaxisMap = {};
-  const yaxisIndexMap = {};
+  const yaxisIndexMap: Record<string, number> = {};
   const colorRuleMap = {};
-  const rangeControlIdMap = {};
+  const rangeControlIdMap: Record<string, boolean> = {};
 
   const addRangeControlId = id => {
     if (id) {

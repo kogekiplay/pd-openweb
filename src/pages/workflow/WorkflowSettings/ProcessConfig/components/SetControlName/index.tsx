@@ -163,7 +163,7 @@ export default ({ data = [], list = [], errorItems, setErrorItems, updateSource 
                   }
 
                   const others = list.filter(o => o.controlId !== obj.controlId);
-                  let repeatControl = {};
+                  let repeatControl: Record<string, string | number> = {};
                   others.forEach(element => {
                     if (!_.find(others, o => o.alias === element.alias && o.controlId !== element.controlId)) {
                       repeatControl[element.controlId] = errorItems[element.controlId] === 1 ? 1 : '';

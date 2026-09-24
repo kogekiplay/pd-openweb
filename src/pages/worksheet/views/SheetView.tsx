@@ -770,7 +770,7 @@ class TableViewBase extends React.Component<any, any> {
                 btnIds: this.getOperateButtonCheckIds(operatesButtons),
               })
               .then(data => {
-                const buttonsCheckStatus = {};
+                const buttonsCheckStatus: Record<string, boolean> = {};
                 data.forEach((item: SheetButtonRowState) => {
                   item.rowIds.forEach((rowId: string) => {
                     buttonsCheckStatus[`${rowId}-${item.btnId}`] = true;

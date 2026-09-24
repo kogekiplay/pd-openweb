@@ -342,7 +342,7 @@ export const loadSavedFilters = (worksheetId: string) => (dispatch: AppDispatch)
   });
 };
 
-const promiseRequests = {};
+const promiseRequests: Record<string, ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined> = {};
 
 export const fetchSheetRows =
   (param: Record<string, any> = {}) =>

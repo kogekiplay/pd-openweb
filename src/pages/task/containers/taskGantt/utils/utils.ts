@@ -556,7 +556,7 @@ const getDaysTime = filterWeekend => {
     : moment(config.minStartTime).format('YYYY-MM-DD');
   const endTime = moment(config.maxEndTime).add(28, 'd').format('YYYY-MM-DD');
   const timeDiff = (moment(endTime) - moment(startTime)) / 24 / 60 / 60 / 1000;
-  const result = {};
+  const result: Record<string, string[]> = {};
 
   for (let i = 0; i <= timeDiff; i++) {
     const momentObj = moment(startTime).add(i, 'd');
@@ -646,7 +646,7 @@ const getMonthsTime = () => {
   const startTime = config.folderId ? moment(config.minStartTime).add(-1, 'M') : moment(config.minStartTime);
   const endTime = moment(config.maxEndTime).add(6, 'M');
   const timeDiff = (endTime.year() - startTime.year()) * 12 + (endTime.month() - startTime.month());
-  const result = {};
+  const result: Record<string, string[]> = {};
 
   for (let i = 0; i <= timeDiff; i++) {
     const momentObj = moment(startTime).add(i, 'M');

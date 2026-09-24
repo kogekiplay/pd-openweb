@@ -7,11 +7,11 @@ import * as ajax from '../../utils/ajax';
 import { FeesItem, formatFeeds } from './index';
 
 const splitFeeds = list => {
-  const ranges = {};
+  const ranges: Record<string, moment.Moment[]> = {};
   ranges[_l('今天')] = [moment().startOf('day'), moment().endOf('day')];
   ranges[_l('最近七天')] = [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')];
   ranges[_l('本月')] = [moment().startOf('month'), moment().endOf('day')];
-  const oSplit = {};
+  const oSplit: Record<string, boolean> = {};
   list.forEach(feed => {
     const feedTime = moment(feed.createTime);
     let i;

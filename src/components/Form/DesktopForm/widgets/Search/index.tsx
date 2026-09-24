@@ -177,7 +177,7 @@ const Search = props => {
 
   const handleSelect = item => {
     const responseMap = safeParse(responsemap || '[]');
-    let rowData = {};
+    let rowData: Record<string, string> = {};
 
     const newValue = getOptions().filter((_i, idx) => `${idx}` === item.key);
     responseMap.map(i => {

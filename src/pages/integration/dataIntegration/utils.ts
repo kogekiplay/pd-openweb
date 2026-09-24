@@ -219,7 +219,7 @@ export const getDefaultData = (
   isDestAppType,
   notCanvas?: boolean,
 ) => {
-  let hasSetFields = {};
+  let hasSetFields: Record<string, number> = {};
   let isSetTitle = false; //是否已经设置过标题默认值
 
   const newFieldsMapping = (mapping || []).map(item => {

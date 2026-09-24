@@ -611,7 +611,7 @@ export default function MingoGeneratedWidgetsSelector({
                       const relateWorksheetIds = uniq(
                         relateControlsWithExistWorksheet.map(c => c.dataSource).filter(Boolean),
                       );
-                      const worksheetControlsMap = {};
+                      const worksheetControlsMap: Record<string, FormControl[]> = {};
                       await Promise.all(
                         relateWorksheetIds.map(relatedWorksheetId =>
                           worksheetAjax

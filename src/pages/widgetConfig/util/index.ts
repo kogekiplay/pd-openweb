@@ -60,7 +60,7 @@ export const exportRelevantComponents = r => {
 // 获取字段编辑页url参数
 export const getUrlPara = () => {
   const search = new URLSearchParams(location.search);
-  const para = {};
+  const para: Record<string, string> = {};
 
   for (var [key, value] of search) {
     para[key] = value;

@@ -272,7 +272,7 @@ class PivotTable extends Component<any, any> {
 
     const { data, yaxisList } = this.props.reportData;
     return this.getCacheValue('controlMinAndMax', [data.data, yaxisList, controlIds], () => {
-      const controlIdMap = {};
+      const controlIdMap: Record<string, boolean> = {};
       controlIds.forEach(id => {
         controlIdMap[id] = true;
       });

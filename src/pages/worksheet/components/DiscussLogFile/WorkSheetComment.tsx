@@ -125,7 +125,7 @@ export default class WorkSheetComment extends React.Component<any, any> {
         ),
       //内部讨论 未配置外部人员可参与讨论 或配置了外部成员不可见内部讨论 不能@外部用户
     );
-    const hash = {};
+    const hash: Record<string, boolean> = {};
     const data2 = data.reduce((result, current) => {
       if (!hash[current.accountId]) {
         hash[current.accountId] = true; // 标记已存在

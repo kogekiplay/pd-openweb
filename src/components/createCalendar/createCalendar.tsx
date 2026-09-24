@@ -1424,7 +1424,7 @@ CreateCalendar.methods = {
 
     // 日程成员
     var members = [];
-    var specialAccounts = {};
+    var specialAccounts: Record<string, string | undefined> = {};
     $('#addCalendarMembers .createMember').each(function (_index: number, item) {
       if ($(item).attr('data-id')) {
         members.push($(item).attr('data-id'));

@@ -836,7 +836,7 @@ BatchTask.updateCharge = function (account: TaskMember) {
 // 批量添加任务成员
 BatchTask.addMembers = function (users: TaskMember[], callbackInviteResult?: (res: any) => void) {
   const userIdArr = [];
-  const specialAccounts = {};
+  const specialAccounts: Record<string, string | undefined> = {};
 
   // 外部用户
   if (_.isFunction(callbackInviteResult)) {

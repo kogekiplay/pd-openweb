@@ -16,7 +16,10 @@ import Time from './Time';
 import UnNormal from './UnNormal';
 import Users from './Users';
 
-const Comps = {};
+const Comps: Record<
+  number,
+  typeof Areas | typeof CheckboxComp | typeof DateTime | typeof Number | typeof RelateRecord | typeof Users
+> = {};
 
 function mapToComp(
   keys: number[],

@@ -12,11 +12,11 @@ import Constant from '../../utils/constant';
 import './index.less';
 
 export const splitFiles = list => {
-  const ranges = {};
+  const ranges: Record<string, moment.Moment[]> = {};
   ranges[_l('今天')] = [moment().startOf('day'), moment().endOf('day')];
   ranges[_l('最近七天')] = [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')];
   ranges[_l('本月')] = [moment().startOf('month'), moment().endOf('day')];
-  const oSplit = {};
+  const oSplit: Record<string, boolean> = {};
   list.forEach(file => {
     if (file.type === 2) {
       file.previewUrl = `${file.url}&imageView2/0/w/100/h/100/q/90`;

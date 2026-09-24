@@ -693,7 +693,7 @@ class TaskStage extends Component<any, TaskStageState> {
    */
   returnCustomFilterArray() {
     const { customFilter } = this.props.taskConfig.filterSettings;
-    const customFilters = {};
+    const customFilters: Record<string, string> = {};
 
     Object.keys(customFilter).forEach(item => {
       let keys = '';

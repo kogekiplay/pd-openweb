@@ -273,7 +273,7 @@ export default function RefreshRecordDialog(props) {
   };
 
   const handleAllChecked = (controls: FormControl[] | undefined, checked: boolean) => {
-    const value = {};
+    const value: Record<string, boolean> = {};
     controls.forEach((l: FormControl) => {
       value[l.controlId] = checked;
     });

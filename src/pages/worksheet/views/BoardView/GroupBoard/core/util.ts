@@ -120,7 +120,7 @@ export const groupByOptionKey = (viewData, view, control, options) => {
 
   const keySet = new Set(options.map(opt => opt.key));
   const groupViewData = {};
-  const secondGroupTotal = {};
+  const secondGroupTotal: Record<string, number> = {};
 
   for (const key of keySet) {
     groupViewData[key] = {};

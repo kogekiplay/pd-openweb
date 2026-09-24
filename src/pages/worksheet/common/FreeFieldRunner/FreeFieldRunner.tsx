@@ -44,7 +44,7 @@ function pickControl(control: FormControl = {}) {
 }
 
 function formatFormData(formData) {
-  const result = {};
+  const result: Record<string, Pick<FormControl, 'type' | 'controlId' | 'controlName' | 'value' | 'options'>> = {};
   formData.forEach((item: FormControl) => {
     result[item.controlId] = pickControl(item);
   });

@@ -71,7 +71,7 @@ const ConvertingMask = styled.div`
 `;
 
 function getMapConfigByExcel(controls: FormControl[] = [], excelData = []) {
-  const result = {};
+  const result: Record<number, string | undefined> = {};
 
   if (excelData.length < controls.length) {
     excelData = excelData.concat(new Array(controls.length - excelData.length).fill(''));

@@ -7,7 +7,7 @@ import { getApproval, getApprovalDetail, getAttributeName } from './utils';
 import type { FormControl } from 'src/utils/controlTypes';
 
 const uniqByProcessId = arr => {
-  const map = {};
+  const map: Record<string, boolean> = {};
   return arr.filter(item => {
     if (map[item.processId]) return false;
     map[item.processId] = true;

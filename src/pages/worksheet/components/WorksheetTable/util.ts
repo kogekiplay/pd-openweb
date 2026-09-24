@@ -384,7 +384,7 @@ export function getControlFieldPermissionsAfterRules(row, controls, rules) {
     data: controls.map((c: FormControl) => ({ ...c, value: row[c.controlId] })),
   });
   const isLock = !/^(temp|default)/.test(row.rowid) && checkRuleLocked(rules, formData, row.rowid);
-  const fieldPermissions = {};
+  const fieldPermissions: Record<string, string> = {};
   const ruleControlAdvancedSettings = {};
   formData.forEach((item: FormControl) => {
     const permKey = row.rowid + '-' + item.controlId;

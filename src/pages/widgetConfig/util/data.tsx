@@ -1418,7 +1418,7 @@ export const dealCopyWidgetId = (data: FormControl = {}) => {
     advancedSetting: { ...data.advancedSetting, custom_event: '', ...getCopyDefaultSetting(data.advancedSetting) },
   };
 
-  let ids = {};
+  let ids: Record<string, string> = {};
 
   if (
     data.type === 34 &&

@@ -555,7 +555,7 @@ class TaskTree extends Component<any, any> {
    */
   returnCustomFilterArray() {
     const { customFilter } = this.props.taskConfig.filterSettings;
-    const customFilters = {};
+    const customFilters: Record<string, string> = {};
 
     Object.keys(customFilter).forEach(item => {
       let keys = '';

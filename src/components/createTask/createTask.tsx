@@ -982,7 +982,7 @@ CreateTask.Motheds = {
     var toUserID = $('#taskUserBox').attr('data-id');
     var stageId = String($('#folderStage').val() ?? '').trim();
     var members = [];
-    var specialAccounts = {};
+    var specialAccounts: Record<string, string | undefined> = {};
 
     // 成员
     $('.createTaskAddMemberBox .createTaskMember').each(function (this: HTMLElement) {

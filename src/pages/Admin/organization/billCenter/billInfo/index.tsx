@@ -41,7 +41,7 @@ import {
 import InvoiceSetting from './invoiceSetting';
 import 'rc-trigger/assets/index.css';
 
-const licenseSupportInfoCache = {};
+const licenseSupportInfoCache: Record<string, HapApi.MD.Web.Ajax.ResultModel.Project.ProjectModel> = {};
 
 const AgentBillingDetailWrap = styled.div`
   height: 100%;

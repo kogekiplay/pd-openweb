@@ -56,7 +56,7 @@ function Edit(params) {
   const WIDGETS_TO_API_TYPE_ENUM_KEYS = Object.keys(ALL_WIDGETS_TYPE).filter(o =>
     controlTypeList.includes(WIDGETS_TO_API_TYPE_ENUM[o]),
   );
-  let WIDGETS_TO_API_TYPE_ENUM_VALUESKEY = {};
+  let WIDGETS_TO_API_TYPE_ENUM_VALUESKEY: Record<number, string> = {};
   _.forEach(WIDGETS_TO_API_TYPE_ENUM, function (value, key) {
     WIDGETS_TO_API_TYPE_ENUM_VALUESKEY[value] = key;
   });

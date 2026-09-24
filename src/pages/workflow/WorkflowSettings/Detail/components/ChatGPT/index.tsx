@@ -423,7 +423,7 @@ export default ({ processId, nodeId, codeType = 1, onSave = () => {}, onClose = 
                                 <UseBtn
                                   className="colorPrimary mLeft20"
                                   onClick={() => {
-                                    const inputData = {};
+                                    const inputData: Record<string, string> = {};
 
                                     if (codeType === 1) {
                                       (code.match(/input\..*?[),;\n ]/g) || []).forEach(key => {

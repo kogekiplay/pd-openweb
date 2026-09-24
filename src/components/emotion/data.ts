@@ -88,7 +88,7 @@ let bearData = [
 // 【不再按素材过滤】面板改成直接渲染 emoji 字符（不是图片），
 // 所以不受 @twemoji/svg 素材集的限制，Unicode 有多少就能列多少。
 // 点选时插入的本来就是字符（见 emotion.ts 的 attr('code')），面板里的图从来只是显示用的。
-let emojiData = {};
+let emojiData: Record<number, { name: string; content: string[] }> = {};
 
 emojiData[0] = {
   name: 'Smileys & Emotion',
