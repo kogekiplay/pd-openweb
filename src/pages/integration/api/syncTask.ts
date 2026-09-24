@@ -102,21 +102,6 @@ const syncTask = {
    *
    *
    * @param {Object} args 请求参数
-   * @param {object} args.jobIds No comments found.,[array of string]
-   * @param {Object} options 配置参数
-   * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
-   **/
-  tasks: function (args: ApiArgs, options?: ApiOptions) {
-    base.ajaxOptions.url = base.server(options) + 'syncTask/tasks';
-    base.ajaxOptions.type = 'GET';
-    return mdyAPI(controllerName, 'syncTasktasks', args, $.extend(base, options));
-  },
-
-  /**
-   *
-   *
-   * @param {Object} args 请求参数
    * @param {integer} args.pageNo No comments found.
    * @param {integer} args.pageSize No comments found.
    * @param {string} args.jobIdOrTaskName No comments found.

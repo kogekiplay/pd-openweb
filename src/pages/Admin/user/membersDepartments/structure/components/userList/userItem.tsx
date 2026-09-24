@@ -32,7 +32,6 @@ class UserItem extends Component<any, any> {
       fullDepartmentInfo: {},
       password: '',
       optListVisible: false,
-      password: '',
       isTopUp: props.user.displayOrder > 0,
     };
   }
