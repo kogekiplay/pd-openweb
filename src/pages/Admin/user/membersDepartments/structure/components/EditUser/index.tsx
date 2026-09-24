@@ -112,7 +112,8 @@ export default class EditUser extends Component<any, any> {
         projectId,
       })
       .then(data => {
-        let { user = {}, jobs = [], workSites = [] } = data;
+        // 接口没给 user 时按「全部字段可缺」处理（null 属性不输出）
+        let { user = {} as Partial<HapApi.MD.Web.Ajax.ResultModel.User.UserModel>, jobs = [], workSites = [] } = data;
         this.setState({
           isUploading: false,
           userName: user.fullname || '',

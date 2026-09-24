@@ -194,7 +194,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetBaseInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetBaseInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetModel> {
     return mdyAPI('Worksheet', 'GetWorksheetBaseInfo', args, options);
   },
   /**
@@ -1046,7 +1049,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetOperationLogs: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetOperationLogs: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.GetWorksheetOpeationLogsResponse> {
     return mdyAPI('Worksheet', 'GetWorksheetOperationLogs', args, options);
   },
   /**

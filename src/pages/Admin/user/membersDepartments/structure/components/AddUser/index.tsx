@@ -171,16 +171,14 @@ export default class AddUser extends Component<any, any> {
           return;
         }
 
-        let user = {
+        const data: Partial<HapApi.MD.Web.Ajax.ResultModel.User.UserModel> = _.get(res, 'userCardModel.user') || {};
+        // 先放查询结果里的基本信息，再用用户卡片覆盖，最后补上部门 id 列表（和原来两步赋值的结果一样）
+        const user = {
           accountId: res.accountId,
           fullname: res.name,
           mobile: res.phone,
           email: res.email,
           avatar: res.avatar,
-        };
-        const data = _.get(res, 'userCardModel.user') || {};
-        user = {
-          ...user,
           ...data,
           departmentIds: (data.departmentInfos || []).map(it => it.departmentId),
         };

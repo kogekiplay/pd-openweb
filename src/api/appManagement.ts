@@ -496,7 +496,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getManagerApps: function (args: ApiArgs, options: ApiOptions = {}) {
+  getManagerApps: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Apk.AppForManagerModel[]> {
     return mdyAPI('AppManagement', 'GetManagerApps', args, options);
   },
   /**
@@ -616,7 +619,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppItems: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppItems: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<Record<string, HapApi.MD.Entity.Apk.EntityInfo[]>> {
     return mdyAPI('AppManagement', 'GetAppItems', args, options);
   },
   /**

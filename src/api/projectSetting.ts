@@ -7,7 +7,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSysColor: function (args: ApiArgs, options: ApiOptions = {}) {
+  getSysColor: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectSettingModel> {
     return mdyAPI('ProjectSetting', 'GetSysColor', args, options);
   },
   /**
@@ -62,7 +65,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrivacy: function (args: ApiArgs, options: ApiOptions = {}) {
+  getPrivacy: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetPrivacyModel> {
     return mdyAPI('ProjectSetting', 'GetPrivacy', args, options);
   },
   /**
@@ -173,7 +179,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOnlyManagerSettings: function (args: ApiArgs, options: ApiOptions = {}) {
+  getOnlyManagerSettings: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.OnlyManagerSettingsModel> {
     return mdyAPI('ProjectSetting', 'GetOnlyManagerSettings', args, options);
   },
   /**
@@ -769,7 +778,10 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserFieldSettings: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUserFieldSettings: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetUserFieldSettingsResponse> {
     return mdyAPI('ProjectSetting', 'GetUserFieldSettings', args, options);
   },
   /**

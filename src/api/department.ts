@@ -384,7 +384,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMembersAndSubs: function (args: ApiArgs, options: ApiOptions = {}) {
+  getMembersAndSubs: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Departments.ShortDepartmentAndUsersModel> {
     return mdyAPI('Department', 'GetMembersAndSubs', args, options);
   },
   /**

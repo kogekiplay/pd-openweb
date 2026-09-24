@@ -16,7 +16,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getContactInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getContactInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccountInfoModel> {
     return mdyAPI('Account', 'GetContactInfo', args, options);
   },
   /**
@@ -307,7 +310,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectList: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectList: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ListModel_ProjectModel> {
     return mdyAPI('Account', 'GetProjectList', args, options);
   },
   /**
@@ -399,7 +405,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserCard: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUserCard: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.UserCardModel> {
     return mdyAPI('Account', 'GetUserCard', args, options);
   },
   /**

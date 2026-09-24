@@ -100,7 +100,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAll: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAll: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Plugin.GetAllResponse> {
     return mdyAPI('Plugin', 'GetAll', args, options);
   },
   /**

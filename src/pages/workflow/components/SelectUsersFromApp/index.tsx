@@ -48,7 +48,8 @@ export default class SelectUsersFromApp extends Component<any, any> {
     const { selectAppId } = this.state;
 
     ajaxRequest.getManagerApps({ projectId: this.props.companyId }).then(result => {
-      result = result.map(({ appId, appName }: { appId?: string; [key: string]: any }) => {
+      // 接口给的是应用列表，这里转成下拉选项；另起一个变量，不复用 result（两者形状不同）
+      const appList = result.map(({ appId, appName }) => {
         return {
           value: appId,
           text: selectAppId === appId ? appName + _l('（本应用）') : appName,
@@ -56,11 +57,11 @@ export default class SelectUsersFromApp extends Component<any, any> {
         };
       });
 
-      this.setState({ appList: result });
+      this.setState({ appList });
 
-      if (!selectAppId && result.length) {
-        this.setState({ selectAppId: result[0].value });
-        this.getRolesByApp(result[0].value);
+      if (!selectAppId && appList.length) {
+        this.setState({ selectAppId: appList[0].value });
+        this.getRolesByApp(appList[0].value);
       }
     });
   }

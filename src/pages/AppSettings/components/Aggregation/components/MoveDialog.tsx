@@ -25,7 +25,8 @@ export default function MoveDialog(props) {
   }, []);
   const getApp = () => {
     ajaxRequest.getManagerApps({ projectId }).then(result => {
-      result = result.map(({ appId, appName }: { appId?: string; [key: string]: any }) => {
+      // 接口给的是应用列表，这里转成下拉选项；另起一个变量，不复用 result（两者形状不同）
+      const appList = result.map(({ appId, appName }) => {
         if (props.appId === appId) {
           appName += _l('（本应用）');
         }
@@ -35,7 +36,7 @@ export default function MoveDialog(props) {
           text: appName,
         };
       });
-      setState({ appList: result });
+      setState({ appList });
     });
   };
 

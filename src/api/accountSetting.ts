@@ -6,7 +6,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountSettings: function (args?: ApiArgs, options: ApiOptions = {}) {
+  getAccountSettings: function (
+    args?: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccountSettingModel> {
     return mdyAPI('AccountSetting', 'GetAccountSettings', args, options);
   },
   /**

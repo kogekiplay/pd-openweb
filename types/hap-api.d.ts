@@ -589,22 +589,12 @@ declare namespace HapApi.MD.Entity.Plugin {
     recentOperation?: HapApi.MD.Entity.Plugin.RecentOperationRecord | undefined;
     license?: HapApi.MD.Entity.Plugin.TradeLicense | undefined;
   }
-  interface PluginCommitRecord {
-    id?: string | undefined;
-    author?: HapApi.MD.Entity.Account.EasyAccount | undefined;
-    commitTime?: string | undefined;
-    content?: HapApi.MD.Entity.Plugin.CommitContent | undefined;
-    message?: string | undefined;
-    versionTags?: string[] | undefined;
-    beUsing: boolean;
-    pluginId?: string | undefined;
-  }
   interface PluginVersion {
     id?: string | undefined;
     versionCode?: string | undefined;
     versionDescription?: string | undefined;
     releaseTime?: string | undefined;
-    state: HapApi.MD.Entity.Plugin.ReleaseState;
+    state?: HapApi.MD.Entity.Plugin.ReleaseState | undefined;
     publisher?: HapApi.MD.Entity.Account.EasyAccount | undefined;
   }
   interface PluginDubugEnvironment {
@@ -633,10 +623,20 @@ declare namespace HapApi.MD.Entity.Plugin {
     status: number;
     projectType: number;
   }
+  interface PluginCommitRecord {
+    id?: string | undefined;
+    author?: HapApi.MD.Entity.Account.EasyAccount | undefined;
+    commitTime?: string | undefined;
+    content?: HapApi.MD.Entity.Plugin.CommitContent | undefined;
+    message?: string | undefined;
+    versionTags?: string[] | undefined;
+    beUsing: boolean;
+    pluginId?: string | undefined;
+  }
+  type ReleaseState = 0 | 1 | 2;
   interface CommitContent {
     codeUrl?: string | undefined;
   }
-  type ReleaseState = 0 | 1 | 2;
 }
 
 declare namespace HapApi.MD.Entity.ProjectSetting {
@@ -648,6 +648,13 @@ declare namespace HapApi.MD.Entity.ProjectSetting {
     system?: HapApi.MD.Entity.ProjectSetting.ChartColorItem[] | undefined;
     custom?: HapApi.MD.Entity.ProjectSetting.ChartColorItem[] | undefined;
   }
+  interface UserFieldSettings_DisplaySet {
+    typeId: number;
+    order: number;
+    type?: HapApi.MD.Entity.ProjectSetting.UserFieldSettings_DisplaySetType | undefined;
+  }
+  type UserFieldSettings_DisplaySetType =
+    0 | 1 | 3 | 4 | 5 | 6 | 7 | 8 | 51 | 52 | 53 | 54 | 55 | 56 | 57 | 58 | 59 | 60;
   interface ThemeColorItem {
     color?: string | undefined;
     enable: boolean;
@@ -959,6 +966,10 @@ declare namespace HapApi.MD.Entity.Worksheet {
     showRequestTypeFilter: boolean;
     showOperatorFilter: boolean;
   }
+  interface WorksheetOpeationLogItem {
+    opeartorInfo?: HapApi.MD.Entity.Account.EasyAccount | undefined;
+    operatContent?: HapApi.MD.Entity.Worksheet.WorksheetLogEntityOperatContent | undefined;
+  }
   interface WorksheetFilterSort {
     controlId?: string | undefined;
     dataType: HapApi.MD.Enum.Form.ControlType;
@@ -1039,6 +1050,17 @@ declare namespace HapApi.MD.Entity.Worksheet {
     viewId?: string | undefined;
     personalSetting?: string | undefined;
   }
+  interface WorksheetLogEntityOperatContent {
+    worksheetId?: string | undefined;
+    objectId?: string | undefined;
+    uniqueId?: string | undefined;
+    objectType: number;
+    type: number;
+    requestType: number;
+    createTime?: string | undefined;
+    logData?: HapApi.MD.Entity.Worksheet.WorksheetLogItemEntity[] | undefined;
+    extendParams?: string[] | undefined;
+  }
   interface RuleChildItem {
     isCustom: boolean;
     controlId?: string | undefined;
@@ -1057,6 +1079,17 @@ declare namespace HapApi.MD.Entity.Worksheet {
     cid?: string | undefined;
     subCid?: string | undefined;
     pid?: string | undefined;
+  }
+  interface WorksheetLogItemEntity {
+    id?: string | undefined;
+    name?: string | undefined;
+    editType: number;
+    type: number;
+    oldValue?: string | undefined;
+    oldText?: string | undefined;
+    newValue?: string | undefined;
+    newText?: string | undefined;
+    isDeleted: boolean;
   }
 }
 
@@ -1150,6 +1183,9 @@ declare namespace HapApi.MD.Entity.Worksheet.PublicForm {
 
 declare namespace HapApi.MD.Enum {
   type ProjectIntergrationType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 100;
+  type CommonAppShowType = 1 | 2;
+  type CommonAppOpenType = 1 | 2;
+  type MessageListShowType = 1 | 2;
   type ResultCode =
     | 0
     | 1
@@ -1245,6 +1281,10 @@ declare namespace HapApi.MD.Enum {
   type GroupStatus = 0 | 1 | 2 | 3 | -1;
   type GroupFollowedStatus = 0 | 1 | 2;
   type GroupUserRole = 0 | 1;
+}
+
+declare namespace HapApi.MD.Enum.Account {
+  type UserOrgState = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 }
 
 declare namespace HapApi.MD.Enum.ActionLog {
@@ -1462,6 +1502,46 @@ declare namespace HapApi.MD.Web.Ajax.Enum {
 }
 
 declare namespace HapApi.MD.Web.Ajax.ResultModel {
+  /** 所有返回列表的Model */
+  interface ListModel_ProjectModel {
+    resultCode?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    list?: HapApi.MD.Web.Ajax.ResultModel.Project.ProjectModel[] | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    allCount?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    pageIndex?: number | undefined;
+  }
+  /** 所有返回列表的Model */
+  interface ListModel_JobModel {
+    resultCode?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    list?: HapApi.MD.Web.Ajax.ResultModel.Project.JobModel[] | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    allCount?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    pageIndex?: number | undefined;
+  }
+  /** 所有返回列表的Model */
+  interface ListModel_UserModel {
+    resultCode?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    list?: HapApi.MD.Web.Ajax.ResultModel.User.UserModel[] | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    allCount?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    pageIndex?: number | undefined;
+  }
+  /** 所有返回列表的Model */
+  interface ListModel_DepartmentModel {
+    resultCode?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    list?: HapApi.MD.Web.Ajax.ResultModel.Project.DepartmentModel[] | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    allCount?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    pageIndex?: number | undefined;
+  }
   interface IdNameMap {
     id?: string | undefined;
     name?: string | undefined;
@@ -1469,6 +1549,45 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel {
 }
 
 declare namespace HapApi.MD.Web.Ajax.ResultModel.Account {
+  interface AccountInfoModel {
+    /** 账户编号 */
+    accountId?: string | undefined;
+    /** 手机号 */
+    mobilePhone?: string | undefined;
+    /** 邮箱 */
+    email?: string | undefined;
+    /** 手机号是否私密 */
+    isPrivateMobile?: boolean | undefined;
+    /** 邮箱是否私密 */
+    isPrivateEmail?: boolean | undefined;
+    /** 邮箱是否已经验证 */
+    isVerify: boolean;
+    /** 是否三方集成账号 */
+    isIntergration: boolean;
+    /** 是否设置过凭证 */
+    isNullCredential: boolean;
+    /** 用户部门集合 */
+    departments?: string[] | undefined;
+    /** 认证类型 */
+    authType: number;
+    onStatusOption?: HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    accountStatus?: number | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    grade?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isHavePrj?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    imQQ?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    snsSina?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    snsQQ?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    snsLinkedin?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    weiXin?: string | undefined;
+  }
   interface AccounContacttInfoModel {
     /** 账户编号 */
     accountId?: string | undefined;
@@ -1476,6 +1595,135 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Account {
     mobilePhone?: string | undefined;
     /** 邮箱 */
     email?: string | undefined;
+  }
+  interface AccountSettingModel {
+    /** 手机号是否大家可见，false：大家都可见， true：仅自己可见 */
+    isPrivateMobile?: boolean | undefined;
+    /** 邮箱是否大家可见，false： 大家都可见，true：仅自己可见 */
+    isPrivateEmail?: boolean | undefined;
+    /** 是否开启两步验证 */
+    isTwoauthentication?: boolean | undefined;
+    /** 是否开启两步验证(手机号) */
+    twoAuthenticationMobilePhoneEnabled?: boolean | undefined;
+    /** 是否开启两步验证(邮箱) */
+    twoAuthenticationEmailEnabled?: boolean | undefined;
+    /** 是否开启两步验证(TOTP) */
+    twoAuthenticationTotpEnabled?: boolean | undefined;
+    /** 是否开启消息提示音 */
+    isOpenMessageSound?: boolean | undefined;
+    /** 是否开启消息闪烁 */
+    isOpenMessageTwinkle?: boolean | undefined;
+    /** 允许多个设备同步登录 */
+    allowMultipleDevicesUse: boolean;
+    /** 返回首页方式 */
+    backHomepageWay: number;
+    /** 应用首选语言 */
+    appLang?: string | undefined;
+    /** 用户最常协作联系人方式 0：默认为系统；1：自定义 */
+    addressBookOftenMetioned: number;
+    /** 是否显示MingoAI */
+    isOpenMingoAI: boolean;
+    /** 是否显示消息 此版本暂不允许用户关闭 */
+    isOpenMessage: boolean;
+    /** 是否显示搜索 */
+    isOpenSearch: boolean;
+    /** 是否显示收藏 */
+    isOpenFavorite: boolean;
+    /** 是否显示工具名称 */
+    isShowToolName: boolean;
+    /** 消息列表 */
+    isOpenMessageList: boolean;
+    /** 常用应用 */
+    isOpenCommonApp: boolean;
+    commonAppShowType: HapApi.MD.Enum.CommonAppShowType;
+    commonAppOpenType: HapApi.MD.Enum.CommonAppOpenType;
+    messageListShowType: HapApi.MD.Enum.MessageListShowType;
+    /** （swagger 里没有，真实响应里有） */
+    isEmailSystemMsg?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isEmailApps?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    openDeskNotice?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    openWeixinLogin?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isHasWeixin?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    openSettingPanel?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isHasEmail?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isHasPhone?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    joinFriendMode?: number | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    lang?: number | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    map?: number | undefined;
+  }
+  interface AccountSimpleModel {
+    /** 账户Id */
+    accountId?: string | undefined;
+    /** 邮箱 */
+    email?: string | undefined;
+    /** 手机号 */
+    mobilePhone?: string | undefined;
+    /** 真实姓名 */
+    fullname?: string | undefined;
+    /** 原始头像 */
+    avatar?: string | undefined;
+    /** 公司名称（个人信息） */
+    companyName?: string | undefined;
+    /** 职业 */
+    profession?: string | undefined;
+    /** 是否手机号 不可见 */
+    isPrivateMobile?: boolean | undefined;
+    /** 是否邮箱 不可见 */
+    isPrivateEmail?: boolean | undefined;
+    /** 是否是当前用户的联系人 */
+    isContact: boolean;
+    accountStatus: HapApi.MD.Enum.AccountStatus;
+    /** 当前 组织名称 */
+    currentProjectName?: string | undefined;
+    /** 当前 组织主部门名称 */
+    currentDepartmentName?: string | undefined;
+    /** 当前 组织主部门全称 */
+    currentDepartmentFullName?: string | undefined;
+    /** 当前 组织主部门Id */
+    currentDepartmentId?: string | undefined;
+    /** 当前 组织职位 */
+    currentJobTitleName?: string | undefined;
+    /** 当前 组织工号 */
+    currentJobNumber?: string | undefined;
+    /** 当前 组织工作地点 */
+    currentWorkSiteName?: string | undefined;
+    /** 当前 组织工作电话 */
+    currentWorkPhone?: string | undefined;
+    /** 外部用户 配置字段值 */
+    portalValues?: HapApi.System.Collections.Generic.KeyValuePair_String_String[] | undefined;
+    /** 名片层 资料显示 字段 */
+    cardSetList?: HapApi.MD.Entity.ProjectSetting.UserFieldSettings_DisplaySet[] | undefined;
+    displayFieldForName: HapApi.MD.Entity.ProjectSetting.UserFieldSettings_DisplaySetType;
+    onStatusOption?: HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption | undefined;
+    /** 部门信息 */
+    departmentInfos?: HapApi.MD.Web.Ajax.ResultModel.Project.DepartmentModel[] | undefined;
+    /** 职位信息 */
+    jobInfos?: HapApi.MD.Web.Ajax.ResultModel.Project.JobModel[] | undefined;
+  }
+  /** 获取用户在组织中的状态 */
+  interface GetUserOrgStateResponse {
+    userState: HapApi.MD.Enum.Account.UserOrgState;
+    /** 用户Id */
+    accountId?: string | undefined;
+    /** 姓名 */
+    name?: string | undefined;
+    /** 头像 */
+    avatar?: string | undefined;
+    /** 手机号 */
+    phone?: string | undefined;
+    /** 邮箱 */
+    email?: string | undefined;
+    userCardModel?: HapApi.MD.Web.Ajax.ResultModel.User.UserCardModel | undefined;
   }
 }
 
@@ -1689,25 +1937,6 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.App {
     /** 最近使用的应用ids（ids已排序） */
     recentAppIds?: string[] | undefined;
   }
-  interface HomePlatformSettingDto {
-    /** 组织id */
-    projectId?: string | undefined;
-    /** 宣传栏 */
-    bulletinBoards?: HapApi.MD.Web.Ajax.ResultModel.App.BulletinBoardDto[] | undefined;
-    /** 颜色 */
-    color?: string | undefined;
-    /** 标语 */
-    slogan?: string | undefined;
-    /** 组织logo */
-    logo?: string | undefined;
-    /** logo开关 */
-    logoSwitch: boolean;
-    /** 宣传栏目开关 */
-    boardSwitch: boolean;
-    /** logo高度 */
-    logoHeight: number;
-    advancedSetting?: Record<string, string> | undefined;
-  }
   interface AppBaseDto {
     /** 网络id */
     projectId?: string | undefined;
@@ -1729,7 +1958,7 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.App {
     /** 是否标记 */
     isMarked: boolean;
     avatarType: number;
-    permissionType: HapApi.MD.Enum.Roles.AppRole.AppRoleType;
+    permissionType?: HapApi.MD.Enum.Roles.AppRole.AppRoleType | undefined;
     /** 商品包id */
     goodsId?: string | undefined;
     /** 是否锁定 */
@@ -1765,6 +1994,25 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.App {
     selectAppItmeType: number;
     appStatus: number;
     exported: boolean;
+  }
+  interface HomePlatformSettingDto {
+    /** 组织id */
+    projectId?: string | undefined;
+    /** 宣传栏 */
+    bulletinBoards?: HapApi.MD.Web.Ajax.ResultModel.App.BulletinBoardDto[] | undefined;
+    /** 颜色 */
+    color?: string | undefined;
+    /** 标语 */
+    slogan?: string | undefined;
+    /** 组织logo */
+    logo?: string | undefined;
+    /** logo开关 */
+    logoSwitch: boolean;
+    /** 宣传栏目开关 */
+    boardSwitch: boolean;
+    /** logo高度 */
+    logoHeight: number;
+    advancedSetting?: Record<string, string> | undefined;
   }
   interface LogModel {
     id?: string | undefined;
@@ -2231,6 +2479,12 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Departments {
     /** 部门 */
     departments?: HapApi.MD.Web.Ajax.ResultModel.Departments.SearchDeptAndUserListModel_ShortDepartment[] | undefined;
   }
+  interface ShortDepartmentAndUsersModel {
+    /** 部门成员信息 */
+    members?: HapApi.MD.Web.Ajax.ResultModel.Departments.ShortDepartmentAndUsersModel_Short2User[] | undefined;
+    /** 下及部门信息 */
+    subDepts?: HapApi.MD.Web.Ajax.ResultModel.Departments.ShortDepartmentAndUsersModel_Short2Department[] | undefined;
+  }
   interface SearchDeptAndUserListModel_ShortUser {
     /** 用户ID */
     accountId?: string | undefined;
@@ -2266,6 +2520,27 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Departments {
     parent?: HapApi.MD.Web.Ajax.ResultModel.Departments.SearchDeptAndUserListModel_ShortDepartment | undefined;
     /** 子部门集 */
     subs?: HapApi.MD.Web.Ajax.ResultModel.Departments.SearchDeptAndUserListModel_ShortDepartment[] | undefined;
+  }
+  interface ShortDepartmentAndUsersModel_Short2User {
+    /** 用户ID */
+    accountId?: string | undefined;
+    /** 头像 */
+    avatar?: string | undefined;
+    /** 名称 */
+    fullname?: string | undefined;
+    job?: string | undefined;
+    department?: string | undefined;
+    onStatusOption?: HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption | undefined;
+  }
+  interface ShortDepartmentAndUsersModel_Short2Department {
+    /** 部门Id */
+    id?: string | undefined;
+    /** 部门名称 */
+    name?: string | undefined;
+  }
+  interface DepartmentJobModel {
+    department?: HapApi.MD.Web.Ajax.ResultModel.IdNameMap | undefined;
+    jobs?: HapApi.MD.Web.Ajax.ResultModel.IdNameMap[] | undefined;
   }
 }
 
@@ -2378,6 +2653,21 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Personals {
     /** 可选的 自定义的 状态项 */
     statusOptions?: HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption[] | undefined;
   }
+  interface PStatusOption {
+    /** Id */
+    statusId?: string | undefined;
+    /** 图标 */
+    icon?: string | undefined;
+    /** 备注 */
+    remark?: string | undefined;
+    /** 起始时间 */
+    beginTime?: string | undefined;
+    /** 结束时间 */
+    endTime?: string | undefined;
+    durationOption: HapApi.MD.BasicService.Duration_Option;
+    /** （swagger 里没有，真实响应里有） */
+    accountId?: string | undefined;
+  }
   interface OnPStatusOption {
     /** Id */
     statusId?: string | undefined;
@@ -2393,18 +2683,14 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Personals {
     /** 用户Id */
     accountId?: string | undefined;
   }
-  interface PStatusOption {
-    /** Id */
-    statusId?: string | undefined;
-    /** 图标 */
-    icon?: string | undefined;
-    /** 备注 */
-    remark?: string | undefined;
-    /** 起始时间 */
-    beginTime?: string | undefined;
-    /** 结束时间 */
-    endTime?: string | undefined;
-    durationOption: HapApi.MD.BasicService.Duration_Option;
+}
+
+declare namespace HapApi.MD.Web.Ajax.ResultModel.Plugin {
+  interface GetAllResponse {
+    /** 我创建的 */
+    myPlugins?: HapApi.MD.Entity.Plugin.PluginModel[] | undefined;
+    /** 组织插件 */
+    orgPlugins?: HapApi.MD.Entity.Plugin.PluginModel[] | undefined;
   }
 }
 
@@ -2559,6 +2845,31 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Project {
     closedOperatorName?: string | undefined;
     privacyModel?: HapApi.MD.Web.Ajax.ResultModel.Project.GetPrivacyModel | undefined;
   }
+  interface GetProjectInfoModel {
+    /** 组织ID */
+    projectId?: string | undefined;
+    /** 组织名称，只在发票抬头用，其他地方用 companyDisplayName */
+    companyName?: string | undefined;
+    /** 英文名 */
+    companyNameEnglish?: string | undefined;
+    /** 呈现名称 */
+    companyDisplayName?: string | undefined;
+    /** (地理位置)国家地区-编码 */
+    geoCountryRegionCode?: string | undefined;
+    /** 国家地区名称 */
+    geoCountryRegionName?: string | undefined;
+    /** 时区偏好 */
+    timeZone?: string | undefined;
+    timeZoneName?: string | undefined;
+    privacyModel?: HapApi.MD.Web.Ajax.ResultModel.Project.GetPrivacyModel | undefined;
+    /** 地区 */
+    geographyId?: number | undefined;
+    /** 行业 */
+    industryId?: number | undefined;
+    /** 企业认证类型 */
+    authType: number;
+    projectStatus: HapApi.MD.Web.Ajax.Enum.ProjectStatus;
+  }
   /** 组织资源限制信息（限额 + 当前用量） */
   interface ProjectLimitationModel {
     /** 组织ID */
@@ -2567,6 +2878,81 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Project {
     limitWorksheetCount: number;
     /** 当前组织下已有的工作表数量 */
     effectiveWorksheetCount: number;
+  }
+  /** 二级域名首页信息 */
+  interface ProjectSubDomainModel {
+    /** 网络Id */
+    projectId?: string | undefined;
+    /** 网络名称 */
+    companyName?: string | undefined;
+    /** 二级域名背景图 */
+    homeImage?: string | undefined;
+    /** 是否默认Logo（代表未设置Logo） */
+    isDefaultLogo: boolean;
+    /** 企业Logo */
+    logo?: string | undefined;
+    /** 是否开启了LDAP */
+    openLDAP: boolean;
+    /** Ldap 自定义显示名称 */
+    ldapName?: string | undefined;
+    /** Ldap 自定义显示名称 */
+    ldapIcon?: string | undefined;
+    /** 是否隐藏注册入口 */
+    hideRegister: boolean;
+    /** 是否开启平台登录 */
+    isOpenSystemLogin: boolean;
+    /** 登录账户显示名称 类型（10=用户名、12=手机号、13=邮箱、100=自定义） */
+    accountTxtType: number;
+    /** 登录账户显示名称 自定义值（自定义 类型时的 值） */
+    accountTxt?: string | undefined;
+    /** 是否是国外lark */
+    isLark: boolean;
+    /** （swagger 里没有，真实响应里有） */
+    projectIntergrationType?: number | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    intergrationScanEnabled?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    entraOnlyLogin?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isOpenSso?: boolean | undefined;
+  }
+  /** 网络设置 */
+  interface ProjectSettingModel {
+    /** 是否默认Logo（代表未设置Logo） */
+    isDefaultLogo: boolean;
+    /** 企业账号 */
+    regCode?: string | undefined;
+    balance?: number | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    logo?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    homeImage?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    allowStructureSelfEdit?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    onlyManagerCreateApp?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    autoPurchaseWorkflowExtPack?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    enabledWatermark?: boolean | undefined;
+  }
+  interface GetPrivacyModel {
+    /** 企业账号 */
+    regCode?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    userAuditEnabled?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    userFillCompanyEnabled?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    userFillWorkSiteEnabled?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    userFillJobNumberEnabled?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    userFillDepartmentEnabled?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    userFillJobEnabled?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    allowProjectCodeJoin?: boolean | undefined;
   }
   interface GetStructureForAllModel {
     /** 允许全员可见组织结构 */
@@ -2592,10 +2978,60 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Project {
     autoPurchaseExternalUserExtPack: boolean;
     balance?: number | undefined;
   }
+  /** 系统允许设置 */
+  interface OnlyManagerSettingsModel {
+    /** 是否 只允许管理员创建应用 */
+    apiIntgOnlyManager: boolean;
+    /** 是否 只允许管理员创建应用 */
+    dataPipeOnlyManager: boolean;
+    /** 是否 只允许管理员创建应用 */
+    pluginsOnlyManager: boolean;
+    /** 是否 开启超级搜索 */
+    superSearchOnlyManager: boolean;
+    balanceLimitNotice?: HapApi.MD.Web.Ajax.ResultModel.Project.BalanceLimitNoticeModel | undefined;
+    /** 是否允许 MingoAgent（AI应用搭建）调用扣费（默认开启，老组织无配置时为 true） */
+    allowMingoAgentCharge: boolean;
+    /** （swagger 里没有，真实响应里有） */
+    onlyManagerCreateApp?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    onlyManagerDeleteApp?: boolean | undefined;
+  }
   /** 获取自定义颜色response */
   interface GetColorSettingsResponse {
     themeColor?: HapApi.MD.Entity.ProjectSetting.ColorSetting_ThemeColorItem | undefined;
     chartColor?: HapApi.MD.Entity.ProjectSetting.ColorSetting_ChartColorItem | undefined;
+  }
+  interface GetUserFieldSettingsResponse {
+    /** 个人 资料显示 字段 */
+    psersonalSetList?: HapApi.MD.Entity.ProjectSetting.UserFieldSettings_DisplaySet[] | undefined;
+    /** 名片层 资料显示 字段 */
+    cardSetList?: HapApi.MD.Entity.ProjectSetting.UserFieldSettings_DisplaySet[] | undefined;
+    displayFieldForName: HapApi.MD.Entity.ProjectSetting.UserFieldSettings_DisplaySetType;
+  }
+  /** 工作地点 */
+  interface WorkSiteModel {
+    /** （swagger 里没有，真实响应里有） */
+    workSiteId?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    workSiteName?: string | undefined;
+  }
+  /** 部门 */
+  interface DepartmentModel {
+    /** 是否 停用 */
+    disabled: boolean;
+    /** （swagger 里没有，真实响应里有） */
+    departmentId?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    departmentName?: string | undefined;
+  }
+  /** 职位 */
+  interface JobModel {
+    /** （swagger 里没有，真实响应里有） */
+    jobId?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    jobName?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    userCount?: number | undefined;
   }
   interface AccountDepartmentsMap {
     accountId?: string | undefined;
@@ -2611,9 +3047,16 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Project {
     endDate?: string | undefined;
     version?: HapApi.MD.Web.Ajax.ResultModel.Order.VersionModel | undefined;
   }
-  interface GetPrivacyModel {
-    /** 企业账号 */
-    regCode?: string | undefined;
+  /** 余额告警提醒设置 */
+  interface BalanceLimitNoticeModel {
+    /** 是否开启余额告警提醒 */
+    noticeEnabled: boolean;
+    /** 提醒余额 */
+    balanceLimit: number;
+    /** 提醒用户列表 */
+    noticeAccounts?: HapApi.MD.Entity.Account.EasyAccount[] | undefined;
+    /** 提醒方式 1：系统消息；2：短信；3：邮件 */
+    noticeTypes?: string[] | undefined;
   }
   interface AccountDepartmentsMap_IdNameMap {
     id?: string | undefined;
@@ -2664,6 +3107,13 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Roles {
     /** 是否开启 调试 */
     isDebug: boolean;
   }
+  interface RoleStandardPermissionModel {
+    roleId?: string | undefined;
+    roleName?: string | undefined;
+    /** 是否 允许添加成员 */
+    allowAddMembers: boolean;
+    permissions?: HapApi.MD.Web.Ajax.ResultModel.Roles.StandardPermission[] | undefined;
+  }
   /** 用户 网络权限信息 */
   interface ProjectPermissionsByUserModel {
     /** 用户 在该企业的网络权限 */
@@ -2679,6 +3129,18 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Roles {
   interface MyPermissionsModel {
     /** 拥有的 权限Ids */
     permissionIds?: number[] | undefined;
+  }
+  interface StandardPermission {
+    /** 权限Id */
+    permissionId: number;
+    /** 权限名称 */
+    permissionName?: string | undefined;
+    /** 角色 描述 */
+    description?: string | undefined;
+    /** 是否 当前角色 拥有的权限 */
+    isRolePermission: boolean;
+    /** 子权限 （可能为 空） */
+    subPermission?: HapApi.MD.Web.Ajax.ResultModel.Roles.StandardPermission[] | undefined;
   }
 }
 
@@ -2707,6 +3169,78 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.UsageAnalysis {
     queryDate?: string | undefined;
     /** 查询状态 查询中=1，查询完成=2，查询失败=3 */
     queryStatus: number;
+  }
+}
+
+declare namespace HapApi.MD.Web.Ajax.ResultModel.User {
+  /** 用户加入网络 */
+  interface UserCardModel {
+    /** 工作地点 */
+    workSites?: HapApi.MD.Web.Ajax.ResultModel.Project.WorkSiteModel[] | undefined;
+    /** 部门 */
+    departments?: HapApi.MD.Web.Ajax.ResultModel.Project.DepartmentModel[] | undefined;
+    /** 工作地点 */
+    jobs?: HapApi.MD.Web.Ajax.ResultModel.Project.JobModel[] | undefined;
+    user?: HapApi.MD.Web.Ajax.ResultModel.User.UserModel | undefined;
+  }
+  interface ContactUserModel {
+    oftenUsers?: HapApi.MD.Web.Ajax.ResultModel.ListModel_UserModel | undefined;
+    users?: HapApi.MD.Web.Ajax.ResultModel.ListModel_UserModel | undefined;
+    departments?: HapApi.MD.Web.Ajax.ResultModel.ListModel_DepartmentModel | undefined;
+  }
+  interface UserModel {
+    /** 账号编号 */
+    accountId?: string | undefined;
+    /** 头像 */
+    avatar?: string | undefined;
+    /** 手机号 */
+    mobilePhone?: string | undefined;
+    /** 邮箱 */
+    email?: string | undefined;
+    onStatusOption?: HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption | undefined;
+    jobIds?: string[] | undefined;
+    /** 职位信息 */
+    jobInfos?: HapApi.MD.Web.Ajax.ResultModel.Project.JobModel[] | undefined;
+    /** 部门名称 */
+    department?: string | undefined;
+    /** 部门信息 */
+    departmentInfos?: HapApi.MD.Web.Ajax.ResultModel.Project.DepartmentModel[] | undefined;
+    /** 组织角色信息 */
+    orgRoles?: HapApi.MD.Web.Ajax.ResultModel.IdNameMap[] | undefined;
+    /** 置顶的 显示顺序（ 大于0 则代表 置顶中） */
+    displayOrder: number;
+    /** 手机号是否私密 */
+    isPrivateMobile?: boolean | undefined;
+    /** 邮箱是否私密 */
+    isPrivateEmail?: boolean | undefined;
+    /** 是否是部门负责人 */
+    isDepartmentChargeUser?: boolean | undefined;
+    /** 是否是外部协作用户 */
+    isRelationShip?: boolean | undefined;
+    /** 是否多任职 */
+    useMultiJobs: boolean;
+    /** 多任职，部门职位信息 */
+    departmentJobInfos?: HapApi.MD.Web.Ajax.ResultModel.Departments.DepartmentJobModel[] | undefined;
+    /** 下属列表 */
+    subordinates?: HapApi.MD.Web.Ajax.ResultModel.User.UserModel[] | undefined;
+    /** 上级列表 */
+    parents?: HapApi.MD.Web.Ajax.ResultModel.User.UserModel[] | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    fullname?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    companyName?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    contactPhone?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    workSite?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    workSiteId?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    jobNumber?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    projectId?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isAdmin?: boolean | undefined;
   }
 }
 
@@ -2809,6 +3343,17 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Worksheet {
     projectId?: string | undefined;
     appId?: string | undefined;
     isCrossApp: boolean;
+  }
+  /** 获取工作表日志响应model */
+  interface GetWorksheetOpeationLogsResponse {
+    /** 日志 */
+    logs?: HapApi.MD.Entity.Worksheet.WorksheetOpeationLogItem[] | undefined;
+    /** 最后标记时间 */
+    lastMark?: string | undefined;
+    /** 记录标题 */
+    recordTitle?: string | undefined;
+    /** 是否要获取老的日志接口的标识量，true表示需要开始调用老的日志接口了 */
+    flag: boolean;
   }
   /** 获取 工作表 索引字段配置 */
   interface GetRowIndexesResult {

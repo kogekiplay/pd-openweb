@@ -416,7 +416,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetProjectInfoModel> {
     return mdyAPI('Project', 'GetProjectInfo', args, options);
   },
   /**
@@ -465,7 +468,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectSubDomainInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectSubDomainInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectSubDomainModel> {
     return mdyAPI('Project', 'GetProjectSubDomainInfo', args, options);
   },
   /**

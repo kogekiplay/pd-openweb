@@ -635,7 +635,7 @@ export default {
       appSectionId?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Entity.Apk.AppSectionDomainModel> {
     return mdyAPI('HomeApp', 'GetAppSectionDetail', args, options);
   },
   /**
@@ -1157,7 +1157,7 @@ export default {
       keywords?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto[]> {
     return mdyAPI('HomeApp', 'SearchMyApps', args, options);
   },
   /**

@@ -48,7 +48,10 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getRoleStandardPermission: function (args: ApiArgs, options: ApiOptions = {}) {
+  getRoleStandardPermission: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Roles.RoleStandardPermissionModel> {
     return mdyAPI('Role', 'GetRoleStandardPermission', args, options);
   },
   /**
@@ -61,7 +64,10 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getRoleHRPermission: function (args: ApiArgs, options: ApiOptions = {}) {
+  getRoleHRPermission: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Roles.RoleStandardPermissionModel> {
     return mdyAPI('Role', 'GetRoleHRPermission', args, options);
   },
   /**

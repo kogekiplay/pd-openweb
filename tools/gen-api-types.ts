@@ -24,7 +24,7 @@
  * 所以只给 VERIFIED 里的接口标类型 —— 每一条都拿真实响应比过键名（只看键、不看值），比对结果记在旁边。
  * 要加接口：先在已登录的页面里 `mdyAPI(controller, action, args)` 取一次，对照 schema 的属性名，再加进来。
  *
- * 用法：node tools/gen-api-types.ts --swagger <swagger-wwwapi-v8.0.0.0.json> [--dry]
+ * 用法：node tools/gen-api-types.ts --swagger <swagger-wwwapi-v8.0.0.0.json> [--dry] [--dump-patches <out.json>]
  * 快照不入库（它等于整份内部接口的地图，见契约参考文档 §2），重新生成时从仓库外指给它。
  */
 const fs = require('fs');
@@ -190,6 +190,33 @@ const VERIFIED = new Set([
   'FixedData/CheckSensitive',
   'FixedData/GetRegionConfigInfos',
   'FixedData/LoadTimeZones',
+  // 第四批（同日，第二轮取样）：先按第三批的差异补了 SCHEMA_PATCHES 和泛型壳（GENERIC_SHELLS），再对照「修正后」的 schema
+  // 复核；缺 id 参数的也照调（只读接口缺参数只会报错或返回空）。收进来的要么所有 id 参数都填得上，要么至少比到了两层对象。
+  'User/GetAccountBaseInfo',
+  'AppManagement/GetManagerApps',
+  'AccountSetting/GetAccountSettings',
+  'Job/GetJobs',
+  'ProjectSetting/GetSysColor',
+  'HomeApp/GetAppSectionDetail',
+  'ProjectSetting/GetPrivacy',
+  'Project/GetProjectInfo',
+  'ProjectSetting/GetOnlyManagerSettings',
+  'Project/GetProjectSubDomainInfo',
+  'Account/GetUserCard',
+  'Account/GetProjectList',
+  'HomeApp/SearchMyApps',
+  'User/GetProjectContactUserListByApp',
+  'Department/GetMembersAndSubs',
+  'Worksheet/GetWorksheetOperationLogs',
+  'Worksheet/GetWorksheetBaseInfo',
+  'Plugin/GetAll',
+  'AppManagement/GetAppItems',
+  'Role/GetRoleStandardPermission',
+  'Role/GetRoleHRPermission',
+  'User/GetUserCard',
+  'User/GetUserOrgState',
+  'ProjectSetting/GetUserFieldSettings',
+  'Account/GetContactInfo',
 ]);
 
 /**
@@ -198,7 +225,7 @@ const VERIFIED = new Set([
  */
 const SCHEMA_PATCHES: Record<
   string,
-  { rename?: Record<string, string>; required?: string[]; add?: Record<string, string> }
+  { rename?: Record<string, string>; required?: string[]; optional?: string[]; add?: Record<string, string> }
 > = {
   // GetAppItems 的项、GetApp 里分组下的 workSheetInfo[]：实际是 workSheetId / workSheetName
   'MD.Entity.Apk.EntityInfo': { rename: { id: 'workSheetId', name: 'workSheetName' } },
@@ -223,7 +250,137 @@ const SCHEMA_PATCHES: Record<
   'MD.Web.Ajax.ResultModel.Roles.ProjectPermissionsByUserModel': {
     add: { isLark: 'boolean | undefined' },
   },
+  // ── 第三批批量取样核对出来的（2026-09-24）：swagger 漏掉的属性，只补取样里真出现过、值是基本类型的 ──
+  // 部门 / 职位 / 工作地点：swagger 里几乎是空壳（部门只有 disabled，职位和工作地点一个属性都没有）
+  'MD.Web.Ajax.ResultModel.Project.DepartmentModel': {
+    add: { departmentId: 'string | undefined', departmentName: 'string | undefined' },
+  },
+  'MD.Web.Ajax.ResultModel.Project.JobModel': {
+    add: { jobId: 'string | undefined', jobName: 'string | undefined', userCount: 'number | undefined' },
+  },
+  'MD.Web.Ajax.ResultModel.Project.WorkSiteModel': {
+    add: { workSiteId: 'string | undefined', workSiteName: 'string | undefined' },
+  },
+  // 用户卡片里的 user：swagger 缺姓名、公司、联系电话、工号等（两个 GetUserCard 给的略有差别：一个给工作地点名称、一个给 id）
+  'MD.Web.Ajax.ResultModel.User.UserModel': {
+    add: {
+      fullname: 'string | undefined',
+      companyName: 'string | undefined',
+      contactPhone: 'string | undefined',
+      workSite: 'string | undefined',
+      workSiteId: 'string | undefined',
+      jobNumber: 'string | undefined',
+      projectId: 'string | undefined',
+      isAdmin: 'boolean | undefined',
+    },
+  },
+  // OnPStatusOption 的 schema 有 accountId，PStatusOption 的漏了（取样里有）
+  'MD.Web.Ajax.ResultModel.Personals.PStatusOption': { add: { accountId: 'string | undefined' } },
+  // 个人 / 组织设置里的开关：swagger 缺这些
+  'MD.Web.Ajax.ResultModel.Account.AccountSettingModel': {
+    add: {
+      isEmailSystemMsg: 'boolean | undefined',
+      isEmailApps: 'boolean | undefined',
+      openDeskNotice: 'boolean | undefined',
+      openWeixinLogin: 'boolean | undefined',
+      isHasWeixin: 'boolean | undefined',
+      openSettingPanel: 'boolean | undefined',
+      isHasEmail: 'boolean | undefined',
+      isHasPhone: 'boolean | undefined',
+      joinFriendMode: 'number | undefined',
+      lang: 'number | undefined',
+      map: 'number | undefined',
+    },
+  },
+  'MD.Web.Ajax.ResultModel.Project.ProjectSettingModel': {
+    add: {
+      logo: 'string | undefined',
+      homeImage: 'string | undefined',
+      allowStructureSelfEdit: 'boolean | undefined',
+      onlyManagerCreateApp: 'boolean | undefined',
+      autoPurchaseWorkflowExtPack: 'boolean | undefined',
+      enabledWatermark: 'boolean | undefined',
+    },
+  },
+  'MD.Web.Ajax.ResultModel.Project.GetPrivacyModel': {
+    add: {
+      userAuditEnabled: 'boolean | undefined',
+      userFillCompanyEnabled: 'boolean | undefined',
+      userFillWorkSiteEnabled: 'boolean | undefined',
+      userFillJobNumberEnabled: 'boolean | undefined',
+      userFillDepartmentEnabled: 'boolean | undefined',
+      userFillJobEnabled: 'boolean | undefined',
+      allowProjectCodeJoin: 'boolean | undefined',
+    },
+  },
+  'MD.Web.Ajax.ResultModel.Project.OnlyManagerSettingsModel': {
+    add: { onlyManagerCreateApp: 'boolean | undefined', onlyManagerDeleteApp: 'boolean | undefined' },
+  },
+  'MD.Web.Ajax.ResultModel.Project.ProjectSubDomainModel': {
+    add: {
+      projectIntergrationType: 'number | undefined',
+      intergrationScanEnabled: 'boolean | undefined',
+      entraOnlyLogin: 'boolean | undefined',
+      isOpenSso: 'boolean | undefined',
+    },
+  },
+  // 账号信息（GetAccountInfo / GetContactInfo）：workBind 是个对象、形状没核对，不写
+  'MD.Web.Ajax.ResultModel.Account.AccountInfoModel': {
+    add: {
+      accountStatus: 'number | undefined',
+      grade: 'string | undefined',
+      isHavePrj: 'boolean | undefined',
+      imQQ: 'string | undefined',
+      snsSina: 'string | undefined',
+      snsQQ: 'string | undefined',
+      snsLinkedin: 'string | undefined',
+      weiXin: 'string | undefined',
+    },
+  },
+  // 标着不可空（枚举），取样里却一次都没出现
+  'MD.Web.Ajax.ResultModel.App.AppBaseDto': { optional: ['permissionType'] },
+  'MD.Entity.Plugin.PluginVersion': { optional: ['state'] },
+  'MD.Entity.ProjectSetting.UserFieldSettings+DisplaySet': { optional: ['type'] },
 };
+
+/**
+ * 泛型壳：swagger 里 ListModel<T> 之类只有 resultCode，真实响应带列表和总数（第三批取样里 16 个接口都是这样）。
+ * 按泛型实参 T 补上；T 取实参方括号里的第一段（类型全名）。
+ */
+const GENERIC_SHELLS: { match: RegExp; add: Record<string, 'list' | 'number'> }[] = [
+  {
+    match: /^MD\.Web\.Ajax\.ResultModel\.ListModel`1\[\[([^,\]]+)/,
+    add: { list: 'list', allCount: 'number', pageIndex: 'number' },
+  },
+  { match: /^MD\.Web\.Ajax\.ResultModel\.AppLogs\.GetGlobalLogsResponse`1\[\[([^,\]]+)/, add: { list: 'list' } },
+];
+/** 泛型壳要补的属性：属性名 → { 数组元素的 schema 全名 } 或 'number' */
+function shellAdds(full: string): Record<string, { list: string } | 'number'> | null {
+  for (const shell of GENERIC_SHELLS) {
+    const m = full.match(shell.match);
+    if (m && schemas[m[1] as string]) {
+      return Object.fromEntries(
+        Object.entries(shell.add).map(([k, kind]) => [k, kind === 'list' ? { list: m[1] as string } : 'number']),
+      );
+    }
+  }
+  return null;
+}
+
+// --dump-patches <file>：把上面两张修正表导出成 JSON，给页面内的取样核对脚本用（核对时要和「修正后」的 schema 比）
+const dumpArg = process.argv.indexOf('--dump-patches');
+if (dumpArg > -1) {
+  const out = process.argv[dumpArg + 1] as string;
+  fs.writeFileSync(
+    out,
+    JSON.stringify({
+      patches: SCHEMA_PATCHES,
+      shells: GENERIC_SHELLS.map(x => ({ match: x.match.source, add: x.add })),
+    }),
+  );
+  console.log(`已导出修正表到 ${out}`);
+  process.exit(0);
+}
 
 /** 直接换成仓库里手写的类型：控件是全仓的核心数据结构，统一用 FormControl（它和控件实体的形状核对过） */
 const SUBSTITUTES: Record<string, string> = {
@@ -372,7 +529,7 @@ function isOpaque(full: string): boolean {
   if (/^System\.ValueTuple`/.test(full)) return true;
   const s = schemas[full];
   const patched = SCHEMA_PATCHES[full];
-  if (patched && patched.add) return false;
+  if ((patched && patched.add) || shellAdds(full)) return false;
   return !!s && s.type === 'object' && !s.properties && !s.additionalProperties && !s.enum;
 }
 
@@ -487,7 +644,9 @@ function emit(full: string): void {
       .map(([k, p]) => {
         const serialized = (patch.rename && patch.rename[k]) || k;
         const key2 = /^[A-Za-z_$][\w$]*$/.test(serialized) ? serialized : JSON.stringify(serialized);
-        const present = alwaysPresent(p) || !!(patch.required && patch.required.includes(k));
+        const present =
+          !(patch.optional && patch.optional.includes(k)) &&
+          (alwaysPresent(p) || !!(patch.required && patch.required.includes(k)));
         const renamed = serialized === k ? '' : `（swagger 里叫 ${k}，实际序列化成 ${serialized}）`;
         return `${jsdoc((p.description || '') + renamed, '      ')}      ${key2}${present ? '' : '?'}: ${tsType(p)}${present ? '' : ' | undefined'};`;
       })
@@ -495,6 +654,12 @@ function emit(full: string): void {
         Object.entries(patch.add || {}).map(
           ([k, t]) => `      /** （swagger 里没有，真实响应里有） */\n      ${k}?: ${t};`,
         ),
+      )
+      .concat(
+        Object.entries(shellAdds(full) || {}).map(([k, v]) => {
+          const t = v === 'number' ? 'number' : wrap(tsType({ $ref: '#/components/schemas/' + v.list })) + '[]';
+          return `      /** （泛型壳，swagger 里没有，真实响应里有） */\n      ${k}?: ${t} | undefined;`;
+        }),
       )
       .join('\n');
     text = `${jsdoc(s.description, '    ')}    interface ${name} {\n${props}\n    }`;
