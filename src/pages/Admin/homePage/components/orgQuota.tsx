@@ -20,7 +20,7 @@ export default function orgQuota(props) {
   const hasBalance = IsPlatformLocal && authority.includes(PERMISSION_ENUM.FINANCE);
   const isCloseProject = !_.find(md.global.Account.projects, l => l.projectId === projectId);
 
-  const getNoLimit = key => {
+  const getNoLimit = (key: string) => {
     if (isCloseProject) return false;
 
     switch (key) {

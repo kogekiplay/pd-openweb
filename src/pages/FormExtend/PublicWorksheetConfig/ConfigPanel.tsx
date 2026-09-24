@@ -158,7 +158,12 @@ const ColumnSettingWrap = styled.div`
   }
 `;
 
-class ConfigPanel extends React.Component<any, any> {
+interface ConfigPanelState {
+  publicConfigVisible: boolean;
+  activeColumn: number;
+}
+
+class ConfigPanel extends React.Component<any, ConfigPanelState> {
   static override propTypes = {
     worksheetInfo: PropTypes.shape({}),
     worksheetSettings: PropTypes.shape({}),

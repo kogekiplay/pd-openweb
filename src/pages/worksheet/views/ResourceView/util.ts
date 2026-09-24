@@ -210,7 +210,7 @@ export const formatRecordTime = (row, view, controls: FormControl[] = []) => {
 /**
  * 处理记录位置
  */
-export const formatRecordPoint = (row, view, list = [], controls, currentTime) => {
+export const formatRecordPoint = (row, view, list = [], controls, currentTime: string | null) => {
   let { startTime, endTime } = row;
   const type =
     localStorage.getItem(`${view.viewId}_resource_type`) || types[_.get(view, 'advancedSetting.calendarType') || 0];

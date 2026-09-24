@@ -28,7 +28,12 @@ const positionTemplatePaths = {
   5: '/staticfiles/template/positionImportTemplate/Templat Import Jawatan.xlsx',
 };
 
-class PositionInfo extends Component<any, any> {
+interface PositionInfoState {
+  showRoleDialog: boolean;
+  filed?: string | undefined;
+}
+
+class PositionInfo extends Component<any, PositionInfoState> {
   declare ajaxObj: ApiResult | null;
   declare input: HTMLInputElement | null | undefined;
 

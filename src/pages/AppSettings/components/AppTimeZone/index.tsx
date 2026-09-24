@@ -19,7 +19,7 @@ const AppTimeZoneDropdown = styled(Dropdown)`
 
 export default function AppTimeZone(props) {
   const { appId, data = {}, onChangeData } = props;
-  const [timeZones, setTimeZones] = useState([]);
+  const [timeZones, setTimeZones] = useState<{ text: string; value: number }[]>([]);
   const [currentTimeZone, setCurrentTimeZone] = useState(
     !_.isUndefined(data.timeZone) ? data.timeZone : md.global.Config.DefaultTimeZone,
   );

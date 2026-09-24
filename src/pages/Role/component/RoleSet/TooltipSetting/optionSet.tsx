@@ -66,7 +66,10 @@ export default function Set(props) {
   const { changeSheetOptionInfo, projectId } = props;
   const [sheet, setState] = useState(props.sheet);
   const [loading, setLoading] = useState(true);
-  const [componentData, setComponentData] = useState({});
+  const [componentData, setComponentData] = useState<{
+    customeButtons?: HapApi.MD.Entity.Worksheet.ComponentDetail[] | undefined;
+    printTempletes?: HapApi.MD.Entity.Worksheet.ComponentDetail[] | undefined;
+  }>({});
   const [showRecordLoggingDialog, setShowRecordLoggingDialog] = useState(false);
   useEffect(() => {
     setState(props.sheet);

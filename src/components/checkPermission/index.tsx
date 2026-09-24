@@ -7,7 +7,7 @@ import { PERMISSION_ENUM, ROUTE_CONFIG } from 'src/pages/Admin/enum';
 
 let cachePermission = {};
 
-const setCacheData = (projectId: string, data, version: string) => {
+const setCacheData = (projectId: string, data: number[], version: string) => {
   cachePermission[projectId] = {
     data,
     time: moment().format('YYYY-MM-DD HH:mm:ss'),

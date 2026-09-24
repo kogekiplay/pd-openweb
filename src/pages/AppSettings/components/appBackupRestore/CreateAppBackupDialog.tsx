@@ -91,7 +91,7 @@ export default function CreateBackupModal(props) {
   const [currentValid, setCurrentValid] = useState(0);
   const [countLoading, setCountLoading] = useState(true);
   const [containData, setContainData] = useState(false);
-  const [countInfo, setCountInfo] = useState({});
+  const [countInfo, setCountInfo] = useState<{ appItemTotal?: number | undefined; rowTotal?: number | undefined }>({});
 
   useEffect(() => {
     if (!appId) return;

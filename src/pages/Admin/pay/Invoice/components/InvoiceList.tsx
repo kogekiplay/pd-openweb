@@ -46,7 +46,7 @@ const InvoiceList = forwardRef((props, ref) => {
   const [searchValues, setSearchValues] = useState({});
   const [fetchAppState, setFetchAppState] = useSetState({ appPageIndex: 1, loading: false, hasMore: true });
   const [appList, setAppList] = useState([]);
-  const [worksheetList, setWorksheetList] = useState([]);
+  const [worksheetList, setWorksheetList] = useState<{ label: string | undefined; value: string | undefined }[]>([]);
   const [exporting, setExporting] = useState(false);
   const [syncingInvoiceId, setSyncingInvoiceId] = useState('');
   const [detailVisibleId, setDetailVisibleId] = useState('');

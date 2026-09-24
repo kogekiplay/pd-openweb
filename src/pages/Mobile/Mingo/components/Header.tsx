@@ -1,7 +1,12 @@
 import { Icon } from 'ming-ui';
 import SelectProject from 'mobile/components/SelectProject';
 
-function ToolbarActions({ onOpenHistory, onNewChat }) {
+export interface ToolbarActionsProps {
+  onOpenHistory: () => void;
+  onNewChat: () => void;
+}
+
+function ToolbarActions({ onOpenHistory, onNewChat }: ToolbarActionsProps) {
   return (
     <div className="toolbarActions flexRow">
       <div className="toolbarIconBtn historyBtn" onClick={onOpenHistory}>

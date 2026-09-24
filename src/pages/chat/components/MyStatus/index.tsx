@@ -91,7 +91,10 @@ const DialogWrap = styled(Dialog)`
 
 export default function MyStatus() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({});
+  const [data, setData] = useState<{
+    onStatusOption?: HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption | null | undefined;
+    statusOptions?: HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption[] | undefined;
+  }>({});
   const [visible, setVisible] = useState(false);
   const [statusList, setStatusList] = useState([]);
   const [currentIndex, setCurrentIndex] = useState<number | undefined>();

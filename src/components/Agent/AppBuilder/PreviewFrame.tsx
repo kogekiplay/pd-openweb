@@ -41,7 +41,7 @@ const Container = styled.div`
 // AI 实时预览场景下，工作表/视图是分两步建出来的：建表成功 ~ 建视图成功之间，工作表 views 为空，
 // 默认会渲染「无视图」错误页。给 iframe 内所有页面统一打上 previewMode=ai 标记，
 // 让工作表渲染层（src/pages/worksheet/common/Sheet/Sheet.jsx）识别后给出一个伪「全部」表格视图兜底。
-function withPreviewMode(path) {
+function withPreviewMode(path: string) {
   if (!path) return path;
   if (/[?&]previewMode=ai(?:&|$)/.test(path)) return path;
   return `${path}${path.includes('?') ? '&' : '?'}previewMode=ai`;

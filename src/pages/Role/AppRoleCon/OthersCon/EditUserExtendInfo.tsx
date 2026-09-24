@@ -74,7 +74,7 @@ export default function EditUserExtendInfo(props) {
   const [loading, setLoading] = useState(false);
   const [worksheetList, setWorksheetList] = useState<HapApi.MD.Entity.Apk.EntityInfo[]>([]);
   const [controls, setControls] = useState([]);
-  const [appName, setAppName] = useState('');
+  const [appName, setAppName] = useState<string | undefined>('');
   const [data, setData] = useState({
     worksheetId: value.worksheetId || undefined,
     controlId: value.controlId || undefined,

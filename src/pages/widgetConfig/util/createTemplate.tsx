@@ -128,7 +128,7 @@ export function supportCreateTemplate(control) {
 }
 
 // 批量获取表权限
-function getBatchPermission(worksheetIds) {
+function getBatchPermission(worksheetIds: (string | undefined)[]) {
   if (_.isEmpty(worksheetIds)) return [];
 
   const res = worksheetAjax.getWorksheetsRoleType({ worksheetIds }, { ajaxOptions: { sync: true } });
@@ -260,7 +260,7 @@ function getControlByDataSource(allControls, dataSource) {
 }
 
 // 解析函数，获取控件
-function getControlByDynamicFunc(allControls, defaultfunc) {
+function getControlByDynamicFunc(allControls: FormControl[], defaultfunc) {
   let referencedControls = [];
   let worksheetRoleControls = [];
 
@@ -305,7 +305,7 @@ function getControlByMapping(allControls, mapping) {
 }
 
 // 解析查询工作表，获取控件
-function getControlBySearchworksheet(allControls, dynamicsrc, queryConfigs = []) {
+function getControlBySearchworksheet(allControls: FormControl[], dynamicsrc, queryConfigs = []) {
   let referencedControls = [];
   let worksheetRoleControls = [];
 

@@ -160,13 +160,13 @@ export default class EnterpriseCard extends Component<any, any> {
     });
   }
 
-  onCancelExit(item, closeProject) {
+  onCancelExit(item, closeProject: boolean) {
     if (!closeProject) return;
 
     navigateTo(`/admin/sysinfo/${item.projectId}`);
   }
 
-  onOkExit(item, isLastSuperAdmin, isClose) {
+  onOkExit(item, isLastSuperAdmin: boolean, isClose) {
     const { card } = this.props;
 
     if (!isLastSuperAdmin) {

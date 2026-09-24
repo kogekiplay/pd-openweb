@@ -199,7 +199,9 @@ function FormIndexSetting(props) {
   const [showMoreOption, setShowMoreOption] = useState(false);
   const [isloading, setIsloading] = useState(true);
   const [selectedIndexList, setSelectedIndexList] = useState([{}]);
-  const [worksheetAvailableFields, setWorksheetAvailableFields] = useState([]);
+  const [worksheetAvailableFields, setWorksheetAvailableFields] = useState<
+    HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetAvailableFieldModel[]
+  >([]);
   const [worksheetRowIndexLimit, setWorksheetRowIndexLimit] = useState(0);
   const [sort, setSort] = useState('');
 

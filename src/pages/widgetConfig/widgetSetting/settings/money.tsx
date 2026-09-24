@@ -71,7 +71,7 @@ export default function Money(props) {
   const { data = {}, onChange, globalSheetInfo = {} } = props;
   const { currency, showformat = '0', suffix, prefix } = getAdvanceSetting(data);
   const { currencycode } = safeParse(currency || '{}');
-  const [currencyList, setList] = useState([]);
+  const [currencyList, setList] = useState<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetCurrencyInfosModel[]>([]);
   const [visible, setVisible] = useState(false);
   const currentCurrency = _.find(currencyList, c => c.currencyCode === currencycode);
   const lang = getCurrentLangCode();

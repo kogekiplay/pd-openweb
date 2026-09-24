@@ -24,7 +24,7 @@ export default function MultiLingual(props) {
   const [loading, setLoading] = useState(true);
   const [langs, setLangs] = useState([]);
   const [langInfo, setLangInfo] = useState(null);
-  const [allLangList, setAllLangList] = useState([]);
+  const [allLangList, setAllLangList] = useState<HapApi.MD.Caching.FixedDataCache.LangConfig[]>([]);
   const { langId, flag } = getRequest();
   const currentLangKey = keys[getCookie('i18n_langtag')];
 

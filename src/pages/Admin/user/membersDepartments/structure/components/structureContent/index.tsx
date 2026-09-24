@@ -17,7 +17,13 @@ import ApprovalContent from '../ApprovalContent';
 import BatchResign from '../BatchResign';
 import UserTable from '../userList/userTable';
 
-class StructureContent extends Component<any, any> {
+interface StructureContentState {
+  batchEditVisible: boolean;
+  isSuperAdmin: boolean;
+  openChangeUserInfoDrawer?: boolean | undefined;
+}
+
+class StructureContent extends Component<any, StructureContentState> {
   constructor(props) {
     super(props);
     this.state = {

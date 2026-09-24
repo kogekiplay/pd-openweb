@@ -444,7 +444,7 @@ export function error() {
   };
 }
 
-function loadMoreAttachments(state, dispatch, isPre?: boolean | undefined) {
+function loadMoreAttachments(state, dispatch: AttachmentsPreviewDispatch, isPre?: boolean | undefined) {
   const { extra, isLoadingMore, loadMoreFinished } = state;
   const loadAjaxName = isPre ? 'preLoadMoreAttachments' : 'loadMoreAttachments';
 

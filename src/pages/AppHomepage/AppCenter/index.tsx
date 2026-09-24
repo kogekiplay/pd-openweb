@@ -77,7 +77,17 @@ function AppCenter(props) {
         },
   );
   const [countData, setCountData] = useState({});
-  const [platformSetting, setPlatformSetting] = useState({});
+  const [platformSetting, setPlatformSetting] = useState<{
+    projectId?: string | undefined;
+    bulletinBoards?: HapApi.MD.Web.Ajax.ResultModel.App.BulletinBoardDto[] | undefined;
+    color?: string | undefined;
+    slogan?: string | undefined;
+    logo?: string | undefined;
+    logoSwitch?: boolean | undefined;
+    boardSwitch?: boolean | undefined;
+    logoHeight?: number | undefined;
+    advancedSetting?: Record<string, string> | undefined;
+  }>({});
   const [isLoading, setIsLoading] = useState(true);
   const [myPermissions, setMyPermissions] = useState([]);
   const [advancedThemes, setAdvancedThemes] = useState([]);

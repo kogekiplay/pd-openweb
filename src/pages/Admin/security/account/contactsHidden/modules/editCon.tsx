@@ -88,7 +88,7 @@ class EditCon extends React.Component<any, EditConState> {
     });
   };
 
-  addDataFn = (datas, type, tTData: number) => {
+  addDataFn = (datas, type: number, tTData: number) => {
     const { dataByRuleId } = this.props;
     let ids = [];
     _.map(datas, user => {

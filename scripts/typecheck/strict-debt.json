@@ -1226,7 +1226,6 @@
     "src/pages/Mobile/Members/index.tsx",
     "src/pages/Mobile/Members/redux/actions.ts",
     "src/pages/Mobile/Members/redux/reducers.ts",
-    "src/pages/Mobile/Mingo/components/Header.tsx",
     "src/pages/Mobile/Mingo/components/OverviewPopup.tsx",
     "src/pages/Mobile/Mingo/components/SessionHistory.tsx",
     "src/pages/Mobile/Mingo/components/Welcome.tsx",

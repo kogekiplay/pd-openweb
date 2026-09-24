@@ -96,7 +96,9 @@ const RoleSelectWrap = styled.div`
 function RoleSelect(props) {
   const { id, handleClose, roleSelectValue = [], visible, appId } = props;
 
-  const [roleList, setRoleList] = useState([]);
+  const [roleList, setRoleList] = useState<
+    HapApi.MD.Web.Ajax.ResultModel.App.AppRole.GetDebugRolesResult_RoleShortInfo[]
+  >([]);
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [value, setValue] = useState([]);
   const [type, setType] = useState(0); // 0 单选 1 多选
