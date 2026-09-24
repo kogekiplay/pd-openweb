@@ -170,8 +170,13 @@ export default function FormSet(props) {
       ) : (
         <div className="flexBox columnRulesBox">
           <Sidenav {...props} projectId={worksheetInfo.projectId} />
+          {/* 不认识的 type（手敲 / 旧链接）内容区会落到 renderCon 的 default、显示「提交表单」，标题跟着用同一个兜底 */}
           <DocumentTitle
-            title={_l('表单设置 - %0 - %1', MODULE_TYPE_TO_NAME[type || 'submitForm'], worksheetName || '')}
+            title={_l(
+              '表单设置 - %0 - %1',
+              MODULE_TYPE_TO_NAME[type || 'submitForm'] || MODULE_TYPE_TO_NAME.submitForm,
+              worksheetName || '',
+            )}
           />
           <ErrorBoundary>{renderCon(type)}</ErrorBoundary>
         </div>
