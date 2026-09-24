@@ -313,12 +313,31 @@ export function submitNewRecord(props) {
     });
 }
 
+// 【批量复制一次发给后端，不分批】「批量复制不能超过20行」只是前端的限制 —— 2026-09-24 反编译 7.4.5 核实：
+// wwwapi 把 rowIds 拼成串原样转给工作表服务，CopyRowCore 拆开后一次 AddWSRowsBatch 写入，
+// 唯一的数量检查是工作表总行数有没有超过授权的最大行数（超了返回码 9，即「复制失败，超过最大数量！」）。
+// 选择上限是一页（每页最多 500 行）；网关超时是 1800s / 3600s，前端请求不设超时，一次发完不会超时。
+// 不在前端分批，是因为分批经不起刷新：刷新后剩下的批次不会再发，前面的已经写进去了，用户既不知道复制到了哪，
+// 再点一次还会把已复制的那部分重复复制。一次请求则没有这个问题：后端这段是同步执行的，不看客户端是否断开，
+// 请求发出去以后刷新、关页面，服务端照样把全部行复制完。
+const COPY_ROWS_ALERT_KEY = 'worksheetCopyRows';
+
 export function copyRow({ worksheetId, viewId, rowIds, relateRecordControlId }: { worksheetId?: string; viewId?: string; [key: string]: any },
   // 【声明写漏了】函数体里是 `done(res.data)`，带参调用；而 `done = () => {}`
   // 这个默认值让 TS 把它推成 () => void，调用方传 `newRows => {…}` 就报
   // 「Target signature provides too few arguments」。调用方没错，是声明欠精确。
   done: (rows?: any) => void = () => {},
 ) {
+  // 多行复制耗时长一些：请求期间一直显示「复制中...」，结果出来后用同一个 key 原地换成结果。
+  // 单行复制（记录详情里的「复制」）照旧，不显示过程提示。
+  const showProgress = rowIds.length > 1;
+  const notify = (msg: string, type = 1) =>
+    showProgress ? alert({ msg, type, key: COPY_ROWS_ALERT_KEY }) : alert(msg, type);
+
+  if (showProgress) {
+    alert({ msg: _l('复制中...'), type: 5, duration: 0, key: COPY_ROWS_ALERT_KEY });
+  }
+
   worksheetAjax
     .copyRow({
       worksheetId,
@@ -329,21 +348,21 @@ export function copyRow({ worksheetId, viewId, rowIds, relateRecordControlId }: 
     .then(res => {
       if (res && res.resultCode === 1 && res.data.length) {
         if (res.data.length < rowIds.length) {
-          alert(_l('%0条复制失败（可能有必填项为空，设置不允许重复或数据超量）', rowIds.length - res.data.length), 3);
+          notify(_l('%0条复制失败（可能有必填项为空，设置不允许重复或数据超量）', rowIds.length - res.data.length), 3);
         } else {
-          alert(_l('复制成功'));
+          notify(_l('复制成功'));
         }
 
         done(res.data);
         emitter.emit('ROWS_UPDATE');
       } else if (res && res.resultCode === 7) {
-        alert(_l('复制失败，权限不足！'), 3);
+        notify(_l('复制失败，权限不足！'), 3);
       } else if (res && res.resultCode === 9) {
-        alert(_l('复制失败，超过最大数量！'), 3);
+        notify(_l('复制失败，超过最大数量！'), 3);
       } else if (res && res.resultCode === 11) {
-        alert(_l('复制失败，当前表存在唯一字段'), 3);
+        notify(_l('复制失败，当前表存在唯一字段'), 3);
       } else {
-        alert(
+        notify(
           res && res.resultCode === 1 ? _l('复制失败（可能有必填项为空，设置不允许重复或数据超量）') : _l('复制失败！'),
           2,
         );
@@ -351,7 +370,7 @@ export function copyRow({ worksheetId, viewId, rowIds, relateRecordControlId }: 
     })
     .catch(err => {
       console.log(err);
-      alert(_l('复制失败！'), 3);
+      notify(_l('复制失败！'), 3);
     });
 }
 

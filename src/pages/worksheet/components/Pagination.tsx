@@ -190,6 +190,9 @@ const pageSizeNums = [
   { text: 50, value: 50 },
   { text: 100, value: 100 },
   { text: 200, value: 200 },
+  // 500：后端取行（GetFilterRows）的控制器 / 业务层 / 工作表服务都没有对 pageSize 做钳制（2026-09-24 反编译 7.4.5 核实，
+  // 只有打印接口钳到 1000、级联搜索钳到 20），所以选 500 时服务端真的返回 500 行，不会静默少给
+  { text: 500, value: 500 },
 ];
 
 export interface PaginationState {

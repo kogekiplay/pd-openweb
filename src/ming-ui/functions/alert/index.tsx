@@ -4,18 +4,21 @@ import { Toast } from 'antd-mobile';
 import { browserIsMobile } from 'src/utils/common';
 
 function getIcon(type = 'success', isMobile = false) {
+  // 这里的 color 是图标字体的颜色 —— 画的是图标，不是文字，所以用功能色本身，不用 -text 档。
+  // -text 档是为「文字压白底要 4.5:1」调深的（亮色主题下警示文字档已经是棕色），当图标用会和主题的功能色对不上。
+  // 09-22 的文字档迁移把这三处一并换成了 -text，是误伤。
   const config: Record<string, { name: string; color: string }> = {
     success: {
       name: 'Finish',
-      color: 'var(--color-success-text)',
+      color: 'var(--color-success)',
     },
     error: {
       name: 'cancel',
-      color: 'var(--color-error-text)',
+      color: 'var(--color-error)',
     },
     warning: {
       name: 'error1',
-      color: 'var(--color-warning-text)',
+      color: 'var(--color-warning)',
     },
     info: {
       name: 'info',

@@ -91,6 +91,13 @@ class BatchOperate extends React.Component<any, any> {
     };
   }
 
+  // 批量复制的回调要知道组件还在不在（见「复制」按钮那里的说明）
+  declare unmounted: boolean;
+
+  override componentWillUnmount() {
+    this.unmounted = true;
+  }
+
   override componentDidMount() {
     const { onlyShowCustomButtons } = this.props;
     const selectedRow = this.props.selectedRows.length === 1 && this.props.selectedRows[0];
@@ -646,11 +653,8 @@ class BatchOperate extends React.Component<any, any> {
                     return;
                   }
 
-                  if (selectedRows.length > 20) {
-                    alert(_l('批量复制不能超过20行'), 3);
-                    return;
-                  }
-
+                  // 原来这里「批量复制不能超过20行」直接拦下 —— 那是前端自己的限制，后端没有，
+                  // 现在整页（最多 500 行）一次发给后端（原因见 controllers/record.ts 的 copyRow 上方）
                   Dialog.confirm({
                     title: _l('您确认复制这%0条记录吗？', selectedRows.length),
                     onOk: () => {
@@ -662,7 +666,22 @@ class BatchOperate extends React.Component<any, any> {
                           rowIds,
                         },
                         newRows => {
-                          if (getGroupControlId(view)) {
+                          // 多行复制要等后端全部写完才回来。这期间如果已经离开这张表（组件卸载），或切到了别的表 / 视图，
+                          // 新行不能再插进界面 —— addRecord 插的是 store 里【当前】那张表。新行已经真实存在，回到这里就能看到
+                          if (
+                            this.unmounted ||
+                            this.props.worksheetId !== worksheetId ||
+                            this.props.viewId !== viewId
+                          ) {
+                            return;
+                          }
+
+                          // 新行插在原行后面会让这一页超过每页条数时，改为按当前页重新取：
+                          // 原来一律本地插入，一页 50 行复制 20 行就显示 70 行，直到手动刷新才恢复成 50 行。
+                          // 重新取之后，新行出现在视图排序真正把它们排到的位置（可能在别的页）。
+                          // 放得下时照旧插在原行后面并高亮，方便一眼看到复制出来的行。
+                          const pageRows = (this.props.rows || []).length;
+                          if (getGroupControlId(view) || pageRows + newRows.length > this.props.pageSize) {
                             refresh();
                             return;
                           }
