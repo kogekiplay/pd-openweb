@@ -69,7 +69,7 @@ export default function (props) {
     return ['print', 'btn', 'group'].includes(o.type) ? data.name : data.txt;
   };
 
-  const getItems = (printList?) => {
+  const getItems = (printList?: HapApi.MD.Entity.Worksheet.PrintListModel[] | undefined) => {
     return actioncolumn.map(o => {
       return {
         ...o,

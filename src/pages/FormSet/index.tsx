@@ -174,7 +174,7 @@ export default function FormSet(props) {
           <DocumentTitle
             title={_l(
               '表单设置 - %0 - %1',
-              MODULE_TYPE_TO_NAME[type || 'submitForm'] || MODULE_TYPE_TO_NAME.submitForm,
+              MODULE_TYPE_TO_NAME[type || 'submitForm'] || MODULE_TYPE_TO_NAME['submitForm'],
               worksheetName || '',
             )}
           />

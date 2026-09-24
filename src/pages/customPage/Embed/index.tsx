@@ -16,7 +16,13 @@ import './index.less';
 
 const isMobile = browserIsMobile();
 
-export default class EmbedPage extends Component<any, any> {
+interface EmbedPageState {
+  loading: boolean;
+  data: null;
+  status?: number | undefined;
+}
+
+export default class EmbedPage extends Component<any, EmbedPageState> {
   declare appId: string;
   declare pageId: string;
 

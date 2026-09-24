@@ -404,7 +404,7 @@ export function sheetButtons(
   }
 }
 
-export function printList(state = [], action: ReduxAction) {
+export function printList(state = [], action: ReduxAction<{ printList: HapApi.MD.Entity.Worksheet.PrintListModel[] }>) {
   switch (action.type) {
     case 'MOBILE_WORKSHEET_UPDATE_PRINT_LIST':
       return action.printList;

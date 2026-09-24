@@ -10,7 +10,15 @@ import CreateEditRole from './createEditRole';
 import RoleList from './roleList';
 import './index.less';
 
-export default class RoleAuth extends React.Component<any, any> {
+interface RoleAuthState {
+  isSuperAdmin: boolean;
+  allowApplyManage: boolean;
+  applyCount: number;
+  showApplyForRole: boolean;
+  showCreateRole: boolean;
+}
+
+export default class RoleAuth extends React.Component<any, RoleAuthState> {
   constructor(props) {
     super(props);
     this.state = {

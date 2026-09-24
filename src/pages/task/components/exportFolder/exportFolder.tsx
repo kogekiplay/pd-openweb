@@ -4,7 +4,21 @@ import { Dialog } from 'ming-ui';
 import { addToken } from 'src/utils/common';
 import './less/exportFolder.less';
 
-export default class ExportFolder extends Component<any, any> {
+/** 导出选项：key 为 null 的是分隔线；disabled 是必选、不能取消，noSelect 是默认不勾选 */
+interface ExportFolderOption {
+  key: string | null;
+  name?: string;
+  disabled?: boolean;
+  noSelect?: boolean;
+}
+
+interface ExportFolderState {
+  folderArry: ExportFolderOption[];
+  taskType: ExportFolderOption[];
+  taskArray: ExportFolderOption[];
+}
+
+export default class ExportFolder extends Component<any, ExportFolderState> {
   constructor(props) {
     super(props);
     this.state = {

@@ -128,7 +128,7 @@ export function buttons(state = [], action: ReduxAction) {
   }
 }
 
-export function printList(state = [], action: ReduxAction) {
+export function printList(state = [], action: ReduxAction<{ printList: HapApi.MD.Entity.Worksheet.PrintListModel[] }>) {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_PRINT_LIST':
       return action.printList;

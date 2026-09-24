@@ -139,7 +139,7 @@ export const updateListSort = (listSort: number) => {
 };
 
 // 更新任务归属
-export const updateTaskAscription = taskFilter => {
+export const updateTaskAscription = (taskFilter: number) => {
   return {
     type: 'UPDATE_TASK_ASCRIPTION',
     taskFilter,

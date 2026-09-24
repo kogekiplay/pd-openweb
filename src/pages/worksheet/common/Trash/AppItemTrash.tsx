@@ -146,7 +146,7 @@ export default function AppItemTrash(props) {
     </span>,
   ]);
 
-  function setPendingCache(key, value: boolean) {
+  function setPendingCache(key: string | undefined, value: boolean) {
     cache.current['pending_' + key] = value;
   }
 

@@ -384,7 +384,7 @@ export default function MobilePrintList(props) {
     );
   };
 
-  const handlePrint = async it => {
+  const handlePrint = async (it: HapApi.MD.Entity.Worksheet.PrintListModel) => {
     const featureType = getFeatureStatus(projectId, VersionProductType.wordPrintTemplate);
 
     if (window.isPublicApp) {

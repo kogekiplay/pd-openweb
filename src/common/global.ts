@@ -841,7 +841,7 @@ window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = 
 
   const promise = new Promise(async (resolve, reject) => {
     const { key, moduleType, sourceId } = getLocalizationKey(controllerName, actionName, requestData);
-    let version;
+    let version: string | undefined;
 
     if (!_.get(window, 'shareState.shareId') && !window.isWeixin && key && sourceId) {
       const localSource = await localForage.getItem(`${key}_${sourceId}`);
