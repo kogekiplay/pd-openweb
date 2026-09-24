@@ -628,7 +628,7 @@ export const handleRecordClick = (
 // control 只在 resultCode 11 的提示里用到，多数调用点只传 resultCode，所以标成可选
 export function handleRecordError(resultCode?: number, control?: FormControl, isNewRecord = false) {
   if (resultCode === 11) {
-    alert(_l('编辑失败，%0不允许重复', control ? control.controlName : ''), 2);
+    alert(_l('编辑失败，%0不允许重复', (control && control.controlName) ?? ''), 2);
   } else if (resultCode === 31) {
     alert(_l('记录提交失败：有必填字段未填写'), 2);
   } else if (resultCode === 22) {
@@ -681,7 +681,12 @@ export function getSubListUniqueError({
       'controlName',
     );
     alert(
-      _l('记录提交失败：%0中第%1行记录的%2与已有记录重复', control.controlName, lastRowBaIndex + 1, controlName),
+      _l(
+        '记录提交失败：%0中第%1行记录的%2与已有记录重复',
+        control.controlName ?? '',
+        lastRowBaIndex + 1,
+        controlName ?? '',
+      ),
       2,
     );
     return {

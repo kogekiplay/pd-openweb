@@ -18,6 +18,7 @@ const checkFuncs = {
         return _l('手机号码格式错误');
       }
     }
+    return undefined;
   },
   newPwd: pwd => {
     const { md = {} } = window;

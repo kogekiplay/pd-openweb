@@ -80,7 +80,7 @@ export default class CountDown extends Component<any, any> {
     } else if (m > 0) {
       return _l(`%0分钟`, m);
     } else if (s < 0) {
-      return;
+      return undefined;
     } else {
       return _l('1分钟');
     }

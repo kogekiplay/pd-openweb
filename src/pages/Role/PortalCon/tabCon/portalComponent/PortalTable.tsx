@@ -163,7 +163,7 @@ function PorTalTable(props) {
           dataSource={listCell}
           bordered
           size="small"
-          locale={_l('暂无数据')}
+          locale={{ emptyText: _l('暂无数据') }}
           rowKey={record => record.rowid}
           pagination={false}
           scroll={{

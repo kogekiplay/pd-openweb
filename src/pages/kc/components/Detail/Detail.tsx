@@ -374,6 +374,7 @@ class Detail extends React.Component<any, any> {
         case NODE_VISIBLE_TYPE.PUBLIC:
           return _l('任何人都可以查看');
       }
+      return undefined;
     };
 
     switch (log.type) {
@@ -443,6 +444,7 @@ class Detail extends React.Component<any, any> {
           </span>
         );
     }
+    return undefined;
   };
 
   genPreviewLink = (name: string, versionId, nodeId) => {

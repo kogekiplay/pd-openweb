@@ -651,6 +651,7 @@ export default class Detail extends React.Component<any, any> {
         if (currentType === TYPES.GROUP) return _l('群组名称');
         if (currentType === TYPES.KC) return _l('共享文件夹名称');
       }
+      return undefined;
     })();
 
     const isAllChecked = !!(_.isArray(list) && list.length && _.every(list, item => !!selectItems[item.sourceId]));

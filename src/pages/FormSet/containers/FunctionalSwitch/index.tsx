@@ -163,6 +163,7 @@ function FunctionalSwitch(props) {
       case '3':
         return len <= 0 ? _l('所有记录') : _l('%0个视图下的记录', l);
     }
+    return undefined;
   };
 
   const closeRangeDiaFn = info => {

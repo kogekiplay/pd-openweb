@@ -527,7 +527,7 @@ export default function RelationSearch(props) {
             value={maxcount || undefined}
             className="w100 Font13"
             type={2}
-            placeholder={showtype === '3' ? 50 : _l('全部')}
+            placeholder={showtype === '3' ? '50' : _l('全部')}
             onChange={value => {
               onChange(handleAdvancedSettingChange(data, { maxcount: `${value}` }));
             }}

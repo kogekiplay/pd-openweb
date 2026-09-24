@@ -303,6 +303,7 @@ function WorksheetReferenceDialog(props) {
         case SUB_MODULE_TYPES.VIEW:
           return _l('当前字段正被以下视图的筛选条件、专属配置使用');
       }
+      return undefined;
     };
 
     return (

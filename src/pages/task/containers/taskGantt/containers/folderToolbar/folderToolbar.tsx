@@ -57,6 +57,7 @@ class FolderToolbar extends Component<any, any> {
       case -1:
         return _l('全部');
     }
+    return undefined;
   }
 
   /**

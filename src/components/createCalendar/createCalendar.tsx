@@ -1125,7 +1125,8 @@ CreateCalendar.methods = {
     }
 
     if (recurType == 1) {
-      messages += '，' + _l('共 %0 次', count);
+      // count 取自输入框的 .val()（jQuery 类型是 string | number | string[]），_l 替换时本来就会 String() 化
+      messages += '，' + _l('共 %0 次', String(count));
     } else if (recurType == 2) {
       day = moment(settings.overTime).format(_l('YYYY年MM月DD日'));
       messages += '，' + _l('截止到 %0', day);

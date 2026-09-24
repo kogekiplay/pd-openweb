@@ -124,8 +124,10 @@ function ExistPluginDialog(props) {
         <Select
           className="selectItem"
           allowClear={true}
-          options={[{ label: _l('创建新插件'), value: 'create' }].concat(
-            pluginList.map(item => {
+          // 「创建新插件」的 label 是文案，已有插件的 label 是元素：用展开拼（和 concat 等价）
+          options={[
+            { label: _l('创建新插件'), value: 'create' },
+            ...pluginList.map(item => {
               return {
                 label: (
                   <span>
@@ -135,7 +137,7 @@ function ExistPluginDialog(props) {
                 value: item.id,
               };
             }),
-          )}
+          ]}
           notFoundContent={_l('暂无发布历史')}
           value={pluginId}
           onChange={value => setPluginId(value)}

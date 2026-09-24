@@ -937,6 +937,7 @@ export default class Print extends Component<any, any> {
       case 6:
         return _l('乘积');
     }
+    return undefined;
   };
   beforeControlIsDetail = function (this: Print, key: string) {
     const { type } = this.state;

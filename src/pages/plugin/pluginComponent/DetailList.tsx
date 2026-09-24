@@ -585,7 +585,8 @@ export default function DetailList(props) {
               .map((item, i) => {
                 return (
                   <div key={i} className={`${item.dataIndex}`}>
-                    {item.renderTitle ? item.renderTitle() : item.title}
+                    {/* 各类列表的列定义形状不一，只有部分列有 renderTitle：先用 in 收窄 */}
+                    {'renderTitle' in item && typeof item.renderTitle === 'function' ? item.renderTitle() : item.title}
                   </div>
                 );
               })}

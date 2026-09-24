@@ -354,7 +354,7 @@ const TimeOutDialog = (props: LockDialogProps & { onClose: () => void }) => {
     >
       {expiredaction === '2'
         ? _l('编辑已超时，无法继续编辑。点击获取最新记录')
-        : _l('您已超过%0分钟未编辑，本次编辑超时', expiretime)}
+        : _l('您已超过%0分钟未编辑，本次编辑超时', expiretime ?? '')}
     </div>
   );
 

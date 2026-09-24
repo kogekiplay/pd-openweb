@@ -182,6 +182,7 @@ export const getTodayTooltip = ({ rangeType, rangeValue }) => {
   if (rangeType === 19) {
     return _l('未勾选时, 表示统计从明天开始到将来%0天数据, 勾选时, 表示统计从今天开始到将来%0天的数据。', rangeValue);
   }
+  return undefined;
 };
 
 /**

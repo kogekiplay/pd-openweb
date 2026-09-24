@@ -222,7 +222,8 @@ export default function MaskSettingDialog(props) {
           maxHeight={385}
           value={masktype}
           renderTitle={(i: Record<string, any> = {}) => i.text}
-          data={[DISPLAY_MASK.map(item => ({ text: renderShowValue(item), value: item.value }))].concat(CUSTOM_DISPLAY)}
+          // 第一组是内置脱敏方式，后面接「自定义规则」；两边 text 的类型不同（元素 / 文案），用展开拼（和 concat 等价）
+          data={[DISPLAY_MASK.map(item => ({ text: renderShowValue(item), value: item.value })), ...CUSTOM_DISPLAY]}
           onChange={value => {
             setDetail({ masktype: value });
             setTestInfo({ text: '', status: false });

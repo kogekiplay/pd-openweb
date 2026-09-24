@@ -16,10 +16,12 @@ export function pickRandom(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
-// 从池中随机取 count 条不重复样本（不足时返回全部）
-export function pickRandomSamples(count: number, list = BUILD_SAMPLES) {
+// 从池中随机取 count 条不重复样本（不足时返回全部）；不传 list 时从搭建样例里取
+export function pickRandomSamples(count: number): string[];
+export function pickRandomSamples<T>(count: number, list: readonly T[]): T[];
+export function pickRandomSamples(count: number, list: readonly unknown[] = BUILD_SAMPLES) {
   const pool = [...list];
-  const result = [];
+  const result: unknown[] = [];
 
   while (pool.length && result.length < count) {
     result.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);

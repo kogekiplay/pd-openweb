@@ -116,7 +116,8 @@ window._l = function (key, ...args) {
   // 含有0%、1%等内容参数替换
   if (args.length > 0) {
     for (let i = 0; i < args.length; i++) {
-      content = content.replace(new RegExp(`%${i}`, 'g'), args[i]);
+      // 参数可能是数字：replace 本来就会把替换值 String() 化，这里显式写出来
+      content = content.replace(new RegExp(`%${i}`, 'g'), String(args[i]));
     }
   } else if (/.*%\d{5}/.test(content)) {
     // 处理特殊多语境单词问题

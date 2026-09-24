@@ -193,7 +193,10 @@ export default function TrashDialog(props) {
       });
   };
 
-  const renderTxt = (it, isTxt?: boolean | undefined) => {
+  // isTxt 时只要纯文本（给 title 用）；否则有视图时包一层 span
+  function renderTxt(it, isTxt: true): string;
+  function renderTxt(it, isTxt?: false): React.ReactNode;
+  function renderTxt(it, isTxt?: boolean) {
     const list = safeParse(_.get(it, 'advancedSetting.listviews'), 'array');
     const dt = safeParse(_.get(it, 'advancedSetting.detailviews'), 'array');
     const data = _.uniq([...list, ...dt]);
@@ -221,7 +224,7 @@ export default function TrashDialog(props) {
     }
 
     return _l('未分配视图');
-  };
+  }
 
   const columns = [
     {

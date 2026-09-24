@@ -164,7 +164,7 @@ function NewRecordForm(props) {
   const [originFormdata, setOriginFormdata] = useState([]);
   const [formdata, setFormdata] = useState([]);
   const { projectId, publicShareUrl, visibleType } = worksheetInfo;
-  const [formError, setFormError] = useState();
+  const [formError, setFormError] = useState<string | undefined>();
   const [errorVisible, setErrorVisible] = useState<boolean | undefined>();
   const [random, setRandom] = useState<number | string | undefined>();
   const [requesting, setRequesting] = useState<boolean | undefined>();

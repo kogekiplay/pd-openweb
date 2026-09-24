@@ -652,6 +652,7 @@ export const checkWidgetMaxNumErr = (data, allControls: FormControl[] = []) => {
   if (data.type === 41 && allControls.filter(i => i.type === 41).length >= 5) {
     return _l('富文本字段数量已达上限（5个）');
   }
+  return undefined;
 };
 
 export const parseDataSource = dataSource => {

@@ -20,7 +20,7 @@ const Abnormal = styled.div`
 export default function createPermissionCheckWrapper(Comp) {
   return function (props) {
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState();
+    const [error, setError] = useState<string | undefined>();
 
     useEffect(() => {
       registerAjax

@@ -178,12 +178,12 @@ export default class CalendarDate extends Component<any, CalendarDateState> {
 
   renderShowBlock() {
     const { calendar } = this.props;
+    // formatRecur 在「不重复 / 频率为无」时返回 false：那种情况不显示这一行（原先会显示成「重复：false」）
+    const recurText = calendar.isRecur && !calendar.isChildCalendar ? formatRecur(calendar) : false;
     return (
       <div onClick={this.handleClick.bind(this)} className="pTop5 pBottom5 w100">
         <div className="calLine">{formatShowTime(calendar)}</div>
-        {calendar.isRecur && !calendar.isChildCalendar ? (
-          <div className="calLine">{_l('重复：%0', formatRecur(calendar))}</div>
-        ) : null}
+        {recurText ? <div className="calLine">{_l('重复：%0', recurText)}</div> : null}
       </div>
     );
   }

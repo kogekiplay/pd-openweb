@@ -93,6 +93,7 @@ export default class AddOrEditItem extends React.Component<any, any> {
     } else if (!/^[A-Za-z0-9\u0391-\uFFE5 .,()，。（）-]+$/.exec((baseInfo.title || '').trim())) {
       return type === 1 ? _l('职位名称不能含特殊字符') : _l('专业和学历不能含特殊字符');
     }
+    return undefined;
   }
 
   endDateError() {

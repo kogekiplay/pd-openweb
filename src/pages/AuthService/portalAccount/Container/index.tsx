@@ -43,6 +43,7 @@ export default function Container(props) {
       case 10:
         return _l('当前应用不存在');
     }
+    return undefined;
   };
 
   const tipStyle = pageMode === 6 && !browserIsMobile() ? { marginTop: document.documentElement.clientHeight / 4 } : {};

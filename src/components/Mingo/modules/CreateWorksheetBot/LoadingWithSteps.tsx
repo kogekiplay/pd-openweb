@@ -20,7 +20,7 @@ export function getStepStatusText(stepStatus: number) {
       return _l('生成表单字段');
   }
 
-  return;
+  return undefined;
 }
 
 export default function LoadingWithSteps({ stepStatus }) {

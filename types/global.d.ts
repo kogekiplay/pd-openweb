@@ -19,7 +19,9 @@
 /// <reference types="jquery" />
 
 // ---- 由 src/common/global.js 在启动时挂到 window 上 ----
-declare var _l: any; // src/common/global.js:108 `window._l = function (key, ...args) {`（i18n）
+// 多语言翻译（src/common/global.ts 的 window._l）：key 查翻译表、查不到回落到 key 本身；
+// 参数按顺序替换文案里的 %0、%1……（替换时被 String() 化，所以数字也可以）。返回的永远是字符串。
+declare var _l: (key: string, ...args: (string | number)[]) => string;
 /**
  * 全局配置树。【形状取自生产运行时，不是照文档抄的】——
  * 2026-09-16 在 oa.tlytelec.com 上把 md.global 逐层 dump 下来生成。
@@ -417,7 +419,8 @@ declare var ActiveXObject: any; // 旧版 IE 宿主对象；TS 只在 lib.script
 
 interface Window {
   // 与上面同源的 window.X 形态访问点（src/common/global.js、src/common/cookies.js）
-  _l: any;
+  // 嵌入式入口（src/pages/embed/mingoEntry/widgetEntry.ts）会换上自己的精简翻译函数，并打上这个标记防止重复安装
+  _l: typeof _l & { __mingoEntryLite?: boolean };
   md: any;
   mdyAPI: any;
   agentAPI: any;

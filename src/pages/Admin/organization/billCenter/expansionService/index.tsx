@@ -969,6 +969,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
       case EXPAND_TYPE.PORTALUPGRADE:
         return '';
     }
+    return undefined;
   } // 购买专属算力
 
   renderExclusiveContent() {
