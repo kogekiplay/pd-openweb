@@ -7,7 +7,11 @@ import CustomFields from 'src/components/Form';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
-export default class RowDetail extends React.Component<any, any> {
+export interface RowDetailState {
+  flag: number;
+}
+
+export default class RowDetail extends React.Component<any, RowDetailState> {
   static override propTypes = {
     widgetStyle: PropTypes.shape({}),
     ignoreLock: PropTypes.bool,

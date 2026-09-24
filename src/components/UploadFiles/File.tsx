@@ -20,7 +20,18 @@ const vertical = {
   WebkitBoxOrient: 'vertical',
 };
 
-export default class FileComponent extends Component<any, any> {
+export interface FileComponentState {
+  isEdit: boolean;
+  menuVisible: boolean;
+  penelVisible: boolean;
+  moreVisible: boolean;
+  imageSrc: boolean;
+  imageWidth: boolean;
+  viewImage: boolean;
+  isDelete: boolean;
+}
+
+export default class FileComponent extends Component<any, FileComponentState> {
   declare editInput: HTMLInputElement | null | undefined;
   declare linkCon: false | HTMLDivElement | null | undefined;
   declare UploadFile: HTMLDivElement | null | undefined;

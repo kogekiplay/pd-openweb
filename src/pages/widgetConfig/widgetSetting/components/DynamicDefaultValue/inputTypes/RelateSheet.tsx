@@ -6,7 +6,11 @@ import { selectRecords } from 'src/components/SelectRecords';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class RelateSheet extends Component<any, any> {
+export interface RelateSheetState {
+  recordListVisible: boolean;
+}
+
+export default class RelateSheet extends Component<any, RelateSheetState> {
   declare $wrap: SelectOtherField | null | undefined;
 
   static override propTypes = {

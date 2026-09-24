@@ -13,7 +13,11 @@ import {
 } from '../../../redux/actions';
 import './taskCommentList.less';
 
-class TaskCommentList extends Component<any, any> {
+export interface TaskCommentListState {
+  onlyLookMe: boolean;
+}
+
+class TaskCommentList extends Component<any, TaskCommentListState> {
   constructor(props) {
     super(props);
     this.state = {

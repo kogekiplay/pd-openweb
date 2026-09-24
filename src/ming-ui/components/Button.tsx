@@ -16,7 +16,11 @@ export const BUTTON_TYPE_LIST = [
 ];
 export const BUTTON_SIZE_LIST = ['tiny', 'small', 'medium', 'large', 'mdnormal', 'mdbig']; // 'mini', 'huge', 'massive'
 
-export default class Button extends Component<any, any> {
+export interface ButtonState {
+  loading: boolean;
+}
+
+export default class Button extends Component<any, ButtonState> {
   declare width: number | undefined;
   declare mounted: boolean | undefined;
   declare button: HTMLButtonElement | null | undefined;

@@ -184,7 +184,11 @@ const renderSortableItem = props => {
   );
 };
 
-export default class YAxis extends Component<any, any> {
+export interface YAxisState {
+  currentControlId: string | null;
+}
+
+export default class YAxis extends Component<any, YAxisState> {
   constructor(props) {
     super(props);
     this.state = {

@@ -6,7 +6,13 @@ import Constant from '../../../utils/constant';
 import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
 
-export default class FileMessage extends Component<any, any> {
+export interface FileMessageState {
+  progress: number;
+  cancel: boolean;
+  cancelShow: boolean;
+}
+
+export default class FileMessage extends Component<any, FileMessageState> {
   declare iconClassName: string;
 
   constructor(props) {

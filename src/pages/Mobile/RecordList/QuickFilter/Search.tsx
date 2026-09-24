@@ -49,7 +49,12 @@ const Mask = styled.div`
   left: 0;
 `;
 
-class Search extends Component<any, any> {
+export interface SearchState {
+  visible: boolean;
+  filterIndex: number;
+}
+
+class Search extends Component<any, SearchState> {
   constructor(props) {
     super(props);
     this.state = {

@@ -185,7 +185,14 @@ const DelNode = styled.div`
   }
 `;
 
-class TaskNode extends Component<any, any> {
+export interface TaskNodeState {
+  visible: boolean;
+  popupVisible: boolean;
+  showChangeName: boolean;
+  showDel: boolean;
+}
+
+class TaskNode extends Component<any, TaskNodeState> {
   constructor(props) {
     super(props);
     this.state = {

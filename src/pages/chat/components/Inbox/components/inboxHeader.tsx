@@ -19,7 +19,11 @@ import * as actions from '../../../redux/actions';
 import { TYPE_GROUP, TYPES } from '../constants';
 import InboxFilter from './baseComponent/inboxFilter';
 
-class InboxHeader extends React.Component<any, any> {
+export interface InboxHeaderState {
+  settingVisible: boolean;
+}
+
+class InboxHeader extends React.Component<any, InboxHeaderState> {
   static override propTypes = {
     title: PropTypes.string,
     type: PropTypes.oneOf(_.values(TYPES)),

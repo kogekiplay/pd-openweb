@@ -39,7 +39,11 @@ const getTaskAtData = data => {
     .slice(0, 20);
 };
 
-class TaskComment extends Component<any, any> {
+export interface TaskCommentState {
+  showCount: boolean;
+}
+
+class TaskComment extends Component<any, TaskCommentState> {
   constructor(props) {
     super(props);
     this.state = {

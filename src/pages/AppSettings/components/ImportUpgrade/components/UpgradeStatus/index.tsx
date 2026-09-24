@@ -142,7 +142,11 @@ const Wrap = styled.div`
   }
 `;
 
-export default class UpgradeStatus extends Component<any, any> {
+export interface UpgradeStatusState {
+  indexSideVisible?: boolean | undefined;
+}
+
+export default class UpgradeStatus extends Component<any, UpgradeStatusState> {
   declare timer: NodeJS.Timeout | undefined;
 
   constructor(props) {

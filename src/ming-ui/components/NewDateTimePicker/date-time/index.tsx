@@ -7,7 +7,14 @@ import PositionContainer from 'ming-ui/components/PositionContainer';
 import LibCalender from '../lib/calender';
 import './style.less';
 
-class DateTime extends Component<any, any> {
+export interface DateTimeState {
+  value: Date | null;
+  label: string;
+  menuOpened: boolean;
+  bounding: DOMRect | null;
+}
+
+class DateTime extends Component<any, DateTimeState> {
   declare _picker: HTMLSpanElement | null | undefined;
 
   constructor(props) {

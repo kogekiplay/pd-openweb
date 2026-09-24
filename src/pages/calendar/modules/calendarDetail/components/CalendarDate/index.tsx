@@ -119,7 +119,11 @@ let EditBlock = class EditBlock extends Component<any, any> {
   }
 };
 EditBlock = ClickAway.wrap(EditBlock);
-export default class CalendarDate extends Component<any, any> {
+export interface CalendarDateState {
+  isEditing: boolean;
+}
+
+export default class CalendarDate extends Component<any, CalendarDateState> {
   declare elem: HTMLDivElement | null | undefined;
 
   constructor(props) {

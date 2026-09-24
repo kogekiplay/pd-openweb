@@ -2,7 +2,12 @@ import { Component } from 'react';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
 
-export default class RoleSearchBox extends Component<any, any> {
+export interface RoleSearchBoxState {
+  searchValue: string;
+  isSearching: boolean;
+}
+
+export default class RoleSearchBox extends Component<any, RoleSearchBoxState> {
   declare input: HTMLInputElement | null | undefined;
 
   constructor(props) {

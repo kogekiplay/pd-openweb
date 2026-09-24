@@ -33,7 +33,13 @@ const shouldLoadDepartments = props => {
   return isExpired || (haveSubDepartment && !subDepartments.length);
 };
 
-class TabList extends React.Component<any, any> {
+export interface TabListState {
+  showPositionDialog: boolean;
+  isNew: boolean;
+  hasDepartmentAuth: boolean;
+}
+
+class TabList extends React.Component<any, TabListState> {
   constructor(props) {
     super(props);
     this.state = {

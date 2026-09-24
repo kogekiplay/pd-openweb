@@ -162,7 +162,9 @@ class StructureContent extends Component<any, any> {
       removeUserFromSet = () => {},
       authority = [],
     } = this.props;
-    let { batchEditVisible, batchResetPasswordVisible, openChangeUserInfoDrawer } = this.state;
+    // 原来还解构了 batchResetPasswordVisible 并在下面 && this.renderBatchResetPassword()：
+    // 这个 state 从没被设过、renderBatchResetPassword 也不存在，是一段走不到的死代码，删掉
+    let { batchEditVisible, openChangeUserInfoDrawer } = this.state;
     return (
       <Fragment>
         {!isSearch ? (
@@ -275,8 +277,6 @@ class StructureContent extends Component<any, any> {
             }}
           />
         )}
-        {batchResetPasswordVisible && this.renderBatchResetPassword()}
-
         {openChangeUserInfoDrawer && (
           <AddUser
             projectId={projectId}

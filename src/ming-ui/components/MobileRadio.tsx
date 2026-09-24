@@ -6,7 +6,12 @@ import { MobileSearch, PopupWrapper, Radio } from 'ming-ui';
 import { MAX_OPTIONS_COUNT } from 'src/pages/widgetConfig/config';
 import './less/MobileCheckbox.less';
 
-export default class MobileRadio extends Component<any, any> {
+export interface MobileRadioState {
+  visible: boolean;
+  keywords: string;
+}
+
+export default class MobileRadio extends Component<any, MobileRadioState> {
   static override propTypes = {
     disabled: PropTypes.bool,
     allowAdd: PropTypes.bool,

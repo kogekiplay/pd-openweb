@@ -62,7 +62,11 @@ const ApplicationTriggerWrapper = styled.div`
   }
 `;
 
-class Moreop extends Component<any, any> {
+export interface MoreopState {
+  menuVisible: boolean;
+}
+
+class Moreop extends Component<any, MoreopState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -111,7 +115,13 @@ class Moreop extends Component<any, any> {
   }
 }
 
-class Upload extends Component<any, any> {
+export interface UploadState {
+  loading: boolean;
+  uploadAvatarUrl: string;
+  uploadAvatar: string;
+}
+
+class Upload extends Component<any, UploadState> {
   declare uploadFileEl: HTMLDivElement | null | undefined;
 
   constructor(props) {

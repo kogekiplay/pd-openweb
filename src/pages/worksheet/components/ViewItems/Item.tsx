@@ -13,7 +13,12 @@ import SettingMenu from './SettingMenu';
 import 'rc-trigger/assets/index.css';
 import './ViewItems.less';
 
-export default class Item extends Component<any, any> {
+export interface ItemState {
+  visible: boolean;
+  isEdit: boolean;
+}
+
+export default class Item extends Component<any, ItemState> {
   static defaultProps = {
     item: {},
   };

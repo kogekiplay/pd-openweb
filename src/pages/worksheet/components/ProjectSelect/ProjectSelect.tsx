@@ -4,7 +4,11 @@ import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
 import './ProjectSelect.less';
 
-export default class ProjectSelect extends Component<any, any> {
+export interface ProjectSelectState {
+  isSlideDown: boolean;
+}
+
+export default class ProjectSelect extends Component<any, ProjectSelectState> {
   static override propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func,

@@ -29,7 +29,11 @@ import './index.less';
 
 const isGunterExport = location.href.includes('gunterExport');
 
-class GunterChart extends Component<any, any> {
+export interface GunterChartState {
+  loading: boolean;
+}
+
+class GunterChart extends Component<any, GunterChartState> {
   constructor(props) {
     super(props);
     this.state = {

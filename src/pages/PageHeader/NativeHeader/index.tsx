@@ -12,7 +12,11 @@ import { NATIVE_MODULES } from '../config';
 import { compareProps } from '../util';
 import './index.less';
 
-export default class NativeHeader extends Component<any, any> {
+export interface NativeHeaderState {
+  indexSideVisible: boolean;
+}
+
+export default class NativeHeader extends Component<any, NativeHeaderState> {
   declare timer: NodeJS.Timeout | undefined;
 
   static override propTypes = {

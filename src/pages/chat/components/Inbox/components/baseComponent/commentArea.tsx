@@ -158,7 +158,11 @@ const getComponentProps = function (props) {
   return $.extend(true, commonProps, map[sourceType]);
 };
 
-class CommentItem extends React.Component<any, any> {
+export interface CommentItemState {
+  showCommenter: boolean;
+}
+
+class CommentItem extends React.Component<any, CommentItemState> {
   constructor(props) {
     super(props);
     this.state = {

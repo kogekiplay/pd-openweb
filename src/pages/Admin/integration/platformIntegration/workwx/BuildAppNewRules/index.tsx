@@ -132,7 +132,13 @@ const StepTwo = styled.div`
   }
 `;
 
-export default class BuildAppNewRules extends Component<any, any> {
+export interface BuildAppNewRulesState {
+  step: number;
+  isLoading: boolean;
+  url?: string | undefined;
+}
+
+export default class BuildAppNewRules extends Component<any, BuildAppNewRulesState> {
   constructor(props) {
     super(props);
     this.state = {

@@ -6,7 +6,12 @@ import { expandedKeysUpdate, getFullTree, loadAllUsers, loadDepartments } from '
 import { clearSearchKeywords, fetchSearchResult, getCustomList } from '../../actions/search';
 import Result from './searchResult';
 
-class SearchBox extends Component<any, any> {
+export interface SearchBoxState {
+  showResult: boolean;
+  searchValue: string | undefined;
+}
+
+class SearchBox extends Component<any, SearchBoxState> {
   declare input: HTMLInputElement | null | undefined;
   declare box: HTMLDivElement | null | undefined;
 

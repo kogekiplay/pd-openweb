@@ -6,7 +6,13 @@ import ajaxRequest from 'src/api/taskCenter';
 import { errorMessage } from '../../../utils/utils';
 import './less/copyTask.less';
 
-export default class CopyTask extends Component<any, any> {
+export interface CopyTaskState {
+  accountId: string;
+  avatar: string;
+  visible: boolean;
+}
+
+export default class CopyTask extends Component<any, CopyTaskState> {
   constructor(props) {
     super(props);
     this.state = {

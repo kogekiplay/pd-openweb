@@ -20,7 +20,18 @@ import * as actions from './redux/actions';
 import './index.less';
 
 let modal = null;
-class MemberList extends Component<any, any> {
+export interface MemberListState {
+  selectUserVisible: boolean;
+  transferAppVisible: boolean;
+  type: string;
+  selectDepartmentType: string;
+  selectJobVisible: boolean;
+  selectOrgnizedRoleVisible: boolean;
+  personalInfoVisible: boolean;
+  accountId: null;
+}
+
+class MemberList extends Component<any, MemberListState> {
   constructor(props) {
     super(props);
     this.state = {

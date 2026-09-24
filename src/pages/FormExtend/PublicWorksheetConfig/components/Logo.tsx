@@ -43,7 +43,12 @@ const ImgCon = styled.div`
     color: var(--color-text-disabled);
   }
 `;
-export default class Logo extends React.Component<any, any> {
+export interface LogoState {
+  isUploading: boolean;
+  logourl?: string | undefined;
+}
+
+export default class Logo extends React.Component<any, LogoState> {
   static override propTypes = {
     url: PropTypes.string,
     onChange: PropTypes.func,

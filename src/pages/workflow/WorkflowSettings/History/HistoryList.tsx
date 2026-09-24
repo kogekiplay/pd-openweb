@@ -37,7 +37,11 @@ const Box = styled.div`
     }
   }
 `;
-export default class HistoryList extends Component<any, any> {
+export interface HistoryListState {
+  showList: boolean;
+}
+
+export default class HistoryList extends Component<any, HistoryListState> {
   static override propTypes = {
     processId: string,
     data: any,

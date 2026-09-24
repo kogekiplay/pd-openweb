@@ -30,7 +30,11 @@ const MenuWrap = styled(Menu)`
   }
 `;
 
-class CreateBtn extends Component<any, any> {
+export interface CreateBtnState {
+  popupVisible: boolean;
+}
+
+class CreateBtn extends Component<any, CreateBtnState> {
   constructor(props) {
     super(props);
     this.state = {

@@ -28,7 +28,11 @@ const getCalendarAtData = ({ createUser, members = [] }) => {
     .slice(0, 20);
 };
 
-export default class CalendarCommenter extends Component<any, any> {
+export interface CalendarCommenterState {
+  showCount: boolean;
+}
+
+export default class CalendarCommenter extends Component<any, CalendarCommenterState> {
   constructor(props) {
     super(props);
     this.state = {

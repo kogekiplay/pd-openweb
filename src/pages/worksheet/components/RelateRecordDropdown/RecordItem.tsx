@@ -32,7 +32,11 @@ const Cover = styled.div(
   }
 `,
 );
-export default class RecordItem extends React.PureComponent<any, any> {
+export interface RecordItemState {
+  coverError: boolean;
+}
+
+export default class RecordItem extends React.PureComponent<any, RecordItemState> {
   static override propTypes = {
     multiple: PropTypes.bool,
     coverCid: PropTypes.string,

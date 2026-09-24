@@ -7,7 +7,11 @@ import '../less/Dialog.less';
 
 const dialogContainerPadding = 32;
 
-class DialogBase extends Component<any, any> {
+export interface DialogBaseState {
+  dislocateIndex: number;
+}
+
+class DialogBase extends Component<any, DialogBaseState> {
   declare target: HTMLDivElement | null;
   declare dialogId: number;
   declare id: number | undefined;

@@ -8,7 +8,11 @@ import { NODE_TYPE } from '../../enum';
 import { getFilterText } from '../../utils';
 import { CreateNode, NodeOperate } from '../components';
 
-export default class BranchItem extends Component<any, any> {
+export interface BranchItemState {
+  isMove: boolean;
+}
+
+export default class BranchItem extends Component<any, BranchItemState> {
   declare mounted: boolean | undefined;
 
   constructor(props) {

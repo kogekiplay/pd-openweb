@@ -12,7 +12,11 @@ import { browserIsMobile } from 'src/utils/common';
 import { getSwitchItemNames } from 'src/utils/control';
 import { FROM } from './enum';
 
-export default class Switch extends React.Component<any, any> {
+export interface SwitchState {
+  value: boolean;
+}
+
+export default class Switch extends React.Component<any, SwitchState> {
   static override propTypes = {
     from: PropTypes.number,
     className: PropTypes.string,

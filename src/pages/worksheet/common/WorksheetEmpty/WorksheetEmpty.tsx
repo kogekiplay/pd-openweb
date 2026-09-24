@@ -19,7 +19,14 @@ const createWorksheetList = [
   { type: 'importExcel', icon: 'new_excel', createType: 'importExcel', name: _l('从Excel创建') },
 ];
 
-class WorksheetEmpty extends Component<any, any> {
+export interface WorksheetEmptyState {
+  createType: string;
+  flag: boolean;
+  dialogImportExcel?: boolean | undefined;
+  visible?: boolean | undefined;
+}
+
+class WorksheetEmpty extends Component<any, WorksheetEmptyState> {
   static override propTypes = {
     dispatch: PropTypes.func,
   };

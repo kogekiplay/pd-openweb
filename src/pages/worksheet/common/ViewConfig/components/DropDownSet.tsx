@@ -54,7 +54,11 @@ const DropDownSetChoose = styled.div`
   }
 `;
 // dropdown
-export default class DropDownSet extends React.Component<any, any> {
+export interface DropDownSetState {
+  visible: boolean;
+}
+
+export default class DropDownSet extends React.Component<any, DropDownSetState> {
   constructor(props) {
     super(props);
     this.state = {

@@ -11,7 +11,11 @@ import Back from '../components/Back';
 import * as actions from './redux/actions';
 import './index.less';
 
-class Members extends Component<any, any> {
+export interface MembersState {
+  checked: boolean;
+}
+
+class Members extends Component<any, MembersState> {
   constructor(props) {
     super(props);
     this.state = {

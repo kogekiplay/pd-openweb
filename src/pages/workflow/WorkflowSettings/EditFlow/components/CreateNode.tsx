@@ -4,7 +4,13 @@ import { Menu, MenuItem } from 'ming-ui';
 import { NODE_TYPE } from '../../enum';
 import BranchDialog from './BranchDialog';
 
-export default class CreateNode extends Component<any, any> {
+export interface CreateNodeState {
+  showOptions: boolean;
+  branchDialogModel: number;
+  showBranchDialog?: boolean | undefined;
+}
+
+export default class CreateNode extends Component<any, CreateNodeState> {
   constructor(props) {
     super(props);
     this.state = {

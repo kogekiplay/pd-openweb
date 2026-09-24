@@ -11,7 +11,11 @@ function supportsVideo() {
   return !!document.createElement('video').canPlayType;
 }
 
-class VideoPlayer extends Component<any, any> {
+export interface VideoPlayerState {
+  showMask: boolean;
+}
+
+class VideoPlayer extends Component<any, VideoPlayerState> {
   declare videoContent: HTMLVideoElement | null | undefined;
 
   static override propTypes = {

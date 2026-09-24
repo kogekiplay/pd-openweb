@@ -2,7 +2,11 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
 
-class ConfirmButton extends Component<any, any> {
+export interface ConfirmButtonState {
+  loading: boolean;
+}
+
+class ConfirmButton extends Component<any, ConfirmButtonState> {
   declare mounted: boolean | undefined;
 
   constructor(props) {

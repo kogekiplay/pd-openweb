@@ -52,7 +52,11 @@ const PAGE_HEADER_ROUTE = {
 // 报 TS2345。数组形态只有重复段（*x / {…}*）才会出现，这个 pattern 是两个普通
 // 段，写清楚实际形状比在调用处 String() 强转诚实。
 const fn = match<{ roleType: string; projectId: string }>('/admin/:roleType/:projectId', { decode: false });
-export default class NetManageHeader extends Component<any, any> {
+export interface NetManageHeaderState {
+  indexSideVisible: boolean;
+}
+
+export default class NetManageHeader extends Component<any, NetManageHeaderState> {
   static override propTypes = {};
   static defaultProps = {};
   override state = {

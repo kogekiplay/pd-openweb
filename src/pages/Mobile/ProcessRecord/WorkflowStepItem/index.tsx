@@ -12,7 +12,11 @@ const Wrap = styled.ul`
   background-color: var(--color-background-secondary);
 `;
 
-class WorkflowStepItem extends Component<any, any> {
+export interface WorkflowStepItemState {
+  visible: boolean;
+}
+
+class WorkflowStepItem extends Component<any, WorkflowStepItemState> {
   constructor(props) {
     super(props);
     this.state = {

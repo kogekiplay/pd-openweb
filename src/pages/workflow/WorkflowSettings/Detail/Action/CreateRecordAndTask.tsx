@@ -17,7 +17,12 @@ const getAppList = data =>
       value: id,
     }));
 
-export default class CreateRecordAndTask extends Component<any, any> {
+export interface CreateRecordAndTaskState {
+  showOtherWorksheet: boolean;
+  isBatch: boolean;
+}
+
+export default class CreateRecordAndTask extends Component<any, CreateRecordAndTaskState> {
   constructor(props) {
     super(props);
 

@@ -21,7 +21,11 @@ const SubmitButton = styled(Button)`
   }
 `;
 
-export default class EditableButton extends React.Component<any, any> {
+export interface EditableButtonState {
+  isEditing: boolean;
+}
+
+export default class EditableButton extends React.Component<any, EditableButtonState> {
   declare con: HTMLInputElement | null | undefined;
 
   static override propTypes = {

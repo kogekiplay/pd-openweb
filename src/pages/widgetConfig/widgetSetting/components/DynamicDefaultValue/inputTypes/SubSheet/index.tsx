@@ -6,7 +6,11 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../../components
 import { DynamicValueInputWrap } from '../../styled';
 import CustomDefaultValue from './CustomDefaultValue';
 
-export default class SubSheet extends Component<any, any> {
+export interface SubSheetState {
+  recordListVisible: boolean;
+}
+
+export default class SubSheet extends Component<any, SubSheetState> {
   declare $wrap: SelectOtherField | null | undefined;
 
   static override propTypes = {

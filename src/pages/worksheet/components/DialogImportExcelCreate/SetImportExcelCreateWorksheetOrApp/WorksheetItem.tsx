@@ -70,7 +70,13 @@ const SheetTabWrap = styled.div`
   }
 `;
 
-export default class WorksheetItem extends Component<any, any> {
+export interface WorksheetItemState {
+  directionVisible: boolean;
+  hideDirection: string | null;
+  sheetItemOperateVisible: boolean;
+}
+
+export default class WorksheetItem extends Component<any, WorksheetItemState> {
   declare scrollWraperEl: HTMLDivElement | null | undefined;
   declare flag: boolean | undefined;
   declare editInput: HTMLInputElement | null | undefined;

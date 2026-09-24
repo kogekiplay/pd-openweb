@@ -12,7 +12,12 @@ import selectToolsFields from './selectToolsFields';
 import './index.less';
 
 const ClickAwayable = ClickAway;
-export default class ActionFields extends Component<any, any> {
+export interface ActionFieldsState {
+  activeIndex: number;
+  keywords: string;
+}
+
+export default class ActionFields extends Component<any, ActionFieldsState> {
   declare search: HTMLInputElement | null | undefined;
 
   static override propTypes = {

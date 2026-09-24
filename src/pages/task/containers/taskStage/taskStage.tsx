@@ -38,7 +38,13 @@ const taskStageSettings = {
   ajaxPost: '' as ApiResult | string,
 };
 
-class TaskStage extends Component<any, any> {
+export interface TaskStageState {
+  openTaskDetail: boolean;
+  taskId: string;
+  isForceUpdate: boolean;
+}
+
+class TaskStage extends Component<any, TaskStageState> {
   /** 组件是否仍挂载；异步回调里用来避免对已卸载组件 setState */
   mounted = false;
 

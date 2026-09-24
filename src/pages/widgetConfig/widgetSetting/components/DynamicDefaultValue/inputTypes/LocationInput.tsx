@@ -5,7 +5,11 @@ import { getMapConfig } from 'src/utils/control';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class LocationInput extends Component<any, any> {
+export interface LocationInputState {
+  visible: boolean;
+}
+
+export default class LocationInput extends Component<any, LocationInputState> {
   declare $wrap: SelectOtherField | null | undefined;
 
   constructor(props) {

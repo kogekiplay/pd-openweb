@@ -3,10 +3,14 @@ import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 
+export interface PostCardState {
+  leaving: boolean;
+}
+
 /**
  * 动态基础卡片样式
  */
-class PostCard extends React.Component<any, any> {
+class PostCard extends React.Component<any, PostCardState> {
   static override propTypes = {
     component: PropTypes.any,
     className: PropTypes.string,

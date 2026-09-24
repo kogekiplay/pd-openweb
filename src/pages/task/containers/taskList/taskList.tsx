@@ -42,7 +42,13 @@ const taskListSettings = {
   taskListPost: null,
 };
 
-class TaskList extends Component<any, any> {
+export interface TaskListState {
+  openTaskDetail: boolean;
+  taskId: string;
+  isForceUpdate: boolean;
+}
+
+class TaskList extends Component<any, TaskListState> {
   /** 组件是否仍挂载；异步回调里用来避免对已卸载组件 setState */
   mounted = false;
 

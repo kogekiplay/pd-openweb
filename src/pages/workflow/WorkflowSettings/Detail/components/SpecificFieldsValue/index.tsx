@@ -6,7 +6,11 @@ import { handleGlobalVariableName } from '../../../utils';
 import SelectOtherFields from '../SelectOtherFields';
 import Tag from '../Tag';
 
-export default class SpecificFieldsValue extends Component<any, any> {
+export interface SpecificFieldsValueState {
+  fieldsVisible: boolean;
+}
+
+export default class SpecificFieldsValue extends Component<any, SpecificFieldsValueState> {
   constructor(props) {
     super(props);
     this.state = {

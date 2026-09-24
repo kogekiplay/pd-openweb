@@ -81,7 +81,11 @@ const ColumnListWrap = styled.div`
   }
 `;
 
-export default class ColumnListDropdown extends React.Component<any, any> {
+export interface ColumnListDropdownState {
+  keywords: string;
+}
+
+export default class ColumnListDropdown extends React.Component<any, ColumnListDropdownState> {
   static override propTypes = {
     visible: PropTypes.bool,
     showSearch: PropTypes.bool,

@@ -192,7 +192,11 @@ const pageSizeNums = [
   { text: 200, value: 200 },
 ];
 
-export default class Pagination extends React.Component<any, any> {
+export interface PaginationState {
+  popupVisible: boolean;
+}
+
+export default class Pagination extends React.Component<any, PaginationState> {
   static override propTypes = {
     appendToBody: PropTypes.bool,
     disabled: PropTypes.bool,

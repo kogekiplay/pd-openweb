@@ -23,7 +23,12 @@ const AppLogWrap = styled.div`
   }
 `;
 
-export default class AppLog extends Component<any, any> {
+export interface AppLogState {
+  currentTab: number;
+  disabledExportBtn: boolean;
+}
+
+export default class AppLog extends Component<any, AppLogState> {
   constructor(props) {
     super(props);
     const globalLogTab = localStorage.getItem('globalLogTab');

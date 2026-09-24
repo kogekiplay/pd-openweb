@@ -35,7 +35,12 @@ import CopyTask from '../copyTask/copyTask';
 import './header.less';
 
 const ClickAwayable = ClickAway;
-class Header extends Component<any, any> {
+export interface HeaderState {
+  showOperator: boolean;
+  showChecklistDialog: boolean;
+}
+
+class Header extends Component<any, HeaderState> {
   declare checklistText: HTMLInputElement | null | undefined;
 
   constructor(props) {

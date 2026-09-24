@@ -10,7 +10,12 @@ import { openPrintPageInBrowser } from './CopyPrintLinkPopup';
 import { isThirdPartyBrowser, requestExportWord } from './utils';
 import './index.less';
 
-class Header extends React.Component<any, any> {
+export interface HeaderState {
+  isEdit: boolean;
+  exportLoading: boolean;
+}
+
+class Header extends React.Component<any, HeaderState> {
   constructor(props) {
     super(props);
     this.state = {

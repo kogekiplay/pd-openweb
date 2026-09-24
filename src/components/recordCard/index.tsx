@@ -22,7 +22,11 @@ function getCoverControlData(data) {
   return _.find(data, file => RegExpValidator.fileIsPicture(file.ext));
 }
 
-export default class RecordCard extends Component<any, any> {
+export interface RecordCardState {
+  forceShowFullValue: boolean | null;
+}
+
+export default class RecordCard extends Component<any, RecordCardState> {
   static override propTypes = {
     from: PropTypes.number,
     disabled: PropTypes.bool,

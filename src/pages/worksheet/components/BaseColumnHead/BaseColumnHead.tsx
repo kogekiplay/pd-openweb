@@ -11,7 +11,11 @@ import { fieldCanSort } from 'src/utils/control';
 import getTableColumnWidth from './getTableColumnWidth';
 import './style.less';
 
-export default class BaseColumnHead extends React.Component<any, any> {
+export interface BaseColumnHeadState {
+  listVisible?: boolean | undefined;
+}
+
+export default class BaseColumnHead extends React.Component<any, BaseColumnHeadState> {
   declare drag: HTMLSpanElement | null | undefined;
 
   static override propTypes = {

@@ -45,7 +45,11 @@ const Wrap = styled.div`
     line-height: 30px;
   }
 `;
-export default class HubAndPluginHeader extends Component<any, any> {
+export interface HubAndPluginHeaderState {
+  indexSideVisible: boolean;
+}
+
+export default class HubAndPluginHeader extends Component<any, HubAndPluginHeaderState> {
   declare timer: NodeJS.Timeout | undefined;
 
   static override propTypes = {

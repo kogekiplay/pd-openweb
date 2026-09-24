@@ -86,7 +86,8 @@ export default class MemberList extends Component<any, any> {
       pageIndex: this.state.pageIndex,
       pageSize: this.state.pageSize,
       groupId: this.props.groupId,
-      keywords: this.state.keyword,
+      // 原来读的是 this.state.keyword（少个 s），state 里只有 keywords —— 群组成员的搜索框输什么都不筛
+      keywords: this.state.keywords,
       type: 1,
       projectId: Config.projectId,
     };

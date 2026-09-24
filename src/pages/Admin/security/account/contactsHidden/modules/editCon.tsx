@@ -19,7 +19,13 @@ const ruleItemType = {
   extra: 15,
   whiteList: 20,
 };
-class EditCon extends React.Component<any, any> {
+export interface EditConState {
+  showMoreActionSelf: boolean;
+  showMoreActionExtra: boolean;
+  showMoreActionWhiteList?: boolean | undefined;
+}
+
+class EditCon extends React.Component<any, EditConState> {
   constructor(props) {
     super(props);
     this.state = {

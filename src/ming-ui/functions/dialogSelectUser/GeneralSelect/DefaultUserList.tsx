@@ -28,7 +28,13 @@ const TitleWrapper = styled.div`
   }
 `;
 
-export default class DefaultUserList extends Component<any, any> {
+export interface DefaultUserListState {
+  manageOftenUserVisible: boolean;
+  oftenUsersCollapseOpen: boolean;
+  usersCollapseOpen: boolean;
+}
+
+export default class DefaultUserList extends Component<any, DefaultUserListState> {
   constructor(props) {
     super(props);
     this.state = {

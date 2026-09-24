@@ -3,7 +3,11 @@ import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 
-export default class FilterNav extends Component<any, any> {
+export interface FilterNavState {
+  currentIndex: number;
+}
+
+export default class FilterNav extends Component<any, FilterNavState> {
   constructor(props) {
     super(props);
     let currentIndex = 0;

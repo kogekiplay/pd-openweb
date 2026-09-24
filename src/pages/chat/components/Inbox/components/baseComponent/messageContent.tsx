@@ -20,7 +20,14 @@ const xssOptions = {
   whiteList: Object.assign({}, whiteList, { img: ['src', 'alt', 'title', 'width', 'height', 'class'] }),
 };
 
-export default class BaseMessageComponent extends React.Component<any, any> {
+export interface BaseMessageComponentState {
+  showBtn: boolean;
+  expanded: boolean;
+  /** 消息超长、折叠显示时才有 */
+  partMsg?: string | undefined;
+}
+
+export default class BaseMessageComponent extends React.Component<any, BaseMessageComponentState> {
   static override propTypes = {
     isFavorite: PropTypes.oneOf(['0', '1']),
 

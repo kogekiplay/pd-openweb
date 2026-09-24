@@ -388,8 +388,12 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
   return global.getGlobalMeta(args).then(finish);
 };
 
+export interface PreState {
+  loading: boolean;
+}
+
 const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
-  class Pre extends React.Component<any, any> {
+  class Pre extends React.Component<any, PreState> {
     constructor(props) {
       super(props);
       this.state = {

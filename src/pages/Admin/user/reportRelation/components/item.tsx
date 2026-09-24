@@ -5,7 +5,12 @@ import Icon from 'ming-ui/components/Icon';
 import OpList from './opList';
 import User from './user';
 
-export default class Item extends Component<any, any> {
+export interface ItemState {
+  isDisabled: boolean;
+  showOpList: boolean;
+}
+
+export default class Item extends Component<any, ItemState> {
   static override propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,

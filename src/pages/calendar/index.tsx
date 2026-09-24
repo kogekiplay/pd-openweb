@@ -6,7 +6,12 @@ import { destroyCalendar } from './modules/calendar/fcInstance';
 import './modules/calendarControl/css/fullcalendar.less';
 import './modules/css/share.less';
 
-export default class CalendarEntrypoint extends Component<any, any> {
+export interface CalendarEntrypointState {
+  openTaskDetail: boolean;
+  taskId: string;
+}
+
+export default class CalendarEntrypoint extends Component<any, CalendarEntrypointState> {
   constructor(props) {
     super(props);
     this.state = {

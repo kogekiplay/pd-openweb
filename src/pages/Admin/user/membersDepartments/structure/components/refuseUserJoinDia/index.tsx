@@ -22,7 +22,11 @@ const DialogWrap = styled(Dialog)`
   }
 `;
 
-class RefuseUserJoinDia extends React.Component<any, any> {
+export interface RefuseUserJoinDiaState {
+  refuseMessage: string;
+}
+
+class RefuseUserJoinDia extends React.Component<any, RefuseUserJoinDiaState> {
   declare area: HTMLTextAreaElement | null | undefined;
 
   constructor(props) {
@@ -85,7 +89,6 @@ class RefuseUserJoinDia extends React.Component<any, any> {
         <textarea
           name="refuseUserJoinDia"
           autoComplete="off"
-          type="textarea"
           className="test-textarea mTop10"
           value={refuseMessage || ''}
           ref={area => {

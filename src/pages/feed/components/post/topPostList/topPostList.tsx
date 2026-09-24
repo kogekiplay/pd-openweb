@@ -10,7 +10,12 @@ import PostBody from '../post/postBody';
 import PostCard from '../post/postCard';
 import TopPostPager from './topPostPager';
 
-class TopPostList extends React.Component<any, any> {
+export interface TopPostListState {
+  pageIndex: number;
+  focus: boolean;
+}
+
+class TopPostList extends React.Component<any, TopPostListState> {
   declare nextItem: _.DebouncedFunc<() => void> | undefined;
   declare _isMounted: boolean | undefined;
   declare root: HTMLDivElement | null | undefined;

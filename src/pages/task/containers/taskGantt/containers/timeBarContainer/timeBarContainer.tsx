@@ -19,7 +19,12 @@ import {
 import utils from '../../utils/utils';
 import './timeBarContainer.less';
 
-class TimeBarContainer extends Component<any, any> {
+export interface TimeBarContainerState {
+  openTaskDetail: boolean;
+  taskId: string;
+}
+
+class TimeBarContainer extends Component<any, TimeBarContainerState> {
   declare timeBarContainer: HTMLDivElement | null | undefined;
 
   constructor(props) {

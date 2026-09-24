@@ -40,7 +40,12 @@ const tabs = [
   { key: 1, label: _l('总览') },
   { key: 2, label: _l('按成员') },
 ];
-export default class AppAnalytics extends Component<any, any> {
+export interface AppAnalyticsState {
+  currentTab: number;
+  isAuthority: boolean;
+}
+
+export default class AppAnalytics extends Component<any, AppAnalyticsState> {
   declare analysisEle: Overview | null | undefined;
 
   constructor(props) {

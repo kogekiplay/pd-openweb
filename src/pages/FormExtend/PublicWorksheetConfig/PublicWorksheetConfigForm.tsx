@@ -58,7 +58,12 @@ const SubmitCon = styled.div(
 `,
 );
 
-class PublicWorksheetConfigForm extends React.Component<any, any> {
+export interface PublicWorksheetConfigFormState {
+  appearanceConfigVisible: boolean;
+  headerPopupVisible: boolean;
+}
+
+class PublicWorksheetConfigForm extends React.Component<any, PublicWorksheetConfigFormState> {
   declare con: HTMLDivElement | null | undefined;
 
   static override propTypes = {

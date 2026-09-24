@@ -5,7 +5,11 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { browserIsMobile } from 'src/utils/common';
 import { FROM } from '../core/config';
 
-class WidgetsDesc extends React.Component<any, any> {
+export interface WidgetsDescState {
+  isShow: boolean;
+}
+
+class WidgetsDesc extends React.Component<any, WidgetsDescState> {
   declare formcon: HTMLSpanElement | null | undefined;
   declare formconMoreDesc: HTMLSpanElement | null | undefined;
   declare formconBox: HTMLSpanElement | null | undefined;

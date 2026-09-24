@@ -50,7 +50,13 @@ const TestResultBox = styled.div`
   }
 `;
 
-export default class NodeOperate extends Component<any, any> {
+export interface NodeOperateState {
+  isEdit: boolean;
+  showDelete: boolean;
+  showOperate: boolean;
+}
+
+export default class NodeOperate extends Component<any, NodeOperateState> {
   declare workflowNodeName: HTMLInputElement | null | undefined;
 
   constructor(props) {

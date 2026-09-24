@@ -228,7 +228,11 @@ function LockApp(props) {
 }
 
 // 解锁应用
-class UnLockDialog extends Component<any, any> {
+export interface UnLockDialogState {
+  lockPassword?: string | undefined;
+}
+
+class UnLockDialog extends Component<any, UnLockDialogState> {
   constructor(props) {
     super(props);
     this.state = {};

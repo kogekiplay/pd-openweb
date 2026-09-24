@@ -368,7 +368,17 @@ function SearchFolder(props) {
   );
 }
 
-class TaskNavigation extends Component<any, any> {
+export interface TaskNavigationState {
+  showFolderTemplate: boolean;
+  showCopyFolder: boolean;
+  folderId: string;
+  projectId: string;
+  folderName: string;
+  chargeUser: string;
+  isAdmin: boolean;
+}
+
+class TaskNavigation extends Component<any, TaskNavigationState> {
   constructor(props) {
     super(props);
     this.state = {

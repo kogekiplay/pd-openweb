@@ -43,7 +43,11 @@ const TabList = [
   { tab: 2, title: _l('已加密字段') },
 ];
 
-class EncryptDetail extends Component<any, any> {
+export interface EncryptDetailState {
+  currentTab: number;
+}
+
+class EncryptDetail extends Component<any, EncryptDetailState> {
   constructor(props) {
     super(props);
     this.state = {

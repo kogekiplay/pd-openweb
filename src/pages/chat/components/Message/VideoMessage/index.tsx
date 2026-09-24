@@ -13,7 +13,11 @@ const formatTime = (seconds = 0) => {
   return `${minute}:${second}`;
 };
 
-export default class VideoMessage extends Component<any, any> {
+export interface VideoMessageState {
+  loading: boolean;
+}
+
+export default class VideoMessage extends Component<any, VideoMessageState> {
   declare _isMounted: boolean | undefined;
 
   constructor(props) {

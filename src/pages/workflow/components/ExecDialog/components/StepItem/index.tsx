@@ -86,7 +86,13 @@ const SIGN_COUNTERSIGN_TYPE = {
  */
 const formatTime = time => moment(dateConvertToUserZone(time)).format('YYYY-MM-DD HH:mm:ss');
 
-export default class StepItem extends Component<any, any> {
+export interface StepItemState {
+  moreOperationVisible: boolean;
+  showLogDialog: boolean;
+  showMore: boolean;
+}
+
+export default class StepItem extends Component<any, StepItemState> {
   static override propTypes = {
     data: object,
     currentType: number,

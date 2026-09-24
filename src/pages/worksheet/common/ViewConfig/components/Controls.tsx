@@ -8,7 +8,11 @@ import { getAdvanceSetting } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
 // 字段
-export default class Controls extends React.Component<any, any> {
+export interface ControlsState {
+  height: number;
+}
+
+export default class Controls extends React.Component<any, ControlsState> {
   constructor(props) {
     super(props);
     this.state = { height: document.documentElement.clientHeight - 280 };

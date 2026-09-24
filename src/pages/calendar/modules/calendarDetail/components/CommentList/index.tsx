@@ -6,7 +6,11 @@ import Commenter from 'src/components/comment/commenter';
 import CommentList from 'src/components/comment/commentList';
 import { htmlDecodeReg } from 'src/utils/common';
 
-export default class CalendarCommentList extends Component<any, any> {
+export interface CalendarCommentListState {
+  isOnlyMe: boolean;
+}
+
+export default class CalendarCommentList extends Component<any, CalendarCommentListState> {
   constructor(props) {
     super(props);
     this.state = {

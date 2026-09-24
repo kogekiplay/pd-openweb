@@ -6,7 +6,12 @@ import { telIsValidNumber } from 'ming-ui/components/PhoneNumberInput/util';
 import { captcha } from 'ming-ui/functions';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
 
-export default class WidgetsVerifyCode extends Component<any, any> {
+export interface WidgetsVerifyCodeState {
+  isSubmit: boolean;
+  count: number;
+}
+
+export default class WidgetsVerifyCode extends Component<any, WidgetsVerifyCodeState> {
   declare timer: NodeJS.Timeout | undefined;
 
   constructor(props) {

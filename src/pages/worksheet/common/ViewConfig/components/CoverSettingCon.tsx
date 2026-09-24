@@ -66,7 +66,11 @@ const COVER_IMAGE_PREVIEW = {
   1: true,
 };
 // 封面图片
-export default class CoverSetting extends React.Component<any, any> {
+export interface CoverSettingState {
+  customWidth: string | number;
+}
+
+export default class CoverSetting extends React.Component<any, CoverSettingState> {
   constructor(props) {
     super(props);
     const cardwidth = _.get(!props.fromRelative ? props.view : props, 'advancedSetting.cardwidth') || '2';

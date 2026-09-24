@@ -15,7 +15,11 @@ const routeList = [
   },
 ];
 
-export default class Portal extends Component<any, any> {
+export interface PortalState {
+  currentTab: string;
+}
+
+export default class Portal extends Component<any, PortalState> {
   constructor(props) {
     super(props);
     this.state = {

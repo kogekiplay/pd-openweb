@@ -42,7 +42,15 @@ const MenuStyle = styled.div`
   }
 `;
 
-export default class SelectOtherField extends Component<any, any> {
+export interface SelectOtherFieldState {
+  isDynamic: boolean;
+  filedVisible: boolean;
+  searchVisible: boolean;
+  fxVisible: boolean;
+  showPopupType: string;
+}
+
+export default class SelectOtherField extends Component<any, SelectOtherFieldState> {
   static override propTypes = { onTriggerClick: func };
   static defaultProps = {
     onTriggerClick: _.noop,

@@ -24,7 +24,11 @@ const typeColors = {
   link: '#00bcd4',
 };
 
-class ThumbnailItem extends React.Component<any, any> {
+export interface ThumbnailItemState {
+  error: boolean;
+}
+
+class ThumbnailItem extends React.Component<any, ThumbnailItemState> {
   static override propTypes = {
     attachment: PropTypes.object,
     current: PropTypes.bool,

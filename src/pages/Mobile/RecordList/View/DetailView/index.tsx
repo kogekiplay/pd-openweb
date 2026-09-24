@@ -22,7 +22,11 @@ const DetailViewWrap = styled.div`
   }
 `;
 
-class DetailView extends Component<any, any> {
+export interface DetailViewState {
+  loading: boolean;
+}
+
+class DetailView extends Component<any, DetailViewState> {
   constructor(props) {
     super(props);
     this.state = {

@@ -17,7 +17,11 @@ import { addFollowMembers, removeFollowMembers, updateUserStatus } from '../../r
 import './subordinateMembers.less';
 
 const ClickAwayable = ClickAway;
-class SubordinateMembers extends Component<any, any> {
+export interface SubordinateMembersState {
+  showNetwork: boolean;
+}
+
+class SubordinateMembers extends Component<any, SubordinateMembersState> {
   declare ganttMembersList: HTMLUListElement | null | undefined;
 
   constructor(props) {

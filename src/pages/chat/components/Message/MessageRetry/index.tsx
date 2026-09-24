@@ -2,7 +2,11 @@ import { Component } from 'react';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import './index.less';
 
-export default class MessageRetry extends Component<any, any> {
+export interface MessageRetryState {
+  status: string | false;
+}
+
+export default class MessageRetry extends Component<any, MessageRetryState> {
   declare loadingTime: NodeJS.Timeout | undefined;
   declare errorTime: NodeJS.Timeout | undefined;
   declare retry: HTMLDivElement | null | undefined;

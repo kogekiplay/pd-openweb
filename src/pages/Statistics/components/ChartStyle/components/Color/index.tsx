@@ -23,7 +23,12 @@ const EntranceWrapper = styled.div`
   }
 `;
 
-export default class ColorEntrance extends Component<any, any> {
+export interface ColorEntranceState {
+  baseColorModalVisible: boolean;
+  ruleColorModalVisible: boolean;
+}
+
+export default class ColorEntrance extends Component<any, ColorEntranceState> {
   constructor(props) {
     super(props);
     this.state = {

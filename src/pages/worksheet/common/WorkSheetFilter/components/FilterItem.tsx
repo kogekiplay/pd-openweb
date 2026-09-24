@@ -15,7 +15,12 @@ import wrapDisableClick from './wrapDisableClick';
 
 const NewMenuItem = wrapDisableClick(MenuItem);
 
-export default class FilterItem extends Component<any, any> {
+export interface FilterItemState {
+  nameIsEditing: boolean;
+  operateVisible: boolean;
+}
+
+export default class FilterItem extends Component<any, FilterItemState> {
   declare title: HTMLDivElement | null | undefined;
 
   static override propTypes = {

@@ -26,10 +26,15 @@ import './postOperateList.css';
 
 const { POST_TYPE } = postEnum;
 
+export interface PostOperateListState {
+  index: number;
+  taskEvent: number;
+}
+
 /**
  * 动态的操作列表
  */
-class PostOperateList extends React.Component<any, any> {
+class PostOperateList extends React.Component<any, PostOperateListState> {
   static override propTypes = {
     dispatch: PropTypes.func,
     options: PropTypes.object,

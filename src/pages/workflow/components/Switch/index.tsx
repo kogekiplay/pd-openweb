@@ -10,7 +10,11 @@ const STATUS2TEXT = {
   close: _l('已关闭%03002'),
 };
 
-export default class Switch extends Component<any, any> {
+export interface SwitchState {
+  disabled: boolean;
+}
+
+export default class Switch extends Component<any, SwitchState> {
   static override propTypes = {
     /** 是否禁止关闭 */
     disabledClose: bool,
