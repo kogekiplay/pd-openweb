@@ -386,6 +386,8 @@ export interface SelectedEntityValue {
   /* 展示名按控件类型各叫各的：成员是 fullname、部门是 departmentName、组织角色是 organizeName。
      渲染时都要判「取不到就显示『已删除』」，所以都在这里列出来。 */
   fullname?: string | undefined;
+  /** 有的来源拼成 fullName（成员控件渲染时两种都兜） */
+  fullName?: string | undefined;
   avatar?: string | undefined;
   departmentName?: string | undefined;
   organizeName?: string | undefined;
@@ -395,6 +397,8 @@ export interface SelectedEntityValue {
   deleteCount?: number | undefined;
   /** 部门控件开「显示完整层级」时带的路径，按 depth 从深到浅排 */
   departmentPath?: DepartmentPathItem[] | undefined;
+  /** 部门 / 组织角色：DepartmentSelect、单元格的部门控件把它作为 disabledDepartmentOrRole 交给详情卡片 */
+  disabled?: boolean | undefined;
 }
 
 /** 部门层级路径上的一节。 */

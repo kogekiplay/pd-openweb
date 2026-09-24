@@ -22,6 +22,7 @@ import {
 } from '../../../utils';
 import ActionFields from '../ActionFields';
 import SelectOtherFields from '../SelectOtherFields';
+import type { SelectedFieldValue } from '../SelectOtherFields';
 import Tag from '../Tag';
 import TagInput from '../TagInput';
 
@@ -1408,7 +1409,7 @@ export default class Condition extends Component<any, any> {
     second,
     isDel,
     sourceType,
-  }) => {
+  }: Partial<SelectedFieldValue> & { i: number; j: number; second?: boolean | undefined; isDel?: boolean | undefined }) => {
     const data = _.cloneDeep(this.props.data);
     const { updateSource } = this.props;
 

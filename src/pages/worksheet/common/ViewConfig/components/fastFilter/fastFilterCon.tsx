@@ -214,7 +214,6 @@ export default function FastFilterCon(params) {
         <div className="hasData">
           <div className="mTop24">
             <SortableList
-              worksheetControls={worksheetControls}
               items={fastFilterDataControls}
               itemKey="controlId"
               useDragHandle

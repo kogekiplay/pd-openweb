@@ -11,14 +11,20 @@
  * 保持 CM5 时代的原样：返回的是【行内】坐标 {line, start, stop}。
  * 它从 ming-ui 的 barrel 导出过，属于公开 API，不动。
  * */
+/** getRePosFromStr 的一项：第 line 行（从 0 数）里 [start, stop) 这一段，tag 是去掉两头 $ 的内容 */
+export interface LinePos {
+  line: number;
+  start: number;
+  stop: number;
+  tag: string;
+}
+
 export function getRePosFromStr(text = '', re = /\$[^ \r\n[\](){}!@%^&*+=]+?\$/g) {
   const lines = text.split('\n');
-  const positions = [];
-  let m;
+  const positions: LinePos[] = [];
+  let m: RegExpExecArray | null;
 
-  for (let i = 0; i < lines.length; i++) {
-    const l = lines[i];
-
+  for (const [i, l] of lines.entries()) {
     while ((m = re.exec(l)) !== null) {
       var tag = m[0].substring(1, m[0].length - 1);
       positions.push({
@@ -41,10 +47,12 @@ export const OPERATOR_RE = /\+|-|\*|\/|\(|\)|,/g;
  */
 export function lineStartOffsets(text = '') {
   const offsets = [0];
-  const lines = text.split('\n');
+  let next = 0;
 
-  for (let i = 0; i < lines.length - 1; i++) {
-    offsets.push(offsets[i] + lines[i].length + 1);
+  // 最后一行后面没有下一行，不算它
+  for (const line of text.split('\n').slice(0, -1)) {
+    next += line.length + 1;
+    offsets.push(next);
   }
 
   return offsets;
@@ -53,8 +61,9 @@ export function lineStartOffsets(text = '') {
 /**
  * 把 {line, start, stop} 换算成全文绝对 offset。
  */
-export function toDocRange(pos, offsets: number[]) {
-  const base = offsets[pos.line];
+export function toDocRange(pos: Pick<LinePos, 'line' | 'start' | 'stop'>, offsets: number[]) {
+  // pos 和 offsets 出自同一段文字，行号一定在范围内
+  const base = offsets[pos.line] ?? 0;
 
   return { from: base + pos.start, to: base + pos.stop };
 }
@@ -69,10 +78,20 @@ export function toDocRange(pos, offsets: number[]) {
  * 而 CM5 是先把全部 tag 标完、再把全部 operator 标完（两轮各自有序、合起来无序），
  * 所以这里必须排序，不能照搬 CM5 的顺序。
  */
+/** 一个要挂 replace 装饰的区间：字段 tag，或（公式 / 日期模式下）一个操作符 */
+export interface TagMark {
+  from: number;
+  to: number;
+  kind: 'tag' | 'operator';
+  tag: string;
+  /** 是不是最后一个字段 tag（renderTag 会收到它） */
+  isLast: boolean;
+}
+
 export function computeTagMarks(text = '', { withOperators = false } = {}) {
   const offsets = lineStartOffsets(text);
   const tagPoss = getRePosFromStr(text);
-  const marks = tagPoss.map((pos, i) => ({
+  const marks = tagPoss.map((pos, i): TagMark => ({
     ...toDocRange(pos, offsets),
     kind: 'tag',
     tag: pos.tag,
@@ -106,7 +125,7 @@ export function computeTagMarks(text = '', { withOperators = false } = {}) {
  * 对应 CM5 beforeChange 里那两段 text.map(...)。
  * 粘贴时多允许一个 `$`，因为粘进来的内容可能整段就是 `$id$` 形式的字段引用。
  */
-export function sanitizeInput(text, { mode, isPaste }) {
+export function sanitizeInput(text: string, { mode, isPaste }: { mode: 'formula' | 'date'; isPaste: boolean }) {
   if (mode === 'formula') {
     return text
       .toUpperCase()

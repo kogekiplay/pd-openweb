@@ -120,7 +120,7 @@ const ExternalLink = props => {
   const [openType, setOpenType] = useState(configuration.openType || '1');
   const [hideHeaderBar, setHideHeaderBar] = useState(configuration.hideHeaderBar || '0');
   const [urlTemplate, setUrlTemplate] = useState(props.urlTemplate || '');
-  const [ref, setRef] = useState('');
+  const [ref, setRef] = useState<TagTextarea | undefined>();
 
   useEffect(() => {
     onChange({
@@ -193,7 +193,7 @@ const ExternalLink = props => {
                               key={value}
                               className="item"
                               onClick={() => {
-                                ref.insertColumnTag(value);
+                                ref?.insertColumnTag(value);
                               }}
                             >
                               {text}

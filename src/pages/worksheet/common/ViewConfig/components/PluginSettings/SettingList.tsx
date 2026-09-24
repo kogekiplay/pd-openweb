@@ -139,7 +139,7 @@ function SettingList(props) {
         props.onSortEnd(newItems, false);
       }}
       itemClassName="boderRadAll_4"
-      renderItem={options => <Item {...props} {...options} key={'item_' + options.num} list={props.items} />}
+      renderItem={options => <Item {...props} {...options} list={props.items} />}
     />
   );
 }

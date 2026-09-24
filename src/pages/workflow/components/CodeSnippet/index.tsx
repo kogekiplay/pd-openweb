@@ -538,7 +538,8 @@ const CodeSnippet = ({
                   getRef={tag => (tagtextarea.current = tag)}
                   lineNumbers
                   readonly
-                  maxHeight
+                  // 原来写的是 maxHeight（= true）：按数字算出来的是 -1 和 "truepx"，结果是不封顶，和 'auto' 相同
+                  maxHeight="auto"
                 />
               </ScrollView>
             )}

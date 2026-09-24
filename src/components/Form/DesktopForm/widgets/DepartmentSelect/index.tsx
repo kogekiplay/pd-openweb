@@ -4,6 +4,8 @@ import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { SortableList } from 'ming-ui';
+import type { SortableRenderItemOptions } from 'ming-ui/components/SortableList';
+import type { SelectedEntityValue } from 'src/utils/controlTypes';
 import { quickSelectDept } from 'ming-ui/functions';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
 import { dealRenderValue, dealUserRange } from '../../../core/utils';
@@ -116,7 +118,7 @@ const DepartmentSelect = props => {
     onChange(JSON.stringify(newValue));
   };
 
-  const renderItem = ({ item, items = [], dragging, isLayer }) => {
+  const renderItem = ({ item, items = [], dragging, isLayer }: SortableRenderItemOptions<SelectedEntityValue>) => {
     const { allpath } = advancedSetting;
     const disablePopover = disabled || dragging || isLayer || item.isDelete;
     const showMenu = showId === item.departmentId && !disablePopover;

@@ -50,7 +50,6 @@ export default function SortableTags() {
                 backgroundColor: 'var(--color-background-disabled)',
               }}
               key={index}
-              index={index}
             >
               {item.name}
             </div>

@@ -4,6 +4,8 @@ import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { SortableList } from 'ming-ui';
+import type { SortableRenderItemOptions } from 'ming-ui/components/SortableList';
+import type { SelectedEntityValue } from 'src/utils/controlTypes';
 import { quickSelectRole } from 'ming-ui/functions';
 import DisabledDepartmentAndRoleName from 'src/components/DisabledDepartmentAndRoleName';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
@@ -111,7 +113,7 @@ const OrgRole = props => {
     onChange(JSON.stringify(newValue));
   };
 
-  const renderItem = ({ item, dragging, items = [], isLayer }) => {
+  const renderItem = ({ item, dragging, items = [], isLayer }: SortableRenderItemOptions<SelectedEntityValue>) => {
     const disablePopover = disabled || dragging || isLayer;
     const showMenu = showId === item.organizeId && !disablePopover;
 
