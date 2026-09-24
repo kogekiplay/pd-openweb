@@ -4,6 +4,7 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { CARD_WIDTH_SETTING } from 'src/pages/worksheet/common/ViewConfig/config';
 import { getCoverStyle } from 'src/pages/worksheet/common/ViewConfig/utils';
+import type { WorksheetInfo, WorksheetView } from 'src/pages/worksheet/types';
 import type { RecordRow } from 'src/utils/controlTypes';
 
 export function findSheet(id, sheetList = []) {
@@ -112,8 +113,8 @@ export function getSheetColumnWidthsOfStyles(columnStyles) {
 }
 
 export function getSheetColumnWidthsMap(
-  view = { advancedSetting: { liststyle: '' } },
-  worksheetInfo = { advancedSetting: { liststyle: '' }, template: { controls: [] } },
+  view: WorksheetView = { advancedSetting: { liststyle: '' } },
+  worksheetInfo: WorksheetInfo = { advancedSetting: { liststyle: '' }, template: { controls: [] } },
 ) {
   const listStyleStrOfWorksheet = worksheetInfo.advancedSetting.liststyle;
   const listStyleStrOfView = view.advancedSetting.liststyle;

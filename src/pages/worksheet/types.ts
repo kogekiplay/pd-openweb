@@ -32,8 +32,12 @@ export interface WorksheetView {
   filters?: unknown[];
   /** 快速筛选配置 */
   fastFilters?: unknown[];
-  /** 导航分组配置 */
-  navGroup?: unknown[];
+  /** 导航分组配置（接口模型 EasyFilterSortEntity，已核对） */
+  navGroup?: HapApi.MD.Entity.Worksheet.EasyFilterSortEntity[] | undefined;
+  /** 卡片 / 看板等视图上【显示】的字段 id（甘特图读它决定显示哪些列） */
+  displayControls?: string[] | undefined;
+  /** 表格视图的显示列（字段 id），列宽 / 列顺序按它排 */
+  showControls?: string[] | undefined;
   /** 表格行高档位 */
   rowHeight?: number;
   /**

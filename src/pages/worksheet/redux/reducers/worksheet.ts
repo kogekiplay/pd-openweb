@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import type { WorksheetInfo } from 'src/pages/worksheet/types';
+import type { WorksheetInfo, WorksheetView } from 'src/pages/worksheet/types';
 import type { ReduxAction } from 'src/redux/types';
 import type { FormControl } from 'src/utils/controlTypes';
 
@@ -39,7 +39,7 @@ export function error(state = false, action: ReduxAction) {
   }
 }
 
-export function worksheetInfo(state: WorksheetInfo = {}, action: ReduxAction) {
+export function worksheetInfo(state: WorksheetInfo = {}, action: ReduxAction): WorksheetInfo {
   let newState;
 
   switch (action.type) {
@@ -94,7 +94,7 @@ export function sheetSearchConfig(state = [], action: ReduxAction) {
   }
 }
 
-export function views(state = [], action: ReduxAction) {
+export function views(state: WorksheetView[] = [], action: ReduxAction): WorksheetView[] {
   switch (action.type) {
     case 'WORKSHEET_INIT':
       return action.value.views || state;
@@ -213,7 +213,7 @@ export function navGroupCounts(state = [], action: ReduxAction) {
   }
 }
 
-export function controls(state = [], action: ReduxAction) {
+export function controls(state: FormControl[] = [], action: ReduxAction): FormControl[] {
   switch (action.type) {
     case 'WORKSHEET_INIT':
       const { value = {} } = action;

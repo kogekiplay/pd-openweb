@@ -115,6 +115,23 @@ export interface ControlAdvancedSetting {
   uniquecontrols?: string | undefined;
   usertype?: string | undefined;
   widths?: string | undefined;
+  // ── 视图（表格）布局，2026-09-24 sheet.views 标上 WorksheetView[] 后由 TS4111 收集（redux/actions/sheetview.ts）──
+  /** 表格显示列是否自定义：'1' 时按 showControls */
+  customdisplay?: string | undefined;
+  /** 冻结列数 */
+  fixedcolumncount?: string | undefined;
+  /** 布局更新时间（和本地缓存比新旧） */
+  layoutupdatetime?: string | undefined;
+  /** 列样式（JSON 串：{ time, styles }） */
+  liststyle?: string | undefined;
+  /** 列宽（JSON 串） */
+  sheetcolumnwidths?: string | undefined;
+  /** 表格里显示的系统字段 id（JSON 数组串） */
+  sysids?: string | undefined;
+  // 老数据里这三个是驼峰键，读到后挪到上面的小写键上（见 sheetview.ts「兼容老数据」）
+  fixedColumnCount?: string | undefined;
+  layoutUpdateTime?: string | undefined;
+  sheetColumnWidths?: string | undefined;
   // 动态访问（advancedSetting[key]）仍然走这里；终点配置下它会带上 | undefined
   [key: string]: string | undefined;
 }

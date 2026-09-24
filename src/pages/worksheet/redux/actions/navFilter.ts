@@ -9,8 +9,8 @@ export const updateNavGroup = () => {
     const { views, base } = getState().sheet;
     const { viewId = '' } = base;
     const view = views.find(o => o.viewId === viewId) || {};
-    const navGroup = view.navGroup && view.navGroup.length > 0 ? view.navGroup[0] : {};
-    navGroup.controlId && window.localStorage.getItem('navGroupIsOpen') !== 'false' && dispatch(getNavGroupCount());
+    const navGroup = view.navGroup && view.navGroup.length > 0 ? view.navGroup[0] : undefined;
+    navGroup?.controlId && window.localStorage.getItem('navGroupIsOpen') !== 'false' && dispatch(getNavGroupCount());
   };
 };
 

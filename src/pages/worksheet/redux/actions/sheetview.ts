@@ -950,8 +950,9 @@ export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
     if (sheetHiddenColumns.length) {
       updates.editAttrs = updates.editAttrs.concat('ShowControls');
       if (view.advancedSetting.customdisplay === '1' && view.showControls.length) {
+        // showControls 里是字段 id（原来标成 cid: FormControl 是错的，下面就是拿它和 id 比）
         updates.showControls = view.showControls.filter(
-          (cid: FormControl) => !_.find(sheetHiddenColumns, hcid => hcid === cid),
+          (cid: string) => !_.find(sheetHiddenColumns, hcid => hcid === cid),
         );
       } else {
         updates.advancedSetting.customdisplay = '1';

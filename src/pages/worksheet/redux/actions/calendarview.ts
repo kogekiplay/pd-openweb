@@ -270,7 +270,8 @@ export function getCalendarData() {
       console.log(error);
     }
 
-    let colorList = colorid ? controls.find((it: FormControl) => it.controlId === colorid) || [] : [];
+    // 找不到就是 undefined（原来用 [] 当「没找到」的占位，再读 .options，拿到的也是 undefined）
+    const colorControl = colorid ? controls.find((it: FormControl) => it.controlId === colorid) : undefined;
     let timeControls = getTimeControls(controls);
 
     if (calendarcids.length <= 0) {
@@ -310,7 +311,7 @@ export function getCalendarData() {
       data: {
         calendarInfo,
         unweekday,
-        colorOptions: colorList.options || [],
+        colorOptions: (colorControl && colorControl.options) || [],
         btnList,
         initialView: typeStr ? typeStr : getCalendarViewType(calendarType, calendarInfo[0].startData),
       },

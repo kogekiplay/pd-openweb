@@ -236,12 +236,15 @@ export function loadWorksheet(worksheetId: string, setRequest) {
       getSwitchPermit: true,
     };
 
-    worksheetRequest = worksheetAjax.getWorksheetBaseInfo(args);
+    // 【结果用带类型的局部常量接】worksheetRequest 只为下一次进表时 abort 用，标的是 ApiResult（Promise<any>）；
+    // 直接在它上面 .then，接口已核对过的响应类型会被抹成 any，整个 WORKSHEET_INIT 的载荷跟着变 any
+    const baseInfoRequest = worksheetAjax.getWorksheetBaseInfo(args);
+    worksheetRequest = baseInfoRequest;
     if (_.isFunction(setRequest)) {
-      setRequest(worksheetRequest);
+      setRequest(baseInfoRequest);
     }
 
-    worksheetRequest
+    baseInfoRequest
       .then(async res => {
         const translateInfo = getTranslateInfo(appId, null, worksheetId);
         res.name = translateInfo.name || res.name;
@@ -308,8 +311,9 @@ export function loadWorksheet(worksheetId: string, setRequest) {
             },
           ),
         });
-        worksheetRequest = worksheetAjax.getWorksheetInfo({ ...args, resultType: undefined });
-        worksheetRequest
+        const infoRequest = worksheetAjax.getWorksheetInfo({ ...args, resultType: undefined });
+        worksheetRequest = infoRequest;
+        infoRequest
           .then(async infoRes => {
             let queryRes;
             infoRes.name = translateInfo.name || infoRes.name;
