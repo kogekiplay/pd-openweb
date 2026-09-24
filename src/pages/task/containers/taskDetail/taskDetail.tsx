@@ -42,6 +42,8 @@ const TAB_TYPE = {
 };
 
 class TaskDetail extends Component<any, any> {
+  declare mounted: boolean | undefined;
+
   static defaultProps = {
     visible: false,
     taskId: '',

@@ -14,6 +14,8 @@ const ClickAwayable = ClickAway;
 
 // enumDefault 单选 0 多选 1
 export default class Text extends React.Component<any, any> {
+  declare isSelecting: boolean | undefined;
+
   static override propTypes = {
     className: PropTypes.string,
     singleLine: PropTypes.bool,

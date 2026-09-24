@@ -6,6 +6,8 @@ import { EXEC_TIME_TYPE, TIME_TYPE, TIME_TYPE_NAME } from '../../../enum';
 import './index.less';
 
 export default class TimeSelect extends Component<any, any> {
+  declare text: HTMLInputElement | null | undefined;
+
   static defaultProps = {
     dateNoTime: true,
   };

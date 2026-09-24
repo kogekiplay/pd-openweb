@@ -19,6 +19,10 @@ import TextInput from '../TextInput';
 import './index.less';
 
 export default class AddUser extends Component<any, any> {
+  declare mobile: HTMLInputElement | null | undefined;
+  declare autonomously: HTMLInputElement | null | undefined;
+  declare baseFormInfo: BaseFormInfo | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

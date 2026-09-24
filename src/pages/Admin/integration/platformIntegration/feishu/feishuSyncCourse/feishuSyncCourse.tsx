@@ -20,6 +20,8 @@ const PlatformName = {
 };
 
 export default class WorkwxSyncCourse extends React.Component<any, any> {
+  declare syncApprovalRef: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

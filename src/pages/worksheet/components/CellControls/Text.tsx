@@ -89,6 +89,9 @@ function getPopupContainer(popupContainer, rows, isMultipleLine) {
 }
 
 export default class Text extends React.Component<any, any> {
+  declare postBlurUntil: number | null | undefined;
+  declare hadBlur: boolean | undefined;
+
   static override contextType = ChildTableContext;
   static override propTypes = {
     className: PropTypes.string,

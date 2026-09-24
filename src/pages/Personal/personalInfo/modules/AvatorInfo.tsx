@@ -43,6 +43,10 @@ const Wrap = styled.div`
 `;
 
 export default class AvatarEditor extends Component<any, any> {
+  declare isUnmounted: boolean | undefined;
+  declare avatarLoadKey: string | undefined;
+  declare avatarObjectUrl: string | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

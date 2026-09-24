@@ -6,6 +6,8 @@ import log from './utils/log';
 import { MarkerAllProps, MarkerConfigurableProps, renderMarkerComponent } from './utils/markerUtils';
 
 class Marker extends React.Component<any, any> {
+  declare contentWrapper: HTMLDivElement | undefined;
+
   static override propTypes = {
     map: PropTypes.object,
     element: HTMLDivElement,

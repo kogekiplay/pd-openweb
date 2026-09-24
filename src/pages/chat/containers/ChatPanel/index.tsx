@@ -40,6 +40,8 @@ const exceptions = [
 ];
 
 class ChatPanel extends Component<any, any> {
+  declare ajax: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

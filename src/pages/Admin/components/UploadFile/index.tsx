@@ -4,6 +4,8 @@ import RegExpValidator from 'src/utils/expression';
 import { UploadError } from 'src/utils/uploader/constants';
 
 export default class UploadFile extends Component<any, any> {
+  declare con: HTMLButtonElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};

@@ -9,6 +9,8 @@ import { typeForCon } from '../../core/config';
 import './index.less';
 
 export default class SaveDia extends React.Component<any, any> {
+  declare name: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     const { printData } = props;

@@ -44,6 +44,13 @@ const errorCode = {
 };
 
 export default class UploadFiles extends Component<any, any> {
+  declare id: string;
+  declare _uploading: boolean | undefined;
+  declare qiniuUploadRef: QiniuUpload | null | undefined;
+  declare nativeFile: HTMLDivElement | null | undefined;
+  declare uploadFilesWrapper: HTMLDivElement | null | undefined;
+  declare filesWrapper: HTMLDivElement | null | undefined;
+
   static override contextType = RecordInfoContext;
   static override propTypes = {
     /**

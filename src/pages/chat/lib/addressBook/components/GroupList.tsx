@@ -5,6 +5,8 @@ import GroupItem from './GroupItem';
 import ListNull from './ListNull';
 
 export default class GroupList extends React.Component<any, any> {
+  declare debouncedScroll: _.DebouncedFuncLeading<() => void>;
+
   constructor() {
     super();
 

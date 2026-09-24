@@ -34,6 +34,9 @@ const WarnBox = styled.div`
 `;
 
 class ChatPanelSession extends Component<any, any> {
+  declare currentHeight: number;
+  declare isFocus: boolean;
+
   constructor(props) {
     super(props);
     const { session } = this.props;

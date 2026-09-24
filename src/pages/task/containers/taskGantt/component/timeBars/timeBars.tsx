@@ -148,6 +148,8 @@ const ganttSource = {
   },
 };
 let TimeBars: any = class TimeBars extends Component<any, any> {
+  declare timeBars: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

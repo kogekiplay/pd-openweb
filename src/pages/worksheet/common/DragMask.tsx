@@ -27,6 +27,9 @@ const DragV = styled.div`
 `;
 
 export default class DragMast extends React.Component<any, any> {
+  declare random: number;
+  declare prevBodyUserSelect: string | undefined;
+
   static override propTypes = {
     direction: PropTypes.string,
     value: PropTypes.number,

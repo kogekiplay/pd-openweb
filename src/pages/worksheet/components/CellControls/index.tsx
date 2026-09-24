@@ -106,6 +106,9 @@ function mergeControlAdvancedSetting(control: FormControl = {}, advancedSetting 
 }
 
 export default class CellControl extends React.Component<any, any> {
+  declare id: string;
+  declare clicktimer: NodeJS.Timeout | null | undefined;
+
   static override propTypes = {
     isSubList: PropTypes.bool,
     disableValidate: PropTypes.bool,

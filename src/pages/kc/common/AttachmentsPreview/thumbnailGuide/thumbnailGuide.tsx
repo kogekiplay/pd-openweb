@@ -39,6 +39,10 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
 };
 
 class ThumbnailGuide extends React.Component<any, any> {
+  declare thumbnailGuide: HTMLDivElement | null | undefined;
+  declare listBox: HTMLDivElement | null | undefined;
+  declare tipTimer: NodeJS.Timeout | undefined;
+
   static override propTypes = {
     attachments: PropTypes.array,
     index: PropTypes.number,

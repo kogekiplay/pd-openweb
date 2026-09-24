@@ -4,13 +4,17 @@ import config from './config';
 
 const INDENT = 20;
 export default class GanttSideBar extends Component<any, any> {
+  declare taskList: HTMLDivElement | null | undefined;
+
   override componentDidMount() {
     const $graphWrap = document.querySelector('.graphWrap');
-    this.taskList.addEventListener('scroll', e => {
-      e.currentTarget.className == config.scrollingEle && ($graphWrap.scrollTop = e.target.scrollTop);
+    const { taskList } = this;
+    // 监听挂在 taskList 自己身上（scroll 不冒泡），e.target / e.currentTarget 都是它
+    taskList.addEventListener('scroll', () => {
+      taskList.className == config.scrollingEle && ($graphWrap.scrollTop = taskList.scrollTop);
     });
-    this.taskList.addEventListener('mouseover', e => {
-      config.scrollingEle = e.currentTarget.className;
+    taskList.addEventListener('mouseover', () => {
+      config.scrollingEle = taskList.className;
     });
   }
 

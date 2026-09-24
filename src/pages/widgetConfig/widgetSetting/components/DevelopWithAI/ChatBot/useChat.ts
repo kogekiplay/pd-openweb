@@ -5,6 +5,11 @@ import agentApi from 'src/api/agent';
 
 // 在文件顶部添加 ChunkLoader 类
 class ChunkLoader {
+  declare chunkSize: number;
+  declare interval: number;
+  declare isProcessing: boolean;
+  declare decoder: TextDecoder;
+
   constructor(feedFn, chunkSize = 4, interval = 30) {
     this.feedFn = feedFn;
     this.chunkSize = chunkSize;

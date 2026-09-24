@@ -2,6 +2,8 @@ import { Component } from 'react';
 import { Icon, Linkify, Textarea } from 'ming-ui';
 
 export default class CalendarSummary extends Component<any, any> {
+  declare attachmentBox: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
 

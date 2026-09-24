@@ -77,6 +77,8 @@ const WecharPayWrap = styled.div`
 `;
 
 export default class WechatPay extends Component<any, any> {
+  declare timeInterval: NodeJS.Timeout | null;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -29,6 +29,8 @@ const getValue = (value, type: string) => {
 };
 
 export default class PortalList extends Component<any, any> {
+  declare dateInput: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

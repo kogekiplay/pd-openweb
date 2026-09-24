@@ -177,6 +177,9 @@ function getOptionStyle(option, cell) {
 }
 
 export default class Options extends React.Component<any, any> {
+  declare popupSpecialFilterClassName: string;
+  declare isChanging: boolean | undefined;
+
   static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

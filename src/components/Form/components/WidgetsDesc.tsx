@@ -6,6 +6,10 @@ import { browserIsMobile } from 'src/utils/common';
 import { FROM } from '../core/config';
 
 class WidgetsDesc extends React.Component<any, any> {
+  declare formcon: HTMLSpanElement | null | undefined;
+  declare formconMoreDesc: HTMLSpanElement | null | undefined;
+  declare formconBox: HTMLSpanElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

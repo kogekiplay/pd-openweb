@@ -143,6 +143,8 @@ const Wrap = styled.div`
 `;
 
 export default class UpgradeStatus extends Component<any, any> {
+  declare timer: NodeJS.Timeout | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};

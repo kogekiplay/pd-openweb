@@ -5,6 +5,8 @@ import fixedDataAjax from 'src/api/fixedData.js';
 import workSiteController from 'src/api/workSite';
 
 export default class SiteName extends Component<any, any> {
+  declare processName: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.dialogtype = this.props.workSiteId ? _l('编辑') : _l('创建');

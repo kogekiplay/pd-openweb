@@ -3,6 +3,8 @@ import _ from 'lodash';
 import { Icon } from 'ming-ui';
 
 export default class RoleSearchBox extends Component<any, any> {
+  declare input: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

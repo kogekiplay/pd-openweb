@@ -23,6 +23,9 @@ import SelectUser from '../../components/SelectUser';
 import './index.less';
 
 export default class AggregationTable extends Component<any, any> {
+  declare ajaxPromise: ApiResult | null;
+  declare changeTaskAjax: ApiResult | null;
+
   constructor(props) {
     super(props);
     this.state = {

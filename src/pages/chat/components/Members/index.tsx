@@ -8,6 +8,8 @@ import InviteOrAddUsers from './InviteOrAddUsers';
 import './index.less';
 
 class Avatar extends Component<any, any> {
+  declare avatar: HTMLImageElement | null | undefined;
+
   constructor(props) {
     super(props);
   }

@@ -33,6 +33,8 @@ const WrapFocusCon = styled.div`
 `;
 
 export default class WorkSheetCommentList extends Component<any, any> {
+  declare debouncedSetKeywords: _.DebouncedFunc<(value?: string) => void>;
+
   constructor(props) {
     super(props);
     this.state = {

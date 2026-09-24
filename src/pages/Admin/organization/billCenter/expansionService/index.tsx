@@ -196,6 +196,8 @@ const getFormatCount = count => {
 };
 
 let ExpansionService = class ExpansionService extends Component<any, any> {
+  declare isPortalUser: boolean;
+
   constructor() {
     super();
     this.expandType = Config.params[3];

@@ -6,6 +6,8 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap } from '../styled';
 
 export default class RoleInput extends Component<any, any> {
+  declare $wrap: SelectOtherField | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};

@@ -28,6 +28,8 @@ const taskTreeSettings = {
 };
 
 class TaskTree extends Component<any, any> {
+  declare mounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

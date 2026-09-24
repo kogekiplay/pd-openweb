@@ -80,6 +80,8 @@ const formatDepartmentData = list => {
 };
 
 export default class ProjectContacts extends React.Component<any, any> {
+  declare promise: ApiResult | null;
+
   constructor() {
     super();
 

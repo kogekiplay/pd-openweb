@@ -11,6 +11,8 @@ import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
 
 export default class ImageMessage extends Component<any, any> {
+  declare _isMounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

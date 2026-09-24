@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import './mdLeftNavSearch.css';
 
 class MDLeftNavSearch extends React.Component<any, any> {
+  declare root: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     value: PropTypes.string,
     onSearch: PropTypes.func,

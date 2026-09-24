@@ -9,6 +9,8 @@ import GlobalSearchAllContent from 'src/pages/globalSearch/containers/GlobalSear
 import './index.less';
 
 class GlobalSearch extends Component<any, any> {
+  declare removeEscEvent: (() => void) | undefined;
+
   static override propTypes = {
     onClose: func,
   };

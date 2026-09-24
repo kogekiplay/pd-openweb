@@ -13,6 +13,7 @@ import postAjax from 'src/api/post';
 import 'src/components/autoTextarea/autoTextarea';
 import Emotion from 'src/components/emotion/emotion';
 import MentionsInput from 'src/components/MentionsInput';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 import UploadFiles from 'src/components/UploadFiles';
 import { generateRandomPassword } from 'src/utils/common';
 import { AT_ALL_TEXT } from './config';
@@ -21,6 +22,11 @@ import './css/commenter.less';
 
 const ClickAwayable = ClickAway;
 class Commenter extends React.Component<any, any> {
+  declare textareaId: string;
+  // initMentionsInput 往这个 textarea 上挂了 val / reset / destroy 等方法
+  declare textarea: MentionsInputElement | null | undefined;
+  declare faceBtn: HTMLSpanElement | null | undefined;
+
   static override propTypes = {
     placeholder: PropTypes.string,
     activePlaceholder: PropTypes.string,
@@ -255,8 +261,8 @@ class Commenter extends React.Component<any, any> {
     const textarea = this.textarea;
     const $textarea = $(textarea);
     const getMessagePromise = this.props.disableMentions
-      ? Promise.resolve($textarea.val())
-      : new Promise(resolve => {
+      ? Promise.resolve(String($textarea.val() ?? ''))
+      : new Promise<string>(resolve => {
           textarea.val(data => resolve(data));
         });
     getMessagePromise.then(data => {

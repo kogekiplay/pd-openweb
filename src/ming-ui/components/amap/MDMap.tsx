@@ -21,6 +21,11 @@ const MAP_TYPE = [
 ];
 
 class GDMap extends Component<any, any> {
+  declare _MapLoader: MapLoader | undefined;
+  declare _maphHandler: MapHandler | null | undefined;
+  declare _mapContainer: HTMLDivElement | null | undefined;
+  declare searchRef: HTMLInputElement | null | undefined;
+
   static defaultProps = {
     isMobile: false,
     distance: 0,

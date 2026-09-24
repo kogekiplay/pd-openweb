@@ -61,6 +61,9 @@ const Description = styled.div`
 
 // 聚合支付
 export default class CreateJxqfMerchant extends Component<any, any> {
+  declare timeInterval: NodeJS.Timeout | null;
+  declare promise: ApiResult | null;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -170,22 +173,22 @@ export default class CreateJxqfMerchant extends Component<any, any> {
         this.promise.abort();
       }
 
-      this.promise = paymentAjax
-        .getMerchantStatus({
-          projectId,
-          merchantId,
-          merchantNo,
-        })
-        .then(res => {
-          if (res === 1) {
-            this.getMerchant();
-          }
+      // 原来存的是 .then() 返回的新 Promise，它没有 abort，上面「先取消上一次轮询请求」从来没生效过
+      this.promise = paymentAjax.getMerchantStatus({
+        projectId,
+        merchantId,
+        merchantNo,
+      });
+      this.promise.then(res => {
+        if (res === 1) {
+          this.getMerchant();
+        }
 
-          if (res) {
-            clearInterval(this.timeInterval);
-            this.setState({ merchantStatus: res, step: _.includes([1, 2], res) ? 2 : res === 3 ? res : step });
-          }
-        });
+        if (res) {
+          clearInterval(this.timeInterval);
+          this.setState({ merchantStatus: res, step: _.includes([1, 2], res) ? 2 : res === 3 ? res : step });
+        }
+      });
     }, 5000);
   };
 

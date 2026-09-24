@@ -63,6 +63,8 @@ const Wrap = styled.div`
 `;
 
 export default class Dectypt extends Component<any, any> {
+  declare uploaderWrap: QiniuUpload | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

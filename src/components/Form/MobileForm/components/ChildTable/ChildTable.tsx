@@ -116,6 +116,12 @@ const DEFAULT_TABLE_PAGE_SIZE = 20;
 const EXPAND_TABLE_PAGE_SIZE = 200;
 
 class ChildTable extends React.Component<any, any> {
+  // 原来是 typeof AbortController !== 'undefined' && new AbortController()：支持的浏览器（Chrome 103 起）都有 AbortController
+  declare abortController: AbortController;
+  declare viewportResizeTimer: NodeJS.Timeout | null;
+  declare expandPaginationFrame: number | null;
+  declare showLoadingMask: boolean | undefined;
+
   static override contextType = RecordInfoContext;
   static override propTypes = {
     mode: PropTypes.string,
@@ -162,7 +168,7 @@ class ChildTable extends React.Component<any, any> {
       viewportSize: getViewportSize(),
     };
     this.controls = props.controls;
-    this.abortController = typeof AbortController !== 'undefined' && new AbortController();
+    this.abortController = new AbortController();
     this.requestPool = createRequestPool({ abortController: this.abortController });
     const _handleUpdateCell = this.handleUpdateCell.bind(this);
 
@@ -482,7 +488,7 @@ class ChildTable extends React.Component<any, any> {
 
   updateAbortController = () => {
     this.abortController && this.abortController.abort && this.abortController.abort();
-    this.abortController = typeof AbortController !== 'undefined' && new AbortController();
+    this.abortController = new AbortController();
     this.requestPool = createRequestPool({ abortController: this.abortController });
     this.dataFormatCacheMap.clear();
   };

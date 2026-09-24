@@ -13,6 +13,8 @@ import './index.less';
 
 const ClickAwayable = ClickAway;
 export default class ActionFields extends Component<any, any> {
+  declare search: HTMLInputElement | null | undefined;
+
   static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.object,

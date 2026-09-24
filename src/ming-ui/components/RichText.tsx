@@ -315,6 +315,8 @@ const Wrapper = styled.div(
 `,
 );
 class MyUploadAdapter {
+  declare xhr: XMLHttpRequest | undefined;
+
   constructor(loader, tokenArgs, options = {}) {
     this.loader = loader;
     this.tokenArgs = tokenArgs;

@@ -106,6 +106,11 @@ let mousePosition = {
   y: 23,
 };
 let AppInfo = class AppInfo extends Component<any, any> {
+  declare appDetailRequestId: number;
+  declare unmounted: boolean;
+  declare isAIPreview: boolean;
+  declare timer: NodeJS.Timeout | undefined;
+
   static override propTypes = {
     appStatus: oneOf([0, 1, 2, 3, 4, 5]),
     updateColor: func,

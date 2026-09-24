@@ -46,6 +46,8 @@ function normalizeAnchor(props, init) {
 }
 
 class CalendarRange extends Component<any, any> {
+  declare _root: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     prefixCls: PropTypes.string,
     timePicker: PropTypes.bool,

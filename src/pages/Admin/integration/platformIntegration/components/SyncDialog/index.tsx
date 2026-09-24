@@ -10,6 +10,8 @@ import { INTEGRATION_INFO } from '../../config';
 import './index.less';
 
 export default class SyncDialog extends Component<any, any> {
+  declare input: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

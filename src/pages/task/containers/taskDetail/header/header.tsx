@@ -36,6 +36,8 @@ import './header.less';
 
 const ClickAwayable = ClickAway;
 class Header extends Component<any, any> {
+  declare checklistText: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

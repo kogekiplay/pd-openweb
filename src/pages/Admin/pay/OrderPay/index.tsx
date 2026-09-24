@@ -42,6 +42,8 @@ const getOrderPayParams = () => {
 };
 
 export default class OrderPay extends Component<any, any> {
+  declare timer: NodeJS.Timeout | null;
+
   constructor(props) {
     super(props);
 

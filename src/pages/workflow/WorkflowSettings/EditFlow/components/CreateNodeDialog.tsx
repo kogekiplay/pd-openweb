@@ -21,6 +21,8 @@ import { ACTION_ID, APP_TYPE, NODE_TYPE, TRIGGER_ID } from '../../enum';
 import BranchDialog from './BranchDialog';
 
 export default class CreateNodeDialog extends Component<any, any> {
+  declare keywordsInput: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
 

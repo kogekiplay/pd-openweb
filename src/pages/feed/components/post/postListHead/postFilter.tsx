@@ -17,6 +17,8 @@ import './postFilter.css';
  * 首页动态列表的头部筛选器
  */
 class HomePostFilter extends React.Component<any, any> {
+  declare searchInput: HTMLInputElement | null | undefined;
+
   static override propTypes = {
     dispatch: PropTypes.func,
     fontSize: PropTypes.number,

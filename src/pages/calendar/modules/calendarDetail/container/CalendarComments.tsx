@@ -4,6 +4,8 @@ import FileList from 'src/components/comment/FileList';
 import { CalendarCommentList } from '../components';
 
 export default class CalendarComments extends Component<any, any> {
+  declare tab: HTMLUListElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

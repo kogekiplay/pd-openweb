@@ -11,6 +11,8 @@ import PostOperateList from './postOperateList';
  * 动态右上角的操作项
  */
 class PostOperator extends React.Component<any, any> {
+  declare toggleBtn: HTMLSpanElement | null | undefined;
+
   static override propTypes = {
     dispatch: PropTypes.func,
     postItem: PropTypes.object.isRequired,

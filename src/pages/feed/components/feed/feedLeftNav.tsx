@@ -18,6 +18,8 @@ import MDLeftNavSearch from '../common/mdLeftNav/mdLeftNavSearch';
 import './feedLeftNav.css';
 
 class FeedLeftNav extends React.Component<any, any> {
+  declare locatedDefaultGroup: boolean | undefined;
+
   static override propTypes = {
     dispatch: PropTypes.func,
     hasNew: PropTypes.bool,

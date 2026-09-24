@@ -18,6 +18,8 @@ const LoadablePublicQuery = lazy(() => import('./publicquery'));
 const LoadableWorksheetListShare = lazy(() => import('./worksheetListShare'));
 
 class WorksheetSahre extends React.Component<any, any> {
+  declare promiseRowsData: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

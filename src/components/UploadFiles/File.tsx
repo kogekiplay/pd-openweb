@@ -21,6 +21,10 @@ const vertical = {
 };
 
 export default class FileComponent extends Component<any, any> {
+  declare editInput: HTMLInputElement | null | undefined;
+  declare linkCon: false | HTMLDivElement | null | undefined;
+  declare UploadFile: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     onReplaceAttachment: PropTypes.func,
   };

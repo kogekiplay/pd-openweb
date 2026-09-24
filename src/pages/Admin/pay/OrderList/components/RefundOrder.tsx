@@ -38,6 +38,10 @@ const FlexWrap = styled.div`
 `;
 
 export default class RefundOrder extends Component<any, any> {
+  declare appPromise: ApiResult | null;
+  declare isInit: boolean;
+  declare tableWrap: PageTableCon | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -59,6 +59,8 @@ const ButtonsCon = styled.div`
   }
 `;
 class BatchOperate extends React.Component<any, any> {
+  declare getWorksheetBtnsAjax: ApiResult | undefined;
+
   static override propTypes = {
     isCharge: PropTypes.bool,
     appId: PropTypes.string,

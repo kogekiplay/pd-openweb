@@ -14,6 +14,10 @@ import '../less/Amap.less';
  * 高德地图key = 9aedaf173cec6f03d4b9ce7c8a9159c5;
  */
 export default class Amap extends Component<any, any> {
+  declare _MapLoader: MapLoader;
+  declare _maphHandler: MapHandler | null | undefined;
+  declare _mapContainer: HTMLDivElement | null | undefined;
+
   static defaultProps = {
     mapTools: false,
     mapOptions: { zoom: 18 },

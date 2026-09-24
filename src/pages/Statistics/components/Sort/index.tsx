@@ -114,6 +114,8 @@ const renderSortableItem = ({ item, DragHandle }) => {
 };
 
 export default class Sort extends Component<any, any> {
+  declare isRenderSort: boolean | undefined;
+
   constructor(props) {
     super(props);
     const { rightY } = props.currentReport;

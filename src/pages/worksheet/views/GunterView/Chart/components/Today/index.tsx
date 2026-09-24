@@ -24,6 +24,8 @@ const TodayWrapper = styled.div`
   }
 `;
 let Today = class Today extends Component<any, any> {
+  declare debounceScroll: _.DebouncedFunc<() => void>;
+
   constructor(props) {
     super(props);
     const { onlyWorkDay, dayOff } = props.gunterView.viewConfig;

@@ -16,6 +16,8 @@ import { formatQueryParam } from './utils';
 import './index.less';
 
 export default class ProcessInform extends Component<any, any> {
+  declare request: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     const { tab } = props.match.params;

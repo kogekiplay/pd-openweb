@@ -31,6 +31,8 @@ function getPopupContainer(popupContainer, rows) {
 
 // enumDefault 单选 0 多选 1
 export default class User extends React.Component<any, any> {
+  declare isPicking: boolean | undefined;
+
   static override contextType = ChildTableContext;
   static override propTypes = {
     className: PropTypes.string,

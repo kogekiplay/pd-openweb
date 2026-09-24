@@ -37,6 +37,10 @@ const LockWrap = styled.div`
   }
 `;
 let RecordForm = class RecordForm extends Component<any, any> {
+  declare isLoadApprove: boolean;
+  declare formWrap: HTMLDivElement | null | undefined;
+  declare con: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

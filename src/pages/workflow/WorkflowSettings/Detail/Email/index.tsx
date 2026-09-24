@@ -31,6 +31,8 @@ import {
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default class Email extends Component<any, any> {
+  declare mounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -38,6 +38,10 @@ function genFunctionWorker() {
 }
 
 class Runner {
+  declare max: number;
+  declare runningCount: number;
+  declare isRunning: boolean;
+
   constructor({ max = 10 } = {}) {
     this.max = max;
     this.runningCount = 0;

@@ -54,6 +54,8 @@ const Department = styled.div`
 // import './css/user.less';
 
 export default class DepartmentTree extends Component<any, any> {
+  declare departAjax: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     const project = _.find(md.global.Account.projects, { projectId: props.projectId });

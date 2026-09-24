@@ -15,6 +15,10 @@ import './index.less';
 const isMobile = browserIsMobile();
 
 export default class EmbedChart extends Component<any, any> {
+  declare appId: string;
+  declare chartId: string;
+  declare pageId: string | (string | null)[] | null;
+
   constructor(props) {
     super(props);
     this.state = {

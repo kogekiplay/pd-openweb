@@ -27,6 +27,9 @@ const FlexWrap = styled.div`
 `;
 
 export default class orgLog extends React.Component<any, any> {
+  declare seatchWrap: HTMLDivElement | null | undefined;
+  declare tableWrap: PageTableCon | null | undefined;
+
   constructor(props) {
     super(props);
     const columns =

@@ -7,6 +7,8 @@ import { captcha } from 'ming-ui/functions';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
 
 export default class WidgetsVerifyCode extends Component<any, any> {
+  declare timer: NodeJS.Timeout | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -74,6 +74,8 @@ const AUTH_MAPPING = {
 };
 
 export default class OtherTool extends Component<any, any> {
+  declare customNameInput: HTMLInputElement | null | undefined;
+
   constructor() {
     super();
     Config.setPageTitle(_l('集成 - 其他'));

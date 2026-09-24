@@ -106,6 +106,9 @@ const tabs = [
 ];
 
 export default class ByApp extends Component<any, any> {
+  declare ajaxRequst: ApiResult | null;
+  declare useageRequest: ApiResult | null;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -17,6 +17,8 @@ import { WrapHeader } from './style';
 import './index.less';
 
 export default class PortalUserSet extends Component<any, any> {
+  declare avatar: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -8,6 +8,8 @@ export { default as Tab } from './tab';
  * tab
  */
 export class Tabs extends React.Component<any, any> {
+  declare indicator: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     children: PropTypes.any,
   };

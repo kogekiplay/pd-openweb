@@ -6,6 +6,8 @@ import PaginationWrap from '../../../components/PaginationWrap';
 import './style.less';
 
 export default class ApplyForRole extends React.Component<any, any> {
+  declare promise: Promise<void> | undefined;
+
   constructor() {
     super();
     this.state = {

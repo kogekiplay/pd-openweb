@@ -9,6 +9,9 @@ import successImg from '../images/succuss.png';
 import './index.less';
 
 export default class DialogCreateApp extends Component<any, any> {
+  declare inputBox: HTMLLabelElement | null | undefined;
+  declare editInput: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

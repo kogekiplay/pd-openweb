@@ -59,6 +59,10 @@ const IncomeWrap = styled.div`
 `;
 
 export default class TransactionDetails extends Component<any, any> {
+  declare appPromise: ApiResult | null;
+  declare isInit: boolean;
+  declare tableWrap: PageTableCon | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

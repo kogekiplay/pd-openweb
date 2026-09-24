@@ -97,6 +97,12 @@ function getDomNode(node) {
 }
 
 class DragSelect extends React.Component<any, any> {
+  declare started: boolean | undefined;
+  declare endPos: { x: number; y: number } | { x: number; y: number } | undefined;
+  declare dragging: boolean | undefined;
+  declare startPos: { x: number; y: number } | undefined;
+  declare selectionEl: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     component: PropTypes.any,
     selectionStyle: PropTypes.object, // 选择框样式

@@ -17,6 +17,9 @@ import './index.less';
 const isMobile = browserIsMobile();
 
 export default class EmbedPage extends Component<any, any> {
+  declare appId: string;
+  declare pageId: string;
+
   constructor(props) {
     super(props);
     const pathname = location.pathname.split(/.*\/embed\/page\/(.*?)\//).filter(o => o);

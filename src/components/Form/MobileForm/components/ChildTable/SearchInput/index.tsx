@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import './index.less';
 
 export default class SearchInput extends Component<any, any> {
+  declare inputEl: HTMLInputElement | null | undefined;
+
   static override propTypes = {
     active: PropTypes.bool,
     className: PropTypes.string,

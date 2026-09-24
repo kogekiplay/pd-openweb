@@ -9,6 +9,8 @@ import RelateRecordCards from '../../components/RelateRecordCards';
 import type { RecordRow } from 'src/utils/controlTypes';
 
 export default class Widgets extends Component<any, any> {
+  declare isFromDefault: boolean | undefined;
+
   static override propTypes = {
     // disabled: PropTypes.bool,
     appId: PropTypes.string, // 他表字段被关联表所在应用 id

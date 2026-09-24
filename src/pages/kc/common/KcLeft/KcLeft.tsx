@@ -20,6 +20,8 @@ import { getRootLog } from './rootLog';
 import './KcLeft.less';
 
 class KcLeft extends Component<any, any> {
+  declare _isMounted: boolean | undefined;
+
   static override propTypes = {
     path: PropTypes.string,
     keywords: PropTypes.string,

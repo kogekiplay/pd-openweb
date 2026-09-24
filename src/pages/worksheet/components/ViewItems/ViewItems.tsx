@@ -30,6 +30,10 @@ const EmptyData = styled.div`
 `;
 const confirm = Dialog.confirm;
 let ViewItems = class ViewItems extends Component<any, any> {
+  declare flag: boolean | null | undefined;
+  declare containerWrapper: HTMLElement | null | undefined;
+  declare scrollWraperEl: HTMLDivElement | null | undefined;
+
   static defaultProps = {
     viewList: [],
   };
@@ -296,7 +300,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
 
   computeDirectionVisible() {
     if (!this.scrollWraperEl) return;
-    const viewsScrollEl = this.scrollWraperEl.querySelector('.viewsScroll');
+    const viewsScrollEl = this.scrollWraperEl.querySelector<HTMLElement>('.viewsScroll');
 
     if (viewsScrollEl) {
       const { offsetWidth, scrollWidth } = viewsScrollEl;
@@ -309,11 +313,11 @@ let ViewItems = class ViewItems extends Component<any, any> {
 
   computeViewItemActiveLeft(delay = 300) {
     if (!this.scrollWraperEl) return;
-    const viewsScrollEl = this.scrollWraperEl.querySelector('.viewsScroll');
+    const viewsScrollEl = this.scrollWraperEl.querySelector<HTMLElement>('.viewsScroll');
 
     if (viewsScrollEl) {
       setTimeout(() => {
-        const activeEl = viewsScrollEl.querySelector('.workSheetViewItem.active');
+        const activeEl = viewsScrollEl.querySelector<HTMLElement>('.workSheetViewItem.active');
 
         if (activeEl) {
           if (activeEl.offsetLeft + activeEl.clientWidth > viewsScrollEl.clientWidth) {
@@ -328,13 +332,13 @@ let ViewItems = class ViewItems extends Component<any, any> {
     if (!this.scrollWraperEl) return;
     const { clientWidth } = this.scrollWraperEl;
     const distance = direction ? clientWidth / 2 : -(clientWidth / 2);
-    const viewsScrollEl = this.scrollWraperEl.querySelector('.viewsScroll');
+    const viewsScrollEl = this.scrollWraperEl.querySelector<HTMLElement>('.viewsScroll');
     const { scrollLeft } = viewsScrollEl;
     viewsScrollEl.scrollLeft = scrollLeft + distance;
   };
   updateScrollBtnState = () => {
     const { hideDirection } = this.state;
-    const viewsScrollEl = this.scrollWraperEl.querySelector('.viewsScroll');
+    const viewsScrollEl = this.scrollWraperEl.querySelector<HTMLElement>('.viewsScroll');
     const { scrollWidth, scrollLeft, offsetWidth } = viewsScrollEl;
     const width = scrollLeft + offsetWidth;
 

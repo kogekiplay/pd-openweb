@@ -14,6 +14,8 @@ import { isWithinOneHour } from '../util';
 import Message from './inboxMessage';
 
 let InboxList = class InboxList extends React.Component<any, any> {
+  declare ajaxRequest: ApiResult | undefined;
+
   static override propTypes = {
     inboxFavorite: PropTypes.bool,
     type: PropTypes.oneOf(_.values(TYPES)),
@@ -93,8 +95,10 @@ let InboxList = class InboxList extends React.Component<any, any> {
           });
         }
       })
-      .catch((_jqXHR, textStatus) => {
-        if (textStatus !== 'abort') {
+      // 原来按 jQuery 的 fail(jqXHR, textStatus) 写，拿第二个参数判 'abort'：Promise 的 catch 只有一个参数，
+      // 于是被取消的请求也弹「加载失败」。接口层 reject 的是 { errorCode, errorMessage }，errorCode 1 就是被取消
+      .catch(error => {
+        if (_.get(error, 'errorCode') !== 1) {
           alert(_l('加载失败，点击重试'), 2);
           this.setState({
             failed: true,

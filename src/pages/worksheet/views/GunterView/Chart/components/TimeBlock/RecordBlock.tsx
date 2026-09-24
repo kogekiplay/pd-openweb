@@ -66,6 +66,9 @@ const getLastWorkEndTime = (time, dayOff) => {
 };
 
 let RowBlock = class RowBlock extends Component<any, any> {
+  declare isScroll: boolean;
+  declare timer: NodeJS.Timeout | null;
+
   constructor(props) {
     super(props);
     const { base } = props;

@@ -36,6 +36,8 @@ const calculateControlNormTypes = normTypes.map(item => {
 const textControlNormTypes = textNormTypes.filter(n => n.value !== 7);
 
 class CalculateControl extends Component<any, any> {
+  declare tagtextarea: TagTextarea | undefined;
+
   constructor(props) {
     super(props);
     const { editCalculateControl } = props;
@@ -340,6 +342,8 @@ class CalculateControl extends Component<any, any> {
 }
 
 export default class CalculateControlModal extends Component<any, any> {
+  declare calculateControlEl: CalculateControl | null | undefined;
+
   constructor(props) {
     super(props);
   }

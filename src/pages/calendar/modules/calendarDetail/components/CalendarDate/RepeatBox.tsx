@@ -9,6 +9,8 @@ import { formatRecur } from '../../common';
 import { FREQUENCY, RECURLAYERS, RECURTYPE, WEEKDAYS } from '../../constant';
 
 export default class RepeatBox extends Component<any, any> {
+  declare untilDateBox: HTMLSpanElement | null | undefined;
+
   static override propTypes = {
     change: PropTypes.func.isRequired,
   };

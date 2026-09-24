@@ -298,6 +298,8 @@ export const replaceColor = (data, customPageConfig = {}, themeColor) => {
 };
 
 export default class extends Component<any, any> {
+  declare isUnmounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

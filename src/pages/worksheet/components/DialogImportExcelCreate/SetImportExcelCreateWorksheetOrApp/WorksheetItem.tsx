@@ -71,6 +71,10 @@ const SheetTabWrap = styled.div`
 `;
 
 export default class WorksheetItem extends Component<any, any> {
+  declare scrollWraperEl: HTMLDivElement | null | undefined;
+  declare flag: boolean | undefined;
+  declare editInput: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -87,7 +91,7 @@ export default class WorksheetItem extends Component<any, any> {
   }
   computeDirectionVisible() {
     if (!this.scrollWraperEl) return;
-    const viewsScrollEl = this.scrollWraperEl.querySelector('.viewsScroll');
+    const viewsScrollEl = this.scrollWraperEl.querySelector<HTMLElement>('.viewsScroll');
 
     if (viewsScrollEl) {
       const { offsetWidth, scrollWidth } = viewsScrollEl;
@@ -99,7 +103,7 @@ export default class WorksheetItem extends Component<any, any> {
   }
   updateScrollBtnState = () => {
     const { hideDirection } = this.state;
-    const viewsScrollEl = this.scrollWraperEl.querySelector('.viewsScroll');
+    const viewsScrollEl = this.scrollWraperEl.querySelector<HTMLElement>('.viewsScroll');
     const { scrollWidth, scrollLeft, offsetWidth } = viewsScrollEl;
     const width = scrollLeft + offsetWidth;
 
@@ -127,7 +131,7 @@ export default class WorksheetItem extends Component<any, any> {
     if (!this.scrollWraperEl) return;
     const { clientWidth } = this.scrollWraperEl;
     const distance = direction ? clientWidth / 2 : -(clientWidth / 2);
-    const viewsScrollEl = this.scrollWraperEl.querySelector('.viewsScroll');
+    const viewsScrollEl = this.scrollWraperEl.querySelector<HTMLElement>('.viewsScroll');
     const { scrollLeft } = viewsScrollEl;
     viewsScrollEl.scrollLeft = scrollLeft + distance;
   };
@@ -314,7 +318,8 @@ export default class WorksheetItem extends Component<any, any> {
                           autoFocus
                           onFocus={() => {
                             setTimeout(() => {
-                              this.editInput && this.editInput.current && this.editInput.current.select();
+                              // editInput 是 ref 回调拿到的 DOM 节点，原来写成 .current.select()，判断恒为假，一次都没全选过
+                              this.editInput && this.editInput.select();
                             }, 0);
                           }}
                           onBlur={e => {

@@ -33,6 +33,8 @@ import './index.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
 class PrintForm extends React.Component<any, any> {
+  declare confirmOk: boolean;
+
   constructor(props) {
     super(props);
     const { match = {} } = this.props;

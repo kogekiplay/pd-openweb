@@ -12,6 +12,8 @@ import DateCalcPicker from './DateCalcPicker';
 import ToTodaySetting from './toTodaySetting';
 
 export default class DateCalc extends Component<any, any> {
+  declare tagtextarea: TagTextarea | undefined;
+
   static override propTypes = {
     widget: PropTypes.shape({}),
     worksheetData: PropTypes.shape({}),

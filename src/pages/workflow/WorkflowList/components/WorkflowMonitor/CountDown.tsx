@@ -2,6 +2,8 @@ import { Component } from 'react';
 import moment from 'moment';
 
 export default class CountDown extends Component<any, any> {
+  declare interval: NodeJS.Timeout | null;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import '../less/Progress.less';
 
 class CircleProgress extends Component<any, any> {
+  declare _circlePath: SVGCircleElement | null | undefined;
+
   static override propTypes = {
     /**
      * 进度条类名

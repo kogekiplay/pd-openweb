@@ -12,6 +12,8 @@ import '../../app/style.css';
 import './detailStyle.css';
 
 class PostDetails extends React.Component<any, any> {
+  declare _mounted: boolean | undefined;
+
   static override propTypes = {
     postItem: PropTypes.object,
     onRemove: PropTypes.func,

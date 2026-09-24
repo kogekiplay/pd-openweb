@@ -43,6 +43,10 @@ import {
 import './KcMain.less';
 
 class KcMain extends Component<any, any> {
+  declare jqns: number | undefined;
+  declare kcApp: HTMLDivElement | null | undefined;
+  declare dragSelect: DragSelect | null | undefined;
+
   static override propTypes = {
     path: PropTypes.string,
     baseUrl: PropTypes.string,

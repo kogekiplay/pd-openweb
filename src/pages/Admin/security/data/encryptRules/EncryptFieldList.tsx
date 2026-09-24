@@ -62,6 +62,9 @@ const Wrap = styled.div`
   }
 `;
 export default class EncryptFieldList extends Component<any, any> {
+  declare promise: ApiResult | null;
+  declare appPromise: ApiResult | null;
+
   constructor(props) {
     super(props);
     this.state = {

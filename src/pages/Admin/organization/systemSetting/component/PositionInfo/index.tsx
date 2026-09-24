@@ -29,6 +29,9 @@ const positionTemplatePaths = {
 };
 
 class PositionInfo extends Component<any, any> {
+  declare ajaxObj: ApiResult | null;
+  declare input: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = { showRoleDialog: false };

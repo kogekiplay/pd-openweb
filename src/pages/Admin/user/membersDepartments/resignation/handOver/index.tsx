@@ -13,6 +13,8 @@ import Detail from './detail';
 import './style.less';
 
 export default class HandOver extends React.Component<any, any> {
+  declare ajax: ApiResult | undefined;
+
   static override propTypes = {
     keywords: PropTypes.string,
     projectId: PropTypes.string.isRequired,

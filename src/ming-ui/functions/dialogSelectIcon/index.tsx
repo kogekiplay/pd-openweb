@@ -14,6 +14,8 @@ const DEFAULT_COLOR = '#1677ff';
 const NAME_MAX_LENGTH = 100;
 
 class SelectIcon extends Component<any, any> {
+  declare colorIndex: number;
+
   static override propTypes = {
     projectId: string,
     className: string,

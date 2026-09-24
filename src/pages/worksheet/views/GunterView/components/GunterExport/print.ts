@@ -22,6 +22,9 @@ const printImage = el => {
 };
 
 class Canvas {
+  declare ctx: CanvasRenderingContext2D | null;
+  declare canvas: HTMLCanvasElement;
+
   constructor(config: Record<string, any> = {}) {
     this.canvas = document.createElement('canvas');
     this.canvas.width = config.bgWidth;

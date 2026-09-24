@@ -6,6 +6,8 @@ import flowMonitor from 'src/pages/workflow/api/processVersion.js';
 import { formatter } from './enum';
 
 export default class HistoryChart extends PureComponent<any, any> {
+  declare chantRef: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

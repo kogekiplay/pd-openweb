@@ -144,6 +144,8 @@ const DisplayFieldForNameInfo = {
 };
 
 class UserCard extends React.Component<any, any> {
+  declare promise: ApiResult | undefined;
+
   static override propTypes = {
     projectId: PropTypes.string,
     appId: PropTypes.string,

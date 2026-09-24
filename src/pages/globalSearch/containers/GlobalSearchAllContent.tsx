@@ -21,6 +21,9 @@ import './GlobalSearchAllContent.less';
 
 const ClickAwayable = ClickAway;
 export default class GlobalSearchAllContent extends Component<any, any> {
+  declare leftAjax: ApiResult | null | undefined;
+  declare rightAjax: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

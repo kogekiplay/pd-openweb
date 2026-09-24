@@ -3,6 +3,8 @@ import { UserCard } from 'ming-ui';
 import { MEMBER_STATUS } from '../../constant';
 
 export default class Member extends Component<any, any> {
+  declare memberItem: HTMLSpanElement | null | undefined;
+
   override render() {
     const {
       member: { head, memberName, status, face, nickName, accountID, thirdID },

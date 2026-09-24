@@ -112,6 +112,8 @@ class Moreop extends Component<any, any> {
 }
 
 class Upload extends Component<any, any> {
+  declare uploadFileEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

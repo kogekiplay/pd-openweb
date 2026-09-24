@@ -14,6 +14,8 @@ const formatTime = (seconds = 0) => {
 };
 
 export default class VideoMessage extends Component<any, any> {
+  declare _isMounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

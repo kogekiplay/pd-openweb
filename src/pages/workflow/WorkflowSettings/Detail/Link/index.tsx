@@ -20,6 +20,8 @@ import {
 } from '../components';
 
 export default class Link extends Component<any, any> {
+  declare isOnComposition: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

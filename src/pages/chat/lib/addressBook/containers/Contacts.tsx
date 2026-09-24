@@ -39,6 +39,8 @@ const defaultState = {
 };
 
 export default class Contacts extends React.Component<any, any> {
+  declare promise: ApiResult | null;
+
   constructor() {
     super();
 

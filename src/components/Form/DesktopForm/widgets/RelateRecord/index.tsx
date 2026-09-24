@@ -12,6 +12,9 @@ import { WidgetEventHelper } from '../../../core/useFormEventManager';
 import type { RecordRow } from 'src/utils/controlTypes';
 
 export default class Widgets extends Component<any, any> {
+  declare eventHelper: WidgetEventHelper;
+  declare isFromDefault: boolean | undefined;
+
   static override propTypes = {
     // disabled: PropTypes.bool,
     isEditing: PropTypes.bool,

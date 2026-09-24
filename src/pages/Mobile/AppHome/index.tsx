@@ -25,6 +25,8 @@ import * as actions from './redux/actions';
 import './index.less';
 
 class AppHome extends React.Component<any, any> {
+  declare isSetScrollTop: boolean;
+
   constructor(props) {
     super(props);
 

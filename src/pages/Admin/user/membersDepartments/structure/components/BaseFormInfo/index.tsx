@@ -59,6 +59,9 @@ const DelIconWrap = styled.div`
 `;
 
 export default class BaseFormInfo extends Component<any, any> {
+  declare ajaxRequest: ApiResult | undefined;
+  declare worksiteRequest: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -97,6 +97,9 @@ const formatScanQRCodeResult = resultStr => {
 };
 
 export default class Widgets extends Component<any, any> {
+  declare id: string;
+  declare animationFrame: number | null;
+
   static override propTypes = {
     projectId: PropTypes.string,
     disablePhoto: PropTypes.bool,

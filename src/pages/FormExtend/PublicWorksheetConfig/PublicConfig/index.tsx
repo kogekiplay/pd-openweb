@@ -54,6 +54,8 @@ const DEFAULT_TEXT = {
   extendSourceId: _l('扩展值'),
 };
 class PublicConfig extends React.Component<any, any> {
+  declare keyinput: HTMLInputElement | null | undefined;
+
   static override propTypes = {
     originalControls: PropTypes.arrayOf(PropTypes.shape({})),
     worksheetSettings: PropTypes.shape({}),

@@ -25,6 +25,8 @@ import { COLORS, ICONS } from './config';
 import './CreateCustomBtn.less';
 
 class CreateCustomBtnCon extends React.Component<any, any> {
+  declare inputEl: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -18,6 +18,8 @@ import './subordinateMembers.less';
 
 const ClickAwayable = ClickAway;
 class SubordinateMembers extends Component<any, any> {
+  declare ganttMembersList: HTMLUListElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

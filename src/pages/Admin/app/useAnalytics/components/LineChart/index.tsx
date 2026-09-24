@@ -53,6 +53,9 @@ const getDualAxesData = (data = []) => {
 };
 
 export default class LineChart extends React.Component<any, any> {
+  declare isMountedComponent: boolean;
+  declare lineChartEle: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.chart = null;

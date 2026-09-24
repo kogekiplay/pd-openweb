@@ -24,6 +24,14 @@ import VideoPlayer from './VideoPlayer';
 import './attachmentsPreview.less';
 
 class AttachmentsPreview extends React.Component<any, any> {
+  declare id: number | undefined;
+  declare timer: NodeJS.Timeout | undefined;
+  declare btnNext: HTMLSpanElement | null | undefined;
+  declare btnPrev: HTMLSpanElement | null | undefined;
+  declare refImageViewer: ImageViewer | null | undefined;
+  declare refPreviewCon: HTMLDivElement | null | undefined;
+  declare refIconCon: HTMLAnchorElement | null | undefined;
+
   static override propTypes = {
     isShare: PropTypes.bool,
     attachments: PropTypes.array,

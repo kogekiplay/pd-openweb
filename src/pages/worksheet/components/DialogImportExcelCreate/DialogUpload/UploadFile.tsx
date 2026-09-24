@@ -33,6 +33,8 @@ const UploadSuccess = styled.div`
 `;
 
 export default class UploadFile extends Component<any, any> {
+  declare uplaodaExcel: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};

@@ -8,6 +8,7 @@ import UploadFiles from 'src/components/UploadFiles';
 import { htmlDecodeReg } from 'src/utils/common';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import RegExpValidator from 'src/utils/expression';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 import { edit } from '../../../redux/postActions';
 
 const FooterWrap = styled.div`
@@ -16,6 +17,9 @@ const FooterWrap = styled.div`
 `;
 
 export default class EditPostDialog extends React.Component<any, any> {
+  // initMentionsInput 往这个 textarea 上挂了 val / reset / destroy 等方法
+  declare textarea: MentionsInputElement | null | undefined;
+
   static show(postItem, dispatch) {
     const div = document.createElement('div');
 

@@ -21,6 +21,8 @@ import './index.less';
 
 const ClickAwayable = ClickAway;
 class ContextMenu extends Component<any, any> {
+  declare popup: HTMLDivElement | undefined;
+
   constructor(props) {
     super(props);
   }
@@ -90,6 +92,11 @@ const getOffsetData = function (rootW: number, rootH: number, nativeEvent) {
 };
 
 class SessionList extends Component<any, any> {
+  declare isWindowChat: boolean;
+  declare resizeObserver: ResizeObserver | undefined;
+  declare sessionListWrap: HTMLDivElement | null | undefined;
+  declare loading: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

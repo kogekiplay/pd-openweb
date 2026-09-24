@@ -6,6 +6,8 @@ import { getAppFeaturesVisible } from 'src/utils/common';
 import UserProfile from './components/Profile';
 
 export default class UserEntryPoint extends React.PureComponent<any, any> {
+  declare request: ApiResult | undefined;
+
   override state = {
     accountId: '',
     isMe: false,

@@ -13,6 +13,8 @@ const Tips = {
 };
 
 export default class DetailList extends Component<any, any> {
+  declare postList: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

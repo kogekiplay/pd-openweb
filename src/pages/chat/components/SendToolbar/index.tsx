@@ -58,6 +58,8 @@ const recurShowFileConfirm = (up, files, i, length, cb) => {
 };
 
 export default class SendToolbar extends Component<any, any> {
+  declare at: HTMLDivElement | null | undefined;
+
   // 这些原来都是隐式挂上去的，TS 下不声明就是 TS2339
   emotion;
   uploadFile;

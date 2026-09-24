@@ -36,6 +36,9 @@ const newWhiteList = Object.assign({}, whiteList, { img: ['src', 'alt', 'title',
 
 // 评论内容列表
 export default class CommentListItem extends React.Component<any, any> {
+  declare ajax: ApiResult | undefined;
+  declare singleTalk: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     children: PropTypes.element,
     comment: PropTypes.shape({

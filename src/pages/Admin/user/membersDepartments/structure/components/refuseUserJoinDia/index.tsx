@@ -23,6 +23,8 @@ const DialogWrap = styled(Dialog)`
 `;
 
 class RefuseUserJoinDia extends React.Component<any, any> {
+  declare area: HTMLTextAreaElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

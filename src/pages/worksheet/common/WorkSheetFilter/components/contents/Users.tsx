@@ -8,6 +8,8 @@ import { getTabTypeBySelectUser } from 'src/pages/worksheet/common/WorkSheetFilt
 import { FILTER_CONDITION_TYPE } from '../../enum';
 
 export default class Users extends Component<any, any> {
+  declare userscon: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     disabled: PropTypes.bool,
     projectId: PropTypes.string,

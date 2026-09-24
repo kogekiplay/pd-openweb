@@ -22,6 +22,8 @@ const SubmitButton = styled(Button)`
 `;
 
 export default class EditableButton extends React.Component<any, any> {
+  declare con: HTMLInputElement | null | undefined;
+
   static override propTypes = {
     name: PropTypes.string,
     onChange: PropTypes.func,

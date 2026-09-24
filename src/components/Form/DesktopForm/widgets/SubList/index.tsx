@@ -7,6 +7,8 @@ import { WidgetEventHelper } from '../../../core/useFormEventManager';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export default class SubList extends React.Component<any, any> {
+  declare eventHelper: WidgetEventHelper;
+
   static override contextType = RecordInfoContext;
   static override propTypes = {
     from: PropTypes.number,

@@ -12,6 +12,8 @@ import AppDetail from './AppDetail';
 import './index.less';
 
 let AppPkgHeader = class AppPkgHeader extends Component<any, any> {
+  declare isRequest: boolean;
+
   constructor(props) {
     super(props);
     this.isRequest = false;

@@ -64,6 +64,9 @@ const statusData = [
 ];
 
 export default class Filter extends Component<any, any> {
+  declare request: ApiResult | undefined;
+  declare owner: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -129,7 +132,7 @@ export default class Filter extends Component<any, any> {
       }
     }
   }
-  getTodoListFilter = props => {
+  getTodoListFilter = (props = this.props) => {
     const { loading } = this.state;
     const { param } = props || this.props;
 

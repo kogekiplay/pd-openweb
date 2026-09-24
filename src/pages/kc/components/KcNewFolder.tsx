@@ -2,6 +2,8 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class KcNewFolder extends Component<any, any> {
+  declare input: HTMLInputElement | null | undefined;
+
   static override propTypes = {
     isList: PropTypes.bool,
     addNewFolder: PropTypes.func,

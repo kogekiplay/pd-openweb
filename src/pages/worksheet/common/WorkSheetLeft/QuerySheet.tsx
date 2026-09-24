@@ -9,6 +9,8 @@ import WorkSheetItem from './WorkSheetItem';
 
 const ClickAwayable = ClickAway;
 export default class QuerySheet extends Component<any, any> {
+  declare searchSheet: _.DebouncedFunc<() => void>;
+
   static override propTypes = {
     sheetActions: PropTypes.object,
   };

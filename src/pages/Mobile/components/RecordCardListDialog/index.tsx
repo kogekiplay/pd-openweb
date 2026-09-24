@@ -27,6 +27,10 @@ import './index.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default class RecordCardListDialog extends Component<any, any> {
+  declare clickSearch: boolean;
+  declare isOnComposition: boolean;
+  declare inputRef: HTMLInputElement | null | undefined;
+
   static override propTypes = {
     from: PropTypes.number, // 来源
     appId: PropTypes.string, // 他表字段被关联表所在应用id

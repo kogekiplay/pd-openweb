@@ -42,6 +42,8 @@ const passApplyConfig = {
 };
 
 export default class DingSyncCourse extends React.Component<any, any> {
+  declare appIconForDown: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

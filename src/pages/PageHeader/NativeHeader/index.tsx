@@ -13,6 +13,8 @@ import { compareProps } from '../util';
 import './index.less';
 
 export default class NativeHeader extends Component<any, any> {
+  declare timer: NodeJS.Timeout | undefined;
+
   static override propTypes = {
     path: string,
   };

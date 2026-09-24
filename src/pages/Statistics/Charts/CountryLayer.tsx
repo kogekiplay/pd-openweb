@@ -84,6 +84,11 @@ const setColorLavel = data => {
 };
 
 export class CountryLayer extends Component<any, any> {
+  declare chartEl: HTMLDivElement | null | undefined;
+  declare resizeObserver: ResizeObserver | undefined;
+  declare colorLavels: string[] | undefined;
+  declare depthColorLavels: string[] | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

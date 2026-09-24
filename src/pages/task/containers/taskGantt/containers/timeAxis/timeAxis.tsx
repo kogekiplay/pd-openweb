@@ -7,6 +7,8 @@ import utils from '../../utils/utils';
 import './timeAxis.less';
 
 class TimeAxis extends Component<any, any> {
+  declare currentYear: number;
+
   constructor(props) {
     super(props);
     this.currentYear = moment().isoWeekYear();

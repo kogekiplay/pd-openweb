@@ -57,6 +57,8 @@ const formatUser = function (props) {
 let date: null | number = null;
 
 export default class Avatar extends React.Component<any, any> {
+  declare card: HTMLAnchorElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

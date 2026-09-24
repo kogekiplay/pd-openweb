@@ -12,6 +12,8 @@ import EditableCellCon from '../EditableCellCon';
 
 const ClickAwayable = ClickAway;
 export default class Text extends React.Component<any, any> {
+  declare isSelecting: boolean | undefined;
+
   static override propTypes = {
     className: PropTypes.string,
     singleLine: PropTypes.bool,

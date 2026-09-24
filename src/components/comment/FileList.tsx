@@ -8,6 +8,8 @@ import UploadFiles from 'src/components/UploadFiles';
 import { SOURCE_TYPE } from './config';
 
 export default class FileList extends Component<any, any> {
+  declare promise: ApiResult | undefined;
+
   static TYPES = SOURCE_TYPE;
 
   static override propTypes = {

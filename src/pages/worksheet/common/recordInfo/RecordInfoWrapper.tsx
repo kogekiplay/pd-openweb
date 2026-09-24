@@ -13,6 +13,8 @@ import RecordInfo from './RecordInfo';
 const AutoSizeRecordInfo = autoSize(RecordInfo);
 
 export default class RecordInfoWrapper extends Component<any, any> {
+  declare didMountTimestamp: number;
+
   static override propTypes = {
     from: PropTypes.number,
     notDialog: PropTypes.bool,

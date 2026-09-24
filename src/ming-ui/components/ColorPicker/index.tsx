@@ -112,6 +112,8 @@ const isColorString = value => {
 };
 
 class ColorPicker extends Component<any, any> {
+  declare trigger: HTMLSpanElement | null | undefined;
+
   static override propTypes = {
     visible: PropTypes.bool,
     notTrigger: PropTypes.bool,

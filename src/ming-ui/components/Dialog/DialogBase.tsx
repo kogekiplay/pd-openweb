@@ -8,6 +8,12 @@ import '../less/Dialog.less';
 const dialogContainerPadding = 32;
 
 class DialogBase extends Component<any, any> {
+  declare target: HTMLDivElement | null;
+  declare dialogId: number;
+  declare id: number | undefined;
+  declare _dialog: HTMLDivElement | null | undefined;
+  declare _ghost: HTMLSpanElement | null | undefined;
+
   static override propTypes = {
     /**
      * 弹窗叠弹窗错位
@@ -343,7 +349,7 @@ class DialogBase extends Component<any, any> {
           {mask}
           <div
             className={cx(containerClasses, containerClassName)}
-            id={this.dialogId}
+            id={String(this.dialogId)}
             onClick={e => {
               overlayOnClick(e);
             }}

@@ -2,6 +2,8 @@ import React from 'react';
 import { UserCard } from 'ming-ui';
 
 export default class UserLink extends React.Component<any, any> {
+  declare card: HTMLAnchorElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

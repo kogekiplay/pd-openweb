@@ -24,6 +24,9 @@ const formatEmpty = value => {
 };
 
 let AddDiscuss = class AddDiscuss extends Component<any, any> {
+  declare isLock: boolean;
+  declare textarea: HTMLTextAreaElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

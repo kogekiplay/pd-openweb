@@ -77,6 +77,8 @@ export const callDialogSelectUser = function (projectId: string, callback = () =
 };
 
 export default class Detail extends React.Component<any, any> {
+  declare ajax: ApiResult | undefined;
+
   static override propTypes = {
     user: PropTypes.shape({
       avatar: PropTypes.string,

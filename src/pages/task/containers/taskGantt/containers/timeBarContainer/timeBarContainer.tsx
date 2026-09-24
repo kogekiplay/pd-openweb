@@ -20,6 +20,8 @@ import utils from '../../utils/utils';
 import './timeBarContainer.less';
 
 class TimeBarContainer extends Component<any, any> {
+  declare timeBarContainer: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

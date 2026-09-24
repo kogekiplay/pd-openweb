@@ -10,6 +10,8 @@ import RepeatBox from './RepeatBox';
 
 const RangePicker = DatePicker.RangePicker;
 let EditBlock = class EditBlock extends Component<any, any> {
+  declare box: HTMLDivElement | null | undefined;
+
   constructor() {
     super();
     this.state = {
@@ -118,6 +120,8 @@ let EditBlock = class EditBlock extends Component<any, any> {
 };
 EditBlock = ClickAway.wrap(EditBlock);
 export default class CalendarDate extends Component<any, any> {
+  declare elem: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

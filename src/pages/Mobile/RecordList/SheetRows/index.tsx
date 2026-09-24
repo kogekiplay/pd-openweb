@@ -18,6 +18,8 @@ import withoutRows from './assets/withoutRows.png';
 import './index.less';
 
 class SheetRows extends Component<any, any> {
+  declare intervalId: NodeJS.Timeout | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -9,6 +9,8 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DynamicValueInputWrap, WrapMaxOrMin } from '../styled';
 
 export default class TimeInput extends Component<any, any> {
+  declare $wrap: SelectOtherField | null | undefined;
+
   static override propTypes = {
     onDynamicValueChange: func,
     data: shape({ enumDefault: number }),

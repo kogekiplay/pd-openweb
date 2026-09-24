@@ -12,6 +12,8 @@ const getComputedStyle = (element, attr) => {
 };
 
 class TimePicker extends Component<any, any> {
+  declare clickHandler: { remove(): void } | undefined;
+
   static override propTypes = {
     /**
      * 时间选择器类名

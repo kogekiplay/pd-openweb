@@ -7,6 +7,8 @@ import organizeAjax from 'src/api/organize.js';
 import './dialogCreateAndEditRole.less';
 
 class DialogCreateAndEditRole extends React.Component<any, any> {
+  declare input: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

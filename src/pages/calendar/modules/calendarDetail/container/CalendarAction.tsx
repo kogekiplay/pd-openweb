@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
 
 export default class CalendarAction extends Component<any, any> {
+  declare elem: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     type: PropTypes.string.isRequired,
     save: PropTypes.func.isRequired,

@@ -28,6 +28,8 @@ import SelectOtherFields from '../SelectOtherFields';
 import Tag from '../Tag';
 
 export default class SingleControlValue extends Component<any, any> {
+  declare tagtextarea: TagTextarea | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

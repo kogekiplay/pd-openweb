@@ -89,6 +89,8 @@ const getBottomTabSheetList = ({ appSection = [], detail = {}, viewHideNavi, isA
 };
 
 class App extends Component<any, any> {
+  declare isSetScrollTop: boolean;
+
   constructor(props) {
     super(props);
     const { match, history } = props;

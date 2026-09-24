@@ -10,6 +10,7 @@ import 'src/components/autoTextarea/autoTextarea';
 import { SOURCE_TYPE } from 'src/components/comment/config';
 import Emotion from 'src/components/emotion/emotion';
 import MentionsInput from 'src/components/MentionsInput';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 import UploadFiles from 'src/components/UploadFiles';
 import { addComment } from '../../../redux/postActions';
 
@@ -21,6 +22,14 @@ const TEXT_AREA_MAX_HEIGHT = 180;
  * 动态回复输入框
  */
 class PostCommentInput extends React.Component<any, any> {
+  declare bound: boolean | undefined;
+
+  // initMentionsInput 往这个 textarea 上挂了 val / reset / destroy 等方法
+  declare textarea: MentionsInputElement | null | undefined;
+  declare button: HTMLInputElement | null | undefined;
+  declare faceBtn: HTMLAnchorElement | null | undefined;
+  declare replyFrame: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     postItem: PropTypes.object,
     onPublished: PropTypes.func,

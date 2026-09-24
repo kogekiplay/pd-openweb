@@ -34,6 +34,8 @@ const RecordCardCellRelateRecord = styled.div`
   margin-right: 6px;
 `;
 export default class RelateRecord extends React.Component<any, any> {
+  declare changed: boolean | undefined;
+
   static override contextType = SheetContext;
   static override propTypes = {
     className: PropTypes.string,

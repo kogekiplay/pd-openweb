@@ -11,6 +11,8 @@ import { Wrap } from './style';
 import { fillTranslateInfo } from './util';
 
 export default class RoleSet extends PureComponent<any, any> {
+  declare promise: ApiResult | undefined;
+
   static override propTypes = {
     appId: PropTypes.string,
     roleId: PropTypes.string,

@@ -83,6 +83,8 @@ const defaultOpts = {
 };
 
 class Map extends Component<any, any> {
+  declare mapWrapper: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     pluginMap: PropTypes.object,
     loader: PropTypes.object,

@@ -6,6 +6,8 @@ import CalendarDetail from '../modules/calendarDetail';
 import './style.less';
 
 class CalendarDetailEntrypoint extends Component<any, any> {
+  declare el: HTMLDivElement | null | undefined;
+
   override componentDidMount() {
     $('html').addClass('AppCalendar AppCalendarDetail');
     CalendarDetail({

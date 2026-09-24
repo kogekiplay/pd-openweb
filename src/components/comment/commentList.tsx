@@ -10,6 +10,9 @@ import { SOURCE_TYPE } from './config';
 import './css/commentList.less';
 
 class CommentList extends React.Component<any, any> {
+  declare ajax: ApiResult | undefined;
+  declare list: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     sourceId: PropTypes.string.isRequired,
     sourceType: PropTypes.oneOf(_.values(SOURCE_TYPE)).isRequired,

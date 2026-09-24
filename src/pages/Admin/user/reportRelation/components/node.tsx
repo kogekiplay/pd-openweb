@@ -27,6 +27,8 @@ const LoadWrap = styled.div`
 `;
 
 class Node extends Component<any, any> {
+  declare node: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     subordinates: PropTypes.arrayOf(PropTypes.string),
     isFirst: PropTypes.bool,

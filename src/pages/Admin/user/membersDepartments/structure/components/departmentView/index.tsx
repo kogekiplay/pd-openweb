@@ -35,6 +35,9 @@ const loop = (data, key, callback) => {
 
 const { DirectoryTree } = Tree;
 class DepartmentTree extends React.Component<any, any> {
+  declare timer: NodeJS.Timeout | null;
+  declare handleResize: _.DebouncedFuncLeading<() => void>;
+
   constructor(props) {
     super(props);
     this.state = {

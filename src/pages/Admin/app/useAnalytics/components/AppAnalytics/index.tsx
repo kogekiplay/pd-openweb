@@ -41,6 +41,8 @@ const tabs = [
   { key: 2, label: _l('按成员') },
 ];
 export default class AppAnalytics extends Component<any, any> {
+  declare analysisEle: Overview | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

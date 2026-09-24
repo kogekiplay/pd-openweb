@@ -33,6 +33,8 @@ import type { FormControl } from 'src/utils/controlTypes';
 export const detailTypeList = UPGRADE_DETAIL_TYPE_LIST.map(v => v.type);
 export const upgradeTypeList = UPGARADE_TYPE_LIST.map(v => v.type);
 export default class UpgradeProcess extends Component<any, any> {
+  declare uploaderWrap: QiniuUpload | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

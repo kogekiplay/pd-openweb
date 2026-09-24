@@ -31,6 +31,9 @@ const initialState = {
 };
 
 class ImageViewer extends React.Component<any, any> {
+  declare root: HTMLDivElement | null | undefined;
+  declare imageEle: HTMLImageElement | null | undefined;
+
   static override propTypes = {
     src: PropTypes.string,
     onError: PropTypes.func,

@@ -9,6 +9,8 @@ import ViewConfigCon from './ViewConfig';
 import './ViewConfig.less';
 
 let ViewConfig = class ViewConfig extends React.Component<any, any> {
+  declare inputEl: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     const { view, worksheetId } = props;

@@ -43,6 +43,8 @@ const isWx = window.isWeiXin && !window.platformENV.isOverseas && !window.platfo
 const isApp = window.isWxWork || isWx || window.isWeLink || window.isDingTalk || window.isFeiShu || window.isMingDaoApp;
 
 export default class Widgets extends Component<any, any> {
+  declare _mapContainer: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     from: PropTypes.number,
     disabled: PropTypes.bool,

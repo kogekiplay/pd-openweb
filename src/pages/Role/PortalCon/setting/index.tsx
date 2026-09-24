@@ -119,6 +119,8 @@ const SETTYPE = [_l('基础设置'), _l('信息收集'), _l('自定义登录界�
 const TYPE_TO_COMP = [BaseSet, InfoSet, LoginSet, TextMessage];
 
 class PortalSetting extends React.Component<any, any> {
+  declare saveRef: HTMLSpanElement | null;
+
   constructor(props) {
     super(props);
     this.state = {

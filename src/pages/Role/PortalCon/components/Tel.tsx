@@ -5,6 +5,9 @@ import _ from 'lodash';
 import { createIntlTelInput } from 'ming-ui/components/PhoneNumberInput/util';
 
 export default class Tel extends Component<any, any> {
+  declare input: HTMLInputElement | null | undefined;
+  declare destroy: boolean | undefined;
+
   override componentDidMount() {
     const {
       data: { value },

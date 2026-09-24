@@ -490,6 +490,8 @@ class ColorScope extends Component<any, any> {
 }
 
 export default class RuleColor extends Component<any, any> {
+  declare colorLevelEl: ColorLevel | ColorScope | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

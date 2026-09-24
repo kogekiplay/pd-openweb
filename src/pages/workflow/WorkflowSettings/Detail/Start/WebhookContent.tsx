@@ -16,6 +16,8 @@ const STATUS = {
 };
 
 export default class WebhookContent extends Component<any, any> {
+  declare setInterval: NodeJS.Timeout | undefined;
+
   constructor(props) {
     super(props);
 

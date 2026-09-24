@@ -12,6 +12,8 @@ import getTableColumnWidth from './getTableColumnWidth';
 import './style.less';
 
 export default class BaseColumnHead extends React.Component<any, any> {
+  declare drag: HTMLSpanElement | null | undefined;
+
   static override propTypes = {
     disabled: PropTypes.bool,
     canDrag: PropTypes.bool,

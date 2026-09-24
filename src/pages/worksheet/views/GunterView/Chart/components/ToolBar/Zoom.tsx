@@ -21,6 +21,8 @@ const IconWrap = styled(Icon)`
   }
 `;
 let Zoom = class Zoom extends Component<any, any> {
+  declare isMobile: boolean;
+
   constructor(props) {
     super(props);
     window.isZoom = true;

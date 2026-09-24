@@ -17,6 +17,9 @@ const totalItem = [{ id: '', name: _l('全部'), iconName: 'icon-apps' }];
 const pageSize = 100;
 
 class SelectIntegrationApi extends Component<any, any> {
+  declare postList: ApiResult | undefined;
+  declare apiPostList: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

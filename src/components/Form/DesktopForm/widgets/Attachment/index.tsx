@@ -27,6 +27,9 @@ import { WidgetEventHelper } from '../../../core/useFormEventManager';
 import './index.less';
 
 export default class Widgets extends Component<any, any> {
+  declare eventHelper: WidgetEventHelper;
+  declare fileBox: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     disabled: PropTypes.bool,
     value: PropTypes.any,

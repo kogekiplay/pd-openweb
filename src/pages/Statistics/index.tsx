@@ -90,6 +90,9 @@ const renderGlobalStatisticsPanel = node => {
 };
 
 export default class Statistics extends Component<any, any> {
+  declare isUnmounted: boolean;
+  declare request: ApiResult | undefined;
+
   constructor(props) {
     super();
     this.isUnmounted = false;

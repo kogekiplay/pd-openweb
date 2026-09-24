@@ -36,6 +36,8 @@ const LoginLogWrap = styled.div`
 
 const PAGE_SIZE = 50;
 export default class LoginLog extends Component<any, any> {
+  declare seatchWrap: HTMLDivElement | null | undefined;
+
   constructor(props) {
     const columns = LOGIN_LOG_COLUMNS.filter(
       v =>

@@ -29,6 +29,8 @@ const configs = [
 ];
 let timeout: NodeJS.Timeout | null = null;
 export default class ExportApp extends React.Component<any, any> {
+  declare settings: AppSettings | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

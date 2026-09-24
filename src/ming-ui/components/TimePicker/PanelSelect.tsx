@@ -4,6 +4,8 @@ import SelectItem from './SelectItem';
 import { scrollTo } from './utils';
 
 class PanelSelect extends Component<any, any> {
+  declare _select: HTMLUListElement | null | undefined;
+
   static override propTypes = {
     options: PropTypes.arrayOf(PropTypes.string),
     onSelect: PropTypes.func,
@@ -13,7 +15,7 @@ class PanelSelect extends Component<any, any> {
   };
 
   override componentDidMount() {
-    const selectedItem = this._select.querySelector('.TimePicker-select-item.actived');
+    const selectedItem = this._select.querySelector<HTMLElement>('.TimePicker-select-item.actived');
 
     if (selectedItem) {
       const dis = this._select.scrollTop + (selectedItem.offsetTop - this._select.scrollTop);

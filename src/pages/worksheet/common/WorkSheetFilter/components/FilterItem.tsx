@@ -16,6 +16,8 @@ import wrapDisableClick from './wrapDisableClick';
 const NewMenuItem = wrapDisableClick(MenuItem);
 
 export default class FilterItem extends Component<any, any> {
+  declare title: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     projectId: PropTypes.string,
     showCustomAddCondition: PropTypes.bool,
@@ -190,8 +192,8 @@ export default class FilterItem extends Component<any, any> {
                   },
                   () => {
                     if (this.title) {
-                      this.title.querySelector('.filterNameInput').select();
-                      this.title.querySelector('.filterNameInput').focus();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput').select();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput').focus();
                     }
                   },
                 );
@@ -357,8 +359,8 @@ export default class FilterItem extends Component<any, any> {
                   e.stopPropagation();
                   this.setState({ nameIsEditing: true }, () => {
                     if (this.title) {
-                      this.title.querySelector('.filterNameInput').select();
-                      this.title.querySelector('.filterNameInput').focus();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput').select();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput').focus();
                     }
                   });
                 }}

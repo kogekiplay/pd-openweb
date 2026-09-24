@@ -10,6 +10,9 @@ import { completeAdminLogLinks } from '../../utils';
 const PAGE_SIZE = 30;
 
 export default class Discuss extends Component<any, any> {
+  declare scrollView: HTMLDivElement | null | undefined;
+  declare $scrollCon: HTMLElement | undefined;
+
   static override propTypes = {
     worksheetId: PropTypes.string,
     rowId: PropTypes.string,

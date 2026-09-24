@@ -46,6 +46,8 @@ const typeList = [
 ];
 
 class AdminWorkflowList extends Component<any, any> {
+  declare workflowMonotor: WorkflowMonitor | null | undefined;
+
   constructor(props) {
     super(props);
     const workflowTab = localStorage.getItem('workflowTab');

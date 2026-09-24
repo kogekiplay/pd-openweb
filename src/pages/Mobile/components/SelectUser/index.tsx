@@ -14,6 +14,8 @@ import UserOrDepartmentItem from './components/UserOrDepartmentItem';
 import './index.less';
 
 export default class SelectUser extends Component<any, any> {
+  declare request: ApiResult | undefined;
+
   constructor(props) {
     super(props);
     const { selectedUsers } = props;

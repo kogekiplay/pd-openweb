@@ -114,6 +114,8 @@ const VerifyButton = styled(Button)`
 `;
 
 export default class SelectField extends Component<any, any> {
+  declare removeEvent: (() => void) | undefined;
+
   static override propTypes = {
     fields: arrayOf(shape({ type: number })),
     viewType: oneOf([1, 2, 4, 5, 8]),

@@ -74,6 +74,10 @@ const refreshData = (departmentId, typeCursor, projectId: string, pageIndex: num
 };
 
 class UserTable extends React.Component<any, any> {
+  declare tbodyContainer: HTMLDivElement | null | undefined;
+  declare headContainer: HTMLDivElement | null | undefined;
+  declare tableContent: HTMLDivElement | null | undefined;
+
   override state = {
     columnsInfo: [
       { value: 'name', label: _l('姓名'), checked: true, width: 200 },

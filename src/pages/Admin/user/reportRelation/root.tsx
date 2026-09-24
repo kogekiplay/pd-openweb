@@ -13,6 +13,9 @@ import NodeDialog from './components/NodeDialog';
 import SearchInput from './components/searchBox';
 
 class Root extends Component<any, any> {
+  declare isUnmounted: boolean | undefined;
+  declare wrapper: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

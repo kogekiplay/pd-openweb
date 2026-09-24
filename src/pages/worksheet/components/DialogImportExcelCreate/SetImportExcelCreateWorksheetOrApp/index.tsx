@@ -45,6 +45,8 @@ const getWorksheetList = (list = []) => {
 
 const { Option } = Select;
 let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrApp extends Component<any, any> {
+  declare tableWrap: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};

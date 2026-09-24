@@ -41,6 +41,9 @@ const defaultState = {
 };
 
 export default class ProjectGroups extends React.Component<any, any> {
+  declare promise: ApiResult | null;
+  declare listContent: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     projectId: PropTypes.string,
   };

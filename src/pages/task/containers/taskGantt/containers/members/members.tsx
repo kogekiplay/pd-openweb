@@ -10,6 +10,8 @@ import { addMembers } from '../../redux/actions';
 import './members.less';
 
 class Members extends Component<any, any> {
+  declare ganttMembersList: HTMLUListElement | null | undefined;
+
   constructor(props) {
     super(props);
   }

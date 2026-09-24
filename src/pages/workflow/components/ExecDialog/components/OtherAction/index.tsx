@@ -109,6 +109,8 @@ const RequiredIcon = styled.div`
 `;
 
 export default class OtherAction extends Component<any, any> {
+  declare signature: Signature | null | undefined;
+
   static override propTypes = {
     projectId: string,
     data: object,

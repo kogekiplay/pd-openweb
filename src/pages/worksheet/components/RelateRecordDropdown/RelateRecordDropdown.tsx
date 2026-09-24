@@ -53,6 +53,8 @@ const PlaceHolder = styled.div`
 const MAX_COUNT = 50;
 
 export default class RelateRecordDropdown extends React.Component<any, any> {
+  declare isAssignedSearchControl: boolean | undefined;
+
   static override propTypes = {
     disableNewRecord: PropTypes.bool,
     isQuickFilter: PropTypes.bool,

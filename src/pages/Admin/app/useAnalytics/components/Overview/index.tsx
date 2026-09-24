@@ -327,7 +327,8 @@ export default class Overview extends Component<any, any> {
     return formatFileSize(total, 2);
   };
 
-  updateChartData = ({ workflow = {}, record = {}, app = {}, attachment = {}, isFilterByDepartment }) => {
+  // isFilterByDepartment 可以不传（应用分析页刷新图表时就不传），按不筛部门算
+  updateChartData = ({ workflow = {}, record = {}, app = {}, attachment = {}, isFilterByDepartment = false }) => {
     const { totalNumberOfexecute = 0, statisticsResult: workflowStatisticsResult } = workflow;
     const {
       totalNumberOfRow = 0,

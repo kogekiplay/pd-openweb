@@ -71,6 +71,8 @@ const dealRelationControls = (controls: FormControl[] = []) => {
 };
 
 export default class SearchWorksheetDialog extends Component<any, any> {
+  declare box: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     const {

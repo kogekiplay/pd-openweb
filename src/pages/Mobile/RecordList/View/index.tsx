@@ -55,6 +55,8 @@ const TYPE_TO_COMP = {
 };
 
 class View extends Component<any, any> {
+  declare buttonsCheckRequestKey: string;
+
   constructor(props) {
     super(props);
     this.viewComRef = React.createRef();

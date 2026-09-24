@@ -7,6 +7,8 @@ import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
 
 export default class FileMessage extends Component<any, any> {
+  declare iconClassName: string;
+
   constructor(props) {
     super(props);
     this.state = {

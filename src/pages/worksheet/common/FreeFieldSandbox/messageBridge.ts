@@ -3,6 +3,11 @@ import EventEmitter from 'events';
 export const emitter = new EventEmitter();
 
 export default class MessageBridge {
+  declare mainWindow: Window;
+  declare iframeId: string | null;
+  declare type: string | null;
+  declare options: { currentEnvName: string; containerEnvName: string };
+
   constructor({ currentEnvName = 'free_field', containerEnvName = 'main_web' } = {}) {
     this.mainWindow = window.parent;
     this.iframeId = new URL(location.href).searchParams.get('id');

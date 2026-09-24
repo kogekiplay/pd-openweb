@@ -9,6 +9,9 @@ import Textarea from 'ming-ui/components/Textarea';
 import { Config, getCalendarColor, getUserAllCalCategories } from '../common';
 
 export default class CalendarHeader extends Component<any, any> {
+  declare catBtn: HTMLSpanElement | null | undefined;
+  declare opBtn: HTMLSpanElement | null | undefined;
+
   static override propTypes = {
     title: PropTypes.string.isRequired,
     auth: PropTypes.object.isRequired,

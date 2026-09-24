@@ -27,6 +27,8 @@ const checkFuncs = {
 };
 
 export default class SetInfoDialog extends Component<any, any> {
+  declare searchRequest: ApiResult | null;
+
   constructor(props) {
     super(props);
     this.state = {

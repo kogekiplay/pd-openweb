@@ -21,6 +21,8 @@ import './ActionDropDown.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default class DropDownItem extends Component<any, any> {
+  declare box: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     values: PropTypes.arrayOf(PropTypes.shape({})),
     dropDownData: PropTypes.array,

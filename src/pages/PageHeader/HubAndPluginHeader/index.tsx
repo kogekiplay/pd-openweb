@@ -46,6 +46,8 @@ const Wrap = styled.div`
   }
 `;
 export default class HubAndPluginHeader extends Component<any, any> {
+  declare timer: NodeJS.Timeout | undefined;
+
   static override propTypes = {
     path: string,
   };

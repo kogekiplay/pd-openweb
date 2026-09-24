@@ -23,6 +23,9 @@ if (hideHeader === 'true') {
 }
 
 export default class PublicShareChart extends Component<any, any> {
+  declare isUnmounted: boolean;
+  declare refreshTimer: NodeJS.Timeout | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

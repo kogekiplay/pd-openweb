@@ -21,6 +21,8 @@ const SCORE_TEXT = [
   _l('十级'),
 ];
 export default class Options extends Component<any, any> {
+  declare con: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,

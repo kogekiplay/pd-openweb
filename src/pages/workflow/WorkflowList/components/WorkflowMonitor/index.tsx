@@ -19,6 +19,9 @@ const MonitorWrap = styled.div`
   position: relative;
 `;
 export default class WorkflowMonitor extends Component<any, any> {
+  declare realTimeDataRef: RealTimeData | null | undefined;
+  declare historyChartRef: HistoryChart | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -8,6 +8,8 @@ import LibCalender from '../lib/calender';
 import './style.less';
 
 class DateTime extends Component<any, any> {
+  declare _picker: HTMLSpanElement | null | undefined;
+
   constructor(props) {
     super(props);
 

@@ -7,6 +7,8 @@ import { browserIsMobile } from 'src/utils/common';
 import './SearchInput.less';
 
 export default class SearchInput extends Component<any, any> {
+  declare inputEl: HTMLInputElement | null | undefined;
+
   static override propTypes = {
     active: PropTypes.bool,
     className: PropTypes.string,

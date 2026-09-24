@@ -6,6 +6,9 @@ import { Tooltip } from 'ming-ui/antd-components';
 import departmentAjax from 'src/api/department.js';
 
 export default class User extends Component<any, any> {
+  declare promise: ApiResult | null;
+  declare timer: NodeJS.Timeout | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

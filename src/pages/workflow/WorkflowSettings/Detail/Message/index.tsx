@@ -51,6 +51,9 @@ const SmsServiceTipsCard = styled.div`
 `;
 
 export default class Message extends Component<any, any> {
+  declare tagBox: TagTextarea | undefined;
+  declare tagtextarea: TagTextarea | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

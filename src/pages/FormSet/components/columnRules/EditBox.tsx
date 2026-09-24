@@ -33,6 +33,9 @@ import * as actions from './redux/actions/columnRules';
 import * as columnRules from './redux/actions/columnRules';
 
 class EditBox extends React.Component<any, any> {
+  declare addField: HTMLDivElement | null | undefined;
+  declare addAction: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

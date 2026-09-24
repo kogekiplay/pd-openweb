@@ -127,6 +127,10 @@ const SOURCE_TYPE_LABEL = {
   5: 'HAP-CLI',
 };
 export default class AppAndWorksheetLog extends Component<any, any> {
+  declare appPromise: ApiResult | undefined;
+  declare tableWrap: PageTableCon | null | undefined;
+  declare seatchWrap: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     const columns =

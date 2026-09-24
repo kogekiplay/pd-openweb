@@ -23,6 +23,8 @@ import * as socket from '../../utils/socket';
 import './index.less';
 
 class Message extends Component<any, any> {
+  declare avatar: HTMLImageElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

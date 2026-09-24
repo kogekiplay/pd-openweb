@@ -26,6 +26,8 @@ const ALERTMSG = {
 };
 
 export default class ImportApp extends React.Component<any, any> {
+  declare uploadFile: HTMLButtonElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

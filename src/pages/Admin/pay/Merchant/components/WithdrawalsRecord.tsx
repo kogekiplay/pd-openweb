@@ -46,6 +46,9 @@ const FlexWrap = styled.div`
 `;
 
 export default class WithdrawalsRecord extends Component<any, any> {
+  declare isInit: boolean;
+  declare tableWrap: PageTableCon | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

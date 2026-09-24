@@ -4,6 +4,8 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 
 class EditableBlock extends React.Component<any, any> {
+  declare inputFileName: HTMLInputElement | null | undefined;
+
   static override propTypes = {
     value: PropTypes.string,
     className: PropTypes.string,

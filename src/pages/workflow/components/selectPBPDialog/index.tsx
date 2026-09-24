@@ -120,6 +120,8 @@ const ContentBox = styled.div`
 `;
 
 class SelectPBPDialog extends Component<any, any> {
+  declare ajaxRequest: ApiResult | null | undefined;
+
   static override propTypes = {
     companyId: PropTypes.string,
     appId: PropTypes.string,

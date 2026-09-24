@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 
 class MultipleDropdownMenu extends Component<any, any> {
+  declare search: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
 

@@ -40,6 +40,9 @@ const CalItem = styled.div`
 `;
 
 export default class Formula extends React.Component<any, any> {
+  declare tagtextarea: TagTextarea | undefined;
+  declare formulaBox: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     const { dataSource } = props.data;

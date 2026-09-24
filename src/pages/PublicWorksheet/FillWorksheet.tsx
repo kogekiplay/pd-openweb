@@ -56,6 +56,8 @@ const LoadMask = styled.div`
 `;
 
 export default class FillWorksheet extends React.Component<any, any> {
+  declare issubmitting: boolean | undefined;
+
   static override propTypes = {
     loading: PropTypes.bool,
     rules: PropTypes.arrayOf(PropTypes.shape({})),

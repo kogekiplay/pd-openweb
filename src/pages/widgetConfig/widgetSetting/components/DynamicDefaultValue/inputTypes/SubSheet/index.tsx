@@ -7,6 +7,8 @@ import { DynamicValueInputWrap } from '../../styled';
 import CustomDefaultValue from './CustomDefaultValue';
 
 export default class SubSheet extends Component<any, any> {
+  declare $wrap: SelectOtherField | null | undefined;
+
   static override propTypes = {
     onDynamicValueChange: func,
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),

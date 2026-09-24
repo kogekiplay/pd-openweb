@@ -35,6 +35,9 @@ const SupportWrap = styled(Support)`
 `;
 
 class BackupFromFilesCom extends Component<any, any> {
+  declare timer: NodeJS.Timeout | null;
+  declare uploaderWrap: QiniuUpload | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

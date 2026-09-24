@@ -32,6 +32,8 @@ const TopBar = styled.div(
 const PreFillWrap = styled.div``;
 
 export default class PublicWorksheet extends React.Component<any, any> {
+  declare shareId: string | undefined;
+
   static override propTypes = {
     isPreview: PropTypes.bool,
     worksheetId: PropTypes.string,

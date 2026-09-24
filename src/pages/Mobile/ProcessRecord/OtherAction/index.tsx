@@ -14,6 +14,8 @@ import functionTemplateModal from '../FunctionTemplateModal';
 import './index.less';
 
 export default class extends Component<any, any> {
+  declare signature: Signature | null | undefined;
+
   constructor(props) {
     super(props);
     const { instance } = this.props;

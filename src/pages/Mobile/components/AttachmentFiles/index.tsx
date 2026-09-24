@@ -19,6 +19,11 @@ import './index.less';
 import { UploadError } from 'src/utils/uploader/constants';
 
 export class UploadFileWrapper extends Component<any, any> {
+  declare id: string;
+  declare uploading: boolean;
+  declare uploadContainer: HTMLDivElement | null | undefined;
+  declare uploadFileEl: HTMLSpanElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

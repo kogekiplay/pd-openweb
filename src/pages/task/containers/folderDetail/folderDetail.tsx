@@ -20,6 +20,8 @@ import { checkIsProject, errorMessage } from '../../utils/utils';
 import './folderDetail.less';
 
 class FolderDetail extends Component<any, any> {
+  declare mounted: boolean | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

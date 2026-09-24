@@ -7,6 +7,13 @@ import Constant from '../../utils/constant';
 import './index.less';
 
 export default class TextareaBox extends Component<any, any> {
+  declare lastHeight: number | undefined;
+  declare currentHeight: number | undefined;
+  declare isComposing: boolean;
+  declare compositionEndTime: number;
+  declare textareaWrapper: HTMLDivElement | null | undefined;
+  declare messageRefer: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

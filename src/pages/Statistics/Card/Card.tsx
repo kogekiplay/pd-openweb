@@ -28,6 +28,9 @@ const ChartDialog = lazy(() => import('../ChartDialog'));
 let isCheckLogin = true;
 
 class Card extends Component<any, any> {
+  declare timer: NodeJS.Timeout | undefined;
+  declare request: ApiResult | undefined;
+
   static defaultProps = {
     needEnlarge: true,
     needTimingRefresh: true,

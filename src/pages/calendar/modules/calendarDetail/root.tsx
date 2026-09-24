@@ -76,6 +76,11 @@ const getStateIsShowUpdateBar = (oldState, state) => {
 };
 
 export default class CalendarDetail extends Component<any, any> {
+  declare omitKeys: string[];
+  declare EVENT_KEY: number;
+  declare calendarDetail: HTMLDivElement | null | undefined;
+  declare throttled: _.DebouncedFuncLeading<() => void> | undefined;
+
   static override propTypes = {
     data: PropTypes.object,
   };

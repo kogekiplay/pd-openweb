@@ -23,6 +23,8 @@ import { isOpenPermit } from '../../tools/utils';
 import './index.less';
 
 export default class Widgets extends Component<any, any> {
+  declare _isUnmounted: boolean;
+
   static override propTypes = {
     disabled: PropTypes.bool,
     advancedSetting: PropTypes.object,

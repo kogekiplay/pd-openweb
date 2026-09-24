@@ -110,6 +110,8 @@ const LoadableRecordInfo = lazy(() => import('worksheet/views/GunterView/compone
 const LoadableRecordOperate = lazy(() => import('worksheet/components/RecordOperate'));
 const LoadableCellControls = lazy(() => import('worksheet/components/CellControls'));
 let Record = class Record extends Component<any, any> {
+  declare clicktimer: true | NodeJS.Timeout | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -150,7 +152,8 @@ let Record = class Record extends Component<any, any> {
         });
 
         if (this.clicktimer) {
-          clearTimeout(this.clicktimer);
+          // 点标题旁的编辑图标时会先把它置成 true，让这里当作双击直接进编辑；那时没有定时器可清
+          if (this.clicktimer !== true) clearTimeout(this.clicktimer);
           this.clicktimer = null;
           this.canedit &&
             titleControl.type === 2 &&

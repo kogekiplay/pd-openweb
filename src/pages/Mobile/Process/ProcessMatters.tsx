@@ -107,6 +107,9 @@ const tabs = [
 ];
 
 export default class ProcessMatters extends Component<any, any> {
+  declare request: ApiResult | undefined;
+  declare signature: Signature | null | undefined;
+
   constructor(props) {
     super(props);
     const { tab } = props.match.params;

@@ -5,6 +5,9 @@ import { Icon } from 'ming-ui';
 import './index.less';
 
 export default class TagInput extends Component<any, any> {
+  declare textWrap: HTMLSpanElement | null | undefined;
+  declare tagInput: HTMLInputElement | null | undefined;
+
   static override propTypes = {
     defaultValue: PropTypes.string,
     className: PropTypes.string,

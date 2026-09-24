@@ -16,6 +16,10 @@ import './updater.css';
  * 动态发布器
  */
 class Updater extends React.Component<any, any> {
+  declare postBtn: HTMLInputElement | null | undefined;
+  declare faceBtn: HTMLAnchorElement | null | undefined;
+  declare linkBtn: HTMLInputElement | null | undefined;
+
   static override propTypes = {
     defaultGroup: PropTypes.string,
     projectId: PropTypes.string,

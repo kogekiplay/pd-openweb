@@ -509,6 +509,8 @@ export const updatePagination = pagination => (dispatch: ChildTableDispatch) => 
 };
 
 class RowData {
+  declare addTime: number | undefined;
+
   constructor(args = {}) {
     this.args = args;
     this.init();

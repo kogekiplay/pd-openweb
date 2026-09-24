@@ -44,6 +44,9 @@ const formatChartMap = (data = [], yaxisList) => {
 };
 
 export default class extends Component<any, any> {
+  declare isUnmounted: boolean;
+  declare chartEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

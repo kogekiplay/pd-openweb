@@ -5,6 +5,8 @@ import UserBaseInfoSetting from './components/UserBaseInfoSetting';
 import './index.less';
 
 export default class UseInfoDisplaySettings extends Component<any, any> {
+  declare settingEle: UserBaseInfoSetting | null;
+
   constructor(props) {
     super(props);
     this.state = {

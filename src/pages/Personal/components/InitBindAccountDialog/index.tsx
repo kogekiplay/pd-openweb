@@ -32,6 +32,9 @@ const checkFuncs = {
 };
 
 export default class InitBindAccountDialog extends Component<any, any> {
+  declare verifyCodeTimer: NodeJS.Timeout | undefined;
+  declare mobile: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     const { md = {} } = window;

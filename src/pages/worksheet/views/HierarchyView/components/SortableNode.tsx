@@ -18,6 +18,8 @@ import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 const isMobile = browserIsMobile();
 
 export default class SortableRecordItem extends Component<any, any> {
+  declare isFirstSkip: boolean;
+
   static override propTypes = {
     index: number,
     parentId: string,

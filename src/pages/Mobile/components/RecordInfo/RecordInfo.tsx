@@ -40,6 +40,10 @@ import './RecordInfo.less';
 
 const imgAndVideoReg = /(swf|avi|flv|mpg|rm|mov|wav|asf|3gp|mkv|rmvb|mp4|gif|png|jpg|jpeg|webp|svg|psd|bmp|tif|tiff)/i;
 let RecordInfo = class RecordInfo extends Component<any, any> {
+  declare submitType: string;
+  declare ignoreUpdateRelationCount: boolean | undefined;
+  declare recordEditLock: RecordEditLock | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

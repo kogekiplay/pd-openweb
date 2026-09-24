@@ -117,6 +117,10 @@ function getValueByPercent(minValue, maxValue, percent) {
 }
 
 export default class extends Component<any, any> {
+  declare isUnmounted: boolean;
+  declare renderTimer: NodeJS.Timeout | null;
+  declare chartEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

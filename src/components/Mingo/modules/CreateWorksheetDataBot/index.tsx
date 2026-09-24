@@ -281,6 +281,9 @@ function getDefaultValueOfMessagesOfMingoCreateWorksheetDataBot(storageKey, work
 }
 
 class PromiseQueue {
+  declare concurrency: number;
+  declare running: number;
+
   constructor(concurrency = 5) {
     this.concurrency = concurrency;
     this.queue = [];

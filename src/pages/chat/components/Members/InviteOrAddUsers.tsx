@@ -16,6 +16,8 @@ const ITEMS = [
 ];
 
 export default class InviteOrAddUsers extends Component<any, any> {
+  declare $wrap: HTMLSpanElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {};

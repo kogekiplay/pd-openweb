@@ -7,6 +7,8 @@ import Config from '../../../config';
 import './index.less';
 
 export default class SubDomain extends Component<any, any> {
+  declare upload: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.images = [];

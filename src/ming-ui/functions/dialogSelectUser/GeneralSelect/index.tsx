@@ -127,6 +127,8 @@ const ResignedTab = {
 };
 
 export default class GeneraSelect extends Component<any, any> {
+  declare _resultScrollView: HTMLDivElement | null | undefined;
+
   // 上游 7.4.4 新增了这两个实例字段。<any, any> 只放开 props/state，
   // 实例字段仍要声明，否则 this.xxx = 会报 TS2339。
   boxRef: any;

@@ -38,6 +38,8 @@ const defaultState = {
 };
 
 export default class Others extends React.Component<any, any> {
+  declare promise: ApiResult | null;
+
   constructor() {
     super();
 

@@ -17,6 +17,8 @@ import TextInput from '../TextInput';
 import './index.less';
 
 export default class EditUser extends Component<any, any> {
+  declare baseFormInfo: BaseFormInfo | null | undefined;
+
   // declare 是纯类型声明，babel 整行擦除，运行时无影响
   /** 手机号输入框上挂的区号控件；输入框随表单重新挂载时要跟着重建（见 componentDidUpdate） */
   declare iti: ReturnType<typeof createIntlTelInput> | null;

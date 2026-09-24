@@ -3,6 +3,8 @@ import { shallowEqual } from 'react-redux';
 
 export default function widthProvider(GridOutComponent) {
   return class WidthProvider extends Component<any, any> {
+    declare resizeObserver: ResizeObserver | undefined;
+
     override state = {
       width: 1280,
       ready: false,

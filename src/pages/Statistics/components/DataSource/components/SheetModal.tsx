@@ -71,6 +71,8 @@ const Wrap = styled.div`
 `;
 
 export default class SheetModal extends Component<any, any> {
+  declare hideAggregation: boolean;
+
   constructor(props) {
     super(props);
     this.state = {

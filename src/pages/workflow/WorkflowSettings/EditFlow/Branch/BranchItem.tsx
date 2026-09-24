@@ -9,6 +9,8 @@ import { getFilterText } from '../../utils';
 import { CreateNode, NodeOperate } from '../components';
 
 export default class BranchItem extends Component<any, any> {
+  declare mounted: boolean | undefined;
+
   constructor(props) {
     super(props);
   }

@@ -16,6 +16,10 @@ import EditContractDialog from './EditContractDialog';
 import './index.less';
 
 export default class VersionUpgrade extends Component<any, any> {
+  declare timer: NodeJS.Timeout | null;
+  declare featureWrap: HTMLDivElement | null | undefined;
+  declare topDescription: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

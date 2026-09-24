@@ -17,6 +17,8 @@ import { FROM } from './enum';
 
 const ClickAwayable = ClickAway;
 export default class MobilePhone extends React.Component<any, any> {
+  declare postBlurUntil: number | null | undefined;
+
   static override propTypes = {
     className: PropTypes.string,
     style: PropTypes.shape({}),

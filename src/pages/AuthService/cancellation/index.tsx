@@ -20,6 +20,9 @@ const actionMsg = {
   5: _l('state过期或错误！'),
 };
 export default class Cancellation extends Component<any, any> {
+  declare timer: NodeJS.Timeout | null;
+  declare loginStateTimer: NodeJS.Timeout | null;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -145,6 +145,9 @@ const func = (ids, limits) => {
 };
 
 export default class LimitAttachmentUpload extends Component<any, any> {
+  declare appPromise: ApiResult | null;
+  declare savePromise: ApiResult | null;
+
   constructor(props) {
     super(props);
     this.state = {

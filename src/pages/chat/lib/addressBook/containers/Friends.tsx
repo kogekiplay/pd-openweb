@@ -36,6 +36,8 @@ const defaultState = {
 };
 
 export default class Friends extends React.Component<any, any> {
+  declare promise: ApiResult | null;
+
   constructor() {
     super();
 

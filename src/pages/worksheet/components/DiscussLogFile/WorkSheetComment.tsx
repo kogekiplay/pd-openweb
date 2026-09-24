@@ -14,6 +14,8 @@ const discussTypes = [
   { id: 2, name: 'discussPortal', text: _l('外部门户') },
 ];
 export default class WorkSheetComment extends React.Component<any, any> {
+  declare $scrollCon: HTMLElement | undefined;
+
   static override propTypes = {
     appId: PropTypes.string,
     worksheetId: PropTypes.string,

@@ -22,6 +22,10 @@ function getDomNode(node) {
 }
 
 class PositionContainer extends Component<any, any> {
+  declare popupBounding: DOMRect | undefined;
+  declare hasTop: boolean | undefined;
+  declare popup: HTMLDivElement | undefined;
+
   static override propTypes = {
     visible: PropTypes.bool, // 显示隐藏
     bounding: PropTypes.object, // 触发元素的 getBoundingClientRect

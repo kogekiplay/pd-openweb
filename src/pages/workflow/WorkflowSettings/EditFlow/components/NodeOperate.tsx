@@ -51,6 +51,8 @@ const TestResultBox = styled.div`
 `;
 
 export default class NodeOperate extends Component<any, any> {
+  declare workflowNodeName: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

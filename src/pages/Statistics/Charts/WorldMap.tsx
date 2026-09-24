@@ -147,6 +147,8 @@ const getPointData = reportData => {
 };
 
 export default class extends Component<any, any> {
+  declare chartEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

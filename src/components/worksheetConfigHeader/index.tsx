@@ -25,6 +25,8 @@ export default function WorksheetConfigHeader(props) {
 }
 
 class WorksheetConfigHeaderComponent extends Component<any, any> {
+  declare editPageUrl: string;
+
   static override propTypes = {
     appId: PropTypes.string,
     worksheetId: PropTypes.string,

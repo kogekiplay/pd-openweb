@@ -6,6 +6,8 @@ import JobController from 'src/api/job';
 import './style.less';
 
 class DialogSelectJob extends Component<any, any> {
+  declare searchRequst: _.DebouncedFuncLeading<() => void> | undefined;
+
   static defaultProps = {
     projectId: '',
     unique: false,

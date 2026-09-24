@@ -32,6 +32,9 @@ const CUSTOM_BUTTOM_CLICK_TYPE = {
 };
 
 class RecordAction extends Component<any, any> {
+  declare isSubList: boolean;
+  declare editable: boolean;
+
   constructor(props) {
     super(props);
     this.state = {

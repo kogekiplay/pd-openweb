@@ -1,6 +1,12 @@
 import _ from 'lodash';
 
 export default class MapHandler {
+  // 高德 JS API 是运行时注入的全局 AMap，没有类型声明（见 types/global.d.ts），它造出来的对象只能是 any
+  declare map: any;
+  declare searchMarker: any;
+  declare rangeCircle: any;
+  declare geolocation: any;
+
   constructor(container = document.createElement('div'), mapOptions = {}) {
     this.searchMarker = null; // 搜索结果点标记
     this.rangeCircle = null; // 圆形范围

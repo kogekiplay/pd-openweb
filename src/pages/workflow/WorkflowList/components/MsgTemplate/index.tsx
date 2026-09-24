@@ -7,6 +7,8 @@ import EmptyStatus from '../../components/Empty';
 import './index.less';
 
 export default class MsgTemplate extends Component<any, any> {
+  declare pending: boolean | undefined;
+
   static override propTypes = {
     closeLayer: func,
   };

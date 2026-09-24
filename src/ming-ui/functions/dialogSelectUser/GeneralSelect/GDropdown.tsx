@@ -7,6 +7,8 @@ import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
 
 class Dropdown extends Component<any, any> {
+  declare _input: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     /** 点击方法，返回true才显示下拉菜单 */
     onClick: PropTypes.func,

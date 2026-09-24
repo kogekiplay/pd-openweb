@@ -25,6 +25,8 @@ const PluginIcon = styled.div`
 `;
 
 class WorkflowInfo extends Component<any, any> {
+  declare name: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

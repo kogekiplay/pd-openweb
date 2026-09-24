@@ -12,6 +12,8 @@ function supportsVideo() {
 }
 
 class VideoPlayer extends Component<any, any> {
+  declare videoContent: HTMLVideoElement | null | undefined;
+
   static override propTypes = {
     src: PropTypes.string,
     attachment: PropTypes.object,

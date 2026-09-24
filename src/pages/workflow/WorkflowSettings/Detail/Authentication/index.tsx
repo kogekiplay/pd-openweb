@@ -16,6 +16,8 @@ import {
 } from '../components';
 
 export default class Authentication extends Component<any, any> {
+  declare refreshTime: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

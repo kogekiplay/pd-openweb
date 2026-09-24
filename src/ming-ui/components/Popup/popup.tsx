@@ -6,6 +6,8 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import './popup.less';
 
 class Popup extends React.Component<any, any> {
+  declare popup: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     children: PropTypes.element,
     withMask: PropTypes.bool,

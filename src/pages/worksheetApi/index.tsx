@@ -86,6 +86,8 @@ interface ApiField {
 }
 
 class WorksheetApi extends Component<any, any> {
+  declare canScroll: boolean;
+
   /** IP 白名单输入框（Textarea），由 manualRef 回填 */
   whiteList?: { value: string };
 

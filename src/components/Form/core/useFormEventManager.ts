@@ -115,6 +115,8 @@ export const useWidgetEvent = (controlId: string, callback) => {
  * 为 Class 组件事件提供
  */
 export class WidgetEventHelper {
+  declare controlId: string;
+
   constructor(controlId: string) {
     this.controlId = controlId;
     this.callback = null;

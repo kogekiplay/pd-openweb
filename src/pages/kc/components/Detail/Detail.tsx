@@ -12,6 +12,11 @@ import { humanDateTime, humanFileSize, shallowEqual } from '../../utils';
 import './Detail.css';
 
 class Detail extends React.Component<any, any> {
+  declare _isMounted: boolean;
+  declare editDownloadablePromise: string | Promise<void> | undefined;
+  declare editEditablePromise: string | Promise<void> | undefined;
+  declare editNodePrimise: string | Promise<void> | undefined;
+
   static override propTypes = {
     data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   };

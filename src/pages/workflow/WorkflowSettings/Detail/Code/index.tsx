@@ -27,6 +27,8 @@ const CodeSnippetButton = styled.div`
 `;
 
 export default class Code extends Component<any, any> {
+  declare editorChangedCode: string | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

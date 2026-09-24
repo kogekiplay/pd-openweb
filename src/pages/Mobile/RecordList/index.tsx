@@ -30,6 +30,8 @@ import View from './View';
 import './index.less';
 
 let RecordList = class RecordList extends Component<any, any> {
+  declare hideAddRecord: string | (string | null)[] | null;
+
   constructor(props) {
     super(props);
     const { hideAddRecord } = getRequest();

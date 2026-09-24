@@ -50,6 +50,11 @@ const SECOND_TABS = {
 };
 const LoadableExecDialog = lazy(() => import('src/pages/workflow/components/ExecDialog'));
 export default class MyProcess extends Component<any, any> {
+  declare removeEscEvent: (() => void) | undefined;
+  declare filterEl: FilterConTent | null | undefined;
+  declare request: ApiResult | undefined;
+  declare signature: Signature | null | undefined;
+
   static defaultProps = {
     countData: {},
     updateCountData: () => {},

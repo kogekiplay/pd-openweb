@@ -26,6 +26,8 @@ const PersonalStatusWrap = styled(PersonalStatus)`
 const { GROUPACTION } = Constant;
 
 class ChatPanelHeader extends Component<any, any> {
+  declare input: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

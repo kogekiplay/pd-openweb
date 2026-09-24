@@ -143,6 +143,8 @@ const TopChartContent = styled.div`
 `;
 
 export default class extends Component<any, any> {
+  declare chartWrapEl: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -7,6 +7,9 @@ import { clearSearchKeywords, fetchSearchResult, getCustomList } from '../../act
 import Result from './searchResult';
 
 class SearchBox extends Component<any, any> {
+  declare input: HTMLInputElement | null | undefined;
+  declare box: HTMLDivElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.ajaxObj = null;

@@ -83,6 +83,9 @@ const PERMISSION_WAYS_WITH_UNCHECKED = [
 ];
 
 export default class extends PureComponent<any, any> {
+  declare input: HTMLInputElement | null | undefined;
+  declare container: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     loading: PropTypes.bool,
     roleDetail: roleDetailPropType,

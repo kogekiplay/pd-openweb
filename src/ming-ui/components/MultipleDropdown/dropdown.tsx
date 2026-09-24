@@ -9,6 +9,9 @@ import '../less/multidropdownmenu.less';
 import '../less/multidropdownpills.less';
 
 class MultipleDropdown extends Component<any, any> {
+  declare button: HTMLButtonElement | null;
+  declare root: HTMLDivElement | null;
+
   constructor(props) {
     super(props);
 

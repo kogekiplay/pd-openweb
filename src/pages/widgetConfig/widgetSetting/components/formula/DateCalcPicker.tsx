@@ -9,6 +9,8 @@ import { getIconByType } from 'src/pages/widgetConfig/util';
 import './DateCalcPicker.less';
 
 export default class DateCalcPicker extends Component<any, any> {
+  declare btn: HTMLSpanElement | null | undefined;
+
   static override propTypes = {
     value: PropTypes.string, // 选中值 可以为 日期字符串 id 或 $id$
     widgets: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // widgets editWidgets 或 control 数组

@@ -11,6 +11,10 @@ import PostCard from '../post/postCard';
 import TopPostPager from './topPostPager';
 
 class TopPostList extends React.Component<any, any> {
+  declare nextItem: _.DebouncedFunc<() => void> | undefined;
+  declare _isMounted: boolean | undefined;
+  declare root: HTMLDivElement | null | undefined;
+
   static override propTypes = {
     dispatch: PropTypes.func,
     fontSize: PropTypes.number,

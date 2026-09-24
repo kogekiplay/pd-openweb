@@ -4,6 +4,8 @@ import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import './index.less';
 
 export default class FullScreenCurtain extends Component<any, any> {
+  declare container: HTMLDivElement;
+
   constructor(props) {
     super(props);
     this.container = document.createElement('div');

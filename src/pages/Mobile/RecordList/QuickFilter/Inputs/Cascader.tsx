@@ -56,6 +56,9 @@ const CascaderItem = styled.span`
 `;
 
 export default class Cascader extends Component<any, any> {
+  declare ajax: string | ApiResult;
+  declare handleSearch: () => void;
+
   constructor(props) {
     super(props);
     this.state = {

@@ -10,6 +10,8 @@ import DepartmentList from '../dialogSelectUser/GeneralSelect/DepartmentList';
 import './style.less';
 
 class DialogSelectDept extends React.Component<any, any> {
+  declare search: _.DebouncedFunc<() => void>;
+
   constructor(props) {
     super(props);
 

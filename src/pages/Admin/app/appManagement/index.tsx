@@ -11,6 +11,8 @@ import UpgradeRecords from './UpgradeRecords';
 import './index.less';
 
 export default class AppManagement extends Component<any, any> {
+  declare appListRef: AppList | null | undefined;
+
   constructor(props) {
     super(props);
     const savedTotalNum = localStorage.getItem('appListTotalNum');

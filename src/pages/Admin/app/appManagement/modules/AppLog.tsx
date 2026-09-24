@@ -34,6 +34,9 @@ const optionTypeIcon = {
 };
 
 export default class AppLog extends React.Component<any, any> {
+  declare postList: ApiResult | undefined;
+  declare search: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {

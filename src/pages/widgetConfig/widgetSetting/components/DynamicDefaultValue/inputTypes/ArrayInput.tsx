@@ -7,6 +7,9 @@ import { DynamicValueInputWrap } from '../styled';
 import { transferValue } from '../util';
 
 export default class ArrayInput extends Component<any, any> {
+  declare $tagtextarea: TagTextarea | undefined;
+  declare $wrap: SelectOtherField | null | undefined;
+
   static override propTypes = {
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
     onDynamicValueChange: func,

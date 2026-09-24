@@ -8,6 +8,8 @@ import PostController from 'src/api/post';
 import { SOURCE_TYPE } from '../../constants';
 
 export default class ReplyTo extends React.Component<any, any> {
+  declare ajax: ApiResult | undefined;
+
   static override propTypes = {
     sourceType: PropTypes.oneOf(_.values(SOURCE_TYPE)),
 

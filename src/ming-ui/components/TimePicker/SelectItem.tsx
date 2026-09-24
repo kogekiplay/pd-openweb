@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 class SelectItem extends Component<any, any> {
+  declare _selectitem: HTMLLIElement | null | undefined;
+
   static override propTypes = {
     onClick: PropTypes.func,
     value: PropTypes.number,

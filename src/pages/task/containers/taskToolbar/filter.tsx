@@ -27,6 +27,9 @@ import { errorMessage, setStateToStorage } from '../../utils/utils';
 
 const ClickAwayable = ClickAway;
 class Filter extends Component<any, any> {
+  declare mounted: boolean | undefined;
+  declare search: HTMLInputElement | null | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
