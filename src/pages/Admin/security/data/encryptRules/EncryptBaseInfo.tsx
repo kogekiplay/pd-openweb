@@ -46,7 +46,7 @@ function EditBaseInfo(props) {
   const { visible, onCancel, ruleDetail = {}, projectId, getDetail = () => {}, updateCurrentRow = () => {} } = props;
   const [ruleName, setRuleName] = useState(ruleDetail.name);
   const [remark, setRemark] = useState(ruleDetail.remark);
-  const ruleNameInput = createRef();
+  const ruleNameInput = createRef<HTMLInputElement>();
 
   useEffect(() => {
     if (ruleNameInput && ruleNameInput.current) {

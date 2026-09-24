@@ -69,7 +69,7 @@ export default class EditableText extends React.Component<any, any> {
       >
         {editting && !mutiLine && (
           <NewInput
-            manualRef={input => (this.input = input)}
+            manualRef={input => { this.input = input; }}
             value={inputvalue}
             onBlur={e => {
               onChange(e.target.value);
@@ -82,7 +82,7 @@ export default class EditableText extends React.Component<any, any> {
           <NewTextarea
             minHeight={minHeight}
             maxLength={maxLength}
-            manualRef={input => (this.input = input)}
+            manualRef={input => { this.input = input; }}
             value={inputvalue}
             onBlur={e => {
               onChange(e.target.value);

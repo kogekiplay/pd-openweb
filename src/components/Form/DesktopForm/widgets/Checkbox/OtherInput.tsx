@@ -64,7 +64,7 @@ export default function OtherInput(props) {
             mTop10: isSelect,
             'controlDisabled controlOtherDisabled': disabled,
           })}
-          manualRef={ref => (textRef.current = ref)}
+          manualRef={ref => { textRef.current = ref; }}
           minHeight={36}
           maxHeight={400}
           spellCheck={false}

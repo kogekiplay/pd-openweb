@@ -25,7 +25,7 @@ const Wrap = styled.div`
 export default function ChartSetting(props) {
   const { projectId } = props;
   const [copyValue, setCopyValue] = useState();
-  const [url, setUrl] = useState();
+  const [url, setUrl] = useState<string>();
   const inputRef = useRef<any>(undefined);
   const newURL = _.trim(url);
 

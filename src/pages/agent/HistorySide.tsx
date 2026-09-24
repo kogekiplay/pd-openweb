@@ -299,7 +299,7 @@ export default function HistorySide({
                                 placeholder={_l('请输入对话名称')}
                                 className="w100 textPrimary"
                                 defaultValue={item.title}
-                                manualRef={ref => (renameInputRef.current = ref)}
+                                manualRef={ref => { renameInputRef.current = ref; }}
                               />
                             ),
                             onOk: () => {

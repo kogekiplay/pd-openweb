@@ -107,7 +107,7 @@ function GetHelp(props) {
           placeholder={_l('请输入描述')}
           value={content}
           onChange={value => setContent(value)}
-          manualRef={con => (textareaRef.current = con)}
+          manualRef={con => { textareaRef.current = con; }}
         />
       </Fragment>
     );

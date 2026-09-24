@@ -256,7 +256,13 @@ export default function NavGroup(params) {
   let [showAddCondition, setShowAddCondition] = useState<boolean | undefined>();
   const [relateSheetInfo, setRelateSheetInfo] = useState([]);
   const [relateControls, setRelateControls] = useState([]);
-  const [{ navshow, navfilters, navwidth, appnavtype }, setState] = useSetState({
+  // navwidth 输入过程中存的是输入框里的原文（字符串），失焦 / 回车时才在 updateWidth 里夹到上下限并保存
+  const [{ navshow, navfilters, navwidth, appnavtype }, setState] = useSetState<{
+    navshow: number | string;
+    navfilters: string;
+    navwidth: number | string;
+    appnavtype: string;
+  }>({
     navshow: 0,
     navfilters: '[]',
     navwidth: defaultNavOpenW,
@@ -481,7 +487,7 @@ export default function NavGroup(params) {
                 (worksheetControls.find((o: FormControl) => o.controlId === navGroup.controlId) || {})
                   .sourceControlType,
               )) &&
-              !['2'].includes(navshow) && (
+              !['2'].includes(String(navshow)) && (
                 <NavSort
                   view={view}
                   customitemsKey={'customnavs'}

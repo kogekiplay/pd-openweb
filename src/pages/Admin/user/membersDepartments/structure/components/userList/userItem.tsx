@@ -307,7 +307,7 @@ class UserItem extends Component<any, any> {
         <Input
           className="w100"
           type="password"
-          autocomplete="new-password"
+          autoComplete="new-password"
           value={this.state.password}
           placeholder={passwordRegexTip || _l('密码，8-20位，必须含字母+数字')}
           onChange={value => {

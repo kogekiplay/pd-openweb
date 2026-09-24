@@ -608,7 +608,7 @@ export default class Text extends React.Component<any, any> {
             // 换成指向真正 textarea DOM 的对象 —— 后面读 value / focus / setSelectionRange 用的都是它
             {..._.omit(editProps, 'ref')}
             value={String(_.isUndefined(editProps.value) ? '' : editProps.value)}
-            manualRef={ref => (this.input = { current: ref })}
+            manualRef={ref => { this.input = { current: ref }; }}
             style={{
               width: style.width,
               minHeight: rowHeight,

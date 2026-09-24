@@ -172,7 +172,7 @@ export default function VarAddOrEditModal(props) {
   const [formData, setFormData] = useSetState(initFormData);
   const [authApps, setAuthApps] = useState([]);
   const [valueFocused, setValueFocused] = useState(false);
-  const inputRef = createRef();
+  const inputRef = createRef<HTMLInputElement>();
 
   useEffect(() => {
     if (!_.isEmpty(defaultFormValue)) {

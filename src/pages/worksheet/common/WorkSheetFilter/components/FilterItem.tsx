@@ -338,11 +338,11 @@ export default class FilterItem extends Component<any, any> {
                   e.stopPropagation();
                 }}
                 onBlur={e => {
-                  this.renameFilter(e.target.value.trim());
+                  this.renameFilter(e.currentTarget.value.trim());
                 }}
                 onKeyDown={e => {
                   if (e.keyCode === 13) {
-                    this.renameFilter(e.target.value.trim());
+                    this.renameFilter(e.currentTarget.value.trim());
                   }
                 }}
               />

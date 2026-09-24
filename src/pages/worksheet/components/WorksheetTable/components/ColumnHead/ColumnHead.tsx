@@ -657,7 +657,7 @@ class ColumnHead extends Component<any, any> {
                       }}
                       onKeyDown={e => {
                         if (e.key === 'Enter') {
-                          let newWidth = Number(e.target.value);
+                          let newWidth = Number(e.currentTarget.value);
 
                           if (isNaN(newWidth)) {
                             return;

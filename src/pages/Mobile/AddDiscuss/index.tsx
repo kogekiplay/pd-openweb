@@ -211,7 +211,7 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
           <Icon icon="cancel" className="close Font22 textTertiary" onClick={this.props.onClose} />
         </div>
         <Textarea
-          manualRef={ele => (this.textarea = ele)}
+          manualRef={ele => { this.textarea = ele; }}
           isFocus
           className="contentInput"
           minHeight={72}

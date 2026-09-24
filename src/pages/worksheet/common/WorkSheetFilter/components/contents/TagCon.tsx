@@ -50,7 +50,8 @@ function TagCon(props) {
             manualRef={inputRef}
             placeholder={data.length ? '' : _l('请选择')}
             className="CityPicker-input-textCon CityPicker-input-tagSearch"
-            autofocus
+            // 原来这里有个小写的 autofocus：React 不认它，动态插入的输入框浏览器也不会自动聚焦，从没生效过。
+            // 没改成 autoFocus —— 那样筛选面板里每个条件的输入框一挂载都抢焦点，是用户从没见过的行为
             type="search"
             value={search}
             onChange={value => {

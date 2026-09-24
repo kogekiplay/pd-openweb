@@ -236,11 +236,11 @@ export default class Pagination extends React.Component<any, any> {
   // getPopupContainer 补上了准确签名 ((node: HTMLElement) => HTMLElement)，
   // 于是 `() => this.xxx.current` 成了 TS2740。2.6.5 那边这个 prop 无类型，看不出来。
   conRef = React.createRef<HTMLElement>();
-  jumpInputRef = React.createRef();
+  jumpInputRef = React.createRef<HTMLInputElement>();
   /** bar 形态自己的跳页输入框 ref。【不复用 jumpInputRef】：
       两种形态虽然不会同时渲染（bar 走 early return、根本不产出 popup），
       但共用一个 ref 是个等着被踩的雷 —— 哪天有人让两者共存就会互相覆盖。 */
-  barJumpRef = React.createRef<{ value?: string }>();
+  barJumpRef = React.createRef<HTMLInputElement>();
 
   /** 跳到指定页。越界或非数字时提示，不静默吞掉。 */
   jumpTo(raw?: string) {

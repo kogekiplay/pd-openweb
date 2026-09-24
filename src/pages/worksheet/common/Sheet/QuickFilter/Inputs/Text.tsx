@@ -132,7 +132,11 @@ export default function Text(props) {
     _.isNumber(limit) &&
     !_.isNaN(limit);
 
-  const handleChange = ({ values, newIsExact, newIsCaseSensitive }, options = {}) => {
+  // 后两项不给就沿用当前的「精确匹配 / 区分大小写」开关
+  const handleChange = (
+    { values, newIsExact, newIsCaseSensitive }: { values: string[]; newIsExact?: boolean; newIsCaseSensitive?: boolean },
+    options = {},
+  ) => {
     onChange(
       {
         values,

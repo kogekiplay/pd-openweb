@@ -470,13 +470,13 @@ export default class AddUser extends Component<any, any> {
               className={cx('formControl', {
                 error: errors['mobile'] && !!checkForm['mobile'](mobile, this.iti),
               })}
-              manualRef={ele => (this.mobile = ele)}
+              manualRef={ele => { this.mobile = ele; }}
               placeholder={_l('成员会收到邀请链接，验证后可加入组织')}
               onFocus={() => {
                 this.clearError('mobile');
               }}
               onInput={e => {
-                const val = e.target.value.replace(/ +/g, '');
+                const val = e.currentTarget.value.replace(/ +/g, '');
                 this.changeFormInfo(val, 'mobile');
               }}
               onBlur={e => {
@@ -521,10 +521,10 @@ export default class AddUser extends Component<any, any> {
               className={cx('formControl input', {
                 error: errors['autonomously'] && checkForm['autonomously'](autonomously),
               })}
-              manualRef={ele => (this.autonomously = ele)}
+              manualRef={ele => { this.autonomously = ele; }}
               onChange={e => this.changeFormInfo(e, 'autonomously')}
               onInput={e => {
-                const val = e.target.value.replace(/ +/g, '');
+                const val = e.currentTarget.value.replace(/ +/g, '');
 
                 if ((val.length <= 3 || isNaN(Number(val))) && this.itiAutonomously) {
                   this.itiAutonomously.destroy();

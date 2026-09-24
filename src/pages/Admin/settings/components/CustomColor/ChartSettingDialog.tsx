@@ -333,7 +333,7 @@ export default function ChartSettingDialog(props) {
           className="nameInput placeholderColor"
           value={name}
           onChange={value => setName(value)}
-          maxlength="15"
+          maxLength={15}
           manualRef={inputRef}
         />
         <div className="label mBottom16 mTop24">{_l('颜色')}</div>

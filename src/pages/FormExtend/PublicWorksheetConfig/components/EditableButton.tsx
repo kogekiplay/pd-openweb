@@ -42,7 +42,7 @@ export default class EditableButton extends React.Component<any, any> {
       <div>
         {isEditing ? (
           <Input
-            manualRef={con => (this.con = con)}
+            manualRef={con => { this.con = con; }}
             defaultValue={name}
             onBlur={e => {
               if (e.target.value.trim() === '') {

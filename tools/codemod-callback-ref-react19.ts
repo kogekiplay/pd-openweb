@@ -27,6 +27,13 @@ const parser = require('@babel/parser');
 const ROOT = path.resolve(__dirname, '..');
 const SRC = path.join(ROOT, 'src');
 
+// 要处理的属性名。默认只有 ref；ming-ui 的 Input / Textarea 等把 manualRef 原样挂到 <input ref=…> 上，
+// React 19 对它的返回值是同一套语义，所以也要改：node tools/codemod-callback-ref-react19.ts --attrs ref,manualRef
+const ATTRS: Set<string> = (() => {
+  const i = process.argv.indexOf('--attrs');
+  return new Set(i >= 0 ? String(process.argv[i + 1] || 'ref').split(',') : ['ref']);
+})();
+
 function walk(dir, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
@@ -54,7 +61,8 @@ const failed = [];
 
 for (const file of walk(SRC)) {
   const src = fs.readFileSync(file, 'utf8');
-  if (!src.includes('ref=')) continue;
+  // 预筛要跟着 ATTRS 走：manualRef= 里是大写 R，按 'ref=' 筛会把只有 manualRef 的文件整个漏掉
+  if (![...ATTRS].some(attr => src.includes(attr + '='))) continue;
 
   let ast;
   try {
@@ -71,7 +79,7 @@ for (const file of walk(SRC)) {
   const edits = [];
   visit(ast.program, node => {
     if (node.type !== 'JSXAttribute') return;
-    if (!node.name || node.name.name !== 'ref') return;
+    if (!node.name || !ATTRS.has(node.name.name)) return;
     const v = node.value;
     if (!v || v.type !== 'JSXExpressionContainer') return;
     const fn = v.expression;

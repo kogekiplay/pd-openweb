@@ -415,7 +415,8 @@ export default function DebugConfig(params) {
               <Input
                 className="flex"
                 value={customViewDebugUrl}
-                disabled={localStorageCustomViewDebugUrl}
+                // 存了调试地址就锁住输入框（原来直接把地址字符串当 disabled 传，效果一样）
+                disabled={!!localStorageCustomViewDebugUrl}
                 onChange={customViewDebugUrl => {
                   setState({
                     customViewDebugUrl,

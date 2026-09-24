@@ -36,7 +36,7 @@ export default function EditFeildsName(props) {
             onKeyDown={event => {
               if (event.which === 13) {
                 setState({
-                  title: event.target.value,
+                  title: event.currentTarget.value,
                 });
               }
             }}

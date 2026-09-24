@@ -192,7 +192,7 @@ function ChatHistoryItem({
                       placeholder={_l('请输入对话名称')}
                       className="w100 textPrimary"
                       defaultValue={item.title}
-                      manualRef={ref => (cache.current.input = ref)}
+                      manualRef={ref => { cache.current.input = ref; }}
                     />
                   ),
                   onOk: () => {

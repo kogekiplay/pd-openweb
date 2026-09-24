@@ -294,7 +294,8 @@ export default class CoverSetting extends React.Component<any, any> {
                         max={800}
                         onChange={e => this.setState({ customWidth: e })}
                         onBlur={e => {
-                          const value = Math.max(200, Math.min(800, e.target.value));
+                          // Math.min 原来直接吃字符串（隐式转数字），显式转一下，结果一样
+                          const value = Math.max(200, Math.min(800, Number(e.target.value)));
                           this.setState({ customWidth: value });
                           handleChangeCoverWidth(value);
                         }}

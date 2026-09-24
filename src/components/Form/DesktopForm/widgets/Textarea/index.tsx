@@ -256,7 +256,7 @@ const Text = props => {
         className="customFormTextarea escclose"
         minHeight={enumDefault === 1 ? minHeight : 36}
         {...(isSingleLine ? {} : { maxHeight })}
-        manualRef={con => (textRef.current = con)}
+        manualRef={con => { textRef.current = con; }}
         placeholder={isEditing ? hint : ''}
         spellCheck={false}
         onFocus={handleFocus}

@@ -114,7 +114,6 @@ export default function PrivateAuthDialog(props) {
                   type="password"
                   autoComplete="new-password"
                   onChange={val => changeFormData(val, item)}
-                  visibilityToggle={false}
                 />
               )}
             </div>
