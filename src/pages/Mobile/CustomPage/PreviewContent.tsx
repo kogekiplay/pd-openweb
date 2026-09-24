@@ -42,7 +42,12 @@ const PreviewContentWrapper = styled.div`
   }
 `;
 
-function ErrorInfo(props) {
+export interface ErrorInfoProps {
+  icon: string;
+  text: string;
+}
+
+function ErrorInfo(props: ErrorInfoProps) {
   return (
     <div className="flexColumn valignWrapper fileWrapper h100">
       <Icon className="Font56 textPlaceholder mBottom20" icon={props.icon} />

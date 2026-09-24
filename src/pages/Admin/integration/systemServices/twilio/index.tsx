@@ -8,8 +8,14 @@ import Config from '../../../config';
 const FORM_KEYS = ['keySid', 'keySecret', 'verifyServiceSid', 'messagingServiceSid'];
 const SECRET_KEYS = ['KeySid', 'KeySecret'];
 
+export interface FieldRowProps {
+  label: string;
+  hint?: string | undefined;
+  children: React.ReactNode;
+}
+
 /** 共用：单行字段容器（标签 + 可选 hint + 内容） */
-function FieldRow({ label, hint, children }) {
+function FieldRow({ label, hint, children }: FieldRowProps) {
   return (
     <div className="mBottom16">
       <div className="mBottom8 Font14">{label}</div>

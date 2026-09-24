@@ -54,7 +54,13 @@ const BottomSpace = styled.div`
   height: 30px;
 `;
 
-class ProjectCard extends Component<any, any> {
+interface ProjectCardState {
+  loading: boolean;
+  visible: boolean;
+  userInfo: HapApi.MD.Web.Ajax.ResultModel.User.UserModel | null | undefined;
+}
+
+class ProjectCard extends Component<any, ProjectCardState> {
   constructor(props) {
     super(props);
     this.state = {

@@ -15,10 +15,17 @@ import PostOperator from './postOperator';
 import PostUsernameGroup from './postUsernameGroup';
 import { pathCompletion } from 'src/utils/common';
 
+interface PostBodyState {
+  selectedOperation: string | undefined;
+  changeJoinOpera: boolean;
+  focusCommentBox?: boolean | undefined;
+  showLikedUsers?: boolean | undefined;
+}
+
 /**
  * 动态卡片内部内容, 包括动态、相应类型动态的附加信息、操作项、回复/标签等
  */
-class PostBody extends React.Component<any, any> {
+class PostBody extends React.Component<any, PostBodyState> {
   declare commentButton: HTMLElement | null | undefined;
   declare favBtn: HTMLDivElement | null | undefined;
 

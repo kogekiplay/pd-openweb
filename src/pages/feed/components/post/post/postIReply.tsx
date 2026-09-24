@@ -8,10 +8,15 @@ import PostFooter from './postFooter';
 import PostMain from './postMain';
 import PostMessage from './postMessage';
 
+interface PostIReplyState {
+  selectedOperation: string | undefined;
+  focusCommentBox?: boolean | undefined;
+}
+
 /**
  * 动态卡片内部内容, 包括动态、相应类型动态的附加信息、操作项、回复/标签等
  */
-class PostIReply extends React.Component<any, any> {
+class PostIReply extends React.Component<any, PostIReplyState> {
   static override propTypes = {
     postItem: PropTypes.any.isRequired,
     className: PropTypes.string,

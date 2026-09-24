@@ -257,7 +257,13 @@ class SheetRows extends Component<any, any> {
   }
 }
 
-export const WithoutRows = props => {
+export interface WithoutRowsProps {
+  text: string;
+  onRefresh?: (() => void) | undefined;
+  children?: React.ReactNode | undefined;
+}
+
+export const WithoutRows = (props: WithoutRowsProps) => {
   return (
     <div className="withoutRows">
       <div className="withoutRowsContent flexColumn alignItemsCenter justifyContentCenter h100">
@@ -268,7 +274,11 @@ export const WithoutRows = props => {
   );
 };
 
-export const WithoutSearchRows = props => {
+export interface WithoutSearchRowsProps {
+  text: string;
+}
+
+export const WithoutSearchRows = (props: WithoutSearchRowsProps) => {
   return (
     <div className="withoutRows flexColumn alignItemsCenter justifyContentCenter">
       <Icon icon="search" />

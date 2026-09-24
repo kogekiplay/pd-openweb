@@ -119,7 +119,14 @@ const AccountWrap = styled.div`
   }
 `;
 let sendVerifyCodeTimer: NodeJS.Timeout | null = null;
-class TelCon extends React.Component<any, any> {
+interface TelConState {
+  loading: boolean;
+  verifyCodeText: string;
+  verifyCodeLoading: boolean;
+  focusDiv: string;
+}
+
+class TelCon extends React.Component<any, TelConState> {
   declare mobile: HTMLInputElement | null | undefined;
   declare code: HTMLInputElement | null | undefined;
 

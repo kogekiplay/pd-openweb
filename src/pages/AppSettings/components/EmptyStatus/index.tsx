@@ -32,7 +32,15 @@ const EmptyStatusWrap = styled.div`
   }
 `;
 
-export default function EmptyStatus(props) {
+export interface EmptyStatusProps {
+  emptyTxt: string;
+  icon: string;
+  radiusSize: number;
+  emptyTxtClassName: string;
+  iconClassName: string;
+}
+
+export default function EmptyStatus(props: EmptyStatusProps) {
   const { emptyTxt, icon, radiusSize, emptyTxtClassName, iconClassName } = props;
   return (
     <EmptyStatusWrap radiusSize={radiusSize}>

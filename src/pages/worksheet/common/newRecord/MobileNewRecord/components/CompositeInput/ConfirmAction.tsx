@@ -69,7 +69,14 @@ const Footer = styled.div`
   }
 `;
 
-const ConfirmAction = ({ visible, content, onCancel, onConfirm }) => {
+export interface ConfirmActionProps {
+  visible: boolean;
+  content: string;
+  onCancel: () => void;
+  onConfirm: () => void;
+}
+
+const ConfirmAction = ({ visible, content, onCancel, onConfirm }: ConfirmActionProps) => {
   const [closing, setClosing] = useState(false);
 
   if (!visible) return null;

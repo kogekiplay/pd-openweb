@@ -24,7 +24,16 @@ const ModalWrap = styled(Popup)`
   }
 `;
 
-export default function MobileRecordRecoverConfirm(props) {
+export interface MobileRecordRecoverConfirmProps {
+  title: string;
+  cancelText: string;
+  updateText: string;
+  visible: boolean | undefined;
+  onCancel: () => void;
+  onUpdate: () => void;
+}
+
+export default function MobileRecordRecoverConfirm(props: MobileRecordRecoverConfirmProps) {
   const { title, cancelText, updateText, visible, onCancel, onUpdate } = props;
   return (
     <ModalWrap onClose={onUpdate} visible={visible} className="mobileModal topRadius">

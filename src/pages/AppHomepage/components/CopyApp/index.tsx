@@ -16,7 +16,14 @@ const Title = styled.span`
 
 const DataDBInstances = [{ label: _l('系统默认数据库'), value: '' }];
 
-export default class CopyApp extends Component<any, any> {
+interface CopyAppState {
+  pending: boolean;
+  DBInstancesDialog: boolean;
+  dataDBInstances: { label: string; value: string }[];
+  visible: boolean;
+}
+
+export default class CopyApp extends Component<any, CopyAppState> {
   static override propTypes = {};
   static defaultProps = {};
   override state = {

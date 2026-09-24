@@ -364,8 +364,12 @@ function SimpleRow({ title, status, value }: { title?: string; [key: string]: an
   );
 }
 
+export interface PrepRowProps {
+  label: string;
+}
+
 // 中间「设计/准备」步骤行：••• loading + 「XX准备中」标题。仅运行中出现，结束即消失（设计稿）。
-function PrepRow({ label }) {
+function PrepRow({ label }: PrepRowProps) {
   return (
     <LoopHeader>
       <LeadBox>
