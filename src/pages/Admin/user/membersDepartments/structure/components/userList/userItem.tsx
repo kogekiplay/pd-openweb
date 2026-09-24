@@ -161,7 +161,7 @@ class UserItem extends Component<any, any> {
   };
 
   // 拒绝
-  handleRefuseClick = e => {
+  handleRefuseClick = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     const { accountId, projectId } = this.props;
 
     this.clickEvent(e);
@@ -182,25 +182,25 @@ class UserItem extends Component<any, any> {
   };
 
   // 编辑
-  handleEditUserClick = e => {
+  handleEditUserClick = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     this.clickEvent(e);
     this.props.clickRow();
   };
 
   // 交接工作
-  handleTransfer = e => {
+  handleTransfer = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     this.clickEvent(e);
     this.setState({ showWorkHandover: true });
   };
 
   // 待办委托
-  handleDelegate = e => {
+  handleDelegate = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     this.clickEvent(e);
     this.setState({ showDelegate: true });
   };
 
   // 离职
-  handleRemoveUserClick = e => {
+  handleRemoveUserClick = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     const { accountId, projectId, user, departmentId, typeCursor } = this.props;
 
     this.clickEvent(e);
@@ -224,7 +224,7 @@ class UserItem extends Component<any, any> {
   };
 
   // 设为/取消部门负责人
-  setAndCancelCharge = e => {
+  setAndCancelCharge = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     let { typeCursor, projectId, departmentId, user = {}, departments } = this.props;
     const department = _.find(departments, d => d.departmentId === departmentId);
 
@@ -259,7 +259,7 @@ class UserItem extends Component<any, any> {
     this.props.fetchReInvite([user.accountId]);
   };
   // 取消邀请并移除
-  cancelInviteAndRemove = e => {
+  cancelInviteAndRemove = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     const { projectId, user = {} } = this.props;
 
     this.clickEvent(e);
@@ -277,7 +277,7 @@ class UserItem extends Component<any, any> {
   };
 
   // 重置密码
-  handleResetPasswordClick = e => {
+  handleResetPasswordClick = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     this.clickEvent(e);
     this.setState({ resetPasswordShowDialog: !this.state.resetPasswordShowDialog });
   };
@@ -350,7 +350,7 @@ class UserItem extends Component<any, any> {
       });
   };
 
-  handleTopUp = e => {
+  handleTopUp = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     const { accountId, projectId, departmentId, typeCursor } = this.props;
     const { isTopUp } = this.state;
     const promiseFun = !isTopUp ? departmentController.setTopDisplayOrder : departmentController.cancelTopDisplayOrder;
@@ -372,7 +372,7 @@ class UserItem extends Component<any, any> {
     });
   };
 
-  handleSort = e => {
+  handleSort = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     this.clickEvent(e);
     this.props.handleSortTopUp();
   };

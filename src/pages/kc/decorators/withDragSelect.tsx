@@ -150,7 +150,7 @@ class DragSelect extends React.Component<any, any> {
 
     return container;
   };
-  handleMouseMove = evt => {
+  handleMouseMove = (evt: MouseEvent) => {
     if (this.started) {
       const rootNode = this.getRootNode();
 
@@ -223,14 +223,14 @@ class DragSelect extends React.Component<any, any> {
 
     execFunc(this.props.onDragSelectEnd);
   };
-  cancelDragSelect = evt => {
+  cancelDragSelect = (evt: KeyboardEvent) => {
     if (evt.which !== 27 /* Esc*/) {
       return;
     }
 
     this.clear();
   };
-  finishDragSelect = evt => {
+  finishDragSelect = (evt: MouseEvent) => {
     if (evt.button !== 0) {
       return;
     }

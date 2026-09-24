@@ -177,7 +177,7 @@ export default function List(props) {
     setCurrent(_index);
   };
 
-  const switchHandle = e => {
+  const switchHandle = (e: KeyboardEvent) => {
     e.stopPropagation();
     if ([38, 40, 13].indexOf(e.keyCode) > -1) {
       setKeyCode(e.keyCode);

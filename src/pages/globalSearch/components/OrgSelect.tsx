@@ -57,7 +57,7 @@ export default function OrgSelect(props) {
     onChange(item.projectId);
   };
 
-  const searchHandle = value => {
+  const searchHandle = (value: string) => {
     let list = md.global.Account.projects;
     setSearch(value);
     if (!value || !value.trim()) {

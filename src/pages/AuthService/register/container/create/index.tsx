@@ -54,7 +54,7 @@ export default function (props) {
       onChange({ lineLoading: false });
     };
 
-    const handleValidation = res => {
+    const handleValidation = (res: boolean) => {
       if (!res) {
         resetSubmitting();
         return;

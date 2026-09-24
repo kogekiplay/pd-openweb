@@ -87,7 +87,7 @@ class Time extends Component<any, any> {
     }
   };
 
-  keyDownListener = e => {
+  keyDownListener = (e: KeyboardEvent) => {
     if (
       e.keyCode === 27 && // ESC
       this.state.menuOpened

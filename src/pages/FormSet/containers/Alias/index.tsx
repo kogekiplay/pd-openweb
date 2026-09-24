@@ -69,7 +69,7 @@ export default function Alias(props) {
       .catch(() => alert(_l('修改失败'), 2));
   };
 
-  const changeAlias = e => {
+  const changeAlias = (e: React.FocusEvent<HTMLInputElement, Element>) => {
     sheetAjax.updateWorksheetAlias({ appId, worksheetId, alias: e.target.value.trim() }).then(res => {
       //0:成功 1：失败 2：别名重复 3：格式不匹配
       if (res === 0) {
@@ -86,7 +86,7 @@ export default function Alias(props) {
     });
   };
 
-  const changeNotes = e => {
+  const changeNotes = (e: React.FocusEvent<HTMLInputElement, Element>) => {
     const value = e.target.value.trim();
     sheetAjax.editDeveloperNotes({ worksheetId, developerNotes: value }).then(res => {
       if (res) {

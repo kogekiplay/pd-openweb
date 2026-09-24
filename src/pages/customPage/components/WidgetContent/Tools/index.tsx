@@ -190,7 +190,7 @@ export default function Tools(props) {
   const containerComponents = allComponents.filter(c => [9, 10, 'tabs', 'card'].includes(c.type));
   const TOOLS = getTools({ widget, widgetType, layoutType, reportType, containerComponents });
 
-  const handleUpdateDropdownVisible = visible => {
+  const handleUpdateDropdownVisible = (visible: boolean) => {
     setDropdownVisible(visible);
     if (visible) {
       const className = `${widgetType}-${['tabs', 'card'].includes(widgetType) ? objectId : widget.id || widget.uuid}`;

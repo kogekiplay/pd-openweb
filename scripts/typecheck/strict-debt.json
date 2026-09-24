@@ -3518,7 +3518,6 @@
     "src/pages/worksheetApi/index.tsx",
     "src/router/App.tsx",
     "src/router/Application/index.tsx",
-    "src/router/NavigationPrompt.tsx",
     "src/router/SegmentPrefixGuard.tsx",
     "src/router/genRouteComponent.tsx",
     "src/router/globalEvents.ts",

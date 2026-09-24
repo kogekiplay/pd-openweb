@@ -78,7 +78,7 @@ function RefundConfirm(props) {
   const [isFocus, setIsFocus] = useState(false);
   const inputRef = useRef<any>(undefined);
 
-  const onChange = value => {
+  const onChange = (value: string) => {
     let val = value
       .replace(/[^-\d.]/g, '')
       .replace(/^\./g, '')

@@ -337,7 +337,7 @@ function SelectOptions(props, ref) {
     const scrollEl = findScrollableParent(wrapRef.current);
     let animationId;
 
-    const handleDragOver = e => {
+    const handleDragOver = (e: DragEvent) => {
       cancelAnimationFrame(animationId);
       const threshold = 60;
       const speed = 10;

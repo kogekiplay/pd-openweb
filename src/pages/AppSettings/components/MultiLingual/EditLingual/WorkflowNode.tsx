@@ -33,7 +33,7 @@ const NodeTagTextarea = props => {
   }));
   const tagTextareaRef = useRef(null);
 
-  const renderTag = id => {
+  const renderTag = (id: string) => {
     const data = formulaMap[id];
     return <ControlTag>{data.name}</ControlTag>;
   };

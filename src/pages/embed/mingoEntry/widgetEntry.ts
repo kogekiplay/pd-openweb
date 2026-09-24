@@ -217,7 +217,7 @@ function loadLocaleScript(lang, options = {}) {
   return localePromises[currentLang];
 }
 
-function readJson(response) {
+function readJson(response: Response) {
   return response
     .json()
     .catch(() => null)

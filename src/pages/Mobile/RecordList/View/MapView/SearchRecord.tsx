@@ -122,7 +122,7 @@ function SearchRecord(props) {
     updateSearchRecord(view, activeRecord);
   }, [activeRecord]);
 
-  const handleSearch = value => {
+  const handleSearch = (value: string) => {
     if (value) {
       setOptions(searchResult(value, queryKey, searchRecordData));
     } else {
@@ -133,7 +133,7 @@ function SearchRecord(props) {
     setOpen(true);
   };
 
-  const onSelect = (_data, { record }) => {
+  const onSelect = (_data: string, { record }) => {
     setSearchRecord(record);
     setOpen(false);
   };

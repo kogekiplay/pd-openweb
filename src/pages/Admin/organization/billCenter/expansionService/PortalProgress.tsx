@@ -134,7 +134,7 @@ export default class PortalProgress extends Component<any, any> {
     document.body.addEventListener('mouseup', this.onMouseUp);
   };
 
-  onMouseMove = e => {
+  onMouseMove = (e: MouseEvent) => {
     const { status, initX, minX } = this.state;
 
     if (status) {

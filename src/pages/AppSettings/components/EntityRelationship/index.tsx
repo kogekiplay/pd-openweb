@@ -194,7 +194,7 @@ function EntityRelationship(props) {
     onLayout(allData.current);
   };
 
-  const handleKeyDown = event => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     const keyCode = event.keyCode || event.which || event.charCode;
     const ctrlKey = event.ctrlKey || event.metaKey;
 

@@ -100,7 +100,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     this.containerWrapper && this.containerWrapper.removeEventListener('click', this.clickDrawerArea);
   }
 
-  clickDrawerArea = e => {
+  clickDrawerArea = (e: PointerEvent) => {
     const { setWorksheetHidden } = this.state;
     this.setState({
       hasClickDrawe: false,

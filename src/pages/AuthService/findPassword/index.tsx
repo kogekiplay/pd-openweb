@@ -44,7 +44,7 @@ export default class FindPassword extends React.Component<any, any> {
     document.removeEventListener('keypress', this.handleEnterKey);
   }
 
-  handleEnterKey = e => {
+  handleEnterKey = (e: KeyboardEvent) => {
     if (e.keyCode === 13 && !hasCaptcha()) {
       this.onBtn();
     }

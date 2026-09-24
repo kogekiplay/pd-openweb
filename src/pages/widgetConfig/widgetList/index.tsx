@@ -475,7 +475,7 @@ function TemplatePanelHeader(props) {
   const moreBtnRef = useRef<HTMLElement | null>(null);
   const [dropdownPlacement, setDropdownPlacement] = useState('bottomRight');
 
-  const handleDropdownVisibleChange = visible => {
+  const handleDropdownVisibleChange = (visible: boolean) => {
     if (visible && moreBtnRef.current) {
       const rect = moreBtnRef.current.getBoundingClientRect();
       const spaceBelow = window.innerHeight - rect.bottom;

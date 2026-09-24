@@ -184,7 +184,7 @@ class App extends Component<any, any> {
     window.removeEventListener('popstate', this.backDashboard);
   }
 
-  backDashboard = event => {
+  backDashboard = (event: PopStateEvent) => {
     // 弹层关闭也会触发 popstate，此时只应关闭弹层，不能按页面返回跳转到工作台。
     if (isHistoryLayerPopstate(event)) return;
 

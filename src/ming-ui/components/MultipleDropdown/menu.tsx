@@ -311,7 +311,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 返回上一级选项
    */
-  back = e => {
+  back = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
 

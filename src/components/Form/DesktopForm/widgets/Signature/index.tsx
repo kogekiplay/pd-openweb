@@ -246,7 +246,7 @@ const Signature = props => {
     }
   };
 
-  const showPopup = visible => {
+  const showPopup = (visible: boolean) => {
     getPopupDirection();
     if (visible) {
       setTimeout(initCanvas, 100);

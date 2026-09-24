@@ -79,7 +79,7 @@ export default function MobileConfig(props) {
   const { appnavwidth = 60 } = advancedSetting;
   const [width, setWidth] = useState(appnavwidth);
 
-  const changeWidth = value => {
+  const changeWidth = (value: string) => {
     let val = value
       .replace(/[^-\d.]/g, '')
       .replace(/^\./g, '')

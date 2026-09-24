@@ -238,7 +238,7 @@ class GunterChart extends Component<any, GunterChartState> {
   handleUpdateGroupingVisible = () => {
     this.props.updateGroupingVisible();
   };
-  handleWheel = e => {
+  handleWheel = (e: WheelEvent) => {
     const { chartScroll } = this.props.gunterView;
 
     if (e.shiftKey) {

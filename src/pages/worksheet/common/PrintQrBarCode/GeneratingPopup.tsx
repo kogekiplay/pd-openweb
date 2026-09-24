@@ -128,7 +128,7 @@ export default function GeneratingPopup(props) {
       PDFObject.embed(embedUrl, embedRef.current);
     }
   }, [loading]);
-  function handleKeyDown(e) {
+  function handleKeyDown(e: KeyboardEvent) {
     e.stopPropagation();
     if (e.keyCode === 27) {
       onClose();

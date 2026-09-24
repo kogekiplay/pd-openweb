@@ -115,7 +115,7 @@ const Markdown = forwardRef((props, ref) => {
   });
   MdEditor.useLocale('md_lang');
 
-  const handleImageUpload = file => {
+  const handleImageUpload = (file: File) => {
     return new Promise((resolve, reject) => {
       const data = new FormData();
       let fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;

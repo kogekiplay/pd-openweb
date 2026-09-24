@@ -288,7 +288,7 @@ export default function CityPicker(props) {
   };
 
   // 37: left 38: up 39: right 40: down 13: enter
-  const handleKeydown = e => {
+  const handleKeydown = (e: KeyboardEvent) => {
     if (![37, 38, 39, 40, 13].includes(e.keyCode) || !data.length || !popupRef.current) return;
     if (search && [37, 39].includes(e.keyCode)) return;
 

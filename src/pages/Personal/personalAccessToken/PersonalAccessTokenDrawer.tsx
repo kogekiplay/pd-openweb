@@ -161,7 +161,7 @@ export default function PersonalAccessTokenDrawer(props) {
     setCustomDateOpen(value === CUSTOM_VALIDITY);
   };
 
-  const onProjectChange = values => {
+  const onProjectChange = (values: string[]) => {
     const selectedValues = values || [];
     const hasAllProjects = selectedValues.includes(ALL_PROJECTS_VALUE);
     let entityScopeType = ENTITY_SCOPE_TYPE.SPECIFIC;

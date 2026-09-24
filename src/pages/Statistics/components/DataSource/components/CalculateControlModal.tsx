@@ -108,7 +108,7 @@ class CalculateControl extends Component<any, any> {
 
     this.props.onChangeDialogVisible(false);
   };
-  handleChange = (err, value, obj) => {
+  handleChange = (err, value: string, obj) => {
     if (err) {
       // this.handleError(err);
       return;

@@ -100,7 +100,7 @@ const SearchRecord = props => {
     setSearchRecord(null);
   }, [viewId]);
 
-  const handleSearch = value => {
+  const handleSearch = (value: string) => {
     if (value) {
       setOptions(searchResult(value, queryKey, data));
     } else {
@@ -112,7 +112,7 @@ const SearchRecord = props => {
     setOpen(true);
   };
 
-  const onSelect = (_data, { record }) => {
+  const onSelect = (_data: string, { record }) => {
     onSearch(record);
     setSearchRecord(record);
     setOpen(false);

@@ -198,7 +198,7 @@ export default class Formula extends React.Component<any, any> {
     }
   };
 
-  handleChange = (err, value, obj) => {
+  handleChange = (err, value: string, obj) => {
     if (err) {
       this.handleError(err);
       return;

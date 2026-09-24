@@ -298,7 +298,7 @@ export default class Sort extends Component<any, any> {
 
     this.setState({ currentCustomSort: null, visible: true });
   };
-  handleChangeVisible = visible => {
+  handleChangeVisible = (visible: boolean) => {
     this.setState({
       visible,
     });

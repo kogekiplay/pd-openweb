@@ -168,7 +168,7 @@ export default class MyProcess extends Component<any, any> {
     document.body.addEventListener('keydown', this.closeGlobalSearch);
     return () => document.body.removeEventListener('keydown', this.closeGlobalSearch);
   };
-  closeGlobalSearch = e => {
+  closeGlobalSearch = (e: KeyboardEvent) => {
     if (e.key === 'Escape' || e.keyCode === 26) {
       const { selectCard } = this.state;
       _.isEmpty(selectCard) && this.props.onCancel();

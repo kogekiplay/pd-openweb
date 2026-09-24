@@ -133,7 +133,7 @@ const ExternalLink = props => {
     });
   }, [customPageType, openType, hideHeaderBar, urlTemplate]);
 
-  const handleChange = (err, value) => {
+  const handleChange = (err, value: string) => {
     if (err) {
       return;
     }

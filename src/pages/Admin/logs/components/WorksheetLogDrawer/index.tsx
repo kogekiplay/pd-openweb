@@ -45,7 +45,7 @@ export default function WorksheetLogDrawer(props) {
       });
   };
 
-  const handleSearch = val => {
+  const handleSearch = (val: string) => {
     const searchValue = _.trim(val);
     const list = worksheetList.filter(item => item.workSheetName.toLowerCase().includes(searchValue.toLowerCase()));
     setData({ searchWorksheetList: list, selectWorksheetId: _.get(list, '[0].workSheetId'), searchValue: val });

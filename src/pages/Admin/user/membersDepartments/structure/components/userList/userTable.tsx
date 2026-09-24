@@ -498,7 +498,7 @@ class UserTable extends React.Component<any, any> {
       return true;
     });
   };
-  handleVisibleChange = flag => {
+  handleVisibleChange = (flag: boolean) => {
     this.setState({ dropDownVisible: flag });
   };
 

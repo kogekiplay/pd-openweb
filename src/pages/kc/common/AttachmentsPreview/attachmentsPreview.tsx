@@ -94,7 +94,7 @@ class AttachmentsPreview extends React.Component<any, any> {
     }
   }
 
-  onWheel = evt => {
+  onWheel = (evt: React.WheelEvent<HTMLDivElement>) => {
     // 浏览PDF时，禁止滚动
     const { index, attachments } = this.props;
     const { ext } = attachments[index];

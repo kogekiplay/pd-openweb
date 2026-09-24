@@ -75,7 +75,7 @@ export default function GroupHeader({
     setDraftName(name);
   }, [name]);
 
-  const handleDropdownVisibleChange = visible => {
+  const handleDropdownVisibleChange = (visible: boolean) => {
     setOpenMoreKey(prev => getNextOpenMoreKey(prev, visible, moreKey));
   };
 

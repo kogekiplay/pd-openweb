@@ -440,7 +440,7 @@ class Commenter extends React.Component<any, any> {
     const hasAttachment = attachmentData.length || kcAttachmentData.length;
     const style = !isEditing && !hasAttachment ? { display: 'none' } : {};
 
-    const onFocus = e => {
+    const onFocus = (e: React.FocusEvent<HTMLTextAreaElement, Element>) => {
       if (activePlaceholder) {
         e.target.placeholder = activePlaceholder;
       }
@@ -454,7 +454,7 @@ class Commenter extends React.Component<any, any> {
       }
     };
 
-    function onBlur(e) {
+    function onBlur(e: React.FocusEvent<HTMLTextAreaElement, Element>) {
       if (activePlaceholder) {
         e.target.placeholder = placeholder;
       }

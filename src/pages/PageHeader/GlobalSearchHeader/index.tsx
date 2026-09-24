@@ -66,7 +66,7 @@ let GlobalSearchHeader = class GlobalSearchHeader extends Component<any, any> {
     if (_.includes(PAGE_HEADER_ROUTE.search, path)) return 'search';
     return '';
   };
-  onSearchChange = value =>
+  onSearchChange = (value: string) =>
     this.setState({
       searchValue: value,
     });

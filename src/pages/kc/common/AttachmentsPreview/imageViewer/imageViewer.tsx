@@ -118,7 +118,7 @@ class ImageViewer extends React.Component<any, any> {
     this._isMounted = false;
   }
 
-  onWheel = evt => {
+  onWheel = (evt: WheelEvent) => {
     if (this.state.ctrlIsdDown) {
       this.updateScale(evt.deltaY < 0);
       evt.preventDefault();
@@ -331,7 +331,7 @@ class ImageViewer extends React.Component<any, any> {
     });
   }
 
-  ctrlDown = evt => {
+  ctrlDown = (evt: KeyboardEvent) => {
     if (evt.keyCode === 17) {
       this.setState({
         ctrlIsdDown: true,
@@ -339,7 +339,7 @@ class ImageViewer extends React.Component<any, any> {
     }
   };
 
-  ctrlUp = evt => {
+  ctrlUp = (evt: KeyboardEvent) => {
     if (evt.keyCode === 17) {
       this.setState({
         ctrlIsdDown: false,

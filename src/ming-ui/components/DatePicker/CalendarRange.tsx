@@ -150,14 +150,14 @@ class CalendarRange extends Component<any, any> {
     this.props.onOk(selectedValue, this.halfData);
   };
 
-  onStartValueChange = leftValue => {
+  onStartValueChange = (leftValue: moment.Moment) => {
     const state = this.state;
     const value = [...state.value];
     value[0] = leftValue;
     return this.fireValueChange(value);
   };
 
-  onEndValueChange = rightValue => {
+  onEndValueChange = (rightValue: moment.Moment) => {
     const state = this.state;
     const value = [...state.value];
     value[1] = rightValue;

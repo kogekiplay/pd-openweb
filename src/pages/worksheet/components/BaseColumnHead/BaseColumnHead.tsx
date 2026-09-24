@@ -55,7 +55,7 @@ export default class BaseColumnHead extends React.Component<any, BaseColumnHeadS
     }
   }
 
-  handleMouseDown = e => {
+  handleMouseDown = (e: MouseEvent) => {
     const { worksheetId, control, columnStyle, updateSheetColumnWidths, rows = [] } = this.props;
     e.preventDefault();
     if (window.dragclicktimer) {

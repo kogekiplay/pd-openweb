@@ -112,7 +112,7 @@ export default class PublicWorksheet extends React.Component<any, any> {
     !this.props.isPreview && window.removeEventListener('popstate', this.pageBack);
   }
 
-  pageBack = event => {
+  pageBack = (event: PopStateEvent) => {
     if (event.state && event.state.page === 'wechat_redirect') {
       location.reload();
     }

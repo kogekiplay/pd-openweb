@@ -23,7 +23,7 @@ export function EnlargeImage(props) {
   useEffect(() => {
     if (!url || !visible) return undefined;
 
-    const handleKeyDown = event => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape' && event.keyCode !== 27) return;
 
       event.stopPropagation();

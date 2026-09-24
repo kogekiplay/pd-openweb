@@ -438,7 +438,7 @@ export default class Ding extends React.Component<any, any> {
     this.editDDAppNoticeSetting({ isEnableRobot: !isEnableRobot, robotCode });
   };
 
-  handleRobotCode = e => {
+  handleRobotCode = (e: React.FocusEvent<HTMLInputElement, Element>) => {
     const { isEnableRobot } = this.state;
     const value = (e.target.value || '').trim();
 

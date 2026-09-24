@@ -425,7 +425,7 @@ class DepartmentTree extends React.Component<any, any> {
     return nodes;
   };
 
-  onExpand = expandedKeys => {
+  onExpand = (expandedKeys: React.Key[]) => {
     this.props.expandedKeysUpdate(expandedKeys);
     this.setState({
       autoExpandParent: false,

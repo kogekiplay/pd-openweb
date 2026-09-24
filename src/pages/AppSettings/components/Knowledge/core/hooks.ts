@@ -81,7 +81,7 @@ export const useEsc = (callback, active = true) => {
   useEffect(() => {
     if (!active) return undefined;
 
-    const handleKeyDown = e => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         callback?.(e);
       }

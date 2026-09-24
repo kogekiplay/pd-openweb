@@ -183,7 +183,7 @@ function SearchFolder(props) {
     handleSearch(trimmedValue, requestId);
   };
 
-  const handleKeyDown = e => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!visible) return;
 
     switch (e.keyCode) {

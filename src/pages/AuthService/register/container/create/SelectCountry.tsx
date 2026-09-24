@@ -52,7 +52,7 @@ export default function RegionDropdown(props) {
     onChange(code);
   };
 
-  const handleSearch = newKeywords => {
+  const handleSearch = (newKeywords: string | undefined) => {
     setState({ keywords: newKeywords });
     if (newKeywords) {
       searchRef.current(newKeywords);

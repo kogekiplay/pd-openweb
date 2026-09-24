@@ -132,7 +132,7 @@ class SearchMember extends Component<any, any> {
       },
     );
   }, 300);
-  handleKeyDown = event => {
+  handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const { flattenResult, currentIndex } = this.state;
     const { which } = event;
 

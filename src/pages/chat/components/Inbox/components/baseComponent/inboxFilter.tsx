@@ -114,7 +114,7 @@ export default class InboxFilter extends React.Component<any, any> {
     });
   };
 
-  handlePickUser = event => {
+  handlePickUser = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     const that = this;
     const filterAccountIds = [md.global.Account.accountId];
     const projectId = '';

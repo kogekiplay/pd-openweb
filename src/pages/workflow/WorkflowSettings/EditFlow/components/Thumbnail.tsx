@@ -124,7 +124,7 @@ export default ({ visible, refreshPosition, refreshThumbnail }) => {
   };
 
   useEffect(() => {
-    const handleMouseMove = event => {
+    const handleMouseMove = (event: MouseEvent) => {
       if (!draggable.status || !dragElement.current) return;
       dragElement.current.style.transform = `translateX(${event.clientX - draggable.x}px) translateY(${
         event.clientY - draggable.y

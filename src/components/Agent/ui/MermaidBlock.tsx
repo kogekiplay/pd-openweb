@@ -343,7 +343,7 @@ export function MermaidBlock({ code, isStreaming }) {
 
   useEffect(() => {
     if (!fullscreen) return undefined;
-    const onKey = e => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setFullscreen(false);
     };
 

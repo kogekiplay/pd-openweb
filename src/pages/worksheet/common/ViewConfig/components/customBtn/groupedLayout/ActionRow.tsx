@@ -15,7 +15,7 @@ function ActionItemRow({ btn, editBtn, deleteBtn, handleCopy, toggleEnable, disa
   const isDisabled = status === 0;
   const moreKey = `btn:${btnId}`;
 
-  const handleDropdownVisibleChange = visible => {
+  const handleDropdownVisibleChange = (visible: boolean) => {
     setOpenMoreKey(prev => getNextOpenMoreKey(prev, visible, moreKey));
   };
 

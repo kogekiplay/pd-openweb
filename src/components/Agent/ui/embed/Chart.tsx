@@ -662,7 +662,7 @@ export function Chart({ data: spec, isStreaming }) {
   // Esc 关闭全屏
   useEffect(() => {
     if (!fullscreen) return undefined;
-    const onKey = e => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setFullscreen(false);
     };
 

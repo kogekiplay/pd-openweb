@@ -443,7 +443,7 @@ export default class Widgets extends Component<any, any> {
       })
       .catch(() => {});
   };
-  handleScanFile = e => {
+  handleScanFile = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
     if (e.target.files.length == 0) {
       return;
     }

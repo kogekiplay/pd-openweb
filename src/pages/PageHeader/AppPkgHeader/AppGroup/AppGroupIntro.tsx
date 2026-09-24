@@ -30,7 +30,7 @@ let AppGroupIntro = class AppGroupIntro extends Component<any, any> {
     return this.props.className !== nextProps.className;
   }
 
-  closeWhenPressEsc = e => {
+  closeWhenPressEsc = (e: KeyboardEvent) => {
     if (e.key === 'Escape' || e.keyCode === 27) {
       this.props.onClose();
     }

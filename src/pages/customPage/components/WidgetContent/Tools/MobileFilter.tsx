@@ -34,7 +34,7 @@ export default props => {
     });
   };
 
-  const handleUpdateDropdownVisible = visible => {
+  const handleUpdateDropdownVisible = (visible: boolean) => {
     setDropdownVisible(visible);
     if (visible) {
       const className = `filter-${widget.id || widget.uuid}`;

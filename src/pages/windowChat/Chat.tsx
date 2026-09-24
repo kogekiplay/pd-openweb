@@ -64,7 +64,7 @@ const WindowChat = class WindowChat extends Component<{ dispatch: AppDispatch; [
     document.body.removeEventListener('keydown', this.closeChatPanel);
   }
 
-  closeChatPanel = e => {
+  closeChatPanel = (e: KeyboardEvent) => {
     if ((e.key === 'Escape' || e.keyCode === 26) && _.isEmpty(window.closeFns)) {
       const closeEl = document.querySelector('.ChatPanel .icon-close');
       closeEl && closeEl.click();

@@ -269,7 +269,7 @@ export default class AddAppItem extends Component<any, any> {
     );
   };
 
-  handleAddAppItemClick = e => {
+  handleAddAppItemClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     this.setState({ createEntryVisible: true });
   };

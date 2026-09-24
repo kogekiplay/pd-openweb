@@ -37,7 +37,7 @@ export default function VerifyPasswordConfirm(props) {
   }, [isRequired, password, isNoneVerification, closeImageValidation]);
 
   useEffect(() => {
-    function handleKeyDown(event) {
+    function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Enter') {
         event.preventDefault();
         handleConfirm();

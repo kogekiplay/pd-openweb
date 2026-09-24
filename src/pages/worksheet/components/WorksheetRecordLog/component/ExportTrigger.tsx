@@ -63,7 +63,7 @@ export default function ExportTrigger(props) {
     });
   };
 
-  const changeVisible = value => {
+  const changeVisible = (value: boolean) => {
     if (value === true && featureStatus === '2') {
       buriedUpgradeVersionDialog(projectId, VersionProductType.batchDownloadFiles);
       return;

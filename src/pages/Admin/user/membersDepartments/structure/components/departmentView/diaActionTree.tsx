@@ -90,7 +90,7 @@ let DiaActionTree = class DiaActionTree extends React.Component<any, any> {
     });
   };
 
-  clearDepartmentCache = e => {
+  clearDepartmentCache = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     e.stopPropagation();
     const { departmentId, projectId } = this.props;
     this.props.closeAction();

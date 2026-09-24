@@ -528,7 +528,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
     this.props.syncAppDetail(obj);
     this.updateData(obj);
   };
-  handleAppNameClick = e => {
+  handleAppNameClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     const { currentPcNaviStyle } = this.state.data;
     const { location, sheet, sheetList } = this.props;

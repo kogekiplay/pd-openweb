@@ -41,7 +41,7 @@ class GlobalSearch extends Component<any, any> {
     return () => document.body.removeEventListener('keydown', this.closeGlobalSearch);
   };
 
-  closeGlobalSearch = e => {
+  closeGlobalSearch = (e: KeyboardEvent) => {
     if (e.key === 'Escape' || e.keyCode === 26) {
       this.props.onClose();
     }

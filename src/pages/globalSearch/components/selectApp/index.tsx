@@ -17,7 +17,7 @@ export default function SelectApp(props) {
     });
   }, [projectId]);
 
-  const searchHandle = value => {
+  const searchHandle = (value: string) => {
     setSearch(value);
   };
 

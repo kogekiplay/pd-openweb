@@ -603,7 +603,10 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
     var has;
     var i;
     var _that = this;
-    var newMemberCheckFun = function (_index: number, item) {
+    var newMemberCheckFun = function (
+      _index: number,
+      item: { accountId?: string; fullname?: string; avatar?: string },
+    ) {
       if (item.accountId === memberArr[i].accountId) {
         has = true;
         return false;

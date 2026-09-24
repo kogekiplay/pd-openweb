@@ -103,7 +103,7 @@ export default function SelectType(props) {
       });
   };
 
-  const onPopupVisibleChange = visible => {
+  const onPopupVisibleChange = (visible: boolean) => {
     setVisible(visible);
     if (!visible) {
       const needSetPrecision = !!currentOption.maxLength && !destField.precision;

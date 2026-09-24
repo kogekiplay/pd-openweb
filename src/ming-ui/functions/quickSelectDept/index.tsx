@@ -511,7 +511,7 @@ export function DeptSelect(props) {
     }
   };
 
-  const handleSearch = evt => {
+  const handleSearch = (evt: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
     setState({ keywords: evt.target.value });
   };
 

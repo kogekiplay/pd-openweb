@@ -51,7 +51,7 @@ const WidgetWrap = styled.div`
 function WidgetList({ components, activeContainerInfo = {}, addWidget = _.noop, ...rest }) {
   const [createWidget, setWidget] = useState({});
 
-  const renderWidget = key => {
+  const renderWidget = (key: string) => {
     const { icon, name } = { ...widgets, ...containerWidgets }[key];
     return (
       <li

@@ -183,7 +183,7 @@ function DetailView(props) {
     [],
   );
 
-  const handleKeyDown = e => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     const editingElements = document.getElementsByClassName('editingBar');
     const isEditing = !![...editingElements].filter(el => el.style.overflow === '').length;
 

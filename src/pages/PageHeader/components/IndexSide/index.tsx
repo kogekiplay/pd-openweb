@@ -26,7 +26,7 @@ let IndexSide = class IndexSide extends Component<any, any> {
     document.body && document.body.removeEventListener('keydown', this.closeWhenPressEsc);
   }
 
-  closeWhenPressEsc = e => {
+  closeWhenPressEsc = (e: KeyboardEvent) => {
     if (e.key === 'Escape' || e.keyCode === 27) {
       this.props.onClose();
     }

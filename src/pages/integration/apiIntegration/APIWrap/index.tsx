@@ -32,7 +32,7 @@ function APISetting(props) {
   });
 
   useEffect(() => {
-    const keyDownListener = e => {
+    const keyDownListener = (e: KeyboardEvent) => {
       if (
         e.keyCode === 27 // ESC
       ) {

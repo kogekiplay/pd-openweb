@@ -272,7 +272,7 @@ class PrintForm extends React.Component<any, any> {
       });
   };
 
-  handleKeyDown = evt => {
+  handleKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === 'Escape') {
       this.setState({ showPdf: false, showHeader: true });
     }

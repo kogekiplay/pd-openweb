@@ -95,7 +95,7 @@ export default function EditingBar(props) {
   } = props;
   const cache = useRef({ saveShortCut, okDisabled });
 
-  const handleSave = e => {
+  const handleSave = (e: KeyboardEvent) => {
     if (!cache.current.saveShortCut || !(window.isMacOs ? e.metaKey : e.ctrlKey)) return;
     if (window.richTextDialogIsActive) {
       e.stopPropagation();

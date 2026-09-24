@@ -55,13 +55,13 @@ function PortalBar(props) {
       });
   };
 
-  const handleSearchChange = e => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
     debouncedSetKeyWordsRef.current(value);
   };
 
-  const handleSearchKeyUp = e => {
+  const handleSearchKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {
       debouncedSetKeyWordsRef.current.cancel();
       setKeyWords(inputValue);

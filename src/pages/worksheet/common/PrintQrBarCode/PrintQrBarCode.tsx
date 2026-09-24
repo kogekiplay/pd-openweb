@@ -222,7 +222,7 @@ export default function PrintQrBarCode(props) {
     });
   }
 
-  function handleKeyDown(e) {
+  function handleKeyDown(e: KeyboardEvent) {
     if (e.keyCode === 27) {
       onClose();
     }

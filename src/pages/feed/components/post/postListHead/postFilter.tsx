@@ -84,19 +84,19 @@ class HomePostFilter extends React.Component<any, any> {
     this.searchInput.focus();
   };
 
-  blurSearchInput = evt => {
+  blurSearchInput = (evt: React.FocusEvent<HTMLInputElement, Element>) => {
     if (!evt.target.value) {
       this.setState({ isSearchInputExpand: false });
     }
   };
 
-  keyupSearchInput = evt => {
+  keyupSearchInput = (evt: React.KeyboardEvent<HTMLInputElement>) => {
     if (evt.which === 13) {
       this.searchPost();
     }
   };
 
-  changeSearchKeywords = e => {
+  changeSearchKeywords = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
     this.props.dispatch(changeSearchKeywords(e.target.value));
   };
 

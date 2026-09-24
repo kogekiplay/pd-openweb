@@ -45,7 +45,7 @@ export default class Text extends Component<any, any> {
     };
   }
 
-  onSearch = value => this.setState({ searchValue: value });
+  onSearch = (value: string) => this.setState({ searchValue: value });
 
   onChange = value => {
     this.props.onChange({ values: value });

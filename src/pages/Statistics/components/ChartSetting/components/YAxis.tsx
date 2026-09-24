@@ -299,7 +299,7 @@ export default class YAxis extends Component<any, YAxisState> {
       yaxisList: newYaxisList,
     });
   };
-  handleSortEnd = (list, newIndex, oldIndex) => {
+  handleSortEnd = (list, newIndex: number, oldIndex: number | undefined) => {
     const { currentReport, onChangeCurrentReport } = this.props;
     const { reportType, config } = currentReport;
     const data = { yaxisList: list };

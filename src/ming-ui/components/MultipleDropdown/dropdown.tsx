@@ -50,7 +50,7 @@ class MultipleDropdown extends Component<any, any> {
    * window keydown listener
    * 点击 ESC 键时，隐藏当前菜单
    */
-  keyDownListener = e => {
+  keyDownListener = (e: KeyboardEvent) => {
     if (
       e.keyCode === 27 && // ESC
       this.state.menuOpened
