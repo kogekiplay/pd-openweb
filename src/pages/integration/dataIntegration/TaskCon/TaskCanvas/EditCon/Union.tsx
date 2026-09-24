@@ -44,7 +44,7 @@ export default function Union(props) {
       unionType,
     });
   }, [props.node]);
-  const renderPopup = o => {
+  const renderPopup = (o: { type: string; txt: string; tips: string; Er: string; img: string; tipImg: string; h: number }) => {
     return (
       <PopupWrap class="toolTipCon">
         <div className="Bold TxtLeft textPrimary Font13 titleTips">{o.txt}</div>

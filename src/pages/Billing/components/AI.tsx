@@ -146,7 +146,7 @@ const AI = () => {
   const hasAnyData = embeddingData.length > 0 || languageData.length > 0;
 
   // 渲染价格单元格
-  const renderPriceCell = (model, priceColumn) => {
+  const renderPriceCell = (model, priceColumn: { type: string; label: string }) => {
     const { type } = priceColumn;
     const value = model.price?.[type];
     const hasValue = value !== null && value !== undefined;

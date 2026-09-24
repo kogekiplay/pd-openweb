@@ -206,7 +206,11 @@ function SortableItem(props) {
 export default function TextVerify(props) {
   const { data, onChange } = props;
   const filterRegex = getAdvanceSetting(data, 'filterregex') || [];
-  const [itemData, setData] = useState({});
+  const [itemData, setData] = useState<{
+    name?: string | undefined;
+    err?: string | undefined;
+    value?: string | undefined;
+  }>({});
   const [activeIndex, setIndex] = useState(-1);
   const [testValue, setTestValue] = useState('');
 

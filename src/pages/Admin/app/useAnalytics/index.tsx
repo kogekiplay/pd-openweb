@@ -26,7 +26,7 @@ export default class UseAnalytics extends Component<any, any> {
       currentTab: type || 'overview',
     };
   }
-  changeTab = item => {
+  changeTab = (item: { key: string; label: string }) => {
     const { match = {} } = this.props;
     const { params = {} } = match;
 

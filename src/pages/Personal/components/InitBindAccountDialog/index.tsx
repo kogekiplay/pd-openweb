@@ -290,4 +290,4 @@ export default class InitBindAccountDialog extends Component<any, any> {
   }
 }
 
-export const initBindAcoount = props => FunctionWrap(InitBindAccountDialog, props);
+export const initBindAcoount = (props: { title: string; showFooter: boolean; getData: () => void }) => FunctionWrap(InitBindAccountDialog, props);

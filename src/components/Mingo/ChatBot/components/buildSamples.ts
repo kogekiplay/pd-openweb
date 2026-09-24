@@ -12,7 +12,8 @@ export const BUILD_SAMPLES = [
   _l('搭建农产品溯源管理应用'),
 ];
 
-export function pickRandom(list) {
+// 从列表里随机取一个（空列表时是 undefined）
+export function pickRandom<T>(list: readonly T[]): T | undefined {
   return list[Math.floor(Math.random() * list.length)];
 }
 

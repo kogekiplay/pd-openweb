@@ -276,7 +276,7 @@ function getControlByDynamicFunc(allControls: FormControl[], defaultfunc) {
 }
 
 // 解析映射，获取控件
-function getControlByMapping(allControls, mapping) {
+function getControlByMapping(allControls: FormControl[], mapping) {
   let referencedControls = [];
   let worksheetRoleControls = [];
 

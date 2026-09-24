@@ -232,7 +232,11 @@ export default function StepsVerifyDialog(props) {
     });
   };
 
-  const handleSwitch = item => {
+  const handleSwitch = (
+    item:
+      | { label: string; value: string; checked: string; desc?: undefined }
+      | { label: string; value: string; desc: string; checked: string },
+  ) => {
     const enabledAuthenticationCount = [
       twoAuthenticationMobilePhoneEnabled,
       twoAuthenticationEmailEnabled,

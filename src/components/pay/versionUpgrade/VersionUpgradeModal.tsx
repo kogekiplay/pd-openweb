@@ -200,7 +200,18 @@ export default function VersionUpgrade(props) {
     return undefined;
   };
 
-  const onPurchase = (v?) => {
+  const onPurchase = (
+    v?:
+      | {
+          type: string;
+          name: string;
+          description: string;
+          price: { monthly: number; yearly: number };
+          featureTitle: string;
+          featureList: string[];
+        }
+      | undefined,
+  ) => {
     if ((!type && hasUpgraded(v)) || showOffLine) {
       return;
     }

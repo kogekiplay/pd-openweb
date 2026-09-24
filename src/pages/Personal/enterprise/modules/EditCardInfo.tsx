@@ -19,7 +19,7 @@ export default class EditCardInfo extends Component<any, any> {
     };
   }
 
-  renderResult(item) {
+  renderResult(item: { label: string; key: string }) {
     const { userInfo } = this.props;
     const currentItem = userInfo[item.key];
 

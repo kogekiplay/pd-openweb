@@ -65,7 +65,12 @@ export default function PrivateAuthDialog(props) {
   const [state, setState] = useState({ name: '', appId: '', appSecret: '' });
   const { name, appId, appSecret } = state;
 
-  const changeFormData = (value: string, item) => {
+  const changeFormData = (
+    value: string,
+    item:
+      | { key: string; label: string; type: string; description?: undefined }
+      | { key: string; label: string; type: string; description: string },
+  ) => {
     setState({ ...state, [item.key]: value, [`${item.key}Error`]: false });
   };
 

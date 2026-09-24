@@ -148,7 +148,7 @@ function IconTabs(props) {
     });
   }, 500);
 
-  const scrollToType = item => {
+  const scrollToType = (item: { label: string; key: string }) => {
     setSetting({ ...setting, currentKey: item.key });
     const el = document.getElementById(item.key);
     if (!el) return;

@@ -120,7 +120,7 @@ export default class CreateNode extends Component<any, CreateNodeState> {
   /**
    * 更多操作点击
    */
-  moreOptionsAction(o) {
+  moreOptionsAction(o: { type: number; name: string; iconColor: string; iconName: string }) {
     const { processId, addFlowNode, item, selectAddNodeId, selectCopy, removeCopyBtn } = this.props;
 
     if (_.includes([NODE_TYPE.WRITE, NODE_TYPE.APPROVAL, NODE_TYPE.CC], o.type)) {

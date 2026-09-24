@@ -65,7 +65,7 @@ function SettingMenu(props) {
     return isOpenPermit(permitList.viewExportSwitch, sheetSwitchPermit, item.viewId);
   };
 
-  const handleExport = it => {
+  const handleExport = (it: { name: string; icon: string; exportType: number; key: string }) => {
     if (window.isPublicApp) {
       alert(_l('预览模式下，不能操作'), 3);
       return;

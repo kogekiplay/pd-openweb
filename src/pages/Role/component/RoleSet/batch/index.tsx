@@ -277,7 +277,7 @@ export default function (props) {
     );
   };
 
-  const hasSet = (actionList, value: string) => {
+  const hasSet = (actionList: { key: string; txt: string }[], value: string) => {
     if (value === 'clear') return true;
     let isSet = false;
     actionList.map(o => {

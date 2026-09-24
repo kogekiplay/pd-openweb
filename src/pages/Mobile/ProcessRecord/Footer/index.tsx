@@ -99,7 +99,7 @@ export default class Footer extends Component<any, any> {
       },
     });
   };
-  handleClick = id => {
+  handleClick = (id: string) => {
     const { onSubmit, instance } = this.props;
     const { ignoreRequired, encrypt, auth } = (instance || {}).flowNode || {};
     const btnDescMap = (instance || {}).btnDescMap || {};

@@ -36,7 +36,7 @@ export default function UserConfig(props) {
   const userType = getAdvanceSetting(data, 'usertype');
   const [overlayVisible, setVisible] = useState(false);
 
-  const handleClick = item => {
+  const handleClick = (item: { id: string; type: number; value: string; text: string }) => {
     setVisible(false);
 
     if (item.id === 'assignGroup') {

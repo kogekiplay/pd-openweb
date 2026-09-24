@@ -56,7 +56,7 @@ export default class Header extends Component<any, any> {
   /**
    * 头部更多操作的处理逻辑
    */
-  handleMoreOperation = action => {
+  handleMoreOperation = (action: string) => {
     if (action === 'addApprove') {
       this.setState({ action, otherActionVisible: true });
     }

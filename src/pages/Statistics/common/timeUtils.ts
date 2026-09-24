@@ -613,7 +613,10 @@ export const timeGatherParticle = [
 /**
  * 过滤集合粒度
  */
-export const filterTimeGatherParticle = (data, { showtype, controlType }) => {
+export const filterTimeGatherParticle = (
+  data: { text: string; value: number; getTime: () => string }[],
+  { showtype, controlType },
+) => {
   let timeGatherParticle = [];
 
   if (controlType === WIDGETS_TO_API_TYPE_ENUM.TIME) {

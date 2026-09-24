@@ -174,7 +174,7 @@ let ChartSetting = class ChartSetting extends Component<any, any> {
     );
   }
 
-  renderPivotTableAxis(x, y) {
+  renderPivotTableAxis(x: string, y: string | undefined) {
     const { currentReport, axisControls, worksheetInfo, changeCurrentReport } = this.props;
     const { lines = [], columns = [] } = currentReport.pivotTable || {};
     const disableParticleSizeTypes = [...lines, ...columns]
@@ -260,7 +260,7 @@ let ChartSetting = class ChartSetting extends Component<any, any> {
     );
   }
 
-  renderChartAxis(x, y) {
+  renderChartAxis(x: string, y: string | undefined) {
     const { currentReport, axisControls, worksheetInfo, changeCurrentReport } = this.props;
     const { reportType, xaxes = {}, yaxisList, split = {}, rightY, formulas = [] } = currentReport;
     const isMultiaxis = [reportTypes.DualAxes, reportTypes.BidirectionalBarChart].includes(reportType);

@@ -34,7 +34,7 @@ export default function NavigationConfig(props) {
     );
   };
 
-  const renderDisplayIcon = list => {
+  const renderDisplayIcon = (list: { name: string; show: boolean }[]) => {
     return (
       <Fragment>
         {list.map((item, index: number) => (

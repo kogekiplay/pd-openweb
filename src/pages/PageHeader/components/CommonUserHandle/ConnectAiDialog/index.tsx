@@ -23,12 +23,12 @@ function Header() {
   );
 }
 
-const handleCopy = text => {
+const handleCopy = (text: string) => {
   copy(text);
   alert(_l('已复制'));
 };
 
-const renderFieldLabel = text => (
+const renderFieldLabel = (text: string) => (
   <div className="fieldLabel">
     <span className="required">*</span>
     {text}

@@ -201,7 +201,7 @@ export default function DebugConfig(params) {
     );
   };
 
-  const renderHeader = (o, i: number) => {
+  const renderHeader = (o: { title: string }, i: number) => {
     return (
       <React.Fragment>
         <h5 className={cx('Bold Font14 pTop16', {})}>{o.title}</h5>

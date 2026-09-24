@@ -207,7 +207,9 @@ function PublishDialog(props) {
 
   const updateInfo = updates => setState({ info: { ...info, ...updates } });
 
-  const renderFormField = field => {
+  const renderFormField = (
+    field: { key: string; txt: string; required: boolean } | { key: string; txt: string; required?: undefined },
+  ) => {
     if (field.key === 'allowEdit') {
       return <Switch checked={!!info[field.key]} onClick={() => updateInfo({ [field.key]: !info[field.key] })} />;
     }

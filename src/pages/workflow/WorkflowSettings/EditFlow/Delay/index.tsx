@@ -58,7 +58,7 @@ export default class Delay extends Component<any, any> {
   renderDelayTimeText(timerNode) {
     const { numberFieldValue, hourFieldValue, minuteFieldValue, secondFieldValue } = timerNode;
 
-    const getDesc = ({ fieldValue, fieldControlId, fieldControlName }, label) => {
+    const getDesc = ({ fieldValue, fieldControlId, fieldControlName }, label: string) => {
       if (!fieldValue && !fieldControlId) {
         return '';
       }

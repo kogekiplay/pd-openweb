@@ -345,7 +345,7 @@ class Filter extends Component<any, any> {
   /**
    * 任务归属
    */
-  renderTaskAscription(item, i: number) {
+  renderTaskAscription(item: { value: string; taskFilter: number }, i: number) {
     const { taskFilter } = this.props.taskConfig;
     return (
       <span

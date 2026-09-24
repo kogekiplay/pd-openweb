@@ -131,7 +131,7 @@ function getErrorInfo(err) {
   };
 }
 
-function parseFileIndexes(message) {
+function parseFileIndexes(message: string) {
   const indexes = [];
 
   String(message || '').replace(/files\[(\d+)\]/g, (_match, index) => {
@@ -151,7 +151,7 @@ function formatSizeLimitMB(size) {
   return Number.isInteger(mb) ? String(mb) : String(parseFloat(mb.toFixed(2)));
 }
 
-function parseSizeLimitMB(message) {
+function parseSizeLimitMB(message: string) {
   const match = String(message || '').match(/\(\s*0\s*,\s*(\d+(?:\.\d+)?)\s*\]/);
 
   return match ? formatSizeLimitMB(match[1]) : undefined;

@@ -89,7 +89,7 @@ function AppCenter(props) {
     advancedSetting?: Record<string, string> | undefined;
   }>({});
   const [isLoading, setIsLoading] = useState(true);
-  const [myPermissions, setMyPermissions] = useState([]);
+  const [myPermissions, setMyPermissions] = useState<number[]>([]);
   const [advancedThemes, setAdvancedThemes] = useState([]);
   const themeChannel = getAdvancedThemeChannel(location.host);
   const themeAssetUrlPrefix = DASHBOARD_THEME_ASSET_URL_PREFIX;

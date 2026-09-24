@@ -20,7 +20,7 @@ export default props => {
   const [loading, setLoading] = useState(true);
   const [currentTimeZone, setCurrentTimeZone] = useState(md.global.Account.timeZone);
   const [map, setMap] = useState(md.global.Account.map || 0);
-  const [timeZones, setTimeZones] = useState([]);
+  const [timeZones, setTimeZones] = useState<{ text: string; value: number }[]>([]);
   const [mapList, setMapList] = useState([]);
 
   useEffect(() => {

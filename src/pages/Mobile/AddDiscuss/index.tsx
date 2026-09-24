@@ -79,7 +79,7 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
       });
   };
 
-  handlePushValue(text) {
+  handlePushValue(text: string) {
     text = text + ' ';
     const { value = '', temporaryDiscuss } = this.state;
 

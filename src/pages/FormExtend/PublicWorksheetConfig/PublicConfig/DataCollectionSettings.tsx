@@ -285,7 +285,7 @@ export default function DataCollectionSettings(props) {
     setState({ timeRange: newTimeRange });
   };
 
-  const renderTimePeriodItem = (itemProps, index: number) => {
+  const renderTimePeriodItem = (itemProps: { type: string; text: string }, index: number) => {
     const { type, text } = itemProps;
     const selectedMonths = limitWriteTime.monthSetting.defineMonth || [];
     const selectedDays = limitWriteTime.daySetting.defineDay || [];

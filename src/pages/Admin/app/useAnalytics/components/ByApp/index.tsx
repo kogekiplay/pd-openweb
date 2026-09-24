@@ -502,7 +502,7 @@ export default class ByApp extends Component<any, any> {
     }
   };
 
-  changeTab = item => {
+  changeTab = (item: { tab: number; name: string }) => {
     const { pageIndex, useagePageIndex, list = [], useageList = [] } = this.state;
 
     if (

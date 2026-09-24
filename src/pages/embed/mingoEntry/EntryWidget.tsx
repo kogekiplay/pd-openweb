@@ -339,7 +339,7 @@ export default function EntryWidget({
     }
   }
 
-  function fillSample(text) {
+  function fillSample(text: string) {
     setDraft(text);
     promptRef.current && promptRef.current.setInputValue(text);
     promptRef.current && promptRef.current.focus();

@@ -55,7 +55,13 @@ export default function BaseSet(props) {
     setInternalControls((portalSetModel.internalControls || []).filter(l => _controls.find(m => m.value === l)));
   }, [_.get(props, ['portalSet', 'portalSetModel'])]);
 
-  const changeMode = (checked: boolean, oKey: string, key: string, WAY, cb: () => void) => {
+  const changeMode = (
+    checked: boolean,
+    oKey: string,
+    key: string,
+    WAY: { key: string; txt: string }[],
+    cb: () => void,
+  ) => {
     const { portalSet = {} } = props;
     const { portalSetModel = {} } = portalSet;
     let num = 0;

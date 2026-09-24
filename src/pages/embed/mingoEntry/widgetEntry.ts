@@ -93,7 +93,7 @@ function getEntryLang(options: Record<string, any> = {}) {
   );
 }
 
-function getLocaleScriptUrl(lang, options: Record<string, any> = {}) {
+function getLocaleScriptUrl(lang: string, options: Record<string, any> = {}) {
   const localePath = LANG_PATH_MAP[lang] || LANG_PATH_MAP[DEFAULT_LANG];
 
   if (options.localeUrl) {
@@ -142,7 +142,7 @@ function installEntryTranslator() {
   window._l = translator;
 }
 
-function loadLocaleScript(lang, options = {}) {
+function loadLocaleScript(lang: string, options = {}) {
   const currentLang = normalizeLang(lang);
 
   if (currentLang === DEFAULT_LANG) {

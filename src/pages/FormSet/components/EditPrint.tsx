@@ -257,7 +257,7 @@ class EditPrint extends React.Component<any, any> {
       });
   };
 
-  onCreateEdit = item => {
+  onCreateEdit = (item: { label: string; value: number }) => {
     const { worksheetId, downLoadUrl, fileType = 'Word', refreshFn } = this.props;
     const { allowDownloadPermission, allowEditAfterPrint, templateName, advanceSettings } = this.state;
 

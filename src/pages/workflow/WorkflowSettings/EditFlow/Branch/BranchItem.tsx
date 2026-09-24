@@ -156,7 +156,7 @@ export default class BranchItem extends Component<any, BranchItemState> {
   /**
    * 渲染或 或者 且
    */
-  renderOrAnd(item, text?) {
+  renderOrAnd(item, text?: string | undefined) {
     const conditionValues = this.getValidConditionValues(item.conditionValues);
 
     return (

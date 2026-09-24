@@ -87,7 +87,10 @@ export default function Set(props) {
       });
   };
 
-  const renderList = (title: string, actionList) => {
+  const renderList = (
+    title: string,
+    actionList: ({ key: string; txt: string; tips?: undefined } | { key: string; txt: string; tips: string })[],
+  ) => {
     let isNotAll = actionList.filter(o => !(sheet[o.key] || {}).enable).length > 0;
     return (
       <React.Fragment>

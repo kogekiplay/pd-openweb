@@ -61,7 +61,7 @@ export default class Quadrant extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  renderQuadrantItem(data) {
+  renderQuadrantItem(data: { textKey: string; bgColorKey: string; name: string }) {
     const { quadrant, onChangeQuadrant } = this.props;
     return (
       <Fragment>

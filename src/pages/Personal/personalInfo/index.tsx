@@ -91,7 +91,7 @@ export default class PersonalInfo extends React.Component<any, any> {
     });
   }
 
-  detailItem = (item, valueType: string) => {
+  detailItem = (item: { label: string; key: string; filter: string } | { label: string; key: string; filter?: undefined }, valueType: string) => {
     const detail = this.state[valueType] || {};
     return (
       <div className="mBottom10" key={item.key}>

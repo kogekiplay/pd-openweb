@@ -228,7 +228,7 @@ export default ({ processId, nodeId, codeType = 1, onSave = () => {}, onClose = 
   const [list, setList] = useState([]);
   const [controller, setController] = useState<AbortController | null>(null);
   const [clearParams, setClearParams] = useState(true);
-  const [error, setError] = useState();
+  const [error, setError] = useState<{ errorMsg: string; sourceData: string } | undefined>();
 
   const generateCode = async () => {
     if (!list.length || !controller) return;

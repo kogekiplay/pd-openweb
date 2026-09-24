@@ -62,7 +62,7 @@ export default class SiteName extends Component<any, any> {
     }
   }
 
-  showMes(str) {
+  showMes(str: string) {
     $('.existResult').fadeIn().html(str);
     setTimeout(function () {
       $('.existResult').fadeOut().html('');

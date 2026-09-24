@@ -195,7 +195,7 @@ export default class CardMessage extends Component<any, any> {
         break;
     }
   }
-  renderMember(members, textInfo) {
+  renderMember(members, textInfo: string) {
     return (
       <div className="Message-cardItem Message-cardItem-membersItem">
         <span>{`${textInfo}/${_l('成员')}：`}</span>
@@ -212,7 +212,7 @@ export default class CardMessage extends Component<any, any> {
       </div>
     );
   }
-  renderDate(deadline, textInfo) {
+  renderDate(deadline, textInfo: string) {
     return (
       <div className="Message-cardItem">
         <span>{`${textInfo}：`}</span>

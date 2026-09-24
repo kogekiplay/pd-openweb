@@ -300,7 +300,7 @@ export default function CreateWechatOrAliMerchant(props) {
     );
   };
 
-  const renderFormInfo = forData => {
+  const renderFormInfo = (forData: { label: string; field: string; placeholder: string }[]) => {
     return forData.map(item => {
       return (
         <div

@@ -88,7 +88,7 @@ export default function SearchMapping(props) {
     };
   };
 
-  const handleChange = (value, item) => {
+  const handleChange = (value, item: { required: boolean; label: string; placeholder: string; type: number; key: string }) => {
     if (item.type === 1) {
       onChange(
         handleAdvancedSettingChange(data, {

@@ -400,7 +400,7 @@ export default function SheetWorkflow(props) {
   const [viewWorkflow, setViewWorkflow] = useState(null);
   const [actionVisible, setActionVisible] = useState(false);
   const [allowTaskRevokeBackNodeId, setAllowTaskRevokeBackNodeId] = useState(null);
-  const [archivedList, setArchivedList] = useState([]);
+  const [archivedList, setArchivedList] = useState<{ id: string; text: string }[]>([]);
   const [selecteArchived, setSelecteArchived] = useState({});
   const [filterVisible, setFilterVisible] = useState(false);
 

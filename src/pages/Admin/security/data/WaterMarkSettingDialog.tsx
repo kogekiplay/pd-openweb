@@ -64,7 +64,7 @@ function WaterMarkSettingDialog(props) {
   const $tagTextarea = useRef(null);
   const [requestLoading, setRequestLoading] = useState(false);
 
-  const onClick = item => {
+  const onClick = (item: { controlId: string; controlName: string }) => {
     $tagTextarea.current.insertColumnTag(item.controlId);
   };
 

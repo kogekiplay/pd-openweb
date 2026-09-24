@@ -199,7 +199,7 @@ const getTimeInfo = (start, end, isCompleteAppear: boolean) => {
  */
 export const formatTaskTime = (status, startTime, endTime, actualStartTime, completeTime, isCreate = false) => {
   const currentTime = getCurrentTime();
-  const render = (text, color: string, className = '') => `<span style="color:${color};" class="${className}">${text}</span>`;
+  const render = (text: string, color: string, className = '') => `<span style="color:${color};" class="${className}">${text}</span>`;
   const COLORS = {
     gray: 'var(--color-text-secondary)',
     blue: '#1677ff',

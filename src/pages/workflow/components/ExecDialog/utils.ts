@@ -28,7 +28,7 @@ export function canDirectSubmitApproveAction({ action, auth = {}, encrypt = fals
   return typeList.length === 1 && typeList[0] === 101;
 }
 
-export function getOperationLogActionText(action, btnMap, operationLogAction, translateInfo) {
+export function getOperationLogActionText(action, btnMap, operationLogAction: Record<number, string>, translateInfo) {
   btnMap = btnMap || {};
   operationLogAction = operationLogAction || {};
   translateInfo = translateInfo || {};
