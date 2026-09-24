@@ -6,7 +6,7 @@ import { canEditApp } from 'src/pages/worksheet/redux/actions/util.js';
 import AddAppItem from './AddAppItem';
 import MyAppItem from './MyAppItem';
 
-const SORT_TYPE = {
+const SORT_TYPE: Record<string, number> = {
   star: 1,
   project: 2,
   personal: 3,

@@ -46,7 +46,7 @@ export default class AddOrEditItem extends React.Component<any, any> {
     const { type } = this.props;
     const { errorList = {}, errorSentry = {} } = this.state;
     const list = { ...errorList, [key]: value };
-    const textInfo = {
+    const textInfo: Record<string, string | undefined> = {
       name: type === 1 ? _l('请输入组织名称') : _l('请输入学校名称'),
       title: this.renderTitleErrorMsg(),
       startDate: _l('请选择起始年月'),

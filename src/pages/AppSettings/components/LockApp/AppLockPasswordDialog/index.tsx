@@ -77,7 +77,7 @@ const checkErrorPassword = (password: string | undefined) => {
   return undefined;
 };
 
-const RESULT_OBJ = {
+const RESULT_OBJ: Record<number, string> = {
   0: _l('设置失败'),
   1: _l('设置成功'),
   2: _l('密码错误'),
@@ -88,7 +88,7 @@ const RESULT_OBJ = {
   7: _l('您输入的新密码与旧密码一样'),
 };
 
-const ACTION_TEXT = {
+const ACTION_TEXT: Record<string, string> = {
   editLockPassword: _l('密码修改成功，需重新解锁'),
   resetLock: _l('您在应用下的操作权限已恢复锁定'),
   unlock: _l('您在应用下的操作权限已解锁'),

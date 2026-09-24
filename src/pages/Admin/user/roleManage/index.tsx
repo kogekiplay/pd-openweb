@@ -111,7 +111,7 @@ const DefaultGroup = {
 };
 
 // 导入角色模版
-const roleTemplatePaths = {
+const roleTemplatePaths: Record<number, string> = {
   0: '/staticfiles/template/orgRoleImportTemplate/组织角色导入模板.xlsx',
   1: '/staticfiles/template/orgRoleImportTemplate/Role Import Template.xlsx',
   2: '/staticfiles/template/orgRoleImportTemplate/役割インポートテンプレート.xlsx',

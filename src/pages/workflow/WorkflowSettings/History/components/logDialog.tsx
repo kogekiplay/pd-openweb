@@ -197,7 +197,7 @@ const LogDialog = props => {
         color: 'rgba(0, 0, 0, 0.5)',
       };
     })();
-    const TEXT = {
+    const TEXT: Record<string, string> = {
       memory: _l('记忆'),
       agent: _l('Agent'),
       ocr: _l('解析文件链接'),

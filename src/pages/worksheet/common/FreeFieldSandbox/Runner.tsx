@@ -27,7 +27,7 @@ const useRun = function ({ initialCode, ...rest }) {
 // 这里的 name 来自用户/AI 编写并存库的 FreeField 代码，是运行时字符串——不映射的话
 // name="Github" 会静默落到兜底的空白圆角竖矩形，不报错、不 warning，只有用户看到图标变空白。
 // 下表每个替代项都实测确认存在于 1.41.0。
-const REMOVED_BRAND_ICON_FALLBACK = {
+const REMOVED_BRAND_ICON_FALLBACK: Record<string, string> = {
   Chrome: 'Globe',
   Codepen: 'Code',
   Codesandbox: 'Package',

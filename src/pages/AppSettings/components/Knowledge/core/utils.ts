@@ -17,7 +17,7 @@ export const getFileIcon = fileName => {
 
   const ext = fileName.split('.').pop().toLowerCase();
 
-  const map = {
+  const map: Record<string, string> = {
     doc: 'fileIcon-word',
     docx: 'fileIcon-word',
     xls: 'fileIcon-excel',

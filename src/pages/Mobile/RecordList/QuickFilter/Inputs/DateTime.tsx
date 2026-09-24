@@ -31,7 +31,7 @@ const formatValue = (control, value, valueFormat: string) => {
     : '';
 };
 
-const precisionObj = { 5: 'year', 4: 'month', 3: 'date', 2: 'hour', 1: 'minite', 6: 'second' };
+const precisionObj: Record<number, string> = { 5: 'year', 4: 'month', 3: 'date', 2: 'hour', 1: 'minite', 6: 'second' };
 
 export default function DateTime(props) {
   const {

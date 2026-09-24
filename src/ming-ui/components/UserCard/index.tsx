@@ -130,7 +130,7 @@ const BusinessCardWrap = styled.div`
   }
 `;
 
-const DisplayFieldForNameInfo = {
+const DisplayFieldForNameInfo: Record<number, string> = {
   51: 'currentDepartmentName',
   52: 'currentDepartmentFullName',
   53: 'currentJobTitleName',

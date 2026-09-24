@@ -92,7 +92,7 @@ export const SUB_PERMISSION_TYPE = {
   MY: 101,
 };
 
-export const SUB_PERMISSION_NAME = {
+export const SUB_PERMISSION_NAME: Record<number, string> = {
   100: _l('可见的记录'),
   101: _l('自己拥有的记录'),
 };

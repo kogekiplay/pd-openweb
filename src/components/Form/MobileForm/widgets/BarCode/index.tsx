@@ -8,7 +8,7 @@ import { FROM } from '../../../core/config';
 import { getBarCodeValue } from '../../../core/utils';
 import { parseDataSource } from '../../tools/utils';
 
-const QRErrorCorrectLevel = {
+const QRErrorCorrectLevel: Record<string, number> = {
   '7%': 1,
   '15%': 0,
   '25%': 3,

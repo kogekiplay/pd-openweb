@@ -119,7 +119,7 @@ const declareConfirm = Component => {
         agreement: _l('服务协议'),
         privacy: _l('隐私政策'),
       };
-      const url = {
+      const url: Record<string, string> = {
         agreement: 'terms',
         privacy: 'privacy',
       };

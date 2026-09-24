@@ -115,14 +115,14 @@ const RuleList = styled.ul`
   }
 `;
 
-const TYPE_TO_TITLE = {
+const TYPE_TO_TITLE: Record<number, string> = {
   1: _l('编号'),
   2: _l('固定字符'),
   3: _l('引用字段'),
   4: _l('创建时间'),
 };
 
-const NUMBER_TYPE_TO_TEXT = {
+const NUMBER_TYPE_TO_TEXT: Record<number, string> = {
   0: _l('不重置'),
   1: _l('每天重置'),
   2: _l('每周重置'),
@@ -153,7 +153,7 @@ const TIME_MODE = [
   },
 ];
 
-const DEFAULT_PARA = { 4: { format: 'YYYYMMDD', type: 4 } };
+const DEFAULT_PARA: Record<number, { format: string; type: number }> = { 4: { format: 'YYYYMMDD', type: 4 } };
 
 function SortableItem({
   data,

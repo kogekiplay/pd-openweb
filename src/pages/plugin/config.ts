@@ -43,7 +43,10 @@ export const tabList = [
   { text: _l('组织'), value: 'project' },
 ];
 
-export const viewDetailTabList = {
+export const viewDetailTabList: Record<
+  string,
+  { project: { text: string; value: string }[]; myPlugin: { text: string; value: string }[] }
+> = {
   view: {
     project: [
       { text: _l('版本历史'), value: 'publishHistory' },
@@ -79,7 +82,7 @@ export const pluginConfigType = {
   exportHistory: 'exportHistory',
 };
 
-export const fileCheckErrorMsg = {
+export const fileCheckErrorMsg: Record<number, string> = {
   3: _l('密码不正确，请重新输入'),
   4: _l('重试次数超标'),
   5: _l('文件解析错误'),
@@ -93,7 +96,18 @@ export const PLUGIN_TYPE = {
   WORKFLOW: 'workflow',
 };
 
-export const pluginConstants = {
+export const pluginConstants: Record<
+  string,
+  {
+    headerTitle: string;
+    headerDescription: string;
+    supportLink: string;
+    myTabText: string;
+    publishDescription: string;
+    usageColumn2: string;
+    usageColumn3: string;
+  }
+> = {
   view: {
     headerTitle: _l('视图插件'),
     headerDescription: _l('制作和管理视图插件，自由扩展工作表视图功能'),

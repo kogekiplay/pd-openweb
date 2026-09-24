@@ -338,7 +338,7 @@ export default function AppList(props) {
 
     if (dataKey === 'app') {
       //埋点
-      const typeObj = { 0: 'worksheet', 1: 'customPage', 2: 'app', 3: 'app' };
+      const typeObj: Record<number, string> = { 0: 'worksheet', 1: 'customPage', 2: 'app', 3: 'app' };
       addBehaviorLog(typeObj[item.itemType], item.itemType === 3 || item.itemType === 2 ? item.appId : item.itemId);
 
       const parameter = [

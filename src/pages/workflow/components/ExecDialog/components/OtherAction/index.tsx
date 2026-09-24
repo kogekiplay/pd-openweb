@@ -455,7 +455,7 @@ export default class OtherAction extends Component<any, any> {
     const { projectId, action, data } = this.props;
     const { nextUserRange } = this.state;
     const { operationUserRange } = data;
-    const TYPES = {
+    const TYPES: Record<string, number> = {
       transferApprove: 6,
       addApprove: 16,
       after: 7,

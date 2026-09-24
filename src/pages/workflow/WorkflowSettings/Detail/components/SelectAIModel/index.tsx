@@ -23,7 +23,7 @@ export default ({
   const [modelParameter, setModelParameter] = useState({});
 
   const renderModelInfo = info => {
-    const ICONS = {
+    const ICONS: Record<number, { icon: string; color: string }> = {
       0: { icon: 'icon-AI_Agent', color: '#2196f3' },
       1: { icon: 'icon-chatgpt', color: '#000' },
       2: { icon: 'icon-Qwen', color: '#615ced' },

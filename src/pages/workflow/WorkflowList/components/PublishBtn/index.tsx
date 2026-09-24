@@ -7,7 +7,7 @@ import { Switch } from 'ming-ui';
 import process from '../../../api/process';
 import PublishErrorDialog from '../../../components/PublishErrorDialog';
 
-const publishStatus2Text = {
+const publishStatus2Text: Record<number, string> = {
   0: _l('创建'),
   1: _l('更新未发布'),
   2: _l('发布'),

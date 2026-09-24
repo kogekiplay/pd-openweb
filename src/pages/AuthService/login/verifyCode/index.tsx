@@ -66,7 +66,7 @@ export default function (props) {
       })
       .then(res => {
         const { actionResult } = res;
-        const errorMessages = {
+        const errorMessages: Record<number, string> = {
           8: _l('发送验证码过于频繁'),
           5: _l('账号不正确'),
           21: _l('当前账户已锁定，验证码发送失败'),

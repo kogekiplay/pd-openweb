@@ -17,7 +17,7 @@ import RefreshBtn from './components/RefreshBtn';
 import { getValueStyle } from './tools/utils';
 import './style.less';
 
-const CONTROL_HEIGHT_MAP = {
+const CONTROL_HEIGHT_MAP: Record<string, string> = {
   '1em': '39px',
   '1.2em': '44px',
   '1.4em': '49px',

@@ -7,7 +7,7 @@ import { Button, FlexCenter, RevertButton, Text } from 'worksheet/styled';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
 import ConfigureHierarchyView from './configureHierarchyView';
 
-const VIEW_TYPE_INFO = {
+const VIEW_TYPE_INFO: Record<string, { icon: string; color: string; title: string; detail: string }> = {
   1: {
     icon: 'kanban',
     color: '#00BCD4',

@@ -13,7 +13,7 @@ export const UPGRADE_DETAIL_TYPE_LIST = [
   { type: 'updateView', name: _l('更新视图') },
 ];
 
-export const UPGRADE_ERRORMSG = {
+export const UPGRADE_ERRORMSG: Record<number, string> = {
   2: _l('导入失败'),
   3: _l('密码错误'),
   4: _l('重试次数超标'),
@@ -45,7 +45,7 @@ export const AdvancedConfig = [
   },
 ];
 
-export const ERROR_CODE = {
+export const ERROR_CODE: Record<number, string> = {
   6: _l('工作表数量超标'),
   13: _l('上传的文件不能来源于同一个应用'),
   20: _l('业务模块类型错误'),

@@ -1290,7 +1290,7 @@ export default class Condition extends Component<any, any> {
 
     // 人员 || 部门 || 组织角色
     if (_.includes([26, 27, 48, 10000001], filedTypeId)) {
-      const KEY = {
+      const KEY: Record<number, { id: string; name: string }> = {
         26: { id: 'accountId', name: 'fullname' },
         27: { id: 'departmentId', name: 'departmentName' },
         48: { id: 'organizeId', name: 'organizeName' },

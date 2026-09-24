@@ -298,8 +298,8 @@ export class UploadFileWrapper extends Component<any, any> {
         // type: '1'->图片, '2'->文档 ,‘3’-> 音频 ,‘4’->视频 ,  '0'->自定义
 
         // 上传附件
-        const accept = { 0: '*', 1: 'image/*', 2: 'video/*' };
-        const fileTypeObj = { 1: 'image/*', 2: 'application/*', 3: 'audio/*', 4: 'video/*' };
+        const accept: Record<number, string> = { 0: '*', 1: 'image/*', 2: 'video/*' };
+        const fileTypeObj: Record<number, string> = { 1: 'image/*', 2: 'application/*', 3: 'audio/*', 4: 'video/*' };
 
         if (ele) {
           // 拍照 or 拍摄

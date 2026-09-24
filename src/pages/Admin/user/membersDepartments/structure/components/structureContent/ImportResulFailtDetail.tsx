@@ -81,7 +81,7 @@ const ImportError = styled.div`
   }
 `;
 
-const userTemplatePaths = {
+const userTemplatePaths: Record<number, string> = {
   0: '/staticfiles/template/importUserTemplate/导入用户.xlsx',
   1: '/staticfiles/template/importUserTemplate/import user.xlsx',
   2: '/staticfiles/template/importUserTemplate/ユーザーをインポートする.xlsx',

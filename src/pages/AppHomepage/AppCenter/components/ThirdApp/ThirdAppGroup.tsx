@@ -5,7 +5,7 @@ import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import placeholderPic from '../../assets/thirdAppPlaceholder.png';
 
-const TYPE_TO_TITLE = {
+const TYPE_TO_TITLE: Record<string, string> = {
   account: _l('个人应用'),
   top: _l('置顶应用'),
 };

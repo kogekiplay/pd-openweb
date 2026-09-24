@@ -51,7 +51,7 @@ const getDefaultParameters = () => {
   };
 };
 
-const PROCESS_TYPE = {
+const PROCESS_TYPE: Record<number, { title: string; desc: string }> = {
   1: {
     title: _l('工作流'),
     desc: _l('节点'),
@@ -62,7 +62,7 @@ const PROCESS_TYPE = {
   },
 };
 
-const PLACEHOLDER = {
+const PLACEHOLDER: Record<string, string> = {
   2: _l('默认值'),
   6: _l('默认值'),
   9: _l('默认选项值'),

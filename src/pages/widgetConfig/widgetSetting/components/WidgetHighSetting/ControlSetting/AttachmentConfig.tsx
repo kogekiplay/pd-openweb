@@ -185,7 +185,7 @@ const MASK_FONT_OPTIONS = [
   { text: _l('米黑'), value: '5' },
 ];
 
-const MASK_SIZE_OPTIONS = {
+const MASK_SIZE_OPTIONS: Record<number, string> = {
   0: '18',
   1: '28',
   2: '68',

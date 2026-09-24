@@ -2,7 +2,7 @@ import { ensureThirdPartyIntegrationFlags } from './env';
 
 const DEFAULT_UPLOAD_HOST = 'https://upload.qiniup.com';
 const DEFAULT_LANG = 'zh-Hans';
-const LANG_PATH_MAP = {
+const LANG_PATH_MAP: Record<string, string> = {
   en: 'en',
   'zh-Hans': 'zh_Hans',
   'zh-Hant': 'zh_Hant',
@@ -10,7 +10,7 @@ const LANG_PATH_MAP = {
   th: 'th',
   ms: 'ms',
 };
-const LANG_ALIAS_MAP = {
+const LANG_ALIAS_MAP: Record<string, string> = {
   zh: 'zh-Hans',
   'zh-cn': 'zh-Hans',
   zh_cn: 'zh-Hans',

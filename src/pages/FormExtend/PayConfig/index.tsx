@@ -20,7 +20,7 @@ import '../common/payAndInvoice.less';
 import './index.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
-const PAYMENT_CHANNEL = { 0: _l('聚合支付'), 2: _l('微信支付'), 1: _l('支付宝支付') };
+const PAYMENT_CHANNEL: Record<number, string> = { 0: _l('聚合支付'), 2: _l('微信支付'), 1: _l('支付宝支付') };
 
 const filterDeleteFields = (fieldMaps, controls) => {
   fieldMaps = !_.isEmpty(fieldMaps)

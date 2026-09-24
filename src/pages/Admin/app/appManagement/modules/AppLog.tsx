@@ -23,7 +23,7 @@ const optionTypeData = [
   { label: _l('恢复'), type: 8 },
 ];
 
-const optionTypeIcon = {
+const optionTypeIcon: Record<number, string> = {
   1: 'icon-add1',
   2: 'icon-ic_toggle_on',
   3: 'icon-ic_toggle_off',

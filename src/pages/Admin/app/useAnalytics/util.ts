@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { formatFileSize } from 'src/utils/common';
 
-const subTypeNames = {
+const subTypeNames: Record<number, string> = {
   1: _l('成员'),
   2: _l('外部门户用户'),
   3: _l('工作流'),

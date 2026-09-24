@@ -66,7 +66,7 @@ const Box = styled.div`
   }
 `;
 
-const LIST_URL_PRE = {
+const LIST_URL_PRE: Record<string, { pre: string; idKey: string }> = {
   post: {
     pre: '/feeddetail?itemID=',
     idKey: 'postID',

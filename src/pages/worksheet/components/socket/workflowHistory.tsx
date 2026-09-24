@@ -7,7 +7,7 @@ import { Dialog } from 'ming-ui';
 import process from 'src/pages/workflow/api/process';
 import { pathCompletion } from 'src/utils/common';
 
-const STATUS_TEXT = {
+const STATUS_TEXT: Record<number, string> = {
   1: _l('执行成功'),
   2: _l('执行成功'),
   3: _l('执行失败'),

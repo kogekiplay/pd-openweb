@@ -10,7 +10,7 @@ import './index.less';
 
 const { Option } = Select;
 
-const RULES = {
+const RULES: Record<number, ({ value: number; txt: string } | { value: string; txt: string })[]> = {
   0: [
     { value: 1, txt: _l('A → Z%02058') },
     { value: -1, txt: _l('Z → A%02059') },

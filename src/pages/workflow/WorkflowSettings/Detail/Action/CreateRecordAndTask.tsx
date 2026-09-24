@@ -78,7 +78,7 @@ export default class CreateRecordAndTask extends Component<any, CreateRecordAndT
         className: 'textSecondary',
       },
     ];
-    const invoiceMessage = {
+    const invoiceMessage: Record<string, string> = {
       amount: _l('开票金额不是 0 或者 负数'),
       productId: _l('组织后台上传的商品管理表中的税收服务简称'),
       price: _l('单价为含税单价'),

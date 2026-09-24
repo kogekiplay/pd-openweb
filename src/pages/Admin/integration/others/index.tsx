@@ -16,7 +16,7 @@ import { accountTxtInfo, formListBottom, formListTop, loginSetting } from './for
 import ViewKeyDialog from './ViewKey';
 import './index.less';
 
-const headerTitle = {
+const headerTitle: Record<string, string> = {
   index: _l('其他'),
   effective: _l('LDAP登录'),
   sso: _l('SSO'),

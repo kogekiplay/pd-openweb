@@ -54,7 +54,7 @@ const parseValue = value => {
 };
 
 const getPlaceHolder = data => {
-  const text = {
+  const text: Record<number, string> = {
     14: _l('请选择'),
     16: _l('请输入日期'),
     26: _l('请输入人员'),

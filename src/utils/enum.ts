@@ -5,7 +5,7 @@ qA2xbYH8/WyKTraCRJT3Hn61UrI4Eac4YVxa1CJ8KaTQtIeZBoXHIW0r5XyhBwYe
 NkSun+OFN+YBoJvCXwIDAQAB
 -----END PUBLIC KEY-----`;
 
-export const APPLICATION_ICON = {
+export const APPLICATION_ICON: Record<string, string> = {
   system: 'chat_system',
   post: 'chat_post',
   task: 'chat_task',

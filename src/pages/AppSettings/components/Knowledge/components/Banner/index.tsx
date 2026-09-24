@@ -14,7 +14,7 @@ const typeStyleMap = {
   `,
 };
 
-const iconColorMap = {
+const iconColorMap: Record<string, string> = {
   warning: 'var(--color-warning)',
   error: 'var(--color-error)',
   primary: 'var(--color-primary)',

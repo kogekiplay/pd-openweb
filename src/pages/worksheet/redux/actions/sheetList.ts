@@ -592,12 +592,12 @@ export function addAppSection(args) {
   };
 }
 
-const iconMap = {
+const iconMap: Record<string, string> = {
   worksheet: 'table',
   customPage: 'dashboard',
   chatbot: 'sys_17_6_reddit',
 };
-const enumTypeMap = {
+const enumTypeMap: Record<string, number> = {
   worksheet: 0,
   customPage: 1,
   chatbot: 3,

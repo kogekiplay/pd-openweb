@@ -120,7 +120,7 @@ const AvatarWrap = styled.div`
   background: var(--color-background-secondary);
 `;
 const PAGE_SIZE = 50;
-const SOURCE_TYPE_LABEL = {
+const SOURCE_TYPE_LABEL: Record<number, string> = {
   1: _l('界面操作'),
   3: _l('个人访问令牌'),
   4: _l('应用密钥'),

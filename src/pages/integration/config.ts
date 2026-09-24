@@ -85,7 +85,7 @@ export const TYPENODE = [
   { txt: _l('使用 Python 语言'), actionId: '103', typeId: 14, name: 'Python' },
 ];
 
-export const publishStatus2Text = {
+export const publishStatus2Text: Record<number, string> = {
   0: _l('创建'),
   1: _l('更新未发布'),
   2: _l('发布'),

@@ -42,7 +42,7 @@ const getControl = data => {
 
   // 时间类型控件，找到刻度最小的控件显示
   if ([WIDGETS_TO_API_TYPE_ENUM.DATE].includes(dataType)) {
-    const type = {
+    const type: Record<number, number> = {
       5: 3,
       4: 2,
       3: 1,
@@ -52,7 +52,7 @@ const getControl = data => {
   }
 
   if ([WIDGETS_TO_API_TYPE_ENUM.DATE_TIME].includes(dataType)) {
-    const type = {
+    const type: Record<number, number> = {
       2: 3,
       1: 2,
       6: 1,

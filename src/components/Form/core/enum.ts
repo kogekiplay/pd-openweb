@@ -152,7 +152,7 @@ export const permitList = {
   approveDetailsSwitch: 41, // 审批流转详情
 };
 
-export const UNIT_TO_TEXT = {
+export const UNIT_TO_TEXT: Record<number, string> = {
   1: _l('分%04023'),
   2: _l('时%04022'),
   3: _l('天%04021'),

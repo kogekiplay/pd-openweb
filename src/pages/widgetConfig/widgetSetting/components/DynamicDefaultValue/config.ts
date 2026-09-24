@@ -75,7 +75,7 @@ export const SYSTEM_TIME = [
 
 export const SYSTEM_USER = [{ controlId: 'caid', controlName: _l('创建人'), type: 26 }];
 
-export const SYSTEM_FIELD_TO_TEXT = {
+export const SYSTEM_FIELD_TO_TEXT: Record<string, string> = {
   ctime: _l('创建时间'),
   caid: _l('创建人'),
   utime: _l('最近修改时间'),
@@ -181,7 +181,7 @@ export const CHECKBOX_TYPES = [
   { id: '1', text: _l('选中') },
 ];
 
-export const CONTROL_TYPE = {
+export const CONTROL_TYPE: Record<number, string> = {
   1: 'text',
   2: 'text',
   3: 'phone',
@@ -272,7 +272,7 @@ export const CURRENT_TYPES = {
   6: CUR_SEARCH_TYPES,
 };
 
-export const CUSTOM_PHP_TYPES = {
+export const CUSTOM_PHP_TYPES: Record<number, { key: string; id: string; text: string }[]> = {
   2: [{ key: 'codeResult', id: 'codeResult', text: _l('扫码结果') }],
   16: [{ key: 'triggerTime', id: 'triggerTime', text: _l('触发时间') }],
   26: [{ key: 'triggerUser', id: 'triggerUser', text: _l('触发者') }],
@@ -280,7 +280,7 @@ export const CUSTOM_PHP_TYPES = {
   48: [{ key: 'triggerOrg', id: 'triggerOrg', text: _l('触发者所在的角色') }],
 };
 
-export const DEFAULT_TYPES = {
+export const DEFAULT_TYPES: Record<number, string> = {
   0: 'dynamiccustom',
   1: 'defaultfunc',
   2: 'dynamicsrc',

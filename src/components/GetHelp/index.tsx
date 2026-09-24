@@ -23,7 +23,7 @@ const PopupWrapper = styled.div`
   }
 `;
 
-const textInfo = {
+const textInfo: Record<number, { title: string; desc: string; okText: string }> = {
   1: { title: _l('反馈'), desc: _l('描述使用过程中遇到的问题，反馈通知给流程拥有者'), okText: _l('发送') },
   2: {
     title: _l('反馈给平台'),

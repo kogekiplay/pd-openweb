@@ -252,7 +252,7 @@ export default class MobileSet extends React.Component<any, any> {
 
   renderCon = () => {
     const { appshowtype } = this.state;
-    const iconMaps = {
+    const iconMaps: Record<number, string> = {
       1: 'App_Card1',
       2: 'App_Card2',
       0: 'App_Card3',

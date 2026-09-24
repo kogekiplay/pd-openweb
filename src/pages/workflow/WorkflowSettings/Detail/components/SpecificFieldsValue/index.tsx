@@ -126,7 +126,7 @@ export default class SpecificFieldsValue extends Component<any, SpecificFieldsVa
 
   renderNumber() {
     const { type, data, updateSource, hasOtherField, min, max, isDecimal, dot } = this.props;
-    const PLACEHOLDER = {
+    const PLACEHOLDER: Record<string, string> = {
       numberFieldValue: _l('填写天数'),
       hourFieldValue: _l('填写小时数'),
       minuteFieldValue: _l('填写分钟数'),

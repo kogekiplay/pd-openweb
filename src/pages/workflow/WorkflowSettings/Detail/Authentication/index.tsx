@@ -384,7 +384,7 @@ export default class Authentication extends Component<any, any> {
    */
   renderOAuth2Parameter(item, index: number, key: string) {
     const { data } = this.state;
-    const TABS = {
+    const TABS: Record<string, { sourceKey: string; btnText: string }> = {
       Params: {
         sourceKey: 'params',
         btnText: '+ Query Param',

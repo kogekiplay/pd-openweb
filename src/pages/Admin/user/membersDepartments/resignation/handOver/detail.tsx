@@ -34,7 +34,7 @@ const typeNames = {
   [TYPES.WORKSHEET_ALL]: _l('工作表'),
 };
 
-const oaTypeNames = {
+const oaTypeNames: Record<number, string> = {
   1: _l('申请记录'),
   2: _l('审批流程'),
   3: _l('审批角色'),

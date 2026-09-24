@@ -11,7 +11,7 @@ import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import { mdAppResponse } from 'src/utils/project';
 import { Wrap } from './style.jsx';
 
-const actionMsg = {
+const actionMsg: Record<number, string> = {
   0: _l('操作失败'),
   1: _l('操作成功'),
   2: _l('验证密码错误！'),

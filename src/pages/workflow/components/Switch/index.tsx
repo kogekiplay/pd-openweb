@@ -5,7 +5,7 @@ import { bool, func, string } from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 import './index.less';
 
-const STATUS2TEXT = {
+const STATUS2TEXT: Record<string, string> = {
   active: _l('运行中%03001'),
   close: _l('已关闭%03002'),
 };

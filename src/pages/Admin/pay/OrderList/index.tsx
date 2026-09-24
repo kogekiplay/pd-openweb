@@ -12,7 +12,7 @@ import { TABS } from '../config';
 import RefundOrder from './components/RefundOrder';
 import TransactionDetails from './components/TransactionDetails';
 
-const Comp = {
+const Comp: Record<string, typeof RefundOrder | typeof TransactionDetails> = {
   transaction: TransactionDetails,
   refund: RefundOrder,
 };

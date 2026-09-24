@@ -81,7 +81,7 @@ const sameHeader = [
   },
 ];
 
-export const MENU_LIST_APPENDIX_HEADER = {
+export const MENU_LIST_APPENDIX_HEADER: Record<string, { title: string; key: string; width: number }[]> = {
   Filter: [
     {
       title: _l('参数'),

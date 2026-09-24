@@ -4,7 +4,7 @@ import { generateRandomPassword } from 'src/utils/common';
 import './index.less';
 
 const TENCENT_CAPTCHA_SCRIPT_URL = 'https://turing.captcha.qcloud.com/TJCaptcha.js';
-const LANG_MAPS = {
+const LANG_MAPS: Record<string, string> = {
   'zh-Hans': 'zh-cn',
   'zh-Hant': 'zh-hk',
   ja: 'en',

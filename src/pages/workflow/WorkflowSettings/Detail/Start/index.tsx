@@ -371,7 +371,7 @@ export default class Start extends Component<any, any> {
    * 验证定时触发配置是否正确
    */
   checkTimingTriggerConfig = config => {
-    const errorText = {
+    const errorText: Record<string, string> = {
       minute: _l('分钟'),
       hour: _l('小时'),
       day: _l('天'),

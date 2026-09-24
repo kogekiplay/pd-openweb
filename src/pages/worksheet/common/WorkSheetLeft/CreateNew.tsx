@@ -70,7 +70,7 @@ const CreateNewContent = styled.div`
 
 const remarkMaxLength = 150;
 
-const createSheetOrCustomPageConfig = {
+const createSheetOrCustomPageConfig: Record<string, { headerText: string; placeholder: string; text: string }> = {
   customPage: {
     headerText: _l('新建自定义页面'),
     placeholder: _l('例如: 首页、仪表盘'),

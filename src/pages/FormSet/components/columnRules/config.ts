@@ -715,7 +715,7 @@ export const filterData = (
   return dataList;
 };
 
-const OCR_ICON_WHITELIST = {
+const OCR_ICON_WHITELIST: Record<number, string> = {
   1: 'ocr',
   2: 'ocr_id_card',
   3: 'ocr_invoice',

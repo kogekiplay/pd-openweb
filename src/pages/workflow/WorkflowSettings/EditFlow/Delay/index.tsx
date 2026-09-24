@@ -4,7 +4,7 @@ import moment from 'moment';
 import { TIME_TYPE_NAME } from '../../enum';
 import { CreateNode, NodeOperate } from '../components';
 
-const EXECUTE_TYPE_TEXT = {
+const EXECUTE_TYPE_TEXT: Record<number, string> = {
   0: _l('当天'),
   1: _l('之前'),
   2: _l('之后'),

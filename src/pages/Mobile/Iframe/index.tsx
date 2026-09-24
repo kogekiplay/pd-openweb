@@ -2,7 +2,7 @@ import { Component, Fragment } from 'react';
 import DocumentTitle from 'mobile/components/DocumentTitle';
 import Back from '../components/Back';
 
-const data = {
+const data: Record<string, { url: string; title: string }> = {
   help: {
     url: window.platformENV.isOverseas ? 'https://help.nocoly.com' : 'https://help.mingdao.com',
     title: _l('帮助中心'),

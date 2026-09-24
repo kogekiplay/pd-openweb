@@ -9,7 +9,7 @@ import Back from '../../components/Back';
 import * as actions from '../redux/actions';
 import './index.less';
 
-const groupTitleList = {
+const groupTitleList: Record<string, string> = {
   markedGroup: _l('星标'),
   personalGroups: _l('个人'),
   projectGroups: _l('组织'),

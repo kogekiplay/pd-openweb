@@ -8,7 +8,7 @@ export { reportTypes };
 /**
  * 图表颜色集合 (旧的颜色配置)
  */
-export const colorGroup = {
+export const colorGroup: Record<number, { name: string; value: string[] }> = {
   0: {
     name: _l('经典'),
     value: [

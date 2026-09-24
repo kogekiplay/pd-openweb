@@ -1,4 +1,4 @@
-export const MODULE_NUMBER_TO_TYPE = {
+export const MODULE_NUMBER_TO_TYPE: Record<number, string> = {
   10: 'app',
   20: 'worksheet',
   21: 'sheetRecord',
@@ -9,7 +9,7 @@ export const MODULE_NUMBER_TO_TYPE = {
   100: 'portalupgrade',
 };
 
-export const VERSION = {
+export const VERSION: Record<number, string | { 0: string; 1: string; 2: string; 3: string }> = {
   // 免费
   0: 'overdue',
   // 正式版

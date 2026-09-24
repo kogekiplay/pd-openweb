@@ -18,7 +18,7 @@ const recordObj = {
   value: 'rowid',
 };
 
-const handleEnumText = {
+const handleEnumText: Record<number, string> = {
   1: _l('跳过'),
   2: _l('覆盖'),
   3: _l('仅更新'),
@@ -768,7 +768,7 @@ export default class ConfigControl extends Component<any, any> {
       { text: _l('覆盖'), value: 2 },
       { text: _l('仅更新，不新增记录'), value: 3 },
     ];
-    const ERROR_SKIP = {
+    const ERROR_SKIP: Record<number, { text: string; desc: string }> = {
       1: { text: _l('必填'), desc: _l('为空') },
       2: { text: _l('数值'), desc: _l('格式错误') },
       3: { text: _l('金额'), desc: _l('格式错误') },

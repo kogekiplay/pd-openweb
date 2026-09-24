@@ -288,7 +288,7 @@ export default class SecuritySetting extends Component<any, any> {
       _.includes([2, 3], md.global?.SysSettings?.twoFactorAuthenticationSwitchType);
     // 构建优先级顺序文案：TOTP > 配置的类型 > 其他类型
     const priorityType = md.global?.SysSettings?.twoFactorAuthenticationPriorityType;
-    const priorityTypeMap = {
+    const priorityTypeMap: Record<number, string> = {
       1: _l('短信'),
       2: _l('邮箱'),
       3: _l('TOTP'),

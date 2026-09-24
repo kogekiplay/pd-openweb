@@ -258,7 +258,7 @@ export const CodeSnippetEdit = ({
   );
 };
 
-const TITLE = {
+const TITLE: Record<number, string> = {
   0: _l('选择代码片段'),
   1: _l('插入JavaScript代码片段'),
   2: _l('插入Python代码片段'),

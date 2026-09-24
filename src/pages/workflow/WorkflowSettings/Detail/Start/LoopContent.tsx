@@ -477,7 +477,7 @@ export default class LoopContent extends Component<any, LoopContentState> {
    */
   renderRangeContent(key: string) {
     const { data } = this.props;
-    const KEYS_ENUM = {
+    const KEYS_ENUM: Record<string, { min: number; max: number }> = {
       minute: {
         min: 0,
         max: 59,
@@ -574,7 +574,7 @@ export default class LoopContent extends Component<any, LoopContentState> {
   renderFixedContent(key: string) {
     const { data } = this.props;
     const values = data.config[key].values;
-    const KEYS_ENUM = {
+    const KEYS_ENUM: Record<string, { min: number; max: number }> = {
       minute: {
         min: 0,
         max: 59,
@@ -669,7 +669,7 @@ export default class LoopContent extends Component<any, LoopContentState> {
    */
   renderIncrementContent(key: string) {
     const { data } = this.props;
-    const KEYS_ENUM = {
+    const KEYS_ENUM: Record<string, { text1: string; text2: string; min: number; max: number }> = {
       minute: {
         text1: _l('分开始，每隔'),
         text2: _l('分钟'),

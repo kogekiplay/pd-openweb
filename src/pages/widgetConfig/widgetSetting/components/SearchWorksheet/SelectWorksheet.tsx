@@ -20,7 +20,7 @@ const Config: { text: string; key: 'app' | 'sheet'; disabled?: boolean; filter?:
   },
 ];
 
-const idContrast = {
+const idContrast: Record<string, string> = {
   app: 'appId',
   sheet: 'sheetId',
 };

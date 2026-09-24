@@ -41,7 +41,7 @@ const initialConfig = [
   },
 ];
 
-const idContrast = {
+const idContrast: Record<string, string> = {
   app: 'appId',
   sheet: 'sheetId',
   view: 'viewId',

@@ -38,7 +38,7 @@ const FillDialogWrap = styled(Dialog)`
   }
 `;
 
-const ALERT_TEXT = {
+const ALERT_TEXT: Record<string, string> = {
   title: _l('请填写标题'),
   content: _l('请填写详细内容'),
   buttonName: _l('请填写按钮名称'),

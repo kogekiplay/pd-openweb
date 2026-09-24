@@ -8,7 +8,7 @@ import { getRequest } from 'src/utils/common';
 import EditLingual from './EditLingual';
 import LingualList from './LingualList';
 
-const keys = {
+const keys: Record<string, string> = {
   'zh-Hans': 'zh_hansName',
   'zh-Hant': 'zh_hantName',
   en: 'enName',

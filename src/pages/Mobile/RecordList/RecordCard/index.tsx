@@ -42,7 +42,7 @@ function getCoverControlData(data) {
   );
 }
 
-const coverTypes = {
+const coverTypes: Record<number, string> = {
   0: 'fill',
   1: 'full',
   2: 'circle',

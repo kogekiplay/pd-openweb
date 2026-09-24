@@ -113,7 +113,7 @@ export default class FolderTemplate extends Component<any, any> {
   override render() {
     const templateType = this.state.templateType;
     const templates = this.state.templates;
-    const TYPE_NAME = {
+    const TYPE_NAME: Record<string, string> = {
       '-1': _l('我的模板'),
       0: _l('常用模板'),
       1: _l('产品研发'),

@@ -25,7 +25,7 @@ export const downloadFile = ({ url, params, exportFileName, callback = () => {} 
 };
 
 // 平台类型与系统设置的映射
-const PLATFORM_HIDE_MAP = {
+const PLATFORM_HIDE_MAP: Record<string, string> = {
   microsoft: 'hideMicrosoftEntra',
   workwx: 'hideWorkWeixin',
   ding: 'hideDingding',

@@ -63,7 +63,7 @@ const NOTICE_METHOD_OPTIONS = [
   { value: '3', label: _l('邮件') },
 ];
 
-const ALERT_TIP = {
+const ALERT_TIP: Record<string, string> = {
   workflow: _l('请输入整数，数值必须 大于0，小于 100001'),
   balance: _l('输入金额错误，输入的金额范围在10到100,000之间'),
 };

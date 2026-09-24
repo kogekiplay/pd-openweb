@@ -172,7 +172,7 @@ const ContentBox = styled.div`
   }
 `;
 
-const PERFORMANCE_ENUM = {
+const PERFORMANCE_ENUM: Record<number, string> = {
   1: _l('高'),
   2: _l('中'),
   3: _l('低'),
@@ -226,7 +226,7 @@ const getModelPriceValue = (model, field: string) => {
 };
 
 // 内置模型描述配置（以模型名称 name 作为唯一标识）
-const MODEL_DESCRIPTIONS = {
+const MODEL_DESCRIPTIONS: Record<string, string> = {
   // OpenAI 模型
   'GPT-5': _l('高度通用，理解能力强，适合长对话及复杂推理任务，支持丰富的图像与工具交互。'),
   'GPT-5-mini': _l('性价比高，适合快速响应的通用任务，处理高并发时表现优异。'),
@@ -493,7 +493,7 @@ class SelectAIModelDialog extends Component<any, any> {
   }
 
   renderModelIcon(developer) {
-    const ICONS = {
+    const ICONS: Record<number, { icon: string; color: string }> = {
       1: {
         icon: 'icon-chatgpt',
         color: '#000',

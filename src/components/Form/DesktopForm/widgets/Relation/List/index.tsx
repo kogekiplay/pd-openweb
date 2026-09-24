@@ -7,7 +7,7 @@ import { getClassNameByExt } from 'src/utils/common';
 import { FROM } from '../../../../core/config';
 import './style.less';
 
-const Icons = {
+const Icons: Record<number, string> = {
   0: '',
   1: 'icon-task-responsible',
   2: 'icon-knowledge_file',

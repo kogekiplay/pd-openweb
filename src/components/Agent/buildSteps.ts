@@ -14,7 +14,7 @@ export const BUILD_PARALLEL_STEP_IDS = new Set([
   'step-build-workflows',
 ]);
 
-export const BUILD_STEPS = {
+export const BUILD_STEPS: Record<string, { title: string; kind: string }> = {
   'step-create-app': { title: _l('应用'), kind: 'step' },
   // 应用描述：create_app 后由 async-agent 后台异步补 remark/desc（fire-and-forget）。纯元数据美化、
   // 不阻塞主流程、无内容产出，进度条不单独展示（BuildProgress.renderSimpleStep 对其 return null）；

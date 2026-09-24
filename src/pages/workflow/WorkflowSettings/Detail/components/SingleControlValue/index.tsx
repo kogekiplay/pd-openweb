@@ -886,8 +886,8 @@ export default class SingleControlValue extends Component<any, any> {
           _.find(controls, obj => obj.controlId === item.fieldId),
           'advancedSetting.showtype',
         ) || 1;
-      const mode = { 3: 'date', 4: 'month', 5: 'year' };
-      const timeMode = { 1: 'minute', 2: 'hour', 6: 'second' };
+      const mode: Record<number, string> = { 3: 'date', 4: 'month', 5: 'year' };
+      const timeMode: Record<number, string> = { 1: 'minute', 2: 'hour', 6: 'second' };
 
       return (
         <div className="mTop8 flexRow relative">
@@ -1031,7 +1031,7 @@ export default class SingleControlValue extends Component<any, any> {
     // 人员 || 部门 || 组织角色
     if (item.type === 26 || item.type === 27 || item.type === 48) {
       const unique = (_.find(controls, obj => obj.controlId === item.fieldId) || {}).enumDefault === 0;
-      const TYPES = {
+      const TYPES: Record<number, { name: string; id: string; placeholder: string }> = {
         26: {
           name: 'fullName',
           id: 'accountId',

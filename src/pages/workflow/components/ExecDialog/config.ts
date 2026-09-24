@@ -1,4 +1,7 @@
-export const ACTION_TYPES = {
+export const ACTION_TYPES: Record<
+  number,
+  { id: string; icon: { 1: string; 5: string; 6: string; 7: string } } | { id: string; icon: string }
+> = {
   0: {
     id: 'default',
     icon: {
@@ -22,7 +25,7 @@ export const ACTION_TYPES = {
   },
 };
 
-export const ACTION_LIST = {
+export const ACTION_LIST: Record<number, { id: string; text: string; icon: string; sort: number }> = {
   3: { id: 'revoke', text: _l('撤回'), icon: 'repeal-o', sort: 3 },
   4: { id: 'pass', text: _l('同意'), icon: 'done', sort: 1 },
   5: { id: 'overrule', text: _l('拒绝'), icon: 'clear', sort: 2 },
@@ -37,12 +40,12 @@ export const ACTION_LIST = {
   20: { id: 'taskRevokeEntrust', text: _l('撤回委托'), icon: 'repeal-o', sort: 11 },
 };
 
-export const OPERATION_LIST = {
+export const OPERATION_LIST: Record<number, { id: string; text: string; icon: string }> = {
   12: { id: 'print', text: _l('打印'), icon: 'print' },
   16: { id: 'addApprove', text: _l('添加审批人'), icon: 'group_add' },
 };
 
-export const MOBILE_OPERATION_LIST = {
+export const MOBILE_OPERATION_LIST: Record<number, { id: string; text: string; icon: string }> = {
   6: { id: 'transferApprove', text: _l('转审'), icon: 'swap_horiz' },
   7: { id: 'sign', text: _l('加签'), icon: 'countersign' },
   10: { id: 'transfer', text: _l('转交'), icon: 'sp_post_exchange_white' },
@@ -95,7 +98,7 @@ export const ACTION_TO_TEXT = {
   },
 };
 
-export const STATUS_ERROR_MESSAGE = {
+export const STATUS_ERROR_MESSAGE: Record<number, string> = {
   20001: _l('动作节点执行失败'),
   20018: _l('节点对象已删除'),
   30001: _l('当前流程已删除'),
@@ -109,7 +112,7 @@ export const STATUS_ERROR_MESSAGE = {
 /**
  * 操作类型对应的后台接口名
  */
-export const ACTION_TO_METHOD = {
+export const ACTION_TO_METHOD: Record<string, string> = {
   before: 'signTask',
   after: 'signTask',
   transferApprove: 'forward',

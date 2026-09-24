@@ -22,7 +22,14 @@ const Row = styled.div`
   }
 `;
 
-const fieldsConfig = {
+const fieldsConfig: Record<
+  string,
+  (
+    | { isTitle: boolean; title: string }
+    | { controlId: string; controlName: string; type: number[] }
+    | { controlId: string; controlName: string; type: number[]; desc: string }
+  )[]
+> = {
   pay: [
     { isTitle: true, title: _l('订单明细（注意：不能选择已在公开表单配置过映射的字段）') },
     { controlId: 'orderNo', controlName: _l('订单编号'), type: [2] },

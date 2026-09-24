@@ -131,7 +131,7 @@ export default class HistoryDetail extends Component<any, any> {
     });
 
     const isApproval = appType === 9 && type === 0;
-    const ERROR_LABELS = {
+    const ERROR_LABELS: Record<string, string> = {
       102: _l('发送邮件，'),
     };
 
@@ -375,7 +375,7 @@ export default class HistoryDetail extends Component<any, any> {
     const { cause, nodeName, causeMsg } = instanceLog;
     const { status } = FLOW_STATUS[data.status];
     const { color, bgColor } = STATUS2COLOR[status];
-    const resultTypeText = {
+    const resultTypeText: Record<number, string> = {
       1: _l('同意'),
       2: _l('拒绝'),
       3: _l('有数据'),

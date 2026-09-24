@@ -1050,7 +1050,7 @@ export const functions = {
   },
 };
 
-export const functionTypes = {
+export const functionTypes: Record<string, string> = {
   math: _l('数学函数'),
   date: _l('日期函数'),
   string: _l('文本函数'),

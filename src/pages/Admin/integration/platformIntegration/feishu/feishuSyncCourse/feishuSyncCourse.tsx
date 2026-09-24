@@ -14,7 +14,7 @@ import larkSyncApproval from './img/larkSyncApproval.png';
 import syncApproval from './img/syncApproval.png';
 import './style.less';
 
-const PlatformName = {
+const PlatformName: Record<string, string> = {
   feishu: _l('飞书'),
   lark: 'Lark',
 };

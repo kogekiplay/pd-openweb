@@ -17,7 +17,7 @@ const TASK_STATUS = {
   completed: 1,
 };
 
-const TASK_STATUS_TEXT = {
+const TASK_STATUS_TEXT: Record<string, string> = {
   '-1': _l('未开始'),
   0: _l('进行中'),
   1: _l('已完成'),

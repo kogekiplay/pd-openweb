@@ -180,7 +180,7 @@ export default class Snapshot extends Component<any, any> {
    */
   renderContent() {
     const { data } = this.state;
-    const TEXT = {
+    const TEXT: Record<number, string> = {
       1: _l('获取自定义页面的快照图片，供流程中其他节点使用。'),
       2: _l('获取统计图表的快照图片，供流程中其他节点使用。'),
       3: _l('通过链接地址获取页面的快照图片，供流程中其他节点使用。'),
@@ -347,7 +347,7 @@ export default class Snapshot extends Component<any, any> {
    * dropdown title
    */
   renderTitle(actionId) {
-    const TYPES = {
+    const TYPES: Record<number, { icon: string; text: string }> = {
       1: { icon: 'icon-dashboard', text: _l('自定义页面') },
       2: { icon: 'icon-worksheet_column_chart', text: _l('统计图表') },
       3: { icon: 'icon-link1', text: _l('链接地址') },

@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
 import SideAppItem from './SideAppItem';
 
-const TYPE_TO_TITLE = {
+const TYPE_TO_TITLE: Record<string, string> = {
   markedApps: _l('应用收藏'),
   aloneApps: _l('个人'),
   expireProject: _l('过期应用'),

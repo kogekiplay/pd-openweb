@@ -620,7 +620,7 @@ export const addRecord = (cell, row) => {
           dispatch(updateGroupingRow(data.data, row.rowid));
         }
 
-        const errors = {
+        const errors: Record<number, string> = {
           11: _l('创建失败，%0不允许重复', titleControl.controlName || ''),
           22: _l('创建失败，子表字段存在重复数据'),
         };

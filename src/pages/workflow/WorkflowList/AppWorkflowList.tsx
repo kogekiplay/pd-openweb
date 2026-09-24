@@ -711,7 +711,7 @@ class AppWorkflowList extends Component<any, any> {
    */
   renderListItem(item) {
     const { type, selectFlowId, appDetail, sortType } = this.state;
-    const ICON = {
+    const ICON: Record<string, string> = {
       timer: 'icon-access_alarm',
       User: 'icon-hr_structure',
       ExternalUser: 'icon-language',

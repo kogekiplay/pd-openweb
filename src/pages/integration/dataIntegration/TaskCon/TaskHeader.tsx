@@ -7,7 +7,7 @@ import { taskTabList } from 'src/pages/integration/config.js';
 import 'src/pages/workflow/components/Switch/index.less';
 import { navigateTo } from 'src/router/navigateTo';
 
-const STATUS2TEXT = {
+const STATUS2TEXT: Record<string, string> = {
   active: _l('运行中'),
   close: _l('已关闭'),
 };

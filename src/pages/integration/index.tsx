@@ -25,7 +25,7 @@ import TaskCon from './dataIntegration/TaskCon';
 import Sidenav from './Sidenav';
 import './svgIcon';
 
-const ROUTE_CONFIG_PATH = {
+const ROUTE_CONFIG_PATH: Record<string, string> = {
   connectList: 'connectList',
   dataConnect: 'dataConnect',
   taskCon: 'taskCon',

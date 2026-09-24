@@ -16,7 +16,7 @@ const STATUS_FILTERS = [
   { text: _l('已失效'), value: 3 },
 ];
 
-const STATUS = {
+const STATUS: Record<number, { text: string; className: string }> = {
   1: { text: _l('生效中'), className: 'active' },
   2: { text: _l('已过期'), className: 'expired' },
   3: { text: _l('已失效'), className: 'invalid' },

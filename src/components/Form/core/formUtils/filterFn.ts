@@ -14,7 +14,7 @@ import type { ControlValue, FormControl, SelectedEntityValue } from 'src/utils/c
 import { dateAppZoneToServerZone } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 
-const TIME_OPTIONS = {
+const TIME_OPTIONS: Record<number, string> = {
   1: 'year ',
   2: 'month',
   3: 'day',
@@ -24,7 +24,7 @@ const TIME_OPTIONS = {
   11: 'quarter',
 };
 
-const TIME_MODE_OPTIONS = {
+const TIME_MODE_OPTIONS: Record<string, number> = {
   YYYY: 1,
   'YYYY-MM': 2,
   'YYYY-MM-DD': 3,

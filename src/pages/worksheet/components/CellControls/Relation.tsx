@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { UserHead } from 'ming-ui';
 import { FROM, RELATION_TYPE_NAME } from './enum';
 
-const Icons = {
+const Icons: Record<number, string> = {
   0: '',
   1: 'icon-task-responsible',
   2: 'icon-knowledge_file',

@@ -890,7 +890,7 @@ export const formatGroupConfig = fields => {
 
 export const setResultFieldSettingByAggFuncType = data => {
   if ([15, 16, 17, 18].includes(_.get(data, 'controlSetting.type'))) {
-    const DATE_VALUE = { CUR_YEAR: '5', CUR_MONTH: '4', TODAY: '3', CUR_HOUR: '2', CUR_MINUTE: '1' };
+    const DATE_VALUE: Record<string, string> = { CUR_YEAR: '5', CUR_MONTH: '4', TODAY: '3', CUR_HOUR: '2', CUR_MINUTE: '1' };
     let datatype = DATE_VALUE[data.aggFuncType];
 
     if (!_.get(data, 'controlSetting.advancedSetting')) {
@@ -907,7 +907,7 @@ export const setResultFieldSettingByAggFuncType = data => {
   ) {
     // { text: _l('时:分'), value: '8' },
     // { text: _l('时:分:秒'), value: '9' },
-    const DATE_VALUE = { CUR_MINUTE: '8' };
+    const DATE_VALUE: Record<string, string> = { CUR_MINUTE: '8' };
     let datatype = DATE_VALUE[data.aggFuncType];
     data.controlSetting.unit = datatype;
     if (!_.get(data, 'controlSetting.advancedSetting')) {

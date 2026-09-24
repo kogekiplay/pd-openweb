@@ -108,7 +108,7 @@ export default class PersonalInfo extends React.Component<any, any> {
   }
 
   transFormGender(value) {
-    const genderObj = { 1: _l('男'), 2: _l('女') };
+    const genderObj: Record<number, string> = { 1: _l('男'), 2: _l('女') };
     return genderObj[value];
   }
 

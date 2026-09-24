@@ -8,7 +8,7 @@ export const AUTH_SCOPE_RADIOS = [
   { text: _l('指定应用'), value: 2 },
 ];
 
-export const CONTROL_NAME = {
+export const CONTROL_NAME: Record<number, string> = {
   2: _l('文本'),
   6: _l('数值'),
 };

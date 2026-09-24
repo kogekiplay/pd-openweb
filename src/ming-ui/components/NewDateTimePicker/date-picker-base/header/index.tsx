@@ -11,7 +11,7 @@ class Header extends Component<any, any> {
   };
 
   override render() {
-    const MONTH_LANG = {
+    const MONTH_LANG: Record<number, string> = {
       1: _l('1月'),
       2: _l('2月'),
       3: _l('3月'),

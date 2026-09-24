@@ -19,7 +19,7 @@ import PositionContent from './components/PositionContent';
 import './index.less';
 
 // 导入职位模版
-const positionTemplatePaths = {
+const positionTemplatePaths: Record<number, string> = {
   0: '/staticfiles/template/positionImportTemplate/职位导入模板.xlsx',
   1: '/staticfiles/template/positionImportTemplate/Position Import Template.xlsx',
   2: '/staticfiles/template/positionImportTemplate/ポジションインポートテンプレート.xlsx',

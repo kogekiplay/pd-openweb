@@ -3,16 +3,16 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-24T05:46:01.372Z",
-  "rawCount": 10648,
+  "generatedAt": "2026-09-24T05:51:31.615Z",
+  "rawCount": 10647,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 10648,
-  "uniqueKeys": 2765,
+  "keptCount": 10647,
+  "uniqueKeys": 2764,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
     "src/common/cookies.ts|TS2556": 1,
@@ -2146,7 +2146,6 @@
     "src/pages/workflow/WorkflowSettings/Header/index.tsx|TS2345": 3,
     "src/pages/workflow/WorkflowSettings/Header/index.tsx|TS2739": 2,
     "src/pages/workflow/WorkflowSettings/History/HistoryDetail.tsx|TS2339": 23,
-    "src/pages/workflow/WorkflowSettings/History/HistoryDetail.tsx|TS2741": 1,
     "src/pages/workflow/WorkflowSettings/History/HistoryList.tsx|TS2362": 1,
     "src/pages/workflow/WorkflowSettings/History/HistoryList.tsx|TS2363": 1,
     "src/pages/workflow/WorkflowSettings/History/components/logDialog.tsx|TS2322": 1,

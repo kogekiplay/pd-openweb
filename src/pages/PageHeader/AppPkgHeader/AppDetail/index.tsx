@@ -53,7 +53,7 @@ import NavigationConfig from './NavigationConfig';
 import RoleSelect from './RoleSelect';
 import './index.less';
 
-const APP_STATUS_TEXT = {
+const APP_STATUS_TEXT: Record<number, string> = {
   11: _l('还原中'),
   12: _l('迁移中'),
 };

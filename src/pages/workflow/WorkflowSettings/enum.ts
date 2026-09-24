@@ -157,7 +157,7 @@ export const APP_TYPE = {
   GLOBAL_VARIABLE: 104,
 };
 
-export const APP_TYPE_TEXT = {
+export const APP_TYPE_TEXT: Record<number, string> = {
   7: _l('发送 API 请求'),
   10: _l('审批流'),
   12: _l('代码块'),
@@ -354,7 +354,7 @@ export const USER_TYPE = {
   ORGANIZE_ROLE: 10,
 };
 
-export const USER_ORGANIZE = {
+export const USER_ORGANIZE: Record<number, string> = {
   11: _l('直属上司'),
   12: _l('主部门负责人'),
   13: _l('主部门上级负责人'),
@@ -362,7 +362,7 @@ export const USER_ORGANIZE = {
   15: _l('组织角色分管负责人'),
 };
 
-export const DEPARTMENT_ORGANIZE = {
+export const DEPARTMENT_ORGANIZE: Record<number, string> = {
   12: _l('部门负责人'),
   13: _l('上级部门负责人'),
   14: _l('部门中的职位'),
@@ -392,13 +392,13 @@ export const TIME_TYPE = {
   DAY: 3,
 };
 
-export const TIME_TYPE_NAME = {
+export const TIME_TYPE_NAME: Record<number, string> = {
   1: _l('分钟'),
   2: _l('小时'),
   3: _l('天%250125'),
 };
 
-export const SUPPORT_HREF = {
+export const SUPPORT_HREF: Record<string, string> = {
   // worksheet
   '0-1': 'https://help.mingdao.com/workflow/trigger-by-worksheet',
   // loop
@@ -497,7 +497,7 @@ export const RELATION_TYPE = {
   PLUGIN: 6,
 };
 
-export const CUSTOM_ACTION_TEXT = {
+export const CUSTOM_ACTION_TEXT: Record<number, string> = {
   1: _l('点击按钮后立即执行'),
   2: _l('点击按钮后需要二次确认'),
   3: _l('点击按钮填写指定内容后立即执行'),
@@ -766,7 +766,7 @@ export const EXPIRE_LIST = [
   },
 ];
 
-export const SEARCH_MODE_MAP = {
+export const SEARCH_MODE_MAP: Record<string, string> = {
   auto: _l('AI 智能选择'),
   vector: _l('混合检索'),
   keyword: _l('语义检索'),

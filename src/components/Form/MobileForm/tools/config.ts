@@ -13,7 +13,7 @@ export const FROM = {
 };
 
 // 标题号映射关系
-export const TITLE_SIZE_OPTIONS = {
+export const TITLE_SIZE_OPTIONS: Record<number, string> = {
   0: '0.8em',
   1: '1em',
   2: '1.2em',
@@ -22,7 +22,7 @@ export const TITLE_SIZE_OPTIONS = {
 };
 
 // 值字号映射关系
-export const FIELD_SIZE_OPTIONS = {
+export const FIELD_SIZE_OPTIONS: Record<number, string> = {
   0: '1em',
   1: '1.2em',
   2: '1.4em',

@@ -61,7 +61,7 @@ const CoverSettingCon = styled.div`
 `;
 
 //空(默认没key)或者"1"：允许 "2"：不允许
-const COVER_IMAGE_PREVIEW = {
+const COVER_IMAGE_PREVIEW: Record<number, boolean> = {
   2: false,
   1: true,
 };

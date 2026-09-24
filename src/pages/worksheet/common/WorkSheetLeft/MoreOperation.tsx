@@ -144,12 +144,12 @@ const CopySheetConfirmDescription = props => {
 
 const handleDeleteWorkSheet = ({ projectId, appId, groupId, appItem, sheetListActions }: { projectId?: string; appId?: string; groupId?: string; [key: string]: any }) => {
   const { workSheetName: name, type } = appItem;
-  const nameMap = {
+  const nameMap: Record<number, string> = {
     0: _l('工作表'),
     1: _l('自定义页面'),
     3: _l('对话机器人'),
   };
-  const titleMap = {
+  const titleMap: Record<number, string> = {
     0: _l('删除工作表 “%0”', name),
     1: _l('删除自定义页面 “%0”', name),
     3: _l('删除对话机器人 “%0”', name),
@@ -293,7 +293,7 @@ const handleCopyWorkSheet = props => {
     dialogConfirm();
   };
 
-  const nameMap = {
+  const nameMap: Record<number, string> = {
     0: _l('工作表'),
     1: _l('自定义页面'),
     3: _l('对话机器人'),
@@ -348,7 +348,7 @@ const handleUpdateWorksheetStatus = (status: number, props) => {
     });
 };
 
-const deleteText = {
+const deleteText: Record<number, string> = {
   0: _l('删除工作表%02029'),
   1: _l('删除自定义页面'),
   2: _l('删除分组%02012'),

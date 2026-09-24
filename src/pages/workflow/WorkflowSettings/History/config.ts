@@ -1,7 +1,7 @@
 /**
  * 工作流状态
  */
-export const FLOW_STATUS = {
+export const FLOW_STATUS: Record<string, { status: string; text: string }> = {
   '-1': { status: 'delete', text: _l('异常') },
   1: { status: 'pending', text: _l('进行中') },
   2: { status: 'completed', text: _l('完成') },
@@ -9,7 +9,7 @@ export const FLOW_STATUS = {
   4: { status: 'fail', text: _l('失败') },
   6: { status: 'revoke', text: _l('撤回') },
 };
-export const NODE_STATUS = {
+export const NODE_STATUS: Record<number, { status: string; text: string }> = {
   1: { status: 'pending', text: _l('等待') },
   2: { status: 'completed', text: _l('通过') },
   3: { status: 'suspend', text: _l('中止') },
@@ -21,7 +21,7 @@ export const NODE_STATUS = {
 /**
  * 工作流错误原因
  */
-export const FLOW_FAIL_REASON = {
+export const FLOW_FAIL_REASON: Record<number, string> = {
   1111: _l('工作表找不到应用'),
   1112: _l('工作表字段权限错误'),
   1113: _l('参数错误'),
@@ -123,7 +123,7 @@ export const FLOW_FAIL_REASON = {
 /**
  * 状态对应的颜色值
  */
-export const STATUS2COLOR = {
+export const STATUS2COLOR: Record<string, { color: string; bgColor: string }> = {
   delete: { color: '#ffa340', bgColor: 'var(--color-warning-bg)' },
   pending: { color: '#2195f3', bgColor: 'var(--color-info-bg)' },
   fail: { color: '#F44336', bgColor: 'var(--color-error-bg)' },
@@ -135,7 +135,7 @@ export const STATUS2COLOR = {
 /**
  * 节点类型
  */
-export const NODE_TYPE = {
+export const NODE_TYPE: Record<number, { type: string; text: string }> = {
   0: { type: 'start', text: _l('发起节点') },
   1: { type: 'gateway', text: _l('网关') },
   2: { type: 'branch', text: _l('分支') },
@@ -179,7 +179,7 @@ export const NODE_TYPE = {
 /**
  * 动作类型
  */
-export const ACTION_TYPE = {
+export const ACTION_TYPE: Record<number, { type: string; text: string }> = {
   1: { type: 'submit', text: _l('提交') },
   2: { type: 'transfer', text: _l('转交') },
   3: { type: 'check', text: _l('查看') },
@@ -194,7 +194,7 @@ export const ACTION_TYPE = {
 /**
  * 会签类型
  */
-export const COUNTER_TYPE = {
+export const COUNTER_TYPE: Record<number, string> = {
   1: _l('需所有审批人通过'),
   2: _l('只需一名审批人通过'),
   4: _l('按比例投票通过'),

@@ -17,7 +17,7 @@ export const MENU_LIST_MAP = {
   [TAB_TYPE.API_V2]: MENU_LIST_API_V2,
 };
 
-export const FILTER_LOGIC_TYPE = {
+export const FILTER_LOGIC_TYPE: Record<number, string> = {
   1: 'AND',
   2: 'OR',
 };

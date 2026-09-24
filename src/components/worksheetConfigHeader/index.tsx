@@ -57,7 +57,7 @@ class WorksheetConfigHeaderComponent extends Component<any, any> {
     const sheetConfigNavInfoStr = localStorage.getItem('sheetConfigNavInfo');
     const sheetConfigNavInfo = sheetConfigNavInfoStr ? safeParse(sheetConfigNavInfoStr) || {} : {};
     const { extensionNav, settingNav } = sheetConfigNavInfo[worksheetId] || {};
-    const urlSet = {
+    const urlSet: Record<string, string> = {
       form: `/worksheet/form/edit/${worksheetId}${extensionNav ? '/' + extensionNav : ''}`,
       formSet: `/worksheet/formSet/edit/${worksheetId}${settingNav ? '/' + settingNav : ''}`,
     };

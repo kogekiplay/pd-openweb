@@ -23,7 +23,7 @@ export const COMPUTING_INSTANCE_STATUS = {
   DestroyFailed: 9,
 };
 
-export const MIGRATE_CODE = {
+export const MIGRATE_CODE: Record<number, string> = {
   0: _l('迁移失败'),
   1: _l('开始迁移'),
   2: _l('应用状态错误（迁移中/维护中/升级中）'),

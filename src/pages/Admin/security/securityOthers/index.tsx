@@ -132,7 +132,7 @@ export default class SecurityOthers extends Component<any, any> {
       );
     }
 
-    const limitInfo = {
+    const limitInfo: Record<string, string> = {
       onlyManagerCreateApp: _l('创建应用'),
       apiIntgOnlyManager: _l('创建 API 连接'),
       // dataPipeOnlyManager: _l('数据集成'),

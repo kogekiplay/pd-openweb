@@ -1,4 +1,4 @@
-export const TITLE_ENUM = {
+export const TITLE_ENUM: Record<number, string> = {
   1: _l('从其他视图复制'),
   2: _l('将配置应用到其他视图'),
 };

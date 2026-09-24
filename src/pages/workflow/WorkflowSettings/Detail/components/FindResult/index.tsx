@@ -24,7 +24,7 @@ export default ({ executeType, updateSource, allowAdd = false, nodeType, appType
       value: 0,
     },
   ];
-  const TEXT = {
+  const TEXT: Record<number, string> = {
     8: _l('请求超时或请求失败时'),
     21: _l('触发错误时'),
     25: _l('请求超时或请求失败时'),

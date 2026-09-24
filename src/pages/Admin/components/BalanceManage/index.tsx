@@ -40,7 +40,7 @@ const NOCOLY_HIDDEN_CONFIG_KEYS = [
 
 // 从 basePricingPolicy 中获取价格
 const getPrice = (basePricingPolicy, key: string) => {
-  const typeMap = {
+  const typeMap: Record<string, number> = {
     sms: BASIC_FUNCTION_TYPE.SMS,
     email: BASIC_FUNCTION_TYPE.EMAIL,
     ocr: BASIC_FUNCTION_TYPE.TEXT_OCR,

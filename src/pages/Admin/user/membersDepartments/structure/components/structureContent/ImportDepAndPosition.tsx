@@ -293,7 +293,7 @@ const SuccessInfo = styled.div`
 `;
 
 // 导入部门模版
-const dptTemplatePaths = {
+const dptTemplatePaths: Record<number, string> = {
   0: '/staticfiles/template/departmentImportTemplate/部门导入模板.xlsx',
   1: '/staticfiles/template/departmentImportTemplate/Department Import Template.xlsx',
   2: '/staticfiles/template/departmentImportTemplate/部門インポートテンプレート.xlsx',

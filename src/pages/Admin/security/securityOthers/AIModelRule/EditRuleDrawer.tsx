@@ -219,7 +219,7 @@ const APP_SCOPE_OPTIONS = [
   },
 ];
 
-const BRAND_ICONS = {
+const BRAND_ICONS: Record<number, { icon: string; color: string }> = {
   1: { icon: 'icon-chatgpt', color: '#000' },
   2: { icon: 'icon-Qwen', color: '#615ced' },
   3: { icon: 'icon-deepseek', color: '#4d6bfe' },

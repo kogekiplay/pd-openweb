@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { getFileIconNameByExt } from '../../../utils';
 import { PREVIEW_TYPE } from '../constant/enum';
 
-const typeColors = {
+const typeColors: Record<string, string> = {
   '7z': '#FBC02d',
   ai: '#ff9100',
   cal: '#9c27b0',

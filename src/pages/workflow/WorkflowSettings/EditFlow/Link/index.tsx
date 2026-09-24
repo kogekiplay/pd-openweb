@@ -13,7 +13,7 @@ export default class Link extends Component<any, any> {
    */
   renderContent() {
     const { item } = this.props;
-    const LINK_TYPE_TEXT = {
+    const LINK_TYPE_TEXT: Record<number, string> = {
       1: _l('获取记录分享链接'),
       2: _l('获取记录填写链接'),
       3: _l('带支付按钮的记录链接'),

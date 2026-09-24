@@ -7,7 +7,7 @@ import InvitationController from 'src/api/invitation';
 import ProjectController from 'src/api/project';
 import { existAccountHint } from 'src/utils/inviteCommon';
 
-const Tips = {
+const Tips: Record<number, string> = {
   1: _l('暂无使用中的邀请链接'),
   2: _l('暂无邀请记录'),
 };

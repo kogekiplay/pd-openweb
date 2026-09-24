@@ -28,7 +28,7 @@ import _ from 'lodash';
  *
  * 治本仍在服务端（工作流服务该和主 API 报同一个 host），这里是前端兜底。
  */
-const BUCKET_CONFIG_KEY = {
+const BUCKET_CONFIG_KEY: Record<string, string> = {
   mdpub: 'pubHost',
   mdpic: 'pictureHost',
   mdmedia: 'mediaHost',

@@ -17,7 +17,7 @@ import DrawerFooter from './DrawerFooter';
 import PrintTemSetting from './PrintTemSetting';
 import './editPrint.less';
 
-const SUFFIX = {
+const SUFFIX: Record<string, string> = {
   Word: 'docx',
   Excel: 'xlsx',
 };

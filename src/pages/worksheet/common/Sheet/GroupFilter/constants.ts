@@ -1,4 +1,4 @@
-export const TYPES = {
+export const TYPES: Record<number, { name: string; id: string }> = {
   26: {
     name: 'fullname',
     id: 'accountId',

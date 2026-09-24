@@ -27,7 +27,7 @@ export default ({
   success = () => {},
   fail = () => {},
 }) => {
-  const ERROR_CODE = {
+  const ERROR_CODE: Record<number, string> = {
     6: _l('密码不正确'),
     8: _l('验证码错误'),
   };

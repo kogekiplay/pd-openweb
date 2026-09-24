@@ -185,7 +185,7 @@ export default class Member extends Component<any, any> {
    * 渲染额外扩展信息
    */
   renderExtensionInfo(item, index: number) {
-    const roleExtension = {
+    const roleExtension: Record<number, { placeholder: string; delText: string; action: (index: number) => void }> = {
       14: {
         placeholder: _l('选择职位'),
         delText: _l('职位已删除'),

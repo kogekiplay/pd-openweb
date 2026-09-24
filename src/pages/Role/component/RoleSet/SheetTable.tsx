@@ -14,7 +14,7 @@ const Wrap = styled.div`
 `;
 
 export const changeSheetModel = (sheet, type: string, checked: boolean) => {
-  const KEYS = {
+  const KEYS: Record<string, string> = {
     READ: 'canRead',
     EDIT: 'canEdit',
     REMOVE: 'canRemove',

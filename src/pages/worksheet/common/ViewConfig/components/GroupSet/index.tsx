@@ -21,7 +21,7 @@ import { SelectValue, Wrap } from './style';
 import { canSetGroup } from './util';
 import type { FormControl } from 'src/utils/controlTypes';
 
-const NAV_GROUP_MAPPING = {
+const NAV_GROUP_MAPPING: Record<string, string> = {
   navfilters: 'groupfilters',
   navshow: 'groupshow',
   navsorts: 'groupsorts',

@@ -82,7 +82,7 @@ const Con = styled.div`
     }
   }
 `;
-const ErrText = {
+const ErrText: Record<number, string> = {
   1: _l('查询不存在或已关闭!'),
   2: _l('未设置可用的查询条件'),
   3: _l('数据源已删除'),

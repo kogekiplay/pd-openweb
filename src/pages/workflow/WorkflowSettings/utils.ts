@@ -652,7 +652,7 @@ export const clearFlowNodeMapParameter = flowNodeMap => {
  * 处理执行的返回值
  */
 export const handleExecReturnValue = item => {
-  const MAP = {
+  const MAP: Record<number, string[]> = {
     14: ['originalFilename', 'ext'],
     26: ['fullName'],
     27: ['departmentName'],

@@ -27,7 +27,14 @@ const Box = styled.div`
 `;
 
 export default props => {
-  const displayMap = { en: 'EN', 'zh-Hans': 'CN', 'zh-Hant': 'TC', ja: 'JP', th: 'TH', ms: 'MS' };
+  const displayMap: Record<string, string> = {
+    en: 'EN',
+    'zh-Hans': 'CN',
+    'zh-Hant': 'TC',
+    ja: 'JP',
+    th: 'TH',
+    ms: 'MS',
+  };
   const DATA = window
     .getAllowLangConfig()
     .map(item => ({ text: item.value, value: item.key, display: displayMap[item.key] }));

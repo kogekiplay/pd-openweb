@@ -67,7 +67,7 @@ export const PRINT_TEMP = {
   BAR_CODE_PRINT: 2,
 };
 
-export const SYST_PRINT = {
+export const SYST_PRINT: Record<string, string> = {
   ownerid: 'ownerAccountChecked',
   caid: 'createAccountChecked',
   ctime: 'createTimeChecked',
@@ -75,7 +75,7 @@ export const SYST_PRINT = {
   uaid: 'updateAccountChecked',
 };
 
-export const SYST_PRINT_TXT = {
+export const SYST_PRINT_TXT: Record<string, string> = {
   ownerAccount: _l('拥有者：'),
   createAccount: _l('创建人：'),
   createTime: _l('创建时间：'),
@@ -151,19 +151,19 @@ export const APPROVAL_POSITION_OPTION = [
 
 export const DefaultNameWidth = 80;
 
-export const TitleFont = {
+export const TitleFont: Record<string, number> = {
   small: 15,
   middle: 18,
   big: 21,
 };
 
-export const RecordTitleFont = {
+export const RecordTitleFont: Record<string, number> = {
   small: 18,
   middle: 24,
   big: 30,
 };
 
-export const FONT_STYLE = {
+export const FONT_STYLE: Record<number, string> = {
   12: 'small',
   16: 'middle',
   18: 'big',

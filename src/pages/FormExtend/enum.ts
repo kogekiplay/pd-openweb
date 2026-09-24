@@ -110,7 +110,7 @@ export const TIME_PERIOD_TYPE = {
   SPECIFY_RANGE_HOUR: 2,
 };
 
-export const TIME_PERIOD_OPTIONS = {
+export const TIME_PERIOD_OPTIONS: Record<string, { text: string; value: number }[]> = {
   month: [
     { text: _l('每月'), value: TIME_PERIOD_TYPE.MONTHLY },
     { text: _l('指定月份'), value: TIME_PERIOD_TYPE.SPECIFY_MONTH },
@@ -180,7 +180,7 @@ export const MONTHS = [
   { text: _l('12月'), value: 12 },
 ];
 
-export const NAV_NAME = {
+export const NAV_NAME: Record<string, string> = {
   publicform: _l('公开表单'),
   query: _l('公开查询'),
   pay: _l('支付'),

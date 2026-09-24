@@ -36,7 +36,7 @@ import wx7Png from './img/wx/7.png';
 import wx8Png from './img/wx/8.png';
 import './style.less';
 
-const passApplyConfig = {
+const passApplyConfig: Record<number, string> = {
   1: 'dingAppCourse',
   3: 'weixinAppCourse',
 };

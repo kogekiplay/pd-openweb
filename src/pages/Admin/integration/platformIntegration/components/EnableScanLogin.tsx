@@ -8,7 +8,7 @@ import workWxIcon from '../images/workwx.png';
 import { pathCompletion } from 'src/utils/common';
 
 const integrationIcon = { 1: dingIcon, 3: workWxIcon, 6: feishuIcon };
-const integrationText = {
+const integrationText: Record<number, { title: string; subTitle: string; hrefTxt: string; defaultName: string }> = {
   1: {
     title: _l('钉钉扫码登录'),
     subTitle: _l('开启后，在二级域名下使用钉钉扫一扫，直接登录'),

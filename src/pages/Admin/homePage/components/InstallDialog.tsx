@@ -7,7 +7,7 @@ import projectAjax from 'src/api/project';
 import { pathCompletion } from 'src/utils/common';
 import copy from 'src/utils/copyToClipboard';
 
-const TYPE_CONFIG = {
+const TYPE_CONFIG: Record<string, { title: string; explain: string; text: string }> = {
   desktop: {
     title: _l('安装桌面客户端'),
     explain: _l('为您的成员安装桌面客户端，支持MAC或者Windows系统'),

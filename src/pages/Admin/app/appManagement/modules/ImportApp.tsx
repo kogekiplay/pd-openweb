@@ -9,7 +9,7 @@ import RegExpValidator from 'src/utils/expression';
 import Config from '../../../config';
 import './index.less';
 
-const ERRORMSG = {
+const ERRORMSG: Record<number, string> = {
   3: _l('密码错误，验证失败'),
   4: _l('失败次数过多，请于15分钟后尝试'),
   6: _l('导入失败，导入将导致目标网络的工作表总数超过上限'),
@@ -20,7 +20,7 @@ const ERRORMSG = {
   33: _l('该应用在组织下已存在，如需使用请从回收站内恢复”'),
 };
 
-const ALERTMSG = {
+const ALERTMSG: Record<number, string> = {
   1: _l('导入失败，组织下应用数量已达上限'),
   6: _l('导入失败，导入将导致目标网络的工作表总数超过上限'),
 };

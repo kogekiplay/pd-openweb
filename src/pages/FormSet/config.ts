@@ -1,4 +1,4 @@
-export const MODULE_TYPE_TO_NAME = {
+export const MODULE_TYPE_TO_NAME: Record<string, string> = {
   submitForm: _l('提交表单'),
   alias: _l('数据名称'),
   display: _l('业务规则'),

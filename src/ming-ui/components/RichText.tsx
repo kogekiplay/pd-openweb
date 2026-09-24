@@ -53,7 +53,7 @@ function loadCkeditor() {
 }
 
 // CKEditor 的语言标识与 HAP 系统语言 key 不完全一致，需要在这里统一映射。
-const CKEDITOR_LANGUAGE_MAP = {
+const CKEDITOR_LANGUAGE_MAP: Record<string, string> = {
   en: 'en',
   ja: 'ja',
   ms: 'ms',

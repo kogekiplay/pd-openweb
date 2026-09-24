@@ -16,7 +16,7 @@ import './index.less';
 
 const { Search } = Input;
 
-const sortFieldTrans = {
+const sortFieldTrans: Record<string, number> = {
   name: 0,
   isVerified: 8,
   status: 11,

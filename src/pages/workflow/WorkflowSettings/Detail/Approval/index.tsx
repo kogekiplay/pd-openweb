@@ -1155,7 +1155,7 @@ export default class Approval extends Component<any, any> {
 
   override render() {
     const { data, showCallbackDialog, tabIndex, showApprovalTemplate, selectMsgKey } = this.state;
-    const authTypeListText = {
+    const authTypeListText: Record<number, string> = {
       1: _l('签名'),
       2: _l('四级：实名'),
       3: _l('三级：实名+实人'),

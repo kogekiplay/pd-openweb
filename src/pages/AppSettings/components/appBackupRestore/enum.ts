@@ -49,7 +49,7 @@ export const Days = [
 ];
 
 // 文本拼接不加翻译
-export const cycleWeekText = {
+export const cycleWeekText: Record<number, string> = {
   1: _l('每周一'),
   2: _l('每周二'),
   3: _l('每周三'),

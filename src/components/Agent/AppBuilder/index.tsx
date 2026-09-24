@@ -76,7 +76,7 @@ const PreviewWrap = styled.div`
 `;
 
 // build agent step → sidebar tab：拿到 appId 后自动 setFocus 让 iframe 跟随
-const STEP_TO_SIDEBAR_KEY = {
+const STEP_TO_SIDEBAR_KEY: Record<string, string> = {
   'step-build-worksheets': 'worksheets',
   // 补表关联仍在工作表上加字段，停留在工作表 tab 让用户看到关联字段陆续出现
   'step-build-relations': 'worksheets',

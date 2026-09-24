@@ -74,7 +74,7 @@ export function getVersion() {
   const { Versions = [] } = md.global || {};
   let upgradeName;
 
-  const TYPE_NAME = { 1: _l('标准版'), 2: _l('专业版'), 3: _l('旗舰版') };
+  const TYPE_NAME: Record<string, string> = { 1: _l('标准版'), 2: _l('专业版'), 3: _l('旗舰版') };
 
   const getFeatureType = (versionIdV2: string) => {
     const versionInfo = _.find(Versions || [], item => item.VersionIdV2 === versionIdV2) || {};

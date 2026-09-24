@@ -582,7 +582,14 @@ export const encrypt = text => {
  * @return {string}
  */
 export const htmlEncodeReg = str => {
-  const encodeHTMLRules = { '&': '&#38;', '<': '&lt;', '>': '&gt;', '"': '&#34;', "'": '&#39;', '/': '&#47;' };
+  const encodeHTMLRules: Record<string, string> = {
+    '&': '&#38;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&#34;',
+    "'": '&#39;',
+    '/': '&#47;',
+  };
   const matchHTML = /&(?!#?\w+;)|<|>|"|'|\//g;
   return str
     ? str.toString().replace(matchHTML, function (m) {
@@ -597,7 +604,7 @@ export const htmlEncodeReg = str => {
  * @return {string}
  */
 export const htmlDecodeReg = str => {
-  const decodeHTMLRules = {
+  const decodeHTMLRules: Record<string, string> = {
     '&#38;': '&',
     '&amp;': '&',
     '&#60;': '<',

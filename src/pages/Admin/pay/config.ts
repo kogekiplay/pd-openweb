@@ -29,7 +29,7 @@ export const PAY_CHANNEL = [
   },
 ];
 
-export const PAY_CHANNEL_TXT = { 0: _l('聚合支付'), 1: _l('支付宝'), 2: _l('微信') };
+export const PAY_CHANNEL_TXT: Record<string, string> = { 0: _l('聚合支付'), 1: _l('支付宝'), 2: _l('微信') };
 
 export const STEPS = [
   {
@@ -52,7 +52,7 @@ export const STEPS = [
 ];
 
 // 商户状态
-export const STATUS = {
+export const STATUS: Record<number, string> = {
   0: _l('注册中'),
   1: _l('待开通'),
   2: _l('开通中'),

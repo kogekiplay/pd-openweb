@@ -98,7 +98,7 @@ export default function AuthorizationList(props) {
   const { hasManageAuth, companyId, onClose, onApproveSuccess } = props;
   const [fetchState, setFetchState] = useSetState({ loading: true, pageIndex: 1, noMore: false });
   const [authorizationList, setAuthorizationList] = useState([]);
-  const statusObj = {
+  const statusObj: Record<number, { color: string; text: string }> = {
     0: { color: 'reject', text: _l('已拒绝') },
     1: { color: 'reviewing', text: _l('待审核') },
     3: { color: 'agree', text: _l('已同意') },

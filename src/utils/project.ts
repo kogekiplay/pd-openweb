@@ -106,7 +106,7 @@ export const addBehaviorLog = (
 ) => {
   if (!get(md, 'global.Account.accountId')) return;
 
-  const typeObj = {
+  const typeObj: Record<string, number> = {
     app: 1, // 应用
     worksheet: 2, // 工作表
     customPage: 3, // 自定义页面

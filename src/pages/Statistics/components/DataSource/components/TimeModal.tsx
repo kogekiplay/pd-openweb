@@ -110,7 +110,7 @@ export default class TimeModal extends Component<any, any> {
   renderScope() {
     const { appId } = this.props;
     const { today, rangeType, rangeValue } = this.state;
-    const pastAndFutureText = {
+    const pastAndFutureText: Record<number, string> = {
       18: _l('过去'),
       19: _l('将来'),
     };

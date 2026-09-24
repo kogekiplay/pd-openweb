@@ -9,7 +9,7 @@ const extraFieldGenerators = {
   48: item => ({ organizeName: item.name, organizeId: item.id }),
 };
 
-const typeRules = {
+const typeRules: Record<number, { idKey: string; nameKey: string }> = {
   26: { idKey: 'accountId', nameKey: 'fullname' },
   27: { idKey: 'departmentId', nameKey: 'departmentName' },
   48: { idKey: 'organizeId', nameKey: 'organizeName' },

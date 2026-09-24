@@ -6,7 +6,7 @@ import UniformRoute from 'src/router/withTitle';
 import { emitter } from 'src/utils/common';
 import TaskCenter from './containers/taskCenter/taskCenter';
 
-const MODULE_TO_TITLE = {
+const MODULE_TO_TITLE: Record<string, string> = {
   center: _l('任务'),
   star: _l('星标任务-任务'),
   subordinate: _l('下属任务-任务'),

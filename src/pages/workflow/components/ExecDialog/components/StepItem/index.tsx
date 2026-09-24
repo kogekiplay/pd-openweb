@@ -21,12 +21,12 @@ const CANCEL_ENTRUST_OPERATION_CODE = 14;
 const OVERRULE = 5;
 
 const getWaitText = (type, principal) => {
-  const WAIT_TEXT = {
+  const WAIT_TEXT: Record<number, string> = {
     3: _l('等我填写...'),
     4: _l('等我审批...'),
     5: _l('等我查看...'),
   };
-  const ENTRUST_WAIT_TEXT = {
+  const ENTRUST_WAIT_TEXT: Record<number, string> = {
     3: _l('%0委托我填写...', principal?.fullName),
     4: _l('%0委托我审批...', principal?.fullName),
     5: _l('%0委托我查看...', principal?.fullName),
@@ -35,18 +35,18 @@ const getWaitText = (type, principal) => {
   return principal ? ENTRUST_WAIT_TEXT[type] : WAIT_TEXT[type];
 };
 
-const SIGN_TYPE = {
+const SIGN_TYPE: Record<number, string> = {
   1: _l('需全员通过'),
   2: _l('只需一人通过，需全员否决'),
   4: _l('及以上的成员通过后即视为节点通过'),
 };
 
-const MULTIPLE_OPERATION = {
+const MULTIPLE_OPERATION: Record<number, string> = {
   3: _l('设置多个填写人,由任意一人进行填写'),
   4: _l('设置多个审批人,由任意一人进行审批'),
 };
 
-const OPERATION_LOG_ACTION = {
+const OPERATION_LOG_ACTION: Record<number, string> = {
   0: _l('发起'),
   1: _l('填写'),
   2: _l('转交'),
@@ -65,17 +65,17 @@ const OPERATION_LOG_ACTION = {
   22: _l('无需审批'),
 };
 
-const UNNECESSARY_OPERATION = {
+const UNNECESSARY_OPERATION: Record<number, string> = {
   3: _l('无需填写'),
   4: _l('无需审批'),
 };
 
-const START_TYPE_TEXT = {
+const START_TYPE_TEXT: Record<number, string> = {
   1: _l('新增记录'),
   2: _l('新增或更新记录'),
 };
 
-const SIGN_COUNTERSIGN_TYPE = {
+const SIGN_COUNTERSIGN_TYPE: Record<number, string> = {
   1: _l('会签'),
   2: _l('会签'),
   3: _l('或签'),
@@ -351,7 +351,7 @@ export default class StepItem extends Component<any, StepItemState> {
   renderAdditionalContent(item) {
     const { operationTime, opinion, opinionType, workItemLog, signature, logIds, updateTime, files } = item;
     const { action, fields } = workItemLog || {};
-    const SYSTEM_TEXT = {
+    const SYSTEM_TEXT: Record<number, string> = {
       1: _l('自动通过'),
       2: _l('限时自动通过'),
       3: '',

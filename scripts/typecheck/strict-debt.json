@@ -1039,7 +1039,6 @@
     "src/pages/AuthService/login/BtnList.tsx",
     "src/pages/AuthService/login/Container.tsx",
     "src/pages/AuthService/login/Form.tsx",
-    "src/pages/AuthService/login/IntegrationLogin.tsx",
     "src/pages/AuthService/login/index.tsx",
     "src/pages/AuthService/login/util.ts",
     "src/pages/AuthService/login/verifyCode/index.tsx",

@@ -12,13 +12,13 @@ export const RELATE_COUNT = [
   { text: _l('多条'), value: 2 },
 ];
 
-export const RELATE_COUNT_TEXT = {
+export const RELATE_COUNT_TEXT: Record<number, string> = {
   0: _l('子表'),
   1: _l('单条'),
   2: _l('多条'),
 };
 
-export const DISPLAY_TYPE_TEXT = {
+export const DISPLAY_TYPE_TEXT: Record<number, string> = {
   1: _l('卡片'),
   2: _l('列表'),
   3: _l('下拉框'),
@@ -84,7 +84,7 @@ export const RELATION_OPTIONS = [
   },
 ];
 
-export const DEFAULT_TEXT = {
+export const DEFAULT_TEXT: Record<number, { key: string; value: string }[]> = {
   1: [
     { key: '1', value: _l('开启') },
     { key: '0', value: _l('关闭') },

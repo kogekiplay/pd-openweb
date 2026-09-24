@@ -1,4 +1,4 @@
-const APPROVE_ACTION_BUTTON_DESC_KEYS = {
+const APPROVE_ACTION_BUTTON_DESC_KEYS: Record<string, number> = {
   pass: 4,
   overrule: 5,
   return: 17,

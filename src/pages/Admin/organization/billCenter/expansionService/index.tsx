@@ -92,7 +92,7 @@ const HeaderSubTitle = {
   chunks: _l('扩充向量知识库分块数'),
 }; //总计接口
 
-const GET_ORDER_PRICE = {
+const GET_ORDER_PRICE: Record<string, (args: ApiArgs, options?: ApiOptions) => ApiResult> = {
   user: orderController.getPersonOrderPrice,
   workflow: orderController.getWorkflowOrderPrice,
   dataSync: orderController.getDataPipelineOrderPrice,
@@ -110,7 +110,7 @@ const GET_ORDER_PRICE = {
   chunks: orderController.getVectorKnowledgeChunkOrderPrice,
 }; //下单接口
 
-const ADD_ORDER_PRICE = {
+const ADD_ORDER_PRICE: Record<string, (args: ApiArgs, options?: ApiOptions) => ApiResult> = {
   user: orderController.addPersonOrder,
   workflow: orderController.addWorkflowOrder,
   dataSync: orderController.addDataPipelineOrder,

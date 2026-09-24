@@ -25,7 +25,7 @@ const HomeEntry = styled.div`
     color: var(--color-primary-text);
   }
 `;
-const MODULE_TO_TEXT = {
+const MODULE_TO_TEXT: Record<string, string> = {
   account: _l('个人账户'),
   admin: _l('组织管理'),
   user: _l('个人资料'),

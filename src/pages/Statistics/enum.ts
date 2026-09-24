@@ -86,7 +86,7 @@ export const defaultPivotTableStyle = {
   textColor: '#000000d9',
 };
 
-export const countryLayerCodeMap = {
+export const countryLayerCodeMap: Record<number, number> = {
   810100: 810000, // 香港岛 -> 香港特别行政区（上级）
   810101: 810001, // 中西区
   810111: 810001, // 坚尼地城 -> 中西区

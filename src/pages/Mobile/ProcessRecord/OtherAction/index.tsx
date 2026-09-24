@@ -410,7 +410,7 @@ export default class extends Component<any, any> {
     const { selectUserVisible, selectedUser, nextUserRange } = this.state;
 
     if (selectUserVisible) {
-      const TYPES = {
+      const TYPES: Record<string, number> = {
         transferApprove: 6,
         addApprove: 16,
         after: 7,

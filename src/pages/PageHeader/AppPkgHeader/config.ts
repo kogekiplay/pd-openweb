@@ -51,7 +51,7 @@ export const DROPDOWN_APP_CONFIG = [
   },
 ];
 
-export const ICON_ROLE_TYPE = {
+export const ICON_ROLE_TYPE: Record<number, string> = {
   100: 'manage_accounts', // 管理员
   2: 'account_box', // 运营者
   1: 'construction', // 开发者

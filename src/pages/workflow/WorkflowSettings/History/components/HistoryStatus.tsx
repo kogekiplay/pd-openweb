@@ -2,7 +2,7 @@ import cx from 'classnames';
 import Icon from 'ming-ui/components/Icon';
 import { FLOW_STATUS } from '../config';
 
-const STATUS2ICON = {
+const STATUS2ICON: Record<string, string> = {
   pending: 'play_arrow',
   suspend: 'workflow_suspend',
   fail: 'workflow_failure',

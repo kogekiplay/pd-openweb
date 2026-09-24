@@ -39,7 +39,7 @@ import { checkIsProject } from '../../../utils/utils';
 import SelectTag from '../SelectTag';
 import './taskBasic.less';
 
-const FROM_TYPE = {
+const FROM_TYPE: Record<number, { icon: string; text: string }> = {
   1: {
     icon: 'icon-bellSchedule',
     text: _l('日程转为的任务'),

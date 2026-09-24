@@ -240,7 +240,7 @@ export default class BranchItem extends Component<any, BranchItemState> {
     const { processId, data, item, disabled, renderNode, clearBorderType, openDetail, isCopy, isApproval, isSimple } =
       this.props;
     const { isMove } = this.state;
-    const resultTypeText = {
+    const resultTypeText: Record<number, string> = {
       1: _l('同意'),
       2: _l('拒绝'),
       3: _l('有数据'),

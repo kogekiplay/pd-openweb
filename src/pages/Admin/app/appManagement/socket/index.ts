@@ -3,7 +3,7 @@ import { antNotification } from 'ming-ui';
 import { navigateTo } from 'src/router/navigateTo';
 import { emitter } from 'src/utils/common';
 
-const TYPES = {
+const TYPES: Record<number, string> = {
   1: _l('应用结构'),
   2: _l('工作表'),
   3: _l('角色'),

@@ -50,12 +50,12 @@ export const USER_ACTIONS = [
   },
 ];
 
-export const USER_ACTIONS_MAP = {
+export const USER_ACTIONS_MAP: Record<number, string> = {
   0: _l('成员'),
   1: _l('管理员'),
 };
 
-export const USER_ACTION_AJAX = {
+export const USER_ACTION_AJAX: Record<number, string> = {
   0: 'removeAdmin',
   1: 'addAdmin',
   3: 'removeUser',
@@ -70,7 +70,7 @@ export const USER_ACTION_AJAX = {
   12: 'updateGroupToPost',
 };
 
-export const USER_ACTION_MAP = {
+export const USER_ACTION_MAP: Record<number, string> = {
   1: 'ADD_ADMIN',
   0: 'REMOVE_ADMIN',
   3: 'REMOVE_USER',

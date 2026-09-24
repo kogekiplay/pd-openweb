@@ -26,7 +26,7 @@ export const viewTypeGroup = [
   { name: 'action', list: ['ActionSet', 'FastFilter', 'NavGroup'] },
   { name: 'other', list: ['MobileSet', 'urlParams'] },
 ];
-export const baseSetList = {
+export const baseSetList: Record<string, string[]> = {
   sheet: ['Setting', 'Show', 'GroupSet'],
   board: ['Setting', 'CardSet', 'GroupSet'],
   calendar: ['Setting', 'CardSet'],
@@ -139,7 +139,7 @@ export const CARD_WIDTH_OPTIONS = [
   },
 ];
 
-export const CARD_WIDTH_SETTING = {
+export const CARD_WIDTH_SETTING: Record<number, number> = {
   1: 200,
   2: 240,
   3: 300,

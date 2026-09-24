@@ -46,7 +46,7 @@ const AddControl = styled.div`
   }
 `;
 
-const DEFAULT_TEXT = {
+const DEFAULT_TEXT: Record<string, string> = {
   ipControlId: _l('IP地址'),
   browserControlId: _l('浏览器'),
   deviceControlId: _l('设备'),

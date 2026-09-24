@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { Button, Icon, LoadDiv, ScrollView } from 'ming-ui';
 import workWeiXinAjax from 'src/api/workWeiXin';
 
-const orderTypes = { 1: _l('购买账号'), 2: _l('续期账号'), 5: _l('历史企业迁移订单') };
-const orderStatus = {
+const orderTypes: Record<number, string> = { 1: _l('购买账号'), 2: _l('续期账号'), 5: _l('历史企业迁移订单') };
+const orderStatus: Record<number, string> = {
   0: _l('待支付'),
   1: _l('已支付'),
   2: _l('已取消'),

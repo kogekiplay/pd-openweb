@@ -81,7 +81,7 @@ class TabList extends React.Component<any, TabListState> {
     updateCursor('');
     updateTypeCursor(typeCursor);
 
-    const segmentMap = { 2: 'inactive', 3: 'approve' };
+    const segmentMap: Record<number, string> = { 2: 'inactive', 3: 'approve' };
     const segment = segmentMap[typeCursor];
     const base = `/admin/structure/${projectId}`;
     history.pushState(null, '', pathCompletion(segment ? `${base}/${segment}` : base, { hasDomain: false }));

@@ -8,7 +8,7 @@ import emptyCover from 'src/pages/worksheet/assets/emptyCover.png';
 import { FROM } from '../../../core/config';
 import { getBarCodeValue } from '../../../core/utils';
 
-const QRErrorCorrectLevel = {
+const QRErrorCorrectLevel: Record<string, number> = {
   '7%': 1,
   '15%': 0,
   '25%': 3,
