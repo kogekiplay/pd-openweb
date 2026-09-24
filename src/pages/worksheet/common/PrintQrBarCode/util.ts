@@ -854,7 +854,23 @@ export class QrLabel {
     this.ctx.fillStyle = color;
     this.ctx.fillText(content, isCenter && !forceInLine ? x + width / 2 : x, y + (fontSize - textFontSize) / 2);
   }
-  renderVerticalTexts({ x = 0, y = 0, fontSize, textList, color = '#222', width, firstIsBold }) {
+  renderVerticalTexts({
+    x = 0,
+    y = 0,
+    fontSize,
+    textList,
+    color = '#222',
+    width,
+    firstIsBold,
+  }: {
+    textList: CanvasLabelText[];
+    x: number;
+    y: number;
+    width: number;
+    fontSize: number;
+    firstIsBold: boolean;
+    color?: string | undefined;
+  }) {
     const { isPreview } = this.options;
     let textTop = y;
     /* 泛型必须显式写：map 的回调要么返回单个对象、要么返回对象数组，

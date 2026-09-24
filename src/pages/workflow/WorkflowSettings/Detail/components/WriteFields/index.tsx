@@ -89,7 +89,7 @@ export default class WriteFields extends Component<any, any> {
   /**
    * 全选操作
    */
-  updateAllSettings({ key, checked }) {
+  updateAllSettings({ key, checked }: { key: string; checked: string | boolean }) {
     const { data, updateSource } = this.props;
     const { showTableControls, selectItem } = this.state;
     const formProperties = _.cloneDeep(showTableControls ? selectItem.subFormProperties : data);

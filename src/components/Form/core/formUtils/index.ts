@@ -742,7 +742,15 @@ export function calcDefaultValueFunction({ formData, fnControl, forceSyncRun = f
   return undefined;
 }
 
-export function asyncUpdateMdFunction({ formData, fnControl, update }) {
+export function asyncUpdateMdFunction({
+  formData,
+  fnControl,
+  update,
+}: {
+  formData: FormControl[];
+  fnControl: FormControl;
+  update: (v: ControlValue) => void;
+}) {
   try {
     execValueFunction(fnControl, formData, { update });
   } catch (err) {

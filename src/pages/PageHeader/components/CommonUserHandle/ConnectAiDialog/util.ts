@@ -127,6 +127,16 @@ export const getInstallData = ({
   selectedSkillModules,
   mcpJsonText,
   showMcpJson,
+}: {
+  activeTab: string;
+  installMode: string;
+  projectId: string | undefined;
+  cliEnabled: boolean;
+  selectedTool: string;
+  withSkills: boolean;
+  selectedSkillModules: string[];
+  mcpJsonText: string;
+  showMcpJson: boolean;
 }) => {
   const isMcpTab = activeTab === 'MCP';
   const isCliTab = activeTab === 'CLI';

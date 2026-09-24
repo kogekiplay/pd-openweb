@@ -82,7 +82,7 @@ const getEmptyTypes = reportType => {
   return emptyTypes;
 };
 
-const getIsEmptyType = (reportType, { isTime, isOption }) => {
+const getIsEmptyType = (reportType, { isTime, isOption }: { isTime: boolean; isOption: boolean }) => {
   if (
     [
       reportTypes.BarChart,

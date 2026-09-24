@@ -453,7 +453,7 @@ export default function WorkflowAction(props) {
     }
   };
 
-  const renderDropdownOverlay = ({ width }) => {
+  const renderDropdownOverlay = ({ width }: { width: string | number }) => {
     return (
       <Menu style={{ width, borderRadius: 4 }}>
         <MenuItem

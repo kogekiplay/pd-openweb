@@ -396,7 +396,13 @@ class TaskDetail extends Component<any, any> {
   /**
    * 滚动到固定位置
    */
-  scrollToFixedPosition({ scrollTo, scrollTop }) {
+  scrollToFixedPosition({
+    scrollTo,
+    scrollTop,
+  }: {
+    scrollTop?: number | undefined;
+    scrollTo?: JQuery<HTMLElement> | undefined;
+  }) {
     if (scrollTo) {
       scrollTo[0]?.scrollIntoView();
     } else {

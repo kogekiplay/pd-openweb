@@ -127,7 +127,15 @@ export const formatTimeValue = (control: FormControl = {}, isCurrent = false, va
 };
 
 // 获取他表字段的值
-export const getOtherWorksheetFieldValue = ({ data, dataSource, sourceControlId }) => {
+export const getOtherWorksheetFieldValue = ({
+  data,
+  dataSource,
+  sourceControlId,
+}: {
+  data: FormControl[];
+  dataSource: string | undefined;
+  sourceControlId: string | undefined;
+}) => {
   try {
     const parentControl = _.find(data, c => c.controlId === dataSource.slice(1, -1));
     const record = safeParse(parentControl.value)[0];
