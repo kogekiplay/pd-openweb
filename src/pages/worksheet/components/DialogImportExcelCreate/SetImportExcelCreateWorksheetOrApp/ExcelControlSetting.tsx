@@ -48,7 +48,14 @@ const ExcelControlSettingWrap = styled.div`
   }
 `;
 
-export default class ExcelControlSetting extends Component<any, any> {
+export interface ExcelControlSettingState {
+  step: number;
+  visible: boolean;
+  controls: { value: string | undefined; text: string | undefined }[];
+  loading: boolean;
+}
+
+export default class ExcelControlSetting extends Component<any, ExcelControlSettingState> {
   constructor(props) {
     super(props);
     this.state = {

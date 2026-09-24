@@ -7,7 +7,15 @@ import { pathCompletion } from 'src/utils/common';
 import { getCurrentProject } from 'src/utils/project';
 import Config from '../../../config';
 
-export default class CloseNet extends Component<any, any> {
+export interface CloseNetState {
+  isLoading: boolean;
+  effectiveApkCount: number | undefined;
+  effectiveWorksheetCount: number | undefined;
+  effectiveWorksheetRowCount: number | undefined;
+  disabled: boolean;
+}
+
+export default class CloseNet extends Component<any, CloseNetState> {
   constructor() {
     super();
     this.state = {

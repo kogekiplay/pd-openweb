@@ -4,7 +4,16 @@ import { SvgIcon } from 'ming-ui';
 import { navigateTo } from '../../../router/navigateTo';
 import './index.less';
 
-export default class AppNameHeader extends Component<any, any> {
+export interface AppNameHeaderState {
+  appId: string;
+  data: HapApi.MD.Web.Ajax.ResultModel.App.GetDto | null;
+  icon: string;
+  name: string | undefined;
+  iconColor: string | undefined;
+  iconUrl?: string | undefined;
+}
+
+export default class AppNameHeader extends Component<any, AppNameHeaderState> {
   constructor(props) {
     super(props);
     this.state = {
