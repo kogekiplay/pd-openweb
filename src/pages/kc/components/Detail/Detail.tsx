@@ -671,22 +671,14 @@ class Detail extends React.Component<any, any> {
             )}
           </div>
           <span className="pinDetailCon">
-            <Checkbox
-              text={_l('保持展开')}
-              checked={this.props.isPinned}
-              onClick={this.props.togglePinned}
-            />
+            <Checkbox text={_l('保持展开')} checked={this.props.isPinned} onClick={this.props.togglePinned} />
           </span>
         </div>
       </div>
     ) : (
       <div className="slideDetail flexColumn">
         <span className="pinDetailCon abs">
-          <Checkbox
-            text={_l('保持展开')}
-            checked={this.props.isPinned}
-            onClick={this.props.togglePinned}
-          />
+          <Checkbox text={_l('保持展开')} checked={this.props.isPinned} onClick={this.props.togglePinned} />
         </span>
         {!this.props.data.size ? (
           <div className="slideDetailNoItem Font14">

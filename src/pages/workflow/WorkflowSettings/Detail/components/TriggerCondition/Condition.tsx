@@ -1409,7 +1409,12 @@ export default class Condition extends Component<any, any> {
     second,
     isDel,
     sourceType,
-  }: Partial<SelectedFieldValue> & { i: number; j: number; second?: boolean | undefined; isDel?: boolean | undefined }) => {
+  }: Partial<SelectedFieldValue> & {
+    i: number;
+    j: number;
+    second?: boolean | undefined;
+    isDel?: boolean | undefined;
+  }) => {
     const data = _.cloneDeep(this.props.data);
     const { updateSource } = this.props;
 

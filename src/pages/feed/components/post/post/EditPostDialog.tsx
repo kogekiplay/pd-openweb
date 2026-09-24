@@ -4,11 +4,11 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Dialog, Textarea } from 'ming-ui';
 import { SelectGroupTrigger } from 'ming-ui/functions/quickSelectGroup';
+import type { MentionsInputElement } from 'src/components/MentionsInput';
 import UploadFiles from 'src/components/UploadFiles';
 import { htmlDecodeReg } from 'src/utils/common';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import RegExpValidator from 'src/utils/expression';
-import type { MentionsInputElement } from 'src/components/MentionsInput';
 import { edit } from '../../../redux/postActions';
 
 const FooterWrap = styled.div`

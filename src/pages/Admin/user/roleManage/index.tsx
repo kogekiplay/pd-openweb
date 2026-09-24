@@ -121,7 +121,8 @@ const roleTemplatePaths = {
 };
 
 class RoleManage extends Component<any, any> {
-  declare promise: ((args: ApiArgs, options?: ApiOptions) => ApiResult) | ((args: ApiArgs, options?: ApiOptions) => ApiResult) | null;
+  declare promise:
+    ((args: ApiArgs, options?: ApiOptions) => ApiResult) | ((args: ApiArgs, options?: ApiOptions) => ApiResult) | null;
 
   constructor(props) {
     super(props);

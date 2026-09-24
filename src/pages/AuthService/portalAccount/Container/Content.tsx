@@ -158,11 +158,7 @@ export default function (props) {
           <div className="mTop40">
             {termsAndAgreementEnable && (
               <div className="mTop12 textPrimary Bold Font14 TxtTop LineHeight22 flexRow">
-                <Checkbox
-                  checked={hasCheck}
-                  onClick={() => setState({ hasCheck: !hasCheck })}
-                  className="Hand"
-                />
+                <Checkbox checked={hasCheck} onClick={() => setState({ hasCheck: !hasCheck })} className="Hand" />
                 <div className="flex alignItemsCenter">
                   {_l('同意')}
                   <span

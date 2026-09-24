@@ -364,7 +364,10 @@ const decls = new Map<string, string[]>(); // 命名空间路径 → 声明文�
 
 function jsdoc(text: string | undefined, indent: string): string {
   if (!text) return '';
-  const clean = text.replace(/\*\//g, '* /').replace(/\r?\n+/g, ' ').trim();
+  const clean = text
+    .replace(/\*\//g, '* /')
+    .replace(/\r?\n+/g, ' ')
+    .trim();
   return clean ? `${indent}/** ${clean} */\n` : '';
 }
 
@@ -389,7 +392,9 @@ function emit(full: string): void {
         return `${jsdoc((p.description || '') + renamed, '      ')}      ${key2}${present ? '' : '?'}: ${tsType(p)}${present ? '' : ' | undefined'};`;
       })
       .concat(
-        Object.entries(patch.add || {}).map(([k, t]) => `      /** （swagger 里没有，真实响应里有） */\n      ${k}?: ${t};`),
+        Object.entries(patch.add || {}).map(
+          ([k, t]) => `      /** （swagger 里没有，真实响应里有） */\n      ${k}?: ${t};`,
+        ),
       )
       .join('\n');
     text = `${jsdoc(s.description, '    ')}    interface ${name} {\n${props}\n    }`;
@@ -399,7 +404,7 @@ function emit(full: string): void {
 }
 
 // 新引用会在 emit 过程中不断加进 reachable，循环到不再增长
-for (let size = -1; size !== reachable.size; ) {
+for (let size = -1; size !== reachable.size;) {
   size = reachable.size;
   for (const full of [...reachable]) emit(full);
 }

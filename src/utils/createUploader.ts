@@ -148,7 +148,10 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
     .filter(Boolean);
   const extensionRegExp =
     allowedExtensions.length && !allowedExtensions.includes('*')
-      ? new RegExp('\\.(' + allowedExtensions.map(ext => ext.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')$', 'i')
+      ? new RegExp(
+          '\\.(' + allowedExtensions.map(ext => ext.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')$',
+          'i',
+        )
       : null;
 
   // 调用方传进来的事件处理器。【要先拷出来】—— 内部逻辑（取凭证、拼参数）

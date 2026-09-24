@@ -34,7 +34,12 @@ export interface SelectedFieldValue {
 
 interface SelectOtherFieldsProps {
   /** 当前在配置的字段：按它的类型筛可选的值 */
-  item: { type: number; enumDefault?: number | undefined; fieldValueId?: string | undefined; fieldValue?: string | undefined };
+  item: {
+    type: number;
+    enumDefault?: number | undefined;
+    fieldValueId?: string | undefined;
+    fieldValue?: string | undefined;
+  };
   fieldsVisible?: boolean | undefined;
   openLayer: () => void;
   closeLayer: () => void;
