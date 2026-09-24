@@ -79,7 +79,7 @@ export class AppPermissionsInfo extends React.Component<any, any> {
       >
         <div className="bold mBottom10">{_l('申请加入应用')}</div>
         <Textarea
-          height={120}
+          minHeight={120}
           value={remark}
           onChange={value => this.setState({ remark: value })}
           placeholder={_l('填写申请说明')}

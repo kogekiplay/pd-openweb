@@ -162,7 +162,6 @@ export default function (props) {
                   checked={hasCheck}
                   onClick={() => setState({ hasCheck: !hasCheck })}
                   className="Hand"
-                  name=""
                 />
                 <div className="flex alignItemsCenter">
                   {_l('同意')}
@@ -189,7 +188,7 @@ export default function (props) {
             {!paramForPcWx && autoLogin && (
               <div className="mTop12 flexRow alignItemsCenter">
                 <div className="flexRow alignItemsCenter" onClick={() => setAutoLogin(!isAutoLogin)}>
-                  <Checkbox checked={isAutoLogin} className="Hand" name="" />
+                  <Checkbox checked={isAutoLogin} className="Hand" />
                   <span className="textPrimary Font14 Bold Hand">{_l('7天内免登录')}</span>
                 </div>
               </div>
@@ -277,7 +276,7 @@ export default function (props) {
               className="mTop32 flexRow alignItemsCenter Hand justifyContentCenter"
               onClick={() => setAutoLogin(!isAutoLogin)}
             >
-              <Checkbox checked={isAutoLogin} className="" name="" />
+              <Checkbox checked={isAutoLogin} className="" />
               <span className="textTertiary Font14 Bold Hand">{_l('7天内免登录')}</span>
             </div>
           )}

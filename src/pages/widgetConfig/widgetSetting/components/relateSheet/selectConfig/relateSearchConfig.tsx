@@ -116,8 +116,9 @@ export default function RelateSearchConfig(props) {
     }
   };
 
+  // 返回布尔：原来直接返回 encryId 字符串，被当成 Radio 的 disabled、JSX 的 && 条件用
   const isForbidEncry = (id?) => {
-    return _.get(
+    return !!_.get(
       _.find(controls, i => i.controlId === (id || searchcontrol)),
       'encryId',
     );

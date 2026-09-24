@@ -170,7 +170,7 @@ export default function SmsSignature(props) {
                     <MenuItem
                       key={menu.key}
                       onClick={() => onMenuClick(menu.key, item)}
-                      className={{ Red: menu.key === 'delete' }}
+                      className={cx({ Red: menu.key === 'delete' })}
                     >
                       {menu.key === 'switch' ? (item.disable ? _l('启用') : _l('停用')) : menu.text}
                     </MenuItem>

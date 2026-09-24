@@ -219,7 +219,7 @@ class Department extends Component<any, any> {
                   !(this.props.selectedDepartment.find(o => o.departmentId === department.departmentId) || {})
                     .checkIncludeChilren
                     ? 'light'
-                    : ''
+                    : undefined
                 }
                 checked={checked}
               />

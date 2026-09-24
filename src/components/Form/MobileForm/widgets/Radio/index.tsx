@@ -55,7 +55,6 @@ const RadioWidget = props => {
             style={{ width: item.key === 'other' && checkIds.includes('other') && !disabled ? '100%' : 'auto' }}
           >
             <Radio
-              needDefaultUpdate
               key={index}
               disabled={disabled}
               text={renderItem(item, checkIds)}

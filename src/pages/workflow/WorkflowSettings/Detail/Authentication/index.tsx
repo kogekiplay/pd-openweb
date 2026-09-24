@@ -409,7 +409,7 @@ export default class Authentication extends Component<any, any> {
                 { text: 'raw(JSON)', value: 2, checked: item.contentType === 2 },
               ]}
               onChange={value => {
-                const newObj = { contentType: value };
+                const newObj: { contentType: number; formControls?: []; body?: string } = { contentType: value };
 
                 if (value === 0) {
                   newObj.formControls = [];

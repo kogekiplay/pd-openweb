@@ -260,7 +260,7 @@ export default function RelateOperate(props) {
         <Checkbox
           size="small"
           text={_l('允许打开记录')}
-          checked={+allowlink}
+          checked={!!+allowlink}
           onClick={(checked: boolean) =>
             onChange(handleAdvancedSettingChange(data, { allowlink: +!checked, openview: checked ? '' : openview }))
           }

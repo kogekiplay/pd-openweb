@@ -191,7 +191,7 @@ function Apply(props) {
       title: _l('拒绝'),
       closable: false,
       anim: false,
-      description: <Textarea height={120} id="applyRoleRefuse" placeholder={_l('请填写拒绝原因')} />,
+      description: <Textarea minHeight={120} id="applyRoleRefuse" placeholder={_l('请填写拒绝原因')} />,
       onOk: () => {
         const remark = document.getElementById('applyRoleRefuse').value.trim();
         appManagementAjax

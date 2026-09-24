@@ -668,7 +668,6 @@ class Detail extends React.Component<any, any> {
           <span className="pinDetailCon">
             <Checkbox
               text={_l('保持展开')}
-              size="middle"
               checked={this.props.isPinned}
               onClick={this.props.togglePinned}
             />
@@ -680,7 +679,6 @@ class Detail extends React.Component<any, any> {
         <span className="pinDetailCon abs">
           <Checkbox
             text={_l('保持展开')}
-            size="middle"
             checked={this.props.isPinned}
             onClick={this.props.togglePinned}
           />

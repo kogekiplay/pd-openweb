@@ -100,7 +100,7 @@ const CopySheetConfirmDescription = props => {
             <Fragment>
               <Checkbox
                 checked={selectIds.length === controls.length}
-                indeterminate={selectIds.length === controls.length ? false : selectIds.length}
+                indeterminate={selectIds.length !== controls.length && selectIds.length > 0}
                 className="mBottom10"
                 text={
                   <Fragment>

@@ -153,7 +153,6 @@ const RadioWidget = props => {
                 <div className="flexColumn" style={direction === '0' ? { width: getItemWidth(displayOptions) } : {}}>
                   <div className="flexColumn" style={direction === '0' ? { width: `${width}px` } : {}}>
                     <Radio
-                      needDefaultUpdate
                       disabled={disabled}
                       text={renderList(item, checkIds)}
                       value={item.key}

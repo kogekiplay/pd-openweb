@@ -337,14 +337,16 @@ export const isIllegalFormat = (calendarInfo = []) => {
   return calendarInfo.some(o => [o.endData, o.startData].some(item => isIllegal(item)));
 };
 
-export const setSysWorkflowTimeControlFormat = (
-  controls: FormControl[] = [],
+// 也有调用方拿它过滤下拉项（key 传 'value'），所以元素类型跟着入参走。
+// 用 function 声明而不是泛型箭头：本仓 babel 给 .ts 也开了 JSX，<T>(…) => 会被当成 JSX 标签解析
+export function setSysWorkflowTimeControlFormat<T extends object = FormControl>(
+  controls: T[] = [],
   sheetSwitchPermit = [],
   key = 'controlId',
-) => {
+): T[] {
   const isPermitted = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit);
-  return controls.filter((o: FormControl) => isPermitted || !SYS_CONTROLS_WORKFLOW.includes(o[key]));
-};
+  return controls.filter(o => isPermitted || !SYS_CONTROLS_WORKFLOW.includes((o as Record<string, any>)[key]));
+}
 
 export const getCurrentView = props => {
   const { views = [], base = {} } = props;

@@ -182,7 +182,7 @@ export default class UnusualContent extends Component<any, any> {
             okText={_l('申请加入')}
           >
             <Textarea
-              height={120}
+              minHeight={120}
               value={remark}
               onChange={value => this.setState({ remark: value })}
               placeholder={_l('填写申请说明')}

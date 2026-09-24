@@ -494,7 +494,7 @@ export default ({ processId, nodeId, codeType = 1, onSave = () => {}, onClose = 
             onChange={setKeywords}
             onKeyDown={event => {
               if (!event.shiftKey && event.keyCode === 13 && !controller) {
-                if (event.target.value.trim().replace(/\r\n/, '')) {
+                if (event.currentTarget.value.trim().replace(/\r\n/, '')) {
                   setController(new AbortController());
                   setList(
                     list.concat([
