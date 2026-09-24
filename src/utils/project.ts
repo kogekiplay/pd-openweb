@@ -283,10 +283,10 @@ function contactInfoIsFresh(contactInfo, key?: string) {
 }
 
 /** 后台取一次联系方式并写回 localStorage。并发调用只跑一次。 */
-let contactInfoRequest: Promise<Record<string, unknown>> | null = null;
+let contactInfoRequest: Promise<object> | null = null;
 
-// 返回的是后端给的联系方式对象，本仓只把它整个塞进 localStorage，不读具体字段
-export const prefetchContactInfo = (): Promise<Record<string, unknown>> => {
+// 返回的是后端给的联系方式对象（取不到时是 {}），本仓只把它整个塞进 localStorage，不读具体字段
+export const prefetchContactInfo = (): Promise<object> => {
   if (!md.global.Account.accountId) return Promise.resolve({});
   if (contactInfoRequest) return contactInfoRequest;
 

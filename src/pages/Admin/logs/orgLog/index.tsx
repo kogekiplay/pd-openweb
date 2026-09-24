@@ -151,8 +151,8 @@ export default class orgLog extends React.Component<any, any> {
         operateType,
         accountIds: selectUserInfo.map(item => item.accountId),
       })
-      .then(({ data } = {}) => {
-        const { totalCount, list } = data || {};
+      .then(res => {
+        const { totalCount, list } = res?.data || {};
         this.setState({
           isLoading: false,
           totalCount: totalCount || 0,

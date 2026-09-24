@@ -177,14 +177,14 @@ class RoleManage extends Component<any, any> {
         includeDisabled: showDisabledOrgRole,
       })
       .then(res => {
+        // 「默认」分组在前、接口给的分组在后；两边字段可空性不同，用展开拼成一个数组（和原来的 concat 等价）
         data = [
           {
             ...DefaultGroup,
             children:
               onlyRefreshGroup && treeData[0] && treeData[0].key === DefaultGroup.key ? treeData[0].children : [],
           },
-        ].concat(
-          res.map(l => {
+          ...res.map(l => {
             let data = treeData.find(o => o.orgRoleGroupId === l.orgRoleGroupId);
             return {
               ...l,
@@ -195,7 +195,7 @@ class RoleManage extends Component<any, any> {
               children: onlyRefreshGroup && data ? data.children : [],
             };
           }),
-        );
+        ];
         if (!onlyRefreshGroup) {
           this.updateChildren(data, [data[0].orgRoleGroupId], true, initFlag);
         } else {

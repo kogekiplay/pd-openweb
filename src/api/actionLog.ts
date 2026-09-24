@@ -17,7 +17,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getActionLogs: function (args: ApiArgs, options: ApiOptions = {}) {
+  getActionLogs: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.ReturnResult_ActionLogListWithTotalCountModel> {
     return mdyAPI('ActionLog', 'GetActionLogs', args, options);
   },
   /**
@@ -38,7 +41,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOrgLogs: function (args: ApiArgs, options: ApiOptions = {}) {
+  getOrgLogs: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.ReturnResult_OrgLogListWithTotalCountModel> {
     return mdyAPI('ActionLog', 'GetOrgLogs', args, options);
   },
   /**

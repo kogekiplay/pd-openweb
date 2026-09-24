@@ -73,7 +73,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getStructureForAll: function (args: ApiArgs, options: ApiOptions = {}) {
+  getStructureForAll: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetStructureForAllModel> {
     return mdyAPI('ProjectSetting', 'GetStructureForAll', args, options);
   },
   /**
@@ -128,7 +131,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAutoPurchaseWorkflowExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAutoPurchaseWorkflowExtPack: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.AutoPurchaseWorkflowExtPackModel> {
     return mdyAPI('ProjectSetting', 'GetAutoPurchaseWorkflowExtPack', args, options);
   },
   /**
@@ -139,7 +145,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAutoPurchaseDataPipelineExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAutoPurchaseDataPipelineExtPack: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.AutoPurchaseDataPipelineExtPackModel> {
     return mdyAPI('ProjectSetting', 'GetAutoPurchaseDataPipelineExtPack', args, options);
   },
   /**
@@ -150,7 +159,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAutoPurchaseExternalUserExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAutoPurchaseExternalUserExtPack: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.AutoPurchaseExternalUserExtPackModel> {
     return mdyAPI('ProjectSetting', 'GetAutoPurchaseExternalUserExtPack', args, options);
   },
   /**
@@ -678,7 +690,10 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getColorSettings: function (args: ApiArgs, options: ApiOptions = {}) {
+  getColorSettings: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetColorSettingsResponse> {
     return mdyAPI('ProjectSetting', 'GetColorSettings', args, options);
   },
   /**

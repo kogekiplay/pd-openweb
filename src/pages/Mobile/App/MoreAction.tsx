@@ -175,9 +175,9 @@ export default function MoreAction(props) {
         .getAppRoleSetting({
           appId: detail.id,
         })
-        .then((data = {}) => {
+        .then(data => {
           if (currentAppIdRef.current !== currentAppId) return;
-          const { appSettingsEnum } = data;
+          const appSettingsEnum = data?.appSettingsEnum;
           setRoleEntryVisible(appSettingsEnum === 1);
         })
         .catch(() => {});

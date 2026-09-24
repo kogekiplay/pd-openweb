@@ -110,7 +110,7 @@ function User(props) {
         appId,
       })
       .then(res => {
-        const { controls, showControlIds = [] }: { controls: FormControl[]; [key: string]: any } = res;
+        const { controls, showControlIds = [] } = res;
         setHideIds(showControlIds);
         setControls(translatePortalRoleOptions(appId, controls));
       });

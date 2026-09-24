@@ -69,7 +69,8 @@ interface ApiSideItem {
 /** 接口文档正文里的一个节点（分组、视图、字段说明都走这个形状） */
 interface ApiDocNode {
   type?: number;
-  desc?: string;
+  // 多数是文字说明；viewId 参数的说明是「视图名 → viewId」对照表（见 List 接口那段），渲染时按 object 转成 JSON
+  desc?: string | Record<string, string | undefined>[];
   items?: ApiDocNode[];
   data?: ApiDocNode[];
   views?: ApiDocNode[];
@@ -323,7 +324,7 @@ class WorksheetApi extends Component<any, any> {
         const isDataPipeline = selectId.includes('dataPipeline');
 
         if (list?.alias) {
-          data = data.map((o: ApiDocNode) => {
+          data = data.map(o => {
             return { ...o, alias: list.alias };
           });
         }
@@ -1266,7 +1267,7 @@ class WorksheetApi extends Component<any, any> {
                       )}
                       {child.type && <div className={cx(`mLeft30 w${getWidth(headerData, 'type')}`)}>{child.type}</div>}
                       <div className={cx(`mLeft30 w${getWidth(headerData, 'desc')}`)}>
-                        {child.desc}
+                        {typeof child.desc === 'object' ? JSON.stringify(child.desc) : child.desc}
                         {child.linkid && (
                           <a className="colorPrimary" onClick={() => this.scrollToFixedPosition(child.linkid)}>
                             {_l('附录')}

@@ -55,7 +55,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  checkAccountSecured: function (args: ApiArgs, options: ApiOptions = {}) {
+  checkAccountSecured: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     return mdyAPI('User', 'CheckAccountSecured', args, options);
   },
   /**

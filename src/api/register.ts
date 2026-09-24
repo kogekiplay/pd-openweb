@@ -53,7 +53,10 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  checkExistAccountByCurrentAccount: function (args?: ApiArgs, options: ApiOptions = {}) {
+  checkExistAccountByCurrentAccount: function (
+    args?: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Register.RegisterModel> {
     return mdyAPI('Register', 'CheckExistAccountByCurrentAccount', args, options);
   },
   /**

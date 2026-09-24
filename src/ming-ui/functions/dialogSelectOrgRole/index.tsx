@@ -40,20 +40,23 @@ class DialogSelectOrgRole extends Component<any, any> {
         projectId,
       })
       .then(res => {
-        let groups = [
+        // 「默认」分组是前端补的，只有名字和空 id（没有 sortIndex / disabled）；和接口给的分组放进同一个数组
+        const defaultGroups: (
+          | HapApi.MD.Web.Ajax.ResultModel.Organize.OrgRoleGroupModel
+          | { orgRoleGroupName: string; orgRoleGroupId: string }
+        )[] = [
           {
             orgRoleGroupName: _l('默认'),
             orgRoleGroupId: '',
           },
-        ]
-          .concat(res)
-          .map(l => {
-            return {
-              ...l,
-              children: [],
-              fetched: false,
-            };
-          });
+        ];
+        let groups = defaultGroups.concat(res).map(l => {
+          return {
+            ...l,
+            children: [],
+            fetched: false,
+          };
+        });
         !appointedOrganizeIds && this.setState({ expendTreeNodeKey: [groups[0].orgRoleGroupId] });
         this.fetchData(groups, groups[0].orgRoleGroupId);
       });

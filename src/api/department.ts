@@ -116,7 +116,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  searchDeptAndUsers: function (args: ApiArgs, options: ApiOptions = {}) {
+  searchDeptAndUsers: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Departments.SearchDeptAndUserListModel> {
     return mdyAPI('Department', 'SearchDeptAndUsers', args, options);
   },
   /**
@@ -477,7 +480,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDepartmentsByAccountId: function (args: ApiArgs, options: ApiOptions = {}) {
+  getDepartmentsByAccountId: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.AccountDepartmentsModel> {
     return mdyAPI('Department', 'GetDepartmentsByAccountId', args, options);
   },
   /**

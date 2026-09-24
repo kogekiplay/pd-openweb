@@ -63,7 +63,8 @@ function DataBase(props) {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [popupVisibleId, setPopupVisibleId] = useState(undefined);
-  const [limit, setLimit] = useState('-');
+  // 接口回来之前显示 '-'，之后是接口给的数字
+  const [limit, setLimit] = useState<number | string>('-');
 
   const getLimit = useCallback(() => {
     projectAjax.getDBInstanceLimit({ projectId }).then(res => {

@@ -55,7 +55,9 @@ export default function MobileMyStatus() {
 
           return item;
         });
-        const onStatusOption = _.get(res, 'onStatusOption') || {};
+        // 没有设置过状态时接口不给 onStatusOption（null 属性不输出），按「全部字段可缺」处理
+        const onStatusOption: Partial<HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption> =
+          res.onStatusOption || {};
 
         setData({
           loading: false,

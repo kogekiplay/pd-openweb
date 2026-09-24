@@ -60,13 +60,18 @@ function FunctionalSwitch(props) {
 
   const getSwitchData = () => {
     sheetAjax.getSwitch({ worksheetId: info.worksheetId }).then(res => {
-      let data = res.concat({
-        view: [],
-        state: res.filter(o => statistics.includes(o.type) && o.state).length > 0,
-        type: statisticsConst, //统计
-        roleType: 0,
-        viewIds: [],
-      });
+      // 末尾拼一个前端自己的「统计」总开关：type 500 不在后端的 SwitchType 枚举里，所以用展开而不是 concat
+      // （concat 要求元素类型和接口返回的完全一致；两种写法运行时等价）
+      let data = [
+        ...res,
+        {
+          view: [],
+          state: res.filter(o => statistics.includes(o.type) && o.state).length > 0,
+          type: statisticsConst, //统计
+          roleType: 0,
+          viewIds: [],
+        },
+      ];
       setInfo({
         ...info,
         loading: false,

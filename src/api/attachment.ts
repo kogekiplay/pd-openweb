@@ -237,7 +237,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachmentTotal: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAttachmentTotal: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Attachment.GetAttachmentTotalDto> {
     return mdyAPI('Attachment', 'GetAttachmentTotal', args, options);
   },
   /**

@@ -246,7 +246,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDBInstanceLimit: function (args: ApiArgs, options: ApiOptions = {}) {
+  getDBInstanceLimit: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<number> {
     return mdyAPI('Project', 'GetDBInstanceLimit', args, options);
   },
   /**
@@ -427,7 +427,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectLimitationInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectLimitationInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectLimitationModel> {
     return mdyAPI('Project', 'GetProjectLimitationInfo', args, options);
   },
   /**
@@ -539,7 +542,10 @@ export default {
   getManageSubscriptionUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetManageSubscriptionUrl', args, options);
   },
-  getProjectSource: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectSource: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Enum.ProjectIntergrationType> {
     return mdyAPI('Project', 'GetProjectSource', args, options);
   },
 };

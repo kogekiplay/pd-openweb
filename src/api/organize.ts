@@ -220,7 +220,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOrgRoleGroupsByProjectId: function (args: ApiArgs, options: ApiOptions = {}) {
+  getOrgRoleGroupsByProjectId: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Organize.OrgRoleGroupModel[]> {
     return mdyAPI('Organize', 'GetOrgRoleGroupsByProjectId', args, options);
   },
   /**
@@ -249,7 +252,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOrganizesByAccountId: function (args: ApiArgs, options: ApiOptions = {}) {
+  getOrganizesByAccountId: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Organize.OrganizeAccountMaps> {
     return mdyAPI('Organize', 'GetOrganizesByAccountId', args, options);
   },
 };

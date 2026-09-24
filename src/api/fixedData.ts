@@ -74,7 +74,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getRegionConfigInfos: function (args: ApiArgs, options: ApiOptions = {}) {
+  getRegionConfigInfos: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.RegionConfigInfo> {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('FixedData', 'GetRegionConfigInfos', args, options);
   },
@@ -95,7 +98,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  checkSensitive: function (args: ApiArgs, options: ApiOptions = {}) {
+  checkSensitive: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('FixedData', 'CheckSensitive', args, options);
   },
@@ -108,7 +111,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  loadTimeZones: function (args?: ApiArgs, options: ApiOptions = {}) {
+  loadTimeZones: function (args?: ApiArgs, options: ApiOptions = {}): ApiResultOf<Record<string, string>> {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('FixedData', 'LoadTimeZones', args, options);
   },
@@ -131,7 +134,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  loadLangList: function (args?: ApiArgs, options: ApiOptions = {}) {
+  loadLangList: function (
+    args?: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<Record<string, HapApi.MD.Caching.FixedDataCache.LangConfig>> {
     return mdyAPI('FixedData', 'LoadLangList', args, options);
   },
   /**

@@ -26,7 +26,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMyContactInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getMyContactInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccounContacttInfoModel> {
     return mdyAPI('Account', 'GetMyContactInfo', args, options);
   },
   /**

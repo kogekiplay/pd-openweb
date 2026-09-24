@@ -25,7 +25,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCardDetails: function (args: ApiArgs, options: ApiOptions = {}) {
+  getCardDetails: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Chat.CardDetailsModel> {
     return mdyAPI('Chat', 'GetCardDetails', args, options);
   },
   /**

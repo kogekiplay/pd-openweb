@@ -44,7 +44,10 @@ export default class CardMessage extends Component<any, any> {
         if (card.md === 'task') {
           this.setCardDetails(result.tasks[0]);
         } else if (card.md === 'calendar') {
-          const calendar = result.calendars[0];
+          // 卡片展示用的起止时间是前端算好后挂在日程对象上的（_startTime / _endTime），接口本身不给
+          const calendar:
+            | (HapApi.MD.Web.Ajax.ResultModel.Chat.CalendarCardModel & { _startTime?: string; _endTime?: string })
+            | undefined = result.calendars[0];
 
           if (calendar) {
             let _startTime = '';

@@ -63,7 +63,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getFilterCount: function (args: ApiArgs, options: ApiOptions = {}) {
+  getFilterCount: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<number> {
     return mdyAPI('SmartSearch', 'GetFilterCount', args, options);
   },
   /**
