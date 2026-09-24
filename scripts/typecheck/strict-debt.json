@@ -228,7 +228,6 @@
     "src/components/Mingo/ChatBot/components/Send.tsx",
     "src/components/Mingo/ChatBot/components/SendButtons.tsx",
     "src/components/Mingo/ChatBot/components/TryTry.tsx",
-    "src/components/Mingo/ChatBot/components/UploadFiles.tsx",
     "src/components/Mingo/ChatBot/components/buildRecommender.ts",
     "src/components/Mingo/ChatBot/components/buildSamples.ts",
     "src/components/Mingo/ChatBot/components/questionRecommender.ts",

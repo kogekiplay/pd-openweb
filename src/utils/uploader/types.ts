@@ -151,35 +151,47 @@ export interface UploadErrorInfo {
   details?: string;
 }
 
+/** filters.mime_types 的一项 */
+export interface UploaderMimeType {
+  title?: string | undefined;
+  extensions: string;
+}
+
+export interface UploaderFilters {
+  mime_types?: UploaderMimeType[] | undefined;
+  max_file_size?: string | number | undefined;
+  prevent_duplicates?: boolean | undefined;
+}
+
 export interface UploaderOption {
   /** 点它弹出文件选择框。可以是元素或 id */
-  browse_button?: HTMLElement | string;
+  browse_button?: HTMLElement | string | undefined;
   /** 往它上面拖文件也能加入队列 */
-  drop_element?: HTMLElement | string;
+  drop_element?: HTMLElement | string | undefined;
   /** 在它上面粘贴（Ctrl+V）也能加入队列。传 id */
-  paste_element?: string;
+  paste_element?: string | undefined;
   /** 允许多选，默认 true */
-  multi_selection?: boolean;
+  multi_selection?: boolean | undefined;
   /** accept 过滤，形如 '.png,.jpg' */
-  accept?: string;
+  accept?: string | undefined;
   /** 后缀黑名单（小写，不带点） */
-  ext_blacklist?: string[];
+  ext_blacklist?: string[] | undefined;
   /** 一次最多选多少个 */
-  max_file_count?: number;
+  max_file_count?: number | undefined;
   /** 选完立刻开始上传 */
-  auto_start?: boolean;
+  auto_start?: boolean | undefined;
   /** 七牛上传域名 */
-  url?: string;
+  url?: string | undefined;
   /** 分片大小，形如 '4mb' 或字节数；0 表示不分片 */
-  chunk_size?: string | number;
+  chunk_size?: string | number | undefined;
   /** 单文件大小上限，形如 '100mb' */
-  max_file_size?: string | number;
+  max_file_size?: string | number | undefined;
   /** 七牛 bucket 分类，传给取凭证接口 */
-  bucket?: number;
+  bucket?: number | undefined;
   /** 取凭证接口的业务类型 */
-  type?: number;
+  type?: number | undefined;
   /** 取凭证接口的额外参数 */
-  getTokenParam?: Record<string, unknown>;
+  getTokenParam?: Record<string, unknown> | undefined;
   /** 覆盖默认的取凭证实现（测试与特殊场景用） */
   getToken?: (
     /** 取凭证时【不传文件本身】，只按「bucket + 扩展名」问一份凭证，见 createUploader 的 tokenFiles */
@@ -188,7 +200,7 @@ export interface UploaderOption {
     args?: Record<string, unknown>,
   ) => Promise<UploadTokenInfo[]>;
   /** 由服务端决定 key 时为 true —— 此时不把 key 放进上传参数 */
-  save_key?: boolean;
+  save_key?: boolean | undefined;
   /** 需要带 x: 自定义变量时传一个对象（值本身不读，只当开关用，沿用原有语义） */
   x_vars?: unknown;
   /**
@@ -199,20 +211,28 @@ export interface UploaderOption {
    */
   multipart_params?: { token?: string | undefined; key?: string | undefined; [name: string]: string | undefined };
   /** 没给 drop_element 时，是否把 browse_button 也当拖放区（plupload 的同名选项，默认 true） */
-  dragdrop?: boolean;
+  dragdrop?: boolean | undefined;
   /**
    * 'h5' = 移动端 H5：FilesAdded 多给第三个参数 start，调用方做完压缩 / 加水印再调它开始上传
    *（见 Mobile/components/AttachmentFiles）
    */
-  source?: 'h5';
+  source?: 'h5' | undefined;
+  /**
+   * plupload 的 filters，语义照 plupload：
+   * - mime_types：后缀白名单，extensions 逗号分隔、不带点，'*' 表示不限。没给 accept 时拿它当文件选择框的 accept；
+   *   加入队列前按它筛，不在单子里的发 FILE_EXTENSION_ERROR、不进队列。直接写成数组等同于只给 mime_types。
+   * - max_file_size：没在顶层写 max_file_size 时用它。
+   * - prevent_duplicates：和队列里已有文件同名同大小的发 FILE_DUPLICATE_ERROR、不进队列。
+   */
+  filters?: UploaderMimeType[] | UploaderFilters | undefined;
   /** 开始上传前的检查，返回 false 或 reject 即中止 */
-  before_upload_check?: (up: Uploader, files: UploaderFile[]) => unknown;
+  before_upload_check?: ((up: Uploader, files: UploaderFile[]) => unknown) | undefined;
   /** 校验失败 / 超数量时回调 */
-  error_callback?: (type: number, files: UploaderFile[]) => void;
+  error_callback?: ((type: number, files: UploaderFile[]) => void) | undefined;
   /** 因超过单文件大小被移出队列时回调 */
-  remove_files_callback?: (up: Uploader, files: UploaderFile[]) => void;
+  remove_files_callback?: ((up: Uploader, files: UploaderFile[]) => void) | undefined;
   /** 事件处理器集合，键是事件名 */
-  init?: { [E in UploaderEvent]?: UploaderEventHandler<E> };
+  init?: { [E in UploaderEvent]?: UploaderEventHandler<E> } | undefined;
   [key: string]: any;
 }
 

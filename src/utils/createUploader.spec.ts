@@ -61,7 +61,7 @@ type UploadedFileResponse = {
   serverName?: string;
 };
 
-type UploadErrorInfo = { code?: number; status?: number; message?: string };
+type UploadErrorInfo = { code?: number; status?: number; message?: string; file?: UploaderFile };
 
 type Uploader = {
   /** 【调用方会直接改它】，用例 6 钉的就是「在 BeforeUpload 里写它能生效」这条契约 */
@@ -96,6 +96,9 @@ type UploaderOption = {
   auto_start?: boolean;
   max_file_count?: number;
   max_file_size?: string | number;
+  filters?:
+    | { title?: string; extensions: string }[]
+    | { mime_types?: { title?: string; extensions: string }[]; max_file_size?: string; prevent_duplicates?: boolean };
   x_vars?: unknown;
   error_callback?: (type: number, files: UploaderFile[]) => void;
   init?: { [E in UploaderEvent]?: (...args: UploaderEventArgs[E]) => void };
@@ -319,6 +322,66 @@ test('超过 max_file_size 发 FILE_SIZE_ERROR（-600，与 plupload 同值）',
   assert.ok(err, '应当发出 Error 事件');
   assert.strictEqual(err![1].code, mod.UploadError.FILE_SIZE_ERROR);
   assert.strictEqual(mod.UploadError.FILE_SIZE_ERROR, -600);
+});
+
+// ── 4b. filters.mime_types 后缀白名单（plupload 的同名选项；换实现时漏过一次）─────────
+test('不在 filters.mime_types 里的后缀发 FILE_EXTENSION_ERROR（-601），不进队列', async () => {
+  const { uploader, events, mod } = makeUploader({
+    filters: { mime_types: [{ title: 'image', extensions: 'jpg, png' }, { extensions: 'tar.gz' }] },
+  });
+  uploader.addFile([fakeFile('a.PNG'), fakeFile('b.pdf'), fakeFile('c.jpg'), fakeFile('d.tar.gz'), fakeFile('epng')]);
+  const errs = events.filter(e => e[0] === 'Error');
+  assert.deepStrictEqual(
+    errs.map(e => [e[1][1].code, e[1][1].file && e[1][1].file.name]),
+    [
+      [mod.UploadError.FILE_EXTENSION_ERROR, 'b.pdf'],
+      [mod.UploadError.FILE_EXTENSION_ERROR, 'epng'],
+    ],
+  );
+  assert.strictEqual(mod.UploadError.FILE_EXTENSION_ERROR, -601);
+  // 大小写不敏感；多段后缀按整段比
+  assert.deepStrictEqual(
+    uploader.files.map(f => f.name),
+    ['a.PNG', 'c.jpg', 'd.tar.gz'],
+  );
+});
+
+test('filters 直接写成数组时当作 mime_types（plupload 的旧写法）', async () => {
+  const { uploader, events, mod } = makeUploader({ filters: [{ title: 'File', extensions: 'xlsx,xls' }] });
+  uploader.addFile([fakeFile('a.xlsx'), fakeFile('b.csv')]);
+  const err = findEvent(events, 'Error');
+  assert.ok(err, '应当发出 Error 事件');
+  assert.strictEqual(err![1].code, mod.UploadError.FILE_EXTENSION_ERROR);
+  assert.deepStrictEqual(
+    uploader.files.map(f => f.name),
+    ['a.xlsx'],
+  );
+});
+
+test('filters.prevent_duplicates：和队列里同名同大小的发 FILE_DUPLICATE_ERROR（-602）', async () => {
+  const { uploader, events, mod } = makeUploader({ filters: { prevent_duplicates: true } });
+  uploader.addFile([fakeFile('a.txt', 10)]);
+  uploader.addFile([fakeFile('a.txt', 10), fakeFile('a.txt', 11)]);
+  const errs = events.filter(e => e[0] === 'Error');
+  assert.strictEqual(errs.length, 1);
+  assert.strictEqual(errs[0][1][1].code, mod.UploadError.FILE_DUPLICATE_ERROR);
+  assert.strictEqual(mod.UploadError.FILE_DUPLICATE_ERROR, -602);
+  assert.strictEqual(uploader.files.length, 2);
+});
+
+test('只在 filters 里写 max_file_size 时按它限制大小', async () => {
+  const { uploader, events, mod } = makeUploader({ filters: { max_file_size: '1kb' } });
+  uploader.addFile([fakeFile('big.txt', 2048)]);
+  const err = findEvent(events, 'Error');
+  assert.ok(err, '应当发出 Error 事件');
+  assert.strictEqual(err![1].code, mod.UploadError.FILE_SIZE_ERROR);
+});
+
+test("filters.mime_types 里写了 '*' 就不限后缀", async () => {
+  const { uploader, events } = makeUploader({ filters: { mime_types: [{ extensions: '*' }] } });
+  uploader.addFile([fakeFile('b.pdf')]);
+  assert.strictEqual(events.filter(e => e[0] === 'Error').length, 0);
+  assert.strictEqual(uploader.files.length, 1);
 });
 
 // ── 5. 取到凭证后挂到文件上 ──────────────────────────────────────────────

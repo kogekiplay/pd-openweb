@@ -177,7 +177,8 @@ function SendButtons(
           <UploadFiles
             disabled={disabled}
             ref={uploadFileRef}
-            maxFileLength={maxFileLength}
+            // 原来写成 maxFileLength（UploadFiles 不认），上限一直按 UploadFiles 自己的默认值 5 算
+            maxFilesLength={maxFileLength}
             tokenType={tokenType}
             existingFiles={existingFiles}
             allowMimeTypes={allowMimeTypes}
