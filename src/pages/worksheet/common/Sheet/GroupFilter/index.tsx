@@ -504,7 +504,7 @@ function GroupFilter(props) {
   const loadData = obj => fetchData(obj);
 
   //更新当前的navGroupData
-  const updateNavGroupData = ({ filterData, data, rowId, cb }: { rowId?: string; [key: string]: any }, notUpdate?) => {
+  const updateNavGroupData = ({ filterData, data, rowId, cb }: { rowId?: string; [key: string]: any }, notUpdate?: boolean | undefined) => {
     if (rowId && !searchRef.current.value) {
       filterData.forEach(item => {
         if (item.value === rowId) {

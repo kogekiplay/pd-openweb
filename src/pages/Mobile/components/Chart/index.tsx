@@ -60,7 +60,7 @@ const VERIFY_CHART_TYPES = [
 
 const chartComponentCache = {};
 
-const loadChartComponent = reportType => {
+const loadChartComponent = (reportType: number) => {
   const normalizedReportType = Number(reportType);
 
   if (chartComponentCache[normalizedReportType]) {

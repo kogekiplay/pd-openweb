@@ -360,7 +360,7 @@ class UserTable extends React.Component<any, any> {
     return false;
   };
 
-  updateFixedColumnState = (scrollContainer, scrollLeft) => {
+  updateFixedColumnState = (scrollContainer: HTMLDivElement | null | undefined, scrollLeft: number) => {
     const $tableContent = this.tableContent ? $(this.tableContent) : null;
 
     if (!$tableContent || !scrollContainer) return;

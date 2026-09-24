@@ -34,7 +34,7 @@ export default class MoreOverlay extends Component<any, any> {
       }
     }
   }
-  handleExportExcel = exportType => {
+  handleExportExcel = (exportType: number) => {
     const { report, pageId, exportData, filter, sourceType } = this.props;
     const {
       filters = [],
@@ -130,7 +130,7 @@ export default class MoreOverlay extends Component<any, any> {
       accountId: createdAccountId,
     });
   };
-  handleChangeFavorite = favorite => {
+  handleChangeFavorite = (favorite: boolean) => {
     const { report, worksheetId, projectId, pageId, onCancelFavorite } = this.props;
     const params = {
       type: 2,

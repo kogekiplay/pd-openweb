@@ -192,7 +192,7 @@ class ConfigPanel extends React.Component<any, any> {
     });
   };
 
-  onChangeColumn = columnNumber => {
+  onChangeColumn = (columnNumber: number) => {
     const { changeControls, controls, originalControls } = this.props;
     let newControls: FormControl[] = [];
     const data = originalControls

@@ -323,7 +323,7 @@ export default class RecordFooter extends Component<any, any> {
       },
     });
   };
-  handleAPPShare = async publicShare => {
+  handleAPPShare = async (publicShare: boolean) => {
     const { recordInfo, recordBase, worksheetInfo, formData = [] } = this.props;
     const { appId, worksheetId, viewId, recordId } = recordBase;
     const { shareCardSet } = this.state;

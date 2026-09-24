@@ -144,7 +144,7 @@ function pickArtifactReferenceFrom(source, { allowId = false, fallback = {} } = 
 
 // fallback 里只取 name / appName / versionLabel 补进结果
 function pickArtifactReferenceFromText(
-  text,
+  text: string,
   fallback: { name?: string; appName?: string; versionLabel?: string } = {},
 ) {
   if (!text) return null;
@@ -182,7 +182,7 @@ function pickLegacyArtifactReference(message) {
   };
 }
 
-function pickHistoryArtifactReference(message, text) {
+function pickHistoryArtifactReference(message, text: string) {
   const data = parseRecord(readField(message, 'data'));
   const payload = parseRecord(readField(message, 'payload'));
   const metadata = parseRecord(readField(message, 'metadata'));
@@ -612,7 +612,7 @@ export function cancelAgentRun(sessionId: string) {
 //    pickBuiltAppId 挖取，checkpoint 是这个窗口里唯一还留着 appId 的地方。
 // 后端按 accountId|sessionId 物理隔离，跨账号查不到记录（返回空进度 + resumable=false）。
 // 任何异常一律当作「无未完成搭建、无挂起弹层、无应用」，宁可少还原也不要因为兜底通道失败而阻断会话加载。
-export async function fetchSessionBuildSnapshot(sessionId) {
+export async function fetchSessionBuildSnapshot(sessionId: string) {
   const empty = { resumable: false, pendingConfirmation: null, appId: '' };
 
   if (!sessionId) return empty;
@@ -643,7 +643,7 @@ export async function fetchSessionBuildSnapshot(sessionId) {
 // status==='ready' 才有有效 credits.estimated（信用点，可为小数）；其余状态视作仍在计算（pending）。
 // 返回 { status, credits }：status 为 'ready' | 'pending' | 'error'；credits 为预估信用点数或 null（含 0 合法值）。
 // 兜底兼容是否已剥外层 data 包裹；网络/异常吞掉返回 error，调用方据此渲染「计算中…」或停止轮询。
-export async function fetchBuildEstimate(artifactId, versionId) {
+export async function fetchBuildEstimate(artifactId: string, versionId: string) {
   if (!artifactId) return { status: 'error', credits: null };
 
   try {
@@ -666,7 +666,7 @@ export async function fetchBuildEstimate(artifactId, versionId) {
 // 返回 { settled, credits }：settled 为 accountStatus==='settled'（已扣完、credits 为终值，含 0 合法值）；
 // pending_aggregate / traceId 未落库（接口返 credits=0+pending）/ 异常都视作未结算（settled:false），由调用方继续轮询。
 // 调用方只在 settled 时写入 credits，避免把阶段值 / 未命中的 0 误显示。
-export async function fetchTraceUsage(traceId, projectId: string) {
+export async function fetchTraceUsage(traceId: string | undefined, projectId: string) {
   if (!traceId || !projectId) return { settled: false, credits: null };
 
   try {
@@ -696,7 +696,7 @@ function normalizeStreamEvent(payload) {
   };
 }
 
-function parseSseBlock(block) {
+function parseSseBlock(block: string) {
   const lines = block
     .split(/\r?\n/)
     .map(l => l.trimEnd())

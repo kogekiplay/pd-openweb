@@ -149,7 +149,7 @@ function DeputeTable(props) {
       });
   };
 
-  const onClickOp = (opType, item) => {
+  const onClickOp = (opType: number, item) => {
     setShowMenu(false);
 
     if (opType === 1) {

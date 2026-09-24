@@ -98,7 +98,7 @@ export default function Edit(props) {
     setSelectedKeys(selectedKeys);
   };
 
-  const handleChangeComparisonLangId = id => {
+  const handleChangeComparisonLangId = (id: string) => {
     setComparisonLangId(id);
     if (id) {
       appManagementApi

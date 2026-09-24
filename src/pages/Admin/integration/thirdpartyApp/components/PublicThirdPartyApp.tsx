@@ -224,7 +224,7 @@ const PublicThirdPartyApp = forwardRef((props, ref) => {
   };
 
   /* 设置组织第三方应用开关 */
-  const editSetting = enabled => {
+  const editSetting = (enabled: boolean) => {
     VerifyPasswordConfirm.confirm({
       onOk: () => {
         openAuthorAjax.editSetting({ projectId, enabled, patEnabled }).then(res => {

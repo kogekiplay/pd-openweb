@@ -66,7 +66,7 @@ export default function Twilio(props) {
     return () => setIsEditSecret(false);
   }, []);
 
-  const handleInputChange = (field: string, value) => setForm(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
 
   const handleCancel = () => {
     if (initialFormRef.current) setForm(initialFormRef.current);

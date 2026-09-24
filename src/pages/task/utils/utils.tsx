@@ -13,7 +13,7 @@ export const errorMessage = error => {
 };
 
 // 获取storage
-export const getTaskStorage = key => {
+export const getTaskStorage = (key: string) => {
   const storage = window.localStorage.getItem(md.global.Account.accountId + key);
 
   if (storage) {
@@ -365,7 +365,7 @@ export const buildMyTaskIcon = (type, isBatch?) => {
 };
 
 // 修改任务状态为未完成时出现弹层
-export const taskStatusDialog = (status, callback) => {
+export const taskStatusDialog = (status, callback: () => void) => {
   if (status) {
     callback();
   } else {

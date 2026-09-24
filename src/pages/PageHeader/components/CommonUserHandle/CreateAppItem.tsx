@@ -69,7 +69,7 @@ function CreateAppItem(props) {
     setCreateType('');
   };
 
-  const handleSwitchCreateType = type => {
+  const handleSwitchCreateType = (type: string) => {
     if (type === 'importExcel') {
       setCreateMenuVisible(false);
       setDialogImportExcel(true);

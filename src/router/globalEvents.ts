@@ -7,7 +7,7 @@ export default () => {
   window.closeindex = 0;
   window.closeFns = {};
 
-  const parseUrl = url => {
+  const parseUrl = (url: string) => {
     var a = document.createElement('a');
     a.href = url;
     return {
@@ -22,7 +22,7 @@ export default () => {
   };
 
   // 验证客户端是否新开窗口
-  const checkClientOpenWindow = url => {
+  const checkClientOpenWindow = (url: string) => {
     const clientOpenList = localStorage.getItem('clientOpenList')
       ? JSON.parse(localStorage.getItem('clientOpenList'))
       : [];

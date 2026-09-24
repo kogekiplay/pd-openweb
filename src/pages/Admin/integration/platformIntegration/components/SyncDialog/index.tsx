@@ -222,7 +222,7 @@ export default class SyncDialog extends Component<any, any> {
   };
 
   // 搜索组织用户
-  searchProjecUsers = value => {
+  searchProjecUsers = (value: string) => {
     this.setState({ platformKeyword: value });
     if (!value) {
       this.getBindList({
@@ -234,7 +234,7 @@ export default class SyncDialog extends Component<any, any> {
   };
 
   // 搜索用户
-  searchWorkwxUsers = value => {
+  searchWorkwxUsers = (value: string) => {
     this.setState({ workwxKeyword: value });
     if (!value) {
       this.getBindList({
@@ -340,7 +340,7 @@ export default class SyncDialog extends Component<any, any> {
     );
   };
 
-  getCount = type => {
+  getCount = (type: number) => {
     if (type === 6) return _.difference(this.getUserList(type), this.getUserList(5)).length;
 
     return this.getUserList(type).length;

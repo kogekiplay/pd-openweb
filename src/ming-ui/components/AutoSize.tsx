@@ -9,7 +9,12 @@ function getElementSize(el) {
     : {};
 }
 
-function shouldUpdateSize(nextSize, prevSize, watchHeight, forceUpdate) {
+function shouldUpdateSize(
+  nextSize,
+  prevSize: { width: number; height: number } | undefined,
+  watchHeight: boolean | undefined,
+  forceUpdate: boolean,
+) {
   if (forceUpdate || !prevSize) {
     return true;
   }

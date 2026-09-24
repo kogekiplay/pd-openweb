@@ -124,7 +124,7 @@ export default function SlideLayerTem(props) {
     });
   };
 
-  const renderTemplate = (fields = [], isAppWorksheet: boolean, cb, hideIsNull?) => {
+  const renderTemplate = (fields = [], isAppWorksheet: boolean, cb, hideIsNull?: boolean | undefined) => {
     const canCheckFields = fields.filter(o => ![22].includes(o.mdType));
     const hasUnsupportedFields = canCheckFields.length < fields.length; // 是否存在不可选字段
     const isAll = canCheckFields.filter(o => o.isCheck).length >= canCheckFields.length;

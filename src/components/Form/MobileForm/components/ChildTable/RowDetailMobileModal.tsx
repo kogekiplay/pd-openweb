@@ -36,7 +36,7 @@ export default function RowDetailModal(props) {
   let closeConfirmFunc = null;
 
   // 切换上一条/下一条
-  const handleSwitch = type => {
+  const handleSwitch = (type: string) => {
     if ($('.mobileChildTableRowDetailDialog').find('.fileUpdateLoading').length) {
       alert(_l('附件正在上传，请稍后'), 3);
       return;

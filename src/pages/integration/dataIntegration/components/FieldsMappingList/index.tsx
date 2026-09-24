@@ -177,7 +177,7 @@ export default function FieldMappingList(props) {
     return systemFieldsExceptRowId.includes((sourceField.fid || '').split('_')[0]);
   };
 
-  const isCheckAll = (isSystemFields?) => {
+  const isCheckAll = (isSystemFields?: boolean | undefined) => {
     return (
       fieldsMapping.filter(
         item =>
@@ -188,7 +188,7 @@ export default function FieldMappingList(props) {
     );
   };
 
-  const onCheckAll = (checked: boolean, isSystemFields?) => {
+  const onCheckAll = (checked: boolean, isSystemFields?: boolean | undefined) => {
     const newFieldsMapping = fieldsMapping.map(item => {
       const { sourceField = {}, destField = {} } = item;
       return (isSystemFields ? isSystemField(item.sourceField) : !isSystemField(item.sourceField))
@@ -834,7 +834,7 @@ export default function FieldMappingList(props) {
     return columns;
   };
 
-  const renderMappingList = isSystemFields => {
+  const renderMappingList = (isSystemFields: boolean) => {
     const data = (fieldsMapping || []).filter(field => {
       const originId = (field.sourceField.fid || '').split('_')[0];
       return isSystemFields

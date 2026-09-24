@@ -18,7 +18,10 @@ import Users from './Users';
 
 const Comps = {};
 
-function mapToComp(keys: number[], Comp) {
+function mapToComp(
+  keys: number[],
+  Comp: typeof Areas | typeof CheckboxComp | typeof DateTime | typeof Number | typeof RelateRecord | typeof Users,
+) {
   keys.forEach(key => (Comps[key] = Comp));
 }
 

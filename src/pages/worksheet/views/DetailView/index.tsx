@@ -169,7 +169,7 @@ function DetailView(props) {
     }
   };
 
-  const changeGroupStatus = isOpen => {
+  const changeGroupStatus = (isOpen: boolean) => {
     setIsOpenGroup(isOpen);
     setGroupFilterWidth(
       isOpen ? cardWidth || window.localStorage.getItem(`detailGroupWidth_${viewId}`) || (coverCid ? 335 : 240) : 32,

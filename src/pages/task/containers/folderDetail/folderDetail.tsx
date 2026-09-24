@@ -509,7 +509,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 添加项目人员事件
    */
-  addFolderMembersEvents(evt: React.MouseEvent<HTMLElement, MouseEvent>, isAdmin) {
+  addFolderMembersEvents(evt: React.MouseEvent<HTMLElement, MouseEvent>, isAdmin: boolean) {
     const { data } = this.state;
     const { folderId, projectId } = this.props.taskConfig;
     let existsIds = [];
@@ -597,7 +597,7 @@ class FolderDetail extends Component<any, any> {
   /**
    * 设为成员和管理员
    */
-  updateFolderMemberAuth(accountId: string, avatar, fullname: string, isAdmin) {
+  updateFolderMemberAuth(accountId: string, avatar, fullname: string, isAdmin: boolean) {
     ajaxRequest
       .updateFolderMemberAuth({
         folderID: this.props.taskConfig.folderId,

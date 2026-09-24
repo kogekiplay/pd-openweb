@@ -9,7 +9,7 @@ export default function Gourup(props) {
   const data = _.find(translateData, { correlationId: selectNode.key }) || {};
   const translateInfo = data.data || {};
 
-  const handleSave = info => {
+  const handleSave = (info: { name: string | undefined }) => {
     onEditAppLang({
       id: data.id,
       parentId: app.id,

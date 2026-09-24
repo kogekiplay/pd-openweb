@@ -70,7 +70,7 @@ export default class CountDown extends Component<any, any> {
     this.setState({ timeStr: this.formatValue(d, h, m, s) });
   };
 
-  formatValue = (d, h, m, s) => {
+  formatValue = (d: number, h: number, m: number, s: number) => {
     if (d > 0) {
       return _l('%0天%1时%2分', d, h, m);
     } else if (h > 0 && !m) {

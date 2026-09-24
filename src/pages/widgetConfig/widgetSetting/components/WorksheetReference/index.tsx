@@ -31,7 +31,7 @@ const filterByAppId = (list = [], appId: string, appType, subModule: number) => 
   });
 };
 
-const showNav = (subModule, list = [], appType) => {
+const showNav = (subModule: number, list = [], appType: string) => {
   if (
     (subModule !== SUB_MODULE_TYPES.WIDGET && appType === 'subList') ||
     (subModule === SUB_MODULE_TYPES.WIDGET && appType === 'subList' && list.every(l => !!l.appId))
@@ -93,7 +93,7 @@ function WorksheetReferenceDialog(props) {
   const count = getGroupCount(references, type === 2 ? SUB_MODULE_TYPES.WORKFLOW : subModule);
   const windowHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
 
-  const handleSideClick = key => {
+  const handleSideClick = (key: number) => {
     if (subModule === key) return;
     const isWorkflow = key === SUB_MODULE_TYPES.WORKFLOW;
     setState({
@@ -158,7 +158,7 @@ function WorksheetReferenceDialog(props) {
     });
   };
 
-  const getReferenceList = (options?) => {
+  const getReferenceList = (options?: { appId: string; isRefresh: boolean } | { isRefresh: boolean } | undefined) => {
     if (loading) return;
 
     setState({ loading: true });
@@ -310,7 +310,7 @@ function WorksheetReferenceDialog(props) {
   };
 
   const renderTopBar = () => {
-    const getNavCount = value => {
+    const getNavCount = (value: string) => {
       if (_.includes([SUB_MODULE_TYPES.WORKFLOW], subModule) && appType !== value) return null;
 
       const filterList = filterByAppId(references, appId, value, subModule);

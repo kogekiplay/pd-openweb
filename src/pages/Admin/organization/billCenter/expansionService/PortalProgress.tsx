@@ -64,7 +64,7 @@ const subscribeTypes = [
 ];
 
 // 获取基础信息
-const getBaseInfo = moveX => {
+const getBaseInfo = (moveX: number) => {
   if (moveX <= 135) {
     return { itemWidth: 15, stepCount: 100, baseLeft: 0 };
   } else if (moveX > 135 && moveX <= 315) {

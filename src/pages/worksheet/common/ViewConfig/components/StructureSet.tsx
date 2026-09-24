@@ -83,7 +83,7 @@ export default function StructureSet(props) {
     });
   };
 
-  const renderFilter = key => {
+  const renderFilter = (key: string) => {
     const visibleKey = `${key}Visible`;
     const filterData = getAdvanceSetting(view, key) || [];
     const globalSheetControls = [];

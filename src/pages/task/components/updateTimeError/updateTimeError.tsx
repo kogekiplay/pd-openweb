@@ -113,7 +113,7 @@ export const updateTimeError = source => {
 /**
  * 修改任务状态二次确认
  */
-export const updateTaskErrorDialog = callback => {
+export const updateTaskErrorDialog = (callback: () => void) => {
   Dialog.confirm({
     closable: false,
     title: _l('任务还未开始，是否仍要完成此任务？'),

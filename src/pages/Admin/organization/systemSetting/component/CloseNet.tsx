@@ -49,7 +49,7 @@ export default class CloseNet extends Component<any, CloseNetState> {
       });
   }
 
-  getFormatText = num => {
+  getFormatText = (num: number | undefined) => {
     return this.state.isLoading || !_.isNumber(num) ? '-' : formatValue(num);
   };
 

@@ -155,7 +155,7 @@ export default function CreateWechatOrAliMerchant(props) {
   };
 
   // 验证&创建&保存商户
-  const checkMerchant = type => {
+  const checkMerchant = (type: string) => {
     if (
       (!isCreate && type === 'save' && !shortName) ||
       ((isCreate || type === 'check') &&

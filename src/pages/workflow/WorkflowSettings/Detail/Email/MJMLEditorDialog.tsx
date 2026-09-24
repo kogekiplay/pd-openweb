@@ -205,7 +205,7 @@ export default function MJMLEditorDialog({
       });
   };
 
-  const insertFieldCode = text => {
+  const insertFieldCode = (text: string) => {
     const editor = editorRef.current;
 
     if (editor && editor.view) {

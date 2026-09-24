@@ -172,7 +172,7 @@ export function WidgetStyleSetting(props) {
   const titleControl = _.find(allControls, a => a.attribute === 1);
 
   // 关联表支持搜索的控件
-  const relateSearchUnSupport = (controlData?) => {
+  const relateSearchUnSupport = (controlData?: FormControl | undefined) => {
     const tempData = controlData || titleControl;
     return tempData && !_.includes(SUPPORT_RELATE_SEARCH, _.get(tempData, 'type'));
   };

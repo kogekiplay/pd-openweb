@@ -49,7 +49,7 @@ class DialogSettingInviteRules extends React.Component<any, any> {
     });
   };
 
-  tipAnimation = $elem => {
+  tipAnimation = ($elem: JQuery<HTMLElement>) => {
     $elem.show();
   };
 

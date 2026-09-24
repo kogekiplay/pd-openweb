@@ -353,7 +353,7 @@ class AdminWorkflowList extends Component<any, any> {
     this.getList();
   }, 200);
 
-  changeTab = tab => {
+  changeTab = (tab: string) => {
     safeLocalStorageSetItem('workflowTab', tab);
     this.setState({ activeTab: tab });
   };

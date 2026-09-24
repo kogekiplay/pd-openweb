@@ -301,7 +301,7 @@ export default class EnterpriseCard extends Component<any, any> {
   };
 
   //操作行为
-  renderOption(type) {
+  renderOption(type: string) {
     const { card } = this.props;
 
     switch (type) {

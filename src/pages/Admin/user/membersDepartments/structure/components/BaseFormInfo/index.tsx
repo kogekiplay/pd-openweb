@@ -378,7 +378,7 @@ export default class BaseFormInfo extends Component<any, any> {
   renderMoreOption = (item, i) => {
     const { visible, currentDepartmentId, departmentInfos = [], departmentJobInfos = [], useMultiJobs } = this.state;
 
-    const onMoveDepart = action => {
+    const onMoveDepart = (action: string) => {
       const currentItem = useMultiJobs ? departmentJobInfos.filter(it => it.key === item.key)[0] || {} : item;
       const list = useMultiJobs ? departmentJobInfos : departmentInfos;
       list.splice(i, 1);
@@ -465,7 +465,7 @@ export default class BaseFormInfo extends Component<any, any> {
     );
   };
 
-  renderDepartmentJob = (type = 'single', departmentItem: Record<string, any> = {}, index?) => {
+  renderDepartmentJob = (type = 'single', departmentItem: Record<string, any> = {}, index?: number | undefined) => {
     const { typeCursor, projectId, authority = [] } = this.props;
     const {
       departmentInfos = [],

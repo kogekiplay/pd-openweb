@@ -83,7 +83,7 @@ function ContainerCon(props) {
   const tipStyle =
     baseSetInfo.pageMode === 6 && !browserIsMobile() ? { marginTop: document.documentElement.clientHeight / 4 } : {};
 
-  const getWaring = status => {
+  const getWaring = (status: number) => {
     const { isErrUrl } = props;
 
     switch (status) {

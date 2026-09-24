@@ -56,7 +56,7 @@ class HomePostFilter extends React.Component<any, any> {
     }
   }
 
-  setFontSize = step => {
+  setFontSize = (step: number) => {
     const fontSize = this.props.fontSize + step;
     this.props.dispatch(changeFontSize(fontSize));
   };

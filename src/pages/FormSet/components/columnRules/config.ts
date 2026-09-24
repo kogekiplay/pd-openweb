@@ -252,7 +252,7 @@ export function getNewDropDownData(controls: FormControl[] = [], actionType) {
     }
   }
 
-  function filterRelations(item) {
+  function filterRelations(item: FormControl) {
     return (item.relationControls || []).filter(re => {
       return (
         _.includes(item.showControls || [], re.controlId) &&
@@ -485,7 +485,7 @@ export function filterDeleteOptions(items, controls: FormControl[] = []) {
   });
 }
 
-export const filterText = (key, filterData, control) => {
+export const filterText = (key, filterData, control: FormControl) => {
   const { filterType = '' } = filterData;
 
   if (filterType === FILTER_CONDITION_TYPE.ISNULL || filterType === FILTER_CONDITION_TYPE.HASVALUE) {
@@ -728,7 +728,7 @@ export function getNewIconByType(control = {}) {
 }
 
 // 业务规则默认名称
-export function getDefaultRuleName(data = [], activeTab) {
+export function getDefaultRuleName(data = [], activeTab: number) {
   const displayNum = data.filter(i => i.type === activeTab).length + 1;
   return getUnUniqName(
     data,
@@ -757,7 +757,7 @@ export function getActionError(value = {}) {
 
 // 对比是否有变更
 // 只按 ruleId 比对：带 '-' 的是还没保存过的新规则，一律当作有改动
-export function hasRuleChanged(data = [], selectRule: { ruleId?: string } = {}, passAlert?) {
+export function hasRuleChanged(data = [], selectRule: { ruleId?: string } = {}, passAlert?: boolean | undefined) {
   const originData = _.find(data, i => i.ruleId === selectRule.ruleId);
   const { ruleId = '' } = selectRule;
 
@@ -771,7 +771,7 @@ export function hasRuleChanged(data = [], selectRule: { ruleId?: string } = {}, 
 
 // 符合错误提示配置的指定字段
 export const getErrorControls = (controls: FormControl[] = []) => {
-  const filterControl = i => {
+  const filterControl = (i: FormControl) => {
     if (_.includes(SYS_CONTROLS.concat(SYS), i.controlId)) return false;
     if (_.includes([29, 51], i.type) && _.includes(['2', '5', '6'], _.get(i, 'advancedSetting.showtype'))) return false;
     if (_.includes([22, 43, 45, 47, 49, 10010], i.type)) return false;

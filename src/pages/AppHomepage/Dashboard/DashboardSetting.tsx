@@ -268,7 +268,7 @@ export default function DashboardSetting(props) {
       : color
     : currentTheme.themeKey;
 
-  const updateLogo = logoName => {
+  const updateLogo = (logoName: string | undefined) => {
     projectSettingApi.setLogo({ logoName, projectId: currentProject.projectId }).then(res => {
       if (res) {
         updatePlatformSetting({ logo: logoName, editingKey: 'logo' });

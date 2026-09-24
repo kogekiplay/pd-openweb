@@ -59,7 +59,7 @@ const RECORD_DISPLAY_OPTIONS = [
   },
 ];
 
-const getTabsDisplay = isDropdown => {
+const getTabsDisplay = (isDropdown: boolean) => {
   return [
     { text: _l('过滤选择范围'), value: 0 },
     isDropdown ? { text: _l('下拉框设置'), value: 2 } : { text: _l('弹层设置'), value: 2 },

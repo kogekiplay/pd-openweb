@@ -70,7 +70,7 @@ export default class Show extends React.Component<any, any> {
     });
   };
 
-  onChange = type => {
+  onChange = (type: string) => {
     const { updateCurrentView, view, columns, appId } = this.props;
     const { customShowControls, showControls } = this.state;
 

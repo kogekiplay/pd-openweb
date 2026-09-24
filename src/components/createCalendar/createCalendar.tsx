@@ -852,7 +852,7 @@ CreateCalendar.methods = {
       }
     });
 
-    var existsIdsCheckFun = function (i, id) {
+    var existsIdsCheckFun = function (i: number, id) {
       if (id === users[i].accountId) {
         isExistes = true;
         return false;
@@ -860,7 +860,7 @@ CreateCalendar.methods = {
       return undefined;
     };
 
-    var existsAccountsCheckFun = function (i, account) {
+    var existsAccountsCheckFun = function (i: number, account) {
       if (account === users[i].account) {
         isExistes = true;
         var $imgMemberBox = $(".imgMemberBox[data-account='" + account + "']");

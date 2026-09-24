@@ -63,7 +63,7 @@ class FolderToolbar extends Component<any, any> {
    * 修改任务状态
    * @param  {number} status
    */
-  switchStatus(status) {
+  switchStatus(status: number) {
     this.setState({ showOperator: false });
     this.props.dispatch(changeTaskStatus(status));
     this.props.dispatch(updateDataSource());
@@ -73,7 +73,7 @@ class FolderToolbar extends Component<any, any> {
    * 切换视图
    * @param  {number} viewType
    */
-  switchView(viewType) {
+  switchView(viewType: number) {
     this.props.dispatch(changeView(viewType));
     this.props.dispatch(getTimeAxisSource());
     this.props.dispatch(updateDataSource());
@@ -83,7 +83,7 @@ class FolderToolbar extends Component<any, any> {
    * 是否显示周末
    * @param  {boolean} filter  true: 不显示  false: 显示
    */
-  filterWeekend(filter) {
+  filterWeekend(filter: boolean) {
     this.props.dispatch(changeFilterWeekend(filter));
     this.props.dispatch(getTimeAxisSource());
     this.props.dispatch(updateDataSource());
@@ -104,7 +104,7 @@ class FolderToolbar extends Component<any, any> {
    * 切换显示子任务的层级
    * @param  {number} level
    */
-  switchLevel(level) {
+  switchLevel(level: number) {
     this.setState({ showLevel: false });
     this.props.dispatch(changeSubTaskLevel(level));
     this.props.dispatch(updateDataSource());

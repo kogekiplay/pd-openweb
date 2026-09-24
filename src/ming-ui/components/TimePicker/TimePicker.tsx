@@ -7,7 +7,7 @@ import PositionContainer from 'ming-ui/components/PositionContainer';
 import Panel from './Panel';
 import '../less/TimePicker.less';
 
-const getComputedStyle = (element, attr) => {
+const getComputedStyle = (element, attr: string) => {
   return window.getComputedStyle(element, null).getPropertyValue(attr);
 };
 
@@ -182,7 +182,7 @@ class TimePicker extends Component<any, any> {
     }
   };
 
-  addEvent(element, type: string, handler) {
+  addEvent(element: Document, type: string, handler) {
     element.addEventListener(type, handler);
     return {
       remove() {

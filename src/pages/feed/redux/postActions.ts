@@ -6,7 +6,7 @@ import { emitter } from 'src/utils/common';
 import postEnum from '../constants/postEnum';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
-function handleMdAjaxFail(dispatch, actionType: string, payload = {}) {
+function handleMdAjaxFail(dispatch: AppDispatch, actionType: string, payload = {}) {
   return result => {
     if (result && result.status === 0) {
       dispatch(Object.assign({ type: actionType + '_ABORTED' }, payload));
@@ -95,7 +95,7 @@ function getMaxCommentId(postIds, postsById) {
   return postItem && postItem.commentID;
 }
 
-export function loading(isLoading) {
+export function loading(isLoading: boolean) {
   return {
     type: 'POST_LOADING',
     isLoading,
@@ -297,7 +297,7 @@ export function filter(inputOptions) {
   };
 }
 
-export function getPostDetail(postId, knowledgeId?, projectId?) {
+export function getPostDetail(postId, knowledgeId?, projectId?: string | undefined) {
   return dispatch => {
     dispatch({ type: 'POST_GET_POST_DETAIL_START', postId });
     postAjax.getPostDetail({ postId, knowledgeId, projectId }).then(

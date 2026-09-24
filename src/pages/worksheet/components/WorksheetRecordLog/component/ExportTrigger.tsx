@@ -49,7 +49,7 @@ export default function ExportTrigger(props) {
   const [visible, setVisible] = useState(false);
   const featureStatus = getFeatureStatus(projectId, VersionProductType.batchDownloadFiles);
 
-  const onExport = type => {
+  const onExport = (type: string) => {
     setVisible(!visible);
     DownloadAjax.exportWorksheetOperationLogs({
       worksheetId,

@@ -298,7 +298,7 @@ export const addGroupSession =
  * @param {*} cb
  */
 export const addUserSession =
-  (id, msg: Record<string, any> = {}, isOpen = true, cb?) =>
+  (id, msg: Record<string, any> = {}, isOpen = true, cb?: (() => void) | undefined) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     // if (utils.chatWindow.is(id)) {
@@ -893,20 +893,21 @@ export const updateGroupPushNotice = (groupId: string, isPushNotice) => (dispatc
  * @param {*} groupId
  * @param {*} isForbidInvite
  */
-export const updateForbIdInvite = (groupId: string, isForbidInvite) => (dispatch: AppDispatch, getState: GetState) => {
-  const { currentSessionList } = getState().chat;
-  const newCurrentSessionList = currentSessionList.map(item => {
-    if (item.id === groupId) {
-      item.isForbidInvite = isForbidInvite;
-    }
+export const updateForbIdInvite =
+  (groupId: string, isForbidInvite: boolean) => (dispatch: AppDispatch, getState: GetState) => {
+    const { currentSessionList } = getState().chat;
+    const newCurrentSessionList = currentSessionList.map(item => {
+      if (item.id === groupId) {
+        item.isForbidInvite = isForbidInvite;
+      }
 
-    return item;
-  });
-  dispatch({
-    type: 'UPDATE_CURRENT_SESSION',
-    result: newCurrentSessionList,
-  });
-};
+      return item;
+    });
+    dispatch({
+      type: 'UPDATE_CURRENT_SESSION',
+      result: newCurrentSessionList,
+    });
+  };
 
 /**
  * 设为官方群组
@@ -1757,7 +1758,7 @@ export const removeGotoMessage = id => {
  * 更新是否在标签页聊天的状态
  * @param {*} isWindow
  */
-export const setIsWindow = isWindow => {
+export const setIsWindow = (isWindow: boolean) => {
   return {
     type: 'UPDATE_IS_WINDOW',
     result: isWindow,
@@ -1897,7 +1898,7 @@ export const setSlience = message => (dispatch: AppDispatch, getState: GetState)
  * 更新 socket 状态
  * @param {*} state
  */
-export const setSocketState = state => {
+export const setSocketState = (state: number) => {
   return {
     type: 'UPDATE_SOCKET_STATE',
     result: state,

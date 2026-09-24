@@ -300,7 +300,7 @@ const APP_QUICK_ACTIONS = [
 // 3) 随机一条 TryTry 问题 → 聚焦并填入
 // 嵌入态（embed）：@ mention 呼出应用选择浮层在 iframe 内不适用，整列统一为最后一类（TryTry 推荐问题，
 // type=fill 点击直接发起对话），去掉 @ 与搭建样例，取 3 条不重复。
-function buildTrySamples(embed) {
+function buildTrySamples(embed: boolean) {
   if (embed) {
     return pickRandomSamples(3, TRY_TRY_LIST).map(item => ({ type: 'fill', text: (item || {}).text || '' }));
   }

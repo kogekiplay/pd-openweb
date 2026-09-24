@@ -272,7 +272,7 @@ export default class CellControl extends React.Component<any, any> {
     return errorType;
   }
 
-  getErrorText(errorType, cell) {
+  getErrorText(errorType: string, cell) {
     const { isSubList } = this.props;
 
     if (typeof FORM_ERROR_TYPE_TEXT[errorType] === 'string') {

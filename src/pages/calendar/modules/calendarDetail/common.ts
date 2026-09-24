@@ -275,7 +275,7 @@ export const getCalendarColor = function (color) {
  * 日程操作
  */
 
-export const changeCategory = ({ id, catID }, callback) => {
+export const changeCategory = ({ id, catID }, callback: () => void) => {
   AjaxRequest.updateCalendarCatId({
     calendarID: id,
     catID,
@@ -389,7 +389,7 @@ export const addMember = ({ members, users }, { id, recurTime, originRecur, isCh
  * @param { string} accountID
  * @param { object } calendar
  */
-export const removeMember = function (accountID, { id, recurTime, originRecur, isChildCalendar }) {
+export const removeMember = function (accountID: string, { id, recurTime, originRecur, isChildCalendar }) {
   const isMe = accountID === md.global.Account.accountId;
   const operatorTitle = isMe ? _l('您确定退出该日程吗？') : _l('您确定移出日程成员吗？');
   const recurTitle = isMe ? _l('您确定退出重复日程吗？') : _l('您确定移出重复日程成员吗？');
@@ -439,7 +439,7 @@ export const removeMember = function (accountID, { id, recurTime, originRecur, i
  * 编辑日程
  * @param { object } calendar
  */
-export const editCalendar = (calendar, isEdit, { originStartTime, originEndTime }) => {
+export const editCalendar = (calendar, isEdit: boolean, { originStartTime, originEndTime }) => {
   const { members } = calendar;
 
   return new Promise<{ isAllCalendar: boolean; oldStartTime: string; oldEndTime: string; reInvite?: boolean }>(resolve => {
@@ -771,7 +771,7 @@ export const removeWxMember = function (thirdId, { id, recurTime, originRecur, i
  * @param { string } calendarId | 日程id
  * @param { bool } isPrivate | 是否是私密日程
  */
-export const updatePrivate = function (calendarId, isPrivate) {
+export const updatePrivate = function (calendarId, isPrivate: boolean) {
   return new Promise(resolve => {
     AjaxRequest.updateCalendarIsPrivate({
       calendarID: calendarId,

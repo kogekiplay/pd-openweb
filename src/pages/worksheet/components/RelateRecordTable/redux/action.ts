@@ -617,7 +617,7 @@ export function appendRecords(records: RecordRow[] = [], { afterRecordId } = {})
   };
 }
 
-export function appendFakeRecords(records) {
+export function appendFakeRecords(records: RecordRow[]) {
   return {
     type: 'APPEND_FAKE_RECORDS',
     records,

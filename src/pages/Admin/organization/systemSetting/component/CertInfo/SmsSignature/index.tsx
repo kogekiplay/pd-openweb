@@ -43,7 +43,7 @@ export default function SmsSignature(props) {
       .catch(() => setLoading(false));
   };
 
-  const onMenuClick = (key, item) => {
+  const onMenuClick = (key: string, item) => {
     setPopupVisibleId('');
     switch (key) {
       case 'smsTest':

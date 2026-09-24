@@ -92,7 +92,7 @@ export const login = () => {
   location.href = pathCompletion('/login');
 };
 
-export const getScript = (src, func) => {
+export const getScript = (src: string, func: () => void) => {
   let script = document.createElement('script');
   script.async = 'async';
   script.src = src;

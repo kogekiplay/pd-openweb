@@ -206,7 +206,7 @@ class TaskControl extends Component<any, any> {
   /**
    * 更新关联控件的值
    */
-  updateRelationValue(id, values) {
+  updateRelationValue(id: string, values) {
     const controls: FormControl[] = this.props.taskControls[this.props.taskId];
     const relations = JSON.parse(_.find(controls, item => item.controlId === id).value);
     const diffItem: Record<string, any> = {};

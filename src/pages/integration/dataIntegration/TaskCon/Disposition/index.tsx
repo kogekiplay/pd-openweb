@@ -253,7 +253,7 @@ function Disposition(props) {
   /**
    * 添加普通成员
    */
-  const addMembers = evt => {
+  const addMembers = (evt: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     evt.stopPropagation();
 
     dialogSelectUser({

@@ -25,7 +25,7 @@ export default function (props) {
   const InputRef = useRef<HTMLInputElement | null>(null);
   const InputEmail = useRef<HTMLInputElement | null>(null);
 
-  const doSetAccountInfo = callback => {
+  const doSetAccountInfo = (callback: () => void) => {
     validateCompanyInfoRequiredField().then(res => {
       if (!res) {
         return;
@@ -116,7 +116,7 @@ export default function (props) {
   };
 
   email = emailOrTel && RegExpValidator.isEmail(emailOrTel) ? emailOrTel : email;
-  const renderWarn = key => {
+  const renderWarn = (key: string) => {
     const warn = warnList.find(o => o.tipDom === key);
     if (!warn) return undefined;
     return <div className={cx('warnTips')}>{warn.warnTxt}</div>;

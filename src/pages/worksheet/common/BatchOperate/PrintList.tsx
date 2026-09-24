@@ -222,7 +222,7 @@ export default function PrintList(props) {
     }
   }
 
-  const renderBatchPrint = templateType => {
+  const renderBatchPrint = (templateType: string) => {
     const defaultTempList = templateList.filter(it =>
       [PRINT_TYPE.SYS_PRINT, PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(it.type),
     );

@@ -62,7 +62,7 @@ export default ({
     return source;
   }, []);
 
-  const renderList = (source, isFile?) => {
+  const renderList = (source, isFile?: boolean | undefined) => {
     return source.map((key, index: number) => {
       const [nodeId, controlId] = parseId(key);
 
@@ -163,7 +163,7 @@ export default ({
     );
   };
 
-  const getPreviewContent = content => {
+  const getPreviewContent = (content: string) => {
     testArray.forEach(key => {
       const [nodeId, controlId] = parseId(key);
 

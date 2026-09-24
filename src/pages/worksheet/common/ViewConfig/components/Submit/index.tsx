@@ -178,7 +178,7 @@ function ActionCon(props) {
   );
 }
 
-const handleCopy = content => {
+const handleCopy = (content: string) => {
   copy(content);
   alert(_l('复制成功'));
 };
@@ -217,7 +217,7 @@ export default function SubmitConfig(params) {
     });
   }, [params]);
 
-  const handleScroll = (pageIndex: number, reGet?) => {
+  const handleScroll = (pageIndex: number, reGet?: boolean | undefined) => {
     if (!_.get(view, 'pluginInfo.id')) {
       return;
     }

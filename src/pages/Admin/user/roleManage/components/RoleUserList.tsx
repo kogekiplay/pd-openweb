@@ -267,7 +267,7 @@ class RoleUserList extends Component<any, any> {
     });
   };
 
-  handleScroll = type => {
+  handleScroll = (type: number) => {
     const ref = type === 0 ? this.scrollNullHeadRef : this.scrollRef;
     if (!ref.current) return;
 

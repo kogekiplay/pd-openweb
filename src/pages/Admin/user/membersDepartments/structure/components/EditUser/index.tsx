@@ -153,7 +153,7 @@ export default class EditUser extends Component<any, any> {
 
     return value;
   };
-  clearError = field => {
+  clearError = (field: string) => {
     const { errors = {} } = this.state;
     delete errors[field];
     this.setState({ errors });

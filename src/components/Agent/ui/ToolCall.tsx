@@ -154,7 +154,7 @@ const RunningState = styled.div`
   }
 `;
 
-function inferLanguage(value) {
+function inferLanguage(value: string) {
   const normalized = value.trim();
 
   if (!normalized) return 'text';

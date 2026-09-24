@@ -460,7 +460,7 @@ export default class Link extends Component<any, any> {
   /**
    * 切换链接方式
    */
-  switchLinkType(linkType) {
+  switchLinkType(linkType: number) {
     const { data } = this.state;
     const formProperties = _.cloneDeep(data.formProperties);
 

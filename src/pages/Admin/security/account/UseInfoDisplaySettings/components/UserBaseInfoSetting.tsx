@@ -64,7 +64,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     });
   };
 
-  changeCardDepartmentTYpeId = typeId => {
+  changeCardDepartmentTYpeId = (typeId: number) => {
     const { cardSettingData } = this.state;
     const index = _.findIndex(cardSettingData, v => _.includes([51, 52], v.typeId));
     cardSettingData[index] = {
@@ -220,7 +220,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     );
   };
 
-  renderAddAction = isCard => {
+  renderAddAction = (isCard: boolean) => {
     const typeFields = isCard ? 'basePopupVisible' : 'cardPopupVisible';
     const { editStatus } = this.props;
 
@@ -281,7 +281,7 @@ export default class UserBaseInfoSetting extends Component<any, any> {
     );
   };
 
-  renderPreviewValue = (item, underName?) => {
+  renderPreviewValue = (item, underName?: boolean | undefined) => {
     if (!item) return null;
     const { userInfo = {} } = this.state;
     let content = '';

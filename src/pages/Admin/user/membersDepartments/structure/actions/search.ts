@@ -40,7 +40,7 @@ export const CUSTOM_LIST = 'CUSTOM_LIST';
  * @param {array} accountIds - 用户accountId array
  * @returns {{object}}
  */
-export const getCustomList = accountIds => {
+export const getCustomList = (accountIds: string[]) => {
   return {
     type: CUSTOM_LIST,
     accountIds,

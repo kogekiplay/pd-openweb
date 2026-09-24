@@ -135,7 +135,7 @@ export default class AvatarEditor extends Component<any, any> {
     };
   };
 
-  getAvatarImageSrc = image => {
+  getAvatarImageSrc = (image: HTMLImageElement) => {
     const editorSize = this.getEditorSize();
     const imageWidth = image.naturalWidth || image.width;
     const imageHeight = image.naturalHeight || image.height;

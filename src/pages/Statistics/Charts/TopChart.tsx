@@ -324,7 +324,7 @@ export default class extends Component<any, any> {
       </div>
     );
   }
-  renderItem(data, index: number, progressControlId, maxValue) {
+  renderItem(data, index: number, progressControlId, maxValue: number) {
     const { projectId, reportData, isViewOriginalData, isLinkageData, isThumbnail, sourceType } = this.props;
     const { style = {}, yaxisList, displaySetup, xaxes } = reportData;
     const { valueProgressVisible } = style;

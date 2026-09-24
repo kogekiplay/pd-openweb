@@ -475,7 +475,7 @@ function EntityRelationship(props) {
     onCenterCell(res.workSheetId);
   };
 
-  const setGraphZoom = type => {
+  const setGraphZoom = (type: boolean) => {
     //type false sub   true add
     const lastZoom = graphRef.current.zoom();
 

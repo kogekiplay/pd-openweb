@@ -75,7 +75,7 @@ export const SetAppRolePagingModel = data => {
 
 let ajaxOut: ApiResult | null = null;
 
-export const getOutList = (props, isOut) => {
+export const getOutList = (props, isOut: boolean) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { appId } = props;
     const { appRolePagingModel = {} } = getState().appRole;
@@ -123,7 +123,7 @@ export const getRoleSummary = (appId: string, cb?, loading?) => {
 
 let ajaxApply: ApiResult | null = null;
 
-export const getApplyList = (props, isApply) => {
+export const getApplyList = (props, isApply: boolean) => {
   return dispatch => {
     const { appId } = props;
     isApply && dispatch({ type: 'UPDATE_ROLE_LOADING', data: true });

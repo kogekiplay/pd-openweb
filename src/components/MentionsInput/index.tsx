@@ -150,7 +150,7 @@ const MentionsInput = props => {
     return mentionsCollection;
   };
 
-  const updateTriggerPopupVisible = visible => {
+  const updateTriggerPopupVisible = (visible: boolean) => {
     if (!visible) {
       createRequestId();
     }
@@ -501,7 +501,7 @@ const MentionsInput = props => {
     }
   };
 
-  const adjustViewport = direction => {
+  const adjustViewport = (direction: string) => {
     const wrapEl = popupRef.current;
     const activeEl = wrapEl ? wrapEl.querySelector('.mentionItem.active') : null;
 

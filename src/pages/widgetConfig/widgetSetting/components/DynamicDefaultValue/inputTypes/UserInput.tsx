@@ -64,7 +64,7 @@ export default class DateInput extends Component<any, any> {
       )
       .map(i => JSON.parse(i.staticValue || '{}').accountId);
 
-    const getUsers = usersId => {
+    const getUsers = (usersId: { cid: string; rcid: string; staticValue: string }[]) => {
       // 人员去重
       const getId = item => _.get(item, ['staticValue', 'accountId']);
       const existUser = dynamicValue

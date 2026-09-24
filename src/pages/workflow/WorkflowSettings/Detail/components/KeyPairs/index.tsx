@@ -80,14 +80,14 @@ export default ({
     updateSource({ [sourceKey]: items });
   };
 
-  const deleteKeys = i => {
+  const deleteKeys = (i: number) => {
     const items = _.cloneDeep(source);
 
     _.remove(items, (_obj, index) => index === i);
     updateSource({ [sourceKey]: items });
   };
 
-  const renderTag = (tag, i) => {
+  const renderTag = (tag, i: number) => {
     const key = tag.replace(/^\$|\$$/g, '');
     const ids = key.split(/([a-zA-Z0-9#]{24,32})-/).filter(item => item);
     const nodeObj = formulaMap[ids[0]] || {};
@@ -150,7 +150,7 @@ export default ({
     );
   };
 
-  const renderNodeList = (selected, i) => {
+  const renderNodeList = (selected: boolean, i: number) => {
     const onHideMenu = () => {
       setIndex(-1);
     };

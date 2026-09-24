@@ -159,7 +159,7 @@ function ImportPlugin(props) {
 
   const pluginApi = pluginApiConfig[pluginType];
 
-  const onCheckFile = async (url: string, alertError?) => {
+  const onCheckFile = async (url: string, alertError?: boolean | undefined) => {
     setFileChecking(true);
     let checkSuccess = false;
     await fileApi
@@ -216,7 +216,7 @@ function ImportPlugin(props) {
     }
   };
 
-  const renderUpload = children => {
+  const renderUpload = (children: React.JSX.Element) => {
     return (
       <QiniuUpload
         className="mTop24"

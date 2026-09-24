@@ -7,7 +7,8 @@ export const DASHBOARD_THEME_ASSET_URL_PREFIX = 'https://fp1.mingdaoyun.cn/dashb
 const getThemeAssetBaseUrl = (themeKey, assetUrlPrefix = DASHBOARD_THEME_ASSET_URL_PREFIX) =>
   `${String(assetUrlPrefix).replace(/\/$/, '')}/${themeKey}`;
 
-export const getAdvancedThemeChannel = host => (String(host || '').includes('www.mingdao.com') ? 'prod' : 'test');
+export const getAdvancedThemeChannel = (host: string) =>
+  String(host || '').includes('www.mingdao.com') ? 'prod' : 'test';
 
 export const getAdvancedThemeBulletinPicExt = theme => {
   const ext = String(_.get(theme, 'bannerExt') || '')
@@ -31,7 +32,7 @@ export const getAdvancedThemeAssetUrls = (themeKey, assetUrlPrefix = DASHBOARD_T
   };
 };
 
-const getChannelThemeKeys = (themeConfig, themeChannel, themes) => {
+const getChannelThemeKeys = (themeConfig, themeChannel: string, themes) => {
   const channelThemeKeys = (themeConfig.channels || {})[themeChannel];
 
   if (_.isArray(channelThemeKeys)) {

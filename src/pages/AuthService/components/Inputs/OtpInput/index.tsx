@@ -53,7 +53,7 @@ function useOtpSending(timeLeft, _hasSend, onSend) {
 }
 
 // 处理粘贴文本
-const processPasteText = (pastedText, value, verifyLen, startIndex, onChange, focusInput) => {
+const processPasteText = (pastedText, value, verifyLen, startIndex: number, onChange, focusInput: (index: number, delay?: number, shouldSelect?: boolean) => void) => {
   const digits = pastedText.replace(/[^\d]/g, '');
   if (!digits) return;
   const newValue = (value.slice(0, startIndex) + digits).slice(0, verifyLen);

@@ -151,7 +151,7 @@ export default function SheetField(props) {
     });
   };
 
-  const updateValue = value => {
+  const updateValue = (value: string) => {
     onChange({ strDefault: updateConfig({ config: strDefault || '00', value, index: 0 }) });
   };
 

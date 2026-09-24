@@ -11,7 +11,7 @@ function PwdFreeVerify(props) {
   const { projectId, onCancel = () => {}, enabled, updateEnabled } = props;
   const [type, setType] = useState(enabled ? 1 : 0);
 
-  const onClick = value => {
+  const onClick = (value: number) => {
     projectSettingController.setEnabledNoneVerification({ projectId, enabledNoneVerification: !!value }).then(res => {
       if (res) {
         setType(value);

@@ -28,7 +28,7 @@ export default class Search extends Component<any, any> {
       }
     }
   }
-  handleChange = value => {
+  handleChange = (value: string) => {
     this.setState({ value });
     this.props.handleChange(value);
   };

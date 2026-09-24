@@ -55,7 +55,7 @@ const FormItem = styled.div`
   }
 `;
 
-const compareVersion = (newVersion, oldVersion) => {
+const compareVersion = (newVersion: string, oldVersion) => {
   const newParts = newVersion.split('.').map(part => parseInt(part) || 0);
   const oldParts = oldVersion.split('.').map(part => parseInt(part) || 0);
 
@@ -122,7 +122,7 @@ export default function PublishVersion(props) {
       });
   };
 
-  const onChangeVersionValue = (value, objName: string) => {
+  const onChangeVersionValue = (value: string, objName: string) => {
     if (!value) {
       setFormData({ [objName]: '' });
       return;

@@ -444,7 +444,7 @@ export function error() {
   };
 }
 
-function loadMoreAttachments(state, dispatch, isPre?) {
+function loadMoreAttachments(state, dispatch, isPre?: boolean | undefined) {
   const { extra, isLoadingMore, loadMoreFinished } = state;
   const loadAjaxName = isPre ? 'preLoadMoreAttachments' : 'loadMoreAttachments';
 
@@ -476,7 +476,13 @@ function preLoadMoreAttachments(state, dispatch) {
   loadMoreAttachments(state, dispatch, true);
 }
 
-function changeIndexThunk(dispatch, getState, index: number, flag, extra = {}) {
+function changeIndexThunk(
+  dispatch: AttachmentsPreviewDispatch,
+  getState: AttachmentsPreviewGetState,
+  index: number,
+  flag: string,
+  extra = {},
+) {
   const state = getState();
   const options = { ...(state.extra || {}), ...extra };
 

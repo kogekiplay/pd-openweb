@@ -59,7 +59,7 @@ export function navigateTo(url, isReplace = false, noRedirect = false) {
 }
 
 /** 获取登录地址  */
-const getLoginUrl = (redirectUrl?) => {
+const getLoginUrl = (redirectUrl?: string | undefined) => {
   if (redirectUrl) return redirectUrl;
 
   if (_.get(md, 'global.Account.isSSO') && _.get(md, 'global.SysSettings.enableSso')) {

@@ -22,7 +22,7 @@ export default class ExclusiveComp extends Component<any, any> {
     };
   }
 
-  onClick = active => {
+  onClick = (active: string) => {
     const { match } = this.props;
 
     if (active === this.state.activeKey) return;

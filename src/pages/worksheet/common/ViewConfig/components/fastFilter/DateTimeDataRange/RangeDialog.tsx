@@ -100,7 +100,7 @@ export default function (props) {
                         onClick={(_a, _s, event) => {
                           if (event.shiftKey && startIndex !== null) {
                             // 计算选中范围
-                            function sliceBetweenValues(arr, startValue, endValue) {
+                            function sliceBetweenValues(arr: number[], startValue: number, endValue: number) {
                               const startIndex = _.findIndex(arr, value => value === startValue);
                               const endIndex = _.findLastIndex(arr, value => value === endValue);
                               return arr.slice(startIndex, endIndex + 1);

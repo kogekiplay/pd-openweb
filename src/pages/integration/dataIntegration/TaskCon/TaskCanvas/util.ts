@@ -55,7 +55,7 @@ export const formatTaskNodeData = (dataList = [], firstId) => {
     });
   };
 
-  const generateCoordinateParent = (parentIds, newY?) => {
+  const generateCoordinateParent = (parentIds, newY?: number | undefined) => {
     parentIds.forEach(currentId => {
       const currentItem = list.find(item => item.nodeId === currentId);
 

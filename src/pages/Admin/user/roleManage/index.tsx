@@ -360,7 +360,7 @@ class RoleManage extends Component<any, any> {
   };
 
   // 新增编辑角色
-  createAndEdit = filed => {
+  createAndEdit = (filed: string) => {
     this.setState({ showRoleDialog: true, filed });
   };
 

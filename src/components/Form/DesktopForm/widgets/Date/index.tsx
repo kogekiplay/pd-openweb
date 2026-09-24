@@ -135,7 +135,7 @@ const DateWidgets = props => {
     return null;
   };
 
-  const renderValue = (showformat, value) => {
+  const renderValue = (showformat: string, value) => {
     const { hint = '' } = props;
 
     return (

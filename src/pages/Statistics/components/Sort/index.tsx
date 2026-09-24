@@ -312,7 +312,7 @@ export default class Sort extends Component<any, any> {
 
     return Math.max(boundaryNode.getBoundingClientRect().left, 0);
   };
-  updateDropdownPlacement = triggerNode => {
+  updateDropdownPlacement = (triggerNode: EventTarget & HTMLElement) => {
     if (!triggerNode || !triggerNode.getBoundingClientRect) {
       return;
     }

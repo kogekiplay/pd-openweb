@@ -54,7 +54,7 @@ const DepartmentSelect = props => {
   /**
    * 选择部门
    */
-  const pickDepartment = (replaceItem?) => {
+  const pickDepartment = (replaceItem?: SelectedEntityValue | undefined) => {
     if (!_.find(md.global.Account.projects, item => item.projectId === projectId)) {
       alert(_l('您不是该组织成员，无法获取其部门列表，请联系组织管理员'), 3);
       return;
@@ -110,7 +110,7 @@ const DepartmentSelect = props => {
   /**
    * 删除部门
    */
-  const removeDepartment = departmentId => {
+  const removeDepartment = (departmentId: string | undefined) => {
     const newValue = departmentId
       ? currentValue.filter(item => item.departmentId !== departmentId)
       : currentValue.filter(i => !i.isDelete);

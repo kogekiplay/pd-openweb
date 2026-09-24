@@ -16,7 +16,7 @@ const RadioWidget = props => {
     item => !item.isDeleted && (_.includes(checkIds, item.key) || (!item.hide && readOnlyShow)),
   );
 
-  const renderItem = (item, checkIds) => {
+  const renderItem = (item, checkIds: string[]) => {
     const { otherValue } = getCheckAndOther(value);
     const content = otherValue && disabled ? otherValue : item.value;
 

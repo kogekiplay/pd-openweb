@@ -63,7 +63,7 @@ export default class ArrayInput extends Component<any, any> {
     }
   };
   // 输入普通字符串时数据转换
-  transferValue = value => {
+  transferValue = (value: string | undefined) => {
     const defsource = transferValue(value);
     this.props.onDynamicValueChange(defsource);
   };

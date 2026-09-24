@@ -289,7 +289,7 @@ export const extractBetweenDollars = str => {
   return matches ? matches.map(match => match.slice(1, -1)) : [];
 };
 
-export const getRuleAlias = (alias, flowData, isRule?: boolean, getLen?) => {
+export const getRuleAlias = (alias, flowData, isRule?: boolean, getLen?: boolean | undefined) => {
   const groupDt = getNodeInfo(flowData, 'GROUP');
   const aggregateDt = getNodeInfo(flowData, 'AGGREGATE');
   const groupFields = _.get(groupDt, 'nodeConfig.config.groupFields') || [];
@@ -817,7 +817,7 @@ export const setGroupFields = (groupDt, sourceInfos, flowData) => {
 };
 
 //聚合字段配置处理
-export const formatAggConfig = (it, isAdd?) => {
+export const formatAggConfig = (it, isAdd?: boolean | undefined) => {
   const dot = ['COUNT', 'DISTINCT_COUNT'].includes(it.aggFuncType)
     ? undefined
     : isAdd

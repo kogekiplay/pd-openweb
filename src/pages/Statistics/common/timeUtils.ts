@@ -677,7 +677,7 @@ export const formatrChartTimeText = ({ rangeType, rangeValue, dynamicFilter, tod
  * 根据文字内容获取尺寸
  */
 
-export const formatterTooltipTitle = (xaxes, key?) => {
+export const formatterTooltipTitle = (xaxes, key?: string | undefined) => {
   if (isTimeControl(xaxes.controlType) && xaxes.particleSizeType === 2) {
     return (title: string, data) => {
       const value = key ? data[key] : title;

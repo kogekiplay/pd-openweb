@@ -120,7 +120,7 @@ export default class AppLog extends React.Component<any, any> {
     this.setState({ list: null, pageIndex: 1, ...obj }, this.searchDataList);
   };
 
-  renderSearchBar(isLog) {
+  renderSearchBar(isLog: boolean) {
     const { handleTypeLabel, visible, datePickerVisible, start, end, searchVisible, keyword } = this.state;
     return (
       <div className={cx('searchBarContainer', searchVisible ? 'extand' : 'close')}>

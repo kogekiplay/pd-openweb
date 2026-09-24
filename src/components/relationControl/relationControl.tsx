@@ -119,7 +119,7 @@ export default class RelationControl extends Component<any, any> {
     const { sourceId, sourceType } = this.props;
     const pageSize = selectIndex === 3 || selectIndex === 6 ? 10 : 20;
 
-    const listMsg = key => {
+    const listMsg = (key: string) => {
       return list.length ? list[list.length - 1][key] : '';
     };
 

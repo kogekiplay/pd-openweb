@@ -235,7 +235,7 @@ class TaskBasic extends Component<any, any> {
   /**
    * 渲染母任务列表
    */
-  renderParentItem(item, i, showBtn) {
+  renderParentItem(item, i, showBtn: boolean) {
     return (
       <li key={i} className="flexRow">
         <div
@@ -402,7 +402,7 @@ class TaskBasic extends Component<any, any> {
   /**
    * 任务成员item
    */
-  renderMemberItem(item, i, hasAuth) {
+  renderMemberItem(item, i, hasAuth: boolean) {
     if (item.type !== 0 || item.status === 2) {
       return null;
     }
@@ -431,7 +431,7 @@ class TaskBasic extends Component<any, any> {
   /**
    * 成员 opHtml
    */
-  renderMemberOpHtml(account, hasAuth, isApply) {
+  renderMemberOpHtml(account, hasAuth, isApply: boolean) {
     // 无权限经过我自己
     if (!hasAuth && md.global.Account.accountId === account.accountId) {
       return (

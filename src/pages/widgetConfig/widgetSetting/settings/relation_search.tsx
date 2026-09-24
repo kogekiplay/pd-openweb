@@ -184,7 +184,7 @@ export default function RelationSearch(props) {
     }
   }, [loading]);
 
-  const getShowControls = (reControls, needDefault?) => {
+  const getShowControls = (reControls, needDefault?: boolean | undefined) => {
     if (_.isEmpty(showControls) && needDefault) return reControls.slice(0, 4).map(item => item.controlId);
     // 删除掉showControls 中已经被删掉的控件
     const allControlId = reControls.map(item => item.controlId);

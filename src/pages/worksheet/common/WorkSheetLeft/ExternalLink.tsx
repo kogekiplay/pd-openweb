@@ -104,7 +104,7 @@ export const EditExternalLink = props => {
   );
 };
 
-const genControlTag = id => {
+const genControlTag = (id: string) => {
   const res = _.flatten(LINK_PARA_FIELDS.map(data => data.fields));
   const field = _.find(res, { value: id });
   return (

@@ -150,7 +150,7 @@ class KcLeft extends Component<any, any> {
     return id === rootId;
   };
 
-  fetchRootsByProjectId = (projectId: string, openProject) => {
+  fetchRootsByProjectId = (projectId: string, openProject: boolean) => {
     if (!this.state.loadingProjects.includes(projectId)) {
       const loadingProjects = this.state.loadingProjects.add(projectId);
       let foldedProjects = this.state.foldedProjects;
@@ -308,7 +308,7 @@ class KcLeft extends Component<any, any> {
     );
   };
 
-  handleRemoveRoot = (item, isCreator, isPermanent) => {
+  handleRemoveRoot = (item, isCreator, isPermanent: boolean) => {
     this.setState({ settingsOption: null });
     removeRoot(item, isCreator, isPermanent, rootId => {
       const roots = this.state.roots;

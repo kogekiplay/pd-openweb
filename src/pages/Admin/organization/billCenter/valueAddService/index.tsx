@@ -81,7 +81,7 @@ let ValueAddService = class ValueAddService extends Component<any, any> {
       });
   }
 
-  handleChange(productPrice) {
+  handleChange(productPrice: number) {
     this.setState({
       productPrice,
       isInput: false,

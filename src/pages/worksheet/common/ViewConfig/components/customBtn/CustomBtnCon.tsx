@@ -7,7 +7,7 @@ import CustomBtnList from './CustomBtnList.jsx';
 import CustomBtnGroupedLayout from './groupedLayout';
 import './CustomBtn.less';
 
-const deleteStr = isAllView => {
+const deleteStr = (isAllView: boolean) => {
   const list = [
     {
       value: 2,

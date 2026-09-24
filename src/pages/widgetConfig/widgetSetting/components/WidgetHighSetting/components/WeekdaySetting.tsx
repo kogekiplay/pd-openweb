@@ -50,7 +50,7 @@ export default function WeekdaySetting({ data, onChange }) {
   const [visible, setVisible] = useState(false);
   const weekdayArr = weekday.split('');
 
-  const handleChange = value => {
+  const handleChange = (value: string) => {
     onChange(handleAdvancedSettingChange(data, { weekday: value }));
   };
 

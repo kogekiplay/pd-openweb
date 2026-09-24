@@ -13,7 +13,7 @@ export default props => {
   const { showType = 2 } = componentConfig;
   const [popoverVisible, setPopoverVisible] = useState(false);
 
-  const handleChangeConfig = data => {
+  const handleChangeConfig = (data: { showType: number }) => {
     props.handleToolClick(type, {
       componentConfig: {
         ...componentConfig,

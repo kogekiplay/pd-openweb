@@ -131,7 +131,7 @@ class UserItem extends Component<any, any> {
     return emailTpl;
   }
 
-  sendNotice(type) {
+  sendNotice(type: number) {
     const { projectId, accountId } = this.props;
 
     return event => {

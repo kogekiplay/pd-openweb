@@ -292,7 +292,7 @@ export default function Ask({ data, docked = false }) {
 
   // 收集回传：每题保留占位；无任何作答（未选且未填）视为跳过。
   // answersOverride 用于"点选即提交"等场景：setTimeout 里闭包的 answers 是旧值，需显式传入刚选的结果。
-  function collect(skipCurrent, answersOverride) {
+  function collect(skipCurrent: boolean, answersOverride) {
     const src = answersOverride || answers;
 
     return questions.map((item, idx) => {

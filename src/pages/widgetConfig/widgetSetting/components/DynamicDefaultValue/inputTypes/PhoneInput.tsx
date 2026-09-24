@@ -22,7 +22,7 @@ export default function (props) {
     onDynamicValueChange(newValue || []);
   };
 
-  const handleChange = (value, withValueChange = true) => {
+  const handleChange = (value: string, withValueChange = true) => {
     const formatValue = value.replace(/[^\d]/g, '');
     const parseValue = formatValue ? parseFloat(value) : '';
     setValue(parseValue);

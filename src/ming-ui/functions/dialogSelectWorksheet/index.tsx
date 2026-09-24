@@ -201,7 +201,7 @@ function SelectWorksheet(props) {
     });
   };
 
-  const expandApp = (e, app) => {
+  const expandApp = (e: React.MouseEvent<HTMLElement, MouseEvent>, app) => {
     e.stopPropagation();
     const isExpand = _.includes(expandIds, app.appId);
     const newIds = isExpand ? expandIds.filter(item => item !== app.appId) : expandIds.concat(app.appId);

@@ -15,7 +15,7 @@ import {
   getDateCompareRangeValues,
 } from '../../enum';
 
-function getPicker(type) {
+function getPicker(type: string) {
   return {
     4: 'month',
     5: 'year',

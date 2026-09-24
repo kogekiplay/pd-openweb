@@ -257,7 +257,7 @@ export default function RelateSheet(props) {
   };
 
   // 显示字段
-  const renderShowControl = (isExtra, hideTitle?) => {
+  const renderShowControl = (isExtra: boolean, hideTitle?) => {
     const coverId = isExtra ? choosecoverid : coverCid;
 
     const renderCover = () => {

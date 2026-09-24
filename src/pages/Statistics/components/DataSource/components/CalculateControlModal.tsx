@@ -174,7 +174,7 @@ class CalculateControl extends Component<any, any> {
       </Menu>
     );
   }
-  genControlTag = (axisControls, id) => {
+  genControlTag = (axisControls, id: string) => {
     const control = _.find(axisControls, { controlId: id.replace(/-\w/, '') }) || {};
     const invalid = _.isEmpty(control);
     const type = id.replace(/\w+-/, '');

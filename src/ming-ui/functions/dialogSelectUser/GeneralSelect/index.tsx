@@ -890,7 +890,7 @@ export default class GeneraSelect extends Component<any, any> {
    * @param {*选择类型} chooseType
    * @param {*实体} data
    */
-  addData = (chooseType, data) => {
+  addData = (chooseType: string, data: SelectUser | SelectDepartment) => {
     let selectedArr = [...this.state.selectedData];
 
     if (chooseType === ChooseType.USER && this.userSettings.unique) {

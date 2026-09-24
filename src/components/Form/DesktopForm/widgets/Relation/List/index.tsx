@@ -31,7 +31,7 @@ const relationDelArr = [
 const RelationList = props => {
   const { data, from, disabled, onDelete } = props;
 
-  const handleLinkClick = (item, e) => {
+  const handleLinkClick = (item, e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     const { type } = item;
 
     // 分享禁止点击

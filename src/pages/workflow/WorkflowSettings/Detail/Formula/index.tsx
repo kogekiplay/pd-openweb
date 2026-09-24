@@ -269,7 +269,7 @@ export default class Formula extends Component<any, any> {
   /**
    * formula handle change
    */
-  handleChange(_err, value, obj, isNumber) {
+  handleChange(_err, value: string, obj, isNumber: boolean) {
     // 数字/金额
     if (isNumber) {
       const { fnmatch } = this.state;

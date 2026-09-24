@@ -15,7 +15,7 @@ export default function MdLinkify(props) {
   };
 
   // 匹配
-  const parseString = string => {
+  const parseString = (string: string) => {
     if (string === '') {
       return string;
     }

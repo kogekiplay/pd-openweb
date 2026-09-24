@@ -300,7 +300,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
 
     return 'theme';
   };
-  translateDebugRoles = (data, appId: string) => {
+  translateDebugRoles = (data: AppDetailData, appId: string) => {
     const selectedRoles = _.get(data, 'debugRole.selectedRoles') || [];
 
     if (!selectedRoles.length) return;
@@ -504,7 +504,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
       });
   }; // 编辑应用详情
 
-  handleEditApp = (type, obj) => {
+  handleEditApp = (type: string, obj) => {
     this.switchVisible({
       [type]: false,
       isShowAppIntroFirst: false,

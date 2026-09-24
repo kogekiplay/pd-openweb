@@ -147,7 +147,7 @@ function AuthParam(props) {
     );
   };
 
-  const renderUrl = withTime => {
+  const renderUrl = (withTime: boolean) => {
     return (
       <div className=" pLeft20 pRight20">
         <div className="flexRow mBottom20 breakAll">{renderValue(_.get(node, 'webHookNodes[0].url'), node)}</div>

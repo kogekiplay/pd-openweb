@@ -7,7 +7,7 @@ import VolumeBar from './VolumeBar';
 
 const isMobile = browserIsMobile();
 
-function secondToMMSS(seconds) {
+function secondToMMSS(seconds: number) {
   const minutes = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;

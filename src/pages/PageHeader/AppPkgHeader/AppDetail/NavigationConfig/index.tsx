@@ -17,7 +17,7 @@ export default function NavigationConfig(props) {
   const [displayIcon, setDisplayIcon] = useState(app.displayIcon || '011');
   const [hideFirstSection, setHideFirstSection] = useState(app.hideFirstSection || false);
 
-  const renderNavStyleConfig = type => {
+  const renderNavStyleConfig = (type: string) => {
     return (
       <Fragment>
         <div className="content mBottom24">

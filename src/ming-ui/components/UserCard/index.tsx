@@ -262,7 +262,7 @@ class UserCard extends React.Component<any, any> {
     this.closeCard();
   };
 
-  setEnlargeImageVisible = enlargeImageVisible => {
+  setEnlargeImageVisible = (enlargeImageVisible: boolean) => {
     if (this.state.enlargeImageVisible === enlargeImageVisible) return;
 
     this.setState({ enlargeImageVisible });

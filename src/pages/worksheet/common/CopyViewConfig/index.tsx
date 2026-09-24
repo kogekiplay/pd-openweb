@@ -170,7 +170,7 @@ export default function CopyViewConfig(props) {
     .filter(l => l.viewId !== view.viewId);
   const inputRef = useRef<any>(undefined);
 
-  const getConfigs = (viewId?) => {
+  const getConfigs = (viewId?: string | undefined) => {
     const currentViewConfigs = COPY_CONFIGS.filter(l => !getFilters(view).includes(l.key));
     const currentViewId = viewId || selectViewId[0];
 
@@ -206,7 +206,7 @@ export default function CopyViewConfig(props) {
 
   const filterFun = l => !keywords || _.toLower(l.name).includes(_.toLower(keywords));
 
-  const onBatchConfigs = type => {
+  const onBatchConfigs = (type: string) => {
     if (isCopyFrom && _.isEmpty(selectViewId)) return;
 
     setState({ selectConfigs: type === 'clear' ? [] : getConfigs().map(l => l.key) });

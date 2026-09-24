@@ -581,7 +581,7 @@ class TaskTree extends Component<any, any> {
   /**
    * 获取子任务
    */
-  getNodeTask($li) {
+  getNodeTask($li: JQuery<HTMLLIElement>) {
     const { listSort } = this.props.taskConfig;
     const taskId = $li.data('taskid');
     $li.append('<div class="treeLoadingSingleTask"> ' + loading + '  </div>');

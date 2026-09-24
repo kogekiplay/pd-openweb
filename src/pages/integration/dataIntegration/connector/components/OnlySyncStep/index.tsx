@@ -494,7 +494,7 @@ export default function OnlySyncStep(props) {
     onChangeStateData(sheetData, setSheetData, { schemaName: schema.value });
   };
 
-  const onChangeSheetCreateType = async sheetCreateType => {
+  const onChangeSheetCreateType = async (sheetCreateType: string) => {
     const initSheetData: DestSheetInit = {};
     const { sheetNameValue, writeNode } = _.get(sheetData, [currentTab.db, currentTab.table]);
 

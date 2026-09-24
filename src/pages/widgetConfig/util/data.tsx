@@ -329,7 +329,7 @@ const canSelectedControls = (controls: FormControl[], data: FormControl) => {
   return controls.filter(item => item.controlId !== data.controlId && !includes(CAN_NOT_AS_TEXT_GROUP, item.type));
 };
 
-const isSingleRelateSheet = data => data.type === 29 && data.enumDefault === 1;
+const isSingleRelateSheet = (data: FormControl) => data.type === 29 && data.enumDefault === 1;
 
 // 获取文本组合可选取的控件
 export const getConcatenateControls = (controls: FormControl[], data: FormControl) => {

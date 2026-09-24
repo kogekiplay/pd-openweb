@@ -121,7 +121,7 @@ export default function Microsoft(props) {
     });
   };
 
-  const onChangeEntraOnlyLogin = value => {
+  const onChangeEntraOnlyLogin = (value: number) => {
     if (onlyLoginAjax.current) {
       onlyLoginAjax.current.abort();
     }

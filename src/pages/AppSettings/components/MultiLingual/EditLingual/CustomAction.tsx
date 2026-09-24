@@ -58,7 +58,7 @@ export default function CustomAction(props) {
     }
   };
 
-  const renderNav = item => {
+  const renderNav = (item: HapApi.MD.Entity.Worksheet.WorksheetBtnEntity) => {
     const data = _.find(translateData, { correlationId: item.btnId }) || {};
     const translateInfo = data.data || {};
     return (
@@ -72,7 +72,7 @@ export default function CustomAction(props) {
     );
   };
 
-  const renderContent = btn => {
+  const renderContent = (btn: HapApi.MD.Entity.Worksheet.WorksheetBtnEntity) => {
     const data = _.find(translateData, { correlationId: btn.btnId }) || {};
     const translateInfo = data.data || {};
     const comparisonLangInfo = getTranslateInfo(app.id, null, btn.btnId, comparisonLangData);

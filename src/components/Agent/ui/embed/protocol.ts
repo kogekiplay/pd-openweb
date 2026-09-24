@@ -25,7 +25,7 @@ export const SILENT_EMBED_SUFFIXES = [TRIGGER_BUILD_SUMMARY_SUFFIX];
 
 // ask_reply 全部跳过：用户对所有提问都点了「跳过」，回传无信息量。
 // 按设计稿「全部跳过时直接发送，界面中不显示」——照常发给 AI，但该 ask_reply 整段不渲染。
-export function isAskReplyAllSkipped(suffix, data) {
+export function isAskReplyAllSkipped(suffix: string, data) {
   if (suffix !== ASK_REPLY_SUFFIX) return false;
   const answers = data && Array.isArray(data.answers) ? data.answers : [];
 

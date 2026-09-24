@@ -27,7 +27,7 @@ export default class extends React.Component<any, any> {
     };
   }
 
-  handleChange = value => {
+  handleChange = (value: number) => {
     const { control, changeWorksheetSheetViewSummaryType } = this.props;
     this.setState({
       menuVisible: false,

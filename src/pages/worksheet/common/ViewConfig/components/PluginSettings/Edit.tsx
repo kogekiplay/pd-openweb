@@ -20,7 +20,7 @@ import {
 } from './config';
 import { Wrap } from './editStyle';
 
-const setOptions = values => {
+const setOptions = (values: string) => {
   return values
     .split(/[\r\n]/)
     .filter(o => o.trim())

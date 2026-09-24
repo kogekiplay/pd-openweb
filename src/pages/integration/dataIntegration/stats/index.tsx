@@ -92,7 +92,7 @@ export default function (props) {
     getDetailInfo();
   };
 
-  const getDetailInfo = (dimension?) => {
+  const getDetailInfo = (dimension?: number | undefined) => {
     getHistory(dimension);
   };
 

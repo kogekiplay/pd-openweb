@@ -65,7 +65,7 @@ export default class MsgTemplate extends Component<any, any> {
     }
   };
 
-  handleSorter = params => {
+  handleSorter = (params: { isAsc: boolean | undefined; sortId: string | undefined; pageIndex: number }) => {
     const { pageIndex, isAsc, sortId } = params;
     this.setState(
       {

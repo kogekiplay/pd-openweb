@@ -73,7 +73,7 @@ const ChunkPreview = props => {
     setChunkHeader({});
   };
 
-  const handleTabChange = value => {
+  const handleTabChange = (value: string) => {
     if (activeTab === value) return;
 
     setActiveTab(value);
@@ -201,7 +201,7 @@ const ChunkPreview = props => {
     });
   };
 
-  const handleAttachmentTypesFilterClick = value => {
+  const handleAttachmentTypesFilterClick = (value: string) => {
     resetSideBar();
     setAttachmentTypes(prev => (prev.includes(value) ? prev.filter(item => item !== value) : [...prev, value]));
   };

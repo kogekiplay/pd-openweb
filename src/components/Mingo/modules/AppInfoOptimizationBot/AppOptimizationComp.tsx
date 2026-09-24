@@ -174,7 +174,7 @@ export function flattenWorkSheetItems(app) {
   const result = [];
   const processedIds = new Set(); // 用于去重
 
-  const processSection = (section, currentLevel) => {
+  const processSection = (section, currentLevel: number) => {
     // 处理当前分组
     if (section.name && section.name.trim() !== '' && !processedIds.has(section.appSectionId)) {
       result.push({

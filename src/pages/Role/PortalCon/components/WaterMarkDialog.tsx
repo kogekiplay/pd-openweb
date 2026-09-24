@@ -38,7 +38,7 @@ function WaterMarkDialog(props) {
     onClose();
   };
 
-  const insertTag = item => {
+  const insertTag = (item: FormControl) => {
     $tagTextarea.current?.insertColumnTag(item.controlId);
   };
 

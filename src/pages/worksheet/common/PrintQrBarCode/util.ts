@@ -397,7 +397,7 @@ function parseToCode128(value) {
   return _.get(parsed, '_encodings.0.0');
 }
 
-function getBarcodeBase64(value, { width = 100, height = 100 } = {}) {
+function getBarcodeBase64(value: string, { width = 100, height = 100 } = {}) {
   const canvas = document.createElement('canvas');
   const fontSize = Math.max((height / 100) * 7, BAR_FONT_SIZE);
   const code128 = parseToCode128(value);
@@ -578,7 +578,7 @@ export class BarLabel {
       this._height - 2 * paddingY * this.unitSize,
     );
   }
-  drawImageUrl(url, { x, y, width, height } = {}) {
+  drawImageUrl(url: string, { x, y, width, height } = {}) {
     return new Promise(resolve => {
       const image = new Image();
 
@@ -645,7 +645,7 @@ export class BarLabel {
         : this._height - (paddingY + height * 1.08) * this.unitSize,
     );
   }
-  measureTextWidth(value, fontSize: number) {
+  measureTextWidth(value: string, fontSize: number) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     ctx.font = fontSize + 'px sans-serif';

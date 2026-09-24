@@ -134,7 +134,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
     }
   };
 
-  getApps = (showLoading?) => {
+  getApps = (showLoading?: boolean | undefined) => {
     const { transferor = {}, projectId } = this.props;
 
     if (showLoading) {
@@ -179,7 +179,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
   };
 
   // 获取交接列表
-  getList = (init?) => {
+  getList = (init?: boolean | undefined) => {
     const { transferor = {}, projectId } = this.props;
     const { activeTab } = this.state;
 
@@ -193,7 +193,7 @@ export default class WorkHandoverDialog extends Component<any, any> {
         init,
       })
       .then(res => {
-        const getData = type => {
+        const getData = (type: number) => {
           return res
             .map(item => ({
               ...item,

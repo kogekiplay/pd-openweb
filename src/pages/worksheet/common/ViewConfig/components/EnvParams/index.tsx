@@ -75,7 +75,7 @@ export default function (props) {
     );
   };
 
-  const updateAdvancedSetting = (data, cb) => {
+  const updateAdvancedSetting = (data: { environmentparams: string }, cb: () => void) => {
     updateCurrentView(
       Object.assign(view, {
         advancedSetting: data,

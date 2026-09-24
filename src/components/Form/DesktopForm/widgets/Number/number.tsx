@@ -122,7 +122,7 @@ const NumberComp = props => {
     return val;
   };
 
-  const handleControl = action => {
+  const handleControl = (action: string) => {
     const { numinterval = '1' } = advancedSetting;
 
     if (!numinterval || disabled) return null;

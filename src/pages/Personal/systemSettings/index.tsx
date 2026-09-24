@@ -93,7 +93,7 @@ export default class AccountChart extends React.Component<any, any> {
   };
 
   // common修改
-  sureSettings(settingNum: string, value, successCallback) {
+  sureSettings(settingNum: string, value, successCallback: () => void) {
     accountSetting
       .editAccountSetting({
         settingType: common.settingOptions[settingNum],

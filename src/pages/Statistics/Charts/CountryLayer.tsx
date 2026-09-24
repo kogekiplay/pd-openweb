@@ -323,7 +323,7 @@ export class CountryLayer extends Component<any, any> {
         const { locationMap = {} } = result;
         const data = setColorLavel(result.map);
 
-        const renderDotLayerChart = level => {
+        const renderDotLayerChart = (level: string) => {
           if (this.DotLayerChart) {
             const dotLayerConfig = this.getDotLayerConfig({ data, locationMap });
             this[`${level}Data`] = { data, locationMap };
@@ -383,7 +383,7 @@ export class CountryLayer extends Component<any, any> {
     const { isThumbnail, reportData, base = {} } = this.props;
     const { country } = reportData;
 
-    const renderDotLayerChart = level => {
+    const renderDotLayerChart = (level: string) => {
       if (this.DotLayerChart) {
         const { data, locationMap } = this[`${level}Data`];
         const dotLayerConfig = this.getDotLayerConfig({ data, locationMap });

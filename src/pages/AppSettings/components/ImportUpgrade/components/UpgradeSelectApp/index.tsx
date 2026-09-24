@@ -107,7 +107,7 @@ export default function UpgradeSelectApp(props) {
   const [popupVisibleId, setPopupVisibleId] = useState(undefined);
   const [selectIds, setSelectIds] = useState([]);
 
-  const onSelectOption = (fileName, type) => {
+  const onSelectOption = (fileName, type: number) => {
     const index = _.findIndex(files, l => l.fileName === fileName);
     setPopupVisibleId(undefined);
 

@@ -403,7 +403,7 @@ function Hierarchy(props) {
 
   const createTextTitleRecord = (value, spliceTempRecord = false) => {
     const idPara = _.pick(props, ['appId', 'viewId']);
-    const isTextTitle = item => item.attribute === 1 && item.type === 2;
+    const isTextTitle = (item: FormControl) => item.attribute === 1 && item.type === 2;
     const { viewControl } = view;
     const filteredControls = _.filter(
       controls,

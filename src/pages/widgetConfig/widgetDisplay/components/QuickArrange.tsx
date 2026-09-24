@@ -36,7 +36,7 @@ export default function QuickArrange({ widgets, setWidgets, status }) {
     $originWidgets.current = widgets;
   }, [status.saveIndex]);
 
-  const quickArrange = columnNumber => {
+  const quickArrange = (columnNumber: number) => {
     if (activeColumn !== columnNumber) {
       setActive(columnNumber);
     }

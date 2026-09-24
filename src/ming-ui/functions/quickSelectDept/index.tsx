@@ -408,7 +408,7 @@ export function DeptSelect(props) {
     return undefined;
   };
 
-  const setMoreList = (departmentId, isDelete) => {
+  const setMoreList = (departmentId, isDelete: boolean) => {
     let moreData = departmentMoreIds.find(o => o.departmentId === departmentId);
 
     if (isDelete) {

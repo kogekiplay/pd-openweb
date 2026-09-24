@@ -35,7 +35,7 @@ const PLATFORM_HIDE_MAP = {
 };
 
 //判断指定平台是否被隐藏
-export const isPlatformHidden = platformType => {
+export const isPlatformHidden = (platformType: string) => {
   const settingKey = PLATFORM_HIDE_MAP[platformType];
   if (!settingKey) return false;
   return !!md.global.SysSettings[settingKey];

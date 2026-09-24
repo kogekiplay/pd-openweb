@@ -122,7 +122,7 @@ export default class AddUser extends Component<any, any> {
       isClickSubmit: false,
     });
   };
-  clearError = field => {
+  clearError = (field: string) => {
     const { errors = {} } = this.state;
     delete errors[field];
     this.setState({ errors });

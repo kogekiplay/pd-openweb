@@ -58,7 +58,7 @@ const CheckboxWidget = props => {
     props.onChange(JSON.stringify(values));
   };
 
-  const handleSelectAll = (options = [], isChecked) => {
+  const handleSelectAll = (options = [], isChecked: boolean) => {
     const checkIds = safeParse(value, 'array');
 
     // 多选平铺, 多选选中则清空
@@ -158,7 +158,7 @@ const CheckboxWidget = props => {
     );
   };
 
-  const renderDropdown = checkIds => {
+  const renderDropdown = (checkIds: string[]) => {
     let sources = [];
 
     checkIds.forEach(item => {

@@ -118,7 +118,7 @@ class Members extends Component<any, MembersState> {
       );
     });
   };
-  renderRoleList(data, isAdmin) {
+  renderRoleList(data, isAdmin: boolean) {
     const sysList = data.filter(o => sysRoleType.includes(o.roleType));
     const otherList = data.filter(o => !sysRoleType.includes(o.roleType));
 

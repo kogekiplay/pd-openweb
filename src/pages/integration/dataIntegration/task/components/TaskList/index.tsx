@@ -446,7 +446,7 @@ export default function TaskList({ projectId, onRefreshComponents }: { projectId
       });
   };
 
-  const batchStartEndTasks = isStart => {
+  const batchStartEndTasks = (isStart: boolean) => {
     if (batchAjaxPromise.current) return;
 
     const taskIds = selectedTasks

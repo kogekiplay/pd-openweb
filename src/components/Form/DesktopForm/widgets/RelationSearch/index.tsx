@@ -91,7 +91,7 @@ const EmptyTag = styled.span`
     border-radius: var(--radius-sm);
 }`;
 
-function getCoverUrl(coverId, record, controls) {
+function getCoverUrl(coverId, record: RecordRow, controls: FormControl[]) {
   const coverControl = _.find(controls, c => c.controlId && c.controlId === coverId);
 
   if (!coverControl) {

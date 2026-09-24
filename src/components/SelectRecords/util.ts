@@ -90,7 +90,7 @@ export function getEmptyText({ keyWords, error } = {}) {
   return keyWords ? _l('没有搜索结果') : _l('暂无记录');
 }
 
-export function getNumFromLocalStorage(key, defaultValue) {
+export function getNumFromLocalStorage(key: string, defaultValue: number) {
   return localStorage.getItem(key) &&
     !isNaN(Number(localStorage.getItem(key))) &&
     isNumber(Number(localStorage.getItem(key)))

@@ -35,7 +35,7 @@ import WidgetWarning from '../components/WidgetBase/WidgetWarning';
 import { SettingCollapseWrap } from './styled';
 
 
-const renderDefaultFilter = showSplice => {
+const renderDefaultFilter = (showSplice: boolean) => {
   return (
     <Fragment>
       <ActionWrap>{_l('在详情页新建或打开记录')}</ActionWrap>

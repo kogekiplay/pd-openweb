@@ -155,7 +155,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 展开显示子选项
    */
-  showSubItems = (e, item) => {
+  showSubItems = (e: React.MouseEvent<HTMLElement, MouseEvent>, item) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -185,7 +185,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 点击选项
    */
-  itemOnClick = (e, item) => {
+  itemOnClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, item) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -260,7 +260,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 取消选中制定项目
    */
-  unCheckItem = (e, item) => {
+  unCheckItem = (e: React.MouseEvent<HTMLElement, MouseEvent>, item) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -297,7 +297,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 清空已选中的项目
    */
-  clearCheckedItems = e => {
+  clearCheckedItems = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -337,7 +337,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 更新筛选文本
    */
-  updateFilterText = event => {
+  updateFilterText = (event: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
     const text = event.target.value;
 
     this.setState(

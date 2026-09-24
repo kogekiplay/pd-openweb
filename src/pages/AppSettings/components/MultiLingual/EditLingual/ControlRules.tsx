@@ -56,7 +56,7 @@ export default function ControlRules(props) {
     }
   };
 
-  const renderNav = item => {
+  const renderNav = (item: HapApi.MD.Entity.Worksheet.ControlRuleEntity) => {
     return (
       <div
         className="navItem flexRow alignItemsCenter pointer"
@@ -68,12 +68,12 @@ export default function ControlRules(props) {
     );
   };
 
-  const renderContent = item => {
+  const renderContent = (item: HapApi.MD.Entity.Worksheet.ControlRuleEntity) => {
     const data = _.find(translateData, { correlationId: item.ruleId }) || {};
     const translateInfo = data.data || {};
     const comparisonLangInfo = getTranslateInfo(app.id, selectNode.workSheetId, item.ruleId, comparisonLangData);
 
-    const handleSave = info => {
+    const handleSave = (info: { message: string | undefined }) => {
       onEditAppLang({
         id: data.id,
         parentId: selectNode.workSheetId,

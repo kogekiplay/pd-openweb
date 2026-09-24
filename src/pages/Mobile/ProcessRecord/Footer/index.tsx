@@ -33,7 +33,7 @@ export default class Footer extends Component<any, any> {
     this.actionSelectOperationHandler && this.actionSelectOperationHandler.close();
   }
 
-  writeVerifyPassword = removeNoneVerification => {
+  writeVerifyPassword = (removeNoneVerification: boolean) => {
     this.actionVerifyPasswordHandler = ActionSheet.show({
       actions: [],
       extra: (

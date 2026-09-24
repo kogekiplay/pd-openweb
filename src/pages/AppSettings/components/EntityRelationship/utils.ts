@@ -22,7 +22,7 @@ export function isBothWayRelate(control, sourceWorksheet) {
   return true;
 }
 
-export function createLabelOption(control, sourceWorksheet) {
+export function createLabelOption(control: FormControl, sourceWorksheet) {
   const texts = ['', '1'];
 
   texts[1] = control.enumDefault === 1 ? '1' : 'N';

@@ -829,7 +829,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
     );
   }
 
-  renderSelected(free?) {
+  renderSelected(free?: boolean | undefined) {
     const {
       control,
       recordId,

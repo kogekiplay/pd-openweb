@@ -70,7 +70,7 @@ class RelationList extends Component<any, any> {
     props.updateBase(newParams);
     props.loadRow({ ...control, formData }, from);
   };
-  handleSelect = (record, selected) => {
+  handleSelect = (record, selected: boolean) => {
     const { relationRow, actionParams, updateActionParams, permissionInfo } = this.props;
     const { worksheet } = relationRow;
     const { isEdit, selectedRecordIds } = actionParams;

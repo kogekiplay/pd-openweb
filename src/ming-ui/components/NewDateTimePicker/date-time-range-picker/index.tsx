@@ -121,7 +121,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     this.dateOnChange(event, range, i);
   };
 
-  dateOnChange = (_event, value, i) => {
+  dateOnChange = (_event, value, i: number) => {
     const start = new Date(this.state.value[0]);
 
     start.setFullYear(value[0].getFullYear(), value[0].getMonth(), value[0].getDate());
@@ -348,7 +348,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     }
   };
 
-  checkboxOnChange = target => {
+  checkboxOnChange = (target: string) => {
     const data = {};
     data[target] = !this.state[target];
 

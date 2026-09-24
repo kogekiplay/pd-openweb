@@ -56,7 +56,7 @@ class ContactsHidden extends React.Component<any, any> {
     dispatch(getRulesAll(projectId));
   }
 
-  renderList = (type, ruleType) => {
+  renderList = (type: string, ruleType: number | undefined) => {
     const { data = [], dispatch, projectId } = this.props;
     const rulesData = _.filter(data, it => it.ruleType === ruleType);
     return _.map(rulesData, (item, i) => {

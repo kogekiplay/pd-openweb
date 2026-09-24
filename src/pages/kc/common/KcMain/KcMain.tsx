@@ -200,7 +200,7 @@ class KcMain extends Component<any, any> {
     });
   };
 
-  handleAddNewFolder = visible => {
+  handleAddNewFolder = (visible: boolean) => {
     this.setState({
       newFolderVisible: visible,
     });

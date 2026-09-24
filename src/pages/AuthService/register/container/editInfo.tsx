@@ -270,7 +270,7 @@ export default function (props) {
     };
   };
 
-  const renderWarn = key => {
+  const renderWarn = (key: string) => {
     const warn = warnList.find(o => o.tipDom === key);
     if (!warn) return undefined;
     return <div className={cx('warnTips')}>{warn.warnTxt}</div>;

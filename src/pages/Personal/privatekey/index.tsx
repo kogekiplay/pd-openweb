@@ -95,7 +95,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     this.setState({ licenseList: [], loading: true, ...state }, this.getLicenseList);
   };
 
-  handleChangeProduct = activeProduct => {
+  handleChangeProduct = (activeProduct: string) => {
     if (activeProduct === this.state.activeProduct) return;
 
     this.reloadLicenseList({ activeProduct, licenseCount: 0, pageIndex: 1 });
@@ -107,7 +107,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     this.reloadLicenseList({ pageIndex });
   };
 
-  handleSetVisible = (hide, targetIndex) => {
+  handleSetVisible = (hide, targetIndex: number) => {
     const { licenseList } = this.state;
     this.setState({
       licenseList: licenseList.map((item, inde) => {

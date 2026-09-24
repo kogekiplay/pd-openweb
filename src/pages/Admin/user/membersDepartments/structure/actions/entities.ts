@@ -374,7 +374,7 @@ export const handleShowDisabledDepartment = flag => dispatch => {
   dispatch(loadDepartments('', 1));
 };
 
-export const updateApplyDateOrderBy = applyDateOrderBy => ({
+export const updateApplyDateOrderBy = (applyDateOrderBy: number) => ({
   type: 'UPDATE_APPLY_DATE_ORDER_BY',
   applyDateOrderBy,
 });

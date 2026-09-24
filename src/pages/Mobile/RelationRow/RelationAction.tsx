@@ -26,7 +26,7 @@ class RelationAction extends Component<any, any> {
       showConfirmPopup: false,
     };
   }
-  handleSetEdit = value => {
+  handleSetEdit = (value: boolean) => {
     this.props.updateActionParams({
       isEdit: value,
       selectedRecordIds: [],
@@ -138,7 +138,7 @@ class RelationAction extends Component<any, any> {
     const newRelationRows = items.concat(relationRows);
     updateRelationRows(newRelationRows, items.length);
   }
-  handleSetShowRelevanceRecord = visible => {
+  handleSetShowRelevanceRecord = (visible: boolean) => {
     const { relationRow } = this.props;
     const entityName = relationRow.worksheet.entityName || _l('记录');
     this.setState({

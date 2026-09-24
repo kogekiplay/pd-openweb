@@ -155,7 +155,7 @@ export const handleAPPScanCode = ({
  * @param {*} updateData - 更新数据
  * @returns
  */
-export const handleRelateRow = (control: FormControl = {}, content, worksheetInfo, updateData) => {
+export const handleRelateRow = (control: FormControl = {}, content, worksheetInfo, updateData: () => void) => {
   const currentWorksheetId = control.dataSource;
 
   if (content.includes('worksheetshare') || content.includes('public/record')) {

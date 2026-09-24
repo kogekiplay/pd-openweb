@@ -53,7 +53,7 @@ export default class UserListCon extends React.Component<any, any> {
     const { memberModels = [] } = outsourcing;
     let dataList = [...memberModels, ...userList];
 
-    const getData = type => {
+    const getData = (type: number) => {
       return userIds
         .filter(item => {
           let data = dataList.find(o => {

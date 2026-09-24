@@ -101,7 +101,7 @@ export default class ReportRelation extends Component<any, any> {
     });
   }
 
-  handleChangeBar(value) {
+  handleChangeBar(value: string) {
     this.setState({ activeBar: value });
   }
 

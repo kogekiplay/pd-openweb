@@ -96,7 +96,7 @@ export default function (props) {
   };
 
   //图形验证
-  const onSend = (codeType?, isfrequentLogin?) => {
+  const onSend = (codeType?: number | undefined, isfrequentLogin?: boolean | undefined) => {
     if (timeLeft > 0 && !isfrequentLogin) {
       return;
     }

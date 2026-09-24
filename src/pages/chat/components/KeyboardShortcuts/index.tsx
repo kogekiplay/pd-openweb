@@ -139,7 +139,7 @@ export default function KeyboardShortcuts(props) {
     );
   };
 
-  const renderSection = (section, sectionIndex) => {
+  const renderSection = (section, sectionIndex: number) => {
     return (
       <div key={sectionIndex} className="shortcutSection">
         <div className="Font18 bold mTop18 mBottom8">{section.section}</div>

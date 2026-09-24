@@ -31,7 +31,7 @@ export default class Guidance extends Component<any, any> {
       }
     }
   }
-  getGuideTextList(guide) {
+  getGuideTextList(guide: number) {
     const guideTextList = [
       {
         title: _l('你好，%0！', md.global.Account.fullname),

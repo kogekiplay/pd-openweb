@@ -52,7 +52,7 @@ export default class TimeSelect extends Component<any, any> {
   /**
    * 验证数值金额控件
    */
-  checkNumberControl(evt, isBlur?) {
+  checkNumberControl(evt, isBlur?: boolean | undefined) {
     const num = evt.target.value.replace(/[^\d]/g, '');
 
     evt.target.value = num;

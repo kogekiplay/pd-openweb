@@ -90,7 +90,7 @@ function CreateShare(props) {
 
   const openDialog = () => setVisible(true);
 
-  const copyHtml = url => {
+  const copyHtml = (url: string) => {
     return (
       htmlEncodeReg(setting.name) +
       '\n' +

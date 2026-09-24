@@ -101,7 +101,7 @@ const RadioWidget = props => {
   /**
    * 渲染列表
    */
-  const renderList = (item, checkIds) => {
+  const renderList = (item, checkIds: string[]) => {
     return (
       <span
         className={cx('ellipsis customRadioItem', { 'pLeft12 pRight12': enumDefault2 === 1 || checkIds.length > 1 })}

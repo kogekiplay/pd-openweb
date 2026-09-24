@@ -223,7 +223,7 @@ export default function (props) {
     );
   };
 
-  const renderCon = type => {
+  const renderCon = (type: string) => {
     const value = [20, 30].includes(sheet[`${type}Level`])
       ? 'user'
       : [100].includes(sheet[`${type}Level`])
@@ -288,7 +288,7 @@ export default function (props) {
     return isSet;
   };
 
-  const renderPermissionSection = type => {
+  const renderPermissionSection = (type: string) => {
     const list = type === 'worksheet' ? sheetActionLists : recordActionLists;
     const key = type === 'worksheet' ? worksheet : record;
 

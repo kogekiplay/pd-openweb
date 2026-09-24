@@ -75,7 +75,7 @@ class InboxHeader extends React.Component<any, InboxHeaderState> {
     }
   }
 
-  handleClick = flag => {
+  handleClick = (flag: boolean) => {
     const { inboxFavorite, changeFaviorite } = this.props;
 
     if (inboxFavorite !== flag) {

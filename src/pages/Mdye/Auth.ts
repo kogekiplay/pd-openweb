@@ -87,7 +87,7 @@ function renderCard({ title, lines = [], buttons = [] }: { title?: string; [key:
   document.body.appendChild(page);
 }
 
-function authorize(callbackUrl) {
+function authorize(callbackUrl: string) {
   const matched = document.cookie.match(/md_pss_id=(\w+)/);
 
   if (!matched) {

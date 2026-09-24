@@ -191,7 +191,7 @@ const getBillingAccountName = createAccountInfo => {
   return createAccountInfo.fullName || createAccountInfo.fullname || createAccountInfo.accountId || _l('未知成员');
 };
 
-const getAgentBillingCacheKey = (projectId: string, traceId) => `${projectId}_${traceId}`;
+const getAgentBillingCacheKey = (projectId: string, traceId: string) => `${projectId}_${traceId}`;
 
 const formatMsDate = dateStr => {
   if (!dateStr) return '-';
@@ -418,7 +418,7 @@ export default function BillInfo({ match }) {
     }
   };
 
-  const handleClick = type => {
+  const handleClick = (type: string) => {
     if (type === 'recharge') {
       location.href = pathCompletion(`/admin/valueaddservice/${projectId}`);
     }

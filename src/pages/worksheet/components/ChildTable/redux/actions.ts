@@ -138,7 +138,7 @@ export const updateCellErrors = (errors, { persisted } = {}) => {
   };
 };
 
-function getChangesControlIds(oldRow, newRow, controls) {
+function getChangesControlIds(oldRow, newRow: RecordRow, controls) {
   if (!oldRow || !newRow) {
     return [];
   }
@@ -200,7 +200,7 @@ export const setFilterControls =
 
 // 按本地增删维护 realCount(未筛选真实总数)。仅在真实总数已知(由未筛选加载落过)时增量维护，
 // 用增量而非按 rows 重算，避免分页只加载首页时按子集重算导致少算。
-export const adjustRealCount = delta => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+export const adjustRealCount = (delta: number) => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
   const { realCount } = getState();
 
   if (_.isNumber(realCount) && delta) {

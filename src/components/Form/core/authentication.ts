@@ -187,7 +187,7 @@ export const bindWeLink = (projectId: string) => {
   });
 };
 
-export const handleTriggerEvent = (scanFn, bindFn, errorFn = _.noop) => {
+export const handleTriggerEvent = (scanFn: () => void, bindFn, errorFn = _.noop) => {
   if (window.currentUrl !== location.href) {
     window.currentUrl = location.href;
     window.configSuccess = false;

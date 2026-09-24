@@ -98,7 +98,12 @@ export function getFeatureStatus(projectId: string | undefined, featureId) {
  * @param {Object} params - 额外的参数，用于记录日志的详细信息。
  * @param {boolean} isLinkVisited - 是否通过链接访问
  */
-export const addBehaviorLog = (type, entityId, params: Record<string, unknown> = {}, isLinkVisited?) => {
+export const addBehaviorLog = (
+  type,
+  entityId,
+  params: Record<string, unknown> = {},
+  isLinkVisited?: boolean | undefined,
+) => {
   if (!get(md, 'global.Account.accountId')) return;
 
   const typeObj = {
@@ -314,7 +319,7 @@ export const prefetchContactInfo = (): Promise<Record<string, unknown>> => {
  * 而 preall 启动时会 await prefetchContactInfo()（见那边的调用点），
  * 所以正常进入任何表单之前缓存一定是热的，第三条分支实际走不到。
  */
-export const getContactInfo = key => {
+export const getContactInfo = (key: string) => {
   const contactInfo = safeParse(window.localStorage.getItem('contactInfo') || '{}');
 
   if (!md.global.Account.accountId) return '';

@@ -160,7 +160,7 @@ function getIconNameByExt(ext = '') {
   return 'doc';
 }
 
-function getClassNameByExt(ext) {
+function getClassNameByExt(ext: string) {
   return `fileIcon-${getIconNameByExt(getExt(ext))}`;
 }
 

@@ -365,7 +365,7 @@ export default class FeiShu extends React.Component<any, any> {
     });
   };
 
-  changeTab = key => {
+  changeTab = (key: string) => {
     this.setState({ currentTab: key });
     if (key === 'other') {
       this.getInitialPassword();

@@ -965,7 +965,7 @@ export default class Approval extends Component<any, any> {
   /**
    * 意见必填修改
    */
-  opinionRequiredChange(checked: boolean, key: string, value?) {
+  opinionRequiredChange(checked: boolean, key: string, value?: number | undefined) {
     const { data } = this.state;
     const currentAuth = [].concat(data.auth[key]);
 

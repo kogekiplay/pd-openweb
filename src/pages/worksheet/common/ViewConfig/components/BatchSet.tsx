@@ -165,7 +165,7 @@ export default function BatchSetDialog(props) {
     });
   };
 
-  const renderList = type => {
+  const renderList = (type: string) => {
     const list = type === 'Show' ? showList : hideList;
     return (
       <React.Fragment>
@@ -354,7 +354,7 @@ export default function BatchSetDialog(props) {
     });
   };
 
-  const onChangeBatchAutoWidth = value => {
+  const onChangeBatchAutoWidth = (value: string | undefined) => {
     if (value === 'autoWidth') {
       if (window[`getTableColumnWidth-${worksheetId}`]) {
         const widths = columns

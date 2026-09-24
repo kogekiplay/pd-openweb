@@ -342,7 +342,7 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
     );
   };
 
-  const renderControlRequired = (item, showText?) => {
+  const renderControlRequired = (item, showText?: boolean | undefined) => {
     return (
       <Checkbox
         className="InlineBlock Font12 TxtMiddle LineHeight20"
@@ -424,7 +424,9 @@ export default ({ data, updateSource, isIntegration, isPlugin }) => {
   const defaultValue =
     selectItem && ((JSON.parse(_.get(selectItem, 'advancedSetting.defsource') || '[]')[0] || {}).staticValue || '');
 
-  const updateControlAdvancedSetting = value => {
+  const updateControlAdvancedSetting = (
+    value: { defsource: string } | { showtype: string } | { direction: string },
+  ) => {
     updateControls('advancedSetting', Object.assign({}, _.get(selectItem, 'advancedSetting'), value), selectItem);
   };
 

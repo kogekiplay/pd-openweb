@@ -74,7 +74,7 @@ const TPType = {
   microsoftBind: 14,
 };
 
-const WORKBINDOPTION = state => {
+const WORKBINDOPTION = (state: number) => {
   switch (state) {
     case 1:
       return { icon: 'invite-ding', label: _l('钉钉'), iconIsImage: false };
@@ -151,7 +151,7 @@ export default class AccountChart extends React.Component<any, any> {
   }
 
   //微信或qq绑定
-  handleBind(type) {
+  handleBind(type: string) {
     const currentType = this.state[type] || {};
 
     if (!currentType.state) {
@@ -287,7 +287,7 @@ export default class AccountChart extends React.Component<any, any> {
   }
 
   // common修改
-  sureSettings(settingNum: string, value, successCallback) {
+  sureSettings(settingNum: string, value, successCallback: () => void) {
     accountSetting
       .editAccountSetting({
         settingType: common.settingOptions[settingNum],
@@ -359,7 +359,7 @@ export default class AccountChart extends React.Component<any, any> {
   };
 
   // 取消绑定手机或邮箱红点提示
-  handleCancelRed(type) {
+  handleCancelRed(type: string) {
     accountGuideController
       .setAccountGuide({
         userGuideSetting: common.guideType[type],
@@ -413,7 +413,7 @@ export default class AccountChart extends React.Component<any, any> {
     );
   }
 
-  renderTips = key => {
+  renderTips = (key: string) => {
     return (
       <Tooltip placement="top" title={tipsConfig[key]}>
         <span className="icon-help textDisabled Hand mLeft5 Font15"></span>

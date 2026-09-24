@@ -463,7 +463,7 @@ export const getConditionList = (type, enumDefault: number) => {
 /**
  * 获取筛选的控件条件的个数
  */
-export const getConditionNumber = id => {
+export const getConditionNumber = (id: string) => {
   let count;
 
   switch (id) {
@@ -594,7 +594,7 @@ export const handleGlobalVariableName = (nodeId, sourceType, name?) => {
 /**
  * 检测筛选条件是否允许值为空
  */
-export const checkConditionAllowEmpty = (type, conditionId) => {
+export const checkConditionAllowEmpty = (type: number, conditionId: string) => {
   let list;
 
   switch (type) {

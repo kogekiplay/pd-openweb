@@ -366,7 +366,7 @@ export default class Ding extends React.Component<any, any> {
   /**
    * 编辑钉钉客户端打开方式
    */
-  handleChangePattern(value) {
+  handleChangePattern(value: number) {
     Ajax.editDDProjectClientWorkingPattern({
       projectId: this.props.projectId,
       status: value,
@@ -405,7 +405,7 @@ export default class Ding extends React.Component<any, any> {
     });
   };
 
-  changeTab = key => {
+  changeTab = (key: string) => {
     this.setState({ currentTab: key });
     if (key === 'other') {
       this.getInitialPassword();

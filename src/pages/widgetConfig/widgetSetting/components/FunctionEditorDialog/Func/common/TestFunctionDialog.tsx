@@ -122,7 +122,7 @@ const TestCon = styled.div`
   }
 `;
 
-function changeControlType(control) {
+function changeControlType(control: FormControl) {
   const { type } = control;
   return (
     {

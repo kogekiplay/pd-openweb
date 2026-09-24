@@ -209,7 +209,7 @@ export const selectSchedule = () => {
  * @param {*} acceptor
  * @param {*} options
  */
-export const newVote = (acceptor, options) => {
+export const newVote = (acceptor, options: { showSuccessTip: boolean }) => {
   return new Promise(resolve => {
     _initPost(
       acceptor,

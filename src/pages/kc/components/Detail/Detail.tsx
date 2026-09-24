@@ -247,7 +247,9 @@ class Detail extends React.Component<any, any> {
     }
   };
 
-  editNodeAttribute = attrubuteObj => {
+  editNodeAttribute = (
+    attrubuteObj: { isDownloadable: boolean } | { isEditable: boolean } | { visibleType: number },
+  ) => {
     // attrubuteObj = $.extend({}, { isDownloadable , isEditable , visibleType });
     let item = this.props.data;
 

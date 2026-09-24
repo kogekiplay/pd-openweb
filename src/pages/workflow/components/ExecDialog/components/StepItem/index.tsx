@@ -596,7 +596,7 @@ export default class StepItem extends Component<any, StepItemState> {
   /**
    * 渲染操作副标题
    */
-  renderOperatorSubtitle(type, key, debugEventDump) {
+  renderOperatorSubtitle(type, key: string, debugEventDump) {
     const isTest =
       _.includes(['1', '2', '3'], key) && debugEventDump && debugEventDump[key] && !!debugEventDump[key].length;
 

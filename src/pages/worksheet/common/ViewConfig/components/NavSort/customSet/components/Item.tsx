@@ -21,7 +21,7 @@ export default function (props) {
   const { onAdd, onDelete, item, onUpdate, projectId, appId, DragHandle, maxCount } = props;
   const { num, info } = item;
 
-  const addUser = (isMultiple = true, tabType, cb) => {
+  const addUser = (isMultiple = true, tabType: number, cb) => {
     quickSelectUser($ref.current, {
       showMoreInvite: false,
       isTask: false,

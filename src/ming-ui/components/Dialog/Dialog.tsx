@@ -9,7 +9,7 @@ import DialogFooter from './DialogFooter';
 import DialogHeader from './DialogHeader';
 import '../less/Dialog.less';
 
-function enterHandle(Comp) {
+function enterHandle(Comp: typeof Dialog) {
   return function UseKey(props) {
     useKey('Enter', () => {
       if (!props.visible || !props.bindEnterTriggerOk) {

@@ -5,7 +5,7 @@ import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget.j
 import { postWithToken } from 'src/utils/common';
 import type { RecordRow } from 'src/utils/controlTypes';
 
-function getSelectedOptionKeys(text = '', options, isMultiple?) {
+function getSelectedOptionKeys(text = '', options, isMultiple?: boolean | undefined) {
   if (!text.trim()) {
     return '';
   }

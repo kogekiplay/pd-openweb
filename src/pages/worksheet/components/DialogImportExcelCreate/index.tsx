@@ -209,7 +209,7 @@ class DialogImportExcelCreate extends Component<any, any> {
     });
   };
 
-  getParams = (isMore?) => {
+  getParams = (isMore?: boolean | undefined) => {
     const { id, filePath, freeRowCount } = this.state;
     const {
       createType,

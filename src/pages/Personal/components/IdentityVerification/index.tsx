@@ -59,4 +59,5 @@ export default function IdentityVerification(props) {
   );
 }
 
-export const identityVerificationFunc = props => FunctionWrap(IdentityVerification, props);
+export const identityVerificationFunc = (props: { verificationSuccess: () => void }) =>
+  FunctionWrap(IdentityVerification, props);

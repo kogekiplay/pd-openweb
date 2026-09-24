@@ -119,7 +119,7 @@ export default class WebProxySetting extends Component<any, any> {
       });
   }
 
-  handleSaveWebProxy = isEnable => {
+  handleSaveWebProxy = (isEnable: boolean) => {
     const { http, https, ip, portNumber, openIdentityValidate, userName, webProxyPassword } = this.state;
     this.setState({ isSaveWebProxy: true });
     if (

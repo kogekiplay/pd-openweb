@@ -18,7 +18,7 @@ import Constant from '../../utils/constant';
 import fileConfirm from '../fileConfirm/fileConfirm';
 import './index.less';
 
-const recurShowFileConfirm = (up, files, i, length, cb) => {
+const recurShowFileConfirm = (up, files, i: number, length, cb) => {
   if (i >= length) {
     // 最后一次调用时启动重新开始上传
     up.start();

@@ -36,7 +36,7 @@ export const updateProjectId = (projectId: string) => ({
  * action: 设置当前部门/职位tab
  * @param type
  */
-export const updateType = typeNum => ({
+export const updateType = (typeNum: number) => ({
   type: UPDATE_TYPE,
   typeNum,
 });

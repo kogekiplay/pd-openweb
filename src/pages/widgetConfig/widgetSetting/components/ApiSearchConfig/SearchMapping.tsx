@@ -60,7 +60,7 @@ export default function SearchMapping(props) {
   const [visible, setVisible] = useState(false);
   const [mapVisible, setMapVisible] = useState(false);
 
-  const getMapData = type => {
+  const getMapData = (type: number) => {
     let filterData = [];
     let dropValue = '';
 

@@ -158,7 +158,7 @@ function SettingMenu(props) {
     handleClose();
   };
 
-  const handleCopyConfig = type => {
+  const handleCopyConfig = (type: number) => {
     onCopyConfig(item, type);
     handleClose();
   };

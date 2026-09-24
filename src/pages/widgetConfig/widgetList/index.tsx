@@ -639,7 +639,7 @@ export default function List(props) {
   };
 
   // 判断某个 widget 是否应该被显示
-  const shouldShowWidget = (key, widget) => {
+  const shouldShowWidget = (key: string, widget) => {
     const featureType = getFeatureType(widget['featureId']);
     if (_.includes(['SEARCH_BTN', 'SEARCH'], key) && !featureType) return false;
     // if (!md.global.SysSettings.enableMap && key === 'LOCATION') return;
@@ -808,7 +808,7 @@ export default function List(props) {
     });
   };
 
-  const handleSwitchWidgetTab = tabValue => {
+  const handleSwitchWidgetTab = (tabValue: number) => {
     setActiveDropdownKey('');
     setActiveWidgetTab(tabValue);
 

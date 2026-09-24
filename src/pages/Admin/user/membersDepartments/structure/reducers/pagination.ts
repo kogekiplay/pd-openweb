@@ -54,7 +54,7 @@ const updatePagination = (
     allCount: undefined,
     searchId: [],
   },
-  action,
+  action: ReduxAction,
 ) => {
   const { type } = action;
   const [requestType, successType, failureType] = [USER_REQUEST, USER_SUCCESS, USER_FAILURE];

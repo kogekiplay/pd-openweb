@@ -66,7 +66,7 @@ const highlightMessageText = (keyword, content) => {
   return content;
 };
 
-const searchResult = (query, queryKey, data) => {
+const searchResult = (query: string, queryKey, data) => {
   const list = data[0] && data[0].rowid ? _.uniqBy(data, 'rowid') : data;
 
   return list

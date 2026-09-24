@@ -342,7 +342,7 @@ export default function ParameterSet(params) {
     );
   };
 
-  const renderReshTime = (isNull?) => {
+  const renderReshTime = (isNull?: boolean | undefined) => {
     const { pluginInfo = {} } = view;
     const { switchSettings = {} } = pluginInfo;
     return switchSettings.showRefresh === '1' ? (

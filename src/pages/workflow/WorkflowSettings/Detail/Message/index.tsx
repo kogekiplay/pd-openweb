@@ -494,7 +494,7 @@ export default class Message extends Component<any, any> {
   /**
    * 获取模板列表内容
    */
-  getTemplateListContent(content, referenceValue = {}) {
+  getTemplateListContent(content: string, referenceValue = {}) {
     Object.keys(referenceValue).forEach(key => {
       content = content.replace(
         new RegExp(key.replace(/\$/g, '\\$').replace(/\(/g, '\\(').replace(/\)/g, '\\)'), 'g'),
@@ -823,7 +823,7 @@ export default class Message extends Component<any, any> {
   /**
    * 插入字段
    */
-  insertFields(currentMapId) {
+  insertFields(currentMapId: string) {
     const { processId, selectNodeId } = this.props;
 
     this.currentMapId = currentMapId;

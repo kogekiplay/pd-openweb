@@ -268,7 +268,7 @@ function createEntryAlert(content, type = 1) {
   }, 3000);
 }
 
-function createMdyAPI(apiServer) {
+function createMdyAPI(apiServer: string) {
   const mdyAPI = (controllerName, actionName, requestData, options: Record<string, any> = {}) => {
     const controller = options.abortController || new AbortController();
     const ajaxOptions = options.ajaxOptions || {};

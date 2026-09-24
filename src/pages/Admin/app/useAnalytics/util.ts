@@ -28,7 +28,7 @@ export const dateDimension = [
 export const formatter = v => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 const units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-export const formatChartData = (type, initData = [], isFilterByDepartment) => {
+export const formatChartData = (type: string, initData = [], isFilterByDepartment: boolean) => {
   let data = [];
 
   switch (type) {

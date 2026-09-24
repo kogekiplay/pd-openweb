@@ -169,7 +169,13 @@ export default function FastFilter(params) {
     setFastFilter(false, data.controlId);
   };
 
-  const updateAdvancedSettingWithEitAdKeys = advanced => {
+  const updateAdvancedSettingWithEitAdKeys = (
+    advanced:
+      | { enablebtn: string; fastrequired: string }
+      | { fastrequired: string }
+      | { requiredcids: string }
+      | { clicksearch: string },
+  ) => {
     setShowAddCondition(false);
     updateCurrentView({
       ...view,

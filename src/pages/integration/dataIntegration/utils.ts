@@ -13,7 +13,7 @@ import {
 import { DEFAULT_DATA } from 'src/pages/widgetConfig/config/widget.js';
 import { canSetAsTitle, enumWidgetType } from 'src/pages/widgetConfig/util';
 
-export const getInitFieldsMapping = (sourceFields, isSourceAppType, destDsType) => {
+export const getInitFieldsMapping = (sourceFields, isSourceAppType: boolean, destDsType) => {
   const isDestAppType = destDsType === DATABASE_TYPE.APPLICATION_WORKSHEET;
   const needReplace = !isSourceAppType || !isDestAppType;
   const isExistJoinPk = !!(sourceFields || []).filter(item => item.isUniquePk).length;
@@ -88,7 +88,7 @@ export const getInitWorkSheetFields = (
   controls,
   isGetDest,
   isSourceAppType,
-  isDestAppType,
+  isDestAppType: boolean,
   workSheetId,
   withRowId?,
   withSys?,

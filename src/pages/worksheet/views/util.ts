@@ -233,7 +233,7 @@ export const getSearchData = sheet => {
   return { queryKey: titleControlId, data };
 };
 
-export const renderTitleByViewtitle = (row, controls, view, useDateConvertToServerZone?) => {
+export const renderTitleByViewtitle = (row, controls, view, useDateConvertToServerZone?: boolean | undefined) => {
   const viewtitle = _.get(view, 'advancedSetting.viewtitle');
   const controlFields = viewtitle.match(FIELD_REG_EXP) || [];
   const defaultValue = _.filter(viewtitle.split('$'), v => !_.isEmpty(v));

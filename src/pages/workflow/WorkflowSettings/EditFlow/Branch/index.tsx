@@ -78,7 +78,7 @@ export default class Branch extends Component<any, any> {
   /**
    * 切换网关类型
    */
-  switchBranchType = gatewayType => {
+  switchBranchType = (gatewayType: number) => {
     const { processId, item, updateBranchGatewayType } = this.props;
 
     updateBranchGatewayType(processId, item.id, gatewayType);

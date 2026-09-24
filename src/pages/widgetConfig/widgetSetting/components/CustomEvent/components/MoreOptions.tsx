@@ -154,7 +154,7 @@ export default function MoreOptions(props) {
   const [visible, setVisible] = useState(false);
   const [copyVisible, setCopyVisible] = useState(false);
 
-  const handleClick = key => {
+  const handleClick = (key: string) => {
     if (key === 'edit') {
       setFocusKey(`${eventId}-${index}`);
       return;

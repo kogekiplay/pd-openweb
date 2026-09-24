@@ -292,7 +292,7 @@ export default class CustomButtons extends React.Component<any, any> {
       }
     }
 
-    function verifyConform(removeNoneVerification) {
+    function verifyConform(removeNoneVerification: boolean) {
       VerifyPasswordConfirm.confirm({
         allowNoVerify: !removeNoneVerification,
         isRequired: true,
@@ -723,7 +723,7 @@ export default class CustomButtons extends React.Component<any, any> {
     }
   }
 
-  addRelateRecordRelateRecord(relationControl, relationControlrelationControlId) {
+  addRelateRecordRelateRecord(relationControl: FormControl, relationControlrelationControlId) {
     let controldata;
 
     try {
@@ -789,7 +789,7 @@ export default class CustomButtons extends React.Component<any, any> {
     });
   }
 
-  setStateFn = (args, fn?) => {
+  setStateFn = (args, fn?: (() => void) | undefined) => {
     const { setCustomButtonActive } = this.props;
 
     if (typeof args.fillRecordControlsVisible !== 'undefined') {

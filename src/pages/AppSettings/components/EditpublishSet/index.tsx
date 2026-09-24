@@ -231,7 +231,7 @@ class EditPublishSetDialog extends React.Component<any, any> {
   };
 
   // 应用维护
-  fixedApp = (fixed, isSave?) => {
+  fixedApp = (fixed: boolean, isSave?: boolean | undefined) => {
     const { projectId, appId, onChangeData } = this.props;
     const { fixRemark } = this.state;
     homeAppAjax

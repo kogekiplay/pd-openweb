@@ -52,7 +52,7 @@ export default function Control(props) {
   const { template = {} } = sheetInfo;
   const controls: FormControl[] = (template.controls || []).filter(c => !ALL_SYS.includes(c.controlId));
 
-  const renderControlNav = c => {
+  const renderControlNav = (c: FormControl) => {
     const data = _.find(translateData, { correlationId: c.controlId, parentId: selectNode.workSheetId }) || {};
     const translateInfo = data.data || {};
     return (

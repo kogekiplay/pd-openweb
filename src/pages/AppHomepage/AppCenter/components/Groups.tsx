@@ -68,7 +68,7 @@ const BaseBtnCon = styled(FlexCenter)`
   }
 `;
 
-function getSortType(type) {
+function getSortType(type: string) {
   return { star: 1, project: 2, personal: 3 }[type];
 }
 

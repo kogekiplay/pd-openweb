@@ -30,7 +30,7 @@ export default class Item extends Component<any, ItemState> {
   }
 
   renderOpList() {
-    const toggleList = (flag?) => {
+    const toggleList = (flag?: boolean | undefined) => {
       if (flag === undefined) {
         this.setState({
           showOpList: !this.state.showOpList,

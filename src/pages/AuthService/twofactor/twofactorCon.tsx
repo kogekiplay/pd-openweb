@@ -38,7 +38,7 @@ const MethodItem = styled.div`
   `}
 `;
 
-function useInterval(callback, delay) {
+function useInterval(callback: () => void, delay: number | null) {
   const savedCallback = useRef(callback);
   useEffect(() => {
     savedCallback.current = callback;

@@ -143,7 +143,7 @@ class Marker extends React.Component<any, any> {
   }
 
   // 获取设置属性的方法
-  getSetterName(key) {
+  getSetterName(key: string) {
     switch (key) {
       case 'zIndex':
         return 'setzIndex';

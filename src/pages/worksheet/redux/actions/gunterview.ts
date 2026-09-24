@@ -39,7 +39,7 @@ const updatePeriodList = ({ result, parent }) => {
   };
 };
 
-const getExportPeriodList = (type, { startTime, endTime }, viewConfig) => {
+const getExportPeriodList = (type: number, { startTime, endTime }, viewConfig) => {
   const { onlyWorkDay } = viewConfig;
   startTime = moment(startTime);
   endTime = moment(endTime);
@@ -890,7 +890,7 @@ export const updateGroupingRow = (data, id) => {
   };
 };
 
-export const moveGroupingRow = (data, newKey, oldKey) => {
+export const moveGroupingRow = (data, newKey: string, oldKey) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { gunterView } = getState().sheet;
     const { grouping, periodList, viewConfig } = gunterView;

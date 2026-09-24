@@ -179,7 +179,7 @@ const HierarchyViewSettingWrap = styled.div(
 `,
 );
 
-const isVisible = control => {
+const isVisible = (control: FormControl) => {
   let { fieldPermission = '111' } = control;
   const [visible] = fieldPermission.split('');
 
@@ -250,7 +250,7 @@ export default function HierarchyViewSetting(props) {
       });
   };
 
-  const addViewControl = item => {
+  const addViewControl = (item: FormControl) => {
     worksheetAjax.getWorksheetInfo({ worksheetId: item.dataSource, getTemplate: true }).then(data => {
       const controls: FormControl[] = data.template.controls;
       const coverControls = filterAndFormatterControls({

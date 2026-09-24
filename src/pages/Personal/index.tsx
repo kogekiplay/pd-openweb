@@ -50,7 +50,7 @@ export default class PersonalEntrypoint extends Component<any, any> {
     return false;
   }
 
-  handleClick(type) {
+  handleClick(type: string[]) {
     const defaultType = type[0];
     navigateTo(
       common.url({

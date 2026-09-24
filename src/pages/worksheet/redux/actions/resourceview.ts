@@ -191,7 +191,7 @@ export const getRelationControls = (appId: string, sourceId) => {
   };
 };
 
-const formatByGroup = (info, view, controls, gridTimes, currentTime) => {
+const formatByGroup = (info, view, controls, gridTimes, currentTime: string | null) => {
   const groupControl = _.find(controls, { controlId: view.viewControl });
   return sortGrouping(
     info

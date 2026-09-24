@@ -86,7 +86,7 @@ const UserSelect = props => {
   /**
    * 选择用户
    */
-  const pickUser = (replaceItem?) => {
+  const pickUser = (replaceItem?: SelectedEntityValue | undefined) => {
     const selectedAccountIds = (currentValueRef.current || []).map(item => item.accountId);
     const tabType = getTabTypeBySelectUser(props);
 

@@ -123,7 +123,7 @@ export const formatChartData = (data, yaxisList, { isPile, isAccumulate, accumul
   return result;
 };
 
-const getLineValue = value => {
+const getLineValue = (value: number) => {
   if (value) {
     return [
       {

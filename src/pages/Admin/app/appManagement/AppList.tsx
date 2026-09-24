@@ -465,7 +465,7 @@ export default class AppManagement extends Component<any, any> {
   /**
    * 修改应用状态
    */
-  editAppStatus(appId: string, status) {
+  editAppStatus(appId: string, status: number) {
     const { projectId } = this.props;
     let list = _.cloneDeep(this.state.list);
 

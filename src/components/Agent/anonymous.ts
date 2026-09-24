@@ -37,14 +37,14 @@ function stringValue(value) {
   return typeof value === 'string' && value.trim() ? value.trim() : undefined;
 }
 
-function agentRequest(args, options) {
+function agentRequest(args, options: { url: string; silent: boolean }) {
   return window.agentAPI(args, {
     ...options,
     method: 'POST',
   });
 }
 
-function webCacheRequest(actionName: string, args, options?) {
+function webCacheRequest(actionName: string, args, options?: { silent: boolean } | undefined) {
   return window.mdyAPI('WebCache', actionName, { ...args, moduleType: WEB_CACHE_MODULE_TYPE }, options);
 }
 
@@ -281,7 +281,7 @@ export async function ensureAnonymousSession() {
 }
 
 // 匿名漏斗语音凭证：复用同一个匿名 sessionId，凭证不长期缓存；登录态录音仍走 Recorder 默认 Mingo/GetFederationToken。
-export async function requestAnonymousVoiceToken(sessionId, { onSessionRefresh } = {}) {
+export async function requestAnonymousVoiceToken(sessionId: string, { onSessionRefresh } = {}) {
   async function request(sid) {
     const res = await withCaptcha(extra =>
       agentRequest(
@@ -420,7 +420,7 @@ export async function peekAnonHandoff(key) {
   }
 }
 
-export function clearAnonHandoff(key) {
+export function clearAnonHandoff(key: string) {
   if (!key) return Promise.resolve(false);
   return webCacheRequest('Clear', { key }, { silent: true }).catch(() => false);
 }

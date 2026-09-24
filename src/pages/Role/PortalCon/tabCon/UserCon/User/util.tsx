@@ -49,8 +49,8 @@ const renderControl = (_text, data) => {
 export const getColumns = (
   controls,
   roleList,
-  filterStatus,
-  setFilterStatus,
+  filterStatus: string,
+  setFilterStatus: React.Dispatch<React.SetStateAction<string>>,
   setFastFilters,
   filterStatusNum,
   appId: string,

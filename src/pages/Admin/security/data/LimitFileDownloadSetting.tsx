@@ -230,7 +230,7 @@ export default class LimitFileDownloadSetting extends Component<any, any> {
     this.setState({ attachmentSettingInfo: { ...attachmentSettingInfo, whiteList: whiteList.concat(addData) } });
   };
 
-  handleSave = isClose => {
+  handleSave = (isClose: boolean) => {
     const { projectId } = this.props;
     const { attachmentSettingInfo, initialAttachmentSettingInfo, ipContent } = this.state;
     const { whiteList = [], limitType, useType, modelType, ipList } = attachmentSettingInfo;

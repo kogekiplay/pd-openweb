@@ -167,7 +167,7 @@ class Print extends React.Component<any, any> {
       });
   };
 
-  addDrawerPrintTemp = fileType => {
+  addDrawerPrintTemp = (fileType: string) => {
     if (this.checkedPrintTempCount()) return;
 
     const { worksheetInfo } = this.props;
@@ -197,7 +197,7 @@ class Print extends React.Component<any, any> {
     });
   };
 
-  onSortEnd = (newItems = [], type) => {
+  onSortEnd = (newItems = [], type: number) => {
     const { printData } = this.state;
     const { worksheetInfo = {}, worksheetId } = this.props;
     const defaultTypes = _.reduce(

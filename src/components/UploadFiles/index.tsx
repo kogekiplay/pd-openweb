@@ -271,7 +271,7 @@ export default class UploadFiles extends Component<any, any> {
     this.props.onUploadComplete(true);
   }
 
-  removeErrorFile = (uploader, fileId) => {
+  removeErrorFile = (uploader, fileId: string | undefined) => {
     if (fileId && uploader.removeFile) {
       uploader.removeFile({ id: fileId });
     }

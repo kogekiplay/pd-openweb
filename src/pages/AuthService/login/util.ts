@@ -237,7 +237,7 @@ export const loginCallback = ({ data, onChange }) => {
 
 // 在集成环境如果 ReturnUrl 包含 appId，去 sso 页面登录
 export const ssoLogin = (returnUrl = '') => {
-  const getAppId = pathname => {
+  const getAppId = (pathname: string) => {
     if (pathname.includes('mobile')) {
       const match = pathname.match(/\/mobile\/([^/]+)\/([^/]+)/);
       return match && match[2];

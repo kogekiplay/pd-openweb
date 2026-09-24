@@ -855,7 +855,7 @@ class TaskStage extends Component<any, TaskStageState> {
   /**
    * 取消阶段创建任务
    */
-  canelCreateStageTask($li) {
+  canelCreateStageTask($li: JQuery<HTMLElement>) {
     $li.find('li.addNewTask:last').hide();
     $li.find('.bottomNewBox').show();
     $li.find('.stageContentBox').removeClass('addNewTask');
@@ -1190,7 +1190,7 @@ class TaskStage extends Component<any, TaskStageState> {
   /**
    * 页面滚动条
    */
-  movePageScroll(event) {
+  movePageScroll(event: JQuery.MouseMoveEvent<Document, undefined, Document, Document>) {
     const gap = event.clientX - taskStageSettings.pointGapX;
     const $listStage = $('#taskList .listStage');
     const oldScrollLeft = $listStage.scrollLeft();

@@ -530,7 +530,7 @@ export default class Overview extends Component<any, any> {
       },
     });
   };
-  linkHref = type => {
+  linkHref = (type: string) => {
     const { projectId } = this.props;
     location.assign(pathCompletion(`/admin/${type}/${projectId}`));
   };

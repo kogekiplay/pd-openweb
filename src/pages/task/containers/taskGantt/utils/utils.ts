@@ -497,7 +497,7 @@ const singleTaskSourceUpdate = (tasks, task, status, filterWeekend, level) => {
  * @param  {object} task  单条任务
  * @param  {number} level  当前层级
  */
-const singleTaskArrow = (tasks, task, level) => {
+const singleTaskArrow = (tasks, task, level: number) => {
   // 无子任务
   if (task.subTaskIds.length === 0) {
     task.arrowStatus = ARROW_STATUS.NULL;
@@ -816,7 +816,7 @@ const getViewSumWidth = (viewType, timeAxisSource, filterWeekend) => {
  * @param  {[]} lefts
  * @return {number}
  */
-const getScrollIndex = (value, lefts) => {
+const getScrollIndex = (value: number, lefts: JQuery<number>) => {
   let index = 0;
 
   while (lefts[index] <= value) {
@@ -933,7 +933,7 @@ const getDays = hour => {
  * @param  {boolean} filterWeekend 是否过滤周末
  * @return {string}
  */
-const offsetDay = (currentTime, day: number, filterWeekend) => {
+const offsetDay = (currentTime: moment.Moment, day: number, filterWeekend) => {
   // 如果不包含周末
   if (!filterWeekend) {
     currentTime = currentTime.add(day, 'd');
@@ -957,7 +957,7 @@ const offsetDay = (currentTime, day: number, filterWeekend) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetStartPositiveHour = (currentTime, hour) => {
+const offsetStartPositiveHour = (currentTime: moment.Moment, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {
@@ -990,7 +990,7 @@ const offsetStartPositiveHour = (currentTime, hour) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetStartNegativeHour = (currentTime, hour: number) => {
+const offsetStartNegativeHour = (currentTime: moment.Moment, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {
@@ -1024,7 +1024,7 @@ const offsetStartNegativeHour = (currentTime, hour: number) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetEndPositiveHour = (currentTime, hour: number) => {
+const offsetEndPositiveHour = (currentTime: moment.Moment, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {
@@ -1059,7 +1059,7 @@ const offsetEndPositiveHour = (currentTime, hour: number) => {
  * @param  {string} hour 偏移的小时
  * @return {object}
  */
-const offsetEndNegativeHour = (currentTime, hour) => {
+const offsetEndNegativeHour = (currentTime: moment.Moment, hour: number) => {
   let day = 0;
 
   for (let i = 0; i < hour; i++) {

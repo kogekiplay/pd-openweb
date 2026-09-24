@@ -50,7 +50,7 @@ function WorksheetRecordLogSelectTags(props) {
   const advancedSetting = _.get(control, ['advancedSetting']) || {};
   const isdecrypt = advancedSetting.isdecrypt;
 
-  const clickHandle = (type, index: number) => {
+  const clickHandle = (type: string, index: number) => {
     if (isMobile) return;
     setPreview(index);
     setPreType({

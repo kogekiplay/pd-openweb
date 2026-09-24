@@ -48,7 +48,7 @@ export default class YesNo extends Component<any, any> {
     return type === FILTER_CONDITION_TYPE.HASVALUE ? 1 : 0;
   };
 
-  getFilterTypeByCheckedValue = value => {
+  getFilterTypeByCheckedValue = (value: number) => {
     const { control } = this.props;
 
     if (control.type === 36) {

@@ -92,7 +92,7 @@ export default class GroupingAxis extends Component<any, any> {
       particleSizeType: value,
     });
   };
-  handleChangeEmptyType = value => {
+  handleChangeEmptyType = (value: number) => {
     this.props.onChangeCurrentReport({
       emptyType: value,
     });

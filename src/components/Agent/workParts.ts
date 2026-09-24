@@ -65,6 +65,6 @@ export function carveWorkParts(parts, finishedAt) {
 
 // 历史加载用：把一段原始 assistant 文本按 <workEnd /> 切成 work / text parts。
 // 历史无逐段时间戳，work part 不带 finishedAt（折叠头只显示「已工作」不带时长）。
-export function splitWorkPartsFromText(text, ts) {
+export function splitWorkPartsFromText(text: string, ts: number) {
   return carveWorkParts([{ kind: 'text', text, ts }], undefined);
 }

@@ -124,7 +124,7 @@ export default function AppEmailService(props) {
     setServiceLoading(data => ({ ...data, [serviceId]: value }));
   };
 
-  const getBindingPayload = (serviceId, sceneEntityIds) => ({
+  const getBindingPayload = (serviceId, sceneEntityIds: string[]) => ({
     id: serviceId,
     projectId,
     sceneType: APP_EMAIL_SCENE_TYPE,

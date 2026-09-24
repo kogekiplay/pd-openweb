@@ -46,7 +46,7 @@ const ToolbarDrawer = props => {
   // dragLeft 越小抽屉越宽，故抽屉最大宽 → dragLeft 下界 minDrawerWidht。
   const minDrawerWidht = bodyWidth - maxDrawerWidth - rightToolbarWidth;
   const maxDrawerWidht = bodyWidth - MIN_DRAWER_WIDTH - rightToolbarWidth;
-  const clampDragLeft = v => Math.min(Math.max(v, minDrawerWidht), maxDrawerWidht);
+  const clampDragLeft = (v: number) => Math.min(Math.max(v, minDrawerWidht), maxDrawerWidht);
   const drawerWidth = bodyWidth - width - rightToolbarWidth;
   // 初始按上限 clamp：之前拖到超过新上限（如 mingo 历史宽 > 640）的，打开即收回到上限
   const [dragLeft, setDragLeft] = useState(clampDragLeft(drawerWidth));

@@ -20,7 +20,7 @@ function testApiPath(apiPath, url) {
   return new RegExp(apiPath + '$').test(apiPathOfRequest);
 }
 
-function changeRequestData(config, apiPath, changes = {}) {
+function changeRequestData(config, apiPath: () => boolean, changes = {}) {
   const needChange = isFunction(apiPath) ? apiPath() : testApiPath(apiPath, config.url);
 
   if (needChange) {
@@ -509,7 +509,7 @@ const disposeRequestParams = (controllerName, actionName, data, ajaxOptions) => 
 
   if (window.apireply_forbid) {
     // AES-256-CBC 加密函数
-    const encryptAES256CBC = plainText => {
+    const encryptAES256CBC = (plainText: string) => {
       // 将密钥和 IV 转换为 CryptoJS 的 WordArray
       const keyWordArray = CryptoJS.enc.Hex.parse(window.apireply_hex_key);
       const ivWordArray = CryptoJS.enc.Hex.parse(window.apireply_hex_iv);

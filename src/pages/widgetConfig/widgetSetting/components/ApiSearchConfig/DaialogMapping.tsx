@@ -11,7 +11,7 @@ import { getMapControls } from '../DynamicDefaultValue/util';
 import './DialogMapping.less';
 import type { FormControl } from 'src/utils/controlTypes';
 
-const renderHeader = (showSupport?) => {
+const renderHeader = (showSupport?: boolean | undefined) => {
   return (
     <div className={cx('mappingHeader mBottom20', { mTop44: !showSupport })}>
       <span className="Font14 Bold">
@@ -176,7 +176,7 @@ export default function DialogMapping(props) {
     return _.flatten(result);
   };
 
-  const handleChange = (value, item, parentId) => {
+  const handleChange = (value: string | undefined, item, parentId) => {
     let newItem: Record<string, any> = {};
 
     if (item.dataSource) {

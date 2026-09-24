@@ -23,7 +23,7 @@ const imgToCanvas = img => {
   return canvas;
 };
 
-const addHintWatermark = (canvas, layouts) => {
+const addHintWatermark = (canvas: HTMLCanvasElement, layouts: { left: number; top: number }[]) => {
   return new Promise(resolve => {
     const text = _l('不支持打印');
     const ctx = canvas.getContext('2d');

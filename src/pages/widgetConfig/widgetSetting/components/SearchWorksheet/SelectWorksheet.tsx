@@ -66,7 +66,7 @@ export default function SelectWorksheetDialog(props) {
   });
   const { appId, sheetId, appName = '' } = ids;
 
-  const isDelete = key => {
+  const isDelete = (key: string) => {
     const currentData = data[key] || [];
     return ids[idContrast[key]] && !_.find(currentData, da => da.value === ids[idContrast[key]]);
   };

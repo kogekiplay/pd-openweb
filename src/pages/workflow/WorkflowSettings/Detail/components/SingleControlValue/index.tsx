@@ -211,7 +211,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 验证号码控件  只能输入数字  做最简单验证
    */
-  checkPhoneNumberControl(evt, isBlur?, i?) {
+  checkPhoneNumberControl(evt, isBlur?: boolean | undefined, i?) {
     const num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -223,7 +223,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 成员选择
    */
-  selectUser(_evt, item, i, unique) {
+  selectUser(_evt, item, i, unique: boolean) {
     dialogSelectUser({
       title: _l('选择人员'),
       showMoreInvite: false,
@@ -256,7 +256,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 部门选择
    */
-  selectDepartment(item, i, unique) {
+  selectDepartment(item, i, unique: boolean) {
     dialogSelectDept({
       projectId: this.props.companyId,
       selectedDepartment: [],
@@ -290,7 +290,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 组织角色选择
    */
-  selectRole(item, i, unique) {
+  selectRole(item, i, unique: boolean) {
     dialogSelectOrgRole({
       projectId: this.props.companyId,
       unique,
@@ -336,7 +336,7 @@ export default class SingleControlValue extends Component<any, any> {
   /**
    * 验证数值金额控件
    */
-  checkNumberControl(evt, isBlur?, i?) {
+  checkNumberControl(evt, isBlur?: boolean | undefined, i?) {
     let num = evt.target.value
       .replace(/[^-\d.]/g, '')
       .replace(/^\./g, '')

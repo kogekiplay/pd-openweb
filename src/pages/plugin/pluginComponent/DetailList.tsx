@@ -281,7 +281,7 @@ export default function DetailList(props) {
   const pluginApi = pluginApiConfig[pluginType];
   const isWorkflowPlugin = pluginType === PLUGIN_TYPE.WORKFLOW;
 
-  const onDel = (type, id) => {
+  const onDel = (type: string, id) => {
     Dialog.confirm({
       title: type === pluginConfigType.commit ? _l('删除提交') : _l('删除历史版本'),
       buttonType: 'danger',

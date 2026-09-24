@@ -255,7 +255,7 @@ export default class FilterItem extends Component<any, FilterItemState> {
     return !!availableConditions.length;
   }
 
-  renameFilter = value => {
+  renameFilter = (value: string) => {
     const { filter, onRename } = this.props;
 
     if (!value) {

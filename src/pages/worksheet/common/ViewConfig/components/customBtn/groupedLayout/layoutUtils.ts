@@ -113,7 +113,7 @@ function segmentsFromTypedRows(rows, idSet) {
 /**
  * 旧数据：detailgroup 为分组对象数组（无 type:'btn' 混合项）时，扁平顺序仅来自 listbtns/detailbtns
  */
-function segmentsFromLegacyFlatAndGroups(flatBtnIds, groupRaw, idSet) {
+function segmentsFromLegacyFlatAndGroups(flatBtnIds, groupRaw: RecordRow[], idSet) {
   const flat = Array.isArray(flatBtnIds) && flatBtnIds.length ? flatBtnIds : [...idSet];
   const flatFiltered = flat.filter(id => idSet.has(id));
   const metas = normalizeGroups(groupRaw);

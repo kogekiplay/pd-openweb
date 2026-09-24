@@ -194,7 +194,7 @@ export const replaceHalfWithSizeControls = controls =>
   });
 
 // 矫正数据row、col与呈现不一致的情况，有些表老数据有问题
-const replaceRowWithControls = widgets => {
+const replaceRowWithControls = (widgets: FormControl[]) => {
   const { commonWidgets = [], tabWidgets = [] } = getSectionWidgets(widgets);
   const flattenTabs = [];
   tabWidgets.forEach(item => {
@@ -256,7 +256,7 @@ export const genControlsByWidgets = widgets => {
 };
 
 // 将所有控件用给定数据重置
-export const resetWidgets = (widgets, obj) => {
+export const resetWidgets = (widgets, obj: { attribute: number }) => {
   return widgets.map(row => row.map(item => ({ ...item, ...obj })));
 };
 

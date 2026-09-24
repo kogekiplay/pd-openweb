@@ -224,7 +224,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     });
   };
 
-  onCopy = text => {
+  onCopy = (text: string) => {
     copy(text, {
       format: 'text/plain',
     });
@@ -699,7 +699,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
     $('#forms').submit().remove();
   };
 
-  onEdit = type => {
+  onEdit = (type: number) => {
     const { popupVisible, downLoadUrl, worksheetName } = this.state;
     this.setState({ popupVisible: false });
 

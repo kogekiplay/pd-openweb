@@ -87,7 +87,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       this.handleEdit(event);
     }
   };
-  handleDownload = (event, isDownload, url) => {
+  handleDownload = (event, isDownload: boolean, url: boolean) => {
     event.stopPropagation();
     if (!isDownload) {
       alert(_l('您权限不足，无法下载，请联系管理员或文件上传者'), 3);
@@ -103,7 +103,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
     });
     handleOpenControlAttachmentInNewTab();
   };
-  handleShare = (event, isDownload) => {
+  handleShare = (event, isDownload: boolean) => {
     event.stopPropagation();
 
     if (!md.global.Account.accountId) {
@@ -168,7 +168,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       });
     });
   };
-  handleSaveToKc = (event, isDownload) => {
+  handleSaveToKc = (event, isDownload: boolean) => {
     event.stopPropagation();
 
     if (!md.global.Account.accountId) {
@@ -280,7 +280,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       isDelete: false,
     });
   };
-  renderPreview(fileResponse, fileClassName, isDoc, _isVid, isKc) {
+  renderPreview(fileResponse, fileClassName: string, isDoc: boolean, _isVid: boolean, isKc: boolean) {
     return isDoc ? (
       <Fragment>
         <div className={cx(fileClassName, 'UploadFiles-fileIcon', 'UploadFiles-previewIcon')} />
@@ -492,7 +492,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       </div>
     );
   }
-  renderView(fileResponse, isKc?) {
+  renderView(fileResponse, isKc?: boolean | undefined) {
     let fileClassName = getClassNameByExt(fileResponse.fileExt);
     let isPicture = RegExpValidator.fileIsPicture(fileResponse.fileExt);
     let isMDLink = fileResponse.viewType === 5;
@@ -542,7 +542,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       </div>
     );
   }
-  renderPenel(fileResponse, index: number, isKc?) {
+  renderPenel(fileResponse, index: number, isKc?: boolean | undefined) {
     let { isEdit, penelVisible } = this.state;
     let isPicture = RegExpValidator.fileIsPicture(fileResponse.fileExt);
     let penelClass = cx(
@@ -554,7 +554,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       colorPrimary: !isPicture,
     });
 
-    let handleOpen = (event, isEdit) => {
+    let handleOpen = (event, isEdit: boolean) => {
       event.stopPropagation();
       if (!isEdit) {
         this.props.onPreview(fileResponse.fileID, index, event);

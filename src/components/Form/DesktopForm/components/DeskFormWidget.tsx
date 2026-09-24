@@ -64,7 +64,7 @@ const shouldAlwaysRender = (prevProps, nextProps) =>
   ALWAYS_RENDER_CONTROL_TYPES.has(getItemType(prevProps)) || ALWAYS_RENDER_CONTROL_TYPES.has(getItemType(nextProps));
 const needRenderData = props => FORM_DATA_DEPENDENT_CONTROL_TYPES.has(getItemType(props)) || isCustomWidget(props.item);
 
-const shouldIgnoreProp = (key, prevProps, nextProps) =>
+const shouldIgnoreProp = (key: string, prevProps, nextProps) =>
   IGNORE_COMPARE_PROP_KEYS.has(key) ||
   (key === 'renderData' && !needRenderData(prevProps) && !needRenderData(nextProps));
 

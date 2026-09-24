@@ -213,12 +213,12 @@ export default function RecordBlock(props) {
     };
   };
 
-  const handleChangeStart = start => {
+  const handleChangeStart = (start: string) => {
     const { endTime } = row;
     updateRecordTime(row, start, endTime, keyForGroup);
   };
 
-  const handleChangeEnd = end => {
+  const handleChangeEnd = (end: string) => {
     const { startTime } = row;
     updateRecordTime(row, startTime, end, keyForGroup);
   };

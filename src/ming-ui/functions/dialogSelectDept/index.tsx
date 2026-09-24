@@ -376,7 +376,7 @@ class DialogSelectDept extends React.Component<any, any> {
     return undefined;
   }
 
-  setMoreList = (departmentId, isDelete) => {
+  setMoreList = (departmentId, isDelete: boolean) => {
     const { departmentMoreIds = [] } = this.state;
     let moreData = departmentMoreIds.find(o => o.departmentId === departmentId);
 

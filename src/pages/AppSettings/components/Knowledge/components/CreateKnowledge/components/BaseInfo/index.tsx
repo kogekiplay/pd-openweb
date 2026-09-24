@@ -15,11 +15,11 @@ const BaseInfo = () => {
 
   useAutoFocus(inputRef);
 
-  const handleSetKnowledgeName = value => {
+  const handleSetKnowledgeName = (value: string) => {
     setKnowledgeName(dispatch, { name: value });
   };
 
-  const handleSetKnowledgeDesc = value => {
+  const handleSetKnowledgeDesc = (value: string) => {
     setKnowledgeDesc(dispatch, { desc: value });
   };
 

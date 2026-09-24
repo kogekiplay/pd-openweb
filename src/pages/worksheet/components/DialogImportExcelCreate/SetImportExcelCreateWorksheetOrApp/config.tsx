@@ -32,7 +32,7 @@ const relateItem = [
   },
 ];
 
-export const getList = (step, worksheetList) => {
+export const getList = (step: number, worksheetList) => {
   if (step === 2) {
     return backItem.concat(worksheetList.map(i => ({ text: i.workSheetName, value: i.workSheetId })));
   }

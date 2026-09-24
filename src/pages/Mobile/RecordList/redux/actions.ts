@@ -845,7 +845,7 @@ export const changeBatchOptVisible = flag => (dispatch: AppDispatch) => {
   dispatch(changeBatchOptData([]));
 };
 
-export const updateBatchCheckAll = isAll => (dispatch: AppDispatch, getState: GetState) => {
+export const updateBatchCheckAll = (isAll: boolean) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSheetRows, groupDataInfo, base, worksheetInfo } = getState().mobile;
   const { groupData, unfoldedKeys } = groupDataInfo;
   const view = _.find(worksheetInfo.views || [], v => v.viewId === base.viewId);
@@ -884,7 +884,7 @@ export const updateFilterControls = filterControls => (dispatch: AppDispatch) =>
   dispatch({ type: 'MOBILE_UPDATE_FILTER_CONTROLS', filterControls });
 };
 
-export const updateIsPullRefreshing = flag => (dispatch: AppDispatch) => {
+export const updateIsPullRefreshing = (flag: boolean) => (dispatch: AppDispatch) => {
   dispatch({ type: 'MOBILE_IS_PULL_REFRESHING', flag });
 };
 

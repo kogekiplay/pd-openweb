@@ -246,7 +246,7 @@ export default class VersionUpgrade extends Component<any, any> {
     );
   };
 
-  toPurchase = version => {
+  toPurchase = (version: number) => {
     let ele = document.getElementById('purchaseInfoWrap');
 
     if (ele) {

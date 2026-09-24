@@ -66,7 +66,7 @@ function WorksheetRecordLogDiffText(props) {
     ));
   }, [diff2]);
 
-  const clickHandle = sign => {
+  const clickHandle = (sign: number) => {
     if (sign === 0) {
       setOpen(false);
       return;

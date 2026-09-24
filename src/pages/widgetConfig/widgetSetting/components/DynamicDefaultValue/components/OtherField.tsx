@@ -117,7 +117,7 @@ export default function OtherField(props) {
     );
   };
 
-  const getFieldNameById = (item, controls) => {
+  const getFieldNameById = (item, controls: FormControl[]) => {
     const { cid, rcid } = item;
     const filterControls = getControls({ data, controls, isCurrent: true, from });
 

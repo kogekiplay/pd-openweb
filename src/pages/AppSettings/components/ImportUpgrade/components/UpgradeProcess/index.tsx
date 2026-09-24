@@ -227,7 +227,7 @@ export default class UpgradeProcess extends Component<any, any> {
     this.destroyUploadWrap();
   };
 
-  batchCheckUpgrade = (i, upgrade?) => {
+  batchCheckUpgrade = (i, upgrade?: boolean | undefined) => {
     const { files } = this.state;
 
     if (files[i].index !== undefined && !upgrade) {
@@ -480,7 +480,7 @@ export default class UpgradeProcess extends Component<any, any> {
     return result;
   };
 
-  getParams = type => {
+  getParams = (type: string) => {
     const { batchUpdate, files, currentAppIndex, modelType } = this.state;
     const contrasts = (batchUpdate ? files[currentAppIndex].contrasts : this.state.contrasts) || {};
 
@@ -540,7 +540,7 @@ export default class UpgradeProcess extends Component<any, any> {
     type === '2' && onCancel();
   };
 
-  selectAllSettings = value => {
+  selectAllSettings = (value: boolean) => {
     this.setState({
       upgradeName: value,
       upgradeHide: value,

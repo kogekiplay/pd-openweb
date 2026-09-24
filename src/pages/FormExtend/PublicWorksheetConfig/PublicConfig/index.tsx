@@ -474,7 +474,7 @@ class PublicConfig extends React.Component<any, any> {
     this.handleChange('sourceKeys', update(sourceKeys, { $splice: [[index, 1]] }));
   };
 
-  handleShowControl = key => {
+  handleShowControl = (key: string) => {
     this.setState({ addControlVisible: true, activeSourceKey: key });
   };
 

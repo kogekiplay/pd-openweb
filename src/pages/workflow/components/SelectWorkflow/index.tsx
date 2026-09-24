@@ -96,7 +96,7 @@ export default class SelectWorkflow extends Component<any, any> {
   /**
    * 渲染单个列表项
    */
-  renderListItem(item, isLast) {
+  renderListItem(item, isLast: boolean) {
     const { relationId } = this.props;
     const { selectItems } = this.state;
 

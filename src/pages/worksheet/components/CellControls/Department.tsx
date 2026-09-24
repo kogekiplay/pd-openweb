@@ -190,7 +190,7 @@ export default class Text extends React.Component<any, any> {
     );
   };
 
-  renderDepartmentTag(department, allowDelete?) {
+  renderDepartmentTag(department, allowDelete?: boolean | undefined) {
     const { style, isediting, cell = {} } = this.props;
     const needRTL = _.get(cell, 'advancedSetting.allpath') === '1' && !department.isDelete;
     const renderName = needRTL ? <bdi dir="ltr">{department.departmentName}</bdi> : department.departmentName;

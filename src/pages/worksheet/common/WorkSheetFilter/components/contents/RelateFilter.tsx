@@ -56,7 +56,7 @@ export default class RelateFilter extends Component<any, RelateFilterState> {
     });
   };
 
-  renderName = (item, nameList, i, isParent?) => {
+  renderName = (item, nameList, i, isParent?: boolean | undefined) => {
     if (!nameList) {
       return (
         <Tooltip title={_l('ID: %0', item.cid)} placement="bottom">

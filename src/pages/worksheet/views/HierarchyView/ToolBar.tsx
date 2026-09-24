@@ -146,7 +146,7 @@ export default class ToolBar extends Component<any, ToolBarState> {
     this.updateStorage({ level: value, levelUpdateTime: Date.now() });
   };
 
-  adjustSize = type => {
+  adjustSize = (type: string) => {
     const { scale, onClick } = this.props;
     const nextScale = type === 'shrink' ? Math.max(SCALE_LIMIT.min, scale - 10) : Math.min(SCALE_LIMIT.max, scale + 10);
     onClick('adjustScale', { scale: nextScale });

@@ -347,7 +347,7 @@ export const eventDidMount = (
   sheetSwitchPermit,
   isCharge: boolean,
   props,
-  eventClick,
+  eventClick: () => void,
   isMove,
   getButtonsCheckStatus,
 ) => {

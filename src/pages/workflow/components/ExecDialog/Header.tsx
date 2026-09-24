@@ -289,7 +289,7 @@ export default class Header extends Component<any, any> {
   /**
    * 验证码弹层
    */
-  verifyPasswordDialog(removeNoneVerification, callback = () => {}) {
+  verifyPasswordDialog(removeNoneVerification: boolean, callback = () => {}) {
     const { projectId } = this.props;
 
     Dialog.confirm({

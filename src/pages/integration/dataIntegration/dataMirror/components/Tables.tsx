@@ -206,7 +206,7 @@ function Controls(props) {
       },
     ];
 
-    const renderChild = (sourceItem, isLast) => {
+    const renderChild = (sourceItem, isLast: boolean) => {
       return (
         <div className="flexRow alignItemsCenter w100 isChild controlL">
           {columnPopup.map((item, index) => {
@@ -315,7 +315,7 @@ export default function Tables(props) {
     checkTableExists(cache.current.doubleWriteTables, true);
   };
 
-  const checkTableExists = (data?, nextCreate?) => {
+  const checkTableExists = (data?, nextCreate?: boolean | undefined) => {
     const tableNames = (data || doubleWriteTables).map(o => o.tableName);
     onChange(null, false, true);
     dataMirrorAjax

@@ -22,7 +22,7 @@ class List extends Component<any, any> {
     $parent.scrollTop = scrollTop;
   };
 
-  itemOnClick = (event, item) => {
+  itemOnClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, item) => {
     if (item.disabled) {
       return;
     }

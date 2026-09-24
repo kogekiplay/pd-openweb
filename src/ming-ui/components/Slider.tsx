@@ -148,7 +148,7 @@ const NumberValue = styled.span`
   ${({ disabled }) => (disabled ? 'color: rgba(0,0,0,.3);' : '')}
 `;
 
-function getColor(config, value, showAsPercent) {
+function getColor(config, value: number | undefined, showAsPercent) {
   if (config.type === 1) {
     return config.color;
   } else if (config.type === 2) {

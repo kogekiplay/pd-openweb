@@ -128,7 +128,7 @@ export default class LoopContent extends Component<any, LoopContentState> {
   /**
    * 验证数值控件
    */
-  checkNumberControl(evt, isBlur?) {
+  checkNumberControl(evt, isBlur?: boolean | undefined) {
     const { updateSource } = this.props;
     let num = evt.target.value.replace(/[^\d]/g, '');
 
@@ -195,7 +195,7 @@ export default class LoopContent extends Component<any, LoopContentState> {
   /**
    * 切换周
    */
-  switchWeek(value) {
+  switchWeek(value: number) {
     const { data, updateSource } = this.props;
     const weekDays = _.cloneDeep(data.weekDays);
 
@@ -531,7 +531,7 @@ export default class LoopContent extends Component<any, LoopContentState> {
   /**
    * 验证范围开始值、结束值
    */
-  checkRangeNumber(evt, key?: string, min?, max?, isEnd?) {
+  checkRangeNumber(evt, key?: string, min?, max?, isEnd?: boolean | undefined) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -729,7 +729,7 @@ export default class LoopContent extends Component<any, LoopContentState> {
   /**
    * 验证增量开始值
    */
-  checkIncrementStartNumber(evt, key?, min?, max?) {
+  checkIncrementStartNumber(evt, key?: string | undefined, min?, max?) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 
@@ -757,7 +757,7 @@ export default class LoopContent extends Component<any, LoopContentState> {
   /**
    * 验证增量值
    */
-  checkIncrementNumber(evt, key?) {
+  checkIncrementNumber(evt, key?: string | undefined) {
     let num = evt.target.value.replace(/[^\d]/g, '');
     evt.target.value = num;
 

@@ -145,7 +145,7 @@ let Calendar = class Calendar extends Component<any, any> {
     }
   }
 
-  onSelect = (value, cause) => {
+  onSelect = (value, cause: { source: string }) => {
     if (value) {
       this.setValue(value);
     }
@@ -208,7 +208,7 @@ let Calendar = class Calendar extends Component<any, any> {
 
     this.props.onSelect(selectedValue, cause);
   };
-  renderRoot = newProps => {
+  renderRoot = (newProps: { children: React.JSX.Element }) => {
     const { prefixCls, className, style } = this.props;
     const classes = {
       [prefixCls]: 1,

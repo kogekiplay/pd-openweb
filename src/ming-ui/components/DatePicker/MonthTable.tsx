@@ -39,7 +39,7 @@ class MonthTable extends Component<any, any> {
   /**
    * 选择月
    */
-  itemOnClick = (event, month) => {
+  itemOnClick = (event, month: number) => {
     if (month !== this.props.value && this.props.onChange) {
       this.props.onChange(event, month, {
         prevValue: this.props.value,

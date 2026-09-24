@@ -14,7 +14,7 @@ export default class IntegrationSync extends Component<any, any> {
     };
   }
 
-  checkSyncFn = showSyncDiaLog => {
+  checkSyncFn = (showSyncDiaLog: boolean) => {
     const { projectId, integrationType } = this.props;
 
     this.setState({ loading: true });

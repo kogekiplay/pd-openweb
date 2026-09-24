@@ -277,13 +277,13 @@ export default class AddViewDisplayMenu extends Component<any, any> {
         });
       });
   };
-  onClickGroup = key => {
+  onClickGroup = (key: string) => {
     const { retract } = this.state;
     this.setState({
       retract: retract.includes(key) ? retract.filter(item => item !== key) : [...retract, key],
     });
   };
-  renderCon = (info, isDev?) => {
+  renderCon = (info, isDev?: boolean | undefined) => {
     const { onClick } = this.props;
     return info.map((o, index) => {
       const { icon, id, iconColor = 'var(--color-cyan-dark)', name, iconUrl } = o;

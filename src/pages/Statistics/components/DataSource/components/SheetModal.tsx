@@ -160,7 +160,13 @@ export default class SheetModal extends Component<any, any> {
         });
       });
   }
-  setViewsData = (worksheetId: string, data) => {
+  setViewsData = (
+    worksheetId: string,
+    data:
+      | { show: boolean }
+      | { loading: boolean }
+      | { views: HapApi.MD.Entity.Worksheet.WorksheetViewEntity[]; show: boolean; loading: boolean },
+  ) => {
     const { viewsData } = this.state;
     this.setState({
       viewsData: {

@@ -90,7 +90,7 @@ export default function (props) {
       });
   };
 
-  const doCaptchaFn = isFrequentLoginError => {
+  const doCaptchaFn = (isFrequentLoginError: boolean) => {
     if (createAccountLoading && !isFrequentLoginError) return;
     const callback = (res: Record<string, any> = {}) => {
       if (isFrequentLoginError && res.ret !== 0) return;

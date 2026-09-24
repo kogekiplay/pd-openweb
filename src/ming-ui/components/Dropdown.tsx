@@ -310,7 +310,7 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
     };
   }
 
-  getTextFromDataById(data, value) {
+  getTextFromDataById(data: readonly DropdownOption<V, Item>[] | readonly (DropdownOption<V, Item> | readonly DropdownOption<V, Item>[])[] | undefined, value: V | undefined) {
     let text = this.props.placeholder;
 
     const getTextFromList = list => {
@@ -352,7 +352,7 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
     }
   }
 
-  handleChange(_event, item) {
+  handleChange(_event: React.MouseEvent<HTMLLIElement, MouseEvent>, item) {
     if (item.disabled) {
       return;
     }

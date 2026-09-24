@@ -226,7 +226,7 @@ const Root = styled.div`
 const FENCE_REGEX = /```([a-zA-Z0-9_-]*)[^\S\n]*\n([\s\S]*?)```/g;
 const OPEN_FENCE_REGEX = /```([a-zA-Z0-9_-]*)[^\S\n]*\n([\s\S]*)$/;
 
-function parseSegments(text, isStreaming = false) {
+function parseSegments(text: string, isStreaming = false) {
   const segments = [];
   let lastIndex = 0;
   let match;

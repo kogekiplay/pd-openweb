@@ -47,7 +47,7 @@ export default <V,>({
   document.body.appendChild(container);
   let confirmValue: V | undefined;
 
-  const handleClick = type => {
+  const handleClick = (type: string) => {
     if (type === 'cancel') {
       onCancel();
     }

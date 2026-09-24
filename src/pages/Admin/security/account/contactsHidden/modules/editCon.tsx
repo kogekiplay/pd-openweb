@@ -166,7 +166,7 @@ class EditCon extends React.Component<any, EditConState> {
     );
   };
 
-  rulesCon = (data, type) => {
+  rulesCon = (data, type: number) => {
     const { currentEditRule } = this.props;
     const depOrRoleIndex = _.findIndex(
       data,

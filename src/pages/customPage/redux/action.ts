@@ -19,7 +19,7 @@ import {
   UPDATE_WIDGET_VISIBLE,
 } from './actionType';
 
-const genAction = type => payload => ({ type, payload });
+const genAction = (type: string) => payload => ({ type, payload });
 
 export const updatePageInfo = genAction(UPDATE_PAGE_INFO);
 

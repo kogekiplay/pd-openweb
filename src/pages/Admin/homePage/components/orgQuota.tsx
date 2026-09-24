@@ -69,7 +69,7 @@ export default function orgQuota(props) {
     return percent;
   };
 
-  const getAllowAdd = key => {
+  const getAllowAdd = (key: string) => {
     switch (key) {
       case 'limitExternalUserCount':
       case 'limitVectorKnowledgeChunkCount':
@@ -130,7 +130,7 @@ export default function orgQuota(props) {
     }
   };
 
-  const getCountText = (key, limit) => {
+  const getCountText = (key: string, limit: string) => {
     const isAttachmentUpload = key === 'effectiveApkStorageCount'; // 附件上传量
     const percentValue =
       getValue(data[limit]) === '-' || getNoLimit(limit) || data[limit] === 0 ? undefined : getCountProcess(key, limit);

@@ -64,7 +64,7 @@ class TabList extends React.Component<any, TabListState> {
     this.setState({ hasDepartmentAuth });
   }
 
-  handleClick = typeCursor => {
+  handleClick = (typeCursor: number) => {
     const {
       projectId,
       updateCursor = () => {},

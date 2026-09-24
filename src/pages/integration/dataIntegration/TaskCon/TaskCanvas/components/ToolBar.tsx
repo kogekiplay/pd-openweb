@@ -57,7 +57,7 @@ const ToolBarWrap = styled.div`
 `;
 
 export default class ToolBar extends Component<any, any> {
-  adjustSize = type => {
+  adjustSize = (type: string) => {
     const { scale, onClick } = this.props;
     const nextScale = type === 'shrink' ? Math.max(SCALE_LIMIT.min, scale - 10) : Math.min(SCALE_LIMIT.max, scale + 10);
     onClick('adjustScale', { scale: nextScale });

@@ -184,7 +184,7 @@ const Numeric = props => {
     }
   };
 
-  const handleControl = action => {
+  const handleControl = (action: string) => {
     if (!numinterval || disabled) return null;
 
     let value = props.value;
@@ -202,7 +202,7 @@ const Numeric = props => {
     onChange({}, `${value}`);
   };
 
-  const renderMobileNumberControl = type => {
+  const renderMobileNumberControl = (type: string) => {
     if (showtype !== '3' || disabled) return null;
 
     return (

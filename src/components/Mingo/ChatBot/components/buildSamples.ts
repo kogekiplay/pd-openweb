@@ -17,7 +17,7 @@ export function pickRandom(list) {
 }
 
 // 从池中随机取 count 条不重复样本（不足时返回全部）
-export function pickRandomSamples(count, list = BUILD_SAMPLES) {
+export function pickRandomSamples(count: number, list = BUILD_SAMPLES) {
   const pool = [...list];
   const result = [];
 

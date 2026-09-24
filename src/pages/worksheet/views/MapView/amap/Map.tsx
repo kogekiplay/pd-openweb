@@ -361,7 +361,7 @@ class Map extends Component<any, any> {
     return props[key];
   }
 
-  getSetterName(key) {
+  getSetterName(key: string) {
     switch (key) {
       case 'labelzIndex':
         return 'setlabelzIndex';
@@ -414,7 +414,7 @@ class Map extends Component<any, any> {
     this.removeOrDisablePlugins(pluginList);
   }
 
-  removeOrDisablePlugins(plugins) {
+  removeOrDisablePlugins(plugins: string[]) {
     if (plugins && plugins.length) {
       plugins.forEach(p => {
         if (p in this.pluginMap) {

@@ -274,7 +274,7 @@ export default class AddAppItem extends Component<any, any> {
     this.setState({ createEntryVisible: true });
   };
 
-  getMyDbInstances = async from => {
+  getMyDbInstances = async (from: string) => {
     const res = await homeAppAjax.getMyDbInstances({
       projectId: this.props.projectId,
     });

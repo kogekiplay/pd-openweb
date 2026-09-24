@@ -22,7 +22,7 @@ export interface CustomBtnDragItem {
 export const GROUP_ICON_DIALOG_REF_FLUSH_MS = 250;
 
 /** 同一时间只允许一个「更多」菜单展开，避免多个 Dropdown portal 叠在一起 */
-export function getNextOpenMoreKey(prevKey, visible, moreKey) {
+export function getNextOpenMoreKey(prevKey, visible: boolean, moreKey) {
   if (visible) {
     return moreKey;
   }

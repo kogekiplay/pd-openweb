@@ -180,7 +180,7 @@ export default function AppItemTrash(props) {
       });
   }
 
-  function onRestore(itemIndex) {
+  function onRestore(itemIndex: number) {
     const appItem = appItems[itemIndex];
 
     if (cache.current['pending_' + appItem.id]) {
@@ -213,7 +213,7 @@ export default function AppItemTrash(props) {
       });
   }
 
-  function onDelete(itemIndex) {
+  function onDelete(itemIndex: number) {
     const needDeleteItem = appItems[itemIndex];
     Dialog.confirm({
       title: (

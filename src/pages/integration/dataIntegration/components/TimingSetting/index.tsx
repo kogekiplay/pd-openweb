@@ -155,7 +155,7 @@ export default function TimingSetting(props) {
     });
   };
 
-  const onChangeReadType = value => {
+  const onChangeReadType = (value: number) => {
     if (value === setting.readType) return;
 
     onChangeSetting({ readType: value, config: {} });

@@ -6,7 +6,7 @@ import { SwitchStyle } from './style';
 export default function DetailSet(props) {
   const { appId, view, updateCurrentView } = props;
 
-  const handleChange = value => {
+  const handleChange = (value: number) => {
     updateCurrentView({
       ...view,
       appId,

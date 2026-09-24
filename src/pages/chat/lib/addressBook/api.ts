@@ -213,7 +213,7 @@ export const editIgnoreFriend = (accountId: string) => {
   });
 };
 
-export const editIgnoreRecommends = recomendId => {
+export const editIgnoreRecommends = (recomendId: string) => {
   return AddressListController.addIgnoreMobileAddress({
     recomendId,
   });

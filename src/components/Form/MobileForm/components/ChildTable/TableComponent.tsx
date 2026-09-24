@@ -194,7 +194,7 @@ const Pagination = styled.div`
 const INITIAL_EXPAND_RENDER_COUNT = 50;
 const EXPAND_RENDER_STEP = 50;
 
-const getWidthDataSource = (dataSource, showExpand) => {
+const getWidthDataSource = (dataSource: RecordRow[], showExpand) => {
   if (!showExpand || dataSource.length <= INITIAL_EXPAND_RENDER_COUNT) return dataSource;
 
   const step = Math.ceil(dataSource.length / INITIAL_EXPAND_RENDER_COUNT);
@@ -328,7 +328,7 @@ function TableComponent(props) {
     };
   }, [dataSource.length, renderKey, showExpand]);
 
-  const changePage = type => {
+  const changePage = (type: string) => {
     if ((type === 'prev' && pageIndex === 1) || (type === 'next' && pageIndex >= totalPage)) {
       return;
     }

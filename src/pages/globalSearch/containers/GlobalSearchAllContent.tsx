@@ -546,7 +546,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
     });
   }
 
-  searchScopeChange = type => {
+  searchScopeChange = (type: string) => {
     const { searchScope } = this.state;
 
     if (type === searchScope) return;

@@ -32,7 +32,7 @@ export default class WorkSheetItem extends Component<any, WorkSheetItemState> {
     super(props);
     this.state = {};
   }
-  svgColor(isActive) {
+  svgColor(isActive: boolean) {
     const { iconColor, currentPcNaviStyle, themeType } = this.props.appPkg;
     const darkColor = [1, 3].includes(currentPcNaviStyle) && !['light'].includes(themeType);
 
@@ -44,7 +44,7 @@ export default class WorkSheetItem extends Component<any, WorkSheetItemState> {
       return isActive ? iconColor : 'var(--color-text-secondary)';
     }
   }
-  textColor(isActive) {
+  textColor(isActive: boolean) {
     const { currentPcNaviStyle, themeType } = this.props.appPkg;
     const darkColor = [1, 3].includes(currentPcNaviStyle) && !['light'].includes(themeType);
     /* 【选中项的文字走 --color-primary-text，不要直接用 appPkg.iconColor】
@@ -68,7 +68,7 @@ export default class WorkSheetItem extends Component<any, WorkSheetItemState> {
       return convertColor(iconColor);
     }
   }
-  getNavigateUrl(isActive) {
+  getNavigateUrl(isActive: boolean) {
     const { appId, groupId, appItem } = this.props;
     const { workSheetId } = appItem;
     const storage = JSON.parse(localStorage.getItem(`mdAppCache_${md.global.Account.accountId}_${appId}`)) || {};

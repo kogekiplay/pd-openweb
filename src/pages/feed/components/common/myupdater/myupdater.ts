@@ -179,7 +179,7 @@ const MyUpdater = {
     let $textareaUpdater = $('#textarea_Updater');
     let textareaUpdaterEl = $textareaUpdater.get(0) as MentionsInputElement;
 
-    const updateTextareaHeight = minHeight => {
+    const updateTextareaHeight = (minHeight: number) => {
       if (typeof $textareaUpdater.autoTextarea === 'function') {
         $textareaUpdater.autoTextarea({
           maxHeight: 220,

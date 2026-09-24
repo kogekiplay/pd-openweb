@@ -386,7 +386,7 @@ function GenerateBar({ filesRef, ready, generating, onGenerateStart }) {
   );
 }
 
-function getCount(key, parsed) {
+function getCount(key: string, parsed) {
   if (!Array.isArray(parsed)) return null;
 
   if (key === 'customActions') {

@@ -138,7 +138,7 @@ const getIsOverOneDay = (beginValue, endValue) => {
   return endDate - beginDate >= 1 || moment(endValue).diff(moment(beginValue), 'minutes') >= 1439;
 };
 
-const getTitleControls = worksheetControls => {
+const getTitleControls = (worksheetControls: FormControl[]) => {
   return worksheetControls.find((item: FormControl) => item.attribute === 1);
 };
 
@@ -419,7 +419,7 @@ export const formatTimeForSave = (value: Date, data: FormControl = {}, appId: st
   return value;
 };
 
-export const changeEndStr = (end, allDay, calendarview) => {
+export const changeEndStr = (end: Date | null, allDay: boolean, calendarview) => {
   const { endFormat } = calendarview.calendarData || {};
   return allDay ? `${moment(end).subtract(1, 'day').format('YYYY-MM-DD')} 23:59:59` : moment(end).format(endFormat);
 };
@@ -462,7 +462,7 @@ export const resetFcEventDraggingPoint = () => {
   }
 };
 
-export const setShowTip = (event, flag, canNew) => {
+export const setShowTip = (event, flag: boolean, canNew) => {
   const myTips = document.getElementById('mytips');
   if (!myTips || document.querySelector('.customPageContent')) return;
   if (!flag || !canNew) {

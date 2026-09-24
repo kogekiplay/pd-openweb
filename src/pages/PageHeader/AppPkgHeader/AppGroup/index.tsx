@@ -122,7 +122,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     );
   }; // 函数节流
 
-  throttleFunc = fn => _.throttle(fn); // 绑定事件
+  throttleFunc = (fn: () => void) => _.throttle(fn); // 绑定事件
 
   bindEvent = () => {
     const throttledEnsurePointerVisible = this.throttleFunc(this.ensurePointerVisible);
@@ -139,7 +139,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
       this.ensurePointerVisible();
     }
   };
-  switchVisible = (obj, cb?) => {
+  switchVisible = (obj: { appItemIntroVisible: boolean } | { delAppItemVisible: boolean }, cb?) => {
     this.setState(obj, cb);
   };
   onSortEnd = newList => {
@@ -207,7 +207,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
       isAppItemOverflow: offsetWidth < scrollWidth,
     });
   };
-  scrollEle = ($ele, distance: number) => {
+  scrollEle = ($ele: Element | null, distance: number) => {
     if (!$ele) return;
     $ele.scrollLeft = distance;
   }; // 滚动指示器点击

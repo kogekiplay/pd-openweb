@@ -95,7 +95,7 @@ class Publicquery extends React.Component<any, any> {
     props.onRef(this);
   }
 
-  renderErr = errCode => {
+  renderErr = (errCode: number) => {
     return <div className="err">{ErrText[errCode]}</div>;
   }; //查询
 

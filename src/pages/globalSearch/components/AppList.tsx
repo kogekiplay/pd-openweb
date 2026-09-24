@@ -357,7 +357,7 @@ export default function AppList(props) {
     window.open(url);
   };
 
-  const setFilter = (item, isApp?) => {
+  const setFilter = (item, isApp?: boolean | undefined) => {
     const { itemType, itemId, appId } = item;
 
     smartSearchAjax

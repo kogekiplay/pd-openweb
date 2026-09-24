@@ -24,7 +24,7 @@ export default function SwitchType({ data, fromAggregation, onChange }) {
   const { controlId, enumDefault2 } = data;
   const isSaved = controlId && !controlId.includes('-');
 
-  const handleChange = type => {
+  const handleChange = (type: number) => {
     const nextData = {
       type,
       sourceControlId: '',

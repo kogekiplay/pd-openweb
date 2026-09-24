@@ -21,7 +21,7 @@ export default props => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [placement, setPlacement] = useState('bottom');
 
-  const onChangeHeight = value => {
+  const onChangeHeight = (value: number) => {
     updateWidget({
       widget,
       mobile: {

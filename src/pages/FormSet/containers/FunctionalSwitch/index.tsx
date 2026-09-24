@@ -145,7 +145,7 @@ function FunctionalSwitch(props) {
       });
   };
 
-  const strRight = (key, data) => {
+  const strRight = (key: string, data) => {
     const { viewIds = [] } = data;
     let len = viewIds.length;
     let Ids = views.map(o => o.viewId);

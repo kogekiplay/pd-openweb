@@ -103,7 +103,7 @@ class EarlyWarningDialog extends Component<any, any> {
     this.setState({ warningValue: val });
   };
 
-  onChangeNoticeTypes = value => {
+  onChangeNoticeTypes = (value: string) => {
     const { noticeTypes } = this.state;
 
     this.setState({

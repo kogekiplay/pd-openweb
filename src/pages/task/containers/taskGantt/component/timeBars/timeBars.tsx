@@ -326,7 +326,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
    * @param  {object} evt
    */
 
-  dragTriggerScroll(evt) {
+  dragTriggerScroll(evt: JQuery.MouseMoveEvent<Document, undefined, Document, Document>) {
     // 处理滚动条滚动
     config.setInterval = setInterval(() => {
       const $scroll = $('.ganttMain .timeBarContainer');

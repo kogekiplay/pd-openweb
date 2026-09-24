@@ -68,7 +68,7 @@ export default function SyncWithDeal(props) {
     }
   }, []);
 
-  const onCreateTypeChange = sheetCreateType => {
+  const onCreateTypeChange = (sheetCreateType: string) => {
     if (sheetCreateType === CREATE_TYPE.SELECT_EXIST) {
       homeAppApi.getWorksheetsByAppId({ appId: dest.id }).then(res => {
         if (res) {

@@ -112,7 +112,7 @@ export default class LineChart extends React.Component<any, any> {
 
     return Math.ceil(max) * Math.pow(10, bite);
   };
-  getLegendOffsetX = defaultOffset => {
+  getLegendOffsetX = (defaultOffset: number) => {
     const totalTxtWidth = Number(_.get(this.props, 'chartInfo.totalTxtWidth')) || 0;
 
     return totalTxtWidth ? totalTxtWidth + 12 : defaultOffset;

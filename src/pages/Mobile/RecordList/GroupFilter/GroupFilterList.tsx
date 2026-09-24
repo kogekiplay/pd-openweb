@@ -446,7 +446,10 @@ const GroupFilterList = props => {
   const loadData = obj => fetchData(obj);
 
   //更新当前的navGroupData
-  const updateNavGroupData = ({ filterData, data, rowId, cb }: { rowId?: string; [key: string]: any }, notUpdate?) => {
+  const updateNavGroupData = (
+    { filterData, data, rowId, cb }: { rowId?: string; [key: string]: any },
+    notUpdate?: boolean | undefined,
+  ) => {
     if (rowId && !keywords) {
       filterData.forEach(item => {
         if (item.value === rowId) {
@@ -545,7 +548,7 @@ const GroupFilterList = props => {
     return navData;
   };
 
-  const clickRightArrow = (e, item) => {
+  const clickRightArrow = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, item) => {
     e.stopPropagation();
     setCurrentNodeId(item.value);
     if (!item.children) {

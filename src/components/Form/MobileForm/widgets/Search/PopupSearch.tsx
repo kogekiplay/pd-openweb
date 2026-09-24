@@ -14,7 +14,7 @@ const MobileSearch = props => {
   const [visible, setVisible] = useState(false);
   const [mobileSearchResult, setMobileSearchResult] = useState([]);
 
-  const searchRealTime = value => {
+  const searchRealTime = (value: string) => {
     if (clicksearch === '1') {
       props.realTimeSearch(value);
     } else {

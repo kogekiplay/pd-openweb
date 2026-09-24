@@ -186,7 +186,7 @@ class PublicWorksheetConfigForm extends React.Component<any, PublicWorksheetConf
       ? ['logo', 'title', 'description']
       : safeParse(extendDatas.visibleHeaders);
 
-    const hideHeader = key => {
+    const hideHeader = (key: string) => {
       const newVisibleHeaders = visibleHeaders.filter(item => item !== key);
       this.saveExtendDatas({ visibleHeaders: JSON.stringify(newVisibleHeaders) });
     };

@@ -21,7 +21,7 @@ export default function NumberInput(props) {
     onDynamicValueChange(newValue || []);
   };
 
-  const handleChange = (value, noChange?) => {
+  const handleChange = (value, noChange?: boolean | undefined) => {
     const parsedValue = formatNumberFromInput(value);
     setValue(parsedValue);
     !noChange && onDynamicValueChange(value ? [{ cid: '', rcid: '', staticValue: parsedValue }] : []);

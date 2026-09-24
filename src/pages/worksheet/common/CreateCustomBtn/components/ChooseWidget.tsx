@@ -170,7 +170,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     }: { relationControls: FormControl[]; [key: string]: any } = props;
     return (writeObject !== 1 ? relationControls : widgetList).filter(o => !canNotForCustomWrite(o));
   };
-  handSet = (item, isAdd) => {
+  handSet = (item, isAdd: boolean) => {
     const controls: FormControl[] = this.getData(this.props);
     const writeControlsIds = this.state.writeControls.map(it => it.controlId);
     const list = getRealData(
@@ -187,7 +187,7 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
         : this.state.writeControls.filter(o => !othersDel.map(it => it.controlId).includes(o.controlId)),
     );
   };
-  selectOrClearAll = (isSelect?) => {
+  selectOrClearAll = (isSelect?: boolean | undefined) => {
     if (!isSelect) {
       this.setState({
         writeControls: [],

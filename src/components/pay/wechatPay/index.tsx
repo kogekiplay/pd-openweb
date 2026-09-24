@@ -124,7 +124,7 @@ export default class WechatPay extends Component<any, any> {
   };
 
   // 轮询获取订单状态
-  pollFetch = delayTime => {
+  pollFetch = (delayTime: number) => {
     this.timeInterval = setInterval(this.getPayStatus, delayTime);
   };
 

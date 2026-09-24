@@ -201,14 +201,14 @@ class Filter extends Component<any, any> {
   /**
    * 项目下的搜索范围
    */
-  switchFolderRange(folderSearchRange) {
+  switchFolderRange(folderSearchRange: number) {
     this.props.dispatch(updateFolderRange(folderSearchRange));
   }
 
   /**
    * 更新项目搜索内容
    */
-  updateKeyWords(value) {
+  updateKeyWords(value: string) {
     if (!value && this.search.value) {
       this.search.value = '';
     }
@@ -219,7 +219,7 @@ class Filter extends Component<any, any> {
   /**
    * 切换任务状态
    */
-  switchTaskStatus = listStatus => {
+  switchTaskStatus = (listStatus: number) => {
     let { listSort, folderId, taskFilter, filterUserId } = this.props.taskConfig;
 
     // 非进行中且现在排序是优先级 或 截止日期
@@ -345,7 +345,7 @@ class Filter extends Component<any, any> {
   /**
    * 任务归属
    */
-  renderTaskAscription(item, i) {
+  renderTaskAscription(item, i: number) {
     const { taskFilter } = this.props.taskConfig;
     return (
       <span

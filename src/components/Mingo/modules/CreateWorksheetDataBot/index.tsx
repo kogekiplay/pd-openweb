@@ -262,7 +262,7 @@ async function getPresetRelatedRecords({ controls, worksheetId }: { worksheetId?
     .catch(() => undefined);
 }
 
-function getDefaultValueOfMessagesOfMingoCreateWorksheetDataBot(storageKey, worksheetId: string) {
+function getDefaultValueOfMessagesOfMingoCreateWorksheetDataBot(storageKey: string, worksheetId: string) {
   if (!storageKey || !localStorage.getItem(storageKey)) {
     return {};
   }

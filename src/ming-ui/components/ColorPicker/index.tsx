@@ -199,7 +199,7 @@ class ColorPicker extends Component<any, any> {
     this.setColor({ color: new TinyColor(value) });
   };
 
-  setColor = (value, themeValue?) => {
+  setColor = (value: { color: TinyColor }, themeValue?: string | undefined) => {
     const stringColor = value.color.toHex8String();
 
     this.setState({ ...value });

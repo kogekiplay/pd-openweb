@@ -199,11 +199,11 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
     window.location.assign(tool.getChatUrl(installData.installMessage));
   };
 
-  const toggleSkillModule = key => {
+  const toggleSkillModule = (key: string) => {
     setSelectedSkillModules(list => (list.includes(key) ? list.filter(item => item !== key) : list.concat(key)));
   };
 
-  const renderSelectExtra = type => (
+  const renderSelectExtra = (type: string) => (
     <div
       onMouseDown={e => e.preventDefault()}
       className="extraCreate"

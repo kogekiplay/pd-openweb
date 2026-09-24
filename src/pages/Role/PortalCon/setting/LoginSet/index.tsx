@@ -5,7 +5,7 @@ import { BGTYPE, COLORS } from 'src/pages/Role/PortalCon/tabCon/util';
 import { formatNumberFromInput } from 'src/utils/control';
 import { Wrap, WrapCon, WrapDemo } from './style';
 
-function parseLogoHeightPx(text) {
+function parseLogoHeightPx(text: string) {
   const n = Math.round(Number(formatNumberFromInput(text, false).trim() || 40));
   return Math.min(72, Math.max(16, Number.isFinite(n) ? n : 40));
 }

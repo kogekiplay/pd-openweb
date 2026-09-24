@@ -311,7 +311,11 @@ export function reducer(state, action: AppHomeAction = {}) {
   }
 }
 
-function handleDashboardOrAppResponse(dispatch, data, isDashboard?) {
+function handleDashboardOrAppResponse(
+  dispatch: (action: AppHomeAction) => void,
+  data,
+  isDashboard?: boolean | undefined,
+) {
   if (
     _.every(
       [
@@ -403,7 +407,7 @@ function handleDashboardOrAppResponse(dispatch, data, isDashboard?) {
 }
 
 // 分组名称多语言
-function getGroupsLangs(dispatch, projectId: string) {
+function getGroupsLangs(dispatch: (action: AppHomeAction) => void, projectId: string) {
   appManagementAjax.getProjectLangs({ projectId, type: 20 }).then(res => {
     dispatch({
       type: 'PROJECT_GROUPS_NAME_LANG',
@@ -416,7 +420,7 @@ function getGroupsLangs(dispatch, projectId: string) {
 }
 
 // 应用名称多语言
-function getAppLangs(dispatch, projectId: string, noCache = false) {
+function getAppLangs(dispatch: (action: AppHomeAction) => void, projectId: string, noCache = false) {
   if (md.global.Account.lang === '') {
     return;
   }

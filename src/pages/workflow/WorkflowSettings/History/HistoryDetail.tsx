@@ -88,7 +88,7 @@ export default class HistoryDetail extends Component<any, any> {
     });
   };
 
-  renderOperationInfo = (item, isLast) => {
+  renderOperationInfo = (item, isLast: boolean) => {
     const { cause, causeMsg, causeAccount } = this.state.data.instanceLog;
     const {
       flowNode,
@@ -317,7 +317,7 @@ export default class HistoryDetail extends Component<any, any> {
     return null;
   }
 
-  operationInstance = ajax => {
+  operationInstance = (ajax: (args: ApiArgs, options?: ApiOptions) => ApiResult) => {
     const { isRetry } = this.state;
     const { id } = this.props;
 

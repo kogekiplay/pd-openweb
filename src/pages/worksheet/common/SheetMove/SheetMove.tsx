@@ -7,7 +7,7 @@ import { canEditApp } from 'worksheet/redux/actions/util';
 import store from 'src/redux/configureStore';
 import './SheetMove.less';
 
-const formatApps = function (validProject, projectId: string) {
+const formatApps = function (validProject: HapApi.MD.Entity.HomeApp.ProjectForApp[] | undefined, projectId: string) {
   const appList = [];
   const project = validProject.filter(item => item.projectId === projectId)[0];
 

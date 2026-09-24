@@ -41,7 +41,7 @@ export default function DatePickerFilter(props) {
   const $ref = useRef(null);
   let _endDate = formatDate(moment());
 
-  const handleClick = id => {
+  const handleClick = (id: string) => {
     const data = getDateFilter(id);
     updateData(data);
   };

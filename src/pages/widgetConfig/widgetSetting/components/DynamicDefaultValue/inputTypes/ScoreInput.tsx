@@ -19,7 +19,7 @@ export default function (props) {
     onDynamicValueChange(newValue || []);
   };
 
-  const handleChange = value => {
+  const handleChange = (value: string) => {
     onDynamicValueChange(value ? [{ cid: '', rcid: '', staticValue: Math.min(parseFloat(value), maxValue) }] : []);
   };
 

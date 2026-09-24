@@ -263,7 +263,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
   }, 300);
 
   // 获取子表下拉数据或查询表下拉数据
-  getDropData = (controls: FormControl[] = [], control: Record<string, any> = {}, hasRowId?) => {
+  getDropData = (controls: FormControl[] = [], control: Record<string, any> = {}, hasRowId?: boolean | undefined) => {
     let filterControls = getControls({
       data: control,
       controls,

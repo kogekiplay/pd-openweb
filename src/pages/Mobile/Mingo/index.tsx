@@ -51,7 +51,7 @@ function getCreatableProjects() {
   return projects.filter(item => !item.cannotCreateApp);
 }
 
-function replaceCreateAppRoute(sessionId) {
+function replaceCreateAppRoute(sessionId: string) {
   if (!sessionId || !window.history || !window.history.replaceState) return;
   window.history.replaceState(
     null,

@@ -5,7 +5,7 @@ import { Icon, SvgIcon } from 'ming-ui';
 import { getAdvanceSetting, getExpandWidgetIds } from '../../tools/utils';
 import { SectionItemWrap } from './style';
 
-const getFormItemMap = (container, widgetIds, worksheetId: string) => {
+const getFormItemMap = (container, widgetIds: (string | undefined)[], worksheetId: string) => {
   if (!container) return {};
 
   const prefix = `formItem-${worksheetId}-`;

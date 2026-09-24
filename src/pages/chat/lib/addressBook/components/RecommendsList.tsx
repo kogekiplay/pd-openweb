@@ -40,7 +40,7 @@ export default class RecommendsList extends React.Component<any, any> {
     }
   }
 
-  updateListData(accountId: string, isAdd) {
+  updateListData(accountId: string, isAdd: boolean) {
     const { listData } = this.state;
     this.setState({
       listData: _.map(listData, item => {

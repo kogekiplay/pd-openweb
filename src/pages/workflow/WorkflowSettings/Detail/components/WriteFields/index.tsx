@@ -206,7 +206,7 @@ export default class WriteFields extends Component<any, any> {
     }
   }
 
-  onChangeCard(id, showCard) {
+  onChangeCard(id, showCard: number) {
     const { data, updateSource } = this.props;
     const formProperties = _.cloneDeep(data);
 
@@ -335,7 +335,7 @@ export default class WriteFields extends Component<any, any> {
   /**
    * 渲染字段
    */
-  renderField(data, showCard, isChildTable, isSubData?) {
+  renderField(data, showCard, isChildTable, isSubData?: boolean | undefined) {
     const { hideTypes, selectNodeType } = this.props;
     const { foldIds, keywords } = this.state;
 

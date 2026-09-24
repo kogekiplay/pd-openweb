@@ -5,7 +5,7 @@ export default class PeriodTarget extends Component<any, any> {
   constructor(props) {
     super(props);
   }
-  handleUpdateLifecycleValue = value => {
+  handleUpdateLifecycleValue = (value: string) => {
     this.props.onChangeDisplaySetup({
       lifecycleValue: Number(value.replace(/[^\d.]/g, '')),
     });

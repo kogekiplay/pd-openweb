@@ -103,7 +103,7 @@ export default class InterfaceLicense extends Component<any, any> {
   };
 
   //  购买/增购
-  clickBuy = buyMore => {
+  clickBuy = (buyMore: boolean) => {
     const { projectId } = this.props;
     this.setState({ loading: true, step: 2 });
     workWeiXinAjax.getWorkWxLicenseCreateOrderDetailByApp({ projectId }).then(res => {

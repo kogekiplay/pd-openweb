@@ -55,7 +55,7 @@ export const CUSTOM_PAGE_IFRAME_ALLOW_LIST = [
 
 export const CUSTOM_PAGE_IFRAME_ALLOW = `${CUSTOM_PAGE_IFRAME_ALLOW_LIST.join('; ')};`;
 
-export const getMergedIframeAllow = allow => {
+export const getMergedIframeAllow = (allow: string | null) => {
   const permissions = (allow || '')
     .split(';')
     .map(permission => permission.trim())
@@ -352,7 +352,7 @@ export const isLightColor = color => {
   return utilsIsLightColor(color);
 };
 
-function getQuarterDateRange(year, quarter) {
+function getQuarterDateRange(year, quarter: number) {
   let startMonth, endMonth;
 
   switch (quarter) {

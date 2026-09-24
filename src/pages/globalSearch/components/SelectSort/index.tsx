@@ -37,7 +37,7 @@ export default function SelectSort(props) {
 
   const [visible, setVisible] = useState(false);
 
-  const onChangeValue = value => {
+  const onChangeValue = (value: number) => {
     onChange(value);
     setVisible(false);
   };

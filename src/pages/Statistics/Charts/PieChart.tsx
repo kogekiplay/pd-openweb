@@ -225,7 +225,7 @@ export default class extends Component<any, any> {
       },
     );
   };
-  interactions(isAnnular) {
+  interactions(isAnnular: boolean) {
     if (browserIsMobile()) {
       return [
         { type: 'element-single-selected' },

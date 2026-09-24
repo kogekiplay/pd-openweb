@@ -46,7 +46,7 @@ export default function SubTable(props) {
       }
     };
 
-    const renderControlNav = c => {
+    const renderControlNav = (c: FormControl) => {
       const data = _.find(translateData, { correlationId: c.controlId }) || {};
       const translateInfo = data.data || {};
       return (

@@ -210,7 +210,7 @@ export default class Workwx extends React.Component<any, any> {
     return newStr;
   };
 
-  editDingStatus = num => {
+  editDingStatus = (num: number) => {
     this.editWXProjectSettingStatus(num, () => {
       this.setState({
         isCloseDing: !this.state.isCloseDing,
@@ -218,7 +218,7 @@ export default class Workwx extends React.Component<any, any> {
     });
   };
 
-  inputRender = (strId: string, w: number, img1: number, img2?) => {
+  inputRender = (strId: string, w: number, img1: number, img2?: number | undefined) => {
     return (
       <React.Fragment>
         <div className="inputTitleBox">
@@ -421,7 +421,7 @@ export default class Workwx extends React.Component<any, any> {
       }
     });
   };
-  changeTab = key => {
+  changeTab = (key: string) => {
     this.setState({ currentTab: key });
     if (key === 'other') {
       this.getInitialPassword();

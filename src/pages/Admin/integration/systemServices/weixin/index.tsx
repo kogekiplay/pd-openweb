@@ -85,7 +85,7 @@ export default class WeiXin extends Component<any, any> {
     });
   }
 
-  handleClick(clickKey, data: Record<string, any> = {}) {
+  handleClick(clickKey: string | undefined, data: Record<string, any> = {}) {
     const { weiXinInfo } = this.state;
 
     if (clickKey === 'view') {

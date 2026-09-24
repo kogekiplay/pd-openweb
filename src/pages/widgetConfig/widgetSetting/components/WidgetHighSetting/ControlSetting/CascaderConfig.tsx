@@ -78,7 +78,7 @@ export default function CascaderConfig(props) {
   const filters = getAdvanceSetting(data, 'filters');
   const isEndLayer = Number(limitlayer) > 0;
 
-  const renderFilter = key => {
+  const renderFilter = (key: string) => {
     const visibleKey = `${key}Visible`;
     const filterData = getAdvanceSetting(data, key) || [];
     return (

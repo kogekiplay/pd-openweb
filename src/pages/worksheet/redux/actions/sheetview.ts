@@ -141,7 +141,7 @@ export function updateTreeNodeExpansion(
   };
 }
 
-export const initGroupFolded = (view, groups, controls) => {
+export const initGroupFolded = (view, groups, controls: FormControl[]) => {
   const value = {};
   const groupKeys = _.map(sortDataByGroupItems(groups, view, controls), 'key');
   const groupFoldedType = _.get(view, 'advancedSetting.groupopen') || '2';

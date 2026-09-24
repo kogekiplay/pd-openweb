@@ -588,7 +588,7 @@ export default class Con extends React.Component<any, any> {
     );
     let relationStyleNum = relationStyle.find(it => it.controlId === tableList.controlId) || [];
 
-    let setStyle = type => {
+    let setStyle = (type: number) => {
       let data = [];
       let isData = relationStyle.map(it => it.controlId).includes(tableList.controlId);
 

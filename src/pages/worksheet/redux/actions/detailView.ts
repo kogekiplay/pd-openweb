@@ -7,7 +7,7 @@ import { formatQuickFilter } from 'src/utils/filter';
 let detailRowsRequest: ApiResult | null = null;
 let requestViewIds = [];
 
-export const fetchRows = (pageIndex: number, keyWords) => {
+export const fetchRows = (pageIndex: number, keyWords: string) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, detailView, quickFilter, navGroupFilters } = getState().sheet;
     const { appId, viewId, worksheetId } = base;

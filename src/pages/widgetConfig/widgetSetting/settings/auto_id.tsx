@@ -210,7 +210,7 @@ function SortableItem({
     );
   };
 
-  const handleTimeSelect = value => {
+  const handleTimeSelect = (value: string) => {
     if (value === 'custom') {
       setVisible({ timeFormatVisible: true });
       return;

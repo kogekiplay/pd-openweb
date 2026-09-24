@@ -282,7 +282,7 @@ export default class DropDownItem extends Component<any, any> {
     );
   }
 
-  updateSelectAll(item, isChecked?) {
+  updateSelectAll(item, isChecked?: boolean | undefined) {
     const { values, onChange } = this.props;
     const index = _.findIndex(values, v => v.controlId === item.controlId);
     const ids = (item.relationControls || []).map(i => i.controlId);
@@ -300,7 +300,7 @@ export default class DropDownItem extends Component<any, any> {
     onChange('controls', newControls);
   }
 
-  renderItem(item: Record<string, any> = {}, parentControl: Record<string, any> = {}, deepIndex) {
+  renderItem(item: Record<string, any> = {}, parentControl: Record<string, any> = {}, deepIndex: number) {
     const { values = [], actionType, from } = this.props;
     const { extendId = [] } = this.state;
     // 子表、关联表格可编辑不显示下拉

@@ -33,7 +33,7 @@ export default function (props) {
   });
   let date = moment(item.date).format('YYYY-MM-DD');
 
-  const addRecordInfo = defaultFormData => {
+  const addRecordInfo = (defaultFormData: { [x: number]: string }) => {
     const { worksheetId } = base;
     addRecord({
       showFillNext: true,

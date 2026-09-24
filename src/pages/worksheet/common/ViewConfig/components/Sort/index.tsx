@@ -72,7 +72,7 @@ export default function (props) {
 
   const defaultColumns = SYSTEM_CONTROL_WITH_UAID.filter(o => ['ctime', 'utime'].includes(o.controlId));
 
-  const changeAdvancedSettingForView = obj => {
+  const changeAdvancedSettingForView = (obj: { defaultsort: string } | { closedefsort: string }) => {
     updateCurrentView({
       ...view,
       appId,

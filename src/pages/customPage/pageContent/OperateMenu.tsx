@@ -93,7 +93,7 @@ function OperateMenu(props) {
   const { appList, groupList } = valueList;
   const { appId, groupId } = ids;
 
-  const formatApps = function (validProject) {
+  const formatApps = function (validProject: HapApi.MD.Entity.HomeApp.ProjectForApp[] | undefined) {
     const appList = [];
     const project = validProject.filter(item => item.projectId === projectId)[0];
 

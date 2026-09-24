@@ -119,7 +119,7 @@ export default function EditUserExtendInfo(props) {
       .catch(() => setLoading(false));
   }, [data.worksheetId]);
 
-  const saveFn = statusFlag => {
+  const saveFn = (statusFlag: number) => {
     if (statusFlag === 9 && !data.controlId) {
       return alert(_l('无扩展信息表'), 3);
     }

@@ -425,7 +425,7 @@ function LoopStep({ stepId, title, cur }: { title?: string; [key: string]: any }
 }
 
 // 总耗时格式化，对齐设计稿 "16m24s"：>=1h 用 "1h3m"，>=1min 用 "16m24s"，否则 "24s"
-function formatDuration(ms) {
+function formatDuration(ms: number) {
   const totalSec = Math.max(0, Math.round(ms / 1000));
   const m = Math.floor(totalSec / 60);
   const s = totalSec % 60;
@@ -463,7 +463,7 @@ export default function BuildProgress({ steps = {}, appName, startedAt, finished
   const wsCur = buildWs.status === 'completed' && relationsBlocking ? { ...buildWs, status: 'running' } : buildWs;
 
   // 把单 agent 并行分支结果（[{ name }]）合成成 LoopStep 可消化的 cur（total + iterations），列出子项名。
-  const branchToCur = (step, key) => {
+  const branchToCur = (step, key: string) => {
     const list = namedListOf(step, key);
 
     return step

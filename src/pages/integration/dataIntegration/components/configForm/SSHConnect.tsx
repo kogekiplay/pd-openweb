@@ -232,7 +232,7 @@ export default function SSHConnect(props) {
       .catch(() => setSubmitLoading(false));
   };
 
-  const onDelete = (e, option) => {
+  const onDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>, option) => {
     e.stopPropagation();
     Dialog.confirm({
       title: _l('删除SSH连接'),

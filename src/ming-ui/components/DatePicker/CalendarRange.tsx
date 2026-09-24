@@ -40,7 +40,7 @@ function momentize(obj) {
   return obj ? moment(obj) : obj;
 }
 
-function normalizeAnchor(props, init) {
+function normalizeAnchor(props, init: number) {
   const normalizedValue = momentize(getValueFromSelectedValue(props.selectedValue));
   return !isEmptyArray(normalizedValue) ? normalizedValue : init && [getNow(), getNow()];
 }
@@ -108,7 +108,7 @@ class CalendarRange extends Component<any, any> {
     }
   }
 
-  onDateSelect(index: number, value, options?) {
+  onDateSelect(index: number, value, options?: { source: string } | undefined) {
     const selectedValue = [...this.state.selectedValue];
     const rememberedValue = [...this.state.rememberedValue];
     selectedValue[index] = value;
@@ -202,7 +202,7 @@ class CalendarRange extends Component<any, any> {
     return v1.diff(v2, 'days');
   };
 
-  fireSelectValueChange = (selectedValue, direct) => {
+  fireSelectValueChange = (selectedValue, direct: boolean) => {
     if (!('selectedValue' in this.props)) {
       this.setState({
         selectedValue,

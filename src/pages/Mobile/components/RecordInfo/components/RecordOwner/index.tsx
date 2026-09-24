@@ -68,13 +68,13 @@ const RecordOwner = props => {
     ownerOptionVisible: false,
   });
 
-  const switchPersonalInfoPopup = bool => {
+  const switchPersonalInfoPopup = (bool: boolean) => {
     setState({
       personalInfoVisible: bool,
     });
   };
 
-  const switchOwnerOptionPopup = bool => {
+  const switchOwnerOptionPopup = (bool: boolean) => {
     setState({
       ownerOptionVisible: bool,
     });

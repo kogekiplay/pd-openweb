@@ -371,7 +371,7 @@ export default class Card extends Component<any, any> {
       </div>
     );
   }
-  renderControl(item) {
+  renderControl(item: FormControl) {
     const { controls }: { controls: FormControl[]; [key: string]: any } = this.props.item;
     return (
       <div key={item.controlId} className={cx('controlWrapper flexColumn mTop10', { flex: controls.length <= 1 })}>

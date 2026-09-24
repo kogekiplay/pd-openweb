@@ -31,7 +31,7 @@ const initialState = () => {
   };
 };
 
-const updateUserSet = (state, action) => {
+const updateUserSet = (state, action: ReduxAction) => {
   const { selectedAccountIds } = state;
   const { type, accountIds } = action;
 

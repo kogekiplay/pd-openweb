@@ -116,12 +116,12 @@ export default class extends PureComponent<any, any> {
     return { readSize, editSize, removeSize, showRead, showEdit, showRemove };
   };
 
-  toggleViewAuth = (key, checked: boolean) => {
+  toggleViewAuth = (key: string, checked: boolean) => {
     const { sheet, onChange } = this.props;
     onChange(changeSheetModel(sheet, key, checked));
   };
 
-  toggleViewLevel = (viewId: string, payload, isAllNoRead?) => {
+  toggleViewLevel = (viewId: string, payload, isAllNoRead?: boolean | undefined) => {
     const { sheet, onChange } = this.props;
     onChange(changeViewModel({ ...sheet, canAdd: isAllNoRead ? false : sheet.canAdd }, viewId, payload));
   };

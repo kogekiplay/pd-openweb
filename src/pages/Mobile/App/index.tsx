@@ -497,7 +497,7 @@ class App extends Component<any, any> {
       });
   }
 
-  renderHeader(data, level, index?) {
+  renderHeader(data, level, index?: number | undefined) {
     const { appDetail } = this.props;
     const { id, appNaviStyle } = appDetail.detail;
     const { expandGroupKeys = [], level2ExpandKeys = [] } = this.state;
@@ -631,7 +631,7 @@ class App extends Component<any, any> {
     );
   }
 
-  renderSection(data, level) {
+  renderSection(data, level: string) {
     const { appDetail } = this.props;
     const { appNaviStyle } = appDetail.detail;
     const { viewHideNavi } = this.state;

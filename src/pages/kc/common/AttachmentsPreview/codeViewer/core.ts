@@ -70,7 +70,7 @@ export function renderMarkdown(src, cb = () => {}) {
     .catch(cb);
 }
 
-function decode(arrayBuffer) {
+function decode(arrayBuffer: ArrayBuffer) {
   const encodings = ['utf-8', 'gbk', 'iso-8859-1']; // 常见的编码列表
 
   for (let encoding of encodings) {

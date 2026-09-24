@@ -286,7 +286,7 @@ export function hasHiddenControl(data, controls) {
 export const isPublicFileDownload = item =>
   item.accountId === 'user-publicform' && _.get(item, 'child[0].operatContent.logData[0].editType') === 13;
 
-export const renderTitleName = (data, isMobile) => {
+export const renderTitleName = (data, isMobile: boolean) => {
   const { accountId, accountName, child, fullname } = data;
 
   if (accountId === 'user-workflow') {
@@ -308,7 +308,7 @@ export const renderTitleName = (data, isMobile) => {
   return <span className="titleAvatarText accountName">{isPublicFileDownload(data) ? _l('公开访问') : fullname}</span>;
 };
 
-export const renderTitleAvatar = (data, isMobile) => {
+export const renderTitleAvatar = (data, isMobile: boolean) => {
   const { accountId, child, type } = data;
 
   if (type === 7) {

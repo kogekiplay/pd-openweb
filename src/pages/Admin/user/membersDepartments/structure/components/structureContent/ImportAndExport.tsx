@@ -59,7 +59,7 @@ class ImportAndExport extends Component<any, any> {
     };
   }
 
-  changeTab = currentTab => {
+  changeTab = (currentTab: string) => {
     this.setState({ currentTab, fileName: '', fileUrl: '' });
   };
 
@@ -237,7 +237,7 @@ class ImportAndExport extends Component<any, any> {
       </div>
     );
   };
-  renderUpload = type => {
+  renderUpload = (type: string) => {
     let { fileName } = this.state;
     const { projectId } = this.props;
 

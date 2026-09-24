@@ -97,7 +97,7 @@ class WorkflowHistory extends Component<any, any> {
       this.setState({ data: { success, failure, unFiltered } });
     });
   }
-  switchStatus = id => {
+  switchStatus = (id: string) => {
     this.setState({ activeStatus: id });
   };
   override render() {

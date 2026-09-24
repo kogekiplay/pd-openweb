@@ -26,7 +26,7 @@ const generateKeyValuePairs = strNum => {
 };
 
 // 转换等级字段的值，向下取整，小于1的认为是空，大于max的转成max
-const processGradeFieldValue = (value, max = '10') => {
+const processGradeFieldValue = (value: string, max = '10') => {
   const num = _.toNumber(value);
   const maxNum = _.toNumber(max);
 

@@ -135,7 +135,7 @@ class PrintForm extends React.Component<any, any> {
     });
   };
 
-  getApp = cb => {
+  getApp = (cb: () => void) => {
     const { params, cacheData } = this.state;
     const { appId } = params;
     const appDetail = _.get(cacheData, 'appDetail.detail') || _.get(cacheData, 'appDetail');
@@ -150,7 +150,7 @@ class PrintForm extends React.Component<any, any> {
     });
   };
 
-  getParamFn = (cb?) => {
+  getParamFn = (cb?: (() => void) | undefined) => {
     if (location.href.indexOf('printForm') > -1) {
       const { params = {} } = this.state;
       const { key } = params;

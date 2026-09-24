@@ -107,7 +107,7 @@ function createMentionNode(app) {
   return span;
 }
 
-export function applySelectionRange(range) {
+export function applySelectionRange(range: Range) {
   const sel = window.getSelection && window.getSelection();
 
   if (!sel) return;

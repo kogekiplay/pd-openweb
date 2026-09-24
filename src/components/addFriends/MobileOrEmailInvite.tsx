@@ -100,7 +100,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
     });
   };
 
-  invite = (accounts, cb?) => {
+  invite = (accounts, cb?: (() => void) | undefined) => {
     const { projectId, onCancel, fromType } = this.props;
 
     InviteController.inviteUser({

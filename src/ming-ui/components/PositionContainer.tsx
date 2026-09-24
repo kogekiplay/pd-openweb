@@ -218,7 +218,7 @@ class PositionContainer extends Component<any, any> {
 
     return result;
   }
-  getVerticalSpace(bounding, popupBounding) {
+  getVerticalSpace(bounding, popupBounding: DOMRect) {
     let { clientHeight } = document.body;
 
     let isTop = bounding.top - popupBounding.height >= 0 ? true : false;
@@ -254,7 +254,7 @@ class PositionContainer extends Component<any, any> {
       bottomSpace,
     };
   }
-  getHorizontalSpace(bounding, popupBounding) {
+  getHorizontalSpace(bounding, popupBounding: DOMRect) {
     let { clientWidth } = document.body;
 
     let left = bounding.left - popupBounding.width;

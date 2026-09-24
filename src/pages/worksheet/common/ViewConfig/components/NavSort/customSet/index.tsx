@@ -166,7 +166,7 @@ export default function (props) {
     });
   };
 
-  const addUser = (isMultiple = true, tabType) => {
+  const addUser = (isMultiple = true, tabType: number) => {
     quickSelectUser($ref.current, {
       showMoreInvite: false,
       isTask: false,

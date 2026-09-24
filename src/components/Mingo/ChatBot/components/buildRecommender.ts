@@ -18,7 +18,7 @@ const seqCursor = new Map();
 
 // agent 输出结构化 JSON：{ "suggestions": ["搭建XX管理应用", ...] }（3~6 条）。
 // 用 partial-json 容忍半截 JSON；非字符串 / 空白统一过滤。异常返回 []。
-export function parseBuildSuggestions(raw) {
+export function parseBuildSuggestions(raw: string) {
   if (!raw) return [];
 
   try {

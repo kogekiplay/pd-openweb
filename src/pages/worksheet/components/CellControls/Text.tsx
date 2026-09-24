@@ -69,7 +69,7 @@ Input.propTypes = {
   onChange: PropTypes.func,
 };
 
-function getPopupContainer(popupContainer, rows, isMultipleLine) {
+function getPopupContainer(popupContainer, rows, isMultipleLine: boolean) {
   // 表格 main-center 设置了 overflow:hidden，多行文本编辑弹层超出单元格高度时会被裁剪，
   // 也会被底部统计行/footer 遮挡。逃逸到外层 .customFieldsContainer 可绕开裁剪。
   if (isMultipleLine) {

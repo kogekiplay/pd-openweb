@@ -54,7 +54,7 @@ export default class CountDown extends Component<any, any> {
     });
   };
 
-  formatTime = (d, h, m, s) => {
+  formatTime = (d: number, h: number, m: number, s: number) => {
     if (d > 0) {
       return _l('%0天%1时%2分%3秒', d, h, m, s);
     } else if (h > 0) {

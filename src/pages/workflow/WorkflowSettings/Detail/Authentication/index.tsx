@@ -382,7 +382,7 @@ export default class Authentication extends Component<any, any> {
   /**
    * 渲染OAuth2参数
    */
-  renderOAuth2Parameter(item, index: number, key) {
+  renderOAuth2Parameter(item, index: number, key: string) {
     const { data } = this.state;
     const TABS = {
       Params: {
@@ -597,7 +597,7 @@ export default class Authentication extends Component<any, any> {
   /**
    * 验证数值控件
    */
-  checkNumberControl(evt, isBlur?) {
+  checkNumberControl(evt, isBlur?: boolean | undefined) {
     let num = evt.target.value.replace(/[^\d]/g, '');
 
     evt.target.value = num;

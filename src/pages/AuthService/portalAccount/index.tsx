@@ -102,7 +102,7 @@ function ContainerCon(props) {
   }, [paramForPcWx]);
 
   //自动登录
-  const onAutoLogin = cb => {
+  const onAutoLogin = (cb: () => void) => {
     const autoLoginKey = window.localStorage.getItem(`PortalLoginInfo-${currentAppId}`) || '';
 
     if (autoLoginKey) {

@@ -131,7 +131,7 @@ export default function ControlsSetting(props) {
     });
   };
 
-  const handleFileRadio = (controlId: string, value) => {
+  const handleFileRadio = (controlId: string, value: string) => {
     fileStyle[controlId] = value;
     changeAdvanceSettings({
       key: 'atta_style',
@@ -139,7 +139,7 @@ export default function ControlsSetting(props) {
     });
   };
 
-  const handleUserInfo = (controlId: string, info) => {
+  const handleUserInfo = (controlId: string, info: { jobNumber: boolean; email: boolean; mobilePhone: boolean } | { [x: string]: boolean }) => {
     userConfig[controlId] = _.assign(userConfig[controlId], info);
     changeAdvanceSettings({
       key: 'user_info',
@@ -328,7 +328,7 @@ export default function ControlsSetting(props) {
     );
   };
 
-  const renderUserChild = (item, uniqueId, callback) => {
+  const renderUserChild = (item, uniqueId, callback: () => void) => {
     const config = userConfig[uniqueId] || {};
     const usertype = _.get(item, 'advancedSetting.usertype');
 

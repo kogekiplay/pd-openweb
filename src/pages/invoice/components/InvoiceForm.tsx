@@ -136,7 +136,7 @@ export default function InvoiceForm(props) {
     [],
   );
 
-  const renderFieldComponent = key => {
+  const renderFieldComponent = (key: string) => {
     if (isConfirmOrTest && !(type === 'test' && key === 'email')) {
       switch (key) {
         case 'invoiceOutputType':

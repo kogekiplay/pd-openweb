@@ -91,7 +91,7 @@ const STEP_TO_SIDEBAR_KEY = {
 // activeKey + 已知 ID 组合出 iframe src
 // iframe 嵌入应用必须带 ?rp=no，避免主应用层的页头/侧栏在 iframe 内重复渲染
 function buildPreviewUrl(
-  activeKey,
+  activeKey: string,
   {
     appId,
     sectionIdByName,
@@ -106,7 +106,7 @@ function buildPreviewUrl(
   // sys_lang：与搭建应用 build stream 透传的 appLanguage（app.json.language）保持一致，
   // 让预览 iframe 按搭建语言渲染，避免预览语言与目标应用语言不一致。
   const withLang = appLanguage ? `&sys_lang=${encodeURIComponent(appLanguage)}` : '';
-  const withRp = path => `${path}?rp=no${withLang}`;
+  const withRp = (path: string) => `${path}?rp=no${withLang}`;
   // 应用根这类静态预览 URL 不随产物变化，附加 nonce 让 src 变化以触发 PreviewFrame 重新导航刷新
   const withRefresh = (path: string) => `${withRp(path)}${previewNonce ? `&_r=${previewNonce}` : ''}`;
 
@@ -196,7 +196,7 @@ const PANEL_BY_KEY = {
   aiAssistants: ({ parsed }) => <AiAssistantsPanel pages={parsed || []} />,
 };
 
-function useStickyScroll(visible, focus, focusedContent) {
+function useStickyScroll(visible: boolean, focus, focusedContent) {
   const ref = useRef(null);
   const stickRef = useRef(true);
 

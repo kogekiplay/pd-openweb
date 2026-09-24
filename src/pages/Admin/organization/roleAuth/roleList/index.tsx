@@ -100,7 +100,7 @@ class RoleList extends React.Component<any, any> {
     const { list, applyList, drawer, hasChanged } = this.state;
     const { projectId } = this.props;
 
-    const onOpenDrawer = (role, type, closeNeedOpenDetail?) => {
+    const onOpenDrawer = (role, type, closeNeedOpenDetail?: boolean | undefined) => {
       this.setState({ drawer: { visible: true, role, type, closeNeedOpenDetail } });
     };
 

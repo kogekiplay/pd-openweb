@@ -47,7 +47,7 @@ export default function AppDisplay(props) {
 
   const app = apps.length ? apps[0] : {};
 
-  const handleClick = (app, multiple?) => {
+  const handleClick = (app, multiple?: boolean | undefined) => {
     if (multiple) {
       return;
     }

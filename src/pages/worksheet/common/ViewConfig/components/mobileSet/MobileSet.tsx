@@ -186,7 +186,7 @@ export default class MobileSet extends React.Component<any, any> {
     );
   };
 
-  changeShowType = type => {
+  changeShowType = (type: string) => {
     const { view, appId } = this.props;
     this.setState(
       {

@@ -205,7 +205,7 @@ export default class OpenActionContent extends Component<any, any> {
       { text: _l('推送模态窗口'), value: 4 },
     ];
 
-    const isRemove = value => {
+    const isRemove = (value: number) => {
       switch (data.pushType) {
         case PUSH_TYPE.DETAIL:
           return _.includes([1, 4], value);

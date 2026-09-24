@@ -155,7 +155,7 @@ export default function DisplayItem(props) {
   };
 
   // 判断是否能同级拖拽,
-  const isCanDragSameRow = item => {
+  const isCanDragSameRow = (item: WidgetDragItem) => {
     if (item.type === DRAG_ITEMS.DISPLAY_ITEM) {
       if (item.id === controlId) return false;
 

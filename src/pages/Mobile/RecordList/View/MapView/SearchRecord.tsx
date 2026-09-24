@@ -80,7 +80,7 @@ const highlightMessageText = (keyword, content) => {
   return content;
 };
 
-const searchResult = (query, queryKey, data) => {
+const searchResult = (query: string, queryKey, data) => {
   return data
     .filter(item => {
       const target = item[queryKey].toLowerCase();

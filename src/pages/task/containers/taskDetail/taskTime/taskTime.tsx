@@ -124,7 +124,7 @@ class TaskTime extends Component<any, any> {
   /**
    * 格式化开始时间
    */
-  formatStartTimeText(diff) {
+  formatStartTimeText(diff: number) {
     const year = Math.floor(diff / 24 / 365);
     const month = Math.floor(diff / 24 / 30);
     const day = Math.floor(diff / 24);
@@ -147,7 +147,7 @@ class TaskTime extends Component<any, any> {
   /**
    * 格式化结束时间
    */
-  formatEndTimeText(diff) {
+  formatEndTimeText(diff: number) {
     const year = Math.floor(diff / 24 / 365);
     const month = Math.floor(diff / 24 / 30);
     const day = Math.floor(diff / 24);

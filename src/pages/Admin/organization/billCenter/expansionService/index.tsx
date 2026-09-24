@@ -179,7 +179,7 @@ const MERCHANT_TYPE_LIST = [
   },
 ];
 
-const getFormatCount = count => {
+const getFormatCount = (count: number | undefined) => {
   let formatCount = count % 100 || 100;
 
   if (formatCount > 0) {

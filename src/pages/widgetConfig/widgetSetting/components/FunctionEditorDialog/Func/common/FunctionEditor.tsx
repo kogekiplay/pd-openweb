@@ -92,7 +92,7 @@ function createElement(text, style = {}, { tooltip } = {}) {
   return dom;
 }
 
-function createTagEle(text) {
+function createTagEle(text: string) {
   const dom = createElement(text);
   dom.style.display = 'inline-block';
   dom.style.margin = '0 4px';
@@ -573,7 +573,7 @@ export default class Function {
 
   // ---------- 对外 API（与 CM5 版逐一对应）----------
 
-  runWhenReady(action) {
+  runWhenReady(action: () => void) {
     if (this.view) {
       action();
       return;
@@ -597,7 +597,7 @@ export default class Function {
     });
   }
 
-  setCursor(offset) {
+  setCursor(offset: number) {
     if (!this.view) return;
 
     const max = this.view.state.doc.length;

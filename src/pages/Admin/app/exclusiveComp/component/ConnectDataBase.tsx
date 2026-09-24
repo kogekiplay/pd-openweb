@@ -133,7 +133,7 @@ function ConnectDataBase(props) {
     return false;
   };
 
-  const clearError = key => {
+  const clearError = (key: string) => {
     setErrors(errors.filter(l => l !== key));
   };
 

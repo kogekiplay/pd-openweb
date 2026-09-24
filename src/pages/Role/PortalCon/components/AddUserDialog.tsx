@@ -30,7 +30,7 @@ const Wrap = styled.div`
   }
 `;
 
-const downLoadByUrl = url => {
+const downLoadByUrl = (url: string) => {
   window
     .mdyAPI(
       '',

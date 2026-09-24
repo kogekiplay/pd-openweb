@@ -50,7 +50,7 @@ function loadImageFromFile(file) {
   });
 }
 
-function getResizeSize(width: number, height: number, maxSide) {
+function getResizeSize(width: number, height: number, maxSide: number | undefined) {
   if (!maxSide || Math.max(width, height) <= maxSide) {
     return { width, height };
   }
@@ -82,7 +82,7 @@ function getCanvasOutputType(fileType, needCompress) {
   return /^image\/(jpeg|jpg|png|webp)$/i.test(fileType) ? fileType : 'image/jpeg';
 }
 
-function canvasToBlob(canvas, type, quality) {
+function canvasToBlob(canvas: HTMLCanvasElement, type, quality) {
   return new Promise(resolve => {
     try {
       canvas.toBlob(blob => resolve(blob), type, quality);
@@ -93,7 +93,7 @@ function canvasToBlob(canvas, type, quality) {
   });
 }
 
-function releaseImageResource(image, objectUrl, canvas?) {
+function releaseImageResource(image: HTMLImageElement, objectUrl: string | undefined, canvas?: HTMLCanvasElement | undefined) {
   const urlCreator = window.URL || window.webkitURL;
 
   if (objectUrl && urlCreator && urlCreator.revokeObjectURL) {

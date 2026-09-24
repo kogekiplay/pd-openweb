@@ -213,7 +213,7 @@ export default function HistorySide({
       });
   };
 
-  const doRename = (item, newTitle) => {
+  const doRename = (item, newTitle: string) => {
     renameAgentSession(item.sessionId, newTitle)
       .then(resultTitle => {
         setSessions(prev => prev.map(s => (s.sessionId === item.sessionId ? { ...s, title: resultTitle } : s)));

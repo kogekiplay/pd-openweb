@@ -191,7 +191,7 @@ export default function MobileTable(props) {
   };
 
   // 编辑平铺记录
-  const handleChangeFlattenRow = (data, _ids, item, customWidgetRef) => {
+  const handleChangeFlattenRow = (data, _ids, item: RecordRow, customWidgetRef) => {
     if (!customWidgetRef) return;
     const updateControlIds = customWidgetRef.dataFormat.getUpdateControlIds();
     const row = [{}, ...data].reduce((a = {}, b = {}) => Object.assign(a, { [b.controlId]: b.value }));

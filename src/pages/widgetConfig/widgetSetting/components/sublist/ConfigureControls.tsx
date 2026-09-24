@@ -138,7 +138,7 @@ const ConfigureWrap = styled.div`
   padding-right: var(--space-2);
 `;
 
-const getFilterData = value => {
+const getFilterData = (value: string) => {
   if (!value) return WIDGET_GROUP_TYPE;
   let filterData = {};
 

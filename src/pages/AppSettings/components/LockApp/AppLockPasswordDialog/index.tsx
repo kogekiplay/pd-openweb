@@ -343,7 +343,7 @@ function AppLockPasswordDialog(props) {
   }, []);
 
   // 修改密码
-  const confirmModifyPassword = (originPassword, newPassword) => {
+  const confirmModifyPassword = (originPassword: string, newPassword: string) => {
     if (!originPassword) return alert(_l('请输入旧密码'), 3);
     if (checkErrorPassword(newPassword)) return;
     if (_.trim(originPassword) === _.trim(newPassword)) {

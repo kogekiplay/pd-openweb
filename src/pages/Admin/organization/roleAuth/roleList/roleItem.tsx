@@ -25,7 +25,7 @@ export default function RoleItem(props) {
     setIsAuthOverflow(authRef.current && authRef.current.scrollHeight > 40);
   }, [authRef.current]);
 
-  const onClickHandle = (e, type: string) => {
+  const onClickHandle = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, type: string) => {
     e.stopPropagation();
 
     switch (type) {

@@ -66,7 +66,7 @@ export interface IntlTelInputOptions {
   customPlaceholder?: () => string;
 }
 
-const normalizeCode = code => {
+const normalizeCode = (code: string) => {
   if (!code) return '';
   return String(code).startsWith('+') ? String(code) : `+${code}`;
 };
@@ -328,7 +328,7 @@ export class DialCodeSelectInstance {
     });
   };
 
-  _getCountryByCode = code => {
+  _getCountryByCode = (code: string) => {
     // 兜底要带类型：写成裸 {} 的话返回类型变成 CountryOption | {}，
     // 调用点读 .localName / .iso2 全部报 TS2339。
     return this.getCountryOptions().find(option => option.code === code) || ({} as CountryOption);
@@ -474,7 +474,7 @@ export class IntlTelInputAdapter {
     this.updateDialCodeInput();
   }
 
-  _getCountryByCode = code => {
+  _getCountryByCode = (code: string) => {
     return this.countryOptions.find(item => item.code === code) || ({} as CountryOption);
   };
 
@@ -574,7 +574,7 @@ export class IntlTelInputAdapter {
     return `${this.code || getDefaultCode(this.defaultCountry)}${localNumber}`;
   };
 
-  setNumber = value => {
+  setNumber = (value: string) => {
     const raw = String(value || '').trim();
     const parsed = parseFullNumberInput({
       inputValue: raw,

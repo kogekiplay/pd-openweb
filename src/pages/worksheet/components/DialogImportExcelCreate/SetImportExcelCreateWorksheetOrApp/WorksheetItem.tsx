@@ -133,7 +133,7 @@ export default class WorksheetItem extends Component<any, WorksheetItemState> {
       });
     }
   };
-  handleScrollPosition = direction => {
+  handleScrollPosition = (direction: number) => {
     if (!this.scrollWraperEl) return;
     const { clientWidth } = this.scrollWraperEl;
     const distance = direction ? clientWidth / 2 : -(clientWidth / 2);

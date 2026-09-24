@@ -88,7 +88,9 @@ export default function CustomPageFilter(props) {
     const translateInfo = data.data || {};
     const comparisonLangInfo = getTranslateInfo(app.id, null, item.id, comparisonLangData);
 
-    const handleSave = info => {
+    const handleSave = (
+      info: { title: string | undefined } | { mobileTitle: string | undefined } | { [x: number]: string | undefined },
+    ) => {
       onEditAppLang({
         id: data.id,
         parentId: selectNode.workSheetId,

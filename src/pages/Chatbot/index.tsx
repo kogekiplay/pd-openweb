@@ -82,7 +82,7 @@ const Chatbot = props => {
   const appId = appPkg.id || data.appId;
   const chatbotName = getTranslateInfo(appId, null, chatbotId).name || data.name || chatbotAppItem.workSheetName;
 
-  const handleNavVisible = value => {
+  const handleNavVisible = (value: boolean) => {
     setNavVisible(value);
     value ? localStorage.setItem(`chatbotNavVisible`, true) : localStorage.removeItem(`chatbotNavVisible`);
   };

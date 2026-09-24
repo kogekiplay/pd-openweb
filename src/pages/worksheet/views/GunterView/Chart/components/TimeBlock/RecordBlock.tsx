@@ -106,7 +106,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     clearInterval(this.timer);
   }
 
-  setDocumentDragListeners = (onMouseMove, onMouseUp) => {
+  setDocumentDragListeners = (onMouseMove, onMouseUp: () => void) => {
     this.removeDocumentDragListeners();
     this.documentDragListeners = { onMouseMove, onMouseUp };
     document.addEventListener('mousemove', onMouseMove);
@@ -188,7 +188,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     clearInterval(this.timer);
   }
 
-  handleAutoUpdateTime = value => {
+  handleAutoUpdateTime = (value: number) => {
     const { row } = this.props;
     const { dragStartTime, dragEndTime } = this.state;
     this.props.updateRecordDragTime(row, dragStartTime, dragEndTime, value);
@@ -300,7 +300,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     }
   }
 
-  handleChangeStart(value) {
+  handleChangeStart(value: number) {
     const [start, end] = this.getStartTime(value);
     this.handleUpdateRecordTime(start, end);
   }
@@ -352,7 +352,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     }
   }
 
-  handleChangeEnd(value) {
+  handleChangeEnd(value: number) {
     const [start, end] = this.getEndTime(value);
     this.handleUpdateRecordTime(start, end);
   }

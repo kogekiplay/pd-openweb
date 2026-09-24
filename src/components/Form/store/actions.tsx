@@ -50,7 +50,7 @@ export const updateActiveTabControlIdAction = (dispatch, id) => {
   });
 };
 
-export const updateConfigLockAction = (dispatch, lock) => {
+export const updateConfigLockAction = (dispatch, lock: boolean) => {
   dispatch({
     type: 'SET_CONFIG_LOCK',
     payload: lock,
@@ -242,7 +242,7 @@ export const updateErrorStateAction = (dispatch, { getState, isShow, controlId }
 /**
  * 提交错误信息弹层
  */
-export const errorDialog = errors => {
+export const errorDialog = (errors: string[]) => {
   const isMobile = browserIsMobile();
 
   if (isMobile) {

@@ -10,7 +10,7 @@ const messageLinkTypes = [
 function SettingLinkOpen(props) {
   const { value, disabled, projectId, className = '', onChange = () => {} } = props;
 
-  const handleChange = status => {
+  const handleChange = (status: number) => {
     Ajax.editDDMessagUrlPcSlide({
       projectId: projectId,
       status,

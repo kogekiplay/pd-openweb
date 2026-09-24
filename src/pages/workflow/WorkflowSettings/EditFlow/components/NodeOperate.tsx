@@ -388,7 +388,7 @@ export default class NodeOperate extends Component<any, NodeOperateState> {
   /**
    * 调整分支顺序
    */
-  updateBranchSort = type => {
+  updateBranchSort = (type: number) => {
     const { processId, item, flowIds, updateBranchSort } = this.props;
     const currentIndex = _.findIndex(flowIds, o => o === item.id);
 

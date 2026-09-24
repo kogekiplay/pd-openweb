@@ -311,7 +311,7 @@ export default class PersonalInfo extends React.Component<any, any> {
     });
   }
 
-  handleDeleteItem(type, id) {
+  handleDeleteItem(type: number, id) {
     if (confirm(_l('确认删除') + '?')) {
       account
         .delAccountDetail({

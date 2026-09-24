@@ -341,7 +341,7 @@ export default props => {
 
   const { name, showColors } = getColorConfig();
 
-  const getBgColor = titleStyle => {
+  const getBgColor = (titleStyle: number) => {
     const value = _.isNumber(titleStyle) ? titleStyle : config.titleStyle || 0;
 
     if (value === 0 || value === 3) {

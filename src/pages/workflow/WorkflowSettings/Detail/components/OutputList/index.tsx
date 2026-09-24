@@ -223,7 +223,7 @@ export default class OutputList extends Component<any, any> {
     action: string,
     value,
     { controlId, type, dataSource }: { controlId?: string; [key: string]: any },
-    isBlur?,
+    isBlur?: boolean | undefined,
   ) {
     const { outputType, data, updateSource } = this.props;
     const { outputs } = data;
@@ -308,7 +308,7 @@ export default class OutputList extends Component<any, any> {
   /**
    * 生成普通数组的对象
    */
-  generationOrdinaryArrayObject(dataSource) {
+  generationOrdinaryArrayObject(dataSource: string | undefined) {
     return {
       controlId: uuidv4(),
       type: 2,

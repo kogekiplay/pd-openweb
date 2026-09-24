@@ -70,7 +70,7 @@ export const controlKeys = {
   group: ['controlName', 'fieldId', 'desc'], //分组标题
 };
 
-export const defaultData = (type, info) => {
+export const defaultData = (type: number, info) => {
   let data = info;
 
   switch (type) {

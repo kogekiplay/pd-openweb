@@ -269,7 +269,7 @@ export function getControlSelectType(control) {
   return { isMultiple, isSingle };
 }
 
-export function getFilterTypeLabel(typeKey, type, control) {
+export function getFilterTypeLabel(typeKey: string | undefined, type, control) {
   const isNumber = typeKey === 'NUMBER';
   const isDate = typeKey === 'DATE';
   const isCascader = control && control.type === 35;

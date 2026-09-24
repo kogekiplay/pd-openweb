@@ -5,7 +5,7 @@ import qs from 'query-string';
 import Dialog from 'ming-ui/components/Dialog';
 import { NODE_SORT_BY, NODE_SORT_TYPE, PICK_TYPE, ROOT_PERMISSION_TYPE } from '../constant/enum';
 
-function smi(i32) {
+function smi(i32: number) {
   return ((i32 >>> 1) & 0x40000000) | (i32 & 0xbfffffff);
 }
 
@@ -387,7 +387,7 @@ export function getFileIconNameByExt(ext) {
   }
 }
 
-export function isOffice(fileExt) {
+export function isOffice(fileExt: string) {
   var fileExts = ['.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx'];
   if (fileExt) {
     fileExt = fileExt.toLowerCase();

@@ -73,7 +73,7 @@ const Info = styled.div`
   }
 `;
 
-function getRefreshControls(controls) {
+function getRefreshControls(controls: FormControl[]) {
   return controls.filter(
     (c: FormControl) =>
       _.includes(
@@ -89,7 +89,7 @@ function getRefreshControls(controls) {
   );
 }
 
-function getRefreshSortControls(controls) {
+function getRefreshSortControls(controls: FormControl[]) {
   return controls.filter((c: FormControl) =>
     _.includes(
       [
@@ -102,7 +102,7 @@ function getRefreshSortControls(controls) {
   );
 }
 
-function getOtherTableControls(controls) {
+function getOtherTableControls(controls: FormControl[]) {
   const list = controls.filter(
     (l: FormControl) =>
       l.dataSource &&
@@ -272,7 +272,7 @@ export default function RefreshRecordDialog(props) {
     });
   };
 
-  const handleAllChecked = (controls, checked: boolean) => {
+  const handleAllChecked = (controls: FormControl[] | undefined, checked: boolean) => {
     const value = {};
     controls.forEach((l: FormControl) => {
       value[l.controlId] = checked;

@@ -874,7 +874,7 @@ class TaskList extends Component<any, TaskListState> {
   /**
    * `我的任务`分页加载`逻辑
    */
-  myTaskManipulation($List) {
+  myTaskManipulation($List: JQuery<HTMLElement>) {
     const $taskList = $('#taskList');
     const $types = $taskList.find('.taskListFolderName[data-type]').not('.floatingHeader');
     // 忽略的`我的任务`分类 reset

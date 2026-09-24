@@ -10,7 +10,7 @@
         v,
         z,
         i,
-        m = function (a, l) {
+        m = function (a, l: ChildNode) {
           l.parentNode.insertBefore(a, l);
         };
       if (l && !h.__iconfont__svg__cssinject__) {

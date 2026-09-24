@@ -141,7 +141,7 @@ const OPTIONS = [
   },
 ];
 
-const handleCopy = content => {
+const handleCopy = (content: string) => {
   copy(content);
   alert(_l('复制成功'));
 };
@@ -201,7 +201,7 @@ export default function DebugConfig(params) {
     );
   };
 
-  const renderHeader = (o, i) => {
+  const renderHeader = (o, i: number) => {
     return (
       <React.Fragment>
         <h5 className={cx('Bold Font14 pTop16', {})}>{o.title}</h5>
@@ -278,7 +278,7 @@ export default function DebugConfig(params) {
     );
   };
 
-  const renderContent = i => {
+  const renderContent = (i: number) => {
     let serverHost;
 
     if (

@@ -105,7 +105,7 @@ class SystemServices extends Component<any, any> {
       });
   };
 
-  handleCardClick = serviceKey => {
+  handleCardClick = (serviceKey: string) => {
     const { weiXinInfo, printList } = this.state;
 
     if (serviceKey === 'weixin') {
@@ -144,7 +144,7 @@ class SystemServices extends Component<any, any> {
     this.setState({ currentService: serviceKey });
   };
 
-  handleEditClick = (e, serviceKey) => {
+  handleEditClick = (e, serviceKey: string) => {
     e.stopPropagation(); // 阻止事件冒泡，避免触发卡片点击
     this.setState({ currentService: serviceKey });
   };

@@ -38,7 +38,7 @@ const Done = styled.span`
 const LoadableExecDialog = lazy(() => import('src/pages/workflow/components/ExecDialog'));
 const LoadableAddressBook = lazy(() => import('src/pages/chat/lib/addressBook'));
 
-const removeWebUrlPrefix = href => {
+const removeWebUrlPrefix = (href: string | undefined) => {
   const url = (href || '').toLocaleLowerCase();
   const webUrl = (md.global.Config.WebUrl || '').toLocaleLowerCase().replace(/\/+$/, '');
 

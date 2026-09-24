@@ -49,7 +49,7 @@ export default function MoreOption(props) {
   // 已删除控件
   const deleteOptions = options.filter(i => i.isDeleted);
 
-  const sortOptions = isAsc => {
+  const sortOptions = (isAsc: boolean) => {
     const newOptions = options.sort(
       ({ value: aValue = '', key: aKey = '' } = {}, { value: bValue = '', key: bKey = '' } = {}) => {
         if (aKey === 'other' && bKey !== 'other') return 1;

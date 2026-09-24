@@ -8,7 +8,7 @@ import { getRecordCardStyle } from 'src/utils/control';
 import { checkCellIsEmpty, checkControlCanSetStyle } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
-function getCellContentPaddingTop(control, isNotEmpty) {
+function getCellContentPaddingTop(control: FormControl, isNotEmpty: boolean) {
   if (!isNotEmpty) {
     return 4;
   }

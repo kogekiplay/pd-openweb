@@ -67,7 +67,7 @@ let External = class External extends Component<any, any> {
     }
   }
 
-  handleScrollTo = top => {
+  handleScrollTo = (top: number) => {
     if (this.scrollRef.current) {
       this.scrollRef.current.scrollTo({
         top,

@@ -74,7 +74,7 @@ class PositionInfo extends Component<any, any> {
     }
   };
   // 新增编辑职位
-  createAndEdit = filed => {
+  createAndEdit = (filed: string) => {
     this.setState({ showRoleDialog: true, filed });
   };
   handleSearch = _.throttle(value => {

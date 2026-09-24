@@ -119,7 +119,7 @@ function MobileFallback({ isPortal }) {
     const page = '/mobile/recordList/';
     const record = '/mobile/record/';
     const pathname = getPathWithoutSubPath(location.pathname);
-    const setHash = url => navigateTo(url + decodeURIComponent(location.hash), true);
+    const setHash = (url: string) => navigateTo(url + decodeURIComponent(location.hash), true);
 
     if (pathname.includes(record)) {
       const param = pathname.replace(record, '').split('/');

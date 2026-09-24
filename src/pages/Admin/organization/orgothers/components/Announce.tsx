@@ -142,7 +142,7 @@ export default class Announce extends Component<any, any> {
     });
   };
 
-  handleCheck = (value, key: string) => {
+  handleCheck = (value: boolean, key: string) => {
     this.setState({
       [key]: !value,
     });

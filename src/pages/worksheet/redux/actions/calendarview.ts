@@ -138,7 +138,7 @@ export const fetchExternal = () => {
   };
 };
 
-export const updataEditable = data => {
+export const updataEditable = (data: boolean) => {
   return dispatch => {
     dispatch({ type: 'CHANGE_CALENDAR_EDITABLE', data: data });
   };
@@ -324,7 +324,7 @@ export function getCalendarData() {
    已改成纯函数 readInitType，见 views/CalendarView/util.ts。 */
 
 // 获取已排期
-export const getEventScheduledData = type => {
+export const getEventScheduledData = (type: string) => {
   return dispatch => {
     if (type === 'eventScheduled') {
       // 早于今天的第一页数据

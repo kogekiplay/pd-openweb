@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { Icon, SortableList, Switch } from 'ming-ui';
 import homeAppApi from 'src/api/homeApp';
 
-const getWorksheetList = (sections = [], viewHideNavi, isAuthorityApp) => {
+const getWorksheetList = (sections = [], viewHideNavi, isAuthorityApp: boolean) => {
   let list = _.reduce(
     sections,
     (result, item) => {

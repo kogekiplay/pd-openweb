@@ -22,7 +22,7 @@ export default function (props) {
     onDynamicValueChange(newValue || []);
   };
 
-  const handleChange = (value, withValueChange = true) => {
+  const handleChange = (value: string, withValueChange = true) => {
     setValue(value);
     withValueChange && onDynamicValueChange(value ? [{ cid: '', rcid: '', staticValue: value }] : []);
   };

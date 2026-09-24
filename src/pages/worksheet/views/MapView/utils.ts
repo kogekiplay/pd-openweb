@@ -18,7 +18,7 @@ export function parseRecord(record = {}, mapViewConfig, controls: FormControl[])
   };
 }
 
-export function calculateZoomLevel(coordinates, mapWidth, mapHeight, paddingPercentage = 10) {
+export function calculateZoomLevel(coordinates, mapWidth: number, mapHeight: number, paddingPercentage = 10) {
   if (coordinates.length < 2) {
     return 0;
   }

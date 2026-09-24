@@ -59,7 +59,7 @@ function getBoundsForNode(node: HTMLElement) {
  * @param  {Object|HTMLElement} b
  * @return {bool}
  */
-function objectsCollide(a, b, tolerance) {
+function objectsCollide(a, b: HTMLDivElement | null | undefined, tolerance) {
   const aObj = a instanceof HTMLElement ? getBoundsForNode(a) : a;
   const bObj = b instanceof HTMLElement ? getBoundsForNode(b) : b;
 
@@ -120,7 +120,7 @@ class DragSelect extends React.Component<any, any> {
   setRootNode = node => {
     this.rootNode = node;
   };
-  setChildNode = (i, node) => {
+  setChildNode = (i: number, node) => {
     this.dragSelectItemNodes = this.dragSelectItemNodes || {};
     this.dragSelectItemNodes[i] = node;
   };
@@ -274,7 +274,11 @@ class DragSelect extends React.Component<any, any> {
 
     execFunc(this.props.onDragSelectStart, evt);
   };
-  calcRect(startPos, endPos, range?) {
+  calcRect(
+    startPos: { x: number; y: number } | undefined,
+    endPos: { x: number; y: number } | { x: number; y: number },
+    range?,
+  ) {
     const el = this.getRootNode();
     let left = startPos.x < endPos.x ? startPos.x : endPos.x;
     let right = el.clientWidth - (startPos.x > endPos.x ? startPos.x : endPos.x);

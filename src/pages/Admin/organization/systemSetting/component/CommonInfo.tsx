@@ -138,7 +138,7 @@ export default class CommonInfo extends Component<any, any> {
   }
 
   // 1: 名称, 2: 所在地，3: 行业
-  updateVisible(visibleType) {
+  updateVisible(visibleType: number) {
     this.setState({ visibleType });
   }
 

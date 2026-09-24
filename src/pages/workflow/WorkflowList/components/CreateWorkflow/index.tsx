@@ -91,7 +91,7 @@ export default class CreateFlow extends Component<any, any> {
 
   requestPending = false;
 
-  createFlow = startEventAppType => {
+  createFlow = (startEventAppType: number) => {
     const { appId } = this.props;
     const { flowName } = this.state;
     this.requestPending = true;

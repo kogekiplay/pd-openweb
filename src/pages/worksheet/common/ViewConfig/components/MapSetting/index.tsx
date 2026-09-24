@@ -113,7 +113,7 @@ export default function MapSetting(props) {
 
   const [mdMapVisible, setMdMapVisible] = useState(false);
 
-  const updateViewTagType = value => {
+  const updateViewTagType = (value: number) => {
     updateCurrentView({
       ...view,
       appId,

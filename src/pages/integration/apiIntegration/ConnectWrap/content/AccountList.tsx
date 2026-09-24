@@ -234,7 +234,7 @@ function AccountList(props) {
   };
 
   // 编辑名称｜删除
-  const onEdit = (data, isDel?) => {
+  const onEdit = (data, isDel?: boolean | undefined) => {
     Oauth2Ajax.updateAccessToken(
       {
         id: data.id,

@@ -10,7 +10,7 @@ export default props => {
   const originalName = props.name;
   const originalIcon = props.icon;
 
-  const onChange = (newName, newIcon) => {
+  const onChange = (newName: string, newIcon) => {
     const { appItem, workSheetId, appId, groupId, icon } = props;
 
     if (appItem.type === 2) {

@@ -217,7 +217,7 @@ function WorksheetRecordLog(props, ref) {
     };
   };
 
-  function loadNewEdition(prop = {}, isPullRefresh?) {
+  function loadNewEdition(prop = {}, isPullRefresh?: boolean | undefined) {
     const { worksheetId, rowId, pageSize = PAGE_SIZE, filterUniqueIds } = props;
     const params = getParams(prop);
     if (!isPullRefresh) setMark({ loading: true, loadingAll: !params.lastMark });

@@ -219,7 +219,7 @@ export default class OtherTool extends Component<any, any> {
       });
   };
 
-  enableForm(key) {
+  enableForm(key: string) {
     this.setState(
       {
         [key]: !this.state[key],
@@ -335,7 +335,7 @@ export default class OtherTool extends Component<any, any> {
 
   changeAccountTxtInfo = () => {};
 
-  renderCompType(key, compType = 'input', inputDisabled, placeholder: string) {
+  renderCompType(key, compType = 'input', inputDisabled: boolean, placeholder: string) {
     const { searchRange, DNGroupList = [], errorInfo = {} } = this.state;
 
     switch (compType) {

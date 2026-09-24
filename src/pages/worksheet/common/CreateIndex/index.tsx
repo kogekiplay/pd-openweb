@@ -301,7 +301,7 @@ export default class CreateIndex extends Component<any, any> {
     this.setState({ selectedIndexList: copySelectedIndexList });
   };
 
-  openAndClose = num => {
+  openAndClose = (num: number) => {
     let temp = [...this.state.showQAList];
 
     if (_.includes(temp, num)) {

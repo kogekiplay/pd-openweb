@@ -60,7 +60,7 @@ export default class Switch extends Component<any, SwitchState> {
     }
   }
 
-  handleClick = type => {
+  handleClick = (type: string) => {
     const { publishFlow, switchStatus, refreshPublish } = this.props;
 
     this.setState({ disabled: true });

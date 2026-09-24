@@ -67,7 +67,7 @@ class TopPostList extends React.Component<any, TopPostListState> {
     this._isMounted = false;
     if (this.nextItem && this.nextItem.cancel) this.nextItem.cancel();
   }
-  isElementInViewport(el) {
+  isElementInViewport(el: HTMLDivElement) {
     if (typeof window.jQuery === 'function' && el instanceof window.jQuery) {
       el = el[0];
     }

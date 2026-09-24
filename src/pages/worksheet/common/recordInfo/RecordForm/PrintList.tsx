@@ -355,7 +355,7 @@ export default class PrintList extends Component<any, any> {
     });
   }
 
-  renderPrintTemplate = templateType => {
+  renderPrintTemplate = (templateType: string) => {
     const {
       isCharge,
       viewId,

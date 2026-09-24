@@ -44,7 +44,7 @@ export default props => {
     updateSource({ processVariables });
   };
 
-  const updateControls = (action: string, value, { controlId, type, dataSource }: { controlId?: string; [key: string]: any }, isBlur?) => {
+  const updateControls = (action: string, value, { controlId, type, dataSource }: { controlId?: string; [key: string]: any }, isBlur?: boolean | undefined) => {
     processVariables.forEach(item => {
       if (item.controlId === controlId) {
         item[action] =

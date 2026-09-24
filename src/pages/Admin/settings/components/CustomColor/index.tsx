@@ -157,7 +157,7 @@ export default class CustomColor extends Component<any, any> {
     this.setState({ customChartDialog: { visible: false, data: null, editable: false, id: null } });
   };
 
-  selected = (item, key) => {
+  selected = (item, key: string) => {
     const { system_color, custom_color } = this.state;
 
     if (!item.enable && this.isMax()) {

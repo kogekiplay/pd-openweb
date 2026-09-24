@@ -129,7 +129,7 @@ function Func(props, ref) {
   const codeEditor = useRef<any>(undefined);
   const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const editorFunctions = key => {
+  const editorFunctions = (key: string) => {
     return (...args) => {
       if (codeEditor.current) {
         codeEditor.current[key](...args);

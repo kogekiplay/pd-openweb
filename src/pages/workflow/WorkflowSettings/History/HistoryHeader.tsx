@@ -52,7 +52,7 @@ export default class HistoryHeader extends Component<any, any> {
       .map(key => ({ ...data[key], value: key }));
   };
 
-  formatTime = time => time.map(item => item && moment(item).format('YYYY/MM/DD HH:mm'));
+  formatTime = (time: string[]) => time.map(item => item && moment(item).format('YYYY/MM/DD HH:mm'));
 
   handlePara = () => {
     const { status, time, searchVal } = this.state;

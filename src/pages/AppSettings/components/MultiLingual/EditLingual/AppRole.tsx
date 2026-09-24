@@ -68,7 +68,7 @@ export default function AppRole(props) {
     const translateInfo = data.data || {};
     const comparisonLangInfo = getTranslateInfo(app.id, null, item.roleId, comparisonLangData);
 
-    const handleSave = info => {
+    const handleSave = (info: { name: string | undefined } | { description: string | undefined }) => {
       onEditAppLang({
         id: data.id,
         parentId: app.id,

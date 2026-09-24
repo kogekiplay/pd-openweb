@@ -74,7 +74,7 @@ export default function CustomPageView(props) {
     const translateInfo = data.data || {};
     const comparisonLangInfo = getTranslateInfo(app.id, null, item.id, comparisonLangData);
 
-    const handleSave = info => {
+    const handleSave = (info: { name: string | undefined } | { [x: number]: string | undefined }) => {
       onEditAppLang({
         id: data.id,
         parentId: selectNode.workSheetId,

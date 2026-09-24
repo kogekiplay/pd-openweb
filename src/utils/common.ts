@@ -102,7 +102,7 @@ export function KVGet(key: string) {
  * 清空
  */
 
-export function KVClear(key) {
+export function KVClear(key: string) {
   return webCache.clear({ key, moduleType: 2 }, { silent: true });
 }
 
@@ -465,7 +465,7 @@ export function accSub(arg1: number, arg2: number) {
   return accAdd(arg1, -arg2);
 }
 
-export function countChar(str = '', char) {
+export function countChar(str = '', char: string) {
   if (!str || !char) {
     return 0;
   }
@@ -625,7 +625,7 @@ export const htmlDecodeReg = str => {
  * @param  {Array}  units 自定义文件大小单位的数组，默认为 ['B', 'KB', 'MB', 'GB', 'TB']
  * @return {String}       可读的格式
  */
-export const formatFileSize = (size, accuracy?, space?, units?) => {
+export const formatFileSize = (size, accuracy?: number | undefined, space?, units?) => {
   units = units || ['B', 'KB', 'MB', 'GB', 'TB'];
   space = space || ' ';
   accuracy = (accuracy && typeof accuracy === 'number' && accuracy) || 0;
@@ -1047,7 +1047,7 @@ export const getUnUniqName = (data, name = '', key = 'name') => {
  * @param {number} length - 密码长度。
  * @returns {string} - 随机生成的密码。
  */
-export const generateRandomPassword = length => {
+export const generateRandomPassword = (length: number) => {
   const chars = {
     uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
     lowercase: 'abcdefghijklmnopqrstuvwxyz',

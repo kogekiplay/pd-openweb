@@ -79,7 +79,7 @@ export const getDashboardColor = color => {
   };
 };
 
-export const urlToBase64 = url => {
+export const urlToBase64 = (url: string) => {
   return fetch(url)
     .then(response => response.blob())
     .then(blob => {

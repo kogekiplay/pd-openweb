@@ -137,7 +137,7 @@ export const ganttDragRecordIndex = (index: number) => {
 
 // 拖拽单侧调整视图呈现
 export const updateStartTimeAndEndTime =
-  (id, index: number, time, type, isReset) => (dispatch: AppDispatch, getState: GetState) => {
+  (id: string, index: number, time, type, isReset: boolean) => (dispatch: AppDispatch, getState: GetState) => {
     let { accountTasksKV, stateConfig } = getState().task;
     accountTasksKV = _.cloneDeep(accountTasksKV);
 

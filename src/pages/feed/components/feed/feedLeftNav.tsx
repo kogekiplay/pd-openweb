@@ -133,7 +133,7 @@ class FeedLeftNav extends React.Component<any, any> {
     );
   };
 
-  fetchGroupsByProjectId = (projectId: string, openProject) => {
+  fetchGroupsByProjectId = (projectId: string, openProject: boolean) => {
     if (!this.state.loadingProjects.includes(projectId)) {
       const loadingProjects = this.state.loadingProjects.add(projectId);
       let foldedProjects = this.state.foldedProjects;
@@ -169,7 +169,7 @@ class FeedLeftNav extends React.Component<any, any> {
     });
   };
 
-  createGroup = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, projectId?) => {
+  createGroup = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, projectId?: string | undefined) => {
     e.preventDefault();
     e.stopPropagation();
     createGroup({

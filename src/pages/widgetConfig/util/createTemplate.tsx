@@ -135,7 +135,7 @@ function getBatchPermission(worksheetIds) {
   return _.get(res, 'data') || [];
 }
 
-function parseDataSource(dataSource) {
+function parseDataSource(dataSource: string | undefined) {
   if (!_.isString(dataSource) || !dataSource) return '';
   return _.includes(dataSource, '$') ? dataSource.slice(1, -1) : dataSource;
 }
@@ -153,7 +153,7 @@ const TEMPLATE_RELATION_CONTROL_TYPES = [
   WIDGETS_TO_API_TYPE_ENUM.RELATION_SEARCH,
 ];
 
-function templateControlsHasRelationField(controls) {
+function templateControlsHasRelationField(controls: FormControl[]) {
   return _.some(controls, c => isValidControl(c) && _.includes(TEMPLATE_RELATION_CONTROL_TYPES, c.type));
 }
 
@@ -405,7 +405,7 @@ function alertPermissionError(permissionErrorInfo) {
 }
 
 // 获取模板中所有引用控件包含本身
-function getAllReferencedControlInfo(allControls, templateControls, queryConfigs) {
+function getAllReferencedControlInfo(allControls: FormControl[], templateControls: FormControl[], queryConfigs) {
   const referencedControls = [];
   const parsedControlIds = [];
   const permittedControlIds = [];

@@ -514,7 +514,7 @@ class CalendarShare extends Component<any, any> {
   /**
    * 返回大小
    */
-  filesize(size, accuracy) {
+  filesize(size, accuracy: number) {
     var units = ['B', 'KB', 'MB', 'GB', 'TB'];
     if (!size) {
       return '0' + units[0];

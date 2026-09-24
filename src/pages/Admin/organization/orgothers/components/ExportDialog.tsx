@@ -75,7 +75,7 @@ export default class ExportDialog extends Component<any, any> {
     };
   }
 
-  onChange(value) {
+  onChange(value: string[]) {
     this.setState({
       typeList: value,
     });

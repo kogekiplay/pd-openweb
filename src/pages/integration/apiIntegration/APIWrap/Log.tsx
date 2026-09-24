@@ -406,7 +406,7 @@ export default function Log(props) {
     }
   };
 
-  const formatTime = time => time.map(item => item && moment(item).format('YYYY/MM/DD HH:mm'));
+  const formatTime = (time: string[]) => time.map(item => item && moment(item).format('YYYY/MM/DD HH:mm'));
 
   const renderTimePlaceholder = () => {
     const [startTime, endTime] = formatTime(time);

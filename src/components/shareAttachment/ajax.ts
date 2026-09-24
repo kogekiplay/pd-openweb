@@ -38,7 +38,7 @@ export function _getChatList(params) {
 }
 
 /** 七牛附件换成可分享的地址：本来就在图片空间的原样返回，否则让服务端转存。结果包在 { data } 里 */
-export function _convertToOtherAttachment(params) {
+export function _convertToOtherAttachment(params: { qiniuUrl: string | undefined }) {
   return new Promise<{ data: string }>((resolve, reject) => {
     if (params.qiniuUrl && params.qiniuUrl.indexOf(md.global.FileStoreConfig.pictureHost) > -1) {
       resolve({

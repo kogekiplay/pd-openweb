@@ -186,7 +186,7 @@ const Drag = props => {
   });
   drag(drop(ref));
 
-  const onMoveGroup = (dragData, targetData, pushGroup) => {
+  const onMoveGroup = (dragData, targetData, pushGroup: boolean) => {
     const sheetList = [1, 3].includes(currentPcNaviStyle)
       ? props.appSectionDetail.map(data => {
           return {

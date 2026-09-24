@@ -92,7 +92,7 @@ function RecordLoggingSettingDialog({ visible = false, value = DEFAULT_LOGGING_V
 
   const logging = normalizeRecordLoggingSetting(value);
 
-  const handleRangeChange = nextRange => {
+  const handleRangeChange = (nextRange: number) => {
     onChange({
       ...logging,
       Range: nextRange,

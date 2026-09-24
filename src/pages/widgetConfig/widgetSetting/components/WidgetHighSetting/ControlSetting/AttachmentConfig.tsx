@@ -211,7 +211,7 @@ const MASK_POSITION = [
   { text: _l('右下'), value: '9' },
 ];
 
-const getMarkStyle = value => {
+const getMarkStyle = (value: string) => {
   if (value === '2') {
     return {
       rotate: 0,

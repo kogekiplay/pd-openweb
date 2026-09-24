@@ -155,7 +155,7 @@ function SearchFolder(props) {
     [handleSearch],
   );
 
-  const handleSearchChange = value => {
+  const handleSearchChange = (value: string) => {
     const trimmedValue = value.trim();
     const requestId = requestIdRef.current + 1;
 
@@ -1330,7 +1330,7 @@ class TaskNavigation extends Component<any, TaskNavigationState> {
   /**
    * 获取各个网络数据
    */
-  getNetworkData(projectId: string, folders, callback?) {
+  getNetworkData(projectId: string, folders, callback?: (() => void) | undefined) {
     const { filterUserId } = this.props.taskConfig;
 
     ajaxRequest
@@ -1469,7 +1469,7 @@ class TaskNavigation extends Component<any, TaskNavigationState> {
   /**
    * 生成项目文件夹
    */
-  builFileFolder(data, projectFolderTpl, projectId: string) {
+  builFileFolder(data, projectFolderTpl: string, projectId: string) {
     const { folderId } = this.props.taskConfig;
 
     // 存在
@@ -1492,7 +1492,7 @@ class TaskNavigation extends Component<any, TaskNavigationState> {
   /**
    * 生成项目
    */
-  buildFolders(data, singleFolderTpl, projectId: string) {
+  buildFolders(data, singleFolderTpl: string, projectId: string) {
     if (data.folderList && data.folderList.length > 0) {
       const { folderId } = this.props.taskConfig;
       const allFolders = doT.template(singleFolderTpl)(data.folderList); // 数据
@@ -1517,7 +1517,7 @@ class TaskNavigation extends Component<any, TaskNavigationState> {
   /**
    * 生成项目列表数据模板
    */
-  buildFolderListModule(data, $el) {
+  buildFolderListModule(data, $el: JQuery<HTMLElement>) {
     const { folderId } = this.props.taskConfig;
     const singleFolderTpl = singleFolder.replace('#include.singleFolderComm', singleFolderComm);
     const source = { folderList: data };
@@ -1966,7 +1966,7 @@ class TaskNavigation extends Component<any, TaskNavigationState> {
   /**
    * 获取指定文件下下的所有项目
    */
-  getMainFolderListInFile(projectID, fileID) {
+  getMainFolderListInFile(projectID: string, fileID) {
     const { filterUserId } = this.props.taskConfig;
 
     ajaxRequest
@@ -1991,7 +1991,7 @@ class TaskNavigation extends Component<any, TaskNavigationState> {
   /**
    * 获取归档项目list
    */
-  getArchiveFolderList(projectID) {
+  getArchiveFolderList(projectID: string) {
     const { filterUserId } = this.props.taskConfig;
 
     ajaxRequest
@@ -2014,7 +2014,7 @@ class TaskNavigation extends Component<any, TaskNavigationState> {
   /**
    * 获取隐藏项目list
    */
-  getHiddenFolderList(projectID) {
+  getHiddenFolderList(projectID: string) {
     const { filterUserId } = this.props.taskConfig;
 
     ajaxRequest
@@ -2037,7 +2037,7 @@ class TaskNavigation extends Component<any, TaskNavigationState> {
   /**
    * 隐藏项目
    */
-  updateFolderDisplay(projectId: string, folderId, isHidden) {
+  updateFolderDisplay(projectId: string, folderId, isHidden: boolean) {
     const that = this;
 
     ajaxRequest

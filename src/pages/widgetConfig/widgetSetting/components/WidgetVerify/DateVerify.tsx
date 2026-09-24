@@ -77,7 +77,7 @@ export default function DateVerify({ data, onChange }) {
     endTime: originEnd,
   });
 
-  const handleWeekChange = key => {
+  const handleWeekChange = (key: string) => {
     const weeks = allowweek.split('');
 
     if (isEmpty(weeks)) {

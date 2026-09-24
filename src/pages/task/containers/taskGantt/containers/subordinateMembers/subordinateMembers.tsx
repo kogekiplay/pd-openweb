@@ -98,7 +98,7 @@ class SubordinateMembers extends Component<any, SubordinateMembersState> {
    * @param  {string} accountId
    * @param  {boolean} hidden
    */
-  updateUserStatus(accountId: string, hidden) {
+  updateUserStatus(accountId: string, hidden: boolean) {
     ajaxRequest.updateUserStatusOfSetting({
       projectId: config.projectId,
       accountId,
