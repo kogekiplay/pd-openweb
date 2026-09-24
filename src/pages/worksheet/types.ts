@@ -18,20 +18,20 @@ import type { ControlAdvancedSetting, FormControl } from 'src/utils/controlTypes
  * 值统一是字符串（后端就是这么存的），所以直接复用 ControlAdvancedSetting 的口径。
  */
 export interface WorksheetView {
-  viewId?: string;
-  name?: string;
-  worksheetId?: string;
+  viewId?: string | undefined;
+  name?: string | undefined;
+  worksheetId?: string | undefined;
   /** 0 表格、1 看板、2 层级、3 甘特、4 日历、5 详情、6 地图、7 资源… */
-  viewType?: number;
-  advancedSetting?: ControlAdvancedSetting;
+  viewType?: number | undefined;
+  advancedSetting?: ControlAdvancedSetting | undefined;
   /** 看板/层级等按某个字段分组时，指向那个字段的 controlId */
-  viewControl?: string;
+  viewControl?: string | undefined;
   /** 层级视图的多级分组字段 */
-  viewControls?: { controlId?: string }[];
+  viewControls?: { controlId?: string }[] | undefined;
   /** 视图自身的筛选条件 */
-  filters?: unknown[];
+  filters?: unknown[] | undefined;
   /** 快速筛选配置 */
-  fastFilters?: unknown[];
+  fastFilters?: unknown[] | undefined;
   /** 导航分组配置（接口模型 EasyFilterSortEntity，已核对） */
   navGroup?: HapApi.MD.Entity.Worksheet.EasyFilterSortEntity[] | undefined;
   /** 卡片 / 看板等视图上【显示】的字段 id（甘特图读它决定显示哪些列） */
@@ -39,12 +39,12 @@ export interface WorksheetView {
   /** 表格视图的显示列（字段 id），列宽 / 列顺序按它排 */
   showControls?: string[] | undefined;
   /** 表格行高档位 */
-  rowHeight?: number;
+  rowHeight?: number | undefined;
   /**
    * 视图里【隐藏】的字段 id（filterHidedControls 按它过滤）。
    * 原来写成「展示哪些字段」、类型 FormControl[]：接口给的是 string[]，读它的地方也全是按 id 比
    */
-  controls?: string[];
+  controls?: string[] | undefined;
 }
 
 /**
@@ -109,13 +109,19 @@ export interface WorksheetInfo {
  * 当前打开的这张表 / 这个视图的定位信息（redux 的 sheet.base 切片）。
  */
 export interface WorksheetBase {
-  appId?: string;
-  groupId?: string;
-  worksheetId?: string;
-  viewId?: string;
+  appId?: string | undefined;
+  groupId?: string | undefined;
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
   /** 从统计图钻取过来时带的图表 id；有它时视图相关的初始化要跳过 */
-  chartId?: string;
+  chartId?: string | undefined;
   /** 关联记录等场景下限制最多取多少条 */
-  maxCount?: number;
-  forcePageSize?: number;
+  maxCount?: number | undefined;
+  forcePageSize?: number | undefined;
+  /** 'single'：单视图模式（嵌在自定义页面 / 移动端单视图里，见 worksheet/common/SingleView） */
+  type?: string | undefined;
+  /** 单视图模式下所属应用的 id（单视图里 appId 可能取不到） */
+  singleAppId?: string | undefined;
+  /** 统计图「以表格查看」时按表格视图渲染 */
+  showAsSheetView?: boolean | undefined;
 }

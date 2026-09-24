@@ -17,7 +17,7 @@ import * as resourceView from './resourceview';
 import * as sheetview from './sheetview';
 import * as worksheet from './worksheet';
 
-function base(state: WorksheetBase = {}, action: ReduxAction) {
+function base(state: WorksheetBase = {}, action: ReduxAction): WorksheetBase {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_BASE':
       return { ...state, ...action.base };

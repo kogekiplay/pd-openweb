@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import type { WorksheetInfo, WorksheetView } from 'src/pages/worksheet/types';
 import type { ReduxAction } from 'src/redux/types';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, WorksheetCustomBtn } from 'src/utils/controlTypes';
 
 export function loading(state = true, action: ReduxAction<{ loading: boolean }>) {
   switch (action.type) {
@@ -72,7 +72,11 @@ export function worksheetInfo(state: WorksheetInfo = {}, action: ReduxAction): W
   }
 }
 
-export function sheetSwitchPermit(state = [], action: ReduxAction) {
+// 值是 GetWorksheetInfo 的 switches（接口类型已核对）
+export function sheetSwitchPermit(
+  state: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] = [],
+  action: ReduxAction,
+): HapApi.MD.Entity.Worksheet.SwitchPermitModel[] {
   switch (action.type) {
     case 'WORKSHEET_PERMISSION_INIT':
       return action.value;
@@ -117,7 +121,7 @@ export function views(state: WorksheetView[] = [], action: ReduxAction): Workshe
   }
 }
 
-export function buttons(state = [], action: ReduxAction) {
+export function buttons(state: WorksheetCustomBtn[] = [], action: ReduxAction): WorksheetCustomBtn[] {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_BUTTONS':
       return action.buttons;
@@ -139,7 +143,7 @@ export function printList(state = [], action: ReduxAction<{ printList: HapApi.MD
   }
 }
 
-export function sheetButtons(state = [], action: ReduxAction) {
+export function sheetButtons(state: WorksheetCustomBtn[] = [], action: ReduxAction): WorksheetCustomBtn[] {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_SHEETBUTTONS':
       return action.buttons;

@@ -437,7 +437,13 @@ export function loadCustomButtons(
     viewId,
     rowId,
     worksheetId,
-  }: { appId?: string; viewId?: string; rowId?: string; worksheetId?: string; [key: string]: any },
+  }: {
+    appId?: string | undefined;
+    viewId?: string | undefined;
+    rowId?: string | undefined;
+    worksheetId?: string | undefined;
+    [key: string]: any;
+  },
   cb = () => {},
 ) {
   return dispatch => {

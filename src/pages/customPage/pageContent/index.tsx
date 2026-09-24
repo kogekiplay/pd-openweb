@@ -364,7 +364,6 @@ export default connect(
     appName: appPkg.name,
     sheetList: data,
     appPkg,
-    activeSheetId: base.workSheetId,
     groupId: base.groupId,
   }),
   dispatch =>

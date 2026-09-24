@@ -24,22 +24,22 @@ export default {
    **/
   createApp: function (
     args?: {
-      projectId?: string;
-      name?: string;
-      icon?: string;
-      iconColor?: string;
-      navColor?: string;
-      lightColor?: string;
-      groupId?: string;
-      groupType?: unknown;
-      urlTemplate?: string;
-      configuratiuon?: Record<string, unknown>;
-      createType?: unknown;
-      pcDisplay?: boolean;
-      webMobileDisplay?: boolean;
-      appDisplay?: boolean;
-      dbInstanceId?: string;
-      shortDesc?: string;
+      projectId?: string | undefined;
+      name?: string | undefined;
+      icon?: string | undefined;
+      iconColor?: string | undefined;
+      navColor?: string | undefined;
+      lightColor?: string | undefined;
+      groupId?: string | undefined;
+      groupType?: unknown | undefined;
+      urlTemplate?: string | undefined;
+      configuratiuon?: Record<string, unknown> | undefined;
+      createType?: unknown | undefined;
+      pcDisplay?: boolean | undefined;
+      webMobileDisplay?: boolean | undefined;
+      appDisplay?: boolean | undefined;
+      dbInstanceId?: string | undefined;
+      shortDesc?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -58,10 +58,10 @@ export default {
    **/
   deleteApp: function (
     args?: {
-      appId?: string;
-      projectId?: string;
-      isHomePage?: boolean;
-      noCache?: boolean;
+      appId?: string | undefined;
+      projectId?: string | undefined;
+      isHomePage?: boolean | undefined;
+      noCache?: boolean | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -81,11 +81,11 @@ export default {
    **/
   getAppRecoveryRecordList: function (
     args?: {
-      pageIndex?: number;
-      pageSize?: number;
-      projectId?: string;
-      isHomePage?: boolean;
-      keyword?: string;
+      pageIndex?: number | undefined;
+      pageSize?: number | undefined;
+      projectId?: string | undefined;
+      isHomePage?: boolean | undefined;
+      keyword?: string | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.GetAppCoveryRecordResponse[]> {
@@ -103,9 +103,9 @@ export default {
    **/
   appRecycleBinDelete: function (
     args?: {
-      id?: string;
-      projectId?: string;
-      isHomePage?: boolean;
+      id?: string | undefined;
+      projectId?: string | undefined;
+      isHomePage?: boolean | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -123,9 +123,9 @@ export default {
    **/
   restoreApp: function (
     args?: {
-      id?: string;
-      projectId?: string;
-      isHomePage?: boolean;
+      id?: string | undefined;
+      projectId?: string | undefined;
+      isHomePage?: boolean | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -142,8 +142,8 @@ export default {
    **/
   editAppTimeZones: function (
     args?: {
-      appId?: string;
-      timeZone?: number;
+      appId?: string | undefined;
+      timeZone?: number | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -160,8 +160,8 @@ export default {
    **/
   editAppOriginalLang: function (
     args?: {
-      appId?: string;
-      originalLang?: string;
+      appId?: string | undefined;
+      originalLang?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -181,11 +181,11 @@ export default {
    **/
   markApp: function (
     args?: {
-      appId?: string;
-      itemId?: string;
-      type?: number;
-      isMark?: boolean;
-      projectId?: string;
+      appId?: string | undefined;
+      itemId?: string | undefined;
+      type?: number | undefined;
+      isMark?: boolean | undefined;
+      projectId?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -225,31 +225,31 @@ export default {
    **/
   editAppInfo: function (
     args?: {
-      appId?: string;
-      projectId?: string;
-      name?: string;
-      description?: string;
-      icon?: string;
-      iconColor?: string;
-      appNaviStyle?: number;
-      pcNavistyle?: number;
-      viewHideNavi?: boolean;
-      navColor?: string;
-      lightColor?: string;
-      gridDisplayMode?: number;
-      appNaviDisplayType?: number;
-      urlTemplate?: string;
-      configuration?: Record<string, unknown>;
-      pcDisplay?: boolean;
-      webMobileDisplay?: boolean;
-      appDisplay?: boolean;
-      selectAppItmeType?: number;
-      pcNaviDisplayType?: number;
-      displayIcon?: string;
-      expandType?: number;
-      hideFirstSection?: boolean;
-      appNavItemIds?: string[];
-      shortDesc?: string;
+      appId?: string | undefined;
+      projectId?: string | undefined;
+      name?: string | undefined;
+      description?: string | undefined;
+      icon?: string | undefined;
+      iconColor?: string | undefined;
+      appNaviStyle?: number | undefined;
+      pcNavistyle?: number | undefined;
+      viewHideNavi?: boolean | undefined;
+      navColor?: string | undefined;
+      lightColor?: string | undefined;
+      gridDisplayMode?: number | undefined;
+      appNaviDisplayType?: number | undefined;
+      urlTemplate?: string | undefined;
+      configuration?: Record<string, unknown> | undefined;
+      pcDisplay?: boolean | undefined;
+      webMobileDisplay?: boolean | undefined;
+      appDisplay?: boolean | undefined;
+      selectAppItmeType?: number | undefined;
+      pcNaviDisplayType?: number | undefined;
+      displayIcon?: string | undefined;
+      expandType?: number | undefined;
+      hideFirstSection?: boolean | undefined;
+      appNavItemIds?: string[] | undefined;
+      shortDesc?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -268,10 +268,10 @@ export default {
    **/
   updateAppSort: function (
     args?: {
-      sortType?: number;
-      appIds?: string[];
-      projectId?: string;
-      groupId?: string;
+      sortType?: number | undefined;
+      appIds?: string[] | undefined;
+      projectId?: string | undefined;
+      groupId?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -291,11 +291,11 @@ export default {
    **/
   copyApp: function (
     args?: {
-      appId?: string;
-      appName?: string;
-      groupId?: string;
-      groupType?: unknown;
-      dbInstanceId?: string;
+      appId?: string | undefined;
+      appName?: string | undefined;
+      groupId?: string | undefined;
+      groupType?: unknown | undefined;
+      dbInstanceId?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -315,11 +315,11 @@ export default {
    **/
   publishSettings: function (
     args?: {
-      appId?: string;
-      projectId?: string;
-      pcDisplay?: boolean;
-      webMobileDisplay?: boolean;
-      appDisplay?: boolean;
+      appId?: string | undefined;
+      projectId?: string | undefined;
+      pcDisplay?: boolean | undefined;
+      webMobileDisplay?: boolean | undefined;
+      appDisplay?: boolean | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -337,9 +337,9 @@ export default {
    **/
   editWhiteList: function (
     args?: {
-      whiteIps?: string[];
-      appId?: string;
-      projectId?: string;
+      whiteIps?: string[] | undefined;
+      appId?: string | undefined;
+      projectId?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -358,10 +358,10 @@ export default {
    **/
   editFix: function (
     args?: {
-      appId?: string;
-      projectId?: string;
-      fixed?: boolean;
-      fixRemark?: string;
+      appId?: string | undefined;
+      projectId?: string | undefined;
+      fixed?: boolean | undefined;
+      fixRemark?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -378,8 +378,8 @@ export default {
    **/
   editSSOAddress: function (
     args?: {
-      appId?: string;
-      ssoAddress?: string;
+      appId?: string | undefined;
+      ssoAddress?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -395,7 +395,7 @@ export default {
    **/
   getAllHomeApp: function (
     args?: {
-      containsLinks?: boolean;
+      containsLinks?: boolean | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Entity.HomeApp.HomeAppModel> {
@@ -413,9 +413,9 @@ export default {
    **/
   getWorksheetsByAppId: function (
     args?: {
-      appId?: string;
-      type?: unknown;
-      getAlias?: boolean;
+      appId?: string | undefined;
+      type?: unknown | undefined;
+      getAlias?: boolean | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Entity.Apk.EntityInfo[]> {
@@ -436,12 +436,12 @@ export default {
    **/
   getAttachementImages: function (
     args?: {
-      workSheetId?: string;
-      viewId?: string;
-      attachementControlId?: string;
-      imageLimitCount?: number;
-      displayMode?: number;
-      filedIds?: string[];
+      workSheetId?: string | undefined;
+      viewId?: string | undefined;
+      attachementControlId?: string | undefined;
+      imageLimitCount?: number | undefined;
+      displayMode?: number | undefined;
+      filedIds?: string[] | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -458,8 +458,8 @@ export default {
    **/
   getPageInfo: function (
     args?: {
-      id?: string;
-      sectionId?: string;
+      id?: string | undefined;
+      sectionId?: string | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.GetPageInfoDto> {
@@ -489,8 +489,8 @@ export default {
    **/
   getItemDetailByAppId: function (
     args?: {
-      appId?: string;
-      itemIds?: string[];
+      appId?: string | undefined;
+      itemIds?: string[] | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -517,16 +517,16 @@ export default {
   **/
   getApp: function (
     args?: {
-      ticket?: string;
-      randStr?: string;
-      captchaType?: unknown;
-      clientId?: string;
-      appId?: string;
-      getSection?: boolean;
-      getManager?: boolean;
-      getProject?: boolean;
-      getLang?: boolean;
-      isMobile?: boolean;
+      ticket?: string | undefined;
+      randStr?: string | undefined;
+      captchaType?: unknown | undefined;
+      clientId?: string | undefined;
+      appId?: string | undefined;
+      getSection?: boolean | undefined;
+      getManager?: boolean | undefined;
+      getProject?: boolean | undefined;
+      getLang?: boolean | undefined;
+      isMobile?: boolean | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.GetDto> {
@@ -553,16 +553,16 @@ export default {
   **/
   getAppLangInfo: function (
     args?: {
-      ticket?: string;
-      randStr?: string;
-      captchaType?: unknown;
-      clientId?: string;
-      appId?: string;
-      getSection?: boolean;
-      getManager?: boolean;
-      getProject?: boolean;
-      getLang?: boolean;
-      isMobile?: boolean;
+      ticket?: string | undefined;
+      randStr?: string | undefined;
+      captchaType?: unknown | undefined;
+      clientId?: string | undefined;
+      appId?: string | undefined;
+      getSection?: boolean | undefined;
+      getManager?: boolean | undefined;
+      getProject?: boolean | undefined;
+      getLang?: boolean | undefined;
+      isMobile?: boolean | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -579,8 +579,8 @@ export default {
    **/
   checkApp: function (
     args?: {
-      appId?: string;
-      tradeId?: string;
+      appId?: string | undefined;
+      tradeId?: string | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Enum.Apk.AppStatusEnum> {
@@ -597,8 +597,8 @@ export default {
    **/
   getAppFirstInfo: function (
     args?: {
-      appId?: string;
-      appSectionId?: string;
+      appId?: string | undefined;
+      appSectionId?: string | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Entity.HomeApp.AppStatusModel> {
@@ -614,7 +614,7 @@ export default {
    **/
   getAppSimpleInfo: function (
     args?: {
-      workSheetId?: string;
+      workSheetId?: string | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Entity.HomeApp.HomeAppSimpleDto> {
@@ -631,8 +631,8 @@ export default {
    **/
   getAppSectionDetail: function (
     args?: {
-      appId?: string;
-      appSectionId?: string;
+      appId?: string | undefined;
+      appSectionId?: string | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Entity.Apk.AppSectionDomainModel> {
@@ -654,13 +654,13 @@ export default {
    **/
   addAppSection: function (
     args?: {
-      appId?: string;
-      name?: string;
-      icon?: string;
-      iconColor?: string;
-      sourceAppSectionId?: string;
-      parentId?: string;
-      rootId?: string;
+      appId?: string | undefined;
+      name?: string | undefined;
+      icon?: string | undefined;
+      iconColor?: string | undefined;
+      sourceAppSectionId?: string | undefined;
+      parentId?: string | undefined;
+      rootId?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -678,9 +678,9 @@ export default {
    **/
   updateAppSectionName: function (
     args?: {
-      appId?: string;
-      name?: string;
-      appSectionId?: string;
+      appId?: string | undefined;
+      name?: string | undefined;
+      appSectionId?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -700,11 +700,11 @@ export default {
    **/
   updateAppSection: function (
     args?: {
-      appId?: string;
-      appSectionId?: string;
-      appSectionName?: string;
-      icon?: string;
-      iconColor?: string;
+      appId?: string | undefined;
+      appSectionId?: string | undefined;
+      appSectionName?: string | undefined;
+      icon?: string | undefined;
+      iconColor?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -722,9 +722,9 @@ export default {
    **/
   deleteAppSection: function (
     args?: {
-      appId?: string;
-      appSectionId?: string;
-      sourceAppSectionId?: string;
+      appId?: string | undefined;
+      appSectionId?: string | undefined;
+      sourceAppSectionId?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -741,8 +741,8 @@ export default {
    **/
   updateAppSectionSort: function (
     args?: {
-      appId?: string;
-      appSectionIds?: string[];
+      appId?: string | undefined;
+      appSectionIds?: string[] | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -760,9 +760,9 @@ export default {
    **/
   updateSectionChildSort: function (
     args?: {
-      appId?: string;
-      appSectionId?: string;
-      workSheetIds?: string[];
+      appId?: string | undefined;
+      appSectionId?: string | undefined;
+      workSheetIds?: string[] | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -780,9 +780,9 @@ export default {
    **/
   setWorksheetStatus: function (
     args?: {
-      appId?: string;
-      worksheetId?: string;
-      status?: number;
+      appId?: string | undefined;
+      worksheetId?: string | undefined;
+      status?: number | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -799,8 +799,8 @@ export default {
    **/
   getApiInfo: function (
     args?: {
-      appId?: string;
-      notOnSettingPage?: boolean;
+      appId?: string | undefined;
+      notOnSettingPage?: boolean | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppApiDto> {
@@ -818,9 +818,9 @@ export default {
    **/
   getMyApp: function (
     args?: {
-      projectId?: string;
-      containsLinks?: boolean;
-      getMarkApp?: boolean;
+      projectId?: string | undefined;
+      containsLinks?: boolean | undefined;
+      getMarkApp?: boolean | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.MyAppDto> {
@@ -840,11 +840,11 @@ export default {
    **/
   getGroup: function (
     args?: {
-      projectId?: string;
-      containsLinks?: boolean;
-      getMarkApp?: boolean;
-      id?: string;
-      groupType?: unknown;
+      projectId?: string | undefined;
+      containsLinks?: boolean | undefined;
+      getMarkApp?: boolean | undefined;
+      id?: string | undefined;
+      groupType?: unknown | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -862,9 +862,9 @@ export default {
    **/
   addToGroup: function (
     args?: {
-      appId?: string;
-      personalGroups?: string[];
-      projectGroups?: string[];
+      appId?: string | undefined;
+      personalGroups?: string[] | undefined;
+      projectGroups?: string[] | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -882,9 +882,9 @@ export default {
    **/
   removeToGroup: function (
     args?: {
-      appId?: string;
-      personalGroups?: string[];
-      projectGroups?: string[];
+      appId?: string | undefined;
+      personalGroups?: string[] | undefined;
+      projectGroups?: string[] | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -903,10 +903,10 @@ export default {
    **/
   markedGroup: function (
     args?: {
-      id?: string;
-      groupType?: unknown;
-      projectId?: string;
-      isMarked?: boolean;
+      id?: string | undefined;
+      groupType?: unknown | undefined;
+      projectId?: string | undefined;
+      isMarked?: boolean | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -925,10 +925,10 @@ export default {
    **/
   addGroup: function (
     args?: {
-      projectId?: string;
-      name?: string;
-      icon?: string;
-      groupType?: unknown;
+      projectId?: string | undefined;
+      name?: string | undefined;
+      icon?: string | undefined;
+      groupType?: unknown | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -949,12 +949,12 @@ export default {
    **/
   editGroup: function (
     args?: {
-      id?: string;
-      groupType?: unknown;
-      projectId?: string;
-      name?: string;
-      icon?: string;
-      displayType?: unknown;
+      id?: string | undefined;
+      groupType?: unknown | undefined;
+      projectId?: string | undefined;
+      name?: string | undefined;
+      icon?: string | undefined;
+      displayType?: unknown | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -972,9 +972,9 @@ export default {
    **/
   deleteGroup: function (
     args?: {
-      id?: string;
-      groupType?: unknown;
-      projectId?: string;
+      id?: string | undefined;
+      groupType?: unknown | undefined;
+      projectId?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -992,9 +992,9 @@ export default {
    **/
   editGroupSort: function (
     args?: {
-      projectId?: string;
-      ids?: string[];
-      sortType?: number;
+      projectId?: string | undefined;
+      ids?: string[] | undefined;
+      sortType?: number | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -1021,18 +1021,18 @@ export default {
    **/
   editHomeSetting: function (
     args?: {
-      projectId?: string;
-      displayType?: unknown;
-      markedAppDisplay?: unknown;
-      todoDisplay?: unknown;
-      exDisplay?: boolean;
-      displayCommonApp?: boolean;
-      isAllAndProject?: boolean;
-      displayMark?: boolean;
-      rowCollect?: boolean;
-      displayApp?: boolean;
-      displayChart?: boolean;
-      sortItems?: unknown[];
+      projectId?: string | undefined;
+      displayType?: unknown | undefined;
+      markedAppDisplay?: unknown | undefined;
+      todoDisplay?: unknown | undefined;
+      exDisplay?: boolean | undefined;
+      displayCommonApp?: boolean | undefined;
+      isAllAndProject?: boolean | undefined;
+      displayMark?: boolean | undefined;
+      rowCollect?: boolean | undefined;
+      displayApp?: boolean | undefined;
+      displayChart?: boolean | undefined;
+      sortItems?: unknown[] | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -1049,8 +1049,8 @@ export default {
    **/
   markApps: function (
     args?: {
-      items?: unknown[];
-      projectId?: string;
+      items?: unknown[] | undefined;
+      projectId?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -1074,15 +1074,15 @@ export default {
    **/
   editPlatformSetting: function (
     args?: {
-      projectId?: string;
-      bulletinBoards?: unknown[];
-      color?: string;
-      slogan?: string;
-      logo?: string;
-      logoSwitch?: boolean;
-      boardSwitch?: boolean;
-      logoHeight?: number;
-      advancedSetting?: Record<string, string>;
+      projectId?: string | undefined;
+      bulletinBoards?: unknown[] | undefined;
+      color?: string | undefined;
+      slogan?: string | undefined;
+      logo?: string | undefined;
+      logoSwitch?: boolean | undefined;
+      boardSwitch?: boolean | undefined;
+      logoHeight?: number | undefined;
+      advancedSetting?: Record<string, string> | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -1099,8 +1099,8 @@ export default {
    **/
   myPlatform: function (
     args?: {
-      projectId?: string;
-      noCache?: boolean;
+      projectId?: string | undefined;
+      noCache?: boolean | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.MyPlatformDto> {
@@ -1117,8 +1117,8 @@ export default {
    **/
   marketApps: function (
     args?: {
-      projectId?: string;
-      noCache?: boolean;
+      projectId?: string | undefined;
+      noCache?: boolean | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -1135,8 +1135,8 @@ export default {
    **/
   recentApps: function (
     args?: {
-      projectId?: string;
-      noCache?: boolean;
+      projectId?: string | undefined;
+      noCache?: boolean | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto[]> {
@@ -1153,8 +1153,8 @@ export default {
    **/
   searchMyApps: function (
     args?: {
-      projectId?: string;
-      keywords?: string;
+      projectId?: string | undefined;
+      keywords?: string | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto[]> {
@@ -1182,8 +1182,8 @@ export default {
    **/
   myPlatformLang: function (
     args?: {
-      projectId?: string;
-      noCache?: boolean;
+      projectId?: string | undefined;
+      noCache?: boolean | undefined;
     },
     options: ApiOptions = {},
   ) {
@@ -1200,8 +1200,8 @@ export default {
    **/
   getAppItems: function (
     args?: {
-      appId?: string;
-      tradeId?: string;
+      appId?: string | undefined;
+      tradeId?: string | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Entity.Apk.EntityInfo[]> {
@@ -1218,8 +1218,8 @@ export default {
    **/
   getHomePlatformSetting: function (
     args?: {
-      projectId?: string;
-      noCache?: boolean;
+      projectId?: string | undefined;
+      noCache?: boolean | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.HomePlatformSettingDto> {
@@ -1236,8 +1236,8 @@ export default {
    **/
   getOwnedApp: function (
     args?: {
-      projectId?: string;
-      noCache?: boolean;
+      projectId?: string | undefined;
+      noCache?: boolean | undefined;
     },
     options: ApiOptions = {},
   ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto[]> {
@@ -1254,7 +1254,7 @@ export default {
   **/
   getMyDbInstances: function (
     args?: {
-      projectId?: string;
+      projectId?: string | undefined;
     },
     options: ApiOptions = {},
   ) {
