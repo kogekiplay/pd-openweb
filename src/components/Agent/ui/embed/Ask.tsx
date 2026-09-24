@@ -231,7 +231,7 @@ export default function Ask({ data, docked = false }) {
   // answers 按题目位置 index 键入（不用 q.id：上游数据可能给出重复 id，否则会多题共用同一份作答而串选）
   // answers: { [index]: { selected: string[](label), custom: string } }
   const [answers, setAnswers] = useState({});
-  const advanceTimer = useRef(null);
+  const advanceTimer = useRef<NodeJS.Timeout | null>(null);
 
   // 卸载时清掉未触发的自动翻页定时器，避免在已卸载组件上 setState（如选中后立即提交、dock 收起）
   useEffect(() => () => clearTimeout(advanceTimer.current), []);

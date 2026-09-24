@@ -29,10 +29,10 @@ const formatMaskedToken = rawToken => {
 };
 
 export default function PersonalAccessToken() {
-  const ajaxRef = useRef(null);
+  const ajaxRef = useRef<ApiResult | null>(null);
   const [tokens, setTokens] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [statusFilter, setStatusFilter] = useState(0);
+  const [statusFilter, setStatusFilter] = useState<number | undefined>(0);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [editingTokenId, setEditingTokenId] = useState(null);
   const [successToken, setSuccessToken] = useState('');

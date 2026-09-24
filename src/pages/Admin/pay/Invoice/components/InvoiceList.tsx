@@ -50,7 +50,7 @@ const InvoiceList = forwardRef((props, ref) => {
   const [exporting, setExporting] = useState(false);
   const [syncingInvoiceId, setSyncingInvoiceId] = useState('');
   const [detailVisibleId, setDetailVisibleId] = useState('');
-  const [reversalReason, setReversalReason] = useState(1);
+  const [reversalReason, setReversalReason] = useState<number | undefined>(1);
   const [reversalOrderId, setReversalOrderId] = useState('');
   const [reversalLoading, setReversalLoading] = useState(false);
 

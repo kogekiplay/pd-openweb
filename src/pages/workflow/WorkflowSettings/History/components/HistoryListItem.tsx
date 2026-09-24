@@ -31,7 +31,7 @@ export default ({
   const { color } = STATUS2COLOR[FLOW_STATUS[isDelete ? -1 : status].status];
   const displayedDate = moment(createDate);
   const [isRetry, setRetry] = useState(false);
-  const [versionDate, setVersion] = useState('');
+  const [versionDate, setVersion] = useState<string | true>('');
   const [currentWorkflowId, setWorkflowId] = useState('');
   const showRetry = _.includes([3, 4], status) && !_.includes([6666, 7777], cause);
   const showSuspend = status === 1;

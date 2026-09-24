@@ -257,7 +257,7 @@ export default function AppBuilder({
     versionId: '',
   });
   // build 费用预估（信用点）：null = 未返回 / 取不到（渲染「计算中…」）；loading 控制提交后到返回前的过渡
-  const [estimateCredits, setEstimateCredits] = useState(null);
+  const [estimateCredits, setEstimateCredits] = useState<number | null>(null);
   const [estimateLoading, setEstimateLoading] = useState(false);
   const [buildPhase, setBuildPhase] = useState('idle'); // 'idle' | 'building' | 'completed' | 'failed'
   const [showRawJson, setShowRawJson] = useState(false);

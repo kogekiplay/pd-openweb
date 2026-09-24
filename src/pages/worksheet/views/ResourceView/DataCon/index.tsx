@@ -50,7 +50,7 @@ const Wrap = styled.div`
 `;
 
 export default function DataCon(props) {
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(true);
   const isMobile = browserIsMobile();
 

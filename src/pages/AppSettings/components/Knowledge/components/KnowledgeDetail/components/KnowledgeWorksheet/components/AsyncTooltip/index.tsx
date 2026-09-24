@@ -18,7 +18,7 @@ const AsyncTooltip = props => {
   const [visible, setVisible] = useState(false);
   const [formattedCondition, setFormattedCondition] = useState('');
 
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   // 组件是否卸载
   const mountedRef = useRef(true);
   // 防止重复请求

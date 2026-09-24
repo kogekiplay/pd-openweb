@@ -29,7 +29,7 @@ export default function FormulaDate(props) {
   const sourceControlId = parseDataSource(data.sourceControlId);
   const dataSource = parseDataSource(data.dataSource);
   const [selectControlVisible, setVisible] = useState(false);
-  const $ref = useRef(null);
+  const $ref = useRef<TagTextarea | null | undefined>(null);
 
   useLayoutEffect(() => {
     if ($ref.current) {

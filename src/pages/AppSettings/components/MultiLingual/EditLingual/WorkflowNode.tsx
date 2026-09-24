@@ -31,7 +31,7 @@ const NodeTagTextarea = props => {
     id: key,
     ...value,
   }));
-  const tagTextareaRef = useRef(null);
+  const tagTextareaRef = useRef<TagTextarea | null | undefined>(null);
 
   const renderTag = (id: string) => {
     const data = formulaMap[id];

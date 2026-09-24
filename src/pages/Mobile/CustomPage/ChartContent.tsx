@@ -107,7 +107,7 @@ function ChartComponent(props) {
     filtersGroup: filtersGroup.length ? filtersGroup : undefined,
   };
 
-  const request = useRef(null);
+  const request = useRef<ApiResult | null>(null);
 
   useDeepCompareEffect(() => {
     handleReportRequest();

@@ -91,7 +91,7 @@ const CustomButtons = props => {
   const isRecordLock = row.sys_lock;
   const recordId = row.rowid;
   const { entityName = _l('记录'), switches } = worksheetInfo;
-  const recordRef = useRef(null);
+  const recordRef = useRef<RecordAction | null>(null);
 
   const getButtonName = button => {
     const translateInfo = getTranslateInfo(appId, null, button.btnId);

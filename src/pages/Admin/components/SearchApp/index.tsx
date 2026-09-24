@@ -16,7 +16,7 @@ export default function SearchApp({ projectId, className, mode, onChange = () =>
     appId: undefined,
   });
   const { appList, pageIndex, keyword, isMoreApp, loadingApp, appId } = state;
-  const appPromiseRef = useRef(null);
+  const appPromiseRef = useRef<ApiResult | null>(null);
   let extra = {};
 
   const getAppList = useCallback(

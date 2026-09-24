@@ -49,7 +49,9 @@ export default function SyncWithDeal(props) {
   });
   const [sourceDataObj, setSourceDataObj] = useSetState({});
   const [destDataObj, setDestDataObj] = useSetState({});
-  const [sourceSheetList, setSourceSheetList] = useState([]);
+  const [sourceSheetList, setSourceSheetList] = useState<{ label: string | undefined; value: string | undefined }[]>(
+    [],
+  );
   const isSourceAppType = source.type === DATABASE_TYPE.APPLICATION_WORKSHEET;
   const isDestAppType = dest.type === DATABASE_TYPE.APPLICATION_WORKSHEET;
 

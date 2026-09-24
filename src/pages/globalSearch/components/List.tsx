@@ -101,7 +101,7 @@ export default function List(props) {
   const [keyCodeStart, setKeyCodeStart] = useState(start);
   const [current, setCurrent] = useState(-1);
   const [countFlag, setCountFlag] = useState(0);
-  const [keyCode, setKeyCode] = useState(null);
+  const [keyCode, setKeyCode] = useState<number | null>(null);
   let count = 0;
 
   useEffect(() => {

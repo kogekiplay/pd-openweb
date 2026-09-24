@@ -37,7 +37,9 @@ export default function ViewLand() {
   const [appId, worksheetId, viewId] = pathname;
   const [loading, setLoading] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
-  const [worksheetInfo, setWorksheetInfo] = useState();
+  const [worksheetInfo, setWorksheetInfo] = useState<
+    { worksheetName: string | undefined; viewName: string; appColor: string | undefined } | undefined
+  >();
   const isMobile = browserIsMobile();
   const Component = isMobile ? MobileSingleView : SingleView;
 

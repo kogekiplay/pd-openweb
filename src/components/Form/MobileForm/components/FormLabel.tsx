@@ -86,7 +86,7 @@ function FormErrorMessage({
   targetRef,
   updateErrorState = () => {},
 }: FormErrorMessageProps) {
-  const [portalStyle, setPortalStyle] = useState(null);
+  const [portalStyle, setPortalStyle] = useState<React.CSSProperties | null>(null);
 
   const updatePortalPosition = useCallback(() => {
     const target = targetRef.current;
@@ -135,7 +135,7 @@ function FormErrorMessage({
         isChildTable: currentErrorItem.isChildTable,
         ignoreErrorMessage: currentErrorItem.ignoreErrorMessage,
       })}
-      style={inBody ? portalStyle : undefined}
+      style={inBody ? (portalStyle ?? undefined) : undefined}
     >
       <span>
         {errorMessage}

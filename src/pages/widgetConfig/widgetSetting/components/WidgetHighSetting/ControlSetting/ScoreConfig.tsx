@@ -48,7 +48,7 @@ const defaultNames = [
 ];
 
 export default function ScoreConfig({ data, onChange }) {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState<boolean | { visible: boolean }>(false);
   const { showvalue, max } = getAdvanceSetting(data);
   const itemnames = getAdvanceSetting(data, 'itemnames') || [];
   const [names, setNames] = useState(itemnames);

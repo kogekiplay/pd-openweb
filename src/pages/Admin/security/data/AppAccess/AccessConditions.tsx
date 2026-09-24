@@ -28,7 +28,7 @@ const SelectWrap = styled(Select)`
 export default function AccessConditions(props) {
   const { actionRecord = {}, updateData = () => {} } = props;
   const [accessType, setAccessType] = useState(0);
-  const [accessPass, setAccessPass] = useState(0);
+  const [accessPass, setAccessPass] = useState<number | undefined>(0);
   const [ipRule, setIpRule] = useState([]);
   const [hearderRule, setHearderRule] = useState([{ index: 0, key: '', value: '' }]);
   const [addressRule, setAdressRule] = useState([]);

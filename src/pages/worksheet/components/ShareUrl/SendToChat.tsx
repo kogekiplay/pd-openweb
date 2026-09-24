@@ -78,7 +78,7 @@ export default function SendToChat(props) {
   const [selectedUser, setSelectedUser] = useState();
   const [listActive, setListActive] = useState(false);
   const [list, setList] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean | undefined>();
   const scrollViewRef = useRef<any>(undefined);
   const descriptionRef = useRef<HTMLInputElement>(null);

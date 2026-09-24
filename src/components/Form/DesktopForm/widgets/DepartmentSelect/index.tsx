@@ -15,10 +15,10 @@ import DepartmentTooltip from './DepartmentTooltip';
 const DepartmentSelect = props => {
   const { disabled, value, projectId, enumDefault, onChange, advancedSetting = {}, formData, formItemId } = props;
 
-  const [showId, setShowId] = useState('');
+  const [showId, setShowId] = useState<string | undefined>('');
 
-  const pickRef = useRef(null);
-  const destoryRef = useRef(null);
+  const pickRef = useRef<HTMLDivElement | null>(null);
+  const destoryRef = useRef<(() => void) | null>(null);
   const currentValueRef = useRef(safeParse(value || '[]'));
 
   const currentValue = useMemo(() => {

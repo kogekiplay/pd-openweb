@@ -28,7 +28,7 @@ function WorksheetRecordLogDiffText(props) {
   const [open, setOpen] = useState(false);
   const [needOpen, setNeedOpen] = useState(false);
   const [dialog, setDialog] = useState(false);
-  const textRef = useRef(null);
+  const textRef = useRef<HTMLDivElement | null>(null);
   const isMobile = browserIsMobile();
   const [diffCount, setDiffCount] = useState(1);
 

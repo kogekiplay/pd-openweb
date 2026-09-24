@@ -36,7 +36,7 @@ export default function OrgSelect(props) {
 
   const [orgList, setOrgList] = useState(md.global.Account.projects || []);
   const [selected, setSelected] = useState(undefined);
-  const [search, setSearch] = useState(undefined);
+  const [search, setSearch] = useState<string | undefined>(undefined);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

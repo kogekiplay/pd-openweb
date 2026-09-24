@@ -99,7 +99,7 @@ function ViewComp(props) {
   const { viewId, appId, worksheetId } = base;
   const view = _.find(views, { viewId }) || (!viewId && views[0]) || {};
   const appNavType = _.get(view, 'advancedSetting.appnavtype');
-  const [appColor, setAppColor] = useState('');
+  const [appColor, setAppColor] = useState<string | undefined>('');
   const navData = (_.get(worksheetInfo, 'template.controls') || []).find(
     o => o.controlId === _.get(view, 'navGroup[0].controlId'),
   );

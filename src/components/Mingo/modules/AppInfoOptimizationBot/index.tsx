@@ -107,7 +107,7 @@ function MingoContent(props, ref) {
     includeAppName: true,
     includeAppIcon: true,
   });
-  const configSnapshotRef = useRef(null);
+  const configSnapshotRef = useRef<{ includeAppName: boolean; includeAppIcon: boolean } | null>(null);
   const configByMessageIdRef = useRef({});
   const messageListRef = useRef(null);
   const cache = useRef({

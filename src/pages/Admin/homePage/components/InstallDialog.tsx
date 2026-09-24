@@ -92,7 +92,7 @@ export default ({ projectId, type, onClose }: { projectId?: string; [key: string
   const { AjaxApiUrl } = _.get(md, ['global', 'Config']);
   const isDesktop = type === 'desktop';
   const $ref = useRef(null);
-  const $copy = useRef(null);
+  const $copy = useRef<Button | null>(null);
   const downloadUrl = pathCompletion('/download');
 
   const handleSelectUser = () => {

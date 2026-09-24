@@ -546,21 +546,20 @@ function MingoContent(props, ref) {
       setHasMore(false);
       setHasScrolledToBottom(false);
       let conversationIdForShare;
-      Promise.all(
-        (isEmpty(props.chatbotConfig) ? [processApi.getChatbotConfig({ chatbotId })] : [{}]).concat([
-          shareId
-            ? chatbotAjax.shareToConversation({ chatbotId, shareConversationId: shareId }).then(res => {
-                conversationIdForShare = res.conversationId;
-                return res.messages;
-              })
-            : chatbotAjax.getMessageList({
-                chatbotId,
-                conversationId: props.conversationId,
-                pageIndex: 1,
-                pageSize: 50,
-              }),
-        ]),
-      ).then(([chatbotConfigData, getMessageListData]) => {
+      Promise.all([
+        isEmpty(props.chatbotConfig) ? processApi.getChatbotConfig({ chatbotId }) : {},
+        shareId
+          ? chatbotAjax.shareToConversation({ chatbotId, shareConversationId: shareId }).then(res => {
+              conversationIdForShare = res.conversationId;
+              return res.messages;
+            })
+          : chatbotAjax.getMessageList({
+              chatbotId,
+              conversationId: props.conversationId,
+              pageIndex: 1,
+              pageSize: 50,
+            }),
+      ]).then(([chatbotConfigData, getMessageListData]) => {
         if (!isEmpty(chatbotConfigData)) {
           setChatbotConfig(chatbotConfigData);
         }

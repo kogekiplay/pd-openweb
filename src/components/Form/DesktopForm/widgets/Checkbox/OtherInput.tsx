@@ -4,7 +4,7 @@ import { Textarea } from 'ming-ui';
 import { getCheckAndOther } from '../../../core/utils';
 
 export default function OtherInput(props) {
-  const textRef = useRef(null);
+  const textRef = useRef<HTMLTextAreaElement | null>(null);
   const isOnCompositionRef = useRef(false);
 
   const {

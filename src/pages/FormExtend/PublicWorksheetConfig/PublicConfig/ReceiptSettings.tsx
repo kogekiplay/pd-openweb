@@ -96,7 +96,7 @@ const ReceiptFilterType = [36, 33, 42, 43, 47, 45, 34, 22, 52];
 function ReceiptSettings(props) {
   const { titleFolded, data, controls, setState, handleUpdateExpandDatas } = props;
   const afterSubmit = safeParse(data);
-  const [search, setSearch] = useState(undefined);
+  const [search, setSearch] = useState<string | undefined>(undefined);
   const [visible, setVisible] = useState(false);
 
   const handleClick = (control, type = 1) => {

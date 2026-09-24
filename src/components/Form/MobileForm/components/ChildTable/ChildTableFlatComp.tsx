@@ -166,13 +166,13 @@ export default function ChildTableFlatComp(props) {
   const [maxShowLength, setMaxShowLength] = useState(defaultMaxLength);
   const [expandRowIndex, setExpandRowIndex] = useState<number | undefined>();
   const [random, setRandom] = useState(Date.now());
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const customWidgetRefs = useRef([]);
   const rowRefs = useRef([]);
 
   const showRows = isEdit || showExpand ? rows : rows.slice(0, maxShowLength);
 
-  const [expandIds, setExpandIds] = useState([]);
+  const [expandIds, setExpandIds] = useState<(string | undefined)[]>([]);
 
   const isShowAll = maxShowLength === rows.length;
 

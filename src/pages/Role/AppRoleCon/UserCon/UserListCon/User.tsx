@@ -218,7 +218,7 @@ const builtinPlacements = {
 };
 
 function User(props) {
-  const ajaxRef = useRef(null);
+  const ajaxRef = useRef<ApiResult | null>(null);
   const {
     appRole = {},
     SetAppRolePagingModel,

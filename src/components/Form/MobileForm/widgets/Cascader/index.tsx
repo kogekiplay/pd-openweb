@@ -58,7 +58,7 @@ const Cascader = props => {
   const limitLayer = Number(limitlayer);
   const minLayer = Number(minlayer);
   const isMultiple = enumDefault === 2;
-  const ajax = useRef(null);
+  const ajax = useRef<ApiResult | null>(null);
   const cacheData = useRef([]);
   const sourcePath = useRef({});
   // 原来初值是 {}，读 keywords 时和 null 一样落到空串
@@ -213,7 +213,7 @@ const Cascader = props => {
             setLayersName((_.find(result.worksheet.views, item => item.viewId === viewId) || {}).layersName || []);
           }
 
-          ajax.current = '';
+          ajax.current = null;
           cacheData.current = keywords ? result.data : _.uniqBy(cacheData.current.concat(result.data), 'rowid');
           deepDataUpdate(_.cloneDeep(options), data, rowId);
           if (isFirstLoad) {

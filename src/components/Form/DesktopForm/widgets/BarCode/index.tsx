@@ -57,7 +57,7 @@ export default function BarCodeWidgets(props) {
   } = props;
 
   const [value, setValue] = useState('');
-  const barIdRef = useRef(null);
+  const barIdRef = useRef<NodeJS.Timeout | null>(null);
   const imgCodeRef = useRef(null);
 
   const updateValue = data => {

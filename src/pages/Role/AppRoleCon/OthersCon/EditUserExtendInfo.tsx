@@ -70,9 +70,9 @@ export default function EditUserExtendInfo(props) {
   const { step, appId, onChangeStep, value, onChangeData, result, appProjectId } = props;
 
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [appList, setAppList] = useState([]);
+  const [appList, setAppList] = useState<HapApi.MD.Entity.Apk.AppForManagerModel[]>([]);
   const [loading, setLoading] = useState(false);
-  const [worksheetList, setWorksheetList] = useState([]);
+  const [worksheetList, setWorksheetList] = useState<HapApi.MD.Entity.Apk.EntityInfo[]>([]);
   const [controls, setControls] = useState([]);
   const [appName, setAppName] = useState('');
   const [data, setData] = useState({

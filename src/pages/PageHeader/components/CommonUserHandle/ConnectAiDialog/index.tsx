@@ -50,7 +50,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
   const [selectedSkillModules, setSelectedSkillModules] = useState(SKILL_MODULES.map(item => item.key));
   const [cliEnabled, setCliEnabled] = useState(true);
   const ajaxRef = useRef({});
-  const refreshFromCreateRef = useRef(null);
+  const refreshFromCreateRef = useRef<(() => void) | null>(null);
 
   const request = useCallback((key: string, promise) => {
     ajaxRef.current[key]?.abort?.();

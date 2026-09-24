@@ -243,7 +243,7 @@ Input.propTypes = {
 
 function PasteEdit(props) {
   const { dialogHeight, importDataActiveType, controls, onParsePaste } = props;
-  const [splitCharType, setSplitCharType] = useState(1);
+  const [splitCharType, setSplitCharType] = useState<number | undefined>(1);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const cacheStoreStack = useRef([[]]);

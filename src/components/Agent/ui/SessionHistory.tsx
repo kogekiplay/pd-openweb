@@ -116,7 +116,7 @@ export default function SessionHistory({
   const pageRef = useRef(1);
   const seqRef = useRef(0); // 每次关键词检索自增，用于丢弃过期的“加载更多”响应
   const loadingMoreRef = useRef(false); // 同步防抖，避免触底事件重复触发
-  const renameInputRef = useRef(null); // 重命名弹层里 Input 的非受控引用
+  const renameInputRef = useRef<HTMLInputElement | null>(null); // 重命名弹层里 Input 的非受控引用
   const searchInputRef = useRef<HTMLInputElement | null>(null); // 搜索框引用：弹窗打开即聚焦
 
   // 弹窗打开即聚焦搜索框（Dialog 挂载/动画后再 focus 更稳）

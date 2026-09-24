@@ -127,7 +127,7 @@ function Func(props, ref) {
   }
 
   const codeEditor = useRef<any>(undefined);
-  const loadingTimerRef = useRef(null);
+  const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const editorFunctions = key => {
     return (...args) => {

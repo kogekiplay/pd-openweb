@@ -44,7 +44,7 @@ const DATE_PICK_OPTIONS = [
 export default function DateFilter(props) {
   const { options = DATE_PICK_OPTIONS, value = DATE_PICK_OPTIONS[0], onChange } = props;
 
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
 
   return (

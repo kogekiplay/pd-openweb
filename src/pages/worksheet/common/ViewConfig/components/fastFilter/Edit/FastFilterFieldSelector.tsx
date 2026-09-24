@@ -19,7 +19,7 @@ export default function FastFilterFieldSelector(props) {
     setActiveFastFilterId,
     updateView,
   }: { worksheetControls: FormControl[]; [key: string]: any } = props;
-  const boxConT = useRef(null);
+  const boxConT = useRef<HTMLDivElement | null>(null);
 
   return (
     <React.Fragment>

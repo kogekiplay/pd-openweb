@@ -40,7 +40,7 @@ const RadioWidget = props => {
     formItemId,
   } = props;
   const [activeIndex, setActiveIndex] = useState(0);
-  const radioRef = useRef(null);
+  const radioRef = useRef<HTMLDivElement | null>(null);
 
   const { direction = '2', width = '200', readonlyshowall } = advancedSetting || {};
   const { checkIds } = getCheckAndOther(value);
@@ -69,7 +69,7 @@ const RadioWidget = props => {
           break;
         case 'Enter':
           setActiveIndex(prevIndex => {
-            const optionElements = radioRef.current.querySelectorAll('.ming.Radio');
+            const optionElements = radioRef.current?.querySelectorAll<HTMLElement>('.ming.Radio') ?? [];
             const options = [...optionElements];
             const activeElement = options[prevIndex - 1];
 

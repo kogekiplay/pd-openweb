@@ -3,7 +3,7 @@ import { Textarea } from 'ming-ui';
 
 export default function EditText({ content, onBlur, style }) {
   const [value, setValue] = useState(content);
-  const $ref = useRef(null);
+  const $ref = useRef<HTMLTextAreaElement | null>(null);
   useEffect(() => {
     setTimeout(() => {
       const $dom = $ref.current;

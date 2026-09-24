@@ -108,7 +108,7 @@ const MentionsInput = props => {
   const mentionAllSyntax =
     sourceType === SOURCE_TYPE.POST ? _.template('<%= type %>:<%= id %>') : _.template('[all]<%= id %>[/all]');
   const rect = input.getBoundingClientRect();
-  const timerId = useRef(null);
+  const timerId = useRef<NodeJS.Timeout | null>(null);
   const debouncedSearch = useRef(null);
   const mentionState = useRef({
     isAt: false,

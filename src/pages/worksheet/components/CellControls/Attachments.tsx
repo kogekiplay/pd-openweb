@@ -608,7 +608,7 @@ function Attachment(props) {
     : previewUrl.replace(/imageView2\/\d\/w\/\d+\/h\/\d+(\/q\/\d+)?/, 'imageView2/2/h/' + fileHeight);
 
   const isSingleFile = attachments.length === 1;
-  const clickTimeoutRef = useRef(null);
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleClick = e => {
     e.stopPropagation();

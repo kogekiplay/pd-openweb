@@ -77,7 +77,7 @@ const Embed = props => {
     flag,
   } = props;
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const embedWatch = useRef(null);
+  const embedWatch = useRef<NodeJS.Timeout | null>(null);
   const viewControlsRef = useRef([]);
   const currentTimeRef = useRef(new Date());
   const latestResultData = useRef('');

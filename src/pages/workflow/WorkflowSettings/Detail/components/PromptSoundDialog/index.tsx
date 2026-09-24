@@ -21,7 +21,7 @@ const MessageBox = styled.div`
 export default ({ companyId, processId, relationId, selectNodeId, promptSound, formulaMap, updateSource }) => {
   const [visible, setVisible] = useState(false);
   const [cacheData, setCacheData] = useState({});
-  const [func, setFunc] = useState(null);
+  const [func, setFunc] = useState<{ cb: () => void } | null>(null);
 
   useEffect(() => {
     if (func && func.cb) {

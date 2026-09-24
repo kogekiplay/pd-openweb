@@ -222,7 +222,7 @@ const NullContent = ({ codeType }) => {
 export default ({ processId, nodeId, codeType = 1, onSave = () => {}, onClose = () => {} }) => {
   const [keywords, setKeywords] = useState('');
   const [list, setList] = useState([]);
-  const [controller, setController] = useState(null);
+  const [controller, setController] = useState<AbortController | null>(null);
   const [clearParams, setClearParams] = useState(true);
   const [error, setError] = useState();
 

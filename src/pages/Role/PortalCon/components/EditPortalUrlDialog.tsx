@@ -53,7 +53,7 @@ const Wrap = styled.div`
 // 不能和HAP地址冲突（点击确定按钮，或失焦时校验，提示：此名称和系统地址冲突，请重新输入
 export default function EditPortalUrlDialog(props) {
   const { onOk, onCancel, urlPre, appId } = props;
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [{ urlSuffix, loading, errStr }, setState] = useSetState({
     urlSuffix: props.urlSuffix,
     loading: false,

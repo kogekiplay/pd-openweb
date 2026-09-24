@@ -52,7 +52,7 @@ const BarCodeWidget = props => {
     className,
   } = props;
   const parseWidth = parseFloat(width);
-  const timer = useRef(null);
+  const timer = useRef<NodeJS.Timeout | null>(null);
   const imgCodeRef = useRef(null);
   const [value, setValue] = useState('');
 

@@ -25,8 +25,8 @@ const OCR = props => {
   } = props;
   const [isUploading, setIsUploading] = useState(false);
   const [width, setWidth] = useState(0);
-  const fileRef = useRef(null);
-  const postListRef = useRef(null);
+  const fileRef = useRef<QiniuUpload | null>(null);
+  const postListRef = useRef<ApiResult | null>(null);
   const cacheFileRef = useRef([]);
 
   useEffect(() => {

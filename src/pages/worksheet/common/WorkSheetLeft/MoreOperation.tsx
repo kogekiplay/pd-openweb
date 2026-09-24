@@ -36,9 +36,9 @@ const Operation = styled(Menu)`
 const CopySheetConfirmDescription = props => {
   const { workSheetId, type, workSheetName } = props;
   const [loading, setLoading] = useState(true);
-  const [controls, setControls] = useState([]);
+  const [controls, setControls] = useState<FormControl[]>([]);
   const [isCopyRelevance, setIsCopyRelevance] = useState(false);
-  const [selectIds, setSelectIds] = useState([]);
+  const [selectIds, setSelectIds] = useState<(string | undefined)[]>([]);
   const [name, setName] = useState(workSheetName);
 
   useEffect(() => {

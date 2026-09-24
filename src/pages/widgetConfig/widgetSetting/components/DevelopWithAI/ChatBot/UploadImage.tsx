@@ -69,7 +69,7 @@ function UploadImage(
   { dropElementId, dropElement, onUploaded = () => {}, onBegin = () => {}, onError = () => {} },
   ref,
 ) {
-  const uploaderRef = useRef(null);
+  const uploaderRef = useRef<QiniuUpload | null>(null);
   const [status, setStatus] = useState('init'); // init, uploading, uploaded
   const [file, setFile] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState('');

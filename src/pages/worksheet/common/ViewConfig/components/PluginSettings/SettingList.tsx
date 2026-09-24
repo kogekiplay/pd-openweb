@@ -15,8 +15,8 @@ const Item = data => {
   const { item, onEdit, openEdit, onDelete, list, key, DragHandle } = data;
   const { type, controlName, fieldId, num, sourceControlType } = item;
 
-  const $ref = useRef(null);
-  const $refFieldId = useRef(null);
+  const $ref = useRef<HTMLInputElement | null>(null);
+  const $refFieldId = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     setTimeout(() => {
       const $dom = $ref.current;

@@ -176,7 +176,7 @@ const Signature = props => {
 
   const $ref = useRef(null);
   const signatureRef = useRef<HTMLCanvasElement | null>(null);
-  const signaturePadRef = useRef(null);
+  const signaturePadRef = useRef<SignaturePad | null>(null);
   const valueRef = useRef(value);
 
   useEffect(() => {

@@ -88,7 +88,7 @@ const widgetEventManager = new WidgetEventManager();
  * @returns {Object} - 发布事件的函数
  */
 export const useWidgetEvent = (controlId: string, callback) => {
-  const unsubscribeRef = useRef(null);
+  const unsubscribeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if (!controlId) return undefined;

@@ -81,7 +81,9 @@ const GroupFilterList = props => {
   // 【类型是 ApiResult | null】接口层回的是 `Promise<any> & { abort }`（见 types/global.d.ts），
   // 只写 { abort?: () => void } 收不住那个 Promise 交集。
   const ajaxRequestRef = useRef<ApiResult | null>(null);
-  const apiRequestRef = useRef<ApiResult | null>(null);
+  // 在途请求：多数是接口返回（带 abort），但部门导航没有可选部门时 makeApiRequest 直接给 Promise.resolve([])，
+  // 不带 abort —— 所以类型里 abort 是可选的，调用处也是 abort?.()
+  const apiRequestRef = useRef<(Promise<unknown> & { abort?: () => void }) | null>(null);
   const debouncedSetKeywords = useRef(_.debounce(value => setKeywords(value), 300));
 
   useEffect(() => {

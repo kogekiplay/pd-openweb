@@ -331,7 +331,7 @@ function SortableItem({
 }
 
 function SortableRules({ rules, data, deleteRule, updateRule, addRule, onSortEnd, fromExcel, ...rest }) {
-  const $addRule = useRef(null);
+  const $addRule = useRef<HTMLLIElement | null>(null);
 
   const getTypes = () => {
     return rules.some(item => item.type === 4)

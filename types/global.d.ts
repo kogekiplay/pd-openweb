@@ -304,14 +304,16 @@ declare var md: {
  * 调用点 `.then(res => ...)` 的 res 就成了隐式 any —— 光 res/result/data/response
  * 四个名字就 3745 条 TS7006。交集写法能保住 .then 的上下文类型。
  */
-declare type ApiResult = Promise<any> & { [key: string]: any };
+// abort：异步路径（绝大多数调用）在返回的 promise 上挂了 promise.abort = () => controller.abort()
+// （src/common/global.ts 的 window.mdyAPI）。显式写出来，调用点 req.abort() 才不算「从索引签名取属性」。
+declare type ApiResult = Promise<any> & { abort: () => void; [key: string]: any };
 
 /**
  * 带数据类型的接口返回值：resolve 的是 mdyAPI 解开 { state, data, exception } 信封之后的 data。
  * T 由 tools/gen-api-types.ts 从后端 swagger 快照生成（types/hap-api.d.ts 的 HapApi 命名空间）。
  * 交集里那个索引签名和 ApiResult 一样，给 abort() 这类挂在返回值上的东西留口子。
  */
-declare type ApiResultOf<T> = Promise<T> & { [key: string]: any };
+declare type ApiResultOf<T> = Promise<T> & { abort: () => void; [key: string]: any };
 
 // 接口 resolve 出来的值的类型 —— 就是 ApiResult 解包之后的那个（目前是 any，见上面那段说明）。
 // 用在「把接口返回值原样转手 resolve 出去」的地方，比如 new Promise<{ data: ApiPayload }>(...)。

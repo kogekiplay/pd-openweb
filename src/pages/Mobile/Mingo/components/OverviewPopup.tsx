@@ -443,7 +443,7 @@ export default function OverviewPopup({
   const stickToBottomRef = useRef(true);
   const lastScrollTopRef = useRef(0);
   const userScrollIntentRef = useRef(false);
-  const userScrollTimerRef = useRef(null);
+  const userScrollTimerRef = useRef<NodeJS.Timeout | null>(null);
   const generatedItems = getGeneratedItems(filesRef, content);
 
   useEffect(() => {

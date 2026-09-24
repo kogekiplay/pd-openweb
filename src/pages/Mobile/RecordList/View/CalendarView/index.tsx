@@ -76,7 +76,7 @@ const Calendar = memo(
     const weeklyCalendarRef = useRef(null);
     const dailyScheduleRef = useRef(null);
     const lastClickTimeRef = useRef(0);
-    const clickTimerRef = useRef(null);
+    const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
     const [
       {
         calendarTitle,

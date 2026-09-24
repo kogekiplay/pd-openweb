@@ -71,7 +71,8 @@ export default class RowDetail extends React.Component<any, RowDetailState> {
     onSave({ ...data, ...row, empty: false }, updateControlIds);
   };
 
-  handleSave = (nextContinue, isSwitchSave, ignoreAlert) => {
+  // 三个开关都可省略（调用方有 handleSave()、handleSave(true)、handleSave(false, true) 几种写法），省略即 false
+  handleSave = (nextContinue?: boolean, isSwitchSave?: boolean, ignoreAlert?: boolean) => {
     if (!this.customwidget.current) {
       return undefined;
     }

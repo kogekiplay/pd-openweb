@@ -77,7 +77,7 @@ export function useDailyBuildSuggestions(projectId: string, enabled = true) {
   const [nextSuggestion, setNextSuggestion] = useState('');
   const [randomSamples, setRandomSamples] = useState([]);
   const [status, setStatus] = useState('idle'); // idle | loading | done | error
-  const abortRef = useRef(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   // 从列表派生展示项：按 projectId 游标顺延。nextSuggestion 取游标当前条（试一试单条）；
   // randomSamples 返回「从游标处旋转」后的全量列表——展示全部的消费方（新建应用弹窗）顺序无感，

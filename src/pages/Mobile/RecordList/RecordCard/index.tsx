@@ -50,6 +50,8 @@ const coverTypes = {
 };
 
 export default class RecordCard extends Component<any, any> {
+  // 卡片外层 Con（styled.div）的 DOM 节点；RecordCardIO 靠它量真实卡片高度
+  declare cardWrap: HTMLDivElement | null | undefined;
   constructor(props) {
     super(props);
     const { data, view } = props;

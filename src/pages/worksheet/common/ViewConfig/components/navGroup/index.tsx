@@ -254,8 +254,8 @@ export default function NavGroup(params) {
   let [filterData, setDatas] = useState();
   let [usenav, setUsenav] = useState<string | undefined>(); //空或者0：不使用筛选条件作为默认值 1：使用筛选条件作为默认值 ，老数据后端回兼容，新配置需要前端把这个值设为1
   let [showAddCondition, setShowAddCondition] = useState<boolean | undefined>();
-  const [relateSheetInfo, setRelateSheetInfo] = useState([]);
-  const [relateControls, setRelateControls] = useState([]);
+  const [relateSheetInfo, setRelateSheetInfo] = useState<{ value: string | undefined; text: string | undefined }[]>([]);
+  const [relateControls, setRelateControls] = useState<FormControl[]>([]);
   // navwidth 输入过程中存的是输入框里的原文（字符串），失焦 / 回车时才在 updateWidth 里夹到上下限并保存
   const [{ navshow, navfilters, navwidth, appnavtype }, setState] = useSetState<{
     navshow: number | string;

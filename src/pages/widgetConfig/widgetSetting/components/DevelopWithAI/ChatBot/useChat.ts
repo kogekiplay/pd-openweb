@@ -46,10 +46,10 @@ function useChatBot({ sessionId, params = [], defaultMessages = [], currentCode,
   const [code, setCode] = useState(currentCode);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [activeMessageId, setActiveMessageId] = useState(null);
+  const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
   const [isRequesting, setIsRequesting] = useState(false);
   // 使用 ref 存储当前的 AbortController
-  const abortControllerRef = useRef(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const streamReaderRef = useRef(null);
 
   useEffect(() => {

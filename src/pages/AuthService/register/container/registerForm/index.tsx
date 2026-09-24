@@ -35,7 +35,7 @@ export default function (props) {
 
   const cache = useRef<{ onRegister?: (() => Promise<void>) | undefined }>({});
 
-  const [keys, setKeys] = useState([]);
+  const [keys, setKeys] = useState<string[]>([]);
   const type = isLink ? (loginForAdd ? 'login' : 'invite') : 'register';
 
   const [{ itiType, loadProjectName, projectNameLang }, setState] = useSetState({

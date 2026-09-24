@@ -98,7 +98,7 @@ function SearchFolder(props) {
     id: 0,
     data: {},
   });
-  const requestRef = useRef(null);
+  const requestRef = useRef<ApiResult | null>(null);
   const requestIdRef = useRef(0);
 
   const hideSearch = () => {

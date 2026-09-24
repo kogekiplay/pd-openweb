@@ -114,7 +114,7 @@ function ConnectAuth(props) {
     tokenLoading: false,
   });
   const testIndex = 0;
-  const refreshTime = useRef(null);
+  const refreshTime = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     getNodeInfo();
   }, []); // 获取连接详情

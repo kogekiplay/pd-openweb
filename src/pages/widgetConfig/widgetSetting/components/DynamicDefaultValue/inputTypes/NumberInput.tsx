@@ -11,7 +11,7 @@ export default function NumberInput(props) {
     props;
   const { cid = '' } = dynamicValue[0] || {};
   const [value, setValue] = useState('');
-  const [isDynamic, setDynamic] = useState(false);
+  const [isDynamic, setDynamic] = useState<false | { isDynamic: boolean }>(false);
   const $wrap = createRef(null);
   const isStep = _.get(data, 'type') === 6 && _.get(data, 'advancedSetting.showtype') === '2';
   const maxValue = _.get(data, 'advancedSetting.max');

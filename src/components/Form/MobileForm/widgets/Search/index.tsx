@@ -17,7 +17,7 @@ import PopupSearch from './PopupSearch';
 const SearchBox = props => {
   const { advancedSetting = {}, formData, type, hint, enumDefault, value, controlName, disabled, formDisabled } = props;
   const { itemsource, itemtitle, itemdesc, responsemap, min = '0' } = advancedSetting;
-  const postList = useRef(null);
+  const postList = useRef<ApiResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [keywords, setKeywords] = useState(null);

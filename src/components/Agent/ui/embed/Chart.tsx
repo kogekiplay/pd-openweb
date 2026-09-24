@@ -533,7 +533,7 @@ export function Chart({ data: spec, isStreaming }) {
   const canvasRef = useRef(null);
   const plotRef = useRef(null);
   const plotTypeRef = useRef(null);
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const fullscreenBoxRef = useRef(null);
   const fullscreenCanvasRef = useRef(null);
   const [renderable, setRenderable] = useState(() => !!buildPlot(spec));

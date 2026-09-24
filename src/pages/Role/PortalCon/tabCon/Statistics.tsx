@@ -87,8 +87,8 @@ function Statistics(props) {
   const [dataRegister, setData] = useState([]); //注册量
   //访问量
   const [dataVisits, setDataLogin] = useState([]);
-  const registerEl = useRef(null);
-  const loginEl = useRef(null);
+  const registerEl = useRef<HTMLDivElement | null>(null);
+  const loginEl = useRef<HTMLDivElement | null>(null);
   const prarm = {
     xField: 'date',
     yField: 'value',

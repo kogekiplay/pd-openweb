@@ -32,7 +32,7 @@ function UploadFiles(
   },
   ref,
 ) {
-  const uploaderRef = useRef(null);
+  const uploaderRef = useRef<QiniuUpload | null>(null);
   const cache = useRef({});
   const suppressRemoveCallbackRef = useRef(false);
   const getUploader = useCallback(() => uploaderRef.current?.uploader, []);

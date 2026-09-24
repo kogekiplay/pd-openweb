@@ -311,9 +311,9 @@ const SelectedWrapper = styled.div`
 const sortTypes = [null, SORT_TYPE.ASC, SORT_TYPE.DESC];
 
 export default function TaskList({ projectId, onRefreshComponents }: { projectId?: string; [key: string]: any }) {
-  const ajaxPromise = useRef(null);
-  const statusAjaxPromise = useRef(null);
-  const batchAjaxPromise = useRef(null);
+  const ajaxPromise = useRef<ApiResult | null>(null);
+  const statusAjaxPromise = useRef<ApiResult | null>(null);
+  const batchAjaxPromise = useRef<ApiResult | null>(null);
   const sortFlag = useRef(0);
   const [taskList, setTaskList] = useState([]);
   const [errorInfoVisible, setErrorInfoVisible] = useSetState({});

@@ -20,7 +20,7 @@ export default function RowDetailModal(props) {
     onDelete,
     onSwitch,
   } = props;
-  const formContent = useRef(null);
+  const formContent = useRef<RowDetail | null>(null);
   const isMobile = browserIsMobile();
 
   // 保存和恢复 window.activeTableId 以解决焦点问题

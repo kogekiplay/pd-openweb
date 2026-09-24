@@ -93,7 +93,7 @@ function navigateInFrame(win, path, refreshFirst = false) {
 // 让 WorkSheet 能识别并渲染它（详见 navigateInFrame）——仍是软导航，不整页 reload。
 export default function PreviewFrame({ src, refreshFirst = false }) {
   const containerRef = useRef(null);
-  const iframeRef = useRef(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const pendingRef = useRef(null);
   // 用 ref 读最新 refreshFirst，避免把它加进 effect 依赖导致 src 未变时多余触发；
   // 同步写放在 effect 中（react-hooks/refs 禁止渲染期写 ref），且必须声明在下方主 effect 之前，

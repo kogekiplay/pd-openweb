@@ -328,7 +328,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
   const [activeTab, setActiveTab] = useState('ask');
   const [questions, setQuestions] = useState([]);
   const [questionStatus, setQuestionStatus] = useState('idle'); // idle | loading | done | error
-  const questionAbortRef = useRef(null);
+  const questionAbortRef = useRef<AbortController | null>(null);
   const promptInputRef = useRef(null);
   // 欢迎动图重播：Mingo 抽屉 destroyOnClose=false，关闭不销毁、重开不会重渲染，play-once gif 会停在末帧。
   // 用 IntersectionObserver 观察稳定容器，每次重新可见就给 <img> 换 key（重建元素）→ 从头再播一次。

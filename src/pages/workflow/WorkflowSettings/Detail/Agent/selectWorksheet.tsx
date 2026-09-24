@@ -7,7 +7,7 @@ import homeApp from 'src/api/homeApp';
 const SelectWorksheet = props => {
   const { appId, selectIds = [], onOk, onClose } = props;
   const [type, setType] = useState(selectIds.length ? 1 : 0);
-  const [worksheetList, setWorksheetList] = useState([]);
+  const [worksheetList, setWorksheetList] = useState<HapApi.MD.Entity.Apk.EntityInfo[]>([]);
   const [worksheetIds, setWorksheetIds] = useState(selectIds);
   const TYPES = [
     { type: 0, name: _l('应用所有工作表') },

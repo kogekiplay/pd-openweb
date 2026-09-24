@@ -16,7 +16,7 @@ const Content = styled.div`
 function ConfirmMoveDialog(props) {
   const { visible = false, type = 'move', projectId, dataBaseInfo = {}, appInfo = {}, onClose } = props;
 
-  const [name, setName] = useState(undefined);
+  const [name, setName] = useState<string | undefined>(undefined);
 
   const handleOk = () => {
     appManagementAjax

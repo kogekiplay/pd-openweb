@@ -11,7 +11,7 @@ import './index.less';
 export default function AppOfflineSubmit(props) {
   const { appId } = props;
   const [loading, setLoading] = useState(true);
-  const [sheetData, setSheetData] = useState([]);
+  const [sheetData, setSheetData] = useState<HapApi.MD.Entity.Apk.EntityInfo[]>([]);
   const [offlineItems, setOfflineItems] = useState([]);
   const [keyword, setKeyword] = useState('');
   const offlineItemIds = offlineItems.map(v => v.worksheetId);

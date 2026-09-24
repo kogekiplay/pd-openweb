@@ -152,7 +152,7 @@ export default function TestFunctionDialog(props) {
   const [expression, setExpression] = useState(value);
   const controlIdsInExpression = uniq((expression.match(/\$(.+?)\$/g) || []).map(id => id.slice(1, -1)));
   const [testFormValues, setTestFormValues] = useState({});
-  const [formFlag, setFormFlag] = useState(null);
+  const [formFlag, setFormFlag] = useState<number | null>(null);
   const [testError, setTestError] = useState(false);
   const [testResultValue, setTestResultValue] = useState('');
   const formData = controlIdsInExpression

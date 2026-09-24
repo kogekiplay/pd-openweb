@@ -29,7 +29,7 @@ export default function GroupHeader({
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState(name);
   const headerRef = useRef(null);
-  const titleToggleTimerRef = useRef(null);
+  const titleToggleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [{ isDragging }, drag, dragPreview] = useDrag({
     type: ITEM_TYPE_GROUP,
     // v11 的 begin 只有副作用、不返回值，v16 里等价物是函数形式的 item：

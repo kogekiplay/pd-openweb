@@ -290,7 +290,7 @@ const CodeSnippet = ({
   const [selectId, setSelectId] = useState('');
   const [editCodeId, setEditCodeId] = useState('');
   const inputName = useRef<HTMLInputElement | null>(null);
-  const tagtextarea = useRef(null);
+  const tagtextarea = useRef<TagTextarea | null | undefined>(null);
   const hasAppResourceAuth = checkPermission(projectId, PERMISSION_ENUM.APP_RESOURCE_SERVICE);
 
   if (window.platformENV.isOverseas || window.platformENV.isLocal) {

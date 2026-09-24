@@ -71,7 +71,7 @@ const KnowledgeWorksheet = props => {
   const disabledKnowledge = isDisabledKnowledge(projectId, true);
   const knowledgeOverLimit = disabledKnowledge ? false : overLimit;
 
-  const [allWorksheetList, setAllWorksheetList] = useState([]);
+  const [allWorksheetList, setAllWorksheetList] = useState<{ worksheetId: string | undefined; worksheetName: string | undefined; worksheet: HapApi.MD.Entity.Apk.EntityInfo }[]>([]);
   const [currentCollection, setCurrentCollection] = useState({});
   const [activeId, setActiveId] = useState(null);
   const [formattedCollection, setFormattedCollection] = useState({});

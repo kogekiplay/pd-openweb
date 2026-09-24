@@ -84,7 +84,7 @@ const Search = props => {
 
   const boxRef = useRef<HTMLDivElement | null>(null);
   const searchRef = useRef(null);
-  const postListRef = useRef(null);
+  const postListRef = useRef<ApiResult | null>(null);
   const keywordsRef = useRef(keywords);
 
   const updateKeywords = useCallback(value => {

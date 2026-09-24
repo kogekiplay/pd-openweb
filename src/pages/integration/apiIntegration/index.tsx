@@ -91,7 +91,7 @@ function APILibraryCon(props) {
       ? 'projectLib'
       : match.params.listType || window.localStorage.getItem('apiLibTab') || 'commonLib',
   );
-  const [loadMore, setLoadMore] = useState('');
+  const [loadMore, setLoadMore] = useState<string | number>('');
   const [hasMore, setHasMore] = useState(false);
 
   const renderLibCon = () => {

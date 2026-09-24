@@ -311,7 +311,7 @@ function SelectOptions(props, ref) {
   const { onChange, options, data = {}, showAssign = false, fromPortal, enableScore, className, isDialog } = props;
   const [focusIndex, setIndex] = useState(-1);
   const [isDrag, setIsDrag] = useState(false);
-  const [focusIndexs, setIndexs] = useState([]);
+  const [focusIndexs, setIndexs] = useState<number[]>([]);
   const wrapRef = useRef(null);
   const hasOther = _.find(options, i => i.key === 'other' && !i.isDeleted);
   const findOther = _.findIndex(options, i => i.key === 'other');

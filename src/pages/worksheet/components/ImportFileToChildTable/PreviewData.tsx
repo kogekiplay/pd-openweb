@@ -113,8 +113,8 @@ export default function PreviewData(props) {
   const [tableLoading, setTableLoading] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
   const [cellsData, setCellsData] = useState(props.cellsData || []);
-  const [headRowIndex, setHeadRowIndex] = useState(1);
-  const [sheetIndex, setSheetIndex] = useState(0);
+  const [headRowIndex, setHeadRowIndex] = useState<number | undefined>(1);
+  const [sheetIndex, setSheetIndex] = useState<number | undefined>(0);
   const needImportCellData = (dataFrom === 'excel' ? cellsData.slice(headRowIndex) : cellsData).slice(
     0,
     maxCount - dataCount,

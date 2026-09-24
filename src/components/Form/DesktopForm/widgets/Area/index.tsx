@@ -20,7 +20,7 @@ export default function AreaWidgets(props) {
     createEventHandler = () => {},
   } = props;
 
-  const [search, setSearch] = useState(undefined);
+  const [search, setSearch] = useState<string | undefined>(undefined);
   const [keywords, setKeywords] = useState('');
   const [visible, setVisible] = useState(false);
   const inputRef = useRef(null);

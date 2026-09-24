@@ -51,7 +51,7 @@ export default function Microsoft(props) {
     entraOnlyLogin: false,
   });
   const { tenantId, state } = getRequest() || {};
-  const onlyLoginAjax = useRef(null);
+  const onlyLoginAjax = useRef<ApiResult | null>(null);
 
   useEffect(() => {
     getSetting();

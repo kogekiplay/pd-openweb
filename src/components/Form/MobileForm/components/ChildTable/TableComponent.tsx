@@ -270,7 +270,7 @@ function TableComponent(props) {
     return addWidthToColumns(visibleColumns, widthDataSource);
   }, [allowcancel, controls, disabled, isEdit, recordId, rows, showControls, useUserPermission, widthDataSource]);
   const tableScrollX = _.sumBy(columns, item => item.width || 180);
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const tableRef = useRef<HTMLDivElement | null>(null);
   const touchRef = useRef(null);
   const rowRuleDataMap = useMemo(() => {

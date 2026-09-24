@@ -38,7 +38,7 @@ export default function UpgradeRecords({ projectId, type }: { projectId?: string
     // '' 是「全部」，其余是数字状态值（和下拉项的 value 一致）
     status: '' as '' | number,
   });
-  const promiseRef = useRef(null);
+  const promiseRef = useRef<ApiResult | null>(null);
 
   const getDataList = useCallback(
     (params: Record<string, any> = {}) => {

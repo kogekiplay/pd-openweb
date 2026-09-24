@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 export default function (props) {
   const { isOpenGroup, keywords, setKeywords, updateFilter } = props;
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const handleSearch = useCallback(
     _.debounce(value => {
       let keyWords = value.trim();

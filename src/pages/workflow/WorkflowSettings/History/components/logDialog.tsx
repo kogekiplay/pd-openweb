@@ -117,7 +117,7 @@ const MODEL_ICON = {
 const LogDialog = props => {
   const { processId, nodeId, instanceId, onClose } = props;
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  const [folds, setFolds] = useState([]);
+  const [folds, setFolds] = useState<number[]>([]);
   const [list, setList] = useState(null);
   const [showConfigInfo, setShowConfigInfo] = useState(false);
   const [model, setModel] = useState('');

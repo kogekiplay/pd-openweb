@@ -11,7 +11,7 @@ import EditInput from './EditInput';
 export default function ControlRules(props) {
   const { app, selectNode, translateData, comparisonLangId, comparisonLangData, onEditAppLang } = props;
   const [loading, setLoading] = useState(true);
-  const [rules, setRules] = useState([]);
+  const [rules, setRules] = useState<HapApi.MD.Entity.Worksheet.ControlRuleEntity[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const scrollViewRef = useRef<any>(undefined);
 

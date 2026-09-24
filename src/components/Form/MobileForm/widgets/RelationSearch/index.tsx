@@ -47,7 +47,7 @@ export default function RelationSearch(props) {
     showAll: isDialog,
   });
   const [recordInfoVisible, setRecordInfoVisible] = useState(false);
-  const [worksheetAllowAdd, setWorksheetAllowAdd] = useState(true);
+  const [worksheetAllowAdd, setWorksheetAllowAdd] = useState<boolean | undefined>(true);
   const [openRecordId, setOpenRecordId] = useState('');
   const {
     loading = true,

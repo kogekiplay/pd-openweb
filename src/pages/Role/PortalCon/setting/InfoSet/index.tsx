@@ -22,7 +22,7 @@ export default function InfoSet(props) {
   const { groupId, name, projectId, worksheetId } = portal.baseInfo || {};
   const [showId, setShowId] = useState<boolean | string>(false);
   const [controls, setControls] = useState([]);
-  const [controlsFilter, setControlsFilter] = useState([]);
+  const [controlsFilter, setControlsFilter] = useState<FormControl[]>([]);
   const [allControl, setAllControl] = useState([]);
   const [hs, setHs] = useState(false);
 

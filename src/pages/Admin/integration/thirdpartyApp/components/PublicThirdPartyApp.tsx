@@ -104,7 +104,7 @@ const PublicThirdPartyApp = forwardRef((props, ref) => {
       dataSourceLoading: true,
       patEnabled: false,
     });
-  const ajaxRef = useRef(null);
+  const ajaxRef = useRef<ApiResult | null>(null);
 
   useImperativeHandle(
     ref,

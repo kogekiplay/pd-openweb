@@ -29,9 +29,9 @@ const UserSelect = props => {
     dataSource,
   } = props;
 
-  const [showId, setShowId] = useState('');
-  const pickRef = useRef(null);
-  const destoryRef = useRef(null);
+  const [showId, setShowId] = useState<string | undefined>('');
+  const pickRef = useRef<HTMLDivElement | null>(null);
+  const destoryRef = useRef<(() => void) | null>(null);
   const currentValueRef = useRef(getUserValue(value));
 
   const currentValue = useMemo(() => {

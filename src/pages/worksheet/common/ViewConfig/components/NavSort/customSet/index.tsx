@@ -51,7 +51,7 @@ const Wrap = styled.div`
 `;
 
 export default function (props) {
-  const $ref = useRef(null);
+  const $ref = useRef<HTMLSpanElement | null>(null);
   const {
     view,
     controlInfo,

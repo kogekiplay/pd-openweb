@@ -39,7 +39,7 @@ export default function ExportRecords({ projectId, type }: { projectId?: string;
     total: 0,
     userInfo: [],
   });
-  const promiseRef = useRef(null);
+  const promiseRef = useRef<ApiResult | null>(null);
 
   const getDataList = useCallback(
     (params: Record<string, any> = {}) => {

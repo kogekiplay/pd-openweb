@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 const AutoHeightInput = ({ className, value, onChange, maxRows = 5, minRows = 1, placeholder, setRef, ...props }) => {
-  const textareaRef = useRef(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const calculateHeight = () => {
     const textarea = textareaRef.current;

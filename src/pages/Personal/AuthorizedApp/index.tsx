@@ -24,7 +24,7 @@ export default function AuthorizedApp() {
     currentItem: {},
   });
 
-  const promiseRef = useRef(null);
+  const promiseRef = useRef<ApiResult | null>(null);
 
   const columns = useMemo(
     () => [

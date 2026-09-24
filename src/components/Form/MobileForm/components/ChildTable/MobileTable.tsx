@@ -150,7 +150,7 @@ export default function MobileTable(props) {
 
   const defaultMaxLength = 10;
   const [maxShowLength, setMaxShowLength] = useState(defaultMaxLength);
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const showRows = isEdit || showExpand ? rows : rows.slice(0, maxShowLength);
 

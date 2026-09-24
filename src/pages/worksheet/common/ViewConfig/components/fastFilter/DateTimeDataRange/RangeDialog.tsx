@@ -15,7 +15,7 @@ export default function (props) {
   const [{ daterange }, setState] = useSetState({
     daterange: props.daterange,
   });
-  const [startIndex, setStartIndex] = useState(null);
+  const [startIndex, setStartIndex] = useState<number | null>(null);
 
   const defaultRange = getDefaultDateRange(
     dateRangeType === 0 || !dateRangeType ? showType : getShowtypeByDateRangeType(dateRangeType),

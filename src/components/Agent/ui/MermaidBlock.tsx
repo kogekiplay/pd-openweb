@@ -288,7 +288,7 @@ export function MermaidBlock({ code, isStreaming }) {
   const [svg, setSvg] = useState('');
   const [error, setError] = useState(null);
   const [fullscreen, setFullscreen] = useState(false);
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   // 内嵌 / 全屏两处 SVG 容器，下载时从中取真实 <svg> 节点导出
   const inlineRef = useRef(null);
   const fullscreenRef = useRef(null);

@@ -16,7 +16,7 @@ const SYSTEM_CONTROL = Object.keys(SYSTEM_FIELD_TO_TEXT).map(item => ({
 export default function RelationSearch({ data = {}, fromType, isTab }) {
   const { enumDefault, dataSource, controlId } = data;
   const { showtype = String(enumDefault) } = getAdvanceSetting(data);
-  const [controls, setControls] = useState([]);
+  const [controls, setControls] = useState<FormControl[]>([]);
 
   useEffect(() => {
     // 公开表单relationControls需要掉接口

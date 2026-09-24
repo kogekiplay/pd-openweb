@@ -30,10 +30,10 @@ export default function FormSet(props) {
   const { match = { params: {} } } = props;
   const { worksheetId, type = '' } = match.params;
 
-  const [worksheetName, setWorksheetName] = useState('');
+  const [worksheetName, setWorksheetName] = useState<string | undefined>('');
   const [loading, setLoading] = useState(true);
-  const [worksheetControls, setWorksheetControls] = useState([]);
-  const [worksheetRuleControls, setWorksheetRuleControls] = useState([]);
+  const [worksheetControls, setWorksheetControls] = useState<FormControl[]>([]);
+  const [worksheetRuleControls, setWorksheetRuleControls] = useState<FormControl[]>([]);
   const [worksheetInfo, setWorksheetInfo] = useState<WorksheetInfo>({});
   const [noRight, setNoRight] = useState(false);
   const mountedRef = useRef(false);

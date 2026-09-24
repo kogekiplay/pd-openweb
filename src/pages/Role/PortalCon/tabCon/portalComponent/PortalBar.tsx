@@ -38,7 +38,7 @@ function PortalBar(props) {
     return controls.filter(o => !['avatar'].includes(o.alias));
   };
 
-  const [columns, setColumns] = useState([]);
+  const [columns, setColumns] = useState<FormControl[]>([]);
 
   useEffect(() => {
     setColumns(getControls() || []);

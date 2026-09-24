@@ -123,7 +123,7 @@ export default function CommonHeader(props) {
 
   const [showKcVersionList, setShowKcVersionList] = useState(false);
   const [showSaveTo, setShowSaveTo] = useState(false);
-  const eleKcVersionList = useRef(null);
+  const eleKcVersionList = useRef<HTMLElement | null>(null);
   const isMobile = browserIsMobile();
   const showWpsPreview =
     !window.platformENV.isOverseas &&

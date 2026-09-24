@@ -25,7 +25,7 @@ export default function RowDetailModal(props) {
     deleteRow = () => {},
   } = props;
   const [errorConfirmVisible, setErrorConfirmVisible] = useState(false);
-  const formContent = useRef(null);
+  const formContent = useRef<RowDetail | null>(null);
   const rowId = data.rowid || '';
   const type = mobileIsEdit
     ? (rowId.includes('temp') || rowId.includes('default')) && !isEditCurrentRow

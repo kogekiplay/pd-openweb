@@ -56,7 +56,7 @@ const Text = props => {
   const [isEditing, setIsEditing] = useState(false);
   const [originValue, setOriginValue] = useState('');
 
-  const textRef = useRef(null);
+  const textRef = useRef<HTMLTextAreaElement | null>(null);
   const boxRef = useRef<HTMLDivElement | null>(null);
   const valueRef = useRef(value);
 

@@ -298,7 +298,7 @@ function RelationSearch(props) {
   const [state, setState] = useState({
     showAll: isDialog,
   });
-  const [worksheetAllowAdd, setWorksheetAllowAdd] = useState(true);
+  const [worksheetAllowAdd, setWorksheetAllowAdd] = useState<boolean | undefined>(true);
   const {
     loading = true,
     entityName,

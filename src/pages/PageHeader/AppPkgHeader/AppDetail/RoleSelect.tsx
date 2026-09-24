@@ -97,7 +97,7 @@ function RoleSelect(props) {
   const { id, handleClose, roleSelectValue = [], visible, appId } = props;
 
   const [roleList, setRoleList] = useState([]);
-  const [search, setSearch] = useState(undefined);
+  const [search, setSearch] = useState<string | undefined>(undefined);
   const [value, setValue] = useState([]);
   const [type, setType] = useState(0); // 0 单选 1 多选
 

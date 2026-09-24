@@ -11,7 +11,7 @@ import EditInput from './EditInput';
 export default function CustomAction(props) {
   const { app, selectNode, translateData, comparisonLangId, comparisonLangData, onEditAppLang } = props;
   const [loading, setLoading] = useState(true);
-  const [sheetBtns, setSheetBtns] = useState([]);
+  const [sheetBtns, setSheetBtns] = useState<HapApi.MD.Entity.Worksheet.WorksheetBtnEntity[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const scrollViewRef = useRef<any>(undefined);
   const [optionsEditDialogVisible, setOptionsEditDialogVisible] = useState('');

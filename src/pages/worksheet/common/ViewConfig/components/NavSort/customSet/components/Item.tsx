@@ -11,7 +11,7 @@ import './index.less';
 
 export default function (props) {
   const { setting } = props;
-  const $ref = useRef(null);
+  const $ref = useRef<HTMLDivElement | null>(null);
   const valueRef = useRef<any>(undefined);
 
   useEffect(() => {
