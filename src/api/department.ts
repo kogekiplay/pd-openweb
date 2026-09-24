@@ -368,7 +368,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectSubDepartmentByDepartmentId: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectSubDepartmentByDepartmentId: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.DepartmentModel[]> {
     return mdyAPI('Department', 'GetProjectSubDepartmentByDepartmentId', args, options);
   },
   /**
@@ -404,7 +407,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectDepartmentByPage: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectDepartmentByPage: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ListModel_DepartmentModel> {
     return mdyAPI('Department', 'GetProjectDepartmentByPage', args, options);
   },
   /**
@@ -501,7 +507,10 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getNotInDepartmentUsers: function (args: ApiArgs, options: ApiOptions = {}) {
+  getNotInDepartmentUsers: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectRootDepartmentModel> {
     return mdyAPI('Department', 'GetNotInDepartmentUsers', args, options);
   },
   /**
@@ -516,7 +525,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  searchDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
+  searchDepartment: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.DepartmentModel[]> {
     return mdyAPI('Department', 'SearchDepartment', args, options);
   },
   /**

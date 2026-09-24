@@ -320,6 +320,52 @@ declare namespace HapApi.MD.Entity.Apk {
     childSections?: HapApi.MD.Entity.Apk.AppSectionDomainModel[] | undefined;
     timeZone: number;
   }
+  interface AppForProjectModel {
+    /** （swagger 里叫 apkId，实际序列化成 appId） */
+    appId?: string | undefined;
+    isLock: boolean;
+    goodsId?: string | undefined;
+    distributeId?: string | undefined;
+    licences?: HapApi.MD.Entity.ApkMap.LicenceModel[] | undefined;
+    sourceProjectId?: string | undefined;
+    dbInstance?: string | undefined;
+    isGoods: boolean;
+    isGoodsStatus: boolean;
+    isImageApk: boolean;
+    projectId?: string | undefined;
+    /** （swagger 里叫 apkName，实际序列化成 appName） */
+    appName?: string | undefined;
+    /** （swagger 里叫 apkNamePinyin，实际序列化成 appNPY） */
+    appNPY?: string | undefined;
+    /** （swagger 里叫 avatar，实际序列化成 icon） */
+    icon?: string | undefined;
+    /** （swagger 里叫 color，实际序列化成 iconColor） */
+    iconColor?: string | undefined;
+    iconUrl?: string | undefined;
+    description?: string | undefined;
+    /** （swagger 里叫 apkStatus，实际序列化成 status） */
+    status: HapApi.MD.Enum.Apk.ApkStatusEnum;
+    /** （swagger 里叫 createAccountId，实际序列化成 caid） */
+    caid?: string | undefined;
+    createAccountInfo?: HapApi.MD.Entity.Role.AppRoleGrpcModel.UserInfos | undefined;
+    /** （swagger 里叫 createTime，实际序列化成 ctime） */
+    ctime?: string | undefined;
+    /** （swagger 里叫 updateTime，实际序列化成 utime） */
+    utime?: string | undefined;
+    permissionType?: HapApi.MD.Enum.Roles.AppRole.AppRoleType | undefined;
+    appSectionIds?: string[] | undefined;
+    sheetCount: number;
+    createType: number;
+    urlTemplate?: string | undefined;
+    trade?: HapApi.MD.Entity.Mongo.Apk.AppTrade | undefined;
+    sourceType: number;
+    worksheetIds?: string[] | undefined;
+    migrateTime?: string | undefined;
+    pcDisplay: boolean;
+    webMobileDisplay: boolean;
+    appDisplay: boolean;
+    exported: boolean;
+  }
   interface OpenAppModel {
     projectId?: string | undefined;
     appId?: string | undefined;
@@ -1294,6 +1340,7 @@ declare namespace HapApi.MD.Enum.ActionLog {
 
 declare namespace HapApi.MD.Enum.Apk {
   type AppSettingsEnum = 1 | 2 | 3 | 4;
+  type ApkStatusEnum = 0 | 1 | 2 | 3 | 4 | 11 | 12 | 20;
   type GroupEnum = 0 | 1;
   type DisplayEnum = 0 | 1;
   type MarkedAppDisplay = 0 | 1;
@@ -1513,6 +1560,26 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel {
     pageIndex?: number | undefined;
   }
   /** 所有返回列表的Model */
+  interface ListModel_DepartmentModel {
+    resultCode?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    list?: HapApi.MD.Web.Ajax.ResultModel.Project.DepartmentModel[] | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    allCount?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    pageIndex?: number | undefined;
+  }
+  /** 所有返回列表的Model */
+  interface ListModel_GroupModel {
+    resultCode?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    list?: HapApi.MD.Web.Ajax.ResultModel.Group.GroupModel[] | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    allCount?: number | undefined;
+    /** （泛型壳，swagger 里没有，真实响应里有） */
+    pageIndex?: number | undefined;
+  }
+  /** 所有返回列表的Model */
   interface ListModel_JobModel {
     resultCode?: number | undefined;
     /** （泛型壳，swagger 里没有，真实响应里有） */
@@ -1533,10 +1600,10 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel {
     pageIndex?: number | undefined;
   }
   /** 所有返回列表的Model */
-  interface ListModel_DepartmentModel {
+  interface ListModel_WorkSiteModel {
     resultCode?: number | undefined;
     /** （泛型壳，swagger 里没有，真实响应里有） */
-    list?: HapApi.MD.Web.Ajax.ResultModel.Project.DepartmentModel[] | undefined;
+    list?: HapApi.MD.Web.Ajax.ResultModel.Project.WorkSiteModel[] | undefined;
     /** （泛型壳，swagger 里没有，真实响应里有） */
     allCount?: number | undefined;
     /** （泛型壳，swagger 里没有，真实响应里有） */
@@ -1745,6 +1812,17 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.ActionLog {
 }
 
 declare namespace HapApi.MD.Web.Ajax.ResultModel.App {
+  /** 网络应用列表 */
+  interface ProjectAppsModel {
+    /** 应用列表 */
+    apps?: HapApi.MD.Entity.Apk.AppForProjectModel[] | undefined;
+    /** 当前应用总数 */
+    total: number;
+    /** 当前工作表总数 */
+    count: number;
+    /** 版本工作表最大数量  为0=无限制 */
+    maxCount: number;
+  }
   interface AppLogDto {
     logs?: HapApi.MD.Web.Ajax.ResultModel.App.LogModel[] | undefined;
     total: number;
@@ -2600,6 +2678,52 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.ExternalPortal {
   }
 }
 
+declare namespace HapApi.MD.Web.Ajax.ResultModel.Group {
+  /** 通用邀请群组搜索 */
+  interface GroupSearchModel {
+    /** 常协作群组 */
+    sharedGroups?: HapApi.MD.Web.Ajax.ResultModel.Group.GroupModel[] | undefined;
+    normalGroups?: HapApi.MD.Web.Ajax.ResultModel.ListModel_GroupModel | undefined;
+  }
+  /** 群组 */
+  interface GroupModel {
+    /** 匹配群组成员总数 */
+    matchedMemberCount: number;
+    /** 有效成员数量 */
+    groupUserCount: number;
+    /** （swagger 里没有，真实响应里有） */
+    groupId?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    name?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    firstCode?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    avatar?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    projectId?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    createTime?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    status?: number | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    groupMemberCount?: number | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    postCount?: number | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isVerified?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isCertificated?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isMember?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isAdmin?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isOpen?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    isApproval?: boolean | undefined;
+  }
+}
+
 declare namespace HapApi.MD.Web.Ajax.ResultModel.Kc {
   /** 知识中心使用情况 */
   interface KcUsageModel {
@@ -2695,8 +2819,27 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Plugin {
 }
 
 declare namespace HapApi.MD.Web.Ajax.ResultModel.Project {
+  /** 部门 */
+  interface DepartmentModel {
+    /** 是否 停用 */
+    disabled: boolean;
+    /** （swagger 里没有，真实响应里有） */
+    departmentId?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    departmentName?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    userCount?: number | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    haveSubDepartment?: boolean | undefined;
+  }
   interface AccountDepartmentsModel {
     maps?: HapApi.MD.Web.Ajax.ResultModel.Project.AccountDepartmentsMap[] | undefined;
+  }
+  /** project 的总人数，以及没有加入任何部门成员详情 */
+  interface ProjectRootDepartmentModel {
+    listUser?: HapApi.MD.Web.Ajax.ResultModel.ListModel_UserModel | undefined;
+    /** 网络总人数 */
+    totalMembers: number;
   }
   /** 组织信息 */
   interface ProjectModel {
@@ -3014,15 +3157,8 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Project {
     workSiteId?: string | undefined;
     /** （swagger 里没有，真实响应里有） */
     workSiteName?: string | undefined;
-  }
-  /** 部门 */
-  interface DepartmentModel {
-    /** 是否 停用 */
-    disabled: boolean;
     /** （swagger 里没有，真实响应里有） */
-    departmentId?: string | undefined;
-    /** （swagger 里没有，真实响应里有） */
-    departmentName?: string | undefined;
+    userCount?: number | undefined;
   }
   /** 职位 */
   interface JobModel {
@@ -3183,11 +3319,6 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.User {
     jobs?: HapApi.MD.Web.Ajax.ResultModel.Project.JobModel[] | undefined;
     user?: HapApi.MD.Web.Ajax.ResultModel.User.UserModel | undefined;
   }
-  interface ContactUserModel {
-    oftenUsers?: HapApi.MD.Web.Ajax.ResultModel.ListModel_UserModel | undefined;
-    users?: HapApi.MD.Web.Ajax.ResultModel.ListModel_UserModel | undefined;
-    departments?: HapApi.MD.Web.Ajax.ResultModel.ListModel_DepartmentModel | undefined;
-  }
   interface UserModel {
     /** 账号编号 */
     accountId?: string | undefined;
@@ -3241,6 +3372,19 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.User {
     projectId?: string | undefined;
     /** （swagger 里没有，真实响应里有） */
     isAdmin?: boolean | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    job?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    enFullname?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    createTime?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    status?: number | undefined;
+  }
+  interface ContactUserModel {
+    oftenUsers?: HapApi.MD.Web.Ajax.ResultModel.ListModel_UserModel | undefined;
+    users?: HapApi.MD.Web.Ajax.ResultModel.ListModel_UserModel | undefined;
+    departments?: HapApi.MD.Web.Ajax.ResultModel.ListModel_DepartmentModel | undefined;
   }
 }
 

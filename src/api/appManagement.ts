@@ -583,7 +583,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppsForProject: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppsForProject: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ProjectAppsModel> {
     return mdyAPI('AppManagement', 'GetAppsForProject', args, options);
   },
   /**
@@ -605,7 +608,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppsByProject: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppsByProject: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ProjectAppsModel> {
     return mdyAPI('AppManagement', 'GetAppsByProject', args, options);
   },
   /**

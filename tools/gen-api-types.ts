@@ -217,6 +217,21 @@ const VERIFIED = new Set([
   'User/GetUserOrgState',
   'ProjectSetting/GetUserFieldSettings',
   'Account/GetContactInfo',
+  // 第五批（同日，第三轮取样）：补了应用列表（AppForProjectModel 改名）、群组、部门 / 工作地点 / 用户的 SCHEMA_PATCHES 后复核，
+  // 每层都对得上（Group/GetGroups 的 createAccount 对象没核对、没写进类型）
+  'AppManagement/GetAppsByProject',
+  'AppManagement/GetAppsForProject',
+  'Department/GetProjectSubDepartmentByDepartmentId',
+  'WorkSite/GetWorkSites',
+  'User/GetOftenMetionedUser',
+  'Department/GetNotInDepartmentUsers',
+  'Structure/GetAllowChooseUsers',
+  'Group/GetGroups',
+  'Group/GetGroupsNameAndIsVerified',
+  'Department/SearchDepartment',
+  'Group/GetGroupsSearch',
+  'WorkSite/GetWorkSiteUsers',
+  'Department/GetProjectDepartmentByPage',
 ]);
 
 /**
@@ -253,13 +268,19 @@ const SCHEMA_PATCHES: Record<
   // ── 第三批批量取样核对出来的（2026-09-24）：swagger 漏掉的属性，只补取样里真出现过、值是基本类型的 ──
   // 部门 / 职位 / 工作地点：swagger 里几乎是空壳（部门只有 disabled，职位和工作地点一个属性都没有）
   'MD.Web.Ajax.ResultModel.Project.DepartmentModel': {
-    add: { departmentId: 'string | undefined', departmentName: 'string | undefined' },
+    add: {
+      departmentId: 'string | undefined',
+      departmentName: 'string | undefined',
+      // 部门列表接口（GetProjectSubDepartmentByDepartmentId / SearchDepartment / GetProjectDepartmentByPage）还带这两个
+      userCount: 'number | undefined',
+      haveSubDepartment: 'boolean | undefined',
+    },
   },
   'MD.Web.Ajax.ResultModel.Project.JobModel': {
     add: { jobId: 'string | undefined', jobName: 'string | undefined', userCount: 'number | undefined' },
   },
   'MD.Web.Ajax.ResultModel.Project.WorkSiteModel': {
-    add: { workSiteId: 'string | undefined', workSiteName: 'string | undefined' },
+    add: { workSiteId: 'string | undefined', workSiteName: 'string | undefined', userCount: 'number | undefined' },
   },
   // 用户卡片里的 user：swagger 缺姓名、公司、联系电话、工号等（两个 GetUserCard 给的略有差别：一个给工作地点名称、一个给 id）
   'MD.Web.Ajax.ResultModel.User.UserModel': {
@@ -272,6 +293,11 @@ const SCHEMA_PATCHES: Record<
       jobNumber: 'string | undefined',
       projectId: 'string | undefined',
       isAdmin: 'boolean | undefined',
+      // 选人 / 常用联系人 / 工作地点成员等列表里的用户还带这些
+      job: 'string | undefined',
+      enFullname: 'string | undefined',
+      createTime: 'string | undefined',
+      status: 'number | undefined',
     },
   },
   // OnPStatusOption 的 schema 有 accountId，PStatusOption 的漏了（取样里有）
@@ -335,6 +361,43 @@ const SCHEMA_PATCHES: Record<
       snsQQ: 'string | undefined',
       snsLinkedin: 'string | undefined',
       weiXin: 'string | undefined',
+    },
+  },
+  // ── 第五批（第三轮取样前按第二轮的差异补）──
+  // 组织下的应用列表（GetAppsByProject / GetAppsForProject 的 apps[]）：和 AppForManagerModel 一样按 JsonProperty 改了名，
+  // 判据同上：多出来的键和「不可空却从没出现」的键一一对上（apkStatus ↔ status）
+  'MD.Entity.Apk.AppForProjectModel': {
+    rename: {
+      apkId: 'appId',
+      apkName: 'appName',
+      apkNamePinyin: 'appNPY',
+      avatar: 'icon',
+      color: 'iconColor',
+      apkStatus: 'status',
+      createAccountId: 'caid',
+      createTime: 'ctime',
+      updateTime: 'utime',
+    },
+    optional: ['permissionType'],
+  },
+  // 群组：swagger 里只有两个计数，实际带群的基本信息（createAccount 是个对象、形状没核对，不写）
+  'MD.Web.Ajax.ResultModel.Group.GroupModel': {
+    add: {
+      groupId: 'string | undefined',
+      name: 'string | undefined',
+      firstCode: 'string | undefined',
+      avatar: 'string | undefined',
+      projectId: 'string | undefined',
+      createTime: 'string | undefined',
+      status: 'number | undefined',
+      groupMemberCount: 'number | undefined',
+      postCount: 'number | undefined',
+      isVerified: 'boolean | undefined',
+      isCertificated: 'boolean | undefined',
+      isMember: 'boolean | undefined',
+      isAdmin: 'boolean | undefined',
+      isOpen: 'boolean | undefined',
+      isApproval: 'boolean | undefined',
     },
   },
   // 标着不可空（枚举），取样里却一次都没出现
