@@ -54,11 +54,11 @@ export const updatePositionList = list => dispatch => {
   });
 };
 
-export const updatePositionPageInfo = data => dispatch => {
+export const updatePositionPageInfo = (data: { isMore: boolean | undefined; pageIndex: number }) => dispatch => {
   dispatch({ type: 'UPDATE_POSITION_PAGE_INFO', data });
 };
 
-export const updateCurrentPosition = currentPosition => dispatch => {
+export const updateCurrentPosition = (currentPosition: HapApi.MD.Web.Ajax.ResultModel.Project.JobModel) => dispatch => {
   dispatch({ type: 'UPDATE_CURRENT_POSITION', currentPosition });
 };
 
@@ -70,7 +70,7 @@ export const updateUserPageIndex = userPageIndex => dispatch => {
   dispatch({ type: 'UPDATE_USER_PAGE_INDEX', userPageIndex });
 };
 
-export const getUserList = params => (dispatch: AppDispatch, getState: GetState) => {
+export const getUserList = (params: { jobId: string | undefined }) => (dispatch: AppDispatch, getState: GetState) => {
   const { jobId = '' } = params;
   const { projectId, userPageIndex } = getState().orgManagePage.position;
   dispatch({ type: 'UPDATE_USER_LOADING', userLoading: true });

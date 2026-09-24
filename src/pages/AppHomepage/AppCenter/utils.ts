@@ -18,7 +18,7 @@ export const getAdvancedThemeBulletinPicExt = theme => {
   return ext === 'gif' ? 'gif' : 'jpg';
 };
 
-export const getAdvancedThemeAssetUrls = (themeKey, assetUrlPrefix = DASHBOARD_THEME_ASSET_URL_PREFIX) => {
+export const getAdvancedThemeAssetUrls = (themeKey: string, assetUrlPrefix = DASHBOARD_THEME_ASSET_URL_PREFIX) => {
   const assetBaseUrl = getThemeAssetBaseUrl(themeKey, assetUrlPrefix);
 
   return {

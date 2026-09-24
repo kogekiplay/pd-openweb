@@ -239,7 +239,7 @@ function isDirectReferencedWorksheetRoleControl(allControls, control: FormContro
 }
 
 // 解析$controlId$格式，获取控件
-function getControlByDataSource(allControls, dataSource) {
+function getControlByDataSource(allControls: FormControl[], dataSource) {
   if (!dataSource) return { referencedControls: [], worksheetRoleControls: [] };
   let referencedControls = [];
   let worksheetRoleControls = [];
@@ -348,7 +348,7 @@ function getControlByDefault(allControls: FormControl[], control, queryConfigs) 
 }
 
 // 解析filters获取控件
-function getControlByFilters(allControls, advancedSetting, filterkey: string) {
+function getControlByFilters(allControls: FormControl[], advancedSetting, filterkey: string) {
   advancedSetting = advancedSetting || {};
   const filters = safeParse(advancedSetting[filterkey] || '[]');
   let referencedControls = [];
