@@ -46,7 +46,7 @@ function ConnectDataBase(props) {
     status: 0,
     remark: undefined,
   });
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState<string[]>([]);
   const [pending, setPending] = useState(false);
   const [addressList, setAddressList] = useState([{ host: '', port: 27017 }]);
   const hostInputRefs = useRef([]);

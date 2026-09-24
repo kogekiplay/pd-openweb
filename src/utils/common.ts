@@ -376,7 +376,7 @@ export function calcDate(date, expression) {
  * 调用：accMul(arg1,arg2)
  * 返回值：arg1乘以arg2的精确结果
  */
-export function accMul(arg1, arg2) {
+export function accMul(arg1, arg2: number) {
   let m = 0,
     s1 = arg1.toString(),
     s2 = arg2.toString();
@@ -435,7 +435,7 @@ export function accDiv(arg1, arg2: number) {
  * 调用：accAdd(arg1,arg2)
  * 返回值：arg1加上arg2的精确结果
  */
-export function accAdd(arg1: number, arg2) {
+export function accAdd(arg1: number, arg2: number) {
   let r1, r2, m;
 
   try {

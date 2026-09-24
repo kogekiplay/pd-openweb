@@ -23,7 +23,7 @@ export default function SideContent(props) {
   const [loading, setLoading] = useState(false);
   // 原来初始值写的是 []：接口给的是对象（按分组取 markedApps、validProject…），isEmpty / pick 两种初始值结果一样
   const [data, setData] = useState<Partial<HapApi.MD.Entity.HomeApp.HomeAppModel>>({});
-  const [expandKeys, setExpandKeys] = useState([]);
+  const [expandKeys, setExpandKeys] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const getData = () => {

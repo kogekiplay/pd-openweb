@@ -178,7 +178,7 @@ export const getDateScope = () => {
   return data.concat(getYear());
 };
 
-export const covertTime = time => {
+export const covertTime = (time: number) => {
   if (time < 0) time = time * -1;
 
   const day = Math.floor(time / 24 / 60 / 60 / 1000);

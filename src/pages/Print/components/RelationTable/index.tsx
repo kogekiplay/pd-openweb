@@ -323,7 +323,7 @@ export default class RelationTable extends React.Component<any, any> {
     return o.width;
   };
 
-  setDefaultWidth = (controls, orderNumberCheck, contentWidth = BASE_PRINT_CONTENT_WIDTH) => {
+  setDefaultWidth = (controls: FormControl[], orderNumberCheck, contentWidth = BASE_PRINT_CONTENT_WIDTH) => {
     const scale = contentWidth / BASE_PRINT_CONTENT_WIDTH;
     const minPictureW = Math.round(BASE_MIN_PICTURE_WIDTH * scale);
     const orderNumberWidth = Math.round(BASE_ORDER_NUMBER_WIDTH * scale);

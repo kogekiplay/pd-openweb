@@ -158,7 +158,7 @@ export default function WorkSheetTrash(props) {
   const needRestoreRelation = useRef(true);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
-  const [selectRows, setSelectRows] = useState([]);
+  const [selectRows, setSelectRows] = useState<RecordRow[]>([]);
   // 排序状态：未排序时为 undefined，排序后是 { 字段, 升序? }
   const [sortControl, setSortControl] = useState<{ controlId?: string; isAsc?: boolean } | undefined>();
   const [disableMaskDataControls, setDisableMaskDataControls] = useState({});

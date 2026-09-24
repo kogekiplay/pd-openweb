@@ -45,7 +45,10 @@ function ManageDataBase(props) {
   const baseInfo = _.get(location, 'state') || {};
   const [keywords, setKeywords] = useState(undefined);
   const [appStatus, setAppStatus] = useState('');
-  const [data, setData] = useState({});
+  const [data, setData] = useState<{
+    apps?: HapApi.MD.Entity.Apk.AppForProjectModel[] | undefined;
+    total?: number | undefined;
+  }>({});
   const [pageIndex, setPageIndex] = useState(1);
   const [loading, setLoading] = useState(true);
   const [actionOp, setActionOp] = useState(undefined);

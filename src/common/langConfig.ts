@@ -63,4 +63,4 @@ const SYSTEM_LANG_TO_APP_LANG: Record<string, string> = {
 
 export const getSystemLangKey = lang => APP_LANG_TO_SYSTEM_LANG[lang] || lang;
 
-export const getAppLangCode = lang => SYSTEM_LANG_TO_APP_LANG[lang] || lang;
+export const getAppLangCode = (lang: string | null) => SYSTEM_LANG_TO_APP_LANG[lang] || lang;

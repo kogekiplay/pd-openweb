@@ -244,7 +244,7 @@ export default function CreateWechatOrAliMerchant(props) {
     return <LoadDiv className="mTop90" />;
   }
 
-  const renderAppId = item => {
+  const renderAppId = (item: { label: string; field: string; placeholder: string }) => {
     if (!formData?.appId && weChatServiceAccounts.length > 1) {
       return (
         <div

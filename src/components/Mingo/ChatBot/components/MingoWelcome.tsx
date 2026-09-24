@@ -549,7 +549,10 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
   }, [appId]);
 
   // 点击"试一试"：第 1 条（mention）聚焦并呼出 @ 浮层；下面两条（搭建示例 / 推荐问题）直接提交消息
-  function handleTrySelect(sample) {
+  function handleTrySelect(
+    sample:
+      { type: string; text: string | undefined; isNew: boolean } | { type: string; text: string; isNew?: undefined },
+  ) {
     if (sample.type === 'mention') {
       promptInputRef.current?.insertAt();
       return;

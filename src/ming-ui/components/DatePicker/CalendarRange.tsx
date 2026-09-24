@@ -242,7 +242,7 @@ class CalendarRange extends Component<any, any> {
   /**
    * 任务模式，切换开始和结束的选中状态
    */
-  toggleValue = (type, checked: boolean) => {
+  toggleValue = (type: string, checked: boolean) => {
     const value = checked ? moment(this.state.rememberedValue[type === 'start' ? 0 : 1] || new Date()) : null;
 
     if (type === 'start') {

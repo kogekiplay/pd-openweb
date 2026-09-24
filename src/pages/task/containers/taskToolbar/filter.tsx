@@ -361,7 +361,7 @@ class Filter extends Component<any, any> {
   /**
    * 切换任务归属
    */
-  switchTaskAscription = taskFilter => {
+  switchTaskAscription = (taskFilter: number) => {
     setStateToStorage(taskFilter, Object.assign({}, this.props.taskConfig, { taskFilter }));
     this.props.dispatch(updateTaskAscription(taskFilter));
   };

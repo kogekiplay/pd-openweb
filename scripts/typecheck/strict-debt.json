@@ -3107,7 +3107,6 @@
     "src/pages/worksheet/common/WorksheetDraft/utils.ts",
     "src/pages/worksheet/common/WorksheetEmpty/WorksheetEmpty.tsx",
     "src/pages/worksheet/common/newRecord/AdvancedSettingHandler.tsx",
-    "src/pages/worksheet/common/newRecord/MobileNewRecord/components/CompositeInput/ConfirmAction.tsx",
     "src/pages/worksheet/common/newRecord/MobileNewRecord/components/CompositeInput/ImageCard.tsx",
     "src/pages/worksheet/common/newRecord/MobileNewRecord/components/CompositeInput/index.tsx",
     "src/pages/worksheet/common/newRecord/MobileNewRecord/components/MingoCreation/index.tsx",

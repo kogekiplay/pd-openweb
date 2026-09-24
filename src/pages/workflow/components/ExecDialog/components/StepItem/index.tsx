@@ -538,7 +538,7 @@ export default class StepItem extends Component<any, StepItemState> {
   /**
    * 转换输出时间
    */
-  covertTime(time, isUp = false) {
+  covertTime(time: number, isUp = false) {
     if (time < 0) time = time * -1;
 
     const day = Math.floor(time / 24 / 60 / 60 / 1000);

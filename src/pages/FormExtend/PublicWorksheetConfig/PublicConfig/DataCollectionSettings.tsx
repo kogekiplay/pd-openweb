@@ -239,7 +239,7 @@ export default function DataCollectionSettings(props) {
   const [daySelectPopupVisible, setDaySelectPopupVisible] = useState(false);
   const locale = locales[md.global.Account.lang] || localeEn;
 
-  const onRangeInputChange = (value: string, type, from: string) => {
+  const onRangeInputChange = (value: string, type: string, from: string) => {
     if (parseInt(value) || parseInt(value) === 0 || value === '') {
       const newTimeRange = _.cloneDeep(timeRange);
       const maxValue = type === TIME_TYPE.MONTH ? 12 : 31;
@@ -257,7 +257,7 @@ export default function DataCollectionSettings(props) {
     }
   };
 
-  const onRangeInputBlur = type => {
+  const onRangeInputBlur = (type: string) => {
     if (timeRange[type].start && timeRange[type].end) {
       const newTimeRange = _.cloneDeep(timeRange);
 

@@ -58,7 +58,7 @@ export default function Btn(props) {
   const { buttonList, config } = btnSetting;
 
   const [activeIndex, setIndex] = useState(0);
-  const [errorBtns, setErrorBtns] = useState([]);
+  const [errorBtns, setErrorBtns] = useState<number[]>([]);
 
   const [visible, setVisible] = useState(_.isEmpty(button));
 

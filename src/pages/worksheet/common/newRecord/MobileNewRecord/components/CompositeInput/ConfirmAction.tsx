@@ -81,7 +81,7 @@ const ConfirmAction = ({ visible, content, onCancel, onConfirm }: ConfirmActionP
 
   if (!visible) return null;
 
-  const handleClose = cb => {
+  const handleClose = (cb: () => void) => {
     setClosing(true);
     setTimeout(() => {
       setClosing(false);
