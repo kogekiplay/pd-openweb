@@ -608,7 +608,7 @@ export const windowOpen = (id, name: string, isGroup: boolean) => {
  */
 export const chatWindow = {
   set(id) {
-    safeLocalStorageSetItem(`chat_window_${id}`, true);
+    safeLocalStorageSetItem(`chat_window_${id}`, String(true));
   },
   remove(id) {
     localStorage.removeItem(`chat_window_${id}`);

@@ -162,7 +162,8 @@ Toolbar.Event = function () {
             categorysArray.push($(this).attr('catid'));
           }
         });
-        safeLocalStorageSetItem('categorys', categorysArray);
+        // 读取处按逗号 split（见 comm.tsx）：和原来数组隐式 toString 的结果一样
+        safeLocalStorageSetItem('categorys', categorysArray.join(','));
         Toolbar.Comm.settings.categorys = categorysArray;
       }
 

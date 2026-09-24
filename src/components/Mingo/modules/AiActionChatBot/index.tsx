@@ -720,7 +720,7 @@ function MingoContent(props, ref) {
   const handleDragChange = useCallback(value => {
     const newWidth = window.innerWidth - value;
     const clampedWidth = Math.min(Math.max(newWidth, MINGO_MIN_WIDTH), MINGO_MAX_WIDTH);
-    safeLocalStorageSetItem('AI_ACTION_CHATBOT_WIDTH', clampedWidth);
+    safeLocalStorageSetItem('AI_ACTION_CHATBOT_WIDTH', String(clampedWidth));
     setPanelWidth(clampedWidth);
     setDragMaskVisible(false);
   }, []);
@@ -736,7 +736,7 @@ function MingoContent(props, ref) {
           setRef={dragRef}
           onDrag={handleDragMouseDown}
           onDBClick={() => {
-            safeLocalStorageSetItem('AI_ACTION_CHATBOT_WIDTH', MINGO_MIN_WIDTH);
+            safeLocalStorageSetItem('AI_ACTION_CHATBOT_WIDTH', String(MINGO_MIN_WIDTH));
             setPanelWidth(MINGO_MIN_WIDTH);
             setDragMaskVisible(false);
           }}

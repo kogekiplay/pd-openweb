@@ -174,7 +174,7 @@ function MapView(props) {
 
         if (_.isUndefined(validZoom) || validZoom === getLocalMapZoom(viewId)) return;
 
-        safeLocalStorageSetItem(getMapZoomStorageKey(viewId), validZoom);
+        safeLocalStorageSetItem(getMapZoomStorageKey(viewId), String(validZoom));
       }, 500),
     [viewId],
   );

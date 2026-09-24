@@ -571,7 +571,7 @@ export default function SelectDialog({ ...args }) {
           isFiltered={isFiltered}
           onExpandFastFilters={() => {
             setFiltersVisible(prev => !prev);
-            safeLocalStorageSetItem('selectDialogFiltersVisible', !filtersVisible);
+            safeLocalStorageSetItem('selectDialogFiltersVisible', String(!filtersVisible));
           }}
           onSearch={debounce(handleUpdateKeyWords, 500)}
           onNewRecord={() => {

@@ -158,7 +158,7 @@ function RoleSelect(props) {
   const changeType = () => {
     type === 1 && setValue([]);
     setType(type === 0 ? 1 : 0);
-    safeLocalStorageSetItem('mingRoleDebugType', type === 0 ? 1 : 0);
+    safeLocalStorageSetItem('mingRoleDebugType', String(type === 0 ? 1 : 0));
   };
 
   return (

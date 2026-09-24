@@ -70,7 +70,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
 
   override componentDidMount() {
     if (_.isNull(localStorage.getItem('adminList_isUp'))) {
-      safeLocalStorageSetItem('adminList_isUp', true);
+      safeLocalStorageSetItem('adminList_isUp', String(true));
     }
 
     $('html').addClass('AppAdmin');

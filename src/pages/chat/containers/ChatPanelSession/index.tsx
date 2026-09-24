@@ -117,7 +117,7 @@ class ChatPanelSession extends Component<any, any> {
     const { isGroup } = this.props.session;
 
     if (isGroup) {
-      visible ? localStorage.removeItem('chatInfoHidden') : safeLocalStorageSetItem('chatInfoHidden', true);
+      visible ? localStorage.removeItem('chatInfoHidden') : safeLocalStorageSetItem('chatInfoHidden', String(true));
     }
 
     this.setState({

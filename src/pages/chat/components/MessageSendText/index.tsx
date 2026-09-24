@@ -21,7 +21,7 @@ export default class MessageSendText extends Component<any, MessageSendTextState
       type: newType,
     });
     config.inputMode = newType;
-    safeLocalStorageSetItem('im_input_mode', newType);
+    safeLocalStorageSetItem('im_input_mode', String(newType));
   }
   override render() {
     const { type } = this.state;

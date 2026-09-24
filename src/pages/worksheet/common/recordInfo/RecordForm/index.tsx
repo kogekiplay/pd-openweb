@@ -371,7 +371,7 @@ function RecordForm(props) {
 
   function setSplit(value) {
     if (value) {
-      safeLocalStorageSetItem('recordinfoSplitHeight', topHeight || formHeight * 0.5);
+      safeLocalStorageSetItem('recordinfoSplitHeight', String(topHeight || formHeight * 0.5));
     } else {
       localStorage.removeItem('recordinfoSplitHeight');
     }

@@ -325,7 +325,7 @@ let Chart = class Chart extends Component<any, any> {
                       }
                     },
                   );
-                  safeLocalStorageSetItem(`${direction}ChartSheetSheetSize`, sheetSize);
+                  safeLocalStorageSetItem(`${direction}ChartSheetSheetSize`, String(sheetSize));
                 }}
               />
             )}

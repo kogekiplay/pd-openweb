@@ -282,7 +282,7 @@ export const updateGroupingVisible = data => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, gunterView } = getState().sheet;
     const value = _.isBoolean(data) ? data : !gunterView.groupingVisible;
-    safeLocalStorageSetItem(`gunterGroupingVisible-${base.viewId}`, value);
+    safeLocalStorageSetItem(`gunterGroupingVisible-${base.viewId}`, String(value));
     dispatch({ type: 'CHANGE_GUNTER_GROUPING_VISIBLE', data: value });
   };
 };
@@ -1013,7 +1013,7 @@ export const updateGroupSubVisible = id => {
         const key = `gunter-sub-visible-${id}`;
 
         if (subVisible) {
-          safeLocalStorageSetItem(key, true);
+          safeLocalStorageSetItem(key, String(true));
         } else {
           localStorage.removeItem(key);
         }

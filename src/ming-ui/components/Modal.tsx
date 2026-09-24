@@ -244,7 +244,7 @@ export default function MdModal(props) {
             icon={isLarge ? 'worksheet_narrow' : 'worksheet_enlarge'}
             tooltip={isLarge ? _l('缩小') : _l('放大')}
             onClick={() => {
-              safeLocalStorageSetItem('NEW_RECORD_IS_LARGE', !isLarge);
+              safeLocalStorageSetItem('NEW_RECORD_IS_LARGE', String(!isLarge));
               setIsLarge(!isLarge);
             }}
           />

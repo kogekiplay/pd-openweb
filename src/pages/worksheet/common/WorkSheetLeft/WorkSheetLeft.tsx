@@ -158,7 +158,7 @@ class WorkSheetLeft extends Component<any, any> {
                 icon={isUnfold ? 'menu_left' : 'menu_right'}
                 className="Font20 textTertiary pointer unfoldIcon"
                 onClick={() => {
-                  safeLocalStorageSetItem('sheetListIsUnfold', !isUnfold);
+                  safeLocalStorageSetItem('sheetListIsUnfold', String(!isUnfold));
                   sheetListActions.updateSheetListIsUnfold(!isUnfold);
                 }}
               />

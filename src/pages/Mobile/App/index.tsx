@@ -307,7 +307,7 @@ class App extends Component<any, any> {
     const { appNaviStyle } = _.get(this.props, 'appDetail.detail') || {};
 
     if (appNaviStyle === 2) {
-      safeLocalStorageSetItem('preventBrowserBack', true);
+      safeLocalStorageSetItem('preventBrowserBack', String(true));
     }
 
     if (item.type === 0) {

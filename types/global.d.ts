@@ -338,15 +338,19 @@ declare var agentAPI: (args?: Record<string, unknown>, options?: AgentApiOptions
  */
 declare var safeParse: any;
 declare var createTimeSpan: any; // src/common/global.js:291 `window.createTimeSpan = (dateStr, showType = 1) =>`
-declare var getCurrentLang: any; // src/common/global.js:74 `window.getCurrentLang = () => {`
-declare var getCurrentLangCode: any; // src/common/global.js:82 `window.getCurrentLangCode = lang => {`
+// src/common/global.ts 的 window.getCurrentLang：URL 上的 sys_lang 优先，否则取 cookie i18n_langtag（都没有时是 null）
+declare var getCurrentLang: () => string | null;
+// window.getCurrentLangCode：语言 key（不传就用当前语言）在 langConfig 里对应的数字 code，找不到时 undefined
+declare var getCurrentLangCode: (lang?: string | null) => number | undefined;
 declare var destroyAlert: any; // src/common/global.js:248 `window.destroyAlert = destroyAlert;`
 
 // ---- 由 src/common/cookies.js 挂到 window 上 ----
-declare var getCookie: any; // src/common/cookies.js:51
-declare var setCookie: any; // src/common/cookies.js:22
-declare var delCookie: any; // src/common/cookies.js:70
-declare var safeLocalStorageSetItem: any; // src/common/cookies.js:8
+// src/common/cookies.ts：读不到时 null；expire 交给 moment() 解析（Date / 日期字符串 / 时间戳），不传就是 10 天
+declare var getCookie: (name: string) => string | null;
+declare var setCookie: (name: string, value: string, expire?: Date | string | number) => void;
+declare var delCookie: (name: string) => void;
+// localStorage.setItem 包一层 try/catch（隐私模式 / 配额满时不抛）
+declare var safeLocalStorageSetItem: (key: string, value: string) => void;
 
 // ---- 由构建期/宿主页注入，不是模块 ----
 declare var __api_server__: any; // CI/generate.js:123 生成 `var __api_server__ = ...` 内联进 HTML；消费点 src/common/global.js:433
@@ -425,13 +429,13 @@ interface Window {
   mdyAPI: any;
   agentAPI: any;
   safeParse: any;
-  safeLocalStorageSetItem: any;
-  getCookie: any;
-  setCookie: any;
-  delCookie: any;
+  safeLocalStorageSetItem: typeof safeLocalStorageSetItem;
+  getCookie: typeof getCookie;
+  setCookie: typeof setCookie;
+  delCookie: typeof delCookie;
   createTimeSpan: any;
-  getCurrentLang: any;
-  getCurrentLangCode: any;
+  getCurrentLang: typeof getCurrentLang;
+  getCurrentLangCode: typeof getCurrentLangCode;
   destroyAlert: any;
   translations: any;
   __api_server__: any;

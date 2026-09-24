@@ -205,7 +205,7 @@ export function loadTop(projectId?) {
 }
 
 export function changeFontSize(fontSize: number) {
-  safeLocalStorageSetItem(md.global.Account.accountId + '_fontsize', fontSize);
+  safeLocalStorageSetItem(md.global.Account.accountId + '_fontsize', String(fontSize));
   return {
     type: 'POST_CHANGE_FONT_SIZE',
     fontSize,

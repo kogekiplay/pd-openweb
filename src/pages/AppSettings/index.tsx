@@ -355,7 +355,7 @@ class AppSettings extends Component<any, any> {
                 icon={!collapseAppManageNav ? 'menu_left' : 'menu_right'}
                 className="Font20 textTertiary pointer collapseWrapIcon"
                 onClick={() => {
-                  safeLocalStorageSetItem('collapseAppManageNav', !collapseAppManageNav);
+                  safeLocalStorageSetItem('collapseAppManageNav', String(!collapseAppManageNav));
                   this.setState({
                     collapseAppManageNav: !collapseAppManageNav,
                   });

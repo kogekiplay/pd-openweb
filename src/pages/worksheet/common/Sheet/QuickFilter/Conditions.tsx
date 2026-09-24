@@ -541,7 +541,7 @@ export default function Conditions(props) {
               showQueryBtn={showQueryBtn}
               onClick={() => {
                 setFullShow(!fullShow);
-                safeLocalStorageSetItem('QUICK_FILTER_FULL_SHOW', !fullShow);
+                safeLocalStorageSetItem('QUICK_FILTER_FULL_SHOW', String(!fullShow));
               }}
             >
               {/* 这里没有别的 transform，Motion 自己合成 rotate() 与原来手写的等价 */}

@@ -1630,7 +1630,7 @@ export default class RecordInfo extends Component<any, any> {
                   min={450}
                   max={width - formSectionWidth - SIDE_MIN_WIDTH}
                   onChange={value => {
-                    safeLocalStorageSetItem('RECORD_INFO_SIDE_WIDTH', width - value - formSectionWidth);
+                    safeLocalStorageSetItem('RECORD_INFO_SIDE_WIDTH', String(width - value - formSectionWidth));
                     this.setState({ dragMaskVisible: false, sideWidth: width - value - formSectionWidth });
                   }}
                 />
@@ -1800,7 +1800,7 @@ export default class RecordInfo extends Component<any, any> {
                   }}
                   onDBClick={() => {
                     // set min width and save to local storage
-                    safeLocalStorageSetItem('RECORD_INFO_SIDE_WIDTH', SIDE_MIN_WIDTH);
+                    safeLocalStorageSetItem('RECORD_INFO_SIDE_WIDTH', String(SIDE_MIN_WIDTH));
                     this.setState({ sideWidth: SIDE_MIN_WIDTH, dragMaskVisible: false });
                   }}
                 />

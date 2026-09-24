@@ -107,13 +107,13 @@ export default function SideContent(props) {
   const onExpandCollapse = (key?) => {
     if (key) {
       const isExpand = expandKeys.includes(key);
-      safeLocalStorageSetItem(key, !isExpand);
+      safeLocalStorageSetItem(key, String(!isExpand));
       setExpandKeys(isExpand ? expandKeys.filter(item => item !== key) : expandKeys.concat(key));
     } else {
       const storageKeys = getStorageKeys();
       setExpandKeys(expandKeys.length === 0 ? storageKeys : []);
       storageKeys.forEach(key => {
-        safeLocalStorageSetItem(key, expandKeys.length === 0 ? true : false);
+        safeLocalStorageSetItem(key, String(expandKeys.length === 0 ? true : false));
       });
     }
   };
