@@ -10,7 +10,11 @@ import EditMemberDialog from '../modules/EditMemberDialog';
 import MergeDialog from '../modules/MergeDialog';
 import './index.less';
 
-export default class WorkPlace extends Component<any, any> {
+export interface WorkPlaceProps {
+  setLevel: (value: number) => void;
+}
+
+export default class WorkPlace extends Component<WorkPlaceProps, any> {
   declare box: HTMLDivElement | null | undefined;
 
   constructor() {

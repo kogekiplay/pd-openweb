@@ -28,10 +28,14 @@ const getValue = (value, type: string) => {
   return value ? `${value} 23:59` : value;
 };
 
-export default class PortalList extends Component<any, any> {
+export interface PortalListProps {
+  projectId: string;
+}
+
+export default class PortalList extends Component<PortalListProps, any> {
   declare dateInput: HTMLDivElement | null | undefined;
 
-  constructor(props) {
+  constructor(props: PortalListProps) {
     super(props);
     this.state = {
       list: null,

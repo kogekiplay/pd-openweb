@@ -40,7 +40,11 @@ const routeList = [
   },
 ];
 
-export default class Stat extends React.Component<any, any> {
+export interface StatProps {
+  onClose: () => void;
+}
+
+export default class Stat extends React.Component<StatProps, any> {
   constructor() {
     super();
 

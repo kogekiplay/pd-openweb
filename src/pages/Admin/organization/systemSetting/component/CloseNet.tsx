@@ -15,7 +15,11 @@ export interface CloseNetState {
   disabled: boolean;
 }
 
-export default class CloseNet extends Component<any, CloseNetState> {
+export interface CloseNetProps {
+  setLevel: (value: number) => void;
+}
+
+export default class CloseNet extends Component<CloseNetProps, CloseNetState> {
   constructor() {
     super();
     this.state = {

@@ -66,8 +66,13 @@ export interface MoreopState {
   menuVisible: boolean;
 }
 
-class Moreop extends Component<any, MoreopState> {
-  constructor(props) {
+export interface MoreopProps {
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+class Moreop extends Component<MoreopProps, MoreopState> {
+  constructor(props: MoreopProps) {
     super(props);
     this.state = {
       menuVisible: false,

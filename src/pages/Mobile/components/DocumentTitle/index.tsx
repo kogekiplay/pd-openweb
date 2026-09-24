@@ -49,7 +49,11 @@ export function setDingTalkNavigationTitle(title: string) {
   updateTitle(0);
 }
 
-export default class DocumentTitle extends Component<any, any> {
+export interface DocumentTitleProps {
+  title: string;
+}
+
+export default class DocumentTitle extends Component<DocumentTitleProps, any> {
   static override propTypes = {
     title: string,
   };
@@ -58,7 +62,7 @@ export default class DocumentTitle extends Component<any, any> {
     setDingTalkNavigationTitle(this.props.title);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DocumentTitleProps) {
     if (prevProps.title !== this.props.title) {
       setDingTalkNavigationTitle(this.props.title);
     }

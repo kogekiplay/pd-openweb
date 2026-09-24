@@ -6,10 +6,14 @@ import projectSettingController from 'src/api/projectSetting';
 import Config from '../../../config';
 import './index.less';
 
-export default class SubDomain extends Component<any, any> {
+export interface SubDomainProps {
+  setLevel: (value: number) => void;
+}
+
+export default class SubDomain extends Component<SubDomainProps, any> {
   declare upload: HTMLInputElement | null | undefined;
 
-  constructor(props) {
+  constructor(props: SubDomainProps) {
     super(props);
     this.images = [];
     this.state = {

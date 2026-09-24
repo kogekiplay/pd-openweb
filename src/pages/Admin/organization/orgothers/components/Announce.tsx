@@ -70,8 +70,12 @@ const AttachmentList = styled.div`
   }
 `;
 
-export default class Announce extends Component<any, any> {
-  constructor(props) {
+export interface AnnounceProps {
+  onClose: () => void;
+}
+
+export default class Announce extends Component<AnnounceProps, any> {
+  constructor(props: AnnounceProps) {
     super(props);
     this.state = {
       announceVisible: false,

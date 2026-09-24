@@ -19,10 +19,15 @@ import './index.less';
 
 const { Option } = Select;
 
-export default class EncryptRules extends Component<any, any> {
+export interface EncryptRulesProps {
+  projectId: string;
+  onClose: () => void;
+}
+
+export default class EncryptRules extends Component<EncryptRulesProps, any> {
   declare promise: ApiResult | null;
 
-  constructor(props) {
+  constructor(props: EncryptRulesProps) {
     super(props);
     this.state = {
       loading: false,

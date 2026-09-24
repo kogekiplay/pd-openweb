@@ -2,7 +2,13 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Checkbox from 'ming-ui/components/Checkbox';
 
-class TaskHeader extends Component<any, any> {
+export interface TaskHeaderProps {
+  toggle: (value: string, arg1: boolean) => void;
+  startChecked: boolean;
+  endChecked: boolean;
+}
+
+class TaskHeader extends Component<TaskHeaderProps, any> {
   /**
    * 切换开始和结束的选中状态
    */

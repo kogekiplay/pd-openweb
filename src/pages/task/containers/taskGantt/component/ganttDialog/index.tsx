@@ -18,7 +18,12 @@ import GanttSideBar from './GanttSideBar';
 import { durDays, momentTime } from './time';
 import './index.less';
 
-export default class GanttDialog extends Component<any, any> {
+export interface GanttDialogProps {
+  closeLayer?: ((value: boolean) => void) | undefined;
+  folderID: string;
+}
+
+export default class GanttDialog extends Component<GanttDialogProps, any> {
   static override propTypes = {
     folderID: PropTypes.string.isRequired,
     closeLayer: PropTypes.func,

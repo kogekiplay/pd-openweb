@@ -17,7 +17,13 @@ function getNode(component) {
   return component && component.getNode ? component.getNode() : null;
 }
 
-class ChecklistOperator extends Component<any, any> {
+export interface ChecklistOperatorProps {
+  isShowOperator: () => void;
+  createTask: () => void;
+  removeItem: () => void;
+}
+
+class ChecklistOperator extends Component<ChecklistOperatorProps, any> {
   override render() {
     return (
       <ClickAwayable
