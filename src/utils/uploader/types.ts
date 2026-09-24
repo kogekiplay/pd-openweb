@@ -141,8 +141,11 @@ export interface UploadErrorInfo {
   code?: number | undefined;
   message?: string;
   status?: number;
-  /** HTTP 错误时后端返回体，本仓只读其中的 error 文案；返回体解析失败时显式给 undefined（见 qiniuV1 的 httpError） */
-  response?: { error?: string } | undefined;
+  /**
+   * HTTP 错误时的后端返回体，【已经解析成对象】（见 qiniuV1 的 httpError）；解析失败时显式给 undefined。
+   * 本仓读 error 文案，以及私有部署下的 code / message（UploadFiles 按 code 弹具体原因）。
+   */
+  response?: { error?: string; code?: number; message?: string } | undefined;
   /** 与具体文件无关的错误（如整批取凭证失败）显式给 undefined */
   file?: UploaderFile | undefined;
   details?: string;
@@ -230,7 +233,8 @@ export interface Uploader {
   start(): void;
   stop(): void;
   addFile(files: File | File[] | FileList): void;
-  removeFile(file: UploaderFile | string): void;
+  /** 按 id 找；调用方常只给 { id }（实现里只读 id） */
+  removeFile(file: Pick<UploaderFile, 'id'> | string): void;
   /** plupload 里是重新测量按钮位置；这里是空操作，保留是为了调用点不用改 */
   refresh(): void;
   disableBrowse(disable?: boolean): void;

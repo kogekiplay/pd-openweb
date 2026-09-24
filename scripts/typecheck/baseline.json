@@ -3,16 +3,16 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-09-24T00:44:40.664Z",
-  "rawCount": 12924,
+  "generatedAt": "2026-09-24T00:48:27.386Z",
+  "rawCount": 12918,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 12924,
-  "uniqueKeys": 2983,
+  "keptCount": 12918,
+  "uniqueKeys": 2982,
   "entries": {
     "src/common/GlobalStore.tsx|TS2554": 1,
     "src/common/cookies.ts|TS2556": 1,
@@ -394,7 +394,6 @@
     "src/ming-ui/components/Progress/CircleProgress.tsx|TS2339": 4,
     "src/ming-ui/components/Progress/CircleProgress.tsx|TS2345": 1,
     "src/ming-ui/components/PullToRefreshWrapper/index.tsx|TS2322": 1,
-    "src/ming-ui/components/QiniuUpload/index.tsx|TS2339": 6,
     "src/ming-ui/components/Radio.tsx|TS2322": 1,
     "src/ming-ui/components/RadioGroup.tsx|TS2556": 1,
     "src/ming-ui/components/RichText.tsx|TS2339": 42,

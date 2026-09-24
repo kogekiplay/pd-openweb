@@ -931,7 +931,10 @@ export default class UploadFiles extends Component<any, any> {
 
             if ((window.platformENV.isOverseas || window.platformENV.isLocal) && error.response) {
               try {
-                const res = JSON.parse(error.response);
+                // 上传层（uploader/qiniuV1 的 httpError）已经把返回体解析成对象了。原来这里再 JSON.parse 一次，
+                // 对象转成 "[object Object]" 必然抛错落进 catch —— 换掉 plupload 以后，私有部署下服务端给的
+                // 具体原因（50001 带的 message、errorCode 里那些）一次都没弹出来过，一律成了「上传失败」
+                const res = error.response;
 
                 if (res.code === 50001) {
                   alert(res.message, 2);

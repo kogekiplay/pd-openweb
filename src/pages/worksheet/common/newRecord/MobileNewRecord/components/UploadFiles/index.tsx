@@ -2,7 +2,8 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 
 import { QiniuUpload } from 'ming-ui';
 import type { MobileFileLike } from 'src/pages/worksheet/types';
 
-const formatUploadFile = (file: MobileFileLike = {}, status = 'added') => ({
+// 只读这几个字段；传进来的可能是上传队列里的文件（它的 status 是数字，和 MobileFileLike 的字符串状态不是一回事）
+const formatUploadFile = (file: Pick<MobileFileLike, 'id' | 'size' | 'type' | 'name' | 'url'> = {}, status = 'added') => ({
   id: file.id,
   size: file.size,
   type: file.type,

@@ -798,7 +798,8 @@ export default class SingleControlValue extends Component<any, any> {
                     .map(o => parseInt(o.fileSize || o.filesize))
                     .reduce((o, count) => count + o, 0);
 
-                  if (currentTotalSize + parseInt(file.size) > 50 * 1024 * 1024) {
+                  // file.size 本来就是整数字节数；parseInt 要的是字符串（结果一样）
+                  if (currentTotalSize + file.size > 50 * 1024 * 1024) {
                     alert(_l('部分附件上传失败，总大小超过50MB'), 2);
                     return;
                   }
