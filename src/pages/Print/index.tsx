@@ -548,7 +548,7 @@ class PrintForm extends React.Component<any, any> {
           (['2', '5', '6'].includes(o.advancedSetting.showtype) || [34, 51].includes(o.type)) //关联表列表||子表||查询列表
         ) {
           //关联表 列表
-          let relations = [];
+          let relations: Pick<FormControl, "type" | "controlId">[] = [];
           o.relationControls.map(it => {
             if (it.checked) {
               relations.push(_.pick(it, ['controlId', 'type']));

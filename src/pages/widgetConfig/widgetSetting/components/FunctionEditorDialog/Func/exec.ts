@@ -89,7 +89,7 @@ class Runner {
       this.run();
     };
 
-    let timer;
+    let timer: NodeJS.Timeout | undefined;
 
     workerObj.worker.onmessage = msg => {
       if (msg.data.type === 'begin') {

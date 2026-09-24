@@ -70,7 +70,7 @@ const getLoginUrl = (redirectUrl?: string | undefined) => {
 };
 
 /** 跳转到 登录页 */
-let pendingCheckLogin;
+let pendingCheckLogin: string | NodeJS.Timeout | undefined;
 
 /* 参数类型必须显式写：「解构 + = {} 默认值」只会把带默认值的 needReturnUrl 推进参数类型，
    needSecondCheck / redirectUrl 被整个丢掉，于是全仓传这两个选项的调用点都报「不是已知属性」——

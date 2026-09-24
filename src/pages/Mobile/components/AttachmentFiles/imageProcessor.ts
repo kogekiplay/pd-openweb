@@ -124,7 +124,7 @@ function getDynamicWrapTxt(dynamicTxt, canvasWidth, ctx, fontSize: number) {
 
   ctx.font = `${fontSize}px 'Fira Sans'`;
   var paragraphs = dynamicTxt.split('\n');
-  const txtList = [];
+  const txtList: string[] = [];
   paragraphs.forEach(function (paragraph) {
     paragraph = paragraph.trim();
 

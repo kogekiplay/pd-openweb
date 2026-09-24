@@ -152,7 +152,7 @@ class TaskTree extends Component<any, any> {
           const $li = $singleTreeTask.parent();
           const taskId = $li.data('taskid');
           let isMuil = false;
-          let metaKeyType;
+          let metaKeyType: string | undefined;
 
           if (
             $singleTreeTask.hasClass('addNewTask') ||

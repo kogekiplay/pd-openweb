@@ -46,7 +46,7 @@ const TYPE_TO_COMP = {
 const ENABLE_DATAPIPELINE_KEYS = ['dataConnect', 'taskCon', 'task', 'source', 'dataMirror', 'stats'];
 
 const getRoutes = param => {
-  let components = [];
+  let components: React.JSX.Element[] = [];
   _.keys(ROUTE_CONFIG_PATH).forEach((key, i) => {
     const path = ROUTE_CONFIG_PATH[key];
     const Component = TYPE_TO_COMP[key];

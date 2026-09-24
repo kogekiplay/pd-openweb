@@ -11,7 +11,7 @@ const formatApps = function (
   projectId: string,
   appId: string,
 ) {
-  const appList = [];
+  const appList: { text: string | undefined; value: string | undefined }[] = [];
   const project = validProject.filter(item => item.projectId === projectId)[0];
 
   if (project && project.projectApps && project.projectApps.length) {

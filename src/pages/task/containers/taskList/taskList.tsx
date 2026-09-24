@@ -236,7 +236,7 @@ class TaskList extends Component<any, TaskListState> {
     $taskList.on('click', '.listStageTaskContent tr', function (this: HTMLElement, event) {
       const _this = $(this);
       let isMuil = false;
-      let metaKeyType;
+      let metaKeyType: string | undefined;
 
       if ($(event.target).hasClass('markTask') || $(event.target).hasClass('taskStar')) {
         return undefined;

@@ -443,7 +443,7 @@ Calendar.Method = {
     }
 
     var $container = $('#container');
-    var hoverTitleTimer;
+    var hoverTitleTimer: NodeJS.Timeout | undefined;
 
     // 鼠标经过提示双击创建
     $container.on(

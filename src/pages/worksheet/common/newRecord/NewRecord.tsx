@@ -313,7 +313,7 @@ function NewRecord(props) {
 
   // 根据条件获取要显示的图标按钮
   const getVisibleIconButtons = () => {
-    const allowedTypes = [];
+    const allowedTypes: string[] = [];
 
     if (showMingoCreate && !md.global.SysSettings.hideAIBasicFun) {
       allowedTypes.push('mingoCreate');

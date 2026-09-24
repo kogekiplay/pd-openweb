@@ -734,7 +734,7 @@ class Header extends Component<any, any> {
               <Button
                 size="large"
                 onClick={() => {
-                  const switchList = [];
+                  const switchList: { state: boolean; type: number; roleType: number }[] = [];
 
                   if (showApprovalFields) {
                     switchList.push({ state: true, type: 40, roleType: 0 });

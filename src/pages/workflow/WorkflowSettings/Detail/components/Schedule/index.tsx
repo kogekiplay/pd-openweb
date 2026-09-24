@@ -295,7 +295,7 @@ export default ({
             showDialog(false);
           }}
           onOk={() => {
-            const accountNullIndex = [];
+            const accountNullIndex: number[] = [];
             const actions = data.actions || [];
 
             actions

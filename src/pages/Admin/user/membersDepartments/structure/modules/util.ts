@@ -89,7 +89,7 @@ export const formatSearchDeptData = (data, keywords: string) => {
     const children = dept.subs || [];
     const parent = dept.parent || {};
     const parentName = htmlEncodeReg(parent.name);
-    const nameArr = [];
+    const nameArr: string[] = [];
     let curName = htmlEncodeReg(dept.name);
     let _curName = curName;
 

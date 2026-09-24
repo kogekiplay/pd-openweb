@@ -162,7 +162,7 @@ export default class RelationControl extends Component<any, any> {
    * @param  {array} types
    */
   returnTypes(types) {
-    let typeArr = [];
+    let typeArr: { name: string; icon: string; value: number; searchText: string; sortText: string }[] = [];
 
     types.forEach(type => {
       defaultArr.forEach(item => {

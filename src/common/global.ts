@@ -670,7 +670,7 @@ window.clearLocalDataTime = ({ controllerName, actionName, requestData = {}, cle
     appLangId: requestData.langId || requestData.targetLangId,
     worksheetId: requestData.worksheetId || requestData.workSheetId || requestData.sourceId,
   });
-  const localKeys = [];
+  const localKeys: string[] = [];
 
   Object.keys(CACHE_PARAMS).forEach(currentKey => {
     if (CACHE_PARAMS[currentKey].clearInterface.includes(key) || _.includes(clearSpecificKeys, currentKey)) {

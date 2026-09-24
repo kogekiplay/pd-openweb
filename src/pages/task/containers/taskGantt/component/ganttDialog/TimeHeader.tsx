@@ -30,7 +30,7 @@ export default class TimeHeader extends Component<any, any> {
   override render() {
     const { time, type } = this.props;
     const width = TYPE_TO_WIDTH[type];
-    let pubWidth, subWidth;
+    let pubWidth: number | undefined, subWidth;
     return (
       <div className="timeHeader flexRow">
         {time.map((item, index: number) => {

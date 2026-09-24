@@ -97,7 +97,7 @@ export const formatTaskNodeData = (dataList = [], firstId) => {
   // 计算所有行的位置情况
   const calculationAllRowPosition = () => {
     const rowObj = {};
-    let allowMergeRow = [];
+    let allowMergeRow: number[] = [];
 
     list
       .filter(item => item.y > 0)

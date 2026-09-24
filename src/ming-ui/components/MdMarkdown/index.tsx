@@ -217,7 +217,7 @@ function MdMarkdown(props) {
   const customUpload = files => {
     return new Promise((resolve, reject) => {
       const urlList = [];
-      const showList = [];
+      const showList: string[] = [];
 
       files.forEach(file => {
         const formData = new FormData();

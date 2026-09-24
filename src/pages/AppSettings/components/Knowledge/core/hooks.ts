@@ -53,7 +53,7 @@ export const useAutoFocus = (ref: React.RefObject<HTMLElement | null>, active = 
   useEffect(() => {
     if (!active) return undefined;
 
-    let frame;
+    let frame: number | undefined;
     let count = 0;
 
     const tryFocus = () => {

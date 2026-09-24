@@ -115,7 +115,7 @@ export default function Btn(props) {
   const handleSave = () => {
     // 验证业务流程是否有必填项
     const { buttonList } = btnSetting;
-    const emptyParamBtns = [];
+    const emptyParamBtns: number[] = [];
     buttonList.forEach((btn, index: number) => {
       const { inputs } = btn.config || {};
       const requiredInput = _.find(inputs, { required: true });

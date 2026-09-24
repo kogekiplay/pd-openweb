@@ -8,7 +8,7 @@ import store from 'src/redux/configureStore';
 import './SheetMove.less';
 
 const formatApps = function (validProject: HapApi.MD.Entity.HomeApp.ProjectForApp[] | undefined, projectId: string) {
-  const appList = [];
+  const appList: { text: string | undefined; value: string | undefined }[] = [];
   const project = validProject.filter(item => item.projectId === projectId)[0];
 
   if (project && project.projectApps && project.projectApps.length) {

@@ -300,7 +300,7 @@ function TableComponent(props) {
 
     const useAnimationFrame = typeof window.requestAnimationFrame === 'function';
     let nextCount = INITIAL_EXPAND_RENDER_COUNT;
-    let frame;
+    let frame: number | undefined;
 
     setRenderState({ key: renderKey, count: nextCount });
 

@@ -478,8 +478,8 @@ export default class StepItem extends Component<any, StepItemState> {
     const workItems = ((data || {}).workItems || []).filter(
       item => _.includes([3, 4], item.type) && !_.includes([2, 8, 9, 10, 22], _.get(item, 'workItemLog.action')),
     );
-    const timeConsuming = [];
-    const endTimeConsuming = [];
+    const timeConsuming: number[] = [];
+    const endTimeConsuming: number[] = [];
 
     if (!workItems.length) return null;
 

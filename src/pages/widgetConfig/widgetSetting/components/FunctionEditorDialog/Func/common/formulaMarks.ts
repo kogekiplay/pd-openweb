@@ -125,7 +125,7 @@ export function findBadEndMarks(text) {
 
 // 括号未闭合。CM5: markUnclosedBrackets()
 export function findUnclosedBracketMarks(text, inString) {
-  const stack = [];
+  const stack: { bracketFrom: number; fnFrom: number | null }[] = [];
   const lines = text.split('\n');
   let lineStart = 0;
 

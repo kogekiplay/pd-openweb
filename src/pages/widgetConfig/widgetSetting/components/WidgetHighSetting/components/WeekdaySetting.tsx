@@ -55,7 +55,7 @@ export default function WeekdaySetting({ data, onChange }) {
   };
 
   const formatWeekdayToText = () => {
-    let weekdayText = [];
+    let weekdayText: string[] = [];
     let isContinue = true;
     weekdayArr.map((item, index: number) => {
       if (index !== weekdayArr.length - 1 && Number(item) + 1 !== Number(weekdayArr[index + 1])) {

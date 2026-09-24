@@ -242,7 +242,7 @@ class FolderChart extends Component<any, any> {
     $('body').on('click.folderChart', '.folderChartChargeYes', function (this: HTMLElement) {
       const $folderChartChargeList = $(this).closest('.folderChartChargeList');
       let isAuto = false;
-      const chargeAccountIDs = [];
+      const chargeAccountIDs: (string | undefined)[] = [];
       const isDialog = $(this).closest('.folderChartMaxView').length;
 
       if (!$folderChartChargeList.find('.folderChartSelect.bgColorPrimary').length) {

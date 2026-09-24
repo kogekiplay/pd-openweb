@@ -159,7 +159,7 @@ const CheckboxWidget = props => {
   };
 
   const renderDropdown = (checkIds: string[]) => {
-    let sources = [];
+    let sources: { key: string; color: string; value: string }[] = [];
 
     checkIds.forEach(item => {
       if ((item || '').toString().indexOf('add_') > -1) {

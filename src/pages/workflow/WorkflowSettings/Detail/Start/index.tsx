@@ -378,7 +378,7 @@ export default class Start extends Component<any, any> {
       week: _l('星期'),
       month: _l('月'),
     };
-    const errorKeys = [];
+    const errorKeys: string[] = [];
 
     Object.keys(config).forEach(key => {
       if ((config[key].type === 2 || config[key].type === 4) && (!config[key].values[0] || !config[key].values[1])) {

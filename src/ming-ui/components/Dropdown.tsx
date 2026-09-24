@@ -486,7 +486,7 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
       itemLoading,
     } = this.props;
 
-    const searchData = [];
+    const searchData: (DropdownOption<V, Item> | readonly DropdownOption<V, Item>[])[] = [];
 
     (data || []).forEach(item => {
       if (_.isArray(item)) {

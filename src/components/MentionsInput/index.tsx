@@ -725,8 +725,8 @@ const MentionsInput = props => {
         );
       }
 
-      let atDataIndex = null;
-      let userIndex = null;
+      let atDataIndex: number | null = null;
+      let userIndex: number | null = null;
 
       responseData.accounts = responseData.accounts.map((item, index: number) => {
         if (item.isAtData && atDataIndex == null && props.forReacordDiscussion && !query) {

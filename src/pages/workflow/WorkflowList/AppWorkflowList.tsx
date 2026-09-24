@@ -800,7 +800,7 @@ class AppWorkflowList extends Component<any, any> {
    */
   column3Content(item) {
     const { type, list, displayType } = this.state;
-    let text;
+    let text: string | undefined;
 
     if (type !== FLOW_TYPE.OTHER_APP) {
       return (

@@ -156,7 +156,7 @@ Toolbar.Event = function () {
 
     setTimeout(() => {
       if (!Toolbar.Comm.settings.categorys.length) {
-        var categorysArray = [];
+        var categorysArray: (string | undefined)[] = [];
         $('.allowDrop').each(function (this: HTMLElement) {
           if ($(this).find('.iconTickStyle').hasClass('icon-calendar-check')) {
             categorysArray.push($(this).attr('catid'));

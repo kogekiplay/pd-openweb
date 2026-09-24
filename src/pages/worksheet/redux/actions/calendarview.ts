@@ -16,7 +16,7 @@ import { formatQuickFilter } from 'src/utils/filter';
 import type { FormControl } from 'src/utils/controlTypes';
 import type { AppDispatch, GetState } from 'src/redux/types';
 
-let getRows;
+let getRows: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined;
 let getRowsIds = [];
 
 export const fetch = searchArgs => {
@@ -352,7 +352,7 @@ export const getEventScheduledData = (type: string) => {
   };
 };
 
-let getFilterRows;
+let getFilterRows: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined;
 let getFilterRowsIds = [];
 
 export function getEventList({

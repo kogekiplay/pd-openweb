@@ -100,7 +100,7 @@ export default class RelationTable extends React.Component<any, any> {
       ];
     }
 
-    let controlsList = [];
+    let controlsList: FormControl[] = [];
     let sumWidth = orderNumberCheck ? orderNumberWidth : 0;
 
     controls.map(it => {

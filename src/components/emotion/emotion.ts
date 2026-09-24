@@ -607,7 +607,7 @@ Emotion.prototype.toggle = function () {
  * @param str
  */
 Emotion.prototype.parse = function (str) {
-  let reg;
+  let reg: RegExp | undefined;
   str = str || '';
 
   emotionData.forEach(function (item, index) {

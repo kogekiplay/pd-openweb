@@ -16,7 +16,7 @@ function handleMdAjaxFail(dispatch: AppDispatch, actionType: string, payload = {
   };
 }
 
-let ajaxObj;
+let ajaxObj: ApiResult | undefined;
 
 /**
  * 加载动态列表

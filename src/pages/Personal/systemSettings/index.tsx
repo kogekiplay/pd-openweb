@@ -59,7 +59,7 @@ export default class AccountChart extends React.Component<any, any> {
     });
 
     fixedDataApi.loadTimeZones().then(res => {
-      const timeZones = [];
+      const timeZones: { text: string; value: number }[] = [];
 
       Object.keys(res).forEach(key => {
         timeZones.push({ text: res[key], value: parseInt(key) });

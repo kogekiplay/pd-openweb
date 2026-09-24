@@ -63,7 +63,7 @@ const dateMenu = [
   },
 ];
 
-let lastSelectId = null;
+let lastSelectId: string | number | null = null;
 
 const DateFilter = props => {
   const { noClear, onChange, popupContainer } = props;

@@ -253,7 +253,7 @@ const checkTime = (startTime, endTime, filterWeekend?) => {
  */
 const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
   // 不同视图下任务名称代表多少小时
-  let taskNameTime;
+  let taskNameTime: number | undefined;
 
   if (viewType === VIEWTYPE.DAY) {
     taskNameTime = TASK_NAME_SIZE / GRANULARITY.DAY;

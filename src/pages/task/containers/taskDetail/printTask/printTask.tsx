@@ -35,8 +35,8 @@ export default class PrintTask extends Component<any, any> {
   }
 
   submit() {
-    const printList = [];
-    const cids = [];
+    const printList: (string | undefined)[] = [];
+    const cids: (string | undefined)[] = [];
 
     $('.printTaskBaseMsg .checkOperation.checked').each(function (this: HTMLElement) {
       printList.push($(this).attr('name'));

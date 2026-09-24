@@ -205,7 +205,7 @@ export default class Condition extends Component<any, any> {
     } = this.props;
     let controlNumber;
     let conditionData = [];
-    let conditionIndex;
+    let conditionIndex: number | undefined;
     let single;
 
     if (isNodeHeader) {
@@ -706,7 +706,7 @@ export default class Condition extends Component<any, any> {
     if (filedTypeId === 15 || filedTypeId === 16) {
       const showType = _.get(currentControl || {}, 'advancedSetting.showtype');
       const mode = { 3: 'date', 4: 'month', 5: 'year' };
-      const dateList = [];
+      const dateList: { text: string; value: number }[][] = [];
       const showTimePicker = filedTypeId === 16 && !_.includes(['9', '10'], item.conditionId);
       const timeMode =
         _.includes(['ctime', 'utime'], filedId) || showType === '6' ? 'second' : showType === '2' ? 'hour' : 'minute';

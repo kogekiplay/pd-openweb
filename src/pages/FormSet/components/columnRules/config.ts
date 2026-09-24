@@ -242,7 +242,7 @@ function formatSectionData(data = []) {
 }
 
 export function getNewDropDownData(controls: FormControl[] = [], actionType) {
-  let filterControls = [];
+  let filterControls: number[] = [];
 
   if (_.includes([3, 4, 5], actionType)) {
     // 公式 汇总 文本组合 自动编号 他表字段 分割线 大写金额 备注 文本识别
@@ -778,7 +778,7 @@ export const getErrorControls = (controls: FormControl[] = []) => {
     return true;
   };
 
-  const newData = [];
+  const newData: FormControl[] = [];
   controls
     .map(i => (i.type === 52 ? i : { ...i, relationControls: [] }))
     .forEach(i => {

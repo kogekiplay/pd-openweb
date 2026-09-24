@@ -257,7 +257,7 @@ export default function ChildTableFlatComp(props) {
 
       // 当展开内容较长时，需要等待内容完全渲染
       // 使用多重 requestAnimationFrame + setTimeout 确保 DOM 和内容都渲染完成
-      let rafId1, rafId2, timeoutId;
+      let rafId1, rafId2: number | undefined, timeoutId: NodeJS.Timeout | undefined;
 
       rafId1 = requestAnimationFrame(() => {
         rafId2 = requestAnimationFrame(() => {

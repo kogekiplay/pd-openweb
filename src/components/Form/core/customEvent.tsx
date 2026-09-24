@@ -286,7 +286,7 @@ const handleUpdateSearchResult = async props => {
                 })
               : searchResult;
 
-            const newValue = [];
+            const newValue: { rowid: string; allowedit: boolean; addTime: number }[] = [];
 
             if (subResult.length) {
               subResult.forEach(item => {

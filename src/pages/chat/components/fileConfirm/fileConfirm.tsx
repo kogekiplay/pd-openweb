@@ -38,7 +38,7 @@ function FileConfirm(this: FileConfirmInstance, file, callback) {
 const fileConfirmMethods = defineMethods<FileConfirmFields>()({
   init: function () {
     var FC = this;
-    var name;
+    var name: string | undefined;
     var file = FC.file;
     var fullname = file.name;
     if (fullname.lastIndexOf('.') > -1) {

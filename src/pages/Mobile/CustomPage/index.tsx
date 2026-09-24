@@ -340,7 +340,7 @@ let CustomPage = class CustomPage extends Component<any, any> {
     const { params } = this.props.match;
     const { urlTemplate } = this.state;
     const dataSource = transferValue(urlTemplate);
-    const urlList = [];
+    const urlList: string[] = [];
     dataSource.map(o => {
       if (o.staticValue) {
         urlList.push(o.staticValue);

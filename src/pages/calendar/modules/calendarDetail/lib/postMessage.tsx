@@ -48,7 +48,7 @@ export default function ({ id, recurTime, members, address, description, allDay,
         <Button
           type="primary"
           onClick={() => {
-            var ids = [];
+            var ids: (string | undefined)[] = [];
             $('.postMessageList .markCompletedSmall').each(function (this: HTMLElement) {
               var $this = $(this).parent();
               if ($this.attr('uid')) {

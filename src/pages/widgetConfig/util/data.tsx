@@ -1040,7 +1040,7 @@ export const dealRequestControls = (controls: FormControl[], needChild?: boolean
 
 // 处理自定义事件--查询api成立条件filters里控件type
 export const getFilterControls = (controls: FormControl[] = []) => {
-  const result = [];
+  const result: FormControl[] = [];
   if (_.isEmpty(controls)) return result;
   controls.forEach(c => {
     if (!c.dataSource) {

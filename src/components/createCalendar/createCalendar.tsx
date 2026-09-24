@@ -710,7 +710,7 @@ const createCalendarMethods = defineMethods<CreateCalendarFields>()({
   // 初始化成员事件
   initMemberEvent: function () {
     var settings = this.settings;
-    var newMembers = [];
+    var newMembers: { accountId: string | undefined; avatar: string | undefined; fullname: string | undefined }[] = [];
     var memberArr = settings.MemberArray;
 
     // hover移除成员
@@ -1423,7 +1423,7 @@ CreateCalendar.methods = {
     }
 
     // 日程成员
-    var members = [];
+    var members: (string | undefined)[] = [];
     var specialAccounts: Record<string, string | undefined> = {};
     $('#addCalendarMembers .createMember').each(function (_index: number, item) {
       if ($(item).attr('data-id')) {

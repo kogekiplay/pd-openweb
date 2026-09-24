@@ -275,7 +275,7 @@ export default class Cascader extends Component<any, any> {
 
   formatSearchData = (item, keywords: string) => {
     const searchPath = safeParse(item.searchPath) || [];
-    const nodes = [];
+    const nodes: (string | React.JSX.Element)[] = [];
 
     searchPath.forEach((part, idx) => {
       if (idx > 0) {

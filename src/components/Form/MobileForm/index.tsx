@@ -94,7 +94,7 @@ const MobileForm = props => {
     const { instanceId, workId } = mobileApprovalRecordInfo;
     const formList = [];
     let prevRow = -1;
-    let preIsSection;
+    let preIsSection: boolean | undefined;
     let firstFieldRendered = false;
     let data = [].concat(renderData).filter(item => !item.hidden && controlState(item, from).visible);
     const richTextControlCount = data.filter(c => c.type === 41).length;

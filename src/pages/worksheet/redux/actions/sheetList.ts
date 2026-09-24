@@ -46,7 +46,7 @@ export const formatLeftSectionDetail = data => {
   });
 };
 
-let getAppSectionDetailRequest;
+let getAppSectionDetailRequest: ApiResultOf<HapApi.MD.Entity.Apk.AppSectionDomainModel> | undefined;
 
 export function getSheetList(args) {
   return function (dispatch) {

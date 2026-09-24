@@ -331,7 +331,7 @@ export default class Print extends Component<any, any> {
         let text = '';
 
         if (value) {
-          const keys = [];
+          const keys: string[] = [];
 
           for (let i = 0; i < value.length; i++) {
             if (value[i] !== '0') {
@@ -722,7 +722,7 @@ export default class Print extends Component<any, any> {
     const evaluateType = mapControl.enumDefault2;
     const showMoney = mapControl.enumDefault;
     const { unit, dot } = mapControl;
-    const controlArray = [];
+    const controlArray: number[] = [];
     controls.forEach(item => {
       controlArray.push(
         Number((item.filter(controlItem => controlItem.controlId === controlId)[0] || { value: '' }).value),

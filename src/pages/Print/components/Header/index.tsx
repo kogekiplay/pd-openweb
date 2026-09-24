@@ -61,7 +61,7 @@ class Header extends React.Component<any, HeaderState> {
       let width = 621;
       let height = 400;
       let scaleBy = 2;
-      let promiseList = [];
+      let promiseList: Promise<Node>[] = [];
       let isTainted = false;
 
       statisticsCardList.forEach((ele, index) => {

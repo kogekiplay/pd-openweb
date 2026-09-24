@@ -49,7 +49,7 @@ const StatisticContent = styled.div`
   }
 `;
 
-let ajaxPromise;
+let ajaxPromise: ApiResult | null | undefined;
 
 export default ({ projectId, flag }: { projectId?: string; [key: string]: any }) => {
   const [statisticData, setStatisticData] = useState({});

@@ -112,7 +112,7 @@ const DesktopForm = props => {
     } = props;
     const formList = [];
     let prevRow = -1;
-    let preIsSection;
+    let preIsSection: boolean | undefined;
     let data = [].concat(formData).filter(item => !item.hidden && controlState(item, from).visible);
     const richTextControlCount = data.filter(c => c.type === 41).length;
 

@@ -231,7 +231,7 @@ class SideNav extends React.Component<any, any> {
     const { printData = [], handChange } = this.props;
     const { receiveControls = [] }: { receiveControls: FormControl[]; [key: string]: any } = printData;
     let dataOther = [];
-    let isCheck;
+    let isCheck: boolean | undefined;
     let sectionOrder = [];
 
     receiveControls.map(item => {

@@ -54,7 +54,7 @@ const EventCardContent = ({
 
   if (coverData.type === 45) {
     let dataSource = transferValue(coverData.value);
-    let urlList = [];
+    let urlList: string[] = [];
     dataSource.forEach(o => {
       if (o.staticValue) {
         urlList.push(o.staticValue);

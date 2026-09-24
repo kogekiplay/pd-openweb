@@ -73,7 +73,7 @@ export default class PrintTask extends Component<any, any> {
 
     // 复选框
     if (item.type === 10) {
-      const key = [];
+      const key: string[] = [];
 
       for (let i = 0; i < item.value.length; i++) {
         if (item.value.substr(i, 1) !== '0') {

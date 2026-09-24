@@ -268,7 +268,7 @@ function CustomPageContent(props) {
   const renderContent = () => {
     if (urlTemplate) {
       const dataSource = transferValue(urlTemplate);
-      const urlList = [];
+      const urlList: string[] = [];
       dataSource.map(o => {
         if (o.staticValue) {
           urlList.push(o.staticValue);

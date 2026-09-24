@@ -349,7 +349,7 @@ export default class Code extends Component<any, any> {
    */
   selectCodeCallback = ({ clearParams, inputData, code }) => {
     const { data } = this.state;
-    const newInputData = [];
+    const newInputData: { name: string; value: string }[] = [];
 
     Object.keys(inputData).forEach(name => {
       newInputData.push({ name, value: '' });

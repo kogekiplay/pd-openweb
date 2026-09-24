@@ -333,7 +333,7 @@ class TaskStage extends Component<any, TaskStageState> {
           taskStageSettings.timer = null;
           const _this = $(this);
           let isMuil = false;
-          let metaKeyType;
+          let metaKeyType: string | undefined;
 
           if (
             _this.hasClass('addNewTask') ||
@@ -1397,7 +1397,7 @@ class TaskStage extends Component<any, TaskStageState> {
    */
   insetVirtualElemByTask() {
     const that = this;
-    let $currentElem = null;
+    let $currentElem: JQuery<HTMLElement> | null = null;
     const eventY = taskStageSettings.globalEvent.clientY;
     const eventX = taskStageSettings.globalEvent.clientX;
     // 所有阶段

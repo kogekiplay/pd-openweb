@@ -342,7 +342,7 @@ export default class ExportSheet extends Component<any, any> {
    */
   saveConfig = () => {
     const { columnsSelected } = this.state;
-    const exportControlsId = [];
+    const exportControlsId: string[] = [];
 
     _.forEach(columnsSelected, (_value, key) => {
       columnsSelected[key] && exportControlsId.push(key);

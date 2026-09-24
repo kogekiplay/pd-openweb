@@ -5,11 +5,11 @@
       l = a.getAttribute('data-injectcss'),
       a = a.getAttribute('data-disable-injectsvg');
     if (!a) {
-      var c,
-        t,
-        v,
+      var c: (() => void) | undefined,
+        t: (() => void) | undefined,
+        v: (() => void) | undefined,
         z,
-        i,
+        i: boolean | undefined,
         m = function (a, l: ChildNode) {
           l.parentNode.insertBefore(a, l);
         };

@@ -132,7 +132,7 @@ function getErrorInfo(err) {
 }
 
 function parseFileIndexes(message: string) {
-  const indexes = [];
+  const indexes: number[] = [];
 
   String(message || '').replace(/files\[(\d+)\]/g, (_match, index) => {
     indexes.push(Number(index));

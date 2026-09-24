@@ -110,7 +110,7 @@ export default class WorkSheetItem extends Component<any, WorkSheetItemState> {
 
     const handleNewOpen = () => {
       const dataSource = transferValue(urlTemplate);
-      const urlList = [];
+      const urlList: string[] = [];
       dataSource.map(o => {
         if (o.staticValue) {
           urlList.push(o.staticValue);

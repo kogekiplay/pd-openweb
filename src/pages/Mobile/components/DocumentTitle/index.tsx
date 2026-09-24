@@ -5,7 +5,7 @@ import ReactDocumentTitle from 'ming-ui/components/DocumentTitle';
 
 const MAX_RETRY_TIMES = 20;
 const RETRY_INTERVAL = 300;
-let titleTimer;
+let titleTimer: NodeJS.Timeout | undefined;
 let latestTitle = '';
 
 export function setDingTalkNavigationTitle(title: string) {

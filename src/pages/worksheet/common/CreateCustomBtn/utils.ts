@@ -15,7 +15,7 @@ export const formatControlsBySectionId = controls => {
 
 export const formatControlsChildBySectionId = controls => {
   const sectionIds = getSectionId(controls);
-  const list = [];
+  const list: FormControl[] = [];
   controls.map((o: FormControl) => {
     if (sectionIds.includes(o.controlId) || !o.sectionId) {
       list.push(o);

@@ -16,7 +16,7 @@ const ChartDialog = lazy(() => import('./ChartDialog'));
 const ClickAwayable = ClickAway;
 let globalStatisticsRoot = null;
 let globalStatisticsContainer: HTMLElement | null = null;
-let globalStatisticsResize = null;
+let globalStatisticsResize: _.DebouncedFunc<() => void> | null = null;
 
 const exceptions = [
   '.mui-dialog-container',

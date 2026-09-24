@@ -135,7 +135,7 @@ const editFolderMethods = defineMethods<EditFolderFields>()({
   returnCheck(): false | EditFolderResult {
     const settings = this.settings;
     let visibility;
-    let groupIds = [];
+    let groupIds: string[] = [];
     const scope = settings.scope;
 
     if ($('#privateFolder :radio').prop('checked')) {

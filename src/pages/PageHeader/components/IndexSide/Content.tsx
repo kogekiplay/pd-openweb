@@ -85,7 +85,7 @@ export default function SideContent(props) {
   };
 
   const getStorageKeys = () => {
-    let keys = [];
+    let keys: string[] = [];
     const allTypes = ['markedApps'].concat(GROUP_TYPES);
 
     allTypes.forEach(type => {

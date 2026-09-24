@@ -448,7 +448,7 @@ class Detail extends React.Component<any, any> {
   };
 
   genPreviewLink = (name: string, versionId, nodeId) => {
-    let isOldest;
+    let isOldest: boolean | undefined;
 
     if (versionId === 'oldest') {
       isOldest = true;

@@ -56,7 +56,7 @@ export default class SetInfoDialog extends Component<any, any> {
 
   // 获取时区数据
   getTimeZones() {
-    const timeZones = [];
+    const timeZones: { text: string; value: number }[] = [];
     fixedDataAjax.loadTimeZones().then(res => {
       Object.keys(res).forEach(key => {
         timeZones.push({ text: res[key], value: parseInt(key) });

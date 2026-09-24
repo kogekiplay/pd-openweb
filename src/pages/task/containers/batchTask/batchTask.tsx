@@ -345,7 +345,7 @@ BatchTask.initEvent = function () {
     };
 
     let size = 0;
-    const existsIds = [];
+    const existsIds: (string | undefined)[] = [];
     let projectId = $('.selectTask:first').attr('data-projectid');
     $.map($('.selectTask').toArray(), (_this: HTMLElement) => {
       if ($(_this).attr('data-projectid') === projectId) {
@@ -697,7 +697,7 @@ BatchTask.updateTasksActualStartTime = function () {
           alert(_l('操作成功'));
         }
 
-        const successIds = [];
+        const successIds: { taskId: string }[] = [];
         BatchTask.Settings.TaskIds.forEach((id: string) => {
           if (!_.includes(noAuth, id)) {
             successIds.push({ taskId: id });
@@ -835,7 +835,7 @@ BatchTask.updateCharge = function (account: TaskMember) {
 
 // 批量添加任务成员
 BatchTask.addMembers = function (users: TaskMember[], callbackInviteResult?: (res: any) => void) {
-  const userIdArr = [];
+  const userIdArr: (string | undefined)[] = [];
   const specialAccounts: Record<string, string | undefined> = {};
 
   // 外部用户

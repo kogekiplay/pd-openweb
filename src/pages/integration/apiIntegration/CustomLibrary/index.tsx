@@ -160,7 +160,7 @@ const RenderBlankBlock = ({ columnSize, number }: RenderBlankBlockProps) => {
   return list;
 };
 
-let ajaxRequest = null;
+let ajaxRequest: string | ApiResult | null = null;
 
 export default function CustomLibrary(props) {
   const { width, currentProjectId, loadMore, setHasMore, myPermissions } = props;

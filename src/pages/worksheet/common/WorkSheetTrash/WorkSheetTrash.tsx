@@ -460,7 +460,7 @@ export default function WorkSheetTrash(props) {
                       setSelectRows([]);
                     }}
                     onSelect={newSelected => {
-                      let newSelectRows = [];
+                      let newSelectRows: RecordRow[] = [];
 
                       if (isAll) {
                         newSelected.forEach(() => {

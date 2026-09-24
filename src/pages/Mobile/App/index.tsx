@@ -324,7 +324,7 @@ class App extends Component<any, any> {
       if (urlTemplate && configuration.openType == '2') {
         const { detail } = this.props.appDetail;
         const dataSource = transferValue(urlTemplate);
-        const urlList = [];
+        const urlList: string[] = [];
         dataSource.map(o => {
           if (o.staticValue) {
             urlList.push(o.staticValue);

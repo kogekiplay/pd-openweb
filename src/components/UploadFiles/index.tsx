@@ -863,7 +863,7 @@ export default class UploadFiles extends Component<any, any> {
               }
             }
 
-            const addFiles = [];
+            const addFiles: { id: string; fileSize: number; progress: number; base: { isPic: boolean; fileExt: string; fileName: string; id: string } }[] = [];
             // 渲染图片列表
             files.forEach(item => {
               let fileExt = `.${RegExpValidator.getExtOfFileName(item.name)}`;

@@ -70,7 +70,7 @@ function ConnectDataBase(props) {
 
   const check = () => {
     const request = ['name', 'account', 'password', 'dbName'];
-    const _errors = [];
+    const _errors: string[] = [];
     request.forEach(key => {
       if (!data[key]) _errors.push(key);
     });

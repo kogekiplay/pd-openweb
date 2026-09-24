@@ -132,7 +132,7 @@ const Cell = styled.div`
 
 const LoadableRecordInfoWrapper = lazy(() => import('src/pages/worksheet/common/recordInfo/RecordInfoWrapper'));
 
-let request;
+let request: ApiResult | undefined;
 let currentProjectId;
 
 function RecordFav(props) {

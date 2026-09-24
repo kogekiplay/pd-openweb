@@ -241,8 +241,8 @@ function isDirectReferencedWorksheetRoleControl(allControls, control: FormContro
 // 解析$controlId$格式，获取控件
 function getControlByDataSource(allControls: FormControl[], dataSource) {
   if (!dataSource) return { referencedControls: [], worksheetRoleControls: [] };
-  let referencedControls = [];
-  let worksheetRoleControls = [];
+  let referencedControls: FormControl[] = [];
+  let worksheetRoleControls: FormControl[] = [];
 
   dataSource.replace(/\$.+?\$/g, matched => {
     const controlId = matched.match(/\$(.+?)\$/)[1];
@@ -277,8 +277,8 @@ function getControlByDynamicFunc(allControls: FormControl[], defaultfunc) {
 
 // 解析映射，获取控件
 function getControlByMapping(allControls: FormControl[], mapping) {
-  let referencedControls = [];
-  let worksheetRoleControls = [];
+  let referencedControls: FormControl[] = [];
+  let worksheetRoleControls: FormControl[] = [];
 
   if (_.isEmpty(mapping)) return { referencedControls, worksheetRoleControls };
 
@@ -406,12 +406,12 @@ function alertPermissionError(permissionErrorInfo) {
 
 // 获取模板中所有引用控件包含本身
 function getAllReferencedControlInfo(allControls: FormControl[], templateControls: FormControl[], queryConfigs) {
-  const referencedControls = [];
-  const parsedControlIds = [];
-  const permittedControlIds = [];
+  const referencedControls: FormControl[] = [];
+  const parsedControlIds: (string | undefined)[] = [];
+  const permittedControlIds: (string | undefined)[] = [];
   const permissionMap = {};
   const noPermissionSheetNames = [];
-  const deletedWorksheetControlNames = [];
+  const deletedWorksheetControlNames: (string | undefined)[] = [];
 
   const addReferencedControls = controls => {
     controls.filter(isValidControl).forEach(control => {

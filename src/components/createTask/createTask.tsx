@@ -601,7 +601,7 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
     var newMember = [];
     var memberArr = settings.MemberArray;
     var has;
-    var i;
+    var i: number | undefined;
     var _that = this;
     var newMemberCheckFun = function (
       _index: number,
@@ -658,7 +658,7 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
     $('#taskMembersBox .createTaskAddMember').on({
       click: function () {
         var _this = $(this);
-        var existsIds = [];
+        var existsIds: (string | undefined)[] = [];
         // 页面上已经存在的成员
         $('.createTaskAddMemberBox .createTaskMember').each(function (this: HTMLElement) {
           existsIds.push($(this).attr('data-id'));
@@ -981,7 +981,7 @@ CreateTask.Motheds = {
     var folderName = String($('#txtTaskFolder').val() ?? '').trim();
     var toUserID = $('#taskUserBox').attr('data-id');
     var stageId = String($('#folderStage').val() ?? '').trim();
-    var members = [];
+    var members: string[] = [];
     var specialAccounts: Record<string, string | undefined> = {};
 
     // 成员
