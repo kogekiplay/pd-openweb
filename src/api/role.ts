@@ -35,7 +35,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedRoleList: function (args: ApiArgs, options: ApiOptions = {}) {
+  pagedRoleList: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Roles.PagedRoleListModel> {
     return mdyAPI('Role', 'PagedRoleList', args, options);
   },
   /**

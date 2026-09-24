@@ -170,7 +170,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectUnauditedUserCount: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectUnauditedUserCount: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<number> {
     return mdyAPI('Project', 'GetProjectUnauditedUserCount', args, options);
   },
   /**

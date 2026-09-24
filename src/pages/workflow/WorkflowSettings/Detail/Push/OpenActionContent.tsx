@@ -49,7 +49,7 @@ export default class OpenActionContent extends Component<any, any> {
     ajax.then(result => {
       if (result.resultCode === 1) {
         this.setState({ worksheetInfo: result });
-        if (result.appId !== relationId && otherAppName === '') {
+        if (result.appId && result.appId !== relationId && otherAppName === '') {
           this.getAppDetail(result.appId);
         }
       } else {

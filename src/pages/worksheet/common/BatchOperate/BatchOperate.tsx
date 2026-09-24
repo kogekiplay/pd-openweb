@@ -668,11 +668,14 @@ class BatchOperate extends React.Component<any, any> {
                         newRows => {
                           // 多行复制要等后端全部写完才回来。这期间如果已经离开这张表（组件卸载），或切到了别的表 / 视图，
                           // 新行不能再插进界面 —— addRecord 插的是 store 里【当前】那张表。新行已经真实存在，回到这里就能看到
-                          if (
-                            this.unmounted ||
-                            this.props.worksheetId !== worksheetId ||
-                            this.props.viewId !== viewId
-                          ) {
+                          // 取回调发生这一刻的 props，不是点「复制」时的
+                          const {
+                            worksheetId: currentWorksheetId,
+                            viewId: currentViewId,
+                            rows: currentRows = [],
+                            pageSize: currentPageSize,
+                          } = this.props;
+                          if (this.unmounted || currentWorksheetId !== worksheetId || currentViewId !== viewId) {
                             return;
                           }
 
@@ -680,8 +683,7 @@ class BatchOperate extends React.Component<any, any> {
                           // 原来一律本地插入，一页 50 行复制 20 行就显示 70 行，直到手动刷新才恢复成 50 行。
                           // 重新取之后，新行出现在视图排序真正把它们排到的位置（可能在别的页）。
                           // 放得下时照旧插在原行后面并高亮，方便一眼看到复制出来的行。
-                          const pageRows = (this.props.rows || []).length;
-                          if (getGroupControlId(view) || pageRows + newRows.length > this.props.pageSize) {
+                          if (getGroupControlId(view) || currentRows.length + newRows.length > currentPageSize) {
                             refresh();
                             return;
                           }

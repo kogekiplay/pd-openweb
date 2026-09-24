@@ -1959,7 +1959,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrintList: function (args: ApiArgs, options: ApiOptions = {}) {
+  getPrintList: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Worksheet.PrintListModel[]> {
     return mdyAPI('Worksheet', 'GetPrintList', args, options);
   },
   /**

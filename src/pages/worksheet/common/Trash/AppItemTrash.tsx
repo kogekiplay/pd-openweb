@@ -100,7 +100,9 @@ export default function AppItemTrash(props) {
   const [loading, setLoading] = useState(true);
   const [pageIndex, setPageIndex] = useState(1);
   const [loadOuted, setLoadOuted] = useState<boolean | undefined>();
-  const [appItems, setAppItems] = useState([]);
+  const [appItems, setAppItems] = useState<
+    HapApi.MD.Web.Ajax.ResultModel.AppItemRecovery.GetAppItemRecoveryListResponse[]
+  >([]);
   const [keyword, setKeyword] = useState();
 
   const data = appItems.map(appItem => [
@@ -108,7 +110,7 @@ export default function AppItemTrash(props) {
       <SvgIcon
         key={'0'}
         url={
-          appItem.iconUrl.startsWith('http')
+          (appItem.iconUrl || '').startsWith('http')
             ? appItem.iconUrl
             : `${md.global.FileStoreConfig.pubHost}/customIcon/${appItem.iconUrl}.svg`
         }
@@ -217,7 +219,9 @@ export default function AppItemTrash(props) {
     const needDeleteItem = appItems[itemIndex];
     Dialog.confirm({
       title: (
-        <span style={{ color: 'var(--color-error-text)' }}>{_l('将彻底删除工作表"%0"', needDeleteItem.name)}</span>
+        <span style={{ color: 'var(--color-error-text)' }}>
+          {_l('将彻底删除工作表"%0"', needDeleteItem.name || '')}
+        </span>
       ),
       buttonType: 'danger',
       description: _l('彻底删除该数据后，将无法恢复。'),

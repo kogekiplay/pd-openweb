@@ -21,7 +21,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAllowApplyManageRole: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAllowApplyManageRole: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     return mdyAPI('ProjectSetting', 'GetAllowApplyManageRole', args, options);
   },
   /**

@@ -130,10 +130,10 @@ class AppRole extends Component<any, any> {
       .getPortalEnableState({
         appId,
       })
-      .then((portalBaseSet = {}) => {
+      .then(portalBaseSet => {
         this.setState(
           {
-            isOpenPortal: portalBaseSet.isEnable,
+            isOpenPortal: portalBaseSet?.isEnable,
             hasGetIsOpen: true,
             editType: editType === 'external' ? 1 : 0,
             loading: true,

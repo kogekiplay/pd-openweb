@@ -462,7 +462,7 @@ export default {
       sectionId?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.GetPageInfoDto> {
     return mdyAPI('HomeApp', 'GetPageInfo', args, options);
   },
   /**
@@ -583,7 +583,7 @@ export default {
       tradeId?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Enum.Apk.AppStatusEnum> {
     return mdyAPI('HomeApp', 'CheckApp', args, options);
   },
   /**
@@ -1103,7 +1103,7 @@ export default {
       noCache?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.MyPlatformDto> {
     return mdyAPI('HomeApp', 'MyPlatform', args, options);
   },
   /**
@@ -1139,7 +1139,7 @@ export default {
       noCache?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto[]> {
     return mdyAPI('HomeApp', 'RecentApps', args, options);
   },
   /**

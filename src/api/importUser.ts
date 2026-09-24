@@ -100,7 +100,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUnusedInfosByProjectIdCount: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUnusedInfosByProjectIdCount: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<number> {
     return mdyAPI('ImportUser', 'GetUnusedInfosByProjectIdCount', args, options);
   },
 };

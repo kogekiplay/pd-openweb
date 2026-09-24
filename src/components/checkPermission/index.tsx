@@ -25,7 +25,8 @@ const setCacheData = (projectId: string, data: number[], version: string) => {
 const fetchVersion = (projectId: string): Promise<string> =>
   versionApi
     .getVersion({ moduleType: 50, sourceId: projectId }, { silent: true })
-    .then(data => (data ? data.version : ''))
+    // version 在接口模型里是可选的；拿不到就是空串，和 catch 分支同一个口径
+    .then(data => (data && data.version) || '')
     .catch(() => '');
 
 /** 后台刷新一个项目的权限，填回缓存。同一个项目并发调用只跑一次。 */

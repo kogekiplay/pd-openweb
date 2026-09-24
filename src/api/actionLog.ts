@@ -68,7 +68,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  addLog: function (args: ApiArgs, options: ApiOptions = {}) {
+  addLog: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     return mdyAPI('ActionLog', 'AddLog', args, options);
   },
 };

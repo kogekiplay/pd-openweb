@@ -771,7 +771,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppItemRecoveryList: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppItemRecoveryList: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.AppItemRecovery.GetAppItemRecoveryListResponse[]> {
     return mdyAPI('AppManagement', 'GetAppItemRecoveryList', args, options);
   },
   /**

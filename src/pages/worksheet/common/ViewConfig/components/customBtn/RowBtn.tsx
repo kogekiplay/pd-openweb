@@ -27,8 +27,8 @@ export default function (props) {
     actioncolumn: _.get(view, 'advancedSetting.actioncolumn')
       ? safeParse(_.get(view, 'advancedSetting.actioncolumn'))
       : [],
-    tempList: [],
-    tempListAll: [],
+    tempList: [] as HapApi.MD.Entity.Worksheet.PrintListModel[],
+    tempListAll: [] as HapApi.MD.Entity.Worksheet.PrintListModel[],
     items: [],
     loading: true,
   });

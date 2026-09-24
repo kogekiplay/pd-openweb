@@ -235,6 +235,25 @@ const VERIFIED = new Set([
   // 第六批（同日，第四轮取样：把前面接口响应里的 id 收集起来填参数）：部门 id → 部门全名、角色 id → 角色成员
   'Department/GetDepartmentFullNameByIds',
   'AppManagement/GetMembersByRole',
+  // 第七批（2026-09-24，被动取样：dev 前面架一层代理，正常浏览工作台 / 应用 / 表单设置 / 组织管理等页面时，
+  // 只在响应上记【键名和值的种类】，页面自己带着合法参数去调，比主动取样凑参数覆盖得广）。
+  // 收录规则同前：至少比到对象这一层且零差异；主体数组是空的（Variable/Gets、PageGetBackupRestoreOperationLog）不收。
+  'Version/GetVersion',
+  'HomeApp/RecentApps',
+  'HomeApp/MyPlatform',
+  'HomeApp/GetPageInfo',
+  'AppManagement/GetAppItemRecoveryList',
+  'ExternalPortal/GetPortalEnableState',
+  'Worksheet/GetPrintList', // 第三批取样时全是空数组没核对成，这次取到了真实的打印模板
+  'Department/PagedSubDepartments',
+  'Role/PagedRoleList',
+  'Account/GetUntreatAuthList', // 补 count（见 SCHEMA_PATCHES）
+  // 返回基本类型的：种类对得上即可
+  'HomeApp/CheckApp',
+  'ActionLog/AddLog',
+  'Project/GetProjectUnauditedUserCount',
+  'ImportUser/GetUnusedInfosByProjectIdCount',
+  'ProjectSetting/GetAllowApplyManageRole',
 ]);
 
 /**
@@ -251,6 +270,8 @@ const SCHEMA_PATCHES: Record<
   'MD.Entity.Apk.AppSectionDomainModel': { rename: { id: 'appSectionId', entityInfo: 'workSheetInfo' } },
   // GetAllHomeApp 的应用项：permission（不可空的枚举）从没出现、多出 permissionType；avatar 从没出现、多出 icon
   'MD.Entity.HomeApp.HomeAppDto': { rename: { avatar: 'icon', permission: 'permissionType' } },
+  // GetUntreatAuthList：实际多一个待处理数 count（被动取样，2026-09-24）
+  'MD.Web.Ajax.ResultModel.Account.AccountAuthModel': { add: { count: 'number' } },
   // 选项的 key 就是选项 id：6 个应用 645 个控件 252 个选项，一个不缺（schema 按 C# 的 string 标了 nullable）
   'MD.Entity.Worksheet.ControlOptionEntity': { required: ['key'] },
   // 控件模板的 controls：18 张表的 GetWorksheetInfo / GetWorksheetControls 里都在（空表是 []，不是缺省）

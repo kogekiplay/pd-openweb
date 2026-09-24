@@ -73,7 +73,7 @@ export default props => {
   const { companyId, processId, data, updateSource, cacheKey, selectNodeType } = props;
   const [tabIndex, setTabIndex] = useState(1);
   const [selected, setSelected] = useState(!!data.processConfig.requiredIds.length);
-  const [printList, setPrintList] = useState([]);
+  const [printList, setPrintList] = useState<{ id: string | undefined; type: number; text: string | undefined }[]>([]);
   const worksheetId = selectNodeType === NODE_TYPE.FIRST ? data.appId : _.get(data, 'selectNodeObj.appId');
   const InitiatorAction = [
     { text: _l('允许发起人撤回流程'), key: 'allowRevoke' },

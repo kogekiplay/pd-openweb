@@ -937,6 +937,27 @@ declare namespace HapApi.MD.Entity.Worksheet {
     version: number;
     controls: import('src/utils/controlTypes').FormControl[];
   }
+  interface PrintListModel {
+    id?: string | undefined;
+    type: number;
+    range: number;
+    projectId?: string | undefined;
+    worksheetId?: string | undefined;
+    formName?: string | undefined;
+    name?: string | undefined;
+    views?: HapApi.MD.Entity.Worksheet.ViewForPrint[] | undefined;
+    labelSize?: number | undefined;
+    layout?: number | undefined;
+    printType?: number | undefined;
+    labelCustomWidth?: number | undefined;
+    labelCustomHeight?: number | undefined;
+    filters?: HapApi.MD.Entity.Worksheet.WorksheetFilterSort[] | undefined;
+    allowDownloadPermission: HapApi.MD.Enum.Worksheet.AllowDownloadPermissionEnum;
+    allowEditAfterPrint: boolean;
+    disabled: boolean;
+    advanceSettings?: HapApi.MD.Entity.Worksheet.AdvanceSettingItem[] | undefined;
+    cloudExtraParams?: ApiPayload[] | undefined;
+  }
   interface FormComponentModel {
     customeButtons?: HapApi.MD.Entity.Worksheet.ComponentDetail[] | undefined;
     printTempletes?: HapApi.MD.Entity.Worksheet.ComponentDetail[] | undefined;
@@ -1062,6 +1083,14 @@ declare namespace HapApi.MD.Entity.Worksheet {
     isAll: boolean;
     controls?: HapApi.MD.Entity.Worksheet.RuleChildItem[] | undefined;
     message?: string | undefined;
+  }
+  interface ViewForPrint {
+    viewId?: string | undefined;
+    viewName?: string | undefined;
+  }
+  interface AdvanceSettingItem {
+    key?: string | undefined;
+    value?: string | undefined;
   }
   interface ComponentDetail {
     id?: string | undefined;
@@ -1339,6 +1368,7 @@ declare namespace HapApi.MD.Enum.ActionLog {
 }
 
 declare namespace HapApi.MD.Enum.Apk {
+  type AppStatusEnum = 1 | 2 | 3 | 4 | 5 | 6 | 9 | 10 | 11 | 12 | 20 | 30 | 31;
   type AppSettingsEnum = 1 | 2 | 3 | 4;
   type ApkStatusEnum = 0 | 1 | 2 | 3 | 4 | 11 | 12 | 20;
   type GroupEnum = 0 | 1;
@@ -1503,6 +1533,7 @@ declare namespace HapApi.MD.Enum.Task {
 declare namespace HapApi.MD.Enum.Worksheet {
   type WSRowStatusEnum = 1 | 9 | 999 | -1;
   type ShareRangeEnum = 1 | 2 | 3;
+  type AllowDownloadPermissionEnum = 0 | 1;
   type SwitchType =
     | 10
     | 11
@@ -1662,6 +1693,10 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Account {
     mobilePhone?: string | undefined;
     /** 邮箱 */
     email?: string | undefined;
+  }
+  interface AccountAuthModel {
+    /** （swagger 里没有，真实响应里有） */
+    count?: number;
   }
   interface AccountSettingModel {
     /** 手机号是否大家可见，false：大家都可见， true：仅自己可见 */
@@ -1886,6 +1921,22 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.App {
     /** 删除时间 */
     deleteTime?: string | undefined;
   }
+  interface GetPageInfoDto {
+    id?: string | undefined;
+    name?: string | undefined;
+    icon?: string | undefined;
+    iconColor?: string | undefined;
+    iconUrl?: string | undefined;
+    /** 1 = 正常，4=删除 7=无权限 */
+    resultCode: number;
+    appId?: string | undefined;
+    /** 0=工作表 、1=自定义页面 */
+    wsType: number;
+    /** url模板 */
+    urlTemplate?: string | undefined;
+    /** 配置 */
+    configuration?: Record<string, string> | undefined;
+  }
   interface GetDto {
     /** 组织id */
     projectId?: string | undefined;
@@ -2014,6 +2065,32 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.App {
     homeSetting?: HapApi.MD.Web.Ajax.ResultModel.App.HomeSettingDto | undefined;
     /** 最近使用的应用ids（ids已排序） */
     recentAppIds?: string[] | undefined;
+  }
+  /** 工作台dto */
+  interface MyPlatformDto {
+    /** 星标应用 */
+    markedApps?: HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto[] | undefined;
+    /** 外部应用 */
+    externalApps?: HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto[] | undefined;
+    /** 个人应用（没有网络id的） */
+    aloneApps?: HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto[] | undefined;
+    /** 星标分组ids */
+    markedGroupIds?: string[] | undefined;
+    /** 所有应用 */
+    apps?: HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto[] | undefined;
+    /** 个人分组 */
+    personalGroups?: HapApi.MD.Web.Ajax.ResultModel.App.AppGroupDto[] | undefined;
+    /** 网络分组 */
+    projectGroups?: HapApi.MD.Web.Ajax.ResultModel.App.AppGroupDto[] | undefined;
+    /** 是否有编辑组织分组的权限 */
+    isPermission: boolean;
+    homeSetting?: HapApi.MD.Web.Ajax.ResultModel.App.HomeSettingDto | undefined;
+    /** 最近使用的应用ids（ids已排序） */
+    recentAppIds?: string[] | undefined;
+    /** 最近使用应用项 */
+    recentAppItems?: HapApi.MD.Web.Ajax.ResultModel.App.AppItemBaseDto[] | undefined;
+    /** 收藏应用和应用项 */
+    markedAppItems?: HapApi.MD.Web.Ajax.ResultModel.App.AppItemBaseDto[] | undefined;
   }
   interface AppBaseDto {
     /** 网络id */
@@ -2192,6 +2269,74 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.App {
     /** 排序项 */
     sortItems?: HapApi.MD.Web.Ajax.ResultModel.App.PlatformSortItemDto[] | undefined;
   }
+  interface AppItemBaseDto {
+    /** 网络id */
+    projectId?: string | undefined;
+    /** 网络名称 */
+    projectName?: string | undefined;
+    /** 应用id */
+    id?: string | undefined;
+    /** 名称 */
+    name?: string | undefined;
+    /** 英文名称 */
+    enName?: string | undefined;
+    icon?: string | undefined;
+    iconColor?: string | undefined;
+    iconUrl?: string | undefined;
+    /** 背景色 */
+    lightColor?: string | undefined;
+    /** 导航栏颜色 */
+    navColor?: string | undefined;
+    /** 是否标记 */
+    isMarked: boolean;
+    avatarType: number;
+    permissionType: HapApi.MD.Enum.Roles.AppRole.AppRoleType;
+    /** 商品包id */
+    goodsId?: string | undefined;
+    /** 是否锁定 */
+    isLock: boolean;
+    /** 是否是通过商品包分发 */
+    isGoods: boolean;
+    /** 是否有效 */
+    isGoodsStatus: boolean;
+    /** 是否是新应用 */
+    isNew: boolean;
+    /** 显示方式 */
+    appNaviStyle: number;
+    /** 是否维护中 */
+    fixed: boolean;
+    /** Pc端显示, */
+    pcDisplay: boolean;
+    /** web移动端显示 */
+    webMobileDisplay: boolean;
+    /** app端显示 */
+    appDisplay: boolean;
+    pcNaviStyle: number;
+    /** 应用所属分组ids */
+    groupIds?: string[] | undefined;
+    /** 来源类型 */
+    sourceType: number;
+    /** 创建类型 */
+    createType: number;
+    /** url模板 */
+    urlTemplate?: string | undefined;
+    /** 链接配置 */
+    configuration?: Record<string, string> | undefined;
+    /** 导航默认选中配置 */
+    selectAppItmeType: number;
+    appStatus: number;
+    exported: boolean;
+    /** 应用项id */
+    itemId?: string | undefined;
+    /** 应用项名称 */
+    itemName?: string | undefined;
+    /** 0 = 应用，1= 自定义页面,2 = 工作表 */
+    type: number;
+    /** 图标链接 */
+    itemUrl?: string | undefined;
+    /** 分组id */
+    sectionId?: string | undefined;
+  }
   interface BulletinBoardDto {
     id?: string | undefined;
     /** 图片链接 */
@@ -2364,6 +2509,36 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.App.ExternalPortal {
     updateTime?: string | undefined;
     /** 隐私条款 */
     privacyTerms?: string | undefined;
+  }
+  /** 门户状态 */
+  interface PortalStateModel {
+    /** 是否启用 */
+    isEnable: boolean;
+  }
+}
+
+declare namespace HapApi.MD.Web.Ajax.ResultModel.AppItemRecovery {
+  /** 分页获取应用项回收站列表 */
+  interface GetAppItemRecoveryListResponse {
+    /** id */
+    id?: string | undefined;
+    /** 应用分组id */
+    appSectionId?: string | undefined;
+    /** 删除的工作表id/自定义页面id */
+    appItemId?: string | undefined;
+    /** icon */
+    iconUrl?: string | undefined;
+    /** iconColor */
+    iconColor?: string | undefined;
+    /** 应用名称 */
+    name?: string | undefined;
+    /** 类型 */
+    type: number;
+    /** 应用分组名称 */
+    appSectionName?: string | undefined;
+    deletePerson?: HapApi.MD.Entity.Account.EasyAccount | undefined;
+    /** 删除时间 */
+    deleteTime?: string | undefined;
   }
 }
 
@@ -3260,6 +3435,12 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Roles {
     /** 是否开启 调试 */
     isDebug: boolean;
   }
+  interface PagedRoleListModel {
+    /** 角色 信息 */
+    roles?: HapApi.MD.Web.Ajax.ResultModel.Roles.PagedRoleItem[] | undefined;
+    /** 总的 角色数 */
+    totalCount: number;
+  }
   interface RoleStandardPermissionModel {
     roleId?: string | undefined;
     roleName?: string | undefined;
@@ -3282,6 +3463,22 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Roles {
   interface MyPermissionsModel {
     /** 拥有的 权限Ids */
     permissionIds?: number[] | undefined;
+  }
+  interface PagedRoleItem {
+    /** 角色Id */
+    roleId?: string | undefined;
+    /** 角色名称 */
+    roleName?: string | undefined;
+    /** 是否超管 */
+    isSuperAdmin: boolean;
+    /** 是否是 我加入的角色 */
+    isMyJoinedRole?: boolean | undefined;
+    /** 是否允许添加成员 */
+    allowAssignSamePermission: boolean;
+    /** 成员名称集 */
+    memberNames?: string[] | undefined;
+    /** 权限名称集 */
+    permissionNames?: string[] | undefined;
   }
   interface StandardPermission {
     /** 权限Id */
@@ -3402,6 +3599,15 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.User {
     oftenUsers?: HapApi.MD.Web.Ajax.ResultModel.ListModel_UserModel | undefined;
     users?: HapApi.MD.Web.Ajax.ResultModel.ListModel_UserModel | undefined;
     departments?: HapApi.MD.Web.Ajax.ResultModel.ListModel_DepartmentModel | undefined;
+  }
+}
+
+declare namespace HapApi.MD.Web.Ajax.ResultModel.Version {
+  interface VersionDataModel {
+    /** 版本号 */
+    version?: string | undefined;
+    /** 模块类型 */
+    moduleType: number;
   }
 }
 

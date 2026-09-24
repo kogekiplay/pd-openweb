@@ -178,7 +178,7 @@ export default function MobilePrintList(props) {
     updatePrintList = noop,
   }: { controls: FormControl[]; [key: string]: any } = props;
 
-  const [printList, setPrintList] = useState([]);
+  const [printList, setPrintList] = useState<HapApi.MD.Entity.Worksheet.PrintListModel[]>([]);
   const [showPrintListVisible, setShowPrintListVisible] = useState(false);
   const [showUpgradeVisible, setShowUpgradeVisible] = useState(false);
   const [printLoading, setPrintLoading] = useState(false);

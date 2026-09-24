@@ -89,7 +89,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedSubDepartments: function (args: ApiArgs, options: ApiOptions = {}) {
+  pagedSubDepartments: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.DepartmentModel[]> {
     return mdyAPI('Department', 'PagedSubDepartments', args, options);
   },
   /**

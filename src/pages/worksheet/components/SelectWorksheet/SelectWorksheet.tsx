@@ -199,7 +199,10 @@ export default class SelectWroksheet extends React.Component<any, any> {
           this.setState({
             selectedWorksheet: {
               name: data.name,
-              id: data.worksheetId,
+              // 用查询时传进去的 id：自定义页面（getPageInfo）的响应里只有 id、没有 worksheetId，
+              // 原来读 data.worksheetId 在自定义页面上恒为 undefined —— 上面「id 相同就不再取」的判断
+              // 于是永远不成立，每次更新都重新请求一遍 getPageInfo
+              id: worksheetId,
             },
           });
         }

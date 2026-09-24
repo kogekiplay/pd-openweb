@@ -84,7 +84,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPortalEnableState: function (args: ApiArgs, options: ApiOptions = {}) {
+  getPortalEnableState: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ExternalPortal.PortalStateModel> {
     return mdyAPI('ExternalPortal', 'GetPortalEnableState', args, options);
   },
   /**

@@ -468,7 +468,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUntreatAuthList: function (args: ApiArgs, options: ApiOptions = {}) {
+  getUntreatAuthList: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccountAuthModel> {
     return mdyAPI('Account', 'GetUntreatAuthList', args, options);
   },
   /**

@@ -77,7 +77,7 @@ export default function Container({ isDialog, ...props }) {
 
   // 缓存的各种信息
   const [settingConfig, setConfig] = useSetState({
-    enableState: undefined, // 外部门户开启状态
+    enableState: undefined as boolean | undefined, // 外部门户开启状态（取到之前是 undefined）
     encryData: undefined, // 加密规则
     ruleList: undefined, // 业务规则
     templatePersonalList: undefined, // 个人模板列表
