@@ -330,6 +330,7 @@ class Task extends Component<any, any> {
                   okText: _l('关闭'),
                 });
               }
+              return undefined;
             },
           );
         }

@@ -657,7 +657,8 @@ function MessageItem({
                   }}
                   icon="hr_ok"
                   popupPlacement="top"
-                  onClick={sendMessageFromMessage}
+                  // 不直接传 sendMessageFromMessage：它的参数是 { isRegenerate } 选项，直接当 onClick 会被塞进一个鼠标事件
+                  onClick={() => sendMessageFromMessage()}
                 />
               </BgIconButton.Group>
             )}

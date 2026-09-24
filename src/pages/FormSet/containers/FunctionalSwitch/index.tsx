@@ -183,7 +183,7 @@ function FunctionalSwitch(props) {
         onClick={() => {
           if (info.showDialog) {
             //使用范围未关闭 不可点击其他开关的状态时
-            return;
+            return undefined;
           }
 
           if ([20, 30].includes(o.type) && o.state) {
@@ -205,6 +205,7 @@ function FunctionalSwitch(props) {
               roleType: o.roleType,
             });
           }
+          return undefined;
         }}
         className="mRight18"
       />

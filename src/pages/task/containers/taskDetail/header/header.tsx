@@ -44,8 +44,8 @@ class Header extends Component<any, any> {
     };
   }
 
-  checkboxRef = React.createRef();
-  taskStatusCheckboxRef = React.createRef();
+  checkboxRef = React.createRef<Checkbox>();
+  taskStatusCheckboxRef = React.createRef<Checkbox>();
 
   override componentDidUpdate() {
     if (this.state.showChecklistDialog) {

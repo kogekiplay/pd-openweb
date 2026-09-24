@@ -278,7 +278,7 @@ function PendingReview(props) {
 
   const rejectDialog = (rowIds?) => {
     if (selectedIds.length <= 0 && (rowIds || []).length <= 0) {
-      return;
+      return undefined;
     }
 
     return Dialog.confirm({

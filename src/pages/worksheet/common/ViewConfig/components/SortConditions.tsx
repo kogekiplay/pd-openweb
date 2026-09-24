@@ -115,7 +115,6 @@ const Item = props => {
         <Icon
           className={cx('operateBtn', { disabled: !canDelete })}
           icon="remove_circle_outline"
-          disabled={!canDelete}
           onClick={() => {
             if (canDelete) props.handleDeleteCondition(condition.controlId);
           }}

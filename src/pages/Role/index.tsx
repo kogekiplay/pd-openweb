@@ -189,6 +189,7 @@ class AppRole extends Component<any, any> {
     } else {
       callback && callback();
     }
+    return undefined;
   };
 
   override render() {

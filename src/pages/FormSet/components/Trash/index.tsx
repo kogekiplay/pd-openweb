@@ -335,7 +335,6 @@ export default function TrashDialog(props) {
                     description: _l('彻底删除该数据后，将无法恢复。'),
                     data: [{ text: _l('我确定执行此操作'), value: true }],
                     okText: _l('彻底删除'),
-                    buttonType: 'danger',
                     onOk: () => {
                       removeBtn(data.btnId);
                     },

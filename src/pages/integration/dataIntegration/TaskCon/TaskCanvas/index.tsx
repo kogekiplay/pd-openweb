@@ -171,7 +171,7 @@ class TaskCanvas extends Component<any, any> {
 
       if (res.failed) {
         alert(res.errorMsg, 2);
-        return;
+        return undefined;
       }
 
       if (_.get(node, 'nodeConfig.config.scheduleConfig.isUpdate')) {
@@ -210,6 +210,7 @@ class TaskCanvas extends Component<any, any> {
           okText: _l('关闭'),
         });
       }
+      return undefined;
     });
   };
   genScreenshot = () => {

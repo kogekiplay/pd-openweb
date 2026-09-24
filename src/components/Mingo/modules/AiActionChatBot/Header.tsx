@@ -107,7 +107,6 @@ export default function Header({
           {(!!messages.length || isTest) && (
             <BgIconButton
               icon={'clean'}
-              title={_l('清空')}
               tooltip={_l('清空当前会话')}
               onClick={() => {
                 if (
@@ -149,7 +148,7 @@ export default function Header({
           )}
           <BgIconButton
             icon="close"
-            title={_l('关闭')}
+            tooltip={_l('关闭')}
             onClick={() => {
               onClose();
             }}

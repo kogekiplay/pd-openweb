@@ -575,7 +575,8 @@ let ViewItems = class ViewItems extends Component<any, any> {
     navigateTo(getNavigateUrl(manageView));
     !isToView && this.handleOpenView(manageView);
   };
-  handleManageItem = (e, type) => {
+  // 设置图标直接把它当 onClick（只收到事件，type 为空 = 进管理）；进视图的那个入口显式传 'toView'
+  handleManageItem = (e: React.MouseEvent, type?: 'toView') => {
     e.stopPropagation();
     const manageView = this.getManageView();
     const isToView = type === 'toView';

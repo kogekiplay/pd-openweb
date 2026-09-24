@@ -619,7 +619,7 @@ function MingoContent(props, ref) {
             {!!messages.length && (
               <BgIconButton
                 icon="clean"
-                title={_l('清空')}
+                tooltip={_l('清空')}
                 onClick={() => {
                   // cleanMessages();
                   setError();
@@ -632,7 +632,7 @@ function MingoContent(props, ref) {
             )}
             <BgIconButton
               icon="close"
-              title={_l('关闭')}
+              tooltip={_l('关闭')}
               onClick={() => {
                 onClose();
               }}

@@ -165,6 +165,7 @@ class PortalSetting extends React.Component<any, any> {
     } else {
       callback && callback();
     }
+    return undefined;
   };
 
   closePortal = () => {

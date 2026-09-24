@@ -22,7 +22,7 @@ class Container extends Component<any, any> {
       data: null,
     };
   }
-  dialogRef = React.createRef();
+  dialogRef = React.createRef<React.ComponentRef<typeof Dialog>>();
 
   override componentDidMount() {
     this.fetchData(true);

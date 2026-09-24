@@ -114,6 +114,12 @@ const antNotification = {
   warning(props) {
     return notification.warning(getProps(props, 'warning'));
   },
+  // antd 5 起 notification 没有 close 了（改叫 destroy(key)），上面的 ...notification 展开不出来。
+  // 全仓 11 处 antNotification.close(key) 在 antd 升级后都会当场抛 TypeError —— 点通知上的
+  //「下载」等按钮，window.open 照常执行，通知却关不掉。补回这个入口，调用方不用改
+  close(key: string) {
+    notification.destroy(key);
+  },
 };
 
 export default antNotification;

@@ -1,4 +1,5 @@
 import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 import { useMeasure } from 'react-use';
 import cx from 'classnames';
 import _, { get } from 'lodash';
@@ -35,6 +36,16 @@ export interface RecordFormContextValue {
   isMingoCreate?: boolean;
 }
 export const RecordFormContext = React.createContext<RecordFormContextValue | undefined>(undefined);
+
+// 编辑态且不分栏时外面包一层 ScrollView，否则不包。原来写成 Con = 条件 ? ScrollView : Fragment 再统一传 props，
+// 类型上只能按两者都得接受来查 —— Fragment 接不住那组滚动属性。拆成一个组件在里面分支，ref 在 React 19 里是普通 prop，原样交给 ScrollView
+function FormScrollWrap({
+  scrollable,
+  children,
+  ...scrollProps
+}: { scrollable: boolean; children?: ReactNode } & ComponentPropsWithRef<typeof ScrollView>) {
+  return scrollable ? <ScrollView {...scrollProps}>{children}</ScrollView> : <Fragment>{children}</Fragment>;
+}
 
 const ShadowCon = styled.div`
   width: 100%;
@@ -408,7 +419,9 @@ function RecordForm(props) {
     stickyBar.id = visible || tabHeaderControl ? 'stickyBarActive' : '';
   }
 
-  const Con = type === 'edit' && !isSplit ? ScrollView : React.Fragment;
+  // 只有编辑态且不分栏时外层才是 ScrollView；下面那组滚动属性也只在这时给 ——
+  // 原来按 type === 'edit' 给，分栏时就落在了 Fragment 上（React 忽略并告警，ref 也挂不上）
+  const formScrollable = type === 'edit' && !isSplit;
   const TopCon = isSplit ? ScrollView : Div;
 
   function scrollToTable() {
@@ -556,8 +569,9 @@ function RecordForm(props) {
                 }}
               />
             )}
-            <Con
-              {...(type === 'edit'
+            <FormScrollWrap
+              scrollable={formScrollable}
+              {...(formScrollable
                 ? {
                     className: 'recordInfoFormScroll Relative flex',
                     ref: scrollRef,
@@ -729,7 +743,7 @@ function RecordForm(props) {
                 </div>
               </TopCon>
               {type === 'edit' && !isSplit && <Bottom />}
-            </Con>
+            </FormScrollWrap>
             <div id="newCustomTabSectionWrap" className={cx('relateRecordBlockCon', { flex: isSplit })}></div>
             {!isSplit && type === 'edit' && !!tabControls.length && !isFixedLeft && !isFixedRight && (
               <FixedCon ref={nav}>

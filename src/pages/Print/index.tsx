@@ -823,6 +823,7 @@ class PrintForm extends React.Component<any, any> {
         },
       });
     }
+    return undefined;
   };
 
   onClickPrint = () => {

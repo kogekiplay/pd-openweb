@@ -571,6 +571,7 @@ function User(props) {
 
                   break;
               }
+              return undefined;
             }}
             popupAlign={{
               points: ['tr', 'br'],
