@@ -1559,6 +1559,10 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel {
     /** （泛型壳，swagger 里没有，真实响应里有） */
     pageIndex?: number | undefined;
   }
+  interface IdNameMap {
+    id?: string | undefined;
+    name?: string | undefined;
+  }
   /** 所有返回列表的Model */
   interface ListModel_DepartmentModel {
     resultCode?: number | undefined;
@@ -1608,10 +1612,6 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel {
     allCount?: number | undefined;
     /** （泛型壳，swagger 里没有，真实响应里有） */
     pageIndex?: number | undefined;
-  }
-  interface IdNameMap {
-    id?: string | undefined;
-    name?: string | undefined;
   }
 }
 
@@ -2257,6 +2257,23 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.App.AppRole {
   }
   interface GetDebugRolesResult {
     roles?: HapApi.MD.Web.Ajax.ResultModel.App.AppRole.GetDebugRolesResult_RoleShortInfo[] | undefined;
+  }
+  /** 根据角色 分页获取成员集合 */
+  interface GetMembersByRoleResult {
+    /** 是否 可以 设置 角色成员（设置 含：添加/删除/移动 成员） */
+    canSetMembers: boolean;
+    /** 成员信息集 */
+    memberModels?: HapApi.MD.Web.Ajax.ResultModel.App.AppRole.MemberInfoModel[] | undefined;
+    /** 总成员数量 */
+    totalCount: number;
+    /** 用户数量 */
+    userCount: number;
+    /** 部门数量 */
+    departementCount: number;
+    /** 组织角色数量 */
+    organizeRoleCount: number;
+    /** 职位数量 */
+    jobCount: number;
   }
   /** 成员信息模型 */
   interface MemberInfoModel {

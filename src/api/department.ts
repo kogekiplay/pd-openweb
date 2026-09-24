@@ -352,7 +352,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDepartmentFullNameByIds: function (args: ApiArgs, options: ApiOptions = {}) {
+  getDepartmentFullNameByIds: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.IdNameMap[]> {
     return mdyAPI('Department', 'GetDepartmentFullNameByIds', args, options);
   },
   /**

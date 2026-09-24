@@ -232,6 +232,9 @@ const VERIFIED = new Set([
   'Group/GetGroupsSearch',
   'WorkSite/GetWorkSiteUsers',
   'Department/GetProjectDepartmentByPage',
+  // 第六批（同日，第四轮取样：把前面接口响应里的 id 收集起来填参数）：部门 id → 部门全名、角色 id → 角色成员
+  'Department/GetDepartmentFullNameByIds',
+  'AppManagement/GetMembersByRole',
 ]);
 
 /**

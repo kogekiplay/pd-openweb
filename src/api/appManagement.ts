@@ -415,7 +415,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMembersByRole: function (args: ApiArgs, options: ApiOptions = {}) {
+  getMembersByRole: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.AppRole.GetMembersByRoleResult> {
     return mdyAPI('AppManagement', 'GetMembersByRole', args, options);
   },
   /**
