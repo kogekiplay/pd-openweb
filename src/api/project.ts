@@ -65,7 +65,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectLicenseSupportInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getProjectLicenseSupportInfo: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectModel> {
     return mdyAPI('Project', 'GetProjectLicenseSupportInfo', args, options);
   },
   /**
@@ -517,7 +520,7 @@ export default {
   /**
    * 获取是否线下订单 true 线下
    * @param {Object} args 请求参数
-  * @param {string} args.projectId 组织ID
+   * @param {string} args.projectId 组织ID
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}

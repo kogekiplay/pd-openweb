@@ -772,7 +772,8 @@ export async function fillRowRelationRows(
       pageSize: 200,
       getWorksheet: true,
     })
-    .then((res: { resultCode?: number; template?: { controls?: FormControl[] }; data?: RecordRow[] }) => {
+    // 返回值的类型来自接口（WorksheetRowsResult），原来这里手写的一份不带 | undefined，和它对不上
+    .then(res => {
       if (res.resultCode === 1) {
         const subControls = ((res.template || {}).controls || []).filter(
           c => !_.includes(SYSTEM_FIELD_IDS, c.controlId),

@@ -23,23 +23,22 @@ declare namespace HapApi.MD.Entity.Account {
 }
 
 declare namespace HapApi.MD.Entity.Apk {
-  interface AppSectionDomainModel {
-    /** （swagger 里叫 id，实际序列化成 appSectionId） */
-    appSectionId?: string | undefined;
-    name?: string | undefined;
-    appRoleType: HapApi.MD.Enum.Roles.AppRole.AppRoleType;
+  interface AppForManagerModel {
+    appId?: string | undefined;
+    appName?: string | undefined;
+    /** （swagger 里叫 apkNamePinyin，实际序列化成 appNPY） */
+    appNPY?: string | undefined;
+    icon?: string | undefined;
+    iconColor?: string | undefined;
+    iconUrl?: string | undefined;
+    isLock: boolean;
     /** （swagger 里叫 entityInfo，实际序列化成 workSheetInfo） */
     workSheetInfo?: HapApi.MD.Entity.Apk.EntityInfo[] | undefined;
-    isLock: boolean;
-    isGoodsStatus: boolean;
-    fixed: boolean;
-    rootId?: string | undefined;
-    parentId?: string | undefined;
-    icon?: string | undefined;
-    iconUrl?: string | undefined;
-    iconColor?: string | undefined;
-    childSections?: HapApi.MD.Entity.Apk.AppSectionDomainModel[] | undefined;
-    timeZone: number;
+    createAccountInfo?: HapApi.MD.Entity.Role.AppRoleGrpcModel.UserInfos | undefined;
+    /** （swagger 里叫 createTime，实际序列化成 ctime） */
+    ctime?: string | undefined;
+    licences?: HapApi.MD.Entity.ApkMap.LicenceModel[] | undefined;
+    trade?: HapApi.MD.Entity.Mongo.Apk.AppTrade | undefined;
   }
   interface EntityInfo {
     /** （swagger 里叫 id，实际序列化成 workSheetId） */
@@ -62,6 +61,24 @@ declare namespace HapApi.MD.Entity.Apk {
     remark?: string | undefined;
     desc?: string | undefined;
     resume?: string | undefined;
+  }
+  interface AppSectionDomainModel {
+    /** （swagger 里叫 id，实际序列化成 appSectionId） */
+    appSectionId?: string | undefined;
+    name?: string | undefined;
+    appRoleType: HapApi.MD.Enum.Roles.AppRole.AppRoleType;
+    /** （swagger 里叫 entityInfo，实际序列化成 workSheetInfo） */
+    workSheetInfo?: HapApi.MD.Entity.Apk.EntityInfo[] | undefined;
+    isLock: boolean;
+    isGoodsStatus: boolean;
+    fixed: boolean;
+    rootId?: string | undefined;
+    parentId?: string | undefined;
+    icon?: string | undefined;
+    iconUrl?: string | undefined;
+    iconColor?: string | undefined;
+    childSections?: HapApi.MD.Entity.Apk.AppSectionDomainModel[] | undefined;
+    timeZone: number;
   }
 }
 
@@ -117,6 +134,17 @@ declare namespace HapApi.MD.Entity.HomeApp {
     projectHashvalue?: string | undefined;
     versionTime?: string | undefined;
     retry: boolean;
+  }
+  interface HomeAppSimpleDto {
+    projectId?: string | undefined;
+    appId?: string | undefined;
+    appName?: string | undefined;
+    appSectionId?: string | undefined;
+    workSheetId?: string | undefined;
+    urlTemplate?: string | undefined;
+    configuration?: Record<string, string> | undefined;
+    createType: number;
+    permission: HapApi.MD.Enum.Roles.AppRole.AppRoleType;
   }
   interface HomeAppDto {
     projectId?: string | undefined;
@@ -286,6 +314,16 @@ declare namespace HapApi.MD.Entity.Plugin {
 }
 
 declare namespace HapApi.MD.Entity.Role.AppRoleGrpcModel {
+  interface UserInfos {
+    addTime?: string | undefined;
+    isRoleCharger: boolean;
+    operaterName?: string | undefined;
+    accountId?: string | undefined;
+    fullName?: string | undefined;
+    avatar?: string | undefined;
+    isOwner: boolean;
+    status: number;
+  }
   interface UserInfoBase {
     addTime?: string | undefined;
     isRoleCharger: boolean;
@@ -301,12 +339,94 @@ declare namespace HapApi.MD.Entity.Role.FormFunc {
 }
 
 declare namespace HapApi.MD.Entity.Worksheet {
+  interface RowDetailData {
+    rowData?: string | undefined;
+    createTime?: string | undefined;
+    updateTime?: string | undefined;
+    titleName?: string | undefined;
+    worksheetName?: string | undefined;
+    entityName?: string | undefined;
+    allowEdit: boolean;
+    allowDelete: boolean;
+    projectId?: string | undefined;
+    ownerAccount?: HapApi.MD.Entity.Account.EasyAccount | undefined;
+    createAccount?: HapApi.MD.Entity.Account.EasyAccount | undefined;
+    editAccount?: HapApi.MD.Entity.Account.EasyAccount | undefined;
+    shareRange: HapApi.MD.Enum.Worksheet.ShareRangeEnum;
+    resultCode: number;
+    roleType: number;
+    view?: ApiPayload | undefined;
+    appId?: string | undefined;
+    groupId?: string | undefined;
+    isViewData: boolean;
+    isFavorite: boolean;
+    templateControls?: import('src/utils/controlTypes').FormControl[] | undefined;
+    advancedSetting?: Record<string, string> | undefined;
+    contentEncrypted: boolean;
+    isLock: boolean;
+    appTimeZone: number;
+  }
+  interface WorksheetBtnEntity {
+    btnId?: string | undefined;
+    name?: string | undefined;
+    worksheetId?: string | undefined;
+    btnType: number;
+    showType: number;
+    filters?: HapApi.MD.Entity.Worksheet.WorksheetFilterSort[] | undefined;
+    isAllView: number;
+    displayViews?: string[] | undefined;
+    clickType: number;
+    confirmMsg?: string | undefined;
+    sureName?: string | undefined;
+    cancelName?: string | undefined;
+    writeObject: number;
+    writeType: number;
+    relationControl?: string | undefined;
+    addRelationControl?: string | undefined;
+    workflowType: number;
+    workflowId?: string | undefined;
+    createAccountId?: string | undefined;
+    updateTime?: string | undefined;
+    updateAccountId?: string | undefined;
+    updateAccount?: HapApi.MD.Entity.Account.EasyAccount | undefined;
+    writeControls?: HapApi.MD.Entity.Worksheet.WriteControlEntity[] | undefined;
+    status: number;
+    color?: string | undefined;
+    icon?: string | undefined;
+    iconUrl?: string | undefined;
+    disabled: boolean;
+    desc?: string | undefined;
+    advancedSetting?: Record<string, string> | undefined;
+    enableConfirm: boolean;
+    verifyPwd: boolean;
+    isBatch: boolean;
+  }
+  interface ControlRuleEntity {
+    ruleId?: string | undefined;
+    name?: string | undefined;
+    controlIds?: string[] | undefined;
+    worksheetId?: string | undefined;
+    type: number;
+    disabled: boolean;
+    filters?: HapApi.MD.Entity.Worksheet.WorksheetFilterSort[] | undefined;
+    createAccountId?: string | undefined;
+    ruleItems?: HapApi.MD.Entity.Worksheet.RuleItem[] | undefined;
+    checkType: number;
+    hintType: number;
+    appTimeZone: number;
+  }
   interface ControlTemplateEntity {
     sourceId?: string | undefined;
     worksheetId?: string | undefined;
     projectId?: string | undefined;
     version: number;
     controls: import('src/utils/controlTypes').FormControl[];
+  }
+  interface SwitchPermitModel {
+    type: HapApi.MD.Enum.Worksheet.SwitchType;
+    state: boolean;
+    viewIds?: string[] | undefined;
+    displayFlowChart: number;
   }
   interface WorksheetViewEntity {
     viewId?: string | undefined;
@@ -342,26 +462,6 @@ declare namespace HapApi.MD.Entity.Worksheet {
     deleteTime?: string | undefined;
     alias?: string | undefined;
   }
-  interface ControlRuleEntity {
-    ruleId?: string | undefined;
-    name?: string | undefined;
-    controlIds?: string[] | undefined;
-    worksheetId?: string | undefined;
-    type: number;
-    disabled: boolean;
-    filters?: HapApi.MD.Entity.Worksheet.WorksheetFilterSort[] | undefined;
-    createAccountId?: string | undefined;
-    ruleItems?: HapApi.MD.Entity.Worksheet.RuleItem[] | undefined;
-    checkType: number;
-    hintType: number;
-    appTimeZone: number;
-  }
-  interface SwitchPermitModel {
-    type: HapApi.MD.Enum.Worksheet.SwitchType;
-    state: boolean;
-    viewIds?: string[] | undefined;
-    displayFlowChart: number;
-  }
   interface WorksheetOperationLogPermissionModel {
     enable: boolean;
     range: HapApi.MD.Entity.Role.FormFunc.OPRangeType;
@@ -387,6 +487,17 @@ declare namespace HapApi.MD.Entity.Worksheet {
     groupFilters?: HapApi.MD.Entity.Worksheet.WorksheetFilterSort[] | undefined;
     emptyRule?: number | undefined;
   }
+  interface WriteControlEntity {
+    controlId?: string | undefined;
+    type: number;
+    defsource?: string | undefined;
+  }
+  interface RuleItem {
+    type: number;
+    isAll: boolean;
+    controls?: HapApi.MD.Entity.Worksheet.RuleChildItem[] | undefined;
+    message?: string | undefined;
+  }
   interface LayerControlEntity {
     worksheetId?: string | undefined;
     worksheetName?: string | undefined;
@@ -405,12 +516,6 @@ declare namespace HapApi.MD.Entity.Worksheet {
     viewId?: string | undefined;
     filterType: number;
   }
-  interface RuleItem {
-    type: number;
-    isAll: boolean;
-    controls?: HapApi.MD.Entity.Worksheet.RuleChildItem[] | undefined;
-    message?: string | undefined;
-  }
   interface RuleChildItem {
     isCustom: boolean;
     controlId?: string | undefined;
@@ -419,9 +524,16 @@ declare namespace HapApi.MD.Entity.Worksheet {
     type?: string | undefined;
     value?: string | undefined;
   }
+  interface WorksheetQueryConfig {
+    cid?: string | undefined;
+    subCid?: string | undefined;
+    pid?: string | undefined;
+  }
 }
 
 declare namespace HapApi.MD.Enum {
+  type UserStatus = 0 | 1 | 2 | 3 | 4 | 5;
+  type LicenseType = 0 | 1 | 2;
   type AccountStatus = 0 | 1 | 2 | 3 | 4 | 5;
 }
 
@@ -546,6 +658,11 @@ declare namespace HapApi.MD.Enum.Worksheet {
     | 52
     | 1001
     | 1002;
+}
+
+declare namespace HapApi.MD.Web.Ajax.Enum {
+  /** 网络状态 */
+  type ProjectStatus = 0 | 1 | 2 | 3 | 4;
 }
 
 declare namespace HapApi.MD.Web.Ajax.ResultModel.App {
@@ -690,6 +807,180 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.App {
   }
 }
 
+declare namespace HapApi.MD.Web.Ajax.ResultModel.Order {
+  /** 版本信息 */
+  interface VersionModel {
+    /** （swagger 里没有，真实响应里有） */
+    versionIdV2?: string | undefined;
+    /** （swagger 里没有，真实响应里有） */
+    name?: string | undefined;
+  }
+}
+
+declare namespace HapApi.MD.Web.Ajax.ResultModel.Project {
+  /** 组织信息 */
+  interface ProjectModel {
+    /** 组织门牌号 */
+    projectCode?: string | undefined;
+    /** 组织ID */
+    projectId?: string | undefined;
+    /** 组织名称，只在发票抬头用，其他地方用 companyDisplayName */
+    companyName?: string | undefined;
+    /** 英文名 */
+    companyNameEnglish?: string | undefined;
+    /** 呈现名称 */
+    companyDisplayName?: string | undefined;
+    /** 地区 */
+    geographyId?: number | undefined;
+    /** 行业 */
+    industryId?: number | undefined;
+    /** (地理位置)国家地区-编码 */
+    geoCountryRegionCode?: string | undefined;
+    /** 国家地区名称 */
+    geoCountryRegionName?: string | undefined;
+    timeZone?: string | undefined;
+    timeZoneName?: string | undefined;
+    /** 当前有效计费人数 */
+    effectiveUserCount?: number | undefined;
+    /** 网络人数上限 */
+    limitUserCount?: number | undefined;
+    /** 当前有效应用数量 */
+    effectiveApkCount?: number | undefined;
+    /** 当前组织应用数上限数量 */
+    limitApkCount?: number | undefined;
+    /** 当前有效工作表数量 */
+    effectiveWorksheetCount?: number | undefined;
+    /** 当前工作表数量上限 */
+    limitWorksheetCount?: number | undefined;
+    /** 当前有效工作表总行数 */
+    effectiveWorksheetRowCount?: number | undefined;
+    /** 当前单个工作表行记录总数量上限 */
+    limitWorksheetRowCount?: number | undefined;
+    /** 当前所有工作表行记录总数量上限 */
+    limitAllWorksheetRowCount?: number | undefined;
+    /** 当前有效工作流数量 */
+    effectiveWorkflowCount?: number | undefined;
+    /** 组织工作流目前上限数量 */
+    limitWorkflowCount?: number | undefined;
+    /** 当前有效存储量（单位字节） */
+    effectiveApkStorageCount?: number | undefined;
+    /** 组织存储量目前上限数量（单位GB） */
+    limitApkStorageCount?: number | undefined;
+    /** 当前外部用户数量 */
+    effectiveExternalUserCount?: number | undefined;
+    /** 组织外部用户目前上限数量 */
+    limitExternalUserCount?: number | undefined;
+    /** 当前有效数据集成运行任务数量 */
+    effectiveDataPipelineJobCount: number;
+    /** 当前有效数据集成包含ETL的运行任务数量 */
+    effectiveDataPipelineEtlJobCount: number;
+    /** 组织数据集成运行任务目前上限数量 */
+    limitDataPipelineJobCount: number;
+    /** 组织数据集成ETL运行任务目前上限数量 */
+    limitDataPipelineEtlJobCount: number;
+    /** 当前有效数据集成运行行数数量 */
+    effectiveDataPipelineRowCount: number;
+    /** 组织数据集成运行行数目前上限数量 */
+    limitDataPipelineRowCount: number;
+    /** 当前组织有效聚合表数量 */
+    effectiveAggregationTableCount?: number | undefined;
+    /** 组织聚合表上限数量 */
+    limitAggregationTableCount?: number | undefined;
+    /** 当前向量知识库有效数量 */
+    effectiveVectorKnowledgeCount?: number | undefined;
+    /** 组织向量知识库目前上限数量（单位个） */
+    limitVectorKnowledgeCount?: number | undefined;
+    /** 当前向量知识库有效分块数量 */
+    effectiveVectorKnowledgeChunkCount?: number | undefined;
+    /** 组织向量知识库分块目前上限数量（单位行） */
+    limitVectorKnowledgeChunkCount?: number | undefined;
+    /** 组织商户上限数量 */
+    limitMerchantCount?: number | undefined;
+    /** 组织电子开票税号上限数量 */
+    limitInvoiceTaxIdCount?: number | undefined;
+    /** 是否不限人数 */
+    unLimited?: boolean | undefined;
+    /** 网络余额（信用点） */
+    balance?: number | undefined;
+    /** 部门数量 */
+    departmentCount?: number | undefined;
+    /** 网络未激活人数 */
+    notActiveUserCount?: number | undefined;
+    /** 是否有角色 */
+    hasRole?: boolean | undefined;
+    /** 是否是 【企业网络管理员】 */
+    isProjectAdmin?: boolean | undefined;
+    /** 是否是 【企业网络超级管理员】 */
+    isSuperAdmin: boolean;
+    /** 是否是创建者 */
+    isCreateUser?: boolean | undefined;
+    /** 是否允许升级 */
+    allowUpgradeVersion?: boolean | undefined;
+    /** 是否允许续费外部门户 */
+    allowUpgradeExternalPortal?: boolean | undefined;
+    projectStatus: HapApi.MD.Web.Ajax.Enum.ProjectStatus;
+    userStatus: HapApi.MD.Enum.UserStatus;
+    /** 该账户在本网路中的加入时间 */
+    userUpdateTime?: string | undefined;
+    licenseType: HapApi.MD.Enum.LicenseType;
+    version?: HapApi.MD.Web.Ajax.ResultModel.Order.VersionModel | undefined;
+    currentLicense?: HapApi.MD.Web.Ajax.ResultModel.Project.ProjectLicenseModel | undefined;
+    nextLicense?: HapApi.MD.Web.Ajax.ResultModel.Project.ProjectLicenseModel | undefined;
+    /** 网络创建者 */
+    createAccountId?: string | undefined;
+    /** 付费次数 */
+    paidCount?: number | undefined;
+    /** 汇报关系全员可见 */
+    structureForAll?: boolean | undefined;
+    /** 是否开放 Hr 入口 */
+    isHrVisible: boolean;
+    /** 是否 不能创建应用 */
+    cannotCreateApp: boolean;
+    /** 是否 不能删除应用 */
+    cannotDeleteApp: boolean;
+    /** 是否 启用水印 */
+    enabledWatermark: boolean;
+    /** 水印文本 */
+    enabledWatermarkTxt?: string | undefined;
+    /** 允许使用（非管理员）API集成 */
+    allowAPIIntegration: boolean;
+    /** 允许使用（非管理员）数据集成 */
+    allowDataPipeline: boolean;
+    /** 允许使用（非管理员）插件 */
+    allowPlugin: boolean;
+    /** 允许使用全局搜索 */
+    allowSuperSearch: boolean;
+    /** 企业认证类型 */
+    authType: number;
+    /** 自动订购应用上传流量包 */
+    autoPurchaseApkStorageExtPack: boolean;
+    /** 自动订购数据集成扩展包 */
+    autoPurchaseDataPipelineExtPack: boolean;
+    /** 自动订购工作流升级包 */
+    autoPurchaseWorkflowExtPack: boolean;
+    /** 自动订购外部门户用户额度扩充包 */
+    autoPurchaseExternalUserExtPack: boolean;
+    closedTime?: string | undefined;
+    /** 关闭 操作人 名称 */
+    closedOperatorName?: string | undefined;
+    privacyModel?: HapApi.MD.Web.Ajax.ResultModel.Project.GetPrivacyModel | undefined;
+  }
+  /** 组织授权 */
+  interface ProjectLicenseModel {
+    /** 到期天数 */
+    expireDays: number;
+    /** 开始时间 */
+    startDate?: string | undefined;
+    /** 结束时间 */
+    endDate?: string | undefined;
+    version?: HapApi.MD.Web.Ajax.ResultModel.Order.VersionModel | undefined;
+  }
+  interface GetPrivacyModel {
+    /** 企业账号 */
+    regCode?: string | undefined;
+  }
+}
+
 declare namespace HapApi.MD.Web.Ajax.ResultModel.Worksheet {
   interface WorksheetModel {
     /** 工作表id */
@@ -774,12 +1065,49 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Worksheet {
     appId?: string | undefined;
     isCrossApp: boolean;
   }
+  /** 查询默认值dto */
+  interface DefultQueryDto {
+    /** 工作表查询数据 */
+    queries?: HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetQueryDto[] | undefined;
+    /** 查询表的控件信息 */
+    templates?: Record<string, import('src/utils/controlTypes').FormControl[]> | undefined;
+  }
   /** 视图插件配置 */
   interface ViewPluginConfiguration {
     functionSwitchSettings?: HapApi.MD.Web.Ajax.ResultModel.Worksheet.FunctionSwitchSettings | undefined;
     /** 参数变量设置 */
     variableParamSettings?: HapApi.System.Collections.Generic.KeyValuePair_String_String[] | undefined;
     currentUseVersion?: HapApi.MD.Entity.Plugin.PluginCommitRecord | undefined;
+  }
+  interface WorksheetQueryDto {
+    id?: string | undefined;
+    worksheetId?: string | undefined;
+    /** 查询控件id */
+    controlId?: string | undefined;
+    controlType: HapApi.MD.Enum.Form.ControlType;
+    /** 来源id */
+    sourceId?: string | undefined;
+    /** 来源名称 */
+    sourceName?: string | undefined;
+    appName?: string | undefined;
+    /** 1 = 本表，2 = 他表 */
+    sourceType: number;
+    /** 筛选条件 */
+    items?: HapApi.MD.Entity.Worksheet.WorksheetFilterSort[] | undefined;
+    /** 映射字段 */
+    configs?: HapApi.MD.Entity.Worksheet.WorksheetQueryConfig[] | undefined;
+    /** 0 = 获取第一条时，按配置来，1= 不赋值 */
+    moreType: number;
+    /** 0 = 赋空值 1 = 保留原值 */
+    recordsNotFound: number;
+    /** 排序 (默认按创建时间降序) */
+    moreSort?: HapApi.MD.Entity.Worksheet.WorksheetFilterSort[] | undefined;
+    /** 查询条数(关联多条,子表时值有效) */
+    queryCount?: number | undefined;
+    /** 结果类型 0=查询到记录，1=仅查询到一条记录，2=查询到多条记录，3=未查询到记录 */
+    resultType: number;
+    /** 0 = 常规字段默认值，1 = 表单事件 */
+    eventType: number;
   }
   /** 功能开关设置 */
   interface FunctionSwitchSettings {

@@ -237,12 +237,13 @@ function EnvValueShow({
         })
         .then(res => {
           setLoading(false);
-          setRows(
-            res.data
-              .slice(0, maxLength)
-              .map(r => pickBy(r, (_value, key) => key.length === 24))
-              .concat(res.data.length > maxLength ? '...' : []),
-          );
+          const data = res.data || [];
+          // 只留控件 id（24 位）那些键；超过条数上限时末尾补一个 '...' 当省略标记
+          const list: (Record<string, unknown> | '...')[] = data
+            .slice(0, maxLength)
+            .map(r => pickBy(r, (_value, key) => key.length === 24));
+          if (data.length > maxLength) list.push('...');
+          setRows(list);
         });
     }
   }, []);

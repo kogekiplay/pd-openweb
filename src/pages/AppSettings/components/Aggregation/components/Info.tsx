@@ -13,6 +13,7 @@ import 'src/pages/integration/dataIntegration/connector/style.less';
 import 'src/pages/workflow/components/Switch/index.less';
 import { getTranslateInfo } from 'src/utils/app';
 import { pathCompletion } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { AGG_CONTROL_MAX, GROUPMAX, GROUPMAXBYREL, systemControls } from '../config';
 import {
   getAllSourceList,
@@ -152,21 +153,24 @@ export default function Info(props) {
       .getWorksheetsControls({ worksheetIds: ids, handControlSource: true, getRelationSearch: true })
       .then(({ code, data }) => {
         if (code === 1) {
-          const sourceInfos = _.map(ids, id => _.keyBy(data, 'worksheetId')[id]).map((o = {}, i) => {
-            return {
-              ...o,
-              worksheetId: o.worksheetId || ids[i],
-              controls: [...(o.controls || []), ...systemControls].map(a => {
-                const relationControls = (a.relationControls || []).filter(it => !it.encryId);
-                return {
-                  ...a,
-                  relationControls: [29, 34].includes(a.type) //子表 关联 都支持系统字段
-                    ? [...relationControls, ...systemControls]
-                    : relationControls,
-                };
-              }),
-            };
-          });
+          // 没取到的表对应 undefined，默认成空对象（所以按 Partial 标）
+          const sourceInfos = _.map(ids, id => _.keyBy(data, 'worksheetId')[id]).map(
+            (o: Partial<HapApi.MD.Entity.Worksheet.ControlTemplateEntity> = {}, i) => {
+              return {
+                ...o,
+                worksheetId: o.worksheetId || ids[i],
+                controls: [...(o.controls || []), ...systemControls].map((a: FormControl) => {
+                  const relationControls = (a.relationControls || []).filter(it => !it.encryId);
+                  return {
+                    ...a,
+                    relationControls: [29, 34].includes(a.type) //子表 关联 都支持系统字段
+                      ? [...relationControls, ...systemControls]
+                      : relationControls,
+                  };
+                }),
+              };
+            },
+          );
 
           if (res) {
             const flowData = res;

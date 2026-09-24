@@ -81,7 +81,7 @@ export default class SheetMove extends Component<any, any> {
         type: 1,
       })
       .then(res => {
-        res = res
+        const pages = res
           .filter(item => !item.urlTemplate)
           .map(item => {
             return {
@@ -90,8 +90,8 @@ export default class SheetMove extends Component<any, any> {
             };
           });
         this.setState({
-          pages: res,
-          pageValue: res.length ? pageId || res[0].value : '',
+          pages,
+          pageValue: pages.length ? pageId || pages[0].value : '',
         });
       });
   }

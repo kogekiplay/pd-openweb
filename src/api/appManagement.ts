@@ -466,7 +466,10 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppForManager: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAppForManager: function (
+    args: ApiArgs,
+    options: ApiOptions = {},
+  ): ApiResultOf<HapApi.MD.Entity.Apk.AppForManagerModel[]> {
     return mdyAPI('AppManagement', 'GetAppForManager', args, options);
   },
   /**

@@ -418,7 +418,7 @@ export default {
       getAlias?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Entity.Apk.EntityInfo[]> {
     return mdyAPI('HomeApp', 'GetWorksheetsByAppId', args, options);
   },
   /**
@@ -617,7 +617,7 @@ export default {
       workSheetId?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Entity.HomeApp.HomeAppSimpleDto> {
     return mdyAPI('HomeApp', 'GetAppSimpleInfo', args, options);
   },
   /**
@@ -1204,7 +1204,7 @@ export default {
       tradeId?: string;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Entity.Apk.EntityInfo[]> {
     return mdyAPI('HomeApp', 'GetAppItems', args, options);
   },
   /**

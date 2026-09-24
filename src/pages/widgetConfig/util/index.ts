@@ -381,24 +381,13 @@ export const isOtherShowFeild = (control: FormControl = {}) => {
   return (control.type === 30 || control.originType === 30) && (control.strDefault || '')[0] === '1';
 };
 
-/**
- * 一条查询配置。字段很多（后端返回的远不止这些），这里【只列消费方真正读到的】，
- * 其余走索引签名原样带过去 —— 这个函数本身就是把 templates 拼回每条查询上，不碰别的字段。
- */
-export interface SearchConfigQuery {
-  sourceId?: string;
-  /** 2 = 事件查询，columnRules 按它过滤 */
-  eventType?: number;
-  [key: string]: unknown;
-}
-
-// 查询配置接口的返回：queries 是查询列表，templates 按 sourceId 存对应的控件模板
-export const formatSearchConfigs = (
-  res: { queries?: SearchConfigQuery[]; templates?: Record<string, FormControl[]> } = {},
-) => {
-  if (!(res.queries || []).length) return [];
-  return res.queries.map(item => {
-    return { ...item, templates: [{ controls: (res.templates || {})[item.sourceId] || [] }] };
+// 查询配置接口（Worksheet/GetQueryBySheetId）的返回：queries 是查询列表，templates 按 sourceId 存对应的控件模板。
+// 这里把 templates 拼回每条查询上。原来的参数类型是手写的「只列用到的字段 + 索引签名」，现在直接用接口类型
+export const formatSearchConfigs = (res: Partial<HapApi.MD.Web.Ajax.ResultModel.Worksheet.DefultQueryDto> = {}) => {
+  const { queries = [], templates = {} } = res;
+  if (!queries.length) return [];
+  return queries.map(item => {
+    return { ...item, templates: [{ controls: templates[item.sourceId ?? ''] || [] }] };
   });
 };
 

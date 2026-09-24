@@ -392,14 +392,12 @@ class RelateRecordCards extends Component<any, any> {
             pageIndex,
             isLoadingMore: false,
             showLoadMore: newRecords.length < res.count && data.length > 0,
-          };
-
-          if (
-            _.includes(['2', '5'], _.get(advancedSetting, 'showtype')) &&
+            // 列表形态（showtype 2 / 5）在表单里、记录详情里才带上总数
+            ...(_.includes(['2', '5'], _.get(advancedSetting, 'showtype')) &&
             _.includes([FROM.H5_EDIT, FROM.RECORDINFO], from)
-          ) {
-            newState.count = res.count;
-          }
+              ? { count: res.count }
+              : {}),
+          };
 
           return newState;
         });

@@ -81,13 +81,30 @@ const VERIFIED = new Set([
   'Worksheet/GetWorksheetInfo', // 缺 pyName、pluginConfiguration（null）
   'Worksheet/GetWorksheetControls', // 缺 msg（null）
   'Worksheet/GetFilterRows', // 缺 worksheet、template、clientId（null）
+  // 第二批（同日，5 个应用 × 每个 2 张表各取一次）
+  'HomeApp/GetWorksheetsByAppId', // 项就是 EntityInfo（改名同下）
+  'HomeApp/GetAppItems',
+  'HomeApp/GetAppSimpleInfo',
+  'Worksheet/GetRowDetail', // view 是 any（schema 就是这么写的），rowData 是动态键
+  'Worksheet/GetRowRelationRows', // swagger 没有响应 schema，见 RESPONSE_OVERRIDES
+  'Worksheet/GetWorksheetBtns',
+  'Worksheet/GetSwitchPermit',
+  'Worksheet/GetControlRules',
+  'Worksheet/GetQueryBySheetId',
+  'Worksheet/GetWorksheetsControls', // 见 RESPONSE_OVERRIDES
+  'Project/GetProjectLicenseSupportInfo',
+  'AppManagement/GetAppForManager', // 改名见 SCHEMA_PATCHES
+  // GetPrintList 取到的全是空数组，核对不了，先不接
 ]);
 
 /**
  * 按真实响应核对出来的 schema 修正。服务端有些类用 Newtonsoft 的 JsonProperty 改了序列化名，swagger 没反映出来；
  * 判据：真实响应里多出来的键 + schema 里「不可空、按理一定出现却从没出现」的键，两边一一对上。
  */
-const SCHEMA_PATCHES: Record<string, { rename?: Record<string, string>; required?: string[] }> = {
+const SCHEMA_PATCHES: Record<
+  string,
+  { rename?: Record<string, string>; required?: string[]; add?: Record<string, string> }
+> = {
   // GetAppItems 的项、GetApp 里分组下的 workSheetInfo[]：实际是 workSheetId / workSheetName
   'MD.Entity.Apk.EntityInfo': { rename: { id: 'workSheetId', name: 'workSheetName' } },
   // GetApp 的 sections[] / childSections[]：实际是 appSectionId / workSheetInfo
@@ -98,6 +115,14 @@ const SCHEMA_PATCHES: Record<string, { rename?: Record<string, string>; required
   'MD.Entity.Worksheet.ControlOptionEntity': { required: ['key'] },
   // 控件模板的 controls：18 张表的 GetWorksheetInfo / GetWorksheetControls 里都在（空表是 []，不是缺省）
   'MD.Entity.Worksheet.ControlTemplateEntity': { required: ['controls'] },
+  // GetAppForManager 的项：createTime 是不可空的日期却从没出现、多出 ctime；另两个同理
+  'MD.Entity.Apk.AppForManagerModel': {
+    rename: { apkNamePinyin: 'appNPY', entityInfo: 'workSheetInfo', createTime: 'ctime' },
+  },
+  // 许可证里的版本信息：swagger 里是个没有属性的空壳，实际带这两个
+  'MD.Web.Ajax.ResultModel.Order.VersionModel': {
+    add: { versionIdV2: 'string | undefined', name: 'string | undefined' },
+  },
 };
 
 /** 直接换成仓库里手写的类型：控件是全仓的核心数据结构，统一用 FormControl（它和控件实体的形状核对过） */
@@ -112,6 +137,16 @@ const RESPONSE_OVERRIDES: Record<string, { type: string; refs: string[] }> = {
     type: '{ code: number; msg?: string | undefined; data?: HapApi.MD.Entity.Worksheet.ControlTemplateEntity | undefined }',
     refs: ['MD.Entity.Worksheet.ControlTemplateEntity'],
   },
+  // 一次取多张表：data 是控件模板的数组
+  'Worksheet/GetWorksheetsControls': {
+    type: '{ code: number; msg?: string | undefined; data?: HapApi.MD.Entity.Worksheet.ControlTemplateEntity[] | undefined }',
+    refs: ['MD.Entity.Worksheet.ControlTemplateEntity'],
+  },
+  // swagger 没写响应；实际和 GetFilterRows 一样是 WorksheetRowsResult（12 个键逐个对上）
+  'Worksheet/GetRowRelationRows': {
+    type: 'HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult',
+    refs: ['MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult'],
+  },
 };
 
 // ── 1. src/api 里用到了哪些接口 ─────────────────────────────────────────────
@@ -122,6 +157,8 @@ interface ApiMethod {
   action: string;
   /** 在文件原文里插入返回类型的位置（参数右括号之后） */
   insertAt: number;
+  /** 已经有一个本脚本生成的 ApiResultOf<…> 时，要替换掉的那一段（重跑时整段换新） */
+  replaceTo?: number;
 }
 
 function findMethods(file: string, text: string): ApiMethod[] {
@@ -129,7 +166,18 @@ function findMethods(file: string, text: string): ApiMethod[] {
   const methods: ApiMethod[] = [];
   const visit = (node: any): void => {
     if (!node || typeof node.type !== 'string') return;
-    if (node.type === 'ObjectProperty' && node.value && node.value.type === 'FunctionExpression' && !node.value.returnType) {
+    const generated =
+      node.type === 'ObjectProperty' &&
+      node.value &&
+      node.value.type === 'FunctionExpression' &&
+      node.value.returnType &&
+      /^:\s*ApiResultOf</.test(text.slice(node.value.returnType.start, node.value.returnType.end));
+    if (
+      node.type === 'ObjectProperty' &&
+      node.value &&
+      node.value.type === 'FunctionExpression' &&
+      (!node.value.returnType || generated)
+    ) {
       const fn = node.value;
       const body = fn.body.body;
       const last = body[body.length - 1];
@@ -144,13 +192,13 @@ function findMethods(file: string, text: string): ApiMethod[] {
         call.arguments[1] &&
         call.arguments[1].type === 'StringLiteral'
       ) {
-        // 返回类型插在函数体左花括号前面那个右括号之后
-        const close = text.lastIndexOf(')', fn.body.start);
+        // 返回类型插在函数体左花括号前面那个右括号之后；已有生成的返回类型就整段替换
         methods.push({
           file,
           controller: call.arguments[0].value,
           action: call.arguments[1].value,
-          insertAt: close + 1,
+          insertAt: generated ? fn.returnType.start : text.lastIndexOf(')', fn.body.start) + 1,
+          ...(generated ? { replaceTo: fn.returnType.end } : {}),
         });
       }
     }
@@ -223,6 +271,8 @@ function isOpaque(full: string): boolean {
   if (/^(Newtonsoft\.Json\.Linq\.|System\.Object$|System\.Text\.Json\.)/.test(full)) return true;
   if (/^System\.ValueTuple`/.test(full)) return true;
   const s = schemas[full];
+  const patched = SCHEMA_PATCHES[full];
+  if (patched && patched.add) return false;
   return !!s && s.type === 'object' && !s.properties && !s.additionalProperties && !s.enum;
 }
 
@@ -338,6 +388,9 @@ function emit(full: string): void {
         const renamed = serialized === k ? '' : `（swagger 里叫 ${k}，实际序列化成 ${serialized}）`;
         return `${jsdoc((p.description || '') + renamed, '      ')}      ${key2}${present ? '' : '?'}: ${tsType(p)}${present ? '' : ' | undefined'};`;
       })
+      .concat(
+        Object.entries(patch.add || {}).map(([k, t]) => `      /** （swagger 里没有，真实响应里有） */\n      ${k}?: ${t};`),
+      )
       .join('\n');
     text = `${jsdoc(s.description, '    ')}    interface ${name} {\n${props}\n    }`;
   }
@@ -384,7 +437,7 @@ if (!DRY) {
   for (const [file, list] of byFile) {
     let text = texts.get(file) as string;
     for (const m of list.sort((a, b) => b.insertAt - a.insertAt)) {
-      text = text.slice(0, m.insertAt) + `: ApiResultOf<${returnTypes.get(m)}>` + text.slice(m.insertAt);
+      text = text.slice(0, m.insertAt) + `: ApiResultOf<${returnTypes.get(m)}>` + text.slice(m.replaceTo ?? m.insertAt);
     }
     fs.writeFileSync(file, text);
   }
