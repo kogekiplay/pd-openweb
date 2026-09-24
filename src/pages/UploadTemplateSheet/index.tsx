@@ -106,8 +106,16 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
         worksheetId: worksheetId,
       });
 
-      const { template = [] } = res;
-      const { controls = [] } = template;
+      // 接口给的控件，加上本页自己挂上去的几项（见下面两段循环）
+      const controls: (FormControl & {
+        /** 空白创建的子表（子表那张表的 type 是 2） */
+        isEmptyControl?: boolean | undefined;
+        /** 关联表的全部字段 */
+        controlList?: FormControl[] | undefined;
+        /** 界面状态：是否展开、是否弹出选字段 */
+        expandControls?: boolean | undefined;
+        showDialog?: boolean | undefined;
+      })[] = res.template?.controls || [];
 
       // 获取子表
       for (let i = 0; i < controls.length; i++) {

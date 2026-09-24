@@ -67,12 +67,12 @@ export default function ViewLand() {
         worksheetInfo.views.forEach(view => {
           view.name = getTranslateInfo(appId, worksheetId, view.viewId).name || view.name;
         });
-        const view = _.find(worksheetInfo.views, v => v.viewId === viewId) || {};
+        const view = _.find(worksheetInfo.views, v => v.viewId === viewId);
         const isSingleRecordDetailView = _.get(view, 'viewType') === 6 && String(_.get(view, 'childType')) === '1';
         setShowHeader(isMobile ? true : !isSingleRecordDetailView);
         setWorksheetInfo({
           worksheetName: worksheetInfo.name,
-          viewName: view.name || '',
+          viewName: view?.name || '',
           appColor: data.iconColor,
         });
         setLoading(false);

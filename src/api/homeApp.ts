@@ -398,7 +398,7 @@ export default {
       containsLinks?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Entity.HomeApp.HomeAppModel> {
     return mdyAPI('HomeApp', 'GetAllHomeApp', args, options);
   },
   /**
@@ -529,7 +529,7 @@ export default {
       isMobile?: boolean;
     },
     options: ApiOptions = {},
-  ) {
+  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.GetDto> {
     return mdyAPI('HomeApp', 'GetApp', args, options);
   },
   /**

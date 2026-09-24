@@ -75,10 +75,11 @@ export default class AppFilter extends Component<any, any> {
   }
   override componentDidMount() {
     api.getAllHomeApp().then(data => {
-      data.validProject.push({
+      data.validProject?.push({
         projectId: 'validProject',
         projectName: _l('外部协作应用'),
         projectApps: data.externalApps,
+        hasApps: !!data.externalApps?.length,
       });
       this.setState({
         dataSource: data.validProject,

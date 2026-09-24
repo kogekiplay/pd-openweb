@@ -129,7 +129,8 @@ function WorksheetRecordLogSubTable(props) {
                     let addValue = _.difference(newValue, oldValue);
                     let defaultValue = _.intersection(newValue, oldValue);
 
-                    if (_cont && Object.keys(TEXT_FIELD_SHOWTEXT_TYPE).find(l => l == _cont.type)) {
+                    // 键是字符串、type 是数字：原来靠 == 隐式转换，这里显式转成字符串比
+                    if (_cont && Object.keys(TEXT_FIELD_SHOWTEXT_TYPE).find(l => l === String(_cont.type))) {
                       deleteValue = _.differenceBy(oldValue, newValue, TEXT_FIELD_SHOWTEXT_TYPE[_cont.type]);
                       addValue = _.differenceBy(newValue, oldValue, TEXT_FIELD_SHOWTEXT_TYPE[_cont.type]);
                       defaultValue = _.intersectionBy(newValue, oldValue, TEXT_FIELD_SHOWTEXT_TYPE[_cont.type]);

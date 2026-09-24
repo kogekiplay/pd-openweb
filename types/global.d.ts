@@ -306,6 +306,13 @@ declare var md: {
  */
 declare type ApiResult = Promise<any> & { [key: string]: any };
 
+/**
+ * 带数据类型的接口返回值：resolve 的是 mdyAPI 解开 { state, data, exception } 信封之后的 data。
+ * T 由 tools/gen-api-types.ts 从后端 swagger 快照生成（types/hap-api.d.ts 的 HapApi 命名空间）。
+ * 交集里那个索引签名和 ApiResult 一样，给 abort() 这类挂在返回值上的东西留口子。
+ */
+declare type ApiResultOf<T> = Promise<T> & { [key: string]: any };
+
 // 接口 resolve 出来的值的类型 —— 就是 ApiResult 解包之后的那个（目前是 any，见上面那段说明）。
 // 用在「把接口返回值原样转手 resolve 出去」的地方，比如 new Promise<{ data: ApiPayload }>(...)。
 // 【为什么不直接写 any】它引用的是既有声明而不是新造一个 any：哪天 ApiResult 精确化了，

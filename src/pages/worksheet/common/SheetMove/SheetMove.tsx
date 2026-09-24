@@ -64,10 +64,8 @@ export default class SheetMove extends Component<any, any> {
       .then(result => {
         const { sections } = result;
         this.setState({
-          grouping: sections.map(data => {
-            data.subVisible = true;
-            return data;
-          }),
+          // 原来在接口对象上原地加 subVisible，改成拷贝出新对象
+          grouping: sections.map(data => ({ ...data, subVisible: true })),
         });
       });
   }

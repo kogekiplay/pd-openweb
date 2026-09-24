@@ -141,7 +141,7 @@ export default function MoreAction(props) {
         .getApp({
           appId: detail.id,
         })
-        .then((data = {}) => data.originalLang || '')
+        .then(data => data?.originalLang || '')
         .catch(() => ''),
     ]).then(values => {
       if (currentAppIdRef.current !== currentAppId) return;

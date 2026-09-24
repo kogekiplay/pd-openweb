@@ -36,8 +36,11 @@ export interface WorksheetView {
   navGroup?: unknown[];
   /** 表格行高档位 */
   rowHeight?: number;
-  /** 表格视图里展示哪些字段 */
-  controls?: FormControl[];
+  /**
+   * 视图里【隐藏】的字段 id（filterHidedControls 按它过滤）。
+   * 原来写成「展示哪些字段」、类型 FormControl[]：接口给的是 string[]，读它的地方也全是按 id 比
+   */
+  controls?: string[];
 }
 
 /**
@@ -91,7 +94,8 @@ export interface WorksheetInfo {
   isAllowImmediatePayment?: boolean;
   isWorksheetQuery?: boolean;
   workflowChildTableSwitch?: boolean;
-  worksheetOperationLogPermission?: boolean;
+  /** 记录日志的权限（原来写成 boolean；接口给的是对象，WorksheetRecordLog 读它的 allowExport 等） */
+  worksheetOperationLogPermission?: HapApi.MD.Entity.Worksheet.WorksheetOperationLogPermissionModel;
   downLoadUrl?: string;
   /** 关联控件的 relationControls 还在请求中；请求期间部分 UI 要等 */
   isRequestingRelationControls?: boolean;

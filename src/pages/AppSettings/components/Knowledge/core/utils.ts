@@ -178,8 +178,7 @@ export async function fetchFilterData({ worksheetId, filterId, setWorksheetContr
       worksheetAjax.getWorksheetFilterById({ filterId }),
     ]);
 
-    const { template = {} } = worksheetInfo;
-    const { controls = [] }: { controls: FormControl[]; [key: string]: any } = template;
+    const controls: FormControl[] = worksheetInfo.template?.controls || [];
 
     const dataFilterFields = controls.filter(isSupportFilterField);
 

@@ -318,10 +318,11 @@ class WorksheetApi extends Component<any, any> {
       }),
     ])
       .then(result => {
-        let [data = [], list = {}] = result;
+        // list 是 getWorksheetInfo 的结果；原来默认成 {}，下面改用可选链读
+        let [data = [], list] = result;
         const isDataPipeline = selectId.includes('dataPipeline');
 
-        if (list.alias) {
+        if (list?.alias) {
           data = data.map((o: ApiDocNode) => {
             return { ...o, alias: list.alias };
           });
@@ -346,10 +347,10 @@ class WorksheetApi extends Component<any, any> {
         this.setState(
           {
             [isDataPipeline ? 'dataPipelineData' : 'data']: data,
-            templateControls: list.template.controls || [],
-            sheetSwitchPermit: list.switches,
+            templateControls: list?.template?.controls || [],
+            sheetSwitchPermit: list?.switches,
             loading: false,
-            alias: list.alias,
+            alias: list?.alias,
           },
           () => {
             this.scrollToFixedPosition();

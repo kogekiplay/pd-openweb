@@ -134,8 +134,9 @@ export default class ConfigControl extends Component<any, any> {
       const { worksheetId, name } = data;
       const { worksheetControls, controlMapping } = this.state;
 
-      // 关联表字段
-      const controls = data.template.controls
+      // 关联表字段（下面还会在最前面插一项「记录ID」，它没有 attribute）
+      const controls: { text?: string | undefined; value?: string | undefined; attribute?: number | undefined; label?: string }[] =
+        data.template.controls
         .filter((item: FormControl) => _.includes([2, 3, 4, 5, 7, 32, 33], item.type))
         .map(item => {
           return {
