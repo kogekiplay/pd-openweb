@@ -9,6 +9,7 @@ import {
 } from 'src/pages/widgetConfig/config/widget';
 import { getTranslateInfo } from 'src/utils/app';
 import { browserIsMobile } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import { CIRCLE_TAGS_CONTROL_TYPE, RECT_TAGS_CONTROL_TYPE, SUBLIST_FILE_EDIT_TYPE } from '../enum.js';
 import { diffSelectTagsValue, getExtendParams, handleSelectTagsValue } from '../util';
@@ -17,12 +18,12 @@ import WorksheetRecordLogDiffText from './WorksheetRecordLogDiffText';
 import WorksheetRecordLogSelectTags from './WorksheetRecordLogSelectTags';
 import WorksheetRecordLogSubList from './WorksheetRecordLogSubList';
 import WorksheetRecordLogThumbnail from './WorksheetRecordLogThumbnail';
-import type { FormControl } from 'src/utils/controlTypes';
 
 function renderContent(data, recordInfo, extendParam) {
   const { type, oldValue, newValue, id, editType } = data;
   const { requestType } = extendParam;
-  let controls: FormControl[] = recordInfo.controls && recordInfo.controls.length ? recordInfo.controls : recordInfo.formdata;
+  let controls: FormControl[] =
+    recordInfo.controls && recordInfo.controls.length ? recordInfo.controls : recordInfo.formdata;
   let control = controls ? controls.find((l: FormControl) => id === l.controlId) : undefined;
 
   if (
@@ -36,7 +37,14 @@ function renderContent(data, recordInfo, extendParam) {
       oldList = [],
       onlyNew = false,
     } = handleSelectTagsValue({ ...data, control, requestType, appId: recordInfo?.appId });
-    const { _oldValue, _newValue, _defaultValue } = diffSelectTagsValue({ newList, oldList, type, editType, control });
+    const { _oldValue, _newValue, _defaultValue } = diffSelectTagsValue({
+      newList,
+      oldList,
+      type,
+      editType,
+      control,
+      appId: recordInfo?.appId,
+    });
 
     return (
       <WorksheetRecordLogSelectTags

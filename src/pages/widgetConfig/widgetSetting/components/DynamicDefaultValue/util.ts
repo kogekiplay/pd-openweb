@@ -221,7 +221,7 @@ export const filterControls = (data = {}, controls: FormControl[] = []) => {
   );
 };
 
-export const getControls = ({ data = {}, controls, isCurrent, from }) => {
+export const getControls = ({ data = {} as FormControl, controls, isCurrent, from }) => {
   const { type, enumDefault, dataSource, advancedSetting: { usertype } = {} } = data;
   const filterFn = FILTER[type];
 
@@ -232,11 +232,18 @@ export const getControls = ({ data = {}, controls, isCurrent, from }) => {
         DYNAMIC_FROM_MODE.USER_CONFIG,
         DYNAMIC_FROM_MODE.ORG_CONFIG,
         DYNAMIC_FROM_MODE.DEPART_CONFIG,
+        DYNAMIC_FROM_MODE.DYNAMIC_VALUE,
+        DYNAMIC_FROM_MODE.RULES,
+        DYNAMIC_FROM_MODE.CUSTOM_EVENT,
       ],
       from,
     )
   ) {
-    controls = controls.map(c => (c.type === 30 ? { ...c, type: c.sourceControlType, originType: c.type } : c));
+    controls = controls.map((control: FormControl) => control.type === 30 ? {
+      ...control, type: control.sourceControlType, originType: control.type,
+      enumDefault: control.sourceControl?.enumDefault ?? control.enumDefault,
+      advancedSetting: { ...(control.sourceControl?.advancedSetting || {}) },
+    } : control);
   }
 
   //文本字段值可选 关联记录自动编号，不能是当前表单,查询工作表都可

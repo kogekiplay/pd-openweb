@@ -575,27 +575,24 @@ export function getRecordColorConfig(view: { advancedSetting?: { [key: string]: 
 }
 
 export function filterRowsByKeywords({
-  rows,
+  rows = [],
   keywords = '',
-  controls,
+  controls = [],
 }: {
-  rows: RecordRow[];
+  rows?: RecordRow[];
   keywords?: string;
-  controls: FormControl[];
+  controls?: FormControl[];
 }) {
   if (!keywords) {
     return rows;
   }
 
-  return rows.filter(
-    row =>
-      controls
-        .filter(c => (c.controlId || '').length === 24)
-        .map(c => renderCellText({ ...c, value: row[c.controlId as string] || '' }))
-        .join('')
-        .toLocaleLowerCase()
-        .indexOf(keywords.toLocaleLowerCase()) > -1,
-  );
+  const normalizedKeywords = String(keywords).toLocaleLowerCase();
+  const searchableControls = controls.filter(control => control.controlId?.length === 24);
+  return rows.filter(row => searchableControls.some(control => {
+    const value = renderCellText({ ...control, value: row[control.controlId as string] ?? '' });
+    return String(value ?? '').toLocaleLowerCase().includes(normalizedKeywords);
+  }));
 }
 
 export const openLinkFromRecord = (linkControlId?: string, record: RecordRow = {}) => {

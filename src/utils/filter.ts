@@ -1,7 +1,8 @@
 import _, { get } from 'lodash';
 import { VIEW_DISPLAY_TYPE } from 'worksheet/constants/enum';
+import type { WorksheetFilterCondition } from 'src/pages/worksheet/types';
 
-export function formatQuickFilter(items = []) {
+export function formatQuickFilter(items: WorksheetFilterCondition[] = []) {
   return items.map(item =>
     _.pick(item, [
       'advancedSetting',

@@ -3,16 +3,10 @@ const fs = require('fs-extra');
 const axios = require('axios');
 const { API_SERVER } = require('../CI/publishConfig.ts');
 const agentApiGen = require('./agentApiGen.ts');
-const { ROOT_PATH, formatWithPrettier, print } = require('./utils.ts');
+const { ROOT_PATH, print, runCommand } = require('./utils.ts');
 const AJAX_PATH = path.join(ROOT_PATH, 'src/api');
 const OUTPUT_EXT = '.ts';
-// 按「去掉扩展名的文件名」保留,否则 agent.js -> agent.ts 后白名单失配,会被 clearDir 静默删掉
-const PRESERVE_BASENAMES = new Set(['agent']); // 由 agentApiGen.js 单独维护,不随本脚本清理
-const SOURCE_EXT_RE = /\.(ts|tsx|js|jsx)$/;
-
-function isPreserved(name) {
-  return PRESERVE_BASENAMES.has(name.replace(SOURCE_EXT_RE, ''));
-}
+// 7.5.0 不再清空 api 目录；只覆盖本次生成的文件，不删除 agent 或人工维护的类型。
 
 const loading = function (prefix = '') {
   var chars = ['🕒🚶', '🕒🏃'];
@@ -29,18 +23,9 @@ const loading = function (prefix = '') {
   };
 };
 
-function clearDir() {
-  if (!fs.existsSync(AJAX_PATH)) {
-    fs.mkdirSync(AJAX_PATH);
-    return;
-  }
-
-  for (const name of fs.readdirSync(AJAX_PATH)) {
-    if (isPreserved(name)) continue;
-    fs.rmSync(path.join(AJAX_PATH, name), { recursive: true, force: true });
-  }
-
-  print.info(`清理 ${AJAX_PATH}(保留 ${[...PRESERVE_BASENAMES].join(', ')})`);
+function ensureApiDir() {
+  fs.mkdirSync(AJAX_PATH, { recursive: true });
+  print.info(`确认 api 输出目录 ${AJAX_PATH}`);
 }
 
 function getApiHost(env = 'develop') {
@@ -177,13 +162,21 @@ ${fns.map(renderApiFunction).join('\n')}
 }
 
 function handleOutput(data) {
+  const outputFiles: string[] = [];
   Object.keys(data).forEach(ajaxFileName => {
     var ajaxFilePath = path.join(AJAX_PATH, ajaxFileName);
     var renderData = data[ajaxFileName];
-    fs.writeFileSync(ajaxFilePath + OUTPUT_EXT, renderAjaxFile(renderData));
-    print.normal(`${ajaxFilePath.replace(ROOT_PATH + path.sep, '')}${OUTPUT_EXT} 输出成功`);
+    const outputFilePath = ajaxFilePath + OUTPUT_EXT;
+    fs.writeFileSync(outputFilePath, renderAjaxFile(renderData));
+    outputFiles.push(outputFilePath);
+    print.normal(`${outputFilePath.replace(ROOT_PATH + path.sep, '')} 输出成功`);
   });
   print.success(`请求文件已全部生成到${AJAX_PATH}`);
+  return outputFiles;
+}
+
+function formatOutputFiles(outputFiles: string[]) {
+  return outputFiles.length ? runCommand('bun', ['x', 'prettier', ...outputFiles, '--write']) : Promise.resolve();
 }
 
 async function main(callback = () => {}) {
@@ -205,13 +198,13 @@ async function main(callback = () => {}) {
     throw err;
   }
 
-  clearDir();
+  ensureApiDir();
   try {
     print.info('开始解析并生成 api 文件');
     const dataForOutput = parseData(data);
-    await handleOutput(dataForOutput);
+    const outputFiles = handleOutput(dataForOutput);
     print.info('开始格式化文件');
-    await formatWithPrettier(`${AJAX_PATH}/**/*.{ts,tsx,js,jsx}`);
+    await formatOutputFiles(outputFiles);
     print.success('格式化文件完成');
   } catch (err) {
     print.danger('生成文件失败！');

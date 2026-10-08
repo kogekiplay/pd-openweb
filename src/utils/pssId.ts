@@ -1,3 +1,4 @@
+import { setLocalStorageItemSafely } from 'src/utils/platform/storage/safe';
 ﻿import { get } from 'lodash';
 
 const getLocalStorage = () => get(window, 'localStorage');
@@ -29,7 +30,7 @@ export const setPssId = (id, verification = false) => {
     const localStorage = getLocalStorage();
 
     if ((window.top !== window.self || httpOnly) && localStorage) {
-      localStorage.setItem('md_pss_id', id);
+      setLocalStorageItemSafely('md_pss_id', id);
     }
   }
 };

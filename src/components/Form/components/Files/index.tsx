@@ -593,6 +593,7 @@ const Files = props => {
             ? sortAllAttachments.filter(filterImageAttachments).filter((_, index: number) => index < showLineCount)
             : sortAllAttachments
         }
+        readOnlyImages={!allowSort}
         wpsEditUrls={wpsEditUrls}
         controlId={controlId}
         worksheetId={recordBaseInfo.worksheetId}

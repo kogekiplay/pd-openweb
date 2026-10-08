@@ -1,3 +1,4 @@
+const fs = require('fs');
 const webpack = require('webpack');
 const path = require('path');
 const { EsbuildPlugin } = require('esbuild-loader');
@@ -8,10 +9,19 @@ const { getWebpackCacheDirectory, getWebpackCacheName } = require('./webpackCach
 const config = webpackConfig();
 const ROOT_PATH = path.join(__dirname, '..');
 const MDHOME_MINGO_ENTRY_WIDGET_PATH = path.resolve(ROOT_PATH, '../MDHome/public/mingo-entry-widget');
+const NOCOLY_MINGO_ENTRY_WIDGET_PATH = path.resolve(ROOT_PATH, '../nocoly/public/mingo-entry-widget');
 
 module.exports = {
   resolve: config.resolve,
   plugins: [
+    {
+      apply(compiler) {
+        compiler.hooks.afterEmit.tap('SyncMingoEntryWidget', () => {
+          if (!fs.existsSync(path.dirname(NOCOLY_MINGO_ENTRY_WIDGET_PATH))) return;
+          fs.cpSync(MDHOME_MINGO_ENTRY_WIDGET_PATH, NOCOLY_MINGO_ENTRY_WIDGET_PATH, { recursive: true });
+        });
+      },
+    },
     new webpack.DefinePlugin({
       isBuildFunction: false,
     }),

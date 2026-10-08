@@ -39,8 +39,8 @@ const LocationWrap = styled.div`
   }
 `;
 
-const isWx = window.isWeiXin && !window.platformENV.isOverseas && !window.platformENV.isLocal && !window.isWxWork;
-const isApp = window.isWxWork || isWx || window.isWeLink || window.isDingTalk || window.isFeiShu || window.isMingDaoApp;
+const getIsWx = () => window.isWeiXin && window.platformENV.isHap && !window.isWxWork;
+const getIsApp = () => window.isWxWork || getIsWx() || window.isWeLink || window.isDingTalk || window.isFeiShu || window.isMingDaoApp;
 
 export default class Widgets extends Component<any, any> {
   declare _mapContainer: HTMLDivElement | null | undefined;
@@ -94,7 +94,7 @@ export default class Widgets extends Component<any, any> {
       return;
     }
 
-    if (isWx) {
+    if (getIsWx()) {
       if (!geolocation) {
         this.setState({ visible: true });
       } else {
@@ -410,7 +410,7 @@ export default class Widgets extends Component<any, any> {
         <div
           className="customFormControlBox customFormButton"
           onClick={() => {
-            if (isApp) {
+            if (getIsApp()) {
               this.handleAuthentication();
             } else {
               this.handleH5Location();
@@ -429,7 +429,7 @@ export default class Widgets extends Component<any, any> {
           <div
             className="customFormControlBox customFormButton flexRow"
             onClick={() => {
-              if (isApp) {
+              if (getIsApp()) {
                 this.handleAuthentication();
               } else {
                 this.setState({ visible: true });
@@ -454,7 +454,7 @@ export default class Widgets extends Component<any, any> {
 
                 window.open(`https://uri.amap.com/marker?position=${location.x},${location.y}`);
               } else {
-                if (isApp) {
+                if (getIsApp()) {
                   this.handleAuthentication();
                 } else {
                   this.setState({ visible: true });

@@ -8,7 +8,7 @@ import cx from 'classnames';
 import _ from 'lodash';
 import { func, oneOf } from 'prop-types';
 import styled from 'styled-components';
-import { Icon, Menu, MenuItem, Skeleton, SvgIcon, UpgradeIcon } from 'ming-ui';
+import { Icon, Menu, MenuItem, Qr, Skeleton, SvgIcon, UpgradeIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { dialogSelectIcon } from 'ming-ui/functions';
@@ -37,6 +37,12 @@ import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo, setFavicon } from 'src/utils/app';
 import { emitter, getAppFeaturesVisible, pathCompletion } from 'src/utils/common';
 import copy from 'src/utils/copyToClipboard';
+import {
+  getPeerEnvironmentUrl,
+  isAppSandboxEnabled,
+  isSandboxEnvironment,
+  openPeerEnvironment,
+} from 'src/utils/domain/app/sandbox';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import { getSheetListFirstId } from 'src/utils/worksheet';
@@ -406,6 +412,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
       'lightColor',
       'iconUrl',
       'projectId',
+      'sandboxStatus',
       'name',
       'id',
       'fixed',
@@ -573,6 +580,31 @@ let AppInfo = class AppInfo extends Component<any, any> {
     );
 
     if (type === 'unlockApp' && !(canLock && isPassword)) return undefined;
+    const sandboxEnvironment = isSandboxEnvironment();
+    if (type === 'mobileView') {
+      if (!sandboxEnvironment) return undefined;
+      const mobileUrl = getPeerEnvironmentUrl(`/mobile/app/${getIds(this.props).appId}`);
+      if (!mobileUrl) return undefined;
+      return (
+        <Tooltip
+          key={type}
+          placement="right"
+          title={
+            <div className="TxtCenter">
+              <Qr content={mobileUrl} width={180} height={180} />
+              <div className="mTop8">{_l('扫码查看')}</div>
+            </div>
+          }
+        >
+          {this.renderMenuHtml({ type, icon, text, action, ...rest })}
+        </Tooltip>
+      );
+    }
+    if (type === 'environmentSwitch') {
+      if (!sandboxEnvironment && !isAppSandboxEnabled(_.get(data, 'sandboxStatus'))) return undefined;
+      if (!getPeerEnvironmentUrl()) return undefined;
+      text = sandboxEnvironment ? _l('访问生产') : _l('访问沙盒');
+    }
 
     if (rest.featureId) {
       const featureType = getFeatureStatus(projectId, rest.featureId);
@@ -638,6 +670,12 @@ let AppInfo = class AppInfo extends Component<any, any> {
           this.setState({
             appConfigVisible: false,
           });
+
+          if (type === 'environmentSwitch') {
+            openPeerEnvironment(`/app/${appId}`);
+            return;
+          }
+          if (type === 'mobileView') return;
 
           if (type === 'editIntro') {
             this.setState({
@@ -811,7 +849,18 @@ let AppInfo = class AppInfo extends Component<any, any> {
 
     if (isLock && isPassword && canLock) {
       list = _.filter(list, it =>
-        _.includes(['modify', 'editIntro', 'appAnalytics', 'appLogs', 'modifyAppLockPassword'], it.type),
+        _.includes(
+          [
+            'modify',
+            'editIntro',
+            'appAnalytics',
+            'appLogs',
+            'modifyAppLockPassword',
+            'mobileView',
+            'environmentSwitch',
+          ],
+          it.type,
+        ),
       );
     } else {
       list = _.filter(list, it => !_.includes(['modifyAppLockPassword'], it.type));

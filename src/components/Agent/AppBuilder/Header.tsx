@@ -212,7 +212,7 @@ const CloseBtn = styled.button`
   }
 `;
 
-function overlayChipLabel(buildStatus) {
+function overlayChipLabel(buildStatus: string | undefined) {
   if (buildStatus === 'completed') return _l('已完成');
   if (buildStatus === 'failed') return _l('搭建失败');
   return _l('搭建中…');
@@ -224,6 +224,7 @@ export default function Header({
   generateDisabled,
   builtVersionLabel,
   onClose,
+  onDownload,
   appName,
   inBuild,
   inOverlay,
@@ -232,14 +233,14 @@ export default function Header({
   estimateCredits,
   estimateLoading,
   isSingleMingoPlan = false,
-}) {
+}: { activeTitle?: string | undefined; onGenerate?: (() => void) | undefined; generateDisabled?: boolean | undefined; builtVersionLabel?: string | undefined; onDownload?: (() => void) | undefined; onClose?: (() => void) | undefined; appName?: string | undefined; inBuild?: boolean; inOverlay?: boolean; onBack?: (() => void) | undefined; buildStatus?: string | undefined; estimateCredits?: number | null | undefined; estimateLoading?: boolean; isSingleMingoPlan?: boolean }) {
   const hasOverlayChip = inOverlay && buildStatus && buildStatus !== 'idle';
   // 仅在「生成应用」按钮真正可点时展示预估费用：未搭建、非 build 视图，且按钮未禁用（plan 已就绪、有工作表、无在途流）。
   // 与拉取预估的 canEstimate 门控一致；计算中显示「计算中…」，拿到结果显示信用点；
   // 若计算结束仍无结果（取不到 / 失败），则不显示，避免一直卡在「计算中…」。
   const showEstimate =
     !inBuild && !builtVersionLabel && !generateDisabled && (estimateLoading || estimateCredits != null);
-  const estimateText = estimateLoading ? _l('预估消耗：计算中…') : _l('预估消耗：%0 信用点', estimateCredits);
+  const estimateText = estimateLoading ? _l('预估消耗：计算中…') : _l('预估消耗：%0 信用点', estimateCredits ?? 0);
 
   return (
     <Wrap $inOverlay={inOverlay}>
@@ -266,6 +267,7 @@ export default function Header({
       )}
       <Right>
         {showEstimate && <EstimateText>{estimateText}</EstimateText>}
+        {onDownload && <button type="button" onClick={onDownload} className="pAll6 textSecondary" style={{ border: 0, background: 'transparent' }} aria-label={_l('下载搭建方案')} title={_l('下载搭建方案')}><Icon icon="download" /></button>}
         {builtVersionLabel ? (
           // 当前查看的方案版本已用于搭建：按钮转为已搭建态（禁用），明示用的是哪个版本
           <GenerateBtn type="button" disabled>

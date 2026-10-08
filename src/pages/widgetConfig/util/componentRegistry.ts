@@ -1,0 +1,1 @@
+export { exportRelevantComponents } from './index';

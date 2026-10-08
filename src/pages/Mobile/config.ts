@@ -1,9 +1,10 @@
 import { addSubPathOfRoutes } from 'src/utils/common';
+import { isSandboxEnvironment } from 'src/utils/domain/app/sandbox';
 
 export const ROUTE_CONFIG = addSubPathOfRoutes({
   appHome: {
     path: '/mobile/dashboard',
-    component: () => import('mobile/AppHome'),
+    component: () => (isSandboxEnvironment() ? import('src/pages/Mobile/AppSandbox') : import('mobile/AppHome')),
     title: _l('工作台'),
   },
   appGroupList: {

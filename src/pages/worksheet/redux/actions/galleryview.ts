@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import type { WorksheetRowsRequest } from 'src/pages/worksheet/types';
 import worksheetAjax from 'src/api/worksheet';
 import type { AppDispatch, GetState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
@@ -44,7 +45,7 @@ export const fetch = (index: number) => {
 
     const groupControlId = getGroupControlId(currentView);
     const groupControl = _.find(controls, { controlId: groupControlId });
-    const args = {
+    const args: WorksheetRowsRequest = {
       worksheetId,
       pageSize: _.get(currentView, 'advancedSetting.groupsetting') ? pageSizeForGroup : pageSize,
       pageIndex: index,

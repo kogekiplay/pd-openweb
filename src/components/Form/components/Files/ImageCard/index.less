@@ -131,3 +131,12 @@
     border-radius: var(--radius-sm);
   }
 }
+
+// Keep native image context-menu copying available through the read-only hover layer.
+.attachmentFile.readOnlyImage .filePanel {
+  pointer-events: none;
+  .panelBtn,
+  input {
+    pointer-events: auto;
+  }
+}

@@ -14,12 +14,12 @@ import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import SelectDBInstance from 'src/pages/AppHomepage/AppCenter/components/SelectDBInstance';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
 import { downloadFile } from 'src/utils/common';
+import { pathCompletion } from 'src/utils/common';
 import { VersionProductType } from 'src/utils/enum';
 import { dateConvertToUserZone, getCurrentProject, getFeatureStatus } from 'src/utils/project';
 import EmptyStatus from '../../EmptyStatus';
 import EditInput from './EditInput.jsx';
 import RestoreAppDialog from './RestoreAppDialog';
-import { pathCompletion } from 'src/utils/common';
 
 const ListWrap = styled.div`
   flex: 1;
@@ -111,8 +111,9 @@ export default function BackupFiles(props) {
     currentValid,
     validLimit,
     permissionType,
+    readonly,
     backupInfo = {},
-    getList = () => { },
+    getList = () => {},
     data,
   } = props;
   const { sourceType } = data;
@@ -365,8 +366,8 @@ export default function BackupFiles(props) {
                 const expired =
                   (window.platformENV.isOverseas || window.platformENV.isLocal
                     ? moment(item.operationDateTime)
-                      .add(md.global.SysSettings.appBackupRecycleDays, 'days')
-                      .format('YYYYMMDDHHmmss')
+                        .add(md.global.SysSettings.appBackupRecycleDays, 'days')
+                        .format('YYYYMMDDHHmmss')
                     : validLimit === -1
                       ? moment(item.operationDateTime).add(1, 'year').format('YYYYMMDDHHmmss')
                       : moment(item.operationDateTime).add(60, 'days').format('YYYYMMDDHHmmss')) <
@@ -375,9 +376,9 @@ export default function BackupFiles(props) {
                 const expiredSoon =
                   (window.platformENV.isOverseas || window.platformENV.isLocal
                     ? moment(item.operationDateTime)
-                      .add(md.global.SysSettings.appBackupRecycleDays, 'days')
-                      .subtract(10, 'days')
-                      .format('YYYYMMDDHHmmss')
+                        .add(md.global.SysSettings.appBackupRecycleDays, 'days')
+                        .subtract(10, 'days')
+                        .format('YYYYMMDDHHmmss')
                     : validLimit === -1
                       ? moment(item.operationDateTime).add(1, 'year').subtract(10, 'days').format('YYYYMMDDHHmmss')
                       : moment(item.operationDateTime).add(50, 'days').format('YYYYMMDDHHmmss')) <
@@ -451,7 +452,7 @@ export default function BackupFiles(props) {
                     {_.includes([0, 10], status) ? (
                       <div className="action">
                         <div className="pRight10 TxtRight">
-                          {!expired && status === 0 && (
+                          {!readonly && !expired && status === 0 && (
                             <span className="Hand mRight20" onClick={() => restoreApp(item)}>
                               {_l('还原')}
                             </span>
@@ -463,8 +464,9 @@ export default function BackupFiles(props) {
                               <Dropdown
                                 trigger={['click']}
                                 placement="bottomRight"
-                                classNames={{ root: "moreActionDropdown" }}
-                                popupRender={() => <Menu>
+                                classNames={{ root: 'moreActionDropdown' }}
+                                popupRender={() => (
+                                  <Menu>
                                     <MenuItem onClick={() => downloadBackup(item)}>{_l('下载应用')}</MenuItem>
                                     {containData && dataStatus === 1 ? (
                                       <MenuItem onClick={() => downloadData(item)}>
@@ -489,16 +491,19 @@ export default function BackupFiles(props) {
                                         </MenuItem>
                                       </Tooltip>
                                     )}
-                                  </Menu>}
+                                  </Menu>
+                                )}
                               >
                                 <span className="Hand mRight20">{_l('下载')}</span>
                               </Dropdown>
                             )}
                           <Dropdown
+                            disabled={readonly}
                             trigger={['click']}
                             placement="bottomRight"
-                            classNames={{ root: "moreActionDropdown" }}
-                            popupRender={() => <Menu>
+                            classNames={{ root: 'moreActionDropdown' }}
+                            popupRender={() => (
+                              <Menu>
                                 {/* 备份文件列表中，开发者无“下载备份和还原为新应用”权限 */}
                                 {!expired &&
                                   permissionType !== APP_ROLE_TYPE.DEVELOPERS_ROLE &&
@@ -512,7 +517,8 @@ export default function BackupFiles(props) {
                                 <MenuItem className="delete" onClick={() => deleteBackup(item)}>
                                   <span>{_l('删除')}</span>
                                 </MenuItem>
-                              </Menu>}
+                              </Menu>
+                            )}
                           >
                             <Icon icon="more_horiz" className="textTertiary Hand Font18 more_horiz" />
                           </Dropdown>

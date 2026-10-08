@@ -1,3 +1,11 @@
+import Share from 'src/pages/worksheet/components/Share';
+import SharePopup from 'src/pages/Mobile/components/SharePopup';
+import { Button, Checkbox } from 'ming-ui/antd-components';
+import { buildSessionShareProps } from './sessionShare';
+import { getSessionMessageGroups, alignSessionMessageIds, getFeedbackTraceId } from './sessionSelection';
+import { ChartSaveProvider } from './ui/embed/chartSaveContext';
+import useAgentFeedback from './ui/Feedback';
+import { HelpComposerBar, TransferHumanDialog, fetchHelpSessionShareUrl, openCustomerService } from './ui/TransferHuman';
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
@@ -374,6 +382,9 @@ type ChatPanelArg = any;
  */
 export interface ChatPanelRuntime {
   anonymous?: boolean;
+  helpMode?: boolean;
+  enableHumanSupport?: boolean;
+  onAnonSessionInvalid?: () => void;
   /** 固定使用的 agent，不让用户切换 */
   agentName?: string;
   initialSessionId?: string;
@@ -404,7 +415,7 @@ export interface ChatPanelRuntime {
   }) => Promise<boolean>;
   deferCommittedAppMetaUntilFilesLoaded?: boolean;
   initialHistoryMessages?: ChatPanelArg[];
-  contentTopInset?: number;
+  contentTopInset?: boolean | number;
   disableSessionRestore?: boolean;
   landingLayout?: boolean;
   promptInputClassName?: string;
@@ -451,6 +462,9 @@ export default function ChatPanel({
   //  - onRetryIntercept：官网未登录 plan 入口失败时，重试按钮交给入口页跳回官网首页
   const {
     anonymous = false,
+    helpMode = false,
+    enableHumanSupport = true,
+    onAnonSessionInvalid,
     agentName: pinnedAgent,
     initialSessionId,
     onRequestBuild,
@@ -482,7 +496,12 @@ export default function ChatPanel({
     promptMentionButtonText,
     promptPlaceholder,
   } = runtime || {};
-  const mentionEnabled = enableMention && !anonymous;
+  const mentionEnabled = enableMention && !anonymous && !helpMode;
+  const shareEnabled = !anonymous && !helpMode;
+  const feedback = useAgentFeedback();
+  const [transferUrl, setTransferUrl] = useState('');
+  const [selectedShareIds, setSelectedShareIds] = useState<string[]>([]);
+  const [shareVisible, setShareVisible] = useState(false);
   const isMobile = browserIsMobile();
   const bus = useAgentBus();
   const initialAppBuilderVisible = landingLayout && autoOpenInitialBuilder && !disableAppBuilder && !isMobile;
@@ -1177,6 +1196,9 @@ export default function ChatPanel({
     setMessages(current => current.map(m => (m.id === assistantId ? appendEventToParts(m, event) : m)));
 
     if (event.eventName === 'completed') {
+      const backendMessageId = stringValue(readField(event.payload, 'messageId'));
+      const completedTraceId = stringValue(readField(event.payload, 'traceId')) || roundTraceIdRef.current || '';
+      if (backendMessageId || completedTraceId) setMessages(current => current.map(message => message.id === assistantId ? { ...message, ...(backendMessageId ? { messageId: backendMessageId } : {}), ...(completedTraceId ? { traceId: completedTraceId } : {}) } : message));
       // plan 漂移确认：这是 halt 信号而非真正收尾，drift 卡片已由 workflow-plan-drift-detected 渲染，
       // 不做 build 收尾（不盖 finishedAt、不切 build:phase=completed），等用户在卡片上二选一。
       if (stringValue(readField(event.payload.data, 'status')) === 'awaiting_plan_drift_confirmation') {
@@ -1766,6 +1788,7 @@ export default function ChatPanel({
     abortRef.current = null;
     clearUsagePolls(); // 切换会话：清掉上一会话在途的用量轮询，避免写进已切走的消息
     setHistoryLoading(true);
+    setSelectedShareIds([]);
     setInterceptError(null); // 切换会话清掉上一会话残留的拦截卡
     setExtracting({ doc: 0, image: 0 });
     try {
@@ -1891,6 +1914,7 @@ export default function ChatPanel({
       }
     } catch (err) {
       console.error('[agent] load session failed', err);
+      if (anonymous && onAnonSessionInvalid) onAnonSessionInvalid();
       alert(_l('加载会话失败'), 2);
       // 加载失败（会话已删除 / 异常）：清掉记住的会话并回到 MingoWelcome 首页，避免停留在坏会话
       const accountId =
@@ -2083,9 +2107,36 @@ export default function ChatPanel({
   // 落地页三栏并排：搭建/预览可见时 AppBuilder 占中栏、对话收右栏；非落地页维持原 absolute 全屏覆盖
   const builderSplit = landingLayout && appBuilderVisible;
 
+  const shareGroups = getSessionMessageGroups(messages);
+  const shareTitle = messages.find(message => message.role === 'user')?.rawText?.slice(0, 100) || _l('Mingo 对话');
+  async function shareFromMessage(messageId: string) {
+    let source = messages;
+    if (source.some(message => !message.messageId)) {
+      const history = await fetchAgentSessionMessages(sessionId, { size: 100 });
+      source = alignSessionMessageIds(source, history as ChatMessage[]);
+      setMessages(source);
+    }
+    const ids = getSessionMessageGroups(source).find(group => group.includes(messageId)) || [messageId];
+    if (ids.length > 100) { alert(_l('最多分享 %0 条消息', 100), 3); return; }
+    setSelectedShareIds(ids);
+  }
+  function toggleShareMessage(messageId: string) {
+    const ids = shareGroups.find(group => group.includes(messageId)) || [messageId];
+    const selected = ids.some(id => selectedShareIds.includes(id));
+    const next = selected ? selectedShareIds.filter(id => !ids.includes(id)) : [...new Set([...selectedShareIds, ...ids])];
+    if (next.length > 100) { alert(_l('最多分享 %0 条消息', 100), 3); return; }
+    setSelectedShareIds(next);
+  }
+  const shareProps = buildSessionShareProps({ sessionId, title: shareTitle, projectId: getContextProjectId(), messageIds: selectedShareIds, groupCount: shareGroups.filter(group => group.some(id => selectedShareIds.includes(id))).length });
+  async function transferToHuman() {
+    if (!messages.length || anonymous) { openCustomerService(); return; }
+    try { setTransferUrl(await fetchHelpSessionShareUrl(sessionId)); } catch { alert(_l('分享失败'), 2); }
+  }
   return (
+    <ChartSaveProvider value={{ canSave: !anonymous && !helpMode, projectId: getContextProjectId() }}>
     <Wrap $dock={builderSplit}>
       <ConversationArea>
+        {shareEnabled && messages.length > 0 && !submitting && <div className="flexRow alignItemsCenter pAll8" style={{ gap: 12 }}><Button type="text" onClick={() => { setSelectedShareIds([]); setShareVisible(true); }}>{_l('分享对话')}</Button>{selectedShareIds.length > 0 && <><Button type="primary" onClick={() => setShareVisible(true)}>{_l('分享所选内容')}</Button><Button onClick={() => setSelectedShareIds([])}>{_l('取消')}</Button></>}</div>}
         <Conversation
           autoScroll={submitting}
           scrollBottomSignal={historyScrollSignal}
@@ -2101,11 +2152,15 @@ export default function ChatPanel({
               <ConversationSkeleton />
             ) : (
               messages.map(message => (
-                <MessageRow
+                <div key={message.id} className="flexRow" style={{ gap: 8 }} >
+                {selectedShareIds.length > 0 && message.messageId && <Checkbox checked={selectedShareIds.includes(message.messageId)} onChange={() => toggleShareMessage(message.messageId!)} />}
+                <div className="flex" style={{ minWidth: 0 }}><MessageRow
                   key={message.id}
                   message={message}
                   isLast={message.id === lastMessageId}
                   submitting={submitting}
+                  onShare={shareEnabled && message.messageId ? () => { void shareFromMessage(message.messageId!); } : undefined}
+                  onFeedback={!anonymous && !helpMode && getFeedbackTraceId(message) ? () => feedback.open({ traceId: getFeedbackTraceId(message), projectId: getContextProjectId() }) : undefined}
                   onRetry={retryAssistant}
                   onConfirmPlanDrift={sendPlanDriftConfirmation}
                   onConfirmRebuild={sendRebuildConfirmation}
@@ -2114,7 +2169,7 @@ export default function ChatPanel({
                   currentAppName={currentAppName}
                   activeVersionLabel={activeVersionLabel}
                   loadingHint={loadingHint}
-                />
+                /></div></div>
               ))
             )}
           </CenteredMessages>
@@ -2161,6 +2216,7 @@ export default function ChatPanel({
               }}
             />
           )}
+          {helpMode && enableHumanSupport && <HelpComposerBar onTransfer={() => { void transferToHuman(); }} />}
           <PromptInput
             className={promptInputClassName}
             ref={promptInputRef}
@@ -2260,6 +2316,9 @@ export default function ChatPanel({
         </DockedAskLayer>
       )}
 
+      {feedback.holder}
+      {transferUrl && <TransferHumanDialog url={transferUrl} onClose={() => setTransferUrl('')} />}
+      {shareVisible && (isMobile ? <SharePopup {...shareProps} onClose={() => setShareVisible(false)} /> : <Share {...shareProps} onClose={() => setShareVisible(false)} />)}
       {historyVisible && (
         <SessionHistory
           currentSessionId={sessionId}
@@ -2281,6 +2340,7 @@ export default function ChatPanel({
           document.querySelector('#containerWrapper'),
         )}
     </Wrap>
+    </ChartSaveProvider>
   );
 }
 
@@ -2370,6 +2430,8 @@ function MessageRow({
   currentAppName,
   activeVersionLabel,
   loadingHint,
+  onShare,
+  onFeedback,
 }) {
   const parts = message.parts || [];
   const lastIdx = parts.length - 1;
@@ -2449,7 +2511,10 @@ function MessageRow({
           pending={isConfirmCard || shouldHideUsage(message.agentName) ? false : message.creditsPending}
           always={isLast}
           onRefresh={() => onRefreshUsage(message)}
-        />
+        >
+          {onShare && <Button type="text" size="small" onClick={onShare}>{_l('分享')}</Button>}
+          {onFeedback && <Button type="text" size="small" onClick={onFeedback}>{_l('反馈')}</Button>}
+        </MessageMeta>
       )}
       {/* 用户消息只展示发送时间（无扣费）：整行最新一条常驻、旧消息 hover 才显现 */}
       {message.role === 'user' && <MessageMeta time={message.time} always={isLast} />}

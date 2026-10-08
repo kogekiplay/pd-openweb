@@ -143,7 +143,7 @@ const normalizeUrls = obj => {
 
     // AppFileServer、WebUrl、PlatformUrl 不处理
     // AjaxApiUrl 应用库引用的library中没有斜杠，所以不处理
-    if (['AppFileServer', 'WebUrl', 'PlatformUrl', 'AccountUrl', 'AjaxApiUrl'].includes(key)) {
+    if (['AppFileServer', 'WebUrl', 'PlatformUrl', 'AccountWebUrl', 'AjaxApiUrl'].includes(key)) {
       continue;
     }
 
@@ -167,8 +167,8 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
   clearLocalStorage();
 
   const defaultGlobal = window.md ? _.cloneDeep(window.md.global) : {};
-  const urlObj = new URL(decodeURIComponent(location.href));
-  let args = requestParams || {};
+  const urlObj = new URL(location.href);
+  const args = { ...(requestParams || {}), lang: getCurrentLangCode() };
 
   if (/^#publicapp/.test(urlObj.hash)) {
     window.isPublicApp = true;
@@ -200,6 +200,7 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
     window.platformENV.isOverseas = /^nocoly/.test(md.global.Config.ProductCode);
     window.platformENV.isLocal = /(server|server-platform)$/.test(md.global.Config.ProductCode);
     window.platformENV.isPlatform = /(saas|platform)$/.test(md.global.Config.ProductCode);
+    window.platformENV.isHap = !window.platformENV.isOverseas && !window.platformENV.isLocal;
 
     // 海外用户默认语言为英文，默认国家为香港
     if (window.platformENV.isOverseas) {

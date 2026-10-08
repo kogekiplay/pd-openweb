@@ -1,3 +1,5 @@
+import ScopedEntityShare from './ScopedEntityShare';
+import type { ScopedShareProps } from './types';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Input } from 'antd';
 import cx from 'classnames';
@@ -39,7 +41,7 @@ function genCard(from, type = 'public', params: Record<string, any> = {}) {
   };
 }
 
-export default function Share(props) {
+function LegacyShare(props) {
   const {
     from,
     title,
@@ -58,7 +60,7 @@ export default function Share(props) {
     width,
   } = props;
   const isFromWorksheetApi = from === 'worksheetApi';
-  const [url, setUrl] = useState();
+  const [url, setUrl] = useState<string | undefined>(undefined);
   const [urlVisible, setUrlVisible] = useState(false);
   const [isPublic, setIsPublic] = useState(props.isPublic);
   const [publicUrl, setPublicUrl] = useState(isPublic && props.publicUrl);
@@ -348,7 +350,7 @@ export default function Share(props) {
   );
 }
 
-Share.propTypes = {
+LegacyShare.propTypes = {
   from: PropTypes.string,
   title: PropTypes.string,
   params: PropTypes.shape({}),
@@ -361,3 +363,7 @@ Share.propTypes = {
 };
 
 export const openShareDialog = props => functionWrap(Share, props);
+
+export default function Share(props: ScopedShareProps & { [key: string]: unknown }) {
+  return props.from === 'mingoHistory' || props.supportProjectScope ? <ScopedEntityShare {...props} /> : <LegacyShare {...props} />;
+}

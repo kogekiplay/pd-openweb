@@ -94,6 +94,10 @@ const {
   formatAttachmentValue,
   formatControlValue,
   getControlsSorts,
+  getSelectedOptions,
+  getTitleTextFromControls,
+  getTitleTextFromRelateControl,
+  parseAdvancedSetting,
   renderText,
   toFixed,
   updateOptionsOfControl,
@@ -375,3 +379,48 @@ assert.strictEqual(formatControlValue({ type: 40, value: '"就是个字符串"' 
 assert.strictEqual(formatControlValue({ type: 19, value: '{坏 JSON' }), undefined);
 
 console.log('renderText / formatControlValue 分支断言通过');
+
+// 7.5.0：清空选择型标题后，结构化空值不能作为记录名；取标题仍保持 store 对象只读。
+const emptyTitleControls = Object.freeze([
+  Object.freeze({ controlId: 'title-user', type: 26, attribute: 1, value: '[]' }),
+]);
+assert.strictEqual(getTitleTextFromControls(emptyTitleControls), '未命名');
+assert.strictEqual(
+  getTitleTextFromRelateControl(
+    { type: 29, advancedSetting: {}, relationControls: emptyTitleControls },
+    { name: '[]' },
+  ),
+  '未命名',
+);
+assert.deepStrictEqual(
+  getSelectedOptions([{ key: 'a', value: '选项 A' }], ['a']),
+  getSelectedOptions([{ key: 'a', value: '选项 A' }], '["a"]'),
+);
+assert.strictEqual(parseAdvancedSetting({ rcsorttype: '1' }).allowDrag, true);
+assert.strictEqual(parseAdvancedSetting({ rcsorttype: '0' }).allowDrag, false);
+
+const { getRelateRecordRowIds, withKeepShowRowIds } = requireEsm('./domain/control/value.ts', {
+  'src/components/Form/core/config': {},
+  'src/utils/controlCommon': {},
+  'src/utils/control': {},
+  'src/components/Form/core/utils': {},
+});
+assert.deepStrictEqual(getRelateRecordRowIds('[{"sid":"old-row"},{"sid":""}]'), ['old-row']);
+assert.deepStrictEqual(withKeepShowRowIds(['old-row', 'new-row'], { keepShowRowIds: ['old-row'] }), ['old-row', 'new-row']);
+
+const { normalizeSandboxAppSettings, updateEntitySyncCount, getSandboxDataExistingAppIds } = requireEsm('./domain/app/sandbox.ts', {
+  'src/utils/enum': { VersionProductType: { appSandbox: 59 } },
+});
+const sandboxApps = normalizeSandboxAppSettings([{ appId: 'app', entities: [{ worksheetId: 'sheet', count: 15000 }] }]);
+const limitedApps = updateEntitySyncCount(sandboxApps, 'app', 'sheet', 'all');
+assert.strictEqual(limitedApps[0].entities[0].count, 10000);
+assert.strictEqual(limitedApps[0].selectedCount, 10000);
+assert.strictEqual(limitedApps[0].entities[0].isAll, false);
+assert.strictEqual(sandboxApps[0].entities[0].count, 0);
+assert.deepStrictEqual(getSandboxDataExistingAppIds({ data: [false, true] }, ['first', 'second']), ['second']);
+
+const { sanitizePostMessageHtml, sanitizeMarkdownPreviewHtml } = requireEsm('./core/sanitizeHtml.ts');
+const sanitizedMessage = sanitizePostMessageHtml('<script>attack()</script><a href="javascript:attack()">通知</a>');
+assert.doesNotMatch(sanitizedMessage, /script|javascript:|attack/);
+assert.match(sanitizedMessage, />通知<\/a>/);
+assert.strictEqual(sanitizeMarkdownPreviewHtml('<input class="task-list-checkbox" type="checkbox" disabled checked>'), '<input class="task-list-checkbox" type="checkbox" disabled checked>');

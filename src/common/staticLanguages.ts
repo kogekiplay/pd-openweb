@@ -26,6 +26,18 @@ type LangMap = Record<LangTag, string>;
  * 页面里的写法：<transformLang>登录</transformLang>，或 <title>登录</title>。
  */
 const staticLanguages: Record<string, LangMap> = {
+  已在默认浏览器打开: {
+    en: 'Opened in the default browser',
+    ja: '既定のブラウザーで開きました',
+    'zh-Hans': '已在默认浏览器打开',
+    'zh-Hant': '已在預設瀏覽器開啟',
+  },
+  '服务异常，登录失败!': {
+    en: 'Service error. Login failed!',
+    ja: 'サービスエラーのため、ログインに失敗しました。',
+    'zh-Hans': '服务异常，登录失败!',
+    'zh-Hant': '服務異常，登入失敗！',
+  },
   登录: {
     en: 'Login',
     ja: 'ログイン',
@@ -443,6 +455,11 @@ function detectLang(): LangTag {
 
 const lang = detectLang();
 
+window.getStaticLanguageText = (content: string): string => {
+  const langMap = staticLanguages[content];
+  return langMap ? langMap[lang] || langMap.en || content : content;
+};
+
 /**
  * 把元素里的中文原文换成当前语言。
  * 【取值顺序照搬原实现】content 属性优先于 innerHTML（<meta content> 这类要用前者）；
@@ -453,9 +470,7 @@ function transformFunc(elements: ArrayLike<Element>): void {
     const element = elements[i];
     if (!element) continue; // i < length，恒有值；只为类型如实
     const content = element.getAttribute('content') || element.innerHTML;
-    const langMap = staticLanguages[content];
-
-    element.innerHTML = langMap ? langMap[lang] || langMap.en || content : content;
+    element.innerHTML = window.getStaticLanguageText(content);
   }
 }
 

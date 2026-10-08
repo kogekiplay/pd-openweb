@@ -96,13 +96,13 @@ const isCustomOptionKey = (key: string) => key.indexOf('other') > -1 || key.inde
 
 /** 获取选项 */
 /** 选项控件的一个选项 */
-export function getSelectedOptions(options: ControlOption[] = [], value?: string, control?: FormControl) {
+export function getSelectedOptions(options: ControlOption[] = [], value?: string | string[], control?: FormControl) {
   if (!value || value === '[]') {
     return [];
   }
 
   try {
-    const selectedKeys: string[] = JSON.parse(value);
+    const selectedKeys: string[] = Array.isArray(value) ? value : JSON.parse(value);
     const optionList = options || [];
     const optionMap = new Map();
 
@@ -495,6 +495,7 @@ export function parseAdvancedSetting(setting: ControlAdvancedSetting = {}) {
     allowImport: allowimport === '1', // 允许导入（控制导入新增入口）
     allowCopy: allowcopy === '1', //允许复制 默认勾选
     allowBatch: allowbatch === '1', //允许批量操作
+    allowDrag: setting.rcsorttype === '1',
     frozenIndex: Number(safeParse(freezeids, 'array')[0] || '0'), //冻结列["1","2","3"]
     titleWrap: titlewrap === '1', //
     titleCenter: rctitlestyle === '1', // 垂直居中
@@ -898,7 +899,11 @@ export function getTitleTextFromControls(
     });
   }
 
-  return titleControl ? renderText(titleControl, options) || titleControl.value || _l('未命名') : _l('未命名');
+  if (_.includes([9, 10, 11, 40], titleControl.type)) {
+    return renderText(titleControl, options) || _l('未命名');
+  }
+  const fallbackValue = typeof titleControl.value === 'string' && /^\s*[[{]/.test(titleControl.value) ? '' : titleControl.value;
+  return titleControl ? renderText(titleControl, options) || fallbackValue || _l('未命名') : _l('未命名');
 }
 
 /**
@@ -917,6 +922,10 @@ export function getTitleTextFromRelateControl(
     newTitleControlId = control.showControls[0];
   }
 
+  if (!find(control.relationControls, { controlId: newTitleControlId })) {
+    newTitleControlId = find(control.relationControls, { attribute: 1 })?.controlId;
+  }
+
   const matchedTitleControl = find(control.relationControls, { controlId: newTitleControlId });
 
   if (newTitleControlId && matchedTitleControl) {
@@ -933,7 +942,7 @@ export function getTitleTextFromRelateControl(
     };
   }
 
-  if (data && data.name) {
+  if (data && data.name && !['[]', '{}', '[{}]'].includes(data.name.trim())) {
     return data.name;
   }
 

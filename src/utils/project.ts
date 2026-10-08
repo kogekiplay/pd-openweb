@@ -2,6 +2,7 @@ import _, { get } from 'lodash';
 import moment from 'moment';
 import accountAjax from 'src/api/account';
 import actionLogAjax from 'src/api/actionLog';
+import { setSessionStorageItemSafely } from 'src/utils/platform/storage/safe';
 import projectAjax from 'src/api/project';
 import { SYS_CHART_COLORS, SYS_COLOR } from 'src/pages/Admin/settings/config';
 
@@ -133,7 +134,7 @@ export const addBehaviorLog = (
     return;
   }
 
-  sessionStorage.setItem('addBehaviorLogInfo', JSON.stringify({ type, entityId, params }));
+  setSessionStorageItemSafely('addBehaviorLogInfo', JSON.stringify({ type, entityId, params }));
 
   // 调用 actionLogAjax.addLog 方法记录行为日志
   actionLogAjax
@@ -347,4 +348,13 @@ export const compatibleMDJS = (jsFuncName: string, jsParams = {}, h5callBack = (
   } else {
     h5callBack();
   }
+};
+
+/** 获取启用的系统与自定义图表配色方案。 */
+export const getProjectChartColors = (projectId = ''): Array<(typeof SYS_CHART_COLORS)[number] & { enable?: boolean }> => {
+  type ChartScheme = (typeof SYS_CHART_COLORS)[number] & { enable?: boolean };
+  const { chartColor } = getProjectColor(projectId) as { chartColor: { system?: ChartScheme[]; custom?: ChartScheme[] } };
+  const systemColors = (chartColor.system || []).filter(item => item.enable !== false && !_.isEmpty(item.colors));
+  const customColors = (chartColor.custom || []).filter(item => item.enable !== false && !_.isEmpty(item.colors));
+  return systemColors.concat(customColors);
 };

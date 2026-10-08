@@ -94,7 +94,7 @@ export function getRecordAttachments(coverImageStr) {
       let coverArr = '';
 
       try {
-        coverArr = JSON.parse(coverImageStr);
+        coverArr = safeParse(coverImageStr, 'array');
       } catch (e) {
         console.log(e);
         coverArr = '';

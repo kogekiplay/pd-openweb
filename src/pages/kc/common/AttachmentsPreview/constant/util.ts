@@ -141,7 +141,7 @@ export function isHtmlPreviewExt(ext = '') {
 }
 
 export function canPreviewHtml() {
-  return !(_.get(window, 'platformENV.isLocal') || _.get(window, 'platformENV.isOverseas'));
+  return _.get(window, 'md.global.SysSettings.enableCodeAttachmentPreview') === true;
 }
 
 /**

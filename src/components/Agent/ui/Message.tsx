@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import moment from 'moment';
 import styled, { css } from 'styled-components';
 import { Icon, PreferenceTime } from 'ming-ui';
@@ -200,7 +201,14 @@ export function MessageHeader({ name, avatarLabel, avatarSrc, strong = false }: 
   );
 }
 
-export function MessageContent({ role = 'assistant', children, className }: { className?: string; [key: string]: any }) {
+export function MessageContent({
+  role = 'assistant',
+  children,
+  className,
+}: {
+  className?: string;
+  [key: string]: any;
+}) {
   return (
     <Content className={className} $role={role}>
       {children}
@@ -219,11 +227,25 @@ export function MessageAction(props) {
 // assistant 气泡下方的元信息行：消息时间 + 本轮费用。整行最新一条常驻、旧消息 hover 才显现。
 // pending=true（用量未结算，a2a 后台还在扣）时费用显示「费用计算中…」+ 刷新按钮，点击重查；否则显示「X 信用点」。
 // credits 为 null 且非 pending（如 help-agent 不计费）时只显示时间。
-export function MessageMeta({ time, credits, pending = false, always = false, onRefresh }) {
+export function MessageMeta({
+  time,
+  credits,
+  pending = false,
+  always = false,
+  onRefresh,
+  children = null,
+}: {
+  time?: unknown;
+  credits?: unknown;
+  pending?: boolean | undefined;
+  always?: boolean | undefined;
+  onRefresh?: (() => void) | undefined;
+  children?: ReactNode | undefined;
+}) {
   const timeValue = normalizeMessageTime(time);
   const hasCost = pending || credits != null;
 
-  if (!timeValue && !hasCost) return null;
+  if (!timeValue && !hasCost && !children) return null;
 
   return (
     <Meta $always={always || pending}>
@@ -243,7 +265,59 @@ export function MessageMeta({ time, credits, pending = false, always = false, on
           )}
         </MessageCost>
       )}
+      {children}
     </Meta>
+  );
+}
+
+const ActionsBar = styled.div`
+  display: inline-flex;
+  align-items: center;
+  opacity: ${({ $always }: { $always: boolean }) => ($always ? 1 : 0)};
+  transition: opacity ${transitions.hover};
+  ${Root}:hover & {
+    opacity: 1;
+  }
+  @media (max-width: 768px) {
+    opacity: 1;
+  }
+`;
+export function MessageActionsBar({
+  children,
+  always = false,
+  className,
+}: {
+  children: ReactNode;
+  always?: boolean | undefined;
+  className?: string | undefined;
+}) {
+  return (
+    <ActionsBar className={className} $always={always}>
+      {children}
+    </ActionsBar>
+  );
+}
+const Footer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: ${spacing.sm};
+  justify-content: ${({ $role }: { $role: string }) => ($role === 'user' ? 'flex-end' : 'flex-start')};
+`;
+export function MessageFooter({
+  role = 'assistant',
+  children,
+  className,
+}: {
+  role?: string | undefined;
+  children: ReactNode;
+  className?: string | undefined;
+}) {
+  return (
+    <Footer className={className} $role={role}>
+      {children}
+    </Footer>
   );
 }
 

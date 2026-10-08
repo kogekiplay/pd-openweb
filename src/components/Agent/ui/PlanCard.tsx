@@ -133,7 +133,8 @@ export function PlanCard({
   versionLabel,
   built = false,
   onClick,
-}) {
+  hideIcon = false,
+}: { status?: string; selected?: boolean; title?: string | undefined; appIcon?: string | undefined; appColor?: string | undefined; versionLabel?: string | undefined; built?: boolean | undefined; onClick?: (() => void) | undefined; hideIcon?: boolean }) {
   const displayTitle = title || _l('应用搭建方案');
   const isDone = status === 'committed';
   // 没有真实 appIcon 时（生成中 / 无数据）一律留空，不显示默认 book 图标，避免误导
@@ -147,9 +148,9 @@ export function PlanCard({
       onClick={onClick}
       role={onClick ? 'button' : undefined}
     >
-      <IconBox $color={showPlaceholder ? 'var(--color-background-disabled)' : appColor}>
+      {!hideIcon && <IconBox $color={showPlaceholder ? 'var(--color-background-disabled)' : appColor}>
         {appIcon ? <SvgIcon url={customIconUrl(appIcon)} fill="#fff" size={22} /> : null}
-      </IconBox>
+      </IconBox>}
       <Body>
         <Title title={displayTitle}>{displayTitle}</Title>
         {isDone ? (

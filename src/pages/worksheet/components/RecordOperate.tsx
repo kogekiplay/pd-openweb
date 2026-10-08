@@ -770,6 +770,7 @@ export default function RecordOperate(props) {
             {showPrint && (
               <PrintList
                 type={printBtnType}
+                printCountEnabled={props.printCountEnabled}
                 isCharge={isCharge || printCharge}
                 controls={formdata || []}
                 {...{ appId: appId || props.printAppId, viewId, worksheetId, projectId, workId, instanceId }}

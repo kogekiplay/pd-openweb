@@ -1,3 +1,5 @@
+import { buildChatbotShareProps } from './chatbotShare';
+import { getCurrentProjectId } from 'src/pages/globalSearch/utils';
 import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import { isEmpty, isEqual } from 'lodash';
@@ -74,7 +76,6 @@ export default function ShareOperate({
   const isAiAction = from === 'aiAction';
   const [shareVisible, setShareVisible] = useState(false);
   const [conversationName, setConversationName] = useState();
-  const [conversationIdForShare, setConversationIdForShare] = useState(conversationId);
   const selectedCount = Math.floor(selectedMessageIds.length / 2);
   const operateComp = (
     <RightSection>
@@ -98,24 +99,8 @@ export default function ShareOperate({
             chatbotId,
             conversationId,
           });
-          console.log(res);
           setConversationName(res.title);
-          if (isSelectAll) {
-            setShareVisible(true);
-          } else {
-            chatbotAjax
-              .addShareConversation({
-                chatbotId,
-                conversationId,
-                userMessageIds: selectedMessageIds.filter(id => id && id.length === 24),
-              })
-              .then(data => {
-                if (data.conversationId) {
-                  setConversationIdForShare(data.conversationId);
-                  setShareVisible(true);
-                }
-              });
-          }
+          setShareVisible(true);
         }}
         className="Font14"
       >
@@ -171,17 +156,7 @@ export default function ShareOperate({
       {isAiAction && <div className="mTop10 t-flex t-justify-end">{operateComp}</div>}
       {shareVisible && (
         <Share
-          title={_l('分享对话: %0', conversationName)}
-          isCustomShare
-          from={from}
-          isCharge={isCharge}
-          privateShare={false}
-          params={{
-            appId,
-            sourceId: `${chatbotId}|${conversationIdForShare}`,
-            worksheetId: chatbotId,
-            title: conversationName,
-          }}
+          {...buildChatbotShareProps({ from, appId, chatbotId, conversationId, title: conversationName, projectId: getCurrentProjectId(), isCharge, messageIds: isSelectAll ? undefined : selectedMessageIds.filter((id: string) => id && id.length === 24) })}
           onClose={() => setShareVisible(false)}
         />
       )}

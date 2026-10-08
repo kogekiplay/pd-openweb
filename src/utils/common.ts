@@ -26,7 +26,7 @@ export function saveLRUWorksheetConfig(key: string, id, value) {
 
   if (localStorage.getItem(key)) {
     try {
-      data = JSON.parse(localStorage.getItem(key));
+      data = safeParse(localStorage.getItem(key));
     } catch (err) {
       console.error(err);
     }
@@ -47,7 +47,7 @@ export function clearLRUWorksheetConfig(key: string, id) {
 
   if (localStorage.getItem(key)) {
     try {
-      data = JSON.parse(localStorage.getItem(key));
+      data = safeParse(localStorage.getItem(key));
     } catch (err) {
       console.error(err);
     }
@@ -63,7 +63,7 @@ export function getLRUWorksheetConfig(key: string, id) {
 
   if (localStorage.getItem(key)) {
     try {
-      data = JSON.parse(localStorage.getItem(key));
+      data = safeParse(localStorage.getItem(key));
     } catch (err) {
       console.error(err);
       return;
@@ -116,7 +116,7 @@ export function saveTempRecordValueToLocal(key: string, id, value: string, max =
 
   if (localStorage.getItem(key)) {
     try {
-      savedIds = JSON.parse(localStorage.getItem(key)) || [];
+      savedIds = safeParse(localStorage.getItem(key), 'array');
       savedIds = savedIds.filter(sid => sid !== id);
     } catch (err) {
       console.error(err);
@@ -153,7 +153,7 @@ export function removeTempRecordValueFromLocal(key: string, id) {
 
   if (localStorage.getItem(key)) {
     try {
-      savedIds = JSON.parse(localStorage.getItem(key)) || [];
+      savedIds = safeParse(localStorage.getItem(key), 'array');
       savedIds = savedIds.filter(sid => sid !== id);
     } catch (err) {
       console.error(err);

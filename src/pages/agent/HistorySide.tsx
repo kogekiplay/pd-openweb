@@ -1,3 +1,4 @@
+import type { AgentSession } from 'src/components/Agent/shareTypes';
 import React, { useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -155,7 +156,7 @@ export default function HistorySide({
   onSelect = () => {},
   onExpand = () => {},
   onDeleted = () => {},
-}) {
+}: { visible?: boolean; currentSessionId?: string | undefined; refreshKey?: number; onNewChat?: () => void; onSelect?: (session: AgentSession) => void; onExpand?: () => void; onDeleted?: (sessionId: string) => void }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(false);

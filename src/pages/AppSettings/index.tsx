@@ -15,6 +15,12 @@ import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo } from 'src/utils/app';
 import { setFavicon } from 'src/utils/app';
 import { pathCompletion } from 'src/utils/common';
+import {
+  isAppSandboxInProduction,
+  isSandboxEnvironment,
+  isSandboxFeatureEnvironment,
+  isSandboxSupportedProject,
+} from 'src/utils/domain/app/sandbox';
 import { VersionProductType } from 'src/utils/enum';
 import { getCurrentProject, getFeatureStatus } from 'src/utils/project';
 import Beta from './components/Beta';
@@ -86,14 +92,17 @@ class AppSettings extends Component<any, any> {
     }
   }
 
-  getFilteredRouterConfigs = (routerConfigs, projectId: string, permissionType) => {
+  getFilteredRouterConfigs = (routerConfigs, projectId: string, permissionType, sandboxStatus?: number) => {
     const { hideRagEmbedFun } = md.global.SysSettings;
     const filtered = hideRagEmbedFun
       ? routerConfigs.filter(item => item.featureId !== VersionProductType.vectorKnowledgeBase)
       : routerConfigs;
-    return getAppConfig(filtered, permissionType).filter(
-      item => !item.featureId || getFeatureStatus(projectId, item.featureId),
-    );
+    const permittedConfigs = getAppConfig(filtered, permissionType) as typeof routerConfigs;
+    return permittedConfigs
+      .filter(item => !item.featureId || getFeatureStatus(projectId, item.featureId))
+      .filter(item => item.type !== 'sandbox' || isSandboxFeatureEnvironment())
+      .filter(item => !isSandboxEnvironment() || item.type !== 'knowledge')
+      .filter(item => !isAppSandboxInProduction(sandboxStatus) || !['lock', 'upgrade', 'del'].includes(item.type));
   };
   getData = () => {
     const { appId } = _.get(this.props, 'match.params');
@@ -108,7 +117,12 @@ class AppSettings extends Component<any, any> {
       .then(data => {
         setFavicon(data.iconUrl, data.iconColor);
         const { permissionType, id, isLock, isPassword, projectId } = data;
-        const list = this.getFilteredRouterConfigs(routerConfigs, projectId, permissionType);
+        const list = this.getFilteredRouterConfigs(
+          routerConfigs,
+          projectId,
+          permissionType,
+          _.get(data, 'sandboxStatus'),
+        );
 
         if (!permissionType || (isLock && isPassword) || _.isEmpty(list)) {
           navigateTo(`/app/${id}`); // 普通角色、加锁应用、无应用管理中特性时跳至应用首页
@@ -172,7 +186,7 @@ class AppSettings extends Component<any, any> {
       permissionType,
     );
 
-    const list = this.getFilteredRouterConfigs(routerConfigs, projectId, permissionType);
+    const list = this.getFilteredRouterConfigs(routerConfigs, projectId, permissionType, _.get(data, 'sandboxStatus'));
     const configList = list
       .filter(it => {
         if (it.type === 'lock') {
@@ -266,11 +280,13 @@ class AppSettings extends Component<any, any> {
       fixed,
       permissionType,
       appName: name,
+      sandboxStatus: _.get(data, 'sandboxStatus'),
+      sandboxRecordId: _.get(data, 'sandboxRecordId'),
       featureId: featureType && featureType === '2' ? featureId : undefined,
       onChangeData: obj =>
-        this.setState({
-          data: { ...data, ...obj },
-        }),
+        this.setState((state: { data: Record<string, unknown> }) => ({
+          data: { ...state.data, ...obj },
+        })),
     };
     return (
       <div className="manageAppWrap flexRow">
@@ -289,7 +305,7 @@ class AppSettings extends Component<any, any> {
                      而列表子元素是这个 Fragment —— React 看不到 key，
                      每次进应用设置都报一条 "Each child in a list should have a unique key"。 */
                   <Fragment key={type}>
-                    {_.includes(['publish', 'language', 'recyclebin', 'appOfflineSubmit'], type) && (
+                    {_.includes(['sandbox', 'language', 'recyclebin', 'appOfflineSubmit'], type) && (
                       <div className="line"></div>
                     )}
                     <div
@@ -330,6 +346,7 @@ class AppSettings extends Component<any, any> {
                         <Fragment>
                           <span className="flex">
                             {text}
+                            {type === 'sandbox' && !isSandboxSupportedProject(projectId) && <UpgradeIcon />}
                             {['appOfflineSubmit', 'knowledge'].includes(type) && <Beta className="mRight15" />}
                           </span>
                           {item.featureId &&

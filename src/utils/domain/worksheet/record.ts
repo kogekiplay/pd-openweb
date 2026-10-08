@@ -1,0 +1,1 @@
+export { getNewRecordPageUrl, getRelateRecordCountFromValue, handleUpdateDefsourceOfControl, SUMMARY_LIST, getSummaryNameByType, getSummaryInfo, formatRecordToRelateRecord, getSummaryResult, copySublistRow, getRecordTempValue, parseRecordTempValue, handleSortRows, getRecordColor, getRecordColorConfig, filterRowsByKeywords, getRecordControlStyles } from 'src/utils/record';

@@ -1,11 +1,20 @@
 import { addSubPathOfRoutes } from 'src/utils/common';
+import { isSandboxEnvironment } from 'src/utils/domain/app/sandbox';
 
 export const PAGE_HEADER_ROUTE_CONFIG = addSubPathOfRoutes({
   home: {
-    path: ['/dashboard', '/app/my/group/:projectId?/:groupType?/:groupId?',
+    path: [
+      '/dashboard',
+      '/app/my/group/:projectId?/:groupType?/:groupId?',
       '/app/my/owned/:projectId?/:groupType?/:groupId?',
-      '/app/my/:projectId?/:groupType?/:groupId?', '/favorite', '/app/lib/'],
-    component: () => import('src/pages/PageHeader/AppCenterHeader'),
+      '/app/my/:projectId?/:groupType?/:groupId?',
+      '/favorite',
+      '/app/lib/',
+    ],
+    component: () =>
+      isSandboxEnvironment()
+        ? Promise.resolve({ default: () => null })
+        : import('src/pages/PageHeader/AppCenterHeader'),
   },
   appLogs: {
     path: '/app/:appId/logs/:projectId',

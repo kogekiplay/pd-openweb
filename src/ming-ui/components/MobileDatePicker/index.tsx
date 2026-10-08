@@ -64,8 +64,11 @@ export default function MobileDatePicker(props) {
 
   const clearDisable =
     !value || /^[A-Za-z]{3} [A-Za-z]{3} \d{1,2} \d{4} \d{2}:\d{2}:\d{2} GMT[+-]\d{4} \(.+\)$/.test(value);
-  const pickerMin = useMemo(() => getPrecisionRangeDate(min, precision, 'min'), [min, precision]);
-  const pickerMax = useMemo(() => getPrecisionRangeDate(max, precision, 'max'), [max, precision]);
+  // Parent form rerenders may recreate equal Date bounds; stable timestamps preserve the user's wheel selection.
+  const minTimestamp = min ? moment(min).valueOf() : undefined;
+  const maxTimestamp = max ? moment(max).valueOf() : undefined;
+  const pickerMin = useMemo(() => getPrecisionRangeDate(minTimestamp, precision, 'min'), [minTimestamp, precision]);
+  const pickerMax = useMemo(() => getPrecisionRangeDate(maxTimestamp, precision, 'max'), [maxTimestamp, precision]);
   const [dateTime, setDateTime] = useState(getDateInRange(getDate(value, minuteStep), pickerMin, pickerMax));
 
   useEffect(() => {

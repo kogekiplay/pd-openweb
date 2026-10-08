@@ -517,7 +517,13 @@ module.exports = function (alonePath = '') {
       runtimeChunk: 'single',
       splitChunks: getSplitChunksConfig(alonePath),
     },
-    devtool: alonePath ? undefined : ENV.isProduction ? 'source-map' : 'eval',
+    devtool: alonePath
+      ? undefined
+      : ENV.isProduction
+        ? ENV.shouldUploadSentrySourcemap
+          ? 'hidden-source-map'
+          : false
+        : 'eval',
     externals: { jquery: 'jQuery' },
     infrastructureLogging: getInfrastructureLoggingConfig(),
   };

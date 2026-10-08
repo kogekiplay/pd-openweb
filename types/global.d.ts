@@ -465,7 +465,8 @@ interface Window {
   isWindows: boolean;
   isIPad: boolean;
   /** 部署形态开关，src/common/global.ts 设初值（嵌入式 Mingo 入口 widgetEntry 自己兜底一份） */
-  platformENV: { isOverseas: boolean; isLocal: boolean; isPlatform: boolean };
+  platformENV: { isOverseas: boolean; isLocal: boolean; isPlatform: boolean; isHap?: boolean };
+  getStaticLanguageText: (content: string) => string;
   /** 被自定义 alert 覆盖之前的原生 window.alert（src/common/global.ts 的 customAlert，启动时必定写入） */
   nativeAlert: Window['alert'];
   /** 公开表单页标记（PublicWorksheet 写入；预览态为 false） */
@@ -544,7 +545,12 @@ interface Window {
    */
   closeFns: {
     // Modal 的 id 是 Math.random() 算出来的数，Dialog / 附件预览是字符串
-    [id: string]: { id: string | number; className?: string | undefined; index?: number | undefined; fn?(e: KeyboardEvent): void };
+    [id: string]: {
+      id: string | number;
+      className?: string | undefined;
+      index?: number | undefined;
+      fn?(e: KeyboardEvent): void;
+    };
   };
   /** closeFns 的层级计数，打开一层 +1、全关时归零（首次打开前是 undefined） */
   closeindex?: number;

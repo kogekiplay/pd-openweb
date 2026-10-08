@@ -1,3 +1,4 @@
+import { canShowMingoEntry } from './permission';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -173,6 +174,7 @@ function Mingo(props) {
     return null;
   }
 
+  if (!canShowMingoEntry()) return null;
   return (
     <MingoWrap className="mingoWrap">
       {!includes(

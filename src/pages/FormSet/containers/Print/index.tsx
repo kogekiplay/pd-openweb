@@ -14,6 +14,7 @@ import EditPrint from '../../components/EditPrint';
 import PrintTemDialog from '../../components/PrintTemDialog';
 import KuaiMaiIcon from './assets/kuaimai.png';
 import openKuaiMaiDialog from './BindKuaiMaiDialog';
+import { PrintCountSettingCard } from './components/PrintCountSetting';
 import PrintSortableItem from './PrintSortableItem';
 import './style.less';
 
@@ -24,6 +25,18 @@ const PRINT_TYPE_CLASSIFY: Record<string, number[]> = {
   1: [PRINT_TYPE.QR_CODE_PRINT, PRINT_TYPE.BAR_CODE_PRINT],
   6: [PRINT_TYPE.CLOUD_PRINT],
 };
+
+interface TemplatePrintSettings {
+  advanceSettings?: { key: string; value?: string | number }[] | undefined;
+}
+const getTemplatePrintLimitCount = (item: TemplatePrintSettings): number => {
+  const count = Number(item.advanceSettings?.find(setting => setting.key === 'print_limit_count')?.value);
+  return count > 0 ? count : 1;
+};
+const getTemplatePrintLimit = (item: TemplatePrintSettings): number | undefined =>
+  item.advanceSettings?.find(setting => setting.key === 'print_limit_enabled')?.value === '1'
+    ? getTemplatePrintLimitCount(item)
+    : undefined;
 
 class CreatePrintDrawer extends React.Component<any, any> {
   constructor(props) {
@@ -46,7 +59,7 @@ class CreatePrintDrawer extends React.Component<any, any> {
     const featureType = getFeatureStatus(currentProjectId, VersionProductType.wordPrintTemplate);
 
     return (
-      (<Drawer
+      <Drawer
         size={400}
         rootClassName="printTempDrawer"
         title={_l('创建打印模板')}
@@ -123,7 +136,7 @@ class CreatePrintDrawer extends React.Component<any, any> {
             )}
           </React.Fragment>
         )}
-      </Drawer>)
+      </Drawer>
     );
   }
 }
@@ -309,6 +322,20 @@ class Print extends React.Component<any, any> {
     });
   };
 
+  updateTemplatePrintLimit = async (templateId: string, count: number | null, previousCount?: number) => {
+    const { worksheetInfo = {}, worksheetId } = this.props;
+    const enabled = count !== null;
+    const result: unknown = await sheetAjax.editPrintCountConfig({
+      projectId: worksheetInfo.projectId,
+      worksheetId,
+      printId: templateId,
+      printLimitEnabled: enabled,
+      ...(enabled || previousCount ? { printLimitCount: enabled ? count : previousCount } : {}),
+    });
+    if (!result) throw new Error('Unable to update print count limit');
+    this.loadPrint({ worksheetId });
+  };
+
   renderPrintItem = (data, type: number) => {
     const { worksheetInfo = {}, worksheetControls } = this.props;
 
@@ -322,6 +349,19 @@ class Print extends React.Component<any, any> {
         renderItem={({ item, DragHandle }) => (
           <PrintSortableItem
             item={item}
+            printLimit={
+              getFeatureStatus(worksheetInfo.projectId, VersionProductType.printCountLimit) === '2'
+                ? undefined
+                : getTemplatePrintLimit(item)
+            }
+            printLimitCount={getTemplatePrintLimitCount(item)}
+            printCountFeatureDisabled={
+              getFeatureStatus(worksheetInfo.projectId, VersionProductType.printCountLimit) === '2'
+            }
+            onPrintLimitChange={this.updateTemplatePrintLimit}
+            onPrintCountUpgrade={() =>
+              buriedUpgradeVersionDialog(worksheetInfo.projectId, VersionProductType.printCountLimit)
+            }
             DragHandle={DragHandle}
             worksheetInfo={worksheetInfo}
             worksheetControls={worksheetControls}
@@ -339,14 +379,14 @@ class Print extends React.Component<any, any> {
     const { showEditPrint, templateId, fileType, printData = [], exampleData, type } = this.state;
 
     return (
-      (<Drawer
+      <Drawer
         size={480}
         placement="right"
         rootClassName="Absolute"
         zIndex={10}
         onClose={() => this.setState({ showEditPrint: false, type: '' })}
         open={showEditPrint}
-       
+
         closable={false}
         getContainer={false}
         mask={false}
@@ -373,7 +413,7 @@ class Print extends React.Component<any, any> {
             this.loadPrint({ worksheetId: worksheetId }); // 获取当前模板
           }}
         />
-      </Drawer>)
+      </Drawer>
     );
   };
 
@@ -384,14 +424,14 @@ class Print extends React.Component<any, any> {
     if (!showCloudPrint) return null;
 
     return (
-      (<Drawer
+      <Drawer
         size={560}
         placement="right"
         rootClassName="Absolute"
         zIndex={10}
         onClose={() => this.setState({ showCloudPrint: false })}
         open={showCloudPrint}
-       
+
         closable={false}
         getContainer={false}
         mask={false}
@@ -404,12 +444,13 @@ class Print extends React.Component<any, any> {
           getPrintData={() => this.loadPrint({ worksheetId: worksheetInfo.worksheetId })}
           onClose={() => this.setState({ showCloudPrint: false, type: '', templateId: '' })}
         />
-      </Drawer>)
+      </Drawer>
     );
   };
 
   renderCon = () => {
     const { printData = [] } = this.state;
+    const { worksheetInfo = {} } = this.props;
     const defaultTemData = printData.filter(it => PRINT_TYPE_CLASSIFY[0].includes(it.type)); //记录打印
     const codeTemData = printData.filter(it => PRINT_TYPE_CLASSIFY[1].includes(it.type)); //条码打印
     const cloudTemData = printData.filter(it => it.type === PRINT_TYPE.CLOUD_PRINT); //云打印
@@ -418,6 +459,11 @@ class Print extends React.Component<any, any> {
       <div className="printBox Relative">
         <div className="printBoxList">
           <div className="h100 overflowHidden">
+            <PrintCountSettingCard
+              worksheetInfo={worksheetInfo}
+              disabled={getFeatureStatus(worksheetInfo.projectId, VersionProductType.printCountLimit) === '2'}
+              onChange={this.props['onChange']}
+            />
             <div className="topBoxText">
               <div className="textCon">
                 <h5 className="formName textPrimary Font17 Bold">{_l('打印模板')}</h5>
@@ -445,6 +491,7 @@ class Print extends React.Component<any, any> {
                   <div className="printTemplatesList-header">
                     <div className="name flex mRight20 valignWrapper overflow_ellipsis pLeft35">{_l('名称')}</div>
                     <div className="views flex mRight20">{_l('使用范围')}</div>
+                    <div className="w120px TxtCenter">{_l('次数限制')}</div>
                     <div className="action mRight8 w180px">{_l('操作')}</div>
                     <div className="more w80px"></div>
                   </div>

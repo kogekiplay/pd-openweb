@@ -22,6 +22,7 @@ import './css/commenter.less';
 
 const ClickAwayable = ClickAway;
 class Commenter extends React.Component<any, any> {
+  isSubmitting = false;
   declare textareaId: string;
   // initMentionsInput 往这个 textarea 上挂了 val / reset / destroy 等方法
   declare textarea: MentionsInputElement | null | undefined;
@@ -245,19 +246,28 @@ class Commenter extends React.Component<any, any> {
     }
   }
 
+  canShareToPost = (): boolean =>
+    !this.props['disableShareToPost'] &&
+    !md.global.Account.isPortal &&
+    !_.includes(md.global.SysSettings.forbidSuites, '1');
+
   handleSubmit() {
-    const { groups } = this.state;
+    const canShareToPost = this.canShareToPost();
+    const groups = canShareToPost ? this.state['groups'] : undefined;
+    if (this.isSubmitting) return false;
 
     if (!this.state.isUploadComplete) {
       alert(_l('文件上传中，请稍等'), 3);
       return false;
     }
 
-    if (this.state.isReshare && !groups) {
+    if (canShareToPost && this.state.isReshare && !groups) {
       alert(_l('请选择分享范围'), 3);
       return false;
     }
 
+    this.isSubmitting = true;
+    this.setState({ disabled: true });
     const textarea = this.textarea;
     const $textarea = $(textarea);
     const getMessagePromise = this.props.disableMentions
@@ -265,7 +275,7 @@ class Commenter extends React.Component<any, any> {
       : new Promise<string>(resolve => {
           textarea.val(data => resolve(data));
         });
-    getMessagePromise.then(data => {
+    const submission = getMessagePromise.then(data => {
       let message = (data || '').trim();
 
       if (!message || message.length > 3000) {
@@ -273,7 +283,7 @@ class Commenter extends React.Component<any, any> {
           alert(_l('发表内容过长，最多允许3000个'), 3);
         }
 
-        return false;
+        return undefined;
       }
 
       let attachments = this.state.attachmentData;
@@ -297,7 +307,7 @@ class Commenter extends React.Component<any, any> {
 
       if (sourceType === SOURCE_TYPE.POST) {
         const { accountId } = this.props;
-        postAjax
+        return postAjax
           .addPostComment({
             uType: 'AddComment',
             postID: sourceId,
@@ -314,14 +324,15 @@ class Commenter extends React.Component<any, any> {
               onSubmit(result.comment);
               this.clearLocalStorage();
             } else {
-              Promise.reject(result.error);
+              return Promise.reject(result.error);
             }
+            return undefined;
           })
           .catch(function (text) {
             alert(text || _l('操作失败'), 2);
           });
       } else {
-        discussionAjax
+        const addDiscussionPromise = discussionAjax
           .addDiscussion({
             sourceId,
             sourceType,
@@ -368,9 +379,15 @@ class Commenter extends React.Component<any, any> {
             knowledgeAttach: JSON.stringify(kcAttachmentData),
           });
         }
+        return addDiscussionPromise;
       }
-      return undefined;
     });
+    submission
+      .catch(() => this.clearLocalStorage(false))
+      .finally(() => {
+        this.isSubmitting = false;
+        this.setState({ disabled: false });
+      });
     return undefined;
   }
 
@@ -502,7 +519,7 @@ class Commenter extends React.Component<any, any> {
               <Icon className="Hand" icon="smile" />
             </span>
           </Tooltip>
-          {!this.props.disableShareToPost && !md.global.Account.isPortal ? (
+          {this.canShareToPost() ? (
             <Tooltip title={_l('同时转发此条')}>
               <span className="commentIconBtn">
                 <i
@@ -513,7 +530,7 @@ class Commenter extends React.Component<any, any> {
             </Tooltip>
           ) : null}
           <div className="flex" />
-          {this.state.isReshare && (
+          {this.canShareToPost() && this.state.isReshare && (
             <span className="commentSelectGroup">
               <SelectGroupTrigger {...selectGroupOptions} minHeight={260} onChange={this.handleChangeGroup} />
             </span>

@@ -15,10 +15,16 @@ import type { FormControl } from 'src/utils/controlTypes';
 import { sendCloudPrint } from 'src/utils/record';
 import MoreOption from '../../components/MoreOption';
 import RangeDrop from '../../components/RangeDrop';
+import { PrintCountLimitModal } from './components/PrintCountSetting';
 
 export default function PrintSortableItem(props) {
   const {
     item,
+    printLimit,
+    printLimitCount,
+    onPrintLimitChange,
+    onPrintCountUpgrade,
+    printCountFeatureDisabled,
     worksheetInfo = {},
     worksheetControls = [],
     updatePrint,
@@ -38,6 +44,7 @@ export default function PrintSortableItem(props) {
   const [showFilters, setShowFilters] = useState(false);
   const [showDropOption, setShowDropOption] = useState(false);
   const [isChangeDrop, setIsChangeDrop] = useState(false);
+  const [showPrintCountLimitModal, setShowPrintCountLimitModal] = useState(false);
 
   useEffect(() => {
     isRename && inputRef.current && inputRef.current.focus();
@@ -373,58 +380,82 @@ export default function PrintSortableItem(props) {
   };
 
   return (
-    <div className="printTemplatesList-tr" onClick={() => onPreview(true)}>
-      <DragHandle>
-        <Icon className="Font15 Hand textTertiary hoverColorPrimary dragIcon mRight10" icon="drag" />
-      </DragHandle>
-      <div className="name flex mRight20 valignWrapper overflowHidden">
-        <Icon
-          icon={PRINT_TYPE_STYLE[item.type] ? PRINT_TYPE_STYLE[item.type].icon : printInfo.icon}
-          className={`iconTitle mRight8 ${
-            [PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(item.type) || printInfo.icon !== 'doc'
-              ? 'Font24'
-              : 'Font22'
-          } ${isCloudPrint ? 'textTertiary' : ''}`}
-        />
-        <div className="flex overflow_ellipsis">
-          {isRename ? (
-            <input
-              name="printPrintSortableItem"
-              autoComplete="off"
-              type="text"
-              className="Font13 renameInput"
-              ref={inputRef}
-              value={inputName}
-              onChange={e => {
-                e.stopPropagation();
-                setInputName(e.target.value);
-              }}
-              onBlur={editPrintName}
-            />
-          ) : (
-            <Tooltip title={item.name}>
-              <span className="overflow_ellipsis printName Font13">{item.name}</span>
-            </Tooltip>
-          )}
-          {[PRINT_TYPE.QR_CODE_PRINT, PRINT_TYPE.BAR_CODE_PRINT].includes(item.type) && (
-            <div className="printSize">{printInfo.text}</div>
-          )}
+    <React.Fragment>
+      <div className="printTemplatesList-tr" onClick={() => onPreview(true)}>
+        <DragHandle>
+          <Icon className="Font15 Hand textTertiary hoverColorPrimary dragIcon mRight10" icon="drag" />
+        </DragHandle>
+        <div className="name flex mRight20 valignWrapper overflowHidden">
+          <Icon
+            icon={PRINT_TYPE_STYLE[item.type] ? PRINT_TYPE_STYLE[item.type].icon : printInfo.icon}
+            className={`iconTitle mRight8 ${
+              [PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(item.type) || printInfo.icon !== 'doc'
+                ? 'Font24'
+                : 'Font22'
+            } ${isCloudPrint ? 'textTertiary' : ''}`}
+          />
+          <div className="flex overflow_ellipsis">
+            {isRename ? (
+              <input
+                name="printPrintSortableItem"
+                autoComplete="off"
+                type="text"
+                className="Font13 renameInput"
+                ref={inputRef}
+                value={inputName}
+                onChange={e => {
+                  e.stopPropagation();
+                  setInputName(e.target.value);
+                }}
+                onBlur={editPrintName}
+              />
+            ) : (
+              <Tooltip title={item.name}>
+                <span className="overflow_ellipsis printName Font13">{item.name}</span>
+              </Tooltip>
+            )}
+            {[PRINT_TYPE.QR_CODE_PRINT, PRINT_TYPE.BAR_CODE_PRINT].includes(item.type) && (
+              <div className="printSize">{printInfo.text}</div>
+            )}
+          </div>
         </div>
+        <div className="views flex mRight20">
+          <span className="viewText printName WordBreak">{getViewText()}</span>
+        </div>
+        <div className="w120px TxtCenter" onClick={event => event.stopPropagation()}>
+          <span
+            className="Hand colorPrimary"
+            onClick={() => {
+              if (printCountFeatureDisabled) {
+                onPrintCountUpgrade?.();
+                return;
+              }
+              setShowPrintCountLimitModal(true);
+            }}
+          >
+            {printLimit === undefined || printLimit === null ? _l('无限制') : _l('%0次', printLimit)}
+          </span>
+        </div>
+        <div className="activeCon mRight8 w180px flexRow " onClick={e => e.stopPropagation()}>
+          {renderDropOption()}
+          {renderFilter()}
+          <span className="Hand Bold" onClick={() => onPreview(true)}>
+            {_l('编辑')}
+          </span>
+          <span className="Hand Bold" onClick={onClickPreview}>
+            {isCloudPrint ? _l('测试') : _l('预览')}
+          </span>
+        </div>
+        <div className="more w80px TxtCenter">{renderMoreOption()}</div>
       </div>
-      <div className="views flex mRight20">
-        <span className="viewText printName WordBreak">{getViewText()}</span>
-      </div>
-      <div className="activeCon mRight8 w180px flexRow " onClick={e => e.stopPropagation()}>
-        {renderDropOption()}
-        {renderFilter()}
-        <span className="Hand Bold" onClick={() => onPreview(true)}>
-          {_l('编辑')}
-        </span>
-        <span className="Hand Bold" onClick={onClickPreview}>
-          {isCloudPrint ? _l('测试') : _l('预览')}
-        </span>
-      </div>
-      <div className="more w80px TxtCenter">{renderMoreOption()}</div>
-    </div>
+      {showPrintCountLimitModal && (
+        <PrintCountLimitModal
+          value={printLimit}
+          defaultValue={printLimitCount}
+          onCancel={() => setShowPrintCountLimitModal(false)}
+          onSave={(value, previousCount) => onPrintLimitChange?.(item.id, value, previousCount)}
+        />
+      )}
+    </React.Fragment>
   );
 }

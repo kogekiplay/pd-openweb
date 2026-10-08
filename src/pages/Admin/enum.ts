@@ -33,6 +33,8 @@ export const PERMISSION_ENUM = {
   APP_RESOURCE_SERVICE: 15300,
   USER_ANALYTICS: 15500,
   GENERAL_SETTING: 15700,
+  APP_SANDBOX: 15800,
+  REVIEW_UPGRADE: 15900,
 
   //支付与开票
   MANAGE_MERCHANT: 16110,
@@ -101,7 +103,7 @@ export const ROUTE_CONFIG = {
   [PERMISSION_ENUM.PLATFORM_ACCOUNT_LOGIN]: ['integrationothers'],
   [PERMISSION_ENUM.OPEN_INTERFACE]: ['integrationothers'],
   [PERMISSION_ENUM.BASIC_SETTING]: ['sysinfo', 'certinfo', 'cloudservice', 'orgothers'],
-  [PERMISSION_ENUM.FINANCE]: ['home', 'billinfo'],
+  [PERMISSION_ENUM.FINANCE]: ['home', 'billinfo', 'billing'],
   [PERMISSION_ENUM.SECURITY]: ['security', 'addressBook', 'dataAccess', 'function'],
   [PERMISSION_ENUM.APP_RESOURCE_SERVICE]: [
     'home',
@@ -116,6 +118,8 @@ export const ROUTE_CONFIG = {
   ],
   [PERMISSION_ENUM.USER_ANALYTICS]: ['analytics'],
   [PERMISSION_ENUM.GENERAL_SETTING]: ['settings'],
+  [PERMISSION_ENUM.APP_SANDBOX]: ['appSandbox'],
+  [PERMISSION_ENUM.REVIEW_UPGRADE]: ['reviewUpgrade'],
   [PERMISSION_ENUM.MANAGE_MERCHANT]: ['merchant'],
   [PERMISSION_ENUM.WITHDRAW]: ['merchant'],
   [PERMISSION_ENUM.ORDER]: ['transaction', 'refund'],

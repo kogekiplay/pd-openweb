@@ -151,6 +151,8 @@ export interface ChatMessagePart {
 /** 对话里的一条消息 */
 export interface ChatMessage {
   id: string;
+  messageId?: string | undefined;
+  traceId?: string | undefined;
   role: 'user' | 'assistant' | (string & {});
   /** 展示名（"你" / 助手名） */
   name?: string;

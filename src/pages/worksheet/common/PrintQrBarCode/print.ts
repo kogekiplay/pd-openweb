@@ -158,7 +158,7 @@ export class QrPdf {
   async render() {
     return new Promise(async resolve => {
       import('jspdf').then(jsPDF => {
-        this.jsPDF = jsPDF.default;
+        this.jsPDF = jsPDF.jsPDF || jsPDF.default;
         if (this.printType === PRINT_TYPE.A4) {
           resolve(this.renderA4());
         } else if (this.printType === PRINT_TYPE.QR) {

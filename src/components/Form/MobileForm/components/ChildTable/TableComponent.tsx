@@ -14,7 +14,7 @@ import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { updateRulesData } from '../../../core/formUtils/updateRulesData';
 import { addWidthToColumns } from './utils';
 
-const TableWrap = styled(Table)`
+export const TableWrap = styled(Table)`
   height: 100%;
   .ant-spin-section,
   .ant-spin-container,
@@ -201,7 +201,7 @@ const getWidthDataSource = (dataSource: RecordRow[], showExpand) => {
   return dataSource.filter((_item, index: number) => index % step === 0).slice(0, INITIAL_EXPAND_RENDER_COUNT);
 };
 
-const lineHeightInfo: Record<number, string> = { 0: 'compactness', 1: 'mediumTable', 2: 'heightTable', 3: 'adaptive' }; // h5height: 0=>紧凑 1=>中等 2=>高 3=>自适应
+export const lineHeightInfo: Record<number, string> = { 0: 'compactness', 1: 'mediumTable', 2: 'heightTable', 3: 'adaptive' }; // h5height: 0=>紧凑 1=>中等 2=>高 3=>自适应
 const getCurrentViewportSize = () => {
   const viewport = window.visualViewport;
 

@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import worksheetAjax from 'src/api/worksheet';
 import type { AppDispatch, GetState } from 'src/redux/types';
+import type { WorksheetFilters } from 'src/pages/worksheet/types';
 import { getFilledRequestParams } from 'src/utils/common';
 
 // 更新分组筛选
@@ -23,7 +24,7 @@ export function getNavGroupCount() {
     const sheet = getState().sheet;
     const { filters = {}, base = {}, quickFilter = {} } = sheet;
     const { appId, worksheetId, viewId } = base;
-    const { filterControls, filtersGroup, keyWords, searchType } = filters;
+    const { filterControls, filtersGroup, keyWords, searchType } = filters as Partial<WorksheetFilters>;
 
     if (getNavGroupRequest && getNavGroupRequest.abort && preWorksheetIds.includes(`${worksheetId}-${viewId}`)) {
       getNavGroupRequest.abort();

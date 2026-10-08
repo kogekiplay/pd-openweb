@@ -1,3 +1,4 @@
+import { isSandboxEnvironment } from 'src/utils/domain/app/sandbox';
 import { Component, Fragment } from 'react';
 import withRouter from '../../../../router/withRouter';
 import { Popover } from 'antd';
@@ -130,10 +131,10 @@ let CommonUserHandle = class CommonUserHandle extends Component<any, any> {
 
         {type !== 'appPkg' && (
           <Fragment>
-            {type === 'dashboard' && md.global.SysSettings.enableAIConnector !== false && (
+            {type === 'dashboard' && md.global.SysSettings.enableAIConnector !== false && !md.global.SysSettings.hideAIBasicFun && (
               <ConnectAiEntry projectId={currentProject?.projectId} />
             )}
-            {type === 'dashboard' && hasProjectAdminAuth && (
+            {type === 'dashboard' && hasProjectAdminAuth && !isSandboxEnvironment() && (
               <MdLink to={`/admin/home/${currentProject.projectId}`}>
                 <EntryWrap>
                   <i className="icon icon-business Font20 TxtMiddle"></i>

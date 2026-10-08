@@ -869,6 +869,7 @@ export default function BillInfo({ match }) {
       <AdminTitle prefix={_l('组织 - 账务')} />
       <div className="billInfoHeader orgManagementHeader">
         <div className="title">{_l('账务%15000')}</div>
+        <span className="colorPrimary pointer mLeft24" onClick={() => navigateTo(`/admin/billing/${projectId}`)}>{_l('切换新账务')}</span>
         {!window.platformENV.isOverseas && (
           <div
             className="invoiceSetting pointer adminHoverColor"

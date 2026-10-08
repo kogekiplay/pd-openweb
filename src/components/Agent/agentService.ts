@@ -1,3 +1,5 @@
+import { fetchAgentSessionPage } from './shareService';
+import type { AgentSessionQuery } from './shareTypes';
 import agentAjax from 'src/api/agent';
 import { withCaptcha as withAnonymousCaptcha } from './anonymous';
 import type { AgentStreamEvent, ChatAttachmentRequest } from './types';
@@ -316,43 +318,9 @@ function markBuiltPlanCards(messages, rawOrdered) {
   }
 }
 
-// 会话时间字段是 "2026-05-27 14:16:32" 这类字符串：转时间戳用于排序（替换 - 为 / 兼容 Safari）
-function toTimestamp(value) {
-  if (!value) return 0;
-  if (typeof value === 'number') return value;
-  const time = new Date(String(value).replace(/-/g, '/')).getTime();
-
-  return Number.isNaN(time) ? 0 : time;
-}
-
 // 拉取当前用户的会话列表（历史会话），按最近活跃时间倒序；传 keyword 时由后端按标题检索
-export async function fetchAgentSessions({ page = 1, size = 50, keyword = '' } = {}) {
-  const args = { page, size };
-  if (keyword) args.keyword = keyword;
-  const res = await agentAjax.getAgentSessions(args, { silent: true });
-  const body = res && res.data !== undefined ? res.data : res;
-
-  return (
-    pickList(body, ['items', 'sessions', 'list', 'data'])
-      .map(item => ({
-        sessionId: stringValue(readField(item, 'sessionId')) || stringValue(readField(item, 'id')) || '',
-        title:
-          stringValue(readField(item, 'firstMessage')) ||
-          stringValue(readField(item, 'title')) ||
-          stringValue(readField(item, 'summary')) ||
-          _l('未命名会话'),
-        updateTime:
-          readField(item, 'lastActiveTime') ||
-          readField(item, 'updateTime') ||
-          readField(item, 'lastMessageTime') ||
-          readField(item, 'createTime') ||
-          null,
-      }))
-      // session-bot- 前缀为单轮 bot 工具调用（建表 / 填记录 / 生成示例数据 / 优化应用信息等旧功能）的会话，
-      // 不属于可续接的主对话，历史会话列表里排除（见 genBotSessionId）。
-      .filter(item => item.sessionId && !item.sessionId.startsWith('session-bot-'))
-      .sort((a, b) => toTimestamp(b.updateTime) - toTimestamp(a.updateTime))
-  );
+export async function fetchAgentSessions(args: AgentSessionQuery = {}) {
+  return (await fetchAgentSessionPage(args)).items;
 }
 
 // 会话重命名：改的就是列表展示标题（后端 firstMessage 字段）。title 需 trim 非空、≤100 字。
@@ -489,6 +457,8 @@ export async function fetchAgentSessionMessages(
 
     return {
       id: `history-${index}`,
+      messageId: stringValue(readField(m, 'messageId')),
+      traceId: stringValue(readField(m, 'traceId')) || '',
       role,
       // 用户消息保留原始文本（含 embed 段原文）：恢复历史后意图弹层选"都不是"(none_of_these)时，
       // 须把用户最后一条原始 message 原样回传后端供重路由；从 parts 反拼会丢 embed 原文。
@@ -685,6 +655,7 @@ function normalizeStreamEvent(payload) {
   return {
     eventType: stringValue(payload.eventType) || stringValue(payload.EventType) || '',
     traceId: stringValue(payload.traceId) || stringValue(payload.TraceId) || '',
+    messageId: stringValue(payload.messageId) || stringValue(payload.MessageId) || '',
     agentName: stringValue(payload.agentName) || stringValue(payload.AgentName) || null,
     // delta 是流式增量内容，空白/换行有意义，绝不能 trim：
     // 否则块间 \n\n 被砍、纯 "\n\n" chunk 整段丢弃，导致 markdown 块粘连（--- 与 ## 粘连、表格行挤在一起）。
@@ -853,3 +824,7 @@ function toAttachmentType(file) {
 export function mapAttachmentForRequest(item) {
   return { type: toAttachmentType(item), url: item.url, name: item.name, size: item.size };
 }
+
+export { createSessionShare, SESSION_SHARE_SCOPE, SHARE_ERROR, fetchSharedSessionMessages, continueSharedSession, fetchAgentSessionPage, fetchAgentSessionTitle } from './shareService';
+
+export const HELP_AGENT_NAME = 'help-agent';

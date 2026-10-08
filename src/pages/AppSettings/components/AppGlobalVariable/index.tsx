@@ -6,6 +6,7 @@ import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import GlobalVarTable from 'src/pages/Admin/app/globalVariable/components/GlobalVarTable';
 import VarAddOrEditModal from 'src/pages/Admin/app/globalVariable/components/VarAddOrEditModal';
 import { REFRESH_TYPE } from 'src/pages/Admin/app/globalVariable/constant';
+import { isAppSandboxInProduction } from 'src/utils/domain/app/sandbox';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import AppSettingHeader from '../AppSettingHeader';
@@ -18,6 +19,7 @@ const tabInfos = [
 
 export default function AppGlobalVariable(props) {
   const { projectId, appId } = props;
+  const readonly = isAppSandboxInProduction(props.sandboxStatus);
   const [currentTab, setCurrentTab] = useState('app');
   const [loading, setLoading] = useState(true);
   const [keyWord, setKeyWord] = useState('');
@@ -61,7 +63,7 @@ export default function AppGlobalVariable(props) {
       <AppSettingHeader
         title={_l('全局变量')}
         showSearch={true}
-        addBtnName={_l('应用变量')}
+        addBtnName={readonly ? undefined : _l('应用变量')}
         needUpgrade={featureType === '2'}
         link="https://help.mingdao.com/workflow/node-update-global-variables"
         description={_l('使用全局变量实现组织内数据的共享与传递')}
@@ -89,6 +91,7 @@ export default function AppGlobalVariable(props) {
         <GlobalVarTable
           data={varList.filter(item => item.name.indexOf(keyWord) > -1)}
           readOnly={currentTab === 'project'}
+          hideDelete={readonly}
           loading={loading}
           onRefreshVarList={onRefreshVarList}
           emptyText={keyWord ? _l('暂无搜索结果') : _l('暂无全局变量')}

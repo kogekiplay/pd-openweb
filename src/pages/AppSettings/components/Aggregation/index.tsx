@@ -8,6 +8,7 @@ import syncTaskApi from 'src/pages/integration/api/syncTask.js';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import { navigateTo } from 'src/router/navigateTo';
 import { getRequest } from 'src/utils/common';
+import { isAppSandboxInProduction } from 'src/utils/domain/app/sandbox';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import AppSettingHeader from '../AppSettingHeader';
@@ -318,7 +319,7 @@ export default function AggregationTables(props) {
                 index={index}
                 num={index}
                 displayType={displayType}
-                canEdit={featureType !== '2'}
+                canEdit={featureType !== '2' && !isAppSandboxInProduction(props.sandboxStatus)}
                 onEdit={() => {
                   if (featureType === '2') {
                     buriedUpgradeVersionDialog(projectId, VersionProductType.aggregation);
@@ -343,7 +344,7 @@ export default function AggregationTables(props) {
         <React.Fragment>
           <AppSettingHeader
             title={_l('聚合表')}
-            addBtnName={_l('新建聚合表')}
+            addBtnName={isAppSandboxInProduction(props.sandboxStatus) ? undefined : _l('新建聚合表')}
             description={_l('可将多个工作表连接，对数据进行归组聚合，在统计中直接使用')}
             link="https://help.mingdao.com/application/aggregation" //帮助链接
             handleSearch={onSearch}

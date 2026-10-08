@@ -3,13 +3,16 @@ import _, { includes } from 'lodash';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import worksheetAjax from 'src/api/worksheet';
 import { getFilledRequestParams, pathCompletion } from 'src/utils/common';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import BatchPrintErrorModal from '../BatchPrintErrorModal';
+import { normalizePrintableRows } from '../printRowUtils';
+import { type BatchPrintError, precheckPrint } from '../recordInfo/RecordForm/RecordPrint/printCount';
 import { PRINT_TYPE, SOURCE_TYPE, SOURCE_URL_TYPE } from './enum';
 import GeneratingPopup from './GeneratingPopup';
 import { QrPdf } from './print';
 import type { CodeUrlSource } from './types';
 import { getCodeContent, getCodeTexts } from './util';
 import { generateLabelPdf } from './vectorLabel';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const PAGE_SIZE = 200;
 
@@ -29,6 +32,9 @@ export default function GeneratingPdf(props) {
     filterControls,
     fastFilters,
     navGroupFilters,
+    precheckError: initialPrecheckError,
+    precheckEnabled,
+    onAllPrecheckFailed = () => {},
     onClose,
   }: { controls: FormControl[]; selectedRows: RecordRow[]; [key: string]: any } = props;
   const [printConfig, setPrintConfig] = useState(config && { ...config });
@@ -37,14 +43,17 @@ export default function GeneratingPdf(props) {
   // setter 就只收 undefined，setLoadingText(字符串) / setEmbedUrl(地址) 都报 TS2345。
   const [loadingText, setLoadingText] = useState<string | undefined>();
   const rows = useRef(selectedRows);
+  const shouldLoadDataOnOpen = useRef(allowLoadMore && selectedRows.length !== count);
+  const [precheckError, setPrecheckError] = useState<BatchPrintError | undefined>(initialPrecheckError);
   const [pageIndex, setPageIndex] = useState(1);
   const [embedUrl, setEmbedUrl] = useState<string | undefined>();
   const [name, setName] = useState(props.name);
 
-  function loadData(pageIndex = 1, cb = () => {}) {
+  async function loadData(pageIndex = 1, cb = () => {}) {
     setLoading(true);
-    worksheetAjax
-      .getFilterRows(
+    setEmbedUrl(undefined);
+    try {
+      const response = await worksheetAjax.getFilterRows(
         getFilledRequestParams({
           worksheetId,
           viewId,
@@ -56,11 +65,33 @@ export default function GeneratingPdf(props) {
           fastFilters,
           navGroupFilters,
         }),
-      )
-      .then(res => {
-        rows.current = res.data;
-        cb();
-      });
+      );
+      let printableRows = normalizePrintableRows(response.data);
+      if (precheckEnabled) {
+        const rowIds = printableRows.map(row => row.rowid);
+        const result = await precheckPrint({ projectId, worksheetId, printId: templateId, rowIds });
+        if (rowIds.length === 1 && result.failedRows.length) {
+          alert(_l('当前模板已达到打印上限'), 2);
+          onClose();
+          return;
+        }
+        const successfulIds = new Set(result.successRows.map(row => row.rowId));
+        const error: BatchPrintError | undefined = result.failedRows.length
+          ? { templateName: name || _l('未命名'), recordNames: result.failedRows.map(row => row.rowTitle) }
+          : undefined;
+        printableRows = printableRows.filter(row => successfulIds.has(row.rowid));
+        if (!printableRows.length) {
+          onClose();
+          onAllPrecheckFailed(error);
+          return;
+        }
+        setPrecheckError(error);
+      }
+      rows.current = printableRows;
+      cb();
+    } catch {
+      onClose();
+    }
   }
 
   async function handlePrint(config) {
@@ -139,7 +170,7 @@ export default function GeneratingPdf(props) {
 
   useEffect(() => {
     function print(config) {
-      if (allowLoadMore) {
+      if (shouldLoadDataOnOpen.current) {
         loadData(1, () => handlePrint(config));
       } else {
         handlePrint(config);
@@ -162,26 +193,35 @@ export default function GeneratingPdf(props) {
     }
   }, []);
   return (
-    <GeneratingPopup
-      allowLoadMore={allowLoadMore}
-      pageIndex={pageIndex}
-      pageSize={PAGE_SIZE}
-      count={count}
-      zIndex={zIndex}
-      loading={loading}
-      loadingText={loadingText}
-      name={name}
-      embedUrl={embedUrl}
-      onPrev={() => {
-        setPageIndex(pageIndex - 1);
-        loadData(pageIndex - 1, () => handlePrint(printConfig));
-      }}
-      onNext={() => {
-        setPageIndex(pageIndex + 1);
-        loadData(pageIndex + 1, () => handlePrint(printConfig));
-      }}
-      onClose={onClose}
-    />
+    <>
+      <GeneratingPopup
+        allowLoadMore={allowLoadMore}
+        pageIndex={pageIndex}
+        pageSize={PAGE_SIZE}
+        count={count}
+        zIndex={zIndex}
+        loading={loading}
+        loadingText={loadingText}
+        name={name}
+        embedUrl={embedUrl}
+        onPrev={() => {
+          setPageIndex(pageIndex - 1);
+          loadData(pageIndex - 1, () => handlePrint(printConfig));
+        }}
+        onNext={() => {
+          setPageIndex(pageIndex + 1);
+          loadData(pageIndex + 1, () => handlePrint(printConfig));
+        }}
+        onClose={onClose}
+      />
+      {embedUrl && precheckError && (
+        <BatchPrintErrorModal
+          {...precheckError}
+          zIndex={(zIndex || 1000) + 1}
+          onClose={() => setPrecheckError(undefined)}
+        />
+      )}
+    </>
   );
 }
 

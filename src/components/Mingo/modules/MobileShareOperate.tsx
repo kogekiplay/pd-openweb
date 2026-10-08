@@ -1,11 +1,8 @@
+import { getChatbotShareLink, copyChatbotShareLink } from './chatbotShare';
 import { Fragment, useEffect, useState } from 'react';
 import { isEmpty, isEqual } from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, MobileConfirmPopup } from 'ming-ui';
-import chatbotAjax from 'src/pages/workflow/apiV2/chatbot';
-import { getPublicShare, updatePublicShareStatus } from 'src/pages/worksheet/components/Share/controller';
-import copy from 'src/utils/copyToClipboard';
-import { compatibleMDJS } from 'src/utils/project';
 
 const MobileShareOperateWrap = styled.div`
   margin-bottom: -12px;
@@ -73,71 +70,14 @@ const MobileShareOperate = ({
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
 
-  const getConversationIdForShare = async () => {
-    const data = await chatbotAjax.addShareConversation({
-      chatbotId,
-      conversationId,
-      userMessageIds: selectedMessageIds.filter(id => id?.length === 24),
-    });
-
-    return data?.conversationId;
-  };
-
   const handleShare = async () => {
     try {
-      let finalConversationId = conversationId;
-
-      if (!isSelectAll) {
-        finalConversationId = await getConversationIdForShare();
-        if (!finalConversationId) {
-          alert(_l('获取会话失败'), 2);
-          return;
-        }
-      }
-
-      const sourceId = `${chatbotId}|${finalConversationId}`;
-      let { shareLink } = await getPublicShare({
-        from,
-        appId,
-        sourceId,
-      });
-
-      // 未开启分享
-      if (!shareLink) {
-        const res = await updatePublicShareStatus({
-          from,
-          appId,
-          sourceId,
-          isPublic: true,
-        });
-
-        if (!res?.shareLink) {
-          alert(_l('分享失败'), 2);
-          return;
-        }
-
-        shareLink = res.shareLink;
-      }
-
-      setConfirmVisible(true);
-      setShareUrl(shareLink);
-    } catch (error) {
-      console.log(error);
-    }
+      const shareLink = await getChatbotShareLink({ from, appId, chatbotId, conversationId, selective: !isSelectAll, messageIds: selectedMessageIds.filter((id: string) => id?.length === 24) });
+      if (!shareLink) { alert(_l('分享失败'), 2); return; }
+      setShareUrl(shareLink); setConfirmVisible(true);
+    } catch (error) { console.error(error); alert(_l('分享失败'), 2); }
   };
-
-  const copyShareUrl = () => {
-    if (window.isMingDaoApp) {
-      compatibleMDJS('shareContent', {
-        type: 1,
-        title: _l('链接已复制'),
-        url: shareUrl,
-      });
-    } else {
-      copy(shareUrl);
-      alert(_l('链接已复制'));
-    }
-  };
+  const copyShareUrl = () => copyChatbotShareLink(shareUrl);
 
   useEffect(() => {
     if (!isSelectAll && isEmpty(selectedMessageIds)) {

@@ -1,4 +1,5 @@
 import { addSubPathOfRoutes } from 'src/utils/common';
+import { isSandboxEnvironment } from 'src/utils/domain/app/sandbox';
 
 export const ROUTE_CONFIG = addSubPathOfRoutes({
   chatWindow: {
@@ -229,7 +230,8 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
       '/favorite',
       '/app/lib/',
     ],
-    component: () => import('src/pages/AppHomepage/AppCenter'),
+    component: () =>
+      isSandboxEnvironment() ? import('src/pages/AppSandbox') : import('src/pages/AppHomepage/AppCenter'),
   },
   aggregationInfo: {
     path: '/aggregation/:id?',

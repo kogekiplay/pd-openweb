@@ -218,6 +218,7 @@ export default function RowHead(props) {
     refreshWorksheetControls?: () => void;
     onOpenRecord?: (...args: unknown[]) => void;
     printCharge?: boolean;
+    printCountEnabled?: boolean | undefined;
     className?: string;
   }
 
@@ -264,6 +265,7 @@ export default function RowHead(props) {
     refreshWorksheetControls = () => {},
     onOpenRecord = () => {},
     printCharge,
+    printCountEnabled,
   }: RowHeadProps = props;
   let { className } = props;
   // 必须给初值 false：不给的话状态类型被推成 undefined，三处 setSelectAllPanelVisible(true/false) 全是 TS2345。
@@ -335,6 +337,7 @@ export default function RowHead(props) {
                 isDevAndOps,
                 isDraft,
                 printCharge,
+                printCountEnabled,
                 view,
               }}
               formdata={controls.map((c: FormControl) => ({ ...c, value: row[c.controlId] }))}

@@ -1,3 +1,11 @@
+import type {
+  BillingAppSummary,
+  BillingBalance,
+  BillingStatisticsSummary,
+  BillingTransaction,
+  OverviewCard,
+} from 'src/pages/Admin/organization/billing/types';
+
 export default {
   /**
    * 查询账务中心信用点余额。
@@ -7,7 +15,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCreditPointBalance: function (args: ApiArgs, options: ApiOptions = {}) {
+  getCreditPointBalance: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<BillingBalance> {
     return mdyAPI('Billing', 'GetCreditPointBalance', args, options);
   },
   /**
@@ -26,7 +34,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  listOrders: function (args: ApiArgs, options: ApiOptions = {}) {
+  listOrders: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<{ items: BillingTransaction[]; page: { totalCount: number } }> {
     return mdyAPI('Billing', 'ListOrders', args, options);
   },
   /**
@@ -45,7 +53,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListCreditPoints: function (args: ApiArgs, options: ApiOptions = {}) {
+  getListCreditPoints: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<{ items: BillingTransaction[] }> {
     return mdyAPI('Billing', 'GetListCreditPoints', args, options);
   },
   /**
@@ -64,7 +72,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCreditPointCount: function (args: ApiArgs, options: ApiOptions = {}) {
+  getCreditPointCount: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<number> {
     return mdyAPI('Billing', 'GetCreditPointCount', args, options);
   },
   /**
@@ -76,7 +84,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCreditPointDetailsByInstanceId: function (args: ApiArgs, options: ApiOptions = {}) {
+  getCreditPointDetailsByInstanceId: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<{ items: BillingTransaction[] }> {
     return mdyAPI('Billing', 'GetCreditPointDetailsByInstanceId', args, options);
   },
   /**
@@ -89,7 +97,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCreditPointOverview: function (args: ApiArgs, options: ApiOptions = {}) {
+  getCreditPointOverview: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<Record<OverviewCard['key'], number>> {
     return mdyAPI('Billing', 'GetCreditPointOverview', args, options);
   },
   /**
@@ -102,7 +110,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getCreditPointStatisticsSummary: function (args: ApiArgs, options: ApiOptions = {}) {
+  getCreditPointStatisticsSummary: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<BillingStatisticsSummary> {
     return mdyAPI('Billing', 'GetCreditPointStatisticsSummary', args, options);
   },
   /**
@@ -116,7 +124,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getApplicationCreditPointStatistics: function (args: ApiArgs, options: ApiOptions = {}) {
+  getApplicationCreditPointStatistics: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<{ items: BillingAppSummary[] }> {
     return mdyAPI('Billing', 'GetApplicationCreditPointStatistics', args, options);
   }
 };

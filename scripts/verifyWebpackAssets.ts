@@ -214,4 +214,5 @@ function main() {
   );
 }
 
-main();
+if (require.main === module) main();
+module.exports = { parseJsFilenameMaps, parseCssFilenameMap, parseCssChunkMap, verifyRuntime };

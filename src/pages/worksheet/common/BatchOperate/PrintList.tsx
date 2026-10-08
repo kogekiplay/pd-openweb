@@ -15,7 +15,10 @@ import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { addBehaviorLog, getFeatureStatus } from 'src/utils/project';
 import { sendCloudPrint } from 'src/utils/record';
+import BatchPrintErrorModal from '../BatchPrintErrorModal';
 import { generatePdf } from '../PrintQrBarCode/GeneratingPdf';
+import { normalizePrintableRows } from '../printRowUtils';
+import { type BatchPrintError, precheckPrint } from '../recordInfo/RecordForm/RecordPrint/printCount';
 
 const Con = styled.div`
   position: relative;
@@ -115,7 +118,8 @@ export default function PrintList(props) {
     selectedLength = 0,
     children,
   }: { controls: FormControl[]; selectedRows: RecordRow[]; [key: string]: any } = props;
-  const idsFromSelectedRows = selectedRows?.map(r => r.rowid);
+  const uniqueSelectedRows = normalizePrintableRows(selectedRows);
+  const idsFromSelectedRows = uniqueSelectedRows.map(r => r.rowid);
   const rowIds = idsFromSelectedRows?.length ? idsFromSelectedRows : selectedRowIds?.filter(Boolean);
   const [loading, setLoading] = useState(true);
   const [menuVisible, setMenuVisible] = useState(false);
@@ -123,6 +127,7 @@ export default function PrintList(props) {
   const featureType = getFeatureStatus(projectId, VersionProductType.wordPrintTemplate);
   const [printLoading, setPrintLoading] = useState(false);
   const [templateId, setTemplateId] = useState('');
+  const [precheckError, setPrecheckError] = useState<BatchPrintError | undefined>();
 
   function loadPrintList() {
     setLoading(true);
@@ -164,7 +169,16 @@ export default function PrintList(props) {
       loadPrintList();
     }
   }, [menuVisible]);
-  function handlePrintQrCode({ id, printType = 1 } = {}) {
+  function handlePrintQrCode(
+    { id, printType = 1, rows = uniqueSelectedRows, error, printCount = count, templateName } = {} as {
+      id?: string;
+      printType?: number;
+      rows?: ReturnType<typeof normalizePrintableRows>;
+      error?: BatchPrintError | undefined;
+      printCount?: number;
+      templateName?: string;
+    },
+  ) {
     if (window.isPublicApp) {
       alert(_l('预览模式下，不能操作'), 3);
       return;
@@ -189,9 +203,16 @@ export default function PrintList(props) {
         worksheetId,
         viewId,
         projectId,
-        selectedRows,
+        selectedRows: rows,
         controls,
-        count,
+        count: printCount,
+        precheckError: error,
+        precheckEnabled: true,
+        name: templateName,
+        onAllPrecheckFailed: (error: BatchPrintError | undefined) => {
+          setMenuVisible(false);
+          setPrecheckError(error);
+        },
         allowLoadMore,
         filterControls,
         fastFilters,
@@ -272,13 +293,53 @@ export default function PrintList(props) {
                 }
               }
 
+              let printableRowIds: string[] = rowIds || [];
+              let currentPrecheckError: BatchPrintError | undefined;
+              const isCodeTemplate = _.includes([3, 4], template.type);
+              const hasCompleteRowSet = !allowLoadMore || printableRowIds.length === count;
+              if (template.type !== PRINT_TYPE.CLOUD_PRINT && (!isCodeTemplate || hasCompleteRowSet)) {
+                try {
+                  const result = await precheckPrint({
+                    projectId,
+                    worksheetId,
+                    printId: template.id,
+                    rowIds: printableRowIds,
+                  });
+                  if (printableRowIds.length === 1 && result.failedRows.length) {
+                    alert(_l('当前模板已达到打印上限'), 2);
+                    return;
+                  }
+                  printableRowIds = result.successRows.map(row => row.rowId);
+                  if (result.failedRows.length)
+                    currentPrecheckError = {
+                      templateName: template.name || template.formName || _l('未命名'),
+                      recordNames: result.failedRows.map(row => row.rowTitle),
+                    };
+                  if (!printableRowIds.length) {
+                    setMenuVisible(false);
+                    setPrecheckError(currentPrecheckError);
+                    return;
+                  }
+                } catch {
+                  return;
+                }
+              }
+              if (currentPrecheckError && !isCodeTemplate) setPrecheckError(currentPrecheckError);
+
               if (_.includes([3, 4], template.type)) {
                 const logType = template.type === 3 ? 'printQRCode' : 'printBarCode';
                 addBehaviorLog(logType, worksheetId, {
                   printId: template.id,
                   msg: [allowLoadMore ? count : selectedRows.length],
                 }); // 埋点
-                handlePrintQrCode({ id: template.id, printType: template.type === 3 ? 1 : 3 });
+                handlePrintQrCode({
+                  id: template.id,
+                  printType: template.type === 3 ? 1 : 3,
+                  rows: uniqueSelectedRows.filter(row => printableRowIds.includes(row.rowid)),
+                  error: currentPrecheckError,
+                  printCount: hasCompleteRowSet ? printableRowIds.length : count,
+                  templateName: template.name || template.formName || _l('未命名'),
+                });
               } else if (template.type === 0) {
                 handleTemplateRecordPrint({
                   template,
@@ -286,7 +347,8 @@ export default function PrintList(props) {
                   viewId,
                   appId,
                   projectId,
-                  rowIds,
+                  rowIds: printableRowIds,
+                  precheckCompleted: true,
                 });
               } else if (template.type === PRINT_TYPE.CLOUD_PRINT) {
                 if (printLoading && templateId === template.id) {
@@ -319,8 +381,8 @@ export default function PrintList(props) {
                   isDefault: false, // word模板
                   worksheetId,
                   projectId,
-                  rowId: rowIds.join(','),
-                  rowIds,
+                  rowId: printableRowIds.join(','),
+                  rowIds: printableRowIds,
                   getType: 1,
                   viewId,
                   appId,
@@ -359,6 +421,7 @@ export default function PrintList(props) {
 
   return (
     <Con>
+      {precheckError && <BatchPrintErrorModal {...precheckError} onClose={() => setPrecheckError(undefined)} />}
       {children ? (
         React.cloneElement(children, { onClick: disabled ? noop : () => setMenuVisible(true) })
       ) : (

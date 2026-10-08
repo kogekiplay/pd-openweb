@@ -1,0 +1,220 @@
+.billingStatistics {
+  padding-bottom: 42px;
+
+  .statisticsSection {
+    min-width: 0;
+
+    > h2 {
+      margin: 0 0 18px;
+      font-size: 17px;
+      line-height: 24px;
+      font-weight: bold;
+    }
+  }
+
+  .statisticsCards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+
+  .statisticsCard {
+    height: 128px;
+    box-sizing: border-box;
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-background-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .statisticsCardLabel {
+    font-size: var(--font-md);
+    line-height: 20px;
+  }
+
+  .statisticsCardValue {
+    margin-top: var(--space-4);
+    line-height: 26px;
+
+    > span:first-child {
+      font-size: 22px;
+      font-weight: 400;
+    }
+  }
+
+  .overviewCharts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: var(--space-5);
+  }
+
+  .billingChartCard {
+    position: relative;
+    box-sizing: border-box;
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-background-primary);
+    color: var(--color-text-primary);
+    padding: var(--space-5);
+
+    .billingChartWrap,
+    .billingChartEmpty {
+      height: 260px;
+    }
+
+    &:hover .billingChartDownload,
+    &:focus-within .billingChartDownload {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  .statisticsChartTitle {
+    min-height: 24px;
+    font-size: var(--font-md);
+    line-height: 20px;
+    margin-bottom: var(--space-3);
+    padding-right: 36px;
+
+    .textSecondary {
+      font-size: var(--font-sm);
+      font-weight: 400;
+    }
+  }
+
+  .consumptionAnalysis {
+    margin-top: 34px;
+  }
+
+  .statisticsDateSelect {
+    width: 220px;
+    flex-shrink: 0;
+  }
+
+  .statisticsFilterRow {
+    gap: var(--space-4);
+  }
+
+  .statisticsGranularity {
+    width: 156px;
+    flex-shrink: 0;
+  }
+
+  .analysisChart {
+    margin-top: 30px;
+  }
+
+  .billingChartDownload {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s;
+
+    .icon {
+      font-size: var(--font-md);
+    }
+  }
+
+  .billingChartWrap {
+    position: relative;
+  }
+
+  .billingChartContainer {
+    width: 100%;
+    height: 100%;
+  }
+
+  .billingChartFeedback {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-background-primary);
+  }
+
+  .billingChartEmpty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .applicationSummary {
+    margin-top: 30px;
+
+    .ant-table-thead > tr > th {
+      background-color: var(--color-background-primary);
+      font-weight: 500;
+      padding: 14px var(--space-3);
+    }
+
+    .ant-table-tbody > tr > td {
+      padding: 14px var(--space-3);
+    }
+  }
+
+  .applicationSummaryHeader {
+    gap: var(--space-4);
+    margin-bottom: 14px;
+  }
+
+  .applicationSummaryTitle {
+    line-height: 22px;
+  }
+
+  .applicationSummaryDescription {
+    margin-top: var(--space-2);
+    line-height: 20px;
+  }
+
+  .applicationSummaryFilter {
+    width: 200px;
+    flex-shrink: 0;
+  }
+
+  .statisticsPaginationWrap {
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: 0 18px;
+    border: 1px solid var(--color-border-primary);
+    border-top: 0;
+
+    .ant-pagination {
+      margin: 0;
+    }
+  }
+
+  .applicationSummaryError,
+  .statisticsError {
+    margin-top: var(--space-6);
+    color: var(--color-error);
+    text-align: center;
+  }
+}
+
+@media (max-width: 1200px) {
+  .billingStatistics {
+    .statisticsCards {
+      gap: var(--space-4);
+    }
+
+    .overviewCharts {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .billingStatistics {
+    .statisticsCards {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .statisticsFilterRow {
+      flex-wrap: wrap;
+    }
+  }
+}

@@ -1,9 +1,8 @@
-import { compose } from 'redux';
 import update from 'immutability-helper';
-import _, { findIndex, flatten, get, includes, isArray, isEmpty, isObject, keys, omit, sortBy } from 'lodash';
+import _, { findIndex, flatten, get, includes, isArray, isObject, keys, omit, sortBy } from 'lodash';
 import { navigateTo } from 'src/router/navigateTo';
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
 import {
   HAVE_HIGH_SETTING_WIDGET,
   HAVE_MASK_WIDGET,
@@ -16,6 +15,7 @@ import {
 import { WHOLE_SIZE } from '../config/Drag';
 import { RELATION_OPTIONS } from '../config/setting';
 import { ALL_SYS, DEFAULT_CONFIG, DEFAULT_DATA, SYS_CONTROLS, WIDGETS_TO_API_TYPE_ENUM } from '../config/widget';
+import { isFullLineControl } from './widgets';
 
 const FORMULA_FN_LIST = [
   'SUM',
@@ -123,43 +123,29 @@ export const putControlBySection = controls => {
 };
 
 // 按顺序将控件摆放在二维数组中
-export const putControlByOrder = controls => {
-  const obj = {};
-
-  // 按照row排序
+export const putControlByOrder = (controls: FormControl[] = []): FormControl[][] => {
+  const grouped: Record<string, Array<{ item: FormControl; originIndex: number }>> = {};
   controls.forEach((item, originIndex) => {
     if (!item.size) item = { ...item, size: getDefaultSizeByData(item) };
-    const { row } = item;
-    const currentItem = { item, originIndex };
-
-    if (isEmpty(obj[row])) {
-      obj[row] = [currentItem];
-    } else {
-      obj[row].push(currentItem);
-    }
+    const key = String(item.row);
+    (grouped[key] ||= []).push({ item, originIndex });
   });
-
-  return keys(obj)
-    .sort((a, b) => +a - +b)
-    .reduce((result, key) => {
-      // 每一行里按照col排序
-      const row = sortBy(obj[key], [({ item }) => item.col, 'originIndex']).map(({ item }) => item);
-      const rows: RecordRow[] = [];
-
-      row.forEach(item => {
-        const currentRow = rows[rows.length - 1];
-
-        // 兼容row、col相同或历史脏数据导致单行宽度溢出的情况，顺延到下一行呈现
-        if (currentRow && getCurrentRowSize(currentRow) + item.size <= WHOLE_SIZE) {
-          currentRow.push(item);
-        } else {
-          rows.push([item]);
-        }
-      });
-
-      result.push(...rows);
-      return result;
-    }, []);
+  return Object.keys(grouped).sort((a, b) => +a - +b).reduce<FormControl[][]>((result, key) => {
+    const row = sortBy(grouped[key] || [], [entry => entry.item.col, 'originIndex']).map(entry => entry.item);
+    const rows: FormControl[][] = [];
+    row.forEach(item => {
+      const currentRow = rows[rows.length - 1];
+      if (isFullLineControl(item)) {
+        rows.push([item]);
+        return;
+      }
+      if (currentRow && currentRow.length < 4 && !currentRow.some(isFullLineControl) && getCurrentRowSize(currentRow) + (item.size || 0) <= WHOLE_SIZE) {
+        currentRow.push(item);
+      } else rows.push([item]);
+    });
+    result.push(...rows);
+    return result;
+  }, []);
 };
 
 export const dealControlData = (controls: FormControl[] = []) => {
@@ -194,7 +180,7 @@ export const replaceHalfWithSizeControls = controls =>
   });
 
 // 矫正数据row、col与呈现不一致的情况，有些表老数据有问题
-const replaceRowWithControls = (widgets: FormControl[]) => {
+const replaceRowWithControls = (widgets: FormControl[][]) => {
   const { commonWidgets = [], tabWidgets = [] } = getSectionWidgets(widgets);
   const flattenTabs = [];
   tabWidgets.forEach(item => {
@@ -213,7 +199,7 @@ export const genWidgetsByControls = (controls: FormControl[] = []) => {
   /**
    * 依次处理数据
    */
-  const newControls: FormControl[] = compose(putControlByOrder, dealControlData, replaceHalfWithSizeControls)(controls);
+  const newControls = putControlByOrder(dealControlData(replaceHalfWithSizeControls(controls)));
   return replaceRowWithControls(newControls);
 };
 
@@ -368,7 +354,7 @@ export const filterOnlyShowField = (controls: FormControl[] = []) => {
 };
 
 export const levelSafeParse = value => {
-  let levelValue = parseFloat(value, 10);
+  let levelValue = parseFloat(value);
 
   if (!_.isNumber(levelValue) || _.isNaN(levelValue)) {
     levelValue = undefined;
@@ -529,7 +515,6 @@ export const supportSettingCollapse = (props, key: string) => {
     enumDefault,
     enumDefault2,
     globalSheetInfo = {},
-    sourceControl = {},
     controlId,
   } = data;
 
@@ -546,7 +531,7 @@ export const supportSettingCollapse = (props, key: string) => {
       return true;
     case 'option':
       if (type === 51) {
-        return enumDefault === 2 && advancedSetting.querytype !== '1';
+        return advancedSetting.querytype !== '1';
       }
 
       return _.includes(HAVE_OPTION_WIDGET, type) || (type === 45 && enumDefault === 3);
@@ -598,7 +583,7 @@ export const supportSettingCollapse = (props, key: string) => {
         (currentControl.type === 6 && currentControl.advancedSetting.showtype !== '2')
       );
     case 'relate':
-      return from !== 'subList' && globalSheetInfo.worksheetId !== dataSource && type === 29 && sourceControl.controlId;
+      return from !== 'subList' && globalSheetInfo.worksheetId !== dataSource && _.includes([29, 35], type);
     case 'permission':
       return true;
     case 'mobile':
@@ -609,6 +594,7 @@ export const supportSettingCollapse = (props, key: string) => {
         from !== 'subList'
       );
   }
+  return undefined;
 };
 
 // 各控件分别支持哪些配置
@@ -676,6 +662,6 @@ export const checkOptionsRepeat = (controls: FormControl[] = [], checkCollection
   return undefined;
 };
 
-export const getCurrentRowSize = row => {
-  return row.reduce((p, c) => p + c.size, 0);
+export const getCurrentRowSize = (row: FormControl[]): number => {
+  return row.reduce((total, control) => total + (control.size || 0), 0);
 };

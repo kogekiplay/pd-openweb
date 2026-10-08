@@ -4,6 +4,12 @@ import base, { controllerName } from './base';
  * reportConfig
  */
 const reportConfig = {
+  createChart: function (args: Record<string, unknown>, options: ApiOptions = {}): Promise<unknown> {
+    return mdyAPI(controllerName, 'reportConfigcreateChart', JSON.stringify(args), {
+      ...base, ...options,
+      ajaxOptions: { ...base.ajaxOptions, url: base.server() + '/reportConfig/createChart', type: 'POST' },
+    });
+  },
   /**
    * 复制图表
    * @param {Object} args 请求参数

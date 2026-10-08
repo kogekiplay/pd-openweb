@@ -1,10 +1,11 @@
-﻿import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import _, { find, get, isEmpty, isFunction, trim, uniqBy } from 'lodash';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
 import sheetAjax from 'src/api/worksheet';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { getTranslateInfo } from 'src/utils/app';
 import type { FormControl } from 'src/utils/controlTypes';
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import { replaceAdvancedSettingTranslateInfo, replaceControlsTranslateInfo } from 'src/utils/translate';
 
 export const ERROR_STATUS = {
@@ -90,6 +91,8 @@ export default function useRecords(props) {
   // 此前没报是因为它被 getSheetStylesOfRelateRecordTable 的 Record<string, any> 顺带污染成
   // any 了；那个 any 一去掉，这处缺类型就露出来。字段按 SelectRecords 下真正读到的列。
   const [worksheetInfo, setWorksheetInfo] = useState<SelectRecordsWorksheetInfo>({});
+  const [manageView, setManageView] = useState<WorksheetView | undefined>();
+  const useColumnStyle = get(control, 'advancedSetting.usecolumnstyle') === '1';
   const [recordsLoading, setRecordsLoading] = useState(true);
   const [keyWords, setKeyWords] = useState('');
   const [sortControl, setSortControl] = useState();
@@ -346,11 +349,22 @@ export default function useRecords(props) {
     });
   }, [worksheetId, parentWorksheetId]);
 
+  useEffect(() => {
+    setManageView(undefined);
+    // Public form endpoints do not expose management views.
+    if (!useColumnStyle || !worksheetId || (window.isPublicWorksheet && !_.get(window, 'shareState.isPublicWorkflowRecord'))) return undefined;
+    let cancelled = false;
+    sheetAjax.getWorksheetViewById({ appId, worksheetId, viewId: worksheetId }, { silent: true })
+      .then(data => { if (!cancelled) setManageView(data as WorksheetView); }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [useColumnStyle, worksheetId, appId]);
+
   const hasMore = listMode && records.length < total;
 
   return {
     loading,
     worksheetInfo,
+    manageView,
     recordsLoading,
     records,
     pageIndex,

@@ -15,6 +15,7 @@ import {
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import { getDefaultCount } from 'src/utils/control';
 import { isSheetDisplay } from 'src/utils/controlCommon';
+import { getRelateRecordRowIds } from 'src/utils/domain/control/value';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { FORM_ERROR_TYPE } from './config.js';
 import {
@@ -187,6 +188,16 @@ const getSubListData = async props => {
   return listResult.resultCode === 1 ? listResult.data : [];
 };
 
+// Clearing a relation through an event must keep its old records selectable until save.
+const keepRelateRecordShowRowIds = (control: FormControl) => {
+  if (control.type !== 29) return;
+  const rowIds = getRelateRecordRowIds(control.value);
+  if (rowIds.length) {
+    const previous: string[] = Array.isArray(control.keepShowRowIds) ? control.keepShowRowIds : [];
+    control.keepShowRowIds = _.uniq(previous.concat(rowIds));
+  }
+};
+
 const getRelateSearchResult = (control, searchResult, isMix?) => {
   let newValue = [];
 
@@ -221,6 +232,7 @@ const getRelateSearchResult = (control, searchResult, isMix?) => {
   }
 
   if (_.isEmpty(newValue) && _.includes([29], control.type)) {
+    keepRelateRecordShowRowIds(control);
     if (browserIsMobile()) return JSON.stringify(newValue);
     return 'deleteRowIds: all';
   } else {
@@ -611,6 +623,7 @@ export const handleSetValueActions = async (actionItems, props) => {
                 const records: RecordRow[] = safeParse(value || '[]');
 
                 if (_.isEmpty(records)) {
+                  keepRelateRecordShowRowIds(control);
                   value = 'deleteRowIds: all';
                 } else {
                   value = JSON.stringify(

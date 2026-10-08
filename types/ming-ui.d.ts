@@ -15,6 +15,7 @@
 // 新增从桶导入的名字时在对应块里补一行；补漏了 tsc 会报「模块没有导出成员 X」。
 
 declare module 'ming-ui' {
+  export { default as SearchInput } from 'ming-ui/components/SearchInput';
   export { default as AILoading } from 'ming-ui/components/AILoading';
   export { default as antNotification } from 'ming-ui/components/antNotification';
   export { default as Avatar } from 'ming-ui/components/Avatar';
@@ -94,10 +95,6 @@ declare module 'ming-ui' {
   export { default as VerifyPasswordConfirm } from 'ming-ui/components/VerifyPasswordConfirm';
   export { default as VerifyPasswordInput } from 'ming-ui/components/VerifyPasswordInput';
   export { default as WaterMark } from 'ming-ui/components/WaterMark';
-}
-
-declare module 'ming-ui/antd-components' {
-  export { default as Tooltip } from 'ming-ui/antd-components/Tooltip';
 }
 
 declare module 'ming-ui/functions' {

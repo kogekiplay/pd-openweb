@@ -37,7 +37,7 @@ const RedMenuItem = styled(MenuItem)`
   color: var(--color-error);
 `;
 
-export default function OptionColumn({ isDirOption, onAdd, onEdit, onDelete, onLog }) {
+export default function OptionColumn({ isDirOption, onAdd, onEdit, onDelete, onLog, hideDelete = false }) {
   const [visible, setVisible] = useState(false);
 
   const onDeleteVar = () => {
@@ -98,7 +98,7 @@ export default function OptionColumn({ isDirOption, onAdd, onEdit, onDelete, onL
                 >
                   {_l('日志')}
                 </MenuItem>
-                <RedMenuItem onClick={onDeleteVar}>{_l('删除')}</RedMenuItem>
+                {!hideDelete && <RedMenuItem onClick={onDeleteVar}>{_l('删除')}</RedMenuItem>}
               </React.Fragment>
             )}
           </OptionMenu>

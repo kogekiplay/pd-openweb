@@ -7,6 +7,7 @@ import { Icon, UpgradeIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import appManagementAjax from 'src/api/appManagement';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
+import { isAppSandboxInProduction } from 'src/utils/domain/app/sandbox';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import AppSettingHeader from '../AppSettingHeader';
@@ -71,6 +72,7 @@ const ActionWrap = styled.div`
 
 export default function ManageBackupFiles(props) {
   const { appId, projectId, appName, permissionType, data } = props;
+  const readonly = isAppSandboxInProduction(props.sandboxStatus);
   const [validLimit, setValidLimit] = useState(0);
   const [currentValid, setCurrentValid] = useState(0);
   const [createBackupVisible, setCreateBackUpVisible] = useState(false);
@@ -263,7 +265,7 @@ export default function ManageBackupFiles(props) {
               </div>
             )}
             <div
-              className="act mRight16"
+              className={readonly ? 'Hidden' : 'act mRight16'}
               onClick={() => {
                 backupFromFiles({ appId, projectId, validLimit, getBackupCount });
               }}
@@ -281,6 +283,7 @@ export default function ManageBackupFiles(props) {
       />
 
       <BackupFiles
+        readonly={readonly}
         backupInfo={backupInfo}
         permissionType={permissionType}
         projectId={projectId}

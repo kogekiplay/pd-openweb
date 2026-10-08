@@ -1,11 +1,11 @@
-import _, { find, get, identity, includes, isArray, isEmpty, sortBy, sum } from 'lodash';
+import _, { find, get, identity, includes, isEmpty, sortBy, sum } from 'lodash';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { CARD_WIDTH_SETTING } from 'src/pages/worksheet/common/ViewConfig/config';
 import { getCoverStyle } from 'src/pages/worksheet/common/ViewConfig/utils';
 import type { WorksheetInfo, WorksheetView } from 'src/pages/worksheet/types';
-import type { RecordRow } from 'src/utils/controlTypes';
+import type { ControlAdvancedSetting, FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export function findSheet(id, sheetList = []) {
   let result = null;
@@ -193,7 +193,7 @@ export function getSheetOperatesButtons<
         result.push({
           name: printItem.name,
           icon: 'print',
-          color: '#1677ff',
+          color: 'var(--color-primary)',
           type: 'print',
           btnId: printItem.id,
           printItem,
@@ -377,75 +377,61 @@ export function filterButtonBySheetSwitchPermit<T extends { type?: string }>(
   }));
 }
 
-function getSheetStylesOfObject(object) {
-  const listStyle = get(object, 'advancedSetting.liststyle');
-
-  if (!listStyle) {
-    return {
-      columnStyles: {},
-      sheetColumnWidths: {},
-    };
-  }
-
-  const { time: updateTime, styles = [] } = safeParse(listStyle);
-  const columnStyles = {};
-  const sheetColumnWidths = {};
-
+interface SheetColumnStyle {
+  cid: string;
+  width?: number | string | undefined;
+  [key: string]: unknown;
+}
+interface SheetTableStyles {
+  updateTime?: string | number | undefined;
+  columnStyles: Record<string, SheetColumnStyle>;
+  sheetColumnWidths: Record<string, number | string | undefined>;
+}
+function getSheetStylesOfObject(object?: { advancedSetting?: ControlAdvancedSetting | undefined }): SheetTableStyles {
+  const listStyle = object?.advancedSetting?.liststyle;
+  if (!listStyle) return { columnStyles: {}, sheetColumnWidths: {} };
+  const { time: updateTime, styles = [] }: { time?: string | number; styles?: SheetColumnStyle[] } = safeParse(listStyle);
+  const columnStyles: SheetTableStyles['columnStyles'] = {};
+  const sheetColumnWidths: SheetTableStyles['sheetColumnWidths'] = {};
   styles.forEach(item => {
     columnStyles[item.cid] = item;
     sheetColumnWidths[item.cid] = item.width;
   });
-
-  return {
-    updateTime,
-    columnStyles,
-    sheetColumnWidths,
-  };
+  return { updateTime, columnStyles, sheetColumnWidths };
 }
-
-export function getSheetStylesOfRelateRecordTable({ control, viewId, worksheetInfo } = {}) {
-  if (get(control, 'advancedSetting.widths')) {
-    const widths = safeParse(get(control, 'advancedSetting.widths'), 'array');
-
-    if (isArray(widths)) {
-      let result = {};
-      widths.forEach((width, i) => {
-        if (control.showControls && control.showControls[i]) {
-          result[control.showControls[i]] = width;
-        }
-      });
-      if (!isEmpty(result)) {
-        return { sheetColumnWidths: result };
-      }
-    } else {
-      if (!isEmpty(widths)) {
-        return { sheetColumnWidths: widths };
-      }
+function isColumnStyleView(view?: WorksheetView): boolean {
+  return Number(view?.viewType) === 0 || (String(view?.viewType) === '2' && view?.advancedSetting?.['hierarchyViewType'] === '3');
+}
+export function getSheetStylesOfRelateRecordTable({ control, viewId, worksheetInfo, manageView }: {
+  control?: FormControl | undefined;
+  viewId?: string | undefined;
+  worksheetInfo?: Pick<WorksheetInfo, 'advancedSetting' | 'views'> | undefined;
+  manageView?: WorksheetView | undefined;
+} = {}): SheetTableStyles {
+  if (control?.advancedSetting?.['usecolumnstyle'] !== '1') {
+    let sheetColumnWidths: SheetTableStyles['sheetColumnWidths'] = {};
+    const serializedWidths = control?.advancedSetting?.widths;
+    if (serializedWidths) {
+      const widths: number[] | Record<string, number | string> = safeParse(serializedWidths, 'array');
+      if (Array.isArray(widths)) {
+        widths.forEach((width, index) => {
+          const controlId = control?.showControls?.[index];
+          if (controlId) sheetColumnWidths[controlId] = width;
+        });
+      } else if (!isEmpty(widths)) sheetColumnWidths = widths;
     }
+    return { columnStyles: {}, sheetColumnWidths };
   }
-
-  const worksheetSheetStyles = getSheetStylesOfObject(worksheetInfo);
-  let result: Record<string, unknown> = {};
-
-  if (!viewId) {
-    result = worksheetSheetStyles;
-  } else {
-    const view = find(worksheetInfo.views, { viewId });
-
-    if (view && view.viewType === 0) {
-      result = getSheetStylesOfObject(view);
-    } else {
-      result = getSheetStylesOfObject(
-        find(worksheetInfo.views, v => v.viewType === 0 && !!get(v, 'advancedSetting.liststyle')),
-      );
-    }
-
-    if (isEmpty(result) || result.updateTime < worksheetSheetStyles.updateTime) {
-      result = worksheetSheetStyles;
-    }
-  }
-
-  return result;
+  const manageViewStyles = manageView && getSheetStylesOfObject(manageView);
+  const worksheetSheetStyles = manageViewStyles?.updateTime ? manageViewStyles : getSheetStylesOfObject(worksheetInfo);
+  if (!viewId) return worksheetSheetStyles;
+  const views = worksheetInfo?.views || [];
+  const view = views.find(item => item.viewId === viewId);
+  const styledView = view && isColumnStyleView(view)
+    ? view
+    : views.find(item => isColumnStyleView(item) && Boolean(item.advancedSetting?.liststyle));
+  const viewStyles = getSheetStylesOfObject(styledView);
+  return viewStyles.updateTime ? viewStyles : worksheetSheetStyles;
 }
 
 export function getGroupControlId(view) {

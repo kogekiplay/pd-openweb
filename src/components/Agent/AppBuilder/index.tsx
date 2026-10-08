@@ -1,3 +1,6 @@
+import { buildPlanMarkdown, buildPlanFileName } from './planExport';
+import type { PlanFiles } from './planTypes';
+import { downloadBlob } from 'src/utils/platform/browser/download';
 import { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
@@ -275,6 +278,8 @@ export default function AppBuilder({
   const [previewNonce, setPreviewNonce] = useState(0);
   // chat panel 正在请求中（plan streaming 或 build 进行中）：禁用「生成应用」按钮
   const [chatSubmitting, setChatSubmitting] = useState(false);
+  const [planStreaming, setPlanStreaming] = useState(false);
+  useAgentEvent('file:begin', () => setPlanStreaming(true));
   // 「生成应用」点击后到搭建真正发起前的过渡态：预检为异步，这段窗口立即禁用按钮（文案仍是「生成应用」），
   // 给即时反馈 + 防重复点击；提交成功由 chatSubmitting 接力，预检被拦则恢复可点。
   const [kickingOff, setKickingOff] = useState(false);
@@ -381,6 +386,7 @@ export default function AppBuilder({
 
   useAgentEvent('chat:submitting', value => {
     setChatSubmitting(!!value);
+    if (!value) setPlanStreaming(false);
     // 搭建已真正发起（submitting 置位）：交接给 chatSubmitting 维持禁用，清掉过渡态
     if (value) setKickingOff(false);
   });
@@ -644,6 +650,13 @@ export default function AppBuilder({
   const appMetaFile = files['/jsons/app.json'];
   const appMetaParsed = (appMetaFile && appMetaFile.parsed) || {};
 
+  const planFile = files['/plan.md'];
+  const canDownloadPlan = planFile?.status === 'ready' && Boolean(planFile.content?.trim()) && !chatSubmitting && !planStreaming && !Object.values(files).some((file: { status?: string }) => file.status === 'streaming');
+  const handleDownloadPlan = () => {
+    const now = new Date();
+    const name = appMetaParsed.appName || appMeta.name;
+    downloadBlob(new Blob([buildPlanMarkdown({ files: files as PlanFiles, appName: name, estimateCredits, now })], { type: 'text/markdown;charset=utf-8' }), buildPlanFileName({ appName: name, versionLabel: appMeta.versionLabel, now }));
+  };
   const hasAppId = !!appMeta.appId;
   const previewUrl = hasAppId
     ? buildPreviewUrl(previewKey, {
@@ -712,6 +725,7 @@ export default function AppBuilder({
           onGenerate={handleGenerate}
           generateDisabled={chatSubmitting || kickingOff || !hasWorksheets}
           builtVersionLabel={builtVersionLabel}
+          onDownload={canDownloadPlan ? handleDownloadPlan : undefined}
           estimateCredits={estimateCredits}
           estimateLoading={estimateLoading}
           onClose={() => bus.emit('builder:close')}

@@ -1,43 +1,56 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
-import datalimitAjax from 'src/api/dataLimit';
-import workflowDataLimitAjax from 'src/pages/workflow/api/DataLimit';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import AdminTitle from 'src/pages/Admin/common/AdminTitle';
-import { VersionProductType } from 'src/utils/enum.js';
-import { getFeatureStatus } from 'src/utils/project';
+import { VersionProductType } from 'src/utils/domain/shared/productFeatures';
+import { getFeatureStatus } from 'src/utils/services/project';
+import * as quotaApi from './api';
 import { QUOTA_LIST_CONTENT } from './config.js';
 import Settings from './Settings.jsx';
+import type { QuotaCard } from './types';
 import './index.less';
 
-const handleSettingData = ({ data = {}, type = '', isKey }) => {
+const handleSettingData = ({
+  data = {},
+  type = '',
+  isKey,
+}: {
+  data?: Record<string, Record<string, number>>;
+  type?: string;
+  isKey: boolean;
+}) => {
   const setting = data[type] || {};
   if (_.isEmpty(setting)) return '';
   return isKey ? Object.keys(setting)[0] : Object.values(setting)[0] || '-';
 };
 
-export default function Quota(props) {
-  const projectId = _.get(props, 'match.params.projectId');
-  const [{ data, globalSize, settingVisible, currentInfo }, setData] = useSetState({
+export default function Quota(props: { match: { params: { projectId: string } } }) {
+  const projectId = props.match.params.projectId;
+  const [{ data, globalSize, settingVisible, currentInfo }, setData] = useSetState<{
+    data: Record<string, Record<string, number>>;
+    globalSize?: number | undefined;
+    settingVisible: boolean;
+    currentInfo: QuotaCard | null;
+  }>({
     data: {},
     settingVisible: false,
-    currentInfo: {},
+    currentInfo: null,
   });
 
-  const getListPage = () => {
+  const getListPage = useCallback(() => {
     Promise.all([
-      datalimitAjax.getListPage({ projectId }),
-      workflowDataLimitAjax.GetUageLimits({ entityIds: [projectId], projectId }),
+      quotaApi.getOverview({ projectId }),
+      quotaApi.getWorkflowLimits({ entityIds: [projectId], projectId }),
     ]).then(([res, workflowRes]) => {
-      const size = _.get(workflowRes, 'data[0].size') || -1;
+      const size = Number(workflowRes.data[0]?.size ?? -1);
       setData({ data: { ...res, workflowLimit: { [size]: workflowRes.total } } });
     });
-  };
+  }, [projectId, setData]);
 
-  const handleSetting = item => {
+  const handleSetting = (item: QuotaCard) => {
     const featureType = getFeatureStatus(projectId, VersionProductType.quota);
 
     if (VersionProductType.quota && featureType === '2') {
@@ -51,9 +64,9 @@ export default function Quota(props) {
 
   useEffect(() => {
     getListPage();
-  }, []);
+  }, [getListPage]);
 
-  if (settingVisible) {
+  if (settingVisible && currentInfo) {
     return (
       <Settings
         projectId={projectId}
@@ -91,14 +104,14 @@ export default function Quota(props) {
             <div className="setting"></div>
           </div>
           <div className="listContent">
-            {QUOTA_LIST_CONTENT.map((item, index) => {
+            {QUOTA_LIST_CONTENT.map(item => {
               let size = handleSettingData({ data, type: item.type, isKey: true });
               const extra = handleSettingData({ data, type: item.type, isKey: false });
 
-              size = item.businessType === 1 && size === 0 ? -1 : size; // 历史数据兼容
+              size = item.businessType === 1 && Number(size) === 0 ? -1 : size; // 历史数据兼容
 
               return (
-                <div key={index} className="flexRow listContentItem">
+                <div className="flexRow listContentItem" key={item.type}>
                   <div className="flex pLeft10">
                     <div className="Font14 textPrimary bold mBottom5">{item.title}</div>
                     <div className="textTertiary">{item.desc}</div>

@@ -295,6 +295,8 @@ function TableComp(props) {
         rowIndex={rowIndex}
         row={row}
         layoutChangeVisible={isCharge && layoutChanged}
+        isCharge={isCharge}
+        printCountEnabled={get(relateWorksheetInfo, 'advancedSetting.print_count_enabled') === '1'}
         allowRemoveRelation={canRemoveRelation}
         tableControls={controls}
         sheetSwitchPermit={sheetSwitchPermit}

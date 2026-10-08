@@ -1,3 +1,5 @@
+import { sanitizeIframeHtml } from 'src/utils/core/sanitizeHtml';
+import { MAX_COMPONENT_COUNT } from './config';
 import { generate } from '@ant-design/colors';
 import { TinyColor } from '@ctrl/tinycolor';
 import { get } from 'lodash';
@@ -71,17 +73,18 @@ export const getMergedIframeAllow = (allow: string | null) => {
 };
 
 export const addIframePermissions = html => {
-  if (!html || typeof document === 'undefined') return html;
+  const safeHtml = sanitizeIframeHtml(html);
+  if (!safeHtml || typeof document === 'undefined') return safeHtml;
 
   const wrap = document.createElement('div');
-  wrap.innerHTML = html;
+  wrap.innerHTML = safeHtml;
 
   wrap.querySelectorAll('iframe').forEach(iframe => {
     iframe.setAttribute('allow', getMergedIframeAllow(iframe.getAttribute('allow')));
     iframe.setAttribute('allowfullscreen', 'true');
   });
 
-  return wrap.innerHTML;
+  return sanitizeIframeHtml(wrap.innerHTML);
 };
 
 export const getEnumType = type => (typeof type === 'number' ? enumWidgetType[type] : type);
@@ -134,12 +137,11 @@ export const getDefaultLayout = ({
 
 // export const formatComponents = components => components.map(item => ({ ...item, layout: JSON.parse(item.layout || '{}') }));
 
-export const componentCountLimit = () => {
-  // if (components.length >= MAX_COMPONENT_COUNT) {
-  //   alert(_l('自定义页面最多只能添加%0个组件', MAX_COMPONENT_COUNT), 3);
-  //   return false;
-  // }
-
+export const componentCountLimit = (components: readonly unknown[] = []) => {
+  if (window.platformENV.isHap && components.length >= MAX_COMPONENT_COUNT) {
+    alert(_l('自定义页面最多只能添加%0个组件', MAX_COMPONENT_COUNT), 3);
+    return false;
+  }
   return true;
 };
 

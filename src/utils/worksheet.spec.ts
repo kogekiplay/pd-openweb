@@ -58,7 +58,7 @@ global.safeParse =
     }
   });
 
-const { moveSheetCache, saveSelectExtensionNavType } = requireEsm('./worksheet.js', {
+const { moveSheetCache, saveSelectExtensionNavType, getSheetStylesOfRelateRecordTable } = requireEsm('./worksheet.js', {
   'src/pages/FormSet/config.js': {
     permitList: {},
   },
@@ -107,3 +107,25 @@ assert.deepStrictEqual(JSON.parse(localStorage.getItem('sheetConfigNavInfo')), {
 });
 
 console.log('worksheet utils tests passed');
+
+// 7.5.0：显式选择的树形表格样式优先于较新的管理视图；关闭继承时只用字段列宽。
+const tableStyle = (time: number, width: number) => ({
+  liststyle: JSON.stringify({ time, styles: [{ cid: 'field', width }] }),
+});
+const worksheetInfo = {
+  advancedSetting: tableStyle(3, 300),
+  views: [{ viewId: 'tree', viewType: 2, advancedSetting: { ...tableStyle(1, 100), hierarchyViewType: '3' } }],
+};
+const inherited = getSheetStylesOfRelateRecordTable({
+  control: { advancedSetting: { usecolumnstyle: '1' } },
+  viewId: 'tree',
+  worksheetInfo,
+  manageView: { advancedSetting: tableStyle(5, 500) },
+});
+assert.strictEqual(inherited.sheetColumnWidths.field, 100);
+const fieldOnly = getSheetStylesOfRelateRecordTable({
+  control: { advancedSetting: { widths: '[80]' }, showControls: ['field'] },
+  viewId: 'tree',
+  worksheetInfo,
+});
+assert.deepStrictEqual(fieldOnly, { columnStyles: {}, sheetColumnWidths: { field: 80 } });

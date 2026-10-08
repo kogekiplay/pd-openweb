@@ -17,6 +17,7 @@ import FormSection from 'src/pages/worksheet/common/recordInfo/RecordForm/FormSe
 import { browserIsMobile, getRequest } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { getRgbaByColor } from 'src/utils/controlCommon';
+import type { FormControl } from 'src/utils/controlTypes';
 import { TIME_TYPE } from '../FormExtend/enum';
 import CountDown from '../FormExtend/PublicWorksheetConfig/CountDown';
 import { getLimitWriteTimeDisplayText } from '../FormExtend/utils';
@@ -57,6 +58,8 @@ const LoadMask = styled.div`
 
 export default class FillWorksheet extends React.Component<any, any> {
   declare issubmitting: boolean | undefined;
+  declare hotkeySubmitTimer: ReturnType<typeof setTimeout> | undefined;
+  readonly enableSubmitHotkey: boolean;
 
   static override propTypes = {
     loading: PropTypes.bool,
@@ -69,6 +72,7 @@ export default class FillWorksheet extends React.Component<any, any> {
 
   constructor(props) {
     super(props);
+    this.enableSubmitHotkey = ['yes', 'true', '1'].includes(String(getRequest().hotkey || ''));
     this.state = {
       showError: false,
       formData: props.formData,
@@ -78,6 +82,7 @@ export default class FillWorksheet extends React.Component<any, any> {
 
   override componentDidMount() {
     const request = getRequest();
+    if (this.enableSubmitHotkey) document.addEventListener('keydown', this.handleHotkeyDown);
 
     if (!this.props.isPreview && !request.isMDClient) {
       window.onbeforeunload = function (e) {
@@ -97,12 +102,42 @@ export default class FillWorksheet extends React.Component<any, any> {
     }
   }
 
+  override componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleHotkeyDown);
+    clearTimeout(this.hotkeySubmitTimer);
+  }
+
   con = React.createRef();
   customwidget = React.createRef();
   sectionTab = React.createRef();
   cellObjs = {};
 
+  isSubmitDisabled = (): boolean => {
+    const formData: FormControl[] = this.state['formData'] || [];
+    return (
+      !formData.some(control => controlState(control, 4).visible) ||
+      this.props['status'] === FILL_STATUS.NOT_IN_FILL_TIME ||
+      Boolean(this.props['isPreview'])
+    );
+  };
+
+  handleHotkeyDown = (event: KeyboardEvent) => {
+    if (event.key !== 'Enter' || !(event.metaKey || event.ctrlKey) || event.isComposing) return;
+    if (
+      this.props['loading'] ||
+      this.state['submitBtnLoading'] ||
+      this.state['submitLoading'] ||
+      this.isSubmitDisabled()
+    )
+      return;
+    event.preventDefault();
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+    clearTimeout(this.hotkeySubmitTimer);
+    this.hotkeySubmitTimer = setTimeout(this.handleSubmit, 50);
+  };
+
   handleSubmit = () => {
+    if (this.state['submitLoading']) return;
     this.setState({ submitLoading: true });
     this.customwidget.current.submitFormData();
   };
@@ -303,7 +338,8 @@ export default class FillWorksheet extends React.Component<any, any> {
       extendDatas = {},
     } = publicWorksheetInfo;
     const request = getRequest();
-    const { header, submit, logo, title, description, footer } = request;
+    const { header, submit, submitbottom, logo, title, description, footer } = request;
+    const submitBottomMargin = /^\d+(\.\d+)?$/.test(String(submitbottom || '')) ? Number(submitbottom) : undefined;
     const isFixedLeft = !browserIsMobile() && _.get(advancedSetting, 'tabposition') === '3';
     const isFixedRight = _.get(advancedSetting, 'tabposition') === '4';
     const visibleHeaders = _.isUndefined(extendDatas.visibleHeaders)
@@ -471,7 +507,10 @@ export default class FillWorksheet extends React.Component<any, any> {
           )}
         </div>
         {!loading && !submitBtnLoading && (
-          <div className={cx('submitCon', { TxtLeft: submit === 'left', TxtRight: submit === 'right' })}>
+          <div
+            className={cx('submitCon', { TxtLeft: submit === 'left', TxtRight: submit === 'right' })}
+            style={{ marginBottom: submitBottomMargin }}
+          >
             <Button
               className="submitBtn"
               disabled={

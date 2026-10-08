@@ -430,6 +430,7 @@ export default function InfoHeader(props) {
           {!isPublicShare && (
             <PrintList
               type={1}
+              printCountEnabled={_.get(worksheetInfo, 'advancedSetting.print_count_enabled') === '1'}
               isCharge={isCharge || printCharge}
               {..._.pick(recordbase, ['appId', 'workId', 'instanceId', 'worksheetId', 'viewId', 'recordId'])}
               projectId={projectId}

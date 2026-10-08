@@ -18,6 +18,8 @@ import MyRole from './organization/roleAuth/myRole';
 import { menuList } from './router.config.js';
 import { allPlatformsHidden } from './util';
 import RedirectTo from 'src/router/RedirectTo';
+import { navigateTo } from 'src/router/navigateTo';
+import { isSandboxEnvironment, isSandboxFeatureEnvironment } from 'src/utils/domain/app/sandbox';
 import './index.less';
 
 // 【按工厂缓存，不要每次渲染都 lazy() 一个新的】本函数是在 render 里被调的
@@ -69,6 +71,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
   };
 
   override componentDidMount() {
+    if (isSandboxEnvironment()) { navigateTo('/dashboard', true); return; }
     if (_.isNull(localStorage.getItem('adminList_isUp'))) {
       safeLocalStorageSetItem('adminList_isUp', String(true));
     }
@@ -206,7 +209,7 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
     const { routeKeys, authority = [] } = this.state; // 根据权限控制模块展示
 
     const routesWithAuthority = _.reduce(
-      menuList,
+      menuList.filter(({ key }) => key !== 'sandbox' || isSandboxFeatureEnvironment()),
       (result, { title, subMenuList = [], key, icon }) => {
         let item = {
           title,

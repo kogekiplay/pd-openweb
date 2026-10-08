@@ -1,3 +1,4 @@
+import type { WorksheetFilters, WorksheetRowsRequest } from 'src/pages/worksheet/types';
 import _, {
   assign,
   find,
@@ -225,7 +226,7 @@ export const fetchRows = ({
       pageSize = getGroupPageSize(maxCount);
     }
 
-    const args = {
+    const args: WorksheetRowsRequest & { pageIndex: number } = {
       worksheetId,
       pageSize,
       pageIndex,
@@ -1358,7 +1359,7 @@ export function getWorksheetSheetViewSummary({ reset = false, groupArgs = {} } =
           filterControls: [],
           keyWords: '',
           searchType: 1,
-          ...filters,
+          ...(filters as Partial<WorksheetFilters>),
           fastFilters: quickFilter
             .concat(groupArgs.filters || [])
             .map(f =>

@@ -6,6 +6,7 @@ import filterXSS from 'xss';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { renderText } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import {
   EDIT_TYPE_TEXT,
   FILTER_FIELD_BY_ATTR,
@@ -15,7 +16,6 @@ import {
   WF_STATUS,
   WFSTATUS_OPTIONS,
 } from './enum.js';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const reg = new RegExp('<[^<>]+>', 'g');
 
@@ -117,6 +117,49 @@ export function getDepartmentName(control = {}, value) {
   return pathValue.concat([value.departmentName]).join('/');
 }
 
+type RelationLogControl = FormControl & { sourceTitleControlId?: string | undefined };
+const parseRelationLogValue = (value: unknown): unknown => {
+  if (typeof value !== 'string') return value;
+  try {
+    return JSON.parse(value) as unknown;
+  } catch {
+    return undefined;
+  }
+};
+const getRelationLogObject = (value: unknown): Record<string, unknown> | undefined =>
+  value !== null && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : undefined;
+
+export function formatRelationLogTitle(value: unknown, control: RelationLogControl = {}, appId?: string): unknown {
+  if (!value || value === _l('未命名')) return value;
+  const controls = control.relationControls || [];
+  const title =
+    controls.find(item => item.controlId === control.sourceTitleControlId) ||
+    controls.find(item => item.attribute === 1) ||
+    controls[0];
+  if (!title) return value;
+  const structured = typeof value === 'object' || (typeof value === 'string' && /^[\[{]/.test(value));
+  if ([26, 27, 40, 48].includes(title.type || 0) && !structured) return value;
+  const parsed = parseRelationLogValue(value);
+  if ([26, 27, 48].includes(title.type || 0)) {
+    const list: unknown[] = Array.isArray(parsed) ? parsed : [];
+    return list
+      .map(item => {
+        const record = getRelationLogObject(item);
+        const name = record?.['departmentName'] || record?.['fullname'] || record?.['organizeName'];
+        return typeof name === 'string' ? name : '';
+      })
+      .filter(Boolean)
+      .join('、');
+  }
+  if (title.type === 40) {
+    const record = getRelationLogObject(parsed);
+    if (typeof record?.['address'] === 'string' && record['address']) return record['address'];
+    if (record?.['x'] === undefined || record?.['y'] === undefined) return value;
+    return `${_l('经度')}：${_.round(Number(record['x']), 6)} ${_l('纬度')}：${_.round(Number(record['y']), 6)}`;
+  }
+  return renderText({ ...title, value }, { appId }) || value;
+}
+
 export function handleSelectTagsValue(param) {
   const { id, type, oldValue, newValue, control, requestType, oldText, newText, editType, appId } = param;
   let onlyNew = false;
@@ -216,16 +259,22 @@ export function handleSelectTagsValue(param) {
 }
 
 export function diffSelectTagsValue(param) {
-  const { oldList, newList, type, editType, control } = param;
+  const { oldList, newList, type, editType, control, appId } = param;
 
   let _oldValue = [];
   let _newValue = [];
   let _defaultValue = [];
 
   if (type === 29) {
-    _oldValue = _.differenceBy(oldList, newList, 'recordId').map(l => l.name || _l('未命名'));
-    _newValue = _.differenceBy(newList, oldList, 'recordId').map(l => l.name || _l('未命名'));
-    _defaultValue = _.intersectionBy(oldList, newList, 'recordId').map(l => l.name || _l('未命名'));
+    _oldValue = _.differenceBy(oldList, newList, 'recordId').map(
+      (item: unknown) => formatRelationLogTitle(getRelationLogObject(item)?.['name'], control, appId) || _l('未命名'),
+    );
+    _newValue = _.differenceBy(newList, oldList, 'recordId').map(
+      (item: unknown) => formatRelationLogTitle(getRelationLogObject(item)?.['name'], control, appId) || _l('未命名'),
+    );
+    _defaultValue = _.intersectionBy(oldList, newList, 'recordId').map(
+      (item: unknown) => formatRelationLogTitle(getRelationLogObject(item)?.['name'], control, appId) || _l('未命名'),
+    );
   } else if ((type === 6 || type === 8) && editType !== 0) {
     _defaultValue = oldList;
     _newValue = editType === 1 ? newList : [];

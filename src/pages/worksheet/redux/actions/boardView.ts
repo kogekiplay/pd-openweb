@@ -18,13 +18,19 @@ import { updateNavGroup } from './navFilter.js';
 import { getParaIds, sortDataByCustomItems } from './util';
 import { wrapAjax } from './util';
 import type { AppDispatch, GetState, RootState } from 'src/redux/types';
+import type { WorksheetRowsRequest, WorksheetView } from 'src/pages/worksheet/types';
 
 let boardPromiseObj;
 let boardPromiseViewIds = [];
 
 const wrappedGetFilterRows = wrapAjax(worksheetAjax.getFilterRows);
 
-function getQuickFilterForRequest({ quickFilter = [], view = {}, controls = [], chartId }) {
+function getQuickFilterForRequest({ quickFilter = [], view = {}, controls = [], chartId }: {
+  quickFilter?: RootState['sheet']['quickFilter'];
+  view?: WorksheetView;
+  controls?: RootState['sheet']['controls'];
+  chartId?: string | undefined;
+}) {
   if (!_.isEmpty(quickFilter) || chartId || _.get(view, 'advancedSetting.clicksearch') === '1') {
     return quickFilter;
   }
@@ -111,7 +117,7 @@ const getBoardViewPara = (sheet: RootState['sheet'], view?) => {
   const { worksheetId, viewControl } = view;
 
   if (!viewControl) {
-    return;
+    return undefined;
   }
 
   let relationWorksheetId;
@@ -122,7 +128,7 @@ const getBoardViewPara = (sheet: RootState['sheet'], view?) => {
   }
 
   const quickFilterForRequest = getQuickFilterForRequest({ quickFilter, view, controls, chartId });
-  let para = {
+  let para: WorksheetRowsRequest & { pageSize: number } = {
     type,
     appId,
     worksheetId,
@@ -155,11 +161,10 @@ export function initBoardViewData(view?, hasSecondGroup?) {
     const { sheet } = getState();
     const para = getBoardViewPara(sheet, view);
 
+    if (!para) return;
     if (hasSecondGroup) {
       para.kanbanSize = 50;
     }
-
-    if (!para) return;
     dispatch({
       type: 'CHANGE_BOARD_VIEW_LOADING',
       loading: true,

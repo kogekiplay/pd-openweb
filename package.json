@@ -4,6 +4,7 @@
   "scripts": {
     "start": "cross-env API_SERVER=http://127.0.0.1:8880 node --max-old-space-size=8192 ./scripts/build.ts dev:main",
     "start-nocoly": "cross-env API_SERVER=https://dev.nocoly.com node --max-old-space-size=8192 ./scripts/build.ts dev:main",
+    "verify:webpack-assets": "node ./scripts/verifyWebpackAssets.ts",
     "release": "cross-env NODE_ENV=production node --max-old-space-size=8192 ./scripts/build.ts release",
     "publish": "cross-env NODE_ENV=production node ./scripts/build.ts publish",
     "lang:sync-po": "node ./scripts/lang.ts sync-po",

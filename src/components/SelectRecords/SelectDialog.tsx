@@ -206,6 +206,7 @@ export default function SelectDialog({ ...args }) {
     loading,
     recordsLoading,
     worksheetInfo,
+    manageView,
     error,
     records,
     total,
@@ -322,6 +323,7 @@ export default function SelectDialog({ ...args }) {
       control,
       viewId: control.viewId,
       worksheetInfo,
+      manageView,
     });
   const [fixedColumnCount, setFixedColumnCount] = useState(tableConfig.fixedColumnCount || 2);
   const summaryConfig = safeParse(get(control, 'advancedSetting.reportsetting'), 'array');

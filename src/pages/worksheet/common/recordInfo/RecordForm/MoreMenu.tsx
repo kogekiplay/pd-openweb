@@ -29,6 +29,7 @@ export default function MoreMenu(props) {
   return (
     <RecordOperate
       printCharge={printCharge}
+      printCountEnabled={recordinfo.advancedSetting?.print_count_enabled === '1'}
       from={from}
       hideFav={hideFav}
       showDeleteHr={false}

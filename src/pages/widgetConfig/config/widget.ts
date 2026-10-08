@@ -939,7 +939,7 @@ export const EXPAND_ITEMS = [
   },
   {
     key: 'relate',
-    label: _l('双向关联'),
+    label: _l('关联方式'),
     name: 'BothWayRelate',
   },
   {

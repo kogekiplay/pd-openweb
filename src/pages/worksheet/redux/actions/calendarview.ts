@@ -15,6 +15,7 @@ import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import { formatQuickFilter } from 'src/utils/filter';
 import type { FormControl } from 'src/utils/controlTypes';
 import type { AppDispatch, GetState } from 'src/redux/types';
+import type { WorksheetRowsRequest } from 'src/pages/worksheet/types';
 
 let getRows: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined;
 let getRowsIds = [];
@@ -376,7 +377,7 @@ export function getEventList({
     }
 
     dispatch({ type: 'CHANGE_CALENDAR_IS_OVER', data: true });
-    let prams = {
+    let prams: WorksheetRowsRequest = {
       appId,
       viewId: viewId,
       worksheetId,

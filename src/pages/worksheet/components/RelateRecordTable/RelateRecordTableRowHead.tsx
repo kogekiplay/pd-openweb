@@ -153,6 +153,8 @@ export default function RowHead(props) {
     allowEdit &&
     (useRecordOperate ? (
       <RecordOperate
+        isCharge={props.isCharge}
+        printCountEnabled={props.printCountEnabled}
         {...{ appId, viewId, view, worksheetId, recordId: row.rowid, projectId }}
         relateRecordControlId={relateRecordControlId}
         allowCopy={allowAdd}

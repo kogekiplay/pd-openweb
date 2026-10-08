@@ -1,6 +1,13 @@
 import _ from 'lodash';
 import type { formatSearchConfigs } from 'src/pages/widgetConfig/util';
-import type { WorksheetInfo, WorksheetView } from 'src/pages/worksheet/types';
+import type {
+  QuickFilterDisplayCondition,
+  WorksheetFilterCondition,
+  WorksheetFilters,
+  WorksheetInfo,
+  WorksheetNavGroupCondition,
+  WorksheetView,
+} from 'src/pages/worksheet/types';
 import type { ReduxAction } from 'src/redux/types';
 import type { FormControl, WorksheetCustomBtn } from 'src/utils/controlTypes';
 
@@ -186,13 +193,16 @@ export function sheetButtons(
   }
 }
 
-const initialFiltersState = {
+const initialFiltersState: WorksheetFilters = {
   searchType: 1,
   keyWords: '',
   filterControls: [],
 };
 
-export function filters(state = initialFiltersState, action: ReduxAction) {
+export function filters(
+  state: WorksheetFilters = initialFiltersState,
+  action: ReduxAction<{ filters: Partial<WorksheetFilters> }>,
+): WorksheetFilters {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_FILTERS':
       return { ...state, ...action.filters };
@@ -206,7 +216,10 @@ export function filters(state = initialFiltersState, action: ReduxAction) {
   }
 }
 
-export function quickFilter(state = [], action: ReduxAction) {
+export function quickFilter(
+  state: WorksheetFilterCondition[] = [],
+  action: ReduxAction<{ filter: WorksheetFilterCondition[] }>,
+): WorksheetFilterCondition[] {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_QUICK_FILTER':
       return [...action.filter];
@@ -219,7 +232,10 @@ export function quickFilter(state = [], action: ReduxAction) {
   }
 }
 
-export function quickFilterWithDefault(state = [], action: ReduxAction) {
+export function quickFilterWithDefault(
+  state: QuickFilterDisplayCondition[] = [],
+  action: ReduxAction<{ filter: QuickFilterDisplayCondition[] }>,
+): QuickFilterDisplayCondition[] {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_QUICK_FILTER_WITH_DEFAULT':
       return [...action.filter];
@@ -231,7 +247,10 @@ export function quickFilterWithDefault(state = [], action: ReduxAction) {
   }
 }
 
-export function navGroupFilters(state = [], action: ReduxAction) {
+export function navGroupFilters(
+  state: WorksheetNavGroupCondition[] = [],
+  action: ReduxAction<{ navGroupFilters?: WorksheetNavGroupCondition[] | undefined }>,
+): WorksheetNavGroupCondition[] {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_GROUP_FILTER':
       return action.navGroupFilters || [];

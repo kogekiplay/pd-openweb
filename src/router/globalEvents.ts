@@ -3,9 +3,55 @@ import { compatibleWorksheetRoute } from 'src/pages/Portal/util.js';
 import { emitter, getDefaultThemeMode, setBodyThemeMode } from 'src/utils/common';
 import { navigateTo } from './navigateTo';
 
-export default () => {
+let escCloseInited = false;
+export const initEscClose = () => {
+  if (escCloseInited) return;
+  escCloseInited = true;
   window.closeindex = 0;
   window.closeFns = {};
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      // 弹窗内存在正在编辑单元格时不触发esc关闭弹窗
+      if (e.target?.classList?.contains('stopPropagation')) {
+        return;
+      }
+
+      const activeElement = document.activeElement;
+      const activeElementTagName = activeElement && activeElement.tagName && activeElement.tagName.toLowerCase();
+
+      if (
+        (activeElementTagName === 'input' || activeElementTagName === 'textarea') &&
+        activeElement &&
+        (activeElement.getAttribute('class') || '').indexOf('escclose') > -1
+      ) {
+        activeElement.blur();
+      } else {
+        const fnitem = _.maxBy(
+          Object.keys(window.closeFns).map(k => window.closeFns[k]),
+          'index',
+        );
+
+        if (
+          fnitem &&
+          /(workSheetNewRecord|createRecordSideMask|workSheetRecordInfo|fillRecordControls)/.test(fnitem.className) &&
+          window.hasEditingCell
+        ) {
+          return;
+        }
+
+        if (fnitem && typeof fnitem.fn === 'function') {
+          fnitem.fn(e);
+          if (Object.keys(window.closeFns).length === 0) {
+            window.closeindex = 0;
+          }
+        }
+      }
+    }
+  });
+};
+
+export default () => {
+  initEscClose();
 
   const parseUrl = (url: string) => {
     var a = document.createElement('a');
@@ -23,9 +69,7 @@ export default () => {
 
   // 验证客户端是否新开窗口
   const checkClientOpenWindow = (url: string) => {
-    const clientOpenList = localStorage.getItem('clientOpenList')
-      ? JSON.parse(localStorage.getItem('clientOpenList'))
-      : [];
+    const clientOpenList = safeParse(localStorage.getItem('clientOpenList'), 'array');
     let isContain = false;
 
     if (url.indexOf('hr') > -1 || url.indexOf('dossier') > -1 || url.indexOf('public') > -1) return true;
@@ -90,46 +134,6 @@ export default () => {
       window.open(url);
     } else {
       navigateTo(url);
-    }
-  });
-
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      // 弹窗内存在正在编辑单元格时不触发esc关闭弹窗
-      if (e.target?.classList?.contains('stopPropagation')) {
-        return;
-      }
-
-      const activeElement = document.activeElement;
-      const activeElementTagName = activeElement && activeElement.tagName && activeElement.tagName.toLowerCase();
-
-      if (
-        (activeElementTagName === 'input' || activeElementTagName === 'textarea') &&
-        activeElement &&
-        (activeElement.getAttribute('class') || '').indexOf('escclose') > -1
-      ) {
-        activeElement.blur();
-      } else {
-        const fnitem = _.maxBy(
-          Object.keys(window.closeFns).map(k => window.closeFns[k]),
-          'index',
-        );
-
-        if (
-          fnitem &&
-          /(workSheetNewRecord|createRecordSideMask|workSheetRecordInfo|fillRecordControls)/.test(fnitem.className) &&
-          window.hasEditingCell
-        ) {
-          return;
-        }
-
-        if (fnitem && typeof fnitem.fn === 'function') {
-          fnitem.fn(e);
-          if (Object.keys(window.closeFns).length === 0) {
-            window.closeindex = 0;
-          }
-        }
-      }
     }
   });
 };

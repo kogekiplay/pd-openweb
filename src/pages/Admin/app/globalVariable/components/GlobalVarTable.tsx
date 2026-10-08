@@ -149,6 +149,7 @@ export default function GlobalVarTable(props) {
     onAdd = () => {},
     onEdit = () => {},
     readOnly,
+    hideDelete,
     allowSelected,
     onSelect = () => {},
     activeId,
@@ -263,6 +264,7 @@ export default function GlobalVarTable(props) {
         return !readOnly ? (
           <OptionColumn
             isDirOption={item.hasChild}
+            hideDelete={hideDelete}
             onAdd={() => {
               featureType === '2'
                 ? buriedUpgradeVersionDialog(projectId, VersionProductType.globalVariable)

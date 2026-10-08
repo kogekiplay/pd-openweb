@@ -1,9 +1,25 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import _ from 'lodash';
 import styled, { css, keyframes } from 'styled-components';
+import { Icon } from 'ming-ui';
+import { Dropdown, Spin } from 'ming-ui/antd-components';
 import loadG2Plot from 'src/pages/Statistics/Charts/loadG2Plot';
 import { colors, radii, shadows, spacing, transitions } from '../tokens';
+import {
+  buildCreateChartPayload,
+  canSaveChart,
+  fetchChartPageSavable,
+  fetchWorksheetName,
+  getChartAppId,
+  getChartWorksheetId,
+  saveChart,
+} from './chartSave';
+import { useChartSaveEnv } from './chartSaveContext';
+
+const SelectOtherWorksheetDialog = lazy(
+  () => import('src/pages/worksheet/components/SelectWorksheet/SelectOtherWorksheetDialog'),
+);
 
 // 导出文件名时间戳后缀：yyMMddHHmmss（年月日时分秒，各 2 位）
 const pad2 = (n: number) => String(n).padStart(2, '0');
@@ -538,6 +554,64 @@ export function Chart({ data: spec, isStreaming }) {
   const fullscreenCanvasRef = useRef(null);
   const [renderable, setRenderable] = useState(() => !!buildPlot(spec));
   const [fullscreen, setFullscreen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
+  const [worksheetName, setWorksheetName] = useState('');
+  const [pageEditable, setPageEditable] = useState(true);
+  const [pageDialogVisible, setPageDialogVisible] = useState(false);
+  const { canSave: envCanSave, projectId } = useChartSaveEnv();
+  const savable = envCanSave && !isStreaming && canSaveChart(spec);
+  const save = async (customPageId?: string) => {
+    if (savingRef.current) return;
+    const payload = buildCreateChartPayload(spec, { customPageId });
+    if (!payload) return;
+    savingRef.current = true;
+    setSaving(true);
+    try {
+      const result = await saveChart(payload);
+      if (result.ok === true) alert(_l('保存成功'));
+      else alert(result.message, 2);
+      if (result.ok) setPageDialogVisible(false);
+    } finally {
+      savingRef.current = false;
+      setSaving(false);
+    }
+  };
+  const renderSaveButton = (fullscreenMode = false) =>
+    savable ? (
+      <Dropdown
+        trigger={['click']}
+        {...(fullscreenMode ? { getPopupContainer: () => fullscreenBoxRef.current || document.body } : {})}
+        onOpenChange={open => {
+          if (open) {
+            void fetchWorksheetName(getChartWorksheetId(spec)).then(setWorksheetName);
+            void fetchChartPageSavable(spec).then(setPageEditable);
+          }
+        }}
+        menu={{
+          items: [
+            {
+              key: 'worksheet',
+              label: worksheetName ? _l('保存到工作表（%0）', worksheetName) : _l('保存到工作表'),
+              disabled: saving,
+              onClick: () => {
+                void save();
+              },
+            },
+            {
+              key: 'page',
+              label: _l('保存到自定义页面'),
+              disabled: saving || !pageEditable,
+              onClick: () => setPageDialogVisible(true),
+            },
+          ],
+        }}
+      >
+        <ToolBtn type="button" title={_l('保存')}>
+          {saving ? <Spin size="small" /> : <Icon icon="save" />}
+        </ToolBtn>
+      </Dropdown>
+    ) : null;
 
   const title = spec && typeof spec.title === 'string' ? spec.title.trim() : '';
 
@@ -683,11 +757,15 @@ export function Chart({ data: spec, isStreaming }) {
       <Wrap ref={wrapRef}>
         {title && <Title>{title}</Title>}
         {isStatistic ? (
-          <StatisticCard spec={spec} />
+          <>
+            <StatisticCard spec={spec} />
+            {savable && <Toolbar className="chart-toolbar">{renderSaveButton()}</Toolbar>}
+          </>
         ) : (
           <>
             <Canvas ref={canvasRef} />
             <Toolbar className="chart-toolbar">
+              {renderSaveButton()}
               <ToolBtn
                 type="button"
                 title={_l('下载 PNG')}
@@ -702,6 +780,20 @@ export function Chart({ data: spec, isStreaming }) {
           </>
         )}
       </Wrap>
+      {pageDialogVisible && (
+        <Suspense fallback={null}>
+          <SelectOtherWorksheetDialog
+            visible
+            projectId={projectId || localStorage.getItem('currentProjectId') || ''}
+            currentAppId={getChartAppId(spec)}
+            worksheetType={1}
+            onHide={() => setPageDialogVisible(false)}
+            onOk={(_appId: string, pageId: string) => {
+              void save(pageId);
+            }}
+          />
+        </Suspense>
+      )}
       {fullscreen &&
         createPortal(
           <Overlay onClick={() => setFullscreen(false)}>
@@ -709,6 +801,7 @@ export function Chart({ data: spec, isStreaming }) {
               <FullscreenHeader>
                 <FullscreenTitle>{title}</FullscreenTitle>
                 <Toolbar className="chart-toolbar" style={{ position: 'static', opacity: 1 }}>
+                  {renderSaveButton(true)}
                   <ToolBtn
                     type="button"
                     title={_l('下载 PNG')}

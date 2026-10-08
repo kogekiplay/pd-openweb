@@ -365,6 +365,7 @@ const MemoizedRowHead = React.memo(
       <RowHead
         isDraft={isDraft}
         printCharge={printCharge}
+        printCountEnabled={get(worksheetInfo, 'advancedSetting.print_count_enabled') === '1'}
         tableType={tableType}
         numberWidth={numberWidth}
         hasBatch={hasBatch}
@@ -429,6 +430,7 @@ const MemoizedRowHead = React.memo(
       'sheetViewConfig.sheetSelectedRows',
       'sheetViewConfig.sheetHiddenColumns',
       'worksheetInfo.allowAdd',
+      'worksheetInfo.advancedSetting.print_count_enabled',
       'isCharge',
       'isDevAndOps',
       'readonly',

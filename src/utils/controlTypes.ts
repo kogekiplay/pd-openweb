@@ -97,6 +97,8 @@ export interface ControlAdvancedSetting {
   rowheight?: string | undefined;
   /** 子表：最大高度行数 / 每页行数 */
   rownum?: string | undefined;
+  /** 关联记录允许拖拽排序。 */
+  rcsorttype?: string | undefined;
   showformat?: string | undefined;
   showinput?: string | undefined;
   showtimezone?: string | undefined;
@@ -146,6 +148,8 @@ export interface ControlPermissions {
  * 递归字段（relationControls / showControls）用自身类型，子表控件靠它们描述内层结构。
  */
 export interface FormControl {
+  /** 关联字段整体清空后，仍允许原关联记录出现在可选列表。 */
+  keepShowRowIds?: string[] | undefined;
   controlId?: string | undefined;
   /** 控件类型，见 src/utils/enum 的控件类型表 */
   type?: number | undefined;

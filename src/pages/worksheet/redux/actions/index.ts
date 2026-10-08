@@ -785,7 +785,7 @@ export function openNewRecord({ isDraft, allowShowMingoCreate } = {}) {
 
     if (hasGroupFilter && !_.isEmpty(navGroupFilters) && navGroupFilters.length > 0) {
       let defaultFormData;
-      let data = navGroupFilters[0];
+      let data = navGroupFilters[0]!;
 
       if (AREA.includes(data.dataType)) {
         defaultFormData = { [data.controlId]: data.navNames };
@@ -818,7 +818,7 @@ export function openNewRecord({ isDraft, allowShowMingoCreate } = {}) {
           defaultFormDataEditable: true,
         });
       } else if ([29, 35].includes(data.dataType)) {
-        const targetWorksheetId = _.find(worksheetInfo.template.controls, { controlId: data.controlId }).dataSource;
+        const targetWorksheetId = _.find(worksheetInfo.template.controls, { controlId: data.controlId })!.dataSource;
 
         if (!targetWorksheetId) {
           return;

@@ -8,6 +8,7 @@ import { updateNavGroup } from './navFilter.js';
 import { dealData, getHierarchyViewIds, getItemByRowId, getParaIds } from './util';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import type { AppDispatch, GetState } from 'src/redux/types';
+import type { WorksheetRowsRequest } from 'src/pages/worksheet/types';
 
 const MULTI_RELATE_MAX_PAGE_SIZE = 500;
 let hierarchyPromiseObj: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined;
@@ -501,7 +502,11 @@ export function multiRelateGetChildren(para) {
   };
 }
 
-export function getAssignChildren({ path = [], pathId = [], callback, ...args }, onlyUpdateChildren = false) {
+export function getAssignChildren({ path = [], pathId = [], callback, ...args }: WorksheetRowsRequest & {
+  path?: number[] | undefined;
+  pathId?: string[] | undefined;
+  callback?: (() => void) | undefined;
+}, onlyUpdateChildren = false) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
     const { filters, quickFilter, navGroupFilters } = sheet;

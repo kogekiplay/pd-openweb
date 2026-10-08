@@ -267,6 +267,7 @@ window.platformENV = {
   isOverseas: false, // 是否海外
   isLocal: false, // 是否私有部署
   isPlatform: false, // 是否平台
+  isHap: false, // 是否 SaaS
 };
 
 /**
@@ -547,9 +548,9 @@ const disposeRequestParams = (controllerName, actionName, data, ajaxOptions) => 
   }
 
   if ((ajaxOptions.type || '').toUpperCase() === 'GET') {
-    let value;
+    data = { ...data };
     Object.keys(data).forEach(key => {
-      value = data[key];
+      const value = data[key];
       data[key] = value && typeof value === 'object' ? JSON.stringify(value) : value;
     });
   }
@@ -559,7 +560,7 @@ const disposeRequestParams = (controllerName, actionName, data, ajaxOptions) => 
   }
 
   //工作表信息
-  if (controllerName === 'Worksheet' && actionName === 'GetWorksheetInfo') {
+  if (controllerName === 'Worksheet' && ['GetWorksheetInfo', 'GetWorksheetById'].includes(actionName)) {
     data = { ...data, getTemplate: true, getViews: true, getSwitchPermit: true, getRules: true };
   }
 
@@ -616,7 +617,7 @@ const generateLocalizationParams = (
       sourceId: `${requestData.worksheetId}_${lang}`,
       clearInterface: [],
     },
-    Worksheet_GetWorksheetBaseInfo: {
+    Worksheet_GetWorksheetById: {
       moduleType: 5,
       ...worksheetInfoParams,
     },
@@ -646,10 +647,13 @@ const getLocalizationKey = (controllerName, actionName, requestData = {}) => {
 /**
  * 插入本地化存储数据
  */
-const insertLocalData = ({ key, moduleType, sourceId, version, data }) => {
-  if (!key || !sourceId) return;
+const canUseLocalizationCache = () => !_.get(window, 'shareState.shareId') && !window.isWeiXin && !window.isWxWork;
 
-  if (key === 'Worksheet_GetWorksheetInfo' && !_.get(data, 'views.length')) return;
+const insertLocalData = ({ key, moduleType, sourceId, version, data }) => {
+  if (!canUseLocalizationCache() || !key || !sourceId) return;
+
+  if (['Worksheet_GetWorksheetInfo', 'Worksheet_GetWorksheetById'].includes(key) && !_.get(data, 'views.length'))
+    return;
 
   if (version) {
     localForage.setItem(`${key}_${sourceId}`, { version, data, time: moment().format('YYYY-MM-DD HH:mm:ss') });
@@ -664,6 +668,7 @@ const insertLocalData = ({ key, moduleType, sourceId, version, data }) => {
  * 指定接口编辑后，需清理缓存时间
  */
 window.clearLocalDataTime = ({ controllerName, actionName, requestData = {}, clearSpecificKeys = [] }) => {
+  if (!canUseLocalizationCache()) return;
   const key = `${controllerName}_${actionName}`;
   const CACHE_PARAMS = generateLocalizationParams({
     ...requestData,
@@ -839,121 +844,128 @@ window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = 
     return streamResponse;
   }
 
-  const promise = new Promise(async (resolve, reject) => {
-    const { key, moduleType, sourceId } = getLocalizationKey(controllerName, actionName, requestData);
-    let version: string | undefined;
+  const promise = new Promise((resolve, reject) => {
+    const executeRequest = async () => {
+      const { key, moduleType, sourceId } = getLocalizationKey(controllerName, actionName, requestData);
+      let version: string | undefined;
 
-    if (!_.get(window, 'shareState.shareId') && !window.isWeixin && key && sourceId) {
-      const localSource = await localForage.getItem(`${key}_${sourceId}`);
+      try {
+        if (canUseLocalizationCache() && key && sourceId) {
+          const localSource = await localForage.getItem(`${key}_${sourceId}`);
 
-      if (localSource && !localStorage.getItem('IS_DEV_MODE')) {
-        if (!localSource.time || moment().diff(moment(localSource.time), 's') > 30) {
-          const versionData = await versionApi.getVersion({ moduleType, sourceId: sourceId.split('_')[0] });
+          if (localSource && !localStorage.getItem('IS_DEV_MODE')) {
+            if (!localSource.time || moment().diff(moment(localSource.time), 's') > 30) {
+              const versionData = await versionApi.getVersion({ moduleType, sourceId: sourceId.split('_')[0] });
 
-          version = versionData.version;
+              version = versionData.version;
 
-          if (version === localSource.version) {
-            insertLocalData({ key, moduleType, sourceId, version, data: _.cloneDeep(localSource.data) }); // 更新时间
-            resolve(localSource.data);
+              if (version === localSource.version) {
+                insertLocalData({ key, moduleType, sourceId, version, data: _.cloneDeep(localSource.data) }); // 更新时间
+                resolve(localSource.data);
+                return;
+              }
+            } else {
+              resolve(localSource.data);
+              return;
+            }
+          }
+        }
+      } catch (cacheError) {
+        console.error(cacheError);
+      }
+
+      if (!isAgent) {
+        window.clearLocalDataTime({ controllerName, actionName, requestData });
+      }
+
+      return axios({
+        method,
+        url,
+        headers,
+        params: method === 'GET' ? data : {},
+        data: ['POST', 'PUT'].includes(method) ? data : {},
+        withCredentials: !ajaxOptions.url,
+        signal: controller.signal,
+        responseType,
+      })
+        .then(response => {
+          // Agent 服务不走标准契约，直接返回后端响应体（与 customParseResponse 一致）
+          if (customParseResponse || isAgent) {
+            resolve(response.data);
             return;
           }
-        } else {
-          resolve(localSource.data);
-          return;
-        }
-      }
-    }
 
-    if (!isAgent) {
-      window.clearLocalDataTime({ controllerName, actionName, requestData });
-    }
+          const responseData = response.data || { state: -1, exception: _l('解析返回结果错误') };
 
-    axios({
-      method,
-      url,
-      headers,
-      params: method === 'GET' ? data : {},
-      data: ['POST', 'PUT'].includes(method) ? data : {},
-      withCredentials: !ajaxOptions.url,
-      signal: controller.signal,
-      responseType,
-    })
-      .then(response => {
-        // Agent 服务不走标准契约，直接返回后端响应体（与 customParseResponse 一致）
-        if (customParseResponse || isAgent) {
-          resolve(response.data);
-          return;
-        }
-
-        const responseData = response.data || { state: -1, exception: _l('解析返回结果错误') };
-
-        if (responseData.exception) {
-          responseData?.state !== 300016 && !options.silent && alert(responseData.exception, 2);
-          reject({ errorCode: responseData.state, errorMessage: responseData.exception, errorData: responseData });
-        } else {
-          const { data } = interfaceDataDecryption(responseData, actionName);
-
-          !_.get(window, 'shareState.shareId') &&
-            insertLocalData({ key, moduleType, sourceId, version, data: _.cloneDeep(data) });
-          resolve(data);
-        }
-      })
-      .catch(error => {
-        if (customParseResponse) {
-          reject(error.response);
-          return;
-        }
-
-        if (get(error, 'response.status') === 401 && !/^localhost:/.test(location.host) && !window.isPublicApp) {
-          import('src/router/navigateTo').then(({ navigateToLogin }) => {
-            navigateToLogin({ needSecondCheck: true });
-          });
-          reject(error.response);
-          return;
-        }
-
-        if (isAgent) {
-          const status = get(error, 'response.status');
-          const respData = get(error, 'response.data');
-
-          if (status === 429 && respData?.errorMessage) {
-            alert(respData.errorMessage, 2);
+          if (responseData.exception) {
+            responseData?.state !== 300016 && !options.silent && alert(responseData.exception, 2);
+            reject({ errorCode: responseData.state, errorMessage: responseData.exception, errorData: responseData });
           } else {
-            getErrorMessage(
+            const { data } = interfaceDataDecryption(responseData, actionName);
+
+            !_.get(window, 'shareState.shareId') &&
+              insertLocalData({ key, moduleType, sourceId, version, data: _.cloneDeep(data) });
+            resolve(data);
+          }
+        })
+        .catch(error => {
+          if (customParseResponse) {
+            reject(error.response);
+            return;
+          }
+
+          if (get(error, 'response.status') === 401 && !/^localhost:/.test(location.host) && !window.isPublicApp) {
+            import('src/router/navigateTo').then(({ navigateToLogin }) => {
+              navigateToLogin({ needSecondCheck: true });
+            });
+            reject(error.response);
+            return;
+          }
+
+          if (isAgent) {
+            const status = get(error, 'response.status');
+            const respData = get(error, 'response.data');
+
+            if (status === 429 && respData?.errorMessage) {
+              alert(respData.errorMessage, 2);
+            } else {
+              getErrorMessage(
+                error.response,
+                baseAxios.isCancel(error) ? 'abort' : '',
+                respData?.exception,
+                options.silent,
+              );
+            }
+
+            reject(error.response || error);
+            return;
+          }
+
+          if (
+            error.response &&
+            error.response.status === 402 &&
+            error.response.data &&
+            error.response.data.state === 13 &&
+            error.response.data.data
+          ) {
+            if (_.get(md, 'global.Account.accountId') && location.href.indexOf('mobile') === -1) {
+              import('../pages/PageHeader/components/NetState').then(netState => {
+                netState.default(interfaceDataDecryption(error.response.data).data);
+              });
+            }
+          }
+
+          reject({
+            ...getErrorMessage(
               error.response,
               baseAxios.isCancel(error) ? 'abort' : '',
-              respData?.exception,
-              options.silent,
-            );
-          }
-
-          reject(error.response || error);
-          return;
-        }
-
-        if (
-          error.response &&
-          error.response.status === 402 &&
-          error.response.data &&
-          error.response.data.state === 13 &&
-          error.response.data.data
-        ) {
-          if (_.get(md, 'global.Account.accountId') && location.href.indexOf('mobile') === -1) {
-            import('../pages/PageHeader/components/NetState').then(netState => {
-              netState.default(interfaceDataDecryption(error.response.data).data);
-            });
-          }
-        }
-
-        reject({
-          ...getErrorMessage(
-            error.response,
-            baseAxios.isCancel(error) ? 'abort' : '',
-            get(error, 'response.data.exception'),
-          ),
-          errorData: baseAxios.isCancel(error) ? {} : get(error, 'response.data'),
+              get(error, 'response.data.exception'),
+            ),
+            errorData: baseAxios.isCancel(error) ? {} : get(error, 'response.data'),
+          });
         });
-      });
+    };
+    executeRequest().catch(reject);
   });
 
   promise.abort = () => {

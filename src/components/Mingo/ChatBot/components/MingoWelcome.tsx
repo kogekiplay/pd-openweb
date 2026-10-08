@@ -1,3 +1,5 @@
+import { canBuildAppWithMingo, canQueryDataWithMingo, canUseMingoOtherAssistant, getDefaultMingoProjectId, isProjectMingoEnabled } from 'src/components/Mingo/permission';
+import { HelpComposerBar, openCustomerService } from 'src/components/Agent/ui/TransferHuman';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import { get } from 'lodash';
@@ -317,7 +319,7 @@ function checkIsCharge(appInfo) {
   return canEditApp(permissionType, isLock);
 }
 
-export default function MingoWelcome({ onStartTask = () => {}, landing = false, embed = false }) {
+export default function MingoWelcome({ onStartTask = () => {}, landing = false, embed = false, helpMode = false, anonymous = false, enableHumanSupport = true }: { onStartTask?: (task: { type: number }) => void; landing?: boolean; embed?: boolean; helpMode?: boolean; anonymous?: boolean; enableHumanSupport?: boolean }) {
   const {
     store: { appInfo, activeWorksheet },
   } = useGlobalStore();
@@ -348,11 +350,14 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
   const projects = get(md, 'global.Account.projects', []) || [];
   const initialProjectId =
     appInfo?.projectId || localStorage.getItem('currentProjectId') || get(projects, '[0].projectId', '');
-  const [selectedProjectId, setSelectedProjectId] = useState(initialProjectId);
+  const [selectedProjectId, setSelectedProjectId] = useState(getDefaultMingoProjectId(initialProjectId));
   // 应用内锁定 appInfo.projectId；非应用走用户切换的 selectedProjectId
   const currentProjectId = appId ? appInfo?.projectId || initialProjectId : selectedProjectId;
   const currentProjectName = getCurrentProject(currentProjectId).companyName || '';
   const canSwitchProject = !appId && projects.length > 1;
+  const allowBuild = canBuildAppWithMingo(currentProjectId);
+  const allowDataQuery = canQueryDataWithMingo(currentProjectId);
+  const allowOthers = canUseMingoOtherAssistant(currentProjectId);
   // 副标题统一展示当前组织名（应用内 / 非应用内一致）
   const sublineText = currentProjectName;
 
@@ -369,9 +374,9 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
     [MINGO_TASK_TYPE.APP_INFO_OPTIMIZATION]: !appId || !isManager,
   });
   const visibleQuickActions =
-    appInfo?.appStatus === 20 ? [] : APP_QUICK_ACTIONS.filter(a => !hiddenTypes.includes(a.type));
+    appInfo?.appStatus === 20 ? [] : APP_QUICK_ACTIONS.filter(a => allowOthers && !hiddenTypes.includes(a.type));
   // 应用内才出现「提问/搭建」tab；appInfo 需已是当前应用的数据（sections 等就绪）才发起推荐
-  const inApp = !!appId;
+  const inApp = !helpMode && !!appId;
   const appReady = appInfo?.id === appId;
 
   // 拉取并流式渲染推荐问题：按 appInfo 组 message 调 app-question-recommender，
@@ -438,7 +443,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
   function dispatchTask(task) {
     onStartTask(task);
     // Mingo 还未被 pin 时，先把任务暂存到 pendingTask，触发 SET_MINGO_FIXED 让外层固定再继续
-    if (!window.mingoFixing) {
+    if (!helpMode && !anonymous && !window.mingoFixing) {
       window.mingoPendingStartTask = task;
       emitter.emit('SET_MINGO_FIXED');
     }
@@ -452,11 +457,12 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
 
     // 必须有正文：仅有附件不发起，避免空 message 进 ChatPanel 被其守卫拦住、首页发了却不发起
     if (!trimmed) return;
+    if (!helpMode && !anonymous && !allowDataQuery && !allowBuild && !allowOthers) { alert(_l('当前组织已禁止使用MingoAI功能'), 3); return; }
     window.mingoInitialMessage = trimmed;
     if (hasAttachments) window.mingoInitialAttachments = attachments;
     // @ 的应用随首条消息一起交接，供 ChatPanel 拼进 context.mentions（设计稿三场景）
     if (hasMentions) window.mingoInitialMentions = mentions;
-    dispatchTask({ type: MINGO_TASK_TYPE.CREATE_APP_ASSIGNMENT });
+    dispatchTask({ type: helpMode ? MINGO_TASK_TYPE.MINGDAO_HELP_CHAT : MINGO_TASK_TYPE.CREATE_APP_ASSIGNMENT });
   }
 
   // 历史对话入口在 Mingo 头部（与关闭按钮同级）渲染，通过全局 emitter 打开本页的历史浮层
@@ -485,7 +491,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
     if (!session || !session.sessionId) return;
     setHistoryVisible(false);
     window.mingoInitialSessionId = session.sessionId;
-    dispatchTask({ type: MINGO_TASK_TYPE.CREATE_APP_ASSIGNMENT });
+    dispatchTask({ type: helpMode ? MINGO_TASK_TYPE.MINGDAO_HELP_CHAT : MINGO_TASK_TYPE.CREATE_APP_ASSIGNMENT });
   }
 
   function handleSubmit(textOverride, mentions) {
@@ -558,16 +564,18 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
       return;
     }
 
+    if (sample.type === 'build' && !allowBuild) return;
     startAgentChat(sample.text);
   }
 
+  if (!helpMode && !anonymous && !isProjectMingoEnabled(currentProjectId)) return null;
   return (
-    <MingoWelcomeWrap className={cx({ landing, embed })}>
+    <MingoWelcomeWrap className={cx({ landing, embed, helpMode })}>
       <div className="inner">
         <div className="topBlock" ref={welcomeBlockRef}>
           {/* 落地页用静态 logo + 整体垂直居中；抽屉态保持原欢迎动图。
               配置了 AI 品牌图标时，欢迎动图属 Mingo 专属素材，抽屉态同样降级成静态品牌 logo */}
-          {landing || md.global.SysSettings.aiBrandLogoUrl ? (
+          {landing || helpMode || md.global.SysSettings.aiBrandLogoUrl ? (
             <img className="welcomeLogo" src={md.global.SysSettings.aiBrandLogoUrl || mingoLogo} alt="mingo" />
           ) : (
             <img key={gifNonce} className="welcomeGif" src={mingoWelcomeGif} alt="" />
@@ -575,7 +583,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
         </div>
 
         {/* 嵌入态（?embed=1）不展示组织名 / 网络切换 */}
-        {embed ? null : canSwitchProject ? (
+        {embed || helpMode || anonymous ? null : canSwitchProject ? (
           <ProjectSwitch value={currentProjectId} onChange={setSelectedProjectId}>
             <div className="subline switchable">
               {currentProjectName}
@@ -586,6 +594,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
           <div className="subline">{sublineText}</div>
         )}
 
+        {helpMode && enableHumanSupport && <HelpComposerBar onTransfer={() => openCustomerService()} />}
         <PromptInput
           ref={promptInputRef}
           value={draft}
@@ -593,9 +602,9 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
           onChange={setDraft}
           onSubmit={handleSubmit}
           // 嵌入态（?embed=1）不提供 @ 应用：隐藏 @ 按钮 + 禁用 @ 浮层，placeholder 也去掉「@应用提问」
-          enableMention={!embed}
+          enableMention={!embed && !helpMode && !anonymous}
           placeholder={
-            inApp
+            helpMode ? _l('有什么可以帮助您') : inApp
               ? _l('对当前应用提问或继续搭建')
               : embed
                 ? _l('提问或开始搭建一个新应用')
@@ -610,7 +619,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
               />
             ) : null
           }
-          attachmentSlot={
+          attachmentSlot={anonymous ? null :
             <UploadFiles
               tokenType={ATTACHMENT_TOKEN_TYPE}
               maxFilesLength={MAX_ATTACHMENTS}
@@ -753,7 +762,7 @@ export default function MingoWelcome({ onStartTask = () => {}, landing = false, 
       </div>
 
       {historyVisible && (
-        <SessionHistory onSelect={handleSelectHistorySession} onClose={() => setHistoryVisible(false)} />
+        <SessionHistory enableShare={!helpMode} agentName={helpMode ? 'help-agent' : ''} onSelect={handleSelectHistorySession} onClose={() => setHistoryVisible(false)} />
       )}
     </MingoWelcomeWrap>
   );

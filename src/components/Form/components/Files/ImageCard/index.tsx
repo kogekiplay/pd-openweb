@@ -7,9 +7,9 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { handleDownload, handleShare, loadImage } from '../utils';
 import './index.less';
 
-const renderFileImage = (url, coverType, imgClassName = 'w100') => {
+const renderFileImage = (url, coverType, imgClassName = 'w100', readOnly = false) => {
   if (coverType === '0') {
-    return <div className="fileImage" style={{ backgroundImage: `url(${url})` }} />;
+    return readOnly ? <img className="fileImage" src={url} style={{ objectFit: 'cover' }} /> : <div className="fileImage" style={{ backgroundImage: `url(${url})` }} />;
   } else {
     return (
       <div className="flexRow alignItemsCenter justifyContentCenter overflowHidden h100 bgTertiary">
@@ -157,7 +157,7 @@ const ImageCard = props => {
   return (
     <div
       ref={wrapRef}
-      className={cx('attachmentFile', { hover: dropdownVisible || isEdit })}
+      className={cx('attachmentFile', { hover: dropdownVisible || isEdit, readOnlyImage: props.readOnlyImages })}
       onClick={e => {
         e.stopPropagation();
         if (browse) {
@@ -189,7 +189,7 @@ const ImageCard = props => {
         </div>
       )}
       {isPicture ? (
-        renderFileImage(previewUrl, coverType, imgClassName)
+        renderFileImage(previewUrl, coverType, imgClassName, props.readOnlyImages)
       ) : (
         <div className="fileAccessory flexColumn">
           <div className="fileIconWrap flexRow alignItemsCenter justifyContentCenter">

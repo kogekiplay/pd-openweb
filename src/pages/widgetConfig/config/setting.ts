@@ -67,7 +67,7 @@ export const RELATION_OPTIONS = [
   {
     value: 1,
     text: _l('任务'),
-    isHide: () => !md.global.SysSettings.forbidSuites.includes('2'),
+    isHide: (forbidSuites: string | string[] = md.global.SysSettings.forbidSuites) => !forbidSuites.includes('2'),
   },
   {
     value: 2,
@@ -76,7 +76,7 @@ export const RELATION_OPTIONS = [
   {
     value: 3,
     text: _l('日程'),
-    isHide: () => !md.global.SysSettings.forbidSuites.includes('3'),
+    isHide: (forbidSuites: string | string[] = md.global.SysSettings.forbidSuites) => !forbidSuites.includes('3'),
   },
   {
     value: 5,

@@ -82,6 +82,8 @@ export const VersionProductType = {
   vectorKnowledgeBase: 55, // 向量知识库
   aIModelAppLicenseManagement: 56, // AI模型应用授权管理
   cloudService: 57, // 云服务(统一云服务—AI 模型服务)
+  printCountLimit: 58, // 打印次数限制
+  appSandbox: 59, // 应用沙盒
 };
 
 export const VersionProductHelpLink = {
@@ -112,6 +114,7 @@ export const VersionProductHelpLink = {
   31: 'https://help.mingdao.com/application/log',
   33: '',
   40: 'https://help.mingdao.com/org/payment',
+  58: '',
 };
 
 const getFastGptConfig = () => {

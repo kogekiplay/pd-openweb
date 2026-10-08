@@ -11,6 +11,7 @@ import worksheetAjax from 'src/api/worksheet';
 import { OptionChip } from 'src/components/OptionChip';
 import EditOptionList from 'src/pages/widgetConfig/widgetSetting/components/OptionList/EditOptionList';
 import { getTranslateInfo } from 'src/utils/app';
+import { isAppSandboxInProduction } from 'src/utils/domain/app/sandbox';
 import { getOptions } from '../../../widgetConfig/util/setting';
 import AppSettingHeader from '../AppSettingHeader';
 import EmptyStatus from '../EmptyStatus';
@@ -92,7 +93,7 @@ const ListItem = styled.div`
 `;
 
 const OptionItem = props => {
-  const { appId, collectionId, name, colorful, handleClick, pos, status, onClick = () => {} } = props;
+  const { appId, collectionId, name, colorful, handleClick, pos, status, readonly, onClick = () => {} } = props;
   const options = getOptions({ options: props.options });
 
   const getPos = () => {
@@ -102,13 +103,13 @@ const OptionItem = props => {
 
   const translateInfo = getTranslateInfo(appId, null, collectionId);
   return (
-    <ListItem style={{ ...getPos() }} status={status} onClick={onClick}>
+    <ListItem style={{ ...getPos() }} status={status} onClick={readonly ? undefined : onClick}>
       <div className="title Bold">
         <div className="name ellipsis">
           {translateInfo.name || name}
           {` ( ${options.length} )`}
         </div>
-        <div className="operate">
+        <div className={cx('operate', { Hidden: readonly })}>
           <Tooltip placement="bottom" title={_l('编辑')}>
             <Icon
               icon="edit"
@@ -143,6 +144,7 @@ const OptionItem = props => {
 
 export default function AllOptionList(props) {
   const { projectId, appId } = props;
+  const readonly = isAppSandboxInProduction(props.sandboxStatus);
   const $ref = useRef(null);
   const [{ createVisible }, setVisible] = useSetState({
     createVisible: false,
@@ -266,10 +268,12 @@ export default function AllOptionList(props) {
         index={index}
         projectId={projectId}
         appId={appId}
+        readonly={readonly}
         pos={posList[index]}
         items={items}
         onClick={() => setIndex({ editIndex: index })}
         handleClick={type => {
+          if (readonly) return;
           if (type === 'edit') {
             setIndex({ editIndex: index });
           }
@@ -288,7 +292,7 @@ export default function AllOptionList(props) {
       <AppSettingHeader
         title={_l('选项集')}
         showSearch={true}
-        addBtnName={_l('新增选项集')}
+        addBtnName={readonly ? undefined : _l('新增选项集')}
         description={_l('将需要在不同工作表间共用的选项创建为选项集，维护选项的一致性')}
         handleSearch={value => {
           setSearchValue(value);
@@ -317,7 +321,7 @@ export default function AllOptionList(props) {
       <OptionListWrap className={cx('flex', { emptyWrap: isEmpty(items) })} ref={$ref}>
         {renderContent()}
       </OptionListWrap>
-      {createVisible && (
+      {!readonly && createVisible && (
         <EditOptionList
           projectId={projectId}
           appId={appId}
@@ -325,7 +329,7 @@ export default function AllOptionList(props) {
           onCancel={() => setVisible({ createVisible: false })}
         />
       )}
-      {editIndex > -1 && (
+      {!readonly && editIndex > -1 && (
         <EditOptionList
           {...items[editIndex]}
           appId={appId}

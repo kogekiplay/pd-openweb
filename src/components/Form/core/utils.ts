@@ -196,6 +196,18 @@ function formatRowToServer(
  * 提交给后端的单个控件，也就是 newOldControl 数组的元素。
  * 只列 formatControlToServer 真正写进去的键 —— 加字段就往这里补一行。
  */
+/** Existing rows without changed control IDs must not send fields omitted by the row API. */
+export function formatExistingSubListRow(row: RecordRow, controls: FormControl[] = []) {
+  if (!row.updatedControlIds) return undefined;
+  return {
+    rowid: row.rowid,
+    editType: 0,
+    newOldControl: formatRowToServer({ ..._.pick(row, row.updatedControlIds), rowid: row.rowid }, controls, {
+      isSubList: true,
+    }),
+  };
+}
+
 export interface ServerControl {
   controlId?: string | undefined;
   type?: FormControl['type'] | undefined;
@@ -541,16 +553,7 @@ export function formatControlToServer(
                     newOldControl: formatRowToServer({ ...row, rowid }, childTableControls, { isSubList: true }),
                   };
                 } else {
-                  if (row && row.updatedControlIds) {
-                    row = _.pick(row, row.updatedControlIds);
-                    delete row.updatedControlIds;
-                  }
-
-                  return {
-                    rowid,
-                    editType: 0,
-                    newOldControl: formatRowToServer({ ...row, rowid }, childTableControls, { isSubList: true }),
-                  };
+                  return formatExistingSubListRow(row, childTableControls);
                 }
               })
               .filter(_.identity),
@@ -783,7 +786,13 @@ export const dealUserRange = (
   data: FormControl[] = [],
   masterData: { worksheetId?: string; formData?: FormControl[] } = {},
 ): UserRanges | false => {
-  if (!JSON.parse(_.get(control, 'advancedSetting.chooserange') || '[]').length) return false;
+  const parsedChooseRange = safeParse(_.get(control, 'advancedSetting.chooserange') || '[]', 'array');
+  const chooseRange: { type?: number; rcid?: string; cid?: string; staticValue?: string }[] = Array.isArray(
+    parsedChooseRange,
+  )
+    ? parsedChooseRange
+    : [];
+  if (!chooseRange.length) return false;
 
   const ranges: UserRanges = {};
 
@@ -804,13 +813,13 @@ export const dealUserRange = (
 
   // chooserange 的一项：type 4 表示「取某个控件的值做范围」，此时带 rcid（关联控件）/ cid（目标控件）；
   // 其余是静态范围（type 1 人员、2 部门、其他 组织角色），staticValue 是选定那一项的 JSON 对象串
-  JSON.parse(_.get(control, 'advancedSetting.chooserange') || '[]').map(
+  chooseRange.forEach(
     (item: { type?: number; rcid?: string; cid?: string; staticValue?: string; [key: string]: ControlValue }) => {
       if (item.type === 4) {
         if (item.rcid && item.rcid !== masterData.worksheetId) {
           const parentControl = _.find(data, i => i.controlId === item.rcid) || {};
           const control = safeParse(parentControl.value || '[]', 'array')[0];
-          const sourcevalue = control && JSON.parse(control.sourcevalue)[item.cid as string];
+          const sourcevalue = control && _.get(safeParse(control.sourcevalue || '{}', 'object'), item.cid as string);
           const curItem = _.find(parentControl.relationControls || [], re => re.controlId === item.cid);
           const sourceVal = sourcevalue && safeParse(sourcevalue);
 
@@ -822,7 +831,9 @@ export const dealUserRange = (
             const arrKey = getArrKey(currentItem);
             ranges[arrKey] = _.uniq(
               (ranges[arrKey] || []).concat(
-                sourceVal.map((s: Record<string, ControlValue>) => s[getWidgetValueId(currentItem.type)]),
+                sourceVal
+                  .map((value: Record<string, unknown>) => value[getWidgetValueId(currentItem.type)])
+                  .filter((value: unknown): value is string => typeof value === 'string' && value.length > 0),
               ),
             );
           }
@@ -836,9 +847,9 @@ export const dealUserRange = (
             const arrKey = getArrKey(currentItem);
             ranges[arrKey] = _.uniq(
               (ranges[arrKey] || []).concat(
-                JSON.parse(currentItem.value || '[]').map(
-                  (i: Record<string, ControlValue>) => i[getWidgetValueId(currentItem.type)],
-                ),
+                safeParse(currentItem.value || '[]', 'array')
+                  .map((i: Record<string, unknown>) => i[getWidgetValueId(currentItem.type)])
+                  .filter((value: unknown): value is string => typeof value === 'string' && value.length > 0),
               ),
             );
           }

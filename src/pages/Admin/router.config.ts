@@ -140,13 +140,17 @@ export const menuList = [
             component: () => import('./organization/billCenter/billInfo'),
           },
           {
+            path: 'billing/:projectId/:tab?',
+            component: () => import('./organization/billing'),
+          },
+          {
             path: 'valueaddservice/*',
             component: () => import('./organization/billCenter/valueAddService'),
           },
         ],
       },
       {
-        name: _l('管理员'),
+        name: _l('权限管理'),
         key: 'sysroles',
         menuPath: '/admin/sysroles/:projectId',
         routes: [
@@ -283,6 +287,13 @@ export const menuList = [
         ],
       },
     ].filter(o => !(_.get(window, 'md.global.SysSettings.hideDataPipeline') && o.key === 'aggregationTable')),
+  },
+  {
+    title: _l('沙盒环境'), key: 'sandbox', icon: 'icon-worksheet_public',
+    subMenuList: [
+      { name: _l('应用沙盒'), key: 'appSandbox', routes: [{ path: 'appSandbox/:projectId', component: () => import('./sandbox/AppSandbox') }] },
+      { name: _l('审核与升级'), key: 'reviewUpgrade', routes: [{ path: 'reviewUpgrade/:projectId', component: () => import('./sandbox/ReviewUpgrade') }] },
+    ],
   },
   {
     title: _l('支付与开票'),

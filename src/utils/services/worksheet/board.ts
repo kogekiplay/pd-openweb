@@ -1,0 +1,1 @@
+export { dealBoardViewData, getTargetName, isShowAddRecord, getFirstGroupDefaultValue, getSecondGroupDefaultValue, viewSortRecord, hasSecondGroupControl, getViewSelectFields, canEditForGroupControl } from 'src/pages/worksheet/views/BoardView/util';

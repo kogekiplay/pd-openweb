@@ -1,3 +1,4 @@
+import { withKeepShowRowIds } from 'src/utils/domain/control/value';
 import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
@@ -709,7 +710,7 @@ class RelateRecordCards extends Component<any, any> {
       control: control,
       recordId,
       isCharge,
-      ignoreRowIds: isMobile ? mobileIgnoreRowIds : deletedIds,
+      ignoreRowIds: withKeepShowRowIds(isMobile ? mobileIgnoreRowIds : deletedIds, control),
       allowNewRecord: this.allowNewRecord,
       disabledManualWrite: disabledManualWrite,
       multiple: enumDefault === 2,

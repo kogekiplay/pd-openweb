@@ -15,6 +15,7 @@ export const getAdvanceSetting = (data?: FormControl, key?: string | string[]) =
   let value = get(setting, key);
 
   if (!value) return '';
+  if (_.isArray(value) || _.isObject(value)) return value;
 
   try {
     return JSON.parse(value);

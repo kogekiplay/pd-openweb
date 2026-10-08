@@ -97,7 +97,7 @@ function RelateRecordTable(props) {
         },
       });
     },
-    [control.controlId, records, relateWorksheetInfo],
+    [control, records, relateWorksheetInfo, allowEdit, controlPermission, deleteRecords, updateRecord, base.worksheetId, isDraft, tableId],
   );
   useEffect(() => {
     if (isUndefined(saveSync)) {
@@ -112,6 +112,7 @@ function RelateRecordTable(props) {
     updateTableConfigByControl(control);
   }, [
     control.fieldPermission,
+    control.eventPermissions,
     control.controlPermissions,
     control.advancedSetting,
     control.disabled,

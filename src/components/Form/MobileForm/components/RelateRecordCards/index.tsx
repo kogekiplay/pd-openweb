@@ -1,3 +1,5 @@
+import { shouldLoadInitialRecords, shouldReloadInitialRecords } from './recordLoading';
+import { withKeepShowRowIds } from 'src/utils/domain/control/value';
 import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
@@ -25,6 +27,10 @@ import SearchInput from '../ChildTable/SearchInput';
 import RelateScanQRCode from '../RelateScanQRCode';
 import RecordCoverCard from './RecordCoverCard';
 import RecordTag from './RecordTag';
+import RelateTreeSection from './RelateTreeSection';
+import type { RelateTreeRow } from './treeData';
+import { getTreeChildrenIds } from './treeData';
+import { alertIfNotUnauthorized } from 'src/utils/services/request/error';
 
 const MAX_COUNT = 200;
 
@@ -90,6 +96,9 @@ const OperateWrap = styled.div`
 `;
 
 class RelateRecordCards extends Component<any, any> {
+  private unmounted = false;
+  private treeTabAddPending = false;
+  private treeTabRemovePendingIds = new Set<string>();
   static override contextType = ChildTableContext;
   static override propTypes = {
     editable: PropTypes.bool,
@@ -156,11 +165,13 @@ class RelateRecordCards extends Component<any, any> {
       showLoadMore,
       isLoadingMore: false,
       pageIndex: 1,
+      treeParentRecord: null,
+      treeTabAdding: false,
     };
   }
 
   override componentDidMount() {
-    const { count = 0, records = [], control = {} } = this.props;
+    const { count = 0, records = [] } = this.props;
 
     if (this.state.sheetTemplateLoading) {
       this.loadControls();
@@ -174,16 +185,12 @@ class RelateRecordCards extends Component<any, any> {
       }
     }
 
-    if (
-      (_.get(window, 'shareState.isPublicForm') &&
-        _.includes(['2', '5', '6'], _.get(this, 'props.control.advancedSetting.originShowType'))) ||
-      (_.includes(['2', '5'], _.get(control, 'advancedSetting.showtype')) &&
-        _.includes([FROM.H5_EDIT, FROM.RECORDINFO, FROM.DRAFT], control.from) &&
-        !_.get(this, 'props.control.hasDefaultValue'))
-    ) {
+    if (shouldLoadInitialRecords(this.props)) {
       this.loadMoreRecords(1);
     }
   }
+
+  override componentWillUnmount() { this.unmounted = true; }
 
   override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
@@ -204,13 +211,7 @@ class RelateRecordCards extends Component<any, any> {
       }
 
       if (this.props.flag !== prevProps.flag) {
-        if (
-          (_.get(window, 'shareState.isPublicForm') &&
-            _.includes(['2', '5', '6'], _.get(this, 'props.control.advancedSetting.originShowType'))) ||
-          (_.includes(['2', '5'], _.get(control, 'advancedSetting.showtype')) &&
-            _.includes([FROM.H5_EDIT, FROM.RECORDINFO], control.from) &&
-            !_.get(this, 'props.control.hasDefaultValue'))
-        ) {
+        if (shouldReloadInitialRecords(prevProps, this.props)) {
           this.setState(
             {
               records: [],
@@ -236,7 +237,8 @@ class RelateRecordCards extends Component<any, any> {
         }
       }
 
-      if (!_.isEqual(this.props.records, prevProps.records)) {
+      const ignoreTransientEmptyRecords = shouldLoadInitialRecords(this.props) && !this.props.records.length && this.state.records.length;
+      if (!ignoreTransientEmptyRecords && !_.isEqual(this.props.records, prevProps.records) && !shouldReloadInitialRecords(prevProps, this.props)) {
         this.setState({
           records: this.props.records,
           count: this.props.count,
@@ -265,20 +267,27 @@ class RelateRecordCards extends Component<any, any> {
   }
 
   get onlyRelateByScanCode() {
-    const [, , onlyRelateByScanCode] = (_.get(this, 'props.control.strDefault') || '').split('').map(b => !!+b);
+    const defaultFlags: string = this.props['control'].strDefault || '';
+    const [, , onlyRelateByScanCode] = defaultFlags.split('').map(b => !!+b);
     return onlyRelateByScanCode;
   }
   get disabledManualWrite() {
     return this.onlyRelateByScanCode && _.get(this, 'props.control.advancedSetting.dismanual') === '1';
   }
 
+  get isTreeTable(): boolean {
+    const control = this.props['control'] || {};
+    const settings = control.advancedSetting || {};
+    return control.enumDefault === 2 && ['2', '5', '6'].includes(String(settings.originShowType || settings.showtype)) && Boolean(settings.layercontrolid);
+  }
+
   get isCard() {
     const { from, control = {} } = this.props;
     const advancedSetting = control.advancedSetting || {};
     return (
-      parseInt(advancedSetting.showtype, 10) === 1 ||
+      !this.isTreeTable && (parseInt(advancedSetting.showtype, 10) === 1 ||
       (_.includes([FROM.H5_ADD, FROM.H5_EDIT, FROM.RECORDINFO, FROM.DRAFT], from) &&
-        parseInt(advancedSetting.showtype, 10) === 2)
+        parseInt(advancedSetting.showtype, 10) === 2))
     );
   }
 
@@ -316,7 +325,7 @@ class RelateRecordCards extends Component<any, any> {
       from !== FROM.SHARE &&
       enumDefault2 !== 11 &&
       (this.isCard ? !this.disabledManualWrite : true) &&
-      !disabled &&
+      (!disabled || (this.isTreeTable && control.showRelateRecordEmpty)) &&
       controlPermission.editable
     );
   }
@@ -375,7 +384,7 @@ class RelateRecordCards extends Component<any, any> {
         rowId: recordId,
         controlId,
         pageIndex,
-        pageSize: 50,
+        pageSize: this.isTreeTable ? 200 : 50,
         getType: from === FROM.DRAFT ? from : undefined,
         instanceId,
         workId,
@@ -384,7 +393,7 @@ class RelateRecordCards extends Component<any, any> {
       .then(res => {
         this.setState(state => {
           const data = _.get(res, 'data') || [];
-          const shouldReset = disabled && formDisabled && pageIndex === 1;
+          const shouldReset = pageIndex === 1 && ((disabled && formDisabled) || shouldLoadInitialRecords(nextProps || this.props));
           const newRecords = shouldReset ? data : _.uniqBy([...state.records, ...data], 'rowid');
 
           const newState = {
@@ -394,7 +403,7 @@ class RelateRecordCards extends Component<any, any> {
             showLoadMore: newRecords.length < res.count && data.length > 0,
             // 列表形态（showtype 2 / 5）在表单里、记录详情里才带上总数
             ...(_.includes(['2', '5'], _.get(advancedSetting, 'showtype')) &&
-            _.includes([FROM.H5_EDIT, FROM.RECORDINFO], from)
+            _.includes([FROM.H5_EDIT, FROM.RECORDINFO, FROM.DRAFT], from)
               ? { count: res.count }
               : {}),
           };
@@ -404,7 +413,7 @@ class RelateRecordCards extends Component<any, any> {
       });
   };
 
-  handleChange(searchByChange) {
+  handleChange(searchByChange?: boolean) {
     const { recordId, onChange } = this.props;
     const { count, records, isLoadingMore, showLoadMore, pageIndex, deletedIds = [], addedIds = [] } = this.state;
     onChange({
@@ -419,19 +428,78 @@ class RelateRecordCards extends Component<any, any> {
     }
   }
 
-  handleDelete = deletedRecord => {
+  removeRecordFromState = (deletedRecord: RecordRow, directSaved = false) => {
     const { count, records, addedIds, deletedIds } = this.state;
     this.setState(
       {
-        deletedIds: _.includes(addedIds, deletedRecord.rowid)
+        deletedIds: directSaved || _.includes(addedIds, deletedRecord.rowid)
           ? deletedIds
           : _.uniq(deletedIds.concat(deletedRecord.rowid)),
-        records: records.filter((r: RecordRow) => r.rowid !== deletedRecord.rowid),
+        records: records.filter((r: RecordRow) => r.rowid !== deletedRecord.rowid).map((row: RelateTreeRow) => {
+          const childrenIds = getTreeChildrenIds(row);
+          return { ...row, pid: row.pid === deletedRecord.rowid ? '' : row.pid,
+            ...(childrenIds.includes(deletedRecord.rowid || '') ? { childrenids: JSON.stringify(childrenIds.filter(id => id !== deletedRecord.rowid)) } : {}),
+          };
+        }),
         addedIds: addedIds.filter(id => id !== deletedRecord.rowid),
-        count: count - 1,
+        count: Math.max(count - 1, 0),
       },
-      this.handleChange,
+      directSaved ? undefined : this.handleChange,
     );
+  };
+
+  shouldDirectSaveTreeTab = (): boolean => {
+    const control = this.props['control'] || {};
+    return Boolean(control.recordId && control.showRelateRecordEmpty && this.isTreeTable && control.from !== FROM.H5_EDIT);
+  };
+  handleDelete = (deletedRecord: RecordRow): void => {
+    if (!this.shouldDirectSaveTreeTab() || !deletedRecord.rowid) {
+      this.removeRecordFromState(deletedRecord);
+      return;
+    }
+    if (this.treeTabRemovePendingIds.has(deletedRecord.rowid)) return;
+    const { appId, viewId, worksheetId, recordId, controlId, instanceId, workId, from } = this.props['control'];
+    const id = deletedRecord.rowid;
+    this.treeTabRemovePendingIds.add(id);
+    sheetAjax.updateRowRelationRows({ appId, viewId, worksheetId, rowId: recordId, controlId, isAdd: false, rowIds: [id], instanceId, workId, updateType: from === FROM.DRAFT ? from : undefined })
+      .then((result: unknown) => {
+        const success = result === true || Boolean(result && typeof result === 'object' && 'isSuccess' in result && result.isSuccess);
+        if (!success) { alert(_l('取消关联失败！'), 2); return; }
+        if (!this.unmounted) { this.removeRecordFromState(deletedRecord, true); alert(_l('取消关联成功！')); }
+      })
+      .catch((error: unknown) => alertIfNotUnauthorized(error, _l('取消关联失败！'), 2))
+      .finally(() => this.treeTabRemovePendingIds.delete(id));
+  };
+  handleAdd = (newAdded: RecordRow[]): void => {
+    if (!newAdded.length) return;
+    if (!this.shouldDirectSaveTreeTab()) { this.addRecordsToState(newAdded); return; }
+    if (this.treeTabAddPending) return;
+    const { appId, viewId, worksheetId, recordId, controlId, instanceId, workId, from } = this.props['control'];
+    this.treeTabAddPending = true;
+    this.setState({ treeTabAdding: true });
+    sheetAjax.updateRowRelationRows({ appId, viewId, worksheetId, rowId: recordId, controlId, isAdd: true, rowIds: newAdded.map(row => row.rowid), instanceId, workId, updateType: from === FROM.DRAFT ? from : undefined })
+      .then((result: unknown) => {
+        const success = result === true || Boolean(result && typeof result === 'object' && 'isSuccess' in result && result.isSuccess);
+        if (!success) { alert(_l('添加记录失败！'), 2); return; }
+        if (!this.unmounted) {
+          this.setState((state: { records: RecordRow[]; count: number }) => {
+            const unique = _.uniqBy([...newAdded.map(row => ({ ...row, isNewAdd: false })), ...state.records], 'rowid');
+            return { records: unique, count: state.count + unique.length - state.records.length };
+          });
+          alert(_l('添加记录成功！'));
+        }
+      })
+      .catch((error: unknown) => alertIfNotUnauthorized(error, _l('添加记录失败！'), 2))
+      .finally(() => { this.treeTabAddPending = false; if (!this.unmounted) this.setState({ treeTabAdding: false }); });
+  };
+  loadTreeChildren = (parentRow: RelateTreeRow): Promise<RelateTreeRow[]> => {
+    const { worksheetId, recordId, controlId, from, instanceId, workId, isDraft } = this.props['control'];
+    return sheetAjax.getRowRelationRows({ worksheetId, rowId: recordId, controlId, pageIndex: 1, pageSize: 200, fastFilters: [{ controlId: 'rowid', value: parentRow.rowid }], getType: from === FROM.DRAFT || isDraft ? 21 : undefined, instanceId, workId })
+      .then(response => {
+        const children = (response.data || []).map((row: RecordRow) => ({ ...row, rowid: row.rowid || '', pid: parentRow.rowid }));
+        if (!this.unmounted && this.props['control'].recordId === recordId && this.props['control'].controlId === controlId) this.setState((state: { records: RecordRow[] }) => ({ records: _.uniqBy([...state.records, ...children], 'rowid') }));
+        return children;
+      });
   };
 
   handleClear = () => {
@@ -479,7 +547,7 @@ class RelateRecordCards extends Component<any, any> {
     });
   };
 
-  handleAdd = newAdded => {
+  addRecordsToState = (newAdded: RecordRow[]) => {
     const { multiple } = this.props;
     const { count, records, addedIds = [], deletedIds = [] } = this.state;
     const { isRealCard } = this;
@@ -572,7 +640,7 @@ class RelateRecordCards extends Component<any, any> {
         sid: recordId,
         type: 8,
         sourcevalue: JSON.stringify({
-          ..._.assign(...formData.map((c: FormControl) => ({ [c.controlId]: c.value }))),
+          ...Object.assign({}, ...formData.map((c: FormControl) => ({ [c.controlId || '']: c.value }))),
           [titleControl.controlId]: titleControl.value,
           rowid: recordId,
         }),
@@ -620,9 +688,9 @@ class RelateRecordCards extends Component<any, any> {
     }
   };
 
-  handleSelectRecord(onOk = () => {}, options = {}) {
+  handleSelectRecord(onOk: (rows: RecordRow[]) => void = () => {}, options: Record<string, unknown> = {}) {
     const { control, showCoverAndControls } = this.props;
-    const { rows } = this.context || {};
+    const { rows } = (this.context || {}) as { rows?: RecordRow[] | undefined };
     const {
       appId,
       viewId,
@@ -640,7 +708,7 @@ class RelateRecordCards extends Component<any, any> {
     const { records, deletedIds } = this.state;
     const { disabledManualWrite, isCard } = this;
     const selectedRowIds = records.map((r: RecordRow) => r.rowid);
-    const ignoreRowIds = _.uniq(deletedIds.concat(selectedRowIds));
+    const ignoreRowIds = withKeepShowRowIds(_.uniq(deletedIds.concat(selectedRowIds)), control);
     const selectOptions = {
       className: `mobileSelectRecordWrap-${controlId}`,
       control: control,
@@ -704,6 +772,23 @@ class RelateRecordCards extends Component<any, any> {
     const controlPermission = controlState(control, from);
     const allowRemove =
       (control.advancedSetting.allowcancel !== '0' || enumDefault === 1) && controlPermission.editable;
+
+    if (this.isTreeTable) {
+      const controls: FormControl[] = this.state['controls'];
+      const titleControl = controls.find(item => item.attribute === 1) || {};
+      const abstractIds: string[] = safeParse(advancedSetting.h5abstractids, 'array');
+      const displayControls = abstractIds.map(id => controls.find(item => item.controlId === id)).filter((item): item is FormControl => Boolean(item) && item?.controlId !== titleControl.controlId);
+      const treeRows = (records as RecordRow[]).filter((row): row is RelateTreeRow => Boolean(row.rowid));
+      return <RelateTreeSection key={`${control.controlId}-${recordId}`} appId={appId} control={control} controls={controls} rows={treeRows} titleControl={titleControl} displayControls={displayControls}
+        projectId={projectId || control.projectId} worksheetId={dataSource} sheetSwitchPermit={sheetSwitchPermit} isEdit={!disabled && !this.props['formDisabled']}
+        allowAddChild={this.allowNewRecord && (!disabled || control.showRelateRecordEmpty) && !this.state['treeTabAdding']}
+        allowRemove={allowRemove && (!disabled || control.showRelateRecordEmpty)}
+        onAddChild={row => this.setState({ showNewRecord: true, treeParentRecord: row })}
+        onLoadChildren={this.loadTreeChildren} onRemove={this.handleDelete}
+        onOpen={row => { if (allowOpenRecord && allowlink !== '0' && !/^temp/.test(row.rowid)) { addBehaviorLog('worksheetRecord', dataSource, { rowId: row.rowid }); this.setState({ previewRecord: { recordId: row.rowid } }); } }}
+        keywords={this.state['keywords']} onSearch={value => this.setState({ keywords: value, pageIndex: 1 }, () => { if (disabled || this.props['formDisabled']) this.loadMoreRecords(1); })}
+        isLoadingMore={isLoadingMore} showLoadMore={showLoadMore} onLoadMore={() => { if (!isLoadingMore) this.loadMoreRecords(pageIndex + 1); }} />;
+    }
 
     if (isCard || this.mobileShowAddAsDropdown) {
       return (
@@ -834,7 +919,7 @@ class RelateRecordCards extends Component<any, any> {
       sourceBtnName,
     } = control;
     const sourceEntityName = getTranslateInfo(appId, null, dataSource).recordName || control.sourceEntityName;
-    const { records, previewRecord, showNewRecord, sheetTemplateLoading, keywords, isMobileSearchFocus } = this.state;
+    const { records, previewRecord, showNewRecord, sheetTemplateLoading, keywords, isMobileSearchFocus, treeParentRecord } = this.state;
     const { onlyRelateByScanCode, disabledManualWrite, addRelationButtonVisible, isCard, mobileShowAddAsDropdown } =
       this;
     const isScanQR = getIsScanQR();
@@ -861,7 +946,7 @@ class RelateRecordCards extends Component<any, any> {
       }
     };
 
-    if (showRelateRecordEmpty && !addRelationButtonVisible && disabled && _.isEmpty(records)) {
+    if (!this.isTreeTable && showRelateRecordEmpty && !addRelationButtonVisible && disabled && _.isEmpty(records)) {
       return (
         <WithoutRowsWrap className="withoutRowsWrapper flexColumn valignWrapper h100">
           <WithoutRows text={_l('暂无记录')} />
@@ -899,20 +984,20 @@ class RelateRecordCards extends Component<any, any> {
             [marginClass]: shouldShowMargin && records.length,
           })}
         >
-          {isCard && addRelationButtonVisible && (
+          {(isCard || this.isTreeTable) && addRelationButtonVisible && (
             <div className="customFormControlBox customFormButton" onClick={this.handleClick}>
               <Icon icon="plus" />
               <span>{sourceBtnName || sourceEntityName || ''}</span>
             </div>
           )}
-          {!isCard && (!disabled || !mobileShowAddAsDropdown) && (
+          {!this.isTreeTable && !isCard && (!disabled || !mobileShowAddAsDropdown) && (
             <div
               className={cx('customFormControlBox controlMinHeight customFormControlCapsuleBox', {
                 controlEditReadonly: !formDisabled && records.length && disabled,
                 controlDisabled: formDisabled,
               })}
               onClick={() => {
-                if (!disabled) this.handleClick();
+                if (!disabled && !disabledManualWrite) this.handleClick();
               }}
             >
               {records.length ? (
@@ -953,7 +1038,7 @@ class RelateRecordCards extends Component<any, any> {
               </RelateScanQRCodeWrap>
             )}
         </div>
-        {(isCard || mobileShowAddAsDropdown) && this.renderRecordsCon()}
+        {(this.isTreeTable || isCard || mobileShowAddAsDropdown) && this.renderRecordsCon()}
         {from !== FROM.PUBLIC_ADD && !!previewRecord && (
           <MobileRecordInfoModal
             className="full"
@@ -970,7 +1055,7 @@ class RelateRecordCards extends Component<any, any> {
             updateRelateRecord={this.updateRelateRecord}
             onClose={() => {
               this.setState({ previewRecord: undefined });
-              if (_.isFunction(control.refreshRecord)) {
+              if (!this.isTreeTable && _.isFunction(control.refreshRecord)) {
                 control.refreshRecord();
               }
             }}
@@ -991,11 +1076,14 @@ class RelateRecordCards extends Component<any, any> {
             visible={showNewRecord}
             masterRecordRowId={recordId}
             hideNewRecord={() => {
-              this.setState({ showNewRecord: false });
+              this.setState({ showNewRecord: false, treeParentRecord: null });
             }}
-            defaultRelatedSheet={this.getDefaultRelateSheetValue()}
-            onAdd={record => {
-              this.handleAdd([{ ...record, isNewAdd: true }]);
+            defaultRelatedSheet={treeParentRecord ? undefined : this.getDefaultRelateSheetValue()}
+            defaultFormData={treeParentRecord ? { [advancedSetting.layercontrolid]: JSON.stringify([{ sid: treeParentRecord.rowid, sourcevalue: JSON.stringify(treeParentRecord), type: 8 }]) } : undefined}
+            defaultFormDataEditable={Boolean(treeParentRecord)}
+            onAdd={(record: RecordRow) => {
+              this.handleAdd([{ ...record, isNewAdd: true, ...(treeParentRecord ? { pid: treeParentRecord.rowid } : {}) }]);
+              this.setState({ treeParentRecord: null });
             }}
           />
         )}

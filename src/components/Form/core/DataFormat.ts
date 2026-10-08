@@ -1591,7 +1591,7 @@ export default class DataFormat {
 
     if (!ids.length) return;
 
-    const isGoogle = !!getMapConfig();
+    const isGoogle = Number(getMapConfig()) === 1;
 
     if (isGoogle) {
       if (navigator.geolocation) {

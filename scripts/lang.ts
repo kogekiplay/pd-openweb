@@ -327,6 +327,7 @@ if (require.main === module) {
 
 module.exports = {
   buildNewPo,
+  getLangConfig,
   buildPoToJs,
   clearPoLangKey,
   extractLangKeysFromContent,

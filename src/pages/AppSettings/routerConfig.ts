@@ -36,6 +36,12 @@ export const routerConfigs = [
     component: () => import('./components/EntityRelationship'),
   },
   {
+    type: 'sandbox',
+    icon: 'worksheet_public',
+    text: _l('沙盒'),
+    component: () => import('./components/AppSandbox'),
+  },
+  {
     type: 'publish',
     icon: 'send',
     text: _l('发布'),

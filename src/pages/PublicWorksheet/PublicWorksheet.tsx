@@ -120,6 +120,12 @@ export default class PublicWorksheet extends React.Component<any, any> {
 
   onClosePreFillDesc = () => this.setState({ preFillDescVisible: false });
 
+  notifyParentSubmitted = () => {
+    if (window.parent === window) return;
+    const { worksheetId } = this.state.publicWorksheetInfo || {};
+    window.parent.postMessage({ type: 'PUBLIC_WORKSHEET_SUBMITTED', worksheetId }, '*');
+  };
+
   onSubmit = (submitResult, data, submitSuccess = () => {}) => {
     const { isPayOrder, rowId, isAtOncePayment, isPaySuccessAddRecord, isOpenInvoice } = submitResult || {};
     const { worksheetId, extendDatas } = this.state.publicWorksheetInfo || {};
@@ -150,6 +156,7 @@ export default class PublicWorksheet extends React.Component<any, any> {
         payFinished: ({ onCancel, isSuccess, amount, orderId }) => {
           if (isPaySuccessAddRecord && isSuccess) {
             submitSuccess();
+            this.notifyParentSubmitted();
             if (!notDialog) {
               this.setState({
                 status: FILL_STATUS.COMPLETED,
@@ -169,7 +176,10 @@ export default class PublicWorksheet extends React.Component<any, any> {
 
     !isPayOrder && jumpUrl && (location.href = jumpUrl);
 
-    (!isPaySuccessAddRecord || notDialog) && this.setState({ status: FILL_STATUS.COMPLETED, fillData: data });
+    if (!isPaySuccessAddRecord || notDialog) {
+      this.setState({ status: FILL_STATUS.COMPLETED, fillData: data });
+      this.notifyParentSubmitted();
+    }
   };
 
   getThemeBgColor = ({ themeBgColor, themeColor }) => {

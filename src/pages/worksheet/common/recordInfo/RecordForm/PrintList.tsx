@@ -22,6 +22,14 @@ import { VersionProductType } from 'src/utils/enum';
 import { addBehaviorLog, getFeatureStatus } from 'src/utils/project';
 import { sendCloudPrint } from 'src/utils/record';
 import IconBtn from './IconBtn';
+import ManagePrintCountModal, { type ManagedPrintTemplate } from './RecordPrint/ManagePrintCountModal';
+import {
+  getRowPrintCount,
+  precheckTemplatePrint,
+  printCountFeatureAvailable,
+  type RowPrintCount,
+  type TemplatePrintCount,
+} from './RecordPrint/printCount';
 
 const MenuItemWrap = styled(MenuItem)`
   &.printItem.Item {
@@ -147,9 +155,16 @@ export async function handleTemplateRecordPrint({
   appDetail,
   worksheetInfo,
   disabledCloudPrint = false,
+  precheckCompleted = false,
   updatePrintStatus = () => {},
 }) {
   const it = template;
+  if (
+    !precheckCompleted &&
+    it.type !== PRINT_TYPE.CLOUD_PRINT &&
+    !(await precheckTemplatePrint({ projectId, worksheetId, printId: it.id, rowIds: rowIds || [recordId] }))
+  )
+    return;
 
   const featureType = getFeatureStatus(projectId, VersionProductType.wordPrintTemplate);
 
@@ -282,7 +297,7 @@ export default class PrintList extends Component<any, any> {
   }
 
   getData = () => {
-    const { viewId, worksheetId, recordId } = this.props;
+    const { viewId, worksheetId, recordId, projectId } = this.props;
 
     if (worksheetId) {
       worksheetAjax
@@ -292,6 +307,14 @@ export default class PrintList extends Component<any, any> {
           rowIds: [recordId].filter(Boolean),
         })
         .then(tempList => {
+          if (recordId && printCountFeatureAvailable(projectId)) {
+            getRowPrintCount({ projectId, worksheetId, rowIds: [recordId] })
+              .then(printCount => {
+                if (this.props['recordId'] === recordId && this.props['worksheetId'] === worksheetId)
+                  this.setState({ printCount });
+              })
+              .catch(() => this.setState({ printCount: undefined }));
+          }
           let list = !viewId ? tempList.filter(o => o.range === 1) : tempList;
 
           this.setState({
@@ -308,13 +331,14 @@ export default class PrintList extends Component<any, any> {
     }
   };
 
-  getDownload = (item, e) => {
+  getDownload = async (item: { id: string; type: number }, e: React.MouseEvent) => {
     const { worksheetId, projectId, viewId, appId, recordId } = this.props;
     const { type, id } = item;
     // 系统打印
     if (type === 0) return;
 
     e.stopPropagation();
+    if (!(await precheckTemplatePrint({ projectId, worksheetId, printId: id, rowIds: [recordId] }))) return;
     addBehaviorLog('printWord', worksheetId, { printId: id, rowId: recordId });
     getDownLoadUrl(
       md.global.Config.WorksheetDownUrl,
@@ -401,6 +425,10 @@ export default class PrintList extends Component<any, any> {
         </div>
         {list.map((it, index: number) => {
           let isCustom = [2, 5].includes(it.type);
+          const printCount: TemplatePrintCount | undefined = this.state['printCount']?.templates.find(
+            (item: TemplatePrintCount) => item.printId === it.id,
+          );
+          const limitReached = printCount?.printLimitEnabled && printCount.leftPrintCount === 0;
 
           return (
             <MenuItemWrap
@@ -444,7 +472,11 @@ export default class PrintList extends Component<any, any> {
               <div title={it.name} className="ellipsis templateName">
                 {it.name}
               </div>
-              {_.includes([3, 4], it.type) ? (
+              {printCount?.printLimitEnabled ? (
+                <span className="detail textTertiary">
+                  {limitReached ? _l('次数受限') : `${printCount.printCount}/${printCount.printLimitCount}`}
+                </span>
+              ) : _.includes([3, 4], it.type) ? (
                 <span className="detail">{getPrintCardInfoOfTemplate(it).text}</span>
               ) : (isCharge || !it.allowDownloadPermission) &&
                 showDownload &&
@@ -463,8 +495,23 @@ export default class PrintList extends Component<any, any> {
   };
 
   override render() {
-    const { viewId, sheetSwitchPermit, type = 0, onItemClick = () => {} } = this.props;
+    const {
+      viewId,
+      sheetSwitchPermit,
+      type = 0,
+      onItemClick = () => {},
+      projectId,
+      worksheetId,
+      recordId,
+    } = this.props;
     const { tempList, showPrintGroup } = this.state;
+    const printCount: RowPrintCount | undefined = this.state['printCount'];
+    const managedTemplates: ManagedPrintTemplate[] = (printCount?.templates || [])
+      .filter(template => template.printLimitEnabled)
+      .map(template => ({
+        ...template,
+        name: tempList.find((item: { id: string; name: string }) => item.id === template.printId)?.name || _l('未命名'),
+      }));
 
     if (tempList.length <= 0 || type === 2) {
       return isOpenPermit(permitList.recordPrintSwitch, sheetSwitchPermit, viewId) && type !== 1 ? (
@@ -484,72 +531,92 @@ export default class PrintList extends Component<any, any> {
       );
     } else {
       return (
-        <Trigger
-          popupVisible={showPrintGroup}
-          onPopupVisibleChange={showPrintGroup => {
-            this.setState({ showPrintGroup }, () => {
-              type === 1 && showPrintGroup && this.getData();
-            });
-          }}
-          popupClassName="DropdownPrintTrigger"
-          action={[type === 1 ? 'click' : 'hover']}
-          mouseEnterDelay={0.1}
-          popupAlign={{
-            points: type === 1 ? ['br', 'tr'] : ['tl', 'tr'],
-            offset: [1, -5],
-            overflow: { adjustX: 1, adjustY: 2 },
-          }}
-          popup={
-            <div className="">
-              {/* 打印模板 */}
-              {tempList.length > 0 && (
-                <div
-                  className={cx('tempList', {
-                    noDefaultPrint:
-                      type === 1 || !isOpenPermit(permitList.recordPrintSwitch, sheetSwitchPermit, viewId),
-                  })}
-                >
-                  {['defaultPrint', 'codePrint', 'cloudPrint'].map(item => this.renderPrintTemplate(item))}
-                </div>
-              )}
-              {/* 系统打印权限 */}
-              {type !== 1 && isOpenPermit(permitList.recordPrintSwitch, sheetSwitchPermit, viewId) && (
-                <Fragment>
-                  <SecTitle>{_l('系统默认打印')}</SecTitle>
-                  <MenuItemWrap
-                    data-event="printRecord"
-                    className={cx({ defaultPrint: tempList.length > 0 })}
-                    onClick={() => {
-                      onItemClick();
-                      this.menuPrint();
-                    }}
+        <Fragment>
+          <Trigger
+            popupVisible={showPrintGroup}
+            onPopupVisibleChange={showPrintGroup => {
+              this.setState({ showPrintGroup }, () => {
+                type === 1 && showPrintGroup && this.getData();
+              });
+            }}
+            popupClassName="DropdownPrintTrigger"
+            action={[type === 1 ? 'click' : 'hover']}
+            mouseEnterDelay={0.1}
+            popupAlign={{
+              points: type === 1 ? ['br', 'tr'] : ['tl', 'tr'],
+              offset: [1, -5],
+              overflow: { adjustX: 1, adjustY: 2 },
+            }}
+            popup={
+              <div className="">
+                {this.props['printCountEnabled'] && printCount && printCount.totalPrintCount > 0 && (
+                  <SecTitle>{_l('已打印 %0 次', printCount.totalPrintCount)}</SecTitle>
+                )}
+                {/* 打印模板 */}
+                {tempList.length > 0 && (
+                  <div
+                    className={cx('tempList', {
+                      noDefaultPrint:
+                        type === 1 || !isOpenPermit(permitList.recordPrintSwitch, sheetSwitchPermit, viewId),
+                    })}
                   >
-                    {_l('打印记录')}
+                    {['defaultPrint', 'codePrint', 'cloudPrint'].map(item => this.renderPrintTemplate(item))}
+                  </div>
+                )}
+                {this.props['isCharge'] && managedTemplates.length > 0 && (
+                  <MenuItemWrap onClick={() => this.setState({ managePrintCountVisible: true, showPrintGroup: false })}>
+                    {_l('管理模板打印次数')}
                   </MenuItemWrap>
-                </Fragment>
-              )}
-            </div>
-          }
-        >
-          {type === 1 ? (
-            <IconBtn data-event="print">
-              <Tooltip title={_l('打印')} placement="bottom" align={{ offset: [0, 0] }}>
-                <Icon icon="print" className="Font22 Hand" />
-              </Tooltip>
-            </IconBtn>
-          ) : (
-            <MenuItemWrap
-              data-event="print"
-              className={cx('printItem', { hover: showPrintGroup })}
-              icon={<Icon icon="print" className="Font17 mLeft5" />}
-            >
-              <span className="mLeft15">
-                {tempList.filter(o => o.type !== 0).length > 0 ? _l('打印/导出') : _l('系统打印')}
-              </span>
-              <Icon icon="arrow-right-tip" style={{ left: 'auto', right: 15 }} className="Font14 mLeft5" />
-            </MenuItemWrap>
+                )}
+                {/* 系统打印权限 */}
+                {type !== 1 && isOpenPermit(permitList.recordPrintSwitch, sheetSwitchPermit, viewId) && (
+                  <Fragment>
+                    <SecTitle>{_l('系统默认打印')}</SecTitle>
+                    <MenuItemWrap
+                      data-event="printRecord"
+                      className={cx({ defaultPrint: tempList.length > 0 })}
+                      onClick={() => {
+                        onItemClick();
+                        this.menuPrint();
+                      }}
+                    >
+                      {_l('打印记录')}
+                    </MenuItemWrap>
+                  </Fragment>
+                )}
+              </div>
+            }
+          >
+            {type === 1 ? (
+              <IconBtn data-event="print">
+                <Tooltip title={_l('打印')} placement="bottom" align={{ offset: [0, 0] }}>
+                  <Icon icon="print" className="Font22 Hand" />
+                </Tooltip>
+              </IconBtn>
+            ) : (
+              <MenuItemWrap
+                data-event="print"
+                className={cx('printItem', { hover: showPrintGroup })}
+                icon={<Icon icon="print" className="Font17 mLeft5" />}
+              >
+                <span className="mLeft15">
+                  {tempList.filter(o => o.type !== 0).length > 0 ? _l('打印/导出') : _l('系统打印')}
+                </span>
+                <Icon icon="arrow-right-tip" style={{ left: 'auto', right: 15 }} className="Font14 mLeft5" />
+              </MenuItemWrap>
+            )}
+          </Trigger>
+          {this.state['managePrintCountVisible'] && (
+            <ManagePrintCountModal
+              templates={managedTemplates}
+              projectId={projectId}
+              worksheetId={worksheetId}
+              rowId={recordId}
+              onReset={this.getData}
+              onCancel={() => this.setState({ managePrintCountVisible: false })}
+            />
           )}
-        </Trigger>
+        </Fragment>
       );
     }
   }

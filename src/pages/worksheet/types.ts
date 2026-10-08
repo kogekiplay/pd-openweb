@@ -11,6 +11,84 @@
  */
 import type { ControlAdvancedSetting, FormControl } from 'src/utils/controlTypes';
 
+/** 发给取行接口的筛选条件。组条件只有连接方式与子条件，不一定有 controlId/dataType。 */
+export interface WorksheetFilterCondition {
+  controlId?: string | undefined;
+  dataType?: number | undefined;
+  spliceType?: number | undefined;
+  filterType?: number | undefined;
+  dateRange?: number | undefined;
+  dateRangeType?: number | undefined;
+  value?: string | number | undefined;
+  values?: string[] | undefined;
+  minValue?: string | number | undefined;
+  maxValue?: string | number | undefined;
+  dynamicSource?: HapApi.MD.Entity.Form.DefaultSourceModel[] | undefined;
+  advancedSetting?: ControlAdvancedSetting | undefined;
+  isGroup?: boolean | undefined;
+  groupFilters?: WorksheetFilterCondition[] | undefined;
+  /** 导航组筛选在界面里显示的名称，发送前保留在 state 中。 */
+  navNames?: string[] | undefined;
+}
+
+/** 导航分组由 GroupFilter 的选中项派发；值和显示名数组始终存在，空组选中项用空数组。 */
+export interface WorksheetNavGroupCondition extends WorksheetFilterCondition {
+  controlId: string;
+  dataType: number;
+  values: string[];
+  navNames: string[];
+}
+
+/** formatFilterValues 把服务端的字符串转换为人员、部门、角色、地区或关联记录项。 */
+export type QuickFilterDisplayValue =
+  | string
+  | { accountId?: string | undefined; fullname?: string | undefined; avatar?: string | undefined }
+  | { organizeId?: string | undefined; organizeName?: string | undefined }
+  | { departmentId?: string | undefined; departmentName?: string | undefined }
+  | { id?: string | undefined; name?: string | undefined }
+  | { rowid?: string | undefined; name?: string | undefined };
+
+export interface QuickFilterDisplayCondition extends Omit<WorksheetFilterCondition, 'values'> {
+  values?: QuickFilterDisplayValue[] | undefined;
+}
+
+/** sheet.filters：搜索框、筛选面板和嵌入页面分别派发部分更新。 */
+export interface WorksheetFilters {
+  searchType: number;
+  keyWords: string;
+  filterControls: WorksheetFilterCondition[];
+  filtersGroup?: WorksheetFilterCondition[] | undefined;
+  requestParams?: { ignorecase?: string | undefined } | undefined;
+}
+
+/** 视图取行请求，筛选字段来自 sheet.filters，其余字段由各视图按需补齐。 */
+export interface WorksheetRowsRequest extends Partial<WorksheetFilters> {
+  type?: string | undefined;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
+  reportId?: string | undefined;
+  /** 日历请求的可见时间范围，由 calendarview 填入。 */
+  beginTime?: string | undefined;
+  endTime?: string | undefined;
+  pageIndex?: number | undefined;
+  pageSize?: number | undefined;
+  status?: number | undefined;
+  kanbanIndex?: number | undefined;
+  kanbanSize?: number | undefined;
+  kanbanKey?: string | undefined;
+  relationWorksheetId?: string | undefined;
+  controlId?: string | undefined;
+  layer?: number | undefined;
+  getType?: number | undefined;
+  notGetTotal?: boolean | undefined;
+  isGetWorksheet?: boolean | undefined;
+  fastFilters?: WorksheetFilterCondition[] | undefined;
+  navGroupFilters?: WorksheetFilterCondition[] | undefined;
+  sortControls?: { controlId?: string | undefined; datatype?: number | undefined; isAsc?: boolean | undefined }[] | undefined;
+  langType?: number | undefined;
+}
+
 /**
  * 一个工作表视图。
  *

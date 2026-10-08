@@ -1,4 +1,4 @@
-﻿import { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Button, Checkbox, Dialog, Dropdown, Icon, LoadDiv, RadioGroup, ScrollView } from 'ming-ui';
@@ -60,6 +60,7 @@ export default class ExportSheet extends Component<any, any> {
       columnSearchWord: '', // 字段实时搜索
       speed: false, // 加速导出
       isNumber: true, // 导出数值类型
+      exportScore: false, // 同时导出选项分值
       previewed: true,
       exportId: false,
       exportJob: false,
@@ -118,6 +119,7 @@ export default class ExportSheet extends Component<any, any> {
         columnsSelected,
         exportRelationalSheet,
         isNumber: res.isNumber || false,
+        exportScore: res.exportScore || false,
         previewed: res.previewed || false,
         exportId: res.exportId || exportId,
         exportJob: res.exportJob || exportJob,
@@ -224,8 +226,18 @@ export default class ExportSheet extends Component<any, any> {
       filtersGroup = [],
       sortControls,
     } = this.props;
-    const { columnsSelected, isStatistics, type, speed, isNumber, previewed, exportId, exportJob, orderType } =
-      this.state;
+    const {
+      columnsSelected,
+      isStatistics,
+      type,
+      speed,
+      isNumber,
+      exportScore,
+      previewed,
+      exportId,
+      exportJob,
+      orderType,
+    } = this.state;
 
     // 获取Token 功能模块 token枚举，3 = 导出excel，4 = 导入excel生成表，5= word打印
     const token = await appManagement.getToken({ worksheetId, viewId, tokenType: 3 });
@@ -255,6 +267,7 @@ export default class ExportSheet extends Component<any, any> {
         .concat(filtersGroup)
         .map(f =>
           _.pick(f, [
+            'advancedSetting',
             'controlId',
             'dataType',
             'spliceType',
@@ -269,6 +282,7 @@ export default class ExportSheet extends Component<any, any> {
       navGroupFilters,
       speed,
       isNumber,
+      exportScore,
       sortRelationCids: speed ? [] : exportControlsId,
       previewed,
       exportId,
@@ -371,7 +385,7 @@ export default class ExportSheet extends Component<any, any> {
       ),
       onOk: () => {
         const { worksheetId, exportView } = this.props;
-        const { type, isStatistics, initEdited, isNumber, previewed, exportId, exportJob } = this.state;
+        const { type, isStatistics, initEdited, isNumber, exportScore, previewed, exportId, exportJob } = this.state;
         const args = {
           type,
           controlIds: exportControlsId,
@@ -381,6 +395,7 @@ export default class ExportSheet extends Component<any, any> {
           worksheetId,
           viewId: exportView.viewId,
           isNumber,
+          exportScore,
           previewed,
           exportId,
           exportJob,
@@ -405,6 +420,7 @@ export default class ExportSheet extends Component<any, any> {
       edited,
       speed,
       isNumber,
+      exportScore,
       previewed,
       exportId,
       exportJob,
@@ -568,6 +584,20 @@ export default class ExportSheet extends Component<any, any> {
                     checked={isNumber}
                     disabled={edited}
                     onClick={() => this.setState({ isNumber: !isNumber })}
+                  />
+
+                  <Checkbox
+                    text={
+                      <span>
+                        {_l('同时导出选项分值')}
+                        <Tooltip title={_l('为赋予分值的单选、多选字段额外导出一列分值')}>
+                          <i className="icon-info mLeft5 Font16 textTertiary" />
+                        </Tooltip>
+                      </span>
+                    }
+                    checked={exportScore}
+                    disabled={edited}
+                    onClick={() => this.setState({ exportScore: !exportScore })}
                   />
 
                   {!hideStatistics && (

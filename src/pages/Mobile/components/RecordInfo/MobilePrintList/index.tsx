@@ -5,17 +5,25 @@ import styled from 'styled-components';
 import { Icon, PopupWrapper } from 'ming-ui';
 import webCacheAjax from 'src/api/webCache';
 import worksheetAjax from 'src/api/worksheet';
+import BatchPrintErrorModal from 'worksheet/common/BatchPrintErrorModal';
 import { getPrintCardInfoOfTemplate } from 'worksheet/common/PrintQrBarCode/enum';
 import { generatePdf } from 'worksheet/common/PrintQrBarCode/GeneratingPdf';
+import {
+  type BatchPrintError,
+  getRowPrintCount,
+  precheckPrint,
+  printCountFeatureAvailable,
+  type RowPrintCount,
+} from 'worksheet/common/recordInfo/RecordForm/RecordPrint/printCount';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { PRINT_TEMP, PRINT_TYPE, PRINT_TYPE_STYLE } from 'src/pages/Print/core/config';
 import { pathCompletion } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { compatibleMDJS, getCurrentProject, getFeatureStatus } from 'src/utils/project';
 import { sendCloudPrint } from 'src/utils/record';
 import { buildAppPrintParams, getPrintCacheAppDetail, getPrintCacheWorksheetInfo } from './utils';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const DEFAULT_TEMPLATE_TYPES = [PRINT_TYPE.SYS_PRINT, PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT];
 const CODE_TEMPLATE_TYPES = [PRINT_TYPE.QR_CODE_PRINT, PRINT_TYPE.BAR_CODE_PRINT];
@@ -183,6 +191,8 @@ export default function MobilePrintList(props) {
   const [showUpgradeVisible, setShowUpgradeVisible] = useState(false);
   const [printLoading, setPrintLoading] = useState(false);
   const [templateId, setTemplateId] = useState('');
+  const [printCount, setPrintCount] = useState<RowPrintCount | undefined>();
+  const [precheckError, setPrecheckError] = useState<BatchPrintError | undefined>();
   const attriData = controls.filter(it => it.attribute === 1);
   const isExternal = _.isEmpty(getCurrentProject(projectId)); // 是否为
   const printTypes = window.isMingDaoApp ? ['defaultPrint', 'codePrint', 'cloudPrint'] : ['defaultPrint', 'cloudPrint'];
@@ -205,12 +215,15 @@ export default function MobilePrintList(props) {
   const getPrintPreviewUrl = (printKey: string, printType = 'preview') =>
     pathCompletion(`/printForm/${appId}/${workId ? 'flow' : 'worksheet'}/${printType}/print/${printKey}`);
 
-  const getTemplatePrintData = template => ({
+  const getTemplatePrintData = (
+    template: HapApi.MD.Entity.Worksheet.PrintListModel,
+    printableRowIds: string[] = currentRowIds,
+  ) => ({
     printId: template.id,
     isDefault: template.type === PRINT_TYPE.SYS_PRINT,
     worksheetId,
     projectId,
-    rowId: isBatchOperate ? currentRowIds.join(',') : rowId,
+    rowId: isBatchOperate ? printableRowIds.join(',') : rowId,
     getType: 1,
     viewId,
     appId,
@@ -222,7 +235,7 @@ export default function MobilePrintList(props) {
     allowEditAfterPrint: template.allowEditAfterPrint,
     workId,
     instanceId,
-    rowIds: currentRowIds,
+    rowIds: printableRowIds,
     ...printCacheContext,
     printer: md.global.Account.fullname,
   });
@@ -360,7 +373,11 @@ export default function MobilePrintList(props) {
   };
 
   // APP网页集成word模版打印\excel打印\二维码打印\条码打印 调用原生方法处理
-  const handleAPPPrint = (it, printUrl?) => {
+  const handleAPPPrint = (
+    it: HapApi.MD.Entity.Worksheet.PrintListModel,
+    printUrl?: string,
+    printableRowIds: string[] = currentRowIds,
+  ) => {
     closePrintList();
 
     // 单条打印全走APP原生逻辑
@@ -376,7 +393,7 @@ export default function MobilePrintList(props) {
         worksheetId,
         viewId,
         rowId,
-        currentRowIds,
+        currentRowIds: printableRowIds,
         isBatchOperate,
         template: it,
         printUrl,
@@ -390,6 +407,26 @@ export default function MobilePrintList(props) {
     if (window.isPublicApp) {
       alert(_l('预览模式下，不能操作'), 3);
       return;
+    }
+
+    let printableRowIds: string[] = currentRowIds;
+    if (it.type !== PRINT_TYPE.CLOUD_PRINT) {
+      try {
+        const result = await precheckPrint({ projectId, worksheetId, printId: it.id || '', rowIds: currentRowIds });
+        if (currentRowIds.length === 1 && result.failedRows.length) {
+          alert(_l('当前模板已达到打印上限'), 2);
+          return;
+        }
+        printableRowIds = result.successRows.map(row => row.rowId);
+        if (result.failedRows.length)
+          setPrecheckError({
+            templateName: it.name || _l('未命名'),
+            recordNames: result.failedRows.map(row => row.rowTitle),
+          });
+        if (!printableRowIds.length) return;
+      } catch {
+        return;
+      }
     }
 
     // APP网页集成word模版打印\excel打印\二维码打印\条码打印 调用原生方法处理
@@ -407,7 +444,7 @@ export default function MobilePrintList(props) {
         return;
       }
 
-      handleAPPPrint(it);
+      handleAPPPrint(it, undefined, printableRowIds);
 
       return;
     }
@@ -467,10 +504,25 @@ export default function MobilePrintList(props) {
     }
 
     openPrintPreview({
-      printData: getTemplatePrintData(it),
+      printData: getTemplatePrintData(it, printableRowIds),
       template: it,
     });
   };
+
+  useEffect(() => {
+    if (!showPrintListVisible || isBatchOperate || !rowId || !printCountFeatureAvailable(projectId)) return undefined;
+    let current = true;
+    getRowPrintCount({ projectId, worksheetId, rowIds: [rowId] })
+      .then(value => {
+        if (current) setPrintCount(value);
+      })
+      .catch(() => {
+        if (current) setPrintCount(undefined);
+      });
+    return () => {
+      current = false;
+    };
+  }, [showPrintListVisible, isBatchOperate, projectId, worksheetId, rowId]);
 
   if (_.isEmpty(printList) && !systemPrintPermission) {
     return null;
@@ -499,6 +551,7 @@ export default function MobilePrintList(props) {
         </div>
         {list.map(item => {
           const isCustom = [PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(item.type);
+          const templateCount = printCount?.templates.find(template => template.printId === item.id);
 
           return (
             <div
@@ -517,6 +570,13 @@ export default function MobilePrintList(props) {
               )}
 
               <div className="flex mLeft20 Font15 ellipsis">{item.name}</div>
+              {templateCount?.printLimitEnabled && (
+                <span className="Font13 textTertiary">
+                  {templateCount.leftPrintCount
+                    ? `${templateCount.printCount}/${templateCount.printLimitCount}`
+                    : _l('次数受限')}
+                </span>
+              )}
             </div>
           );
         })}
@@ -526,6 +586,7 @@ export default function MobilePrintList(props) {
 
   return (
     <Fragment>
+      {precheckError && <BatchPrintErrorModal {...precheckError} onClose={() => setPrecheckError(undefined)} />}
       <EntryWrap
         className="flexRow extraBtnItem"
         onClick={() => {
@@ -546,6 +607,11 @@ export default function MobilePrintList(props) {
         onClose={() => setShowPrintListVisible(false)}
       >
         <PrintListContent>
+          {worksheetInfo?.advancedSetting?.print_count_enabled === '1' &&
+            printCount &&
+            printCount.totalPrintCount > 0 && (
+              <div className="textTertiary Font13 pLeft20">{_l('已打印 %0 次', printCount.totalPrintCount)}</div>
+            )}
           {printTypes.map(templateType => renderPrintTemplate(templateType))}
           {systemPrintPermission && (
             <PrintTemplateWrap>
