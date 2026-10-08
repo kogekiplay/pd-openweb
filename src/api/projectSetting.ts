@@ -7,10 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSysColor: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectSettingModel> {
+  getSysColor: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectSettingModel> {
     return mdyAPI('ProjectSetting', 'GetSysColor', args, options);
   },
   /**
@@ -21,6 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getAllowApplyManageRole: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     return mdyAPI('ProjectSetting', 'GetAllowApplyManageRole', args, options);
   },
@@ -32,6 +30,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getMDLoginSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetMDLoginSetting', args, options);
   },
@@ -43,6 +42,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getSsoSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetSsoSettings', args, options);
   },
@@ -54,6 +54,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getSubDomain: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetSubDomain', args, options);
   },
@@ -65,10 +66,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrivacy: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetPrivacyModel> {
+
+  getPrivacy: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetPrivacyModel> {
     return mdyAPI('ProjectSetting', 'GetPrivacy', args, options);
   },
   /**
@@ -79,10 +78,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getStructureForAll: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetStructureForAllModel> {
+
+  getStructureForAll: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetStructureForAllModel> {
     return mdyAPI('ProjectSetting', 'GetStructureForAll', args, options);
   },
   /**
@@ -93,6 +90,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getEnabledWatermark: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetEnabledWatermark', args, options);
   },
@@ -104,6 +102,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getEnabledNoneVerification: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetEnabledNoneVerification', args, options);
   },
@@ -115,6 +114,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getOnlyManagerCreateApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetOnlyManagerCreateApp', args, options);
   },
@@ -126,6 +126,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getOnlyManagerDeleteApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetOnlyManagerDeleteApp', args, options);
   },
@@ -137,10 +138,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAutoPurchaseWorkflowExtPack: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.AutoPurchaseWorkflowExtPackModel> {
+
+  getAutoPurchaseWorkflowExtPack: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.AutoPurchaseWorkflowExtPackModel> {
     return mdyAPI('ProjectSetting', 'GetAutoPurchaseWorkflowExtPack', args, options);
   },
   /**
@@ -151,10 +150,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAutoPurchaseDataPipelineExtPack: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.AutoPurchaseDataPipelineExtPackModel> {
+
+  getAutoPurchaseDataPipelineExtPack: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.AutoPurchaseDataPipelineExtPackModel> {
     return mdyAPI('ProjectSetting', 'GetAutoPurchaseDataPipelineExtPack', args, options);
   },
   /**
@@ -165,10 +162,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAutoPurchaseExternalUserExtPack: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.AutoPurchaseExternalUserExtPackModel> {
+
+  getAutoPurchaseExternalUserExtPack: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.AutoPurchaseExternalUserExtPackModel> {
     return mdyAPI('ProjectSetting', 'GetAutoPurchaseExternalUserExtPack', args, options);
   },
   /**
@@ -179,10 +174,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOnlyManagerSettings: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.OnlyManagerSettingsModel> {
+
+  getOnlyManagerSettings: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.OnlyManagerSettingsModel> {
     return mdyAPI('ProjectSetting', 'GetOnlyManagerSettings', args, options);
   },
   /**
@@ -193,6 +186,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getBalanceLimitNoticeSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetBalanceLimitNoticeSettings', args, options);
   },
@@ -218,6 +212,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setLogo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetLogo', args, options);
   },
@@ -243,6 +238,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   clearLogo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'ClearLogo', args, options);
   },
@@ -268,6 +264,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setCustomeHomeImage: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetCustomeHomeImage', args, options);
   },
@@ -293,6 +290,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setStructureForAll: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetStructureForAll', args, options);
   },
@@ -318,6 +316,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setStructureSelfEdit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetStructureSelfEdit', args, options);
   },
@@ -330,6 +329,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setOnlyManagerCreateApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetOnlyManagerCreateApp', args, options);
   },
@@ -355,6 +355,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setEnabledWatermark: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetEnabledWatermark', args, options);
   },
@@ -380,6 +381,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setEnabledWatermarkTxt: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetEnabledWatermarkTxt', args, options);
   },
@@ -405,6 +407,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setEnabledNoneVerification: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetEnabledNoneVerification', args, options);
   },
@@ -417,6 +420,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setAutoPurchaseWorkflowExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAutoPurchaseWorkflowExtPack', args, options);
   },
@@ -429,6 +433,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setAutoPurchaseDataPipelineExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAutoPurchaseDataPipelineExtPack', args, options);
   },
@@ -441,6 +446,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setAutoPurchaseApkStorageExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAutoPurchaseApkStorageExtPack', args, options);
   },
@@ -453,6 +459,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setAutoPurchaseExternalUserExtPack: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAutoPurchaseExternalUserExtPack', args, options);
   },
@@ -465,12 +472,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setAllowMingoAgentCharge: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAllowMingoAgentCharge', args, options);
   },
   /**
   * 设置 是否允许申请后台组织管理员权限
-超级管理员才能操作
+  超级管理员才能操作
   * @param {Object} args 请求参数
   * @param {string} args.projectId 网络id
   * @param {boolean} args.allowApplyManageRole 是否允许申请管理员
@@ -478,6 +486,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   setAllowApplyManageRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetAllowApplyManageRole', args, options);
   },
@@ -490,6 +499,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setMDLoginSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetMDLoginSetting', args, options);
   },
@@ -502,6 +512,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setSso: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetSso', args, options);
   },
@@ -514,6 +525,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setSsoName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetSsoName', args, options);
   },
@@ -527,6 +539,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setSsoUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetSsoUrl', args, options);
   },
@@ -552,16 +565,17 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setSubDomin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetSubDomin', args, options);
   },
   /**
   * 新用户加入企业必填字段
-MD.Enum.ProjectSetting.UserFillCompanyEnabled
-MD.Enum.ProjectSetting.UserFillWorkSiteEnabled
-MD.Enum.ProjectSetting.UserFillJobNumberEnabled
-MD.Enum.ProjectSetting.UserFillDepartmentEnabled
-【前端反馈 无调用】
+  MD.Enum.ProjectSetting.UserFillCompanyEnabled
+  MD.Enum.ProjectSetting.UserFillWorkSiteEnabled
+  MD.Enum.ProjectSetting.UserFillJobNumberEnabled
+  MD.Enum.ProjectSetting.UserFillDepartmentEnabled
+  【前端反馈 无调用】
   * @param {Object} args 请求参数
   * @param {string} args.projectId 网络id
   * @param {} args.setting
@@ -570,6 +584,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   setPrivacy: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetPrivacy', args, options);
   },
@@ -583,19 +598,23 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {boolean} args.dataPipeOnlyManager 数据集成 仅管理员 可用开关（可空，空置不设置该值）
    * @param {boolean} args.pluginsOnlyManager 插件 仅管理员 可用开关（可空，空置不设置该值）
    * @param {boolean} args.superSearchOnlyManager 超级搜索 仅管理员 可用开关（可空，空置不设置该值）
+   * @param {boolean} args.mingoAppBuild Mingo AI 应用搭建功能开关
+   * @param {boolean} args.mingoDataQueryAndAnalysis Mingo AI 数据查询与分析功能开关
+   * @param {boolean} args.mingoAppOthers Mingo AI 其他功能开关
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setOnlyManager: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetOnlyManager', args, options);
   },
   /**
   * 新用户加入企业必填字段
-MD.Enum.ProjectSetting.UserFillCompanyEnabled
-MD.Enum.ProjectSetting.UserFillWorkSiteEnabled
-MD.Enum.ProjectSetting.UserFillJobNumberEnabled
-MD.Enum.ProjectSetting.UserFillDepartmentEnabled
+  MD.Enum.ProjectSetting.UserFillCompanyEnabled
+  MD.Enum.ProjectSetting.UserFillWorkSiteEnabled
+  MD.Enum.ProjectSetting.UserFillJobNumberEnabled
+  MD.Enum.ProjectSetting.UserFillDepartmentEnabled
   * @param {Object} args 请求参数
   * @param {string} args.projectId 网络id
   * @param {array} args.settings
@@ -603,6 +622,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   setPrivacys: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetPrivacys', args, options);
   },
@@ -614,11 +634,12 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
   * @param {integer} args.balanceLimit 提醒余额
   * @param {array} args.accountIds 提醒用户列表
   * @param {array} args.noticeTypes 提醒方式
-1：系统消息；2：短信；3：邮件
+  1：系统消息；2：短信；3：邮件
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   setBalanceLimitNotice: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetBalanceLimitNotice', args, options);
   },
@@ -630,6 +651,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getProjectLdapSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetProjectLdapSetting', args, options);
   },
@@ -663,6 +685,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   updateProjectLdapSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'UpdateProjectLdapSetting', args, options);
   },
@@ -675,6 +698,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   updateLdapState: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'UpdateLdapState', args, options);
   },
@@ -688,6 +712,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   updateLdapName: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'UpdateLdapName', args, options);
   },
@@ -699,10 +724,8 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getColorSettings: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetColorSettingsResponse> {
+
+  getColorSettings: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetColorSettingsResponse> {
     return mdyAPI('ProjectSetting', 'GetColorSettings', args, options);
   },
   /**
@@ -716,6 +739,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editColorSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'EditColorSettings', args, options);
   },
@@ -728,6 +752,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setApiProxyState: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetApiProxyState', args, options);
   },
@@ -739,6 +764,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getApiProxyState: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetApiProxyState', args, options);
   },
@@ -750,6 +776,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getApiProxySettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'GetApiProxySettings', args, options);
   },
@@ -767,6 +794,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editApiProxySettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'EditApiProxySettings', args, options);
   },
@@ -778,10 +806,8 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserFieldSettings: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetUserFieldSettingsResponse> {
+
+  getUserFieldSettings: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetUserFieldSettingsResponse> {
     return mdyAPI('ProjectSetting', 'GetUserFieldSettings', args, options);
   },
   /**
@@ -795,20 +821,17 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   setUserFieldSettings: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'SetUserFieldSettings', args, options);
   },
   /**
   * 
- ProcessType = 10 &gt;  RemoveProjectUserMemoryCache : 移除 （整网络）网络成员 内存缓存 
-
- ProcessType = 11 &gt; ResetProjectUserMemoryCache : 重置 （整网络）网络成员 内存缓存 
-
- ProcessType = 13 &gt; ResetAccountsProjectUserMemoryCache : 重置 网络成员 内存缓存 中 指定成员的 缓存数据！（需传递 AccountIds） 
-
- ProcessType = 20 &gt; RemovePersonalContactsMemoryCache : 移除 个人联系人内存缓存（可指定 AccountIds，否则 为 全网络）（注：无 重置操作 选项） 
-
- ProcessType = 30 &gt; RemoveAccountsMemoryCache : 移除 Account 缓存（独立的 缓存信息，好友、外协中使用）（与网络无关）（必须指定 AccountIds） 
+  ProcessType = 10 &gt;  RemoveProjectUserMemoryCache : 移除 （整网络）网络成员 内存缓存 
+  ProcessType = 11 &gt; ResetProjectUserMemoryCache : 重置 （整网络）网络成员 内存缓存 
+  ProcessType = 13 &gt; ResetAccountsProjectUserMemoryCache : 重置 网络成员 内存缓存 中 指定成员的 缓存数据！（需传递 AccountIds） 
+  ProcessType = 20 &gt; RemovePersonalContactsMemoryCache : 移除 个人联系人内存缓存（可指定 AccountIds，否则 为 全网络）（注：无 重置操作 选项） 
+  ProcessType = 30 &gt; RemoveAccountsMemoryCache : 移除 Account 缓存（独立的 缓存信息，好友、外协中使用）（与网络无关）（必须指定 AccountIds） 
   * @param {Object} args 请求参数
   * @param {} args.processType
   * @param {string} args.projectId
@@ -817,6 +840,7 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   projectClearCache: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'ProjectClearCache', args, options);
   },
@@ -830,7 +854,8 @@ MD.Enum.ProjectSetting.UserFillDepartmentEnabled
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   clearItemCache: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ProjectSetting', 'ClearItemCache', args, options);
-  },
+  }
 };

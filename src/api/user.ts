@@ -22,10 +22,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserCard: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.UserCardModel> {
+  getUserCard: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.UserCardModel> {
     return mdyAPI('User', 'GetUserCard', args, options);
   },
   /**
@@ -33,34 +30,33 @@ export default {
   * @param {Object} args 请求参数
   * @param {string} args.onProjectId 使用的模块所在组织Id（可空），如应用
   * @param {string} args.appId 所在应用
-如果是外部门户用户，则会读取可见字段配置
+  如果是外部门户用户，则会读取可见字段配置
   * @param {string} args.accountId 账号Id
   * @param {boolean} args.refresh 是否刷新读取
-为true则不走缓存
+  为true则不走缓存
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getAccountBaseInfo: function (
-    args?: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccountSimpleModel> {
+
+  getAccountBaseInfo: function (args?: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccountSimpleModel> {
     return mdyAPI('User', 'GetAccountBaseInfo', args, options);
   },
   /**
   * 验证对方用户是否是安全用户，优先确保是联系人
-校验对方用户是否有付费组织；加入的组织是否经过企业身份认证；以上有一项通过则返回True
+  校验对方用户是否有付费组织；加入的组织是否经过企业身份认证；以上有一项通过则返回True
   * @param {Object} args 请求参数
   * @param {string} args.onProjectId 使用的模块所在组织Id（可空），如应用
   * @param {string} args.appId 所在应用
-如果是外部门户用户，则会读取可见字段配置
+  如果是外部门户用户，则会读取可见字段配置
   * @param {string} args.accountId 账号Id
   * @param {boolean} args.refresh 是否刷新读取
-为true则不走缓存
+  为true则不走缓存
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   checkAccountSecured: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     return mdyAPI('User', 'CheckAccountSecured', args, options);
   },
@@ -72,52 +68,52 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getAccountDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'GetAccountDetail', args, options);
   },
   /**
   * mentionsInput 使用，@出来的用户和群组
-用于任何实体 AT 快速搜索
+  用于任何实体 AT 快速搜索
   * @param {Object} args 请求参数
   * @param {integer} args.search 搜索类型
-1：为用户搜索；2为群组搜索
+  1：为用户搜索；2为群组搜索
   * @param {string} args.keywords 关键词
   * @param {string} args.currentProjectId 当前组织（可不传）
-主数据所属组织，比如行记录
+  主数据所属组织，比如行记录
   * @param {integer} args.pageSize 页大小
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   getUsersByKeywords: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'GetUsersByKeywords', args, options);
   },
   /**
   * 获取当前用户经常协作的用户
-用于工作表/任务 等默认最常协作联系人
+  用于工作表/任务 等默认最常协作联系人
   * @param {Object} args 请求参数
   * @param {integer} args.count 页大小（经常协作用户的数量，不包含 prefixAccountIds 和未指定/我自己的数量）
   * @param {array} args.filterAccountIds 需要排除的帐号
   * @param {array} args.prefixAccountIds 需要插在前面的帐号，排在未指定和我自己后面
   * @param {boolean} args.includeUndefinedAndMyself 是否在前面插入未指定和我自己
   * @param {boolean} args.includeSystemField 是否包含系统预设账户
-比如当前用户、当前用户的下属、未指定、工作流、公开表单、API等
+  比如当前用户、当前用户的下属、未指定、工作流、公开表单、API等
   * @param {integer} args.oftenMetionedType 最常协作类型：-1：遵循用户的设置；0：系统推荐；1：用户自定义
   * @param {string} args.projectId 当前网络id
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getOftenMetionedUser: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.UserModel[]> {
+
+  getOftenMetionedUser: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.UserModel[]> {
     return mdyAPI('User', 'GetOftenMetionedUser', args, options);
   },
   /**
   * 获取用户列表（projectId不存在加载好友，projectId存在加载公司通讯录）
-当 dataRange=project时 projectId不能为空
-用于通讯录简化弹层
+  当 dataRange=project时 projectId不能为空
+  用于通讯录简化弹层
   * @param {Object} args 请求参数
   * @param {integer} args.pageIndex 页码
   * @param {integer} args.pageSize 页大小
@@ -130,7 +126,7 @@ export default {
   * @param {boolean} args.includeUndefinedAndMyself 是否在前面插入未指定和我自己
   * @param {boolean} args.includeMyself 是否在前面插入我自己
   * @param {boolean} args.includeSystemField 是否包含系统预设账户
-比如当前用户、当前用户的下属、未指定、工作流、公开表单、API等
+  比如当前用户、当前用户的下属、未指定、工作流、公开表单、API等
   * @param {array} args.appointedAccountIds 指定的账户列表
   * @param {array} args.appointedDepartmentIds 指定的部门列表
   * @param {array} args.appointedOrganizeIds 指定的组织角色列表
@@ -139,6 +135,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   getContactUserList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'GetContactUserList', args, options);
   },
@@ -153,12 +150,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getProjectResignedUserList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'GetProjectResignedUserList', args, options);
   },
   /**
   * 根据人员筛选条件获取人员列表
-包括：指定部门、指定人员、指定组织角色，或者动态范围
+  包括：指定部门、指定人员、指定组织角色，或者动态范围
   * @param {Object} args 请求参数
   * @param {integer} args.pageIndex 页码
   * @param {integer} args.pageSize 页大小
@@ -171,7 +169,7 @@ export default {
   * @param {boolean} args.includeUndefinedAndMyself 是否在前面插入未指定和我自己
   * @param {boolean} args.includeMyself 是否在前面插入我自己
   * @param {boolean} args.includeSystemField 是否包含系统预设账户
-比如当前用户、当前用户的下属、未指定、工作流、公开表单、API等
+  比如当前用户、当前用户的下属、未指定、工作流、公开表单、API等
   * @param {array} args.appointedAccountIds 指定的账户列表
   * @param {array} args.appointedDepartmentIds 指定的部门列表
   * @param {array} args.appointedOrganizeIds 指定的组织角色列表
@@ -180,10 +178,8 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getProjectContactUserListByApp: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.ContactUserModel> {
+
+  getProjectContactUserListByApp: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.ContactUserModel> {
     return mdyAPI('User', 'GetProjectContactUserListByApp', args, options);
   },
   /**
@@ -199,6 +195,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getLeaveUserList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'GetLeaveUserList', args, options);
   },
@@ -212,6 +209,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   sendNotice: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'SendNotice', args, options);
   },
@@ -223,6 +221,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   validateUserIsProjectAdmin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'ValidateUserIsProjectAdmin', args, options);
   },
@@ -233,6 +232,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   validateUserHaveFriend: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'ValidateUserHaveFriend', args, options);
   },
@@ -248,6 +248,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   pagedNormalUserList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'PagedNormalUserList', args, options);
   },
@@ -264,6 +265,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   pagedRemovedUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'PagedRemovedUsers', args, options);
   },
@@ -278,16 +280,14 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserOrgState: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.GetUserOrgStateResponse> {
+
+  getUserOrgState: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.GetUserOrgStateResponse> {
     return mdyAPI('User', 'GetUserOrgState', args, options);
   },
   /**
   * 网络管理 - 获取网络下用户列表（projectId不存在加载好友，projectId存在加载公司通讯录）
-当 dataRange=project时 projectId不能为空
-用于【网络管理/管理后台 - 不受通讯录规则限制】通讯录简化弹层
+  当 dataRange=project时 projectId不能为空
+  用于【网络管理/管理后台 - 不受通讯录规则限制】通讯录简化弹层
   * @param {Object} args 请求参数
   * @param {integer} args.pageIndex 页码
   * @param {integer} args.pageSize 页大小
@@ -300,7 +300,7 @@ export default {
   * @param {boolean} args.includeUndefinedAndMyself 是否在前面插入未指定和我自己
   * @param {boolean} args.includeMyself 是否在前面插入我自己
   * @param {boolean} args.includeSystemField 是否包含系统预设账户
-比如当前用户、当前用户的下属、未指定、工作流、公开表单、API等
+  比如当前用户、当前用户的下属、未指定、工作流、公开表单、API等
   * @param {array} args.appointedAccountIds 指定的账户列表
   * @param {array} args.appointedDepartmentIds 指定的部门列表
   * @param {array} args.appointedOrganizeIds 指定的组织角色列表
@@ -309,6 +309,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   getProjectContactUserList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'GetProjectContactUserList', args, options);
   },
@@ -325,6 +326,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getApprovalUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'GetApprovalUser', args, options);
   },
@@ -338,6 +340,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   resetPassword: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'ResetPassword', args, options);
   },
@@ -351,6 +354,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   batchResetPassword: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'BatchResetPassword', args, options);
   },
@@ -375,6 +379,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   updateUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'UpdateUser', args, options);
   },
@@ -396,6 +401,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   updateUserCard: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'UpdateUserCard', args, options);
   },
@@ -408,6 +414,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   removeUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'RemoveUser', args, options);
   },
@@ -420,6 +427,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   removeUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'RemoveUsers', args, options);
   },
@@ -432,6 +440,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   recoveryUser: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'RecoveryUser', args, options);
   },
@@ -445,6 +454,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   updateDepartmentForUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'UpdateDepartmentForUsers', args, options);
   },
@@ -458,6 +468,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   updateJobForUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'UpdateJobForUsers', args, options);
   },
@@ -471,6 +482,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   updateWorkSiteForUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'UpdateWorkSiteForUsers', args, options);
   },
@@ -493,6 +505,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   agreeUserJoin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'AgreeUserJoin', args, options);
   },
@@ -505,6 +518,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   agreeUsersJoin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'AgreeUsersJoin', args, options);
   },
@@ -518,6 +532,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   refuseUserJoin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'RefuseUserJoin', args, options);
   },
@@ -531,7 +546,21 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   refuseUsersJoin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('User', 'RefuseUsersJoin', args, options);
   },
+  /**
+   * 批量更新 用户部门
+   * @param {Object} args 请求参数
+   * @param {string} args.projectId 网络Id
+   * @param {array} args.accountIds 账户Ids
+   * @param {array} args.orgRoleIds 组织角色Ids
+   * @param {Object} options 配置参数
+   * @param {Boolean} options.silent 是否禁止错误弹层
+   * @returns {Promise<Boolean, ErrorModel>}
+   **/
+  updateOrgRoleForUsers: function (args: ApiArgs, options: ApiOptions = {}) {
+    return mdyAPI('User', 'UpdateOrgRoleForUsers', args, options);
+  }
 };

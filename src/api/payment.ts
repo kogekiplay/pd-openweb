@@ -7,12 +7,14 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
   getWxAuthUrl: function (args: ApiArgs, options: ApiOptions = {}) {
-    options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
+    options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
+      type: 'GET'
+    });
     return mdyAPI('Payment', 'GetWxAuthUrl', args, options);
   },
   /**
   * 获取预检生成订单信息（尚未生成订单）
-返回待支付相关等信息
+  返回待支付相关等信息
   * @param {Object} args 请求参数
   * @param {string} args.worksheetId 工作表id
   * @param {string} args.rowId 工作表纪录id
@@ -21,6 +23,7 @@ export default {
   * @param {string} args.licenseId 套餐id
   * @param {string} args.merchantNo 商户号
   * @param {boolean} args.atOnce 立即支付
+  * @param {string} args.backUrlForTicket 商家小票返回地址
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
@@ -38,6 +41,7 @@ export default {
    * @param {string} args.licenseId 套餐id
    * @param {string} args.merchantNo 商户号
    * @param {boolean} args.atOnce 立即支付
+   * @param {string} args.backUrlForTicket 商家小票返回地址
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
@@ -47,7 +51,7 @@ export default {
   },
   /**
   * 支付宝支付
-返回支付链接
+  返回支付链接
   * @param {Object} args 请求参数
   * @param {string} args.orderId 订单ID
   * @param {Object} options 配置参数
@@ -59,7 +63,7 @@ export default {
   },
   /**
   * 微信支付
-返回支付信息以及OpenID
+  返回支付信息以及OpenID
   * @param {Object} args 请求参数
   * @param {string} args.orderId 订单ID
   * @param {string} args.code 微信临时授权 Code
@@ -73,7 +77,7 @@ export default {
   },
   /**
   * 获取订单信息
-校验订单与原始数据一致性
+  校验订单与原始数据一致性
   * @param {Object} args 请求参数
   * @param {string} args.orderId 订单ID
   * @param {string} args.worksheetId 工作表id
@@ -98,7 +102,7 @@ export default {
   },
   /**
   * 获取订单状态
-用于订单支付状态轮询
+  用于订单支付状态轮询
   * @param {Object} args 请求参数
   * @param {string} args.orderId 订单ID
   * @param {Object} options 配置参数
@@ -110,8 +114,8 @@ export default {
   },
   /**
   * 确认支付订单
-无需支付：主要针对0元及以下
-若支付金额调整为大于0需支付则返回支付失败
+  无需支付：主要针对0元及以下
+  若支付金额调整为大于0需支付则返回支付失败
   * @param {Object} args 请求参数
   * @param {string} args.orderId 订单ID
   * @param {Object} options 配置参数
@@ -123,7 +127,7 @@ export default {
   },
   /**
   * 获取记录的订单信息
-用于展现再记录右侧支付TAB
+  用于展现再记录右侧支付TAB
   * @param {Object} args 请求参数
   * @param {string} args.projectId 组织Id
   * @param {string} args.appId 应用Id
@@ -151,7 +155,7 @@ export default {
   },
   /**
   * 聚合获取开通的支付商户以及认证的企业信息列表
-返回 公司名称/税号/类型。可以通过已经认证的企业信息开通电子开票税号
+  返回 公司名称/税号/类型。可以通过已经认证的企业信息开通电子开票税号
   * @param {Object} args 请求参数
   * @param {string} args.projectId 组织id
   * @param {Object} options 配置参数
@@ -232,6 +236,7 @@ export default {
    * 创建商户
    * @param {Object} args 请求参数
    * @param {string} args.merchantNo
+   * @param {string} args.lakalaMerchantNo
    * @param {string} args.name
    * @param {string} args.projectId
    * @param {string} args.accountId
@@ -539,4 +544,19 @@ export default {
   exportRefundOrder: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Payment', 'ExportRefundOrder', args, options);
   },
+  /**
+   * 为已有商户更新拉卡拉配置并切换到拉卡拉渠道
+   * @param {Object} args 请求参数
+   * @param {string} args.merchantId
+   * @param {string} args.merchantNo
+   * @param {string} args.projectId
+   * @param {string} args.lakalaMerchantNo
+   * @param {} args.merchantPaymentChannel
+   * @param {Object} options 配置参数
+   * @param {Boolean} options.silent 是否禁止错误弹层
+   * @returns {Promise<Boolean, ErrorModel>}
+   **/
+  updateLakalaMerchantConfig: function (args: ApiArgs, options: ApiOptions = {}) {
+    return mdyAPI('Payment', 'UpdateLakalaMerchantConfig', args, options);
+  }
 };

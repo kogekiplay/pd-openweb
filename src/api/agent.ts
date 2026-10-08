@@ -17,10 +17,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/billing/grant',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * 作废一笔赠送(订单失效时回调)。把对应赠送桶置 `voided`,剩余额立即失效(已消耗不追回),幂等。 桶尚不存在(void 先于 grant 到达)→ 建作废占位,挡掉后到的同 orderId 赠送。
    * @param {Object} args 请求参数
@@ -33,10 +32,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/billing/grant/void',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * 按自然月汇总免费额度消耗。request.ProjectId 留空=全平台(所有组织汇总);传则钻取单组织。 StartDate/EndDate 为 `yyyy-MM-dd`(含首尾整天)。返回按月明细并<b>补齐区间内空月份</b>(与 MDAPI 一致)。
    * @param {Object} args 请求参数
@@ -50,10 +48,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/billing/internal/monthly-free-consumption',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * V4.0：用户主动取消同 sessionId 的活跃 Agent 执行（典型场景：build-app-agent 搭建中途点"停止搭建"）。 鉴权由 service 层 M:MD.AgentService.Core.Agenting.Abstractions.IAgentApplicationService.CancelAsync(MD.AgentService.Core.Agenting.Contracts.AgentCancelRequest,System.Threading.CancellationToken) 内部用 accountId 拼 registry key 隐式完成—— 跨账号自然 NotFound（返回 not_in_flight），无需额外 403 分支。 详见 docs/architecture/api-design.md §10.1。 V5.20.3：公开漏斗匿名用户也可取消自己发起的匿名执行。匿名身份与执行流同源（seed=sessionId）， 这里在未登录时按同口径重算 `anon:hash` 写入 `HttpContext.Items`，使 service 层 `_currentUserContext.AccountId` 兜底命中，拼出与注册端一致的 registry key。capability 模型： 仅持有 sessionId 者能算出该 key；猜错 / 跨账号自然 not_in_flight，不泄露任何信息。
    * @param {Object} args 请求参数
@@ -65,10 +62,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/cancel',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * 路由并执行已配置的 Agent，同步返回完整 ExecuteAgentResponse。
    * @param {Object} args 请求参数
@@ -78,6 +74,7 @@ export default {
    * @param {string} args.sessionId 当前请求所属的会话标识。
    * @param {string} args.language V5.12.4：客户端 UI 选定的界面语言（BCP-47 标签，如 `en` / `zh-CN` / `zh-TW` / `ja` / `th` / `ms`）。 作为会话语言的**权威源**（优先级高于启发式检测）：写了即按它注入 `{{session.language}}` 并冻结，天然覆盖启发式分不开的简繁 / 马来语等。 安全：该值会进 system prompt，MD.AgentService.Core.Agenting.Services.SessionMemory.SessionLanguageResolver 仅放行 BCP-47 形态（字母 + 可选 -子标签），不合法一律忽略、回落检测，杜绝经此字段注入任意文本。 空 / 不合法时回落 ② 会话粘性检测值 → ③ 启发式检测当前消息。
    * @param {string} args.projectId V3.4.5：当前请求关联的明道网络/组织 ID（顶层显式传参）。 与 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.Context["projectId"] 等价，但更显眼且类型固定为 string。 优先级（在 ICurrentUserContext.InitializeProjectId 实现里生效）： HTTP query `?projectId=` → 本字段 → `Context["projectId"]` → null。 服务端在 AgentApplicationService 入口完成装配，下游统一通过 ICurrentUserContext.ProjectId 取。
+   * @param {string} args.appId V6.7：当前请求归属的应用 ID（顶层显式传参）。仅作**业务归属标识**——不参与路由、不进 prompt、不影响产出， 唯一用途是扣费时透传 MDAPI 账务流水的 `app_id`，使账单可按应用维度统计。 优先级（在 MD.AgentService.Core.Agenting.Services.RequestAppIdResolver 里生效）：本字段 → `Context["appId"]` → `Context["defaultAppId"]` → `Context["currentApp"].appId` → null。服务端在入口一次性固化， 下游（含后台 async-agent 结算）统一读本字段——同 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.ProjectId 的固化理由：请求结束后 `ICurrentUserContext` / `HttpContext` 已失效。 ⚠️ app-build **首建**轮请求时应用尚未创建，本字段必然为空，由执行期回填通道补 （`WorkflowAppIdRegistry`）；**续建**轮前端会回填 `defaultAppId`，此处即可解析到。 ⚠️ 本字段**不参与 plan 指纹**（`PlanHashCalculator` 只哈希 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.Context），故新增它不会让 首建 / 续建算出不同 hash；同理**禁止**把解析结果写回 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.Context。
    * @param {string} args.captchaTicket V5.6：腾讯云图形验证码票据（前端验证码组件回吐的 ticket）。仅匿名访问 allowAnonymous agent 且触发验证码阈值时需要； 登录用户无需携带。与 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.CaptchaRandstr 成对，由匿名访问闸调腾讯云校验。
    * @param {string} args.captchaRandstr V5.6：腾讯云图形验证码随机串（randstr），与 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.CaptchaTicket 成对提交。
    * @param {string} args.regenerateFromMessageId V6.3 重新生成：要重跑的那条 <b>assistant</b> 消息 ID。传了它即进入「重新生成」语义—— 服务端取该条同轮的 user 提问原文重跑（重走路由），成功后删除「该条及其之后」的全部消息。
@@ -97,10 +94,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/execute',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * 路由并以 SSE（text/event-stream）方式流式执行已配置的 Agent；同源 text-delta / subagent-text-delta / reasoning-delta（V3.5）事件按 MD.AgentService.API.Controllers.AgentController.MessageDeltaFlushWindowMs 窗口合并下发。
    * @param {Object} args 请求参数
@@ -110,6 +106,7 @@ export default {
    * @param {string} args.sessionId 当前请求所属的会话标识。
    * @param {string} args.language V5.12.4：客户端 UI 选定的界面语言（BCP-47 标签，如 `en` / `zh-CN` / `zh-TW` / `ja` / `th` / `ms`）。 作为会话语言的**权威源**（优先级高于启发式检测）：写了即按它注入 `{{session.language}}` 并冻结，天然覆盖启发式分不开的简繁 / 马来语等。 安全：该值会进 system prompt，MD.AgentService.Core.Agenting.Services.SessionMemory.SessionLanguageResolver 仅放行 BCP-47 形态（字母 + 可选 -子标签），不合法一律忽略、回落检测，杜绝经此字段注入任意文本。 空 / 不合法时回落 ② 会话粘性检测值 → ③ 启发式检测当前消息。
    * @param {string} args.projectId V3.4.5：当前请求关联的明道网络/组织 ID（顶层显式传参）。 与 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.Context["projectId"] 等价，但更显眼且类型固定为 string。 优先级（在 ICurrentUserContext.InitializeProjectId 实现里生效）： HTTP query `?projectId=` → 本字段 → `Context["projectId"]` → null。 服务端在 AgentApplicationService 入口完成装配，下游统一通过 ICurrentUserContext.ProjectId 取。
+   * @param {string} args.appId V6.7：当前请求归属的应用 ID（顶层显式传参）。仅作**业务归属标识**——不参与路由、不进 prompt、不影响产出， 唯一用途是扣费时透传 MDAPI 账务流水的 `app_id`，使账单可按应用维度统计。 优先级（在 MD.AgentService.Core.Agenting.Services.RequestAppIdResolver 里生效）：本字段 → `Context["appId"]` → `Context["defaultAppId"]` → `Context["currentApp"].appId` → null。服务端在入口一次性固化， 下游（含后台 async-agent 结算）统一读本字段——同 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.ProjectId 的固化理由：请求结束后 `ICurrentUserContext` / `HttpContext` 已失效。 ⚠️ app-build **首建**轮请求时应用尚未创建，本字段必然为空，由执行期回填通道补 （`WorkflowAppIdRegistry`）；**续建**轮前端会回填 `defaultAppId`，此处即可解析到。 ⚠️ 本字段**不参与 plan 指纹**（`PlanHashCalculator` 只哈希 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.Context），故新增它不会让 首建 / 续建算出不同 hash；同理**禁止**把解析结果写回 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.Context。
    * @param {string} args.captchaTicket V5.6：腾讯云图形验证码票据（前端验证码组件回吐的 ticket）。仅匿名访问 allowAnonymous agent 且触发验证码阈值时需要； 登录用户无需携带。与 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.CaptchaRandstr 成对，由匿名访问闸调腾讯云校验。
    * @param {string} args.captchaRandstr V5.6：腾讯云图形验证码随机串（randstr），与 MD.AgentService.Core.Agenting.Contracts.ExecuteAgentRequest.CaptchaTicket 成对提交。
    * @param {string} args.regenerateFromMessageId V6.3 重新生成：要重跑的那条 <b>assistant</b> 消息 ID。传了它即进入「重新生成」语义—— 服务端取该条同轮的 user 提问原文重跑（重走路由），成功后删除「该条及其之后」的全部消息。
@@ -130,10 +127,9 @@ export default {
       ...options,
       url: '/api/agent/execute/stream',
       method: 'POST',
-      isStream: true,
+      isStream: true
     });
   },
-
   /**
    * 测试指定供应商 / 模型的<b>某一项</b>能力。
    * @param {Object} args 请求参数
@@ -149,10 +145,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/providers/test-capabilities',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * V5.7：免登录会话「转正」认领（需登录）。把匿名账户名下、该 sessionId 的 artifact + 会话历史改派给当前登录账号， 之后用产品版 `app-plan-builder`（带租户 / 计费）以 artifactId + 原 sessionId 续聊 / 续建。 故意不走匿名旁路（MD.AgentService.Core.Agenting.Contracts.SessionClaimRequest 不实现 IAgentNameCarrier）→ 无登录态由 `[Authorize]` 拦回 401； 租户非成员由 service 抛 PermissionException、经 AppFilter 映射 403。
    * @param {Object} args 请求参数
@@ -165,10 +160,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/session-claim',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * 会话改名：把 sessionId 在会话列表里展示的标题（FirstMessage）改为请求体里的 title。 sessionId 必须属于当前登录用户，越权 / 不存在一律 404 不区分；title 必填非空白且 ≤ 100 字，超界 400。
    * @param {Object} args 请求参数
@@ -178,14 +172,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   agentSessionsRename: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { sessionId, ...rest } = args;
+    const {
+      sessionId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agent/sessions/${encodeURIComponent(sessionId)}/rename`,
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * V3.4：手动重摘 session 摘要。清掉 summary 子文档，下一次 InvocationCompleted 抢锁后从 0 重摘。 用途：摘要质量异常 / 字段损坏时救场；不会同步触发摘要生成（异步由 InvocationCompleted hook 触发）。
    * @param {Object} args 请求参数
@@ -194,14 +190,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   agentSessionsResummarize: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { sessionId, ...rest } = args;
+    const {
+      sessionId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agent/sessions/${encodeURIComponent(sessionId)}/resummarize`,
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * V6.0 统一分享模型：创建分享实体（登录态）。校验通过后落库 `agent_session_shares` 并返回 `shareId`， 前端随后把 `shareId` 登记为 MDAPI `appentityshare.SourceId` 完成分享创建（两步流程，见设计文档 §6.1）。
    * @param {Object} args 请求参数
@@ -216,10 +214,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/sessions/shares',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * V6.1 分享「继续对话」:登录访客带着分享看到的内容,在<b>自己的新会话</b>里继续和该 agent 对话。 授权链复用读取那把闸(clientId Header + CheckShare + 加载实体 + 未知 scope/软删 fail-closed),但 <b>scope 门校验主体换成 [Authorize] 登录 accountId</b>(权威身份,见 M:MD.AgentService.API.Controllers.SessionHistoryController.ResolveShareContextAsync(System.String,System.Threading.CancellationToken,System.String) 的 scopeGateAccountId)。自我分享(登录访客==owner)直接返回原会话不 fork;否则快照 fork 出归属访客的新会话。 详见 docs/architecture/mingo-session-share-design.md §9.4。
    * @param {Object} args 请求参数
@@ -228,14 +225,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   agentSessionsSharesContinue: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { shareId, ...rest } = args;
+    const {
+      shareId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agent/sessions/shares/${encodeURIComponent(shareId)}/continue`,
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * V5.7：申请临时匿名会话 token（官网免登录漏斗入口）。鉴权层只放行 `allowAnonymous` agent 的无登录请求； 本 action 顺序：① agentName 必填 → ② 显式校验目标 agent `AllowAnonymous`（覆盖登录用户也来调的情况）→ ③ bootstrap 按 client IP 的验证码闸（超 IP 阈值要求验证码，挡「重复申请会话刷量」）→ ④ 生成高熵 sessionId + Redis 登记（TTL 15min，绑定 agentName）。 bootstrap 按 client IP 的限流由 RateLimitMiddleware（Public 档）兜底。
    * @param {Object} args 请求参数
@@ -249,10 +248,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/session-token',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * V5.6.1：匿名批量上传 token 发放（官网免登录漏斗）。鉴权层只放行 `allowAnonymous` agent 的匿名请求； 本 action 顺序：① 验证码阈值闸（与 execute 共享计数）+ 合成匿名身份 → ② 数量上限（MaxCount）→ ③ 独立发 token 限流（ma:rl:upload，按 IP）→ ④ 逐文件签发受限 Qiniu 上传 token。 响应字段对齐 MDAPI `api/Qiniu/GetUploadToken`（`data[]` + `state`）。
    * @param {Object} args 请求参数
@@ -268,10 +266,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/upload-token',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * V5.6.2：匿名语音输入凭证发放（官网免登录漏斗输入框语音输入）。鉴权层只放行 `allowAnonymous` agent 的匿名请求； 本 action 顺序：① agentName 必填 + 公开漏斗 sessionId 必传 → ② 验证码阈值闸（scene=voice 独立计数）+ 合成匿名身份 → ③ 独立发凭证限流（ma:rl:voice，按 sessionId）→ ④ gRPC 代理 MD.OCR 取腾讯 ASR STS 临时凭证。 凭证字段对齐 MDAPI `Mingo/GetFederationToken`（`token/tmpSecretId/tmpSecretKey/expiredTime/expiration/appId`）+ `state` 信封。
    * @param {Object} args 请求参数
@@ -286,10 +283,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/voice-token',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * 兼容 CopilotKit REST runtime 的 agent connect 入口。
    * @param {Object} args 请求参数
@@ -298,14 +294,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   aguiAgentConnect: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { agentId, ...rest } = args;
+    const {
+      agentId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agui/agent/${encodeURIComponent(agentId)}/connect`,
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * 兼容 CopilotKit REST runtime 的 agent run 入口。
    * @param {Object} args 请求参数
@@ -314,14 +312,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   aguiAgentRun: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { agentId, ...rest } = args;
+    const {
+      agentId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agui/agent/${encodeURIComponent(agentId)}/run`,
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * 兼容需要通过 POST 探测 runtime 信息的客户端。
    * @param {Object} args 请求参数
@@ -332,10 +332,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agui/info',
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * 以 AG-UI SSE 协议执行请求。
    * @param {Object} args 请求参数
@@ -347,10 +346,9 @@ export default {
       ...options,
       url: '/api/agui',
       method: 'POST',
-      isStream: true,
+      isStream: true
     });
   },
-
   /**
    * 取消指定线程下的所有活跃运行。
    * @param {Object} args 请求参数
@@ -359,14 +357,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   aguiThreadsCancel: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { threadId, ...rest } = args;
+    const {
+      threadId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agui/threads/${encodeURIComponent(threadId)}/cancel`,
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * 切换 artifact 的 active 版本。POST body: { "versionId": "ver-xxx" }。
    * @param {Object} args 请求参数
@@ -376,14 +376,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   artifactsActive: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { artifactId, ...rest } = args;
+    const {
+      artifactId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/artifacts/${encodeURIComponent(artifactId)}/active`,
-      method: 'POST',
+      method: 'POST'
     });
   },
-
   /**
    * 会话软删除：把 sessionId 在 agent_sessions 元数据上打删除标记，之后该会话不再出现在会话列表里。 仅改元数据状态，消息正文不动。sessionId 必须属于当前登录用户，越权 / 不存在一律 404 不区分。
    * @param {Object} args 请求参数
@@ -392,14 +394,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   deleteAgentSessions: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { sessionId, ...rest } = args;
+    const {
+      sessionId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agent/sessions/${encodeURIComponent(sessionId)}`,
-      method: 'DELETE',
+      method: 'DELETE'
     });
   },
-
   /**
    * 删除整个 artifact（级联删版本与文件记录；Qiniu blob 走 GC 回收）。
    * @param {Object} args 请求参数
@@ -408,14 +412,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   deleteArtifacts: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { artifactId, ...rest } = args;
+    const {
+      artifactId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/artifacts/${encodeURIComponent(artifactId)}`,
-      method: 'DELETE',
+      method: 'DELETE'
     });
   },
-
   /**
    * 删除某个版本（级联删该版本 artifact_files；不影响其他版本）。
    * @param {Object} args 请求参数
@@ -425,14 +431,17 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   deleteArtifactsVersions: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { artifactId, versionId, ...rest } = args;
+    const {
+      artifactId,
+      versionId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/artifacts/${encodeURIComponent(artifactId)}/versions/${encodeURIComponent(versionId)}`,
-      method: 'DELETE',
+      method: 'DELETE'
     });
   },
-
   /**
    * 查询指定组织当月(自然月,按容器时区)的免费额度:发放总额、已消耗、剩余可用。 要求:用户已登录(401) 且 隶属于该组织(403);projectId 必传(400 invalid_request,errorMessage 说明缺 projectId)。
    * @param {Object} args 请求参数
@@ -444,10 +453,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/billing/free-quota',
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * V5.11.8：翻页查询指定组织的账单列表——<b>按 traceId 聚合</b>(一笔请求一行),按各 trace 最新时间倒序(最新在前)。 单 agent=1 行、a2a 编排=1 行(N 条逐 agent 明细聚合);逐 agent 明细点开走 `transactions/{traceId}`。 鉴权与 free-quota 同口径(登录 401 + 隶属该组织 403);projectId 必传(400)。 翻页口径对齐会话历史:page 从 1 起、size 默认 20、单页最多 100 条、page * size ≤ 1000(防深翻);<b>page 按 trace 笔数翻、TotalCount=去重 trace 数</b>。 支持按 startDate/endDate(yyyy-MM-dd,容器本地时区、含首尾整天)过滤创建时间; token 默认<b>不返回</b>(列表轻量化),仅当 includeTokens=true 时附带。
    * @param {Object} args 请求参数
@@ -466,10 +474,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/billing/transactions',
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * V5.11.4：按 traceId 查询该次请求的扣款明细(a2a 编排=N 条逐 agent 明细;单 agent=1 条),按创建时间正序。 鉴权与列表接口同口径(登录 401 + 隶属该组织 403);projectId + traceId 必传(400)。 存储层按 (projectId, traceId) 双条件查询,租户隔离落数据层——即便知道别组织 traceId 也读不到。
    * @param {Object} args 请求参数
@@ -480,14 +487,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getAgentBillingTransactionsByTraceId: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { traceId, ...rest } = args;
+    const {
+      traceId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agent/billing/transactions/${encodeURIComponent(traceId)}`,
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * V5.11.8：按 traceId 查该次请求的<b>用量汇总</b>(只返总数,不返逐 agent 明细——与 §17.18 的唯一区别)。 供前端在一次请求(尤其单 agent)结束后回看「这一次共花了多少」:总信用点 + 总 token(+ 免费/账户拆分)。 鉴权 / 隔离 / 取数与 §17.18 完全同口径(登录 401 + 隶属组织 403 + projectId/traceId 必传 400; 存储层 (projectId, traceId) 双条件查、租户隔离落数据层);part 数有界,不翻页。
    * @param {Object} args 请求参数
@@ -498,14 +507,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getAgentBillingUsage: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { traceId, ...rest } = args;
+    const {
+      traceId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agent/billing/usage/${encodeURIComponent(traceId)}`,
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 取某 plan 版本(artifactId + versionId)的 build 费用预估;miss 时当场算。
    * @param {Object} args 请求参数
@@ -519,10 +530,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/build-estimate',
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 返回当前可用的 Agent 定义摘要。
    * @param {Object} args 请求参数
@@ -533,10 +543,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/config/agents',
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 返回基础服务状态(旧端点,向后兼容;恒 ok)。
    * @param {Object} args 请求参数
@@ -547,10 +556,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/health',
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * liveness 探针:恒 ok。仅反映进程存活,不受优雅停机 / drain 影响——否则停机中会被误判挂掉而提前重启杀。
    * @param {Object} args 请求参数
@@ -561,10 +569,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/health/live',
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * readiness 探针:就绪返 200、未就绪(启动未完成 / 已进入停机)返 503，让 K8s 把本 pod 从 endpoints 摘掉、不再路由新流量。
    * @param {Object} args 请求参数
@@ -575,10 +582,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/health/ready',
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * V4.0 R6 D2：查询指定 sessionId 的 build 进度（SSE 断连场景下的兜底通道）。 鉴权同 cancel：accountId|sessionId 物理隔离,跨账号自然查不到记录(返回空进度 + resumable=false)。 V5.5：可选 detail=true 额外返回 checkpoint 明细（原始输入摘要 + 各步关键产出如 appId + loop 逐迭代结果如工作表 name/id/成败），用于排障与"继续"前展示。缺省 false，零额外开销、旧调用不受影响。 详见 docs/architecture/checkpoint-recovery.md §13.6。
    * @param {Object} args 请求参数
@@ -588,14 +594,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getAgentProgress: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { sessionId, ...rest } = args;
+    const {
+      sessionId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agent/progress/${encodeURIComponent(sessionId)}`,
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 列出当前登录用户的 session 元数据。agentName 与 onlyUnbound 互斥（只能传一个），都不传时返回该用户全部 session。
    * @param {Object} args 请求参数
@@ -611,10 +619,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/sessions',
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 列出指定 sessionId 下的全部消息。sessionId 必须属于当前登录用户，否则返回 404 不区分"不存在"与"他人所有"。
    * @param {Object} args 请求参数
@@ -626,14 +633,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getAgentSessionsMessages: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { sessionId, ...rest } = args;
+    const {
+      sessionId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agent/sessions/${encodeURIComponent(sessionId)}/messages`,
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * V5.22：列出当前登录用户的「最近提问」，供前端做可点击的联想/快捷入口，免重复输入。 只读 routable agent 记录（写入侧只记 routable，故库里即「全部 routable」）；按 LastAskedAt 倒序。
    * @param {Object} args 请求参数
@@ -646,10 +655,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agent/sessions/recent',
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * V6.0 统一分享模型：读取分享内容——<b>shareId 锚点</b>的独立路由。前端拿到的分享标识只有 shareId （MDAPI 分享信息里登记的 SourceId=我方 shareId，没有 sessionId），故分享读取不复用 `{sessionId}/messages`。 授权链：`clientId` Header（必带）→ CheckShare(clientId, shareId) → 加载我方实体 → 按 scope 限流 → 组织内成员校验 → 整会话/选择性分流读取 → 脱敏返回。详见 docs/architecture/mingo-session-share-design.md §6.2。
    * @param {Object} args 请求参数
@@ -660,14 +668,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getAgentSessionsSharesMessages: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { shareId, ...rest } = args;
+    const {
+      shareId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/agent/sessions/shares/${encodeURIComponent(shareId)}/messages`,
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 返回 CopilotKit / AG-UI runtime 信息，供前端探测运行模式与智能体列表。
    * @param {Object} args 请求参数
@@ -678,10 +688,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/agui/info',
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 列出当前账号的 artifact。支持按 sessionId 过滤 + 分页。
    * @param {Object} args 请求参数
@@ -696,10 +705,9 @@ export default {
     return agentAPI(args, {
       ...options,
       url: '/api/artifacts',
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 按 artifactId 查询产物详情。
    * @param {Object} args 请求参数
@@ -708,14 +716,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getArtifactsByArtifactId: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { artifactId, ...rest } = args;
+    const {
+      artifactId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/artifacts/${encodeURIComponent(artifactId)}`,
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 列出 artifact 的全部 committed 版本；按创建时间升序。
    * @param {Object} args 请求参数
@@ -724,14 +734,16 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getArtifactsVersions: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { artifactId, ...rest } = args;
+    const {
+      artifactId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/artifacts/${encodeURIComponent(artifactId)}/versions`,
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 按 versionId 查询版本元数据。
    * @param {Object} args 请求参数
@@ -741,14 +753,17 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getArtifactsVersionsByVersionId: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { artifactId, versionId, ...rest } = args;
+    const {
+      artifactId,
+      versionId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/artifacts/${encodeURIComponent(artifactId)}/versions/${encodeURIComponent(versionId)}`,
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 两个版本之间的文件级 diff：Added / Modified / Removed / Unchanged。
    * @param {Object} args 请求参数
@@ -759,14 +774,17 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getArtifactsVersionsDiff: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { artifactId, versionId, ...rest } = args;
+    const {
+      artifactId,
+      versionId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/artifacts/${encodeURIComponent(artifactId)}/versions/${encodeURIComponent(versionId)}/diff`,
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 把某版本的全部文件打包成 zip 直接流返回；内存实现，仅适用于 MaxVersionTotalSize 以内的产物。
    * @param {Object} args 请求参数
@@ -776,14 +794,17 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getArtifactsVersionsDownload: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { artifactId, versionId, ...rest } = args;
+    const {
+      artifactId,
+      versionId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/artifacts/${encodeURIComponent(artifactId)}/versions/${encodeURIComponent(versionId)}/download`,
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 列出某版本的文件树，可按路径前缀过滤。
    * @param {Object} args 请求参数
@@ -794,14 +815,17 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getArtifactsVersionsFiles: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { artifactId, versionId, ...rest } = args;
+    const {
+      artifactId,
+      versionId,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/artifacts/${encodeURIComponent(artifactId)}/versions/${encodeURIComponent(versionId)}/files`,
-      method: 'GET',
+      method: 'GET'
     });
   },
-
   /**
    * 读取某版本单文件；返回 Qiniu 签名 URL，前端直接 fetch。
    * @param {Object} args 请求参数
@@ -812,11 +836,31 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    */
   getArtifactsVersionsFilesByPath: function (args: ApiArgs = {}, options: ApiOptions = {}) {
-    const { artifactId, versionId, path, ...rest } = args;
+    const {
+      artifactId,
+      versionId,
+      path,
+      ...rest
+    } = args;
     return agentAPI(rest, {
       ...options,
       url: `/api/artifacts/${encodeURIComponent(artifactId)}/versions/${encodeURIComponent(versionId)}/files/${encodeURIComponent(path)}`,
-      method: 'GET',
+      method: 'GET'
     });
   },
+  /**
+   * 返回携带 traceId / projectId 上下文的问题反馈表单地址。
+   * @param {Object} args 请求参数
+   * @param {string} args.traceId Agent 单次请求追踪 ID，必须属于当前登录账号。
+   * @param {string} args.projectId 组织/网络 ID，仅透传给反馈表单作为上下文。
+   * @param {Object} options 配置参数
+   * @param {Boolean} options.silent 是否禁止错误弹层
+   */
+  getAgentFeedbackFormUrl: function (args: ApiArgs = {}, options: ApiOptions = {}) {
+    return agentAPI(args, {
+      ...options,
+      url: '/api/agent/feedback/form-url',
+      method: 'GET'
+    });
+  }
 };

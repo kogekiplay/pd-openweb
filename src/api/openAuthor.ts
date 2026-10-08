@@ -7,7 +7,9 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
   getSetting: function (args: ApiArgs, options: ApiOptions = {}) {
-    options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
+    options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
+      type: 'GET'
+    });
     return mdyAPI('OpenAuthor', 'GetSetting', args, options);
   },
   /**
@@ -146,40 +148,44 @@ export default {
     return mdyAPI('OpenAuthor', 'GetPAT', args, options);
   },
   /**
-   * 创建个人访问令牌（返回原始 Token，仅此一次）
-   * @param {Object} args 请求参数
-   * @param {string} args.name 令牌名称
-   * @param {string} args.projectId 允许访问的组织 id
-   * @param {integer} args.entityScopeType 组织范围类型，1 = 现在和将来所有组织，2 = 指定组织
-   * @param {array} args.projectIds 指定组织 id 列表
-   * @param {array} args.scopeCodes 权限范围代码列表
-   * @param {integer} args.appScopeType 应用范围类型：1=所有应用，2=指定应用
-   * @param {array} args.appIds 指定应用时的应用 id 列表（AppScopeType=2 时有效）
-   * @param {integer} args.validityType 有效期类型：0=永久有效，1=相对天数，2=自定义时间
-   * @param {integer} args.days 相对天数（ValidityType=1 时有效，例如 1、7、30）
-   * @param {string} args.customTime 自定义截止时间（ValidityType=2 时有效）
-   * @param {Object} options 配置参数
-   * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
-   **/
+  * 创建个人访问令牌（返回原始 Token，仅此一次）
+  * @param {Object} args 请求参数
+  * @param {string} args.name 令牌名称
+  * @param {string} args.projectId 允许访问的组织 id
+  * @param {integer} args.entityScopeType 组织范围类型，1 = 现在和将来所有组织，2 = 指定组织
+  * @param {array} args.projectIds 指定组织 id 列表
+  * @param {integer} args.apiScopeType 接口范围类型：1 = 所有接口（含将来新增），2 = 指定接口。
+  为 1 时忽略 ScopeCodes。
+  * @param {array} args.scopeCodes 权限范围代码列表（ApiScopeType = 2 时有效）
+  * @param {integer} args.appScopeType 应用范围类型：1=所有应用，2=指定应用
+  * @param {array} args.appIds 指定应用时的应用 id 列表（AppScopeType=2 时有效）
+  * @param {integer} args.validityType 有效期类型：0=永久有效，1=相对天数，2=自定义时间
+  * @param {integer} args.days 相对天数（ValidityType=1 时有效，例如 1、7、30）
+  * @param {string} args.customTime 自定义截止时间（ValidityType=2 时有效）
+  * @param {Object} options 配置参数
+  * @param {Boolean} options.silent 是否禁止错误弹层
+  * @returns {Promise<Boolean, ErrorModel>}
+  **/
   createPAT: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'CreatePAT', args, options);
   },
   /**
-   * 编辑个人访问令牌配置（组织范围不允许编辑）
-   * @param {Object} args 请求参数
-   * @param {string} args.id 令牌 id
-   * @param {string} args.name 令牌名称
-   * @param {array} args.scopeCodes 权限范围代码列表
-   * @param {integer} args.appScopeType 应用范围类型，1 = 现在和将来所有应用，2 = 指定应用
-   * @param {array} args.appIds 指定应用 id 列表
-   * @param {integer} args.validityType 有效期类型，0 = 永久有效，1 = 相对天数，2 = 自定义时间
-   * @param {integer} args.days 相对天数
-   * @param {string} args.customTime 自定义截止时间
-   * @param {Object} options 配置参数
-   * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
-   **/
+  * 编辑个人访问令牌配置（组织范围不允许编辑）
+  * @param {Object} args 请求参数
+  * @param {string} args.id 令牌 id
+  * @param {string} args.name 令牌名称
+  * @param {integer} args.apiScopeType 接口范围类型：1 = 所有接口（含将来新增），2 = 指定接口。
+  为 1 时忽略 ScopeCodes。
+  * @param {array} args.scopeCodes 权限范围代码列表（ApiScopeType = 2 时有效）
+  * @param {integer} args.appScopeType 应用范围类型，1 = 现在和将来所有应用，2 = 指定应用
+  * @param {array} args.appIds 指定应用 id 列表
+  * @param {integer} args.validityType 有效期类型，0 = 永久有效，1 = 相对天数，2 = 自定义时间
+  * @param {integer} args.days 相对天数
+  * @param {string} args.customTime 自定义截止时间
+  * @param {Object} options 配置参数
+  * @param {Boolean} options.silent 是否禁止错误弹层
+  * @returns {Promise<Boolean, ErrorModel>}
+  **/
   updatePAT: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('OpenAuthor', 'UpdatePAT', args, options);
   },
@@ -236,7 +242,9 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
   introspectPATTest: function (args: ApiArgs, options: ApiOptions = {}) {
-    options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
+    options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
+      type: 'GET'
+    });
     return mdyAPI('OpenAuthor', 'IntrospectPATTest', args, options);
   },
   /**
@@ -247,7 +255,9 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
   getOAuthAppInfoByClientIdTest: function (args: ApiArgs, options: ApiOptions = {}) {
-    options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
+    options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
+      type: 'GET'
+    });
     return mdyAPI('OpenAuthor', 'GetOAuthAppInfoByClientIdTest', args, options);
   },
   /**
@@ -298,7 +308,9 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
   introspectTokenTest: function (args: ApiArgs, options: ApiOptions = {}) {
-    options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
+    options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
+      type: 'GET'
+    });
     return mdyAPI('OpenAuthor', 'IntrospectTokenTest', args, options);
-  },
+  }
 };

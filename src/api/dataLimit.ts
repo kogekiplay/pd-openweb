@@ -7,10 +7,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAttachmentSetting: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.DataLimit.AttachmentSettingDto> {
+  getAttachmentSetting: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.DataLimit.AttachmentSettingDto> {
     return mdyAPI('DataLimit', 'GetAttachmentSetting', args, options);
   },
   /**
@@ -26,6 +23,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editAttachmentSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'EditAttachmentSetting', args, options);
   },
@@ -38,6 +36,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   addAttachmentWhiteList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'AddAttachmentWhiteList', args, options);
   },
@@ -50,6 +49,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   removeAttachmentWhiteList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'RemoveAttachmentWhiteList', args, options);
   },
@@ -62,6 +62,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editAttachmentWhiteList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'EditAttachmentWhiteList', args, options);
   },
@@ -73,6 +74,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getLimits: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'GetLimits', args, options);
   },
@@ -86,6 +88,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editLimits: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'EditLimits', args, options);
   },
@@ -98,6 +101,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getAppLimitList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'GetAppLimitList', args, options);
   },
@@ -110,6 +114,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getAppLimit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'GetAppLimit', args, options);
   },
@@ -139,6 +144,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   addAppLimit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'AddAppLimit', args, options);
   },
@@ -168,6 +174,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   updateAppLimit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'UpdateAppLimit', args, options);
   },
@@ -180,6 +187,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   deleteAppLimit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'DeleteAppLimit', args, options);
   },
@@ -192,6 +200,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getAIModelAuthRuleList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'GetAIModelAuthRuleList', args, options);
   },
@@ -204,6 +213,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getAIModelAuthRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'GetAIModelAuthRule', args, options);
   },
@@ -221,6 +231,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   addAIModelAuthRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'AddAIModelAuthRule', args, options);
   },
@@ -238,6 +249,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   updateAIModelAuthRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'UpdateAIModelAuthRule', args, options);
   },
@@ -251,6 +263,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editAIModelAuthRuleStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'EditAIModelAuthRuleStatus', args, options);
   },
@@ -263,6 +276,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   deleteAIModelAuthRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'DeleteAIModelAuthRule', args, options);
   },
@@ -274,10 +288,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getListPage: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.DataLimit.GetListPageDto> {
+
+  getListPage: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.DataLimit.GetListPageDto> {
     return mdyAPI('DataLimit', 'GetListPage', args, options);
   },
   /**
@@ -288,10 +300,12 @@ export default {
    * @param {array} args.entityIds 筛选的实体ids
    * @param {integer} args.pageIndex 页码
    * @param {integer} args.pageSize 每页数量
+   * @param {integer} args.sortType 排序类型：0 为 ObjectId 降序，1 为 ObjectId 升序，2 为额度降序，3 为额度升序。
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getUageLimits: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'GetUageLimits', args, options);
   },
@@ -308,6 +322,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editUageLimit: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'EditUageLimit', args, options);
   },
@@ -319,22 +334,21 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getLimitRowTotal: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.DataLimit.GetLimitRowTotalDto> {
+
+  getLimitRowTotal: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.DataLimit.GetLimitRowTotalDto> {
     return mdyAPI('DataLimit', 'GetLimitRowTotal', args, options);
   },
   /**
-   * 重置应用使用用量
+   * 重置应用使用用量(批量)
    * @param {Object} args 请求参数
    * @param {string} args.projectId 组织id
-   * @param {string} args.appId 应用idid
+   * @param {array} args.appIds 应用ids
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   resetUsage: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('DataLimit', 'ResetUsage', args, options);
-  },
+  }
 };

@@ -7,9 +7,9 @@ export default {
   * @param {string} args.companyDisplayName 公司显示名称
   * @param {string} args.companyNameEnglish 公司英文名称
   * @param {integer} args.geographyId 组织所属区域
-非必选
+  非必选
   * @param {integer} args.industryId 组织所属行业
-非必选
+  非必选
   * @param {string} args.geoCountryRegionCode (地理位置)国家地区-编码
   * @param {string} args.timeZone 时区
   * @param {Object} options 配置参数
@@ -65,10 +65,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectLicenseSupportInfo: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectModel> {
+  getProjectLicenseSupportInfo: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectModel> {
     return mdyAPI('Project', 'GetProjectLicenseSupportInfo', args, options);
   },
   /**
@@ -79,6 +76,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getEffectiveUsersCount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetEffectiveUsersCount', args, options);
   },
@@ -90,6 +88,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getProjectLogOff: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetProjectLogOff', args, options);
   },
@@ -102,6 +101,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   closeProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'CloseProject', args, options);
   },
@@ -114,6 +114,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   recoverProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'RecoverProject', args, options);
   },
@@ -126,6 +127,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   applyCancelProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'ApplyCancelProject', args, options);
   },
@@ -137,6 +139,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   removeApplyCancelProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'RemoveApplyCancelProject', args, options);
   },
@@ -148,6 +151,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   removeProjectTrialLicense: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'RemoveProjectTrialLicense', args, options);
   },
@@ -159,6 +163,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getInviteGiveRule: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetInviteGiveRule', args, options);
   },
@@ -170,6 +175,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getProjectUnauditedUserCount: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<number> {
     return mdyAPI('Project', 'GetProjectUnauditedUserCount', args, options);
   },
@@ -183,6 +189,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   pushInstallClientMsg: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'PushInstallClientMsg', args, options);
   },
@@ -195,6 +202,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getComputingInstances: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetComputingInstances', args, options);
   },
@@ -207,12 +215,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getComputingInstanceDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetComputingInstanceDetail', args, options);
   },
   /**
   * 更新专属算力实例名称
-删除专属算力
+  删除专属算力
   * @param {Object} args 请求参数
   * @param {string} args.projectId 组织id
   * @param {string} args.instanceId 专属算力实例id
@@ -416,10 +425,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectInfo: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetProjectInfoModel> {
+  getProjectInfo: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.GetProjectInfoModel> {
     return mdyAPI('Project', 'GetProjectInfo', args, options);
   },
   /**
@@ -430,15 +436,12 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectLimitationInfo: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectLimitationModel> {
+  getProjectLimitationInfo: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectLimitationModel> {
     return mdyAPI('Project', 'GetProjectLimitationInfo', args, options);
   },
   /**
   * 获取组织与授权相关信息，只返回授权/登录账户是否管理员/是否开启水印
-登录之后才返回信息
+  登录之后才返回信息
   * @param {Object} args 请求参数
   * @param {string} args.projectId 组织ID
   * @param {Object} options 配置参数
@@ -468,10 +471,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectSubDomainInfo: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectSubDomainModel> {
+  getProjectSubDomainInfo: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Project.ProjectSubDomainModel> {
     return mdyAPI('Project', 'GetProjectSubDomainInfo', args, options);
   },
   /**
@@ -529,7 +529,7 @@ export default {
   /**
    * 获取是否线下订单 true 线下
    * @param {Object} args 请求参数
-   * @param {string} args.projectId 组织ID
+  * @param {string} args.projectId 组织ID
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
@@ -548,10 +548,52 @@ export default {
   getManageSubscriptionUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Project', 'GetManageSubscriptionUrl', args, options);
   },
-  getProjectSource: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Enum.ProjectIntergrationType> {
+  getProjectSource: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Enum.ProjectIntergrationType> {
     return mdyAPI('Project', 'GetProjectSource', args, options);
   },
+  /**
+   * 获取专属算力历史工作流页面数据。
+   * @param {Object} args 请求参数
+   * @param {string} args.projectId 组织 Id。
+   * @param {string} args.id 专属算力实例 Id。
+   * @param {string} args.appId 应用 Id；为空时查询全部应用。
+   * @param {integer} args.processListType 工作流列表类型；为空时查询全部类型。
+   * @param {string} args.keyword 工作流名称关键字。
+   * @param {integer} args.pageIndex 页码，从 1 开始。
+   * @param {integer} args.pageSize 每页数量，最大为 100。
+   * @param {Object} options 配置参数
+   * @param {Boolean} options.silent 是否禁止错误弹层
+   * @returns {Promise<Boolean, ErrorModel>}
+   **/
+  getComputingInstanceHistoryWorkflows: function (args: ApiArgs, options: ApiOptions = {}) {
+    return mdyAPI('Project', 'GetComputingInstanceHistoryWorkflows', args, options);
+  },
+  /**
+   * 检查待迁移的历史工作流是否已存在于目标之外的其他专属算力。
+   * @param {Object} args 请求参数
+   * @param {string} args.projectId 组织 Id。
+   * @param {string} args.id 已过期专属算力实例 Id。
+   * @param {string} args.targetResourceId 目标专属算力资源 Id。
+   * @param {array} args.workflowIds 需要迁移的工作流 Id；为空时迁移该实例快照中的全部工作流。
+   * @param {Object} options 配置参数
+   * @param {Boolean} options.silent 是否禁止错误弹层
+   * @returns {Promise<Boolean, ErrorModel>}
+   **/
+  checkMoveComputingInstanceHistoryWorkflows: function (args: ApiArgs, options: ApiOptions = {}) {
+    return mdyAPI('Project', 'CheckMoveComputingInstanceHistoryWorkflows', args, options);
+  },
+  /**
+   * 将已过期专属算力的历史工作流添加到其他运行中的专属算力。
+   * @param {Object} args 请求参数
+   * @param {string} args.projectId 组织 Id。
+   * @param {string} args.id 已过期专属算力实例 Id。
+   * @param {string} args.targetResourceId 目标专属算力资源 Id。
+   * @param {array} args.workflowIds 需要迁移的工作流 Id；为空时迁移该实例快照中的全部工作流。
+   * @param {Object} options 配置参数
+   * @param {Boolean} options.silent 是否禁止错误弹层
+   * @returns {Promise<Boolean, ErrorModel>}
+   **/
+  moveComputingInstanceHistoryWorkflows: function (args: ApiArgs, options: ApiOptions = {}) {
+    return mdyAPI('Project', 'MoveComputingInstanceHistoryWorkflows', args, options);
+  }
 };

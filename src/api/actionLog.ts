@@ -10,6 +10,7 @@ export default {
    * @param {} args.logType
    * @param {} args.accountResult
    * @param {array} args.accountIds 用户ID
+   * @param {string} args.ip IP 地址（前端输入的文本，模糊匹配）
    * @param {array} args.columnNames 列名称
    * @param {string} args.fileName 导出文件名
    * @param {boolean} args.confirmExport 是否确认导出(超量的情况下传)
@@ -17,10 +18,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getActionLogs: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Entity.ReturnResult_ActionLogListWithTotalCountModel> {
+  getActionLogs: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Entity.ReturnResult_ActionLogListWithTotalCountModel> {
     return mdyAPI('ActionLog', 'GetActionLogs', args, options);
   },
   /**
@@ -34,6 +32,7 @@ export default {
    * @param {} args.operateTargetType
    * @param {} args.operateType
    * @param {array} args.accountIds 用户ID
+   * @param {string} args.ip IP 地址（前端输入的文本，模糊匹配）
    * @param {string} args.fileName 文件名
    * @param {array} args.columnNames 列名称
    * @param {boolean} args.confirmExport 是否确认导出(超量的情况下传)
@@ -41,10 +40,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getOrgLogs: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Entity.ReturnResult_OrgLogListWithTotalCountModel> {
+
+  getOrgLogs: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Entity.ReturnResult_OrgLogListWithTotalCountModel> {
     return mdyAPI('ActionLog', 'GetOrgLogs', args, options);
   },
   /**
@@ -54,6 +51,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getAccountDevices: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ActionLog', 'GetAccountDevices', args, options);
   },
@@ -62,13 +60,14 @@ export default {
   * @param {Object} args 请求参数
   * @param {} args.type
   * @param {string} args.entityId 实体id(根据访问类型不同， 传不同模块id)
-浏览应用，entityId =应用id，浏览自定义页面，entityId = 页面id。其他的浏览行为 =worksheetId
+  浏览应用，entityId =应用id，浏览自定义页面，entityId = 页面id。其他的浏览行为 =worksheetId
   * @param {} args.params
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   addLog: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<boolean> {
     return mdyAPI('ActionLog', 'AddLog', args, options);
-  },
+  }
 };

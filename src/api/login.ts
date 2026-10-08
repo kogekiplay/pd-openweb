@@ -7,16 +7,16 @@ export default {
   * @param {} args.captchaType
   * @param {string} args.account 账号
   * @param {string} args.password 密码
-密码直接登录
+  密码直接登录
   * @param {string} args.verifyCode 验证码
-验证码直接登录
+  验证码直接登录
   * @param {boolean} args.isCookie 是否记住用户名密码
   * @param {string} args.unionId 第三方账号id标识
   * @param {string} args.state 第三方账号随机码
   * @param {} args.tpType
   * @param {string} args.regFrom 登录广告来源
   * @param {string} args.appKey 移动端 AppKey
-只支持iOS/Android
+  只支持iOS/Android
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
@@ -59,7 +59,7 @@ export default {
   * 通过状态码获取账户开启的两步验证登录方式
   * @param {Object} args 请求参数
   * @param {string} args.state 首次登录成功之后返回的临时状态码
-用于反向存储用户相关信息，具备有效期
+  用于反向存储用户相关信息，具备有效期
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
@@ -72,7 +72,7 @@ export default {
   * @param {Object} args 请求参数
   * @param {string} args.state 状态位
   * @param {integer} args.type 验证类型
-1为手机号；2为邮箱；3为TOTP
+  1为手机号；2为邮箱；3为TOTP
   * @param {string} args.verifyCode 验证码
   * @param {string} args.regFrom 登录广告来源
   * @param {Object} options 配置参数
@@ -90,7 +90,7 @@ export default {
   * @param {} args.captchaType
   * @param {string} args.state 状态位
   * @param {integer} args.type 发送类型
-1为手机号；2为邮箱
+  1为手机号；2为邮箱
   * @param {} args.lang
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
@@ -119,7 +119,7 @@ export default {
   },
   /**
   * 检查登录状态
-登录返回true，未登录则返回false
+  登录返回true，未登录则返回false
   * @param {Object} args 请求参数
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
@@ -213,7 +213,7 @@ export default {
   },
   /**
   * 企业微信小程序登录
-企业微信打开明道云小程序
+  企业微信打开明道云小程序
   * @param {Object} args 请求参数
   * @param {string} args.code 授权码
   * @param {Object} options 配置参数
@@ -225,7 +225,7 @@ export default {
   },
   /**
   * 【三方应用】企业微信三方应用明道云登录
-企业微信打开明道云
+  企业微信打开明道云
   * @param {Object} args 请求参数
   * @param {string} args.code 授权码
   * @param {Object} options 配置参数
@@ -251,7 +251,7 @@ export default {
   * @param {Object} args 请求参数
   * @param {string} args.code 授权码
   * @param {string} args.state State
-用于oauth 带的key值，定位Corp 信息
+  用于oauth 带的key值，定位Corp 信息
   * @param {integer} args.type 1钉钉内部登录 2 钉钉扫码登录
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
@@ -265,7 +265,7 @@ export default {
   * @param {Object} args 请求参数
   * @param {string} args.code 授权码
   * @param {string} args.state State
-用于oauth 带的key值，定位Corp 信息
+  用于oauth 带的key值，定位Corp 信息
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
@@ -312,7 +312,7 @@ export default {
   * @param {Object} args 请求参数
   * @param {string} args.code 授权码
   * @param {string} args.state State
-用于oauth 带的key值，定位Corp 信息
+  用于oauth 带的key值，定位Corp 信息
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
@@ -337,7 +337,7 @@ export default {
   * @param {string} args.code 授权码
   * @param {string} args.codeVerifier Code验证器
   * @param {string} args.state State
-用于oauth 带的key值，定位Corp 信息
+  用于oauth 带的key值，定位Corp 信息
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
@@ -345,4 +345,16 @@ export default {
   workMicrosoftLoginByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Login', 'WorkMicrosoftLoginByApp', args, options);
   },
+  /**
+   * Microsoft My Apps 集成登录。
+   * @param {Object} args 请求参数
+   * @param {string} args.code 授权码。
+   * @param {string} args.codeVerifier Code 验证器。
+   * @param {Object} options 配置参数
+   * @param {Boolean} options.silent 是否禁止错误弹层
+   * @returns {Promise<Boolean, ErrorModel>}
+   **/
+  workMicrosoftMyAppsLogin: function (args: ApiArgs, options: ApiOptions = {}) {
+    return mdyAPI('Login', 'WorkMicrosoftMyAppsLogin', args, options);
+  }
 };

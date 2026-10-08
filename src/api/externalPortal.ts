@@ -42,10 +42,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserAgreement: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ExternalPortal.UserAgreementResult> {
+  getUserAgreement: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ExternalPortal.UserAgreementResult> {
     return mdyAPI('ExternalPortal', 'GetUserAgreement', args, options);
   },
   /**
@@ -57,10 +54,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPrivacyTerms: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ExternalPortal.PrivacyTermsResult> {
+
+  getPrivacyTerms: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ExternalPortal.PrivacyTermsResult> {
     return mdyAPI('ExternalPortal', 'GetPrivacyTerms', args, options);
   },
   /**
@@ -72,6 +67,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getPortalSet: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetPortalSet', args, options);
   },
@@ -84,15 +80,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getPortalEnableState: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ExternalPortal.PortalStateModel> {
+
+  getPortalEnableState: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.App.ExternalPortal.PortalStateModel> {
     return mdyAPI('ExternalPortal', 'GetPortalEnableState', args, options);
   },
   /**
   * 根据 AppId
-获取功能配置
+  获取功能配置
   * @param {Object} args 请求参数
   * @param {string} args.appId AppId
   * @param {string} args.customLink 客户自定义登录链接参数值
@@ -100,10 +94,8 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getConfig: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Entity.ExternalPortal.PortalDiscussConfig> {
+
+  getConfig: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Entity.ExternalPortal.PortalDiscussConfig> {
     return mdyAPI('ExternalPortal', 'GetConfig', args, options);
   },
   /**
@@ -115,6 +107,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   createEPDiscussWorkFlow: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'CreateEPDiscussWorkFlow', args, options);
   },
@@ -127,6 +120,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   initAddressExt: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'InitAddressExt', args, options);
   },
@@ -139,6 +133,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editExPortalEnable: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditExPortalEnable', args, options);
   },
@@ -151,6 +146,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editIsSendMsgs: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditIsSendMsgs', args, options);
   },
@@ -164,6 +160,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editPortalSet: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditPortalSet', args, options);
   },
@@ -176,6 +173,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editCustomAddressSuffix: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditCustomAddressSuffix', args, options);
   },
@@ -188,6 +186,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editCustomAddressExt: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditCustomAddressExt', args, options);
   },
@@ -204,6 +203,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   sendAccountVerifyCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'SendAccountVerifyCode', args, options);
   },
@@ -219,6 +219,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   checkExAccountVerifyCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'CheckExAccountVerifyCode', args, options);
   },
@@ -231,6 +232,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getUserTemple: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetUserTemple', args, options);
   },
@@ -246,13 +248,15 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getUserCollect: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetUserCollect', args, options);
   },
   /**
    * 获取外部用户日志
    * @param {Object} args 请求参数
-   * @param {string} args.appId
+   * @param {string} args.appId 外部门户应用 Id。
+   * @param {} args.logType
    * @param {integer} args.pageIndex 当前页码
    * @param {integer} args.pageSize 页面尺寸
    * @param {string} args.startDate 开始时间
@@ -262,10 +266,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserActionLogs: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Entity.ReturnResult_ActionLogListWithTotalCountModel> {
+
+  getUserActionLogs: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Entity.ReturnResult_ActionLogListWithTotalCountModel> {
     return mdyAPI('ExternalPortal', 'GetUserActionLogs', args, options);
   },
   /**
@@ -277,6 +279,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   dateHistogram: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'DateHistogram', args, options);
   },
@@ -289,6 +292,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   importExAccounts: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'ImportExAccounts', args, options);
   },
@@ -302,6 +306,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   addExAccounts: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'AddExAccounts', args, options);
   },
@@ -315,6 +320,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   reinviteExAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'ReinviteExAccount', args, options);
   },
@@ -329,6 +335,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   saveUserDetailForBackgroud: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'SaveUserDetailForBackgroud', args, options);
   },
@@ -343,6 +350,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   saveUserDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'SaveUserDetail', args, options);
   },
@@ -357,6 +365,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editExAccountsRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditExAccountsRole', args, options);
   },
@@ -371,6 +380,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editExAccountState: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditExAccountState', args, options);
   },
@@ -384,6 +394,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   activatExAccounts: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'ActivatExAccounts', args, options);
   },
@@ -399,6 +410,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   auditPassExAccountToNewRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'AuditPassExAccountToNewRole', args, options);
   },
@@ -412,6 +424,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   refusePassExAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'RefusePassExAccount', args, options);
   },
@@ -424,6 +437,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editExAccountCancel: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditExAccountCancel', args, options);
   },
@@ -439,6 +453,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   bindExAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'BindExAccount', args, options);
   },
@@ -454,6 +469,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editExAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditExAccount', args, options);
   },
@@ -467,6 +483,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   removeUsers: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'RemoveUsers', args, options);
   },
@@ -480,6 +497,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   cancelInvitation: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'CancelInvitation', args, options);
   },
@@ -492,10 +510,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getViewShowControls: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetViewShowControlsDto> {
+
+  getViewShowControls: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetViewShowControlsDto> {
     return mdyAPI('ExternalPortal', 'GetViewShowControls', args, options);
   },
   /**
@@ -507,6 +523,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editViewShowControls: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditViewShowControls', args, options);
   },
@@ -519,10 +536,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getExAccountCategoryCount: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetExAccountCategoryCountResult> {
+
+  getExAccountCategoryCount: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetExAccountCategoryCountResult> {
     return mdyAPI('ExternalPortal', 'GetExAccountCategoryCount', args, options);
   },
   /**
@@ -532,8 +547,8 @@ export default {
   * @param {string} args.randStr 票据随机字符串
   * @param {} args.captchaType
   * @param {string} args.clientId 客户端标识
-记录输入密码之后，页面刷新不用重复输入密码操作
-滑动过期
+  记录输入密码之后，页面刷新不用重复输入密码操作
+  滑动过期
   * @param {string} args.worksheetId 工作表id
   * @param {} args.getType
   * @param {array} args.filterControls 查询列
@@ -571,6 +586,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   getFilterRows: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetFilterRows', args, options);
   },
@@ -584,6 +600,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetDetail', args, options);
   },
@@ -605,10 +622,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUsers: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetUsersDto> {
+
+  getUsers: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetUsersDto> {
     return mdyAPI('ExternalPortal', 'GetUsers', args, options);
   },
   /**
@@ -624,6 +639,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getUsersByApp: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetUsersByApp', args, options);
   },
@@ -636,6 +652,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   removeUsersByPorject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'RemoveUsersByPorject', args, options);
   },
@@ -649,10 +666,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAppInfoByProject: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetAppInfoByProjectDto> {
+
+  getAppInfoByProject: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ExternalPortal.GetAppInfoByProjectDto> {
     return mdyAPI('ExternalPortal', 'GetAppInfoByProject', args, options);
   },
   /**
@@ -664,6 +679,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getExRoles: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetExRoles', args, options);
   },
@@ -689,10 +705,14 @@ export default {
    * @param {} args.generalSystemPrinting
    * @param {} args.generalAttachmentDownload
    * @param {} args.generalLogging
+   * @param {} args.generalFilter
+   * @param {} args.generalStats
+   * @param {} args.generalButtons
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   addExRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'AddExRole', args, options);
   },
@@ -705,6 +725,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editDefaultExRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditDefaultExRole', args, options);
   },
@@ -719,6 +740,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editAppExRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'EditAppExRole', args, options);
   },
@@ -731,6 +753,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   removeExRole: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'RemoveExRole', args, options);
   },
@@ -748,6 +771,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   sendVerifyCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'SendVerifyCode', args, options);
   },
@@ -760,6 +784,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   autoLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'AutoLogin', args, options);
   },
@@ -773,12 +798,13 @@ export default {
   * @param {string} args.verifyCode 验证码
   * @param {string} args.appId 应用ID
   * @param {string} args.state 微信登录成功之后返回的临时状态码
-用于反向存储微信相关信息，具备有效期
+  用于反向存储微信相关信息，具备有效期
   * @param {boolean} args.autoLogin 是否自动登录
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   login: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'Login', args, options);
   },
@@ -797,6 +823,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   pwdLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'PwdLogin', args, options);
   },
@@ -807,7 +834,7 @@ export default {
   * @param {string} args.randStr 票据随机字符串
   * @param {} args.captchaType
   * @param {string} args.state 首次登录成功之后返回的临时状态码
-用于反向存储用户相关信息，具备有效期
+  用于反向存储用户相关信息，具备有效期
   * @param {string} args.account 账号
   * @param {string} args.verifyCode 验证码
   * @param {boolean} args.autoLogin 是否自动登录
@@ -815,6 +842,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   twofactorLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'TwofactorLogin', args, options);
   },
@@ -822,11 +850,12 @@ export default {
   * 外部门户两步验证获取用户信息
   * @param {Object} args 请求参数
   * @param {string} args.state 首次登录成功之后返回的临时状态码
-用于反向存储用户相关信息，具备有效期
+  用于反向存储用户相关信息，具备有效期
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   getTwofactorInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetTwofactorInfo', args, options);
   },
@@ -840,6 +869,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   exportalSSO: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'ExportalSSO', args, options);
   },
@@ -847,12 +877,13 @@ export default {
   * 收集信息与登录
   * @param {Object} args 请求参数
   * @param {string} args.state 验证码或者微信登录成功之后返回的临时状态码
-用于反向存储账户相关信息，具备有效期
+  用于反向存储账户相关信息，具备有效期
   * @param {array} args.receiveControls 用户填写信息
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   infoLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'InfoLogin', args, options);
   },
@@ -864,6 +895,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getTpLoginUrlInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetTpLoginUrlInfo', args, options);
   },
@@ -878,6 +910,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   tpLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'TpLogin', args, options);
   },
@@ -889,6 +922,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getSelfLoginScanUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetSelfLoginScanUrl', args, options);
   },
@@ -896,11 +930,12 @@ export default {
   * 返回外部门户平台二维码扫码之后跳转登录地址
   * @param {Object} args 请求参数
   * @param {string} args.state 二维码所需的临时状态码
-用于反向存储应用与用户相关信息，具备有效期
+  用于反向存储应用与用户相关信息，具备有效期
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   getSelfTpLoginUrlInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetSelfTpLoginUrlInfo', args, options);
   },
@@ -908,26 +943,28 @@ export default {
   * 返回外部门户微信公众号关注地址
   * @param {Object} args 请求参数
   * @param {string} args.state 二维码所需的临时状态码
-用于反向存储应用与用户相关信息，具备有效期
+  用于反向存储应用与用户相关信息，具备有效期
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   getTpLoginSubscribedScanUrl: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'GetTpLoginSubscribedScanUrl', args, options);
   },
   /**
   * 获取外部门户微信扫码登录结果
-轮询
+  轮询
   * @param {Object} args 请求参数
   * @param {string} args.state 二维码所需的临时状态码
-用于反向存储账户相关信息，具备有效期
+  用于反向存储账户相关信息，具备有效期
   * @param {string} args.appId 应用ID
   * @param {boolean} args.autoLogin 是否自动登录
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   scanTpLogin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'ScanTpLogin', args, options);
   },
@@ -945,7 +982,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   findPwd: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('ExternalPortal', 'FindPwd', args, options);
-  },
+  }
 };

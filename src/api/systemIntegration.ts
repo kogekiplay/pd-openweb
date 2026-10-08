@@ -74,4 +74,15 @@ export default {
   changeSystemIntegrationStatus: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('SystemIntegration', 'ChangeSystemIntegrationStatus', args, options);
   },
+  /**
+   * 获取工作表云打印绑定状态
+   * @param {Object} args 请求参数
+   * @param {string} args.worksheetId 工作表 Id
+   * @param {Object} options 配置参数
+   * @param {Boolean} options.silent 是否禁止错误弹层
+   * @returns {Promise<Boolean, ErrorModel>}
+   **/
+  getCloudPrintStatus: function (args: ApiArgs, options: ApiOptions = {}) {
+    return mdyAPI('SystemIntegration', 'GetCloudPrintStatus', args, options);
+  }
 };

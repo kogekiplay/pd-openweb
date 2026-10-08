@@ -12,6 +12,7 @@ export default {
    * @param {string} args.mapWorksheetId 关联的工作表
    * @param {object} args.fieldMaps 关联的工作表映射字段
    * @param {integer} args.expireTime 订单过期时长
+   * @param {integer} args.refundTime 退款时效 天
    * @param {boolean} args.enableOrderVisible 是否启用订单可见
    * @param {string} args.orderVisibleViewId 订单可见视图id
    * @param {} args.worksheetPaymentSetting
@@ -34,7 +35,9 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
   getPaymentSetting: function (args: ApiArgs, options: ApiOptions = {}) {
-    options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
+    options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
+      type: 'GET'
+    });
     return mdyAPI('WorksheetSetting', 'GetPaymentSetting', args, options);
   },
   /**
@@ -45,7 +48,9 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
   getRowDetailIsShowOrder: function (args: ApiArgs, options: ApiOptions = {}) {
-    options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
+    options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
+      type: 'GET'
+    });
     return mdyAPI('WorksheetSetting', 'GetRowDetailIsShowOrder', args, options);
   },
   /**
@@ -75,7 +80,9 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
   getInvoiceSetting: function (args: ApiArgs, options: ApiOptions = {}) {
-    options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
+    options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
+      type: 'GET'
+    });
     return mdyAPI('WorksheetSetting', 'GetInvoiceSetting', args, options);
   },
   /**
@@ -101,7 +108,9 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
   getShareCardSetting: function (args: ApiArgs, options: ApiOptions = {}) {
-    options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
+    options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
+      type: 'GET'
+    });
     return mdyAPI('WorksheetSetting', 'GetShareCardSetting', args, options);
-  },
+  }
 };

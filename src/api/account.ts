@@ -16,10 +16,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getContactInfo: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccountInfoModel> {
+  getContactInfo: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccountInfoModel> {
     return mdyAPI('Account', 'GetContactInfo', args, options);
   },
   /**
@@ -29,10 +26,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMyContactInfo: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccounContacttInfoModel> {
+
+  getMyContactInfo: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccounContacttInfoModel> {
     return mdyAPI('Account', 'GetMyContactInfo', args, options);
   },
   /**
@@ -43,6 +38,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getAccountDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetAccountDetail', args, options);
   },
@@ -55,6 +51,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   delAccountDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'DelAccountDetail', args, options);
   },
@@ -71,6 +68,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editAccountBasicInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditAccountBasicInfo', args, options);
   },
@@ -86,6 +84,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editContactInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditContactInfo', args, options);
   },
@@ -104,6 +103,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editAccountDetail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditAccountDetail', args, options);
   },
@@ -111,12 +111,13 @@ export default {
   * 修改头像
   * @param {Object} args 请求参数
   * @param {string} args.fileName 头像文件名
-如: https://pic.mingdao.com/UserAvatar/9e4554bb-4fb4-4ef7-abb8-d79fcdbc3f7d.jpg
-只需要传: 9e4554bb-4fb4-4ef7-abb8-d79fcdbc3f7d.jpg
+  如: https://pic.mingdao.com/UserAvatar/9e4554bb-4fb4-4ef7-abb8-d79fcdbc3f7d.jpg
+  只需要传: 9e4554bb-4fb4-4ef7-abb8-d79fcdbc3f7d.jpg
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
+
   editAccountAvatar: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditAccountAvatar', args, options);
   },
@@ -127,6 +128,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getAccountInfo: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetAccountInfo', args, options);
   },
@@ -140,6 +142,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   sendProjectBindEmail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'SendProjectBindEmail', args, options);
   },
@@ -151,6 +154,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   emailValidate: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EmailValidate', args, options);
   },
@@ -164,6 +168,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editPwd: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditPwd', args, options);
   },
@@ -177,36 +182,43 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editIntergrationAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditIntergrationAccount', args, options);
   },
   /**
-   * 发送修改帐号验证码
-   * @param {Object} args 请求参数
-   * @param {string} args.ticket 验证码返票据
-   * @param {string} args.randStr 票据随机字符串
-   * @param {} args.captchaType
-   * @param {string} args.account 账号
-   * @param {boolean} args.needCheckCode 是否需要验证密码输入
-   * @param {Object} options 配置参数
-   * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
-   **/
+  * 发送修改帐号验证码
+  * @param {Object} args 请求参数
+  * @param {string} args.ticket 验证码返票据
+  * @param {string} args.randStr 票据随机字符串
+  * @param {} args.captchaType
+  * @param {integer} args.type 发送类型
+  0为输入手机号；1为当前用户的手机号；2为当前用户的邮箱
+  * @param {string} args.account 账号
+  * @param {boolean} args.needCheckCode 是否需要验证密码输入
+  * @param {Object} options 配置参数
+  * @param {Boolean} options.silent 是否禁止错误弹层
+  * @returns {Promise<Boolean, ErrorModel>}
+  **/
+
   sendChangeAccountVerifyCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'SendChangeAccountVerifyCode', args, options);
   },
   /**
-   * 发送验证码
-   * @param {Object} args 请求参数
-   * @param {string} args.ticket 验证码返票据
-   * @param {string} args.randStr 票据随机字符串
-   * @param {} args.captchaType
-   * @param {string} args.account 账号
-   * @param {boolean} args.needCheckCode 是否需要验证密码输入
-   * @param {Object} options 配置参数
-   * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
-   **/
+  * 发送验证码
+  * @param {Object} args 请求参数
+  * @param {string} args.ticket 验证码返票据
+  * @param {string} args.randStr 票据随机字符串
+  * @param {} args.captchaType
+  * @param {integer} args.type 发送类型
+  0为输入手机号；1为当前用户的手机号；2为当前用户的邮箱
+  * @param {string} args.account 账号
+  * @param {boolean} args.needCheckCode 是否需要验证密码输入
+  * @param {Object} options 配置参数
+  * @param {Boolean} options.silent 是否禁止错误弹层
+  * @returns {Promise<Boolean, ErrorModel>}
+  **/
+
   sendVerifyCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'SendVerifyCode', args, options);
   },
@@ -221,12 +233,13 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   checkAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'CheckAccount', args, options);
   },
   /**
-  * 验证登录密码
-根据设备（勾选之后1小时内免验证）
+  * 验证身份（登录密码 / 手机短信 / 邮箱 / 身份验证器TOTP）
+  根据设备（勾选之后1小时内免验证）
   * @param {Object} args 请求参数
   * @param {string} args.ticket 验证码返票据
   * @param {string} args.randStr 票据随机字符串
@@ -234,6 +247,10 @@ export default {
   * @param {string} args.password 密码
   * @param {string} args.projectId 组织ID
   * @param {boolean} args.isNoneVerification 是否1小时内该设备免验证
+  * @param {integer} args.type 验证方式：0=登录密码（默认，用 Password 字段）；1=手机短信验证码；2=邮箱验证码；
+  3=身份验证器(TOTP)。1/2/3 均用 VerifyCode 字段传验证码。
+  编号与 SendVerifyCode / 前端 TwofactorType(手机1/邮箱2/totp3) 保持一致。
+  * @param {string} args.verifyCode 验证码（手机短信 / 邮箱 / 身份验证器 TOTP 共用；Type=1/2/3 时使用）
   * @param {Object} options 配置参数
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
@@ -310,10 +327,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getProjectList: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ListModel_ProjectModel> {
+  getProjectList: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.ListModel_ProjectModel> {
     return mdyAPI('Account', 'GetProjectList', args, options);
   },
   /**
@@ -330,6 +344,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   joinProjectByToken: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'JoinProjectByToken', args, options);
   },
@@ -347,6 +362,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   joinProjectByCode: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'JoinProjectByCode', args, options);
   },
@@ -358,6 +374,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   revokedJoinProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'RevokedJoinProject', args, options);
   },
@@ -370,6 +387,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   checkJoinProjectByTokenWithCard: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'CheckJoinProjectByTokenWithCard', args, options);
   },
@@ -382,6 +400,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   refuseJoin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'RefuseJoin', args, options);
   },
@@ -394,6 +413,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   editUserCardContactPhone: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'EditUserCardContactPhone', args, options);
   },
@@ -405,10 +425,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserCard: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.UserCardModel> {
+
+  getUserCard: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.User.UserCardModel> {
     return mdyAPI('Account', 'GetUserCard', args, options);
   },
   /**
@@ -421,6 +439,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   sendSystemMessageToAdmin: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'SendSystemMessageToAdmin', args, options);
   },
@@ -436,6 +455,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   validateExitProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'ValidateExitProject', args, options);
   },
@@ -448,6 +468,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   exitProject: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'ExitProject', args, options);
   },
@@ -458,6 +479,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getMyAuthList: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'GetMyAuthList', args, options);
   },
@@ -468,10 +490,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUntreatAuthList: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccountAuthModel> {
+
+  getUntreatAuthList: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Account.AccountAuthModel> {
     return mdyAPI('Account', 'GetUntreatAuthList', args, options);
   },
   /**
@@ -482,6 +502,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   unbindEmail: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'UnbindEmail', args, options);
   },
@@ -493,6 +514,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   unbindMobile: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'UnbindMobile', args, options);
   },
@@ -503,8 +525,11 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   validateLogoffAccount: function (args?: ApiArgs, options: ApiOptions = {}) {
-    options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
+    options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
+      type: 'GET'
+    });
     return mdyAPI('Account', 'ValidateLogoffAccount', args, options);
   },
   /**
@@ -514,6 +539,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   applyLogOffAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'ApplyLogOffAccount', args, options);
   },
@@ -524,8 +550,11 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   getApplyLogOffAccount: function (args: ApiArgs, options: ApiOptions = {}) {
-    options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
+    options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
+      type: 'GET'
+    });
     return mdyAPI('Account', 'GetApplyLogOffAccount', args, options);
   },
   /**
@@ -535,7 +564,8 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
+
   cancelLogOffAccount: function (args: ApiArgs, options: ApiOptions = {}) {
     return mdyAPI('Account', 'CancelLogOffAccount', args, options);
-  },
+  }
 };
