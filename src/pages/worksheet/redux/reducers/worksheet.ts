@@ -1,7 +1,30 @@
 import _ from 'lodash';
+import type { formatSearchConfigs } from 'src/pages/widgetConfig/util';
 import type { WorksheetInfo, WorksheetView } from 'src/pages/worksheet/types';
 import type { ReduxAction } from 'src/redux/types';
 import type { FormControl, WorksheetCustomBtn } from 'src/utils/controlTypes';
+
+// 按 action.type 区分载荷，value 在初始化和更新请求状态时分别是对象与布尔值。
+type WorksheetInfoAction =
+  | { type: 'WORKSHEET_INIT'; value: WorksheetInfo }
+  | { type: 'WORKSHEET_UPDATE_WORKSHEETINFO'; info: Partial<WorksheetInfo> }
+  | { type: 'WORKSHEET_UPDATE_IS_REQUESTING_RELATION_CONTROLS'; value: boolean }
+  | { type: 'WORKSHEET_UPDATE_SOME_CONTROLS'; controls: FormControl[] };
+
+type ViewsAction =
+  | { type: 'WORKSHEET_INIT'; value: Pick<WorksheetInfo, 'views'> }
+  | { type: 'WORKSHEET_UPDATE_VIEWS'; views?: WorksheetView[] | undefined }
+  | { type: 'WORKSHEET_UPDATE_VIEW'; view: WorksheetView }
+  | { type: 'WORKSHEET_ADD_MANAGE_VIEW'; views: WorksheetView[] }
+  | { type: 'WORKSHEET_FETCH_START' };
+
+type ControlsAction =
+  | { type: 'WORKSHEET_INIT'; value?: Pick<WorksheetInfo, 'template'> | undefined }
+  | { type: 'WORKSHEET_UPDATE_CONTROLS' | 'WORKSHEET_UPDATE_SOME_CONTROLS'; controls: FormControl[] }
+  | { type: 'WORKSHEET_UPDATE_CONTROL'; control: FormControl };
+
+// formatSearchConfigs 在每条查询上拼接模板，直接复用实际返回形状，避免另写一份漂移。
+type SheetSearchConfig = ReturnType<typeof formatSearchConfigs>;
 
 export function loading(state = true, action: ReduxAction<{ loading: boolean }>) {
   switch (action.type) {
@@ -39,7 +62,7 @@ export function error(state = false, action: ReduxAction) {
   }
 }
 
-export function worksheetInfo(state: WorksheetInfo = {}, action: ReduxAction): WorksheetInfo {
+export function worksheetInfo(state: WorksheetInfo = {}, action: WorksheetInfoAction): WorksheetInfo {
   let newState;
 
   switch (action.type) {
@@ -75,7 +98,7 @@ export function worksheetInfo(state: WorksheetInfo = {}, action: ReduxAction): W
 // 值是 GetWorksheetInfo 的 switches（接口类型已核对）
 export function sheetSwitchPermit(
   state: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] = [],
-  action: ReduxAction,
+  action: ReduxAction<{ value: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] }>,
 ): HapApi.MD.Entity.Worksheet.SwitchPermitModel[] {
   switch (action.type) {
     case 'WORKSHEET_PERMISSION_INIT':
@@ -87,7 +110,10 @@ export function sheetSwitchPermit(
   }
 }
 
-export function sheetSearchConfig(state = [], action: ReduxAction) {
+export function sheetSearchConfig(
+  state: SheetSearchConfig = [],
+  action: ReduxAction<{ value: SheetSearchConfig }>,
+): SheetSearchConfig {
   switch (action.type) {
     case 'WORKSHEET_SEARCH_CONFIG_INIT':
       return action.value;
@@ -98,7 +124,7 @@ export function sheetSearchConfig(state = [], action: ReduxAction) {
   }
 }
 
-export function views(state: WorksheetView[] = [], action: ReduxAction): WorksheetView[] {
+export function views(state: WorksheetView[] = [], action: ViewsAction): WorksheetView[] {
   switch (action.type) {
     case 'WORKSHEET_INIT':
       return action.value.views || state;
@@ -121,7 +147,10 @@ export function views(state: WorksheetView[] = [], action: ReduxAction): Workshe
   }
 }
 
-export function buttons(state: WorksheetCustomBtn[] = [], action: ReduxAction): WorksheetCustomBtn[] {
+export function buttons(
+  state: WorksheetCustomBtn[] = [],
+  action: ReduxAction<{ buttons: WorksheetCustomBtn[] }>,
+): WorksheetCustomBtn[] {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_BUTTONS':
       return action.buttons;
@@ -143,7 +172,10 @@ export function printList(state = [], action: ReduxAction<{ printList: HapApi.MD
   }
 }
 
-export function sheetButtons(state: WorksheetCustomBtn[] = [], action: ReduxAction): WorksheetCustomBtn[] {
+export function sheetButtons(
+  state: WorksheetCustomBtn[] = [],
+  action: ReduxAction<{ buttons: WorksheetCustomBtn[] }>,
+): WorksheetCustomBtn[] {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_SHEETBUTTONS':
       return action.buttons;
@@ -217,12 +249,12 @@ export function navGroupCounts(state = [], action: ReduxAction) {
   }
 }
 
-export function controls(state: FormControl[] = [], action: ReduxAction): FormControl[] {
+export function controls(state: FormControl[] = [], action: ControlsAction): FormControl[] {
   switch (action.type) {
     case 'WORKSHEET_INIT':
       const { value = {} } = action;
       const { template = {} } = value;
-      const { controls = [] }: { controls: FormControl[]; [key: string]: any } = template;
+      const { controls = [] } = template;
       return controls;
     case 'WORKSHEET_UPDATE_CONTROLS':
       return action.controls;
