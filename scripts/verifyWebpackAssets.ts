@@ -29,6 +29,9 @@ function parseJsFilenameMaps(runtimeCode) {
     const hashMapReg = new RegExp(
       `\\(\\{([\\s\\S]*?)\\}\\[${variableName}\\]\\|\\|${variableName}\\)\\s*\\+\\s*["']\\.["']\\s*\\+\\s*\\{([\\s\\S]*?)\\}\\[${variableName}\\]\\s*\\+\\s*["']\\.chunk\\.js["']`,
     );
+    const numericNameHashReg = new RegExp(
+      `${variableName}\\s*\\+\\s*["']\\.["']\\s*\\+\\s*\\{([\\s\\S]*?)\\}\\[${variableName}\\]\\s*\\+\\s*["']\\.chunk\\.js["']`,
+    );
     let conditionMatch;
 
     while ((conditionMatch = conditionReg.exec(expression))) {
@@ -44,6 +47,13 @@ function parseJsFilenameMaps(runtimeCode) {
       hashMap.forEach((chunkHash, chunkId) => {
         entries.set(chunkId, `${nameMap.get(chunkId) || chunkId}.${chunkHash}.chunk.js`);
       });
+    } else {
+      const numericNameHashMatch = expression.match(numericNameHashReg);
+      if (numericNameHashMatch) {
+        parseObjectEntries(numericNameHashMatch[1]).forEach((chunkHash, chunkId) => {
+          entries.set(chunkId, `${chunkId}.${chunkHash}.chunk.js`);
+        });
+      }
     }
 
     maps.push(entries);
@@ -54,7 +64,8 @@ function parseJsFilenameMaps(runtimeCode) {
 
 function parseCssFilenameMap(runtimeCode) {
   const maps = [];
-  const reg = /\.miniCssF\s*=\s*([a-zA-Z_$][\w$]*)\s*=>\s*["']{2}\s*\+\s*\{([\s\S]*?)\}\[\1\]\s*\+\s*["']\.css["']/g;
+  const reg =
+    /\.miniCssF\s*=\s*([a-zA-Z_$][\w$]*)\s*=>\s*(?:["']{2}\s*\+\s*)?\(?\s*\{([\s\S]*?)\}\)?\[\1\]\s*\+\s*["']\.css["']/g;
   let match;
 
   while ((match = reg.exec(runtimeCode))) {
@@ -127,6 +138,9 @@ function verifyRuntime(runtimePath) {
   const jsFilenameMap = mergeFilenameMaps(jsFilenameMaps, runtimePath, 'js', duplicateMappings);
   const cssFilenameMap = mergeFilenameMaps(cssFilenameMaps, runtimePath, 'css', duplicateMappings);
   const cssChunkMap = mergeChunkMaps(cssChunkMaps);
+  if (/\.u\s*=\s*[a-zA-Z_$][\w$]*\s*=>/.test(runtimeCode) && !jsFilenameMap.size) {
+    missingMappings.push(`${runtimePath}: found JS runtime loader but could not parse filename mappings`);
+  }
 
   jsFilenameMap.forEach((jsFile, chunkId) => {
     const jsPath = path.join(packDir, jsFile);
@@ -169,7 +183,10 @@ function getRuntimeFiles(packDir) {
 
   return fs
     .readdirSync(packDir)
-    .filter(file => /^runtime\..*\.entry\.js$/.test(file))
+    .filter(file => file.endsWith('.entry.js'))
+    .filter(file =>
+      /\.u\s*=\s*[a-zA-Z_$][\w$]*\s*=>|\.miniCssF\s*=/.test(fs.readFileSync(path.join(packDir, file), 'utf8')),
+    )
     .map(file => path.join(packDir, file));
 }
 
