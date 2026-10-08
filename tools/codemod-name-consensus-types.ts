@@ -46,8 +46,8 @@
  */
 
 const path = require('path');
-const is = require('typescript/unstable/ast/is');
-const { SyntaxKind: SK } = require('typescript/unstable/ast');
+const is = require('@typescript/native/unstable/ast/is');
+const { SyntaxKind: SK } = require('@typescript/native/unstable/ast');
 const {
   ROOT,
   callSiteFits,

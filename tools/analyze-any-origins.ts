@@ -21,7 +21,7 @@
  */
 
 const path = require('path');
-const is = require('typescript/unstable/ast/is');
+const is = require('@typescript/native/unstable/ast/is');
 const { ROOT, openProject } = require('./ts7.ts');
 
 const TOP = (() => {

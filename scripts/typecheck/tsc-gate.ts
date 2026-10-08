@@ -112,7 +112,7 @@ function runTsc({ incremental }) {
   // 写死路径在 pnpm 的符号链接布局下会失效；而 TS 7 的 exports 只放行
   // '.'、'./package.json'、'./unstable/*'，直接解析 bin/tsc 会
   // ERR_PACKAGE_PATH_NOT_EXPORTED。从 package.json 反推包目录是唯一两边都成立的写法。
-  const tsc = path.join(path.dirname(require.resolve('typescript/package.json')), 'bin/tsc');
+  const tsc = path.join(path.dirname(require.resolve('@typescript/native/package.json')), 'bin/tsc');
   const args = ['-p', TSCONFIG, '--pretty', 'false'];
   if (!incremental) args.push('--incremental', 'false');
   const t0 = Date.now();
@@ -158,6 +158,17 @@ function main() {
   const all = parseDiagnostics(raw);
   const ci = new CommentIndex(ROOT);
   const { kept, dropped } = filterNoise(all, ci);
+
+  // TS 文件关闭 ESLint core no-undef 后，这里必须零容忍，不能被历史基线放行。
+  // 同文件/错误码的差分计数也可能掩盖「修掉一处、又新增一处」的替换。
+  const undefinedNames = kept.filter(d => /^(TS2304|TS2552|TS18004|TS2662|TS2663)$/.test(d.code));
+  if (undefinedNames.length) {
+    console.error(`未定义标识符门禁失败：${undefinedNames.length} 条，历史基线不能豁免。`);
+    for (const d of undefinedNames.slice(0, 40)) {
+      console.error(`  ${d.file}(${d.line},${d.col}): ${d.code}: ${d.message}`);
+    }
+    process.exit(1);
+  }
 
   // 实验用：把【当前树状态下】剔噪后的 4 种 key multiset 全部 dump 出来。
   // 必须在跑完 tsc 后立刻 dump —— 注释判定要读磁盘上的文件，
@@ -241,7 +252,7 @@ function main() {
         {
           _note: '差分基线。由 scripts/typecheck/tsc-gate.ts --write-baseline 生成，请勿手改。',
           key: keyName,
-          tsVersion: require(path.join(ROOT, 'node_modules/typescript/package.json')).version,
+          tsVersion: require('@typescript/native/package.json').version,
           tsconfig: TSCONFIG,
           generatedAt: new Date().toISOString(),
           rawCount: all.length,
@@ -283,10 +294,14 @@ function main() {
   let fixed = 0;
   for (const [k, n] of baseMap) fixed += Math.max(0, n - (cur.get(k) || 0));
 
-  console.log(`tsc 耗时 ${ms ? (ms / 1000).toFixed(1) + 's' : 'n/a'} | 原始 ${all.length} | 剔噪后 ${kept.length} | key 条目 ${cur.size}（基线 ${baseMap.size}）`);
+  console.log(
+    `tsc 耗时 ${ms ? (ms / 1000).toFixed(1) + 's' : 'n/a'} | 原始 ${all.length} | 剔噪后 ${kept.length} | key 条目 ${cur.size}（基线 ${baseMap.size}）`,
+  );
 
   if (added.length === 0) {
-    console.log(`门禁通过：无新增类型诊断。${fixed > 0 ? `另有 ${fixed} 条基线诊断已消失，可跑 --write-baseline 收紧棘轮。` : ''}`);
+    console.log(
+      `门禁通过：无新增类型诊断。${fixed > 0 ? `另有 ${fixed} 条基线诊断已消失，可跑 --write-baseline 收紧棘轮。` : ''}`,
+    );
     return;
   }
 

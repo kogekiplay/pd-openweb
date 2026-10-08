@@ -387,7 +387,7 @@ export default function ChildTableDialog(props) {
                   return;
                 }
 
-                if (lastAction.type === 'ADD_ROWS' && find(lastAction.rows, row => row.isAddByTree)) {
+                if (lastAction.type === 'ADD_ROWS' && _.find(lastAction.rows, row => row.isAddByTree)) {
                   return;
                 }
 

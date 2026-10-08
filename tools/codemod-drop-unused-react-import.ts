@@ -41,7 +41,7 @@ interface ImportNode {
 }
 
 function collectHits(): Hit[] {
-  const tsc = path.join(path.dirname(require.resolve('typescript/package.json')), 'bin/tsc');
+  const tsc = path.join(path.dirname(require.resolve('@typescript/native/package.json')), 'bin/tsc');
   const res = spawnSync(process.execPath, [tsc, '--noEmit', '--pretty', 'false', '--jsx', 'react-jsx'], {
     cwd: ROOT,
     encoding: 'utf8',

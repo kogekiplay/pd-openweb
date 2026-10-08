@@ -4,6 +4,8 @@ const reactHooks = require('eslint-plugin-react-hooks');
 const js = require('@eslint/js');
 const globals = require('globals');
 const babelParser = require('@babel/eslint-parser');
+const tsParser = require('@typescript-eslint/parser');
+const tsPlugin = require('@typescript-eslint/eslint-plugin');
 
 const reactHooksRecommendedRules = Object.keys(reactHooks.configs.recommended.rules).reduce((rules, ruleName) => {
   rules[ruleName] = 'warn';
@@ -29,13 +31,7 @@ module.exports = [
     ],
   },
   {
-    // .ts/.tsx 已纳入。不需要 typescript-eslint：@babel/eslint-parser 读项目 .babelrc，
-    // 而 .babelrc 的 development/production 两个 env 都挂了 @babel/preset-typescript，
-    // preset-typescript 按文件扩展名自动启用 TS 语法，所以 .ts/.tsx 能被正常解析。
-    // （eslint 进程 NODE_ENV 为空时 babel 的 envName 默认就是 "development"。）
-    // 注意这里只恢复了「语法层」的 lint 覆盖，拿不到类型感知规则
-    //（no-unsafe-*、no-floating-promises 等）—— 那些需要 typescript-eslint + 类型信息。
-    // 类型层的检查由 tsc 那条独立管线负责，不指望 eslint。
+    // 公共规则与全局变量。JS/JSX 继续使用项目的 Babel parser，TS/TSX 在下面覆盖。
     files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'],
     plugins: {
       react,
@@ -130,6 +126,28 @@ module.exports = [
       react: {
         version: 'detect',
       },
+    },
+  },
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        experimentalDecorators: true,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    },
+    rules: {
+      // core no-undef 不理解声明文件中的类型/全局，TS 未定义标识符由 fast/strict
+      // 的零容忍检查接管，不受历史基线或 strict 欠债清单豁免。
+      'no-undef': 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
+      // TS 的函数重载和类型/值同名声明是合法的，交给理解这些语法的扩展规则。
+      'no-redeclare': 'off',
+      '@typescript-eslint/no-redeclare': 'error',
     },
   },
 ];

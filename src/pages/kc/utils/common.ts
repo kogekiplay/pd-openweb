@@ -21,13 +21,13 @@ import {
 import { confirm, getLocationType, getParentId, getParentName, getPermission } from './index';
 
 function saveLastPos(root, folder) {
-  if (typeof currentRoot !== 'object' && root !== 1) {
+  if (typeof root !== 'object' && root !== 1) {
     return;
   }
 
   let rootNode;
 
-  if (typeof currentRoot === 'object') {
+  if (typeof root === 'object') {
     rootNode = {
       id: root.id,
       projectId: root.project ? root.project.projectId : '',

@@ -33,7 +33,7 @@ const CONFIGS = ['tsconfig.tools.json', 'tsconfig.tools.browser.json'];
 // TS 7 只导出 '.'、'./package.json' 和 './unstable/*'，
 // require.resolve('typescript/bin/tsc') 会 ERR_PACKAGE_PATH_NOT_EXPORTED。
 // 解析 package.json 再拼 bin/tsc 是唯一稳的写法。
-const tsc: string = path.join(path.dirname(require.resolve('typescript/package.json')), 'bin/tsc');
+const tsc: string = path.join(path.dirname(require.resolve('@typescript/native/package.json')), 'bin/tsc');
 
 const t0 = Date.now();
 const errors: string[] = [];

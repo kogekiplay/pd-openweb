@@ -64,7 +64,7 @@ export default function Departments(props) {
       isEmpty={!values.length}
       active={active}
       onClick={e => {
-        if (md.global.Account.isPortal && !find(md.global.Account.projects, item => item.projectId === projectId)) {
+        if (md.global.Account.isPortal && !_.find(md.global.Account.projects, item => item.projectId === projectId)) {
           alert(_l('您不是该组织成员，无法获取其成员列表，请联系组织管理员'), 3);
           return;
         }

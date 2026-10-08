@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
+import Inbox from './components/Inbox';
 
-export { default as Inbox } from './components/Inbox';
+export { Inbox };
 
 export function index(options) {
   const { container, ...others } = options;

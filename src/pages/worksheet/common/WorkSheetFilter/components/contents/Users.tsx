@@ -73,7 +73,7 @@ export default class Users extends Component<any, any> {
     if (
       tabType === 1 &&
       md.global.Account.isPortal &&
-      !find(md.global.Account.projects, item => item.projectId === projectId)
+      !_.find(md.global.Account.projects, item => item.projectId === projectId)
     ) {
       alert(_l('您不是该组织成员，无法获取其成员列表，请联系组织管理员'), 3);
       return;
@@ -202,7 +202,13 @@ export default class Users extends Component<any, any> {
     const { users } = this.state;
     return (
       <div className="worksheetFilterUsersCondition">
-        <div className={cx('usersCon', { disabled })} ref={con => { this.userscon = con; }} onClick={this.addUser}>
+        <div
+          className={cx('usersCon', { disabled })}
+          ref={con => {
+            this.userscon = con;
+          }}
+          onClick={this.addUser}
+        >
           {users.length ? (
             users.map((user, index: number) => (
               <div className="userItem" key={index}>

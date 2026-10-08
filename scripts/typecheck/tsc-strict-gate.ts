@@ -66,12 +66,12 @@ function runStrictTsc() {
   // 【不能用 npx】npx 找的是 registry / 全局，不是工作区里的那个 tsc。
   // 2026-09-15 换 nodeLinker 时就是它静默失败、输出为空，而下面把「0 条诊断」
   // 读成了「全仓 strict 干净」—— 棘轮直接失明。
-  const tsc = path.join(path.dirname(require.resolve('typescript/package.json')), 'bin/tsc');
-  const res = spawnSync(
-    process.execPath,
-    [tsc, '--noEmit', '--pretty', 'false', ...TARGET_FLAGS],
-    { cwd: ROOT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 },
-  );
+  const tsc = path.join(path.dirname(require.resolve('@typescript/native/package.json')), 'bin/tsc');
+  const res = spawnSync(process.execPath, [tsc, '--noEmit', '--pretty', 'false', ...TARGET_FLAGS], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    maxBuffer: 256 * 1024 * 1024,
+  });
   const out = `${res.stdout || ''}${res.stderr || ''}`;
   return { out, ms: Date.now() - started };
 }
@@ -105,13 +105,15 @@ function allCompiledFiles() {
     encoding: 'utf8',
   });
   // --cached 与 --others 理论上不重叠，去重只是保险；泛型必须写，否则推成 Set<unknown>
-  return [...new Set<string>(String(res.stdout || '').split('\n'))]
-    // 【两个后缀都要排】spec 是测试脚手架不是产品代码，口径要和差分门禁
-    //（tsconfig.gate.json 的 exclude）一致。2026-09-15 把 69 个 spec 改成 .ts
-    // 时这里还只排 .spec.js，它们整批混进来，把「strict-clean 605/4252」
-    // 一夜刷成「674/4321」——进度数字凭空虚高 69，而产品代码一行没改。
-    // 它们由 tsconfig.tools.json 的零容忍门禁负责。
-    .filter(f => /\.tsx?$/.test(f) && !f.startsWith('src/library/') && !/\.spec\.(js|ts)$/.test(f));
+  return (
+    [...new Set<string>(String(res.stdout || '').split('\n'))]
+      // 【两个后缀都要排】spec 是测试脚手架不是产品代码，口径要和差分门禁
+      //（tsconfig.gate.json 的 exclude）一致。2026-09-15 把 69 个 spec 改成 .ts
+      // 时这里还只排 .spec.js，它们整批混进来，把「strict-clean 605/4252」
+      // 一夜刷成「674/4321」——进度数字凭空虚高 69，而产品代码一行没改。
+      // 它们由 tsconfig.tools.json 的零容忍门禁负责。
+      .filter(f => /\.tsx?$/.test(f) && !f.startsWith('src/library/') && !/\.spec\.(js|ts)$/.test(f))
+  );
 }
 
 if (process.env.SKIP_TYPECHECK === '1') {
@@ -122,6 +124,15 @@ if (process.env.SKIP_TYPECHECK === '1') {
 const { out, ms } = runStrictTsc();
 const byFile = parse(out);
 const compiled = allCompiledFiles();
+// 未定义标识符由 tsc 接管 ESLint no-undef 的职责，欠债清单不能豁免。
+const undefinedNames = compiled.flatMap(f =>
+  (byFile.get(f) || []).filter(line => /error TS(?:2304|2552|18004|2662|2663):/.test(line)),
+);
+if (undefinedNames.length) {
+  console.error(`未定义标识符门禁失败：${undefinedNames.length} 条，strict 欠债清单不能豁免。`);
+  undefinedNames.slice(0, 40).forEach(line => console.error(`  ${line}`));
+  process.exit(1);
+}
 const dirty = compiled.filter(f => byFile.has(f));
 const clean = compiled.filter(f => !byFile.has(f));
 

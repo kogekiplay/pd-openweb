@@ -28,7 +28,7 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { API } = require('typescript/unstable/sync');
+const { API } = require('@typescript/native/unstable/sync');
 
 const ROOT = path.resolve(__dirname, '../..');
 const configPath = path.join(ROOT, 'tsconfig.gate.json');

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
+import { Icon } from 'ming-ui';
 import { createIntlTelInput } from 'ming-ui/components/PhoneNumberInput/util';
 import { getDialCode, getEmailOrTel, isTel } from 'src/pages/AuthService/util.js';
 

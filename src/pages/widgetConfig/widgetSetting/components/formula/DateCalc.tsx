@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';

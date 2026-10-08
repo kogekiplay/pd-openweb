@@ -1,0 +1,53 @@
+{
+  "beforeRevision": "85dab3fc6",
+  "before": {
+    "files": 4292,
+    "errors": 9848,
+    "warnings": 2072,
+    "fatalErrors": 0,
+    "rules": {
+      "prettier/prettier": 3139,
+      "no-undef": 5095,
+      "no-irregular-whitespace": 4,
+      "no-unused-vars": 1308,
+      "padding-line-between-statements": 482,
+      "(inline directive)": 10,
+      "no-useless-assignment": 291,
+      "react-hooks/refs": 83,
+      "react-hooks/exhaustive-deps": 1315,
+      "react-hooks/set-state-in-effect": 94,
+      "react-hooks/immutability": 65,
+      "react-hooks/preserve-manual-memoization": 10,
+      "no-empty": 1,
+      "@typescript-eslint/no-explicit-any": 2,
+      "react-hooks/use-memo": 10,
+      "no-unassigned-vars": 8,
+      "react-hooks/purity": 2,
+      "react-hooks/static-components": 1
+    }
+  },
+  "after": {
+    "files": 4292,
+    "errors": 3460,
+    "warnings": 2073,
+    "fatalErrors": 0,
+    "rules": {
+      "prettier/prettier": 3136,
+      "no-irregular-whitespace": 4,
+      "padding-line-between-statements": 482,
+      "@typescript-eslint/no-unused-vars": 27,
+      "(inline directive)": 12,
+      "react-hooks/refs": 83,
+      "react-hooks/exhaustive-deps": 1314,
+      "react-hooks/set-state-in-effect": 94,
+      "react-hooks/immutability": 65,
+      "no-useless-assignment": 284,
+      "react-hooks/preserve-manual-memoization": 10,
+      "no-empty": 1,
+      "react-hooks/use-memo": 10,
+      "no-unassigned-vars": 8,
+      "react-hooks/purity": 2,
+      "react-hooks/static-components": 1
+    }
+  }
+}

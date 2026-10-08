@@ -6,6 +6,7 @@ import { Button, Icon, LoadDiv, MdLink, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import Dialog from 'ming-ui/components/Dialog';
 import Ajax from 'src/api/workWeiXin';
+import { purchaseMethodFunc } from 'src/components/pay/versionUpgrade/PurchaseMethodModal';
 import CancelIntegration from '../components/CancelIntegration';
 import { checkClearIntergrationData, integrationFailed } from '../utils';
 import clientIdImg from './img/client_id.png';
@@ -133,7 +134,7 @@ export default class Welink extends React.Component<any, any> {
             title={null}
             arrow={{ pointAtCenter: true }}
             placement="bottomLeft"
-            classNames={{ root: "welinkPopoverWrapper" }}
+            classNames={{ root: 'welinkPopoverWrapper' }}
             content={
               <span className="card Relative overflowHidden">
                 <img width={466} className="mTop1" src={clientIdImg} alt={_l('点击“自建应用”进入新建应用页面')} />
@@ -288,7 +289,10 @@ export default class Welink extends React.Component<any, any> {
                 placement="bottomLeft"
               >
                 <span className="mLeft10 switchBtn">
-                  <Switch checked={!this.state.isCloseDing} onClick={(checked: boolean) => this.editDingStatus(checked ? 2 : 1)} />
+                  <Switch
+                    checked={!this.state.isCloseDing}
+                    onClick={(checked: boolean) => this.editDingStatus(checked ? 2 : 1)}
+                  />
                 </span>
               </Tooltip>
             </span>

@@ -32,7 +32,7 @@
  */
 
 const path = require('path');
-const is = require('typescript/unstable/ast/is');
+const is = require('@typescript/native/unstable/ast/is');
 const { ROOT, openProject, usageFits, writeSource } = require('./ts7.ts');
 
 const APPLY = !process.argv.includes('--list');

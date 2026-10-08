@@ -35,9 +35,9 @@
 
 const fs = require('fs');
 const path = require('path');
-const { API } = require('typescript/unstable/sync');
-const is = require('typescript/unstable/ast/is');
-const { SyntaxKind: SK } = require('typescript/unstable/ast');
+const { API } = require('@typescript/native/unstable/sync');
+const is = require('@typescript/native/unstable/ast/is');
+const { SyntaxKind: SK } = require('@typescript/native/unstable/ast');
 
 const ROOT: string = path.resolve(__dirname, '..');
 const SRC: string = path.join(ROOT, 'src') + path.sep;
