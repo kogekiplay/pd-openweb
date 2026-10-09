@@ -5,7 +5,6 @@ import { LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import Checkbox from 'ming-ui/components/Checkbox';
 import projectSettingController from 'src/api/projectSetting';
-import Config from '../../config';
 import { fetchRootSubordinates, initRoot, updateCollapse } from './actions';
 import { setStructureForAll, setStructureSelfEdit } from './common';
 import Node from './components/node';
@@ -39,7 +38,7 @@ class Root extends Component<any, any> {
 
     projectSettingController
       .getStructureForAll({
-        projectId: Config.projectId,
+        projectId: this.props['projectId'],
       })
       .then(auth => {
         this.setState({
@@ -55,6 +54,7 @@ class Root extends Component<any, any> {
 
   changeSubordinate = (checked: boolean) => {
     setStructureSelfEdit({
+      projectId: this.props['projectId'],
       isAllowStructureSelfEdit: !checked,
     }).then(() => {
       this.setState({
@@ -65,6 +65,7 @@ class Root extends Component<any, any> {
 
   changeReporting = (checked: boolean) => {
     setStructureForAll({
+      projectId: this.props['projectId'],
       forAll: !checked,
     }).then(() => {
       this.setState({
@@ -79,7 +80,7 @@ class Root extends Component<any, any> {
     return (
       <Fragment>
         {auth && (
-          <div className="rootBoardHeader flexRow">
+          <div className="AppAdminReportRelation rootBoardHeader flexRow">
             <div className="Font17 flex Bold">
               {_l('汇报关系')}
               <Tooltip
@@ -115,11 +116,17 @@ class Root extends Component<any, any> {
             </Fragment>
           </div>
         )}
-        <div className={cx('mainContent rootBoard box-sizing', { rootBoardBox: auth })}>
+        <div className={cx('AppAdminReportRelation mainContent rootBoard box-sizing', { rootBoardBox: auth })}>
           <div className="card pAll20 box-sizing mLeft16 mRight16 h100">
-            {auth && <SearchInput onChange={user => this.setState({ searchUser: user, nodeDialogVisible: true })} />}
+            {auth && (
+              <SearchInput
+                projectId={this.props['projectId']}
+                onChange={user => this.setState({ searchUser: user, nodeDialogVisible: true })}
+              />
+            )}
             {nodeDialogVisible && (
               <NodeDialog
+                projectId={this.props['projectId']}
                 auth={auth}
                 id={searchUser.accountId}
                 user={searchUser}
@@ -143,7 +150,7 @@ class Root extends Component<any, any> {
               {rootLoading ? (
                 <LoadDiv className="reportRelationRootLoading" />
               ) : (
-                <Node auth={auth} projectId={Config.projectId} />
+                <Node auth={auth} projectId={this.props['projectId']} />
               )}
             </div>
           </div>

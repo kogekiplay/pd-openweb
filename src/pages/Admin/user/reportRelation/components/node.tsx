@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, type ComponentType } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -68,9 +68,21 @@ class Node extends Component<any, any> {
       return (
         <div className="childNodeList">
           {sortSubordinates.map((child, index: number) => {
-            const _props = {
+            const _props: {
+              id: string;
+              parentId: string;
+              projectId?: string | undefined;
+              level: number;
+              isFirst: boolean;
+              isLast: boolean;
+              auth?: boolean | undefined;
+              onChangeData?: (change: unknown) => void;
+              data?: object;
+              dataFromProps?: boolean | undefined;
+            } = {
               id: child,
               parentId: id,
+              projectId: this.props['projectId'],
               level: this.props.level + 1,
               isFirst: index === 0,
               isLast: index === sortSubordinates.length - 1,
@@ -133,10 +145,14 @@ class Node extends Component<any, any> {
   add() {
     const { id, dispatch, dataFromProps, onChangeData } = this.props;
     selectUser({
+      projectId: this.props['projectId'],
       title: _l('添加下属'),
       accountId: id,
       callback: accounts => {
-        let param = { id, accounts };
+        let param: { id: string; accounts: Array<{ accountId?: string; fullname?: string }>; callback?: () => void } = {
+          id,
+          accounts,
+        };
 
         if (dataFromProps) {
           param.callback = () => onChangeData({ type: 'ADD', value: accounts, id });
@@ -150,13 +166,19 @@ class Node extends Component<any, any> {
   replace() {
     const { id, parentId, dispatch, onChangeData, dataFromProps } = this.props;
     selectUser({
+      projectId: this.props['projectId'],
       title: _l('替换成员'),
       accountId: id,
       unique: true,
       callback: accounts => {
-        let param = {
-          parentId,
-          account: accounts[0],
+        let param: {
+          parentId: string;
+          account: { accountId?: string; fullname?: string };
+          replacedAccountId: string;
+          callback?: () => void;
+        } = {
+          parentId: parentId || '',
+          account: accounts[0]!,
           replacedAccountId: id,
         };
 
@@ -175,10 +197,7 @@ class Node extends Component<any, any> {
       title: _l('确认移除 %0 ?', fullname),
       description: _l('移除后，其下属成员也将从汇报关系中移除'),
       onOk: () => {
-        let param = {
-          parentId,
-          accountId: id,
-        };
+        let param: { parentId?: string; accountId?: string; callback?: () => void } = { parentId, accountId: id };
 
         if (dataFromProps) {
           param.callback = () => onChangeData({ type: 'REMOVE', id: parentId, values: id });
@@ -284,8 +303,17 @@ const ConnectedNode = connect((state: RootState, ownProps) => {
     isHighLight: highLightId === id,
     isLoading,
     firstLevelLoading: ownProps.dataFromProps ? ownProps.firstLevelLoading : firstLevelLoading,
-    projectId: ownProps.projectId,
+    projectId: (ownProps as { projectId?: string }).projectId,
   };
-})(Node);
+})(Node) as unknown as ComponentType<{
+  id?: string | undefined;
+  projectId?: string | undefined;
+  auth?: boolean | undefined;
+  data?: object;
+  dataFromProps?: boolean | undefined;
+  level?: number;
+  pageIndex?: number;
+  onChangeData?: (change: unknown) => void;
+}>;
 
 export default ConnectedNode;

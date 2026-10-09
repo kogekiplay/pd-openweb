@@ -1,7 +1,12 @@
 import { dialogSelectUser } from 'ming-ui/functions';
-import Config from '../../../config';
 
-export default ({ onChange = () => {} }) => {
+export default ({
+  projectId,
+  onChange = () => {},
+}: {
+  projectId: string;
+  onChange?: (user: { accountId?: string }) => void;
+}) => {
   const selectUser = e => {
     e.stopPropagation();
 
@@ -15,7 +20,7 @@ export default ({ onChange = () => {} }) => {
         filterOthers: true,
         filterOtherProject: true,
         filterResigned: false,
-        projectId: Config.projectId,
+        projectId,
         inProject: true,
         unique: true,
         callback: users => {

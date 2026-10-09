@@ -5,11 +5,11 @@ import EditAppIntro from 'src/pages/PageHeader/AppPkgHeader/AppDetail/EditIntro'
 import { filterHtmlTag } from '../util';
 
 export default function (props) {
-  const { value, originalValue, onChange } = props;
+  const { value, originalValue, onChange, title } = props;
   const [editAppIntroVisible, setEditAppIntroVisible] = useState(false);
 
   return (
-    (<Fragment>
+    <Fragment>
       <Input.TextArea
         readOnly={true}
         style={{ resize: 'none' }}
@@ -33,10 +33,11 @@ export default function (props) {
         // closeIcon={<Icon icon="close" />}
       >
         <EditAppIntro
-          title={_l('应用说明')}
+          title={title || _l('应用说明')}
           description={value}
           permissionType={100}
           isEditing={true}
+          showRemark={false}
           cacheKey="appMultilingual"
           renderLeftContent={() => (
             <RichText
@@ -54,6 +55,6 @@ export default function (props) {
           onCancel={() => setEditAppIntroVisible(false)}
         />
       </Modal>
-    </Fragment>)
+    </Fragment>
   );
 }

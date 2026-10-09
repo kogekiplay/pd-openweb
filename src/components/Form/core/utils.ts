@@ -355,14 +355,17 @@ export function formatControlToServer(
         control.store
       ) {
         state = control.store.getState();
+        const savedRecords: RecordRow[] = state.records.filter(
+          (record: RecordRow) => _.isString(record.rowid) && !!record.rowid,
+        );
         if (isDraft && control.advancedSetting?.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)) {
           result.value = JSON.stringify(
-            state.records
+            savedRecords
               .map((record: RecordRow) => ({ sid: record.rowid }))
               .concat(state.changes.addedRecordIds.map((id: string) => ({ sid: id }))),
           );
         } else if (isNewRecord || _.includes(hasDefaultRelateRecordTableControls, control.controlId)) {
-          result.value = JSON.stringify(state.records.map((record: RecordRow) => ({ sid: record.rowid })));
+          result.value = JSON.stringify(savedRecords.map((record: RecordRow) => ({ sid: record.rowid })));
         } else if (
           get(state, 'changes.isDeleteAll') &&
           control.advancedSetting?.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)

@@ -1,12 +1,10 @@
 import { dialogSelectUser } from 'ming-ui/functions';
 import projectSettingController from 'src/api/projectSetting';
 import structureController from 'src/api/structure';
-import Config from '../../config';
 
-export function setStructureForAll(params: { forAll: boolean }) {
+export function setStructureForAll(params: { projectId: string; forAll: boolean }) {
   return projectSettingController
     .setStructureForAll({
-      projectId: Config.projectId,
       ...params,
     })
     .then(
@@ -19,10 +17,9 @@ export function setStructureForAll(params: { forAll: boolean }) {
     );
 }
 
-export function setStructureSelfEdit(params: { isAllowStructureSelfEdit: boolean }) {
+export function setStructureSelfEdit(params: { projectId: string; isAllowStructureSelfEdit: boolean }) {
   return projectSettingController
     .setStructureSelfEdit({
-      projectId: Config.projectId,
       ...params,
     })
     .then(
@@ -35,11 +32,24 @@ export function setStructureSelfEdit(params: { isAllowStructureSelfEdit: boolean
     );
 }
 
-export function selectUser({ accountId, unique, isSetParent, callback }: { accountId?: string; [key: string]: any }) {
+export function selectUser({
+  accountId,
+  unique,
+  isSetParent,
+  projectId,
+  callback,
+}: {
+  accountId?: string;
+  unique?: boolean;
+  isSetParent?: boolean;
+  projectId: string;
+  title?: string;
+  callback?: (accounts: Array<{ accountId?: string; fullname?: string }>) => void;
+}) {
   dialogSelectUser({
     fromAdmin: true,
     SelectUserSettings: {
-      projectId: Config.projectId,
+      projectId,
       filterAll: true,
       filterFriend: true,
       filterOthers: true,
@@ -58,7 +68,7 @@ export function selectUser({ accountId, unique, isSetParent, callback }: { accou
             getUsers: function (args) {
               args = $.extend({}, args, {
                 accountId,
-                projectId: Config.projectId,
+                projectId,
                 isSetParent,
               });
               return structureController.getAllowChooseUsers(args);
