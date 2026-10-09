@@ -4,7 +4,7 @@
 
 完成时需从当前文件与实际检查验证：
 
-1. 产品 tsconfig 正式开启 strict/noImplicitAny/noUncheckedIndexedAccess/exactOptionalPropertyTypes/noPropertyAccessFromIndexSignature，直接编译当前全仓零诊断。
+1. 产品及自有工具脚本的 tsconfig 正式开启 strict/noImplicitAny 等目标检查（产品含 noUncheckedIndexedAccess/exactOptionalPropertyTypes/noPropertyAccessFromIndexSignature），直接编译当前各完整程序零诊断；工具门禁目前 strict:false，不将它的语义零诊断当作严格化完成。
 2. 严格类型欠债清单归零并移除豁免机制；基础语义检查不再依靠历史诊断基线放行。
 3. 公共 API、缓存、JSON 及事件/Redux 边界使用准确有限模型或 unknown 验证。删除为迁移保留的 styled-components 类型下限及开放 any 结果等替代声明，使用实际依赖类型。
 4. 自有产品代码的隐式/显式 any 不作为逃生口；确实开放的数据保留 unknown 并在使用前验证。真实协议假设须明确，不能用整包断言假装数据已验证。
