@@ -158,7 +158,7 @@ files.forEach(file => {
   // Identity switches must cross namespaces; staying in /portal recreates the reload loop.
   assert(source.includes('getPortalIdentityRedirect({'));
   assert(source.includes('location.href = identityRedirect;'));
-  assert(source.includes("location.href = pathCompletion('/dashboard');"));
+  assert(!source.includes("location.href = pathCompletion('/dashboard');"));
 }
 
 {
