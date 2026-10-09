@@ -252,6 +252,7 @@ export function Search(props) {
       <i className="icon icon-search search" />
       <input
         name="quickSelectUserComps"
+        className="searchInput"
         autoComplete="off"
         ref={inputRef}
         type="text"
