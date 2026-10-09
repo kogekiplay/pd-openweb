@@ -155,7 +155,9 @@ files.forEach(file => {
   assert(!source.includes('`${location.search}&sys_lang=${sysDefaultLang}`'));
   assert(source.includes("url.searchParams.set('sys_lang', sysDefaultLang);"));
   assert(source.includes('location.href = pathCompletion(`${url.pathname}${url.search}`);'));
-  assert(source.includes('location.href = pathCompletion(`/portal/${md.global.Account.appId}`);'));
+  // Identity switches must cross namespaces; staying in /portal recreates the reload loop.
+  assert(source.includes('getPortalIdentityRedirect({'));
+  assert(source.includes('location.href = identityRedirect;'));
   assert(source.includes("location.href = pathCompletion('/dashboard');"));
 }
 
