@@ -8,8 +8,8 @@ import * as ajax from 'src/pages/chat/utils/ajax';
 import * as socketEvent from 'src/pages/chat/utils/socketEvent.js';
 import PortalMg from 'src/pages/Portal/PortalMg.jsx';
 import type { RootState } from 'src/redux/types';
-import { getAppFeaturesVisible } from 'src/utils/common';
 import type { AppDispatch } from 'src/redux/types';
+import { getAppFeaturesVisible } from 'src/utils/common';
 import './index.less';
 
 const Wrap = styled.div`
@@ -58,8 +58,10 @@ class PortalMessage extends Component<{ dispatch: AppDispatch; [key: string]: an
   override componentDidUpdate(prevProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { sessionList = [] } = this.props;
-      const count = (sessionList.find(o => o.value === 'worksheet') || {}).count;
-      const countProps = ((prevProps.sessionList || []).find(o => o.value === 'worksheet') || {}).count;
+      const count = ((Array.isArray(sessionList) ? sessionList : []).find(o => o.value === 'worksheet') || {}).count;
+      const countProps = (
+        (Array.isArray(prevProps.sessionList) ? prevProps.sessionList : []).find(o => o.value === 'worksheet') || {}
+      ).count;
 
       if (count > 0 && countProps !== count) {
         this.setState({
@@ -75,14 +77,16 @@ class PortalMessage extends Component<{ dispatch: AppDispatch; [key: string]: an
         pageSize: 100,
       })
       .then(sessionList => {
-        const count = (sessionList.find(o => o && o.value === 'worksheet') || {}).count;
+        const count = ((Array.isArray(sessionList) ? sessionList : []).find(o => o && o.value === 'worksheet') || {})
+          .count;
 
         if (count > 0) {
           this.setState({
             count,
           });
         }
-      });
+      })
+      .catch(() => {});
   };
   override render() {
     const { rp } = getAppFeaturesVisible();

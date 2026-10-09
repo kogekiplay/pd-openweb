@@ -1,6 +1,5 @@
-import { addSubPathOfRoutes } from 'src/utils/common';
-
-export const ROUTE_CONFIG = addSubPathOfRoutes({
+// These routes are relative to the application mount; a portal/deployment prefix belongs to the parent.
+export const ROUTE_CONFIG = {
   // 工作流
   workflow: {
     path: 'workflow/:worksheetId?',
@@ -55,9 +54,9 @@ export const ROUTE_CONFIG = addSubPathOfRoutes({
     component: () => import('src/pages/worksheet/WorkSheet'),
     sensitive: true,
   },
-});
+};
 
-export const PORTAL_ROUTE_CONFIG = addSubPathOfRoutes({
+export const PORTAL_ROUTE_CONFIG = {
   // 工作流
   workflow: {
     path: 'workflow',
@@ -78,4 +77,4 @@ export const PORTAL_ROUTE_CONFIG = addSubPathOfRoutes({
     component: () => import('src/pages/worksheet/WorkSheet'),
     sensitive: true,
   },
-});
+};
