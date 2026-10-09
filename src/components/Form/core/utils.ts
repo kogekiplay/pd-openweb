@@ -18,6 +18,7 @@ import type {
 } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows, getNewRecordPageUrl, getRelateRecordCountFromValue } from 'src/utils/record';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, FROM, getWidgetValueId } from './config';
+import { parsedRecords } from './formUtils/valueBoundary';
 
 export function validate(id = '') {
   return !/^(temp|default|public-temp|deleterowids)/.test(id.toLowerCase());
@@ -1111,13 +1112,11 @@ export const getArrBySpliceType = (filters: { spliceType?: number }[] = []) => {
 };
 
 // 不允许重复传参格式处理
-export const formatControlValue = (value: string, type?: number) => {
+export const formatControlValue = (value: string, type?: number): string => {
   if (_.includes([26, 27, 29, 48], type)) {
-    return safeParse(value.startsWith('deleteRowIds') ? '[]' : value || '[]')
-      .map((ac: Record<string, ControlValue>) => ac[getWidgetValueId(type)])
-      .join('');
+    const records = parsedRecords(value.startsWith('deleteRowIds') ? '[]' : value || '[]');
+    return records.map(record => record[getWidgetValueId(type)]).join('');
   }
-
   return value;
 };
 

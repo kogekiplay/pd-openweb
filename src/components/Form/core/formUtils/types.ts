@@ -35,6 +35,7 @@ export interface FormConditionRule {
   disabled?: boolean | undefined;
   filters?: FormFilterGroup[] | undefined;
   ruleItems?: FormRuleAction[] | undefined;
+  hintType?: number | undefined;
   checkType?: number | undefined;
   appTimeZone?: number | undefined;
 }

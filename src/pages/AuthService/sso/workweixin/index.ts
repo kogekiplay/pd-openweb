@@ -1,6 +1,7 @@
 import { pathCompletion } from 'src/utils/common';
 import { setPssId } from 'src/utils/pssId';
 import { ajax, browserIsMobile, checkLogin, checkOriginUrl, getGlobalMeta, getRequest, login } from 'src/utils/sso';
+import { decodeSsoAccountResult } from 'src/utils/ssoTypes';
 
 const { code, i, s, ret, source, url, state } = getRequest();
 const isMobile = browserIsMobile();
@@ -21,20 +22,23 @@ if (source === 'wxwork') {
         code,
       },
       async: true,
+      decodeData: decodeSsoAccountResult,
       success: result => {
         const { accountResult, sessionId } = result.data;
 
         if (accountResult === 1) {
-          getGlobalMeta().then(() => {
-            setPssId(sessionId);
-            const safeUrl = checkOriginUrl(url);
+          getGlobalMeta()
+            .then(() => {
+              setPssId(sessionId);
+              const safeUrl = checkOriginUrl(url);
 
-            if (safeUrl) {
-              location.replace(safeUrl);
-            } else {
-              location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
-            }
-          });
+              if (safeUrl) {
+                location.replace(safeUrl);
+              } else {
+                location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
+              }
+            })
+            .catch(login);
         }
       },
       error: login,
@@ -59,6 +63,7 @@ if (source === 'wxwork') {
         secretId: s,
       },
       async: true,
+      decodeData: decodeSsoAccountResult,
       success: result => {
         const { accountResult, sessionId } = result.data;
 

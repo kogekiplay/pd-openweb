@@ -54,11 +54,11 @@ export interface MasterData {
  * 等一大堆，那些只有 filterFn 在看；这里不写索引签名兜底，是为了拼错字段名当场报错。
  */
 export interface RuleFilterItem {
-  controlId?: string;
+  controlId?: string | undefined;
   /** 与前一条的连接方式：1 且、2 或 */
-  spliceType?: number;
+  spliceType?: number | undefined;
   /** 非空表示「跟另一个字段比」，cid 是那个字段的 controlId */
-  dynamicSource?: { cid?: string }[];
+  dynamicSource?: { cid?: string | undefined }[] | undefined;
 }
 
 /**
@@ -69,7 +69,7 @@ export interface RuleFilterItem {
  * 之后再 `.concat(it.controlId)`，两层都取。以前 filters 是 any[]，这件事看不出来。
  */
 export interface RuleFilterGroup extends RuleFilterItem {
-  groupFilters?: RuleFilterItem[];
+  groupFilters?: RuleFilterItem[] | undefined;
 }
 
 /** 业务规则（显示/必填/只读等），data 之外单独一份。 */

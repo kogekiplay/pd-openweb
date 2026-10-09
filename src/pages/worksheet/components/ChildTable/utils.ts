@@ -2,6 +2,8 @@ import _, { get, isEmpty, isNull, isUndefined } from 'lodash';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, FROM } from 'src/components/Form/core/config';
 import DataFormat from 'src/components/Form/core/DataFormat';
 import { checkRequired, checkRuleLocked, checkValueByFilterRegex } from 'src/components/Form/core/formUtils';
+import type { FormConditionRule } from 'src/components/Form/core/formUtils/types';
+import type { MasterData } from 'src/components/Form/core/types';
 import { browserIsMobile } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
@@ -42,14 +44,14 @@ function getControlCompareValue(c: FormControl, value) {
  */
 
 export function getSubListError(
-  { rows, rules },
+  { rows, rules = [] }: { rows: RecordRow[]; rules?: FormConditionRule[] | undefined },
   controls: FormControl[] = [],
-  showControls = [],
+  showControls: string[] = [],
   from = 3,
-  masterData,
+  masterData?: MasterData,
   { workflowRequiredCheck = false } = {},
 ) {
-  const result = {};
+  const result: Record<string, string | undefined> = {};
 
   try {
     filterEmptyChildTableRows(rows).forEach(async row => {
@@ -59,7 +61,7 @@ export function getSubListError(
         controls: controls.filter(
           (c: FormControl) =>
             _.find(showControls, id => id === c.controlId) ||
-            _.find(rules, rule => JSON.stringify(rule.filters).indexOf(c.controlId) > -1),
+            _.find(rules, rule => JSON.stringify(rule.filters).indexOf(c.controlId || '') > -1),
         ),
         row,
       });
@@ -126,18 +128,22 @@ export function getSubListError(
     uniqueControls.forEach(c => {
       const hadValueRows = rows.filter(
         (row: RecordRow) =>
-          !isUndefined(row[c.controlId]) &&
-          !isNull(row[c.controlId]) &&
-          !row[c.controlId].startsWith('deleteRowIds') &&
-          !checkCellIsEmpty(row[c.controlId]),
+          !isUndefined(row[c.controlId === undefined ? 'undefined' : c.controlId]) &&
+          !isNull(row[c.controlId === undefined ? 'undefined' : c.controlId]) &&
+          !row[c.controlId === undefined ? 'undefined' : c.controlId].startsWith('deleteRowIds') &&
+          !checkCellIsEmpty(row[c.controlId === undefined ? 'undefined' : c.controlId]),
       );
-      const uniqueValueRows = _.uniqBy(hadValueRows, row => getControlCompareValue(c, row[c.controlId]));
+      const uniqueValueRows = _.uniqBy(hadValueRows, row =>
+        getControlCompareValue(c, row[c.controlId === undefined ? 'undefined' : c.controlId]),
+      );
 
       if (hadValueRows.length !== uniqueValueRows.length) {
         const duplicateValueRows = hadValueRows.filter(vr => !_.find(uniqueValueRows, r => r.rowid === vr.rowid));
         duplicateValueRows.forEach(row => {
           const sameValueRows = hadValueRows.filter(
-            r => getControlCompareValue(c, r[c.controlId]) === getControlCompareValue(c, row[c.controlId]),
+            r =>
+              getControlCompareValue(c, r[c.controlId === undefined ? 'undefined' : c.controlId]) ===
+              getControlCompareValue(c, row[c.controlId === undefined ? 'undefined' : c.controlId]),
           );
 
           if (sameValueRows.length > 1) {
@@ -156,7 +162,11 @@ export function getSubListError(
   }
 }
 
-function filterPendingCellErrors(errors = {}, rows: RecordRow[] = [], showControls = []) {
+function filterPendingCellErrors(
+  errors: Record<string, string | undefined> = {},
+  rows: RecordRow[] = [],
+  showControls: string[] = [],
+) {
   const validRows = filterEmptyChildTableRows(rows);
 
   return _.pickBy(errors, (error, key) => {
@@ -195,20 +205,40 @@ function mergeRequiredState(controls: FormControl[] = [], control: FormControl =
   });
 }
 
-export function getSubListErrorOfStore(store, currentControl?) {
+export interface ChildTableValidationStore {
+  getState: () => {
+    rows: RecordRow[];
+    cellErrors?: Record<string, string | undefined> | undefined;
+    persistedCellErrors?: Record<string, string | undefined> | undefined;
+    base?:
+      | {
+          recordId?: string | undefined;
+          control?: FormControl | undefined;
+          controls?: FormControl[] | undefined;
+          instanceId?: string | undefined;
+          workId?: string | undefined;
+          worksheetInfo?:
+            { rules?: FormConditionRule[] | undefined; workflowChildTableSwitch?: boolean | undefined } | undefined;
+          masterData?: MasterData | undefined;
+        }
+      | undefined;
+  };
+  dispatch: (action: { type: 'UPDATE_CELL_ERRORS'; value: Record<string, string | undefined> }) => unknown;
+  clearSubListErrors: () => void;
+}
+export function getSubListErrorOfStore(
+  store: ChildTableValidationStore,
+  currentControl?: FormControl,
+): Record<string, string | undefined> {
   const state = store.getState();
-  const {
-    rows,
-    base = {},
-    persistedCellErrors: pendingCellErrors = {},
-  }: { rows: RecordRow[]; [key: string]: any } = state;
+  const { rows, base = {}, persistedCellErrors: pendingCellErrors = {} } = state;
   const { recordId, control = {} } = base;
   const isWorkflow =
     ((base.instanceId && base.workId) || _.get(window, 'shareState.isPublicWorkflowRecord')) &&
     _.get(base, 'worksheetInfo.workflowChildTableSwitch') !== false;
   const mergedControl = isWorkflow && currentControl ? currentControl : control;
   // 只同步工作流审批规则改写后的必填状态，避免影响普通记录子表的权限判断。
-  const controls: FormControl[] = isWorkflow ? mergeRequiredState(base.controls, mergedControl) : base.controls;
+  const controls: FormControl[] = isWorkflow ? mergeRequiredState(base.controls, mergedControl) : base.controls || [];
   const error = getSubListError(
     {
       rows,

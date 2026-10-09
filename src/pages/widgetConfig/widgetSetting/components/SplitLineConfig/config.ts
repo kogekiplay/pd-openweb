@@ -49,10 +49,10 @@ export const getExpandWidgetIds = (controls: FormControl[] = [], data = {}, from
   const expandWidgetIds = [];
   const widgets = controls.sort((a, b) => {
     if (a.row === b.row) {
-      return a.col - b.col;
+      return (a.col ?? NaN) - (b.col ?? NaN);
     }
 
-    return a.row - b.row;
+    return (a.row ?? NaN) - (b.row ?? NaN);
   });
 
   let searchStatus = false;
@@ -77,15 +77,18 @@ export const getExpandWidgetIds = (controls: FormControl[] = [], data = {}, from
   return expandWidgetIds;
 };
 
-export const getExpandWidgetIdsMap = (controls: FormControl[] = [], from) => {
-  const expandWidgetIdsMap = {};
-  const activeSections = [];
-  const widgets = [].concat(controls || []).sort((a, b) => {
+export const getExpandWidgetIdsMap = (
+  controls: FormControl[] = [],
+  from?: number,
+): Record<string, Array<string | undefined>> => {
+  const expandWidgetIdsMap: Record<string, Array<string | undefined>> = {};
+  const activeSections: Array<{ sectionId?: string | undefined; expandWidgetIds: Array<string | undefined> }> = [];
+  const widgets = [...(controls || [])].sort((a, b) => {
     if (a.row === b.row) {
-      return a.col - b.col;
+      return (a.col ?? NaN) - (b.col ?? NaN);
     }
 
-    return a.row - b.row;
+    return (a.row ?? NaN) - (b.row ?? NaN);
   });
 
   for (let item of widgets) {
@@ -96,11 +99,11 @@ export const getExpandWidgetIdsMap = (controls: FormControl[] = [], from) => {
         fixedBottomWidgets(item) ||
         (_.get(item, 'type') === 22 &&
           (from ? controlState(item, from).visible && !item.hidden : true) &&
-          section.sectionId === (item.sectionId || ''))
+          section?.sectionId === (item.sectionId || ''))
       ) {
         activeSections.splice(i, 1);
       } else {
-        section.expandWidgetIds.push(item.controlId);
+        section?.expandWidgetIds.push(item.controlId);
       }
     }
 
@@ -110,7 +113,7 @@ export const getExpandWidgetIdsMap = (controls: FormControl[] = [], from) => {
         expandWidgetIds: [],
       };
 
-      expandWidgetIdsMap[item.controlId] = sectionInfo.expandWidgetIds;
+      expandWidgetIdsMap[item.controlId === undefined ? 'undefined' : item.controlId] = sectionInfo.expandWidgetIds;
       activeSections.push(sectionInfo);
     }
   }

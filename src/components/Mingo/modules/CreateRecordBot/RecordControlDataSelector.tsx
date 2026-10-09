@@ -10,7 +10,8 @@ import { emitter } from 'src/utils/common';
 import { formatAiGenControlValue } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
 import { parseStreamingJsonlData } from 'src/utils/sse';
-import type { FormControl } from 'src/utils/controlTypes';
+import { generatedControlValue } from 'src/utils/sseTypes';
+import type { GeneratedControlValue } from 'src/utils/sseTypes';
 
 const Con = styled.div`
   border-radius: 8px;
@@ -224,13 +225,16 @@ export default function MingoGeneratedWidgetsSelector({
   content,
   worksheetId,
   controls = [],
-}: { worksheetId?: string; [key: string]: any }) {
+}: {
+  worksheetId?: string;
+  [key: string]: any;
+}) {
   const disabled = !isLastAssistantMessage;
   // 使用 useMemo 缓存解析结果，避免重复解析
   const cache = useRef({});
-  const allControls: FormControl[] = useMemo(() => {
+  const allControls: GeneratedControlValue[] = useMemo(() => {
     if (!content) return [];
-    return parseStreamingJsonlData(content, isStreaming);
+    return parseStreamingJsonlData(content, isStreaming, generatedControlValue);
   }, [content, isStreaming]);
   const allControlsWithValue = useMemo(
     () =>

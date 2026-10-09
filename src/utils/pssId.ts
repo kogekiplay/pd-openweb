@@ -1,23 +1,36 @@
 import { setLocalStorageItemSafely } from 'src/utils/platform/storage/safe';
-﻿import { get } from 'lodash';
 
-const getLocalStorage = () => get(window, 'localStorage');
+const getLocalStorage = (): Storage | undefined => window.localStorage;
+
+function isMetadataObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+function getDeploymentFlags(): { httpOnly: boolean | undefined; isLocal: boolean | undefined } {
+  const metadata: unknown = window.md;
+  const globalInfo = isMetadataObject(metadata) ? metadata['global'] : undefined;
+  const config = isMetadataObject(globalInfo) ? globalInfo['Config'] : undefined;
+  const httpOnly = isMetadataObject(config) ? config['HttpOnly'] : undefined;
+  const isLocal = isMetadataObject(config) ? config['IsLocal'] : undefined;
+  return {
+    httpOnly: typeof httpOnly === 'boolean' ? httpOnly : undefined,
+    isLocal: typeof isLocal === 'boolean' ? isLocal : undefined,
+  };
+}
 
 /**
  * 设置 md_pss_id
  * @param {string} id
  */
-export const setPssId = (id, verification = false) => {
+export const setPssId = (id: string | null | undefined, verification = false) => {
   if (id) {
-    const httpOnly = get(window, 'md.global.Config.HttpOnly');
-    const isLocal = get(window, 'md.global.Config.IsLocal');
+    const { httpOnly, isLocal } = getDeploymentFlags();
 
     if (
       verification ||
       window.isDingTalk ||
       window.isMiniProgram ||
       window.isFeiShu ||
-      process.env.NODE_ENV === 'development' ||
+      process.env['NODE_ENV'] === 'development' ||
       location.href.indexOf('theportal.cn') > -1 ||
       location.href.indexOf('localhost') > -1 ||
       location.href.indexOf('share.mingdao.net') > -1 ||

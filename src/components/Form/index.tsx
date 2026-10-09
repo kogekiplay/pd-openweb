@@ -20,6 +20,7 @@ import { FORM_ERROR_TYPE } from './core/config';
 import DataFormat from './core/DataFormat';
 import { commonDefaultProps, commonPropTypes } from './core/formPropTypes';
 import { destroyMapLocation, retainMapLocation } from './core/mapUtils';
+import type { FormControl, FormError } from './core/types';
 import { useFormEventManager } from './core/useFormEventManager';
 import { loadSDK } from './core/utils';
 import { fixWeixinInputBlurScroll } from './MobileForm/tools/utils';
@@ -39,10 +40,12 @@ import {
   updateRulesLoadingAction,
   updateUniqueErrorItemsAction,
 } from './store/actions';
+import type { EntranceContextValue, EntranceProps, EntranceRef } from './store/entranceTypes';
 import { initialState, reducer } from './store/reducers';
+import type { CustomEventParams, StoreRuleOptions } from './store/types';
 import './index.less';
 
-export const EntranceContext = createContext();
+export const EntranceContext = createContext<EntranceContextValue | undefined>(undefined);
 export const useFormStore = () => {
   const context = useContext(EntranceContext);
 
@@ -56,10 +59,11 @@ export const useFormStore = () => {
 const isMobile = browserIsMobile();
 const LoadableMobileForm = lazy(() => import('./MobileForm'));
 const LoadableDesktopForm = lazy(() => import('./DesktopForm'));
-const Entrance = React.forwardRef((componentProps, ref) => {
-  const props = _.defaults({}, componentProps, commonDefaultProps);
+const Entrance = React.forwardRef<EntranceRef, EntranceProps>((componentProps, ref) => {
+  const initialProps: EntranceProps = {};
+  const props: EntranceProps = _.defaults(initialProps, componentProps, commonDefaultProps);
   const recordInfoContext = useContext(RecordInfoContext);
-  const dataFormat = useRef(null);
+  const dataFormat = useRef<DataFormat | null>(null);
   const abortController = useRef(new AbortController());
   const controlRefs = useRef({});
   const storeCenter = useRef({});
@@ -87,6 +91,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    */
 
   const getFilterDataByRule = (isInit = false) => {
+    if (!dataFormat.current) return;
     getFilterDataByRuleAction(dispatch, {
       props,
       dataFormat: dataFormat.current,
@@ -102,7 +107,13 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    * 获取配置（业务规则 || 查询配置）
    */
 
-  const getConfig = ({ getRules, getSearchConfig }) => {
+  const getConfig = ({
+    getRules,
+    getSearchConfig,
+  }: {
+    getRules?: boolean | undefined;
+    getSearchConfig?: boolean | undefined;
+  }) => {
     getConfigAction(dispatch, {
       props,
       getRules,
@@ -113,7 +124,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    * 更新error显示状态
    */
 
-  const updateErrorState = (isShow, controlId: string) => {
+  const updateErrorState = (isShow: boolean, controlId: string) => {
     updateErrorStateAction(dispatch, {
       getState,
       isShow,
@@ -121,7 +132,8 @@ const Entrance = React.forwardRef((componentProps, ref) => {
     });
   };
 
-  const getSubmitData = options => {
+  const getSubmitData = (options?: StoreRuleOptions) => {
+    if (!dataFormat.current) return undefined;
     return getSubmitDataAction(dispatch, {
       props,
       getState,
@@ -137,7 +149,8 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    * 表单提交数据
    */
 
-  const submitFormData = (options?) => {
+  const submitFormData = (options?: StoreRuleOptions) => {
+    if (!dataFormat.current) return;
     submitFormDataAction(dispatch, {
       props,
       getState,
@@ -154,7 +167,8 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    * 组件onChange方法
    */
 
-  const handleChange = (value, cid, item, searchByChange = true) => {
+  const handleChange = (value: unknown, cid?: string, item?: FormControl, searchByChange = true) => {
+    if (!dataFormat.current || !item || cid === undefined) return;
     handleChangeAction(dispatch, {
       props,
       getState,
@@ -170,11 +184,11 @@ const Entrance = React.forwardRef((componentProps, ref) => {
     });
   };
 
-  const updateErrorItems = items => {
+  const updateErrorItems = (items: FormError[]) => {
     updateErrorItemsAction(dispatch, items);
   };
 
-  const updateUniqueErrorItems = items => {
+  const updateUniqueErrorItems = (items: FormError[]) => {
     updateUniqueErrorItemsAction(dispatch, items);
   };
 
@@ -182,18 +196,18 @@ const Entrance = React.forwardRef((componentProps, ref) => {
     updateRulesLoadingAction(dispatch, loading);
   };
 
-  const setActiveTabControlId = id => {
+  const setActiveTabControlId = (id: string | undefined) => {
     updateActiveTabControlIdAction(dispatch, id);
   };
 
-  const updateLoadingItems = items => {
+  const updateLoadingItems = (items: Record<string, boolean>) => {
     updateLoadingItemsAction(dispatch, items);
   };
   /**
    * 提交的时唯一值错误
    */
 
-  const uniqueErrorUpdate = uniqueErrorIds => {
+  const uniqueErrorUpdate = (uniqueErrorIds: string[]) => {
     const { uniqueErrorItems } = getState();
     alert(_l('记录提交失败：数据重复'), 2);
     (uniqueErrorIds || []).forEach((controlId: string) => {
@@ -214,13 +228,15 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    */
 
   const updateRenderData = () => {
+    if (!dataFormat.current) return;
     const newErrorItems = dataFormat.current.getErrorControls();
     const { errorItems = [] } = state;
     getFilterDataByRule();
     if (newErrorItems.length !== errorItems.length) updateErrorItems(newErrorItems);
   };
 
-  const triggerCustomEvent = params => {
+  const triggerCustomEvent = (params: CustomEventParams) => {
+    if (!dataFormat.current) return;
     triggerCustomEventAction(dispatch, {
       params,
       props,
@@ -231,7 +247,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
     });
   };
 
-  const checkControlUnique = (controlId: string, controlType, controlValue) => {
+  const checkControlUnique = (controlId: string, controlType: number | undefined, controlValue: string) => {
     checkControlUniqueAction(dispatch, {
       props,
       getState,
@@ -252,14 +268,14 @@ const Entrance = React.forwardRef((componentProps, ref) => {
     };
   };
 
-  const onChangeEnhance = (dataSource, controlIds, obj) => {
-    props.onChange(dataSource, controlIds, obj);
+  const onChangeEnhance = (dataSource: FormControl[], controlIds: string[], obj: unknown) => {
+    props.onChange?.(dataSource, controlIds, obj);
   };
   /**
    * 初始化数据
    */
 
-  const initSourceAction = (data, disabled: boolean, reInit = false) => {
+  const initSourceAction = (data: FormControl[] = [], disabled: boolean | undefined, reInit = false) => {
     const {
       appId,
       isCharge,
@@ -300,12 +316,9 @@ const Entrance = React.forwardRef((componentProps, ref) => {
       abortController: abortController.current,
       storeCenter: storeCenter.current,
       embedData: { ..._.pick(props, ['projectId', 'appId', 'groupId', 'worksheetId', 'recordId', 'viewId']) },
-      searchConfig: searchConfig.filter(i => !i.eventType),
+      searchConfig: (searchConfig || []).filter(i => !i['eventType']),
       loadRowsWhenChildTableStoreCreated,
       updateLoadingItems: loadingItems => {
-        updateLoadingItems({ ...loadingItems });
-      },
-      updateLoadingItemsWithAutoSubmit: loadingItems => {
         updateLoadingItems({ ...loadingItems });
       },
       activeTrigger: () => {
@@ -317,28 +330,33 @@ const Entrance = React.forwardRef((componentProps, ref) => {
         }
       },
       onAsyncChange: changes => {
+        const currentDataFormat = dataFormat.current;
+        if (!currentDataFormat) return;
         const { controlId, controlIds } = changes;
 
         if (isMobile) {
           // H5 子表行详情依赖原始异步回填值重放 DataFormat，避免 getDataSource 快照未包含最新 sourcevalue。
-          onChangeEnhance(dataFormat.current.getDataSource(), controlIds || [controlId], {
+          onChangeEnhance(currentDataFormat.getDataSource(), controlIds || [controlId], {
             isAsyncChange: true,
             asyncChanges: changes,
           });
         } else {
-          onChangeEnhance(dataFormat.current.getDataSource(), [controlId], {
+          onChangeEnhance(currentDataFormat.getDataSource(), [controlId], {
             isAsyncChange: true,
           });
         }
 
         changeStatus.current = true;
         getFilterDataByRule();
-        updateErrorItems(dataFormat.current.getErrorControls()); // updateLoadingItems({ ...state.loadingItems });
+        updateErrorItems(currentDataFormat.getErrorControls()); // updateLoadingItems({ ...state.loadingItems });
       },
     });
     getFilterDataByRule(true);
     updateErrorItems(
-      dataFormat.current.getErrorControls().map(item => ({ ...item, showError: reInit ? false : item.reInit })),
+      dataFormat.current.getErrorControls().map(item => ({
+        ...item,
+        showError: reInit ? false : 'reInit' in item && typeof item.reInit === 'boolean' ? item.reInit : undefined,
+      })),
     );
     updateUniqueErrorItems([]);
     updateRulesLoading(false);
@@ -349,7 +367,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
    * 渲染短信验证码
    */
 
-  const renderVerifyCode = item => {
+  const renderVerifyCode = (item: FormControl) => {
     const { controlId, type } = item;
     const { smsVerificationFiled, smsVerification, worksheetId } = props;
 
@@ -359,7 +377,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
           {...item}
           verifyCode={state.verifyCode}
           worksheetId={worksheetId}
-          handleChange={code =>
+          handleChange={(code: string) =>
             dispatch({
               type: 'SET_VERIFY_CODE',
               payload: code,
@@ -374,16 +392,16 @@ const Entrance = React.forwardRef((componentProps, ref) => {
 
   /** 校验错误项：controlId 定位控件，errorMessage 是文案，ignoreErrorMessage 表示"可忽略"。 */
   type FormValidateError = {
-    controlId?: string;
-    errorMessage?: string;
-    ignoreErrorMessage?: boolean;
+    controlId?: string | undefined;
+    errorMessage?: string | undefined;
+    ignoreErrorMessage?: boolean | undefined;
   };
 
   // errors 必须标类型：不标的话它是隐式 any，但下面第 378 行的 _.uniqBy 在装上
   // @types/lodash 后会【反向约束】它 —— TS 把 errors 推成字符串数组，于是
   // i.ignoreErrorMessage / item.errorMessage 全部报 TS2339
   // （报文里那串 charAt / charCodeAt 就是 String 的原型成员，很好认）。
-  const newErrorDialog = (errors: FormValidateError[], options) => {
+  const newErrorDialog = (errors: FormValidateError[], options?: StoreRuleOptions) => {
     const isAllIgnoreError = errors.every(i => i.ignoreErrorMessage);
 
     const uniqueErrors = _.uniqBy(errors, 'errorMessage');
@@ -471,7 +489,8 @@ const Entrance = React.forwardRef((componentProps, ref) => {
     }
   };
 
-  const setLoadingInfo = (key, status) => {
+  const setLoadingInfo = (key: string, status: boolean) => {
+    if (!dataFormat.current) return;
     dataFormat.current.loadingInfo[key] = status;
     updateLoadingItems({ ...dataFormat.current.loadingInfo });
   }; // 初始化数据
@@ -482,10 +501,10 @@ const Entrance = React.forwardRef((componentProps, ref) => {
 
     if (!rulesLoading && !isWorksheetQuery) {
       initSourceAction(data, disabled);
-    } else if (rulesLoading || (isWorksheetQuery && searchConfig && !searchConfig.length)) {
+    } else if (rulesLoading || (isWorksheetQuery && searchConfig && !(searchConfig || []).length)) {
       getConfig({
         getRules: rulesLoading,
-        getSearchConfig: isWorksheetQuery && !searchConfig.length,
+        getSearchConfig: isWorksheetQuery && !(searchConfig || []).length,
       });
     }
 
@@ -531,7 +550,7 @@ const Entrance = React.forwardRef((componentProps, ref) => {
     }
 
     initSourceAction(props.data, props.disabled, true);
-  }, [props.flag, props.data.length, props.disabled, props.isRecordLock]); // 监听 worksheetId
+  }, [props.flag, (props.data || []).length, props.disabled, props.isRecordLock]); // 监听 worksheetId
 
   useEffect(() => {
     if (firstRenderMap.current.worksheetId) {
@@ -570,7 +589,10 @@ const Entrance = React.forwardRef((componentProps, ref) => {
   const widgetEventProps = useFormEventManager({
     containerRef,
     stateRef,
-    ..._.pick(props, ['from', 'disabledTabs', 'disabledChildTableCheck', 'flag']),
+    from: props.from,
+    disabledTabs: props.disabledTabs,
+    disabledChildTableCheck: props.disabledChildTableCheck,
+    flag: props.flag,
   });
   return (
     <EntranceContext.Provider

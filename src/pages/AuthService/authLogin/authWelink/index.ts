@@ -10,6 +10,7 @@ import {
   getScript,
   login,
 } from 'src/utils/sso';
+import { decodeSsoAccountResult } from 'src/utils/ssoTypes';
 
 const { url, p } = getRequest();
 const isMobile = browserIsMobile();
@@ -35,20 +36,23 @@ if (checkLogin()) {
             code: data.code,
           },
           async: true,
+          decodeData: decodeSsoAccountResult,
           success: result => {
             const { accountResult, sessionId } = result.data;
 
             if (accountResult === 1) {
-              getGlobalMeta().then(() => {
-                setPssId(sessionId);
-                const safeUrl = checkOriginUrl(url);
+              getGlobalMeta()
+                .then(() => {
+                  setPssId(sessionId);
+                  const safeUrl = checkOriginUrl(url);
 
-                if (safeUrl) {
-                  location.replace(safeUrl);
-                } else {
-                  location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
-                }
-              });
+                  if (safeUrl) {
+                    location.replace(safeUrl);
+                  } else {
+                    location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
+                  }
+                })
+                .catch(login);
             }
           },
           error: login,

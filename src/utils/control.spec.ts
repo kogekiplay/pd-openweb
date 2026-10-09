@@ -92,6 +92,7 @@ const {
   convertAiRecommendControlToControlData,
   convertControlTypeToAiRecommendControlType,
   formatAttachmentValue,
+  formatAiGenControlValue,
   formatControlValue,
   getControlsSorts,
   getSelectedOptions,
@@ -174,6 +175,82 @@ const {
     getTimeZone: () => ({ serverZone: 480, userZone: 480 }),
   },
 });
+
+// Real widget formatting reads the finite stream payload and serializes the persisted field value.
+assert.strictEqual(formatAiGenControlValue({ type: 2 }, 'text'), 'text');
+assert.strictEqual(formatAiGenControlValue({ type: 6 }, 5), '5');
+assert.strictEqual(formatAiGenControlValue({ type: 36 }, false), '0');
+assert.strictEqual(formatAiGenControlValue({ type: 36 }, true), '1');
+assert.deepStrictEqual(
+  JSON.parse(
+    formatAiGenControlValue({ type: 26, enumDefault: 0 }, [
+      { id: 'user-a', name: 'A', avatar: 'avatar' },
+      { id: 'user-b', name: 'B' },
+    ]),
+  ),
+  [{ accountId: 'user-a', fullname: 'A', avatar: 'avatar' }],
+);
+assert.deepStrictEqual(
+  JSON.parse(formatAiGenControlValue({ type: 48, enumDefault: 1 }, [{ id: 'role', name: 'Role' }])),
+  [{ organizeId: 'role', organizeName: 'Role' }],
+);
+assert.deepStrictEqual(
+  JSON.parse(formatAiGenControlValue({ type: 27, enumDefault: 1 }, [{ id: 'department', name: 'Department' }])),
+  [{ departmentId: 'department', departmentName: 'Department' }],
+);
+assert.deepStrictEqual(JSON.parse(formatAiGenControlValue({ type: 29 }, [{ sid: 'row', name: 'Row' }])), [
+  { sid: 'row', name: 'Row' },
+]);
+assert.deepStrictEqual(
+  JSON.parse(
+    formatAiGenControlValue(
+      {
+        type: 10,
+        options: [
+          { key: 'a', value: 'Alpha' },
+          { key: 'b', value: 'Beta' },
+        ],
+      },
+      'Alpha,Beta',
+    ),
+  ),
+  ['a', 'b'],
+);
+assert.deepStrictEqual(
+  JSON.parse(
+    formatAiGenControlValue(
+      {
+        type: 34,
+        relationControls: [
+          { controlId: 'label', type: 2 },
+          { controlId: 'number', type: 6 },
+        ],
+      },
+      [{ label: 'A', number: 1, ignored: 'not a field' }],
+    ),
+  ),
+  [{ label: 'A', number: '1' }],
+);
+assert.deepStrictEqual(
+  JSON.parse(formatAiGenControlValue({ type: 14 }, [{ url: 'https://example.com/file', name: 'file', ext: 'txt' }])),
+  {
+    attachments: [{ fileUrl: 'https://example.com/file', fileName: 'file', fileSize: 40, fileExt: '.txt' }],
+    attachmentData: [],
+    knowledgeAtts: [],
+  },
+);
+const originalConsoleError = console.error;
+const aiFormattingFailures: unknown[] = [];
+try {
+  console.error = (...args: unknown[]) => aiFormattingFailures.push(args);
+  assert.strictEqual(formatAiGenControlValue({ type: 26 }, [null]), undefined);
+  assert.strictEqual(formatAiGenControlValue({ type: 26 }, [{ id: {}, name: 'invalid' }]), undefined);
+  assert.strictEqual(formatAiGenControlValue({ type: 14 }, [{ url: {} }]), undefined);
+  assert.strictEqual(formatAiGenControlValue({ type: 34, relationControls: [] }, { invalid: 'row list' }), undefined);
+} finally {
+  console.error = originalConsoleError;
+}
+assert.equal(aiFormattingFailures.length, 4, 'Malformed widget payloads take the existing formatter failure path');
 
 assert.deepStrictEqual(getControlsSorts([{ controlId: 'a' }, {}, { data: { controlId: 'b' } }, { data: {} }, null]), [
   'a',
@@ -406,11 +483,17 @@ const { getRelateRecordRowIds, withKeepShowRowIds } = requireEsm('./domain/contr
   'src/components/Form/core/utils': {},
 });
 assert.deepStrictEqual(getRelateRecordRowIds('[{"sid":"old-row"},{"sid":""}]'), ['old-row']);
-assert.deepStrictEqual(withKeepShowRowIds(['old-row', 'new-row'], { keepShowRowIds: ['old-row'] }), ['old-row', 'new-row']);
+assert.deepStrictEqual(withKeepShowRowIds(['old-row', 'new-row'], { keepShowRowIds: ['old-row'] }), [
+  'old-row',
+  'new-row',
+]);
 
-const { normalizeSandboxAppSettings, updateEntitySyncCount, getSandboxDataExistingAppIds } = requireEsm('./domain/app/sandbox.ts', {
-  'src/utils/enum': { VersionProductType: { appSandbox: 59 } },
-});
+const { normalizeSandboxAppSettings, updateEntitySyncCount, getSandboxDataExistingAppIds } = requireEsm(
+  './domain/app/sandbox.ts',
+  {
+    'src/utils/enum': { VersionProductType: { appSandbox: 59 } },
+  },
+);
 const sandboxApps = normalizeSandboxAppSettings([{ appId: 'app', entities: [{ worksheetId: 'sheet', count: 15000 }] }]);
 const limitedApps = updateEntitySyncCount(sandboxApps, 'app', 'sheet', 'all');
 assert.strictEqual(limitedApps[0].entities[0].count, 10000);
@@ -423,4 +506,7 @@ const { sanitizePostMessageHtml, sanitizeMarkdownPreviewHtml } = requireEsm('./c
 const sanitizedMessage = sanitizePostMessageHtml('<script>attack()</script><a href="javascript:attack()">通知</a>');
 assert.doesNotMatch(sanitizedMessage, /script|javascript:|attack/);
 assert.match(sanitizedMessage, />通知<\/a>/);
-assert.strictEqual(sanitizeMarkdownPreviewHtml('<input class="task-list-checkbox" type="checkbox" disabled checked>'), '<input class="task-list-checkbox" type="checkbox" disabled checked>');
+assert.strictEqual(
+  sanitizeMarkdownPreviewHtml('<input class="task-list-checkbox" type="checkbox" disabled checked>'),
+  '<input class="task-list-checkbox" type="checkbox" disabled checked>',
+);

@@ -11,6 +11,7 @@ import {
   login,
   replenishRet,
 } from 'src/utils/sso';
+import { decodeSsoAccountResult, decodeSsoProviderInfo } from 'src/utils/ssoTypes';
 
 const { t, i, ret, url, code, p, pc_slide = '', ...otherParam } = getRequest();
 const isPcSlide = pc_slide.includes('true');
@@ -37,6 +38,7 @@ function start() {
         },
         async: true,
         withCredentials: false,
+        decodeData: decodeSsoAccountResult,
         success: result => {
           const { accountResult, sessionId } = result.data;
 
@@ -73,6 +75,7 @@ function start() {
           apkId: i,
         },
         async: true,
+        decodeData: decodeSsoProviderInfo,
         success: result => {
           const { corpId, state } = result.data;
           const redirect_uri = encodeURIComponent(pathCompletion(`/sso/workweixin?ret=${newRet || ''}&i=${i || ''}`), {
@@ -113,6 +116,7 @@ function start() {
           projectId,
         },
         async: true,
+        decodeData: decodeSsoProviderInfo,
         success: result => {
           const { corpId, state, clientWorkingPattern } = result.data;
 

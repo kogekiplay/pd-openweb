@@ -4,15 +4,23 @@ import moment from 'moment';
 import roleApi from 'src/api/role';
 import versionApi from 'src/api/version';
 import { PERMISSION_ENUM, ROUTE_CONFIG } from 'src/pages/Admin/enum';
+import { isNumericPermissionId, isPermissionId, permissionIds, permissionVersion } from './boundary';
+import type {
+  PermissionCacheEntry,
+  PermissionContainerProps,
+  PermissionId,
+  PermissionOptions,
+  RequiredPermission,
+} from './types';
 
-let cachePermission: Record<string, { data: number[]; time: string; version: string }> = {};
+const cachePermission = new Map<string, PermissionCacheEntry>();
 
 const setCacheData = (projectId: string, data: number[], version: string) => {
-  cachePermission[projectId] = {
+  cachePermission.set(projectId, {
     data,
     time: moment().format('YYYY-MM-DD HH:mm:ss'),
     version,
-  };
+  });
 };
 
 /**
@@ -26,42 +34,49 @@ const fetchVersion = (projectId: string): Promise<string> =>
   versionApi
     .getVersion({ moduleType: 50, sourceId: projectId }, { silent: true })
     // version 在接口模型里是可选的；拿不到就是空串，和 catch 分支同一个口径
-    .then(data => (data && data.version) || '')
+    .then((data: unknown) => permissionVersion(data))
     .catch(() => '');
 
 /** 后台刷新一个项目的权限，填回缓存。同一个项目并发调用只跑一次。 */
 // 里面装的是 permissionIds（权限枚举值，见 Admin/enum 的 PERMISSION_ENUM）
-const refreshing: Record<string, Promise<number[]>> = {};
+const refreshing = new Map<string, Promise<number[]>>();
 
 export const prefetchMyPermissions = (projectId: string): Promise<number[]> => {
   if (!projectId) return Promise.resolve([]);
-  if (refreshing[projectId]) return refreshing[projectId];
+  const current = refreshing.get(projectId);
+  if (current) return current;
 
-  refreshing[projectId] = fetchVersion(projectId)
+  const pending = fetchVersion(projectId)
     .then(version =>
-      roleApi.getMyPermissions({ projectId }, { silent: true }).then(res => {
-        const ids = (res && res.permissionIds) || [];
+      roleApi.getMyPermissions({ projectId }, { silent: true }).then((res: unknown) => {
+        const ids = permissionIds(res);
         setCacheData(projectId, ids, version);
         return ids;
       }),
     )
     .catch(() => [])
     .finally(() => {
-      delete refreshing[projectId];
+      refreshing.delete(projectId);
     });
 
-  return refreshing[projectId];
+  refreshing.set(projectId, pending);
+  return pending;
 };
 
 //校验权限--已有用户权限
-export const hasPermission = (userPermissionIds, needPermission) => {
+export const hasPermission = (
+  userPermissionIds: readonly PermissionId[],
+  needPermission: RequiredPermission,
+): boolean => {
+  if (!Array.isArray(userPermissionIds) || !userPermissionIds.every(isPermissionId)) return false;
   let checkResult = false;
 
   if (_.isArray(needPermission)) {
+    if (!needPermission.every(isPermissionId)) return false;
     //要检查的权限是数组时，用户权限包含数组中任一项则符合条件
-    checkResult = needPermission.some(item => userPermissionIds.includes(item));
+    checkResult = needPermission.some(item => isPermissionId(item) && userPermissionIds.includes(item));
   } else {
-    checkResult = userPermissionIds.includes(needPermission);
+    checkResult = isPermissionId(needPermission) && userPermissionIds.includes(needPermission);
   }
 
   return checkResult;
@@ -86,7 +101,7 @@ export const hasPermission = (userPermissionIds, needPermission) => {
 export function getMyPermissions(projectId: string, isSync?: true): number[];
 export function getMyPermissions(projectId: string, isSync: false): Promise<number[]>;
 export function getMyPermissions(projectId: string, isSync = true) {
-  const cache = cachePermission[projectId];
+  const cache = cachePermission.get(projectId);
 
   if (cache) {
     // 超过 5 分钟就顺手在后台刷一次，但本次调用仍然用旧值
@@ -103,54 +118,59 @@ export function getMyPermissions(projectId: string, isSync = true) {
 }
 
 //校验权限--需要获取权限
-export const checkPermission = (projectId: string, needPermission: number | number[]) => {
+export const checkPermission = (projectId: string, needPermission: RequiredPermission) => {
   return hasPermission(getMyPermissions(projectId), needPermission);
 };
 
-export const canPurchase = ({ projectId, myPermissions = [] }: { projectId?: string; [key: string]: any }) => {
-  const permissionsExceptHr = Object.values(PERMISSION_ENUM)
-    .map(item => parseInt(item))
-    .filter(item => item);
+export const canPurchase = ({ projectId, myPermissions = [] }: PermissionOptions) => {
+  const permissionsExceptHr = Object.values(PERMISSION_ENUM).filter(isNumericPermissionId);
 
   return projectId
     ? checkPermission(projectId, permissionsExceptHr)
     : hasPermission(myPermissions, permissionsExceptHr);
 };
 
-export const hasBackStageAdminAuth = ({
-  projectId,
-  myPermissions = [],
-}: {
-  projectId?: string;
-  [key: string]: any;
-}) => {
+export const hasBackStageAdminAuth = ({ projectId, myPermissions = [] }: PermissionOptions) => {
   const permissionArr = Object.keys(ROUTE_CONFIG)
     .map(item => parseInt(item))
     .filter(item => item);
   return projectId ? checkPermission(projectId, permissionArr) : hasPermission(myPermissions, permissionArr);
 };
 
-export default function PermissionContainer(props) {
+export default function PermissionContainer(props: PermissionContainerProps) {
   const { children, projectId, needPermission } = props;
-  const [hasAuth, setHasAuth] = useState(false);
+  const [authorization, setAuthorization] = useState<
+    { projectId: string; needPermission: RequiredPermission; allowed: boolean } | undefined
+  >(undefined);
 
   useEffect(() => {
-    const cache = cachePermission[projectId];
+    let active = true;
+    setAuthorization({ projectId, needPermission, allowed: false });
+    const cache = cachePermission.get(projectId);
 
     // 有缓存就先按旧值渲染（超过 5 分钟时下面的 prefetch 会顺带刷新）
     if (cache) {
-      setHasAuth(hasPermission(cache.data || [], needPermission));
+      setAuthorization({ projectId, needPermission, allowed: hasPermission(cache.data || [], needPermission) });
 
       if (moment().diff(moment(cache.time), 'm') <= 5) {
-        return;
+        return () => {
+          active = false;
+        };
       }
     }
 
     // 这里统一走异步取数（原先是先同步请求版本号再取，那是废弃的同步 XHR）
     prefetchMyPermissions(projectId)
-      .then(ids => setHasAuth(hasPermission(ids, needPermission)))
+      .then(ids => {
+        if (active) setAuthorization({ projectId, needPermission, allowed: hasPermission(ids, needPermission) });
+      })
       .catch(_.noop);
-  }, []);
+    return () => {
+      active = false;
+    };
+  }, [projectId, needPermission]);
 
+  const hasAuth =
+    authorization?.projectId === projectId && authorization.needPermission === needPermission && authorization.allowed;
   return hasAuth ? <React.Fragment>{children}</React.Fragment> : null;
 }

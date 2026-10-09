@@ -11,6 +11,7 @@ import {
   getRequest,
   login,
 } from 'src/utils/sso';
+import { decodeSsoAccountResult, decodeSsoProviderInfo } from 'src/utils/ssoTypes';
 
 const { code, state, url, p, ...otherParam } = getRequest();
 const isMobile = browserIsMobile();
@@ -33,20 +34,23 @@ if (code) {
         type: 2,
       },
       async: true,
+      decodeData: decodeSsoAccountResult,
       success: result => {
         const { accountResult, sessionId } = result.data;
 
         if (accountResult === 1) {
-          getGlobalMeta().then(() => {
-            setPssId(sessionId);
-            const safeUrl = checkOriginUrl(url);
+          getGlobalMeta()
+            .then(() => {
+              setPssId(sessionId);
+              const safeUrl = checkOriginUrl(url);
 
-            if (safeUrl) {
-              location.replace(safeUrl);
-            } else {
-              location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
-            }
-          });
+              if (safeUrl) {
+                location.replace(safeUrl);
+              } else {
+                location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
+              }
+            })
+            .catch(login);
         }
       },
       error: login,
@@ -73,6 +77,7 @@ if (code) {
         projectId,
       },
       async: true,
+      decodeData: decodeSsoProviderInfo,
       success: result => {
         const { clientId, state } = result.data;
         const defaultCallBackUrl = 'https://login.dingtalk.com/oauth2/auth';

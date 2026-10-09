@@ -2,8 +2,10 @@
  * 一个支持部分解析的JSON解析器类。
  * 它可以从不完整的JSON对象字符串中提取出已经完整的键值对。
  */
-class PartialJsonParser {
+export class PartialJsonParser {
   declare jsonPairRegex: RegExp;
+  declare buffer: string;
+  declare parsedData: Record<string, unknown>;
 
   constructor() {
     // 存储已接收到的数据流
@@ -29,7 +31,7 @@ class PartialJsonParser {
    * @param {string} chunk 新传入的数据块
    * @returns {object} 当前已成功解析出的所有数据
    */
-  parse(chunk) {
+  parse(chunk: string): Record<string, unknown> {
     this.buffer += chunk;
 
     let match;
@@ -41,9 +43,10 @@ class PartialJsonParser {
     while ((match = regex.exec(this.buffer)) !== null) {
       const key = match[1];
       const valueStr = match[2];
+      if (key === undefined || valueStr === undefined) continue;
 
       // 如果这个key已经解析过了，就跳过，避免重复解析
-      if (this.parsedData.hasOwnProperty(key)) {
+      if (Object.hasOwn(this.parsedData, key)) {
         continue;
       }
 
@@ -51,8 +54,8 @@ class PartialJsonParser {
         // 我们匹配到的 valueStr 是一个合法的JSON值字符串
         // (如 "hello", 123, [1,2])，可以直接用JSON.parse解析
         const isNumberStr = /^-?\d+(?:\.\d+)?$/.test(valueStr);
-        const value = isNumberStr ? parseFloat(valueStr) : JSON.parse(valueStr);
-        this.parsedData[key] = value;
+        const value: unknown = isNumberStr ? parseFloat(valueStr) : JSON.parse(valueStr);
+        Object.defineProperty(this.parsedData, key, { value, enumerable: true, configurable: true, writable: true });
       } catch (e) {
         // 理论上，由于正则表达式的限制，这里不应该失败
         // 但保留catch以防万一
@@ -68,42 +71,61 @@ class PartialJsonParser {
    * 获取当前已解析的完整数据
    * @returns {object}
    */
-  getResult() {
+  getResult(): Record<string, unknown> {
     return { ...this.parsedData };
   }
 }
 
-export function parseStreamingJsonlData(content, isStreaming = true) {
+export function parseStreamingJsonlData(content: string, isStreaming?: boolean): unknown[];
+export function parseStreamingJsonlData<T extends object>(
+  content: string,
+  isStreaming: boolean,
+  decode: (value: unknown) => T | undefined,
+): T[];
+export function parseStreamingJsonlData<T extends object>(
+  content: string,
+  isStreaming = true,
+  decode?: (value: unknown) => T | undefined,
+): Array<T | unknown> {
   const lines = content.split('\n').slice(0, isStreaming ? -2 : undefined);
   return lines
-    .map(line => {
+    .map((line: string): unknown => {
       try {
+        let value: unknown;
         if (!isStreaming) {
           try {
-            return JSON.parse(line);
+            value = JSON.parse(line);
           } catch {
-            return JSON.parse(line.replace(/\b0+(\d+(\.\d+)?)\b/g, '$1'));
+            value = JSON.parse(line.replace(/\b0+(\d+(\.\d+)?)\b/g, '$1'));
           }
+        } else {
+          const parser = new PartialJsonParser();
+          value = parser.parse(line);
         }
-
-        const parser = new PartialJsonParser();
-        const result = parser.parse(line);
-        return result;
+        return value && decode ? decode(value) : value;
       } catch {
-        return;
+        return undefined;
       }
     })
     .filter(Boolean);
 }
 
-export function getTextContentFromMessage(content) {
+export function getTextContentFromMessage(content: unknown): string {
   if (typeof content === 'string') {
     return content;
   }
 
+  if (!Array.isArray(content)) return '';
   return content
-    .map(item => {
-      if (item.type === 'text') {
+    .map((item: unknown) => {
+      if (
+        item &&
+        typeof item === 'object' &&
+        'type' in item &&
+        item.type === 'text' &&
+        'text' in item &&
+        typeof item.text === 'string'
+      ) {
         return item.text;
       }
 

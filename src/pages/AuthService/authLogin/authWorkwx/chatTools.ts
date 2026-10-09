@@ -1,7 +1,8 @@
 import { addOtherParam, ajax, getRequest, login } from 'src/utils/sso';
+import { decodeSsoWechatSignature } from 'src/utils/ssoTypes';
 
 const { url, p } = getRequest();
-const currentUrl = location.href.split('#')[0];
+const currentUrl = location.href.split('#')[0] || '';
 const hosts = location.host.split('.');
 const projectId = p || hosts[0];
 
@@ -39,14 +40,16 @@ const succeed = () => {
       if (entry === 'group_chat_tools') {
         getCurExternalChat().then(chatId => {
           const targetUrl = addOtherParam(url, `chat_id=${chatId}&pc_slide=true`);
-          location.replace(targetUrl);
+          if (targetUrl) location.replace(targetUrl);
+          else login();
         });
       }
 
       if (entry === 'contact_profile' || entry === 'single_chat_tools') {
         getCurExternalContact().then(userId => {
           const targetUrl = addOtherParam(url, `external_userid=${userId}&pc_slide=true`);
-          location.replace(targetUrl);
+          if (targetUrl) location.replace(targetUrl);
+          else login();
         });
       }
     } else {
@@ -65,6 +68,7 @@ const agentConfigInit = () => {
       tickettype: 2,
     },
     async: true,
+    decodeData: decodeSsoWechatSignature,
     success: ({ data }) => {
       window.wx.agentConfig({
         corpid: data.corpId,
@@ -95,6 +99,7 @@ ajax.post({
     tickettype: 1,
   },
   async: true,
+  decodeData: decodeSsoWechatSignature,
   success: ({ data }) => {
     window.wx.config({
       beta: true,

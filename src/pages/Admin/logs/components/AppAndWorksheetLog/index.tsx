@@ -149,7 +149,7 @@ export default class AppAndWorksheetLog extends Component<any, any> {
             ? hasPermission(myPermissions, PERMISSION_ENUM.APP_MANAGE_LOG) &&
               hasPermission(myPermissions, PERMISSION_ENUM.RECORD_OPERATE_LOG) &&
               hasPermission(myPermissions, PERMISSION_ENUM.USER_ACTION_LOG)
-            : hasPermission(myPermissions, it.permissionKey),
+            : it.permissionKey !== undefined && hasPermission(myPermissions, it.permissionKey),
         );
 
     this.state = {

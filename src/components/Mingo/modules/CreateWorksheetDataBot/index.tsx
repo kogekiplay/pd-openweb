@@ -27,6 +27,8 @@ import { controlState, formatAiGenControlValue } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 import { AI_FEATURE_TYPE } from 'src/utils/enum';
 import { parseStreamingJsonlData } from 'src/utils/sse';
+import { streamRow } from 'src/utils/sseTypes';
+import type { StreamRow } from 'src/utils/sseTypes';
 import mingoTemplateFiles from '../../../../../staticfiles/choroplethData/mingo/MingoTemplateFiles.json';
 import MessageList from '../../ChatBot/components/MessageList';
 import ResponseError from '../../ChatBot/components/ResponseError';
@@ -408,7 +410,7 @@ function MingoContent(props, ref) {
   const [isChatting, setIsChatting] = useState(defaultIsChatting);
   const [createdDataMap, setCreatedDataMap] = useState(defaultData.createdDataMap || {});
   const [selectedDataMessageId, setSelectedDataMessageId] = useState([]);
-  const [previewTempData, setPreviewTempData] = useState([]);
+  const [previewTempData, setPreviewTempData] = useState<StreamRow[]>([]);
   const [messageIdOfIsGeneratingMoreData, setMessageIdOfIsGeneratingMoreData] = useState();
   const [error, setError] = useState<StreamError | undefined>();
   const {
@@ -478,16 +480,17 @@ function MingoContent(props, ref) {
         cache.current.currentJSONLStr += messageContent;
       }
 
-      let parsedData;
+      let parsedData: StreamRow[] = [];
 
       if (cache.current.JSONLIsPiping) {
         parsedData = parseStreamingJsonlData(
           cache.current.currentJSONLStr,
           !cache.current.currentMessage.includes('\n```'),
+          streamRow,
         )
           .filter(item => !isEmpty(item))
           .map(row => {
-            const newRow = {
+            const newRow: StreamRow = {
               rowid: row.rowid || `temp-${uuidv4()}`,
             };
             Object.keys(row).forEach(key => {

@@ -757,7 +757,13 @@ export default class OtherTool extends Component<any, any> {
         {DATA_INFO.map((item, index) => {
           const { key, featureId, docLink, showSetting, description, showCustomName, label, iconClassName } = item;
           const featureType = getFeatureStatus(Config.projectId, featureId);
-          if ((item.featureId && !featureType) || !hasPermission(authority, AUTH_MAPPING[item.key])) return null;
+          const permissionKey = AUTH_MAPPING[item.key];
+          if (
+            (item.featureId && !featureType) ||
+            permissionKey === undefined ||
+            !hasPermission(authority, permissionKey)
+          )
+            return null;
 
           if (key === 'sso') return null;
 
@@ -850,7 +856,9 @@ export default class OtherTool extends Component<any, any> {
                           <input
                             name="integrationOthers"
                             autoComplete="off"
-                            ref={node => { this.customNameInput = node; }}
+                            ref={node => {
+                              this.customNameInput = node;
+                            }}
                             value={this.state[`${key}CustomName`]}
                             className="customNameInput"
                             onChange={e => this.setState({ [`${key}CustomName`]: e.target.value })}

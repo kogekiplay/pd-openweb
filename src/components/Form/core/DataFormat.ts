@@ -45,7 +45,8 @@ import {
   parseValueIframe,
 } from './formUtils';
 import { formatTimeValue, getItemFilters, getOtherWorksheetFieldValue } from './formUtils/helper';
-import type { ControlValue, FormControl, FormError, FormRule, SubListStore } from './types';
+import type { FormConditionRule } from './formUtils/types';
+import type { ControlValue, FormControl, FormError, SubListStore } from './types';
 import { calcSubTotalCount, getArrBySpliceType, halfSwitchSize, isUnTextWidget } from './utils';
 
 /**
@@ -83,12 +84,12 @@ interface DataFormatOptions {
   recordId?: string | undefined;
   instanceId?: string | undefined;
   workId?: string | undefined;
-  /** 子表控件创建行存储的工厂，由外部注入 */
-  setSubListStore?: ((...args: ControlValue[]) => ControlValue) | undefined;
+  /** 是否在初始化表单时创建子表行存储。 */
+  setSubListStore?: boolean | undefined;
   requestPool?: ReturnType<typeof createRequestPool> | undefined;
   abortController?: AbortController | undefined;
   data?: FormControl[] | undefined;
-  rules?: FormRule[] | undefined;
+  rules?: FormConditionRule[] | undefined;
   /** 构造时就同步初始化 store，而不是等第一次读 */
   forceSync?: boolean | undefined;
   isCreate?: boolean | undefined;

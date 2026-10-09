@@ -143,7 +143,11 @@ export const replaceAdvancedSettingTranslateInfo = (
 };
 
 /** 规则里被翻译的是 ruleItems[0].message（只有 type === 1 的校验规则有） */
-type TranslatableRule = { ruleId?: string; type?: number; ruleItems?: { message?: string }[] };
+type TranslatableRule = {
+  ruleId?: string | undefined;
+  type?: number | undefined;
+  ruleItems?: Array<{ message?: string | undefined }> | undefined;
+};
 
 // 【泛型而不是 any[]】函数原地改 message 再把同一批对象还回去，用 T 能保住调用方的规则类型
 export const replaceRulesTranslateInfo = <T extends TranslatableRule>(

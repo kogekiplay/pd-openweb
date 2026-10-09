@@ -182,7 +182,21 @@ export class WidgetEventHelper {
  * instanceId 表单隔离唯一id
  * tabFocusArr 数组，第一个为当前激活的控件id，第二个为上一次激活的控件id
  */
-export const useFormEventManager = ({ containerRef, stateRef, from, disabledTabs, disabledChildTableCheck, flag }) => {
+export const useFormEventManager = ({
+  containerRef,
+  stateRef,
+  from,
+  disabledTabs,
+  disabledChildTableCheck,
+  flag,
+}: {
+  containerRef: import('react').RefObject<HTMLElement | null>;
+  stateRef: import('react').RefObject<import('../store/types').FormStoreState>;
+  from?: number | undefined;
+  disabledTabs?: boolean | undefined;
+  disabledChildTableCheck?: boolean | undefined;
+  flag?: unknown;
+}) => {
   const [tabFocusArr, setTabFocusArr] = useState([]);
   const tabFocusArrRef = useRef([]);
 
@@ -209,7 +223,13 @@ export const useFormEventManager = ({ containerRef, stateRef, from, disabledTabs
       let loopCount = 0;
 
       while (loopCount < allElementKeys.length) {
-        const id = allElementKeys[nextIndex].split('~')[1];
+        const nextKey = allElementKeys[nextIndex];
+        if (!nextKey) {
+          loopCount++;
+          nextIndex = (nextIndex + 1) % allElementKeys.length;
+          continue;
+        }
+        const id = nextKey.split('~')[1];
         const controlData = _.find(renderData, { controlId: id });
 
         if (supportTabKeyDown(controlData, from, disabledChildTableCheck)) {
@@ -225,7 +245,7 @@ export const useFormEventManager = ({ containerRef, stateRef, from, disabledTabs
             break;
           }
 
-          widgetEventManager.publish(allElementKeys[nextIndex], {
+          widgetEventManager.publish(nextKey, {
             triggerType: 'trigger_tab_enter',
             originalEvent,
           });
@@ -249,7 +269,7 @@ export const useFormEventManager = ({ containerRef, stateRef, from, disabledTabs
       if (window.activeTableId || disabledTabs) return;
 
       if (_.includes(['Enter', 'ArrowRight', 'ArrowLeft'], event.key) && _.get(tabFocusArrRef, 'current.0')) {
-        widgetEventManager.publish(tabFocusArrRef.current[0], {
+        widgetEventManager.publish(tabFocusArrRef.current[0] || '', {
           triggerType: event.key,
           originalEvent: event,
         });

@@ -13,51 +13,61 @@ import { dealCustomEvent } from '../core/customEvent';
 import { checkAllValueAvailable, checkRequired, getRuleErrorInfo } from '../core/formUtils';
 import { mergeFormDataWidthSystem, replaceStr } from '../core/formUtils/helper';
 import { updateRulesData } from '../core/formUtils/updateRulesData';
+import type { FormControl, FormError } from '../core/types';
 import { formatControlValue, getServiceError } from '../core/utils';
+import type {
+  FormDataFormat,
+  FormStoreState,
+  OnChangeEnhance,
+  StoreDispatch,
+  StoreOperation,
+  StoreProps,
+  TriggerEventAction,
+} from './types';
 
-export const updateErrorItemsAction = (dispatch, items) => {
+export const updateErrorItemsAction = (dispatch: StoreDispatch, items: FormError[]) => {
   dispatch({
     type: 'SET_ERROR_ITEMS',
     payload: items,
   });
 };
 
-export const updateUniqueErrorItemsAction = (dispatch, items) => {
+export const updateUniqueErrorItemsAction = (dispatch: StoreDispatch, items: FormError[]) => {
   dispatch({
     type: 'SET_UNIQUE_ERROR_ITEMS',
     payload: items,
   });
 };
 
-export const updateRulesLoadingAction = (dispatch, loading: boolean) => {
+export const updateRulesLoadingAction = (dispatch: StoreDispatch, loading: boolean) => {
   dispatch({
     type: 'SET_RULES_LOADING',
     payload: loading,
   });
 };
 
-export const updateLoadingItemsAction = (dispatch, items) => {
+export const updateLoadingItemsAction = (dispatch: StoreDispatch, items: Record<string, boolean>) => {
   dispatch({
     type: 'SET_LOADING_ITEMS',
     payload: items,
   });
 };
 
-export const updateActiveTabControlIdAction = (dispatch, id) => {
+export const updateActiveTabControlIdAction = (dispatch: StoreDispatch, id?: string) => {
   dispatch({
     type: 'SET_ACTIVE_TAB_CONTROL_ID',
     payload: id,
   });
 };
 
-export const updateConfigLockAction = (dispatch, lock: boolean) => {
+export const updateConfigLockAction = (dispatch: StoreDispatch, lock: boolean) => {
   dispatch({
     type: 'SET_CONFIG_LOCK',
     payload: lock,
   });
 };
 
-export const updateEmSizeNumAction = (dispatch, num) => {
+export const updateEmSizeNumAction = (dispatch: StoreDispatch, num: number | string | undefined) => {
   dispatch({
     type: 'SET_EM_SIZE_NUM',
     payload: num,
@@ -65,7 +75,7 @@ export const updateEmSizeNumAction = (dispatch, num) => {
 };
 
 export const getFilterDataByRuleAction = (
-  dispatch,
+  dispatch: StoreDispatch,
   {
     props,
     dataFormat,
@@ -74,11 +84,19 @@ export const getFilterDataByRuleAction = (
     updateChangeStatus = () => {},
     onChangeEnhance = () => {},
     disabledRuleSet = false,
+  }: {
+    props: StoreProps;
+    dataFormat: FormDataFormat;
+    getState: () => FormStoreState;
+    isInit?: boolean;
+    updateChangeStatus?: (value: boolean) => void;
+    onChangeEnhance?: OnChangeEnhance;
+    disabledRuleSet?: boolean;
   },
 ) => {
   const { ignoreHideControl, recordId, from, systemControlData, verifyAllControls } = props;
   const { rules = [], searchConfig = [], uniqueErrorItems = [] } = getState();
-  let lastRuleSetValueChange;
+  let lastRuleSetValueChange: { cid?: string | undefined; value?: unknown } | undefined;
 
   let tempRenderData = updateRulesData({
     rules,
@@ -94,7 +112,7 @@ export const getFilterDataByRuleAction = (
       dataFormat.setErrorControl(controlId, errorType, errorMessage, rule, isInit);
     },
     verifyAllControls,
-    searchConfig: searchConfig.filter(item => item.eventType === 2),
+    searchConfig: searchConfig.filter(item => item['eventType'] === 2),
     handleChange: (value, cid, item, searchByChange, setComplete) => {
       const valueChanged = item && item.value !== value;
 
@@ -143,15 +161,17 @@ export const getFilterDataByRuleAction = (
     },
   });
 
-  const controlMap = {};
-  const sectionControlsMap = {};
+  const controlMap: Record<string, FormControl> = {};
+  const sectionControlsMap: Record<string, FormControl[]> = {};
 
   tempRenderData.forEach(item => {
     controlMap[item.controlId === undefined ? 'undefined' : item.controlId] = item;
 
     if (item.sectionId) {
       sectionControlsMap[item.sectionId] = sectionControlsMap[item.sectionId] || [];
-      sectionControlsMap[item.sectionId].push(item);
+      const members = sectionControlsMap[item.sectionId] || [];
+      members.push(item);
+      sectionControlsMap[item.sectionId] = members;
     }
   });
 
@@ -180,43 +200,63 @@ export const getFilterDataByRuleAction = (
 /**
  * 获取配置（业务规则 || 查询配置）
  */
-export const getConfigAction = async (dispatch, { props, getRules, getSearchConfig }) => {
+export const getConfigAction = async (
+  dispatch: StoreDispatch,
+  {
+    props,
+    getRules,
+    getSearchConfig,
+  }: { props: StoreProps; getRules?: boolean | undefined; getSearchConfig?: boolean | undefined },
+) => {
   const { appId, worksheetId, onRulesLoad = () => {} } = props;
   let rules;
   let config;
 
-  // 获取字段显示规则
-  if (getRules) {
-    rules = await sheetAjax.getControlRules({ worksheetId, type: 1 });
-    rules = replaceRulesTranslateInfo(appId, worksheetId, rules);
-    onRulesLoad(rules);
-    dispatch({
-      type: 'SET_RULES',
-      payload: rules,
-    });
+  if ((getRules || getSearchConfig) && !worksheetId) {
+    updateConfigLockAction(dispatch, false);
+    updateRulesLoadingAction(dispatch, false);
+    alert(_l('表单配置加载失败，请刷新后重试'), 3);
+    return;
   }
 
-  // 获取查询配置
-  if (getSearchConfig) {
-    config = await sheetAjax.getQueryBySheetId({ worksheetId });
-    dispatch({
-      type: 'SET_SEARCH_CONFIG',
-      payload: formatSearchConfigs(config),
-    });
-  }
+  try {
+    // 获取字段显示规则
+    if (getRules) {
+      rules = await sheetAjax.getControlRules({ worksheetId, type: 1 });
+      rules = replaceRulesTranslateInfo(appId || '', worksheetId || '', rules);
+      onRulesLoad(rules);
+      dispatch({
+        type: 'SET_RULES',
+        payload: rules,
+      });
+    }
 
-  dispatch({
-    type: 'SET_CONFIG_LOCK',
-    payload: true,
-  });
+    // 获取查询配置
+    if (getSearchConfig) {
+      config = await sheetAjax.getQueryBySheetId({ worksheetId });
+      dispatch({
+        type: 'SET_SEARCH_CONFIG',
+        payload: formatSearchConfigs(config),
+      });
+    }
+
+    dispatch({
+      type: 'SET_CONFIG_LOCK',
+      payload: true,
+    });
+  } catch {
+    updateConfigLockAction(dispatch, false);
+    updateRulesLoadingAction(dispatch, false);
+    alert(_l('表单配置加载失败，请刷新后重试'), 3);
+  }
 };
 
 /**
  * 更新error显示状态
  */
 export const updateErrorStateAction = (
-  dispatch,
-  { getState, isShow, controlId }: { controlId?: string; [key: string]: any },
+  dispatch: StoreDispatch,
+  { getState, isShow, controlId }: { getState: () => FormStoreState; isShow: boolean; controlId?: string },
 ) => {
   const { errorItems, uniqueErrorItems } = getState();
 
@@ -284,8 +324,17 @@ export const errorDialog = (errors: string[]) => {
  * 获取提交数据
  */
 export const getSubmitDataAction = (
-  dispatch,
-  { props, getState, options, dataFormat, getSubmitBegin, getControlRefs, getFormContainer, newErrorDialog },
+  dispatch: StoreDispatch,
+  {
+    props,
+    getState,
+    options,
+    dataFormat,
+    getSubmitBegin,
+    getControlRefs,
+    getFormContainer,
+    newErrorDialog,
+  }: StoreOperation,
 ) => {
   const { from, recordId, ignoreHideControl, systemControlData, tabControlProp = {}, worksheetId } = props;
   const { rules, activeTabControlId, errorItems, uniqueErrorItems } = getState();
@@ -335,7 +384,7 @@ export const getSubmitDataAction = (
     .map(c => ({
       controlId: c.controlId,
       // 工作流审批规则可能会在当前表单数据上改写子表字段必填状态，子表 store 里的 control 可能还是旧配置。
-      error: c.store && getSubListErrorOfStore(c.store, c),
+      error: c.store ? getSubListErrorOfStore(c.store, c) : undefined,
     }))
     .filter(c => !isEmpty(c.error));
   const currentErrorItems = _.uniqBy(
@@ -363,8 +412,8 @@ export const getSubmitDataAction = (
     // 分段
     data.forEach(d => {
       if (d.type === 22) {
-        const expandWidgetIds = expandWidgetIdsMap[d.controlId] || [];
-        const { handleExpand } = controlRefs[d.controlId] || {};
+        const expandWidgetIds = expandWidgetIdsMap[d.controlId === undefined ? 'undefined' : d.controlId] || [];
+        const { handleExpand } = controlRefs[d.controlId === undefined ? 'undefined' : d.controlId] || {};
         const visibleErrors = totalErrors.filter(i => _.includes(expandWidgetIds, i.controlId));
 
         if (visibleErrors.length > 0 && _.isFunction(handleExpand)) {
@@ -376,7 +425,10 @@ export const getSubmitDataAction = (
     // 标签页
     // 定位到第一个报错
     const firstErrorItem = _.head(
-      totalErrors.map(t => _.find(data, d => d.controlId === t.controlId)).sort((a, b) => a.row - b.row),
+      totalErrors
+        .map(t => _.find(data, d => d.controlId === t.controlId))
+        .filter((control): control is FormControl => control !== undefined)
+        .sort((a, b) => (a.row ?? NaN) - (b.row ?? NaN)),
     );
 
     if (firstErrorItem && !firstErrorItem.isSubList) {
@@ -395,8 +447,8 @@ export const getSubmitDataAction = (
     const tabErrorControls = data
       .filter(d => _.find(totalErrors, t => t.controlId === d.controlId) && d.sectionId)
       .map(t => _.find(data, d => d.controlId === t.sectionId))
-      .filter(_.identity)
-      .sort((a, b) => a.row - b.row);
+      .filter((control): control is FormControl => control !== undefined)
+      .sort((a, b) => (a.row ?? NaN) - (b.row ?? NaN));
 
     if (!!tabErrorControls.length && !_.find(tabErrorControls, t => t.controlId === activeTabControlId)) {
       const tempId = _.get(tabErrorControls, '0.controlId');
@@ -430,7 +482,7 @@ export const getSubmitDataAction = (
  * 表单提交数据
  */
 export const submitFormDataAction = (
-  dispatch,
+  dispatch: StoreDispatch,
   {
     props,
     getState,
@@ -441,7 +493,7 @@ export const submitFormDataAction = (
     getControlRefs,
     getFormContainer,
     newErrorDialog,
-  },
+  }: StoreOperation & { updateSubmitBegin: (value: boolean) => void },
 ) => {
   if (!dataFormat) return;
 
@@ -463,10 +515,14 @@ export const submitFormDataAction = (
     return;
   }
 
+  if (!onSave) {
+    updateSubmitBegin(false);
+    return;
+  }
   onSave(error, {
     data,
     updateControlIds,
-    isQuickUpdateCheck: options?.isQuickUpdateCheck,
+    isQuickUpdateCheck: options?.['isQuickUpdateCheck'],
     alertLockError: () => {
       const { ruleItems = [] } = _.find(rules, r => r.type === 2) || {};
       const message = _.get(ruleItems, '0.message');
@@ -503,7 +559,7 @@ export const submitFormDataAction = (
         }
       });
       let totalRuleError = getRuleErrorInfo(rules, badData)
-        .reduce((total, its) => {
+        .reduce<FormError[]>((total, its) => {
           return total.concat(its.errorInfo);
         }, [])
         .filter(i => _.find(data, d => d.controlId === i.controlId));
@@ -545,7 +601,7 @@ export const submitFormDataAction = (
  * searchByChange: api查询被动赋值引起的工作表查询，文本类按失焦处理
  */
 export const handleChangeAction = (
-  dispatch,
+  dispatch: StoreDispatch,
   {
     props,
     getState,
@@ -556,6 +612,16 @@ export const handleChangeAction = (
     updateChangeStatus = () => {},
     onChangeEnhance = () => {},
     searchByChange = true,
+  }: {
+    props: StoreProps;
+    getState: () => FormStoreState;
+    dataFormat: FormDataFormat;
+    value: unknown;
+    cid?: string;
+    item: FormControl;
+    updateChangeStatus?: (value: boolean) => void;
+    onChangeEnhance?: OnChangeEnhance;
+    searchByChange?: boolean;
   },
 ) => {
   const { uniqueErrorItems } = getState();
@@ -563,7 +629,8 @@ export const handleChangeAction = (
   let disabledRuleSet = false;
 
   if (item.type === 34) {
-    disabledRuleSet = _.get(value, 'disabledRuleSet');
+    disabledRuleSet =
+      value !== null && typeof value === 'object' && 'disabledRuleSet' in value && value.disabledRuleSet === true;
   }
 
   if (searchByChange) {
@@ -577,7 +644,7 @@ export const handleChangeAction = (
 
   if (item.value !== value || cid !== item.controlId || _.get(value, 'isFormTable')) {
     if (_.get(value, 'isFormTable')) {
-      value = value.value;
+      value = value !== null && typeof value === 'object' && 'value' in value ? value.value : undefined;
     }
 
     dataFormat.updateDataSource({
@@ -619,8 +686,8 @@ export const handleChangeAction = (
  * 自定义事件
  */
 export const triggerCustomEventAction = (
-  dispatch,
-  { params, props, getState, dataFormat, updateRenderData, handleChange },
+  dispatch: StoreDispatch,
+  { params, props, getState, dataFormat, updateRenderData, handleChange }: TriggerEventAction,
 ) => {
   const { systemControlData = [], handleEventPermission = () => {}, from, tabControlProp = {} } = props;
   const { searchConfig = [], renderData = [] } = getState();
@@ -631,11 +698,11 @@ export const triggerCustomEventAction = (
     ..._.pick(props, ['from', 'recordId', 'projectId', 'worksheetId', 'appId', 'isRecordLock']),
     formData: mergeFormDataWidthSystem(dataFormat.getDataSource(), replaceData), // 合并系统字段和最新变更字段值
     renderData,
-    searchConfig: searchConfig.filter(i => i.eventType === 1),
-    checkRuleValidator: (controlId: string, errorType, errorMessage) => {
+    searchConfig: searchConfig.filter(i => i['eventType'] === 1),
+    checkRuleValidator: (controlId: string | undefined, errorType: string, errorMessage: string | undefined) => {
       dataFormat.setErrorControl(controlId, errorType, errorMessage);
     },
-    checkEventComplete: eventLoading => {
+    checkEventComplete: (eventLoading: Record<string, boolean>) => {
       updateLoadingItemsAction(dispatch, { ...eventLoading });
     },
     setErrorItems: () => {},
@@ -643,10 +710,10 @@ export const triggerCustomEventAction = (
       updateRenderData();
       handleEventPermission();
     },
-    handleChange: (value, cid, item, searchByChange) => {
+    handleChange: (value: unknown, cid?: string, item?: FormControl, searchByChange?: boolean) => {
       handleChange(value, cid, item, searchByChange);
     },
-    handleActiveTab: id => {
+    handleActiveTab: (id: string) => {
       const curControl = _.find(renderData, r => r.controlId === id);
 
       if (
@@ -668,9 +735,22 @@ export const triggerCustomEventAction = (
  * 验证唯一值
  */
 export const checkControlUniqueAction = (
-  dispatch,
-  { props, getState, controlId, controlType, controlValue }: { controlId?: string; [key: string]: any },
+  dispatch: StoreDispatch,
+  {
+    props,
+    getState,
+    controlId,
+    controlType,
+    controlValue,
+  }: {
+    props: StoreProps;
+    getState: () => FormStoreState;
+    controlId?: string;
+    controlType?: number | undefined;
+    controlValue: string;
+  },
 ) => {
+  if (controlId === undefined) return;
   const { uniqueErrorItems } = getState();
   const { worksheetId, recordId, checkCellUnique, onError = () => {} } = props;
 
@@ -713,6 +793,11 @@ export const checkControlUniqueAction = (
       }
 
       updateUniqueErrorItemsAction(dispatch, uniqueErrorItems);
+    })
+    .catch(() => {
+      onError();
+    })
+    .finally(() => {
       updateLoadingItemsAction(dispatch, { [controlId]: false });
     });
 };

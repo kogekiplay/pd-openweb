@@ -1,4 +1,5 @@
 import { ajax, getRequest, login } from 'src/utils/sso';
+import { decodeSsoJwt } from 'src/utils/ssoTypes';
 
 const { code } = getRequest();
 
@@ -9,10 +10,14 @@ ajax.post({
     appKey: '9eba86d207a0',
   },
   async: true,
-  succees: data => {
+  decodeData: decodeSsoJwt,
+  success: data => {
     if (data.state) {
-      document.getElementById('jwtInput').value = data.data;
-      document.forms['jwtForm'].submit();
+      const input = document.getElementById('jwtInput');
+      const form = document.forms.namedItem('jwtForm');
+      if (!(input instanceof HTMLInputElement) || !form) throw new Error('Missing Zendesk SSO form');
+      input.value = data.data;
+      form.submit();
     }
   },
   error: login,

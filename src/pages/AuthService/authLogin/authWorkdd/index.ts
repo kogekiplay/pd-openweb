@@ -11,6 +11,7 @@ import {
   getRequest,
   login,
 } from 'src/utils/sso';
+import { decodeSsoAccountResult, decodeSsoProviderInfo } from 'src/utils/ssoTypes';
 
 const { code, state, url, p, pc_slide = '', ...otherParam } = getRequest();
 const isPcSlide = pc_slide.includes('true');
@@ -33,20 +34,23 @@ if (code) {
         state,
       },
       async: true,
+      decodeData: decodeSsoAccountResult,
       success: result => {
         const { accountResult, sessionId } = result.data;
 
         if (accountResult === 1) {
-          getGlobalMeta().then(() => {
-            setPssId(sessionId);
-            const safeUrl = checkOriginUrl(url);
+          getGlobalMeta()
+            .then(() => {
+              setPssId(sessionId);
+              const safeUrl = checkOriginUrl(url);
 
-            if (safeUrl) {
-              location.replace(safeUrl);
-            } else {
-              location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
-            }
-          });
+              if (safeUrl) {
+                location.replace(safeUrl);
+              } else {
+                location.replace(pathCompletion(isMobile ? `/mobile` : `/app`));
+              }
+            })
+            .catch(login);
         } else {
           login();
         }
@@ -80,6 +84,7 @@ if (code) {
         projectId,
       },
       async: true,
+      decodeData: decodeSsoProviderInfo,
       success: result => {
         const { corpId, state, clientWorkingPattern } = result.data;
 

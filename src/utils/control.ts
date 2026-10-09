@@ -29,7 +29,6 @@ import {
   isSheetDisplay,
 } from 'src/utils/controlCommon';
 import type {
-  AiGenEntityRef,
   AiRecommendControl,
   AttachmentValue,
   ControlAdvancedSetting,
@@ -44,6 +43,7 @@ import type {
 import copy from 'src/utils/copyToClipboard';
 import RegExpValidator from 'src/utils/expression';
 import { dateConvertToUserZone, dateServerZoneToAppZone, getTimeZone } from 'src/utils/project';
+import { generatedAttachmentRecords, generatedEntityRecords, generatedRowRecords } from 'src/utils/sseTypes';
 
 export const REQUIRED_SUPPORTED_WIDGET_TYPES = [
   WIDGETS_TO_API_TYPE_ENUM.TEXT, // 2 - 文本
@@ -2105,7 +2105,7 @@ export function convertControlTypeToAiRecommendControlType(control?: FormControl
  * aiGeneratedControls 会被加入到字段列表里，但是别名是不可以重复的
  * 这个函数的目的就是处理 aiGeneratedControls 的 code 属性，当这个 别名在 existingControls 里存在时，自动在 code 后面加上 _1, _2, _3, ...
  */
-export function changeCodeOfAIGenControl(_existingControls: FormControl[], aiGeneratedControls: FormControl[]) {
+export function changeCodeOfAIGenControl<T>(_existingControls: FormControl[], aiGeneratedControls: T[]): T[] {
   return aiGeneratedControls;
   // if (!aiGeneratedControls || !Array.isArray(aiGeneratedControls)) {
   //   return aiGeneratedControls;
@@ -2153,17 +2153,16 @@ export function changeCodeOfAIGenControl(_existingControls: FormControl[], aiGen
   // });
 }
 
-// 返回类型显式标 any：函数在子表分支里递归调用自己，不标就是 TS7023。
-// result 也是 any —— 中途会被换成数组/对象，最后才统一 stringify。
-export function formatAiGenControlValue(control: FormControl, value: any = ''): any {
+// AI values stay unknown until the particular widget reads them; persisted field values are serialized strings.
+export function formatAiGenControlValue(control: FormControl, value: unknown = ''): string | undefined {
   try {
     const { type } = control;
-    let result: any = value;
+    let result: unknown = value;
 
     if (type === WIDGETS_TO_API_TYPE_ENUM.ATTACHMENT) {
       result = isArray(value)
         ? {
-            attachments: value.map(({ ext, name, url }: { ext?: string; name?: string; url?: string }) =>
+            attachments: generatedAttachmentRecords(value).map(({ ext, name, url }) =>
               getTemporaryAttachmentFromUrl({
                 fileUrl: url,
                 fileName: name,
@@ -2180,42 +2179,48 @@ export function formatAiGenControlValue(control: FormControl, value: any = ''): 
       type === WIDGETS_TO_API_TYPE_ENUM.MULTI_SELECT ||
       type === WIDGETS_TO_API_TYPE_ENUM.FLAT_MENU
     ) {
-      const matchedValues = typeof value === 'string' ? value.split(',') : value;
-      const matchedOptions = get(control, 'options', []).filter((option: ControlOption) =>
-        find(matchedValues, (value: string) => option.value === value),
+      const matchedValues = typeof value === 'string' ? value.split(',') : Array.isArray(value) ? value : [];
+      const matchedOptions = (control.options || []).filter((option: ControlOption) =>
+        find(matchedValues, (value: unknown) => option.value === value),
       );
       result = matchedOptions.map((item: ControlOption) => item.key);
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.USER_PICKER) {
       result = isArray(value)
-        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: AiGenEntityRef) => {
-            return {
-              fullname: item.name,
-              accountId: item.id,
-              avatar: item.avatar,
-            };
-          })
+        ? generatedEntityRecords(value)
+            .slice(0, control.enumDefault === 0 ? 1 : undefined)
+            .map(item => {
+              return {
+                fullname: item.name,
+                accountId: item.id,
+                avatar: item.avatar,
+              };
+            })
         : [];
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.ORG_ROLE) {
       result = isArray(value)
-        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: AiGenEntityRef) => {
-            return {
-              organizeName: item.name,
-              organizeId: item.id,
-            };
-          })
+        ? generatedEntityRecords(value)
+            .slice(0, control.enumDefault === 0 ? 1 : undefined)
+            .map(item => {
+              return {
+                organizeName: item.name,
+                organizeId: item.id,
+              };
+            })
         : [];
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT) {
       result = isArray(value)
-        ? value.slice(0, control.enumDefault === 0 ? 1 : undefined).map((item: AiGenEntityRef) => {
-            return {
-              departmentName: item.name,
-              departmentId: item.id,
-            };
-          })
+        ? generatedEntityRecords(value)
+            .slice(0, control.enumDefault === 0 ? 1 : undefined)
+            .map(item => {
+              return {
+                departmentName: item.name,
+                departmentId: item.id,
+              };
+            })
         : [];
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET || type === WIDGETS_TO_API_TYPE_ENUM.CASCADER) {
       result = isArray(value)
-        ? value.map((item: AiGenEntityRef) => {
+        ? generatedEntityRecords(value).map(item => {
             return {
               name: item.name,
               sid: item.id || item.sid,
@@ -2223,12 +2228,10 @@ export function formatAiGenControlValue(control: FormControl, value: any = ''): 
           })
         : [];
     } else if (type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) {
-      result = (value || []).map((row: RecordRow) => {
-        const newRow: RecordRow = {};
+      result = generatedRowRecords(value || []).map(row => {
+        const newRow: Record<string, unknown> = {};
         Object.keys(row).forEach(controlId => {
-          const matchedControl = get(control, 'relationControls', []).find(
-            (c: FormControl) => c.controlId === controlId,
-          );
+          const matchedControl = (control.relationControls || []).find((c: FormControl) => c.controlId === controlId);
 
           if (matchedControl) {
             newRow[controlId] = formatAiGenControlValue(matchedControl, row[controlId]);
@@ -2245,7 +2248,7 @@ export function formatAiGenControlValue(control: FormControl, value: any = ''): 
     return typeof result === 'string' ? result : JSON.stringify(result);
   } catch (err) {
     console.error(err);
-    return;
+    return undefined;
   }
 }
 

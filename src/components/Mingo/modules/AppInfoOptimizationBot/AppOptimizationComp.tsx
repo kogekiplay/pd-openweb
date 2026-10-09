@@ -1,14 +1,16 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { AILoading, BgIconButton, Button, Checkbox, Switch } from 'ming-ui';
 import { updateSheetListAppItem } from 'src/pages/worksheet/redux/actions/sheetList';
 import type { AppDispatch } from 'src/redux/configureStore';
 import { emitter } from 'src/utils/common';
 import { parseStreamingJsonlData } from 'src/utils/sse';
+import { appOptimizationValue } from 'src/utils/sseTypes';
+import type { AppOptimizationValue } from 'src/utils/sseTypes';
 import { buildSheetListUpdates, saveOptimizationResult } from './saveOptimizationResult';
 import WorksheetItemTree from './WorksheetItemTree';
 
@@ -417,9 +419,12 @@ function AppInfoOptimizationPopup({ appInfo, optimizedMap, config, isStreaming, 
 function AppOptimizationComp(props, ref) {
   const { appInfo, config, isStreaming, isLoading, content, editable = true } = props;
   const [detailVisible, setDetailVisible] = useState(true);
-  const parsedData = useMemo(() => parseStreamingJsonlData(content, isStreaming), [content, isStreaming]);
+  const parsedData = useMemo(
+    () => parseStreamingJsonlData(content, isStreaming, appOptimizationValue),
+    [content, isStreaming],
+  );
   const optimizedMap = useMemo(() => {
-    const map = {};
+    const map: Record<string, Pick<AppOptimizationValue, 'name' | 'icon' | 'reason'>> = {};
 
     if (!Array.isArray(parsedData)) {
       return map;

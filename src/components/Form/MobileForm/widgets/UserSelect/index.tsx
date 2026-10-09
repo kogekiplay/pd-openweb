@@ -71,7 +71,7 @@ function UserSelect(props) {
   const {
     state: { emSizeNum },
   } = useFormStore();
-  const userHeadSize = emSizeNum * 1.5 + 6;
+  const userHeadSize = Number(emSizeNum) * 1.5 + 6;
   const selectUsers = useMemo(() => getUserValue(value), [value]);
   const [showSelectUser, setShowSelectUser] = useState(false);
   const [personalInfoVisible, setPersonalInfoVisible] = useState(false);

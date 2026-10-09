@@ -16,6 +16,7 @@ import { emitter, htmlEncodeReg } from 'src/utils/common';
 import { changeCodeOfAIGenControl, convertAiRecommendControlToControlData } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 import { parseStreamingJsonlData } from 'src/utils/sse';
+import { generatedWidget } from 'src/utils/sseTypes';
 
 const Con = styled.div`
   border-radius: 8px;
@@ -465,7 +466,7 @@ export default function MingoGeneratedWidgetsSelector({
   const tabs = useMemo(() => allWidgets.filter(item => item.group === 'tab'), [allWidgets]);
   useEffect(() => {
     if (!content) return;
-    let data = parseStreamingJsonlData(content, isStreaming);
+    let data = parseStreamingJsonlData(content, isStreaming, generatedWidget);
     const streamEnd = !!content && !isStreaming;
 
     if (streamEnd) {

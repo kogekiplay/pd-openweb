@@ -1,5 +1,6 @@
-import type { ReduxAction } from 'src/redux/types';
-export const initialState = {
+import type { FormStoreState, StoreAction } from './types';
+
+export const initialState: FormStoreState = {
   renderData: [],
   errorItems: [],
   uniqueErrorItems: [],
@@ -15,7 +16,8 @@ export const initialState = {
   emSizeNum: 16,
 };
 
-export const reducer = (state, action: ReduxAction) => {
+export const reducer = (state: FormStoreState, action: StoreAction): FormStoreState => {
+  const actionType: string = action.type;
   switch (action.type) {
     case 'SET_RENDER_DATA':
       return state.renderData === action.payload ? state : { ...state, renderData: action.payload };
@@ -40,6 +42,6 @@ export const reducer = (state, action: ReduxAction) => {
     case 'SET_EM_SIZE_NUM':
       return { ...state, emSizeNum: action.payload };
     default:
-      throw new Error(`Unhandled action type: ${action.type}`);
+      throw new Error(`Unhandled action type: ${actionType}`);
   }
 };

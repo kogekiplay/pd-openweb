@@ -21,7 +21,7 @@ import { loginCallback, ssoLogin } from './util';
 
 export default function Login() {
   const request = getRequest();
-  const [state, setState] = useSetState({
+  const initialState = {
     modeType: 1, // 1:手机号邮箱 2:用户名登录 其他:不使用账户登录方式
     verifyType: request.loginModeType === 'verify' ? 'verifyCode' : 'password', //验证方式 'passWord' 密码 'verifyCode' 验证码
     step: '', //verifyCode 验证码 默认账户
@@ -59,7 +59,14 @@ export default function Login() {
     state: request.state || '',
     firstSendVerifyCode: false,
     appscheme: request.appscheme || '', //兼容移动端的登录参数
-  });
+  };
+  type LoginState = Omit<typeof initialState, 'projectId' | 'title' | 'logo' | 'isDefaultLogo'> & {
+    projectId: string | undefined;
+    title: string | undefined;
+    logo: string | undefined;
+    isDefaultLogo: boolean | undefined;
+  };
+  const [state, setState] = useSetState<LoginState>(initialState);
 
   useEffect(() => {
     onInit();
@@ -68,6 +75,7 @@ export default function Login() {
   const onInit = () => {
     const request = getRequest();
     const accountWebUrl = _.get(window, 'md.global.Config.AccountUrl');
+    const integrationProjectId = request.projectId || request.projectid;
 
     if (_.get(window, 'md.global.SysSettings.initialized') === false && accountWebUrl) {
       location.href = `${accountWebUrl}createPlatformAdmin`;
@@ -79,12 +87,12 @@ export default function Login() {
       request.appscheme && //只有移动端app会带appscheme参数
       (request.projectIntergrationType || request.projectintergrationtype) + '' ===
         IntegrationAccountType.microsoftEntra + '' &&
-      (request.projectId || request.projectid)
+      integrationProjectId
     ) {
       setState({
         step: 'integrationLogin',
         integrationAccountType: IntegrationAccountType.microsoftEntra,
-        projectId: request.projectId || request.projectid,
+        projectId: integrationProjectId,
         loading: false,
         appscheme: request.appscheme,
       });
@@ -227,7 +235,7 @@ export default function Login() {
 
   return (
     <WrapCom>
-      <DocumentTitle title={state.title} />
+      <DocumentTitle {...(state.title === undefined ? {} : { title: state.title })} />
       <WrapBg homeImage={state.homeImage} />
       <div className="loginBox">
         <div className="loginContainer">

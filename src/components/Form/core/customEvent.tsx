@@ -18,6 +18,8 @@ import { isSheetDisplay } from 'src/utils/controlCommon';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { getRelateRecordRowIds } from 'src/utils/domain/control/value';
 import { FORM_ERROR_TYPE } from './config.js';
+import { decodeCustomEventEntries } from './customEventTypes';
+import type { CustomEventProps } from './customEventTypes';
 import {
   calcDefaultValueFunction,
   checkValueAvailable,
@@ -879,9 +881,10 @@ const triggerCustomActions = async props => {
  * 执行自定义事件
  * triggerType: 当前触发执行的事件类型
  */
-export const dealCustomEvent = props => {
+export const dealCustomEvent = (props: CustomEventProps): void => {
   const { triggerType, renderData = [], checkEventComplete, isRecordLock } = props;
-  const customEvent = safeParse(_.get(props, 'advancedSetting.custom_event'), 'array');
+  const rawEvents: unknown = safeParse(props.advancedSetting?.['custom_event'], 'array');
+  const customEvent = decodeCustomEventEntries(rawEvents);
 
   // 以下情况不生效
   if (
@@ -909,10 +912,11 @@ export const dealCustomEvent = props => {
 
   customEvent.forEach(async item => {
     const { eventType, eventActions = [], eventId } = item;
+    const loadingKey = eventId === undefined ? 'undefined' : eventId;
 
     if (eventType === triggerType) {
       // 失焦事件才检查事件是否完成，事件开始执行
-      isBlurEvent && checkEventComplete({ [eventId]: true });
+      isBlurEvent && checkEventComplete({ [loadingKey]: true });
 
       for (const e of eventActions) {
         const { filters = [], actions = [] } = e;
@@ -925,7 +929,7 @@ export const dealCustomEvent = props => {
           // 执行完成
           if (completeActionsCount === actions.length && isBlurEvent) {
             const eventTimer = setTimeout(() => {
-              checkEventComplete({ [eventId]: false });
+              checkEventComplete({ [loadingKey]: false });
               clearTimeout(eventTimer);
             }, 0);
           }
@@ -935,7 +939,7 @@ export const dealCustomEvent = props => {
       }
 
       // 没有事件执行
-      isBlurEvent && checkEventComplete({ [eventId]: false });
+      isBlurEvent && checkEventComplete({ [loadingKey]: false });
     }
   });
 };
