@@ -151,12 +151,16 @@ export const controlName = {
   10010: _l('备注'),
 };
 
-const enumType = obj => {
-  const res = {};
+type BidirectionalEnum<T extends Record<string, string>> = T & {
+  [Name in T[keyof T]]: string;
+};
+
+const enumType = function <const T extends Record<string, string>>(obj: T): BidirectionalEnum<T> {
+  const res: Record<string, string> = {};
   _.keys(obj).forEach(key => {
-    res[(res[key] = obj[key])] = key;
+    res[(res[key] = obj[key as keyof T]!)] = key;
   });
-  return res;
+  return res as BidirectionalEnum<T>;
 };
 
 export const VIEW_DISPLAY_TYPE = enumType({

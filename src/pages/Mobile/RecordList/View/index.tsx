@@ -157,7 +157,15 @@ class View extends Component<any, any> {
     }
   };
 
-  checkWorksheetRowsBtn = ({ worksheetId, rowIds, btnIds, updateButtonsCheckStatus = () => {} }: { worksheetId?: string; [key: string]: any }) => {
+  checkWorksheetRowsBtn = ({
+    worksheetId,
+    rowIds,
+    btnIds,
+    updateButtonsCheckStatus = () => {},
+  }: {
+    worksheetId?: string;
+    [key: string]: any;
+  }) => {
     const requestKey = [worksheetId, rowIds.join(','), btnIds.join(',')].join('|');
     this.buttonsCheckRequestKey = requestKey;
 
@@ -299,7 +307,7 @@ class View extends Component<any, any> {
       buttonsCheckStatus,
       appDetail: appDetail.detail,
     };
-    const ViewComponent = <Component ref={this.viewComRef} {...viewProps} />;
+    const ViewComponent = Component ? <Component ref={this.viewComRef} {...viewProps} /> : null;
 
     if (
       hasGroupFilter &&

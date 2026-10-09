@@ -1,34 +1,37 @@
 import { find } from 'lodash';
 import _ from 'lodash';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
-import type { WorksheetView } from 'src/pages/worksheet/types';
+import type { WorksheetBase, WorksheetView } from 'src/pages/worksheet/types';
 import type { FormControl } from 'src/utils/controlTypes';
 import type { HierarchyChild, HierarchyNode } from '../reducers/hierarchyTypes';
 
-export const dealData = data => {
-  const res = {};
+export const dealData = <T extends { rowid: string }>(data: T[]): Record<string, T> => {
+  const res: Record<string, T> = {};
   data.forEach(item => {
     res[item.rowid] = item;
   });
   return res;
 };
 
-export const getParaIds = worksheet => {
+export const getParaIds = (worksheet: { base: WorksheetBase }) => {
   const { appId, worksheetId, viewId } = _.get(worksheet, 'base');
   return { appId, worksheetId, viewId };
 };
 
-export const getCurrentView = sheet => {
+export const getCurrentView = (sheet: { base: WorksheetBase; views: WorksheetView[] }): WorksheetView => {
   const { base, views } = sheet;
   return find(views, item => item.viewId === base.viewId) || {};
 };
 
-export const getHierarchyViewIds = (worksheet, path = []) => {
+export const getHierarchyViewIds = (
+  worksheet: { base: WorksheetBase; views: WorksheetView[] },
+  path: number[] = [],
+) => {
   const { appId, worksheetId, viewId } = _.get(worksheet, 'base');
   const { childType, viewControls } = getCurrentView(worksheet);
 
   if (childType === 2 && path.length > 0) {
-    const currentSheet = viewControls[path.length - 1];
+    const currentSheet = viewControls![path.length - 1]!;
     return { appId, worksheetId: currentSheet.worksheetId };
   }
 
@@ -36,13 +39,13 @@ export const getHierarchyViewIds = (worksheet, path = []) => {
 };
 
 //当前角色是否具有管理员权限
-export const isHaveCharge = (type, isLock?) => {
+export const isHaveCharge = (type?: number | string | null, isLock?: boolean) => {
   const { isAdmin, isOwner } = getUserRole(type, isLock);
   return !!isAdmin || !!isOwner;
 };
 
 //获取当前用户对应角色
-export const getUserRole = (type, isLock?) => {
+export const getUserRole = (type?: number | string | null, isLock?: boolean) => {
   // 这条记录对当前用户开放哪些身份能力；isLock 为真时一律关掉
   let data: { isOwner?: boolean; isAdmin?: boolean; isDeveloper?: boolean; isRunner?: boolean } = {};
 
@@ -76,27 +79,27 @@ export const getUserRole = (type, isLock?) => {
 };
 
 //可以编辑应用、拥有应用搭建权限(管理员，拥有者，开发者)
-export const canEditApp = (type, isLock?) => {
+export const canEditApp = (type?: number | string | null, isLock?: boolean) => {
   const { isAdmin, isOwner, isDeveloper } = getUserRole(type, isLock);
   return !!isAdmin || !!isOwner || !!isDeveloper;
 };
 
 //可以管理应用下所有数据权限(管理员，拥有者，运营者)
-export const canEditData = type => {
+export const canEditData = (type?: number | string | null) => {
   const { isAdmin, isOwner, isRunner } = getUserRole(type);
   return !!isAdmin || !!isOwner || !!isRunner;
 };
 
-export function wrapAjax(func) {
-  const cache = {};
+export function wrapAjax<A extends unknown[], R extends { abort: () => void }>(func: (...args: A) => R) {
+  const cache: Record<string, R | undefined> = {};
 
-  return (...args) => {
+  return (...args: A): R => {
     if (cache[func.name]) {
-      cache[func.name].abort();
+      cache[func.name]!.abort();
     }
 
     cache[func.name] = func(...args);
-    return cache[func.name];
+    return cache[func.name]!;
   };
 }
 
@@ -122,16 +125,55 @@ export function getItemByRowId(
   return undefined;
 }
 
-export function sortDataByCustomItems(
-  data,
+type CustomSortId = string | number;
+function isCustomSortId(value: unknown): value is CustomSortId | undefined {
+  return value === undefined || typeof value === 'string' || typeof value === 'number';
+}
+function isOptionalString(value: unknown): value is string | undefined {
+  return value === undefined || typeof value === 'string';
+}
+function decodeCustomSortItems(serialized: string | undefined): CustomSortId[] {
+  const parsed: unknown = safeParse(serialized, 'array');
+  if (!Array.isArray(parsed) || !parsed.every(item => typeof item === 'string' || typeof item === 'number')) {
+    throw new TypeError('Invalid worksheet custom sort items');
+  }
+  return parsed;
+}
+function decodeStructuredSortId(serialized: CustomSortId): CustomSortId | undefined {
+  const parsed: unknown = safeParse(serialized);
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed))
+    throw new TypeError('Invalid worksheet custom sort entity');
+  const id = 'id' in parsed ? parsed.id : undefined;
+  const accountId = 'accountId' in parsed ? parsed.accountId : undefined;
+  if (!isCustomSortId(id)) throw new TypeError('Invalid worksheet custom sort id');
+  if (!isCustomSortId(accountId)) throw new TypeError('Invalid worksheet custom sort account id');
+  return id || accountId;
+}
+
+function decodeGroupControlId(serialized: string | undefined): string | undefined {
+  const parsed: unknown = safeParse(serialized, 'array');
+  const first: unknown = Array.isArray(parsed) ? parsed[0] : undefined;
+  if (!first || typeof first !== 'object' || Array.isArray(first))
+    throw new TypeError('Invalid worksheet group settings');
+  const id = 'controlId' in first ? first.controlId : undefined;
+  if (!isOptionalString(id)) throw new TypeError('Invalid worksheet group control id');
+  return id;
+}
+
+export interface SortableGroup {
+  key?: string | number | undefined;
+  sort?: number | undefined;
+}
+export function sortDataByCustomItems<T extends object>(
+  data: T[],
   view: WorksheetView = {},
   controls: FormControl[] = [],
   firstNotSpecified = true,
 ) {
-  let customItems = safeParse(_.get(view, 'advancedSetting.customitems'), 'array');
+  let customItems = decodeCustomSortItems(_.get(view, 'advancedSetting.customitems'));
 
   if (_.get(view, 'advancedSetting.navshow') === '2') {
-    customItems = safeParse(_.get(view, 'advancedSetting.navfilters'), 'array');
+    customItems = decodeCustomSortItems(_.get(view, 'advancedSetting.navfilters'));
   }
 
   const viewControls = _.find(controls, c => c.controlId === view.viewControl);
@@ -143,17 +185,18 @@ export function sortDataByCustomItems(
       if (_.includes([9, 10, 11, 28], type)) {
         return i;
       } else {
-        const itemVal = safeParse(i);
-        return itemVal.id || itemVal.accountId;
+        return decodeStructuredSortId(i);
       }
     });
-    const keyByOrder = new Map(sortIds.map((t, i) => [t, i]));
+    const keyByOrder = new Map<string | number | undefined, number>(sortIds.map((t, i) => [t, i]));
     const sortOriginData = _.sortBy(data, 'sort');
-    let sortData = _.sortBy(sortOriginData, o => (o.key === '-1' ? -999 : keyByOrder.get(o.key)));
+    let sortData = _.sortBy(sortOriginData, o =>
+      (o as SortableGroup).key === '-1' ? -999 : keyByOrder.get((o as SortableGroup).key),
+    );
 
     // 未指定固定第一项
     if (!firstNotSpecified) {
-      const [specialItems, regularItems] = _.partition(sortData, item => item.key === '-1');
+      const [specialItems, regularItems] = _.partition(sortData, item => (item as SortableGroup).key === '-1');
 
       if (specialItems.length > 0) {
         sortData = [...regularItems, ...specialItems];
@@ -167,12 +210,16 @@ export function sortDataByCustomItems(
 }
 
 //根据视图下的分组配置，处理视图呈现数据的顺序，以及是否呈现未分组数据
-export function sortDataByGroupItems(list = [], currentView: WorksheetView = {}, controls: FormControl[] = []) {
+export function sortDataByGroupItems<T extends SortableGroup>(
+  list: T[] = [],
+  currentView: WorksheetView = {},
+  controls: FormControl[] = [],
+) {
   const sortedData = sortDataByCustomItems(
     list.sort((a, b) => {
       if (a.sort === -1) return 1;
       if (b.sort === -1) return -1;
-      return a.sort - b.sort;
+      return a.sort! - b.sort!;
     }),
     {
       ...currentView,
@@ -182,7 +229,7 @@ export function sortDataByGroupItems(list = [], currentView: WorksheetView = {},
         navfilters: _.get(currentView, 'advancedSetting.groupfilters'),
         navshow: _.get(currentView, 'advancedSetting.groupshow'),
       },
-      viewControl: safeParse(_.get(currentView, 'advancedSetting.groupsetting'), 'array')[0].controlId,
+      viewControl: decodeGroupControlId(_.get(currentView, 'advancedSetting.groupsetting')),
     },
     controls,
     false,

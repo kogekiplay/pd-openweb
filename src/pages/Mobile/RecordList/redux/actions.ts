@@ -4,6 +4,7 @@ import homeAppAjax from 'src/api/homeApp';
 import sheetAjax from 'src/api/worksheet';
 import { VIEW_DISPLAY_TYPE } from 'worksheet/constants/enum';
 import { sortDataByCustomItems } from 'worksheet/redux/actions/util';
+import { readBoardGroups } from 'worksheet/redux/reducers/boardViewApi';
 import { getBoardItemKey } from 'worksheet/redux/util';
 import {
   getCalendartypeData,
@@ -17,9 +18,11 @@ import { formatForSave } from 'src/pages/worksheet/common/WorkSheetFilter/model'
 import { formatOriginFilterGroupValue } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { fireWhenViewLoaded as PcFireWhenViewLoaded, refreshSheet } from 'src/pages/worksheet/redux/actions/index.js';
 import { canEditApp, sortDataByGroupItems } from 'src/pages/worksheet/redux/actions/util';
+import type { AppDispatch, GetState, RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { getFilledRequestParams, getRequest } from 'src/utils/common';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { formatQuickFilter, needHideViewFilters } from 'src/utils/filter';
 import { addBehaviorLog, compatibleMDJS, dateConvertToUserZone } from 'src/utils/project';
 import {
@@ -34,8 +37,6 @@ import {
   getSheetOperatesButtons,
 } from 'src/utils/worksheet';
 import { getFlatSheetRows } from '../util';
-import type { AppDispatch, GetState } from 'src/redux/types';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const dealBoardViewRecordCount = data => {
   if (!data || !_.isArray(data)) return {};
@@ -342,7 +343,10 @@ export const loadSavedFilters = (worksheetId: string) => (dispatch: AppDispatch)
   });
 };
 
-const promiseRequests: Record<string, ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined> = {};
+const promiseRequests: Record<
+  string,
+  ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined
+> = {};
 
 export const fetchSheetRows =
   (param: Record<string, any> = {}) =>
@@ -529,7 +533,7 @@ export const fetchSheetRows =
         });
         // 看板逻辑
         if (isKanban) {
-          const formatData = sortDataByCustomItems(sheetRowsAndTem.data, view, template.controls);
+          const formatData = sortDataByCustomItems(readBoardGroups(newData), view, template.controls);
           dispatch(changeBoardViewData(formatData));
           dispatch(initBoardViewRecordCount(dealBoardViewRecordCount(formatData)));
           dispatch(
@@ -1028,7 +1032,10 @@ export const initBoardViewData = () => {
   };
 };
 
-export const getSingleBoardGroup = ({ pageIndex = 1, kanbanKey } = {}, callback) => {
+export const getSingleBoardGroup = (
+  { pageIndex = 1, kanbanKey }: { pageIndex?: number | undefined; kanbanKey?: string | undefined } = {},
+  callback?: () => void,
+) => {
   return dispatch => {
     dispatch(
       loadBoardViewGroupItemData(
@@ -1165,7 +1172,7 @@ export const getCalendarData = () => {
 
 export const updateFormatData = listData => {
   return (dispatch: AppDispatch, getState: GetState) => {
-    const { calendarView = {}, base, worksheetInfo } = getState().mobile;
+    const { calendarView, base, worksheetInfo } = getState().mobile;
     const { viewId = '' } = base;
     const { views, template } = worksheetInfo;
     const controls = (template && template.controls) || [];
@@ -1187,7 +1194,7 @@ export const updateFormatData = listData => {
   };
 };
 
-const getCalendarEventListPara = (sheet = {}) => {
+const getCalendarEventListPara = (sheet: Pick<RootState['mobile'], 'base'>) => {
   const { base } = sheet;
   const { appId, worksheetId, viewId } = base;
   const { chartId } = getRequest();
@@ -1322,7 +1329,10 @@ export const updateCalendarNotScheduled = (rowid: string, rowData = {}) => {
   };
 };
 
-export function loadCustomButtons({ appId, worksheetId }: { appId?: string; worksheetId?: string; [key: string]: any }, cb = () => {}) {
+export function loadCustomButtons(
+  { appId, worksheetId }: { appId?: string; worksheetId?: string; [key: string]: any },
+  cb = () => {},
+) {
   return dispatch => {
     if (!worksheetId || _.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage')) {
       return;
@@ -1397,7 +1407,16 @@ export function addMobileNewRecord({ view }) {
   };
 }
 
-export function updateButtonsCheckStatus(buttonsCheckStatus, { rowIds = [], btnIds = [] } = {}) {
+export function updateButtonsCheckStatus(
+  buttonsCheckStatus,
+  {
+    rowIds = [],
+    btnIds = [],
+  }: {
+    rowIds?: Array<string | undefined>;
+    btnIds?: Array<string | undefined>;
+  } = {},
+) {
   return dispatch => {
     dispatch({ type: 'MOBILE_UPDATE_BUTTONS_CHECK_STATUS', buttonsCheckStatus, rowIds, btnIds });
   };

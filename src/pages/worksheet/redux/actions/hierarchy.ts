@@ -1,45 +1,152 @@
 import update from 'immutability-helper';
 import _, { get, isEmpty, isFunction } from 'lodash';
 import sheetAjax from 'src/api/worksheet';
-import type { WorksheetRowsRequest } from 'src/pages/worksheet/types';
-import type { AppDispatch, GetState } from 'src/redux/types';
+import type { WorksheetFilters, WorksheetRowsRequest, WorksheetView } from 'src/pages/worksheet/types';
+import type { AppDispatch, GetState, RootState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
 import { formatQuickFilter } from 'src/utils/filter';
 import type {
   AddHierarchyChildPayload,
+  HierarchyCellValue,
   HierarchyControlsAction,
   HierarchyControlsPayload,
+  HierarchyDataItem,
+  HierarchyDataMap,
   HierarchyMovePayload,
   HierarchyNode,
+  HierarchyPath,
   HierarchyRecord,
   HierarchyStateAction,
   HierarchyTextTitle,
+  HierarchyViewData,
 } from '../reducers/hierarchyTypes';
-import { getCurrentView } from '../util';
 import { updateNavGroup } from './navFilter.js';
+import { getCurrentView } from './util';
 import { dealData, getHierarchyViewIds, getItemByRowId, getParaIds } from './util';
 
 const MULTI_RELATE_MAX_PAGE_SIZE = 500;
 let hierarchyPromiseObj: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined;
-let hierarchyPromiseViewIds = [];
+let hierarchyPromiseViewIds: Array<string | undefined> = [];
 
-const getTotalDataIds = (hierarchyViewData = {}, total = 0) => {
-  let totalIds = [];
-  Object.values(hierarchyViewData).forEach(item => {
-    if (item) {
-      totalIds.push(item.rowid);
-    }
+// GetFilterRows is a generic JSON endpoint. Validate the fields the hierarchy algorithms consume
+// before its untyped cell dictionary becomes hierarchy state; malformed successful responses throw.
+function isCellValue(value: unknown): value is HierarchyCellValue {
+  return (
+    value === null ||
+    value === undefined ||
+    typeof value === 'string' ||
+    typeof value === 'boolean' ||
+    typeof value === 'number' ||
+    (Array.isArray(value)
+      ? value.every(isCellValue)
+      : typeof value === 'object' && Object.values(value).every(isCellValue))
+  );
+}
+function decodeHierarchyLevel(serialized: string | null): number | string | undefined {
+  const parsed: unknown = safeParse(serialized);
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed))
+    throw new TypeError('Invalid hierarchy view configuration');
+  const level = 'level' in parsed ? parsed.level : undefined;
+  if (isHierarchyLevel(level)) return level;
+  throw new TypeError('Invalid hierarchy expansion level');
+}
+function isHierarchyLevel(value: unknown): value is number | string | undefined {
+  return value === undefined || typeof value === 'number' || typeof value === 'string';
+}
+function decodeOperationSuccess(value: unknown): boolean {
+  if (!value || typeof value !== 'object' || Array.isArray(value))
+    throw new TypeError('Invalid hierarchy operation result');
+  const success = 'isSuccess' in value ? value.isSuccess : undefined;
+  if (success === undefined) return false;
+  if (typeof success !== 'boolean') throw new TypeError('Invalid hierarchy operation success state');
+  return success;
+}
+function isRelationControl(control: unknown): control is FormControl {
+  if (!control || typeof control !== 'object' || Array.isArray(control)) return false;
+  return (
+    (!('controlId' in control) || control.controlId === undefined || typeof control.controlId === 'string') &&
+    (!('viewId' in control) || control.viewId === undefined || typeof control.viewId === 'string') &&
+    (!('type' in control) || control.type === undefined || typeof control.type === 'number') &&
+    isCellValue(control)
+  );
+}
+function decodeRelationControls(data: unknown): FormControl[][] {
+  if (!Array.isArray(data)) throw new TypeError('Invalid hierarchy worksheet controls');
+  return data.map(template => {
+    if (!template || typeof template !== 'object' || Array.isArray(template))
+      throw new TypeError('Invalid hierarchy worksheet template');
+    const controls: unknown = 'controls' in template ? template.controls : undefined;
+    if (controls === undefined) throw new TypeError('Hierarchy control fields are missing');
+    if (!Array.isArray(controls) || !controls.every(isRelationControl))
+      throw new TypeError('Invalid hierarchy control fields');
+    return controls;
+  });
+}
+function isHierarchyRecord(value: unknown): value is HierarchyRecord {
+  if (
+    !value ||
+    typeof value !== 'object' ||
+    Array.isArray(value) ||
+    !('rowid' in value) ||
+    typeof value.rowid !== 'string'
+  )
+    return false;
+  if ('allowDelete' in value && value.allowDelete !== undefined && typeof value.allowDelete !== 'boolean') return false;
+  if ('pid' in value && value.pid !== undefined && typeof value.pid !== 'string') return false;
+  if (
+    'childrenids' in value &&
+    value.childrenids !== undefined &&
+    typeof value.childrenids !== 'string' &&
+    !(Array.isArray(value.childrenids) && value.childrenids.every(id => typeof id === 'string'))
+  )
+    return false;
+  if (
+    'controls' in value &&
+    value.controls !== undefined &&
+    !(Array.isArray(value.controls) && value.controls.every(isRelationControl))
+  )
+    return false;
+  return Object.values(value).every(isCellValue);
+}
+function decodeHierarchyRows(data: unknown): HierarchyRecord[] {
+  if (!Array.isArray(data) || !data.every(isHierarchyRecord)) throw new TypeError('Invalid hierarchy worksheet rows');
+  return data;
+}
 
-    if (get(item, 'childrenids.length') > 0) {
-      totalIds.concat(getTotalDataIds(item.childrenids, total));
+function isSavedRecord(row: HierarchyDataItem): row is HierarchyRecord {
+  return typeof row.rowid === 'string';
+}
+function getSavedHierarchyMap(data: HierarchyViewData): HierarchyDataMap {
+  if (Array.isArray(data)) throw new TypeError('Hierarchy data has not been initialized');
+  return data;
+}
+function getSavedHierarchyRecord(data: HierarchyViewData, rowId: string): HierarchyRecord {
+  const row = getSavedHierarchyMap(data)[rowId];
+  if (!row || !isSavedRecord(row)) throw new TypeError('Hierarchy record is missing');
+  return row;
+}
+type RawTotalItem = HierarchyRecord | (string & { rowid?: never; childrenids?: never });
+const getTotalDataIds = (
+  hierarchyViewData: HierarchyRecord[] | Record<string, RawTotalItem> | string | string[] = {},
+  total = 0,
+): Array<string | undefined> => {
+  let totalIds: Array<string | undefined> = [];
+  Object.values(hierarchyViewData).forEach((item: RawTotalItem) => {
+    if (item) totalIds.push(item.rowid);
+    if ((get(item, 'childrenids.length') || 0) > 0) {
+      // Preserve the existing counter's discarded recursion result; changing its paging policy is separate.
+      totalIds.concat(getTotalDataIds(item.childrenids!, total));
     }
   });
   return _.uniq(totalIds);
 };
 
 // 展开多级数据
-export function expandedMultiLevelHierarchyData(args, changeFilters?) {
+export function expandedMultiLevelHierarchyData(
+  args: Omit<WorksheetRowsRequest, 'layer'> & { layer: number | string },
+  changeFilters?: boolean,
+) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { quickFilter, navGroupFilters } = sheet;
@@ -71,7 +178,8 @@ export function expandedMultiLevelHierarchyData(args, changeFilters?) {
       }),
     );
 
-    hierarchyPromiseObj.then(({ data, count, resultCode }) => {
+    hierarchyPromiseObj.then(({ data: rawData, count, resultCode }) => {
+      const data = resultCode === 1 ? decodeHierarchyRows(rawData) : [];
       hierarchyPromiseViewIds = hierarchyPromiseViewIds.filter(o => o !== params.viewId);
       if (resultCode === 1) {
         const treeData = dealData(data);
@@ -110,11 +218,20 @@ export function expandedMultiLevelHierarchyData(args, changeFilters?) {
   };
 }
 
-function genKanbanKeyByData(data) {
+function genKanbanKeyByData(data: HierarchyRecord[]) {
   return data.map(item => item.rowid).join(',');
 }
 
 // 递归获取多级关联的层级视图数据
+interface HierarchyRecursionParams {
+  dispatch: AppDispatch;
+  getState: GetState;
+  viewControls: NonNullable<WorksheetView['viewControls']>;
+  level: number | string;
+  filters: WorksheetFilters;
+  viewId?: string | undefined;
+  worksheetId?: string | undefined;
+}
 function getHierarchyDataRecursion({
   worksheet,
   records,
@@ -122,15 +239,18 @@ function getHierarchyDataRecursion({
   index,
   para,
 }: {
-  index?: number;
-  [key: string]: any;
+  worksheet: RootState['sheet'];
+  records: HierarchyRecord[];
+  kanbanKey: string;
+  index: number;
+  para: HierarchyRecursionParams;
 }) {
   const { dispatch, getState, viewControls, level, filters, ...rest } = para;
   // 筛选条件异步加载，重新获取数据时暂停上一次递归请求
   const { sheet } = getState();
   if (!_.isEqual(_.get(filters, 'filtersGroup') || [], _.get(sheet, 'filters.filtersGroup') || [])) return;
 
-  if (records.length >= 1000 || index > level || index > viewControls.length) {
+  if (records.length >= 1000 || index > (level as number) || index > viewControls.length) {
     const treeData = dealData(records);
     dispatch({ type: 'INIT_HIERARCHY_VIEW_DATA', data: treeData });
     dispatch({
@@ -141,7 +261,7 @@ function getHierarchyDataRecursion({
     return;
   }
 
-  const { worksheetId: relationWorksheetId, controlId } = viewControls[index - 1];
+  const { worksheetId: relationWorksheetId, controlId } = viewControls[index - 1]!;
   sheetAjax
     .getFilterRows(
       getFilledRequestParams({
@@ -154,7 +274,8 @@ function getHierarchyDataRecursion({
         langType: window.shareState.shareId ? getCurrentLangCode() : undefined,
       }),
     )
-    .then(({ data }) => {
+    .then(({ data: rawData }) => {
+      const data = decodeHierarchyRows(rawData);
       if (data.length < 1) {
         const treeData = dealData(records);
         dispatch({ type: 'INIT_HIERARCHY_VIEW_DATA', data: treeData });
@@ -176,7 +297,7 @@ function getHierarchyDataRecursion({
     });
 }
 
-export const expandMultiLevelHierarchyDataOfMultiRelate = level => {
+export const expandMultiLevelHierarchyDataOfMultiRelate = (level: number | string) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { worksheetInfo = {}, filters } = sheet;
@@ -192,14 +313,15 @@ export const expandMultiLevelHierarchyDataOfMultiRelate = level => {
           langType: window.shareState.shareId ? getCurrentLangCode() : undefined,
         }),
       )
-      .then(({ data, count }) => {
+      .then(({ data: rawData, count }) => {
+        const data = decodeHierarchyRows(rawData);
         const kanbanKey = genKanbanKeyByData(data);
         dispatch({
           type: 'CHANGE_HIERARCHY_TOP_LEVEL_DATA_COUNT',
           count: count,
         });
         dispatch({ type: 'CHANGE_HIERARCHY_DATA_STATUS', data: { loading: false, pageIndex: 1 } });
-        if (!kanbanKey || level <= 1) {
+        if (!kanbanKey || (level as number) <= 1) {
           const treeData = dealData(data);
           dispatch({
             type: 'EXPAND_HIERARCHY_VIEW_STATE',
@@ -211,7 +333,7 @@ export const expandMultiLevelHierarchyDataOfMultiRelate = level => {
         }
 
         const para = {
-          viewControls,
+          viewControls: viewControls!,
           level,
           viewId,
           dispatch,
@@ -230,40 +352,45 @@ export const expandMultiLevelHierarchyDataOfMultiRelate = level => {
   };
 };
 
-export const addHierarchyRecord = args => (dispatch: AppDispatch, getState: GetState) => {
-  const { path, pathId, data, reGetData = false } = args;
-  dispatch({
-    type: 'CHANGE_HIERARCHY_VIEW_DATA',
-    data: dealData([data]),
-  });
-  // 添加子记录
-  if (isEmpty(path)) {
-    // 添加顶级记录
-    dispatch({ type: 'ADD_TOP_LEVEL_STATE', data: [data] });
-  } else {
-    const { sheet } = getState();
-    const { hierarchyView } = sheet;
-    const { hierarchyViewState = [] } = hierarchyView || {};
-    const recordIndex = path[0];
+export const addHierarchyRecord =
+  (args: AddHierarchyChildPayload & { reGetData?: boolean | undefined }) =>
+  (dispatch: AppDispatch, getState: GetState) => {
+    const { path, pathId, data, reGetData = false } = args;
+    dispatch({
+      type: 'CHANGE_HIERARCHY_VIEW_DATA',
+      data: dealData([data]),
+    });
+    // 添加子记录
+    if (isEmpty(path)) {
+      // 添加顶级记录
+      dispatch({ type: 'ADD_TOP_LEVEL_STATE', data: [data] });
+    } else {
+      const { sheet } = getState();
+      const { hierarchyView } = sheet;
+      const { hierarchyViewState = [] } = hierarchyView || {};
+      const recordIndex = path[0]!;
 
-    // 分页数据
-    if (reGetData && recordIndex >= 50) {
-      const curRecord = hierarchyViewState[recordIndex]!;
-      const children = curRecord.children || [];
+      // 分页数据
+      if (reGetData && recordIndex >= 50) {
+        const curRecord = hierarchyViewState[recordIndex]!;
+        const children = curRecord.children || [];
 
-      // 只有未展开且没有展开过的时候才处理
-      if (children?.length && typeof children[0] === 'string') {
-        dispatch({ type: 'ADD_RECORD_CHILDREN_WITH_ONLY_PAGINATION', data: { index: recordIndex, rowId: data.rowid } });
-        return;
+        // 只有未展开且没有展开过的时候才处理
+        if (children?.length && typeof children[0] === 'string') {
+          dispatch({
+            type: 'ADD_RECORD_CHILDREN_WITH_ONLY_PAGINATION',
+            data: { index: recordIndex, rowId: data.rowid },
+          });
+          return;
+        }
       }
+
+      dispatch(addHierarchyChildrenRecord({ data, path, pathId }));
     }
+  };
 
-    dispatch(addHierarchyChildrenRecord({ data, path, pathId }));
-  }
-};
-
-export function onCopySuccess(data) {
-  return dispatch => {
+export function onCopySuccess(data: { path: HierarchyPath; pathId: string[]; item: HierarchyRecord }) {
+  return (dispatch: AppDispatch) => {
     const { path, pathId, item } = data;
 
     if (path.length === 1) {
@@ -281,10 +408,11 @@ export function addHierarchyChildrenRecord(
   return { type: 'ADD_HIERARCHY_CHILDREN_RECORD_STATE', data };
 }
 
-export const getTopLevelHierarchyData = args => dispatch => {
+export const getTopLevelHierarchyData = (args: WorksheetRowsRequest) => (dispatch: AppDispatch) => {
   dispatch({ type: 'CHANGE_HIERARCHY_DATA_STATUS', data: { loading: true } });
   args.langType = window.shareState.shareId ? getCurrentLangCode() : undefined;
-  sheetAjax.getFilterRows(getFilledRequestParams(args)).then(({ data, resultCode, count }) => {
+  sheetAjax.getFilterRows(getFilledRequestParams(args)).then(({ data: rawData, resultCode, count }) => {
+    const data = resultCode === 1 ? decodeHierarchyRows(rawData) : [];
     if (resultCode === 1) {
       const treeData = dealData(data);
       dispatch({ type: 'INIT_HIERARCHY_VIEW_DATA', data: treeData });
@@ -296,16 +424,21 @@ export const getTopLevelHierarchyData = args => dispatch => {
 };
 
 // 删除层级记录
-export function deleteHierarchyRecord({ rows, path, pathId, ...rest }) {
+export function deleteHierarchyRecord({
+  rows,
+  path,
+  pathId,
+  ...rest
+}: WorksheetRowsRequest & { rows: HierarchyRecord[]; path: HierarchyPath; pathId: string[] }) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { hierarchyView } = sheet;
     let { hierarchyViewData } = hierarchyView;
-    const rowIds = rows.filter((item: RecordRow) => !!item.allowDelete).map(item => item.rowid);
-    sheetAjax.deleteWorksheetRows({ rowIds, ...getHierarchyViewIds(sheet, path), ...rest }).then(data => {
-      const id = rowIds[0];
+    const rowIds = rows.filter((item: HierarchyRecord) => !!item.allowDelete).map(item => item.rowid);
+    sheetAjax.deleteWorksheetRows({ rowIds, ...getHierarchyViewIds(sheet, path), ...rest }).then((data: unknown) => {
+      const id = rowIds[0]!;
 
-      if (data.isSuccess) {
+      if (decodeOperationSuccess(data)) {
         const pathLen = pathId.length;
 
         if (pathLen === 1) {
@@ -333,35 +466,36 @@ export function deleteHierarchyRecord({ rows, path, pathId, ...rest }) {
   };
 }
 
-export const hideHierarchyRecord = (id, path, pathId) => (dispatch: AppDispatch, getState: GetState) => {
-  const { sheet } = getState();
-  const { hierarchyView } = sheet;
-  let { hierarchyViewData } = hierarchyView;
-  const pathLen = pathId.length;
+export const hideHierarchyRecord =
+  (id: string, path: HierarchyPath, pathId: string[]) => (dispatch: AppDispatch, getState: GetState) => {
+    const { sheet } = getState();
+    const { hierarchyView } = sheet;
+    let { hierarchyViewData } = hierarchyView;
+    const pathLen = pathId.length;
 
-  if (pathLen === 1) {
-    dispatch(expandedMultiLevelHierarchyData({ layer: 3 }));
-  } else {
-    dispatch(
-      getAssignChildren(
-        {
-          path: path.slice(0, -1),
-          pathId: pathId.slice(0, -1),
-          kanbanKey: pathId[pathLen - 2],
-        },
-        true,
-      ),
-    );
-  }
+    if (pathLen === 1) {
+      dispatch(expandedMultiLevelHierarchyData({ layer: 3 }));
+    } else {
+      dispatch(
+        getAssignChildren(
+          {
+            path: path.slice(0, -1),
+            pathId: pathId.slice(0, -1),
+            kanbanKey: pathId[pathLen - 2],
+          },
+          true,
+        ),
+      );
+    }
 
-  dispatch({
-    type: 'CHANGE_HIERARCHY_VIEW_DATA',
-    data: update(hierarchyViewData, { $unset: [id] }),
-  });
-};
+    dispatch({
+      type: 'CHANGE_HIERARCHY_VIEW_DATA',
+      data: update(hierarchyViewData, { $unset: [id] }),
+    });
+  };
 
 // 判断是否是祖先元素
-const isAncestor = (src, target) => {
+const isAncestor = (src: HierarchyPath, target: HierarchyPath) => {
   for (let i = 0; i < target.length; i++) {
     if (src[i] !== target[i]) return false;
   }
@@ -369,12 +503,12 @@ const isAncestor = (src, target) => {
   return true;
 };
 
-const isSibling = (src, target) => {
+const isSibling = (src: HierarchyPath, target: HierarchyPath) => {
   if (!Array.isArray(src) || !Array.isArray(target)) return undefined;
   return JSON.stringify(src.slice(0, -1)) === JSON.stringify(target.slice(0, -1));
 };
 
-export function updateMovedRecord(args) {
+export function updateMovedRecord(args: HierarchyMovePayload & WorksheetRowsRequest) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { src, target, ...rest } = args;
     const { sheet } = getState();
@@ -445,17 +579,16 @@ export function updateMovedRecord(args) {
   };
 }
 
-export function moveMultiSheetRecord(args) {
+export function moveMultiSheetRecord(args: HierarchyMovePayload) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
     const { src, target } = args;
     const { viewControls } = getCurrentView(sheet);
-    const { worksheetId } = viewControls[target.path.length - 1];
-    const { controlId, worksheetId: relationWorksheetId } = viewControls[target.path.length];
+    const { worksheetId } = viewControls![target.path.length - 1]!;
+    const { controlId, worksheetId: relationWorksheetId } = viewControls![target.path.length]!;
     const { hierarchyView } = sheet;
-    const { pid: fromRowId, controls } = get(hierarchyView, ['hierarchyViewData', [src.rowId]]) as HierarchyRecord & {
-      controls: FormControl[];
-    };
+    const { pid: fromRowId, controls } = getSavedHierarchyRecord(hierarchyView.hierarchyViewData, src.rowId);
+    if (!controls) throw new TypeError('Hierarchy record controls are missing');
     const { viewId } = _.find(controls, item => item.controlId === controlId) || {};
 
     const targetControl = _.find(sheet.controls || [], item => item.controlId === controlId) || {};
@@ -477,8 +610,8 @@ export function moveMultiSheetRecord(args) {
         controlId,
         viewId,
       })
-      .then(({ isSuccess }) => {
-        if (isSuccess) {
+      .then((response: unknown) => {
+        if (decodeOperationSuccess(response)) {
           dispatch({ type: 'MULTI_RELATE_MOVE_RECORD', data: { src, target } });
           // 重新拉取目标节点数据
           dispatch(
@@ -508,7 +641,7 @@ export function moveMultiSheetRecord(args) {
 }
 
 // 关联多表层级视图获取子级数据
-export function multiRelateGetChildren(para) {
+export function multiRelateGetChildren(para: WorksheetRowsRequest & { path: HierarchyPath; pathId: string[] }) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
     const { viewControls = [] } = getCurrentView(sheet);
@@ -567,10 +700,11 @@ export function getAssignChildren(
       langType: window.shareState.shareId ? getCurrentLangCode() : undefined,
     };
 
-    sheetAjax.getFilterRows(getFilledRequestParams(args)).then(({ data, resultCode }) => {
+    sheetAjax.getFilterRows(getFilledRequestParams(args)).then(({ data: rawData, resultCode }) => {
       if (resultCode !== 1) {
         return;
       }
+      const data = decodeHierarchyRows(rawData);
 
       dispatch({
         type: 'CHANGE_HIERARCHY_VIEW_DATA',
@@ -605,7 +739,7 @@ export const changeHierarchyChildrenVisible = (data: {
 };
 
 // 成为顶级记录
-export function becomeTopLevelRecord(data) {
+export function becomeTopLevelRecord(data: HierarchyNode) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
 
@@ -628,10 +762,11 @@ export function becomeTopLevelRecord(data) {
         value: JSON.stringify([]),
       },
     ];
-    sheetAjax.updateWorksheetRow({ newOldControl, rowId, ...getParaIds(sheet) }).then(res => {
+    sheetAjax.updateWorksheetRow({ newOldControl, rowId, ...getParaIds(sheet) }).then((res: { data?: unknown }) => {
       if (res && res.data) {
+        const savedRecord = decodeHierarchyRows([res.data])[0]!;
         dispatch(getAssignChildren(args, true));
-        dispatch({ type: 'ADD_TOP_LEVEL_STATE', data: [res.data] });
+        dispatch({ type: 'ADD_TOP_LEVEL_STATE', data: [savedRecord] });
         if (data.children && data.children.length) {
           dispatch(
             getAssignChildren(
@@ -665,8 +800,11 @@ export function updateHierarchyData({
   pathId,
   relateSheet,
 }: {
-  recordId?: string;
-  [key: string]: any;
+  recordId: string;
+  value: Partial<HierarchyRecord>;
+  path: HierarchyPath;
+  pathId: string[];
+  relateSheet?: boolean | undefined;
 }) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
@@ -675,7 +813,7 @@ export function updateHierarchyData({
     const { viewControl, childType } = getCurrentView(sheet);
     const updateKeys = Object.keys(value);
     // 父记录更新有值，手动刷新，否则作为顶级处理
-    const hasValue = value[viewControl] && !_.isEmpty(safeParse(value[viewControl] || '[]'));
+    const hasValue = value[viewControl!] && !_.isEmpty(safeParse(value[viewControl!] || '[]'));
 
     if (_.includes(updateKeys, viewControl) && hasValue) {
       dispatch(getDefaultHierarchyData());
@@ -694,7 +832,7 @@ export function updateHierarchyData({
       dispatch(getAssignChildren(args, true));
       dispatch({
         type: 'ADD_TOP_LEVEL_STATE',
-        data: [hierarchyViewData[recordId]],
+        data: [getSavedHierarchyRecord(hierarchyViewData, recordId)],
       });
       return;
     }
@@ -702,8 +840,13 @@ export function updateHierarchyData({
     if (!_.isEmpty(value)) {
       dispatch({
         type: 'CHANGE_HIERARCHY_VIEW_DATA',
-        data: update(hierarchyViewData, {
-          [recordId]: { $apply: item => ({ ...item, ...value }) },
+        data: update(getSavedHierarchyMap(hierarchyViewData), {
+          [recordId]: {
+            $apply: (item: HierarchyDataItem): HierarchyRecord => {
+              if (!isSavedRecord(item)) throw new TypeError('Hierarchy record is missing');
+              return { ...item, ...value };
+            },
+          },
         }),
       });
     }
@@ -734,7 +877,7 @@ export function moveRecord(
   return { type: 'MOVE_RECORD', data };
 }
 
-export function getHierarchyRecord(args, cb) {
+export function getHierarchyRecord(args: WorksheetRowsRequest, cb?: (rows: HierarchyRecord[] | undefined) => void) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
     args = {
@@ -743,16 +886,17 @@ export function getHierarchyRecord(args, cb) {
       ...args,
       langType: window.shareState.shareId ? getCurrentLangCode() : undefined,
     };
-    sheetAjax.getFilterRows(getFilledRequestParams(args)).then(({ data, resultCode, count }) => {
+    sheetAjax.getFilterRows(getFilledRequestParams(args)).then(({ data: rawData, resultCode, count }) => {
+      const data = rawData === undefined ? undefined : decodeHierarchyRows(rawData);
       if (isFunction(cb)) {
         cb(data);
       }
 
-      if (resultCode !== 1 || !data.length) {
+      if (resultCode !== 1 || !data!.length) {
         return;
       }
 
-      dispatch({ type: 'CHANGE_HIERARCHY_VIEW_DATA', data: dealData(data) });
+      dispatch({ type: 'CHANGE_HIERARCHY_VIEW_DATA', data: dealData(data!) });
       dispatch({ type: 'CHANGE_HIERARCHY_DATA_STATUS', data: { loading: false, pageIndex: args.pageIndex || 1 } });
       dispatch({ type: 'ADD_TOP_LEVEL_STATE', data });
       dispatch({ type: 'CHANGE_HIERARCHY_TOP_LEVEL_DATA_COUNT', count });
@@ -761,10 +905,10 @@ export function getHierarchyRecord(args, cb) {
 }
 
 // 更新标题控件数据
-export function updateTitleData({ data, rowId }: { rowId?: string; [key: string]: any }) {
+export function updateTitleData({ data, rowId }: { rowId: string; data: Partial<HierarchyRecord> }) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
-    const originData = get(sheet, ['hierarchyView', 'hierarchyViewData', rowId]) as HierarchyRecord | undefined;
+    const originData = getSavedHierarchyRecord(sheet.hierarchyView.hierarchyViewData, rowId);
     dispatch({ type: 'UPDATE_HIERARCHY_VIEW_DATA', data: { [rowId]: { ...originData, ...data } } });
   };
 }
@@ -789,10 +933,13 @@ export function initHierarchyRelateSheetControls(payload: HierarchyControlsPaylo
   return { type: 'INIT_HIERARCHY_RELATE_SHEET_CONTROLS', payload };
 }
 
-export function getDefaultHierarchyData(view?, { changeFilters } = {}) {
+export function getDefaultHierarchyData(
+  view?: WorksheetView,
+  { changeFilters }: { changeFilters?: boolean | undefined } = {},
+) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
-    const { viewId, viewControl, viewControls, childType } = isEmpty(view) ? getCurrentView(sheet) : view;
+    const { viewId, viewControl, viewControls, childType } = isEmpty(view) ? getCurrentView(sheet) : view!;
     const pageSize =
       Number(childType) === 2
         ? 50
@@ -806,7 +953,7 @@ export function getDefaultHierarchyData(view?, { changeFilters } = {}) {
       data: { loading: true, pageSize: pageSize },
     });
     if (_.includes(['1', '0'], String(childType))) {
-      const { level } = safeParse(localStorage.getItem(`hierarchyConfig-${viewId}`));
+      const level = decodeHierarchyLevel(localStorage.getItem(`hierarchyConfig-${viewId}`));
       dispatch(
         expandedMultiLevelHierarchyData(
           {
@@ -816,7 +963,7 @@ export function getDefaultHierarchyData(view?, { changeFilters } = {}) {
         ),
       );
     } else {
-      const { level } = safeParse(localStorage.getItem(`hierarchyConfig-${viewId}`));
+      const level = decodeHierarchyLevel(localStorage.getItem(`hierarchyConfig-${viewId}`));
       // 多表关联层级视图获取多级数据 默认加载3级
       dispatch(expandMultiLevelHierarchyDataOfMultiRelate(level || 3));
     }
@@ -827,18 +974,18 @@ export function hierarchyViewRefresh() {
   getDefaultHierarchyData();
 }
 
-export function addMultiRelateHierarchyControls(ids) {
-  return dispatch => {
+export function addMultiRelateHierarchyControls(ids: string[]) {
+  return (dispatch: AppDispatch) => {
     sheetAjax.getWorksheetsControls({ worksheetIds: ids }).then(({ code, data }) => {
       if (code === 1) {
-        const relateControls = data.map(item => item.controls);
+        const relateControls = decodeRelationControls(data);
         dispatch(addHierarchyRelateSheetControls({ ids, controls: relateControls }));
       }
     });
   };
 }
 
-export const updateHierarchySearchRecord = record => {
+export const updateHierarchySearchRecord = (record: Pick<HierarchyRecord, 'rowid'> | null) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const count = sheet.hierarchyView.hierarchyTopLevelDataCount || 0;
@@ -874,7 +1021,7 @@ export const updateHierarchySearchRecord = record => {
 };
 
 export const resetHierarchyViewData = () => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'INIT_HIERARCHY_VIEW_DATA', data: [] });
     dispatch({
       type: 'CHANGE_HIERARCHY_DATA_STATUS',

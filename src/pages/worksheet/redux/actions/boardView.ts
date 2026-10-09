@@ -10,22 +10,45 @@ import {
   handleConditionsDefault,
   validate,
 } from 'worksheet/common/Sheet/QuickFilter/utils';
+import type { QuickFilterDisplayValue, WorksheetFilterCondition, WorksheetView } from 'src/pages/worksheet/types';
+import type { AppDispatch, GetState, RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { getFilledRequestParams } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import { formatQuickFilter } from 'src/utils/filter';
+import { readBoardGroups } from '../reducers/boardViewApi';
+import type {
+  BoardAddRecordPayload,
+  BoardGroup,
+  BoardMultiSelectPayload,
+  BoardRecord,
+  BoardRecordCountDelta,
+  BoardRecordCounts,
+  BoardRecordLocation,
+  BoardRowsRequest,
+  BoardSortRequest,
+  BoardTitlePayload,
+  BoardUpdateRecordPayload,
+  BoardViewAction,
+  BoardViewCardState,
+  BoardViewPageState,
+} from '../reducers/boardViewTypes';
 import { getBoardItemKey, getCurrentView } from '../util';
 import { updateNavGroup } from './navFilter.js';
 import { getParaIds, sortDataByCustomItems } from './util';
 import { wrapAjax } from './util';
-import type { AppDispatch, GetState, RootState } from 'src/redux/types';
-import type { WorksheetRowsRequest, WorksheetView } from 'src/pages/worksheet/types';
 
-let boardPromiseObj;
-let boardPromiseViewIds = [];
+let boardPromiseObj: ReturnType<typeof worksheetAjax.getFilterRows> | undefined;
+let boardPromiseViewIds: Array<string | undefined> = [];
 
 const wrappedGetFilterRows = wrapAjax(worksheetAjax.getFilterRows);
 
-function getQuickFilterForRequest({ quickFilter = [], view = {}, controls = [], chartId }: {
+function getQuickFilterForRequest({
+  quickFilter = [],
+  view = {},
+  controls = [],
+  chartId,
+}: {
   quickFilter?: RootState['sheet']['quickFilter'];
   view?: WorksheetView;
   controls?: RootState['sheet']['controls'];
@@ -35,7 +58,7 @@ function getQuickFilterForRequest({ quickFilter = [], view = {}, controls = [], 
     return quickFilter;
   }
 
-  const newFastFilters = handleConditionsDefault(view.fastFilters || [], controls);
+  const newFastFilters = handleConditionsDefault(view.fastFilters || [], controls) as WorksheetFilterCondition[];
 
   if (!_.some(newFastFilters, validate)) {
     return quickFilter;
@@ -45,32 +68,44 @@ function getQuickFilterForRequest({ quickFilter = [], view = {}, controls = [], 
     ...condition,
     filterType: condition.dataType === 29 && condition.filterType === 2 ? 24 : condition.filterType || 2,
     spliceType: condition.spliceType || 1,
-    values: formatFilterValuesToServer(condition.dataType, formatFilterValues(condition.dataType, condition.values)),
+    values: (formatFilterValuesToServer as (type: number | undefined, values: QuickFilterDisplayValue[]) => string[])(
+      condition.dataType,
+      (formatFilterValues as (type: number | undefined, values?: string[] | undefined) => QuickFilterDisplayValue[])(
+        condition.dataType,
+        condition.values,
+      ),
+    ),
     ...(condition.dataType === 36 ? { value: 1 } : {}),
   }));
 }
 
-export function updateBoardViewRecordCount(data) {
+export function updateBoardViewRecordCount(
+  data: BoardRecordCountDelta,
+): Extract<BoardViewAction, { type: 'UPDATE_BOARD_VIEW_RECORD_COUNT' }> {
   return { type: 'UPDATE_BOARD_VIEW_RECORD_COUNT', data };
 }
 
-export function initBoardViewRecordCount(data) {
+export function initBoardViewRecordCount(
+  data: BoardRecordCounts,
+): Extract<BoardViewAction, { type: 'INIT_BOARD_VIEW_RECORD_COUNT' }> {
   return { type: 'INIT_BOARD_VIEW_RECORD_COUNT', data };
 }
 
-export function changeBoardViewData(data) {
+export function changeBoardViewData(
+  data: BoardGroup[],
+): Extract<BoardViewAction, { type: 'CHANGE_BOARD_VIEW_DATA' | 'UPDATE_BOARD_VIEW_DATA' }> {
   return {
     type: 'CHANGE_BOARD_VIEW_DATA',
     data,
   };
 }
 
-export function delBoardViewRecord(data) {
+export function delBoardViewRecord(data: BoardRecordLocation) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     sheetAjax.deleteWorksheetRows({ rowIds: [data.rowId], ...getParaIds(sheet) }).then(res => {
       if (res.isSuccess) {
-        dispatch({ type: 'DEL_BOARD_VIEW_RECORD_COUNT', data });
+        dispatch({ type: 'DEL_BOARD_VIEW_RECORD_COUNT', data } satisfies BoardViewAction);
         dispatch(updateBoardViewRecordCount([data.key, -1]));
         dispatch(updateNavGroup());
       }
@@ -78,42 +113,42 @@ export function delBoardViewRecord(data) {
   };
 }
 
-export function addRecord(data) {
-  return dispatch => {
+export function addRecord(data: BoardAddRecordPayload) {
+  return (dispatch: AppDispatch) => {
     const { item, key } = data;
-    dispatch({ type: 'ADD_BOARD_VIEW_RECORD', data: { item, key } });
+    dispatch({ type: 'ADD_BOARD_VIEW_RECORD', data: { item, key } } satisfies BoardViewAction);
     dispatch(updateBoardViewRecordCount([key, 1]));
     dispatch(updateNavGroup());
   };
 }
 
-export function onCopySuccess(data) {
-  return dispatch => {
+export function onCopySuccess(data: BoardAddRecordPayload) {
+  return (dispatch: AppDispatch) => {
     const { item, key } = data;
-    dispatch({ type: 'ADD_BOARD_VIEW_RECORD', data: { item, key } });
+    dispatch({ type: 'ADD_BOARD_VIEW_RECORD', data: { item, key } } satisfies BoardViewAction);
     dispatch(updateBoardViewRecordCount([key, 1]));
   };
 }
 
-export function updateBoardViewRecord(data) {
-  return dispatch => {
-    dispatch({ type: 'UPDATE_BOARD_VIEW_RECORD', data });
+export function updateBoardViewRecord(data: BoardUpdateRecordPayload) {
+  return (dispatch: AppDispatch) => {
+    dispatch({ type: 'UPDATE_BOARD_VIEW_RECORD', data } satisfies BoardViewAction);
     if (data.target) {
-      let targetKey = getBoardItemKey(data.target);
+      let targetKey = getBoardItemKey(data.target) as string;
       // 一级分组字段为【拥有者】，值为未指定时，对应的key为-1
       if (targetKey === 'user-undefined') targetKey = '-1';
       if (targetKey !== data.key) {
-        dispatch({ type: 'UPDATE_BOARD_VIEW_RECORD_COUNT', data: [data.key, -1] });
-        dispatch({ type: 'UPDATE_BOARD_VIEW_RECORD_COUNT', data: [targetKey, 1] });
+        dispatch({ type: 'UPDATE_BOARD_VIEW_RECORD_COUNT', data: [data.key, -1] } satisfies BoardViewAction);
+        dispatch({ type: 'UPDATE_BOARD_VIEW_RECORD_COUNT', data: [targetKey, 1] } satisfies BoardViewAction);
       }
     }
   };
 }
 
-const getBoardViewPara = (sheet: RootState['sheet'], view?) => {
+const getBoardViewPara = (sheet: RootState['sheet'], view?: WorksheetView): BoardRowsRequest | undefined => {
   const { base, controls, navGroupFilters = [], quickFilter = [] } = sheet;
   const { viewId, appId, chartId, type } = base;
-  view = view || getCurrentView(sheet);
+  view = view || (getCurrentView(sheet) as WorksheetView);
   const { worksheetId, viewControl } = view;
 
   if (!viewControl) {
@@ -128,7 +163,7 @@ const getBoardViewPara = (sheet: RootState['sheet'], view?) => {
   }
 
   const quickFilterForRequest = getQuickFilterForRequest({ quickFilter, view, controls, chartId });
-  let para: WorksheetRowsRequest & { pageSize: number } = {
+  let para: BoardRowsRequest = {
     type,
     appId,
     worksheetId,
@@ -151,12 +186,12 @@ const getBoardViewPara = (sheet: RootState['sheet'], view?) => {
   return para;
 };
 
-const dealBoardViewRecordCount = data => {
+const dealBoardViewRecordCount = (data: BoardGroup[] | undefined): BoardRecordCounts => {
   if (!data || !_.isArray(data)) return {};
   return data.map(item => ({ [item.key]: item.totalNum })).reduce((p, c) => ({ ...p, ...c }), {});
 };
 
-export function initBoardViewData(view?, hasSecondGroup?) {
+export function initBoardViewData(view?: WorksheetView, hasSecondGroup?: boolean | string) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const para = getBoardViewPara(sheet, view);
@@ -168,15 +203,28 @@ export function initBoardViewData(view?, hasSecondGroup?) {
     dispatch({
       type: 'CHANGE_BOARD_VIEW_LOADING',
       loading: true,
-    });
-    dispatch({ type: 'CHANGE_BOARD_VIEW_STATE', payload: { kanbanIndex: 1, hasMoreData: true } });
+    } satisfies BoardViewAction);
+    dispatch({
+      type: 'CHANGE_BOARD_VIEW_STATE',
+      payload: { kanbanIndex: 1, hasMoreData: true },
+    } satisfies BoardViewAction);
 
     getBoardViewDataFillPage({ para, dispatch, view: view || getCurrentView(sheet), controls: sheet.controls });
   };
 }
 
 // 拉取看板数据以填满页面
-function getBoardViewDataFillPage({ para, dispatch, view, controls }) {
+function getBoardViewDataFillPage({
+  para,
+  dispatch,
+  view,
+  controls,
+}: {
+  para: BoardRowsRequest;
+  dispatch: AppDispatch;
+  view: WorksheetView;
+  controls: FormControl[];
+}) {
   if (boardPromiseObj && boardPromiseObj.abort && _.includes(boardPromiseViewIds, view.viewId)) {
     boardPromiseObj.abort();
   }
@@ -187,7 +235,8 @@ function getBoardViewDataFillPage({ para, dispatch, view, controls }) {
     getFilledRequestParams(para),
   );
 
-  boardPromiseObj.then(({ data, resultCode }) => {
+  boardPromiseObj.then(({ data: rawData, resultCode }) => {
+    const data = readBoardGroups(rawData);
     boardPromiseViewIds = boardPromiseViewIds.filter(o => o !== view.viewId);
     if (resultCode !== 1) {
       dispatch({
@@ -197,10 +246,13 @@ function getBoardViewDataFillPage({ para, dispatch, view, controls }) {
       dispatch({
         type: 'CHANGE_BOARD_VIEW_LOADING',
         loading: false,
-      });
+      } satisfies BoardViewAction);
     }
 
-    const translateInfo = getTranslateInfo(para.appId, para.worksheetId, view.viewControl);
+    const translateInfo = getTranslateInfo(para.appId!, para.worksheetId, view.viewControl) as Record<
+      string,
+      string | undefined
+    >;
     const formatData = sortDataByCustomItems(data, view, controls);
     const groupControl = _.find(controls, { controlId: view.viewControl });
     dispatch(
@@ -211,7 +263,7 @@ function getBoardViewDataFillPage({ para, dispatch, view, controls }) {
           if (_.get(groupControl, 'options.length')) {
             return {
               ...data,
-              name: _.get(_.find(groupControl.options, { key: data.key }), 'value') || name,
+              name: _.get(_.find(groupControl!.options, { key: data.key }), 'value') || name,
             };
           }
 
@@ -227,15 +279,15 @@ function getBoardViewDataFillPage({ para, dispatch, view, controls }) {
     dispatch({
       type: 'CHANGE_BOARD_VIEW_LOADING',
       loading: false,
-    });
+    } satisfies BoardViewAction);
     dispatch({
       type: 'CHANGE_BOARD_VIEW_STATE',
       payload: { kanbanIndex: para.kanbanIndex, hasMoreData: !(data.length < 50) },
-    });
+    } satisfies BoardViewAction);
   });
 }
 
-export function getBoardViewPageData({ alwaysCallback = noop }) {
+export function getBoardViewPageData({ alwaysCallback = noop }: { alwaysCallback?: () => void }) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { boardView } = sheet;
@@ -252,7 +304,8 @@ export function getBoardViewPageData({ alwaysCallback = noop }) {
     }
 
     wrappedGetFilterRows(getFilledRequestParams({ ...para, kanbanIndex: kanbanIndex + 1 }))
-      .then(({ data }) => {
+      .then(({ data: rawData }) => {
+        const data = readBoardGroups(rawData);
         // 将已经存在的看板过滤掉
         const existedKeys = boardData.map(item => item.key);
         const filterData = data
@@ -260,9 +313,9 @@ export function getBoardViewPageData({ alwaysCallback = noop }) {
           .map((item, index: number) => ({ ...item, sort: existedKeys.length + index + 1 }));
         dispatch(changeBoardViewData(boardData.concat(filterData)));
         dispatch(initBoardViewRecordCount({ ...boardViewRecordCount, ...dealBoardViewRecordCount(filterData) }));
-        let nextState = { kanbanIndex: kanbanIndex + 1 };
+        let nextState: Partial<BoardViewPageState> = { kanbanIndex: kanbanIndex + 1 };
         if (data.length < 50) nextState = { ...nextState, hasMoreData: false };
-        dispatch({ type: 'CHANGE_BOARD_VIEW_STATE', payload: nextState });
+        dispatch({ type: 'CHANGE_BOARD_VIEW_STATE', payload: nextState } satisfies BoardViewAction);
       })
       .finally(() => {
         alwaysCallback();
@@ -270,14 +323,24 @@ export function getBoardViewPageData({ alwaysCallback = noop }) {
   };
 }
 
-function mergeUniqBoardData(boardViewData, currentData) {
+function mergeUniqBoardData(boardViewData: string[], currentData: string[]) {
   return uniqBy(boardViewData.concat(currentData), value => {
     return _.get(JSON.parse(value), 'rowid');
   });
 }
 
 // 分页获取单个看板数据
-export function getSingleBoardPageData({ pageIndex, kanbanKey, alwaysCallback, checkIsMore }: { pageIndex?: number; [key: string]: any }) {
+export function getSingleBoardPageData({
+  pageIndex,
+  kanbanKey,
+  alwaysCallback,
+  checkIsMore,
+}: {
+  pageIndex?: number;
+  kanbanKey: string;
+  alwaysCallback: () => void;
+  checkIsMore: (isMore: boolean) => void;
+}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { boardView } = sheet;
@@ -290,13 +353,19 @@ export function getSingleBoardPageData({ pageIndex, kanbanKey, alwaysCallback, c
     }
 
     wrappedGetFilterRows(getFilledRequestParams({ ...para, pageIndex, kanbanKey }))
-      .then(({ data }) => {
-        dispatch({ type: 'CHANGE_BOARD_VIEW_LOADING', loading: false });
+      .then(({ data: rawData }) => {
+        const data = readBoardGroups(rawData);
+        dispatch({ type: 'CHANGE_BOARD_VIEW_LOADING', loading: false } satisfies BoardViewAction);
         const boardViewIndex = _.findIndex(boardData, item => item.key === kanbanKey);
-        const nextData = _.get(
-          _.find(data, item => item.key === kanbanKey),
-          'rows',
-        );
+        const nextData =
+          _.get(
+            _.find(data, item => item.key === kanbanKey),
+            'rows',
+          ) || [];
+        if (pageIndex !== 1 && !boardData[boardViewIndex]) {
+          checkIsMore(false);
+          return;
+        }
         dispatch({
           type: 'CHANGE_BOARD_VIEW_DATA',
           data:
@@ -306,11 +375,11 @@ export function getSingleBoardPageData({ pageIndex, kanbanKey, alwaysCallback, c
                   // 分页更新对应key下的记录数据
                   [boardViewIndex]: {
                     rows: {
-                      $set: mergeUniqBoardData(boardData[boardViewIndex].rows, nextData),
+                      $set: mergeUniqBoardData(boardData[boardViewIndex]!.rows, nextData),
                     },
                   },
                 }),
-        });
+        } satisfies BoardViewAction);
         dispatch(initBoardViewRecordCount(dealBoardViewRecordCount(data)));
         checkIsMore((nextData || []).length >= para.pageSize);
       })
@@ -330,10 +399,10 @@ export function sortBoardRecord({
   firstGroupControlId,
   secondGroupControlId,
   ...para
-}) {
-  return dispatch => {
+}: BoardSortRequest) {
+  return (dispatch: AppDispatch) => {
     const { rowId } = para;
-    worksheetAjax.updateWorksheetRow(para).then(res => {
+    worksheetAjax.updateWorksheetRow(para).then((res: { data: BoardRecord }) => {
       if (!isEmpty(res.data)) {
         dispatch({
           type: 'SORT_BOARD_VIEW_RECORD',
@@ -344,11 +413,11 @@ export function sortBoardRecord({
             value: res.data[firstGroupControlId] || value,
             firstGroupChange,
             firstGroupControlId,
-            secondGroupValue: res.data[secondGroupControlId] || secondGroupValue,
+            secondGroupValue: res.data[secondGroupControlId!] || secondGroupValue,
             secondGroupChange,
             secondGroupControlId,
           },
-        });
+        } satisfies BoardViewAction);
         dispatch(updateBoardViewRecordCount([srcKey, -1]));
         dispatch(updateBoardViewRecordCount([targetKey, 1]));
       } else {
@@ -358,27 +427,31 @@ export function sortBoardRecord({
   };
 }
 
-export function updateTitleData(data) {
+export function updateTitleData(
+  data: BoardTitlePayload,
+): Extract<BoardViewAction, { type: 'UPDATE_BOARD_TITLE_DATA' }> {
   return { type: 'UPDATE_BOARD_TITLE_DATA', data };
 }
 
 // 更新多选看板
-export const updateMultiSelectBoard = data => ({ type: 'UPDATE_MULTI_SELECT_BOARD', data });
+export const updateMultiSelectBoard = (
+  data: BoardMultiSelectPayload,
+): Extract<BoardViewAction, { type: 'UPDATE_MULTI_SELECT_BOARD' }> => ({ type: 'UPDATE_MULTI_SELECT_BOARD', data });
 
 export const clearBoardView = () => {
-  return dispatch => {
-    dispatch({ type: 'CLEAR_BOARD_VIEW', data: [] });
+  return (dispatch: AppDispatch) => {
+    dispatch({ type: 'CLEAR_BOARD_VIEW', data: [] } satisfies BoardViewAction);
   };
 };
 
-export const updateBoardViewCard = data => {
-  return dispatch => {
-    dispatch({ type: 'UPDATE_BOARD_VIEW_CARD', data });
+export const updateBoardViewCard = (data: Partial<BoardViewCardState>) => {
+  return (dispatch: AppDispatch) => {
+    dispatch({ type: 'UPDATE_BOARD_VIEW_CARD', data } satisfies BoardViewAction);
   };
 };
 
-export const updateBoardViewSortedOptionKeys = data => {
-  return dispatch => {
-    dispatch({ type: 'UPDATE_BOARD_VIEW_SORTED_OPTION_KEYS', data });
+export const updateBoardViewSortedOptionKeys = (data: string[]) => {
+  return (dispatch: AppDispatch) => {
+    dispatch({ type: 'UPDATE_BOARD_VIEW_SORTED_OPTION_KEYS', data } satisfies BoardViewAction);
   };
 };

@@ -3,26 +3,23 @@ import _ from 'lodash';
 import moment from 'moment';
 import sheetAjax from 'src/api/worksheet';
 import { sortDataByCustomItems } from 'src/pages/worksheet/redux/actions/util.js';
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import { getHoverColor } from 'src/pages/worksheet/views/CalendarView/util.js';
 import { fillRecordTimeBlockColor, sortGrouping } from 'src/pages/worksheet/views/GunterView/util.js';
-import {
-  kanbanSize,
-  pageSize,
-  types,
-} from 'src/pages/worksheet/views/ResourceView/config.js';
+import { kanbanSize, pageSize, types } from 'src/pages/worksheet/views/ResourceView/config.js';
 import {
   calculateTop,
   formatRecordPoint,
   formatRecordTime,
   getViewTimesList,
 } from 'src/pages/worksheet/views/ResourceView/util.js';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { browserIsMobile, getFilledRequestParams } from 'src/utils/common';
 import { isLightColor } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { formatQuickFilter } from 'src/utils/filter';
 import { dateConvertToServerZone, dateConvertToUserZone } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate.js';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
-import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const initData = () => {
   return dispatch => {
@@ -85,7 +82,7 @@ export const fetchRows = (refresh = true) => {
       )
       .then(({ data }) => {
         const resourceData = formatByGroup(
-          sortDataByCustomItems(data, view, controls),
+          sortDataByCustomItems(decodeResourceGroups(data), view, controls),
           view,
           controls,
           gridTimes,
@@ -191,7 +188,48 @@ export const getRelationControls = (appId: string, sourceId) => {
   };
 };
 
-const formatByGroup = (info, view, controls, gridTimes, currentTime: string | null) => {
+interface ResourceGroup {
+  key: string | number;
+  name: string;
+  sort?: number | undefined;
+  rows?: string[] | RecordRow[] | undefined;
+}
+function isResourceRow(value: unknown): value is RecordRow {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    (!('rowid' in value) || value.rowid === undefined || typeof value.rowid === 'string')
+  );
+}
+function isResourceGroup(value: unknown): value is ResourceGroup {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  if (!('key' in value) || (typeof value.key !== 'string' && typeof value.key !== 'number')) return false;
+  if (!('name' in value) || typeof value.name !== 'string') return false;
+  if ('sort' in value && value.sort !== undefined && typeof value.sort !== 'number') return false;
+  if (
+    'rows' in value &&
+    value.rows !== undefined &&
+    !(
+      Array.isArray(value.rows) &&
+      (value.rows.every(row => typeof row === 'string') || value.rows.every(isResourceRow))
+    )
+  )
+    return false;
+  return true;
+}
+/** The generic rows endpoint supplies group metadata for a resource view. Preserve valid groups verbatim. */
+function decodeResourceGroups(value: unknown): ResourceGroup[] {
+  if (!Array.isArray(value) || !value.every(isResourceGroup)) throw new TypeError('Invalid resource view group rows');
+  return value;
+}
+const formatByGroup = (
+  info: ResourceGroup[],
+  view: WorksheetView,
+  controls: FormControl[],
+  gridTimes: unknown[],
+  currentTime: string | null,
+): Array<ResourceGroup & { rows: RecordRow[]; height: number | undefined }> => {
   const groupControl = _.find(controls, { controlId: view.viewControl });
   return sortGrouping(
     info
@@ -308,7 +346,8 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
     const { base, controls, resourceview, views } = getState().sheet;
     const view = base.viewId ? _.find(views, { viewId: base.viewId }) : views[0];
     const { resourceData } = resourceview;
-    const startControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.begindate')) || {};
+    const startControl =
+      controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.begindate')) || {};
     const endControl = controls.find((o: FormControl) => o.controlId === _.get(view, 'advancedSetting.enddate')) || {};
     const newOldControl = [];
 
@@ -332,7 +371,7 @@ export const updateRecordTime = (row, start, end, key, newKey) => {
       });
     }
 
-    const viewControlData = controls.find((o: FormControl) => o.controlId === view.viewControl) || {};
+    const viewControlData = controls.find((o: FormControl) => o.controlId === view?.viewControl) || {};
 
     if (!!newKey && (viewControlData.fieldPermission || '111')[1] === '1') {
       const newData = resourceData.find(o => o.key === newKey);
