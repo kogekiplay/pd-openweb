@@ -18,7 +18,7 @@
 
 实际生产 Babel 对比：iframe 7 次调用/14 条消息相同；公式 305 组格式、91 组日期、7 组坐标和 5 组字符计数相同，包括循环数组引用与重复转换；键盘/点击事件有效回调顺序相同；五种原生配置、两种动作触发、语音和封面有效观察相同。实际 SDK 失败、定位失败恢复、消息超时/销毁/克隆失败、订阅替换/卸载等规格通过。iframe 16、事件 9、公式 7、浏览器/签名 9 个错误公共类型案例分别拒绝，合法探针行零诊断；这些探针的传递依赖仍含独立旧债，不宣称完整程序零诊断。
 
-源码提交后的构建结果将在核验后记录。证据目录：`/private/tmp/hap-shared-boundaries-release-20261010`、`/private/tmp/hap-widget-events-20261010`、`/private/tmp/hap-strong-20261010/iframe-probe`、`/private/tmp/hap-strong-20261010/function-library-review` 和 `/private/tmp/hap-shared-browser-types-20261010`。
+源码提交 `dcb0b8bb5` 的本地生产构建通过，耗时 49 秒；runtime 资源校验通过（1095 JS、387 CSS）。最终只读审查未发现本批新增运行回归，证据为 `/private/tmp/hap-shared-readonly-review/review.md`。没有部署或对外发布。其余证据目录：`/private/tmp/hap-shared-boundaries-release-20261010`、`/private/tmp/hap-widget-events-20261010`、`/private/tmp/hap-strong-20261010/iframe-probe`、`/private/tmp/hap-strong-20261010/function-library-review` 和 `/private/tmp/hap-shared-browser-types-20261010`。
 
 ## 剩余范围
 
