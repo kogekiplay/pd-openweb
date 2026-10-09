@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
 import type { WorksheetView } from 'src/pages/worksheet/types';
 import type { FormControl } from 'src/utils/controlTypes';
+import type { HierarchyChild, HierarchyNode } from '../reducers/hierarchyTypes';
 
 export const dealData = data => {
   const res = {};
@@ -99,11 +100,14 @@ export function wrapAjax(func) {
   };
 }
 
-export function getItemByRowId(rowId = null, data = []) {
+export function getItemByRowId(
+  rowId: string | null = null,
+  data: HierarchyChild[] = [],
+): HierarchyNode | null | undefined {
   if (rowId) {
-    const treeFind = tree => {
+    const treeFind = (tree: HierarchyChild[]): HierarchyNode | null => {
       for (const item of tree) {
-        if (item.rowId === rowId) return item;
+        if (item.rowId === rowId) return item as HierarchyNode;
         if (item.children && item.children.length > 0) {
           const res = treeFind(item.children);
           if (res) return res;
@@ -115,6 +119,7 @@ export function getItemByRowId(rowId = null, data = []) {
 
     return treeFind(data);
   }
+  return undefined;
 }
 
 export function sortDataByCustomItems(

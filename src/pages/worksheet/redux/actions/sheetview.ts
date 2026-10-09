@@ -1,4 +1,3 @@
-import type { WorksheetFilters, WorksheetRowsRequest } from 'src/pages/worksheet/types';
 import _, {
   assign,
   find,
@@ -25,6 +24,7 @@ import {
   WIDGETS_TO_API_TYPE_ENUM,
   WORKFLOW_SYSTEM_CONTROL,
 } from 'src/pages/widgetConfig/config/widget';
+import type { WorksheetFilters, WorksheetRowsRequest } from 'src/pages/worksheet/types';
 import type { AppDispatch, GetState, RootState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
 import { clearLRUWorksheetConfig, getLRUWorksheetConfig, saveLRUWorksheetConfig } from 'src/utils/common';
@@ -38,6 +38,7 @@ import {
   getListStyle,
   getSheetColumnWidthsMap,
 } from 'src/utils/worksheet';
+import type { SheetColumnWidthActionCreator, SheetSortControl, SheetViewActionOf } from '../reducers/sheetviewTypes';
 import { updateNavGroup } from './navFilter.js';
 import { sortDataByGroupItems } from './util.js';
 
@@ -393,7 +394,8 @@ export const loadGroupMore = groupKey => {
     const loadMoreRow = find(currentRows, r => r.groupKey === groupKey && r.rowid === 'loadGroupMore');
     const rows: RecordRow[] = currentRows.filter(r => !(r.groupKey === groupKey && r.rowid === 'loadGroupMore'));
     const groupFetchParams = sheetview.groupFetchParams;
-    const prevPageIndex = get(groupFetchParams, `${groupKey}.pageIndex`, 1);
+    // Group keys can contain dots; select the exact group before resolving its pageIndex.
+    const prevPageIndex = get(groupFetchParams[groupKey], 'pageIndex', 1);
     const nextPageIndex = prevPageIndex + 1;
 
     if (loadMoreRow?.isLoading) {
@@ -483,7 +485,9 @@ export const setRowsEmpty = () => (dispatch: AppDispatch) => {
   });
 };
 
-export const sortByControl = sortControl => ({
+export const sortByControl = (
+  sortControl?: SheetSortControl,
+): SheetViewActionOf<'WORKSHEET_SHEETVIEW_UPDATE_SORTS'> => ({
   type: 'WORKSHEET_SHEETVIEW_UPDATE_SORTS',
   sortControl,
 });
@@ -869,7 +873,13 @@ export function hideRows(rowIds) {
   };
 }
 
-export function selectRows({ rows = [], selectAll }) {
+export function selectRows({
+  rows = [],
+  selectAll,
+}: {
+  rows?: RecordRow[] | undefined;
+  selectAll?: boolean | undefined;
+}): SheetViewActionOf<'WORKSHEET_SHEETVIEW_SELECT_ALL' | 'WORKSHEET_SHEETVIEW_SELECT_ROWS'> {
   if (selectAll) {
     return {
       type: 'WORKSHEET_SHEETVIEW_SELECT_ALL',
@@ -894,23 +904,25 @@ export function changeToSelectCurrentPageFromSelectAll() {
   };
 }
 
-export const updateSheetColumnWidths = (controlId: string, value, changes) => ({
-  type: 'WORKSHEET_SHEETVIEW_UPDATE_COLUMN_WIDTH',
-  controlId,
-  value,
-  changes,
-});
+// The overload checks single/batch argument combinations; this object forwards those same four fields.
+export const updateSheetColumnWidths: SheetColumnWidthActionCreator = (controlId, value, changes) =>
+  ({
+    type: 'WORKSHEET_SHEETVIEW_UPDATE_COLUMN_WIDTH',
+    controlId,
+    value,
+    changes,
+  }) as SheetViewActionOf<'WORKSHEET_SHEETVIEW_UPDATE_COLUMN_WIDTH'>;
 
-export const hideColumn = (controlId: string) => ({
+export const hideColumn = (controlId: string): SheetViewActionOf<'WORKSHEET_SHEETVIEW_HIDE_COLUMN'> => ({
   type: 'WORKSHEET_SHEETVIEW_HIDE_COLUMN',
   controlId,
 });
 
-export const clearHiddenColumn = () => ({
+export const clearHiddenColumn = (): SheetViewActionOf<'WORKSHEET_SHEETVIEW_CLEAR_HIDDEN_COLUMN'> => ({
   type: 'WORKSHEET_SHEETVIEW_CLEAR_HIDDEN_COLUMN',
 });
 
-export function frozenColumn(columnIndex) {
+export function frozenColumn(columnIndex: number): SheetViewActionOf<'WORKSHEET_SHEETVIEW_UPDATE_FIXED_COLUMN_COUNT'> {
   return { type: 'WORKSHEET_SHEETVIEW_UPDATE_FIXED_COLUMN_COUNT', value: columnIndex };
 }
 
@@ -1039,7 +1051,9 @@ export function resetSheetLayout() {
   };
 }
 
-export const updateDefaultScrollLeft = value => ({
+export const updateDefaultScrollLeft = (
+  value?: number,
+): SheetViewActionOf<'WORKSHEET_SHEETVIEW_UPDATE_SCROLL_LEFT'> => ({
   type: 'WORKSHEET_SHEETVIEW_UPDATE_SCROLL_LEFT',
   value,
 });
@@ -1336,7 +1350,8 @@ export function getWorksheetSheetViewSummary({ reset = false, groupArgs = {} } =
 
     const columnRpts = Object.keys(types).map(controlId => ({
       controlId,
-      rptType: parseInt(types[controlId], 10),
+      // parseInt coerces numeric summary settings at runtime; this annotation preserves that call.
+      rptType: (parseInt as (value: string | number | undefined, radix?: number) => number)(types[controlId], 10),
     }));
     const view = find(views, { viewId });
 

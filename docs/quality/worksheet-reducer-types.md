@@ -16,10 +16,9 @@
 - 临时探针中三个错误载荷均被 fast 拒绝：字符串 control、布尔 worksheetInfo、拼错的 workshetId；探针随后删除。
 - 十项检查通过，90/90 行为 spec 通过，仍有原来一项已知失败隔离。
 
-筛选 state 的进一步传播仍保存于 stash（说明包含“先合并 HAP 7.5.0”）和
-`/private/tmp/hap-eslint-n3Fa8G/strong-work-in-progress.patch`，本批不包含该实验部分。
+后续：筛选 state 的暂存改动已在 7.5.0 逐模块整合时恢复，原 stash 与补丁仍保留。
+7.5.0 升级及生产部署已完成，失败自动草稿没有采用；见
+`docs/upgrade/7.5.0-validation.md` 与 `7.5.0-strong-types.md`。
 
-7.5.0 升级没有完成：未通过验证的整合草稿保留在 `codex/hap-750-merge-wip`
-（`a7a3a4f3b`），其基础类型诊断 42402 条、行为测试 49/90。
-生产保持 7.4.5，附加操作未执行；预拉镜像、数据和前端备份已经准备好。
-升级记录保存在 `/Users/kogeki/dev/HAP-7.5.0-升级验证记录.md`。
+2026-10-09 的表格/层级状态和公共写入边界继续收紧，验证及剩余范围见
+`docs/quality/worksheet-state-types-20261009.md`。

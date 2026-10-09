@@ -1,14 +1,24 @@
 import update from 'immutability-helper';
 import _, { get, isEmpty, isFunction } from 'lodash';
 import sheetAjax from 'src/api/worksheet';
+import type { WorksheetRowsRequest } from 'src/pages/worksheet/types';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { formatQuickFilter } from 'src/utils/filter';
+import type {
+  AddHierarchyChildPayload,
+  HierarchyControlsAction,
+  HierarchyControlsPayload,
+  HierarchyMovePayload,
+  HierarchyNode,
+  HierarchyRecord,
+  HierarchyStateAction,
+  HierarchyTextTitle,
+} from '../reducers/hierarchyTypes';
 import { getCurrentView } from '../util';
 import { updateNavGroup } from './navFilter.js';
 import { dealData, getHierarchyViewIds, getItemByRowId, getParaIds } from './util';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
-import type { AppDispatch, GetState } from 'src/redux/types';
-import type { WorksheetRowsRequest } from 'src/pages/worksheet/types';
 
 const MULTI_RELATE_MAX_PAGE_SIZE = 500;
 let hierarchyPromiseObj: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined;
@@ -105,7 +115,16 @@ function genKanbanKeyByData(data) {
 }
 
 // 递归获取多级关联的层级视图数据
-function getHierarchyDataRecursion({ worksheet, records, kanbanKey, index, para }: { index?: number; [key: string]: any }) {
+function getHierarchyDataRecursion({
+  worksheet,
+  records,
+  kanbanKey,
+  index,
+  para,
+}: {
+  index?: number;
+  [key: string]: any;
+}) {
   const { dispatch, getState, viewControls, level, filters, ...rest } = para;
   // 筛选条件异步加载，重新获取数据时暂停上一次递归请求
   const { sheet } = getState();
@@ -229,7 +248,7 @@ export const addHierarchyRecord = args => (dispatch: AppDispatch, getState: GetS
 
     // 分页数据
     if (reGetData && recordIndex >= 50) {
-      const curRecord = hierarchyViewState[recordIndex];
+      const curRecord = hierarchyViewState[recordIndex]!;
       const children = curRecord.children || [];
 
       // 只有未展开且没有展开过的时候才处理
@@ -256,7 +275,9 @@ export function onCopySuccess(data) {
   };
 }
 
-export function addHierarchyChildrenRecord(data) {
+export function addHierarchyChildrenRecord(
+  data: AddHierarchyChildPayload,
+): Extract<HierarchyStateAction, { type: 'ADD_HIERARCHY_CHILDREN_RECORD_STATE' }> {
   return { type: 'ADD_HIERARCHY_CHILDREN_RECORD_STATE', data };
 }
 
@@ -432,11 +453,14 @@ export function moveMultiSheetRecord(args) {
     const { worksheetId } = viewControls[target.path.length - 1];
     const { controlId, worksheetId: relationWorksheetId } = viewControls[target.path.length];
     const { hierarchyView } = sheet;
-    const { pid: fromRowId, controls }: { controls: FormControl[]; [key: string]: any } = get(hierarchyView, ['hierarchyViewData', [src.rowId]]);
+    const { pid: fromRowId, controls } = get(hierarchyView, ['hierarchyViewData', [src.rowId]]) as HierarchyRecord & {
+      controls: FormControl[];
+    };
     const { viewId } = _.find(controls, item => item.controlId === controlId) || {};
 
     const targetControl = _.find(sheet.controls || [], item => item.controlId === controlId) || {};
-    const targetRowData = _.find(hierarchyView.hierarchyViewState || [], { rowId: target.rowId }) || {};
+    const targetRowData: Partial<HierarchyNode> =
+      _.find(hierarchyView.hierarchyViewState || [], { rowId: target.rowId }) || {};
 
     // 如果是单条且已有值，则返回
     if (targetControl.enumDefault === 1 && targetRowData.children?.length) {
@@ -502,11 +526,19 @@ export function multiRelateGetChildren(para) {
   };
 }
 
-export function getAssignChildren({ path = [], pathId = [], callback, ...args }: WorksheetRowsRequest & {
-  path?: number[] | undefined;
-  pathId?: string[] | undefined;
-  callback?: (() => void) | undefined;
-}, onlyUpdateChildren = false) {
+export function getAssignChildren(
+  {
+    path = [],
+    pathId = [],
+    callback,
+    ...args
+  }: WorksheetRowsRequest & {
+    path?: number[] | undefined;
+    pathId?: string[] | undefined;
+    callback?: (() => void) | undefined;
+  },
+  onlyUpdateChildren = false,
+) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
     const { filters, quickFilter, navGroupFilters } = sheet;
@@ -565,7 +597,10 @@ export function getAssignChildren({ path = [], pathId = [], callback, ...args }:
 }
 
 // 切换子记录的显隐
-export const changeHierarchyChildrenVisible = data => {
+export const changeHierarchyChildrenVisible = (data: {
+  path: number[];
+  visible?: boolean | undefined;
+}): Extract<HierarchyStateAction, { type: 'TOGGLE_HIERARCHY_VISIBLE' }> => {
   return { type: 'TOGGLE_HIERARCHY_VISIBLE', data };
 };
 
@@ -616,12 +651,23 @@ export function becomeTopLevelRecord(data) {
   };
 }
 
-export const addTopLevelStateFromTemp = data => {
+export const addTopLevelStateFromTemp = (
+  data: HierarchyRecord,
+): Extract<HierarchyStateAction, { type: 'ADD_TOP_LEVEL_STATE_FROM_TEMP' }> => {
   return { type: 'ADD_TOP_LEVEL_STATE_FROM_TEMP', data };
 };
 
 // 更新层级记录数据
-export function updateHierarchyData({ recordId, value, path, pathId, relateSheet }: { recordId?: string; [key: string]: any }) {
+export function updateHierarchyData({
+  recordId,
+  value,
+  path,
+  pathId,
+  relateSheet,
+}: {
+  recordId?: string;
+  [key: string]: any;
+}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheet } = getState();
     const { hierarchyView } = sheet;
@@ -682,7 +728,9 @@ export function updateHierarchyData({ recordId, value, path, pathId, relateSheet
 }
 
 // 拖拽移动记录
-export function moveRecord(data) {
+export function moveRecord(
+  data: HierarchyMovePayload,
+): Extract<HierarchyStateAction, { type: 'MOVE_RECORD' | 'MULTI_RELATE_MOVE_RECORD' }> {
   return { type: 'MOVE_RECORD', data };
 }
 
@@ -716,24 +764,28 @@ export function getHierarchyRecord(args, cb) {
 export function updateTitleData({ data, rowId }: { rowId?: string; [key: string]: any }) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { sheet } = getState();
-    const originData = get(sheet, ['hierarchyView', 'hierarchyViewData', rowId]);
+    const originData = get(sheet, ['hierarchyView', 'hierarchyViewData', rowId]) as HierarchyRecord | undefined;
     dispatch({ type: 'UPDATE_HIERARCHY_VIEW_DATA', data: { [rowId]: { ...originData, ...data } } });
   };
 }
 
-export function addTextTitleRecord(data) {
+export function addTextTitleRecord(
+  data: HierarchyTextTitle,
+): Extract<HierarchyStateAction, { type: 'ADD_TEXT_TITLE_RECORD' }> {
   return { type: 'ADD_TEXT_TITLE_RECORD', data };
 }
 
-export function removeHierarchyTempItem(data) {
+export function removeHierarchyTempItem(
+  data: Pick<HierarchyTextTitle, 'rowId' | 'path'>,
+): Extract<HierarchyStateAction, { type: 'REMOVE_HIERARCHY_TEMP_ITEM' }> {
   return { type: 'REMOVE_HIERARCHY_TEMP_ITEM', data };
 }
 
-export function addHierarchyRelateSheetControls(payload) {
+export function addHierarchyRelateSheetControls(payload: HierarchyControlsPayload): HierarchyControlsAction {
   return { type: 'ADD_HIERARCHY_RELATE_SHEET_CONTROLS', payload };
 }
 
-export function initHierarchyRelateSheetControls(payload) {
+export function initHierarchyRelateSheetControls(payload: HierarchyControlsPayload): HierarchyControlsAction {
   return { type: 'INIT_HIERARCHY_RELATE_SHEET_CONTROLS', payload };
 }
 

@@ -16,8 +16,9 @@ import mapView from './mapView';
 import * as resourceView from './resourceview';
 import * as sheetview from './sheetview';
 import * as worksheet from './worksheet';
+import type { WorksheetAction } from './worksheetActions';
 
-function base(state: WorksheetBase = {}, action: ReduxAction): WorksheetBase {
+function base(state: WorksheetBase = {}, action: WorksheetAction): WorksheetBase {
   switch (action.type) {
     case 'WORKSHEET_UPDATE_BASE':
       return { ...state, ...action.base };
@@ -31,7 +32,7 @@ function base(state: WorksheetBase = {}, action: ReduxAction): WorksheetBase {
       // 自定义页面没有视图
       if (isEmpty(action.value.views)) return state;
       if (state.worksheetId === action.value.worksheetId) {
-        const showViews = action.value.views.filter(view => {
+        const showViews = action.value.views!.filter(view => {
           const showhide = _.get(view, 'advancedSetting.showhide') || '';
 
           if (browserIsMobile()) {
@@ -42,7 +43,7 @@ function base(state: WorksheetBase = {}, action: ReduxAction): WorksheetBase {
         });
         return {
           ...state,
-          viewId: _.get((showViews.length ? showViews : action.value.views)[0], 'viewId'),
+          viewId: _.get((showViews.length ? showViews : action.value.views!)[0], 'viewId'),
         };
       }
 

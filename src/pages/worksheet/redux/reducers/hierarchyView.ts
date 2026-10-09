@@ -1,30 +1,65 @@
 import update from 'immutability-helper';
 import { isArray, isEmpty } from 'lodash';
 import _ from 'lodash';
+import type {
+  AddHierarchyChildPayload,
+  ExpandedHierarchyPayload,
+  HierarchyChild,
+  HierarchyControlsAction,
+  HierarchyControlsMap,
+  HierarchyControlsPayload,
+  HierarchyCountAction,
+  HierarchyDataAction,
+  HierarchyDataMap,
+  HierarchyDataStatus,
+  HierarchyMovePayload,
+  HierarchyNode,
+  HierarchyPath,
+  HierarchyRecord,
+  HierarchyRecordInfoAction,
+  HierarchySearchAction,
+  HierarchyState,
+  HierarchyStateAction,
+  HierarchyStatusAction,
+  HierarchyTextTitle,
+  HierarchyViewData,
+} from './hierarchyTypes';
 import { dealChildren, dealPath, initState } from './util';
-import type { ReduxAction } from 'src/redux/types';
-import type { FormControl } from 'src/utils/controlTypes';
 
 // 按已有顺序排序
-const sortChildIds = (treeData, rowId: string, childrenids) => {
+const sortChildIds = (
+  treeData: HierarchyDataMap,
+  rowId: string,
+  childrenids: HierarchyRecord['childrenids'],
+): string[] => {
   const sortIds = Object.values(treeData).filter(i => i.pid === rowId);
   const idByOrder = new Map(sortIds.map((t, i) => [t.rowid, i]));
   // 未指定固定第一项
-  return _.sortBy(dealChildren(childrenids), o => idByOrder.get(o));
+  return _.sortBy(dealChildren(childrenids) as string[], o => idByOrder.get(o));
 };
 
 // 更新记录
-const updateHierarchyRecord = ({ state, path, updater }) => {
+const updateHierarchyRecord = ({
+  state,
+  path,
+  updater,
+}: {
+  state: HierarchyState;
+  path: HierarchyPath;
+  updater: Partial<HierarchyNode>;
+}): HierarchyState => {
   if (!path.length) return state;
   if (path.length === 1) {
     return update(state, {
-      [path[0]]: { $apply: item => ({ ...item, ...updater }) },
+      [path[0]!]: { $apply: (item: HierarchyNode) => ({ ...item, ...updater }) },
     });
   }
 
   const temp = _.cloneDeep(state);
   const wholePath = dealPath(path);
-  const prevValue = _.get(state, wholePath);
+  // Paths are supplied by existing state nodes. These annotations describe that protocol;
+  // they do not validate an arbitrary path or decoded server response at runtime.
+  const prevValue = _.get(state, wholePath) as HierarchyNode | undefined;
   if (_.isEmpty(prevValue)) return temp;
   _.set(temp, wholePath, { ...prevValue, ...updater });
   return temp;
@@ -32,21 +67,33 @@ const updateHierarchyRecord = ({ state, path, updater }) => {
 
 // 展开多级 递归生成状态树
 const genTree = (
-  { data = [], treeData = {}, path = [], pathId = [], level } = {
+  {
+    data = [],
+    treeData = {},
+    path = [],
+    pathId = [],
+    level,
+  }: {
+    data?: Array<string | HierarchyRecord>;
+    treeData?: HierarchyDataMap;
+    path?: HierarchyPath;
+    pathId?: string[];
+    level?: number | string;
+  } = {
     data: [],
     treeData: {},
     path: [],
     pathId: [],
     level: 0,
   },
-) => {
-  if (level < 0) return [];
-  level = level - 1;
-  const children = [];
+): HierarchyState => {
+  if ((level as number) < 0) return [];
+  level = (level as number) - 1;
+  const children: HierarchyState = [];
 
   for (let i = 0; i < data.length; i++) {
-    const rowId = _.isString(data[i]) ? data[i] : data[i].rowid;
-    const node = treeData[rowId] || {};
+    const rowId = _.isString(data[i]) ? (data[i] as string) : (data[i]! as HierarchyRecord).rowid;
+    const node: Pick<HierarchyRecord, 'childrenids'> = treeData[rowId] || {};
     const currentPath = path.concat([i]);
     const currentPathId = pathId.concat([rowId]);
     children.push({
@@ -69,26 +116,37 @@ const genTree = (
 };
 
 //向上展开全部记录
-const updateHierarchyVisible = ({ state = [], currentItem }) => {
+const updateHierarchyVisible = ({
+  state = [],
+  currentItem,
+}: {
+  state?: HierarchyState;
+  currentItem: Pick<HierarchyNode, 'pathId' | 'rowId'>;
+}): HierarchyState => {
   const { pathId = [], rowId } = currentItem;
   //本身不展开
   const filterPathId = pathId.filter(id => id !== rowId);
   const index = _.findIndex(state, da => _.includes(filterPathId, da.rowId));
 
   if (index > -1) {
-    const treeChange = tree => {
+    // The existing traversal returns the first element and discards recursive return values.
+    // Its caller supplies one known node; the overload describes that result without changing the traversal.
+    const treeChange = ((tree: HierarchyChild[]): HierarchyChild | HierarchyChild[] => {
       for (const item of tree) {
         if (item.children && item.children.length > 0) {
           treeChange(item.children);
         }
 
-        return _.includes(filterPathId, item.rowId) ? { ...item, visible: true } : item;
+        return _.includes(filterPathId, item.rowId) ? { ...(item as HierarchyNode), visible: true } : item;
       }
 
       return tree;
+    }) as {
+      (tree: [HierarchyNode, ...HierarchyChild[]]): HierarchyNode;
+      (tree: HierarchyChild[]): HierarchyChild | HierarchyChild[];
     };
 
-    const newData = treeChange([state[index]]);
+    const newData = treeChange([state[index]!]);
     return update(state, { $splice: [[index, 1, newData]] });
   } else {
     return state;
@@ -96,13 +154,19 @@ const updateHierarchyVisible = ({ state = [], currentItem }) => {
 };
 
 // 展开多级记录
-const expandedHierarchyView = ({ data, treeData, level }) => {
+const expandedHierarchyView = ({ data, treeData, level }: ExpandedHierarchyPayload): HierarchyState => {
   const parents = _.filter(data, item => !item.pid);
   return genTree({ data: parents, treeData, level });
 };
 
 // 添加顶级记录
-const addTopLevelRecordState = ({ state, data }) => {
+const addTopLevelRecordState = ({
+  state,
+  data,
+}: {
+  state: HierarchyState;
+  data: HierarchyRecord | HierarchyRecord[];
+}): HierarchyState => {
   const count = state.length;
   if (!isArray(data) && !isEmpty(data)) data = [data];
   return update(state, {
@@ -111,9 +175,15 @@ const addTopLevelRecordState = ({ state, data }) => {
 };
 
 // 添加子记录
-const addChildrenRecordState = ({ state, data, path, pathId, spliceTempRecord = false }) => {
+const addChildrenRecordState = ({
+  state,
+  data,
+  path,
+  pathId,
+  spliceTempRecord = false,
+}: { state: HierarchyState } & AddHierarchyChildPayload): HierarchyState => {
   if (!path.length) return state;
-  const getNextChildren = children => {
+  const getNextChildren = (children: HierarchyChild[]): HierarchyChild[] => {
     const actualChildren = children.filter(item => typeof item !== 'string');
 
     if (spliceTempRecord) {
@@ -145,13 +215,13 @@ const addChildrenRecordState = ({ state, data, path, pathId, spliceTempRecord = 
 
   if (path.length === 1) {
     return update(state, {
-      [path[0]]: { children: { $apply: item => getNextChildren(item) } },
+      [path[0]!]: { children: { $apply: (item: HierarchyChild[]) => getNextChildren(item) } },
     });
   }
 
   const temp = _.cloneDeep(state);
   const wholePath = dealPath(path);
-  const prevValue = _.get(state, wholePath);
+  const prevValue = _.get(state, wholePath) as HierarchyNode;
 
   _.set(temp, wholePath, {
     ...prevValue,
@@ -161,12 +231,16 @@ const addChildrenRecordState = ({ state, data, path, pathId, spliceTempRecord = 
   return temp;
 };
 
-function multiRelateMoveRecord({ state, src, target }) {
+function multiRelateMoveRecord({
+  state,
+  src,
+  target,
+}: { state: HierarchyState } & HierarchyMovePayload): HierarchyState {
   const { rowId: currentRowId, path: srcPath } = src;
   const { path: targetPath } = target;
   const temp = _.cloneDeep(state);
 
-  const isCurrent = item => {
+  const isCurrent = (item: HierarchyChild): boolean => {
     if (_.isObject(item)) return item.rowId === currentRowId;
     return item === currentRowId;
   };
@@ -179,8 +253,8 @@ function multiRelateMoveRecord({ state, src, target }) {
   const targetWholePath = dealPath(targetPath);
 
   // const currentRecord = _.get(temp, currentWholePath);
-  const currentParentRecord = _.get(temp, currentParentWholePath);
-  const targetRecord = _.get(temp, targetWholePath);
+  const currentParentRecord = _.get(temp, currentParentWholePath) as HierarchyNode;
+  const targetRecord = _.get(temp, targetWholePath) as HierarchyNode;
   const currentIndex = _.findIndex(currentParentRecord.children, isCurrent);
 
   // const nextRecord = update(currentRecord, {
@@ -201,7 +275,7 @@ function multiRelateMoveRecord({ state, src, target }) {
 }
 
 // 移动记录卡片，分别更新原纪录的path和pathId 并将其放入目标记录的children中
-const moveRecord = ({ state, target, src }) => {
+const moveRecord = ({ state, target, src }: { state: HierarchyState } & HierarchyMovePayload): HierarchyState => {
   const { path: targetPath } = target;
   const { rowId: srcId, path: srcPath } = src;
   if (_.isEmpty(targetPath) || _.isEmpty(srcPath)) return state;
@@ -209,29 +283,29 @@ const moveRecord = ({ state, target, src }) => {
   const temp = _.cloneDeep(state);
   const targetWholePath = dealPath(targetPath);
   const srcWholePath = dealPath(srcPath);
-  const targetRecord = _.get(temp, targetWholePath);
-  const srcRecord = _.get(temp, srcWholePath);
+  const targetRecord = _.get(temp, targetWholePath) as HierarchyNode;
+  const srcRecord = _.get(temp, srcWholePath) as HierarchyNode;
   if (!srcRecord || !targetRecord) return state;
   // 顶级记录移动
   if (srcWholePath.length === 1) {
-    const index = srcWholePath[0];
+    const index = srcWholePath[0] as number;
     const next = update(temp, { $splice: [[index, 1]] });
     const nextTarget = update(targetRecord, {
-      children: { $push: [temp[index]] },
+      children: { $push: [temp[index]!] },
     });
     _.set(next, targetWholePath, nextTarget);
     return next;
   }
 
   const srcParentPath = dealPath(srcPath.slice(0, -1));
-  const srcParent = _.get(temp, srcParentPath);
+  const srcParent = _.get(temp, srcParentPath) as HierarchyNode;
   const srcIndex = _.findIndex(srcParent.children, item => item.rowId === srcId);
   const nextSrcParent = update(srcParent, {
     children: { $splice: [[srcIndex, 1]] },
   });
   const nextSrcRecord = update(srcRecord, {
     pathId: { $apply: () => [...targetRecord.pathId, srcId] },
-    path: { $apply: item => [...targetRecord.path, _.last(item)] },
+    path: { $apply: (item: HierarchyPath) => [...targetRecord.path, _.last(item)!] },
   });
   _.set(temp, srcParentPath, nextSrcParent);
   const nextTarget = nextSrcRecord ? update(targetRecord, { children: { $push: [nextSrcRecord] } }) : targetRecord;
@@ -239,7 +313,7 @@ const moveRecord = ({ state, target, src }) => {
   return temp;
 };
 
-function addTextTitleRecord({ state, data }) {
+function addTextTitleRecord({ state, data }: { state: HierarchyState; data: HierarchyTextTitle }): HierarchyState {
   const { path } = data;
 
   // 添加顶级记录
@@ -250,15 +324,21 @@ function addTextTitleRecord({ state, data }) {
   }
 
   const temp = _.cloneDeep(state);
-  const node = _.get(temp, dealPath(path));
+  const node = _.get(temp, dealPath(path)) as HierarchyNode;
   return _.set(temp, dealPath(path), update(node, { children: { $push: [data.rowId] } }));
 }
 
-function removeHierarchyTempItem({ state, data }) {
+function removeHierarchyTempItem({
+  state,
+  data,
+}: {
+  state: HierarchyState;
+  data: Pick<HierarchyTextTitle, 'rowId' | 'path'>;
+}): HierarchyState {
   const { path } = data;
 
   // 如果是只有一个顶级记录 则直接清空
-  if (state.length === 1 && _.isEmpty(state[0].children)) return [];
+  if (state.length === 1 && _.isEmpty(state[0]!.children)) return [];
 
   if (_.isEmpty(path)) {
     const index = state.findIndex(item => item.rowId === data.rowId);
@@ -266,13 +346,13 @@ function removeHierarchyTempItem({ state, data }) {
   }
 
   const temp = _.cloneDeep(state);
-  const node = _.get(temp, dealPath(path));
+  const node = _.get(temp, dealPath(path)) as HierarchyNode;
   return _.set(
     temp,
     dealPath(path),
     update(node, {
       children: {
-        $apply: item => {
+        $apply: (item: HierarchyChild[]) => {
           return (item || []).filter(i => typeof i === 'object');
         },
       },
@@ -281,7 +361,7 @@ function removeHierarchyTempItem({ state, data }) {
 }
 
 // 更新层级记录状态树
-export function hierarchyViewState(state = [], action: ReduxAction) {
+export function hierarchyViewState(state: HierarchyState = [], action: HierarchyStateAction): HierarchyState {
   const { type, data } = action;
 
   switch (type) {
@@ -372,7 +452,7 @@ export function hierarchyViewState(state = [], action: ReduxAction) {
   }
 }
 
-export function hierarchyViewData(state = {}, action: ReduxAction) {
+export function hierarchyViewData(state: HierarchyViewData = {}, action: HierarchyDataAction): HierarchyViewData {
   const { type, data } = action;
 
   switch (type) {
@@ -389,7 +469,7 @@ export function hierarchyViewData(state = {}, action: ReduxAction) {
       return update(state, { $unset: [data.rowId] });
     case 'ADD_TOP_LEVEL_STATE':
       if (_.isArray(data)) {
-        const newItems = data.reduce((acc, item) => {
+        const newItems = data.reduce<HierarchyDataMap>((acc, item) => {
           acc[item.rowid] = item;
           return acc;
         }, {});
@@ -405,7 +485,10 @@ export function hierarchyViewData(state = {}, action: ReduxAction) {
   }
 }
 
-export function hierarchyDataStatus(state = { loading: false, hasMoreData: true, pageIndex: 1, pageSize: 50 }, action: ReduxAction) {
+export function hierarchyDataStatus(
+  state: HierarchyDataStatus = { loading: false, hasMoreData: true, pageIndex: 1, pageSize: 50 },
+  action: HierarchyStatusAction,
+): HierarchyDataStatus {
   const { type, data } = action;
 
   switch (type) {
@@ -416,7 +499,7 @@ export function hierarchyDataStatus(state = { loading: false, hasMoreData: true,
   }
 }
 
-export function hierarchyTopLevelDataCount(state = 0, action: ReduxAction<{ count: number }>) {
+export function hierarchyTopLevelDataCount(state = 0, action: HierarchyCountAction) {
   switch (action.type) {
     case 'CHANGE_HIERARCHY_TOP_LEVEL_DATA_COUNT':
       return action.count;
@@ -425,21 +508,27 @@ export function hierarchyTopLevelDataCount(state = 0, action: ReduxAction<{ coun
   }
 }
 
-const addRelateControls = (state, { ids, controls }) => {
-  const newControls: FormControl[] = ids.reduce((p, c, index: number) => {
+const addRelateControls = (
+  state: HierarchyControlsMap,
+  { ids, controls }: HierarchyControlsPayload,
+): HierarchyControlsMap => {
+  const newControls = ids.reduce<HierarchyControlsMap>((p, c, index: number) => {
     p[c] = controls[index];
     return p;
   }, {});
   return { ...state, ...newControls };
 };
 
-export function hierarchyRelateSheetControls(state = {}, action: ReduxAction) {
-  const { type, payload = {} } = action;
-  const { ids = [], controls = [] }: { controls: FormControl[]; [key: string]: any } = payload;
+export function hierarchyRelateSheetControls(
+  state: HierarchyControlsMap = {},
+  action: HierarchyControlsAction,
+): HierarchyControlsMap {
+  const { type, payload = {} as HierarchyControlsPayload } = action;
+  const { ids = [], controls = [] } = payload;
 
   switch (type) {
     case 'INIT_HIERARCHY_RELATE_SHEET_CONTROLS':
-      return ids.reduce((p, c, index: number) => {
+      return ids.reduce<HierarchyControlsMap>((p, c, index: number) => {
         p[c] = controls[index];
         return p;
       }, {});
@@ -450,7 +539,7 @@ export function hierarchyRelateSheetControls(state = {}, action: ReduxAction) {
   }
 }
 
-export function searchRecordId(state = null, action: ReduxAction) {
+export function searchRecordId(state: string | null = null, action: HierarchySearchAction): string | null {
   switch (action.type) {
     case 'CHANGE_HIERARCHY_SEARCH_RECORD_ID':
       return action.data;
@@ -459,7 +548,7 @@ export function searchRecordId(state = null, action: ReduxAction) {
   }
 }
 
-export function recordInfoId(state = null, action: ReduxAction) {
+export function recordInfoId(state: string | null = null, action: HierarchyRecordInfoAction): string | null {
   switch (action.type) {
     case 'CHANGE_HIERARCHY_RECORD_INFO_ID':
       return action.data;

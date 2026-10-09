@@ -16,10 +16,11 @@ import { refreshBtnData } from 'src/pages/FormSet/util';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { formatSearchConfigs } from 'src/pages/widgetConfig/util';
 import { AREA } from 'src/pages/worksheet/common/Sheet/GroupFilter/constants.js';
-import type { AppPkgData, WorksheetView } from 'src/pages/worksheet/types';
+import type { AppPkgData, WorksheetBase, WorksheetInfo, WorksheetView } from 'src/pages/worksheet/types';
 import type { AppDispatch, GetState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { getHighAuthControls } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { needHideViewFilters } from 'src/utils/filter';
 import { addBehaviorLog } from 'src/utils/project';
 import {
@@ -29,6 +30,7 @@ import {
   replaceRulesTranslateInfo,
 } from 'src/utils/translate';
 import { getHighAuthSheetSwitchPermit } from 'src/utils/worksheet';
+import type { WorksheetActionOf } from '../reducers/worksheetActions';
 import { initBoardViewData } from './boardView';
 import { refresh as calendarViewRefresh } from './calendarview';
 import { refresh as customWidgetViewRefresh } from './customWidgetView';
@@ -151,7 +153,7 @@ export function handleLoadOperateButtons({ worksheetInfo }) {
   };
 }
 
-export const updateBase = base => {
+export const updateBase = (base: Partial<WorksheetBase>) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().sheet;
     const viewChanged = _.get(sheet, 'base.viewId') && base.viewId && _.get(sheet, 'base.viewId') !== base.viewId;
@@ -201,15 +203,26 @@ export const clearChartId = () => {
 };
 
 // 更新个别字段
-export const updateWorksheetSomeControls = controls => ({
+export const updateWorksheetSomeControls = (
+  controls: FormControl[],
+): WorksheetActionOf<'WORKSHEET_UPDATE_SOME_CONTROLS'> => ({
   type: 'WORKSHEET_UPDATE_SOME_CONTROLS',
   controls,
 });
 
-export const updateIsCharge = (isCharge: boolean) => ({ type: 'WORKSHEET_UPDATE_IS_CHARGE', isCharge });
-export const updateAppPkgData = (appPkgData: AppPkgData) => ({ type: 'WORKSHEET_UPDATE_APPPKGDATA', appPkgData });
+export const updateIsCharge = (isCharge: boolean): WorksheetActionOf<'WORKSHEET_UPDATE_IS_CHARGE'> => ({
+  type: 'WORKSHEET_UPDATE_IS_CHARGE',
+  isCharge,
+});
+export const updateAppPkgData = (appPkgData: AppPkgData): WorksheetActionOf<'WORKSHEET_UPDATE_APPPKGDATA'> => ({
+  type: 'WORKSHEET_UPDATE_APPPKGDATA',
+  appPkgData,
+});
 
-export const updateWorksheetLoading = (loading: boolean) => ({ type: 'WORKSHEET_UPDATE_LOADING', loading });
+export const updateWorksheetLoading = (loading: boolean): WorksheetActionOf<'WORKSHEET_UPDATE_LOADING'> => ({
+  type: 'WORKSHEET_UPDATE_LOADING',
+  loading,
+});
 
 let worksheetRequest: ApiResult | null = null;
 
@@ -426,7 +439,9 @@ export function loadWorksheet(worksheetId: string, setRequest) {
   };
 }
 
-export const updateWorksheetInfo = info => ({
+export const updateWorksheetInfo = (
+  info: Partial<WorksheetInfo>,
+): WorksheetActionOf<'WORKSHEET_UPDATE_WORKSHEETINFO'> => ({
   type: 'WORKSHEET_UPDATE_WORKSHEETINFO',
   info,
 });
@@ -506,13 +521,13 @@ export function updateCustomButtons(btns, isAdd) {
 }
 
 // 更新所有视图
-export const updateViews = views => ({
+export const updateViews = (views: WorksheetView[] | undefined): WorksheetActionOf<'WORKSHEET_UPDATE_VIEWS'> => ({
   type: 'WORKSHEET_UPDATE_VIEWS',
   views,
 });
 
 // 更新单个视图
-export const updateView = view => ({
+export const updateView = (view: WorksheetView): WorksheetActionOf<'WORKSHEET_UPDATE_VIEW'> => ({
   type: 'WORKSHEET_UPDATE_VIEW',
   view,
 });

@@ -2,11 +2,12 @@ import React from 'react';
 import _ from 'lodash';
 import { handleCondition } from 'src/pages/widgetConfig/util/data';
 import { dealData } from 'src/pages/worksheet/redux/actions/util.js';
+import type { HierarchyRecord } from 'src/pages/worksheet/redux/reducers/hierarchyTypes';
 import { dealChildren } from 'src/pages/worksheet/redux/reducers/util.js';
 import { renderText as renderCellText } from 'src/utils/control';
 import { getAdvanceSetting } from 'src/utils/control';
-import { AREA, TYPES } from './constants.js';
 import type { FormControl } from 'src/utils/controlTypes';
+import { AREA, TYPES } from './constants.js';
 
 export function sortDataByCustomNavs(data, view = {}, controls: FormControl[] = []) {
   let customItems = safeParse(_.get(view, 'advancedSetting.customnavs'), 'array');
@@ -99,27 +100,38 @@ const sortChildIds = (treeData, rowId: string, childrenids) => {
   const sortIds = Object.values(treeData).filter(i => i.pid === rowId);
   const idByOrder = new Map(sortIds.map((t, i) => [t.rowid, i]));
   // 未指定固定第一项
-  return _.sortBy(dealChildren(childrenids), o => idByOrder.get(o));
+  return _.sortBy(dealChildren(childrenids) as string[], o => idByOrder.get(o));
 };
 
 // 展开多级 递归生成状态树
-const genTree = (
-  { data = [], treeData = {}, path = [], pathId = [], level, info } = {
-    data: [],
-    treeData: {},
-    path: [],
-    pathId: [],
-    level: 0,
-    info,
-  },
-) => {
-  if (level < 0) return [];
-  level = level - 1;
+const genTree = ({
+  data = [],
+  treeData = {},
+  path = [],
+  pathId = [],
+  level,
+  info,
+}: {
+  data?: Array<string | HierarchyRecord> | undefined;
+  treeData?: Partial<Record<string, HierarchyRecord>> | undefined;
+  path?: number[] | undefined;
+  pathId?: string[] | undefined;
+  level?: number | undefined;
+  info: {
+    source: FormControl;
+    keywords: string;
+    control: FormControl;
+    viewId: string;
+    navGroup: { viewId?: string | undefined };
+  };
+}) => {
+  if ((level as number) < 0) return [];
+  level = (level as number) - 1;
   const children = [];
 
   for (let i = 0; i < data.length; i++) {
-    const rowId = _.isString(data[i]) ? data[i] : data[i].rowid;
-    const node = treeData[rowId] || {};
+    const rowId = _.isString(data[i]) ? (data[i] as string) : (data[i]! as HierarchyRecord).rowid;
+    const node: Partial<HierarchyRecord> = treeData[rowId] || {};
     if (!node.rowid) return undefined;
     const currentPath = path.concat([i]);
     const currentPathId = pathId.concat([rowId]);
@@ -141,7 +153,7 @@ const genTree = (
       children: childrenData,
       isLeaf: !node.childrenids,
       txt, // 渲染显示文本
-      text: node[control.controlId], // 原始文本
+      text: node[control.controlId as string], // 原始文本
     });
   }
 
@@ -155,7 +167,8 @@ export const formatData = (source, navGroup, controls, view) => {
     case 9:
     case 10:
     case 11:
-      const controlOptions = (controls.find((o: FormControl) => o.controlId === _.get(navGroup, 'controlId')) || []).options || [];
+      const controlOptions =
+        (controls.find((o: FormControl) => o.controlId === _.get(navGroup, 'controlId')) || []).options || [];
       data = (navGroup.isAsc ? controlOptions : [...controlOptions].reverse())
         .filter(o => !o.isDeleted)
         .map(o => ({
@@ -223,9 +236,10 @@ export const buildNavGroupFilters = (view, source, controls, keywords: string) =
       groupFilters: [
         {
           dataType: (
-            ((controls.find((o: FormControl) => o.controlId === _.get(source, 'controlId')) || {}).relationControls || []).find(
-              o => o.controlId === navsearchcontrol,
-            ) || {}
+            (
+              (controls.find((o: FormControl) => o.controlId === _.get(source, 'controlId')) || {}).relationControls ||
+              []
+            ).find(o => o.controlId === navsearchcontrol) || {}
           ).type,
           spliceType: 1,
           dynamicSource: [],
@@ -250,7 +264,18 @@ export const getAllDepartmentIds = view => {
 };
 
 // 准备请求参数
-export const prepareRequestParams = ({ worksheetId, viewId, rowId, appId }: { worksheetId?: string; viewId?: string; rowId?: string; appId?: string; [key: string]: any }, view, source, controls, keyWords) => {
+export const prepareRequestParams = (
+  {
+    worksheetId,
+    viewId,
+    rowId,
+    appId,
+  }: { worksheetId?: string; viewId?: string; rowId?: string; appId?: string; [key: string]: any },
+  view,
+  source,
+  controls,
+  keyWords,
+) => {
   const { navfilters = '[]', navshow, navlayer } = getAdvanceSetting(view);
   const filters = safeParse(navfilters, 'array'); // 解析导航过滤器
 

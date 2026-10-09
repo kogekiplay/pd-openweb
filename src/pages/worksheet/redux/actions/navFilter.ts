@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import worksheetAjax from 'src/api/worksheet';
+import type { WorksheetFilters, WorksheetNavGroupCount } from 'src/pages/worksheet/types';
 import type { AppDispatch, GetState } from 'src/redux/types';
-import type { WorksheetFilters } from 'src/pages/worksheet/types';
 import { getFilledRequestParams } from 'src/utils/common';
 
 // 更新分组筛选
@@ -15,8 +15,8 @@ export const updateNavGroup = () => {
   };
 };
 
-let getNavGroupRequest: ApiResult | null = null;
-let preWorksheetIds = [];
+let getNavGroupRequest: ApiResultOf<WorksheetNavGroupCount[]> | null = null;
+let preWorksheetIds: string[] = [];
 
 // 获取分组筛选的count
 export function getNavGroupCount() {

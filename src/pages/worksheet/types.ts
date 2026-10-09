@@ -39,6 +39,13 @@ export interface WorksheetNavGroupCondition extends WorksheetFilterCondition {
   navNames: string[];
 }
 
+/** GetNavGroup 的消费形状：key 对应分组值，name 用于关联分组标题，count 用于数量显示。 */
+export interface WorksheetNavGroupCount {
+  key: string;
+  name?: string | undefined;
+  count: number;
+}
+
 /** formatFilterValues 把服务端的字符串转换为人员、部门、角色、地区或关联记录项。 */
 export type QuickFilterDisplayValue =
   | string
@@ -85,7 +92,8 @@ export interface WorksheetRowsRequest extends Partial<WorksheetFilters> {
   isGetWorksheet?: boolean | undefined;
   fastFilters?: WorksheetFilterCondition[] | undefined;
   navGroupFilters?: WorksheetFilterCondition[] | undefined;
-  sortControls?: { controlId?: string | undefined; datatype?: number | undefined; isAsc?: boolean | undefined }[] | undefined;
+  sortControls?:
+    { controlId?: string | undefined; datatype?: number | undefined; isAsc?: boolean | undefined }[] | undefined;
   langType?: number | undefined;
 }
 

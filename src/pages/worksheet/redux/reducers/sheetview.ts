@@ -1,33 +1,24 @@
 import _, { get } from 'lodash';
 import type { RecordRow } from 'src/utils/controlTypes';
-import type { ReduxAction } from 'src/redux/types';
+import type {
+  SheetFetchParamsState,
+  SheetFoldedMap,
+  SheetGroupFetchParamsState,
+  SheetViewAction,
+  SheetViewConfigState,
+  SheetViewDataState,
+} from './sheetviewTypes';
+
+export type {
+  SheetColumnStyle,
+  SheetViewConfigState,
+  SheetFetchParamsState,
+  SheetViewDataState,
+} from './sheetviewTypes';
 
 export { treeTableViewData } from 'worksheet/common/TreeTableHelper/index.js';
 
 // 表视图表格属性
-
-/** 表格列样式：advancedSetting.liststyle 里解析出来的一项（按 cid 建索引）；全仓读到的只有下面这些字段 */
-export interface SheetColumnStyle {
-  cid?: string | undefined;
-  width?: number | undefined;
-  /** 对齐：没配时数值类字段默认 2（右对齐），其余 0 */
-  direction?: number | undefined;
-  showtype?: number | undefined;
-  coverFillType?: number | undefined;
-}
-
-export interface SheetViewConfigState {
-  fixedColumnCount: number;
-  defaultScrollLeft: number;
-  /** 列宽：controlId → px */
-  sheetColumnWidths: Record<string, number>;
-  sheetColumnWidthsMap: Record<string, number>;
-  /** 临时隐藏的列（controlId） */
-  sheetHiddenColumns: string[];
-  allWorksheetIsSelected: boolean;
-  sheetSelectedRows: RecordRow[];
-  columnStyles: Record<string, SheetColumnStyle>;
-}
 
 const initialSheetViewConfig: SheetViewConfigState = {
   fixedColumnCount: 0,
@@ -40,7 +31,7 @@ const initialSheetViewConfig: SheetViewConfigState = {
   columnStyles: {},
 };
 
-export function sheetViewConfig(state = initialSheetViewConfig, action: ReduxAction): SheetViewConfigState {
+export function sheetViewConfig(state = initialSheetViewConfig, action: SheetViewAction): SheetViewConfigState {
   switch (action.type) {
     // 记录选择逻辑
     case 'WORKSHEET_SHEETVIEW_SELECT_ALL':
@@ -85,20 +76,13 @@ export function sheetViewConfig(state = initialSheetViewConfig, action: ReduxAct
 
 // 表视图数据请求参数
 
-export interface SheetFetchParamsState {
-  pageIndex: number;
-  pageSize: number;
-  /** 当前排序（至多一项，见 WORKSHEET_SHEETVIEW_UPDATE_SORTS） */
-  sortControls: { controlId?: string | undefined; datatype?: number | undefined; isAsc?: boolean | undefined }[];
-}
-
 const initialSheetFetchParams: SheetFetchParamsState = {
   pageIndex: 1,
   pageSize: 50,
   sortControls: [],
 };
 
-export function sheetFetchParams(state = initialSheetFetchParams, action: ReduxAction): SheetFetchParamsState {
+export function sheetFetchParams(state = initialSheetFetchParams, action: SheetViewAction): SheetFetchParamsState {
   switch (action.type) {
     case 'WORKSHEET_SHEETVIEW_CHANGE_PAGEINDEX':
       return { ...state, pageIndex: action.pageIndex };
@@ -119,20 +103,6 @@ export function sheetFetchParams(state = initialSheetFetchParams, action: ReduxA
 
 // 表视图数据请
 
-export interface SheetViewDataState {
-  loading: boolean;
-  rows: RecordRow[];
-  count: number;
-  /** 视图统计：types 是 controlId → 统计方式；values 是 controlId → 统计值（报表接口的原样值，没核对过） */
-  rowsSummary: { types: Record<string, number>; values: Record<string, ApiPayload> };
-  /** 分组统计：groupKey → { values }，另有一个固定的 types 键（见 WORKSHEET_SHEETVIEW_FETCH_REPORT_SUCCESS） */
-  groupRowsSummary: { types?: Record<string, number> | undefined; [groupKey: string]: ApiPayload };
-  /** 各视图的批量编辑权限：viewId → getViewPermission 的 view */
-  permission: Record<string, HapApi.MD.Entity.Role.AppRoleGrpcModel.ViewPermission>;
-  refreshFlag?: number | undefined;
-  pageCountAbnormal?: boolean | undefined;
-}
-
 const initialSheetViewData: SheetViewDataState = {
   // 表视图loading
   loading: true,
@@ -148,7 +118,7 @@ const initialSheetViewData: SheetViewDataState = {
   permission: {},
 };
 
-export function sheetViewData(state = initialSheetViewData, action: ReduxAction): SheetViewDataState {
+export function sheetViewData(state = initialSheetViewData, action: SheetViewAction): SheetViewDataState {
   switch (action.type) {
     // 开始获取记录数据
     case 'WORKSHEET_SHEETVIEW_FETCH_ROWS_START':
@@ -219,11 +189,11 @@ export function sheetViewData(state = initialSheetViewData, action: ReduxAction)
   }
 }
 
-export function abortController(state = new AbortController(), action: ReduxAction) {
+export function abortController(state = new AbortController(), action: SheetViewAction) {
   return action.type === 'WORKSHEET_SHEETVIEW_INIT_ABORT_CONTROLLER' ? new AbortController() : state;
 }
 
-export function foldedMap(state = {}, action: ReduxAction) {
+export function foldedMap(state: SheetFoldedMap = {}, action: SheetViewAction): SheetFoldedMap {
   switch (action.type) {
     case 'WORKSHEET_SHEETVIEW_FETCH_ROWS_START':
     case 'WORKSHEET_SHEETVIEW_CLEAR_FOLDED':
@@ -238,7 +208,10 @@ export function foldedMap(state = {}, action: ReduxAction) {
   }
 }
 
-export function groupFetchParams(state = {}, action: ReduxAction) {
+export function groupFetchParams(
+  state: SheetGroupFetchParamsState = {},
+  action: SheetViewAction,
+): SheetGroupFetchParamsState {
   switch (action.type) {
     case 'WORKSHEET_SHEETVIEW_CHANGE_GROUP_FETCH_PARAMS':
       return { ...state, [action.groupKey]: { ...state[action.groupKey], ...action.changes } };
