@@ -17,6 +17,7 @@ function requireMapUtils({ deferLoad = false } = {}) {
   let handlerCount = 0;
   let destroyCount = 0;
   let getCurrentPosCallback;
+  let getFailedLocationCallback;
   let resolveLoad;
   const locationResult = {
     formattedAddress: '上海市',
@@ -28,8 +29,9 @@ function requireMapUtils({ deferLoad = false } = {}) {
       handlerCount += 1;
     }
 
-    getCurrentPos(callback) {
+    getCurrentPos(callback, _openCityPos, options) {
       getCurrentPosCallback = callback;
+      getFailedLocationCallback = options.locationFailedCallback;
     }
 
     destroyMap() {
@@ -83,8 +85,11 @@ function requireMapUtils({ deferLoad = false } = {}) {
       get destroyCount() {
         return destroyCount;
       },
-      resolveLocation() {
-        getCurrentPosCallback('complete', locationResult);
+      resolveLocation(result: unknown = locationResult) {
+        getCurrentPosCallback('complete', result);
+      },
+      failLocation(error?: unknown) {
+        getFailedLocationCallback(error);
       },
       resolveLoad() {
         resolveLoad();
@@ -161,6 +166,23 @@ async function flushLocationChain() {
 
   await assert.rejects(expiredLocation, /Location lifecycle expired before map init/);
   assert.strictEqual(deferred.counters.handlerCount, 0, '生命周期失效后不应再创建地图实例');
+
+  const invalid = requireMapUtils();
+  invalid.mapUtils.retainMapLocation();
+  const invalidLocation = invalid.mapUtils.getCurrentPos();
+  await flushLocationChain();
+  invalid.counters.resolveLocation({ formattedAddress: 42 });
+  await assert.rejects(invalidLocation, /Location failed/);
+  const sdkFailure = invalid.mapUtils.getCurrentPos();
+  await flushLocationChain();
+  const sdkError = new Error('SDK failed');
+  invalid.counters.failLocation(sdkError);
+  await assert.rejects(sdkFailure, error => error === sdkError);
+  const recovered = invalid.mapUtils.getCurrentPos();
+  await flushLocationChain();
+  invalid.counters.resolveLocation();
+  assert.strictEqual(await recovered, invalid.counters.locationResult, '失败后下一次定位仍可返回真实结果');
+  invalid.mapUtils.destroyMapLocation();
 
   console.log('Form map utils tests passed');
 })().catch(error => {

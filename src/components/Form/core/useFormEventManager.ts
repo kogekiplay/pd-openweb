@@ -1,9 +1,37 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { Dispatch, RefObject, SetStateAction } from 'react';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { browserIsMobile } from 'src/utils/common';
 import type { FormControl } from 'src/utils/controlTypes';
 import { supportTabKeyDown } from '../core/utils';
+import type { FormStoreState } from '../store/types';
+
+export type WidgetEventTrigger = 'trigger_tab_enter' | 'trigger_tab_leave' | 'Enter' | 'ArrowRight' | 'ArrowLeft';
+/** Only the trigger and native keyboard event are interpreted here; extension payloads stay unknown. */
+export type WidgetEventData =
+  | {
+      triggerType: 'trigger_tab_enter' | 'trigger_tab_leave';
+      originalEvent?: KeyboardEvent | null | undefined;
+      [key: string]: unknown;
+    }
+  | { triggerType: 'Enter' | 'ArrowRight' | 'ArrowLeft'; originalEvent: KeyboardEvent; [key: string]: unknown }
+  | { triggerType?: undefined; originalEvent?: KeyboardEvent | null | undefined; [key: string]: unknown };
+export type WidgetEventCallback = (data: WidgetEventData) => void;
+export type TabFocus = [] | [activeId: string, previousId?: string | undefined];
+export interface FormEventOptions {
+  containerRef: RefObject<HTMLElement | null>;
+  stateRef: RefObject<Pick<FormStoreState, 'renderData'>>;
+  from?: number | undefined;
+  disabledTabs?: boolean | undefined;
+  disabledChildTableCheck?: boolean | undefined;
+  flag?: unknown;
+}
+export interface FormEventResult {
+  instanceId: string;
+  tabFocusArr: TabFocus;
+  setTabFocusArr: Dispatch<SetStateAction<TabFocus>>;
+}
 
 // rememberText 该文本控制是否能作为tab标记开始控件
 const isTextInput = (data: FormControl = {}, rememberText = false) => {
@@ -28,44 +56,43 @@ const isTextInput = (data: FormControl = {}, rememberText = false) => {
  * 控件事件管理器类
  */
 class WidgetEventManager {
-  constructor() {
-    this.subscribers = new Map(); // controlId -> callback
-  }
+  private readonly subscribers = new Map<string, { callback: WidgetEventCallback }>();
 
   /**
    * 订阅事件
    * @param {string} controlId
    * @param {Function} callback
    */
-  subscribe(controlId: string, callback) {
-    this.subscribers.set(controlId, callback);
+  subscribe(controlId: string, callback: WidgetEventCallback): () => void {
+    const subscription = { callback };
+    this.subscribers.set(controlId, subscription);
 
     // 返回取消订阅函数
     return () => {
-      this.subscribers.delete(controlId);
+      if (this.subscribers.get(controlId) === subscription) this.subscribers.delete(controlId);
     };
   }
 
   /**
    * 发布事件
    * @param {string} controlId - 控件ID
-   * @param {any} data - 事件数据
+   * @param data - 事件数据
    */
-  publish(controlId: string, data = {}) {
-    const callback = this.subscribers.get(controlId);
-    if (callback) callback(data);
+  publish(controlId: string, data: WidgetEventData = {}): void {
+    const subscription = this.subscribers.get(controlId);
+    subscription?.callback(data);
   }
 
   /**
    * 清理所有订阅
    */
-  clear(instanceId: string) {
+  clear(instanceId?: string): void {
     if (instanceId) {
-      // 清理包含特定instanceId的controlId
+      // 控件键由 DesktopForm 生成 `${instanceId}~${controlId}`，只清理该实例。
       const keysToDelete = [];
 
       for (const [controlId] of this.subscribers) {
-        if (controlId.includes(instanceId)) {
+        if (controlId.startsWith(`${instanceId}~`)) {
           keysToDelete.push(controlId);
         }
       }
@@ -87,27 +114,21 @@ const widgetEventManager = new WidgetEventManager();
  * @param {Function} callback - 键盘事件回调
  * @returns {Object} - 发布事件的函数
  */
-export const useWidgetEvent = (controlId: string, callback) => {
-  const unsubscribeRef = useRef<(() => void) | null>(null);
-
+export const useWidgetEvent = (controlId: string | undefined, callback?: WidgetEventCallback) => {
+  const callbackRef = useRef(callback);
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
   useEffect(() => {
     if (!controlId) return undefined;
-
-    const unsubscribe = widgetEventManager.subscribe(controlId, data => {
-      if (callback) callback(data);
-    });
-
-    unsubscribeRef.current = unsubscribe;
-
-    return () => {
-      if (unsubscribeRef.current) {
-        unsubscribeRef.current();
-      }
-    };
+    // Capture this subscription's disposer so an old cleanup cannot detach a replacement.
+    return widgetEventManager.subscribe(controlId, data => callbackRef.current?.(data));
   }, [controlId]);
 
   return {
-    publish: data => widgetEventManager.publish(controlId, data),
+    publish: (data: WidgetEventData = {}) => {
+      if (controlId) widgetEventManager.publish(controlId, data);
+    },
   };
 };
 
@@ -115,25 +136,26 @@ export const useWidgetEvent = (controlId: string, callback) => {
  * 为 Class 组件事件提供
  */
 export class WidgetEventHelper {
-  declare controlId: string;
+  readonly controlId: string | undefined;
+  private callback: WidgetEventCallback | null = null;
+  private detach: (() => void) | null = null;
 
-  constructor(controlId: string) {
+  constructor(controlId: string | undefined) {
     this.controlId = controlId;
-    this.callback = null;
-    this.unsubscribe = null;
   }
 
   /**
    * 订阅事件
    * @param {Function} callback - 回调函数
    */
-  subscribe(callback) {
+  subscribe(callback: WidgetEventCallback): void {
+    this.unsubscribe();
     if (!this.controlId) {
       return;
     }
 
     this.callback = callback;
-    this.unsubscribe = widgetEventManager.subscribe(this.controlId, data => {
+    this.detach = widgetEventManager.subscribe(this.controlId, data => {
       if (this.callback) {
         try {
           this.callback(data);
@@ -147,20 +169,18 @@ export class WidgetEventHelper {
   /**
    * 取消订阅事件
    */
-  unsubscribe() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-      this.unsubscribe = null;
-    }
+  unsubscribe(): void {
+    this.detach?.();
+    this.detach = null;
 
     this.callback = null;
   }
 
   /**
    * 发布事件
-   * @param {any} data - 事件数据
+   * @param data - 事件数据
    */
-  publish(data) {
+  publish(data: WidgetEventData = {}): void {
     if (!this.controlId) {
       return;
     }
@@ -171,7 +191,7 @@ export class WidgetEventHelper {
   /**
    * 清理所有订阅
    */
-  destroy() {
+  destroy(): void {
     this.unsubscribe();
   }
 }
@@ -189,29 +209,25 @@ export const useFormEventManager = ({
   disabledTabs,
   disabledChildTableCheck,
   flag,
-}: {
-  containerRef: import('react').RefObject<HTMLElement | null>;
-  stateRef: import('react').RefObject<import('../store/types').FormStoreState>;
-  from?: number | undefined;
-  disabledTabs?: boolean | undefined;
-  disabledChildTableCheck?: boolean | undefined;
-  flag?: unknown;
-}) => {
-  const [tabFocusArr, setTabFocusArr] = useState([]);
-  const tabFocusArrRef = useRef([]);
+}: FormEventOptions): FormEventResult => {
+  const [tabFocusArr, setTabFocusArr] = useState<TabFocus>([]);
+  const tabFocusArrRef = useRef<TabFocus>([]);
 
-  const instanceId = useMemo(() => {
-    const id = uuidv4();
-    // window.FormActiveTabId用于记录已渲染的表单实例id，隔离事件
-    window.FormActiveTabId = (window.FormActiveTabId || []).concat(id);
+  const instanceId = useMemo(() => uuidv4(), []);
+  useEffect(() => {
+    // Register committed forms only; an abandoned/StrictMode render must not leave a phantom instance.
+    window.FormActiveTabId = (window.FormActiveTabId || []).concat(instanceId);
     window.activeTableId = undefined;
-    return id;
-  }, []);
+    return () => {
+      widgetEventManager.clear(instanceId);
+      window.FormActiveTabId = (window.FormActiveTabId || []).filter(id => id !== instanceId);
+    };
+  }, [instanceId]);
 
   // 从当前控件移到下一个支持 Tab 的控件（子表最后一格 Tab 退出时复用）
   const moveToNextFormItem = useCallback(
-    (currentTabFocusId, originalEvent) => {
-      const renderData = _.get(stateRef, 'current.renderData') || [];
+    (currentTabFocusId: string, originalEvent: KeyboardEvent | null) => {
+      const renderData = stateRef.current.renderData;
       if (!containerRef.current || !renderData.length) return;
       const allElements = containerRef.current.querySelectorAll('.customFormItem');
       const allElementKeys = [...allElements]
@@ -224,7 +240,7 @@ export const useFormEventManager = ({
 
       while (loopCount < allElementKeys.length) {
         const nextKey = allElementKeys[nextIndex];
-        if (!nextKey) {
+        if (!nextKey || !nextKey.startsWith(`${instanceId}~`) || !nextKey.split('~')[1]) {
           loopCount++;
           nextIndex = (nextIndex + 1) % allElementKeys.length;
           continue;
@@ -249,7 +265,7 @@ export const useFormEventManager = ({
             triggerType: 'trigger_tab_enter',
             originalEvent,
           });
-          setTabFocusArr([allElementKeys[nextIndex], currentTabFocusId]);
+          setTabFocusArr([nextKey, currentTabFocusId]);
           break;
         } else {
           nextIndex = nextIndex === allElementKeys.length - 1 ? 0 : nextIndex + 1;
@@ -257,18 +273,32 @@ export const useFormEventManager = ({
         }
       }
     },
-    [from, disabledChildTableCheck],
+    [from, disabledChildTableCheck, containerRef, stateRef, instanceId],
   );
+
+  const publishTabFocusLeave = useCallback(() => {
+    const activeTabFocusId = tabFocusArrRef.current[0] || tabFocusArrRef.current[1];
+
+    if (activeTabFocusId) {
+      widgetEventManager.publish(activeTabFocusId, {
+        triggerType: 'trigger_tab_leave',
+      });
+      setTabFocusArr([]);
+    }
+  }, []);
 
   // Tab事件处理
   const handleTabChange = useCallback(
-    event => {
-      const renderData = _.get(stateRef, 'current.renderData') || [];
+    (event: KeyboardEvent) => {
+      const renderData = stateRef.current.renderData;
       if (!containerRef.current || !renderData.length) return;
       if (_.last(window.FormActiveTabId || []) !== instanceId) return;
       if (window.activeTableId || disabledTabs) return;
 
-      if (_.includes(['Enter', 'ArrowRight', 'ArrowLeft'], event.key) && _.get(tabFocusArrRef, 'current.0')) {
+      if (
+        (event.key === 'Enter' || event.key === 'ArrowRight' || event.key === 'ArrowLeft') &&
+        _.get(tabFocusArrRef, 'current.0')
+      ) {
         widgetEventManager.publish(tabFocusArrRef.current[0] || '', {
           triggerType: event.key,
           originalEvent: event,
@@ -288,13 +318,17 @@ export const useFormEventManager = ({
         }
       }
     },
-    [moveToNextFormItem],
+    [moveToNextFormItem, instanceId, disabledTabs, publishTabFocusLeave, containerRef, stateRef],
   );
 
   // 子表最后一格 Tab 时请求退出到外层 Tab：执行移至下一个表单控件
   useEffect(() => {
-    const handler = e => {
-      const { formItemId: fromFormItemId } = e.detail || {};
+    const handler = (event: Event) => {
+      if (!(event instanceof CustomEvent)) return;
+      const detail: unknown = event.detail;
+      if (!detail || typeof detail !== 'object' || !('formItemId' in detail)) return;
+      const fromFormItemId = detail.formItemId;
+      if (typeof fromFormItemId !== 'string') return;
       if (!fromFormItemId || tabFocusArrRef.current[0] !== fromFormItemId) return;
       if (_.last(window.FormActiveTabId || []) !== instanceId) return;
       moveToNextFormItem(fromFormItemId, null);
@@ -304,79 +338,74 @@ export const useFormEventManager = ({
     return () => window.removeEventListener('form-request-tab-to-next', handler);
   }, [instanceId, moveToNextFormItem]);
 
-  const publishTabFocusLeave = useCallback(() => {
-    const activeTabFocusId = tabFocusArrRef.current[0] || tabFocusArrRef.current[1];
-
-    if (activeTabFocusId) {
-      widgetEventManager.publish(activeTabFocusId, {
-        triggerType: 'trigger_tab_leave',
-      });
-      setTabFocusArr([]);
-    }
-  }, []);
-
   // 点击外部处理
-  const handleClickOutSide = useCallback(e => {
-    const $target = e.target.closest('.customFormItemControl');
-    // 某些控件编辑、非编辑切换显示，捕捉不到上层，单独异化
-    const specialTarget = e.target.closest('.classtabfocus');
-    const specialTargetId = specialTarget ? specialTarget.getAttribute('data-instance-id') : '';
-    const renderData = _.get(stateRef, 'current.renderData') || [];
-    const activeTabFocusId = tabFocusArrRef.current[0] || tabFocusArrRef.current[1] || '';
-    const activeData = _.find(renderData, { controlId: activeTabFocusId.split('~')[1] }) || {};
+  const handleClickOutSide = useCallback(
+    (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const $target = target.closest('.customFormItemControl');
+      // 某些控件编辑、非编辑切换显示，捕捉不到上层，单独异化
+      const specialTarget = target.closest('.classtabfocus');
+      const specialTargetId = specialTarget ? specialTarget.getAttribute('data-instance-id') : '';
+      const renderData = stateRef.current.renderData;
+      const activeTabFocusId = tabFocusArrRef.current[0] || tabFocusArrRef.current[1] || '';
+      const activeData = _.find(renderData, { controlId: activeTabFocusId.split('~')[1] }) || {};
 
-    if (
-      containerRef.current &&
-      ((containerRef.current.contains(e.target) && $target) ||
-        (specialTargetId && specialTargetId.includes(instanceId)))
-    ) {
-      const $targetId = e.target.closest('.customFormItem');
-      const targetId = specialTargetId || $targetId.getAttribute('data-instance-id') || '';
-      const controlData = _.find(renderData, { controlId: targetId.split('~')[1] }) || {};
+      if (
+        containerRef.current &&
+        ((containerRef.current.contains(target) && $target) ||
+          (specialTargetId && specialTargetId.startsWith(`${instanceId}~`)))
+      ) {
+        const $targetId = target.closest('.customFormItem');
+        const targetId = specialTargetId || $targetId?.getAttribute('data-instance-id') || '';
+        if (!targetId.startsWith(`${instanceId}~`) || !targetId.split('~')[1]) return;
+        const controlData = _.find(renderData, { controlId: targetId.split('~')[1] }) || {};
 
-      // 非文本类主动清空操作状态，文本类会失焦
-      if (activeTabFocusId !== targetId && !isTextInput(activeData)) {
+        // 非文本类主动清空操作状态，文本类会失焦
+        if (activeTabFocusId !== targetId && !isTextInput(activeData)) {
+          publishTabFocusLeave();
+        }
+
+        // 文本类记录当前点击作为下一次起始位置
+        // 注意：markdown不支持tab切换，但是需要主动失焦
+        if (
+          supportTabKeyDown(controlData, from, disabledChildTableCheck, true) &&
+          isTextInput(controlData, true) &&
+          activeTabFocusId !== targetId
+        ) {
+          setTabFocusArr(['', targetId]);
+        }
+      } else {
+        if (isTextInput(activeData)) {
+          return;
+        }
+        // 非文本类弹层避免清空操作,部分点击切换显影的元素要注意
+
+        if (
+          activeTabFocusId &&
+          (target.closest('#quickSelectDept') ||
+            target.closest('.selectUserBox') ||
+            target.closest('.selectRoleDialog') ||
+            target.closest('.relationControlBox') ||
+            target.closest('.MDMap') ||
+            target.closest('.UploadFilesTriggerPanel') ||
+            target.closest('.ant-picker-dropdown') ||
+            target.classList.contains('ant-picker') ||
+            target.classList.contains('ant-picker-year-btn') ||
+            target.classList.contains('ant-picker-month-btn') ||
+            target.classList.contains('ant-picker-decade-btn') ||
+            target.classList.contains('ant-picker-cell-inner') ||
+            (activeData.type === 14 && document.querySelector('.folderSelectDialog')) ||
+            target.closest('.CityPickerPanelTrigger'))
+        ) {
+          return;
+        }
+
         publishTabFocusLeave();
       }
-
-      // 文本类记录当前点击作为下一次起始位置
-      // 注意：markdown不支持tab切换，但是需要主动失焦
-      if (
-        supportTabKeyDown(controlData, from, disabledChildTableCheck, true) &&
-        isTextInput(controlData, true) &&
-        activeTabFocusId !== targetId
-      ) {
-        setTabFocusArr(['', targetId]);
-      }
-    } else {
-      if (isTextInput(activeData)) {
-        return;
-      }
-      // 非文本类弹层避免清空操作,部分点击切换显影的元素要注意
-
-      if (
-        activeTabFocusId &&
-        (e.target.closest('#quickSelectDept') ||
-          e.target.closest('.selectUserBox') ||
-          e.target.closest('.selectRoleDialog') ||
-          e.target.closest('.relationControlBox') ||
-          e.target.closest('.MDMap') ||
-          e.target.closest('.UploadFilesTriggerPanel') ||
-          e.target.closest('.ant-picker-dropdown') ||
-          e.target.classList.contains('ant-picker') ||
-          e.target.classList.contains('ant-picker-year-btn') ||
-          e.target.classList.contains('ant-picker-month-btn') ||
-          e.target.classList.contains('ant-picker-decade-btn') ||
-          e.target.classList.contains('ant-picker-cell-inner') ||
-          (activeData.type === 14 && document.querySelector('.folderSelectDialog')) ||
-          e.target.closest('.CityPickerPanelTrigger'))
-      ) {
-        return;
-      }
-
-      publishTabFocusLeave();
-    }
-  }, []);
+    },
+    [containerRef, stateRef, instanceId, from, disabledChildTableCheck, publishTabFocusLeave],
+  );
 
   // tab激活状态处理
   useEffect(() => {
@@ -390,7 +419,7 @@ export const useFormEventManager = ({
         }
       }
     }
-  }, [tabFocusArr]);
+  }, [tabFocusArr, containerRef]);
 
   // 注册事件监听器
   useEffect(() => {
@@ -403,21 +432,11 @@ export const useFormEventManager = ({
       window.removeEventListener('keydown', handleTabChange);
       document.body?.removeEventListener('click', handleClickOutSide);
     };
-  }, [handleTabChange]);
-
-  // 组件卸载时清理事件管理器
-  useEffect(() => {
-    return () => {
-      widgetEventManager.clear(instanceId);
-      if (window.FormActiveTabId.includes(instanceId)) {
-        window.FormActiveTabId = window.FormActiveTabId.filter(id => id !== instanceId);
-      }
-    };
-  }, []);
+  }, [handleTabChange, handleClickOutSide]);
 
   useEffect(() => {
     publishTabFocusLeave();
-  }, [flag]);
+  }, [flag, publishTabFocusLeave]);
 
   return {
     instanceId,

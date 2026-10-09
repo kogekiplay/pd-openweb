@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRunner } from 'react-runner';
+import type { UseRunnerProps } from 'react-runner';
 import EventEmitter from 'events';
 import * as LucideIconComp from 'lucide-react';
 import PropTypes from 'prop-types';
@@ -16,7 +17,7 @@ const scope = {
   LucideIcon,
 };
 
-const useRun = function ({ initialCode, ...rest }) {
+const useRun = function ({ initialCode, ...rest }: Omit<UseRunnerProps, 'code'> & { initialCode: string }) {
   const [code, setCode] = useState(initialCode);
   const { element, error } = useRunner({ code, ...rest });
   return { element, error, setCode };
@@ -70,7 +71,7 @@ LucideIcon.propTypes = {
   name: PropTypes.string,
 };
 
-function getFullCode(code) {
+function getFullCode(code?: string) {
   if (!code) {
     return '';
   }
@@ -107,39 +108,46 @@ function getFullCode(code) {
   `;
 }
 
-export default function Runner({ reRenderFlag, type, code, params, onChange = () => {}, onError = () => {} }) {
+export default function Runner({
+  reRenderFlag,
+  type,
+  code,
+  params,
+  onChange = () => {},
+  onError = () => {},
+}: {
+  reRenderFlag?: unknown;
+  type?: string | null | undefined;
+  code?: string | undefined;
+  params?: unknown;
+  onChange?: ((...values: unknown[]) => void) | undefined;
+  onError?: ((error: unknown) => void) | undefined;
+}) {
   const runnerEmitter = useRef(new EventEmitter());
-  const bridge = useRef(
-    new ParentBridge({
-      tunnelId: new URL(location.href).searchParams.get('id'),
-    }),
-  );
+  const bridge = useRef<ParentBridge | null>(null);
+  const active = useRef(true);
+  const getBridge = (): ParentBridge => {
+    if (!active.current) throw new Error('Parent bridge unavailable');
+    if (!bridge.current)
+      bridge.current = new ParentBridge({ tunnelId: new URL(location.href).searchParams.get('id') || 'global' });
+    return bridge.current;
+  };
+  useEffect(() => {
+    active.current = true;
+    const currentBridge = getBridge();
+    return () => {
+      active.current = false;
+      currentBridge.destroy();
+      if (bridge.current === currentBridge) bridge.current = null;
+    };
+  }, []);
   const memoizedFunctions = useMemo(() => {
+    const call = async (methodName: string, params: unknown): Promise<unknown> => getBridge().call(methodName, params);
     return {
-      getRowsForRelation: apiParams =>
-        new Promise(resolve => {
-          bridge.current.call('getRowsForRelation', apiParams).then(res => {
-            resolve(res);
-          });
-        }),
-      refreshRecord: apiParams =>
-        new Promise(resolve => {
-          bridge.current.call('refreshRecord', apiParams).then(res => {
-            resolve(res);
-          });
-        }),
-      getTitleOfRecord: record =>
-        new Promise(resolve => {
-          bridge.current.call('getTitleOfRecord', record).then(res => {
-            resolve(res);
-          });
-        }),
-      setControlHeight: record =>
-        new Promise(resolve => {
-          bridge.current.call('setControlHeight', record).then(res => {
-            resolve(res);
-          });
-        }),
+      getRowsForRelation: (params?: unknown) => call('getRowsForRelation', params),
+      refreshRecord: (params?: unknown) => call('refreshRecord', params),
+      getTitleOfRecord: (record: unknown) => call('getTitleOfRecord', record),
+      setControlHeight: (height: unknown) => call('setControlHeight', height),
     };
   }, []);
   const memoizedScope = useMemo(() => {
@@ -165,7 +173,7 @@ export default function Runner({ reRenderFlag, type, code, params, onChange = ()
   }, [params]);
   useEffect(() => {
     runnerEmitter.current.removeAllListeners('value-update-from-widget');
-    runnerEmitter.current.addListener('value-update-from-widget', (...args) => {
+    runnerEmitter.current.addListener('value-update-from-widget', (...args: unknown[]) => {
       console.log('onChange', args);
       onChange(...args);
     });

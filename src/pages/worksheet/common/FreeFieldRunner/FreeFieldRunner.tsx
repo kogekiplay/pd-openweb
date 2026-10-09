@@ -8,6 +8,8 @@ import type { FormControl } from 'src/utils/controlTypes';
 import { MessageHandler } from 'src/utils/iframeCommunicate';
 import type { FieldStoreRecord } from 'src/utils/subListStoreTypes';
 import { isChildTableStore } from 'src/utils/subListStoreTypes';
+import { bridgeRecord, controlHeight, relationParams, titleRecord } from './bridgeTypes';
+import type { FreeFieldWidgetParams } from './bridgeTypes';
 import { getRowsRelation } from './functions';
 
 const Con = styled.div`
@@ -48,10 +50,10 @@ function pickControl(control: FormControl = {}) {
   return result;
 }
 
-function formatFormData(formData) {
+function formatFormData(formData: FormControl[]) {
   const result: Record<string, Pick<FormControl, 'type' | 'controlId' | 'controlName' | 'value' | 'options'>> = {};
   formData.forEach((item: FormControl) => {
-    result[item.controlId] = pickControl(item);
+    result[String(item.controlId)] = pickControl(item);
   });
   return result;
 }
@@ -64,11 +66,42 @@ export default function FreeFieldRunner({
   className = undefined,
   widgetParams = {},
   onError = () => {},
+}: {
+  type?: string | undefined;
+  code?: string | undefined;
+  runFlag?: unknown;
+  compReRenderFlag?: unknown;
+  className?: string | undefined;
+  widgetParams?: FreeFieldWidgetParams | undefined;
+  onError?: ((error: unknown) => void) | undefined;
 }) {
   const [iframeId] = useState(v4());
   const { currentControlId, value, env, recordId, worksheetId, refreshRecord, setControlHeight, appId } = widgetParams;
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const cache = useRef({});
+  const cache = useRef<{
+    context?:
+      | {
+          control?: FormControl | undefined;
+          recordId?: string | undefined;
+          worksheetId?: string | undefined;
+          appId?: string | undefined;
+        }
+      | undefined;
+    refreshRecord?: FreeFieldWidgetParams['refreshRecord'];
+    setControlHeight?: FreeFieldWidgetParams['setControlHeight'];
+    formData?: FormControl[] | undefined;
+    onChange?: FreeFieldWidgetParams['onChange'];
+    didMount?: boolean | undefined;
+    code?: string | undefined;
+    params?:
+      | {
+          currentControl: ReturnType<typeof pickControl>;
+          value: unknown;
+          formData: ReturnType<typeof formatFormData>;
+          env: unknown;
+        }
+      | undefined;
+  }>({});
   cache.current.formData = widgetParams.formData;
   cache.current.onChange = widgetParams.onChange;
   const pluginRuntimeUrl = get(md, 'global.Config.PluginRuntimeUrl');
@@ -78,7 +111,10 @@ export default function FreeFieldRunner({
     const targetControl = find(widgetParams.formData || [], item => item.controlId === currentControlId);
     return targetControl;
   }, [widgetParams.formData, currentControlId]);
-  const postToIframe = useCallback(payload => {
+  cache.current.context = { control: currentControl, recordId, worksheetId, appId };
+  cache.current.refreshRecord = refreshRecord;
+  cache.current.setControlHeight = setControlHeight;
+  const postToIframe = useCallback((payload: unknown) => {
     if (!iframeRef.current || !iframeRef.current.contentWindow) return;
     iframeRef.current.contentWindow.postMessage({ source: 'main_web', payload }, '*');
   }, []);
@@ -88,11 +124,15 @@ export default function FreeFieldRunner({
       setLoadingForMask(false);
     }, delay);
   }, []);
-  const handleMessage = useCallback(event => {
-    const { id, source, payload } = event.data;
+  const handleMessage = useCallback((event: MessageEvent<unknown>) => {
+    if (event.source !== iframeRef.current?.contentWindow) return;
+    const message = bridgeRecord(event.data);
+    const { id, source } = message || {};
+    const payload = bridgeRecord(message?.['payload']);
+    if (!payload) return;
 
     if (source === 'free_field' && id === iframeId) {
-      if (payload.event === 'container-did-mount') {
+      if (payload['event'] === 'container-did-mount') {
         cache.current.didMount = true;
         console.log('container-did-mount');
         if (cache.current.code) {
@@ -104,10 +144,10 @@ export default function FreeFieldRunner({
           postToIframe({ event: 'update-params', ...cache.current.params });
           cache.current.params = undefined;
         }
-      } else if (payload.event === 'trigger-on-change') {
-        cache.current.onChange(...payload.value);
-      } else if (payload.event === 'trigger-error') {
-        onError(payload.error);
+      } else if (payload['event'] === 'trigger-on-change') {
+        if (Array.isArray(payload['value'])) cache.current.onChange?.(...payload['value']);
+      } else if (payload['event'] === 'trigger-error') {
+        onError(payload['error']);
       }
     }
   }, []);
@@ -149,24 +189,36 @@ export default function FreeFieldRunner({
   useEffect(() => {
     const messageHandler = new MessageHandler({
       tunnelId: iframeId,
+      getSource: () => iframeRef.current?.contentWindow || null,
     });
-    messageHandler.register('getRowsForRelation', (params = {}) =>
-      getRowsRelation(
+    messageHandler.register('getRowsForRelation', params => {
+      const context = cache.current.context;
+      if (!context?.control) throw new Error('Current free field control unavailable');
+      return getRowsRelation(
         {
-          control: currentControl,
-          recordId,
+          control: context.control,
+          recordId: context.recordId,
           formData: cache.current.formData,
-          parentWorksheetId: worksheetId,
-          parentAppId: appId,
+          parentWorksheetId: context.worksheetId,
+          parentAppId: context.appId,
         },
-        params,
-      ),
-    );
-    messageHandler.register('getTitleOfRecord', record =>
-      getTitleTextFromControls(currentControl.relationControls, record),
-    );
-    messageHandler.register('refreshRecord', refreshRecord);
-    messageHandler.register('setControlHeight', setControlHeight);
+        relationParams(params),
+      );
+    });
+    messageHandler.register('getTitleOfRecord', record => {
+      const control = cache.current.context?.control;
+      if (!control) throw new Error('Current free field control unavailable');
+      return getTitleTextFromControls(control.relationControls, titleRecord(record));
+    });
+    messageHandler.register('refreshRecord', params => {
+      if (!cache.current.refreshRecord) throw new Error('Method refreshRecord not found');
+      return cache.current.refreshRecord(params);
+    });
+    messageHandler.register('setControlHeight', height => {
+      if (!cache.current.setControlHeight) throw new Error('Method setControlHeight not found');
+      return cache.current.setControlHeight(controlHeight(height));
+    });
+    return () => messageHandler.destroy();
   }, []);
   return (
     <Con className={className}>
@@ -178,7 +230,7 @@ export default function FreeFieldRunner({
           /\/+$/,
           '',
         )}/freefield?id=${iframeId}&type=${type}`}
-        frameborder="0"
+        frameBorder="0"
         style={{ width: '100%' }}
       ></iframe>
       {loadingForMask && <div className="loading" />}

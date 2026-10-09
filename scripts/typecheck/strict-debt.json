@@ -187,9 +187,6 @@
     "src/components/Form/components/TextMarkdown.tsx",
     "src/components/Form/components/WidgetsDesc.tsx",
     "src/components/Form/components/WidgetsVerifyCode.tsx",
-    "src/components/Form/core/authentication.ts",
-    "src/components/Form/core/mapUtils.ts",
-    "src/components/Form/core/useFormEventManager.ts",
     "src/components/GetHelp/index.tsx",
     "src/components/MentionsInput/index.tsx",
     "src/components/Mingo/ChatBot/components/AddedFiles.tsx",
@@ -2841,8 +2838,6 @@
     "src/pages/worksheet/common/ExportAttachment/index.tsx",
     "src/pages/worksheet/common/ExportSheet/ExportSheet.tsx",
     "src/pages/worksheet/common/ExportSheet/index.ts",
-    "src/pages/worksheet/common/FreeFieldRunner/FreeFieldRunner.tsx",
-    "src/pages/worksheet/common/FreeFieldRunner/functions.ts",
     "src/pages/worksheet/common/FreeFieldSandbox/Runner.tsx",
     "src/pages/worksheet/common/FreeFieldSandbox/index.tsx",
     "src/pages/worksheet/common/FreeFieldSandbox/messageBridge.ts",
@@ -3442,13 +3437,9 @@
     "src/socket/marketNotice/getNotice.ts",
     "src/socket/marketNotice/index.ts",
     "src/socket/mobileSocketInit.ts",
-    "src/utils/audio.ts",
     "src/utils/common.ts",
     "src/utils/createLinksForMessage.ts",
-    "src/utils/function-library.ts",
-    "src/utils/iframeCommunicate.ts",
     "src/utils/inviteCommon.ts",
-    "src/utils/mobileNavigation.ts",
-    "src/utils/view.ts"
+    "src/utils/mobileNavigation.ts"
   ]
 }

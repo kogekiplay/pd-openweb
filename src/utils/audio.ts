@@ -7,15 +7,23 @@ export interface SpeechSynthesizerOptions {
   rate?: number;
   volume?: number;
 }
+export interface SpeechPlaybackOptions extends Omit<SpeechSynthesizerOptions, 'bufferDelay'> {
+  onEnd?: () => void;
+}
+interface SpeechChunk {
+  text: string;
+  options: SpeechPlaybackOptions;
+}
 
 export class SpeechSynthesizer {
   declare voice: SpeechSynthesisVoice | null;
   declare synth: SpeechSynthesis;
   declare hasUtteranceSupport: boolean;
   declare speaking: boolean;
-  declare bufferTimer: NodeJS.Timeout | null;
+  declare bufferTimer: ReturnType<typeof setTimeout> | null;
   declare bufferDelay: number;
   declare minChunkLength: number;
+  declare queue: SpeechChunk[];
   declare defaultOptions: { bufferDelay?: number; lang: string; pitch: number; rate: number; volume: number };
 
   constructor(options: SpeechSynthesizerOptions = {}) {
@@ -46,7 +54,7 @@ export class SpeechSynthesizer {
       if (this.synth) {
         this.synth.onvoiceschanged = () => {
           const voices = this.synth && this.synth.getVoices();
-          this.voice = voices.find(v => v.lang === this.defaultOptions.lang) || voices[0];
+          this.voice = voices.find(v => v.lang === this.defaultOptions.lang) || voices[0] || null;
         };
       }
     } catch (error) {
@@ -66,7 +74,7 @@ export class SpeechSynthesizer {
   }
 
   // 播放一整段文字（非流式）
-  speak(text, options = {}) {
+  speak(text: string, options: SpeechPlaybackOptions = {}) {
     if (!this.hasUtteranceSupport || !this.synth) return;
     this.clear(); // 清除前面所有任务
     const utterance = this._createUtterance(text, options);
@@ -75,7 +83,7 @@ export class SpeechSynthesizer {
   }
 
   // 播放流式文本，智能缓冲
-  speakStream(textChunk, options = {}) {
+  speakStream(textChunk: string, options: SpeechPlaybackOptions = {}) {
     if (!this.hasUtteranceSupport || !this.synth) return;
     this.queue.push({ text: textChunk, options });
 
@@ -117,7 +125,7 @@ export class SpeechSynthesizer {
   }
 
   // 创建语音单元
-  _createUtterance(text, options = {}) {
+  _createUtterance(text: string, options: SpeechPlaybackOptions = {}) {
     if (!this.hasUtteranceSupport) return null;
     const { onEnd = () => {} } = options;
     const utter = new window.SpeechSynthesisUtterance(text);

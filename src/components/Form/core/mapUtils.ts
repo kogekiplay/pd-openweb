@@ -1,7 +1,21 @@
 import MapHandler from 'src/ming-ui/components/amap/MapHandler';
 import MapLoader from 'src/ming-ui/components/amap/MapLoader';
 
-let pendingLocationPromise = null;
+export interface MapLocationResult {
+  formattedAddress: string;
+  [metadata: string]: unknown;
+}
+function locationResult(value: unknown): value is MapLocationResult {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    'formattedAddress' in value &&
+    typeof value.formattedAddress === 'string' &&
+    !!value.formattedAddress
+  );
+}
+let pendingLocationPromise: Promise<MapLocationResult> | null = null;
 let mapLoader: MapLoader | null = null;
 let mapHandler: MapHandler | null = null;
 let formRefCount = 0;
@@ -31,7 +45,7 @@ function isCurrentLifecycle(version: number) {
   return version === lifecycleVersion && formRefCount > 0;
 }
 
-export function getCurrentPos() {
+export function getCurrentPos(): Promise<MapLocationResult> {
   // 多个附件字段快速点击时复用同一次定位请求，避免 SDK 未加载完成前重复创建地图实例。
   if (pendingLocationPromise) {
     return pendingLocationPromise;
@@ -50,15 +64,16 @@ export function getCurrentPos() {
         mapHandler = new MapHandler();
       }
 
-      return new Promise((resolve, reject) => {
-        mapHandler.getCurrentPos(
-          (status, result: Record<string, any> = {}) => {
+      const currentHandler = mapHandler;
+      return new Promise<MapLocationResult>((resolve, reject) => {
+        currentHandler.getCurrentPos(
+          (status: unknown, result: unknown = {}) => {
             if (!isCurrentLifecycle(currentVersion)) {
               reject(new Error('Location lifecycle expired after callback'));
               return;
             }
 
-            if (status === 'complete' && result.formattedAddress) {
+            if (status === 'complete' && locationResult(result)) {
               resolve(result);
               return;
             }
@@ -67,7 +82,7 @@ export function getCurrentPos() {
           },
           false,
           {
-            locationFailedCallback: err => {
+            locationFailedCallback: (err: unknown) => {
               if (!isCurrentLifecycle(currentVersion)) {
                 reject(new Error('Location lifecycle expired after failed callback'));
                 return;

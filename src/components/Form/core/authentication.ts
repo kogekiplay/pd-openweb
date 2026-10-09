@@ -1,37 +1,40 @@
 import _ from 'lodash';
 import weixinApi from 'src/api/weixin';
 import workWeiXinApi from 'src/api/workWeiXin';
+import {
+  appSignature,
+  dingSignature,
+  reportNativeConfigError,
+  wechatSignature,
+  workWechatSignature,
+} from './authenticationTypes';
 
 export const bindWeiXin = (projectId: string) => {
-  return new Promise((reslove, reject) => {
+  return new Promise<void>((reslove, reject) => {
     const entryUrl = sessionStorage.getItem('entryUrl');
-    const url = (window.isIphone ? entryUrl || location.href : location.href).split('#')[0];
+    const url = (window.isIphone ? entryUrl || location.href : location.href).split('#')[0] ?? '';
     weixinApi
       .getWeiXinConfig({
         url,
         projectId,
       })
-      .then(({ data, code }) => {
-        if (code === 1) {
-          window.wx.config({
-            debug: false,
-            appId: data.appId,
-            timestamp: data.timestamp,
-            nonceStr: data.nonceStr,
-            signature: data.signature,
-            jsApiList: ['scanQRCode'],
-          });
-          window.wx.ready(() => {
-            reslove();
-          });
-          window.wx.error(res => {
-            res.mdurl = url;
-            window.nativeAlert(JSON.stringify(res));
-            reject();
-          });
-        } else {
-          reject(1);
-        }
+      .then((reply: unknown) => {
+        const data = wechatSignature(reply);
+        window.wx.config({
+          debug: false,
+          appId: data.appId,
+          timestamp: data.timestamp,
+          nonceStr: data.nonceStr,
+          signature: data.signature,
+          jsApiList: ['scanQRCode'],
+        });
+        window.wx.ready(() => {
+          reslove();
+        });
+        window.wx.error((res: unknown) => {
+          reportNativeConfigError(res, url);
+          reject();
+        });
       })
       .catch(err => {
         reject(err);
@@ -40,8 +43,8 @@ export const bindWeiXin = (projectId: string) => {
 };
 
 export const bindWxWork = (projectId: string) => {
-  return new Promise((reslove, reject) => {
-    const url = location.href.split('#')[0];
+  return new Promise<void>((reslove, reject) => {
+    const url = location.href.split('#')[0] ?? '';
 
     workWeiXinApi
       .getSignatureInfo({
@@ -50,11 +53,8 @@ export const bindWxWork = (projectId: string) => {
         suiteType: 8,
         tickettype: 1,
       })
-      .then(data => {
-        if (!data) {
-          reject(1);
-          return;
-        }
+      .then((reply: unknown) => {
+        const data = workWechatSignature(reply);
 
         window.wx.config({
           beta: true,
@@ -68,9 +68,8 @@ export const bindWxWork = (projectId: string) => {
         window.wx.ready(() => {
           reslove();
         });
-        window.wx.error(res => {
-          res.mdurl = url;
-          window.nativeAlert(JSON.stringify(res));
+        window.wx.error((res: unknown) => {
+          reportNativeConfigError(res, url);
           reject();
         });
       })
@@ -81,33 +80,35 @@ export const bindWxWork = (projectId: string) => {
 };
 
 export const bindFeishu = (projectId: string) => {
-  return new Promise((reslove, reject) => {
-    const url = location.href.split('#')[0];
+  return new Promise<void>((reslove, reject) => {
+    const url = location.href.split('#')[0] ?? '';
     workWeiXinApi
       .getFeiShuSignatureInfo({
         projectId,
         url,
       })
-      .then(data => {
-        if (!data) {
+      .then((reply: unknown) => {
+        if (!reply) {
           reject(1);
           return;
         }
+        const data = appSignature(reply);
+        const sdk = window.h5sdk;
+        if (!sdk) throw new Error('Feishu SDK unavailable');
 
-        window.h5sdk.config({
+        sdk.config({
           appId: data.appId,
           timestamp: data.timestamp,
           nonceStr: data.noncestr,
           signature: data.signature,
           jsApiList: ['scanCode', 'getLocation'],
           onSuccess: () => {},
-          onFail: err => {
-            err.mdurl = url;
-            window.nativeAlert(JSON.stringify(err));
+          onFail: (err: unknown) => {
+            reportNativeConfigError(err, url);
             reject();
           },
         });
-        window.h5sdk.ready(() => {
+        sdk.ready(() => {
           reslove();
         });
       })
@@ -118,18 +119,20 @@ export const bindFeishu = (projectId: string) => {
 };
 
 export const bindDing = (projectId: string) => {
-  return new Promise((reslove, reject) => {
+  return new Promise<void>((reslove, reject) => {
     const entryUrl = sessionStorage.getItem('entryUrl') || location.href;
-    const url = (window.isIphone ? location.href : entryUrl).split('#')[0];
+    const url = (window.isIphone ? location.href : entryUrl).split('#')[0] ?? '';
     workWeiXinApi
       .getDDSignatureInfo({
         projectId,
         url,
       })
-      .then(data => {
-        if (!data) {
+      .then((reply: unknown) => {
+        if (!reply) {
           reject();
+          return;
         }
+        const data = dingSignature(reply);
 
         window.dd.config({
           agentId: data.agentId,
@@ -142,9 +145,9 @@ export const bindDing = (projectId: string) => {
         window.dd.ready(() => {
           reslove();
         });
-        window.dd.error(err => {
-          err.mdurl = url;
-          window.nativeAlert(JSON.stringify(err));
+        window.dd.error((err: unknown) => {
+          reportNativeConfigError(err, url);
+          reject();
         });
       })
       .catch(err => {
@@ -154,17 +157,19 @@ export const bindDing = (projectId: string) => {
 };
 
 export const bindWeLink = (projectId: string) => {
-  return new Promise((reslove, reject) => {
-    const url = location.href.split('#')[0];
+  return new Promise<void>((reslove, reject) => {
+    const url = location.href.split('#')[0] ?? '';
     workWeiXinApi
       .getWeLinkSignatureInfo({
         projectId,
         url,
       })
-      .then(data => {
-        if (!data) {
+      .then((reply: unknown) => {
+        if (!reply) {
           reject();
+          return;
         }
+        const data = appSignature(reply);
 
         window.HWH5.config({
           appId: data.appId,
@@ -176,9 +181,9 @@ export const bindWeLink = (projectId: string) => {
         window.HWH5.ready(() => {
           reslove();
         });
-        window.HWH5.error(err => {
-          err.mdurl = url;
-          window.nativeAlert(JSON.stringify(err));
+        window.HWH5.error((err: unknown) => {
+          reportNativeConfigError(err, url);
+          reject();
         });
       })
       .catch(err => {
@@ -187,7 +192,11 @@ export const bindWeLink = (projectId: string) => {
   });
 };
 
-export const handleTriggerEvent = (scanFn: () => void, bindFn, errorFn = _.noop) => {
+export const handleTriggerEvent = (
+  scanFn: () => void,
+  bindFn: PromiseLike<void>,
+  errorFn: (error: unknown) => void = _.noop,
+) => {
   if (window.currentUrl !== location.href) {
     window.currentUrl = location.href;
     window.configSuccess = false;
@@ -195,16 +204,22 @@ export const handleTriggerEvent = (scanFn: () => void, bindFn, errorFn = _.noop)
   }
 
   if (window.configSuccess) {
+    void Promise.resolve(bindFn).catch(() => {});
     scanFn();
   } else {
     if (!window.configLoading) {
-      bindFn
+      Promise.resolve(bindFn)
         .then(() => {
           window.configLoading = false;
           window.configSuccess = true;
           scanFn();
         })
-        .catch(errorFn);
+        .catch(error => {
+          window.configLoading = false;
+          errorFn(error);
+        });
+    } else {
+      void Promise.resolve(bindFn).catch(() => {});
     }
   }
 };

@@ -34,7 +34,7 @@ export default function ControlPreview({
   isMobile,
 }) {
   const env = useMemo(() => getEnv(reference, { isDisabled, isMobile }), [reference, isDisabled, isMobile]);
-  const [value, setValue] = useState();
+  const [value, setValue] = useState<unknown>();
   useEffect(() => {
     const targetControl = formData.find(item => item.controlId === currentControlId);
 

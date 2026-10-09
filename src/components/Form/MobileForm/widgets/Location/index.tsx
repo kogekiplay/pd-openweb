@@ -7,6 +7,7 @@ import { Icon } from 'ming-ui';
 import Amap from 'ming-ui/components/amap/Amap';
 import { Gmap } from 'ming-ui/components/amap/components/GoogleMap';
 import MDMap from 'ming-ui/components/amap/MDMap';
+import { objectValue } from 'src/utils/recordValueBoundary';
 import {
   bindDing,
   bindFeishu,
@@ -40,7 +41,8 @@ const LocationWrap = styled.div`
 `;
 
 const getIsWx = () => window.isWeiXin && window.platformENV.isHap && !window.isWxWork;
-const getIsApp = () => window.isWxWork || getIsWx() || window.isWeLink || window.isDingTalk || window.isFeiShu || window.isMingDaoApp;
+const getIsApp = () =>
+  window.isWxWork || getIsWx() || window.isWeLink || window.isDingTalk || window.isFeiShu || window.isMingDaoApp;
 
 export default class Widgets extends Component<any, any> {
   declare _mapContainer: HTMLDivElement | null | undefined;
@@ -359,12 +361,14 @@ export default class Widgets extends Component<any, any> {
 
     getCurrentPos()
       .then(res => {
+        const position = objectValue(res['position']);
+        if (!position) throw new TypeError('Invalid location coordinates');
         onChange(
           JSON.stringify({
-            x: res.position.lng,
-            y: res.position.lat,
+            x: position['lng'],
+            y: position['lat'],
             address: res.formattedAddress || '',
-            title: (res.addressComponent || {}).building || '',
+            title: objectValue(res['addressComponent'])?.['building'] || '',
           }),
         );
         Toast.clear();

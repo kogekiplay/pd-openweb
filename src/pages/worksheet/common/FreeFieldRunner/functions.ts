@@ -2,11 +2,29 @@ import _ from 'lodash';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
 import sheetAjax from 'src/api/worksheet';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
+import type { FormControl } from 'src/utils/controlTypes';
+import type { FreeFieldRelationParams } from './bridgeTypes';
 
-export function getRowsRelation({ control, recordId, formData, parentAppId }: { recordId?: string; [key: string]: any }, params = {}) {
+export function getRowsRelation(
+  {
+    control,
+    recordId,
+    formData = [],
+    parentAppId,
+  }: {
+    control: FormControl;
+    recordId?: string | undefined;
+    formData?: FormControl[] | undefined;
+    parentAppId?: string | undefined;
+    parentWorksheetId?: string | undefined;
+  },
+  params: FreeFieldRelationParams = {},
+): Promise<unknown> {
   const { pageIndex = 1, pageSize = 50, keyWords } = params;
-  const filterControls = getFilter({ control: { ...control, recordId }, formData, appId: parentAppId });
-  let getFilterRowsPromise, args;
+  const relatedControl = { ...control, recordId };
+  const filterControls = getFilter({ control: relatedControl, formData, appId: parentAppId });
+  let getFilterRowsPromise;
+  let args: Record<string, unknown>;
   args = {
     worksheetId: control.dataSource,
     viewId: control.viewId,
@@ -28,7 +46,7 @@ export function getRowsRelation({ control, recordId, formData, parentAppId }: { 
     getFilterRowsPromise = sheetAjax.getFilterRows;
   } else {
     getFilterRowsPromise = publicWorksheetAjax.getRelationRows;
-    args.shareId = window.publicWorksheetShareId;
+    args['shareId'] = window.publicWorksheetShareId;
   }
 
   return getFilterRowsPromise(args);
