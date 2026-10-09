@@ -28,7 +28,7 @@ const Wrap = styled.div`
 export default function Remark({ data, onChange }) {
   const [show, setShow] = useState(false);
   return (
-    (<Fragment>
+    <Fragment>
       <SettingItem>
         <div className="settingItemTitle">{_l('备注内容')}</div>
         <Wrap className="settingContent">
@@ -63,6 +63,7 @@ export default function Remark({ data, onChange }) {
               description={data.dataSource}
               permissionType={100} //可编辑的权限
               isEditing={true}
+              showRemark={false}
               cacheKey={'remarkDes'}
               onSave={data => {
                 const description = data.description;
@@ -77,6 +78,6 @@ export default function Remark({ data, onChange }) {
           </Modal>
         )}
       </SettingItem>
-    </Fragment>)
+    </Fragment>
   );
 }

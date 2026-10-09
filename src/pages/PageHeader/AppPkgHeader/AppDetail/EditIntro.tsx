@@ -69,6 +69,7 @@ export default class AppIntro extends Component<any, any> {
         summary={summary}
         resume={resume}
         remark={remark}
+        showRemark={this.props['showRemark']}
         isEditing={isEditing}
         permissionType={permissionType}
         changeEditState={isEditing => {

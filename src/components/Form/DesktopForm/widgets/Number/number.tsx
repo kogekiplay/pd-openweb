@@ -38,10 +38,13 @@ const NumberComp = props => {
     isMaskReadonly = false,
     formItemId,
     registerCell,
+    flag,
   } = props;
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [originValue, setOriginValue] = useState('');
+  const [inputDraft, setInputDraft] = useState({ value: '', flag, sourceValue: value });
 
   const numberRef = useRef<HTMLInputElement | null>(null);
 
@@ -60,7 +63,9 @@ const NumberComp = props => {
   }, []);
 
   const onFocus = e => {
+    setIsFocused(true);
     setOriginValue(e.target.value.trim());
+    setInputDraft({ value: `${e.target.value ?? ''}`, flag, sourceValue: value });
     if (_.isFunction(triggerCustomEvent)) {
       triggerCustomEvent(ADD_EVENT_ENUM.FOCUS);
     }
@@ -84,20 +89,20 @@ const NumberComp = props => {
       value = '';
     }
 
-    if (numberRef.current) {
-      numberRef.current.value = value;
-    }
+    const draftValue = value;
 
     if (advancedSetting.numshow === '1' && !isNaN(parseFloat(value))) {
       value = accDiv(parseFloat(value), 100);
     }
 
+    setInputDraft({ value: draftValue, flag, sourceValue: value });
     onChange(value);
   };
 
   const handleBlur = () => {
     let currentValue = value;
     setIsEditing(false);
+    setIsFocused(false);
 
     if (currentValue === '-') {
       currentValue = '';
@@ -174,6 +179,12 @@ const NumberComp = props => {
     displayValue = accMul(displayValue, 100);
   }
 
+  const inputValue = displayValue;
+  const numberInputValue =
+    isFocused && inputDraft.flag === flag && `${inputDraft.sourceValue ?? ''}` === `${value ?? ''}`
+      ? inputDraft.value
+      : inputValue;
+
   displayValue = getAutoValue(displayValue);
 
   if (!isEditing) {
@@ -246,7 +257,7 @@ const NumberComp = props => {
         autoFocus
         placeholder={hint}
         disabled={disabled}
-        defaultValue={displayValue}
+        value={numberInputValue ?? ''}
         maxLength={16}
         onFocus={onFocus}
         onBlur={handleBlur}
@@ -299,7 +310,7 @@ NumberComp.propTypes = {
 
 export default memo(NumberComp, (prevProps, nextProps) => {
   return _.isEqual(
-    _.pick(prevProps, ['value', 'disabled', 'showMaskValue', 'isMaskReadonly']),
-    _.pick(nextProps, ['value', 'disabled', 'showMaskValue', 'isMaskReadonly']),
+    _.pick(prevProps, ['flag', 'value', 'disabled', 'showMaskValue', 'isMaskReadonly']),
+    _.pick(nextProps, ['flag', 'value', 'disabled', 'showMaskValue', 'isMaskReadonly']),
   );
 });

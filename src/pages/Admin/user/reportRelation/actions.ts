@@ -1,7 +1,6 @@
 ﻿import _ from 'lodash';
 import StructureController from 'src/api/structure';
 import { getCurrentProject } from 'src/utils/project';
-import Config from '../../config';
 import type { ReportRelationDispatch, ReportRelationGetState } from './types';
 
 const COMPANY_FAKE_ACCOUNTID = '';
@@ -35,23 +34,33 @@ export const UPDATE_IS_LOADING = 'UPDATE_IS_LOADING';
 export const UPDATE_FIRST_LEVEL_LOADING = 'UPDATE_FIRST_LEVEL_LOADING';
 
 const PAGE_SIZE = 20;
+type ReportAccount = { accountId?: string; fullname?: string; [key: string]: unknown };
+type AddSubordinatesArgs = { id: string; accounts: ReportAccount[]; callback?: () => void };
+type ReplaceStructureArgs = {
+  account: ReportAccount;
+  parentId: string;
+  replacedAccountId: string;
+  callback?: () => void;
+};
 
 // 公司节点
-export const initRoot = () => dispatch => {
-  const project = getCurrentProject(Config.projectId, true);
-  dispatch({
-    type: ADD_STRUCTURES,
-    payload: {
-      source: [
-        {
-          projectId: Config.projectId,
-          fullname: project.companyName,
-          accountId: COMPANY_FAKE_ACCOUNTID,
-        },
-      ],
-    },
-  });
-};
+export const initRoot =
+  () =>
+  (dispatch: ReportRelationDispatch, _getState: ReportRelationGetState, { projectId }: { projectId: string }) => {
+    const project = getCurrentProject(projectId, true);
+    dispatch({
+      type: ADD_STRUCTURES,
+      payload: {
+        source: [
+          {
+            projectId,
+            fullname: project.companyName,
+            accountId: COMPANY_FAKE_ACCOUNTID,
+          },
+        ],
+      },
+    });
+  };
 
 export const updateCollapse = (id = COMPANY_FAKE_ACCOUNTID, open = true) => ({
   type: open ? OPEN_COLLAPSE : CLOSE_COLLAPSE,
@@ -61,10 +70,10 @@ export const updateCollapse = (id = COMPANY_FAKE_ACCOUNTID, open = true) => ({
 });
 
 export const addSubordinates =
-  ({ id, accounts, callback }) =>
-  (dispatch: ReportRelationDispatch, getState: ReportRelationGetState) => {
+  ({ id, accounts, callback }: AddSubordinatesArgs) =>
+  (dispatch: ReportRelationDispatch, getState: ReportRelationGetState, { projectId }: { projectId: string }) => {
     StructureController.addStructure({
-      projectId: Config.projectId,
+      projectId,
       isTop: id === COMPANY_FAKE_ACCOUNTID,
       parentId: id,
       accountIds: _.map(accounts, _ => _.accountId),
@@ -76,7 +85,10 @@ export const addSubordinates =
         if (failedAccountIds && failedAccountIds.length) {
           successAccounts = _.filter(
             accounts,
-            account => failedAccountIds.findIndex(({ accountId }: { accountId?: string; [key: string]: any }) => accountId === account.accountId) === -1,
+            account =>
+              failedAccountIds.findIndex(
+                ({ accountId }: { accountId?: string; [key: string]: any }) => accountId === account.accountId,
+              ) === -1,
           );
 
           alert(
@@ -85,7 +97,7 @@ export const addSubordinates =
               failedAccountIds
                 .map(
                   ({ accountId, failMessage }: { accountId?: string; [key: string]: any }) =>
-                    _.find(accounts, account => account.accountId === accountId).fullname + failMessage,
+                    _.find(accounts, account => account.accountId === accountId)?.fullname + failMessage,
                 )
                 .join(','),
             ),
@@ -95,7 +107,8 @@ export const addSubordinates =
 
         if (_.isElement(successAccounts)) return;
 
-        const { users = {} } = getState().entities;
+        const { users = {} }: { users: Record<string, { subordinates?: string[]; subTotalCount?: number }> } =
+          getState().entities;
         const { subordinates = [], subTotalCount } = users[id] || {};
         callback && callback();
         // 添加实体
@@ -115,8 +128,8 @@ export const addSubordinates =
               id,
               source: successAccounts,
               totalCount: !id
-                ? users[id].subTotalCount
-                : users[id].subTotalCount + _.map(accounts, _ => _.accountId).length,
+                ? users[id]?.subTotalCount
+                : (users[id]?.subTotalCount || 0) + _.map(accounts, _ => _.accountId).length,
             },
           });
         }
@@ -144,11 +157,11 @@ export const addSubordinates =
  * @param { string } params.parentId 替换的节点的父节点 update children用
  */
 export const replaceStructure =
-  ({ account, parentId, replacedAccountId, callback }) =>
-  dispatch => {
+  ({ account, parentId, replacedAccountId, callback }: ReplaceStructureArgs) =>
+  (dispatch: ReportRelationDispatch, _getState: ReportRelationGetState, { projectId }: { projectId: string }) => {
     const { accountId } = account;
     StructureController.replaceUserStructure({
-      projectId: Config.projectId,
+      projectId,
       replacedAccountId,
       accountId,
     }).then(res => {
@@ -203,9 +216,9 @@ export const replaceStructure =
  */
 export const removeStructure =
   ({ parentId, accountId, callback }: { accountId?: string; [key: string]: any }) =>
-  dispatch => {
+  (dispatch: ReportRelationDispatch, _getState: ReportRelationGetState, { projectId }: { projectId: string }) => {
     StructureController.removeParentID({
-      projectId: Config.projectId,
+      projectId,
       accountId,
     }).then(res => {
       if (res === 1) {
@@ -242,12 +255,12 @@ export const removeStructure =
 
 export const fetchRootSubordinates =
   (parentId, pageIndex = 1) =>
-  dispatch => {
+  (dispatch: ReportRelationDispatch, _getState: ReportRelationGetState, { projectId }: { projectId: string }) => {
     dispatch({ type: SUBORDINATES_REQUEST, payload: { id: parentId } });
     pageIndex <= 1 && dispatch({ type: UPDATE_IS_LOADING, payload: { data: true } });
     pageIndex > 1 && dispatch({ type: UPDATE_FIRST_LEVEL_LOADING, payload: { data: true } });
     return StructureController.pagedGetAccountList({
-      projectId: Config.projectId,
+      projectId,
       pageIndex,
       pageSize: PAGE_SIZE,
       parentId: parentId || '',
@@ -276,10 +289,10 @@ export const fetchRootSubordinates =
 
 export const fetchSubordinates =
   (parentId, pageIndex = 1) =>
-  dispatch => {
+  (dispatch: ReportRelationDispatch, _getState: ReportRelationGetState, { projectId }: { projectId: string }) => {
     dispatch({ type: UPDATE_ENTITY_CHILDS, payload: { id: parentId, source: [], moreLoading: true } });
     return StructureController.pagedGetAccountList({
-      projectId: Config.projectId,
+      projectId,
       pageIndex,
       pageSize: PAGE_SIZE,
       parentId: parentId || '',
@@ -298,10 +311,10 @@ export const fetchSubordinates =
  */
 export const fetchParent =
   (id, isDirect = false) =>
-  (dispatch: ReportRelationDispatch, getState: ReportRelationGetState) => {
+  (dispatch: ReportRelationDispatch, getState: ReportRelationGetState, { projectId }: { projectId: string }) => {
     return StructureController.getParentsByAccountId({
       accountId: id,
-      projectId: Config.projectId,
+      projectId,
       isDirect,
     }).then(parents => {
       if (parents && parents.length) {
@@ -309,14 +322,14 @@ export const fetchParent =
         parentIds.reverse().forEach(it => {
           dispatch(fetchSubordinates(it))
             .then(source => {
-              const users = getState().entities.users;
+              const users: Record<string, { subordinates?: string[] }> = getState().entities.users;
               const accountIds = _.reduce(
                 source,
                 (result, { accountId }) => {
                   const subordinates = (users[accountId] || {}).subordinates;
                   return result.concat(subordinates || []);
                 },
-                [],
+                [] as string[],
               );
               return accountIds;
             })

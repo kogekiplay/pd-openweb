@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { type ComponentType, Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -6,7 +6,6 @@ import { Dialog, Icon, LoadDiv } from 'ming-ui';
 import StructureController from 'src/api/structure';
 import type { RootState } from 'src/redux/types';
 import { getCurrentProject } from 'src/utils/project';
-import Config from '../../../config';
 import ConnectedNode from './node';
 import SearchInput from './searchBox';
 import '../style/otherDialog.less';
@@ -93,14 +92,39 @@ const EmptyWrap = styled.div`
   }
 `;
 
+interface DialogUserData {
+  id: string;
+  accountId: string;
+  fullname?: string;
+  collapsed?: boolean;
+  moreLoading?: boolean | undefined;
+  projectId?: string;
+  subTotalCount?: number;
+  subordinates?: string[];
+  disableMore?: boolean;
+  dataFromProps?: boolean;
+  auth?: boolean;
+  firstLevelLoading?: boolean;
+  sourceData?: unknown[];
+  hasSub?: boolean;
+}
+type DialogUsers = Record<string, DialogUserData>;
+
 const DialogHeaderWrap = styled.div`
   padding-right: var(--space-4);
 `;
 
-function NodeDialogWrap(props) {
-  const { user, handleClose, auth, selectSearchUser, id } = props;
+function NodeDialogWrap(props: {
+  user: { accountId?: string; fullname?: string };
+  handleClose: () => void;
+  auth: boolean;
+  selectSearchUser: (user: unknown) => void;
+  id?: string;
+  projectId: string;
+}) {
+  const { user, handleClose, auth, selectSearchUser, id, projectId } = props;
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<DialogUsers>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -110,24 +134,24 @@ function NodeDialogWrap(props) {
   const getData = () => {
     setLoading(true);
     StructureController.getTreesByAccountId({
-      projectId: Config.projectId,
+      projectId,
       accountId: user.accountId,
     }).then(res => {
       setLoading(false);
       if (res.length === 0) {
-        setData([]);
+        setData({});
         return;
       }
 
-      let projectInfo = getCurrentProject(Config.projectId, true);
-      let users = {
+      let projectInfo = getCurrentProject(projectId, true);
+      let users: DialogUsers = {
         '': {
           id: '',
           accountId: '',
           collapsed: false,
           fullname: projectInfo.companyName,
           moreLoading: false,
-          projectId: Config.projectId,
+          projectId,
           subTotalCount: 1,
           subordinates: [res[0].accountId],
           disableMore: true,
@@ -154,12 +178,12 @@ function NodeDialogWrap(props) {
 
   const getSubordinates = ({ id, pageIndex }: { pageIndex?: number; [key: string]: any }) => {
     StructureController.pagedGetAccountList({
-      projectId: Config.projectId,
+      projectId,
       pageIndex: pageIndex,
       pageSize: 20,
       parentId: id || '',
     }).then(({ pagedDatas }) => {
-      let newUsers = {};
+      let newUsers: DialogUsers = {};
       pagedDatas.forEach(l => {
         newUsers[l.accountId] = {
           ...l,
@@ -170,18 +194,20 @@ function NodeDialogWrap(props) {
           firstLevelLoading: pageIndex === 1,
         };
       });
-      data[id].subordinates =
+      const current = data[id];
+      if (!current) return;
+      current.subordinates =
         pageIndex === 1
           ? pagedDatas.map(l => l.accountId)
           : _.union(
-              data[id].subordinates || [],
+              current.subordinates || [],
               pagedDatas.map(l => l.accountId),
             );
-      data[id].moreLoading =
-        data[id].subordinates &&
-        data[id].subordinates.length !== 0 &&
-        data[id].subTotalCount > data[id].subordinates.length;
-      data[id].sourceData = pagedDatas;
+      current.moreLoading =
+        current.subordinates &&
+        current.subordinates.length !== 0 &&
+        (current.subTotalCount || 0) > current.subordinates.length;
+      current.sourceData = pagedDatas;
 
       setData({
         ...data,
@@ -196,7 +222,8 @@ function NodeDialogWrap(props) {
     switch (type) {
       case 'EXPEND':
         const item = data[id];
-        data[id].collapsed = value;
+        if (!item) break;
+        item.collapsed = value;
         if (item.hasSub && !value && (!item.subordinates || item.subordinates.length === 0)) {
           getSubordinates({ id: id, pageIndex: 1 });
         } else setData({ ...data });
@@ -236,6 +263,7 @@ function NodeDialogWrap(props) {
           <span className="Font17 LineHeight32 Bold">{`“${user.fullname}” ${_l('的汇报关系')}`}</span>
           {auth && (
             <SearchInput
+              projectId={projectId}
               onChange={value => {
                 selectSearchUser(value);
               }}
@@ -248,7 +276,7 @@ function NodeDialogWrap(props) {
       footer={null}
       handleClose={handleClose}
     >
-      {data.length === 0 ? (
+      {_.isEmpty(data) ? (
         renderEmpty()
       ) : (
         <NodeWrap className="rootBoardBox">
@@ -260,7 +288,7 @@ function NodeDialogWrap(props) {
               pageIndex={1}
               level={0}
               key={'searchNode' + data[''].id}
-              projectId={Config.projectId}
+              projectId={projectId}
               onChangeData={props => onChangeData(props)}
             />
           )}
@@ -280,6 +308,13 @@ const NodeDialog = connect((state: RootState, ownProps) => {
     users: users,
     auth: ownProps.auth,
   };
-})(NodeDialogWrap);
+})(NodeDialogWrap) as unknown as ComponentType<{
+  projectId: string;
+  auth: boolean;
+  id: string;
+  user: { accountId?: string; fullname?: string };
+  handleClose: () => void;
+  selectSearchUser: (user: { accountId?: string }) => void;
+}>;
 
 export default NodeDialog;
