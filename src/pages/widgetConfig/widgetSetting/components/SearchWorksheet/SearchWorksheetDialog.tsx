@@ -722,7 +722,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                   <InputValue
                     className="w100"
                     type={2}
-                    placeholder={getDefaultCount(data)}
+                    placeholder={String(getDefaultCount(data))}
                     value={queryCount ? queryCount.toString() : undefined}
                     onChange={value => this.setState({ queryCount: value })}
                     onBlur={value => {

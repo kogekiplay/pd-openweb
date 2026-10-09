@@ -4,52 +4,74 @@ import { v4 as uuidv4 } from 'uuid';
 import { SYSTEM_CONTROL, WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import { getDatePickerConfigs, isEmptyValue } from 'src/utils/controlCommon';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getDynamicValue } from './formUtils';
 import { getAttachmentData } from './formUtils/helper';
+import {
+  dateValue,
+  defaultSources,
+  parsedArray,
+  parsedRecord,
+  parsedRecords,
+  parsedStrings,
+  parseValue,
+  stringValue,
+  valueRecord,
+} from './formUtils/valueBoundary';
+import { decodeApiResponseMap } from './searchTypes';
+import type { ApiKeywords, ApiRequestMapping, ApiUpdateProps } from './searchTypes';
 
-const getRelateValue = (control: FormControl = {}, controlState, recordId: string) => {
+function isStoreReader(value: unknown): value is { getState: () => unknown } {
+  return typeof valueRecord(value)?.['getState'] === 'function';
+}
+
+const getRelateValue = (control: FormControl = {}, controlState: Record<string, unknown>, recordId?: string) => {
   if (!_.isEmpty(controlState)) {
-    const records: RecordRow[] = _.get(controlState, 'records') || [];
+    const records = parsedRecords(controlState['records'] || []);
 
     if (recordId) {
-      return records.concat(_.get(controlState, 'changes.addedRecords') || []);
+      return records.concat(parsedRecords(valueRecord(controlState['changes'])?.['addedRecords'] || []));
     }
 
     return records;
   }
 
-  const value = safeParse(control.value || '[]');
+  const value = parsedRecords(control.value || '[]');
   if (_.isEmpty(value)) return [];
   return value.map(i => {
-    return { ...i, ...safeParse(i.sourcevalue) };
+    return { ...i, ...parsedRecord(i['sourcevalue']) };
   });
 };
 
-const getValue = (control: FormControl = {}, type) => {
+const getValue = (control: FormControl = {}, type?: number) => {
   if (!control.value) return '';
+  const value: unknown = control.value;
   const effectiveType = control.type === 30 ? control.sourceControlType : control.type;
 
   switch (effectiveType) {
     case 2:
       if (type === 10000007) {
-        return (control.value || '').replace(/，/g, ',').split(',');
+        return (stringValue(value) || '').replace(/，/g, ',').split(',');
       }
 
-      return control.value;
+      return value;
     // 单选、多选
     case 9:
     case 10:
     case 11:
-      const ids = safeParse(control.value || '[]');
+      const ids = parsedStrings(value || '[]');
       if (!ids.length) return '';
       const noDelControls = (control.options || []).filter(item => _.includes(ids, item.key) && !item.isDeleted);
 
       if (type === 6) {
         return noDelControls
           .map(i => i.score)
-          .reduce((total, cur) => {
-            return total + cur;
+          .reduce<number | string>((total, cur) => {
+            const score: unknown = cur;
+            if (score !== null && score !== undefined && !['string', 'number', 'boolean'].includes(typeof score))
+              return NaN;
+            if (typeof total === 'string' || typeof score === 'string') return `${total}${score}`;
+            return total + Number(score);
           }, 0);
       }
 
@@ -67,50 +89,45 @@ const getValue = (control: FormControl = {}, type) => {
     case 15:
     case 16:
       const { formatMode } = getDatePickerConfigs(control);
-      return control.value ? moment(control.value).format(formatMode) : '';
+      return control.value ? moment(dateValue(value)).format(formatMode) : '';
     // 成员
     case 26:
       if (type === 2) {
-        return safeParse(control.value || '[]')
-          .map(i => (i.accountId === md.global.Account.accountId ? md.global.Account.fullname : i.fullname))
+        return parsedRecords(value || '[]')
+          .map(i => (i['accountId'] === md.global.Account.accountId ? md.global.Account.fullname : i['fullname']))
           .join('、');
       }
 
-      return safeParse(control.value || '[]').map(i => i.accountId);
+      return parsedRecords(value || '[]').map(i => i['accountId']);
     // 部门
     case 27:
       if (type === 2) {
-        return safeParse(control.value || '[]')
-          .map(i => i.departmentName)
+        return parsedRecords(value || '[]')
+          .map(i => i['departmentName'])
           .join('、');
       }
 
-      return safeParse(control.value || '[]').map(i => i.departmentId);
+      return parsedRecords(value || '[]').map(i => i['departmentId']);
     //地区
     case 19:
     case 23:
     case 24:
-      return (safeParse(control.value) || {}).name;
+      return parsedRecord(value)['name'];
     //关联记录
     case 29:
-      const names = safeParse(control.value || '[]').map(i => i.name);
+      const names = parsedRecords(value || '[]').map(i => i['name']);
       return type === 2 ? names.join('') : names;
     case 48:
-      return safeParse(control.value || '[]')
-        .map(i => i.organizeName)
+      return parsedRecords(value || '[]')
+        .map(i => i['organizeName'])
         .join('、');
     default:
-      return control.value;
+      return value;
   }
 };
 
-const getApiDynamicValue = (
-  item,
-  formData,
-  keywords: string | { url?: string | undefined; fileId?: string | undefined },
-  recordId = '',
-) => {
-  const tempValues = safeParse(item.defsource || '[]').map(source => {
+const getApiDynamicValue = (item: ApiRequestMapping, formData: FormControl[], keywords: ApiKeywords, recordId = '') => {
+  const tempValues = defaultSources(item.defsource || '[]').map(source => {
     // 动态值
     if (source.cid) {
       if (source.cid === 'search-keyword') return keywords;
@@ -121,7 +138,7 @@ const getApiDynamicValue = (
       }
 
       if (source.cid === 'ocr-file' && item.type === 14) {
-        const fileId = _.get(keywords, 'fileId');
+        const fileId = typeof keywords === 'string' ? undefined : keywords.fileId;
         return keywords ? (/\w{8}(-\w{4}){3}-\w{12}/.test(fileId || '') ? [fileId] : [JSON.stringify(keywords)]) : '';
       }
 
@@ -145,26 +162,27 @@ const getApiDynamicValue = (
 
       // 人员
       if (item.type === 26) {
-        return _.includes(['user-self'], safeParse(source.staticValue).accountId)
+        return _.includes(['user-self'], parsedRecord(source.staticValue)['accountId'])
           ? md.global.Account.accountId
-          : safeParse(source.staticValue).accountId;
+          : parsedRecord(source.staticValue)['accountId'];
       }
 
       // 部门
       if (item.type === 27) {
-        return safeParse(source.staticValue).departmentId;
+        return parsedRecord(source.staticValue)['departmentId'];
       }
 
       // 组织角色
       if (item.type === 48) {
-        return safeParse(source.staticValue).organizeId;
+        return parsedRecord(source.staticValue)['organizeId'];
       }
 
       //普通数组
       if (item.type === 10000007) {
-        return (source.staticValue || '').replace(/，/g, ',').split(',');
+        return (typeof source.staticValue === 'string' ? source.staticValue : '').replace(/，/g, ',').split(',');
       }
     }
+    return undefined;
   });
 
   if (_.includes([2, 6, 9, 16, 36], item.type)) {
@@ -175,20 +193,27 @@ const getApiDynamicValue = (
   return _.isEmpty(dealValue) ? '' : dealValue;
 };
 
-export const getParamsByConfigs = (recordId: string, requestMap = [], formData = [], keywords = '') => {
-  let params = {};
+export const getParamsByConfigs = (
+  recordId: string | undefined,
+  requestMap: ApiRequestMapping[] = [],
+  formData: FormControl[] = [],
+  keywords: ApiKeywords = '',
+) => {
+  const params: Record<string, unknown> = {};
   requestMap.forEach(item => {
-    if (item.pid) return;
+    if (item.pid || !item.id) return;
     // 对象数组
     if (item.type === 10000008) {
       // 对象数组或子表控件
-      const curControl =
-        _.find(formData, i => i.controlId === _.get(safeParse(item.defsource || '[]')[0], 'cid')) || {};
+      const curControl = _.find(formData, i => i.controlId === defaultSources(item.defsource || '[]')[0]?.cid) || {};
       // 对象数组或子表值
-      const controlState = curControl.store ? curControl.store.getState() : {};
-      const rows: RecordRow[] = (
-        curControl.type === 29 ? getRelateValue(curControl, controlState, recordId) : _.get(controlState, 'rows') || []
-      ).filter(r => !(r.rowid || '').includes('empty'));
+      const store: unknown = curControl.store;
+      const controlState = valueRecord(isStoreReader(store) ? store.getState() : undefined) || {};
+      const rows = (
+        curControl.type === 29
+          ? getRelateValue(curControl, controlState, recordId)
+          : parsedRecords(controlState['rows'] || [])
+      ).filter(r => !(stringValue(r['rowid']) || '').includes('empty'));
 
       params[item.id] = '';
 
@@ -197,10 +222,11 @@ export const getParamsByConfigs = (recordId: string, requestMap = [], formData =
         const childMap = requestMap.filter(r => r.pid === item.id);
 
         params[item.id] = rows.map((row = {}) => {
-          let rowItem = {};
-          const rowRecordId = _.get(row, 'rowid') || '';
+          const rowItem: Record<string, unknown> = {};
+          const rowRecordId = stringValue(row['rowid']) || '';
           childMap.forEach(c => {
-            const { cid, rcid } = safeParse(c.defsource || '[]')[0] || {};
+            if (!c.id) return;
+            const { cid, rcid } = defaultSources(c.defsource || '[]')[0] || {};
             const dynamicRecordId = cid === 'rowid' && rcid ? rowRecordId : recordId;
             const totalRelations = (curControl.relationControls || [])
               .concat(WORKFLOW_SYSTEM_CONTROL)
@@ -211,7 +237,7 @@ export const getParamsByConfigs = (recordId: string, requestMap = [], formData =
                   if (i.controlId === cid) {
                     return {
                       ...i,
-                      value: _.get(row, [cid]) || '',
+                      value: cid ? row[cid] || '' : '',
                     };
                   }
 
@@ -233,12 +259,12 @@ export const getParamsByConfigs = (recordId: string, requestMap = [], formData =
   return params;
 };
 
-export const getShowValue = (control, value = '') => {
+export const getShowValue = (control: FormControl | undefined, value: unknown = '') => {
   if (control) {
-    let curValue = [];
+    let curValue: unknown[] = [];
 
     if (_.includes([9, 10, 11], control.type)) {
-      curValue = safeParse(value || '[]').map(
+      curValue = parsedStrings(value || '[]').map(
         i =>
           _.get(
             _.find(control.options || [], op => op.key === i),
@@ -246,11 +272,11 @@ export const getShowValue = (control, value = '') => {
           ) || '',
       );
     } else if (control.type === 26) {
-      curValue = safeParse(value || '[]').map(i => i.fullname);
+      curValue = parsedRecords(value || '[]').map(i => i['fullname']);
     } else if (control.type === 27) {
-      curValue = safeParse(value || '[]').map(i => i.departmentName);
+      curValue = parsedRecords(value || '[]').map(i => i['departmentName']);
     } else if (control.type === 48) {
-      curValue = safeParse(value || '[]').map(i => i.organizeName);
+      curValue = parsedRecords(value || '[]').map(i => i['organizeName']);
     } else {
       return clearValue(value);
     }
@@ -261,12 +287,8 @@ export const getShowValue = (control, value = '') => {
   return clearValue(value);
 };
 
-export const clearValue = (value = '') => {
-  let curValue = value;
-
-  if (typeof curValue !== 'string') {
-    curValue = `${curValue}`;
-  }
+export const clearValue = (value: unknown = ''): string => {
+  let curValue = typeof value === 'string' ? value : `${value}`;
 
   if (_.includes(['{}', '[]', 'null'], curValue)) {
     curValue = '';
@@ -276,10 +298,17 @@ export const clearValue = (value = '') => {
 };
 
 // api查询数据处理
-export const handleUpdateApi = (props, itemData = {}, isDefault = false, callback?: (() => void) | undefined) => {
-  const { advancedSetting: { responsemap } = {}, formData, onChange } = props;
-  const responseMap = safeParse(responsemap || '[]');
+export const handleUpdateApi = (
+  props: ApiUpdateProps,
+  sourceData: unknown = {},
+  isDefault = false,
+  callback?: (() => void) | undefined,
+) => {
+  const { advancedSetting: { ['responsemap']: responsemap } = {}, formData = [], onChange } = props;
+  const itemData = valueRecord(sourceData) || {};
+  const responseMap = decodeApiResponseMap(responsemap || '[]');
   responseMap.map(item => {
+    if (!item.cid) return;
     const control = _.find(formData, i => i.controlId === item.cid);
 
     if (control && !_.isUndefined(itemData[item.cid])) {
@@ -289,7 +318,7 @@ export const handleUpdateApi = (props, itemData = {}, isDefault = false, callbac
           {
             action: 'clearAndSet',
             isDefault,
-            rows: safeParse(itemData[item.cid] || '[]').map(i => {
+            rows: parsedRecords(itemData[item.cid] || '[]').map(i => {
               return {
                 ...i,
                 rowid: `temprowid-${uuidv4()}`,
@@ -304,9 +333,9 @@ export const handleUpdateApi = (props, itemData = {}, isDefault = false, callbac
         // 普通数组特殊处理
         let itemVal = itemData[item.cid];
 
-        if (item.type === 10000007 && itemData[item.cid] && _.isArray(safeParse(itemData[item.cid]))) {
+        if (item.type === 10000007 && itemData[item.cid] && Array.isArray(parseValue(itemData[item.cid]))) {
           if (!_.includes([26], control.type)) {
-            itemVal = safeParse(itemData[item.cid]).join(',');
+            itemVal = parsedArray(itemData[item.cid]).join(',');
           }
         }
 
@@ -321,13 +350,14 @@ export const handleUpdateApi = (props, itemData = {}, isDefault = false, callbac
 };
 
 // authAccount处理
-export const dealAuthAccount = (authaccount = '', formData) => {
-  const parseAccount = safeParse(authaccount, 'object');
+export const dealAuthAccount = (authaccount = '', formData: FormControl[] = []) => {
+  const parseAccount = parsedRecord(authaccount);
 
-  if (parseAccount.authIdAccounts) {
-    const { authIdAccounts = [], authIdKeywords } = parseAccount;
+  if (parseAccount['authIdAccounts']) {
+    const authIdAccounts = parsedRecords(parseAccount['authIdAccounts'] || []);
+    const authIdKeywords = stringValue(parseAccount['authIdKeywords']) || '';
     return JSON.stringify({
-      accountId: _.get(authIdAccounts, '0.roleId'),
+      accountId: authIdAccounts[0]?.['roleId'],
       keywords: getDynamicValue(formData, {
         type: 2,
         advancedSetting: { defsource: JSON.stringify(transferValue(authIdKeywords)) },

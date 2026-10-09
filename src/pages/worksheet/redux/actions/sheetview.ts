@@ -338,7 +338,10 @@ export const fetchRows = ({
     const view = _.find(views, { viewId });
     const isGroupedView = !!getGroupControlId(view);
     const abortController = sheetview.abortController;
-    let savedPageSize: number | undefined = parseInt(getLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', worksheetId), 10);
+    let savedPageSize: number | undefined = parseInt(
+      String(getLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', worksheetId)),
+      10,
+    );
 
     if (_.isNaN(savedPageSize)) {
       savedPageSize = undefined;
@@ -1337,7 +1340,7 @@ export function setViewLayout(viewId: string | undefined) {
     const { advancedSetting = {} } = view || {};
     let sheetColumnWidths: SheetColumnWidths = {};
     const localLayoutUpdateTime = getLRUWorksheetConfig('SHEET_LAYOUT_UPDATE_TIME', viewId);
-    const pageSize = parseInt(getLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', worksheetInfo.worksheetId), 10);
+    const pageSize = parseInt(String(getLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', worksheetInfo.worksheetId)), 10);
     let frozonIndex = getLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_FROZON', viewId);
 
     /**
@@ -1411,10 +1414,10 @@ export function setViewLayout(viewId: string | undefined) {
       dispatch({ type: 'WORKSHEET_SHEETVIEW_CHANGE_PAGESIZE', pageSize });
     }
 
-    if (_.isNumber(parseInt(frozonIndex, 10)) && !_.isNaN(parseInt(frozonIndex, 10))) {
+    if (_.isNumber(parseInt(String(frozonIndex), 10)) && !_.isNaN(parseInt(String(frozonIndex), 10))) {
       dispatch({
         type: 'WORKSHEET_SHEETVIEW_UPDATE_FIXED_COLUMN_COUNT',
-        value: parseInt(frozonIndex, 10),
+        value: parseInt(String(frozonIndex), 10),
       });
     }
   };
@@ -1553,7 +1556,7 @@ export function getWorksheetSheetViewSummary({
         savedData = safeParse(getLRUWorksheetConfig('WORKSHEET_VIEW_SUMMARY_TYPES', viewId));
       } else {
         const groupedSavedData: SummarySavedConfig = JSON.parse(
-          getLRUWorksheetConfig('GROUPED_WORKSHEET_VIEW_SUMMARY_TYPES', viewId),
+          String(getLRUWorksheetConfig('GROUPED_WORKSHEET_VIEW_SUMMARY_TYPES', viewId)),
         );
         savedData = groupedSavedData.types;
       }

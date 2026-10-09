@@ -15,11 +15,20 @@ import {
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import { getDefaultCount } from 'src/utils/control';
 import { isSheetDisplay } from 'src/utils/controlCommon';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getRelateRecordRowIds } from 'src/utils/domain/control/value';
 import { FORM_ERROR_TYPE } from './config.js';
-import { decodeCustomEventEntries } from './customEventTypes';
-import type { CustomEventProps } from './customEventTypes';
+import { decodeCustomEventEntries, eventQueryResponse, eventRows } from './customEventTypes';
+import type {
+  CustomEventAction,
+  CustomEventFilter,
+  CustomEventProps,
+  EventQueryContext,
+  EventQueryRequest,
+  EventQueryResult,
+  EventRecordRow,
+  EventValueContext,
+} from './customEventTypes';
 import {
   calcDefaultValueFunction,
   checkValueAvailable,
@@ -28,12 +37,25 @@ import {
   getDynamicValue,
 } from './formUtils';
 import { replaceStr } from './formUtils/helper';
-import { eventLinkValue } from './formUtils/valueBoundary';
+import type { RuleTarget } from './formUtils/ruleDataTypes';
+import {
+  eventLinkValue,
+  parsedArray,
+  parsedRecord,
+  parseValue,
+  stringValue,
+  valueRecord,
+} from './formUtils/valueBoundary';
+import { decodeApiRequestMap } from './searchTypes';
 import { dealAuthAccount, getParamsByConfigs, handleUpdateApi } from './searchUtils';
+import type { FormError } from './types';
+import type { ServerControl } from './utils';
 import { formatControlToServer } from './utils';
 
 // 显隐、只读编辑等处理
-const dealDataPermission = props => {
+const dealDataPermission = (
+  props: EventValueContext & { actionItems?: RuleTarget[]; actions?: CustomEventAction[]; actionType?: string },
+) => {
   const { actionItems = [], actions = [], actionType, formData = [] } = props;
 
   function setEventPermission(item: FormControl) {
@@ -56,7 +78,7 @@ const dealDataPermission = props => {
     }
 
     item.eventPermissions = eventPermissions.replace(/x/g, (_a, b) => {
-      return (item.fieldPermission || '111')[b];
+      return (item.fieldPermission || '111')[b] || '';
     });
   }
 
@@ -67,6 +89,7 @@ const dealDataPermission = props => {
     formData.forEach((item: FormControl) => {
       actionItems.map(i => {
         const { controlId, childControlIds = [] } = i || {};
+        if (!controlId) return;
 
         if (controlId === _.get(item, 'controlId')) {
           if (_.isEmpty(childControlIds)) {
@@ -89,7 +112,7 @@ const dealDataPermission = props => {
 };
 
 // 获取默认值
-const getDynamicData = ({ formData, embedData, masterData }, control) => {
+const getDynamicData = ({ formData = [], embedData, masterData }: EventValueContext, control: FormControl) => {
   const defaultType = _.get(control, 'advancedSetting.defaulttype');
 
   // 函数
@@ -103,7 +126,7 @@ const getDynamicData = ({ formData, embedData, masterData }, control) => {
     return calcDefaultValueFunction({ fnControl: control, formData, forceSyncRun: true });
   } else {
     const defSource = _.get(control, 'advancedSetting.defsource');
-    const parsed = safeParse(defSource, 'array');
+    const parsed = parsedArray(defSource);
 
     // 没值或配置清空相当于清空
     if (_.isEmpty(parsed) || _.get(parsed, '0.cid') === 'empty') {
@@ -115,36 +138,34 @@ const getDynamicData = ({ formData, embedData, masterData }, control) => {
 };
 
 // 能配查询多条的是否赋值的控件
-const canSearchMore = currentControl => {
+const canSearchMore = (currentControl: FormControl) => {
   return !_.includes([29, 34], currentControl.type) || (currentControl.type === 29 && currentControl.enumDefault === 1);
 };
 
 // 多条关联卡片需要一次取回匹配记录，否则 count>1 时只会拿到第一页的 1 条用于赋值。
-const isMultipleRelateCard = control => {
+const isMultipleRelateCard = (control: FormControl) => {
   return control.type === 29 && control.enumDefault === 2 && String(_.get(control, 'advancedSetting.showtype')) === '1';
 };
 
 // 获取查询工作表数据
-const getSearchWorksheetData = async props => {
-  const { formData, recordId, queryConfig = {}, control, appId } = props;
+const getSearchWorksheetData = async (props: EventQueryContext): Promise<EventQueryResult | false> => {
+  const { formData = [], recordId, queryConfig = {}, control, appId } = props;
   const { items = [], templates = [], sourceId, moreSort, controlId, id, moreType, recordsNotFound } = queryConfig;
   const currentControl = control || _.find(formData, da => da.controlId === controlId);
-  const controls: FormControl[] = _.get(templates[0] || {}, 'controls') || [];
-  let queryCount = getDefaultCount(currentControl, queryConfig.queryCount);
+  const controls = templates[0]?.controls || [];
+  if (!currentControl) return false;
+  const queryCount = getDefaultCount(currentControl, queryConfig.queryCount);
 
-  if (templates.length > 0 && controls.length > 0) {
-    const filterControls = getFilter({
-      control: {
-        ...currentControl,
-        advancedSetting: { filters: JSON.stringify(items) },
-        recordId,
-        relationControls: controls,
-      },
-      appId,
-      formData,
-      ignoreEmptyRule: true,
-    });
-    let params = {
+  if (sourceId && templates.length > 0 && controls.length > 0) {
+    const filterControl = {
+      ...currentControl,
+      advancedSetting: { filters: JSON.stringify(items) },
+      recordId,
+      relationControls: controls,
+    };
+    const filterControls: unknown = getFilter({ control: filterControl, appId, formData, ignoreEmptyRule: true });
+    if (filterControls !== false && !Array.isArray(filterControls)) return false;
+    const params: EventQueryRequest = {
       filterControls: filterControls === false ? [] : filterControls,
       pageIndex: 1,
       searchType: 1,
@@ -161,10 +182,10 @@ const getSearchWorksheetData = async props => {
       ...(_.get(window, 'shareState.shareId') ? { relationWorksheetId: queryConfig.worksheetId } : {}),
     };
 
-    const resultData = await sheetAjax.getFilterRowsByQueryDefault(params);
+    const resultData = eventQueryResponse(await sheetAjax.getFilterRowsByQueryDefault(params));
 
-    if (_.get(resultData, 'resultCode') === 1) {
-      let result = resultData.data || [];
+    if (resultData) {
+      let result: EventRecordRow[] | false = resultData.data;
 
       // 查询多条时不赋值
       if (
@@ -183,12 +204,21 @@ const getSearchWorksheetData = async props => {
   return false;
 };
 
-const getSubListData = async props => {
-  const listResult = await sheetAjax.getRowRelationRows({
-    ...props,
-    pageIndex: 1,
-  });
-  return listResult.resultCode === 1 ? listResult.data : [];
+const getSubListData = async (props: {
+  rowId?: string | undefined;
+  worksheetId?: string | undefined;
+  controlId?: string | undefined;
+  pageSize?: unknown;
+}) => {
+  const result: unknown = await sheetAjax.getRowRelationRows({ ...props, pageIndex: 1 });
+  const listResult = valueRecord(result);
+  if (listResult?.['resultCode'] !== 1) throw new Error('Invalid related-row query response');
+  const data = listResult['data'];
+  // This mapping consumes rows only; relation count also includes rows outside the requested page.
+  if (!Array.isArray(data)) throw new Error('Invalid related-row data');
+  const rows = eventRows(data);
+  if (rows.length !== data.length) throw new Error('Invalid related-row data');
+  return rows;
 };
 
 // Clearing a relation through an event must keep its old records selectable until save.
@@ -201,7 +231,7 @@ const keepRelateRecordShowRowIds = (control: FormControl) => {
   }
 };
 
-const getRelateSearchResult = (control, searchResult, isMix?) => {
+const getRelateSearchResult = (control: FormControl, searchResult: EventRecordRow[] | false, isMix?: boolean) => {
   let newValue = [];
 
   if (isMix) {
@@ -212,16 +242,16 @@ const getRelateSearchResult = (control, searchResult, isMix?) => {
             isNew: true,
             isWorksheetQueryFill: _.get(control.advancedSetting || {}, 'showtype') === '1',
             sourcevalue: itemResult.sourcevalue,
-            row: JSON.parse(itemResult.sourcevalue),
+            row: parsedRecord(itemResult.sourcevalue),
             type: 8,
             sid: itemResult.rowid || itemResult.sid,
-            name: itemResult.name,
+            name: itemResult['name'],
           };
         });
   } else {
     const titleControl = _.find(_.get(control, 'relationControls'), i => i.attribute === 1);
     newValue = (searchResult || []).map(itemResult => {
-      const nameValue = titleControl ? itemResult[titleControl.controlId] : undefined;
+      const nameValue = titleControl?.controlId ? itemResult[titleControl.controlId] : undefined;
       return {
         isNew: true,
         isWorksheetQueryFill: _.get(control.advancedSetting || {}, 'showtype') === '1',
@@ -244,21 +274,25 @@ const getRelateSearchResult = (control, searchResult, isMix?) => {
 };
 
 // 查询工作表赋值
-const handleUpdateSearchResult = async props => {
+const handleUpdateSearchResult = async (
+  props: EventQueryContext & { searchResult?: EventQueryResult | false; isMix?: boolean },
+) => {
   const { handleChange, queryConfig = {}, formData = [], isMix, control } = props;
-  const { configs = [], templates = {}, recordsNotFound, moreType } = queryConfig;
-  const controls: FormControl[] = _.get(templates[0] || {}, 'controls') || [];
-  const { count, result: searchResult } = props.searchResult || {};
+  const { configs = [], templates = [], recordsNotFound, moreType } = queryConfig;
+  const controls = templates[0]?.controls || [];
+  if (!props.searchResult || props.searchResult.result === false) return;
+  const { count, result: searchResult } = props.searchResult;
 
   // 保留原值
   const keepOriginalValue =
-    (isMix ? count > 1 && moreType === 1 : canSearchMore(control) && count > 1 && moreType === 1) ||
+    (isMix ? count > 1 && moreType === 1 : control && canSearchMore(control) && count > 1 && moreType === 1) ||
     (!count && recordsNotFound);
 
   if (keepOriginalValue) return;
 
   // 查询多条赋空值、未查询到赋空值
-  const emptyValue = c => (canSearchMore(c) && count > 1 && moreType === 2) || (!count && !recordsNotFound);
+  const emptyValue = (c: FormControl) =>
+    (canSearchMore(c) && count > 1 && moreType === 2) || (!count && !recordsNotFound);
 
   if (control && _.includes([29, 35], control.type)) {
     const newVal = getRelateSearchResult(control, emptyValue(control) ? [] : searchResult);
@@ -267,19 +301,21 @@ const handleUpdateSearchResult = async props => {
   }
 
   try {
-    const updates = {};
+    const updates: Record<string, { value: unknown; control: FormControl }> = {};
 
     await Promise.all(
       configs.map(async item => {
         const { pid, cid, subCid } = item;
         const currentControl = control || _.find(formData, i => i.controlId === cid);
 
-        if (!pid && currentControl) {
+        if (!pid && currentControl?.controlId) {
           // 关联记录赋值
           if (_.includes([29, 35], currentControl.type)) {
             const newVal = getRelateSearchResult(
               currentControl,
-              emptyValue(currentControl) ? [] : safeParse(_.get(searchResult[0], [subCid]) || '[]'),
+              emptyValue(currentControl)
+                ? []
+                : eventRows(parseValue(subCid ? searchResult[0]?.[subCid] || '[]' : '[]')),
               isMix,
             );
             updates[currentControl.controlId] = {
@@ -294,10 +330,10 @@ const handleUpdateSearchResult = async props => {
               : configs;
             const subResult = isMix
               ? await getSubListData({
-                  rowId: _.get(searchResult, '0.rowid'),
-                  worksheetId: _.get(searchResult, '0.wsid'),
+                  rowId: searchResult[0]?.rowid,
+                  worksheetId: searchResult[0]?.wsid,
                   controlId: subCid,
-                  pageSize: (searchResult[0] || {}).subCid,
+                  pageSize: searchResult[0]?.['subCid'],
                 })
               : searchResult;
 
@@ -305,7 +341,7 @@ const handleUpdateSearchResult = async props => {
 
             if (subResult.length) {
               subResult.forEach(item => {
-                let row = {};
+                const row: Record<string, unknown> = {};
                 subMapConfigs.map(({ cid = '', subCid = '' }) => {
                   const subItemControl = _.find(currentControl.relationControls || [], re => re.controlId === cid);
 
@@ -359,7 +395,7 @@ const handleUpdateSearchResult = async props => {
               targetControl: _.find(controls, c => c.controlId === subCid),
               currentControl: currentControl,
               controls,
-              searchResult: (searchResult[0] || {})[subCid],
+              searchResult: subCid ? searchResult[0]?.[subCid] : undefined,
             });
             updates[currentControl.controlId] = {
               value: emptyValue(currentControl) ? '' : itemVal,
@@ -383,26 +419,27 @@ const handleUpdateSearchResult = async props => {
 };
 
 // 获取查询工作表结果
-const getSearchWorksheetResult = async props => {
-  const { advancedSetting = {}, searchConfig = [], formData, recordId, appId } = props;
-  const { id } = safeParse(advancedSetting.dynamicsrc || '{}');
+const getSearchWorksheetResult = async (
+  props: EventValueContext & { advancedSetting?: import('src/utils/controlTypes').ControlAdvancedSetting },
+) => {
+  const { advancedSetting = {}, searchConfig = [], formData = [], recordId, appId } = props;
+  const id = stringValue(parsedRecord(advancedSetting['dynamicsrc'] || '{}')['id']);
+  if (!id) return false;
   const currentSearchConfig = _.find(searchConfig, s => s.id === id) || {};
   const { items = [], templates = [], sourceId, moreSort, resultType, controlId } = currentSearchConfig;
-  const controls: FormControl[] = _.get(templates[0] || {}, 'controls') || [];
+  const controls = templates[0]?.controls || [];
+  if (!formData.some(control => control.controlId === controlId)) return false;
 
-  if (templates.length > 0 && controls.length > 0) {
-    const filterControls = getFilter({
-      control: {
-        ..._.find(formData, da => da.controlId === controlId),
-        advancedSetting: { filters: JSON.stringify(items) },
-        recordId,
-        relationControls: controls,
-      },
-      formData,
-      appId,
-      ignoreEmptyRule: true,
-    });
-    let params = {
+  if (sourceId && templates.length > 0 && controls.length > 0) {
+    const filterControl = {
+      ..._.find(formData, da => da.controlId === controlId),
+      advancedSetting: { filters: JSON.stringify(items) },
+      recordId,
+      relationControls: controls,
+    };
+    const filterControls: unknown = getFilter({ control: filterControl, formData, appId, ignoreEmptyRule: true });
+    if (filterControls !== false && !Array.isArray(filterControls)) return false;
+    const params: EventQueryRequest = {
       filterControls: filterControls === false ? [] : filterControls,
       pageIndex: 1,
       searchType: 1,
@@ -416,9 +453,9 @@ const getSearchWorksheetResult = async props => {
       ...(_.get(window, 'shareState.shareId') ? { relationWorksheetId: currentSearchConfig.worksheetId } : {}),
     };
 
-    const resultData = await sheetAjax.getFilterRowsByQueryDefault(params);
+    const resultData = eventQueryResponse(await sheetAjax.getFilterRowsByQueryDefault(params));
 
-    if (_.get(resultData, 'resultCode') === 1) {
+    if (resultData) {
       const dataCount = resultData.count || 0;
       let searchConfigResult = false;
 
@@ -443,16 +480,24 @@ const getSearchWorksheetResult = async props => {
 };
 
 // 创建记录
-const createRecord = async props => {
+const createRecord = async (
+  props: EventValueContext & {
+    actionItems?: RuleTarget[];
+    advancedSetting?: import('src/utils/controlTypes').ControlAdvancedSetting;
+  },
+) => {
   const { actionItems = [], advancedSetting = {}, projectId } = props;
 
-  const receiveControls: FormControl[] = [];
+  const receiveControls: ServerControl[] = [];
 
-  const sheetData = await sheetAjax.getWorksheetInfo({ worksheetId: advancedSetting.sheetId, getTemplate: true });
+  if (!advancedSetting['sheetId']) return;
+  const sheetData = await sheetAjax.getWorksheetInfo({ worksheetId: advancedSetting['sheetId'], getTemplate: true });
 
-  const controls: FormControl[] = _.get(sheetData, 'template.controls') || [];
+  const controls = sheetData.template?.controls || [];
 
+  if (!controls.length) return;
   actionItems.map(item => {
+    if (!item.controlId) return;
     const control = _.find(controls, f => f.controlId === item.controlId);
 
     if (control) {
@@ -466,25 +511,30 @@ const createRecord = async props => {
 
   let para = {
     projectId,
-    appId: advancedSetting.appId,
-    worksheetId: advancedSetting.sheetId,
+    appId: advancedSetting['appId'],
+    worksheetId: advancedSetting['sheetId'],
     rowStatus: 1,
     pushUniqueId: md.global.Config.pushUniqueId,
     receiveControls: receiveControls,
   };
-  sheetAjax.addWorksheetRow(para).then(res => {
-    if (res.resultCode === 1) {
-      alert(_l('创建成功'));
-    }
-  });
+  const result: unknown = await sheetAjax.addWorksheetRow(para);
+  if (valueRecord(result)?.['resultCode'] === 1) {
+    alert(_l('创建成功'));
+  }
 };
 
 // api查询
-const handleSearchApi = async props => {
+const handleSearchApi = async (
+  props: EventValueContext & {
+    advancedSetting?: import('src/utils/controlTypes').ControlAdvancedSetting;
+    dataSource?: string | undefined;
+    actionType?: string | undefined;
+  },
+) => {
   const {
     advancedSetting = {},
     dataSource,
-    formData,
+    formData = [],
     projectId,
     worksheetId,
     appId,
@@ -492,7 +542,7 @@ const handleSearchApi = async props => {
     recordId,
     actionType,
   } = props;
-  const requestMap = safeParse(advancedSetting.requestmap || '[]');
+  const requestMap = decodeApiRequestMap(advancedSetting['requestmap'] || '[]');
   const apiFormData = formData.concat([{ controlId: 'rowid', value: recordId }]);
   const paramsData = getParamsByConfigs(recordId, requestMap, apiFormData);
 
@@ -506,15 +556,15 @@ const handleSearchApi = async props => {
     workSheetId: worksheetId,
     apkId: appId,
     apiTemplateId: dataSource,
-    apiEventId: advancedSetting.apiEventId,
-    authId: dealAuthAccount(advancedSetting.authaccount, apiFormData),
+    apiEventId: advancedSetting['apiEventId'],
+    authId: dealAuthAccount(advancedSetting['authaccount'], apiFormData),
     pushUniqueId: md.global.Config.pushUniqueId,
     actionType,
   };
 
-  const apiData = await sheetAjax.excuteApiQuery(params);
+  const apiData = valueRecord(await sheetAjax.excuteApiQuery(params)) || {};
 
-  if (apiData.code === 20008) {
+  if (apiData['code'] === 20008) {
     upgradeVersionDialog({
       projectId,
       okText: _l('立即充值'),
@@ -524,23 +574,23 @@ const handleSearchApi = async props => {
         location.href = pathCompletion(`/admin/valueaddservice/${projectId}`);
       },
     });
-    return;
+    return undefined;
   }
 
-  if (apiData.message) {
-    alert(apiData.message, 3);
-    return;
+  if (typeof apiData['message'] === 'string' && apiData['message']) {
+    alert(apiData['message'], 3);
+    return undefined;
   }
 
-  return apiData.apiQueryData || {};
+  return valueRecord(apiData['apiQueryData']);
 };
 
 // 判断筛选条件
-const checkFiltersAvailable = async props => {
-  const { filters = [], recordId, formData } = props;
+const checkFiltersAvailable = async (props: EventValueContext & { filters?: CustomEventFilter[] }) => {
+  const { filters = [], recordId, formData = [] } = props;
   let result = [];
 
-  const currentSpliceType = _.get(filters, [0, 'spliceType']);
+  const currentSpliceType = filters[0]?.spliceType;
 
   for (const f of filters) {
     const { valueType, filterItems = [], advancedSetting = {} } = f;
@@ -584,11 +634,12 @@ const checkFiltersAvailable = async props => {
 };
 
 // 处理设置字段值的操作
-export const handleSetValueActions = async (actionItems, props) => {
-  const { formData, recordId, searchConfig, handleChange } = props;
+export const handleSetValueActions = async (actionItems: RuleTarget[], props: EventValueContext) => {
+  const { formData = [], recordId, searchConfig = [], handleChange } = props;
 
   return Promise.all(
     actionItems.map(async item => {
+      if (!item.controlId) return;
       const control = _.find(formData, f => f.controlId === item.controlId);
       const actionItemType = item.type === '0' ? '' : item.type;
 
@@ -599,14 +650,14 @@ export const handleSetValueActions = async (actionItems, props) => {
 
         // 查询工作表单独更新
         if (actionItemType === '2') {
-          const queryId = _.get(safeParse(item.value || '{}'), 'id');
-          const queryConfig = _.find(searchConfig, q => q.id === queryId);
+          const queryId = stringValue(parsedRecord(item.value || '{}')['id']);
+          const queryConfig = queryId ? _.find(searchConfig, q => q.id === queryId) : undefined;
 
           if (!(canNotSet || props.disabled)) {
             const searchResult = await getSearchWorksheetData({ ...props, queryConfig, control });
 
             if (!(searchResult === false)) {
-              handleUpdateSearchResult({ ...props, searchResult, queryConfig, control });
+              await handleUpdateSearchResult({ ...props, searchResult, queryConfig, control });
             }
           }
         } else {
@@ -623,14 +674,14 @@ export const handleSetValueActions = async (actionItems, props) => {
           if (value !== control.value && !canNotSet) {
             if (control.type === 29) {
               try {
-                const records: RecordRow[] = safeParse(value || '[]');
+                const records = eventRows(parseValue(value || '[]'));
 
                 if (_.isEmpty(records)) {
                   keepRelateRecordShowRowIds(control);
                   value = 'deleteRowIds: all';
                 } else {
                   value = JSON.stringify(
-                    records.map((record: RecordRow) => ({
+                    records.map(record => ({
                       ...record,
                       count: records.length,
                     })),
@@ -643,7 +694,7 @@ export const handleSetValueActions = async (actionItems, props) => {
 
             if (control.type === 34) {
               try {
-                const records: RecordRow[] = safeParse(value || '[]');
+                const records = eventRows(parseValue(value || '[]'));
                 value = {
                   action: 'clearAndSet',
                   isDefault: true,
@@ -665,10 +716,10 @@ export const handleSetValueActions = async (actionItems, props) => {
 };
 
 // 成立则执行一下动作
-const triggerCustomActions = async props => {
+const triggerCustomActions = async (props: CustomEventProps & { actions?: CustomEventAction[] }) => {
   const {
     actions = [],
-    formData,
+    formData = [],
     recordId,
     worksheetId,
     searchConfig = [],
@@ -678,202 +729,229 @@ const triggerCustomActions = async props => {
     handleActiveTab = () => {},
   } = props;
   let completeActionsCount = 0;
+  const backgroundActions: Promise<void>[] = [];
 
-  for (const a of actions) {
-    const { actionType, actionItems = [], message = '', advancedSetting = {}, dataSource } = a;
+  try {
+    for (const a of actions) {
+      const { actionType, actionItems = [], message = '', advancedSetting = {}, dataSource } = a;
 
-    switch (actionType) {
-      // 显示、隐藏、可编辑、只读
-      case ACTION_VALUE_ENUM.SHOW:
-      case ACTION_VALUE_ENUM.HIDE:
-      case ACTION_VALUE_ENUM.EDIT:
-      case ACTION_VALUE_ENUM.READONLY:
-        const newRenderData = dealDataPermission({ ...props, actionItems, actionType });
-        setRenderData(newRenderData);
-        completeActionsCount += 1;
-        break;
-      // 错误提示
-      case ACTION_VALUE_ENUM.ERROR:
-        const errorInfos = [];
-        actionItems.map((item, index: number) => {
-          const errorControl = _.find(formData, f => f.controlId === item.controlId);
+      switch (actionType) {
+        // 显示、隐藏、可编辑、只读
+        case ACTION_VALUE_ENUM.SHOW:
+        case ACTION_VALUE_ENUM.HIDE:
+        case ACTION_VALUE_ENUM.EDIT:
+        case ACTION_VALUE_ENUM.READONLY:
+          const newRenderData = dealDataPermission({ ...props, actionItems, actionType });
+          setRenderData(newRenderData);
+          completeActionsCount += 1;
+          break;
+        // 错误提示
+        case ACTION_VALUE_ENUM.ERROR:
+          const errorInfos: FormError[] = [];
+          actionItems.map((item, index: number) => {
+            if (!item.controlId) return;
+            const errorControl = _.find(formData, f => f.controlId === item.controlId);
 
-          if (errorControl) {
-            const errorMessage = getDynamicData(props, { ...errorControl, advancedSetting: { defsource: item.value } });
-            errorInfos.push({
-              controlId: item.controlId,
-              errorMessage,
-              errorType: FORM_ERROR_TYPE.OTHER_ERROR,
-              showError: true,
-            });
+            if (errorControl) {
+              const errorMessage = getDynamicData(props, {
+                ...errorControl,
+                advancedSetting: { defsource: item.value },
+              });
+              errorInfos.push({
+                controlId: item.controlId,
+                errorMessage: eventLinkValue(errorMessage) || '',
+                errorType: FORM_ERROR_TYPE.OTHER_ERROR,
+                showError: true,
+              });
+            }
+
+            if (index === actionItems.length - 1) completeActionsCount += 1;
+          });
+          setErrorItems(errorInfos);
+          break;
+        // 设置字段值
+        case ACTION_VALUE_ENUM.SET_VALUE:
+          try {
+            await handleSetValueActions(actionItems, { ...props, isSetValueFromEvent: true });
+            completeActionsCount += 1;
+          } catch (error) {
+            console.log(error);
+            completeActionsCount += 1;
           }
 
-          if (index === actionItems.length - 1) completeActionsCount += 1;
-        });
-        setErrorItems(errorInfos);
-        break;
-      // 设置字段值
-      case ACTION_VALUE_ENUM.SET_VALUE:
-        try {
-          await handleSetValueActions(actionItems, { ...props, isSetValueFromEvent: true });
-          completeActionsCount += 1;
-        } catch (error) {
-          console.log(error);
-          completeActionsCount += 1;
-        }
+          break;
+        // 刷新字段值
+        case ACTION_VALUE_ENUM.REFRESH_VALUE:
+          try {
+            if (recordId && _.get(md, 'global.Account.accountId')) {
+              await Promise.all(
+                actionItems.map(async item => {
+                  if (!item.controlId) return;
+                  const control = _.find(formData, f => f.controlId === item.controlId);
 
-        break;
-      // 刷新字段值
-      case ACTION_VALUE_ENUM.REFRESH_VALUE:
-        try {
-          if (recordId && _.get(md, 'global.Account.accountId')) {
-            await Promise.all(
-              actionItems.map(async item => {
-                const control = _.find(formData, f => f.controlId === item.controlId);
-
-                if (control) {
-                  const refreshResult = await sheetAjax.refreshSummary({
-                    worksheetId,
-                    rowId: recordId,
-                    controlId: item.controlId,
-                  });
-                  handleChange(refreshResult, item.controlId, control, false);
-                }
-              }),
-            );
-          }
-
-          completeActionsCount += 1;
-        } catch (error) {
-          console.log(error);
-          completeActionsCount += 1;
-        }
-
-        break;
-      // 调用api、事件封装流程
-      case ACTION_VALUE_ENUM.OPERATION_FLOW:
-      case ACTION_VALUE_ENUM.API:
-        const apiRes = await handleSearchApi({ ...props, advancedSetting, dataSource, actionType });
-        handleUpdateApi(
-          {
-            ...props,
-            advancedSetting,
-            onChange: (value, cid) => {
-              handleChange(
-                value,
-                cid,
-                _.find(formData, f => f.controlId === cid),
-                false,
+                  if (control) {
+                    const refreshResult: unknown = await sheetAjax.refreshSummary({
+                      worksheetId,
+                      rowId: recordId,
+                      controlId: item.controlId,
+                    });
+                    handleChange(refreshResult, item.controlId, control, false);
+                  }
+                }),
               );
-            },
-          },
-          apiRes,
-          true,
-        );
-        completeActionsCount += 1;
-        break;
-      // 提示消息
-      case ACTION_VALUE_ENUM.MESSAGE:
-        const messageInfo = getDynamicData(props, {
-          type: 2,
-          advancedSetting: { defsource: message },
-        });
-        const splitMessage = String(messageInfo).substr(0, 50);
+            }
 
-        if (splitMessage) {
-          alert(splitMessage, Number(advancedSetting.alerttype), undefined, undefined, undefined, { marginTop: 32 });
-        }
-
-        completeActionsCount += 1;
-        break;
-      // 播放声音
-      case ACTION_VALUE_ENUM.VOICE:
-        const { fileKey, voicefiles } = advancedSetting;
-        const voiceFiles = VOICE_FILE_LIST.concat(safeParse(voicefiles, 'array'));
-        const curFile = _.find(voiceFiles, v => v.fileKey === fileKey);
-
-        if (fileKey && curFile) {
-          let audioSrc = _.get(curFile, 'filePath');
-
-          // 上传的mp3置换url
-          if (!Number(fileKey)) {
-            audioSrc = await fileAjax.getChatFileUrl({ serverName: curFile.filePath, key: fileKey });
+            completeActionsCount += 1;
+          } catch (error) {
+            console.log(error);
+            completeActionsCount += 1;
           }
 
-          if (!window.customEventAudioPlayer) {
-            const audio = document.createElement('audio');
-            window.customEventAudioPlayer = audio;
-          }
-
-          window.customEventAudioPlayer.src = audioSrc;
-          window.customEventAudioPlayer.play();
+          break;
+        // 调用api、事件封装流程
+        case ACTION_VALUE_ENUM.OPERATION_FLOW:
+        case ACTION_VALUE_ENUM.API:
+          const apiRes = await handleSearchApi({ ...props, advancedSetting, dataSource, actionType });
+          if (apiRes)
+            handleUpdateApi(
+              {
+                ...props,
+                advancedSetting,
+                onChange: (value: unknown, cid?: string) => {
+                  handleChange(
+                    value,
+                    cid,
+                    _.find(formData, f => f.controlId === cid),
+                    false,
+                  );
+                },
+              },
+              apiRes,
+              true,
+            );
           completeActionsCount += 1;
-        } else {
-          completeActionsCount += 1;
-        }
-
-        break;
-      // 打开链接
-      case ACTION_VALUE_ENUM.LINK:
-        const linkInfo = eventLinkValue(
-          getDynamicData(props, {
+          break;
+        // 提示消息
+        case ACTION_VALUE_ENUM.MESSAGE:
+          const messageInfo = getDynamicData(props, {
             type: 2,
             advancedSetting: { defsource: message },
-          }),
-        );
-        if (linkInfo === undefined) break;
+          });
+          const splitMessage = String(messageInfo).substr(0, 50);
 
-        if (advancedSetting.opentype === '2') {
-          if (/^https?:\/\/.+$/.test(linkInfo)) {
-            Dialog.confirm({
-              width: 640,
-              title: null,
-              noFooter: true,
-              closable: true,
-              children: (
-                <iframe
-                  width={640}
-                  height={600}
-                  frameborder="0"
-                  allowtransparency="true"
-                  webkitallowfullscreen="true"
-                  mozallowfullscreen="true"
-                  allowfullscreen="true"
-                  src={linkInfo}
-                />
-              ),
-            });
+          if (splitMessage) {
+            alert(splitMessage, Number(advancedSetting['alerttype']));
           }
-        } else {
-          window.open(linkInfo);
-        }
 
-        break;
-      // 创建记录
-      case ACTION_VALUE_ENUM.CREATE:
-        createRecord({ ...props, actionItems, advancedSetting });
-        break;
-      case ACTION_VALUE_ENUM.ACTIVATE_TAB:
-        const id = _.get(actionItems, '0.controlId');
-        handleActiveTab(id);
-        completeActionsCount += 1;
-        break;
-      case ACTION_VALUE_ENUM.SEARCH_WORKSHEET:
-        const queryId = _.get(safeParse(advancedSetting.dynamicsrc || '{}'), 'id');
-        const queryConfig = _.find(searchConfig, q => q.id === queryId);
-        const searchResult = await getSearchWorksheetData({ ...props, queryConfig });
-
-        if (searchResult !== false) {
-          await handleUpdateSearchResult({ ...props, searchResult, queryConfig, isMix: true });
           completeActionsCount += 1;
-        } else {
-          completeActionsCount += 1;
-        }
+          break;
+        // 播放声音
+        case ACTION_VALUE_ENUM.VOICE:
+          const { ['fileKey']: fileKey, ['voicefiles']: voicefiles } = advancedSetting;
+          const voiceFiles = [
+            ...VOICE_FILE_LIST,
+            ...parsedArray(voicefiles).flatMap(value => {
+              const file = valueRecord(value);
+              return typeof file?.['fileKey'] === 'string' && typeof file['filePath'] === 'string'
+                ? [{ fileKey: file['fileKey'], filePath: file['filePath'] }]
+                : [];
+            }),
+          ];
+          const curFile = _.find(voiceFiles, v => v.fileKey === fileKey);
 
-        break;
+          if (fileKey && curFile) {
+            let audioSrc: unknown = curFile.filePath;
+
+            // 上传的mp3置换url
+            if (!Number(fileKey)) {
+              audioSrc = await fileAjax.getChatFileUrl({ serverName: curFile.filePath, key: fileKey });
+            }
+
+            if (!window.customEventAudioPlayer) {
+              const audio = document.createElement('audio');
+              window.customEventAudioPlayer = audio;
+            }
+
+            if (typeof audioSrc !== 'string') break;
+            window.customEventAudioPlayer.src = audioSrc;
+            void window.customEventAudioPlayer.play().catch(error => console.log(error));
+            completeActionsCount += 1;
+          } else {
+            completeActionsCount += 1;
+          }
+
+          break;
+        // 打开链接
+        case ACTION_VALUE_ENUM.LINK:
+          const linkInfo = eventLinkValue(
+            getDynamicData(props, {
+              type: 2,
+              advancedSetting: { defsource: message },
+            }),
+          );
+          if (linkInfo === undefined) break;
+
+          if (advancedSetting['opentype'] === '2') {
+            if (/^https?:\/\/.+$/.test(linkInfo)) {
+              Dialog.confirm({
+                width: 640,
+                title: null,
+                noFooter: true,
+                closable: true,
+                children: (
+                  <iframe
+                    width={640}
+                    height={600}
+                    frameBorder="0"
+                    {...{
+                      allowtransparency: 'true',
+                      webkitallowfullscreen: 'true',
+                      mozallowfullscreen: 'true',
+                      allowfullscreen: 'true',
+                    }}
+                    src={linkInfo}
+                  />
+                ),
+              });
+            }
+          } else {
+            window.open(linkInfo);
+          }
+
+          break;
+        // 创建记录
+        case ACTION_VALUE_ENUM.CREATE:
+          backgroundActions.push(
+            createRecord({ ...props, actionItems, advancedSetting }).catch(error => {
+              console.log(error);
+            }),
+          );
+          completeActionsCount += 1;
+          break;
+        case ACTION_VALUE_ENUM.ACTIVATE_TAB:
+          const id = _.get(actionItems, '0.controlId');
+          if (typeof id === 'string') handleActiveTab(id);
+          completeActionsCount += 1;
+          break;
+        case ACTION_VALUE_ENUM.SEARCH_WORKSHEET:
+          const queryId = stringValue(parsedRecord(advancedSetting['dynamicsrc'] || '{}')['id']);
+          const queryConfig = queryId ? _.find(searchConfig, q => q.id === queryId) : undefined;
+          const searchResult = await getSearchWorksheetData({ ...props, queryConfig });
+
+          if (searchResult !== false) {
+            await handleUpdateSearchResult({ ...props, searchResult, queryConfig, isMix: true });
+            completeActionsCount += 1;
+          } else {
+            completeActionsCount += 1;
+          }
+
+          break;
+      }
     }
+  } finally {
+    // Creation keeps its existing background action order, while completion waits for started requests.
+    await Promise.all(backgroundActions);
   }
-
   return completeActionsCount;
 };
 
@@ -918,28 +996,32 @@ export const dealCustomEvent = (props: CustomEventProps): void => {
       // 失焦事件才检查事件是否完成，事件开始执行
       isBlurEvent && checkEventComplete({ [loadingKey]: true });
 
-      for (const e of eventActions) {
-        const { filters = [], actions = [] } = e;
-
-        const filterResult = await checkFiltersAvailable({ ...props, filters });
-
-        if (_.isEmpty(filters) || filterResult) {
-          const completeActionsCount = await triggerCustomActions({ ...props, actions });
-
-          // 执行完成
-          if (completeActionsCount === actions.length && isBlurEvent) {
+      let executed = false;
+      try {
+        for (const e of eventActions) {
+          const { filters = [], actions = [] } = e;
+          const filterResult = await checkFiltersAvailable({ ...props, filters });
+          if (_.isEmpty(filters) || filterResult) {
+            executed = true;
+            await triggerCustomActions({ ...props, actions });
+            return;
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        // Success, failure, cancellation and skipped actions all finish the event's loading lifecycle.
+        if (isBlurEvent) {
+          if (executed) {
             const eventTimer = setTimeout(() => {
               checkEventComplete({ [loadingKey]: false });
               clearTimeout(eventTimer);
             }, 0);
+          } else {
+            checkEventComplete({ [loadingKey]: false });
           }
-
-          return;
         }
       }
-
-      // 没有事件执行
-      isBlurEvent && checkEventComplete({ [loadingKey]: false });
     }
   });
 };

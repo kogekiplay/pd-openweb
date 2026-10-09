@@ -25,9 +25,12 @@ import {
   saveTempRecordValueToLocal,
 } from 'src/utils/common';
 import { getTitleTextFromControls, isRelateRecordTableControl, updateOptionsOfControls } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { addBehaviorLog, getFeatureStatus } from 'src/utils/project';
 import { getRecordTempValue } from 'src/utils/record';
+import { decodeTempRecordSnapshot } from 'src/utils/tempRecordCache';
+import type { TempRecordSnapshot } from 'src/utils/tempRecordCache';
 import SheetContext from '../Sheet/SheetContext';
 import { deleteRecord, handleSubmitDraft, loadRecord, RecordApi, updateRecord, updateRecordLockStatus } from './crtl';
 import RecordEditLock from './RecordEditLock';
@@ -36,7 +39,6 @@ import Header from './RecordForm/Header';
 import RecordInfoContext from './RecordInfoContext';
 import RecordInfoRight from './RecordInfoRight';
 import './RecordInfo.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const SIDE_MIN_WIDTH = 200 + 226;
 
@@ -297,20 +299,27 @@ export default class RecordInfo extends Component<any, any> {
     const { recordId } = this.props;
     const { viewId, iseditting, tempFormData, isRecordLock } = this.state;
     if (!viewId || isRecordLock) return;
-    let tempData;
+    let tempData: string | null | undefined;
 
     const handleFillValue = () => {
       if (tempData && !iseditting) {
         this.setState({ isSettingTempData: true });
-        const savedData = safeParse(tempData);
+        let savedData: TempRecordSnapshot | undefined;
+        try {
+          savedData = decodeTempRecordSnapshot(tempData);
+        } catch (error) {
+          console.error(error);
+          this.setState({ isSettingTempData: false });
+          return;
+        }
 
-        if (_.isEmpty(savedData)) {
+        if (!savedData) {
           this.setState({ isSettingTempData: false });
           return;
         }
 
         const { create_at, value } = savedData;
-        const tempRecordCreateTime = new Date(create_at);
+        const tempRecordCreateTime = new Date(create_at === undefined ? NaN : create_at);
         const recordUpdateTime = new Date(updateTime);
 
         if (tempRecordCreateTime > recordUpdateTime) {
@@ -366,10 +375,15 @@ export default class RecordInfo extends Component<any, any> {
     };
 
     if (window.isWxWork) {
-      KVGet(`${md.global.Account.accountId}${viewId}-${recordId}-recordInfo`).then(data => {
-        tempData = data;
-        handleFillValue();
-      });
+      KVGet(`${md.global.Account.accountId}${viewId}-${recordId}-recordInfo`)
+        .then(data => {
+          tempData = data;
+          handleFillValue();
+        })
+        .catch(error => {
+          console.error(error);
+          this.setState({ isSettingTempData: false });
+        });
     } else {
       tempData = localStorage.getItem(`recordInfo_${viewId}-${recordId}`);
       handleFillValue();
@@ -442,7 +456,10 @@ export default class RecordInfo extends Component<any, any> {
     closeWhenNotViewData,
     needUpdateControlIds,
     cb = _.noop,
-  }: { recordId?: string; [key: string]: any }) {
+  }: {
+    recordId?: string;
+    [key: string]: any;
+  }) {
     const {
       from,
       view = {},
@@ -1175,7 +1192,15 @@ export default class RecordInfo extends Component<any, any> {
     );
   };
 
-  refreshEvent = ({ worksheetId, recordId, closeWhenNotViewData }: { worksheetId?: string; recordId?: string; [key: string]: any }) => {
+  refreshEvent = ({
+    worksheetId,
+    recordId,
+    closeWhenNotViewData,
+  }: {
+    worksheetId?: string;
+    recordId?: string;
+    [key: string]: any;
+  }) => {
     const { iseditting } = this.state;
 
     if (!iseditting && worksheetId === this.state.worksheetId && recordId === this.state.recordId) {

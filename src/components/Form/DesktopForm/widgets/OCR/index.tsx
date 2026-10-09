@@ -1,3 +1,4 @@
+import { decodeApiRequestMap } from '../../../core/searchTypes';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -191,7 +192,7 @@ const OCR = props => {
       return alert(_l('模版为空或已删除'), 3);
     }
 
-    const requestMap = safeParse(requestmap || '[]');
+    const requestMap = decodeApiRequestMap(requestmap || '[]');
 
     // 有配置api和请求参数
     if (postListRef.current) {
@@ -288,7 +289,7 @@ const OCR = props => {
     );
   };
 
-  const requestMap = safeParse(advancedSetting.requestmap || '[]');
+  const requestMap = decodeApiRequestMap(advancedSetting.requestmap || '[]');
 
   if (
     advancedSetting.ocrapitype === '1' &&

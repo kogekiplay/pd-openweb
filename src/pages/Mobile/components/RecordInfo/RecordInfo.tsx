@@ -32,6 +32,8 @@ import { renderText as renderCellText } from 'src/utils/control';
 import { VersionProductType } from 'src/utils/enum';
 import { addBehaviorLog, getFeatureStatus } from 'src/utils/project';
 import { getRecordTempValue } from 'src/utils/record';
+import { decodeTempRecordSnapshot } from 'src/utils/tempRecordCache';
+import type { TempRecordSnapshot } from 'src/utils/tempRecordCache';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import RecordFooter from './RecordFooter';
 import RecordForm from './RecordForm';
@@ -480,17 +482,24 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     const { recordBase, tempFormData, formChanged } = this.state;
     const { recordId, viewId } = recordBase;
     if (!viewId) return;
-    let tempData;
+    let tempData: string | null | undefined;
 
     const handleFillValue = () => {
       if (tempData && !formChanged) {
-        const savedData = safeParse(tempData);
-        if (_.isEmpty(savedData)) return;
+        let savedData: TempRecordSnapshot | undefined;
+        try {
+          savedData = decodeTempRecordSnapshot(tempData);
+        } catch (error) {
+          console.error(error);
+          this.setState({ isSettingTempData: false });
+          return;
+        }
+        if (!savedData) return;
         this.setState({
           isSettingTempData: true,
         });
         const { create_at, value } = savedData;
-        const tempRecordCreateTime = new Date(create_at);
+        const tempRecordCreateTime = new Date(create_at === undefined ? NaN : create_at);
         const recordUpdateTime = new Date(updateTime);
 
         if (tempRecordCreateTime > recordUpdateTime) {
@@ -561,10 +570,15 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     };
 
     if (window.isWxWork) {
-      KVGet(`${md.global.Account.accountId}${viewId}-${recordId}-recordInfo`).then(data => {
-        tempData = data;
-        handleFillValue();
-      });
+      KVGet(`${md.global.Account.accountId}${viewId}-${recordId}-recordInfo`)
+        .then(data => {
+          tempData = data;
+          handleFillValue();
+        })
+        .catch(error => {
+          console.error(error);
+          this.setState({ isSettingTempData: false });
+        });
     } else {
       tempData = localStorage.getItem(`recordInfo_${viewId}-${recordId}`);
       handleFillValue();

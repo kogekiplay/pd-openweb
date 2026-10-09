@@ -46,6 +46,7 @@ import {
 } from './formUtils';
 import { formatTimeValue, getItemFilters, getOtherWorksheetFieldValue } from './formUtils/helper';
 import type { FormConditionRule } from './formUtils/types';
+import type { FormQueryConfig } from './queryTypes';
 import type { ControlValue, FormControl, FormError, SubListStore } from './types';
 import { calcSubTotalCount, getArrBySpliceType, halfSwitchSize, isUnTextWidget } from './utils';
 
@@ -106,7 +107,7 @@ interface DataFormatOptions {
   isDraft?: boolean | undefined;
   storeCenter?: Record<string, SubListStore> | undefined;
   loadRowsWhenChildTableStoreCreated?: boolean | undefined;
-  searchConfig?: ControlValue[] | undefined;
+  searchConfig?: FormQueryConfig[] | undefined;
   embedData?: Record<string, ControlValue> | undefined;
   ignoreHiddenRequired?: boolean | undefined;
   onAsyncChange?: ((...args: ControlValue[]) => ControlValue) | undefined;
@@ -148,7 +149,7 @@ export default class DataFormat {
   declare masterData: ControlValue;
   /** 嵌入场景透传的外部数据 */
   declare embedData: Record<string, ControlValue>;
-  declare searchConfig: ControlValue[];
+  declare searchConfig: FormQueryConfig[];
 
   declare controlIds: string[];
   declare ruleControlIds: string[];

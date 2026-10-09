@@ -96,7 +96,7 @@ function isRuleItem(value: unknown): value is RuleFilterItem {
       }))
   );
 }
-function isRuleGroup(value: unknown): value is RuleFilterGroup {
+export function isRuleGroup(value: unknown): value is RuleFilterGroup {
   const group = valueRecord(value);
   return (
     isRuleItem(value) &&

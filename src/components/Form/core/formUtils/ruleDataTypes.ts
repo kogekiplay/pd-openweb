@@ -1,4 +1,5 @@
 import type { ControlAdvancedSetting, FormControl } from 'src/utils/controlTypes';
+import type { FormQueryConfig } from '../queryTypes';
 import type { FilterEvaluation } from './filterTypes';
 import type { getAvailableFilters } from './ruleUtils';
 import type { FormConditionRule, FormRuleAction, PermissionUpdate } from './types';
@@ -39,10 +40,7 @@ export type RuleValidator = (
   errorText: string | undefined,
   rule?: FormConditionRule,
 ) => void;
-export interface RuleSearchConfig {
-  id?: string | undefined;
-  [key: string]: unknown;
-}
+export type RuleSearchConfig = FormQueryConfig;
 export interface RuleDataProps {
   rules?: FormConditionRule[] | undefined;
   data?: FormControl[] | undefined;

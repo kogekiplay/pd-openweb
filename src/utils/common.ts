@@ -10,74 +10,71 @@ import webCache from 'src/api/webCache';
 import { PUBLIC_KEY } from './enum';
 import RegExpValidator from './expression';
 import { getPssId } from './pssId';
+import { decodeKVValue, decodeTempRecordIds } from './tempRecordCache';
+import type { KVOptions, KVRequest } from './tempRecordCache';
+import { decodeWorksheetConfigCache, validateWorksheetConfigValue } from './worksheetConfigCache';
+import type { WorksheetConfigKey, WorksheetConfigValues, WorksheetConfigWriteArgs } from './worksheetConfigCache';
 
 export const emitter = new EventEmitter();
 
 window.onresize = () => emitter.emit('WINDOW_RESIZE');
 
 /** LRU 存储 */
-export function saveLRUWorksheetConfig(key: string, id, value) {
-  if (_.isObject(value)) {
-    throw new Error('只支持存储字符串');
+export function saveLRUWorksheetConfig(...args: WorksheetConfigWriteArgs): void;
+export function saveLRUWorksheetConfig(
+  key: WorksheetConfigKey,
+  id: string | undefined,
+  value: WorksheetConfigValues[WorksheetConfigKey],
+): void {
+  if (!id) return;
+  const validatedValue = validateWorksheetConfigValue(key, value);
+  let data: Record<string, WorksheetConfigValues[WorksheetConfigKey]> = {};
+  try {
+    data = decodeWorksheetConfigCache(key, localStorage.getItem(key));
+  } catch (err) {
+    console.error(err);
   }
-
-  const maxSaveNum = 30;
-  let data = {};
-
-  if (localStorage.getItem(key)) {
-    try {
-      data = safeParse(localStorage.getItem(key));
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  const newData = _.assign({}, data, { [id]: value });
-
-  if (Object.keys(newData).length > maxSaveNum) {
-    delete newData[Object.keys(newData).pop];
-  }
-
-  safeLocalStorageSetItem(key, JSON.stringify(newData));
+  // Updating an entry makes it the most recently written preference.
+  delete data[id];
+  Object.defineProperty(data, id, { value: validatedValue, enumerable: true, writable: true, configurable: true });
+  const previousIds = Object.keys(data).filter(previousId => previousId !== id);
+  for (const staleId of previousIds.slice(0, Math.max(0, previousIds.length - 29))) delete data[staleId];
+  safeLocalStorageSetItem(key, JSON.stringify(data));
 }
 
 /** LRU 存储 */
-export function clearLRUWorksheetConfig(key: string, id) {
-  let data = {};
-
-  if (localStorage.getItem(key)) {
-    try {
-      data = safeParse(localStorage.getItem(key));
-    } catch (err) {
-      console.error(err);
-    }
+export function clearLRUWorksheetConfig<Key extends WorksheetConfigKey>(key: Key, id: string | undefined): void {
+  if (!id) return;
+  let data: Record<string, WorksheetConfigValues[Key]> = {};
+  try {
+    data = decodeWorksheetConfigCache(key, localStorage.getItem(key));
+  } catch (err) {
+    console.error(err);
   }
-
   delete data[id];
   safeLocalStorageSetItem(key, JSON.stringify(data));
 }
 
 /** LRU 读取 */
-export function getLRUWorksheetConfig(key: string, id) {
-  let data = [];
-
-  if (localStorage.getItem(key)) {
-    try {
-      data = safeParse(localStorage.getItem(key));
-    } catch (err) {
-      console.error(err);
-      return;
-    }
+export function getLRUWorksheetConfig<Key extends WorksheetConfigKey>(
+  key: Key,
+  id: string | undefined,
+): WorksheetConfigValues[Key] | undefined {
+  if (!id) return undefined;
+  try {
+    const data = decodeWorksheetConfigCache(key, localStorage.getItem(key));
+    return Object.hasOwn(data, id) ? data[id] : undefined;
+  } catch (err) {
+    console.error(err);
+    return undefined;
   }
-
-  return data[id];
 }
 
 /**
  * 后端 key value 存储服务
  * 存
  */
-export function KVSet(key, value, { expireTime } = {}) {
+export function KVSet(key: string, value: string, { expireTime }: KVOptions = {}): KVRequest {
   return webCache.add({
     key,
     value,
@@ -93,8 +90,8 @@ export const debouncedKVSet = _.debounce(KVSet, 1000);
  * 取
  */
 
-export function KVGet(key: string) {
-  return webCache.get({ key, moduleType: 2 }).then(res => get(res, 'data') || '');
+export function KVGet(key: string): Promise<string> {
+  return webCache.get({ key, moduleType: 2 }).then((reply: unknown) => decodeKVValue(reply));
 }
 
 /**
@@ -102,21 +99,28 @@ export function KVGet(key: string) {
  * 清空
  */
 
-export function KVClear(key: string) {
+export function KVClear(key: string): KVRequest {
   return webCache.clear({ key, moduleType: 2 }, { silent: true });
 }
 
-export function saveTempRecordValueToLocal(key: string, id, value: string, max = 5) {
+export function saveTempRecordValueToLocal(
+  key: string,
+  id: string | undefined,
+  value: string,
+  max = 5,
+): typeof debouncedKVSet | undefined {
+  if (!id) return undefined;
   if (window.isWxWork) {
     debouncedKVSet(`${md.global.Account.accountId}${id}-${key}`, value);
     return debouncedKVSet;
   }
 
-  let savedIds = [];
+  let savedIds: string[] = [];
 
   if (localStorage.getItem(key)) {
     try {
-      savedIds = safeParse(localStorage.getItem(key), 'array');
+      const storedIndex: unknown = safeParse(localStorage.getItem(key), 'array');
+      savedIds = decodeTempRecordIds(storedIndex);
       savedIds = savedIds.filter(sid => sid !== id);
     } catch (err) {
       console.error(err);
@@ -125,7 +129,7 @@ export function saveTempRecordValueToLocal(key: string, id, value: string, max =
 
   savedIds.push(id);
   if (savedIds.length > max) {
-    localStorage.removeItem(`${key}_${savedIds[0]}`, value);
+    localStorage.removeItem(`${key}_${savedIds[0]}`);
     savedIds = savedIds.slice(1);
   }
 
@@ -143,17 +147,19 @@ export function saveTempRecordValueToLocal(key: string, id, value: string, max =
   return undefined;
 }
 
-export function removeTempRecordValueFromLocal(key: string, id) {
+export function removeTempRecordValueFromLocal(key: string, id: string | undefined) {
+  if (!id) return undefined;
   if (window.isWxWork) {
     KVClear(`${md.global.Account.accountId}${id}-${key}`);
     return;
   }
 
-  let savedIds = [];
+  let savedIds: string[] = [];
 
   if (localStorage.getItem(key)) {
     try {
-      savedIds = safeParse(localStorage.getItem(key), 'array');
+      const storedIndex: unknown = safeParse(localStorage.getItem(key), 'array');
+      savedIds = decodeTempRecordIds(storedIndex);
       savedIds = savedIds.filter(sid => sid !== id);
     } catch (err) {
       console.error(err);

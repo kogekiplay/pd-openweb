@@ -1,7 +1,12 @@
-export type RuntimeRecordValue = string | number | boolean | null | undefined | RuntimeRecordValue[] | RuntimeRecord;
-export interface RuntimeRecord {
-  rowid?: string | undefined;
+export type RuntimeRecordValue =
+  string | number | boolean | null | undefined | RuntimeRecordValue[] | RuntimeJsonObject;
+/** A field's JSON payload may contain arbitrary keys, including a numeric `rowid`. */
+export interface RuntimeJsonObject {
   [controlId: string]: RuntimeRecordValue;
+}
+/** Row identifiers are constrained only at the actual worksheet-record boundary. */
+export interface RuntimeRecord extends RuntimeJsonObject {
+  rowid?: string | undefined;
 }
 export interface RuntimeRelatedRecord {
   type?: number | undefined;
@@ -24,7 +29,7 @@ export function recordValue(value: unknown): RuntimeRecordValue {
   if (Array.isArray(value)) return value.map(recordValue);
   const object = objectValue(value);
   if (!object) return undefined;
-  const result: RuntimeRecord = {};
+  const result: RuntimeJsonObject = {};
   Object.keys(object).forEach(key => {
     result[key] = recordValue(object[key]);
   });
@@ -37,7 +42,10 @@ export function recordObject(value: unknown): RuntimeRecord | undefined {
   const normalized = recordValue(object);
   if (!normalized || typeof normalized !== 'object' || Array.isArray(normalized)) return undefined;
   if (rowId !== undefined && typeof rowId !== 'string') return undefined;
-  return normalized;
+  return recordRow(normalized) ? normalized : undefined;
+}
+function recordRow(value: RuntimeJsonObject): value is RuntimeRecord {
+  return value['rowid'] === undefined || typeof value['rowid'] === 'string';
 }
 export function recordArray(value: unknown): RuntimeRecord[] {
   return Array.isArray(value) ? value.map(recordObject).filter((row): row is RuntimeRecord => row !== undefined) : [];

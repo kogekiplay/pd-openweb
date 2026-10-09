@@ -1,13 +1,14 @@
 import type { RuleChange, RuleDataProps, RuleValidator } from 'src/components/Form/core/formUtils/ruleDataTypes';
 import type { FormConditionRule } from 'src/components/Form/core/formUtils/types';
 import type { FormControl, FormError } from 'src/components/Form/core/types';
+import type { FormQueryConfig } from '../core/queryTypes';
 
 export type StoreAction =
   | { type: 'SET_RENDER_DATA'; payload: FormControl[] }
   | { type: 'SET_ERROR_ITEMS' | 'SET_UNIQUE_ERROR_ITEMS'; payload: FormError[] }
   | { type: 'SET_RULES'; payload: FormConditionRule[] | undefined }
   | { type: 'SET_RULES_LOADING' | 'SET_CONFIG_LOCK'; payload: boolean }
-  | { type: 'SET_SEARCH_CONFIG'; payload: Array<Record<string, unknown>> | undefined }
+  | { type: 'SET_SEARCH_CONFIG'; payload: FormQueryConfig[] | undefined }
   | { type: 'SET_LOADING_ITEMS'; payload: Record<string, boolean> }
   | { type: 'SET_VERIFY_CODE'; payload: string }
   | { type: 'SET_ACTIVE_TAB_CONTROL_ID'; payload: string | undefined }
@@ -15,7 +16,7 @@ export type StoreAction =
 export type StoreDispatch = (action: StoreAction) => unknown;
 export interface FormStoreState {
   rules?: FormConditionRule[] | undefined;
-  searchConfig?: Array<Record<string, unknown>> | undefined;
+  searchConfig?: FormQueryConfig[] | undefined;
   uniqueErrorItems: FormError[];
   errorItems: FormError[];
   renderData: FormControl[];
@@ -50,7 +51,7 @@ export interface FormDataFormat {
 }
 export interface StoreProps {
   rules?: FormConditionRule[] | undefined;
-  searchConfig?: Array<Record<string, unknown>> | undefined;
+  searchConfig?: FormQueryConfig[] | undefined;
   systemControlData?: FormControl[] | undefined;
   recordId?: string | undefined;
   from?: number | undefined;

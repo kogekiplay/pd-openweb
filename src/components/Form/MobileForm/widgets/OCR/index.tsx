@@ -1,3 +1,4 @@
+import { decodeApiRequestMap } from '../../../core/searchTypes';
 import { Fragment, useRef, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -25,7 +26,7 @@ const OCR = props => {
     recordId,
   } = props;
   const { requestmap, authaccount } = advancedSetting || {};
-  const requestMap = safeParse(advancedSetting.requestmap || '[]');
+  const requestMap = decodeApiRequestMap(advancedSetting.requestmap || '[]');
 
   const fileRef = useRef<QiniuUpload | null>(null);
   const postList = useRef<ApiResult | null>(null);
@@ -62,7 +63,7 @@ const OCR = props => {
       return alert(_l('模版为空或已删除'), 3);
     }
 
-    const requestMap = safeParse(requestmap || '[]');
+    const requestMap = decodeApiRequestMap(requestmap || '[]');
 
     // 有配置api和请求参数
     if (postList.current) {

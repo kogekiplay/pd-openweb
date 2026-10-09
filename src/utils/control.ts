@@ -2264,7 +2264,7 @@ export const getTimeZoneText = (data: FormControl, appId?: string) => {
   return `UTC${timeZone > 0 ? '+' : ''}${timeZone / 60}`;
 };
 
-export const getDefaultCount = (data: FormControl = {}, value: ControlValue = 0) => {
+export const getDefaultCount = (data: FormControl = {}, value: ControlValue = 0): number => {
   value = parseInt(value);
   if (value) {
     // 下拉框50，卡片200，列表500

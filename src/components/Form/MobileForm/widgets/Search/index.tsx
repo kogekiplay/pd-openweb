@@ -1,3 +1,4 @@
+import { decodeApiRequestMap } from '../../../core/searchTypes';
 import React, { Fragment, memo, useCallback, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -45,7 +46,7 @@ const SearchBox = props => {
     } = props;
     setData({});
 
-    const requestMap = safeParse(requestmap || '[]');
+    const requestMap = decodeApiRequestMap(requestmap || '[]');
     if (!dataSource) return alert(_l('模版为空或已删除'), 3);
     if (type === 50 && (!itemsource || !itemtitle)) return alert(_l('下拉框的必填映射项未配置(选项列表，选项名)'), 3);
     // 有配置api和请求参数

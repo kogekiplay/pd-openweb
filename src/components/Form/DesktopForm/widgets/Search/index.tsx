@@ -1,3 +1,4 @@
+import { decodeApiRequestMap } from '../../../core/searchTypes';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Select } from 'antd';
 import cx from 'classnames';
@@ -101,7 +102,7 @@ const Search = props => {
   const handleSearch = () => {
     setData(null);
 
-    const requestMap = safeParse(requestmap || '[]');
+    const requestMap = decodeApiRequestMap(requestmap || '[]');
     if (!dataSource) return alert(_l('模版为空或已删除'), 3);
     if (type === 50 && (!itemsource || !itemtitle)) return alert(_l('下拉框的必填映射项未配置(选项列表，选项名)'), 3);
 

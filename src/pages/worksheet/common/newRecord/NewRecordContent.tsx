@@ -27,6 +27,8 @@ import { isRelateRecordTableControl } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 import { compatibleMDJS } from 'src/utils/project';
 import { formatRecordToRelateRecord, getRecordTempValue, parseRecordTempValue } from 'src/utils/record';
+import { decodeTempRecordSnapshot } from 'src/utils/tempRecordCache';
+import type { TempRecordSnapshot } from 'src/utils/tempRecordCache';
 import RecordInfoContext from '../recordInfo/RecordInfoContext';
 import MobileRecordRecoverConfirm from './MobileNewRecord/components/RecordRecoverConfirm';
 import './NewRecord.less';
@@ -540,12 +542,22 @@ function NewRecordForm(props) {
   const RecordCon = notDialog ? React.Fragment : ScrollView;
   const recordTitle = title || _l('创建%0', entityName || worksheetInfo.entityName || _l('记录'));
 
-  const fillTempRecordValue = (tempNewRecord, formData) => {
+  const fillTempRecordValue = (tempNewRecord: string, formData: FormControl[]) => {
     setIsSettingTempData(true);
-    const savedData = safeParse(tempNewRecord);
-    if (_.isEmpty(savedData)) return;
+    let savedData: TempRecordSnapshot | undefined;
+    try {
+      savedData = decodeTempRecordSnapshot(tempNewRecord);
+    } catch (error) {
+      console.error(error);
+      setIsSettingTempData(false);
+      return;
+    }
+    if (!savedData) {
+      setIsSettingTempData(false);
+      return;
+    }
     const tempRecordCreateTime = savedData.create_at;
-    const value = savedData.value || savedData;
+    const value = savedData.value;
     cache.current.tempRecordCreateTime = tempRecordCreateTime;
     const parsedData = parseRecordTempValue(value, formData, defaultRelatedSheet);
 
@@ -564,11 +576,16 @@ function NewRecordForm(props) {
     if (window.isMingDaoApp) return;
     if (needCache) {
       if (window.isWxWork) {
-        KVGet(`${md.global.Account.accountId}${worksheetId}-${saveKey}`).then(data => {
-          if (data) {
-            fillTempRecordValue(data, newFormdata);
-          }
-        });
+        KVGet(`${md.global.Account.accountId}${worksheetId}-${saveKey}`)
+          .then(data => {
+            if (data) {
+              fillTempRecordValue(data, newFormdata);
+            }
+          })
+          .catch(error => {
+            console.error(error);
+            setIsSettingTempData(false);
+          });
       } else {
         const tempData = localStorage.getItem(saveKey + '_' + worksheetId);
 
