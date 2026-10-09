@@ -62,8 +62,8 @@ export default function StyleCardContent(props) {
 
   useEffect(() => {
     setExpandKeys(totalKeys);
-    const cardTitleStyle = getAdvanceSetting(data, 'cardtitlestyle');
-    const cardValueStyle = getAdvanceSetting(data, 'cardvaluestyle');
+    const cardTitleStyle = getAdvanceSetting(data, 'cardtitlestyle') || {};
+    const cardValueStyle = getAdvanceSetting(data, 'cardvaluestyle') || {};
 
     // 查询记录--聚合表默认强调值
     if (

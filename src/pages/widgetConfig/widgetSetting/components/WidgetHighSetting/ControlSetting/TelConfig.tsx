@@ -1,3 +1,4 @@
+import { countrySettings } from '../../../../util/advancedSettingBoundary';
 import { Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
 import { Dropdown } from 'antd';
@@ -41,8 +42,8 @@ export default function TelConfig({ data, onChange, globalSheetInfo = {} }) {
     defaultCountryVisible: false,
   });
 
-  const allowData = getAdvanceSetting(data, 'allowcountries') || [];
-  const commonData = getAdvanceSetting(data, 'commcountries') || [];
+  const allowData = countrySettings(getAdvanceSetting(data, 'allowcountries'));
+  const commonData = countrySettings(getAdvanceSetting(data, 'commcountries'));
   const defaultCountry = getAdvanceSetting(data, 'defaultarea') || {};
 
   useEffect(() => {
@@ -84,9 +85,7 @@ export default function TelConfig({ data, onChange, globalSheetInfo = {} }) {
   // 根据允许的国家生成常用的国家
   const genNextCommonData = list => {
     if (list.length < 1) return [];
-    return commonData.reduce((p, c) => {
-      return list.some(item => item.iso2 === c.iso2) ? p.concat(c) : p;
-    }, []);
+    return commonData.filter(c => list.some(item => item.iso2 === c.iso2));
   };
 
   const getCommonDisplayText = () => {

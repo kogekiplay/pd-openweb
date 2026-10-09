@@ -46,7 +46,7 @@ export default function DepartmentConfig(props) {
   };
 
   const handleFieldClick = selectData => {
-    let newValue = [].concat(chooseRange);
+    let newValue = chooseRange.slice();
     const availUsers = selectData.map(item => (item.cid ? { ...item, type: 4 } : { ...item, type: 2 }));
     availUsers.map(item => {
       if (existIndex(item) === -1) {

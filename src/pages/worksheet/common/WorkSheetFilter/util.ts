@@ -20,7 +20,12 @@ import {
   getFilterTypeLabel,
 } from './enum';
 
-export function getConditionType(condition) {
+export function getConditionType(condition: {
+  controlType?: number | string | undefined;
+  dataType?: number | string | undefined;
+  type?: number | string | undefined;
+  conditionGroupType?: number | undefined;
+}): number | undefined {
   return (condition.controlType === 28 || condition.dataType === 28) &&
     _.includes([FILTER_CONDITION_TYPE.EQ, FILTER_CONDITION_TYPE.NE], condition.type)
     ? CONTROL_FILTER_WHITELIST.OPTIONS.value
@@ -127,8 +132,10 @@ export function formatValuesOfCondition(condition) {
       };
 }
 
-export function getTypeKey(type) {
-  const whiteListKeys = Object.keys(CONTROL_FILTER_WHITELIST);
+export function getTypeKey(type: number | undefined): keyof typeof CONTROL_FILTER_WHITELIST | undefined {
+  const whiteListKeys = Object.keys(CONTROL_FILTER_WHITELIST).filter(
+    (key): key is keyof typeof CONTROL_FILTER_WHITELIST => key in CONTROL_FILTER_WHITELIST,
+  );
   const typeKey = _.find(whiteListKeys, key => _.includes(CONTROL_FILTER_WHITELIST[key].keys, type));
   return typeKey;
 }
@@ -776,7 +783,9 @@ export function getDefaultCondition(control, from?) {
  * 处理汇总、他表字段、公式等复杂复合控件的 type
  * @param {*} control 控件
  *  */
-export function redefineComplexControl(control) {
+export function redefineComplexControl<T extends FormControl>(
+  control: T,
+): Omit<T, 'type' | 'originType' | 'options'> & FormControl {
   if (control.type === 37) {
     return { ...control, ...{ type: control.enumDefault2 || 6, originType: control.type } };
   }
@@ -1279,10 +1288,10 @@ export function fillConditionValue({
   dynamicControl = redefineComplexControl(dynamicControl);
 
   // 快速筛选配置的其他字段的值
-  if (dynamicControl.filterValue) {
+  if (dynamicControl['filterValue']) {
     const newCondition = {
       ...condition,
-      ...(dynamicControl.filterValue || {}),
+      ...(dynamicControl['filterValue'] || {}),
     };
     return validate(newCondition) || newCondition.filterType === 7 ? newCondition : false;
   }
@@ -1416,8 +1425,8 @@ export function fillConditionValue({
       const store = dynamicControl.store;
       const state = store && store.getState();
 
-      if (isRelateRecordTableControl(dynamicControl) && dynamicControl.rcValue) {
-        let rcValues = safeParse(dynamicControl.rcValue, 'array') || [];
+      if (isRelateRecordTableControl(dynamicControl) && dynamicControl['rcValue']) {
+        let rcValues = safeParse(dynamicControl['rcValue'], 'array') || [];
         const { addedRecordIds = [], deletedRecordIds = [] } = state?.changes || {};
         rcValues = rcValues.concat(addedRecordIds).filter(r => !_.includes(deletedRecordIds, r));
         condition.values = _.uniq(rcValues);

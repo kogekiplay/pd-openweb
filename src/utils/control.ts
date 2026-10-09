@@ -902,7 +902,8 @@ export function getTitleTextFromControls(
   if (_.includes([9, 10, 11, 40], titleControl.type)) {
     return renderText(titleControl, options) || _l('未命名');
   }
-  const fallbackValue = typeof titleControl.value === 'string' && /^\s*[[{]/.test(titleControl.value) ? '' : titleControl.value;
+  const fallbackValue =
+    typeof titleControl.value === 'string' && /^\s*[[{]/.test(titleControl.value) ? '' : titleControl.value;
   return titleControl ? renderText(titleControl, options) || fallbackValue || _l('未命名') : _l('未命名');
 }
 
@@ -1246,7 +1247,7 @@ export function renderText(cell: FormControl, options: RenderTextOptions = {}) {
       case 36: // SWITCH 检查框
         const itemnames = getSwitchItemNames(cell, { needDefault: true });
         const text = _.get(
-          _.find(itemnames, i => i.key === value || parseFloat(i.key) === value),
+          _.find(itemnames, i => i.key === value || (typeof i.key === 'string' && parseFloat(i.key) === value)),
           'value',
         );
         value = value === '1' || value === 1 ? text || _l('已选中') : '';
@@ -1650,13 +1651,13 @@ export const getSwitchItemNames = (
   { needDefault, isShow }: { needDefault?: boolean; isShow?: boolean } = {},
 ) => {
   const itemnames = getAdvanceSetting(data, 'itemnames') || [];
-  const showtype: keyof typeof DEFAULT_TEXT = getAdvanceSetting(data, 'showtype');
-  const defaultData = DEFAULT_TEXT[showtype];
+  const showtype = getAdvanceSetting(data, 'showtype');
+  const defaultData = showtype === 1 || showtype === 2 ? DEFAULT_TEXT[showtype] : undefined;
 
   // 筛选按默认来
   if (isShow) {
     return (
-      DEFAULT_TEXT[showtype] || [
+      defaultData || [
         { key: '1', value: _l('选中') },
         { key: '0', value: _l('未选中') },
       ]
@@ -1666,14 +1667,14 @@ export const getSwitchItemNames = (
   // 需要兜底显示
   if (needDefault && defaultData) {
     return defaultData.map(i => {
-      const cur = _.find(itemnames, (it: { key?: string }) => it.key === i.key);
-      return _.get(cur, 'value') ? cur : i;
+      const cur = itemnames.find(it => it.key === i.key);
+      return cur?.value ? cur : i;
     });
   }
 
   // radio框必须要文案
   if (showtype === 2) {
-    return itemnames.every((i: { value?: string }) => !!i.value) ? itemnames : defaultData;
+    return itemnames.every(i => !!i.value) ? itemnames : defaultData || [];
   }
 
   return itemnames;

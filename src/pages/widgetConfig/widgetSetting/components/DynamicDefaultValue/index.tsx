@@ -1,3 +1,4 @@
+import { functionSetting } from '../../../util/advancedSettingBoundary';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -22,7 +23,7 @@ export default function DynamicDefaultValue(props) {
   //工作表或函数
   const { defaulttype = '' } = getAdvanceSetting(data);
   let defaultType = DEFAULT_TYPES[defaulttype] || '';
-  let dynamicData = defaultType ? getAdvanceSetting(data, defaultType) || {} : {};
+  let dynamicData = defaultType ? functionSetting(getAdvanceSetting(data, defaultType)) : {};
 
   //子表自定义类型异化
   if (dynamicValue.length > 0 && type === 'subList' && defaultType === 'dynamiccustom') {
@@ -54,7 +55,7 @@ export default function DynamicDefaultValue(props) {
   };
 
   const isDYForFaster =
-    (getAdvanceSettingByKey(data, 'defsource') || []).filter(o => ['url', 'dateRange'].includes(o.rcid)).length > 0;
+    (getAdvanceSettingByKey(data, 'defsource') || []).filter(o => ['url', 'dateRange'].some(key => key === o.rcid)).length > 0;
   return (
     <SettingItem className={cx({ mTop0: hideTitle })}>
       {!hideTitle && (

@@ -53,7 +53,9 @@ function isSource(value: unknown): value is DefaultSource {
   const record = valueRecord(value);
   return (
     !!record &&
-    ['cid', 'rcid', 'staticValue'].every(key => optionalString(record[key])) &&
+    ['cid', 'rcid'].every(key => optionalString(record[key])) &&
+    (optionalString(record['staticValue']) ||
+      (typeof record['staticValue'] === 'number' && Number.isFinite(record['staticValue']))) &&
     (record['type'] === undefined || typeof record['type'] === 'number') &&
     (record['isAsync'] === undefined || typeof record['isAsync'] === 'boolean')
   );

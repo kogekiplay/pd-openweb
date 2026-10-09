@@ -25,6 +25,7 @@ import { filterEmptyChildTableRows } from 'src/utils/record';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT } from '../config';
 import type { FormError, MasterData } from '../types';
 import filterFn from './filterFn';
+import type { FilterEvaluation } from './filterTypes';
 import {
   checkChildTableIsEmpty,
   compareWithTime,
@@ -229,7 +230,7 @@ export const getCurrentValue = (
             .join();
         case 36:
           if (_.includes(['1', '2'], item.advancedSetting?.showtype)) {
-            return _.find(getSwitchItemNames(item, { needDefault: true }), option => option.key === data)?.value || '';
+            return _.find(getSwitchItemNames(item, { needDefault: true }), option => option?.key === data)?.value || '';
           }
           return data === '1' ? 'true' : 'false';
         case 40: {
@@ -353,7 +354,9 @@ export const formatSearchResultValue = ({
 };
 
 // 处理静态默认值
-const parseStaticValue = (item: FormControl, staticValue: string): FormRuntimeValue => {
+const parseStaticValue = (item: FormControl, staticValue: string | number): FormRuntimeValue => {
+  // The score input stores its static value as a JSON number. Other widgets serialize strings.
+  if (typeof staticValue === 'number') return item.type === 28 && Number.isFinite(staticValue) ? staticValue : '';
   // 手机 当前用户
   if (item.type === 3 && parsedRecord(staticValue)['accountId'] === 'user-self') {
     return getContactInfo('mobilePhone');
@@ -1404,7 +1407,7 @@ export const checkValueAvailable = (
   recordId?: string,
   from?: number,
 ): FormRuleCheckResult => {
-  let isAvailable = false;
+  let isAvailable: FilterEvaluation = false;
   //不满足条件的id,过滤错误
   const filterControlIds: Record<number, Array<Array<string | undefined>>> = {};
   //满足条件的错误id合集
@@ -1434,7 +1437,7 @@ export const checkValueAvailable = (
     if (filters && filters.length) {
       const failedIds = filterControlIds[pIdx] || [];
       const availableIds = availableControlIds[pIdx] || [];
-      let childItemAvailable = true;
+      let childItemAvailable: FilterEvaluation = true;
       filters.forEach((its, index: number) => {
         let filterControl = data.find(a => a.controlId === its.controlId);
 

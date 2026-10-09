@@ -62,7 +62,7 @@ export default function SearchMapping(props) {
 
   const getMapData = (type: number) => {
     let filterData = [];
-    let dropValue = '';
+    let dropValue: string | string[] = '';
 
     // 选项列表
     if (type === 1) {

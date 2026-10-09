@@ -10,7 +10,7 @@ import { formatViewToDropdown, isSheetDisplay } from '../../../util';
 export default function RelateSearchOperate(props) {
   const { data, onChange } = props;
   const { enumDefault2 = 1, controlId, viewId } = data;
-  let { allowlink, openview = '', allowexport } = getAdvanceSetting(data);
+  let { allowlink = '', openview = '', allowexport } = getAdvanceSetting(data);
   const { loading = true, views = [] } = window.subListSheetConfig[controlId] || {};
   const selectedViewIsDeleted = !loading && viewId && !_.find(views, sheet => sheet.viewId === viewId);
   const selectedOpenViewIsDelete = !loading && openview && !_.find(views, sheet => sheet.viewId === openview);

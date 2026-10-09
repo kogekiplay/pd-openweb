@@ -145,7 +145,7 @@ export default function BarCode({ data, onChange, allControls, from, subListData
               let value = e.target.value.trim();
 
               if (!value) {
-                value = width || 160;
+                value = width || '160';
               }
 
               setTempWidth(value);

@@ -246,7 +246,7 @@ export default function CalendarSet(props) {
       <TimeDropdownChoose>
         <Select
           className={cx('timeDropdown', {})}
-          value={[weekbegin]}
+          value={weekbegin}
           optionLabelProp="label"
           placeholder={_l('请选择')}
           suffixIcon={<Icon icon="arrow-down-border Font14" />}

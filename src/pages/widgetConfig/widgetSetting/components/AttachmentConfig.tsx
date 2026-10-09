@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Input } from 'antd';
 import styled from 'styled-components';
 import { getAdvanceSetting, handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';
+import { numberSetting } from '../../util/advancedSettingBoundary';
 
 const PointerConfigWrap = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ const PointerConfigWrap = styled.div`
 `;
 
 export default function AttachmentConfig({ data = {}, minCount = 1, maxNum, onChange, attr }) {
-  const maxcount = getAdvanceSetting(data, attr);
+  const maxcount = numberSetting(getAdvanceSetting(data, attr));
 
   // 数值上限
   if (!maxNum) {
@@ -62,12 +63,13 @@ export default function AttachmentConfig({ data = {}, minCount = 1, maxNum, onCh
   };
 
   const addNumber = () => {
-    const compareData = data.type === 50 ? maxcount + 1 : Math.min(maxNum, maxcount + 1);
+    const nextCount = maxcount === '' ? '1' : maxcount + 1;
+    const compareData = data.type === 50 ? nextCount : Math.min(maxNum, Number(nextCount));
     onChange(handleAdvancedSettingChange(data, { [attr]: compareData }));
   };
 
   const reduceNumber = () => {
-    onChange(handleAdvancedSettingChange(data, { [attr]: Math.max(minCount, maxcount - 1) }));
+    onChange(handleAdvancedSettingChange(data, { [attr]: Math.max(minCount, Number(maxcount) - 1) }));
   };
 
   return (

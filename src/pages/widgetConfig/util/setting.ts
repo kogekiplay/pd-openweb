@@ -7,17 +7,17 @@ import { SYSTEM_CONTROLS } from 'src/pages/worksheet/constants/enum';
 import {
   canAsUniqueWidget,
   canSetWidgetStyle,
-  getAdvanceSetting,
   getAreaHintText,
   getDatePickerConfigs,
   getDateToEn,
   getShowFormat,
   getTitleStyle,
 } from 'src/utils/controlCommon';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getMaxControlsCount, NO_CONTENT_CONTROL, NOT_HAVE_WIDTH_CONFIG } from '../config';
 import { DISPLAY_TYPE } from '../config/setting';
+import { getWidgetAdvanceSetting as getAdvanceSetting, stringSettings } from './advancedSettingBoundary';
 import { getRowById, isFullLineControl } from './widgets';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export {
   canAsUniqueWidget,
@@ -50,7 +50,7 @@ export const sortControlsByRowAndCol = (controls: FormControl[] = []) => {
 };
 
 export const getControlsSorts = (data, controls, key = 'controlssorts') => {
-  const parsedSorts = getAdvanceSetting(data, [key]) || [];
+  const parsedSorts = stringSettings(getAdvanceSetting(data, [key]));
   // 显示字段没有配置，默认按原表row、col排序
   const defaultSorts = sortControlsByRowAndCol(controls).map(item => item.controlId);
 
@@ -65,13 +65,15 @@ export const getControlsSorts = (data, controls, key = 'controlssorts') => {
 
 // 默认取标题控件 和 前三个控件
 export const getDefaultShowControls = allControls => {
-  if (allControls.length <= 3) return allControls.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId);
+  if (allControls.length <= 3)
+    return allControls.map(({ controlId }: FormControl) => controlId);
   const titleControlIndex = _.findIndex(allControls, item => item.attribute === 1);
-  if (titleControlIndex <= 3) return allControls.slice(0, 4).map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId);
+  if (titleControlIndex <= 3)
+    return allControls.slice(0, 4).map(({ controlId }: FormControl) => controlId);
   return allControls
     .slice(0, 3)
     .concat(allControls[titleControlIndex])
-    .map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId);
+    .map(({ controlId }: FormControl) => controlId);
 };
 
 export const filterByTypeAndSheetFieldType = (controls: FormControl[] = [], filter) => {
@@ -308,7 +310,9 @@ export const getDefaultOptions = () => {
   ];
 };
 
-export const getDefaultCheckedOption = (options: { key: string; value: string; isDeleted: boolean; index: number; checked: boolean; color: string }[]) => {
+export const getDefaultCheckedOption = (
+  options: { key: string; value: string; isDeleted: boolean; index: number; checked: boolean; color: string }[],
+) => {
   if (isEmpty(options)) return '';
   return JSON.stringify([head(options).key]);
 };

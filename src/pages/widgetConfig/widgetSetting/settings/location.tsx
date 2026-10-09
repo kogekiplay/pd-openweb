@@ -106,7 +106,7 @@ export default function Location({ data, onChange }) {
               border
               style={{ width: '100%', backgroundColor: 'var(--color-background-primary)', marginTop: '10px' }}
               menuStyle={{ width: '100%' }}
-              value={+distance || undefined}
+              value={Number(distance) || undefined}
               data={DISTANCE_CONFIG}
               onChange={value => {
                 onChange(handleAdvancedSettingChange(data, { distance: value }));

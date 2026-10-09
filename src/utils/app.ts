@@ -5,38 +5,42 @@ import homeAppApi from 'src/api/homeApp';
 import { getAppLangCode } from 'src/common/langConfig';
 import { DEFAULT_CONFIG, WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { genBotSessionId } from 'src/utils/agentSession';
+import {
+  decodeAppLangInfo,
+  decodeAppLanguageDetail,
+  decodeAppLanguages,
+  decodeDescriptionResponse,
+  decodeTranslationData,
+  isTranslateInfo,
+} from './appTypes';
+import type {
+  AppLanguageCache,
+  AppLanguageDetail,
+  AppLanguageSource,
+  AppSection,
+  AppSectionItem,
+  DescriptionContext,
+  DescriptionRequest,
+  DescriptionResponse,
+  SharedLanguageSource,
+  TranslationId,
+  TranslationIndex,
+} from './appTypes';
 
 export const PUBLIC_APP_BASE_LANG = '_base_';
 
-export const getWidgetTypeName = type => {
+export const getWidgetTypeName = (
+  type: number | undefined,
+): { controlTypeName: string | undefined; controlType: string } => {
   const widgetType = _.findKey(WIDGETS_TO_API_TYPE_ENUM, value => value === type);
 
-  return { controlTypeName: _.get(DEFAULT_CONFIG, `${widgetType}.widgetName`), controlType: String(widgetType) };
+  const name: unknown = _.get(DEFAULT_CONFIG, `${widgetType}.widgetName`);
+  return { controlTypeName: typeof name === 'string' ? name : undefined, controlType: String(widgetType) };
 };
 
-/**
- * 应用导航里的一节。只列 getExistWorksheet 真正读到的字段。
- * type === 2 的项是「分组」，要顺着 childSections 往下钻；其余按工作表/自定义页面处理。
- */
-interface AppSectionItem {
-  workSheetId?: string;
-  workSheetName?: string;
-  name?: string;
-  remark?: string;
-  /** 1 = 自定义页面，2 = 分组（下钻），其余当工作表 */
-  type?: number;
-}
-
-interface AppSection {
-  appSectionId?: string;
-  item?: AppSectionItem[];
-  workSheetInfo?: AppSectionItem[];
-  childSections?: AppSection[];
-}
-
 /** 入参既可能直接是分组数组，也可能是带 sections 的应用详情对象 —— 两种都收 */
-export const getExistWorksheet = (data: AppSection[] | { sections?: AppSection[] } = {}) => {
-  const existWorksheet: { name?: string; description?: string; type: 'page' | 'table' }[] = [];
+export const getExistWorksheet = (data: AppSection[] | { sections?: AppSection[] | undefined } = {}) => {
+  const existWorksheet: { name?: string | undefined; description?: string | undefined; type: 'page' | 'table' }[] = [];
   const sections: AppSection[] = Array.isArray(data) ? data : data.sections || [];
 
   const pushWorksheet = (item: AppSectionItem) => {
@@ -70,8 +74,13 @@ export const getExistWorksheet = (data: AppSection[] | { sections?: AppSection[]
   return existWorksheet;
 };
 
-export const generateAppOrWorksheetDescription = async ({ name = '', description = '', isApp = true, data = {} }) => {
-  let param = {
+export const generateAppOrWorksheetDescription = async ({
+  name = '',
+  description = '',
+  isApp = true,
+  data = {},
+}: DescriptionRequest): Promise<DescriptionResponse> => {
+  const param: DescriptionContext = {
     userLanguage: window.getCurrentLang() || 'zh-Hans',
   };
 
@@ -80,13 +89,13 @@ export const generateAppOrWorksheetDescription = async ({ name = '', description
     param.groups = JSON.stringify({
       appName: name || data.name,
       description: description || data.desc,
-      existWorksheet: getExistWorksheet(data),
+      existWorksheet: getExistWorksheet({ sections: data.sections }),
     });
   } else {
     param.tableName = name || data.name;
     param.tableDescription = description || data.description;
     param.fields = JSON.stringify(
-      (_.get(data, 'template.controls') || []).map(item => {
+      (data.template?.controls || []).map(item => {
         return {
           controlName: item.controlName,
           type: getWidgetTypeName(item.type).controlTypeName,
@@ -95,7 +104,7 @@ export const generateAppOrWorksheetDescription = async ({ name = '', description
     );
   }
 
-  const result = await agentApi.agentExecute(
+  const result: unknown = await agentApi.agentExecute(
     {
       agentName: isApp ? 'app-description-generator' : 'worksheet-description-generator',
       sessionId: genBotSessionId(),
@@ -104,42 +113,50 @@ export const generateAppOrWorksheetDescription = async ({ name = '', description
     },
     { silent: true },
   );
-  return result;
+  return decodeDescriptionResponse(result);
 };
 
-const langDataIndexCache = new WeakMap();
+const langDataIndexCache = new WeakMap<TranslationItemArray, TranslationIndex>();
+type TranslationItemArray = unknown[];
+const languageCache: AppLanguageCache = window;
 
 /**
  * 设置应用的 favicon。
  * @param {string} iconUrl - 图标的 URL。
  * @param {string} iconColor - 用于设置图标的颜色。
  */
-export const setFavicon = (iconUrl, iconColor) => {
+export const setFavicon = (iconUrl?: string | null, iconColor?: string | null) => {
+  if (!iconUrl) return;
   fetch(iconUrl)
     .then(res => res.text())
     .then(data => {
-      if (iconUrl.indexOf('_preserve.svg') === -1) {
-        data = btoa(data.replace(/fill=".*?"/g, '').replace(/<svg/, `<svg fill="${iconColor}"`));
-      } else {
-        data = btoa(data.replace(/<svg/, `<svg fill="${iconColor}"`));
+      if (iconColor) {
+        if (iconUrl.indexOf('_preserve.svg') === -1) {
+          data = data.replace(/fill=".*?"/g, '').replace(/<svg/, `<svg fill="${iconColor}"`);
+        } else {
+          data = data.replace(/<svg/, `<svg fill="${iconColor}"`);
+        }
       }
 
-      $('[rel="icon"]').attr('href', `data:image/svg+xml;base64,${data}`);
+      $('[rel="icon"]').attr('href', `data:image/svg+xml;base64,${btoa(data)}`);
     })
     .catch(() => {});
 };
 
-const getLangDataIndex = langData => {
+const getLangDataIndex = (rawData: unknown[]): TranslationIndex => {
+  const langData = rawData;
   const cache = langDataIndexCache.get(langData);
 
   if (cache && cache.length === langData.length) {
     return cache;
   }
 
-  const correlationIdMap = new Map();
-  const parentIdMap = new Map();
+  const correlationIdMap: TranslationIndex['correlationIdMap'] = new Map();
+  const parentIdMap: TranslationIndex['parentIdMap'] = new Map();
 
-  langData.forEach(item => {
+  const entries = decodeTranslationData(langData);
+  if (!Array.isArray(entries)) throw new TypeError('Translation index requires an array');
+  entries.forEach(item => {
     if (!item) return;
 
     const { correlationId, parentId } = item;
@@ -152,7 +169,7 @@ const getLangDataIndex = langData => {
       parentIdMap.set(parentId, new Map());
     }
 
-    const parentMap = parentIdMap.get(parentId);
+    const parentMap = parentIdMap.get(parentId)!;
 
     if (!parentMap.has(correlationId)) {
       parentMap.set(correlationId, item);
@@ -229,20 +246,23 @@ export interface TranslateInfo {
   [key: string]: string | undefined;
 }
 
-export const getTranslateInfo = (appId: string, parentId, id, data?): TranslateInfo => {
-  const langData = data || window[`langData-${appId}`] || [];
+export const getTranslateInfo = (
+  appId: string,
+  parentId: TranslationId,
+  id: TranslationId,
+  data?: unknown,
+): TranslateInfo => {
+  const langData: unknown = data || languageCache[`langData-${appId}`] || [];
 
   if (!Array.isArray(langData)) {
-    // 标注类型：下面按条件往里塞 parentId，不标的话对象字面量被推成
-    // { correlationId: any }，加字段直接报 TS2339。
-    const findCondition: { correlationId: unknown; parentId?: unknown } = { correlationId: id };
-
-    if (parentId) {
-      findCondition.parentId = parentId;
-    }
-
-    const info = _.find(langData, findCondition);
-    return info ? info.data || {} : {};
+    const entries = decodeTranslationData(langData);
+    const info = Object.values(entries).find(
+      item =>
+        item !== null && item !== undefined && item.correlationId === id && (!parentId || item.parentId === parentId),
+    );
+    if (!info?.data) return {};
+    if (!isTranslateInfo(info.data)) throw new TypeError('Invalid consumed translation dictionary');
+    return info.data;
   }
 
   if (!langData.length) return {};
@@ -251,32 +271,30 @@ export const getTranslateInfo = (appId: string, parentId, id, data?): TranslateI
   const parentMap = parentId ? parentIdMap.get(parentId) : null;
   const info = parentId ? parentMap && parentMap.get(id) : correlationIdMap.get(id);
 
-  return info ? info.data || {} : {};
+  if (!info?.data) return {};
+  if (!isTranslateInfo(info.data)) throw new TypeError('Invalid consumed translation dictionary');
+  return info.data;
 };
 
 /**
  * 获取应用的翻译包数据
  */
-export const getAppLangDetail = appDetail => {
+export const getAppLangDetail = async (appDetail: AppLanguageSource): Promise<AppLanguageDetail | undefined> => {
   const { langInfo } = appDetail;
   const appId = appDetail.id;
-  return new Promise(resolve => {
-    if (langInfo && langInfo.appLangId && langInfo.version !== window[`langVersion-${appId}`]) {
-      appManagementApi
-        .getAppLangDetail({
-          projectId: appDetail.projectId,
-          appId,
-          appLangId: langInfo.appLangId,
-        })
-        .then(lang => {
-          window[`langData-${appId}`] = lang.items;
-          window[`langVersion-${appId}`] = langInfo.version;
-          resolve(lang);
-        });
-    } else {
-      resolve();
-    }
-  });
+  if (!appId) return undefined;
+  if (langInfo && langInfo.appLangId && langInfo.version !== languageCache[`langVersion-${appId}`]) {
+    const response: unknown = await appManagementApi.getAppLangDetail({
+      projectId: appDetail.projectId,
+      appId,
+      appLangId: langInfo.appLangId,
+    });
+    const lang = decodeAppLanguageDetail(response);
+    languageCache[`langData-${appId}`] = lang.items;
+    languageCache[`langVersion-${appId}`] = langInfo.version;
+    return lang;
+  }
+  return undefined;
 };
 
 /**
@@ -284,7 +302,7 @@ export const getAppLangDetail = appDetail => {
  * 仅加载「当前应用」之外的语言包（如跨应用打开关联记录），保证 getTranslateInfo / replaceControlsTranslateInfo 能命中缓存
  */
 export const ensureAppLangData = async (appId: string) => {
-  if (!appId || window[`langData-${appId}`]) return;
+  if (!appId || languageCache[`langData-${appId}`]) return;
 
   // 公开分享 / 公开表单等未登录态由 shareGetAppLangDetail 处理，避免在此调用需鉴权接口
   const isPublic =
@@ -295,16 +313,18 @@ export const ensureAppLangData = async (appId: string) => {
   if (isPublic || !_.get(window, 'md.global.Account.accountId')) return;
 
   try {
-    const langInfo = await homeAppApi.getAppLangInfo({ appId });
+    const response: unknown = await homeAppApi.getAppLangInfo({ appId });
+    const langInfo = decodeAppLangInfo(response);
 
-    if (langInfo && langInfo.appLangId && langInfo.version !== window[`langVersion-${appId}`]) {
-      const lang = await appManagementApi.getAppLangDetail({
+    if (langInfo && langInfo.appLangId && langInfo.version !== languageCache[`langVersion-${appId}`]) {
+      const response: unknown = await appManagementApi.getAppLangDetail({
         appId,
         appLangId: langInfo.appLangId,
         projectId: langInfo.projectId,
       });
-      window[`langData-${appId}`] = lang.items;
-      window[`langVersion-${appId}`] = langInfo.version;
+      const lang = decodeAppLanguageDetail(response);
+      languageCache[`langData-${appId}`] = lang.items;
+      languageCache[`langVersion-${appId}`] = langInfo.version;
     }
   } catch (err) {
     // 加载失败时退回原文，不阻塞记录打开
@@ -312,45 +332,33 @@ export const ensureAppLangData = async (appId: string) => {
   }
 };
 
-export const shareGetAppLangDetail = data => {
+export const shareGetAppLangDetail = async (source: SharedLanguageSource): Promise<AppLanguageDetail | undefined> => {
   const appLang = new URL(location.href).searchParams.get('app_lang');
   const isBaseLang = appLang === PUBLIC_APP_BASE_LANG;
   const langKey = isBaseLang ? '' : appLang || getAppLangCode(getCurrentLang());
-  const { appId, projectId, worksheetId } = data;
-  return new Promise(resolve => {
-    appManagementApi
-      .getAppLangs({
-        appId,
-        projectId,
-        ...(worksheetId ? { worksheetId } : {}),
-      })
-      .then(data => {
-        window[`appLangs-${appId}`] = data || [];
-
-        if (isBaseLang) {
-          delete window[`langData-${appId}`];
-          delete window[`langVersion-${appId}`];
-          resolve();
-          return;
-        }
-
-        const langInfo = _.find(data, { langCode: langKey });
-
-        if (langInfo) {
-          appManagementApi
-            .getAppLangDetail({
-              appId,
-              projectId,
-              appLangId: langInfo.id,
-              ...(worksheetId ? { worksheetId } : {}),
-            })
-            .then(lang => {
-              window[`langData-${appId}`] = lang.items;
-              resolve(lang);
-            });
-        } else {
-          resolve();
-        }
-      });
+  const { appId, projectId, worksheetId } = source;
+  if (!appId) return undefined;
+  const response: unknown = await appManagementApi.getAppLangs({
+    appId,
+    projectId,
+    ...(worksheetId ? { worksheetId } : {}),
   });
+  const languages = decodeAppLanguages(response);
+  languageCache[`appLangs-${appId}`] = languages;
+  if (isBaseLang) {
+    delete languageCache[`langData-${appId}`];
+    delete languageCache[`langVersion-${appId}`];
+    return undefined;
+  }
+  const langInfo = languages.find(item => item.langCode === langKey);
+  if (!langInfo || !langInfo.id) return undefined;
+  const detailResponse: unknown = await appManagementApi.getAppLangDetail({
+    appId,
+    projectId,
+    appLangId: langInfo.id,
+    ...(worksheetId ? { worksheetId } : {}),
+  });
+  const lang = decodeAppLanguageDetail(detailResponse);
+  languageCache[`langData-${appId}`] = lang.items;
+  return lang;
 };

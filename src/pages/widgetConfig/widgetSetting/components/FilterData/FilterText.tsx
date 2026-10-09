@@ -18,15 +18,15 @@ const FilterTextWrap = styled.div`
 `;
 
 export default function FilterText({ data, allControls }) {
-  const filters = getAdvanceSetting(data, 'filters');
+  const filters = getAdvanceSetting(data, 'filters') || [];
   return (
     <FilterTextWrap>
       {filters.map((item, index: number) => {
         const { controlId } = item;
-        const { controlName } = getControlByControlId(allControls, controlId);
+        const { controlName } = getControlByControlId(allControls, controlId || '');
         return (
           <div key={index} className="filterItem">
-            {index > 0 && <div className="filterMode">{filters[index - 1].spliceType === 1 ? _l('且') : _l('或')}</div>}
+            {index > 0 && <div className="filterMode">{filters[index - 1]?.spliceType === 1 ? _l('且') : _l('或')}</div>}
             <div className="controlName">{controlName}</div>
             <div className="filterType"></div>
             <div className="filterInfo"></div>

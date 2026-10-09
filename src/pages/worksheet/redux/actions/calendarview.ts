@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import sheetAjax from 'src/api/worksheet';
+import type { WorksheetRowsRequest } from 'src/pages/worksheet/types';
 import {
   getCalendartypeData,
   getCalendarViewType,
@@ -10,12 +11,12 @@ import {
   readInitType,
   setDataFormat,
 } from 'src/pages/worksheet/views/CalendarView/util';
+import type { AppDispatch, GetState } from 'src/redux/types';
+import { calendarPairs } from 'src/utils/advancedSettingBoundary';
 import { getFilledRequestParams } from 'src/utils/common';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
-import { formatQuickFilter } from 'src/utils/filter';
 import type { FormControl } from 'src/utils/controlTypes';
-import type { AppDispatch, GetState } from 'src/redux/types';
-import type { WorksheetRowsRequest } from 'src/pages/worksheet/types';
+import { formatQuickFilter } from 'src/utils/filter';
 
 let getRows: ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetRowsResult> | undefined;
 let getRowsIds = [];
@@ -66,13 +67,14 @@ export const fetch = searchArgs => {
         langType: window.shareState.shareId ? getCurrentLangCode() : undefined,
       }),
     );
-    getRows.then(res => {
-      getRowsIds = getFilterRowsIds.filter(o => o !== viewId);
-      dispatch({ type: 'CHANGE_CALENDARLIST', data: res.data, resultCode: res.resultCode });
-      dispatch({ type: 'WORKSHEET_VIEW_UPDATE_ROWS_LOADING', value: false });
-      dispatch(updataEditable(true));
-      dispatch(updateFormatData());
-    })
+    getRows
+      .then(res => {
+        getRowsIds = getFilterRowsIds.filter(o => o !== viewId);
+        dispatch({ type: 'CHANGE_CALENDARLIST', data: res.data, resultCode: res.resultCode });
+        dispatch({ type: 'WORKSHEET_VIEW_UPDATE_ROWS_LOADING', value: false });
+        dispatch(updataEditable(true));
+        dispatch(updateFormatData());
+      })
       /* 必须兜 catch：上面切视图/翻月份时会 abort 掉上一个请求，被 abort 的 promise
          以 { errorCode: 1, errorMessage: '请求被取消' } 拒绝（见 src/common/global.ts
          的 textStatus === 'abort'），没人接就是 "Uncaught (in promise)" 刷控制台。
@@ -261,15 +263,10 @@ export function getCalendarData() {
       colorid = '',
       begindate = '',
       enddate = '',
-      calendarcids = '[]',
+      calendarcids: rawCalendarCids = '[]',
     } = getAdvanceSetting(currentView);
 
-    try {
-      calendarcids = JSON.parse(calendarcids);
-    } catch (error) {
-      calendarcids = [];
-      console.log(error);
-    }
+    let calendarcids = calendarPairs(rawCalendarCids);
 
     // 找不到就是 undefined（原来用 [] 当「没找到」的占位，再读 .options，拿到的也是 undefined）
     const colorControl = colorid ? controls.find((it: FormControl) => it.controlId === colorid) : undefined;
@@ -291,7 +288,7 @@ export function getCalendarData() {
       };
     });
     // listMonth 跟在最后：它和月视图共用日期区间，是"时间轴摊不开时"的兜底读法
-    const btnList = isTimeStyle(calendarInfo[0].startData)
+    const btnList = isTimeStyle(calendarInfo[0]?.startData)
       ? 'today prev,next dayGridMonth,timeGridWeek,timeGridDay,listMonth'
       : 'today prev,next dayGridMonth,dayGridWeek,dayGridDay,listMonth';
     let viewType = getCalendartypeData()[`${worksheetId}-${viewId}`];
@@ -299,9 +296,9 @@ export function getCalendarData() {
 
     if (viewType) {
       if (['dayGridWeek', 'timeGridWeek'].includes(viewType)) {
-        typeStr = isTimeStyle(calendarInfo[0].startData) ? 'timeGridWeek' : 'dayGridWeek';
+        typeStr = isTimeStyle(calendarInfo[0]?.startData) ? 'timeGridWeek' : 'dayGridWeek';
       } else if (['timeGridDay', 'dayGridDay'].includes(viewType)) {
-        typeStr = isTimeStyle(calendarInfo[0].startData) ? 'timeGridDay' : 'dayGridDay';
+        typeStr = isTimeStyle(calendarInfo[0]?.startData) ? 'timeGridDay' : 'dayGridDay';
       } else {
         typeStr = viewType;
       }
@@ -314,7 +311,7 @@ export function getCalendarData() {
         unweekday,
         colorOptions: (colorControl && colorControl.options) || [],
         btnList,
-        initialView: typeStr ? typeStr : getCalendarViewType(calendarType, calendarInfo[0].startData),
+        initialView: typeStr ? typeStr : getCalendarViewType(calendarType, calendarInfo[0]?.startData),
       },
     });
   };
@@ -472,111 +469,112 @@ export function getEventList({
       }),
     );
     let l = calenderEventList[`${typeEvent}Dt`] || [];
-    getFilterRows.then(rowsData => {
-      getFilterRowsIds = getFilterRowsIds.filter(o => o !== viewId);
-      let s = rowsData.data;
+    getFilterRows
+      .then(rowsData => {
+        getFilterRowsIds = getFilterRowsIds.filter(o => o !== viewId);
+        let s = rowsData.data;
 
-      if (keyWords) {
-        let searchDataList = [];
-        s.forEach(it => {
-          searchDataList.push(
-            ...setDataFormat({
-              ...it,
-              worksheetControls: controls,
-              currentView,
-              calendarData,
-              byRowId: true, //根据rowId返回一条
-            }),
-          );
-        });
-        dispatch({
-          type: 'CHANGE_CALENDAR_LIST',
-          data: {
-            ...calenderEventList,
-            keyWords,
-            searchData: searchDataList,
-          },
-        });
-        dispatch({ type: 'CHANGE_CALENDAR_LOADING', data: false });
-      } else {
-        if (isAdd) {
-          l = isUp ? s.concat(l) : l.concat(s);
-        } else {
-          l = s;
-        }
-
-        let events = [];
-        s.forEach(it => {
-          events.push(
-            ...setDataFormat({
-              ...it,
-              worksheetControls: controls,
-              byRowId: typeEvent !== 'eventScheduled', //根据rowId
-              currentView,
-              calendarData,
-            }),
-          );
-        });
-        //已排期需要排序
-        if (typeEvent === 'eventScheduled') {
-          events = events.sort((a, b) => {
-            return Date.parse(a.start) - Date.parse(b.start);
+        if (keyWords) {
+          let searchDataList = [];
+          s.forEach(it => {
+            searchDataList.push(
+              ...setDataFormat({
+                ...it,
+                worksheetControls: controls,
+                currentView,
+                calendarData,
+                byRowId: true, //根据rowId返回一条
+              }),
+            );
           });
-        }
+          dispatch({
+            type: 'CHANGE_CALENDAR_LIST',
+            data: {
+              ...calenderEventList,
+              keyWords,
+              searchData: searchDataList,
+            },
+          });
+          dispatch({ type: 'CHANGE_CALENDAR_LOADING', data: false });
+        } else {
+          if (isAdd) {
+            l = isUp ? s.concat(l) : l.concat(s);
+          } else {
+            l = s;
+          }
 
-        let dts = {
-          ...calenderEventList,
-          [typeEvent]: !isAdd
-            ? events
-            : isUp
-              ? events.concat(calenderEventList[typeEvent])
-              : calenderEventList[typeEvent].concat(events),
-          [`${typeEvent}Dt`]: l,
-          [`${typeEvent}IsAll`]: isUp ? calenderEventList[`${typeEvent}IsAll`] : s.length < 20,
-          [`${typeEvent}Index`]: isUp ? calenderEventList[`${typeEvent}Index`] : pageIndex,
-          [`${typeEvent}Count`]: isUp ? calenderEventList[`${typeEvent}Count`] : rowsData.count,
-          typeEvent,
-          keyWords,
-          searchData: [],
-          updataRowIds: pageIndex === 1 ? [] : calenderEventList.updataRowIds,
-          eventScheduledUpIsAll: isUp ? s.length < 20 : calenderEventList.eventScheduledUpIsAll,
-          eventScheduledUpIndex: isUp ? pageIndex : calenderEventList.eventScheduledUpIndex, //已排期 今天之前的 pageIndex
-          eventScheduledUpCount: isUp ? rowsData.count : calenderEventList.eventScheduledUpCount, //已排期 今天之前的 Count
-          eventScheduledDtResort:
-            typeEvent === 'eventScheduled'
-              ? dataResort({
-                  arr: calenderEventList.eventScheduledDtResort || [],
-                  addData: events,
-                  isUp,
-                  isAdd,
-                  updataRowIds: calenderEventList.updataRowIds,
-                })
-              : calenderEventList.eventScheduledDtResort,
-        };
+          let events = [];
+          s.forEach(it => {
+            events.push(
+              ...setDataFormat({
+                ...it,
+                worksheetControls: controls,
+                byRowId: typeEvent !== 'eventScheduled', //根据rowId
+                currentView,
+                calendarData,
+              }),
+            );
+          });
+          //已排期需要排序
+          if (typeEvent === 'eventScheduled') {
+            events = events.sort((a, b) => {
+              return Date.parse(a.start) - Date.parse(b.start);
+            });
+          }
 
-        //重新获取已排期的数据 充值已排期今天之前的数据
-        if (pageIndex === 1 && typeEvent === 'eventScheduled' && !isUp) {
-          dts = {
-            ...dts,
-            eventScheduledUpIsAll: false,
-            eventScheduledUpIndex: 0, //已排期 今天之前的 pageIndex
-            eventScheduledUpCount: 0, //已排期 今天之前的 Count
+          let dts = {
+            ...calenderEventList,
+            [typeEvent]: !isAdd
+              ? events
+              : isUp
+                ? events.concat(calenderEventList[typeEvent])
+                : calenderEventList[typeEvent].concat(events),
+            [`${typeEvent}Dt`]: l,
+            [`${typeEvent}IsAll`]: isUp ? calenderEventList[`${typeEvent}IsAll`] : s.length < 20,
+            [`${typeEvent}Index`]: isUp ? calenderEventList[`${typeEvent}Index`] : pageIndex,
+            [`${typeEvent}Count`]: isUp ? calenderEventList[`${typeEvent}Count`] : rowsData.count,
+            typeEvent,
+            keyWords,
+            searchData: [],
+            updataRowIds: pageIndex === 1 ? [] : calenderEventList.updataRowIds,
+            eventScheduledUpIsAll: isUp ? s.length < 20 : calenderEventList.eventScheduledUpIsAll,
+            eventScheduledUpIndex: isUp ? pageIndex : calenderEventList.eventScheduledUpIndex, //已排期 今天之前的 pageIndex
+            eventScheduledUpCount: isUp ? rowsData.count : calenderEventList.eventScheduledUpCount, //已排期 今天之前的 Count
+            eventScheduledDtResort:
+              typeEvent === 'eventScheduled'
+                ? dataResort({
+                    arr: calenderEventList.eventScheduledDtResort || [],
+                    addData: events,
+                    isUp,
+                    isAdd,
+                    updataRowIds: calenderEventList.updataRowIds,
+                  })
+                : calenderEventList.eventScheduledDtResort,
           };
+
+          //重新获取已排期的数据 充值已排期今天之前的数据
+          if (pageIndex === 1 && typeEvent === 'eventScheduled' && !isUp) {
+            dts = {
+              ...dts,
+              eventScheduledUpIsAll: false,
+              eventScheduledUpIndex: 0, //已排期 今天之前的 pageIndex
+              eventScheduledUpCount: 0, //已排期 今天之前的 Count
+            };
+          }
+
+          dispatch({
+            type: 'CHANGE_CALENDAR_LIST',
+            data: dts,
+          });
+          dispatch({ type: 'CHANGE_CALENDAR_LOADING', data: false });
         }
 
-        dispatch({
-          type: 'CHANGE_CALENDAR_LIST',
-          data: dts,
-        });
-        dispatch({ type: 'CHANGE_CALENDAR_LOADING', data: false });
-      }
-
-      dispatch({ type: 'CHANGE_CALENDAR_IS_OVER', data: true });
-      if (cb) {
-        dispatch({ type: 'CHANGE_CALENDAR_LOADING', data: true });
-        cb();
-      }
-    })
+        dispatch({ type: 'CHANGE_CALENDAR_IS_OVER', data: true });
+        if (cb) {
+          dispatch({ type: 'CHANGE_CALENDAR_LOADING', data: true });
+          cb();
+        }
+      })
       // 同上：切换/翻页会 abort 上一个请求，errorCode 1 是主动取消，静默即可。
       .catch(err => {
         if (_.get(err, 'errorCode') !== 1) {

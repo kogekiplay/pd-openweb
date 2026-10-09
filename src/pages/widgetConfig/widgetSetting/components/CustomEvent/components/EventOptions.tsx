@@ -1,3 +1,4 @@
+import type { EventActions } from '../../../../util/advancedSettingBoundary';
 import { useState } from 'react';
 import update from 'immutability-helper';
 import _ from 'lodash';
@@ -42,7 +43,7 @@ export default function EventOptions(props) {
       if (i.eventId === eventId) {
         return update(i, {
           eventActions: {
-            $apply: (item = []) => {
+            $apply: (item: EventActions[] = []) => {
               const originItem = item[index] || {
                 eventName: _l('满足条件%0', item.length + 1),
                 filters: [],

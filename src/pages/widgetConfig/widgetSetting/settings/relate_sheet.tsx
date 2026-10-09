@@ -1,3 +1,4 @@
+import { sortSettings } from '../../util/advancedSettingBoundary';
 import { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
@@ -145,7 +146,7 @@ export default function RelateSheet(props) {
     layercontrolid,
   } = getAdvanceSetting(data);
   const strDefault = data.strDefault || '000';
-  const sorts = _.isArray(getAdvanceSetting(data, 'sorts')) ? getAdvanceSetting(data, 'sorts') : [];
+  const sorts = sortSettings(getAdvanceSetting(data, 'sorts'));
   const chooseshowIds = getAdvanceSetting(data, 'chooseshowids') || [];
 
   const [{ sortVisible }, setState] = useSetState({

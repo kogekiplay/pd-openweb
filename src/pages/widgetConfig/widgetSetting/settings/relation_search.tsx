@@ -1,3 +1,4 @@
+import { sortSettings } from '../../util/advancedSettingBoundary';
 import { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
@@ -127,7 +128,7 @@ export default function RelationSearch(props) {
     openstatistics,
   } = getAdvanceSetting(data);
   const resultFilters = getAdvanceSetting(data, 'resultfilters');
-  const sorts = _.isArray(getAdvanceSetting(data, 'sorts')) ? getAdvanceSetting(data, 'sorts') : [];
+  const sorts = sortSettings(getAdvanceSetting(data, 'sorts'));
 
   const [sortVisible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -446,7 +447,7 @@ export default function RelationSearch(props) {
             onChange({
               ...handleAdvancedSettingChange(data, {
                 showtype: value,
-                maxcount: value === '3' && (parseInt(maxcount) || parseInt(maxcount) === 0) > 50 ? '50' : maxcount,
+                maxcount: value === '3' && (parseInt(String(maxcount)) || parseInt(String(maxcount)) === 0) > 50 ? '50' : maxcount,
                 ...(value === '2' ? { titlesize: '', titlestyle: '', titlecolor: '', hidetitle: '0' } : {}),
                 allowexport: isSheetDisplay(value) ? allowexport : '0',
               }),

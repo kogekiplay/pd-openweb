@@ -72,7 +72,7 @@ export default function DateVerify({ data, onChange }) {
     startTimeVisible: false,
     endTimeVisible: false,
   });
-  const [{ startTime, endTime }, setTime] = useSetState({
+  const [{ startTime, endTime }, setTime] = useSetState<{ startTime: string | undefined; endTime: string | undefined }>({
     startTime: originStart,
     endTime: originEnd,
   });
@@ -144,7 +144,7 @@ export default function DateVerify({ data, onChange }) {
             <div className="labelWrap">
               <Checkbox
                 size="small"
-                checked={allowweek}
+                checked={!!allowweek}
                 onClick={(checked: boolean) =>
                   onChange(handleAdvancedSettingChange(data, { allowweek: checked ? '' : '1234567' }))
                 }
@@ -199,7 +199,7 @@ export default function DateVerify({ data, onChange }) {
           <div className="labelWrap">
             <Checkbox
               size="small"
-              checked={allowtime}
+              checked={!!allowtime}
               onClick={(checked: boolean) =>
                 onChange(handleAdvancedSettingChange(data, { allowtime: checked ? '' : '00:00-24:00' }))
               }
@@ -215,7 +215,7 @@ export default function DateVerify({ data, onChange }) {
                 popupRender={() => <WeekWrap>
                     {TIME_FIELD.map(v => {
                       const nextVal = allowtime.split('-')[1];
-                      const disabled = parseFloat(v) >= parseFloat(nextVal);
+                      const disabled = parseFloat(v) >= parseFloat(String(nextVal));
                       return (
                         <div
                           key={v}
@@ -251,7 +251,7 @@ export default function DateVerify({ data, onChange }) {
                 popupRender={() => <WeekWrap>
                     {TIME_FIELD.map(v => {
                       const preVal = allowtime.split('-')[0];
-                      const disabled = parseFloat(v) <= parseFloat(preVal);
+                      const disabled = parseFloat(v) <= parseFloat(String(preVal));
                       return (
                         <div
                           key={v}

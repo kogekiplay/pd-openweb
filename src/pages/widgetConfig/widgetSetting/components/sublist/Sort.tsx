@@ -1,3 +1,4 @@
+import { sortSettings } from '../../../util/advancedSettingBoundary';
 import { useState } from 'react';
 import _ from 'lodash';
 import { Dialog } from 'ming-ui';
@@ -24,7 +25,7 @@ export default function SubListSort(props) {
     advancedSettingKey = 'sorts',
     onlyShowSystemDateControl,
   }: { controls: FormControl[]; [key: string]: any } = props;
-  const [sorts, setSorts] = useState(getAdvanceSetting(data, advancedSettingKey));
+  const [sorts, setSorts] = useState(sortSettings(getAdvanceSetting(data, advancedSettingKey)));
   return (
     <Dialog
       visible

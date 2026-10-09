@@ -21,6 +21,14 @@ import { navigateTo, navigateToLogin, navigateToLogout, redirect } from 'src/rou
 import { browserIsMobile, getPathWithoutSubPath, pathCompletion } from 'src/utils/common';
 import { prefetchContactInfo } from 'src/utils/project';
 import { getPssId, setPssId } from 'src/utils/pssId';
+import { decodeBootstrapMetadata, decodeBootstrapReply, metadataRecord } from './bootstrapMetadata';
+
+interface GlobalMetaRequest {
+  allowNotLogin?: boolean | undefined;
+  requestParams?: Record<string, unknown> | undefined;
+  sync?: boolean | undefined;
+  skipLanguageReload?: boolean | undefined;
+}
 
 // 装平台调色板。放在模块级是因为【72 个入口全都 import 这个文件】，
 // 这里是唯一一处「必经、且早于任何渲染」的位置。
@@ -49,7 +57,8 @@ syncThemeFromLocation();
 // 但 unhandledrejection 只对【没人接的】rejection 触发 —— 组件自己 catch 的照样能拿到，
 // 所以放这里既覆盖全部调用点（含以后新写的），又不会改变任何现有行为。
 window.addEventListener('unhandledrejection', event => {
-  if (event.reason && event.reason.errorCode === 1) {
+  const reason: unknown = event.reason;
+  if (reason && typeof reason === 'object' && 'errorCode' in reason && reason.errorCode === 1) {
     event.preventDefault();
   }
 });
@@ -138,7 +147,7 @@ const clearLocalStorage = () => {
 };
 
 // 格式化url末尾的斜杠
-const normalizeUrls = obj => {
+const normalizeUrls = (obj: Record<string, unknown> = {}): Record<string, unknown> => {
   for (const key in obj) {
     const value = obj[key];
 
@@ -157,7 +166,12 @@ const normalizeUrls = obj => {
   return obj;
 };
 
-const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguageReload = false }: any = {}) => {
+const getGlobalMeta = ({
+  allowNotLogin,
+  requestParams,
+  sync = false,
+  skipLanguageReload = false,
+}: GlobalMetaRequest = {}) => {
   // 处理location.href方法异步的问题
   window.isWaiting = false;
 
@@ -167,7 +181,7 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
   // 清除 AMap 和 体积大于200k的 localStorage
   clearLocalStorage();
 
-  const defaultGlobal = window.md ? _.cloneDeep(window.md.global) : {};
+  const defaultGlobal = window.md ? _.cloneDeep(metadataRecord(window.md.global)) : {};
   const urlObj = new URL(location.href);
   const args = { ...(requestParams || {}), lang: getCurrentLangCode() };
 
@@ -184,30 +198,33 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
    * 里面的 return 原本是从 getGlobalMeta 返回，现在是从 finish 返回 —— 语义一样，
    * 都是「到此为止，后面的处理不做了」。
    */
-  const finish = data => {
+  const finish = (response: unknown) => {
+    const data = decodeBootstrapReply(response);
     window.config = data.config || {};
-    const formatUrlEnum = ['Config', 'FileStoreConfig'];
+    const formatUrlEnum: Array<'Config' | 'FileStoreConfig'> = ['Config', 'FileStoreConfig'];
     const globalData = _.merge(defaultGlobal, data['md.global']);
     const formatGlobalData = {
       ...globalData,
-      ...formatUrlEnum.reduce((acc, key) => {
+      ...formatUrlEnum.reduce<Record<string, Record<string, unknown>>>((acc, key) => {
         const config = globalData[key];
-        acc[key] = normalizeUrls(config);
+        acc[key] = normalizeUrls(config === undefined ? {} : metadataRecord(config));
         return acc;
       }, {}),
     };
+    const metadata = decodeBootstrapMetadata(formatGlobalData);
     window.md.global = formatGlobalData;
 
-    window.platformENV.isOverseas = /^nocoly/.test(md.global.Config.ProductCode);
-    window.platformENV.isLocal = /(server|server-platform)$/.test(md.global.Config.ProductCode);
-    window.platformENV.isPlatform = /(saas|platform)$/.test(md.global.Config.ProductCode);
+    window.platformENV.isOverseas = /^nocoly/.test(metadata.Config.ProductCode);
+    window.platformENV.isLocal = /(server|server-platform)$/.test(metadata.Config.ProductCode);
+    window.platformENV.isPlatform = /(saas|platform)$/.test(metadata.Config.ProductCode);
     window.platformENV.isHap = !window.platformENV.isOverseas && !window.platformENV.isLocal;
 
     // 海外用户默认语言为英文，默认国家为香港
     if (window.platformENV.isOverseas) {
-      window.md.global.Config.DefaultLang = 'en';
-      window.md.global.Config.DefaultConfig.initialCountry = 'hk';
-      window.md.global.Config.DefaultConfig.preferredCountries = ['hk'];
+      metadata.Config.DefaultLang = 'en';
+      metadata.Config.DefaultConfig = metadata.Config.DefaultConfig || {};
+      metadata.Config.DefaultConfig.initialCountry = 'hk';
+      metadata.Config.DefaultConfig.preferredCountries = ['hk'];
     }
 
     const lang = getCurrentLang();
@@ -272,9 +289,9 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
 
     if (allowNotLogin) window.allowNotLogin = true;
 
-    if (allowNotLogin || window.isPublicApp || (isMobilePrintForm && !md.global.Account.accountId)) return undefined;
+    if (allowNotLogin || window.isPublicApp || (isMobilePrintForm && !metadata.Account.accountId)) return undefined;
 
-    if (!md.global.Account.accountId) {
+    if (!metadata.Account.accountId) {
       navigateToLogin();
       return undefined;
     }
@@ -283,8 +300,8 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
 
     const identityRedirect = getPortalIdentityRedirect({
       href: location.href,
-      account: md.global.Account,
-      mainSiteUrl: md.global.Config.WebUrl,
+      account: metadata.Account,
+      mainSiteUrl: metadata.Config.WebUrl,
       customSubPath: window.__customSubPath__,
     });
     if (identityRedirect) {
@@ -299,24 +316,24 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
     }
 
     // 第一次进入
-    if (!md.global.Account.langModified) {
+    if (!metadata.Account.langModified) {
       accountSetting.autoEditAccountLangSetting({ langType: getCurrentLangCode(lang) });
 
-      if (!md.global.Account.isPortal && !urlObj.href.includes('oauth/authorize') && !isMingoCreateAppRoute()) {
+      if (!metadata.Account.isPortal && !urlObj.href.includes('oauth/authorize') && !isMingoCreateAppRoute()) {
         navigateTo('/app/my');
       }
     } else if (
-      md.global.Account.lang !== lang &&
+      metadata.Account.lang !== lang &&
       !window.shareState.isPublicFormPreview &&
       !urlObj.hash.includes('i18n_reload') &&
       !localStorage.getItem('i18n_reload')
     ) {
-      setCookie('i18n_langtag', md.global.Account.lang);
+      if (metadata.Account.lang) setCookie('i18n_langtag', metadata.Account.lang);
 
       if (skipLanguageReload) return undefined;
 
       if (window.top !== window.self) {
-        localStorage.setItem('i18n_reload', true);
+        localStorage.setItem('i18n_reload', 'true');
       } else {
         urlObj.hash = 'i18n_reload';
       }
@@ -327,31 +344,33 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
     }
 
     // 设置网络多语言
-    if (md.global.ProjectLangs && md.global.ProjectLangs.length) {
-      const projectLangs = md.global.ProjectLangs.filter(o => o.langType === getCurrentLangCode(lang)).map(o => ({
-        projectId: o.projectId,
-        companyName: o.data[0].value || (_.find(v => v.projectId === o.projectId) || {}).companyName,
-      }));
-      const mergedProjects = _.merge(
-        _.keyBy(md.global.Account.projects, 'projectId'),
-        _.keyBy(projectLangs, 'projectId'),
-      );
+    const projectLanguageNames = metadata.ProjectLangs || [];
+    const currentLangCode = getCurrentLangCode(lang);
+    if (projectLanguageNames.length) {
+      const projects = metadata.Account.projects || [];
+      const projectLangs = projectLanguageNames
+        .filter(o => o.langType === currentLangCode)
+        .map(o => ({
+          projectId: o.projectId,
+          companyName: o.data?.[0]?.value || (_.find(projects, v => v.projectId === o.projectId) || {}).companyName,
+        }));
+      const mergedProjects = _.merge(_.keyBy(projects, 'projectId'), _.keyBy(projectLangs, 'projectId'));
 
-      md.global.Account.projects = _.values(mergedProjects);
+      metadata.Account.projects = _.values(mergedProjects);
     }
 
     // HAP显示人事
     if (!window.platformENV.isOverseas && !window.platformENV.isLocal) {
-      md.global.SysSettings.forbidSuites = (md.global.SysSettings.forbidSuites || '').replace('5', '');
+      metadata.SysSettings.forbidSuites = (metadata.SysSettings.forbidSuites || '').replace('5', '');
     }
 
     // 加载云客服
-    !md.global.Account.isPortal && window.mdCustomerService && window.mdCustomerService();
+    !metadata.Account.isPortal && window.mdCustomerService && window.mdCustomerService();
 
     // 设置md_pss_id
     setPssId(getPssId());
 
-    md.global.Account.isPortal && resetPortalUrl();
+    metadata.Account.isPortal && resetPortalUrl();
 
     redirect(location.pathname);
 
@@ -363,7 +382,7 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
          · getMyPermissions：20 个调用点，多数在 render 里当条件用
          · getContactInfo：表单默认值要的手机号/邮箱（formUtils 4 处） */
     return Promise.all([
-      ...(_.get(md, 'global.Account.projects') || []).map(p => prefetchMyPermissions(p.projectId)),
+      ...(metadata.Account.projects || []).flatMap(p => (p.projectId ? [prefetchMyPermissions(p.projectId)] : [])),
       prefetchContactInfo(),
     ]);
   };
@@ -382,27 +401,35 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
 
 export interface PreState {
   loading: boolean;
+  failed: boolean;
 }
 
-const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
-  class Pre extends React.Component<any, PreState> {
-    constructor(props) {
+const wrapComponent = function <Props extends object>(
+  Comp: React.ComponentType<Props>,
+  { allowNotLogin, requestParams }: GlobalMetaRequest = {},
+) {
+  class Pre extends React.Component<Props, PreState> {
+    constructor(props: Props) {
       super(props);
       this.state = {
         loading: true,
+        failed: false,
       };
     }
     override componentDidMount() {
       // 【等取完再放行】getGlobalMeta 以前是同步 XHR，所以下面这句 setState 紧跟着写也没事；
       // 现在改成异步，正好用上这个组件本来就有的 loading 态 —— 期间显示 <LoadDiv>，
       // 被包的 Comp 在 md.global 填好之前不会渲染。
-      getGlobalMeta({ allowNotLogin, requestParams }).finally(() => {
-        this.setState({ loading: false });
-      });
+      const fail = () => this.setState({ loading: false, failed: true });
+      try {
+        getGlobalMeta({ allowNotLogin, requestParams }).then(() => this.setState({ loading: false }), fail);
+      } catch {
+        fail();
+      }
     }
 
     override render() {
-      const { loading } = this.state;
+      const { loading, failed } = this.state;
 
       if (window.isDingTalk) {
         document.title = _l('应用');
@@ -410,7 +437,18 @@ const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
 
       return (
         <StyleSheetManager shouldForwardProp={shouldForwardProp}>
-          {loading || window.isWaiting ? <LoadDiv size="big" className="pre" /> : <Comp {...this.props} />}
+          {failed ? (
+            <div className="pre" role="alert">
+              <p>{_l('页面加载失败，请刷新后重试')}</p>
+              <button type="button" onClick={() => window.location.reload()}>
+                {_l('刷新')}
+              </button>
+            </div>
+          ) : loading || window.isWaiting ? (
+            <LoadDiv size="big" className="pre" />
+          ) : (
+            <Comp {...this.props} />
+          )}
         </StyleSheetManager>
       );
     }
@@ -419,20 +457,22 @@ const wrapComponent = function (Comp, { allowNotLogin, requestParams } = {}) {
   return Pre;
 };
 
-export default function (
-  Comp,
-  {
-    allowNotLogin,
-    requestParams,
-    skipLanguageReload = false,
-  }: {
-    allowNotLogin?: boolean;
-    requestParams?: Record<string, unknown>;
-    /** SSO 回调用（上游 7.4.5）：语言只写 cookie 不刷新页面，由调用方自己跳转，避免刷新后重复登录 */
-    skipLanguageReload?: boolean;
-  } = {},
-) {
-  if (_.isObject(Comp) && Comp.type === 'function') {
+interface FunctionSentinel {
+  type: 'function';
+}
+function isFunctionSentinel(value: object): value is FunctionSentinel {
+  return 'type' in value && value.type === 'function';
+}
+export default function preall(Comp: FunctionSentinel, options?: GlobalMetaRequest): undefined;
+export default function preall<Props extends object>(
+  Comp: React.ComponentType<Props>,
+  options?: GlobalMetaRequest,
+): React.ComponentClass<Props>;
+export default function preall<Props extends object>(
+  Comp: React.ComponentType<Props> | FunctionSentinel,
+  { allowNotLogin, requestParams, skipLanguageReload = false }: GlobalMetaRequest = {},
+): React.ComponentClass<Props> | undefined {
+  if (isFunctionSentinel(Comp)) {
     // 【这条分支只能同步】4 个 share 页用 preall({ type: 'function' }) 当哨兵，
     // 调完紧接着就 new 出页面对象去读 md.global（见 kc/folderShare、kc/shareMobile、
     // Statistics/PublicShare、Chatbot/PublicShare），改异步要连它们一起动。
@@ -440,9 +480,8 @@ export default function (
     getGlobalMeta({ allowNotLogin, requestParams, sync: true, skipLanguageReload });
     // 哨兵用法：调用方不要返回值（它们拿到的一直是 undefined）
     return undefined;
-  } else {
-    return wrapComponent(Comp, { allowNotLogin, requestParams });
   }
+  return wrapComponent(Comp, { allowNotLogin, requestParams });
 }
 
 if (location.href.indexOf('?debug') > -1) {

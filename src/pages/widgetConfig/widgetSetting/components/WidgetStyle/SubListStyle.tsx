@@ -156,7 +156,7 @@ export default function SubListStyle(props) {
             onChange={value => {
               let tempRow = getAdvanceSetting(value, 'blankrow');
 
-              if (tempRow > Number(rownum)) {
+              if (Number(tempRow) > Number(rownum)) {
                 tempRow = Number(rownum) || 0;
               }
 
@@ -178,7 +178,7 @@ export default function SubListStyle(props) {
             onChange={value => {
               let tempRowNum = getAdvanceSetting(value, 'rownum');
 
-              if (tempRowNum < Number(blankrow)) {
+              if (Number(tempRowNum) < Number(blankrow)) {
                 tempRowNum = Number(blankrow) || 15;
               }
 

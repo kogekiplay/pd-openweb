@@ -1,3 +1,4 @@
+import { numberSetting } from '../../../util/advancedSettingBoundary';
 import { Fragment, useState } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
@@ -70,7 +71,7 @@ function OperateDialog(props) {
             <div key={index} className="labelWrap mBottom10 ">
               <Checkbox
                 size="small"
-                {...(item.disabledKey ? { disabled: getAdvanceSetting(data, [item.disabledKey]) === 0 } : {})}
+                {...(item.disabledKey ? { disabled: numberSetting(getAdvanceSetting(data, [item.disabledKey])) === 0 } : {})}
                 checked={(batchInfo[item.key] || defaultValue) === '1'}
                 onClick={(checked: boolean) => setBatchInfo({ [item.key]: String(+!checked) })}
               >
@@ -109,7 +110,7 @@ export default function RelateOperate(props) {
 
   let {
     showtype = String(enumDefault),
-    allowlink,
+    allowlink = '',
     allowcancel = '1',
     openview = '',
     searchrange = '1',

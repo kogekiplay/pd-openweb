@@ -5,6 +5,7 @@ const parser = require('@babel/parser');
 const generate = require('@babel/generator').default;
 const { getPortalIdentityRedirect } = require('./portalIdentityRedirect.ts');
 const lodash = require('lodash');
+const { decodeBootstrapMetadata, decodeBootstrapReply, metadataRecord } = require('./bootstrapMetadata.ts');
 
 const wanted = new Set([
   'parseShareId',
@@ -102,6 +103,9 @@ async function bootPortal(
     'redirect',
     'prefetchMyPermissions',
     'prefetchContactInfo',
+    'decodeBootstrapMetadata',
+    'decodeBootstrapReply',
+    'metadataRecord',
   ];
   const values = [
     window,
@@ -135,6 +139,9 @@ async function bootPortal(
     noop,
     () => Promise.resolve(),
     () => Promise.resolve(),
+    decodeBootstrapMetadata,
+    decodeBootstrapReply,
+    metadataRecord,
   ];
   const bootstrap = new Function(...names, `${source}\nreturn getGlobalMeta;`)(...values);
   await bootstrap();

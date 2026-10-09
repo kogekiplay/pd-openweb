@@ -77,8 +77,8 @@ export default function Number(props) {
       return;
     }
 
-    let minValue = parseFloat(min) || 0;
-    let maxValue = typeof parseFloat(max) === 'number' ? parseFloat(max) : numshow === '1' ? 1 : 100;
+    let minValue = parseFloat(String(min)) || 0;
+    let maxValue = typeof parseFloat(String(max)) === 'number' ? parseFloat(String(max)) : numshow === '1' ? 1 : 100;
 
     if (maxValue < minValue) {
       changes.minValue = maxValue;
@@ -88,7 +88,7 @@ export default function Number(props) {
       changes.minValue = minValue;
     }
 
-    if (minValue !== min || maxValue !== max) {
+    if (!_.isEqual(minValue, min) || !_.isEqual(maxValue, max)) {
       onChange(handleAdvancedSettingChange(data, { min: `${changes.minValue}`, max: `${changes.maxValue}` }));
     }
   };
@@ -133,8 +133,8 @@ export default function Number(props) {
               onBlur={() => {
                 let tempValue = numValue || '1';
 
-                if (numValue && parseFloat(numValue) > parseFloat(max)) {
-                  tempValue = numinterval;
+                if (numValue && parseFloat(numValue) > parseFloat(String(max))) {
+                  tempValue = numinterval || '';
                 }
 
                 if (!parseFloat(tempValue)) {

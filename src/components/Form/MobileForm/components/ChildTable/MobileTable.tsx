@@ -245,10 +245,12 @@ export default function MobileTable(props) {
                   });
 
                   const currentCell = _.find(tableFormData, v => v.controlId === c.controlId);
-                  c = { ...c, fieldPermission: currentCell.fieldPermission };
+                  c = { ...c, fieldPermission: currentCell?.fieldPermission || c.fieldPermission || '111' };
 
                   const visible =
-                    c.fieldPermission[0] === '1' && c.fieldPermission[2] === '1' && c.controlPermissions[0] === '1';
+                    (c.fieldPermission || '111')[0] === '1' &&
+                    (c.fieldPermission || '111')[2] === '1' &&
+                    (c.controlPermissions || '111')[0] === '1';
 
                   if (!visible) {
                     return (

@@ -143,8 +143,8 @@ function getTopHeight() {
   return height;
 }
 
-function mergeTabData(tabData: FormControl[] = [], eventData = [], dealFrom: number) {
-  const filterFn = (data = []) => {
+function mergeTabData(tabData: FormControl[] = [], eventData: FormControl[] = [], dealFrom: number) {
+  const filterFn = (data: FormControl[] = []) => {
     // 标签页下无可见字段，隐藏标签页
     return data
       .filter(tab => {
@@ -280,7 +280,7 @@ function RecordForm(props) {
     recordId,
   })
     .map(control => {
-      const runtimeControl = runtimeControlMap[control.controlId];
+      const runtimeControl = control.controlId === undefined ? undefined : runtimeControlMap[control.controlId];
 
       return runtimeControl && runtimeControl.store ? { ...control, store: runtimeControl.store } : control;
     })

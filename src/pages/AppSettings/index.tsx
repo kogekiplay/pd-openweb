@@ -115,7 +115,8 @@ class AppSettings extends Component<any, any> {
         getLang: true,
       })
       .then(data => {
-        setFavicon(data.iconUrl, data.iconColor);
+        if (typeof data.iconUrl === 'string' && typeof data.iconColor === 'string')
+          setFavicon(data.iconUrl, data.iconColor);
         const { permissionType, id, isLock, isPassword, projectId } = data;
         const list = this.getFilteredRouterConfigs(
           routerConfigs,

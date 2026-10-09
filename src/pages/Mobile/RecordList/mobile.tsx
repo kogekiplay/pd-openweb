@@ -11,6 +11,7 @@ import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { addNewRecord } from 'src/pages/worksheet/redux/actions';
 import type { RootState } from 'src/redux/types';
+import { calendarPairs } from 'src/utils/advancedSettingBoundary';
 import { getRequest } from 'src/utils/common';
 import { getAdvanceSetting } from 'src/utils/control';
 import { mdAppResponse } from 'src/utils/project';
@@ -126,14 +127,9 @@ let RecordList = class RecordList extends Component<any, any> {
       (!viewId && views[0]) ||
       {};
     const { params } = match;
-    let { begindate = '', enddate = '', calendarcids = '[]' } = getAdvanceSetting(view);
+    let { begindate = '', enddate = '', calendarcids: rawCalendarCids = '[]' } = getAdvanceSetting(view);
 
-    try {
-      calendarcids = JSON.parse(calendarcids);
-    } catch (error) {
-      console.log(error);
-      calendarcids = [];
-    }
+    let calendarcids = calendarPairs(rawCalendarCids);
 
     if (calendarcids.length <= 0) {
       calendarcids = [

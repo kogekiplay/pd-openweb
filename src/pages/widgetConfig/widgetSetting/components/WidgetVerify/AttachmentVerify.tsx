@@ -66,13 +66,13 @@ export default function AttachmentVerify(props) {
               const value = e.target.value.trim();
               const newVal = value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1');
 
-              if (!isNaN(value) && (value === '' || newVal)) {
+              if (!isNaN(Number(value)) && (value === '' || newVal)) {
                 setMax(newVal);
               }
             }}
             onBlur={() => {
-              const value = !max || max < 0.01 ? 1 : max > 4096 ? 4096 : max;
-              setMax(value);
+              const value = !max || Number(max) < 0.01 ? 1 : Number(max) > 4096 ? 4096 : max;
+              setMax(String(value));
               onChange(
                 handleAdvancedSettingChange(data, {
                   max: value,

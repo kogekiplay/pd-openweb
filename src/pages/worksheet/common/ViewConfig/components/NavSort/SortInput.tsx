@@ -4,27 +4,36 @@ import { SYSTEM_CONTROLS } from 'worksheet/constants/enum';
 import { EditInfo, SettingItem } from 'src/pages/widgetConfig/styled/index.js';
 import { getAdvanceSetting } from 'src/pages/widgetConfig/util/index.js';
 import Sort from 'src/pages/widgetConfig/widgetSetting/components/sublist/Sort';
+import { settingSorts } from 'src/utils/advancedSettingBoundary';
 import { getSortData } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
 export default function (props) {
-  const { view, onChange, relationControls, advancedSettingKey, viewControlData, canClear }: { relationControls: FormControl[]; [key: string]: any } = props;
+  const {
+    view,
+    onChange,
+    relationControls,
+    advancedSettingKey,
+    viewControlData,
+    canClear,
+  }: { relationControls: FormControl[]; [key: string]: any } = props;
   const [{ sortVisible }, setConfig] = useSetState({
     sortVisible: false,
   });
 
+  const parsedSorts = settingSorts(getAdvanceSetting(view, advancedSettingKey));
   return (
     <SettingItem className={props.className}>
       <EditInfo className="pointer subListSortInput flexRow" onClick={() => setConfig({ sortVisible: true })}>
         <div className="overflow_ellipsis textPrimary flex">
-          {getAdvanceSetting(view, advancedSettingKey).length > 0 ? (
-            getAdvanceSetting(view, advancedSettingKey).reduce((p, item) => {
+          {parsedSorts.length > 0 ? (
+            parsedSorts.reduce((p, item) => {
               const sortsRelationControls = relationControls
                 .filter((column: FormControl) => !_.find(SYSTEM_CONTROLS, c => c.controlId === column.controlId))
                 .concat(SYSTEM_CONTROLS);
               const control = sortsRelationControls.find(({ controlId }) => item.controlId === controlId) || {};
               const flag = item.isAsc === true ? 2 : 1;
-              const { text } = getSortData(control.type, control).find(item => item.value === flag);
+              const { text = '' } = getSortData(control.type, control).find(item => item.value === flag) || {};
               const value = control.controlId ? `${control.controlName}：${text}` : '';
               return p ? `${p}；${value}` : value;
             }, '')
@@ -34,7 +43,7 @@ export default function (props) {
             </span>
           )}
         </div>
-        {canClear && getAdvanceSetting(view, advancedSettingKey).length > 0 && (
+        {canClear && parsedSorts.length > 0 && (
           <div
             className="clearBtn mRight10"
             onClick={e => {

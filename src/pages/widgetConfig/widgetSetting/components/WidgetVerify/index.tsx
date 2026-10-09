@@ -98,7 +98,7 @@ export default function WidgetVerify(props) {
                 required: !checked,
               })
             }
-            text={type === 36 ? SWITCH_TYPE_TO_TEXT[showtype || '0'] : _l('必填')}
+            text={type === 36 ? SWITCH_TYPE_TO_TEXT[Number(showtype || '0')] : _l('必填')}
           />
         </div>
         {/**写入时强制校验必填 */}

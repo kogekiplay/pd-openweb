@@ -33,6 +33,23 @@ export type SubListStore = any;
 
 /** 控件的高级设置。键极多且按控件类型各不相同，值统一是字符串（后端就是这么存的）。 */
 export interface ControlAdvancedSetting {
+  /** Calendar/nav rendering consumes these serialized wire settings before parsing locally. */
+  colorid?: string | undefined;
+  colortype?: string | undefined;
+  coloritems?: string | undefined;
+  begindate?: string | undefined;
+  enddate?: string | undefined;
+  calendarcids?: string | undefined;
+  viewtitle?: string | undefined;
+  navfilters?: string | undefined;
+  navsorts?: string | undefined;
+  customnavs?: string | undefined;
+  showallitem?: string | undefined;
+  allitemname?: string | undefined;
+  shownullitem?: string | undefined;
+  nullitemname?: string | undefined;
+  navlayer?: string | undefined;
+  syssort?: string | undefined;
   // 下面这些键是【已经被按点访问、且值确实落在本类型上】的（2026-09-23 在终点配置下由 TS4111 收集）。
   // 接口给的值一律是字符串（开关是 '1' / '0'，复杂配置是 JSON 串）。
   // 控件和视图（WorksheetView.advancedSetting）共用这个类型。不一次性把全仓 grep 到的 324 个键都塞进来：
@@ -293,7 +310,7 @@ export interface FormControl {
   /** 子表控件的行数据 */
   data?: ControlValue | undefined;
   /** 规则求值前的原始状态，用于还原 */
-  defaultState?: ControlValue | undefined;
+  defaultState?: Pick<FormControl, 'required' | 'controlPermissions' | 'fieldPermission' | 'showControls'> | undefined;
   hidden?: boolean | undefined;
   /** 规则把控件置灰时不参与必填校验 */
   ignoreDisabled?: boolean | undefined;

@@ -242,7 +242,7 @@ function StartEndTime(props) {
       <div className={cx('labelWrap mTop8', { mBottom8: min })}>
         <Checkbox
           size="small"
-          checked={min}
+          checked={!!min}
           onClick={(checked: boolean) =>
             onChange(
               handleAdvancedSettingChange(
@@ -287,7 +287,7 @@ function StartEndTime(props) {
       <div className={cx('labelWrap', { mTop8: min, mBottom8: max })}>
         <Checkbox
           size="small"
-          checked={max}
+          checked={!!max}
           onClick={(checked: boolean) =>
             onChange(handleAdvancedSettingChange(data, { max: checked ? '' : JSON.stringify([]) }))
           }

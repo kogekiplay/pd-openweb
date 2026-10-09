@@ -36,7 +36,7 @@ export default function NumberConfig(props) {
         <div className="labelWrap">
           <Checkbox
             size="small"
-            checked={itemnames}
+            checked={!!itemnames}
             onClick={(checked: boolean) => {
               if (checked) {
                 onChange(handleAdvancedSettingChange(data, { itemnames: '' }));

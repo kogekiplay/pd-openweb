@@ -11,7 +11,7 @@ import {
 } from '.';
 import cx from 'classnames';
 import update from 'immutability-helper';
-import _, { filter, find, findIndex, flatten, get, head, includes, isEmpty, last, omit } from 'lodash';
+import _, { find, findIndex, flatten, get, head, includes, isEmpty, last, omit } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Dialog, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -27,6 +27,7 @@ import { CAN_NOT_AS_TEXT_GROUP } from '../config';
 import { DRAG_MODE, WHOLE_SIZE } from '../config/Drag';
 import { ALL_SYS } from '../config/widget';
 import { ControlTag } from '../styled';
+import { filterSettings } from './advancedSettingBoundary';
 import { type DeleteTarget, isDeleteTarget } from './deleteTarget';
 import { batchRemoveItems, insertControlInSameLine } from './drag';
 import { canAsUniqueWidget, getAdvanceSetting, handleAdvancedSettingChange, isExceedMaxControlLimit } from './setting';
@@ -260,9 +261,9 @@ export function dealCascaderId(data: FormControl) {
  * dataType 是被筛字段的控件类型，values 是选中的值（成员/部门/地区这些存的是 JSON 串）。
  */
 interface FilterCondition {
-  dataType?: number;
-  values?: string[];
-  dynamicSource?: { rcid?: string }[];
+  dataType?: number | undefined;
+  values?: string[] | undefined;
+  dynamicSource?: { rcid?: string | undefined }[] | undefined;
   [key: string]: unknown;
 }
 
@@ -302,7 +303,7 @@ export function handleCondition(condition: FilterCondition, isRelate?: boolean |
  */
 export function handleFilters(data: FormControl, isRelate = false, filterKey?: string) {
   const keyName = filterKey ? filterKey : 'filters';
-  const filters = getAdvanceSetting(data, [keyName]);
+  const filters = filterSettings(getAdvanceSetting(data, [keyName]));
 
   try {
     let filtersValue = [];
@@ -547,10 +548,10 @@ export const dealControlPos = (controls: FormControl[]) => {
 
 /** 自定义事件里的一条执行动作。type: '1' 函数、'2' 查询，其余是给字段设默认值 */
 export interface CustomEventAction {
-  type?: string;
-  controlId?: string;
+  type?: string | undefined;
+  controlId?: string | undefined;
   /** 设默认值时的取值配置（JSON 串，与控件 advancedSetting.defsource 同格式） */
-  value?: string;
+  value?: string | undefined;
   [key: string]: unknown;
 }
 
@@ -595,7 +596,7 @@ const isBlankSubList = (control: FormControl = {}) => {
   const { dataSource, controlId } = control;
 
   if (dataSource && dataSource.includes('-')) return true;
-  if (getAdvanceSetting(control, 'detailworksheettype') === '2') return true;
+  if (_.isEqual(getAdvanceSetting(control, 'detailworksheettype'), '2')) return true;
   return _.get(window, `subListSheetConfig.${controlId}.mode`) === 'new';
 };
 
@@ -654,11 +655,11 @@ export const checkWidgetErrorBeforeSave = (controls: FormControl[] = [], originC
       const customActionItems = customEvent.map(({ eventActions = [] } = {}) => {
         return _.reduce(
           eventActions,
-          (total, cur) => {
+          (total: CustomEventAction[], cur) => {
             const actionItems = (cur.actions || [])
               .filter(a => _.includes(['5', '12'], a.actionType))
               .map(a => a.actionItems);
-            return total.concat(...actionItems);
+            return total.concat(...actionItems.filter((items): items is CustomEventAction[] => !!items));
           },
           [],
         );
@@ -979,14 +980,14 @@ export const formatControlsData = (controls: FormControl[] = [], fromSub = false
      * */
     if (type === 33) {
       let increase = getAdvanceSetting(data, 'increase') || [];
-      increase = filter(increase, item => {
-        if ([2, 3].includes(item.type)) return item.controlId;
+      increase = increase.filter(item => {
+        if (item.type === 2 || item.type === 3) return item.controlId;
         return true;
       });
       const index = findIndex(increase, item => item.type === 1);
       if (index < 0) return data;
       const configItem = increase[index];
-      if (configItem.start) return data;
+      if (!configItem || configItem.start) return data;
       // 未配置初始值时设为1
       const nextIncrease = update(increase, { [index]: { $apply: item => ({ ...item, start: 1 }) } });
       return handleAdvancedSettingChange(data, { increase: JSON.stringify(nextIncrease) });

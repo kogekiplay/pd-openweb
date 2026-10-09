@@ -101,7 +101,7 @@ export function TabHeaderItem(props) {
       return <Icon icon="Worksheet_query" className="Font16 mRight8 textTertiary" />;
     }
 
-    const { iconUrl } = getAdvanceSetting(data, 'icon');
+    const { iconUrl } = getAdvanceSetting(data, 'icon') || {};
     return iconUrl ? (
       <SvgIcon url={iconUrl} fill="var(--color-text-tertiary)" size={16} className="mRight8 LineHeight16 Width16" />
     ) : (

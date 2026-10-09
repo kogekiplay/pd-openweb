@@ -5,6 +5,7 @@ import { SYS } from 'src/pages/widgetConfig/config/widget';
 import { VIEW_DISPLAY_TYPE } from 'src/pages/worksheet/constants/enum';
 import { isIllegal } from 'src/pages/worksheet/views/CalendarView/util';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
+import { calendarPairs } from 'src/utils/advancedSettingBoundary';
 import { getAdvanceSetting } from 'src/utils/control';
 
 const { sheet, board, calendar, gallery, structure, gunter, detail, resource, map } = VIEW_DISPLAY_TYPE;
@@ -30,7 +31,7 @@ export const getViewActionInfo = ({
   const { controls = [] } = template;
   const viewType = String(view.viewType);
   const { calendarData = {} } = calendarview;
-  let { begindate = '', enddate = '', calendarcids = '[]' } = getAdvanceSetting(view);
+  let { begindate = '', enddate = '', calendarcids: rawCalendarCids = '[]' } = getAdvanceSetting(view);
   const canDelete = isOpenPermit(permitList.delete, sheetSwitchPermit, view.viewId);
   const showCusTomBtn = isOpenPermit(permitList.execute, sheetSwitchPermit, view.viewId);
   let isHaveSelectControl = true;
@@ -59,22 +60,17 @@ export const getViewActionInfo = ({
     case calendar:
       const { calendarInfo = [] } = calendarData;
 
-      try {
-        calendarcids = JSON.parse(calendarcids);
-      } catch (error) {
-        console.log(error);
-        calendarcids = [];
-      }
+      let calendarcids = calendarPairs(rawCalendarCids);
 
       if (calendarcids.length <= 0) {
         calendarcids = [{ begin: begindate, end: enddate }]; //兼容老数据
       }
 
       const isDelete =
-        calendarcids[0].begin &&
+        calendarcids[0]?.begin &&
         calendarInfo.length > 0 &&
         (!calendarInfo[0].startData || !calendarInfo[0].startData.controlId);
-      isHaveSelectControl = !(!calendarcids[0].begin || isDelete);
+      isHaveSelectControl = !(!calendarcids[0]?.begin || isDelete);
       canAddRecord = canAddRecord && isHaveSelectControl;
       break;
     case gallery:

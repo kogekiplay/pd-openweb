@@ -426,11 +426,11 @@ export const getSetDefault = (control: FormControl = {}) => {
   FAST_FILTERS_WHITELIST.forEach(o => {
     let defaultValue = o.default;
 
-    if (o.keys.includes(type)) {
+    if (o.keys.some(key => key === type)) {
       const { advancedSetting = {} } = fastFilterSet;
 
       if (!ADVANCEDSETTING_KEYS.includes(o.key)) {
-        if (DATE_GRANULARITY_TYPE.keys.includes(type) && o.key === 'dateRangeType') {
+        if (DATE_GRANULARITY_TYPE.keys.some(key => key === type) && o.key === 'dateRangeType') {
           defaultValue = getDefaultDateRangeType(control);
         }
 
@@ -439,7 +439,7 @@ export const getSetDefault = (control: FormControl = {}) => {
           [o.key]: control[o.key] || defaultValue,
         };
       } else {
-        if (DATE_RANGE.keys.includes(type) && o.key === 'daterange') {
+        if (DATE_RANGE.keys.some(key => key === type) && o.key === 'daterange') {
           defaultValue = getDefaultDateRange(_.get(control, 'advancedSetting.showtype'));
         }
 

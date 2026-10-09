@@ -1,5 +1,9 @@
 import type { FormControl } from 'src/utils/controlTypes';
 import type { FormError, RuleFilterItem } from '../types';
+import type { FilterEvaluation } from './filterTypes';
+import type { RuleTarget } from './ruleDataTypes';
+
+export type { RuleTarget } from './ruleDataTypes';
 
 /** Form values keep arbitrary row payloads unknown until their particular widget reads them. */
 export type FormRuntimeValue = string | number | boolean | null | undefined | unknown[] | Record<string, unknown>;
@@ -11,7 +15,7 @@ export interface DefaultSource {
   cid?: string | undefined;
   rcid?: string | undefined;
   type?: number | undefined;
-  staticValue?: string | undefined;
+  staticValue?: string | number | undefined;
   isAsync?: boolean | undefined;
 }
 export interface RegexValidation {
@@ -23,7 +27,7 @@ export interface FormRuleAction {
   type?: number | undefined;
   permission?: string[] | undefined;
   message?: string | undefined;
-  controls?: Array<{ controlId?: string | undefined }> | undefined;
+  controls?: RuleTarget[] | undefined;
 }
 export interface FormConditionRule {
   ruleId?: string | undefined;
@@ -35,7 +39,7 @@ export interface FormConditionRule {
   appTimeZone?: number | undefined;
 }
 export interface FormRuleCheckResult {
-  isAvailable: boolean;
+  isAvailable: FilterEvaluation;
   filterControlIds: Array<string | undefined>;
   availableControlIds: Array<string | undefined>;
 }
@@ -72,7 +76,6 @@ export interface FormComparisonCondition extends RuleFilterItem {
   minValue?: string | number | undefined;
   maxValue?: string | number | undefined;
 }
-
 export interface FormAttachmentData {
   originalFileName?: string | undefined;
   originalFilename?: string | undefined;

@@ -22,11 +22,22 @@ import type {
   ControlValue,
   FormControl,
   RecordRow,
-  RelateRecordValue,
   SubListStore,
 } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
+import { objectValue, recordArray, recordObject, recordValue, relatedArray } from './recordValueBoundary';
+import type { RuntimeRecord, RuntimeRecordValue, RuntimeRelatedRecord } from './recordValueBoundary';
+
+export type RelatedRecordRow = RuntimeRelatedRecord & {
+  isNew?: boolean | undefined;
+  needFullUpdate?: boolean | undefined;
+  isFromDefault?: boolean | undefined;
+  deletedIds?: string[] | undefined;
+  count?: number | undefined;
+};
+export type TempRecordMap = Record<string, RuntimeRecordValue>;
+type RuntimeControl = Omit<FormControl, 'value'> & { value?: unknown };
 
 export function filterEmptyChildTableRows<T extends { rowid?: string | undefined }>(rows: T[] = []): T[] {
   try {
@@ -49,21 +60,22 @@ export function getNewRecordPageUrl({
   return pathCompletion(`/app/${appId}/newrecord/${worksheetId}/${viewId}/`);
 }
 
-export function getRelateRecordCountFromValue(value?: ControlValue, propsCount?: number) {
+export function getRelateRecordCountFromValue(value?: RuntimeRecordValue, propsCount?: number): number {
   let count = 0;
 
   try {
-    let savedCount;
-    const parsedData = safeParse(value, 'array');
+    let savedCount: unknown;
+    const rawParsed: unknown = safeParse(value, 'array');
+    const parsedData = Array.isArray(rawParsed) ? rawParsed : [];
 
-    if (!_.isUndefined(_.get(parsedData, '0.count'))) {
-      savedCount = parsedData[0].count;
+    if (objectValue(parsedData[0])?.['count'] !== undefined) {
+      savedCount = objectValue(parsedData[0])?.['count'];
     } else if (value === '') {
       savedCount = 0;
     } else if (!_.isUndefined(propsCount)) {
       savedCount = propsCount;
     } else {
-      savedCount = parsedData[0]?.count || parsedData.length;
+      savedCount = objectValue(parsedData[0])?.['count'] || parsedData.length;
     }
 
     if (!_.isUndefined(savedCount) && !_.isNaN(Number(savedCount))) {
@@ -200,7 +212,7 @@ export function getSummaryInfo(type?: number, control?: FormControl) {
 
 export function formatRecordToRelateRecord(
   controls: FormControl[],
-  records: RecordRow[] = [],
+  records: RuntimeRecord[] = [],
   {
     addedIds = [],
     deletedIds = [],
@@ -214,14 +226,14 @@ export function formatRecordToRelateRecord(
     count?: number;
     isFromDefault?: boolean;
   } = {},
-) {
+): RelatedRecordRow[] {
   if (!_.isArray(records)) {
     records = [];
   }
 
   const titleControl = _.find(controls, control => control.attribute === 1);
-  const value = records.map((record: RecordRow = {}) => {
-    let name = titleControl ? record[titleControl.controlId as string] : '';
+  const value = records.map((record: RuntimeRecord = {}) => {
+    let name: RuntimeRecordValue = titleControl?.controlId ? record[titleControl.controlId] : '';
 
     if (titleControl && titleControl.type === 29 && name) {
       /**
@@ -229,8 +241,9 @@ export function formatRecordToRelateRecord(
        * 他表字段数据里的 name 不再返回字段原始数据，而是返回格式化后的文本
        */
       try {
-        const cellData = JSON.parse(record[titleControl.controlId as string]);
-        name = cellData[0].name;
+        const parsedTitle: unknown = safeParse(record[titleControl.controlId as string], 'array');
+        const titleRow = Array.isArray(parsedTitle) ? objectValue(parsedTitle[0]) : undefined;
+        name = titleRow ? recordValue(titleRow['name']) : '';
       } catch (err) {
         console.error(err);
         name = '';
@@ -365,11 +378,11 @@ export function copySublistRow(controls: FormControl[], row: RecordRow) {
 }
 
 export function getRecordTempValue(
-  data: FormControl[] = [],
-  relateRecordMultipleData: { [controlId: string]: FormControl } = {},
+  data: RuntimeControl[] = [],
+  relateRecordMultipleData: { [controlId: string]: RuntimeControl } = {},
   { updateControlIds }: { updateControlIds?: string[] } = {},
-) {
-  const results: { [controlId: string]: ControlValue } = {};
+): TempRecordMap {
+  const results: TempRecordMap = {};
   data
     .filter(
       c =>
@@ -379,22 +392,24 @@ export function getRecordTempValue(
     )
     .forEach(control => {
       if (control.type === WIDGETS_TO_API_TYPE_ENUM.SUB_LIST) {
-        if (control.value && control.value.rows && filterEmptyChildTableRows(control.value.rows).length) {
-          results[control.controlId as string] = filterEmptyChildTableRows<RecordRow>(control.value.rows).map(r => {
-            const newRow: RecordRow = _.pickBy(r, v => !checkCellIsEmpty(v));
+        const valueObject = objectValue(control.value);
+        const rows = recordArray(valueObject?.['rows']);
+        if (rows.length && filterEmptyChildTableRows(rows).length) {
+          results[control.controlId as string] = filterEmptyChildTableRows(rows).map(r => {
+            const newRow: RuntimeRecord = _.pickBy(r, v => !checkCellIsEmpty(v));
             const relateRecordKeys = _.keys(_.pickBy(r, v => typeof v === 'string' && v.indexOf('sourcevalue') > -1));
             relateRecordKeys.forEach(key => {
               try {
-                const parsed = JSON.parse(String(newRow[key]));
+                const parsed = relatedArray(newRow[key]);
                 newRow[key] = JSON.stringify(
-                  parsed.map((relateRecord: RelateRecordValue) => ({
+                  parsed.map(relateRecord => ({
                     ...relateRecord,
                     sourcevalue: JSON.stringify(
                       _.pickBy(
                         // sourcevalue 是可选的；这里刻意用 String() 而不是 `|| '{}'` ——
                         // 取不到时要让 JSON.parse 照旧抛出，由外层 catch 把这个 key 整个删掉
                         // （用 '{}' 兜底会变成「保留一个空对象」，和原来的行为不一样）。
-                        JSON.parse(String(relateRecord.sourcevalue)),
+                        recordObject(JSON.parse(String(relateRecord.sourcevalue))) || {},
                         v => !checkCellIsEmpty(v) && (typeof v !== 'string' || v.indexOf('sourcevalue') < 0),
                       ),
                     ),
@@ -410,12 +425,28 @@ export function getRecordTempValue(
         }
       } else if (control.type === WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET) {
         try {
-          if (get(control, 'value', '')[0] === '[') {
+          if (typeof control.value === 'string' && control.value[0] === '[') {
             results[control.controlId as string] = JSON.stringify(
-              JSON.parse(control.value).map((r: RelateRecordValue) => ({
+              relatedArray(control.value).map(r => ({
                 type: r.type,
                 sid: r.sid,
-                name: getTitleTextFromRelateControl(control, r.name ? r : r.row || safeParse(r.sourcevalue)),
+                name: recordValue(
+                  getTitleTextFromRelateControl(
+                    control,
+                    (() => {
+                      const rawTitle =
+                        typeof r.name === 'string' && r.name
+                          ? { ...r, name: r.name }
+                          : r.row || recordObject(safeParse(r.sourcevalue));
+                      if (!rawTitle) return undefined;
+                      const titleRecord: RecordRow = {};
+                      Object.entries(rawTitle).forEach(([key, value]) => {
+                        titleRecord[key] = value;
+                      });
+                      return titleRecord;
+                    })(),
+                  ),
+                ),
               })),
             );
           }
@@ -426,26 +457,26 @@ export function getRecordTempValue(
         control.type !== WIDGETS_TO_API_TYPE_ENUM.SUB_LIST &&
         _.includes(['string', 'number'], typeof control.value)
       ) {
-        results[control.controlId as string] = control.value;
+        results[control.controlId as string] = recordValue(control.value);
       }
     });
   Object.keys(relateRecordMultipleData).forEach(controlId => {
     const control = relateRecordMultipleData[controlId];
 
     if (control) {
-      results[control.controlId as string] = control.value;
+      results[control.controlId as string] = recordValue(control.value);
     }
   });
   return results;
 }
 
 export function parseRecordTempValue(
-  data: { [controlId: string]: ControlValue } = {},
+  data: TempRecordMap = {},
   originFormData: FormControl[] = [],
-  defaultRelatedSheet: { relateSheetControlId?: string; value?: ControlValue } = {},
+  defaultRelatedSheet: { relateSheetControlId?: string; value?: RuntimeRecordValue } = {},
 ) {
   let formdata: FormControl[] = [];
-  const relateRecordData: { [controlId: string]: ControlValue } = {};
+  const relateRecordData: Record<string, RuntimeControl> = {};
 
   try {
     formdata = originFormData.map(c => {
@@ -537,7 +568,8 @@ export function getRecordColor({
     return undefined;
   }
 
-  let activeKey = safeParse(row[colorControl.controlId as string])[0];
+  const parsedKeys: unknown = safeParse(row[colorControl.controlId as string]);
+  let activeKey: unknown = Array.isArray(parsedKeys) ? parsedKeys[0] : undefined;
 
   if (activeKey && typeof activeKey === 'string' && activeKey.startsWith('other')) {
     activeKey = 'other';
@@ -558,11 +590,25 @@ export function getRecordColor({
   );
 }
 
-export function getRecordColorConfig(view: { advancedSetting?: { [key: string]: string } } = {}) {
+export interface RecordColorConfig {
+  controlId: string;
+  colorItems: string[] | '';
+  showLine: boolean;
+  showBg: boolean;
+}
+export function getRecordColorConfig(
+  view: { advancedSetting?: ControlAdvancedSetting } = {},
+): RecordColorConfig | '' | undefined {
   const controlId = _.get(view, 'advancedSetting.colorid');
-  const colorItems = _.get(view, 'advancedSetting.coloritems')
+  const parsedColorItems: unknown = _.get(view, 'advancedSetting.coloritems')
     ? safeParse(_.get(view, 'advancedSetting.coloritems'), 'array')
     : '';
+  const colorItems: string[] | '' =
+    parsedColorItems === ''
+      ? ''
+      : Array.isArray(parsedColorItems)
+        ? parsedColorItems.filter((value): value is string => typeof value === 'string')
+        : [];
   const colorType = _.get(view, 'advancedSetting.colortype');
   return (
     controlId && {
@@ -589,10 +635,14 @@ export function filterRowsByKeywords({
 
   const normalizedKeywords = String(keywords).toLocaleLowerCase();
   const searchableControls = controls.filter(control => control.controlId?.length === 24);
-  return rows.filter(row => searchableControls.some(control => {
-    const value = renderCellText({ ...control, value: row[control.controlId as string] ?? '' });
-    return String(value ?? '').toLocaleLowerCase().includes(normalizedKeywords);
-  }));
+  return rows.filter(row =>
+    searchableControls.some(control => {
+      const value = renderCellText({ ...control, value: row[control.controlId as string] ?? '' });
+      return String(value ?? '')
+        .toLocaleLowerCase()
+        .includes(normalizedKeywords);
+    }),
+  );
 }
 
 export const openLinkFromRecord = (linkControlId?: string, record: RecordRow = {}) => {

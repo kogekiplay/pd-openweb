@@ -11,11 +11,11 @@ import { updateViewAdvancedSetting } from 'src/pages/worksheet/common/ViewConfig
 import { formatValuesOfOriginConditions } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { getControlsForGunter } from 'src/pages/worksheet/views/GunterView/util.js';
 import { getAdvanceSetting } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import DisplayControl from '../DisplayControl';
 import DropDownSet from '../DropDownSet';
 import Group from '../Group';
 import SelectStartOrEnd from '../SelectStartOrEndControl/SelectStartOrEnd';
-import type { FormControl } from 'src/utils/controlTypes';
 
 let obj = [
   { txt: _l('日'), key: '0' },
@@ -27,7 +27,12 @@ let obj = [
 let weekObj = [_l('周一'), _l('周二'), _l('周三'), _l('周四'), _l('周五'), _l('周六'), _l('周天')];
 
 export default function GunterSet(props) {
-  const { appId, view, updateCurrentView, worksheetControls = [] }: { worksheetControls: FormControl[]; [key: string]: any } = props;
+  const {
+    appId,
+    view,
+    updateCurrentView,
+    worksheetControls = [],
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   const { advancedSetting = {} } = view;
   const { calendartype = '0', unweekday = '', milepost, showgroupcolor } = advancedSetting;
   let [checkedWorkDate, setCheckedWorkDate] = useState(unweekday === '');
@@ -155,7 +160,9 @@ export default function GunterSet(props) {
       />
       <Group {...props} />
       {_.get(view, 'viewControl') &&
-        [9, 10, 11].includes((worksheetControls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl')) || {}).type) && (
+        [9, 10, 11].some(
+          type => type === worksheetControls.find((o: FormControl) => o.controlId === _.get(view, 'viewControl'))?.type,
+        ) && (
           <SwitchStyle className="flexRow alignItemsCenter mTop8">
             <Icon
               icon={showgroupcolor === '1' ? 'ic_toggle_on' : 'ic_toggle_off'}

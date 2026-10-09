@@ -417,7 +417,7 @@ window.addEventListener('beforeunload', () => {
  * 获取错误信息
  * @returns {Object}
  */
-// jqXHR 只用到 status 和 responseJSON（名字是 jQuery 时代留下的，现在底层是 axios）
+// HTTP 错误只读取状态；响应体由 readErrorEnvelope 单独验证后传入。
 const getErrorMessage = (
   jqXHR: HttpFailure = {},
   textStatus: string,

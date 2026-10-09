@@ -78,7 +78,7 @@ const CheckWidget = props => {
     if (advancedSetting.showtype === '2') {
       if (disabled) {
         let radioLabel = (itemnames || []).filter(item => item.key === value).length
-          ? itemnames.filter(item => item.key === value)[0].value
+          ? itemnames.find(item => item.key === value)?.value
           : '';
         return <div>{radioLabel}</div>;
       }

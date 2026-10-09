@@ -1,3 +1,4 @@
+import { filterSettings } from '../../../util/advancedSettingBoundary';
 import { Fragment, useEffect, useRef, useState } from 'react';
 
 import { useSetState } from 'react-use';
@@ -127,12 +128,12 @@ export function RelateSearchWorksheet(props) {
   const defaultRelateType = props.relateType || (data.sourceControlId ? 'exist' : 'new');
   const defaultAppId = props.appId || globalSheetInfo.appId;
 
-  const [{ controls, loading, relateType }, setState] = useSetState({
+  const [{ controls, loading, relateType }, setState] = useSetState<{ controls: FormControl[]; loading: boolean; relateType: string }>({
     controls: [],
     relateType: defaultRelateType, // exist | new | filter
     loading: false,
   });
-  const [{ relateFields, open, selectedControl }, setFields] = useSetState({
+  const [{ relateFields, open, selectedControl = {} }, setFields] = useSetState<{ open: boolean; relateFields: FormControl[]; selectedControl: FormControl | undefined }>({
     open: false,
     relateFields: [],
     selectedControl: {},
@@ -143,7 +144,7 @@ export function RelateSearchWorksheet(props) {
     setInfo,
   ] = useSetState({
     ..._.pick(data, ['relationControls', 'sourceControlId']),
-    resultFilters: getAdvanceSetting(data, 'resultfilters') || '',
+    resultFilters: filterSettings(getAdvanceSetting(data, 'resultfilters')),
     appId: defaultAppId,
     sheetId: dataSource,
     sheetName: props.sheetName || '',
@@ -185,7 +186,7 @@ export function RelateSearchWorksheet(props) {
           setState({ controls: filterControls });
           setInfo({
             ..._.pick(data, ['relationControls', 'sourceControlId']),
-            resultFilters: getAdvanceSetting(data, 'resultfilters') || '',
+            resultFilters: filterSettings(getAdvanceSetting(data, 'resultfilters')),
           });
           if (sheetId && relateType === 'new') {
             handleSetSource({ newControls: filterControls });
@@ -211,7 +212,7 @@ export function RelateSearchWorksheet(props) {
     }
   }, [relateType, sheetId]);
 
-  const handleSetSource = ({ newControls, open } = {}) => {
+  const handleSetSource = ({ newControls, open }: { newControls?: FormControl[] | undefined; open?: boolean | undefined } = {}) => {
     const reControls = (newControls || controls || []).filter(
       i => i.dataSource === sheetId && _.get(i, 'sourceControl.advancedSetting.hide') !== '1',
     );
@@ -321,16 +322,16 @@ export function RelateSearchWorksheet(props) {
                         sourceControlId: item.sourceControlId,
                         sheetId: item.dataSource,
                         queryType: '0',
-                        resultFilters: '',
+                        resultFilters: [],
                         relationControls: [],
                       });
                       setFields({ selectedControl: item });
                     }}
                   >
-                    <SvgIcon url={item.iconUrl} fill="var(--color-text-tertiary)" size={18} className="InlineBlock" />
+                    <SvgIcon url={_.get(item, 'iconUrl')} fill="var(--color-text-tertiary)" size={18} className="InlineBlock" />
                     <span className="Bold mLeft10">{item.sourceEntityName}</span>
                     <span className="textTertiary mLeft4 Font14">
-                      {` - ${_.get(DEFAULT_CONFIG[enumWidgetType[type]], 'widgetName')}：${controlName}`}
+                      {` - ${_.get(DEFAULT_CONFIG, [enumWidgetType[type ?? ''], 'widgetName'])}：${controlName}`}
                     </span>
                   </li>
                 );
@@ -383,7 +384,7 @@ export function RelateSearchWorksheet(props) {
                     sheetName: '',
                     relationControls: [],
                     sourceControlId: '',
-                    resultFilters: '',
+                    resultFilters: [],
                   });
                   setFields({
                     relateFields: [],

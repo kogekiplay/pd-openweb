@@ -1,10 +1,20 @@
 import _ from 'lodash';
 import { controlState, isSheetDisplay } from 'src/utils/controlCommon';
+import type { FormControl } from 'src/utils/controlTypes';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT } from '../config';
-import type { FormRule, RuleFilterGroup, RuleFilterItem } from '../types';
 import filterFn from './filterFn';
-import { updateRulesDataByRule } from './ruleDataCore';
+import type { FilterEvaluation } from './filterTypes';
+import { checkRequired as checkRequiredValue } from './index';
+import { decodeRuleStyleSetting, updateRulesDataByRule } from './ruleDataCore';
+import type { RuleDataProps } from './ruleDataTypes';
 import { flattenArr, getAvailableFilters, getResult, isRelateMoreList, replaceStr } from './ruleUtils';
+import type {
+  FormConditionRule,
+  FormRuleCheckResult,
+  PermissionUpdate,
+  FormFilterGroup as RuleFilterGroup,
+  FormComparisonCondition as RuleFilterItem,
+} from './types';
 
 const getFieldIds = (filter: RuleFilterItem = {}) => {
   const isDynamic = filter.dynamicSource && filter.dynamicSource.length > 0;
@@ -12,10 +22,18 @@ const getFieldIds = (filter: RuleFilterItem = {}) => {
 };
 
 const getIds = (filterGroup: RuleFilterGroup = {}) => {
-  return (filterGroup.groupFilters || []).reduce((total, filter) => total.concat(getFieldIds(filter)), []);
+  return (filterGroup.groupFilters || []).reduce<Array<string | undefined>>(
+    (total, filter) => total.concat(getFieldIds(filter)),
+    [],
+  );
 };
 
-const getItemGroupFilters = (filterGroup: RuleFilterGroup = {}, data = [], recordId: string, from) => {
+const getItemGroupFilters = (
+  filterGroup: RuleFilterGroup = {},
+  data: FormControl[] = [],
+  recordId: string | undefined,
+  from: number | undefined,
+) => {
   const isOrCondition = (filterGroup.groupFilters || []).findIndex(filter => filter.spliceType === 2) > -1;
   let groupFilters = [filterGroup.groupFilters || []];
 
@@ -38,110 +56,89 @@ const getItemGroupFilters = (filterGroup: RuleFilterGroup = {}, data = [], recor
   return { ...filterGroup, groupFilters: _.flatten(groupFilters) };
 };
 
-const checkValueAvailable = (rule: FormRule = {}, data = [], recordId: string, from) => {
-  let isAvailable = false;
-  let filterControlIds = {};
-  let availableControlIds = {};
-  let transFilters = rule.filters || [{}];
+const checkValueAvailable = (
+  rule: FormConditionRule = {},
+  data: FormControl[] = [],
+  recordId?: string,
+  from?: number,
+): FormRuleCheckResult => {
+  let isAvailable: FilterEvaluation = false;
+  //不满足条件的id,过滤错误
+  const filterControlIds: Record<number, Array<Array<string | undefined>>> = {};
+  //满足条件的错误id合集
+  const availableControlIds: Record<number, Array<Array<string | undefined>>> = {};
+  let transFilters = rule.filters || [{}]; //条件二维数组
 
+  //条件字段或字段值都隐藏
+  // 记录id存在才参与业务规则
   if (from) {
     transFilters = transFilters
-      .map(filterGroup => getItemGroupFilters(filterGroup, data, recordId, from))
-      .filter(filterGroup => !_.isEmpty(filterGroup.groupFilters));
+      .map(arrItem => {
+        return getItemGroupFilters(arrItem, data, recordId, from);
+      })
+      .filter(i => !_.isEmpty(i.groupFilters));
   }
 
-  transFilters.forEach((filterGroup, groupIndex) => {
-    if (!filterControlIds[groupIndex]) {
-      filterControlIds[groupIndex] = [];
+  transFilters.forEach((arr, pIdx) => {
+    if (!filterControlIds[pIdx]) {
+      filterControlIds[pIdx] = [];
     }
 
-    if (!availableControlIds[groupIndex]) {
-      availableControlIds[groupIndex] = [];
+    if (!availableControlIds[pIdx]) {
+      availableControlIds[pIdx] = [];
     }
 
-    if (filterGroup.groupFilters && filterGroup.groupFilters.length) {
-      let childItemAvailable = true;
-      filterGroup.groupFilters.forEach((filter, filterIndex) => {
-        const filterControl = data.find(item => item.controlId === filter.controlId);
+    const filters = arr.groupFilters;
+    if (filters && filters.length) {
+      const failedIds = filterControlIds[pIdx] || [];
+      const availableIds = availableControlIds[pIdx] || [];
+      let childItemAvailable: FilterEvaluation = true;
+      filters.forEach((its, index: number) => {
+        let filterControl = data.find(a => a.controlId === its.controlId);
 
-        if (filterControl && !isRelateMoreList(filterControl, filter)) {
+        if (filterControl && !isRelateMoreList(filterControl, its)) {
           const result = filterFn({
-            filterData: filter,
+            filterData: its,
             originControl: filterControl,
             data,
-            recordId,
+            ...(recordId === undefined ? {} : { recordId }),
             appTimeZone: rule.appTimeZone,
           });
-          childItemAvailable = getResult(filterGroup.groupFilters, filterIndex, result, childItemAvailable);
+          childItemAvailable = getResult(filters, index, result, childItemAvailable);
 
-          const ids = getFieldIds(filter);
+          const ids = getFieldIds(its);
 
           if (!result) {
-            filterControlIds[groupIndex][filterIndex] = ids;
-            availableControlIds[groupIndex][filterIndex] = [];
+            failedIds[index] = ids;
+            availableIds[index] = [];
           } else {
-            filterControlIds[groupIndex][filterIndex] = [];
-            availableControlIds[groupIndex][filterIndex] = ids;
+            failedIds[index] = [];
+            availableIds[index] = ids;
           }
         }
       });
-      isAvailable = getResult(transFilters, groupIndex, childItemAvailable, isAvailable);
+      isAvailable = getResult(transFilters, pIdx, childItemAvailable, isAvailable);
     }
   });
 
   const ids = transFilters.map(i => getIds(i));
 
-  if (isAvailable) {
-    availableControlIds = ids;
-    filterControlIds = [];
-  } else {
-    availableControlIds = [];
-    filterControlIds = ids;
-  }
-
   return {
     isAvailable,
-    filterControlIds: flattenArr(filterControlIds),
-    availableControlIds: flattenArr(availableControlIds),
+    filterControlIds: flattenArr(isAvailable ? [] : ids),
+    availableControlIds: flattenArr(isAvailable ? ids : []),
   };
 };
 
-const checkRequired = item => {
-  if (
-    item.required &&
-    ((item.type !== 34 && (!_.includes([6, 8], item.type) ? !item.value : isNaN(parseFloat(item.value)))) ||
-      (item.type !== 34 && _.isString(item.value) && !item.value.trim()) ||
-      (_.includes([9, 10, 11], item.type) && !safeParse(item.value).length) ||
-      (item.type === 14 &&
-        ((_.isArray(safeParse(item.value)) && !safeParse(item.value).length) ||
-          (!_.isArray(safeParse(item.value)) &&
-            !safeParse(item.value)?.attachments?.length &&
-            !safeParse(item.value)?.knowledgeAtts?.length &&
-            !safeParse(item.value)?.attachmentData?.length))) ||
-      (_.includes([21, 26, 27, 29, 35, 48], item.type) &&
-        _.isArray(safeParse(item.value)) &&
-        !safeParse(item.value).length) ||
-      (item.type === 29 &&
-        typeof item.value === 'string' &&
-        (item.value.startsWith('deleteRowIds') || item.value === '0')) ||
-      (item.type === 36 && item.value === '0') ||
-      (item.type === 28 && parseFloat(item.value) === 0))
-  ) {
-    return FORM_ERROR_TYPE.REQUIRED;
-  }
+const checkRequired = (item: FormControl): string => checkRequiredValue(item);
 
-  return '';
-};
-
-const getRequiredErrorText = item => {
+const getRequiredErrorText = (item: FormControl): string => {
   const errorType = checkRequired(item);
   if (!errorType) return '';
-  return typeof FORM_ERROR_TYPE_TEXT[errorType] === 'string'
-    ? FORM_ERROR_TYPE_TEXT[errorType]
-    : FORM_ERROR_TYPE_TEXT[errorType](item);
+  return FORM_ERROR_TYPE_TEXT.REQUIRED(item);
 };
 
-const updateDataPermission = ({ attrs = [], it, checkRuleValidator, item = {} }) => {
+const updateDataPermission = ({ attrs = [], it, checkRuleValidator, item = {} }: PermissionUpdate): void => {
   const isSubList = _.includes([29, 34], item.type);
   let fieldPermission = it.fieldPermission || '111';
   let required = it.required || false;
@@ -222,10 +219,13 @@ const updateDataPermission = ({ attrs = [], it, checkRuleValidator, item = {} })
   it.disabled = disabled;
 };
 
-export const updateRulesDataOfRow = props =>
+export const updateRulesDataOfRow = (props: RuleDataProps): FormControl[] =>
   updateRulesDataByRule(props, {
     getAvailableFilters,
     checkValueAvailable,
     updateDataPermission,
-    parseStyleSetting: value => safeParse(value || '{}'),
+    parseStyleSetting: value => {
+      const parsed: unknown = safeParse(value || '{}');
+      return decodeRuleStyleSetting(parsed);
+    },
   });

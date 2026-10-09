@@ -16,7 +16,7 @@ const SCORE_COLOR_TYPE = [
 
 export default function Score({ data, onChange }) {
   const [visible, setVisible] = useState(false);
-  const [colors, setColors] = useState([]);
+  const [colors, setColors] = useState<NonNullable<import('src/utils/advancedSettingTypes').SettingItemColor['colors']>>([]);
   const { controlId } = data;
   const itemcolor = getAdvanceSetting(data, 'itemcolor');
   const max = getAdvanceSetting(data, 'max');
@@ -80,7 +80,7 @@ export default function Score({ data, onChange }) {
               handleChangeColor({ type });
             }}
           />
-          {itemcolor.type !== 2 ? (
+          {(itemcolor && itemcolor.type) !== 2 ? (
             <WidgetColor
               color={getColor(data)}
               handleChange={color => {
@@ -101,7 +101,7 @@ export default function Score({ data, onChange }) {
         title={_l('动态颜色')}
         dialogClasses="dynamicSettingColorDialog"
         onCancel={() => {
-          setColors(itemcolor.colors);
+          setColors(itemcolor ? itemcolor.colors || [] : []);
           setVisible(false);
         }}
         onOk={() => {

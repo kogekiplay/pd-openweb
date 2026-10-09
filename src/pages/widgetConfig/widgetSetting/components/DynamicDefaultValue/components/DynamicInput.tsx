@@ -67,7 +67,7 @@ export default function DynamicInput({
           }
 
           if (isDYDateTime) {
-            const info = _.flattenDeep(DATE_TYPE).find(it => it.value == o.cid);
+            const info = _.flattenDeep(DATE_TYPE).find(it => it.value == Number(o.cid));
             const isDel = !info || !getDaterange(data.advancedSetting || {}).includes(o.cid);
             return (
               <span key={index} className={isDel ? 'Red' : ''}>

@@ -62,7 +62,7 @@ export default function EditingRecord(props) {
           content={content}
           onBlur={(value, needUpdate) => {
             if (checkrange === '1') {
-              if (value.length > +max || value.length < +min) {
+              if (value.length > Number(max) || value.length < Number(min)) {
                 const errorText = FORM_ERROR_TYPE_TEXT.TEXT_RANGE({ value, advancedSetting: { min, max } });
                 alert(errorText);
                 return;

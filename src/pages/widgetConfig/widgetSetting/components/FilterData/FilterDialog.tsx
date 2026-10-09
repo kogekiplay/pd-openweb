@@ -1,3 +1,4 @@
+import { filterSettings } from '../../../util/advancedSettingBoundary';
 import { Fragment, useRef, useState } from 'react';
 import { isEmpty, isEqual } from 'lodash';
 import _ from 'lodash';
@@ -40,7 +41,7 @@ export default function FilterDialog(props) {
   }: { allControls: FormControl[]; relationControls: FormControl[]; [key: string]: any } = props;
 
   const { sourceControlId = '', type = '' } = data;
-  const originFilters = props.filters || getAdvanceSetting(data, [filterKey]);
+  const originFilters = filterSettings(props.filters || getAdvanceSetting(data, [filterKey]));
   const [filters, setFilters] = useState(originFilters);
   const ruleRef = useRef(null);
 

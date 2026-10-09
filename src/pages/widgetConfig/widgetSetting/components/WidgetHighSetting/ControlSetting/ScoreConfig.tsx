@@ -56,7 +56,7 @@ export default function ScoreConfig({ data, onChange }) {
   const getNames = () => {
     return itemnames.length
       ? itemnames
-      : Array.from({ length: max }).map((_i, index) => ({ key: `${index + 1}`, value: '' }));
+      : Array.from({ length: Number(max) }).map((_i, index) => ({ key: `${index + 1}`, value: '' }));
   };
 
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function ScoreConfig({ data, onChange }) {
       <div className="labelWrap">
         <Checkbox
           size="small"
-          checked={itemnames.length}
+          checked={!!itemnames.length}
           text={_l('自定义等级文案')}
           onClick={(checked: boolean) => {
             if (!checked) {

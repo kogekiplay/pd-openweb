@@ -89,7 +89,8 @@ export const getFilterDataByRuleAction = (
     currentRuleControlIds: dataFormat.getCurrentRuleControlIds(),
     disabledRuleSet,
     ignoreHideControl,
-    checkRuleValidator: (controlId: string, errorType, errorMessage, rule) => {
+    checkRuleValidator: (controlId: string | undefined, errorType, errorMessage, rule) => {
+      if (controlId === undefined) return;
       dataFormat.setErrorControl(controlId, errorType, errorMessage, rule, isInit);
     },
     verifyAllControls,
@@ -146,7 +147,7 @@ export const getFilterDataByRuleAction = (
   const sectionControlsMap = {};
 
   tempRenderData.forEach(item => {
-    controlMap[item.controlId] = item;
+    controlMap[item.controlId === undefined ? 'undefined' : item.controlId] = item;
 
     if (item.sectionId) {
       sectionControlsMap[item.sectionId] = sectionControlsMap[item.sectionId] || [];
@@ -157,7 +158,7 @@ export const getFilterDataByRuleAction = (
   tempRenderData.forEach(item => {
     // 标签页显示，但标签页内没有显示字段，标签页隐藏
     if (item.type === 52 && controlState(item, from).visible && !item.hidden) {
-      const childWidgets = sectionControlsMap[item.controlId] || [];
+      const childWidgets = sectionControlsMap[item.controlId === undefined ? 'undefined' : item.controlId] || [];
 
       if (_.every(childWidgets, c => !(controlState(c, from).visible && !c.hidden))) {
         item.fieldPermission = replaceStr(item.fieldPermission || '111', 0, '0');
@@ -213,7 +214,10 @@ export const getConfigAction = async (dispatch, { props, getRules, getSearchConf
 /**
  * 更新error显示状态
  */
-export const updateErrorStateAction = (dispatch, { getState, isShow, controlId }: { controlId?: string; [key: string]: any }) => {
+export const updateErrorStateAction = (
+  dispatch,
+  { getState, isShow, controlId }: { controlId?: string; [key: string]: any },
+) => {
   const { errorItems, uniqueErrorItems } = getState();
 
   if (controlId) {
@@ -250,7 +254,9 @@ export const errorDialog = (errors: string[]) => {
       content: (
         <div>
           {errors.map((item, index) => (
-            <div key={index} className="textSecondary mBottom6 WordBreak">{item}</div>
+            <div key={index} className="textSecondary mBottom6 WordBreak">
+              {item}
+            </div>
           ))}
         </div>
       ),
@@ -263,7 +269,9 @@ export const errorDialog = (errors: string[]) => {
       description: (
         <div>
           {errors.map((item, index) => (
-            <div key={index} className="textSecondary mBottom6 WordBreak">{item}</div>
+            <div key={index} className="textSecondary mBottom6 WordBreak">
+              {item}
+            </div>
           ))}
         </div>
       ),
@@ -659,7 +667,10 @@ export const triggerCustomEventAction = (
 /**
  * 验证唯一值
  */
-export const checkControlUniqueAction = (dispatch, { props, getState, controlId, controlType, controlValue }: { controlId?: string; [key: string]: any }) => {
+export const checkControlUniqueAction = (
+  dispatch,
+  { props, getState, controlId, controlType, controlValue }: { controlId?: string; [key: string]: any },
+) => {
   const { uniqueErrorItems } = getState();
   const { worksheetId, recordId, checkCellUnique, onError = () => {} } = props;
 

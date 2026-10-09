@@ -22,7 +22,7 @@ export default function MoneyCn({ data, onChange, allControls }) {
   const moneyControls = getMoneyCnControls(allControls, data);
   const relateId = parseDataSource(data.dataSource);
   const relCon = relateMoneyControl(relateId, moneyControls);
-  const { currencycode } = getAdvanceSetting(relCon, 'currency');
+  const { currencycode } = getAdvanceSetting(relCon, 'currency') || {};
   const isEn = currencycode && !_.includes(['CNY', 'HKD', 'TWD', 'MOP'], currencycode);
   const needSet = isEn && currencytype !== '1';
 
@@ -69,7 +69,7 @@ export default function MoneyCn({ data, onChange, allControls }) {
           <div className="settingItemTitle">{_l('转换类型')}</div>
           <Dropdown
             border
-            disabled={!currencycode || (isEn && !needSet)}
+            disabled={!currencycode || !!(isEn && !needSet)}
             value={needSet ? undefined : currencytype || '0'}
             placeholder={_l('未配置')}
             data={isEn ? DISPLAY_OPTIONS.filter(i => i.value === '1') : DISPLAY_OPTIONS}

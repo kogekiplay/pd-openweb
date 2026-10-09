@@ -4,8 +4,8 @@ import { Icon } from 'ming-ui';
 import { filterOnlyShowField, getIconByType } from 'src/pages/widgetConfig/util';
 import AddCondition from 'src/pages/worksheet/common/WorkSheetFilter/components/AddCondition';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
-import { FASTFILTER_CONDITION_TYPE, getControlFormatType, getSetDefault } from '../util';
 import type { FormControl } from 'src/utils/controlTypes';
+import { FASTFILTER_CONDITION_TYPE, getControlFormatType, getSetDefault } from '../util';
 
 // 快速筛选字段切换，替换字段时同步清理必填筛选配置。
 export default function FastFilterFieldSelector(props) {
@@ -31,8 +31,8 @@ export default function FastFilterFieldSelector(props) {
           setSysWorkflowTimeControlFormat(worksheetControls, currentSheetInfo.switches || []),
         ).filter(
           o =>
-            (FASTFILTER_CONDITION_TYPE.includes(o.type) ||
-              (o.type === 30 && FASTFILTER_CONDITION_TYPE.includes(getControlFormatType(o)))) &&
+            (FASTFILTER_CONDITION_TYPE.some(type => type === o.type) ||
+              (o.type === 30 && FASTFILTER_CONDITION_TYPE.some(type => type === getControlFormatType(o)))) &&
             !fastFilters.map(o => o.controlId).includes(o.controlId),
         )}
         onAdd={data => {

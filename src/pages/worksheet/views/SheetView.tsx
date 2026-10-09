@@ -38,6 +38,7 @@ import { renderBatchSetDialog } from 'src/pages/worksheet/common/ViewConfig/comp
 import { NORMAL_SYSTEM_FIELDS_SORT, WORKFLOW_SYSTEM_FIELDS_SORT } from 'src/pages/worksheet/common/ViewConfig/enum';
 import { getUserRole } from 'src/pages/worksheet/redux/actions/util';
 import type { RootState } from 'src/redux/types';
+import { parsedSettingStrings } from 'src/utils/advancedSettingBoundary';
 import { browserIsMobile, emitter, getLRUWorksheetConfig } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { getAdvanceSetting, getHighAuthControls } from 'src/utils/control';
@@ -1151,21 +1152,15 @@ class TableViewBase extends React.Component<any, any> {
           (this.isManageView ||
             (!_.find(hiddenColumnIds, cid => cid === control.controlId) && controlState(control).visible)),
       );
-    let { customdisplay = '0', sysids = '[]', syssort = '[]' } = getAdvanceSetting(view); // '0':表格显示列与表单中的字段保持一致 '1':自定义显示列
+    let { customdisplay = '0', sysids: rawSysids = '[]', syssort: rawSyssort = '[]' } = getAdvanceSetting(view); // '0':表格显示列与表单中的字段保持一致 '1':自定义显示列
 
     if (customdisplay === '1') {
       columns = _.uniq(showControls)
         .map(id => _.find(filteredControls, c => c.controlId === id))
         .filter(_.identity);
     } else {
-      try {
-        sysids = JSON.parse(sysids);
-        syssort = JSON.parse(syssort);
-      } catch (err) {
-        console.log(err);
-        sysids = [];
-        syssort = [];
-      }
+      const sysids = parsedSettingStrings(rawSysids);
+      const syssort = parsedSettingStrings(rawSyssort);
 
       columns = filteredControls
         .filter(
@@ -1832,7 +1827,7 @@ class TableViewBase extends React.Component<any, any> {
         <OperateButtons
           status={status}
           refreshFlag={sheetViewData.refreshFlag}
-          resetFlag={get(operateBtnResetFlag, recordId)}
+          resetFlag={recordId === undefined ? undefined : get(operateBtnResetFlag, recordId)}
           row={row}
           rowHeight={ROW_HEIGHT[view.rowHeight] || 34}
           recordId={recordId}

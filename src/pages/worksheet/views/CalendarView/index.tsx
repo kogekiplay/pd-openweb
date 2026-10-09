@@ -29,6 +29,7 @@ import RecordInfoWrapper from 'src/pages/worksheet/common/recordInfo/RecordInfoW
 import { saveView, updateWorksheetControls } from 'src/pages/worksheet/redux/actions';
 import * as Actions from 'src/pages/worksheet/redux/actions/calendarview';
 import type { RootState } from 'src/redux/types';
+import { calendarPairs } from 'src/utils/advancedSettingBoundary';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
@@ -629,7 +630,6 @@ class RecordCalendarBase extends Component<any, any> {
         this.calendarComponentRef.current.getApi().changeView(initialView); // 更改视图类型
       }
     }
-
   }
 
   /**
@@ -940,17 +940,12 @@ class RecordCalendarBase extends Component<any, any> {
       enddate = '',
       colorid = '',
       hour24 = '0',
-      calendarcids = '[]',
+      calendarcids: rawCalendarCids = '[]',
       weekbegin,
       showall = '0',
     } = getAdvanceSetting(currentView);
 
-    try {
-      calendarcids = JSON.parse(calendarcids);
-    } catch (error) {
-      calendarcids = [];
-      console.log(error);
-    }
+    let calendarcids = calendarPairs(rawCalendarCids);
 
     if (!Array.isArray(calendarcids) || calendarcids.length <= 0 || !calendarcids[0]) {
       calendarcids = [{ begin: begindate, end: enddate }]; //兼容老数据
@@ -962,7 +957,7 @@ class RecordCalendarBase extends Component<any, any> {
     const { calendarInfo = [], unweekday = '', btnList, initialView } = calendarData;
     const { height, calendarFormatData } = this.state;
     let isDelete =
-      calendarcids[0].begin &&
+      calendarcids[0]?.begin &&
       calendarInfo.length > 0 &&
       (!calendarInfo[0].startData || !calendarInfo[0].startData.controlId);
 
@@ -973,7 +968,7 @@ class RecordCalendarBase extends Component<any, any> {
       isDelete = true;
     }
 
-    let isHaveSelectControl = !calendarcids[0].begin || isDelete; // 是否选中了开始时间 //开始时间字段已删除
+    let isHaveSelectControl = !calendarcids[0]?.begin || isDelete; // 是否选中了开始时间 //开始时间字段已删除
 
     if (isHaveSelectControl || isIllegalFormat(calendarInfo)) {
       return (

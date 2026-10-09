@@ -20,7 +20,7 @@ export default function FilterDialog(props) {
     sourceControlId,
   }: { controls: FormControl[]; allControls: FormControl[]; [key: string]: any } = props;
 
-  const [filters, setFilters] = useState(getAdvanceSetting(data, 'filters'));
+  const [filters, setFilters] = useState(getAdvanceSetting(data, 'filters') || []);
   const ruleRef = useRef(null);
 
   return (

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import type { FormControl } from 'src/utils/controlTypes';
+import type { FilterEvaluation } from './filterTypes';
 import type { FormComparisonCondition, FormConditionRule, FormFilterGroup as RuleFilterGroup } from './types';
 
 export const flattenArr = <T extends unknown>(
@@ -13,9 +14,9 @@ export const flattenArr = <T extends unknown>(
 export const getResult = (
   arr: Array<{ spliceType?: number | undefined }>,
   index: number,
-  result: boolean,
-  available: boolean,
-): boolean => {
+  result: FilterEvaluation,
+  available: FilterEvaluation,
+): FilterEvaluation => {
   if (!index) {
     return result;
   } else {

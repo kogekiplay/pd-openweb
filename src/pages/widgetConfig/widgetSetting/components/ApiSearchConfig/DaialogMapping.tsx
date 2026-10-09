@@ -39,7 +39,7 @@ const getOptions = item => {
 
   return { iconType: item.type, placeholder: item.dataSource ? _l('请选择子表中的字段') : _l('请选择') };
 };
-const findCurrentValue = (item: Partial<FormControl> = {}, i: { subid?: string; cid?: string } = {}) => {
+const findCurrentValue = (item: Partial<FormControl> = {}, i: { subid?: string | undefined; cid?: string | undefined } = {}) => {
   if (item.dataSource) return i.subid;
   if (item.type === 10000007) return i.subid || i.cid;
   if (!item.dataSource && !i.subid) return i.cid;
@@ -116,7 +116,7 @@ export default function DialogMapping(props) {
     );
   };
 
-  const getDropData = (item: Record<string, any> = {}, showValue) => {
+  const getDropData = (item: FormControl = {}, showValue) => {
     const parentMappingItem = _.find(mappingData, i => i.id === item.dataSource);
     const filterSYS = SYS.concat(SYS_CONTROLS);
     const filterSelf = allControls.filter(i => i.controlId !== data.controlId || !_.includes(filterSYS, i.controlId));
@@ -226,7 +226,7 @@ export default function DialogMapping(props) {
   const renderItem = item => {
     const { iconType, placeholder } = getOptions(item);
     // 单条映射的配置
-    const mappingItem = _.find(mappingData, i => i.id === item.controlId && findCurrentValue(item, i));
+    const mappingItem = mappingData.find(i => i.id === item.controlId && findCurrentValue(item, i));
 
     const showValue = mappingItem ? findCurrentValue(item, mappingItem) : undefined;
     const disabled = item.dataSource

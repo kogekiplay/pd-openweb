@@ -14,7 +14,13 @@ export function checkRulesErrorOfRow({ from, rules, controls, control, row }) {
     updateControlIds: control ? [control.controlId] : [],
     checkAllUpdate: !control,
     // rule 只有 checkType 被读到（3 = 这条错误不弹提示，只标红）
-    checkRuleValidator: (controlId: string, errorType, errorMessage, rule: { checkType?: number } = {}) => {
+    checkRuleValidator: (
+      controlId: string | undefined,
+      errorType,
+      errorMessage,
+      rule: { checkType?: number | undefined } = {},
+    ) => {
+      if (controlId === undefined) return;
       if (errorMessage) {
         errors.push({ controlId, errorType, errorMessage, ignoreErrorMessage: rule.checkType === 3 });
       }

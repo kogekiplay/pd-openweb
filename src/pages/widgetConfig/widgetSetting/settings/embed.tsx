@@ -301,7 +301,7 @@ export default function Embed(props) {
               onChange={value => {
                 let tempRowNum = getAdvanceSetting(value, 'rownum');
 
-                if (tempRowNum > 50) {
+                if (Number(tempRowNum) > 50) {
                   tempRowNum = 50;
                 }
 

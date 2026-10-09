@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import preall from 'src/common/preall';
 import type { RootState } from 'src/redux/types';
+import type { AppDispatch } from 'src/redux/types';
 import { socketInit } from 'src/socket';
 import * as actions from '../../redux/actions';
 import * as utils from '../../utils/';
@@ -11,7 +12,6 @@ import Constant from '../../utils/constant';
 import * as socket from '../../utils/socket';
 import * as socketEvent from '../../utils/socketEvent';
 import ChatPanelSession from '../ChatPanelSession';
-import type { AppDispatch } from 'src/redux/types';
 import '../ChatPanel/index.less';
 
 let hasMounted = false;
@@ -107,12 +107,12 @@ let ChatWindow = class ChatWindow extends Component<{ dispatch: AppDispatch; [ke
     );
   }
 };
-ChatWindow = preall(ChatWindow);
+const PreloadedChatWindow = preall(ChatWindow);
 const ConnectChatWindow = connect((state: RootState) => {
   const { currentSessionList, isWindow } = state.chat;
   return {
     currentSessionList,
     isWindow,
   };
-})(ChatWindow);
+})(PreloadedChatWindow);
 export default ConnectChatWindow;

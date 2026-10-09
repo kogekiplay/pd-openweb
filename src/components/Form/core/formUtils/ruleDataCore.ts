@@ -1,10 +1,26 @@
 import _ from 'lodash';
 import { controlState } from 'src/utils/controlCommon';
+import type { ControlAdvancedSetting, FormControl } from 'src/utils/controlTypes';
 import { FORM_ERROR_TYPE } from '../config';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { RuleBuckets, RuleDataDependencies, RuleDataProps, RuleTarget, RuleValidator } from './ruleDataTypes';
+import { valueRecord } from './valueBoundary';
 
-const removeRequireError = (controls: FormControl[] = [], checkRuleValidator = () => {}) => {
-  controls.forEach((control: FormControl) => {
+export function parseRuleStyleSetting(value?: string): ControlAdvancedSetting {
+  const parsed: unknown = JSON.parse(value || '{}');
+  return decodeRuleStyleSetting(parsed);
+}
+export function decodeRuleStyleSetting(parsed: unknown): ControlAdvancedSetting {
+  const record = valueRecord(parsed);
+  if (!record) return {};
+  const result: ControlAdvancedSetting = {};
+  Object.entries(record).forEach(([key, setting]) => {
+    if (typeof setting === 'string') result[key] = setting;
+  });
+  return result;
+}
+
+const removeRequireError = (controls: RuleTarget[] = [], checkRuleValidator: RuleValidator = () => {}) => {
+  controls.forEach(control => {
     const { controlId = '', childControlIds = [] } = control;
 
     if (!childControlIds.length) {
@@ -16,15 +32,15 @@ const removeRequireError = (controls: FormControl[] = [], checkRuleValidator = (
 };
 
 export const updateRulesDataByRule = (
-  props,
+  props: RuleDataProps,
   {
     getAvailableFilters,
     checkValueAvailable,
     updateDataPermission,
     handleDynamicRules,
-    parseStyleSetting = value => JSON.parse(value || '{}'),
-  },
-) => {
+    parseStyleSetting = parseRuleStyleSetting,
+  }: RuleDataDependencies,
+): FormControl[] => {
   const {
     rules = [],
     data = [],
@@ -55,11 +71,11 @@ export const updateRulesDataByRule = (
     formatData = formatData.filter(control => controlState(control, from).visible);
   }
 
-  const formatDataMap = formatData.reduce((map, item) => {
-    map[item.controlId] = item;
+  const formatDataMap = formatData.reduce<Record<string, FormControl>>((map, item) => {
+    map[item.controlId === undefined ? 'undefined' : item.controlId] = item;
     return map;
   }, {});
-  const relateRuleType = {
+  const relateRuleType: RuleBuckets = {
     parent: {},
     child: {},
     errorMsg: {},
@@ -67,8 +83,10 @@ export const updateRulesDataByRule = (
     style: {},
   };
 
-  function pushType(key: string, id, obj) {
-    relateRuleType[key][id] ? relateRuleType[key][id].push(obj) : (relateRuleType[key][id] = [obj]);
+  function pushType<T>(bucket: Record<string, T[]>, id: string | undefined, value: T): void {
+    const key = id === undefined ? 'undefined' : id;
+    const values = bucket[key];
+    values ? values.push(value) : (bucket[key] = [value]);
   }
 
   const { defaultRules = [], errorOrStyleRules = [] } = getAvailableFilters(rules, formatData, recordId);
@@ -77,7 +95,7 @@ export const updateRulesDataByRule = (
     defaultRules.forEach(rule => {
       const { isAvailable, availableControlIds = [] } = checkValueAvailable(rule, formatData, recordId);
 
-      rule.ruleItems.forEach(({ type, controls = [] }) => {
+      (rule.ruleItems || []).forEach(({ type, controls = [] }) => {
         let currentType = type;
 
         if (currentType === 1) {
@@ -95,22 +113,24 @@ export const updateRulesDataByRule = (
         const attrObj = { type: currentType };
 
         if (_.includes([7, 8], currentType)) {
-          formatData.forEach(item => pushType('parent', item.controlId, attrObj));
+          formatData.forEach(item => pushType(relateRuleType.parent, item.controlId, attrObj));
         } else {
-          controls.forEach((control: FormControl) => {
+          controls.forEach(control => {
             if (currentType === 9) {
               if (
                 _.some(availableControlIds, availableControlId => _.includes(currentRuleControlIds, availableControlId))
               ) {
-                pushType('dynamic', control.controlId, { ..._.pick(control, ['type', 'value']) });
+                pushType(relateRuleType.dynamic, control.controlId, { ..._.pick(control, ['type', 'value']) });
               }
             } else {
               const { controlId = '', childControlIds = [], permission, isCustom } = control;
 
               if (!childControlIds.length) {
-                pushType('parent', controlId, { ...attrObj, ...(isCustom ? { permission } : {}) });
+                pushType(relateRuleType.parent, controlId, { ...attrObj, ...(isCustom ? { permission } : {}) });
               } else {
-                childControlIds.forEach(childControlId => pushType('child', `${controlId}-${childControlId}`, attrObj));
+                childControlIds.forEach(childControlId =>
+                  pushType(relateRuleType.child, `${controlId}-${childControlId}`, attrObj),
+                );
               }
             }
           });
@@ -131,7 +151,7 @@ export const updateRulesDataByRule = (
       });
     });
     updateDataPermission({
-      attrs: relateRuleType.parent[item.controlId],
+      attrs: relateRuleType.parent[item.controlId === undefined ? 'undefined' : item.controlId],
       it: item,
       checkRuleValidator,
       verifyAllControls,
@@ -147,25 +167,27 @@ export const updateRulesDataByRule = (
           isAvailable,
         } = checkValueAvailable(rule, formatData, recordId, from);
 
-        rule.ruleItems.forEach(({ type, message, controls = [] }) => {
+        (rule.ruleItems || []).forEach(({ type, message, controls = [] }) => {
           if (rule.type === 3 && isAvailable) {
-            controls.forEach((control: FormControl) => {
-              pushType('style', control.controlId, { ..._.pick(control, ['type', 'value']), message });
+            controls.forEach(control => {
+              pushType(relateRuleType.style, control.controlId, { ..._.pick(control, ['type', 'value']), message });
             });
           } else if (_.includes([6], type)) {
-            const errorIds = controls.map((i: FormControl) => i.controlId);
+            const errorIds = controls.map(control => control.controlId);
             const curErrorIds = rule.type === 1 && errorIds.length > 0 ? errorIds : filterControlIds;
             (rule.type === 1 ? curErrorIds : filterControlIds).forEach(id =>
               checkRuleValidator(id, FORM_ERROR_TYPE.RULE_ERROR, '', rule),
             );
 
             if (isAvailable) {
-              availableControlIds.forEach((controlId: string) => {
-                if (!relateRuleType.errorMsg[controlId]) {
-                  const pushError = (id, msg) => {
-                    pushType('errorMsg', id, msg);
-                    if (formatDataMap[id]) {
-                      const errorMsg = relateRuleType.errorMsg[id] || [];
+              availableControlIds.forEach(controlId => {
+                const idKey = controlId === undefined ? 'undefined' : controlId;
+                if (!relateRuleType.errorMsg[idKey]) {
+                  const pushError = (id: string | undefined, msg: string | undefined): void => {
+                    const key = id === undefined ? 'undefined' : id;
+                    pushType(relateRuleType.errorMsg, id, msg);
+                    if (formatDataMap[key]) {
+                      const errorMsg = relateRuleType.errorMsg[key] || [];
                       checkRuleValidator(id, FORM_ERROR_TYPE.RULE_ERROR, errorMsg[0], rule);
                     }
                   };
@@ -205,7 +227,7 @@ export const updateRulesDataByRule = (
       if (relateRuleType.style[key]) {
         const styleSettings = _.last(relateRuleType.style[key] || []);
 
-        if (!_.isEmpty(styleSettings)) {
+        if (styleSettings && !_.isEmpty(styleSettings)) {
           const item = formatDataMap[key];
 
           if (item) {

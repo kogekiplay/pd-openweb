@@ -7,7 +7,8 @@ import { DynamicValueInputWrap } from '../styled';
 export default function (props) {
   const { onDynamicValueChange, dynamicValue = [], data = {}, defaultType } = props;
   const { staticValue = '', cid = '' } = dynamicValue[0] || {};
-  const maxValue = getAdvanceSetting(data, 'max') || (data.enumDefault === 1 ? 5 : 10);
+  const configuredMax = getAdvanceSetting(data, 'max');
+  const maxValue = typeof configuredMax === 'number' && configuredMax ? configuredMax : (data.enumDefault === 1 ? 5 : 10);
   const [isDynamic, setDynamic] = useState(!!cid);
   const $wrap = createRef(null);
 

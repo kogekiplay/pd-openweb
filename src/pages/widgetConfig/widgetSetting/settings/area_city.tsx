@@ -1,3 +1,4 @@
+import { stringSettings } from '../../util/advancedSettingBoundary';
 import { Fragment, useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -50,7 +51,7 @@ export default function Area(props) {
 
   const commonData = _.isUndefined(commcountries)
     ? COMMON_DEFAULT_COUNTRY
-    : getAdvanceSetting(data, 'commcountries') || [];
+    : stringSettings(getAdvanceSetting(data, 'commcountries'));
   const filterCommonData = commonData.filter(i => _.find(originData, o => o.id === i));
 
   useEffect(() => {

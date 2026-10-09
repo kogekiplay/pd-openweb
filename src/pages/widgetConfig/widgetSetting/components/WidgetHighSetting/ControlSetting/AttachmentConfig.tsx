@@ -266,7 +266,7 @@ function WaterMarkDialog(props) {
   const [loading, setLoading] = useState(false);
   const [previewUrl, setUrl] = useState(null);
 
-  const fontSize = MASK_SIZE_OPTIONS[info.valuesize] || info.valuesize;
+  const fontSize = MASK_SIZE_OPTIONS[Number(info.valuesize)] || info.valuesize;
 
   useEffect(() => {
     if (showwatermark === '1') {

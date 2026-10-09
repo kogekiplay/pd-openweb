@@ -28,7 +28,7 @@ import _ from 'lodash';
  *
  * 治本仍在服务端（工作流服务该和主 API 报同一个 host），这里是前端兜底。
  */
-const BUCKET_CONFIG_KEY: Record<string, string> = {
+const BUCKET_CONFIG_KEY: Record<string, 'pubHost' | 'pictureHost' | 'mediaHost'> = {
   mdpub: 'pubHost',
   mdpic: 'pictureHost',
   mdmedia: 'mediaHost',
@@ -44,7 +44,8 @@ const ABSOLUTE_FILE_URL = /^https?:\/\/[^/]+(\/file\/(mdpub|mdpic|mdmedia)\/)/i;
 
    真正要判断的是「文件服务是不是就在当前页面这个 origin 上」，两种形态都算： */
 function bucketServedFromSameOrigin(bucket: string) {
-  const configured = _.get(window, ['md', 'global', 'FileStoreConfig', BUCKET_CONFIG_KEY[bucket]]);
+  const configKey = BUCKET_CONFIG_KEY[bucket];
+  const configured: unknown = configKey ? _.get(window, ['md', 'global', 'FileStoreConfig', configKey]) : undefined;
 
   if (!_.isString(configured) || !configured) return false;
 
@@ -60,14 +61,17 @@ function bucketServedFromSameOrigin(bucket: string) {
   }
 }
 
-export function normalizeFileUrl(url) {
+export function normalizeFileUrl<T>(url: T): T | string {
   if (!_.isString(url) || !url) return url;
 
   const matched = url.match(ABSOLUTE_FILE_URL);
 
   if (!matched) return url;
 
-  return bucketServedFromSameOrigin(matched[2].toLowerCase()) ? url.slice(url.indexOf(matched[1])) : url;
+  const prefix = matched[1];
+  const bucket = matched[2];
+  if (!prefix || !bucket) return url;
+  return bucketServedFromSameOrigin(bucket.toLowerCase()) ? url.slice(url.indexOf(prefix)) : url;
 }
 
 export default normalizeFileUrl;

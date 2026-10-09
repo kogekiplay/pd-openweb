@@ -246,16 +246,17 @@ export default class Editor extends Component<any, any> {
       isApp: isApp,
     })
       .then(res => {
-        const { isSuccess, content, errorMsg } = res.data || {};
-
-        if (!isSuccess) {
-          alert(errorMsg, 3);
+        const response = res.data;
+        if (!response?.isSuccess) {
+          alert(response?.errorMsg, 3);
+          this.setState({ aiCreateLoading: false });
+          return;
         }
 
         this.setState({
           sourceAi: true,
           aiCreateLoading: false,
-          remark: content.value,
+          remark: response.content.value,
         });
       })
       .catch(() => {

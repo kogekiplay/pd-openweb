@@ -5,6 +5,7 @@ import { Checkbox, Icon } from 'ming-ui';
 import InputValue from 'src/pages/widgetConfig/widgetSetting/components/WidgetVerify/InputValue.jsx';
 import { AnimationWrap, DisplayMode, SettingItem } from '../../../styled';
 import { fixedBottomWidgets, getAdvanceSetting, isCustomWidget } from '../../../util';
+import { styleSetting } from '../../../util/advancedSettingBoundary';
 import { canSetWidgetStyle, handleAdvancedSettingChange, updateConfig } from '../../../util/setting';
 import { SectionItem } from '../SplitLineConfig/style';
 import WidgetColor from '../WidgetColor';
@@ -37,7 +38,11 @@ const DISPLAY_POSITION_TYPES = [
   { text: _l('强调值'), value: '2', icon: 'highlight-fieldvalue' },
 ];
 
-const DISPLAY_OTHER_COLOR_TYPES = [
+const DISPLAY_OTHER_COLOR_TYPES: Array<{
+  text: string;
+  key: 'bordercolor' | 'background';
+  isDefault?: boolean | undefined;
+}> = [
   { text: _l('边框'), key: 'bordercolor', isDefault: true },
   { text: _l('背景'), key: 'background' },
 ];
@@ -46,7 +51,9 @@ const DISPLAY_OTHER_COLOR_TYPES = [
 const StyleDefault = props => {
   const { data = {}, editKey = '', ignoreFormat = [], onChange, defaultStyle } = props;
   const isOldConfig = _.includes(['titledefault', 'valuedefault'], editKey);
-  const defaultConfig = isOldConfig ? safeParse(defaultStyle || '{}') : getAdvanceSetting(data, [editKey]) || {};
+  const defaultConfig = styleSetting(
+    isOldConfig ? safeParse(defaultStyle || '{}') : getAdvanceSetting(data, [editKey]),
+  );
   const sizeResult = defaultConfig.size || (editKey === 'rowtitlestyle' || data.type === 34 ? '1' : '0');
   const colorResult =
     defaultConfig.color ||
@@ -151,8 +158,8 @@ const StyleDefault = props => {
 // 位置
 const PositionDefault = props => {
   const { data = {}, editKey, onChange } = props;
-  const defaultConfig = getAdvanceSetting(data, [editKey]);
-  const defaultCardValue = getAdvanceSetting(data, 'cardvaluestyle');
+  const defaultConfig = styleSetting(getAdvanceSetting(data, [editKey]));
+  const defaultCardValue = getAdvanceSetting(data, 'cardvaluestyle') || {};
   const { direction = '1' } = defaultConfig;
   return (
     <SettingItem>
@@ -207,7 +214,7 @@ const PositionDefault = props => {
 // 其他
 const OtherDefault = props => {
   const { data = {}, editKey, onChange } = props;
-  const defaultConfig = getAdvanceSetting(data, [editKey]);
+  const defaultConfig = styleSetting(getAdvanceSetting(data, [editKey]));
   return (
     <div className="flexRow flexCenter">
       {DISPLAY_OTHER_COLOR_TYPES.map(({ text, key, isDefault }, index) => {
@@ -270,13 +277,13 @@ const TextHeightLimit = props => {
             onChange(handleAdvancedSettingChange(data, { minheight: value }));
           }}
           onBlur={value => {
-            let tempMinValue = Number(value || 36);
+            let tempMinValue: number | string = Number(value || 36);
 
-            if (tempMinValue < 36) {
+            if (Number(tempMinValue) < 36) {
               tempMinValue = 36;
             }
 
-            if (maxheight && tempMinValue > Number(maxheight)) {
+            if (maxheight && Number(tempMinValue) > Number(maxheight)) {
               tempMinValue = maxheight;
             }
 

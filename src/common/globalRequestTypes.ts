@@ -51,7 +51,6 @@ export type StandardApiEnvelope = PlainApiEnvelope | EncryptedApiEnvelope;
 export interface HttpFailure {
   status?: number | undefined;
   data?: unknown;
-  responseJSON?: { exception?: string | undefined } | undefined;
 }
 export interface RequestFailure {
   response?: HttpFailure | undefined;

@@ -359,3 +359,151 @@ if (process.env.FORM_NORMAL_ONLY !== '1') {
   assert.equal(boundaries.eventLinkValue(42), '42');
   console.log('form utilities malformed boundaries passed');
 }
+
+if (process.env.FORM_NORMAL_ONLY !== '1') {
+  // Render the actual configuration components and invoke their actual input/save callbacks.
+  // This exercises ScoreInput -> DynamicDefaultValue -> serialized defsource -> getDynamicValue.
+  interface DefaultValueSource {
+    cid?: string;
+    rcid?: string;
+    staticValue?: string | number;
+  }
+  interface ProducerNode {
+    type: unknown;
+    props: Record<string, unknown>;
+    children: unknown[];
+  }
+  type ScoreProducer = (props: {
+    data: Control;
+    dynamicValue: DefaultValueSource[];
+    defaultType?: string;
+    onDynamicValueChange: (value: DefaultValueSource[]) => void;
+  }) => ProducerNode;
+  type DefaultProducer = (props: {
+    data: Control;
+    allControls: Control[];
+    onChange: (data: Control) => void;
+  }) => ProducerNode;
+  const scoreInputType = Symbol('ActualScoreInput');
+  const fakeElement = (type: unknown, props: Record<string, unknown> | null, ...children: unknown[]): ProducerNode => ({
+    type,
+    props: props || {},
+    children,
+  });
+  const { jsxRuntimeFrom } = require('../../../../../scripts/spec-harness.ts');
+  const jsx = jsxRuntimeFrom(fakeElement);
+  const producerStubs: Record<string, unknown> = {
+    react: {
+      createRef: () => ({ current: null }),
+      useEffect: () => {},
+      useState: (value: unknown) => [value, () => {}],
+    },
+    'react/jsx-runtime': jsx,
+    antd: { Input: scoreInputType },
+    'src/pages/widgetConfig/util': { getAdvanceSetting: () => undefined },
+    '../components': {
+      DynamicInput: 'DynamicInput',
+      OtherFieldList: 'OtherFieldList',
+      SelectOtherField: 'SelectOtherField',
+    },
+    '../styled': { DynamicValueInputWrap: 'DynamicValueInputWrap' },
+    '../../../util/advancedSettingBoundary': { functionSetting: () => ({}) },
+    'ming-ui/antd-components': { Tooltip: 'Tooltip' },
+    'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js': { DYNAMIC_FROM_MODE: {} },
+    'src/utils/control': { getAdvanceSetting: () => [] },
+    '../../../styled': { SettingItem: 'SettingItem' },
+    '../../../util/setting': {
+      getAdvanceSetting: (_data: Control, key?: string) => (key ? [] : {}),
+      handleAdvancedSettingChange: (data: Control, setting: Record<string, string>) => ({
+        ...data,
+        advancedSetting: { ...data.advancedSetting, ...setting },
+      }),
+    },
+    './config': { DEFAULT_TYPES: {} },
+    './util': { dealIds: (_type: number, value: unknown) => value, getControlType: () => 'score' },
+  };
+  function loadProducer<Model extends object>(file: string): Partial<Model> {
+    const { code } = transformFileSync(file, { plugins: ['@babel/plugin-transform-modules-commonjs'] });
+    const moduleLike: { exports: Partial<Model> } = { exports: {} };
+    new Function('module', 'exports', 'require', '_l', code)(
+      moduleLike,
+      moduleLike.exports,
+      (name: string) => {
+        if (name === 'lodash' || name === 'classnames') return require(name);
+        if (Object.hasOwn(producerStubs, name)) return producerStubs[name];
+        throw new Error(`Unexpected score producer dependency ${name}`);
+      },
+      (text: string) => text,
+    );
+    return moduleLike.exports;
+  }
+  const producerDirectory = path.resolve(
+    __dirname,
+    '../../../../pages/widgetConfig/widgetSetting/components/DynamicDefaultValue',
+  );
+  const score = loadProducer<{ default: ScoreProducer }>(
+    path.join(producerDirectory, 'inputTypes/ScoreInput.tsx'),
+  ).default;
+  assert.equal(typeof score, 'function');
+  producerStubs['./inputTypes'] = { TYPE_TO_COMP: { score } };
+  const setting = loadProducer<{ default: DefaultProducer }>(path.join(producerDirectory, 'index.tsx')).default;
+  assert.equal(typeof setting, 'function');
+  function nodeWithType(value: unknown, expectedType: unknown): ProducerNode | undefined {
+    if (!value || typeof value !== 'object' || !('type' in value) || !('children' in value)) return undefined;
+    const node = value as ProducerNode;
+    if (node.type === expectedType) return node;
+    for (const child of node.children.flat()) {
+      const found = nodeWithType(child, expectedType);
+      if (found) return found;
+    }
+    return undefined;
+  }
+  function saveScore(input: string): Control {
+    let saved: Control | undefined;
+    const target: Control = { type: 28, enumDefault: 1, advancedSetting: {} };
+    const rootNode = (setting as DefaultProducer)({
+      data: target,
+      allControls: [],
+      onChange: data => {
+        saved = data;
+      },
+    });
+    const scoreNode = nodeWithType(rootNode, score);
+    assert.ok(scoreNode);
+    const scoreProps = scoreNode.props as Parameters<ScoreProducer>[0];
+    const inputNode = nodeWithType((score as ScoreProducer)(scoreProps), scoreInputType);
+    assert.ok(inputNode);
+    const onChange = inputNode.props['onChange'];
+    assert.equal(typeof onChange, 'function');
+    (onChange as (event: { target: { value: string } }) => void)({ target: { value: input } });
+    assert.ok(saved);
+    return saved as Control;
+  }
+  const numericFive = saveScore('5');
+  assert.deepEqual(JSON.parse(numericFive.advancedSetting?.['defsource'] || '[]'), [
+    { cid: '', rcid: '', staticValue: 5 },
+  ]);
+  assert.equal(
+    utils.getDynamicValue([], numericFive),
+    '5',
+    'The real numeric score configuration must survive decoding and render as the default value',
+  );
+  const numericZero = saveScore('0');
+  assert.deepEqual(JSON.parse(numericZero.advancedSetting?.['defsource'] || '[]'), [
+    { cid: '', rcid: '', staticValue: 0 },
+  ]);
+  assert.equal(
+    utils.getDynamicValue([], numericZero),
+    '',
+    'Numeric zero preserves the original falsy default-source behavior',
+  );
+  assert.equal(utils.getDynamicValue([], { type: 28, advancedSetting: { defsource: '[{"staticValue":"0"}]' } }), '0');
+  assert.equal(utils.getDynamicValue([], { type: 28, advancedSetting: { defsource: '[{"staticValue":"5"}]' } }), '5');
+  assert.equal(utils.getDynamicValue([], { type: 28, advancedSetting: { defsource: '[{"staticValue":{}}]' } }), '');
+  assert.equal(
+    utils.getDynamicValue([], { type: 26, advancedSetting: { defsource: '[{"staticValue":5}]' } }),
+    '[]',
+    'A numeric score default does not become a person payload',
+  );
+  console.log('real score producer-to-form default-value protocol passed');
+}

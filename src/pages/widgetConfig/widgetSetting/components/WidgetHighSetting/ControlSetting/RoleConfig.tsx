@@ -41,7 +41,7 @@ export default function RoleConfig(props) {
   };
 
   const handleFieldClick = selectData => {
-    let newValue = [].concat(chooseRange);
+    let newValue = chooseRange.slice();
     const availUsers = selectData.map(item => (item.cid ? { ...item, type: 4 } : { ...item, type: 3 }));
     availUsers.map(item => {
       if (existIndex(item) === -1) {

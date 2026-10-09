@@ -9,6 +9,7 @@ import sheetAjax from 'src/api/worksheet';
 import { getAdvanceSetting } from 'src/pages/widgetConfig/util/index.js';
 import { isSameType } from 'src/pages/worksheet/common/ViewConfig/util.js';
 import { getTabTypeBySelectUser } from 'src/pages/worksheet/common/WorkSheetFilter/util';
+import { settingStrings } from 'src/utils/advancedSettingBoundary';
 import { renderText as renderCellText } from 'src/utils/control';
 import SortList from './components/SortList';
 
@@ -66,7 +67,7 @@ export default function (props) {
   } = props;
 
   const formatSetting = () => {
-    const data = getAdvanceSetting(view, advancedSettingKey) || [];
+    const data = settingStrings(getAdvanceSetting(view, advancedSettingKey));
 
     if ([29].includes(controlInfo.type)) {
       return data.map(o => {

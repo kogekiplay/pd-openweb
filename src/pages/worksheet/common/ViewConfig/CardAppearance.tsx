@@ -96,7 +96,7 @@ export default class CardAppearance extends Component<any, any> {
       const { view } = this.props;
       const { emptyname = '' } = getAdvanceSetting(view);
 
-      if (emptyname !== getAdvanceSetting(prevProps.view || {}).emptyname) {
+      if (emptyname !== getAdvanceSetting(prevProps.view || {})['emptyname']) {
         this.setState({
           emptyname,
         });

@@ -110,7 +110,7 @@ export default function UserConfig(props) {
   };
 
   const handleFieldClick = selectData => {
-    let newValue = [].concat(chooseRange);
+    let newValue = chooseRange.slice();
     const availUsers = selectData.map(item => {
       if (item.cid) {
         return { ...item, type: 4 };

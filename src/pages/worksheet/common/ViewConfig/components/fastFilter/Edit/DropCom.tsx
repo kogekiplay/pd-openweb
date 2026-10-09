@@ -4,11 +4,17 @@ import moment from 'moment';
 import { Dropdown } from 'ming-ui';
 import { DATE_FORMAT_BY_DATERANGETYPE } from 'src/pages/worksheet/common/ViewConfig/components/fastFilter/config.js';
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
-import { getControlFormatType, getDateRangeTypeListByShowtype, getDefaultDateRangeType } from '../util';
 import type { FormControl } from 'src/utils/controlTypes';
+import { getControlFormatType, getDateRangeTypeListByShowtype, getDefaultDateRangeType } from '../util';
 
 export default function DropCom(props) {
-  const { data, worksheetControls, control, advancedSetting, updateViewSet }: { worksheetControls: FormControl[]; [key: string]: any } = props;
+  const {
+    data,
+    worksheetControls,
+    control,
+    advancedSetting,
+    updateViewSet,
+  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
   let conData = worksheetControls.find((item: FormControl) => item.controlId === control.controlId) || {};
   let dataInfo = data.types.map(o => {
     return { ...o, disabled: !!conData.encryId && o.value !== FILTER_CONDITION_TYPE.EQ };
@@ -22,7 +28,7 @@ export default function DropCom(props) {
 
   let type = getControlFormatType(control);
   let value = ['filterType', 'dateRangeType'].includes(data.key)
-    ? ['filterType'].includes(data.key) && data.keys.includes(type) && control[data.key] === 0
+    ? ['filterType'].includes(data.key) && data.keys.some((key: number) => key === type) && control[data.key] === 0
       ? FILTER_CONDITION_TYPE.DATE_BETWEEN //兼容老数据的默认值
       : control[data.key]
     : (!advancedSetting[data.key] ? '' : safeParse(advancedSetting[data.key])) || data.default;
@@ -36,10 +42,10 @@ export default function DropCom(props) {
         onChange={newValue => {
           let dataNew = { [data.key]: newValue };
 
-          if (data.keys.includes(type) && [15, 16].includes(type)) {
+          if (data.keys.some((key: number) => key === type) && [15, 16].some(key => key === type)) {
             if (['dateRangeType'].includes(data.key)) {
               dataNew.daterange = '[]'; //新增默认不勾选
-              if ([15, 16].includes(type) && _.includes([4, 5, 3, 2, 1], newValue) && control.value) {
+              if ([15, 16].some(key => key === type) && _.includes([4, 5, 3, 2, 1], newValue) && control.value) {
                 dataNew.value = moment(control.value).format(DATE_FORMAT_BY_DATERANGETYPE[newValue]);
               }
             }
@@ -55,7 +61,7 @@ export default function DropCom(props) {
             }
           }
 
-          if (['filterType'].includes(data.key) && [6, 8, 15, 16, 17, 18, 46].includes(type)) {
+          if (['filterType'].includes(data.key) && [6, 8, 15, 16, 17, 18, 46].some(key => key === type)) {
             //清空默认值
             dataNew = {
               ...dataNew,

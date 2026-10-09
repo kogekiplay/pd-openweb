@@ -181,7 +181,7 @@ export const CHECKBOX_TYPES = [
   { id: '1', text: _l('选中') },
 ];
 
-export const CONTROL_TYPE: Record<number, string> = {
+export const CONTROL_TYPE: Record<string, string> = {
   1: 'text',
   2: 'text',
   3: 'phone',
@@ -280,7 +280,7 @@ export const CUSTOM_PHP_TYPES: Record<number, { key: string; id: string; text: s
   48: [{ key: 'triggerOrg', id: 'triggerOrg', text: _l('触发者所在的角色') }],
 };
 
-export const DEFAULT_TYPES: Record<number, string> = {
+export const DEFAULT_TYPES: Record<string, string> = {
   0: 'dynamiccustom',
   1: 'defaultfunc',
   2: 'dynamicsrc',

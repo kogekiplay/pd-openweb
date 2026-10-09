@@ -10,9 +10,22 @@ import {
 import { getConditionType, getTypeKey, redefineComplexControl } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { accDiv, accMul } from 'src/utils/common';
 import { getDatePickerConfigs, isEmptyValue, toFixed } from 'src/utils/controlCommon';
-import type { ControlValue, FormControl, SelectedEntityValue } from 'src/utils/controlTypes';
+import type { FormControl, SubListStore } from 'src/utils/controlTypes';
 import { dateAppZoneToServerZone } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
+import {
+  filterArray,
+  filterDate,
+  filterDurationUnit,
+  filterEntity,
+  filterMomentUnit,
+  filterNumber,
+  filterText,
+  parsedEntity,
+} from './filterBoundary';
+import type { FilterEvaluation, FilterFnOptions } from './filterTypes';
+import type { FormComparisonCondition } from './types';
+import { parsedRecord, parsedRecords, parseValue, valueRecord } from './valueBoundary';
 
 const TIME_OPTIONS: Record<number, string> = {
   1: 'year ',
@@ -35,20 +48,20 @@ const TIME_MODE_OPTIONS: Record<string, number> = {
   'HH:mm:ss': 6,
 };
 
-const timeModeByDateRangeType = dateRangeType => {
+const timeModeByDateRangeType = (dateRangeType: number | string | undefined): string | undefined => {
   // 索引类型必须写出来：字面量 {} 会被推成 {}，rangeTypes[x] = y 与后面的取值都报错
   const rangeTypes: Record<string, string> = {};
-  _.keys(DATE_RANGE_TYPE).forEach(key => {
-    rangeTypes[DATE_RANGE_TYPE[key]] = key.toLowerCase();
+  Object.entries(DATE_RANGE_TYPE).forEach(([key, value]) => {
+    rangeTypes[String(value)] = key.toLowerCase();
   });
-  return rangeTypes[dateRangeType];
+  return rangeTypes[dateRangeType === undefined ? 'undefined' : dateRangeType];
 };
 
 // 时间格式化数值
-const formatFnTimeValue = (value, mode: string) => {
-  return moment(value).year()
-    ? moment(moment(value).format(mode), mode).format(`YYYY-MM-DD ${mode}`)
-    : moment(value, mode).format(`YYYY-MM-DD ${mode}`);
+const formatFnTimeValue = (value: unknown, mode: string): string => {
+  return moment(filterDate(value)).year()
+    ? moment(moment(filterDate(value)).format(mode), mode).format(`YYYY-MM-DD ${mode}`)
+    : moment(filterDate(value), mode).format(`YYYY-MM-DD ${mode}`);
 };
 
 // 时间字段根据显示格式处理数据
@@ -72,10 +85,10 @@ const getFormatMode = (control: FormControl = {}, currentControl?: FormControl, 
   }
 
   if (_.isEmpty(currentControl) && curMode) return mode;
-  return TIME_MODE_OPTIONS[mode] <= TIME_MODE_OPTIONS[curMode] ? mode : curMode;
+  return (TIME_MODE_OPTIONS[mode] ?? NaN) <= (TIME_MODE_OPTIONS[curMode] ?? NaN) ? mode : curMode;
 };
 
-const getValueByDateRange = dateRange => {
+const getValueByDateRange = (dateRange: number | undefined): number | undefined => {
   let value;
   _.flattenDeep(DATE_OPTIONS).map(o => {
     if (o.value === dateRange) {
@@ -85,7 +98,12 @@ const getValueByDateRange = dateRange => {
   return value;
 };
 
-const dateFn = (filterData, value, isEQ: boolean, appTimeZone) => {
+const dateFn = (
+  filterData: FormComparisonCondition,
+  value: unknown,
+  isEQ: boolean,
+  appTimeZone: number | undefined,
+): boolean => {
   const { dateRange, dataType } = filterData;
   let result = true;
   let date = '';
@@ -95,73 +113,73 @@ const dateFn = (filterData, value, isEQ: boolean, appTimeZone) => {
     case 4:
       date = moment().startOf('week').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'week');
+      result = moment(filterDate(value)).isSame(date, 'week');
       break;
     // { text: _l('上周'), value: 5 },
     case 5:
       date = moment().startOf('week').add(-1, 'week').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'week');
+      result = moment(filterDate(value)).isSame(date, 'week');
       break;
     // { text: _l('下周'), value: 6 },
     case 6:
       date = moment().startOf('week').add(1, 'week').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'week');
+      result = moment(filterDate(value)).isSame(date, 'week');
       break;
     // { text: _l('本月'), value: 7 },
     case 7:
       date = moment().startOf('month').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'month');
+      result = moment(filterDate(value)).isSame(date, 'month');
       break;
     // { text: _l('上个月'), value: 8 },
     case 8:
       date = moment().startOf('month').add(-1, 'month').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'month');
+      result = moment(filterDate(value)).isSame(date, 'month');
       break;
     // { text: _l('下个月'), value: 9 },
     case 9:
       date = moment().startOf('month').add(1, 'month').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'month');
+      result = moment(filterDate(value)).isSame(date, 'month');
       break;
     // { text: _l('本季度'), value: 12 },
     case 12:
       date = moment().startOf('quarter').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'quarter');
+      result = moment(filterDate(value)).isSame(date, 'quarter');
       break;
     // { text: _l('上季度'), value: 13 },
     case 13:
       date = moment().startOf('quarter').add(-1, 'quarter').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'quarter');
+      result = moment(filterDate(value)).isSame(date, 'quarter');
       break;
     // { text: _l('下季度'), value: 14 },
     case 14:
       date = moment().startOf('quarter').add(1, 'quarter').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'quarter');
+      result = moment(filterDate(value)).isSame(date, 'quarter');
       break;
     // { text: _l('今年'), value: 15 },
     case 15:
       date = moment().startOf('year').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'year');
+      result = moment(filterDate(value)).isSame(date, 'year');
       break;
     // { text: _l('去年'), value: 16 },
     case 16:
       date = moment().startOf('year').add(-1, 'year').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'year');
+      result = moment(filterDate(value)).isSame(date, 'year');
       break;
     // { text: _l('明年'), value: 17 },
     case 17:
       date = moment().startOf('year').add(1, 'year').format('YYYY-MM-DD');
       date = dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
-      result = moment(value).isSame(date, 'year');
+      result = moment(filterDate(value)).isSame(date, 'year');
       break;
   }
 
@@ -169,11 +187,11 @@ const dateFn = (filterData, value, isEQ: boolean, appTimeZone) => {
 };
 
 const dayFn = (
-  filterData: Record<string, ControlValue> = {},
-  value?: ControlValue,
+  filterData: FormComparisonCondition = {},
+  value?: unknown,
   isGT?: boolean,
   currentControl: FormControl = {},
-  appTimeZone?: ControlValue,
+  appTimeZone?: number,
 ) => {
   let { dateRange, dynamicSource = [], dataType, dateRangeType, value: editValue } = filterData;
   const { type } = currentControl;
@@ -182,7 +200,7 @@ const dayFn = (
     dateRange = 0;
   }
 
-  let dateRangeTypeNum;
+  let dateRangeTypeNum: number | string | undefined;
   let date = '';
 
   if (_.includes([101, 102], dateRange)) {
@@ -196,7 +214,7 @@ const dayFn = (
         break;
       case DATE_RANGE_TYPE.QUARTER:
         dateRange = isFeature ? 14 : 13;
-        dateRangeTypeNum = (editValue || 1) * 3;
+        dateRangeTypeNum = Number(editValue || 1) * 3;
         break;
       case DATE_RANGE_TYPE.MONTH:
         dateRange = isFeature ? 9 : 8;
@@ -207,7 +225,7 @@ const dayFn = (
         dateRangeTypeNum = editValue || 1;
         break;
       case DATE_RANGE_TYPE.MINUTE:
-        dateRangeTypeNum = value || 1;
+        dateRangeTypeNum = typeof value === 'string' || typeof value === 'number' ? value || 1 : 1;
         break;
     }
   }
@@ -221,13 +239,13 @@ const dayFn = (
     // { text: _l('昨天'), value: 2 },
     case 2:
       date = moment()
-        .subtract(dateRangeTypeNum || 1, 'days')
+        .subtract(Number(dateRangeTypeNum || 1), 'days')
         .format('YYYY-MM-DD');
       return dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
     // { text: _l('明天'), value: 3 },
     case 3:
       date = moment()
-        .add(dateRangeTypeNum || 1, 'days')
+        .add(Number(dateRangeTypeNum || 1), 'days')
         .format('YYYY-MM-DD');
       return dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
     // { text: _l('本周'), value: 4 },
@@ -252,11 +270,11 @@ const dayFn = (
     case 8:
       date = isGT
         ? moment()
-            .month(moment().month() - (dateRangeTypeNum || 1))
+            .month(moment().month() - Number(dateRangeTypeNum || 1))
             .startOf('month')
             .format('YYYY-MM-DD')
         : moment()
-            .month(moment().month() - (dateRangeTypeNum || 1))
+            .month(moment().month() - Number(dateRangeTypeNum || 1))
             .endOf('month')
             .format('YYYY-MM-DD');
       return dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
@@ -264,11 +282,23 @@ const dayFn = (
     case 9:
       date = isGT
         ? moment()
-            .month(moment().month() + (dateRangeTypeNum || 1))
+            .month(
+              Number(
+                typeof dateRangeTypeNum === 'string'
+                  ? Number(String(moment().month()) + (dateRangeTypeNum || '1'))
+                  : moment().month() + (dateRangeTypeNum || 1),
+              ),
+            )
             .startOf('month')
             .format('YYYY-MM-DD')
         : moment()
-            .month(moment().month() + (dateRangeTypeNum || 1))
+            .month(
+              Number(
+                typeof dateRangeTypeNum === 'string'
+                  ? Number(String(moment().month()) + (dateRangeTypeNum || '1'))
+                  : moment().month() + (dateRangeTypeNum || 1),
+              ),
+            )
             .endOf('month')
             .format('YYYY-MM-DD');
       return dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
@@ -281,11 +311,11 @@ const dayFn = (
       date = isGT
         ? moment()
             .startOf('quarter')
-            .subtract(dateRangeTypeNum || 3, 'month')
+            .subtract(Number(dateRangeTypeNum || 3), 'month')
             .format('YYYY-MM-DD')
         : moment()
             .endOf('quarter')
-            .subtract(dateRangeTypeNum || 3, 'month')
+            .subtract(Number(dateRangeTypeNum || 3), 'month')
             .format('YYYY-MM-DD');
       return dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
     // { text: _l('下季度'), value: 14 },
@@ -293,11 +323,11 @@ const dayFn = (
       date = isGT
         ? moment()
             .startOf('quarter')
-            .add(dateRangeTypeNum || 3, 'month')
+            .add(Number(dateRangeTypeNum || 3), 'month')
             .format('YYYY-MM-DD')
         : moment()
             .endOf('quarter')
-            .add(dateRangeTypeNum || 3, 'month')
+            .add(Number(dateRangeTypeNum || 3), 'month')
             .format('YYYY-MM-DD');
       return dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
     // { text: _l('今年'), value: 15 },
@@ -308,12 +338,12 @@ const dayFn = (
     case 16:
       date = isGT
         ? moment()
-            .add(dateRangeTypeNum || -1, 'year')
+            .add(Number(dateRangeTypeNum || -1), 'year')
             .format('YYYY') +
           '-01' +
           '-01'
         : moment()
-            .add(dateRangeTypeNum || -1, 'year')
+            .add(Number(dateRangeTypeNum || -1), 'year')
             .endOf('year')
             .format('YYYY-MM-DD');
       return dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
@@ -321,12 +351,12 @@ const dayFn = (
     case 17:
       date = isGT
         ? moment()
-            .add(dateRangeTypeNum || 1, 'year')
+            .add(Number(dateRangeTypeNum || 1), 'year')
             .format('YYYY') +
           '-01' +
           '-01'
         : moment()
-            .add(dateRangeTypeNum || 1, 'year')
+            .add(Number(dateRangeTypeNum || 1), 'year')
             .endOf('year')
             .format('YYYY-MM-DD');
       return dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
@@ -336,7 +366,7 @@ const dayFn = (
     case 22:
     case 23:
       date = moment()
-        .subtract(getValueByDateRange(dateRange) || value, 'day')
+        .subtract(getValueByDateRange(dateRange) || Number(value), 'day')
         .format('YYYY-MM-DD');
       return dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
     // { text: _l('将来...天'), value: 11 },
@@ -345,7 +375,7 @@ const dayFn = (
     case 32:
     case 33:
       date = moment()
-        .add(getValueByDateRange(dateRange) || value, 'day')
+        .add(getValueByDateRange(dateRange) || Number(value), 'day')
         .format('YYYY-MM-DD');
       return dataType === 16 ? dateAppZoneToServerZone(date, appTimeZone) : date;
     // { text: _l('指定时间'), value: 18 },
@@ -353,22 +383,33 @@ const dayFn = (
     case 101:
     case 102:
       const formatMode = (
-        getDatePickerConfigs({ advancedSetting: { showtype: filterData.dataShowType }, type: dataType }) || {}
+        getDatePickerConfigs({
+          advancedSetting: {
+            showtype: filterData.dataShowType === undefined ? undefined : String(filterData.dataShowType),
+          },
+          type: dataType,
+        }) || {}
       ).formatMode;
-      let tempTime = moment(value);
+      let tempTime = moment(filterDate(value));
 
       if (dateRange === 101) {
-        tempTime = moment().subtract(dateRangeTypeNum || 1, timeModeByDateRangeType(dateRangeType));
+        tempTime = moment().subtract(
+          Number(dateRangeTypeNum || 1),
+          filterDurationUnit(timeModeByDateRangeType(dateRangeType)),
+        );
       } else if (dateRange === 102) {
-        tempTime = moment().add(dateRangeTypeNum || 1, timeModeByDateRangeType(dateRangeType));
+        tempTime = moment().add(
+          Number(dateRangeTypeNum || 1),
+          filterDurationUnit(timeModeByDateRangeType(dateRangeType)),
+        );
       }
 
-      tempTime = tempTime.format(formatMode || 'YYYY-MM-DD');
-      return dataType === 16 ? dateAppZoneToServerZone(tempTime, appTimeZone) : tempTime;
+      const formattedTime = tempTime.format(formatMode || 'YYYY-MM-DD');
+      return dataType === 16 ? dateAppZoneToServerZone(formattedTime, appTimeZone) : formattedTime;
     default:
       //日期时间
       const formatText = (getDatePickerConfigs(currentControl) || {}).formatMode;
-      return type === 16 ? moment(value).format(formatText) : moment(value).format(formatText);
+      return type === 16 ? moment(filterDate(value)).format(formatText) : moment(filterDate(value)).format(formatText);
   }
 };
 
@@ -378,10 +419,7 @@ export default function filterFn({
   data = [],
   recordId,
   appTimeZone,
-}: {
-  recordId?: string;
-  [key: string]: any;
-}) {
+}: FilterFnOptions): FilterEvaluation {
   try {
     let { filterType = '', dataType = '', dynamicSource = [], dateRange, dateRangeType } = filterData;
     const control = redefineComplexControl(originControl);
@@ -391,13 +429,14 @@ export default function filterFn({
     }
 
     //比较字段值
-    let compareValues = filterData.values || [];
-    let compareValue = filterData.value || '';
+    let compareValues: unknown[] = filterData.values || [];
+    let compareValue: unknown = filterData.value || '';
     // 时间比较精度
     let formatMode = '';
-    let timeLevel = '';
+    let timeLevel: string | undefined = '';
     //条件字段值
-    let { value = '', advancedSetting = {} } = control;
+    let value: unknown = control.value === undefined ? '' : control.value;
+    const advancedSetting = control.advancedSetting || {};
 
     // 指定时间添加显示格式配置
     if (filterData.dateRange === 18) {
@@ -406,27 +445,32 @@ export default function filterFn({
 
     //手机号去除区号
     if (control.type === 3) {
-      value = (value || '').replace('+86', '');
+      value = filterText(value || '').replace('+86', '');
     }
 
-    if (_.includes([9, 10, 11], control.type) && value && value.indexOf('other')) {
-      const optionsFormatVal = safeParse(value, 'array').map(i => (i.startsWith('other:') ? 'other' : i));
+    if (_.includes([9, 10, 11], control.type) && value && filterText(value).indexOf('other')) {
+      const optionsFormatVal = filterArray(value).map(value => {
+        if (typeof value !== 'string') throw new Error('Invalid filter option');
+        return value.startsWith('other:') ? 'other' : value;
+      });
       value = JSON.stringify(optionsFormatVal);
     }
 
     value = value === null ? '' : value;
     if (control.type === API_ENUM_TO_TYPE.MONEY_CN) {
-      let controlId = control.dataSource.replace(/\$/g, '');
+      let controlId = (control.dataSource || '').replace(/\$/g, '');
       const itemData = data.find(it => it.controlId === controlId) || {};
       value = itemData.value;
     }
 
     const conditionGroupKey = getTypeKey(control.type);
-    const conditionGroup = CONTROL_FILTER_WHITELIST[conditionGroupKey] || {};
+    const conditionGroup =
+      Object.entries(CONTROL_FILTER_WHITELIST).find(([key]) => key === conditionGroupKey)?.[1] || {};
+    const rawGroup: unknown = 'value' in conditionGroup ? conditionGroup.value : undefined;
     const conditionGroupType = getConditionType({
       ...filterData,
       controlType: dataType,
-      conditionGroupType: conditionGroup.value,
+      conditionGroupType: typeof rawGroup === 'number' ? rawGroup : undefined,
       type: filterType,
     });
     const { showtype } = advancedSetting; // 1 卡片 2 列表 3 下拉
@@ -434,7 +478,7 @@ export default function filterFn({
 
     //是否多选
     if (dynamicSource.length > 0) {
-      const { cid = '' } = dynamicSource[0];
+      const { cid = '' } = dynamicSource[0] || {};
 
       if (cid === 'rowid') {
         currentControl = { type: 2, value: recordId };
@@ -459,7 +503,7 @@ export default function filterFn({
       }
 
       if (currentControl.type === 3) {
-        currentControl.value = (currentControl.value || '').replace('+86', '');
+        currentControl.value = filterText(currentControl.value || '').replace('+86', '');
       }
 
       //是(等于)、不是(不等于)、大于(等于)、小于(等于) && NUMBER
@@ -479,11 +523,11 @@ export default function filterFn({
         ((_.includes([5], conditionGroupType) && _.includes([9, 10, 11, 27, 48], dataType)) ||
           _.includes([6], conditionGroupType))
       ) {
-        const val = currentControl.value ? safeParse(currentControl.value) : currentControl.value;
-        compareValues = typeof val === 'object' ? val : [currentControl.value];
+        const val = currentControl.value ? parseValue(currentControl.value) : currentControl.value;
+        compareValues = Array.isArray(val) ? val : [currentControl.value];
       } else if (_.includes([24, 25, 26, 27, 28, 51, 52], filterType) && _.includes([29, 35], dataType)) {
-        const val = currentControl.value ? safeParse(currentControl.value) : currentControl.value;
-        compareValues = typeof val === 'object' ? val : [currentControl.value];
+        const val = currentControl.value ? parseValue(currentControl.value) : currentControl.value;
+        compareValues = Array.isArray(val) ? val : [currentControl.value];
       } else {
         compareValues = [currentControl.value];
       }
@@ -491,11 +535,11 @@ export default function filterFn({
       // options类型
       if (_.includes([26, 27, 48], control.type)) {
         compareValues = compareValues.map(item => {
-          let curI = item ? JSON.parse(item) : item;
+          const curI = item ? parsedRecord(item) : {};
 
           if ((_.get(curI, 'accountId') || _.get(curI, 'id')) === 'user-self') {
-            curI.accountId = md.global.Account.accountId;
-            delete curI.id;
+            curI['accountId'] = md.global.Account.accountId;
+            delete curI['id'];
           }
 
           return curI;
@@ -506,14 +550,14 @@ export default function filterFn({
     if (_.isArray(compareValues)) {
       compareValues = compareValues.filter(i => !isEmptyValue(i));
       if (control.type === 5) {
-        compareValues = compareValues.map(i => i.toLowerCase());
+        compareValues = compareValues.map(value => (typeof value === 'string' ? value.toLowerCase() : value));
       }
     }
 
     // 时间类显示类型
     if (_.includes([15, 16, 46], control.type)) {
       formatMode = getFormatMode(control, currentControl, conditionGroupType);
-      timeLevel = TIME_OPTIONS[TIME_MODE_OPTIONS[formatMode]];
+      timeLevel = TIME_OPTIONS[TIME_MODE_OPTIONS[formatMode] ?? 0];
 
       if (!dynamicSource.length && control.type !== 46) {
         // 今天、昨天、明天，对比单位天
@@ -531,25 +575,29 @@ export default function filterFn({
         } else if (_.includes([15, 16, 17], dateRange)) {
           timeLevel = 'year';
         } else if (dateRange === 18) {
-          timeLevel = dateRangeType === '3' ? timeLevel : timeModeByDateRangeType(dateRangeType);
+          const legacyDateRangeType: unknown = dateRangeType;
+          timeLevel = legacyDateRangeType === '3' ? timeLevel : timeModeByDateRangeType(dateRangeType);
         }
       }
     }
 
     // value精度处理(公式、汇总计算)
     // 邮箱value忽略大小写
-    function formatControlValue(v, con: FormControl = {}) {
+    function formatControlValue(v: unknown, con: FormControl = {}): unknown {
       if (
         (con.originType === 37 || con.type === 31 || (con.originType === 30 && con.sourceControltype === 37)) &&
         v &&
         /^\d+\.\d+$/.test(`${v}`)
       ) {
         const isNumShow = (con.advancedSetting || {}).numshow === '1';
-        return accDiv(parseFloat(toFixed(accMul(parseFloat(v), 100), isNumShow ? con.dot + 2 : con.dot)), 100);
+        return accDiv(
+          parseFloat(toFixed(accMul(filterNumber(v), 100), isNumShow ? (con.dot ?? NaN) + 2 : con.dot)),
+          100,
+        );
       }
 
       if (con.type === 5 && v) {
-        return v.toLowerCase();
+        return typeof v === 'string' ? v.toLowerCase() : v;
       }
 
       return v;
@@ -558,7 +606,8 @@ export default function filterFn({
     value = formatControlValue(value, control);
     compareValue = formatControlValue(compareValue, currentControl);
 
-    let store, state;
+    let store: SubListStore | undefined;
+    let state: ReturnType<SubListStore['getState']> | undefined;
 
     switch (filterType) {
       //   LIKE: 1, // 包含
@@ -567,7 +616,7 @@ export default function filterFn({
           case CONTROL_FILTER_WHITELIST.TEXT.value:
             let isInValue = false;
             _.map(compareValues, it => {
-              if (value.indexOf(it) >= 0) {
+              if (filterText(value).indexOf(filterText(it)) >= 0) {
                 isInValue = true;
               }
             });
@@ -585,10 +634,11 @@ export default function filterFn({
             if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
             let isEQ = false;
-            _.map(compareValues, (it: SelectedEntityValue = {}) => {
-              let user = safeParse(value || '[]');
+            _.map(compareValues, raw => {
+              const it = filterEntity(raw);
+              let user = filterArray(value || '[]');
               _.map(user, its => {
-                if (its.accountId === (it.id || it.accountId)) {
+                if (filterEntity(its).accountId === (it.id || it.accountId)) {
                   isEQ = true;
                 }
               });
@@ -606,18 +656,19 @@ export default function filterFn({
                 return !!value;
               }
 
-              const { code } = safeParse(value || '{}');
-              const areaValues = compareValues.map(it => safeParse(it, '{}').id || safeParse(it, '{}').code);
+              const { code } = parsedEntity(value || '{}');
+              const areaValues = compareValues.map(it => parsedEntity(it).id || parsedEntity(it).code);
               return _.includes(areaValues, code);
               // 部门
             } else if (dataType === API_ENUM_TO_TYPE.GROUP_PICKER) {
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
               let isEQ = false;
-              _.map(compareValues, (it: SelectedEntityValue = {}) => {
-                let valueN = safeParse(value || '[]');
+              _.map(compareValues, raw => {
+                const it = filterEntity(raw);
+                let valueN = filterArray(value || '[]');
                 _.map(valueN, item => {
-                  if ((it.departmentId || it.id) === item.departmentId) {
+                  if ((it.departmentId || it.id) === filterEntity(item).departmentId) {
                     isEQ = true;
                   }
                 });
@@ -628,10 +679,11 @@ export default function filterFn({
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
               let isEQ = false;
-              _.map(compareValues, (it: SelectedEntityValue = {}) => {
-                let valueN = safeParse(value || '[]');
+              _.map(compareValues, raw => {
+                const it = filterEntity(raw);
+                let valueN = filterArray(value || '[]');
                 _.map(valueN, item => {
-                  if ((it.organizeId || it.id) === item.organizeId) {
+                  if ((it.organizeId || it.id) === filterEntity(item).organizeId) {
                     isEQ = true;
                   }
                 });
@@ -639,23 +691,25 @@ export default function filterFn({
               return isEQ;
               // 等级
             } else if (dataType === API_ENUM_TO_TYPE.SCORE) {
-              return _.includes(compareValues, value.toString());
+              return _.includes(compareValues, filterText(value));
             } else if (
-              [API_ENUM_TO_TYPE.OPTIONS_10, API_ENUM_TO_TYPE.OPTIONS_11, API_ENUM_TO_TYPE.OPTIONS_9].includes(dataType)
+              [API_ENUM_TO_TYPE.OPTIONS_10, API_ENUM_TO_TYPE.OPTIONS_11, API_ENUM_TO_TYPE.OPTIONS_9].some(
+                type => type === dataType,
+              )
             ) {
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
               if (dataType === API_ENUM_TO_TYPE.OPTIONS_10) {
                 // 多选10
                 let isEQ = false;
-                safeParse(value || '[]').forEach(singleValue => {
+                filterArray(value || '[]').forEach(singleValue => {
                   if (_.includes(compareValues, singleValue)) {
                     isEQ = true;
                   }
                 });
                 return isEQ;
               } else {
-                return compareValues.includes(safeParse(value || '[]')[0]);
+                return compareValues.includes(filterArray(value || '[]')[0]);
               }
             } else {
               if (!value) {
@@ -667,7 +721,7 @@ export default function filterFn({
 
           case CONTROL_FILTER_WHITELIST.NUMBER.value:
             if (isEmptyValue(value) && isEmptyValue(compareValue)) return true;
-            return parseFloat(compareValue) === parseFloat(value);
+            return filterNumber(compareValue) === filterNumber(value);
           case CONTROL_FILTER_WHITELIST.TEXT.value:
             if (isEmptyValue(value) && _.isEmpty(compareValues)) return true;
             let isInValue = false;
@@ -684,12 +738,12 @@ export default function filterFn({
           case CONTROL_FILTER_WHITELIST.CASCADER.value:
             let isInVal = false;
             _.map(compareValues, it => {
-              let itValue = dynamicSource.length > 0 ? it || {} : safeParse(it || '{}');
-              let valueN = _.isArray(value) ? value : safeParse(value || '[]', 'array');
+              const itValue = dynamicSource.length > 0 ? filterEntity(it) : parsedEntity(it || '{}');
+              let valueN = Array.isArray(value) ? value : filterArray(value || '[]');
               _.map(valueN, item => {
                 let curId = dynamicSource.length > 0 ? itValue.sid : itValue.id;
 
-                if (curId === item.sid) {
+                if (curId === filterEntity(item).sid) {
                   isInVal = true;
                 }
               });
@@ -705,7 +759,7 @@ export default function filterFn({
           case CONTROL_FILTER_WHITELIST.TEXT.value:
             let isInValue = false;
             _.map(compareValues, it => {
-              if (value.startsWith(it)) {
+              if (filterText(value).startsWith(filterText(it))) {
                 isInValue = true;
               }
             });
@@ -720,7 +774,7 @@ export default function filterFn({
           case CONTROL_FILTER_WHITELIST.TEXT.value:
             let isInValue = true;
             _.map(compareValues, it => {
-              if (value.startsWith(it)) {
+              if (filterText(value).startsWith(filterText(it))) {
                 isInValue = false;
               }
             });
@@ -735,7 +789,7 @@ export default function filterFn({
           case CONTROL_FILTER_WHITELIST.TEXT.value:
             var isInValue = false;
             _.map(compareValues, function (it) {
-              if (value.endsWith(it)) {
+              if (filterText(value).endsWith(filterText(it))) {
                 isInValue = true;
               }
             });
@@ -750,7 +804,7 @@ export default function filterFn({
           case CONTROL_FILTER_WHITELIST.TEXT.value:
             let isInValue = true;
             _.map(compareValues, function (it) {
-              if (value.endsWith(it)) {
+              if (filterText(value).endsWith(filterText(it))) {
                 isInValue = false;
               }
             });
@@ -765,7 +819,7 @@ export default function filterFn({
           case CONTROL_FILTER_WHITELIST.TEXT.value:
             let isInValue = true;
             _.map(compareValues, it => {
-              if (value.indexOf(it) >= 0) {
+              if (filterText(value).indexOf(filterText(it)) >= 0) {
                 isInValue = false;
               }
             });
@@ -783,10 +837,11 @@ export default function filterFn({
             if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
             let isInValue = true;
-            _.map(compareValues, (it: SelectedEntityValue = {}) => {
-              let user = safeParse(value || '[]');
+            _.map(compareValues, raw => {
+              const it = filterEntity(raw);
+              let user = filterArray(value || '[]');
               _.map(user, its => {
-                if (its.accountId === (it.id || it.accountId)) {
+                if (filterEntity(its).accountId === (it.id || it.accountId)) {
                   isInValue = false;
                 }
               });
@@ -804,18 +859,19 @@ export default function filterFn({
                 return !!value;
               }
 
-              const { code } = safeParse(value || '{}');
-              const areaValues = compareValues.map(it => safeParse(it, '{}').id || safeParse(it, '{}').code);
+              const { code } = parsedEntity(value || '{}');
+              const areaValues = compareValues.map(it => parsedEntity(it).id || parsedEntity(it).code);
               return !_.includes(areaValues, code);
               // 部门
             } else if (dataType === API_ENUM_TO_TYPE.GROUP_PICKER) {
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
               let isNE = true;
-              _.map(compareValues, (it: SelectedEntityValue = {}) => {
-                let valueN = safeParse(value || '[]');
+              _.map(compareValues, raw => {
+                const it = filterEntity(raw);
+                let valueN = filterArray(value || '[]');
                 _.map(valueN, item => {
-                  if ((it.departmentId || it.id) === item.departmentId) {
+                  if ((it.departmentId || it.id) === filterEntity(item).departmentId) {
                     isNE = false;
                   }
                 });
@@ -826,10 +882,11 @@ export default function filterFn({
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
               let isNE = true;
-              _.map(compareValues, (it: SelectedEntityValue = {}) => {
-                let valueN = safeParse(value || '[]');
+              _.map(compareValues, raw => {
+                const it = filterEntity(raw);
+                let valueN = filterArray(value || '[]');
                 _.map(valueN, item => {
-                  if ((it.organizeId || it.id) === item.organizeId) {
+                  if ((it.organizeId || it.id) === filterEntity(item).organizeId) {
                     isNE = false;
                   }
                 });
@@ -837,16 +894,19 @@ export default function filterFn({
               return isNE;
               // 等级
             } else if (dataType === API_ENUM_TO_TYPE.SCORE) {
-              return !_.includes(compareValues, value.toString());
+              return !_.includes(compareValues, filterText(value));
             } else if (
-              [API_ENUM_TO_TYPE.OPTIONS_10, API_ENUM_TO_TYPE.OPTIONS_11, API_ENUM_TO_TYPE.OPTIONS_9].includes(dataType)
+              [API_ENUM_TO_TYPE.OPTIONS_10, API_ENUM_TO_TYPE.OPTIONS_11, API_ENUM_TO_TYPE.OPTIONS_9].some(
+                type => type === dataType,
+              )
             ) {
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
               if (dataType === API_ENUM_TO_TYPE.OPTIONS_10) {
                 let isEQ = true;
-                _.map(compareValues, (it: SelectedEntityValue = {}) => {
-                  let valueN = safeParse(value || '[]');
+                _.map(compareValues, raw => {
+                  const it = filterEntity(raw);
+                  let valueN = filterArray(value || '[]');
                   _.map(valueN, item => {
                     if (it === item) {
                       isEQ = false;
@@ -855,7 +915,7 @@ export default function filterFn({
                 });
                 return isEQ;
               } else {
-                return !compareValues.includes(safeParse(value || '[]')[0]);
+                return !compareValues.includes(filterArray(value || '[]')[0]);
               }
             } else {
               if (!value) {
@@ -867,7 +927,7 @@ export default function filterFn({
 
           case CONTROL_FILTER_WHITELIST.NUMBER.value:
             if (isEmptyValue(value) && isEmptyValue(compareValue)) return false;
-            return parseFloat(compareValue || 0) !== parseFloat(value || 0);
+            return filterNumber(compareValue || 0) !== filterNumber(value || 0);
           case CONTROL_FILTER_WHITELIST.TEXT.value:
             if (isEmptyValue(value) && _.isEmpty(compareValues)) return false;
             let isInValue1 = true;
@@ -885,13 +945,13 @@ export default function filterFn({
             let isInV = true;
             _.map(compareValues, it => {
               // 这里只用得到这两个 id：动态值那一路给的是 sid，静态 JSON 那一路给的是 id
-              let itValue: { sid?: string; id?: string } = {};
-              itValue = dynamicSource.length > 0 ? it || {} : safeParse(it || '{}');
-              let valueN = _.isArray(value) ? value : safeParse(value || '[]', 'array');
+              let itValue: { sid?: string | undefined; id?: string | undefined } = {};
+              itValue = dynamicSource.length > 0 ? filterEntity(it) : parsedEntity(it || '{}');
+              let valueN = Array.isArray(value) ? value : filterArray(value || '[]');
               _.map(valueN, item => {
                 let curId = dynamicSource.length > 0 ? itValue.sid : itValue.id;
 
-                if (curId === item.sid) {
+                if (curId === filterEntity(item).sid) {
                   isInV = false;
                 }
               });
@@ -917,30 +977,32 @@ export default function filterFn({
                 dataType === API_ENUM_TO_TYPE.AREA_INPUT_24) &&
               !!compareValues
             ) {
-              return !safeParse(value || '{}').code;
+              return !parsedEntity(value || '{}').code;
               //等级
             } else if (dataType === API_ENUM_TO_TYPE.SCORE) {
               return !value;
             }
 
-            return safeParse(value || '[]').length <= 0;
+            return filterArray(value || '[]').length <= 0;
           case CONTROL_FILTER_WHITELIST.BOOL.value:
             if (!value) {
               return !value;
             }
 
             if (dataType === API_ENUM_TO_TYPE.ATTACHMENT) {
-              let data = safeParse(value);
+              const data: unknown = parseValue(value);
 
               if (_.isArray(data)) {
                 return data.length <= 0;
               } else {
                 return (
-                  data.attachments.length <= 0 && data.knowledgeAtts.length <= 0 && data.attachmentData.length <= 0
+                  filterArray(valueRecord(data)?.['attachments']).length <= 0 &&
+                  filterArray(valueRecord(data)?.['knowledgeAtts']).length <= 0 &&
+                  filterArray(valueRecord(data)?.['attachmentData']).length <= 0
                 );
               }
             } else if (dataType === API_ENUM_TO_TYPE.RELATION) {
-              return safeParse(value).length <= 0;
+              return filterArray(value).length <= 0;
             }
 
             return !value;
@@ -949,7 +1011,7 @@ export default function filterFn({
             if (!value) {
               return !value;
             } else {
-              return safeParse(value).length <= 0;
+              return filterArray(value).length <= 0;
             }
 
           case CONTROL_FILTER_WHITELIST.RELATE_RECORD.value:
@@ -969,7 +1031,7 @@ export default function filterFn({
                 return !value;
               } else {
                 return (
-                  safeParse(value).length <= 0 ||
+                  filterArray(value).length <= 0 ||
                   (typeof value === 'string' && value.startsWith('deleteRowIds')) ||
                   value === '0'
                 );
@@ -983,7 +1045,7 @@ export default function filterFn({
               return filterEmptyChildTableRows(state.rows).length <= 0;
             } else {
               if (_.isObject(value)) {
-                return filterEmptyChildTableRows(value.rows).length <= 0;
+                return filterEmptyChildTableRows(parsedRecords(valueRecord(value)?.['rows'])).length <= 0;
               }
 
               return value === '0' || !value;
@@ -1009,32 +1071,32 @@ export default function filterFn({
                 dataType === API_ENUM_TO_TYPE.AREA_INPUT_24) &&
               !!compareValues
             ) {
-              return safeParse(value || '{}').code;
+              return parsedEntity(value || '{}').code;
               //等级
             } else if (dataType === API_ENUM_TO_TYPE.SCORE) {
               return !!value;
             }
 
-            return safeParse(value || '[]').length > 0;
+            return filterArray(value || '[]').length > 0;
           case CONTROL_FILTER_WHITELIST.BOOL.value:
             if (!value) {
               return !!value;
             }
 
             if (dataType === API_ENUM_TO_TYPE.ATTACHMENT) {
-              let data = safeParse(value);
+              const data: unknown = parseValue(value);
 
               if (_.isArray(data)) {
                 return data.length > 0;
               } else {
                 return !(
-                  data.attachments.length <= 0 &&
-                  data.knowledgeAtts.length <= 0 &&
-                  data.attachmentData.length <= 0
+                  filterArray(valueRecord(data)?.['attachments']).length <= 0 &&
+                  filterArray(valueRecord(data)?.['knowledgeAtts']).length <= 0 &&
+                  filterArray(valueRecord(data)?.['attachmentData']).length <= 0
                 );
               }
             } else if (dataType === API_ENUM_TO_TYPE.RELATION) {
-              return safeParse(value).length > 0;
+              return filterArray(value).length > 0;
             }
 
             return !!value;
@@ -1043,7 +1105,7 @@ export default function filterFn({
             if (!value) {
               return !!value;
             } else {
-              return safeParse(value).length > 0;
+              return filterArray(value).length > 0;
             }
 
           case CONTROL_FILTER_WHITELIST.RELATE_RECORD.value:
@@ -1062,7 +1124,7 @@ export default function filterFn({
               if (!value) {
                 return !!value;
               } else {
-                return safeParse(value).length > 0;
+                return filterArray(value).length > 0;
               }
             }
 
@@ -1073,7 +1135,7 @@ export default function filterFn({
               return filterEmptyChildTableRows(state.rows).length > 0;
             } else {
               if (_.isObject(value)) {
-                return filterEmptyChildTableRows(value.rows).length > 0;
+                return filterEmptyChildTableRows(parsedRecords(valueRecord(value)?.['rows'])).length > 0;
               }
 
               return Number(value) > 0;
@@ -1091,12 +1153,12 @@ export default function filterFn({
           case CONTROL_FILTER_WHITELIST.NUMBER.value:
             if (isEmptyValue(value)) return false;
             return (
-              parseFloat(value) <= parseFloat(filterData.maxValue || 0) &&
-              parseFloat(value) >= parseFloat(filterData.minValue || 0)
+              filterNumber(value) <= filterNumber(filterData.maxValue || 0) &&
+              filterNumber(value) >= filterNumber(filterData.minValue || 0)
             );
           case CONTROL_FILTER_WHITELIST.DATE.value:
             return value
-              ? moment(value).isBetween(
+              ? moment(filterDate(value)).isBetween(
                   moment(
                     control.type === 16
                       ? dateAppZoneToServerZone(filterData.minValue, appTimeZone)
@@ -1107,16 +1169,16 @@ export default function filterFn({
                       ? dateAppZoneToServerZone(filterData.maxValue, appTimeZone)
                       : filterData.maxValue,
                   ).format(formatMode),
-                  timeLevel,
+                  filterMomentUnit(timeLevel),
                   '[]',
                 )
               : false;
           case CONTROL_FILTER_WHITELIST.TIME.value:
             return value
-              ? moment(value, formatMode).isBetween(
+              ? moment(filterDate(value), formatMode).isBetween(
                   moment(filterData.minValue, formatMode).format(`YYYY-MM-DD ${formatMode}`),
                   moment(filterData.maxValue, formatMode).format(`YYYY-MM-DD ${formatMode}`),
-                  timeLevel,
+                  filterMomentUnit(timeLevel),
                   '[]',
                 )
               : false;
@@ -1131,8 +1193,8 @@ export default function filterFn({
                 return !!value;
               }
 
-              const { code } = safeParse(value || '{}');
-              const areaValues = compareValues.map(it => safeParse(it, '{}').id);
+              const { code } = parsedEntity(value || '{}');
+              const areaValues = compareValues.map(it => parsedEntity(it).id);
               return _.includes(areaValues, code);
               // 部门
             }
@@ -1151,12 +1213,12 @@ export default function filterFn({
           case CONTROL_FILTER_WHITELIST.NUMBER.value:
             if (isEmptyValue(value)) return true;
             return (
-              parseFloat(value) > parseFloat(filterData.maxValue || 0) ||
-              parseFloat(value) < parseFloat(filterData.minValue || 0)
+              filterNumber(value) > filterNumber(filterData.maxValue || 0) ||
+              filterNumber(value) < filterNumber(filterData.minValue || 0)
             );
           case CONTROL_FILTER_WHITELIST.DATE.value:
             return value
-              ? !moment(value).isBetween(
+              ? !moment(filterDate(value)).isBetween(
                   moment(
                     control.type === 16
                       ? dateAppZoneToServerZone(filterData.minValue, appTimeZone)
@@ -1167,16 +1229,16 @@ export default function filterFn({
                       ? dateAppZoneToServerZone(filterData.maxValue, appTimeZone)
                       : filterData.maxValue,
                   ).format(formatMode),
-                  timeLevel,
+                  filterMomentUnit(timeLevel),
                   '[]',
                 )
               : false;
           case CONTROL_FILTER_WHITELIST.TIME.value:
             return value
-              ? !moment(value, formatMode).isBetween(
+              ? !moment(filterDate(value), formatMode).isBetween(
                   moment(filterData.minValue, formatMode).format(`YYYY-MM-DD ${formatMode}`),
                   moment(filterData.maxValue, formatMode).format(`YYYY-MM-DD ${formatMode}`),
-                  timeLevel,
+                  filterMomentUnit(timeLevel),
                   '[]',
                 )
               : false;
@@ -1191,8 +1253,8 @@ export default function filterFn({
                 return !!value;
               }
 
-              const { code } = safeParse(value || '{}');
-              const areaValues = compareValues.map(it => safeParse(it, '{}').id);
+              const { code } = parsedEntity(value || '{}');
+              const areaValues = compareValues.map(it => parsedEntity(it).id);
               return !_.includes(areaValues, code);
               // 部门
             }
@@ -1210,14 +1272,19 @@ export default function filterFn({
         switch (conditionGroupType) {
           case CONTROL_FILTER_WHITELIST.NUMBER.value:
             if (isEmptyValue(value) || isEmptyValue(compareValue)) return false;
-            return parseFloat(value) > parseFloat(compareValue);
+            return filterNumber(value) > filterNumber(compareValue);
           case CONTROL_FILTER_WHITELIST.DATE.value:
             let day = dayFn(filterData, compareValue, false, currentControl, appTimeZone);
-            return !value || (!!dynamicSource.length && !compareValue) ? false : moment(value).isAfter(day, timeLevel);
+            return !value || (!!dynamicSource.length && !compareValue)
+              ? false
+              : moment(filterDate(value)).isAfter(day, filterMomentUnit(timeLevel));
           case CONTROL_FILTER_WHITELIST.TIME.value:
             return !value || (!!dynamicSource.length && !compareValue)
               ? false
-              : moment(value, formatMode).isAfter(formatFnTimeValue(compareValue, formatMode), timeLevel);
+              : moment(filterDate(value), formatMode).isAfter(
+                  formatFnTimeValue(compareValue, formatMode),
+                  filterMomentUnit(timeLevel),
+                );
           default:
             return true;
         }
@@ -1229,16 +1296,19 @@ export default function filterFn({
         switch (conditionGroupType) {
           case CONTROL_FILTER_WHITELIST.NUMBER.value:
             if (isEmptyValue(value) || isEmptyValue(compareValue)) return false;
-            return parseFloat(value) >= parseFloat(compareValue);
+            return filterNumber(value) >= filterNumber(compareValue);
           case CONTROL_FILTER_WHITELIST.DATE.value:
             let day = dayFn(filterData, compareValue, false, currentControl, appTimeZone);
             return !value || (!!dynamicSource.length && !compareValue)
               ? false
-              : moment(value).isSameOrAfter(day, timeLevel);
+              : moment(filterDate(value)).isSameOrAfter(day, filterMomentUnit(timeLevel));
           case CONTROL_FILTER_WHITELIST.TIME.value:
             return !value || (!!dynamicSource.length && !compareValue)
               ? false
-              : moment(value, formatMode).isSameOrAfter(formatFnTimeValue(compareValue, formatMode), timeLevel);
+              : moment(filterDate(value), formatMode).isSameOrAfter(
+                  formatFnTimeValue(compareValue, formatMode),
+                  filterMomentUnit(timeLevel),
+                );
           default:
             return true;
         }
@@ -1250,14 +1320,19 @@ export default function filterFn({
         switch (conditionGroupType) {
           case CONTROL_FILTER_WHITELIST.NUMBER.value:
             if (isEmptyValue(value) || isEmptyValue(compareValue)) return false;
-            return parseFloat(value) < parseFloat(compareValue);
+            return filterNumber(value) < filterNumber(compareValue);
           case CONTROL_FILTER_WHITELIST.DATE.value:
             let day = dayFn(filterData, compareValue, true, currentControl, appTimeZone);
-            return !value || (!!dynamicSource.length && !compareValue) ? false : moment(value).isBefore(day, timeLevel);
+            return !value || (!!dynamicSource.length && !compareValue)
+              ? false
+              : moment(filterDate(value)).isBefore(day, filterMomentUnit(timeLevel));
           case CONTROL_FILTER_WHITELIST.TIME.value:
             return !value || (!!dynamicSource.length && !compareValue)
               ? false
-              : moment(value, formatMode).isBefore(formatFnTimeValue(compareValue, formatMode), timeLevel);
+              : moment(filterDate(value), formatMode).isBefore(
+                  formatFnTimeValue(compareValue, formatMode),
+                  filterMomentUnit(timeLevel),
+                );
           default:
             return true;
         }
@@ -1269,17 +1344,20 @@ export default function filterFn({
         switch (conditionGroupType) {
           case CONTROL_FILTER_WHITELIST.NUMBER.value:
             if (isEmptyValue(value) || isEmptyValue(compareValue)) return false;
-            return parseFloat(value) <= parseFloat(compareValue);
+            return filterNumber(value) <= filterNumber(compareValue);
           case CONTROL_FILTER_WHITELIST.DATE.value:
             // 早于等于按需求取动态日期的开始点，与早于保持一致。
             let day = dayFn(filterData, compareValue, true, currentControl, appTimeZone);
             return !value || (!!dynamicSource.length && !compareValue)
               ? false
-              : moment(value).isSameOrBefore(day, timeLevel);
+              : moment(filterDate(value)).isSameOrBefore(day, filterMomentUnit(timeLevel));
           case CONTROL_FILTER_WHITELIST.TIME.value:
             return !value || (!!dynamicSource.length && !compareValue)
               ? false
-              : moment(value, formatMode).isSameOrBefore(formatFnTimeValue(compareValue, formatMode), timeLevel);
+              : moment(filterDate(value), formatMode).isSameOrBefore(
+                  formatFnTimeValue(compareValue, formatMode),
+                  filterMomentUnit(timeLevel),
+                );
           default:
             return true;
         }
@@ -1301,22 +1379,29 @@ export default function filterFn({
 
             if (_.includes([10, 101], dateRange)) {
               return hasToday
-                ? moment(value).isSameOrBefore(todayDate, timeLevel) && moment(value).isSameOrAfter(day, timeLevel)
-                : moment(value).isBefore(todayDate, timeLevel) && moment(value).isSameOrAfter(day, timeLevel);
+                ? moment(filterDate(value)).isSameOrBefore(todayDate, filterMomentUnit(timeLevel)) &&
+                    moment(filterDate(value)).isSameOrAfter(day, filterMomentUnit(timeLevel))
+                : moment(filterDate(value)).isBefore(todayDate, filterMomentUnit(timeLevel)) &&
+                    moment(filterDate(value)).isSameOrAfter(day, filterMomentUnit(timeLevel));
             } else if (_.includes([11, 102], dateRange)) {
               return hasToday
-                ? moment(value).isSameOrAfter(todayDate, timeLevel) && moment(value).isSameOrBefore(day, timeLevel)
-                : moment(value).isAfter(todayDate, timeLevel) && moment(value).isSameOrBefore(day, timeLevel);
+                ? moment(filterDate(value)).isSameOrAfter(todayDate, filterMomentUnit(timeLevel)) &&
+                    moment(filterDate(value)).isSameOrBefore(day, filterMomentUnit(timeLevel))
+                : moment(filterDate(value)).isAfter(todayDate, filterMomentUnit(timeLevel)) &&
+                    moment(filterDate(value)).isSameOrBefore(day, filterMomentUnit(timeLevel));
               // 本周、本月、本季度、今年等等
             } else if (_.includes([4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17], dateRange) && !dynamicSource.length) {
               return dateFn(filterData, value, true, appTimeZone);
             }
 
-            return moment(value).isSame(day, timeLevel);
+            return moment(filterDate(value)).isSame(day, filterMomentUnit(timeLevel));
           case CONTROL_FILTER_WHITELIST.TIME.value:
             return !value || (!!dynamicSource.length && !compareValue)
               ? false
-              : moment(value, formatMode).isSame(formatFnTimeValue(compareValue, formatMode), timeLevel);
+              : moment(filterDate(value), formatMode).isSame(
+                  formatFnTimeValue(compareValue, formatMode),
+                  filterMomentUnit(timeLevel),
+                );
           default:
             return true;
         }
@@ -1338,25 +1423,31 @@ export default function filterFn({
 
             if (dateRange === 10) {
               return (
-                (hasToday ? moment(value).isAfter(todayDate, 'day') : moment(value).isSameOrAfter(todayDate, 'day')) ||
-                moment(value).isBefore(day, 'day')
+                (hasToday
+                  ? moment(filterDate(value)).isAfter(todayDate, 'day')
+                  : moment(filterDate(value)).isSameOrAfter(todayDate, 'day')) ||
+                moment(filterDate(value)).isBefore(day, 'day')
               );
             } else if (dateRange === 11) {
               return (
                 (hasToday
-                  ? moment(value).isBefore(todayDate, 'day')
-                  : moment(value).isSameOrBefore(todayDate, 'day')) || moment(value).isAfter(day, 'day')
+                  ? moment(filterDate(value)).isBefore(todayDate, 'day')
+                  : moment(filterDate(value)).isSameOrBefore(todayDate, 'day')) ||
+                moment(filterDate(value)).isAfter(day, 'day')
               );
               // 本周、本月、本季度、今年等等
             } else if (_.includes([4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17], dateRange) && !dynamicSource.length) {
               return dateFn(filterData, value, false, appTimeZone);
             }
 
-            return !moment(value).isSame(day, timeLevel);
+            return !moment(filterDate(value)).isSame(day, filterMomentUnit(timeLevel));
           case CONTROL_FILTER_WHITELIST.TIME.value:
             return !value || (!!dynamicSource.length && !compareValue)
               ? false
-              : !moment(value, formatMode).isSame(formatFnTimeValue(compareValue, formatMode), timeLevel);
+              : !moment(filterDate(value), formatMode).isSame(
+                  formatFnTimeValue(compareValue, formatMode),
+                  filterMomentUnit(timeLevel),
+                );
           default:
             return true;
         }
@@ -1368,12 +1459,12 @@ export default function filterFn({
           case CONTROL_FILTER_WHITELIST.CASCADER.value:
             let isInValue = false;
             _.map(compareValues, it => {
-              let itValue = dynamicSource.length > 0 ? it || {} : safeParse(it || '{}');
-              let valueN = _.isArray(value) ? value : safeParse(value || '[]', 'array');
+              const itValue = dynamicSource.length > 0 ? filterEntity(it) : parsedEntity(it || '{}');
+              let valueN = Array.isArray(value) ? value : filterArray(value || '[]');
               _.map(valueN, item => {
                 let curId = dynamicSource.length > 0 ? itValue.sid : itValue.id;
 
-                if (curId === item.sid) {
+                if (curId === filterEntity(item).sid) {
                   isInValue = true;
                 }
               });
@@ -1391,13 +1482,13 @@ export default function filterFn({
             let isInValue = true;
             _.map(compareValues, it => {
               // 这里只用得到这两个 id：动态值那一路给的是 sid，静态 JSON 那一路给的是 id
-              let itValue: { sid?: string; id?: string } = {};
-              itValue = dynamicSource.length > 0 ? it || {} : safeParse(it || '{}');
-              let valueN = _.isArray(value) ? value : safeParse(value || '[]', 'array');
+              let itValue: { sid?: string | undefined; id?: string | undefined } = {};
+              itValue = dynamicSource.length > 0 ? filterEntity(it) : parsedEntity(it || '{}');
+              let valueN = Array.isArray(value) ? value : filterArray(value || '[]');
               _.map(valueN, item => {
                 let curId = dynamicSource.length > 0 ? itValue.sid : itValue.id;
 
-                if (curId === item.sid) {
+                if (curId === filterEntity(item).sid) {
                   isInValue = false;
                 }
               });
@@ -1414,9 +1505,14 @@ export default function filterFn({
             if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
             return _.isEqual(
-              compareValues.map((it: SelectedEntityValue = {}) => it.id || it.accountId).sort(),
-              safeParse(value || '[]')
-                .map(its => its.accountId)
+              compareValues
+                .map(it => {
+                  const entity = filterEntity(it);
+                  return entity.id || entity.accountId;
+                })
+                .sort(),
+              filterArray(value || '[]')
+                .map(its => filterEntity(its).accountId)
                 .sort(),
             );
           case CONTROL_FILTER_WHITELIST.OPTIONS.value:
@@ -1425,9 +1521,14 @@ export default function filterFn({
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
               return _.isEqual(
-                compareValues.map((it: SelectedEntityValue = {}) => it.id || it.departmentId).sort(),
-                safeParse(value || '[]')
-                  .map(its => its.departmentId)
+                compareValues
+                  .map(it => {
+                    const entity = filterEntity(it);
+                    return entity.id || entity.departmentId;
+                  })
+                  .sort(),
+                filterArray(value || '[]')
+                  .map(its => filterEntity(its).departmentId)
                   .sort(),
               );
               // 组织角色
@@ -1435,18 +1536,25 @@ export default function filterFn({
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
               return _.isEqual(
-                compareValues.map((it: SelectedEntityValue = {}) => it.id || it.organizeId).sort(),
-                safeParse(value || '[]')
-                  .map(its => its.organizeId)
+                compareValues
+                  .map(it => {
+                    const entity = filterEntity(it);
+                    return entity.id || entity.organizeId;
+                  })
+                  .sort(),
+                filterArray(value || '[]')
+                  .map(its => filterEntity(its).organizeId)
                   .sort(),
               );
               // 选项
             } else if (
-              [API_ENUM_TO_TYPE.OPTIONS_10, API_ENUM_TO_TYPE.OPTIONS_11, API_ENUM_TO_TYPE.OPTIONS_9].includes(dataType)
+              [API_ENUM_TO_TYPE.OPTIONS_10, API_ENUM_TO_TYPE.OPTIONS_11, API_ENUM_TO_TYPE.OPTIONS_9].some(
+                type => type === dataType,
+              )
             ) {
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return true;
 
-              return _.isEqual(safeParse(value || '[]').sort(), compareValues.sort());
+              return _.isEqual(filterArray(value || '[]').sort(), compareValues.sort());
             }
 
             break;
@@ -1456,10 +1564,10 @@ export default function filterFn({
 
             return _.isEqual(
               compareValues
-                .map(it => (dynamicSource.length > 0 ? _.get(it, 'sid') : _.get(safeParse(it || '{}'), 'id')))
+                .map(it => (dynamicSource.length > 0 ? _.get(it, 'sid') : _.get(parsedEntity(it || '{}'), 'id')))
                 .sort(),
-              safeParse(value || '[]', 'array')
-                .map(item => item.sid)
+              filterArray(value || '[]')
+                .map(item => filterEntity(item).sid)
                 .sort(),
             );
           default:
@@ -1474,9 +1582,14 @@ export default function filterFn({
             if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
             return !_.isEqual(
-              compareValues.map((it: SelectedEntityValue = {}) => it.id || it.accountId).sort(),
-              safeParse(value || '[]', 'array')
-                .map(its => its.accountId)
+              compareValues
+                .map(it => {
+                  const entity = filterEntity(it);
+                  return entity.id || entity.accountId;
+                })
+                .sort(),
+              filterArray(value || '[]')
+                .map(its => filterEntity(its).accountId)
                 .sort(),
             );
           case CONTROL_FILTER_WHITELIST.OPTIONS.value:
@@ -1485,9 +1598,14 @@ export default function filterFn({
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
               return !_.isEqual(
-                compareValues.map((it: SelectedEntityValue = {}) => it.id || it.departmentId).sort(),
-                safeParse(value || '[]', 'array')
-                  .map(its => its.departmentId)
+                compareValues
+                  .map(it => {
+                    const entity = filterEntity(it);
+                    return entity.id || entity.departmentId;
+                  })
+                  .sort(),
+                filterArray(value || '[]')
+                  .map(its => filterEntity(its).departmentId)
                   .sort(),
               );
               // 组织角色
@@ -1495,18 +1613,25 @@ export default function filterFn({
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
               return !_.isEqual(
-                compareValues.map((it: SelectedEntityValue = {}) => it.id || it.organizeId).sort(),
-                safeParse(value || '[]', 'array')
-                  .map(its => its.organizeId)
+                compareValues
+                  .map(it => {
+                    const entity = filterEntity(it);
+                    return entity.id || entity.organizeId;
+                  })
+                  .sort(),
+                filterArray(value || '[]')
+                  .map(its => filterEntity(its).organizeId)
                   .sort(),
               );
               // 选项
             } else if (
-              [API_ENUM_TO_TYPE.OPTIONS_10, API_ENUM_TO_TYPE.OPTIONS_11, API_ENUM_TO_TYPE.OPTIONS_9].includes(dataType)
+              [API_ENUM_TO_TYPE.OPTIONS_10, API_ENUM_TO_TYPE.OPTIONS_11, API_ENUM_TO_TYPE.OPTIONS_9].some(
+                type => type === dataType,
+              )
             ) {
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
-              return !_.isEqual(safeParse(value || '[]', 'array').sort(), compareValues.sort());
+              return !_.isEqual(filterArray(value || '[]').sort(), compareValues.sort());
             }
 
             break;
@@ -1516,10 +1641,10 @@ export default function filterFn({
 
             return !_.isEqual(
               compareValues
-                .map(it => (dynamicSource.length > 0 ? _.get(it, 'sid') : _.get(safeParse(it || '{}'), 'id')))
+                .map(it => (dynamicSource.length > 0 ? _.get(it, 'sid') : _.get(parsedEntity(it || '{}'), 'id')))
                 .sort(),
-              safeParse(value || '[]', 'array')
-                .map(item => item.sid)
+              filterArray(value || '[]')
+                .map(item => filterEntity(item).sid)
                 .sort(),
             );
           default:
@@ -1533,29 +1658,38 @@ export default function filterFn({
           case CONTROL_FILTER_WHITELIST.USERS.value: // ???
             if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
-            const userCompareArr = compareValues.map((it: SelectedEntityValue = {}) => it.id || it.accountId);
-            const userArr = safeParse(value || '[]', 'array').map(it => it.accountId);
+            const userCompareArr = compareValues.map(it => {
+              const entity = filterEntity(it);
+              return entity.id || entity.accountId;
+            });
+            const userArr = filterArray(value || '[]').map(it => filterEntity(it).accountId);
             return _.every(userCompareArr, its => _.includes(userArr, its));
           case CONTROL_FILTER_WHITELIST.OPTIONS.value:
             // 部门
             if (dataType === API_ENUM_TO_TYPE.GROUP_PICKER) {
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
-              const deptCompareArr = compareValues.map((it: SelectedEntityValue = {}) => it.id || it.departmentId);
-              const deptArr = safeParse(value || '[]', 'array').map(it => it.departmentId);
+              const deptCompareArr = compareValues.map(it => {
+                const entity = filterEntity(it);
+                return entity.id || entity.departmentId;
+              });
+              const deptArr = filterArray(value || '[]').map(it => filterEntity(it).departmentId);
               return _.every(deptCompareArr, its => _.includes(deptArr, its));
               // 组织角色
             } else if (dataType === API_ENUM_TO_TYPE.ORG_ROLE) {
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
-              const orgCompareArr = compareValues.map((it: SelectedEntityValue = {}) => it.id || it.organizeId);
-              const orgArr = safeParse(value || '[]', 'array').map(it => it.organizeId);
+              const orgCompareArr = compareValues.map(it => {
+                const entity = filterEntity(it);
+                return entity.id || entity.organizeId;
+              });
+              const orgArr = filterArray(value || '[]').map(it => filterEntity(it).organizeId);
               return _.every(orgCompareArr, its => _.includes(orgArr, its));
               // 选项
             } else if (dataType === API_ENUM_TO_TYPE.OPTIONS_10) {
               if (_.isEmpty(value) && _.isEmpty(compareValues)) return false;
 
-              return _.every(compareValues, its => _.includes(safeParse(value || '[]', 'array'), its));
+              return _.every(compareValues, its => _.includes(filterArray(value || '[]'), its));
             }
 
             break;
@@ -1565,9 +1699,9 @@ export default function filterFn({
             if (_.isEmpty(value) || _.isEmpty(compareValues)) return false;
 
             const reCompareArr = compareValues.map(it =>
-              dynamicSource.length > 0 ? _.get(it, 'sid') : _.get(safeParse(it || '{}'), 'id'),
+              dynamicSource.length > 0 ? _.get(it, 'sid') : _.get(parsedEntity(it || '{}'), 'id'),
             );
-            const reArr = safeParse(value || '[]', 'array').map(it => it.sid);
+            const reArr = filterArray(value || '[]').map(it => filterEntity(it).sid);
             return _.every(reCompareArr, its => _.includes(reArr, its));
           default:
             return true;
@@ -1576,11 +1710,13 @@ export default function filterFn({
         break;
       // 文本同时包含
       case FILTER_CONDITION_TYPE.TEXT_ALLCONTAIN:
-        return compareValues.every(i => value.includes(i));
+        return compareValues.every(i => filterText(value).includes(filterText(i)));
       default:
         return true;
     }
   } catch (err) {
     console.log(err);
+    return undefined;
   }
+  return undefined;
 }

@@ -101,7 +101,7 @@ export default ({ from, data, onChange, globalSheetInfo, allControls = [] }) => 
                   <div className="labelWrap labelBetween">
                     <Checkbox
                       size="small"
-                      checked={currentWaterMark}
+                      checked={!!currentWaterMark}
                       onClick={(checked: boolean) => {
                         if (checked) {
                           setVisible(false);

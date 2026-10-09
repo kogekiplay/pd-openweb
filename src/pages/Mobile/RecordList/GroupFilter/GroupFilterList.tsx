@@ -28,6 +28,7 @@ import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilte
 import * as worksheetActions from 'src/pages/worksheet/redux/actions';
 import * as navFilterActions from 'src/pages/worksheet/redux/actions/navFilter';
 import type { RootState } from 'src/redux/types';
+import { parsedSettingStrings } from 'src/utils/advancedSettingBoundary';
 import { getFilledRequestParams } from 'src/utils/common';
 import { getTitleTextFromControls } from 'src/utils/control';
 import { getAdvanceSetting } from 'src/utils/control';
@@ -189,7 +190,7 @@ const GroupFilterList = props => {
   }, [rowIdForFilter, navGroup]);
 
   const fetch = () => {
-    let { navfilters = '[]', navshow } = getAdvanceSetting(view);
+    let { navfilters: rawNavfilters = '[]', navshow } = getAdvanceSetting(view);
 
     if (navGroup.controlId === 'wfstatus' && !isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit)) {
       navshow = '0';
@@ -199,12 +200,7 @@ const GroupFilterList = props => {
       setGroupFilterData([]);
       return;
     } else {
-      try {
-        navfilters = JSON.parse(navfilters);
-      } catch (error) {
-        console.log(error);
-        navfilters = [];
-      }
+      const navfilters = parsedSettingStrings(rawNavfilters);
 
       if (navshow === '2' && navfilters.length <= 0) {
         //设置了显示项=显示指定项 且 未指定 按空处理
@@ -504,14 +500,9 @@ const GroupFilterList = props => {
     }
 
     let isOption = [9, 10, 11, 28].includes(source.type) || [9, 10, 11, 28].includes(source.sourceControlType); //是否选项
-    let { navfilters = '[]', navshow } = getAdvanceSetting(view);
+    let { navfilters: rawNavfilters = '[]', navshow } = getAdvanceSetting(view);
 
-    try {
-      navfilters = JSON.parse(navfilters);
-    } catch (error) {
-      console.log(error);
-      navfilters = [];
-    }
+    const navfilters = parsedSettingStrings(rawNavfilters);
 
     //系统字段关闭，且为状态时，默认显示成 全部
     if (navGroup.controlId === 'wfstatus' && !isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit)) {

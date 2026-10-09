@@ -14,8 +14,8 @@ import { getAdvanceSetting } from 'src/pages/widgetConfig/util/setting';
 import { updateRecordLockStatus } from 'src/pages/worksheet/common/recordInfo/crtl.js';
 import type { RootState } from 'src/redux/types';
 import { renderText as renderCellText } from 'src/utils/control';
-import { handleRecordClick } from 'src/utils/record';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import { handleRecordClick } from 'src/utils/record';
 
 export const RecordWrapper = styled.div`
   height: 32px;
@@ -188,7 +188,7 @@ let Record = class Record extends Component<any, any> {
     );
 
     if (checkrange === '1') {
-      if (value.length > +max || value.length < +min) {
+      if (value.length > Number(max) || value.length < Number(min)) {
         const errorText = FORM_ERROR_TYPE_TEXT.TEXT_RANGE({
           value,
           advancedSetting: {

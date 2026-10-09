@@ -32,7 +32,7 @@ const Con = styled.div`
 `;
 
 export default function Switch({ data, displayRow }) {
-  const defaultValue = getAdvanceSetting(data, 'defsource');
+  const defaultValue = getAdvanceSetting(data, 'defsource') || [];
   const isChecked = get(head(defaultValue), 'staticValue') === '1';
   const { showtype } = getAdvanceSetting(data);
   const itemnames = getSwitchItemNames(data);
@@ -61,7 +61,7 @@ export default function Switch({ data, displayRow }) {
           size="middle"
           disabled={true}
           checkedValue={get(head(defaultValue), 'staticValue')}
-          data={itemnames.map(item => ({ text: item.value, value: item.key }))}
+          data={itemnames.map(item => ({ text: item?.value, value: item?.key }))}
         />
       </Con>
     );

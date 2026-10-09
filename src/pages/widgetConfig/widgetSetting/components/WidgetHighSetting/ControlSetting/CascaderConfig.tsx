@@ -1,3 +1,4 @@
+import { filterSettings, widgetObject } from '../../../../util/advancedSettingBoundary';
 import { Fragment, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -39,12 +40,13 @@ const LAYER_OPTIONS = Array.from({ length: 10 }).map((_item, index) => ({
 
 const topFiltersToDefsource = data => {
   const topFilters = getAdvanceSetting(data, 'topfilters') || [];
+  if (!topFilters.every(item => typeof item === 'string')) throw new TypeError('Cascader root values must be JSON strings');
   const tempDefSourcce = topFilters.map(def => {
-    const item = safeParse(def);
+    const item: unknown = safeParse(def);
     return {
       cid: '',
       rcid: '',
-      staticValue: JSON.stringify([_.isObject(item) ? item.id : item]),
+      staticValue: JSON.stringify([widgetObject(item) ? item['id'] : item]),
       relateSheetName: _.get(item, 'name'),
     };
   });
@@ -60,7 +62,7 @@ const topFiltersToDefsource = data => {
 export default function CascaderConfig(props) {
   const { data, onChange, globalSheetControls } = props;
   const { relationControls = [] }: { relationControls: FormControl[]; [key: string]: any } = data;
-  const [visibleInfo, setVisibleInfo] = useState({
+  const [visibleInfo, setVisibleInfo] = useState<Partial<Record<'filtersVisible' | 'topfiltersVisible' | 'searchVisible', boolean>>>({
     filtersVisible: false,
     topfiltersVisible: false,
     searchVisible: false,
@@ -80,7 +82,7 @@ export default function CascaderConfig(props) {
 
   const renderFilter = (key: string) => {
     const visibleKey = `${key}Visible`;
-    const filterData = getAdvanceSetting(data, key) || [];
+    const filterData = filterSettings(getAdvanceSetting(data, key));
     return (
       <Fragment>
         {visibleInfo[visibleKey] && (

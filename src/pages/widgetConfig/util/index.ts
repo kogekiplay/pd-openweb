@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-import _, { findIndex, flatten, get, includes, isArray, isObject, keys, omit, sortBy } from 'lodash';
+import _, { findIndex, flatten, get, includes, keys, omit, sortBy } from 'lodash';
 import { navigateTo } from 'src/router/navigateTo';
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import type { FormControl } from 'src/utils/controlTypes';
@@ -325,20 +325,7 @@ export const adjustControlSize = (row = [], data) => {
   return { ...data, size: WHOLE_SIZE / nextRow.length };
 };
 
-export const getAdvanceSetting = (data, key?) => {
-  const setting = get(data, ['advancedSetting']) || {};
-  if (!key) return setting;
-  let value = get(setting, key);
-  if (isArray(value) || isObject(value)) return value;
-  if (!value) return '';
-
-  try {
-    return JSON.parse(value);
-  } catch (error) {
-    console.log(error);
-    return '';
-  }
-};
+export { getWidgetAdvanceSetting as getAdvanceSetting } from './advancedSettingBoundary';
 
 export const getRelationText = (enumDefault: number) => {
   return (
@@ -616,7 +603,7 @@ export const filterSysControls = (controls: FormControl[] = []) => {
 };
 
 // 拖拽补key,完成去key
-export const getSortItems = (items = [], addKey: boolean, controlId = '') => {
+export const getSortItems = <T extends object>(items: T[] = [], addKey: boolean, controlId = '') => {
   return items.map((i, index) => {
     return addKey ? { ...i, key: `${controlId}item_${index}` } : { ..._.omit(i, ['key']) };
   });

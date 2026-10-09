@@ -3,27 +3,37 @@ import _, { get, includes } from 'lodash';
 import moment from 'moment';
 import { HAVE_VALUE_STYLE_WIDGET } from 'src/components/Form/core/enum';
 import type { ControlAdvancedSetting, FormControl } from 'src/utils/controlTypes';
+import { decodeKnownSetting, isKnownSettingKey } from './advancedSettingBoundary';
+import type { KnownAdvancedSettingKey, KnownAdvancedSettings } from './advancedSettingTypes';
 
 const NEW_RECORD_FROM = [2, 4, 5, 21];
 
 // 获取advancedSetting属性转化为对象
-export const getAdvanceSetting = (data?: FormControl, key?: string | string[]) => {
-  const setting = get(data, ['advancedSetting']) || {};
+export function getAdvanceSetting(data?: FormControl): ControlAdvancedSetting;
+export function getAdvanceSetting<K extends KnownAdvancedSettingKey>(
+  data: FormControl | undefined,
+  key: K,
+): KnownAdvancedSettings[K] | '';
+export function getAdvanceSetting(data: FormControl | undefined, key: string | string[]): unknown;
+export function getAdvanceSetting(data?: FormControl, key?: string | string[]): ControlAdvancedSetting | unknown {
+  const setting: ControlAdvancedSetting = data?.advancedSetting || {};
 
   if (!key) return setting;
 
-  let value = get(setting, key);
+  const value: unknown = get(setting, key);
 
   if (!value) return '';
-  if (_.isArray(value) || _.isObject(value)) return value;
+  if (_.isArray(value) || _.isObject(value))
+    return typeof key === 'string' && isKnownSettingKey(key) ? decodeKnownSetting(key, value) : value;
 
   try {
-    return JSON.parse(value);
+    const parsed: unknown = JSON.parse(typeof value === 'string' ? value : String(value));
+    return typeof key === 'string' && isKnownSettingKey(key) ? decodeKnownSetting(key, parsed) : parsed;
   } catch (error) {
     console.log(error);
     return '';
   }
-};
+}
 
 // 更新advancedSetting数据
 export const handleAdvancedSettingChange = (data: FormControl, obj: ControlAdvancedSetting) => {
@@ -647,7 +657,7 @@ export const dealMaskValue = (data: FormControl = {}) => {
     // 开头显示指定字数
     case BEGIN_ENUM.APPOINT_NUM:
       maskValue = dealValueByCharNum({ charNum: mdchar, value, maskValue, isBegin: true });
-      const mdNum = mdchar && parseInt(mdchar);
+      const mdNum = mdchar ? parseInt(String(mdchar), 10) : 0;
 
       switch (maskend) {
         //指定字数(重叠位置舍弃)

@@ -113,12 +113,9 @@ class CustomScore extends Component<any, any> {
     const { score, lastScore } = this.state;
     const { className, data = {}, hideTip, hideText = false, from, backgroundColor } = this.props;
     const isOldData = !(data.advancedSetting || {}).itemicon;
-    const {
-      max,
-      itemicon,
-      showvalue,
-      itemcolor: defaultColor,
-    } = isOldData ? getDefaultData(data) : getAdvanceSetting(data);
+    const settings = isOldData ? { ...getDefaultData(data), showvalue: undefined } : getAdvanceSetting(data);
+    const { max: rawMax, itemicon, showvalue, itemcolor: defaultColor } = settings;
+    const max = Number(rawMax);
     const itemcolor = JSON.parse(defaultColor || '{}');
     const itemnames = getAdvanceSetting(data, 'itemnames') || [];
     const list = Array.from({ length: max });

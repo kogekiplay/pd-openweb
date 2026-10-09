@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Dropdown, Icon } from 'ming-ui';
 import { getAdvanceSetting } from 'src/pages/widgetConfig/util/index.js';
 import { isSameType } from 'src/pages/worksheet/common/ViewConfig/util.js';
+import { settingStrings } from 'src/utils/advancedSettingBoundary';
 import SortCustom from './customSet';
 import SortInput from './SortInput';
 
@@ -97,7 +98,7 @@ export default function (props) {
         {canCustom && (
           <span
             className={cx('custom hoverColorPrimary TxtCenter Hand', {
-              has: getAdvanceSetting(view, customitemsKey).length > 0,
+              has: settingStrings(getAdvanceSetting(view, customitemsKey)).length > 0,
             })}
             onClick={() => {
               setShow(true);

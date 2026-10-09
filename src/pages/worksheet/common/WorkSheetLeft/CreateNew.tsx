@@ -153,13 +153,14 @@ class CreateSheetOrPage extends Component<any, any> {
       isApp: false,
     })
       .then(res => {
-        const { isSuccess, content, errorMsg } = res.data || {};
-
-        if (!isSuccess) {
-          alert(errorMsg, 3);
+        const response = res.data;
+        if (!response?.isSuccess) {
+          alert(response?.errorMsg, 3);
+          this.setState({ loading: false });
+          return;
         }
 
-        this.setState({ loading: false, sourceAi: true, remark: content.value });
+        this.setState({ loading: false, sourceAi: true, remark: response.content.value });
       })
       .catch(() => {
         this.setState({ loading: false });

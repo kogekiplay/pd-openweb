@@ -430,6 +430,8 @@ interface Window {
   // 嵌入式入口（src/pages/embed/mingoEntry/widgetEntry.ts）会换上自己的精简翻译函数，并打上这个标记防止重复安装
   _l: typeof _l & { __mingoEntryLite?: boolean };
   md: any;
+  /** 客服 SDK 由门户入口按需注入，未安装时保持缺省。 */
+  mdCustomerService?: (() => void) | undefined;
   mdyAPI: any;
   agentAPI: any;
   safeParse: any;

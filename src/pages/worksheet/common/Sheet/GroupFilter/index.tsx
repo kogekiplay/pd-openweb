@@ -10,9 +10,11 @@ import { updateGroupFilter } from 'worksheet/redux/actions';
 import { getNavGroupCount } from 'worksheet/redux/actions/navFilter';
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum.js';
 import type { RootState } from 'src/redux/types';
+import { parsedSettingStrings } from 'src/utils/advancedSettingBoundary';
 import { emitter } from 'src/utils/common';
 import { getFilledRequestParams } from 'src/utils/common';
 import { getAdvanceSetting } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { AREA, PARTICULARLY_CITY, TYPES } from './constants.js';
 import NavGroupCon from './NavGroup';
 import NavSearch from './NavSearch.jsx';
@@ -26,7 +28,6 @@ import {
   renderTxt,
   transformCountsToData,
 } from './util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 let getNavGroupRequest = null;
 let preWorksheetIds = [];
@@ -231,19 +232,14 @@ function GroupFilter(props) {
 
   const fetch = useCallback(() => {
     const { navGroup, view } = latestValues.current;
-    let { navfilters = '[]', navshow } = getAdvanceSetting(view);
+    let { navfilters: rawNavfilters = '[]', navshow } = getAdvanceSetting(view);
     setOpenKeys([]);
     if (!navGroup.controlId) {
       setGroupFilterData([]);
       return;
     }
 
-    try {
-      navfilters = JSON.parse(navfilters);
-    } catch (error) {
-      console.log(error);
-      navfilters = [];
-    }
+    const navfilters = parsedSettingStrings(rawNavfilters);
 
     if (navshow === '2' && navfilters.length <= 0) {
       //设置了显示项=显示指定项 且 未指定 按空处理
@@ -319,23 +315,36 @@ function GroupFilter(props) {
     }
   }, []);
 
-  const fetchData = useCallback(({ worksheetId, viewId, rowId, cb }: { worksheetId?: string; viewId?: string; rowId?: string; [key: string]: any }) => {
-    const { isOpenGroup, view, source, controls, base } = latestValues.current;
-    if (!isOpenGroup) return;
-    const requestParams = prepareRequestParams(
-      { worksheetId, viewId, rowId, appId: base.appId },
-      view,
-      source,
-      controls,
-      searchRef.current.value,
-    );
-    handleRequestCancellation();
-    const apiRequest = makeApiRequest({ worksheetId, viewId, rowId, params: requestParams });
-    apiRequest.then(result => {
-      cleanupRequest();
-      processApiResponse({ result, worksheetId, viewId, rowId, cb });
-    });
-  }, []);
+  const fetchData = useCallback(
+    ({
+      worksheetId,
+      viewId,
+      rowId,
+      cb,
+    }: {
+      worksheetId?: string;
+      viewId?: string;
+      rowId?: string;
+      [key: string]: any;
+    }) => {
+      const { isOpenGroup, view, source, controls, base } = latestValues.current;
+      if (!isOpenGroup) return;
+      const requestParams = prepareRequestParams(
+        { worksheetId, viewId, rowId, appId: base.appId },
+        view,
+        source,
+        controls,
+        searchRef.current.value,
+      );
+      handleRequestCancellation();
+      const apiRequest = makeApiRequest({ worksheetId, viewId, rowId, params: requestParams });
+      apiRequest.then(result => {
+        cleanupRequest();
+        processApiResponse({ result, worksheetId, viewId, rowId, cb });
+      });
+    },
+    [],
+  );
 
   //处理请求取消逻辑
   const handleRequestCancellation = () => {
@@ -406,94 +415,108 @@ function GroupFilter(props) {
   }, []);
 
   //处理API响应
-  const processApiResponse = useCallback(({ result, worksheetId, viewId, rowId, cb }: { worksheetId?: string; viewId?: string; rowId?: string; [key: string]: any }) => {
-    const { source, view, navGroupData } = latestValues.current;
-    const isArea = AREA.includes(source.type);
-    const { navshow, navlayer } = getAdvanceSetting(view);
-    const { navfilters = '[]' } = getAdvanceSetting(view);
-    const filters = safeParse(navfilters, 'array');
-
-    // 处理视图已删除的情况
-    if (result.resultCode === 4) {
-      return fetchData({ worksheetId, viewId: '', rowId, cb });
-    }
-
-    // 处理无权限情况
-    if (result.resultCode === 7) {
-      return updateNavGroupData({ filterData: navGroupData, data: [], rowId, cb });
-    }
-
-    // 处理成功响应
-    let responseData = [];
-
-    // 处理地区数据
-    if (isArea) {
-      responseData = (result.citys || []).map(item => ({
-        value: item.id,
-        txt: searchRef.current.value ? item.path : item.name, // 有关键词时显示完整路径
-        isLeaf:
-          item.last ||
-          (item?.path?.split('/')?.length || 1) - 1 >= source.enumDefault2 ||
-          (source.enumDefault2 === 2 && PARTICULARLY_CITY.includes(item.id)), // 是否是最后一级
-        text: JSON.stringify({ code: item.id, name: item.path }),
-      }));
-    }
-    // 处理部门数据
-    else if (source.type === 27 && navshow === '2' && navlayer === '999') {
-      responseData = (result || []).map(item => ({
-        value: item.departmentId,
-        txt: item.departmentName,
-        isLeaf: !item.haveSubDepartment, // 没有子部门
-        text: JSON.stringify({ departmentId: item.departmentId, departmentName: item.departmentName }),
-      }));
-    } // 级联 关联
-    else {
-      let data = result.data || [];
-      const controls: FormControl[] = _.get(result, ['template', 'controls']) || [];
-      const control = controls.find((item: FormControl) => item.attribute === 1);
-
-      if (navlayer && Number(navlayer) > 1 && !rowId) {
-        //配置了默认展开层级 接口一次性的返回对于数据 处理成相关结果
-        responseData = getListByNavlayer(data, Number(navlayer), {
-          source,
-          keywords: searchRef.current.value,
-          control,
-          viewId,
-          navGroup,
-        });
-        setOpenKeys(
-          data
-            .filter(o => {
-              const childrenids = safeParse(o.childrenids, 'array') || [];
-              return childrenids.length > 0 && !!data.find(o => o.rowid === childrenids[0]);
-            })
-            .map(o => o.rowid),
-        );
-      } else {
-        let data = result.data || [];
-
-        if (source.type !== 35 && filters.length > 0 && navshow === '2') {
-          const ids = filters.map(value => safeParse(value).id);
-          data = ids.map(id => data.find(o => o.rowid === id)).filter(Boolean);
-        }
-
-        responseData = data.map(item => ({
-          value: item.rowid,
-          txt: renderTxt(source, searchRef.current.value, item, control, viewId, navGroup), // 渲染显示文本
-          isLeaf: !item.childrenids, // 没有子节点时是叶子节点
-          text: item[control.controlId], // 原始文本
-        }));
-      }
-    }
-
-    // 更新导航组数据
-    updateNavGroupData({
-      filterData: navGroupData,
-      data: responseData,
+  const processApiResponse = useCallback(
+    ({
+      result,
+      worksheetId,
+      viewId,
       rowId,
       cb,
-    });
-  }, []);
+    }: {
+      worksheetId?: string;
+      viewId?: string;
+      rowId?: string;
+      [key: string]: any;
+    }) => {
+      const { source, view, navGroupData } = latestValues.current;
+      const isArea = AREA.includes(source.type);
+      const { navshow, navlayer } = getAdvanceSetting(view);
+      const { navfilters = '[]' } = getAdvanceSetting(view);
+      const filters = safeParse(navfilters, 'array');
+
+      // 处理视图已删除的情况
+      if (result.resultCode === 4) {
+        return fetchData({ worksheetId, viewId: '', rowId, cb });
+      }
+
+      // 处理无权限情况
+      if (result.resultCode === 7) {
+        return updateNavGroupData({ filterData: navGroupData, data: [], rowId, cb });
+      }
+
+      // 处理成功响应
+      let responseData = [];
+
+      // 处理地区数据
+      if (isArea) {
+        responseData = (result.citys || []).map(item => ({
+          value: item.id,
+          txt: searchRef.current.value ? item.path : item.name, // 有关键词时显示完整路径
+          isLeaf:
+            item.last ||
+            (item?.path?.split('/')?.length || 1) - 1 >= source.enumDefault2 ||
+            (source.enumDefault2 === 2 && PARTICULARLY_CITY.includes(item.id)), // 是否是最后一级
+          text: JSON.stringify({ code: item.id, name: item.path }),
+        }));
+      }
+      // 处理部门数据
+      else if (source.type === 27 && navshow === '2' && navlayer === '999') {
+        responseData = (result || []).map(item => ({
+          value: item.departmentId,
+          txt: item.departmentName,
+          isLeaf: !item.haveSubDepartment, // 没有子部门
+          text: JSON.stringify({ departmentId: item.departmentId, departmentName: item.departmentName }),
+        }));
+      } // 级联 关联
+      else {
+        let data = result.data || [];
+        const controls: FormControl[] = _.get(result, ['template', 'controls']) || [];
+        const control = controls.find((item: FormControl) => item.attribute === 1);
+
+        if (navlayer && Number(navlayer) > 1 && !rowId) {
+          //配置了默认展开层级 接口一次性的返回对于数据 处理成相关结果
+          responseData = getListByNavlayer(data, Number(navlayer), {
+            source,
+            keywords: searchRef.current.value,
+            control,
+            viewId,
+            navGroup,
+          });
+          setOpenKeys(
+            data
+              .filter(o => {
+                const childrenids = safeParse(o.childrenids, 'array') || [];
+                return childrenids.length > 0 && !!data.find(o => o.rowid === childrenids[0]);
+              })
+              .map(o => o.rowid),
+          );
+        } else {
+          let data = result.data || [];
+
+          if (source.type !== 35 && filters.length > 0 && navshow === '2') {
+            const ids = filters.map(value => safeParse(value).id);
+            data = ids.map(id => data.find(o => o.rowid === id)).filter(Boolean);
+          }
+
+          responseData = data.map(item => ({
+            value: item.rowid,
+            txt: renderTxt(source, searchRef.current.value, item, control, viewId, navGroup), // 渲染显示文本
+            isLeaf: !item.childrenids, // 没有子节点时是叶子节点
+            text: item[control.controlId], // 原始文本
+          }));
+        }
+      }
+
+      // 更新导航组数据
+      updateNavGroupData({
+        filterData: navGroupData,
+        data: responseData,
+        rowId,
+        cb,
+      });
+    },
+    [],
+  );
 
   // 清理请求状态
   const cleanupRequest = () => {
@@ -504,7 +527,10 @@ function GroupFilter(props) {
   const loadData = obj => fetchData(obj);
 
   //更新当前的navGroupData
-  const updateNavGroupData = ({ filterData, data, rowId, cb }: { rowId?: string; [key: string]: any }, notUpdate?: boolean | undefined) => {
+  const updateNavGroupData = (
+    { filterData, data, rowId, cb }: { rowId?: string; [key: string]: any },
+    notUpdate?: boolean | undefined,
+  ) => {
     if (rowId && !searchRef.current.value) {
       filterData.forEach(item => {
         if (item.value === rowId) {

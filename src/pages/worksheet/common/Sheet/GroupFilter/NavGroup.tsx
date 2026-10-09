@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import { permitList } from 'src/pages/FormSet/config';
 import { isOpenPermit } from 'src/pages/FormSet/util';
+import { parsedSettingStrings } from 'src/utils/advancedSettingBoundary';
 import { getAdvanceSetting } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 import { AREA, TYPES } from './constants.js';
@@ -87,14 +88,9 @@ export default function NavGroup(props) {
   }
 
   let isOption = [9, 10, 11, 28].includes(source.type) || [9, 10, 11, 28].includes(source.sourceControlType); //是否选项
-  let { navfilters = '[]', navshow } = getAdvanceSetting(view);
+  let { navfilters: rawNavfilters = '[]', navshow } = getAdvanceSetting(view);
 
-  try {
-    navfilters = JSON.parse(navfilters);
-  } catch (error) {
-    console.log(error);
-    navfilters = [];
-  }
+  const navfilters = parsedSettingStrings(rawNavfilters);
 
   //系统字段关闭，且为状态时，默认显示成 全部
   if (navGroup.controlId === 'wfstatus' && !isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit)) {

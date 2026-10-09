@@ -1,3 +1,4 @@
+import { sortSettings } from '../../util/advancedSettingBoundary';
 import { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
 import _, { filter, find, findIndex, isEmpty } from 'lodash';
@@ -79,7 +80,7 @@ export default function SubListSetting(props) {
   const [{ sortVisible }, setConfig] = useSetState({
     sortVisible: false,
   });
-  const sorts = _.isArray(getAdvanceSetting(data, 'sorts')) ? getAdvanceSetting(data, 'sorts') : [];
+  const sorts = sortSettings(getAdvanceSetting(data, 'sorts'));
   const uniqueControls = getAdvanceSetting(data, 'uniquecontrols') || [];
 
   const filterSysRelate = relationControls.filter(i => !_.includes(ALL_SYS, i.controlId));

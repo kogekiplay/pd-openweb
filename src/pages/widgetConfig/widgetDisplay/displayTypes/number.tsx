@@ -32,7 +32,7 @@ const NumberControlWrap = styled.div`
 export default function FormulaNumber({ data }) {
   const { hint } = data;
   const { showtype, min, max, numinterval, showinput } = getAdvanceSetting(data);
-  const defaultValue = getAdvanceSetting(data, 'defsource');
+  const defaultValue = getAdvanceSetting(data, 'defsource') || [];
   const defValue = get(head(defaultValue), 'staticValue');
   const isStep = showtype === '3';
 
@@ -46,9 +46,9 @@ export default function FormulaNumber({ data }) {
         itemnames={itemnames}
         itemcolor={itemcolor}
         showInput={showinput === '1'}
-        min={parseFloat(min)}
-        max={parseFloat(max)}
-        step={parseFloat(numinterval)}
+        min={parseFloat(String(min))}
+        max={parseFloat(String(max))}
+        step={parseFloat(String(numinterval))}
         value={levelSafeParse(defValue)}
       />
     );

@@ -1,4 +1,4 @@
-﻿import update from 'immutability-helper';
+import update from 'immutability-helper';
 import _, { find, flatten, get, some } from 'lodash';
 import homeAppAjax from 'src/api/homeApp';
 import sheetAjax from 'src/api/worksheet';
@@ -19,6 +19,7 @@ import { formatOriginFilterGroupValue } from 'src/pages/worksheet/common/WorkShe
 import { fireWhenViewLoaded as PcFireWhenViewLoaded, refreshSheet } from 'src/pages/worksheet/redux/actions/index.js';
 import { canEditApp, sortDataByGroupItems } from 'src/pages/worksheet/redux/actions/util';
 import type { AppDispatch, GetState, RootState } from 'src/redux/types';
+import { calendarPairs } from 'src/utils/advancedSettingBoundary';
 import { getTranslateInfo } from 'src/utils/app';
 import { getFilledRequestParams, getRequest } from 'src/utils/common';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
@@ -1116,15 +1117,10 @@ export const getCalendarData = () => {
       colorid = '',
       begindate = '',
       enddate = '',
-      calendarcids = '[]',
+      calendarcids: rawCalendarCids = '[]',
     } = getAdvanceSetting(view);
 
-    try {
-      calendarcids = JSON.parse(calendarcids);
-    } catch (error) {
-      calendarcids = [];
-      console.log(error);
-    }
+    let calendarcids = calendarPairs(rawCalendarCids);
 
     let colorList = colorid ? controls.find(it => it.controlId === colorid) || [] : [];
     let timeControls = getTimeControls(controls);
@@ -1150,9 +1146,9 @@ export const getCalendarData = () => {
 
     if (viewType) {
       if (['dayGridWeek', 'timeGridWeek'].includes(viewType)) {
-        typeStr = isTimeStyle(calendarInfo[0].startData) ? 'timeGridWeek' : 'dayGridWeek';
+        typeStr = isTimeStyle(calendarInfo[0]?.startData) ? 'timeGridWeek' : 'dayGridWeek';
       } else if (['timeGridDay', 'dayGridDay'].includes(viewType)) {
-        typeStr = isTimeStyle(calendarInfo[0].startData) ? 'timeGridDay' : 'dayGridDay';
+        typeStr = isTimeStyle(calendarInfo[0]?.startData) ? 'timeGridDay' : 'dayGridDay';
       } else {
         typeStr = viewType;
       }
@@ -1164,7 +1160,7 @@ export const getCalendarData = () => {
         calendarInfo,
         unweekday,
         colorOptions: colorList.options || [],
-        initialView: typeStr ? typeStr : getCalendarViewType(calendarType, calendarInfo[0].startData),
+        initialView: typeStr ? typeStr : getCalendarViewType(calendarType, calendarInfo[0]?.startData),
       },
     });
   };

@@ -60,11 +60,11 @@ export default function ApiSearchConfig(props) {
   const [visible, setVisible] = useState(false);
 
   const searchableControls = formatControlsToDropdown(
-    controls.filter(item => TEXT_TYPE_CONTROL.includes(item.type) && /^\w{24}$/.test(item.controlId)),
+    controls.filter(item => TEXT_TYPE_CONTROL.some(type => type === item.type) && /^\w{24}$/.test(item.controlId || '')),
   );
   const defaultSearchControl =
     get(
-      controls.find(item => item.attribute === 1 && TEXT_TYPE_CONTROL.includes(item.type)),
+      controls.find(item => item.attribute === 1 && TEXT_TYPE_CONTROL.some(type => type === item.type)),
       'controlId',
     ) || get(head(searchableControls), 'value');
 
@@ -72,9 +72,9 @@ export default function ApiSearchConfig(props) {
   const { showtype } = config;
 
   const [{ searchfilters, searchcontrol, searchtype, clicksearch }, setState] = useSetState({
-    searchtype: config.searchtype || '1',
-    searchcontrol: config.searchcontrol || defaultSearchControl,
-    clicksearch: config.clicksearch || '0',
+    searchtype: config['searchtype'] || '1',
+    searchcontrol: config['searchcontrol'] || defaultSearchControl,
+    clicksearch: config['clicksearch'] || '0',
     searchfilters: getAdvanceSetting(data, 'searchfilters') || [],
   });
 
@@ -180,7 +180,7 @@ export default function ApiSearchConfig(props) {
                           <SelectControl
                             list={filterOnlyShowField(controls).filter(({ type, sourceControlType, controlId }) => {
                               const ids = searchfilters.map(
-                                ({ controlId }: { controlId?: string; [key: string]: any }) => controlId,
+                                ({ controlId }) => controlId,
                               );
                               return (
                                 _.includes(FASTFILTER_CONDITION_TYPE, type === 30 ? sourceControlType : type) &&

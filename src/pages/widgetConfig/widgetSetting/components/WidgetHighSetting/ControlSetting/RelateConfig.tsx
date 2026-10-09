@@ -113,7 +113,7 @@ export default function RelateConfig(props) {
               <div className="labelWrap">
                 <Checkbox
                   size="small"
-                  checked={resultfilters && resultfilters.length > 0}
+                  checked={!!resultfilters && resultfilters.length > 0}
                   onClick={(checked: boolean) => {
                     if (checked) {
                       onChange(handleAdvancedSettingChange(data, { resultfilters: '' }));
