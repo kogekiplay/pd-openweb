@@ -139,7 +139,7 @@ export default class DialogBatchEdit extends Component<any, any> {
     this.props.onCancel();
   };
   resetPassword = () => {
-    const { selectedAccountIds = [], projectId, emptyUserSet } = this.props;
+    const { selectedAccountIds = [], projectId } = this.props;
     let { password } = this.state;
     const { passwordRegexTip, passwordRegex } = _.get(md, ['global', 'SysSettings']) || {};
 
@@ -160,12 +160,9 @@ export default class DialogBatchEdit extends Component<any, any> {
       .then(result => {
         if (result) {
           alert(_l('修改成功'), 1);
-          this.setState({ batchResetPasswordVisible: false, password: '' });
         } else {
           alert(_l('修改失败'), 2);
         }
-
-        emptyUserSet();
       });
   };
   override render() {

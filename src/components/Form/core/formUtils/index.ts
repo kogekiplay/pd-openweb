@@ -1,6 +1,7 @@
 import { Parser } from 'hot-formula-parser';
 import _ from 'lodash';
 import moment from 'moment';
+import { getDefaultCode } from 'ming-ui/components/PhoneNumberInput/DialCodeSelect/utils';
 import { telIsValidNumber } from 'ming-ui/components/PhoneNumberInput/util';
 import { RELATE_RECORD_SHOW_TYPE } from 'worksheet/constants/enum';
 import { formatColumnToText } from 'src/pages/widgetConfig/util/data.js';
@@ -1162,9 +1163,11 @@ export const onValidator = ({
 
       // 手机
       if (item.type === 3) {
-        // 香港6262开头不识别特殊处理
-        // 中国电话特殊处理
-        errorType = !value || telIsValidNumber(value) ? '' : FORM_ERROR_TYPE.MOBILE_PHONE;
+        const defaultArea = parsedRecord(item.advancedSetting?.['defaultarea'] || '{}');
+        const defaultCountry = stringValue(defaultArea['iso2']) || md.global.Config.DefaultRegion || 'cn';
+        // 裸默认值按字段显示的默认区号校验，避免沿用全局实例的历史区号。
+        const phoneValue = value && !value.startsWith('+') ? `${getDefaultCode(defaultCountry)}${value}` : value;
+        errorType = !value || telIsValidNumber(phoneValue) ? '' : FORM_ERROR_TYPE.MOBILE_PHONE;
       }
 
       // 座机

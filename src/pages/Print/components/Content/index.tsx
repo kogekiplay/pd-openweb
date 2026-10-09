@@ -122,7 +122,8 @@ export default class Con extends React.Component<any, any> {
 
     // 对内分享链接
     const url = pathCompletion(`/app/${appId}/${worksheetId}/${viewId || ''}/row/${rowId || rowIdForQr}`);
-    this.setState({ shareUrl: url });
+    // 门户站内链接可能为相对路径，二维码使用配置的站点地址补齐域名。
+    this.setState({ shareUrl: md.global.Account.isPortal ? new URL(url, md.global.Config.WebUrl).href : url });
   };
 
   getPlaceholderMode = () => {
@@ -984,11 +985,13 @@ export default class Con extends React.Component<any, any> {
                                   </span>
                                   {workItemLog &&
                                     workItemLog.fields &&
-                                    workItemLog.fields.map(({ name, toValue }: { name?: string; [key: string]: any }, index) => (
-                                      <span key={index}>
-                                        {name}：{toValue}
-                                      </span>
-                                    ))}
+                                    workItemLog.fields.map(
+                                      ({ name, toValue }: { name?: string; [key: string]: any }, index) => (
+                                        <span key={index}>
+                                          {name}：{toValue}
+                                        </span>
+                                      ),
+                                    )}
                                   {signature && !approvePosition ? (
                                     <div
                                       style={STYLE_PRINT.worksTable_workPersons_infoSignature}

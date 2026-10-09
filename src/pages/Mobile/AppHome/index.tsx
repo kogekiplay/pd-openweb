@@ -207,7 +207,8 @@ class AppHome extends React.Component<any, any> {
   };
 
   renderHeader = () => {
-    const isAppLibrary = window.platformENV.isOverseas || window.platformENV.isLocal;
+    const isAppLibrary =
+      (window.platformENV.isOverseas || window.platformENV.isLocal) && !md.global.SysSettings.hideTemplateLibrary;
 
     return (
       <div className="appHomeHeader flexRow alignItemsCenter">

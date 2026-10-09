@@ -48,7 +48,10 @@ interface Boundaries {
 }
 const globalScope = globalThis;
 globalScope.md = {
-  global: { Account: { accountId: 'self', fullname: 'Current User', avatarMiddle: 'avatar', isPortal: false } },
+  global: {
+    Account: { accountId: 'self', fullname: 'Current User', avatarMiddle: 'avatar', isPortal: false },
+    Config: { DefaultRegion: 'cn' },
+  },
 };
 globalScope.window = { isPublicWorksheet: false, worksheetControlsCache: {} };
 globalScope.localStorage = { getItem: () => null };
@@ -61,8 +64,14 @@ const errors = {
   DATE_TIME_RANGE: 'DATE_TIME_RANGE',
   RULE_ERROR: 'RULE_ERROR',
 };
+const checkedPhones: string[] = [];
 const stubs: Record<string, unknown> = {
-  'ming-ui/components/PhoneNumberInput/util': { telIsValidNumber: () => true },
+  'ming-ui/components/PhoneNumberInput/util': {
+    telIsValidNumber: (value: string) => {
+      checkedPhones.push(value);
+      return true;
+    },
+  },
   'worksheet/constants/enum': { RELATE_RECORD_SHOW_TYPE: { CARD: 3 } },
   'src/pages/widgetConfig/util/data.js': { formatColumnToText: (control: Control) => String(control.value ?? '') },
   'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util': {
@@ -140,6 +149,11 @@ function loadModule(file: string): Record<string, unknown> & Partial<FormUtils &
     moduleLike.exports,
     (name: string) => {
       if (Object.hasOwn(stubs, name)) return stubs[name];
+      if (name === 'ming-ui/components/PhoneNumberInput/DialCodeSelect/utils') {
+        return loadModule(
+          path.resolve(__dirname, '../../../../ming-ui/components/PhoneNumberInput/DialCodeSelect/utils.ts'),
+        );
+      }
       if (name.startsWith('.')) {
         const original =
           full.startsWith('/private/tmp/hap-form-utils-strict-20261009/') && ['./helper', './ruleUtils'].includes(name)
@@ -167,6 +181,35 @@ const source = process.env.FORM_UTIL_SOURCE || path.join(__dirname, 'index.ts');
 const utils = loadModule(source) as FormUtils;
 const helper = loadModule(path.join(__dirname, 'helper.ts')) as HelperUtils;
 const boundaries = loadModule(path.join(__dirname, 'valueBoundary.ts')) as Boundaries;
+
+const phoneUtils = loadModule(
+  path.resolve(__dirname, '../../../../ming-ui/components/PhoneNumberInput/DialCodeSelect/utils.ts'),
+) as {
+  parsePhoneValue: (input: { value?: string; defaultCountry?: string; code?: string }) => {
+    code: string;
+    numberValue: string;
+  };
+};
+assert.deepEqual(
+  phoneUtils.parsePhoneValue({ value: '13800138000', defaultCountry: 'cn', code: '+852' }),
+  { code: '+86', numberValue: '13800138000' },
+  'A new bare phone default resets a previously selected country code',
+);
+assert.deepEqual(phoneUtils.parsePhoneValue({ value: '2025550123', defaultCountry: 'us', code: '+86' }), {
+  code: '+1',
+  numberValue: '2025550123',
+});
+assert.deepEqual(
+  phoneUtils.parsePhoneValue({ value: '+85262621234', defaultCountry: 'cn', code: '+86' }),
+  { code: '+852', numberValue: '62621234' },
+  'Explicit international prefixes remain selected',
+);
+utils.onValidator({ item: { type: 3, value: '2025550123', advancedSetting: { defaultarea: '{"iso2":"us"}' } } });
+assert.equal(checkedPhones.pop(), '+12025550123', 'Validation uses the field country for a bare default');
+utils.onValidator({ item: { type: 3, value: '13800138000' } });
+assert.equal(checkedPhones.pop(), '+8613800138000', 'Validation falls back to the configured default region');
+utils.onValidator({ item: { type: 3, value: '+85262621234', advancedSetting: { defaultarea: '{"iso2":"us"}' } } });
+assert.equal(checkedPhones.pop(), '+85262621234', 'Validation retains an explicit international prefix');
 
 // The source and target controls are real payloads, not a second implementation of the helper.
 assert.equal(

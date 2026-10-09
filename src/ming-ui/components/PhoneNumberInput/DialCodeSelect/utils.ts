@@ -189,6 +189,11 @@ export const parsePhoneValue = ({
     return { code: defaultCode, numberValue: '' };
   }
 
+  // 裸默认值或外部回填使用字段默认区号，避免继续创建时沿用上一条记录的区号。
+  if (!String(value).trim().startsWith('+')) {
+    return { code: defaultCode, numberValue: String(value) };
+  }
+
   const parsed = parsePhoneNumberFromString(value);
 
   if (parsed) {

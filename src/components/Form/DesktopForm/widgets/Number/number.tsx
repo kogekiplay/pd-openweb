@@ -44,7 +44,7 @@ const NumberComp = props => {
   const [isEditing, setIsEditing] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [originValue, setOriginValue] = useState('');
-  const [inputDraft, setInputDraft] = useState({ value: '', flag, sourceValue: value });
+  const [inputDraft, setInputDraft] = useState({ value: '', flag, hasInput: false });
 
   const numberRef = useRef<HTMLInputElement | null>(null);
 
@@ -65,7 +65,7 @@ const NumberComp = props => {
   const onFocus = e => {
     setIsFocused(true);
     setOriginValue(e.target.value.trim());
-    setInputDraft({ value: `${e.target.value ?? ''}`, flag, sourceValue: value });
+    setInputDraft({ value: `${e.target.value ?? ''}`, flag, hasInput: false });
     if (_.isFunction(triggerCustomEvent)) {
       triggerCustomEvent(ADD_EVENT_ENUM.FOCUS);
     }
@@ -95,7 +95,7 @@ const NumberComp = props => {
       value = accDiv(parseFloat(value), 100);
     }
 
-    setInputDraft({ value: draftValue, flag, sourceValue: value });
+    setInputDraft({ value: draftValue, flag, hasInput: true });
     onChange(value);
   };
 
@@ -180,10 +180,8 @@ const NumberComp = props => {
   }
 
   const inputValue = displayValue;
-  const numberInputValue =
-    isFocused && inputDraft.flag === flag && `${inputDraft.sourceValue ?? ''}` === `${value ?? ''}`
-      ? inputDraft.value
-      : inputValue;
+  // 实际输入后保留小数点等中间态；仅聚焦时跟随父级，避免连续创建时缓存重置前的值。
+  const numberInputValue = isFocused && inputDraft.hasInput && inputDraft.flag === flag ? inputDraft.value : inputValue;
 
   displayValue = getAutoValue(displayValue);
 

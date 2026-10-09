@@ -150,6 +150,9 @@ function load(file: string): Modules {
   };
   const localRequire = (name: string): unknown => {
     if (Object.hasOwn(stubs, name)) return stubs[name];
+    if (name === 'ming-ui/components/PhoneNumberInput/DialCodeSelect/utils') {
+      return { getDefaultCode: () => '+86' };
+    }
     if (name === 'lodash' || name === 'moment' || name === 'hot-formula-parser') return require(name);
     if (name === 'src/pages/worksheet/common/WorkSheetFilter/util') {
       const text = fs.readFileSync(path.join(root, 'src/pages/worksheet/common/WorkSheetFilter/util.ts'), 'utf8');
