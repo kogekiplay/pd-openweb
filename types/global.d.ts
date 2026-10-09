@@ -422,6 +422,10 @@ declare var google: any; // Google 地图/登录 SDK，外链 script（eslint.co
 declare var ActiveXObject: any; // 旧版 IE 宿主对象；TS 只在 lib.scripthost.d.ts 提供，默认 lib 不含（eslint.config.js 登记）
 
 interface Window {
+  /** 原生客户端回传 base64 JSON 的统一事件入口，由 project.ts 注册。 */
+  MD_APP_RESPONSE: (base64: string) => void;
+  /** SelectRecords/RecordCardListDialog 把接口已定义的关联控件数组按工作表 ID 缓存。 */
+  worksheetControlsCache?: Record<string, import('../src/utils/controlTypes').FormControl[] | undefined> | undefined;
   // 与上面同源的 window.X 形态访问点（src/common/global.js、src/common/cookies.js）
   // 嵌入式入口（src/pages/embed/mingoEntry/widgetEntry.ts）会换上自己的精简翻译函数，并打上这个标记防止重复安装
   _l: typeof _l & { __mingoEntryLite?: boolean };

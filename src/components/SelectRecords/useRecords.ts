@@ -3,9 +3,9 @@ import _, { find, get, isEmpty, isFunction, trim, uniqBy } from 'lodash';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
 import sheetAjax from 'src/api/worksheet';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import { getTranslateInfo } from 'src/utils/app';
 import type { FormControl } from 'src/utils/controlTypes';
-import type { WorksheetView } from 'src/pages/worksheet/types';
 import { replaceAdvancedSettingTranslateInfo, replaceControlsTranslateInfo } from 'src/utils/translate';
 
 export const ERROR_STATUS = {
@@ -352,11 +352,22 @@ export default function useRecords(props) {
   useEffect(() => {
     setManageView(undefined);
     // Public form endpoints do not expose management views.
-    if (!useColumnStyle || !worksheetId || (window.isPublicWorksheet && !_.get(window, 'shareState.isPublicWorkflowRecord'))) return undefined;
+    if (
+      !useColumnStyle ||
+      !worksheetId ||
+      (window.isPublicWorksheet && !_.get(window, 'shareState.isPublicWorkflowRecord'))
+    )
+      return undefined;
     let cancelled = false;
-    sheetAjax.getWorksheetViewById({ appId, worksheetId, viewId: worksheetId }, { silent: true })
-      .then(data => { if (!cancelled) setManageView(data as WorksheetView); }).catch(() => {});
-    return () => { cancelled = true; };
+    sheetAjax
+      .getWorksheetViewById({ appId, worksheetId, viewId: worksheetId }, { silent: true })
+      .then(data => {
+        if (!cancelled) setManageView(data as WorksheetView);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, [useColumnStyle, worksheetId, appId]);
 
   const hasMore = listMode && records.length < total;
@@ -411,10 +422,11 @@ export function getWorksheetInfo(worksheetId: string, parentWorksheetId) {
       langType: window.shareState.shareId ? getCurrentLangCode() : undefined,
     })
     .then(data => {
-      window.worksheetControlsCache = {};
+      const worksheetControlsCache: NonNullable<Window['worksheetControlsCache']> = {};
+      window.worksheetControlsCache = worksheetControlsCache;
       get(data, 'template.controls', []).forEach(c => {
         if (c.type === 29) {
-          window.worksheetControlsCache[c.dataSource] = c.relationControls;
+          worksheetControlsCache[c.dataSource] = c.relationControls;
         }
       });
       const appId = _.get(window, 'appInfo.id') || data.appId;

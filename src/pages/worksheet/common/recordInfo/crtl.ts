@@ -469,8 +469,9 @@ export function updateRecordControl({
           if (data.resultCode === 32) {
             const errorResult = getRuleErrorInfo(rules, data.badData);
 
-            if (_.get(errorResult, '0.errorInfo.0')) {
-              alert(_l('编辑失败，%0', _.get(errorResult, '0.errorInfo.0.errorMessage')), 2);
+            const firstError = errorResult[0]?.errorInfo[0];
+            if (firstError) {
+              alert(_l('编辑失败，%0', firstError.errorMessage || ''), 2);
             }
 
             reject();

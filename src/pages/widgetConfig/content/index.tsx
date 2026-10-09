@@ -19,7 +19,7 @@ const originFixedInfo = {
 
 export default function Content(props) {
   const { globalSheetInfo = {}, isRecycle, activeWidget = {}, setActiveWidget, styleInfo = {}, setStyleInfo } = props;
-  const { store: { mingoCreateWorksheetAction, mingoIsCreatingWorksheetStatus } = {} } = useGlobalStore() || {};
+  const { store: { mingoCreateWorksheetAction, mingoIsCreatingWorksheetStatus } = {} } = useGlobalStore({ optional: true }) || {};
   const [fixedInfo, setPanelFixed] = useSetState(originFixedInfo);
   const [{ widgetVisible, settingVisible }, setVisible] = useSetState({
     widgetVisible: false,

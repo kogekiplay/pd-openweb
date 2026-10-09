@@ -99,7 +99,7 @@ export default class CloseNet extends Component<CloseNetProps, CloseNetState> {
               <div id="stepOne">
                 <div className="Bold Font24 title">
                   <i className="icon-error error Font28 mRight8" />
-                  {_l('关闭组织：%0', currentProject.companyName)}
+                  {_l('关闭组织：%0', String(currentProject.companyName))}
                 </div>
                 <div className="mTop22 Font14">
                   <span className="textPrimary">{_l('组织关闭后，所有人将无法访问组织和应用。')}</span>

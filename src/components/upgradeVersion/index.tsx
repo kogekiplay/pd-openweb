@@ -70,7 +70,7 @@ export function buriedUpgradeVersionDialog(
     )[0];
 
     if (featureId === 38) {
-      const nextVersionType = parseInt(version.versionIdV2 || 0) + 1;
+      const nextVersionType = parseInt(version.versionIdV2 || '0') + 1;
 
       usableVersion = {
         versionName: TYPE_NAME[nextVersionType],

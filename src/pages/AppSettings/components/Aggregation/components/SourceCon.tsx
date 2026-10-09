@@ -242,7 +242,7 @@ export default function SourceCon(props) {
         )}
 
         {sourceDtList.length > 0 &&
-          (['2', '3'].includes(_.get(getSyncLicenseInfo(projectId) || {}, 'version.versionIdV2')) && !canAdd ? (
+          (_.includes(['2', '3'], getSyncLicenseInfo(projectId).version?.versionIdV2) && !canAdd ? (
             ''
           ) : (
             <React.Fragment>

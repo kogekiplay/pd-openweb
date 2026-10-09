@@ -15,8 +15,8 @@ import {
 import { browserIsMobile, pathCompletion } from 'src/utils/common';
 import { getDefaultCount } from 'src/utils/control';
 import { isSheetDisplay } from 'src/utils/controlCommon';
-import { getRelateRecordRowIds } from 'src/utils/domain/control/value';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import { getRelateRecordRowIds } from 'src/utils/domain/control/value';
 import { FORM_ERROR_TYPE } from './config.js';
 import {
   calcDefaultValueFunction,
@@ -26,6 +26,7 @@ import {
   getDynamicValue,
 } from './formUtils';
 import { replaceStr } from './formUtils/helper';
+import { eventLinkValue } from './formUtils/valueBoundary';
 import { dealAuthAccount, getParamsByConfigs, handleUpdateApi } from './searchUtils';
 import { formatControlToServer } from './utils';
 
@@ -812,10 +813,13 @@ const triggerCustomActions = async props => {
         break;
       // 打开链接
       case ACTION_VALUE_ENUM.LINK:
-        const linkInfo = getDynamicData(props, {
-          type: 2,
-          advancedSetting: { defsource: message },
-        });
+        const linkInfo = eventLinkValue(
+          getDynamicData(props, {
+            type: 2,
+            advancedSetting: { defsource: message },
+          }),
+        );
+        if (linkInfo === undefined) break;
 
         if (advancedSetting.opentype === '2') {
           if (/^https?:\/\/.+$/.test(linkInfo)) {

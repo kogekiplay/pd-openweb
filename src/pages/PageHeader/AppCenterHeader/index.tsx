@@ -323,7 +323,7 @@ function AppCenterHeader(props) {
                 {currentProject.licenseType == 0
                   ? _l('免费版')
                   : _.get(currentProject, 'currentLicense.expireDays')
-                    ? _l('试用期剩余%0天', _.get(currentProject, 'currentLicense.expireDays'))
+                    ? _l('试用期剩余%0天', String(currentProject.currentLicense?.expireDays))
                     : ''}
               </div>
 

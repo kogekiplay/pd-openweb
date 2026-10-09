@@ -7,6 +7,16 @@ import { getCurrentValue } from 'src/components/Form/core/formUtils';
 import { compatibleMDJS } from 'src/utils/project';
 import ScanQRCode from './ScanQRCode';
 
+interface ScanRelationResponse {
+  enumDefault?: number | undefined;
+  controlId?: string | undefined;
+  controlName?: string | undefined;
+  title: unknown;
+  rowId?: string | undefined;
+  type?: string | undefined;
+  msg?: string | undefined;
+}
+
 export default class Widgets extends Component<any, any> {
   static override propTypes = {
     projectId: PropTypes.string,
@@ -15,7 +25,15 @@ export default class Widgets extends Component<any, any> {
   };
 
   // 关联记录关联成功将当前关联数据通过js sdk返回给APP
-  handleScanRelationLoaded = ({ enumDefault, controlId, controlName, title, rowId, type, msg }) => {
+  handleScanRelationLoaded = ({
+    enumDefault,
+    controlId,
+    controlName,
+    title,
+    rowId,
+    type,
+    msg,
+  }: ScanRelationResponse) => {
     if (enumDefault !== 2) {
       return;
     }
@@ -92,6 +110,7 @@ export default class Widgets extends Component<any, any> {
           title: getCurrentValue(titleControl, nameValue, { type: 2 }),
           rowId: row.rowid,
           type: _.includes(relateRecordIds, row.rowid) ? '3' : undefined,
+          msg: _.includes(relateRecordIds, row.rowid) ? _l('此记录已关联') : undefined,
         });
       } else {
         if (window.isMingDaoApp) {

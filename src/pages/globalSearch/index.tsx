@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import withRouter from '../../router/withRouter';
 import { Skeleton } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
@@ -11,6 +10,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import { getRequest } from 'src/utils/common';
 import { VersionProductType } from 'src/utils/enum';
 import { getCurrentProject, getFeatureStatus } from 'src/utils/project';
+import withRouter from '../../router/withRouter';
 import AppList from './components/AppList';
 import DateFilter from './components/DateFilter';
 import FilterPosition from './components/FilterPosition';
@@ -74,16 +74,18 @@ class GlobalSearch extends Component<any, any> {
   initParam() {
     const urlParam = getRequest(this.props.search);
     const { searchType, projectId, appProjectId } = this.state;
+    const querySearchType = typeof urlParam.search_type === 'string' ? urlParam.search_type : undefined;
+    const querySearchKey = typeof urlParam.search_key === 'string' ? urlParam.search_key : undefined;
 
     this.updateSearchParam({
-      searchKey: urlParam.search_key,
-      searchType: urlParam.search_type || 'all',
-      projectId: NEED_ALL_ORG_TAB.includes(urlParam.search_type)
+      searchKey: querySearchKey,
+      searchType: querySearchType || 'all',
+      projectId: NEED_ALL_ORG_TAB.some(type => type === querySearchType)
         ? 'all'
-        : urlParam.search_type !== searchType
+        : querySearchType !== searchType
           ? getCurrentProjectId()
           : projectId,
-      appProjectId: urlParam.search_type !== searchType ? getCurrentProjectId() : appProjectId,
+      appProjectId: querySearchType !== searchType ? getCurrentProjectId() : appProjectId,
       pageIndex: 1,
       dateRange: undefined,
     });
@@ -697,7 +699,7 @@ class GlobalSearch extends Component<any, any> {
                       >
                         <p className="allCount mTop16 textTertiary mLeft10">
                           {searchType === 'record' && !allowSuperSearch
-                            ? _l('“%0”功能不可用', companyName)
+                            ? _l('“%0”功能不可用', companyName || '')
                             : searchAppResCode === 2 && searchType === 'record'
                               ? _l('数据正在初始化，请耐心等待')
                               : ['app', 'record'].indexOf(searchType) < 0

@@ -15,6 +15,7 @@ import PortalUserSet from 'src/pages/PageHeader/components/PortalUserSet/index.j
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
+import { embedUrlSegment } from 'src/pages/worksheet/views/CustomWidgetView/valueBoundary';
 import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { getAppFeaturesVisible } from 'src/utils/common';
@@ -105,7 +106,7 @@ class App extends Component<any, any> {
     };
     this.contentRef = createRef();
     if (isHideTabBar) {
-      sessionStorage.setItem('hideTabBar', true);
+      sessionStorage.setItem('hideTabBar', 'true');
     }
 
     this.handleScroll = _.debounce(this.handleScroll.bind(this), 300);
@@ -329,17 +330,16 @@ class App extends Component<any, any> {
           if (o.staticValue) {
             urlList.push(o.staticValue);
           } else {
-            urlList.push(
-              getEmbedValue(
-                {
-                  projectId: detail.projectId,
-                  appId: params.appId,
-                  groupId: params.appSectionId,
-                  worksheetId: params.workSheetId,
-                },
-                o.cid,
-              ),
+            const embedValue = getEmbedValue(
+              {
+                projectId: detail.projectId,
+                appId: params.appId,
+                groupId: params.appSectionId,
+                worksheetId: params.workSheetId,
+              },
+              o.cid,
             );
+            urlList.push(embedUrlSegment(embedValue));
           }
         });
         window.open(urlList.join(''));
@@ -958,7 +958,7 @@ class App extends Component<any, any> {
               if (key === 'more') {
                 const { params } = this.props.match;
                 this.navigateTo(`/mobile/app/${params.appId}`);
-                sessionStorage.setItem('detectionUrl', 1);
+                sessionStorage.setItem('detectionUrl', '1');
               } else {
                 const item = _.find(sheetList, { workSheetId: key });
                 addBehaviorLog(item.type === 0 ? 'worksheet' : 'customPage', item.workSheetId); // 埋点

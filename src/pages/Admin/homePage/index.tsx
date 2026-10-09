@@ -144,7 +144,7 @@ export default function HomePage({ match, location: routerLocation, authority })
   }, [refreshHomePageData]);
 
   useEffect(() => {
-    document.title = _l('组织管理 - 首页 - %0', companyName);
+    document.title = _l('组织管理 - 首页 - %0', String(companyName));
     refreshHomePageData();
     isNocolySaas && displayPaySuccess();
   }, [companyName, displayPaySuccess, isNocolySaas, refreshHomePageData]);

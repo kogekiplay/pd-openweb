@@ -204,7 +204,7 @@ export default class Cancellation extends Component<any, any> {
   renderHasApplyLogout = () => {
     const { createTime, overdueDate = '', overdueDiff = 0 } = this.state;
     let diffValue = moment(createTime)
-      .add(15 * 24, 'H')
+      .add(15 * 24, 'h')
       .diff(moment(), 'H');
     let days = Math.floor(diffValue / 24);
     let hours = diffValue % 24;

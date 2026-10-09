@@ -14,6 +14,10 @@ function runWithParams(control, formData, langCode) {
 
   const result = exec(control, formData, { type: 'lib', langCode });
 
+  if (!result) {
+    console.error('Function did not return a synchronous result');
+    return '';
+  }
   if (!result.error) {
     return result.value;
   } else {
@@ -47,4 +51,5 @@ export function run(str, type = 'mobile') {
   } else if (type === 'obj') {
     return objRun(str);
   }
+  return undefined;
 }

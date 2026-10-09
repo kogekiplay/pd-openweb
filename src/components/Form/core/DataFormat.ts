@@ -26,6 +26,7 @@ import {
   toFixed,
 } from 'src/utils/control';
 import { getDatePickerConfigs } from 'src/utils/controlCommon';
+import type { RecordRow } from 'src/utils/controlTypes';
 import { compatibleMDJS, getCurrentProject } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { FORM_ERROR_TYPE, FROM, SYSTEM_ENUM, TIME_UNIT } from './config';
@@ -46,7 +47,6 @@ import {
 import { formatTimeValue, getItemFilters, getOtherWorksheetFieldValue } from './formUtils/helper';
 import type { ControlValue, FormControl, FormError, FormRule, SubListStore } from './types';
 import { calcSubTotalCount, getArrBySpliceType, halfSwitchSize, isUnTextWidget } from './utils';
-import type { RecordRow } from 'src/utils/controlTypes';
 
 /**
  * 自定义字段数据格式化
@@ -398,8 +398,8 @@ export default class DataFormat {
           item.sourceControlId &&
           item.sourceControlId[0] !== '$'
         ) {
-          const unit = (TIME_UNIT[Number(item.unit) as keyof typeof TIME_UNIT] ||
-            'd') as moment.unitOfTime.Diff & moment.unitOfTime.StartOf;
+          const unit = (TIME_UNIT[Number(item.unit) as keyof typeof TIME_UNIT] || 'd') as moment.unitOfTime.Diff &
+            moment.unitOfTime.StartOf;
           const today = moment().startOf(unit);
           const time = moment(item.sourceControlId);
 
@@ -781,7 +781,9 @@ export default class DataFormat {
             ) {
               if (String(value || '').startsWith('[')) {
                 try {
-                  const records: RecordRow[] = safeParse(value, 'array').filter((r: ControlValue) => r.sid || r.sourcevalue);
+                  const records: RecordRow[] = safeParse(value, 'array').filter(
+                    (r: ControlValue) => r.sid || r.sourcevalue,
+                  );
                   item.store.dispatch({
                     type: 'DELETE_ALL',
                   });
@@ -1264,16 +1266,17 @@ export default class DataFormat {
           item =>
             !!(
               (item.dataSource || '').indexOf(controlId) > -1 ||
-            (item.type === 38 && (item.sourceControlId || '').indexOf(controlId) > -1) ||
-            (item.advancedSetting &&
-              item.advancedSetting?.defsource &&
-              safeParse(item.advancedSetting?.defsource).filter(
-                (obj: ControlValue) =>
-                  ((!obj.rcid && obj.cid === controlId) || (obj.rcid === controlId && obj.cid)) && !obj.isAsync,
-              ).length) ||
-            ((item.advancedSetting && _.get(safeParse(item.advancedSetting?.defaultfunc), 'expression')) || '').indexOf(
-              controlId,
-            ) > -1 ||
+              (item.type === 38 && (item.sourceControlId || '').indexOf(controlId) > -1) ||
+              (item.advancedSetting &&
+                item.advancedSetting?.defsource &&
+                safeParse(item.advancedSetting?.defsource).filter(
+                  (obj: ControlValue) =>
+                    ((!obj.rcid && obj.cid === controlId) || (obj.rcid === controlId && obj.cid)) && !obj.isAsync,
+                ).length) ||
+              (
+                (item.advancedSetting && _.get(safeParse(item.advancedSetting?.defaultfunc), 'expression')) ||
+                ''
+              ).indexOf(controlId) > -1 ||
               (item.type === 37 && controlId === (item.dataSource || '').slice(1, -1))
             ),
         );
@@ -1356,9 +1359,8 @@ export default class DataFormat {
   checkFilterRegex(item: FormControl) {
     this.data.forEach(i => {
       if (
-        ((i.type === 2 && i.advancedSetting && i.advancedSetting.filterregex) || '').indexOf(
-          item.controlId as string,
-        ) > -1
+        ((i.type === 2 && i.advancedSetting && i.advancedSetting.filterregex) || '').indexOf(item.controlId as string) >
+        -1
       ) {
         const error = checkValueByFilterRegex(i, i.value, this.data);
 
@@ -1386,7 +1388,7 @@ export default class DataFormat {
     const effectBySearch = this.getFilterConfigs({}, 'init');
     return isInit
       ? !!_.find(effectBySearch, (ef: ControlValue) => ef.controlId === controlId) &&
-        !this.loadingInfo[controlId as string]
+          !this.loadingInfo[controlId as string]
       : !isInit;
   }
 
@@ -1587,7 +1589,13 @@ export default class DataFormat {
    */
   getCurrentLocation(ids: string[]) {
     // 处理定位回来慢但是用户已经选择了位置
-    ids = ids.filter(controlId => !_.get(this.data.find(o => o.controlId === controlId), 'value'));
+    ids = ids.filter(
+      controlId =>
+        !_.get(
+          this.data.find(o => o.controlId === controlId),
+          'value',
+        ),
+    );
 
     if (!ids.length) return;
 
@@ -1738,7 +1746,12 @@ export default class DataFormat {
       this.setLoadingInfo(controlId, true);
 
       // 下面按场景改 getType、挂 shareId，所以标出完整形状（getType：1 普通、3 公开表单、13 填写链接）
-      const params: { getType: number; worksheetId?: string | undefined; rowId?: string | undefined; shareId?: string } = {
+      const params: {
+        getType: number;
+        worksheetId?: string | undefined;
+        rowId?: string | undefined;
+        shareId?: string;
+      } = {
         getType: 1,
         worksheetId,
         rowId: sid,
@@ -1912,8 +1925,8 @@ export default class DataFormat {
         const isDynamicValue = item.dynamicSource && item.dynamicSource.length > 0;
         //筛选值字段
         const fieldResult =
-          _.includes(['rowid', 'currenttime'], _.get(item.dynamicSource[0] || {}, 'cid')) ||
-          _.find(this.data, da => da.controlId === _.get(item.dynamicSource[0] || {}, 'cid'));
+          _.includes(['rowid', 'currenttime'], _.get(item.dynamicSource?.[0] || {}, 'cid')) ||
+          _.find(this.data, da => da.controlId === _.get(item.dynamicSource?.[0] || {}, 'cid'));
         //条件字段
         const conditionExit = _.find(
           (controls as FormControl[]).concat(SYSTEM_CONTROLS),
@@ -1979,7 +1992,7 @@ export default class DataFormat {
             _.every(
               getItemFilters(items),
               item =>
-                _.includes(['rowid', 'currenttime'], _.get(item.dynamicSource[0] || {}, 'cid')) ||
+                _.includes(['rowid', 'currenttime'], _.get(item.dynamicSource?.[0] || {}, 'cid')) ||
                 (item.dynamicSource || []).length === 0,
             ) && isNull
           );
@@ -1999,7 +2012,7 @@ export default class DataFormat {
 
             return _.some(
               getItemFilters(items),
-              item => _.get(item.dynamicSource[0] || {}, 'cid') === control.controlId,
+              item => _.get(item.dynamicSource?.[0] || {}, 'cid') === control.controlId,
             );
           });
       default:

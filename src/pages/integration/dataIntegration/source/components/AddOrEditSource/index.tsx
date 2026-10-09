@@ -279,14 +279,17 @@ export default function AddOrEditSource(props) {
 
           {currentTab === DETAIL_TYPE.TIMING_SETTING && (
             <TimingSettingList
-              projectId={currentProject.projectId}
+              {...(currentProject.projectId === undefined ? {} : { projectId: currentProject.projectId })}
               sourceId={sourceId}
               onViewUseDetail={() => setCurrentTab(DETAIL_TYPE.USE_DETAIL)}
             />
           )}
 
           {currentTab === DETAIL_TYPE.USE_DETAIL && (
-            <UsageDetail projectId={currentProject.projectId} sourceId={sourceId} />
+            <UsageDetail
+              {...(currentProject.projectId === undefined ? {} : { projectId: currentProject.projectId })}
+              sourceId={sourceId}
+            />
           )}
         </React.Fragment>
       )}

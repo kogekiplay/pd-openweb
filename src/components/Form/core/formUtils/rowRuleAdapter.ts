@@ -42,7 +42,7 @@ const checkValueAvailable = (rule: FormRule = {}, data = [], recordId: string, f
   let isAvailable = false;
   let filterControlIds = {};
   let availableControlIds = {};
-  let transFilters = rule.filters || [[]];
+  let transFilters = rule.filters || [{}];
 
   if (from) {
     transFilters = transFilters

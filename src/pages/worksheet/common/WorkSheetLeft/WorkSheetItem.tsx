@@ -8,6 +8,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { getEmbedValue } from 'src/components/Form/core/formUtils/helper';
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import { canEditApp, canEditData } from 'src/pages/worksheet/redux/actions/util';
+import { embedUrlSegment } from 'src/pages/worksheet/views/CustomWidgetView/valueBoundary';
 import { getTranslateInfo } from 'src/utils/app';
 import { addBehaviorLog } from 'src/utils/project';
 import Drag from './Drag';
@@ -116,14 +117,16 @@ export default class WorkSheetItem extends Component<any, WorkSheetItemState> {
           urlList.push(o.staticValue);
         } else {
           urlList.push(
-            getEmbedValue(
-              {
-                projectId,
-                appId,
-                groupId,
-                worksheetId: workSheetId,
-              },
-              o.cid,
+            embedUrlSegment(
+              getEmbedValue(
+                {
+                  projectId,
+                  appId,
+                  groupId,
+                  worksheetId: workSheetId,
+                },
+                o.cid,
+              ),
             ),
           );
         }

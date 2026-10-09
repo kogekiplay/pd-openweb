@@ -2,18 +2,48 @@ import _, { get } from 'lodash';
 import moment from 'moment';
 import accountAjax from 'src/api/account';
 import actionLogAjax from 'src/api/actionLog';
-import { setSessionStorageItemSafely } from 'src/utils/platform/storage/safe';
 import projectAjax from 'src/api/project';
 import { SYS_CHART_COLORS, SYS_COLOR } from 'src/pages/Admin/settings/config';
+import { setSessionStorageItemSafely } from 'src/utils/platform/storage/safe';
+import {
+  decodeAppBridgeResponse,
+  decodeContactInfo,
+  decodeFeatureVersions,
+  decodeProjectColors,
+  decodeProjectInfo,
+  decodeProjects,
+  getSdkMethod,
+} from './projectTypes';
+import type {
+  AppBridgeRequest,
+  BehaviorLogParams,
+  BehaviorLogType,
+  ContactInfo,
+  ContactInfoKey,
+  EnabledChartScheme,
+  FiltersBridgeRequest,
+  FiltersBridgeResponse,
+  MapBridgeRequest,
+  NativeActionResponse,
+  NativeBridgeRequest,
+  NativeInteractionRequest,
+  ProjectChartScheme,
+  ProjectColor,
+  ProjectInfo,
+  ProjectNativeBridge,
+  ScanBridgeRequest,
+  ScanBridgeResponse,
+  SdkParameters,
+} from './projectTypes';
 
 // 获取当前网络信息
 // id 的调用点里既有 string，也有 localStorage.getItem 的 string | null，
 // 还有从 query 里解出来的 string | string[]（那种匹配不上，返回 {}）
-export const getCurrentProject = (id?: string | string[] | null, isExternalProject?: boolean) => {
+export const getCurrentProject = (id?: string | string[] | null, isExternalProject?: boolean): ProjectInfo => {
   if (!id) return {};
 
-  const externalProjects = _.get(md, ['global', 'Account', 'externalProjects']) || [];
-  const projects = (_.get(md, ['global', 'Account', 'projects']) || []).concat(
+  const externalProjects = decodeProjects(_.get(md, ['global', 'Account', 'externalProjects']));
+  const projects = decodeProjects(_.get(md, ['global', 'Account', 'projects'])).concat(
     isExternalProject ? externalProjects : [],
   );
   let info = _.find(projects, item => item.projectId === id);
@@ -28,12 +58,23 @@ export const getCurrentProject = (id?: string | string[] | null, isExternalProje
 /**
  * 调用 app 内的方式
  */
-export function mdAppResponse(param) {
-  return new Promise(resolve => {
+export function mdAppResponse(param: ScanBridgeRequest): Promise<ScanBridgeResponse>;
+export function mdAppResponse(param: FiltersBridgeRequest): Promise<FiltersBridgeResponse>;
+export function mdAppResponse(param: NativeInteractionRequest | MapBridgeRequest): Promise<NativeActionResponse>;
+export function mdAppResponse(param: NativeBridgeRequest): Promise<unknown>;
+export function mdAppResponse(param: AppBridgeRequest): Promise<unknown> {
+  // This finite view describes only the native bridge entry points used below.
+  const bridge: ProjectNativeBridge = window;
+  return new Promise((resolve, reject) => {
     // 注册监听
-    window.MD_APP_RESPONSE = base64 => {
-      const decodedData = window.atob(base64);
-      resolve(JSON.parse(decodeURIComponent(escape(decodedData))));
+    bridge.MD_APP_RESPONSE = (base64: string) => {
+      try {
+        const decodedData = window.atob(base64);
+        const response: unknown = JSON.parse(decodeURIComponent(escape(decodedData)));
+        resolve(decodeAppBridgeResponse(param, response));
+      } catch (error) {
+        reject(error);
+      }
     };
 
     // 触发监听的回调函数
@@ -41,9 +82,10 @@ export function mdAppResponse(param) {
     const base64 = window.btoa(string);
 
     if (window.isMacOs) {
-      window.webkit?.messageHandlers?.MD_APP_REQUEST?.postMessage(base64);
+      bridge.webkit?.messageHandlers?.MD_APP_REQUEST?.postMessage(base64);
     } else {
-      window.Android.MD_APP_REQUEST(base64);
+      if (!bridge.Android) throw new TypeError('Missing Android request bridge');
+      bridge.Android.MD_APP_REQUEST(base64);
     }
   });
 }
@@ -53,22 +95,24 @@ export function mdAppResponse(param) {
  */
 // projectId 和 getFeatureStatus 同理：下面那行 UUID 正则就是用来挡非法入参的，
 // 匹配不上直接返回 {}。调用方里有从 query 解出来的 string | string[]。
-export const getSyncLicenseInfo = (projectId: string | string[] | null | undefined) => {
+export const getSyncLicenseInfo = (projectId: string | string[] | null | undefined): ProjectInfo => {
   const { projects = [], externalProjects = [] } = md.global.Account;
-  let projectInfo = _.find(projects.concat(externalProjects), o => o.projectId === projectId) || {};
+  let projectInfo: ProjectInfo =
+    _.find(decodeProjects(projects).concat(decodeProjects(externalProjects)), o => o.projectId === projectId) || {};
 
   if (_.isEmpty(projectInfo)) {
     if (
       window.isPublicApp ||
+      typeof projectId !== 'string' ||
       !/^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$/.test(String(projectId))
     ) {
       return {};
     }
 
-    const info = projectAjax.getProjectLicenseInfo({ projectId }, { ajaxOptions: { sync: true } });
+    const info: unknown = projectAjax.getProjectLicenseInfo({ projectId }, { ajaxOptions: { sync: true } });
 
-    projectInfo = { ...info, projectId };
-    md.global.Account.externalProjects = (md.global.Account.externalProjects || []).concat(projectInfo);
+    projectInfo = { ...decodeProjectInfo(info), projectId };
+    md.global.Account.externalProjects = decodeProjects(md.global.Account.externalProjects).concat(projectInfo);
   }
 
   return projectInfo;
@@ -79,15 +123,19 @@ export const getSyncLicenseInfo = (projectId: string | string[] | null | undefin
  */
 // projectId 允许为 undefined：下面那行 UUID 正则本来就是用来挡非法入参的，
 // undefined 过不了正则、直接早返回。多处调用方的 projectId 就是可选的。
-export function getFeatureStatus(projectId: string | undefined, featureId) {
-  if (window.shareState.shareId) return;
-  if (!/^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$/.test(projectId)) return;
+export function getFeatureStatus(
+  projectId: string | null | undefined,
+  featureId: number | string | undefined,
+): string | number | undefined {
+  if (window.shareState.shareId) return undefined;
+  if (!/^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$/.test(String(projectId)))
+    return undefined;
 
   const { Versions = [] } = md.global || {};
   const { version = { versionIdV2: '-1' } } = getSyncLicenseInfo(projectId);
-  const versionInfo = _.find(Versions || [], item => item.VersionIdV2 === version.versionIdV2) || {};
+  const versionInfo = _.find(decodeFeatureVersions(Versions), item => item.VersionIdV2 === version.versionIdV2);
 
-  return (_.find(versionInfo.Products || [], item => item.ProductType === featureId) || {}).Type;
+  return _.find(versionInfo?.Products || [], item => item.ProductType === featureId)?.Type;
 }
 
 /**
@@ -100,14 +148,14 @@ export function getFeatureStatus(projectId: string | undefined, featureId) {
  * @param {boolean} isLinkVisited - 是否通过链接访问
  */
 export const addBehaviorLog = (
-  type,
-  entityId,
-  params: Record<string, unknown> = {},
+  type: string | undefined,
+  entityId: string | undefined,
+  params: BehaviorLogParams = {},
   isLinkVisited?: boolean | undefined,
 ) => {
   if (!get(md, 'global.Account.accountId')) return;
 
-  const typeObj: Record<string, number> = {
+  const typeObj: Record<BehaviorLogType, number> = {
     app: 1, // 应用
     worksheet: 2, // 工作表
     customPage: 3, // 自定义页面
@@ -138,7 +186,11 @@ export const addBehaviorLog = (
 
   // 调用 actionLogAjax.addLog 方法记录行为日志
   actionLogAjax
-    .addLog({ type: typeObj[type], entityId, params })
+    .addLog({
+      type: type && Object.prototype.hasOwnProperty.call(typeObj, type) ? typeObj[type as BehaviorLogType] : undefined,
+      entityId,
+      params,
+    })
     .then(res => {
       if (res && !(type === 'app' && !isLinkVisited) && !(type === 'worksheet' && !isLinkVisited)) {
         sessionStorage.removeItem('addBehaviorLogInfo');
@@ -154,26 +206,28 @@ export const addBehaviorLog = (
  * @param {string} projectId - 网络ID
  * @returns {Object} - 包含图表颜色和主题颜色配置的对象。
  */
-export const getProjectColor = (projectId: string) => {
+export const getProjectColor = (projectId: string): ProjectColor => {
   const { PorjectColor, Account } = md.global;
   const { projects = [] } = Account;
   const currentProjectId = localStorage.getItem('currentProjectId');
   const id = projectId || currentProjectId || _.get(projects[0], 'projectId');
-  const data = _.find(PorjectColor, { projectId: id });
+  const data = _.find(decodeProjectColors(PorjectColor), { projectId: id });
 
   if (data) {
-    const mapColor = colors =>
+    const mapColor = (colors: ProjectChartScheme[]) =>
       colors.map(item => {
-        const data = _.find(SYS_CHART_COLORS, { id: item.id });
+        const data = _.find(SYS_CHART_COLORS, scheme => scheme.id === item.id);
         return {
           ...data,
           enable: item.enable,
         };
       });
-    data.chartColor.system = _.isEmpty(data.chartColor.system) ? SYS_CHART_COLORS : mapColor(data.chartColor.system);
-    data.themeColor.system = _.isEmpty(data.themeColor.system) ? SYS_COLOR : data.themeColor.system;
-
-    return data;
+    const chartColor = data.chartColor || {};
+    const themeColor = data.themeColor || {};
+    chartColor.system = _.isEmpty(chartColor.system) ? SYS_CHART_COLORS : mapColor(chartColor.system || []);
+    themeColor.system = _.isEmpty(themeColor.system) ? SYS_COLOR : themeColor.system;
+    // Older deployments may omit one color group; use the same built-in system defaults.
+    return Object.assign(data, { chartColor, themeColor });
   } else {
     return {
       chartColor: {
@@ -201,7 +255,7 @@ export const getThemeColors = (projectId: string) => {
   // 过滤并映射自定义色，去除未启用的项
   const customColorList = (themeColor.custom || []).filter(item => item.enable !== false).map(item => item.color);
   // 合并系统色和自定义色的颜色数组
-  return systemColorList.concat(customColorList);
+  return systemColorList.concat(customColorList).filter((color): color is string => typeof color === 'string');
 };
 
 /**
@@ -217,7 +271,7 @@ export const getTimeZone = () => {
 /**
  * 日期时间转为用户时区时间
  */
-export const dateConvertToUserZone = date => {
+export const dateConvertToUserZone = (date: moment.MomentInput): string => {
   if (!date) return '';
 
   const { serverZone, userZone } = getTimeZone();
@@ -230,7 +284,7 @@ export const dateConvertToUserZone = date => {
 /**
  * 日期时间转为服务器时区时间
  */
-export const dateConvertToServerZone = date => {
+export const dateConvertToServerZone = (date: moment.MomentInput): string => {
   if (!date) return '';
 
   const { serverZone, userZone } = getTimeZone();
@@ -243,7 +297,10 @@ export const dateConvertToServerZone = date => {
 /**
  * 日期时间应用时区转为服务器时区时间
  */
-export const dateAppZoneToServerZone = (date, appTimeZone) => {
+export const dateAppZoneToServerZone = <T extends moment.MomentInput>(
+  date: T,
+  appTimeZone?: number | null,
+): T | string => {
   if (!date) return '';
   if (!appTimeZone) return date;
 
@@ -257,7 +314,10 @@ export const dateAppZoneToServerZone = (date, appTimeZone) => {
 /**
  * 服务器时区转应用时区呈现
  */
-export const dateServerZoneToAppZone = (date, appTimeZone) => {
+export const dateServerZoneToAppZone = <T extends moment.MomentInput>(
+  date: T,
+  appTimeZone?: number | null,
+): T | string => {
   if (!date) return '';
   if (!appTimeZone) return date;
 
@@ -269,14 +329,15 @@ export const dateServerZoneToAppZone = (date, appTimeZone) => {
 };
 
 /** 缓存是否还能用（用户没换、掩码过的值和缓存对得上） */
-function contactInfoIsFresh(contactInfo, key?: string) {
+function contactInfoIsFresh(contactInfo: ContactInfo, key?: ContactInfoKey) {
   if (_.isEmpty(contactInfo)) return false;
   if (contactInfo.accountId !== md.global.Account.accountId) return false;
 
   // 掩码校验：Account 里存的是 138****5678 这种打码值，拿缓存里的明文按位填回去应当相等。
   // 不相等说明用户在别处改了手机号/邮箱，缓存过期了。只有传了 key 才有得比。
   if (key && contactInfo[key] && md.global.Account[key]) {
-    const restored = md.global.Account[key].replace(/\*/g, (_a, b) => contactInfo[key][b]);
+    const contactValue = contactInfo[key];
+    const restored = md.global.Account[key].replace(/\*/g, (_a: string, b: number) => String(contactValue[b]));
     if (restored !== contactInfo[key]) return false;
   }
 
@@ -284,18 +345,19 @@ function contactInfoIsFresh(contactInfo, key?: string) {
 }
 
 /** 后台取一次联系方式并写回 localStorage。并发调用只跑一次。 */
-let contactInfoRequest: Promise<object> | null = null;
+let contactInfoRequest: Promise<ContactInfo> | null = null;
 
-// 返回的是后端给的联系方式对象（取不到时是 {}），本仓只把它整个塞进 localStorage，不读具体字段
-export const prefetchContactInfo = (): Promise<object> => {
+// 保留后端联系方式元信息；这里的消费契约只有账号、手机号、邮箱。
+export const prefetchContactInfo = (): Promise<ContactInfo> => {
   if (!md.global.Account.accountId) return Promise.resolve({});
   if (contactInfoRequest) return contactInfoRequest;
 
   contactInfoRequest = accountAjax
     .getMyContactInfo({}, { silent: true })
     .then(data => {
-      if (data) safeLocalStorageSetItem('contactInfo', JSON.stringify(data));
-      return data || {};
+      const contactInfo = data ? decodeContactInfo(data) : {};
+      if (data) safeLocalStorageSetItem('contactInfo', JSON.stringify(contactInfo));
+      return contactInfo;
     })
     .catch(() => ({}))
     .finally(() => {
@@ -320,8 +382,14 @@ export const prefetchContactInfo = (): Promise<object> => {
  * 而 preall 启动时会 await prefetchContactInfo()（见那边的调用点），
  * 所以正常进入任何表单之前缓存一定是热的，第三条分支实际走不到。
  */
-export const getContactInfo = (key: string) => {
-  const contactInfo = safeParse(window.localStorage.getItem('contactInfo') || '{}');
+export const getContactInfo = (key: ContactInfoKey): string | undefined => {
+  let contactInfo: ContactInfo;
+  try {
+    const cached: unknown = safeParse(window.localStorage.getItem('contactInfo') || '{}');
+    contactInfo = decodeContactInfo(cached);
+  } catch {
+    contactInfo = {};
+  }
 
   if (!md.global.Account.accountId) return '';
 
@@ -341,9 +409,16 @@ export const getContactInfo = (key: string) => {
  * h5callBack h5处理方法
  * appCallBack app处理方法
  */
-export const compatibleMDJS = (jsFuncName: string, jsParams = {}, h5callBack = () => {}, appCallBack = () => {}) => {
-  if (window.isMingDaoApp && window.MDJS && window.MDJS[jsFuncName]) {
-    window.MDJS[jsFuncName](jsParams);
+export const compatibleMDJS = (
+  jsFuncName: string,
+  jsParams: SdkParameters = {},
+  h5callBack: () => void = () => {},
+  appCallBack: () => void = () => {},
+) => {
+  const bridge: ProjectNativeBridge = window;
+  const method = window.isMingDaoApp ? getSdkMethod(bridge.MDJS, jsFuncName) : undefined;
+  if (method) {
+    method.call(bridge.MDJS, jsParams);
     appCallBack();
   } else {
     h5callBack();
@@ -351,10 +426,11 @@ export const compatibleMDJS = (jsFuncName: string, jsParams = {}, h5callBack = (
 };
 
 /** 获取启用的系统与自定义图表配色方案。 */
-export const getProjectChartColors = (projectId = ''): Array<(typeof SYS_CHART_COLORS)[number] & { enable?: boolean }> => {
-  type ChartScheme = (typeof SYS_CHART_COLORS)[number] & { enable?: boolean };
-  const { chartColor } = getProjectColor(projectId) as { chartColor: { system?: ChartScheme[]; custom?: ChartScheme[] } };
-  const systemColors = (chartColor.system || []).filter(item => item.enable !== false && !_.isEmpty(item.colors));
-  const customColors = (chartColor.custom || []).filter(item => item.enable !== false && !_.isEmpty(item.colors));
+export const getProjectChartColors = (projectId = ''): EnabledChartScheme[] => {
+  const { chartColor } = getProjectColor(projectId);
+  const isEnabledScheme = (item: ProjectChartScheme): item is EnabledChartScheme =>
+    item.enable !== false && !!item.colors?.length;
+  const systemColors = (chartColor.system || []).filter(isEnabledScheme);
+  const customColors = (chartColor.custom || []).filter(isEnabledScheme);
   return systemColors.concat(customColors);
 };

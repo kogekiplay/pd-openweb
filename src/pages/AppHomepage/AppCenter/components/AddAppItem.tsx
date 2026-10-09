@@ -9,6 +9,7 @@ import { hasPermission } from 'src/components/checkPermission';
 import { MINGO_TASK_TYPE } from 'src/components/Mingo/ChatBot/enum';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
+import { SYS_COLOR } from 'src/pages/Admin/settings/config';
 import { navigateTo } from 'src/router/navigateTo';
 import { emitter } from 'src/utils/common';
 import { VersionProductType } from 'src/utils/enum';
@@ -141,7 +142,8 @@ export default class AddAppItem extends Component<any, any> {
     switch (id) {
       case 'createFromEmpty':
         const COLORS = getThemeColors(projectId);
-        const iconColor = COLORS[_.random(0, COLORS.length - 1)];
+        const iconColor = COLORS[_.random(0, COLORS.length - 1)] || SYS_COLOR[0]?.color;
+        if (!iconColor) return;
         const lightColor = generate(iconColor)[0];
         this.props.createAppFromEmpty({
           projectId,
@@ -169,7 +171,8 @@ export default class AddAppItem extends Component<any, any> {
     const { createAppDbInstanceId } = this.state;
     const { projectId } = this.props;
     const COLORS = getThemeColors(projectId);
-    const iconColor = COLORS[_.random(0, COLORS.length - 1)];
+    const iconColor = COLORS[_.random(0, COLORS.length - 1)] || SYS_COLOR[0]?.color;
+    if (!iconColor) return;
     const lightColor = generate(iconColor)[0];
     this.props.createAppFromEmpty(
       {

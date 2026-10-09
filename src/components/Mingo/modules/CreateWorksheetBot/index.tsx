@@ -1,13 +1,4 @@
-import {
-  forwardRef,
-  Fragment,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { forwardRef, Fragment, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { findLast, flatten, get, isArray, isEmpty, trim } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -369,11 +360,15 @@ function MingoContent(props, ref) {
     }));
   }, [window?.globalStoreForMingo?.activeModule, baseLoading, base, sheetList]);
   useEffect(() => {
-    if (get(mingoCreateWorksheetAction, 'action') === 'createFromEmpty') {
+    if (
+      mingoCreateWorksheetAction &&
+      typeof mingoCreateWorksheetAction === 'object' &&
+      mingoCreateWorksheetAction.action === 'createFromEmpty'
+    ) {
       setTimeout(() => {
         setTitle(_l('生成表单字段'));
       }, 0);
-      const { worksheetInfo = {} } = mingoCreateWorksheetAction;
+      const { worksheetInfo } = mingoCreateWorksheetAction;
       const { name, desc } = worksheetInfo;
       setIsRequesting(true);
       cache.current.worksheetDescription = [_l('工作表名称：%0', name), desc && _l('工作表描述：%0', desc)]
@@ -382,7 +377,11 @@ function MingoContent(props, ref) {
       handleSend(_l('开始生成'));
       emitter.emit('UPDATE_GLOBAL_STORE', 'mingoCreateWorksheetAction', true);
     }
-  }, [mingoCreateWorksheetAction?.action]);
+  }, [
+    mingoCreateWorksheetAction && typeof mingoCreateWorksheetAction === 'object'
+      ? mingoCreateWorksheetAction.action
+      : undefined,
+  ]);
   useEffect(() => {
     if (window.createWorksheetParams) {
       const { worksheetName, worksheetDescription } = window.createWorksheetParams;

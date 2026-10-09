@@ -57,6 +57,7 @@ export default props => {
     const { colorType, colorGroupId, customColors, personColor } = chartColor || {};
     const chartColors = getPorjectChartColors(appPkg.projectId);
     const defaultConfig = { name: _l('未配置'), showColors: [] };
+    const defaultScheme = chartColors[0];
 
     if (!config.chartColor) {
       return defaultConfig;
@@ -73,21 +74,23 @@ export default props => {
         showColors: personColor.colors,
       };
     } else if (colorGroupId === 'adaptThemeColor') {
+      if (!defaultScheme) return defaultConfig;
       const adaptThemeColors = chartColors.filter(item => (item.themeColors || []).includes(iconColor));
 
       if (adaptThemeColors.length) {
         return {
           name: _l('适应主题'),
-          showColors: adaptThemeColors[0].colors,
+          showColors: adaptThemeColors[0]!.colors,
         };
       } else {
         return {
-          name: chartColors[0].name,
-          showColors: chartColors[0].colors,
+          name: defaultScheme.name,
+          showColors: defaultScheme.colors,
         };
       }
     } else {
-      const data = _.find(chartColors, { id: colorGroupId }) || chartColors[0];
+      const data = _.find(chartColors, { id: colorGroupId }) || defaultScheme;
+      if (!data) return defaultConfig;
       return {
         name: data.name,
         showColors: data.colors,

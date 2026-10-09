@@ -196,6 +196,11 @@ const getLangDataIndex = langData => {
  * 调用方一律写成 info.name || 原文。
  */
 export interface TranslateInfo {
+  /** 动作/字段/导航及表单提示的翻译字段，translate.ts 按模块实际消费。 */
+  prefix?: string | undefined;
+  defaultTabName?: string | undefined;
+  message?: string | undefined;
+  otherhint?: string | undefined;
   name?: string;
   description?: string;
   recordName?: string;

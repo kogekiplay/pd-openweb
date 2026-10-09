@@ -14,6 +14,7 @@ import {
 } from 'src/utils/project';
 import { getDynamicValue } from '../../../core/formUtils';
 import { compareWithTime } from '../../../core/formUtils/helper';
+import { dateValue } from '../../../core/formUtils/valueBoundary';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
 
 const DateZoneWrap = styled.div`
@@ -224,7 +225,7 @@ const DateWidgets = props => {
             disabled={disabled}
             value={value ? moment(dateTime) : ''}
             {...(minDate && advancedSetting.locationbegin === '1' && !value
-              ? { defaultPickerValue: moment(minDate) }
+              ? { defaultPickerValue: moment(dateValue(minDate)) }
               : {})}
             picker={dateProps.mode === 'datetime' ? 'date' : dateProps.mode}
             showTime={showTime || false}

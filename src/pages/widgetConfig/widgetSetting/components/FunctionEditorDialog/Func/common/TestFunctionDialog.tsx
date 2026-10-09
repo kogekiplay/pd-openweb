@@ -147,11 +147,11 @@ export default function TestFunctionDialog(props) {
     onChange,
     onCancel,
     onUpdate,
-  }: { controls: FormControl[]; [key: string]: any } = props;
+  }: { controls: FormControl[]; value?: string | undefined; [key: string]: any } = props;
   const codeEditorRef = useRef<any>(undefined);
-  const [expression, setExpression] = useState(value);
+  const [expression, setExpression] = useState(value || '');
   const controlIdsInExpression = uniq((expression.match(/\$(.+?)\$/g) || []).map(id => id.slice(1, -1)));
-  const [testFormValues, setTestFormValues] = useState({});
+  const [testFormValues, setTestFormValues] = useState<Record<string, unknown>>({});
   const [formFlag, setFormFlag] = useState<number | null>(null);
   const [testError, setTestError] = useState(false);
   const [testResultValue, setTestResultValue] = useState('');
@@ -174,14 +174,13 @@ export default function TestFunctionDialog(props) {
         controlPermissions: '111',
         value: testFormValues[expressionControlId],
         notSupport:
-          [
-            WIDGETS_TO_API_TYPE_ENUM.SUB_LIST,
-            ...(isWorksheetFlow ? [WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET] : []),
-          ].includes(c.type) || isRelateRecordTableControl(c),
-        notSupportTip: _l('暂不支持调试%0', c.controlName),
+          [WIDGETS_TO_API_TYPE_ENUM.SUB_LIST, ...(isWorksheetFlow ? [WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET] : [])].some(
+            type => type === c.type,
+          ) || isRelateRecordTableControl(c),
+        notSupportTip: _l('暂不支持调试%0', c.controlName || ''),
       };
     })
-    .filter(_.identity);
+    .filter((control): control is NonNullable<typeof control> => control !== null);
   return (
     <Modal
       visible
@@ -245,7 +244,7 @@ export default function TestFunctionDialog(props) {
                     worksheetId,
                     onOk: selectedRecords => {
                       if (selectedRecords && selectedRecords[0]) {
-                        const newFormData = {};
+                        const newFormData: Record<string, unknown> = {};
                         controlIdsInExpression.forEach(expressionControlId => {
                           const bareId = expressionControlId.replace(/[a-zA-Z0-9]+-/, '');
                           newFormData[expressionControlId] = selectedRecords[0][bareId];
@@ -298,6 +297,11 @@ export default function TestFunctionDialog(props) {
                 const testResult = execValueFunction(control, formData, {
                   defaultExpression: expression,
                 });
+                if (!testResult) {
+                  setTestError(true);
+                  setTestResultValue('');
+                  return;
+                }
                 const { value } = testResult;
                 setTestError(!!testResult.error);
                 setTestResultValue(_.isUndefined(value) || _.isNull(value) || _.isNaN(value) ? '' : String(value));

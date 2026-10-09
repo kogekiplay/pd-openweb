@@ -23,6 +23,7 @@ import { getAppSectionData } from 'src/pages/PageHeader/AppPkgHeader/LeftAppGrou
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import { copyCustomPage } from 'src/pages/worksheet/redux/actions/sheetList';
 import { deleteSheet, updateSheetList, updateSheetListAppItem } from 'src/pages/worksheet/redux/actions/sheetList';
+import { embedUrlSegment } from 'src/pages/worksheet/views/CustomWidgetView/valueBoundary';
 import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { browserIsMobile, emitter } from 'src/utils/common';
@@ -273,14 +274,16 @@ function CustomPageContent(props) {
         if (o.staticValue) {
           urlList.push(o.staticValue);
         } else {
-          const embedValue = getEmbedValue(
-            {
-              projectId: appPkg.projectId,
-              appId: ids.appId,
-              groupId: ids.groupId,
-              worksheetId: ids.worksheetId,
-            },
-            o.cid,
+          const embedValue = embedUrlSegment(
+            getEmbedValue(
+              {
+                projectId: appPkg.projectId,
+                appId: ids.appId,
+                groupId: ids.groupId,
+                worksheetId: ids.worksheetId,
+              },
+              o.cid,
+            ),
           );
           urlList.push(encodeURIComponent(embedValue));
         }

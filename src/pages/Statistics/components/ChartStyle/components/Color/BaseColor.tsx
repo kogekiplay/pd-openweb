@@ -17,7 +17,7 @@ export default class BaseColor extends Component<any, any> {
     const { style, xaxes = {}, split = {}, reportType } = props.currentReport;
     const isBarChart = reportType === reportTypes.BarChart;
     const { colorType, colorGroupIndex, colorGroupId, customColors } = style ? style : {};
-    const defaultColors = chartColors[0].colors;
+    const defaultColors = chartColors[0]?.colors || [];
     const defaultCustomColors = defaultColors.map(() => defaultColors[0]);
     const storeCustomColors = JSON.parse(localStorage.getItem('chartCustomColors'));
     const xaxesOptions = (xaxes.options || []).map(item => item.color);
@@ -31,7 +31,7 @@ export default class BaseColor extends Component<any, any> {
     this.state = {
       type: defaultType,
       colorGroupIndex: colorGroupIndex || 0,
-      colorGroupId: colorGroupIndex ? null : colorGroupId || chartColors[0].id,
+      colorGroupId: colorGroupIndex ? null : colorGroupId || chartColors[0]?.id,
       colorIndex: 0,
       customColors: customColors || storeCustomColors || defaultCustomColors,
       controlColors: this.isAlienationColor ? controlColors : [],
@@ -225,7 +225,7 @@ export default class BaseColor extends Component<any, any> {
     );
     const adaptThemeId = adaptThemeColors.map(item => item.id);
     return (
-      (<Modal
+      <Modal
         title={_l('图形颜色')}
         width={520}
         className="chartModal chartBaseColorModal"
@@ -267,7 +267,7 @@ export default class BaseColor extends Component<any, any> {
             )}
           </div>
         )}
-      </Modal>)
+      </Modal>
     );
   }
 }

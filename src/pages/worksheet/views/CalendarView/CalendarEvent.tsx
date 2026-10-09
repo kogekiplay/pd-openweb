@@ -11,13 +11,14 @@ import { isOpenPermit } from 'src/pages/FormSet/util';
 import { SYS_CONTROLS_WORKFLOW } from 'src/pages/widgetConfig/config/widget.js';
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import EditableCard from 'src/pages/worksheet/views/components/EditableCard.jsx';
+import { embedUrlSegment } from 'src/pages/worksheet/views/CustomWidgetView/valueBoundary';
 import { getRecordAttachments } from 'src/pages/worksheet/views/util.js';
 import { RENDER_RECORD_NECESSARY_ATTR } from 'src/pages/worksheet/views/util.js';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getRecordColorConfig } from 'src/utils/record';
 import { CARD_WIDTH } from './constants';
 import { isEmojiCharacter } from './util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const EventCardContent = ({
   info,
@@ -60,16 +61,18 @@ const EventCardContent = ({
         urlList.push(o.staticValue);
       } else {
         urlList.push(
-          getEmbedValue(
-            {
-              projectId: worksheetInfo.projectId,
-              appId,
-              groupId,
-              worksheetId,
-              viewId,
-              recordId: item.rowid,
-            },
-            o.cid,
+          embedUrlSegment(
+            getEmbedValue(
+              {
+                projectId: worksheetInfo.projectId,
+                appId,
+                groupId,
+                worksheetId,
+                viewId,
+                recordId: item.rowid,
+              },
+              o.cid,
+            ),
           ),
         );
       }
@@ -314,7 +317,7 @@ const EventCard = ({
       trigger="hover"
       // trigger="click"
       placement="topLeft"
-      classNames={{ root: "event-card-popover calendarPopoverWrap" }}
+      classNames={{ root: 'event-card-popover calendarPopoverWrap' }}
       open={visible && !isMove}
       onOpenChange={visible => {
         setVisible(visible);

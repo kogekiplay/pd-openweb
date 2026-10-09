@@ -61,7 +61,7 @@ const WidgetConfig = styled.div`
 `;
 
 export default function Container({ isDialog, ...props }) {
-  const { store: { mingoIsCreatingWorksheetStatus } = {} } = useGlobalStore() || {};
+  const { store: { mingoIsCreatingWorksheetStatus } = {} } = useGlobalStore({ optional: true }) || {};
   // 本表设置相关信息
   const [{ version }, setInfo] = useState({ version: 1 });
   // 所有的控件 二维数组方式保存

@@ -1,10 +1,30 @@
 import dayjs from 'dayjs';
-import _, { get, isNaN } from 'lodash';
+import _, { isNaN } from 'lodash';
 import qs from 'query-string';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
+import type { FormControl } from 'src/utils/controlTypes';
 import { formatControlValue } from 'src/utils/function-library';
-import { initLang } from './local';
 import { functions } from './enum';
+import type {
+  FunctionCompletion,
+  FunctionRunOptions,
+  FunctionRunResult,
+  FunctionTask,
+  FunctionWorker,
+} from './execTypes';
+import { initLang } from './local';
+
+function isMessageRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+function messageRecord(value: unknown): Record<string, unknown> | undefined {
+  return isMessageRecord(value) ? value : undefined;
+}
+function dateResult(value: unknown): string | number | Date | dayjs.Dayjs | null {
+  return typeof value === 'string' || typeof value === 'number' || value instanceof Date || dayjs.isDayjs(value)
+    ? value
+    : null;
+}
 
 const execWorkerCode = `onmessage = function (e) {
   try {
@@ -41,6 +61,9 @@ class Runner {
   declare max: number;
   declare runningCount: number;
   declare isRunning: boolean;
+  declare queue: unknown[];
+  declare workers: FunctionWorker[];
+  declare list: FunctionTask[];
 
   constructor({ max = 10 } = {}) {
     this.max = max;
@@ -64,6 +87,7 @@ class Runner {
       this.workers.push(newWorker);
       return newWorker;
     }
+    return undefined;
   }
   run() {
     const workerObj = this.getWorker();
@@ -91,8 +115,11 @@ class Runner {
 
     let timer: NodeJS.Timeout | undefined;
 
-    workerObj.worker.onmessage = msg => {
-      if (msg.data.type === 'begin') {
+    workerObj.worker.onmessage = (msg: MessageEvent<unknown>) => {
+      const data = messageRecord(msg.data);
+      if (!data) return;
+      const outerError: unknown = Reflect.get(msg, 'err');
+      if (data['type'] === 'begin') {
         timer = setTimeout(() => {
           workerObj.worker.terminate();
           this.workers = this.workers.filter(w => w.id !== workerObj.id);
@@ -101,24 +128,24 @@ class Runner {
         }, timeout);
       }
 
-      if (msg.data.type === 'over') {
+      if (data['type'] === 'over') {
         afterRun();
 
-        cb(null, msg.data.value);
+        cb(null, data['value']);
         clearTimeout(timer);
       }
 
-      if (msg.data.type === 'error') {
-        console.error(msg.err || get(msg, 'data.err'));
+      if (data['type'] === 'error') {
+        console.error(outerError || data['err']);
         afterRun();
-        cb(msg.err || get(msg, 'data.err'));
+        cb(outerError || data['err']);
         clearTimeout(timer);
       }
     };
 
     workerObj.worker.postMessage(code);
   }
-  push({ code, cb, timeout }) {
+  push({ code, cb, timeout }: FunctionTask) {
     this.list.push({ code, cb, timeout });
     if (this.runningCount < this.max) {
       this.run();
@@ -135,16 +162,16 @@ const runner = new Runner();
  * 现在瓶颈在表格更新端，函数运行挺快的但更新到表格时还是挨个单元格更新。
  */
 
-function asyncRun(code, cb, { timeout = 1000 } = {}) {
+function asyncRun(code: string, cb: FunctionCompletion, { timeout = 1000 } = {}) {
   runner.push({ code, cb, timeout });
   // 测试使用，下面的写法是同步运行函数。
   // const result = eval('function run() { ' + code + ' } run()');
   // cb(null, result);
 }
 
-function replaceControlIdToValue(expression, formData, nullzero = '0', inString?) {
+function replaceControlIdToValue(expression: string, formData: FormControl[], nullzero = '0', inString?: boolean) {
   expression = expression.replace(/\$(.+?)\$/g, matched => {
-    const controlId = matched.match(/\$(.+?)\$/)[1];
+    const controlId = matched.slice(1, -1);
     const control = _.find(formData, obj => obj.controlId === controlId);
 
     if (!control) {
@@ -152,7 +179,7 @@ function replaceControlIdToValue(expression, formData, nullzero = '0', inString?
       return 'undefined';
     }
 
-    let value = formatControlValue(control, nullzero);
+    let value: unknown = formatControlValue(control, nullzero);
 
     if (typeof value === 'string' && !inString) {
       value = `'${value.replace(/'/g, "\\'").replace(/\n/g, '\\n')}'`;
@@ -173,7 +200,7 @@ function replaceControlIdToValue(expression, formData, nullzero = '0', inString?
   return expression;
 }
 
-function formatFunctionResult(control, value) {
+function formatFunctionResult(control: FormControl, value: unknown): unknown {
   const controlType = _.get(control, 'type') === 53 ? _.get(control, 'enumDefault2') : control.type;
   let result = value;
 
@@ -189,33 +216,39 @@ function formatFunctionResult(control, value) {
       try {
         if (!(result === '' || result === undefined || result === null || isNaN(result))) {
           if (typeof result === 'string' && /[^0-9.-]/.test(result || '')) {
-            result = (result || '').match(/^-?[\d.]+/)[0];
+            result = (result || '').match(/^-?[\d.]+/)?.[0];
           }
 
-          result = (typeof (result || 0) === 'string' ? Number(result || 0) : result || 0)
+          const numericValue = typeof result === 'string' ? Number(result || 0) : result || 0;
+          if (typeof numericValue !== 'number') return result;
+          result = numericValue
             .toFixed(12)
             .toString()
-            .match(/^-?[\d.]+/)[0];
-          result = (result || '').replace(/\.([0-9]*[1-9])0+$|\.0+$/, (_match, group) => {
+            .match(/^-?[\d.]+/)?.[0];
+          result = (typeof result === 'string' ? result : '').replace(/\.([0-9]*[1-9])0+$|\.0+$/, (_match, group) => {
             return group ? `.${group}` : '';
           });
         }
       } catch (err) {
-        (() => {})(err);
+        void err;
       }
 
       break;
     case WIDGETS_TO_API_TYPE_ENUM.DATE:
-      result = result && dayjs(result).isValid() ? dayjs(result).format('YYYY-MM-DD') : undefined;
+      result =
+        result && dayjs(dateResult(result)).isValid() ? dayjs(dateResult(result)).format('YYYY-MM-DD') : undefined;
       break;
     case WIDGETS_TO_API_TYPE_ENUM.DATE_TIME:
-      result = result && dayjs(result).isValid() ? dayjs(result).format('YYYY-MM-DD HH:mm:ss') : undefined;
+      result =
+        result && dayjs(dateResult(result)).isValid()
+          ? dayjs(dateResult(result)).format('YYYY-MM-DD HH:mm:ss')
+          : undefined;
       break;
     case WIDGETS_TO_API_TYPE_ENUM.FLAT_MENU:
     case WIDGETS_TO_API_TYPE_ENUM.MULTI_SELECT:
     case WIDGETS_TO_API_TYPE_ENUM.DROP_DOWN:
       const filterOptions = (control.options || []).filter(i => !i.isDeleted);
-      const tempValue = (_.isString(result) ? result.split(',') : [].concat(result))
+      const tempValue = (_.isString(result) ? result.split(',') : Array.isArray(result) ? result : [result])
         .map(item => {
           return _.get(
             _.find(filterOptions, option => option.value === item),
@@ -229,9 +262,9 @@ function formatFunctionResult(control, value) {
     case WIDGETS_TO_API_TYPE_ENUM.TIME:
       const formatMode = _.includes(['6', '9'], control.unit) ? 'HH:mm:ss' : 'HH:mm';
       result = result
-        ? dayjs(result).year() && dayjs(result).isValid()
-          ? dayjs(result).format(formatMode)
-          : dayjs(result, dayjs(result).second() ? 'HH:mm:ss' : 'HH:mm').format(formatMode)
+        ? dayjs(dateResult(result)).year() && dayjs(dateResult(result)).isValid()
+          ? dayjs(dateResult(result)).format(formatMode)
+          : dayjs(dateResult(result), dayjs(dateResult(result)).second() ? 'HH:mm:ss' : 'HH:mm').format(formatMode)
         : undefined;
       if (result && result.toString().toLowerCase().includes('invalid date')) {
         result = undefined;
@@ -239,7 +272,7 @@ function formatFunctionResult(control, value) {
 
       break;
     case WIDGETS_TO_API_TYPE_ENUM.LOCATION:
-      const resultArr = _.isString(result) ? result.split(',') : [].concat(result);
+      const resultArr = _.isString(result) ? result.split(',') : Array.isArray(result) ? result : [result];
       const [x, y, title, address] = resultArr;
       result = x && y && !_.isNaN(Number(x)) && !_.isNaN(Number(y)) ? JSON.stringify({ x, y, title, address }) : '';
       break;
@@ -249,22 +282,24 @@ function formatFunctionResult(control, value) {
 }
 
 export default function (
-  control,
-  formData,
-  { update, type, forceSyncRun = false, defaultExpression, langCode } = {},
-) {
+  control: FormControl,
+  formData: FormControl[],
+  { update, type, forceSyncRun = false, defaultExpression, langCode }: FunctionRunOptions = {},
+): FunctionRunResult | undefined {
   initLang(langCode);
   const run = functions;
-  let expressionData = {};
+  let expressionData: Record<string, unknown> = {};
 
   try {
-    expressionData = JSON.parse(control.advancedSetting.defaultfunc);
+    const value: unknown = JSON.parse(control.advancedSetting?.['defaultfunc'] || '{}');
+    expressionData = messageRecord(value) || {};
   } catch (err) {
     console.log(err);
   }
 
-  let expression = defaultExpression || _.get(expressionData, 'expression');
-  let fnType = _.get(expressionData, 'type');
+  let expression =
+    defaultExpression || (typeof expressionData['expression'] === 'string' ? expressionData['expression'] : undefined);
+  let fnType: unknown = expressionData['type'];
 
   if (!expression) {
     return {
@@ -277,7 +312,7 @@ export default function (
 
   if (fnType !== 'javascript') {
     expression = expression.replace(/([A-Z_]+)(?=\()/g, (name: string) => {
-      if (run[name]) {
+      if (Object.entries(run).some(([key, fn]) => key === name && !!fn)) {
         return 'run.' + name;
       } else {
         // 不执行未定义函数
@@ -304,12 +339,12 @@ export default function (
 
   return (function () {
     try {
-      let result;
+      let result: unknown;
 
       if (window.isIphone && fnType === 'javascript' && !forceSyncRun) {
         // iOS15以下不支持web worker，改为直接运行
         result = eval('function run() { ' + expression + ' } run()');
-        update(
+        update?.(
           _.isUndefined(result) || _.isNaN(result) || _.isNull(result)
             ? ''
             : String(formatFunctionResult(control, result)),
@@ -326,7 +361,7 @@ export default function (
             expression,
             (err, value) => {
               if (!err) {
-                update(
+                update?.(
                   _.isUndefined(value) || _.isNaN(value) || _.isNull(value)
                     ? ''
                     : String(formatFunctionResult(control, value)),

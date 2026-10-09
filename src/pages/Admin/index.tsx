@@ -5,7 +5,10 @@ import _ from 'lodash';
 import { LoadDiv, WaterMark } from 'ming-ui';
 import withoutPermission from 'src/pages/worksheet/assets/withoutPermission.png';
 import expandRoutePaths from 'src/router/expandRoutePaths';
+import { navigateTo } from 'src/router/navigateTo';
+import RedirectTo from 'src/router/RedirectTo';
 import { RouteElement } from 'src/router/routeProps';
+import { isSandboxEnvironment, isSandboxFeatureEnvironment } from 'src/utils/domain/app/sandbox';
 import { getCurrentProject, getFeatureStatus } from 'src/utils/project';
 import AdminCommon from './common/common';
 import Empty from './common/TableEmpty';
@@ -17,9 +20,6 @@ import ApplyRole from './organization/roleAuth/apply';
 import MyRole from './organization/roleAuth/myRole';
 import { menuList } from './router.config.js';
 import { allPlatformsHidden } from './util';
-import RedirectTo from 'src/router/RedirectTo';
-import { navigateTo } from 'src/router/navigateTo';
-import { isSandboxEnvironment, isSandboxFeatureEnvironment } from 'src/utils/domain/app/sandbox';
 import './index.less';
 
 // 【按工厂缓存，不要每次渲染都 lazy() 一个新的】本函数是在 render 里被调的
@@ -71,7 +71,10 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
   };
 
   override componentDidMount() {
-    if (isSandboxEnvironment()) { navigateTo('/dashboard', true); return; }
+    if (isSandboxEnvironment()) {
+      navigateTo('/dashboard', true);
+      return;
+    }
     if (_.isNull(localStorage.getItem('adminList_isUp'))) {
       safeLocalStorageSetItem('adminList_isUp', String(true));
     }
@@ -118,7 +121,8 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
         keys = keys.concat(ROUTE_CONFIG[item] || []);
       });
 
-      const subMenuArray = _.flatten(menuList.map(item => item.subMenuList));
+      type FeatureMenu = { key?: string; featureId?: number; featureIds?: number[]; platformHiddenIds?: number[] };
+      const subMenuArray = _.flatten<FeatureMenu>(menuList.map(item => item.subMenuList));
 
       const result = _.uniq(keys).filter(key => {
         if (window.platformENV.isOverseas || window.platformENV.isLocal) {
@@ -129,19 +133,21 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
         }
 
         if (!window.platformENV.isOverseas && !window.platformENV.isLocal && key === 'quota') return undefined;
-        const itemMenu = subMenuArray.filter(sub => sub.key === key)[0] || {};
+        const itemMenu: FeatureMenu = subMenuArray.filter(sub => sub.key === key)[0] || {};
         let featureType = getFeatureStatus(projectId, itemMenu.featureId);
         let hasFeatureIdsAuth = false;
 
         if (itemMenu.featureIds) {
           itemMenu.featureIds
-            .filter(l => !window.platformENV.isPlatform || !itemMenu.platformHiddenIds.includes(l))
+            .filter(l => !window.platformENV.isPlatform || !itemMenu.platformHiddenIds!.includes(l))
             .forEach(l => {
               let itemFeatureType = getFeatureStatus(projectId, l);
 
               if (itemFeatureType) {
                 hasFeatureIdsAuth = true;
-                featureType = featureType ? Math.min(itemFeatureType, featureType).toString() : itemFeatureType;
+                featureType = featureType
+                  ? Math.min(Number(itemFeatureType), Number(featureType)).toString()
+                  : itemFeatureType;
               }
             });
         }
@@ -276,7 +282,9 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
       this.getCurrentAuth(routeKeys) &&
       routeKeys.filter(route => !ROUTE_CONFIG[PERMISSION_ENUM.CAN_PURCHASE].includes(route)).length
     ) {
-      return <RedirectTo url={'/admin/' + (routeKeys.includes('home') ? 'home' : routeKeys[0]) + '/' + Config.projectId} />;
+      return (
+        <RedirectTo url={'/admin/' + (routeKeys.includes('home') ? 'home' : routeKeys[0]) + '/' + Config.projectId} />
+      );
     }
 
     return this.renderRoutes();

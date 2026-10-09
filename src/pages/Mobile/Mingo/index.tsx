@@ -90,7 +90,9 @@ export default function Mingo() {
   });
   // 个性化「待搭建应用」推荐：nextSuggestion 顺延 1 条（welcome 单条）、randomSamples 返回全量推荐（搭建态取前 3）；
   // 就绪前由 Welcome 骨架占位（不再回退静态样例以免闪动）；仅内存缓存（刷新页面才重拉），移动端与桌面同源。
-  const { nextSuggestion: buildReco, randomSamples: buildRandomSamples } = useDailyBuildSuggestions(project.projectId);
+  const { nextSuggestion: buildReco, randomSamples: buildRandomSamples } = useDailyBuildSuggestions(
+    project.projectId || '',
+  );
   const [draft, setDraft] = useState('');
   const [attachments, setAttachments] = useState([]);
   const [historyVisible, setHistoryVisible] = useState(false);

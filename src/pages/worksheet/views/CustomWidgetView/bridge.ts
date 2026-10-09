@@ -1,5 +1,6 @@
 import { get, isFunction } from 'lodash';
 import _ from 'lodash';
+import { isApiMethod, valueObject } from './valueBoundary';
 import { api, mainWebApi, utils } from './widgetFunctions';
 
 export default class WidgetBridge {
@@ -116,9 +117,12 @@ export default class WidgetBridge {
       controller = _.lowerCase(controller[0]) + controller.slice(1);
       action = _.lowerCase(action[0]) + action.slice(1);
       action;
-      if (get(mainWebApi, [controller, action].join('.'))) {
+      const method: unknown = get(mainWebApi, [controller, action].join('.'));
+      if (isApiMethod(method)) {
         try {
-          const result = await get(mainWebApi, [controller, action].join('.'))(data);
+          const requestData = data === undefined ? undefined : valueObject(data);
+          if (data !== undefined && !requestData) throw new TypeError('Widget API parameters must be an object');
+          const result = await method(requestData);
           e.ports[0].postMessage({
             result,
           });

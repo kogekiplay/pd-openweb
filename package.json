@@ -163,6 +163,7 @@
     "@twemoji/svg": "15.0.0",
     "@types/crypto-js": "^4.2.2",
     "@types/hoist-non-react-statics": "^3",
+    "@types/hot-formula-parser": "^4.0.4",
     "@types/jquery": "^4.0.1",
     "@types/lodash": "^4.17.25",
     "@types/node": "26.6.2",

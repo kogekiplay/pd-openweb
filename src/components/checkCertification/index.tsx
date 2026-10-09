@@ -41,7 +41,7 @@ export const checkCertification = props => {
     project => _.get(project, 'licenseType') === 1,
   );
 
-  if (isPersonal ? !paidProjects.length : [0, 2].includes(getCurrentProject(projectId).licenseType) || forceCheck) {
+  if (isPersonal ? !paidProjects.length : _.includes([0, 2], getCurrentProject(projectId).licenseType) || forceCheck) {
     /* 【原先是同步 XHR】`{ ajaxOptions: { sync: true } }` —— 主线程同步请求已被废弃，
        控制台每次都报 "Synchronous XMLHttpRequest on the main thread is deprecated"，
        而且这一下会把主线程卡到请求回来为止。

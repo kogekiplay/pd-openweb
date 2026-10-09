@@ -18,13 +18,13 @@ import MobileNewRecord from 'src/pages/worksheet/common/newRecord/MobileNewRecor
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { getTranslateInfo } from 'src/utils/app';
 import { fieldCanSort } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { compatibleMDJS } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import Filter from './Filter';
 import QuickFilterView from './QuickFilterView';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export default class RecordCardListDialog extends Component<any, any> {
   declare clickSearch: boolean;
@@ -114,10 +114,11 @@ export default class RecordCardListDialog extends Component<any, any> {
 
           data.entityName = getTranslateInfo(data.appId, null, control.dataSource).recordName || data.entityName;
 
-          window.worksheetControlsCache = {};
+          const worksheetControlsCache: NonNullable<Window['worksheetControlsCache']> = {};
+          window.worksheetControlsCache = worksheetControlsCache;
           (_.get(data, 'template.controls') || []).forEach(c => {
             if (c.type === 29) {
-              window.worksheetControlsCache[c.dataSource] = c.relationControls;
+              worksheetControlsCache[c.dataSource] = c.relationControls;
             }
           });
 

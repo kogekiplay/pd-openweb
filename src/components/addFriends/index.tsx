@@ -44,7 +44,11 @@ class AddFriends extends Component<any, any> {
         isPayUsers:
           projects.some(item => item.licenseType === 1) || window.platformENV.isOverseas || window.platformENV.isLocal,
         myPermissions,
-        selectTab: [0, 2].includes(licenseType) ? TABS[2].value : hasMemberManageAuth ? TABS[0].value : TABS[1].value,
+        selectTab: _.includes([0, 2], licenseType)
+          ? TABS[2].value
+          : hasMemberManageAuth
+            ? TABS[0].value
+            : TABS[1].value,
       },
       () => {
         // 非付费用户获取认证信息

@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash';
 import { dialogSelectDept, dialogSelectOrgRole, dialogSelectUser } from 'ming-ui/functions';
 import actionLogAjax from 'src/api/actionLog';
 import appManagementAjax from 'src/api/appManagement';
@@ -30,21 +29,41 @@ import { emitter } from 'src/utils/common';
 import { renderText } from 'src/utils/control';
 import { addBehaviorLog, compatibleMDJS, mdAppResponse } from 'src/utils/project';
 import selectLocation from './selectLocation';
-import type { RecordRow } from 'src/utils/controlTypes';
+import {
+  firstNativeRecord,
+  nativeDepartments,
+  nativeLocation,
+  nativeOrgRoles,
+  nativeUsers,
+  parsedObjects,
+} from './valueBoundary';
+import type {
+  WidgetDepartment,
+  WidgetLocation,
+  WidgetLocationOptions,
+  WidgetNewRecordOptions,
+  WidgetOrgRole,
+  WidgetRecordOptions,
+  WidgetRecordSelectorOptions,
+  WidgetSelectorOptions,
+  WidgetUser,
+} from './widgetFunctionTypes';
 
 export const api = {
-  getFilterRowsTotalNum: data => window.mdyAPI('Worksheet', 'GetFilterRowsTotalNum', getFilledRequestParams(data)),
-  getFilterRows: data => window.mdyAPI('Worksheet', 'GetFilterRows', getFilledRequestParams(data)),
-  getRowRelationRows: data => window.mdyAPI('Worksheet', 'GetRowRelationRows', data),
-  getRowDetail: data => window.mdyAPI('Worksheet', 'GetRowDetail', data),
-  addWorksheetRow: data => window.mdyAPI('Worksheet', 'AddWorksheetRow', data),
-  deleteWorksheetRow: data => window.mdyAPI('Worksheet', 'DeleteWorksheetRows', data),
-  updateWorksheetRow: data => window.mdyAPI('Worksheet', 'UpdateWorksheetRow', data),
-  getWorksheetInfo: data => window.mdyAPI('Worksheet', 'GetWorksheetInfo', data),
+  getFilterRowsTotalNum: (data: Record<string, unknown>) =>
+    window.mdyAPI('Worksheet', 'GetFilterRowsTotalNum', getFilledRequestParams(data)),
+  getFilterRows: (data: Record<string, unknown>) =>
+    window.mdyAPI('Worksheet', 'GetFilterRows', getFilledRequestParams(data)),
+  getRowRelationRows: (data: Record<string, unknown>) => window.mdyAPI('Worksheet', 'GetRowRelationRows', data),
+  getRowDetail: (data: Record<string, unknown>) => window.mdyAPI('Worksheet', 'GetRowDetail', data),
+  addWorksheetRow: (data: Record<string, unknown>) => window.mdyAPI('Worksheet', 'AddWorksheetRow', data),
+  deleteWorksheetRow: (data: Record<string, unknown>) => window.mdyAPI('Worksheet', 'DeleteWorksheetRows', data),
+  updateWorksheetRow: (data: Record<string, unknown>) => window.mdyAPI('Worksheet', 'UpdateWorksheetRow', data),
+  getWorksheetInfo: (data: Record<string, unknown>) => window.mdyAPI('Worksheet', 'GetWorksheetInfo', data),
 };
 
 function getMainWebApi() {
-  const mainWebApi = {};
+  const mainWebApi: Record<string, object> = {};
   [
     {
       controller: 'worksheet',
@@ -112,7 +131,7 @@ export const mainWebApi = getMainWebApi();
 
 const isMobile = browserIsMobile();
 
-function emitWidgetAction(action: string, value) {
+function emitWidgetAction(action: string, value: unknown) {
   emitter.emit('POST_MESSAGE_TO_CUSTOM_WIDGET', {
     action,
     value,
@@ -122,7 +141,7 @@ function emitWidgetAction(action: string, value) {
 export const utils = {
   alert: window.alert,
   previewAttachments,
-  openRecordInfo: args => {
+  openRecordInfo: (args: WidgetRecordOptions) => {
     addBehaviorLog('worksheetRecord', args.worksheetId, { rowId: args.recordId }); // 浏览记录埋点
     if (window.isMingDaoApp) {
       const sessionId = Math.random().toString(32).slice(2);
@@ -140,13 +159,13 @@ export const utils = {
         if (res.action === 'close') {
           return { action: 'close' };
         } else if (res.action === 'row') {
-          return { action: 'update', value: safeParse(res.value)[0] };
+          return { action: 'update', value: firstNativeRecord(res.value) };
         }
         return undefined;
       });
     }
 
-    return new Promise(resolve => {
+    return new Promise<{ action: string; value: unknown }>(resolve => {
       (isMobile ? openMobileRecordInfo : openRecordInfo)({
         projectId: args.projectId,
         allowAdd: args.worksheetInfo && args.worksheetInfo.allowAdd,
@@ -156,19 +175,19 @@ export const utils = {
               appId: args.appId || (args.worksheetInfo && args.worksheetInfo.appId),
               rowId: args.recordId,
               className: 'full',
-              updateSuccess: (_rowIds, newRow) => {
+              updateSuccess: (_rowIds: string[], newRow: unknown) => {
                 resolve({ action: 'update', value: newRow });
               },
             }
           : {
-              updateRows: (_rowIds, newRow) => {
+              updateRows: (_rowIds: string[], newRow: unknown) => {
                 resolve({ action: 'update', value: newRow });
               },
             }),
       });
     });
   },
-  openNewRecord: args => {
+  openNewRecord: (args: WidgetNewRecordOptions) => {
     if (window.isMingDaoApp) {
       const sessionId = Math.random().toString(32).slice(2);
       return mdAppResponse({
@@ -182,10 +201,11 @@ export const utils = {
         },
       }).then(res => {
         if (res.action === 'close') {
-          return;
+          return undefined;
         } else if (res.action === 'addRow') {
-          return safeParse(res.value)[0];
+          return firstNativeRecord(res.value);
         }
+        return undefined;
       });
     }
 
@@ -196,7 +216,7 @@ export const utils = {
       });
     });
   },
-  selectUsers: ({ unique, ...rest } = {}) => {
+  selectUsers: ({ unique, ...rest }: WidgetSelectorOptions = {}) => {
     if (window.isMingDaoApp) {
       const sessionId = Math.random().toString(32).slice(2);
       return mdAppResponse({
@@ -211,19 +231,16 @@ export const utils = {
         if (res.action === 'close') {
           return [];
         } else if (res.action === 'selectUsers') {
-          const users = safeParse(res.value, 'array').map(user => ({
-            accountId: user.account_id,
-            avatar: user.avatar,
-            fullname: user.full_name || user.fullname,
-          }));
+          const users = nativeUsers(res.value);
           emitWidgetAction('select-users', users);
           return users;
         }
+        return undefined;
       });
     }
 
-    return new Promise(resolve => {
-      function handleSelect(users) {
+    return new Promise<WidgetUser[]>(resolve => {
+      function handleSelect(users: WidgetUser[]) {
         emitWidgetAction('select-users', users);
         resolve(users);
       }
@@ -248,7 +265,7 @@ export const utils = {
       }
     });
   },
-  selectDepartments: ({ unique, ...rest } = {}) => {
+  selectDepartments: ({ unique, ...rest }: WidgetSelectorOptions = {}) => {
     if (window.isMingDaoApp) {
       const sessionId = Math.random().toString(32).slice(2);
       return mdAppResponse({
@@ -261,20 +278,18 @@ export const utils = {
         },
       }).then(res => {
         if (res.action === 'close') {
-          return;
+          return undefined;
         } else if (res.action === 'selectDepartments') {
-          const departments = safeParse(res.value, 'array').map(department => ({
-            departmentId: department.department_id,
-            departmentName: department.department_name,
-          }));
+          const departments = nativeDepartments(res.value);
           emitWidgetAction('select-departments', departments);
           return departments;
         }
+        return undefined;
       });
     }
 
-    return new Promise(resolve => {
-      function handleSelect(departments) {
+    return new Promise<WidgetDepartment[] | undefined>(resolve => {
+      function handleSelect(departments: WidgetDepartment[]) {
         emitWidgetAction('select-departments', departments);
         resolve(departments);
       }
@@ -295,13 +310,13 @@ export const utils = {
           showCreateBtn: rest.showCreateBtn,
           allPath: rest.allPath,
           selectFn: handleSelect,
-          onClose: () => resolve(),
+          onClose: () => resolve(undefined),
           ...rest,
         });
       }
     });
   },
-  selectOrgRole: ({ unique, ...rest } = {}) => {
+  selectOrgRole: ({ unique, ...rest }: WidgetSelectorOptions = {}) => {
     if (window.isMingDaoApp) {
       const sessionId = Math.random().toString(32).slice(2);
       return mdAppResponse({
@@ -314,20 +329,18 @@ export const utils = {
         },
       }).then(res => {
         if (res.action === 'close') {
-          return;
+          return undefined;
         } else if (res.action === 'selectOrgRole') {
-          const orgs = safeParse(res.value, 'array').map(orgRole => ({
-            organizeId: orgRole.organizeId,
-            organizeName: orgRole.organizeName,
-          }));
+          const orgs = nativeOrgRoles(res.value);
           emitWidgetAction('select-org-roles', orgs);
           return orgs;
         }
+        return undefined;
       });
     }
 
-    return new Promise(resolve => {
-      function handleSelect(orgs) {
+    return new Promise<WidgetOrgRole[]>(resolve => {
+      function handleSelect(orgs: WidgetOrgRole[]) {
         emitWidgetAction('select-org-roles', orgs);
         resolve(orgs);
       }
@@ -349,7 +362,7 @@ export const utils = {
       }
     });
   },
-  selectRecord: ({ relateSheetId, multiple, ...rest } = {}) => {
+  selectRecord: ({ relateSheetId, multiple, ...rest }: WidgetRecordSelectorOptions = {}) => {
     if (window.isMingDaoApp) {
       const sessionId = Math.random().toString(32).slice(2);
       return mdAppResponse({
@@ -365,7 +378,7 @@ export const utils = {
         if (res.action === 'close') {
           return undefined;
         } else if (res.action === 'selectRecord') {
-          const records: RecordRow[] = safeParse(res.value, 'array');
+          const records = parsedObjects(res.value);
           emitWidgetAction('select-records', records);
           return records;
         }
@@ -382,7 +395,7 @@ export const utils = {
         singleConfirm: true,
         relateSheetId,
         worksheetId: relateSheetId,
-        onOk: records => {
+        onOk: (records: unknown[]) => {
           emitWidgetAction('select-records', records);
           resolve(records);
         },
@@ -390,7 +403,7 @@ export const utils = {
       });
     });
   },
-  selectLocation: (options = {}) => {
+  selectLocation: (options: WidgetLocationOptions = {}) => {
     const { distance } = options;
 
     if (window.isMingDaoApp) {
@@ -406,15 +419,7 @@ export const utils = {
         if (res.action === 'close') {
           return undefined;
         } else if (res.action === 'map') {
-          const value = safeParse(res.value);
-          const location = !isEmpty(value)
-            ? {
-                address: value.address,
-                lat: value.lat,
-                lng: value.lon,
-                name: value.title,
-              }
-            : undefined;
+          const location = nativeLocation(res.value);
           emitWidgetAction('select-location', [location]);
           return location;
         }
@@ -425,7 +430,7 @@ export const utils = {
     return new Promise(resolve => {
       selectLocation({
         ...options,
-        onSelect: location => {
+        onSelect: (location: WidgetLocation) => {
           resolve(location);
           emitWidgetAction('select-location', [location]);
         },
@@ -436,10 +441,10 @@ export const utils = {
     if (window.isMingDaoApp) {
       return new Promise((resolve, reject) => {
         compatibleMDJS('getLocation', {
-          success: res => {
+          success: (res: unknown) => {
             resolve(res);
           },
-          cancel: res => {
+          cancel: (res: unknown) => {
             reject(res);
           },
         });

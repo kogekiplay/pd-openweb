@@ -4,6 +4,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Icon, MobileDatePicker } from 'ming-ui';
 import { getDynamicValue } from '../../../core/formUtils';
+import { dateBoundaryValue } from '../../../core/formUtils/valueBoundary';
 
 const Time = props => {
   const { value, controlName, formData, masterData, formDisabled, disabled, advancedSetting = {}, unit } = props;
@@ -14,8 +15,8 @@ const Time = props => {
   const formatMode = unit === '6' ? 'HH:mm:ss' : 'HH:mm';
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [currentValue, setCurrentValue] = useState<string | moment.Moment>('');
-  const [minDate, setMinDate] = useState(null);
-  const [maxDate, setMaxDate] = useState(null);
+  const [minDate, setMinDate] = useState<string | null>(null);
+  const [maxDate, setMaxDate] = useState<string | null>(null);
 
   const onChange = value => {
     const mode = unit === '6' ? 'HH:mm:ss' : 'HH:mm';
@@ -45,10 +46,13 @@ const Time = props => {
   useEffect(() => {
     if (advancedSetting.min) {
       setMinDate(
-        getDynamicValue(
-          formData,
-          Object.assign({}, props, { advancedSetting: { defsource: advancedSetting.min } }),
-          masterData,
+        dateBoundaryValue(
+          getDynamicValue(
+            formData,
+            Object.assign({}, props, { advancedSetting: { defsource: advancedSetting.min } }),
+            masterData,
+          ),
+          true,
         ),
       );
     }
@@ -57,10 +61,13 @@ const Time = props => {
   useEffect(() => {
     if (advancedSetting.max) {
       setMaxDate(
-        getDynamicValue(
-          formData,
-          Object.assign({}, props, { advancedSetting: { defsource: advancedSetting.max } }),
-          masterData,
+        dateBoundaryValue(
+          getDynamicValue(
+            formData,
+            Object.assign({}, props, { advancedSetting: { defsource: advancedSetting.max } }),
+            masterData,
+          ),
+          true,
         ),
       );
     }

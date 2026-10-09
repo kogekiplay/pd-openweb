@@ -5,10 +5,21 @@ import type { FormControl } from 'src/utils/controlTypes';
 import { getContactInfo } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { FORM_ERROR_TYPE } from '../config';
+import type { EmbedData, FormAttachmentData, FormFilterGroup, FormRuntimeValue } from './types';
+import {
+  dateValue,
+  parsedArray,
+  parsedRecord,
+  parsedRecords,
+  parsedStrings,
+  parseValue,
+  runtimeValue,
+  valueRecord,
+} from './valueBoundary';
 
 export { flattenArr, getAvailableFilters, getResult, isRelateMoreList, replaceStr } from './ruleUtils';
 
-export const getEmbedValue = (embedData = {}, id) => {
+export const getEmbedValue = (embedData: EmbedData = {}, id: string): FormRuntimeValue => {
   switch (id) {
     case 'userId':
       return md.global.Account.accountId;
@@ -23,14 +34,18 @@ export const getEmbedValue = (embedData = {}, id) => {
     case 'timestamp':
       return new Date().getTime();
     default:
-      return embedData[id] || '';
+      return runtimeValue(embedData[id]) || '';
   }
 };
 
-export const compareWithTime = (start, end, type: string) => {
+export const compareWithTime = (
+  start: string | undefined,
+  end: string | undefined,
+  type: string,
+): boolean | undefined => {
   if (!start || !end) return false;
-  const startTime = parseInt(start.split(':')[0]) * 60 + parseInt(start.split(':')[1]);
-  const endTime = parseInt(end.split(':')[0]) * 60 + parseInt(end.split(':')[1]);
+  const startTime = parseInt(start.split(':')[0] || '') * 60 + parseInt(start.split(':')[1] || '');
+  const endTime = parseInt(end.split(':')[0] || '') * 60 + parseInt(end.split(':')[1] || '');
 
   switch (type) {
     case 'isBefore':
@@ -45,26 +60,27 @@ export const compareWithTime = (start, end, type: string) => {
   return undefined;
 };
 
-export const getRangeErrorType = ({ type, value, advancedSetting = {} }: FormControl) => {
+export const getRangeErrorType = ({ type, value: rawValue, advancedSetting = {} }: FormControl): string => {
+  const value: unknown = rawValue;
   const formatValue = (value: string) => parseFloat(String(value).replace(/,/g, ''));
   const { min, max, checkrange } = advancedSetting;
 
   if (!value || checkrange !== '1') return '';
 
   if (type === 2) {
-    const stringSize = (value || '').length;
+    const stringSize = typeof value === 'string' ? value.length : 0;
     if ((min && stringSize < +min) || (max && stringSize > +max)) return FORM_ERROR_TYPE.TEXT_RANGE;
   }
 
   if (
-    !isNaN(value) &&
+    !isNaN(Number(value)) &&
     _.includes([6, 8], type) &&
-    ((min && +value < formatValue(min)) || (max && +value > formatValue(max)))
+    ((min && Number(value) < formatValue(min)) || (max && Number(value) > formatValue(max)))
   )
     return FORM_ERROR_TYPE.NUMBER_RANGE;
 
   if (type === 10) {
-    const selectedItemsCount = JSON.parse(value || '[]').length;
+    const selectedItemsCount = parsedArray(value || '[]').length;
     if ((min && selectedItemsCount < +min) || (max && selectedItemsCount > +max))
       return FORM_ERROR_TYPE.MULTI_SELECT_RANGE;
   }
@@ -75,7 +91,7 @@ export const getRangeErrorType = ({ type, value, advancedSetting = {} }: FormCon
 /**
  * 验证身份证出生日期是否有效
  */
-export const validateIdCardBirthDate = idCard => {
+export const validateIdCardBirthDate = (idCard: string) => {
   const year = parseInt(idCard.substring(6, 10), 10);
   const month = parseInt(idCard.substring(10, 12), 10);
   const day = parseInt(idCard.substring(12, 14), 10);
@@ -101,7 +117,7 @@ export const validateIdCardBirthDate = idCard => {
     daysInMonth[1] = 29; // 闰年2月有29天
   }
 
-  if (day < 1 || day > daysInMonth[month - 1]) {
+  if (day < 1 || day > (daysInMonth[month - 1] ?? NaN)) {
     return false;
   }
 
@@ -109,21 +125,21 @@ export const validateIdCardBirthDate = idCard => {
 };
 
 // 合并筛选filter
-export const getItemFilters = items => {
-  return (items || []).reduce((total, cur) => {
-    return total.concat(cur.isGroup ? cur.groupFilters : [cur]);
+export const getItemFilters = (items?: FormFilterGroup[]) => {
+  return (items || []).reduce<FormFilterGroup[]>((total, cur) => {
+    return total.concat(cur.isGroup ? cur.groupFilters || [] : [cur]);
   }, []);
 };
 
 // 时间字段处理
-export const formatTimeValue = (control: FormControl = {}, isCurrent = false, value?) => {
+export const formatTimeValue = (control: FormControl = {}, isCurrent = false, value?: unknown) => {
   // 汇总输出格式unit为9
   const mode = control.unit === '6' || control.unit === '9' ? 'HH:mm:ss' : 'HH:mm';
   if (isCurrent) return moment(moment().format(mode), mode).format('HH:mm:ss');
   if (!value) return '';
-  return moment(value).year()
-    ? moment(moment(value).format(mode), mode).format('HH:mm:ss')
-    : moment(value, mode).format('HH:mm:ss');
+  return moment(dateValue(value)).year()
+    ? moment(moment(dateValue(value)).format(mode), mode).format('HH:mm:ss')
+    : moment(dateValue(value), mode).format('HH:mm:ss');
 };
 
 // 获取他表字段的值
@@ -137,20 +153,16 @@ export const getOtherWorksheetFieldValue = ({
   sourceControlId: string | undefined;
 }) => {
   try {
-    const parentControl = _.find(data, c => c.controlId === dataSource.slice(1, -1));
-    const record = safeParse(parentControl.value)[0];
-    const sourceControl = parentControl && _.find(parentControl.relationControls, c => c.controlId === sourceControlId);
-
+    if (!dataSource || sourceControlId === undefined) return '';
+    const parentControl = data.find(control => control.controlId === dataSource.slice(1, -1));
+    if (!parentControl) return '';
+    const record = parsedRecords(parentControl.value)[0];
+    const sourceControl = parentControl.relationControls?.find(control => control.controlId === sourceControlId);
+    const value = parsedRecord(record?.['sourcevalue'])[sourceControlId];
     if (sourceControl && _.includes([29, 35], sourceControl.type)) {
-      const sourceControlValue = safeParse(record.sourcevalue)[sourceControlId];
-      const sourceControlValueRecord = safeParse(sourceControlValue)[0];
-
-      if (sourceControlValueRecord) {
-        return sourceControlValueRecord.name;
-      }
-    } else {
-      return safeParse(record.sourcevalue)[sourceControlId];
+      return runtimeValue(parsedRecords(value)[0]?.['name']);
     }
+    return runtimeValue(value);
   } catch (err) {
     console.log(err);
     return '';
@@ -160,10 +172,11 @@ export const getOtherWorksheetFieldValue = ({
 /**
  * ignoreAddZero 不走补零逻辑
  */
-export function handleDotAndRound(currentItem, value, ignoreAddZero = true) {
-  const isNegative = value < 0;
-  value = Math.abs(value);
-  const roundType = currentItem.advancedSetting.roundtype || (_.includes([6, 8, 31, 37], currentItem.type) ? '2' : '0');
+export function handleDotAndRound(currentItem: FormControl, value: number | string, ignoreAddZero = true) {
+  const isNegative = Number(value) < 0;
+  value = Math.abs(Number(value));
+  const roundType =
+    currentItem.advancedSetting?.roundtype || (_.includes([6, 8, 31, 37], currentItem.type) ? '2' : '0');
   // 取整方式 空或者0 向下取整 1 向上取整 2 代表四舍五入
   let dot = Number(currentItem.dot);
 
@@ -176,10 +189,12 @@ export function handleDotAndRound(currentItem, value, ignoreAddZero = true) {
   } else if (roundType === '1') {
     value = String((Math.ceil(value * Math.pow(10, dot)) / Math.pow(10, dot)) * (isNegative ? -1 : 1));
   } else {
-    value = String(toFixed(Math.floor(value * Math.pow(10, dot)) / Math.pow(10, dot), dot) * (isNegative ? -1 : 1));
+    value = String(
+      Number(toFixed(Math.floor(value * Math.pow(10, dot)) / Math.pow(10, dot), dot)) * (isNegative ? -1 : 1),
+    );
   }
 
-  const ignoreZero = currentItem.advancedSetting.dotformat === '1';
+  const ignoreZero = currentItem.advancedSetting?.dotformat === '1';
 
   if (!ignoreZero && dot !== 0 && ignoreAddZero) {
     value = (value + (value.indexOf('.') > -1 ? '' : '.') + '0000000000000').replace(
@@ -193,9 +208,14 @@ export function handleDotAndRound(currentItem, value, ignoreAddZero = true) {
 
 // 获取控件的值（处理特殊选项控件）
 // objValue是外层新值，覆盖obj.value
-export const getControlValue = (data, currentItem, controlId: string, objValue?) => {
+export const getControlValue = (
+  data: FormControl[] = [],
+  currentItem: FormControl,
+  controlId?: string,
+  objValue?: unknown,
+): FormRuntimeValue => {
   const obj = _.find(data, o => o.controlId === controlId) || {};
-  const value = objValue || obj.value;
+  const value: unknown = objValue || obj.value;
 
   // 非同选项集选项默认值文本匹配
   if (
@@ -204,7 +224,7 @@ export const getControlValue = (data, currentItem, controlId: string, objValue?)
     !(obj.dataSource && obj.dataSource === currentItem.dataSource) &&
     value
   ) {
-    const tempValue = safeParse(value || '[]')
+    const tempValue = parsedStrings(value || '[]')
       .map(item => {
         const isOther = (item || '').includes('other') && _.find(currentItem.options || [], c => c.key === 'other');
         const itemText = _.get(
@@ -224,18 +244,18 @@ export const getControlValue = (data, currentItem, controlId: string, objValue?)
     (_.includes([6, 8, 28, 31], currentItem.type) || (currentItem.type === 38 && currentItem.enumDefault === 2))
   ) {
     // 选项控件的分值可以被数值类控件引用
-    if (!safeParse(value || '[]').length) return '';
+    if (!parsedStrings(value || '[]').length) return '';
 
     let cValue = 0;
-    safeParse(value || '[]').forEach(key => {
+    parsedStrings(value || '[]').forEach(key => {
       // 新增的项默认0
-      cValue += key.indexOf('add_') > -1 || !obj.enumDefault ? 0 : obj.options.find(o => o.key === key)?.score;
+      cValue += key.indexOf('add_') > -1 || !obj.enumDefault ? 0 : Number(obj.options?.find(o => o.key === key)?.score);
     });
 
     return cValue;
   }
 
-  return _.isUndefined(value) ? '' : value;
+  return _.isUndefined(value) ? '' : runtimeValue(value);
 };
 
 export const checkChildTableIsEmpty = (control: FormControl = {}) => {
@@ -257,21 +277,31 @@ export const checkChildTableIsEmpty = (control: FormControl = {}) => {
   }
 };
 
-export const getAttachmentData = (control: FormControl = {}) => {
-  let fileData;
-
-  if (control.value && _.isArray(JSON.parse(control.value))) {
-    fileData = JSON.parse(control.value);
-  } else {
-    const data = JSON.parse(control.value || '{}');
-    const { attachments = [], attachmentData = [], knowledgeAtts = [] } = data;
-    fileData = [...attachmentData, ...attachments, ...knowledgeAtts];
-  }
-
-  return fileData;
+export const getAttachmentData = (control: FormControl = {}): FormAttachmentData[] => {
+  const value = parseValue(control.value || '{}');
+  const object = valueRecord(value);
+  const attachments: unknown[] = Array.isArray(value)
+    ? value
+    : [
+        ...parsedArray(object?.['attachmentData']),
+        ...parsedArray(object?.['attachments']),
+        ...parsedArray(object?.['knowledgeAtts']),
+      ];
+  return attachments.filter((attachment): attachment is FormAttachmentData => {
+    const item = valueRecord(attachment);
+    return (
+      !!item &&
+      ['originalFileName', 'originalFilename', 'fileID'].every(
+        key => item[key] === undefined || typeof item[key] === 'string',
+      )
+    );
+  });
 };
 
-export const mergeFormDataWidthSystem = (data = [], systemControlData = []) => {
+export const mergeFormDataWidthSystem = (
+  data: FormControl[] = [],
+  systemControlData: FormControl[] = [],
+): FormControl[] => {
   const mergedData = [...data];
   (systemControlData || []).forEach(systemItem => {
     const existingIndex = mergedData.findIndex(d => d.controlId === systemItem.controlId);

@@ -5,11 +5,12 @@ import { getEmbedValue } from 'src/components/Form/core/formUtils/helper';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
+import { embedUrlSegment } from 'src/pages/worksheet/views/CustomWidgetView/valueBoundary';
 import { getTitleControlForCard } from 'src/pages/worksheet/views/util.js';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getRecordColor, getRecordColorConfig } from 'src/utils/record';
 import EditableCard from '../components/EditableCard';
 import { getRecordAttachments, RENDER_RECORD_NECESSARY_ATTR } from '../util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export default function DetailItem(props) {
   const {
@@ -34,7 +35,10 @@ export default function DetailItem(props) {
     return { ...o, value: itemData[o.controlId] };
   });
   const { coverImage, allAttachments } = getRecordAttachments(itemData[coverCid]);
-  let coverData = { ...(controls.find((it: FormControl) => it.controlId === coverCid) || {}), value: itemData[coverCid] };
+  let coverData = {
+    ...(controls.find((it: FormControl) => it.controlId === coverCid) || {}),
+    value: itemData[coverCid],
+  };
 
   if (coverData.type === 45) {
     //嵌入字段 dataSource需要转换
@@ -45,16 +49,18 @@ export default function DetailItem(props) {
         urlList.push(o.staticValue);
       } else {
         urlList.push(
-          getEmbedValue(
-            {
-              projectId: worksheetInfo.projectId,
-              appId,
-              groupId,
-              worksheetId,
-              viewId,
-              recordId: currentRecordId,
-            },
-            o.cid,
+          embedUrlSegment(
+            getEmbedValue(
+              {
+                projectId: worksheetInfo.projectId,
+                appId,
+                groupId,
+                worksheetId,
+                viewId,
+                recordId: currentRecordId,
+              },
+              o.cid,
+            ),
           ),
         );
       }

@@ -95,7 +95,7 @@ const EmptyWrap = styled.div`
 interface DialogUserData {
   id: string;
   accountId: string;
-  fullname?: string;
+  fullname?: string | undefined;
   collapsed?: boolean;
   moreLoading?: boolean | undefined;
   projectId?: string;

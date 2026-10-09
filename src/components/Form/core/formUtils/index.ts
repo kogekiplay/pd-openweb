@@ -19,11 +19,11 @@ import {
 } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
 import { getShowFormat, isSheetDisplay } from 'src/utils/controlCommon';
-import type { ControlValue, FormControl } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
 import { dateConvertToServerZone, dateServerZoneToAppZone, getContactInfo } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
-import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, TIME_UNIT } from '../config';
-import type { FormRule, MasterData, RuleFilterGroup, RuleFilterItem } from '../types';
+import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT } from '../config';
+import type { FormError, MasterData } from '../types';
 import filterFn from './filterFn';
 import {
   checkChildTableIsEmpty,
@@ -40,14 +40,82 @@ import {
   replaceStr,
   validateIdCardBirthDate,
 } from './helper';
+import type {
+  EmbedData,
+  FormConditionRule,
+  FormRuleCheckResult,
+  FormRuleMessage,
+  FormRuntimeValue,
+  PermissionUpdate,
+  FormFilterGroup as RuleFilterGroup,
+  FormComparisonCondition as RuleFilterItem,
+} from './types';
+import {
+  dateValue,
+  defaultSources,
+  parsedArray,
+  parsedRecord,
+  parsedRecords,
+  parsedStrings,
+  parseValue,
+  regexValidations,
+  runtimeValue,
+  stringValue,
+  valueRecord,
+} from './valueBoundary';
+
+function getTimeUnit(
+  unit: string | undefined,
+  fallback: moment.unitOfTime.DurationConstructor,
+): moment.unitOfTime.DurationConstructor {
+  switch (unit) {
+    case '1':
+      return 'm';
+    case '2':
+      return 'h';
+    case '3':
+      return 'd';
+    case '4':
+      return 'M';
+    case '5':
+      return 'y';
+    case '6':
+      return 's';
+    default:
+      return fallback;
+  }
+}
+
+function getErrorText(errorType: string): string | ((item: FormControl) => string | undefined) | undefined {
+  const messages = {
+    REQUIRED: FORM_ERROR_TYPE_TEXT.REQUIRED,
+    REQUIRED_SELECT: FORM_ERROR_TYPE_TEXT.REQUIRED_SELECT,
+    MOBILE_PHONE: FORM_ERROR_TYPE_TEXT.MOBILE_PHONE,
+    TEL_PHONE: FORM_ERROR_TYPE_TEXT.TEL_PHONE,
+    EMAIL: FORM_ERROR_TYPE_TEXT.EMAIL,
+    ID_CARD: FORM_ERROR_TYPE_TEXT.ID_CARD,
+    PASSPORT: FORM_ERROR_TYPE_TEXT.PASSPORT,
+    HK_PASSPORT: FORM_ERROR_TYPE_TEXT.HK_PASSPORT,
+    TW_PASSPORT: FORM_ERROR_TYPE_TEXT.TW_PASSPORT,
+    OTHER_REQUIRED: FORM_ERROR_TYPE_TEXT.OTHER_REQUIRED,
+    CHILD_TABLE_ROWS_LIMIT: FORM_ERROR_TYPE_TEXT.CHILD_TABLE_ROWS_LIMIT,
+    UNIQUE: FORM_ERROR_TYPE_TEXT.UNIQUE,
+    NUMBER_RANGE: FORM_ERROR_TYPE_TEXT.NUMBER_RANGE,
+    MULTI_SELECT_RANGE: FORM_ERROR_TYPE_TEXT.MULTI_SELECT_RANGE,
+    DATE: FORM_ERROR_TYPE_TEXT.DATE,
+    DATE_TIME: FORM_ERROR_TYPE_TEXT.DATE_TIME,
+    TEXT_RANGE: FORM_ERROR_TYPE_TEXT.TEXT_RANGE,
+  };
+  return Object.entries(messages).find(([key]) => key === errorType)?.[1];
+}
 
 export const checkValueByFilterRegex = (
   data: FormControl = {},
   name?: string,
   formData?: FormControl[],
   recordId?: string,
-) => {
-  const filterRegex = safeParse(_.get(data, 'advancedSetting.filterregex') || '[]');
+): string | undefined => {
+  const filterRegex = regexValidations(data.advancedSetting?.filterregex || '[]');
 
   if (filterRegex.length) {
     for (const f of filterRegex) {
@@ -71,162 +139,122 @@ export const checkValueByFilterRegex = (
       }
     }
   }
+  return undefined;
 };
 
 // 工作表查询部门、地区、用户赋值特殊处理
-export const getCurrentValue = (item, data, control) => {
+export const getCurrentValue = (
+  item: FormControl | undefined,
+  originalData: unknown,
+  control: FormControl | undefined,
+): FormRuntimeValue => {
+  let data = runtimeValue(originalData);
   if (!item || !control) return data;
   switch (control.type) {
-    //当前控件文本
     case 2:
     case 41:
       if (_.includes([6, 31, 37], item.type) && item.advancedSetting && item.advancedSetting.numshow === '1' && data) {
-        data = accMul(parseFloat(data), 100);
+        data = accMul(parseFloat(String(data)), 100);
       }
-
       switch (item.type) {
-        //用户
         case 26:
-          return JSON.parse(data || '[]')
-            .map(item =>
-              item.accountId === md.global.Account.accountId ? md.global.Account.fullname : item.name || item.fullname,
+          return parsedRecords(data || '[]')
+            .map(user =>
+              user['accountId'] === md.global.Account.accountId
+                ? md.global.Account.fullname
+                : user['name'] || user['fullname'],
             )
             .join('、');
-        //部门
         case 27:
-          return JSON.parse(data || '[]')
-            .map(item => item.departmentName)
+          return parsedRecords(data || '[]')
+            .map(department => department['departmentName'])
             .join('、');
-        //组织角色
         case 48:
-          return JSON.parse(data || '[]')
-            .map(item => item.organizeName)
+          return parsedRecords(data || '[]')
+            .map(role => role['organizeName'])
             .join('、');
-        //地区
         case 19:
         case 23:
         case 24:
-          return JSON.parse(data || '{}').name;
-        // 单选、多选
+          return runtimeValue(parsedRecord(data || '{}')['name']);
         case 9:
         case 10:
         case 11:
-          const ids = JSON.parse(data || '[]');
-          return ids
-            .map(i => {
-              let d = '';
-
+          return parsedStrings(data || '[]')
+            .map(id => {
+              let parsedOption: unknown;
               try {
-                const da = JSON.parse(i);
-
-                if (typeof da === 'object') {
-                  return da.value;
-                } else {
-                  d = i;
-                }
-              } catch (e) {
-                console.log(e);
-                d = i;
+                parsedOption = JSON.parse(id);
+              } catch (error) {
+                console.log(error);
               }
-
-              if (d.toString().indexOf('add_') > -1) {
-                return d.split('add_')[1];
-              }
-
+              const option = valueRecord(parsedOption);
+              if (option) return option['value'];
+              if (id.indexOf('add_') > -1) return id.split('add_')[1];
               if (item.controlId === 'wfstatus') {
-                return (
-                  _.get(
-                    _.find(WFSTATUS_OPTIONS, t => t.key === d && !t.isDeleted),
-                    'value',
-                  ) || ''
-                );
+                return _.find(WFSTATUS_OPTIONS, status => status.key === id)?.value || '';
               }
-
-              const curValue =
-                _.get(
-                  _.find(item.options || [], t => t.key === d && !t.isDeleted),
-                  'value',
-                ) || '';
-
-              if (d.toString().indexOf('other:') > -1) {
-                return _.replace(d, 'other:', '') || curValue;
-              }
-
-              return curValue;
+              const currentValue = item.options?.find(option => option.key === id && !option.isDeleted)?.value || '';
+              if (id.indexOf('other:') > -1) return _.replace(id, 'other:', '') || currentValue;
+              return currentValue;
             })
             .join(', ');
         case 14:
-          const fileData = getAttachmentData({ value: data });
-          return fileData.map(f => f.originalFileName || f.originalFilename).join('、');
+          return getAttachmentData({ value: data })
+            .map(file => file.originalFileName || file.originalFilename)
+            .join('、');
         case 15:
         case 16:
-          const showFormat = getShowFormat(item);
-          return data ? moment(data).format(showFormat) : '';
-        //关联记录单条
-        case 29:
-          const formatData = safeParse(data || '[]', 'array')[0] || {};
-          let titleControl;
-
-          if (_.get(item, 'relationControls.length')) {
-            titleControl = _.find(item.relationControls, r => r.attribute === 1) || {};
-          } else if (_.get(window, 'worksheetControlsCache.' + item.dataSource)) {
-            titleControl =
-              _.find(_.get(window, 'worksheetControlsCache.' + item.dataSource) || [], r => r.attribute === 1) || {};
+          return data ? moment(dateValue(data)).format(getShowFormat(item)) : '';
+        case 29: {
+          const record = parsedRecords(data || '[]')[0] || {};
+          let titleControl: FormControl | undefined;
+          if (item.relationControls?.length) {
+            titleControl = item.relationControls.find(control => control.attribute === 1) || {};
+          } else {
+            const controls = window.worksheetControlsCache?.[item.dataSource || ''] || [];
+            if (controls.length) titleControl = controls.find(control => control.attribute === 1) || {};
           }
-
-          return titleControl ? renderCellText({ ...titleControl, value: formatData.name }) : formatData.name;
-        //公式
-        case 31:
-          const dot = item.dot || 0;
-          const val = Number(data || 0).toFixed(dot);
-          return _.get(item, 'advancedSetting.dotformat') === '1' ? formatStrZero(val) : val;
-        // 级联
+          return titleControl
+            ? runtimeValue(renderCellText({ ...titleControl, value: record['name'] }))
+            : runtimeValue(record['name']);
+        }
+        case 31: {
+          const val = Number(data || 0).toFixed(item.dot || 0);
+          return item.advancedSetting?.dotformat === '1' ? formatStrZero(val) : val;
+        }
         case 35:
-          return safeParse(data || '[]', 'array')
-            .map(item => item.name)
+          return parsedRecords(data || '[]')
+            .map(record => record['name'])
             .join();
-        // 检查框
         case 36:
-          if (_.includes(['1', '2'], item.advancedSetting.showtype)) {
-            const itemnames = getSwitchItemNames(item, { needDefault: true });
-            return (
-              _.get(
-                _.find(itemnames, i => i.key === data),
-                'value',
-              ) || ''
-            );
+          if (_.includes(['1', '2'], item.advancedSetting?.showtype)) {
+            return _.find(getSwitchItemNames(item, { needDefault: true }), option => option.key === data)?.value || '';
           }
-
           return data === '1' ? 'true' : 'false';
-        // 定位
-        case 40:
-          const locationData = safeParse(data || '{}');
-          return _.isEmpty(locationData)
+        case 40: {
+          const location = parsedRecord(data || '{}');
+          return _.isEmpty(location)
             ? ''
-            : locationData.title || locationData.address
-              ? [locationData.title, locationData.address].filter(o => o).join(' ')
-              : `${_l('经度：%0', locationData.x)} ${_l('纬度：%0', locationData.y)}`;
+            : location['title'] || location['address']
+              ? [location['title'], location['address']].filter(Boolean).join(' ')
+              : `${_l('经度：%0', String(location['x']))} ${_l('纬度：%0', String(location['y']))}`;
+        }
         case 46:
-          return data ? moment(data, 'HH:mm:ss').format(item.unit === '6' ? 'HH:mm:ss' : 'HH:mm') : '';
+          return data ? moment(dateValue(data), 'HH:mm:ss').format(item.unit === '6' ? 'HH:mm:ss' : 'HH:mm') : '';
         default:
           return data;
       }
-
-    //控件为数值、金额、等级
     case 6:
     case 8:
     case 28:
-      //选项赋分值
       if (isEnableScoreOption(item)) {
-        const selectOptions = (item.options || []).filter(item => _.includes(JSON.parse(data || '[]'), item.key));
-        if (!selectOptions.length) return '';
-        return selectOptions.reduce((total, cur) => {
-          return total + Number(cur.score || 0);
-        }, 0);
-      } else {
-        return data;
+        const selected = parsedStrings(data || '[]');
+        const options = (item.options || []).filter(option => selected.includes(option.key || ''));
+        if (!options.length) return '';
+        return options.reduce((total, option) => total + Number(option.score || 0), 0);
       }
-
+      return data;
     default:
       return data;
   }
@@ -236,7 +264,7 @@ export const getCurrentValue = (item, data, control) => {
  * 基本验证大陆身份证号码
  * 验证地址码、出生日期和号码格式，兼容校验码不符合规则的历史真实证件
  */
-const validateMainlandIdCard = idCard => {
+const validateMainlandIdCard = (idCard: string) => {
   const result = Reg.idCardNumber.test(idCard);
 
   if (!result) {
@@ -271,13 +299,13 @@ const Reg = {
 };
 
 export const Validator = {
-  isTelPhoneNumber: str => {
+  isTelPhoneNumber: (str: string) => {
     return Reg.telPhoneNumber.test(str);
   },
-  isEmailAddress: str => {
+  isEmailAddress: (str: string) => {
     return Reg.emailAddress.test(str);
   },
-  isIdCardNumber: str => {
+  isIdCardNumber: (str: string) => {
     // 身份证严格校验
     if (validateMainlandIdCard(str)) {
       return true;
@@ -285,13 +313,13 @@ export const Validator = {
 
     return Reg.hkCardNumber.test(str) || Reg.moCardNumber.test(str) || Reg.twCardNumber.test(str);
   },
-  isPassportNumber: str => {
+  isPassportNumber: (str: string) => {
     return Reg.passportNumber.test(str);
   },
-  isHkPassportNumber: str => {
+  isHkPassportNumber: (str: string) => {
     return Reg.hkPassportNumber.test(str);
   },
-  isTwPassportNumber: str => {
+  isTwPassportNumber: (str: string) => {
     return Reg.twPassportNumber.test(str);
   },
 };
@@ -309,7 +337,7 @@ export const formatSearchResultValue = ({
   targetControl?: FormControl | undefined;
   currentControl?: FormControl | undefined;
   controls?: FormControl[] | undefined;
-  searchResult?: ControlValue | undefined;
+  searchResult?: unknown;
 }) => {
   if (_.includes([9, 10, 11], currentControl.type)) {
     return getControlValue(controls, currentControl, targetControl.controlId, searchResult);
@@ -325,20 +353,20 @@ export const formatSearchResultValue = ({
 };
 
 // 处理静态默认值
-const parseStaticValue = (item, staticValue) => {
+const parseStaticValue = (item: FormControl, staticValue: string): FormRuntimeValue => {
   // 手机 当前用户
-  if (item.type === 3 && _.get(safeParse(staticValue), 'accountId') === 'user-self') {
+  if (item.type === 3 && parsedRecord(staticValue)['accountId'] === 'user-self') {
     return getContactInfo('mobilePhone');
   }
 
   // 邮箱 当前用户
-  if (item.type === 5 && _.get(safeParse(staticValue), 'accountId') === 'user-self') {
+  if (item.type === 5 && parsedRecord(staticValue)['accountId'] === 'user-self') {
     return getContactInfo('email');
   }
 
   // 日期 || 日期时间
   if (item.type === 15 || item.type === 16) {
-    const unit = TIME_UNIT[item.unit] || 'd';
+    const unit = getTimeUnit(item.unit, 'd');
 
     if (staticValue === '2') {
       return item.type === 15
@@ -358,9 +386,9 @@ const parseStaticValue = (item, staticValue) => {
 
   // 人员 || 部门
   if (_.includes([26, 27, 48], item.type)) {
-    const value = safeParse(staticValue);
+    const value = parseValue(staticValue);
 
-    if (value.accountId === 'user-self') {
+    if (valueRecord(value)?.['accountId'] === 'user-self') {
       if (window.isPublicWorksheet) return '';
       if ((item.advancedSetting || {}).usertype === '2' && !md.global.Account.isPortal) return '';
       const obj = _.pick(_.get(md, ['global', 'Account']), ['accountId', 'fullname', 'avatarMiddle']);
@@ -368,26 +396,28 @@ const parseStaticValue = (item, staticValue) => {
       return { ...obj, avatar: obj.avatarMiddle, name: obj.fullname };
     }
 
-    return _.isEmpty(value) ? '' : value;
+    return _.isEmpty(value) ? '' : runtimeValue(value);
   }
 
   // 关联表、级联
   if (_.includes([29, 35], item.type)) {
     const titleControl = _.find(_.get(item, 'relationControls'), i => i.attribute === 1);
     const isCascaderAllPath = item.type === 35 && _.get(item, 'advancedSetting.allpath') === '1';
-    staticValue = safeParse(staticValue)[0];
+    const sourceValue = parsedArray(staticValue)[0];
+    const row = parsedRecord(sourceValue);
     const name =
-      safeParse(staticValue).name ||
+      row['name'] ||
       (isCascaderAllPath
-        ? safeParse(_.get(safeParse(staticValue), 'path') || '[]').join(' / ')
+        ? parsedArray(row['path'] || '[]').join(' / ')
         : titleControl
-          ? renderCellText({ ...titleControl, value: safeParse(staticValue)[titleControl.controlId] }) || _l('未命名')
+          ? renderCellText({ ...titleControl, value: row[titleControl.controlId || 'undefined'] }) || _l('未命名')
           : undefined);
+
     return JSON.stringify([
       {
-        sourcevalue: staticValue,
+        sourcevalue: sourceValue,
         type: 8,
-        sid: safeParse(staticValue).rowid,
+        sid: row['rowid'],
         name: name,
       },
     ]);
@@ -398,7 +428,7 @@ const parseStaticValue = (item, staticValue) => {
     let parsedValue;
 
     try {
-      parsedValue = safeParse(staticValue);
+      parsedValue = parsedRecords(staticValue);
       return JSON.stringify(parsedValue.map(r => ({ ...r, initRowIsCreate: false })));
     } catch (err) {
       console.log(err);
@@ -410,12 +440,17 @@ const parseStaticValue = (item, staticValue) => {
 
 // 获取动态默认值
 // embedData 标可选：多数调用点只传前三个参数，不标会报 TS2554。
-export const getDynamicValue = (data, currentItem, masterData?, embedData?) => {
+export const getDynamicValue = (
+  data: FormControl[] = [],
+  currentItem: FormControl,
+  masterData?: MasterData,
+  embedData?: EmbedData,
+): FormRuntimeValue => {
   if (currentItem.isQueryWorksheetFill && !checkCellIsEmpty(currentItem.value)) {
-    return currentItem.value;
+    return runtimeValue(currentItem.value);
   }
 
-  let value = safeParse(currentItem.advancedSetting.defsource || '[]').map(item => {
+  let value: FormRuntimeValue[] | string = defaultSources(currentItem.advancedSetting?.defsource || '[]').map(item => {
     if (item.isAsync) return '';
 
     // 关联他表字段
@@ -425,29 +460,29 @@ export const getDynamicValue = (data, currentItem, masterData?, embedData?) => {
           const targetControl = _.find(masterData.formData, c => c.controlId === item.cid);
 
           if (_.includes([15, 16], currentItem.type)) {
-            return targetControl.value
-              ? moment(targetControl.value).format(item.type === 15 ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss')
+            return targetControl?.value
+              ? moment(dateValue(targetControl?.value)).format(item.type === 15 ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss')
               : '';
           }
 
           if (currentItem.type === 46) {
-            return formatTimeValue(currentItem, false, targetControl.value);
+            return formatTimeValue(currentItem, false, targetControl?.value);
           }
 
           //文本类控件(默认值为选项、成员、部门等异化)
           if (_.includes([2], currentItem.type)) {
-            return getCurrentValue(targetControl, targetControl.value, currentItem);
+            return getCurrentValue(targetControl, targetControl?.value, currentItem);
           }
 
-          return getControlValue(masterData.formData, currentItem, item.cid);
+          return getControlValue(masterData.formData || [], currentItem, item.cid);
         }
 
         const parentControl = _.find(data, c => c.controlId === item.rcid) || {};
-        const control = safeParse(parentControl.value || '[]')[0];
-        const sourcevalue = control && safeParse(control.sourcevalue)[item.cid];
+        const control = parsedRecords(parentControl.value || '[]')[0];
+        const sourcevalue = control && parsedRecord(control['sourcevalue'])[item.cid || 'undefined'];
 
         if (_.includes([15, 16], currentItem.type) && _.includes(['ctime', 'utime'], item.cid)) {
-          return (sourcevalue ? moment(sourcevalue) : moment()).format(
+          return (sourcevalue ? moment(dateValue(sourcevalue)) : moment()).format(
             item.type === 15 ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss',
           );
         }
@@ -459,7 +494,7 @@ export const getDynamicValue = (data, currentItem, masterData?, embedData?) => {
         // 关联表
         if (_.includes([29, 35], currentItem.type)) {
           try {
-            return JSON.stringify(safeParse(sourcevalue, 'array').filter(r => r.sid));
+            return JSON.stringify(parsedRecords(sourcevalue).filter(record => record['sid']));
           } catch (err) {
             console.log(err);
             return '';
@@ -474,16 +509,18 @@ export const getDynamicValue = (data, currentItem, masterData?, embedData?) => {
           try {
             if (!sourcevalue) return '';
             let cValue = 0;
-            const { options, enumDefault } = _.find(parentControl.relationControls, o => o.controlId === item.cid);
+            const sourceControl = parentControl.relationControls?.find(control => control.controlId === item.cid);
+            if (!sourceControl) return runtimeValue(sourcevalue);
+            const { options = [], enumDefault } = sourceControl;
 
-            safeParse(sourcevalue, 'array').forEach(key => {
-              cValue += enumDefault ? options.find(o => o.key === key).score : 0;
+            parsedStrings(sourcevalue).forEach(key => {
+              cValue += enumDefault ? Number(options.find(option => option.key === key)?.score) : 0;
             });
 
             return cValue;
           } catch (err) {
             console.log(err);
-            return sourcevalue;
+            return runtimeValue(sourcevalue);
           }
         }
 
@@ -507,7 +544,7 @@ export const getDynamicValue = (data, currentItem, masterData?, embedData?) => {
           return getControlValue(parentControl.relationControls || [], currentItem, item.cid, sourcevalue);
         }
 
-        return sourcevalue;
+        return runtimeValue(sourcevalue);
       } catch (err) {
         console.log(err);
         return '';
@@ -547,7 +584,7 @@ export const getDynamicValue = (data, currentItem, masterData?, embedData?) => {
       ) {
         if (item.cid === 'caid' && (embedData || {}).recordId) {
           const userValue = _.get(currentTargetControl, 'value');
-          return safeParse(userValue || '[]')[0] || '';
+          return runtimeValue(parsedArray(userValue || '[]')[0]) || '';
         }
 
         const obj = _.pick(_.get(md, ['global', 'Account']), ['accountId', 'fullname', 'avatarMiddle']);
@@ -579,18 +616,16 @@ export const getDynamicValue = (data, currentItem, masterData?, embedData?) => {
   });
 
   if (_.includes([9, 10, 11, 26, 27, 29, 35, 48], currentItem.type)) {
-    let source = [];
+    let source: unknown[] = [];
 
     _.remove(value, o => !o);
 
     // 合并成新的一维数组
     value.forEach(obj => {
       if (typeof obj === 'string' && /[{|[]/.test(obj)) {
-        if (_.isArray(safeParse(obj))) {
-          source = source.concat(safeParse(obj));
-        } else {
-          source.push(safeParse(obj));
-        }
+        const parsed: unknown = parseValue(obj);
+        if (Array.isArray(parsed)) source = source.concat(parsed);
+        else source.push(parsed);
       } else {
         source.push(obj);
       }
@@ -598,20 +633,28 @@ export const getDynamicValue = (data, currentItem, masterData?, embedData?) => {
 
     // 筛选出不重复的用户
     if (currentItem.type === 26) {
-      source = _.uniqBy(source, user => user.accountId);
+      source = _.uniqBy(source, user => valueRecord(user)?.['accountId']);
     } else if (
       currentItem.type === 29 &&
       currentItem.enumDefault === 2 &&
       _.get(currentItem, 'advancedSetting.showtype') === String(RELATE_RECORD_SHOW_TYPE.CARD)
     ) {
-      source = source.filter(r => _.isObject(r)).map(r => ({ ...r, isNew: true, isFromDefault: true }));
+      source = source
+        .filter((row): row is Record<string, unknown> => !!valueRecord(row))
+        .map(row => ({ ...row, isNew: true, isFromDefault: true }));
     } else {
-      source = _.uniqBy(source);
+      source = _.uniq(source);
     }
 
     // 选项已删除的校验
     if (_.includes([9, 10, 11], currentItem.type)) {
-      source = source.filter(s => _.find(currentItem.options, c => s.includes(c.key) && !c.isDeleted));
+      source = source.filter(
+        source =>
+          typeof source === 'string' &&
+          currentItem.options?.some(
+            option => option.key !== undefined && source.includes(option.key) && !option.isDeleted,
+          ),
+      );
     }
 
     value = JSON.stringify(source);
@@ -633,7 +676,7 @@ interface FormulaResult {
   columnIsUndefined?: boolean;
   result?: number | null;
   /** 历史遗留键：没有任何地方给它赋值 */
-  error?: unknown;
+  error?: undefined;
 }
 
 export const parseNewFormula = (data: FormControl[], currentItem: FormControl = {}): FormulaResult => {
@@ -659,7 +702,7 @@ export const parseNewFormula = (data: FormControl[], currentItem: FormControl = 
     .replace(/cROUNDDOWN/gi, 'ROUNDDOWN');
 
   const expression = formulaStr.replace(/\$.+?\$/g, matched => {
-    const controlId = matched.match(/\$(.+?)\$/)[1];
+    const controlId = matched.slice(1, -1);
     let column = Object.assign(
       {},
       _.find(data, obj => obj.controlId === controlId),
@@ -667,7 +710,7 @@ export const parseNewFormula = (data: FormControl[], currentItem: FormControl = 
 
     if (!column) {
       columnIsUndefined = true;
-      return undefined;
+      return 'undefined';
     }
 
     if (_.includes([9, 10, 11], column.type)) {
@@ -677,7 +720,7 @@ export const parseNewFormula = (data: FormControl[], currentItem: FormControl = 
         columnIsUndefined = true;
       }
 
-      return nullzero === '1' && optionValue === '' ? 0 : optionValue;
+      return String(nullzero === '1' && optionValue === '' ? 0 : optionValue);
     }
 
     // 汇总字段默认按 0 处理
@@ -694,13 +737,16 @@ export const parseNewFormula = (data: FormControl[], currentItem: FormControl = 
       column.value = '0';
     }
 
-    return _.find([6, 8, 28, 31, 37], c => c === column.type || c === column.sourceControlType)
-      ? column.value
-      : formatColumnToText(column, true, true);
+    return String(
+      _.find([6, 8, 28, 31, 37], c => c === column.type || c === column.sourceControlType)
+        ? column.value
+        : formatColumnToText(column, true, true),
+    );
   });
   const parser = new Parser();
   parser.setFunction('MOD', function (params) {
-    return params[0] % params[1];
+    const values: unknown[] = Array.isArray(params) ? params : [];
+    return Number(values[0]) % Number(values[1]);
   });
   const result = parser.parse(expression);
   return columnIsUndefined
@@ -725,8 +771,16 @@ export const parseNewFormula = (data: FormControl[], currentItem: FormControl = 
 // 函数处理
 // forceSyncRun 标可选：调用点（DataFormat 的默认值计算）不传它，
 // 不标的话解构参数默认是必填，报 TS2345。
-export function calcDefaultValueFunction({ formData, fnControl, forceSyncRun = false }) {
-  let expression = _.get(safeParse(fnControl.advancedSetting.defaultfunc), 'expression');
+export function calcDefaultValueFunction({
+  formData,
+  fnControl,
+  forceSyncRun = false,
+}: {
+  formData: FormControl[];
+  fnControl: FormControl;
+  forceSyncRun?: boolean | undefined;
+}): string | undefined {
+  const expression = stringValue(parsedRecord(fnControl.advancedSetting?.['defaultfunc'])['expression']);
 
   if (!expression) {
     return '';
@@ -734,6 +788,7 @@ export function calcDefaultValueFunction({ formData, fnControl, forceSyncRun = f
 
   const result = execValueFunction(fnControl, formData, { forceSyncRun });
 
+  if (!result) return undefined;
   if (result.error) {
     console.log(result);
   } else {
@@ -749,7 +804,7 @@ export function asyncUpdateMdFunction({
 }: {
   formData: FormControl[];
   fnControl: FormControl;
-  update: (v: ControlValue) => void;
+  update: (v: unknown) => void;
 }) {
   try {
     execValueFunction(fnControl, formData, { update });
@@ -759,7 +814,12 @@ export function asyncUpdateMdFunction({
 }
 
 // 嵌入字段处理
-export const parseValueIframe = (data: FormControl[], currentItem: FormControl, masterData, embedData) => {
+export const parseValueIframe = (
+  data: FormControl[],
+  currentItem: FormControl,
+  masterData?: MasterData,
+  embedData?: EmbedData,
+) => {
   return getDynamicValue(
     data,
     {
@@ -794,10 +854,12 @@ export function handleDotAndRound(currentItem: FormControl, value: number | stri
   } else if (roundType === '1') {
     value = String((Math.ceil(value * Math.pow(10, dot)) / Math.pow(10, dot)) * (isNegative ? -1 : 1));
   } else {
-    value = String(toFixed(Math.floor(value * Math.pow(10, dot)) / Math.pow(10, dot), dot) * (isNegative ? -1 : 1));
+    value = String(
+      Number(toFixed(Math.floor(value * Math.pow(10, dot)) / Math.pow(10, dot), dot)) * (isNegative ? -1 : 1),
+    );
   }
 
-  const ignoreZero = currentItem.advancedSetting.dotformat === '1';
+  const ignoreZero = currentItem.advancedSetting?.dotformat === '1';
 
   if (!ignoreZero && dot !== 0 && ignoreAddZero) {
     value = (value + (value.indexOf('.') > -1 ? '' : '.') + '0000000000000').replace(
@@ -810,8 +872,9 @@ export function handleDotAndRound(currentItem: FormControl, value: number | stri
 }
 
 // 处理日期公式
-export const parseDateFormula = (data, currentItem, recordCreateTime) => {
-  const getTime = (str, pos: string) => {
+export const parseDateFormula = (data: FormControl[], currentItem: FormControl, recordCreateTime?: string | Date) => {
+  const getTime = (str: string | undefined, pos: string): moment.MomentInput => {
+    if (!str) return undefined;
     if (str === '$ctime$') {
       return recordCreateTime || new Date();
     } else if (str === '$utime$') {
@@ -820,9 +883,9 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
       const column = _.find(data, item => item.controlId === str.slice(1, -1));
 
       if (!column) {
-        return;
+        return undefined;
       } else {
-        let timestr;
+        let timestr: moment.MomentInput;
         let columnType = column.type;
 
         if (column.type === 37) {
@@ -830,15 +893,15 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
         }
 
         if (_.includes([15, 16, 46, 30], columnType)) {
-          timestr = column.value;
+          timestr = dateValue(column.value);
         }
 
         if (columnType === 29) {
-          timestr = _.get(safeParse(column.value), '0.name');
+          timestr = dateValue(parsedRecords(column.value)[0]?.['name']);
         }
 
         if (!timestr) {
-          return;
+          return undefined;
         }
 
         if (columnType === 15 || (columnType === 30 && column.sourceControlType === 15)) {
@@ -866,17 +929,18 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
     } else if (moment.isDate(new Date(str))) {
       return str;
     } else {
-      return;
+      return undefined;
     }
   };
 
-  let value = '';
+  let value: string | number = '';
 
   if (currentItem.enumDefault === 1) {
     let startTime = getTime(currentItem.sourceControlId, 'start');
     let endTime = getTime(currentItem.dataSource, 'end');
-    const startControl = _.find(data, item => item.controlId === currentItem.sourceControlId.slice(1, -1)) || {};
-    const endControl = _.find(data, item => item.controlId === currentItem.dataSource.slice(1, -1)) || {};
+    const startControl =
+      _.find(data, item => item.controlId === (currentItem.sourceControlId || '').slice(1, -1)) || {};
+    const endControl = _.find(data, item => item.controlId === (currentItem.dataSource || '').slice(1, -1)) || {};
 
     if (startControl.type === 46 && endControl.type !== 46) {
       startTime = moment(endTime).format('YYYY-MM-DD') + moment(startTime).format(' HH:mm:ss');
@@ -884,8 +948,8 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
       endTime = moment(startTime).format('YYYY-MM-DD') + moment(endTime).format(' HH:mm:ss');
     }
 
-    const weekday = currentItem.advancedSetting.weekday || '1234567';
-    const unit = parseInt(currentItem.unit);
+    const weekday = currentItem.advancedSetting?.['weekday'] || '1234567';
+    const unit = parseInt(currentItem.unit || '');
 
     if (!startTime || !endTime) {
       return undefined;
@@ -929,18 +993,18 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
         if (_.includes(weekday.split(''), (day === 0 ? 7 : day).toString())) {
           // 是同一天
           if (moment(startTime).isSame(endTime, 'd')) {
-            value = moment(endTime).diff(startTime, TIME_UNIT[currentItem.unit] || 'm', true);
+            value = moment(endTime).diff(startTime, getTimeUnit(currentItem.unit, 'm'), true);
           } else {
             if (i !== timeDiff % 7) {
               weekDayHour += moment(moment(newStart).add(1, 'd').format('YYYY-MM-DD')).diff(
                 i === 0 ? newStart : newStart.format('YYYY-MM-DD'),
-                TIME_UNIT[currentItem.unit] || 'm',
+                getTimeUnit(currentItem.unit, 'm'),
                 true,
               );
             } else {
               weekDayHour += moment(newStart.format('YYYY-MM-DD') + moment(endTime).format(' HH:mm')).diff(
                 moment(newStart).format('YYYY-MM-DD'),
-                TIME_UNIT[currentItem.unit] || 'm',
+                getTimeUnit(currentItem.unit, 'm'),
                 true,
               );
             }
@@ -948,9 +1012,9 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
         }
       }
 
-      value = (value + weekDayHour) * isNegative;
+      value = (typeof value === 'string' ? Number(value + weekDayHour) : value + weekDayHour) * isNegative;
     } else {
-      value = moment(endTime).diff(startTime, TIME_UNIT[currentItem.unit] || 'm', true);
+      value = moment(endTime).diff(startTime, getTimeUnit(currentItem.unit, 'm'), true);
     }
 
     value = handleDotAndRound(currentItem, value);
@@ -963,7 +1027,7 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
     if (!currentItem.sourceControlId) {
       return undefined;
     } else if (/^\$[a-z0-9]{24}\$$/.test(currentItem.sourceControlId)) {
-      const column = _.find(data, item => item.controlId === currentItem.sourceControlId.slice(1, -1));
+      const column = _.find(data, item => item.controlId === (currentItem.sourceControlId || '').slice(1, -1));
 
       if (!column) {
         return undefined;
@@ -986,17 +1050,18 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
       return undefined;
     }
 
+    if (currentItem.dataSource === undefined) return undefined;
     const expression = currentItem.dataSource.replace(/\$.+?\$/g, matched => {
-      const matchedControlId = matched.match(/\$(.+?)\$/)[1];
+      const matchedControlId = matched.slice(1, -1);
       const matchedColumn = _.find(data, item => item.controlId === matchedControlId);
 
       if (!matchedColumn) {
         hasUndefinedColumn = true;
-        return undefined;
+        return 'undefined';
       }
 
       if (_.includes([9, 10, 11], matchedColumn.type)) {
-        return getControlValue(data, currentItem, matchedControlId);
+        return String(getControlValue(data, currentItem, matchedControlId));
       }
 
       if (matchedColumn.type === 46) {
@@ -1008,12 +1073,15 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
         hasUndefinedColumn = true;
       }
 
-      return parseFloat(formatColumnToText(matchedColumn, true, true), 10);
+      return String(parseFloat(formatColumnToText(matchedColumn, true, true)));
     });
     formulaResult = hasUndefinedColumn ? {} : calcDate(date ? moment(date, formatMode) : '', expression);
-    value = formulaResult.error || hasUndefinedColumn ? '' : formulaResult.result.format('YYYY-MM-DD HH:mm:ss');
+    value =
+      formulaResult.error || hasUndefinedColumn || !formulaResult.result
+        ? ''
+        : formulaResult.result.format('YYYY-MM-DD HH:mm:ss');
   } else if (currentItem.enumDefault === 3) {
-    const unit = TIME_UNIT[currentItem.unit] || 'd';
+    const unit = getTimeUnit(currentItem.unit, 'd');
     let today = moment();
     let time = moment(getTime(currentItem.sourceControlId, 'start'));
 
@@ -1022,8 +1090,8 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
     }
 
     if (
-      currentItem.advancedSetting.dateformulatype === '1' ||
-      _.isUndefined(currentItem.advancedSetting.dateformulatype)
+      currentItem.advancedSetting?.dateformulatype === '1' ||
+      _.isUndefined(currentItem.advancedSetting?.dateformulatype)
     ) {
       value = String(moment(time).diff(today, unit, true));
     } else {
@@ -1037,34 +1105,30 @@ export const parseDateFormula = (data, currentItem, recordCreateTime) => {
 };
 
 // 检测必填
-export const checkRequired = item => {
-  let errorType = '';
-
+export const checkRequired = (item: FormControl): string => {
+  if (!item.required) return '';
+  const value: unknown = item.value;
+  const parsed = _.includes([9, 10, 11, 14, 21, 26, 27, 29, 35, 48], item.type) ? parseValue(value) : undefined;
+  const attachment = valueRecord(parsed);
+  const missingAttachment = Array.isArray(parsed)
+    ? !parsed.length
+    : !parsedArray(attachment?.['attachments']).length &&
+      !parsedArray(attachment?.['knowledgeAtts']).length &&
+      !parsedArray(attachment?.['attachmentData']).length;
   if (
     item.required &&
-    ((item.type !== 34 && (!_.includes([6, 8], item.type) ? !item.value : isNaN(parseFloat(item.value)))) ||
-      (item.type !== 34 && _.isString(item.value) && !item.value.trim()) ||
-      (_.includes([9, 10, 11], item.type) && !safeParse(item.value).length) ||
-      (item.type === 14 &&
-        ((_.isArray(safeParse(item.value)) && !safeParse(item.value).length) ||
-          (!_.isArray(safeParse(item.value)) &&
-            !safeParse(item.value)?.attachments?.length &&
-            !safeParse(item.value)?.knowledgeAtts?.length &&
-            !safeParse(item.value)?.attachmentData?.length))) ||
-      (_.includes([21, 26, 27, 29, 35, 48], item.type) &&
-        _.isArray(safeParse(item.value)) &&
-        !safeParse(item.value).length) ||
-      (item.type === 29 &&
-        typeof item.value === 'string' &&
-        (item.value.startsWith('deleteRowIds') || item.value === '0')) ||
+    ((item.type !== 34 && (!_.includes([6, 8], item.type) ? !value : isNaN(parseFloat(String(value))))) ||
+      (item.type !== 34 && typeof value === 'string' && !value.trim()) ||
+      (_.includes([9, 10, 11], item.type) && !parsedArray(value).length) ||
+      (item.type === 14 && missingAttachment) ||
+      (_.includes([21, 26, 27, 29, 35, 48], item.type) && Array.isArray(parsed) && !parsed.length) ||
+      (item.type === 29 && typeof value === 'string' && (value.startsWith('deleteRowIds') || value === '0')) ||
       (item.type === 34 && checkChildTableIsEmpty(item)) ||
-      (item.type === 36 && item.value === '0') ||
-      (item.type === 28 && parseFloat(item.value) === 0))
-  ) {
-    errorType = FORM_ERROR_TYPE.REQUIRED;
-  }
-
-  return errorType;
+      (item.type === 36 && value === '0') ||
+      (item.type === 28 && parseFloat(String(value)) === 0))
+  )
+    return FORM_ERROR_TYPE.REQUIRED;
+  return '';
 };
 
 // 验证必填及格式
@@ -1084,13 +1148,14 @@ export const onValidator = ({
   appId?: string | undefined;
 }) => {
   let errorType = '';
-  let errorText = '';
+  let errorText: string | undefined = '';
 
   if (!item.hidden && (!item.disabled || verifyAllControls)) {
     errorType = checkRequired(item);
 
     if (!errorType) {
-      const value = (item.value || '').toString().trim();
+      const fieldValue: unknown = item.value;
+      const value = String(fieldValue || '').trim();
 
       // 手机
       if (item.type === 3) {
@@ -1112,7 +1177,7 @@ export const onValidator = ({
       // 证件
       if (item.type === 7) {
         // 证件号不允许首尾空格，使用原始值校验，避免去空格后误判通过
-        const credValue = (item.value || '').toString();
+        const credValue = String(fieldValue || '');
 
         if (!value) {
           errorType = '';
@@ -1149,10 +1214,10 @@ export const onValidator = ({
 
       // 日期 || 日期时间
       if (_.includes([15, 16], item.type)) {
-        const allowweek = item.advancedSetting.allowweek || '1234567';
-        const allowtime = item.advancedSetting.allowtime || '00:00-24:00';
-        const min = item.advancedSetting.min;
-        const max = item.advancedSetting.max;
+        const allowweek = item.advancedSetting?.allowweek || '1234567';
+        const allowtime = item.advancedSetting?.allowtime || '00:00-24:00';
+        const min = item.advancedSetting?.min;
+        const max = item.advancedSetting?.max;
         const [start, end] = allowtime.split('-');
         const appTimeZoneValue = item.type === 16 ? dateServerZoneToAppZone(value, window[`timeZone_${appId}`]) : value;
 
@@ -1172,9 +1237,16 @@ export const onValidator = ({
                 ? getDynamicValue(data, Object.assign({}, item, { advancedSetting: { defsource: max } }), masterData)
                 : '';
 
-              if ((minDate && mAppTime < moment(minDate)) || (maxDate && mAppTime > moment(maxDate))) {
+              if (
+                (minDate && mAppTime < moment(dateValue(minDate))) ||
+                (maxDate && mAppTime > moment(dateValue(maxDate)))
+              ) {
                 errorType = FORM_ERROR_TYPE.DATE_TIME_RANGE;
-                errorText = FORM_ERROR_TYPE_TEXT.DATE_TIME_RANGE(appTimeZoneValue, minDate, maxDate);
+                errorText = FORM_ERROR_TYPE_TEXT.DATE_TIME_RANGE(
+                  appTimeZoneValue,
+                  stringValue(minDate),
+                  stringValue(maxDate),
+                );
               }
             }
 
@@ -1184,8 +1256,8 @@ export const onValidator = ({
 
             if (
               !errorType &&
-              (compareWithTime(start, `${mAppTime.hour()}:${mAppTime.minute()}`, 'isAfter') ||
-                compareWithTime(end, `${mAppTime.hour()}:${mAppTime.minute()}`, 'isBefore'))
+              (compareWithTime(start || '', `${mAppTime.hour()}:${mAppTime.minute()}`, 'isAfter') ||
+                compareWithTime(end || '', `${mAppTime.hour()}:${mAppTime.minute()}`, 'isBefore'))
             ) {
               errorType = FORM_ERROR_TYPE.DATE_TIME;
             }
@@ -1195,8 +1267,8 @@ export const onValidator = ({
 
       // 时间
       if (item.type === 46) {
-        const min = item.advancedSetting.min;
-        const max = item.advancedSetting.max;
+        const min = item.advancedSetting?.min;
+        const max = item.advancedSetting?.max;
 
         if (!value) {
           errorType = '';
@@ -1209,11 +1281,11 @@ export const onValidator = ({
             : '';
 
           if (
-            (minDate && compareWithTime(value, minDate, 'isBefore')) ||
-            (maxDate && compareWithTime(value, maxDate, 'isAfter'))
+            (minDate && compareWithTime(value, stringValue(minDate), 'isBefore')) ||
+            (maxDate && compareWithTime(value, stringValue(maxDate), 'isAfter'))
           ) {
             errorType = FORM_ERROR_TYPE.DATE_TIME_RANGE;
-            errorText = FORM_ERROR_TYPE_TEXT.DATE_TIME_RANGE(value, minDate, maxDate, true);
+            errorText = FORM_ERROR_TYPE_TEXT.DATE_TIME_RANGE(value, stringValue(minDate), stringValue(maxDate), true);
           }
         }
       }
@@ -1221,9 +1293,10 @@ export const onValidator = ({
       // 其他选项必填
       if (_.includes([9, 10, 11], item.type) && !ignoreRequired) {
         const hasOtherOption = _.find(item.options, i => i.key === 'other' && !i.isDeleted);
-        const selectOther = /^\[.*\]$/.test(item.value)
-          ? _.find(safeParse(item.value || '[]'), i => (i || '').includes('other'))
-          : false;
+        const selectOther =
+          typeof fieldValue === 'string' && /^\[.*\]$/.test(fieldValue)
+            ? parsedStrings(fieldValue || '[]').find(value => value.includes('other'))
+            : false;
 
         if (
           hasOtherOption &&
@@ -1248,11 +1321,12 @@ export const onValidator = ({
     }
 
     if (item.type === 34) {
-      const { min, max, enablelimit } = item.advancedSetting;
+      const { min, max, enablelimit } = item.advancedSetting || {};
 
       if (String(enablelimit) === '1') {
         const rowsLength = Number(
-          (_.get(item, 'value.rows') && filterEmptyChildTableRows(item.value.rows).length) ||
+          (Array.isArray(valueRecord(item.value)?.['rows']) &&
+            filterEmptyChildTableRows(parsedRecords(valueRecord(item.value)?.['rows'])).length) ||
             (!_.isObject(item.value) ? item.value : 0) ||
             0,
         );
@@ -1269,10 +1343,8 @@ export const onValidator = ({
   }
 
   if (errorType && !errorText) {
-    errorText =
-      typeof FORM_ERROR_TYPE_TEXT[errorType] !== 'string'
-        ? FORM_ERROR_TYPE_TEXT[errorType](item)
-        : FORM_ERROR_TYPE_TEXT[errorType];
+    const formatter = getErrorText(errorType);
+    errorText = typeof formatter === 'string' ? formatter : formatter?.(item);
   }
 
   return { errorType, errorText };
@@ -1290,13 +1362,18 @@ const getFieldIds = (its: RuleFilterItem = {}) => {
 };
 
 const getIds = (arr: RuleFilterGroup = {}) => {
-  return (arr.groupFilters || []).reduce((total, its) => {
+  return (arr.groupFilters || []).reduce<Array<string | undefined>>((total, its) => {
     return total.concat(getFieldIds(its));
   }, []);
 };
 
 // 提示错误：单个条件组字段、条件值隐藏过滤(补充条件为或的情况)
-const getItemGroupFilters = (arrItem: RuleFilterGroup = {}, data = [], recordId: string, from) => {
+const getItemGroupFilters = (
+  arrItem: RuleFilterGroup = {},
+  data: FormControl[] = [],
+  recordId: string | undefined,
+  from: number | undefined,
+) => {
   const isOrCondition = (arrItem.groupFilters || []).findIndex(its => its.spliceType === 2) > -1;
   let newArr = [arrItem.groupFilters || []];
 
@@ -1321,13 +1398,18 @@ const getItemGroupFilters = (arrItem: RuleFilterGroup = {}, data = [], recordId:
 };
 
 //判断业务规则配置条件是否满足
-export const checkValueAvailable = (rule: FormRule = {}, data = [], recordId: string, from?) => {
+export const checkValueAvailable = (
+  rule: FormConditionRule = {},
+  data: FormControl[] = [],
+  recordId?: string,
+  from?: number,
+): FormRuleCheckResult => {
   let isAvailable = false;
   //不满足条件的id,过滤错误
-  let filterControlIds = {};
+  const filterControlIds: Record<number, Array<Array<string | undefined>>> = {};
   //满足条件的错误id合集
-  let availableControlIds = {};
-  let transFilters = rule.filters || [[]]; //条件二维数组
+  const availableControlIds: Record<number, Array<Array<string | undefined>>> = {};
+  let transFilters = rule.filters || [{}]; //条件二维数组
 
   //条件字段或字段值都隐藏
   // 记录id存在才参与业务规则
@@ -1348,9 +1430,12 @@ export const checkValueAvailable = (rule: FormRule = {}, data = [], recordId: st
       availableControlIds[pIdx] = [];
     }
 
-    if (arr.groupFilters && arr.groupFilters.length) {
+    const filters = arr.groupFilters;
+    if (filters && filters.length) {
+      const failedIds = filterControlIds[pIdx] || [];
+      const availableIds = availableControlIds[pIdx] || [];
       let childItemAvailable = true;
-      arr.groupFilters.forEach((its, index: number) => {
+      filters.forEach((its, index: number) => {
         let filterControl = data.find(a => a.controlId === its.controlId);
 
         if (filterControl && !isRelateMoreList(filterControl, its)) {
@@ -1358,19 +1443,19 @@ export const checkValueAvailable = (rule: FormRule = {}, data = [], recordId: st
             filterData: its,
             originControl: filterControl,
             data,
-            recordId,
+            ...(recordId === undefined ? {} : { recordId }),
             appTimeZone: rule.appTimeZone,
           });
-          childItemAvailable = getResult(arr.groupFilters, index, result, childItemAvailable);
+          childItemAvailable = getResult(filters, index, result, childItemAvailable);
 
           const ids = getFieldIds(its);
 
           if (!result) {
-            filterControlIds[pIdx][index] = ids;
-            availableControlIds[pIdx][index] = [];
+            failedIds[index] = ids;
+            availableIds[index] = [];
           } else {
-            filterControlIds[pIdx][index] = [];
-            availableControlIds[pIdx][index] = ids;
+            failedIds[index] = [];
+            availableIds[index] = ids;
           }
         }
       });
@@ -1380,32 +1465,29 @@ export const checkValueAvailable = (rule: FormRule = {}, data = [], recordId: st
 
   const ids = transFilters.map(i => getIds(i));
 
-  if (isAvailable) {
-    availableControlIds = ids;
-    filterControlIds = [];
-  } else {
-    availableControlIds = [];
-    filterControlIds = ids;
-  }
-
   return {
     isAvailable,
-    filterControlIds: flattenArr(filterControlIds),
-    availableControlIds: flattenArr(availableControlIds),
+    filterControlIds: flattenArr(isAvailable ? [] : ids),
+    availableControlIds: flattenArr(isAvailable ? ids : []),
   };
 };
 
 //判断所有业务规则是否满足条件
-export const checkAllValueAvailable = (rules = [], data = [], recordId: string, from) => {
-  let errors = [];
+export const checkAllValueAvailable = (
+  rules: FormConditionRule[] = [],
+  data: FormControl[] = [],
+  recordId: string | undefined,
+  from: number | undefined,
+): FormRuleMessage[] => {
+  let errors: FormRuleMessage[] = [];
   const { errorRules = [] } = getAvailableFilters(rules, data, recordId);
 
   if (errorRules.length > 0) {
     errorRules.forEach(rule => {
-      rule.ruleItems.forEach(item => {
+      (rule.ruleItems || []).forEach(item => {
         if (rule.checkType !== 2) {
           const { isAvailable } = checkValueAvailable(rule, data, recordId, from);
-          isAvailable && errors.push({ errorMessage: item.message, ignoreErrorMessage: rule.checkType === 3 });
+          isAvailable && errors.push({ errorMessage: item.message || '', ignoreErrorMessage: rule.checkType === 3 });
         }
       });
     });
@@ -1416,21 +1498,21 @@ export const checkAllValueAvailable = (rules = [], data = [], recordId: string, 
 
 // 业务规则后端校验。
 // badData 的每一项是后端拼的字符串，形如 "…:controlId:ruleId:rowId"，在下面 split(':') 拆开。
-export const getRuleErrorInfo = (rules: FormRule[] = [], badData: string[] = []) => {
+export const getRuleErrorInfo = (rules: FormConditionRule[] = [], badData: string[] = []) => {
   return badData
     .map(itemBadData => {
-      const errorInfo = [];
+      const errorInfo: FormError[] = [];
       const [rowId, ruleId, controlId] = (itemBadData || '').split(':').reverse();
 
       rules.forEach(rule => {
         if (rule.ruleId === ruleId && _.find(_.get(rule, 'ruleItems') || [], r => r.type === 6)) {
-          _.get(rule, 'ruleItems').forEach(item => {
+          (rule.ruleItems || []).forEach(item => {
             const errorIds = (_.get(item, 'controls') || []).map(c => c.controlId);
             const curErrorIds = errorIds.length > 0 ? errorIds : _.flatten((rule.filters || []).map(i => getIds(i)));
             curErrorIds.forEach(c => {
               errorInfo.push({
                 controlId: c,
-                errorMessage: item.message,
+                errorMessage: item.message || '',
                 ruleId,
                 errorType: FORM_ERROR_TYPE.RULE_ERROR,
                 showError: true,
@@ -1447,14 +1529,14 @@ export const getRuleErrorInfo = (rules: FormRule[] = [], badData: string[] = [])
 };
 
 //判断所有业务规则是否有锁定状态
-export const checkRuleLocked = (rules: FormRule[] = [], data: FormControl[] = [], recordId?: string) => {
+export const checkRuleLocked = (rules: FormConditionRule[] = [], data: FormControl[] = [], recordId?: string) => {
   let isLocked = false;
   const { defaultRules = [] } = getAvailableFilters(rules, data, recordId);
 
   if (defaultRules.length > 0) {
     defaultRules.forEach(rule => {
       if (isLocked) return;
-      rule.ruleItems.map(item => {
+      (rule.ruleItems || []).map(item => {
         if (item.type === 7) {
           const { isAvailable } = checkValueAvailable(rule, data, recordId);
           isAvailable && (isLocked = true);
@@ -1467,7 +1549,13 @@ export const checkRuleLocked = (rules: FormRule[] = [], data: FormControl[] = []
 };
 
 // 更新业务规则权限属性
-export const updateDataPermission = ({ attrs = [], it, checkRuleValidator, item = {}, verifyAllControls = false }) => {
+export const updateDataPermission = ({
+  attrs = [],
+  it,
+  checkRuleValidator,
+  item = {},
+  verifyAllControls = false,
+}: PermissionUpdate): void => {
   //子表或关联记录
   const isSubList = _.includes([29, 34], item.type);
   let fieldPermission = it.fieldPermission || '111';

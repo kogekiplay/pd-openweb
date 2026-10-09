@@ -85,11 +85,11 @@ export default class ColorEntrance extends Component<any, ColorEntranceState> {
           const { personColor } = newStyle;
           name = personColor.name;
         } else if (colorGroupId) {
-          name = (_.find(chartColors, { id: colorGroupId }) || chartColors[0]).name;
+          name = (_.find(chartColors, { id: colorGroupId }) || chartColors[0])?.name;
         } else if (colorGroup[colorGroupIndex]) {
           name = colorGroup[colorGroupIndex].name;
         } else {
-          name = chartColors[0].name;
+          name = chartColors[0]?.name;
         }
 
         return `${name}${_l('配色')}`;

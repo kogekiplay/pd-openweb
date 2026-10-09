@@ -1,15 +1,16 @@
 import React, { Fragment } from 'react';
+import _ from 'lodash';
 import { purchaseMethodFunc } from 'src/components/pay/versionUpgrade/PurchaseMethodModal';
 import { versionUpgradeModal } from 'src/components/pay/versionUpgrade/VersionUpgradeModal';
 import PurchaseExpandPack from 'src/pages/Admin/components/PurchaseExpandPack';
-import { getCurrentProject } from 'src/utils/project';
 import { pathCompletion } from 'src/utils/common';
+import { getCurrentProject } from 'src/utils/project';
 
 export default function UserCountLimitLink({ projectId }: { projectId?: string; [key: string]: any }) {
   const { licenseType, version } = getCurrentProject(projectId, true);
-  const isDevelopment = parseInt(version?.versionIdV2) === 0;
+  const isDevelopment = Number.parseInt(String(version?.versionIdV2)) === 0;
 
-  if ([0, 2].includes(licenseType)) {
+  if (_.includes([0, 2], licenseType)) {
     return (
       <React.Fragment>
         <span>{_l('当前用户数已经达到限额')}</span>

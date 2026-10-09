@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { formatNumberThousand, toFixed } from 'src/utils/control';
-import { getProjectColor } from 'src/utils/project';
+import { getProjectChartColors } from 'src/utils/project';
 import { reportTypes } from './reportTypes';
 
 export { reportTypes };
@@ -194,18 +194,14 @@ export const colorGroup: Record<number, { name: string; value: string[] }> = {
 /**
  * 获取组织管理主题色
  */
-export const getPorjectChartColors = (projectId: string) => {
-  const { chartColor } = getProjectColor(projectId);
-  const systemColorList = (chartColor.system || []).filter(item => item.enable !== false && !_.isEmpty(item.colors));
-  const customColorList = (chartColor.custom || []).filter(item => item.enable !== false && !_.isEmpty(item.colors));
-  return systemColorList.concat(customColorList);
-};
+export const getPorjectChartColors = (projectId: string) => getProjectChartColors(projectId);
 
 /**
  * 获取图表颜色
  */
 export const getChartColors = (style, themeColor, projectId: string) => {
   const chartColors = getPorjectChartColors(projectId);
+  const defaultScheme = chartColors[0];
   const { colorType, colorGroupIndex, colorGroupId, customColors, personColor = {} } = style ? style : {};
 
   if ([0, 1].includes(colorType)) {
@@ -214,18 +210,18 @@ export const getChartColors = (style, themeColor, projectId: string) => {
       const adaptThemeColors = chartColors.filter(item =>
         (item.themeColors || []).map(n => n.toLocaleUpperCase()).includes(themeColor.toLocaleUpperCase()),
       );
-      return (adaptThemeColors[0] || chartColors[0]).colors;
+      return (adaptThemeColors[0] || defaultScheme)?.colors || [];
     } else if (colorGroupId && colorGroupId.includes('personColor')) {
-      return personColor.colors || chartColors[0].colors;
+      return personColor.colors || defaultScheme?.colors || [];
     } else if (colorGroupId) {
-      return (_.find(chartColors, { id: colorGroupId }) || chartColors[0]).colors;
+      return (_.find(chartColors, { id: colorGroupId }) || defaultScheme)?.colors || [];
     } else if (colorGroup[colorGroupIndex]) {
       return colorGroup[colorGroupIndex].value;
     } else {
-      return chartColors[0].colors;
+      return defaultScheme?.colors || [];
     }
   } else {
-    return customColors || chartColors[0].colors;
+    return customColors || defaultScheme?.colors || [];
   }
 };
 

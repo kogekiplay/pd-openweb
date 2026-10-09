@@ -24,6 +24,7 @@ import {
 } from 'src/pages/customPage/util';
 import { insertPortal } from 'src/pages/customPage/util';
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
+import { embedUrlSegment } from 'src/pages/worksheet/views/CustomWidgetView/valueBoundary';
 import store from 'src/redux/configureStore';
 import { getTranslateInfo } from 'src/utils/app';
 import { compatibleMDJS } from 'src/utils/project';
@@ -346,14 +347,16 @@ let CustomPage = class CustomPage extends Component<any, any> {
         urlList.push(o.staticValue);
       } else {
         urlList.push(
-          getEmbedValue(
-            {
-              // projectId: appPkg.projectId,
-              appId: params.appId,
-              groupId: params.groupId,
-              worksheetId: params.worksheetId,
-            },
-            o.cid,
+          embedUrlSegment(
+            getEmbedValue(
+              {
+                // projectId: appPkg.projectId,
+                appId: params.appId,
+                groupId: params.groupId,
+                worksheetId: params.worksheetId,
+              },
+              o.cid,
+            ),
           ),
         );
       }

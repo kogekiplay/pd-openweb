@@ -1,31 +1,44 @@
 import _ from 'lodash';
+import type { FormControl } from 'src/utils/controlTypes';
+import type { FormComparisonCondition, FormConditionRule, FormFilterGroup as RuleFilterGroup } from './types';
 
-export const flattenArr = (obj = {}) => {
-  return Object.values(obj).reduce((total, cur = []) => {
+export const flattenArr = <T extends unknown>(
+  obj: Record<string, Array<T | T[]>> | Array<Array<T | T[]>> = {},
+): T[] => {
+  return Object.values(obj).reduce<T[]>((total, cur = []) => {
     return total.concat(_.flatten(cur));
   }, []);
 };
 
-export const getResult = (arr, index: number, result, available: boolean) => {
+export const getResult = (
+  arr: Array<{ spliceType?: number | undefined }>,
+  index: number,
+  result: boolean,
+  available: boolean,
+): boolean => {
   if (!index) {
     return result;
   } else {
-    return arr[index - 1].spliceType === 1 ? available && result : available || result;
+    return arr[index - 1]?.spliceType === 1 ? available && result : available || result;
   }
 };
 
-export const replaceStr = (str, index: number, value: string) => {
+export const replaceStr = (str: string, index: number, value: string): string => {
   return str.substring(0, index) + value + str.substring(index + 1);
 };
 
 // 过滤不必要走（字段都删除）的业务规则
-export const getAvailableFilters = (rules = [], formatData = [], recordId: string) => {
+export const getAvailableFilters = <Rule extends FormConditionRule>(
+  rules: Rule[] = [],
+  formatData: FormControl[] = [],
+  recordId?: string,
+) => {
   // 过滤禁用规则及单个且数组中字段全部删除情况
   // 注意如果是记录id，data里不包含系统字段，所以必须recordId存在才生效
-  let filterRules = [];
+  let filterRules: Array<Rule & { filters: RuleFilterGroup[] }> = [];
   rules.forEach(rule => {
     if (!rule.disabled) {
-      let filterTrs = [];
+      let filterTrs: RuleFilterGroup[] = [];
       (rule.filters || []).forEach(filterGroup => {
         if (
           _.some(filterGroup.groupFilters || [], filter =>
@@ -49,7 +62,7 @@ export const getAvailableFilters = (rules = [], formatData = [], recordId: strin
 };
 
 // 是否关联多条列表
-export function isRelateMoreList(control, condition) {
+export function isRelateMoreList(control: FormControl | undefined, condition: FormComparisonCondition) {
   return (
     control &&
     control.type === 29 &&

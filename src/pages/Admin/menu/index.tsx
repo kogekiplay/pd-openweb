@@ -1,9 +1,9 @@
 import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { generatePath, matchPath } from 'react-router';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { MdLink, UpgradeIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { navigateTo } from 'src/router/navigateTo';
@@ -35,8 +35,8 @@ const toAbsoluteAdminPath = path => (!path ? '' : path.startsWith('/') ? path : 
  */
 const isRoutePathMatched = (path, pathname) => !!matchPath(toAbsoluteAdminPath(path), getPathWithoutSubPath(pathname));
 
-const buildMenuHref = (pattern, projectId: string) =>
-  generatePath(pattern, pattern.includes(':projectId') ? { projectId } : { '*': projectId });
+const buildMenuHref = (pattern, projectId: string | undefined) =>
+  generatePath(pattern, pattern.includes(':projectId') ? { projectId: projectId ?? null } : { '*': projectId ?? null });
 
 let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
   constructor(props) {
@@ -138,7 +138,9 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
 
         if (itemFeatureType) {
           routeIndex === undefined && (routeIndex = i);
-          featureType = featureType ? Math.min(itemFeatureType, featureType).toString() : itemFeatureType;
+          featureType = featureType
+            ? Math.min(Number(itemFeatureType), Number(featureType)).toString()
+            : itemFeatureType;
         }
       });
     }

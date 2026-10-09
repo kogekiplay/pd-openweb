@@ -1,20 +1,33 @@
 import _ from 'lodash';
 import { getTranslateInfo } from 'src/utils/app';
+import type { TranslateInfo } from 'src/utils/app';
 import type { ControlAdvancedSetting, FormControl, WorksheetCustomBtn } from 'src/utils/controlTypes';
+import { isTranslationConfirmation, isTranslationItems } from './translateTypes';
+import type { TranslationAdvancedSetting } from './translateTypes';
 
-const replaceOptionControlTranslateInfo = (data, { translateInfo, optionTranslateInfo }) => {
+type TranslatedControl = FormControl & { advancedSetting?: TranslationAdvancedSetting | undefined };
+
+const replaceOptionControlTranslateInfo = (
+  data: TranslatedControl,
+  { translateInfo, optionTranslateInfo }: { translateInfo: TranslateInfo; optionTranslateInfo: TranslateInfo },
+) => {
+  if (!data.options) throw new TypeError('Option controls require options');
   data.options = data.options.map(item => {
     return {
       ...item,
       value: item.value ? optionTranslateInfo[item.key] || item.value : '',
     };
   });
-  if (data.advancedSetting.otherhint) {
+  if (data.advancedSetting?.otherhint) {
     data.advancedSetting.otherhint = translateInfo.otherhint || data.advancedSetting.otherhint;
   }
 };
 
-export const replaceControlsTranslateInfo = (appId: string, worksheetId: string, controls: FormControl[] = []) => {
+export const replaceControlsTranslateInfo = (
+  appId: string,
+  worksheetId: string | undefined,
+  controls: FormControl[] = [],
+) => {
   if (!window[`langData-${appId}`]) return controls;
   return controls.map(c => {
     const translateInfo = getTranslateInfo(appId, worksheetId, c.controlId);
@@ -26,34 +39,34 @@ export const replaceControlsTranslateInfo = (appId: string, worksheetId: string,
     };
 
     // 选项
-    if ([9, 10, 11].includes(c.type)) {
+    if ([9, 10, 11].some(type => type === c.type)) {
       const optionTranslateInfo = c.dataSource ? getTranslateInfo(appId, null, c.dataSource) : translateInfo;
       replaceOptionControlTranslateInfo(data, { translateInfo, optionTranslateInfo });
     }
 
     // 检查项
     if (c.type === 36 && advancedSetting.itemnames) {
-      const itemnames = safeParse(advancedSetting.itemnames, null);
+      const itemnames: unknown = safeParse(advancedSetting.itemnames, null);
 
-      if (_.isArray(itemnames)) {
+      if (isTranslationItems(itemnames)) {
         const newItemnames = itemnames.map(item => {
           return {
             ...item,
             value: item.value ? translateInfo[item.key] || item.value : '',
           };
         });
-        data.advancedSetting.itemnames = JSON.stringify(newItemnames);
+        advancedSetting.itemnames = JSON.stringify(newItemnames);
       }
     }
 
     // 数值
-    if ([6, 8, 31].includes(c.type) && (advancedSetting.suffix || advancedSetting.prefix)) {
+    if ([6, 8, 31].some(type => type === c.type) && (advancedSetting.suffix || advancedSetting.prefix)) {
       if (advancedSetting.suffix) {
-        data.advancedSetting.suffix = translateInfo.suffix || advancedSetting.suffix;
+        advancedSetting.suffix = translateInfo.suffix || advancedSetting.suffix;
       }
 
       if (advancedSetting.prefix) {
-        data.advancedSetting.prefix = translateInfo.prefix || advancedSetting.prefix;
+        advancedSetting.prefix = translateInfo.prefix || advancedSetting.prefix;
       }
     }
 
@@ -69,15 +82,16 @@ export const replaceControlsTranslateInfo = (appId: string, worksheetId: string,
 
     // 他表字段
     if (c.type === 30) {
+      if (typeof c.dataSource !== 'string') throw new TypeError('Source controls require a data source');
       const { dataSource } = _.find(controls, { controlId: c.dataSource.replace(/\$/g, '') }) || {};
 
       // 选项集
-      if (c.sourceControl?.dataSource && [9, 10, 11].includes(c.sourceControlType)) {
+      if (c.sourceControl?.dataSource && [9, 10, 11].some(type => type === c.sourceControlType)) {
         const optionTranslateInfo = getTranslateInfo(appId, null, c.sourceControl.dataSource);
         replaceOptionControlTranslateInfo(data, { translateInfo, optionTranslateInfo });
       } else {
         // 普通控件
-        if (dataSource && [9, 10, 11].includes(c.sourceControlType)) {
+        if (dataSource && [9, 10, 11].some(type => type === c.sourceControlType)) {
           const optionTranslateInfo = getTranslateInfo(appId, dataSource, data.sourceControlId);
           replaceOptionControlTranslateInfo(data, { translateInfo, optionTranslateInfo });
         }
@@ -101,7 +115,7 @@ export const replaceAdvancedSettingTranslateInfo = (
   advancedSetting: ControlAdvancedSetting = {},
 ) => {
   const translateInfo = getTranslateInfo(appId, null, worksheetId);
-  const data = {
+  const data: TranslationAdvancedSetting = {
     ...advancedSetting,
     title: advancedSetting.title ? translateInfo.formTitle || advancedSetting.title : '',
     sub: advancedSetting.sub ? translateInfo.formSub || advancedSetting.sub : '',
@@ -111,9 +125,9 @@ export const replaceAdvancedSettingTranslateInfo = (
   };
 
   if (data.doubleconfirm) {
-    const doubleconfirm = safeParse(data.doubleconfirm, null);
+    const doubleconfirm: unknown = safeParse(data.doubleconfirm, null);
 
-    if (_.isObject(doubleconfirm) && !_.isArray(doubleconfirm)) {
+    if (isTranslationConfirmation(doubleconfirm)) {
       data.doubleconfirm = JSON.stringify({
         confirmMsg: doubleconfirm.confirmMsg ? translateInfo.confirmMsg || doubleconfirm.confirmMsg : '',
         confirmContent: doubleconfirm.confirmContent

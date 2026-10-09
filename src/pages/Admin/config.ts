@@ -1,11 +1,12 @@
 import _ from 'lodash';
 import AdminController from 'src/api/adminManage';
 import { getCurrentProject } from 'src/utils/project';
+import type { ProjectInfo } from 'src/utils/projectTypes';
 
 const Config = {
   params: null, // parameters from url， eg: /admin/:routeType/:projectId
   projectId: null, // current projectId
-  project: null, // current project info (from `md.global`)
+  project: null as ProjectInfo | null, // current project info (from `md.global`)
 };
 
 Config.AdminController = AdminController;

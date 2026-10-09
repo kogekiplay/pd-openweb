@@ -13,10 +13,10 @@ import {
   isFormulaResultAsTime,
 } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import { API_ENUM_TO_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum.js';
+import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { getSyncLicenseInfo } from 'src/utils/project';
 import { DATE_TIME_DATA_PARTICLE, GROUPLIMITTYPES } from './config';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export const getNodeInfo = (flowData, type: string) => {
   return _.values(_.get(flowData, 'aggTableNodes') || {}).find(o => _.get(o, 'nodeType') === type) || {};
@@ -890,7 +890,13 @@ export const formatGroupConfig = fields => {
 
 export const setResultFieldSettingByAggFuncType = data => {
   if ([15, 16, 17, 18].includes(_.get(data, 'controlSetting.type'))) {
-    const DATE_VALUE: Record<string, string> = { CUR_YEAR: '5', CUR_MONTH: '4', TODAY: '3', CUR_HOUR: '2', CUR_MINUTE: '1' };
+    const DATE_VALUE: Record<string, string> = {
+      CUR_YEAR: '5',
+      CUR_MONTH: '4',
+      TODAY: '3',
+      CUR_HOUR: '2',
+      CUR_MINUTE: '1',
+    };
     let datatype = DATE_VALUE[data.aggFuncType];
 
     if (!_.get(data, 'controlSetting.advancedSetting')) {
@@ -960,7 +966,7 @@ export const sourceIsMax = (projectId: string) => {
   const project = getSyncLicenseInfo(projectId);
 
   if (
-    !['2', '3'].includes(_.get(project, 'version.versionIdV2')) &&
+    !_.includes(['2', '3'], project.version?.versionIdV2) &&
     !window.platformENV.isOverseas &&
     !window.platformENV.isLocal
   ) {

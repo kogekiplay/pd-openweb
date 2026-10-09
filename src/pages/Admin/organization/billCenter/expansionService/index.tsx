@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import withRouter from '../../../../../router/withRouter';
 import { Checkbox } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -16,6 +15,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import { pathCompletion } from 'src/utils/common';
 import { VersionProductType } from 'src/utils/enum';
 import { getCurrentProject } from 'src/utils/project';
+import withRouter from '../../../../../router/withRouter';
 import Config from '../../../config';
 import PortalProgress from './PortalProgress';
 import './style.less';
@@ -204,7 +204,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
     this.isPortalUser = _.includes([EXPAND_TYPE.PORTALUSER, EXPAND_TYPE.PORTALUPGRADE], this.expandType);
     const currentProject = getCurrentProject(Config.projectId);
     const disabledPurchase =
-      _.includes([0, 2], currentProject.licenseType) || parseInt(_.get(currentProject, 'version.versionIdV2')) === 0;
+      _.includes([0, 2], currentProject.licenseType) || parseInt(String(currentProject.version?.versionIdV2)) === 0;
     this.state = {
       step: 1,
       addUserCount: 5,
@@ -827,7 +827,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
     const { workflowType } = this.state;
     const currentProject = getCurrentProject(Config.projectId);
     const disabledPurchase =
-      _.includes([0, 2], currentProject.licenseType) || parseInt(_.get(currentProject, 'version.versionIdV2')) === 0;
+      _.includes([0, 2], currentProject.licenseType) || parseInt(String(currentProject.version?.versionIdV2)) === 0;
     return (
       <Fragment>
         <div className="workflowTypeContent">
@@ -871,7 +871,7 @@ let ExpansionService = class ExpansionService extends Component<any, any> {
     const { dataSyncType } = this.state;
     const currentProject = getCurrentProject(Config.projectId);
     const disabledPurchase =
-      _.includes([0, 2], currentProject.licenseType) || parseInt(_.get(currentProject, 'version.versionIdV2')) === 0;
+      _.includes([0, 2], currentProject.licenseType) || parseInt(String(currentProject.version?.versionIdV2)) === 0;
     return (
       <Fragment>
         <div className="workflowTypeContent">

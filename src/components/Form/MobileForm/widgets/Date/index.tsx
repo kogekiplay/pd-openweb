@@ -12,6 +12,7 @@ import {
   dateServerZoneToAppZone,
 } from 'src/utils/project';
 import { getDynamicValue } from '../../../core/formUtils';
+import { dateBoundaryValue } from '../../../core/formUtils/valueBoundary';
 
 const DateWidget = props => {
   const {
@@ -35,8 +36,8 @@ const DateWidget = props => {
 
   const [dateProps, setDateProps] = useState(getDatePickerConfigs(props));
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [minDate, setMinDate] = useState(null);
-  const [maxDate, setMaxDate] = useState(null);
+  const [minDate, setMinDate] = useState<string | null>(null);
+  const [maxDate, setMaxDate] = useState<string | null>(null);
   const [dateTime, setDateTime] = useState(null);
   const precision = useMemo(() => {
     let mode =
@@ -97,10 +98,12 @@ const DateWidget = props => {
   useEffect(() => {
     if (advancedSetting.min) {
       setMinDate(
-        getDynamicValue(
-          formData,
-          Object.assign({}, props, { advancedSetting: { defsource: advancedSetting.min } }),
-          masterData,
+        dateBoundaryValue(
+          getDynamicValue(
+            formData,
+            Object.assign({}, props, { advancedSetting: { defsource: advancedSetting.min } }),
+            masterData,
+          ),
         ),
       );
     }
@@ -109,10 +112,12 @@ const DateWidget = props => {
   useEffect(() => {
     if (advancedSetting.max) {
       setMaxDate(
-        getDynamicValue(
-          formData,
-          Object.assign({}, props, { advancedSetting: { defsource: advancedSetting.max } }),
-          masterData,
+        dateBoundaryValue(
+          getDynamicValue(
+            formData,
+            Object.assign({}, props, { advancedSetting: { defsource: advancedSetting.max } }),
+            masterData,
+          ),
         ),
       );
     }

@@ -62,7 +62,7 @@ const getValue = (control: FormControl = {}, type) => {
       const attachmentData = getAttachmentData(control);
       return attachmentData.map(att => {
         const fileId = _.get(att, 'fileID');
-        return /\w{8}(-\w{4}){3}-\w{12}/.test(fileId) ? fileId : JSON.stringify(att);
+        return /\w{8}(-\w{4}){3}-\w{12}/.test(fileId || '') ? fileId : JSON.stringify(att);
       });
     case 15:
     case 16:
@@ -104,7 +104,12 @@ const getValue = (control: FormControl = {}, type) => {
   }
 };
 
-const getApiDynamicValue = (item, formData, keywords: string, recordId = '') => {
+const getApiDynamicValue = (
+  item,
+  formData,
+  keywords: string | { url?: string | undefined; fileId?: string | undefined },
+  recordId = '',
+) => {
   const tempValues = safeParse(item.defsource || '[]').map(source => {
     // 动态值
     if (source.cid) {
@@ -117,7 +122,7 @@ const getApiDynamicValue = (item, formData, keywords: string, recordId = '') => 
 
       if (source.cid === 'ocr-file' && item.type === 14) {
         const fileId = _.get(keywords, 'fileId');
-        return keywords ? (/\w{8}(-\w{4}){3}-\w{12}/.test(fileId) ? [fileId] : [JSON.stringify(keywords)]) : '';
+        return keywords ? (/\w{8}(-\w{4}){3}-\w{12}/.test(fileId || '') ? [fileId] : [JSON.stringify(keywords)]) : '';
       }
 
       const control = _.find(formData, i => i.controlId === source.cid);
