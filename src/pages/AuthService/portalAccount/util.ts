@@ -183,7 +183,9 @@ export const getCurrentExt = (appId: string, suffix) => {
 };
 
 export const goApp = (sessionId, appId: string, customLink) => {
-  setPssId(sessionId);
+  // The portal login response is authoritative even when a main-site cookie already exists.
+  // Force the existing writer to persist it on ordinary private-deployment domains.
+  setPssId(sessionId, true);
   const request = getRequest();
   let { ReturnUrl = '' } = request;
 

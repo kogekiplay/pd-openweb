@@ -11,6 +11,7 @@ import { StyleSheetManager } from 'styled-components';
 import { LoadDiv } from 'ming-ui';
 import accountSetting from 'src/api/accountSetting';
 import global from 'src/api/global';
+import { getPortalIdentityRedirect } from 'src/common/portalIdentityRedirect';
 import shouldForwardProp from 'src/common/shouldForwardProp';
 import { installPlatformTheme, installStaticHolderTheme, syncThemeFromLocation } from 'src/common/theme';
 import { prefetchMyPermissions } from 'src/components/checkPermission';
@@ -280,28 +281,18 @@ const getGlobalMeta = ({ allowNotLogin, requestParams, sync = false, skipLanguag
 
     initThemeMode();
 
-    if (
-      ((location.href.includes('/portal/') || location.href.indexOf('theportal.cn') > -1) &&
-        !md.global.Account.isPortal) ||
-      (!location.href.includes('/portal/') &&
-        location.href.indexOf('theportal.cn') === -1 &&
-        md.global.Account.isPortal)
-    ) {
+    const identityRedirect = getPortalIdentityRedirect({
+      href: location.href,
+      account: md.global.Account,
+      mainSiteUrl: md.global.Config.WebUrl,
+      customSubPath: window.__customSubPath__,
+    });
+    if (identityRedirect) {
       window.isWaiting = true;
       if (window.isWeiXin) {
         navigateToLogout();
       } else {
-        if (
-          md.global.Account.isPortal &&
-          !location.href.includes('theportal.cn') &&
-          !location.href.includes('/portal/') &&
-          md.global.Account.appId
-        ) {
-          location.href = pathCompletion(`/portal/${md.global.Account.appId}`);
-          return undefined;
-        }
-
-        location.href = pathCompletion('/dashboard');
+        location.href = identityRedirect;
       }
 
       return undefined;
