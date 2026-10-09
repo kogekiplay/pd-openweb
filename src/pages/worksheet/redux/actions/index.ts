@@ -731,7 +731,7 @@ export function openNewRecord({ isDraft, allowShowMingoCreate } = {}) {
     const { base, views, worksheetInfo, navGroupFilters, sheetSwitchPermit, isCharge, appPkgData } = getState().sheet;
     const { appId, viewId, groupId, worksheetId } = base;
     const isManageView = isHaveCharge(appPkgData.appRoleType) && viewId === worksheetId;
-    const lastSheetSwitchPermit = isManageView
+    const lastSheetSwitchPermit = isManageView && worksheetId
       ? getHighAuthSheetSwitchPermit(sheetSwitchPermit, worksheetId)
       : sheetSwitchPermit;
     const view = _.find(views, { viewId }) || (!viewId && views[0]) || {};
@@ -920,7 +920,9 @@ export function updateQuickFilter(filter = [], view, { noLoad } = {}) {
 }
 
 // 更新快速筛选条件
-export function updateQuickFilterWithDefault(filter = []) {
+export function updateQuickFilterWithDefault(
+  filter: import('src/pages/worksheet/types').WorksheetFilterCondition[] = [],
+) {
   return dispatch => {
     dispatch({
       type: 'WORKSHEET_UPDATE_QUICK_FILTER_WITH_DEFAULT',

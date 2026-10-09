@@ -53,6 +53,7 @@ import {
   getSheetOperatesButtons,
   getSheetOperatesButtonsStyle,
 } from 'src/utils/worksheet';
+import type { OperatesButtonStyle } from 'src/utils/worksheetTypes';
 import SheetContext from '../common/Sheet/SheetContext';
 import ColumnVisibilityControl from './components/ColumnVisibilityControl';
 import ToolBar from './HierarchyView/ToolBar';
@@ -620,7 +621,7 @@ class TableViewBase extends React.Component<any, any> {
     showIcon,
     rows,
   }: {
-    style: React.CSSProperties;
+    style: OperatesButtonStyle | undefined;
     visibleNum: number;
     showIcon: boolean;
     rows: RecordRow[];

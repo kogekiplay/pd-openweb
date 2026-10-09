@@ -260,7 +260,7 @@ export default function OperateButtons({
                               setBtnDisable(old => ({ ...old, [button.btnId]: printLoading })),
                           });
                         } else {
-                          alert(_l('无法打印“%0”', button.printItem.name), 3);
+                          alert(_l('无法打印“%0”', button.printItem.name || ''), 3);
                           setBtnDisable(old => ({ ...old, [button.printItem.id]: true }));
                         }
                       });

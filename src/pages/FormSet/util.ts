@@ -1,7 +1,12 @@
 import _ from 'lodash';
 import { allSwitchKeys } from 'src/pages/FormSet/containers/FunctionalSwitch/config.js';
+import type { SheetSwitchPermitItem } from 'src/utils/worksheetTypes';
 
-export const isOpenPermit = (type: number, list = [], viewId?) => {
+export const isOpenPermit = (
+  type: number,
+  list: SheetSwitchPermitItem[] = [],
+  viewId?: string,
+): boolean | undefined => {
   if (Array.isArray(list)) {
     list = list.length > 0 ? formatSwitches(list) : list;
     let data = list.find(o => o.type === type);
@@ -18,6 +23,7 @@ export const isOpenPermit = (type: number, list = [], viewId?) => {
     }
 
     // data.viewIds.length <= 0 所有视图
+    if (!data.viewIds) return false;
     return !!data.state && (data.viewIds.includes(viewId) || data.viewIds.length <= 0);
   }
 
@@ -42,7 +48,7 @@ export const refreshBtnData = (data, btns, isAdd) => {
 };
 
 //兼容没返回的功能开关枚举
-export const formatSwitches = switches => {
+export const formatSwitches = (switches?: SheetSwitchPermitItem[]): SheetSwitchPermitItem[] => {
   return allSwitchKeys.map(o => {
     const it = (switches || []).find(it => it.type === o);
 

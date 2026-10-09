@@ -67,7 +67,7 @@ window.getCookie = function getCookie(name: string) {
   const cookieRegex = new RegExp(`(^| )${name}=([^;]*)(;|$)`);
   const cookieMatch = document.cookie.match(cookieRegex);
 
-  return cookieMatch ? decodeURIComponent(cookieMatch[2]) : null;
+  return cookieMatch ? decodeURIComponent(cookieMatch[2]!) : null;
 };
 
 /**

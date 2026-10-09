@@ -23,7 +23,7 @@ interface Actions {
 let fetchResponse: unknown = { resultCode: 1, data: [], count: 0 };
 let updateResponse: unknown = { resultCode: 1, data: { rowid: 'r1', title: 'new' } };
 let summaryResponse: unknown = [];
-let groupControlId = '';
+let groupControlId: string | undefined = '';
 const alerts: unknown[] = [];
 const failures: unknown[] = [];
 const calls: { kind: string; args: unknown }[] = [];
@@ -167,6 +167,12 @@ async function run(): Promise<void> {
   fetchResponse = { resultCode: 1, count: 5 };
   const missingFetchActions = runThunk(actions.fetchRows(), state());
   await settle();
+  const rowRequest = calls.filter(call => call.kind === 'rows').at(-1)?.args;
+  assert.equal(
+    rowRequest && typeof rowRequest === 'object' && 'kanbanIndex' in rowRequest,
+    false,
+    'A view without a group control must not gain grouped pagination fields when groupControlId is undefined',
+  );
   const restoration = missingFetchActions.find(action => action.type === 'WORKSHEET_SHEETVIEW_FETCH_ROWS');
   assert.deepEqual(
     restoration?.rows,
@@ -177,6 +183,29 @@ async function run(): Promise<void> {
     missingFetchActions.some(action => action.type === 'WORKSHEET_VIEW_UPDATE_ROWS_LOADING' && action.value === false),
   );
   assert.ok(!missingFetchActions.some(action => action.type === 'WORKSHEET_SHEETVIEW_UPDATE_COUNT'));
+
+  // The old lodash literal matcher requires an undefined-valued key to exist.
+  // Keep that distinction when the group lookup has no configured control ID.
+  groupControlId = undefined;
+  const noGroupState = state();
+  const noGroupSheet = noGroupState['sheet'] as {
+    base: { chartId?: string };
+    controls: { controlId?: string; type: number }[];
+  };
+  delete noGroupSheet.base.chartId;
+  noGroupSheet.controls = [{ type: 2 }];
+  const previousRowsCalls = calls.filter(call => call.kind === 'rows').length;
+  runThunk(actions.fetchRows(), noGroupState);
+  await settle();
+  const rowCalls = calls.filter(call => call.kind === 'rows');
+  assert.equal(rowCalls.length, previousRowsCalls + 1, 'The real thunk must issue a row request');
+  const noGroupRequest = rowCalls.at(-1)?.args;
+  assert.equal(
+    noGroupRequest && typeof noGroupRequest === 'object' && 'kanbanIndex' in noGroupRequest,
+    false,
+    'A control without an ID must not be selected as the undefined group control',
+  );
+  groupControlId = '';
 
   fetchResponse = { resultCode: 1, data: [{ rowid: 'new' }], count: 1 };
   const validFetchActions = runThunk(actions.fetchRows(), state());

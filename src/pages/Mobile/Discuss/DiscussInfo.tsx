@@ -265,6 +265,7 @@ class Discuss extends Component<any, any> {
     const newTabs = tabs.filter(item => {
       if (item.type === 1) return recordDiscussSwitch;
       if (item.type === 3) return recordLogSwitch;
+      return undefined;
     });
     const pageType = this.state.pageType ? this.state.pageType : newTabs[0]?.type;
     const keys = _.keys(temporaryDiscuss).reverse();

@@ -1,4 +1,5 @@
 import baseAxios from 'axios';
+import type { InternalAxiosRequestConfig } from 'axios';
 import CryptoJS from 'crypto-js';
 import localForage from 'localforage';
 import _, { get, isFunction, isObject, replace, some } from 'lodash';
@@ -11,17 +12,38 @@ import versionApi from 'src/api/version';
 import { browserIsMobile, getPathWithoutSubPath } from 'src/utils/common';
 import { PUBLIC_KEY } from 'src/utils/enum';
 import { getPssId } from 'src/utils/pssId';
+import type {
+  AbortablePromise,
+  HttpFailure,
+  LocalizationKey,
+  LocalizationParams,
+  RequestData,
+  RequestHeaders,
+  StandardApiEnvelope,
+} from './globalRequestTypes';
+import {
+  fetchRequestHeaders,
+  parseCacheEnvelope,
+  parseRequestFailure,
+  parseStandardEnvelope,
+  readErrorEnvelope,
+  RequestProtocolError,
+} from './globalRequestTypes';
 import langConfig from './langConfig';
 
 const axios = baseAxios.create();
 
-function testApiPath(apiPath, url) {
+function testApiPath(apiPath: string, url: string) {
   const apiPathOfRequest = new URL(/^http/.test(url) ? url : location.origin + url).pathname;
   return new RegExp(apiPath + '$').test(apiPathOfRequest);
 }
 
-function changeRequestData(config, apiPath: () => boolean, changes = {}) {
-  const needChange = isFunction(apiPath) ? apiPath() : testApiPath(apiPath, config.url);
+function changeRequestData(
+  config: InternalAxiosRequestConfig<RequestData>,
+  apiPath: string | (() => boolean),
+  changes: RequestData | ((data: RequestData | undefined) => RequestData) = {},
+) {
+  const needChange = isFunction(apiPath) ? apiPath() : testApiPath(apiPath, config.url!);
 
   if (needChange) {
     if (isFunction(changes)) {
@@ -49,10 +71,10 @@ axios.interceptors.request.use(
               'Worksheet/DeleteWorksheetRows',
               'process/startProcessByPBC',
               'process/startProcess',
-            ].map(apiPath => testApiPath(apiPath, config.url)),
+            ].map(apiPath => testApiPath(apiPath, config.url!)),
           ),
         {
-          pushUniqueId: testApiPath('process/startProcess', config.url)
+          pushUniqueId: testApiPath('process/startProcess', config.url!)
             ? get(md, 'global.Config.pushUniqueId')
             : replace(get(md, 'global.Config.pushUniqueId', ''), /__.*/, ''),
         },
@@ -293,7 +315,7 @@ if (window.isWeiXin) {
  * @param {string} type - 返回值类型 ('array' 或 'object')
  * @returns {Array|Object} - 解析结果或空数组/空对象
  */
-window.safeParse = (str, type) => {
+window.safeParse = (str: unknown, type?: 'array' | 'object'): unknown => {
   if (!str) {
     return type === 'array' ? [] : {};
   }
@@ -303,7 +325,7 @@ window.safeParse = (str, type) => {
   }
 
   try {
-    return JSON.parse(str);
+    return JSON.parse(String(str)) as unknown;
   } catch (err) {
     if (str && !(typeof str === 'string' && str.startsWith('deleteRowIds'))) {
       console.error(err);
@@ -319,7 +341,7 @@ window.safeParse = (str, type) => {
  * @param {string} showType 输出类型 1:精简模式 2:极简模式 3:完整显示 4:完整显示（不带时分秒）
  * @returns {string} 相对的时间，如15分钟前
  */
-window.createTimeSpan = (dateStr, showType = 1) => {
+window.createTimeSpan = (dateStr: moment.MomentInput, showType = 1) => {
   const dateTime = moment(dateStr);
   const now = moment();
   const diff = now.diff(dateTime);
@@ -386,7 +408,7 @@ window.isNewTab = () => {
  */
 window.addEventListener('beforeunload', () => {
   const tabIds = safeParse(localStorage.getItem('tabIds'), 'array');
-  const newTabIds = tabIds.filter(id => id !== tabId);
+  const newTabIds = (tabIds as string[]).filter(id => id !== tabId);
 
   localStorage.setItem('tabIds', JSON.stringify(newTabIds));
 });
@@ -397,9 +419,9 @@ window.addEventListener('beforeunload', () => {
  */
 // jqXHR 只用到 status 和 responseJSON（名字是 jQuery 时代留下的，现在底层是 axios）
 const getErrorMessage = (
-  jqXHR: { status?: number; responseJSON?: { exception?: string } } = {},
+  jqXHR: HttpFailure = {},
   textStatus: string,
-  exception,
+  exception: string | null | undefined,
   silent = false,
 ) => {
   let errorMessage;
@@ -446,9 +468,9 @@ const getErrorMessage = (
       break;
   }
 
-  if (!errorMessage && jqXHR.status >= 400 && jqXHR.status < 500) {
+  if (!errorMessage && jqXHR.status! >= 400 && jqXHR.status! < 500) {
     errorMessage = exception || _l('请求失败，请稍后重试');
-  } else if (!errorMessage && jqXHR.status >= 500) {
+  } else if (!errorMessage && jqXHR.status! >= 500) {
     errorMessage = _l('服务异常，请稍后重试');
   }
 
@@ -466,9 +488,17 @@ const getErrorMessage = (
 /**
  * 处理请求参数
  */
-const disposeRequestParams = (controllerName, actionName, data, ajaxOptions) => {
+const disposeRequestParams = (
+  controllerName: string | null,
+  actionName: string | null,
+  data: RequestData | string,
+  ajaxOptions: Omit<NonNullable<ApiOptions['ajaxOptions']>, 'agent' | 'noAccountIdHeader'> & {
+    agent?: boolean | undefined;
+    noAccountIdHeader?: boolean | undefined;
+  },
+) => {
   let serverPath = __api_server__.main;
-  let headers = {
+  let headers: RequestHeaders = {
     Authorization: getPssId() ? `md_pss_id ${getPssId()}` : '',
     AccountId: !ajaxOptions.url && _.get(md.global.Account, 'accountId') ? md.global.Account.accountId : undefined,
     'X-Requested-With': 'XMLHttpRequest',
@@ -513,8 +543,8 @@ const disposeRequestParams = (controllerName, actionName, data, ajaxOptions) => 
     // AES-256-CBC 加密函数
     const encryptAES256CBC = (plainText: string) => {
       // 将密钥和 IV 转换为 CryptoJS 的 WordArray
-      const keyWordArray = CryptoJS.enc.Hex.parse(window.apireply_hex_key);
-      const ivWordArray = CryptoJS.enc.Hex.parse(window.apireply_hex_iv);
+      const keyWordArray = CryptoJS.enc.Hex.parse(window.apireply_hex_key!);
+      const ivWordArray = CryptoJS.enc.Hex.parse(window.apireply_hex_iv!);
 
       // 加密
       const encrypted = CryptoJS.AES.encrypt(plainText, keyWordArray, {
@@ -548,24 +578,26 @@ const disposeRequestParams = (controllerName, actionName, data, ajaxOptions) => 
   }
 
   if ((ajaxOptions.type || '').toUpperCase() === 'GET') {
-    data = { ...data };
-    Object.keys(data).forEach(key => {
-      const value = data[key];
-      data[key] = value && typeof value === 'object' ? JSON.stringify(value) : value;
+    const getData: RequestData =
+      typeof data === 'string' ? Object.fromEntries(Object.entries(data)) : Object.assign({}, data);
+    Object.keys(getData).forEach(key => {
+      const value = getData[key];
+      getData[key] = value && typeof value === 'object' ? JSON.stringify(value) : value;
     });
+    data = getData;
   }
 
   if (typeof data === 'string') {
-    data = JSON.parse(data);
+    data = JSON.parse(data) as RequestData;
   }
 
   //工作表信息
-  if (controllerName === 'Worksheet' && ['GetWorksheetInfo', 'GetWorksheetById'].includes(actionName)) {
+  if (controllerName === 'Worksheet' && ['GetWorksheetInfo', 'GetWorksheetById'].includes(actionName!)) {
     data = { ...data, getTemplate: true, getViews: true, getSwitchPermit: true, getRules: true };
   }
 
   return {
-    url: ajaxOptions.url || serverPath + controllerName + '/' + encodeURIComponent(actionName),
+    url: ajaxOptions.url || serverPath + controllerName + '/' + encodeURIComponent(actionName!),
     headers,
     data,
   };
@@ -575,9 +607,7 @@ const disposeRequestParams = (controllerName, actionName, data, ajaxOptions) => 
  * 生成本地化存储参数
  */
 // 按接口名给出「本地缓存的 key 与失效条件」；requestData 里这几个 id 参与拼 sourceId
-const generateLocalizationParams = (
-  requestData: { worksheetId?: string; appId?: string; appLangId?: string; projectId?: string } = {},
-) => {
+const generateLocalizationParams = (requestData: RequestData = {}): Record<string, LocalizationParams> => {
   const lang = _.get(md, 'global.Account.lang');
   const worksheetInfoParams = {
     sourceId: `${requestData.worksheetId}_${lang}`,
@@ -637,7 +667,11 @@ const generateLocalizationParams = (
  * @param {Object} requestData    请求参数
  * @returns
  */
-const getLocalizationKey = (controllerName, actionName, requestData = {}) => {
+const getLocalizationKey = (
+  controllerName: string | null | undefined,
+  actionName: string | null | undefined,
+  requestData: RequestData = {},
+): LocalizationKey => {
   const key = `${controllerName}_${actionName}`;
   const CACHE_PARAMS = generateLocalizationParams(requestData);
 
@@ -649,7 +683,13 @@ const getLocalizationKey = (controllerName, actionName, requestData = {}) => {
  */
 const canUseLocalizationCache = () => !_.get(window, 'shareState.shareId') && !window.isWeiXin && !window.isWxWork;
 
-const insertLocalData = ({ key, moduleType, sourceId, version, data }) => {
+const insertLocalData = ({
+  key,
+  moduleType,
+  sourceId,
+  version,
+  data,
+}: LocalizationKey & { version?: string | undefined; data: unknown }) => {
   if (!canUseLocalizationCache() || !key || !sourceId) return;
 
   if (['Worksheet_GetWorksheetInfo', 'Worksheet_GetWorksheetById'].includes(key) && !_.get(data, 'views.length'))
@@ -667,7 +707,17 @@ const insertLocalData = ({ key, moduleType, sourceId, version, data }) => {
 /**
  * 指定接口编辑后，需清理缓存时间
  */
-window.clearLocalDataTime = ({ controllerName, actionName, requestData = {}, clearSpecificKeys = [] }) => {
+window.clearLocalDataTime = ({
+  controllerName,
+  actionName,
+  requestData = {},
+  clearSpecificKeys = [],
+}: {
+  controllerName?: string | null | undefined;
+  actionName?: string | null | undefined;
+  requestData?: RequestData | undefined;
+  clearSpecificKeys?: string[] | undefined;
+}) => {
   if (!canUseLocalizationCache()) return;
   const key = `${controllerName}_${actionName}`;
   const CACHE_PARAMS = generateLocalizationParams({
@@ -678,22 +728,31 @@ window.clearLocalDataTime = ({ controllerName, actionName, requestData = {}, cle
   const localKeys: string[] = [];
 
   Object.keys(CACHE_PARAMS).forEach(currentKey => {
-    if (CACHE_PARAMS[currentKey].clearInterface.includes(key) || _.includes(clearSpecificKeys, currentKey)) {
-      localKeys.push(`${currentKey}_${CACHE_PARAMS[currentKey].sourceId}`);
+    if (CACHE_PARAMS[currentKey]!.clearInterface.includes(key) || _.includes(clearSpecificKeys, currentKey)) {
+      localKeys.push(`${currentKey}_${CACHE_PARAMS[currentKey]!.sourceId}`);
     }
   });
 
   if (!localKeys.length) return;
 
   localKeys.forEach(localKey => {
-    localForage.getItem(localKey).then(localSource => {
-      localSource &&
-        localForage.setItem(localKey, { version: localSource.version, data: localSource.data, time: null });
+    localForage.getItem<unknown>(localKey).then<unknown>(rawCache => {
+      let localSource;
+      try {
+        localSource = parseCacheEnvelope(rawCache);
+      } catch (error) {
+        if (error instanceof RequestProtocolError) return localForage.removeItem(localKey);
+        throw error;
+      }
+      return (
+        localSource &&
+        localForage.setItem(localKey, { version: localSource.version, data: localSource.data, time: null })
+      );
     });
   });
 };
 
-function JSONParseForEncryption(jsonString = '') {
+function JSONParseForEncryption(jsonString = ''): unknown {
   try {
     return JSON.parse(jsonString.replace(/\t/g, '\\t'));
   } catch (error) {
@@ -705,10 +764,10 @@ function JSONParseForEncryption(jsonString = '') {
 /**
  * 接口数据解密
  */
-const interfaceDataDecryption = (response, actionName = '') => {
+const interfaceDataDecryption = (response: StandardApiEnvelope, actionName = '') => {
   const { data, key, encrypted } = response || {};
 
-  const getDecryptedValue = (decryptKey, encryptedValue) => {
+  const getDecryptedValue = (decryptKey: string, encryptedValue: string) => {
     const decrypted = CryptoJS.AES.decrypt(encryptedValue, CryptoJS.enc.Utf8.parse(decryptKey), {
       iv: CryptoJS.enc.Utf8.parse(PUBLIC_KEY.replace(/\r|\n/, '').slice(26, 42)),
     });
@@ -726,7 +785,7 @@ const interfaceDataDecryption = (response, actionName = '') => {
     ) &&
     !['meihua.mingdao.com', 'www.mingdao.com'].includes(location.host)
   ) {
-    let dataStr = JSON.stringify(data);
+    let dataStr = JSON.stringify(data)!;
     // 标注成 string[]：match 失败时的 `|| []` 是 never[]，与 RegExpMatchArray 组成联合后
     // TS 会把 forEach 的形参解析成 never，下面的 item.split 报 TS2339。
     // 升级前被 @types/react 18 的宽松推断盖住了，这里写清楚实际类型。
@@ -737,7 +796,7 @@ const interfaceDataDecryption = (response, actionName = '') => {
         .split(/\$\$encryptedStart\$\$(.*?)\$\$(.*?)\$\$encryptedEnd/)
         .filter(o => o);
 
-      dataStr = dataStr.replace(item, getDecryptedValue(decryptKey, encryptedValue));
+      dataStr = dataStr.replace(item, getDecryptedValue(decryptKey!, encryptedValue!));
     });
 
     return {
@@ -765,7 +824,36 @@ const throttledCheckLogin = _.throttle(() => loginApi.checkLogin({}, { silent: t
  * @param  {Boolean} options.silent 发生错误时不弹出提示
  * @return {Promise}               返回结果的 promise
  */
-window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = {}) => {
+export function requestApi(
+  controllerName: string | null,
+  actionName: string | null,
+  requestData: RequestData | undefined,
+  options: ApiOptions & { ajaxOptions: NonNullable<ApiOptions['ajaxOptions']> & { sync: true } },
+): unknown;
+export function requestApi(
+  controllerName: string | null,
+  actionName: string | null,
+  requestData: RequestData | undefined,
+  options: ApiOptions & { isReadableStream: true },
+): Promise<Response>;
+export function requestApi(
+  controllerName: string | null,
+  actionName: string | null,
+  requestData: RequestData | undefined,
+  options?: ApiOptions & { isReadableStream?: false | undefined },
+): AbortablePromise<unknown>;
+export function requestApi(
+  controllerName: string | null,
+  actionName: string | null,
+  requestData: RequestData | undefined,
+  options: ApiOptions,
+): unknown;
+export function requestApi(
+  controllerName: string | null,
+  actionName: string | null,
+  requestData: RequestData | undefined,
+  options: ApiOptions = {},
+): unknown {
   const controller = options.abortController || new AbortController();
   const ajaxOptions = options.ajaxOptions || {};
   const method = ajaxOptions.type || 'POST';
@@ -798,13 +886,13 @@ window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = 
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
     Object.keys(headers).forEach(key => {
-      xhr.setRequestHeader(key, headers[key]);
+      xhr.setRequestHeader(key, String(headers[key]));
     });
 
     xhr.withCredentials = !ajaxOptions.url;
     xhr.send(method === 'GET' ? '' : JSON.stringify(data));
 
-    const responseData = JSON.parse(xhr.responseText);
+    const responseData = parseStandardEnvelope(JSON.parse(xhr.responseText));
 
     if (xhr.status === 200) {
       if (responseData.exception) {
@@ -822,19 +910,23 @@ window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = 
     const streamResponse = fetch(url, {
       signal: controller.signal,
       method,
-      headers: { ...headers, 'Content-Type': 'application/json' },
-      body: method === 'GET' ? undefined : JSON.stringify(data),
+      headers: fetchRequestHeaders({ ...headers, 'Content-Type': 'application/json' }),
+      ...(method === 'GET' ? {} : { body: JSON.stringify(data) }),
     });
 
     // Agent 限流必须告知用户，不受 silent 控制
     if (isAgent) {
       return streamResponse.then(async response => {
         if (response.status === 429) {
-          const limitData = await response
+          const rawLimitData: unknown = await response
             .clone()
             .json()
             .catch(() => null);
-          limitData?.errorMessage && alert(limitData.errorMessage, 2);
+          const limitData =
+            rawLimitData && typeof rawLimitData === 'object' && 'errorMessage' in rawLimitData
+              ? rawLimitData.errorMessage
+              : undefined;
+          typeof limitData === 'string' && limitData && alert(limitData, 2);
         }
 
         return response;
@@ -844,14 +936,14 @@ window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = 
     return streamResponse;
   }
 
-  const promise = new Promise((resolve, reject) => {
+  const promise = new Promise<unknown>((resolve, reject) => {
     const executeRequest = async () => {
       const { key, moduleType, sourceId } = getLocalizationKey(controllerName, actionName, requestData);
       let version: string | undefined;
 
       try {
         if (canUseLocalizationCache() && key && sourceId) {
-          const localSource = await localForage.getItem(`${key}_${sourceId}`);
+          const localSource = parseCacheEnvelope(await localForage.getItem<unknown>(`${key}_${sourceId}`));
 
           if (localSource && !localStorage.getItem('IS_DEV_MODE')) {
             if (!localSource.time || moment().diff(moment(localSource.time), 's') > 30) {
@@ -875,7 +967,7 @@ window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = 
       }
 
       if (!isAgent) {
-        window.clearLocalDataTime({ controllerName, actionName, requestData });
+        window.clearLocalDataTime({ controllerName: controllerName!, actionName: actionName!, requestData });
       }
 
       return axios({
@@ -895,20 +987,26 @@ window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = 
             return;
           }
 
-          const responseData = response.data || { state: -1, exception: _l('解析返回结果错误') };
+          const responseData = parseStandardEnvelope(response.data || { state: -1, exception: _l('解析返回结果错误') });
 
           if (responseData.exception) {
             responseData?.state !== 300016 && !options.silent && alert(responseData.exception, 2);
             reject({ errorCode: responseData.state, errorMessage: responseData.exception, errorData: responseData });
           } else {
-            const { data } = interfaceDataDecryption(responseData, actionName);
+            const { data } = interfaceDataDecryption(responseData, actionName || '');
 
             !_.get(window, 'shareState.shareId') &&
               insertLocalData({ key, moduleType, sourceId, version, data: _.cloneDeep(data) });
             resolve(data);
           }
         })
-        .catch(error => {
+        .catch((caught: unknown) => {
+          if (caught instanceof RequestProtocolError) {
+            reject(caught);
+            return;
+          }
+          const error = parseRequestFailure(caught);
+          const errorEnvelope = readErrorEnvelope(error.response?.data);
           if (customParseResponse) {
             reject(error.response);
             return;
@@ -924,20 +1022,20 @@ window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = 
 
           if (isAgent) {
             const status = get(error, 'response.status');
-            const respData = get(error, 'response.data');
+            const respData = errorEnvelope;
 
             if (status === 429 && respData?.errorMessage) {
               alert(respData.errorMessage, 2);
             } else {
               getErrorMessage(
                 error.response,
-                baseAxios.isCancel(error) ? 'abort' : '',
+                baseAxios.isCancel(caught) ? 'abort' : '',
                 respData?.exception,
                 options.silent,
               );
             }
 
-            reject(error.response || error);
+            reject(error.response || caught);
             return;
           }
 
@@ -945,35 +1043,32 @@ window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = 
             error.response &&
             error.response.status === 402 &&
             error.response.data &&
-            error.response.data.state === 13 &&
-            error.response.data.data
+            errorEnvelope.state === 13 &&
+            errorEnvelope.data
           ) {
             if (_.get(md, 'global.Account.accountId') && location.href.indexOf('mobile') === -1) {
               import('../pages/PageHeader/components/NetState').then(netState => {
-                netState.default(interfaceDataDecryption(error.response.data).data);
+                netState.default(interfaceDataDecryption(parseStandardEnvelope(error.response!.data)).data);
               });
             }
           }
 
           reject({
-            ...getErrorMessage(
-              error.response,
-              baseAxios.isCancel(error) ? 'abort' : '',
-              get(error, 'response.data.exception'),
-            ),
-            errorData: baseAxios.isCancel(error) ? {} : get(error, 'response.data'),
+            ...getErrorMessage(error.response, baseAxios.isCancel(caught) ? 'abort' : '', errorEnvelope.exception),
+            errorData: baseAxios.isCancel(caught) ? {} : get(error, 'response.data'),
           });
         });
     };
     executeRequest().catch(reject);
   });
 
-  promise.abort = () => {
-    controller.abort();
-  };
-
-  return promise;
-};
+  return Object.assign(promise, {
+    abort: () => {
+      controller.abort();
+    },
+  });
+}
+window.mdyAPI = requestApi;
 
 /**
  * Agent 服务薄客户端
@@ -987,7 +1082,10 @@ window.mdyAPI = (controllerName, actionName, requestData, options: ApiOptions = 
  * @param  {AbortController} options.abortController
  * @return {Promise}                     非流式 resolve 后端响应体（axios response.data）
  */
-window.agentAPI = (args: Record<string, unknown> = {}, options: AgentApiOptions = {}) => {
+window.agentAPI = (
+  args: Record<string, unknown> & { projectId?: unknown; context?: { projectId?: unknown } | undefined } = {},
+  options: AgentApiOptions = {},
+) => {
   const { url, method = 'POST', isStream, silent, header, abortController } = options;
 
   const agentHost = (_.get(md, 'global.Config.AgentUrl') || '').replace(/\/$/, '');
@@ -1028,7 +1126,7 @@ window.agentAPI = (args: Record<string, unknown> = {}, options: AgentApiOptions 
         const argArr = Array.prototype.slice.call(arguments),
           docFrag = document.createDocumentFragment();
 
-        argArr.forEach(function (argItem) {
+        argArr.forEach(function (argItem: unknown) {
           const isNode = argItem instanceof Node;
           docFrag.appendChild(isNode ? argItem : document.createTextNode(String(argItem)));
         });
@@ -1042,8 +1140,8 @@ window.agentAPI = (args: Record<string, unknown> = {}, options: AgentApiOptions 
  * 兼容钉钉内核63 问题
  */
 if (!Object.fromEntries) {
-  Object.fromEntries = function (entries) {
-    let entriesObj = {};
+  Object.fromEntries = function (entries: Iterable<readonly [PropertyKey, unknown]>) {
+    let entriesObj: Record<PropertyKey, unknown> = {};
 
     if (Array.isArray(entries)) {
       (entries || []).forEach(element => {
