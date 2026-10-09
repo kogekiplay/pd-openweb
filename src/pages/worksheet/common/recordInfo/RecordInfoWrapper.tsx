@@ -214,6 +214,8 @@ export default class RecordInfoWrapper extends Component<any, any> {
     return !notDialog ? (
       <Modal
         {...dialogProps}
+        // Quick selectors render under document.body; the modal must allow their inputs to keep focus.
+        focusable={{ trap: false }}
         verticalAlign="bottom"
         closeSize={56}
         style={{ minWidth: 900 }}
