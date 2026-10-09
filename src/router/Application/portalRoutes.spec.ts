@@ -15,7 +15,7 @@ function loadConfig(file: string, subPath: string): Record<string, { path: strin
       if (name === 'src/utils/common')
         return {
           addSubPathOfRoutes: (routes: Record<string, { path: string | string[] }>) => {
-            const copy = _.cloneDeep(routes);
+          const copy: Record<string, { path: string | string[] }> = _.cloneDeep(routes);
             for (const route of Object.values(copy))
               route.path = Array.isArray(route.path) ? route.path.map(p => subPath + p) : subPath + route.path;
             return copy;
