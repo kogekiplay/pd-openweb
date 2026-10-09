@@ -5,7 +5,7 @@ import sheetAjax from 'src/api/worksheet';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import type { WorksheetView } from 'src/pages/worksheet/types';
 import { getTranslateInfo } from 'src/utils/app';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { ControlAdvancedSetting } from 'src/utils/controlTypes';
 import { replaceAdvancedSettingTranslateInfo, replaceControlsTranslateInfo } from 'src/utils/translate';
 
 export const ERROR_STATUS = {
@@ -52,16 +52,12 @@ function getSearchConfig(control) {
  * 选择记录弹层用到的工作表信息。【只列本目录真正读到的字段】——
  * 后端返回的对象远不止这些，缺的按需往这里补，不要退回 any。
  */
-export interface SelectRecordsWorksheetInfo {
-  worksheetId?: string;
-  appId?: string;
-  projectId?: string;
-  entityName?: string;
-  allowAdd?: boolean;
-  views?: { viewId?: string; name?: string; viewType?: number }[];
-  template?: { controls?: FormControl[] };
-  advancedSetting?: Record<string, string>;
-}
+export type SelectRecordsWorksheetInfo = Partial<
+  Omit<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetModel, 'advancedSetting' | 'views'>
+> & {
+  advancedSetting?: ControlAdvancedSetting | undefined;
+  views?: WorksheetView[] | undefined;
+};
 
 const LIST_MODE_PAGE_SIZE = 1000;
 
@@ -421,22 +417,23 @@ export function getWorksheetInfo(worksheetId: string, parentWorksheetId) {
       relationWorksheetId: parentWorksheetId,
       langType: window.shareState.shareId ? getCurrentLangCode() : undefined,
     })
-    .then(data => {
+    .then(response => {
+      const data: SelectRecordsWorksheetInfo = response;
       const worksheetControlsCache: NonNullable<Window['worksheetControlsCache']> = {};
       window.worksheetControlsCache = worksheetControlsCache;
-      get(data, 'template.controls', []).forEach(c => {
-        if (c.type === 29) {
+      (data.template?.controls || []).forEach(c => {
+        if (c.type === 29 && c.dataSource) {
           worksheetControlsCache[c.dataSource] = c.relationControls;
         }
       });
-      const appId = _.get(window, 'appInfo.id') || data.appId;
+      const appId = _.get(window, 'appInfo.id') || data.appId || '';
       const translateInfo = getTranslateInfo(appId, null, data.worksheetId);
       data.entityName = translateInfo.recordName || data.entityName;
       if (data.advancedSetting) {
-        data.advancedSetting = replaceAdvancedSettingTranslateInfo(appId, data.worksheetId, data.advancedSetting);
+        data.advancedSetting = replaceAdvancedSettingTranslateInfo(appId, data.worksheetId || '', data.advancedSetting);
       }
 
-      if (get(data, 'template.controls')) {
+      if (data.template?.controls) {
         data.template.controls = replaceControlsTranslateInfo(appId, data.worksheetId, data.template.controls);
       }
 

@@ -1,6 +1,7 @@
 import type { RuleChange, RuleDataProps, RuleValidator } from 'src/components/Form/core/formUtils/ruleDataTypes';
 import type { FormConditionRule } from 'src/components/Form/core/formUtils/types';
 import type { FormControl, FormError } from 'src/components/Form/core/types';
+import type { SubListStoreCall } from 'src/utils/subListStoreTypes';
 import type { FormQueryConfig } from '../core/queryTypes';
 
 export type StoreAction =
@@ -47,7 +48,7 @@ export interface FormDataFormat {
     rule?: FormConditionRule,
     isInit?: boolean,
   ): void;
-  callStore(fn: string | { fnName: string; controlId?: string | undefined }, ...args: unknown[]): void;
+  callStore(...call: SubListStoreCall): void;
 }
 export interface StoreProps {
   rules?: FormConditionRule[] | undefined;

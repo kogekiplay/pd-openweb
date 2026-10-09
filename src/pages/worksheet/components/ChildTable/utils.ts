@@ -10,6 +10,7 @@ import { checkCellIsEmpty } from 'src/utils/control';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { checkRulesErrorOfRow } from 'src/utils/rule';
+import type { ChildTableStore } from 'src/utils/subListStoreTypes';
 
 function getControlCompareValue(c: FormControl, value) {
   if (c.type === 26) {
@@ -205,32 +206,15 @@ function mergeRequiredState(controls: FormControl[] = [], control: FormControl =
   });
 }
 
-export interface ChildTableValidationStore {
-  getState: () => {
-    rows: RecordRow[];
-    cellErrors?: Record<string, string | undefined> | undefined;
-    persistedCellErrors?: Record<string, string | undefined> | undefined;
-    base?:
-      | {
-          recordId?: string | undefined;
-          control?: FormControl | undefined;
-          controls?: FormControl[] | undefined;
-          instanceId?: string | undefined;
-          workId?: string | undefined;
-          worksheetInfo?:
-            { rules?: FormConditionRule[] | undefined; workflowChildTableSwitch?: boolean | undefined } | undefined;
-          masterData?: MasterData | undefined;
-        }
-      | undefined;
-  };
-  dispatch: (action: { type: 'UPDATE_CELL_ERRORS'; value: Record<string, string | undefined> }) => unknown;
-  clearSubListErrors: () => void;
-}
+export type ChildTableValidationStore = Pick<ChildTableStore, 'getState' | 'dispatch' | 'clearSubListErrors'>;
+
 export function getSubListErrorOfStore(
   store: ChildTableValidationStore,
   currentControl?: FormControl,
 ): Record<string, string | undefined> {
   const state = store.getState();
+  const loadError = state.base.initializationError || state.base.rowLoadError;
+  if (loadError) return { __load__: loadError };
   const { rows, base = {}, persistedCellErrors: pendingCellErrors = {} } = state;
   const { recordId, control = {} } = base;
   const isWorkflow =

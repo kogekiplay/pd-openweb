@@ -14,9 +14,10 @@ import type {
   FormControl,
   RecordRow,
   SelectedEntityValue,
-  SubListStore,
 } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows, getNewRecordPageUrl, getRelateRecordCountFromValue } from 'src/utils/record';
+import { isChildTableStore, isRelateRecordTableStore } from 'src/utils/subListStoreTypes';
+import type { SubListState } from 'src/utils/subListStoreTypes';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, FROM, getWidgetValueId } from './config';
 import { parsedRecords } from './formUtils/valueBoundary';
 
@@ -271,7 +272,7 @@ export function formatControlToServer(
   let parsedValue: ControlValue;
   let childTableControls: FormControl[];
   let isFromDefault: boolean;
-  let state: SubListStore;
+  let state: SubListState | undefined;
   let rows: RecordRow[];
   const isRelateRecordDropdown =
     control.type === 29 &&
@@ -353,7 +354,7 @@ export function formatControlToServer(
           ],
           control.advancedSetting?.showtype,
         ) &&
-        control.store
+        isRelateRecordTableStore(control.store)
       ) {
         state = control.store.getState();
         const savedRecords: RecordRow[] = state.records.filter(
@@ -363,16 +364,16 @@ export function formatControlToServer(
           result.value = JSON.stringify(
             savedRecords
               .map((record: RecordRow) => ({ sid: record.rowid }))
-              .concat(state.changes.addedRecordIds.map((id: string) => ({ sid: id }))),
+              .concat(state.changes.addedRecordIds.map(id => ({ sid: id }))),
           );
         } else if (isNewRecord || _.includes(hasDefaultRelateRecordTableControls, control.controlId)) {
           result.value = JSON.stringify(savedRecords.map((record: RecordRow) => ({ sid: record.rowid })));
         } else if (
-          get(state, 'changes.isDeleteAll') &&
+          state?.changes.isDeleteAll &&
           control.advancedSetting?.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)
         ) {
           result.editType = 0;
-          result.value = JSON.stringify(state.changes.addedRecordIds.map((id: string) => ({ sid: id })));
+          result.value = JSON.stringify(state.changes.addedRecordIds.map(id => ({ sid: id })));
         } else if (
           !isEmpty(state.changes) &&
           control.advancedSetting?.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)
@@ -380,7 +381,7 @@ export function formatControlToServer(
           result.editType = 9;
           result.value = JSON.stringify(
             state.changes.addedRecordIds
-              .map((id: string) => ({ editType: 1, rowid: id }))
+              .map(id => ({ editType: 1, rowid: id }))
               .concat(state.changes.deletedRecordIds.map((id: string) => ({ editType: 2, rowid: id }))),
           );
         } else {
@@ -425,7 +426,7 @@ export function formatControlToServer(
             );
             result.value = JSON.stringify(
               addedIds
-                .map((id: string) => ({ editType: 1, rowid: id }))
+                .map(id => ({ editType: 1, rowid: id }))
                 .concat(deletedIds.map((id: string) => ({ editType: 2, rowid: id }))),
             );
           }
@@ -461,8 +462,9 @@ export function formatControlToServer(
         break;
       }
 
-      state = control.store && control.store.getState();
-      childTableControls = get(state, 'base.controls') || [];
+      const childState = isChildTableStore(control.store) ? control.store.getState() : undefined;
+      state = childState;
+      childTableControls = state?.base.controls || [];
       if (_.isEmpty(childTableControls)) {
         console.log('childTableControls is empty');
       }
@@ -473,17 +475,17 @@ export function formatControlToServer(
 
       if (
         (!result.value || (_.isNumber(Number(result.value)) && !_.isNaN(Number(result.value)))) &&
-        (!_.isEmpty(filterEmptyChildTableRows(get(state, 'rows', []))) || get(state, 'changes.isDeleteAll'))
+        (!_.isEmpty(filterEmptyChildTableRows(childState?.rows || [])) || state?.changes.isDeleteAll)
       ) {
         result.editType = 9;
         if (isNewRecord) {
           result.value = JSON.stringify(
-            filterEmptyChildTableRows(get(state, 'rows', [])).map(row =>
+            filterEmptyChildTableRows(childState?.rows || []).map(row =>
               formatRowToServer(row, childTableControls || [], { isDraft, isSubList: true }),
             ),
           );
         } else {
-          rows = filterEmptyChildTableRows(get(state, 'rows', [])).map(row => ({
+          rows = filterEmptyChildTableRows(childState?.rows || []).map(row => ({
             editType: 0,
             newOldControl: formatRowToServer(row, childTableControls || [], { isDraft, isSubList: true }),
           }));
@@ -495,7 +497,7 @@ export function formatControlToServer(
               },
               ...rows,
             ]);
-          } else if (get(state, 'changes.isDeleteAll')) {
+          } else if (state?.changes.isDeleteAll) {
             result.value = JSON.stringify([
               {
                 rowid: 'all',
@@ -510,7 +512,7 @@ export function formatControlToServer(
         return result;
       } else if (result.value.isAdd) {
         result.value = JSON.stringify(
-          filterEmptyChildTableRows(get(state, 'rows', [])).map(row =>
+          filterEmptyChildTableRows(childState?.rows || []).map(row =>
             formatRowToServer(row, childTableControls || [], { isDraft, isSubList: true }),
           ),
         );
@@ -534,7 +536,7 @@ export function formatControlToServer(
         // 因异步查询回填的竞态漏登记，避免快速连续录入（如扫码）时保存静默丢行
         const storeNewRowIds =
           _.isObject(result.value) && control.store
-            ? filterEmptyChildTableRows(get(state, 'rows', []))
+            ? filterEmptyChildTableRows(isChildTableStore(control.store) ? control.store.getState().rows : [])
                 .map(row => row.rowid)
                 .filter(id => /^(temp|default)/.test(String(id)))
             : [];
@@ -545,7 +547,7 @@ export function formatControlToServer(
             updatedRowIds
               .map(rowid => {
                 const isNew = /^(temp|default)/.test(rowid);
-                let row: RecordRow | undefined = _.find(get(state, 'rows', []), (r: RecordRow) => r.rowid === rowid);
+                let row: RecordRow | undefined = (childState?.rows || []).find(row => row.rowid === rowid);
 
                 if (!row) {
                   return undefined;
@@ -564,7 +566,7 @@ export function formatControlToServer(
           );
         }
 
-        if (get(state, 'changes.isDeleteAll')) {
+        if (state?.changes.isDeleteAll) {
           resultvalue = resultvalue.concat({
             rowid: 'all',
             editType: 2,
@@ -572,7 +574,7 @@ export function formatControlToServer(
         }
 
         result.value = JSON.stringify(filterEmptyChildTableRows(resultvalue));
-        if (control.store && control.store.dispatch) {
+        if (isChildTableStore(control.store)) {
           control.store.dispatch({
             type: 'RESET_CHANGES',
           });
@@ -720,7 +722,11 @@ export const renderCount = (item: FormControl) => {
     count = _.isUndefined(recordsCount) ? item.count : recordsCount;
   }
 
-  if (type === 29 && advancedSetting?.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)) {
+  if (
+    type === 29 &&
+    isRelateRecordTableStore(item.store) &&
+    advancedSetting?.showtype === String(RELATE_RECORD_SHOW_TYPE.TABLE)
+  ) {
     const state = item.store.getState();
     count =
       state.loading && /^\d+$/.test(item.value)
@@ -748,7 +754,7 @@ export const renderCount = (item: FormControl) => {
         count = value.num || filterEmptyChildTableRows(value.rows || []).length;
       } else if (!_.isNaN(parseInt(item.value, 10))) {
         count = parseInt(item.value, 10);
-      } else if (item.store) {
+      } else if (isChildTableStore(item.store)) {
         try {
           count = filterEmptyChildTableRows(item.store.getState().rows).length;
         } catch (err) {

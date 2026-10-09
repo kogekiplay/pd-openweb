@@ -9,6 +9,7 @@ import functionWrap from 'ming-ui/components/FunctionWrap';
 import sheetAjax from 'src/api/worksheet';
 import worksheetAjax from 'src/api/worksheet';
 import ChildTable from 'worksheet/components/ChildTable';
+import type { ChildTableCellRef } from 'worksheet/components/ChildTable/publicTypes';
 import { ROW_HEIGHT } from 'worksheet/constants/enum';
 import { onValidator } from 'src/components/Form/core/formUtils';
 import { formatControlToServer } from 'src/components/Form/core/utils';
@@ -147,7 +148,7 @@ export default function ChildTableDialog(props) {
     mobileIsEdit,
     onClose,
   }: { controls: FormControl[]; [key: string]: any } = props;
-  const cache = useRef({});
+  const cache = useRef<{ comp?: ChildTableCellRef | undefined; isSaving?: boolean | undefined; reload?: unknown }>({});
   const callFromDialog = openFrom !== 'cell';
   const rowHeight = ROW_HEIGHT[Number(_.get(control, 'advancedSetting.rowheight'))] || 34;
   const needUpdateControls = _.isEmpty(controls) || hasNoRelationRelateControl(controls);
@@ -169,7 +170,8 @@ export default function ChildTableDialog(props) {
         return;
       }
 
-      const store = cache.current.comp.props.store;
+      const store = cache.current.comp?.props.store;
+      if (!store) return;
       const errors = getSubListErrorOfStore(store);
       const validatedResult = onValidator({ item: { ...control, value }, appId });
 

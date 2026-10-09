@@ -250,7 +250,9 @@ export default function SelectDialog({ ...args }) {
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [tempSheetColumnWidths, setTempSheetColumnWidths] = useState({});
   const [isFiltered, setIsFiltered] = useState(false);
-  const [filtersVisible, setFiltersVisible] = useState(window.localStorage.getItem(`selectDialogFiltersVisible`));
+  const [filtersVisible, setFiltersVisible] = useState<string | boolean | null>(
+    window.localStorage.getItem(`selectDialogFiltersVisible`),
+  );
   const [disableMaskDataControls, setDisableMaskDataControls] = useState({});
   // 弹层里新建记录时新增的选项，工作表模板里还没有，需要在本次弹层内合并使用
   const [newOptionControls, setNewOptionControls] = useState([]);
@@ -322,7 +324,10 @@ export default function SelectDialog({ ...args }) {
     getSheetStylesOfRelateRecordTable({
       control,
       viewId: control.viewId,
-      worksheetInfo,
+      worksheetInfo: {
+        ...(worksheetInfo.advancedSetting ? { advancedSetting: worksheetInfo.advancedSetting } : {}),
+        ...(worksheetInfo.views ? { views: worksheetInfo.views } : {}),
+      },
       manageView,
     });
   const [fixedColumnCount, setFixedColumnCount] = useState(tableConfig.fixedColumnCount || 2);

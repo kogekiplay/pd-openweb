@@ -50,6 +50,7 @@ function loadTarget(): RecordHelpers {
     moduleLike,
     moduleLike.exports,
     (name: string) => {
+      if (name === './fieldStoreBoundary') return require(path.join(__dirname, 'fieldStoreBoundary.ts'));
       if (name === 'lodash') return require('lodash');
       if (name === 'src/pages/widgetConfig/config/widget.js')
         return { WIDGETS_TO_API_TYPE_ENUM: { SUB_LIST: 34, RELATE_SHEET: 29 } };

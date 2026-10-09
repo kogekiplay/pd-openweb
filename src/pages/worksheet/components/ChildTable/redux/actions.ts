@@ -4,17 +4,37 @@ import { v4 as uuidv4 } from 'uuid';
 import worksheetAjax from 'src/api/worksheet';
 import { createRequestPool } from 'worksheet/api/standard';
 import { getTreeExpandSize, handleUpdateTreeNodeExpansion, treeDataUpdater } from 'worksheet/common/TreeTableHelper';
+import type DataFormatClass from 'src/components/Form/core/DataFormat';
+import { runtimeValue } from 'src/components/Form/core/formUtils/valueBoundary';
 import type { MasterData, RuleFilterItem } from 'src/components/Form/core/types';
+import type { TreeExpansionOptions, TreeMap } from 'src/pages/worksheet/common/TreeTableHelper';
+import type { WorksheetFilterCondition } from 'src/pages/worksheet/types';
 import { postWithToken } from 'src/utils/common';
 import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
+import { storeFailureMessage, storeRows } from 'src/utils/fieldStoreBoundary';
 import { filterEmptyChildTableRows } from 'src/utils/record';
+import type {
+  CellErrors,
+  ChildPagination,
+  ChildTableBase,
+  ChildTableState,
+  FieldStoreRecord,
+} from 'src/utils/subListStoreTypes';
+import type { ChildErrorsAction, ChildRowsAction, ChildTableAction } from './stateTypes';
 import type { ChildTableDispatch, ChildTableGetState } from './types';
 
 const PAGE_SIZE = 200;
 
 export function updateTreeNodeExpansion(
   row: RecordRow = {},
-  { expandAll, forceUpdate, getNewRows, updateRows, worksheetId, recordId } = {},
+  {
+    expandAll,
+    forceUpdate,
+    getNewRows,
+    updateRows,
+    worksheetId,
+    recordId,
+  }: TreeExpansionOptions<ChildTableState, ChildTableAction> = {},
 ) {
   return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { base, rows = [], treeTableViewData } = getState();
@@ -27,7 +47,7 @@ export function updateTreeNodeExpansion(
           .getRowRelationRows({
             worksheetId,
             rowId: recordId,
-            controlId: control.controlId,
+            controlId: control?.controlId,
             pageIndex: 1,
             pageSize: 200,
             fastFilters: [
@@ -40,7 +60,7 @@ export function updateTreeNodeExpansion(
             workId,
           })
           .then(res => {
-            const newRows: RecordRow[] = res.data.map(r => ({
+            const newRows = storeRows(res.data || []).map(r => ({
               ...r,
               isAddByTree: true,
             }));
@@ -48,7 +68,7 @@ export function updateTreeNodeExpansion(
             return newRows;
           }));
     dispatch(
-      handleUpdateTreeNodeExpansion(row, {
+      handleUpdateTreeNodeExpansion<ChildTableState, ChildTableAction>(row, {
         expandAll,
         forceUpdate,
         treeMap,
@@ -62,7 +82,7 @@ export function updateTreeNodeExpansion(
   };
 }
 
-export function updateBase(changes = {}) {
+export function updateBase(changes: ChildTableBase = {}) {
   return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { base } = getState();
     dispatch({
@@ -72,10 +92,10 @@ export function updateBase(changes = {}) {
   };
 }
 
-export const initRows = rows => ({ type: 'INIT_ROWS', rows });
+export const initRows = (rows: FieldStoreRecord[]): ChildRowsAction => ({ type: 'INIT_ROWS', rows });
 
 export const updateTreeTableViewData =
-  ({ prevTreeMap } = {}) =>
+  ({ prevTreeMap }: { prevTreeMap?: TreeMap | undefined } = {}) =>
   (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { base, rows, treeTableViewData } = getState();
 
@@ -130,7 +150,10 @@ export const clearRows = () => {
 
 // persisted：本次写入中属于「row 端重算发现不了」的错误（失焦持久化的非法格式值、后端唯一校验），
 // 保存时只有这部分会与 row 端校验结果合并，见 reducer 的 persistedCellErrors
-export const updateCellErrors = (errors, { persisted } = {}) => {
+export const updateCellErrors = (
+  errors: CellErrors | undefined,
+  { persisted }: { persisted?: CellErrors | undefined } = {},
+): ChildErrorsAction => {
   return {
     type: 'UPDATE_CELL_ERRORS',
     value: errors || {},
@@ -138,16 +161,16 @@ export const updateCellErrors = (errors, { persisted } = {}) => {
   };
 };
 
-function getChangesControlIds(oldRow, newRow: RecordRow, controls) {
+function getChangesControlIds(oldRow: FieldStoreRecord | undefined, newRow: FieldStoreRecord, controls: FormControl[]) {
   if (!oldRow || !newRow) {
     return [];
   }
 
-  const ids = oldRow.updatedControlIds || [];
+  const ids = [...(oldRow.updatedControlIds || [])];
   controls
     .map((c: FormControl) => c.controlId)
     .forEach(key => {
-      if (key.length === 24) {
+      if (key && key.length === 24) {
         if (oldRow[key] !== newRow[key]) {
           ids.push(key);
         }
@@ -157,17 +180,25 @@ function getChangesControlIds(oldRow, newRow: RecordRow, controls) {
 }
 
 export const clearAndSetRows = (
-  rows,
-  { isSetValueFromEvent = false, isSetValueFromRule = false, controls = [] } = {},
+  rows: FieldStoreRecord[],
+  {
+    isSetValueFromEvent = false,
+    isSetValueFromRule = false,
+    controls = [],
+  }: {
+    isSetValueFromEvent?: boolean | undefined;
+    isSetValueFromRule?: boolean | undefined;
+    controls?: FormControl[] | undefined;
+  } = {},
 ) => {
   return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const oldRows = getState().rows;
-    let newRows: RecordRow[] = rows;
+    let newRows = rows;
     let deleted = oldRows.map(r => r.rowid);
 
     if (isSetValueFromEvent) {
       deleted = oldRows.filter(oldRow => !find(rows, r => r.rowid === oldRow.rowid)).map(r => r.rowid);
-      newRows = newRows.map((row: RecordRow) => ({
+      newRows = newRows.map(row => ({
         ...row,
         updatedControlIds: getChangesControlIds(
           find(oldRows, r => r.rowid === row.rowid),
@@ -181,10 +212,10 @@ export const clearAndSetRows = (
   };
 };
 
-export const setOriginRows = rows => ({ type: 'LOAD_ROWS', rows });
+export const setOriginRows = (rows: FieldStoreRecord[]): ChildRowsAction => ({ type: 'LOAD_ROWS', rows });
 
 export const setFilterControls =
-  (filterControls, { skipRealCount } = {}) =>
+  (filterControls: WorksheetFilterCondition[], { skipRealCount }: { skipRealCount?: boolean } = {}) =>
   (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { rows = [], realCount, filterControls: prevFilterControls = [] } = getState();
 
@@ -208,19 +239,21 @@ export const adjustRealCount = (delta: number) => (dispatch: ChildTableDispatch,
   }
 };
 
-export const addRow = (row, insertRowId) => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
-  const { filterControls = [] } = getState();
-  // 筛选生效时，新增的临时行（temp-*）置顶，不参与筛选
-  const isTempRow = row.rowid && _.isFunction(row.rowid.startsWith) && row.rowid.startsWith('temp-');
-  const finalInsertRowId = !insertRowId && filterControls.length && isTempRow ? '__HEAD__' : insertRowId;
-  // adjustRealCount 必须在 ADD_ROW/DELETE_ROW 等会改 rows 的 action 之前 dispatch：
-  // 这些 action 会同步触发大表单实时校验（DataFormat 的必填判断），realCount 滞后会让筛选态下
-  // 增删后的必填判断读到旧的 realCount，导致删空筛选后保存不触发必填、或新增首行误报必填。
-  dispatch(adjustRealCount(1));
-  dispatch({ type: 'ADD_ROW', row: omit(row, 'needShowLoading'), rowid: row.rowid, insertRowId: finalInsertRowId });
-  dispatch(updateTreeTableViewData());
-  dispatch(updatePagination({ count: _.get(getState(), 'pagination.count') + 1 }));
-};
+export const addRow =
+  (row: FieldStoreRecord, insertRowId?: string | undefined) =>
+  (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
+    const { filterControls = [] } = getState();
+    // 筛选生效时，新增的临时行（temp-*）置顶，不参与筛选
+    const isTempRow = row.rowid && _.isFunction(row.rowid.startsWith) && row.rowid.startsWith('temp-');
+    const finalInsertRowId = !insertRowId && filterControls.length && isTempRow ? '__HEAD__' : insertRowId;
+    // adjustRealCount 必须在 ADD_ROW/DELETE_ROW 等会改 rows 的 action 之前 dispatch：
+    // 这些 action 会同步触发大表单实时校验（DataFormat 的必填判断），realCount 滞后会让筛选态下
+    // 增删后的必填判断读到旧的 realCount，导致删空筛选后保存不触发必填、或新增首行误报必填。
+    dispatch(adjustRealCount(1));
+    dispatch({ type: 'ADD_ROW', row: omit(row, 'needShowLoading'), rowid: row.rowid, insertRowId: finalInsertRowId });
+    dispatch(updateTreeTableViewData());
+    dispatch(updatePagination({ count: _.get(getState(), 'pagination.count') + 1 }));
+  };
 
 export const deleteRow = (rowid: string) => (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
   const { cellErrors } = getState();
@@ -233,7 +266,7 @@ export const deleteRow = (rowid: string) => (dispatch: ChildTableDispatch, getSt
 };
 
 export const deleteRows =
-  (rowIds, { useUserPermission } = {}) =>
+  (rowIds: string[], { useUserPermission }: { useUserPermission?: boolean | undefined } = {}) =>
   (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { rows, cellErrors } = getState();
     const filteredRowIds = rowIds.filter((rowId: string) => {
@@ -257,10 +290,10 @@ export const deleteRows =
   };
 
 export const updateRow = (
-  { rowid, value }: { rowid?: string; [key: string]: any },
-  { asyncUpdate, noRealUpdate } = {},
+  { rowid, value }: { rowid?: string | undefined; value: FieldStoreRecord },
+  { asyncUpdate, noRealUpdate }: { asyncUpdate?: boolean | undefined; noRealUpdate?: boolean | undefined } = {},
 ) => {
-  return dispatch => {
+  return (dispatch: ChildTableDispatch) => {
     dispatch({
       type: 'UPDATE_ROW',
       asyncUpdate,
@@ -273,8 +306,11 @@ export const updateRow = (
   };
 };
 
-export const updateRows = ({ rowIds, value }, { asyncUpdate, noRealUpdate } = {}) => {
-  return dispatch => {
+export const updateRows = (
+  { rowIds, value }: { rowIds: string[]; value: FieldStoreRecord },
+  { asyncUpdate, noRealUpdate }: { asyncUpdate?: boolean | undefined; noRealUpdate?: boolean | undefined } = {},
+) => {
+  return (dispatch: ChildTableDispatch) => {
     dispatch({
       type: 'UPDATE_ROWS',
       asyncUpdate,
@@ -287,20 +323,22 @@ export const updateRows = ({ rowIds, value }, { asyncUpdate, noRealUpdate } = {}
   };
 };
 
-async function batchLoadRows(args) {
-  let rows: RecordRow[] = [];
+async function batchLoadRows(args: Record<string, unknown> & { pageIndex: number }) {
+  let rows: FieldStoreRecord[] = [];
   let total;
   let res;
   let noMore = false;
 
   while ((_.isUndefined(total) || rows.length < total) && !noMore) {
     res = await worksheetAjax.getRowRelationRows(args);
-    rows = rows.concat(res.data || []).map((row, i) => ({ ...row, addTime: i }));
+    if (res.resultCode !== 1) throw new Error('Child row request failed');
+    const pageRows = storeRows(res.data || []);
+    rows = rows.concat(pageRows).map((row, i) => ({ ...row, addTime: i }));
     if (!total) {
       total = res.count;
     }
 
-    if (res.data.length === 0) {
+    if (pageRows.length === 0) {
       noMore = true;
     }
 
@@ -323,10 +361,22 @@ export const loadRows = ({
   isTreeTableView,
   setLoadingInfo,
   callback = () => {},
+}: {
+  worksheetId?: string | undefined;
+  recordId?: string | undefined;
+  controlId?: string | undefined;
+  pageIndex?: number | undefined;
+  getWorksheet?: boolean | undefined;
+  from?: number | undefined;
+  isTreeTableView?: boolean | undefined;
+  setLoadingInfo?: ((key: string, value: boolean) => void) | undefined;
+  callback?: (response: unknown) => void;
 }) => {
   return (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { base, filterControls = [] } = getState();
     const { instanceId, workId, control } = base;
+    dispatch(updateBase({ rowLoadError: undefined }));
+    dispatch({ type: 'UPDATE_DATA_LOADING', value: true });
 
     const args = {
       worksheetId,
@@ -338,12 +388,13 @@ export const loadRows = ({
       getType: from === 21 ? from : undefined,
       instanceId,
       workId,
-      discussId: control.discussId,
+      discussId: control?.discussId,
       filterControls,
     };
     batchLoadRows(args)
       .then(batchRes => {
         const { res, rows } = batchRes;
+        if (!res) throw new TypeError('Missing child row response');
         dispatch(updatePagination({ count: res.count }));
         // 仅未筛选加载时落"真实总数"(此时 res.count 即全量总数)；筛选态加载不覆盖，保留已知总数。
         if (_.isEmpty(filterControls)) {
@@ -379,7 +430,9 @@ export const loadRows = ({
 
         callback(res);
       })
-      .catch(() => {
+      .catch((error: unknown) => {
+        dispatch(updateBase({ rowLoadError: storeFailureMessage(error, _l('子表记录加载失败，请重试')) }));
+        dispatch({ type: 'UPDATE_DATA_LOADING', value: false });
         // 加载失败也要清标，否则保存被永久挂起
         if (isFunction(setLoadingInfo)) {
           setLoadingInfo('loadRows_' + controlId, false);
@@ -400,15 +453,19 @@ export const loadPageRows =
     from,
     callback = () => {},
   }: {
-    worksheetId?: string;
-    recordId?: string;
-    controlId?: string;
-    [key: string]: any;
+    worksheetId?: string | undefined;
+    recordId?: string | undefined;
+    controlId?: string | undefined;
+    getWorksheet?: boolean | undefined;
+    from?: number | undefined;
+    callback?: ((response: unknown) => void) | undefined;
   }) =>
   (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { base, pagination, filterControls = [] } = getState();
     const { instanceId, workId } = base;
     const { pageIndex, pageSize } = pagination;
+    dispatch(updateBase({ rowLoadError: undefined }));
+    dispatch({ type: 'UPDATE_DATA_LOADING', value: true });
 
     const args = {
       worksheetId,
@@ -424,32 +481,40 @@ export const loadPageRows =
     };
 
     // 表格形态手动分页加载
-    worksheetAjax.getRowRelationRows(args).then(res => {
-      dispatch({ type: 'LOAD_ROWS', rows: res.data || [] });
-      dispatch({ type: 'UPDATE_DATA_LOADING', value: false });
-      dispatch(initRows(res.data || []));
-      callback(res);
-    });
+    worksheetAjax
+      .getRowRelationRows(args)
+      .then(res => {
+        if (res.resultCode !== 1) throw new Error('Child page request failed');
+        dispatch({ type: 'LOAD_ROWS', rows: storeRows(res.data || []) });
+        dispatch({ type: 'UPDATE_DATA_LOADING', value: false });
+        dispatch(initRows(storeRows(res.data || [])));
+        callback(res);
+      })
+      .catch((error: unknown) => {
+        dispatch(updateBase({ rowLoadError: storeFailureMessage(error, _l('子表记录加载失败，请重试')) }));
+        dispatch({ type: 'UPDATE_DATA_LOADING', value: false });
+        callback(null);
+      });
   };
 
 export const addRows =
-  (rows: RecordRow[], options = {}) =>
+  (rows: FieldStoreRecord[], options: { asyncUpdate?: boolean | undefined } = {}) =>
   (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
-    dispatch({ type: 'ADD_ROWS', rows: rows.map((row: RecordRow) => omit(row, 'needShowLoading')), ...options });
+    dispatch({ type: 'ADD_ROWS', rows: rows.map(row => omit(row, 'needShowLoading')), ...options });
     dispatch(updateTreeTableViewData());
     dispatch(updatePagination({ count: _.get(getState(), 'pagination.count') + rows.length }));
     dispatch(adjustRealCount(rows.length));
   };
 
-export const sortRows = ({ control, isAsc }) => {
-  return dispatch => {
+export const sortRows = ({ control, isAsc }: { control: FormControl; isAsc?: boolean | undefined }) => {
+  return (dispatch: ChildTableDispatch) => {
     // 只更新排序配置，不修改 rows 顺序
     dispatch({
       type: 'UPDATE_SORT_CONFIG',
       sortConfig: _.isUndefined(isAsc)
         ? null
         : {
-            controlId: control.controlId,
+            controlId: control?.controlId,
             isAsc,
           },
     });
@@ -504,14 +569,33 @@ export const exportSheet = ({
   };
 };
 
-export const updatePagination = pagination => (dispatch: ChildTableDispatch) => {
+export const updatePagination = (pagination: Partial<ChildPagination>) => (dispatch: ChildTableDispatch) => {
   dispatch({ type: 'UPDATE_PAGINATION', pagination });
 };
 
+interface RowDataArgs {
+  requestPool: ReturnType<typeof createRequestPool>;
+  recordId?: string | undefined;
+  projectId?: string | undefined;
+  row?: FieldStoreRecord | undefined;
+  abortController?: AbortController | undefined;
+  masterData?: MasterData | undefined;
+  controls: FormControl[];
+  searchConfig?: ChildTableBase['searchConfig'];
+  isCreate?: boolean | undefined;
+  isDefaultValue?: boolean | undefined;
+  isQueryWorksheetFill?: boolean | undefined;
+  DataFormat: typeof DataFormatClass;
+  rowId: string;
+  allowEdit: boolean;
+  updateRow: (row: FieldStoreRecord) => void;
+}
 class RowData {
   declare addTime: number | undefined;
-
-  constructor(args = {}) {
+  declare args: RowDataArgs;
+  declare updatedControlIds: string[] | undefined;
+  declare formData: DataFormatClass;
+  constructor(args: RowDataArgs) {
     this.args = args;
     this.init();
   }
@@ -528,17 +612,17 @@ class RowData {
       isCreate = false,
       isQueryWorksheetFill = false,
       DataFormat,
-    }: { controls: FormControl[]; [key: string]: any } = this.args;
+    } = this.args;
 
     if (get(row, 'updatedControlIds')) {
-      this.updatedControlIds = get(row, 'updatedControlIds');
+      this.updatedControlIds = row?.updatedControlIds;
     }
 
     this.handleAsyncChange = this.handleAsyncChange.bind(this);
     this.formData = new DataFormat({
       requestPool,
       data: controls.map((c: FormControl) => {
-        let controlValue = (row || {})[c.controlId];
+        let controlValue = c.controlId ? (row || {})[c.controlId] : undefined;
 
         if (_.isUndefined(controlValue) && (isCreate || !row)) {
           controlValue = c.value;
@@ -548,7 +632,7 @@ class RowData {
           ...c,
           isSubList: true,
           isQueryWorksheetFill,
-          value: controlValue,
+          value: runtimeValue(controlValue),
         };
       }),
       isCreate: isCreate || !row,
@@ -563,8 +647,8 @@ class RowData {
     });
     this.addTime = new Date().getTime();
   }
-  handleAsyncChange(changes) {
-    const { controls, updateRow }: { controls: FormControl[]; [key: string]: any } = this.args;
+  handleAsyncChange(changes: { controlId?: string | undefined; value?: unknown }) {
+    const { controls, updateRow } = this.args;
     const { controlId, value } = changes;
     this.formData.updateDataSource({ controlId, value });
     let updatedControlIds = this.formData.controlIds.concat('rowid');
@@ -577,7 +661,7 @@ class RowData {
     while (hasNewAffected) {
       hasNewAffected = false;
       derivedControls.forEach(c => {
-        if (!affectedIds.has(c.controlId) && [...affectedIds].some(id => includes(c.dataSource, id))) {
+        if (c.controlId && !affectedIds.has(c.controlId) && [...affectedIds].some(id => includes(c.dataSource, id))) {
           affectedIds.add(c.controlId);
           updatedControlIds.push(c.controlId);
           hasNewAffected = true;
@@ -589,12 +673,12 @@ class RowData {
   }
   getRow() {
     const { rowId, allowEdit } = this.args;
-    const rowOfFormData = [
-      {
-        updatedControlIds: _.uniqBy(this.updatedControlIds || []).concat(this.formData.getUpdateControlIds()),
-      },
-      ...this.formData.getDataSource(),
-    ].reduce((a = {}, b = {}) => Object.assign(a, { [b.controlId]: b.value }));
+    const rowOfFormData: FieldStoreRecord = {
+      updatedControlIds: _.uniq(this.updatedControlIds || []).concat(this.formData.getUpdateControlIds()),
+    };
+    this.formData.getDataSource().forEach(control => {
+      rowOfFormData[String(control.controlId)] = control.value;
+    });
     return {
       ...rowOfFormData,
       rowid: rowId,
@@ -609,7 +693,7 @@ export interface SetRowsFromStaticRowsParams {
   recordId?: string | undefined;
   masterData?: MasterData | undefined;
   /** 要写进子表的行 */
-  staticRows?: RecordRow[] | undefined;
+  staticRows?: FieldStoreRecord[] | undefined;
   abortController?: AbortController | undefined;
   /** 'append' = 追加在现有行后面；不给就是整体替换 */
   type?: 'append' | undefined;
@@ -634,22 +718,22 @@ export function setRowsFromStaticRows({
   isSetValueFromRule = false,
   triggerSubListControlValueChange = (_controlValue?: ControlValue) => {},
 }: SetRowsFromStaticRowsParams = {}) {
-  return (getState, dispatch, DataFormat) => {
+  return (getState: ChildTableGetState, dispatch: ChildTableDispatch, DataFormat: typeof DataFormatClass) => {
     const { base } = getState();
-    const { controls, projectId, searchConfig, initRowIsCreate, max }: { controls: FormControl[]; [key: string]: any } =
-      base;
+    staticRows = storeRows(staticRows);
+    const { controls = [], projectId, searchConfig, initRowIsCreate, max } = base;
     // 树形子表：value 序列化可能不带 pid/childrenids，按 value 重建会丢父子关系、展开 icon 消失。
     // 用同 rowid 的现有行（如服务端已加载行）的树字段做兜底，仅当 value 未给该字段时回退。
     const existingRows: RecordRow[] = getState().rows || [];
     const requestPool = createRequestPool({
-      abortController: abortController || (typeof AbortController !== 'undefined' && new AbortController()),
+      abortController: abortController || (typeof AbortController !== 'undefined' ? new AbortController() : undefined),
       maxConcurrentRequests: 6,
     });
-    const rows: RecordRow[] = (!max ? staticRows : staticRows.slice(0, max)).map(staticRow => {
+    const rows: FieldStoreRecord[] = (!max ? staticRows : staticRows.slice(0, max)).map(staticRow => {
       let tempRowId;
 
-      if (/^public-/.test(staticRow.rowid)) {
-        tempRowId = staticRow.rowid.replace('public-', '');
+      if (/^public-/.test(staticRow.rowid || '')) {
+        tempRowId = (staticRow.rowid || '').replace('public-', '');
       } else if (isSetValueFromEvent) {
         if (!staticRow.rowid) {
           tempRowId = `temp-${uuidv4()}`;
@@ -660,9 +744,9 @@ export function setRowsFromStaticRows({
         tempRowId = !isDefaultValue
           ? `temp-${uuidv4()}`
           : includes(staticRow.rowid, 'temp-')
-            ? staticRow.rowid.replace('temp-', 'default-')
-            : /^default-/.test(staticRow.rowid)
-              ? staticRow.rowid
+            ? (staticRow.rowid || '').replace('temp-', 'default-')
+            : /^default-/.test(staticRow.rowid || '')
+              ? staticRow.rowid || ''
               : `default-${uuidv4()}`;
       }
 
@@ -692,7 +776,7 @@ export function setRowsFromStaticRows({
                 ? initRowIsCreate
                 : true)) &&
           !isSetValueFromEvent,
-        updateRow: row => {
+        updateRow: (row: FieldStoreRecord) => {
           dispatch({
             type: 'UPDATE_ROW',
             rowid: row.rowid,

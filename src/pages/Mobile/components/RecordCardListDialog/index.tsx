@@ -104,20 +104,20 @@ export default class RecordCardListDialog extends Component<any, any> {
           relationWorksheetId: parentWorksheetId,
         })
         .then(data => {
-          if (_.get(data, 'template.controls')) {
+          if (data.template?.controls) {
             data.template.controls = replaceControlsTranslateInfo(
-              data.appId,
+              data.appId || '',
               control.dataSource,
               data.template.controls,
             );
           }
 
-          data.entityName = getTranslateInfo(data.appId, null, control.dataSource).recordName || data.entityName;
+          data.entityName = getTranslateInfo(data.appId || '', null, control.dataSource).recordName || data.entityName;
 
           const worksheetControlsCache: NonNullable<Window['worksheetControlsCache']> = {};
           window.worksheetControlsCache = worksheetControlsCache;
           (_.get(data, 'template.controls') || []).forEach(c => {
-            if (c.type === 29) {
+            if (c.type === 29 && c.dataSource) {
               worksheetControlsCache[c.dataSource] = c.relationControls;
             }
           });
@@ -353,7 +353,7 @@ export default class RecordCardListDialog extends Component<any, any> {
               loading: false,
               loadouted: res.data.length < 20,
               controls: res.template
-                ? replaceControlsTranslateInfo(res.worksheet.appId, null, res.template.controls)
+                ? replaceControlsTranslateInfo(res.worksheet.appId || '', undefined, res.template.controls)
                 : [],
               worksheet: res.worksheet || {},
             },

@@ -9,10 +9,10 @@ import { getFilter } from 'worksheet/common/WorkSheetFilter/util';
 import { TextAbsoluteCenter } from 'worksheet/components/StyledComps';
 import RestrictAccessStatus from 'src/components/restrictAccessStatus';
 import { getTranslateInfo } from 'src/utils/app';
+import type { RecordRow } from 'src/utils/controlTypes';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import ChildTableContext from '../ChildTable/ChildTableContext';
 import ReacordItem from './RecordItem';
-import type { RecordRow } from 'src/utils/controlTypes';
 
 export default class RelateRecordList extends React.PureComponent<any, any> {
   static override contextType = ChildTableContext;
@@ -66,9 +66,9 @@ export default class RelateRecordList extends React.PureComponent<any, any> {
           relationWorksheetId: parentWorksheetId,
         })
         .then(data => {
-          if (_.get(data, 'template.controls')) {
+          if (data.template?.controls) {
             data.template.controls = replaceControlsTranslateInfo(
-              data.appId,
+              data.appId || '',
               control.dataSource,
               data.template.controls,
             );

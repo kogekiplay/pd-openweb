@@ -10,6 +10,7 @@ import DataFormat from 'src/components/Form/core/DataFormat';
 import { formatControlToServer } from 'src/components/Form/core/utils';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
+import { isRelateRecordTableStore } from 'src/utils/subListStoreTypes';
 import withWorksheetRowProvider from '../WorksheetRecordProvider';
 import './FillRecordControls.less';
 
@@ -182,7 +183,7 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
                   c.type === 29 &&
                   c.enumDefault === 2 &&
                   c.advancedSetting.showtype === '5' &&
-                  defaultFormControl.store
+                  isRelateRecordTableStore(defaultFormControl.store)
                 ) {
                   try {
                     if (!_.isEmpty(defaultFormControl.store.getState().records)) {

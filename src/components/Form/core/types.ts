@@ -1,5 +1,5 @@
 // 再导出不会把名字带进本地作用域，下面 FormRule 用到 ControlValue 所以还要 import 一次。
-import type { ControlValue, FormControl } from 'src/utils/controlTypes';
+import type { ControlValue, FormControl } from '../../../utils/controlTypes';
 
 /**
  * 表单引擎专有的类型。
@@ -15,7 +15,7 @@ export type {
   ControlValue,
   FormControl,
   SubListStore,
-} from 'src/utils/controlTypes';
+} from '../../../utils/controlTypes';
 
 /** 校验失败的条目，errorItems 数组的元素。 */
 export interface FormError {

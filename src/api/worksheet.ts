@@ -250,7 +250,7 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
 
-  getWorksheetInfoByWorkItem: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetInfoByWorkItem: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<Partial<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetModel>> {
     return mdyAPI('Worksheet', 'GetWorksheetInfoByWorkItem', args, options);
   },
   /**

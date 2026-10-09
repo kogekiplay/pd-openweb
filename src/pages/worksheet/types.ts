@@ -9,7 +9,7 @@
  * 不是照着接口文档抄的。碰到没列的就往这里加一行，不要退回 any ——
  * 一旦退回去，各处 view.xxx 又整片变成不受检的黑洞。
  */
-import type { ControlAdvancedSetting, FormControl } from 'src/utils/controlTypes';
+import type { ControlAdvancedSetting, FormControl } from '../../utils/controlTypes';
 
 /** 发给取行接口的筛选条件。组条件只有连接方式与子条件，不一定有 controlId/dataType。 */
 export interface WorksheetFilterCondition {

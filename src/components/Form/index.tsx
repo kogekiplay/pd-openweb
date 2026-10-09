@@ -15,6 +15,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { mobileConfirmPopupFunc } from 'ming-ui/components/MobileConfirmPopup';
 import RecordInfoContext from 'src/pages/worksheet/common/recordInfo/RecordInfoContext';
 import { browserIsMobile } from 'src/utils/common';
+import type { SubListStore } from 'src/utils/controlTypes';
 import WidgetsVerifyCode from './components/WidgetsVerifyCode';
 import { FORM_ERROR_TYPE } from './core/config';
 import DataFormat from './core/DataFormat';
@@ -66,7 +67,7 @@ const Entrance = React.forwardRef<EntranceRef, EntranceProps>((componentProps, r
   const dataFormat = useRef<DataFormat | null>(null);
   const abortController = useRef(new AbortController());
   const controlRefs = useRef({});
-  const storeCenter = useRef({});
+  const storeCenter = useRef<Record<string, SubListStore>>({});
   const changeStatus = useRef(false);
   const submitBegin = useRef(false);
   const containerRef = useRef<HTMLDivElement | null>(null); // 专门用于获取真实DOM的ref

@@ -6,8 +6,9 @@ import { browserIsMobile } from 'src/utils/common';
 import { renderText as renderCellText } from 'src/utils/control';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import { checkCellIsEmpty, getSelectedOptions } from 'src/utils/control';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
 import { dateServerZoneToAppZone } from 'src/utils/project';
+import { isRelateRecordTableStore } from 'src/utils/subListStoreTypes';
 import {
   API_ENUM_TO_TYPE,
   CONTROL_FILTER_WHITELIST,
@@ -1314,13 +1315,16 @@ export function fillConditionValue({
       if (isRelateRecordTableControl(dynamicControl) && !browserIsMobile()) {
         condition.values = relateControl.recordId
           ? [`cid|${dynamicControl.controlId}`].concat(
-              get(dynamicControl.store && dynamicControl.store.getState(), 'changes.addedRecordIds'),
+              isRelateRecordTableStore(dynamicControl.store)
+                ? dynamicControl.store
+                    .getState()
+                    .changes.addedRecordIds.filter((id): id is string => typeof id === 'string')
+                : [],
               [],
             )
-          : dynamicControl.store
-              .getState()
-              .records.map((r: RecordRow) => r.rowid)
-              .filter(_.identity);
+          : isRelateRecordTableStore(dynamicControl.store)
+            ? dynamicControl.store.getState().records.flatMap(row => (row.rowid ? [row.rowid] : []))
+            : [];
       } else {
         if (isRelateRecordTableControl(dynamicControl) && browserIsMobile() && relateControl.recordId) {
           condition.values = [`cid|${dynamicControl.controlId}`];
@@ -1423,7 +1427,7 @@ export function fillConditionValue({
   } else if (dataType === 29 || dataType === 35) {
     try {
       const store = dynamicControl.store;
-      const state = store && store.getState();
+      const state = isRelateRecordTableStore(store) ? store.getState() : undefined;
 
       if (isRelateRecordTableControl(dynamicControl) && dynamicControl['rcValue']) {
         let rcValues = safeParse(dynamicControl['rcValue'], 'array') || [];

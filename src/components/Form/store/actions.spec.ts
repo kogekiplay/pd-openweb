@@ -209,6 +209,8 @@ new Function('module', 'exports', 'require', '_l', 'alert', 'setTimeout', '$', c
   moduleLike,
   moduleLike.exports,
   (name: string) => {
+    if (name === 'src/utils/subListStoreTypes')
+      return require(path.join(__dirname, '../../../../src/utils/subListStoreTypes.ts'));
     if (name === 'lodash') return lodash;
     if (Object.hasOwn(stubs, name)) return stubs[name];
     throw new Error(`Unexpected form action dependency ${name}`);

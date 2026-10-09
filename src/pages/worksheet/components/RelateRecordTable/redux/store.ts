@@ -3,12 +3,15 @@ import { find, get, includes, isEmpty } from 'lodash';
 import { v4 } from 'uuid';
 import { RELATE_RECORD_SHOW_TYPE } from 'worksheet/constants/enum';
 import { isRelateRecordTableControl } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
+import { storeFailureMessage } from 'src/utils/fieldStoreBoundary';
+import type { FieldStoreControl, RelateRecordState, RelateRecordTableStore } from 'src/utils/subListStoreTypes';
 import { init, updateTreeTableViewData } from './action';
 import reducer from './reducer';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { RelateRecordAction } from './stateTypes';
 
 export default function generateStore(
-  control: FormControl,
+  control: FieldStoreControl,
   {
     mode,
     from,
@@ -24,6 +27,7 @@ export default function generateStore(
     isDraft,
     openFrom,
   }: {
+    sheetSwitchPermit?: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] | undefined;
     mode?: string | undefined;
     from?: number | undefined;
     isCharge?: boolean | undefined;
@@ -39,7 +43,7 @@ export default function generateStore(
     isDraft?: boolean | undefined;
     openFrom?: string | undefined;
   } = {},
-) {
+): RelateRecordTableStore {
   if (!pageSize) {
     const defaultPageSize = 50;
     pageSize = localStorage.getItem('relateRecordTablePageSize')
@@ -55,7 +59,7 @@ export default function generateStore(
   // lastAction 的 reducer 同样是 `(state, action: ReduxAction) => action`，会把 UPDATE_BASE 的
   // payload 原样再存一份，所以必须一起豁免。
   // 其余 slice（records / controls / changes / tableState…）仍然受保护。
-  const store = configureStore({
+  const reduxStore = configureStore<RelateRecordState, RelateRecordAction>({
     reducer,
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware({
@@ -63,7 +67,14 @@ export default function generateStore(
         immutableCheck: { ignoredPaths: ['base', 'lastAction'] },
       }),
   });
-  store.version = v4();
+
+  const store: RelateRecordTableStore = Object.assign(reduxStore, {
+    version: v4(),
+    init: () => initialize(),
+    cancelChange: () => cancelChange(),
+    reset: () => reset(),
+    setEmpty: (options?: Parameters<RelateRecordTableStore['setEmpty']>[0]) => setEmpty(options),
+  });
   const treeLayerControlId = get(control, 'advancedSetting.layercontrolid');
   const treeLayerControl = find(control.relationControls, { controlId: treeLayerControlId });
   store.dispatch({
@@ -106,7 +117,7 @@ export default function generateStore(
   // 这里在新建 store 时读取一次：无论有无内容都立即清除（避免空壳残留 / 下次新建沿用旧值），
   // 有内容才 seed 进新 store；init 以 merge 口径拉取使其生效。
   const summaryCacheKey = `${recordId}_${get(control, 'controlId')}`;
-  const summaryCache = window.relateRecordSummaryTypesCache;
+  const summaryCache = window['relateRecordSummaryTypesCache'];
 
   if (summaryCache && summaryCacheKey in summaryCache) {
     const cachedSummaryTypes = summaryCache[summaryCacheKey];
@@ -117,14 +128,14 @@ export default function generateStore(
     }
   }
 
-  store.cancelChange = () => {
+  const cancelChange = () => {
     const state = store.getState();
 
     if (get(state, 'base.isTab')) {
       return;
     }
 
-    const { originFirstPageResult = {} } = state;
+    const originFirstPageResult = Array.isArray(state.originFirstPageResult) ? {} : state.originFirstPageResult;
     store.dispatch({
       type: 'CANCEL_CHANGE',
       records: originFirstPageResult.records,
@@ -136,15 +147,35 @@ export default function generateStore(
     store.dispatch(updateTreeTableViewData({ resetExpansion: true }));
   };
 
-  store.init = () => store.dispatch(init());
-  store.reset = () => {
+  let initializing: Promise<void> | undefined;
+  const initialize = (): Promise<void> => {
+    if (initializing) return initializing;
+    if (store.getState().initialized) return Promise.resolve();
+    store.dispatch({ type: 'UPDATE_TABLE_STATE', value: { error: undefined } });
+    store.dispatch({ type: 'UPDATE_LOADING', value: true });
+    initializing = store
+      .dispatch(init())
+      .catch((error: unknown) => {
+        store.dispatch({
+          type: 'UPDATE_TABLE_STATE',
+          value: { error: storeFailureMessage(error, _l('关联记录加载失败，请重试')), tableLoading: false },
+        });
+        throw error;
+      })
+      .finally(() => {
+        initializing = undefined;
+        if (!store.getState().initialized) store.dispatch({ type: 'UPDATE_LOADING', value: false });
+      });
+    return initializing;
+  };
+  const reset = () => {
     store.dispatch({
       type: 'UPDATE_TABLE_STATE',
       value: { highlightRows: {} },
     });
   };
 
-  store.setEmpty = ({ ignoreControlId = [] } = {}) => {
+  const setEmpty: RelateRecordTableStore['setEmpty'] = ({ ignoreControlId = [] } = {}) => {
     const state = store.getState();
     const { base = {} } = state;
     const controlId = get(base, 'control.controlId');

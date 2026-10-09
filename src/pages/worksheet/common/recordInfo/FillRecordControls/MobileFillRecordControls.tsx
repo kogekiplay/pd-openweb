@@ -12,6 +12,7 @@ import { handleAPPScanCode } from 'src/pages/Mobile/components/RecordInfo/preSca
 import withWorksheetRowProvider from 'src/pages/worksheet/common/recordInfo/WorksheetRecordProvider';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
+import { isRelateRecordTableStore } from 'src/utils/subListStoreTypes';
 
 const Con = styled.div`
   display: flex;
@@ -185,7 +186,7 @@ let FillRecordControls = class FillRecordControls extends React.Component<any, a
                   c.type === 29 &&
                   c.enumDefault === 2 &&
                   c.advancedSetting.showtype === '5' &&
-                  defaultFormControl.store
+                  isRelateRecordTableStore(defaultFormControl.store)
                 ) {
                   try {
                     if (!_.isEmpty(defaultFormControl.store.getState().records)) {

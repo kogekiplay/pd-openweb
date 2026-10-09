@@ -29,6 +29,13 @@ import { getDatePickerConfigs } from 'src/utils/controlCommon';
 import type { RecordRow } from 'src/utils/controlTypes';
 import { compatibleMDJS, getCurrentProject } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
+import {
+  isChildTableAction,
+  isChildTableStore,
+  isRelateRecordAction,
+  isRelateRecordTableStore,
+} from 'src/utils/subListStoreTypes';
+import type { SubListStoreCall } from 'src/utils/subListStoreTypes';
 import { FORM_ERROR_TYPE, FROM, SYSTEM_ENUM, TIME_UNIT } from './config';
 import { checkRuleLocked } from './formUtils';
 import {
@@ -555,9 +562,11 @@ export default class DataFormat {
     }
   }
 
-  getControlStore(control: FormControl) {
+  getControlStore(control: FormControl): SubListStore | undefined {
     const { appId, recordId, instanceId, workId, worksheetId, from, loadRowsWhenChildTableStoreCreated } = this;
-    let store = this.storeCenter[control.controlId as string];
+    const controlId = control.controlId;
+    if (!controlId) return undefined;
+    let store = this.storeCenter[controlId];
 
     if (store) {
       return store;
@@ -606,11 +615,13 @@ export default class DataFormat {
         (control.required || find(control.relationControls, c => c.required)) && controlState(control, from).visible;
 
       if (loadRowsWhenChildTableStoreCreated || (subListNeedValidate && !!recordId)) {
-        store.initAndLoadRows({
-          worksheetId: this.worksheetId,
-          recordId,
-          controlId: control.controlId,
-        });
+        store
+          .initAndLoadRows({
+            worksheetId: this.worksheetId,
+            recordId,
+            controlId: control.controlId,
+          })
+          .catch(error => console.error(error));
       }
     } else if (control.type === 29) {
       store = generateRelateRecordTableStore(control, {
@@ -629,10 +640,10 @@ export default class DataFormat {
     // generateRelateRecordTableStore
     if (!store) {
       console.error('create store fail!');
-      return;
+      return undefined;
     }
 
-    this.storeCenter[control.controlId as string] = store;
+    this.storeCenter[controlId] = store;
     return store;
   }
 
@@ -686,11 +697,12 @@ export default class DataFormat {
         this.data.forEach(item => {
           if (item.controlId === controlId) {
             // 子表被动赋值
-            if (item.type === 34 && !item.isSubList && item.store) {
+            if (item.type === 34 && !item.isSubList && isChildTableStore(item.store)) {
+              const childStore = item.store;
               let loading = true;
 
               try {
-                loading = item.store.getState().baseLoading;
+                loading = childStore.getState().baseLoading;
               } catch (err) {
                 console.log(err);
               }
@@ -714,7 +726,7 @@ export default class DataFormat {
                 params.isSetValueFromEvent = value.isSetValueFromEvent;
                 params.isSetValueFromRule = value.isSetValueFromRule;
                 if (_.isEmpty(value.rows)) {
-                  item.store.dispatch({
+                  childStore.dispatch({
                     type: 'DELETE_ALL',
                   });
                 }
@@ -735,10 +747,10 @@ export default class DataFormat {
                   _.remove(this.errorItems, obj => obj.controlId === item.controlId);
                 }
 
-                if (loading || (get(value, 'fireWhenLoaded') && this.recordId && !item.store.getState().base.loaded)) {
-                  (get(value, 'fireWhenLoaded') && this.recordId && !item.store.getState().base.loaded
-                    ? item.store.waitListForLoadRows
-                    : item.store.waitList
+                if (loading || (get(value, 'fireWhenLoaded') && this.recordId && !childStore.getState().base.loaded)) {
+                  (get(value, 'fireWhenLoaded') && this.recordId && !childStore.getState().base.loaded
+                    ? childStore.waitListForLoadRows
+                    : childStore.waitList
                   ).push(() => {
                     setRowsFromStaticRows({
                       ...params,
@@ -752,13 +764,13 @@ export default class DataFormat {
                           value: controlValue,
                         });
                       },
-                    })(item.store.getState, item.store.dispatch, DataFormat);
+                    })(childStore.getState, childStore.dispatch, DataFormat);
                   });
-                  if (!item.store.initialized) {
-                    item.store.init({ noMountInit: true });
+                  if (!childStore.initialized) {
+                    childStore.init({ noMountInit: true }).catch(error => console.error(error));
                   }
                 } else {
-                  setRowsFromStaticRows(params)(item.store.getState, item.store.dispatch, DataFormat);
+                  setRowsFromStaticRows(params)(childStore.getState, childStore.dispatch, DataFormat);
                 }
 
                 this.controlIds.push(controlId as string);
@@ -771,6 +783,7 @@ export default class DataFormat {
               !this.isMobile &&
               (!this.recordId || String(RELATE_RECORD_SHOW_TYPE.TABLE) === item.advancedSetting?.showtype) &&
               item.type === 29 &&
+              isRelateRecordTableStore(item.store) &&
               !item.isSubList &&
               includes(
                 [
@@ -1096,7 +1109,7 @@ export default class DataFormat {
             try {
               if (sourceSheetControl.type === 29) {
                 try {
-                  if (sourceSheetControl.store) {
+                  if (isRelateRecordTableStore(sourceSheetControl.store)) {
                     const state = sourceSheetControl.store.getState();
                     records = this.recordId
                       ? state.records.concat(get(state, 'changes.addedRecords') || [])
@@ -1116,7 +1129,7 @@ export default class DataFormat {
                   console.log(err);
                 }
               } else if (sourceSheetControl.type === 34) {
-                if (sourceSheetControl.store) {
+                if (isChildTableStore(sourceSheetControl.store)) {
                   records = sourceSheetControl.store.getState().rows || [];
                 } else {
                   records = sourceSheetControl.value.rows || [];
@@ -2313,13 +2326,60 @@ export default class DataFormat {
    * 操作字段的 store
    */
   // fn 既可以是方法名字符串，也可以是 { fnName, controlId } —— 后者只作用于指定控件的 store
-  callStore(fn: string | { fnName: string; controlId?: string }, ...args: ControlValue[]) {
-    const fnName = _.isObject(fn) ? fn.fnName : fn;
-    Object.keys(this.storeCenter).forEach(key => {
-      const store = this.storeCenter[key];
-      if (_.isObject(fn) && fn.controlId && fn.controlId !== get(store.getState(), 'base.control.controlId')) return;
-      if (store && _.isFunction(store[fnName])) {
-        store[fnName](...args);
+  callStore(...call: SubListStoreCall): void {
+    const target = call[0];
+    const fnName = typeof target === 'string' ? target : target.fnName;
+    Object.values(this.storeCenter).forEach(store => {
+      if (
+        typeof target !== 'string' &&
+        target.controlId &&
+        target.controlId !== store.getState().base.control?.controlId
+      )
+        return;
+      switch (fnName) {
+        case 'reset':
+          store.reset();
+          break;
+        case 'cancelChange':
+          store.cancelChange();
+          break;
+        case 'clearSubListErrors':
+          if (isChildTableStore(store)) store.clearSubListErrors();
+          break;
+        case 'setUniqueError':
+          if (isChildTableStore(store)) {
+            const options = call[1];
+            if (
+              options &&
+              'badData' in options &&
+              Array.isArray(options.badData) &&
+              options.badData.every((id: unknown) => typeof id === 'string')
+            )
+              store.setUniqueError({ badData: options.badData });
+            else store.setUniqueError();
+          }
+          break;
+        case 'setEmpty':
+          if (isChildTableStore(store)) store.setEmpty();
+          else {
+            const options = call[1];
+            if (
+              options &&
+              'ignoreControlId' in options &&
+              Array.isArray(options.ignoreControlId) &&
+              options.ignoreControlId.every((id: unknown) => typeof id === 'string')
+            )
+              store.setEmpty({ ignoreControlId: options.ignoreControlId });
+            else store.setEmpty();
+          }
+          break;
+        case 'dispatch':
+          if (call.length === 2 && call[1] && 'type' in call[1]) {
+            const action = call[1];
+            if (isChildTableStore(store) && isChildTableAction(action)) store.dispatch(action);
+            else if (isRelateRecordTableStore(store) && isRelateRecordAction(action)) store.dispatch(action);
+          }
+          break;
       }
     });
   }

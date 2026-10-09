@@ -1,3 +1,5 @@
+import type { SubListStore } from './subListStoreTypes';
+
 /**
  * 控件（字段）的领域类型。
  *
@@ -27,9 +29,9 @@ export type ControlValue = any;
 
 /**
  * 子表/关联表的行存储句柄，由外部通过 setSubListStore 挂到控件上。
- * 实现在 Form/core 之外（ChildTableStore），这里只需要「有这么个东西」。
+ * 子表和关联表使用各自完整的状态、Redux 动作与方法模型，消费前按 store 家族区分。
  */
-export type SubListStore = any;
+export type { SubListStore } from './subListStoreTypes';
 
 /** 控件的高级设置。键极多且按控件类型各不相同，值统一是字符串（后端就是这么存的）。 */
 export interface ControlAdvancedSetting {
@@ -244,7 +246,7 @@ export interface FormControl {
   /** 他表字段的原始控件类型 */
   originType?: number | undefined;
   strDefault?: string | undefined;
-  storeFromDefault?: boolean | undefined;
+  storeFromDefault?: SubListStore | undefined;
   fieldPermission?: string | undefined;
   /**
    * 权限位，后端存成 '111' 这样的三位字符串，全仓都是按下标取字符

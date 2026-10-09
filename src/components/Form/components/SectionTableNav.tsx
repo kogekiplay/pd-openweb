@@ -9,6 +9,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { getTitleStyle } from 'src/utils/controlCommon';
 import type { FormControl } from 'src/utils/controlTypes';
 import { SPRING_DEFAULT } from 'src/utils/spring';
+import { isRelateRecordTableStore } from 'src/utils/subListStoreTypes';
 
 const Con = styled.div`
   display: flex;
@@ -149,7 +150,7 @@ export function renderTabs(props) {
           Number(control.value) !== 0;
         let num = control.value || 0;
 
-        if (control.type === 29 && control.store && !control.store.getState().loading) {
+        if (control.type === 29 && isRelateRecordTableStore(control.store) && !control.store.getState().loading) {
           num = control.store.getState().tableState.count;
         }
 

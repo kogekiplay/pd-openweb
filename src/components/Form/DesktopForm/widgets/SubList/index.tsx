@@ -3,8 +3,15 @@ import _, { find, get } from 'lodash';
 import PropTypes from 'prop-types';
 import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
 import ChildTable from 'worksheet/components/ChildTable';
-import { WidgetEventHelper } from '../../../core/useFormEventManager';
+import type { ChildTableChange } from 'worksheet/components/ChildTable/publicTypes';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import { storeObject, storeRows } from 'src/utils/fieldStoreBoundary';
+import { WidgetEventHelper } from '../../../core/useFormEventManager';
+
+function actionIds(value: unknown): string[] {
+  if (typeof value === 'string') return [value];
+  return Array.isArray(value) ? value.filter((id): id is string => typeof id === 'string') : [];
+}
 
 export default class SubList extends React.Component<any, any> {
   declare eventHelper: WidgetEventHelper;
@@ -21,7 +28,7 @@ export default class SubList extends React.Component<any, any> {
     onChange: PropTypes.func,
   };
 
-  childTable = React.createRef();
+  childTable = React.createRef<React.ElementRef<typeof ChildTable>>();
 
   constructor(props) {
     super(props);
@@ -29,7 +36,7 @@ export default class SubList extends React.Component<any, any> {
     this.eventHelper = new WidgetEventHelper(props.formItemId);
   }
 
-  handleChange = ({ rows, originRows = [], lastAction = {} }, mode) => {
+  handleChange = ({ rows, originRows = [], lastAction }: ChildTableChange, mode?: unknown) => {
     if (mode === 'childTableDialog') {
       if (!this.childTable.current) return;
 
@@ -42,7 +49,7 @@ export default class SubList extends React.Component<any, any> {
     const { value, recordId, onChildTableLoaded = () => {} } = this.props;
     // 子表导入场景这里可以异化，导入完成再调用 onChange
     const onChange =
-      lastAction.type === 'UPDATE_ROW' && lastAction.asyncUpdate ? this.debounceChange : this.props.onChange;
+      lastAction.type === 'UPDATE_ROW' && lastAction['asyncUpdate'] ? this.debounceChange : this.props.onChange;
 
     const isAdd = !recordId;
 
@@ -76,7 +83,7 @@ export default class SubList extends React.Component<any, any> {
       ) &&
       !/^@/.test(lastAction.type)
     ) {
-      if (lastAction.type === 'ADD_ROWS' && find(lastAction.rows, row => row.isAddByTree)) {
+      if (lastAction.type === 'ADD_ROWS' && find(storeRows(lastAction['rows']), row => row.isAddByTree)) {
         return;
       }
 
@@ -84,44 +91,46 @@ export default class SubList extends React.Component<any, any> {
         onChange({
           isAdd: true,
           disabledRuleSet: get(lastAction, 'isSetValueFromRule'),
-          rows: rows.filter((row: RecordRow) => !row.empty),
+          rows: rows.filter(row => !row.empty),
         });
       } else if (lastAction.type === 'CLEAR_AND_SET_ROWS') {
         onChange({
           deleted: get(lastAction, 'isSetValueFromEvent')
-            ? value.deleted || lastAction.deleted || []
+            ? value.deleted || lastAction['deleted'] || []
             : originRows.map((r: RecordRow) => r.rowid),
           updated: rows.map((r: RecordRow) => r.rowid),
           rows: rows,
           disabledRuleSet: get(lastAction, 'isSetValueFromRule'),
         });
       } else {
-        let deleted = [];
-        let updated = [];
+        let deleted: string[] = [];
+        let updated: string[] = [];
 
         try {
-          deleted = value.deleted || lastAction.deleted || [];
-          updated = value.updated || lastAction.updated || [];
+          deleted = actionIds(storeObject(value)?.['deleted'] || lastAction['deleted']);
+          updated = actionIds(storeObject(value)?.['updated'] || lastAction['updated']);
         } catch (err) {
           console.log(err);
         }
 
         if (lastAction.type === 'DELETE_ROW') {
-          deleted = _.uniqBy(deleted.concat(lastAction.rowid)).filter(id => !/^(temp|default)/.test(id));
+          deleted = _.uniq(deleted.concat(actionIds(lastAction['rowid']))).filter(id => !/^(temp|default)/.test(id));
         } else if (lastAction.type === 'DELETE_ROWS') {
-          deleted = _.uniqBy(deleted.concat(lastAction.rowIds)).filter(id => !/^(temp|default)/.test(id));
-        } else if (lastAction.type === 'ADD_ROW' || (lastAction.type === 'UPDATE_ROW' && !lastAction.noRealUpdate)) {
-          updated = _.uniqBy(
+          deleted = _.uniq(deleted.concat(actionIds(lastAction['rowIds']))).filter(id => !/^(temp|default)/.test(id));
+        } else if (lastAction.type === 'ADD_ROW' || (lastAction.type === 'UPDATE_ROW' && !lastAction['noRealUpdate'])) {
+          updated = _.uniq(
             updated.concat(
               lastAction.type === 'UPDATE_ROW'
-                ? _.get(lastAction, 'value.rowid') || lastAction.rowid
-                : lastAction.rowid,
+                ? actionIds(storeObject(lastAction['value'])?.['rowid'] || lastAction['rowid'])
+                : actionIds(lastAction['rowid']),
             ),
           );
-        } else if (lastAction.type === 'UPDATE_ROWS' && !lastAction.noRealUpdate) {
-          updated = _.uniqBy(updated.concat(lastAction.rowIds));
+        } else if (lastAction.type === 'UPDATE_ROWS' && !lastAction['noRealUpdate']) {
+          updated = _.uniq(updated.concat(actionIds(lastAction['rowIds'])));
         } else if (lastAction.type === 'ADD_ROWS') {
-          updated = _.uniqBy(updated.concat(lastAction.rows.map((r: RecordRow) => r.rowid)));
+          updated = _.uniq(
+            updated.concat(storeRows(lastAction['rows']).flatMap(row => (row.rowid ? [row.rowid] : []))),
+          );
         }
 
         onChange({

@@ -199,7 +199,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getWorksheetInfo: function (args: ApiArgs, options: ApiOptions = {}) {
+  getWorksheetInfo: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<Partial<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetModel>> {
     return mdyAPI('PublicWorksheet', 'GetWorksheetInfo', args, options);
   },
   /**

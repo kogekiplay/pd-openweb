@@ -22,12 +22,13 @@ import type {
   ControlValue,
   FormControl,
   RecordRow,
-  SubListStore,
 } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
+import { storeRows } from './fieldStoreBoundary';
 import { objectValue, recordArray, recordObject, recordValue, relatedArray } from './recordValueBoundary';
 import type { RuntimeRecord, RuntimeRecordValue, RuntimeRelatedRecord } from './recordValueBoundary';
+import type { ChildTableStore, FieldStoreRecord } from './subListStoreTypes';
 
 export type RelatedRecordRow = RuntimeRelatedRecord & {
   isNew?: boolean | undefined;
@@ -695,7 +696,7 @@ export function getSubListUniqueError({
   badData = [],
 }: {
   /** 子表的 ChildTableStore */
-  store: SubListStore;
+  store: ChildTableStore;
   control: FormControl;
   /** 形如 ['子表controlId:控件controlId:重复值'] */
   badData?: string[];
@@ -705,22 +706,28 @@ export function getSubListUniqueError({
     // 拿它去取 r[controlId] 一样取不到，行为不变
     const [childTableControlId, controlId = '', value = ''] = badData[0].split(':');
     const state = store.getState();
-    let rows: RecordRow[] = state.rows;
+    let rows: FieldStoreRecord[] = state.rows;
 
     if (get(state, 'base.isTreeTableView')) {
-      rows = getSheetViewRows(
-        { rows: _.filter(rows, r => !/^empty-/.test(r.rowid || '')) },
-        { treeMap: get(state, 'treeTableViewData.treeMap', {}) },
+      rows = storeRows(
+        getSheetViewRows(
+          { rows: _.filter(rows, r => !/^empty-/.test(r.rowid || '')) },
+          { treeMap: get(state, 'treeTableViewData.treeMap', {}) },
+        ),
       );
     }
 
-    const badRowIds = filterEmptyChildTableRows<RecordRow>(rows)
+    const badRowIds = filterEmptyChildTableRows(rows)
       .filter(r =>
-        value.indexOf('-') > -1 ? (r[controlId] || '').indexOf(value) > -1 : (r[controlId] || '') === value,
+        value.indexOf('-') > -1
+          ? typeof r[controlId] === 'string' && r[controlId].indexOf(value) > -1
+          : (r[controlId] || '') === value,
       )
       .map(r => r.rowid);
-    const lastRowBaIndex = findLastIndex(filterEmptyChildTableRows<RecordRow>(rows), r =>
-      value.indexOf('-') > -1 ? (r[controlId] || '').indexOf(value) > -1 : (r[controlId] || '') === value,
+    const lastRowBaIndex = findLastIndex(filterEmptyChildTableRows(rows), r =>
+      value.indexOf('-') > -1
+        ? typeof r[controlId] === 'string' && r[controlId].indexOf(value) > -1
+        : (r[controlId] || '') === value,
     );
     if (!badRowIds.length) return {};
     const controlName = _.get(

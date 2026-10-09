@@ -8,7 +8,10 @@ interface TestControl {
   controlId: string;
   type: number;
   advancedSetting: { showtype: string };
-  store: { getState: () => { records: TestRecord[]; changes: { addedRecordIds: string[] } } };
+  store: {
+    version: 'relation-store';
+    getState: () => { records: TestRecord[]; changes: { addedRecordIds: string[] } };
+  };
 }
 interface CoreUtilities {
   formatControlToServer(
@@ -22,6 +25,8 @@ const { code } = transformFileSync(process.env.RELATE_IDS_SOURCE || path.join(__
   plugins: ['@babel/plugin-transform-modules-commonjs'],
 });
 new Function('module', 'exports', 'require', code)(moduleLike, moduleLike.exports, (name: string) => {
+  if (name === 'src/utils/subListStoreTypes')
+    return require(path.join(__dirname, '../../../../src/utils/subListStoreTypes.ts'));
   if (name === 'lodash') return require('lodash');
   if (name === 'worksheet/constants/enum')
     return { RELATE_RECORD_SHOW_TYPE: { LIST: 1, TAB_TABLE: 5, TABLE: 3, DROPDOWN: 2 }, RELATION_SEARCH_SHOW_TYPE: {} };
@@ -34,7 +39,7 @@ const control: TestControl = {
   controlId: 'relationship',
   type: 29,
   advancedSetting: { showtype: '3' },
-  store: { getState: () => ({ records, changes: { addedRecordIds: ['draft-1'] } }) },
+  store: { version: 'relation-store', getState: () => ({ records, changes: { addedRecordIds: ['draft-1'] } }) },
 };
 assert.deepEqual(JSON.parse(formatControlToServer(control, { isNewRecord: true }).value || '[]'), [{ sid: 'saved-1' }]);
 assert.deepEqual(

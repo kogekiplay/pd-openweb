@@ -13,6 +13,7 @@ import { getDatePickerConfigs, isEmptyValue, toFixed } from 'src/utils/controlCo
 import type { FormControl, SubListStore } from 'src/utils/controlTypes';
 import { dateAppZoneToServerZone } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
+import { isChildTableStore } from 'src/utils/subListStoreTypes';
 import {
   filterArray,
   filterDate,
@@ -1040,7 +1041,7 @@ export default function filterFn({
 
           case CONTROL_FILTER_WHITELIST.SUBLIST.value: // 子表
             store = control.store;
-            state = store && store.getState();
+            state = isChildTableStore(store) ? store.getState() : undefined;
             if (state && state.rows && !state.baseLoading && !state.dataLoading) {
               return filterEmptyChildTableRows(state.rows).length <= 0;
             } else {
@@ -1130,7 +1131,7 @@ export default function filterFn({
 
           case CONTROL_FILTER_WHITELIST.SUBLIST.value: // 子表
             store = control.store;
-            state = store && store.getState();
+            state = isChildTableStore(store) ? store.getState() : undefined;
             if (state && state.rows && !state.baseLoading && !state.dataLoading) {
               return filterEmptyChildTableRows(state.rows).length > 0;
             } else {

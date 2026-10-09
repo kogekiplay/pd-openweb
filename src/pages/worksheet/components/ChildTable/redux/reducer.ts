@@ -1,11 +1,20 @@
 import { combineReducers } from 'redux';
+import type { UnknownAction } from '@reduxjs/toolkit';
 import _, { includes, uniq } from 'lodash';
 import { handleTreeNodeRow, treeTableViewData } from 'worksheet/common/TreeTableHelper/index.js';
 import { browserIsMobile } from 'src/utils/common';
-import type { RecordRow } from 'src/utils/controlTypes';
-import type { ReduxAction } from 'src/redux/types';
+import type { ChildTableState } from 'src/utils/subListStoreTypes';
+import type {
+  CellErrors,
+  ChildPagination,
+  ChildTableBase,
+  ChildTableChanges,
+  FieldSortConfig,
+  FieldStoreRecord,
+} from 'src/utils/subListStoreTypes';
+import type { ChildTableAction } from './stateTypes';
 
-function dataLoading(state = true, action: ReduxAction<{ value: boolean }>) {
+function dataLoading(state = true, action: ChildTableAction) {
   switch (action.type) {
     case 'UPDATE_DATA_LOADING':
       return action.value;
@@ -14,7 +23,7 @@ function dataLoading(state = true, action: ReduxAction<{ value: boolean }>) {
   }
 }
 
-function baseLoading(state = true, action: ReduxAction<{ value: boolean }>) {
+function baseLoading(state = true, action: ChildTableAction) {
   switch (action.type) {
     case 'UPDATE_BASE_LOADING':
       return action.value;
@@ -23,7 +32,7 @@ function baseLoading(state = true, action: ReduxAction<{ value: boolean }>) {
   }
 }
 
-function base(state = {}, action: ReduxAction) {
+function base(state: ChildTableBase = {}, action: ChildTableAction): ChildTableBase {
   // controls, searchConfig, rules, projectId, workflowChildTableSwitch, entityName, appId
   // masterData, recordId
 
@@ -65,7 +74,7 @@ const DIRTY_MARKING_ACTIONS = [
   'CLEAR_AND_SET_ROWS',
 ];
 
-function changes(state = {}, action: ReduxAction) {
+function changes(state: ChildTableChanges = {}, action: ChildTableAction): ChildTableChanges {
   if (_.includes(DIRTY_MARKING_ACTIONS, action.type)) {
     return { ...state, isDirty: true };
   }
@@ -84,7 +93,7 @@ function changes(state = {}, action: ReduxAction) {
   }
 }
 
-function cellErrors(state = {}, action: ReduxAction) {
+function cellErrors(state: CellErrors = {}, action: ChildTableAction): CellErrors {
   switch (action.type) {
     case 'UPDATE_CELL_ERRORS':
       return action.value;
@@ -98,7 +107,7 @@ function cellErrors(state = {}, action: ReduxAction) {
 // 否则上一次保存写回 cellErrors 的必填/规则错误会被当成待处理错误反复保留，
 // 出现「改了业务规则条件字段、该字段已不必填，保存仍报必填」。
 // 未标记的 key 随 cellErrors 收敛（清空、删行、改值清错误时同步失效）。
-function persistedCellErrors(state = {}, action: ReduxAction) {
+function persistedCellErrors(state: CellErrors = {}, action: ChildTableAction): CellErrors {
   switch (action.type) {
     case 'UPDATE_CELL_ERRORS':
       return _.pickBy({ ...state, ...(action.persisted || {}) }, (_error, key) => key in (action.value || {}));
@@ -107,23 +116,23 @@ function persistedCellErrors(state = {}, action: ReduxAction) {
   }
 }
 
-function lastAction(_state, action: ReduxAction) {
+function lastAction(_state: UnknownAction | undefined, action: ChildTableAction): UnknownAction {
   return action;
 }
 
-function originRows(state = [], action: ReduxAction) {
+function originRows(state: FieldStoreRecord[] = [], action: ChildTableAction): FieldStoreRecord[] {
   switch (action.type) {
     case 'LOAD_ROWS':
-      return action.rows.map((row: RecordRow) => ({ ...row }));
+      return action.rows.map((row: FieldStoreRecord) => ({ ...row }));
     default:
       return state;
   }
 }
 
-function fillEmptyRows(rows, emptyCount = 0) {
+function fillEmptyRows(rows: FieldStoreRecord[], emptyCount = 0): FieldStoreRecord[] {
   if (rows.length < emptyCount) {
     return rows.concat(
-      new Array(emptyCount - rows.length).fill().map(() => ({
+      new Array(emptyCount - rows.length).fill(undefined).map(() => ({
         rowid: 'empty-' + Math.random().toString(32),
       })),
     );
@@ -145,8 +154,8 @@ const ROWS_HANDLED_ACTIONS = [
   'UPDATE_STATE',
 ];
 
-function rows(state = [], action: ReduxAction) {
-  const emptyCount = action.emptyCount || 0;
+function rows(state: FieldStoreRecord[] = [], action: ChildTableAction): FieldStoreRecord[] {
+  const emptyCount = 'emptyCount' in action && typeof action.emptyCount === 'number' ? action.emptyCount || 0 : 0;
 
   // 无关 action 不重建空行，避免重新生成 empty rowid 导致在途交互（focus/paste）丢失行引用
   if (!_.includes(ROWS_HANDLED_ACTIONS, action.type)) {
@@ -168,7 +177,7 @@ function rows(state = [], action: ReduxAction) {
     case 'INIT_ROWS':
     case 'FORCE_SET_OUT_ROWS':
     case 'CLEAR_AND_SET_ROWS':
-      newState = action.rows.map((row: RecordRow) => ({ ...row }));
+      newState = action.rows.map((row: FieldStoreRecord) => ({ ...row }));
       break;
     case 'ADD_ROW':
       if (action.insertRowId === '__HEAD__') {
@@ -220,7 +229,10 @@ function rows(state = [], action: ReduxAction) {
   return newState.length < emptyCount && !browserIsMobile() ? fillEmptyRows(newState, emptyCount) : newState;
 }
 
-function pagination(state = { pageIndex: 1, pageSize: 20, count: 0 }, action: ReduxAction) {
+function pagination(
+  state: ChildPagination = { pageIndex: 1, pageSize: 20, count: 0 },
+  action: ChildTableAction,
+): ChildPagination {
   switch (action.type) {
     case 'UPDATE_PAGINATION':
       return { ...state, ...action.pagination };
@@ -232,7 +244,7 @@ function pagination(state = { pageIndex: 1, pageSize: 20, count: 0 }, action: Re
 // 子表"未筛选时的真实总行数"：筛选态下 state.rows 只是服务端筛选后的子集，
 // 无法据此判空触发必填，故由 actions 在未筛选加载时落总数、筛选态下按本地增删增量维护。
 // 默认 null = 未知（从未在未筛选态加载过），判空时回退旧的安全策略，避免误报必填。
-function realCount(state = null, action: ReduxAction<{ value: number }>) {
+function realCount(state: number | null = null, action: ChildTableAction): number | null {
   switch (action.type) {
     case 'SET_REAL_COUNT':
       return _.isNumber(action.value) ? Math.max(0, action.value) : null;
@@ -243,7 +255,7 @@ function realCount(state = null, action: ReduxAction<{ value: number }>) {
   }
 }
 
-function sortConfig(state = null, action: ReduxAction) {
+function sortConfig(state: FieldSortConfig | null = null, action: ChildTableAction): FieldSortConfig | null {
   switch (action.type) {
     case 'UPDATE_SORT_CONFIG':
       return action.sortConfig;
@@ -256,7 +268,10 @@ function sortConfig(state = null, action: ReduxAction) {
   }
 }
 
-function filterControls(state = [], action: ReduxAction) {
+function filterControls(
+  state: import('src/pages/worksheet/types').WorksheetFilterCondition[] = [],
+  action: ChildTableAction,
+): import('src/pages/worksheet/types').WorksheetFilterCondition[] {
   switch (action.type) {
     case 'UPDATE_FILTER_CONTROLS':
       return action.filterControls || [];
@@ -267,7 +282,7 @@ function filterControls(state = [], action: ReduxAction) {
   }
 }
 
-export default combineReducers({
+const combinedReducer = combineReducers({
   cellErrors,
   persistedCellErrors,
   baseLoading,
@@ -283,3 +298,7 @@ export default combineReducers({
   sortConfig,
   filterControls,
 });
+
+export default function reducer(state: ChildTableState | undefined, action: ChildTableAction): ChildTableState {
+  return combinedReducer(state, action);
+}

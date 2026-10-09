@@ -1,9 +1,13 @@
 ﻿import { combineReducers } from 'redux';
+import type { UnknownAction } from '@reduxjs/toolkit';
 import { assign, cloneDeep, findIndex, get, includes, uniq, uniqBy } from 'lodash';
 import { handleTreeNodeRow, treeTableViewData } from 'worksheet/common/TreeTableHelper/index.js';
-import type { ReduxAction } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
+import type { RelateRecordState } from 'src/utils/subListStoreTypes';
+import type { FieldStoreRecord, RelateChanges, RelateRecordBase, RelateTableState } from 'src/utils/subListStoreTypes';
+import type { RelateRecordAction } from './stateTypes';
 
-function loading(state = true, action: ReduxAction) {
+function loading(state = true, action: RelateRecordAction): boolean {
   switch (action.type) {
     case 'UPDATE_LOADING':
       return action.value;
@@ -12,7 +16,7 @@ function loading(state = true, action: ReduxAction) {
   }
 }
 
-function base(state = {}, action: ReduxAction) {
+function base(state: RelateRecordBase = {}, action: RelateRecordAction): RelateRecordBase {
   switch (action.type) {
     case 'UPDATE_BASE':
       return Object.assign({}, state, action.value);
@@ -21,7 +25,7 @@ function base(state = {}, action: ReduxAction) {
   }
 }
 
-const initialTableState = {
+const initialTableState: RelateTableState = {
   pageIndex: 1,
   pageSize: localStorage.getItem('relateRecordTablePageSize')
     ? Number(localStorage.getItem('relateRecordTablePageSize'))
@@ -30,18 +34,18 @@ const initialTableState = {
 };
 
 function tableState(
-  state = {
+  state: RelateTableState = {
     ...initialTableState,
   },
-  action,
-) {
-  if (includes(['APPEND_RECORDS', 'DELETE_RECORDS'], action.type) && !action.saveSync) {
+  action: RelateRecordAction,
+): RelateTableState {
+  if ((action.type === 'APPEND_RECORDS' || action.type === 'DELETE_RECORDS') && !action.saveSync) {
     const newCount = typeof state.countForShow === 'undefined' ? state.count : state.countForShow;
 
     if (action.type === 'APPEND_RECORDS') {
-      return { ...state, countForShow: newCount + action.records.length };
+      return { ...state, countForShow: Number(newCount) + action.records.length };
     } else if (action.type === 'DELETE_RECORDS') {
-      return { ...state, countForShow: newCount - action.recordIds.length };
+      return { ...state, countForShow: Number(newCount) - action.recordIds.length };
     }
 
     return { ...state };
@@ -53,14 +57,14 @@ function tableState(
     case 'UPDATE_TABLE_STATE':
       return Object.assign({}, state, action.value);
     case 'APPEND_RECORDS':
-      return { ...state, count: state.count + action.records.length };
+      return { ...state, count: Number(state.count) + action.records.length };
     case 'DELETE_RECORDS':
-      return { ...state, count: state.count - action.recordIds.length };
+      return { ...state, count: Number(state.count) - action.recordIds.length };
     case 'RESET':
       return {
         ...initialTableState,
         sheetColumnWidths: state.sheetColumnWidths,
-        ...(action.doNotClearKeywords ? { keywords: state.keywords } : {}),
+        ...('doNotClearKeywords' in action && action.doNotClearKeywords ? { keywords: state.keywords } : {}),
       };
     case 'CANCEL_CHANGE':
       return {
@@ -81,7 +85,7 @@ function tableState(
   }
 }
 
-function controls(state = [], action: ReduxAction) {
+function controls(state: FormControl[] = [], action: RelateRecordAction): FormControl[] {
   switch (action.type) {
     case 'UPDATE_CONTROLS':
       return action.controls;
@@ -90,20 +94,20 @@ function controls(state = [], action: ReduxAction) {
   }
 }
 
-export const initialChanges = {
+export const initialChanges: RelateChanges = {
   addedRecordIds: [],
   deletedRecordIds: [],
   addedRecords: [],
 };
 
-function changes(state = cloneDeep(initialChanges), action: ReduxAction) {
-  if (action.saveSync) {
+function changes(state: RelateChanges = cloneDeep(initialChanges), action: RelateRecordAction): RelateChanges {
+  if ('saveSync' in action && action.saveSync) {
     if (includes(['APPEND_RECORDS', 'DELETE_RECORDS'], action.type)) {
       return { ...state, changed: true };
     }
   }
 
-  const newRecords = (action.records || []).map(record => ({ ...record, isNew: true }));
+  const newRecords = ('records' in action ? action.records || [] : []).map(record => ({ ...record, isNew: true }));
 
   switch (action.type) {
     case 'APPEND_RECORDS':
@@ -127,7 +131,9 @@ function changes(state = cloneDeep(initialChanges), action: ReduxAction) {
         addedRecordIds: state.addedRecordIds.filter(recordId => !includes(action.recordIds, recordId)),
         addedRecords: state.addedRecords.filter(record => !includes(action.recordIds, record.rowid)),
         deletedRecordIds: uniq(
-          state.deletedRecordIds.concat(action.recordIds.filter((recordId: string) => !includes(state.addedRecordIds, recordId))),
+          state.deletedRecordIds.concat(
+            action.recordIds.filter((recordId: string) => !includes(state.addedRecordIds, recordId)),
+          ),
         ),
       };
     case 'DELETE_ALL':
@@ -143,7 +149,10 @@ function changes(state = cloneDeep(initialChanges), action: ReduxAction) {
   }
 }
 
-function originFirstPageResult(state = [], action: ReduxAction) {
+function originFirstPageResult(
+  state: { records?: FieldStoreRecord[] | undefined; count?: number | undefined } | [] = [],
+  action: RelateRecordAction,
+): { records?: FieldStoreRecord[] | undefined; count?: number | undefined } | [] {
   switch (action.type) {
     case 'INIT_FIRST_PAGE_RESULT':
       return action.value;
@@ -152,7 +161,7 @@ function originFirstPageResult(state = [], action: ReduxAction) {
   }
 }
 
-function records(state = [], action: ReduxAction) {
+function records(state: FieldStoreRecord[] = [], action: RelateRecordAction): FieldStoreRecord[] {
   let newRecords;
 
   switch (action.type) {
@@ -196,7 +205,7 @@ function records(state = [], action: ReduxAction) {
   }
 }
 
-export function initialized(state = false, action: ReduxAction<{ value: boolean }>) {
+export function initialized(state = false, action: RelateRecordAction) {
   switch (action.type) {
     case 'UPDATE_INIT_STATE':
       return action.value;
@@ -205,11 +214,14 @@ export function initialized(state = false, action: ReduxAction<{ value: boolean 
   }
 }
 
-function lastAction(_state, action: ReduxAction) {
+function lastAction(_state: UnknownAction | undefined, action: RelateRecordAction): UnknownAction {
   return action;
 }
 
-function rowsSummary(state = { types: {}, values: {} }, action: ReduxAction) {
+function rowsSummary(
+  state: { types: Record<string, number>; values: Record<string, unknown> } = { types: {}, values: {} },
+  action: RelateRecordAction,
+) {
   switch (action.type) {
     case 'UPDATE_ROWS_SUMMARY':
       return {
@@ -223,7 +235,7 @@ function rowsSummary(state = { types: {}, values: {} }, action: ReduxAction) {
   }
 }
 
-export default combineReducers({
+const combinedReducer = combineReducers({
   initialized,
   loading,
   base,
@@ -236,3 +248,7 @@ export default combineReducers({
   rowsSummary,
   lastAction,
 });
+
+export default function reducer(state: RelateRecordState | undefined, action: RelateRecordAction): RelateRecordState {
+  return combinedReducer(state, action);
+}

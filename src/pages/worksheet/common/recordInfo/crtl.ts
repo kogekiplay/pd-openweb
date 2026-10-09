@@ -6,6 +6,7 @@ import worksheetAjax from 'src/api/worksheet';
 import { getRowDetail, type RecordDetail } from 'worksheet/api';
 import { exportSheet } from 'worksheet/components/ChildTable/redux/actions';
 import { getRuleErrorInfo } from 'src/components/Form/core/formUtils';
+import type { FormConditionRule } from 'src/components/Form/core/formUtils/types';
 import type { FormRule, RuleFilterItem } from 'src/components/Form/core/types';
 import { formatControlToServer } from 'src/components/Form/core/utils';
 import { getCustomWidgetUri } from 'src/pages/worksheet/constants/common';
@@ -438,7 +439,7 @@ interface UpdateRecordControlOptions {
   recordId?: string;
   /** 单个待更新单元格；cells 为空时会被包成 [cell] */
   cell?: FormControl;
-  rules?: FormRule[];
+  rules?: FormConditionRule[] | undefined;
   cells?: FormControl[];
 }
 

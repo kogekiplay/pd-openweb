@@ -1,3 +1,4 @@
+import type { Middleware, ThunkMiddleware, Tuple } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
 import { find, includes, isFunction, isNaN, isNumber } from 'lodash';
 import { get } from 'lodash';
@@ -5,27 +6,52 @@ import { isEmpty } from 'lodash';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
 import sheetAjax from 'src/api/worksheet';
 import { setRowsFromStaticRows } from 'worksheet/components/ChildTable/redux/actions';
+import type DataFormatClass from 'src/components/Form/core/DataFormat';
+import type { FormQueryConfig } from 'src/components/Form/core/queryTypes';
 import { formatSearchConfigs } from 'src/pages/widgetConfig/util';
 import { canAsUniqueWidget } from 'src/pages/widgetConfig/util/setting';
 import { isRelateRecordTableControl, parseAdvancedSetting } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
+import { storeFailureMessage } from 'src/utils/fieldStoreBoundary';
 import { getSubListUniqueError } from 'src/utils/record';
 import { handleUpdateDefsourceOfControl } from 'src/utils/record';
+import type {
+  ChildTableState,
+  ChildTableStore,
+  FieldStoreMasterData,
+  FieldStoreWorksheet,
+} from 'src/utils/subListStoreTypes';
 import { clearRows, loadRows, resetRows, updateTreeTableViewData } from './actions';
 import reducer from './reducer';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { ChildTableAction } from './stateTypes';
 
-function loadWorksheetInfo(worksheetId: string, { controlId, relationWorksheetId, recordId, instanceId, workId } = {}) {
-  const args = { worksheetId, getTemplate: true, getRules: true, relationWorksheetId };
+function loadWorksheetInfo(
+  worksheetId: string,
+  {
+    controlId,
+    relationWorksheetId,
+    recordId,
+    instanceId,
+    workId,
+  }: {
+    controlId?: string | undefined;
+    relationWorksheetId?: string | undefined;
+    recordId?: string | undefined;
+    instanceId?: string | undefined;
+    workId?: string | undefined;
+  } = {},
+) {
+  const args: Record<string, unknown> = { worksheetId, getTemplate: true, getRules: true, relationWorksheetId };
   let getWorksheetInfoPromise;
 
   if (window.shareState.isPublicWorkflowRecord && window.shareState.shareId) {
-    args.linkId = window.shareState.shareId;
-    args.controlId = controlId;
+    args['linkId'] = window.shareState.shareId;
+    args['controlId'] = controlId;
     getWorksheetInfoPromise = sheetAjax.getWorksheetInfoByWorkItem;
   } else if (recordId && instanceId && workId) {
-    args.instanceId = instanceId;
-    args.workId = workId;
-    args.controlId = controlId;
+    args['instanceId'] = instanceId;
+    args['workId'] = workId;
+    args['controlId'] = controlId;
     getWorksheetInfoPromise = sheetAjax.getWorksheetInfoByWorkItem;
   } else if (get(window, 'shareState.isPublicForm')) {
     getWorksheetInfoPromise = publicWorksheetAjax.getWorksheetInfo;
@@ -37,7 +63,10 @@ function loadWorksheetInfo(worksheetId: string, { controlId, relationWorksheetId
 }
 
 export default function generateStore(
-  control,
+  control: FormControl & {
+    discussId?: string | undefined;
+    updateRelationControls?: ((controlId: string | undefined, controls: FormControl[]) => void) | undefined;
+  },
   {
     from,
     relationWorksheetId,
@@ -49,22 +78,43 @@ export default function generateStore(
     workId,
     initRowIsCreate,
     DataFormat,
+  }: {
+    from?: number | undefined;
+    relationWorksheetId?: string | undefined;
+    controls?: FormControl[] | undefined;
+    searchConfig?: FormQueryConfig[] | undefined;
+    masterData?: FieldStoreMasterData | undefined;
+    recordId?: string | undefined;
+    instanceId?: string | undefined;
+    workId?: string | undefined;
+    initRowIsCreate?: boolean | undefined;
+    DataFormat?: typeof DataFormatClass | undefined;
+    appId?: string | undefined;
+    isCharge?: boolean | undefined;
   } = {},
-) {
-  let worksheetInfo;
+): ChildTableStore {
+  let worksheetInfo: FieldStoreWorksheet | undefined;
+  const worksheetIdForRequests = control.dataSource;
+  if (!worksheetIdForRequests) throw new TypeError('Child table has no worksheet ID');
 
-  const logger = () => next => action => {
+  const logger: Middleware<{}, ChildTableState> = () => next => action => {
     const emptyCount = Number(get(control, 'advancedSetting.blankrow'));
-    action.emptyCount = isNumber(emptyCount) && !isNaN(emptyCount) ? emptyCount : 1;
+    if (action && typeof action === 'object')
+      Object.assign(action, { emptyCount: isNumber(emptyCount) && !isNaN(emptyCount) ? emptyCount : 1 });
     return next(action);
   };
 
   const worksheetId = control.dataSource;
+  if (!worksheetId) throw new TypeError('Child table has no worksheet ID');
 
   // 原来这里手工探测并挂 window.__REDUX_DEVTOOLS_EXTENSION__，configureStore 默认
   // devTools: true 已经做了同一件事（且只在非 production 生效），所以那段删掉了。
   // thunk 也由默认中间件提供，只需把自定义的 logger 追加上去。
-  const store = configureStore({
+  const reduxStore = configureStore<
+    ChildTableState,
+    ChildTableAction,
+    Tuple<[ThunkMiddleware<ChildTableState>, Middleware<{}, ChildTableState>]>
+  >({
     reducer,
     // base / lastAction 这两片整体豁免两个 dev 检查（豁免理由见下），其余 slice
     // （rows / originRows / changes / treeTableViewData…）仍然受保护 —— 真正会藏 bug 的是那几片。
@@ -99,8 +149,16 @@ export default function generateStore(
         immutableCheck: { ignoredPaths: ['base', 'lastAction'] },
       }).concat(logger),
   });
-  store.name = Math.floor(Math.random() * 1000);
-  async function init({ noMountInit = false } = {}) {
+  let initializing: Promise<void> | undefined;
+  function init(options: { noMountInit?: boolean } = {}): Promise<void> {
+    if (initializing) return initializing;
+    if (store.initialized) return Promise.resolve();
+    initializing = initialize(options).finally(() => {
+      initializing = undefined;
+    });
+    return initializing;
+  }
+  async function initialize({ noMountInit = false } = {}) {
     if (store.initialized) return;
     if (isFunction(store.setLoadingInfo)) {
       store.setLoadingInfo('store_' + control.controlId, true);
@@ -115,29 +173,38 @@ export default function generateStore(
     }
 
     store.initialized = true;
+    store.dispatch({ type: 'UPDATE_BASE_LOADING', value: true });
     try {
       let { max, treeLayerControlId } = parseAdvancedSetting(control.advancedSetting);
 
       if (!controls) {
-        worksheetInfo = await loadWorksheetInfo(worksheetId, {
-          relationWorksheetId,
-          controlId: control.controlId,
-          recordId,
-          instanceId,
-          workId,
-        });
+        worksheetInfo = await loadWorksheetInfo(
+          control.dataSource ||
+            (() => {
+              throw new TypeError('Missing child worksheet');
+            })(),
+          {
+            relationWorksheetId,
+            controlId: control.controlId,
+            recordId,
+            instanceId,
+            workId,
+          },
+        );
+        if (worksheetInfo.resultCode !== 1 || !worksheetInfo.template?.controls)
+          throw new Error('Child worksheet request failed');
         // await new Promise(resolve => setTimeout(resolve, 5000)); // TEST: 测试子表未加载完成时的提交问题
         controls = get(worksheetInfo, 'template.controls');
         controls = handleUpdateDefsourceOfControl({
-          recordId,
-          relateRecordControl: { ...control, worksheetId: relationWorksheetId },
-          masterData,
-          controls,
+          ...(recordId ? { recordId } : {}),
+          relateRecordControl: { ...control, ...(relationWorksheetId ? { worksheetId: relationWorksheetId } : {}) },
+          ...(masterData ? { masterData: { formData: masterData.formData || [] } } : {}),
+          ...(controls ? { controls } : {}),
         });
       }
 
       if (!searchConfig) {
-        const queryRes = await sheetAjax.getQueryBySheetId({ worksheetId });
+        const queryRes = await sheetAjax.getQueryBySheetId({ worksheetId: worksheetIdForRequests });
         searchConfig = formatSearchConfigs(queryRes).filter(i => i.eventType !== 1);
       }
 
@@ -148,7 +215,7 @@ export default function generateStore(
       }));
       const isWorkflow =
         ((instanceId && workId) || window.shareState.isPublicWorkflowRecord) &&
-        worksheetInfo.workflowChildTableSwitch !== false;
+        worksheetInfo?.workflowChildTableSwitch !== false;
 
       if (isWorkflow && isFunction(control.updateRelationControls)) {
         control.updateRelationControls(control.controlId, controls);
@@ -185,6 +252,7 @@ export default function generateStore(
           masterData,
           staticRows: safeParse(control.value),
         };
+        if (!DataFormat) throw new TypeError('Missing child row constructor');
         setRowsFromStaticRows(params)(store.getState, store.dispatch, DataFormat);
       }
 
@@ -198,6 +266,17 @@ export default function generateStore(
         store.setLoadingInfo('loadRows_' + control.controlId, false);
       }
 
+      store.initialized = false;
+      store.dispatch({
+        type: 'UPDATE_BASE',
+        value: {
+          ...store.getState().base,
+          control,
+          initializationError: storeFailureMessage(err, _l('子表加载失败，请重试')),
+        },
+      });
+      store.dispatch({ type: 'UPDATE_BASE_LOADING', value: false });
+      store.dispatch({ type: 'UPDATE_DATA_LOADING', value: false });
       throw err;
     } finally {
       if (isFunction(store.setLoadingInfo)) {
@@ -206,10 +285,7 @@ export default function generateStore(
     }
   }
 
-  store.init = init;
-  store.waitList = [];
-  store.waitListForLoadRows = [];
-  store.reset = () => {
+  const reset = () => {
     // 保存成功后大表单会调用 reset 清理脏态(changes/errors)，但并不会重新拉取 rows，
     // 此时 state.rows 仍是筛选后的子集。RESET 会顺带清空 filterControls / realCount，
     // 造成"数据仍是筛选结果、筛选器指示却消失"的状态错位，并让筛选态判空必填回退失真。
@@ -234,11 +310,11 @@ export default function generateStore(
     });
   };
 
-  store.resetRows = () => {
+  const resetStoredRows = () => {
     store.dispatch(resetRows());
   };
 
-  store.setEmpty = () => {
+  const setEmpty = () => {
     store.dispatch(clearRows());
     store.dispatch({
       type: 'UPDATE_CELL_ERRORS',
@@ -246,7 +322,7 @@ export default function generateStore(
     });
   };
 
-  store.cancelChange = () => {
+  const cancelChange = () => {
     store.dispatch(resetRows());
     store.dispatch({
       type: 'UPDATE_CELL_ERRORS',
@@ -254,18 +330,14 @@ export default function generateStore(
     });
   };
 
-  store.resetRows = () => {
-    store.dispatch(resetRows());
-  };
-
-  store.clearSubListErrors = () => {
+  const clearSubListErrors = () => {
     store.dispatch({
       type: 'UPDATE_CELL_ERRORS',
       value: {},
     });
   };
 
-  store.initAndLoadRows = async ({ worksheetId, recordId, controlId } = {}) => {
+  const initAndLoadRows: ChildTableStore['initAndLoadRows'] = async ({ worksheetId, recordId, controlId } = {}) => {
     await store.init();
     const state = store.getState();
     const { base = {} } = state;
@@ -290,8 +362,8 @@ export default function generateStore(
     );
   };
 
-  store.setUniqueError = ({ badData = [] } = {}) => {
-    const { controlId, error } = getSubListUniqueError({ store, badData, control });
+  const setUniqueError: ChildTableStore['setUniqueError'] = ({ badData = [] } = {}) => {
+    const { controlId, error } = getSubListUniqueError({ store, badData, control }) || {};
     if (controlId !== control.controlId) return;
     if (!isEmpty(error)) {
       store.dispatch({
@@ -301,5 +373,20 @@ export default function generateStore(
     }
   };
 
+  const waitList: Array<() => void> = [];
+  const waitListForLoadRows: Array<() => void> = [];
+  const store: ChildTableStore = Object.assign(reduxStore, {
+    name: Math.floor(Math.random() * 1000),
+    init,
+    reset,
+    resetRows: resetStoredRows,
+    setEmpty,
+    cancelChange,
+    clearSubListErrors,
+    initAndLoadRows,
+    setUniqueError,
+    waitList,
+    waitListForLoadRows,
+  });
   return store;
 }

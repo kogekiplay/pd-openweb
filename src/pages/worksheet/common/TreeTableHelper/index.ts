@@ -1,28 +1,18 @@
+import type { ThunkAction, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import _, { difference, find, get, intersection, isUndefined, pickBy, sortBy } from 'lodash';
-import type { AppDispatch, AppThunk } from 'src/redux/types';
+import type { RootState } from 'src/redux/types';
 import { parseAdvancedSetting } from 'src/utils/control';
 import type { RecordRow } from 'src/utils/controlTypes';
+import type { TreeExpansionAction, TreeMap, TreeViewAction, TreeViewState } from './types';
 
-export interface TreeNode {
-  index?: number | undefined;
-  rowid?: string | undefined;
-  childrenIds?: Array<string | undefined> | undefined;
-  key?: string | undefined;
-  levelList?: number[] | undefined;
-  loaded?: boolean | undefined;
-  folded?: boolean | undefined;
-  parentKeys?: string[] | undefined;
-  hideExpand?: boolean | undefined;
-  loading?: boolean | undefined;
-}
-export type TreeMap = Record<string, TreeNode | undefined>;
+export type { TreeNode, TreeMap, TreeViewState, TreeViewAction, TreeExpansionAction } from './types';
 export interface TreeDataResult {
   treeMap: TreeMap;
   maxLevel: number;
 }
 interface TreeUpdateOptions {
   rootRows?: RecordRow[] | undefined;
-  rows?: Array<RecordRow & { addTime?: string | undefined }> | undefined;
+  rows?: Array<RecordRow & { addTime?: string | number | undefined }> | undefined;
   defaultIndex?: number | undefined;
   defaultLevelList?: number[] | undefined;
   defaultparentKeys?: string[] | undefined;
@@ -42,26 +32,22 @@ interface ParseChildrenOptions {
   doNotContinue?: boolean | undefined;
   hideExpand?: boolean | undefined;
 }
-export interface TreeViewState {
-  maxLevel: number;
-  treeMap: TreeMap;
-  sortedIds: string[];
-  expandedAllKeys: Record<string, boolean>;
-  levelCount?: number | undefined;
-}
 
-export interface TreeExpansionOptions {
+export interface TreeExpansionOptions<State = RootState, Actions extends UnknownAction = UnknownAction> {
   runTimes?: number | undefined;
   expandAll?: boolean | undefined;
   forceUpdate?: boolean | undefined;
   treeMap?: TreeMap | undefined;
   maxLevel?: number | undefined;
-  rows?: Array<RecordRow & { addTime?: string | undefined }> | undefined;
+  rows?: Array<RecordRow & { addTime?: string | number | undefined }> | undefined;
   updateRows?: ((rowIds: Array<string | undefined>, changes: RecordRow) => unknown) | undefined;
   getNewRows?: (() => Promise<RecordRow[] | undefined>) | undefined;
   isAddsSubTree?: boolean | undefined;
   updateTreeNodeExpansion?:
-    | ((row: RecordRow & { key?: string | undefined }, options: { expandAll: boolean; runTimes: number }) => AppThunk)
+    | ((
+        row: RecordRow & { key?: string | undefined },
+        options: { expandAll: boolean; runTimes: number },
+      ) => ThunkAction<unknown, State, undefined, Actions | TreeExpansionAction>)
     | undefined;
   navGroupFilters?: unknown;
   appId?: string | undefined;
@@ -231,20 +217,6 @@ export function treeDataUpdater(
   return { treeMap, maxLevel };
 }
 
-export type TreeViewAction =
-  | { type: 'UPDATE_TREE_TABLE_VIEW_DATA' | 'UPDATE_TREE_TABLE_VIEW_ITEM'; value: Partial<TreeViewState> }
-  | {
-      type: 'UPDATED_TREE_NODE_EXPANSION';
-      key: string;
-      folded?: boolean | undefined;
-      childrenIds?: Array<string | undefined> | undefined;
-      loaded?: boolean | undefined;
-      loading?: boolean | undefined;
-    }
-  | { type: 'UPDATE_TREE_TABLE_VIEW_EXPANDED'; key: string }
-  | { type: 'UPDATE_TREE_TABLE_VIEW_TREE_MAP'; value: TreeMap }
-  | { type: 'RESET' | 'RESET_TREE' | 'WORKSHEET_INIT' | 'WORKSHEET_SHEETVIEW_CLEAR' };
-
 const initialTreeViewParams: TreeViewState = {
   maxLevel: 0,
   treeMap: {},
@@ -315,7 +287,7 @@ export function treeTableViewData(state = initialTreeViewParams, action: TreeVie
  * @returns
  */
 export const handleUpdateTreeNodeExpansion =
-  (
+  <State = RootState, Actions extends UnknownAction = UnknownAction>(
     row: RecordRow & { key?: string | undefined } = {},
     {
       runTimes,
@@ -328,9 +300,9 @@ export const handleUpdateTreeNodeExpansion =
       getNewRows,
       isAddsSubTree,
       updateTreeNodeExpansion,
-    }: TreeExpansionOptions = {},
+    }: TreeExpansionOptions<State, Actions> = {},
   ) =>
-  async (dispatch: AppDispatch) => {
+  async (dispatch: ThunkDispatch<State, undefined, Actions | TreeExpansionAction>) => {
     const recordId = row.rowid;
     const treeMapKey = row.key;
     if (!treeMapKey || !treeMap || !rows) return;
@@ -415,7 +387,7 @@ export const handleUpdateTreeNodeExpansion =
       dispatch({
         type: 'UPDATE_TREE_TABLE_VIEW_ITEM',
         value: {
-          maxLevel: _.max([maxLevel, treeDataUpdaterResult.maxLevel]),
+          maxLevel: _.max([maxLevel, treeDataUpdaterResult.maxLevel]) ?? treeDataUpdaterResult.maxLevel,
         },
       });
       dispatch({

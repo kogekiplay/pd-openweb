@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import _, { isArray, isFunction } from 'lodash';
-import type { RecordRow } from 'src/utils/controlTypes';
+import _, { isArray } from 'lodash';
+import type { ControlOption, FormControl, RecordRow } from 'src/utils/controlTypes';
+import { isChildTableStore } from 'src/utils/subListStoreTypes';
 
 function filterEmptyChildTableRows(rows: RecordRow[] = []) {
   try {
@@ -11,18 +12,20 @@ function filterEmptyChildTableRows(rows: RecordRow[] = []) {
   }
 }
 
-const isCustomOptionKey = key => key.indexOf('other') > -1 || key.indexOf('add_') > -1;
+const isCustomOptionKey = (key: string) => key.indexOf('other') > -1 || key.indexOf('add_') > -1;
 
 /** 获取选项 */
-function getSelectedOptions(options = [], value, control) {
+function getSelectedOptions(options: ControlOption[] = [], value: unknown, control: FormControl): ControlOption[] {
   if (!value || value === '[]') {
     return [];
   }
 
   try {
-    const selectedKeys = JSON.parse(value);
+    const parsed: unknown = JSON.parse(typeof value === 'string' ? value : String(value));
+    if (!Array.isArray(parsed) || !parsed.every((key: unknown) => typeof key === 'string')) return [];
+    const selectedKeys = parsed;
     const optionList = options || [];
-    const optionMap = new Map();
+    const optionMap = new Map<string | undefined, ControlOption>();
 
     optionList.forEach(option => {
       if (!optionMap.has(option.key)) {
@@ -33,9 +36,9 @@ function getSelectedOptions(options = [], value, control) {
     const selectedKeySet = new Set(selectedKeys.filter(key => !isCustomOptionKey(key)));
     const customSelectedKeys = selectedKeys.filter(isCustomOptionKey);
 
-    const findOptionByKey = key => {
+    const findOptionByKey = (key: string) => {
       if (isCustomOptionKey(key)) {
-        return optionList.find(option => key.indexOf(option.key) > -1);
+        return optionList.find(option => typeof option.key === 'string' && key.indexOf(option.key) > -1);
       }
 
       return optionMap.get(key);
@@ -47,13 +50,15 @@ function getSelectedOptions(options = [], value, control) {
             .filter(
               option =>
                 (selectedKeySet.has(option.key) ||
-                  customSelectedKeys.some(selectedKey => selectedKey.indexOf(option.key) > -1)) &&
+                  customSelectedKeys.some(
+                    selectedKey => typeof option.key === 'string' && selectedKey.indexOf(option.key) > -1,
+                  )) &&
                 !option.isDeleted,
             )
-            .map(option => option.key)
+            .flatMap(option => (typeof option.key === 'string' ? [option.key] : []))
         : selectedKeys;
 
-    return keys.map(findOptionByKey).filter(Boolean);
+    return keys.map(findOptionByKey).filter((option): option is ControlOption => !!option);
   } catch (err) {
     console.log(err);
     return [];
@@ -146,7 +151,7 @@ export function countChar(str = '', char: string) {
  * 对将复杂字段数据处理成简单数据 用来呈现或参与计算
  * return undefined string number bool [string] [number]
  */
-export function formatControlValue(cell, nullzero = '0') {
+export function formatControlValue(cell: FormControl | undefined, nullzero = '0') {
   try {
     if (!cell) {
       return;
@@ -278,7 +283,7 @@ export function formatControlValue(cell, nullzero = '0') {
       case 34: // SUBLIST 子表
         if (_.isObject(value)) {
           return filterEmptyChildTableRows(_.get(value, 'rows', []));
-        } else if (isFunction(cell.store?.getState)) {
+        } else if (isChildTableStore(cell.store)) {
           return filterEmptyChildTableRows(cell.store.getState()?.rows || []);
         } else {
           return [...new Array(value ? Number(value) : 0)];

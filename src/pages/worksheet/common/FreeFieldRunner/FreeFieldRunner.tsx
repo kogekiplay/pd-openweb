@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { find, get, isFunction, pick } from 'lodash';
+import { find, get, pick } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { v4 } from 'uuid';
 import { getTitleTextFromControls } from 'src/utils/control';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
 import { MessageHandler } from 'src/utils/iframeCommunicate';
+import type { FieldStoreRecord } from 'src/utils/subListStoreTypes';
+import { isChildTableStore } from 'src/utils/subListStoreTypes';
 import { getRowsRelation } from './functions';
 
 const Con = styled.div`
@@ -27,14 +29,17 @@ const Con = styled.div`
 `;
 
 function pickControl(control: FormControl = {}) {
-  const result = pick(control, ['controlId', 'controlName', 'value', 'type', 'options']);
+  const result: Pick<FormControl, 'controlId' | 'controlName' | 'value' | 'type' | 'options'> & {
+    rows?: FieldStoreRecord[];
+    rowsLoading?: boolean;
+  } = pick(control, ['controlId', 'controlName', 'value', 'type', 'options']);
 
-  if (control.type === 34 && isFunction(get(control, 'store.getState'))) {
+  if (control.type === 34 && isChildTableStore(control.store)) {
     try {
       const state = control.store.getState();
-      const rows: RecordRow[] = get(state, 'rows', []);
-      result.rows = rows.filter((row: RecordRow) => !get(row, 'rowid', '').startsWith('empty-'));
-      result.rowsLoading = get(state, 'dataLoading', true);
+      const rows = state.rows;
+      result.rows = rows.filter(row => !(row.rowid || '').startsWith('empty-'));
+      result.rowsLoading = state.dataLoading;
     } catch (error) {
       console.error(error);
     }

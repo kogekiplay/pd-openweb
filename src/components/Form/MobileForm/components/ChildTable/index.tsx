@@ -3,23 +3,49 @@ import { shallowEqual } from 'react-redux';
 import { connect, Provider } from 'react-redux';
 import _, { isFunction } from 'lodash';
 import DataFormat from 'src/components/Form/core/DataFormat';
+import type {
+  ChildTableCellRef,
+  ChildTableWrapperState,
+  MobileChildTableProps,
+  MobileChildTableRenderProps,
+} from 'src/pages/worksheet/components/ChildTable/publicTypes';
+import { retryChildTableStore } from 'src/pages/worksheet/components/ChildTable/publicTypes';
 import generateStore from 'src/pages/worksheet/components/ChildTable/redux/store';
-import type { RootState } from 'src/redux/types';
+import { isChildTableStore } from 'src/utils/subListStoreTypes';
+import type { ChildTableState, ChildTableStore } from 'src/utils/subListStoreTypes';
 import ChildTable from './ChildTable';
 import './style.less';
 
-const ChildTableComp = connect((state: RootState) => ({
+const ChildTableComp = connect((state: ChildTableState) => ({
   baseLoading: state.baseLoading,
   base: state.base,
   rows: state.rows,
   lastAction: state.lastAction,
-/* 内联组件的 props 必须写类型：隐式 any 时，react-redux 的 ConnectedComponent 推导在
-   strictFunctionTypes 下会塌成 ComponentType<never>，结果「不能当 JSX 组件用」。
-   这里只读 baseLoading，其余原样透传给 ChildTable。 */
-}))((props: { baseLoading?: boolean; [key: string]: any }) => {
-  const { baseLoading } = props;
+}))((props: MobileChildTableRenderProps) => {
+  const { retrying, onRetry, ...tableProps } = props;
+  const { baseLoading, base, store } = tableProps;
+  if (base.initializationError || base.rowLoadError) {
+    return (
+      <div
+        role="alert"
+        className="flexRow alignItemsCenter justifyContentCenter textTertiary"
+        style={{ minHeight: 74 }}
+      >
+        {_l('加载失败')}
+        <button
+          type="button"
+          className="ThemeColor Hand"
+          style={{ marginInlineStart: 'var(--space-2)' }}
+          disabled={retrying || baseLoading || store.getState().dataLoading}
+          onClick={onRetry}
+        >
+          {_l('重试')}
+        </button>
+      </div>
+    );
+  }
 
-  if (baseLoading) {
+  if (baseLoading || retrying) {
     return (
       <div
         style={{
@@ -30,38 +56,58 @@ const ChildTableComp = connect((state: RootState) => ({
     );
   }
 
-  return <ChildTable {...props} />;
+  return <ChildTable {...tableProps} />;
 });
-export default class extends React.Component<any, any> {
-  constructor(props) {
+export default class extends React.Component<MobileChildTableProps, ChildTableWrapperState> {
+  declare store: ChildTableStore;
+  declare unsubscribe: (() => void) | undefined;
+  declare unmounted: boolean;
+
+  constructor(props: MobileChildTableProps) {
     super(props);
+    this.state = { retrying: false };
+    this.unmounted = false;
     const { worksheetId, recordId, masterData } = props;
-    this.store =
-      props.control.store ||
-      generateStore(props.control, {
+    const existingStore = props.control.store;
+    if (existingStore) {
+      if (!isChildTableStore(existingStore)) throw new TypeError('Expected a child table store');
+      this.store = existingStore;
+    } else {
+      this.store = generateStore(props.control, {
         initRowIsCreate: props.initRowIsCreate,
         relationWorksheetId: worksheetId,
         recordId,
         masterData,
         DataFormat,
       });
-    this.store.init();
+    }
+    void this.store.init().catch((error: unknown) => console.error(error));
     this.bindSubscribe();
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: MobileChildTableProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { onChange } = this.props;
 
       if (this.props.control.store && this.props.control.store !== this.store) {
-        this.store = this.props.control.store;
-        this.store.init();
+        const existingStore = this.props.control.store;
+        if (!isChildTableStore(existingStore)) throw new TypeError('Expected a child table store');
+        if (this.state.retrying) this.setState({ retrying: false });
+        this.store = existingStore;
+        void this.store.init().catch((error: unknown) => console.error(error));
         this.bindSubscribe();
       }
 
       const state = this.store.getState() || {};
 
-      if (this.props.from === 21 && !_.isEqual(prevProps.flag, this.props.flag) && !_.isEmpty(state.rows)) {
+      if (
+        !state.base.initializationError &&
+        !state.base.rowLoadError &&
+        !this.state.retrying &&
+        this.props.from === 21 &&
+        !_.isEqual(prevProps.flag, this.props.flag) &&
+        !_.isEmpty(state.rows)
+      ) {
         // h5草稿箱已有子表值时编辑赋值
         onChange({
           rows: state.rows,
@@ -73,17 +119,25 @@ export default class extends React.Component<any, any> {
   }
 
   override componentWillUnmount() {
+    this.unmounted = true;
     if (isFunction(this.unsubscribe)) {
       this.unsubscribe();
     }
   }
 
   bindSubscribe() {
+    this.unsubscribe?.();
     const { onChange = () => {} } = this.props;
     this.unsubscribe = this.store.subscribe(() => {
       const state = this.store.getState();
 
+      if (state.base.initializationError || state.base.rowLoadError) {
+        if (this.state.retrying && !state.baseLoading && !state.dataLoading) this.setState({ retrying: false });
+        return;
+      }
+
       if (_.get(state, 'lastAction.type') === 'LOAD_ROWS_COMPLETE') {
+        if (this.state.retrying) this.setState({ retrying: false });
         this.store.waitListForLoadRows.forEach(fn => fn());
         this.store.waitListForLoadRows = [];
         return;
@@ -95,7 +149,7 @@ export default class extends React.Component<any, any> {
         return;
       }
 
-      const value = _.get(this.props, 'control.value');
+      const value: unknown = this.props.control.value;
       onChange(
         {
           rows: state.rows,
@@ -107,6 +161,20 @@ export default class extends React.Component<any, any> {
     });
   }
 
+  retryLoad = () => {
+    const store = this.store;
+    this.setState({ retrying: true });
+    void retryChildTableStore(this.props, store)
+      .then(() => {
+        if (!this.unmounted && this.store === store && !(this.props.recordId ?? store.getState().base.recordId))
+          this.setState({ retrying: false });
+      })
+      .catch((error: unknown) => {
+        console.error(error);
+        if (!this.unmounted && this.store === store) this.setState({ retrying: false });
+      });
+  };
+
   override render() {
     const { registerCell = () => {} } = this.props;
     return (
@@ -114,7 +182,9 @@ export default class extends React.Component<any, any> {
         <ChildTableComp
           {...this.props}
           store={this.store}
-          registerCell={ref => {
+          retrying={this.state.retrying}
+          onRetry={this.retryLoad}
+          registerCell={(ref: ChildTableCellRef) => {
             registerCell(ref);
             this.store.ref = ref;
           }}

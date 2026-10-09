@@ -1,4 +1,4 @@
-﻿import { Dialog as MobileDialog } from 'antd-mobile';
+import { Dialog as MobileDialog } from 'antd-mobile';
 import _, { isEmpty } from 'lodash';
 import { Dialog } from 'ming-ui';
 import sheetAjax from 'src/api/worksheet';
@@ -7,6 +7,7 @@ import { getExpandWidgetIdsMap } from 'src/pages/widgetConfig/widgetSetting/comp
 import { getSubListErrorOfStore } from 'src/pages/worksheet/components/ChildTable/utils';
 import { browserIsMobile } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
+import { isChildTableStore } from 'src/utils/subListStoreTypes';
 import { replaceRulesTranslateInfo } from 'src/utils/translate';
 import { FORM_ERROR_TYPE, FROM } from '../core/config';
 import { dealCustomEvent } from '../core/customEvent';
@@ -384,7 +385,7 @@ export const getSubmitDataAction = (
     .map(c => ({
       controlId: c.controlId,
       // 工作流审批规则可能会在当前表单数据上改写子表字段必填状态，子表 store 里的 control 可能还是旧配置。
-      error: c.store ? getSubListErrorOfStore(c.store, c) : undefined,
+      error: isChildTableStore(c.store) ? getSubListErrorOfStore(c.store, c) : undefined,
     }))
     .filter(c => !isEmpty(c.error));
   const currentErrorItems = _.uniqBy(

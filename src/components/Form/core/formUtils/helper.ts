@@ -4,6 +4,7 @@ import { toFixed } from 'src/utils/controlCommon';
 import type { FormControl } from 'src/utils/controlTypes';
 import { getContactInfo } from 'src/utils/project';
 import { filterEmptyChildTableRows } from 'src/utils/record';
+import { isChildTableStore } from 'src/utils/subListStoreTypes';
 import { FORM_ERROR_TYPE } from '../config';
 import type { EmbedData, FormAttachmentData, FormFilterGroup, FormRuntimeValue } from './types';
 import {
@@ -260,7 +261,7 @@ export const getControlValue = (
 
 export const checkChildTableIsEmpty = (control: FormControl = {}) => {
   const store = control.store;
-  const state = store && store.getState();
+  const state = isChildTableStore(store) ? store.getState() : undefined;
 
   if (state && state.rows && !state.baseLoading) {
     // 子表筛选(filterControls)生效时按筛选条件从服务端重新加载，state.rows 只是筛选后的子集（可能为空），
