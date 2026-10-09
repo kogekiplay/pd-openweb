@@ -61,6 +61,6 @@ const SYSTEM_LANG_TO_APP_LANG: Record<string, string> = {
   'zh-Hant': 'zh_hant',
 };
 
-export const getSystemLangKey = lang => APP_LANG_TO_SYSTEM_LANG[lang] || lang;
+export const getSystemLangKey = (lang: string) => APP_LANG_TO_SYSTEM_LANG[lang] || lang;
 
-export const getAppLangCode = (lang: string | null) => SYSTEM_LANG_TO_APP_LANG[lang] || lang;
+export const getAppLangCode = (lang: string | null) => lang === null ? null : SYSTEM_LANG_TO_APP_LANG[lang] || lang;

@@ -8,6 +8,7 @@ import _, {
   includes,
   isArray,
   isEmpty,
+  isMatch,
   mapValues,
   pick,
   pickBy,
@@ -395,7 +396,7 @@ export const fetchRows = ({
       ...(showAsSheetView || chartId ? { getType: 0 } : {}),
     };
     const groupControlId = !chartId && getGroupControlId(view);
-    const groupControl = _.find(controls, { controlId: groupControlId });
+    const groupControl = _.find(controls, control => isMatch(control, { controlId: groupControlId }));
 
     if (groupControl) {
       args.kanbanIndex = 1;
@@ -1250,7 +1251,7 @@ export function resetSheetLayout() {
     clearLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_WIDTH', viewId);
     clearLRUWorksheetConfig('SHEET_LAYOUT_UPDATE_TIME', viewId);
     const { map: sheetColumnWidthsMap } = getSheetColumnWidthsMap(view, worksheetInfo);
-    dispatch({ type: 'WORKSHEET_SHEETVIEW_INIT_COLUMN_WIDTH', value: sheetColumnWidthsMap });
+    dispatch({ type: 'WORKSHEET_SHEETVIEW_INIT_COLUMN_WIDTH', value: sheetColumnWidthsMap || {} });
     clearLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_STYLES', viewId);
     dispatch(setColumnStyles(view, worksheetInfo));
   };
@@ -1362,14 +1363,18 @@ export function setViewLayout(viewId: string | undefined) {
     );
 
     // sheetColumnWidthsMap 是配置的数据，view 和 worksheet 取最新的那个
-    if ((localColumnStyles && (localColumnStyles.time ?? NaN) > listStyleUpdateTime) || !listStyleUpdateTime) {
+    if ((localColumnStyles && (localColumnStyles.time ?? NaN) > Number(listStyleUpdateTime)) || !listStyleUpdateTime) {
       // 本地样式配置时间比配置里的新
       sheetColumnWidths = mapValues(localColumnStyles.styles, 'width');
     } else {
-      sheetColumnWidths = sheetColumnWidthsMap;
+      sheetColumnWidths = sheetColumnWidthsMap || {};
     }
 
-    if (localColumnStyles.time && listStyleUpdateTime && listStyleUpdateTime > (localColumnStyles.time ?? NaN)) {
+    if (
+      localColumnStyles.time &&
+      listStyleUpdateTime &&
+      Number(listStyleUpdateTime) > (localColumnStyles.time ?? NaN)
+    ) {
       clearLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_STYLES', view?.viewId);
     }
 
@@ -1456,9 +1461,9 @@ export function setColumnStyles(view: WorksheetView = {}, worksheetInfo: Workshe
         {},
       );
 
-      if ((localColumnStyles.time && localColumnStyles.time > time) || !time) {
+      if ((localColumnStyles.time && localColumnStyles.time > Number(time)) || !time) {
         columnStyles = assign({}, columnStyles, localColumnStyles.styles);
-      } else if (time > (localColumnStyles.time ?? NaN)) {
+      } else if (Number(time) > (localColumnStyles.time ?? NaN)) {
         clearLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_STYLES', viewId);
       }
 

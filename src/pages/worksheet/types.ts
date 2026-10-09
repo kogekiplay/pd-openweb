@@ -23,7 +23,16 @@ export interface WorksheetFilterCondition {
   values?: string[] | undefined;
   minValue?: string | number | undefined;
   maxValue?: string | number | undefined;
-  dynamicSource?: HapApi.MD.Entity.Form.DefaultSourceModel[] | undefined;
+  /** UI 动态 URL 条件只写 cid/rcid/staticValue；服务端条件还可能带 isAsync/type。 */
+  dynamicSource?:
+    | {
+        cid?: string | undefined;
+        rcid?: string | undefined;
+        staticValue?: string | undefined;
+        isAsync?: boolean | undefined;
+        type?: number | undefined;
+      }[]
+    | undefined;
   advancedSetting?: ControlAdvancedSetting | undefined;
   isGroup?: boolean | undefined;
   groupFilters?: WorksheetFilterCondition[] | undefined;

@@ -4,14 +4,18 @@ import { WIDGETS_TO_API_TYPE_ENUM } from 'pages/widgetConfig/config/widget';
 import { FILTER_CONDITION_TYPE } from 'worksheet/common/WorkSheetFilter/enum';
 import { DATE_RANGE_TYPE } from 'worksheet/common/WorkSheetFilter/enum';
 import { getType, redefineComplexControl, validate } from 'src/pages/worksheet/common/WorkSheetFilter/util';
+import type { QuickFilterDisplayValue } from 'src/pages/worksheet/types';
 import { getRequest } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
+import { isQuickFilterCondition, readSelectedEntity } from './boundaries';
+import type { QuickFilterCondition, QuickFilterInputValue } from './types';
 
 export { getType, validate };
 
-export function formatFilterValues(controlType, values = []) {
-  function parse(str = '') {
+export function formatFilterValues(controlType: number | undefined, values: string[] = []): QuickFilterDisplayValue[] {
+  function parse(str: string = '') {
     if (str.startsWith('{')) {
-      return safeParse(str);
+      return readSelectedEntity(safeParse(str) as unknown);
     } else {
       return { id: str };
     }
@@ -36,28 +40,52 @@ export function formatFilterValues(controlType, values = []) {
   }
 }
 
-export function formatFilterValuesToServer(controlType, values = []) {
+export function formatFilterValuesToServer(
+  controlType: number | undefined,
+  values: QuickFilterInputValue[] = [],
+): string[] {
   values = values.filter(_.identity);
   switch (controlType) {
     case WIDGETS_TO_API_TYPE_ENUM.USER_PICKER: // 人员
-      return values.map(v => v.accountId);
+      return values
+        .map(v => (typeof v === 'object' && v !== null && 'accountId' in v ? v.accountId : undefined))
+        .filter((value): value is string => typeof value === 'string');
     case WIDGETS_TO_API_TYPE_ENUM.ORG_ROLE: // 角色
-      return values.map(v => v.organizeId);
+      return values
+        .map(v => (typeof v === 'object' && v !== null && 'organizeId' in v ? v.organizeId : undefined))
+        .filter((value): value is string => typeof value === 'string');
     case WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT: // 部门
-      return values.map(v => v.departmentId);
+      return values
+        .map(v => (typeof v === 'object' && v !== null && 'departmentId' in v ? v.departmentId : undefined))
+        .filter((value): value is string => typeof value === 'string');
     case WIDGETS_TO_API_TYPE_ENUM.AREA_PROVINCE: // 地区
     case WIDGETS_TO_API_TYPE_ENUM.AREA_CITY: // 地区
     case WIDGETS_TO_API_TYPE_ENUM.AREA_COUNTY: // 地区
-      return values.map(v => v.id);
+      return values
+        .map(v => (typeof v === 'object' && v !== null && 'id' in v ? v.id : undefined))
+        .filter((value): value is string => typeof value === 'string');
     case WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET: // 关联
     case WIDGETS_TO_API_TYPE_ENUM.CASCADER: // 级联
-      return values.map(v => v.rowid);
+      return values
+        .map(v => (typeof v === 'object' && v !== null && 'rowid' in v ? v.rowid : undefined))
+        .filter((value): value is string => typeof value === 'string');
     default:
       return values.filter(_.isString);
   }
 }
 
-function parseUrlValue({ value, control, filterType, dateRangeType } = {}) {
+function parseUrlValue({
+  value,
+  control,
+  filterType,
+  dateRangeType,
+}: {
+  value?: string | undefined;
+  control?: FormControl | undefined;
+  filterType?: number | undefined;
+  dateRangeType?: number | undefined;
+} = {}): Partial<QuickFilterCondition> | undefined {
+  if (!control || value === undefined) return undefined;
   if (
     includes(
       [
@@ -91,7 +119,7 @@ function parseUrlValue({ value, control, filterType, dateRangeType } = {}) {
       values: value
         .split(',')
         .map(splittedValue => get(find(control.options, { value: splittedValue }), 'key'))
-        .filter(_.identity),
+        .filter((key): key is string => typeof key === 'string' && Boolean(key)),
     };
   } else if (includes([WIDGETS_TO_API_TYPE_ENUM.DATE, WIDGETS_TO_API_TYPE_ENUM.DATE_TIME], control.type)) {
     return {
@@ -101,7 +129,7 @@ function parseUrlValue({ value, control, filterType, dateRangeType } = {}) {
         {
           [DATE_RANGE_TYPE.MINUTE]: 'YYYY-MM-DD HH:mm',
           [DATE_RANGE_TYPE.HOUR]: 'YYYY-MM-DD HH',
-        }[dateRangeType] || 'YYYY-MM-DD',
+        }[dateRangeType!] || 'YYYY-MM-DD',
       ),
     };
   } else if (includes([WIDGETS_TO_API_TYPE_ENUM.TIME], control.type)) {
@@ -121,12 +149,24 @@ function parseUrlValue({ value, control, filterType, dateRangeType } = {}) {
   return undefined;
 }
 
-function parseDynamicSource({ dynamicSource, control, filterType, dateRangeType } = {}) {
+function parseDynamicSource({
+  dynamicSource = [],
+  control,
+  filterType,
+  dateRangeType,
+}: {
+  dynamicSource?: QuickFilterCondition['dynamicSource'];
+  control?: FormControl | undefined;
+  filterType?: number | undefined;
+  dateRangeType?: number | undefined;
+} = {}): Array<Partial<QuickFilterCondition> | undefined> {
   const urlParams = getRequest();
   return dynamicSource.map(item => {
-    if (item.rcid !== 'url' || !item.cid || !urlParams[item.cid]) return undefined;
+    if (item.rcid !== 'url' || !item.cid || !urlParams[item.cid] || !control) return undefined;
+    const value = urlParams[item.cid];
+    if (typeof value !== 'string') return undefined;
     const changes = parseUrlValue({
-      value: urlParams[item.cid],
+      value,
       control: redefineComplexControl(control),
       filterType,
       dateRangeType,
@@ -135,8 +175,13 @@ function parseDynamicSource({ dynamicSource, control, filterType, dateRangeType 
   });
 }
 
-export function handleConditionsDefault(conditions, controls) {
-  return conditions.map(condition => {
+export function handleConditionsDefault<T extends QuickFilterCondition>(
+  conditions: T[],
+  controls: FormControl[],
+): Array<Omit<T, keyof QuickFilterCondition> & QuickFilterCondition>;
+export function handleConditionsDefault(conditions: unknown[], controls: FormControl[]): QuickFilterCondition[];
+export function handleConditionsDefault(conditions: unknown[], controls: FormControl[]): QuickFilterCondition[] {
+  return conditions.filter(isQuickFilterCondition).map(condition => {
     condition = { ...condition };
     if (
       condition.filterType === FILTER_CONDITION_TYPE.DATE_BETWEEN &&
@@ -164,7 +209,7 @@ export function handleConditionsDefault(conditions, controls) {
 
     const values = condition.values;
 
-    if (values[0] === 'isEmpty') {
+    if (values?.[0] === 'isEmpty') {
       condition.filterType = 7;
     }
 

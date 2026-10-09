@@ -430,6 +430,10 @@ interface Window {
   agentAPI: any;
   safeParse: any;
   safeLocalStorageSetItem: typeof safeLocalStorageSetItem;
+  /** 页面注入的可选 AES API 信封开关与十六进制密钥，global.ts 在启用时消费。 */
+  apireply_forbid?: boolean | undefined;
+  apireply_hex_key?: string | undefined;
+  apireply_hex_iv?: string | undefined;
   getCookie: typeof getCookie;
   setCookie: typeof setCookie;
   delCookie: typeof delCookie;
@@ -534,7 +538,7 @@ interface Window {
     // 这两个拼成「接口名」去匹配各缓存的 clearInterface；多数调用方只按 clearSpecificKeys 清，不给
     controllerName?: string;
     actionName?: string;
-    requestData?: ApiArgs;
+    requestData?: ApiArgs | undefined;
     clearSpecificKeys?: string[];
   }) => void;
   /**
@@ -822,6 +826,8 @@ declare interface ApiOptions {
   isReadableStream?: boolean;
   /** Agent 服务：不走 {state,data,exception} 契约 */
   agent?: boolean;
+  /** 附件/批量接口需要只传会话头，不携带当前 accountId。 */
+  noAccountIdHeader?: boolean | undefined;
   [key: string]: any;
 }
 

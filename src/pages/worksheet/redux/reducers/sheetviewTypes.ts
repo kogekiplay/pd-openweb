@@ -1,19 +1,8 @@
 import type { RecordRow } from 'src/utils/controlTypes';
+import type { SheetColumnStyles, SheetColumnWidths } from 'src/utils/worksheetTypes';
 
-/** Advanced-setting liststyle entries, indexed by the control ID. */
-export interface SheetColumnStyle {
-  cid?: string | undefined;
-  width?: number | undefined;
-  direction?: number | undefined;
-  showtype?: number | undefined;
-  coverFillType?: number | undefined;
-  /** Summary choice stored by getWorksheetSheetViewSummary in liststyle. */
-  report?: number | undefined;
-}
+export type { SheetColumnStyle, SheetColumnStyles, SheetColumnWidths } from 'src/utils/worksheetTypes';
 
-// setColumnStyles maps optional liststyle widths without dropping absent values.
-export type SheetColumnWidths = Record<string, number | undefined>;
-export type SheetColumnStyles = Record<string, SheetColumnStyle>;
 export interface SheetSortControl {
   controlId?: string | undefined;
   datatype?: number | undefined;

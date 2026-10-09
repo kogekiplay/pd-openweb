@@ -10,7 +10,7 @@ import {
   handleConditionsDefault,
   validate,
 } from 'worksheet/common/Sheet/QuickFilter/utils';
-import type { QuickFilterDisplayValue, WorksheetFilterCondition, WorksheetView } from 'src/pages/worksheet/types';
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import type { AppDispatch, GetState, RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { getFilledRequestParams } from 'src/utils/common';
@@ -58,7 +58,7 @@ function getQuickFilterForRequest({
     return quickFilter;
   }
 
-  const newFastFilters = handleConditionsDefault(view.fastFilters || [], controls) as WorksheetFilterCondition[];
+  const newFastFilters = handleConditionsDefault(view.fastFilters || [], controls);
 
   if (!_.some(newFastFilters, validate)) {
     return quickFilter;
@@ -68,13 +68,7 @@ function getQuickFilterForRequest({
     ...condition,
     filterType: condition.dataType === 29 && condition.filterType === 2 ? 24 : condition.filterType || 2,
     spliceType: condition.spliceType || 1,
-    values: (formatFilterValuesToServer as (type: number | undefined, values: QuickFilterDisplayValue[]) => string[])(
-      condition.dataType,
-      (formatFilterValues as (type: number | undefined, values?: string[] | undefined) => QuickFilterDisplayValue[])(
-        condition.dataType,
-        condition.values,
-      ),
-    ),
+    values: formatFilterValuesToServer(condition.dataType, formatFilterValues(condition.dataType, condition.values)),
     ...(condition.dataType === 36 ? { value: 1 } : {}),
   }));
 }

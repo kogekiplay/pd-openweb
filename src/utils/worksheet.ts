@@ -1,17 +1,155 @@
-import _, { find, get, identity, includes, isEmpty, sortBy, sum } from 'lodash';
+import _, { identity, includes, sortBy, sum } from 'lodash';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { CARD_WIDTH_SETTING } from 'src/pages/worksheet/common/ViewConfig/config';
 import { getCoverStyle } from 'src/pages/worksheet/common/ViewConfig/utils';
-import type { WorksheetInfo, WorksheetView } from 'src/pages/worksheet/types';
+import type { WorksheetFilterCondition, WorksheetInfo, WorksheetView } from 'src/pages/worksheet/types';
 import type { ControlAdvancedSetting, FormControl, RecordRow } from 'src/utils/controlTypes';
+import type {
+  CustomOperateButton,
+  OperateButtonStyleConfig,
+  OperateButtonStyleValue,
+  OperatesButtonStyle,
+  OperatesButtonsWidthOptions,
+  SheetColumnStyle,
+  SheetColumnWidths,
+  SheetColumnWidthsSnapshot,
+  SheetSwitchPermitItem,
+  SheetTableStyles,
+  StoredOperateButtonStyle,
+  WorksheetActionColumn,
+  WorksheetAppCache,
+  WorksheetButtonGroup,
+  WorksheetButtonSource,
+  WorksheetCachedNavigation,
+  WorksheetExtensionNavigation,
+  WorksheetListStyle,
+  WorksheetMenuItem,
+  WorksheetMenuNode,
+  WorksheetOperateButton,
+  WorksheetPrintSource,
+} from './worksheetTypes';
 
-export function findSheet(id, sheetList = []) {
-  let result = null;
+export type { SheetSwitchPermitItem } from './worksheetTypes';
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+function isOptionalString(value: unknown): value is string | undefined {
+  return value === undefined || typeof value === 'string';
+}
+function isSavedColumnStyle(value: unknown): value is SheetColumnStyle & { cid: string } {
+  return (
+    isObject(value) &&
+    typeof value['cid'] === 'string' &&
+    ['width', 'direction', 'showtype', 'coverFillType', 'report'].every(
+      key => value[key] === undefined || typeof value[key] === 'number',
+    )
+  );
+}
+function isListStyle(value: unknown): value is WorksheetListStyle {
+  return (
+    isObject(value) &&
+    (value['time'] === undefined || typeof value['time'] === 'number' || typeof value['time'] === 'string') &&
+    (value['styles'] === undefined || (Array.isArray(value['styles']) && value['styles'].every(isSavedColumnStyle)))
+  );
+}
+function decodeListStyle(serialized?: string): WorksheetListStyle {
+  const value: unknown = safeParse(serialized);
+  if (isListStyle(value)) return value;
+  if (!isObject(value)) return {};
+  const { time, styles, ...metadata } = value;
+  const result: WorksheetListStyle = metadata;
+  if (typeof time === 'number' || typeof time === 'string') result.time = time;
+  if (Array.isArray(styles)) result.styles = styles.filter(isSavedColumnStyle);
+  return result;
+}
+function isCachedNavigation(value: unknown): value is WorksheetCachedNavigation {
+  return isObject(value) && ['groupId', 'worksheetId', 'viewId'].every(key => isOptionalString(value[key]));
+}
+function decodeAppCache(serialized: string): WorksheetAppCache {
+  const value: unknown = safeParse(serialized);
+  if (!isObject(value)) return {};
+  const { worksheets, lastWorksheetId, ...metadata } = value;
+  const result: WorksheetAppCache = metadata;
+  if (Array.isArray(worksheets)) result.worksheets = worksheets.filter(isCachedNavigation);
+  if (typeof lastWorksheetId === 'string') result.lastWorksheetId = lastWorksheetId;
+  return result;
+}
+function isNavigationSelection(value: unknown): value is Record<string, string> {
+  return isObject(value) && Object.values(value).every(item => typeof item === 'string');
+}
+function decodeExtensionNavigation(serialized: string): WorksheetExtensionNavigation {
+  const value: unknown = safeParse(serialized);
+  if (!isObject(value)) return {};
+  const result: WorksheetExtensionNavigation = {};
+  Object.entries(value).forEach(([key, selection]) => {
+    if (isNavigationSelection(selection)) result[key] = selection;
+  });
+  return result;
+}
+function isActionColumn(value: unknown): value is WorksheetActionColumn {
+  if (!isObject(value)) return false;
+  switch (value['type']) {
+    case 'copy':
+    case 'share':
+    case 'delete':
+    case 'sysprint':
+      return true;
+    case 'btn':
+    case 'print':
+      return typeof value['id'] === 'string';
+    case 'group':
+      return typeof value['id'] === 'string' && isOptionalString(value['source']);
+    default:
+      return false;
+  }
+}
+function decodeActionColumn(serialized?: string): WorksheetActionColumn[] {
+  const value: unknown = safeParse(serialized, 'array');
+  return Array.isArray(value) ? value.filter(isActionColumn) : [];
+}
+function isButtonGroup(value: unknown): value is WorksheetButtonGroup {
+  return (
+    isObject(value) &&
+    value['type'] === 'group' &&
+    typeof value['id'] === 'string' &&
+    ['name', 'icon', 'iconUrl', 'iconColor'].every(key => isOptionalString(value[key])) &&
+    (value['btns'] === undefined || (Array.isArray(value['btns']) && value['btns'].every(id => typeof id === 'string')))
+  );
+}
+function decodeButtonGroups(serialized?: string): WorksheetButtonGroup[] {
+  const value: unknown = safeParse(serialized, 'array');
+  return Array.isArray(value) ? value.filter(isButtonGroup) : [];
+}
+
+function decodeButtonStyleValue(value: unknown, fallback: number): OperateButtonStyleValue {
+  if (value === undefined) return fallback;
+  if (value === null) return null;
+  if (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean') return value;
+  return NaN;
+}
+function decodeButtonStyle(serialized?: string): StoredOperateButtonStyle {
+  const value: unknown = safeParse(serialized);
+  const config = isObject(value) ? value : {};
+  return {
+    icon: decodeButtonStyleValue(config['icon'], 1),
+    style: decodeButtonStyleValue(config['style'], 1),
+    btncount: decodeButtonStyleValue(config['btncount'], 3),
+    primarycount: decodeButtonStyleValue(config['primarycount'], 1),
+  };
+}
+
+export function findSheet<Node extends WorksheetMenuNode<Node> = WorksheetMenuItem>(
+  id: string | undefined,
+  sheetList: Node[] = [],
+): Node | null {
+  let result: Node | null = null;
 
   for (let i = 0; i < sheetList.length; i++) {
     const current = sheetList[i];
+    if (!current) continue;
 
     if (current.workSheetId == id) {
       result = current;
@@ -29,18 +167,22 @@ export function findSheet(id, sheetList = []) {
   return result;
 }
 
-export function getSheetListFirstId(sheetList = [], isCharge = true) {
-  let result = null;
+export function getSheetListFirstId<Node extends WorksheetMenuNode<Node> = WorksheetMenuItem>(
+  sheetList: Node[] = [],
+  isCharge = true,
+): string | null | undefined {
+  let result: string | null | undefined = null;
 
   for (let i = 0; i < sheetList.length; i++) {
     const current = sheetList[i];
+    if (!current) continue;
 
     if (current.type === 2) {
       result = getSheetListFirstId(current.items, isCharge);
       if (result) {
         break;
       }
-    } else if (isCharge ? true : [1, 4].includes(current.status) && !current.navigateHide) {
+    } else if (isCharge ? true : [1, 4].some(status => status === current.status) && !current.navigateHide) {
       result = current.workSheetId;
       break;
     }
@@ -51,7 +193,7 @@ export function getSheetListFirstId(sheetList = [], isCharge = true) {
 
 export const moveSheetCache = (appId: string, groupId: string) => {
   const storageKey = `mdAppCache_${md.global.Account.accountId}_${appId}`;
-  const storage = safeParse(localStorage.getItem(storageKey) || '{}');
+  const storage = decodeAppCache(localStorage.getItem(storageKey) || '{}');
   const worksheets = (storage.worksheets || []).map(data => {
     if (data.groupId === groupId) {
       data.worksheetId = '';
@@ -64,48 +206,52 @@ export const moveSheetCache = (appId: string, groupId: string) => {
   safeLocalStorageSetItem(storageKey, JSON.stringify(storage));
 };
 
-export const getHighAuthSheetSwitchPermit = (sheetSwitchPermit, worksheetId: string) => {
+export const getHighAuthSheetSwitchPermit = <Permit extends SheetSwitchPermitItem>(
+  sheetSwitchPermit: Permit[],
+  worksheetId: string,
+) => {
   return sheetSwitchPermit.map(l => ({ ...l, state: true, viewIds: (l.viewIds || []).concat(worksheetId) }));
 };
 
 // 本地存储当前选中菜单
 export const saveSelectExtensionNavType = (worksheetId: string, navType: string, navValue: string) => {
-  const sheetConfigNavInfo = safeParse(localStorage.getItem('sheetConfigNavInfo') || '{}');
+  const sheetConfigNavInfo = decodeExtensionNavigation(localStorage.getItem('sheetConfigNavInfo') || '{}');
 
-  if (!sheetConfigNavInfo[worksheetId]) {
-    sheetConfigNavInfo[worksheetId] = {};
-  }
-
-  sheetConfigNavInfo[worksheetId][navType] = navValue;
+  const worksheetSelection = sheetConfigNavInfo[worksheetId] || {};
+  sheetConfigNavInfo[worksheetId] = worksheetSelection;
+  worksheetSelection[navType] = navValue;
   const sheetIds = Object.keys(sheetConfigNavInfo);
 
-  if (sheetIds.length > 10) {
-    delete sheetConfigNavInfo[sheetIds[0]];
+  const firstSheetId = sheetIds[0];
+  if (sheetIds.length > 10 && firstSheetId !== undefined) {
+    delete sheetConfigNavInfo[firstSheetId];
   }
 
   safeLocalStorageSetItem('sheetConfigNavInfo', JSON.stringify(sheetConfigNavInfo));
 };
 
-export function getListStyle(listStyleStrOfView, listStyleStrOfWorksheet) {
-  let availableListStyle;
-  let listStyleOfWorksheet;
-  let listStyleOfView;
+export function getListStyle(listStyleStrOfView?: string, listStyleStrOfWorksheet?: string): WorksheetListStyle {
+  let availableListStyle: WorksheetListStyle | undefined;
+  let listStyleOfWorksheet: WorksheetListStyle;
+  let listStyleOfView: WorksheetListStyle;
 
   if (!listStyleStrOfWorksheet && listStyleStrOfView) {
-    availableListStyle = safeParse(listStyleStrOfView);
+    availableListStyle = decodeListStyle(listStyleStrOfView);
   } else if (listStyleStrOfWorksheet && !listStyleStrOfView) {
-    availableListStyle = safeParse(listStyleStrOfWorksheet);
+    availableListStyle = decodeListStyle(listStyleStrOfWorksheet);
   } else {
-    listStyleOfWorksheet = safeParse(listStyleStrOfWorksheet);
-    listStyleOfView = safeParse(listStyleStrOfView);
+    listStyleOfWorksheet = decodeListStyle(listStyleStrOfWorksheet);
+    listStyleOfView = decodeListStyle(listStyleStrOfView);
     availableListStyle = sortBy([listStyleOfWorksheet, listStyleOfView], 'time').pop();
   }
 
-  return availableListStyle;
+  return availableListStyle || {};
 }
 
-export function getSheetColumnWidthsOfStyles(columnStyles) {
-  const sheetColumnWidthsMap = new Map();
+export function getSheetColumnWidthsOfStyles(
+  columnStyles: Array<SheetColumnStyle & { cid: string }> = [],
+): SheetColumnWidths {
+  const sheetColumnWidthsMap = new Map<string, number | undefined>();
   columnStyles.forEach(item => {
     sheetColumnWidthsMap.set(item.cid, item.width);
   });
@@ -115,9 +261,9 @@ export function getSheetColumnWidthsOfStyles(columnStyles) {
 export function getSheetColumnWidthsMap(
   view: WorksheetView = { advancedSetting: { liststyle: '' } },
   worksheetInfo: WorksheetInfo = { advancedSetting: { liststyle: '' }, template: { controls: [] } },
-) {
-  const listStyleStrOfWorksheet = worksheetInfo.advancedSetting.liststyle;
-  const listStyleStrOfView = view.advancedSetting.liststyle;
+): SheetColumnWidthsSnapshot {
+  const listStyleStrOfWorksheet = worksheetInfo.advancedSetting?.liststyle;
+  const listStyleStrOfView = view.advancedSetting?.liststyle;
   if (!listStyleStrOfView && !listStyleStrOfWorksheet) return {};
   const { time, styles } = getListStyle(listStyleStrOfView, listStyleStrOfWorksheet);
   return {
@@ -126,15 +272,17 @@ export function getSheetColumnWidthsMap(
   };
 }
 
-export function getCardWidth(view) {
+export function getCardWidth(view: WorksheetView): number | undefined {
   const cardwidth = _.get(view, 'advancedSetting.cardwidth');
 
   if (!cardwidth) return undefined;
 
-  const cardWidth = CARD_WIDTH_SETTING[cardwidth] || Number(cardwidth);
+  const cardWidthPresets: Partial<Record<string, number>> = CARD_WIDTH_SETTING;
+  const cardWidth = cardWidthPresets[cardwidth] || Number(cardwidth);
+  const isPresetSize = Number(cardwidth) < 5;
+  const coverPosition: unknown = isPresetSize ? _.get(getCoverStyle(view), 'coverPosition') : undefined;
   const positionIsLeftOrRight =
-    Number(cardwidth) < 5 &&
-    ['0', '1'].includes(_.get(getCoverStyle(view), 'coverPosition') || (view.viewType === 3 ? '2' : '1'));
+    isPresetSize && ['0', '1'].some(position => position === (coverPosition || (view.viewType === 3 ? '2' : '1')));
 
   return positionIsLeftOrRight ? cardWidth + 96 : cardWidth;
 }
@@ -142,14 +290,17 @@ export function getCardWidth(view) {
 // 【按钮 / 打印模板用泛型】函数只读按钮的 btnId、status 和打印模板的 id、name，其余字段原样带进结果；
 // 用泛型把调用方自己的元素类型保住。默认值 [] 不写类型的话会被推成 never[]，调用方一旦传进有类型的数组就报错。
 export function getSheetOperatesButtons<
-  B extends { btnId?: string | undefined; status?: number | undefined },
-  P extends { id?: string | undefined; name?: string | undefined },
->(view, { buttons = [], printList = [] }: { buttons?: B[] | undefined; printList?: P[] | undefined } = {}) {
-  const actionColumn = safeParse(get(view, 'advancedSetting.actioncolumn'), 'array');
-  let result = [];
+  B extends WorksheetButtonSource = WorksheetButtonSource,
+  P extends WorksheetPrintSource = WorksheetPrintSource,
+>(
+  view: WorksheetView | undefined,
+  { buttons = [], printList = [] }: { buttons?: B[] | undefined; printList?: P[] | undefined } = {},
+): WorksheetOperateButton<B, P>[] {
+  const actionColumn = decodeActionColumn(view?.advancedSetting?.['actioncolumn']);
+  let result: WorksheetOperateButton<B, P>[] = [];
   actionColumn.forEach(c => {
     if (c.type === 'btn') {
-      const matchBtn = find(buttons, b => b.btnId === c.id);
+      const matchBtn = buttons.find((button): button is B & { btnId: string } => button.btnId === c.id);
 
       // 过滤已停用的按钮（status === 0）
       if (matchBtn && matchBtn.status !== 0) {
@@ -157,7 +308,7 @@ export function getSheetOperatesButtons<
       }
     } else if (c.type === 'group') {
       const layoutKey = c.source === 'detail' ? 'detailgroup' : 'listgroup';
-      const groupLayout = safeParse(get(view, `advancedSetting.${layoutKey}`), 'array');
+      const groupLayout = decodeButtonGroups(view?.advancedSetting?.[layoutKey]);
       const groupDef = (groupLayout || []).find(g => g && g.type === 'group' && g.id === c.id);
 
       if (!groupDef) {
@@ -166,10 +317,10 @@ export function getSheetOperatesButtons<
 
       // 行内操作里分组优先于单按钮，组内按钮可能已不在 actioncolumn 中，这里按分组布局展开并过滤停用按钮。
       const memberButtons = (groupDef.btns || [])
-        .map(id => find(buttons, b => b.btnId === id))
-        .filter(Boolean)
+        .map(id => buttons.find((button): button is B & { btnId: string } => button.btnId === id))
+        .filter((button): button is B & { btnId: string } => Boolean(button))
         .filter(b => b.status !== 0)
-        .map(b => ({ ...b, type: 'custom_button' }));
+        .map((b): CustomOperateButton<B> => ({ ...b, type: 'custom_button' }));
 
       if (!memberButtons.length) {
         return;
@@ -187,7 +338,7 @@ export function getSheetOperatesButtons<
         buttons: memberButtons,
       });
     } else if (c.type === 'print') {
-      const printItem = find(printList, p => p.id === c.id);
+      const printItem = printList.find((template): template is P & { id: string } => template.id === c.id);
 
       if (printItem) {
         result.push({
@@ -203,10 +354,7 @@ export function getSheetOperatesButtons<
       result.push({
         btnId: c.type,
         type: c.type,
-        color:
-          {
-            delete: '#F44336',
-          }[c.type] || '#1677ff',
+        color: c.type === 'delete' ? '#F44336' : '#1677ff',
         name: {
           copy: _l('复制'),
           share: _l('分享'),
@@ -236,18 +384,19 @@ export function getSheetOperateButtonIds(
     button.type === 'group_ref' && _.isArray(button.buttons)
       ? button.buttons.map(member => member.btnId)
       : [button.btnId],
-  ).filter(Boolean);
+  ).filter((id): id is string => Boolean(id));
 }
 
-export function getSheetOperatesButtonsStyle(view) {
-  const { icon = 1, style = 1, btncount = 3, primarycount = 1 } = safeParse(get(view, 'advancedSetting.acstyle'));
+export function getSheetOperatesButtonsStyle(view: WorksheetView | undefined): OperateButtonStyleConfig {
+  const { icon, style, btncount, primarycount } = decodeButtonStyle(view?.advancedSetting?.['acstyle']);
+  const styles: Record<string, OperatesButtonStyle | undefined> = {
+    1: 'standard',
+    2: 'text',
+    3: 'icon',
+  };
   return {
     showIcon: icon === 1,
-    style: {
-      1: 'standard',
-      2: 'text',
-      3: 'icon',
-    }[style],
+    style: Object.hasOwn(styles, String(style)) ? styles[String(style)] : undefined,
     visibleNum: Number(btncount),
     primaryNum: Number(primarycount),
   };
@@ -269,19 +418,27 @@ function getTextWidth(text = '1', fontSize = 13) {
   return result;
 }
 
-export function getOperatesButtonsWidth({ buttons, style, visibleNum, showIcon } = {}) {
+export function getOperatesButtonsWidth({
+  buttons = [],
+  style,
+  visibleNum,
+  showIcon,
+}: OperatesButtonsWidthOptions = {}) {
   const fontSize = 12;
   const iconWidth = 20;
   const marginRight = 6;
   const iconMarginRight = 4;
   const buttonPadding = 8 * 2;
   const cellPadding = 10 * 2;
-  const showMore = buttons.length > visibleNum;
+  const showMore = buttons.length > (visibleNum ?? NaN);
   const moreButtonWidth = 28;
   const cellBorderWidth = 1 * 2;
   const groupChevronWidth = 16;
 
-  function getButtonWidth(button, { noMarginRight = false } = {}) {
+  function getButtonWidth(
+    button: NonNullable<OperatesButtonsWidthOptions['buttons']>[number],
+    { noMarginRight = false } = {},
+  ) {
     let buttonWidth = 0;
     let textWidth = 0;
     const isGroup = button && button.type === 'group_ref';
@@ -338,14 +495,6 @@ export function getOperatesButtonsWidth({ buttons, style, visibleNum, showIcon }
  * 判定在 pages/FormSet/util.ts 的 isOpenPermit：按 type 找到项，再看 state 和 viewIds
  *（viewIds 为空表示对所有视图生效）。
  */
-export interface SheetSwitchPermitItem {
-  type?: number;
-  state?: boolean;
-  // 接口模型（HapApi.MD.Entity.Worksheet.SwitchPermitModel）写的是 string[] | undefined；
-  // 「没有这个字段」和「值是 undefined」对 isOpenPermit 是一回事
-  viewIds?: string[] | undefined;
-}
-
 // 【按钮用泛型而不是 any[]】函数只读 button.type，其余字段原样带出去，
 // 用 T 能把调用方自己的按钮类型保住，不会在这里被抹平。
 export function filterButtonBySheetSwitchPermit<T extends { type?: string }>(
@@ -360,7 +509,7 @@ export function filterButtonBySheetSwitchPermit<T extends { type?: string }>(
 ) {
   return (buttons = buttons.filter(button => {
     if (button.type === 'delete') {
-      return isOpenPermit(permitList.recordDelete, sheetSwitchPermit, viewId) && row.allowdelete;
+      return isOpenPermit(permitList.recordDelete, sheetSwitchPermit, viewId) && row['allowdelete'];
     } else if (button.type === 'share') {
       return (
         (isOpenPermit(permitList.recordShareSwitch, sheetSwitchPermit, viewId) ||
@@ -368,7 +517,7 @@ export function filterButtonBySheetSwitchPermit<T extends { type?: string }>(
         !md.global.Account.isPortal
       );
     } else if (button.type === 'copy') {
-      return isOpenPermit(permitList.recordCopySwitch, sheetSwitchPermit, viewId) && row.allowedit;
+      return isOpenPermit(permitList.recordCopySwitch, sheetSwitchPermit, viewId) && row['allowedit'];
     } else if (button.type === 'sysprint') {
       return isOpenPermit(permitList.recordPrintSwitch, sheetSwitchPermit, viewId);
     }
@@ -377,20 +526,10 @@ export function filterButtonBySheetSwitchPermit<T extends { type?: string }>(
   }));
 }
 
-interface SheetColumnStyle {
-  cid: string;
-  width?: number | string | undefined;
-  [key: string]: unknown;
-}
-interface SheetTableStyles {
-  updateTime?: string | number | undefined;
-  columnStyles: Record<string, SheetColumnStyle>;
-  sheetColumnWidths: Record<string, number | string | undefined>;
-}
 function getSheetStylesOfObject(object?: { advancedSetting?: ControlAdvancedSetting | undefined }): SheetTableStyles {
   const listStyle = object?.advancedSetting?.liststyle;
   if (!listStyle) return { columnStyles: {}, sheetColumnWidths: {} };
-  const { time: updateTime, styles = [] }: { time?: string | number; styles?: SheetColumnStyle[] } = safeParse(listStyle);
+  const { time: updateTime, styles = [] } = decodeListStyle(listStyle);
   const columnStyles: SheetTableStyles['columnStyles'] = {};
   const sheetColumnWidths: SheetTableStyles['sheetColumnWidths'] = {};
   styles.forEach(item => {
@@ -400,9 +539,17 @@ function getSheetStylesOfObject(object?: { advancedSetting?: ControlAdvancedSett
   return { updateTime, columnStyles, sheetColumnWidths };
 }
 function isColumnStyleView(view?: WorksheetView): boolean {
-  return Number(view?.viewType) === 0 || (String(view?.viewType) === '2' && view?.advancedSetting?.['hierarchyViewType'] === '3');
+  return (
+    Number(view?.viewType) === 0 ||
+    (String(view?.viewType) === '2' && view?.advancedSetting?.['hierarchyViewType'] === '3')
+  );
 }
-export function getSheetStylesOfRelateRecordTable({ control, viewId, worksheetInfo, manageView }: {
+export function getSheetStylesOfRelateRecordTable({
+  control,
+  viewId,
+  worksheetInfo,
+  manageView,
+}: {
   control?: FormControl | undefined;
   viewId?: string | undefined;
   worksheetInfo?: Pick<WorksheetInfo, 'advancedSetting' | 'views'> | undefined;
@@ -412,13 +559,18 @@ export function getSheetStylesOfRelateRecordTable({ control, viewId, worksheetIn
     let sheetColumnWidths: SheetTableStyles['sheetColumnWidths'] = {};
     const serializedWidths = control?.advancedSetting?.widths;
     if (serializedWidths) {
-      const widths: number[] | Record<string, number | string> = safeParse(serializedWidths, 'array');
+      const widths: unknown = safeParse(serializedWidths, 'array');
       if (Array.isArray(widths)) {
-        widths.forEach((width, index) => {
+        widths.forEach((width: unknown, index) => {
           const controlId = control?.showControls?.[index];
-          if (controlId) sheetColumnWidths[controlId] = width;
+          if (controlId && (typeof width === 'number' || typeof width === 'string'))
+            sheetColumnWidths[controlId] = width;
         });
-      } else if (!isEmpty(widths)) sheetColumnWidths = widths;
+      } else if (isObject(widths)) {
+        Object.entries(widths).forEach(([controlId, width]) => {
+          if (typeof width === 'number' || typeof width === 'string') sheetColumnWidths[controlId] = width;
+        });
+      }
     }
     return { columnStyles: {}, sheetColumnWidths };
   }
@@ -427,19 +579,24 @@ export function getSheetStylesOfRelateRecordTable({ control, viewId, worksheetIn
   if (!viewId) return worksheetSheetStyles;
   const views = worksheetInfo?.views || [];
   const view = views.find(item => item.viewId === viewId);
-  const styledView = view && isColumnStyleView(view)
-    ? view
-    : views.find(item => isColumnStyleView(item) && Boolean(item.advancedSetting?.liststyle));
+  const styledView =
+    view && isColumnStyleView(view)
+      ? view
+      : views.find(item => isColumnStyleView(item) && Boolean(item.advancedSetting?.liststyle));
   const viewStyles = getSheetStylesOfObject(styledView);
   return viewStyles.updateTime ? viewStyles : worksheetSheetStyles;
 }
 
-export function getGroupControlId(view) {
-  const groupId = get(safeParse(get(view, 'advancedSetting.groupsetting'), 'array'), '[0].controlId');
-  return groupId;
+export function getGroupControlId(view: WorksheetView | undefined): string | undefined {
+  const groups: unknown = safeParse(view?.advancedSetting?.['groupsetting'], 'array');
+  const first: unknown = Array.isArray(groups) ? groups[0] : undefined;
+  return isObject(first) && typeof first['controlId'] === 'string' ? first['controlId'] : undefined;
 }
 
-export function getFiltersForGroupedView(control, groupKey) {
+export function getFiltersForGroupedView(
+  control: Pick<FormControl, 'controlId' | 'type'>,
+  groupKey: string,
+): WorksheetFilterCondition {
   if (String(groupKey) === '-1') {
     return {
       controlId: control.controlId,
