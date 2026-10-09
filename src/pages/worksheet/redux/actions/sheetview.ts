@@ -16,7 +16,7 @@ import _, {
 } from 'lodash';
 import worksheetAjax from 'src/api/worksheet';
 import { getRowDetail } from 'worksheet/api';
-import { treeDataUpdater } from 'worksheet/common/TreeTableHelper';
+import { treeDataUpdater, type TreeMap } from 'worksheet/common/TreeTableHelper';
 import { handleUpdateTreeNodeExpansion } from 'worksheet/common/TreeTableHelper/index.js';
 import { getRuleErrorInfo } from 'src/components/Form/core/formUtils';
 import {
@@ -24,11 +24,17 @@ import {
   WIDGETS_TO_API_TYPE_ENUM,
   WORKFLOW_SYSTEM_CONTROL,
 } from 'src/pages/widgetConfig/config/widget';
-import type { WorksheetFilters, WorksheetRowsRequest } from 'src/pages/worksheet/types';
+import type {
+  WorksheetFilterCondition,
+  WorksheetFilters,
+  WorksheetInfo,
+  WorksheetRowsRequest,
+  WorksheetView,
+} from 'src/pages/worksheet/types';
 import type { AppDispatch, GetState, RootState } from 'src/redux/types';
 import { getFilledRequestParams } from 'src/utils/common';
 import { clearLRUWorksheetConfig, getLRUWorksheetConfig, saveLRUWorksheetConfig } from 'src/utils/common';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ControlOption, FormControl, RecordRow } from 'src/utils/controlTypes';
 import { formatQuickFilter } from 'src/utils/filter';
 import { handleRecordError } from 'src/utils/record';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
@@ -38,15 +44,150 @@ import {
   getListStyle,
   getSheetColumnWidthsMap,
 } from 'src/utils/worksheet';
-import type { SheetColumnWidthActionCreator, SheetSortControl, SheetViewActionOf } from '../reducers/sheetviewTypes';
+import type {
+  SheetColumnStyles,
+  SheetColumnWidthActionCreator,
+  SheetColumnWidths,
+  SheetSortControl,
+  SheetSummaryTypes,
+  SheetViewActionOf,
+} from '../reducers/sheetviewTypes';
 import { updateNavGroup } from './navFilter.js';
 import { sortDataByGroupItems } from './util.js';
+
+interface SheetRowGroup {
+  key: string;
+  [key: string]: unknown;
+}
+interface SheetGroup {
+  key: string;
+  name?: string | undefined;
+  totalNum: number;
+  type?: number | undefined;
+  rows: Array<string | RecordRow>;
+  control?: FormControl | undefined;
+  sort?: number | undefined;
+}
+interface SheetRow {
+  rowid?: string | undefined;
+  pid?: string | undefined;
+  childrenids?: string | undefined;
+  name?: string | undefined;
+  groupKey?: string | undefined;
+  controlType?: number | undefined;
+  isLoading?: boolean | undefined;
+  [controlId: string]: unknown;
+  key?: string | undefined;
+  count?: number | undefined;
+  control?: FormControl | undefined;
+  group?: SheetRowGroup | undefined;
+  allowedit?: boolean | undefined;
+  allowdelete?: boolean | undefined;
+}
+interface SummaryGroupArgs {
+  groupKey?: string | undefined;
+  filters?: WorksheetFilterCondition[] | WorksheetFilterCondition | undefined;
+}
+interface SummarySavedConfig {
+  types?: SheetSummaryTypes | undefined;
+  groupRows?: Array<{ key: string; controlType: number; controlId: string }> | undefined;
+}
+interface ColumnStyleSnapshot {
+  time?: number | undefined;
+  styles?: SheetColumnStyles | undefined;
+}
+interface RefreshOptions {
+  resetPageIndex?: boolean | undefined;
+  changeFilters?: boolean | undefined;
+  noLoading?: boolean | undefined;
+  isAutoRefresh?: boolean | undefined;
+  noClearSelected?: boolean | undefined;
+  updateWorksheetControls?: boolean | undefined;
+}
+interface EditedCell {
+  controlId?: string | undefined;
+  value?: unknown;
+  editType?: number | undefined;
+}
+interface UpdateCellOptions {
+  callback?: ((row: SheetRow) => void) | undefined;
+  updateSuccessCb?: ((row: SheetRow) => void) | undefined;
+  row?: RecordRow | undefined;
+  cell?: FormControl | undefined;
+  onSuccess?: (() => void) | undefined;
+}
+interface SaveViewLayoutRequest {
+  appId: string | undefined;
+  worksheetId: string | undefined;
+  viewId: string | undefined;
+  editAttrs: string[];
+  advancedSetting?:
+    | {
+        fixedcolumncount: number;
+        layoutupdatetime: number;
+        liststyle?: string | undefined;
+        customdisplay?: string | undefined;
+      }
+    | undefined;
+  showControls?: Array<string | undefined> | undefined;
+  editAdKeys?: string[] | undefined;
+}
+
+function plainRecord(value: unknown): Record<string, unknown> | undefined {
+  return _.isPlainObject(value) ? (value as Record<string, unknown>) : undefined;
+}
+function isSheetRow(value: unknown): value is SheetRow {
+  const row = plainRecord(value);
+  return (
+    !!row &&
+    ['rowid', 'pid', 'childrenids', 'key', 'groupKey', 'name'].every(
+      key => row[key] === undefined || typeof row[key] === 'string',
+    ) &&
+    (row['count'] === undefined || typeof row['count'] === 'number') &&
+    (row['group'] === undefined || typeof plainRecord(row['group'])?.['key'] === 'string')
+  );
+}
+function isSheetGroup(value: unknown): value is SheetGroup {
+  const group = plainRecord(value);
+  return (
+    !!group &&
+    typeof group['key'] === 'string' &&
+    typeof group['totalNum'] === 'number' &&
+    (group['type'] === undefined || typeof group['type'] === 'number') &&
+    (group['name'] === undefined || typeof group['name'] === 'string') &&
+    Array.isArray(group['rows']) &&
+    group['rows'].every((row: unknown) => typeof row === 'string' || isSheetRow(row))
+  );
+}
+function isRowUpdate(
+  value: unknown,
+): value is { resultCode: number; data?: SheetRow | undefined; badData?: string[] | undefined } {
+  const result = plainRecord(value);
+  return (
+    !!result &&
+    typeof result['resultCode'] === 'number' &&
+    (result['data'] === undefined || isSheetRow(result['data'])) &&
+    (result['badData'] === undefined ||
+      (Array.isArray(result['badData']) && result['badData'].every((item: unknown) => typeof item === 'string')))
+  );
+}
+
+function isControlOption(value: unknown): value is ControlOption {
+  const option = plainRecord(value);
+  return (
+    !!option &&
+    typeof option['key'] === 'string' &&
+    ['value', 'color'].every(key => option[key] === undefined || typeof option[key] === 'string') &&
+    ['index', 'score'].every(key => option[key] === undefined || typeof option[key] === 'number') &&
+    (option['isDeleted'] === undefined || typeof option['isDeleted'] === 'boolean')
+  );
+}
 
 const DEFAULT_PAGESIZE = 50;
 const DEFAULT_GROUP_PAGESIZE = 20;
 
-function getGroupPageSize(maxCount) {
-  const pageSize = parseInt(maxCount, 10);
+function getGroupPageSize(maxCount: number | string | undefined) {
+  const pageSize = (parseInt as (value: string | number | undefined, radix: number) => number)(maxCount, 10);
 
   return pageSize > 0 ? pageSize : DEFAULT_GROUP_PAGESIZE;
 }
@@ -57,10 +198,15 @@ function checkIsTreeTableView(state: RootState) {
   return view && view.viewType === 2 && get(view, 'advancedSetting.hierarchyViewType') === '3';
 }
 
-function flatRowsFromGroups(groups, groupControl, view, controls) {
-  let result = [];
+function flatRowsFromGroups(
+  groups: SheetGroup[],
+  groupControl: FormControl,
+  view: WorksheetView | undefined,
+  controls: FormControl[],
+) {
+  let result: SheetRow[] = [];
   const newGroups = sortDataByGroupItems(groups, view, controls);
-  newGroups.forEach(group => {
+  newGroups.forEach((group: SheetGroup) => {
     if (_.get(groupControl, 'options.length')) {
       group.name = _.get(_.find(groupControl.options, { key: group.key }), 'value') || group.name;
     }
@@ -75,7 +221,7 @@ function flatRowsFromGroups(groups, groupControl, view, controls) {
     };
     result.push(groupRow);
     result.push(
-      ...group.rows.map((rowStr: RecordRow) => ({
+      ...group.rows.map((rowStr: string | RecordRow) => ({
         ...safeParse(rowStr),
         groupKey: group.key,
         group: {
@@ -102,10 +248,10 @@ export function updateTreeNodeExpansion(
     // sheet.sheetview 这一层的 reducer 初值就是 {}，解构默认值又把它钉成 {}，
     // 所以下面读 treeTableViewData / sheetViewData 拿不到类型。先取出来再按需读。
     const { base = {}, navGroupFilters, filters: { filtersGroup } = {} } = getState().sheet;
-    const sheetview: Record<string, any> = getState().sheet.sheetview || {};
+    const sheetview: Partial<RootState['sheet']['sheetview']> = getState().sheet.sheetview || {};
     const { appId, viewId, worksheetId } = base;
     const { treeMap, maxLevel } = sheetview.treeTableViewData || {};
-    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
+    const { rows = [] }: { rows?: SheetRow[] | undefined } = sheetview.sheetViewData || {};
 
     if (runTimes > 20) {
       return;
@@ -123,7 +269,7 @@ export function updateTreeNodeExpansion(
         treeMap,
         maxLevel,
         rows,
-        updateRows: (...args) => dispatch(updateRows(...args)),
+        updateRows: (...args: Parameters<typeof updateRows>) => dispatch(updateRows(...args)),
         updateTreeNodeExpansion,
         getNewRows: () =>
           worksheetAjax
@@ -143,9 +289,13 @@ export function updateTreeNodeExpansion(
   };
 }
 
-export const initGroupFolded = (view, groups, controls: FormControl[]) => {
+export const initGroupFolded = (
+  view: WorksheetView | undefined,
+  groups: SheetGroup[],
+  controls: FormControl[],
+): SheetViewActionOf<'WORKSHEET_SHEETVIEW_UPDATE_FOLDED'> => {
   const value: Record<string, boolean> = {};
-  const groupKeys = _.map(sortDataByGroupItems(groups, view, controls), 'key');
+  const groupKeys: string[] = _.map(sortDataByGroupItems(groups, view, controls), 'key');
   const groupFoldedType = _.get(view, 'advancedSetting.groupopen') || '2';
 
   if (groupFoldedType !== '2') {
@@ -173,12 +323,12 @@ export const fetchRows = ({
   updateWorksheetControls,
 }: {
   /** 树形表格：要展开到第几层 */
-  levelCount?: number;
-  isFirst?: boolean;
-  changeView?: boolean;
-  noLoading?: boolean;
-  noClearSelected?: boolean;
-  updateWorksheetControls?: boolean;
+  levelCount?: number | undefined;
+  isFirst?: boolean | undefined;
+  changeView?: boolean | undefined;
+  noLoading?: boolean | undefined;
+  noClearSelected?: boolean | undefined;
+  updateWorksheetControls?: boolean | undefined;
 } = {}) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, views, sheetview, quickFilter, navGroupFilters } = getState().sheet;
@@ -187,7 +337,7 @@ export const fetchRows = ({
     const view = _.find(views, { viewId });
     const isGroupedView = !!getGroupControlId(view);
     const abortController = sheetview.abortController;
-    let savedPageSize = parseInt(getLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', worksheetId), 10);
+    let savedPageSize: number | undefined = parseInt(getLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', worksheetId), 10);
 
     if (_.isNaN(savedPageSize)) {
       savedPageSize = undefined;
@@ -209,7 +359,7 @@ export const fetchRows = ({
         levelCount = Number(level);
       }
 
-      if (isNaN(levelCount)) {
+      if ((isNaN as (value: number | undefined) => boolean)(levelCount)) {
         levelCount = 1;
       }
 
@@ -293,33 +443,45 @@ export const fetchRows = ({
     });
     fetchRowsAjax
       .then(res => {
-        if (updateWorksheetControls && _.get(res, 'template.controls')) {
-          const newControls: FormControl[] = _.get(res, 'template.controls').filter(
+        const responseData: unknown = res.data;
+        let rows: SheetRow[] = [];
+        let groups: SheetGroup[] | undefined;
+        if (groupControl && !isTreeTableView) {
+          if (!Array.isArray(responseData) || !responseData.every(isSheetGroup))
+            throw new Error('Invalid grouped worksheet rows');
+          groups = responseData;
+        } else {
+          if (!Array.isArray(responseData) || !responseData.every(isSheetRow))
+            throw new Error('Invalid worksheet rows');
+          rows = responseData;
+        }
+        if (updateWorksheetControls && res.template?.controls) {
+          const newControls: FormControl[] = res.template.controls.filter(
             c =>
-              c.controlId.length === 24 ||
+              c.controlId?.length === 24 ||
               _.includes(
                 SYSTEM_CONTROL_WITH_UAID.concat(WORKFLOW_SYSTEM_CONTROL).map(c => c.controlId),
                 c.controlId,
               ),
           );
-          controls = replaceControlsTranslateInfo(appId, worksheetId, newControls);
+          controls = (
+            replaceControlsTranslateInfo as (
+              appId: string | undefined,
+              worksheetId: string | undefined,
+              controls: FormControl[],
+            ) => FormControl[]
+          )(appId, worksheetId, newControls);
           try {
-            dispatch({
-              type: 'WORKSHEET_UPDATE_CONTROLS',
-              controls,
-            });
+            dispatch({ type: 'WORKSHEET_UPDATE_CONTROLS', controls });
           } catch (err) {
             console.log(err);
           }
-
           dispatch(setViewLayout(viewId));
         }
 
-        let rows: RecordRow[] = res.data;
-
-        if (groupControl && !isTreeTableView) {
-          rows = flatRowsFromGroups(rows, groupControl, view, controls);
-          dispatch(initGroupFolded(view, res.data, controls));
+        if (groups && groupControl) {
+          rows = flatRowsFromGroups(groups, groupControl, view, controls);
+          dispatch(initGroupFolded(view, groups, controls));
         }
 
         dispatch({
@@ -330,7 +492,7 @@ export const fetchRows = ({
         if (isGroupedView) {
           dispatch({
             type: 'WORKSHEET_SHEETVIEW_UPDATE_COUNT',
-            count: sum(rows.filter((r: RecordRow) => r.rowid === 'groupTitle').map(r => r.count)),
+            count: sum(rows.filter((r: SheetRow) => r.rowid === 'groupTitle').map(r => r.count)),
           });
         }
 
@@ -338,7 +500,7 @@ export const fetchRows = ({
         if (isTreeTableView) {
           const { treeMap, maxLevel } = treeDataUpdater(
             {},
-            { rootRows: res.data.filter(r => !r.pid), rows: res.data, levelLimit: Number(args.layer) },
+            { rootRows: rows.filter(r => !r.pid), rows, levelLimit: Number(args.layer) },
           );
           dispatch({
             type: 'UPDATE_TREE_TABLE_VIEW_DATA',
@@ -353,24 +515,29 @@ export const fetchRows = ({
           });
         }
       })
-      .catch(err => {
-        if (err.errorCode === 300016) {
-          dispatch({
-            type: 'WORKSHEET_SHEETVIEW_FETCH_ROWS',
-            rows: [],
-            resultCode: err.errorCode,
-          });
+      .catch((err: unknown) => {
+        if (abortController.signal.aborted) return;
+        if (plainRecord(err)?.['errorCode'] === 300016) {
+          dispatch({ type: 'WORKSHEET_SHEETVIEW_FETCH_ROWS', rows: [], resultCode: 300016 });
+        } else {
+          dispatch({ type: 'WORKSHEET_SHEETVIEW_FETCH_ROWS', rows: sheetview.sheetViewData.rows });
+          if (err instanceof Error) alert(_l('获取记录失败，请稍后重试'), 2);
         }
+        dispatch({ type: 'WORKSHEET_VIEW_UPDATE_ROWS_LOADING', value: false });
       });
     if (pageIndex === 1 && !chartId && !isGroupedView) {
       const fetchRowsNumAjax = worksheetAjax.getFilterRowsTotalNum(getFilledRequestParams(args), { abortController });
-      fetchRowsNumAjax.then(data => {
+      fetchRowsNumAjax.then((data: unknown) => {
         if (!data || data === '-1') {
           dispatch({
             type: 'WORKSHEET_SHEETVIEW_UPDATE_COUNT_ABNORMAL',
           });
         } else {
-          const count = parseInt(data, 10);
+          if (typeof data !== 'string' && typeof data !== 'number') {
+            dispatch({ type: 'WORKSHEET_SHEETVIEW_UPDATE_COUNT_ABNORMAL' });
+            return;
+          }
+          const count = (parseInt as (value: string | number, radix: number) => number)(data, 10);
 
           if (!_.isNaN(count)) {
             dispatch({
@@ -384,15 +551,15 @@ export const fetchRows = ({
   };
 };
 
-export const loadGroupMore = groupKey => {
+export const loadGroupMore = (groupKey: string) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, filters, sheetview, quickFilter, navGroupFilters } = getState().sheet;
     const { appId, viewId, worksheetId, maxCount } = base;
     const abortController = sheetview.abortController;
     let { sortControls } = sheetview.sheetFetchParams;
-    const currentRows = get(sheetview, 'sheetViewData.rows', []);
+    const currentRows: SheetRow[] = get(sheetview, 'sheetViewData.rows', []);
     const loadMoreRow = find(currentRows, r => r.groupKey === groupKey && r.rowid === 'loadGroupMore');
-    const rows: RecordRow[] = currentRows.filter(r => !(r.groupKey === groupKey && r.rowid === 'loadGroupMore'));
+    const rows: SheetRow[] = currentRows.filter(r => !(r.groupKey === groupKey && r.rowid === 'loadGroupMore'));
     const groupFetchParams = sheetview.groupFetchParams;
     // Group keys can contain dots; select the exact group before resolving its pageIndex.
     const prevPageIndex = get(groupFetchParams[groupKey], 'pageIndex', 1);
@@ -429,18 +596,18 @@ export const loadGroupMore = groupKey => {
       })
       .then(res => {
         let lastRowIndex = _.findLastIndex(rows, r => r.groupKey === groupKey);
-        const newRowsOfGroup = get(find(res.data, { key: groupKey }), 'rows', []).map(rowStr => ({
+        const newRowsOfGroup = get(find(res.data, { key: groupKey }), 'rows', []).map((rowStr: string | RecordRow) => ({
           ...safeParse(rowStr),
           groupKey,
         }));
-        let newRows: RecordRow[] = rows;
+        let newRows: SheetRow[] = rows;
 
         if (!isEmpty(newRowsOfGroup)) {
           newRows = [...rows.slice(0, lastRowIndex + 1), ...newRowsOfGroup, ...rows.slice(lastRowIndex + 1)];
-          const rowsOfGroup = newRows.filter((r: RecordRow) => r.groupKey === groupKey);
+          const rowsOfGroup = newRows.filter((r: SheetRow) => r.groupKey === groupKey);
           const group = find(newRows, r => r.rowid === 'groupTitle' && r.key === groupKey);
 
-          if (group && rowsOfGroup.length < group.count) {
+          if (group && typeof group.count === 'number' && rowsOfGroup.length < group.count) {
             lastRowIndex = _.findLastIndex(newRows, r => r.groupKey === groupKey);
             newRows = [
               ...newRows.slice(0, lastRowIndex + 1),
@@ -492,7 +659,11 @@ export const sortByControl = (
   sortControl,
 });
 
-export function updateViewPermission(param) {
+export function updateViewPermission(param?: {
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
+}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base } = getState().sheet;
     const { appId, viewId, worksheetId } = base;
@@ -519,8 +690,18 @@ export function updateViewPermission(param) {
 }
 
 export function updateControlOfRow(
-  { cell = {}, cells = [], recordId, rules }: { recordId?: string; [key: string]: any },
-  options: Record<string, any> = {},
+  {
+    cell = {},
+    cells = [],
+    recordId,
+    rules,
+  }: {
+    cell?: EditedCell | undefined;
+    cells?: EditedCell[] | undefined;
+    recordId?: string | undefined;
+    rules?: Parameters<typeof getRuleErrorInfo>[0] | undefined;
+  },
+  options: UpdateCellOptions = {},
 ) {
   return (dispatch: AppDispatch, getState: GetState) => {
     if (!_.isEmpty(cell) && _.isEmpty(cells)) {
@@ -537,7 +718,7 @@ export function updateControlOfRow(
         let { value } = cell;
         const control = _.find(controls, { controlId });
 
-        if (control && control.type === 29) {
+        if (control && control.type === 29 && typeof value === 'string') {
           try {
             if (value === 'deleteRowIds: all') {
               value = '[]';
@@ -575,8 +756,13 @@ export function updateControlOfRow(
         rowId: recordId,
         newOldControl,
       })
-      .then(res => {
-        if (res.resultCode === 1) {
+      .then((response: unknown) => {
+        if (!isRowUpdate(response) || (response.resultCode === 1 && !response.data)) {
+          alert(_l('编辑失败！'), 3);
+          return;
+        }
+        const res = response;
+        if (res.resultCode === 1 && res.data) {
           dispatch(updateNavGroup());
           if (_.isFunction(options.callback)) {
             options.callback(res.data);
@@ -590,24 +776,35 @@ export function updateControlOfRow(
           dispatch(getWorksheetSheetViewSummary());
           // 处理新增自定义选项
           if (
-            _.includes([WIDGETS_TO_API_TYPE_ENUM.MULTI_SELECT, WIDGETS_TO_API_TYPE_ENUM.DROP_DOWN], control.type) &&
+            _.includes([WIDGETS_TO_API_TYPE_ENUM.MULTI_SELECT, WIDGETS_TO_API_TYPE_ENUM.DROP_DOWN], control?.type) &&
+            control &&
+            control.options &&
+            controlId &&
+            typeof value === 'string' &&
             /{/.test(value)
           ) {
+            const storedValues: unknown =
+              typeof res.data[controlId] === 'string' ? JSON.parse(res.data[controlId]) : undefined;
+            const submittedValues: unknown = JSON.parse(value);
+            const lastStoredValue: unknown = Array.isArray(storedValues) ? _.last(storedValues) : undefined;
+            const lastSubmittedValue: unknown = Array.isArray(submittedValues) ? _.last(submittedValues) : undefined;
+            const submittedOption =
+              typeof lastSubmittedValue === 'string' ? plainRecord(JSON.parse(lastSubmittedValue)) : undefined;
             const newoption = {
               index: control.options.length + 1,
               isDeleted: false,
-              key: _.last(JSON.parse(res.data[controlId])),
-              ...JSON.parse(_.last(JSON.parse(value))),
+              key: lastStoredValue,
+              ...submittedOption,
             };
-            const newcontrol = { ...control, options: [...control.options, newoption] };
-            dispatch({
-              type: 'WORKSHEET_UPDATE_CONTROL',
-              control: newcontrol,
-            });
+            if (isControlOption(newoption)) {
+              const option: ControlOption = newoption;
+              const newcontrol = { ...control, options: [...control.options, option] };
+              dispatch({ type: 'WORKSHEET_UPDATE_CONTROL', control: newcontrol });
+            }
           }
         } else if (res.resultCode === 11) {
           if (options.row) {
-            dispatch(updateRows([recordId], { [controlId]: value }));
+            if (controlId) dispatch(updateRows([recordId], { [controlId]: value }));
             dispatch(updateRows([recordId], _.omit(options.row, ['allowedit', 'allowdelete'])));
           }
 
@@ -628,21 +825,19 @@ export function updateControlOfRow(
   };
 }
 
-export function insertToGroupedRow(newRow) {
+export function insertToGroupedRow(newRow: SheetRow) {
   return (dispatch: AppDispatch, getState: GetState) => {
     if (!newRow.group) {
       return;
     }
+    const group = newRow.group;
 
     const { sheetview } = getState().sheet;
-    const { rows, count } = sheetview.sheetViewData;
-    let lastRowIndexOfGroup = _.findLastIndex(
-      rows,
-      r => r.groupKey === newRow.group.key && r.rowid !== 'loadGroupMore',
-    );
+    const { rows, count }: { rows: SheetRow[]; count: number } = sheetview.sheetViewData;
+    let lastRowIndexOfGroup = _.findLastIndex(rows, r => r.groupKey === group.key && r.rowid !== 'loadGroupMore');
 
     if (lastRowIndexOfGroup === -1) {
-      const groupIndex = _.findIndex(rows, r => r.key === newRow.group.key);
+      const groupIndex = _.findIndex(rows, r => r.key === group.key);
 
       if (groupIndex === -1) {
         return;
@@ -651,13 +846,13 @@ export function insertToGroupedRow(newRow) {
       lastRowIndexOfGroup = groupIndex;
     }
 
-    let newRows: RecordRow[] = [
+    let newRows: SheetRow[] = [
       ...rows.slice(0, lastRowIndexOfGroup + 1),
-      { ...newRow, groupKey: newRow.group.key, group: newRow.group },
+      { ...newRow, groupKey: group.key, group: newRow.group },
       ...rows.slice(lastRowIndexOfGroup + 1),
     ];
-    newRows = newRows.map((row: RecordRow) => {
-      if (row.rowid === 'groupTitle' && row.key === newRow?.group?.key) {
+    newRows = newRows.map((row: SheetRow) => {
+      if (row.rowid === 'groupTitle' && row.key === newRow?.group?.key && typeof row.count === 'number') {
         row = {
           ...row,
           count: row.count + 1,
@@ -677,32 +872,33 @@ export function insertToGroupedRow(newRow) {
   };
 }
 
-export function updateRows(rowIds, value) {
+export function updateRows(rowIds: Array<string | undefined>, value: SheetRow) {
   return (dispatch: AppDispatch, getState: GetState) => {
     if (value.group) {
-      let rows: RecordRow[] = get(getState().sheet.sheetview.sheetViewData, 'rows', []);
+      const group = value.group;
+      let rows: SheetRow[] = get(getState().sheet.sheetview.sheetViewData, 'rows', []);
       const prevRow = find(rows, r => r.rowid === value.rowid);
-      rows = rows.filter((row: RecordRow) => row.rowid !== value.rowid);
-      const groupOldRow = find(rows, r => r.rowid === 'groupTitle' && r.key === prevRow.groupKey);
-      const lastRowIndexOfGroup = _.findLastIndex(rows, r => r.groupKey === value.group.key);
+      rows = rows.filter((row: SheetRow) => row.rowid !== value.rowid);
+      const groupOldRow = find(rows, r => r.rowid === 'groupTitle' && r.key === prevRow?.groupKey);
+      const lastRowIndexOfGroup = _.findLastIndex(rows, r => r.groupKey === group.key);
 
       if (lastRowIndexOfGroup === -1) {
         return;
       }
 
       const oldRow = rows[lastRowIndexOfGroup];
-      let newRows: RecordRow[] = [
+      let newRows: SheetRow[] = [
         ...rows.slice(0, lastRowIndexOfGroup + 1),
-        { ...pick(oldRow, ['allowedit', 'allowdelete']), ...value, groupKey: value.group.key, group: value.group },
+        { ...pick(oldRow, ['allowedit', 'allowdelete']), ...value, groupKey: group.key, group: value.group },
         ...rows.slice(lastRowIndexOfGroup + 1),
       ];
-      newRows = newRows.map((row: RecordRow) => {
-        if (row.rowid === 'groupTitle') {
+      newRows = newRows.map((row: SheetRow) => {
+        if (row.rowid === 'groupTitle' && typeof row.count === 'number') {
           let count = row.count;
 
           if (groupOldRow && row.key === groupOldRow.key) {
             count = count - 1;
-          } else if (row.rowid === 'groupTitle' && row.key === value.group.key) {
+          } else if (row.rowid === 'groupTitle' && row.key === group.key) {
             count = count + 1;
           }
 
@@ -737,7 +933,7 @@ export function refresh({
   isAutoRefresh,
   noClearSelected,
   updateWorksheetControls,
-} = {}) {
+}: RefreshOptions = {}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const {
       sheetview,
@@ -756,7 +952,7 @@ export function refresh({
       !chartId &&
       _.get(view, 'advancedSetting.showallitem') === '1' &&
       !_.get(view, 'navGroup[0].viewId') &&
-      _.get(view, 'navGroup').length > 0;
+      (_.get(view, 'navGroup') || []).length > 0;
 
     if (filters.keyWords || resetPageIndex || changeFilters) {
       dispatch(changePageIndex(1));
@@ -775,27 +971,27 @@ export function refresh({
   };
 }
 
-export const clearHighLight = tableId => {
+export const clearHighLight = (tableId?: string) => {
   return () => {
     $(`.sheetViewTable.id-${tableId}-id .cell`).removeClass('highlight');
     delete window[`sheetTableHighlightRow${tableId}`];
   };
 };
 
-export const setHighLight = (tableId, rowIndex) => {
-  return dispatch => {
+export const setHighLight = (tableId: string | undefined, rowIndex?: number) => {
+  return (dispatch: AppDispatch) => {
     dispatch(clearHighLight(tableId));
     $(`.sheetViewTable.id-${tableId}-id .cell.row-${rowIndex}`).addClass('highlight');
     window[`sheetTableHighlightRow${tableId}`] = rowIndex;
   };
 };
 
-export const setHighLightOfRows = (rowIds, tableId?) => {
+export const setHighLightOfRows = (rowIds: string[], tableId?: string) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview } = getState().sheet;
-    const { rows } = sheetview.sheetViewData;
+    const { rows }: { rows: SheetRow[] } = sheetview.sheetViewData;
     dispatch(clearHighLight(tableId));
-    rowIds.forEach((rowId: string) => {
+    rowIds.forEach((rowId: string | undefined) => {
       let rowIndex = _.findIndex(rows, row => row.rowid === rowId);
 
       if (_.isUndefined(rowIndex)) {
@@ -812,23 +1008,23 @@ export const setHighLightOfRows = (rowIds, tableId?) => {
   };
 };
 
-export const clearSelect = () => ({
+export const clearSelect = (): SheetViewActionOf<'WORKSHEET_SHEETVIEW_CLEAR_SELECT'> => ({
   type: 'WORKSHEET_SHEETVIEW_CLEAR_SELECT',
 });
 
-export function hideRows(rowIds) {
+export function hideRows(rowIds: Array<string | undefined>) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview, views, base = {} } = getState().sheet;
     const view = _.find(views, v => v.viewId === base.viewId);
-    const { rows } = sheetview.sheetViewData;
-    rowIds = rowIds.filter((rowId: string) => _.find(rows, r => rowId === r.rowid));
+    const { rows }: { rows: SheetRow[] } = sheetview.sheetViewData;
+    rowIds = rowIds.filter((rowId: string | undefined) => _.find(rows, r => rowId === r.rowid));
     if (rowIds.length) {
       dispatch(clearSelect());
       if (getGroupControlId(view)) {
-        const newRows: RecordRow[] = rows.map((groupRow: RecordRow) => {
-          if (groupRow.rowid === 'groupTitle') {
-            const deletedRowsLengthOfGroup = rowIds.filter((rowId: string) => {
-              const row = rows.find((r: RecordRow) => r.rowid === rowId);
+        const newRows: SheetRow[] = rows.map((groupRow: SheetRow) => {
+          if (groupRow.rowid === 'groupTitle' && typeof groupRow.count === 'number') {
+            const deletedRowsLengthOfGroup = rowIds.filter((rowId: string | undefined) => {
+              const row = rows.find((r: SheetRow) => r.rowid === rowId);
               return row && row.groupKey === groupRow.key;
             }).length;
             return { ...groupRow, count: groupRow.count - deletedRowsLengthOfGroup };
@@ -847,18 +1043,20 @@ export function hideRows(rowIds) {
         rowIds,
       });
       if (checkIsTreeTableView(getState())) {
-        rowIds.forEach((rowId: string) => {
-          rows.forEach((row: RecordRow) => {
+        rowIds.forEach((rowId: string | undefined) => {
+          rows.forEach((row: SheetRow) => {
             if (row.pid === rowId || includes(row.childrenids, rowId)) {
               // pid 置 undefined = 把这行从父节点下摘出来；childrenids 是 JSON 串
-              const changes: { pid?: string; childrenids?: string } = {};
+              const changes: { pid?: string | undefined; childrenids?: string | undefined } = {};
 
               if (row.pid === rowId) {
                 changes.pid = undefined;
               }
 
               if (includes(row.childrenids, rowId)) {
-                changes.childrenids = JSON.stringify(safeParse(row.childrenids, 'array').filter(id => id !== rowId));
+                changes.childrenids = JSON.stringify(
+                  safeParse(row.childrenids, 'array').filter((id: string) => id !== rowId),
+                );
               }
 
               dispatch(updateRows([row.rowid], changes));
@@ -899,7 +1097,7 @@ export function changeToSelectCurrentPageFromSelectAll() {
     const { rows = [] } = sheetview.sheetViewData;
     dispatch(clearSelect());
     dispatch(
-      selectRows({ rows: rows.filter((r: RecordRow) => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore') }),
+      selectRows({ rows: rows.filter((r: SheetRow) => r.rowid !== 'groupTitle' && r.rowid !== 'loadGroupMore') }),
     );
   };
 }
@@ -926,7 +1124,13 @@ export function frozenColumn(columnIndex: number): SheetViewActionOf<'WORKSHEET_
   return { type: 'WORKSHEET_SHEETVIEW_UPDATE_FIXED_COLUMN_COUNT', value: columnIndex };
 }
 
-export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
+export function saveSheetLayout({
+  isApplyAll,
+  closePopup = () => {},
+}: {
+  isApplyAll?: boolean | undefined;
+  closePopup?: (() => void) | undefined;
+}) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { base, controls, views, sheetview, worksheetInfo } = getState().sheet;
     const { appId, worksheetId, viewId } = base;
@@ -938,7 +1142,7 @@ export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
     }
 
     const hadNewConfig = get(worksheetInfo, 'advancedSetting.liststyle') || get(view, 'advancedSetting.liststyle');
-    const updates = {
+    const updates: SaveViewLayoutRequest = {
       appId,
       worksheetId,
       viewId,
@@ -962,7 +1166,7 @@ export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
 
     if (sheetHiddenColumns.length) {
       updates.editAttrs = updates.editAttrs.concat('ShowControls');
-      if (view.advancedSetting.customdisplay === '1' && view.showControls.length) {
+      if (view.advancedSetting?.customdisplay === '1' && view.showControls?.length) {
         // showControls 里是字段 id（原来标成 cid: FormControl 是错的，下面就是拿它和 id 比）
         updates.showControls = view.showControls.filter(
           (cid: string) => !_.find(sheetHiddenColumns, hcid => hcid === cid),
@@ -972,9 +1176,10 @@ export function saveSheetLayout({ isApplyAll, closePopup = () => {} }) {
         updates.showControls = controls
           .filter(
             (c: FormControl) =>
-              /^\w{24}$/.test(c.controlId) || _.includes(safeParse(view.advancedSetting.sysids, 'array'), c.controlId),
+              /^\w{24}$/.test(c.controlId || '') ||
+              _.includes(safeParse(view.advancedSetting?.sysids, 'array'), c.controlId),
           )
-          .sort((a, b) => (a.row * 10 + a.col > b.row * 10 + b.col ? 1 : -1))
+          .sort((a, b) => ((a.row ?? NaN) * 10 + (a.col ?? NaN) > (b.row ?? NaN) * 10 + (b.col ?? NaN) ? 1 : -1))
           .filter(c => (isEmpty(view.showControls) ? true : includes(view.showControls, c.controlId)))
           .filter(c => !_.find(sheetHiddenColumns, hcid => hcid === c.controlId))
           .map(c => c.controlId);
@@ -1059,7 +1264,7 @@ export const updateDefaultScrollLeft = (
 });
 
 // 更新每页数量
-export function changePageSize(pageSize, pageIndex: number, { refetch = true } = {}) {
+export function changePageSize(pageSize: number, pageIndex: number, { refetch = true } = {}) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { base } = getState().sheet;
     saveLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', base.worksheetId, pageSize);
@@ -1071,8 +1276,8 @@ export function changePageSize(pageSize, pageIndex: number, { refetch = true } =
 }
 
 // 分页
-export function changePageIndex(pageIndex: number, sleep?) {
-  return function (dispatch) {
+export function changePageIndex(pageIndex: number, sleep?: number) {
+  return function (dispatch: AppDispatch) {
     if (sleep) {
       setTimeout(() => {
         dispatch({
@@ -1090,7 +1295,7 @@ export function changePageIndex(pageIndex: number, sleep?) {
 }
 
 function resetView() {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({
       type: 'WORKSHEET_SHEETVIEW_CLEAR',
     });
@@ -1104,7 +1309,7 @@ function resetView() {
  * 新配置-本地：列宽(和对齐方式) - liststyle，列冻结 fixedcolumncount，更新时间 layoutupdatetime
  */
 
-export function setViewLayout(viewId: string) {
+export function setViewLayout(viewId: string | undefined) {
   // pageSize 更新逻辑
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base = {}, views, worksheetInfo } = getState().sheet;
@@ -1128,7 +1333,7 @@ export function setViewLayout(viewId: string) {
 
     dispatch(setColumnStyles(view, worksheetInfo, { updateWidths: false }));
     const { advancedSetting = {} } = view || {};
-    let sheetColumnWidths = {};
+    let sheetColumnWidths: SheetColumnWidths = {};
     const localLayoutUpdateTime = getLRUWorksheetConfig('SHEET_LAYOUT_UPDATE_TIME', viewId);
     const pageSize = parseInt(getLRUWorksheetConfig('WORKSHEET_VIEW_PAGESIZE', worksheetInfo.worksheetId), 10);
     let frozonIndex = getLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_FROZON', viewId);
@@ -1152,20 +1357,20 @@ export function setViewLayout(viewId: string) {
     if (advancedSetting.sheetColumnWidths) advancedSetting.sheetcolumnwidths = advancedSetting.sheetColumnWidths;
 
     const { time: listStyleUpdateTime, map: sheetColumnWidthsMap } = getSheetColumnWidthsMap(view, worksheetInfo);
-    const localColumnStyles = JSON.parse(
+    const localColumnStyles: ColumnStyleSnapshot = JSON.parse(
       (view && getLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_STYLES', view.viewId)) || '{}',
     );
 
     // sheetColumnWidthsMap 是配置的数据，view 和 worksheet 取最新的那个
-    if ((localColumnStyles && localColumnStyles.time > listStyleUpdateTime) || !listStyleUpdateTime) {
+    if ((localColumnStyles && (localColumnStyles.time ?? NaN) > listStyleUpdateTime) || !listStyleUpdateTime) {
       // 本地样式配置时间比配置里的新
       sheetColumnWidths = mapValues(localColumnStyles.styles, 'width');
     } else {
       sheetColumnWidths = sheetColumnWidthsMap;
     }
 
-    if (localColumnStyles.time && listStyleUpdateTime && listStyleUpdateTime > localColumnStyles.time) {
-      clearLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_STYLES', view.viewId);
+    if (localColumnStyles.time && listStyleUpdateTime && listStyleUpdateTime > (localColumnStyles.time ?? NaN)) {
+      clearLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_STYLES', view?.viewId);
     }
 
     // 兼容老数据
@@ -1209,7 +1414,7 @@ export function setViewLayout(viewId: string) {
   };
 }
 
-function columnStylesMergeChanges(columnStyles = {}, changes = {}) {
+function columnStylesMergeChanges(columnStyles: SheetColumnStyles = {}, changes: SheetColumnStyles = {}) {
   const newChanges = { ...changes };
   Object.keys(changes).forEach(cid => {
     if (columnStyles[cid]) {
@@ -1219,13 +1424,15 @@ function columnStylesMergeChanges(columnStyles = {}, changes = {}) {
   return assign({}, columnStyles, newChanges);
 }
 
-export function setColumnStyles(view = {}, worksheetInfo, { updateWidths = true } = {}) {
-  return dispatch => {
+export function setColumnStyles(view: WorksheetView = {}, worksheetInfo: WorksheetInfo, { updateWidths = true } = {}) {
+  return (dispatch: AppDispatch) => {
     try {
       const listStyleStrOfWorksheet = get(worksheetInfo, 'advancedSetting.liststyle');
       const listStyleStrOfView = get(view, 'advancedSetting.liststyle');
       const viewId = get(view, 'viewId');
-      const localColumnStyles = JSON.parse(getLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_STYLES', viewId) || '{}');
+      const localColumnStyles: ColumnStyleSnapshot = JSON.parse(
+        getLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_STYLES', viewId) || '{}',
+      );
 
       if (!listStyleStrOfView && !listStyleStrOfWorksheet && !localColumnStyles) {
         const sheetcolumnwidths = get(view, 'advancedSetting.sheetcolumnwidths');
@@ -1243,11 +1450,15 @@ export function setColumnStyles(view = {}, worksheetInfo, { updateWidths = true 
       }
 
       const { time, styles = [] } = getListStyle(listStyleStrOfView, listStyleStrOfWorksheet);
-      let columnStyles = styles.reduce((a, b) => Object.assign({}, a, { [b.cid]: b }), {});
+      let columnStyles = styles.reduce(
+        (a: SheetColumnStyles, b: SheetColumnStyles[string]) =>
+          Object.assign({}, a, { [b.cid === undefined ? 'undefined' : b.cid]: b }),
+        {},
+      );
 
       if ((localColumnStyles.time && localColumnStyles.time > time) || !time) {
         columnStyles = assign({}, columnStyles, localColumnStyles.styles);
-      } else if (time > localColumnStyles.time) {
+      } else if (time > (localColumnStyles.time ?? NaN)) {
         clearLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_STYLES', viewId);
       }
 
@@ -1266,7 +1477,7 @@ export function setColumnStyles(view = {}, worksheetInfo, { updateWidths = true 
   };
 }
 
-export function updateColumnStyles(changes) {
+export function updateColumnStyles(changes: SheetColumnStyles) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview } = getState().sheet;
     const { columnStyles } = sheetview.sheetViewConfig;
@@ -1277,7 +1488,7 @@ export function updateColumnStyles(changes) {
   };
 }
 
-export function saveColumnStylesToLocal(changes) {
+export function saveColumnStylesToLocal(changes: SheetColumnStyles) {
   return (_dispatch: AppDispatch, getState: GetState) => {
     const { sheetview, base } = getState().sheet;
     const viewId = get(base, 'viewId');
@@ -1301,10 +1512,12 @@ function triggerGroupedSummary() {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base } = getState().sheet;
     const { viewId } = base;
-    const groupedSavedData = safeParse(getLRUWorksheetConfig('GROUPED_WORKSHEET_VIEW_SUMMARY_TYPES', viewId));
+    const groupedSavedData: SummarySavedConfig = safeParse(
+      getLRUWorksheetConfig('GROUPED_WORKSHEET_VIEW_SUMMARY_TYPES', viewId),
+    );
 
     if (isArray(get(groupedSavedData, 'groupRows'))) {
-      get(groupedSavedData, 'groupRows').forEach(r => {
+      get(groupedSavedData, 'groupRows', []).forEach((r: { key: string; controlType: number; controlId: string }) => {
         dispatch(
           getWorksheetSheetViewSummary({
             groupArgs: {
@@ -1318,19 +1531,24 @@ function triggerGroupedSummary() {
   };
 }
 
-export function getWorksheetSheetViewSummary({ reset = false, groupArgs = {} } = {}) {
+export function getWorksheetSheetViewSummary({
+  reset = false,
+  groupArgs = {},
+}: { reset?: boolean | undefined; groupArgs?: SummaryGroupArgs | undefined } = {}) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { base, sheetview, filters, quickFilter, navGroupFilters, views = [] } = getState().sheet;
     const { appId, viewId, worksheetId, chartId } = base;
     const { rowsSummary } = sheetview.sheetViewData;
     const configData = mapValues(sheetview.sheetViewConfig.columnStyles, 'report');
-    let savedData = {};
+    let savedData: SheetSummaryTypes | undefined = {};
 
     try {
       if (!groupArgs.groupKey) {
         savedData = safeParse(getLRUWorksheetConfig('WORKSHEET_VIEW_SUMMARY_TYPES', viewId));
       } else {
-        const groupedSavedData = JSON.parse(getLRUWorksheetConfig('GROUPED_WORKSHEET_VIEW_SUMMARY_TYPES', viewId));
+        const groupedSavedData: SummarySavedConfig = JSON.parse(
+          getLRUWorksheetConfig('GROUPED_WORKSHEET_VIEW_SUMMARY_TYPES', viewId),
+        );
         savedData = groupedSavedData.types;
       }
     } catch (err) {
@@ -1393,12 +1611,27 @@ export function getWorksheetSheetViewSummary({ reset = false, groupArgs = {} } =
           navGroupFilters,
         }),
       )
-      .then(data => {
+      .then((data: unknown) => {
+        if (
+          !Array.isArray(data) ||
+          !data.every(
+            (item: unknown): item is { controlId: string; value?: unknown } =>
+              typeof plainRecord(item)?.['controlId'] === 'string',
+          )
+        ) {
+          alert(_l('获取统计失败，请稍后重试'), 2);
+          return;
+        }
         dispatch({
           type: 'WORKSHEET_SHEETVIEW_FETCH_REPORT_SUCCESS',
           types: groupArgs.groupKey ? savedData : types,
-          values:
-            data && data.length ? [{}, ...data].reduce((a, b) => Object.assign({}, a, { [b.controlId]: b.value })) : {},
+          values: data.length
+            ? [{}, ...data].reduce<Record<string, unknown>>(
+                (a, b: { controlId?: string; value?: unknown }) =>
+                  Object.assign({}, a, { [b.controlId === undefined ? 'undefined' : b.controlId]: b.value }),
+                {},
+              )
+            : {},
           groupKey: groupArgs.groupKey,
         });
       });
@@ -1410,15 +1643,24 @@ export function changeWorksheetSheetViewSummaryType({
   value,
   groupArgs = {},
 }: {
-  controlId?: string;
-  [key: string]: any;
+  controlId: string;
+  value: number;
+  groupArgs?: SummaryGroupArgs | undefined;
 }) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { sheetview, base } = getState().sheet;
-    const { rows = [], rowsSummary, groupRowsSummary } = sheetview.sheetViewData;
+    const {
+      rows = [],
+      rowsSummary,
+      groupRowsSummary,
+    }: {
+      rows: SheetRow[];
+      rowsSummary: RootState['sheet']['sheetview']['sheetViewData']['rowsSummary'];
+      groupRowsSummary: RootState['sheet']['sheetview']['sheetViewData']['groupRowsSummary'];
+    } = sheetview.sheetViewData;
     const { viewId } = base;
     let newTypes = {};
-    const groupRows = rows.filter((row: RecordRow) => row.rowid === 'groupTitle');
+    const groupRows = rows.filter((row: SheetRow) => row.rowid === 'groupTitle');
 
     if (!groupArgs.groupKey) {
       newTypes = Object.assign({}, rowsSummary.types, { [controlId]: value });
@@ -1465,12 +1707,12 @@ export function changeWorksheetSheetViewSummaryType({
   };
 }
 
-export function addRecord(records, afterRowId?) {
+export function addRecord(records: SheetRow | SheetRow[], afterRowId?: string) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const state = getState();
     const { sheetview, base = {}, views = [], controls = [] } = state.sheet;
     const { worksheetId, viewId } = base;
-    const { rows, count } = sheetview.sheetViewData;
+    const { rows, count }: { rows: SheetRow[]; count: number } = sheetview.sheetViewData;
 
     if (!_.isArray(records)) {
       if (records.group) {
@@ -1485,6 +1727,7 @@ export function addRecord(records, afterRowId?) {
       records = [records];
     }
 
+    const normalizedRecords = records as SheetRow[];
     dispatch({
       type: 'WORKSHEET_SHEETVIEW_UPDATE_COUNT',
       count: count + records.length,
@@ -1492,9 +1735,9 @@ export function addRecord(records, afterRowId?) {
     dispatch(getWorksheetSheetViewSummary());
     if (afterRowId) {
       const afterRowIndex = _.findIndex(rows, row => row.rowid === afterRowId);
-      const newRows: RecordRow[] = _.isUndefined(afterRowId)
-        ? [...records, ...rows]
-        : [...rows.slice(0, afterRowIndex + 1), ...records, ...rows.slice(afterRowIndex + 1)];
+      const newRows: SheetRow[] = _.isUndefined(afterRowId)
+        ? [...normalizedRecords, ...rows]
+        : [...rows.slice(0, afterRowIndex + 1), ...normalizedRecords, ...rows.slice(afterRowIndex + 1)];
       dispatch({
         type: 'WORKSHEET_SHEETVIEW_UPDATE_ROWS',
         rows: newRows,
@@ -1503,22 +1746,24 @@ export function addRecord(records, afterRowId?) {
     } else {
       dispatch({
         type: 'WORKSHEET_SHEETVIEW_UPDATE_ROWS',
-        rows: [...records, ...rows],
+        rows: [...normalizedRecords, ...rows],
         count: count + 1,
       });
     }
 
     const view = find(views, { viewId });
-    const viewControl = view.viewControl;
+    const viewControl = view?.viewControl;
 
     function expand() {
       const childrenControl = find(controls, c => c.sourceControlId === viewControl);
       dispatch(
-        refreshTreeOfTreeTableView(({ treeMap = {} } = {}) => {
+        refreshTreeOfTreeTableView(({ treeMap = {} }) => {
           const keyOfRow = findKey(treeMap, value => _.get(value, 'rowid') === get(records, '0.rowid'));
 
-          if (get(records, '0.' + childrenControl.controlId)) {
-            dispatch(updateTreeNodeExpansion(Object.assign(records[0], { key: keyOfRow }), { forceUpdate: true }));
+          if (childrenControl && get(records, '0.' + childrenControl.controlId) && normalizedRecords[0]) {
+            dispatch(
+              updateTreeNodeExpansion(Object.assign(normalizedRecords[0], { key: keyOfRow }), { forceUpdate: true }),
+            );
           }
         }),
       );
@@ -1536,7 +1781,7 @@ export function addRecord(records, afterRowId?) {
           }).then(data => {
             dispatch({
               type: 'WORKSHEET_SHEETVIEW_UPDATE_ROWS',
-              rows: [safeParse(data.rowData), ...records, ...rows],
+              rows: [safeParse(data.rowData), ...normalizedRecords, ...rows],
               count: count + 2,
             });
             expand();
@@ -1556,8 +1801,8 @@ export function addRecord(records, afterRowId?) {
  * @param {number} levelCount
  * @returns
  */
-export function changeTreeTableViewLevelCount(levelCount) {
-  return dispatch => {
+export function changeTreeTableViewLevelCount(levelCount: number) {
+  return (dispatch: AppDispatch) => {
     dispatch(fetchRows({ levelCount }));
     dispatch({
       type: 'UPDATE_TREE_TABLE_VIEW_ITEM',
@@ -1573,12 +1818,13 @@ export function changeTreeTableViewLevelCount(levelCount) {
  */
 export function expandAllTreeTableViewNode() {
   return (dispatch: AppDispatch, getState: GetState) => {
-    const { sheetview = {} } = getState().sheet;
-    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
-    const { treeMap } = sheetview.treeTableViewData || {};
+    const { sheetview = {} }: { sheetview?: Partial<RootState['sheet']['sheetview']> | undefined } = getState().sheet;
+    const { rows = [] }: { rows?: SheetRow[] | undefined } = sheetview.sheetViewData || {};
+    const { treeMap = {} } = sheetview.treeTableViewData || {};
     const needLoadNodes = Object.keys(treeMap)
-      .filter(key => treeMap[key].folded)
-      .map(key => treeMap[key]);
+      .filter(key => treeMap[key]?.folded)
+      .map(key => treeMap[key])
+      .filter((node): node is NonNullable<typeof node> => node !== undefined);
     needLoadNodes.forEach(needLoadNode => {
       const row = find(rows, { rowid: needLoadNode.rowid });
 
@@ -1594,8 +1840,8 @@ export function expandAllTreeTableViewNode() {
  */
 export function collapseAllTreeTableViewNode() {
   return (dispatch: AppDispatch, getState: GetState) => {
-    const { sheetview = {} } = getState().sheet;
-    const { treeMap } = sheetview.treeTableViewData || {};
+    const { sheetview = {} }: { sheetview?: Partial<RootState['sheet']['sheetview']> | undefined } = getState().sheet;
+    const { treeMap = {} } = sheetview.treeTableViewData || {};
     dispatch({
       type: 'UPDATE_TREE_TABLE_VIEW_ITEM',
       value: {
@@ -1610,19 +1856,20 @@ export function collapseAllTreeTableViewNode() {
 /**
  * 重新渲染树
  */
-export function refreshTreeOfTreeTableView(cb = () => {}) {
+export function refreshTreeOfTreeTableView(cb: (result: { treeMap: TreeMap }) => void = () => {}) {
   return (dispatch: AppDispatch, getState: GetState) => {
-    const { sheetview = {} } = getState().sheet;
+    const { sheetview = {} }: { sheetview?: Partial<RootState['sheet']['sheetview']> | undefined } = getState().sheet;
     const oldTreeMap = get(sheetview, 'treeTableViewData.treeMap');
-    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
-    const { treeMap, maxLevel } = treeDataUpdater({}, { rootRows: rows.filter((r: RecordRow) => !r.pid), rows });
+    const { rows = [] }: { rows?: SheetRow[] | undefined } = sheetview.sheetViewData || {};
+    const { treeMap, maxLevel } = treeDataUpdater({}, { rootRows: rows.filter((r: SheetRow) => !r.pid), rows });
     dispatch({
       type: 'UPDATE_TREE_TABLE_VIEW_DATA',
       value: {
         maxLevel,
         treeMap: forEach(treeMap, (_value, key) => {
           try {
-            treeMap[key].folded = get(oldTreeMap, key + '.folded');
+            const node = treeMap[key];
+            if (node) node.folded = get(oldTreeMap?.[key], 'folded');
           } catch (err) {
             console.log(err);
           }
@@ -1633,11 +1880,22 @@ export function refreshTreeOfTreeTableView(cb = () => {}) {
   };
 }
 
-export function updateTreeByRowChange({ recordId, changedValue = {} } = {}) {
+export function updateTreeByRowChange({
+  recordId,
+  changedValue = {},
+}: { recordId?: string | undefined; changedValue?: RecordRow | undefined } = {}) {
   return (dispatch: AppDispatch, getState: GetState) => {
-    const { base, views, sheetview = {} } = getState().sheet;
-    const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
-    const { treeMap } = sheetview.treeTableViewData || {};
+    const {
+      base,
+      views,
+      sheetview = {},
+    }: {
+      base: RootState['sheet']['base'];
+      views: RootState['sheet']['views'];
+      sheetview?: Partial<RootState['sheet']['sheetview']> | undefined;
+    } = getState().sheet;
+    const { rows = [] }: { rows?: SheetRow[] | undefined } = sheetview.sheetViewData || {};
+    const { treeMap = {} } = sheetview.treeTableViewData || {};
     const { viewId } = base;
     const view = find(views, v => v.viewId === viewId) || {};
     const treeBaseControl = view.viewControl;
@@ -1647,8 +1905,8 @@ export function updateTreeByRowChange({ recordId, changedValue = {} } = {}) {
     }
 
     const row = find(rows, { rowid: recordId });
-    const oldParentRecordId = get(safeParse(get(row, view.viewControl)), '0.sid');
-    const newParentRecordId = get(safeParse(get(changedValue, view.viewControl)), '0.sid');
+    const oldParentRecordId = get(safeParse(get(row, treeBaseControl)), '0.sid');
+    const newParentRecordId = get(safeParse(get(changedValue, treeBaseControl)), '0.sid');
     const oldParentRow = find(rows, { rowid: oldParentRecordId });
     const newParentRow = find(rows, { rowid: newParentRecordId });
     dispatch(
@@ -1676,7 +1934,7 @@ export function updateTreeByRowChange({ recordId, changedValue = {} } = {}) {
   };
 }
 
-export const initAbortController = () => ({
+export const initAbortController = (): SheetViewActionOf<'WORKSHEET_SHEETVIEW_INIT_ABORT_CONTROLLER'> => ({
   type: 'WORKSHEET_SHEETVIEW_INIT_ABORT_CONTROLLER',
 });
 
@@ -1691,16 +1949,17 @@ export function abortRequest() {
   };
 }
 
-export function updateFolded(key, value) {
+export function updateFolded(key: string, value: boolean) {
   return (dispatch: AppDispatch, getState: GetState) => {
     if (key === 'all') {
       if (value) {
-        const { sheetview = {} } = getState().sheet;
-        const { rows = [] }: { rows: RecordRow[]; [key: string]: any } = sheetview.sheetViewData || {};
-        const groupRows = rows.filter((row: RecordRow) => row.rowid === 'groupTitle');
+        const { sheetview = {} }: { sheetview?: Partial<RootState['sheet']['sheetview']> | undefined } =
+          getState().sheet;
+        const { rows = [] }: { rows?: SheetRow[] | undefined } = sheetview.sheetViewData || {};
+        const groupRows = rows.filter((row: SheetRow) => row.rowid === 'groupTitle');
         dispatch({
           type: 'WORKSHEET_SHEETVIEW_UPDATE_FOLDED',
-          value: groupRows.reduce((a, b) => ({ ...a, [b.key]: value }), {}),
+          value: groupRows.reduce((a, b) => ({ ...a, [b.key === undefined ? 'undefined' : b.key]: value }), {}),
         });
       } else {
         dispatch({

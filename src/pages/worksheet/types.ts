@@ -113,7 +113,9 @@ export interface WorksheetView {
   /** 看板/层级等按某个字段分组时，指向那个字段的 controlId */
   viewControl?: string | undefined;
   /** 层级视图的多级分组字段 */
-  viewControls?: { controlId?: string }[] | undefined;
+  viewControls?: { controlId?: string | undefined; worksheetId?: string | undefined }[] | undefined;
+  /** 层级视图区分本表父子关联与多表关联。 */
+  childType?: number | undefined;
   /** 视图自身的筛选条件 */
   filters?: unknown[] | undefined;
   /** 快速筛选配置 */

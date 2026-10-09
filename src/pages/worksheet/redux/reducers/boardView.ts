@@ -3,17 +3,29 @@ import { get, head } from 'lodash';
 import _ from 'lodash';
 import findIndex from 'lodash/findIndex';
 import { WIDGET_VALUE_ID } from 'src/components/Form/core/config';
-import type { ReduxAction } from 'src/redux/types';
-import type { RecordRow } from 'src/utils/controlTypes';
+import type {
+  BoardAddRecordPayload,
+  BoardGroup,
+  BoardGroupingInfo,
+  BoardMultiSelectPayload,
+  BoardRecord,
+  BoardRecordCounts,
+  BoardRecordLocation,
+  BoardSortPayload,
+  BoardTitlePayload,
+  BoardUpdateRecordPayload,
+  BoardViewAction,
+  BoardViewState,
+} from './boardViewTypes';
 
-export const getIndex = (state, data) => {
+export const getIndex = (state: BoardGroup[], data: BoardRecordLocation): [number, number] | null => {
   const { key, rowId } = data;
   const keyIndex = _.findIndex(state, item => item.key === key);
   if (keyIndex < 0) return null;
-  const rows: RecordRow[] = _.get(state, [keyIndex, 'rows']);
+  const rows: string[] = _.get(state, [keyIndex, 'rows']);
 
   try {
-    const rowIndex = _.findIndex(rows, row => JSON.parse(row).rowid === rowId);
+    const rowIndex = _.findIndex(rows, row => (JSON.parse(row) as BoardRecord).rowid === rowId);
     if (rowIndex < 0) return null;
     return [keyIndex, rowIndex];
   } catch (error) {
@@ -23,14 +35,16 @@ export const getIndex = (state, data) => {
 };
 
 // 删除记录
-export const delRecord = (state, data) => {
+export const delRecord = (state: BoardGroup[], data: BoardRecordLocation): BoardGroup[] => {
   const indexList = getIndex(state, data);
   if (!indexList) return state;
   const [keyIndex, rowIndex] = indexList;
-  return update(state, { [keyIndex]: { rows: { $splice: [[rowIndex, 1]] }, totalNum: { $apply: num => num - 1 } } });
+  return update(state, {
+    [keyIndex]: { rows: { $splice: [[rowIndex, 1]] }, totalNum: { $apply: (num: number) => num - 1 } },
+  });
 };
 
-const sortBoardRecord = (state, data) => {
+const sortBoardRecord = (state: BoardGroup[], data: BoardSortPayload): BoardGroup[] => {
   const {
     key,
     targetKey,
@@ -45,7 +59,7 @@ const sortBoardRecord = (state, data) => {
   if (!indexList) return state;
   const [keyIndex, rowIndex] = indexList;
   const targetIndex = findIndex(state, item => item.key === targetKey);
-  const originData = JSON.parse(get(state, [keyIndex, 'rows', rowIndex]));
+  const originData = JSON.parse(get(state, [keyIndex, 'rows', rowIndex]) as string) as BoardRecord;
   // 多选单独处理 防止重复
   // if (get(head(state), 'type') === 10) {
   //   const targetBoard = state.find(item => item.key === targetKey);
@@ -58,7 +72,7 @@ const sortBoardRecord = (state, data) => {
   // }
   const updateValue = {
     ...(firstGroupChange ? { [firstGroupControlId]: value } : {}),
-    ...(secondGroupChange ? { [secondGroupControlId]: secondGroupValue } : {}),
+    ...(secondGroupChange ? { [secondGroupControlId!]: secondGroupValue } : {}),
   };
 
   if (key === targetKey) {
@@ -77,7 +91,10 @@ const sortBoardRecord = (state, data) => {
   });
 };
 
-const getKeyAndName = data => {
+const getKeyAndName = (data: {
+  info: BoardGroupingInfo;
+  target?: string | undefined;
+}): { name?: string | undefined; targetKey?: string | undefined } | undefined => {
   const { info, target } = data;
   const { type } = info;
   const defaultPara = { targetKey: '-1' };
@@ -88,24 +105,34 @@ const getKeyAndName = data => {
     return target ? { targetKey: target } : defaultPara;
   }
 
-  const dealFn = parseData => {
+  const dealFn = (
+    parseData: Array<
+      string | { name?: string | undefined; sid?: string | undefined; [key: string]: string | undefined }
+    >,
+  ) => {
     const firstItem = head(parseData);
 
     if (_.includes([26, 27, 48], type)) {
-      return { name: JSON.stringify(firstItem), targetKey: _.get(firstItem, WIDGET_VALUE_ID[type]) };
+      return {
+        name: JSON.stringify(firstItem),
+        targetKey: _.get(firstItem, (WIDGET_VALUE_ID as Record<number, string>)[type!]!) as string | undefined,
+      };
     }
 
     if (type === 29) {
-      return { name: firstItem.name, targetKey: _.get(firstItem, 'sid') };
+      return {
+        name: (firstItem as { name?: string | undefined }).name,
+        targetKey: _.get(firstItem, 'sid') as string | undefined,
+      };
     }
 
-    if ([9, 11].includes(type)) {
-      return { targetKey: firstItem };
+    if ([9, 11].includes(type!)) {
+      return { targetKey: firstItem as string };
     }
     return undefined;
   };
 
-  if ([9, 11, 26, 29].includes(type)) {
+  if ([9, 11, 26, 29].includes(type!)) {
     try {
       const parseData = JSON.parse(target);
 
@@ -125,15 +152,15 @@ const getKeyAndName = data => {
 };
 
 // 更新记录
-export const updateRecord = (state, data) => {
+export const updateRecord = (state: BoardGroup[], data: BoardUpdateRecordPayload): BoardGroup[] => {
   const indexList = getIndex(state, data);
   if (!indexList) return state;
   const [keyIndex, rowIndex] = indexList;
-  let oldItem = _.get(state, `${keyIndex}.rows.${rowIndex}`);
+  let oldItem: string | BoardRecord | undefined = _.get(state, `${keyIndex}.rows.${rowIndex}`);
 
   if (oldItem) {
     try {
-      oldItem = JSON.parse(oldItem);
+      oldItem = JSON.parse(oldItem) as BoardRecord;
       data.item = { ...oldItem, ...data.item };
     } catch (err) {
       console.error(err);
@@ -141,7 +168,7 @@ export const updateRecord = (state, data) => {
   }
 
   if (data.target !== undefined) {
-    let { name, targetKey } = getKeyAndName(data);
+    let { name, targetKey } = getKeyAndName(data)!;
     if (targetKey === 'user-undefined') targetKey = '-1';
     const targetIndex = _.findIndex(state, item => item.key === targetKey);
 
@@ -156,7 +183,7 @@ export const updateRecord = (state, data) => {
 
       if (targetKey) {
         const currentItem = JSON.stringify(data.item);
-        let nextBoard = {
+        let nextBoard: BoardGroup = {
           key: targetKey,
           rows: [currentItem],
           totalNum: 1,
@@ -164,7 +191,7 @@ export const updateRecord = (state, data) => {
         nextBoard = { ...nextBoard, name: name || data.targetName };
         if (_.get(data, ['info', 'type'])) nextBoard = { ...nextBoard, type: data.info.type };
         return update(state, {
-          [keyIndex]: { rows: { $splice: [[rowIndex, 1]] }, totalNum: { $apply: item => item - 1 } },
+          [keyIndex]: { rows: { $splice: [[rowIndex, 1]] }, totalNum: { $apply: (item: number) => item - 1 } },
           $push: [nextBoard],
         });
       }
@@ -181,14 +208,14 @@ export const updateRecord = (state, data) => {
   return update(state, { [keyIndex]: { rows: { $splice: [[rowIndex, 1, JSON.stringify(data.item)]] } } });
 };
 
-export const addRecord = (state, data) => {
+export const addRecord = (state: BoardGroup[], data: BoardAddRecordPayload): BoardGroup[] => {
   const { item, key } = data;
   const keyIndex = _.findIndex(state, item => item.key === key);
   if (keyIndex < 0) return state;
   return update(state, { [keyIndex]: { rows: { $unshift: [JSON.stringify(item)] } } });
 };
 
-const updateTitleData = (state, obj) => {
+const updateTitleData = (state: BoardGroup[], obj: BoardTitlePayload): BoardGroup[] => {
   const { key, index, data } = obj;
   const keyIndex = _.findIndex(state, item => item.key === key);
   // 只更新编辑的标题数据
@@ -196,8 +223,8 @@ const updateTitleData = (state, obj) => {
     [keyIndex]: {
       rows: {
         [index]: {
-          $apply: str => {
-            const originData = JSON.parse(str);
+          $apply: (str: string) => {
+            const originData = JSON.parse(str) as BoardRecord;
             return JSON.stringify({ ...originData, ...data });
           },
         },
@@ -206,10 +233,10 @@ const updateTitleData = (state, obj) => {
   });
 };
 
-export function updateMultiSelectBoard(boardData, data) {
+export function updateMultiSelectBoard(boardData: BoardGroup[], data: BoardMultiSelectPayload): BoardGroup[] {
   const { rowId, item, prevValue, currentValue, info = {}, selectControl = {} } = data;
-  const prevKeys = JSON.parse(prevValue || '[]');
-  const currKeys = JSON.parse(currentValue || '[]');
+  const prevKeys = JSON.parse(prevValue || '[]') as string[];
+  const currKeys = JSON.parse(currentValue || '[]') as string[];
 
   /**
    * 获取增加记录和移除记录的看板 并分别更新
@@ -224,14 +251,14 @@ export function updateMultiSelectBoard(boardData, data) {
     addRecordKeys.forEach(key => {
       const index = boardData.findIndex(item => item.key === key);
 
-      if (index > 0) {
+      if (index >= 0) {
         boardData = update(boardData, {
-          [index]: { totalNum: { $apply: item => item + 1 }, rows: { $push: [JSON.stringify(item)] } },
+          [index]: { totalNum: { $apply: (item: number) => item + 1 }, rows: { $push: [JSON.stringify(item)] } },
         });
       } else {
         const name = (_.find(selectControl.options || [], i => i.key === key) || {}).value;
         boardData = update(boardData, {
-          $push: [{ key: data.key, name, type: info.type, rows: [JSON.stringify(item)], totalNum: 1 }],
+          $push: [{ key, name, type: info.type, rows: [JSON.stringify(item)], totalNum: 1 }],
         });
       }
     });
@@ -241,15 +268,15 @@ export function updateMultiSelectBoard(boardData, data) {
     removeRecordKeys.forEach(key => {
       const index = boardData.findIndex(item => item.key === key);
 
-      if (index > 0) {
+      if (index >= 0) {
         boardData = update(boardData, {
           [index]: {
-            totalNum: { $apply: item => item - 1 },
+            totalNum: { $apply: (item: number) => item - 1 },
             rows: {
-              $apply: list => {
+              $apply: (list: string[]) => {
                 const ids = list.map(item => _.get(JSON.parse(item), 'rowid'));
                 const rowIndex = ids.findIndex(id => id === rowId);
-                return update(list, { $splice: [[rowIndex, 1]] });
+                return rowIndex < 0 ? list : update(list, { $splice: [[rowIndex, 1]] });
               },
             },
           },
@@ -262,14 +289,14 @@ export function updateMultiSelectBoard(boardData, data) {
   currKeys.forEach(key => {
     const index = boardData.findIndex(item => item.key === key);
 
-    if (index > 0) {
+    if (index >= 0) {
       boardData = update(boardData, {
         [index]: {
           rows: {
-            $apply: list => {
+            $apply: (list: string[]) => {
               const ids = list.map(item => _.get(JSON.parse(item), 'rowid'));
               const rowIndex = ids.findIndex(id => id === rowId);
-              return update(list, { $splice: [[rowIndex, 1, JSON.stringify(item)]] });
+              return rowIndex < 0 ? list : update(list, { $splice: [[rowIndex, 1, JSON.stringify(item)]] });
             },
           },
         },
@@ -280,7 +307,7 @@ export function updateMultiSelectBoard(boardData, data) {
   return boardData;
 }
 
-const INIT_STATE = {
+const INIT_STATE: BoardViewState = {
   boardData: [],
   loading: false,
   boardViewState: { hasMoreData: true, kanbanIndex: 1 },
@@ -291,7 +318,7 @@ const INIT_STATE = {
   sortedOptionKeys: [],
 };
 
-export default function boardView(state = INIT_STATE, action: ReduxAction) {
+export default function boardView(state: BoardViewState = INIT_STATE, action: BoardViewAction): BoardViewState {
   const { type, data } = action;
   const { boardData, boardViewState, boardViewRecordCount, boardViewCard } = state;
 
@@ -316,13 +343,15 @@ export default function boardView(state = INIT_STATE, action: ReduxAction) {
     case 'INIT_BOARD_VIEW_RECORD_COUNT':
       return {
         ...state,
-        boardViewRecordCount: update(boardViewRecordCount, { $apply: item => ({ ...item, ...data }) }),
+        boardViewRecordCount: update(boardViewRecordCount, {
+          $apply: (item: BoardRecordCounts | undefined) => ({ ...item, ...data }),
+        }),
       };
     case 'UPDATE_BOARD_VIEW_RECORD_COUNT':
       return {
         ...state,
-        boardViewRecordCount: update(boardViewRecordCount, {
-          [data[0]]: { $apply: item => Math.max(0, item + data[1]) },
+        boardViewRecordCount: update(boardViewRecordCount || {}, {
+          [data[0]]: { $apply: (item: number | undefined) => Math.max(0, (item || 0) + data[1]) },
         }),
       };
     case 'UPDATE_MULTI_SELECT_BOARD':

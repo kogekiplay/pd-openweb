@@ -146,7 +146,7 @@ const GroupFilter = props => {
               />
             )}
             <div className="groupDetailCon flexColumn overflowHidden">
-              <Component {...viewProps} changeActionSheetModalIndex={true} />
+              {Component && <Component {...viewProps} changeActionSheetModalIndex={true} />}
 
               <div
                 className="recordActionWrap"

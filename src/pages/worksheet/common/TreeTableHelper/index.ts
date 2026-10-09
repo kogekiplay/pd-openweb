@@ -1,31 +1,109 @@
 import _, { difference, find, get, intersection, isUndefined, pickBy, sortBy } from 'lodash';
-import type { ReduxAction } from 'src/redux/types';
+import type { AppDispatch, AppThunk } from 'src/redux/types';
 import { parseAdvancedSetting } from 'src/utils/control';
 import type { RecordRow } from 'src/utils/controlTypes';
 
-function getSortedValue(list) {
+export interface TreeNode {
+  index?: number | undefined;
+  rowid?: string | undefined;
+  childrenIds?: Array<string | undefined> | undefined;
+  key?: string | undefined;
+  levelList?: number[] | undefined;
+  loaded?: boolean | undefined;
+  folded?: boolean | undefined;
+  parentKeys?: string[] | undefined;
+  hideExpand?: boolean | undefined;
+  loading?: boolean | undefined;
+}
+export type TreeMap = Record<string, TreeNode | undefined>;
+export interface TreeDataResult {
+  treeMap: TreeMap;
+  maxLevel: number;
+}
+interface TreeUpdateOptions {
+  rootRows?: RecordRow[] | undefined;
+  rows?: Array<RecordRow & { addTime?: string | undefined }> | undefined;
+  defaultIndex?: number | undefined;
+  defaultLevelList?: number[] | undefined;
+  defaultparentKeys?: string[] | undefined;
+  keyPrefix?: string | undefined;
+  noSetRootMapKey?: boolean | undefined;
+  expandSize?: number | undefined;
+  levelLimit?: number | undefined;
+  pageIndexStart?: number | undefined;
+  prevTreeMap?: TreeMap | undefined;
+}
+interface ParseChildrenOptions {
+  index: number;
+  parentKeys: string[];
+  keyPrefix?: string | undefined;
+  defaultLevelList?: number[] | undefined;
+  notSetKey?: boolean | undefined;
+  doNotContinue?: boolean | undefined;
+  hideExpand?: boolean | undefined;
+}
+export interface TreeViewState {
+  maxLevel: number;
+  treeMap: TreeMap;
+  sortedIds: string[];
+  expandedAllKeys: Record<string, boolean>;
+  levelCount?: number | undefined;
+}
+
+export interface TreeExpansionOptions {
+  runTimes?: number | undefined;
+  expandAll?: boolean | undefined;
+  forceUpdate?: boolean | undefined;
+  treeMap?: TreeMap | undefined;
+  maxLevel?: number | undefined;
+  rows?: Array<RecordRow & { addTime?: string | undefined }> | undefined;
+  updateRows?: ((rowIds: Array<string | undefined>, changes: RecordRow) => unknown) | undefined;
+  getNewRows?: (() => Promise<RecordRow[] | undefined>) | undefined;
+  isAddsSubTree?: boolean | undefined;
+  updateTreeNodeExpansion?:
+    | ((row: RecordRow & { key?: string | undefined }, options: { expandAll: boolean; runTimes: number }) => AppThunk)
+    | undefined;
+  navGroupFilters?: unknown;
+  appId?: string | undefined;
+  viewId?: string | undefined;
+  worksheetId?: string | undefined;
+  recordId?: string | undefined;
+}
+
+function getSortedValue(list: number[]) {
   return _.map(list, function (num) {
-    return _.padStart(num, 10, '0');
+    return (_.padStart as (value: string | number, length: number, chars: string) => string)(num, 10, '0');
   });
 }
 
-export function getSheetViewRows(sheetViewData = {}, treeTableViewData = {}) {
+export function getSheetViewRows(
+  sheetViewData: { rows: RecordRow[] },
+  treeTableViewData?: { treeMap?: TreeMap | undefined },
+): RecordRow[];
+export function getSheetViewRows(
+  sheetViewData?: { rows?: RecordRow[] | undefined },
+  treeTableViewData?: { treeMap?: TreeMap | undefined },
+): RecordRow[] | undefined;
+export function getSheetViewRows(
+  sheetViewData: { rows?: RecordRow[] | undefined } = {},
+  treeTableViewData: { treeMap?: TreeMap | undefined } = {},
+) {
   const { rows } = sheetViewData;
-  const { treeMap } = treeTableViewData;
-  const foldedList = Object.keys(treeMap).filter(key => treeMap[key].folded);
+  const { treeMap = {} } = treeTableViewData;
+  const foldedList = Object.keys(treeMap).filter(key => treeMap[key]?.folded);
 
   return Object.keys(treeMap).length
-    ? sortBy(Object.keys(treeMap), key => getSortedValue(get(treeMap, key + '.levelList') || []))
+    ? sortBy(Object.keys(treeMap), key => getSortedValue(get(treeMap[key], 'levelList') || []))
         .map(key => {
-          const row = find(rows, { rowid: get(treeMap, key + '.rowid') });
+          const row = find<RecordRow>(rows, { rowid: get(treeMap[key], 'rowid') });
           return row && { ...row, key };
         })
-        .filter(row => {
+        .filter((row): row is RecordRow & { key: string } => {
           if (!row) {
             return false;
           }
 
-          if (_.intersection(get(treeMap, `${row.key}.parentKeys`), foldedList).length) {
+          if (_.intersection(get(treeMap[row.key], 'parentKeys'), foldedList).length) {
             return false;
           }
 
@@ -34,7 +112,7 @@ export function getSheetViewRows(sheetViewData = {}, treeTableViewData = {}) {
     : rows;
 }
 
-export function getTreeExpandCellWidth(index: number, rowsLength) {
+export function getTreeExpandCellWidth(index: number, rowsLength?: number) {
   rowsLength = rowsLength || 1;
   let strLength = String(rowsLength).length;
 
@@ -61,7 +139,7 @@ export function getTreeExpandSize(control = {}) {
 }
 
 export function treeDataUpdater(
-  { treeMap = {} } = {},
+  { treeMap = {} }: { treeMap?: TreeMap | undefined } = {},
   {
     rootRows = [],
     rows = [],
@@ -74,13 +152,21 @@ export function treeDataUpdater(
     levelLimit,
     pageIndexStart,
     prevTreeMap,
-  } = {},
-) {
+  }: TreeUpdateOptions = {},
+): TreeDataResult {
   let maxLevel = defaultIndex;
 
   function parseChildren(
-    row,
-    { index, parentKeys, keyPrefix = '', defaultLevelList = [], notSetKey = false, doNotContinue, hideExpand },
+    row: RecordRow,
+    {
+      index,
+      parentKeys,
+      keyPrefix = '',
+      defaultLevelList = [],
+      notSetKey = false,
+      doNotContinue,
+      hideExpand,
+    }: ParseChildrenOptions,
   ) {
     if (levelLimit && index > levelLimit) return;
     if (index > 50) return;
@@ -100,7 +186,7 @@ export function treeDataUpdater(
     if (!doNotContinue) {
       filteredRows.forEach((r, i) => {
         const newLevelList = defaultLevelList.concat(i + 1);
-        maxLevel = _.max([index + 1, maxLevel]);
+        maxLevel = _.max([index + 1, maxLevel]) as number;
         parseChildren(r, {
           index: index + 1,
           parentKeys: parentKeys.concat(key),
@@ -110,11 +196,13 @@ export function treeDataUpdater(
       });
     }
 
-    const childrenIds = _.uniq(safeParse(row.childrenids, 'array').concat(filteredRows.map(r => r.rowid)));
+    const childrenIds: Array<string | undefined> = _.uniq(
+      safeParse(row.childrenids, 'array').concat(filteredRows.map(r => r.rowid)),
+    );
 
     if (!notSetKey) {
       if (typeof pageIndexStart === 'number' && defaultLevelList.length) {
-        defaultLevelList[0] = pageIndexStart + defaultLevelList[0];
+        defaultLevelList[0] = pageIndexStart + (defaultLevelList[0] ?? NaN);
       }
 
       treeMap[key] = {
@@ -143,7 +231,21 @@ export function treeDataUpdater(
   return { treeMap, maxLevel };
 }
 
-const initialTreeViewParams = {
+export type TreeViewAction =
+  | { type: 'UPDATE_TREE_TABLE_VIEW_DATA' | 'UPDATE_TREE_TABLE_VIEW_ITEM'; value: Partial<TreeViewState> }
+  | {
+      type: 'UPDATED_TREE_NODE_EXPANSION';
+      key: string;
+      folded?: boolean | undefined;
+      childrenIds?: Array<string | undefined> | undefined;
+      loaded?: boolean | undefined;
+      loading?: boolean | undefined;
+    }
+  | { type: 'UPDATE_TREE_TABLE_VIEW_EXPANDED'; key: string }
+  | { type: 'UPDATE_TREE_TABLE_VIEW_TREE_MAP'; value: TreeMap }
+  | { type: 'RESET' | 'RESET_TREE' | 'WORKSHEET_INIT' | 'WORKSHEET_SHEETVIEW_CLEAR' };
+
+const initialTreeViewParams: TreeViewState = {
   maxLevel: 0,
   treeMap: {},
   sortedIds: [],
@@ -151,7 +253,7 @@ const initialTreeViewParams = {
 };
 
 // 树形表格相关参数
-export function treeTableViewData(state = initialTreeViewParams, action: ReduxAction) {
+export function treeTableViewData(state = initialTreeViewParams, action: TreeViewAction): TreeViewState {
   switch (action.type) {
     case 'UPDATE_TREE_TABLE_VIEW_DATA':
       return {
@@ -214,7 +316,7 @@ export function treeTableViewData(state = initialTreeViewParams, action: ReduxAc
  */
 export const handleUpdateTreeNodeExpansion =
   (
-    row: RecordRow = {},
+    row: RecordRow & { key?: string | undefined } = {},
     {
       runTimes,
       expandAll,
@@ -226,13 +328,14 @@ export const handleUpdateTreeNodeExpansion =
       getNewRows,
       isAddsSubTree,
       updateTreeNodeExpansion,
-    } = {},
+    }: TreeExpansionOptions = {},
   ) =>
-  async dispatch => {
+  async (dispatch: AppDispatch) => {
     const recordId = row.rowid;
     const treeMapKey = row.key;
+    if (!treeMapKey || !treeMap || !rows) return;
     let { folded, loaded = false, loading = false } = treeMap[treeMapKey] || {};
-    let needDeleteKeys = {};
+    let needDeleteKeys: TreeMap = {};
 
     if (forceUpdate) {
       loaded = false;
@@ -248,12 +351,24 @@ export const handleUpdateTreeNodeExpansion =
     } else if (loading) {
       return;
     } else {
+      if (!getNewRows || (forceUpdate && !updateRows)) return;
       dispatch({
         type: 'UPDATED_TREE_NODE_EXPANSION',
         key: treeMapKey,
         loading: true,
       });
-      const childRows = await getNewRows();
+      let childRows: RecordRow[] | undefined;
+      try {
+        childRows = await getNewRows();
+      } catch (error) {
+        dispatch({ type: 'UPDATED_TREE_NODE_EXPANSION', key: treeMapKey, loading: false });
+        throw error;
+      }
+      if (!Array.isArray(childRows)) {
+        dispatch({ type: 'UPDATED_TREE_NODE_EXPANSION', key: treeMapKey, loading: false });
+        alert(_l('加载记录失败，请稍后重试'), 2);
+        return;
+      }
       const newRows: RecordRow[] = rows
         .filter((r: RecordRow) => !find(childRows, { rowid: r.rowid }))
         .concat(childRows);
@@ -265,12 +380,12 @@ export const handleUpdateTreeNodeExpansion =
         ? row.childrenids
         : JSON.stringify(_.uniq(safeParse(row.childrenids, 'array').concat(childRows.map(r => r.rowid))));
 
-      if (forceUpdate) {
+      if (forceUpdate && updateRows) {
         (updateRows([recordId], {
           childrenids: newChildrenIds,
         }),
           Object.keys(treeMap).forEach(key => {
-            if (treeMap[key].parentKeys.includes(row.key)) {
+            if (treeMap[key]?.parentKeys?.includes(treeMapKey)) {
               needDeleteKeys[key] = undefined;
             }
           }));
@@ -315,7 +430,7 @@ export const handleUpdateTreeNodeExpansion =
         loading: false,
         childrenIds: forceUpdate ? childRows.map(r => r.rowid) : undefined,
       });
-      if (expandAll) {
+      if (expandAll && updateTreeNodeExpansion) {
         dispatch({
           type: 'UPDATE_TREE_TABLE_VIEW_EXPANDED',
           key: treeMapKey,
@@ -328,7 +443,7 @@ export const handleUpdateTreeNodeExpansion =
                   ...row,
                   key: [treeMapKey, row.rowid].filter(_.identity).join('_'),
                 },
-                { expandAll: true, runTimes: runTimes + 1 },
+                { expandAll: true, runTimes: (runTimes ?? NaN) + 1 },
               ),
             );
           }
@@ -337,7 +452,7 @@ export const handleUpdateTreeNodeExpansion =
     }
   };
 
-export function handleTreeNodeRow(row, deletedRecordId) {
+export function handleTreeNodeRow(row: RecordRow, deletedRecordId: string | string[]) {
   // deletedRecordId 兼容单个 id（string）与一批 id（array，如取消关联/批量删除）；统一按数组处理，
   // 从本行 childrenids 里剔除被删 id、并在父记录被删时清空本行 pid。
   // 注意：数组分支历史上漏写了 `newChildrenIds =` 赋值，导致取消关联时所有剩余行 childrenids 被置 undefined、

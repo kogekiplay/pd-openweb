@@ -2,6 +2,8 @@ import _ from 'lodash';
 import moment from 'moment';
 import { SYS } from 'src/pages/widgetConfig/config/widget';
 import { sortDataByCustomItems } from 'src/pages/worksheet/redux/actions/util.js';
+import type { SortableGroup } from 'src/pages/worksheet/redux/actions/util';
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import { browserIsMobile } from 'src/utils/common';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { PERIOD_TYPE, PERIODS } from './config';
@@ -683,9 +685,9 @@ export const getRecordIndex = (id, grouping, withoutArrangementVisible) => {
 /**
  * 排序分组
  */
-export const sortGrouping = (grouping, view = {}, controls: FormControl[] = []) => {
-  const empty = grouping.filter(item => item.key == '-1');
-  const sortGrouping = grouping.filter(item => item.key !== '-1').sort((a, b) => a.sort - b.sort);
+export const sortGrouping = <T extends object>(grouping: T[], view: WorksheetView = {}, controls: FormControl[] = []): T[] => {
+  const empty = grouping.filter(item => (item as SortableGroup).key == '-1');
+  const sortGrouping = grouping.filter(item => (item as SortableGroup).key !== '-1').sort((a, b) => (a as SortableGroup).sort! - (b as SortableGroup).sort!);
   return sortDataByCustomItems(sortGrouping.concat(empty), view, controls, false);
 };
 
