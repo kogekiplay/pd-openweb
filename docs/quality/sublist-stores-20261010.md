@@ -24,6 +24,6 @@ DataFormat、序列化、唯一值校验、Form store、树形工具、筛选、
 
 143/143 行为规格通过，工具类型零诊断，语法、后缀、颜色、圆角、排版和 JSX key 检查通过。既有公开表单微信鉴权子路径 known failure 仍隔离。21 个非法公共 store/方法/动作案例和 4 个非法树形载荷用法被实际类型检查拒绝；合法探针行零诊断，传递依赖的存量债独立保留。真实工厂、reducer、动作、wrapper、失败重试及保存链路规格通过；最终只读复查确认所有四项已复现问题关闭。
 
-本批构建验证将在提交后记录。完整证据位于 `/private/tmp/hap-store-release-20261010`、`/private/tmp/hap-strong-20261010/store-probe`、`/private/tmp/hap-strong-20261010/wrapper-review` 和 `/private/tmp/hap-store-readonly-review`。
+源码提交 `64bf20007` 的本地生产构建成功，耗时 56 秒；Webpack runtime 资源校验通过（1094 JS、387 CSS）。没有执行生产部署或对外发布。完整证据位于 `/private/tmp/hap-store-release-20261010`、`/private/tmp/hap-strong-20261010/store-probe`、`/private/tmp/hap-strong-20261010/wrapper-review` 和 `/private/tmp/hap-store-readonly-review`。
 
 DataFormat 的旧值引擎、私有大表格 UI、全局 ControlValue/APIResult、styled-components 迁移声明等仍有后续工作。直接完整严格编译仍有 60,662 条存量诊断，产品和工具配置的最终 strict 开关与全部基线/欠债移除尚未完成，不把局部达标当作全仓目标完成。
