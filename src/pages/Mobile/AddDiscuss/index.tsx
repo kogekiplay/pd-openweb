@@ -85,7 +85,8 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
 
     const { replyId, replyName } = _.get(this.props, 'match.params.discussionInfo'); // 当前光标所在位置
 
-    const cursorPosition = getCaretPosition(this.textarea);
+    if (!this.textarea) throw new TypeError('Missing discussion input');
+    const cursorPosition = Number(getCaretPosition(this.textarea));
 
     const temp = _.assign(temporaryDiscuss, {
       [replyId || 'empty']: {
@@ -214,7 +215,9 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
           <Icon icon="cancel" className="close Font22 textTertiary" onClick={this.props.onClose} />
         </div>
         <Textarea
-          manualRef={ele => { this.textarea = ele; }}
+          manualRef={ele => {
+            this.textarea = ele;
+          }}
           isFocus
           className="contentInput"
           minHeight={72}
@@ -296,7 +299,8 @@ let AddDiscuss = class AddDiscuss extends Component<any, any> {
             onSave={members => {
               const { value = '' } = this.state; // 当前光标所在位置
 
-              const cursorPosition = getCaretPosition(this.textarea);
+              if (!this.textarea) throw new TypeError('Missing discussion input');
+              const cursorPosition = Number(getCaretPosition(this.textarea));
               const atUser = `${members.map(item => `@${item.fullname}`).join(' ')} `;
 
               const temp = _.assign(temporaryDiscuss, {

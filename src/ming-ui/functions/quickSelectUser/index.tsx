@@ -1,16 +1,25 @@
+import type { WheelEvent } from 'react';
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-
 import { useClickAway } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import { LoadDiv } from 'ming-ui';
-import { Con, Content, Search, Tabs, UserList } from './Comps';
-import { getAccounts, getUsers } from './util';
 import OptionalRouter from 'src/router/OptionalRouter';
+import { userObject } from './boundary';
+import { Con, Content, Search, Tabs, UserList } from './Comps';
+import type {
+  LoadUsersOptions,
+  QuickSelectUserProps,
+  QuickUser,
+  UserSelectorProps,
+  UserSource,
+  UsersRequest,
+} from './types';
+import { getAccounts, getUsers } from './util';
 
-export function UserSelector(props) {
+export function UserSelector(props: UserSelectorProps) {
   const {
     projectId,
     staticAccounts = [], // 静态显示用户，传值时不在走接口取数据
@@ -35,23 +44,30 @@ export function UserSelector(props) {
     selectCb = () => {}, // 选中回调
     onSelect = () => {}, // 选中回调
   } = props;
-  const conRef = useRef<any>(undefined);
-  const scrollRef = useRef<any>(undefined);
+  const conRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const [activeTab, setActiveTab] = useState(
     !_.isUndefined(tabIndex) ? tabIndex : tabType === 1 || tabType === 3 ? 0 : 1,
   );
-  const [type, setType] = useState(selectRangeOptions ? 'range' : activeTab === 1 ? 'external' : 'normal');
+  const [type, setType] = useState<UserSource>(selectRangeOptions ? 'range' : activeTab === 1 ? 'external' : 'normal');
   const [keywords, setKeywords] = useState<string | undefined>();
   const [pageIndex, setPageIndex] = useState(1);
   const [loadOuted, setLoadOuted] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [list, setList] = useState([]);
+  const [loadError, setLoadError] = useState<string | undefined>();
+  const mountedRef = useRef(true);
+  const requestRef = useRef<UsersRequest | null>(null);
+  const requestVersion = useRef(0);
+  const lastLoadRef = useRef<LoadUsersOptions>({});
+  const [list, setList] = useState<QuickUser[]>([]);
   const [hadShowMore, setHadShowMore] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const isStatic =
     !_.isEmpty(staticAccounts) && !(staticAccounts.length === 1 && _.get(staticAccounts, '0.accountId') === 'isEmpty');
   const baseArgs = {
-    filterAccountIds: filterAccountIds.concat(selectedAccountIds).filter(_.identity),
+    filterAccountIds: filterAccountIds
+      .concat(selectedAccountIds)
+      .filter((id): id is string => typeof id === 'string' && !!id),
     prefixAccountIds,
     selectRangeOptions,
     projectId: projectId || _.get(props, 'SelectUserSettings.projectId'),
@@ -63,28 +79,71 @@ export function UserSelector(props) {
     filterOtherProject,
   };
 
-  function loadList({ keywords, pageIndex = 1, clear = true, type } = {}) {
+  function cancelRequest() {
+    requestVersion.current += 1;
+    try {
+      requestRef.current?.abort();
+    } catch (error) {
+      console.error(error);
+    }
+    requestRef.current = null;
+  }
+  function loadList({ keywords, pageIndex = 1, clear = true, type }: LoadUsersOptions = {}) {
     if (isStatic) {
+      setLoading(false);
       return;
     }
-
+    cancelRequest();
+    const version = requestVersion.current;
+    lastLoadRef.current = { keywords, pageIndex, clear, type };
     if (clear) {
       setList([]);
+      setLoadOuted(false);
     }
-
+    setLoadError(undefined);
     setLoading(true);
-    getUsers({ ...baseArgs, type, keywords: (keywords || '').trim(), pageIndex }).then(data => {
-      setList(l => l.concat(data));
+    try {
+      const request = getUsers({ ...baseArgs, type, keywords: (keywords || '').trim(), pageIndex });
+      requestRef.current = request;
+      request
+        .then(data => {
+          if (!mountedRef.current || version !== requestVersion.current) return;
+          setList(previous => previous.concat(data));
+          setLoading(false);
+          if (!data.length) setLoadOuted(true);
+        })
+        .catch((error: unknown) => {
+          if (!mountedRef.current || version !== requestVersion.current) return;
+          setLoading(false);
+          const message = userObject(error)?.['message'];
+          setLoadError(typeof message === 'string' && message ? message : _l('加载失败，请重试'));
+        })
+        .finally(() => {
+          if (version === requestVersion.current) requestRef.current = null;
+        });
+    } catch (error) {
       setLoading(false);
-      if (_.isEmpty(data)) {
-        setLoadOuted(true);
-      }
-    });
+      setLoadError(_l('加载失败，请重试'));
+    }
   }
-
-  const debounceLoadList = useCallback(_.debounce(loadList, 200), []);
+  const loadListRef = useRef(loadList);
+  useEffect(() => {
+    loadListRef.current = loadList;
+  }, [loadList]);
+  const debounceLoadList = useCallback(
+    _.debounce((args: LoadUsersOptions) => loadListRef.current(args), 200),
+    [],
+  );
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      debounceLoadList.cancel();
+      cancelRequest();
+    };
+  }, [debounceLoadList]);
   let prefixUsers = prefixAccounts;
-  let users = [];
+  let users: QuickUser[] = [];
 
   if (!isStatic && !keywords && !selectRangeOptions && activeTab !== 1) {
     const result = getAccounts({
@@ -92,7 +151,9 @@ export function UserSelector(props) {
       includeUndefinedAndMySelf,
       includeSystemField,
       prefixOnlySystemField,
-      filterAccountIds: filterAccountIds.concat(selectedAccountIds).filter(_.identity),
+      filterAccountIds: filterAccountIds
+        .concat(selectedAccountIds)
+        .filter((id): id is string => typeof id === 'string' && !!id),
       prefixAccountIds,
       prefixAccounts,
     });
@@ -111,9 +172,11 @@ export function UserSelector(props) {
   }
 
   const usersForUserList =
-    isStatic && keywords ? users.filter(u => u.fullname.toLowerCase().indexOf(keywords.toLowerCase()) > -1) : users;
+    isStatic && keywords
+      ? users.filter(u => (u.fullname || '').toLowerCase().indexOf(keywords.toLowerCase()) > -1)
+      : users;
 
-  function handleSelect(user) {
+  function handleSelect(user: QuickUser) {
     const res = [_.pick(user, ['accountId', 'avatar', 'fullname', 'job'])];
     onSelect(res);
     selectCb(res);
@@ -136,7 +199,7 @@ export function UserSelector(props) {
       className="selectUserBox"
       onClick={() => {
         if (conRef.current && conRef.current.querySelector('input')) {
-          conRef.current.querySelector('input').focus();
+          conRef.current.querySelector('input')?.focus();
         }
       }}
     >
@@ -145,6 +208,7 @@ export function UserSelector(props) {
           active={activeTab}
           onActive={value => {
             const newType = selectRangeOptions ? 'range' : value === 1 ? 'external' : 'normal';
+            debounceLoadList.cancel();
             loadList({ type: newType, keywords: '' });
             setType(newType);
             setActiveTab(value);
@@ -158,6 +222,8 @@ export function UserSelector(props) {
         keywords={keywords}
         parentProps={props}
         setKeywords={value => {
+          cancelRequest();
+          setLoadError(undefined);
           setLoading(true);
           setPageIndex(1);
           setKeywords(value);
@@ -194,7 +260,7 @@ export function UserSelector(props) {
               break;
           }
 
-          if (newIndex < 0) {
+          if (newIndex !== undefined && newIndex < 0) {
             newIndex = 0;
           }
 
@@ -204,14 +270,14 @@ export function UserSelector(props) {
 
           const listLength = scrollRef.current.querySelectorAll('.userItem').length;
 
-          if (newIndex >= listLength) {
+          if (newIndex !== undefined && newIndex >= listLength) {
             newIndex = listLength - 1;
           }
 
           if (!_.isUndefined(newIndex)) {
             setActiveIndex(newIndex);
             const scrollContent = scrollRef.current;
-            const item = scrollContent.querySelectorAll(`.userItem`)[newIndex];
+            const item = scrollContent.querySelectorAll<HTMLElement>(`.userItem`)[newIndex];
 
             if (!item) return;
 
@@ -230,7 +296,7 @@ export function UserSelector(props) {
       <Content
         ref={scrollRef}
         style={{ minHeight }}
-        onWheel={e => {
+        onWheel={(e: WheelEvent<HTMLDivElement>) => {
           if (loading || type !== 'external' || loadOuted) {
             return;
           }
@@ -276,7 +342,7 @@ export function UserSelector(props) {
           <UserList
             type={type}
             appId={appId}
-            loading={loading}
+            loading={loading || !!loadError}
             keywords={keywords}
             showManageBtn={!isStatic && type === 'normal' && activeTab !== 1}
             activeIndex={
@@ -288,6 +354,14 @@ export function UserSelector(props) {
             onSelect={handleSelect}
           />
         }
+        {!isStatic && loadError && !loading && (
+          <div role="alert" className="pAll16">
+            {loadError}
+            <button type="button" className="mLeft8" onClick={() => loadList(lastLoadRef.current)}>
+              {_l('重试')}
+            </button>
+          </div>
+        )}
         {!isStatic && loading && <LoadDiv />}
       </Content>
     </Con>
@@ -319,10 +393,10 @@ UserSelector.propTypes = {
   onSelect: func, // 选中回调(用这个新的属性名)
 };
 
-export function SelectWrapper(props) {
+export function SelectWrapper(props: QuickSelectUserProps & { children: import('react').ReactElement }) {
   const { offset = { top: 0, left: 0 }, zIndex = 1001 } = props;
   const [visible, setVisible] = useState(false);
-  const popupOffset = [offset.left, offset.top];
+  const popupOffset = [offset.left || 0, offset.top || 0];
   return (
     <Trigger
       zIndex={zIndex}
@@ -361,7 +435,10 @@ SelectWrapper.propTypes = {
   popupOffset: arrayOf(number),
 };
 
-export default function quickSelectUser(target, props: Record<string, any> = {}) {
+export default function quickSelectUser(
+  target: EventTarget | { getBoundingClientRect(): Pick<DOMRect, 'x' | 'y' | 'height'> } | null | undefined,
+  props: QuickSelectUserProps = {},
+) {
   const panelWidth = 360;
   const panelHeight = 48 + (props.minHeight || 328);
   let targetLeft;
@@ -373,11 +450,13 @@ export default function quickSelectUser(target, props: Record<string, any> = {})
   const $con = document.createElement('div');
 
   function setPosition() {
-    if (_.isFunction(_.get(target, 'getBoundingClientRect'))) {
-      const rect = target.getBoundingClientRect();
-      height = rect.height;
-      targetLeft = rect.x;
-      targetTop = rect.y;
+    if (target && 'getBoundingClientRect' in target && typeof target.getBoundingClientRect === 'function') {
+      const rect = userObject(target.getBoundingClientRect());
+      if (!rect || typeof rect['height'] !== 'number' || typeof rect['x'] !== 'number' || typeof rect['y'] !== 'number')
+        throw new TypeError('Invalid user selector anchor rectangle');
+      height = rect['height'];
+      targetLeft = rect['x'];
+      targetTop = rect['y'];
       x = targetLeft + (offset.left || 0);
       y = targetTop + height + (offset.top || 0);
       if (x + panelWidth > window.innerWidth) {
@@ -401,7 +480,7 @@ export default function quickSelectUser(target, props: Record<string, any> = {})
       $con.style.position = 'absolute';
       $con.style.left = x + 'px';
       $con.style.top = y + 'px';
-      $con.style.zIndex = zIndex;
+      $con.style.zIndex = String(zIndex);
     }
   }
 
@@ -409,8 +488,13 @@ export default function quickSelectUser(target, props: Record<string, any> = {})
   document.body.appendChild($con);
 
   const root = createRoot($con);
+  let destroyed = false;
+  let positionTimer: ReturnType<typeof setTimeout> | undefined;
 
   function destory() {
+    if (destroyed) return;
+    destroyed = true;
+    if (positionTimer !== undefined) clearTimeout(positionTimer);
     root.unmount();
     if ($con && $con.parentNode === document.body && document.body.contains($con)) {
       document.body.removeChild($con);
@@ -423,7 +507,10 @@ export default function quickSelectUser(target, props: Record<string, any> = {})
         {...props}
         onClose={force => {
           if (!force && props.isDynamic) {
-            setTimeout(setPosition, 100);
+            if (positionTimer !== undefined) clearTimeout(positionTimer);
+            positionTimer = setTimeout(() => {
+              if (!destroyed) setPosition();
+            }, 100);
             return;
           }
 

@@ -1,8 +1,9 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { getToken } from 'src/utils/common';
+import { requireFileToken } from 'src/utils/commonRequestBoundary';
 import RegExpValidator from 'src/utils/expression';
 
 let vditorPromise;
@@ -230,19 +231,20 @@ function MdMarkdown(props) {
           worksheetId,
         })
           .then(res => {
-            formData.append('token', res[0].uptoken);
+            const token = requireFileToken(res);
+            formData.append('token', token.uptoken);
             formData.append('file', file);
-            formData.append('key', res[0].key);
-            formData.append('x:serverName', res[0].serverName);
-            formData.append('x:filePath', res[0].key.replace(res[0].fileName, ''));
-            formData.append('x:fileName', res[0].fileName);
+            formData.append('key', token.key);
+            formData.append('x:serverName', token.serverName);
+            formData.append('x:filePath', token.key.replace(token.fileName, ''));
+            formData.append('x:fileName', token.fileName);
             formData.append(
               'x:originalFileName',
               encodeURIComponent(
-                res[0].fileName.indexOf('.') > -1 ? res[0].fileName.split('.').slice(0, -1).join('.') : res[0].fileName,
+                token.fileName.indexOf('.') > -1 ? token.fileName.split('.').slice(0, -1).join('.') : token.fileName,
               ),
             );
-            formData.append('x:fileExt', '.' + RegExpValidator.getExtOfFileName(res[0].fileName));
+            formData.append('x:fileExt', '.' + RegExpValidator.getExtOfFileName(token.fileName));
 
             return window.mdyAPI('', '', formData, {
               ajaxOptions: {

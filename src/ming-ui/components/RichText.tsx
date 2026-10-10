@@ -6,6 +6,8 @@ import filterXSS from 'xss';
 import { whiteList } from 'xss/lib/default';
 import autoSize from 'ming-ui/components/AutoSize';
 import { getToken } from 'src/utils/common';
+import { requireFileToken } from 'src/utils/commonRequestBoundary';
+import type { TokenRequestArgs } from 'src/utils/commonRequestTypes';
 import RegExpValidator from 'src/utils/expression';
 import { preventWidgetResizeRedrawRecursion } from './richTextUtils';
 import './less/RichText.less';
@@ -317,7 +319,9 @@ const Wrapper = styled.div(
 class MyUploadAdapter {
   declare xhr: XMLHttpRequest | undefined;
 
-  constructor(loader, tokenArgs, options = {}) {
+  declare options: { bucket?: number | undefined };
+  declare tokenArgs: TokenRequestArgs;
+  constructor(loader, tokenArgs: TokenRequestArgs, options: { bucket?: number | undefined } = {}) {
     this.loader = loader;
     this.tokenArgs = tokenArgs;
     this.options = options;
@@ -384,26 +388,27 @@ class MyUploadAdapter {
       let fileExt = `.${RegExpValidator.getExtOfFileName(result.name)}`;
       let isPic = RegExpValidator.fileIsPicture(fileExt);
       this.url = '';
-      getToken([{ bucket: get(this, 'options.bucket') || (isPic ? 4 : 2), ext: fileExt }], 9, this.tokenArgs).then(
-        res => {
-          data.append('token', res[0].uptoken);
+      getToken([{ bucket: this.options.bucket || (isPic ? 4 : 2), ext: fileExt }], 9, this.tokenArgs)
+        .then(res => {
+          const token = requireFileToken(res);
+          data.append('token', token.uptoken);
           data.append('file', result);
-          data.append('key', res[0].key);
-          data.append('x:serverName', res[0].serverName);
-          data.append('x:filePath', res[0].key.replace(res[0].fileName, ''));
-          data.append('x:fileName', res[0].fileName);
+          data.append('key', token.key);
+          data.append('x:serverName', token.serverName);
+          data.append('x:filePath', token.key.replace(token.fileName, ''));
+          data.append('x:fileName', token.fileName);
           data.append(
             'x:originalFileName',
             encodeURIComponent(
-              res[0].fileName.indexOf('.') > -1 ? res[0].fileName.split('.').slice(0, -1).join('.') : res[0].fileName,
+              token.fileName.indexOf('.') > -1 ? token.fileName.split('.').slice(0, -1).join('.') : token.fileName,
             ),
           );
-          var fileExt = '.' + RegExpValidator.getExtOfFileName(res[0].fileName);
+          var fileExt = '.' + RegExpValidator.getExtOfFileName(token.fileName);
           data.append('x:fileExt', fileExt);
-          this.url = res[0].url || (res[0].serverName && res[0].key ? res[0].serverName + res[0].key : '');
+          this.url = token.url || (token.serverName && token.key ? token.serverName + token.key : '');
           this.xhr.send(data);
-        },
-      );
+        })
+        .catch(reject);
       this.xhr.addEventListener('load', () => {
         const response = this.xhr.response;
 

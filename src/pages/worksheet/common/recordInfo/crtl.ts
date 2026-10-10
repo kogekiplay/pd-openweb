@@ -684,7 +684,7 @@ interface ChangeOwnerOptions {
   projectId?: string;
   /** 选人浮层的锚点元素 */
   target?: HTMLElement | null;
-  changeOwner: (users: { accountId?: string; fullname?: string }[], accountId?: string) => void;
+  changeOwner: (users: { accountId?: string | undefined; fullname?: string | undefined }[], accountId?: string) => void;
 }
 
 export function handleChangeOwner({
@@ -714,7 +714,7 @@ export function handleChangeOwner({
       unique: true,
       projectId: projectId,
       selectedAccountIds: [ownerAccountId],
-      callback(users: { accountId?: string; fullname?: string }[]) {
+      callback(users: { accountId?: string | undefined; fullname?: string | undefined }[]) {
         if (users[0].accountId === md.global.Account.accountId) {
           users[0].fullname = md.global.Account.fullname;
         }
@@ -722,7 +722,7 @@ export function handleChangeOwner({
         changeOwner(users, users[0].accountId);
       },
     },
-    selectCb(users: { accountId?: string; fullname?: string }[]) {
+    selectCb(users: { accountId?: string | undefined; fullname?: string | undefined }[]) {
       if (users[0].accountId === md.global.Account.accountId) {
         users[0].fullname = md.global.Account.fullname;
       }

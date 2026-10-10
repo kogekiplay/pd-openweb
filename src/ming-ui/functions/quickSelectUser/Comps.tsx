@@ -7,6 +7,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import PersonalStatus from 'src/pages/chat/components/MyStatus/PersonalStatus';
 import dialogSelectUser from '../dialogSelectUser';
 import { openManageOftenUserDialog } from '../dialogSelectUser/GeneralSelect/ManageOftenUserDialog';
+import type { SearchProps, UserItemProps, UserListProps } from './types';
 
 export const Con = styled.div`
   overflow: hidden;
@@ -112,8 +113,8 @@ export const SearchUsers = styled.div`
   }
 `;
 
-export function UserItem(props) {
-  const { className, notShowCurrentUserName, user = {}, type, onClick, appId, projectId, select = false } = props;
+export function UserItem(props: UserItemProps) {
+  const { className, notShowCurrentUserName, user, type, onClick, appId, projectId, select = false } = props;
   const { accountId, phone, fullname, job, department, onStatusOption } = user;
 
   return (
@@ -162,7 +163,7 @@ export function UserItem(props) {
   );
 }
 
-export function UserList(props) {
+export function UserList(props: UserListProps) {
   const {
     keywords,
     activeIndex,
@@ -181,7 +182,7 @@ export function UserList(props) {
 
   const hasManageBtn = showManageBtn && !window.isPublicApp && !md.global.Account.isPortal;
   const [isShowMore, setIsShowMore] = useState(false);
-  const [select, setSelect] = useState([]);
+  const [select, setSelect] = useState<string[]>([]);
 
   const openManageDialog = () => {
     openManageOftenUserDialog({
@@ -238,7 +239,7 @@ export function UserList(props) {
   );
 }
 
-export function Search(props) {
+export function Search(props: SearchProps) {
   const { type, keywords, setKeywords, parentProps, onSelect, onClose, isHidAddUser, onKeyDown = () => {} } = props;
   const SelectUserSettings = parentProps.SelectUserSettings || { ...parentProps };
   const inputRef = useRef<HTMLInputElement>(null);
@@ -312,7 +313,7 @@ const TabsCon = styled.div`
   }
 `;
 
-export function Tabs(props) {
+export function Tabs(props: { active?: number | undefined; onActive: (tab: number) => void }) {
   const { active = 0, onActive } = props;
   return (
     <TabsCon>

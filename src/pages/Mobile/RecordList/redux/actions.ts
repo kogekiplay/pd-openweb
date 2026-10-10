@@ -22,10 +22,12 @@ import type { AppDispatch, GetState, RootState } from 'src/redux/types';
 import { calendarPairs } from 'src/utils/advancedSettingBoundary';
 import { getTranslateInfo } from 'src/utils/app';
 import { getFilledRequestParams, getRequest } from 'src/utils/common';
+import { isLessThan } from 'src/utils/comparisonBoundary';
 import { getAdvanceSetting, isTimeStyle } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 import { formatQuickFilter, needHideViewFilters } from 'src/utils/filter';
 import { addBehaviorLog, compatibleMDJS, dateConvertToUserZone } from 'src/utils/project';
+import { objectValue } from 'src/utils/recordValueBoundary';
 import {
   replaceAdvancedSettingTranslateInfo,
   replaceControlsTranslateInfo,
@@ -205,11 +207,19 @@ export const loadWorksheet = noNeedGetApp => (dispatch: AppDispatch, getState: G
            store 里的对象（appSection 取自 getState().mobile.appDetail），
            而下面只用 workSheetId 做匹配，盖上去的字段没人读。直接删。 */
         let navSheetList = _.flatten(appSection.map(item => item.workSheetInfo))
-          .filter(item => [1, 3].includes(item.status) && !item.navigateHide) //左侧列表状态为1 且 角色权限没有设置隐藏
+          .flatMap((value: unknown) => {
+            const item = objectValue(value);
+            return item &&
+              typeof item['status'] === 'number' &&
+              [1, 3].includes(item['status']) &&
+              !item['navigateHide']
+              ? [item]
+              : [];
+          }) //左侧列表状态为1 且 角色权限没有设置隐藏
           .slice(0, 4);
         navSheetList.forEach(item => {
-          if (item.workSheetId === workSheetInfo.worksheetId) {
-            safeLocalStorageSetItem(`currentNavWorksheetInfo-${item.workSheetId}`, JSON.stringify(workSheetInfo));
+          if (item['workSheetId'] === workSheetInfo.worksheetId) {
+            safeLocalStorageSetItem(`currentNavWorksheetInfo-${item['workSheetId']}`, JSON.stringify(workSheetInfo));
           }
         });
       }
@@ -452,7 +462,7 @@ export const fetchSheetRows =
 
     dispatch({ type: 'MOBILE_FETCH_SHEETROW_START' });
     dispatch({ type: 'MOBILE_UPDATE_SHEET_VIEW', sheetView: { pageIndex } });
-    const params = getFilledRequestParams({
+    const rowRequest = {
       worksheetId,
       appId,
       searchType: 1,
@@ -470,7 +480,13 @@ export const fetchSheetRows =
       langType: window.shareState.shareId ? getCurrentLangCode() : undefined,
       requestParams,
       ...extraParams,
-    });
+    };
+    const params: Omit<typeof rowRequest, 'pageSize' | 'pageIndex'> & {
+      pageSize?: number;
+      pageIndex?: unknown;
+      kanbanIndex?: unknown;
+      kanbanSize?: unknown;
+    } = getFilledRequestParams(rowRequest);
 
     // 看板分页用特殊字段
     if (isKanban) {
@@ -540,7 +556,7 @@ export const fetchSheetRows =
           dispatch(
             changeBoardViewState({
               kanbanIndex: params.kanbanIndex,
-              hasMoreData: !(sheetRowsAndTem.data < params.kanbanSize),
+              hasMoreData: !isLessThan(sheetRowsAndTem.data, params.kanbanSize),
             }),
           );
         }
@@ -968,7 +984,7 @@ export const loadBoardViewNextGroup = ({ callback = _.noop }) => {
         // 将已经存在的看板过滤掉
         const existedKeys = boardData.map(item => item.key);
         const filterData = data
-          .filter(item => !_.includes(existedKeys, item.key))
+          .filter(item => !_.includes(existedKeys, item['key']))
           .map((item, index: number) => ({ ...item, sort: existedKeys.length + index + 1 }));
         dispatch(changeBoardViewData(boardData.concat(filterData)));
         dispatch(initBoardViewRecordCount({ ...boardViewRecordCount, ...dealBoardViewRecordCount(filterData) }));
@@ -990,8 +1006,7 @@ export const loadBoardViewGroupItemData =
     const { boardView } = sheet;
     const params = getBoardViewPara(sheet);
 
-    params.pageIndex = pageIndex;
-    params.kanbanKey = kanbanKey;
+    Object.assign(params, { pageIndex, kanbanKey });
 
     sheetAjax
       .getFilterRows(params)

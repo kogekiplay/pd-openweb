@@ -6,6 +6,7 @@ import { reportTypes } from 'statistics/Charts/common';
 import { formatValuesOfOriginConditions, redefineComplexControl } from 'worksheet/common/WorkSheetFilter/util';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { VIEW_DISPLAY_TYPE } from 'src/pages/worksheet/constants/enum';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
 import { getFilledRequestParams, pathCompletion } from 'src/utils/common';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
@@ -19,7 +20,6 @@ import {
 } from '../common/reportConfigUtils';
 import { fillValueMap, mergeReportData } from '../common/reportDataUtils';
 import { filterTimeParticleSizeDropdownData } from '../common/timeUtils';
-import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const changeBase = data => {
   return dispatch => {
@@ -222,12 +222,15 @@ export const getReportData = ({ reload = false } = {}) => {
 
       const { filter = {}, sorts, version, reportType } = data;
       const { particleSizeType } = data.xaxes || {};
+      const requestExtensions: { particleSizeType?: unknown } = {};
+      const requestFilters: unknown[] = [];
       const params = {
         reportId: report.id,
         pageId,
         version,
         reload,
-        filters: [],
+        filters: requestFilters,
+        ...requestExtensions,
         ...getFilledRequestParams({}),
       };
 
@@ -332,12 +335,15 @@ export const getTableData = () => {
 
       const { filter = {}, sorts, country, reportType } = data;
       const { particleSizeType } = data.xaxes || {};
+      const requestExtensions: { particleSizeType?: unknown } = {};
+      const requestFilters: unknown[] = [];
       const params = {
         reportId: report.id,
         pageId,
         version: data.version,
         reload: true,
-        filters: [],
+        filters: requestFilters,
+        ...requestExtensions,
       };
 
       if (!_.isEmpty(filters)) {
@@ -1007,10 +1013,12 @@ export const removeXaxes = () => {
     };
 
     if (reportType === reportTypes.FunnelChart) {
-      data.displaySetup = {
-        ...currentReport.displaySetup,
-        showOptionIds: [],
-      };
+      Object.assign(data, {
+        displaySetup: {
+          ...currentReport.displaySetup,
+          showOptionIds: [],
+        },
+      });
     }
 
     dispatch(changeCurrentReport(data, true));

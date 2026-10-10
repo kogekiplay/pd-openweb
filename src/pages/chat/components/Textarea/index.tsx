@@ -70,7 +70,7 @@ export default class TextareaBox extends Component<any, any> {
 
         event.preventDefault();
       } else {
-        const pos = getCaretPosition(event.target);
+        const pos = Number(getCaretPosition(event.target));
         const start = value.slice(0, pos);
         const end = value.slice(pos);
         const nextValue = isEnter ? start + '\r\n' + end : start + end;

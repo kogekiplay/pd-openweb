@@ -1,4 +1,3 @@
-import { canShowMingoEntry } from './permission';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -12,6 +11,7 @@ import type { RootState } from 'src/redux/types';
 import { emitter, pathCompletion } from 'src/utils/common';
 import { MINGO_TASK_TYPE } from './ChatBot/enum';
 import MingoEntry from './Entry';
+import { canShowMingoEntry } from './permission';
 
 const MingoWrap = styled.div`
   height: 100%;
@@ -44,12 +44,12 @@ const MingoWrap = styled.div`
 `;
 
 function getDefaultValueOfMingoCache() {
-  if (window.globalStoreForMingo.activeModule === 'worksheetControlsEdit') {
+  if (window.globalStoreForMingo?.activeModule === 'worksheetControlsEdit') {
     const cacheObj = safeParse(
       localStorage.getItem(`MINGO_CACHE_CREATE_WORKSHEET_BOT_${get(md, 'global.Account.accountId')}`),
     );
 
-    if (cacheObj && cacheObj.worksheetId === window.globalStoreForMingo.worksheetId) {
+    if (cacheObj && cacheObj.worksheetId === window.globalStoreForMingo?.worksheetId) {
       return cacheObj;
     }
     //  && globalStoreForMingo.worksheetId

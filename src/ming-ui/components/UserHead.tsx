@@ -12,7 +12,7 @@ interface UserHeadProps {
   /** 头像的点击事件 */
   headClick?: ((accountId: string) => void) | undefined;
   /** 网络 id */
-  projectId?: string | undefined;
+  projectId?: string | null | undefined;
   appId?: string | undefined;
   operation?: React.ReactNode;
   /** 是否显示发消息按钮 */

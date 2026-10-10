@@ -80,6 +80,8 @@ new Function(
   moduleLike,
   moduleLike.exports,
   (name: string) => {
+    if (name === './commonRequestBoundary' || name === './caretBoundary' || name === './mingoStoreBoundary')
+      return require(path.join(__dirname, name + '.ts'));
     if (Object.hasOwn(imports, name)) return imports[name];
     throw new Error('Unstubbed common helper dependency ' + name);
   },

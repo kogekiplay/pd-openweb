@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Icon } from 'ming-ui';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import { dialogSelectUser } from 'ming-ui/functions';
@@ -110,9 +110,10 @@ const MentionsInput = props => {
   const rect = input.getBoundingClientRect();
   const timerId = useRef<NodeJS.Timeout | null>(null);
   const debouncedSearch = useRef(null);
+  const initialMentionPosition: { atPos: number | null | undefined } = { atPos: 0 };
   const mentionState = useRef({
     isAt: false,
-    atPos: 0,
+    ...initialMentionPosition,
     currentType: null,
     currentDataQuery: null,
     promiseObj: null,
@@ -296,10 +297,10 @@ const MentionsInput = props => {
     const state = mentionState.current;
     const currentType = state.currentType;
     var currentMessage = input.value;
-    var position = getCaretPosition(input);
+    var position = Number(getCaretPosition(input));
 
     var startCaretPosition = 0;
-    if (state.isAt && state.atPos < position) {
+    if (state.isAt && Number(state.atPos) < position) {
       // 中文问题
       startCaretPosition = position - (state.currentDataQuery || '').length - 1;
     } else {
@@ -403,7 +404,7 @@ const MentionsInput = props => {
 
     let startPos = getCaretPosition(target);
     let currentMessage = target.value;
-    let startChar = currentMessage.substring(startPos - 1, startPos);
+    let startChar = currentMessage.substring(Number(startPos) - 1, startPos === null ? 0 : startPos);
 
     if (atLetterArr.indexOf(startChar) > -1 || (showCategory && categoryLetterArr.indexOf(startChar) > -1)) {
       state.atPos = startPos;
@@ -416,14 +417,14 @@ const MentionsInput = props => {
 
     if (!state.isAt) {
       // 解决部分数据法恶心的问题
-      var message = currentMessage.substring(state.atPos, startPos);
+      var message = currentMessage.substring(Number(state.atPos), startPos === null ? 0 : startPos);
       if (
         (message.indexOf(' ') == -1 && message.indexOf('\n') == -1) ||
         (window.isSafari && atLetterArr.includes(message.charAt(message.length - 1)))
       ) {
         // 没有空格 没有换行，重新激活搜索
         state.isAt = true;
-        state.currentType = currentMessage.substring(state.atPos - 1, state.atPos);
+        state.currentType = currentMessage.substring(Number(state.atPos) - 1, state.atPos === null ? 0 : state.atPos);
       }
     }
 
@@ -438,8 +439,9 @@ const MentionsInput = props => {
       return;
     }
 
-    if (state.isAt && state.atPos <= getCaretPosition(target)) {
-      state.currentDataQuery = currentMessage.substring(state.atPos, getCaretPosition(target));
+    if (state.isAt && Number(state.atPos) <= Number(getCaretPosition(target))) {
+      const position = getCaretPosition(target);
+      state.currentDataQuery = currentMessage.substring(Number(state.atPos), position === null ? 0 : position);
       debouncedSearch.current(state.currentDataQuery);
     } else {
       debouncedSearch.current && debouncedSearch.current.cancel();

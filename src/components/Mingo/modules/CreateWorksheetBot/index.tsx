@@ -12,6 +12,8 @@ import { genBotSessionId } from 'src/utils/agentSession';
 import { SpeechSynthesizer } from 'src/utils/audio';
 import { emitter } from 'src/utils/common';
 import { AI_FEATURE_TYPE } from 'src/utils/enum';
+import { mingoObject, mingoString, mingoWorksheets } from 'src/utils/mingoStoreBoundary';
+import type { MingoAppContext } from 'src/utils/mingoStoreTypes';
 import CreateWorksheetRecommend from '../../ChatBot/components/CreateWorksheetRecommend';
 import MessageList from '../../ChatBot/components/MessageList';
 import ResponseError from '../../ChatBot/components/ResponseError';
@@ -62,24 +64,33 @@ const MingoContentWrap = styled.div`
   }
 `;
 
-function getCurrentAppData({ base = {}, sheetList = {} } = {}) {
+function getCurrentAppData({ base = {}, sheetList = {} }: { base?: unknown; sheetList?: unknown } = {}):
+  MingoAppContext | undefined {
   if (window?.globalStoreForMingo?.activeModule === 'worksheet') {
-    let loading = sheetList.loading;
-    const { appId, worksheetId, groupId } = base;
-    const worksheets = flatten(sheetList.data.map(item => (item.type === 0 ? item : item.items))).filter(
-      sheet => sheet && sheet.type === 0,
-    );
-    const appDetail =
-      appId === window.appInfo?.id ? { name: window.appInfo?.name, description: window.appInfo?.description } : null;
+    const baseData = mingoObject(base);
+    const sheetData = mingoObject(sheetList);
+    const appId = mingoString(baseData?.['appId']);
+    const worksheetId = mingoString(baseData?.['worksheetId']);
+    const groupId = mingoString(baseData?.['groupId']);
+    const sheetItems = sheetData?.['data'];
+    if (!Array.isArray(sheetItems)) throw new TypeError('Missing Mingo worksheet list');
+    const flattened = flatten(
+      sheetItems.map((item: unknown) => {
+        const sheetItem = mingoObject(item);
+        return sheetItem?.['type'] === 0 ? item : sheetItem?.['items'];
+      }),
+    ).filter((sheet: unknown) => mingoObject(sheet)?.['type'] === 0);
+    const worksheets = mingoWorksheets(flattened);
+    const rawAppInfo: unknown = window['appInfo'];
+    const appInfo = mingoObject(rawAppInfo);
     const baseInfo = {
-      loading: loading || !appDetail,
       appId,
       worksheetId,
-      projectId: window.appInfo?.projectId,
+      projectId: mingoString(appInfo?.['projectId']),
       sectionId: groupId,
       worksheets,
-      appName: window.appInfo?.name,
-      appDescription: window.appInfo?.description,
+      appName: mingoString(appInfo?.['name']),
+      appDescription: mingoString(appInfo?.['description']),
     };
     return {
       activeModule: 'worksheetControlsEdit',
@@ -147,9 +158,11 @@ function MingoContent(props, ref) {
   const [rootComp, setRootComp] = useState(null);
   const [error, setError] = useState<StreamError | undefined>();
   const [sendDisabled, setSendDisabled] = useState(false);
-  const [currentAppData, setCurrentAppData] = useState(getCurrentAppData({ base, sheetList }));
+  const [currentAppData, setCurrentAppData] = useState<MingoAppContext | undefined>(
+    getCurrentAppData({ base, sheetList }),
+  );
   const [unsavedControlIds, setUnsavedControlIds] = useState([]);
-  const { appId, projectId, sectionId, worksheetId, worksheets = [], appName, appDescription } = currentAppData;
+  const { appId, projectId, sectionId, worksheetId, worksheets = [], appName, appDescription } = currentAppData || {};
   const cache = useRef({
     taskStatus:
       defaultData.taskStatus ||

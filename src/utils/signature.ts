@@ -1,3 +1,6 @@
+import { requireBase64FileToken } from './commonRequestBoundary';
+import type { TokenRequestArgs } from './commonRequestTypes';
+
 /**
  * 签名控件（type 42）相关的 URL 归一化。
  *
@@ -54,7 +57,7 @@ function base64OfBytes(bytes: Uint8Array): string {
   return btoa(binary);
 }
 
-interface SignatureTokenArgs {
+interface SignatureTokenArgs extends TokenRequestArgs {
   projectId?: string;
   appId?: string;
   worksheetId?: string;
@@ -80,20 +83,17 @@ export async function ensurePngSignatureUrl(url: string, tokenArgs: SignatureTok
     const [{ getToken }, { default: axios }] = await Promise.all([import('./common'), import('axios')]);
     const res = await getToken([{ bucket: 4, ext: '.png' }], 10, tokenArgs);
 
-    if (!res || res.error || !res[0]) return url;
+    if (!Array.isArray(res) || !res[0]) return url;
+    const token = requireBase64FileToken(res);
 
-    await axios.post(
-      `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(res[0].key)}`,
-      base64OfBytes(bytes),
-      {
-        headers: {
-          'Content-Type': 'application/octet-stream',
-          Authorization: `UpToken ${res[0].uptoken}`,
-        },
+    await axios.post(`${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(token.key)}`, base64OfBytes(bytes), {
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        Authorization: `UpToken ${token.uptoken}`,
       },
-    );
+    });
 
-    return stripFileUrlSignature(res[0].url);
+    return stripFileUrlSignature(token.url || '');
   } catch (err) {
     console.error('签名扩展名归一化失败，沿用原 URL', err);
     return url;

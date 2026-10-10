@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallowEqual } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { UserHead } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
 import { quickSelectUser } from 'ming-ui/functions';
@@ -210,7 +210,7 @@ export default class User extends React.Component<any, any> {
 
     const selectedAccountIds = value.map(item => item.accountId);
 
-    const callback = (data, forceUpdate) => {
+    const callback = (data, forceUpdate?: boolean) => {
       if (cell.enumDefault === 0) {
         // 单选
         const validateResult = onValidate(JSON.stringify(data));

@@ -127,7 +127,7 @@ export default class ExportSheet extends Component<any, any> {
     });
   }
 
-  getColumnRpts(exportControlsId = []) {
+  getColumnRpts(exportControlsId: string[] = []) {
     const { columns, worksheetSummaryTypes } = this.props;
     return columns
       .filter(control => _.includes(exportControlsId, control.controlId))
@@ -241,13 +241,13 @@ export default class ExportSheet extends Component<any, any> {
 
     // 获取Token 功能模块 token枚举，3 = 导出excel，4 = 导入excel生成表，5= word打印
     const token = await appManagement.getToken({ worksheetId, viewId, tokenType: 3 });
-    const exportControlsId = [];
+    const exportControlsId: string[] = [];
 
     this.sortControls(columns).forEach(column => {
       columnsSelected[column.controlId] && exportControlsId.push(column.controlId);
     });
 
-    const args = getFilledRequestParams({
+    const requestArgs = {
       token,
       accountId: md.global.Account.accountId,
       worksheetId,
@@ -288,7 +288,9 @@ export default class ExportSheet extends Component<any, any> {
       exportId,
       exportJob,
       orderType,
-    });
+    };
+    const args: typeof requestArgs & { excludeRowIds?: unknown; columnRpts?: unknown } =
+      getFilledRequestParams(requestArgs);
 
     if (allWorksheetIsSelected) {
       delete args['rowIds'];

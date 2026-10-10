@@ -10,6 +10,7 @@ import type { MasterData, RuleFilterItem } from 'src/components/Form/core/types'
 import type { TreeExpansionOptions, TreeMap } from 'src/pages/worksheet/common/TreeTableHelper';
 import type { WorksheetFilterCondition } from 'src/pages/worksheet/types';
 import { postWithToken } from 'src/utils/common';
+import { decodeDownloadBlob } from 'src/utils/commonRequestBoundary';
 import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
 import { storeFailureMessage, storeRows } from 'src/utils/fieldStoreBoundary';
 import { filterEmptyChildTableRows } from 'src/utils/record';
@@ -559,6 +560,7 @@ export const exportSheet = ({
         {
           responseType: 'blob',
         },
+        decodeDownloadBlob,
       );
       onDownload();
       saveAs(resData, fileName || resData.name || 'file');

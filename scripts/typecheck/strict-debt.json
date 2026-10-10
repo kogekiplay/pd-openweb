@@ -495,9 +495,6 @@
     "src/ming-ui/functions/quickSelectDept/index.tsx",
     "src/ming-ui/functions/quickSelectGroup/index.tsx",
     "src/ming-ui/functions/quickSelectRole/index.tsx",
-    "src/ming-ui/functions/quickSelectUser/Comps.tsx",
-    "src/ming-ui/functions/quickSelectUser/index.tsx",
-    "src/ming-ui/functions/quickSelectUser/util.ts",
     "src/pages/Admin/api/cloudApi/apiKey.ts",
     "src/pages/Admin/api/cloudApi/email.ts",
     "src/pages/Admin/api/cloudApi/health.ts",
@@ -3436,7 +3433,6 @@
     "src/socket/marketNotice/displaySysNotice.ts",
     "src/socket/marketNotice/getNotice.ts",
     "src/socket/marketNotice/index.ts",
-    "src/socket/mobileSocketInit.ts",
-    "src/utils/common.ts"
+    "src/socket/mobileSocketInit.ts"
   ]
 }

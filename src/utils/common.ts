@@ -1,15 +1,40 @@
 import dayjs from 'dayjs';
 import EventEmitter from 'events';
 import JSEncrypt from 'jsencrypt';
-import _, { get, isEmpty } from 'lodash';
+import _, { isEmpty } from 'lodash';
 import moment from 'moment';
 import qs from 'query-string';
 import appManagementAjax from 'src/api/appManagement';
 import qiniuAjax from 'src/api/qiniu';
 import webCache from 'src/api/webCache';
+import { invokeLegacyCaretMethod } from './caretBoundary';
+import type { CaretControl } from './caretBoundary';
+import {
+  decodeAuthToken,
+  decodeFileTokens,
+  decodeLocalPushData,
+  validateFileTokenRequests,
+  validateTemporaryAttachment,
+} from './commonRequestBoundary';
+import type {
+  AbortableRequest,
+  FileTokenOptions,
+  FileTokenRequest,
+  FileTokenResult,
+  FilledRequestParams,
+  LocalPushData,
+  RequestBody,
+  ResponseDecoder,
+  TemporaryAttachment,
+  TemporaryAttachmentArgs,
+  TokenHttpOptions,
+  TokenRequestArgs,
+} from './commonRequestTypes';
 import { PUBLIC_KEY } from './enum';
 import RegExpValidator from './expression';
 import type { CalculatedDate, FunctionDateInput } from './functionLibraryTypes';
+import { mingoStorePatch, writeMingoStoreValue } from './mingoStoreBoundary';
+import type { MingoGlobalStore, MingoStoreKey, MingoStoreUpdater, MingoStoreValues } from './mingoStoreTypes';
 import { getPssId } from './pssId';
 import { decodeKVValue, decodeTempRecordIds } from './tempRecordCache';
 import type { KVOptions, KVRequest } from './tempRecordCache';
@@ -234,23 +259,37 @@ export function getRowGetType(from?: string | number, { discussId }: { discussId
 
 // axiosConfig 只有 responseType 被读到（全仓三个调用点里只有导出 Excel 传 'blob'），
 // 所以按这一个键标，别用 Record<string, any> 假装它能收任何配置。
+export function postWithToken(
+  url: string,
+  tokenArgs?: TokenRequestArgs,
+  body?: RequestBody,
+  axiosConfig?: TokenHttpOptions,
+): Promise<unknown>;
+export function postWithToken<Value>(
+  url: string,
+  tokenArgs: TokenRequestArgs,
+  body: RequestBody,
+  axiosConfig: TokenHttpOptions,
+  decode: ResponseDecoder<Value>,
+): Promise<Value>;
 export async function postWithToken(
   url: string,
-  tokenArgs = {},
-  body = {},
-  axiosConfig: { responseType?: XMLHttpRequestResponseType } = {},
-) {
-  let token;
+  tokenArgs: TokenRequestArgs = {},
+  body: RequestBody = {},
+  axiosConfig: TokenHttpOptions = {},
+  decode?: ResponseDecoder<unknown>,
+): Promise<unknown> {
+  let token: string | undefined;
 
   if (!_.get(window, 'shareState.shareId')) {
-    token = await appManagementAjax.getToken(tokenArgs);
-
-    if (!token) {
+    const rawToken: unknown = await appManagementAjax.getToken(tokenArgs);
+    if (!rawToken) {
       throw '获取token失败';
     }
+    token = decodeAuthToken(rawToken);
   }
 
-  return window.mdyAPI(
+  const result: unknown = await window.mdyAPI(
     '',
     '',
     Object.assign({}, body, {
@@ -266,20 +305,33 @@ export async function postWithToken(
       },
     },
   );
+  return decode ? decode(result) : result;
 }
 
-export async function getWithToken(url: string, tokenArgs = {}, body = {}) {
-  let token;
+export function getWithToken(url: string, tokenArgs?: TokenRequestArgs, body?: RequestBody): Promise<unknown>;
+export function getWithToken<Value>(
+  url: string,
+  tokenArgs: TokenRequestArgs,
+  body: RequestBody,
+  decode: ResponseDecoder<Value>,
+): Promise<Value>;
+export async function getWithToken(
+  url: string,
+  tokenArgs: TokenRequestArgs = {},
+  body: RequestBody = {},
+  decode?: ResponseDecoder<unknown>,
+): Promise<unknown> {
+  let token: string | undefined;
 
   if (!_.get(window, 'shareState.shareId')) {
-    token = await appManagementAjax.getToken(tokenArgs);
-
-    if (!token) {
+    const rawToken: unknown = await appManagementAjax.getToken(tokenArgs);
+    if (!rawToken) {
       throw '获取token失败';
     }
+    token = decodeAuthToken(rawToken);
   }
 
-  return window.mdyAPI(
+  const result: unknown = await window.mdyAPI(
     '',
     '',
     {
@@ -295,51 +347,67 @@ export async function getWithToken(url: string, tokenArgs = {}, body = {}) {
       },
     },
   );
+  return decode ? decode(result) : result;
 }
 
-export const getFilledRequestParams = (params, defaultRequestParams = {}) => {
+export const getFilledRequestParams = <Params extends object>(
+  params: Params,
+  defaultRequestParams: RequestBody = {},
+): FilledRequestParams<Params> => {
   const request = getRequest();
-  const requestParams = _.isObject(params.requestParams) ? { ...params.requestParams } : {};
+  const existing: unknown = Reflect.get(params, 'requestParams');
+  const requestParams: Record<string, unknown> =
+    existing !== null && (typeof existing === 'object' || typeof existing === 'function') ? { ...existing } : {};
 
   if (_.isEmpty(request)) {
     return params;
   }
 
   Object.keys(request).forEach(key => {
-    if (_.isArray(request[key])) {
-      requestParams[key.trim()] = request[key][request[key].length - 1];
-    } else if (request[key] !== null) {
-      requestParams[key.trim()] = request[key];
+    const value = request[key];
+    if (Array.isArray(value)) {
+      requestParams[key.trim()] = value[value.length - 1];
+    } else if (value !== null) {
+      requestParams[key.trim()] = value;
     }
   });
 
   return { ...params, requestParams: { ...defaultRequestParams, ...requestParams } };
 };
 
-export function appendDataToLocalPushUniqueId(data?) {
+export function appendDataToLocalPushUniqueId(data?: LocalPushData): void {
   try {
-    const defaultData = getDataFromLocalPushUniqueId();
-    let pushUniqueId = _.get(md, 'global.Config.pushUniqueId');
+    let pushUniqueId = md.global.Config.pushUniqueId;
     pushUniqueId = pushUniqueId.replace(/__(.+)/, '');
     if (pushUniqueId) {
+      const defaultData = data ? getDataFromLocalPushUniqueId() : {};
       md.global.Config.pushUniqueId =
-        pushUniqueId + (!data ? '' : `__${JSON.stringify(_.assign({}, defaultData, data))}`);
+        pushUniqueId + (!data ? '' : `__${JSON.stringify(_.assign({}, defaultData, decodeLocalPushData(data)))}`);
     }
   } catch (err) {
     console.error(err);
   }
 }
 
-export function resetLocalPushUniqueId() {
+export function resetLocalPushUniqueId(): void {
   appendDataToLocalPushUniqueId();
 }
 
-export function getDataFromLocalPushUniqueId() {
-  return safeParse(((_.get(md, 'global.Config.pushUniqueId') || '').match(/__(.+)/) || [])[1]);
+export function getDataFromLocalPushUniqueId(): LocalPushData {
+  const rawId: unknown = md.global.Config.pushUniqueId;
+  if (rawId === undefined || rawId === null || rawId === '') return {};
+  if (typeof rawId !== 'string') throw new TypeError('Invalid local push identifier');
+  const serialized = rawId.match(/__(.+)/)?.[1];
+  if (serialized === undefined) return {};
+  const parsed: unknown = JSON.parse(serialized);
+  return decodeLocalPushData(parsed);
 }
 
-export function equalToLocalPushUniqueId(pushUniqueId) {
-  return String(pushUniqueId).replace(/__(.+)/, '') === _.get(md, 'global.Config.pushUniqueId').replace(/__(.+)/, '');
+export function equalToLocalPushUniqueId(pushUniqueId: string | number | null | undefined): boolean {
+  const raw: unknown = pushUniqueId;
+  if (raw !== null && raw !== undefined && typeof raw !== 'string' && typeof raw !== 'number')
+    throw new TypeError('Invalid local push identifier');
+  return String(pushUniqueId).replace(/__(.+)/, '') === md.global.Config.pushUniqueId.replace(/__(.+)/, '');
 }
 
 /**
@@ -769,7 +837,7 @@ export const getRequest = (str?: string) => {
  * @param  {string} ext 拓展名
  * @return {string}          背景图片 icon 名
  */
-export const getIconNameByExt = ext => {
+export const getIconNameByExt = (ext?: string | null) => {
   let extType = null;
 
   switch (ext && ext.toLowerCase()) {
@@ -908,7 +976,7 @@ export const getIconNameByExt = ext => {
     case 'rp':
     case 'skp':
     case 'xd':
-      extType = ext.toLowerCase();
+      extType = ext?.toLowerCase() ?? 'doc';
       break;
     case 'url':
       extType = 'link';
@@ -928,7 +996,7 @@ export const getIconNameByExt = ext => {
  * @param  {string} filename 文件名
  * @return {string}          背景图片 css 类名
  */
-export const getClassNameByExt = ext => {
+export const getClassNameByExt = (ext?: string | false | null) => {
   if (ext === false) {
     return 'fileIcon-folder';
   }
@@ -945,19 +1013,19 @@ export const getClassNameByExt = ext => {
 /**
  * 获取光标位置
  */
-export const getCaretPosition = ctrl => {
-  let sel, sel2;
-  let caretPos = 0;
+export const getCaretPosition = (ctrl: CaretControl): number | null | undefined => {
+  let caretPos: number | null | undefined = 0;
+  const selection: unknown = Reflect.get(document, 'selection');
 
-  if (document.selection) {
+  if (selection) {
     // IE Support
     ctrl.focus();
-    sel = document.selection.createRange();
-    sel2 = sel.duplicate();
-    sel2.moveToElementText(ctrl);
+    const sel = invokeLegacyCaretMethod(selection, 'createRange');
+    const sel2 = invokeLegacyCaretMethod(sel, 'duplicate');
+    invokeLegacyCaretMethod(sel2, 'moveToElementText', [ctrl]);
     caretPos = -1;
-    while (sel2.inRange(sel)) {
-      sel2.moveStart('character');
+    while (invokeLegacyCaretMethod(sel2, 'inRange', [sel])) {
+      invokeLegacyCaretMethod(sel2, 'moveStart', ['character']);
       caretPos++;
     }
   } else if (ctrl.setSelectionRange) {
@@ -972,14 +1040,15 @@ export const getCaretPosition = ctrl => {
 /**
  * 设置光标位置
  */
-export const setCaretPosition = (ctrl, caretPos) => {
+export const setCaretPosition = (ctrl: CaretControl | null | undefined, caretPos?: number | null) => {
   if (!ctrl) return;
   if (ctrl.createTextRange) {
     let range = ctrl.createTextRange();
-    range.move('character', caretPos);
-    range.select();
+    invokeLegacyCaretMethod(range, 'move', ['character', caretPos]);
+    invokeLegacyCaretMethod(range, 'select');
   } else if (caretPos) {
     ctrl.focus();
+    if (!ctrl.setSelectionRange) throw new TypeError('Missing caret selection method');
     ctrl.setSelectionRange(caretPos, caretPos);
   } else {
     ctrl.focus();
@@ -989,12 +1058,18 @@ export const setCaretPosition = (ctrl, caretPos) => {
 /**
  * 获取上传token
  */
-export const getToken = (files, type = 0, args = {}, options = {}) => {
-  if (!md.global.Account.accountId) {
-    return qiniuAjax.getFileUploadToken({ files, type, ...args }, options);
-  } else {
-    return qiniuAjax.getUploadToken({ files, type, ...args }, options);
-  }
+export const getToken = (
+  files: FileTokenRequest[],
+  type = 0,
+  args: TokenRequestArgs = {},
+  options: FileTokenOptions = {},
+): AbortableRequest<FileTokenResult> => {
+  validateFileTokenRequests(files);
+  const request: AbortableRequest<unknown> = !md.global.Account.accountId
+    ? qiniuAjax.getFileUploadToken({ files, type, ...args }, options)
+    : qiniuAjax.getUploadToken({ files, type, ...args }, options);
+  const decoded = request.then(decodeFileTokens);
+  return Object.assign(decoded, request, { abort: () => request.abort() });
 };
 
 /**
@@ -1077,17 +1152,19 @@ export function addSubPathOfRoute(route: SubPathRoute): SubPathRoute {
  * @param {string} key - 用于比较的键名，默认为 'name'
  * @returns {string} - 不重复的名称
  */
-export const getUnUniqName = (data, name = '', key = 'name') => {
+export const getUnUniqName = (data: Array<Record<string, unknown>>, name = '', key = 'name') => {
   const nameExists = _.some(data, [key, name]);
 
   if (nameExists) {
     const maxNumber = _.max(
-      _.filter(data, item => _.startsWith(item[key], String(name).replace(/\d*$/, ''))).map(item =>
-        parseInt(item[key].replace(/^.*?(\d+)$/, '$1')),
-      ),
+      _.filter(data, item => _.startsWith(_.toString(item[key]), String(name).replace(/\d*$/, ''))).map(item => {
+        const value = item[key];
+        if (typeof value !== 'string') throw new TypeError('Unique names must be strings');
+        return parseInt(value.replace(/^.*?(\d+)$/, '$1'));
+      }),
     );
 
-    name = String(name).replace(/\d*$/, (maxNumber || 0) + 1);
+    name = String(name).replace(/\d*$/, String((maxNumber || 0) + 1));
   }
 
   return name;
@@ -1129,34 +1206,39 @@ export function domFilterHtmlScript(html: string): string {
   }
 }
 
-const globalStoreForMingo = {
-  emitter: new EventEmitter(),
+const globalStoreForMingo: MingoGlobalStore = {
+  emitter: new EventEmitter<Record<string, unknown[]>>(),
   activeModule: 'worksheet', // ["worksheet", "worksheetControlsEdit"]
 };
 
 window.globalStoreForMingo = globalStoreForMingo;
 
-export const updateGlobalStoreForMingo = (key, value?) => {
+export const updateGlobalStoreForMingo: MingoStoreUpdater = (key: unknown, value?: unknown) => {
   if (typeof key === 'string') {
-    globalStoreForMingo[key] = value;
+    writeMingoStoreValue(globalStoreForMingo, key, value);
   } else {
+    const patch = mingoStorePatch(key);
     if (value === 'clear') {
       Object.keys(globalStoreForMingo).forEach(k => {
         delete globalStoreForMingo[k];
       });
     }
 
-    Object.keys(key).forEach(k => {
-      globalStoreForMingo[k] = key[k];
+    Object.keys(patch).forEach(k => {
+      writeMingoStoreValue(globalStoreForMingo, k, patch[k]);
     });
   }
 };
 
-export const getGlobalStoreForMingo = key => {
+export function getGlobalStoreForMingo(): MingoGlobalStore;
+export function getGlobalStoreForMingo(key: undefined | null | ''): MingoGlobalStore;
+export function getGlobalStoreForMingo<Key extends MingoStoreKey>(key: Key): MingoStoreValues[Key];
+export function getGlobalStoreForMingo(key: string): unknown;
+export function getGlobalStoreForMingo(key?: string | null): unknown {
   return key ? globalStoreForMingo[key] : globalStoreForMingo;
-};
+}
 
-function generateFileOId() {
+function generateFileOId(): string {
   const prefix = 'o_';
 
   // 使用当前时间戳作为基础（更具唯一性）
@@ -1173,17 +1255,14 @@ export function getTemporaryAttachmentFromUrl({
   fileName = '',
   fileSize,
   fileExt,
-}: {
-  // 调用方多是把模型 / 接口给的字段原样转过来，没给就是 undefined（fileName 的默认值照样生效）
-  fileUrl?: string | undefined;
-  fileName?: string | undefined;
-  fileSize?: number | undefined;
-  fileExt?: string | undefined;
-} = {}) {
+}: TemporaryAttachmentArgs = {}): TemporaryAttachment {
+  validateTemporaryAttachment({ fileUrl, fileName, fileSize, fileExt });
   const urlObj = new URL(String(fileUrl));
   const name = fileName.replace(/\.[^.]+$/, '');
-  const ext = fileExt || get(fileName.match(/\.[^.]+$/), '0');
-  const fileNameOfUrl = get(urlObj.pathname.match(/\/([^/]*$)/, ''), '1').replace(/\.[^.]+$/, '');
+  const ext = fileExt || fileName.match(/\.[^.]+$/)?.[0];
+  const fileNameSegment = urlObj.pathname.match(/\/([^/]*$)/)?.[1];
+  if (fileNameSegment === undefined) throw new TypeError('Invalid attachment URL path');
+  const fileNameOfUrl = fileNameSegment.replace(/\.[^.]+$/, '');
   return {
     fileID: generateFileOId(),
     fileSize: fileSize || 0,
@@ -1203,7 +1282,7 @@ export function getTemporaryAttachmentFromUrl({
  * @param  {string} ext 文件扩展名
  * @return {string}     MIME 类型
  */
-export const getMimeTypeByExt = ext => {
+export const getMimeTypeByExt = (ext?: string | null) => {
   if (!ext) return 'application/octet-stream';
   ext = ext.replace(/^\./, '');
   const extLower = ext.toLowerCase();

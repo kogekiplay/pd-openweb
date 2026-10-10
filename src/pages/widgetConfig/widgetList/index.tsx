@@ -18,6 +18,7 @@ import {
 } from 'src/pages/widgetConfig/util/data';
 import { emitter, updateGlobalStoreForMingo } from 'src/utils/common';
 import type { FormControl } from 'src/utils/controlTypes';
+import { mingoWidgets } from 'src/utils/mingoStoreBoundary';
 import { getFeatureStatus } from 'src/utils/project';
 import { DRAG_ITEMS } from '../config/Drag';
 import { WIDGET_GROUP_TYPE } from '../config/widget';
@@ -709,7 +710,7 @@ export default function List(props) {
   };
 
   useEffect(() => {
-    updateGlobalStoreForMingo('allWidgets', allControls);
+    updateGlobalStoreForMingo('allWidgets', mingoWidgets(allControls));
   }, [allControls]);
 
   useEffect(() => {

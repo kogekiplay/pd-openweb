@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import agentApi from 'src/api/agent';
 import LoadingDots from 'src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/LoadingDots';
 import { genBotSessionId } from 'src/utils/agentSession';
+import type { MingoWorksheetContext } from 'src/utils/mingoStoreTypes';
 
 const Con = styled.div`
   display: flex;
@@ -59,7 +60,13 @@ const RecommendItem = styled.div`
   }
 `;
 
-export default function CreateWorksheetRecommend({ appName, appDescription, worksheets = [], onSelect = () => {} }) {
+const emptyWorksheets: MingoWorksheetContext[] = [];
+export default function CreateWorksheetRecommend({
+  appName,
+  appDescription,
+  worksheets = emptyWorksheets,
+  onSelect = () => {},
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const [recommendWorkSheets, setRecommendWorkSheets] = useState([]);
   const existingWorksheets = useMemo(

@@ -5,6 +5,7 @@ import cx from 'classnames';
 import MarkdownIt from 'markdown-it';
 import styled from 'styled-components';
 import { getToken } from 'src/utils/common';
+import { requireFileToken } from 'src/utils/commonRequestBoundary';
 import RegExpValidator from 'src/utils/expression';
 
 const Wrap = styled.div`
@@ -121,39 +122,42 @@ const Markdown = forwardRef((props, ref) => {
       let fileExt = `.${RegExpValidator.getExtOfFileName(file.name)}`;
       let isPic = RegExpValidator.fileIsPicture(fileExt);
       let urlImg = '';
-      getToken([{ bucket: bucket || (isPic ? 4 : 2), ext: fileExt }], 9, tokenArgs).then(res => {
-        data.append('token', res[0].uptoken);
-        data.append('file', file);
-        data.append('key', res[0].key);
-        data.append('x:serverName', res[0].serverName);
-        data.append('x:filePath', res[0].key.replace(res[0].fileName, ''));
-        data.append('x:fileName', res[0].fileName);
-        data.append(
-          'x:originalFileName',
-          encodeURIComponent(
-            res[0].fileName.indexOf('.') > -1 ? res[0].fileName.split('.').slice(0, -1).join('.') : res[0].fileName,
-          ),
-        );
-        data.append('x:fileExt', '.' + RegExpValidator.getExtOfFileName(res[0].fileName));
-        urlImg = res[0].url || (res[0].serverName && res[0].key) ? res[0].serverName + res[0].key : '';
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', md.global.FileStoreConfig.uploadHost, true);
-        xhr.onerror = function () {
-          reject(new Error('Network Error'));
-        };
+      getToken([{ bucket: bucket || (isPic ? 4 : 2), ext: fileExt }], 9, tokenArgs)
+        .then(res => {
+          const token = requireFileToken(res);
+          data.append('token', token.uptoken);
+          data.append('file', file);
+          data.append('key', token.key);
+          data.append('x:serverName', token.serverName);
+          data.append('x:filePath', token.key.replace(token.fileName, ''));
+          data.append('x:fileName', token.fileName);
+          data.append(
+            'x:originalFileName',
+            encodeURIComponent(
+              token.fileName.indexOf('.') > -1 ? token.fileName.split('.').slice(0, -1).join('.') : token.fileName,
+            ),
+          );
+          data.append('x:fileExt', '.' + RegExpValidator.getExtOfFileName(token.fileName));
+          urlImg = token.url || (token.serverName && token.key) ? token.serverName + token.key : '';
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', md.global.FileStoreConfig.uploadHost, true);
+          xhr.onerror = function () {
+            reject(new Error('Network Error'));
+          };
 
-        xhr.send(data);
-        xhr.addEventListener('load', () => {
-          const response = xhr.response;
+          xhr.send(data);
+          xhr.addEventListener('load', () => {
+            const response = xhr.response;
 
-          if (!response || response.error) {
-            const genericErrorText = "Couldn't upload file:" + ` ${file.name}.`;
-            return reject(response && response.error ? response.error.message : genericErrorText);
-          }
+            if (!response || response.error) {
+              const genericErrorText = "Couldn't upload file:" + ` ${file.name}.`;
+              return reject(response && response.error ? response.error.message : genericErrorText);
+            }
 
-          resolve(urlImg);
-        });
-      });
+            resolve(urlImg);
+          });
+        })
+        .catch(reject);
     });
   };
 

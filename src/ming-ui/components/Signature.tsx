@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import accountSettingAjax from 'src/api/accountSetting';
 import GenScanUploadQr from 'worksheet/components/GenScanUploadQr';
 import { getToken } from 'src/utils/common';
+import { requireBase64FileToken } from 'src/utils/commonRequestBoundary';
 import { stripFileUrlSignature } from 'src/utils/signature';
 import Icon from './Icon';
 
@@ -117,34 +118,42 @@ export default class Signature extends Component<any, any> {
 
     this.isComplete = false;
 
-    (getTokenFn || getToken)([{ bucket: 4, ext: '.png' }]).then(res => {
-      if (res.error) {
-        alert(res.error);
-      } else {
-        const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(res[0].key)}`;
-        axios
-          .post(url, this.signaturePad.toDataURL('image/png').split(',')[1], {
-            headers: {
-              'Content-Type': 'application/octet-stream',
-              Authorization: `UpToken ${res[0].uptoken}`,
-            },
-          })
-          .then(({ data }) => {
-            const { key = '' } = data || {};
+    (getTokenFn || getToken)([{ bucket: 4, ext: '.png' }])
+      .then(res => {
+        if (!Array.isArray(res)) {
+          this.isComplete = true;
+          alert(res.error);
+          return undefined;
+        } else {
+          const token = requireBase64FileToken(res);
+          const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(token.key)}`;
+          return axios
+            .post(url, this.signaturePad.toDataURL('image/png').split(',')[1], {
+              headers: {
+                'Content-Type': 'application/octet-stream',
+                Authorization: `UpToken ${token.uptoken}`,
+              },
+            })
+            .then(({ data }) => {
+              const { key = '' } = data || {};
 
-            /* 【只剥 editSign 这一路，callback 不动】editSign 存的是「上次签名」，
+              /* 【只剥 editSign 这一路，callback 不动】editSign 存的是「上次签名」，
                下次「使用上次签名」读的就是它 —— 带读时签名存进去，过期就打不开。
                callback 那一路是给调用方即时展示/继续上传用的（扫码签名用的是 key
                不是 url），不属于持久化，保持原样不冒险。 */
-            if (get(window, 'md.global.Account.accountId')) {
-              accountSettingAjax.editSign({ url: stripFileUrlSignature(res[0].url) });
-            }
+              if (get(window, 'md.global.Account.accountId')) {
+                accountSettingAjax.editSign({ url: stripFileUrlSignature(token.url || '') });
+              }
 
-            callback({ bucket: 4, key, url: res[0].url });
-            this.isComplete = true;
-          });
-      }
-    });
+              callback({ bucket: 4, key, url: token.url });
+              this.isComplete = true;
+            });
+        }
+      })
+      .catch((error: unknown) => {
+        this.isComplete = true;
+        alert(error instanceof Error ? error.message : typeof error === 'string' ? error : _l('保存失败!'), 2);
+      });
   };
 
   getSignature = () => {

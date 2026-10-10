@@ -15,6 +15,7 @@ import LoadingDots from 'src/pages/widgetConfig/widgetSetting/components/Develop
 import { emitter, htmlEncodeReg } from 'src/utils/common';
 import { changeCodeOfAIGenControl, convertAiRecommendControlToControlData } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
+import type { MingoWidget } from 'src/utils/mingoStoreTypes';
 import { parseStreamingJsonlData } from 'src/utils/sse';
 import { generatedWidget } from 'src/utils/sseTypes';
 
@@ -332,12 +333,13 @@ function groupWidgetsByType(widgets, { idCache = {} } = {}) {
   return allWidgets;
 }
 
+const emptyExistingControls: MingoWidget[] = [];
 function WidgetList({
   disabled = false,
   className,
   name,
   widgets = [],
-  existingControls = [],
+  existingControls = emptyExistingControls,
   selectedWidgetIds = [],
   setSelectedWidgetIds = () => {},
 }) {

@@ -3,6 +3,8 @@ import addressBookController from 'src/api/addressBook';
 import externalPortalCotroller from 'src/api/externalPortal';
 import userController from 'src/api/user';
 import { wrapAjax } from 'worksheet/redux/actions/util';
+import { decodeUsers, userObject } from './boundary';
+import type { AccountsOptions, GetUsersOptions, QuickUser, UsersRequest } from './types';
 
 const getUsersByApp = wrapAjax(externalPortalCotroller.getUsersByApp);
 const getProjectContactUserListByApp = wrapAjax(userController.getProjectContactUserListByApp);
@@ -17,8 +19,8 @@ export function getAccounts({
   filterAccountIds,
   prefixAccountIds,
   prefixAccounts,
-}) {
-  let prefixUsers = [];
+}: AccountsOptions) {
+  let prefixUsers: QuickUser[] = [];
   let users = [...list];
   var filterMe = filterAccountIds.indexOf(md.global.Account.accountId) !== -1;
   var filterUndefined = filterAccountIds.indexOf('user-undefined') !== -1;
@@ -58,17 +60,21 @@ export function getAccounts({
   };
 }
 
-export function getUsers(args) {
+export function getUsers(args: GetUsersOptions): UsersRequest {
+  let request: { abort(): void };
+  let result: Promise<QuickUser[]>;
   if (args.type === 'external') {
-    return getUsersByApp({
+    const raw = getUsersByApp({
       projectId: args.projectId,
       appId: args.appId,
       pageIndex: args.pageIndex || 1,
       pageSize: 25,
       keywords: args.keywords || '',
       filterAccountIds: args.filterAccountIds || [],
-    }).then(res => {
-      let result = res.map(user => ({
+    });
+    request = raw;
+    result = raw.then((response: unknown) => {
+      let result: QuickUser[] = decodeUsers(response).map(user => ({
         accountId: user.accountId,
         avatar: user.avatar,
         fullname: user.name,
@@ -82,13 +88,14 @@ export function getUsers(args) {
       const currentAccount = result.find(item => item.accountId === md.global.Account.accountId);
 
       if (!args.hidePortalCurrentUser && (args.includeSystemField || args.includeUndefinedAndMySelf)) {
-        result = [
+        const prefix: QuickUser[] = [
           {
             accountId: 'user-self',
             avatar: md.global.FileStoreConfig.pictureHost + '/UserAvatar/user-self.png?imageView2/1/w/100/h/100/q/90',
             fullname: _l('当前用户'),
           },
-        ].concat(result);
+        ];
+        result = prefix.concat(result);
       } else if (!args.keywords && currentAccount) {
         result = [currentAccount].concat(result);
       }
@@ -96,24 +103,37 @@ export function getUsers(args) {
       return _.uniqBy(result, 'accountId');
     });
   } else if (args.type === 'range') {
-    return getProjectContactUserListByApp({
+    const raw = getProjectContactUserListByApp({
       pageIndex: 1,
       pageSize: 100,
       projectId: args.projectId,
       keywords: args.keywords,
       filterAccountIds: args.filterAccountIds || [],
       ...(_.isObject(args.selectRangeOptions) ? args.selectRangeOptions : {}),
-    }).then(res => _.get(res, 'users.list') || []);
+    });
+    request = raw;
+    result = raw.then((response: unknown) => {
+      const result = userObject(response);
+      if (!result) throw new TypeError('Invalid restricted user response');
+      const source = result['users'];
+      if (source === undefined || source === null) return [];
+      const users = userObject(source);
+      if (!users) throw new TypeError('Invalid restricted user list');
+      const list = users['list'];
+      return decodeUsers(list === undefined || list === null ? [] : list);
+    });
   } else if (args.keywords) {
     const otherOptions = args.filterOtherProject ? { projectId: args.projectId } : { currentProjectId: args.projectId };
 
-    return getUserAddressbookByKeywords({
+    const raw = getUserAddressbookByKeywords({
       keywords: args.keywords || '',
       filterAccountIds: args.filterAccountIds || [],
       ...otherOptions,
-    }).then(res => res.list);
+    });
+    request = raw;
+    result = raw.then((response: unknown) => decodeUsers(userObject(response)?.['list']));
   } else {
-    return getOftenMetionedUser({
+    const raw = getOftenMetionedUser({
       count: args.mentionedCount,
       filterAccountIds: args.filterAccountIds || [],
       includeUndefinedAndMySelf: args.includeUndefinedAndMySelf || false,
@@ -121,5 +141,8 @@ export function getUsers(args) {
       prefixAccountIds: args.prefixAccountIds || [],
       projectId: args.projectId,
     });
+    request = raw;
+    result = raw.then((response: unknown) => decodeUsers(response));
   }
+  return Object.assign(result, { abort: () => request.abort() });
 }

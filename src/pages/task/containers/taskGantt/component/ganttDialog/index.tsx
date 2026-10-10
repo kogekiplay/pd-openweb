@@ -10,6 +10,7 @@ import LoadDiv from 'ming-ui/components/LoadDiv';
 import taskReq from 'src/api/taskCenter';
 import ErrorState from 'src/components/errorPage/errorState';
 import { downloadFile, getToken } from 'src/utils/common';
+import { requireBase64FileToken } from 'src/utils/commonRequestBoundary';
 import TaskDetail from '../../../taskDetail/taskDetail';
 import config from './config';
 import GanttContent from './GanttContent';
@@ -196,33 +197,39 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
    * 上传到七牛
    */
   putb64(base64) {
-    getToken([{ bucket: 2, ext: '.png' }]).then(res => {
-      if (res.error) {
-        alert(res.error);
-      } else {
-        const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(res[0].key)}`;
-        axios
-          .post(url, base64.replace('data:image/png;base64,', ''), {
-            headers: {
-              'Content-Type': 'application/octet-stream',
-              Authorization: `UpToken ${res[0].uptoken}`,
-            },
-          })
-          .then(({ data }) => {
-            const { key = '' } = data || {};
-            this.setState({
-              buildImgSuccess: true,
-              url: `${md.global.FileStoreConfig.pubHost}/${key}?attname=${encodeURIComponent(
-                this.state.name + moment().format('YYYY-MM-DD'),
-              )}.png`,
+    getToken([{ bucket: 2, ext: '.png' }])
+      .then(res => {
+        if (!Array.isArray(res)) {
+          alert(res.error);
+        } else {
+          const token = requireBase64FileToken(res);
+          const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(token.key)}`;
+          axios
+            .post(url, base64.replace('data:image/png;base64,', ''), {
+              headers: {
+                'Content-Type': 'application/octet-stream',
+                Authorization: `UpToken ${token.uptoken}`,
+              },
+            })
+            .then(({ data }) => {
+              const { key = '' } = data || {};
+              this.setState({
+                buildImgSuccess: true,
+                url: `${md.global.FileStoreConfig.pubHost}/${key}?attname=${encodeURIComponent(
+                  this.state.name + moment().format('YYYY-MM-DD'),
+                )}.png`,
+              });
+            })
+            .catch(error => {
+              console.log(error);
+              alert(_l('保存失败!'), 2);
             });
-          })
-          .catch(error => {
-            console.log(error);
-            alert(_l('保存失败!'), 2);
-          });
-      }
-    });
+        }
+      })
+      .catch((error: unknown) => {
+        console.error(error);
+        alert(_l('保存失败!'), 2);
+      });
   }
 
   /**

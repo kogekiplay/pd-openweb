@@ -9,6 +9,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { hasPermission } from 'src/components/checkPermission';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import { emitter, getToken } from 'src/utils/common';
+import { requireBase64FileToken } from 'src/utils/commonRequestBoundary';
 import { getRgbaByColor } from 'src/utils/controlCommon';
 import { CreateActions, initialState, reducer } from '../AppCenter/appHomeReducer';
 import AppGrid from '../AppCenter/components/AppGrid';
@@ -233,40 +234,47 @@ export default function Dashboard(props) {
             },
           ],
           4,
-        ).then(res => {
-          if (res.error) {
-            alert(res.error);
-          } else {
-            const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(res[0].key)}`;
-            urlToBase64(getUrlWithRandomQuery(theme.bulletinPic)).then(base64 => {
-              axios
-                .post(url, getImageBase64UploadData(base64, bulletinPicExt), {
-                  headers: {
-                    'Content-Type': 'application/octet-stream',
-                    Authorization: `UpToken ${res[0].uptoken}`,
-                  },
-                })
-                .then(({ data }) => {
-                  const { key = '' } = data || {};
-                  updatePlatformSetting({
-                    color: theme.themeColor,
-                    boardSwitch: true,
-                    bulletinBoards: [
-                      {
-                        url: `${md.global.FileStoreConfig.pictureHost}/${key}`,
-                        key,
-                        bucket: 4,
-                        link: theme.bulletinLink,
-                        title: theme.bulletinTitle,
-                        themeKey: theme.themeKey,
-                      },
-                    ].concat(bulletinBoards),
-                    advancedSetting: _.pick(theme, 'themeKey'),
+        )
+          .then(res => {
+            if (!Array.isArray(res)) {
+              alert(res.error);
+              return undefined;
+            } else {
+              const token = requireBase64FileToken(res);
+              const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(token.key)}`;
+              return urlToBase64(getUrlWithRandomQuery(theme.bulletinPic)).then(base64 => {
+                return axios
+                  .post(url, getImageBase64UploadData(base64, bulletinPicExt), {
+                    headers: {
+                      'Content-Type': 'application/octet-stream',
+                      Authorization: `UpToken ${token.uptoken}`,
+                    },
+                  })
+                  .then(({ data }) => {
+                    const { key = '' } = data || {};
+                    updatePlatformSetting({
+                      color: theme.themeColor,
+                      boardSwitch: true,
+                      bulletinBoards: [
+                        {
+                          url: `${md.global.FileStoreConfig.pictureHost}/${key}`,
+                          key,
+                          bucket: 4,
+                          link: theme.bulletinLink,
+                          title: theme.bulletinTitle,
+                          themeKey: theme.themeKey,
+                        },
+                      ].concat(bulletinBoards),
+                      advancedSetting: _.pick(theme, 'themeKey'),
+                    });
                   });
-                });
-            });
-          }
-        });
+              });
+            }
+          })
+          .catch((error: unknown) => {
+            console.error(error);
+            alert(_l('保存失败!'), 2);
+          });
   };
 
   const renderSortableModules = () => {

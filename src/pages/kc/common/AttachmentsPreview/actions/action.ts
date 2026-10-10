@@ -6,6 +6,7 @@ import kcAjax from 'src/api/kc';
 import folderDg from 'src/components/kc/folderSelectDialog/folderSelectDialog';
 import saveToKnowledge from 'src/components/kc/saveToKnowledge/saveToKnowledge';
 import { getToken } from 'src/utils/common';
+import { requireServerFileToken } from 'src/utils/commonRequestBoundary';
 import { VersionProductType } from 'src/utils/enum';
 import { addBehaviorLog, getFeatureStatus } from 'src/utils/project';
 import { NODE_VISIBLE_TYPE, PICK_TYPE } from '../../../constant/enum';
@@ -62,17 +63,21 @@ function loadAttachment(attachment, options: Record<string, any> = {}) {
         attachment.sourceNode.privateDownloadUrl = attachment.sourceNode.path;
         attachmentPromise = Object.assign({}, attachment, {});
       } else {
-        getToken([{ bucket: 3, ext: '.pdf' }]).then(res => {
-          const [{ serverName }] = res;
-          const key = (path || '').split(serverName)[1];
+        getToken([{ bucket: 3, ext: '.pdf' }])
+          .then(res => {
+            const { serverName } = requireServerFileToken(res);
+            const key = (path || '').split(serverName)[1];
 
-          // 通过特定API获取下载链接
-          fileAjax.getChatFileUrl({ serverName, key }).then(data => {
-            // 在聊天中访问PDF
-            attachment.sourceNode.privateDownloadUrl = data;
-            attachmentPromise = Object.assign({}, attachment, {});
+            // 通过特定API获取下载链接
+            return fileAjax.getChatFileUrl({ serverName, key }).then(data => {
+              // 在聊天中访问PDF
+              attachment.sourceNode.privateDownloadUrl = data;
+              attachmentPromise = Object.assign({}, attachment, {});
+            });
+          })
+          .catch((error: unknown) => {
+            console.error(error);
           });
-        });
       }
     } else if (
       (attachment.ext || '').toLocaleLowerCase() === 'pdf' &&

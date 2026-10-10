@@ -172,6 +172,8 @@ function loadCreateUploader(qiniuCalls: QiniuCall[]): CreateUploaderModule {
         return loadLocal(path.join(dir, request + '.ts'));
       }
 
+      if (request === 'src/utils/commonRequestBoundary')
+        return loadLocal(path.join(__dirname, 'commonRequestBoundary.ts'));
       if (request === 'src/utils/common') {
         // 默认的取凭证实现；spec 里一律通过 option.getToken 覆盖，这里只要能引到
         return { getToken: () => Promise.resolve([]) };
@@ -529,6 +531,49 @@ test('auto_start:false 且未调用 start() 时不会自动上传', async () => 
   uploader.addFile([fakeFile('pic.png')]);
   await tick();
   assert.strictEqual(calls.length, 0, '没请求过开始，就不该上传');
+});
+
+test('取凭证拒绝后整批失败并移出等待队列，可重新添加上传', async () => {
+  const calls: QiniuCall[] = [];
+  let rejectTokens = true;
+  const { uploader, events, mod } = makeUploader(
+    { getToken: files => (rejectTokens ? Promise.reject(new Error('Token unavailable')) : tokenStub(files)) },
+    calls,
+  );
+  uploader.addFile([fakeFile('a.png'), fakeFile('b.png')]);
+  const pending = [...uploader.files];
+  await tick();
+  assert.strictEqual(calls.length, 0);
+  assert.strictEqual(uploader.files.length, 0);
+  assert.ok(pending.every(file => file.status === mod.FileStatus.FAILED));
+  const errors = events.filter(event => event[0] === 'Error');
+  assert.strictEqual(errors.length, 2);
+  for (const event of errors) {
+    assert.strictEqual(event[1][1].code, mod.UploadError.SECURITY_ERROR);
+    assert.strictEqual(event[1][1].message, 'Token unavailable');
+    assert.ok(pending.includes(event[1][1].file));
+  }
+  assert.ok(!findEvent(events, 'FileUploaded'));
+  rejectTokens = false;
+  uploader.addFile([fakeFile('retry.png')]);
+  await tick();
+  assert.strictEqual(calls.length, 1);
+});
+
+test('凭证缺少实际上传字段时不会发网络请求或留未完成队列', async () => {
+  const calls: QiniuCall[] = [];
+  const { uploader, events, mod } = makeUploader(
+    { getToken: () => Promise.resolve([{ uptoken: 'token', key: 'key' }]) },
+    calls,
+  );
+  uploader.addFile([fakeFile('bad.png')]);
+  const pending = uploader.files[0];
+  await tick();
+  assert.strictEqual(calls.length, 0);
+  assert.strictEqual(uploader.files.length, 0);
+  assert.strictEqual(pending.status, mod.FileStatus.FAILED);
+  assert.match(findEvent(events, 'Error')[1].message, /Missing upload token fields/);
+  assert.ok(!findEvent(events, 'FileUploaded'));
 });
 
 (async () => {

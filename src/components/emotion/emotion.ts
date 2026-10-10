@@ -399,7 +399,7 @@ Emotion.prototype.select = function select(event) {
     var oldVal = this.$target.val();
     var target = this.$target.get(0);
     if (target) {
-      var _currentPos = getCaretPosition(target);
+      var _currentPos = Number(getCaretPosition(target));
       this.$target.val(oldVal.slice(0, _currentPos) + _val + oldVal.slice(_currentPos));
       var newPos = _currentPos + _val.length;
 

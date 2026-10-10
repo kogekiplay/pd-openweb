@@ -32,7 +32,16 @@ export async function generateWorksheetWidgetsSSE({ agentParams, context, sessio
 }
 
 /** worksheet-name-icon-recommender：POST /api/agent/execute（非流式） */
-export async function fetchWorksheetNameIconRecommend({ message, context, projectId, sessionId, abortController }: { projectId?: string; [key: string]: any }) {
+export async function fetchWorksheetNameIconRecommend({
+  message,
+  context,
+  projectId,
+  sessionId,
+  abortController,
+}: {
+  projectId?: string | undefined;
+  [key: string]: any;
+}) {
   try {
     const result = await agentApi.agentExecute(
       {

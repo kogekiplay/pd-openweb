@@ -5,9 +5,10 @@ import styled from 'styled-components';
 import { Button, Checkbox, Dropdown, LoadDiv, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getWithToken } from 'src/utils/common';
+import { decodeImportPreview } from 'src/utils/commonRequestBoundary';
+import type { FormControl } from 'src/utils/controlTypes';
 import convert from './convertData';
 import PreviewTable from './PreviewTable';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Header = styled.div`
   height: 52px;
@@ -187,24 +188,30 @@ export default function PreviewData(props) {
                 data={sheets}
                 onChange={async newSheetIndex => {
                   setTableLoading(true);
-                  const data = await getWithToken(
-                    `${md.global.Config.WorksheetDownUrl}/Import/PreviewSubtable`,
-                    { worksheetId, tokenType: 7 },
-                    {
-                      worksheetId,
-                      filePath: excelUrl.replace(/\?.+/, ''),
-                      getSheetIndex: newSheetIndex,
-                    },
-                  );
+                  try {
+                    const data = await getWithToken(
+                      `${md.global.Config.WorksheetDownUrl}/Import/PreviewSubtable`,
+                      { worksheetId, tokenType: 7 },
+                      {
+                        worksheetId,
+                        filePath: excelUrl.replace(/\?.+/, ''),
+                        getSheetIndex: newSheetIndex,
+                      },
+                      decodeImportPreview,
+                    );
 
-                  if (_.get(data, 'rows')) {
-                    setCellsData(data.rows.map((r: RecordRow) => r.cells));
-                  } else {
-                    setCellsData([]);
+                    if (data.rows) {
+                      setCellsData(data.rows.map(row => row.cells));
+                    } else {
+                      setCellsData([]);
+                    }
+
+                    setSheetIndex(newSheetIndex);
+                  } catch {
+                    alert(_l('文件解析失败！'), 2);
+                  } finally {
+                    setTableLoading(false);
                   }
-
-                  setSheetIndex(newSheetIndex);
-                  setTableLoading(false);
                 }}
               />
             )}
@@ -272,17 +279,22 @@ export default function PreviewData(props) {
             disabled={_.isEmpty(valuedData) || _.isEmpty(_.values(mapConfig).filter(_.identity))}
             onClick={async () => {
               setIsConverting(true);
-              const data = await convert({
-                projectId,
-                worksheetId,
-                controlId,
-                mapConfig,
-                controls,
-                data: needImportCellData,
-              });
-              setIsConverting(false);
+              try {
+                const data = await convert({
+                  projectId,
+                  worksheetId,
+                  controlId,
+                  mapConfig,
+                  controls,
+                  data: needImportCellData,
+                });
 
-              onClose(data);
+                onClose(data);
+              } catch {
+                alert(_l('文件解析失败！'), 2);
+              } finally {
+                setIsConverting(false);
+              }
             }}
           >
             {_l('导入')}

@@ -3,6 +3,7 @@ import moment from 'moment';
 import { onValidator } from 'src/components/Form/core/formUtils';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget.js';
 import { postWithToken } from 'src/utils/common';
+import { decodeHandledPreview, decodeImportPreviewEntities } from 'src/utils/commonRequestBoundary';
 import type { RecordRow } from 'src/utils/controlTypes';
 
 function getSelectedOptionKeys(text = '', options, isMultiple?: boolean | undefined) {
@@ -63,7 +64,19 @@ function getDateStringValue(dateString) {
   return undefined;
 }
 
-async function convert({ projectId, worksheetId, controlId, mapConfig = [], controls = [], data = [] }: { projectId?: string; worksheetId?: string; controlId?: string; [key: string]: any }) {
+async function convert({
+  projectId,
+  worksheetId,
+  controlId,
+  mapConfig = [],
+  controls = [],
+  data = [],
+}: {
+  projectId?: string;
+  worksheetId?: string;
+  controlId?: string;
+  [key: string]: any;
+}) {
   const rows: RecordRow[] = [];
   const serverHandleControls = [];
   data.forEach((item, rowIndex) => {
@@ -172,6 +185,8 @@ async function convert({ projectId, worksheetId, controlId, mapConfig = [], cont
           controlId,
           rows: needHandleRows,
         },
+        {},
+        decodeHandledPreview,
       );
 
       if (_.isArray(resData)) {
@@ -199,7 +214,7 @@ async function convert({ projectId, worksheetId, controlId, mapConfig = [], cont
               case WIDGETS_TO_API_TYPE_ENUM.USER_PICKER:
                 if (cell.value && cell.value !== '[]') {
                   rows[index][control.controlId] = JSON.stringify(
-                    safeParse(cell.value, 'array').map(n => ({
+                    decodeImportPreviewEntities(cell.value).map(n => ({
                       accountId: n.id,
                       fullname: n.name,
                       avatar: n.avatarUrl,
@@ -211,7 +226,7 @@ async function convert({ projectId, worksheetId, controlId, mapConfig = [], cont
               case WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT:
                 if (cell.value && cell.value !== '[]') {
                   rows[index][control.controlId] = JSON.stringify(
-                    safeParse(cell.value, 'array').map(n => ({
+                    decodeImportPreviewEntities(cell.value).map(n => ({
                       departmentId: n.id,
                       departmentName: n.name,
                     })),
@@ -222,7 +237,7 @@ async function convert({ projectId, worksheetId, controlId, mapConfig = [], cont
               case WIDGETS_TO_API_TYPE_ENUM.ORG_ROLE:
                 if (cell.value && cell.value !== '[]') {
                   rows[index][control.controlId] = JSON.stringify(
-                    safeParse(cell.value, 'array').map(n => ({
+                    decodeImportPreviewEntities(cell.value).map(n => ({
                       organizeId: n.id,
                       organizeName: n.name,
                     })),
@@ -233,7 +248,7 @@ async function convert({ projectId, worksheetId, controlId, mapConfig = [], cont
               case WIDGETS_TO_API_TYPE_ENUM.RELATE_SHEET:
                 if (cell.value && cell.value !== '[]') {
                   rows[index][control.controlId] = JSON.stringify(
-                    safeParse(cell.value, 'array').map(n => ({
+                    decodeImportPreviewEntities(cell.value).map(n => ({
                       sid: n.id,
                       name: n.name,
                       sourcevalue: JSON.stringify({ rowid: n.id, name: n.name }),

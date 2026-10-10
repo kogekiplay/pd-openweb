@@ -1,4 +1,4 @@
-﻿import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { useKey } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -10,6 +10,7 @@ import UploadFile from 'worksheet/components/DialogImportExcelCreate/DialogUploa
 import { usePasteText } from 'worksheet/hooks';
 import { getWithToken } from 'src/utils/common';
 import { isKeyBoardInputChar } from 'src/utils/common';
+import { decodeImportPreview } from 'src/utils/commonRequestBoundary';
 import type { RecordRow } from 'src/utils/controlTypes';
 import PreviewTable from './PreviewTable';
 
@@ -560,20 +561,26 @@ export default function ImportData(props) {
                 setLoading(true);
               }}
               fileUploaded={async file => {
-                const fileUrl = file.serverName + file.key;
-                const data = await getWithToken(
-                  `${md.global.Config.WorksheetDownUrl}/Import/PreviewSubtable`,
-                  { worksheetId, tokenType: 7 },
-                  {
-                    worksheetId,
-                    filePath: fileUrl.replace(/\?.+/, ''),
-                  },
-                );
-                setLoading(false);
-                if (_.get(data, 'rows')) {
-                  onParseExcel(data, fileUrl);
-                } else {
+                try {
+                  const fileUrl = file.serverName + file.key;
+                  const data = await getWithToken(
+                    `${md.global.Config.WorksheetDownUrl}/Import/PreviewSubtable`,
+                    { worksheetId, tokenType: 7 },
+                    {
+                      worksheetId,
+                      filePath: fileUrl.replace(/\?.+/, ''),
+                    },
+                    decodeImportPreview,
+                  );
+                  if (data.rows) {
+                    onParseExcel(data, fileUrl);
+                  } else {
+                    alert(_l('文件解析失败！'), 2);
+                  }
+                } catch {
                   alert(_l('文件解析失败！'), 2);
+                } finally {
+                  setLoading(false);
                 }
               }}
             />

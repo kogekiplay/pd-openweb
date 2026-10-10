@@ -25,6 +25,7 @@
  */
 import { assign, endsWith, find, forEach } from 'lodash';
 import { getToken } from 'src/utils/common';
+import { requireFileToken } from 'src/utils/commonRequestBoundary';
 import RegExpValidator from 'src/utils/expression';
 import { FileStatus, UPLOAD_ERROR, UploadError, UploaderState } from './uploader/constants';
 import type { UploadErrorValue } from './uploader/constants';
@@ -422,46 +423,64 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
     const start = () => {
       const beforeCheck = option.before_upload_check ? option.before_upload_check(uploader, accepted) : undefined;
 
-      (option.getToken || getToken)(tokenFiles, option.type, option.getTokenParam).then(res => {
-        const exceedFiles: UploaderFile[] = [];
+      (option.getToken || getToken)(tokenFiles, option.type, option.getTokenParam)
+        .then(res => {
+          const exceedFiles: UploaderFile[] = [];
 
-        accepted.forEach((item, i) => {
-          const info = res && res[i];
-          if (!info) {
-            uploader.removeFile(item);
-            return;
+          accepted.forEach((item, i) => {
+            const info = Array.isArray(res) ? res[i] : undefined;
+            if (!info || !Array.isArray(res)) {
+              uploader.removeFile(item);
+              return;
+            }
+            // 服务端也会给一个大小上限（单位 MB），超了就移出队列
+            if (info.size && item.size > info.size * 1024 * 1024) {
+              exceedFiles.push(item);
+              uploader.removeFile(item);
+              return;
+            }
+            const token = requireFileToken(res, i);
+            item.token = token.uptoken;
+            item.key = token.key;
+            item.serverName = token.serverName;
+            item.fileName = token.fileName;
+            item.url = token.url;
+          });
+
+          if (exceedFiles.length) {
+            if (initFunc.FilesAdded) initFunc.FilesAdded(uploader, []);
+            option.remove_files_callback && option.remove_files_callback(uploader, exceedFiles);
+            alert(
+              _l(
+                '%0个文件无法上传：单个文件大小超过%1MB',
+                exceedFiles.length,
+                Array.isArray(res) ? (res[0]?.size ?? 'undefined') : 'undefined',
+              ),
+              2,
+            );
           }
-          // 服务端也会给一个大小上限（单位 MB），超了就移出队列
-          if (info.size && item.size > info.size * 1024 * 1024) {
-            exceedFiles.push(item);
-            uploader.removeFile(item);
-            return;
+
+          if (option.auto_start) {
+            Promise.resolve(beforeCheck === false ? Promise.reject(false) : beforeCheck)
+              .then(() => startQueue())
+              .catch(failResult => {
+                forEach(accepted, file => triggerUploadError(file, failResult || _l('上传前检查失败')));
+              });
+          } else {
+            // auto_start: false —— 由调用方自己挑时机 start()。那个时机可能【早于】
+            // 这里，所以凭证刚到位就得把已经在等的文件接上，否则它们会永远停在队列里。
+            resumePendingStart();
           }
-          item.token = info.uptoken;
-          item.key = info.key;
-          item.serverName = info.serverName;
-          item.fileName = info.fileName;
-          item.url = info.url;
+        })
+        .catch((error: unknown) => {
+          const message =
+            error instanceof Error
+              ? error.message
+              : typeof error === 'string'
+                ? error
+                : _l('获取上传凭证失败，请稍后重试。');
+          forEach(accepted, file => triggerUploadError(file, message, UploadError.SECURITY_ERROR));
         });
-
-        if (exceedFiles.length) {
-          if (initFunc.FilesAdded) initFunc.FilesAdded(uploader, []);
-          option.remove_files_callback && option.remove_files_callback(uploader, exceedFiles);
-          alert(_l('%0个文件无法上传：单个文件大小超过%1MB', exceedFiles.length, res[0].size), 2);
-        }
-
-        if (option.auto_start) {
-          Promise.resolve(beforeCheck === false ? Promise.reject(false) : beforeCheck)
-            .then(() => startQueue())
-            .catch(failResult => {
-              forEach(accepted, file => triggerUploadError(file, failResult || _l('上传前检查失败')));
-            });
-        } else {
-          // auto_start: false —— 由调用方自己挑时机 start()。那个时机可能【早于】
-          // 这里，所以凭证刚到位就得把已经在等的文件接上，否则它们会永远停在队列里。
-          resumePendingStart();
-        }
-      });
     };
 
     trigger('FilesAdded', uploader, accepted);

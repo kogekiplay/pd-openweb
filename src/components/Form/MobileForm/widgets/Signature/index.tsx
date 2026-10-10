@@ -9,6 +9,7 @@ import { Button, Icon } from 'ming-ui';
 import accountSettingAjax from 'src/api/accountSetting';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
 import { getToken } from 'src/utils/common';
+import { requireBase64FileToken } from 'src/utils/commonRequestBoundary';
 import { compatibleMDJS } from 'src/utils/project';
 import { ensurePngSignatureUrl, stripFileUrlSignature } from 'src/utils/signature';
 import 'rc-trigger/assets/index.css';
@@ -398,41 +399,47 @@ const Signature = props => {
       projectId,
       appId,
       worksheetId,
-    }).then(res => {
-      if (res.error) {
-        alert(res.error);
-      } else {
-        const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(res[0].key)}`;
-        axios
-          .post(url, data.split(',')[1], {
-            headers: {
-              'Content-Type': 'application/octet-stream',
-              Authorization: `UpToken ${res[0].uptoken}`,
-            },
-          })
-          .then(() => {
-            setPopupVisible(false);
-            resetSignaturePopupState();
+    })
+      .then(res => {
+        if (!Array.isArray(res)) {
+          alert(res.error);
+        } else {
+          const token = requireBase64FileToken(res);
+          const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(token.key)}`;
+          axios
+            .post(url, data.split(',')[1], {
+              headers: {
+                'Content-Type': 'application/octet-stream',
+                Authorization: `UpToken ${token.uptoken}`,
+              },
+            })
+            .then(() => {
+              setPopupVisible(false);
+              resetSignaturePopupState();
 
-            // 同 Desktop：存进字段和 editSign 的都必须是裸 URL，不能带读时签名。
-            const signUrl = stripFileUrlSignature(res[0].url);
+              // 同 Desktop：存进字段和 editSign 的都必须是裸 URL，不能带读时签名。
+              const signUrl = stripFileUrlSignature(token.url || '');
 
-            if (window.isPublicWorksheet || _.get(window, 'shareState.isPublicWorkflowRecord')) {
-              props.onChange(signUrl);
-            } else {
-              accountSettingAjax.editSign({ url: signUrl }).then(result => {
-                if (result) {
-                  props.onChange(signUrl);
-                }
-              });
-            }
-          })
-          .catch(error => {
-            console.log(error);
-            alert(_l('保存失败!'), 2);
-          });
-      }
-    });
+              if (window.isPublicWorksheet || _.get(window, 'shareState.isPublicWorkflowRecord')) {
+                props.onChange(signUrl);
+              } else {
+                accountSettingAjax.editSign({ url: signUrl }).then(result => {
+                  if (result) {
+                    props.onChange(signUrl);
+                  }
+                });
+              }
+            })
+            .catch(error => {
+              console.log(error);
+              alert(_l('保存失败!'), 2);
+            });
+        }
+      })
+      .catch((error: unknown) => {
+        console.error(error);
+        alert(_l('保存失败!'), 2);
+      });
   };
 
   const useLastSignature = () => {

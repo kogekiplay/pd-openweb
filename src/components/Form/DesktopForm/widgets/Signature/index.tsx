@@ -14,6 +14,7 @@ import GenScanUploadQr from 'worksheet/components/GenScanUploadQr';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
 import { CardButton } from 'src/pages/worksheet/components/Basics.jsx';
 import { getToken } from 'src/utils/common';
+import { requireBase64FileToken } from 'src/utils/commonRequestBoundary';
 import { compatibleMDJS } from 'src/utils/project';
 import { ensurePngSignatureUrl, stripFileUrlSignature } from 'src/utils/signature';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
@@ -310,43 +311,49 @@ const Signature = props => {
       projectId,
       appId,
       worksheetId,
-    }).then(res => {
-      if (res.error) {
-        alert(res.error);
-      } else {
-        const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(res[0].key)}`;
-        axios
-          .post(url, data.split(',')[1], {
-            headers: {
-              'Content-Type': 'application/octet-stream',
-              Authorization: `UpToken ${res[0].uptoken}`,
-            },
-          })
-          .then(() => {
-            setPopupVisible(false);
+    })
+      .then(res => {
+        if (!Array.isArray(res)) {
+          alert(res.error);
+        } else {
+          const token = requireBase64FileToken(res);
+          const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(token.key)}`;
+          axios
+            .post(url, data.split(',')[1], {
+              headers: {
+                'Content-Type': 'application/octet-stream',
+                Authorization: `UpToken ${token.uptoken}`,
+              },
+            })
+            .then(() => {
+              setPopupVisible(false);
 
-            /* getToken 回包的 url 带读时签名（?e=…&token=…），而库里存的是裸 URL ——
+              /* getToken 回包的 url 带读时签名（?e=…&token=…），而库里存的是裸 URL ——
                带签名存下去，签名一过期图就打不开。editSign 那一路尤其要剥：
                它存的就是下次「使用上次签名」读到的东西。 */
-            const signUrl = stripFileUrlSignature(res[0].url);
+              const signUrl = stripFileUrlSignature(token.url || '');
 
-            if (window.isPublicWorksheet || _.get(window, 'shareState.isPublicWorkflowRecord')) {
-              onChange(signUrl);
-            } else {
-              if (!get(window, 'md.global.Account.accountId')) return;
-              accountSettingAjax.editSign({ url: signUrl }).then(result => {
-                if (result) {
-                  onChange(signUrl);
-                }
-              });
-            }
-          })
-          .catch(error => {
-            console.log(error);
-            alert(_l('保存失败!'), 2);
-          });
-      }
-    });
+              if (window.isPublicWorksheet || _.get(window, 'shareState.isPublicWorkflowRecord')) {
+                onChange(signUrl);
+              } else {
+                if (!get(window, 'md.global.Account.accountId')) return;
+                accountSettingAjax.editSign({ url: signUrl }).then(result => {
+                  if (result) {
+                    onChange(signUrl);
+                  }
+                });
+              }
+            })
+            .catch(error => {
+              console.log(error);
+              alert(_l('保存失败!'), 2);
+            });
+        }
+      })
+      .catch((error: unknown) => {
+        console.error(error);
+        alert(_l('保存失败!'), 2);
+      });
   };
 
   const useLastSignature = () => {

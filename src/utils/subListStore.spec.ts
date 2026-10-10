@@ -105,6 +105,7 @@ function load(relative: string): ModuleExports {
     if (name === 'src/api/worksheet' || name === 'src/api/publicWorksheet') return api;
     if (name === 'file-saver') return { saveAs() {} };
     if (name === 'src/utils/subListStoreTypes') return load('src/utils/subListStoreTypes.ts');
+    if (name === 'src/utils/commonRequestBoundary') return load('src/utils/commonRequestBoundary.ts');
     if (name === 'src/utils/fieldStoreBoundary') return load('src/utils/fieldStoreBoundary.ts');
     if (name === 'worksheet/common/TreeTableHelper' || name === 'worksheet/common/TreeTableHelper/index.js')
       return load('src/pages/worksheet/common/TreeTableHelper/index.ts');

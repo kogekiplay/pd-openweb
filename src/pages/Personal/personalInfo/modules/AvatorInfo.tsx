@@ -1,8 +1,9 @@
-﻿import { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense } from 'react';
 import styled from 'styled-components';
 import { Button, LoadDiv } from 'ming-ui';
 import accountAjax from 'src/api/account';
 import { browserIsMobile, getToken } from 'src/utils/common';
+import { requireBase64FileToken } from 'src/utils/commonRequestBoundary';
 
 const MAX_FILE_SIZE = 1024 * 1024 * 10;
 const DESKTOP_EDITOR_SIZE = 500;
@@ -214,39 +215,45 @@ export default class AvatarEditor extends Component<any, any> {
     }
 
     //1= 用户头像
-    getToken([{ bucket: 4, ext: '.png' }], this.props.defaultType ? 0 : 1).then(res => {
-      if (res.error) {
-        alert(res.error);
-      } else {
-        const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(res[0].key)}`;
-        const xhr = new XMLHttpRequest();
+    getToken([{ bucket: 4, ext: '.png' }], this.props.defaultType ? 0 : 1)
+      .then(res => {
+        if (!Array.isArray(res)) {
+          alert(res.error);
+        } else {
+          const token = requireBase64FileToken(res);
+          const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(token.key)}`;
+          const xhr = new XMLHttpRequest();
 
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState == 4) {
-            const { key } = safeParse(xhr.responseText);
+          xhr.onreadystatechange = () => {
+            if (xhr.readyState == 4) {
+              const { key } = safeParse(xhr.responseText);
 
-            if (!key) {
-              return;
-            }
+              if (!key) {
+                return;
+              }
 
-            if (this.props.editAvatar) {
-              this.props.editAvatar(res[0]);
-              this.props.closeDialog();
-            } else {
-              accountAjax.editAccountAvatar({ fileName: key.replace('UserAvatar/', '') }).then(() => {
-                this.props.updateAvator();
+              if (this.props.editAvatar) {
+                this.props.editAvatar(token);
                 this.props.closeDialog();
-              });
+              } else {
+                accountAjax.editAccountAvatar({ fileName: key.replace('UserAvatar/', '') }).then(() => {
+                  this.props.updateAvator();
+                  this.props.closeDialog();
+                });
+              }
             }
-          }
-        };
+          };
 
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-        xhr.setRequestHeader('Authorization', 'UpToken ' + res[0].uptoken);
-        xhr.send(preview.replace('data:image/png;base64,', ''));
-      }
-    });
+          xhr.open('POST', url, true);
+          xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+          xhr.setRequestHeader('Authorization', 'UpToken ' + token.uptoken);
+          xhr.send(preview.replace('data:image/png;base64,', ''));
+        }
+      })
+      .catch((error: unknown) => {
+        console.error(error);
+        alert(_l('保存失败!'), 2);
+      });
   };
 
   override render() {

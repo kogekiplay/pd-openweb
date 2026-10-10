@@ -526,7 +526,7 @@ class TaskBasic extends Component<any, any> {
     let existsIds = data.member.filter(item => item.type !== 3).map(item => item.account.accountID);
 
     // 回调
-    const callback = (users, callbackInviteResult) => {
+    const callback = (users, callbackInviteResult?: () => void) => {
       const userIdArr = [];
       const specialAccounts = {}; // 外部用户
 

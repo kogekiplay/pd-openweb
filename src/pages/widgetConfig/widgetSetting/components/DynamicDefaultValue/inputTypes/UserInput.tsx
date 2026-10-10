@@ -3,6 +3,7 @@ import update from 'immutability-helper';
 import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import { dialogSelectUser, quickSelectUser } from 'ming-ui/functions';
+import type { SelectedQuickUser } from 'src/ming-ui/functions/quickSelectUser/types';
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
 import { getTabTypeBySelectUser } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
@@ -45,7 +46,7 @@ export default class DateInput extends Component<any, any> {
       this.props.onDynamicValueChange(update(dynamicValue, { $splice: [[index, 1]] }));
     }
   };
-  formatUsersId = (users = []) => {
+  formatUsersId = (users: Pick<SelectedQuickUser, 'accountId'>[] = []) => {
     return users.map(item => ({
       cid: '',
       rcid: '',
@@ -66,7 +67,8 @@ export default class DateInput extends Component<any, any> {
 
     const getUsers = (usersId: { cid: string; rcid: string; staticValue: string }[]) => {
       // 人员去重
-      const getId = (item: { cid: string; rcid: string; staticValue: string }) => _.get(item, ['staticValue', 'accountId']);
+      const getId = (item: { cid: string; rcid: string; staticValue: string }) =>
+        _.get(item, ['staticValue', 'accountId']);
       const existUser = dynamicValue
         .filter(item => item.staticValue)
         .map(item => JSON.parse(item.staticValue || '{}').accountId);
@@ -144,13 +146,20 @@ export default class DateInput extends Component<any, any> {
           <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} />
         ) : (
           <OtherFieldList
-            ref={con => { this.userscon = con; }}
+            ref={con => {
+              this.userscon = con;
+            }}
             {...this.props}
             removeItem={this.removeItem}
             onClick={this.selectUser}
           />
         )}
-        <SelectOtherField {...this.props} ref={con => { this.$wrap = con; }} />
+        <SelectOtherField
+          {...this.props}
+          ref={con => {
+            this.$wrap = con;
+          }}
+        />
       </DynamicValueInputWrap>
     );
   }

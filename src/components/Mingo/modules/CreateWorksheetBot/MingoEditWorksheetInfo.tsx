@@ -119,7 +119,7 @@ export default function MingoEditWorksheetInfo({
   worksheetId,
   ...rest
 }: {
-  appId?: string;
+  appId?: string | undefined;
   worksheetId?: string;
   [key: string]: any;
 }) {

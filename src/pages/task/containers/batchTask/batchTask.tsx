@@ -168,10 +168,10 @@ interface JQueryEventLike {
 
 /** 任务的参与人 / 负责人 */
 interface TaskMember {
-  accountId?: string;
-  accountID?: string;
-  fullname?: string;
-  avatar?: string;
+  accountId?: string | undefined;
+  accountID?: string | undefined;
+  fullname?: string | undefined;
+  avatar?: string | undefined;
   [key: string]: any;
 }
 
