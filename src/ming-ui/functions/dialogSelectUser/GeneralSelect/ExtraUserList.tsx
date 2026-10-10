@@ -1,16 +1,17 @@
 import { Component } from 'react';
 import _ from 'lodash';
 import NoData from './NoData';
+import type { ListData, SelectUser, UsersListProps } from './types';
 import User from './User';
 
-export default class ExtraUserList extends Component<any, any> {
-  getChecked(user) {
+export default class ExtraUserList extends Component<UsersListProps & { data: ListData<SelectUser> }> {
+  getChecked(user: SelectUser) {
     return (
       !!this.props.selectedUsers.filter(item => item.accountId === user.accountId).length || this.getIncluded(user)
     );
   }
 
-  getIncluded(user) {
+  getIncluded(user: SelectUser) {
     return _.includes(this.props.selectedAccountIds || [], user.accountId);
   }
 

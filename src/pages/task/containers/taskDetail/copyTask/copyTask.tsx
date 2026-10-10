@@ -8,7 +8,7 @@ import './less/copyTask.less';
 
 export interface CopyTaskState {
   accountId: string;
-  avatar: string;
+  avatar: string | undefined;
   visible: boolean;
 }
 

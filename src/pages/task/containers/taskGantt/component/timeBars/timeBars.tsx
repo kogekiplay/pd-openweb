@@ -1,16 +1,16 @@
 import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
-// react-dnd v14 删除了 DragSource / DropTarget 装饰器且没有官方替代，
-// 这里用 v16 的 hooks 重建了一份语义一致的（含 spec 第三参 component）。
-// 为什么走兼容层而不是逐个改写成 hooks，见 src/components/dnd/legacyDecorators.tsx 文件头。
-import { DragSource } from 'src/components/dnd/legacyDecorators';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
 import { Tooltip } from 'ming-ui/antd-components';
+// react-dnd v14 删除了 DragSource / DropTarget 装饰器且没有官方替代，
+// 这里用 v16 的 hooks 重建了一份语义一致的（含 spec 第三参 component）。
+// 为什么走兼容层而不是逐个改写成 hooks，见 src/components/dnd/legacyDecorators.tsx 文件头。
+import { DragSource } from 'src/components/dnd/legacyDecorators';
 import { formatTaskTime } from '../../../../utils/utils';
 import config from '../../config/config';
-import utils from '../../utils/utils';
+import utils, { arithmeticValue } from '../../utils/utils';
 import DragPreview from '../dragPreview/dragPreview';
 import './timeBars.less';
 
@@ -65,7 +65,8 @@ const ganttSource = {
 
       const currentScrollLeft = $('.ganttMain .timeBarContainer').scrollLeft(); // 计算偏移距离
 
-      const diffLeft = clientOffset.x - config.offset.x + currentScrollLeft - config.offsetX - config.scrollLeft; // 计算偏移小时
+      const diffLeft =
+        clientOffset.x - config.offset.x + currentScrollLeft - config.offsetX - arithmeticValue(config.scrollLeft); // 计算偏移小时
 
       const diffHours = Math.floor(diffLeft / utils.getOneHourWidth(props.viewType)); // 偏移小时相同的时候不重现换算
 
@@ -208,7 +209,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
 
         const currentScrollLeft = $('.ganttMain .timeBarContainer').scrollLeft(); // 计算偏移距离
 
-        const diffLeft = evt.clientX + currentScrollLeft - config.offsetX - config.scrollLeft; // 计算偏移小时
+        const diffLeft = evt.clientX + currentScrollLeft - config.offsetX - arithmeticValue(config.scrollLeft); // 计算偏移小时
 
         const diffHours = Math.floor(diffLeft / utils.getOneHourWidth(that.props.viewType)); // 新的时间
 

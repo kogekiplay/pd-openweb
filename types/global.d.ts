@@ -308,14 +308,14 @@ declare var md: {
  */
 // abort：异步路径（绝大多数调用）在返回的 promise 上挂了 promise.abort = () => controller.abort()
 // （src/common/global.ts 的 window.mdyAPI）。显式写出来，调用点 req.abort() 才不算「从索引签名取属性」。
-declare type ApiResult = Promise<any> & { abort: () => void; [key: string]: any };
+declare type ApiResult = Promise<any> & { abort: () => void; [metadata: string]: unknown };
 
 /**
  * 带数据类型的接口返回值：resolve 的是 mdyAPI 解开 { state, data, exception } 信封之后的 data。
  * T 由 tools/gen-api-types.ts 从后端 swagger 快照生成（types/hap-api.d.ts 的 HapApi 命名空间）。
- * 交集里那个索引签名和 ApiResult 一样，给 abort() 这类挂在返回值上的东西留口子。
+ * abort 明确登记；其它挂在 Promise 上的元信息保持 unknown，不能未经检查直接调用。
  */
-declare type ApiResultOf<T> = Promise<T> & { abort: () => void; [key: string]: any };
+declare type ApiResultOf<T> = Promise<T> & { abort: () => void; [metadata: string]: unknown };
 
 // 接口 resolve 出来的值的类型 —— 就是 ApiResult 解包之后的那个（目前是 any，见上面那段说明）。
 // 用在「把接口返回值原样转手 resolve 出去」的地方，比如 new Promise<{ data: ApiPayload }>(...)。
@@ -337,12 +337,12 @@ declare var agentAPI: (args?: Record<string, unknown>, options?: AgentApiOptions
  * 标成 any[] 之后那些地方立刻报错，而错的是类型不是代码。
  */
 declare var safeParse: any;
-declare var createTimeSpan: any; // src/common/global.js:291 `window.createTimeSpan = (dateStr, showType = 1) =>`
+declare var createTimeSpan: import('../src/common/globalClientTypes').TimeSpanFormatter;
 // src/common/global.ts 的 window.getCurrentLang：URL 上的 sys_lang 优先，否则取 cookie i18n_langtag（都没有时是 null）
 declare var getCurrentLang: () => string | null;
 // window.getCurrentLangCode：语言 key（不传就用当前语言）在 langConfig 里对应的数字 code，找不到时 undefined
 declare var getCurrentLangCode: (lang?: string | null) => number | undefined;
-declare var destroyAlert: any; // src/common/global.js:248 `window.destroyAlert = destroyAlert;`
+declare var destroyAlert: (key?: import('react').Key) => void;
 
 // ---- 由 src/common/cookies.js 挂到 window 上 ----
 // src/common/cookies.ts：读不到时 null；expire 交给 moment() 解析（Date / 日期字符串 / 时间戳），不传就是 10 天
@@ -353,8 +353,8 @@ declare var delCookie: (name: string) => void;
 declare var safeLocalStorageSetItem: (key: string, value: string) => void;
 
 // ---- 由构建期/宿主页注入，不是模块 ----
-declare var __api_server__: any; // CI/generate.js:123 生成 `var __api_server__ = ...` 内联进 HTML；消费点 src/common/global.js:433
-declare var translations: any; // src/pages/embed/mingoEntry/widgetEntry.js:162 `window.translations = hostTranslations`（宿主页注入的语言包）
+declare var __api_server__: import('../src/common/globalClientTypes').ClientApiServers;
+declare var translations: import('../src/common/globalClientTypes').ClientTranslations | undefined;
 /**
  * ---- jQuery ----
  *
@@ -444,12 +444,13 @@ interface Window {
   getCookie: typeof getCookie;
   setCookie: typeof setCookie;
   delCookie: typeof delCookie;
-  createTimeSpan: any;
+  createTimeSpan: typeof createTimeSpan;
   getCurrentLang: typeof getCurrentLang;
   getCurrentLangCode: typeof getCurrentLangCode;
-  destroyAlert: any;
-  translations: any;
-  __api_server__: any;
+  destroyAlert: typeof destroyAlert;
+  translations?: typeof translations;
+  __mingoEntryTranslations?: import('../src/common/globalClientTypes').ClientTranslations | undefined;
+  __api_server__: typeof __api_server__;
   // 与上面的全局声明保持同一个类型，否则 window.$ 和裸 $ 会是两种东西
   $: JQueryStatic;
   jQuery: JQueryStatic;
@@ -800,13 +801,14 @@ declare module '*.eot' {
 // 不覆盖的话 tsc 会按 DOM 的 alert(message?: any): void 判读，凡是传第二个参数的
 // 调用点（本仓大量 `alert(msg, 2)`）都会误报 TS2554 Expected 0-1 arguments。
 // 注意：content 可以是字符串/ReactNode，也可以是 { msg, type, duration, onClose, ... } 配置对象。
-declare function alert(content?: any, alertType?: number): void;
+// 全局入口同时可能是原生 alert 或嵌入页的轻提示，公共协议只承诺显示消息；
+// 需要移动 Toast controller 的调用方直接使用 antAlert 的实际返回类型。
+declare function alert(content?: import('../src/ming-ui/functions/alert/types').AlertContent, alertType?: number): void;
 
 // src/api/* 方法第二个参数 options 的类型。
 // 依据 src/common/global.js:721 `window.mdyAPI = (controllerName, actionName, requestData, options = {}) =>`
 // 以及 src/api 里对 options 的实际写入（如 src/api/download.ts 的 options.ajaxOptions）。
-// 【索引签名保留】options 会被各处塞自定义键，收紧会产生大量噪声诊断；
-// 但下面这些是 window.mdyAPI 自己真正读到的，列出来至少拼错常用键时能报错。
+// 传输层实际消费的配置逐项登记；其它扩展选项保持 unknown，消费前需要验证。
 declare interface ApiOptions {
   /** 出错时不弹提示 */
   silent?: boolean;
@@ -835,7 +837,7 @@ declare interface ApiOptions {
   agent?: boolean;
   /** 附件/批量接口需要只传会话头，不携带当前 accountId。 */
   noAccountIdHeader?: boolean | undefined;
-  [key: string]: any;
+  [metadata: string]: unknown;
 }
 
 // 业务代码 catch 到的「接口错误」。useUnknownInCatchVariables 打开后 catch 变量是 unknown，

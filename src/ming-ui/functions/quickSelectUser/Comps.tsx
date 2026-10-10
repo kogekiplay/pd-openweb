@@ -1,10 +1,10 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import styled from 'styled-components';
 import { Icon, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import PersonalStatus from 'src/pages/chat/components/MyStatus/PersonalStatus';
+import styled from 'src/utils/typedStyled';
 import dialogSelectUser from '../dialogSelectUser';
 import { openManageOftenUserDialog } from '../dialogSelectUser/GeneralSelect/ManageOftenUserDialog';
 import type { SearchProps, UserItemProps, UserListProps } from './types';

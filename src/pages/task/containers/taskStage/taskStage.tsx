@@ -208,7 +208,10 @@ class TaskStage extends Component<any, TaskStageState> {
 
                         this.props.dispatch(
                           updateTaskCharge(taskId, user, '', () => {
-                            $ele.data('id', user.accountId).data('src', user.avatar).data('hasbusinesscard', false);
+                            $ele.data('id', user.accountId);
+                            if (user.avatar === undefined) $ele.data('src', undefined);
+                            else $ele.data('src', user.avatar);
+                            $ele.data('hasbusinesscard', false);
                             this.renderChargeHeaderAvatar();
                           }),
                         );

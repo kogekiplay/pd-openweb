@@ -1,4 +1,3 @@
-import defineMethods from 'src/utils/defineMethods';
 import { createRoot } from 'react-dom/client';
 import doT from 'dot';
 import _ from 'lodash';
@@ -6,6 +5,7 @@ import { Dialog, ScrollView, UserHead } from 'ming-ui';
 import { dialogSelectUser, quickSelectUser } from 'ming-ui/functions';
 import kcAjax from 'src/api/kc';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
+import defineMethods from 'src/utils/defineMethods';
 import { existAccountHint } from 'src/utils/inviteCommon';
 import addMemberTpl from './tpl/addMember.html';
 import htmlTpl from './tpl/createRoot.html';
@@ -679,7 +679,9 @@ const rootSettingsMethods = defineMethods<RootSettingsFields>()({
           .then(function () {
             $createFolderBox.find('.folderContent .dropBox .seleted').html(selectName).data('projectId', selectId);
             $attributeList.fadeOut();
-            var membersLi = $createFolderBox.find('.folderMembers .memberList .memberItem').filter(function (this: HTMLElement) {
+            var membersLi = $createFolderBox.find('.folderMembers .memberList .memberItem').filter(function (
+              this: HTMLElement,
+            ) {
               return ($(this).data('accountId') || $(this).data('account')) !== md.global.Account.accountId;
             });
 
@@ -798,7 +800,7 @@ const rootSettingsMethods = defineMethods<RootSettingsFields>()({
             projectId: (root.project && root.project.projectId) || '',
             filterAccountIds: [md.global.Account.accountId],
             callback: function (users) {
-              if (!users && users.length <= 0) {
+              if (Boolean(!users) && users.length <= 0) {
                 alert(_l('请选择托付用户'), 2);
                 return;
               }
@@ -814,7 +816,7 @@ const rootSettingsMethods = defineMethods<RootSettingsFields>()({
                   alert(_l('托付成功'));
                   var members = root.members.slice(0);
                   function getNewOwnerObject() {
-                    var ownerInMembers = _.find(members, m => newOwner.account === m.accountId);
+                    var ownerInMembers = _.find(members, m => newOwner['account'] === m.accountId);
                     var newOwnerObject = ownerInMembers
                       ? _.assign({}, ownerInMembers, {
                           permission: PERMISSION_TYPE.OWNER,

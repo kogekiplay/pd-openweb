@@ -6,26 +6,35 @@ import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import { savedBoolean } from './boundary';
 import NoData from './NoData';
+import type { ListData, SelectDepartment, SelectGroup, SelectUser, UserSettings, UsersListProps } from './types';
 import User from './User';
 import './css/user.less';
 
-export default class DepartmentGroupUserList extends Component<any, any> {
-  constructor(props) {
+type GroupProps = Omit<UsersListProps, 'currentIndex'> & {
+  unique?: UserSettings['unique'];
+  userAction?: (() => void) | undefined;
+  toggleUserItem: (id: string) => void;
+  allSelectUserItem: (id: string, checked: boolean) => void;
+} & ({ tabType: 'department'; data: ListData<SelectDepartment> } | { tabType: 'group'; data: ListData<SelectGroup> });
+
+export default class DepartmentGroupUserList extends Component<GroupProps, { onlyJoinGroupChecked: boolean }> {
+  constructor(props: GroupProps) {
     super(props);
     const isCheckedGroupOnlyMyJoin = localStorage.getItem('isCheckedGroupOnlyMyJoin');
     this.state = {
-      onlyJoinGroupChecked: isCheckedGroupOnlyMyJoin ? safeParse(isCheckedGroupOnlyMyJoin) : true,
+      onlyJoinGroupChecked: savedBoolean(isCheckedGroupOnlyMyJoin, true),
     };
   }
 
-  getChecked(user) {
+  getChecked(user: SelectUser) {
     return (
       !!this.props.selectedUsers.filter(item => item.accountId === user.accountId).length || this.getIncluded(user)
     );
   }
 
-  getIncluded(user) {
+  getIncluded(user: SelectUser) {
     return _.includes(this.props.selectedAccountIds || [], user.accountId);
   }
 
@@ -38,9 +47,23 @@ export default class DepartmentGroupUserList extends Component<any, any> {
   };
 
   override render() {
-    let { list = [] } = this.props.data;
+    const list =
+      this.props.tabType === 'department'
+        ? this.props.data.list.map(item => ({
+            id: item.departmentId,
+            name: item.departmentName,
+            count: item.userCount,
+            users: item.users,
+            open: item.open,
+          }))
+        : this.props.data.list.map(item => ({
+            id: item.groupId,
+            name: item.name,
+            count: item.groupMemberCount,
+            users: item.users,
+            open: item.open,
+          }));
     let { selectedUsers = [], selectedAccountIds = [], tabType } = this.props;
-    let { ID, NAME, COUNT } = this.props.getKeys(tabType);
     const { onlyJoinGroupChecked } = this.state;
 
     return (
@@ -54,18 +77,18 @@ export default class DepartmentGroupUserList extends Component<any, any> {
               const checked =
                 (selectedUsers.length || selectedAccountIds.length) && (department.users || []).length
                   ? _.every(department.users || [], u =>
-                      _.includes(selectedUsers.map(l => l.accountId).concat(selectedAccountIds), u.accountId),
+                      _.includes([...selectedUsers.map(l => l.accountId), ...selectedAccountIds], u.accountId),
                     )
                   : false;
               const isAllSelectedAccountIds =
                 checked &&
                 !(department.users || []).filter(l => !selectedAccountIds.includes(l.accountId)).length &&
-                !!department[COUNT];
+                !!department.count;
 
               return (
-                <div key={department[ID]}>
+                <div key={department.id}>
                   <div className="GSelect-treeItem">
-                    <div className="GSelect-arrow" onClick={() => this.props.toggleUserItem(department[ID])}>
+                    <div className="GSelect-arrow" onClick={() => this.props.toggleUserItem(department.id)}>
                       <i
                         className={cx(
                           'GSelect-arrow__arrowIcon',
@@ -85,16 +108,16 @@ export default class DepartmentGroupUserList extends Component<any, any> {
                       <span>
                         <Checkbox
                           className="GSelect-treeItem--checkbox"
-                          disabled={this.props.unique || isAllSelectedAccountIds}
+                          disabled={!!this.props.unique || isAllSelectedAccountIds}
                           checked={checked}
-                          onClick={() => this.props.allSelectUserItem(department[ID], checked)}
+                          onClick={() => this.props.allSelectUserItem(department.id, checked)}
                         />
                       </span>
                     </Tooltip>
 
-                    <div className="flex flexRow pointer" onClick={() => this.props.toggleUserItem(department[ID])}>
-                      <div className="GSelect-treeItem-name overflow_ellipsis">{department[NAME]}</div>
-                      <div className="GSelect-treeItem-number">{`（${department[COUNT]}人）`}</div>
+                    <div className="flex flexRow pointer" onClick={() => this.props.toggleUserItem(department.id)}>
+                      <div className="GSelect-treeItem-name overflow_ellipsis">{department.name}</div>
+                      <div className="GSelect-treeItem-number">{`（${department.count}人）`}</div>
                     </div>
                     {/* {this.props.unique ? null : (
                     <div
@@ -107,7 +130,7 @@ export default class DepartmentGroupUserList extends Component<any, any> {
                   </div>
                   {!department.open ? null : (
                     <div className="GSelect-userList">
-                      {department.users.map(user => {
+                      {(department.users || []).map(user => {
                         return (
                           <User
                             user={user}

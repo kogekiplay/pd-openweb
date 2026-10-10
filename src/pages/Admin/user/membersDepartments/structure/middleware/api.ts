@@ -75,8 +75,10 @@ export default () => next => action => {
   prePromiseType = requestType;
   promise.then(
     response => {
-      if (promise && promise.state && promise.state() === 'abort') {
-        return false;
+      if (promise && promise['state']) {
+        const state: unknown = promise['state'];
+        if (typeof state !== 'function') throw new TypeError('Invalid request state method');
+        if (Reflect.apply(state, promise, []) === 'abort') return false;
       }
 
       next(

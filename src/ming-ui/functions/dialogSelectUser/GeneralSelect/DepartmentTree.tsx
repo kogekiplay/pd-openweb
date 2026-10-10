@@ -5,8 +5,45 @@ import styled from 'styled-components';
 import { Checkbox, Icon, LoadDiv, ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import departmentController from 'src/api/department';
+import { userObject } from '../../quickSelectUser/boundary';
+import { decodeDepartments, decodeUserList, savedBoolean } from './boundary';
 import NoData from './NoData';
+import type {
+  AbortableRequest,
+  SelectedEntity,
+  SelectUser,
+  UserDepartmentNode,
+  UserSettings,
+  UsersListProps,
+} from './types';
 import User from './User';
+
+interface TreeProps extends Omit<UsersListProps, 'keywords' | 'currentIndex'> {
+  data: UserDepartmentNode[];
+  userSettings: UserSettings;
+  isNetwork?: boolean | '' | null | undefined;
+  unique?: UserSettings['unique'];
+  removeSelectedData: (ids: string[]) => void;
+  addSelectedData: (items: SelectedEntity[]) => void;
+  userAction: () => void;
+  defaultCheckedDepId?: string | null | undefined;
+}
+interface TreeState {
+  groupId: string | null;
+  selects: Array<string | undefined>;
+  groupList: SelectUser[];
+  loading: boolean;
+  pageIndex: number;
+  isMore: boolean;
+  pagedDepartmentIndex: number;
+  pagedDepartmentSize: number;
+  isMoreDepartment: boolean;
+  department: UserDepartmentNode[];
+  departmentLoading: boolean;
+  onlyJoinDepartmentChecked: boolean;
+  userError?: string | undefined;
+  departmentError?: string | undefined;
+}
 
 const DepartmentTreeWrapper = styled.div`
   overflow: auto;
@@ -53,10 +90,10 @@ const Department = styled.div`
 
 // import './css/user.less';
 
-export default class DepartmentTree extends Component<any, any> {
-  declare departAjax: ApiResult | undefined;
+export default class DepartmentTree extends Component<TreeProps, TreeState> {
+  declare departAjax: AbortableRequest<unknown> | undefined;
 
-  constructor(props) {
+  constructor(props: TreeProps) {
     super(props);
     const project = _.find(md.global.Account.projects, { projectId: props.projectId });
     const isCheckedOnlyMyJoin = localStorage.getItem('isCheckedOnlyMyJoin');
@@ -72,23 +109,79 @@ export default class DepartmentTree extends Component<any, any> {
       isMoreDepartment: true,
       department: props.data || [],
       departmentLoading: false,
-      onlyJoinDepartmentChecked: isCheckedOnlyMyJoin ? safeParse(isCheckedOnlyMyJoin) : false,
+      onlyJoinDepartmentChecked: savedBoolean(isCheckedOnlyMyJoin, false),
     };
   }
 
   override componentDidMount() {
-    if (this.props.defaultCheckedDepId) {
-      this.handleSelectGroup(this.props.defaultCheckedDepId);
-    }
+    const replay = this.unmounted;
+    this.unmounted = false;
+    const initialize = () => {
+      if (this.props.defaultCheckedDepId) this.handleSelectGroup(this.props.defaultCheckedDepId);
+    };
+    if (replay) this.setState({ loading: false, departmentLoading: false }, initialize);
+    else initialize();
   }
 
-  getChecked(user) {
+  private unmounted = false;
+  private userVersion = 0;
+  private lifecycleVersion = 0;
+  private departmentErrorVersions = new Map<string, number>();
+  private retryDepartment: (() => void) | undefined;
+  private requests = new Set<AbortableRequest<unknown>>();
+  override componentWillUnmount() {
+    this.unmounted = true;
+    this.lifecycleVersion++;
+    this.userVersion++;
+    this.requests.forEach(request => request.abort?.());
+    this.requests.clear();
+  }
+  run<T>(
+    request: AbortableRequest<unknown>,
+    kind: 'user' | 'department',
+    decode: (value: unknown) => T,
+    apply: (data: T) => void,
+    departmentKey = 'root',
+  ) {
+    const version = kind === 'user' ? ++this.userVersion : (this.departmentErrorVersions.get(departmentKey) || 0) + 1;
+    if (kind === 'department') this.departmentErrorVersions.set(departmentKey, version);
+    const retryDepartment = this.retryDepartment;
+    const lifecycleVersion = this.lifecycleVersion;
+    this.requests.add(request);
+    this.setState(kind === 'user' ? { userError: undefined } : { departmentError: undefined });
+    return request
+      .then(raw => {
+        if (
+          this.unmounted ||
+          lifecycleVersion !== this.lifecycleVersion ||
+          (kind === 'user' && version !== this.userVersion)
+        )
+          return;
+        apply(decode(raw));
+      })
+      .catch(() => {
+        if (
+          this.unmounted ||
+          lifecycleVersion !== this.lifecycleVersion ||
+          (kind === 'user' ? version !== this.userVersion : version !== this.departmentErrorVersions.get(departmentKey))
+        )
+          return;
+        if (kind === 'user') this.setState({ loading: false, userError: _l('加载失败，请重试') });
+        else {
+          this.retryDepartment = retryDepartment;
+          this.setState({ departmentLoading: false, departmentError: _l('加载失败，请重试') });
+        }
+      })
+      .finally(() => this.requests.delete(request));
+  }
+
+  getChecked(user: SelectUser) {
     return (
       !!this.props.selectedUsers.filter(item => item.accountId === user.accountId).length || this.getIncluded(user)
     );
   }
 
-  getIncluded(user) {
+  getIncluded(user: SelectUser) {
     return _.includes(this.props.selectedAccountIds || [], user.accountId);
   }
 
@@ -98,48 +191,61 @@ export default class DepartmentTree extends Component<any, any> {
 
     if (!loading && isMore) {
       if (projectId === groupId) {
-        this.handleLoadAll(groupId);
+        if (groupId) this.handleLoadAll(groupId);
       } else {
-        this.handleSelectGroup(groupId);
+        if (groupId) this.handleSelectGroup(groupId);
       }
     }
   };
 
-  getNextPageDepartmentTrees = (id?) => {
+  getNextPageDepartmentTrees = (id?: string) => {
+    this.retryDepartment = () => this.getNextPageDepartmentTrees(id);
     const { pagedDepartmentIndex, pagedDepartmentSize } = this.state;
     const { projectId, isNetwork } = this.props;
     this.setState({ departmentLoading: true });
-    departmentController[isNetwork ? 'pagedProjectDepartmentTrees' : 'pagedDepartmentTrees']({
-      projectId,
-      pageIndex: pagedDepartmentIndex + 1,
-      pageSize: pagedDepartmentSize,
-      parentId: id,
-    }).then(res => {
-      let temp =
-        (_.isArray(res) &&
-          res.map(item => ({ ...item, name: item.departmentName, id: item.departmentId, subs: [] }))) ||
-        [];
-      const department = this.state.department.concat(temp);
-      this.setState({
-        isMoreDepartment: department.length % pagedDepartmentSize <= 0,
-        departmentLoading: false,
-        pagedDepartmentIndex: pagedDepartmentIndex + 1,
-        department,
-      });
-    });
+    this.run(
+      departmentController[isNetwork ? 'pagedProjectDepartmentTrees' : 'pagedDepartmentTrees']({
+        projectId,
+        pageIndex: pagedDepartmentIndex + 1,
+        pageSize: pagedDepartmentSize,
+        parentId: id,
+      }),
+      'department',
+      decodeDepartments,
+      res => {
+        let temp =
+          (_.isArray(res) &&
+            res.map(item => ({ ...item, name: item.departmentName, id: item.departmentId, subs: [] }))) ||
+          [];
+        const department = this.state.department.concat(temp);
+        this.setState({
+          isMoreDepartment: department.length % pagedDepartmentSize <= 0,
+          departmentLoading: false,
+          pagedDepartmentIndex: pagedDepartmentIndex + 1,
+          department,
+        });
+      },
+      `page:${id || ''}`,
+    );
   };
 
-  handleLoadAll = id => {
+  handleLoadAll = (id: string) => {
     const { pageIndex } = this.state;
     const { projectId } = this.props;
     this.setState({ groupId: id, loading: true });
-    departmentController
-      .getNotInDepartmentUsers({
+    this.run(
+      departmentController.getNotInDepartmentUsers({
         projectId,
         pageIndex,
         pageSize: 20,
-      })
-      .then(({ listUser }) => {
+      }),
+      'user',
+      value => {
+        const data = userObject(value);
+        if (!data) throw new TypeError('Invalid root department users');
+        return decodeUserList(data['listUser']);
+      },
+      listUser => {
         const groupList = this.state.groupList.concat(listUser.list);
         this.setState({
           isMore: groupList.length !== listUser.allCount,
@@ -147,17 +253,18 @@ export default class DepartmentTree extends Component<any, any> {
           pageIndex: pageIndex + 1,
           groupList,
         });
-      });
+      },
+    );
   };
 
-  handleSelectGroup = id => {
+  handleSelectGroup = (id: string) => {
     const { pageIndex, loading, isMore } = this.state;
     const { userSettings, projectId, isNetwork } = this.props;
 
-    if (loading || !isMore) return;
+    if ((loading && this.state.groupId === id) || !isMore) return;
 
     if (this.departAjax) {
-      this.departAjax.abort();
+      this.departAjax.abort?.();
     }
 
     this.setState({ groupId: id, loading: true });
@@ -169,10 +276,10 @@ export default class DepartmentTree extends Component<any, any> {
       pageIndex,
       pageSize: 100,
     });
-    this.departAjax.then(data => {
+    this.run(this.departAjax, 'user', decodeUserList, data => {
       const groupList = this.state.groupList.concat(data.list);
       this.setState({
-        isMore: groupList.length < data.allCount,
+        isMore: data.allCount !== undefined && groupList.length < data.allCount,
         loading: false,
         pageIndex: pageIndex + 1,
         groupList,
@@ -180,7 +287,7 @@ export default class DepartmentTree extends Component<any, any> {
     });
   };
 
-  updateTreeData = (list, key, subs) => {
+  updateTreeData = (list: UserDepartmentNode[], key: string, subs: UserDepartmentNode[]): UserDepartmentNode[] => {
     return list.map(node => {
       if (node.id === key) {
         return { ...node, subs };
@@ -194,19 +301,26 @@ export default class DepartmentTree extends Component<any, any> {
     });
   };
 
-  expandNext = id => {
+  expandNext = (id: string) => {
+    this.retryDepartment = () => this.expandNext(id);
     const { projectId, isNetwork } = this.props;
     let { department } = this.state;
     this.setState({ departmentLoading: true });
-    departmentController[isNetwork ? 'pagedProjectDepartmentTrees' : 'pagedDepartmentTrees']({
-      projectId,
-      pageIndex: 1,
-      pageSize: 100,
-      parentId: id,
-    }).then(res => {
-      let data = res.map(item => ({ ...item, name: item.departmentName, id: item.departmentId, subs: [] }));
-      this.setState({ department: this.updateTreeData(department, id, data), departmentLoading: false });
-    });
+    this.run(
+      departmentController[isNetwork ? 'pagedProjectDepartmentTrees' : 'pagedDepartmentTrees']({
+        projectId,
+        pageIndex: 1,
+        pageSize: 100,
+        parentId: id,
+      }),
+      'department',
+      decodeDepartments,
+      res => {
+        let data = res.map(item => ({ ...item, name: item.departmentName, id: item.departmentId, subs: [] }));
+        this.setState({ department: this.updateTreeData(department, id, data), departmentLoading: false });
+      },
+      `expand:${id}`,
+    );
   };
 
   handleCheckAll = () => {
@@ -218,8 +332,8 @@ export default class DepartmentTree extends Component<any, any> {
     const isAll = res.length !== reallyGroupLength;
 
     if (isAll) {
-      const ids = selectedUsers.map(item => item.accountId).concat(selectedAccountIds);
-      const res = groupList
+      const ids = [...selectedUsers.map(item => item.accountId), ...(selectedAccountIds || [])];
+      const res: SelectedEntity[] = groupList
         .filter(item => !ids.includes(item.accountId))
         .map(item => {
           return {
@@ -238,7 +352,7 @@ export default class DepartmentTree extends Component<any, any> {
     }
   };
 
-  renderDepartment(item) {
+  renderDepartment(item: UserDepartmentNode): React.JSX.Element {
     const { projectId } = this.props;
     const { selects, groupId } = this.state;
     const subVisible = selects.includes(item.id);
@@ -266,7 +380,7 @@ export default class DepartmentTree extends Component<any, any> {
           <Icon
             icon={subVisible ? 'arrow-down' : 'arrow-right-tip'}
             className={cx('textSecondary iconArrow', { Visibility: !item.haveSubDepartment })}
-            onClick={event => {
+            onClick={(event: React.MouseEvent) => {
               event.stopPropagation();
               this.expandNext(item.id);
               const { selects } = this.state;
@@ -298,6 +412,13 @@ export default class DepartmentTree extends Component<any, any> {
 
   renderDepartmentTree() {
     const { department = [], departmentLoading, onlyJoinDepartmentChecked } = this.state;
+    if (this.state.departmentError)
+      return (
+        <div role="alert">
+          {this.state.departmentError}
+          <button onClick={() => this.retryDepartment?.()}>{_l('重试')}</button>
+        </div>
+      );
     return (
       <DepartmentTreeWrapper className="flexColumn flex h100">
         <Checkbox
@@ -339,6 +460,22 @@ export default class DepartmentTree extends Component<any, any> {
   renderUsers() {
     const { groupId, loading, groupList } = this.state;
 
+    if (this.state.userError)
+      return (
+        <div role="alert">
+          {this.state.userError}
+          <button
+            onClick={() => {
+              if (groupId) {
+                if (groupId === this.props.projectId) this.handleLoadAll(groupId);
+                else this.handleSelectGroup(groupId);
+              }
+            }}
+          >
+            {_l('重试')}
+          </button>
+        </div>
+      );
     if (loading && !groupList.length) {
       return (
         <div className="justifyCenter flexRow valignWrapper h100">
@@ -362,7 +499,7 @@ export default class DepartmentTree extends Component<any, any> {
                   <span>
                     <Checkbox
                       checked={res.length === reallyGroupLength}
-                      disabled={this.props.unique || isAllSelectedAccountIds}
+                      disabled={!!this.props.unique || isAllSelectedAccountIds}
                       onClick={() => this.handleCheckAll()}
                     />
                   </span>

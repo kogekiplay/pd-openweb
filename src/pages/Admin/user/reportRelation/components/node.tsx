@@ -149,7 +149,11 @@ class Node extends Component<any, any> {
       title: _l('添加下属'),
       accountId: id,
       callback: accounts => {
-        let param: { id: string; accounts: Array<{ accountId?: string; fullname?: string }>; callback?: () => void } = {
+        let param: {
+          id: string;
+          accounts: Array<{ accountId?: string; fullname?: string | undefined }>;
+          callback?: () => void;
+        } = {
           id,
           accounts,
         };
@@ -173,7 +177,7 @@ class Node extends Component<any, any> {
       callback: accounts => {
         let param: {
           parentId: string;
-          account: { accountId?: string; fullname?: string };
+          account: { accountId?: string; fullname?: string | undefined };
           replacedAccountId: string;
           callback?: () => void;
         } = {

@@ -247,6 +247,7 @@ function load(file: string): Record<string, unknown> {
       if (name === 'ming-ui/antd-components') return { Tooltip: 'Tooltip' };
       if (name === 'styled-components')
         return { __esModule: true, default: new Proxy({}, { get: (_target, tag) => () => tag }) };
+      if (name === 'src/utils/typedStyled') return load(path.resolve(__dirname, '../../../utils/typedStyled.ts'));
       if (name === 'src/pages/chat/components/MyStatus/PersonalStatus')
         return { __esModule: true, default: 'PersonalStatus' };
       if (name === '../dialogSelectUser')

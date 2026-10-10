@@ -6,8 +6,41 @@ import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import { browserIsMobile } from 'src/utils/common';
 import { getCurrentProject } from 'src/utils/project';
 import GeneralSelect from './GeneralSelect';
+import { decodeProjectHeaders } from './GeneralSelect/boundary';
 import NoData from './GeneralSelect/NoData';
+import type {
+  DialogOptions,
+  DialogState,
+  DialogUserSettings,
+  NonEmptyUsers,
+  SelectDepartment,
+  SelectGroup,
+  SelectUser,
+} from './GeneralSelect/types';
 import './index.less';
+
+function isProjectSelection(value: string | number | undefined): value is string | undefined {
+  return typeof value === 'string' || value === undefined;
+}
+function requireProjectId(value: string | undefined): string {
+  if (value === undefined) throw new TypeError('Missing project ID');
+  return value;
+}
+function hasUsers(users: SelectUser[]): users is NonEmptyUsers {
+  return users.length > 0;
+}
+interface DialogProps extends DialogOptions {
+  SelectUserSettings: DialogUserSettings;
+  visible: boolean;
+  onCancel: () => void;
+  dialogProps: {
+    width: number;
+    oneScreen: boolean;
+    oneScreenGap: number;
+    className: string;
+    overlayClosable?: boolean | undefined;
+  };
+}
 
 // dataRange枚举(0:所有联系人, 1: 好友, 2:网络用户,3:其他协作---7.7版本移除 )
 const dataRangeTypes = {
@@ -16,13 +49,13 @@ const dataRangeTypes = {
   project: 2,
 };
 
-class DialogSelectUser extends Component<any, any> {
+class DialogSelectUser extends Component<DialogProps, DialogState> {
   // 纯类型声明：babel 的 TS preset 会把 declare 行整条抹掉，零运行时影响。
   // 【不能】改成有初值的类字段 —— 那会在构造后把 ref 回调写进去的值覆盖掉。
   declare focusSearchInputFrame: number;
-  declare generalSelect: any;
+  declare generalSelect: GeneralSelect | null;
 
-  constructor(props) {
+  constructor(props: DialogProps) {
     super(props);
     const { SelectUserSettings: { projectId = '', dataRange = 0, filterProjectId } = {} } = props;
     this.state = {
@@ -47,19 +80,20 @@ class DialogSelectUser extends Component<any, any> {
     });
   };
 
-  getSettings = (dropLists = []) => {
+  getSettings = (dropLists: NonNullable<DialogState['list']> = []) => {
     const { SelectUserSettings: { filterAll, filterFriend } = {} } = this.props;
-    let settings: { dataRange?: number; projectId?: string } = {};
+    let settings: { dataRange?: number; projectId?: string | undefined } = {};
 
     if (filterAll && filterFriend) {
       settings.dataRange = dataRangeTypes.project;
       if (!this.state.projectId) {
-        settings.projectId = (dropLists[0] || {}).value;
+        const value = dropLists[0]?.value;
+        settings.projectId = typeof value === 'string' ? value : undefined;
       }
     }
 
     if (!_.isEmpty(settings)) {
-      this.setState({ ...settings });
+      this.setState(state => ({ ...state, ...settings }));
     }
   };
 
@@ -69,7 +103,7 @@ class DialogSelectUser extends Component<any, any> {
   initDropList = async () => {
     const { SelectUserSettings = {}, projectId } = this.props;
     const { currentProject } = this.state;
-    let list = [];
+    let list: NonNullable<DialogState['list']> = [];
 
     if (!SelectUserSettings.filterAll) {
       list.push({
@@ -85,26 +119,25 @@ class DialogSelectUser extends Component<any, any> {
       });
     }
 
-    let projects = md.global.Account.projects;
+    const projects = decodeProjectHeaders(md.global.Account.projects || []);
 
     if (md.global.Account && projects) {
       for (let i = 0, length = projects.length; i < length; i++) {
         const item = projects[i];
+        if (!item) continue;
 
         // 过滤某个
         if (
           SelectUserSettings.filterProjectId &&
-          SelectUserSettings.filterProjectId.toLowerCase() == item.projectId.toLowerCase()
+          SelectUserSettings.filterProjectId.toLowerCase() == requireProjectId(item.projectId).toLowerCase()
         ) {
           continue;
         }
 
         // 过滤除某个之外的所有
-        if (
-          SelectUserSettings.filterOtherProject &&
-          SelectUserSettings.projectId.toLowerCase() != item.projectId.toLowerCase()
-        ) {
-          continue;
+        if (SelectUserSettings.filterOtherProject) {
+          if (typeof SelectUserSettings.projectId !== 'string') throw new TypeError('Missing selected project ID');
+          if (SelectUserSettings.projectId.toLowerCase() != requireProjectId(item.projectId).toLowerCase()) continue;
         }
 
         list.push({
@@ -136,19 +169,24 @@ class DialogSelectUser extends Component<any, any> {
     return (
       <div className="dialogSelectTitleContainer">
         <Icon icon="topbar-addressList" className="Font16 colorPrimary" />
-        <Dropdown
+        <Dropdown<string | number | undefined, { value: string | number | undefined; text: string | undefined }>
           data={list}
           value={curValue}
           maxHeight={500}
           currentItemClass="selectMenuItem"
           disabled={SelectUserSettings.filterOtherProject}
-          onChange={value => {
+          onChange={(value: string | number | undefined) => {
             if (value === curValue) return;
             const isProjectId = !_.includes([dataRangeTypes.all, dataRangeTypes.friend], value);
             this.setState(
               {
-                dataRange: isProjectId ? dataRangeTypes.project : value,
-                projectId: isProjectId ? (_.find(md.global.Account.projects, { projectId: value }) ? value : '') : '',
+                dataRange: isProjectId ? dataRangeTypes.project : typeof value === 'number' ? value : dataRange,
+                projectId:
+                  isProjectId && isProjectSelection(value)
+                    ? _.find(md.global.Account.projects, { projectId: value })
+                      ? value
+                      : ''
+                    : '',
               },
               this.focusSearchInput,
             );
@@ -205,7 +243,8 @@ class DialogSelectUser extends Component<any, any> {
       hideResignedTab: settings.hideResignedTab,
       hideOftenUsers: settings.hideOftenUsers,
       hideManageOftenUsers: settings.hideManageOftenUsers,
-      callback: (users, departments, group) => {
+      callback: (users: SelectUser[], departments?: SelectDepartment[], group?: SelectGroup[]) => {
+        if (!hasUsers(users)) return;
         settings.callback && settings.callback(users, departments, group);
         this.props.onCancel();
       },
@@ -262,7 +301,7 @@ class DialogSelectUser extends Component<any, any> {
   }
 }
 
-export default function dialogSelectUser(opts) {
+export default function dialogSelectUser(opts: DialogOptions) {
   let DEFAULTS = {
     SelectUserSettings: {
       includeMySelf: true, // 包含我自己

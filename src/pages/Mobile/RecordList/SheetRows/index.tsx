@@ -5,6 +5,7 @@ import { SpinLoading } from 'antd-mobile';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Icon, LoadDiv, PullToRefreshWrapper, ScrollView } from 'ming-ui';
+import type { ScrollViewHandle } from 'ming-ui/components/ScrollView';
 import { RecordInfoModal } from 'mobile/Record';
 import RecordCardIO from 'mobile/RecordList/RecordCard/RecordCardIO';
 import GroupByControl from 'src/pages/Mobile/components/GroupByControl';
@@ -27,7 +28,7 @@ class SheetRows extends Component<any, any> {
     };
   }
 
-  scrollViewRef = React.createRef();
+  scrollViewRef = React.createRef<ScrollViewHandle>();
 
   override componentDidMount() {
     this.intervalId = setInterval(() => {

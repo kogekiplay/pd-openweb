@@ -4,12 +4,17 @@ import _ from 'lodash';
 import { Checkbox, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import departmentAjax from 'src/api/department.js';
+import { decodeDepartmentName } from './boundary';
+import type { AbortableRequest, UserProps } from './types';
 
-export default class User extends Component<any, any> {
-  declare promise: ApiResult | null;
-  declare timer: NodeJS.Timeout | undefined;
+export default class User extends Component<
+  UserProps,
+  { departmentNames: Record<string, string>; departmentId?: string | undefined }
+> {
+  declare promise: AbortableRequest<unknown> | null;
+  declare timer: ReturnType<typeof setTimeout> | undefined;
 
-  constructor(props) {
+  constructor(props: UserProps) {
     super(props);
     this.state = {
       departmentNames: {},
@@ -24,24 +29,40 @@ export default class User extends Component<any, any> {
     this.props.onChange(this.props.user);
   }
 
-  getFullDepartment = departmentId => {
+  override componentDidMount() {
+    this.unmounted = false;
+  }
+  private unmounted = false;
+  private requestVersion = 0;
+  getFullDepartment = (departmentId: string) => {
+    const version = ++this.requestVersion;
     let { projectId } = this.props;
 
     if (this.promise) {
-      this.promise.abort();
+      this.promise.abort?.();
     }
 
     this.promise = departmentAjax.getDepartmentFullNameById({ departmentId, projectId });
-    this.promise.then(res => {
-      this.setState({
-        departmentId,
-        departmentNames: {
-          ...this.state.departmentNames,
-          [departmentId]: res,
-        },
-      });
-    });
+    this.promise
+      .then(res => {
+        if (this.unmounted || version !== this.requestVersion) return;
+        this.setState({
+          departmentId,
+          departmentNames: {
+            ...this.state.departmentNames,
+            [departmentId]: decodeDepartmentName(res),
+          },
+        });
+      })
+      .catch(() => {});
   };
+
+  override componentWillUnmount() {
+    this.unmounted = true;
+    this.requestVersion++;
+    clearTimeout(this.timer);
+    this.promise?.abort?.();
+  }
 
   override render() {
     let {
@@ -58,8 +79,7 @@ export default class User extends Component<any, any> {
       (includeMySelf || includeUndefinedAndMySelf) &&
       user.accountId === md.global.Account.accountId
     );
-    const { departmentName, departmentId } =
-      _.get(user, 'departmentInfo') || { departmentName: _.get(user, 'department') } || {};
+    const { departmentName, departmentId } = user.departmentInfo || { departmentName: user.department };
     const { departmentNames } = this.state;
 
     if (!user.accountId) return null;
@@ -100,17 +120,17 @@ export default class User extends Component<any, any> {
           <div className="GSelect-User__companyName">
             {projectId ? (
               <Fragment>
-                <Tooltip title={departmentNames[departmentId] || ''} mouseEnterDelay={0.8}>
+                <Tooltip title={(departmentId && departmentNames[departmentId]) || ''} mouseEnterDelay={0.8}>
                   <span
                     onMouseEnter={() => {
-                      if (departmentNames[departmentId]) return;
+                      if (!departmentId || departmentNames[departmentId]) return;
 
                       this.timer = setTimeout(() => this.getFullDepartment(departmentId), 500);
                     }}
                     onMouseLeave={() => {
                       clearTimeout(this.timer);
                       if (this.promise) {
-                        this.promise.abort();
+                        this.promise.abort?.();
                       }
                     }}
                   >

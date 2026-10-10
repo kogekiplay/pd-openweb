@@ -108,7 +108,7 @@ class FolderDetail extends Component<any, any> {
         let $networkFolderList = $li.closest('.networkFolderList');
 
         if ($networkFolderList.length) {
-          count = parseInt($networkFolderList.attr('data-count'), 10) - 1;
+          count = parseInt(String($networkFolderList.attr('data-count')), 10) - 1;
           $networkFolderList.attr('data-count', count);
           if (!count) {
             $networkFolderList.find('.allFolders .folderNewTip').addClass('Hidden');
@@ -134,7 +134,7 @@ class FolderDetail extends Component<any, any> {
           if (!projectId) return;
 
           $networkFolderList = $('.networkFolderList[data-projectid=' + projectId + ']');
-          count = parseInt($networkFolderList.attr('data-count'), 10) - 1;
+          count = parseInt(String($networkFolderList.attr('data-count')), 10) - 1;
           $networkFolderList.attr('data-count', count);
           if (!count) {
             $networkFolderList.find('.allFolders .folderNewTip').addClass('Hidden');
@@ -543,11 +543,11 @@ class FolderDetail extends Component<any, any> {
   /**
    * 更改项目负责人
    */
-  updateFolderCharge(accountId: string, avatar, fullname: string) {
+  updateFolderCharge(accountId: string, avatar: string | undefined, fullname: string | undefined) {
     Dialog.confirm({
       dialogClasses: 'updateFolderCharge',
       closable: false,
-      title: <div style={{ color: 'var(--color-error-text)' }}>{_l('将项目负责人移交给“%0”', fullname)}</div>,
+      title: <div style={{ color: 'var(--color-error-text)' }}>{_l('将项目负责人移交给“%0”', String(fullname))}</div>,
       children: (
         <div className="Font14" style={{ color: 'var(--color-text-tertiary)' }}>
           {_l('如果您移交后，将无法把自己重新设为该项目的负责人')}
@@ -578,14 +578,10 @@ class FolderDetail extends Component<any, any> {
 
               // 左边列表更新
               const $navLi = $('.folderList .commFolder').filter('[data-id=' + this.props.taskConfig.folderId + ']');
-              $navLi
-                .data('charge', accountId)
-                .data('auth', 8)
-                .find('.folderCharge')
-                .attr('src', avatar)
-                .data('id', accountId)
-                .data('hasbusinesscard', false)
-                .off();
+              const $charge = $navLi.data('charge', accountId).data('auth', 8).find('.folderCharge');
+              if (avatar === undefined) $charge.attr('src', undefined);
+              else $charge.attr('src', avatar);
+              $charge.data('id', accountId).data('hasbusinesscard', false).off();
             } else {
               errorMessage(source.error);
             }

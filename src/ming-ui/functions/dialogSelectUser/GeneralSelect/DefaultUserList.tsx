@@ -5,9 +5,10 @@ import { Collapse, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ManageOftenUserDialog from './ManageOftenUserDialog';
 import NoData from './NoData';
+import type { DefaultUserListProps, SelectUser } from './types';
 import User from './User';
 
-const TitleWrapper = styled.div`
+const TitleWrapper = styled.div<{ open: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -34,8 +35,8 @@ export interface DefaultUserListState {
   usersCollapseOpen: boolean;
 }
 
-export default class DefaultUserList extends Component<any, DefaultUserListState> {
-  constructor(props) {
+export default class DefaultUserList extends Component<DefaultUserListProps, DefaultUserListState> {
+  constructor(props: DefaultUserListProps) {
     super(props);
     this.state = {
       manageOftenUserVisible: false,
@@ -44,13 +45,13 @@ export default class DefaultUserList extends Component<any, DefaultUserListState
     };
   }
 
-  getChecked(user) {
+  getChecked(user: SelectUser) {
     return (
       !!this.props.selectedUsers.filter(item => item.accountId === user.accountId).length || this.getIncluded(user)
     );
   }
 
-  getIncluded(user) {
+  getIncluded(user: SelectUser) {
     return _.includes(this.props.selectedAccountIds || [], user.accountId);
   }
 
@@ -77,10 +78,10 @@ export default class DefaultUserList extends Component<any, DefaultUserListState
       includeUndefinedAndMySelf: this.props.includeUndefinedAndMySelf || false,
     };
     const oftenUsersList = data.oftenUsers?.list;
-    const showOftenUsers = !hideOftenUsers && (keywords ? oftenUsersList?.length > 0 : !!oftenUsersList);
+    const showOftenUsers = !hideOftenUsers && (keywords ? (oftenUsersList?.length || 0) > 0 : !!oftenUsersList);
 
     if (
-      (data.oftenUsers && data.oftenUsers.list && data.oftenUsers.list.length) ||
+      (data.oftenUsers && (data.oftenUsers?.list || []) && (data.oftenUsers?.list || []).length) ||
       (data.users && data.users.list.length)
     ) {
       const { manageOftenUserVisible } = this.state;
@@ -107,9 +108,9 @@ export default class DefaultUserList extends Component<any, DefaultUserListState
                   </Tooltip>
                 )}
               </div>
-              {!data.oftenUsers.list.length && this.renderOftenEmpty()}
+              {!(data.oftenUsers?.list || []).length && this.renderOftenEmpty()}
               <Collapse open={oftenUsersCollapseOpen}>
-                {data.oftenUsers.list.map(user => (
+                {(data.oftenUsers?.list || []).map(user => (
                   <User
                     {...otherOptions}
                     user={user}

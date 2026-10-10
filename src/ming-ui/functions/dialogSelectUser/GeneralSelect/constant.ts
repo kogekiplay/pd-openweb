@@ -7,7 +7,7 @@ export const DataRangeTypes = {
   FREND: 1,
   /** 网络 */
   PROJECT: 2,
-};
+} as const;
 
 /** 选择用户的tab种类 */
 export const RenderTypes = {
@@ -23,7 +23,7 @@ export const RenderTypes = {
   GROUP: 6,
   /**已离职 */
   RESIGNED: 7,
-};
+} as const;
 
 /** 选择的类型，人员、部门、群组 */
 export const ChooseType = {
@@ -31,7 +31,7 @@ export const ChooseType = {
   DEPARTMENT: 'department',
   GROUP: 'group',
   RESIGNED: 'resigned',
-};
+} as const;
 
 export const UserTabsId = {
   CONACT_USER: 'conactUser',
@@ -39,7 +39,7 @@ export const UserTabsId = {
   GROUP: 'group',
   SUBORDINATE_USER: 'subordinateUser',
   RESIGNED: 'resigned',
-};
+} as const;
 
 export const OFTEN_USER_OPTIONS = [
   {

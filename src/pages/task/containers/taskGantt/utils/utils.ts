@@ -1,6 +1,18 @@
 import _ from 'lodash';
 import moment from 'moment';
 import config from '../config/config';
+import { validateAxisGroups, validateTask, validateTaskGroups, validateTasks } from './boundary';
+import type {
+  GanttAxisBoundary,
+  GanttAxisGroup,
+  GanttDayAxis,
+  GanttMonthAxis,
+  GanttTask,
+  GanttTaskGroup,
+  GanttTime,
+  GanttWeekAxis,
+  WorkingTime,
+} from './types';
 
 const {
   workingTimes,
@@ -15,6 +27,33 @@ const {
   ARROW_STATUS,
 } = config;
 
+function workingTime(index: number): WorkingTime {
+  const range = workingTimes[index];
+  if (!range) throw new TypeError('Missing Gantt working time');
+  return range;
+}
+export function arithmeticValue(value: number | undefined): number {
+  return value === undefined ? NaN : value;
+}
+function datePart(value: GanttTime): string {
+  if (value === null || value === undefined) throw new TypeError('Missing Gantt date');
+  const date = value.split(' ')[0];
+  if (date === undefined) throw new TypeError('Missing Gantt date');
+  return date;
+}
+function axisMoment(value: GanttAxisBoundary | null): moment.Moment {
+  // Moment's array constructor performs parseInt(element, 10) before calendar construction.
+  return moment(Array.isArray(value) ? value.map(part => parseInt(part, 10)) : value);
+}
+function firstAxisValue(value: GanttAxisBoundary): string | undefined {
+  if (value === undefined) throw new TypeError('Missing Gantt axis boundary');
+  return value[0];
+}
+function lastAxisValue(value: GanttAxisBoundary): string | undefined {
+  if (value === undefined) throw new TypeError('Missing Gantt axis boundary');
+  return value[value.length - 1];
+}
+
 /**
  * 返回有效时长
  * @param  {string} startTime
@@ -22,13 +61,14 @@ const {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {number}  有效时长
  */
-const getValidHours = (startTime, endTime, filterWeekend) => {
+const getValidHours = (startTime: GanttTime, endTime: GanttTime, filterWeekend?: boolean): number => {
   // 开始时间和截止时间都不存在
   if (!startTime && !endTime) {
     return 0;
   }
 
-  let validHours = Math.floor((moment(endTime) - moment(startTime)) / 24 / 60 / 60 / 1000) * workingSumHours; // 整数时长
+  let validHours =
+    Math.floor((moment(endTime).valueOf() - moment(startTime).valueOf()) / 24 / 60 / 60 / 1000) * workingSumHours; // 整数时长
   let validStartHours = parseInt(moment(startTime).format('HH:00'));
   let validEndHours = parseInt(moment(endTime).format('HH:00'));
   let validHoursSingle = 0; // 单独的时间
@@ -44,8 +84,8 @@ const getValidHours = (startTime, endTime, filterWeekend) => {
   }
 
   for (let i = 0; i < workingTimes.length; i++) {
-    const workingStart = parseInt(workingTimes[i][0]);
-    const workingEnd = parseInt(workingTimes[i][1]);
+    const workingStart = parseInt(workingTime(i)[0]);
+    const workingEnd = parseInt(workingTime(i)[1]);
 
     // 开始时间在工作时间范围内
     if (validStartHours >= workingStart && validStartHours < workingEnd) {
@@ -76,7 +116,7 @@ const getValidHours = (startTime, endTime, filterWeekend) => {
   // 过滤周末
   if (filterWeekend) {
     // 相差天数
-    let timeDiff = (moment(endTime.split(' ')[0]) - moment(startTime.split(' ')[0])) / 24 / 60 / 60 / 1000;
+    let timeDiff = (moment(datePart(endTime)).valueOf() - moment(datePart(startTime)).valueOf()) / 24 / 60 / 60 / 1000;
     // 计算出整数周 算出几个周末
     let weekendCount = Math.floor(timeDiff / 7) * filterWeekendDay.length;
     // 剩下的天
@@ -84,7 +124,7 @@ const getValidHours = (startTime, endTime, filterWeekend) => {
 
     // 统计周末总天数
     for (let i = 0; i < timeDiff; i++) {
-      const day = moment(startTime.split(' ')[0]).add(i, 'd').day();
+      const day = moment(datePart(startTime)).add(i, 'd').day();
 
       if (_.includes(filterWeekendDay, day)) {
         weekendCount++;
@@ -105,9 +145,9 @@ const getValidHours = (startTime, endTime, filterWeekend) => {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {object}  showStartTime, showEndTime, showHourLong
  */
-const checkTime = (startTime, endTime, filterWeekend?) => {
+const checkTime = (startTime: GanttTime, endTime: GanttTime, filterWeekend?: boolean) => {
   // 最大截止时间
-  const maxWorkingEnd = workingTimes[workingTimes.length - 1][1];
+  const maxWorkingEnd = workingTime(workingTimes.length - 1)[1];
 
   if (startTime) {
     // 开始时间
@@ -118,8 +158,8 @@ const checkTime = (startTime, endTime, filterWeekend?) => {
     // 处理开始时间
     const updateStartTime = () => {
       for (let i = 0; i < workingTimes.length; i++) {
-        const workingStart = workingTimes[i][0];
-        const workingEnd = workingTimes[i][1];
+        const workingStart = workingTime(i)[0];
+        const workingEnd = workingTime(i)[1];
 
         // 开始时间早于工作时间，则把开始时间设为工作开始时间
         if (parseInt(startHours) < parseInt(workingStart)) {
@@ -147,7 +187,7 @@ const checkTime = (startTime, endTime, filterWeekend?) => {
         }
       }
 
-      startTime = startTime.split(' ')[0] + ' ' + startHours;
+      startTime = datePart(startTime) + ' ' + startHours;
     };
 
     // 处理开始时间 是否过滤特定日期
@@ -168,7 +208,7 @@ const checkTime = (startTime, endTime, filterWeekend?) => {
         addStartDay--;
       }
 
-      startTime = moment(startTime.split(' ')[0]).add(addStartDay, 'd').format('YYYY-MM-DD') + ' ' + startHours;
+      startTime = moment(datePart(startTime)).add(addStartDay, 'd').format('YYYY-MM-DD') + ' ' + startHours;
     } else {
       // 处理开始时间
       updateStartTime();
@@ -184,8 +224,8 @@ const checkTime = (startTime, endTime, filterWeekend?) => {
     // 处理结束时间
     const updateEndTime = () => {
       for (let i = 0; i < workingTimes.length; i++) {
-        const workingStart = workingTimes[i][0];
-        const workingEnd = workingTimes[i][1];
+        const workingStart = workingTime(i)[0];
+        const workingEnd = workingTime(i)[1];
 
         // 结束时间晚于工作时间，则把结束时间设为工作结束时间
         if (parseInt(endHours) > parseInt(maxWorkingEnd)) {
@@ -206,12 +246,12 @@ const checkTime = (startTime, endTime, filterWeekend?) => {
         }
       }
 
-      endTime = endTime.split(' ')[0] + ' ' + endHours;
+      endTime = datePart(endTime) + ' ' + endHours;
     };
 
     // 处理结束时间 是否过滤特定日期
     if (filterWeekend && _.includes(filterWeekendDay, endDay)) {
-      const newEnd = parseInt(workingTimes[0][0]) + 1;
+      const newEnd = parseInt(workingTime(0)[0]) + 1;
       let addEndDay = 0;
 
       endHours = newEnd >= 10 ? newEnd + ':00' : '0' + newEnd + ':00';
@@ -227,7 +267,7 @@ const checkTime = (startTime, endTime, filterWeekend?) => {
         }
       }
 
-      endTime = moment(endTime.split(' ')[0]).add(addEndDay, 'd').format('YYYY-MM-DD') + ' ' + endHours;
+      endTime = moment(datePart(endTime)).add(addEndDay, 'd').format('YYYY-MM-DD') + ' ' + endHours;
     } else {
       // 处理结束时间
       updateEndTime();
@@ -251,7 +291,11 @@ const checkTime = (startTime, endTime, filterWeekend?) => {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {[]}  数据源
  */
-const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
+const taskTimeBars = <Source extends GanttTaskGroup>(
+  source: Source[],
+  viewType: number,
+  filterWeekend: boolean,
+): Source[] => {
   // 不同视图下任务名称代表多少小时
   let taskNameTime: number | undefined;
 
@@ -267,10 +311,11 @@ const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
     taskNameTime = TASK_NAME_SIZE / GRANULARITY.MONTH;
   }
 
+  validateTaskGroups(source);
   source.forEach(data => {
     let taskListArry = _.cloneDeep(data.tasks);
-    const taskTimeBarArry = [];
-    const lastTaskTimeBars = [];
+    const taskTimeBarArry: GanttTask[][] = [];
+    const lastTaskTimeBars: GanttTask[][] = [];
 
     // 循环出无展示开始时间 或 无展示结束时间的数据
     taskListArry.forEach(task => {
@@ -283,7 +328,9 @@ const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
     _.remove(taskListArry, task => (task.showStartTime === '' && task.showEndTime === '') || !task.isShow);
 
     // 根据开始时间排序
-    taskListArry = taskListArry.sort((a, b) => (moment(a.showStartTime) > moment(b.showStartTime) ? 1 : -1));
+    taskListArry = taskListArry.sort((a, b) =>
+      moment(a.showStartTime).valueOf() > moment(b.showStartTime).valueOf() ? 1 : -1,
+    );
 
     /**
      * 检测是否包含了该项
@@ -310,13 +357,13 @@ const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
      * @param  {object} item
      * @return {string}
      */
-    const getMaxEndTime = item => {
+    const getMaxEndTime = (item: GanttTask) => {
       let maxEndTime = item.showEndTime;
 
       // 已完成
-      if (item.status && moment(maxEndTime) < moment(item.completeTime)) {
+      if (item.status && axisMoment(maxEndTime).valueOf() < moment(item.completeTime).valueOf()) {
         maxEndTime = checkTime(item.showStartTime, item.completeTime, filterWeekend).showEndTime;
-      } else if (moment(maxEndTime) < moment(config.timeStamp)) {
+      } else if (axisMoment(maxEndTime).valueOf() < moment(config.timeStamp).valueOf()) {
         maxEndTime = checkTime(item.showStartTime, config.timeStamp, filterWeekend).showEndTime;
       }
 
@@ -324,7 +371,7 @@ const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
     };
 
     // 获取真实展示截止时间
-    const getFactEndTime = item => {
+    const getFactEndTime = (item: GanttTask) => {
       const factEndTime = moment(getMaxEndTime(item));
       const offsetTimes = getDays(taskNameTime);
       // 用小时 计算出天偏差和时间
@@ -334,14 +381,14 @@ const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
     };
 
     // 获取带子任务的最小开始时间
-    const getMinStartTime = item => {
+    const getMinStartTime = (item: GanttTask) => {
       // 最小展示开始时间
       let minShowStartTime = item.showStartTime;
 
       if (item.arrowStatus !== ARROW_STATUS.NULL) {
         // 左侧子任务展开元素宽度
         const leftElementWidth = 20;
-        let leftElementTime;
+        let leftElementTime: number | undefined;
 
         // 日视图
         if (viewType === VIEWTYPE.DAY) {
@@ -359,7 +406,7 @@ const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
         }
 
         // 换算时间
-        const offsetTimes = getDays(-leftElementTime);
+        const offsetTimes = getDays(-arithmeticValue(leftElementTime));
         // 用小时 计算出天偏差和时间
         const { day, time } = offsetStartNegativeHour(moment(item.showStartTime), Math.abs(offsetTimes.hour));
 
@@ -393,12 +440,14 @@ const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
           // 展示开始时间 大于当前 展示结束时间  并且 不存在  且 非拖拽项
           if (
             item.startTime &&
-            moment(getMinStartTime(item)) >= factEndTime &&
+            moment(getMinStartTime(item)).valueOf() >= factEndTime.valueOf() &&
             !checkIsContain(item.taskId) &&
             item.taskId !== config.singleDragTaskId
           ) {
             factEndTime = moment(getFactEndTime(item));
-            taskTimeBarArry[taskTimeBarArry.length - 1].push(item);
+            const bars = taskTimeBarArry[taskTimeBarArry.length - 1];
+            if (!bars) throw new TypeError('Missing Gantt task bar');
+            bars.push(item);
           }
         });
       }
@@ -423,7 +472,15 @@ const taskTimeBars = (source, viewType: number, filterWeekend: boolean) => {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @param  {number} level  当前层级
  */
-const singleTaskSourceUpdate = (tasks, task, status, filterWeekend, level) => {
+const singleTaskSourceUpdate = (
+  tasks: GanttTask[],
+  task: GanttTask,
+  status: number,
+  filterWeekend: boolean,
+  level: number,
+): void => {
+  validateTasks(tasks);
+  validateTask(task);
   let startTime = task.startTime;
   let endTime = task.deadline;
   task.isShow = true;
@@ -463,7 +520,7 @@ const singleTaskSourceUpdate = (tasks, task, status, filterWeekend, level) => {
   if (task.status === TASKSTATUS.COMPLETED) {
     if (task.startTime || task.deadline) {
       // 结束时间存在 且 完成时间小于结束时间  有效时长用完成时间  提前完成
-      if (task.deadline && moment(task.completeTime) < moment(task.deadline)) {
+      if (task.deadline && moment(task.completeTime).valueOf() < moment(task.deadline).valueOf()) {
         endTime = moment(task.completeTime).add(1, 'h').format('YYYY-MM-DD HH:00:00');
       }
 
@@ -474,7 +531,7 @@ const singleTaskSourceUpdate = (tasks, task, status, filterWeekend, level) => {
       }
 
       // 开始不存在 或 开始时间大于结束时间
-      if (!task.startTime || moment(task.startTime) >= moment(endTime)) {
+      if (!task.startTime || moment(task.startTime).valueOf() >= moment(endTime).valueOf()) {
         startTime = moment(endTime).add(-1, 'd').format('YYYY-MM-DD HH:00:00');
       }
     } else {
@@ -497,7 +554,7 @@ const singleTaskSourceUpdate = (tasks, task, status, filterWeekend, level) => {
  * @param  {object} task  单条任务
  * @param  {number} level  当前层级
  */
-const singleTaskArrow = (tasks, task, level: number) => {
+const singleTaskArrow = (tasks: GanttTask[], task: GanttTask, level: number): void => {
   // 无子任务
   if (task.subTaskIds.length === 0) {
     task.arrowStatus = ARROW_STATUS.NULL;
@@ -531,7 +588,14 @@ const singleTaskArrow = (tasks, task, level: number) => {
  * @param  {number} level  当前层级
  * @return {[]}  数据源
  */
-const updateTasksDataSource = (source, status: number, viewType: number, filterWeekend: boolean, level: number) => {
+const updateTasksDataSource = <Source extends GanttTaskGroup>(
+  source: Source[],
+  status: number,
+  viewType: number,
+  filterWeekend: boolean,
+  level: number,
+): Source[] => {
+  validateTaskGroups(source);
   source.forEach(data => {
     // 循环处理任务箭头的问题
     data.tasks.forEach(task => {
@@ -550,12 +614,12 @@ const updateTasksDataSource = (source, status: number, viewType: number, filterW
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {[]}
  */
-const getDaysTime = filterWeekend => {
+const getDaysTime = (filterWeekend: boolean): GanttDayAxis[] => {
   const startTime = config.folderId
     ? moment(config.minStartTime).subtract(7, 'd').format('YYYY-MM-DD')
     : moment(config.minStartTime).format('YYYY-MM-DD');
   const endTime = moment(config.maxEndTime).add(28, 'd').format('YYYY-MM-DD');
-  const timeDiff = (moment(endTime) - moment(startTime)) / 24 / 60 / 60 / 1000;
+  const timeDiff = (moment(endTime).valueOf() - moment(startTime).valueOf()) / 24 / 60 / 60 / 1000;
   const result: Record<string, string[]> = {};
 
   for (let i = 0; i <= timeDiff; i++) {
@@ -574,10 +638,10 @@ const getDaysTime = filterWeekend => {
     }
   }
 
-  return Object.keys(result).map(item => {
+  return Object.entries(result).map(([item, dates]) => {
     return {
       month: item,
-      dateList: result[item],
+      dateList: dates,
     };
   });
 };
@@ -587,15 +651,15 @@ const getDaysTime = filterWeekend => {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {[]}
  */
-const getWeeksTime = filterWeekend => {
+const getWeeksTime = (filterWeekend: boolean): GanttWeekAxis[] => {
   const startGapDay = moment(config.minStartTime).day();
   const endGapDay = moment(config.maxEndTime).day();
   const startWssk = moment(config.minStartTime).subtract((startGapDay === 0 ? 7 : startGapDay) - 1, 'd');
   const endWssk = moment(config.maxEndTime).add(endGapDay === 0 ? 0 : 7 - endGapDay, 'd');
   const startTime = config.folderId ? startWssk.subtract(1, 'w').format('YYYY-MM-DD') : startWssk.format('YYYY-MM-DD');
   const endTime = endWssk.add(8, 'w').format('YYYY-MM-DD');
-  const timeDiff = (moment(endTime) - moment(startTime)) / 24 / 60 / 60 / 1000;
-  let result = {};
+  const timeDiff = (moment(endTime).valueOf() - moment(startTime).valueOf()) / 24 / 60 / 60 / 1000;
+  const result: Record<string, string[]> = {};
 
   for (let i = 0; i <= timeDiff; i++) {
     const momentObj = moment(startTime).add(i, 'd');
@@ -614,26 +678,26 @@ const getWeeksTime = filterWeekend => {
     }
   }
 
-  result = Object.keys(result).reduce((obj, item) => {
-    const first = result[item][0];
+  const weeksByMonth = Object.entries(result).reduce<Record<string, string[][]>>((obj, [_item, dates]) => {
+    const first = dates[0];
     const firstDate = moment(first);
     const year = firstDate.isoWeekYear();
     const month = firstDate.month() + 1;
     const key = `${year}-${month}`;
 
     if (!obj[key]) {
-      obj[key] = [result[item]];
+      obj[key] = [dates];
     } else {
-      obj[key].push(result[item]);
+      obj[key].push(dates);
     }
 
     return obj;
   }, {});
 
-  return Object.keys(result).map(item => {
+  return Object.entries(weeksByMonth).map(([item, dates]) => {
     return {
       month: item,
-      dateList: result[item],
+      dateList: dates,
     };
   });
 };
@@ -642,7 +706,7 @@ const getWeeksTime = filterWeekend => {
  * 返回月视图数据
  * @return {[]}
  */
-const getMonthsTime = () => {
+const getMonthsTime = (): GanttMonthAxis[] => {
   const startTime = config.folderId ? moment(config.minStartTime).add(-1, 'M') : moment(config.minStartTime);
   const endTime = moment(config.maxEndTime).add(6, 'M');
   const timeDiff = (endTime.year() - startTime.year()) * 12 + (endTime.month() - startTime.month());
@@ -660,10 +724,10 @@ const getMonthsTime = () => {
     }
   }
 
-  return Object.keys(result).map(item => {
+  return Object.entries(result).map(([item, dates]) => {
     return {
       year: item,
-      dateList: result[item],
+      dateList: dates,
     };
   });
 };
@@ -674,7 +738,7 @@ const getMonthsTime = () => {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {[]}
  */
-const getTimeAxisSource = (viewType, filterWeekend) => {
+const getTimeAxisSource = (viewType: number, filterWeekend: boolean): GanttAxisGroup[] | undefined => {
   if (viewType === VIEWTYPE.DAY) {
     return getDaysTime(filterWeekend);
   }
@@ -694,7 +758,7 @@ const getTimeAxisSource = (viewType, filterWeekend) => {
  * @param  {number} viewType  当前视图
  * @return {number}
  */
-const getOneHourWidth = viewType => {
+const getOneHourWidth = (viewType: number): number | undefined => {
   if (viewType === VIEWTYPE.DAY) {
     return GRANULARITY.DAY;
   }
@@ -714,7 +778,7 @@ const getOneHourWidth = viewType => {
  * @param  {number} viewType  当前视图
  * @return {number}
  */
-const singleDayWidth = viewType => {
+const singleDayWidth = (viewType: number): number | undefined => {
   if (viewType === VIEWTYPE.DAY) {
     return workingSumHours * GRANULARITY.DAY;
   }
@@ -736,7 +800,7 @@ const singleDayWidth = viewType => {
  * @param  {string} month 月份
  * @return {number}
  */
-const singleTableWidth = (viewType, filterWeekend?, month?) => {
+const singleTableWidth = (viewType: number, filterWeekend?: boolean, month?: GanttAxisBoundary): number | undefined => {
   // 日
   if (viewType === VIEWTYPE.DAY) {
     return singleDayWidth(viewType);
@@ -745,15 +809,15 @@ const singleTableWidth = (viewType, filterWeekend?, month?) => {
   // 周
   if (viewType === VIEWTYPE.WEEK) {
     if (filterWeekend) {
-      return singleDayWidth(viewType) * (7 - filterWeekendDay.length);
+      return arithmeticValue(singleDayWidth(viewType)) * (7 - filterWeekendDay.length);
     }
 
-    return singleDayWidth(viewType) * 7;
+    return arithmeticValue(singleDayWidth(viewType)) * 7;
   }
 
   // 月
   if (viewType === VIEWTYPE.MONTH) {
-    const timeDiff = (moment(month).add(1, 'M') - moment(month)) / 24 / 60 / 60 / 1000;
+    const timeDiff = (axisMoment(month).add(1, 'M').valueOf() - axisMoment(month).valueOf()) / 24 / 60 / 60 / 1000;
     const startTime = month + '-01';
     let days = 0;
 
@@ -763,7 +827,7 @@ const singleTableWidth = (viewType, filterWeekend?, month?) => {
       days++;
     }
 
-    return days * singleDayWidth(viewType);
+    return days * arithmeticValue(singleDayWidth(viewType));
   }
   return undefined;
 };
@@ -775,7 +839,8 @@ const singleTableWidth = (viewType, filterWeekend?, month?) => {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {number}
  */
-const getViewSumWidth = (viewType, timeAxisSource, filterWeekend) => {
+const getViewSumWidth = (viewType: number, timeAxisSource: GanttAxisGroup[], filterWeekend: boolean): number => {
+  validateAxisGroups(timeAxisSource);
   let days = 0;
 
   if (viewType === VIEWTYPE.DAY) {
@@ -795,7 +860,7 @@ const getViewSumWidth = (viewType, timeAxisSource, filterWeekend) => {
   if (viewType === VIEWTYPE.MONTH) {
     timeAxisSource.forEach(items => {
       items.dateList.forEach(item => {
-        const timeDiff = (moment(item).add(1, 'M') - moment(item)) / 24 / 60 / 60 / 1000;
+        const timeDiff = (axisMoment(item).add(1, 'M').valueOf() - axisMoment(item).valueOf()) / 24 / 60 / 60 / 1000;
         const startTime = item + '-01';
 
         for (let i = 0; i < timeDiff; i++) {
@@ -807,7 +872,7 @@ const getViewSumWidth = (viewType, timeAxisSource, filterWeekend) => {
     });
   }
 
-  return days * singleDayWidth(viewType);
+  return days * arithmeticValue(singleDayWidth(viewType));
 };
 
 /**
@@ -819,7 +884,7 @@ const getViewSumWidth = (viewType, timeAxisSource, filterWeekend) => {
 const getScrollIndex = (value: number, lefts: JQuery<number>) => {
   let index = 0;
 
-  while (lefts[index] <= value) {
+  while (arithmeticValue(lefts[index]) <= value) {
     index++;
   }
 
@@ -831,7 +896,7 @@ const getScrollIndex = (value: number, lefts: JQuery<number>) => {
  * @return void
  */
 const syncUpdateScroll = () => {
-  const scrollValue = $('.timeBarContainer').scrollLeft() * -1;
+  const scrollValue = arithmeticValue($('.timeBarContainer').scrollLeft()) * -1;
   const value = Math.abs(scrollValue);
   $('.timeAxisContent .timeAxisContentScroll').css('transform', `translateX(${scrollValue}px)`);
   // timeAxisMonths 类上文字的宽度
@@ -842,13 +907,13 @@ const syncUpdateScroll = () => {
   });
   const index = getScrollIndex(value, monthsLeft);
 
-  if (value > monthsLeft[index] - textWith) {
+  if (value > arithmeticValue(monthsLeft[index]) - textWith) {
     return;
   }
 
-  monthsEls.eq(index + 1).css('padding-left', value - monthsLeft[index + 1]);
+  monthsEls.eq(index + 1).css('padding-left', value - arithmeticValue(monthsLeft[index + 1]));
   monthsEls.eq(index).css('padding-left', 0);
-  monthsEls.eq(index - 1).css('padding-left', value - monthsLeft[index - 1]);
+  monthsEls.eq(index - 1).css('padding-left', value - arithmeticValue(monthsLeft[index - 1]));
 };
 
 /**
@@ -859,10 +924,15 @@ const syncUpdateScroll = () => {
  * @param  {boolean} filterWeekend  是否过滤周末
  * @return {number}
  */
-const getTimePosition = (minStartTime, time, viewType, filterWeekend) => {
+const getTimePosition = (
+  minStartTime: GanttAxisBoundary,
+  time: GanttTime,
+  viewType: number,
+  filterWeekend: boolean,
+): number => {
   // 周视图算出开始第一天
   if (viewType === VIEWTYPE.WEEK) {
-    minStartTime = minStartTime[0];
+    minStartTime = firstAxisValue(minStartTime);
   }
 
   // 月视图算出开始第一天
@@ -872,7 +942,7 @@ const getTimePosition = (minStartTime, time, viewType, filterWeekend) => {
 
   const timeDate = moment(time).format('YYYY-MM-DD');
   // 差多少天
-  let timeDiff = (moment(timeDate) - moment(minStartTime)) / 24 / 60 / 60 / 1000;
+  let timeDiff = (moment(timeDate).valueOf() - axisMoment(minStartTime).valueOf()) / 24 / 60 / 60 / 1000;
   // 真实天数
   let actualDays = 0;
 
@@ -884,7 +954,7 @@ const getTimePosition = (minStartTime, time, viewType, filterWeekend) => {
       timeDiff = timeDiff % 7;
 
       for (let i = 0; i < timeDiff; i++) {
-        const momentObj = moment(minStartTime).add(i, 'd');
+        const momentObj = axisMoment(minStartTime).add(i, 'd');
         if (filterWeekend && _.includes(filterWeekendDay, momentObj.days())) continue;
         actualDays++;
       }
@@ -895,7 +965,7 @@ const getTimePosition = (minStartTime, time, viewType, filterWeekend) => {
       timeDiff = timeDiff % 7;
 
       for (let i = 0; i < Math.abs(timeDiff); i++) {
-        const momentObj = moment(minStartTime).add(-i, 'd');
+        const momentObj = axisMoment(minStartTime).add(-i, 'd');
         if (filterWeekend && _.includes(filterWeekendDay, momentObj.days())) continue;
         actualDays += -1;
       }
@@ -907,11 +977,11 @@ const getTimePosition = (minStartTime, time, viewType, filterWeekend) => {
   let hour = 0;
 
   // 特殊情况：因为时间已经在上面处理成合法的了，所以时间等于工作的开始时间  那就算计算开始时间的位置
-  if (moment(time).format('HH:mm') !== workingTimes[0][0]) {
+  if (moment(time).format('HH:mm') !== workingTime(0)[0]) {
     hour = checkTime(timeDate + ' 00:00', time).showHourLong;
   }
 
-  return (actualDays * workingSumHours + hour) * getOneHourWidth(viewType);
+  return (actualDays * workingSumHours + hour) * arithmeticValue(getOneHourWidth(viewType));
 };
 
 /**
@@ -919,10 +989,10 @@ const getTimePosition = (minStartTime, time, viewType, filterWeekend) => {
  * @param  {string} hour 小时
  * @return {object}
  */
-const getDays = hour => {
+const getDays = (hour: number | undefined) => {
   return {
-    day: parseInt(hour / workingSumHours),
-    hour: hour % workingSumHours,
+    day: parseInt(String(arithmeticValue(hour) / workingSumHours)),
+    hour: arithmeticValue(hour) % workingSumHours,
   };
 };
 
@@ -933,7 +1003,7 @@ const getDays = hour => {
  * @param  {boolean} filterWeekend 是否过滤周末
  * @return {string}
  */
-const offsetDay = (currentTime: moment.Moment, day: number, filterWeekend) => {
+const offsetDay = (currentTime: moment.Moment, day: number, filterWeekend: boolean): string => {
   // 如果不包含周末
   if (!filterWeekend) {
     currentTime = currentTime.add(day, 'd');
@@ -964,16 +1034,16 @@ const offsetStartPositiveHour = (currentTime: moment.Moment, hour: number) => {
     currentTime = currentTime.add(1, 'h');
 
     for (let j = 0; j < workingTimes.length; j++) {
-      const workingStart = workingTimes[j][0];
-      const workingEnd = workingTimes[j][1];
+      const workingStart = workingTime(j)[0];
+      const workingEnd = workingTime(j)[1];
 
       if (currentTime.hour() >= parseInt(workingStart) && currentTime.hour() < parseInt(workingEnd)) {
         break;
-      } else if (currentTime.hour() >= parseInt(workingTimes[workingTimes.length - 1][1])) {
+      } else if (currentTime.hour() >= parseInt(workingTime(workingTimes.length - 1)[1])) {
         day++;
-        currentTime = moment(currentTime.format(`YYYY-MM-DD ${workingTimes[0][0]}`));
+        currentTime = moment(currentTime.format(`YYYY-MM-DD ${workingTime(0)[0]}`));
       } else if (currentTime.hour() === parseInt(workingEnd)) {
-        currentTime = moment(currentTime.format(`YYYY-MM-DD ${workingTimes[j + 1][0]}`));
+        currentTime = moment(currentTime.format(`YYYY-MM-DD ${workingTime(j + 1)[0]}`));
       }
     }
   }
@@ -996,17 +1066,17 @@ const offsetStartNegativeHour = (currentTime: moment.Moment, hour: number) => {
   for (let i = 0; i < hour; i++) {
     currentTime = currentTime.add(-1, 'h');
     for (let j = 0; j < workingTimes.length; j++) {
-      const workingStart = workingTimes[j][0];
-      const workingEnd = workingTimes[j][1];
+      const workingStart = workingTime(j)[0];
+      const workingEnd = workingTime(j)[1];
 
       if (currentTime.hour() >= parseInt(workingStart) && currentTime.hour() < parseInt(workingEnd)) {
         break;
-      } else if (currentTime.hour() <= parseInt(workingTimes[0][0])) {
+      } else if (currentTime.hour() <= parseInt(workingTime(0)[0])) {
         day--;
-        const diff = parseInt(workingTimes[workingTimes.length - 1][1]) - 1;
+        const diff = parseInt(workingTime(workingTimes.length - 1)[1]) - 1;
         currentTime = moment(currentTime.format(`YYYY-MM-DD ${diff < 10 ? `0${diff}` : diff}`));
       } else if (currentTime.hour() === parseInt(workingStart)) {
-        const diff = parseInt(workingTimes[j - 1][1]) - 1;
+        const diff = parseInt(workingTime(j - 1)[1]) - 1;
         currentTime = moment(currentTime.format(`YYYY-MM-DD ${diff < 10 ? `0${diff}` : diff}`));
       }
     }
@@ -1031,14 +1101,14 @@ const offsetEndPositiveHour = (currentTime: moment.Moment, hour: number) => {
     currentTime = currentTime.add(1, 'h');
 
     for (let j = 0; j < workingTimes.length; j++) {
-      const workingStart = workingTimes[j][0];
-      const workingEnd = workingTimes[j][1];
+      const workingStart = workingTime(j)[0];
+      const workingEnd = workingTime(j)[1];
 
       if (currentTime.hour() > parseInt(workingStart) && currentTime.hour() <= parseInt(workingEnd)) {
         break;
-      } else if (currentTime.hour() > parseInt(workingTimes[workingTimes.length - 1][1])) {
+      } else if (currentTime.hour() > parseInt(workingTime(workingTimes.length - 1)[1])) {
         day++;
-        const diff = parseInt(workingTimes[0][0]) + 1;
+        const diff = parseInt(workingTime(0)[0]) + 1;
         currentTime = moment(currentTime.format(`YYYY-MM-DD ${diff < 10 ? `0${diff}` : diff}`));
       } else if (currentTime.hour() === parseInt(workingStart)) {
         const diff = parseInt(workingStart) + 1;
@@ -1066,14 +1136,14 @@ const offsetEndNegativeHour = (currentTime: moment.Moment, hour: number) => {
     currentTime = currentTime.add(-1, 'h');
 
     for (let j = 0; j < workingTimes.length; j++) {
-      const workingStart = workingTimes[j][0];
-      const workingEnd = workingTimes[j][1];
+      const workingStart = workingTime(j)[0];
+      const workingEnd = workingTime(j)[1];
 
       if (currentTime.hour() > parseInt(workingStart) && currentTime.hour() <= parseInt(workingEnd)) {
         break;
-      } else if (currentTime.hour() <= parseInt(workingTimes[0][0])) {
+      } else if (currentTime.hour() <= parseInt(workingTime(0)[0])) {
         day--;
-        const diff = parseInt(workingTimes[workingTimes.length - 1][1]);
+        const diff = parseInt(workingTime(workingTimes.length - 1)[1]);
         currentTime = moment(currentTime.format(`YYYY-MM-DD ${diff < 10 ? `0${diff}` : diff}`));
       } else if (currentTime.hour() === parseInt(workingEnd)) {
         const diff = parseInt(workingEnd);
@@ -1099,15 +1169,25 @@ const offsetEndNegativeHour = (currentTime: moment.Moment, hour: number) => {
  * @param  {number} viewType 当前视图
  * @return {object}
  */
-const offsetTime = (start: string, end: string, filterWeekend, offsetTime: number, minStartTime, maxEndTime, viewType) => {
+const offsetTime = (
+  initialStart: GanttTime,
+  initialEnd: GanttTime,
+  filterWeekend: boolean,
+  offsetTime: number,
+  minStartTime: GanttAxisBoundary,
+  maxEndTime: GanttAxisBoundary,
+  viewType: number,
+) => {
+  let start: GanttTime | string[] = initialStart;
+  let end: GanttTime | string[] = initialEnd;
   const startOffset = getDays(offsetTime);
   const endOffset = getDays(offsetTime);
 
   let startOffsetDay = startOffset.day;
   let endOffsetDay = endOffset.day;
 
-  const workingStart = workingTimes[0][0];
-  const workingEnd = workingTimes[workingTimes.length - 1][1];
+  const workingStart = workingTime(0)[0];
+  const workingEnd = workingTime(workingTimes.length - 1)[1];
 
   // 日视图
   if (viewType === VIEWTYPE.DAY) {
@@ -1117,31 +1197,31 @@ const offsetTime = (start: string, end: string, filterWeekend, offsetTime: numbe
 
   // 周视图
   if (viewType === VIEWTYPE.WEEK) {
-    minStartTime = minStartTime[0] + ' ' + workingStart;
-    maxEndTime = maxEndTime[maxEndTime.length - 1] + ' ' + workingEnd;
+    minStartTime = firstAxisValue(minStartTime) + ' ' + workingStart;
+    maxEndTime = lastAxisValue(maxEndTime) + ' ' + workingEnd;
   }
 
   // 月视图
   if (viewType === VIEWTYPE.MONTH) {
     minStartTime = minStartTime + '-01 ' + workingStart;
-    maxEndTime = moment(maxEndTime).add(1, 'M').add(-1, 'd').format('YYYY-MM-DD ') + workingEnd;
+    maxEndTime = axisMoment(maxEndTime).add(1, 'M').add(-1, 'd').format('YYYY-MM-DD ') + workingEnd;
   }
 
   if (start) {
     if (startOffset.hour > 0) {
-      const { day, time } = offsetStartPositiveHour(moment(start), startOffset.hour);
+      const { day, time } = offsetStartPositiveHour(axisMoment(start), startOffset.hour);
       start = time;
       startOffsetDay += day;
     } else if (startOffset.hour < 0) {
-      const { day, time } = offsetStartNegativeHour(moment(start), Math.abs(startOffset.hour));
+      const { day, time } = offsetStartNegativeHour(axisMoment(start), Math.abs(startOffset.hour));
       start = time;
       startOffsetDay += day;
     }
 
     if (startOffsetDay !== 0) {
-      start = offsetDay(moment(start), startOffsetDay, filterWeekend);
+      start = offsetDay(axisMoment(start), startOffsetDay, filterWeekend);
       // 单侧不允许超出时间视图
-      if (moment(start) < moment(minStartTime) && config.singleDragTaskId) {
+      if (axisMoment(start).valueOf() < axisMoment(minStartTime).valueOf() && config.singleDragTaskId) {
         start = minStartTime;
       }
     }
@@ -1149,19 +1229,19 @@ const offsetTime = (start: string, end: string, filterWeekend, offsetTime: numbe
 
   if (end) {
     if (endOffset.hour > 0) {
-      const { day, time } = offsetEndPositiveHour(moment(end), endOffset.hour);
+      const { day, time } = offsetEndPositiveHour(axisMoment(end), endOffset.hour);
       end = time;
       endOffsetDay += day;
     } else if (endOffset.hour < 0) {
-      const { day, time } = offsetEndNegativeHour(moment(end), Math.abs(endOffset.hour));
+      const { day, time } = offsetEndNegativeHour(axisMoment(end), Math.abs(endOffset.hour));
       end = time;
       endOffsetDay += day;
     }
 
     if (endOffsetDay !== 0) {
-      end = offsetDay(moment(end), endOffsetDay, filterWeekend);
+      end = offsetDay(axisMoment(end), endOffsetDay, filterWeekend);
       // 单侧不允许超出时间视图
-      if (moment(end) > moment(maxEndTime) && config.singleDragTaskId) {
+      if (axisMoment(end).valueOf() > axisMoment(maxEndTime).valueOf() && config.singleDragTaskId) {
         end = maxEndTime;
       }
 
@@ -1169,17 +1249,17 @@ const offsetTime = (start: string, end: string, filterWeekend, offsetTime: numbe
       if (config.singleDragTaskId) {
         config.isHiddenLastTips = false;
         // 日视图
-        if (viewType === VIEWTYPE.DAY && moment(end) > moment(maxEndTime).add(-1, 'd')) {
+        if (viewType === VIEWTYPE.DAY && axisMoment(end).valueOf() > axisMoment(maxEndTime).add(-1, 'd').valueOf()) {
           config.isHiddenLastTips = true;
         }
 
         // 周视图
-        if (viewType === VIEWTYPE.WEEK && moment(end) > moment(maxEndTime).add(-2, 'd')) {
+        if (viewType === VIEWTYPE.WEEK && axisMoment(end).valueOf() > axisMoment(maxEndTime).add(-2, 'd').valueOf()) {
           config.isHiddenLastTips = true;
         }
 
         // 月视图
-        if (viewType === VIEWTYPE.MONTH && moment(end) > moment(maxEndTime).add(-10, 'd')) {
+        if (viewType === VIEWTYPE.MONTH && axisMoment(end).valueOf() > axisMoment(maxEndTime).add(-10, 'd').valueOf()) {
           config.isHiddenLastTips = true;
         }
       }

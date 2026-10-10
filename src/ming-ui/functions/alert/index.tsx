@@ -1,7 +1,9 @@
 import React from 'react';
+import type { Key } from 'react';
 import { message } from 'antd';
 import { Toast } from 'antd-mobile';
 import { browserIsMobile } from 'src/utils/common';
+import type { AlertContent } from './types';
 
 function getIcon(type = 'success', isMobile = false) {
   // 这里的 color 是图标字体的颜色 —— 画的是图标，不是文字，所以用功能色本身，不用 -text 档。
@@ -54,7 +56,9 @@ function getIcon(type = 'success', isMobile = false) {
   );
 }
 
-export function antAlert(content, alertType = 1) {
+const messageTypes = ['success', 'error', 'warning', 'info', 'loading'] as const;
+
+export function antAlert(content?: AlertContent, alertType = 1) {
   const isReactNode = React.isValidElement(content);
   const isPlainValue = typeof content !== 'object' || isReactNode;
   const isMobile = browserIsMobile();
@@ -68,35 +72,36 @@ export function antAlert(content, alertType = 1) {
   };
   const { msg, type, duration, onClose, key, style, isPcAlert } = defaultOptions;
   // 消息类型
-  const func = ['success', 'error', 'warning', 'info', 'loading'][type - 1] || 'success';
+  const func = messageTypes[Number(type) - 1] || 'success';
   // 内容处理
-  const contentValue = isReactNode ? msg : String(msg || '').replace(/(<([^>]+)>)/gi, '');
+  const contentValue = isReactNode ? content : String(msg || '').replace(/(<([^>]+)>)/gi, '');
 
   // 部分情况需要在移动端使用antd的message
   if (isMobile && !isPcAlert) {
-    const toastController = Toast.show({
+    const toastOptions = {
       icon: getIcon(func, isMobile),
       content: contentValue,
-      duration,
-      afterClose: onClose,
       maskStyle: { zIndex: 999999 },
-    });
+    };
+    // Both libraries accept the original explicit undefined fields at runtime;
+    // retain those own keys without asserting a complete third-party options model.
+    Object.assign(toastOptions, { duration, afterClose: onClose });
+    const toastController = Toast.show(toastOptions);
     return toastController;
   }
 
-  message[func]({
+  const messageOptions = {
     className: 'pcToast',
     icon: getIcon(func),
     content: contentValue,
-    duration: duration / 1000,
-    onClose,
-    key,
-    style,
-  });
+    duration: Number(duration) / 1000,
+  };
+  Object.assign(messageOptions, { onClose, key, style });
+  message[func](messageOptions);
   return undefined;
 }
 
-export function destroyAlert(key) {
+export function destroyAlert(key?: Key) {
   const isMobile = browserIsMobile();
 
   if (isMobile) {

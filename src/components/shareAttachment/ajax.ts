@@ -74,42 +74,44 @@ export function createNewTask() {
 
 /** type 1 是单聊（value 为 accountId）、2 是新建的群组（value 为 groupId） */
 export function createNewChat() {
-  return new Promise<{ type: number; logo: string; name: string; value: string }>((resolve, reject) => {
-    dialogSelectUser({
-      sourceId: 0,
-      fromType: 0,
-      showMoreInvite: false,
-      SelectUserSettings: {
-        filterAccountIds: [md.global.Account.accountId],
-        callback: function (data) {
-          if (data.length > 1) {
-            groupController
-              .addDiscussionGroup({
-                accountIds: data.map(function (account) {
-                  return account.accountId;
-                }),
-              })
-              .then(function (result) {
-                resolve({
-                  type: 2,
-                  logo: result.avatar,
-                  name: result.name,
-                  value: result.groupId,
+  return new Promise<{ type: number; logo: string | undefined; name: string | undefined; value: string }>(
+    (resolve, reject) => {
+      dialogSelectUser({
+        sourceId: 0,
+        fromType: 0,
+        showMoreInvite: false,
+        SelectUserSettings: {
+          filterAccountIds: [md.global.Account.accountId],
+          callback: function (data) {
+            if (data.length > 1) {
+              groupController
+                .addDiscussionGroup({
+                  accountIds: data.map(function (account) {
+                    return account.accountId;
+                  }),
+                })
+                .then(function (result) {
+                  resolve({
+                    type: 2,
+                    logo: result.avatar,
+                    name: result.name,
+                    value: result.groupId,
+                  });
+                })
+                .catch(function () {
+                  reject(_l('创建新聊天失败'));
                 });
-              })
-              .catch(function () {
-                reject(_l('创建新聊天失败'));
+            } else {
+              resolve({
+                type: 1,
+                logo: data[0].avatar,
+                name: data[0].fullname,
+                value: data[0].accountId,
               });
-          } else {
-            resolve({
-              type: 1,
-              logo: data[0].avatar,
-              name: data[0].fullname,
-              value: data[0].accountId,
-            });
-          }
+            }
+          },
         },
-      },
-    });
-  });
+      });
+    },
+  );
 }

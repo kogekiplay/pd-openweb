@@ -1,13 +1,24 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Dialog, FunctionWrap, Icon, LoadDiv, RadioGroup, SortableList } from 'ming-ui';
 import accountSettingAjax from 'src/api/accountSetting';
 import addressBookAjax from 'src/api/addressBook';
 import userAjax from 'src/api/user';
+import { userObject } from '../../quickSelectUser/boundary';
+import { decodeUsers } from './boundary';
 import { MAX_OFTEN_USERS, OFTEN_USER_OPTIONS } from './constant';
+import type { OpenUserDialog, SelectUser, UserProps } from './types';
 import User from './User';
 
-const Wrap = styled.div`
+export interface ManageOftenUserProps {
+  visible?: boolean | undefined;
+  userOptions: Partial<Omit<UserProps, 'user'>>;
+  onOk?: ((type: number) => void) | undefined;
+  onClose?: (() => void) | undefined;
+  dialogSelectUser: OpenUserDialog;
+}
+
+const Wrap = styled.div<{ activeBorder: boolean }>`
   overflow: hidden;
   height: 100%;
   display: flex;
@@ -66,35 +77,56 @@ const OftenUserDialog = styled(Dialog)`
   }
 `;
 
-function ManageOftenUserDialog(props) {
+function ManageOftenUserDialog(props: ManageOftenUserProps) {
   const { visible, userOptions, onOk = () => {}, onClose = () => {}, dialogSelectUser } = props;
 
   const [type, setType] = useState(0);
   const [clearFlag, setClearFlag] = useState(false);
-  const [list, setList] = useState([]);
+  const [list, setList] = useState<SelectUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [isDrag, setIsDrag] = useState(false);
+  const generation = useRef(0);
+  const [loadError, setLoadError] = useState('');
   useEffect(() => {
-    if (!visible) return;
+    if (!visible) return undefined;
 
     getData();
+    return () => {
+      generation.current++;
+    };
   }, [visible]);
 
   const getData = () => {
+    const version = ++generation.current;
     setLoading(true);
+    setLoadError('');
     userAjax
-      .getOftenMetionedUser({
-        count: MAX_OFTEN_USERS,
-        projectId: '',
-        includeUndefinedAndMySelf: false,
-      })
-      .then(res => {
+      .getOftenMetionedUser({ count: MAX_OFTEN_USERS, projectId: '', includeUndefinedAndMySelf: false })
+      .then(users => {
+        if (version !== generation.current) return;
+        setList(decodeUsers(users));
         setLoading(false);
-        setList(res);
+      })
+      .catch(() => {
+        if (version !== generation.current) return;
+        setLoading(false);
+        setLoadError(_l('加载失败，请重试'));
       });
-    accountSettingAjax.getAccountSettings().then(({ addressBookOftenMetioned }) => {
-      setType(addressBookOftenMetioned);
-    });
+    accountSettingAjax
+      .getAccountSettings()
+      .then(settings => {
+        if (version !== generation.current) return;
+        const data = userObject(settings);
+        const type = data?.['addressBookOftenMetioned'];
+        if (type !== 0 && type !== 1) throw new TypeError('Invalid often-user setting');
+        setType(type);
+      })
+      .catch(() => {
+        if (version === generation.current) {
+          setLoading(false);
+          setLoadError(_l('加载失败，请重试'));
+        }
+      });
   };
 
   const onClear = () => {
@@ -103,7 +135,7 @@ function ManageOftenUserDialog(props) {
     alert(_l('清空成功，保存后生效'));
   };
 
-  const onSortEnd = newItems => {
+  const onSortEnd = (newItems: SelectUser[]) => {
     setIsDrag(false);
     setList(newItems);
   };
@@ -132,20 +164,23 @@ function ManageOftenUserDialog(props) {
     Promise.all([
       accountSettingAjax.editAccountSetting({ settingType: 22, settingValue: type }),
       addressBookAjax.editAddressBookOftenMetioned({ accountIds: list.map(l => l.accountId) }),
-    ]).then(() => {
-      onOk(type);
-    });
+    ])
+      .then(() => {
+        onOk(type);
+      })
+      .catch(() => alert(_l('保存失败'), 2));
 
     onClose();
   };
 
-  const renderUserItem = options => {
+  const renderUserItem = (options: { item: SelectUser }) => {
     return (
       <li className="valignWrapper">
         <Icon icon="drag" className="Font14 Hand textTertiary hoverColorPrimary dragIcon" />
         <div className="flex userItemBox overflow_ellipsis">
           <User
             {...userOptions}
+            onChange={userOptions.onChange || (() => {})}
             hideChecked={true}
             disabled={true}
             user={options.item}
@@ -178,7 +213,7 @@ function ManageOftenUserDialog(props) {
         <SortableList
           items={list}
           itemKey="accountId"
-          onSortEnd={newItems => onSortEnd(newItems)}
+          onSortEnd={(newItems: SelectUser[]) => onSortEnd(newItems)}
           renderItem={renderUserItem}
           moveItem={() => setIsDrag(true)}
         />
@@ -198,12 +233,18 @@ function ManageOftenUserDialog(props) {
       onCancel={onClose}
     >
       <Wrap activeBorder={isDrag}>
+        {loadError && (
+          <div role="alert">
+            {loadError}
+            <button onClick={getData}>{_l('重试')}</button>
+          </div>
+        )}
         <RadioGroup
           size="middle"
           className="mBottom16"
           checkedValue={type}
           data={OFTEN_USER_OPTIONS}
-          onChange={value => setType(value)}
+          onChange={(value: number) => setType(value)}
         />
 
         <div className="textSecondary mBottom20 Font14">
@@ -233,6 +274,6 @@ function ManageOftenUserDialog(props) {
 
 export default ManageOftenUserDialog;
 
-export const openManageOftenUserDialog = props => {
+export const openManageOftenUserDialog = (props: ManageOftenUserProps) => {
   FunctionWrap(ManageOftenUserDialog, { ...props });
 };

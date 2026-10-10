@@ -86,6 +86,7 @@ function boot(source: string) {
     './langConfig': [],
     'src/common/langConfig': [],
     './globalRequestTypes': types.exports,
+    './globalClientTypes': require('./globalClientTypes.ts'),
   };
   class Element {}
   class Document {}

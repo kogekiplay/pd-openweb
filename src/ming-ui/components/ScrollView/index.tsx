@@ -77,7 +77,23 @@ interface ScrollViewProps {
   [key: string]: any;
 }
 
-const ScrollView = forwardRef((props: ScrollViewProps, ref) => {
+/** The actual imperative handle emitted by useImperativeHandle below. */
+export interface ScrollViewHandle {
+  scrollTo(options?: ScrollToOptions, behavior?: ScrollBehavior): void;
+  scrollToElement(element: Element | null | undefined, behavior?: ScrollBehavior): void;
+  getScrollInfo():
+    | {
+        scrollTop?: number;
+        scrollLeft?: number;
+        scrollHeight?: number;
+        clientHeight?: number;
+        maxScrollTop?: number;
+        viewport?: HTMLElement;
+      }
+    | undefined;
+}
+
+const ScrollView = forwardRef<ScrollViewHandle, ScrollViewProps>((props, ref) => {
   const {
     children,
     className = '',
@@ -133,7 +149,7 @@ const ScrollView = forwardRef((props: ScrollViewProps, ref) => {
   }, [scrollContentClassName]);
 
   // 设置滚动位置
-  const scrollTo = (scrollOptions = { top: 0, left: 0 }, behavior = 'auto') => {
+  const scrollTo = (scrollOptions: ScrollToOptions = { top: 0, left: 0 }, behavior: ScrollBehavior = 'auto') => {
     if (!osRef.current) return;
     const osInstance = osRef.current.osInstance();
     if (!osInstance) return;
@@ -145,7 +161,7 @@ const ScrollView = forwardRef((props: ScrollViewProps, ref) => {
   };
 
   // 根据元素设置滚动位置
-  const scrollToElement = (element, behavior = 'auto') => {
+  const scrollToElement = (element: Element | null | undefined, behavior: ScrollBehavior = 'auto') => {
     if (!osRef.current || !element) return;
     const osInstance = osRef.current.osInstance();
     if (!osInstance) return;

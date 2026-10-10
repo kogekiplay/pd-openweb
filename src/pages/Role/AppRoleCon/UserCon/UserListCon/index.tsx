@@ -158,7 +158,22 @@ export default class UserListCon extends React.Component<any, any> {
   /**
    * 添加成员提交
    */
-  addRoleMembers = (roleId, { users = [], departments = [], jobs = [], departmentTrees = [], addOrgRoleList = [] }) => {
+  addRoleMembers = (
+    roleId,
+    {
+      users = [],
+      departments = [],
+      jobs = [],
+      departmentTrees = [],
+      addOrgRoleList = [],
+    }: {
+      users?: Array<{ accountId?: string | undefined }> | undefined;
+      departments?: Array<{ departmentId?: string | undefined }> | undefined;
+      jobs?: Array<{ jobId?: string | undefined }> | undefined;
+      departmentTrees?: Array<{ departmentId?: string | undefined }> | undefined;
+      addOrgRoleList?: Array<{ organizeId?: string | undefined }> | undefined;
+    },
+  ) => {
     const { projectId = '', appId = '', SetAppRolePagingModel, freshNum, isExternal } = this.props;
     AppAjax.addRoleMembers({
       projectId,

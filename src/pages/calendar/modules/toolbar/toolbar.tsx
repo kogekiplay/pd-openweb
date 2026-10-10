@@ -1,12 +1,12 @@
 import { createRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import { Dialog, LoadDiv, UserCard, UserHead } from 'ming-ui';
 import { dialogSelectUser } from 'ming-ui/functions';
 import calendarAjax from 'src/api/calendar';
 import { htmlEncodeReg } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 import Calendar from '../calendar/calendar';
 import { formatRecur } from '../calendarDetail/common';
 import Comm from '../comm/comm';
@@ -311,6 +311,7 @@ Toolbar.Event = function () {
           if (userCount > 0) {
             for (var i = 0; i < userCount; i++) {
               user = users[i];
+              if (!user) continue;
               if (user.accountId && _.indexOf(Toolbar.Comm.settings.otherUsers, user.accountId) < 0) {
                 Toolbar.Comm.settings.otherUsers.push(user.accountId);
                 safeLocalStorageSetItem(

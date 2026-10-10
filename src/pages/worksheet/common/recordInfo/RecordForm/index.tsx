@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { Icon, ScrollView, Skeleton } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';
+import type { ScrollViewHandle } from 'ming-ui/components/ScrollView';
 import DragMask from 'worksheet/common/DragMask';
 import { RECORD_INFO_FROM } from 'worksheet/constants/enum';
 import ViewContext from 'worksheet/views/ViewContext';
@@ -304,7 +305,7 @@ function RecordForm(props) {
   const isFixedRight = _.get(widgetStyle, 'tabposition') === '4';
   const isFixed = _.includes(['2', '3', '4'], _.get(recordinfo, 'advancedSetting.tabposition'));
 
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<ScrollViewHandle>(null);
   const customwidget = useRef<any>(undefined);
   const recordForm = useRef<HTMLDivElement>(null);
   const nav = useRef<HTMLDivElement>(null);

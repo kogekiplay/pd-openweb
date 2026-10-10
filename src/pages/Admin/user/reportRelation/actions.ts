@@ -34,7 +34,7 @@ export const UPDATE_IS_LOADING = 'UPDATE_IS_LOADING';
 export const UPDATE_FIRST_LEVEL_LOADING = 'UPDATE_FIRST_LEVEL_LOADING';
 
 const PAGE_SIZE = 20;
-type ReportAccount = { accountId?: string; fullname?: string; [key: string]: unknown };
+type ReportAccount = { accountId?: string; fullname?: string | undefined; [key: string]: unknown };
 type AddSubordinatesArgs = { id: string; accounts: ReportAccount[]; callback?: () => void };
 type ReplaceStructureArgs = {
   account: ReportAccount;

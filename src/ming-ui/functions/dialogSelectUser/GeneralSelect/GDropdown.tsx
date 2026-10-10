@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
+import type { DropdownItem, DropdownProps } from './types';
 
-class Dropdown extends Component<any, any> {
+class Dropdown extends Component<DropdownProps, { value: string | undefined; showMenu: boolean }> {
   declare _input: HTMLDivElement | null | undefined;
 
   static override propTypes = {
@@ -86,7 +87,7 @@ class Dropdown extends Component<any, any> {
     onClick: () => true,
   };
 
-  constructor(props) {
+  constructor(props: DropdownProps) {
     super(props);
     let value;
 
@@ -104,7 +105,7 @@ class Dropdown extends Component<any, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DropdownProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value != undefined) {
         this.setState({
@@ -114,10 +115,10 @@ class Dropdown extends Component<any, any> {
     }
   }
 
-  getTextFromDataById(data, value) {
+  getTextFromDataById(data: DropdownItem[], value: string | undefined) {
     let text = this.props.placeholder;
 
-    const getTextFromList = list => {
+    const getTextFromList = (list: DropdownItem[]) => {
       list.forEach(item => {
         if (item.value != undefined && item.value === value) {
           text = item.text;
@@ -134,14 +135,14 @@ class Dropdown extends Component<any, any> {
   }
 
   handleClick() {
-    if (this.props.onClick()) {
+    if (this.props.onClick?.() ?? true) {
       this.setState({
         showMenu: !this.state.showMenu,
       });
     }
   }
 
-  handleChange(_event, value) {
+  handleChange(_event: unknown, value: string | undefined) {
     if (this.props.value == undefined) {
       this.setState({
         value,
@@ -152,7 +153,7 @@ class Dropdown extends Component<any, any> {
       showMenu: false,
     });
     if (this.props.onChange) {
-      this.props.onChange(value);
+      if (value !== undefined) this.props.onChange(value);
     }
   }
 
@@ -180,9 +181,9 @@ class Dropdown extends Component<any, any> {
                   hoverBorderColorPrimary: this.props.hoverTheme,
                 })}
               >
-                {this.props.renderValue.replace(
+                {(this.props.renderValue || '{{value}}').replace(
                   /{{value}}/g,
-                  this.getTextFromDataById(this.props.data, this.state.value),
+                  this.getTextFromDataById(this.props.data, this.state.value) || '',
                 )}
               </span>
             ) : (
@@ -200,7 +201,7 @@ class Dropdown extends Component<any, any> {
                 showMenu: false,
               });
             }}
-            onClickAwayExceptions={[this._input]}
+            onClickAwayExceptions={this._input ? [this._input] : []}
           >
             {this.props.data && this.props.data.length ? (
               this.props.data.map((item, index: number) => (

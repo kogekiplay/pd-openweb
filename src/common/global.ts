@@ -12,6 +12,7 @@ import versionApi from 'src/api/version';
 import { browserIsMobile, getPathWithoutSubPath } from 'src/utils/common';
 import { PUBLIC_KEY } from 'src/utils/enum';
 import { getPssId } from 'src/utils/pssId';
+import { translationText } from './globalClientTypes';
 import type {
   AbortablePromise,
   HttpFailure,
@@ -132,7 +133,7 @@ window._l = function (key, ...args) {
 
   // 翻译文件内存在这个key
   if (typeof translations !== 'undefined' && translations[key]) {
-    content = translations[key];
+    content = translationText(translations[key]);
   }
 
   // 含有0%、1%等内容参数替换

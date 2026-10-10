@@ -109,7 +109,9 @@ function UpdateUserDialog(props) {
   const [selectAccountIds, setSelectAccountIds] = useState(
     currentWorkItems.map(data => data.workItemAccount.accountId),
   );
-  const [newAccounts, setNewAccounts] = useState([]);
+  const [newAccounts, setNewAccounts] = useState<
+    Array<{ accountId: string; fullname?: string | undefined; avatar?: string | undefined }>
+  >([]);
 
   const handleAddAccount = () => {
     dialogSelectUser({
@@ -260,7 +262,9 @@ function MobileUpdateUserDialog(props) {
   const [selectAccountIds, setSelectAccountIds] = useState(
     currentWorkItems.map(data => data.workItemAccount.accountId),
   );
-  const [newAccounts, setNewAccounts] = useState([]);
+  const [newAccounts, setNewAccounts] = useState<
+    Array<{ accountId: string; fullname?: string | undefined; avatar?: string | undefined }>
+  >([]);
   const [selectUserVisible, setSelectUserVisible] = useState(false);
 
   return (

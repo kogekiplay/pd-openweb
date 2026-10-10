@@ -14,6 +14,8 @@ import { ALL_SYS, DEFAULT_CONFIG, WIDGETS_TO_API_TYPE_ENUM } from '../config/wid
 import { SettingItem } from '../styled';
 import { enumWidgetType } from '../util';
 import { formatControlsData } from './data';
+import { decodeTemplatePermissions } from './templatePermissionBoundary';
+import type { TemplateWorksheetPermission } from './templatePermissionBoundary';
 
 const TemplateRelationNotice = styled.div`
   margin-top: 10px;
@@ -132,7 +134,7 @@ function getBatchPermission(worksheetIds: (string | undefined)[]) {
   if (_.isEmpty(worksheetIds)) return [];
 
   const res = worksheetAjax.getWorksheetsRoleType({ worksheetIds }, { ajaxOptions: { sync: true } });
-  return _.get(res, 'data') || [];
+  return decodeTemplatePermissions(_.get(res, 'data') || []);
 }
 
 function parseDataSource(dataSource: string | undefined) {
@@ -409,7 +411,7 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
   const referencedControls: FormControl[] = [];
   const parsedControlIds: (string | undefined)[] = [];
   const permittedControlIds: (string | undefined)[] = [];
-  const permissionMap = {};
+  const permissionMap: Record<string, TemplateWorksheetPermission | null | undefined> = {};
   const noPermissionSheetNames = [];
   const deletedWorksheetControlNames: (string | undefined)[] = [];
 
@@ -441,7 +443,7 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
       .filter(({ control, worksheetId }) => !isDirectReferencedWorksheetRoleControl(allControls, control, worksheetId))
       .filter(item => item.worksheetId);
     const worksheetIds = _.uniq(worksheetRoleControls.map(item => item.worksheetId));
-    const needRequestIds = worksheetIds.filter(worksheetId => _.isUndefined(permissionMap[worksheetId]));
+    const needRequestIds = worksheetIds.filter(worksheetId => _.isUndefined(permissionMap[String(worksheetId)]));
 
     if (!_.isEmpty(needRequestIds)) {
       const permissionList = getBatchPermission(needRequestIds);
@@ -450,15 +452,15 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
         permissionMap[item.worksheetId] = item;
       });
       needRequestIds
-        .filter(worksheetId => _.isUndefined(permissionMap[worksheetId]))
+        .filter(worksheetId => _.isUndefined(permissionMap[String(worksheetId)]))
         .forEach(worksheetId => {
-          permissionMap[worksheetId] = null;
+          permissionMap[String(worksheetId)] = null;
         });
     }
 
     const permittedControls = worksheetRoleControls
       .filter(({ control, worksheetId }) => {
-        const permissionInfo = permissionMap[worksheetId];
+        const permissionInfo = permissionMap[String(worksheetId)];
         const isDeleted = permissionInfo && !permissionInfo.name;
         const noPermission = !permissionInfo || !_.includes(PERMISSION_WORKSHEET_ROLE_TYPES, permissionInfo.roleType);
 
@@ -728,7 +730,9 @@ function CreateTemplateDialog(props) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [hasCreateTemplatePermission, setHasCreateTemplatePermission] = useState(false);
-  const [resolvedReferencedControls, setResolvedReferencedControls] = useState(null);
+  const [resolvedReferencedControls, setResolvedReferencedControls] = useState<FormControl[] | null>(null);
+  const [referenceError, setReferenceError] = useState<string | undefined>();
+  const [referenceRetry, setReferenceRetry] = useState(0);
   const referenceExpandNoticeShownRef = useRef(false);
   const [templateInfoState, setTemplateInfoState] = useSetState({
     name: templateInfo.name || '',
@@ -749,16 +753,25 @@ function CreateTemplateDialog(props) {
     }
 
     if (templateInfo.templateId) {
+      setReferenceError(undefined);
       setResolvedReferencedControls(null);
       return;
     }
 
     if (_.isEmpty(templateControls)) {
+      setReferenceError(undefined);
       setResolvedReferencedControls([]);
       return;
     }
 
-    const referencedControls = getAllReferencedControls(allControls, templateControls, queryConfigs);
+    let referencedControls: FormControl[];
+    try {
+      referencedControls = getAllReferencedControls(allControls, templateControls, queryConfigs);
+      setReferenceError(undefined);
+    } catch {
+      setReferenceError(_l('获取引用字段权限失败，请重试'));
+      return;
+    }
 
     setResolvedReferencedControls(referencedControls);
     const originalIds = new Set(
@@ -776,10 +789,14 @@ function CreateTemplateDialog(props) {
       referenceExpandNoticeShownRef.current = true;
       alert(_l('已自动添加引用字段，以确保模板完整可用'), 4);
     }
-  }, [loading, templateInfo.templateId, templateControls, allControls, queryConfigs]);
+  }, [loading, templateInfo.templateId, templateControls, allControls, queryConfigs, referenceRetry]);
 
   const handleOk = () => {
     if (saving) {
+      return;
+    }
+    if (referenceError) {
+      alert(referenceError, 2);
       return;
     }
 
@@ -807,10 +824,17 @@ function CreateTemplateDialog(props) {
         return;
       }
 
-      const referencedControls =
-        resolvedReferencedControls !== null
-          ? resolvedReferencedControls
-          : getAllReferencedControls(allControls, templateControls, queryConfigs);
+      let referencedControls: FormControl[];
+      try {
+        referencedControls =
+          resolvedReferencedControls !== null
+            ? resolvedReferencedControls
+            : getAllReferencedControls(allControls, templateControls, queryConfigs);
+      } catch {
+        setReferenceError(_l('获取引用字段权限失败，请重试'));
+        alert(_l('获取引用字段权限失败，请重试'), 2);
+        return;
+      }
 
       if (referencedControls.length > 30) {
         alert(_l('模板最多包含 30 个字段（含引用字段），请减少选择后重试'), 2);
@@ -947,7 +971,7 @@ function CreateTemplateDialog(props) {
     <TemplateDialogWrap
       width={560}
       visible={visible}
-      okDisabled={!name}
+      okDisabled={!name || !!referenceError}
       title={templateInfo.templateId ? _l('编辑字段模板') : _l('添加字段模板')}
       onCancel={() => setVisible(false)}
       onOk={() => {
@@ -995,6 +1019,14 @@ function CreateTemplateDialog(props) {
               )}
             </SettingItem>
           )}
+          {referenceError && (
+            <div role="alert">
+              {referenceError}
+              <button type="button" onClick={() => setReferenceRetry(value => value + 1)}>
+                {_l('重试')}
+              </button>
+            </div>
+          )}
           {!_.isEmpty(displayControls) && (
             <SettingItem className="withSplitLine">
               <div className="settingItemTitle">{_l('模板中的字段（包含引用字段）')}</div>
@@ -1039,11 +1071,14 @@ export const createTemplateDialog = props => {
       return;
     }
 
-    const { noPermissionSheetNames, deletedWorksheetControlNames } = getAllReferencedControlInfo(
-      allControls,
-      supportedTemplateControls,
-      queryConfigs,
-    );
+    let permissionInfo: ReturnType<typeof getAllReferencedControlInfo>;
+    try {
+      permissionInfo = getAllReferencedControlInfo(allControls, supportedTemplateControls, queryConfigs);
+    } catch {
+      alert(_l('获取引用字段权限失败，请重试'), 2);
+      return undefined;
+    }
+    const { noPermissionSheetNames, deletedWorksheetControlNames } = permissionInfo;
 
     if (alertPermissionError({ noPermissionSheetNames, deletedWorksheetControlNames })) {
       return;

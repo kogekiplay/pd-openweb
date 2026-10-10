@@ -118,8 +118,8 @@ function installEntryTranslator() {
     previousTranslate = window._l;
   }
 
-  const translator = function (key, ...args) {
-    let content = key;
+  const translator = function (key: string, ...args: (string | number)[]) {
+    let content: unknown = key;
     const entryTranslations = window.__mingoEntryTranslations || {};
 
     if (entryTranslations[key]) {
@@ -130,9 +130,9 @@ function installEntryTranslator() {
 
     if (args.length > 0) {
       for (let i = 0; i < args.length; i++) {
-        content = String(content).replace(new RegExp(`%${i}`, 'g'), args[i]);
+        content = String(content).replace(new RegExp(`%${i}`, 'g'), String(args[i]));
       }
-    } else if (/.*%\d{5}/.test(content)) {
+    } else if (/.*%\d{5}/.test(String(content))) {
       content = String(content).replace(/%\d{5}$/, '');
     }
 

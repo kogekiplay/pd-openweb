@@ -1,10 +1,12 @@
 import { Component } from 'react';
+import type { MouseEvent } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, LoadDiv, Radio } from 'ming-ui';
+import type { DepartmentListProps, SelectDepartment } from './types';
 import './css/department.less';
 
 const Wrap = styled.div`
@@ -18,7 +20,7 @@ const Wrap = styled.div`
   }
 `;
 
-export default class DepartmentList extends Component<any, any> {
+export default class DepartmentList extends Component<DepartmentListProps> {
   static override propTypes = {
     selectedDepartment: PropTypes.array,
     toogleDepargmentSelect: PropTypes.func,
@@ -30,23 +32,26 @@ export default class DepartmentList extends Component<any, any> {
     checkIncludeChilren: PropTypes.bool,
     unique: PropTypes.bool,
   };
-  getParentId = (list, id) => {
-    for (let i in list) {
-      if (list[i].departmentId == id) {
-        return [list[i]];
+  getParentId = (list: SelectDepartment[], id: string): SelectDepartment[] | undefined => {
+    for (const department of list) {
+      if (department.departmentId == id) {
+        return [department];
       }
 
-      if (list[i].subDepartments) {
-        let node = this.getParentId(list[i].subDepartments, id);
+      if (department.subDepartments) {
+        let node = this.getParentId(department.subDepartments, id);
 
         if (node !== undefined) {
-          return node.concat(list[i]);
+          return node.concat(department);
         }
       }
     }
+    return undefined;
   };
-  getIsIncludesByParent = department => {
-    let list = this.getParentId(this.props.treeData, department.departmentId).map(o => o.departmentId);
+  getIsIncludesByParent = (department: SelectDepartment) => {
+    let list = (this.getParentId(this.props.treeData || this.props.data, department.departmentId) || []).map(
+      o => o.departmentId,
+    );
     let isIncludesByParent = this.props.selectedDepartment.filter(
       o =>
         (list.includes(o.departmentId) || o.departmentId.indexOf('orgs_') > -1) &&
@@ -55,15 +60,15 @@ export default class DepartmentList extends Component<any, any> {
     );
     return !!isIncludesByParent.length;
   };
-  getChecked = department => {
+  getChecked = (department: SelectDepartment) => {
     let selectedDepartmentData = this.props.selectedDepartment.filter(
       item => item.departmentId === department.departmentId,
     );
     return (
-      !!selectedDepartmentData.length || (this.props.checkIncludeChilren && this.getIsIncludesByParent(department))
+      !!selectedDepartmentData.length || (!!this.props.checkIncludeChilren && this.getIsIncludesByParent(department))
     );
   };
-  getDisable = department => {
+  getDisable = (department: SelectDepartment) => {
     return this.props.checkIncludeChilren && this.getIsIncludesByParent(department);
   };
   override render() {
@@ -76,6 +81,7 @@ export default class DepartmentList extends Component<any, any> {
           {departments.map((department, index: number) => {
             return (
               <Department
+                data={this.props.data}
                 active={_.includes(activeIds, department.departmentId)}
                 key={department.departmentId + index}
                 department={department}
@@ -102,7 +108,15 @@ export default class DepartmentList extends Component<any, any> {
   }
 }
 
-class Department extends Component<any, any> {
+class Department extends Component<
+  DepartmentListProps & {
+    department: SelectDepartment;
+    active?: boolean | undefined;
+    checked: boolean;
+    isIncludesByParent: boolean;
+  },
+  { moreIdLoading: string | undefined }
+> {
   static defaultProps = {
     showUserCount: true,
   };
@@ -117,14 +131,14 @@ class Department extends Component<any, any> {
     checkIncludeChilren: PropTypes.bool,
     onChangeSelectedOnly: PropTypes.func,
   };
-  constructor(props) {
+  constructor(props: Department['props']) {
     super(props);
     this.state = {
       moreIdLoading: '',
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: Department['props']) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.departmentMoreIds, this.props.departmentMoreIds)) {
         this.setState({
@@ -134,7 +148,7 @@ class Department extends Component<any, any> {
     }
   }
 
-  toogleDepargmentSelect = event => {
+  toogleDepargmentSelect = (event: MouseEvent) => {
     const {
       department: { disabled },
     } = this.props;
@@ -147,29 +161,29 @@ class Department extends Component<any, any> {
     // }
   };
 
-  toggleDepartmentList = event => {
+  toggleDepartmentList = (event: MouseEvent) => {
     event.stopPropagation();
     this.props.toggleDepartmentList(this.props.department.departmentId);
   };
   override render() {
     const { moreIdLoading } = this.state;
     let { active, department, checked, keywords, isIncludesByParent, checkIncludeChilren } = this.props;
-    let { haveSubDepartment, subDepartments, disabled, open, departmentName } = department;
+    let { haveSubDepartment, subDepartments = [], disabled, open, departmentName } = department;
     disabled = disabled || isIncludesByParent;
     let name = departmentName;
     let nameArr = [name];
 
     if (this.props.keywords) {
-      let mt = name.match(keywords);
-      let len = keywords.length;
+      let mt = name.match(keywords || '');
+      let len = (keywords || '').length;
 
       if (mt) {
         nameArr = [];
         while (mt) {
-          nameArr.push(name.slice(0, mt.index));
-          nameArr.push(name.slice(mt.index, mt.index + len));
-          name = name.slice(mt.index + len);
-          mt = name.match(keywords);
+          nameArr.push(name.slice(0, mt.index || 0));
+          nameArr.push(name.slice(mt.index || 0, (mt.index || 0) + len));
+          name = name.slice((mt.index || 0) + len);
+          mt = name.match(keywords || '');
         }
 
         if (name) {
@@ -199,7 +213,7 @@ class Department extends Component<any, any> {
           </div>
           <Wrap
             className="flex flexRow GSelect-department-box pointer"
-            onClick={department => {
+            onClick={(department: MouseEvent) => {
               if (disabled) {
                 return;
               }
@@ -216,8 +230,8 @@ class Department extends Component<any, any> {
                 styleType={
                   checked &&
                   checkIncludeChilren &&
-                  !(this.props.selectedDepartment.find(o => o.departmentId === department.departmentId) || {})
-                    .checkIncludeChilren
+                  !this.props.selectedDepartment.find(o => o.departmentId === department.departmentId)
+                    ?.checkIncludeChilren
                     ? 'light'
                     : undefined
                 }
@@ -245,7 +259,7 @@ class Department extends Component<any, any> {
                 className="Hand onlySelf colorPrimary pRight5"
                 onClick={e => {
                   e.stopPropagation();
-                  this.props.onChangeSelectedOnly(department);
+                  this.props.onChangeSelectedOnly?.(department);
                 }}
               >
                 {_l('仅当前部门')}
@@ -269,20 +283,20 @@ class Department extends Component<any, any> {
           />
         )}
         {open &&
-        (subDepartments[0] || {}).parentId &&
-        (this.props.departmentMoreIds || []).find(o => o.departmentId === subDepartments[0].parentId) ? (
+        subDepartments[0]?.parentId &&
+        (this.props.departmentMoreIds || []).find(o => o.departmentId === subDepartments[0]?.parentId) ? (
           <span
             className="mLeft60 Hand moreBtn"
             onClick={() => {
-              safeLocalStorageSetItem('parentId', subDepartments[0].parentId);
-              this.props.toggleDepartmentList(subDepartments[0].parentId);
+              safeLocalStorageSetItem('parentId', subDepartments[0]?.parentId || '');
+              this.props.toggleDepartmentList(subDepartments[0]?.parentId || '');
               this.setState({
-                moreIdLoading: subDepartments[0].parentId,
+                moreIdLoading: subDepartments[0]?.parentId || '',
               });
             }}
           >
-            {moreIdLoading === subDepartments[0].parentId && <LoadDiv size="small" />}
-            {moreIdLoading === subDepartments[0].parentId ? _l('加载中') : _l('更多')}
+            {moreIdLoading === subDepartments[0]?.parentId && <LoadDiv size="small" />}
+            {moreIdLoading === subDepartments[0]?.parentId ? _l('加载中') : _l('更多')}
           </span>
         ) : (
           ''

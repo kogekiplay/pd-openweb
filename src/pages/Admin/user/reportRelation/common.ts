@@ -44,7 +44,7 @@ export function selectUser({
   isSetParent?: boolean;
   projectId: string;
   title?: string;
-  callback?: (accounts: Array<{ accountId?: string; fullname?: string }>) => void;
+  callback?: (accounts: Array<{ accountId?: string; fullname?: string | undefined }>) => void;
 }) {
   dialogSelectUser({
     fromAdmin: true,
