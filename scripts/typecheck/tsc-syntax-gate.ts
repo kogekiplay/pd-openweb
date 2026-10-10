@@ -32,14 +32,14 @@ const { API } = require('@typescript/native/unstable/sync');
 
 const ROOT = path.resolve(__dirname, '../..');
 const configPath = path.join(ROOT, 'tsconfig.gate.json');
-const rel = f => path.relative(ROOT, f).split(path.sep).join('/');
+const rel = (f: string): string => path.relative(ROOT, f).split(path.sep).join('/');
 
 // 与语义门禁一致的噪声剔除：src/library 是预打包压缩产物，__ 前缀是探针
-const isNoise = r => r.startsWith('src/library/') || path.basename(r).startsWith('__');
+const isNoise = (r: string): boolean => r.startsWith('src/library/') || path.basename(r).startsWith('__');
 
 /** pos（字符偏移）-> (line, col)，都是 1 起。按文件缓存行首表。 */
 const lineStartsCache = new Map();
-function posToLineCol(absFile, pos) {
+function posToLineCol(absFile: string, pos: number): { line: number; col: number } {
   let starts = lineStartsCache.get(absFile);
   if (starts === undefined) {
     try {
@@ -78,7 +78,7 @@ if (!project) {
   process.exit(2);
 }
 
-const diags = project.program.getSyntacticDiagnostics().filter(d => !d.fileName || !isNoise(rel(d.fileName)));
+const diags = project.program.getSyntacticDiagnostics().filter((d: { fileName?: string }) => !d.fileName || !isNoise(rel(d.fileName)));
 const secs = ((Date.now() - t0) / 1000).toFixed(1);
 
 if (diags.length === 0) {
@@ -92,7 +92,7 @@ console.error('提示：含 JSX 的文件必须是 .tsx，不能是 .ts —— �
 const byFile = new Map();
 for (const d of diags) {
   const f = d.fileName ? rel(d.fileName) : '(no file)';
-  if (!byFile.has(f)) byFile.set(f, []);
+  if (!byFile.has(f)) byFile.set(f, [] as typeof diags);
   byFile.get(f).push(d);
 }
 for (const [f, ds] of byFile) {

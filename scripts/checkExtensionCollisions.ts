@@ -67,7 +67,7 @@ const JS_ALLOWLIST = [
 
 const JS_EXT = new Set(['.js', '.jsx', '.cjs', '.mjs']);
 
-function findStrayJs(files) {
+function findStrayJs(files: string[]): string[] {
   return files
     .filter(f => JS_EXT.has(path.extname(f)))
     .filter(f => !JS_ALLOWLIST.some(prefix => f.startsWith(prefix)))
@@ -91,7 +91,7 @@ function listTrackedFiles() {
     .filter(Boolean);
 }
 
-function findCollisions(files) {
+function findCollisions(files: string[]): Array<{ stem: string; exts: string[] }> {
   const byStem = new Map();
   for (const file of files.filter(f => f.startsWith('src/'))) {
     const ext = path.extname(file);
