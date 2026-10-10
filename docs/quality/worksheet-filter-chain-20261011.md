@@ -12,4 +12,6 @@ API 失败处理补齐本地化提示、保留已有列表/编辑内容及重试
 
 最终统一证据 `/private/tmp/hap-worksheet-filter-chain-20261011/final`；完整冻结和专项证据在 `/private/tmp/hap-filtercore-20261011`、`/private/tmp/hap-primitives-20261011`、`/private/tmp/hap-filter-selection-20261011`。独立审查和反例证据位于 `/private/tmp/hap-filter-core-review-20261011`。较早第一次门禁结果保留在统一证据目录上层，最终修复后门禁与诊断以 final 目录为准。
 
+源码提交 `fae0befb36912f543d7eab3a648002e719f056cc` 已在干净整合工作区完成正式 release（54 秒）和本地 publish；release 再次执行全部行为规格及类型检查。Webpack runtime 校验通过 1095 JS、387 CSS、3 runtime，73 个顶层 HTML 中 532 个 `/dist/`、`/staticfiles/` JS/CSS 引用均存在，整批没有 dev JS。首页版本与源码一致，SHA256 为 `2c629beda7c087daebe41a2cc83b3b837216734143911f805dca3cf188698517`；44 个批次文件冻结哈希一致，构建后的工作树干净。上述是本地候选产物验证，未切换生产目录。
+
 全仓正式严格开关仍未全部开启；其他筛选 UI、API 生产者、公共开放类型、styled-components 旧 shim 及工具债务继续推进。生产当前仍为 `5cf1a7bbb`，本批未部署；已授权的每日 16:45 开始、17:30 前前端发布任务继续保留。

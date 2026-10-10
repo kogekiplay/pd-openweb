@@ -18,4 +18,6 @@
 
 本轮源码 `2a927fcff` 正式 release（1 分 50 秒）、本地 publish 和 1095 JS / 387 CSS / 3 runtime 资源校验通过。73 个顶层 HTML 的 532 个本地产物引用存在且无 dev JS；入口 revision 与源码一致，构建后工作树干净，冻结文件哈希匹配。本地候选版本已完成产物验证，仍未部署生产。
 
+后续筛选核心/编辑器源码 `fae0befb3` 已完成正式 release（54 秒）、本地 publish 及同口径资源校验，193/193 规格与 release 类型门禁通过；44 个批次文件冻结哈希匹配、构建后工作树干净。最新本地候选入口 revision 为该源码提交；生产仍为 `5cf1a7bbb`，日常发布任务保持 ACTIVE。
+
 工具链批次 `b1347dbf6` 已推送：CI/utils、CI/generate、CI/serve、publishConfig、build、spec-harness 和 run-specs 的自有路径五开关零诊断；179/179 规格及 release 构建通过，资源为 1095 JS、387 CSS、3 runtime。全工具 strict 按诊断标题计数为 2929 条（3158 → 2929，减少 229；旧数字3391是含说明的输出行数），仍有 webpack 配置、其它脚本和既有测试 globals 等未处理债务；本批未更新生产。
