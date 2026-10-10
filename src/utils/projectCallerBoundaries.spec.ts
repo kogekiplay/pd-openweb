@@ -14,10 +14,10 @@ function method(file: string, name: string, globals: Record<string, unknown>): T
   const ast = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
   let expression = '';
   traverse(ast, {
-    ClassMethod(p) {
+    ClassMethod(p: { node: { key: { name?: string; end: number }; end: number } }) {
       if (p.node.key.name === name) expression = 'function ' + source.slice(p.node.key.end, p.node.end);
     },
-    ClassProperty(p) {
+    ClassProperty(p: { node: { key: { name?: string }; value: { params: Array<{ start: number; end: number }>; body: { start: number; end: number } } } }) {
       if (p.node.key.name === name) {
         const value = p.node.value;
         const params = value.params.map(param => source.slice(param.start, param.end)).join(', ');

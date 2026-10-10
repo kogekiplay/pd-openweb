@@ -82,7 +82,7 @@ assert.strictEqual(dark['--color-primary-dark'], antdDark.colorPrimaryActive);
     const s = h.replace('#', '');
     const ch = [0, 2, 4].map(i => parseInt(s.slice(i, i + 2), 16) / 255);
     const f = (v: number) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
-    return 0.2126 * f(ch[0]) + 0.7152 * f(ch[1]) + 0.0722 * f(ch[2]);
+    return 0.2126 * f(ch[0] ?? 0) + 0.7152 * f(ch[1] ?? 0) + 0.0722 * f(ch[2] ?? 0);
   };
   const ratio = (a: string, b: string) => {
     const [x, y] = [lumOf(a), lumOf(b)];

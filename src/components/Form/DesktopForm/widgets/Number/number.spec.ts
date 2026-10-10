@@ -50,7 +50,7 @@ function find(node: NodeElement, type: string): NodeElement | undefined {
 }
 const moduleLike: { exports: unknown } = { exports: {} };
 let comparator: ((before: NumberProps, after: NumberProps) => boolean) | undefined;
-const { code } = transformFileSync(process.env.NUMBER_DRAFT_SOURCE || path.join(__dirname, 'number.tsx'), {
+const { code } = transformFileSync(process.env['NUMBER_DRAFT_SOURCE'] || path.join(__dirname, 'number.tsx'), {
   babelrc: false,
   plugins: ['@babel/plugin-transform-modules-commonjs'],
 });
@@ -106,13 +106,13 @@ function render(): NodeElement {
 }
 function input(): NodeElement {
   const found = find(render(), 'input');
-  assert.ok(found);
+  if (!found) throw new Error('Expected rendered input');
   return found;
 }
 const display = render();
-const target = display.children[0];
-assert.ok(target);
-(target.props['onClick'] as () => void)();
+  const target = display.children[0];
+  if (!target) throw new Error('Expected rendered display target');
+  (target.props['onClick'] as () => void)();
 let field = input();
 assert.equal(field.props['value'], 15, 'The editing field displays percentage units');
 (field.props['onFocus'] as (event: unknown) => void)({ target: { value: '15' } });

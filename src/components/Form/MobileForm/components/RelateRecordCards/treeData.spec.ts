@@ -11,7 +11,8 @@ const tree = moduleState.exports as {
   getDefaultExpandedIds(rows: TestTreeRow[], layer: number): Set<string>;
   getTreeChildrenIds(row: TestTreeRow): string[];
 };
-global.safeParse = (value: unknown, fallback: unknown = {}) => {
+const testGlobal = globalThis as Record<string, unknown>;
+testGlobal['safeParse'] = (value: unknown, fallback: unknown = {}) => {
   try { return JSON.parse(String(value)); }
   catch { return fallback === 'array' ? [] : fallback; }
 };
@@ -78,9 +79,9 @@ interface Controller {
   handleAdd(rows: TestTreeRow[]): void; handleDelete(row: TestTreeRow): void;
 }
 const Cards = (controllerModule.exports as { default: new (props: unknown) => Controller }).default;
-global._l = (value: string) => value;
-global.alert = () => {};
-global.window = { isPublicWorksheet: false };
+testGlobal['_l'] = (value: string) => value;
+testGlobal['alert'] = () => {};
+testGlobal['window'] = { isPublicWorksheet: false };
 async function verifyController(): Promise<void> {
   let changed = 0;
   const cards = new Cards({ appId: 'app', count: 1, records: [{ rowid: 'root' }], multiple: true, editable: true,

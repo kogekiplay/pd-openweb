@@ -5,7 +5,7 @@ const ReactDOMServer = require('react-dom/server');
 const { transformFileSync } = require('../../../scripts/spec-harness.ts');
 const { ServerStyleSheet } = require('styled-components');
 
-function requireEsm(file, stubs = {}) {
+function requireEsm(file: string, stubs: Record<string, unknown> = {}) {
   // exports 上挂的是被测模块的导出，形状由被测代码决定；不标类型
   // 的话推成 {}，下游每读一个导出都是一条 TS2339。
   const moduleLike: { exports: Record<string, any> } = { exports: {} };
@@ -15,7 +15,7 @@ function requireEsm(file, stubs = {}) {
     plugins: ['@babel/plugin-transform-modules-commonjs'],
   });
 
-  function localRequire(request) {
+  function localRequire(request: string) {
     return stubs[request] || require(request);
   }
 

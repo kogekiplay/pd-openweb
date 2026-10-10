@@ -27,17 +27,17 @@ const { ROOT } = require('../scripts/spec-harness.ts');
 const SOURCES = [
   {
     file: '.babelrc',
-    pick: src => [...src.matchAll(/"chrome"\s*:\s*"(\d+)"/g)].map(m => m[1]),
+    pick: (src: string) => [...src.matchAll(/"chrome"\s*:\s*"(\d+)"/g)].map(m => m[1]),
     expect: 2, // development / production 两个 env 块
   },
   {
     file: 'CI/webpack.config.ts',
-    pick: src => [...src.matchAll(/chrome:\s*'(\d+)'/g)].map(m => m[1]),
+    pick: (src: string) => [...src.matchAll(/chrome:\s*'(\d+)'/g)].map(m => m[1]),
     expect: 1,
   },
   {
     file: 'CI/webpack.mingo-entry-widget.config.ts',
-    pick: src => [...src.matchAll(/chrome:\s*'(\d+)'/g)].map(m => m[1]),
+    pick: (src: string) => [...src.matchAll(/chrome:\s*'(\d+)'/g)].map(m => m[1]),
     expect: 1,
   },
 ];

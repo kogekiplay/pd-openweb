@@ -66,7 +66,7 @@ function loadTarget(): RecordHelpers {
           getTitleTextFromRelateControl: (_control: unknown, row: { name?: string }) => row.name || '',
           isRelateRecordTableControl: () => false,
           renderText: ({ value }: { value: unknown }) => String(value ?? ''),
-          formatAttachmentValue: value => value,
+          formatAttachmentValue: (value: unknown) => value,
           getValueStyle: () => ({}),
         };
       if (name === 'src/utils/common') return { pathCompletion: (value: string) => value };
@@ -94,14 +94,15 @@ function loadTarget(): RecordHelpers {
   );
   return moduleLike.exports as RecordHelpers;
 }
-global.safeParse = (value: unknown, defaultValue: unknown = {}) => {
+const testGlobal = globalThis as Record<string, unknown>;
+testGlobal['safeParse'] = (value: unknown, defaultValue: unknown = {}) => {
   try {
     return JSON.parse(String(value));
   } catch {
     return defaultValue === 'array' ? [] : defaultValue;
   }
 };
-global._l = (value: string) => value;
+testGlobal['_l'] = (value: string) => value;
 const helpers = loadTarget();
 assert.equal(helpers.getRelateRecordCountFromValue('[{"count":3}]', 9), 3);
 assert.equal(helpers.getRelateRecordCountFromValue('', 9), 0);
