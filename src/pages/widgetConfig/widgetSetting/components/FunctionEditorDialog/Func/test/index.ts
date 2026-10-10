@@ -3,7 +3,7 @@ const path = require('path');
 const bundleFilePath = path.join(__dirname, '../../../../../../../../build/dist/mdfunction.bundle.js');
 const { run } = require(bundleFilePath);
 
-function runAndOutput(description = '', data) {
+function runAndOutput(description = '', data: unknown): void {
   console.log(`calculate ${description} in nodejs:`);
   console.log('result:', run(data));
 }
@@ -113,7 +113,7 @@ const optionDefaultData = {
   ],
 };
 
-async function test(prefix, data) {
+async function test(prefix: string, data: unknown): Promise<void> {
   await runAndOutput(prefix, data);
   // await runInSwift(prefix, data);
 }

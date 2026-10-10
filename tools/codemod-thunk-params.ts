@@ -37,7 +37,7 @@ const IMPORT_LINE = "import type { AppDispatch, GetState } from 'src/redux/types
 const BARE = /\(dispatch, getState\) =>/g;
 const BARE_FN = /function \(dispatch, getState\)/g;
 
-function walk(dir, out = []) {
+function walk(dir: string, out: string[] = []): string[] {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
     if (e.isDirectory()) {
@@ -69,7 +69,7 @@ for (const file of walk(SRC)) {
     // 插在【第一条】import 之前 —— 多行 import 的首行也匹配 /^\s*import/，
     // 按「最后一条 import + 1」插会把语句从中间劈开。顺序交给 prettier 的 sort-imports。
     const lines = src.split('\n');
-    const first = lines.findIndex(l => /^\s*import\b/.test(l));
+    const first = lines.findIndex((l: string) => /^\s*import\b/.test(l));
 
     if (first === -1) {
       console.log(`  跳过 ${rel}：找不到 import 语句`);
