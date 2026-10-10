@@ -123,6 +123,6 @@ for (const [file, lines] of byFile) {
 }
 
 console.log(
-  `${DRY ? '[dry] ' : ''}命中 ${byFile.size} 个文件：整行删 ${tally.dropped || 0}，去掉默认导入保留具名导入 ${tally.trimmed || 0}，跳过 ${skipped.length}`,
+  `${DRY ? '[dry] ' : ''}命中 ${byFile.size} 个文件：整行删 ${tally['dropped'] || 0}，去掉默认导入保留具名导入 ${tally['trimmed'] || 0}，跳过 ${skipped.length}`,
 );
 if (skipped.length) console.log(skipped.join('\n'));

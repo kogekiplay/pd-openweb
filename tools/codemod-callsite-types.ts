@@ -173,6 +173,10 @@ for (const [fileName, ds] of byFile) {
       continue;
     }
     const type = [...set][0];
+    if (type === undefined) {
+      skip.notPortable += 1;
+      continue;
+    }
     if (!PORTABLE.has(type)) {
       skip.notPortable += 1;
       continue;

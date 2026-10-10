@@ -154,6 +154,10 @@ project.eachSrcFile(({ fileName, text, node }: any) => {
       continue;
     }
     const tag = [...tags][0];
+    if (tag === undefined) {
+      skip.noJsx += 1;
+      continue;
+    }
     // 自定义组件（首字母大写）是组件实例不是 DOM 元素，推不出来也不该猜
     if (!/^[a-z]/.test(tag)) {
       skip.custom += 1;
