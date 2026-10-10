@@ -1,14 +1,40 @@
 import { Component } from 'react';
-import copy from 'src/utils/copyToClipboard';
 import Trigger from '@rc-component/trigger';
 import privateRequest from 'src/api/private';
 import mobile from 'src/pages/appInstallSetting/images/mobile.png';
 import pc from 'src/pages/appInstallSetting/images/pc.png';
-import code from './images/code.png';
+import copy from 'src/utils/copyToClipboard';
+import hap from './images/hap.png';
+import nocoly from './images/nocoly.png';
 import './index.less';
 
-export default class AppInstallSetting extends Component<any, any> {
-  constructor(props) {
+interface AppInstallInfo {
+  url?: string | undefined;
+  qrCodeUrl?: string | undefined;
+  downloadAppQrCodeUrl?: string | undefined;
+}
+interface AppInstallState extends AppInstallInfo {
+  loadError?: boolean | undefined;
+}
+function installText(value: unknown): string | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value === 'string') return value;
+  throw new TypeError('Invalid client installation URL');
+}
+function installInfo(value: unknown): AppInstallInfo {
+  if (!value || typeof value !== 'object' || Array.isArray(value))
+    throw new TypeError('Invalid client installation info');
+  return {
+    url: installText(Reflect.get(value, 'url')),
+    qrCodeUrl: installText(Reflect.get(value, 'qrCodeUrl')),
+    downloadAppQrCodeUrl: installText(Reflect.get(value, 'downloadAppQrCodeUrl')),
+  };
+}
+
+export default class AppInstallSetting extends Component<{ className?: string | undefined }, AppInstallState> {
+  private requestVersion = 0;
+  private mounted = true;
+  constructor(props: { className?: string | undefined }) {
     super(props);
     this.state = {
       url: '',
@@ -17,13 +43,24 @@ export default class AppInstallSetting extends Component<any, any> {
     };
   }
   override componentDidMount() {
-    privateRequest.getAPIUrl().then(({ url, qrCodeUrl, downloadAppQrCodeUrl }) => {
-      this.setState({
-        url,
-        qrCodeUrl,
-        downloadAppQrCodeUrl,
-      });
-    });
+    this.mounted = true;
+    void this.loadInfo();
+  }
+  override componentWillUnmount() {
+    this.mounted = false;
+    this.requestVersion++;
+  }
+  async loadInfo() {
+    if (!this.mounted) return;
+    const version = ++this.requestVersion;
+    this.setState({ loadError: false });
+    try {
+      const result: unknown = await privateRequest.getAPIUrl();
+      if (!this.mounted || version !== this.requestVersion) return;
+      this.setState(installInfo(result));
+    } catch {
+      if (this.mounted && version === this.requestVersion) this.setState({ loadError: true });
+    }
   }
   renderTitle() {
     return <div className="appInstallSettingTitle Font16 bold">{_l('App下载与设置')}</div>;
@@ -38,7 +75,7 @@ export default class AppInstallSetting extends Component<any, any> {
           <span
             className="copy"
             onClick={() => {
-              copy(url);
+              copy(url || '');
               alert(_l('复制成功'));
             }}
           >
@@ -65,6 +102,7 @@ export default class AppInstallSetting extends Component<any, any> {
   }
   renderContent() {
     const { downloadAppQrCodeUrl } = this.state;
+    const code = window.platformENV.isOverseas ? nocoly : hap;
     return (
       <div className="appInstallSettingContent">
         <div className="Font16 bold title">{_l('下载客户端')}</div>
@@ -104,6 +142,12 @@ export default class AppInstallSetting extends Component<any, any> {
   override render() {
     return (
       <div className="appInstallSettingWrapper card mAll15 pAll15">
+        {this.state.loadError && (
+          <div role="alert">
+            {_l('加载失败，请重试')}
+            <button onClick={() => void this.loadInfo()}>{_l('重试')}</button>
+          </div>
+        )}
         {this.renderTitle()}
         {this.renderHeader()}
         {this.renderContent()}

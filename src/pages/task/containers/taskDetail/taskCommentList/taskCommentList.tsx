@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import Commenter from 'src/components/comment/commenter';
 import CommentList from 'src/components/comment/commentList';
+import { getTaskAtData } from 'src/components/comment/mentionCandidates';
 import type { RootState } from 'src/redux/types';
 import { htmlDecodeReg } from 'src/utils/common';
 import {
@@ -74,6 +75,8 @@ class TaskCommentList extends Component<any, TaskCommentListState> {
       appId: md.global.APPInfo.taskAppID,
       remark: taskId + '|' + htmlDecodeReg(data.taskName) + '|' + _l('任务'),
       storageId: taskId,
+      forReacordDiscussion: true,
+      atData: getTaskAtData(data, md.global.Account.accountId),
       projectId: data.projectID,
       selectGroupOptions: { projectId: data.projectID },
       onSubmit: this.onSubmit,

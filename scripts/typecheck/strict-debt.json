@@ -1620,7 +1620,6 @@
     "src/pages/agent/AgentLand.tsx",
     "src/pages/agent/HistorySide.tsx",
     "src/pages/agent/index.tsx",
-    "src/pages/appInstallSetting/index.tsx",
     "src/pages/calendar/detail/index.tsx",
     "src/pages/calendar/index.tsx",
     "src/pages/calendar/modules/calendar/calendar.ts",

@@ -4,6 +4,7 @@ import moment from 'moment';
 import CheckBox from 'ming-ui/components/Checkbox';
 import Commenter from 'src/components/comment/commenter';
 import CommentList from 'src/components/comment/commentList';
+import { getCalendarAtData } from 'src/components/comment/mentionCandidates';
 import { htmlDecodeReg } from 'src/utils/common';
 
 export interface CalendarCommentListState {
@@ -50,6 +51,8 @@ export default class CalendarCommentList extends Component<any, CalendarCommentL
 
       storageId: id,
       autoFocus: true,
+      forReacordDiscussion: true,
+      atData: getCalendarAtData(this.props['calendar'], md.global.Account.accountId),
       onSubmit: data => {
         change({ discussions: (data ? [data] : []).concat(discussions) });
       },
