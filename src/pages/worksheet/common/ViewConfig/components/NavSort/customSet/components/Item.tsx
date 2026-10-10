@@ -68,7 +68,7 @@ export default function (props) {
       unique: !isMultiple,
       showCreateBtn: false,
       selectedDepartment: valueRef.current,
-      selectFn: onSaveAddDep,
+      selectFn: (data, isCancel) => onSaveAddDep(data, Boolean(isCancel)),
     });
   };
 

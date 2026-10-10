@@ -77,6 +77,7 @@ declare module 'ming-ui' {
   export { default as Signature } from 'ming-ui/components/Signature';
   export { default as Skeleton } from 'ming-ui/components/Skeleton';
   export { default as Slider } from 'ming-ui/components/Slider';
+  export type { SliderProps, SliderScale, SliderColor, SliderCellHandle } from 'ming-ui/components/Slider';
   export { default as SortableList } from 'ming-ui/components/SortableList';
   export { default as Splitter } from 'ming-ui/components/Splitter';
   export { default as Steps } from 'ming-ui/components/Steps';

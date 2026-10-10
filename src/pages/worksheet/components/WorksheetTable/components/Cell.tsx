@@ -166,15 +166,15 @@ export function getIndex({
   rightFixedCount,
   leftFixedCount,
 }: {
-  columnIndex?: number;
-  rowIndex?: number;
-  tableColumnCount?: number;
-  leftFixed?: boolean;
-  rightFixed?: boolean;
-  topFixed?: boolean;
-  bottomFixed?: boolean;
-  rightFixedCount?: number;
-  leftFixedCount?: number;
+  columnIndex?: number | undefined;
+  rowIndex?: number | undefined;
+  tableColumnCount?: number | undefined;
+  leftFixed?: boolean | undefined;
+  rightFixed?: boolean | undefined;
+  topFixed?: boolean | undefined;
+  bottomFixed?: boolean | undefined;
+  rightFixedCount?: number | undefined;
+  leftFixedCount?: number | undefined;
 } = {}) {
   let result = {
     columnIndex: columnIndex,

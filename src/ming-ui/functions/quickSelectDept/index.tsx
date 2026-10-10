@@ -4,13 +4,23 @@ import { useSetState } from 'react-use';
 import { useClickAway } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
-import styled from 'styled-components';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import NoData from 'ming-ui/functions/dialogSelectUser/GeneralSelect/NoData';
-import departmentController from 'src/api/department';
 import { checkPermission } from 'src/components/checkPermission';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
+import styled from 'src/utils/typedStyled';
 import dialogSelectDept from '../dialogSelectDept';
+import {
+  departmentTree as decodeTree,
+  departmentChoices,
+  rangeId,
+  requestDepartments,
+  requestIds,
+  rootResult,
+} from '../dialogSelectDept/boundary';
+import type { DepartmentChoice, DepartmentRequest, DepartmentTree } from '../dialogSelectDept/types';
+import type { AbortableRequest } from '../dialogSelectUser/GeneralSelect/types';
+import type { QuickDepartmentHandle, QuickDepartmentOptions, QuickDepartmentState } from './types';
 
 const PAGE_SIZE = 100;
 
@@ -75,7 +85,7 @@ const DeptSelectWrap = styled.div`
   }
 `;
 
-const getDepartmentTree = (data, parentId) => {
+const getDepartmentTree = (data: DepartmentTree[], parentId?: string): DepartmentTree[] => {
   return data.map(item => {
     let { departmentId, departmentName, userCount, haveSubDepartment, subDepartments = [] } = item;
     return {
@@ -90,7 +100,7 @@ const getDepartmentTree = (data, parentId) => {
   });
 };
 
-export function DeptSelect(props) {
+export function DeptSelect(props: QuickDepartmentOptions) {
   const {
     projectId = '',
     unique = true,
@@ -121,15 +131,16 @@ export function DeptSelect(props) {
       rootPageAll,
       rootLoading,
       allList,
+      loadError,
     },
     setState,
-  ] = useSetState({
+  ] = useSetState<QuickDepartmentState>({
     rootPageIndex: 1,
     rootPageAll: false,
     rootLoading: false,
     loading: true,
     keywords: '',
-    selectedDepartment: props.selectedDepartment || [],
+    selectedDepartment: departmentChoices(props.selectedDepartment || []),
     departmentMoreIds: [],
     showProjectAll: false,
     activeIds: [],
@@ -140,7 +151,19 @@ export function DeptSelect(props) {
     ((md.global.Account.projects || []).filter(project => project.projectId === props.projectId).length &&
       md.global.Account.projects.filter(project => project.projectId === props.projectId)[0]) ||
     {};
-  let promiseFn = null;
+  const promiseRef = useRef<AbortableRequest<unknown> | null>(null);
+  const versionRef = useRef(0);
+  const mounted = useRef(true);
+  const childRequests = useRef(new Set<AbortableRequest<unknown>>());
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      versionRef.current++;
+      promiseRef.current?.abort?.();
+      childRequests.current.forEach(request => request.abort?.());
+    };
+  }, []);
 
   useClickAway(conRef, () => {
     onSelect();
@@ -166,7 +189,7 @@ export function DeptSelect(props) {
     fetchData();
   }, [rootLoading]);
 
-  const getDepartmentPath = dept => {
+  const getDepartmentPath = (dept: DepartmentChoice) => {
     const pathData = getParentId(list, dept.departmentId) || [];
 
     return pathData
@@ -178,7 +201,7 @@ export function DeptSelect(props) {
       }));
   };
 
-  const onSelect = (value?) => {
+  const onSelect = (value?: DepartmentChoice[]) => {
     const selected = value || selectedDepartment;
     selectFn.call(
       null,
@@ -207,7 +230,7 @@ export function DeptSelect(props) {
     );
   };
 
-  const getSearchDepartmentTree = data => {
+  const getSearchDepartmentTree = (data: DepartmentTree[]): DepartmentTree[] => {
     return data.map(item => {
       let { departmentId, departmentName, userCount, haveSubDepartment, subDepartments = [] } = item;
 
@@ -227,12 +250,11 @@ export function DeptSelect(props) {
   };
 
   const fetchData = () => {
-    setState({ loading: true });
+    const version = ++versionRef.current;
+    setState({ loading: true, loadError: false });
     const isAdmin = projectId && checkPermission(projectId, PERMISSION_ENUM.DEPARTMENT) && fromAdmin;
 
-    if (promiseFn) {
-      promiseFn.abort();
-    }
+    promiseRef.current?.abort?.();
 
     let getTree;
 
@@ -242,7 +264,7 @@ export function DeptSelect(props) {
       getTree = getDepartmentTree;
     }
 
-    let param = {
+    let param: DepartmentRequest = {
       projectId: projectId,
       returnCount: returnCount,
       [isAnalysis && departrangetype === '0' ? 'keyword' : 'keywords']: keywords.trim(),
@@ -255,13 +277,18 @@ export function DeptSelect(props) {
       param.pageSize = PAGE_SIZE;
     }
 
-    if (departrangetype !== '0') {
-      param.appointedDepartmentIds = appointedDepartmentIds.filter(l => l);
-      param.appointedUserIds = appointedUserIds.filter(l => l);
-      param.rangeTypeId = [10, 20, 30][departrangetype - 1];
+    try {
+      if (departrangetype !== '0') {
+        param.appointedDepartmentIds = requestIds(appointedDepartmentIds);
+        param.appointedUserIds = requestIds(appointedUserIds);
+        param.rangeTypeId = rangeId(departrangetype);
+      }
+    } catch {
+      setState({ loading: false, rootLoading: false, loadError: true });
+      return Promise.resolve();
     }
 
-    promiseFn = departmentController[
+    promiseRef.current = requestDepartments(
       departrangetype !== '0'
         ? 'appointedDepartment'
         : isAnalysis && isAdmin
@@ -270,24 +297,23 @@ export function DeptSelect(props) {
             ? 'pagedDepartmentTrees'
             : isAdmin
               ? 'searchProjectDepartment2'
-              : 'searchDepartment2'
-    ](param)
-      .then(res => {
-        let showProjectAll = true;
-        let data = res;
-
-        if (isAnalysis || departrangetype !== '0') {
-          data = res;
-        } else if (!isAdmin) {
-          showProjectAll = !res.item1;
-          data = res.item2;
-        }
+              : 'searchDepartment2',
+      param,
+    );
+    return promiseRef.current
+      .then((response: unknown) => {
+        if (!mounted.current || version !== versionRef.current) return;
+        const { departments: data, showProjectAll } = rootResult(
+          response,
+          !(isAnalysis || departrangetype !== '0' || isAdmin),
+        );
+        if (usePageDepartment && rootPageIndex > 1 && !list) throw new TypeError('Missing paged departments');
 
         let _list = !usePageDepartment
           ? getTree(data)
           : usePageDepartment && rootPageIndex <= 1
             ? getTree(data)
-            : list.concat(getTree(data));
+            : (list || []).concat(getTree(data));
 
         if (departrangetype === '3') {
           _list = _list.map(l => ({ ...l, disabled: appointedDepartmentIds.includes(l.departmentId) }));
@@ -304,7 +330,7 @@ export function DeptSelect(props) {
 
         setState({
           list: _list,
-          activeIds: !_.isEmpty(_list) ? [_list[0].departmentId] : [],
+          activeIds: _list[0] ? [_list[0].departmentId] : [],
           loading: false,
           rootLoading: false,
           rootPageAll: usePageDepartment && (_list.length % PAGE_SIZE > 0 || data.length <= 0),
@@ -314,22 +340,25 @@ export function DeptSelect(props) {
         });
       })
       .catch(() => {
+        if (!mounted.current || version !== versionRef.current) return;
         setState({
           loading: false,
           rootLoading: false,
+          loadError: true,
         });
       });
   };
 
   const debouncedSearch = useCallback(_.debounce(fetchData, 500), [fetchData]);
 
-  const getDepartmentById = (departmentTree, id) => {
-    for (let i = 0; i < departmentTree.length; i++) {
-      let department = departmentTree[i];
+  const getDepartmentById = (departmentTree: DepartmentTree[] | undefined, id: string): DepartmentTree | undefined => {
+    for (let i = 0; i < (departmentTree || []).length; i++) {
+      const department = departmentTree?.[i];
+      if (!department) continue;
 
       if (department.departmentId === id) {
         return department;
-      } else if (department.subDepartments.length) {
+      } else if (department.subDepartments?.length) {
         let oDepartment = getDepartmentById(department.subDepartments, id);
 
         if (oDepartment) {
@@ -337,11 +366,13 @@ export function DeptSelect(props) {
         }
       }
     }
+    return undefined;
   };
 
-  const fetchSubDepartment = id => {
-    let departmentTree = [...list];
+  const fetchSubDepartment = (id: string) => {
+    let departmentTree = [...(list || [])];
     let department = getDepartmentById(departmentTree, id);
+    if (!department) throw new TypeError('Unknown department');
     const { subDepartments = [] } = department;
 
     if (!department.haveSubDepartment) {
@@ -354,7 +385,7 @@ export function DeptSelect(props) {
       if (subDepartments.length && !isForMore) {
         department.open = true;
       } else {
-        let param = {
+        let param: DepartmentRequest = {
           projectId: projectId,
           includeDisabled: false,
         };
@@ -376,26 +407,37 @@ export function DeptSelect(props) {
                 returnCount: returnCount,
               };
 
-        departmentController[
+        const version = versionRef.current;
+        const request = requestDepartments(
           isAnalysis && location.href.indexOf('admin') > -1
             ? 'pagedProjectDepartmentTrees'
             : isAnalysis
               ? 'pagedDepartmentTrees'
               : location.href.indexOf('admin') > -1
                 ? 'pagedSubDepartments'
-                : 'getProjectSubDepartmentByDepartmentId'
-        ](param).then(data => {
-          localStorage.removeItem('parentId');
-          department.subDepartments =
-            pageIndex > 1
-              ? department.subDepartments.concat(getDepartmentTree(data, department.departmentId))
-              : getDepartmentTree(data, department.departmentId);
-          department.open = true;
-          setMoreList(department.departmentId, data.length < PAGE_SIZE);
-          setState({
-            list: departmentTree,
-          });
-        });
+                : 'getProjectSubDepartmentByDepartmentId',
+          param,
+        );
+        childRequests.current.add(request);
+        void request
+          .then((response: unknown) => {
+            if (!mounted.current || version !== versionRef.current) return;
+            const data = decodeTree(response);
+            localStorage.removeItem('parentId');
+            department.subDepartments =
+              pageIndex > 1
+                ? (department.subDepartments || []).concat(getDepartmentTree(data, department.departmentId))
+                : getDepartmentTree(data, department.departmentId);
+            department.open = true;
+            setMoreList(department.departmentId, data.length < PAGE_SIZE);
+            setState({
+              list: departmentTree,
+            });
+          })
+          .catch((error: unknown) => {
+            if (mounted.current && version === versionRef.current) console.error(error);
+          })
+          .finally(() => childRequests.current.delete(request));
         return false;
       }
     } else {
@@ -408,7 +450,7 @@ export function DeptSelect(props) {
     return undefined;
   };
 
-  const setMoreList = (departmentId, isDelete: boolean) => {
+  const setMoreList = (departmentId: string, isDelete: boolean) => {
     let moreData = departmentMoreIds.find(o => o.departmentId === departmentId);
 
     if (isDelete) {
@@ -434,23 +476,24 @@ export function DeptSelect(props) {
     }
   };
 
-  const getParentId = (list, id) => {
-    for (let i in list) {
-      if (list[i].departmentId == id) {
-        return [list[i]];
+  const getParentId = (list: DepartmentTree[] | undefined, id: string): DepartmentTree[] | undefined => {
+    for (const item of list || []) {
+      if (item.departmentId == id) {
+        return [item];
       }
 
-      if (list[i].subDepartments) {
-        let node = getParentId(list[i].subDepartments, id);
+      if (item.subDepartments) {
+        let node = getParentId(item.subDepartments, id);
 
         if (node !== undefined) {
-          return node.concat(list[i]);
+          return node.concat(item);
         }
       }
     }
+    return undefined;
   };
 
-  const toggle = (department, notIncludeChilren?) => {
+  const toggle = (department: DepartmentChoice, notIncludeChilren?: boolean) => {
     const departmentIndex = _.findIndex(list, { departmentId: department.departmentId });
 
     if (!_.isUndefined(departmentIndex)) {
@@ -494,8 +537,7 @@ export function DeptSelect(props) {
             selectedDepartments = [];
           } else {
             selectedDepartment.map(o => {
-              let l = getParentId(allList, o.departmentId) || [];
-              l = l.map(it => it.departmentId);
+              const l = (getParentId(allList, o.departmentId) || []).map(it => it.departmentId);
               if (l.includes(department.departmentId)) {
                 selectedDepartments = selectedDepartments.filter(it => it.departmentId !== o.departmentId);
               }
@@ -512,11 +554,13 @@ export function DeptSelect(props) {
   };
 
   const handleSearch = (evt: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+    versionRef.current++;
+    promiseRef.current?.abort?.();
     setState({ keywords: evt.target.value });
   };
 
-  const getIsIncludesByParent = department => {
-    let _list = getParentId(list, department.departmentId).map(o => o.departmentId);
+  const getIsIncludesByParent = (department: DepartmentChoice) => {
+    let _list = (getParentId(list, department.departmentId) || []).map(o => o.departmentId);
     let isIncludesByParent = selectedDepartment.filter(
       o =>
         (_list.includes(o.departmentId) || o.departmentId.indexOf('orgs_') > -1) &&
@@ -526,7 +570,7 @@ export function DeptSelect(props) {
     return !!isIncludesByParent.length;
   };
 
-  const getChecked = department => {
+  const getChecked = (department: DepartmentChoice) => {
     let selectedDepartmentData = selectedDepartment.filter(item => item.departmentId === department.departmentId);
     return !!selectedDepartmentData.length || (checkIncludeChilren && getIsIncludesByParent(department));
   };
@@ -558,20 +602,20 @@ export function DeptSelect(props) {
     });
   };
 
-  const onExpend = item => {
+  const onExpend = (item: DepartmentTree) => {
     if (!item.haveSubDepartment) return;
     fetchSubDepartment(item.departmentId);
   };
 
-  const toogleDepargmentSelect = item => {
+  const toogleDepargmentSelect = (item: DepartmentTree) => {
     if (item.disabled) return;
     toggle(item);
   };
 
-  const renderList = data => {
+  const renderList = (data: DepartmentTree[] | undefined): React.ReactNode => {
     return (
       <div className="QSelect-departmentList">
-        {data.map((item, index) => {
+        {(data || []).map((item, index) => {
           const checked = getChecked(item);
           return (
             <React.Fragment key={index}>
@@ -617,6 +661,13 @@ export function DeptSelect(props) {
   const renderContent = () => {
     if (loading && rootPageIndex <= 1) {
       return <LoadDiv />;
+    } else if (loadError) {
+      return (
+        <div role="alert">
+          {_l('加载失败，请重试')}
+          <button onClick={() => void fetchData()}>{_l('重试')}</button>
+        </div>
+      );
     } else if (list && list.length) {
       return (
         <React.Fragment>
@@ -657,7 +708,15 @@ export function DeptSelect(props) {
           onChange={handleSearch}
         />
         {keywords && (
-          <Icon icon="cancel" className="Font16 mLeft4 textTertiary hand" onClick={() => setState({ keywords: '' })} />
+          <Icon
+            icon="cancel"
+            className="Font16 mLeft4 textTertiary hand"
+            onClick={() => {
+              versionRef.current++;
+              promiseRef.current?.abort?.();
+              setState({ keywords: '' });
+            }}
+          />
         )}
         {departrangetype === '0' && (
           <Icon icon="department" className="Hand textSecondary hoverColorPrimary Font18" onClick={openDialog} />
@@ -670,9 +729,10 @@ export function DeptSelect(props) {
   );
 }
 
-export default function quickSelectDept(target, props: Record<string, any> = {}) {
+export default function quickSelectDept(target: unknown, props: QuickDepartmentOptions = {}): QuickDepartmentHandle {
   const panelWidth = 360;
-  const panelHeight = 41 + (props.minHeight || 358);
+  const minHeight = props.minHeight || 358;
+  const panelHeight = typeof minHeight === 'string' ? '41' + minHeight : 41 + minHeight;
   let targetLeft;
   let targetTop;
   let x = 0;
@@ -682,24 +742,35 @@ export default function quickSelectDept(target, props: Record<string, any> = {})
   const $con = document.createElement('div');
 
   function setPosition() {
-    if (_.isFunction(_.get(target, 'getBoundingClientRect'))) {
-      const rect = target.getBoundingClientRect();
-      height = rect.height;
-      targetLeft = rect.x;
-      targetTop = rect.y;
+    if (target && (typeof target === 'object' || typeof target === 'function')) {
+      const getRect: unknown = Reflect.get(target, 'getBoundingClientRect');
+      if (typeof getRect !== 'function') return;
+      const method: unknown = Reflect.get(target, 'getBoundingClientRect');
+      if (typeof method !== 'function') throw new TypeError('Invalid department popup rectangle method');
+      const rect: unknown = Reflect.apply(method, target, []);
+      if (!rect || (typeof rect !== 'object' && typeof rect !== 'function'))
+        throw new TypeError('Invalid department popup rectangle');
+      const rectHeight: unknown = Reflect.get(rect, 'height');
+      const rectX: unknown = Reflect.get(rect, 'x');
+      const rectY: unknown = Reflect.get(rect, 'y');
+      if (typeof rectHeight !== 'number' || typeof rectX !== 'number' || typeof rectY !== 'number')
+        throw new TypeError('Invalid department popup coordinates');
+      height = rectHeight;
+      targetLeft = rectX;
+      targetTop = rectY;
       x = targetLeft + (offset.left || 0);
       y = targetTop + height + (offset.top || 0);
       if (x + panelWidth > window.innerWidth) {
         x = targetLeft - 10 - panelWidth;
       }
 
-      if (y + panelHeight > window.innerHeight) {
-        y = targetTop - panelHeight - 4;
+      if (Number(typeof panelHeight === 'string' ? String(y) + panelHeight : y + panelHeight) > window.innerHeight) {
+        y = targetTop - Number(panelHeight) - 4;
         if (y < 0) {
           y = 0;
         }
 
-        if (targetTop < panelHeight) {
+        if (targetTop < Number(panelHeight)) {
           x = targetLeft - 10 - panelWidth;
           if (x < panelWidth) {
             x = targetLeft + 10 + 36;
@@ -710,7 +781,7 @@ export default function quickSelectDept(target, props: Record<string, any> = {})
       $con.style.position = 'absolute';
       $con.style.left = x + 'px';
       $con.style.top = y + 'px';
-      $con.style.zIndex = zIndex;
+      $con.style.zIndex = String(zIndex);
     }
   }
 

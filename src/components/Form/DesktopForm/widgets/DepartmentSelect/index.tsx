@@ -74,7 +74,7 @@ const DepartmentSelect = props => {
       appointedUserIds: _.get(deptRange, 'appointedAccountIds') || [],
       selectedDepartment: currentValueRef.current,
       selectFn: (departs, isCancel) => {
-        onSave(departs, isCancel, replaceItem);
+        onSave(departs, Boolean(isCancel), replaceItem);
         if (unique && destoryRef.current) {
           destoryRef.current();
           destoryRef.current = null;

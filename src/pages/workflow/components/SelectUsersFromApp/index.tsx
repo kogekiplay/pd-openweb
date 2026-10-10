@@ -1,6 +1,7 @@
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Dialog, Dropdown, LoadDiv, MultipleDropdown } from 'ming-ui';
+import type { DropdownKey, SelectionEvent } from 'ming-ui/components/MultipleDropdown/types';
 import ajaxRequest from 'src/api/appManagement';
 import { getTranslateInfo } from 'src/utils/app';
 import './index.less';
@@ -147,7 +148,9 @@ export default class SelectUsersFromApp extends Component<any, any> {
               multipleHideDropdownNav
               filter
               filterHint={_l('搜索')}
-              onChange={(_evt, ids) => this.setState({ selectRoleIds: multiChoose ? ids : [ids] })}
+              onChange={(_evt: SelectionEvent, ids: DropdownKey | DropdownKey[]) =>
+                this.setState({ selectRoleIds: multiChoose ? ids : [ids] })
+              }
             />
           </div>
         </div>

@@ -2,17 +2,34 @@ import React from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Checkbox, Dialog, FunctionWrap, LoadDiv, Radio } from 'ming-ui';
+import type { DialogInstance } from 'ming-ui/components/Dialog/Dialog';
 import NoData from 'ming-ui/functions/dialogSelectUser/GeneralSelect/NoData';
-import departmentController from 'src/api/department';
 import { checkPermission } from 'src/components/checkPermission';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import DepartmentList from '../dialogSelectUser/GeneralSelect/DepartmentList';
+import type { AbortableRequest } from '../dialogSelectUser/GeneralSelect/types';
+import {
+  departmentChoices,
+  departmentTree as departmentTreeFromResponse,
+  memberIds,
+  rangeId,
+  requestDepartments,
+  requestIds,
+  rootResult,
+} from './boundary';
+import type {
+  DepartmentChoice,
+  DepartmentDialogState,
+  DepartmentRequest,
+  DepartmentSelectorOptions,
+  DepartmentTree,
+} from './types';
 import './style.less';
 
-class DialogSelectDept extends React.Component<any, any> {
+class DialogSelectDept extends React.Component<DepartmentSelectorOptions, DepartmentDialogState> {
   declare search: _.DebouncedFunc<() => void>;
 
-  constructor(props) {
+  constructor(props: DepartmentSelectorOptions) {
     super(props);
 
     this.state = {
@@ -22,7 +39,7 @@ class DialogSelectDept extends React.Component<any, any> {
         ((md.global.Account.projects || []).filter(project => project.projectId === props.projectId).length &&
           md.global.Account.projects.filter(project => project.projectId === props.projectId)[0]) ||
         {},
-      selectedDepartment: props.selectedDepartment || [],
+      selectedDepartment: departmentChoices(props.selectedDepartment || []),
       pageSize: 100,
       departmentMoreIds: [],
       rootPageIndex: 1,
@@ -36,16 +53,25 @@ class DialogSelectDept extends React.Component<any, any> {
     this.search = _.debounce(this.fetchData.bind(this), 500);
     this.handleKeydown = this.handleKeydown.bind(this);
   }
-  promise = null;
+  promise: AbortableRequest<unknown> | null = null;
+  mounted = false;
+  requestVersion = 0;
+  readonly childRequests = new Set<AbortableRequest<unknown>>();
+  declare dialog: DialogInstance | null;
 
-  scroll = React.createRef();
+  scroll = React.createRef<HTMLDivElement>();
 
   override componentDidMount() {
+    this.mounted = true;
     document.body.addEventListener('keydown', this.handleKeydown);
     this.fetchData();
   }
 
   override componentWillUnmount() {
+    this.mounted = false;
+    this.requestVersion++;
+    this.promise?.abort?.();
+    this.childRequests.forEach(request => request.abort?.());
     if (this.search && this.search.cancel) {
       this.search.cancel();
     }
@@ -53,7 +79,7 @@ class DialogSelectDept extends React.Component<any, any> {
     document.body.removeEventListener('keydown', this.handleKeydown);
   }
 
-  handleKeydown(e) {
+  handleKeydown(e: KeyboardEvent) {
     if (!_.includes(['ArrowUp', 'ArrowDown', 'Enter'], e.key)) {
       return;
     }
@@ -62,13 +88,13 @@ class DialogSelectDept extends React.Component<any, any> {
     e.stopPropagation();
     e.preventDefault();
     if (e.key === 'Enter') {
-      const department = list[activeIndex];
+      const department = list?.[activeIndex];
 
       if (department) {
         this.toggle(department);
       }
     } else {
-      let newIndex;
+      let newIndex = activeIndex;
 
       if (e.key === 'ArrowUp') {
         newIndex = activeIndex - 1;
@@ -76,7 +102,7 @@ class DialogSelectDept extends React.Component<any, any> {
         newIndex = activeIndex + 1;
       }
 
-      const newActiveId = _.get(list, `${newIndex}.departmentId`);
+      const newActiveId = list?.[newIndex]?.departmentId;
 
       if (!_.isUndefined(newActiveId)) {
         this.setState({
@@ -85,6 +111,7 @@ class DialogSelectDept extends React.Component<any, any> {
         });
         const itemHeight = 40.39;
         const $scroll = this.scroll.current;
+        if (!$scroll) return;
         const itemTop = newIndex * itemHeight;
 
         if (newIndex > activeIndex) {
@@ -100,7 +127,7 @@ class DialogSelectDept extends React.Component<any, any> {
     }
   }
 
-  getDepartmentPath(dept) {
+  getDepartmentPath(dept: DepartmentChoice) {
     const pathData = this.getParentId(this.state.list, dept.departmentId) || [];
     return pathData
       .filter(item => item.departmentId !== dept.departmentId)
@@ -116,8 +143,10 @@ class DialogSelectDept extends React.Component<any, any> {
     const { checkIncludeChilren, allPath, onClose = () => {} } = this.props; //是否选择包含子集
 
     const checkedHasUser = await this.hasUser();
+    if (!this.mounted) return;
 
     const selectFn = this.props.selectFn;
+    if (!selectFn) throw new TypeError('Missing department selection callback');
     selectFn.call(
       null,
       _.map(
@@ -146,22 +175,28 @@ class DialogSelectDept extends React.Component<any, any> {
     onClose(true);
   }
 
-  async hasUser() {
+  async hasUser(): Promise<string[]> {
     const { selectedDepartment } = this.state;
     const { projectId, fetchCount } = this.props;
 
     if (!fetchCount) return [];
 
-    const { hasMemberIds = [], hasMemberIdsInTree = [] } = await departmentController.keepHasMemberIds({
+    const request = requestDepartments('keepHasMemberIds', {
       projectId,
       departmentIds: selectedDepartment.filter(l => !l.checkIncludeChilren).map(l => l.departmentId),
       departmentIdsInTree: selectedDepartment.filter(l => l.checkIncludeChilren).map(l => l.departmentId),
     });
 
-    return hasMemberIds.concat(hasMemberIdsInTree);
+    this.childRequests.add(request);
+    try {
+      const result: unknown = await request;
+      return memberIds(result);
+    } finally {
+      this.childRequests.delete(request);
+    }
   }
 
-  getDepartmentTree(data, parentId) {
+  getDepartmentTree(data: DepartmentTree[], parentId?: string): DepartmentTree[] {
     return data.map(item => {
       let { departmentId, departmentName, userCount, haveSubDepartment, subDepartments = [] } = item;
       return {
@@ -176,7 +211,7 @@ class DialogSelectDept extends React.Component<any, any> {
     });
   }
 
-  getSearchDepartmentTree(data) {
+  getSearchDepartmentTree(data: DepartmentTree[]): DepartmentTree[] {
     return data.map(item => {
       let { departmentId, departmentName, userCount, haveSubDepartment, subDepartments = [] } = item;
 
@@ -201,10 +236,13 @@ class DialogSelectDept extends React.Component<any, any> {
       fromAdmin = false,
       projectId,
       departrangetype = '0',
-      appointedDepartmentIds,
-      appointedUserIds,
+      appointedDepartmentIds = [],
+      appointedUserIds = [],
     } = this.props;
-    this.setState({ loading: true });
+    const version = ++this.requestVersion;
+    const keywords = this.state.keywords;
+    const rootPageIndex = this.state.rootPageIndex;
+    this.setState({ loading: true, loadError: false });
     const isAdmin = projectId && checkPermission(projectId, PERMISSION_ENUM.DEPARTMENT) && fromAdmin;
 
     if (this.promise && _.isFunction(this.promise.abort)) {
@@ -219,7 +257,7 @@ class DialogSelectDept extends React.Component<any, any> {
       getTree = this.getDepartmentTree.bind(this);
     }
 
-    let param = {
+    let param: DepartmentRequest = {
       projectId: this.props.projectId,
       returnCount: this.props.returnCount,
       [isAnalysis && departrangetype === '0' ? 'keyword' : 'keywords']: _.trim(this.state.keywords),
@@ -231,13 +269,18 @@ class DialogSelectDept extends React.Component<any, any> {
       param.pageSize = this.state.pageSize;
     }
 
-    if (departrangetype !== '0') {
-      param.appointedDepartmentIds = appointedDepartmentIds.filter(l => l);
-      param.appointedUserIds = appointedUserIds.filter(l => l);
-      param.rangeTypeId = [10, 20, 30][departrangetype - 1];
+    try {
+      if (departrangetype !== '0') {
+        param.appointedDepartmentIds = requestIds(appointedDepartmentIds);
+        param.appointedUserIds = requestIds(appointedUserIds);
+        param.rangeTypeId = rangeId(departrangetype);
+      }
+    } catch {
+      this.setState({ loading: false, rootLoading: false, loadError: true });
+      return Promise.resolve();
     }
 
-    this.promise = departmentController[
+    this.promise = requestDepartments(
       departrangetype !== '0'
         ? 'appointedDepartment'
         : isAnalysis && isAdmin
@@ -246,27 +289,31 @@ class DialogSelectDept extends React.Component<any, any> {
             ? 'pagedDepartmentTrees'
             : isAdmin
               ? 'searchProjectDepartment2'
-              : 'searchDepartment2'
-    ](param)
-      .then(data => {
-        let showProjectAll = true;
+              : 'searchDepartment2',
+      param,
+    );
+    return this.promise
+      .then((response: unknown) => {
+        if (!this.mounted || this.requestVersion !== version) return;
+        const { departments: data, showProjectAll } = rootResult(
+          response,
+          !isAdmin,
+          !!isAnalysis || departrangetype !== '0',
+        );
 
-        if (!isAdmin) {
-          showProjectAll = !data.item1;
-          data = data.item2;
-        }
-
+        if (usePageDepartment && rootPageIndex > 1 && !this.state.list)
+          throw new TypeError('Missing paged departments');
         let list = !usePageDepartment
           ? getTree(data)
-          : usePageDepartment && this.state.rootPageIndex <= 1
+          : usePageDepartment && rootPageIndex <= 1
             ? getTree(data)
-            : this.state.list.concat(getTree(data));
+            : (this.state.list || []).concat(getTree(data));
 
         if (departrangetype === '3') {
           list = list.map(l => ({ ...l, disabled: appointedDepartmentIds.includes(l.departmentId) }));
         }
 
-        let states = !this.state.keywords
+        let states = !keywords
           ? {
               allList: list,
             }
@@ -274,31 +321,35 @@ class DialogSelectDept extends React.Component<any, any> {
               rootPageIndex: 1,
               departmentMoreIds: [],
             };
-        this.setState({
+        this.setState(state => ({
+          ...state,
           list,
-          activeIds: !_.isEmpty(list) ? [list[0].departmentId] : [],
+          activeIds: list[0] ? [list[0].departmentId] : [],
           loading: false,
           rootLoading: false,
           rootPageAll: usePageDepartment && (list.length % this.state.pageSize > 0 || data.length <= 0),
           showProjectAll,
           ...states,
-        });
+        }));
       })
       .catch(() => {
+        if (!this.mounted || this.requestVersion !== version) return;
         this.setState({
           loading: false,
           rootLoading: false,
+          loadError: true,
         });
       });
   }
 
-  getDepartmentById(departmentTree, id) {
-    for (let i = 0; i < departmentTree.length; i++) {
-      let department = departmentTree[i];
+  getDepartmentById(departmentTree: DepartmentTree[] | undefined, id: string): DepartmentTree | undefined {
+    for (let i = 0; i < (departmentTree || []).length; i++) {
+      const department = departmentTree?.[i];
+      if (!department) continue;
 
       if (department.departmentId === id) {
         return department;
-      } else if (department.subDepartments.length) {
+      } else if (department.subDepartments?.length) {
         let oDepartment = this.getDepartmentById(department.subDepartments, id);
 
         if (oDepartment) {
@@ -306,11 +357,13 @@ class DialogSelectDept extends React.Component<any, any> {
         }
       }
     }
+    return undefined;
   }
 
-  fetchSubDepartment(id) {
-    let departmentTree = [...this.state.list];
+  fetchSubDepartment(id: string) {
+    let departmentTree = [...(this.state.list || [])];
     let department = this.getDepartmentById(departmentTree, id);
+    if (!department) throw new TypeError('Unknown department');
     const { subDepartments = [] } = department;
 
     if (!department.haveSubDepartment) {
@@ -323,7 +376,7 @@ class DialogSelectDept extends React.Component<any, any> {
       if (subDepartments.length && !isForMore) {
         department.open = true;
       } else {
-        let param = {
+        let param: DepartmentRequest = {
           projectId: this.props.projectId,
         };
         let moreData = this.state.departmentMoreIds.find(o => o.departmentId === department.departmentId);
@@ -344,26 +397,37 @@ class DialogSelectDept extends React.Component<any, any> {
                 returnCount: this.props.returnCount,
               };
 
-        departmentController[
+        const version = this.requestVersion;
+        const request = requestDepartments(
           this.props.isAnalysis && location.href.indexOf('admin') > -1
             ? 'pagedProjectDepartmentTrees'
             : this.props.isAnalysis
               ? 'pagedDepartmentTrees'
               : location.href.indexOf('admin') > -1
                 ? 'pagedSubDepartments'
-                : 'getProjectSubDepartmentByDepartmentId'
-        ](param).then(data => {
-          localStorage.removeItem('parentId');
-          department.subDepartments =
-            pageIndex > 1
-              ? department.subDepartments.concat(this.getDepartmentTree(data, department.departmentId))
-              : this.getDepartmentTree(data, department.departmentId);
-          department.open = true;
-          this.setMoreList(department.departmentId, data.length < this.state.pageSize);
-          this.setState({
-            list: departmentTree,
-          });
-        });
+                : 'getProjectSubDepartmentByDepartmentId',
+          param,
+        );
+        this.childRequests.add(request);
+        void request
+          .then((response: unknown) => {
+            if (!this.mounted || version !== this.requestVersion) return;
+            const data = departmentTreeFromResponse(response);
+            localStorage.removeItem('parentId');
+            department.subDepartments =
+              pageIndex > 1
+                ? (department.subDepartments || []).concat(this.getDepartmentTree(data, department.departmentId))
+                : this.getDepartmentTree(data, department.departmentId);
+            department.open = true;
+            this.setMoreList(department.departmentId, data.length < this.state.pageSize);
+            this.setState({
+              list: departmentTree,
+            });
+          })
+          .catch((error: unknown) => {
+            if (this.mounted && version === this.requestVersion) console.error(error);
+          })
+          .finally(() => this.childRequests.delete(request));
         return false;
       }
     } else {
@@ -376,7 +440,7 @@ class DialogSelectDept extends React.Component<any, any> {
     return undefined;
   }
 
-  setMoreList = (departmentId, isDelete: boolean) => {
+  setMoreList = (departmentId: string, isDelete: boolean) => {
     const { departmentMoreIds = [] } = this.state;
     let moreData = departmentMoreIds.find(o => o.departmentId === departmentId);
 
@@ -403,23 +467,24 @@ class DialogSelectDept extends React.Component<any, any> {
     }
   };
 
-  getParentId = (list, id) => {
-    for (let i in list) {
-      if (list[i].departmentId == id) {
-        return [list[i]];
+  getParentId = (list: DepartmentTree[] | undefined, id: string): DepartmentTree[] | undefined => {
+    for (const item of list || []) {
+      if (item.departmentId == id) {
+        return [item];
       }
 
-      if (list[i].subDepartments) {
-        let node = this.getParentId(list[i].subDepartments, id);
+      if (item.subDepartments) {
+        let node = this.getParentId(item.subDepartments, id);
 
         if (node !== undefined) {
-          return node.concat(list[i]);
+          return node.concat(item);
         }
       }
     }
+    return undefined;
   };
 
-  toggle(department, notIncludeChilren?) {
+  toggle(department: DepartmentChoice, notIncludeChilren?: unknown) {
     const { selectedDepartment } = this.state;
     const { checkIncludeChilren } = this.props; //是否选择包含子集
     const departmentIndex = _.findIndex(this.state.list, { departmentId: department.departmentId });
@@ -466,8 +531,7 @@ class DialogSelectDept extends React.Component<any, any> {
             selectedDepartments = [];
           } else {
             selectedDepartment.map(o => {
-              let l = this.getParentId(this.state.allList, o.departmentId) || [];
-              l = l.map(it => it.departmentId);
+              const l = (this.getParentId(this.state.allList, o.departmentId) || []).map(it => it.departmentId);
               if (l.includes(department.departmentId)) {
                 selectedDepartments = selectedDepartments.filter(it => it.departmentId !== o.departmentId);
               }
@@ -482,7 +546,7 @@ class DialogSelectDept extends React.Component<any, any> {
     }
   }
 
-  onChangeSelectedOnly(department) {
+  onChangeSelectedOnly(department: DepartmentChoice) {
     const { selectedDepartment } = this.state;
 
     if (selectedDepartment.filter(dept => dept.departmentId === department.departmentId).length) {
@@ -503,14 +567,21 @@ class DialogSelectDept extends React.Component<any, any> {
     }
   }
 
-  handleChange(evt) {
+  handleChange(evt: React.ChangeEvent<HTMLInputElement>) {
     const keywords = evt.target.value;
+    this.requestVersion++;
+    this.promise?.abort?.();
     this.setState({ keywords });
     this.search();
   }
 
   clearKeywords() {
-    this.setState({ keywords: '' });
+    this.requestVersion++;
+    this.promise?.abort?.();
+    this.search.cancel();
+    this.setState({ keywords: '', rootPageIndex: 1, rootPageAll: false, departmentMoreIds: [] }, () => {
+      void this.fetchData();
+    });
   }
 
   renderContent() {
@@ -518,6 +589,13 @@ class DialogSelectDept extends React.Component<any, any> {
 
     if (this.state.loading && this.state.rootPageIndex <= 1) {
       return <LoadDiv />;
+    } else if (this.state.loadError) {
+      return (
+        <div role="alert">
+          {_l('加载失败，请重试')}
+          <button onClick={() => void this.fetchData()}>{_l('重试')}</button>
+        </div>
+      );
     } else if (this.state.list && this.state.list.length) {
       const { selectedDepartment, list, keywords, departmentMoreIds } = this.state;
       const props = {
@@ -565,7 +643,7 @@ class DialogSelectDept extends React.Component<any, any> {
     }
   }
 
-  deleteFn(departmentId) {
+  deleteFn(departmentId: string) {
     this.setState({
       selectedDepartment: _.filter(this.state.selectedDepartment, dept => dept.departmentId !== departmentId),
     });
@@ -613,10 +691,16 @@ class DialogSelectDept extends React.Component<any, any> {
         }}
         onCancel={onClose}
         onOk={() => {
-          this.selectFn();
+          this.setState({ selectionError: false });
+          void this.selectFn().catch((error: unknown) => {
+            if (!this.mounted) return;
+            console.error(error);
+            this.setState({ selectionError: true });
+          });
         }}
       >
         <div>
+          {this.state.selectionError && <div role="alert">{_l('选择失败，请重试')}</div>}
           <div className="selectDepartmentContainer">
             <div className="selectDepartmentContainer_search">
               <span className="searchIcon icon-search" />
@@ -713,8 +797,8 @@ class DialogSelectDept extends React.Component<any, any> {
   }
 }
 
-export default function (opts) {
-  const DEFAULTS = {
+export default function dialogSelectDept(opts?: DepartmentSelectorOptions) {
+  const DEFAULTS: DepartmentSelectorOptions = {
     title: _l('选择部门'),
     dialogBoxID: 'dialogSelectDept',
     projectId: '',
@@ -731,7 +815,7 @@ export default function (opts) {
     selectFn: () => {},
   };
 
-  const options = _.extend({}, DEFAULTS, opts);
+  const options: DepartmentSelectorOptions = _.extend({}, DEFAULTS, opts);
 
   const listProps = {
     className: options.className,

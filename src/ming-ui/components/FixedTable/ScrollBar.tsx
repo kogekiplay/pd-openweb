@@ -1,9 +1,11 @@
+import type { CSSProperties } from 'react';
 import { ScrollView } from 'ming-ui';
+import type { ScrollBarProps } from './types';
 
-export default function ScrollBar(props) {
+export default function ScrollBar(props: ScrollBarProps) {
   const { type = 'y', barWidth, setRef, onScroll = () => {}, setScrollY = () => {}, setScrollX = () => {} } = props;
-  let style = { ...props.style };
-  let contentStyle = { ...props.contentStyle };
+  let style: CSSProperties = { ...props.style };
+  let contentStyle: CSSProperties = { ...props.contentStyle };
   style.position = 'absolute';
   style.overflow = 'hidden';
   if (type === 'y') {

@@ -221,7 +221,7 @@ export default class GroupsList extends Component<any, any> {
       unique: true,
       fromAdmin: true,
       selectFn: data => {
-        _this.updateDeptMappingGroup(record.groupId, true, data && !_.isEmpty(data) ? data[0].departmentId : '');
+        _this.updateDeptMappingGroup(record.groupId, true, data[0]?.departmentId || '');
       },
     });
   }
@@ -243,7 +243,7 @@ export default class GroupsList extends Component<any, any> {
       projectId: Config.projectId,
       fromAdmin: true,
       selectFn: function (data) {
-        _this.updateDeptMappingGroup(record.groupId, true, data && !_.isEmpty(data) ? data[0].departmentId : '');
+        _this.updateDeptMappingGroup(record.groupId, true, data[0]?.departmentId || '');
       },
     });
   }

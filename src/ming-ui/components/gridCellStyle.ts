@@ -9,9 +9,11 @@
 //
 // 与其改这些下游，不如在格子入口把坐标还原成 v1 的形状（left / top 数值 + 去掉
 // transform），这样上面几处一行都不用动。
+import type { CSSProperties } from 'react';
+
 const TRANSLATE = /translate\((-?[\d.]+)px,\s*(-?[\d.]+)px\)/;
 
-export function normalizeGridCellStyle(style) {
+export function normalizeGridCellStyle(style: CSSProperties): CSSProperties {
   if (!style || !style.transform) return style;
 
   // rtl 下 v2 给的是 right: 0 + 负向 translate。负号能被下面的正则匹配上，
@@ -31,7 +33,7 @@ export function normalizeGridCellStyle(style) {
 // v1 的容器没有这三条，v2 加了。maxHeight / maxWidth 的百分比对绝对定位元素同样生效，
 // 会把显式给了宽高的网格裁掉，所以必须解除；flexGrow 对绝对定位元素无效，但一并归零
 // 免得将来某个网格改成非绝对定位时莫名被拉伸。
-export const RESET_V2_CONTAINER_BOX = {
+export const RESET_V2_CONTAINER_BOX: CSSProperties = {
   maxHeight: 'none',
   maxWidth: 'none',
   flexGrow: 0,

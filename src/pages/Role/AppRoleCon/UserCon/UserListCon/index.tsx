@@ -170,7 +170,7 @@ export default class UserListCon extends React.Component<any, any> {
       users?: Array<{ accountId?: string | undefined }> | undefined;
       departments?: Array<{ departmentId?: string | undefined }> | undefined;
       jobs?: Array<{ jobId?: string | undefined }> | undefined;
-      departmentTrees?: Array<{ departmentId?: string | undefined }> | undefined;
+      departmentTrees?: Array<{ departmentId?: string | undefined }> | null | undefined;
       addOrgRoleList?: Array<{ organizeId?: string | undefined }> | undefined;
     },
   ) => {

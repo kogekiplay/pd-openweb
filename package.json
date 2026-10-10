@@ -162,6 +162,7 @@
     "@trivago/prettier-plugin-sort-imports": "6.0.2",
     "@twemoji/svg": "15.0.0",
     "@types/crypto-js": "^4.2.2",
+    "@types/hammerjs": "2.0.46",
     "@types/hoist-non-react-statics": "^3",
     "@types/hot-formula-parser": "^4.0.4",
     "@types/jquery": "^4.0.1",

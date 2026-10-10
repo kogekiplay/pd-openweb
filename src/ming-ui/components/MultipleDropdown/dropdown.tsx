@@ -3,16 +3,19 @@ import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
+import { isMultipleSelection, isSingleSelection } from './boundary';
 import MultipleDropdownMenu from './menu';
+import type { DropdownKey, DropdownState, MultipleDropdownProps, SelectionEvent, SingleSelectionLabel } from './types';
 import '../less/multidropdown.less';
 import '../less/multidropdownmenu.less';
 import '../less/multidropdownpills.less';
 
-class MultipleDropdown extends Component<any, any> {
+class MultipleDropdown extends Component<MultipleDropdownProps, DropdownState> {
   declare button: HTMLButtonElement | null;
   declare root: HTMLDivElement | null;
+  declare static defaultProp: Partial<MultipleDropdownProps>;
 
-  constructor(props) {
+  constructor(props: MultipleDropdownProps) {
     super(props);
 
     this.state = {
@@ -38,10 +41,14 @@ class MultipleDropdown extends Component<any, any> {
    * window click listener
    * 点击外部区域时，隐藏当前菜单
    */
-  clickListener = e => {
+  clickListener = (e: MouseEvent) => {
     const node = this.root;
 
-    if (node && (node === e.target || !node.contains(e.target)) && this.state.menuOpened) {
+    if (
+      node &&
+      (node === e.target || !(e.target instanceof Node) || !node.contains(e.target)) &&
+      this.state.menuOpened
+    ) {
       this.hideMenu();
     }
   };
@@ -84,7 +91,7 @@ class MultipleDropdown extends Component<any, any> {
    * label: label|label[] - 选中选项的 label（单级单选为一个值；多级数据单选为所有层级的 label；多选为多个 label）
    */
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: MultipleDropdownProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== this.state.value) {
         this.setState({
@@ -92,6 +99,7 @@ class MultipleDropdown extends Component<any, any> {
         });
       }
 
+      if (this.props.disabled && this.state.menuOpened) this.hideMenu();
       if (this.props.label !== this.state.label) {
         const label = this.props.label && this.props.label.length ? this.props.label.toString() : '请选择';
         this.setState({
@@ -107,9 +115,25 @@ class MultipleDropdown extends Component<any, any> {
    * value: value|value[] - 选中的值（单选为一个值；多选为多个值）
    * label: label|label[] - 选中选项的 label（单级单选为一个值；多级数据单选为所有层级的 label；多选为多个 label）
    */
-  onChange = (e, value, label, autoHide) => {
+  onChange = (
+    e: SelectionEvent,
+    value: DropdownKey | DropdownKey[],
+    label: SingleSelectionLabel,
+    autoHide: boolean,
+  ) => {
+    const props = this.props;
+    if (props.disabled) return;
+    const notify = (callback: 'onClick' | 'onChange') => {
+      if (isMultipleSelection(props)) {
+        if (!Array.isArray(value) || !Array.isArray(label)) throw new TypeError('Invalid multiple selection');
+        props[callback]?.(e, value, label);
+      } else if (isSingleSelection(props)) {
+        if (Array.isArray(value)) throw new TypeError('Invalid single selection');
+        props[callback]?.(e, value, label);
+      }
+    };
     if (this.props.onClick) {
-      this.props.onClick(e, value, label);
+      notify('onClick');
     }
 
     if (value !== this.state.value) {
@@ -118,7 +142,7 @@ class MultipleDropdown extends Component<any, any> {
       });
 
       if (this.props.onChange) {
-        this.props.onChange(e, value, label);
+        notify('onChange');
       }
     }
 
@@ -131,6 +155,7 @@ class MultipleDropdown extends Component<any, any> {
    * 显示菜单
    */
   showMenu() {
+    if (this.props.disabled) return;
     this.setState({
       menuOpened: true,
     });
@@ -149,6 +174,7 @@ class MultipleDropdown extends Component<any, any> {
    * 切换菜单显示/隐藏
    */
   toggleMenuOpened = () => {
+    if (this.props.disabled) return;
     this.setState({
       menuOpened: !this.state.menuOpened,
     });
@@ -184,6 +210,7 @@ class MultipleDropdown extends Component<any, any> {
             this.button = button;
           }}
           type="button"
+          disabled={this.props.disabled}
           className="dropdown-btn"
           onClick={this.toggleMenuOpened}
         >
@@ -192,6 +219,7 @@ class MultipleDropdown extends Component<any, any> {
         </button>
         <MultipleDropdownMenu
           value={this.state.value}
+          disabled={this.props.disabled}
           openMenu={this.state.menuOpened}
           maxSelectNum={this.props.maxSelectNum}
           options={this.props.options}

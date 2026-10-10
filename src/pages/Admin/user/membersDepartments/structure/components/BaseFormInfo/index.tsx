@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Dialog, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { quickSelectDept, quickSelectRole } from 'ming-ui/functions';
+import type { DepartmentChoice } from 'ming-ui/functions/dialogSelectDept/types';
 import departmentController from 'src/api/department';
 import jobAjax from 'src/api/job';
 import workSiteController from 'src/api/workSite';
@@ -180,15 +181,14 @@ export default class BaseFormInfo extends Component<any, any> {
           : []
         : this.state.departmentInfos,
       showCreateBtn: false,
-      selectFn: (departments, isCancel = false) => {
+      selectFn: (departments, isCancel: boolean | DepartmentChoice[] | null | undefined = false) => {
+        const first = departments[0];
         if (useMultiJobs) {
-          if (isCancel || !departments.length) return;
+          if (isCancel || !first) return;
 
           if (
             departmentJobInfos.filter(
-              item =>
-                item.departmentId === departments[0].departmentId &&
-                departments[0].departmentId !== selectedDepartment.departmentId,
+              item => item.departmentId === first.departmentId && first.departmentId !== selectedDepartment.departmentId,
             ).length
           ) {
             alert(_l('已存在该部门，请勿重复选择'), 3);
@@ -196,16 +196,13 @@ export default class BaseFormInfo extends Component<any, any> {
           }
 
           const newData = departmentJobInfos.map(item => {
-            return item.key === selectedDepartment.key
-              ? { ...item, ...departments[0], key: departments[0].departmentId }
-              : item;
+            return item.key === selectedDepartment.key ? { ...item, ...first, key: first.departmentId } : item;
           });
           this.setState({ departmentJobInfos: newData });
         } else {
           if (isCancel) {
-            const newDepartmentInfos = this.state.departmentInfos.filter(
-              l => l.departmentId !== departments[0].departmentId,
-            );
+            if (!first) return;
+            const newDepartmentInfos = this.state.departmentInfos.filter(l => l.departmentId !== first.departmentId);
             this.setState({ departmentInfos: newDepartmentInfos });
             return;
           }

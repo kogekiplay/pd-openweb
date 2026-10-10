@@ -2,11 +2,24 @@ import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
+import { dropdownOptions, emptyCheckedItems, hasItems, hasValue, isChoiceOption } from './boundary';
+import type {
+  CheckedItems,
+  ChoiceOption,
+  DropdownKey,
+  DropdownLabel,
+  DropdownMenuProps,
+  DropdownOption,
+  MenuState,
+  ValuedOption,
+} from './types';
 
-class MultipleDropdownMenu extends Component<any, any> {
+class MultipleDropdownMenu extends Component<DropdownMenuProps, MenuState> {
   declare search: HTMLInputElement | null | undefined;
+  declare focusTimer: ReturnType<typeof setTimeout> | undefined;
+  declare static defaultProp: Partial<DropdownMenuProps>;
 
-  constructor(props) {
+  constructor(props: DropdownMenuProps) {
     super(props);
 
     this.state = {
@@ -17,7 +30,7 @@ class MultipleDropdownMenu extends Component<any, any> {
       /**
        * 当前层级的选项
        */
-      options: this.props.options || [],
+      options: dropdownOptions(this.props.options || []),
       /**
        * 筛选出的选项
        */
@@ -29,7 +42,7 @@ class MultipleDropdownMenu extends Component<any, any> {
       /**
        * 已选中的选项
        */
-      checkedItems: {},
+      checkedItems: emptyCheckedItems(),
       /**
        * 筛选文本
        */
@@ -40,7 +53,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 状态初始化
    */
-  init = props => {
+  init = (props: DropdownMenuProps) => {
     this.initValue(props);
     this.initOptions(props);
   };
@@ -48,21 +61,28 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 获取 value 和 checkedItems
    */
-  getValue = props => {
+  getValue = (props: DropdownMenuProps) => {
     const value = props.value || null;
-    const checkedItems = {};
-    let values = [];
+    const checkedItems: CheckedItems = emptyCheckedItems();
+    let values: Array<DropdownKey | DropdownKey[] | null | undefined> = [];
 
     if (!props.multipleSelect) {
       values.push(value);
     } else {
-      values = value;
+      if (Array.isArray(value)) values = value;
+      else if (value === null) values = [];
+      else throw new TypeError('Multiple selection needs an ID array');
     }
 
     if (values && values.length) {
       for (const i in values) {
         if (values[i]) {
-          checkedItems[values[i]] = this.getItem(props.options, values[i]);
+          const id = values[i];
+          const dictionaryKey = Array.isArray(id) ? id.toString() : id;
+          if (dictionaryKey !== null && dictionaryKey !== undefined)
+            checkedItems[dictionaryKey] = Array.isArray(id)
+              ? null
+              : this.getItem(dropdownOptions(props.options || []), dictionaryKey);
         }
       }
     }
@@ -76,7 +96,7 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 初始化 value 和 checkedItems
    */
-  initValue = props => {
+  initValue = (props: DropdownMenuProps) => {
     const { value, checkedItems } = this.getValue(props);
 
     this.setState({
@@ -88,13 +108,13 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 初始化 options 和 list
    */
-  initOptions = props => {
+  initOptions = (props: DropdownMenuProps) => {
     const { value, checkedItems } = this.getValue(props);
 
     this.setState({
       value,
-      options: props.options || [],
-      availOptions: props.options || [],
+      options: dropdownOptions(props.options || []),
+      availOptions: dropdownOptions(props.options || []),
       list: [],
       checkedItems,
       filter: '',
@@ -109,7 +129,7 @@ class MultipleDropdownMenu extends Component<any, any> {
    * 递归查找指定选项
    */
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DropdownMenuProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         this.initValue(this.props);
@@ -119,23 +139,29 @@ class MultipleDropdownMenu extends Component<any, any> {
         this.initOptions(this.props);
       }
 
-      if (this.props.openMenu && this.props.filter && !prevProps.openMenu) {
-        setTimeout(() => {
-          this.search.focus();
+      if (!this.props.openMenu || !this.props.filter || this.props.disabled) clearTimeout(this.focusTimer);
+      if (this.props.openMenu && this.props.filter && !this.props.disabled && !prevProps.openMenu) {
+        clearTimeout(this.focusTimer);
+        this.focusTimer = setTimeout(() => {
+          if (this.props.openMenu && !this.props.disabled) this.search?.focus();
         }, 100);
       }
     }
   }
 
+  override componentWillUnmount() {
+    clearTimeout(this.focusTimer);
+  }
+
   /**
    * 递归查找指定选项
    */
-  getItem(items, value) {
+  getItem(items: DropdownOption[], value: DropdownKey): ValuedOption | null {
     for (const i in items) {
       if (items[i]) {
         const item = items[i];
 
-        if (item.value === value) {
+        if (hasValue(item) && item.value === value) {
           return item;
         }
 
@@ -155,18 +181,18 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 展开显示子选项
    */
-  showSubItems = (e: React.MouseEvent<HTMLElement, MouseEvent>, item) => {
+  showSubItems = (e: React.MouseEvent<HTMLElement, MouseEvent>, item: ChoiceOption) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (item.disabled) {
+    if (this.props.disabled || item.disabled) {
       return;
     }
 
     const list = this.state.list;
     let options = this.state.options;
 
-    if (this.props.multipleLevel && item.items && item.items.length) {
+    if (this.props.multipleLevel && hasItems(item)) {
       list.push(item);
       options = item.items;
     }
@@ -185,11 +211,11 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 点击选项
    */
-  itemOnClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, item) => {
+  itemOnClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, item: ChoiceOption) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (item.disabled) {
+    if (this.props.disabled || item.disabled) {
       return;
     }
 
@@ -199,7 +225,7 @@ class MultipleDropdownMenu extends Component<any, any> {
     let autoHide = true;
 
     if (!this.props.multipleSelect) {
-      let label = item.label;
+      let label: DropdownLabel | DropdownLabel[] = item.label;
 
       if (this.props.multipleLevel) {
         label = this.state.list.map(_item => {
@@ -216,7 +242,7 @@ class MultipleDropdownMenu extends Component<any, any> {
     } else {
       autoHide = false;
 
-      const checkedItems = {};
+      const checkedItems: CheckedItems = emptyCheckedItems();
 
       for (const key in this.state.checkedItems) {
         if (this.state.checkedItems[key]) {
@@ -231,14 +257,16 @@ class MultipleDropdownMenu extends Component<any, any> {
         checkedItems[item.value] = item;
       }
 
-      const values = [];
-      const labels = [];
+      const values: DropdownKey[] = [];
+      const labels: DropdownLabel[] = [];
 
       for (const key in checkedItems) {
         if (checkedItems[key]) {
           const checkedItem = checkedItems[key];
-          values.push(checkedItem.value);
-          labels.push(checkedItem.label);
+          if (checkedItem) {
+            values.push(checkedItem.value);
+            labels.push(checkedItem.label);
+          }
         }
       }
 
@@ -260,11 +288,12 @@ class MultipleDropdownMenu extends Component<any, any> {
   /**
    * 取消选中制定项目
    */
-  unCheckItem = (e: React.MouseEvent<HTMLElement, MouseEvent>, item) => {
+  unCheckItem = (e: React.MouseEvent<HTMLElement, MouseEvent>, item: ValuedOption) => {
     e.preventDefault();
     e.stopPropagation();
+    if (this.props.disabled) return;
 
-    const checkedItems = {};
+    const checkedItems: CheckedItems = emptyCheckedItems();
 
     for (const key in this.state.checkedItems) {
       if (this.state.checkedItems[key]) {
@@ -276,14 +305,16 @@ class MultipleDropdownMenu extends Component<any, any> {
       }
     }
 
-    const values = [];
-    const labels = [];
+    const values: DropdownKey[] = [];
+    const labels: DropdownLabel[] = [];
 
     for (const key in checkedItems) {
       if (checkedItems[key]) {
         const checkedItem = checkedItems[key];
-        values.push(checkedItem.value);
-        labels.push(checkedItem.label);
+        if (checkedItem) {
+          values.push(checkedItem.value);
+          labels.push(checkedItem.label);
+        }
       }
     }
 
@@ -301,10 +332,11 @@ class MultipleDropdownMenu extends Component<any, any> {
     e.preventDefault();
     e.stopPropagation();
 
+    if (this.props.disabled) return;
     this.props.onChange(e, [], [], false);
 
     this.setState({
-      checkedItems: {},
+      checkedItems: emptyCheckedItems(),
     });
   };
 
@@ -315,15 +347,16 @@ class MultipleDropdownMenu extends Component<any, any> {
     e.preventDefault();
     e.stopPropagation();
 
+    if (this.props.disabled) return;
     const list = this.state.list;
     list.pop();
 
-    let options = [];
+    let options: DropdownOption[] = [];
 
     if (list.length > 0) {
-      options = list[list.length - 1].items;
+      options = list[list.length - 1]?.items || [];
     } else {
-      options = this.props.options;
+      options = dropdownOptions(this.props.options || []);
     }
 
     this.setState({
@@ -354,7 +387,7 @@ class MultipleDropdownMenu extends Component<any, any> {
    * 筛选选项
    */
   filterList = () => {
-    const list = [];
+    const list: DropdownOption[] = [];
 
     this.state.options.map(item => {
       if (item.type) {
@@ -363,7 +396,10 @@ class MultipleDropdownMenu extends Component<any, any> {
 
       if (
         item.value &&
-        (item.label.indexOf(this.state.filter) >= 0 || item.label.toLowerCase().indexOf(this.state.filter) >= 0)
+        (this.filterLabel(item).indexOf(this.state.filter || '') >= 0 ||
+          this.filterLabel(item)
+            .toLowerCase()
+            .indexOf(this.state.filter || '') >= 0)
       ) {
         list.push(item);
       }
@@ -376,6 +412,11 @@ class MultipleDropdownMenu extends Component<any, any> {
     });
   };
 
+  filterLabel(item: DropdownOption): string {
+    if (typeof item.label !== 'string') throw new TypeError('A filtered option needs a string label');
+    return item.label;
+  }
+
   override render() {
     /**
      * 清空按钮
@@ -387,12 +428,11 @@ class MultipleDropdownMenu extends Component<any, any> {
     let pills: React.JSX.Element | null = null;
 
     if (this.props.multipleLevel && this.props.multipleSelect) {
-      const pillItems = [];
+      const pillItems: React.JSX.Element[] = [];
 
       for (const key in this.state.checkedItems) {
-        if (this.state.checkedItems[key]) {
-          const item = this.state.checkedItems[key];
-
+        const item = this.state.checkedItems[key];
+        if (item) {
           pillItems.push(
             <li key={item.value}>
               <div className="label">
@@ -507,7 +547,7 @@ class MultipleDropdownMenu extends Component<any, any> {
       } else if (item.type && item.type === 'divider') {
         // 分隔线
         return <li className="divider" key={`divider-${i}`} />;
-      } else {
+      } else if (isChoiceOption(item)) {
         // 普通选项
         const classList = [];
 
@@ -519,7 +559,7 @@ class MultipleDropdownMenu extends Component<any, any> {
           classList.push('checked');
         }
 
-        if (item.disabled) {
+        if (this.props.disabled || item.disabled) {
           // 已禁用
           classList.push('disabled');
         }
@@ -583,6 +623,7 @@ class MultipleDropdownMenu extends Component<any, any> {
           </li>
         );
       }
+      return null;
     });
 
     if (!this.props.options || !this.props.options.length) {

@@ -65,7 +65,8 @@ function isDepartment(value: unknown): value is SelectDepartment {
     optionalNumber(data['userCount']) &&
     optionalBoolean(data['haveSubDepartment']) &&
     optionalBoolean(data['disabled']) &&
-    optionalBoolean(data['open']) &&
+    (optionalBoolean(data['open']) ||
+      (typeof data['open'] === 'number' && Number.isInteger(data['open']) && data['open'] >= 0)) &&
     optionalBoolean(data['checkIncludeChilren']) &&
     optionalString(data['parentId']) &&
     (data['subDepartments'] === undefined ||

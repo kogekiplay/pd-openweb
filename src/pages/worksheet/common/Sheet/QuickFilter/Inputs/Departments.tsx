@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { arrayOf, func, string } from 'prop-types';
 import styled from 'styled-components';
 import { quickSelectDept } from 'ming-ui/functions';
+import type { DepartmentChoice } from 'ming-ui/functions/dialogSelectDept/types';
 import { BaseSelectedItem } from './Styles';
 
 const Con = styled.div`
@@ -77,8 +78,9 @@ export default function Departments(props) {
           showCurrentUserDept: true,
           selectedDepartment: values,
           onClose: () => setActive(false),
-          selectFn: (data, isCancel = false) => {
-            if (!data.length) {
+          selectFn: (data, isCancel: boolean | DepartmentChoice[] | null | undefined = false) => {
+            const first = data[0];
+            if (!first) {
               return;
             }
 
@@ -86,7 +88,7 @@ export default function Departments(props) {
             onChange({
               values: isMultiple
                 ? isCancel
-                  ? valueRef.current.filter(l => l.departmentId !== data[0].departmentId)
+                  ? valueRef.current.filter(l => l.departmentId !== first.departmentId)
                   : _.uniqBy([...valueRef.current, ...data], 'departmentId')
                 : data,
             });

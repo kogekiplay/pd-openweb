@@ -217,7 +217,7 @@ export default function (props) {
       key: JSON.stringify(setting),
       showCreateBtn: false,
       selectedDepartment: setting,
-      selectFn: onSaveAddDep,
+      selectFn: (data, isCancel) => onSaveAddDep(data, Boolean(isCancel)),
     });
   };
 

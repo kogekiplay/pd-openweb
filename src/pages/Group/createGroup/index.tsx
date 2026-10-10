@@ -6,6 +6,7 @@ import { Avatar, Dialog, Dropdown, Icon, Input, Radio, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import { dialogSelectDept } from 'ming-ui/functions';
+import type { DepartmentChoice } from 'ming-ui/functions/dialogSelectDept/types';
 import groupAjax from 'src/api/group';
 import { checkPermission } from 'src/components/checkPermission';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
@@ -55,6 +56,7 @@ const GROUP_TYPES = [
 function CreateGroup(props) {
   const { visible, projectId, onClose, callback } = props;
   const currentProject = projectId ? { projectId } : getCurrentProject(localStorage.getItem('currentProjectId'));
+  const initialDepartment: { department: DepartmentChoice | undefined } = { department: undefined };
   const [
     {
       type,
@@ -81,7 +83,7 @@ function CreateGroup(props) {
     isOfficial: false,
     hideOfficial: false,
     disabledCreate: false,
-    department: undefined,
+    ...initialDepartment,
     avatarName: undefined,
     createLoading: false,
   });

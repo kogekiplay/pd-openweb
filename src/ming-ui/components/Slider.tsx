@@ -1,21 +1,95 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type {
+  ChangeEvent,
+  CSSProperties,
+  FocusEvent,
+  MouseEvent as ReactMouseEvent,
+  ReactNode,
+  TouchEvent as ReactTouchEvent,
+} from 'react';
 import _ from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
-import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { TooltipProps } from 'ming-ui/antd-components';
 import { browserIsMobile } from 'src/utils/common';
 import { formatNumberFromInput } from 'src/utils/control';
+import styled from 'src/utils/typedStyled';
+
+export interface SliderScale {
+  key?: string | number | undefined;
+  value?: ReactNode;
+}
+export interface SliderColor {
+  type?: number | undefined;
+  color?: string | undefined;
+  colors?: ReadonlyArray<{ key?: string | number | undefined; value?: string | undefined }> | undefined;
+}
+export interface SliderCellHandle {
+  handleFocus(): void;
+  handleBlur(): void;
+}
+export interface SliderProps {
+  className?: string | undefined;
+  style?: CSSProperties | undefined;
+  readonly?: boolean | undefined;
+  disabled?: boolean | undefined;
+  from?: string | undefined;
+  value?: number | string | boolean | null | undefined;
+  min?: number | undefined;
+  max?: number | undefined;
+  step?: number | undefined;
+  itemcolor?: SliderColor | string | undefined;
+  itemnames?: ReadonlyArray<SliderScale> | '' | null | undefined;
+  numStyle?: CSSProperties | undefined;
+  barStyle?: CSSProperties | undefined;
+  valueTextStyle?: CSSProperties | undefined;
+  showScale?: boolean | undefined;
+  showScaleText?: boolean | undefined;
+  showTip?: boolean | undefined;
+  showInput?: boolean | undefined;
+  showNumber?: boolean | undefined;
+  showDrag?: boolean | undefined;
+  showAsPercent?: boolean | undefined;
+  tipDirection?: TooltipProps['placement'];
+  triggerWhenMove?: boolean | undefined;
+  /** Drag/click preserve formatted strings, input/clamping may produce numbers, and clearing produces ''. */
+  onChange?: ((value: number | string) => void) | undefined;
+  liveUpdate?: boolean | undefined;
+  inputClassName?: string | undefined;
+  registerCell?: ((handle: SliderCellHandle) => void) | undefined;
+}
+
+type PointerEvent = MouseEvent | TouchEvent | ReactMouseEvent<HTMLSpanElement> | ReactTouchEvent<HTMLSpanElement>;
+interface DragCache {
+  active?: boolean | undefined;
+  conWidth?: number | undefined;
+  clientX?: number | undefined;
+  valuePercent?: number | undefined;
+  newPercent?: number | undefined;
+  lastClientX?: number | undefined;
+}
+interface ScalePointValue {
+  percent: number;
+  value: number;
+  normalizedValue: number;
+  text: ReactNode;
+}
+interface ScaleTextValue {
+  percent?: number | undefined;
+  normalizedValue?: number | undefined;
+  text: ReactNode;
+}
 
 const isMobile = browserIsMobile();
 
-const getClientX = e => {
-  return !isMobile ? e.clientX : e.touches[0].clientX;
+const getClientX = (e: PointerEvent): number | undefined => {
+  return !isMobile ? ('clientX' in e ? e.clientX : undefined) : 'touches' in e ? e.touches[0]?.clientX : undefined;
 };
 
 const mouseMoveEventName = !isMobile ? 'mousemove' : 'touchmove';
 const mouseUpEventName = !isMobile ? 'mouseup' : 'touchend';
 
-const Con = styled.div`
+const Con = styled.div<{ hasScale?: number | boolean | '' | null | undefined; isMobile: boolean }>`
   width: 100%;
   display: flex;
   align-items: center;
@@ -25,7 +99,7 @@ const Con = styled.div`
   ${({ hasScale }) => (hasScale ? 'padding-bottom: 44px;' : '')}
   ${({ isMobile }) => (isMobile ? 'padding-left: 0px;' : '')}
 `;
-const Bar = styled.div`
+const Bar = styled.div<{ disabled?: boolean | undefined }>`
   flex: 1;
   min-width: 20px;
   position: relative;
@@ -44,7 +118,7 @@ const Content = styled.div`
   border-radius: var(--radius-sm);
 `;
 
-const Drag = styled.span`
+const Drag = styled.span<{ color?: string | undefined }>`
   cursor: pointer;
   position: absolute;
   background: var(--color-text-inverse);
@@ -70,7 +144,7 @@ const ScalePointClick = styled.span`
   font-size: 0px;
 `;
 
-const ScalePoint = styled.span`
+const ScalePoint = styled.span<{ value: number; color?: string | undefined; percent: number }>`
   background: var(--color-background-primary);
   display: inline-block;
   width: 8px;
@@ -120,7 +194,7 @@ const InputCon = styled.div`
   }
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ showAsPercent?: boolean | undefined; active?: boolean | undefined }>`
   border: 1px solid transparent;
   width: 68px;
   height: 36px;
@@ -143,22 +217,27 @@ const Input = styled.input`
         background: var(--color-background-disabled);
       }`}
 `;
-const NumberValue = styled.span`
+const NumberValue = styled.span<{ disabled?: boolean | undefined; isMobile: boolean }>`
   margin-left: var(--space-3);
   ${({ disabled }) => (disabled ? 'color: rgba(0,0,0,.3);' : '')}
 `;
 
-function getColor(config, value: number | undefined, showAsPercent) {
+function getColor(
+  config: SliderColor | string,
+  value: number | string | undefined,
+  showAsPercent: boolean | undefined,
+) {
+  if (typeof config === 'string') return 'var(--color-primary)';
   if (config.type === 1) {
     return config.color;
   } else if (config.type === 2) {
-    let result = 'var(--color-primary)';
-    const colors = config.colors
-      .map(c => ({ value: Number(c.key * (showAsPercent ? 100 : 1)), color: c.value }))
+    let result: string | undefined = 'var(--color-primary)';
+    const colors = (config.colors || [])
+      .map(c => ({ value: Number(Number(c.key) * (showAsPercent ? 100 : 1)), color: c.value }))
       .filter(c => _.isNumber(c.value) && !_.isNaN(value))
       .sort((a, b) => b.value - a.value);
     colors.forEach(c => {
-      if (value <= c.value) {
+      if (value !== undefined && Number(value) <= c.value) {
         result = c.color;
       }
     });
@@ -168,7 +247,7 @@ function getColor(config, value: number | undefined, showAsPercent) {
   }
 }
 
-function getDefaultValue(value) {
+function getDefaultValue(value: SliderProps['value']): number | undefined {
   if (_.isUndefined(value) || _.isNull(value) || String(value).trim() === '' || _.isNaN(Number(value))) {
     return undefined;
   } else {
@@ -176,7 +255,9 @@ function getDefaultValue(value) {
   }
 }
 
-function formatByStep(num, step, min = 0) {
+function formatByStep(num: number, step: number, min?: number): string;
+function formatByStep(num: undefined, step: number, min?: number): undefined;
+function formatByStep(num: number | undefined, step: number, min = 0): string | undefined {
   if (_.isUndefined(num)) {
     return undefined;
   }
@@ -189,23 +270,23 @@ function formatByStep(num, step, min = 0) {
   return (Math.floor(num / step) * step + min).toFixed(((String(step).match(/\.(\d+)/) || '')[1] || '').length);
 }
 
-function fixedByStep(num: number, step) {
+function fixedByStep(num: number, step: number) {
   return num.toFixed(((String(step).match(/\.(\d+)/) || '')[1] || '').length);
 }
 
-function formatByMinMax(value, min, max) {
-  if (value < min) {
+function formatByMinMax(value: number | string, min: number, max: number): number | string {
+  if (Number(value) < min) {
     value = min;
   }
 
-  if (value > max) {
+  if (Number(value) > max) {
     value = max;
   }
 
   return value;
 }
 
-function getNumberMaxWidth(max, step = 1, isPercent) {
+function getNumberMaxWidth(max: number, step = 1, isPercent: boolean | undefined) {
   let count = String(max).length;
 
   if (/\./.test(String(step))) {
@@ -219,7 +300,7 @@ function getNumberMaxWidth(max, step = 1, isPercent) {
   return 9 * count + 5;
 }
 
-export default function Slider(props) {
+export default function Slider(props: SliderProps) {
   const {
     className,
     style,
@@ -254,23 +335,25 @@ export default function Slider(props) {
 
   const numberWidth = getNumberMaxWidth(max, step, showAsPercent);
   const disabled = props.disabled || readonly;
-  const cache = useRef({});
+  const cache = useRef<DragCache>({});
+  const dragEndTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const dragBodyStyles = useRef<{ userSelect: string; overflow: string } | undefined>(undefined);
   const barRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<HTMLSpanElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [tempValue, setTempValue] = useState();
+  const [tempValue, setTempValue] = useState<number | string | undefined>();
   const [numberIsFocusing, setNumberIsFocusing] = useState<boolean | undefined>();
   const [isDragging, setIsDragging] = useState<boolean | undefined>();
-  const [value, setValue] = useState(
-    getDefaultValue(showAsPercent ? fixedByStep(props.value * 100, step) : props.value),
+  const [value, setValue] = useState<number | string | undefined>(
+    getDefaultValue(showAsPercent ? fixedByStep(Number(props.value) * 100, step) : props.value),
   );
   // 这个 state 除了数字还会存 '' 和 formatNumberFromInput 的字符串结果
   const [valueForInput, setValueForInput] = useState<number | string | undefined>(value);
   const isMobile = browserIsMobile();
   const inputAttribute = isMobile ? (window.isIphone ? { type: 'text' } : { inputmode: 'decimal' }) : {};
   const color = getColor(itemcolor, value, showAsPercent);
-  const scalePoints = useMemo(
+  const scalePoints = useMemo<ScalePointValue[]>(
     () =>
       (itemnames || [])
         .map(c => {
@@ -286,11 +369,13 @@ export default function Slider(props) {
         .filter(c => _.isNumber(c.value) && !_.isNaN(c.value) && !_.isUndefined(c.text)),
     [itemnames, max, min, showAsPercent],
   );
-  let data = scalePoints.filter(scale => scale.normalizedValue >= min && scale.normalizedValue <= max);
+  let data: ScaleTextValue[] = scalePoints.filter(
+    scale => scale.normalizedValue >= min && scale.normalizedValue <= max,
+  );
   const hasMin = _.findIndex(data, v => v.normalizedValue === min) !== -1;
-  data = hasMin ? data : [{ text: '' }].concat(data);
+  data = hasMin ? data : [{ text: '' }, ...data];
 
-  let valuePercent = Math.ceil(((_.isUndefined(value) ? 0 : value - min) / (max - min)) * 100);
+  let valuePercent = Math.ceil(((_.isUndefined(value) ? 0 : Number(value) - min) / (max - min)) * 100);
 
   if (valuePercent > 100) {
     valuePercent = 100;
@@ -300,27 +385,29 @@ export default function Slider(props) {
     valuePercent = 0;
   }
 
-  function updateValue(v, update, updateInput?: boolean) {
+  function updateValue(v: number | string, update: boolean, updateInput?: boolean) {
     v = formatByMinMax(v, min, max);
 
     setValue(v);
     if (update) {
-      onChange(showAsPercent ? v / 100 : v);
+      onChange(showAsPercent ? Number(v) / 100 : v);
     }
 
-    setTempValue(showAsPercent ? v / 100 : v);
+    setTempValue(showAsPercent ? Number(v) / 100 : v);
     if (updateInput) {
       setValueForInput(v);
     }
   }
 
-  const handleMouseMove = useCallback(e => {
+  const handleMouseMove = useCallback((e: MouseEvent | TouchEvent) => {
     if (!cache.current.active) {
       return;
     }
 
-    let newPercent =
-      cache.current.valuePercent + ((getClientX(e) - cache.current.clientX) / cache.current.conWidth) * 100;
+    const clientX = getClientX(e);
+    const { valuePercent, clientX: startX, conWidth } = cache.current;
+    if (clientX === undefined || valuePercent === undefined || startX === undefined || conWidth === undefined) return;
+    let newPercent = valuePercent + ((clientX - startX) / conWidth) * 100;
 
     if (newPercent > 100) {
       newPercent = 100;
@@ -330,7 +417,7 @@ export default function Slider(props) {
       newPercent = 0;
     }
 
-    cache.current.lastClientX = getClientX(e);
+    cache.current.lastClientX = clientX;
     cache.current.newPercent = newPercent;
     let newValue = min + ((max - min) * newPercent) / 100;
     updateValue(formatByStep(newValue, step, min), false, true);
@@ -341,13 +428,14 @@ export default function Slider(props) {
     }
 
     cache.current.active = false;
-    let newValue = min + ((max - min) * cache.current.newPercent) / 100;
+    let newValue = min + ((max - min) * (cache.current.newPercent ?? NaN)) / 100;
 
     if (_.isNumber(newValue) && !_.isNaN(newValue)) {
       updateValue(formatByStep(newValue, step, min), true, true);
     }
 
-    setTimeout(() => {
+    clearTimeout(dragEndTimeout.current);
+    dragEndTimeout.current = setTimeout(() => {
       setIsDragging(false);
     }, 300);
     document.body.style.userSelect = 'inherit';
@@ -356,7 +444,7 @@ export default function Slider(props) {
     window.removeEventListener(mouseUpEventName, handleMouseUp);
   }, []);
 
-  const inputChange = (e, update) => {
+  const inputChange = (e: ChangeEvent<HTMLInputElement> | FocusEvent<HTMLInputElement>, update: boolean) => {
     const changedValue = formatNumberFromInput(e.target.value, false);
     setValueForInput(changedValue);
     if (changedValue.trim() === '') {
@@ -372,10 +460,10 @@ export default function Slider(props) {
   };
 
   useEffect(() => {
-    cache.current.conWidth = barRef.current.clientWidth;
+    cache.current.conWidth = barRef.current?.clientWidth;
   }, [disabled]);
   useEffect(() => {
-    const v = getDefaultValue(showAsPercent ? fixedByStep(props.value * 100, step) : props.value);
+    const v = getDefaultValue(showAsPercent ? fixedByStep(Number(props.value) * 100, step) : props.value);
     setValue(v);
     if (document.activeElement !== inputRef.current) {
       setValueForInput(_.isUndefined(v) ? '' : v);
@@ -403,6 +491,22 @@ export default function Slider(props) {
       });
     }
   }, []);
+  useEffect(
+    () => () => {
+      clearTimeout(dragEndTimeout.current);
+      window.removeEventListener(mouseMoveEventName, handleMouseMove);
+      window.removeEventListener(mouseUpEventName, handleMouseUp);
+      if (cache.current.active) {
+        cache.current.active = false;
+        const styles = dragBodyStyles.current;
+        if (styles) {
+          document.body.style.userSelect = styles.userSelect;
+          document.body.style.overflow = styles.overflow;
+        }
+      }
+    },
+    [],
+  );
   return (
     <Con
       className={className}
@@ -429,8 +533,9 @@ export default function Slider(props) {
                 e.stopPropagation();
                 e.preventDefault();
                 if (isDragging) return;
-                const newPercent =
-                  ((e.clientX - barRef.current.getBoundingClientRect().left) / cache.current.conWidth) * 100;
+                const bar = barRef.current;
+                if (!bar || cache.current.conWidth === undefined) return;
+                const newPercent = ((e.clientX - bar.getBoundingClientRect().left) / cache.current.conWidth) * 100;
                 let newValue = min + ((max - min) * newPercent) / 100;
                 updateValue(formatByStep(newValue, step, min), true, true);
               }
@@ -473,7 +578,7 @@ export default function Slider(props) {
         {showScale && showScaleText && (
           <ScaleTextWrap>
             {data.map((scale, index: number) => {
-              const getPercent = target => {
+              const getPercent = (target: ScaleTextValue | undefined) => {
                 if (!target || !_.isNumber(target.percent)) return 0;
                 if (target.percent < 0) return 0;
                 if (target.percent > 100) return 100;
@@ -519,7 +624,7 @@ export default function Slider(props) {
                     transform: textTransform,
                     textAlign,
                     color:
-                      _.isNumber(scale.percent) && valuePercent < scale.percent
+                      scale.percent !== undefined && valuePercent < scale.percent
                         ? 'var(--color-text-tertiary)'
                         : 'var(--color-text-title)',
                   }}
@@ -551,11 +656,21 @@ export default function Slider(props) {
               {...(disabled
                 ? {}
                 : {
-                    [!isMobile ? 'onMouseDown' : 'onTouchStart']: e => {
+                    [!isMobile ? 'onMouseDown' : 'onTouchStart']: (
+                      e: ReactMouseEvent<HTMLSpanElement> | ReactTouchEvent<HTMLSpanElement>,
+                    ) => {
+                      const clientX = getClientX(e);
+                      if (clientX === undefined) return;
+                      if (!cache.current.active) {
+                        dragBodyStyles.current = {
+                          userSelect: document.body.style.userSelect,
+                          overflow: document.body.style.overflow,
+                        };
+                      }
                       document.body.style.userSelect = 'none';
                       document.body.style.overflow = 'hidden';
                       cache.current.active = true;
-                      cache.current.clientX = getClientX(e);
+                      cache.current.clientX = clientX;
                       cache.current.valuePercent = valuePercent;
                       setIsDragging(true);
                       window.addEventListener(mouseMoveEventName, handleMouseMove);

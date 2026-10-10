@@ -15,7 +15,7 @@ export interface SelectDepartment {
   subDepartments?: SelectDepartment[] | undefined;
   parentId?: string | undefined;
   disabled?: boolean | undefined;
-  open?: boolean | undefined;
+  open?: boolean | number | undefined;
   checkIncludeChilren?: boolean | undefined;
   users?: SelectUser[] | undefined;
   [metadata: string]: unknown;
@@ -222,7 +222,7 @@ export interface DefaultUserListProps extends UsersListProps {
 export interface DepartmentListProps {
   data: SelectDepartment[];
   treeData?: SelectDepartment[] | undefined;
-  selectedDepartment: SelectDepartment[];
+  selectedDepartment: Array<Pick<SelectDepartment, 'departmentId' | 'checkIncludeChilren'>>;
   toogleDepargmentSelect: (department: SelectDepartment) => void;
   toggleDepartmentList: (departmentId: string) => void;
   onChangeSelectedOnly?: ((department: SelectDepartment) => void) | undefined;

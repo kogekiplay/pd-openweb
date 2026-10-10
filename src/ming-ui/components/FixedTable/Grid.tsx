@@ -1,19 +1,21 @@
 import { Fragment, useCallback, useMemo, useRef } from 'react';
 import { Grid as WindowGrid } from 'react-window';
+import type { CellComponentProps, GridImperativeAPI } from 'react-window';
 import { includes, isFunction } from 'lodash';
 import { normalizeGridCellStyle, RESET_V2_CONTAINER_BOX } from '../gridCellStyle';
+import type { FixedTableCellProps, GridProps } from './types';
 
-function sum(array = []) {
+function sum(array: number[] = []): number {
   return array.reduce((a, b) => a + b, 0);
 }
 
-function cx(obj) {
+function cx(obj: Record<string, boolean | undefined>): string {
   return Object.keys(obj)
     .filter(key => obj[key])
     .join(' ');
 }
 
-export default function Grid(props) {
+export default function Grid<Data extends object>(props: GridProps<Data>) {
   const {
     isGroupTableView,
     id,
@@ -93,7 +95,7 @@ export default function Grid(props) {
   const setRefRef = useRef(setRef);
   setRefRef.current = setRef;
 
-  const handleGridRef = useCallback(api => {
+  const handleGridRef = useCallback((api: GridImperativeAPI | null) => {
     if (isFunction(setRefRef.current)) {
       setRefRef.current(api);
     }
@@ -117,7 +119,11 @@ export default function Grid(props) {
   // 必须 useMemo：包装组件的标识就是 v2 memo 的依赖，每次渲染换新的会让所有格子重挂。
   const NormalizedCell = useMemo(
     () =>
-      function GridCell({ ariaAttributes, style, ...rest }) {
+      function GridCell({
+        ariaAttributes: _ariaAttributes,
+        style,
+        ...rest
+      }: CellComponentProps<{ data: FixedTableCellProps<Data>['data'] }>) {
         return <Cell {...rest} style={normalizeGridCellStyle(style)} />;
       },
     [Cell],
@@ -205,11 +211,7 @@ export default function Grid(props) {
         }}
         rowHeight={getRowHeight || (() => rowHeight)}
         rowCount={config.rowCount}
-        // as any：v2 会从 cellComponent 的参数类型反推 cellProps 该长什么样，而这里的参数没有标注，
-        // 它就把 ariaAttributes / style 也算进 cellProps 的必填项。给参数加类型能修，但那要引入具名类型，
-        // 而本仓 eslint 用 @babel/eslint-parser、不做 TS 作用域分析，纯类型位置的标识符会被 no-undef 误报。
-        // 本仓整体是 Component<any, any> 的无类型风格，这里跟随，把类型让给 tsc 那条独立管线。
-        cellComponent={NormalizedCell as any}
+        cellComponent={NormalizedCell}
         // v2 把 cellProps【展开】传给 cell（cell 收到的是
         // { ariaAttributes, columnIndex, rowIndex, style, ...cellProps }），
         // 所以这里把整包数据放在 `data` 键下——Cell 组件里 `const { data } = props` 的写法

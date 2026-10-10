@@ -519,7 +519,7 @@ export default class Overview extends Component<any, any> {
             departmentInfo: !_.isEmpty(departments)
               ? departments[0]
               : !_.isEmpty(departmentTrees)
-                ? departmentTrees[0]
+                ? departmentTrees?.[0]
                 : {},
             depFlag: !_.isEmpty(departments) ? true : false,
           },

@@ -1,23 +1,28 @@
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import type { ReactElement, ReactNode } from 'react';
+import type { GridImperativeAPI } from 'react-window';
 import Hammer from 'hammerjs';
-import _, { get, includes } from 'lodash';
+import _, { includes } from 'lodash';
 import { OverlayScrollbars } from 'overlayscrollbars';
 import { bool, func, number } from 'prop-types';
-import styled from 'styled-components';
-import { useRefStore } from 'worksheet/hooks';
 import { getScrollBarWidth } from 'src/utils/common';
+import styled from 'src/utils/typedStyled';
 import Skeleton from '../Skeleton';
 import Grid from './Grid';
 import ScrollBar from './ScrollBar';
+import type { EmptyFixedTableProps, FixedTableCache, FixedTableProps, GridId, GridProps, HammerCache } from './types';
+import { useRefCache } from './useRefCache';
+
+function wheelTarget(event: WheelEvent): Element {
+  if (!(event.target instanceof Element)) throw new TypeError('Missing table wheel target');
+  return event.target;
+}
+const EMPTY_TABLE_DATA = {};
+function hasTableData<Data extends object>(
+  props: FixedTableProps<Data> | EmptyFixedTableProps,
+): props is FixedTableProps<Data> {
+  return props.tableData !== undefined;
+}
 
 const Con = styled.div`
   position: relative;
@@ -46,7 +51,7 @@ const TableBorder = styled.div`
   z-index: 1;
 `;
 
-function sum(array = []) {
+function sum(array: number[] = []): number {
   return array.reduce((a, b) => a + b, 0);
 }
 
@@ -70,27 +75,29 @@ function sum(array = []) {
  *   2. 依赖迁移不该顺手改动滚动行为。那个既存的空操作（例如 :463 的 defaultScrollLeft
  *      只移动网格、不移动滚动条滑块）记录在此，留待单独处理。
  */
-function gridScrollElement(target) {
+function gridScrollElement(target: GridImperativeAPI | null | undefined): HTMLDivElement | null {
   // 只处理 react-window 2 的 imperative API；DOM 元素条目按上面说明跳过。
   return target && target.element ? target.element : null;
 }
 
-function setScrollX(cache, newLeft) {
-  ['top-center', 'main-center', 'bottom-center', 'scrollX'].forEach(name => {
+function setScrollX(cache: FixedTableCache, newLeft: number | undefined): void {
+  const names: GridId[] = ['top-center', 'main-center', 'bottom-center'];
+  names.forEach(name => {
     const el = gridScrollElement(cache[name]);
 
     if (el) {
-      el.scrollLeft = newLeft;
+      el.scrollLeft = Number(newLeft);
     }
   });
 }
 
-function setScrollY(cache, newTop) {
+function setScrollY(cache: FixedTableCache, newTop: number): void {
   if (newTop < 0) {
     newTop = 0;
   }
 
-  ['main-left', 'main-center', 'main-right', 'scrollY'].forEach(name => {
+  const names: GridId[] = ['main-left', 'main-center', 'main-right'];
+  names.forEach(name => {
     const el = gridScrollElement(cache[name]);
 
     if (el) {
@@ -99,7 +106,10 @@ function setScrollY(cache, newTop) {
   });
 }
 
-function FixedTable(props, ref) {
+function FixedTable(props: EmptyFixedTableProps): ReactElement;
+function FixedTable<Data extends object>(props: FixedTableProps<Data>): ReactElement;
+function FixedTable<Data extends object>(props: FixedTableProps<Data> | EmptyFixedTableProps): ReactElement {
+  const ref = props.ref;
   const {
     noRenderEmpty,
     isGroupTableView,
@@ -124,8 +134,6 @@ function FixedTable(props, ref) {
     rightFixedCount = 0,
     hasSubListFooter,
     defaultScrollLeft, // 默认横向滚动距离
-    Cell,
-    tableData,
     renderEmpty, // 渲染空状态
     disablePanVertical,
     tableFooter,
@@ -143,16 +151,20 @@ function FixedTable(props, ref) {
   const bottomFixedCount = showFoot ? 1 : 0;
   const topFixedCount = showHead ? 1 : 0;
   const conRef = useRef<HTMLDivElement>(null);
-  const tablehammer = useRef<any>(undefined);
-  const [hammerCache, setHammer] = useRefStore();
-  const [cache, set] = useRefStore({
+  const tableContainer = (): HTMLDivElement => {
+    if (!conRef.current) throw new TypeError('Missing table container');
+    return conRef.current;
+  };
+  const tablehammer = useRef<HammerManager | undefined>(undefined);
+  const [hammerCache, setHammer] = useRefCache<HammerCache>({});
+  const [cache, set] = useRefCache<FixedTableCache>({
     left: 0,
     top: 0,
     needUpdated: {},
   });
   // 递增它只为触发一次重渲，从而让所有可见网格重新测量——见下面 forceUpdate 的说明。
   const [, bumpSizeVersion] = useState(0);
-  window.cache = cache;
+  window['cache'] = cache;
   const tableSize = useMemo(
     () => ({
       width: sum([...new Array(columnCount)].map((_a, i) => getColumnWidth(i) || 200)),
@@ -169,7 +181,15 @@ function FixedTable(props, ref) {
       !disableYScroll && tableSize.height > height - (showHead ? columnHeadHeight : 0) - (bottomFixedCount ? 28 : 0),
     [height, tableSize.height, topFixedCount, columnHeadHeight, bottomFixedCount, rowCount],
   );
-  const tableConfigs = [
+  const tableConfigs: Array<{
+    id: GridId;
+    visible: boolean;
+    topFixed?: boolean;
+    bottomFixed?: boolean;
+    leftFixed?: boolean;
+    rightFixed?: boolean;
+    renderCustomComp?: (() => ReactNode) | undefined;
+  }> = [
     {
       id: 'top-left',
       topFixed: true,
@@ -221,33 +241,30 @@ function FixedTable(props, ref) {
   }, []);
   const tables = tableConfigs
     .filter(item => item.visible && (!loading || includes(item.id, 'top')))
-    .map(t => (
+    .map(t => {
       // key 用 tableConfigs 里那个稳定的 id（top-left / bottom-right …）
-      <Grid
-        key={t.id}
-        {...Object.assign(t, {
-          isGroupTableView,
-          width: YIsScroll ? width - barWidth : width,
-          height: XIsScroll ? height + barWidth * -1 : height,
-          columnHeadHeight,
-          rowCount,
-          columnCount,
-          topFixedCount,
-          bottomFixedCount,
-          leftFixedCount,
-          rightFixedCount,
-          rowHeight,
-          cache, // 用来更新指定位置
-          getColumnWidth,
-          getRowHeight,
-          Cell,
-          tableData,
-          setRef: ref => {
-            if (ref) cache[t.id] = ref;
-          },
-        })}
-      />
-    ));
+      const grid: Omit<GridProps<Data>, 'Cell' | 'tableData'> = Object.assign(t, {
+        isGroupTableView,
+        width: YIsScroll ? width - barWidth : width,
+        height: XIsScroll ? height + barWidth * -1 : height,
+        columnHeadHeight,
+        rowCount,
+        columnCount,
+        topFixedCount,
+        bottomFixedCount,
+        leftFixedCount,
+        rightFixedCount,
+        rowHeight,
+        cache, // 用来更新指定位置
+        getColumnWidth,
+        getRowHeight,
+        setRef: (ref: GridImperativeAPI | null) => {
+          if (ref) cache[t.id] = ref;
+        },
+      });
+      if (hasTableData(props)) return <Grid<Data> key={t.id} {...grid} Cell={props.Cell} tableData={props.tableData} />;
+      return <Grid<object> key={t.id} {...grid} Cell={props.Cell} tableData={EMPTY_TABLE_DATA} />;
+    });
   const verticalScroll = useMemo(
     () => (
       <ScrollBar
@@ -304,7 +321,10 @@ function FixedTable(props, ref) {
     [tableSize.width, YIsScroll, leftFixedCount],
   );
   // 缓存滚动元素引用，避免重复查询
-  const scrollElementsRef = useRef({ $scrollX: null, $scrollY: null });
+  const scrollElementsRef = useRef<{
+    $scrollX: HTMLElement | null | undefined;
+    $scrollY: HTMLElement | null | undefined;
+  }>({ $scrollX: null, $scrollY: null });
 
   // 更新滚动元素缓存
   const updateScrollElements = useCallback(() => {
@@ -324,7 +344,7 @@ function FixedTable(props, ref) {
     }
 
     ['x', 'y'].forEach(type => {
-      const host = conRef.current.querySelector<HTMLElement>(`.scroll-${type}`);
+      const host = tableContainer().querySelector<HTMLElement>(`.scroll-${type}`);
       const osInstance = host && OverlayScrollbars(host);
 
       if (osInstance && _.isFunction(osInstance.update)) {
@@ -335,8 +355,8 @@ function FixedTable(props, ref) {
 
   // 原始的滚轮处理逻辑
   const performMouseWheel = useCallback(
-    e => {
-      if (e.target.closest('.scrollInTable')) {
+    (e: WheelEvent) => {
+      if (wheelTarget(e).closest('.scrollInTable')) {
         return;
       }
 
@@ -347,8 +367,8 @@ function FixedTable(props, ref) {
       }
 
       // 直接实时查询，避免缓存引用指向已脱离 DOM 的 viewport 节点
-      const $scrollX = conRef.current && conRef.current.querySelector('.scroll-x .scroll-viewport');
-      const $scrollY = conRef.current && conRef.current.querySelector('.scroll-y .scroll-viewport');
+      const $scrollX = conRef.current && tableContainer().querySelector<HTMLElement>('.scroll-x .scroll-viewport');
+      const $scrollY = conRef.current && tableContainer().querySelector<HTMLElement>('.scroll-y .scroll-viewport');
 
       if (direction === 'x') {
         let newLeft = cache.left + (window.isWindows && e.shiftKey ? e.deltaY : e.deltaX);
@@ -393,9 +413,9 @@ function FixedTable(props, ref) {
     [performMouseWheel],
   );
 
-  function handleMouseWheel(e) {
+  function handleMouseWheel(e: WheelEvent): void {
     // 对于立即需要阻止默认行为的情况，先处理
-    if (e.target.closest('.scrollInTable')) {
+    if (wheelTarget(e).closest('.scrollInTable')) {
       return;
     }
 
@@ -404,26 +424,26 @@ function FixedTable(props, ref) {
   }
 
   // hammer event
-  function handlePanMove(e) {
-    if (window.disableTableScroll) {
+  function handlePanMove(e: HammerInput): void {
+    if (window['disableTableScroll']) {
       return;
     }
 
     const isScrollVer = Math.abs(e.deltaY) > Math.abs(e.deltaX);
-    setHammer('leftForHammer', hammerCache.leftForHammer + hammerCache.lastPandeltaX - e.deltaX);
-    setHammer('topForHammer', hammerCache.topForHammer + hammerCache.lastPandeltaY - e.deltaY);
+    setHammer('leftForHammer', Number(hammerCache.leftForHammer) + Number(hammerCache.lastPandeltaX) - e.deltaX);
+    setHammer('topForHammer', Number(hammerCache.topForHammer) + Number(hammerCache.lastPandeltaY) - e.deltaY);
     setHammer('lastPandeltaX', e.deltaX);
     setHammer('lastPandeltaY', e.deltaY);
-    const $scrollX = conRef.current.querySelector('.scroll-x .scroll-viewport');
-    const $scrollY = conRef.current.querySelector('.scroll-y .scroll-viewport');
+    const $scrollX = tableContainer().querySelector<HTMLElement>('.scroll-x .scroll-viewport');
+    const $scrollY = tableContainer().querySelector<HTMLElement>('.scroll-y .scroll-viewport');
 
     if (isScrollVer) {
       if ($scrollY) {
-        $scrollY.scrollTop = hammerCache.topForHammer;
+        $scrollY.scrollTop = Number(hammerCache.topForHammer);
       }
     } else {
       if ($scrollX) {
-        $scrollX.scrollLeft = hammerCache.leftForHammer;
+        $scrollX.scrollLeft = Number(hammerCache.leftForHammer);
       }
     }
   }
@@ -438,8 +458,8 @@ function FixedTable(props, ref) {
     dom: conRef,
     forceUpdate,
     setScroll: (left, top) => {
-      const $scrollX = conRef.current.querySelector('.scroll-x .scroll-viewport');
-      const $scrollY = conRef.current.querySelector('.scroll-y .scroll-viewport');
+      const $scrollX = tableContainer().querySelector<HTMLElement>('.scroll-x .scroll-viewport');
+      const $scrollY = tableContainer().querySelector<HTMLElement>('.scroll-y .scroll-viewport');
 
       if (!_.isUndefined(left) && $scrollX) {
         $scrollX.scrollLeft = left;
@@ -455,9 +475,9 @@ function FixedTable(props, ref) {
     },
   }));
   useLayoutEffect(() => {
-    if (get(cache, 'scrollX.scrollLeft')) {
+    if (cache.scrollX?.scrollLeft) {
       setTimeout(() => {
-        setScrollX(cache, get(cache, 'scrollX.scrollLeft'));
+        setScrollX(cache, cache.scrollX?.scrollLeft);
       }, 10);
     }
   }, [loading]);
@@ -475,11 +495,17 @@ function FixedTable(props, ref) {
     // 初始化滚动元素缓存
     updateScrollElements();
 
-    conRef.current.addEventListener('wheel', handleMouseWheel);
+    tableContainer().addEventListener('wheel', handleMouseWheel);
     // --- 表格触摸事件处理 ---
-    tablehammer.current = new Hammer(conRef.current, { inputClass: Hammer.TouchInput });
-    setHammer('leftForHammer', _.get(conRef.current.querySelector('.scroll-x .scroll-viewport'), 'scrollLeft') || 0);
-    setHammer('topForHammer', _.get(conRef.current.querySelector('.scroll-y .scroll-viewport'), 'scrollTop') || 0);
+    tablehammer.current = new Hammer(tableContainer(), { inputClass: Hammer.TouchInput });
+    setHammer(
+      'leftForHammer',
+      tableContainer().querySelector<HTMLElement>('.scroll-x .scroll-viewport')?.scrollLeft || 0,
+    );
+    setHammer(
+      'topForHammer',
+      tableContainer().querySelector<HTMLElement>('.scroll-y .scroll-viewport')?.scrollTop || 0,
+    );
     setHammer('lastPandeltaX', 0);
     setHammer('lastPandeltaY', 0);
     tablehammer.current
@@ -490,9 +516,10 @@ function FixedTable(props, ref) {
     // ---
     setTimeout(() => {
       if (defaultScrollLeft) {
-        if (conRef.current && conRef.current.querySelector('.scroll-x .scroll-viewport')) {
+        const viewport = conRef.current && tableContainer().querySelector<HTMLElement>('.scroll-x .scroll-viewport');
+        if (viewport) {
           setScrollX(cache, defaultScrollLeft);
-          conRef.current.querySelector('.scroll-x .scroll-viewport').scrollLeft = defaultScrollLeft;
+          viewport.scrollLeft = defaultScrollLeft;
         }
       }
     }, 0);
@@ -594,7 +621,12 @@ function FixedTable(props, ref) {
       {!loading &&
         rowCount === 0 &&
         !noRenderEmpty &&
-        renderEmpty({
+        (
+          renderEmpty ||
+          (() => {
+            throw new TypeError('Missing table empty renderer');
+          })
+        )({
           style: {
             top: columnHeadHeight,
             ...(XIsScroll ? { height: 'auto', bottom: barWidth } : {}),
@@ -615,4 +647,5 @@ FixedTable.propTypes = {
   disablePanVertical: bool,
 };
 
-export default forwardRef(FixedTable);
+export type { FixedTableHandle, FixedTableProps, EmptyFixedTableProps, FixedTableCellProps } from './types';
+export default FixedTable;

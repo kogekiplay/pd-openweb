@@ -5,6 +5,7 @@ import _, { get, noop } from 'lodash';
 import styled from 'styled-components';
 import { FixedTable } from 'ming-ui';
 import autoSize from 'ming-ui/components/AutoSize';
+import type { FixedTableHandle } from 'ming-ui/components/FixedTable';
 import worksheetApi from 'src/api/worksheet';
 import DragMask from 'worksheet/common/DragMask';
 import { SHEET_VIEW_HIDDEN_TYPES, WORKSHEETTABLE_FROM_MODULE } from 'worksheet/constants/enum';
@@ -323,7 +324,11 @@ function WorksheetTable(props, ref) {
     () => defaultRuleState.ruleControlAdvancedSettings,
   );
   const [xIsScroll, setXIsScroll] = useState(false);
-  const tableRef = useRef<any>(undefined);
+  const tableRef = useRef<FixedTableHandle | null>(null);
+  const tableHandle = (): FixedTableHandle => {
+    if (!tableRef.current) throw new TypeError('Missing fixed table handle');
+    return tableRef.current;
+  };
   window.tableRef = tableRef;
   const handleUpdateRuleState = useCallback(updates => {
     const { fieldPermissions = {}, ruleControlAdvancedSettings: adv = {}, touchedRowIds = [] } = updates || {};
@@ -564,7 +569,7 @@ function WorksheetTable(props, ref) {
       const checkResult = checkCellFullVisible(focusElement);
 
       if (!checkResult.fullvisible) {
-        tableRef.current.setScroll(checkResult.newLeft);
+        tableHandle().setScroll(checkResult.newLeft);
         setTimeout(() => {
           addHighlightClassOfRow(rowIndex);
         }, 10);
@@ -643,7 +648,7 @@ function WorksheetTable(props, ref) {
     const closeToBottom = rowIndex * rowHeight - contentScrollTop > contentHeight / 2;
 
     if (!targetRowFullVisible) {
-      tableRef.current.setScroll(0, closeToBottom ? (rowIndex + 1) * rowHeight - contentHeight : rowIndex * rowHeight);
+      tableHandle().setScroll(0, closeToBottom ? (rowIndex + 1) * rowHeight - contentHeight : rowIndex * rowHeight);
     }
   }
 
@@ -733,7 +738,7 @@ function WorksheetTable(props, ref) {
 
   useEffect(() => {
     // 显示列变更，列宽变更
-    tableRef.current.forceUpdate();
+    tableHandle().forceUpdate();
   }, [
     tableType,
     rowHeight,
@@ -813,8 +818,8 @@ function WorksheetTable(props, ref) {
       focusCell,
       handleTableKeyDown,
       addNewRow,
-      setScroll: (...args) => tableRef.current.setScroll(...args),
-      setScrollX: left => tableRef.current.setScrollX(left),
+      setScroll: (left?: number, top?: number) => tableHandle().setScroll(left, top),
+      setScrollX: left => tableHandle().setScrollX(left),
       onCellEnter,
       onCellLeave,
       onTableMouseLeave:
@@ -1025,7 +1030,7 @@ function WorksheetTable(props, ref) {
     },
     cellUniqueValidate,
     scrollTo: ({ left, top } = {}) => {
-      tableRef.current.setScroll(left, top);
+      tableHandle().setScroll(left, top);
     },
     // 更新数据
     updateCell: ({ row, args, options } = {}) => {

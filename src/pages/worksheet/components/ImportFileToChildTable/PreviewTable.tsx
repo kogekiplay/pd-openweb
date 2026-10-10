@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { FixedTable } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import autoSize from 'ming-ui/components/AutoSize';
+import type { FixedTableCellProps, FixedTableHandle } from 'ming-ui/components/FixedTable';
 import SelectControls from 'worksheet/common/WorkSheetFilter/components/SelectControls';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { getIconByType } from 'src/pages/widgetConfig/util';
@@ -73,17 +74,19 @@ const NoImportItem = styled.div`
   }
 `;
 
-function checkCellFullVisible(element) {
+function checkCellFullVisible(element: HTMLElement) {
   const left = element.offsetLeft;
   const top = element.offsetTop;
   const width = element.offsetWidth;
   const height = element.offsetHeight;
   let newLeft;
   let newTop;
-  const scrollLeft = element.parentElement.parentElement.scrollLeft;
-  const scrollTop = element.parentElement.parentElement.scrollTop;
-  const gridWidth = element.parentElement.parentElement.clientWidth;
-  const gridHeight = element.parentElement.parentElement.clientHeight;
+  const viewport = element.parentElement?.parentElement;
+  if (!viewport) throw new TypeError('Missing cell viewport');
+  const scrollLeft = viewport.scrollLeft;
+  const scrollTop = viewport.scrollTop;
+  const gridWidth = viewport.clientWidth;
+  const gridHeight = viewport.clientHeight;
   const rightVisible = left + width <= scrollLeft + gridWidth;
   const leftVisible = left >= scrollLeft;
   const topVisible = top >= scrollTop;
@@ -191,27 +194,31 @@ function PreviewTable(props) {
     columnCount = columnCount + 1;
   }
 
-  const tableRef = useRef<any>(undefined);
+  const tableRef = useRef<FixedTableHandle | null>(null);
+  const tableHandle = (): FixedTableHandle => {
+    if (!tableRef.current) throw new TypeError('Missing fixed table handle');
+    return tableRef.current;
+  };
   useEffect(() => {
-    const tableDom = _.get(tableRef, 'current.dom.current');
+    const tableDom = tableRef.current?.dom.current;
 
     if (!tableDom) {
       return;
     }
 
-    const activeCell = tableDom.querySelector('.cell.active');
+    const activeCell = tableDom.querySelector<HTMLElement>('.cell.active');
 
     if (activeCell) {
       const result = checkCellFullVisible(activeCell);
 
       if (!result.fullvisible) {
-        tableRef.current.setScroll(result.newLeft, result.newTop);
+        tableHandle().setScroll(result.newLeft, result.newTop);
       }
     }
   });
   useEffect(() => {
     try {
-      tableRef.current.forceUpdate();
+      tableHandle().forceUpdate();
     } catch (err) {
       console.log(err);
     }
@@ -231,7 +238,7 @@ function PreviewTable(props) {
       rowCount={rowCount > fullTableCount ? rowCount : fullTableCount}
       columnCount={columnCount}
       leftFixedCount={showNumber ? 1 : 0}
-      Cell={({ style, key, data = {}, ...rest }) => {
+      Cell={({ style, key, data, ...rest }: FixedTableCellProps) => {
         const { columnIndex, rowIndex } = getIndex({
           columnIndex: rest.columnIndex,
           rowIndex: rest.rowIndex,
