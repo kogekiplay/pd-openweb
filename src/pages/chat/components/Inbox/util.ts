@@ -306,7 +306,8 @@ export function linkifySanitizedHtml(sanitizedHtml: string, options = {}) {
   const doc = new DOMParser().parseFromString(sanitizedHtml, 'text/html');
 
   Array.from(doc.body.querySelectorAll('a[href]')).forEach(a => {
-    a.setAttribute('href', pathCompletion(a.getAttribute('href')));
+    const href = a.getAttribute('href');
+    if (href !== null) a.setAttribute('href', pathCompletion(href));
   });
 
   const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, {

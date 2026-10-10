@@ -99,7 +99,7 @@ export interface PreviewFrameProps {
 export default function PreviewFrame({ src, refreshFirst = false }: PreviewFrameProps) {
   const containerRef = useRef(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const pendingRef = useRef(null);
+  const pendingRef = useRef<string | null>(null);
   // 用 ref 读最新 refreshFirst，避免把它加进 effect 依赖导致 src 未变时多余触发；
   // 同步写放在 effect 中（react-hooks/refs 禁止渲染期写 ref），且必须声明在下方主 effect 之前，
   // 保证同一次提交内主 effect 读到的是最新值

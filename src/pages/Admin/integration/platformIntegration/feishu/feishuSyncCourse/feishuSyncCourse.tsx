@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import { compareProps } from 'pages/PageHeader/util.js';
 import qs from 'query-string';
 import { LoadDiv } from 'ming-ui';
 import Ajax from 'src/api/workWeiXin';
+import copy from 'src/utils/copyToClipboard';
 import { getIntegrationHomeUrl } from '../../utils';
 import scan1 from '../../workwx/workwxSyncCourse/img/scan1.png';
 import fsImg4 from './img/4.png';
@@ -127,6 +127,7 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
             <span
               className="copyBtn"
               onClick={() => {
+                if (homeUrl === undefined) return;
                 copy(homeUrl);
                 alert(_l('已经复制到粘贴板，你可以使用Ctrl+V 贴到需要的地方去了哦'));
               }}
@@ -236,7 +237,11 @@ export default class WorkwxSyncCourse extends React.Component<any, any> {
     const { type } = this.state;
     const isLark = type === 'lark';
     return (
-      <div ref={ele => { this.syncApprovalRef = ele; }}>
+      <div
+        ref={ele => {
+          this.syncApprovalRef = ele;
+        }}
+      >
         <h3 className="Font18 textPrimary mTop40">
           {isLark ? _l('流程待办同步至Lark审批中心') : _l('流程待办同步至飞书审批中心')}
         </h3>

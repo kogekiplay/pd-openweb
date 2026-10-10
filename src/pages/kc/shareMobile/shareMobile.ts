@@ -253,7 +253,7 @@ const mobileSharePreviewMethods = defineMethods<MobileSharePreviewFields>()({
       if (!md.global.Account || !md.global.Account.accountId) {
         MSP.alert(_l('请先登录'));
         setTimeout(function () {
-          window.location = pathCompletion(
+          window.location.href = pathCompletion(
             '/login?ReturnUrl=' + encodeURIComponent(window.location.href.replace('checked=login', '')),
           );
         }, 1000);

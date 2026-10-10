@@ -462,8 +462,8 @@ function WorksheetRecordLog(props, ref) {
 
             if (isMobile) {
               const con = message.replace(reg, '').split(' ');
-              let userOrFlow = con && con.length && con[0];
-              const actTxt = con && con.length && con[1];
+              let userOrFlow = con[0] || '';
+              const actTxt = con[1];
 
               if (childData.accountId === 'user-workflow') {
                 userOrFlow = userOrFlow.slice(3);

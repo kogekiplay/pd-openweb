@@ -56,7 +56,7 @@ export default function BarCodeWidgets(props) {
     className,
   } = props;
 
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string | undefined>('');
   const barIdRef = useRef<NodeJS.Timeout | null>(null);
   const imgCodeRef = useRef(null);
 

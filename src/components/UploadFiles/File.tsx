@@ -87,7 +87,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       this.handleEdit(event);
     }
   };
-  handleDownload = (event, isDownload: boolean, url: boolean) => {
+  handleDownload = (event, isDownload: boolean, url: string) => {
     event.stopPropagation();
     if (!isDownload) {
       alert(_l('您权限不足，无法下载，请联系管理员或文件上传者'), 3);
@@ -744,7 +744,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       isDownload = true;
     }
 
-    let downloadUrl = false;
+    let downloadUrl: string;
 
     if (fileResponse.downloadUrl) {
       downloadUrl =

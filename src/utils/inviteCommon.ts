@@ -1,12 +1,22 @@
+import { decodeInviteResult } from './inviteBoundary';
+import type { DecodedInviteResult, InviteAccount, InviteHintAccounts } from './inviteTypes';
+
 // 提示邀请结果
-export const existAccountHint = function (result) {
-  const inviteNoticeMessage = function (title: string, accounts) {
+export const existAccountHint = function (response: unknown): InviteHintAccounts | undefined {
+  let result: DecodedInviteResult;
+  try {
+    result = decodeInviteResult(response);
+  } catch {
+    alert(_l('邀请失败'), 2);
+    return undefined;
+  }
+  const inviteNoticeMessage = function (title: string, accounts: InviteAccount[]) {
     if (!accounts.length) return '';
-    const USER_STATUS: Record<number, string> = {
-      2: _l('（被拒绝加入，需从后台恢复权限）'),
-      3: _l('（待审批）'),
-      4: _l('（被暂停权限，需从后台恢复权限）'),
-    };
+    const USER_STATUS = new Map([
+      ['2', _l('（被拒绝加入，需从后台恢复权限）')],
+      ['3', _l('（待审批）')],
+      ['4', _l('（被暂停权限，需从后台恢复权限）')],
+    ]);
     let noticeMessage = title + '：<br/>';
 
     accounts.forEach(item => {
@@ -17,7 +27,7 @@ export const existAccountHint = function (result) {
         message = item.account;
       } else {
         // 已存在的用户
-        let accountArr = [];
+        let accountArr: string[] = [];
 
         if (item.email) {
           accountArr.push(item.email);
@@ -27,7 +37,7 @@ export const existAccountHint = function (result) {
           accountArr.push(item.mobilePhone);
         }
 
-        let desc = accountArr.join(' / ') + (USER_STATUS[item.user] || '');
+        let desc = accountArr.join(' / ') + (item.user === undefined ? '' : USER_STATUS.get(String(item.user)) || '');
         message = item.fullname + (desc.length ? '：' + desc : '');
       }
 
@@ -37,22 +47,16 @@ export const existAccountHint = function (result) {
     return noticeMessage;
   };
 
-  const SendMessageResult = {
-    Failed: 0,
-    Success: 1,
-    Limit: 2,
-  };
-
-  if (result.sendMessageResult === SendMessageResult.Failed) {
+  if (result.sendMessageResult === 0) {
     alert(_l('邀请失败'), 2);
     return undefined;
   }
 
-  let accountInfos = []; // 成功
-  let existAccountInfos = []; // 已存在
-  let failedAccountInfos = []; // 失败
-  let limitAccountInfos = []; // 邀请限制
-  let forbidAccountInfos = []; // 账号来源类型受限
+  let accountInfos: InviteAccount[] = []; // 成功
+  let existAccountInfos: InviteAccount[] = []; // 已存在
+  let failedAccountInfos: InviteAccount[] = []; // 失败
+  let limitAccountInfos: InviteAccount[] = []; // 邀请限制
+  let forbidAccountInfos: InviteAccount[] = []; // 账号来源类型受限
 
   (result.results || []).forEach(singleResult => {
     // 成功

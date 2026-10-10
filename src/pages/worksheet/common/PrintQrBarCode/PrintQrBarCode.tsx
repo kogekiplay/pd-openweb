@@ -7,7 +7,9 @@ import FilterDetailName from 'worksheet/common/WorkSheetFilter/components/Filter
 import saveTemplateConfirm from 'src/pages/Print/components/SaveDia/saveTemplateConfirm';
 import { FILTER } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import { pathCompletion } from 'src/utils/common';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
+import { objectValue } from 'src/utils/recordValueBoundary';
 import {
   A4_LAYOUT,
   BAR_LAYOUT,
@@ -27,7 +29,6 @@ import {
   getCodeTexts,
   getDefaultText,
 } from './util';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   height: 100vh;
@@ -123,7 +124,7 @@ export default function PrintQrBarCode(props) {
   const sourceType = printType === PRINT_TYPE.BAR ? 2 : 1;
   const [loading, setLoading] = useState(!!id);
   const [previewRow, setPreviewRow] = useState(selectedRows[0] || {});
-  const [previewRowPublicUrl, setPreviewRowPublicUrl] = useState({});
+  const [previewRowPublicUrl, setPreviewRowPublicUrl] = useState('');
   const [config, setConfig] = useState({
     ...getDefaultConfig(printType),
     sourceType: sourceType,
@@ -237,8 +238,12 @@ export default function PrintQrBarCode(props) {
           worksheetId,
           rowIds: [recordId],
         })
-        .then(data => {
-          setPreviewRowPublicUrl(data[recordId]);
+        .then((data: unknown) => {
+          const url = objectValue(data)?.[recordId];
+          setPreviewRowPublicUrl(typeof url === 'string' ? url : 'error');
+        })
+        .catch(() => {
+          setPreviewRowPublicUrl('error');
         });
     } else {
       setPreviewRowPublicUrl('error');

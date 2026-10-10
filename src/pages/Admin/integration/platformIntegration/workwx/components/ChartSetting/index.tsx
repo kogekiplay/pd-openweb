@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
-import copy from 'src/utils/copyToClipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Input } from 'ming-ui';
 import { pathCompletion } from 'src/utils/common';
+import copy from 'src/utils/copyToClipboard';
 
 const Wrap = styled.div`
   padding: var(--space-5) var(--space-6) 0;
@@ -24,7 +24,7 @@ const Wrap = styled.div`
 
 export default function ChartSetting(props) {
   const { projectId } = props;
-  const [copyValue, setCopyValue] = useState();
+  const [copyValue, setCopyValue] = useState<string | undefined>();
   const [url, setUrl] = useState<string>();
   const inputRef = useRef<any>(undefined);
   const newURL = _.trim(url);

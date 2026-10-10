@@ -9,6 +9,7 @@ import qiniuAjax from 'src/api/qiniu';
 import webCache from 'src/api/webCache';
 import { PUBLIC_KEY } from './enum';
 import RegExpValidator from './expression';
+import type { CalculatedDate, FunctionDateInput } from './functionLibraryTypes';
 import { getPssId } from './pssId';
 import { decodeKVValue, decodeTempRecordIds } from './tempRecordCache';
 import type { KVOptions, KVRequest } from './tempRecordCache';
@@ -178,7 +179,7 @@ export function removeTempRecordValueFromLocal(key: string, id: string | undefin
 /**
  * 验证函数表达式基础语法
  */
-export function validateFnExpression(expression, type = 'mdfunction') {
+export function validateFnExpression(expression: string, type = 'mdfunction') {
   try {
     expression = expression.replace(/\$(.+?)\$/g, '"1"');
     if (type === 'mdfunction') {
@@ -196,7 +197,7 @@ export function validateFnExpression(expression, type = 'mdfunction') {
   }
 }
 
-export function isKeyBoardInputChar(value) {
+export function isKeyBoardInputChar(value: string) {
   return (
     `1234567890-=!@#$%^&*()_+[];',./{}|:"<>?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`.indexOf(value) > -1
   );
@@ -206,7 +207,7 @@ export function getScrollBarWidth() {
   return 10;
 }
 
-export function getRowGetType(from, { discussId } = {}) {
+export function getRowGetType(from?: string | number, { discussId }: { discussId?: unknown } = {}) {
   let isInbox;
 
   if (typeof discussId !== 'undefined') {
@@ -345,7 +346,7 @@ export function equalToLocalPushUniqueId(pushUniqueId) {
  *  日期公式计算
  * */
 
-export function calcDate(date, expression) {
+export function calcDate(date: FunctionDateInput | moment.Moment, expression: string): CalculatedDate {
   if (!date) {
     return { error: true };
   }
@@ -355,7 +356,7 @@ export function calcDate(date, expression) {
   }
 
   try {
-    let result = dayjs(date);
+    let result = dayjs(moment.isMoment(date) ? date.toDate() : date);
     const regexp = /([/+/-]){1}(\d+(\.\d+)?)+([YQMwdhms]){1}/g;
     let match = regexp.exec(expression);
 
@@ -364,8 +365,23 @@ export function calcDate(date, expression) {
       const number = Number(match[2]);
       const unit = match[4];
 
-      if (/^[+-]$/.test(operator) && number && typeof number === 'number' && /^[YQMwdhms]$/.test(unit)) {
-        result = result[operator === '+' ? 'add' : 'subtract'](Math.round(number), unit.replace(/Y/, 'y'));
+      if ((operator === '+' || operator === '-') && number && unit) {
+        const rounded = Math.round(number);
+        if (unit === 'Q') {
+          const next: unknown = Reflect.apply(result[operator === '+' ? 'add' : 'subtract'], result, [rounded, unit]);
+          if (!dayjs.isDayjs(next)) throw new TypeError('Date expression must return a Dayjs value');
+          result = next;
+        } else if (
+          unit === 'Y' ||
+          unit === 'M' ||
+          unit === 'w' ||
+          unit === 'd' ||
+          unit === 'h' ||
+          unit === 'm' ||
+          unit === 's'
+        ) {
+          result = result[operator === '+' ? 'add' : 'subtract'](rounded, unit === 'Y' ? 'y' : unit);
+        }
       }
 
       match = regexp.exec(expression);
@@ -382,7 +398,7 @@ export function calcDate(date, expression) {
  * 调用：accMul(arg1,arg2)
  * 返回值：arg1乘以arg2的精确结果
  */
-export function accMul(arg1, arg2: number) {
+export function accMul(arg1: string | number, arg2: number) {
   let m = 0,
     s1 = arg1.toString(),
     s2 = arg2.toString();
@@ -407,7 +423,7 @@ export function accMul(arg1, arg2: number) {
  * 调用：accDiv(arg1,arg2)
  * 返回值：arg1除以arg2的精确结果
  */
-export function accDiv(arg1, arg2: number) {
+export function accDiv(arg1: string | number, arg2: number) {
   let t1 = 0,
     t2 = 0,
     r1,
@@ -477,7 +493,7 @@ export function countChar(str = '', char: string) {
   }
 
   try {
-    return str.match(new RegExp(char, 'g')).length;
+    return str.match(new RegExp(char, 'g'))?.length ?? 0;
   } catch (err) {
     console.log(err);
     return 0;
@@ -489,7 +505,7 @@ export function countChar(str = '', char: string) {
  * @param {string} self - 要计算字节数的字符串
  * @returns {number} - 字符串的字节数
  */
-export const getStringBytes = self => {
+export const getStringBytes = (self: string) => {
   let strLength = 0;
 
   for (let i = 0; i < self.length; i++) {
@@ -500,7 +516,7 @@ export const getStringBytes = self => {
   return strLength;
 };
 
-export const cutStringWithHtml = (self, len: number, rows: number) => {
+export const cutStringWithHtml = (self: string, len: number, rows: number) => {
   let str = '';
   let strLength = 0;
   let isA = false;
@@ -571,13 +587,14 @@ export const cutStringWithHtml = (self, len: number, rows: number) => {
 };
 
 // 加密
-export const encrypt = text => {
+export const encrypt = (text: unknown) => {
+  if (typeof text === 'symbol') throw new TypeError('Cannot convert a Symbol value to a string');
   const encrypt = new JSEncrypt();
   encrypt.setPublicKey(PUBLIC_KEY);
   return encrypt.encrypt(
     JSON.stringify({
       expire: moment().utc().valueOf(),
-      data: encodeURIComponent(text),
+      data: encodeURIComponent(String(text)),
     }),
   );
 };
@@ -587,7 +604,7 @@ export const encrypt = text => {
  * @param  {string} str
  * @return {string}
  */
-export const htmlEncodeReg = str => {
+export const htmlEncodeReg = (str: unknown): string => {
   const encodeHTMLRules: Record<string, string> = {
     '&': '&#38;',
     '<': '&lt;',
@@ -609,7 +626,7 @@ export const htmlEncodeReg = str => {
  * @param  {string} str
  * @return {string}
  */
-export const htmlDecodeReg = str => {
+export const htmlDecodeReg = (str: unknown): string => {
   const decodeHTMLRules: Record<string, string> = {
     '&#38;': '&',
     '&amp;': '&',
@@ -638,7 +655,12 @@ export const htmlDecodeReg = str => {
  * @param  {Array}  units 自定义文件大小单位的数组，默认为 ['B', 'KB', 'MB', 'GB', 'TB']
  * @return {String}       可读的格式
  */
-export const formatFileSize = (size, accuracy?: number | undefined, space?, units?) => {
+export const formatFileSize = (
+  size: string | number | null | undefined,
+  accuracy?: number | undefined,
+  space?: string,
+  units?: string[],
+) => {
   units = units || ['B', 'KB', 'MB', 'GB', 'TB'];
   space = space || ' ';
   accuracy = (accuracy && typeof accuracy === 'number' && accuracy) || 0;
@@ -646,14 +668,14 @@ export const formatFileSize = (size, accuracy?: number | undefined, space?, unit
     return '0' + space + units[0];
   }
 
-  let i = Math.floor(Math.log(size) / Math.log(1024));
-  return (size / Math.pow(1024, i)).toFixed(accuracy) * 1 + space + units[i];
+  let i = Math.floor(Math.log(Number(size)) / Math.log(1024));
+  return Number((Number(size) / Math.pow(1024, i)).toFixed(accuracy)) + space + units[i];
 };
 
-export const downloadFile = url => {
+export const downloadFile = (url: string): string => {
   if (window.isDingTalk) {
     const [, search] = decodeURIComponent(url).split('?');
-    const { validation } = qs.parse(search);
+    const { validation } = qs.parse(search ?? '');
     return addToken(url, validation ? true : false);
   } else {
     return addToken(url, md.global.Config.HttpOnly || window.self !== window.top ? false : true);
@@ -665,7 +687,7 @@ export const downloadFile = url => {
  * @param {string} url
  * @returns {string} url
  */
-export const addToken = (url, verificationId = true) => {
+export const addToken = (url: string, verificationId = true) => {
   const id = window.getCookie('md_pss_id') || window.localStorage.getItem('md_pss_id');
 
   if (verificationId && id && !md.global.Account.isPortal) {
@@ -684,18 +706,18 @@ export const addToken = (url, verificationId = true) => {
  */
 export const browserIsMobile = () => {
   const sUserAgent = navigator.userAgent.toLowerCase();
-  const bIsIphoneOs = sUserAgent.match(/iphone os/i) == 'iphone os';
-  const bIsMidp = sUserAgent.match(/midp/i) == 'midp';
-  const bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == 'rv:1.2.3.4';
-  const bIsUc = sUserAgent.match(/ucweb/i) == 'ucweb';
-  const bIsAndroid = sUserAgent.match(/android/i) == 'android';
-  const bIsCE = sUserAgent.match(/windows ce/i) == 'windows ce';
-  const bIsWM = sUserAgent.match(/windows mobile/i) == 'windows mobile';
-  const bIsApp = sUserAgent.match(/mingdao application/i) == 'mingdao application';
-  const bIsMiniProgram = sUserAgent.match(/miniprogram/i) == 'miniprogram';
-  const isHuawei = sUserAgent.match(/mobile huaweibrowser/i) == 'mobile huaweibrowser';
-  const isHarmony = sUserAgent.match(/penharmony/i) == 'penharmony';
-  const isAndroid = sUserAgent.match(/android/i) == 'android';
+  const bIsIphoneOs = sUserAgent.match(/iphone os/i)?.[0] === 'iphone os';
+  const bIsMidp = sUserAgent.match(/midp/i)?.[0] === 'midp';
+  const bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i)?.[0] === 'rv:1.2.3.4';
+  const bIsUc = sUserAgent.match(/ucweb/i)?.[0] === 'ucweb';
+  const bIsAndroid = sUserAgent.match(/android/i)?.[0] === 'android';
+  const bIsCE = sUserAgent.match(/windows ce/i)?.[0] === 'windows ce';
+  const bIsWM = sUserAgent.match(/windows mobile/i)?.[0] === 'windows mobile';
+  const bIsApp = sUserAgent.match(/mingdao application/i)?.[0] === 'mingdao application';
+  const bIsMiniProgram = sUserAgent.match(/miniprogram/i)?.[0] === 'miniprogram';
+  const isHuawei = sUserAgent.match(/mobile huaweibrowser/i)?.[0] === 'mobile huaweibrowser';
+  const isHarmony = sUserAgent.match(/penharmony/i)?.[0] === 'penharmony';
+  const isAndroid = sUserAgent.match(/android/i)?.[0] === 'android';
 
   const value =
     bIsIphoneOs ||
@@ -713,8 +735,11 @@ export const browserIsMobile = () => {
 
   if (sUserAgent.includes('dingtalk') || sUserAgent.includes('wxwork') || sUserAgent.includes('feishu')) {
     // 钉钉和微信设备针对侧边栏打开判断为 mobile 环境
-    const { pc_slide = '' } = getRequest();
-    return pc_slide.includes('true') || sessionStorage.getItem('dingtalk_pc_slide') ? true : value;
+    const pcSlide = getRequest()['pc_slide'];
+    return (pcSlide === undefined || pcSlide === null ? false : pcSlide.includes('true')) ||
+      sessionStorage.getItem('dingtalk_pc_slide')
+      ? true
+      : value;
   } else {
     return value;
   }
@@ -729,7 +754,7 @@ export const getDefaultThemeMode = () => {
  * @param  {string} str url中 ? 之后的部分，可以包含 ?
  * @return {object}
  */
-export const getRequest = (str?) => {
+export const getRequest = (str?: string) => {
   str = str || location.search;
   str = str
     .replace(/^\?/, '')
@@ -975,34 +1000,44 @@ export const getToken = (files, type = 0, args = {}, options = {}) => {
 /**
  * 路由添加子路径，返回新的路由对象
  */
-export function addSubPathOfRoutes(routes) {
+export type SubPathRoute = string | SubPathRoute[];
+interface SubPathRouteConfig {
+  path: SubPathRoute;
+}
+type NormalizedRoutes<Routes extends Record<string, SubPathRouteConfig>> = {
+  [Key in keyof Routes]: Omit<Routes[keyof Routes], 'path'> & { path: SubPathRoute };
+};
+export function addSubPathOfRoutes<Routes extends Record<string, SubPathRouteConfig>>(
+  routes: Routes,
+): NormalizedRoutes<Routes> {
   if (!getCurrentSubPath()) {
     return routes;
   }
 
-  const newRoutes = _.cloneDeep(routes);
-
-  Object.keys(newRoutes).forEach(key => {
-    newRoutes[key].path = addSubPathOfRoute(newRoutes[key].path);
+  const newRoutes: NormalizedRoutes<Routes> = _.cloneDeep(routes);
+  _.forOwn(newRoutes, route => {
+    route.path = addSubPathOfRoute(route.path);
   });
-
   return newRoutes;
 }
 
 /**
  * 子路径处理
  */
-export const getCurrentSubPath = () => window.subPath || window.__customSubPath__ || '';
+export const getCurrentSubPath = (): string => {
+  const path: unknown = window['subPath'];
+  return (typeof path === 'string' && path) || window.__customSubPath__ || '';
+};
 
-const hasSubPath = (route, subPath) =>
+const hasSubPath = (route: string, subPath: string) =>
   !!subPath && (route === subPath || route.startsWith(`${subPath}/`) || route.startsWith(`${subPath}?`));
 
-const getPathWithSubPath = (route, subPath = getCurrentSubPath()) =>
+const getPathWithSubPath = (route: string, subPath = getCurrentSubPath()) =>
   subPath && !hasSubPath(route, subPath) ? subPath + route : route;
 
 export function getPathWithoutSubPath(url = '', subPath = getCurrentSubPath()) {
   const route = String(url).startsWith(location.origin) ? String(url).slice(location.origin.length) : String(url);
-  const pathname = route.split(/(?=[?#])/)[0];
+  const pathname = route.split(/(?=[?#])/)[0] ?? '';
 
   if (hasSubPath(pathname, subPath)) {
     return (pathname.slice(subPath.length) || '/') + route.slice(pathname.length);
@@ -1014,7 +1049,10 @@ export function getPathWithoutSubPath(url = '', subPath = getCurrentSubPath()) {
 /**
  * 路由添加子路径，返回新的路由路径
  */
-export function addSubPathOfRoute(route) {
+export function addSubPathOfRoute(route: string): string;
+export function addSubPathOfRoute(route: string[]): string[];
+export function addSubPathOfRoute(route: SubPathRoute): SubPathRoute;
+export function addSubPathOfRoute(route: SubPathRoute): SubPathRoute {
   const subPath = getCurrentSubPath();
 
   if (!subPath) {
@@ -1081,7 +1119,7 @@ export const generateRandomPassword = (length: number) => {
  * regexFilter dom 转换方式过滤 html标签
  * 缺点：慢
  */
-export function domFilterHtmlScript(html) {
+export function domFilterHtmlScript(html: string): string {
   try {
     let doc = new DOMParser().parseFromString(html, 'text/html');
     return doc.body.textContent || '';
@@ -1431,7 +1469,7 @@ export const getMimeTypeByExt = ext => {
   }
 };
 
-export const setBodyThemeMode = value => {
+export const setBodyThemeMode = (value: string) => {
   const isMobile = browserIsMobile();
 
   const theme =
@@ -1509,10 +1547,15 @@ export const getAppFeaturesPath = () => {
 // parameters 的类型不能靠默认值推断 —— 那样会推成两个字段都必填，
 // 而全仓大量调用点只传 { hasDomain: false }（navigateTo、portalAccount/util 等）。
 // 显式标成可选：缺省时 localHasDomain 是 undefined，与原来传 false 同为假值，行为不变。
-export const pathCompletion = (
-  url,
+export function pathCompletion(url: string, parameters?: { hasDomain?: boolean; localHasDomain?: boolean }): string;
+export function pathCompletion(
+  url: string | null | undefined,
+  parameters?: { hasDomain?: boolean; localHasDomain?: boolean },
+): string | null | undefined;
+export function pathCompletion(
+  url: string | null | undefined,
   parameters: { hasDomain?: boolean; localHasDomain?: boolean } = { hasDomain: true, localHasDomain: false },
-) => {
+) {
   if (!url || url.startsWith('#') || url.startsWith('http')) return url;
 
   const { hasDomain, localHasDomain } = parameters;
@@ -1524,10 +1567,10 @@ export const pathCompletion = (
   // 用于让工作表渲染层在 views 暂时为空时给出伪「全部」视图。navigateTo / pathCompletion
   // 默认会重写 query 丢掉非白名单参数（如 AppPkgHeader.completePara 跳 ?flag=Date.now()），
   // 所以这里跟 hideOptions 一样把 previewMode 透传，确保它在 iframe 路由跳转后依然保留。
-  const currentPreviewMode = qs.parse(location.search.substr(1)).previewMode;
+  const currentPreviewMode = qs.parse(location.search.substr(1))['previewMode'];
   const previewModeOption = currentPreviewMode === 'ai' ? 'previewMode=ai' : '';
 
-  url = url.split('#')[0];
+  url = url.split('#')[0] ?? '';
 
   // 外部门户自定义域名后缀：PC 用 /suffix 路径，移动端用 /app/appId 路径
   const { isPortal, addressSuffix, appId } = _.get(window.md, 'global.Account') || {};
@@ -1568,4 +1611,4 @@ export const pathCompletion = (
   }
 
   return url + (hash ? `#${hash}` : '');
-};
+}

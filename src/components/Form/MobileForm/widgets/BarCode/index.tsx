@@ -54,7 +54,7 @@ const BarCodeWidget = props => {
   const parseWidth = parseFloat(width);
   const timer = useRef<NodeJS.Timeout | null>(null);
   const imgCodeRef = useRef(null);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string | undefined>('');
 
   const updateValue = data => {
     const newVal = getBarCodeValue({

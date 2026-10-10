@@ -28,7 +28,15 @@ export const integrationFailed = (projectId: string) => {
 };
 
 // 判断是否需要清理集成关系
-export const checkClearIntergrationData = ({ projectId, onSave = () => {}, integrationType, onClose = () => {} }: { projectId?: string; [key: string]: any }) => {
+export const checkClearIntergrationData = ({
+  projectId,
+  onSave = () => {},
+  integrationType,
+  onClose = () => {},
+}: {
+  projectId?: string;
+  [key: string]: any;
+}) => {
   return workwxAjax.checkClearIntergrationData({ projectId }).then(res => {
     if (res) {
       checkClearIntegrationDialog({ projectId, integrationType, onSave, onClose });
@@ -56,4 +64,5 @@ export const getIntegrationHomeUrl = ({ projectId, integrationType }: { projectI
     const url = `/auth/feishu?p=${projectId}`;
     return isSaas ? host + url : pathCompletion(url);
   }
+  return undefined;
 };

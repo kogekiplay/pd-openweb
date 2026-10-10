@@ -3437,9 +3437,6 @@
     "src/socket/marketNotice/getNotice.ts",
     "src/socket/marketNotice/index.ts",
     "src/socket/mobileSocketInit.ts",
-    "src/utils/common.ts",
-    "src/utils/createLinksForMessage.ts",
-    "src/utils/inviteCommon.ts",
-    "src/utils/mobileNavigation.ts"
+    "src/utils/common.ts"
   ]
 }

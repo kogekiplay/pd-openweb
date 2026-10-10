@@ -21,15 +21,30 @@ import { browserIsMobile } from 'src/utils/common';
  *
  * 兼容：handlePushState / handleReplaceState 旧 API 保留，内部转发到新栈实现。
  */
-const _layerStack = [];
+export type HistoryClose = (() => void) | null | undefined;
+export type HistoryUrlParams = Record<string, string | null | undefined>;
+export interface HistoryLayerOptions {
+  urlParams?: HistoryUrlParams | undefined;
+}
+export interface HistoryBackCloseOptions extends HistoryLayerOptions {
+  visible?: boolean | undefined;
+  layerId?: string | undefined;
+  onClose?: HistoryClose;
+}
+interface HistoryLayer {
+  id: string;
+  onClose: HistoryClose;
+  seq: number;
+}
+const _layerStack: HistoryLayer[] = [];
 // 标记由弹层历史栈消费的事件，供页面级 popstate 监听区分“关闭弹层”和“页面返回”。
-const _historyLayerPopstateEvents = new WeakSet();
+const _historyLayerPopstateEvents = new WeakSet<PopStateEvent>();
 let _popstateListenerBound = false;
 // 主动关闭会先清理栈再 history.go，使用计数保留该次回退仍属于弹层操作的信息。
 let _pendingHistoryLayerPopstates = 0;
 let _seqCounter = 0;
 
-const _getUrlWithParams = (urlParams: Record<string, string | null | undefined> | undefined) => {
+const _getUrlWithParams = (urlParams: HistoryUrlParams | undefined) => {
   if (!window.isMingDaoApp || !urlParams || !Object.keys(urlParams).length) return '';
 
   const url = new URL(window.location.href);
@@ -48,17 +63,31 @@ const _getUrlWithParams = (urlParams: Record<string, string | null | undefined> 
   return `${url.pathname}${url.search}${url.hash}`;
 };
 
-const _readStateSeq = () => {
-  const v = history.state && history.state.__layerSeq;
-  return typeof v === 'number' ? v : 0;
+const _readStateSeq = (): number => {
+  const state: unknown = history.state;
+  const value: unknown =
+    state !== null && (typeof state === 'object' || typeof state === 'function') && '__layerSeq' in state
+      ? state.__layerSeq
+      : undefined;
+  return typeof value === 'number' ? value : 0;
 };
+/** Object spread preserves every unconsumed metadata property, including legacy array/string indices. */
+function historyMetadata(value: unknown): Record<string, unknown> {
+  if (value !== null && (typeof value === 'object' || typeof value === 'function')) return { ...value };
+  if (typeof value === 'string') {
+    const result: Record<string, unknown> = {};
+    for (let index = 0; index < value.length; index++) result[index] = value[index];
+    return result;
+  }
+  return {};
+}
 
 const _bindPopstateOnce = () => {
   if (_popstateListenerBound) return;
   _popstateListenerBound = true;
   window.addEventListener(
     'popstate',
-    event => {
+    (event: PopStateEvent) => {
       if (_pendingHistoryLayerPopstates > 0) {
         _pendingHistoryLayerPopstates -= 1;
         _historyLayerPopstateEvents.add(event);
@@ -68,6 +97,7 @@ const _bindPopstateOnce = () => {
       if (!_layerStack.length) return;
       _historyLayerPopstateEvents.add(event);
       const top = _layerStack[_layerStack.length - 1];
+      if (!top) return;
       const currentSeq = _readStateSeq();
       // 当前 history.state 的 seq 小于栈顶的 seq → 用户回退一帧，关栈顶弹层
       // 当前 seq ≥ 栈顶 seq → 自家 history.go 引起的消化帧（pop 中已 splice），忽略
@@ -95,28 +125,31 @@ export const isHistoryLayerPopstate = (event: PopStateEvent) =>
  * @returns {boolean} 是否成功入栈（非移动端 / 重复入栈返回 false）
  */
 export const pushHistoryLayer = (
-  id,
-  onClose,
+  id: string | undefined,
+  onClose: HistoryClose,
   // 只有 urlParams 会被读到；值为空串/null/undefined 表示把该参数从 URL 里删掉
-  options: { urlParams?: Record<string, string | null | undefined> } = {},
+  options: HistoryLayerOptions = {},
 ) => {
   if (!browserIsMobile() || !id) return false;
   _bindPopstateOnce();
   // 同 id 已在栈顶 → 视为"刷新 onClose 引用"，不重复 push
-  if (_layerStack.length && _layerStack[_layerStack.length - 1].id === id) {
-    _layerStack[_layerStack.length - 1].onClose = onClose;
+  const top = _layerStack[_layerStack.length - 1];
+  if (top?.id === id) {
+    top.onClose = onClose;
     return false;
   }
 
   const seq = ++_seqCounter;
   _layerStack.push({ id, onClose, seq });
-  const state = { ...(history.state || {}), __layerId: id, __layerSeq: seq };
-  const url = _getUrlWithParams(options.urlParams);
-
-  if (url) {
-    history.pushState(state, '', url);
-  } else {
-    history.pushState(state, '');
+  try {
+    const currentState: unknown = history.state;
+    const state = { ...historyMetadata(currentState), __layerId: id, __layerSeq: seq };
+    const url = _getUrlWithParams(options.urlParams);
+    if (url) history.pushState(state, '', url);
+    else history.pushState(state, '');
+  } catch (error) {
+    _layerStack.pop();
+    throw error;
   }
 
   return true;
@@ -127,16 +160,22 @@ export const pushHistoryLayer = (
  * 由于在 history.go 之前已 splice 掉对应层，随后触发的 popstate 看到当前栈顶 seq
  * ≤ history.state.__layerSeq，会被判定为"消化帧"忽略，不再误关父层。
  */
-export const popHistoryLayer = id => {
+export const popHistoryLayer = (id: string | undefined): boolean => {
   if (!browserIsMobile() || !id) return false;
   const idx = _layerStack.findIndex(s => s.id === id);
   if (idx === -1) return false;
   const steps = _layerStack.length - idx;
   // 先清栈，让随后 history.go 触发的 popstate 在监听器中被识别为消化帧
-  _layerStack.splice(idx, steps);
+  const removed = _layerStack.splice(idx, steps);
   if (steps > 0) {
     _pendingHistoryLayerPopstates += 1;
-    history.go(-steps);
+    try {
+      history.go(-steps);
+    } catch (error) {
+      _pendingHistoryLayerPopstates -= 1;
+      _layerStack.splice(idx, 0, ...removed);
+      throw error;
+    }
   }
 
   return true;
@@ -149,7 +188,7 @@ export const getHistoryLayerDepth = () => _layerStack.length;
  * 返回栈中是否包含某个 layerId
  * 在 onClose 里需要知道"自己是否还在栈中"时使用
  */
-export const hasHistoryLayer = (id: string) => _layerStack.some(s => s.id === id);
+export const hasHistoryLayer = (id: string | undefined) => _layerStack.some(s => s.id === id);
 
 /**
  * @deprecated 旧 API，保留向后兼容；内部转发到 pushHistoryLayer
@@ -168,7 +207,7 @@ export const handlePushState = (queryKey = '', queryValue = '') => {
  * 旧语义：当 history.state.popupKey 命中时执行 callback，并 replaceState 清掉标记。
  * 新语义：把对应 layer 从栈中弹出（同时消费 history 帧），并触发 callback。
  */
-export const handleReplaceState = (queryKey, queryValue, callback = () => {}) => {
+export const handleReplaceState = (queryKey: string, queryValue: string, callback: () => void = () => {}) => {
   const id = `${queryKey}=${queryValue}`;
   if (!hasHistoryLayer(id)) return;
   callback();
@@ -190,49 +229,42 @@ export const handleReplaceState = (queryKey, queryValue, callback = () => {}) =>
  *
  * 注意：必须传 layerId（同一时刻同 id 不会重复入栈）。
  */
-export const useHistoryBackClose = ({ visible, layerId, onClose, urlParams }) => {
+export const useHistoryBackClose = ({ visible, layerId, onClose, urlParams }: HistoryBackCloseOptions): void => {
   const onCloseRef = useRef(onClose);
   const urlParamsRef = useRef(urlParams);
-  const prevVisibleRef = useRef(false);
+  const prevVisibleRef = useRef<boolean | undefined>(false);
   const pushedRef = useRef(false);
 
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
-
   useEffect(() => {
     urlParamsRef.current = urlParams;
   }, [urlParams]);
-
   useEffect(() => {
     if (!browserIsMobile() || !layerId) return undefined;
-
     if (visible && !prevVisibleRef.current) {
-      // open
       pushedRef.current = pushHistoryLayer(
         layerId,
         () => {
           pushedRef.current = false;
-          onCloseRef.current && onCloseRef.current();
+          onCloseRef.current?.();
         },
         { urlParams: urlParamsRef.current },
       );
     } else if (!visible && prevVisibleRef.current && pushedRef.current) {
-      // close（主动关闭）
-      pushedRef.current = false;
       popHistoryLayer(layerId);
+      pushedRef.current = false;
     }
-
     prevVisibleRef.current = visible;
     return undefined;
   }, [visible, layerId]);
 
-  // 卸载兜底
   useEffect(() => {
     return () => {
       if (pushedRef.current && layerId) {
-        pushedRef.current = false;
         popHistoryLayer(layerId);
+        pushedRef.current = false;
       }
     };
   }, [layerId]);
