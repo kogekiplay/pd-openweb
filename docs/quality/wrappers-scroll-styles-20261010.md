@@ -16,6 +16,8 @@
 
 170/170 行为规格通过；工具、语法、严格欠债、fast、后缀、颜色、圆角、排版、JSX key 全部门禁通过。新规格另按工具终点严格 flags 检查，自身零诊断；工具程序已有历史严格欠债及 PublicWorksheet 微信子路径 known failure 保持，不放宽类型配置或增加基线条目。
 
+源码提交 `7e09e2bab` 的本地生产构建通过，用时 1 分 17 秒；构建后工作树干净，3 个 runtime 的资源校验通过（1095 JS、387 CSS）。本批尚未部署，当前实际生产版本为同日 15:09 更新的 cfd1fd453。
+
 实际生产 Babel 有效对比通过：四个 wrapper 1089 组、Date/Score 完整原 DOM 控制、Cascader 单/多/嵌套/搜索/原位数组及实际 Widget 请求/保存、ScrollView 22 组；15 样式/keyframes 的 SSR HTML/CSS 相同，浏览器构建使用同一实际库。公共错误类型探针分别 wrapper 20、Cascader 11、样式/Dialog 16、ScrollView/选项 12 个拒绝，合法主体零诊断，导入依赖旧债单独计入。API 加载/拒绝/重试、缓存分支旧失败、空 key、title 函数装饰、SDK 未初始化卸载及 trailing 清理均执行实际模块。
 
 只读交叉审查指出的缓存 B 旧失败覆盖和首次搜索失败仍“搜索中”已修复并复验。与本批无关的私有 UI、泛化 API payload 和全仓值引擎未被宣称完成。整个 styled-components 旧 shim 尚未删除，实际 bare import 仍有 1575 个生产模块（本批整体迁移 9 个，含 Cascader），需要继续收紧。
