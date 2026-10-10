@@ -20,7 +20,7 @@ interface CoreUtilities {
   ): { value?: string };
 }
 const moduleLike: { exports: unknown } = { exports: {} };
-const { code } = transformFileSync(process.env.RELATE_IDS_SOURCE || path.join(__dirname, 'utils.ts'), {
+const { code } = transformFileSync(process.env['RELATE_IDS_SOURCE'] || path.join(__dirname, 'utils.ts'), {
   babelrc: false,
   plugins: ['@babel/plugin-transform-modules-commonjs'],
 });

@@ -7,7 +7,7 @@ let logout = 0;
 const location = { href: 'https://example.com/portal/app/app-id/group/sheet/view', search: '' };
 const md = { global: { Account: { isPortal: true, appId: 'app-id', addressSuffix: 'custom-suffix' } } };
 const exportsLike = { exports: {} as { formatPortalHref: (props: unknown) => void } };
-const { code } = transformFileSync(process.env.PORTAL_GUARD_SOURCE || path.join(__dirname, 'util.ts'));
+const { code } = transformFileSync(process.env['PORTAL_GUARD_SOURCE'] || path.join(__dirname, 'util.ts'));
 new Function('module', 'exports', 'require', 'md', 'location', code)(
   exportsLike,
   exportsLike.exports,

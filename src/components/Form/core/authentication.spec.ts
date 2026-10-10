@@ -87,7 +87,9 @@ async function bind(
   await flush();
   assert.deepEqual(configs.at(-1), expected);
   assert.equal(typeof onReady, 'function');
-  onReady?.();
+  const ready = onReady;
+  if (typeof ready !== 'function') throw new Error('SDK ready callback was not registered');
+  Reflect.apply(ready, undefined, []);
   await pending;
 }
 async function run() {

@@ -31,7 +31,7 @@ function loadToTimeDelta(): ToTimeDelta {
   });
   // eslint-disable-next-line no-new-func
   new Function('module', 'exports', 'require', code)(mod, mod.exports, require);
-  return mod.exports.toTimeDelta as ToTimeDelta;
+  return mod.exports['toTimeDelta'] as ToTimeDelta;
 }
 
 const toTimeDelta = loadToTimeDelta();

@@ -27,7 +27,7 @@ function loadIsDeleteTarget(): IsDeleteTarget {
   });
   // eslint-disable-next-line no-new-func
   new Function('module', 'exports', 'require', code)(mod, mod.exports, require);
-  return mod.exports.isDeleteTarget as IsDeleteTarget;
+  return mod.exports['isDeleteTarget'] as IsDeleteTarget;
 }
 
 const isDeleteTarget = loadIsDeleteTarget();

@@ -229,7 +229,7 @@ function load(file: string): Record<string, unknown> {
       getDynamicValue: (_data: FormControl[], control: FormControl) => {
         if (dynamicResult !== undefined) return dynamicResult;
         const getSources = valueBoundary()['defaultSources'] as (value: unknown) => Array<{ staticValue?: unknown }>;
-        return getSources(control.advancedSetting?.defsource)
+        return getSources(control.advancedSetting?.['defsource'])
           .map(source => source.staticValue ?? '')
           .join('');
       },

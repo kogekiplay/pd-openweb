@@ -48,7 +48,7 @@ const pss = load(path.resolve(__dirname, '../../../utils/pssId.ts'), request => 
     return { setLocalStorageItemSafely: (key: string, value: string) => storage.set(key, value) };
   throw new Error(`Unexpected session dependency ${request}`);
 });
-const util = load(process.env.PORTAL_SESSION_SOURCE || path.join(__dirname, 'util.ts'), request => {
+const util = load(process.env['PORTAL_SESSION_SOURCE'] || path.join(__dirname, 'util.ts'), request => {
   if (request === 'lodash') return lodash;
   if (request === 'src/api/externalPortal') return {};
   if (request === 'src/utils/pssId') return pss;
