@@ -3,13 +3,14 @@ const os = require('os');
 const path = require('path');
 const { ROOT_PATH, print, runCommand } = require('./utils.ts');
 
-const API_ZIP_TARGETS = {
+interface ApiZipTarget { url: string; outputDir: string }
+const API_ZIP_TARGETS: Record<string, ApiZipTarget> = {
   report: {
-    url: process.env.REPORT_API_DOC_URL || 'http://118.24.27.163:28086/v/api-docs?group=report',
+    url: process.env['REPORT_API_DOC_URL'] || 'http://118.24.27.163:28086/v/api-docs?group=report',
     outputDir: path.join(ROOT_PATH, 'src/pages/Statistics/api'),
   },
   workflow: {
-    url: process.env.WORKFLOW_API_DOC_URL || 'http://118.24.27.163:28085/v/api-docs?group=workflow%20all',
+    url: process.env['WORKFLOW_API_DOC_URL'] || 'http://118.24.27.163:28085/v/api-docs?group=workflow%20all',
     outputDir: path.join(ROOT_PATH, 'src/pages/workflow/apiV2'),
   },
 };
@@ -18,7 +19,7 @@ const API_ZIP_TARGETS = {
 // 不做后处理的话，同名 .js 与 .ts 会【并存】：webpack 的 resolve.extensions 让 .ts 优先，
 // 于是新拉下来的接口被陈旧 .ts 静默遮蔽——构建绿、tsc 绿、只有 git status 里多出未跟踪 .js。
 // 因此把刚解出来的每个 .js 就地转正成 .ts（先删掉被它取代的旧 .ts）。
-function adoptExtractedJsAsTs(outputDir) {
+function adoptExtractedJsAsTs(outputDir: string): string[] {
   const adopted = [];
   for (const name of fs.readdirSync(outputDir)) {
     if (!name.endsWith('.js')) continue;
@@ -32,10 +33,11 @@ function adoptExtractedJsAsTs(outputDir) {
   if (adopted.length) {
     print.info(`已将 ${adopted.length} 个解压出的 .js 就地转为 .ts: ${adopted.join(', ')}`);
   }
+  return adopted;
 }
 
 async function main() {
-  const targetName = process.argv[2];
+  const targetName = process.argv[2] ?? '';
   const target = API_ZIP_TARGETS[targetName];
 
   if (!target) {

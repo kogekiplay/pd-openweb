@@ -50,13 +50,13 @@ const STAMP_PATH = path.join(ROOT, 'node_modules', '.install-stamp.json');
 const STAMP_VERSION = 1;
 
 /** 键排序后再序列化：package.json 里字段换个位置不该算成"依赖变了"。 */
-function canonical(value) {
-  if (Array.isArray(value)) return value.map(canonical);
+function canonical(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(item => canonical(item));
   if (value && typeof value === 'object') {
-    return Object.keys(value)
+    return Object.keys(value as Record<string, unknown>)
       .sort()
-      .reduce((acc, k) => {
-        acc[k] = canonical(value[k]);
+      .reduce<Record<string, unknown>>((acc, k) => {
+        acc[k] = canonical((value as Record<string, unknown>)[k]);
         return acc;
       }, {});
   }
@@ -93,7 +93,7 @@ function write() {
     );
   } catch (err) {
     // 见文件头：绝不因为写戳失败而让 bun install 挂掉。
-    console.warn('install-stamp: 写入失败（不影响安装）:', err.message);
+    console.warn('install-stamp: 写入失败（不影响安装）:', err instanceof Error ? err.message : String(err));
   }
 }
 

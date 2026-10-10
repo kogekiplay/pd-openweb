@@ -6,9 +6,9 @@ const http = require('http');
 const path = require('path');
 const handler = require('serve-handler');
 
-const PORT = Number(process.env.FC_PREVIEW_PORT || 5599);
+const PORT = Number(process.env['FC_PREVIEW_PORT'] || 5599);
 const root = path.join(__dirname, 'dist');
 
 http
-  .createServer((req, res) => handler(req, res, { public: root }))
+  .createServer((req: import('node:http').IncomingMessage, res: import('node:http').ServerResponse) => handler(req, res, { public: root }))
   .listen(PORT, () => console.log(`fc7 预览: http://localhost:${PORT}/`));

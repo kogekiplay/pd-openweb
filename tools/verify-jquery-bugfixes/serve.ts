@@ -6,9 +6,9 @@ const http = require('http');
 const path = require('path');
 const handler = require('serve-handler');
 
-const PORT = Number(process.env.JQ_VERIFY_PORT || 5601);
+const PORT = Number(process.env['JQ_VERIFY_PORT'] || 5601);
 const root = path.join(__dirname, 'dist');
 
 http
-  .createServer((req, res) => handler(req, res, { public: root }))
+  .createServer((req: import('node:http').IncomingMessage, res: import('node:http').ServerResponse) => handler(req, res, { public: root }))
   .listen(PORT, () => console.log(`jQuery 修复验证页: http://localhost:${PORT}/`));

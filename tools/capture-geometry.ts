@@ -55,7 +55,7 @@ const payload =
 const sinkIdx = process.argv.indexOf('--sink');
 
 if (sinkIdx !== -1) {
-  const outFile: string = process.argv[sinkIdx + 1];
+  const outFile: string = process.argv[sinkIdx + 1] ?? '';
   if (!outFile) {
     console.error('--sink 后面要跟输出文件路径');
     process.exit(2);
@@ -72,7 +72,7 @@ await fetch('http://127.0.0.1:${SINK_PORT}/', {
 }).then(r => r.text());
 `;
 
-  const server = http.createServer((req, res) => {
+  const server = http.createServer((req: import('node:http').IncomingMessage, res: import('node:http').ServerResponse) => {
     // 见文件头：不加这三个头，浏览器会以网络错的形式静默拦掉
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -84,7 +84,7 @@ await fetch('http://127.0.0.1:${SINK_PORT}/', {
     }
 
     let body = '';
-    req.on('data', (c: any) => (body += c));
+    req.on('data', (c: Buffer | string) => (body += c.toString()));
     req.on('end', () => {
       try {
         const json = JSON.parse(body);
@@ -92,9 +92,9 @@ await fetch('http://127.0.0.1:${SINK_PORT}/', {
         fs.writeFileSync(outFile, JSON.stringify(json, null, 0) + '\n');
         res.writeHead(200).end('ok');
         console.error(`收到快照：${json.meta.元素数} 个元素，漂移 ${json.meta.采集间漂移元素数} -> ${outFile}`);
-      } catch (err: any) {
+      } catch (err: unknown) {
         res.writeHead(400).end('bad');
-        console.error('收到的不是合法快照：' + err.message);
+        console.error('收到的不是合法快照：' + (err instanceof Error ? err.message : String(err)));
       }
       server.close();
     });
