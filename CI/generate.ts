@@ -5,12 +5,24 @@ const path: typeof import('path') = require('path');
 const fs: typeof import('fs') = require('fs');
 const moment: typeof import('moment') = require('moment');
 const cheerio: typeof import('cheerio') = require('cheerio');
-const minify: (html: string, options: Record<string, unknown>) => Promise<string> = require('html-minifier-terser').minify;
+const minify: (html: string, options: Record<string, unknown>) => Promise<string> =
+  require('html-minifier-terser').minify;
 const lodash: Pick<typeof import('lodash'), 'isArray' | 'random'> = require('lodash');
 
-interface HtmlEntry { type: string; src: string | null; origin: string }
-interface CiUtils { htmlTemplatesPath: string; getEntryName(str: string, filename: string): string; getEntryFromHtml(filename: string, type?: string): HtmlEntry | undefined }
-interface PublishConfig { apiServer: string; webpackPublicPath: string | readonly string[] }
+interface HtmlEntry {
+  type: string;
+  src: string | null;
+  origin: string;
+}
+interface CiUtils {
+  htmlTemplatesPath: string;
+  getEntryName(str: string, filename: string): string;
+  getEntryFromHtml(filename: string, type?: string): HtmlEntry | undefined;
+}
+interface PublishConfig {
+  apiServer: string;
+  webpackPublicPath: string | readonly string[];
+}
 type EntryNameFunction = (str: string, filename: string) => unknown;
 type EntryFromHtmlFunction = (filename: string, type?: string) => unknown;
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -28,7 +40,12 @@ function optionalEntrySource(value: unknown): string | null {
   throw new TypeError('Invalid CI HTML entry src');
 }
 function loadCiUtils(value: unknown): CiUtils {
-  if (!isRecord(value) || typeof value['htmlTemplatesPath'] !== 'string' || !isEntryNameFunction(value['getEntryName']) || !isEntryFromHtmlFunction(value['getEntryFromHtml'])) {
+  if (
+    !isRecord(value) ||
+    typeof value['htmlTemplatesPath'] !== 'string' ||
+    !isEntryNameFunction(value['getEntryName']) ||
+    !isEntryFromHtmlFunction(value['getEntryFromHtml'])
+  ) {
     throw new TypeError('Invalid CI utility module');
   }
   const htmlTemplatesPath = value['htmlTemplatesPath'];
@@ -44,7 +61,12 @@ function loadCiUtils(value: unknown): CiUtils {
     getEntryFromHtml(filename, type) {
       const result = getEntryFromHtmlFunction(filename, type);
       if (result === undefined) return undefined;
-      if (!isRecord(result) || typeof result['type'] !== 'string' || (result['src'] !== null && typeof result['src'] !== 'string') || typeof result['origin'] !== 'string') {
+      if (
+        !isRecord(result) ||
+        typeof result['type'] !== 'string' ||
+        (result['src'] !== null && typeof result['src'] !== 'string') ||
+        typeof result['origin'] !== 'string'
+      ) {
         throw new TypeError('Invalid CI HTML entry');
       }
       return {
@@ -58,7 +80,10 @@ function loadCiUtils(value: unknown): CiUtils {
 function decodePublishConfig(value: unknown): PublishConfig {
   if (!isRecord(value) || typeof value['apiServer'] !== 'string') throw new TypeError('Invalid publish config');
   const publicPath = value['webpackPublicPath'];
-  if (typeof publicPath !== 'string' && (!Array.isArray(publicPath) || !publicPath.every(item => typeof item === 'string'))) {
+  if (
+    typeof publicPath !== 'string' &&
+    (!Array.isArray(publicPath) || !publicPath.every(item => typeof item === 'string'))
+  ) {
     throw new TypeError('Invalid webpack public path');
   }
   return { apiServer: value['apiServer'], webpackPublicPath: publicPath };
@@ -124,20 +149,36 @@ async function destHtml(filename: string, html: string): Promise<void> {
   );
 }
 
-interface ManifestAsset { js?: string; css?: string }
+interface ManifestAsset {
+  js?: string;
+  css?: string;
+}
 type Manifest = Record<string, ManifestAsset>;
-function decodeManifest(value: unknown): Manifest {
-  if (value === null || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('Invalid webpack manifest');
+/** Only the named entries used by this HTML have a single js/css path.
+ * AssetsPlugin also emits an unnamed bucket of asynchronous assets as arrays.
+ */
+function decodeManifest(value: unknown, scriptEntries: readonly string[], styleEntries: readonly string[]): Manifest {
+  if (value === null || typeof value !== 'object' || Array.isArray(value))
+    throw new TypeError('Invalid webpack manifest');
   const result: Manifest = {};
-  for (const [key, rawAsset] of Object.entries(value)) {
-    if (rawAsset === null || typeof rawAsset !== 'object' || Array.isArray(rawAsset)) throw new TypeError(`Invalid manifest entry: ${key}`);
+  for (const key of new Set([...scriptEntries, ...styleEntries])) {
+    if (!Object.prototype.hasOwnProperty.call(value, key)) continue;
+    const rawAsset: unknown = Reflect.get(value, key);
+    if (rawAsset === null || typeof rawAsset !== 'object' || Array.isArray(rawAsset))
+      throw new TypeError(`Invalid manifest entry: ${key}`);
     const data: Record<string, unknown> = {};
     for (const [field, fieldValue] of Object.entries(rawAsset)) data[field] = fieldValue;
-    if (data['js'] !== undefined && typeof data['js'] !== 'string') throw new TypeError(`Invalid manifest js: ${key}`);
-    if (data['css'] !== undefined && typeof data['css'] !== 'string') throw new TypeError(`Invalid manifest css: ${key}`);
     const outputAsset: ManifestAsset = {};
-    if (typeof data['js'] === 'string') outputAsset.js = data['js'];
-    if (typeof data['css'] === 'string') outputAsset.css = data['css'];
+    if (scriptEntries.includes(key)) {
+      if (data['js'] !== undefined && typeof data['js'] !== 'string')
+        throw new TypeError(`Invalid manifest js: ${key}`);
+      if (typeof data['js'] === 'string') outputAsset.js = data['js'];
+    }
+    if (styleEntries.includes(key)) {
+      if (data['css'] !== undefined && typeof data['css'] !== 'string')
+        throw new TypeError(`Invalid manifest css: ${key}`);
+      if (typeof data['css'] === 'string') outputAsset.css = data['css'];
+    }
     result[key] = outputAsset;
   }
   return result;
@@ -306,14 +347,20 @@ async function generate(): Promise<void> {
         // 发布模式
         const baseEntry = ['runtime', ...getCommonEntries(entry.type)];
 
-        const manifestData: Manifest = decodeManifest(JSON.parse(
-          fs
-            .readFileSync(path.join(buildPath, `dist/${entry.type === 'index' ? '' : `${entry.type}/`}manifest.json`))
-            .toString(),
-        ));
+        const scriptEntries = [...(!noCommonResource ? baseEntry : ['runtime', 'cookies']), moduleName];
+        const styleEntries = noCommonResource ? [] : ['css', ...baseEntry, moduleName];
+        const manifestData: Manifest = decodeManifest(
+          JSON.parse(
+            fs
+              .readFileSync(path.join(buildPath, `dist/${entry.type === 'index' ? '' : `${entry.type}/`}manifest.json`))
+              .toString(),
+          ),
+          scriptEntries,
+          styleEntries,
+        );
 
         $entryScript.replaceWith(
-          [...(!noCommonResource ? baseEntry : ['runtime', 'cookies']), moduleName]
+          scriptEntries
             .filter(key => !!manifestData[key] && manifestData[key].js)
             .map(key => {
               const asset = manifestData[key];
@@ -324,7 +371,7 @@ async function generate(): Promise<void> {
 
         if (!noCommonResource) {
           $('head').append(
-            ['css', ...baseEntry, moduleName]
+            styleEntries
               .filter(key => !!manifestData[key] && manifestData[key].css)
               .map(key => {
                 const asset = manifestData[key];
