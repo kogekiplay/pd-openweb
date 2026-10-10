@@ -17,316 +17,88 @@ import { accAdd, accDiv, accMul, htmlDecodeReg, pathCompletion } from 'src/utils
 import { formatFormulaDate, renderText as renderCellText } from 'src/utils/control';
 import RegExpValidator from 'src/utils/expression';
 import model from './model';
+import {
+  cellTitleControl,
+  checklist,
+  decodePrintLogo,
+  decodePrintRow,
+  decodePrintSheet,
+  decodePrintTask,
+  decodeRelateRecord,
+  displayName,
+  locationValue,
+  parsePrintJson,
+  printAttachments,
+  printControls,
+  printDate,
+  printNode,
+  printObject,
+  printOptions,
+  printRows,
+  printShareUrl,
+  printString,
+  readDateValues,
+  relationValues,
+  subTasks,
+  taskItems,
+  workflowItems,
+} from './printBoundary';
 import PrintOptDialog from './PrintOptDialog';
+import type {
+  PrintAttachment,
+  PrintControl,
+  PrintFormDetail,
+  PrintOption,
+  PrintProps,
+  PrintRelateRecord,
+  PrintRow,
+  PrintState,
+  PrintTaskData,
+  PrintTaskItem,
+} from './PrintTypes';
 import './index.less';
-import type { ControlOption, FormControl, RecordRow } from 'src/utils/controlTypes';
-
-/** 打印里用到的附件形状 */
-interface PrintAttachment {
-  originalFilename: string;
-  ext: string;
-  previewUrl?: string | undefined;
-  [key: string]: unknown;
-}
-
-interface PrintRouteParams {
-  typeId: string;
-  printType: string;
-}
-
-type PrintControl = FormControl & {
-  formId?: string | undefined;
-  innerRow?: number | undefined;
-};
-
-interface PrintProps {
-  match: { params: PrintRouteParams };
-}
-
-interface PrintTaskItem {
-  key: string;
-  name: string;
-  show: boolean;
-  independent: boolean;
-  value: PrintTaskValue;
-}
-
-interface ChecklistItem {
-  checkListName: string;
-  checkListData: Array<{ name: string; status?: boolean | number | undefined }>;
-}
-
-interface SubTaskItem {
-  name: string;
-  status?: boolean | number | undefined;
-}
-
-type PrintTaskValue = ReactNode | ChecklistItem[] | SubTaskItem[];
-
-interface PrintTaskData {
-  controls: PrintControl[];
-  taskName: string;
-  folder?: string | undefined;
-  startTime?: string | undefined;
-  deadline?: string | undefined;
-  actualStartTime?: string | undefined;
-  completedTime?: string | undefined;
-  member: string[];
-  tag: string[];
-  desc: string;
-  [key: string]: unknown;
-}
-
-interface PrintWorkLog {
-  action: number;
-}
-
-interface PrintWorkItem {
-  countersignType?: number | undefined;
-  workItems: PrintWorkItem[];
-  workItemLogList: PrintWorkLog[];
-  workType?: number | undefined;
-}
-
-interface PrintWorks {
-  taskList: PrintWorkItem[];
-  manageList: PrintWorkItem[];
-}
-
-interface PrintFormDetail {
-  formId: string;
-  tempControls: PrintControl[];
-  controls: PrintControl[][];
-}
-
-interface PrintRequestInfo {
-  title?: string | undefined;
-  reqTitle?: string | undefined;
-  reqNo?: string | undefined;
-  controls: PrintControl[];
-  formControls: PrintFormDetail[];
-}
-
-interface PrintRowInfo {
-  controls: PrintControl[];
-  shortUrl?: string | undefined;
-}
-
-interface PrintRelateRecord {
-  template: { controls: PrintControl[] };
-  data: RecordRow[];
-}
-
-interface PrintState {
-  reqId: string;
-  type: string;
-  processOption: string | string[];
-  configOptions: { showWorkflowQrCode: boolean };
-  formDetail: Record<string, unknown>;
-  workList: PrintWorkItem[];
-  controls: Record<string, PrintControl[]>;
-  signatureControls: PrintControl[];
-  formControls: PrintFormDetail[];
-  logo: string;
-  detailsType: number;
-  showPrintDialog: boolean;
-  controlOption: string[] | 'all';
-  reqInfo: PrintRequestInfo;
-  reqWorks: PrintWorks;
-  printCheckAll: boolean;
-  fontSize: number;
-  appId?: string | undefined;
-  viewId?: string | undefined;
-  worksheetId?: string | undefined;
-  projectId?: string | undefined;
-  workSheetGetType: string | number;
-  sheetInfo: { name?: string | undefined; ownerAccount?: unknown; updateTime?: string | undefined };
-  rowInfo: PrintRowInfo;
-  task: PrintTaskItem[];
-  workflow: Array<Record<string, unknown>>;
-  printTitle?: string | undefined;
-  relateRecords: Record<string, PrintRelateRecord>;
-  taskList?: PrintWorkItem[] | undefined;
-  manageList?: PrintWorkItem[] | undefined;
-  printWorkList?: PrintWorkItem[] | undefined;
-  temControl?: unknown;
-}
-
-function isPrimitiveTaskValue(value: unknown): value is string | number | boolean {
-  return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
-}
-
-function decodeChecklistItem(value: unknown): ChecklistItem | undefined {
-  if (!isRecord(value) || typeof value['checkListName'] !== 'string' || !Array.isArray(value['checkListData'])) return undefined;
-  const checkListData: ChecklistItem['checkListData'] = [];
-  for (const entry of value['checkListData']) {
-    if (!isRecord(entry) || typeof entry['name'] !== 'string') return undefined;
-    const status = entry['status'];
-    if (status !== undefined && typeof status !== 'boolean' && typeof status !== 'number') return undefined;
-    checkListData.push({ name: entry['name'], status });
-  }
-  return { checkListName: value['checkListName'], checkListData };
-}
-
-function decodeSubTaskItem(value: unknown): SubTaskItem | undefined {
-  if (!isRecord(value) || typeof value['name'] !== 'string') return undefined;
-  const status = value['status'];
-  if (status !== undefined && typeof status !== 'boolean' && typeof status !== 'number') return undefined;
-  return { name: value['name'], status };
-}
-
-function decodeTaskValue(value: unknown): PrintTaskValue {
-  if (value === null || value === undefined || isPrimitiveTaskValue(value)) return value;
-  if (Array.isArray(value)) {
-    if (value.every(item => isPrimitiveTaskValue(item))) return value.map(item => item);
-    const checklists = value.map(decodeChecklistItem);
-    if (checklists.every((item): item is ChecklistItem => item !== undefined)) return checklists;
-    const subTasks = value.map(decodeSubTaskItem);
-    if (subTasks.every((item): item is SubTaskItem => item !== undefined)) return subTasks;
-  }
-  return undefined;
-}
-
-function isChecklistArray(value: PrintTaskValue): value is ChecklistItem[] {
-  return Array.isArray(value) && value.every(item => isRecord(item) && typeof item['checkListName'] === 'string' && Array.isArray(item['checkListData']));
-}
-
-function isSubTaskArray(value: PrintTaskValue): value is SubTaskItem[] {
-  return Array.isArray(value) && value.every(item => isRecord(item) && typeof item['name'] === 'string');
-}
-
-function decodePrintAttachments(value: string): PrintAttachment[] | undefined {
-  const parsed = parsePrintJson(value);
-  if (!Array.isArray(parsed)) return undefined;
-  const attachments: PrintAttachment[] = [];
-  for (const item of parsed) {
-    if (!isRecord(item) || typeof item['originalFilename'] !== 'string' || typeof item['ext'] !== 'string') {
-      return undefined;
-    }
-    attachments.push({
-      originalFilename: item['originalFilename'],
-      ext: item['ext'],
-      previewUrl: typeof item['previewUrl'] === 'string' ? item['previewUrl'] : undefined,
-    });
-  }
-  return attachments;
-}
-
-function parsePrintJson(value: string): unknown {
-  try {
-    const parsed: unknown = JSON.parse(value);
-    return parsed;
-  } catch (error) {
-    console.log(error);
-    return undefined;
-  }
-}
-
-function readPrintStringArray(value: unknown): string[] | undefined {
-  return Array.isArray(value) && value.every(item => typeof item === 'string') ? value : undefined;
-}
-
-interface PrintRelationValue {
-  type?: number | undefined;
-  name?: string | undefined;
-}
-
-function readPrintRelationValues(value: unknown): PrintRelationValue[] | undefined {
-  if (!Array.isArray(value)) return undefined;
-  const result: PrintRelationValue[] = [];
-  for (const item of value) {
-    if (!isRecord(item)) return undefined;
-    const type = item['type'];
-    const name = item['name'];
-    if (type !== undefined && typeof type !== 'number') return undefined;
-    if (name !== undefined && typeof name !== 'string') return undefined;
-    result.push({ type, name });
-  }
-  return result;
-}
-
-function readPrintDisplayNames(value: unknown): string[] | undefined {
-  if (Array.isArray(value)) {
-    if (!value.every(item => isRecord(item) && typeof item['fullname'] === 'string')) return undefined;
-    return value.map(item => item['fullname']);
-  }
-  return isRecord(value) && typeof value['fullname'] === 'string' ? [value['fullname']] : undefined;
-}
-
-function readPrintDepartmentName(value: unknown): string {
-  const item = Array.isArray(value) ? value[0] : value;
-  return isRecord(item) && typeof item['departmentName'] === 'string' ? item['departmentName'] : '';
-}
-
-function readPrintLocation(value: unknown): { title: string; address: string } | undefined {
-  if (!isRecord(value) || typeof value['title'] !== 'string' || typeof value['address'] !== 'string') return undefined;
-  return { title: value['title'], address: value['address'] };
-}
-
-function isFormControl(value: unknown): value is PrintControl {
-  if (!isRecord(value)) return false;
-  const stringKeys = ['controlId', 'controlName', 'dataSource', 'sourceControlId', 'unit', 'formId'];
-  const numberKeys = ['type', 'enumDefault', 'enumDefault2', 'sourceControlType', 'dot', 'row', 'col', 'attribute', 'innerRow', 'printDetailType'];
-  const booleanKeys = ['printHide', 'isRelateMultipleSheet', 'needEvaluate'];
-  return (
-    stringKeys.every(key => value[key] === undefined || typeof value[key] === 'string') &&
-    numberKeys.every(key => value[key] === undefined || typeof value[key] === 'number') &&
-    booleanKeys.every(key => value[key] === undefined || typeof value[key] === 'boolean')
-  );
-}
-
-function isRecordRow(value: unknown): value is RecordRow {
-  return isRecord(value);
-}
 
 function hasControlId(control: PrintControl): control is PrintControl & { controlId: string } {
   return typeof control.controlId === 'string';
 }
-
-function decodeRelateRecord(value: unknown): PrintRelateRecord | undefined {
-  if (!isRecord(value)) return undefined;
-  const template = value['template'];
-  const data = value['data'];
-  if (!isRecord(template) || !Array.isArray(template['controls']) || !template['controls'].every(isFormControl)) return undefined;
-  if (!Array.isArray(data) || !data.every(isRecordRow)) return undefined;
-  return { template: { controls: template['controls'] }, data };
-}
-
-function getRecordControlValue(row: RecordRow, control: PrintControl): unknown {
+function getRecordControlValue(row: PrintRow, control: PrintControl): unknown {
   return control.controlId ? row[control.controlId] : undefined;
 }
-
+// Preserve the old undefined arithmetic/comparison behavior: Number(undefined) is NaN.
 function getInnerRow(control: PrintControl): number {
-  return control.innerRow ?? 0;
+  return Number(control.innerRow);
 }
-
 function isNumericPrintType(type: number | undefined): boolean {
   return type === 6 || type === 8 || type === 20;
 }
-
 function hasPrintType(control: PrintControl, type: number): boolean {
   return control.type === type;
 }
-
 function hasPrintDataSource(value: unknown): boolean {
   return Boolean(value) && value !== 0;
 }
-
-function getExpandedPrintControls(value: unknown): PrintControl[] {
-  if (!Array.isArray(value) || !value.every(isFormControl)) throw new Error('Invalid expanded print controls');
-  return value;
-}
-
 function hasAttachmentPreview(attachment: PrintAttachment): attachment is PrintAttachment & { previewUrl: string } {
   return typeof attachment.previewUrl === 'string';
 }
-
-function getRenderableTaskValue(value: PrintTaskValue): ReactNode {
-  return isChecklistArray(value) || isSubTaskArray(value) ? undefined : value;
+function getExpandedPrintControls(value: unknown): PrintControl[] {
+  return printControls(value);
+}
+function getRenderableTaskValue(value: unknown): ReactNode {
+  return printNode(value);
+}
+function printCellText(control: PrintControl): ReactNode {
+  const result: unknown = renderCellText(cellTitleControl(control));
+  return printNode(result);
+}
+function printDateRange(value: unknown, worksheet: boolean): string | string[] {
+  if (!worksheet) return printString(value).split(',');
+  try {
+    const dates = readDateValues(parsePrintJson(value));
+    return dates.filter(Boolean).length ? dates.map(item => (item ? moment(item).format('x') : '')) : '';
+  } catch (error) {
+    console.log(error);
+    return printString(value);
+  }
 }
 
 const nzhCn = nzh.cn;
@@ -369,7 +141,7 @@ const allocationTask = (result: PrintTaskData): PrintTaskItem[] => {
     } else if (item.key === 'desc') {
       printItem.value = <span dangerouslySetInnerHTML={{ __html: filterXss(htmlDecodeReg(result.desc)) }} />;
     } else {
-      printItem.value = decodeTaskValue(result[item.key]);
+      printItem.value = result[item.key];
     }
 
     return printItem;
@@ -377,6 +149,11 @@ const allocationTask = (result: PrintTaskData): PrintTaskItem[] => {
 };
 
 export default class Print extends Component<PrintProps, PrintState> {
+  private disposed = false;
+  private cleanupTimer: ReturnType<typeof setInterval> | undefined;
+  private loadVersion = 0;
+  private shareVersion = 0;
+  private relationVersions = new Map<string, number>();
   static override propTypes = {
     reqId: PropTypes.string,
   };
@@ -399,8 +176,8 @@ export default class Print extends Component<PrintProps, PrintState> {
       detailsType: 2, // 明细的显示方式：1纵向，2横向
       showPrintDialog: false, // 显隐设置弹层
       controlOption: 'all',
-      reqInfo: { controls: [], formControls: [] }, // 表单控件内容
-      reqWorks: { taskList: [], manageList: [] }, // 表单审批流程内容
+      reqInfo: {}, // 表单控件内容
+      reqWorks: {}, // 表单审批流程内容
       printCheckAll: true, // 打印选项弹层是否全选
       fontSize: 14,
       appId: window.location.search.slice(1).split('&&')[0],
@@ -409,13 +186,20 @@ export default class Print extends Component<PrintProps, PrintState> {
       projectId: window.location.search.slice(1).split('&&')[3],
       workSheetGetType: window.location.search.slice(1).split('&&')[4] || 1,
       sheetInfo: {}, // 工作表记录详情
-      rowInfo: { controls: [] }, // 工作表记录打印控件
+      rowInfo: {}, // 工作表记录打印控件
       task: [],
       workflow: [],
       relateRecords: {},
+      relationErrors: {},
     };
   }
   override componentDidMount = () => {
+    this.disposed = false;
+    if (this.cleanupTimer !== undefined) clearInterval(this.cleanupTimer);
+    this.cleanupTimer = setInterval(() => {
+      const elements = $('.kf5-support-chat, #containerBg, #topBarContainer');
+      if (elements.length > 0) elements.remove();
+    }, 1000);
     const { params } = this.props.match;
 
     if (params.printType === 'worksheet') {
@@ -424,7 +208,19 @@ export default class Print extends Component<PrintProps, PrintState> {
       this.initTask();
     }
   };
-  initWorksheet() {
+  override componentWillUnmount(): void {
+    this.disposed = true;
+    this.loadVersion++;
+    this.shareVersion++;
+    if (this.cleanupTimer !== undefined) clearInterval(this.cleanupTimer);
+    this.cleanupTimer = undefined;
+  }
+  private loadError(error: unknown, version: number): void {
+    console.log(error);
+    if (!this.disposed && version === this.loadVersion) this.setState({ loadingError: _l('加载失败') });
+  }
+  initWorksheet(): Promise<void> {
+    const version = ++this.loadVersion;
     document.title = _l('记录打印') + ' - ' + _l('工作表');
     const sheetArgs = {
       worksheetId: this.state.worksheetId,
@@ -441,16 +237,20 @@ export default class Print extends Component<PrintProps, PrintState> {
       this.state.projectId && !!_.find(md.global.Account.projects, item => item.projectId === this.state.projectId)
         ? projectAjax.getSysColor({ projectId: this.state.projectId })
         : Promise.resolve({ logo: md.global.Config.Logo });
-    Promise.all([sheetAjax.getWorksheetInfo(sheetArgs), sheetAjax.getRowByID(rowInfoArgs), logoAjax]).then(
-      ([sheetInfo, rowInfo, logo]) => {
-        const signatureControls = rowInfo.receiveControls.filter((item: FormControl) => item.type === 42);
-        rowInfo.receiveControls = rowInfo.receiveControls.filter((item: FormControl) => item.type !== 42);
+    return Promise.all([sheetAjax.getWorksheetInfo(sheetArgs), sheetAjax.getRowByID(rowInfoArgs), logoAjax])
+      .then(([sheetResponse, rowResponse, logoResponse]: [unknown, unknown, unknown]) => {
+        const sheetInfo = decodePrintSheet(sheetResponse);
+        const rowInfo = decodePrintRow(rowResponse);
+        const logo = decodePrintLogo(logoResponse);
+        if (this.disposed || version !== this.loadVersion) return;
+        const signatureControls = rowInfo.receiveControls.filter((item: PrintControl) => item.type === 42);
+        rowInfo.receiveControls = rowInfo.receiveControls.filter((item: PrintControl) => item.type !== 42);
         const controlData = _.groupBy(rowInfo.receiveControls, item => item.row);
         const titleControl = _.find(rowInfo.receiveControls, control => control.attribute === 1);
         const relateRecordControls = rowInfo.receiveControls.filter(
-          (control: FormControl) => control.type === 29 && control.enumDefault === 2,
+          (control: PrintControl) => control.type === 29 && control.enumDefault === 2,
         );
-        relateRecordControls.forEach((control: FormControl) =>
+        relateRecordControls.forEach((control: PrintControl) =>
           this.loadRowRelationRows({
             appId: this.state.appId,
             worksheetId: this.state.worksheetId,
@@ -459,9 +259,9 @@ export default class Print extends Component<PrintProps, PrintState> {
           }),
         );
         this.setState({
-          logo: logo.logo || '',
+          logo: logo.logo,
           rowInfo: { controls: rowInfo.receiveControls, shortUrl: rowInfo.shortUrl },
-          printTitle: titleControl ? renderCellText(titleControl) || _l('未命名') : _l('未命名'),
+          printTitle: titleControl ? printCellText(titleControl) || _l('未命名') : _l('未命名'),
           controls: controlData,
           signatureControls,
           sheetInfo: {
@@ -471,19 +271,28 @@ export default class Print extends Component<PrintProps, PrintState> {
           },
           reqInfo: {
             title: rowInfo.titleName,
-            controls: [],
-            formControls: [],
           },
           relateRecords: {},
+          relationErrors: {},
+          loadingError: undefined,
         });
         this.loadWorksheetShortUrl(this.state.appId, rowInfoArgs.worksheetId, this.state.viewId, rowInfoArgs.rowId);
-      },
-    );
+      })
+      .catch((error: unknown) => this.loadError(error, version));
   }
 
-  loadRowRelationRows = (args: { appId?: string | undefined; worksheetId?: string | undefined; rowId: string; control: PrintControl }) => {
+  loadRowRelationRows = (args: {
+    appId?: string | undefined;
+    worksheetId?: string | undefined;
+    rowId: string;
+    control: PrintControl;
+  }): Promise<void> => {
     const { appId, worksheetId, rowId, control } = args;
-    sheetAjax
+    const loadVersion = this.loadVersion;
+    const key = control.controlId || '';
+    const version = (this.relationVersions.get(key) || 0) + 1;
+    this.relationVersions.set(key, version);
+    return sheetAjax
       .getRowRelationRows({
         appId,
         worksheetId,
@@ -493,21 +302,45 @@ export default class Print extends Component<PrintProps, PrintState> {
         pageSize: 100000,
         getWorksheet: true,
       })
-      .then(data => {
+      .then((data: unknown) => {
         const relateRecord = decodeRelateRecord(data);
-        if (!relateRecord || !control.controlId) return;
-        const newRelateRecords = Object.assign({}, this.state.relateRecords);
-        newRelateRecords[control.controlId] = relateRecord;
-        this.setState({
-          relateRecords: newRelateRecords,
-        });
+        if (
+          this.disposed ||
+          loadVersion !== this.loadVersion ||
+          this.relationVersions.get(key) !== version ||
+          !control.controlId
+        )
+          return;
+        const controlId = control.controlId;
+        this.setState(previous => ({
+          relateRecords: { ...previous.relateRecords, [controlId]: relateRecord },
+          relationErrors: { ...previous.relationErrors, [controlId]: '' },
+        }));
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         console.log(err);
+        if (
+          !this.disposed &&
+          loadVersion === this.loadVersion &&
+          this.relationVersions.get(key) === version &&
+          control.controlId
+        ) {
+          const controlId = control.controlId;
+          this.setState(previous => ({
+            relationErrors: { ...previous.relationErrors, [controlId]: _l('加载失败') },
+          }));
+        }
       });
   };
-  loadWorksheetShortUrl(appId: string | undefined, worksheetId: string | undefined, viewId: string | undefined, rowId: string) {
-    sheetAjax
+  loadWorksheetShortUrl(
+    appId: string | undefined,
+    worksheetId: string | undefined,
+    viewId: string | undefined,
+    rowId: string,
+  ): Promise<void> {
+    const loadVersion = this.loadVersion;
+    const version = ++this.shareVersion;
+    return sheetAjax
       .getWorksheetShareUrl({
         worksheetId,
         appId,
@@ -515,20 +348,25 @@ export default class Print extends Component<PrintProps, PrintState> {
         rowId,
         objectType: 2,
       })
-      .then(shareUrl => {
+      .then((response: unknown) => {
+        const shareUrl = printShareUrl(response);
+        if (this.disposed || loadVersion !== this.loadVersion || version !== this.shareVersion) return;
         this.setState({
           rowInfo: Object.assign({}, this.state.rowInfo, { shortUrl: shareUrl }),
         });
-      });
+      })
+      .catch((error: unknown) => console.log(error));
   }
-  initTask() {
+  initTask(): Promise<void> {
+    const version = ++this.loadVersion;
     document.title = _l('任务打印');
-    postAjax
+    return postAjax
       .getTaskDetail4Print({
         taskId: this.state.reqId,
       })
-      .then(source => {
-        const { data } = source;
+      .then((source: unknown) => {
+        const data = decodePrintTask(source);
+        if (this.disposed || version !== this.loadVersion) return;
         const controlData = _.groupBy(data.controls, 'row');
         const url = `${md.global.Config.AjaxApiUrl}code/CreateQrCodeImage?url=${encodeURIComponent(
           pathCompletion(`/apps/task/task_${this.state.reqId}`),
@@ -543,8 +381,11 @@ export default class Print extends Component<PrintProps, PrintState> {
             formControls: [],
           },
           controls: controlData,
+          loadingError: undefined,
+          relationErrors: {},
         });
-      });
+      })
+      .catch((error: unknown) => this.loadError(error, version));
   }
   override componentDidUpdate = function (this: Print) {
     $('#container, .AppHr form').addClass('hrApprovalBox');
@@ -558,9 +399,9 @@ export default class Print extends Component<PrintProps, PrintState> {
   */
   getShowContent = function (
     this: Print,
-    item: FormControl,
+    item: PrintControl,
     sourceControlType?: number,
-    valueItem?: RecordRow,
+    valueItem?: unknown,
     relationItemKey?: string,
   ): ReactNode {
     const value = sourceControlType ? valueItem : item.value;
@@ -588,11 +429,11 @@ export default class Print extends Component<PrintProps, PrintState> {
       case 10007:
       case 10008:
       case 10009:
-        return value || '';
+        return printNode(value || '');
       case 15:
-        return value ? moment(value).format('YYYY-MM-DD') : '';
+        return value ? moment(printDate(value)).format('YYYY-MM-DD') : '';
       case 16:
-        return value ? moment(value).format('YYYY-MM-DD HH:mm') : '';
+        return value ? moment(printDate(value)).format('YYYY-MM-DD HH:mm') : '';
       case 36:
         return value === '1' ? '✓' : '';
       case 6:
@@ -617,20 +458,24 @@ export default class Print extends Component<PrintProps, PrintState> {
               : _value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')) + (item.unit ? item.unit : '')
           : '';
       case 9: {
-        const selectItem = (item.options || []).filter((optionItem: ControlOption) => optionItem.key == value);
-        return selectItem[0]?.value || '';
+        const selectItem = (item.options || []).filter((optionItem: PrintOption) => optionItem.key == value);
+        return selectItem[0] ? selectItem[0].value : '';
       }
 
       case 11: {
         if (value && item.dataSource && !item.sourceControlId) {
           const parsed = parsePrintJson(value);
-          const label = isRecord(parsed) && typeof parsed['label'] === 'string' ? parsed['label'] : '';
-          const labels = readPrintStringArray(parsePrintJson(label));
-          return labels ? labels.join(' / ') || '' : label;
+          const label = printObject(parsed) && typeof parsed['label'] === 'string' ? parsed['label'] : '';
+          try {
+            return readDateValues(parsePrintJson(label)).join(' / ') || '';
+          } catch (error) {
+            console.log(error);
+            return label;
+          }
         }
 
-        const selectItem = (item.options || []).filter((optionItem: ControlOption) => optionItem.key == value);
-        return selectItem[0]?.value || '';
+        const selectItem = (item.options || []).filter((optionItem: PrintOption) => optionItem.key == value);
+        return selectItem[0] ? selectItem[0].value : '';
       }
 
       case 10: {
@@ -638,16 +483,17 @@ export default class Print extends Component<PrintProps, PrintState> {
 
         if (value) {
           const keys: string[] = [];
+          const bitString = printString(value);
 
-          for (let i = 0; i < value.length; i++) {
-            if (value[i] !== '0') {
-              keys.push('1' + value.slice(i + 1).replace(/1/g, 0));
+          for (let i = 0; i < bitString.length; i++) {
+            if (bitString[i] !== '0') {
+              keys.push('1' + bitString.slice(i + 1).replace(/1/g, '0'));
             }
           }
 
           text = (item.options || [])
-            .filter((option: ControlOption) => keys.indexOf(option.key) > -1)
-            .map((option: ControlOption) => option.value)
+            .filter((option: PrintOption) => keys.indexOf(option.key) > -1)
+            .map((option: PrintOption) => option.value)
             .join(',');
         }
 
@@ -659,22 +505,13 @@ export default class Print extends Component<PrintProps, PrintState> {
           return this.renderRecordAttachments(value, item.isRelateMultipleSheet);
         }
 
-        const attachments = value ? decodePrintAttachments(value) : undefined;
+        const attachments = value ? printAttachments(value) : undefined;
         return attachments ? attachments.map(item => item.originalFilename).join(',') : ' ';
       case 17: {
         let showContent = '';
 
         if (value) {
-          let newValue = '';
-
-          if (this.state.type === 'worksheet' || this.state.type === 'workflow') {
-            const dateValues = readPrintStringArray(parsePrintJson(value));
-            newValue = dateValues && dateValues.filter(item => item).length > 0
-              ? dateValues.map(item => (item ? moment(item).format('x') : ''))
-              : value;
-          } else {
-            newValue = value.split(',');
-          }
+          const newValue = printDateRange(value, this.state.type === 'worksheet' || this.state.type === 'workflow');
 
           const days = moment(new Date(Number(newValue[1]))).diff(moment(new Date(Number(newValue[0]))), 'days') + 1; // 时间差
 
@@ -698,16 +535,7 @@ export default class Print extends Component<PrintProps, PrintState> {
         let showContent = '';
 
         if (value) {
-          let newValue = '';
-
-          if (this.state.type === 'worksheet' || this.state.type === 'workflow') {
-            const dateValues = readPrintStringArray(parsePrintJson(value));
-            newValue = dateValues && dateValues.filter(item => item).length > 0
-              ? dateValues.map(item => (item ? moment(item).format('x') : ''))
-              : value;
-          } else {
-            newValue = value.split(',');
-          }
+          const newValue = printDateRange(value, this.state.type === 'worksheet' || this.state.type === 'workflow');
 
           const timeDifference = Number(newValue[1]) - Number(newValue[0]); // 时间差
           // const days = Math.floor(timeDifference / (24 * 3600 * 1000)); // 时间差转化成天数
@@ -749,7 +577,7 @@ export default class Print extends Component<PrintProps, PrintState> {
 
       case 21: {
         if (value) {
-          const getTypeName = (type: number) => {
+          const getTypeName = (type: number | undefined) => {
             switch (type) {
               case 1:
                 return _l('任务') + '：';
@@ -767,21 +595,23 @@ export default class Print extends Component<PrintProps, PrintState> {
             return undefined;
           };
 
-          const relationshipItem = (relationValueItem: RecordRow, index: number) => {
+          const relationshipItem = (
+            relationValueItem: { type?: number | undefined; name?: string | undefined },
+            index: number,
+          ) => {
             return (
               <div className="relationshipItem" key={item.controlId + '-relationValueItem-' + index}>
-                <span className="typeName">{getTypeName(relationValueItem['type'])}</span>
+                <span className="typeName">{getTypeName(relationValueItem.type)}</span>
                 <span className="name">{relationValueItem.name} </span>
                 {/* <span className="link"> {relationValueItem.link}</span>*/}
               </div>
             );
           };
 
-          const newValue = readPrintRelationValues(parsePrintJson(value));
-          if (!newValue) return '';
+          const newValue = relationValues(parsePrintJson(value));
           const content = (
             <div key={relationItemKey || item.controlId} className="relationshipBox">
-              {newValue.map((relationValueItem: RecordRow, index: number) => relationshipItem(relationValueItem, index))}
+              {newValue.map((relationValueItem, index: number) => relationshipItem(relationValueItem, index))}
             </div>
           );
           return content;
@@ -792,23 +622,31 @@ export default class Print extends Component<PrintProps, PrintState> {
 
       case 26:
         if (!value) return '';
-        const displayNames = readPrintDisplayNames(parsePrintJson(value));
-        return displayNames ? displayNames.join(',') : '';
+        const users = parsePrintJson(value);
+        if (this.state.type === 'worksheet' || this.state.type === 'workflow') {
+          if (!Array.isArray(users)) throw new TypeError('Invalid print users');
+          return users.map(user => displayName(user, 'fullname')).join(',');
+        }
+        return displayName(users, 'fullname');
       case 27:
-        return value ? readPrintDepartmentName(parsePrintJson(value)) : '';
+        if (!value) return '';
+        const departments = parsePrintJson(value);
+        return Array.isArray(departments)
+          ? departments[0]
+            ? displayName(departments[0], 'departmentName')
+            : ''
+          : displayName(departments, 'departmentName');
       case 28:
         return value ? (item.enumDefault === 1 ? value + '星' : value + '/10') : '';
       case 29: {
         if (item.enumDefault === 1) {
           const parsedRecords = parsePrintJson(value);
-          const records: RecordRow[] = Array.isArray(parsedRecords) && parsedRecords.every(isRecordRow)
-            ? parsedRecords
-            : [];
+          const records = printRows(parsedRecords);
 
           return records
             .map(
               r =>
-                renderCellText(Object.assign({}, item, { value: r.name, type: item.sourceControlType })) ||
+                printCellText(Object.assign({}, item, { value: r['name'], type: item.sourceControlType })) ||
                 _l('未命名') ||
                 _l('未命名'),
             )
@@ -817,6 +655,28 @@ export default class Print extends Component<PrintProps, PrintState> {
           const { relateRecords } = this.state;
 
           const relateRecord = item.controlId ? relateRecords[item.controlId] : undefined;
+          const error = item.controlId && this.state.relationErrors[item.controlId];
+          if (error)
+            return (
+              <>
+                {relateRecord && this.renderTable(relateRecord, item)}
+                <div role="alert">
+                  {error}
+                  <button
+                    onClick={() =>
+                      this.loadRowRelationRows({
+                        appId: this.state.appId,
+                        worksheetId: this.state.worksheetId,
+                        rowId: this.state.reqId,
+                        control: item,
+                      })
+                    }
+                  >
+                    {_l('重试')}
+                  </button>
+                </div>
+              </>
+            );
           if (relateRecord) return this.renderTable(relateRecord, item);
           return (
             <div className="textCenter">
@@ -827,13 +687,15 @@ export default class Print extends Component<PrintProps, PrintState> {
       }
 
       case 30: {
+        if (!item.sourceControlType || item.sourceControlType === 30)
+          throw new TypeError('Invalid print source control type');
         const showContent = this.getShowContent(item, item.sourceControlType, value, item.controlId);
         return showContent || '';
       }
 
       case 40: {
-        const location = readPrintLocation(parsePrintJson(value));
-        return location ? `${location.title} ${location.address}` : '';
+        const location = locationValue(parsePrintJson(value));
+        return `${location.title} ${location.address}`;
       }
 
       case 38: {
@@ -843,30 +705,34 @@ export default class Print extends Component<PrintProps, PrintState> {
         if (!value) {
           content = '';
         } else {
-          content = enumDefault === 1 ? formatFormulaDate({ value, unit }) : value;
+          const formatted: unknown = enumDefault === 1 ? formatFormulaDate({ value, unit }) : value;
+          content = printNode(formatted);
         }
 
         return content;
       }
 
       case 41: {
-        return <div className="richText" dangerouslySetInnerHTML={{ __html: filterXss(value) }}></div>;
+        return <div className="richText" dangerouslySetInnerHTML={{ __html: filterXss(printString(value)) }}></div>;
       }
 
       case 42: {
-        return <img src={value} style={{ width: 168 }} />;
+        return <img src={value === undefined ? undefined : printString(value)} style={{ width: 168 }} />;
       }
 
       case 10010:
-        return <div className="richText" dangerouslySetInnerHTML={{ __html: filterXss(value) }}></div>;
+        return <div className="richText" dangerouslySetInnerHTML={{ __html: filterXss(printString(value)) }}></div>;
       default:
         break;
     }
-    return '';
+    return undefined;
   };
-  renderRecordAttachments(value: string, isRelateMultipleSheet?: boolean) {
-    const attachments = decodePrintAttachments(value);
-    if (!attachments) {
+  renderRecordAttachments(value: unknown, isRelateMultipleSheet?: boolean) {
+    let attachments: PrintAttachment[];
+    try {
+      attachments = printAttachments(value);
+    } catch (error) {
+      console.log(error);
       return <span className="mBottom5 InlineBlock" dangerouslySetInnerHTML={{ __html: '&nbsp;' }}></span>;
     }
     const pictureAttachments = attachments.filter(
@@ -924,7 +790,9 @@ export default class Print extends Component<PrintProps, PrintState> {
   renderTable(relateRecord: PrintRelateRecord, control: PrintControl): ReactNode {
     const { detailsType } = this.state;
     const controls = (control.showControls || [])
-      .map((controlId: string) => _.find(relateRecord.template.controls.concat(systemControl), c => c.controlId === controlId))
+      .map((controlId: string) =>
+        _.find(relateRecord.template.controls.concat(systemControl), c => c.controlId === controlId),
+      )
       .filter((c): c is PrintControl => c !== undefined && !((c.type === 29 && c.enumDefault === 2) || c.type === 41))
       .filter(hasControlId);
     return detailsType === 2 ? (
@@ -933,10 +801,14 @@ export default class Print extends Component<PrintProps, PrintState> {
           {/* 前导格与映射出的表头 concat 进同一个数组，key 要在合并后的数组里唯一：
               表头按字段 controlId（天然唯一），前导格用固定字符串，两者不会撞 */}
           {[<td key="rowNumber" width="20"></td>].concat(
-            controls.map(c => <th key={c.controlId} style={c.type === 14 ? { width: 200 } : {}}>{c.controlName || ''}</th>),
+            controls.map(c => (
+              <th key={c.controlId} style={c.type === 14 ? { width: 200 } : {}}>
+                {c.controlName || ''}
+              </th>
+            )),
           )}
         </tr>
-        {relateRecord.data.map((item: RecordRow, i: number) => (
+        {relateRecord.data.map((item: PrintRow, i: number) => (
           <tr key={i}>
             {[<td key="rowNumber"> {i + 1} </td>].concat(
               controls.map(c => (
@@ -950,7 +822,7 @@ export default class Print extends Component<PrintProps, PrintState> {
       </table>
     ) : (
       <div className="verticalLayout">
-        {relateRecord.data.map((item: RecordRow, i: number) => (
+        {relateRecord.data.map((item: PrintRow, i: number) => (
           <table key={i} className="detailItem" cellPadding="0" cellSpacing="0" style={{ tableLayout: 'fixed' }}>
             {_.chunk(controls, 4).map((rowData, rowIndex) => (
               <tr key={rowIndex} className="detailItemControlRow">
@@ -987,7 +859,12 @@ export default class Print extends Component<PrintProps, PrintState> {
     );
   }
   // controls 是【按行分好的控件二维数组】，不是一维控件列表 —— 下面 item.filter 就是证据
-  getEvaluateValue = function (this: Print, controls: PrintControl[][], mapControl: PrintControl, ..._legacyArgs: unknown[]) {
+  getEvaluateValue = function (
+    this: Print,
+    controls: PrintControl[][],
+    mapControl: PrintControl,
+    ..._legacyArgs: unknown[]
+  ) {
     const controlId = mapControl.controlId;
     const evaluateType = mapControl.enumDefault2;
     const showMoney = mapControl.enumDefault;
@@ -995,7 +872,7 @@ export default class Print extends Component<PrintProps, PrintState> {
     const controlArray: number[] = [];
     controls.forEach(item => {
       const control = item.find(controlItem => controlItem.controlId === controlId);
-      controlArray.push(Number(control?.value || ''));
+      controlArray.push(Number(control ? control.value : ''));
     });
     let result: number | undefined;
 
@@ -1040,7 +917,7 @@ export default class Print extends Component<PrintProps, PrintState> {
 
     if (result === undefined) throw new Error(`Unsupported print evaluate type: ${String(evaluateType)}`);
     const formattedResult = evaluateType !== 2 ? result.toFixed(dot).toString() : result.toString();
-    const montyCn = mapControl.type === 8 && showMoney ? nzhCn.toMoney(result).substring(3) : '';
+    const montyCn = mapControl.type === 8 && showMoney ? nzhCn.toMoney(formattedResult).substring(3) : '';
     const displayResult =
       (formattedResult.indexOf('.') > -1
         ? formattedResult.replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
@@ -1056,14 +933,14 @@ export default class Print extends Component<PrintProps, PrintState> {
     const controlOption = this.state.controlOption || [];
 
     if (Array.isArray(controlOption) && controlOption.length === 0) {
-      this.state.reqInfo.controls
+      (this.state.reqInfo.controls || [])
         .filter(item => !item.printHide)
         .forEach(item => {
           if (item && item.controlId) {
             controlOption.push(item.controlId);
           }
         });
-      this.state.reqInfo.formControls.forEach((formControlItem: PrintFormDetail) => {
+      (this.state.reqInfo.formControls || []).forEach((formControlItem: PrintFormDetail) => {
         if (formControlItem.tempControls.filter(item => item.needEvaluate).length > 0) {
           controlOption.push('formDetailEvaluate-' + formControlItem.formId);
         }
@@ -1077,14 +954,22 @@ export default class Print extends Component<PrintProps, PrintState> {
     processOption: string,
     printCheckAll: boolean,
     controlOption: string[],
-    options?: Record<string, unknown>,
+    options?: { showWorkflowQrCode?: boolean | undefined },
   ) {
+    if (
+      typeof processOption !== 'string' ||
+      typeof printCheckAll !== 'boolean' ||
+      !Array.isArray(controlOption) ||
+      !Array.from(controlOption).every(item => typeof item === 'string')
+    )
+      throw new TypeError('Invalid print selection');
+    const configOptions = printOptions(options);
     let controls: PrintControl[] = [];
 
     if (this.state.type === 'worksheet') {
-      controls = this.state.rowInfo.controls;
+      controls = this.state.rowInfo.controls || [];
     } else {
-      controls = this.state.reqInfo.controls;
+      controls = this.state.reqInfo.controls || [];
     }
 
     const formDetailEvaluate: string[] = [];
@@ -1097,7 +982,9 @@ export default class Print extends Component<PrintProps, PrintState> {
       });
     // printDetailType:打印明细的类型  1：明细和统计都打印 2：只打印明细 3：只打印统计
     if (controlOption.length > -1) {
-      const newControls: PrintControl[] = controls.filter(item => item.controlId && controlOption.indexOf(item.controlId) > -1);
+      const newControls: PrintControl[] = controls.filter(
+        item => item.controlId && controlOption.indexOf(item.controlId) > -1,
+      );
       newControls.forEach((item, index) => {
         if (item.type === 0) {
           const target = newControls[index];
@@ -1134,19 +1021,21 @@ export default class Print extends Component<PrintProps, PrintState> {
     if (this.state.type === 'worksheet' || this.state.type === 'task' || this.state.type === 'workflow') {
       this.setState({
         showPrintDialog: false,
-        configOptions: Object.assign({}, this.state.configOptions, options),
+        configOptions: Object.assign({}, this.state.configOptions, configOptions),
         controlOption,
         printCheckAll,
         controls: controlData,
       });
     } else if (this.state.type === 'hr') {
-      this.state.reqWorks.manageList.forEach(manageItem => {
+      (this.state.reqWorks.manageList || []).forEach(manageItem => {
         manageItem.workType = 2;
       });
       const newWorkList = _.cloneDeep(this.state.reqWorks);
+      const taskList = newWorkList.taskList || [];
+      const manageList = newWorkList.manageList || [];
 
       if (processOption === 'some') {
-        newWorkList.taskList.forEach(taskItem => {
+        taskList.forEach(taskItem => {
           if (taskItem.countersignType) {
             taskItem.workItems.forEach(countersignItem => {
               countersignItem.workItemLogList = countersignItem.workItemLogList.filter(
@@ -1171,7 +1060,7 @@ export default class Print extends Component<PrintProps, PrintState> {
             );
           }
         });
-        newWorkList.manageList.forEach(manageItem => {
+        manageList.forEach(manageItem => {
           manageItem.workItemLogList = manageItem.workItemLogList.filter(
             item =>
               item.action === 12 ||
@@ -1183,20 +1072,20 @@ export default class Print extends Component<PrintProps, PrintState> {
         });
       }
 
-      const workList = newWorkList.taskList.concat(newWorkList.manageList);
+      const workList = taskList.concat(manageList);
       this.setState({
         showPrintDialog: false,
         processOption,
         controlOption,
         printCheckAll,
-        taskList: processOption === 'no' ? [] : newWorkList.taskList,
-        manageList: processOption === 'no' ? [] : newWorkList.manageList,
+        taskList: processOption === 'no' ? [] : taskList,
+        manageList: processOption === 'no' ? [] : manageList,
         printWorkList: workList,
         controls: controlData,
       });
     }
   }.bind(this);
-  getEvaluateType = function (this: Print, detailsEvaluateItem: FormControl) {
+  getEvaluateType = function (this: Print, detailsEvaluateItem: PrintControl) {
     switch (detailsEvaluateItem.enumDefault2) {
       case 2:
         return _l('求和');
@@ -1252,7 +1141,12 @@ export default class Print extends Component<PrintProps, PrintState> {
     return (
       <table className="formDetail mBottom32" cellPadding="0" cellSpacing="0" style={{ fontSize: this.state.fontSize }}>
         <tbody>
-          {task.map(item => item.show && !item.independent && this.renderTaskItem(item.name, getRenderableTaskValue(item.value), item.key))}
+          {task.map(
+            item =>
+              item.show &&
+              !item.independent &&
+              this.renderTaskItem(item.name, getRenderableTaskValue(item.value), item.key),
+          )}
         </tbody>
       </table>
     );
@@ -1260,9 +1154,9 @@ export default class Print extends Component<PrintProps, PrintState> {
   renderTaskInventory() {
     const { task } = this.state;
     const result = task.find(item => item.key === 'checklist');
-    if (!result || !isChecklistArray(result.value)) return null;
-    const checklist = result.value;
-    return checklist.map((item, checklistIndex) => (
+    if (!result) return null;
+    const items = checklist(result.value);
+    return items.map((item, checklistIndex) => (
       <div className="workDetail clearfix" style={{ display: result.show ? 'block' : 'none' }} key={checklistIndex}>
         <div className="workName Bold">
           <h3>{`${item.checkListName} ${item.checkListData.reduce((count, item) => count + (item.status ? 1 : 0), 0)}/${
@@ -1292,8 +1186,8 @@ export default class Print extends Component<PrintProps, PrintState> {
   renderTaskSubTask() {
     const { task } = this.state;
     const result = task.find(item => item.key === 'subTask');
-    if (!result || !isSubTaskArray(result.value)) return null;
-    const subTask = result.value;
+    if (!result) return null;
+    const subTask = subTasks(result.value);
     const completedCount = subTask.reduce((count, item) => count + (item.status ? 1 : 0), 0);
     return (
       <div className="workDetail clearfix" style={{ display: result.show ? 'block' : 'none' }}>
@@ -1374,39 +1268,39 @@ export default class Print extends Component<PrintProps, PrintState> {
                                   (tempControlItem.type === 17 || tempControlItem.type === 18) &&
                                   hasPrintDataSource(tempControlItem.dataSource) &&
                                   typeof tempControlItem.value !== 'string' ? (
-                                    getExpandedPrintControls(tempControlItem.value).map((item2: PrintControl, index2: number) => (
-                                      <th
-                                        style={{
-                                          width:
-                                            975 /
-                                            (this.getFormDetail(firstControl.formId).tempControls.length +
-                                              this.getFormDetail(firstControl.formId)
-                                                .tempControls.filter(
+                                    getExpandedPrintControls(tempControlItem.value).map(
+                                      (item2: PrintControl, index2: number) => (
+                                        <th
+                                          style={{
+                                            width:
+                                              975 /
+                                              (this.getFormDetail(firstControl.formId).tempControls.length +
+                                                this.getFormDetail(firstControl.formId).tempControls.filter(
                                                   item =>
                                                     (item.type === 17 || item.type === 18) &&
                                                     hasPrintDataSource(item.dataSource) &&
                                                     typeof item.value !== 'string',
                                                 ).length *
-                                                3),
-                                        }}
-                                        key={key + 'th' + index + 'dataTh' + index2}
-                                      >
-                                        {item2.controlName}
-                                      </th>
-                                    ))
+                                                  3),
+                                          }}
+                                          key={key + 'th' + index + 'dataTh' + index2}
+                                        >
+                                          {item2.controlName}
+                                        </th>
+                                      ),
+                                    )
                                   ) : (
                                     <th
                                       style={{
                                         width:
                                           975 /
                                           (this.getFormDetail(firstControl.formId).tempControls.length +
-                                            this.getFormDetail(firstControl.formId)
-                                              .tempControls.filter(
-                                                item =>
-                                                  (item.type === 17 || item.type === 18) &&
-                                                  hasPrintDataSource(item.dataSource) &&
-                                                  typeof item.value !== 'string',
-                                              ).length *
+                                            this.getFormDetail(firstControl.formId).tempControls.filter(
+                                              item =>
+                                                (item.type === 17 || item.type === 18) &&
+                                                hasPrintDataSource(item.dataSource) &&
+                                                typeof item.value !== 'string',
+                                            ).length *
                                               3),
                                       }}
                                       key={key + 'th' + index}
@@ -1417,8 +1311,8 @@ export default class Print extends Component<PrintProps, PrintState> {
                                 )}
                             </tr>
                             {(firstControl.printDetailType === 1 || firstControl.printDetailType === 2) &&
-                              this.getFormDetail(firstControl.formId)
-                                .controls.map((detailsChildItem, index: number) => (
+                              this.getFormDetail(firstControl.formId).controls.map(
+                                (detailsChildItem, index: number) => (
                                   <tr key={key + 'tr' + index}>
                                     <td className="titleTd">{index + 1}</td>
                                     {detailsChildItem
@@ -1427,23 +1321,23 @@ export default class Print extends Component<PrintProps, PrintState> {
                                         (detailsChildItemControl.type === 17 || detailsChildItemControl.type === 18) &&
                                         hasPrintDataSource(detailsChildItemControl.dataSource) &&
                                         typeof detailsChildItemControl.value !== 'string' ? (
-                                          getExpandedPrintControls(detailsChildItemControl.value).map((item2: PrintControl, index3: number) => (
-                                            <td
-                                              className={cx(
-                                                isNumericPrintType(detailsChildItemControl.type) &&
-                                                  'TxtRight',
-                                              )}
-                                              style={{ width: 975 / detailsChildItem.length }}
-                                              key={key + 'td' + index2 + 'dataTd' + index3}
-                                            >
-                                              {this.getShowContent(item2)}
-                                            </td>
-                                          ))
+                                          getExpandedPrintControls(detailsChildItemControl.value).map(
+                                            (item2: PrintControl, index3: number) => (
+                                              <td
+                                                className={cx(
+                                                  isNumericPrintType(detailsChildItemControl.type) && 'TxtRight',
+                                                )}
+                                                style={{ width: 975 / detailsChildItem.length }}
+                                                key={key + 'td' + index2 + 'dataTd' + index3}
+                                              >
+                                                {this.getShowContent(item2)}
+                                              </td>
+                                            ),
+                                          )
                                         ) : (
                                           <td
                                             className={cx(
-                                              isNumericPrintType(detailsChildItemControl.type) &&
-                                                'TxtRight',
+                                              isNumericPrintType(detailsChildItemControl.type) && 'TxtRight',
                                             )}
                                             style={{ width: 975 / detailsChildItem.length }}
                                             key={key + 'td' + index2}
@@ -1453,19 +1347,19 @@ export default class Print extends Component<PrintProps, PrintState> {
                                         ),
                                       )}
                                   </tr>
-                                ))}
-                            {this.getFormDetail(firstControl.formId)
-                              .tempControls.filter((item: FormControl) => item.needEvaluate).length > 0 &&
+                                ),
+                              )}
+                            {this.getFormDetail(firstControl.formId).tempControls.filter(
+                              (item: PrintControl) => item.needEvaluate,
+                            ).length > 0 &&
                               (firstControl.printDetailType === 1 || firstControl.printDetailType === 3) && (
                                 <tr key={key + 'evaluateTr'} className="evaluateTr">
                                   <td className="titleTd">=</td>
-                                  {this.getFormDetail(firstControl.formId)
-                                    .tempControls.map((detailsEvaluateItem, index: number) => (
+                                  {this.getFormDetail(firstControl.formId).tempControls.map(
+                                    (detailsEvaluateItem, index: number) => (
                                       <td
                                         style={{
-                                          width:
-                                            975 /
-                                            this.getFormDetail(firstControl.formId).tempControls.length,
+                                          width: 975 / this.getFormDetail(firstControl.formId).tempControls.length,
                                         }}
                                         key={key + 'evaluateTd' + index}
                                       >
@@ -1484,7 +1378,8 @@ export default class Print extends Component<PrintProps, PrintState> {
                                             )
                                           : ''}
                                       </td>
-                                    ))}
+                                    ),
+                                  )}
                                 </tr>
                               )}
                           </tbody>
@@ -1510,99 +1405,91 @@ export default class Print extends Component<PrintProps, PrintState> {
                       </div>
                       {(() => {
                         if (firstControl.printDetailType === 1 || firstControl.printDetailType === 2) {
-                          return this.getFormDetail(firstControl.formId)
-                            .controls.map((detailItem, index1) => (
-                              <table className="detailItem" key={index1} cellPadding="0" cellSpacing="0">
-                                <tbody>
-                                  {(() => {
-                                    const newItemControl: PrintControl[][] = [];
-                                    detailItem.forEach(detailItemChildrenItem => {
-                                      if (
-                                        (detailItemChildrenItem.type === 17 || detailItemChildrenItem.type === 18) &&
-                                        hasPrintDataSource(detailItemChildrenItem.dataSource) &&
-                                        typeof detailItemChildrenItem.value !== 'string'
-                                      ) {
-                                        detailItemChildrenItem.innerRow = -1;
+                          return this.getFormDetail(firstControl.formId).controls.map((detailItem, index1) => (
+                            <table className="detailItem" key={index1} cellPadding="0" cellSpacing="0">
+                              <tbody>
+                                {(() => {
+                                  const newItemControl: PrintControl[][] = [];
+                                  detailItem.forEach(detailItemChildrenItem => {
+                                    if (
+                                      (detailItemChildrenItem.type === 17 || detailItemChildrenItem.type === 18) &&
+                                      hasPrintDataSource(detailItemChildrenItem.dataSource) &&
+                                      typeof detailItemChildrenItem.value !== 'string'
+                                    ) {
+                                      detailItemChildrenItem.innerRow = -1;
+                                    }
+                                  });
+                                  detailItem
+                                    .filter(item => getInnerRow(item) < 0)
+                                    .map(item2 => newItemControl.push(getExpandedPrintControls(item2.value)));
+                                  const newDetailItem = detailItem.filter(item => getInnerRow(item) >= 0);
+                                  newDetailItem
+                                    .sort((a, b) => getInnerRow(a) - getInnerRow(b))
+                                    .forEach((item, index: number) => {
+                                      if (index % 4 === 0) {
+                                        const second = newDetailItem[index + 1];
+                                        const third = newDetailItem[index + 2];
+                                        const fourth = newDetailItem[index + 3];
+                                        if (second && third && fourth) {
+                                          newItemControl.push([item, second, third, fourth]);
+                                        } else if (second && third) {
+                                          newItemControl.push([item, second, third]);
+                                        } else if (second) {
+                                          newItemControl.push([item, second]);
+                                        } else {
+                                          newItemControl.push([item]);
+                                        }
                                       }
                                     });
-                                    detailItem
-                                      .filter(item => getInnerRow(item) < 0)
-                                      .map(item2 => newItemControl.push(getExpandedPrintControls(item2.value)));
-                                    const newDetailItem = detailItem.filter(item => getInnerRow(item) >= 0);
-                                    newDetailItem
-                                      .sort((a, b) => getInnerRow(a) - getInnerRow(b))
-                                      .forEach((item, index: number) => {
-                                        if (index % 4 === 0) {
-                                          const second = newDetailItem[index + 1];
-                                          const third = newDetailItem[index + 2];
-                                          const fourth = newDetailItem[index + 3];
-                                          if (second && third && fourth) {
-                                            newItemControl.push([
-                                              item,
-                                              second,
-                                              third,
-                                              fourth,
-                                            ]);
-                                          } else if (second && third) {
-                                            newItemControl.push([item, second, third]);
-                                          } else if (second) {
-                                            newItemControl.push([item, second]);
-                                          } else {
-                                            newItemControl.push([item]);
-                                          }
-                                        }
-                                      });
-                                    return newItemControl.map((newControlRow, index2) => (
-                                      <tr className="clearfix detailItemControlRow" key={'newControlRow' + index2}>
-                                        {index2 === 0 && (
-                                          <td className="detailItemName" rowSpan={newItemControl.length}>
-                                            {index1 + 1}
-                                          </td>
-                                        )}
-                                        {newControlRow.map((newControlRowItem, index: number) => (
-                                          <td
-                                            style={{
-                                              width:
-                                                newControlRow.length === 1
-                                                  ? '97.5%'
-                                                  : newControlRow.length === 2
-                                                    ? '48.75%'
-                                                    : '24.375%',
-                                            }}
-                                            className="clearfix detailRowItem"
-                                            colSpan={
-                      newControlRow.length === 2 ? 2 : newControlRow.length === 1 ? 4 : 1
-                                            }
-                                            key={'newControlRowItem' + index}
+                                  return newItemControl.map((newControlRow, index2) => (
+                                    <tr className="clearfix detailItemControlRow" key={'newControlRow' + index2}>
+                                      {index2 === 0 && (
+                                        <td className="detailItemName" rowSpan={newItemControl.length}>
+                                          {index1 + 1}
+                                        </td>
+                                      )}
+                                      {newControlRow.map((newControlRowItem, index: number) => (
+                                        <td
+                                          style={{
+                                            width:
+                                              newControlRow.length === 1
+                                                ? '97.5%'
+                                                : newControlRow.length === 2
+                                                  ? '48.75%'
+                                                  : '24.375%',
+                                          }}
+                                          className="clearfix detailRowItem"
+                                          colSpan={newControlRow.length === 2 ? 2 : newControlRow.length === 1 ? 4 : 1}
+                                          key={'newControlRowItem' + index}
+                                        >
+                                          <span className="detailName TxtMiddle">{newControlRowItem.controlName}</span>
+                                          <span
+                                            className="detailValue TxtMiddle"
+                                            style={{ width: 'calc(100% - 105px)' }}
                                           >
-                                            <span className="detailName TxtMiddle">
-                                              {newControlRowItem.controlName}
-                                            </span>
-                                            <span
-                                              className="detailValue TxtMiddle"
-                                              style={{ width: 'calc(100% - 105px)' }}
-                                            >
-                                              {this.getShowContent(newControlRowItem)}
-                                            </span>
-                                          </td>
-                                        ))}
-                                        {newControlRow.length === 3 && <td style={{ width: '24.375%' }} />}
-                                      </tr>
-                                    ));
-                                  })()}
-                                </tbody>
-                              </table>
-                            ));
+                                            {this.getShowContent(newControlRowItem)}
+                                          </span>
+                                        </td>
+                                      ))}
+                                      {newControlRow.length === 3 && <td style={{ width: '24.375%' }} />}
+                                    </tr>
+                                  ));
+                                })()}
+                              </tbody>
+                            </table>
+                          ));
                         }
                         return null;
                       })()}
-                      {this.getFormDetail(firstControl.formId)
-                        .tempControls.filter((item: FormControl) => item.needEvaluate).length > 0 &&
+                      {this.getFormDetail(firstControl.formId).tempControls.filter(
+                        (item: PrintControl) => item.needEvaluate,
+                      ).length > 0 &&
                         (firstControl.printDetailType === 1 || firstControl.printDetailType === 3) && (
                           <div className="evaluateItemBox">
                             {(() => {
-                              const tempControls = this.getFormDetail(firstControl.formId)
-                                .tempControls.filter((item: FormControl) => item.needEvaluate);
+                              const tempControls = this.getFormDetail(firstControl.formId).tempControls.filter(
+                                (item: PrintControl) => item.needEvaluate,
+                              );
                               const newTempControls: PrintControl[][] = [];
                               tempControls
                                 .sort((a, b) => getInnerRow(a) - getInnerRow(b))
@@ -1708,25 +1595,27 @@ export default class Print extends Component<PrintProps, PrintState> {
                 !firstControl.printHide
               ) {
                 if (hasPrintDataSource(firstControl.dataSource)) {
-                  return getExpandedPrintControls(firstControl.value).map((dataItem: PrintControl, dataIndex: number) => (
-                    <tr key={'dataTime' + dataIndex} className="row clearfix Relative notDetails">
-                      <td
-                        style={{
-                          borderTopColor:
-                            key !== '0' && dataIndex === 0 && this.beforeControlIsDetail(key)
-                              ? 'var(--color-text-title)'
-                              : 'var(--color-text-disabled)',
-                        }}
-                        className="noHalf rowItem BorderRight0"
-                        colSpan={colSpan}
-                      >
-                        <span className="controlName TxtMiddle">{dataItem.controlName}</span>
-                        <span style={{ width: 'calc(100% - 105px)' }} className="controlValue TxtMiddle">
-                          {this.getShowContent(dataItem)}
-                        </span>
-                      </td>
-                    </tr>
-                  ));
+                  return getExpandedPrintControls(firstControl.value).map(
+                    (dataItem: PrintControl, dataIndex: number) => (
+                      <tr key={'dataTime' + dataIndex} className="row clearfix Relative notDetails">
+                        <td
+                          style={{
+                            borderTopColor:
+                              key !== '0' && dataIndex === 0 && this.beforeControlIsDetail(key)
+                                ? 'var(--color-text-title)'
+                                : 'var(--color-text-disabled)',
+                          }}
+                          className="noHalf rowItem BorderRight0"
+                          colSpan={colSpan}
+                        >
+                          <span className="controlName TxtMiddle">{dataItem.controlName}</span>
+                          <span style={{ width: 'calc(100% - 105px)' }} className="controlValue TxtMiddle">
+                            {this.getShowContent(dataItem)}
+                          </span>
+                        </td>
+                      </tr>
+                    ),
+                  );
                 }
 
                 return (
@@ -1832,7 +1721,8 @@ export default class Print extends Component<PrintProps, PrintState> {
 
             const visibleControls = controlItem.filter(item => !item.printHide);
             const leftControl = controlItem.find(item => item.col === 0);
-            const rightControl = controlItem.find(item => item.col === 1) || controlItem[1];
+            const rightControl =
+              controlItem.find(item => item.col === 1) || controlItem.filter(item => item.col === 0)[1];
             if (!leftControl) return null;
             return (
               visibleControls.length > 0 && (
@@ -1850,7 +1740,7 @@ export default class Print extends Component<PrintProps, PrintState> {
                       <span className="controlName TxtMiddle">{leftControl.controlName}</span>
                       <span
                         style={{ width: 'calc(100% - 105px)' }}
-                        className={cx('controlValue TxtMiddle', hasPrintType(leftControl, 2) && 'textPreLine')}
+                        className={cx('controlValue TxtMiddle', hasPrintType(firstControl, 2) && 'textPreLine')}
                       >
                         {this.getShowContent(leftControl)}
                       </span>
@@ -1869,7 +1759,7 @@ export default class Print extends Component<PrintProps, PrintState> {
                       <span className="controlName TxtMiddle">{rightControl.controlName}</span>
                       <span
                         style={{ width: 'calc(100% - 105px)' }}
-                        className={cx('controlValue TxtMiddle', hasPrintType(rightControl, 2) && 'textPreLine')}
+                        className={cx('controlValue TxtMiddle', controlItem[1]?.type === 2 && 'textPreLine')}
                       >
                         {this.getShowContent(rightControl)}
                       </span>
@@ -1893,13 +1783,16 @@ export default class Print extends Component<PrintProps, PrintState> {
       logo = md.global.Config.AjaxApiUrl + 'code/CreateQrCodeImage?url=' + rowInfo.shortUrl;
     }
 
-    setInterval(() => {
-      if ($('.kf5-support-chat, #containerBg, #topBarContainer').length > 0) {
-        $('.kf5-support-chat, #containerBg, #topBarContainer').remove();
-      }
-    }, 1000);
     return (
       <div className="printBox" id="hrApprovalPrint">
+        {this.state.loadingError && (
+          <div role="alert">
+            {this.state.loadingError}
+            <button onClick={() => (this.state.type === 'worksheet' ? this.initWorksheet() : this.initTask())}>
+              {_l('重试')}
+            </button>
+          </div>
+        )}
         {this.state.showPrintDialog && (
           <PrintOptDialog
             visible={this.state.showPrintDialog}
@@ -1916,15 +1809,15 @@ export default class Print extends Component<PrintProps, PrintState> {
             worksheetId={this.state.worksheetId}
             type={params.printType}
             task={_.cloneDeep(this.state.task)}
-            onUpdateTask={(newTask: PrintTaskItem[]) => {
+            onUpdateTask={(newTask: unknown) => {
               this.setState({
-                task: newTask,
+                task: taskItems(newTask),
               });
             }}
             workflow={_.cloneDeep(this.state.workflow)}
-            onUpdateWorkflow={(newWorkflow: Array<Record<string, unknown>>) => {
+            onUpdateWorkflow={(newWorkflow: unknown) => {
               this.setState({
-                workflow: newWorkflow,
+                workflow: workflowItems(newWorkflow),
               });
             }}
           />
@@ -1977,6 +1870,7 @@ export default class Print extends Component<PrintProps, PrintState> {
             <div
               className="printButton Right pointer"
               onClick={() => {
+                if (this.state.loadingError || Object.values(this.state.relationErrors).some(Boolean)) return false;
                 window.print();
                 return false;
               }}
@@ -2025,7 +1919,7 @@ export default class Print extends Component<PrintProps, PrintState> {
                 {this.state.signatureControls.map(item => (
                   <div key={item.controlId}>
                     <div className="bold">{item.controlName}</div>
-                    <img className="mTop10" src={item.value} />
+                    <img className="mTop10" src={item.value === undefined ? undefined : printString(item.value)} />
                   </div>
                 ))}
               </div>

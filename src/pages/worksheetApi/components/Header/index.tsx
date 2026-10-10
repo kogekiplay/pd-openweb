@@ -13,6 +13,30 @@ import { browserIsMobile } from 'src/utils/common';
 import { TAB_TYPE } from '../../core/enum';
 import Beta from '../Beta';
 
+export interface HeaderDataApp {
+  appIconColor?: string | undefined;
+  appNavColor?: string | undefined;
+  appName?: string | undefined;
+  appIcon?: string | undefined;
+  iconUrl?: string | undefined;
+  name?: string | undefined;
+  projectId?: string | undefined;
+  iconColor?: string | undefined;
+  navColor?: string | undefined;
+}
+export interface HeaderProps {
+  isAuthorization?: boolean | undefined;
+  isSharePage?: boolean | undefined;
+  data?: unknown;
+  dataApp?: HeaderDataApp;
+  appId?: string | undefined;
+  appInfo?: { apiRequest?: { appKey?: string | undefined } | undefined } | undefined;
+  tabIndex?: string;
+  updateTabIndex?: (value: string) => void;
+  getId?: () => string | undefined;
+  share?: { data?: HeaderDataApp | undefined };
+}
+
 const HeaderWrap = styled.header`
   position: relative;
   display: flex;
@@ -106,8 +130,12 @@ const TABS_OPTS = [
 ];
 const isMobile = browserIsMobile();
 
-const getIconColor = ({ iconColor, navColor }) => {
-  const lightColor = generate(iconColor)[0];
+const getIconColor = ({ iconColor, navColor }: { iconColor?: string | undefined; navColor?: string | undefined }) => {
+  // The existing SDK accepts absent color at runtime; preserve its own fallback.
+  const palette: unknown = Reflect.apply(generate, undefined, [iconColor]);
+  if (!Array.isArray(palette) || !Array.from(palette).every(value => typeof value === 'string'))
+    throw new TypeError('Invalid generated API icon palette');
+  const lightColor: string | undefined = palette[0];
   const light = [lightColor, '#ffffff', '#f5f6f7'].includes(navColor);
   const black = '#1b2025' === navColor;
   const backgroundColor = light ? lightColor : navColor || iconColor;
@@ -115,8 +143,9 @@ const getIconColor = ({ iconColor, navColor }) => {
   return { backgroundColor, fillColor };
 };
 
-const CommonHeader = props => {
-  const { data, dataApp, appId, isSharePage, appInfo, tabIndex, updateTabIndex, getId = () => {} } = props;
+const CommonHeader = (props: HeaderProps) => {
+  const { data, dataApp, appId, isSharePage, appInfo, tabIndex, updateTabIndex, getId = () => undefined } = props;
+  if (!dataApp) throw new TypeError('Missing worksheet API header application');
   const { backgroundColor, fillColor } = getIconColor(dataApp);
   const theme = document.documentElement.getAttribute('data-theme') || 'light';
   const [shareVisible, setShareVisible] = useState(false);
@@ -133,7 +162,7 @@ const CommonHeader = props => {
   return (
     <HeaderWrap className="flexRow">
       <div className="ellipsis">
-        {data && (
+        {!!data && (
           <Fragment>
             <span
               className="appIconWrapIcon"
@@ -168,7 +197,10 @@ const CommonHeader = props => {
                   className={cx('worksheetApiTab', {
                     active: tabIndex === item.tabIndex,
                   })}
-                  onClick={() => updateTabIndex(item.tabIndex)}
+                  onClick={() => {
+                    if (!updateTabIndex) throw new TypeError('Missing worksheet API tab callback');
+                    updateTabIndex(item.tabIndex);
+                  }}
                 >
                   <span>
                     {item.name}
@@ -213,7 +245,7 @@ const CommonHeader = props => {
               isCharge={true}
               params={{
                 appId,
-                sourceId: _.get(appInfo, 'apiRequest.appKey') || getId(),
+                sourceId: appInfo?.apiRequest?.appKey || getId(),
                 title: _l('API说明'),
               }}
               onClose={() => setShareVisible(false)}
@@ -225,9 +257,9 @@ const CommonHeader = props => {
   );
 };
 
-const AuthorizationHeader = props => {
-  const { share } = props;
-  const { appIconColor, appNavColor } = share.data;
+const AuthorizationHeader = (props: HeaderProps) => {
+  const { share = {} } = props;
+  const { appIconColor, appNavColor } = share.data || {};
   const { backgroundColor, fillColor } = getIconColor({ iconColor: appIconColor, navColor: appNavColor });
   return (
     <HeaderWrap isAuthorization={true}>
@@ -245,7 +277,7 @@ const AuthorizationHeader = props => {
   );
 };
 
-const Header = props => {
+const Header = (props: HeaderProps) => {
   const { isAuthorization = false, ...rest } = props;
   const Component = isAuthorization ? AuthorizationHeader : CommonHeader;
 

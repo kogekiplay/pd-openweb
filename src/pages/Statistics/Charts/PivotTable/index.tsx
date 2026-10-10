@@ -2,7 +2,6 @@ import React, { Component, createRef, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { generate } from '@ant-design/colors';
 import { Dropdown, Menu, Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, Linkify, UserCard } from 'ming-ui';
@@ -16,7 +15,37 @@ import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { browserIsMobile, getClassNameByExt } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import { formatNumberValue, formatrChartValue } from '../common';
+import {
+  isCellObject,
+  isObject,
+  lookup,
+  numeric,
+  objectValue,
+  renderNode,
+  requireItem,
+  stringValue,
+  widthConfig,
+} from './boundary';
 import PivotTableContent from './styled';
+import type { CellBackgroundStyle } from './types';
+import type {
+  AxisField,
+  BodyCellArgs,
+  ColorRuleConfig,
+  ControlMinAndMax,
+  CustomPageColors,
+  LinkageMatch,
+  PivotFile,
+  PivotLineData,
+  PivotProps,
+  PivotRecord,
+  PivotResultItem,
+  PivotSetting,
+  PivotState,
+  PivotStyleColors,
+  PivotTableColumn,
+  RenderOutput,
+} from './types';
 import {
   compileColorRuleConfig,
   getColumnName,
@@ -34,241 +63,71 @@ const isMobile = browserIsMobile();
 const isPrintPivotTable = location.href.includes('printPivotTable');
 const textStyle: React.CSSProperties = { wordWrap: 'break-word', wordBreak: 'break-word' };
 
-type PivotScalar = string | number | boolean | null;
-type PivotValue = PivotScalar | PivotValue[] | PivotFile | { [key: string]: PivotValue };
-type PivotMap = Record<string, PivotValue | undefined>;
-
-interface PivotStyleMap {
-  columnBgColor?: string | undefined;
-  lineBgColor?: string | undefined;
-  columnTextColor?: string | undefined;
-  lineTextColor?: string | undefined;
-  evenBgColor?: string | undefined;
-  evenTextColor?: string | undefined;
-  oddBgColor?: string | undefined;
-  oddTextColor?: string | undefined;
-  pivoTableColor?: string | undefined;
-  pivoTableColorIndex?: number | undefined;
-  pageStyleType?: string | undefined;
-  widgetBgColor?: string | undefined;
-  originWidgetBgColor?: string | undefined;
-  [key: string]: PivotValue | undefined;
+export type { PivotProps, PivotRecord, PivotReportData, AxisField } from './types';
+interface CachedValue<T> {
+  deps: unknown[];
+  value: T;
 }
-
-interface PivotStyle {
-  pivotTableStyle?: PivotStyleMap;
-  pivotTableColumnWidthConfig?: Record<string, number>;
-  pivotTableColumnFreeze?: boolean;
-  pivotTableLineFreeze?: boolean;
-  mobilePivotTableColumnFreeze?: boolean;
-  mobilePivotTableLineFreeze?: boolean;
-  pivotTableLineFreezeIndex?: number;
-  mobilePivotTableLineFreezeIndex?: number;
-  pivotTableUnilineShow?: boolean;
-  paginationSize?: number;
-  paginationVisible?: boolean;
-  pcWidthModel?: number;
-  mobileWidthModel?: number;
-  autoLinkageChartObjectIds?: string[];
-  [key: string]: unknown;
+interface PivotCache {
+  result?: CachedValue<PivotResultItem[]>;
+  linesData?: CachedValue<PivotLineData[]>;
+  controlMinAndMax?: CachedValue<ControlMinAndMax>;
+  colorRuleConfig?: CachedValue<ColorRuleConfig>;
 }
-
-interface PivotSetting {
-  showtype?: string;
-  allowdownload?: string;
-  [key: string]: unknown;
+function cachedValue<T>(
+  cache: CachedValue<T> | undefined,
+  deps: unknown[],
+  getValue: () => T,
+  save: (cache: CachedValue<T>) => void,
+): T {
+  if (cache && cache.deps.length === deps.length && cache.deps.every((dep, index) => dep === deps[index]))
+    return cache.value;
+  const value = getValue();
+  save({ deps, value });
+  return value;
 }
-
-interface AxisField {
-  controlId: string;
-  controlName?: string;
-  controlType?: number;
-  cid?: string;
-  hide?: boolean;
-  rename?: string;
-  size?: number;
-  fields?: AxisField[];
-  advancedSetting?: PivotSetting;
-  displayMode?: string;
-  subTotal?: boolean;
-  xaxisEmptyType?: boolean;
-  subTotalName?: string;
-  showNumber?: boolean;
-  percent?: { enable?: boolean; type?: number };
-  [key: string]: unknown;
-}
-
-interface PivotColumn extends AxisField {
-  key?: string;
-  fixed?: boolean | string;
-  children?: PivotColumn[] | undefined;
-  title?: React.ReactNode | (() => React.ReactNode);
-  dataIndex?: string;
-  colSpan?: number;
-  rowSpan?: number;
-  width?: number;
-  className?: string;
-  ellipsis?: boolean;
-  render?: (...args: never[]) => unknown;
-  onCell?: (record: PivotRecord) => unknown;
-}
-
-interface TableColumn {
-  controlId?: string | undefined;
+interface ColumnInput {
+  title?: PivotTableColumn['title'] | undefined;
   key?: string | undefined;
-  cid?: string | undefined;
-  fixed?: boolean | string | undefined;
-  children?: TableColumn[] | undefined;
-  title?: React.ReactNode | (() => React.ReactNode) | null | undefined;
   dataIndex?: string | undefined;
+  children?: PivotTableColumn[] | undefined;
   colSpan?: number | undefined;
   rowSpan?: number | undefined;
   width?: number | undefined;
-  className?: string | undefined;
   ellipsis?: boolean | undefined;
-  onCell?: ((record: PivotRecord) => unknown) | undefined;
-  render?: ((...args: never[]) => unknown) | undefined;
-  [key: string]: unknown;
+  fixed?: 'left' | 'right' | boolean | undefined;
+  className?: string | undefined;
+  render?: ((value: unknown, record: PivotRecord, index: number) => RenderOutput) | undefined;
+  onCell?: ((record: PivotRecord) => React.HTMLAttributes<HTMLElement>) | undefined;
 }
-
-interface PivotCellObject {
-  value: PivotValue;
-  length?: number;
-  sum?: boolean;
-  subTotalName?: string;
-  sumSuffix?: string;
+function makeColumn(input: ColumnInput): PivotTableColumn {
+  const result: PivotTableColumn = {};
+  if (input.title !== undefined) result.title = input.title;
+  if (input.key !== undefined) result.key = input.key;
+  if (input.dataIndex !== undefined) result.dataIndex = input.dataIndex;
+  if (input.children !== undefined) result.children = input.children;
+  if (input.colSpan !== undefined) result.colSpan = input.colSpan;
+  if (input.rowSpan !== undefined) result.rowSpan = input.rowSpan;
+  if (input.width !== undefined) result.width = input.width;
+  if (input.ellipsis !== undefined) result.ellipsis = input.ellipsis;
+  if (input.fixed !== undefined) result.fixed = input.fixed;
+  if (input.className !== undefined) result.className = input.className;
+  if (input.render !== undefined) result.render = input.render;
+  if (input.onCell !== undefined) result.onCell = input.onCell;
+  return result;
 }
-
-const isPivotCellObject = (value: PivotCell | undefined): value is PivotCellObject =>
-  !!value && typeof value === 'object' && !Array.isArray(value) && 'value' in value;
-const toPivotValue = (value: PivotCell): PivotValue => (isPivotCellObject(value) ? value.value : value);
-const toDisplayNode = (value: PivotCell | undefined): React.ReactNode => {
-  if (value === null || value === undefined || typeof value === 'boolean') return value ? 'true' : null;
-  if (typeof value === 'string' || typeof value === 'number') return value;
-  return JSON.stringify(value);
-};
-const isPivotFile = (value: PivotCell): value is PivotFile =>
-  !!value &&
-  typeof value === 'object' &&
-  !Array.isArray(value) &&
-  'previewUrl' in value &&
-  'ext' in value &&
-  typeof value.previewUrl === 'string' &&
-  typeof value.ext === 'string';
-const parsePivotObject = (value: PivotCell): Record<string, unknown> => {
-  const parsed: unknown = typeof value === 'string' ? window.safeParse(value) : value;
-  return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? (parsed as Record<string, unknown>) : {};
-};
-const readString = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
-
-interface PivotLineData {
-  key: string;
-  name?: string;
-  data: PivotCell[];
-  xaxisEmptyType?: boolean;
+interface ScrollConfig {
+  x?: string;
+  y?: number;
 }
-
-type PivotCell = PivotValue | PivotCellObject;
-
-interface PivotResultItem {
-  t_id: string;
-  y: PivotCell[];
-  data: PivotCell[];
-  sum?: number;
-  summary_col?: boolean;
+function isFile(value: unknown): value is PivotFile {
+  if (!isObject(value) || typeof value['previewUrl'] !== 'string' || typeof value['ext'] !== 'string') return false;
+  if (value['fileID'] !== undefined && typeof value['fileID'] !== 'string') return false;
+  return true;
 }
-
-interface PivotRecord {
-  key: string | number;
-  type?: string | undefined;
-  isSubTotal?: boolean | undefined;
-  showNumber?: boolean | undefined;
-  showPercent?: number | boolean | undefined;
-  lineSubTotal?: number | undefined;
-  sumCount?: number | undefined;
-  sumData?: { number?: boolean; percent?: boolean; name?: string } | undefined;
-  [key: string]: unknown;
-}
-
-interface PivotTableConfig {
-  showLineTotal?: boolean;
-  lineSummary: SummaryConfig;
-  showColumnTotal?: boolean;
-  columnSummary: SummaryConfig;
-}
-
-interface SummaryConfig {
-  location: number;
-  rename?: string;
-  controlList: Array<{ controlId?: string; name?: string; number?: boolean; percent?: boolean }>;
-}
-
-interface PivotReportData {
-  reportId: string;
-  reportType?: number;
-  appId?: string;
-  name?: string;
-  style?: PivotStyle;
-  data: { data: PivotResultItem[]; x: Array<Record<string, PivotCell[]>> };
-  columns: PivotColumn[];
-  lines: AxisField[];
-  yaxisList: AxisField[];
-  valueMap: Record<string, Record<string, PivotValue>>;
-  yvalueMap: Record<string, Record<string, PivotValue>>;
-  displaySetup: { mergeCell?: boolean; showRowList?: boolean; colorRules?: PivotMap[] };
-  pivotTable?: PivotTableConfig;
-  columnSummary?: SummaryConfig;
-  lineSummary: SummaryConfig;
-  showLineTotal?: boolean;
-  [key: string]: unknown;
-}
-
-interface LinkageFilter {
-  controlId?: string | undefined;
-  values: PivotValue[];
-  controlName?: string | undefined;
-  controlValue?: PivotValue | undefined;
-  type?: number | undefined;
-  control?: AxisField | PivotColumn | undefined;
-}
-
-interface LinkageMatch {
-  sheetId?: string;
-  reportId?: string;
-  reportName?: string;
-  reportType?: number;
-  filters: LinkageFilter[];
-  lineValue?: PivotValue;
-  columnValue?: PivotValue;
-  onlyChartIds?: string[];
-}
-
-interface PivotProps {
-  reportData: PivotReportData;
-  themeColor?: string;
-  customPageConfig?: PivotStyleMap;
-  sourceType?: number;
-  linkageMatch?: LinkageMatch;
-  isViewOriginalData?: boolean;
-  isLinkageData?: boolean;
-  isThumbnail?: boolean;
-  isHorizontal?: boolean;
-  settingVisible?: boolean;
-  projectId?: string;
-  onUpdateLinkageFiltersGroup: (match: LinkageMatch | undefined) => void;
-  onOpenChartDialog: (data: { isPersonal: boolean; match: PivotMap | undefined }) => void;
-  requestOriginalData: (data: { isPersonal: boolean; match: PivotMap | undefined }) => void;
-  onChangeCurrentReport: (data: { style: PivotStyle }) => void;
-}
-
-interface PivotState {
-  dragValue: number;
-  pageSize: number;
-  pageIndex: number;
-  dropdownVisible: boolean;
-  offset: { x?: number; y?: number };
-  match: PivotMap | null;
-  linkageMatch: LinkageMatch | null;
+function fileValues(value: unknown): PivotFile[] {
+  if (!Array.isArray(value) || !Array.from(value).every(isFile)) throw new TypeError('Invalid pivot attachments');
+  return value;
 }
 
 export const replaceColor = ({
@@ -277,11 +136,11 @@ export const replaceColor = ({
   themeColor,
   sourceType,
 }: {
-  pivotTableStyle: PivotStyleMap;
-  customPageConfig?: PivotStyleMap | undefined;
+  pivotTableStyle: PivotStyleColors;
+  customPageConfig?: CustomPageColors | undefined;
   themeColor?: string | undefined;
   sourceType?: number | undefined;
-  linkageMatch?: LinkageMatch | undefined;
+  linkageMatch?: unknown;
 }) => {
   const data = _.clone(pivotTableStyle);
   const { columnBgColor, lineBgColor } = data;
@@ -292,9 +151,8 @@ export const replaceColor = ({
     widgetBgColor,
     originWidgetBgColor,
   } = customPageConfig || {};
-  const colorIndex = typeof pivoTableColorIndex === 'number' ? pivoTableColorIndex : 1;
 
-  if (pivoTableColor && colorIndex >= (data.pivoTableColorIndex || 0)) {
+  if (pivoTableColor && pivoTableColorIndex >= (data.pivoTableColorIndex || 0)) {
     const isLight = isLightColor(pivoTableColor);
     data.columnBgColor = pivoTableColor;
     data.lineBgColor = pivoTableColor;
@@ -366,77 +224,13 @@ export const replaceColor = ({
   return data;
 };
 
-/** 每个字段在整批数据里的最小/最大值，按 controlId 索引；色阶规则没给范围时回落到它 */
-type ControlMinAndMax = Record<string, { min?: number; max?: number }>;
-
-/** 色阶/条件格式配置 */
-interface YaxisConfig {
-  controlType?: number;
-  normType?: number;
-  emptyShowType?: number;
-  percent?: string | number | undefined;
-}
-
-interface StyleRule {
-  model?: number;
-  sourceControlId?: string;
-  sourceIndex?: number;
-  rangeControlId?: string;
-  onlyShowBar?: boolean;
-  positiveNumberColor?: string;
-  negativeNumberColor?: string;
-  [key: string]: unknown;
-}
-
-interface ColorRule {
-  textColorRule?: StyleRule;
-  bgColorRule?: StyleRule;
-  dataBarRule?: StyleRule;
-}
-
-interface ColorRuleConfig {
-  /** 哪些字段启用了范围色阶 */
-  rangeControlIds?: string[];
-  yaxisMap?: Record<string, YaxisConfig>;
-  colorRuleMap?: Record<string, ColorRule>;
-}
-
-interface BodyCellArgs {
-  value: PivotCell;
-  record: PivotRecord;
-  controlId: string;
-  controlMinAndMax: ControlMinAndMax;
-  columnIndex: number;
-  recordIndex: number;
-  result: PivotResultItem[];
-  colorRuleConfig?: ColorRuleConfig | undefined;
-}
-
-interface CellRenderResult {
-  children: React.ReactNode;
-  props?:
-    { colSpan?: number | undefined; rowSpan?: number | undefined; style?: React.CSSProperties | undefined } | undefined;
-}
-interface ScrollConfig {
-  x?: string;
-  y?: number;
-}
-
-type RenderOutput = React.ReactNode | CellRenderResult;
-
-interface PivotFile {
-  fileID?: string;
-  previewUrl: string;
-  ext: string;
-}
-
 export class PivotTable extends Component<PivotProps, PivotState> {
   // 纯类型声明，babel 的 TS preset 会整条抹掉；【不能】写成有初值的类字段，
   // 那会覆盖构造函数里赋的值
   declare $ref: React.RefObject<HTMLDivElement | null>;
-  declare cache: Record<string, { deps: unknown[]; value: unknown }>;
-  declare isViewOriginalData: boolean;
-  declare isLinkageData: boolean;
+  declare cache: PivotCache;
+  declare isViewOriginalData: boolean | undefined;
+  declare isLinkageData: boolean | number | undefined;
 
   constructor(props: PivotProps) {
     super(props);
@@ -460,34 +254,22 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       const style = this.props.reportData.style || {};
       const oldStyle = prevProps.reportData.style || {};
 
-      if (style.paginationSize !== oldStyle.paginationSize && style.paginationSize !== undefined) {
+      if (style.paginationSize !== oldStyle.paginationSize) {
         this.setState({
           pageSize: style.paginationSize,
         });
       }
     }
   }
-  getCacheValue = <T,>(key: string, deps: unknown[], getValue: () => T) => {
-    const cache = this.cache[key];
-
-    if (
-      cache &&
-      cache.deps.length === deps.length &&
-      cache.deps.every((dep: unknown, index: number) => dep === deps[index])
-    ) {
-      return cache.value as T;
-    }
-
-    const value = getValue();
-    this.cache[key] = { deps, value };
-    return value;
-  };
   getResult = (): PivotResultItem[] => {
     const { data, columns, yaxisList } = this.props.reportData;
-    return this.getCacheValue(
-      'result',
+    return cachedValue(
+      this.cache.result,
       [data.data, columns, yaxisList],
-      () => mergeColumnsCell(data.data, columns, yaxisList) as PivotResultItem[],
+      () => mergeColumnsCell(data.data, columns, yaxisList),
+      cache => {
+        this.cache.result = cache;
+      },
     );
   };
   get result() {
@@ -510,8 +292,8 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       freezeIndex,
       mergeCell: displaySetup.mergeCell,
     };
-    return this.getCacheValue(
-      'linesData',
+    return cachedValue(
+      this.cache.linesData,
       [
         data.x,
         lines,
@@ -524,7 +306,10 @@ export class PivotTable extends Component<PivotProps, PivotState> {
         mobilePivotTableLineFreezeIndex,
         displaySetup.mergeCell,
       ],
-      () => mergeLinesCell(data.x, lines, valueMap, config) as PivotLineData[],
+      () => mergeLinesCell(data.x, lines, valueMap, config),
+      cache => {
+        this.cache.linesData = cache;
+      },
     );
   };
   get linesData() {
@@ -536,24 +321,34 @@ export class PivotTable extends Component<PivotProps, PivotState> {
     }
 
     const { data, yaxisList } = this.props.reportData;
-    return this.getCacheValue('controlMinAndMax', [data.data, yaxisList, controlIds], () => {
-      const controlIdMap: Record<string, boolean> = {};
-      controlIds.forEach(id => {
-        controlIdMap[id] = true;
-      });
-      return getControlMinAndMax(
-        yaxisList.filter((item: AxisField) => controlIdMap[item.controlId]),
-        data.data,
-      ) as ControlMinAndMax;
-    });
+    return cachedValue(
+      this.cache.controlMinAndMax,
+      [data.data, yaxisList, controlIds],
+      () => {
+        const controlIdMap: Record<string, boolean> = {};
+        controlIds.forEach(id => {
+          controlIdMap[id] = true;
+        });
+        return getControlMinAndMax(
+          yaxisList.filter((item: AxisField) => controlIdMap[item.controlId]),
+          data.data,
+        );
+      },
+      cache => {
+        this.cache.controlMinAndMax = cache;
+      },
+    );
   };
   getColorRuleConfig = (): ColorRuleConfig => {
     const { yaxisList, displaySetup } = this.props.reportData;
     const { colorRules = [] } = displaySetup;
-    return this.getCacheValue(
-      'colorRuleConfig',
+    return cachedValue(
+      this.cache.colorRuleConfig,
       [yaxisList, colorRules],
-      () => compileColorRuleConfig(yaxisList, colorRules as never[]) as ColorRuleConfig,
+      () => compileColorRuleConfig(yaxisList, colorRules),
+      cache => {
+        this.cache.colorRuleConfig = cache;
+      },
     );
   };
   get scrollTableBody() {
@@ -605,24 +400,14 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       document.onmouseup = null;
     };
   };
-  getColumnWidthConfig = (): Record<string, number> => {
+  getColumnWidthConfig = (): Record<string, number | string> => {
     const { reportData } = this.props;
     const { reportId, style } = reportData;
     const { pivotTableColumnWidthConfig = {} } = style || {};
     const key = `pivotTableColumnWidthConfig-${reportId}`;
 
     const stored = sessionStorage.getItem(key);
-    if (stored) {
-      const parsed: unknown = JSON.parse(stored);
-      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-        return Object.fromEntries(
-          Object.entries(parsed).filter((entry): entry is [string, number] => typeof entry[1] === 'number'),
-        );
-      }
-      return {};
-    } else {
-      return pivotTableColumnWidthConfig;
-    }
+    return stored ? widthConfig(JSON.parse(stored)) : pivotTableColumnWidthConfig;
   };
   setColumnWidth = (index: number, width: number) => {
     const { settingVisible, reportData, onChangeCurrentReport } = this.props;
@@ -630,27 +415,12 @@ export class PivotTable extends Component<PivotProps, PivotState> {
     const style = reportData.style || {};
     const key = `pivotTableColumnWidthConfig-${reportId}`;
     const stored = sessionStorage.getItem(key);
-    const parsed: unknown = stored ? JSON.parse(stored) : {};
-    const data: Record<string, number> =
-      parsed && typeof parsed === 'object' && !Array.isArray(parsed)
-        ? Object.fromEntries(
-            Object.entries(parsed).filter((entry): entry is [string, number] => typeof entry[1] === 'number'),
-          )
-        : {};
-    const config = {
-      ...data,
-      [index]: width,
-    };
-
+    const data = widthConfig(stored ? JSON.parse(stored) : null);
+    const config = { ...data, [index]: width };
     if (settingVisible) {
-      onChangeCurrentReport({
-        style: {
-          ...style,
-          pivotTableColumnWidthConfig: config,
-        },
-      });
+      if (!onChangeCurrentReport) throw new TypeError('Missing pivot report update callback');
+      onChangeCurrentReport({ style: { ...style, pivotTableColumnWidthConfig: config } });
     }
-
     sessionStorage.setItem(key, JSON.stringify(config));
   };
   getColumnWidth = (index: number) => {
@@ -706,38 +476,29 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       valueMap,
     } = this.props.reportData;
     const style = rawStyle || {};
-    const param: PivotMap = {};
-    const linkageMatch: LinkageMatch = {
-      reportId,
-      filters: [],
-    };
-    if (appId !== undefined) linkageMatch.sheetId = appId;
-    if (name !== undefined) linkageMatch.reportName = name;
-    if (reportType !== undefined) linkageMatch.reportType = reportType;
-    this.isViewOriginalData = !!(displaySetup.showRowList && this.props.isViewOriginalData && !isPrintPivotTable);
+    const param: Record<string, unknown> = {};
+    const linkageMatch: LinkageMatch = { sheetId: appId, reportId, reportName: name, reportType, filters: [] };
+    this.isViewOriginalData = displaySetup.showRowList && this.props.isViewOriginalData && !isPrintPivotTable;
     this.isLinkageData =
-      !!this.props.isLinkageData &&
+      this.props.isLinkageData &&
       !(_.isArray(style.autoLinkageChartObjectIds) && style.autoLinkageChartObjectIds.length === 0) &&
       !isPrintPivotTable &&
-      !!(columns.length || lines.length);
+      (columns.length || lines.length);
     data.x.forEach(item => {
       const key = _.findKey(item);
       if (!key) return;
-      const control = _.find(lines, { cid: key });
-      if (!control) return;
+      const control: Partial<AxisField> = lines.find(line => line.cid === key) || {};
       const { controlId, controlType, controlName } = control;
       const isNumber = isFormatNumber(controlType);
-      const recordIndex = typeof record.key === 'number' ? record.key : 0;
+      const recordIndex = Number(record.key);
       const value = item[key]?.[recordIndex];
-      if (value === undefined) return;
-      const pivotValue = toPivotValue(value);
-      const valueKey =
-        typeof pivotValue === 'string' || typeof pivotValue === 'number' ? String(pivotValue) : undefined;
-      const controlValue = valueKey && valueMap[key] ? valueMap[key][valueKey] : pivotValue;
-      param[key] = isNumber && typeof pivotValue === 'number' ? Number(pivotValue) : pivotValue;
+
+      const pivotValue = value;
+      const valueKey = String(pivotValue);
+      const controlValue: unknown = valueKey && valueMap[key] ? valueMap[key][valueKey] : pivotValue;
+      param[key] = isNumber && pivotValue ? numeric(pivotValue) : pivotValue;
       linkageMatch.lineValue = pivotValue;
       const lineParam = param[key];
-      if (lineParam === undefined) return;
       linkageMatch.filters.push({
         controlId: controlId,
         values: [lineParam],
@@ -747,22 +508,20 @@ export class PivotTable extends Component<PivotProps, PivotState> {
         control,
       });
     });
-    columns.forEach((item: PivotColumn, i: number) => {
+    columns.forEach((item: AxisField, i: number) => {
       if (!item.cid) return;
       const isNumber = isFormatNumber(item.controlType);
       const resultRow = data.data[index];
       if (!resultRow) return;
       const value = resultRow.y[i];
-      if (value === undefined) return;
-      const pivotValue = toPivotValue(value);
-      const valueKey =
-        typeof pivotValue === 'string' || typeof pivotValue === 'number' ? String(pivotValue) : undefined;
+
+      const pivotValue = value;
+      const valueKey = String(pivotValue);
       const mappedValues = valueMap[item.cid];
-      const controlValue = valueKey && mappedValues ? mappedValues[valueKey] : pivotValue;
-      param[item.cid] = isNumber && typeof pivotValue === 'number' ? Number(pivotValue) : pivotValue;
+      const controlValue: unknown = valueKey && mappedValues ? mappedValues[valueKey] : pivotValue;
+      param[item.cid] = isNumber && pivotValue ? numeric(pivotValue) : pivotValue;
       linkageMatch.columnValue = pivotValue;
       const columnParam = param[item.cid];
-      if (columnParam === undefined) return;
       linkageMatch.filters.push({
         controlId: item.controlId,
         values: [columnParam],
@@ -803,7 +562,8 @@ export class PivotTable extends Component<PivotProps, PivotState> {
   };
   handleAutoLinkage = () => {
     const { linkageMatch } = this.state;
-    if (linkageMatch) this.props.onUpdateLinkageFiltersGroup(linkageMatch);
+    if (!this.props.onUpdateLinkageFiltersGroup) throw new TypeError('Missing pivot linkage callback');
+    this.props.onUpdateLinkageFiltersGroup(linkageMatch);
     this.setState({ dropdownVisible: false });
   };
   handleRequestOriginalData = () => {
@@ -811,16 +571,18 @@ export class PivotTable extends Component<PivotProps, PivotState> {
     const { match } = this.state;
     const data = {
       isPersonal: false,
-      match: match || undefined,
+      match,
     };
     this.setState({ dropdownVisible: false });
     if (isThumbnail) {
+      if (!this.props.onOpenChartDialog) throw new TypeError('Missing pivot dialog callback');
       this.props.onOpenChartDialog(data);
     } else {
+      if (!this.props.requestOriginalData) throw new TypeError('Missing pivot data callback');
       this.props.requestOriginalData(data);
     }
   };
-  handleFilePreview = (control: { advancedSetting?: PivotSetting }, res: PivotFile[], file: PivotFile) => {
+  handleFilePreview = (control: { advancedSetting?: PivotSetting | undefined }, res: PivotFile[], file: PivotFile) => {
     if (_.get(window.shareState, 'isPublicChart') && ['.docx', '.xlsx'].includes(file.ext)) {
       alert(_l('暂不支持预览'), 3);
       return;
@@ -836,9 +598,11 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       hideFunctions,
     });
   };
-  getColumnsHeader(linesData: PivotLineData[]): TableColumn[] {
+  getColumnsHeader(linesData: PivotLineData[]): PivotTableColumn[] {
     let { lines, style, yaxisList } = this.props.reportData;
-    let columns: TableColumn[] = _.cloneDeep(this.props.reportData.columns) as TableColumn[];
+    const columns: (Partial<AxisField> & { children?: PivotTableColumn[] })[] = _.cloneDeep(
+      this.props.reportData.columns,
+    );
     const {
       pivotTableUnilineShow,
       pivotTableLineFreeze,
@@ -856,33 +620,32 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       columns.pop();
     }
 
-    const get = (column: TableColumn): TableColumn => {
-      return {
+    const get = (axis: Partial<AxisField> & { children?: PivotTableColumn[] }): PivotTableColumn => {
+      return makeColumn({
         title: () => {
           return (
             <Fragment>
-              {getColumnName(column)}
+              {getColumnName(axis)}
               {isHideHeaderLastTr && this.renderDrag(0)}
             </Fragment>
           );
         },
-        dataIndex: column.cid,
-        children: column.children,
+        dataIndex: axis.cid,
+        children: axis.children,
         colSpan:
           freeze && _.isNumber(freezeIndex) && fIndex <= linesData.length ? fIndex : linesData.length || undefined,
-      };
+      });
     };
 
-    const linesChildren: TableColumn[] = linesData.map((item: PivotLineData, index: number): TableColumn => {
-      const control = _.find(lines, { controlId: item.key });
-      if (!control) return { dataIndex: item.key, title: item.name };
+    const linesChildren: PivotTableColumn[] = linesData.map((item: PivotLineData, index: number): PivotTableColumn => {
+      const control: Partial<AxisField> = lines.find(line => line.controlId === item.key) || {};
       const { controlType, fields = [] } = control;
       const showControl = controlType === 29 && !_.isEmpty(fields);
       const data = item.data;
       const columnWidth = this.getColumnWidth(index);
       const maxFilesWidth = showControl ? this.getAllMaxFilesWidth(data, fields) : 0;
       const diffWidth = _.isUndefined(columnWidth) ? 0 : columnWidth - maxFilesWidth;
-      return {
+      return makeColumn({
         title: () => {
           if (showControl) {
             return (
@@ -895,8 +658,8 @@ export class PivotTable extends Component<PivotProps, PivotState> {
                       style={{
                         width:
                           item.controlType === 14
-                            ? this.getMaxFileLength(data, index) *
-                                (relevanceImageSize.find(image => image.value === item.size)?.px || 0) +
+                            ? numeric(this.getMaxFileLength(data, index)) *
+                                requireItem(relevanceImageSize.find(image => image.value === item.size)).px +
                               diffWidth / fields.length
                             : undefined,
                       }}
@@ -923,16 +686,9 @@ export class PivotTable extends Component<PivotProps, PivotState> {
         width: showControl ? columnWidth || maxFilesWidth : columnWidth,
         className: 'line-content',
         render: (value: unknown, row: PivotRecord, index: number) => {
-          return this.renderLineTd(
-            value as PivotCell,
-            row,
-            index,
-            control,
-            diffWidth / (fields.length || 1),
-            linesData,
-          );
+          return this.renderLineTd(value, row, index, control, diffWidth / (fields.length || 1), linesData);
         },
-      };
+      });
     });
 
     for (let i = columns.length - 1; i >= 0; i--) {
@@ -943,8 +699,8 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       if (next) {
         column.children = [get(next)];
       } else {
-        const defaultChildren: TableColumn[] = yaxisList.length
-          ? [{ title: null, width: isHideHeaderLastTr ? this.getColumnWidth(0) : undefined }]
+        const defaultChildren: PivotTableColumn[] = yaxisList.length
+          ? [makeColumn({ title: null, width: isHideHeaderLastTr ? this.getColumnWidth(0) : undefined })]
           : [];
         column.children = linesChildren.length ? linesChildren : defaultChildren;
       }
@@ -958,7 +714,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
         const freezeChildren = linesChildren.filter(n => n.fixed);
         const noFreezeChildren = linesChildren.filter(n => !n.fixed);
 
-        const getFreeze = (data: TableColumn): TableColumn => {
+        const getFreeze = (data: PivotTableColumn): PivotTableColumn => {
           const children = Array.isArray(data.children) ? data.children : [];
           if (children.length === linesChildren.length) {
             return {
@@ -975,7 +731,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
           }
         };
 
-        const getNoFreeze = (data: TableColumn): TableColumn => {
+        const getNoFreeze = (data: PivotTableColumn): PivotTableColumn => {
           const children = Array.isArray(data.children) ? data.children : [];
           if (children.length === linesChildren.length) {
             return {
@@ -1007,45 +763,45 @@ export class PivotTable extends Component<PivotProps, PivotState> {
     result: PivotResultItem[],
     controlMinAndMax: ControlMinAndMax,
     colorRuleConfig?: ColorRuleConfig,
-  ): TableColumn[] {
+  ): PivotTableColumn[] {
     const { reportData, isViewOriginalData } = this.props;
     const { columns, lines, valueMap, yvalueMap, pivotTable, displaySetup } = reportData;
     const yaxisList = reportData.yaxisList.filter((item: AxisField) => !item.hide);
     const columnSummary = pivotTable?.columnSummary || reportData.columnSummary || { location: 0, controlList: [] };
-    const dataList: TableColumn[] = [];
+    const dataList: PivotTableColumn[] = [];
     const yaxisListLength = yaxisList.filter((n: AxisField) => !n.hide).length;
     const isHideHeaderLastTr = columns.length && !lines.length && yaxisListLength === 1;
     const contentColumnIndexOffset = lines.length || (isHideHeaderLastTr ? 1 : 0);
     const getColumnWidthIndex = (index: number) => contentColumnIndexOffset + index;
 
-    const getTitle = (id: string | undefined, data: PivotCell | undefined): React.ReactNode => {
-      if (data === null || data === undefined) return;
-      const control = columns.find(item => item.cid === id);
-      if (!control) return;
+    const getTitle = (id: string | undefined, data: unknown | undefined): React.ReactNode => {
+      if (data === null || data === undefined) return undefined;
+      const control: Partial<AxisField> = columns.find(item => item.cid === id) || {};
       const defaultEmpty = control.xaxisEmptyType ? '--' : ' ';
       const advancedSetting = control.advancedSetting || {};
       const valueKey = id ? valueMap[id] : undefined;
 
-      if (isPivotCellObject(data)) {
-        const nestedKey =
-          typeof data.value === 'string' || typeof data.value === 'number' ? String(data.value) : undefined;
-        return valueKey && nestedKey
-          ? renderValue(valueKey[nestedKey], advancedSetting) || defaultEmpty
-          : renderValue(data.value, advancedSetting);
+      if (isCellObject(data)) {
+        return renderNode(
+          valueKey
+            ? renderValue(lookup(valueKey, data.value), advancedSetting) || defaultEmpty
+            : renderValue(data.value, advancedSetting),
+        );
       } else {
-        const scalarKey = typeof data === 'string' || typeof data === 'number' ? String(data) : undefined;
-        return valueKey && scalarKey
-          ? renderValue(valueKey[scalarKey], advancedSetting) || defaultEmpty
-          : renderValue(data, advancedSetting);
+        return renderNode(
+          valueKey
+            ? renderValue(lookup(valueKey, data), advancedSetting) || defaultEmpty
+            : renderValue(data, advancedSetting),
+        );
       }
     };
 
-    const getYaxisList = (index: number): TableColumn[] => {
+    const getYaxisList = (index: number): PivotTableColumn[] => {
       const yaxisColumn = yaxisList.map((item, i) => {
         const { rename, controlName, showNumber = true, percent = {} } = item;
         const name = rename || controlName;
         const dragIndex = getColumnWidthIndex(index + i);
-        return {
+        return makeColumn({
           title: () => {
             return (
               <Fragment>
@@ -1069,13 +825,13 @@ export class PivotTable extends Component<PivotProps, PivotState> {
               },
             };
           },
-          render: (value: PivotCell, record: PivotRecord, recordIndex: number) => {
+          render: (value: unknown, record: PivotRecord, recordIndex: number) => {
             const columnData = result[index + i];
             if (!columnData) return null;
-            const subTotal = !record.isSubTotal && getLineSubTotal(columnData.data as never[], recordIndex);
+            const subTotal = !record.isSubTotal && getLineSubTotal(columnData.data, recordIndex);
             record.showNumber = record.key == 'sum' || record.isSubTotal ? true : showNumber;
-            const shouldShowPercent = !!(subTotal || (record.key !== 'sum' && !record.isSubTotal));
-            record.showPercent = shouldShowPercent && percent.enable ? percent.type : undefined;
+            record.showPercent =
+              (subTotal || (record.key !== 'sum' && !record.isSubTotal)) && percent.enable && percent.type;
             if (value && subTotal) {
               const yMap = yvalueMap[item.controlId];
               record.lineSubTotal = yMap ? Number(yMap[subTotal]) : undefined;
@@ -1093,21 +849,21 @@ export class PivotTable extends Component<PivotProps, PivotState> {
               colorRuleConfig,
             });
           },
-        };
+        });
       });
       return yaxisColumn;
     };
 
-    const getChildren = (columnIndex: number, startIndex: number, length: number): TableColumn[] => {
-      const res: TableColumn[] = result.slice(startIndex, startIndex + length).map((item, index) => {
+    const getChildren = (columnIndex: number, startIndex: number, length: number): PivotTableColumn[] => {
+      const res: PivotTableColumn[] = result.slice(startIndex, startIndex + length).map((item, index) => {
         const data = item.y[columnIndex];
         const nextIndex = columnIndex + 1;
-        const isObject = isPivotCellObject(data);
+        const isObject = isCellObject(data);
         const colSpan = isObject && typeof data.length === 'number' ? data.length : 1;
         const dragIndex = getColumnWidthIndex(startIndex + index + colSpan - 1);
         const id = columns[columnIndex]?.cid;
         const title = getTitle(id, data);
-        return {
+        return makeColumn({
           title: title
             ? () => {
                 return (
@@ -1124,9 +880,9 @@ export class PivotTable extends Component<PivotProps, PivotState> {
             nextIndex < columns.length
               ? getChildren(nextIndex, startIndex + index, colSpan)
               : getYaxisList(startIndex + index),
-        };
+        });
       });
-      return res.filter(item => item.title !== undefined);
+      return res.filter(item => item.title);
     };
 
     if (columns.length) {
@@ -1134,12 +890,12 @@ export class PivotTable extends Component<PivotProps, PivotState> {
         const firstItem = item.y.length ? item.y[0] : null;
 
         if (firstItem) {
-          const isObject = isPivotCellObject(firstItem);
+          const isObject = isCellObject(firstItem);
           const colSpan = isObject && typeof firstItem.length === 'number' ? firstItem.length : 1;
           const id = columns[0]?.cid;
           const children = item.y.length > 1 ? getChildren(1, index, colSpan) : getYaxisList(index);
           const dragIndex = getColumnWidthIndex(index + colSpan - 1);
-          const obj = {
+          const obj = makeColumn({
             title: () => {
               return (
                 <Fragment>
@@ -1152,7 +908,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
             key: id,
             colSpan,
             children,
-          };
+          });
           dataList.push(obj);
         }
       });
@@ -1182,17 +938,17 @@ export class PivotTable extends Component<PivotProps, PivotState> {
   ) {
     const { reportData } = this.props;
     const { yaxisList, columns, pivotTable, valueMap } = reportData;
-    const showColumnTotal = pivotTable?.showColumnTotal ?? reportData.pivotTable?.showColumnTotal;
+    const { showColumnTotal } = pivotTable || reportData;
     const columnSummary = pivotTable?.columnSummary || reportData.columnSummary;
 
     if (!(showColumnTotal && columns.length && columnSummary)) return null;
 
     let index = 0;
 
-    const childrenYaxisList: TableColumn[] = [];
-    const sumData = columnSummary.controlList.length === 1 ? columnSummary.controlList[0] || {} : {};
+    const childrenYaxisList: PivotTableColumn[] = [];
+    const sumData = columnSummary.controlList.length === 1 ? requireItem(columnSummary.controlList[0]) : {};
 
-    const data: TableColumn = {
+    const data: PivotTableColumn = makeColumn({
       title: () => {
         return (
           <Fragment>
@@ -1207,14 +963,14 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       width: yaxisList.length === 1 ? this.getColumnWidth(getColumnWidthIndex(result.length - 1)) : undefined,
       rowSpan: columns.length,
       colSpan: yaxisList.length,
-    };
+    });
 
-    const set = (node: TableColumn): void => {
+    const set = (node: PivotTableColumn): void => {
       index = index + 1;
       if (index === columns.length) {
-        data.children = childrenYaxisList;
+        node.children = childrenYaxisList;
       } else {
-        data.children = [
+        node.children = [
           {
             title: null,
             rowSpan: 0,
@@ -1234,52 +990,54 @@ export class PivotTable extends Component<PivotProps, PivotState> {
 
         if (sumData.number || sumData.percent) {
           const dragIndex = getColumnWidthIndex(index);
-          childrenYaxisList.push({
-            title: () => {
-              return (
-                <Fragment>
-                  {sumData.name ? `${name} (${sumData.name})` : name}
-                  {this.renderDrag(dragIndex)}
-                </Fragment>
-              );
-            },
-            dataIndex: `${item.t_id}-${index}`,
-            colSpan: 1,
-            width:
-              yaxisList.length === 1
-                ? this.getColumnWidth(getColumnWidthIndex(result.length - 1))
-                : this.getColumnWidth(dragIndex),
-            className: 'cell-content',
-            render: (value: PivotCell, record: PivotRecord, recordIndex: number) => {
-              const newRecord = {
-                ...record,
-                key: 'sum',
-                type: record.type || 'columns',
-                sumCount: item.sum,
-                sumData,
-              };
-              const subTotal = !record.isSubTotal && getLineSubTotal(item.data as never[], recordIndex);
+          childrenYaxisList.push(
+            makeColumn({
+              title: () => {
+                return (
+                  <Fragment>
+                    {sumData.name ? `${name} (${sumData.name})` : name}
+                    {this.renderDrag(dragIndex)}
+                  </Fragment>
+                );
+              },
+              dataIndex: `${item.t_id}-${index}`,
+              colSpan: 1,
+              width:
+                yaxisList.length === 1
+                  ? this.getColumnWidth(getColumnWidthIndex(result.length - 1))
+                  : this.getColumnWidth(dragIndex),
+              className: 'cell-content',
+              render: (value: unknown, record: PivotRecord, recordIndex: number) => {
+                const newRecord = {
+                  ...record,
+                  key: 'sum',
+                  type: record.type || 'columns',
+                  sumCount: item.sum,
+                  sumData,
+                };
+                const subTotal = !record.isSubTotal && getLineSubTotal(item.data, recordIndex);
 
-              if (subTotal && valueMap[item.t_id]) {
-                const summaryMap = valueMap[item.t_id];
-                newRecord.lineSubTotal = summaryMap ? Number(summaryMap[subTotal]) : undefined;
-              }
+                if (subTotal && valueMap[item.t_id]) {
+                  const summaryMap = valueMap[item.t_id];
+                  newRecord.lineSubTotal = summaryMap ? Number(summaryMap[subTotal]) : undefined;
+                }
 
-              newRecord.showNumber = record.isSubTotal && newRecord.type === 'columns' ? true : showNumber;
-              // newRecord.showPercent = (subTotal || newRecord.key === 'sum' && !record.isSubTotal && newRecord.type === 'columns') && percent.enable && percent.type;
-              newRecord.showPercent = false;
-              return this.renderBodyTd({
-                value,
-                record: newRecord,
-                controlId: item.t_id,
-                controlMinAndMax,
-                columnIndex: index - 1,
-                recordIndex,
-                result,
-                colorRuleConfig,
-              });
-            },
-          });
+                newRecord.showNumber = record.isSubTotal && newRecord.type === 'columns' ? true : showNumber;
+                // newRecord.showPercent = (subTotal || newRecord.key === 'sum' && !record.isSubTotal && newRecord.type === 'columns') && percent.enable && percent.type;
+                newRecord.showPercent = false;
+                return this.renderBodyTd({
+                  value,
+                  record: newRecord,
+                  controlId: item.t_id,
+                  controlMinAndMax,
+                  columnIndex: index - 1,
+                  recordIndex,
+                  result,
+                  colorRuleConfig,
+                });
+              },
+            }),
+          );
         }
       }
     });
@@ -1327,19 +1085,19 @@ export class PivotTable extends Component<PivotProps, PivotState> {
     const freezeIndex = isMobile ? mobilePivotTableLineFreezeIndex : pivotTableLineFreezeIndex;
     const fIndex = typeof freezeIndex === 'number' ? freezeIndex + 1 : 0;
     const isFreeze = freeze && _.isNumber(freezeIndex) && fIndex <= linesData.length;
-    const subTotalIds = lines.filter(item => item.subTotal && item.cid).map(item => item.cid as string);
+    const subTotalIds = lines.filter(item => item.subTotal).map(item => item.cid);
     const totalLength = showBottomLineTotal ? dataLength + 1 : dataLength;
-    const start = shouldPaginate ? (pageIndex - 1) * this.state.pageSize : 0;
-    const end = shouldPaginate ? Math.min(start + this.state.pageSize, totalLength) : totalLength;
+    const start = shouldPaginate ? (pageIndex - 1) * numeric(this.state.pageSize) : 0;
+    const end = shouldPaginate ? Math.min(start + numeric(this.state.pageSize), totalLength) : totalLength;
     const rowIndexes = Array.from({ length: Math.max(end - start, 0) }, (__, index) => start + index);
     const dataRowIndexes = rowIndexes.filter(index => index < dataLength);
 
     const matchingValue = (
-      value: PivotCell | undefined,
-      valueKey: Record<string, PivotValue> | null,
-    ): PivotValue | undefined => {
+      value: unknown | undefined,
+      valueKey: Record<string, unknown> | null,
+    ): unknown | undefined => {
       if (value === undefined) return undefined;
-      const pivotValue = toPivotValue(value);
+      const pivotValue = value;
       if (valueKey) {
         const isSubTotal = typeof pivotValue === 'string' ? pivotValue.includes('subTotal') : false;
         const lookupKey =
@@ -1359,7 +1117,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
         if (
           !('isSubTotal' in obj) &&
           subTotalIds.includes(item.key) &&
-          (isPivotCellObject(value) ? String(value.value) : String(value ?? '')).includes('subTotal')
+          (isCellObject(value) ? String(value.value) : String(value ?? '')).includes('subTotal')
         ) {
           obj.isSubTotal = true;
         }
@@ -1370,7 +1128,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
 
         if (Array.isArray(value)) {
           obj[`${item.t_id}-${i}`] = value
-            .map((cell: PivotValue) => {
+            .map((cell: unknown) => {
               const lookupKey = typeof cell === 'string' || typeof cell === 'number' ? String(cell) : undefined;
               return valueKey && lookupKey ? valueKey[lookupKey] || cell : cell;
             })
@@ -1471,7 +1229,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       const columnsLength = (columns.length || 1) + (yaxisList.length === 1 ? 0 : 1);
       const headerHeight = columnsLength * lineHeight;
       const offsetHeight = isMobile && isHorizontal ? document.body.clientWidth - 80 : parent.offsetHeight - 15;
-      const paginationHeight = paginationVisible && paginationTotal > this.state.pageSize ? 45 : 0;
+      const paginationHeight = paginationVisible && paginationTotal > numeric(this.state.pageSize) ? 45 : 0;
 
       if (!lineFreeze) {
         config.x = '100%';
@@ -1482,30 +1240,30 @@ export class PivotTable extends Component<PivotProps, PivotState> {
 
     return config;
   }
-  getMaxFileLength(data: PivotCell[], index: number): number {
+  getMaxFileLength(data: unknown[], index: number): number | null | undefined {
     const maxValue = 10;
     const lengths = data.map(item => {
-      if (isPivotCellObject(item) && Array.isArray(item.value)) {
+      if (isCellObject(item) && Array.isArray(item.value)) {
         const nested = item.value[index];
-        return Array.isArray(nested) ? nested.length : 0;
+        if (Array.isArray(nested)) return nested.length;
       }
-
       if (Array.isArray(item)) {
-        const nested = item[index];
-        return Array.isArray(nested) ? nested.length : 0;
+        const nested: unknown = item[index];
+        if (Array.isArray(nested) || typeof nested === 'string') return nested.length;
+        throw new TypeError('Invalid pivot attachment field');
       }
-
-      return 0;
+      return null;
     });
-    const value = Math.max(...lengths, 0);
-    return value > maxValue ? maxValue : value;
+    const value = _.max(lengths);
+    return numeric(value) > maxValue ? maxValue : value;
   }
-  getAllMaxFilesWidth(data: PivotCell[], fields: AxisField[]): number {
+  getAllMaxFilesWidth(data: unknown[], fields: AxisField[]): number {
     let width = 0;
     fields.forEach((field, index: number) => {
       if (field.controlType === 14) {
         width +=
-          this.getMaxFileLength(data, index) * (relevanceImageSize.find(image => image.value === field.size)?.px || 0);
+          numeric(this.getMaxFileLength(data, index)) *
+          requireItem(relevanceImageSize.find(image => image.value === field.size)).px;
       } else {
         width += 130;
       }
@@ -1549,8 +1307,8 @@ export class PivotTable extends Component<PivotProps, PivotState> {
     }
   }
   renderRelevanceContent(
-    relevanceData: PivotCell,
-    parentControl: AxisField,
+    relevanceData: unknown,
+    parentControl: Partial<AxisField>,
     index: number,
     diffWidth: number,
     linesData: PivotLineData[] = [],
@@ -1563,16 +1321,19 @@ export class PivotTable extends Component<PivotProps, PivotState> {
 
     if (control.controlType === 14) {
       const imageConfig = relevanceImageSize.find(image => image.value === (control.size || 2));
-      if (!imageConfig) return <div className="relevanceContent">{'--'}</div>;
+      if (!imageConfig) throw new TypeError('Invalid pivot attachment size');
       const { px, fileIconSize } = imageConfig;
       const line = linesData.find(item => item.key === parentControl.controlId);
       const data = line?.data || [];
       const max = this.getMaxFileLength(data, index);
-      const relevanceItems = Array.isArray(relevanceData) ? relevanceData : [relevanceData];
-      const files = relevanceItems.filter(isPivotFile);
+      const files = fileValues(relevanceData);
       const handleFilePreview = this.handleFilePreview.bind(this, control, files);
       return (
-        <div className="relevanceContent fileContent" style={{ width: max * px + diffWidth }} key={control.controlId}>
+        <div
+          className="relevanceContent fileContent"
+          style={{ width: numeric(max) * px + diffWidth }}
+          key={control.controlId}
+        >
           {files.length ? (
             files.map(file => this.renderFile(file, px, fileIconSize, handleFilePreview))
           ) : (
@@ -1585,7 +1346,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
     if (Array.isArray(relevanceData)) {
       return (
         <div className="relevanceContent" key={control.controlId}>
-          {relevanceData.map(toDisplayNode).join('、')}
+          {relevanceData.join('、')}
         </div>
       );
     }
@@ -1600,34 +1361,36 @@ export class PivotTable extends Component<PivotProps, PivotState> {
 
     return (
       <div className="relevanceContent" key={control.controlId}>
-        <span className={cx({ ellipsis: pivotTableUnilineShow })}>{toDisplayNode(relevanceData) || '--'}</span>
+        <span className={cx({ ellipsis: pivotTableUnilineShow })}>{renderNode(relevanceData) || '--'}</span>
       </div>
     );
   }
-  renderSheetControl(data: PivotCell, control: AxisField): React.ReactNode {
+  renderSheetControl(data: unknown, control: Partial<AxisField>): React.ReactNode {
     const { isThumbnail, sourceType } = this.props;
     const { controlType, advancedSetting } = control;
 
     if (controlType === WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT) {
-      const item = parsePivotObject(data);
-      const projectId = readString(item['projectId']);
+      const parsed: unknown = window.safeParse(data);
+      const item = objectValue(parsed);
+      const projectId = stringValue(item['projectId']);
       return projectId ? (
         <DepartmentTooltip projectId={projectId} item={item}>
-          <div className="departmentWrap">{readString(item['departmentName'])}</div>
+          <div className="departmentWrap">{stringValue(item['departmentName'])}</div>
         </DepartmentTooltip>
       ) : (
         <DepartmentTooltip item={item}>
-          <div className="departmentWrap">{readString(item['departmentName'])}</div>
+          <div className="departmentWrap">{stringValue(item['departmentName'])}</div>
         </DepartmentTooltip>
       );
     }
 
     if (controlType === WIDGETS_TO_API_TYPE_ENUM.USER_PICKER) {
       const { projectId } = this.props;
-      const item = parsePivotObject(data);
-      const accountId = readString(item['accountId']);
-      const fullname = readString(item['fullname']);
-      const avatar = readString(item['avatar']);
+      const parsed: unknown = window.safeParse(data);
+      const item = objectValue(parsed);
+      const accountId = stringValue(item['accountId']);
+      const fullname = stringValue(item['fullname']);
+      const avatar = stringValue(item['avatar']);
 
       if (accountId) {
         return (
@@ -1645,7 +1408,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
           </div>
         );
       } else {
-        return toDisplayNode(data);
+        return renderNode(data);
       }
     }
 
@@ -1653,28 +1416,29 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       if (_.get(advancedSetting, 'showtype') === '0') {
         return data === '1' ? '✅' : '';
       } else {
-        return toDisplayNode(data);
+        return renderNode(data);
       }
     }
 
     if (isOptionControl(controlType)) {
-      const item = parsePivotObject(data);
-      const value = readString(item['value']);
-      const color = readString(item['color']);
+      const parsed: unknown = window.safeParse(data);
+      const item = objectValue(parsed);
+      const value: unknown = item['value'];
+      const color = stringValue(item['color']);
       return (
         <div className="optionWrap" style={{ backgroundColor: color || 'rgba(80, 120, 150, 0.08)' }}>
-          {value || toDisplayNode(data)}
+          {renderNode(value || data)}
         </div>
       );
     }
 
-    return toDisplayNode(data);
+    return renderNode(data);
   }
   renderLineTd(
-    data: PivotCell,
+    data: unknown,
     _row: PivotRecord,
     _index: number,
-    control: AxisField,
+    control: Partial<AxisField>,
     diffWidth: number,
     linesData: PivotLineData[] = [],
   ): RenderOutput {
@@ -1692,17 +1456,17 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       };
     }
 
-    if (isPivotCellObject(data)) {
-      const props: { colSpan?: number | undefined; rowSpan?: number | undefined } = {};
+    if (isCellObject(data)) {
+      const props: { colSpan?: number; rowSpan?: number } = {};
 
       if (data.sum) {
-        props.colSpan = data.length;
+        if (data.length !== undefined) props.colSpan = data.length;
       } else {
-        props.rowSpan = data.length;
+        if (data.length !== undefined) props.rowSpan = data.length;
       }
 
       if (controlType === 29 && fields.length > 0 && !data.sum && Array.isArray(data.value)) {
-        const res = data.value as PivotCell[];
+        const res = data.value;
         return {
           children: (
             <div className="flexRow w100">
@@ -1720,21 +1484,21 @@ export class PivotTable extends Component<PivotProps, PivotState> {
         return {
           children: (
             <div style={textStyle}>
-              {data.sum ? toDisplayNode(data.value) : this.renderSheetControl(data.value, control)}
+              {data.sum ? renderNode(data.value) : this.renderSheetControl(data.value, control)}
             </div>
           ),
           props,
         };
       } else {
         return {
-          children: toDisplayNode(data.value),
+          children: renderNode(data.value),
           props,
         };
       }
     }
 
     if (controlType === 29 && fields.length > 0 && Array.isArray(data)) {
-      const res = data as PivotCell[];
+      const res = data;
       return (
         <div className="flexRow w100">
           {res.map((item, index) => this.renderRelevanceContent(item, control, index, diffWidth, linesData))}
@@ -1756,14 +1520,14 @@ export class PivotTable extends Component<PivotProps, PivotState> {
     }
 
     if (pivotTableUnilineShow) {
-      return isFieldStyle ? this.renderSheetControl(data, control) : toDisplayNode(data);
+      return isFieldStyle ? this.renderSheetControl(data, control) : renderNode(data);
     }
 
     if (controlType === 2) {
       return (
         <div style={textStyle}>
           <Linkify properties={{ target: '_blank' }} unLimit={true}>
-            {toDisplayNode(data)}
+            {renderNode(data)}
           </Linkify>
         </div>
       );
@@ -1773,7 +1537,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
       return <div style={textStyle}>{this.renderSheetControl(data, control)}</div>;
     }
 
-    return <div style={textStyle}>{toDisplayNode(data)}</div>;
+    return <div style={textStyle}>{renderNode(data)}</div>;
   }
   renderBodyTd({
     value,
@@ -1791,25 +1555,25 @@ export class PivotTable extends Component<PivotProps, PivotState> {
     // 数据条（条形背景）的样式
     const barStyle: React.CSSProperties = {};
     const { controlType, normType, emptyShowType, percent: percentConfig } = yaxisMap[controlId] || {};
-    const isNumberValue = typeof value === 'number';
+    const isNumberValue = _.isNumber(value);
     const originalValue = value;
-    let onlyShowBar = false;
+    let onlyShowBar: boolean | undefined = false;
     let sumSuffix = '';
     let percent = '';
 
-    if (isPivotCellObject(value)) {
+    if (isCellObject(value)) {
       sumSuffix = value.sumSuffix || '';
       value = value.value;
     }
 
     if (isNumberValue || _.isEmpty(value) || emptyShowType === 1) {
-      const colorRule = colorRuleMap[controlId] || {};
-      const textColorRule = colorRule.textColorRule || {};
-      const bgColorRule = colorRule.bgColorRule || {};
-      const dataBarRule = colorRule.dataBarRule;
+      const colorRule = colorRuleMap[controlId];
+      const textColorRule = colorRule?.textColorRule || {};
+      const bgColorRule = colorRule?.bgColorRule || {};
+      const dataBarRule = colorRule?.dataBarRule;
 
       if (textColorRule.model) {
-        style.color = getCompiledStyleColor({
+        const color = getCompiledStyleColor({
           value: getStyleRuleValue({
             rule: textColorRule,
             value,
@@ -1825,10 +1589,11 @@ export class PivotTable extends Component<PivotProps, PivotState> {
           emptyShowType,
           rule: textColorRule,
         });
+        if (color !== null && color !== undefined) style.color = color;
       }
 
       if (bgColorRule.model) {
-        style.backgroundColor = getCompiledStyleColor({
+        const color = getCompiledStyleColor({
           value: getStyleRuleValue({
             rule: bgColorRule,
             value,
@@ -1844,9 +1609,10 @@ export class PivotTable extends Component<PivotProps, PivotState> {
           emptyShowType,
           rule: bgColorRule,
         });
+        if (color !== null && color !== undefined) style.backgroundColor = color;
       }
 
-      if (dataBarRule && dataBarRule.rangeControlId && record.key !== 'sum') {
+      if (dataBarRule && record.key !== 'sum') {
         Object.assign(
           barStyle,
           getCompiledBarStyleColor({
@@ -1855,13 +1621,13 @@ export class PivotTable extends Component<PivotProps, PivotState> {
             rule: dataBarRule,
           }),
         );
-        onlyShowBar = !!dataBarRule.onlyShowBar;
+        onlyShowBar = dataBarRule.onlyShowBar;
       }
 
       if (record.key === 'sum' && record.type === 'columns') {
-        value = typeof value === 'number' ? value || 0 : 0;
+        value = value || 0;
         const { sumCount, sumData = {} } = record;
-        const percent = value && sumCount ? `${((value / sumCount) * 100).toFixed(2)}%` : undefined;
+        const percent = value && sumCount ? `${((numeric(value) / sumCount) * 100).toFixed(2)}%` : undefined;
 
         if (sumData.number) {
           value = formatrChartValue(value, false, yaxisList, controlId);
@@ -1886,7 +1652,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
     }
 
     if (isNumberValue) {
-      const originalNumber = typeof originalValue === 'number' ? originalValue : 0;
+      const originalNumber = numeric(originalValue);
       if (record.showPercent === 1) {
         const count = record.lineSubTotal || 0;
         const percentValue = formatNumberValue((originalNumber / count) * 100, percentConfig);
@@ -1906,7 +1672,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
 
     const renderValue = () => {
       if (isNumberValue) {
-        return record.showNumber ? toDisplayNode(value) : null;
+        return renderNode(record.showNumber && value);
       } else if (controlType === 2 && normType === 7) {
         return (
           <Linkify properties={{ target: '_blank' }} unLimit={true}>
@@ -1914,7 +1680,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
           </Linkify>
         );
       } else {
-        return toDisplayNode(value);
+        return renderNode(value);
       }
     };
 
@@ -1932,12 +1698,11 @@ export class PivotTable extends Component<PivotProps, PivotState> {
     );
 
     if (style.backgroundColor) {
+      const backgroundStyle: CellBackgroundStyle = { '--pivot-table-cell-bg': style.backgroundColor };
       return {
         children,
         props: {
-          style: {
-            '--pivot-table-cell-bg': String(style.backgroundColor),
-          } as React.CSSProperties,
+          style: backgroundStyle,
         },
       };
     }
@@ -2006,8 +1771,8 @@ export class PivotTable extends Component<PivotProps, PivotState> {
           ref={this.$ref}
           isMobile={isMobile}
           pivotTableStyle={replaceColor({ pivotTableStyle, customPageConfig, themeColor, sourceType, linkageMatch })}
-          isFreeze={columnFreeze || lineFreeze}
-          paginationVisible={paginationVisible && !isPrintPivotTable && paginationTotal > pageSize}
+          isFreeze={!!(columnFreeze || lineFreeze)}
+          paginationVisible={paginationVisible && !isPrintPivotTable && paginationTotal > numeric(pageSize)}
           className={cx('flex flexColumn chartWrapper Relative', {
             contentXAuto: _.isUndefined(scrollConfig.x),
             contentYAuto: _.isUndefined(scrollConfig.y),
@@ -2037,7 +1802,7 @@ export class PivotTable extends Component<PivotProps, PivotState> {
                     total: paginationTotal,
                     hideOnSinglePage: true,
                     showSizeChanger: true,
-                    pageSize: showTopLineTotal ? pageSize + 1 : pageSize,
+                    ...(pageSize !== undefined ? { pageSize: showTopLineTotal ? pageSize + 1 : pageSize } : {}),
                     pageSizeOptions: [20, 25, 30, 50, 100],
                     onChange: pageIndex => {
                       this.setState({ pageIndex });
@@ -2049,14 +1814,14 @@ export class PivotTable extends Component<PivotProps, PivotState> {
                   }
                 : false
             }
-            columns={tableColumns as unknown as ColumnsType<PivotRecord>}
+            columns={tableColumns}
             dataSource={dataSource}
             scroll={scrollConfig}
           />
           {!!dragValue && <div style={{ left: dragValue }} className="pivotTableDragLine" />}
         </PivotTableContent>
         <Dropdown
-          open={dropdownVisible}
+          open={!!dropdownVisible}
           onOpenChange={dropdownVisible => {
             this.setState({ dropdownVisible });
           }}
@@ -2071,4 +1836,11 @@ export class PivotTable extends Component<PivotProps, PivotState> {
   }
 }
 
-export default ErrorBoundary.wrap(PivotTable);
+// Keep the existing error boundary runtime, with an explicit public prop contract.
+export default function PivotTableBoundary(props: PivotProps) {
+  return (
+    <ErrorBoundary>
+      <PivotTable {...props} />
+    </ErrorBoundary>
+  );
+}

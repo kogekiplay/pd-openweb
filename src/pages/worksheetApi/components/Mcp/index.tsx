@@ -3,7 +3,18 @@ import { Empty, Select } from 'antd';
 import JsonView from '@mingdaocom/json-view';
 import { Support } from 'ming-ui';
 
-const maskString = (str, startW: number, endW: number, middleW: number) => {
+export interface McpAuthorize {
+  appKey?: string | undefined;
+  name?: string | undefined;
+  sign?: string | undefined;
+  appName?: string | undefined;
+}
+export interface McpProps {
+  authorizes?: McpAuthorize[] | undefined;
+  appInfo?: Record<string, unknown> | undefined;
+}
+
+const maskString = (str: unknown, startW: number, endW: number, middleW: number) => {
   if (typeof str !== 'string') return '';
   const start = str.slice(0, startW); // 前面保留
   const end = str.slice(-endW); // 后面保留
@@ -11,7 +22,15 @@ const maskString = (str, startW: number, endW: number, middleW: number) => {
   return start + middle + end;
 };
 
-const formatMcpData = ({ appKey, sign, appName }) => {
+const formatMcpData = ({
+  appKey,
+  sign,
+  appName,
+}: {
+  appKey?: string | undefined;
+  sign?: string | undefined;
+  appName?: string | undefined;
+}) => {
   const url = appKey
     ? `${md.global.Config.MCPUrl}?HAP-Appkey=${maskString(appKey, 4, 4, 8)}&HAP-Sign=${maskString(sign, 6, 4, 78)}`
     : `${md.global.Config.MCPUrl}?HAP-Appkey=YOUR_APP_KEY&HAP-Sign=YOUR_SIGN`;
@@ -19,7 +38,15 @@ const formatMcpData = ({ appKey, sign, appName }) => {
   return { [`hap-mcp-${appName}`]: { url } };
 };
 
-const formatRealMcpData = ({ appKey, sign, appName }) => {
+const formatRealMcpData = ({
+  appKey,
+  sign,
+  appName,
+}: {
+  appKey?: string | undefined;
+  sign?: string | undefined;
+  appName?: string | undefined;
+}) => {
   const url = appKey
     ? `${md.global.Config.MCPUrl}?HAP-Appkey=${appKey}&HAP-Sign=${sign}`
     : `${md.global.Config.MCPUrl}?HAP-Appkey=YOUR_APP_KEY&HAP-Sign=YOUR_SIGN`;
@@ -27,10 +54,10 @@ const formatRealMcpData = ({ appKey, sign, appName }) => {
   return { [`hap-mcp-${appName}`]: { url } };
 };
 
-const Mcp = ({ authorizes = [] }) => {
-  const [appItem, setAppItem] = useState({});
+const Mcp = ({ authorizes = [] }: McpProps) => {
+  const [appItem, setAppItem] = useState<McpAuthorize | undefined>({});
 
-  const handleChange = value => {
+  const handleChange = (value: string | undefined) => {
     const appItem = authorizes.find(item => item.appKey === value);
     setAppItem(appItem);
   };
@@ -62,8 +89,8 @@ const Mcp = ({ authorizes = [] }) => {
           <div>{_l('包含应用、工作表、聚合表、应用角色、选项集 API、工作流')}</div>
           <div className="flexRow alignItemsCenter mLeft30 nowrap flex-shrink-0">
             {_l('选择密钥：')}
-            <Select
-              value={appItem.appKey}
+            <Select<string | undefined, { value: string | undefined; label: string | undefined }>
+              value={appItem?.appKey}
               style={{ minWidth: 150, maxWidth: 220, fontSize: 13 }}
               notFoundContent={<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={_l('请先创建授权密钥')} />}
               onChange={handleChange}
@@ -72,7 +99,11 @@ const Mcp = ({ authorizes = [] }) => {
           </div>
         </div>
         <div className="worksheetApiContentJsonViewBox mTop15">
-          <JsonView bodyClassName="pAll15" data={formatMcpData(appItem)} copyData={formatRealMcpData(appItem)} />
+          <JsonView
+            bodyClassName="pAll15"
+            data={formatMcpData(appItem || {})}
+            copyData={formatRealMcpData(appItem || {})}
+          />
         </div>
       </div>
     </div>

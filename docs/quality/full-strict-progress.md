@@ -16,4 +16,4 @@
 
 包含本轮公共类型及上游更新的整合源码提交 `946e9c615` 完整生产构建通过（1 分 53 秒），构建后工作树干净，冻结源码哈希相同。本地新批次没有部署到生产。
 
-工具链后续批次已在本地冻结：CI/utils、CI/generate、CI/serve、publishConfig、build、spec-harness 和 run-specs 的自有路径五开关零诊断；179/179 规格及 release 构建通过，资源为 1095 JS、387 CSS、3 runtime。全工具 strict 存量约 3391 条，仍有 webpack 配置、其它脚本和既有测试 globals 等未处理债务；本批未推送前不会计入远端，也未更新生产。
+工具链批次 `b1347dbf6` 已推送：CI/utils、CI/generate、CI/serve、publishConfig、build、spec-harness 和 run-specs 的自有路径五开关零诊断；179/179 规格及 release 构建通过，资源为 1095 JS、387 CSS、3 runtime。全工具 strict 按诊断标题计数为 2929 条（3158 → 2929，减少 229；旧数字3391是含说明的输出行数），仍有 webpack 配置、其它脚本和既有测试 globals 等未处理债务；本批未更新生产。

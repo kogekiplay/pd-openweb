@@ -1,7 +1,7 @@
-const childProcess = require('child_process');
-const path = require('path');
+const childProcess: typeof import('node:child_process') = require('child_process');
+const path: typeof import('node:path') = require('path');
 
-function normalizeCacheKey(value) {
+function normalizeCacheKey(value: unknown): string {
   return String(value || 'local')
     .replace(/^refs[\\/]heads[\\/]/, '')
     .replace(/^refs[\\/]remotes[\\/]/, '')
@@ -10,7 +10,7 @@ function normalizeCacheKey(value) {
     .slice(0, 120);
 }
 
-function getGitValue(rootPath, command) {
+function getGitValue(rootPath: string, command: string): string {
   try {
     return childProcess
       .execSync(command, { cwd: rootPath, stdio: ['ignore', 'pipe', 'ignore'] })
@@ -21,8 +21,8 @@ function getGitValue(rootPath, command) {
   }
 }
 
-function getWebpackCacheBranch(rootPath) {
-  const envBranch = process.env.GIT_BRANCH;
+function getWebpackCacheBranch(rootPath: string): string {
+  const envBranch = process.env['GIT_BRANCH'];
 
   if (envBranch) {
     return normalizeCacheKey(envBranch);
@@ -52,15 +52,15 @@ function getWebpackCacheBranch(rootPath) {
  * 需要隔离时（比如 CI 上要复现干净构建）设 WEBPACK_CACHE_KEY，
  * 设成分支名即可退回旧行为。
  */
-function getWebpackCacheDirectory(rootPath) {
-  const key = process.env.WEBPACK_CACHE_KEY || 'shared';
+function getWebpackCacheDirectory(rootPath: string): string {
+  const key = process.env['WEBPACK_CACHE_KEY'] || 'shared';
 
   return path.resolve(rootPath, 'node_modules/.cache/webpack', normalizeCacheKey(key));
 }
 
-function getWebpackCacheName(rootPath, parts) {
+function getWebpackCacheName(_rootPath: string, parts: readonly string[]): string {
   // 与目录同源：默认不再按分支区分，理由见 getWebpackCacheDirectory
-  const key = normalizeCacheKey(process.env.WEBPACK_CACHE_KEY || 'shared');
+  const key = normalizeCacheKey(process.env['WEBPACK_CACHE_KEY'] || 'shared');
 
   return ['mdpublic', key].concat(parts).filter(Boolean).join('-');
 }
@@ -69,4 +69,10 @@ module.exports = {
   getWebpackCacheBranch,
   getWebpackCacheDirectory,
   getWebpackCacheName,
+};
+
+export type WebpackCache = {
+  getWebpackCacheBranch: typeof getWebpackCacheBranch;
+  getWebpackCacheDirectory: typeof getWebpackCacheDirectory;
+  getWebpackCacheName: typeof getWebpackCacheName;
 };

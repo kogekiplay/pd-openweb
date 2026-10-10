@@ -5,8 +5,8 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';
 import FilterConfig from 'worksheet/common/WorkSheetFilter/common/FilterConfig';
-import type { FormControl } from 'src/utils/controlTypes';
 import { formatFilters } from '../../core/utils';
+import type { ApiSwitchPermit, ApiTemplateControl } from '../../types';
 
 const Wrapper = styled.div`
   display: flex;
@@ -88,13 +88,14 @@ const formatFiltersValue = (filters = []) => {
   });
 };
 
-export default function FiltersGenerate(props) {
-  const {
-    controls = [],
-    projectId,
-    appId,
-    sheetSwitchPermit = [],
-  }: { controls: FormControl[]; [key: string]: any } = props;
+export interface FiltersGenerateProps {
+  controls?: ApiTemplateControl[] | undefined;
+  projectId?: string | undefined;
+  appId?: string | undefined;
+  sheetSwitchPermit?: ApiSwitchPermit[] | undefined;
+}
+export default function FiltersGenerate(props: FiltersGenerateProps) {
+  const { controls = [], projectId, appId, sheetSwitchPermit = [] } = props;
   const [visible, setVisible] = useState(false);
   const [filters, setFilters] = useState([]);
   const [apiVersion, setApiVersion] = useState('apiV2');

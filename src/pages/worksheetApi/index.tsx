@@ -1,10 +1,11 @@
-import React, { Component, Fragment, useCallback, useEffect, useState } from 'react';
+import React, { Component, Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import JsonView from '@mingdaocom/json-view';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Avatar, Dialog, Icon, LoadDiv, ScrollView, Textarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { ScrollViewHandle } from 'ming-ui/components/ScrollView';
 import appManagementAjax from 'src/api/appManagement';
 import homeApp from 'src/api/homeApp';
 import ajaxRequest from 'src/api/worksheet';
@@ -18,8 +19,29 @@ import { FIELD_TYPE_LIST } from 'src/pages/workflow/WorkflowSettings/enum';
 import { VIEW_DISPLAY_TYPE, VIEW_TYPE_ICON } from 'src/pages/worksheet/constants/enum';
 import { getTranslateInfo, setFavicon, shareGetAppLangDetail } from 'src/utils/app';
 import { browserIsMobile } from 'src/utils/common';
-import type { FormControl } from 'src/utils/controlTypes';
 import copy from 'src/utils/copyToClipboard';
+import {
+  apiAppInfo,
+  apiAuthorizes,
+  apiDocuments,
+  apiFields,
+  apiMenuItems,
+  apiOptions,
+  apiShare,
+  apiSidebarItems,
+  apiSideItems,
+  apiWorkflow,
+  apiWorksheetMetadata,
+  cachedPosition,
+  displayDescription,
+  errorInfo,
+  isRecord,
+  optionParameters,
+  parseExample,
+  relationExample,
+  textField,
+  viewDescriptions,
+} from './boundary';
 import FiltersGenerate from './components/FiltersGenerate';
 import Header from './components/Header';
 import Mcp from './components/Mcp';
@@ -48,6 +70,20 @@ import {
 } from './core/applicationConfig';
 import { MENU_LIST_MAP, SIDEBAR_LIST_MAP, TAB_TYPE } from './core/enum';
 import { convertControl } from './core/utils';
+import type {
+  ApiAuthorize,
+  ApiDocNode,
+  ApiField,
+  ApiHeader,
+  ApiMenuItem,
+  ApiRecord,
+  ApiSection,
+  ApiShareData,
+  ApiShareResponse,
+  ApiSideItem,
+  ApiWorksheetState,
+  WorksheetApiProps,
+} from './types';
 import './index.less';
 
 const FIELD_TYPE = FIELD_TYPE_LIST.concat([
@@ -56,43 +92,24 @@ const FIELD_TYPE = FIELD_TYPE_LIST.concat([
 ]);
 const isMobile = browserIsMobile();
 
-/** 左侧列表里的工作表 / 流程 / 数据管道条目 */
-interface ApiSideItem {
-  id?: string;
-  workSheetId?: string;
-  workSheetName?: string;
-  name?: string;
-  startAppType?: number;
-  [key: string]: any;
-}
-
-/** 接口文档正文里的一个节点（分组、视图、字段说明都走这个形状） */
-interface ApiDocNode {
-  type?: number;
-  // 多数是文字说明；viewId 参数的说明是「视图名 → viewId」对照表（见 List 接口那段），渲染时按 object 转成 JSON
-  desc?: string | Record<string, string | undefined>[];
-  items?: ApiDocNode[];
-  data?: ApiDocNode[];
-  views?: ApiDocNode[];
-  [key: string]: any;
-}
-
-/** 封装业务流程的入参 / 出参 */
-interface ApiField {
-  controlId?: string;
-  controlName?: string;
-  dataSource?: string;
-  type?: number;
-  [key: string]: any;
-}
-
-class WorksheetApi extends Component<any, any> {
+export class WorksheetApi extends Component<WorksheetApiProps, ApiWorksheetState> {
   declare canScroll: boolean;
+  private disposed = false;
+  private appVersion = 0;
+  private selectionVersion = 0;
+  private authorizeVersion = 0;
+  private pipelineVersion = 0;
+  private requests = new Set<ApiResultOf<unknown>>();
+  private stateCompletions = new Set<() => void>();
+  private retryRequest: (() => Promise<void>) | undefined;
+  private scrollTimer: ReturnType<typeof setTimeout> | undefined;
 
   /** IP 白名单输入框（Textarea），由 manualRef 回填 */
-  whiteList?: { value: string };
+  whiteList?: HTMLTextAreaElement | null;
+  contentScrollRef: React.RefObject<ScrollViewHandle | null>;
+  handleGetId: () => string | undefined;
 
-  constructor(props) {
+  constructor(props: WorksheetApiProps) {
     super(props);
     this.state = {
       data: [],
@@ -133,25 +150,43 @@ class WorksheetApi extends Component<any, any> {
       workflowAlias: '',
     };
     this.canScroll = true;
-    this.contentScrollRef = React.createRef();
+    this.contentScrollRef = React.createRef<ScrollViewHandle>();
     this.handleGetId = this.getId.bind(this);
   }
 
   override componentDidMount() {
-    this.getAppInfo();
+    this.disposed = false;
+    void this.getAppInfo();
+  }
+  override componentWillUnmount() {
+    this.disposed = true;
+    this.appVersion++;
+    this.selectionVersion++;
+    this.authorizeVersion++;
+    this.pipelineVersion++;
+    this.requests.forEach(request => request.abort());
+    this.requests.clear();
+    this.stateCompletions.forEach(finish => finish());
+    this.stateCompletions.clear();
+    this.scroll.cancel();
+    clearTimeout(this.scrollTimer);
+  }
+  private track<T>(request: ApiResultOf<T>): ApiResultOf<T> {
+    this.requests.add(request);
+    return request;
+  }
+  private failure(error: unknown, retry: () => Promise<void>): void {
+    if (this.disposed) return;
+    const info = errorInfo(error);
+    this.retryRequest = retry;
+    this.setState({ loading: false, dataPipelineLoading: false, errorCode: info.errorCode, loadError: info.message });
   }
 
-  /**
-   * 【返回类型要显式写】这几张菜单表的条目形状按接口各不相同：
-   * 有的带 isGet / fields / requestData / outputData，有的不带。
-   * 不写的话 TS 会把数组推成这些形状的联合，读任何非公共字段都报"属性不存在"。
-   * 共有的只有 id / title，其余如实写成开放的索引签名 ——
-   * 【不要试图把字段列全】那是按 4 条样本猜形状，实测会漏掉一大半、反而制造新错误。
-   */
-  get MENU_LIST(): Array<{ id: string; title: string; [key: string]: any }> {
+  /** Checked actual menu fields; metadata and shared menu/array identities are retained. */
+  get MENU_LIST(): ApiMenuItem[] {
     const { tabIndex } = this.state;
 
-    return MENU_LIST_MAP[tabIndex] || [];
+    return apiMenuItems(MENU_LIST_MAP[tabIndex] || []);
   }
 
   get hideMcp() {
@@ -165,11 +200,13 @@ class WorksheetApi extends Component<any, any> {
     );
   }
 
-  getAppInfo() {
+  getAppInfo(): Promise<void> {
     const { isSharePage, shareData = {} } = this.props;
+    const version = ++this.appVersion;
 
     this.setState({
       loading: true,
+      loadError: undefined,
     });
 
     const promiseList = isSharePage
@@ -210,193 +247,232 @@ class WorksheetApi extends Component<any, any> {
           appManagementAjax.getAuthorizes({ appId: this.getId() }),
         ];
 
-    Promise.all(promiseList).then(async res => {
-      let resArr = isSharePage ? res.concat([undefined, undefined]) : res;
-      const [
-        worksheetList = [],
-        appInfo = {},
-        addOptionsParams = [],
-        getOptionsParams = [],
-        processList = [],
-        dataApp = {},
-        authorizes = [],
-      ] = resArr;
+    promiseList.forEach(request => this.track(request));
+    return Promise.all(promiseList)
+      .then(async (res: unknown[]) => {
+        if (this.disposed || version !== this.appVersion) return;
+        const worksheetList = apiSideItems(res[0] === undefined ? [] : res[0]);
+        const appInfo = apiAppInfo(res[1] === undefined ? {} : res[1]);
+        const addOptionsParams = apiOptions(res[2] === undefined ? [] : res[2]);
+        const getOptionsParams = apiOptions(res[3] === undefined ? [] : res[3]);
+        const processList = apiSideItems(res[4] === undefined ? [] : res[4]);
+        const dataApp = apiAppInfo(isSharePage || res[5] === undefined ? {} : res[5]);
+        const authorizes = apiAuthorizes(isSharePage || res[6] === undefined ? [] : res[6]);
 
-      if (isSharePage) {
-        dataApp.iconUrl = shareData.appIcon;
-        dataApp.id = shareData.appId;
-        dataApp.iconColor = shareData.appIconColor;
-        dataApp.name = shareData.appName;
-        dataApp.projectId = shareData.projectId;
-        dataApp.navColor = shareData.appNavColor;
-      }
+        if (isSharePage) {
+          dataApp.iconUrl = shareData.appIcon;
+          dataApp.id = shareData.appId;
+          dataApp.iconColor = shareData.appIconColor;
+          dataApp.name = shareData.appName;
+          dataApp.projectId = shareData.projectId;
+          dataApp.navColor = shareData.appNavColor;
+        }
 
-      const { langInfo, id: appId, projectId } = dataApp;
+        const { langInfo, id: appId, projectId } = dataApp;
 
-      if (isSharePage && appId && projectId) {
-        await shareGetAppLangDetail({ appId, projectId });
-      } else if (langInfo && langInfo.appLangId && langInfo.version !== window[`langVersion-${appId}`]) {
-        const lang = await appManagementAjax.getAppLangDetail({
-          projectId,
-          appId,
-          appLangId: langInfo.appLangId,
+        if (isSharePage && appId && projectId) {
+          await shareGetAppLangDetail({ appId, projectId });
+        } else if (langInfo && langInfo.appLangId && langInfo.version !== window[`langVersion-${appId}`]) {
+          const langRequest = this.track(
+            appManagementAjax.getAppLangDetail({ projectId, appId, appLangId: langInfo.appLangId }),
+          );
+          let lang: unknown;
+          try {
+            lang = await langRequest;
+          } finally {
+            this.requests.delete(langRequest);
+          }
+          if (this.disposed || version !== this.appVersion) return;
+          if (!isRecord(lang)) throw new TypeError('Invalid application language response');
+          window[`langData-${appId}`] = lang['items'];
+          window[`langVersion-${appId}`] = langInfo.version;
+        }
+
+        if (this.disposed || version !== this.appVersion) return;
+        const appName = appId === undefined ? undefined : getTranslateInfo(appId, null, appId).name;
+        dataApp.name = appName || dataApp.name;
+
+        worksheetList.forEach((item: ApiSideItem) => {
+          const sheetName = appId === undefined ? undefined : getTranslateInfo(appId, null, item.workSheetId).name;
+          item.workSheetName = sheetName || item.workSheetName;
         });
-        window[`langData-${appId}`] = lang.items;
-        window[`langVersion-${appId}`] = langInfo.version;
-      }
 
-      dataApp.name = getTranslateInfo(appId, null, appId).name || dataApp.name;
+        setFavicon(dataApp.iconUrl, dataApp.iconColor);
 
-      worksheetList.forEach((item: ApiSideItem) => {
-        item.workSheetName = getTranslateInfo(appId, null, item.workSheetId).name || item.workSheetName;
-      });
+        for (const item of optionParameters(addOptionsParams) || []) {
+          item.required = item.isRequired ? _l('是') : _l('否');
+          item.type = item.dataType;
+          item.desc = item.description;
+        }
 
-      setFavicon(dataApp.iconUrl, dataApp.iconColor);
+        for (const item of optionParameters(getOptionsParams) || []) {
+          item.required = item.isRequired ? _l('是') : _l('否');
+          item.type = item.dataType;
+          item.desc = item.description;
+        }
 
-      for (const item of addOptionsParams.requestParams || []) {
-        item.required = item.isRequired ? _l('是') : _l('否');
-        item.type = item.dataType;
-        item.desc = item.description;
-      }
-
-      for (const item of getOptionsParams.requestParams || []) {
-        item.required = item.isRequired ? _l('是') : _l('否');
-        item.type = item.dataType;
-        item.desc = item.description;
-      }
-
-      if (dataApp.appStatus === 20) {
-        this.setState({ errorCode: 2 });
-      }
-      // else if (worksheetList.length <= 0) {
-      //   this.setState({ errorCode: 1 });
-      // }
-      else {
-        this.setState(
-          {
-            dataApp,
-            worksheetList,
-            authorizes,
-            appInfo,
-            addOptionsParams,
-            getOptionsParams,
-            pbcList: processList.filter((l: ApiSideItem) => l.startAppType !== 7),
-            webhookList: processList.filter((l: ApiSideItem) => l.startAppType === 7),
-          },
-          () => {
-            document.title = dataApp.name + ' - ' + _l('API说明');
-            if (worksheetList.length > 0) {
-              this.getWorksheetApiInfo(worksheetList[0].workSheetId);
-            } else {
-              this.setState({ loading: false });
-            }
-          },
-        );
-      }
-    });
+        if (dataApp.appStatus === 20) {
+          this.setState({ errorCode: 2, loading: false });
+        }
+        // else if (worksheetList.length <= 0) {
+        //   this.setState({ errorCode: 1 });
+        // }
+        else {
+          await new Promise<void>(resolve => {
+            let complete = false;
+            const finish = () => {
+              if (complete) return;
+              complete = true;
+              this.stateCompletions.delete(finish);
+              resolve();
+            };
+            this.stateCompletions.add(finish);
+            this.setState(
+              {
+                dataApp,
+                worksheetList,
+                authorizes,
+                appInfo,
+                addOptionsParams,
+                getOptionsParams,
+                pbcList: processList.filter((l: ApiSideItem) => l.startAppType !== 7),
+                webhookList: processList.filter((l: ApiSideItem) => l.startAppType === 7),
+              },
+              () => {
+                if (this.disposed || version !== this.appVersion) {
+                  finish();
+                  return;
+                }
+                document.title = dataApp.name + ' - ' + _l('API说明');
+                const first = worksheetList[0];
+                if (first) {
+                  void this.getWorksheetApiInfo(first.workSheetId).then(finish);
+                } else {
+                  this.setState({ loading: false });
+                  finish();
+                }
+              },
+            );
+          });
+        }
+      })
+      .catch((error: unknown) => {
+        if (version === this.appVersion) this.failure(error, () => this.getAppInfo());
+      })
+      .finally(() => promiseList.forEach(request => this.requests.delete(request)));
   }
 
-  getAuthorizes = () => {
-    appManagementAjax.getAuthorizes({ appId: this.getId() }).then(authorizes => {
-      this.setState({ authorizes });
-    });
+  getAuthorizes = (): Promise<void> => {
+    const version = ++this.authorizeVersion;
+    const request = this.track(appManagementAjax.getAuthorizes({ appId: this.getId() }));
+    return request
+      .then((raw: unknown) => {
+        if (this.disposed || version !== this.authorizeVersion) return;
+        const authorizes = apiAuthorizes(raw);
+        this.setState({ authorizes, loadError: undefined });
+      })
+      .catch((error: unknown) => {
+        if (version === this.authorizeVersion) this.failure(error, this.getAuthorizes);
+      })
+      .finally(() => this.requests.delete(request));
   };
 
-  // 获取工作表信息
-  getWorksheetApiInfo = (worksheetId: string) => {
-    const { selectId } = this.state;
-    Promise.all([
-      // 获取工作表信息
-      ajaxRequest.getWorksheetApiInfo({
-        worksheetId,
-        appId: this.getId(),
-      }),
-
-      // 获取工作表信息
-      ajaxRequest.getWorksheetInfo({
-        worksheetId,
-        getTemplate: true,
-      }),
-    ])
-      .then(result => {
-        // list 是 getWorksheetInfo 的结果；原来默认成 {}，下面改用可选链读
-        let [data = [], list] = result;
-        const isDataPipeline = selectId.includes('dataPipeline');
-
-        if (list?.alias) {
-          data = data.map(o => {
-            return { ...o, alias: list.alias };
-          });
-        }
-
+  getWorksheetApiInfo = (worksheetId: string | undefined): Promise<void> => {
+    const selectId = this.state.selectId;
+    const version = ++this.selectionVersion;
+    if (!worksheetId) {
+      this.failure(new TypeError('Missing worksheet ID'), () => this.getAppInfo());
+      return Promise.resolve();
+    }
+    const documentRequest = this.track(ajaxRequest.getWorksheetApiInfo({ worksheetId, appId: this.getId() }));
+    const worksheetRequest = this.track(ajaxRequest.getWorksheetInfo({ worksheetId, getTemplate: true }));
+    return Promise.all([documentRequest, worksheetRequest])
+      .then(([raw, rawList]: [unknown, unknown]) => {
+        if (this.disposed || version !== this.selectionVersion) return;
+        let data = apiDocuments(raw === undefined ? [] : raw);
+        const list = apiWorksheetMetadata(rawList);
+        if (!data[0]?.worksheetId) throw new TypeError('Missing worksheet API documentation ID');
+        const isDataPipeline = (selectId || '').includes('dataPipeline');
+        if (list?.alias) data = data.map(row => ({ ...row, alias: list.alias }));
         if (!isDataPipeline) {
-          this.MENU_LIST.forEach(item => {
-            if (item.id === 'List') {
-              item.data.forEach((obj: ApiDocNode) => {
-                if (obj.name === 'viewId') {
-                  obj.desc = data[0].views.map((o: ApiDocNode) => {
-                    return {
-                      [o.name]: o.viewId,
-                    };
-                  });
-                }
+          this.MENU_LIST.forEach(menu => {
+            if (menu.id === 'List')
+              (menu.data || []).forEach(field => {
+                if (field.name === 'viewId') field.desc = viewDescriptions(data[0]?.views || []);
               });
-            }
           });
         }
-
         this.setState(
-          {
-            [isDataPipeline ? 'dataPipelineData' : 'data']: data,
+          state => ({
+            ...state,
+            ...(isDataPipeline ? { dataPipelineData: data } : { data }),
             templateControls: list?.template?.controls || [],
             sheetSwitchPermit: list?.switches,
             loading: false,
+            loadError: undefined,
             alias: list?.alias,
-          },
-          () => {
-            this.scrollToFixedPosition();
-          },
+          }),
+          () => this.scrollToFixedPosition(),
         );
       })
-      .catch(err => {
-        this.setState({ loading: false, errorCode: err.errorCode });
+      .catch((error: unknown) => {
+        if (version === this.selectionVersion) this.failure(error, () => this.getWorksheetApiInfo(worksheetId));
+      })
+      .finally(() => {
+        this.requests.delete(documentRequest);
+        this.requests.delete(worksheetRequest);
       });
   };
 
-  // 获取工作流信息
-  getWorkflowApiInfo = (processId: string) => {
-    processAjax.getProcessApiInfo({ processId, relationId: this.getId() }).then(res => {
-      this.setState({ workflowInfo: { ...res, processId } }, () => {
-        this.scrollToFixedPosition();
-      });
-    });
+  getWorkflowApiInfo = (processId: string): Promise<void> => {
+    const version = ++this.selectionVersion;
+    const request = this.track(processAjax.getProcessApiInfo({ processId, relationId: this.getId() }));
+    return request
+      .then((raw: unknown) => {
+        const result = apiWorkflow(raw);
+        if (this.disposed || version !== this.selectionVersion) return;
+        this.setState({ workflowInfo: { ...result, processId }, loadError: undefined }, () =>
+          this.scrollToFixedPosition(),
+        );
+      })
+      .catch((error: unknown) => {
+        if (version === this.selectionVersion) this.failure(error, () => this.getWorkflowApiInfo(processId));
+      })
+      .finally(() => this.requests.delete(request));
   };
 
-  getDataPipelineWorksheet = () => {
+  getDataPipelineWorksheet = (): Promise<void> => {
+    const version = ++this.pipelineVersion;
     const { appInfo } = this.state;
-
-    if (this.hideDataPipeline) return;
-
-    this.setState({ dataPipelineLoading: true });
-
-    integrationAjax
-      .list(
+    if (this.hideDataPipeline) return Promise.resolve();
+    this.setState({ dataPipelineLoading: true, loadError: undefined });
+    const request = this.track(
+      integrationAjax.list(
         {
-          projectId: _.get(appInfo, 'apiResponse.projectId'),
-          appId: _.get(appInfo, 'apiResponse.appId'),
+          projectId: appInfo.apiResponse?.projectId,
+          appId: appInfo.apiResponse?.appId,
           status: 'RUNNING',
           pageSize: 1000,
           pageNo: 0,
           taskType: 1,
         },
         { isAggTable: true },
-      )
-      .then(res => {
-        this.setState({ dataPipelineList: res.content, dataPipelineLoading: false });
-      });
+      ),
+    );
+    return request
+      .then((raw: unknown) => {
+        if (this.disposed || version !== this.pipelineVersion) return;
+        if (!isRecord(raw)) throw new TypeError('Invalid data pipeline response');
+        const dataPipelineList = apiSideItems(raw['content']);
+        if (!this.disposed) this.setState({ dataPipelineList, dataPipelineLoading: false });
+      })
+      .catch((error: unknown) => {
+        if (version === this.pipelineVersion) this.failure(error, this.getDataPipelineWorksheet);
+      })
+      .finally(() => this.requests.delete(request));
   };
 
-  getId() {
+  getId(): string | undefined {
     const { isSharePage } = this.props;
 
     if (isSharePage) {
@@ -411,11 +487,13 @@ class WorksheetApi extends Component<any, any> {
    * 滚动到固定位置
    */
   scrollToFixedPosition(id?: string) {
-    const selectId = (id || this.state.selectId).replace('dataPipeline', '');
+    const selectId = (id || this.state.selectId || '').replace('dataPipeline', '');
 
     if (!$(`#${selectId}-content`)[0]) return;
 
-    setTimeout(() => {
+    clearTimeout(this.scrollTimer);
+    this.scrollTimer = setTimeout(() => {
+      if (this.disposed) return;
       this.canScroll = true;
       if (this.contentScrollRef.current) {
         this.contentScrollRef.current.scrollToElement($(`#${selectId}-content`)[0]);
@@ -432,14 +510,19 @@ class WorksheetApi extends Component<any, any> {
     workflowId,
     expandIds,
   }: {
-    selectId?: string;
-    worksheetId?: string;
-    workflowId?: string;
-    expandIds?: string[];
+    selectId?: string | undefined;
+    worksheetId?: string | undefined;
+    workflowId?: string | undefined;
+    expandIds?: Array<string | null | undefined> | undefined;
   }) {
     this.canScroll = false;
     this.setState(
-      { selectId, selectWorkflowId: workflowId, workflowInfo: {}, expandIds: expandIds || this.state.expandIds },
+      {
+        selectId,
+        selectWorkflowId: workflowId,
+        workflowInfo: {},
+        expandIds: expandIds || this.state.expandIds,
+      },
       () => {
         if (worksheetId) {
           this.getWorksheetApiInfo(worksheetId);
@@ -464,7 +547,7 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 渲染二三级工作表
    */
-  renderSideItem(props?) {
+  renderSideItem(props?: { type?: string }) {
     const { worksheetList = [], selectId, dataPipelineList = [], expandIds = [] } = this.state;
     const type = _.get(props, 'type') || 'worksheetCreateForm';
     const list =
@@ -472,7 +555,7 @@ class WorksheetApi extends Component<any, any> {
 
     return (type === 'dataPipeline' ? dataPipelineList : worksheetList).map((item: ApiSideItem) => {
       const worksheetId = item.workSheetId || item.worksheetId;
-      const isSelect = (expandIds[1] || '').includes(worksheetId);
+      const isSelect = (expandIds[1] || '').includes(String(worksheetId));
       const prefix = type === 'dataPipeline' ? type : '';
 
       return (
@@ -480,7 +563,7 @@ class WorksheetApi extends Component<any, any> {
           <div
             className="worksheetApiMenuItem overflow_ellipsis"
             onClick={() => {
-              let id = prefix + worksheetId + this.MENU_LIST[0].id;
+              let id = prefix + worksheetId + (this.MENU_LIST[0]?.id || '');
               isSelect
                 ? this.setState({ expandIds: [expandIds[0]] })
                 : this.setSelectId({
@@ -597,10 +680,9 @@ class WorksheetApi extends Component<any, any> {
   renderPBCSide({ type, listKey, title }: { type: string; listKey: string; title: string }) {
     const { selectWorkflowId, expandIds = [] } = this.state;
     const isOpen = expandIds[1] === type;
-
-    if (!this.state[listKey].length) return null;
-
-    const list = this.state[listKey];
+    const list = listKey === 'pbcList' ? this.state.pbcList : this.state.webhookList;
+    if (!list.length) return null;
+    const firstId = list[0]?.id;
 
     return (
       <div className="worksheetApiMenu">
@@ -611,7 +693,7 @@ class WorksheetApi extends Component<any, any> {
               ? this.setState({ expandIds: [] })
               : this.setSelectId({
                   selectId: 'workflowInfo',
-                  workflowId: list[0].id,
+                  ...(firstId ? { workflowId: firstId } : {}),
                   expandIds: [expandIds[0], type],
                 });
           }}
@@ -627,7 +709,9 @@ class WorksheetApi extends Component<any, any> {
                 className={cx('worksheetApiMenuItem pLeft58 overflow_ellipsis', {
                   active: item.id === selectWorkflowId,
                 })}
-                onClick={() => this.setSelectId({ selectId: 'workflowInfo', workflowId: item.id })}
+                onClick={() =>
+                  this.setSelectId({ selectId: 'workflowInfo', ...(item.id ? { workflowId: item.id } : {}) })
+                }
               >
                 {item.name + ' POST'}
               </div>
@@ -673,31 +757,35 @@ class WorksheetApi extends Component<any, any> {
    */
   renderOtherSide(type: string) {
     const { selectId, addOptionsParams, getOptionsParams, expandIds } = this.state;
-    OPTIONS_FUNCTION_LIST[0].data = addOptionsParams.requestParams;
-    OPTIONS_FUNCTION_LIST[1].data = getOptionsParams.requestParams;
-    OPTIONS_FUNCTION_LIST[2].data = addOptionsParams.requestParams;
-    const { title, currentList } = [
+    const optionSource = apiMenuItems(OPTIONS_FUNCTION_LIST);
+    optionSource[0] && (optionSource[0].data = optionParameters(addOptionsParams));
+    optionSource[1] && (optionSource[1].data = optionParameters(getOptionsParams));
+    optionSource[2] && (optionSource[2].data = optionParameters(addOptionsParams));
+    const { title, source } = [
       {
         title: _l('应用角色'),
-        currentList: MENU_LIST_APPROLE,
+        source: MENU_LIST_APPROLE,
       },
       {
         title: _l('筛选'),
-        currentList: MENU_LIST_APPENDIX,
+        source: MENU_LIST_APPENDIX,
       },
       {
         title: _l('选项集'),
-        currentList: OPTIONS_FUNCTION_LIST,
+        source: optionSource,
       },
-    ][type];
-    const isOpen = expandIds[0] === currentList[0].id;
+    ][Number(type)] || { title: '', source: [] };
+    const currentList = apiMenuItems(source);
+    const first = currentList[0];
+    if (!first) return null;
+    const isOpen = expandIds[0] === first.id;
 
     return (
       <div className="worksheetApiMenu">
         <div
           className="worksheetApiMenuTitle Hand"
           onClick={() => {
-            let id = currentList[0].id;
+            let id = first.id;
             isOpen ? this.setState({ expandIds: [] }) : this.setSelectId({ selectId: id, expandIds: [id] });
           }}
         >
@@ -736,7 +824,7 @@ class WorksheetApi extends Component<any, any> {
             <div
               className="flexRow worksheetApiLi"
               key={i + type}
-              id={item.worksheetId + this.MENU_LIST[index].id + '-content'}
+              id={item.worksheetId + (this.MENU_LIST[index]?.id || '') + '-content'}
             >
               {['FieldTable', 'ViewTable'].includes(o.id)
                 ? this.renderComparisonTable(item, i, type)
@@ -777,7 +865,7 @@ class WorksheetApi extends Component<any, any> {
                 <div className="w32">{o.name}</div>
                 <div className="mLeft30 w18">{o.required}</div>
                 <div className="mLeft30 w14">{o.type}</div>
-                <div className="mLeft30 w36">{o.desc}</div>
+                <div className="mLeft30 w36">{displayDescription(o.desc)}</div>
               </div>
             );
           })}
@@ -804,6 +892,8 @@ class WorksheetApi extends Component<any, any> {
     if (data.length <= 0) {
       return null;
     }
+    const firstData = data[0];
+    if (!firstData) return null;
 
     return (
       <Fragment>
@@ -813,7 +903,7 @@ class WorksheetApi extends Component<any, any> {
             name="worksheetApi2"
             autoComplete="off"
             className="mTop24 worksheetApiInput"
-            value={_l('请求URL：') + data[0].apiUrl + 'worksheet/getWorksheetInfo'}
+            value={_l('请求URL：') + firstData.apiUrl + 'worksheet/getWorksheetInfo'}
           />
           <div className="flexRow worksheetApiLine flexRowHeight bold mTop25">
             <div className="w32">{_l('参数')}</div>
@@ -821,22 +911,22 @@ class WorksheetApi extends Component<any, any> {
             <div className="mLeft30 w14">{_l('类型')}</div>
             <div className="mLeft30 w36">{_l('说明')}</div>
           </div>
-          {sameParameters.map(o => {
+          {apiFields(sameParameters).map(o => {
             return (
               <div key={o.name} className="flexRow worksheetApiLine flexRowHeight">
                 <div className="w32">{o.name}</div>
                 <div className="mLeft30 w18">{o.required}</div>
                 <div className="mLeft30 w14">{o.type}</div>
-                <div className="mLeft30 w36">{o.desc}</div>
+                <div className="mLeft30 w36">{displayDescription(o.desc)}</div>
               </div>
             );
           })}
         </div>
         {this.renderRightContent({
           data: {
-            appKey: data[0].appKey || 'YOUR_APP_KEY',
-            sign: data[0].sign || 'YOUR_SIGN',
-            worksheetId: data[0].alias || data[0].worksheetId,
+            appKey: firstData.appKey || 'YOUR_APP_KEY',
+            sign: firstData.sign || 'YOUR_SIGN',
+            worksheetId: firstData.alias || firstData.worksheetId,
           },
           successData: WORKSHEETINFO_SUCCESS_DATA,
           errorData: appRoleErrorData,
@@ -854,9 +944,11 @@ class WorksheetApi extends Component<any, any> {
     if (data.length <= 0) {
       return null;
     }
+    const firstData = data[0];
+    if (!firstData) return null;
 
-    const sectionIds = _.get(appInfo, 'apiResponse.sections').flatMap((l: ApiDocNode) => {
-      let items = l.items.filter((it: ApiDocNode) => it.type === 2);
+    const sectionIds: ApiDocNode[] = (appInfo.apiResponse?.sections || []).flatMap<ApiDocNode>((l: ApiSection) => {
+      let items = (l.items || []).filter((it: ApiDocNode) => it.type === 2);
       if (items.length === 0) return l;
 
       let items2 = items.map((m: ApiDocNode) => {
@@ -866,11 +958,11 @@ class WorksheetApi extends Component<any, any> {
         };
       });
 
-      return [l].concat(items2);
+      return [l, ...items2];
     });
     const sectionIdsFlat = sectionIds.map((l: ApiDocNode) => {
       return {
-        [l.keyName || l.name]: l.id || l.sectionId,
+        [String(l.keyName || l.name)]: l.id || l.sectionId,
       };
     });
 
@@ -951,7 +1043,7 @@ class WorksheetApi extends Component<any, any> {
             name="worksheetApi3"
             autoComplete="off"
             className="mTop24 worksheetApiInput"
-            value={_l('请求URL：') + data[0].apiUrl + 'worksheet/addWorksheet'}
+            value={_l('请求URL：') + firstData.apiUrl + 'worksheet/addWorksheet'}
           />
           <div className="flexRow worksheetApiLine flexRowHeight bold mTop25">
             <div className="w32">{_l('参数')}</div>
@@ -972,11 +1064,11 @@ class WorksheetApi extends Component<any, any> {
         </div>
         {this.renderRightContent({
           data: {
-            appKey: data[0].appKey || 'YOUR_APP_KEY',
-            sign: data[0].sign || 'YOUR_SIGN',
-            name: data[0].name || 'NAME',
-            alias: data[0].alias,
-            sectionId: appInfo.apiResponse.sections[0].sectionId || 'sectionId',
+            appKey: firstData.appKey || 'YOUR_APP_KEY',
+            sign: firstData.sign || 'YOUR_SIGN',
+            name: firstData.name || 'NAME',
+            alias: firstData.alias,
+            sectionId: appInfo.apiResponse?.sections?.[0]?.sectionId || 'sectionId',
             controls: ADD_API_CONTROLS,
           },
           successData: ADD_WORKSHEET_SUCCESS,
@@ -991,13 +1083,17 @@ class WorksheetApi extends Component<any, any> {
    */
   renderWorkflowInfo() {
     const { workflowInfo, tabIndex, webhookList } = this.state;
+    if (_.isEmpty(workflowInfo)) return null;
+    const inputs = workflowInfo.inputs,
+      outputs = workflowInfo.outputs;
+    if (!inputs || !outputs) return null;
     const isWebhook = !!_.find(webhookList, l => l.id === workflowInfo.processId);
-    let inputExample = {};
-    let outputExample = {};
+    let inputExample: ApiRecord = {};
+    let outputExample: ApiRecord = {};
 
     const renderInputs = (source: ApiField[]) => {
       return source.map((o: ApiField, index) => {
-        if (o.dataSource && _.find(workflowInfo.inputs, item => item.controlId === o.dataSource).type === 10000007) {
+        if (o.dataSource && _.find(inputs, item => item.controlId === o.dataSource)?.type === 10000007) {
           return null;
         }
 
@@ -1009,10 +1105,10 @@ class WorksheetApi extends Component<any, any> {
                 {o.alias || o.controlName}
               </div>
               <div className="mLeft30 w18">{o.required ? _l('是') : _l('否')}</div>
-              <div className="mLeft30 w14">{FIELD_TYPE.find(obj => obj.value === o.type).text}</div>
-              <div className="mLeft30 w36">{o.desc}</div>
+              <div className="mLeft30 w14">{FIELD_TYPE.find(obj => obj.value === o.type)?.text || ''}</div>
+              <div className="mLeft30 w36">{displayDescription(o.desc)}</div>
             </div>
-            {renderInputs(workflowInfo.inputs.filter((item: ApiField) => item.dataSource === o.controlId))}
+            {renderInputs(inputs.filter((item: ApiField) => item.dataSource === o.controlId))}
           </Fragment>
         );
       });
@@ -1020,7 +1116,7 @@ class WorksheetApi extends Component<any, any> {
 
     const renderOutputs = (source: ApiField[]) => {
       return source.map((o: ApiField, index) => {
-        if (o.dataSource && _.find(workflowInfo.outputs, item => item.controlId === o.dataSource).type === 10000007) {
+        if (o.dataSource && _.find(outputs, item => item.controlId === o.dataSource)?.type === 10000007) {
           return null;
         }
 
@@ -1031,35 +1127,33 @@ class WorksheetApi extends Component<any, any> {
                 {o.dataSource && <span className="pLeft20" />}
                 {o.alias || o.controlName}
               </div>
-              <div className="mLeft30 w36">{o.desc}</div>
+              <div className="mLeft30 w36">{displayDescription(o.desc)}</div>
             </div>
-            {renderOutputs(workflowInfo.outputs.filter((item: ApiField) => item.dataSource === o.controlId))}
+            {renderOutputs(outputs.filter((item: ApiField) => item.dataSource === o.controlId))}
           </Fragment>
         );
       });
     };
 
-    if (_.isEmpty(workflowInfo)) return null;
-
     if (workflowInfo.outType === 1) {
       inputExample['callbackURL'] = '';
     }
 
-    workflowInfo.inputs
+    inputs
       .filter((item: ApiField) => !item.dataSource)
       .forEach((item: ApiField) => {
-        inputExample[item.alias || item.controlName] =
+        inputExample[String(item.alias || item.controlName)] =
           item.value && _.includes([10000003, 10000007, 10000008], item.type)
-            ? JSON.parse(item.value)
+            ? parseExample(item.value)
             : item.value || '';
       });
 
-    workflowInfo.outputs
+    outputs
       .filter((item: ApiField) => !item.dataSource)
       .forEach((item: ApiField) => {
-        outputExample[item.alias || item.controlName] =
+        outputExample[String(item.alias || item.controlName)] =
           item.value && _.includes([10000003, 10000007, 10000008], item.type)
-            ? JSON.parse(item.value)
+            ? parseExample(item.value)
             : item.value || '';
       });
 
@@ -1116,7 +1210,7 @@ class WorksheetApi extends Component<any, any> {
               <div className="mLeft30 w36">{_l('用于接受流程执行完毕输出的参数')}</div>
             </div>
           )}
-          {renderInputs(workflowInfo.inputs.filter((o: ApiField) => !o.dataSource))}
+          {renderInputs(inputs.filter((o: ApiField) => !o.dataSource))}
           {tabIndex === TAB_TYPE.API_V2 && !isWebhook && (
             <Fragment>
               <div className="Font17 bold mTop30">{_l('响应参数')}</div>
@@ -1129,7 +1223,7 @@ class WorksheetApi extends Component<any, any> {
                 <div className="w32">{_l('参数')}</div>
                 <div className="mLeft30 w36">{_l('说明')}</div>
               </div>
-              {renderOutputs(workflowInfo.outputs.filter((o: ApiField) => !o.dataSource))}
+              {renderOutputs(outputs.filter((o: ApiField) => !o.dataSource))}
             </Fragment>
           )}
         </div>
@@ -1160,12 +1254,14 @@ class WorksheetApi extends Component<any, any> {
    */
   renderAppRoleContent() {
     const { appInfo = {} } = this.state;
+    const roleMenus = apiMenuItems(MENU_LIST_APPROLE);
     return (
       <Fragment>
-        {MENU_LIST_APPROLE.map(({ id, isGet, title, data = [], apiName, successData, errorData }, i) => {
-          const url = appInfo.apiUrl + apiName;
-          let dataObj = {};
+        {roleMenus.map(({ id, isGet, title, data = [], apiName, successData, errorData }, i) => {
+          const url = appInfo.apiUrl + (apiName || '');
+          const dataObj: ApiRecord = {};
           data.forEach(({ name, desc, example }) => {
+            if (!name) return;
             dataObj[name] = _.includes(['appKey', 'sign'], name)
               ? (this.state.data[0] || {})[name] || { appKey: 'YOUR_APP_KEY', sign: 'YOUR_SIGN' }[name]
               : example || desc;
@@ -1194,7 +1290,7 @@ class WorksheetApi extends Component<any, any> {
                       <div className="w32">{o.name}</div>
                       <div className="mLeft30 w18">{o.required}</div>
                       <div className="mLeft30 w14">{o.type}</div>
-                      <div className="mLeft30 w36">{o.desc}</div>
+                      <div className="mLeft30 w36">{displayDescription(o.desc)}</div>
                     </div>
                   );
                 })}
@@ -1210,7 +1306,7 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 拼接url
    */
-  getUrl(url = '', data = {}) {
+  getUrl(url = '', data: ApiRecord = {}): ApiRecord {
     let curUrl = url + '?';
 
     for (let key in data) {
@@ -1229,20 +1325,20 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 渲染附录内容
    */
-  renderAppendixContent(list?: ApiField[]) {
+  renderAppendixContent(list?: unknown[]) {
     const { tabIndex } = this.state;
-    const getWidth = (headerData: ApiDocNode[], key: string) =>
+    const getWidth = (headerData: ApiHeader[], key: string): number | undefined =>
       _.get(_.find(headerData, headerObj => headerObj.key === key) || {}, 'width');
-    const data = list || MENU_LIST_APPENDIX;
+    const data = apiMenuItems(list || MENU_LIST_APPENDIX);
 
     return (
       <Fragment>
-        {data.map((o: ApiDocNode, i: number) => {
-          const headerData = MENU_LIST_APPENDIX_HEADER[o.id] || [];
+        {data.map((o: ApiMenuItem, i: number) => {
+          const headerData: ApiHeader[] = MENU_LIST_APPENDIX_HEADER[o.id] || [];
           const isFirst = !list && i === 0;
 
           return (
-            <div className="flexRow worksheetApiLi" key={i} id={data[i].id + '-content'}>
+            <div className="flexRow worksheetApiLi" key={i} id={o.id + '-content'}>
               <div className="flex worksheetApiContent1">
                 {isFirst && <div className="Font22 bold mBottom40">{_l('附录')}</div>}
 
@@ -1250,7 +1346,7 @@ class WorksheetApi extends Component<any, any> {
 
                 {!!headerData.length && (
                   <div className="flexRow worksheetApiLine flexRowHeight bold mTop25">
-                    {headerData.map((header: ApiDocNode, headerIdx: number) => (
+                    {headerData.map((header: ApiHeader, headerIdx: number) => (
                       <div key={headerIdx} className={cx(`w${header.width}`, { mLeft30: headerIdx > 0 })}>
                         {header.title}
                       </div>
@@ -1258,7 +1354,7 @@ class WorksheetApi extends Component<any, any> {
                   </div>
                 )}
 
-                {o.data.map((child, childIdx) => {
+                {(o.data || []).map((child, childIdx) => {
                   return (
                     <div key={`${child.id}-${childIdx}`} className="flexRow worksheetApiLine flexRowHeight">
                       <div className={cx(`w${getWidth(headerData, 'name')}`)}>{child.name}</div>
@@ -1304,7 +1400,7 @@ class WorksheetApi extends Component<any, any> {
               ) : o.id === 'AreaInfo' ? (
                 <div className="worksheetApiContent2">
                   <div className="Font14 mTop20 textWhite mBottom6">{_l('获取地区信息')}</div>
-                  <JsonView data={o.cityData} />
+                  <JsonView data={o['cityData']} />
                 </div>
               ) : (
                 tabIndex === TAB_TYPE.API_V2 && <div className="worksheetApiContent2" />
@@ -1319,10 +1415,12 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 对照表
    */
-  renderComparisonTable(item, i, type) {
+  renderComparisonTable(item: ApiDocNode, i: number, type: string) {
+    const menu = this.MENU_LIST[i];
+    if (!menu) return null;
     const { isSharePage } = this.props;
     const {
-      aliasDialog = {},
+      aliasDialog = { visible: false },
       templateControls = [],
       showWorksheetAliasDialog,
       alias,
@@ -1332,7 +1430,7 @@ class WorksheetApi extends Component<any, any> {
       tabIndex,
     } = this.state;
     const isFieldTable = i === 0;
-    const data = item[this.MENU_LIST[i].type === 'control' ? 'controls' : 'views'];
+    const data = item[menu.type === 'control' ? 'controls' : 'views'];
 
     return (
       <Fragment>
@@ -1367,38 +1465,41 @@ class WorksheetApi extends Component<any, any> {
           )}
 
           <div className="Font17 bold">
-            {this.MENU_LIST[i].title}
+            {menu.title}
             {!isSharePage && (
               <span
                 className="Right Hand Font13"
                 style={{ color: 'var(--color-primary-text)' }}
                 onClick={() => {
-                  this.setState({ aliasDialog: { visible: true, type: this.MENU_LIST[i].type }, dialogType: type });
+                  this.setState({ aliasDialog: { visible: true, type: menu.type }, dialogType: type });
                 }}
               >
-                {this.MENU_LIST[i].btnText}
+                {menu.btnText}
               </span>
             )}
           </div>
           <div className="flexRow worksheetApiLine flexRowHeight bold mTop25">
-            {this.MENU_LIST[i].fields.map(field => (
+            {(menu.fields || []).map(field => (
               <div key={field.key} className={field.className}>
                 {field.text}
               </div>
             ))}
           </div>
-          {(isFieldTable ? item.controls : item.views).map((o, index: number) => {
+          {(isFieldTable ? item.controls || [] : item.views || []).map((o, index: number) => {
             return (
               <div key={`${o.controlId || o.viewId}-${index}`} className="flexRow worksheetApiLine flexRowHeight">
-                {this.MENU_LIST[i].fields.map(field => {
+                {(menu.fields || []).map(field => {
                   let type = null;
-                  let options = [];
+                  let options: Array<{
+                    key: string | number | null | undefined;
+                    value: string | number | null | undefined;
+                  }> = [];
 
                   if (field.key === 'controlType' || field.key === 'desc') {
                     const control = _.find(templateControls, numberType => numberType.controlId === o.controlId) || {};
                     type = control.type;
-                    if ([9, 10, 11].includes(type)) {
-                      options = (control.options || [])?.map(({ key, value }) => ({ key, value }));
+                    if (typeof type === 'number' && [9, 10, 11].includes(type)) {
+                      options = (control.options || []).map(option => ({ key: option.key, value: option.value }));
                     }
                   }
 
@@ -1406,25 +1507,26 @@ class WorksheetApi extends Component<any, any> {
                     <div key={`data-${field.key}`} className={field.className}>
                       {['controlId', 'viewId'].includes(field.key) && (
                         <Fragment>
-                          <div>{o[field.key]}</div>
+                          <div>{textField(o[field.key])}</div>
                           {o.alias && <div>({o.alias})</div>}
                         </Fragment>
                       )}
 
                       {field.key === 'controlType' &&
-                        `${o.type.replace(/（/g, '(').replace(/）/g, ')')}(${type} | ${convertControl(type)})`}
+                        `${typeof o.type === 'string' ? o.type.replace(/（/g, '(').replace(/）/g, ')') : o.type}(${type} | ${convertControl(type)})`}
 
                       {field.key === 'viewType' &&
-                        (_.find(VIEW_TYPE_ICON, { id: VIEW_DISPLAY_TYPE[o.type] }) || {}).text}
+                        (_.find(VIEW_TYPE_ICON, { id: _.get(VIEW_DISPLAY_TYPE, String(o.type)) }) || {}).text}
 
                       {field.key === 'desc' && (
                         <div className="descBox">
-                          <div>{o.desc}</div>
+                          <div>{displayDescription(o.desc)}</div>
                           {options?.length > 0 && <pre className="descPre">{JSON.stringify(options, null, 2)}</pre>}
                         </div>
                       )}
 
-                      {!['controlId', 'viewId', 'controlType', 'viewType', 'desc'].includes(field.key) && o[field.key]}
+                      {!['controlId', 'viewId', 'controlType', 'viewType', 'desc'].includes(field.key) &&
+                        textField(o[field.key])}
                     </div>
                   );
                 })}
@@ -1432,16 +1534,16 @@ class WorksheetApi extends Component<any, any> {
             );
           })}
         </div>
-        {aliasDialog.visible && aliasDialog.type === this.MENU_LIST[i].type && dialogType === type && (
+        {aliasDialog.visible && aliasDialog.type === menu.type && dialogType === type && (
           <AliasDialog
-            type={this.MENU_LIST[i].type}
+            type={menu.type || ''}
             data={data}
             controlTypeList={data}
             worksheetId={item.worksheetId}
             appId={this.getId()}
-            onClose={isUpdate => {
+            onClose={(isUpdate: boolean) => {
               this.setState({ aliasDialog: { visible: false }, dialogType: undefined });
-              isUpdate && this.getWorksheetApiInfo(item.worksheetId);
+              isUpdate && item.worksheetId && this.getWorksheetApiInfo(item.worksheetId);
             }}
           />
         )}
@@ -1451,7 +1553,7 @@ class WorksheetApi extends Component<any, any> {
             alias={alias}
             appId={this.getId()}
             worksheetId={item.worksheetId}
-            updateAlias={alias => {
+            updateAlias={(alias: string) => {
               this.setState({
                 alias,
                 data: this.state.data.map(o => ({ ...o, alias: alias })),
@@ -1472,8 +1574,9 @@ class WorksheetApi extends Component<any, any> {
   renderAuthorizationManagement = () => {
     const { authorizes = [], addSecretKey, visibleAppKeys, visibleSigns, tabIndex } = this.state;
 
-    const renderIconRow = (visibleState: string, text) => {
-      const visible = this.state[visibleState].includes(text);
+    const renderIconRow = (visibleState: 'visibleAppKeys' | 'visibleSigns', text: string) => {
+      const values = visibleState === 'visibleAppKeys' ? this.state.visibleAppKeys : this.state.visibleSigns;
+      const visible = values.includes(text);
 
       return (
         <div className="flexRow alignItemsCenter mTop4">
@@ -1482,11 +1585,8 @@ class WorksheetApi extends Component<any, any> {
               icon={visible ? 'visibility_off' : 'eye_off'}
               className="Font16 pointer textSecondary hoverColorPrimaryDark"
               onClick={() => {
-                this.setState({
-                  [visibleState]: visible
-                    ? this.state[visibleState].filter(item => item !== text)
-                    : this.state[visibleState].concat(text),
-                });
+                const changed = visible ? values.filter(item => item !== text) : values.concat(text);
+                this.setState(state => ({ ...state, [visibleState]: changed }));
               }}
             />
           </Tooltip>
@@ -1542,8 +1642,8 @@ class WorksheetApi extends Component<any, any> {
                 </div>
                 <div className="mLeft10 w22">
                   <div className="flexRow alignItemsCenter">
-                    <Avatar src={_.get(o, 'creater.avatar')} size={20} className="flex-shrink-0" />
-                    <div className="mLeft4">{_.get(o, 'creater.fullname')}</div>
+                    <Avatar src={o.creater?.avatar} size={20} className="flex-shrink-0" />
+                    <div className="mLeft4">{o.creater?.fullname}</div>
                   </div>
                   <div className="mTop4">{o.createTime}</div>
                 </div>
@@ -1580,7 +1680,7 @@ class WorksheetApi extends Component<any, any> {
     );
   };
 
-  moreOption = data => {
+  moreOption = (data: ApiAuthorize) => {
     const { showMoreOption, appKey = '' } = this.state;
 
     if (!showMoreOption || appKey !== data.appKey) {
@@ -1593,7 +1693,7 @@ class WorksheetApi extends Component<any, any> {
         showMoreOption={this.state.showMoreOption}
         appId={this.getId()}
         data={data}
-        setFn={showMoreOption => {
+        setFn={(showMoreOption: boolean) => {
           this.setState({
             showMoreOption: showMoreOption,
           });
@@ -1639,8 +1739,13 @@ class WorksheetApi extends Component<any, any> {
             visible={true}
             width={480}
             onOk={() => {
+              const textarea = this.whiteList;
+              if (!textarea) {
+                alert(_l('请输入正确的 IP 地址'), 2);
+                return;
+              }
               const whiteList = _.uniq(
-                this.whiteList.value
+                textarea.value
                   .split('\n')
                   .filter(o => o.trim())
                   .map(o => o.trim()),
@@ -1658,8 +1763,8 @@ class WorksheetApi extends Component<any, any> {
               } else {
                 homeApp
                   .editWhiteList({ appId: dataApp.id, projectId: dataApp.projectId, whiteIps: whiteList })
-                  .then(res => {
-                    if (res.data) {
+                  .then((raw: unknown) => {
+                    if (isRecord(raw) && raw['data']) {
                       this.setState({
                         dataApp: Object.assign({}, dataApp, { openApiWhiteList: whiteList }),
                         whiteListDialog: false,
@@ -1667,7 +1772,8 @@ class WorksheetApi extends Component<any, any> {
                     } else {
                       alert(_l('修改失败'), 2);
                     }
-                  });
+                  })
+                  .catch(() => alert(_l('修改失败'), 2));
               }
             }}
             onCancel={() => this.setState({ whiteListDialog: false })}
@@ -1692,18 +1798,21 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 渲染请求内容
    */
-  renderPostContent(item, i, otherOptions, rightOptions = {}) {
+  renderPostContent(item: ApiDocNode, i: number, otherOptions: ApiRecord, rightOptions: ApiRecord = {}) {
     if (this.state.data.length <= 0) {
       return null;
     }
-
-    const url = this.state.data[0].apiUrl + this.MENU_LIST[i].apiName;
+    const firstData = this.state.data[0];
+    if (!firstData) return null;
+    const menu = this.MENU_LIST[i];
+    if (!menu) return null;
+    const url = firstData.apiUrl + (menu.apiName || '');
 
     return (
       <Fragment>
         {this.renderLeftContent(i)}
         {this.renderRightContent({
-          data: this.MENU_LIST[i].isGet
+          data: menu.isGet
             ? this.getUrl(url, this.setCommonPostParameters(item, otherOptions))
             : this.setCommonPostParameters(item, otherOptions),
           errorData: appRoleErrorData,
@@ -1716,22 +1825,26 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 渲染通用的左内容
    */
-  renderLeftContent(i) {
+  renderLeftContent(i: number) {
     const { data = [] } = this.state;
 
     if (data.length <= 0) {
       return null;
     }
+    const firstData = data[0];
+    if (!firstData) return null;
+    const menu = this.MENU_LIST[i];
+    if (!menu) return null;
 
     return (
       <div className="worksheetApiContent1">
         <div />
-        <div className="Font17 bold">{this.MENU_LIST[i].title}</div>
+        <div className="Font17 bold">{menu.title}</div>
         <input
           name="worksheetApi6"
           autoComplete="off"
           className="mTop24 worksheetApiInput"
-          value={_l('请求URL：') + data[0].apiUrl + this.MENU_LIST[i].apiName}
+          value={_l('请求URL：') + firstData.apiUrl + (this.MENU_LIST[i]?.apiName || '')}
         />
         <div className="flexRow worksheetApiLine flexRowHeight bold mTop25">
           <div className="w32">{_l('参数')}</div>
@@ -1739,7 +1852,7 @@ class WorksheetApi extends Component<any, any> {
           <div className="mLeft30 w14">{_l('类型')}</div>
           <div className="mLeft30 w36">{_l('说明')}</div>
         </div>
-        {this.MENU_LIST[i].data.map(o => {
+        {(menu.data || []).map(o => {
           return (
             <div key={o.name} className="flexRow worksheetApiLine flexRowHeight">
               <div className="w32">{o.name}</div>
@@ -1775,10 +1888,10 @@ class WorksheetApi extends Component<any, any> {
     errorData,
     outputData,
   }: {
-    data?: any;
-    successData?: any;
-    errorData?: any;
-    outputData?: any;
+    data?: unknown;
+    successData?: unknown;
+    errorData?: unknown;
+    outputData?: unknown;
     /** 有一处调用点传了它，但函数体并不读 —— 如实列出，不动调用方的意图 */
     enableClipboard?: boolean;
   }) {
@@ -1809,7 +1922,7 @@ class WorksheetApi extends Component<any, any> {
   /**
    * 设置通用的请求参数
    */
-  setCommonPostParameters(item, otherOptions) {
+  setCommonPostParameters(item: ApiDocNode, otherOptions: ApiRecord): ApiRecord {
     const { rowId, ...restOptions } = otherOptions || {};
 
     return {
@@ -1821,10 +1934,11 @@ class WorksheetApi extends Component<any, any> {
     };
   }
 
-  renderMapItem = o => {
+  renderMapItem = (o: ApiField): ApiRecord => {
     const { templateControls = [] } = this.state;
-    let { relationValue = [], controlId, value, alias } = o;
-    let list = {
+    const relationValue = relationExample(o.relationValue === undefined ? [] : o.relationValue);
+    const { controlId, value, alias } = o;
+    const list: ApiRecord = {
       controlId: alias || controlId,
       value,
     };
@@ -1861,7 +1975,7 @@ class WorksheetApi extends Component<any, any> {
       );
     }
 
-    return relationValue.length <= 0
+    return relationValue.length !== undefined && relationValue.length <= 0
       ? list
       : {
           ...list,
@@ -1884,37 +1998,53 @@ class WorksheetApi extends Component<any, any> {
     });
   }
 
-  fillControls = (item, isSupportSys = false) => {
-    return item.controls
-      .filter(o => o.isSupport && (isSupportSys || o.controlId.length > 20 || o.controlId === 'ownerid'))
+  fillControls = (item: { controls?: ApiField[] | undefined }, isSupportSys = false): ApiRecord[] => {
+    return (item.controls || [])
+      .filter(
+        o => !!o.controlId && o.isSupport && (isSupportSys || o.controlId.length > 20 || o.controlId === 'ownerid'),
+      )
       .map(o => this.renderMapItem(o));
   };
 
-  renderWorksheetCommon(item, i, type) {
+  renderWorksheetCommon(item: ApiDocNode, i: number, type: string) {
     const specification = this.MENU_LIST[i];
-    const rightOptions: Record<string, any> = {};
-    const needFilter = type === 'dataPipeline' && DATA_PIPELINE_FILTERS[specification.id];
-    const otherOptions =
-      _.omit(specification.requestData, needFilter ? DATA_PIPELINE_FILTERS[specification.id] : []) || {};
+    if (!specification) return null;
+    const rightOptions: { successData?: unknown; errorData?: unknown } = {};
+    const pipelineFilter =
+      specification.id === 'List'
+        ? DATA_PIPELINE_FILTERS.List
+        : specification.id === 'TotalNum'
+          ? DATA_PIPELINE_FILTERS.TotalNum
+          : undefined;
+    const needFilter = type === 'dataPipeline' && pipelineFilter !== undefined;
+    const omitted = new Set(needFilter ? pipelineFilter : []);
+    const otherOptions: ApiRecord = {};
+    Object.entries(specification.requestData || {}).forEach(([key, value]) => {
+      if (!omitted.has(key)) otherOptions[key] = value;
+    });
 
     if (needFilter)
-      specification.data = specification.data.filter(l => !DATA_PIPELINE_FILTERS[specification.id].includes(l.name));
+      specification.data = (specification.data || []).filter(
+        l => typeof l.name !== 'string' || !pipelineFilter.includes(l.name),
+      );
     if (specification.successData) rightOptions.successData = specification.successData;
     if (specification.errorData) rightOptions.errorData = specification.errorData;
-    if (specification.id === 'List') otherOptions.filters = this.fillFilters();
+    if (specification.id === 'List') otherOptions['filters'] = this.fillFilters();
     if (['AddRow', 'AddRows', 'UpdateDetail', 'UpdateDetails'].includes(specification.id)) {
-      const controls: FormControl[] = this.fillControls(item, specification.id === 'UpdateDetails');
+      const controls = this.fillControls(item, specification.id === 'UpdateDetails');
       otherOptions[specification.id === 'AddRows' ? 'rows' : 'controls'] =
         specification.id === 'AddRows' ? [controls] : controls;
     }
 
-    specification.data.forEach(obj => {
+    (specification.data || []).forEach(obj => {
+      const name = obj.name;
+      if (!name) return;
       if (
-        !_.includes(['appKey', 'sign', 'worksheetId', 'viewId', 'pageSize', 'pageIndex', 'listType'], obj.name) &&
-        !otherOptions[obj.name]
+        !_.includes(['appKey', 'sign', 'worksheetId', 'viewId', 'pageSize', 'pageIndex', 'listType'], name) &&
+        !otherOptions[name]
       ) {
-        if (obj.name === 'control' && specification.id === 'UpdateDetails') return;
-        otherOptions[obj.name] = obj.desc;
+        if (name === 'control' && specification.id === 'UpdateDetails') return;
+        otherOptions[name] = obj.desc;
       }
     });
 
@@ -1924,26 +2054,26 @@ class WorksheetApi extends Component<any, any> {
   /**
    * scrollView滚动
    */
-  scroll = _.throttle(({ scrollTop }) => {
+  scroll = _.throttle(({ scrollTop }: { scrollTop: number }) => {
     if (!this.canScroll) {
       return;
     }
 
-    const heightArr = [];
+    const heightArr: Array<{ id: string; h: number | undefined; height?: number | undefined }> = [];
     let totalHeight = 0;
     let isExist = false;
 
     $('.scrollViewContainer .worksheetApiLi').map((_index: number, el) => {
       heightArr.push({
-        id: $(el).attr('id').replace('-content', ''),
+        id: String($(el).attr('id') || '').replace('-content', ''),
         h: $(el).height(),
       });
     });
     heightArr
-      .filter(item => item.height > 0)
-      .forEach((item: ApiField) => {
-        totalHeight += item.h;
-        if (!isExist && totalHeight - item.h * 0.3 > scrollTop) {
+      .filter(item => Number(item.height) > 0)
+      .forEach(item => {
+        totalHeight += Number(item.h);
+        if (!isExist && totalHeight - Number(item.h) * 0.3 > scrollTop) {
           isExist = true;
           this.setState({ selectId: item.id });
         }
@@ -1983,7 +2113,7 @@ class WorksheetApi extends Component<any, any> {
                       <div className="w32">{o.name}</div>
                       <div className="mLeft30 w18">{o.required}</div>
                       <div className="mLeft30 w14">{o.type}</div>
-                      <div className="mLeft30 w36">{o.desc}</div>
+                      <div className="mLeft30 w36">{displayDescription(o.desc)}</div>
                     </div>
                   );
                 })}
@@ -2004,7 +2134,7 @@ class WorksheetApi extends Component<any, any> {
     );
   }
 
-  updateTabIndex = nexTabIndex => {
+  updateTabIndex = (nexTabIndex: string) => {
     const { selectId, expandIds, tabIndex } = this.state;
     // 存储当前tab下菜单的位置
     sessionStorage.setItem(
@@ -2028,7 +2158,7 @@ class WorksheetApi extends Component<any, any> {
     }
 
     // 获取目标tab下菜单的位置
-    const targetPosition = JSON.parse(sessionStorage.getItem(`ApiTabIndex-${nexTabIndex}`)) || {};
+    const targetPosition = cachedPosition(sessionStorage.getItem(`ApiTabIndex-${nexTabIndex}`));
     const targetSelectId = this.hideMcp && targetPosition.selectId === 'mcpServer' ? targetId : targetPosition.selectId;
     this.setState(
       {
@@ -2041,6 +2171,14 @@ class WorksheetApi extends Component<any, any> {
       },
     );
   };
+
+  renderSidebar(name: string, args: number | undefined): React.ReactNode {
+    if (name === 'renderWorksheetSide') return this.renderWorksheetSide();
+    if (name === 'renderDataPipelineSide') return this.renderDataPipelineSide();
+    if (name === 'renderWorkflow') return this.renderWorkflow();
+    if (name === 'renderOtherSide' && args !== undefined) return this.renderOtherSide(String(args));
+    return null;
+  }
 
   override render() {
     const {
@@ -2056,7 +2194,7 @@ class WorksheetApi extends Component<any, any> {
     } = this.state;
     const { isSharePage } = this.props;
     const appId = this.getId();
-    const sidebarList = (SIDEBAR_LIST_MAP[tabIndex] || []).filter(item => {
+    const sidebarList = apiSidebarItems(SIDEBAR_LIST_MAP[tabIndex] || []).filter(item => {
       if (this.hideMcp && item.key === 'mcpServer') return false;
       if (this.hideDataPipeline && item.key === 'dataPipeline') return false;
       return true;
@@ -2079,6 +2217,21 @@ class WorksheetApi extends Component<any, any> {
 
     if (errorCode === 300016) {
       return <RestrictAccessStatus />;
+    }
+
+    if (this.state.loadError) {
+      return (
+        <div role="alert" className="pAll24">
+          <div>{this.state.loadError}</div>
+          <button
+            onClick={() => {
+              void this.retryRequest?.();
+            }}
+          >
+            {_l('重试')}
+          </button>
+        </div>
+      );
     }
 
     if (loading) {
@@ -2113,7 +2266,7 @@ class WorksheetApi extends Component<any, any> {
                 <ScrollView>
                   {sidebarList.map(({ key, title, render, args }, index) => {
                     return render ? (
-                      <Fragment key={index}>{this[render](args)}</Fragment>
+                      <Fragment key={index}>{this.renderSidebar(render, args)}</Fragment>
                     ) : (
                       <div
                         key={index}
@@ -2188,7 +2341,7 @@ class WorksheetApi extends Component<any, any> {
   }
 }
 
-const MobileUnsupported = ({ shareData = {} }) => {
+const MobileUnsupported = ({ shareData }: { shareData: ApiShareData }) => {
   const dataApp = {
     iconUrl: shareData.appIcon,
     iconColor: shareData.appIconColor,
@@ -2209,105 +2362,122 @@ const MobileUnsupported = ({ shareData = {} }) => {
   );
 };
 
-const Entry = () => {
+export const Entry = () => {
   const isSharePage = location.pathname.includes('/public/');
   const pathname = location.pathname.split('/');
-  const id = pathname[pathname.length - 1];
+  const id = pathname[pathname.length - 1] || '';
   const [loading, setLoading] = useState(true);
-  const [share, setShare] = useState({});
+  const [share, setShare] = useState<ApiShareResponse>({});
+  const [loadError, setLoadError] = useState<string | undefined>();
+  const mounted = useRef(true);
+  const requestVersion = useRef(0);
+  const requests = useRef(new Set<ApiResultOf<unknown>>());
 
   const getEntityShareById = useCallback(
-    async data => {
-      const result = await appManagementAjax.getEntityShareById({ id, sourceType: 45, ...data });
-      const clientId = _.get(result, 'data.clientId');
-      window.clientId = clientId;
-      clientId && sessionStorage.setItem(id, clientId);
-      return result;
+    async (data: ApiRecord): Promise<ApiShareResponse> => {
+      const version = ++requestVersion.current;
+      const request = appManagementAjax.getEntityShareById({ id, sourceType: 45, ...data });
+      requests.current.add(request);
+      try {
+        const raw: unknown = await request;
+        const result = apiShare(raw);
+        if (!mounted.current || version !== requestVersion.current) throw new Error('API share request cancelled');
+        const clientId = result.data?.clientId;
+        Reflect.set(window, 'clientId', clientId);
+        if (clientId) sessionStorage.setItem(id, clientId);
+        return result;
+      } finally {
+        requests.current.delete(request);
+      }
     },
     [id],
   );
 
   useEffect(() => {
+    mounted.current = true;
+    let cancelled = false;
     if (!isSharePage) {
       preall({ type: 'function' });
-      Promise.resolve().then(() => setLoading(false));
-      return;
+      Promise.resolve().then(() => {
+        if (!cancelled) setLoading(false);
+      });
+    } else {
+      const clientId = sessionStorage.getItem(id);
+      Reflect.set(window, 'clientId', clientId);
+      const pending = getEntityShareById({ clientId, langType: getCurrentLangCode() });
+      const version = requestVersion.current;
+      void pending
+        .then(result => {
+          if (cancelled || version !== requestVersion.current) return;
+          preall({ type: 'function' }, { allowNotLogin: true, requestParams: { projectId: result.data?.projectId } });
+          setShare(result);
+          setLoading(false);
+        })
+        .catch((error: unknown) => {
+          if (!cancelled && version === requestVersion.current) {
+            setLoadError(errorInfo(error).message);
+            setLoading(false);
+          }
+        });
     }
-
-    const clientId = sessionStorage.getItem(id);
-    window.clientId = clientId;
-
-    getEntityShareById({
-      clientId,
-      langType: getCurrentLangCode(),
-    }).then(result => {
-      preall({ type: 'function' }, { allowNotLogin: true, requestParams: { projectId: result.data.projectId } });
-      setShare(result);
-      setLoading(false);
-    });
+    return () => {
+      cancelled = true;
+      mounted.current = false;
+      requestVersion.current++;
+      requests.current.forEach(request => request.abort());
+    };
   }, [getEntityShareById, id, isSharePage]);
 
   const renderContent = () => {
-    if ([14, 18, 19].includes(share.resultCode)) {
+    if (share.resultCode !== undefined && [14, 18, 19].includes(share.resultCode)) {
       return (
         <VerificationPass
-          validatorPassPromise={(value, captchaResult) => {
-            return new Promise(async (resolve, reject) => {
-              if (value) {
-                getEntityShareById({
-                  password: value,
-                  ...captchaResult,
-                }).then(data => {
-                  if (data.resultCode === 1) {
-                    setShare(data);
-                    resolve(data);
-                  } else {
-                    reject(SHARE_STATE[data.resultCode]);
-                  }
-                });
-              } else {
-                reject();
-              }
+          validatorPassPromise={(value: string, captchaResult: ApiRecord): Promise<ApiShareResponse> => {
+            if (!value) return Promise.reject();
+            const pending = getEntityShareById({ password: value, ...captchaResult });
+            const version = requestVersion.current;
+            return pending.then(result => {
+              if (result.resultCode !== 1)
+                return Promise.reject(result.resultCode === undefined ? undefined : SHARE_STATE[result.resultCode]);
+              if (!mounted.current || version !== requestVersion.current)
+                return Promise.reject(new Error('API share request cancelled'));
+              setShare(result);
+              return result;
             });
           }}
         />
       );
     }
-
     return <ShareState code={share.resultCode} />;
   };
-
-  if (loading) {
+  if (loading)
     return (
       <div className="w100 h100 flexColumn alignItemsCenter justifyContentCenter">
         <LoadDiv />
       </div>
     );
-  }
-
-  // 登录打开
-  if (!isSharePage) {
-    return <WorksheetApi isSharePage={isSharePage} />;
-  }
-
-  // 分享打开
-  if (share.resultCode === 1) {
-    if (isMobile) {
-      return <MobileUnsupported shareData={share.data} />;
-    }
-
+  if (loadError)
+    return (
+      <div role="alert" className="pAll24">
+        {loadError}
+        <button onClick={() => window.location.reload()}>{_l('重试')}</button>
+      </div>
+    );
+  if (!isSharePage) return <WorksheetApi isSharePage={isSharePage} />;
+  if (share.resultCode === 1 && share.data) {
+    if (isMobile) return <MobileUnsupported shareData={share.data} />;
     return <WorksheetApi isSharePage={isSharePage} appId={share.data.appId} shareData={share.data} />;
   }
-
-  // 密码验证
   return (
     <div className="flexColumn h100">
-      <Header isAuthorization={true} share={share} />
+      {share.data && <Header isAuthorization={true} share={share} />}
       {renderContent()}
     </div>
   );
 };
 
-const root = createRoot(document.getElementById('app'));
+const appElement = document.getElementById('app');
+if (!appElement) throw new TypeError('Worksheet API root is missing');
+const root = createRoot(appElement);
 
 root.render(<Entry />);

@@ -1,6 +1,14 @@
-import styled from 'styled-components';
+import styled from 'src/utils/typedStyled';
+import type { PivotStyleColors } from './types';
 
-const PivotTableContent = styled.div`
+interface PivotContentProps {
+  pivotTableStyle: PivotStyleColors;
+  isMobile?: boolean | undefined;
+  isFreeze?: boolean | undefined;
+  paginationVisible?: boolean | undefined;
+}
+
+const PivotTableContent = styled.div<PivotContentProps>`
   .ant-table {
     color: var(--color-text-primary);
     background: var(--color-background-primary);

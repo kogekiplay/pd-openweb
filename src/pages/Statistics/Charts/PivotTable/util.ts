@@ -1,11 +1,58 @@
+import type { CSSProperties } from 'react';
 import _ from 'lodash';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { dealMaskValue } from 'src/pages/widgetConfig/widgetSetting/components/WidgetSecurity/util';
+import {
+  addRangeValues,
+  cellObject,
+  greaterThan,
+  greaterThanOrEqual,
+  isCellObject,
+  lessThan,
+  lessThanOrEqual,
+  lookup,
+  numeric,
+  requireItem,
+} from './boundary';
+import type {
+  AxisField,
+  ColorRule,
+  ColorRuleConfig,
+  CompiledColorRule,
+  CompiledDataBarRule,
+  CompiledStyleRule,
+  ControlMinAndMax,
+  DataBarRule,
+  PivotLineData,
+  PivotRecord,
+  PivotResultItem,
+  PivotSetting,
+  Range,
+  ScopeRule,
+  StyleRule,
+} from './types';
+
+interface MergeConfig {
+  pageSize?: number | undefined;
+  defaultEmpty?: string | undefined;
+  mergeCell?: boolean | undefined;
+}
+interface MergeColumn {
+  index?: number;
+  data: unknown[];
+  xaxisEmptyType?: number | boolean | undefined;
+}
+interface MergeLinesConfig {
+  pageSize?: number | undefined;
+  freeze?: boolean | undefined;
+  freezeIndex?: number | undefined;
+  mergeCell?: boolean | undefined;
+}
 
 /**
  * 将连续的单元格合并
  */
-export const uniqMerge = (data, config) => {
+export const uniqMerge = (data: unknown[], config: MergeConfig): unknown[] => {
   const { pageSize, defaultEmpty, mergeCell = true } = config;
   data = data.map(item => item || defaultEmpty);
   for (let i = data.length - 1; i >= 0; i--) {
@@ -20,10 +67,10 @@ export const uniqMerge = (data, config) => {
       };
     }
 
-    if (_.isObject(current) && mergeCell && current.value === last && (pageSize ? i % pageSize : true)) {
+    if (isCellObject(current) && mergeCell && current.value === last && (pageSize ? i % pageSize : true)) {
       data[i - 1] = {
         value: last,
-        length: current.length + 1,
+        length: numeric(current.length) + 1,
       };
       data[i] = null;
     }
@@ -35,19 +82,21 @@ export const uniqMerge = (data, config) => {
 /**
  * 多维度单元格合并
  */
-export const mergeTableCell = (list, pageSize?, mergeCell?) => {
+export function mergeTableCell(list: PivotLineData[], pageSize?: number, mergeCell?: boolean): PivotLineData[];
+export function mergeTableCell(list: MergeColumn[], pageSize?: number, mergeCell?: boolean): MergeColumn[];
+export function mergeTableCell(list: MergeColumn[], pageSize?: number, mergeCell?: boolean): MergeColumn[] {
   list.map((item, index: number) => {
     const last = list[index - 1];
     const defaultEmpty = item.xaxisEmptyType ? '--' : ' ';
 
     if (last) {
       let data = last.data.map((n, i) => {
-        if (_.isObject(n)) {
+        if (isCellObject(n)) {
           if (n.sum) {
             return item.data[i];
           }
 
-          let end = i + n.length;
+          let end = i + numeric(n.length);
           return uniqMerge(item.data.slice(i, end), { pageSize, defaultEmpty, mergeCell });
         } else if (_.isString(n)) {
           return item.data[i] || defaultEmpty;
@@ -63,51 +112,58 @@ export const mergeTableCell = (list, pageSize?, mergeCell?) => {
     return item;
   });
   return list;
-};
+}
 
 /**
  * 合并列
  */
-export const mergeColumnsCell = (data, columns, yaxisList) => {
+export const mergeColumnsCell = (
+  data: PivotResultItem[],
+  columns: AxisField[],
+  yaxisList: AxisField[],
+): PivotResultItem[] => {
   data = _.cloneDeep(data).filter(item => {
     const yaxis = _.find(yaxisList, { controlId: item.t_id });
     return yaxis ? !yaxis.hide : true;
   });
-  const length = _.get(_.find(data, { summary_col: false }), ['y', 'length']) || 0;
-  const result = [];
+  const length = data.find(item => item.summary_col === false)?.y.length || 0;
+  const result: MergeColumn[] = [];
 
   for (let i = 0; i < length; i++) {
     result.push({
       index: i,
-      xaxisEmptyType: columns[i].xaxisEmptyType,
+      xaxisEmptyType: requireItem(columns[i]).xaxisEmptyType,
       data: [],
     });
     data
       .filter(item => !item.summary_col)
       .forEach(item => {
         if (item.y && item.y.length) {
-          result[i].data.push(item.y[i]);
+          requireItem(result[i]).data.push(item.y[i]);
         }
       });
   }
 
   mergeTableCell(result).forEach((item, index: number) => {
     item.data.forEach((n, i) => {
-      data.filter(item => !item.summary_col)[i].y[index] = n;
+      requireItem(data.filter(item => !item.summary_col)[i]).y[index] = n;
     });
   });
 
   return data;
 };
 
-export const renderValue = (value, advancedSetting) => dealMaskValue({ value, advancedSetting });
+export const renderValue = (value: unknown, advancedSetting: PivotSetting): unknown => {
+  const result: unknown = dealMaskValue({ value, advancedSetting });
+  return result;
+};
 
-const getTotalCount = (data, index: number) => {
+const getTotalCount = (data: Record<string, string[]>[], index: number): (string | null)[] => {
   return data
     .map(item => {
-      const key = Object.keys(item)[0];
-      const res = item[key];
-      const value = res[index];
+      const key = requireItem(Object.keys(item)[0]);
+      const res = requireItem(item[key]);
+      const value = requireItem(res[index]);
       return value.includes('subTotal') ? value : null;
     })
     .filter(_ => _);
@@ -116,44 +172,48 @@ const getTotalCount = (data, index: number) => {
 /**
  * 合并行
  */
-export const mergeLinesCell = (data, lines, valueMap, config) => {
+export const mergeLinesCell = (
+  data: Record<string, string[]>[],
+  lines: AxisField[],
+  valueMap: Record<string, Record<string, unknown>>,
+  config: MergeLinesConfig,
+): PivotLineData[] => {
   const { pageSize, freeze, freezeIndex, mergeCell = true } = config;
-  const fIndex = freezeIndex + 1;
+  const fIndex = numeric(freezeIndex) + 1;
   const isFreeze = freeze && _.isNumber(freezeIndex);
 
-  const result = mergeTableCell(
-    data.map((item, index: number) => {
-      const key = Object.keys(item)[0];
-      const res = item[key].map((value, valueIndex) => {
-        if (value.includes('subTotal')) {
-          const freezeData = isFreeze && freezeIndex ? data.slice(0, index <= freezeIndex ? fIndex : index) : data;
-          const rightLength = getTotalCount(freezeData.slice(index + 1, freezeData.length), valueIndex).length + 1;
-          const leftLength = getTotalCount(freezeData.slice(0, index), valueIndex).length;
+  const sourceLines: PivotLineData[] = data.map((item, index: number) => {
+    const key = requireItem(Object.keys(item)[0]);
+    const res = requireItem(item[key]).map((value, valueIndex) => {
+      if (value.includes('subTotal')) {
+        const freezeData = isFreeze && freezeIndex ? data.slice(0, index <= freezeIndex ? fIndex : index) : data;
+        const rightLength = getTotalCount(freezeData.slice(index + 1, freezeData.length), valueIndex).length + 1;
+        const leftLength = getTotalCount(freezeData.slice(0, index), valueIndex).length;
 
-          if (!leftLength && rightLength) {
-            const showLine = data[data.length - rightLength];
-            const showId = Object.keys(showLine)[0];
-            return {
-              value,
-              length: rightLength,
-              sum: true,
-              subTotalName: _.get(_.find(lines, { cid: showId }), 'subTotalName') || _l('总计'),
-            };
-          } else {
-            if (isFreeze && freezeIndex) {
-              return index <= freezeIndex ? `subTotalEmpty-${valueIndex}` : `subTotalFreezeEmpty-${valueIndex}`;
-            }
-
-            return `subTotalEmpty-${valueIndex}`;
+        if (!leftLength && rightLength) {
+          const showLine = requireItem(data[data.length - rightLength]);
+          const showId = requireItem(Object.keys(showLine)[0]);
+          return {
+            value,
+            length: rightLength,
+            sum: true,
+            subTotalName: lines.find(line => line.cid === showId)?.subTotalName || _l('总计'),
+          };
+        } else {
+          if (isFreeze && freezeIndex) {
+            return index <= freezeIndex ? `subTotalEmpty-${valueIndex}` : `subTotalFreezeEmpty-${valueIndex}`;
           }
-        }
 
-        return value;
-      });
-      const target = _.find(lines, { cid: key }) || {};
-      const name = target.rename || target.controlName;
-      const { xaxisEmptyType } = target;
-      /*
+          return `subTotalEmpty-${valueIndex}`;
+        }
+      }
+
+      return value;
+    });
+    const target: Partial<AxisField> = lines.find(line => line.cid === key) || {};
+    const name = target.rename || target.controlName;
+    const { xaxisEmptyType } = target;
+    /*
       if (isTime) {
         return {
           key,
@@ -175,22 +235,20 @@ export const mergeLinesCell = (data, lines, valueMap, config) => {
         };
       }
       */
-      return {
-        key,
-        xaxisEmptyType,
-        name,
-        data: res,
-      };
-    }),
-    pageSize,
-    mergeCell,
-  );
+    return {
+      key,
+      xaxisEmptyType,
+      name,
+      data: res,
+    };
+  });
+  const result = mergeTableCell(sourceLines, pageSize, mergeCell);
 
-  const parse = value => {
+  const parse = (value: unknown): unknown => {
     let result = value;
 
     try {
-      let res = JSON.parse(value);
+      let res: unknown = JSON.parse(String(value));
 
       if (_.isArray(res)) {
         res = res.map(item => {
@@ -207,7 +265,7 @@ export const mergeLinesCell = (data, lines, valueMap, config) => {
   };
 
   result.forEach(item => {
-    const control = _.find(lines, { cid: item.key }) || {};
+    const control: Partial<AxisField> = lines.find(line => line.cid === item.key) || {};
     const advancedSetting = control.advancedSetting || {};
     const defaultEmpty = item.xaxisEmptyType ? '--' : ' ';
     item.data = item.data.map(n => {
@@ -220,28 +278,30 @@ export const mergeLinesCell = (data, lines, valueMap, config) => {
           ? {}
           : valueMap[item.key];
 
-      if (_.isObject(n)) {
-        const defaultValue = n.value.includes('subTotal') ? n.value : defaultEmpty;
+      if (isCellObject(n)) {
+        const raw = cellObject(n);
+        const value = raw.value;
+        const defaultValue = typeof value === 'string' && value.includes('subTotal') ? value : defaultEmpty;
         return {
-          ...n,
+          ...raw,
           value: valueKey
-            ? valueKey[n.value]
-              ? renderValue(valueKey[n.value], advancedSetting)
-              : n.value || defaultValue
-            : renderValue(n.value, advancedSetting),
+            ? lookup(valueKey, value)
+              ? renderValue(lookup(valueKey, value), advancedSetting)
+              : value || defaultValue
+            : renderValue(value, advancedSetting),
         };
       } else {
-        const defaultValue = n.includes('subTotal') ? n : defaultEmpty;
+        const defaultValue = typeof n === 'string' && n.includes('subTotal') ? n : defaultEmpty;
         return valueKey
-          ? valueKey[n]
-            ? renderValue(valueKey[n], advancedSetting)
+          ? lookup(valueKey, n)
+            ? renderValue(lookup(valueKey, n), advancedSetting)
             : n || defaultValue
           : renderValue(n, advancedSetting);
       }
     });
     if (control.controlType === 29) {
       item.data = item.data.map(item => {
-        if (_.isObject(item)) {
+        if (isCellObject(item)) {
           return {
             ...item,
             value: parse(item.value),
@@ -256,7 +316,7 @@ export const mergeLinesCell = (data, lines, valueMap, config) => {
   return result;
 };
 
-export const getColumnName = column => {
+export const getColumnName = (column: Partial<AxisField>) => {
   const { rename, controlName } = column;
   const name = rename || controlName;
   /*
@@ -276,9 +336,9 @@ export const getColumnName = column => {
   return name;
 };
 
-export const getControlMinAndMax = (yaxisList, data) => {
-  const result = {};
-  const valuesMap = {};
+export const getControlMinAndMax = (yaxisList: AxisField[], data: PivotResultItem[]): ControlMinAndMax => {
+  const result: ControlMinAndMax = {};
+  const valuesMap: Record<string, unknown[][]> = {};
 
   yaxisList.forEach(item => {
     valuesMap[item.controlId] = [];
@@ -286,15 +346,15 @@ export const getControlMinAndMax = (yaxisList, data) => {
 
   data.forEach(item => {
     if (!item.summary_col && Object.prototype.hasOwnProperty.call(valuesMap, item.t_id)) {
-      valuesMap[item.t_id].push(item.data);
+      valuesMap[item.t_id]?.push(item.data);
     }
   });
 
   yaxisList.forEach(item => {
-    const values = _.flatten(valuesMap[item.controlId]);
+    const values: unknown[] = _.flatten(valuesMap[item.controlId] || []);
     const min = _.min(values) || 0;
     const max = _.max(values);
-    const center = (max + min) / 2;
+    const center = numeric(addRangeValues(max, min)) / 2;
 
     result[item.controlId] = {
       min,
@@ -306,7 +366,7 @@ export const getControlMinAndMax = (yaxisList, data) => {
   return result;
 };
 
-const isApplyStyle = (applyValue, recordKey) => {
+const isApplyStyle = (applyValue: number | undefined, recordKey: string | number | undefined) => {
   if (applyValue === 1) {
     return recordKey !== 'sum';
   }
@@ -321,30 +381,35 @@ const isApplyStyle = (applyValue, recordKey) => {
   return undefined;
 };
 
-const getCompiledScopeRuleColor = (value, controlMinAndMax: Record<string, any> = {}, scopeRules = [], emptyShowType) => {
-  let result = null;
+const getCompiledScopeRuleColor = (
+  value: unknown,
+  controlMinAndMax: Range = {},
+  scopeRules: ScopeRule[] = [],
+  emptyShowType?: number,
+) => {
+  let result: string | null | undefined = null;
 
   scopeRules.forEach(rule => {
     const { type, and, color } = rule;
     const minValue = rule.dynamicMin ? controlMinAndMax.min || 0 : rule.min;
     const maxValue = rule.dynamicMax ? controlMinAndMax.max || 0 : rule.max;
 
-    if (type === 1 && value > minValue) {
-      if (and === 5 && value < maxValue) {
+    if (type === 1 && greaterThan(value, minValue)) {
+      if (and === 5 && lessThan(value, maxValue)) {
         result = color;
       }
 
-      if (and === 6 && value <= maxValue) {
+      if (and === 6 && lessThanOrEqual(value, maxValue)) {
         result = color;
       }
     }
 
-    if (type === 2 && value >= minValue) {
-      if (and === 5 && value < maxValue) {
+    if (type === 2 && greaterThanOrEqual(value, minValue)) {
+      if (and === 5 && lessThan(value, maxValue)) {
         result = color;
       }
 
-      if (and === 6 && value <= maxValue) {
+      if (and === 6 && lessThanOrEqual(value, maxValue)) {
         result = color;
       }
     }
@@ -368,24 +433,31 @@ export const getCompiledStyleColor = ({
   controlId,
   record = {},
   emptyShowType,
-}: { controlId?: string; [key: string]: any }) => {
+}: {
+  value?: unknown;
+  controlMinAndMax?: ControlMinAndMax;
+  rule: CompiledStyleRule;
+  controlId?: string | undefined;
+  record?: Partial<PivotRecord>;
+  emptyShowType?: number | undefined;
+}) => {
   const { model, applyValue } = rule;
 
   if (model === 1 && isApplyStyle(applyValue, record.key)) {
-    const applyControl = controlMinAndMax[rule.rangeControlId];
+    const applyControl = rule.rangeControlId ? controlMinAndMax[rule.rangeControlId] : undefined;
     const minValue = _.isNumber(rule.minValue) ? rule.minValue : applyControl ? applyControl.min : 0;
     const maxValue = _.isNumber(rule.maxValue) ? rule.maxValue : applyControl ? applyControl.max : 0;
     const centerValue = _.isNumber(rule.centerValue) ? rule.centerValue : applyControl ? applyControl.center : 0;
     let percent = 0;
 
     if (rule.centerVisible) {
-      percent = ((value - centerValue) / (maxValue - centerValue)) * 50 + 50;
+      percent = ((numeric(value) - numeric(centerValue)) / (numeric(maxValue) - numeric(centerValue))) * 50 + 50;
     } else {
-      percent = ((value - minValue) / (maxValue - minValue)) * 100;
+      percent = ((numeric(value) - numeric(minValue)) / (numeric(maxValue) - numeric(minValue))) * 100;
     }
 
-    percent = parseInt(percent);
-    if (value <= minValue) {
+    percent = parseInt(String(percent));
+    if (lessThanOrEqual(value, minValue)) {
       percent = 0;
     }
 
@@ -393,7 +465,7 @@ export const getCompiledStyleColor = ({
       percent = 50;
     }
 
-    if (value >= maxValue) {
+    if (greaterThanOrEqual(value, maxValue)) {
       percent = 100;
     }
 
@@ -405,23 +477,32 @@ export const getCompiledStyleColor = ({
       percent = 0;
     }
 
-    return rule.colors[percent];
+    return requireItem(rule.colors)[percent];
   }
 
   if (model === 2) {
     return getCompiledScopeRuleColor(
       value,
-      controlMinAndMax[rule.rangeControlId || controlId],
+      controlMinAndMax[String(rule.rangeControlId || controlId)],
       rule.scopeRules,
       emptyShowType,
     );
   }
+  return undefined;
 };
 
-export const getCompiledBarStyleColor = ({ value, controlMinAndMax = {}, rule }) => {
+export const getCompiledBarStyleColor = ({
+  value,
+  controlMinAndMax = {},
+  rule,
+}: {
+  value: unknown;
+  controlMinAndMax?: Range | undefined;
+  rule: CompiledDataBarRule;
+}): CSSProperties => {
   const minValue = _.isNumber(rule.minValue) ? rule.minValue : rule.useDefaultMin ? 0 : controlMinAndMax.min || 0;
   const maxValue = _.isNumber(rule.maxValue) ? rule.maxValue : controlMinAndMax.max || 0;
-  const barStyle: Record<string, any> = {};
+  const barStyle: CSSProperties = {};
 
   if (rule.direction === 1) {
     barStyle.left = 0;
@@ -431,7 +512,9 @@ export const getCompiledBarStyleColor = ({ value, controlMinAndMax = {}, rule })
     barStyle.right = 0;
   }
 
-  let percent = parseInt(((value - minValue) / (maxValue - minValue)) * 100);
+  let percent = parseInt(
+    String(((numeric(value) - numeric(minValue)) / (numeric(maxValue) - numeric(minValue))) * 100),
+  );
 
   if (percent >= 100) {
     percent = 100;
@@ -441,7 +524,7 @@ export const getCompiledBarStyleColor = ({ value, controlMinAndMax = {}, rule })
     percent = 0;
   }
 
-  if (value < minValue) {
+  if (lessThan(value, minValue)) {
     percent = 0;
   }
 
@@ -450,31 +533,47 @@ export const getCompiledBarStyleColor = ({ value, controlMinAndMax = {}, rule })
   }
 
   barStyle.width = `${percent}%`;
-  barStyle.backgroundColor = value >= 0 ? rule.positiveNumberColor : rule.negativeNumberColor;
+  barStyle.backgroundColor = numeric(value) >= 0 ? rule.positiveNumberColor : rule.negativeNumberColor;
   return barStyle;
 };
 
-export const getStyleRuleValue = ({ rule, value, controlId, columnIndex, record, recordIndex, result }) => {
+export const getStyleRuleValue = ({
+  rule,
+  value,
+  controlId,
+  columnIndex,
+  record,
+  recordIndex,
+  result,
+}: {
+  rule: CompiledStyleRule;
+  value: unknown;
+  controlId: string;
+  columnIndex: number;
+  record: PivotRecord;
+  recordIndex: number;
+  result: PivotResultItem[];
+}): unknown => {
   if (controlId === rule.sourceControlId) {
     return value;
   }
 
   if (record.type === 'line') {
-    const colorRuleData = result[columnIndex + rule.sourceIndex] || {};
-    return colorRuleData.sum;
+    const colorRuleData = result[columnIndex + numeric(rule.sourceIndex)];
+    return colorRuleData?.sum;
   } else {
-    const colorRuleData = _.get(result[columnIndex + rule.sourceIndex], 'data') || [];
+    const colorRuleData = result[columnIndex + numeric(rule.sourceIndex)]?.data || [];
     return colorRuleData[recordIndex];
   }
 };
 
-export const compileColorRuleConfig = (yaxisList, colorRules = []) => {
-  const yaxisMap = {};
+export const compileColorRuleConfig = (yaxisList: AxisField[], colorRules: ColorRule[] = []): ColorRuleConfig => {
+  const yaxisMap: Record<string, AxisField> = {};
   const yaxisIndexMap: Record<string, number> = {};
-  const colorRuleMap = {};
+  const colorRuleMap: Record<string, CompiledColorRule> = {};
   const rangeControlIdMap: Record<string, boolean> = {};
 
-  const addRangeControlId = id => {
+  const addRangeControlId = (id: string | undefined): void => {
     if (id) {
       rangeControlIdMap[id] = true;
     }
@@ -485,13 +584,14 @@ export const compileColorRuleConfig = (yaxisList, colorRules = []) => {
     yaxisIndexMap[item.controlId] = index;
   });
 
-  const compileStyleRule = (rule, defaultControlId) => {
+  const compileStyleRule = (rule: StyleRule | undefined, defaultControlId: string): CompiledStyleRule => {
     if (!rule || !rule.model) {
       return {};
     }
 
     const sourceControlId = rule.controlId;
-    const sourceIndex = _.isNumber(yaxisIndexMap[sourceControlId]) ? yaxisIndexMap[sourceControlId] : -1;
+    const sourceIndex =
+      typeof yaxisIndexMap[String(sourceControlId)] === 'number' ? yaxisIndexMap[String(sourceControlId)] : -1;
     const data = {
       ...rule,
       sourceControlId,
@@ -521,8 +621,8 @@ export const compileColorRuleConfig = (yaxisList, colorRules = []) => {
       const scopeRules = (rule.scopeRules || []).map(item => {
         return {
           ...item,
-          dynamicMin: [1, 2].includes(item.type) && !_.isNumber(item.min),
-          dynamicMax: [1, 2].includes(item.type) && !_.isNumber(item.max),
+          dynamicMin: item.type !== undefined && [1, 2].includes(item.type) && !_.isNumber(item.min),
+          dynamicMax: item.type !== undefined && [1, 2].includes(item.type) && !_.isNumber(item.max),
         };
       });
       const needRange = scopeRules.some(item => item.dynamicMin || item.dynamicMax);
@@ -541,7 +641,7 @@ export const compileColorRuleConfig = (yaxisList, colorRules = []) => {
     return data;
   };
 
-  const compileDataBarRule = (rule, controlId: string) => {
+  const compileDataBarRule = (rule: DataBarRule | undefined, controlId: string): CompiledDataBarRule | undefined => {
     if (!rule) {
       return undefined;
     }
@@ -584,12 +684,13 @@ export const compileColorRuleConfig = (yaxisList, colorRules = []) => {
   };
 };
 
-export const getLineSubTotal = (data = [], index: number) => {
+export const getLineSubTotal = (data: unknown[] = [], index: number): string => {
   let count = '';
 
   for (let i = index; i < data.length; i++) {
-    if (data[i] && _.isString(data[i]) && data[i].includes('subTotal')) {
-      count = data[i];
+    const value = data[i];
+    if (typeof value === 'string' && value && value.includes('subTotal')) {
+      count = value;
       break;
     }
   }

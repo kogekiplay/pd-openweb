@@ -7,11 +7,11 @@ import './less/Avatar.less';
 export interface AvatarProps {
   size?: number | undefined;
   shape?: string | undefined;
-  src: string;
+  src?: string | null | undefined;
   className?: string | undefined;
 }
 
-export default class Avatar extends Component<AvatarProps, any> {
+export default class Avatar extends Component<AvatarProps> {
   static override propTypes = {
     src: PropTypes.string,
     size: PropTypes.number,
