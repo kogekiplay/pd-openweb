@@ -12,6 +12,7 @@ import { WIDGETS_TO_API_TYPE_ENUM, WORKFLOW_SYSTEM_CONTROL } from 'src/pages/wid
 import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
 import { formatFilterValuesToServer } from 'src/pages/worksheet/common/Sheet/QuickFilter/utils';
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
+import type { FilterSaveItem } from 'src/pages/worksheet/common/WorkSheetFilter/filterModelTypes';
 import { formatForSave } from 'src/pages/worksheet/common/WorkSheetFilter/model';
 import * as sheetActions from 'src/pages/worksheet/redux/actions';
 import type { RootState } from 'src/redux/types';
@@ -135,7 +136,7 @@ export function QuickFilter(props) {
   const store = useRef({});
   const [values, setValues] = useState({});
   const [requiredErrorVisible, setRequiredErrorVisible] = useState(false);
-  const [filterControls, setFilterControls] = useState([]);
+  const [filterControls, setFilterControls] = useState<FilterSaveItem[]>([]);
   const debounceUpdateQuickFilter = useRef(_.debounce(updateQuickFilter, 500));
   const showSavedFilter = canFilter && !_.get(window, 'shareState.shareId') && base.type !== 'single';
   const [appFilterId, setAppFilterId] = useState('');

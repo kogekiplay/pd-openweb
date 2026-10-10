@@ -4,8 +4,10 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import CascaderDropdown from 'src/components/Form/DesktopForm/widgets/Cascader';
 import { FILTER_CONDITION_TYPE } from '../../enum';
+import { cascaderValues, selectionItem } from './selectionBoundary';
+import type { CascaderState, SelectionProps } from './selectionTypes';
 
-export default class RelateRecord extends React.Component<any, any> {
+export default class RelateRecord extends React.Component<SelectionProps, CascaderState> {
   static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
@@ -17,19 +19,22 @@ export default class RelateRecord extends React.Component<any, any> {
     fullValues: [],
   };
 
-  constructor(props) {
+  constructor(props: SelectionProps) {
     super(props);
     let { fullValues = [] } = props;
     this.state = {
-      records: fullValues?.length > 0 ? _.map(fullValues, r => safeParse(r)) : [],
+      records: (fullValues?.length || 0) > 0 ? _.map(fullValues, r => selectionItem(safeParse(r))) : [],
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: SelectionProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.fullValues?.length !== prevProps.fullValues?.length) {
         this.setState({
-          records: this.props.fullValues?.length > 0 ? _.map(this.props.fullValues, r => safeParse(r)) : [],
+          records:
+            (this.props.fullValues?.length || 0) > 0
+              ? _.map(this.props.fullValues, r => selectionItem(safeParse(r)))
+              : [],
         });
       }
     }
@@ -40,7 +45,7 @@ export default class RelateRecord extends React.Component<any, any> {
   }
 
   get isAnyLevel() {
-    return this.props.control.advancedSetting.anylevel === '0' || this.isFuzzy;
+    return this.props.control.advancedSetting?.['anylevel'] === '0' || this.isFuzzy;
   }
 
   // 只有“是”是单值条件；是其中一个/不是任何一个/属于/不属于都可以填多个值，
@@ -50,8 +55,8 @@ export default class RelateRecord extends React.Component<any, any> {
     return control.enumDefault !== 2 && type === FILTER_CONDITION_TYPE.EQ_FOR_SINGLE;
   }
 
-  handleChange = selected => {
-    const newRecords = selected ? JSON.parse(selected || '[]').map(r => ({ name: r.name, id: r.sid })) : [];
+  handleChange = (selected: string) => {
+    const newRecords = selected ? cascaderValues(selected || '[]') : [];
 
     this.setState(
       {
@@ -70,7 +75,7 @@ export default class RelateRecord extends React.Component<any, any> {
     const { control, disabled, from, worksheetId } = this.props;
     const { records } = this.state;
 
-    const isTree = control.advancedSetting.showtype === '4';
+    const isTree = control.advancedSetting?.showtype === '4';
     return (
       <div className="worksheetFilterRelateRecordCondition worksheetFilterCascaderCondition">
         <div

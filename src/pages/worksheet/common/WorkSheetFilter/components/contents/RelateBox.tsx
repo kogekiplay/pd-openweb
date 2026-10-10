@@ -9,6 +9,12 @@ import { getIconByType } from 'src/pages/widgetConfig/util';
 import { relateDy } from 'src/pages/worksheet/common/WorkSheetFilter/util.js';
 import { isSheetDisplay } from '../../../../../widgetConfig/util';
 import { API_ENUM_TO_TYPE, DEFAULT_COLUMNS, FILTER_CONDITION_TYPE } from '../../enum';
+import type { FormControl } from 'src/utils/controlTypes';
+
+function searchableControlName(control: FormControl): string {
+  if (typeof control.controlName !== 'string') throw new TypeError('Missing dynamic filter control name');
+  return control.controlName.toLocaleLowerCase();
+}
 
 let RelateBox = class RelateBox extends Component<any, any> {
   static override propTypes = {
@@ -129,18 +135,18 @@ let RelateBox = class RelateBox extends Component<any, any> {
     let listColumn = this.filterDynamicControls();
     let customData = !keywords
       ? customColums
-      : _.filter(listColumn, o => o.controlName.toLocaleLowerCase().indexOf(keywords.toLocaleLowerCase()) >= 0); //符合动态筛选值规则的本表控件
+      : _.filter(listColumn, o => searchableControlName(o).indexOf(keywords.toLocaleLowerCase()) >= 0); //符合动态筛选值规则的本表控件
 
     let columnsData = !keywords
       ? listColumn
-      : _.filter(listColumn, o => o.controlName.toLocaleLowerCase().indexOf(keywords.toLocaleLowerCase()) >= 0); //符合动态筛选值规则主表控件
+      : _.filter(listColumn, o => searchableControlName(o).indexOf(keywords.toLocaleLowerCase()) >= 0); //符合动态筛选值规则主表控件
 
     let listglobalSheetColumn = this.filterDynamicControls(true);
     let globalSheetControlsData = !keywords
       ? listglobalSheetColumn
       : _.filter(
           listglobalSheetColumn,
-          o => o.controlName.toLocaleLowerCase().indexOf(keywords.toLocaleLowerCase()) >= 0,
+          o => searchableControlName(o).indexOf(keywords.toLocaleLowerCase()) >= 0,
         );
     const showResult =
       listColumn.length > 0 || listglobalSheetColumn.length > 0 || (showCustom && customColums.length > 0);
@@ -190,7 +196,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
                             {
                               ...item,
                               rcid: _.includes(['fastFilter'], from)
-                                ? item.isNavGroup
+                                ? Reflect.get(item, 'isNavGroup')
                                   ? 'navGroup'
                                   : 'fastFilter'
                                 : 'parent',

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
+import type { FilterWireItem } from 'src/pages/worksheet/common/WorkSheetFilter/filterModelTypes';
 import { toFixed } from 'src/utils/controlCommon';
 import type { FormControl } from 'src/utils/controlTypes';
 import { getContactInfo } from 'src/utils/project';
@@ -126,11 +127,15 @@ export const validateIdCardBirthDate = (idCard: string) => {
 };
 
 // 合并筛选filter
-export const getItemFilters = (items?: FormFilterGroup[]) => {
-  return (items || []).reduce<FormFilterGroup[]>((total, cur) => {
+export function getItemFilters(items?: readonly FormFilterGroup[]): FormFilterGroup[];
+export function getItemFilters(items: readonly FilterWireItem[]): FilterWireItem[];
+export function getItemFilters(
+  items?: readonly (FormFilterGroup | FilterWireItem)[],
+): Array<FormFilterGroup | FilterWireItem> {
+  return (items || []).reduce<Array<FormFilterGroup | FilterWireItem>>((total, cur) => {
     return total.concat(cur.isGroup ? cur.groupFilters || [] : [cur]);
   }, []);
-};
+}
 
 // 时间字段处理
 export const formatTimeValue = (control: FormControl = {}, isCurrent = false, value?: unknown) => {

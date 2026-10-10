@@ -2,11 +2,12 @@ import { useRef, useState } from 'react';
 import { isEmpty } from 'lodash';
 import { Dialog } from 'ming-ui';
 import FilterConfig from 'src/pages/worksheet/common/WorkSheetFilter/common/FilterConfig';
+import { filterWireItems } from 'src/pages/worksheet/common/WorkSheetFilter/filterModelBoundary';
 import 'src/pages/worksheet/common/WorkSheetFilter/WorkSheetFilter.less';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getAdvanceSetting } from '../../../util/setting';
 import EmptyRuleConfig from '../EmptyRuleConfig';
 import '../FilterData/FilterDialog.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export default function FilterDialog(props) {
   const {
@@ -20,7 +21,7 @@ export default function FilterDialog(props) {
     sourceControlId,
   }: { controls: FormControl[]; allControls: FormControl[]; [key: string]: any } = props;
 
-  const [filters, setFilters] = useState(getAdvanceSetting(data, 'filters') || []);
+  const [filters, setFilters] = useState(filterWireItems(getAdvanceSetting(data, 'filters') || []));
   const ruleRef = useRef(null);
 
   return (

@@ -112,7 +112,7 @@ export default function useRecords(props) {
       });
     }
 
-    return;
+    return undefined;
   }, [control, formData, worksheetInfo]);
   const load = useCallback(() => {
     if (filterControls === false && !ignoreAllFilters) {

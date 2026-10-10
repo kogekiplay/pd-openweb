@@ -1,21 +1,24 @@
 import { useEffect, useReducer } from 'react';
 import _ from 'lodash';
-import { arrayOf, bool, func, number, shape, string } from 'prop-types';
-import styled from 'styled-components';
+import { arrayOf, bool, func, number, oneOfType, shape, string } from 'prop-types';
 import { SYSTEM_CONTROLS } from 'worksheet/constants/enum';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
+import type { FormControl } from 'src/utils/controlTypes';
+import styled from 'src/utils/typedStyled';
 import FilterDetail from '../components/FilterDetail';
 import { CONTROL_FILTER_WHITELIST } from '../enum';
 import { createActions, createReducer, formatForSave, initialState } from '../model';
 import { formatOriginFilterGroupValue, redefineComplexControl } from '../util';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FilterConfigProps } from './filterProps';
+
+export type { FilterConfigProps } from './filterProps';
 
 const Con = styled.div``;
 
-export default function SingleFilter(props) {
+export default function SingleFilter(props: FilterConfigProps) {
   const {
     from,
     version,
@@ -43,9 +46,7 @@ export default function SingleFilter(props) {
     disableAddCondition,
   } = props;
   let { columns = [] } = props;
-  const filterWhiteKeys = _.flatten(
-    Object.keys(CONTROL_FILTER_WHITELIST).map(key => CONTROL_FILTER_WHITELIST[key].keys),
-  );
+  const filterWhiteKeys = _.flatten(Object.values(CONTROL_FILTER_WHITELIST).map(group => group.keys));
   columns = columns
     .filter(c => (c.controlPermissions || '111')[0] === '1')
     .map(redefineComplexControl)
@@ -57,7 +58,11 @@ export default function SingleFilter(props) {
       .concat(SYSTEM_CONTROLS);
   }
 
-  columns = columns.sort((a, b) => (a.row * 10 + a.col > b.row * 10 + b.col ? 1 : -1));
+  columns = columns.sort((a, b) =>
+    Number(a.row) * 10 + (a.col === undefined ? NaN : a.col) > Number(b.row) * 10 + (b.col === undefined ? NaN : b.col)
+      ? 1
+      : -1,
+  );
   const [state = {}, dispatch] = useReducer(createReducer, {
     ...initialState,
     editingFilter: formatOriginFilterGroupValue({ items: conditions }),
@@ -70,7 +75,7 @@ export default function SingleFilter(props) {
   };
   const showWorkflowControl = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit, viewId);
 
-  function filterAddConditionControls(controls) {
+  function filterAddConditionControls(controls: FormControl[]) {
     const availableControls: FormControl[] = showWorkflowControl
       ? controls
       : controls.filter(
@@ -85,7 +90,8 @@ export default function SingleFilter(props) {
   }
 
   useEffect(() => {
-    if (/^(ADD_|UPDATE_|DELETE_)/.test(state.lastAction)) {
+    if (/^(ADD_|UPDATE_|DELETE_)/.test(String(state.lastAction))) {
+      if (!state.editingFilter) throw new TypeError('Missing worksheet editing filter');
       const formattedValues = formatForSave(state.editingFilter, { returnFullValues: feOnly, noCheck: true });
 
       if (formattedValues) {
@@ -133,14 +139,14 @@ export default function SingleFilter(props) {
 
 SingleFilter.propTypes = {
   appId: string,
-  canEdit: string,
+  canEdit: bool,
   columns: arrayOf(shape({})),
   conditions: arrayOf(shape({})),
   feOnly: bool,
   filterColumnClassName: string,
-  from: number,
+  from: oneOfType([string, number]),
   isRules: bool,
-  offset: number,
+  offset: arrayOf(number),
   onConditionsChange: func,
   projectId: string,
   showSystemControls: bool,

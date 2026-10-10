@@ -4,10 +4,13 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { UserHead } from 'ming-ui';
 import { dialogSelectUser, quickSelectUser } from 'ming-ui/functions';
+import type { NonEmptyUsers } from 'ming-ui/functions/dialogSelectUser/GeneralSelect/types';
 import { getTabTypeBySelectUser } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { FILTER_CONDITION_TYPE } from '../../enum';
+import { selectedUser, selectionUsers, userFromJson } from './selectionBoundary';
+import type { SelectionProps, SelectionUser, SelectUserOptions, UsersState } from './selectionTypes';
 
-export default class Users extends Component<any, any> {
+export default class Users extends Component<SelectionProps, UsersState> {
   declare userscon: HTMLDivElement | null | undefined;
 
   static override propTypes = {
@@ -20,27 +23,10 @@ export default class Users extends Component<any, any> {
   static defaultProps = {
     fullValues: [],
   };
-  constructor(props) {
+  constructor(props: SelectionProps) {
     super(props);
     this.state = {
-      users: (props.fullValues || [])
-        .map(value => {
-          let user: Record<string, any> = {};
-
-          try {
-            user = JSON.parse(value);
-          } catch (err) {
-            console.log(err);
-            return undefined;
-          }
-
-          return {
-            accountId: user.id,
-            fullname: user.name,
-            avatar: user.avatar,
-          };
-        })
-        .filter(_.identity),
+      users: (props.fullValues || []).map(userFromJson).filter((user): user is SelectionUser => user !== undefined),
     };
   }
   get selectSingle() {
@@ -49,7 +35,7 @@ export default class Users extends Component<any, any> {
       _.includes([FILTER_CONDITION_TYPE.ARREQ, FILTER_CONDITION_TYPE.ARRNE], this.props.type)
     );
   }
-  selectUser(title: string, projectId: string, options, callback) {
+  selectUser(title: string, projectId: string, options: SelectUserOptions, callback: (users: NonEmptyUsers) => void) {
     dialogSelectUser({
       title,
       sourceId: 0,
@@ -126,7 +112,8 @@ export default class Users extends Component<any, any> {
     });
   };
 
-  addUsers = selectusers => {
+  addUsers = (value: unknown) => {
+    const selectusers = selectionUsers(value);
     const { users } = this.state;
     const newUsers = users.concat(selectusers);
 
@@ -135,7 +122,8 @@ export default class Users extends Component<any, any> {
       return;
     }
 
-    if (!selectusers[0] || _.find(users, option => option.accountId === selectusers[0].accountId)) {
+    const first = selectusers[0];
+    if (!first || _.find(users, option => option.accountId === first.accountId)) {
       alert(_l('该用户已存在'), 3);
       return;
     }
@@ -143,12 +131,13 @@ export default class Users extends Component<any, any> {
     this.changeUsers(newUsers);
   };
 
-  removeUser = user => {
+  removeUser = (value: unknown) => {
+    const user = selectedUser(value);
     const newUsers = this.state.users.filter(u => u.accountId !== user.accountId);
     this.changeUsers(newUsers);
   };
 
-  changeUsers = newUsers => {
+  changeUsers = (newUsers: SelectionUser[]) => {
     const { onChange } = this.props;
     this.setState(
       {
@@ -169,7 +158,7 @@ export default class Users extends Component<any, any> {
       },
     );
   };
-  renderHead(user) {
+  renderHead(user: SelectionUser) {
     if (user.accountId === 'user-self') {
       return (
         <span className="iconCon">
@@ -183,6 +172,7 @@ export default class Users extends Component<any, any> {
         </span>
       );
     } else {
+      if (user.accountId === undefined) return null;
       return (
         <UserHead
           className="userHead"

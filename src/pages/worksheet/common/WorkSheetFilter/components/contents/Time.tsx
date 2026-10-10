@@ -9,8 +9,9 @@ import PropTypes from 'prop-types';
 import TimePicker from 'src/components/Form/DesktopForm/widgets/Time';
 import { TimePicker as AntTimePicker } from 'src/ming-ui/components/mdAntPickers';
 import { FILTER_CONDITION_TYPE } from '../../enum';
+import type { PrimitiveValue, TimeFilterProps, TimeRangeChange } from '../../primitiveTypes';
 
-export default class Date extends Component<any, any> {
+export default class Date extends Component<TimeFilterProps, Record<string, never>> {
   static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
@@ -20,14 +21,20 @@ export default class Date extends Component<any, any> {
     maxValue: PropTypes.string,
     type: PropTypes.number,
   };
-  constructor(props) {
+  constructor(props: TimeFilterProps) {
     super(props);
     this.state = {};
   }
   override render() {
     const { control = {}, type, value, minValue, maxValue, onChange } = this.props;
     const lang = getCookie('i18n_langtag') || window.getDefaultLangKey();
-    const datePickerLocale = { en: en_US, ja: ja_JP, 'zh-Hans': zh_CN, 'zh-Hant': zh_TW }[lang] || en_US;
+    const datePickerLocales: Record<string, typeof en_US> = {
+      en: en_US,
+      ja: ja_JP,
+      'zh-Hans': zh_CN,
+      'zh-Hant': zh_TW,
+    };
+    const datePickerLocale = datePickerLocales[lang] || en_US;
     const unit = String(control.unit);
     const timeFormat = _.includes(['1', '8'], unit) ? 'HH:mm' : 'HH:mm:ss';
     return (
@@ -39,7 +46,7 @@ export default class Date extends Component<any, any> {
               locale={datePickerLocale}
               defaultValue={minValue && maxValue ? [moment(minValue, timeFormat), moment(maxValue, timeFormat)] : []}
               popupClassName="filterDateRangeInputPopup"
-              onOpenChange={isOpen => {
+              onOpenChange={(isOpen: boolean) => {
                 // 手动修复激活面板定位问题，官方有问题
                 if (isOpen) {
                   const $arrow = $('.filterDateRangeInputPopup .ant-picker-range-arrow');
@@ -47,19 +54,18 @@ export default class Date extends Component<any, any> {
                   if ($arrow) {
                     const arrowLeft = $arrow.css('left');
                     $('.filterDateRangeInputPopup .ant-picker-panel-container').css({
-                      marginLeft: parseInt(arrowLeft),
+                      marginLeft: parseInt(arrowLeft === undefined ? 'undefined' : arrowLeft),
                     });
                   }
                 }
               }}
-              onChange={moments => {
-                if (!moments || !_.isArray(moments)) {
-                  moments = [];
-                }
+              onChange={(...args: Parameters<TimeRangeChange>) => {
+                const moments = args[0];
+                const values = moments && _.isArray(moments) ? moments : [];
 
                 onChange({
-                  minValue: moments[0] && moments[0].format(timeFormat),
-                  maxValue: moments[1] && moments[1].format(timeFormat),
+                  minValue: values[0] && values[0].format(timeFormat),
+                  maxValue: values[1] && values[1].format(timeFormat),
                 });
               }}
             />
@@ -69,7 +75,7 @@ export default class Date extends Component<any, any> {
             <TimePicker
               {...control}
               value={value && moment(value, timeFormat)}
-              onChange={timeValue => {
+              onChange={(timeValue: PrimitiveValue) => {
                 onChange({
                   dateRange: 18,
                   value: timeValue ? moment(timeValue, timeFormat).format(timeFormat) : undefined,

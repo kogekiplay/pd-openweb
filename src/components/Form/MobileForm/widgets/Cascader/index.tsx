@@ -7,6 +7,7 @@ import { Checkbox, Icon, LoadDiv, MobileSearch, PopupWrapper, Radio, ScrollView 
 import type { MobileSearchHandle } from 'ming-ui/components/MobileSearch';
 import sheetAjax from 'src/api/worksheet';
 import RestrictAccessStatus from 'src/components/restrictAccessStatus';
+import type { FilterWireItem } from 'src/pages/worksheet/common/WorkSheetFilter/filterModelTypes';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { renderText as renderCellText } from 'src/utils/control';
 import { CustomCommonCapsule } from '../../style';
@@ -167,7 +168,7 @@ const Cascader = props => {
 
     // 数据源筛选
     const filterControls = getFilter({ control: props, formData, appId }) || [];
-    let navGroupFilters = [];
+    let navGroupFilters: FilterWireItem[] = [];
 
     // 开始筛选范围处理
     if (topshow === '3' && !rowId) {

@@ -14,19 +14,32 @@ import {
   FILTER_CONDITION_TYPE,
   getDateCompareRangeValues,
 } from '../../enum';
+import type {
+  DateFilterChanges,
+  DateFilterProps,
+  DateRangeChange,
+  PickerMode,
+  PrimitiveValue,
+} from '../../primitiveTypes';
 
 function getPicker(type: string) {
-  return {
-    4: 'month',
-    5: 'year',
-  }[type];
+  const pickers: Record<string, PickerMode> = { 4: 'month', 5: 'year' };
+  return pickers[type];
+}
+
+function getRangeTypeLabel(type: string | number): string {
+  const rangeLabels: Record<string, string> = {
+    [DATE_RANGE_TYPE.DAY]: _l('包括今天'),
+    [DATE_RANGE_TYPE.MONTH]: _l('包括本月'),
+    [DATE_RANGE_TYPE.YEAR]: _l('包括今年'),
+    [DATE_RANGE_TYPE.QUARTER]: _l('包括本季度'),
+  };
+  return rangeLabels[String(type)] || _l('包括今天');
 }
 
 function getDateOptionsByCompareType(
-  type,
-  dateOptions: (
-    { text: string; value: number; dateRangeType?: undefined } | { text: string; value: number; dateRangeType: number }
-  )[][],
+  type: number | undefined,
+  dateOptions: Array<Array<{ text: string; value: number; dateRangeType?: number | undefined }>>,
 ) {
   const allowedValues = [18].concat(getDateCompareRangeValues(type));
 
@@ -43,7 +56,7 @@ function getDateOptionsByCompareType(
     .filter(options => options.length);
 }
 
-export default function Date(props) {
+export default function Date(props: DateFilterProps) {
   const {
     control = {},
     disabled,
@@ -60,7 +73,7 @@ export default function Date(props) {
   } = props;
   const dayNum = value;
   const isDateCompareFilter = includes(DATE_COMPARE_FILTER_TYPES, type);
-  let dateOptions = DATE_OPTIONS;
+  let dateOptions: Array<Array<{ text: string; value: number; dateRangeType?: number | undefined }>> = DATE_OPTIONS;
   // if (
   //   dateRange === 18 &&
   //   _.includes(
@@ -132,14 +145,13 @@ export default function Date(props) {
             showTime={timeFormat ? { format: timeFormat } : false}
             picker={getPicker(showType)}
             format={showValueFormat}
-            onChange={moments => {
-              if (!moments || !_.isArray(moments)) {
-                moments = [];
-              }
+            onChange={(...args: Parameters<DateRangeChange>) => {
+              const moments = args[0];
+              const dates = moments && _.isArray(moments) ? moments : [];
 
               onChange({
-                minValue: moments[0] && moments[0].format(valueFormat === 'YYYY-MM-DD HH' ? undefined : valueFormat),
-                maxValue: moments[1] && moments[1].format(valueFormat === 'YYYY-MM-DD HH' ? undefined : valueFormat),
+                minValue: dates[0] && dates[0].format(valueFormat === 'YYYY-MM-DD HH' ? undefined : valueFormat),
+                maxValue: dates[1] && dates[1].format(valueFormat === 'YYYY-MM-DD HH' ? undefined : valueFormat),
               });
             }}
           />
@@ -157,15 +169,15 @@ export default function Date(props) {
                   includes([1, 2], dateRangeType) &&
                   includes([FILTER_CONDITION_TYPE.DATE_EQ, FILTER_CONDITION_TYPE.DATE_NE], type) &&
                   dateRange === 18
-                    ? dateRange + 0.1 * dateRangeType
+                    ? dateRange + 0.1 * Number(dateRangeType)
                     : dateRange
                 }
                 isAppendToBody
                 menuStyle={{ width: 220 }}
-                onChange={newDateRange => {
+                onChange={(newDateRange: number | undefined) => {
                   const item = find(flatten(dateOptions), o => o.value === newDateRange);
-                  if (!item) return;
-                  let changes = { value: undefined, values: [] };
+                  if (!item || newDateRange === undefined) return;
+                  let changes: DateFilterChanges = { value: undefined, values: [] };
 
                   if (newDateRange === 10 || newDateRange === 11) {
                     changes = {
@@ -180,7 +192,7 @@ export default function Date(props) {
                         : '3';
                   } else if (newDateRange > 18 && newDateRange < 19) {
                     changes.dateRangeType = get(item, 'dateRangeType');
-                    newDateRange = parseInt(newDateRange);
+                    newDateRange = parseInt(String(newDateRange));
                   } else {
                     changes.dateRangeType = undefined;
                   }
@@ -211,17 +223,17 @@ export default function Date(props) {
                     onChange({ value: dayNumToChange, dateRangeType });
                   }
                 }}
-                onChange={e => onChange({ value: get(e, 'target.value', '').replace(/[^\d]/g, ''), dateRangeType })}
+                onChange={e => onChange({ value: e.target.value.replace(/[^\d]/g, ''), dateRangeType })}
               />
               {(dateRange === 101 || dateRange === 102) && (
-                <Dropdown
+                <Dropdown<number | string>
                   isAppendToBody
                   className="dateRangeType"
                   data={DATE_RANGE_TYPE_OPTIONS}
                   value={dateRangeType || 3}
                   menuStyle={{ width: 80, marginLeft: -1, marginTop: 6 }}
-                  onChange={newDateRangeType => {
-                    const changes = { dateRangeType: newDateRangeType };
+                  onChange={(newDateRangeType: number | string | undefined) => {
+                    const changes: DateFilterChanges = { dateRangeType: newDateRangeType };
 
                     if (newDateRangeType === DATE_RANGE_TYPE.YEAR && Number(dayNum) > 100) {
                       changes.value = 100;
@@ -246,14 +258,7 @@ export default function Date(props) {
                 ) && (
                   <Checkbox
                     className="includeToday"
-                    text={
-                      {
-                        [DATE_RANGE_TYPE.DAY]: _l('包括今天'),
-                        [DATE_RANGE_TYPE.MONTH]: _l('包括本月'),
-                        [DATE_RANGE_TYPE.YEAR]: _l('包括今年'),
-                        [DATE_RANGE_TYPE.QUARTER]: _l('包括本季度'),
-                      }[dateRangeType] || _l('包括今天')
-                    }
+                    text={getRangeTypeLabel(dateRangeType)}
                     checked={_.isEqual(values, ['today'])}
                     onClick={() => onChange({ values: _.isEqual(values, ['today']) ? [] : ['today'] })}
                   />
@@ -283,7 +288,7 @@ export default function Date(props) {
                 value={value && moment(value)}
                 showTime={showTime}
                 dropdownClassName="scrollInTable"
-                onChange={date => {
+                onChange={(date: PrimitiveValue) => {
                   let formattedDate;
 
                   if (date) {

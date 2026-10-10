@@ -1,21 +1,22 @@
-import { filterSettings } from '../../../util/advancedSettingBoundary';
 import { Fragment, useRef, useState } from 'react';
 import { isEmpty, isEqual } from 'lodash';
 import _ from 'lodash';
 import { Dialog, Support } from 'ming-ui';
 import FilterConfig from 'src/pages/worksheet/common/WorkSheetFilter/common/FilterConfig';
 import { CONTROL_FILTER_WHITELIST } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
+import { filterWireItems } from 'src/pages/worksheet/common/WorkSheetFilter/filterModelBoundary';
 import {
   filterUnavailableConditions,
   getTypeKey,
   redefineComplexControl,
 } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import 'src/pages/worksheet/common/WorkSheetFilter/WorkSheetFilter.less';
+import type { FormControl } from 'src/utils/controlTypes';
 import { filterControlsFromAll } from '../../../util';
+import { filterSettings } from '../../../util/advancedSettingBoundary';
 import { getAdvanceSetting, isSingleRelateSheet } from '../../../util/setting';
 import EmptyRuleConfig from '../EmptyRuleConfig';
 import './FilterDialog.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 export default function FilterDialog(props) {
   const {
@@ -41,7 +42,7 @@ export default function FilterDialog(props) {
   }: { allControls: FormControl[]; relationControls: FormControl[]; [key: string]: any } = props;
 
   const { sourceControlId = '', type = '' } = data;
-  const originFilters = filterSettings(props.filters || getAdvanceSetting(data, [filterKey]));
+  const originFilters = filterWireItems(filterSettings(props.filters || getAdvanceSetting(data, [filterKey])));
   const [filters, setFilters] = useState(originFilters);
   const ruleRef = useRef(null);
 

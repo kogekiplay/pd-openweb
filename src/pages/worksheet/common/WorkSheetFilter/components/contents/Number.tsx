@@ -3,8 +3,9 @@ import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { FILTER_CONDITION_TYPE } from '../../enum';
+import type { NumberFilterProps, NumberFilterValues, PrimitiveValue } from '../../primitiveTypes';
 
-export default class Number extends Component<any, any> {
+export default class Number extends Component<NumberFilterProps, NumberFilterValues> {
   static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
@@ -13,7 +14,7 @@ export default class Number extends Component<any, any> {
     minValue: PropTypes.number,
     type: PropTypes.number,
   };
-  constructor(props) {
+  constructor(props: NumberFilterProps) {
     super(props);
     this.state = {
       value: props.value,
@@ -22,7 +23,7 @@ export default class Number extends Component<any, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: NumberFilterProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.value !== prevProps.value ||
@@ -44,17 +45,17 @@ export default class Number extends Component<any, any> {
     const { onChange } = this.props;
     let { value, maxValue, minValue } = this.state;
 
-    function isEmpty(v) {
+    function isEmpty(v: PrimitiveValue) {
       return _.isUndefined(v) || v === '';
     }
 
-    const changes: { value?: string; minValue?: string; maxValue?: string } = {};
+    const changes: NumberFilterValues = {};
 
     if (isEmpty(value) && isEmpty(minValue) && isEmpty(maxValue)) {
       return;
     }
 
-    if (minValue && maxValue && parseFloat(maxValue) < parseFloat(minValue)) {
+    if (minValue && maxValue && parseFloat(String(maxValue)) < parseFloat(String(minValue))) {
       changes.minValue = maxValue;
       changes.maxValue = minValue;
       this.setState({
@@ -72,7 +73,7 @@ export default class Number extends Component<any, any> {
     }
   };
 
-  setValue = (key: string, value: string) => {
+  setValue = (key: keyof NumberFilterValues, value: string) => {
     const newValues = {
       value: this.state.value,
       minValue: this.state.minValue,
@@ -96,11 +97,11 @@ export default class Number extends Component<any, any> {
                 disabled={disabled}
                 type="text"
                 className="ming Input"
-                value={minValue}
+                value={minValue === null ? undefined : minValue}
                 placeholder={_l('最小值')}
                 onChange={e => this.setValue('minValue', e.target.value)}
                 onBlur={this.handleChange}
-                maxlength={18}
+                maxLength={18}
               />
             </div>
             <span className="split">-</span>
@@ -111,11 +112,11 @@ export default class Number extends Component<any, any> {
                 disabled={disabled}
                 type="text"
                 className="ming Input"
-                value={maxValue}
+                value={maxValue === null ? undefined : maxValue}
                 placeholder={_l('最大值')}
                 onChange={e => this.setValue('maxValue', e.target.value)}
                 onBlur={this.handleChange}
-                maxlength={18}
+                maxLength={18}
               />
             </div>
           </div>
@@ -126,11 +127,11 @@ export default class Number extends Component<any, any> {
             disabled={disabled}
             type="text"
             className="ming Input w100"
-            value={value}
+            value={value === null ? undefined : value}
             placeholder={_l('请输入数值')}
             onChange={e => this.setValue('value', e.target.value)}
             onBlur={this.handleChange}
-            maxlength={18}
+            maxLength={18}
           />
         )}
       </div>

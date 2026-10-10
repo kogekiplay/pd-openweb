@@ -6,7 +6,9 @@ import { LoadDiv } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';
 import { VIEW_DISPLAY_TYPE } from 'worksheet/constants/enum';
 import RestrictAccessStatus from 'src/components/restrictAccessStatus';
+import type { FilterFormControl, FilterWireItem } from 'src/pages/worksheet/common/WorkSheetFilter/filterModelTypes';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import { isPublicLink } from '../../../core/utils';
 
 const EmbedWrap = styled.div`
@@ -70,12 +72,12 @@ const Embed = props => {
     isDraft,
     appId,
   } = props;
-  const [resultData, setResultData] = useState('');
+  const [resultData, setResultData] = useState<string | FilterWireItem[]>('');
   const [needUpdate, setNeedUpdate] = useState(Math.random());
   const [viewType, setViewType] = useState('');
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const embedWatchRef = useRef<NodeJS.Timeout | null>(null);
-  const viewControlsRef = useRef([]);
+  const viewControlsRef = useRef<FormControl[]>([]);
   const currentTimeRef = useRef(new Date());
   const latestResultData = useRef(resultData);
   const [errorCode, setErrorCode] = useState(null);
@@ -120,7 +122,10 @@ const Embed = props => {
       });
   }, [dataSource]);
 
-  const getFilterResult = (currentProps, currentTimeForSecond) =>
+  const getFilterResult = (
+    currentProps: FilterFormControl & { formData?: FormControl[] | undefined },
+    currentTimeForSecond: Date,
+  ): FilterWireItem[] =>
     getFilter({
       control: {
         ...currentProps,
@@ -206,7 +211,8 @@ const Embed = props => {
   const { appid, reportid, wsid } = enumDefault === 1 ? {} : safeParse(dataSource || '{}');
 
   const getContent = () => {
-    const isLegal = enumDefault === 1 ? /^https?:\/\/.+$/.test(resultData) : dataSource;
+    const isLegal =
+      enumDefault === 1 ? typeof resultData === 'string' && /^https?:\/\/.+$/.test(resultData) : dataSource;
 
     const isShareView = _.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage');
 
@@ -238,7 +244,7 @@ const Embed = props => {
       );
     }
 
-    if (enumDefault === 1) {
+    if (enumDefault === 1 && typeof resultData === 'string') {
       return (
         <div className="embedContainer">
           <iframe

@@ -3,8 +3,10 @@ import { Select } from 'antd';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Icon } from 'ming-ui';
+import styled from 'src/utils/typedStyled';
+import type { TextFilterProps, TextFilterState, TextKeyEvent, TextTag } from '../../primitiveTypes';
+import { textTagValue } from '../../primitiveTypes';
 
 const Tag = styled.div`
   font-size: var(--font-xs);
@@ -28,7 +30,7 @@ const DropdownWrap = styled.div`
   padding: 6px var(--space-3);
 `;
 
-export default class Text extends Component<any, any> {
+export default class Text extends Component<TextFilterProps, TextFilterState> {
   static override propTypes = {
     disabled: PropTypes.bool,
     values: PropTypes.arrayOf(PropTypes.string),
@@ -37,7 +39,7 @@ export default class Text extends Component<any, any> {
   static defaultProps = {
     values: [],
   };
-  constructor(props) {
+  constructor(props: TextFilterProps) {
     super(props);
     this.state = {
       searchValue: undefined,
@@ -47,32 +49,33 @@ export default class Text extends Component<any, any> {
 
   onSearch = (value: string) => this.setState({ searchValue: value });
 
-  onChange = value => {
+  onChange = (value: string[]) => {
     this.props.onChange({ values: value });
     this.setState({ searchValue: undefined, values: value });
   };
 
-  onRemove = tag => {
-    const newValues = this.state.values.filter(l => l !== tag.value);
+  onRemove = (tag: TextTag) => {
+    const newValues = this.state.values.filter(l => l !== textTagValue(tag.value));
     this.props.onChange({ values: newValues });
     this.setState({ values: newValues });
   };
 
-  onInputKeyDown = e => {
+  onInputKeyDown = (e: TextKeyEvent): null | undefined => {
     if (e.key !== 'Enter') return null;
 
     const { searchValue, values } = this.state;
     const value = _.trim(searchValue);
 
-    if (!value || _.includes(value)) return null;
+    if (!value || _.includes(value, undefined)) return null;
 
     this.onChange(values.concat(value));
+    return undefined;
   };
 
-  tagRender = tag => {
+  tagRender = (tag: TextTag) => {
     return (
       <Tag>
-        <span className="ellipsis">{tag.value}</span>
+        <span className="ellipsis">{textTagValue(tag.value)}</span>
         <Icon icon="clear" className="remove textTertiary Hand" onClick={() => this.onRemove(tag)} />
       </Tag>
     );
@@ -95,23 +98,23 @@ export default class Text extends Component<any, any> {
     const { disabled } = this.props;
 
     return (
-      (<Select
+      <Select<string[]>
         mode="tags"
         className="worksheetFilterTextCondition"
         placeholder={_l('请输入')}
         classNames={{ popup: { root: cx('worksheetFilterTextPopup', { hide: !searchValue }) } }}
-        disabled={disabled}
+        {...(disabled === undefined ? {} : { disabled })}
         value={values}
         style={{ width: '100%' }}
         notFoundContent={null}
         onChange={this.onChange}
-        showSearch={{ searchValue: searchValue, onSearch: this.onSearch }}
+        showSearch={{ ...(searchValue === undefined ? {} : { searchValue }), onSearch: this.onSearch }}
         tokenSeparators={['\r\n', '\n']}
         options={[]}
         tagRender={this.tagRender}
         popupRender={this.dropdownRender}
         onInputKeyDown={this.onInputKeyDown}
-      />)
+      />
     );
   }
 }

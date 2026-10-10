@@ -7,6 +7,7 @@ import type { TreeViewState } from '../pages/worksheet/common/TreeTableHelper/ty
 import type { ChildTableAction } from '../pages/worksheet/components/ChildTable/redux/stateTypes';
 import type { RelateRecordAction } from '../pages/worksheet/components/RelateRecordTable/redux/stateTypes';
 import type { WorksheetFilterCondition } from '../pages/worksheet/types';
+import type { FilterWireItem } from '../pages/worksheet/common/WorkSheetFilter/filterModelTypes';
 import type { ControlAdvancedSetting, FormControl } from './controlTypes';
 
 /** Worksheet columns are arbitrary, but public store consumers must inspect values before using them. */
@@ -144,7 +145,8 @@ export interface RelateTableState {
   isBatchEditing?: boolean | undefined;
   tableLoading?: boolean | undefined;
   highlightRows?: Record<string, boolean> | undefined;
-  filterControls?: WorksheetFilterCondition[] | undefined;
+  /** Dynamic filter evaluation may abort the query with false; callers keep that state. */
+  filterControls?: WorksheetFilterCondition[] | FilterWireItem[] | false | undefined;
   sortControl?: FieldSortConfig | undefined;
   fixedColumnCount?: number | undefined;
 }

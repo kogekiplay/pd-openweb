@@ -20,6 +20,28 @@ import {
   getDateCompareRangeValues,
   getFilterTypeLabel,
 } from './enum';
+import {
+  filterConditionEvaluation,
+  filterConditionPatch,
+  filterJSON,
+  filterScalar,
+  filterWireItems,
+  parsedFilterProperty,
+  savedFilter,
+} from './filterModelBoundary';
+import type {
+  EditingFilter,
+  FilterCondition,
+  FilterConditionsGroup,
+  FilterFormControl,
+  FilterScalar,
+  FilterValues,
+  FilterWireCondition,
+  FilterWireFields,
+  FilterWireItem,
+  OriginFilter,
+  OriginGroupFilter,
+} from './filterModelTypes';
 
 export function getConditionType(condition: {
   controlType?: number | string | undefined;
@@ -34,16 +56,16 @@ export function getConditionType(condition: {
 }
 
 export function formatConditionForSave(
-  condition: any,
+  condition: FilterCondition,
   relationType?: number,
-  options: { returnFullValues?: boolean } = {},
-) {
+  options: { returnFullValues?: boolean | undefined } = {},
+): FilterWireCondition {
   let { controlId, values, controlType } = condition;
   const { returnFullValues } = options;
 
   if (_.get(condition, 'control') && controlType === 25) {
     controlType = 8;
-    controlId = condition.control.dataSource.slice(1, -1);
+    controlId = requiredDataSource(condition.control).slice(1, -1);
   }
 
   if (
@@ -52,7 +74,7 @@ export function formatConditionForSave(
     condition.dateRange === 18 &&
     condition.dateRangeType
   ) {
-    condition.value = moment(condition.value).format(
+    condition.value = filterMoment(condition.value).format(
       {
         [DATE_RANGE_TYPE.YEAR]: 'YYYY',
         [DATE_RANGE_TYPE.MONTH]: 'YYYY-MM',
@@ -82,10 +104,14 @@ export function formatConditionForSave(
   };
 }
 
-export function formatValues(controlType, filterType, values = []) {
-  function safeParse(str) {
+export function formatValues(
+  controlType: number | undefined,
+  filterType: number | undefined,
+  values: unknown[] = [],
+): unknown[] {
+  function safeParse(str: unknown): unknown {
     try {
-      return JSON.parse(str);
+      return filterJSON(str);
     } catch (err) {
       console.error(err);
       return {};
@@ -109,7 +135,7 @@ export function formatValues(controlType, filterType, values = []) {
     }
 
     if (_.includes([26, 27, 19, 23, 24, 29, 35, 48], controlType)) {
-      return values.map(value => safeParse(value).id).filter(_.identity);
+      return values.map(value => parsedFilterProperty(safeParse(value), 'id')).filter(_.identity);
     }
   } catch (err) {
     console.log(err);
@@ -118,7 +144,7 @@ export function formatValues(controlType, filterType, values = []) {
   return values;
 }
 
-export function formatValuesOfCondition(condition) {
+export function formatValuesOfCondition(condition: FilterWireItem): FilterWireItem {
   return condition.isGroup && condition.groupFilters
     ? {
         ...condition,
@@ -141,7 +167,7 @@ export function getTypeKey(type: number | undefined): keyof typeof CONTROL_FILTE
   return typeKey;
 }
 
-export function formatValuesOfOriginConditions(conditions) {
+export function formatValuesOfOriginConditions(conditions: FilterWireItem[]): FilterWireItem[] {
   return conditions.map(condition =>
     condition.isGroup && condition.groupFilters
       ? {
@@ -158,11 +184,12 @@ export function formatValuesOfOriginConditions(conditions) {
   );
 }
 
-function formatConditions(items) {
+function formatConditions(items: FilterWireItem[]): FilterCondition[] {
   return items.map(condition => {
     const conditionGroupType = getConditionType(
       assign({}, condition, {
-        conditionGroupType: (CONTROL_FILTER_WHITELIST[getTypeKey(condition.dataType)] || {}).value,
+        conditionGroupType:
+          getTypeKey(condition.dataType) === undefined ? undefined : filterGroupType(condition.dataType),
       }),
     );
     return {
@@ -186,8 +213,8 @@ function formatConditions(items) {
   });
 }
 
-export function formatOriginFilterValue(item) {
-  item = typeof item === 'string' ? JSON.parse(item) : item;
+export function formatOriginFilterValue(value: unknown): OriginFilter {
+  const item = savedFilter(typeof value === 'string' ? filterJSON(value) : value);
   const items = item.items || [];
   const result = {
     id: item.filterId,
@@ -200,16 +227,16 @@ export function formatOriginFilterValue(item) {
   return result;
 }
 
-export function formatOriginFilterGroupValue(filter) {
+export function formatOriginFilterGroupValue(value: unknown): OriginGroupFilter {
   // 原来写的是 typeof item —— 从上面 formatOriginFilterValue(item) 复制过来漏改了形参名，
   // 而这个函数里没有 item 这个标识符。typeof 作用在未声明标识符上【不抛错】，恒等于
   // 'undefined'，所以这个三元永远走 else：传进来的 JSON 字符串从来没被解析过，
   // 后面 _.get(filter, 'items') 拿到 undefined、filter.filterId 也是 undefined，
   // 静默给出空筛选条件，不报错。tsc 报 TS2552 Cannot find name 'item'。
-  filter = typeof filter === 'string' ? JSON.parse(filter) : filter;
-  const items = _.get(filter, 'items') || [];
-  const isGroup = items[0] && items[0].isGroup;
-  const result = {
+  const filter = savedFilter(typeof value === 'string' ? filterJSON(value) : value);
+  const items = filter.items || [];
+  const isGroup = items[0]?.isGroup;
+  const result: Pick<OriginGroupFilter, 'id' | 'name' | 'type' | 'createAccountId' | 'isGroup'> = {
     id: filter.filterId || '',
     name: filter.name,
     type: filter.type,
@@ -217,14 +244,18 @@ export function formatOriginFilterGroupValue(filter) {
     isGroup,
   };
 
+  let conditionsGroups: FilterConditionsGroup[];
   if (isGroup) {
-    result.conditionsGroups = items.map(conditionsGroup => ({
-      ...conditionsGroup,
-      conditionSpliceType: _.get(conditionsGroup, 'groupFilters.0.spliceType') || FILTER_RELATION_TYPE.AND,
-      conditions: formatConditions(conditionsGroup.groupFilters),
-    }));
+    conditionsGroups = items.map(conditionsGroup => {
+      if (!conditionsGroup.isGroup) throw new TypeError('Missing worksheet filter group');
+      return {
+        ...conditionsGroup,
+        conditionSpliceType: requiredGroupFilters(conditionsGroup)[0]?.spliceType || FILTER_RELATION_TYPE.AND,
+        conditions: formatConditions(requiredGroupFilters(conditionsGroup)),
+      };
+    });
   } else {
-    result.conditionsGroups = [
+    conditionsGroups = [
       {
         spliceType: FILTER_RELATION_TYPE.AND,
         conditionSpliceType: _.get(items, '0.spliceType') || FILTER_RELATION_TYPE.AND,
@@ -235,33 +266,42 @@ export function formatOriginFilterGroupValue(filter) {
     ];
   }
 
-  return result;
+  return { ...result, conditionsGroups };
 }
 
-export function checkFilterConditionsAvailable(filter) {
+export function checkFilterConditionsAvailable(filter: Pick<EditingFilter, 'conditions'>) {
   const { conditions } = filter;
   return conditions && conditions.length && _.every(conditions, condition => checkConditionAvailable(condition));
 }
 
-export function filterUnavailableConditions(conditions, key = 'groupFilters') {
-  let newConditions = [...conditions];
-  newConditions = newConditions.map(condition => {
+export function filterUnavailableConditions<
+  T extends {
+    isGroup?: boolean | undefined;
+    conditions?: FilterCondition[] | undefined;
+    groupFilters?: FilterWireItem[] | undefined;
+  },
+>(conditions: T[], key: 'groupFilters' | 'conditions' = 'groupFilters'): T[] {
+  const newConditions = [...conditions].map(condition => {
     if (condition.isGroup && condition[key]) {
-      condition[key] = condition[key].filter(checkConditionAvailable);
+      if (key === 'conditions' && condition.conditions)
+        condition.conditions = condition.conditions.filter(checkConditionAvailable);
+      else if (key === 'groupFilters' && condition.groupFilters)
+        condition.groupFilters = condition.groupFilters.filter(checkConditionAvailable);
     }
-
     return condition;
   });
   return newConditions.filter(condition => {
     if (condition.isGroup) {
-      return !!condition[key].length;
-    } else {
-      return checkConditionAvailable(condition);
+      const members = condition[key];
+      if (!members) throw new TypeError('Missing worksheet filter group conditions');
+      return !!members.length;
     }
+    return checkConditionAvailable(condition);
   });
 }
 
-export function checkConditionAvailable(condition) {
+export function checkConditionAvailable(valueToCheck: unknown) {
+  const condition = filterConditionEvaluation(valueToCheck);
   const { type, value, values, minValue, maxValue, dateRange, dynamicSource = [], isDynamicsource = false } = condition;
   const conditionGroupType = getConditionType(condition);
 
@@ -319,12 +359,17 @@ export function checkConditionAvailable(condition) {
   }
 }
 
-export function getConditionOverrideValue(type, condition, valueType?, from?) {
+export function getConditionOverrideValue(
+  type: number | undefined,
+  condition: FilterCondition,
+  valueType?: number,
+  from?: string | number,
+): Partial<FilterCondition> {
   const { value, values, dateRange, dateRangeType, fullValues } = condition;
   let newDateRangeType = dateRangeType;
   const conditionGroupType = getConditionType(condition);
   const isDateCompareType = includes(DATE_COMPARE_FILTER_TYPES, type);
-  const base = {
+  const base: Partial<FilterCondition> = {
     type,
     values: [],
     maxValue: undefined,
@@ -369,7 +414,7 @@ export function getConditionOverrideValue(type, condition, valueType?, from?) {
       } else if (!includes([FILTER_CONDITION_TYPE.DATE_EQ, FILTER_CONDITION_TYPE.DATE_NE], type)) {
         let showType = get(condition, 'control.advancedSetting.showtype');
 
-        if (SYSTEM_DATE_CONTROL.map(c => c.controlId).includes(condition.controlId)) {
+        if (SYSTEM_DATE_CONTROL.some(c => c.controlId === condition.controlId)) {
           showType = DATE_RANGE_TYPE.SECOND;
         }
 
@@ -423,7 +468,13 @@ export function getConditionOverrideValue(type, condition, valueType?, from?) {
   }
 }
 
-export function compareControlType(widget, type) {
+export function compareControlType(
+  widget: {
+    data?: { type?: number | undefined } | undefined;
+    typeArr?: Array<{ type?: number | undefined }> | undefined;
+  },
+  type: number | undefined,
+) {
   if (widget.data && widget.data.type === type) {
     return true;
   }
@@ -435,8 +486,8 @@ export function compareControlType(widget, type) {
   return false;
 }
 
-export function getFilterTypes(control: FormControl = {}, conditionType?, from?) {
-  let typeEnums = [];
+export function getFilterTypes(control: FormControl = {}, conditionType?: number, from?: string | number) {
+  let typeEnums: number[] = [];
   const { type, advancedSetting = {} } = control;
   const typeKey = getTypeKey(type);
 
@@ -700,7 +751,7 @@ export function getFilterTypes(control: FormControl = {}, conditionType?, from?)
   }));
 }
 
-function getDefaultFilterType(control, from) {
+function getDefaultFilterType(control: FormControl, from?: string | number) {
   const { isMultiple } = getControlSelectType(control);
 
   // 文本类
@@ -746,13 +797,12 @@ function getDefaultFilterType(control, from) {
   return undefined;
 }
 
-export function getDefaultCondition(control, from?) {
+export function getDefaultCondition(control: FormControl, from?: string | number): FilterCondition {
   const conditionGroupKey = getTypeKey(control.type);
   const conditionGroupType =
-    CONTROL_FILTER_WHITELIST[conditionGroupKey] && CONTROL_FILTER_WHITELIST[conditionGroupKey].value;
+    conditionGroupKey === undefined ? undefined : CONTROL_FILTER_WHITELIST[conditionGroupKey].value;
   const filterTypesOfControl = getFilterTypes(control);
-  let defaultFilterType =
-    getDefaultFilterType(control, from) || FILTER_CONDITION_TYPE.EQ || filterTypesOfControl[0].value;
+  let defaultFilterType = getDefaultFilterType(control, from) || FILTER_CONDITION_TYPE.EQ;
 
   if (
     (_.isUndefined(defaultFilterType) || !_.find(filterTypesOfControl, c => c.value === defaultFilterType)) &&
@@ -762,7 +812,7 @@ export function getDefaultCondition(control, from?) {
     defaultFilterType = filterTypesOfControl[0].value;
   }
 
-  const baseCondition = {
+  const baseCondition: FilterCondition = {
     controlId: control.controlId,
     controlType: control.type,
     keyStr: control.controlId + Math.random().toString(16).slice(2),
@@ -894,7 +944,13 @@ export function redefineComplexControl<T extends FormControl>(
 /**
  * 动态筛选值规则
  *  */
-export function relateDy(conditionType, controls, control, defaultValue, from) {
+export function relateDy(
+  conditionType: number | undefined,
+  controls: FormControl[],
+  control: FormControl,
+  defaultValue: number | undefined,
+  from?: string | number,
+) {
   if (
     defaultValue === FILTER_CONDITION_TYPE.ISNULL || // 为空
     defaultValue === FILTER_CONDITION_TYPE.HASVALUE || // 不为空
@@ -913,7 +969,7 @@ export function relateDy(conditionType, controls, control, defaultValue, from) {
     return [];
   }
 
-  let typeList = [];
+  let typeList: number[] = [];
 
   switch (conditionType) {
     // 文本框、文本组合、自动编号
@@ -1048,7 +1104,7 @@ export function relateDy(conditionType, controls, control, defaultValue, from) {
       return _.filter(controls, items => {
         const currentItems = redefineComplexControl(items);
 
-        const getDataSource = i => {
+        const getDataSource = (i: FormControl) => {
           return i.originType === 30 ? _.get(i, 'sourceControl.dataSource') : i.dataSource;
         };
 
@@ -1120,36 +1176,38 @@ export function getFilter({
   appId,
   currentTimeForSecond,
 }: {
-  control?: FormControl | undefined;
+  control?: FilterFormControl | undefined;
   formData?: FormControl[] | undefined;
   /** advancedSetting 里存筛选条件的键名，查询配置用 'filters' 之外的值 */
   filterKey?: string | undefined;
   ignoreEmptyRule?: boolean | undefined;
   appId?: string | undefined;
-  currentTimeForSecond?: boolean | undefined;
-}) {
+  currentTimeForSecond?: moment.MomentInput | boolean | undefined;
+}): FilterWireItem[] | false {
   if (
     !control ||
     _.isEmpty(control.advancedSetting) ||
-    _.isEmpty(control.advancedSetting[filterKey]) ||
-    control.advancedSetting[filterKey] === '[]'
+    _.isEmpty(control.advancedSetting?.[filterKey]) ||
+    control.advancedSetting?.[filterKey] === '[]'
   ) {
     return [];
   }
 
-  let conditions;
+  const relateControl = control;
+  let parsedConditions: unknown;
 
   try {
-    conditions = JSON.parse(control.advancedSetting[filterKey]);
+    parsedConditions = filterJSON(control.advancedSetting?.[filterKey]);
   } catch (err) {
     console.log(err);
     return [];
   }
 
+  const conditions = filterWireItems(parsedConditions);
   const abortFilterWhenEmpty =
     (get(conditions, '0.emptyRule') === 3 || get(conditions, '0.groupFilters.0.emptyRule') === 3) && !ignoreEmptyRule;
 
-  function handleFormatCondition(condition) {
+  function handleFormatCondition(condition: FilterWireItem): FilterWireItem | false | undefined {
     if (_.isEmpty(condition.dynamicSource)) {
       return Object.assign({}, condition, {
         values: formatValues(condition.dataType, condition.filterType, condition.values),
@@ -1169,16 +1227,16 @@ export function getFilter({
       return fillConditionValue({
         condition,
         formData,
-        relateControl: control,
+        relateControl,
         appId,
         currentTimeForSecond,
-        ignoreFilterControl: control.ignoreFilterControl,
+        ignoreFilterControl: relateControl.ignoreFilterControl,
         abortFilterWhenEmpty,
       });
     }
   }
 
-  conditions = conditions.map(condition => {
+  const results = conditions.map(condition => {
     if (!(condition.isGroup && condition.groupFilters)) {
       return handleFormatCondition(condition);
     } else {
@@ -1189,22 +1247,22 @@ export function getFilter({
         return !formattedGroupFilters.filter(f => !f).length
           ? {
               ...condition,
-              groupFilters: formattedGroupFilters,
+              groupFilters: formattedGroupFilters.filter((item): item is FilterWireItem => Boolean(item)),
             }
           : false;
       } else {
         // 或 条件
         return {
           ...condition,
-          groupFilters: formattedGroupFilters.filter(_.identity),
+          groupFilters: formattedGroupFilters.filter((item): item is FilterWireItem => Boolean(item)),
         };
       }
     }
   });
-  const filteredConditions = conditions.filter(_.identity);
+  const filteredConditions = results.filter((condition): condition is FilterWireItem => Boolean(condition));
   if (!abortFilterWhenEmpty) return filteredConditions;
   if (filteredConditions.length) {
-    if (filteredConditions[0].spliceType === 1) {
+    if (filteredConditions[0]?.spliceType === 1) {
       // 且 条件
       return filteredConditions.length === conditions.length ? filteredConditions : false;
     } else {
@@ -1224,27 +1282,35 @@ export function fillConditionValue({
   currentTimeForSecond,
   ignoreFilterControl = false,
   abortFilterWhenEmpty = false,
-}) {
+}: {
+  condition: FilterWireItem;
+  formData: FilterFormControl[];
+  relateControl: FilterFormControl;
+  appId?: string | undefined;
+  currentTimeForSecond?: moment.MomentInput | boolean | undefined;
+  ignoreFilterControl?: boolean | undefined;
+  abortFilterWhenEmpty?: boolean | undefined;
+}): FilterWireItem | false | undefined {
   const { dataType, controlId } = condition;
-  const dynamicSource = condition.dynamicSource[0];
+  const dynamicSource = condition.dynamicSource?.[0];
   const filterControl = _.find(
     (relateControl.relationControls || []).concat([...SYSTEM_DATE_CONTROL, ...ROW_ID_CONTROL]),
     item => item.controlId === controlId,
   );
 
   if (!dynamicSource || (!filterControl && !ignoreFilterControl)) {
-    return;
+    return undefined;
   }
 
   const { rcid, cid } = dynamicSource;
 
   if (!cid) {
-    return;
+    return undefined;
   }
 
   if ((cid === 'current-rowid' || cid === 'rowid') && !_.includes(['fastFilter', 'navGroup'], rcid)) {
     if (!relateControl.recordId) {
-      return;
+      return undefined;
     }
 
     condition.values = [relateControl.recordId];
@@ -1266,39 +1332,40 @@ export function fillConditionValue({
       const formatMode = formatFilterControl.unit === '6' || formatFilterControl.unit === '9' ? 'HH:mm:ss' : 'HH:mm';
       const now = currentTimeForSecond && _.includes(formatMode, 'ss') ? currentTimeForSecond : new Date();
 
-      condition.value = moment(now).format(formatMode);
+      condition.value = filterMoment(now).format(formatMode);
     } else {
       const formatMode = getDatePickerConfigs(formatFilterControl).formatMode;
       const now = currentTimeForSecond && _.includes(formatMode, 'ss') ? currentTimeForSecond : new Date();
 
-      condition.value = moment(now).format(formatMode);
+      condition.value = filterMoment(now).format(formatMode);
     }
 
     return condition;
   }
 
-  let dynamicControl;
+  let dynamicControl: FilterFormControl | undefined;
   dynamicControl = _.find(
     formData,
     c => c && c.controlId === (_.includes(['fastFilter', 'navGroup'], rcid) ? rcid + '_' : '') + cid,
   );
   if (!dynamicControl) {
-    return;
+    return undefined;
   }
 
   dynamicControl = redefineComplexControl(dynamicControl);
 
   // 快速筛选配置的其他字段的值
-  if (dynamicControl['filterValue']) {
+  const rawFilterValue: unknown = dynamicControl.filterValue;
+  if (rawFilterValue) {
     const newCondition = {
       ...condition,
-      ...(dynamicControl['filterValue'] || {}),
+      ...filterConditionPatch(rawFilterValue),
     };
     return validate(newCondition) || newCondition.filterType === 7 ? newCondition : false;
   }
 
   const { type } = dynamicControl;
-  const value = (
+  const value: unknown = (
     _.find(
       formData,
       control => control.controlId === (_.includes(['fastFilter', 'navGroup'], rcid) ? rcid + '_' : '') + cid,
@@ -1329,8 +1396,8 @@ export function fillConditionValue({
         if (isRelateRecordTableControl(dynamicControl) && browserIsMobile() && relateControl.recordId) {
           condition.values = [`cid|${dynamicControl.controlId}`];
         } else {
-          condition.values = (_.isObject(value) ? value.records : JSON.parse(value))
-            .map(r => r.sid || r.rowid)
+          condition.values = relationRows(value)
+            .map(r => parsedFilterProperty(r, 'sid') || parsedFilterProperty(r, 'rowid'))
             .filter(_.identity);
         }
       }
@@ -1340,7 +1407,7 @@ export function fillConditionValue({
     }
 
     if (_.isEmpty(condition.values)) {
-      return;
+      return undefined;
     }
 
     return condition;
@@ -1357,7 +1424,7 @@ export function fillConditionValue({
       ),
     ];
   } else if (dataType === 6 || dataType === 8 || dataType === 31 || dataType === 46) {
-    condition.value = value;
+    condition.value = requiredFilterScalar(value);
   } else if (dataType === 15 || dataType === 16) {
     try {
       let tempValue = value;
@@ -1366,24 +1433,24 @@ export function fillConditionValue({
         const appTimeZone = window[`timeZone_${appId}`];
 
         if (!_.isUndefined(appTimeZone)) {
-          tempValue = dateServerZoneToAppZone(tempValue, appTimeZone);
+          tempValue = dateServerZoneToAppZone(requiredDateString(tempValue), appTimeZone);
         }
       }
 
-      condition.value = moment(tempValue).format(
+      condition.value = filterMoment(tempValue).format(
         getDatePickerConfigs({
           ...dynamicControl,
           value: tempValue,
         }).formatMode,
       );
     } catch (err) {
-      condition.value = value;
+      condition.value = requiredFilterScalar(value);
       console.error(err);
     }
   } else if (dataType === 9 || dataType === 11 || dataType === 10) {
     if (type === 9 || type === 11) {
       // 单选
-      const selectedOption = getSelectedOptions(dynamicControl.options, value, dynamicControl)[0];
+      const selectedOption = getSelectedOptions(dynamicControl.options, selectedOptionValue(value), dynamicControl)[0];
 
       if (!selectedOption) {
         condition.values = [];
@@ -1400,7 +1467,7 @@ export function fillConditionValue({
       }
     } else if (type === 10) {
       // 多选
-      const selectedOptions = getSelectedOptions(dynamicControl.options, value, dynamicControl);
+      const selectedOptions = getSelectedOptions(dynamicControl.options, selectedOptionValue(value), dynamicControl);
 
       if (!selectedOptions.length) {
         condition.values = [];
@@ -1421,7 +1488,7 @@ export function fillConditionValue({
     } else {
       // 文字
       condition.values = (_.get(filterControl, 'options') || [])
-        .filter(option => option.value.indexOf(value) > -1)
+        .filter(option => requiredOptionText(option.value).indexOf(String(value)) > -1)
         .map(option => option.key);
     }
   } else if (dataType === 29 || dataType === 35) {
@@ -1429,19 +1496,23 @@ export function fillConditionValue({
       const store = dynamicControl.store;
       const state = isRelateRecordTableStore(store) ? store.getState() : undefined;
 
-      if (isRelateRecordTableControl(dynamicControl) && dynamicControl['rcValue']) {
-        let rcValues = safeParse(dynamicControl['rcValue'], 'array') || [];
+      const rcValue: unknown = dynamicControl.rcValue;
+      if (isRelateRecordTableControl(dynamicControl) && rcValue) {
+        const parsed: unknown = safeParse(rcValue, 'array');
+        let rcValues = requiredArray(parsed || []);
         const { addedRecordIds = [], deletedRecordIds = [] } = state?.changes || {};
         rcValues = rcValues.concat(addedRecordIds).filter(r => !_.includes(deletedRecordIds, r));
         condition.values = _.uniq(rcValues);
       } else {
-        let relateValues = state ? state.records : _.isObject(value) ? value.records : JSON.parse(value);
+        let relateValues: unknown = state ? state.records : relationRows(value);
 
         if (!_.isArray(relateValues)) {
           relateValues = [];
         }
 
-        condition.values = relateValues.map(r => r.sid || r.rowid).filter(_.identity);
+        condition.values = requiredArray(relateValues)
+          .map(r => parsedFilterProperty(r, 'sid') || parsedFilterProperty(r, 'rowid'))
+          .filter(_.identity);
       }
     } catch (err) {
       console.log(err);
@@ -1449,32 +1520,32 @@ export function fillConditionValue({
     }
 
     if (_.isEmpty(condition.values)) {
-      return;
+      return undefined;
     }
   } else if (dataType === 26) {
     try {
-      const users = JSON.parse(value);
-      condition.values = users.map(user => user.accountId).filter(_.identity);
+      const users = requiredArray(filterJSON(value));
+      condition.values = users.map(user => parsedFilterProperty(user, 'accountId')).filter(_.identity);
     } catch (err) {
       console.log(err);
       condition.values = [];
     }
 
     if (_.isEmpty(condition.values)) {
-      return;
+      return undefined;
     }
   } else if (dataType === 27) {
     try {
-      const groups = JSON.parse(value);
-      condition.values = groups.map(group => group.departmentId);
+      const groups = requiredArray(filterJSON(value));
+      condition.values = groups.map(group => parsedFilterProperty(group, 'departmentId'));
     } catch (err) {
       console.log(err);
       condition.values = [];
     }
   } else if (dataType === 48) {
     try {
-      const groups = JSON.parse(value);
-      condition.values = groups.map(group => group.organizeId);
+      const groups = requiredArray(filterJSON(value));
+      condition.values = groups.map(group => parsedFilterProperty(group, 'organizeId'));
     } catch (err) {
       console.log(err);
       condition.values = [];
@@ -1485,37 +1556,38 @@ export function fillConditionValue({
       dataType,
     )
   ) {
-    condition.values = [safeParse(value, '{}').code];
+    const parsed: unknown = safeParse(value, '{}');
+    condition.values = [parsedFilterProperty(parsed, 'code')];
   } else if (dataType === 28 || dataType === 33) {
     if (_.includes([FILTER_CONDITION_TYPE.EQ, FILTER_CONDITION_TYPE.NE], condition.filterType)) {
       condition.values = [value];
     } else {
-      condition.value = value;
+      condition.value = requiredFilterScalar(value);
     }
   }
 
   return condition;
 }
 
-export function formatDateValue({ type, value }) {
+export function formatDateValue({ type, value }: { type?: number | undefined; value?: FilterScalar }) {
   if (type === FILTER_CONDITION_TYPE.DATE_GT) {
     // 晚于
-    return moment(value || undefined)
+    return filterMoment(value || undefined)
       .endOf('day')
       .format('YYYY-MM-DD HH:mm:ss');
   } else if (type === FILTER_CONDITION_TYPE.DATE_LT) {
     // 早于
-    return moment(value || undefined)
+    return filterMoment(value || undefined)
       .startOf('day')
       .format('YYYY-MM-DD HH:mm:ss');
   } else if (type === FILTER_CONDITION_TYPE.DATE_LTE) {
     // 早于等于
-    return moment(value || undefined)
+    return filterMoment(value || undefined)
       .endOf('day')
       .format('YYYY-MM-DD HH:mm:ss');
   } else if (type === FILTER_CONDITION_TYPE.DATE_GTE) {
     // 晚于等于
-    return moment(value || undefined)
+    return filterMoment(value || undefined)
       .startOf('day')
       .format('YYYY-MM-DD HH:mm:ss');
   } else {
@@ -1523,7 +1595,7 @@ export function formatDateValue({ type, value }) {
   }
 }
 
-export const getTabTypeBySelectUser = (control = {}) => {
+export const getTabTypeBySelectUser = (control: FormControl = {}) => {
   const { advancedSetting = {}, sourceControl = {}, controlId } = control;
   return _.includes(['caid', 'ownerid', 'daid', 'uaid'], controlId)
     ? 3
@@ -1532,7 +1604,7 @@ export const getTabTypeBySelectUser = (control = {}) => {
       : 1;
 };
 
-export function formatQuickFilterValueToControlValue(type, condition) {
+export function formatQuickFilterValueToControlValue(type: number | undefined, condition: FilterValues) {
   if (
     _.includes(
       [
@@ -1548,7 +1620,7 @@ export function formatQuickFilterValueToControlValue(type, condition) {
       type,
     )
   ) {
-    return (_.get(condition, 'values') || [])[0];
+    return requiredFilterScalar((condition.values || [])[0]);
   }
 
   if (
@@ -1576,7 +1648,7 @@ export function formatQuickFilterValueToControlValue(type, condition) {
   ) {
     return JSON.stringify(
       (_.get(condition, 'values') || []).map(row => ({
-        sid: row.rowid,
+        sid: parsedFilterProperty(row, 'rowid'),
       })),
     );
   }
@@ -1610,13 +1682,13 @@ export function formatQuickFilterValueToControlValue(type, condition) {
       type,
     )
   ) {
-    return;
+    return undefined;
   }
 
-  return;
+  return undefined;
 }
 
-export function getType(control) {
+export function getType(control: FormControl) {
   let { type } = control;
 
   if (type === WIDGETS_TO_API_TYPE_ENUM.SHEET_FIELD && control) {
@@ -1638,7 +1710,12 @@ export function getType(control) {
   return type;
 }
 
-export function validate(condition) {
+export function validate(
+  condition: Pick<
+    FilterWireFields,
+    'dataType' | 'filterType' | 'values' | 'value' | 'minValue' | 'maxValue' | 'dateRange'
+  >,
+) {
   let dataType = getType({ type: condition.dataType });
 
   if (
@@ -1680,8 +1757,8 @@ export function validate(condition) {
       dataType,
     )
   ) {
-    const isNumberStr = value => {
-      return value !== '' && typeof +value === 'number' && !isNaN(+value);
+    const isNumberStr = (value: FilterScalar) => {
+      return value !== '' && typeof Number(value) === 'number' && !isNaN(Number(value));
     };
 
     return condition.filterType === FILTER_CONDITION_TYPE.BETWEEN
@@ -1726,7 +1803,7 @@ export function validate(condition) {
 const SHEET_FILTER_URL_KEY = 'sf';
 
 // 把选中的已保存筛选器 id 写入 url，刷新后可还原选中；不传 filterId 时仅清除该参数
-export function saveSheetFilterIdToUrl(filterId?) {
+export function saveSheetFilterIdToUrl(filterId?: string) {
   if (typeof window === 'undefined' || !window.history) return;
   try {
     const search = new URLSearchParams(window.location.search);
@@ -1758,4 +1835,51 @@ export function getSheetFilterIdFromUrl() {
     console.error('getSheetFilterIdFromUrl error', err);
     return null;
   }
+}
+
+function requiredDataSource(control: FormControl | undefined): string {
+  if (control?.dataSource === undefined) throw new TypeError('Missing filter control data source');
+  return control.dataSource;
+}
+function filterGroupType(type: number | undefined): number | undefined {
+  const key = getTypeKey(type);
+  return key === undefined ? undefined : CONTROL_FILTER_WHITELIST[key].value;
+}
+
+function filterMoment(value: unknown): moment.Moment {
+  const result: unknown = Reflect.apply(moment, undefined, [value]);
+  if (!moment.isMoment(result)) throw new TypeError('Invalid filter date factory result');
+  return result;
+}
+function requiredGroupFilters(item: FilterWireItem): FilterWireItem[] {
+  if (!item.isGroup || !item.groupFilters) throw new TypeError('Missing filter group conditions');
+  return item.groupFilters;
+}
+function requiredArray(value: unknown): unknown[] {
+  if (!Array.isArray(value)) throw new TypeError('Invalid worksheet filter value array');
+  return value;
+}
+function relationRows(value: unknown): unknown[] {
+  return requiredArray(
+    typeof value === 'object' && value !== null ? parsedFilterProperty(value, 'records') : filterJSON(value),
+  );
+}
+function requiredFilterScalar(value: unknown): FilterScalar {
+  if (!filterScalar(value)) throw new TypeError('Invalid worksheet filter scalar value');
+  return value;
+}
+function requiredDateString(value: unknown): string {
+  if (typeof value !== 'string') throw new TypeError('Invalid worksheet filter date string');
+  return value;
+}
+
+function selectedOptionValue(value: unknown): string | string[] | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value) && Array.from(value).every((item): item is string => typeof item === 'string')) return value;
+  throw new TypeError('Invalid selected filter options value');
+}
+function requiredOptionText(value: string | undefined): string {
+  if (value === undefined) throw new TypeError('Missing filter option text');
+  return value;
 }

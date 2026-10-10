@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import type { FormControl } from 'src/utils/controlTypes';
 
 export const FILTER_TYPE = {
   PERSONAL: 1,
@@ -78,7 +79,7 @@ export const DATE_COMPARE_RANGE_LABELS: Record<number, string> = {
   102: _l('...后'),
 };
 
-export function getDateCompareRangeValues(type) {
+export function getDateCompareRangeValues(type: number | undefined) {
   if (_.includes([FILTER_CONDITION_TYPE.DATE_LT, FILTER_CONDITION_TYPE.DATE_LTE], type)) {
     return DATE_COMPARE_PAST_RANGE_VALUES;
   }
@@ -245,7 +246,9 @@ export const DATE_RANGE_TYPE = {
   QUARTER: 11,
 };
 
-export function getControlSelectType(control) {
+export function getControlSelectType(
+  control: Pick<FormControl, 'type' | 'enumDefault' | 'controlId'> | null | undefined,
+) {
   const isOptionsSingle = control && (control.type === 9 || control.type === 11);
   const isOptionsMultiple = control && control.type === 10;
   // 人员
@@ -269,7 +272,11 @@ export function getControlSelectType(control) {
   return { isMultiple, isSingle };
 }
 
-export function getFilterTypeLabel(typeKey: string | undefined, type, control) {
+export function getFilterTypeLabel(
+  typeKey: string | undefined,
+  type: number | undefined,
+  control: Pick<FormControl, 'type' | 'enumDefault' | 'controlId'> | null | undefined,
+) {
   const isNumber = typeKey === 'NUMBER';
   const isDate = typeKey === 'DATE';
   const isCascader = control && control.type === 35;

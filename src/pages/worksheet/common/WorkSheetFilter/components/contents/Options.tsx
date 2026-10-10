@@ -5,8 +5,21 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { CityPicker } from 'ming-ui';
 import { quickSelectDept, quickSelectRole } from 'ming-ui/functions';
+import type { FormControl } from 'src/utils/controlTypes';
 import { FILTER_CONDITION_TYPE } from '../../enum';
+import {
+  areas,
+  departments,
+  parsedSelection,
+  roles,
+  searchChange,
+  selectionItem,
+  selectionItems,
+} from './selectionBoundary';
+import type { OptionsState, SelectionItem, SelectionProps } from './selectionTypes';
 import TagCon from './TagCon';
+
+export type { SelectionProps } from './selectionTypes';
 
 const SCORE_TEXT = [
   _l('一级'),
@@ -20,8 +33,9 @@ const SCORE_TEXT = [
   _l('九级'),
   _l('十级'),
 ];
-export default class Options extends Component<any, any> {
+export default class Options extends Component<SelectionProps, OptionsState> {
   declare con: HTMLDivElement | null | undefined;
+  declare tempArea: SelectionItem | undefined;
 
   static override propTypes = {
     disabled: PropTypes.bool,
@@ -33,7 +47,7 @@ export default class Options extends Component<any, any> {
   static defaultProps = {
     folded: true,
   };
-  constructor(props) {
+  constructor(props: SelectionProps) {
     super(props);
     this.state = {
       selectedOptions: this.getDefaultSelectedOptions(props.fullValues, props.control),
@@ -42,7 +56,7 @@ export default class Options extends Component<any, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: SelectionProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.fullValues, prevProps.fullValues)) {
         this.setState({
@@ -52,17 +66,18 @@ export default class Options extends Component<any, any> {
     }
   }
 
-  getDefaultSelectedOptions(values, control) {
+  getDefaultSelectedOptions(values: string[] | undefined, control: FormControl): SelectionItem[] {
     values = values || [];
     if (_.includes([19, 23, 24], control.type)) {
-      return values.map(value => JSON.parse(value));
+      return values.map(value => parsedSelection(value));
     } else if (control.type === 27 || control.type === 48) {
-      return values.map(value => JSON.parse(value));
+      return values.map(value => parsedSelection(value));
     } else if (control.type === 28) {
       return values
         .filter(v => !_.isEmpty(v))
         .map(i => {
-          if (_.isObject(safeParse(i))) return safeParse(i);
+          const parsed: unknown = safeParse(i);
+          if (_.isObject(parsed)) return selectionItem(parsed);
           return {
             id: i,
             name: SCORE_TEXT[Number(i) - 1],
@@ -72,7 +87,10 @@ export default class Options extends Component<any, any> {
       return values.length
         ? _.compact(
             values.map(value =>
-              _.find(control.options, option => option.key === (value.startsWith('{') ? safeParse(value).id : value)),
+              _.find(
+                control.options,
+                option => option.key === (value.startsWith('{') ? selectionItem(safeParse(value)).id : value),
+              ),
             ),
           ).map(option => ({
             id: option.key,
@@ -83,7 +101,7 @@ export default class Options extends Component<any, any> {
       return [];
     }
   }
-  getAreaLevel(enumDefault2: number, filterType) {
+  getAreaLevel(enumDefault2: number | undefined, filterType: number | undefined) {
     const isAreaContain = _.includes([FILTER_CONDITION_TYPE.LIKE, FILTER_CONDITION_TYPE.NCONTAIN], filterType);
 
     if (isAreaContain) {
@@ -93,11 +111,12 @@ export default class Options extends Component<any, any> {
     return enumDefault2;
   }
 
-  onFetchData = _.debounce(value => {
+  onFetchData = _.debounce((value: string) => {
     this.setState({ keywords: value });
   }, 500);
 
-  addItem = (item, { clearSelected } = {}) => {
+  addItem = (value: SelectionItem | SelectionItem[], { clearSelected }: { clearSelected?: boolean } = {}) => {
+    const item = Array.isArray(value) ? selectionItems(value) : selectionItem(value);
     this.setState(
       {
         selectedOptions: clearSelected
@@ -115,7 +134,7 @@ export default class Options extends Component<any, any> {
     );
   };
 
-  updateItem = (id, item) => {
+  updateItem = (id: SelectionItem['id'], item: SelectionItem) => {
     const newOptions = this.state.selectedOptions.map(option =>
       option.id === id ? _.assign({}, option, item) : option,
     );
@@ -133,7 +152,7 @@ export default class Options extends Component<any, any> {
   };
 
   clearTemp = () => {
-    const newOptions = this.state.selectedOptions.map(option => _.omit(option, ['temp']));
+    const newOptions = this.state.selectedOptions.map(option => selectionItem(_.omit(option, ['temp'])));
     this.setState(
       {
         selectedOptions: newOptions,
@@ -147,7 +166,8 @@ export default class Options extends Component<any, any> {
     );
   };
 
-  removeItem = item => {
+  removeItem = (value: unknown) => {
+    const item = selectionItem(value);
     this.setState(
       {
         selectedOptions: this.state.selectedOptions.filter(seletedOption => item.id !== seletedOption.id),
@@ -188,7 +208,8 @@ export default class Options extends Component<any, any> {
             commcountries={commcountries}
             projectId={projectId}
             level={areaLevel}
-            callback={area => {
+            callback={(value: unknown) => {
+              const area = areas(value);
               const last = _.last(area);
               search && this.setState({ keywords: undefined, search: '' });
               if (last) {
@@ -217,7 +238,13 @@ export default class Options extends Component<any, any> {
               needInput={true}
               search={search}
               keywords={keywords}
-              onChangeInput={value => this.setState(value)}
+              onChangeInput={(value: unknown) => {
+                const change = searchChange(value);
+                this.setState(previous => ({
+                  keywords: 'keywords' in change ? change.keywords : previous.keywords,
+                  search: 'search' in change ? change.search : previous.search,
+                }));
+              }}
             />
           </CityPicker>
         </div>
@@ -240,7 +267,8 @@ export default class Options extends Component<any, any> {
               isIncludeRoot: false,
               immediate: false,
               showCurrentUserDept: !_.includes(['rule', 'portal'], from),
-              selectFn: data => {
+              selectFn: value => {
+                const data = departments(value);
                 if (!data.length) {
                   return;
                 }
@@ -277,7 +305,8 @@ export default class Options extends Component<any, any> {
               showCurrentOrgRole: !_.includes(['rule', 'portal'], from),
               showCompanyName: true,
               immediate: false,
-              onSave: data => {
+              onSave: (value: unknown) => {
+                const data = roles(value);
                 if (!data.length) {
                   return;
                 }
@@ -303,15 +332,15 @@ export default class Options extends Component<any, any> {
           [FILTER_CONDITION_TYPE.ARREQ, FILTER_CONDITION_TYPE.ARRNE, FILTER_CONDITION_TYPE.EQ_FOR_SINGLE],
           type,
         ) && controlIsSingle;
-      let options = [];
+      let options: SelectionItem[] = [];
 
       if (_.includes([9, 10, 11], control.type)) {
-        options = control.options
+        options = (control.options || [])
           .filter(option => !option.isDeleted || _.find(selectedOptions, o => o.id === option.key))
-          .sort((a, b) => a.index - b.index)
+          .sort((a, b) => Number(a.index) - Number(b.index))
           .map(option => ({ id: option.key, name: option.value }));
       } else if (control.type === 28) {
-        options = Array.from({ length: (control.advancedSetting || {}).max }).map((_v, i) => ({
+        options = Array.from({ length: Number((control.advancedSetting || {}).max) }).map((_v, i) => ({
           id: i + 1 + '',
           name: SCORE_TEXT[i],
         }));

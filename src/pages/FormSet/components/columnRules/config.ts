@@ -23,7 +23,6 @@ import {
 import { getUnUniqName } from 'src/utils/common';
 import { getSwitchItemNames } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
-import type { SettingFilter } from 'src/pages/widgetConfig/util/advancedSettingBoundary';
 
 //初始规则数据
 export const originRuleItem = {
@@ -339,19 +338,19 @@ export function getActionLabelByType(type) {
 }
 
 //判断规则是否有效并能否提交
-export function checkConditionCanSave(filters: SettingFilter[] = []) {
+export function checkConditionCanSave(filters: readonly unknown[] = []) {
   if (_.isEmpty(filters)) return false;
-  const formatFilter: { isGroup?: boolean | undefined; conditionsGroups?: Array<{ groupFilters?: SettingFilter[] | undefined; conditions?: SettingFilter[] | undefined }> | undefined } = formatOriginFilterGroupValue({ items: filters }) || {};
+  const formatFilter = formatOriginFilterGroupValue({ items: filters });
   return (formatFilter.conditionsGroups || []).every(data => {
     const tempData = (formatFilter.isGroup ? data.groupFilters : data.conditions) || [];
     if (_.isEmpty(tempData)) return false;
     return tempData.every(i => {
       const conditionGroupKey = getTypeKey(i.dataType);
-      const conditionGroup: { value?: number | undefined } = CONTROL_FILTER_WHITELIST[conditionGroupKey] || {};
+      const conditionGroup = conditionGroupKey === undefined ? undefined : CONTROL_FILTER_WHITELIST[conditionGroupKey];
       const conditionGroupType = getConditionType({
         ...i,
         controlType: i.dataType,
-        conditionGroupType: conditionGroup.value,
+        conditionGroupType: conditionGroup?.value,
         type: i.filterType,
       });
       return checkConditionAvailable({

@@ -4,20 +4,21 @@ import PropTypes from 'prop-types';
 import { RadioGroup } from 'ming-ui';
 import { getSwitchItemNames } from 'src/utils/control';
 import { FILTER_CONDITION_TYPE } from '../../enum';
+import type { YesNoFilterProps } from '../../primitiveTypes';
 
-export default class YesNo extends Component<any, any> {
+export default class YesNo extends Component<YesNoFilterProps, Record<string, never>> {
   static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
     control: PropTypes.shape({}),
     type: PropTypes.number,
   };
-  constructor(props) {
+  constructor(props: YesNoFilterProps) {
     super(props);
     this.state = {};
   }
 
-  getRadioGroupData = () => {
+  getRadioGroupData = (_legacyType?: number) => {
     const { control } = this.props;
 
     if (control.type === 36) {
@@ -38,7 +39,7 @@ export default class YesNo extends Component<any, any> {
     ];
   };
 
-  getCheckedByFilterType = type => {
+  getCheckedByFilterType = (type: number | undefined) => {
     const { control } = this.props;
 
     if (control.type === 36) {
@@ -48,7 +49,7 @@ export default class YesNo extends Component<any, any> {
     return type === FILTER_CONDITION_TYPE.HASVALUE ? 1 : 0;
   };
 
-  getFilterTypeByCheckedValue = (value: number) => {
+  getFilterTypeByCheckedValue = (value: number | undefined) => {
     const { control } = this.props;
 
     if (control.type === 36) {

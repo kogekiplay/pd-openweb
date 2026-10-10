@@ -5,9 +5,12 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { SYSTEM_CONTROLS } from 'worksheet/constants/enum';
 import { filterOnlyShowField, isOtherShowFeild } from 'src/pages/widgetConfig/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import AddCondition from '../components/AddCondition';
 import Condition from '../components/Condition';
 import { CONTROL_FILTER_WHITELIST } from '../enum';
+import { filterConditionPatch } from '../filterModelBoundary';
+import type { FilterCondition, FilterWireCondition } from '../filterModelTypes';
 import {
   checkConditionAvailable,
   formatOriginFilterValue,
@@ -15,11 +18,14 @@ import {
   getTypeKey,
   redefineComplexControl,
 } from '../util';
+import type { SingleFilterProps, SingleFilterState } from './filterProps';
+
+export type { SingleFilterProps, SingleFilterState } from './filterProps';
 
 // setting编辑字段，关联他表筛选/汇总 rule字段显示规则=> 不需要验证的from
 const noCheckConditionAvailable = ['relateSheet', 'rule', 'subTotal', 'custombutton'];
 
-export default class SingleFilter extends Component<any, any> {
+export default class SingleFilter extends Component<SingleFilterProps, SingleFilterState> {
   static override propTypes = {
     isRules: PropTypes.bool,
     controllable: PropTypes.bool,
@@ -36,7 +42,7 @@ export default class SingleFilter extends Component<any, any> {
     conditions: [],
     onConditionsChange: () => {},
   };
-  constructor(props) {
+  constructor(props: SingleFilterProps) {
     super(props);
     const formateddata = formatOriginFilterValue({ items: props.conditions });
     this.state = {
@@ -45,7 +51,7 @@ export default class SingleFilter extends Component<any, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: SingleFilterProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.id && this.props.id !== prevProps.id) {
         const formateddata = formatOriginFilterValue({
@@ -58,7 +64,7 @@ export default class SingleFilter extends Component<any, any> {
       }
     }
   }
-  addCondition = control => {
+  addCondition = (control: FormControl | null | undefined) => {
     if (!control) {
       alert(_l('字段不存在'), 3);
       return;
@@ -75,7 +81,7 @@ export default class SingleFilter extends Component<any, any> {
       this.handleConditionsChange(newConditions);
     }
   };
-  updateCondition(index: number, value) {
+  updateCondition(index: number, value: Partial<FilterCondition>) {
     const { from = '' } = this.props;
     const { conditions } = this.state;
     const newConditions = conditions.map((c, i) => (i === index ? Object.assign({}, c, value) : c));
@@ -104,10 +110,10 @@ export default class SingleFilter extends Component<any, any> {
     });
     this.handleConditionsChange(newConditions);
   }
-  handleConditionsChange(conditions, relationType?) {
+  handleConditionsChange(conditions: readonly FilterCondition[], relationType?: number) {
     const { onConditionsChange, feOnly } = this.props;
-    const formatedConditions = conditions.map(condition => ({
-      controlId: condition.controlType === 25 ? condition.control.dataSource.slice(1, -1) : condition.controlId,
+    const formatedConditions: FilterWireCondition[] = conditions.map(condition => ({
+      controlId: condition.controlType === 25 ? this.currencySourceId(condition) : condition.controlId,
       dataType: condition.controlType === 25 ? 8 : condition.controlType,
       spliceType: _.isUndefined(relationType) ? this.state.relationType : relationType,
       filterType: condition.type,
@@ -129,12 +135,17 @@ export default class SingleFilter extends Component<any, any> {
       this.setState({ relationType });
     }
 
-    onConditionsChange(formatedConditions);
+    (onConditionsChange || SingleFilter.defaultProps.onConditionsChange)(formatedConditions);
   }
-  handleChangeRelationType(value) {
+  currencySourceId(condition: FilterCondition): string {
+    const dataSource = condition.control?.dataSource;
+    if (typeof dataSource !== 'string') throw new TypeError('Missing worksheet currency source');
+    return dataSource.slice(1, -1);
+  }
+  handleChangeRelationType(value: number | undefined) {
     this.handleConditionsChange(this.state.conditions, value);
   }
-  renderConditions(columns = []) {
+  renderConditions(columns: FormControl[] = []) {
     const {
       isRules,
       projectId,
@@ -176,26 +187,31 @@ export default class SingleFilter extends Component<any, any> {
           currentColumns={currentColumns}
           relateSheetList={relateSheetList} // 除去自身的本表的关联单条的数据
           globalSheetControls={globalSheetControls} //主记录的Controls
-          onChange={value => {
-            this.updateCondition(index, value);
+          onChange={(value: unknown) => {
+            this.updateCondition(index, filterConditionPatch(value));
           }}
           onDelete={() => {
             this.deleteCondition(index);
           }}
-          onUpdateFilter={value => {
-            this.handleChangeRelationType(value.relationType);
+          onUpdateFilter={(value: unknown) => {
+            this.handleChangeRelationType(this.relationTypeUpdate(value));
           }}
         />
       );
     });
   }
+  relationTypeUpdate(value: unknown): number | undefined {
+    if (!value || typeof value !== 'object') throw new TypeError('Invalid worksheet relation update');
+    const relationType: unknown = Reflect.get(value, 'relationType');
+    if (relationType === undefined) return undefined;
+    if (typeof relationType === 'number') return relationType;
+    throw new TypeError('Invalid worksheet relation type');
+  }
   override render() {
     const { from, canEdit, showSystemControls, filterColumnClassName, offset } = this.props;
     let { columns = [] } = this.props;
     const { conditions } = this.state;
-    const filterWhiteKeys = _.flatten(
-      Object.keys(CONTROL_FILTER_WHITELIST).map(key => CONTROL_FILTER_WHITELIST[key].keys),
-    );
+    const filterWhiteKeys = _.flatten(Object.values(CONTROL_FILTER_WHITELIST).map(group => group.keys));
 
     if (showSystemControls) {
       columns = columns

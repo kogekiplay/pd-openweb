@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Dialog, Icon, ScrollView } from 'ming-ui';
 import FilterConfig from 'worksheet/common/WorkSheetFilter/common/FilterConfig';
 import { checkConditionCanSave } from 'src/pages/FormSet/components/columnRules/config';
+import type { FilterSaveItem } from 'src/pages/worksheet/common/WorkSheetFilter/filterModelTypes';
 import Button from '../../../Button';
 
 const FilterData = styled.div`
@@ -69,7 +70,7 @@ const FieldConditions = props => {
     setDelayOpenFilter,
     onSave,
   } = props;
-  const [filter, setFilter] = useState(null);
+  const [filter, setFilter] = useState<FilterSaveItem[] | null>(null);
   const [hasInvalidConditions, setHasInvalidConditions] = useState(false);
 
   const handleFilterDataClick = e => {

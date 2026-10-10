@@ -5,13 +5,17 @@ import FilterConfig from 'src/pages/worksheet/common/WorkSheetFilter/common/Filt
 import { CONTROL_FILTER_WHITELIST } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
 import { getTypeKey, redefineComplexControl } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import 'src/pages/worksheet/common/WorkSheetFilter/WorkSheetFilter.less';
+import type { FormControl } from 'src/utils/controlTypes';
 import { SYSTEM_CONTROL } from '../../../../config/widget';
 import { filterControlsFromAll } from '../../../../util';
 import { getAdvanceSetting, handleAdvancedSettingChange, isSingleRelateSheet } from '../../../../util/setting';
 import EmptyRuleConfig from '../../EmptyRuleConfig';
-import type { FormControl } from 'src/utils/controlTypes';
 
-const formatCondition = ({ filters = [], relationControls = [], ruleValue }) => {
+const formatCondition = ({ filters = [], relationControls = [], ruleValue }: {
+  filters?: readonly unknown[] | undefined;
+  relationControls?: FormControl[] | undefined;
+  ruleValue: unknown;
+}) => {
   function formatCondition(condition) {
     if (condition.groupFilters) {
       if (_.isEmpty(condition.groupFilters)) return null;
@@ -92,7 +96,10 @@ export default function FilterDialog(props) {
   );
   const currentColumns = allControls.map(redefineComplexControl);
 
-  const dealFilters = (newConditions, value) => {
+  const dealFilters = (
+    newConditions?: import('src/pages/worksheet/common/WorkSheetFilter/filterModelTypes').FilterWireItem[],
+    value?: unknown,
+  ) => {
     const newFilters = formatCondition({
       filters: newConditions || filters,
       relationControls: controls,

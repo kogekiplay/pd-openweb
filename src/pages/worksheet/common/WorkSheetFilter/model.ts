@@ -1,8 +1,18 @@
-import update from 'immutability-helper';
 import _, { get } from 'lodash';
 import worksheetAjax from 'src/api/worksheet';
-import type { ReduxAction } from 'src/redux/types';
+import type { FormControl } from 'src/utils/controlTypes';
 import { FILTER_RELATION_TYPE, FILTER_TYPE } from './enum';
+import { savedFilter } from './filterModelBoundary';
+import type {
+  EditingFilter,
+  FilterAction,
+  FilterCondition,
+  FilterConditionsGroup,
+  FilterDispatch,
+  FilterSaveItem,
+  FilterState,
+  SaveFilterOptions,
+} from './filterModelTypes';
 import {
   checkConditionAvailable,
   formatConditionForSave,
@@ -10,7 +20,19 @@ import {
   getDefaultCondition,
 } from './util';
 
-export const initialState = {
+export type {
+  EditingFilter,
+  FilterAction,
+  FilterCondition,
+  FilterConditionsGroup,
+  FilterDispatch,
+  FilterState,
+  FilterWireItem,
+  FilterSaveItem,
+  SavedFilter,
+} from './filterModelTypes';
+
+export const initialState: FilterState = {
   filters: [],
   isGroupFilter: false,
   loading: true,
@@ -19,31 +41,32 @@ export const initialState = {
 
 // noCheck：跳过「条件是否填完整」的校验，原样存下去
 // returnFullValues：本函数自己不读，原样透传给 formatConditionForSave
-export function formatForSave(filter, options: { noCheck?: boolean; returnFullValues?: boolean } = {}) {
-  let items;
+export function formatForSave(
+  filter: EditingFilter,
+  options: { noCheck?: boolean | undefined; returnFullValues?: boolean | undefined } = {},
+): FilterSaveItem[] {
+  let items: FilterSaveItem[];
 
   if (filter.isGroup) {
-    items = update(filter.conditionsGroups || [], {
-      $apply: conditionsGroups =>
-        conditionsGroups
-          .map(conditionsGroup => ({
-            spliceType: conditionsGroup.spliceType,
-            isGroup: true,
-            groupFilters: conditionsGroup.conditions
-              .filter(condition => (options.noCheck ? true : checkConditionAvailable(condition)))
-              .map(condition => ({
-                ...formatConditionForSave(condition, conditionsGroup.conditionSpliceType, options),
-              })),
-          }))
-          .filter(conditionsGroup => options.noCheck || !_.isEmpty(conditionsGroup.groupFilters)),
-    });
+    items = (filter.conditionsGroups || [])
+      .map((conditionsGroup): import('./filterModelTypes').FilterSavedGroup => ({
+        spliceType: conditionsGroup.spliceType,
+        isGroup: true,
+        groupFilters: conditionsGroup.conditions
+          .filter(condition => (options.noCheck ? true : checkConditionAvailable(condition)))
+          .map(condition => ({
+            ...formatConditionForSave(condition, conditionsGroup.conditionSpliceType, options),
+          })),
+      }))
+      .filter(conditionsGroup => options.noCheck || !_.isEmpty(conditionsGroup.groupFilters));
   } else {
-    const conditions = _.get(filter, 'conditionsGroups.0.conditions');
+    const firstGroup = filter.conditionsGroups?.[0];
+    const conditions = firstGroup?.conditions;
 
-    if (!_.isEmpty(conditions)) {
+    if (conditions && conditions.length) {
       items = conditions
         .filter(condition => (options.noCheck ? true : checkConditionAvailable(condition)))
-        .map(condition => formatConditionForSave(condition, filter.conditionsGroups[0].conditionSpliceType, options));
+        .map(condition => formatConditionForSave(condition, firstGroup?.conditionSpliceType, options));
     } else {
       items = [];
     }
@@ -52,18 +75,32 @@ export function formatForSave(filter, options: { noCheck?: boolean; returnFullVa
   return items;
 }
 
-class Actions {
-  constructor(dispatch) {
+export class Actions {
+  readonly dispatch: FilterDispatch;
+  private error: FilterState['error'];
+  constructor(dispatch: FilterDispatch, state?: FilterState) {
     this.dispatch = dispatch;
+    this.error = state?.error;
   }
-  init(value) {
+  private failure(message: string): void {
+    this.error = message;
+    this.dispatch({ type: 'UPDATE', value: { loading: false, error: message } });
+    alert(message, 3);
+  }
+  private recover(): Partial<FilterState> {
+    if (this.error === undefined) return {};
+    this.error = undefined;
+    return { error: undefined };
+  }
+  init(value: Partial<FilterState>) {
+    if (Object.hasOwn(value, 'error')) this.error = value.error;
     this.dispatch({
       type: 'INIT',
       value,
     });
   }
 
-  setActiveFilter = filter => {
+  setActiveFilter = (filter: EditingFilter) => {
     this.dispatch({
       type: 'UPDATE',
       value: {
@@ -73,27 +110,39 @@ class Actions {
     });
   };
 
-  loadFilters = (worksheetId: string, cb = () => {}) => {
-    if (!worksheetId) return;
-    worksheetAjax.getWorksheetFilters({ worksheetId }).then(data => {
-      let filters = data.map(formatOriginFilterGroupValue);
+  loadFilters = (worksheetId: string, cb: (filters: EditingFilter[]) => void = () => {}) => {
+    if (!worksheetId) return undefined;
+    return worksheetAjax
+      .getWorksheetFilters({ worksheetId })
+      .then((raw: unknown) => {
+        if (!Array.isArray(raw)) throw new TypeError('Invalid worksheet filter list');
+        let filters = Array.from(raw, formatOriginFilterGroupValue);
 
-      if (md.global.Account.isPortal) {
-        filters = filters.filter(o => o.type !== 2); // 外部门户 排除公共筛选
-      }
+        if (md.global.Account.isPortal) {
+          filters = filters.filter(o => o.type !== 2); // 外部门户 排除公共筛选
+        }
 
-      cb(filters);
-      this.dispatch({
-        type: 'UPDATE',
-        value: {
-          filters,
-          loading: false,
-        },
+        return filters;
+      })
+      .catch(() => {
+        this.failure(_l('加载失败，请重试'));
+        return undefined;
+      })
+      .then(filters => {
+        if (filters === undefined) return;
+        cb(filters);
+        this.dispatch({
+          type: 'UPDATE',
+          value: {
+            filters,
+            loading: false,
+            ...this.recover(),
+          },
+        });
       });
-    });
   };
 
-  addFilter = ({ defaultCondition } = {}) => {
+  addFilter = ({ defaultCondition }: { defaultCondition?: FilterCondition | undefined } = {}) => {
     const newFilter = {
       id: `new-${new Date().getTime().toString(16)}-${Math.random().toString(16).slice(2)}`,
       isGroup: true,
@@ -116,7 +165,7 @@ class Actions {
     });
   };
 
-  editFilter = filter => {
+  editFilter = (filter: EditingFilter) => {
     this.dispatch({
       type: 'UPDATE',
       value: {
@@ -126,19 +175,19 @@ class Actions {
     });
   };
 
-  changeEditingFilter = (value = {}) => {
+  changeEditingFilter = (value: Partial<EditingFilter> = {}) => {
     this.dispatch({
       type: 'CHANGE_EDITING_FILTER',
       value,
     });
   };
 
-  addCondition = (control, groupIndex = 0, from) => {
+  addCondition = (control: FormControl, groupIndex = 0, from?: string | number) => {
     const condition = getDefaultCondition(control, from);
     setTimeout(() => {
       const dom = document.querySelector('.keyStr_' + condition.keyStr + ' .ant-select-content');
 
-      if (dom) {
+      if (dom instanceof HTMLElement) {
         dom.click();
       }
     }, 100);
@@ -149,7 +198,7 @@ class Actions {
     });
   };
 
-  updateCondition = (value, groupIndex = 0, conditionIndex) => {
+  updateCondition = (value: Partial<FilterCondition>, groupIndex = 0, conditionIndex: number) => {
     this.dispatch({
       type: 'UPDATE_CONDITION',
       conditionIndex,
@@ -158,7 +207,7 @@ class Actions {
     });
   };
 
-  deleteCondition = (conditionIndex, groupIndex = 0) => {
+  deleteCondition = (conditionIndex: number, groupIndex = 0) => {
     this.dispatch({
       type: 'DELETE_CONDITION',
       conditionIndex,
@@ -179,7 +228,7 @@ class Actions {
     });
   };
 
-  addGroup = spliceType => {
+  addGroup = (spliceType?: number) => {
     this.dispatch({
       type: 'ADD_GROUP',
       group: {
@@ -190,14 +239,14 @@ class Actions {
     });
   };
 
-  deleteGroup = groupIndex => {
+  deleteGroup = (groupIndex: number) => {
     this.dispatch({
       type: 'DELETE_GROUP',
       groupIndex,
     });
   };
 
-  updateConditionsGroup = (value = {}, groupIndex = 0) => {
+  updateConditionsGroup = (value: Partial<FilterConditionsGroup> = {}, groupIndex: number | '*' = 0) => {
     this.dispatch({
       type: 'UPDATE_CONDITIONS_GROUP',
       groupIndex,
@@ -205,39 +254,36 @@ class Actions {
     });
   };
 
-  copyFilter = ({ appId, worksheetId, filter, isCharge } = {}) => {
+  copyFilter = ({ appId, worksheetId, filter, isCharge }: SaveFilterOptions & { isCharge?: boolean | undefined }) => {
     const newFilter = {
       ...filter,
       id: undefined,
       type: isCharge && filter.type === FILTER_TYPE.PUBLIC ? FILTER_TYPE.PUBLIC : FILTER_TYPE.PERSONAL,
-      name: _l('%0-复制', filter.name),
+      name: _l('%0-复制', String(filter.name)),
     };
-    this.saveFilter({
+    return this.saveFilter({
       appId,
       worksheetId,
       filter: newFilter,
     });
   };
 
-  toggleFilterType = ({ appId, worksheetId, filter } = {}) => {
+  toggleFilterType = ({ appId, worksheetId, filter }: SaveFilterOptions) => {
     const newFilter = {
       ...filter,
       type: filter.type === FILTER_TYPE.PUBLIC ? FILTER_TYPE.PERSONAL : FILTER_TYPE.PUBLIC,
     };
-    this.saveFilter({
+    return this.saveFilter({
       appId,
       worksheetId,
       filter: newFilter,
     });
   };
 
-  saveFilter = (
-    { appId, worksheetId, filter }: { appId?: string; worksheetId?: string; [key: string]: any },
-    cb = () => {},
-  ) => {
+  saveFilter = ({ appId, worksheetId, filter }: SaveFilterOptions, cb: (filter: EditingFilter) => void = () => {}) => {
     const isNew = !filter.id || filter.id.startsWith('new');
     const items = formatForSave(filter);
-    worksheetAjax
+    return worksheetAjax
       .saveWorksheetFilter({
         appId,
         filterId: isNew ? undefined : filter.id,
@@ -246,42 +292,66 @@ class Actions {
         worksheetId,
         items: items,
       })
-      .then(data => {
-        if (isNew) {
+      .then((raw: unknown) => {
+        const data = savedFilter(raw);
+        if (!data.filterId) throw new TypeError('Missing saved worksheet filter ID');
+        return { data, saved: formatOriginFilterGroupValue(data) };
+      })
+      .catch(() => {
+        this.failure(_l('保存失败，请重试'));
+        return undefined;
+      })
+      .then(response => {
+        if (response === undefined) return;
+        const { data, saved } = response;
+        try {
+          if (isNew) {
+            this.dispatch({
+              type: 'ADD_FILTER',
+              filter: saved,
+            });
+            setTimeout(() => {
+              const editIconEl = document.querySelector('.filter_' + data.filterId + ' .editIcon');
+              if (editIconEl instanceof HTMLElement) editIconEl.click();
+            }, 100);
+          } else {
+            this.dispatch({
+              type: 'UPDATE_FILTER',
+              filter: saved,
+            });
+          }
+
+          cb(formatOriginFilterGroupValue(data));
+        } finally {
           this.dispatch({
-            type: 'ADD_FILTER',
-            filter: formatOriginFilterGroupValue(data),
-          });
-          setTimeout(() => {
-            const editIconEl = document.querySelector('.filter_' + data.filterId + ' .editIcon');
-            if (editIconEl) editIconEl.click();
-          }, 100);
-        } else {
-          this.dispatch({
-            type: 'UPDATE_FILTER',
-            filter: formatOriginFilterGroupValue(data),
+            type: 'UPDATE',
+            value: {
+              editingFilter: undefined,
+              needSave: false,
+              ...this.recover(),
+            },
           });
         }
-
-        cb(formatOriginFilterGroupValue(data));
-        this.dispatch({
-          type: 'UPDATE',
-          value: {
-            editingFilter: undefined,
-            needSave: false,
-          },
-        });
         alert(_l('保存成功！'));
       });
   };
 
-  deleteFilter = ({ appId, filter }: { appId?: string; [key: string]: any }) => {
-    worksheetAjax
+  deleteFilter = ({ appId, filter }: Pick<SaveFilterOptions, 'appId' | 'filter'>) => {
+    return worksheetAjax
       .deleteWorksheetFilter({
         appId,
         filterId: filter.id,
       })
+      .then((data: unknown) => {
+        if (typeof data !== 'boolean') throw new TypeError('Invalid worksheet filter delete response');
+        return data;
+      })
+      .catch(() => {
+        this.failure(_l('删除失败'));
+        return undefined;
+      })
       .then(data => {
+        if (data === undefined) return;
         if (data) {
           this.dispatch({
             type: 'DELETE_FILTER',
@@ -292,6 +362,7 @@ class Actions {
             value: {
               editingFilter: undefined,
               needSave: false,
+              ...this.recover(),
             },
           });
         } else {
@@ -300,12 +371,26 @@ class Actions {
       });
   };
 
-  sortFilters = (appId: string, worksheetId: string, sortedIds) => {
-    worksheetAjax.sortWorksheetFilters({
-      appId,
-      worksheetId,
-      filterIds: sortedIds,
-    });
+  sortFilters = (appId: string, worksheetId: string, sortedIds: string[]) => {
+    void worksheetAjax
+      .sortWorksheetFilters({
+        appId,
+        worksheetId,
+        filterIds: sortedIds,
+      })
+      .then((result: unknown) => {
+        if (result !== true) throw new TypeError('Invalid worksheet filter sort success');
+        return result;
+      })
+      .catch(() => {
+        this.failure(_l('排序失败，请重试'));
+        return undefined;
+      })
+      .then(result => {
+        if (result === undefined) return;
+        const recovered = this.recover();
+        if (Object.hasOwn(recovered, 'error')) this.dispatch({ type: 'UPDATE', value: recovered });
+      });
     this.dispatch({
       type: 'SORT_FILTERS',
       ids: sortedIds,
@@ -313,169 +398,137 @@ class Actions {
   };
 
   reset = () => {
+    this.error = undefined;
     this.dispatch({
       type: 'RESET',
     });
   };
 }
 
-export function createActions(dispatch) {
-  return new Actions(dispatch);
+export type FilterActions = Actions;
+export function createActions(dispatch: FilterDispatch, state?: FilterState) {
+  return new Actions(dispatch, state);
 }
 
-/**
- * 筛选面板的 reducer state。
- * lastAction 不是数据，是个变更戳（action.type + 时间），用来强制下游 effect 重跑。
- */
-export interface FilterState {
-  /** 已保存的筛选列表 */
-  filters?: unknown[];
-  /** 当前正在编辑的那条 */
-  editingFilter?: unknown;
-  /** 编辑版本号，effect 靠它判断"内容真的变了" */
-  editingFilterVersion?: number;
-  conditionsGroups?: unknown[];
-  loading?: boolean;
-  nameIsUpdated?: boolean;
-  needSave?: boolean;
-  lastAction?: string;
+function requiredFilters(state: FilterState): EditingFilter[] {
+  if (!state.filters) throw new TypeError('Missing saved worksheet filters');
+  return state.filters;
 }
-
-export function createReducer(state: FilterState = {}, action: ReduxAction) {
-  function updateWithLastAction(oldState, updates) {
-    if (_.isEmpty(updates)) return oldState;
-    return update(oldState || {}, { ...updates, lastAction: { $set: action.type + Date.now() } });
-  }
-
+function requiredGroups(filter: EditingFilter): FilterConditionsGroup[] {
+  if (!filter.conditionsGroups) throw new TypeError('Missing worksheet filter condition groups');
+  return filter.conditionsGroups;
+}
+function atGroup(filter: EditingFilter, index: number): FilterConditionsGroup {
+  const group = requiredGroups(filter)[index];
+  if (!group) throw new TypeError('Missing worksheet filter condition group');
+  return group;
+}
+export function createReducer(state: FilterState = {}, action: FilterAction): FilterState {
+  const withLastAction = (patch: Partial<FilterState>): FilterState => ({
+    ...state,
+    ...patch,
+    lastAction: action.type + Date.now(),
+  });
+  const editGroup = (index: number, fn: (group: FilterConditionsGroup) => FilterConditionsGroup): FilterState => {
+    const filter = state.editingFilter;
+    if (!filter) return state;
+    const editingFilterVersion = Math.random();
+    const stamp = action.type + Date.now();
+    const oldGroup = atGroup(filter, index);
+    const groups = requiredGroups(filter).slice();
+    groups[index] = fn(oldGroup);
+    return {
+      ...state,
+      needSave: true,
+      editingFilterVersion,
+      editingFilter: { ...filter, conditionsGroups: groups },
+      lastAction: stamp,
+    };
+  };
+  const editGroups = (
+    fn: (groups: FilterConditionsGroup[]) => FilterConditionsGroup[],
+    patch: Partial<EditingFilter> = {},
+  ): FilterState => {
+    const filter = state.editingFilter;
+    if (!filter) return state;
+    return withLastAction({
+      needSave: true,
+      editingFilterVersion: Math.random(),
+      editingFilter: { ...filter, ...patch, conditionsGroups: fn(requiredGroups(filter)) },
+    });
+  };
   switch (action.type) {
     case 'INIT':
     case 'UPDATE':
-      return updateWithLastAction(state, {
-        $apply: oldState => ({ ...oldState, ...(action.value || {}) }),
-      });
+      return withLastAction(action.value || {});
     case 'ADD_FILTER':
-      return updateWithLastAction(state, {
-        filters: { $push: [action.filter] },
-      });
+      return withLastAction({ filters: requiredFilters(state).concat(action.filter) });
     case 'UPDATE_FILTER':
-      return updateWithLastAction(state, {
-        filters: {
-          $apply: oldFilters => oldFilters.map(filter => (filter.id === action.filter.id ? action.filter : filter)),
-        },
+      return withLastAction({
+        filters: requiredFilters(state).map(filter => (filter.id === action.filter.id ? action.filter : filter)),
       });
     case 'DELETE_FILTER':
-      return updateWithLastAction(state, {
-        filters: {
-          $apply: oldFilters => oldFilters.filter(filter => filter.id !== action.filterId),
-        },
-      });
+      return withLastAction({ filters: requiredFilters(state).filter(filter => filter.id !== action.filterId) });
     case 'CHANGE_EDITING_FILTER':
-      return updateWithLastAction(state, {
-        needSave: { $set: !_.get(action, 'value.name') },
-        nameIsUpdated: { $set: !!_.get(action, 'value.name') },
-        editingFilterVersion: { $set: Math.random() },
-        editingFilter: {
-          $apply: filter => ({ ...(filter || {}), ...action.value }),
-        },
+      return withLastAction({
+        needSave: !action.value.name,
+        nameIsUpdated: !!action.value.name,
+        editingFilterVersion: Math.random(),
+        editingFilter: { ...(state.editingFilter || {}), ...action.value },
       });
     case 'ADD_CONDITION':
-      if (!state.editingFilter) return state;
-      return updateWithLastAction(state, {
-        needSave: { $set: true },
-        editingFilterVersion: { $set: Math.random() },
-        editingFilter: { conditionsGroups: { [action.groupIndex]: { conditions: { $push: [action.condition] } } } },
-      });
+      return editGroup(action.groupIndex, group => ({
+        ...group,
+        conditions: group.conditions.concat(action.condition),
+      }));
     case 'UPDATE_CONDITION':
-      if (!state.editingFilter) return state;
-      return updateWithLastAction(state, {
-        needSave: { $set: true },
-        editingFilterVersion: { $set: Math.random() },
-        editingFilter: {
-          conditionsGroups: {
-            [action.groupIndex]: {
-              conditions: {
-                [action.conditionIndex]: {
-                  $apply: condition => updateWithLastAction(condition, { $merge: action.value }),
-                },
-              },
-            },
-          },
-        },
+      return editGroup(action.groupIndex, group => {
+        const conditions = group.conditions.slice(),
+          old = conditions[action.conditionIndex];
+        if (!old) throw new TypeError('Missing worksheet filter condition');
+        conditions[action.conditionIndex] = { ...old, ...action.value, lastAction: action.type + Date.now() };
+        return { ...group, conditions };
       });
     case 'UPDATE_CONDITIONS_GROUP':
-      if (!state.editingFilter) return state;
-      return updateWithLastAction(state, {
-        needSave: { $set: true },
-        editingFilterVersion: { $set: Math.random() },
-        editingFilter: {
-          conditionsGroups:
-            action.groupIndex === '*'
-              ? {
-                  $apply: conditionsGroups =>
-                    conditionsGroups.map(conditionsGroup => ({
-                      ...conditionsGroup,
-                      ...(action.value || {}),
-                    })),
-                }
-              : {
-                  [action.groupIndex]: {
-                    $apply: conditionsGroup => updateWithLastAction(conditionsGroup, { $merge: action.value }),
-                  },
-                },
-        },
-      });
+      if (action.groupIndex === '*')
+        return editGroups(groups => groups.map(group => ({ ...group, ...(action.value || {}) })));
+      return editGroup(action.groupIndex, group => ({
+        ...group,
+        ...action.value,
+        lastAction: action.type + Date.now(),
+      }));
     case 'DELETE_CONDITION':
-      if (!state.editingFilter) return state;
-      return updateWithLastAction(state, {
-        needSave: { $set: true },
-        editingFilterVersion: { $set: Math.random() },
-        editingFilter: {
-          conditionsGroups: { [action.groupIndex]: { conditions: { $splice: [[action.conditionIndex, 1]] } } },
-        },
+      return editGroup(action.groupIndex, group => {
+        const conditions = group.conditions.slice();
+        conditions.splice(action.conditionIndex, 1);
+        return { ...group, conditions };
       });
     case 'DELETE_CONDITIONS_GROUP':
-      if (!state.editingFilter) return state;
-      return updateWithLastAction(state, {
-        needSave: { $set: true },
-        editingFilterVersion: { $set: Math.random() },
-        editingFilter: {
-          conditionsGroups: { $splice: [[action.groupIndex, 1]] },
-        },
+    case 'DELETE_GROUP':
+      return editGroups(groups => {
+        const result = groups.slice();
+        result.splice(action.groupIndex, 1);
+        return result;
       });
     case 'CLEAR_CONDITIONS':
       if (!state.editingFilter) return state;
-      return updateWithLastAction(state, {
-        needSave: { $set: true },
-        editingFilterVersion: { $set: Math.random() },
-        editingFilter: { conditionsGroups: { $set: [] } },
+      return withLastAction({
+        needSave: true,
+        editingFilterVersion: Math.random(),
+        editingFilter: { ...state.editingFilter, conditionsGroups: [] },
       });
     case 'UPDATE_FILTERS':
-      return updateWithLastAction(state, {
-        filters: { $set: action.value },
-      });
+      return withLastAction({ filters: action.value });
     case 'UPDATE_LOADING':
-      return updateWithLastAction(state, {
-        loading: { $set: action.value },
-      });
+      return withLastAction({ loading: action.value });
     case 'ADD_GROUP':
-      if (!state.editingFilter) return state;
-      return updateWithLastAction(state, {
-        needSave: { $set: true },
-        editingFilterVersion: { $set: Math.random() },
-        editingFilter: { isGroup: { $set: true }, conditionsGroups: { $push: [action.group] } },
-      });
-    case 'DELETE_GROUP':
-      if (!state.editingFilter) return state;
-      return updateWithLastAction(state, {
-        needSave: { $set: true },
-        editingFilterVersion: { $set: Math.random() },
-        editingFilter: { conditionsGroups: { $splice: [[action.groupIndex, 1]] } },
-      });
+      return editGroups(groups => groups.concat(action.group), { isGroup: true });
     case 'SORT_FILTERS':
-      return updateWithLastAction(state, {
-        filters: {
-          $apply: oldFilters => action.ids.map(id => _.find(oldFilters, { id })).filter(_.identity),
-        },
+      return withLastAction({
+        filters: action.ids.flatMap(id => {
+          const filter = requiredFilters(state).find(filter => filter.id === id);
+          return filter ? [filter] : [];
+        }),
       });
     case 'RESET':
       return {};
