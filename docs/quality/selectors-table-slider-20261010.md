@@ -17,3 +17,5 @@
 证据：`/private/tmp/hap-controls-release-20261010`、`/private/tmp/hap-slider-20261010`、`/private/tmp/hap-department-20261010`、`/private/tmp/hap-fixedtable-20261010`、`/private/tmp/hap-multiple-dropdown-20261010` 和 `/private/tmp/hap-controls-cross-review-20261010`。表格截图 `hap-fixedtable-20261010/browser/preview.png`。源码 42 个路径按 SHA256 冻结；清空搜索定点修复后两条路径重新冻结并独立复验。
 
 今天生产已于 16:52 更新至此前验证的 `9a1dd5378`。本批尚未部署。上游 `4790807e8` 的二维码及讨论 @ 候选人变更在本批源码完成后继续独立整合，验证前不会推送。
+
+本批源码提交 `02aaae4cb` 随后纳入真实上游整合提交 `946e9c615`；该完整源码的生产构建通过，用时 1 分 53 秒，176 项 release 前置规格及类型门禁通过，构建后干净，全部冻结源码哈希相同。上游整合证据详见 `upstream-4790807-20261010.md`，实际生产仍保持 16:52 的 9a1dd5378。
