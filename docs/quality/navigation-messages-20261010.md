@@ -18,6 +18,6 @@
 
 生产 Babel 有效对比通过：邀请 414 组状态/成员/顺序/引用/提示参数，消息 90 个场景，移动栈正常序列；common 4 个路由、7 个路径、44 个 UA/查询组合、16 个 HTML 观察、9 个文件大小、42 个日期表达式和 URI 载荷相同。失败回滚、路由循环引用和真实二维码 URL 请求闭包规格通过。移动 9、邀请 7、消息 13、common 9 个错误公共载荷/类型案例拒绝，合法探针主体零诊断；传递依赖的旧债单独保留。
 
-最终只读复查确认路由字典引用回归已修复，未发现其他新增业务回归。源码提交后的本地构建结果将在核验后记录。证据位于 `/private/tmp/hap-navigation-messages-release-20261010`、`/private/tmp/hap-common-protocols-20261010`、`/private/tmp/hap-mobile-navigation-20261010`、`/private/tmp/hap-strong-20261010/message-links`、`/private/tmp/hap-strong-20261010/invite-review` 和 `/private/tmp/hap-links-invite-common-readonly`。
+最终只读复查确认路由字典引用回归已修复，未发现其他新增业务回归。源码提交 `0bbce2b31` 的本地生产构建通过，耗时 58 秒，runtime 资源校验通过（1095 JS、387 CSS）；没有部署或对外发布。证据位于 `/private/tmp/hap-navigation-messages-release-20261010`、`/private/tmp/hap-common-protocols-20261010`、`/private/tmp/hap-mobile-navigation-20261010`、`/private/tmp/hap-strong-20261010/message-links`、`/private/tmp/hap-strong-20261010/invite-review` 和 `/private/tmp/hap-links-invite-common-readonly`。
 
 全仓直接严格编译仍有 60,339 条存量诊断；产品/工具最终 strict 开关、全部基线/欠债删除及全局开放声明清除尚未完成。
