@@ -3,11 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const { jsxRuntimeFrom, transformSync, resolveSpecTarget } = require('../../../scripts/spec-harness.ts');
 
-global._l = text => text;
+const testGlobal = globalThis as Record<string, unknown>;
+testGlobal['_l'] = (text: string) => text;
 
 const moduleCache = new Map();
 
-function requireSource(filePath) {
+function requireSource(filePath: string): Record<string, unknown> {
   // resolveSpecTarget handles both the extensionless case and a stale .js/.jsx
   // left over from before the TS codemod. See scripts/spec-harness.js.
   const resolvedPath = resolveSpecTarget(filePath);
@@ -28,7 +29,7 @@ function requireSource(filePath) {
     plugins: ['@babel/plugin-transform-modules-commonjs'],
   });
 
-  function localRequire(request) {
+  function localRequire(request: string) {
     // JSX 走 automatic runtime（与 .babelrc 一致），jsx() 也要落到假 createElement
     if (request === 'react/jsx-runtime') return jsxRuntimeFrom(() => null);
     if (request === 'react') {
@@ -50,9 +51,9 @@ function requireSource(filePath) {
   return moduleLike.exports;
 }
 
-const { permitList } = requireSource(path.join(__dirname, 'config.js'));
-const { allSwitchKeys } = requireSource(path.join(__dirname, 'containers/FunctionalSwitch/config.js'));
-const { isOpenPermit } = requireSource(path.join(__dirname, 'util.js'));
+const permitList = requireSource(path.join(__dirname, 'config.js')) as { filterSwitch: number; statsSwitch: number; createButtonSwitch: number };
+const allSwitchKeys = requireSource(path.join(__dirname, 'containers/FunctionalSwitch/config.js'))['allSwitchKeys'] as number[];
+const isOpenPermit = requireSource(path.join(__dirname, 'util.js'))['isOpenPermit'] as (type: number, switches: unknown[], viewId?: string) => boolean;
 
 assert.strictEqual(permitList.filterSwitch, 1001);
 assert.strictEqual(permitList.statsSwitch, 1002);

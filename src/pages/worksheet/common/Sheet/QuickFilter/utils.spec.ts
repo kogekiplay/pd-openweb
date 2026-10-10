@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const fs = require('node:fs');
 const { createRequire } = require('node:module');
-const root = process.env.QUICK_FILTER_REPO || '/Users/kogeki/dev/pd-openweb-dnd';
+const root = process.env['QUICK_FILTER_REPO'] || '/Users/kogeki/dev/pd-openweb-dnd';
 const localRequire = createRequire(path.join(root, 'package.json'));
 const { transformFileSync, transformSync } = localRequire('./scripts/spec-harness.ts');
 const parser = localRequire('@babel/parser');
@@ -122,7 +122,7 @@ const actualUtilities = new Function(
   utilityCode + ';return { redefineComplexControl, getType, validate };',
 )(localRequire('lodash'), WIDGETS_TO_API_TYPE_ENUM, FILTER_CONDITION_TYPE);
 const source =
-  process.env.QUICK_FILTER_SOURCE || path.join(root, 'src/pages/worksheet/common/Sheet/QuickFilter/utils.ts');
+  process.env['QUICK_FILTER_SOURCE'] || path.join(root, 'src/pages/worksheet/common/Sheet/QuickFilter/utils.ts');
 const sourceDir = path.dirname(source);
 const boundaries = requireEsm(path.join(sourceDir, 'boundaries.ts'));
 const { formatFilterValues, formatFilterValuesToServer, handleConditionsDefault } = requireEsm(source, {
@@ -136,7 +136,7 @@ const { formatFilterValues, formatFilterValuesToServer, handleConditionsDefault 
   './boundaries': boundaries,
 }) as FilterModule;
 
-const referenceSource = process.env.QUICK_FILTER_REFERENCE;
+const referenceSource = process.env['QUICK_FILTER_REFERENCE'];
 const reference = referenceSource
   ? (requireEsm(referenceSource, {
       'pages/widgetConfig/config/widget': { WIDGETS_TO_API_TYPE_ENUM },
@@ -206,7 +206,7 @@ function dynamicCondition(
   };
   const controls = [{ controlId: 'field', type, ...controlChanges }];
   const result = handleConditionsDefault([source], controls)[0];
-  assert.ok(result);
+  if (!result) throw new Error('Expected default condition result');
   if (reference) assert.deepEqual(result, reference.handleConditionsDefault([source], controls)[0]);
   assert.deepEqual(source.values, [], 'Default parsing must not mutate saved configuration');
   return result;

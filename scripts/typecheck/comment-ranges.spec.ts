@@ -18,7 +18,7 @@ const { CommentIndex } = require('./comment-ranges.ts');
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'comment-ranges-'));
 
 /** 写个临时文件，返回 (line, col) -> 是否在注释里 */
-function probe(name, source) {
+function probe(name: string, source: string): (line: number, col: number) => boolean {
   fs.writeFileSync(path.join(dir, name), source);
   const idx = new CommentIndex(dir);
   return (line, col) => idx.isInComment(name, line, col);

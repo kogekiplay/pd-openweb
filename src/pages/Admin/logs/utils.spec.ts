@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { transformFileSync, readSource } = require('../../../../scripts/spec-harness.ts');
 
-function requireEsm(file, stubs = {}) {
+function requireEsm(file: string, stubs: Record<string, unknown> = {}) {
   // exports 上挂的是被测模块的导出，形状由被测代码决定；不标类型
   // 的话推成 {}，下游每读一个导出都是一条 TS2339。
   const module: { exports: Record<string, any> } = { exports: {} };
@@ -12,7 +12,7 @@ function requireEsm(file, stubs = {}) {
     plugins: ['@babel/plugin-transform-modules-commonjs'],
   });
 
-  function localRequire(request) {
+  function localRequire(request: string) {
     return Object.prototype.hasOwnProperty.call(stubs, request) ? stubs[request] : require(request);
   }
 
@@ -22,7 +22,7 @@ function requireEsm(file, stubs = {}) {
 
 const { completeAdminLogLinks } = requireEsm('./utils.js', {
   'src/utils/common': {
-    pathCompletion: url => (url.startsWith('/tenant/') ? url : `/tenant${url}`),
+    pathCompletion: (url: string) => (url.startsWith('/tenant/') ? url : `/tenant${url}`),
   },
 });
 
