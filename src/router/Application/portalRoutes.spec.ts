@@ -28,7 +28,7 @@ function loadConfig(file: string, subPath: string): Record<string, { path: strin
   return moduleLike.exports;
 }
 for (const prefix of ['', '/portal', '/tenant/portal']) {
-  const config = loadConfig(process.env.PORTAL_ROUTES_SOURCE || path.join(__dirname, 'config.ts'), prefix);
+  const config = loadConfig(process.env['PORTAL_ROUTES_SOURCE'] || path.join(__dirname, 'config.ts'), prefix);
   for (const name of ['ROUTE_CONFIG', 'PORTAL_ROUTE_CONFIG']) {
     const routes = config[name] as unknown as Record<string, { path: string }>;
     const parent = `${prefix}/app/:appId`;

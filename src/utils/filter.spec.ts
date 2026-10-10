@@ -25,7 +25,7 @@ interface FilterUtilities {
   }): boolean;
 }
 const moduleLike: { exports: unknown } = { exports: {} };
-const { code } = transformFileSync(process.env.WORKSHEET_FILTER_SOURCE || path.join(__dirname, 'filter.ts'), {
+const { code } = transformFileSync(process.env['WORKSHEET_FILTER_SOURCE'] || path.join(__dirname, 'filter.ts'), {
   babelrc: false,
   plugins: ['@babel/plugin-transform-modules-commonjs'],
 });

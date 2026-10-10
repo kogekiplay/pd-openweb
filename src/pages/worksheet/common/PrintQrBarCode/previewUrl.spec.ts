@@ -8,7 +8,7 @@ const source = fs.readFileSync(path.join(__dirname, 'PrintQrBarCode.tsx'), 'utf8
 const tree = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
 let closure: string | undefined;
 traverse(tree, {
-  FunctionDeclaration(nodePath) {
+  FunctionDeclaration(nodePath: { node: { id: { name: string }; start: number; end: number } }) {
     if (nodePath.node.id.name === 'updatePreviewRowShareUrl') {
       closure = source.slice(nodePath.node.start, nodePath.node.end);
     }

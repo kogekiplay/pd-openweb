@@ -122,7 +122,7 @@ const state: TestState = {
 const actualUtil = loadTarget('./util.ts', { 'src/pages/worksheet/constants/enum': {} });
 const reduxUtil = loadTarget('../util.ts');
 const apiBoundary = loadTarget('../reducers/boardViewApi.ts');
-const actions = loadTarget(process.env.BOARD_ACTION_SOURCE || './boardView.ts', {
+const actions = loadTarget(process.env['BOARD_ACTION_SOURCE'] || './boardView.ts', {
   'src/api/worksheet': { __esModule: true, default: worksheetApi },
   'worksheet/common/Sheet/QuickFilter/utils': {
     handleConditionsDefault: (conditions: unknown[]) => conditions,
@@ -138,7 +138,8 @@ const actions = loadTarget(process.env.BOARD_ACTION_SOURCE || './boardView.ts', 
   './navFilter.js': {},
   './util': actualUtil,
 }) as BoardActions;
-global.window = { shareState: {} };
+const testGlobal = globalThis as Record<string, unknown>;
+testGlobal['window'] = { shareState: {} };
 const waitForApi = async (): Promise<void> => {
   await Promise.resolve();
   await Promise.resolve();

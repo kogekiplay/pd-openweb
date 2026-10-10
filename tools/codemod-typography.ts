@@ -108,7 +108,7 @@ function isCommentAt(source: string, offset: number): boolean {
   return /^\s*(\/\/|\*|\/\*)/.test(source.slice(lineStart, offset));
 }
 
-const root: string = process.argv[2];
+const root: string = process.argv[2] ?? '';
 const apply = process.argv.includes('--apply');
 
 if (!root) {

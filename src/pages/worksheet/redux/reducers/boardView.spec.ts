@@ -46,7 +46,7 @@ function loadTarget(file: string, stubs: Record<string, unknown> = {}): unknown 
   );
   return moduleLike.exports;
 }
-const source = process.env.BOARD_REDUCER_SOURCE || './boardView.ts';
+const source = process.env['BOARD_REDUCER_SOURCE'] || './boardView.ts';
 const board = loadTarget(source, {
   'src/components/Form/core/config': { WIDGET_VALUE_ID: { 26: 'accountId', 27: 'departmentId', 48: 'organizeId' } },
 }) as BoardModule;

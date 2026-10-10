@@ -40,7 +40,7 @@ const { buildEventOrder, compareCell, cellKindOf } = load();
 /** 用生成的比较函数把一组对象排好，返回 name 顺序，方便断言 */
 function sortNames(order: Array<string | ((a: Obj, b: Obj) => number)>, rows: Obj[]): string[] {
   const cmp = order[0] as (a: Obj, b: Obj) => number;
-  return rows.slice().sort(cmp).map(r => r.name);
+  return rows.slice().sort(cmp).map(r => r['name']);
 }
 
 // 1. 没配排序时退回 ['start']，不要凭空造一个比较函数

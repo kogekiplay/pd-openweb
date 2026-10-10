@@ -45,7 +45,8 @@ function load(relative: string): unknown {
   );
   return target.exports;
 }
-global._l = (text: string) => text;
+const testGlobal = globalThis as Record<string, unknown>;
+testGlobal['_l'] = (text: string) => text;
 const library = load('function-library.ts') as Library;
 const format = library.formatControlValue;
 assert.equal(format(undefined), undefined);

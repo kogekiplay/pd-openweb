@@ -55,7 +55,8 @@ function load(file: string, stubs: Record<string, unknown>): unknown {
   );
   return target.exports;
 }
-global.safeParse = (value: unknown, fallback: unknown = {}) => {
+const testGlobal = globalThis as Record<string, unknown>;
+testGlobal['safeParse'] = (value: unknown, fallback: unknown = {}) => {
   try {
     return JSON.parse(String(value));
   } catch {
