@@ -17,7 +17,7 @@ const code = transformFileSync(path.join(__dirname, 'common.ts'))
   .code.replaceAll('(0, _worksheetConfigCache.decodeWorksheetConfigCache)', 'decodeWorksheetConfigCache')
   .replaceAll('(0, _worksheetConfigCache.validateWorksheetConfigValue)', 'validateWorksheetConfigValue');
 const ast = parser.parse(code, { sourceType: 'script' });
-const declarations = ast.program.body.filter(node => node.type === 'FunctionDeclaration' && wanted.has(node.id.name));
+const declarations = ast.program.body.filter((node: { type: string; id: { name?: string } }) => node.type === 'FunctionDeclaration' && wanted.has(node.id.name ?? ''));
 assert.equal(declarations.length, wanted.size, 'Exercise the real common cache entry points');
 const cache: WorksheetCache = new Function(
   'decodeWorksheetConfigCache',
@@ -25,7 +25,7 @@ const cache: WorksheetCache = new Function(
   'localStorage',
   'safeLocalStorageSetItem',
   'console',
-  declarations.map(node => generate(node).code).join('\n') +
+  declarations.map((node: { type: string; id: { name?: string } }) => generate(node).code).join('\n') +
     '\nreturn {saveLRUWorksheetConfig,clearLRUWorksheetConfig,getLRUWorksheetConfig};',
 )(
   boundary.decodeWorksheetConfigCache,

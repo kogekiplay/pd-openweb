@@ -142,12 +142,12 @@ function countInSource(source: string): number {
 
   FONT_RE.lastIndex = 0;
   while ((m = FONT_RE.exec(source))) {
-    if (!isCommentAt(source, m.index)) n += countMissed(m[1], FONT_STEPS);
+    if (!isCommentAt(source, m.index)) n += countMissed(m[1] ?? '', FONT_STEPS);
   }
 
   SPACE_RE.lastIndex = 0;
   while ((m = SPACE_RE.exec(source))) {
-    if (!isCommentAt(source, m.index)) n += countMissed(m[1], SPACE_STEPS);
+    if (!isCommentAt(source, m.index)) n += countMissed(m[1] ?? '', SPACE_STEPS);
   }
 
   return n;

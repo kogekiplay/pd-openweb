@@ -89,8 +89,8 @@ if (files.length !== 2) {
   process.exit(2);
 }
 
-const before = load(files[0]);
-const after = load(files[1]);
+const before = load(files[0] ?? '');
+const after = load(files[1] ?? '');
 
 /* ---------- 可比性前置检查（不满足就中止，见文件头）---------- */
 const blockers: string[] = [];

@@ -34,12 +34,12 @@ function commonHelpers(): Modules {
     'getPathWithSubPath',
     'getAppFeaturesPath',
   ]);
-  const statements = ast.program.body.filter(node => {
+  const statements = ast.program.body.filter((node: { type: string; id?: { name?: string }; declarations?: Array<{ id?: { name?: string } }>; declaration?: { type: string; id?: { name?: string }; declarations?: Array<{ id?: { name?: string } }> } | null }) => {
     const declaration = node.type === 'ExportNamedDeclaration' ? node.declaration : node;
     if (!declaration) return false;
     return declaration.type === 'FunctionDeclaration'
-      ? names.has(declaration.id?.name)
-      : declaration.type === 'VariableDeclaration' && declaration.declarations.some(item => names.has(item.id?.name));
+      ? names.has(declaration.id?.name ?? '')
+      : declaration.type === 'VariableDeclaration' && declaration.declarations?.some((item: { id?: { name?: string } }) => names.has(item.id?.name ?? ''));
   });
   const source = generate({ type: 'File', program: { type: 'Program', sourceType: 'module', body: statements } }).code;
   const { code } = transformSync(source, { filename, plugins: ['@babel/plugin-transform-modules-commonjs'] });

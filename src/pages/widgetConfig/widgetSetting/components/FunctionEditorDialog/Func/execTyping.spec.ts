@@ -36,10 +36,11 @@ class MockWorker {
   }
   terminate(): void {}
 }
-globalThis.window = { isIphone: false };
-globalThis.Worker = MockWorker;
+const testGlobal = globalThis as Record<string, unknown>;
+testGlobal['window'] = { isIphone: false };
+testGlobal['Worker'] = MockWorker;
 function load(): Execute {
-  const source = process.env.FUNCTION_EXEC_SOURCE || path.join(__dirname, 'exec.ts');
+  const source = process.env['FUNCTION_EXEC_SOURCE'] || path.join(__dirname, 'exec.ts');
   const { code } = transformFileSync(source, { plugins: ['@babel/plugin-transform-modules-commonjs'] });
   const moduleLike: { exports: { default?: Execute } } = { exports: {} };
   new Function('module', 'exports', 'require', code)(moduleLike, moduleLike.exports, (name: string) => {

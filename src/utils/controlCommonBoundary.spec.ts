@@ -20,8 +20,9 @@ interface CommonModule {
   getAdvanceSetting(data?: Control): AdvancedSetting;
   getAdvanceSetting(data: Control | undefined, key: string | string[]): unknown;
 }
-global._l = (value: string) => value;
-global.safeParse = (value: unknown, type?: string) => {
+const testGlobal = globalThis as Record<string, unknown>;
+testGlobal['_l'] = (value: string) => value;
+testGlobal['safeParse'] = (value: unknown, type?: string) => {
   try {
     return JSON.parse(String(value));
   } catch {
