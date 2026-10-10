@@ -34,8 +34,8 @@ function load(react: unknown): StoreModule {
 const realStore = load(React);
 function RequiredReader() {
   const value = realStore.useGlobalStore();
-  assert.ok(value);
-  return React.createElement('span', null, JSON.stringify(value.store));
+  if (!value) throw new Error('Expected required global store value');
+  return React.createElement('span', null, JSON.stringify(value['store']));
 }
 function OptionalReader() {
   return React.createElement('span', null, String(realStore.useGlobalStore({ optional: true })));
@@ -87,11 +87,11 @@ const command = {
   worksheetInfo: { appId: 'app', projectId: 'project', worksheetId: 'worksheet', name: 'Tasks' },
 };
 emitter.emit('UPDATE_GLOBAL_STORE', 'mingoCreateWorksheetAction', command);
-assert.equal(renderProvider().store.mingoCreateWorksheetAction, command, 'Command object references stay intact');
+assert.equal(renderProvider().store['mingoCreateWorksheetAction'], command, 'Command object references stay intact');
 renderProvider().setValue('mingoIsCreatingWorksheetStatus', 2);
 emitter.emit('UPDATE_GLOBAL_STORE', 'activeWorksheet');
-assert.equal(renderProvider().store.mingoIsCreatingWorksheetStatus, 2);
-assert.equal(renderProvider().store.activeWorksheet, undefined);
+assert.equal(renderProvider().store['mingoIsCreatingWorksheetStatus'], 2);
+assert.equal(renderProvider().store['activeWorksheet'], undefined);
 cleanup?.();
 assert.equal(emitter.listenerCount('UPDATE_GLOBAL_STORE'), 0, 'Unmount removes the original subscribed callback');
 const lastState = renderProvider().store;

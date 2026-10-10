@@ -151,7 +151,7 @@ function boot(source: string) {
         (this.request['headers'] as Record<string, string>)[key] = String(value);
       }
       send(body: unknown) {
-        this.request.data = body;
+        this.request['data'] = body;
       }
     },
     fetch: (url: string, config: { method: string; body?: unknown; headers: Record<string, string> }) => {
@@ -248,7 +248,7 @@ async function scenarios(source: string) {
     appId: 'app',
     appLangId: 'en',
   });
-  assert.equal(refreshed.ok, true);
+  assert.equal(refreshed['ok'], true);
   Object.assign(invalid.context, {
     apireply_forbid: true,
     apireply_hex_key: '11'.repeat(32),

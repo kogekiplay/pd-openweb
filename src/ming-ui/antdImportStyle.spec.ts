@@ -27,7 +27,7 @@ const { ROOT } = require('../../scripts/spec-harness.ts');
 const EXTS = new Set(['.js', '.jsx', '.ts', '.tsx']);
 const SKIP_DIR = /(^|\/)(node_modules|library)(\/|$)/;
 
-function collect(dir, out) {
+function collect(dir: string, out: string[]): string[] {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const abs = path.join(dir, entry.name);
 

@@ -21,13 +21,20 @@ function boundary() {
 const product = fs.readFileSync(path.join(__dirname, 'common.ts'), 'utf8');
 const tree = parser.parse(product, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
 const names = ['globalStoreForMingo', 'updateGlobalStoreForMingo', 'getGlobalStoreForMingo'];
+type AstNode = {
+  type: string;
+  declaration?: AstNode | null;
+  declarations?: Array<{ id: { name?: string } }>;
+  id?: { name?: string };
+};
 const nodes = tree.program.body
-  .map(node => (node.type === 'ExportNamedDeclaration' ? node.declaration : node))
+  .map((node: AstNode) => (node.type === 'ExportNamedDeclaration' ? node.declaration : node))
   .filter(
-    node =>
+    (node: AstNode | null) =>
       node &&
-      ((node.type === 'VariableDeclaration' && node.declarations.some(item => names.includes(item.id.name))) ||
-        (node.type === 'FunctionDeclaration' && names.includes(node.id.name))),
+      ((node.type === 'VariableDeclaration' &&
+        node.declarations?.some(item => item.id.name !== undefined && names.includes(item.id.name))) ||
+        (node.type === 'FunctionDeclaration' && node.id?.name !== undefined && names.includes(node.id.name))),
   );
 assert.equal(nodes.length, 3);
 const globals = { window: {} as Record<string, unknown>, EventEmitter, ...boundary() };
@@ -36,7 +43,7 @@ new Function(
   'module',
   ...Object.keys(globals),
   transformSync(
-    nodes.map(node => generate(node).code).join('\n') +
+  nodes.map((node: AstNode) => generate(node).code).join('\n') +
       '\nwindow.globalStoreForMingo=globalStoreForMingo;module.exports={updateGlobalStoreForMingo,getGlobalStoreForMingo};',
     { filename: path.join(__dirname, 'common.ts') },
   ).code,
@@ -56,7 +63,7 @@ const common = target.exports as {
 const get = common.getGlobalStoreForMingo,
   update = common.updateGlobalStoreForMingo;
 const store = get() as Store;
-assert.equal(globals.window.globalStoreForMingo, store);
+assert.equal(globals.window['globalStoreForMingo'], store);
 assert.equal(get(''), store);
 assert.equal(get(null), store);
 assert.equal(get('activeModule'), 'worksheet');
@@ -85,7 +92,7 @@ assert.equal(get('activeModule'), 'workflow');
 assert.equal(get('appId'), 'app');
 update({ activeModule: 'worksheetControlsEdit', worksheetId: 'sheet', worksheetName: 'Sheet' }, 'clear');
 assert.equal(get(), store, 'clear retains the live store object reference');
-assert.equal(globals.window.globalStoreForMingo, store);
+assert.equal(globals.window['globalStoreForMingo'], store);
 assert.equal(
   get('emitter'),
   undefined,
@@ -113,7 +120,7 @@ function productFunction(relative: string, name: string, values: Record<string, 
     ast = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
   let body = '';
   traverse(ast, {
-    FunctionDeclaration(p) {
+    FunctionDeclaration(p: { node: { id?: { name?: string } } }) {
       if (p.node.id?.name === name) body = generate(p.node).code;
     },
   });
@@ -187,7 +194,7 @@ assert.deepEqual(cacheReader(), { worksheetId: 'sheet', cached: true });
 update({ activeModule: 'worksheet' }, 'clear');
 const directSheet = { type: 0, workSheetId: 'sheet1', workSheetName: 'Direct', remark: 'Remark' };
 const groupedSheet = { type: 0, workSheetId: 'sheet2', workSheetName: 'Grouped' };
-globals.window.appInfo = { name: 'App', projectId: 'project', description: 'Description' };
+globals.window['appInfo'] = { name: 'App', projectId: 'project', description: 'Description' };
 assert.deepEqual(
   readApp({
     base: { appId: 'app', worksheetId: 'sheet1', groupId: 'section' },
@@ -205,10 +212,10 @@ assert.deepEqual(
   },
 );
 assert.deepEqual(cacheReader(), {});
-const savedWindowStore = globals.window.globalStoreForMingo;
-delete globals.window.globalStoreForMingo;
+const savedWindowStore = globals.window['globalStoreForMingo'];
+delete globals.window['globalStoreForMingo'];
 assert.deepEqual(cacheReader(), {}, 'pre-initialization window state is a real optional branch');
-globals.window.globalStoreForMingo = savedWindowStore;
+globals.window['globalStoreForMingo'] = savedWindowStore;
 for (const [key, value] of [
   ['activeModule', 'invalid'],
   ['allWidgets', {}],
