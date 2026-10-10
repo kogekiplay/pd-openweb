@@ -12,4 +12,6 @@
 
 统一证据目录 `/private/tmp/hap-options-filters-tools-20261011`；专项冻结报告分别在 `/private/tmp/hap-print-options-20261011`、`/private/tmp/hap-filtergenerator-20261011`、`/private/tmp/hap-install-stamp-20261011`，独立审查报告在 `/private/tmp/hap-final-cross-review-20261011`。本批未进行真实外部身份或后端端到端验收。
 
+源码提交 `2a927fcff5e90e92fa2c46a88ad2a7f7983fc90a` 已在干净整合工作区完成正式 release（1 分 50 秒）和本地 publish。构建再次执行全部行为规格及类型门禁；runtime 校验通过 1095 JS、387 CSS、3 runtime。发布产物的 73 个顶层 HTML 中 532 个 `/dist/`、`/staticfiles/` JS/CSS 引用均存在，整批没有 dev JS；入口内版本与源码一致，SHA256 为 `49d5ac7287c0b722e6e83313d741dd9e4600656de2504f1171aa07b796c6fe8e`。构建后的工作树干净，20 个批次文件的冻结哈希匹配。此项是本地发布产物验证，未切换生产目录。
+
 全仓强类型和严格开关尚未完成。生产当前仍为 `5cf1a7bbb`，本批尚未部署；每日 16:45 开始、17:30 前更新的既有发布任务继续保留。
