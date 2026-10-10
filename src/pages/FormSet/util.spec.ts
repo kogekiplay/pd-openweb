@@ -51,7 +51,11 @@ function requireSource(filePath: string): Record<string, unknown> {
   return moduleLike.exports;
 }
 
-const permitList = requireSource(path.join(__dirname, 'config.js')) as { filterSwitch: number; statsSwitch: number; createButtonSwitch: number };
+const permitList = requireSource(path.join(__dirname, 'config.js'))['permitList'] as {
+  filterSwitch: number;
+  statsSwitch: number;
+  createButtonSwitch: number;
+};
 const allSwitchKeys = requireSource(path.join(__dirname, 'containers/FunctionalSwitch/config.js'))['allSwitchKeys'] as number[];
 const isOpenPermit = requireSource(path.join(__dirname, 'util.js'))['isOpenPermit'] as (type: number, switches: unknown[], viewId?: string) => boolean;
 
