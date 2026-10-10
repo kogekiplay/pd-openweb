@@ -142,6 +142,7 @@
         "@types/prop-types": "^15.7.15",
         "@types/react": "19.3.0",
         "@types/react-dom": "^19.3.0",
+        "@types/serve-handler": "6.1.4",
         "@types/shallowequal": "^1",
         "@typescript-eslint/eslint-plugin": "8.71.1",
         "@typescript-eslint/parser": "8.71.1",
@@ -1153,6 +1154,8 @@
     "@types/react": ["@types/react@19.3.0", "", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-N0rFCuH9YoxG9/m61l9MfpJKfmLOVU0em7ipIz6TRgSSkvReLB9vL85GB+yr8Bs5leqpvg96JSwF4ZS1s4viQg=="],
 
     "@types/react-dom": ["@types/react-dom@19.3.0", "", { "peerDependencies": { "@types/react": "^19.3.0" } }, "sha512-ZI7bU42mZXXKHn/qNLEw2IrbiINU7X5+vfgdixBHkCNpYWXjKgfQ/P+uyGb5CjOLB9UcnTeg3rylQtV2hym44Q=="],
+
+    "@types/serve-handler": ["@types/serve-handler@6.1.4", "", { "dependencies": { "@types/node": "*" } }, "sha512-aXy58tNie0NkuSCY291xUxl0X+kGYy986l4kqW6Gi4kEXgr6Tx0fpSH7YwUSa5usPpG3s9DBeIR6hHcDtL2IvQ=="],
 
     "@types/shallowequal": ["@types/shallowequal@1.1.5", "", {}, "sha512-8afr1hbNqvZ/FBMY2mcfkkbk7xhlTZN4lVCgQf55YdjUQpWLemmrcvcHg94vjw+ZVIfPa3UZz/sOE6CkaMlDnQ=="],
 

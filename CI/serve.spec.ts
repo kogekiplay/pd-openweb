@@ -18,9 +18,9 @@
  *
  * 不 require CI/serve.js：那个模块一加载就会启动服务器。这里只做静态解析。
  */
-const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
+const assert: typeof import('node:assert') = require('assert');
+const fs: typeof import('node:fs') = require('fs');
+const path: typeof import('node:path') = require('path');
 
 const raw = fs.readFileSync(path.join(__dirname, 'serve.ts'), 'utf8');
 
@@ -29,7 +29,7 @@ const raw = fs.readFileSync(path.join(__dirname, 'serve.ts'), 'utf8');
 //   2. 括号配对要在纯代码上做。
 // 剥的时候必须跟踪字符串状态 —— 源码里有 'https://…' 这类字面量，
 // 见到 // 就当注释会把它从中间截断。
-function stripComments(src) {
+function stripComments(src: string): string {
   let out = '';
   let quote = null; // 当前所在字符串的引号字符
   let i = 0;
@@ -80,13 +80,13 @@ const source = stripComments(raw);
 
 // 单行数组（REWRITE_PREFIXES）和多行数组（proxyConfigs）都要能切，
 // 所以按括号配对找结尾，不能靠 '\n];' 这种形状假设。
-function sliceArray(varName) {
+function sliceArray(varName: string): string {
   // 【别用 `const X = [` 这种定长前缀匹配】源文件从 .js 改成 .ts 之后，声明可能带
   // 类型标注（`const proxyConfigs: {...}[] = [`），定长前缀当场失配，
   // 而失败信息只会说「找不到 proxyConfigs」，看着像变量被删了。
   // 用正则，让声明名和 `=` 之间可以夹任意标注。
   const m = new RegExp(`const\\s+${varName}\\s*(?::[^=]+)?=\\s*\\[`).exec(source);
-  assert.notStrictEqual(m, null, `serve.ts 里找不到 ${varName} —— 改名了就同步改这条 spec`);
+  if (!m) throw new Error(`serve.ts 里找不到 ${varName} —— 改名了就同步改这条 spec`);
   // 【从正则匹配的末尾取 `[`，不要 indexOf】类型标注里自己就带方括号
   //（`const proxyConfigs: {...}[] = [`），indexOf('[') 会切到类型里那个，
   // 括号配对随即错位，报出来的却是「没解析到 path」，跟真实原因毫无关系。
@@ -104,13 +104,19 @@ function sliceArray(varName) {
 // 两套改写前缀都是简单的字符串数组字面量。
 // 注意 sliceArray 用 `const <名字> = [` 定位，'const REWRITE_PREFIXES = [' 不会
 // 误命中 'const PLATFORM_REWRITE_PREFIXES = ['（中间隔着 PLATFORM_），两者互不干扰。
-const parseList = name => [...sliceArray(name).matchAll(/'([^']+)'/g)].map(m => m[1]);
+function capture(match: RegExpMatchArray, index: number): string {
+  const value = match[index];
+  if (!value) throw new Error(`serve.ts 解析缺少第 ${index} 个捕获组`);
+  return value;
+}
+const parseList = (name: string): string[] =>
+  [...sliceArray(name).matchAll(/'([^']+)'/g)].map(match => capture(match, 1));
 const rewritePrefixes = parseList('REWRITE_PREFIXES');
 const platformPrefixes = parseList('PLATFORM_REWRITE_PREFIXES');
 
 // proxyConfigs：取每个条目的 path（dev 侧匹配前缀）
 const proxyBody = sliceArray('proxyConfigs');
-const proxyPaths = [...proxyBody.matchAll(/\bpath:\s*'([^']+)'/g)].map(m => m[1]);
+const proxyPaths = [...proxyBody.matchAll(/\bpath:\s*'([^']+)'/g)].map(match => capture(match, 1));
 
 assert.ok(rewritePrefixes.length > 0, '没解析到 REWRITE_PREFIXES，解析逻辑失效了');
 assert.ok(platformPrefixes.length > 0, '没解析到 PLATFORM_REWRITE_PREFIXES，解析逻辑失效了');
@@ -130,7 +136,7 @@ assert.ok(proxyPaths.length > 0, '没解析到 proxyConfigs 的 path，解析逻
 for (const [listName, prefixes] of [
   ['REWRITE_PREFIXES', rewritePrefixes],
   ['PLATFORM_REWRITE_PREFIXES', platformPrefixes],
-]) {
+ ] as Array<[string, string[]]>) {
   for (const prefix of prefixes) {
     // '/' 是唯一豁免：它就是 dev server 自己的根（主站 SPA），本地直接就有，
     // 不需要也不该有转发条目。见 PLATFORM_REWRITE_PREFIXES 的注释。

@@ -1,18 +1,79 @@
-const path = require('path');
-const fs = require('fs');
-const moment = require('moment');
-const cheerio = require('cheerio');
-const minify = require('html-minifier-terser').minify;
-const _ = require('lodash');
-const { htmlTemplatesPath, getEntryName, getEntryFromHtml } = require('./utils.ts');
-const { apiServer, webpackPublicPath } = require('./publishConfig.ts');
-const isProduction = process.env.NODE_ENV === 'production';
+import type { CheerioAPI } from 'cheerio';
+import type { Element } from 'domhandler';
+
+const path: typeof import('path') = require('path');
+const fs: typeof import('fs') = require('fs');
+const moment: typeof import('moment') = require('moment');
+const cheerio: typeof import('cheerio') = require('cheerio');
+const minify: (html: string, options: Record<string, unknown>) => Promise<string> = require('html-minifier-terser').minify;
+const lodash: Pick<typeof import('lodash'), 'isArray' | 'random'> = require('lodash');
+
+interface HtmlEntry { type: string; src: string | null; origin: string }
+interface CiUtils { htmlTemplatesPath: string; getEntryName(str: string, filename: string): string; getEntryFromHtml(filename: string, type?: string): HtmlEntry | undefined }
+interface PublishConfig { apiServer: string; webpackPublicPath: string | readonly string[] }
+type EntryNameFunction = (str: string, filename: string) => unknown;
+type EntryFromHtmlFunction = (filename: string, type?: string) => unknown;
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+function isEntryNameFunction(value: unknown): value is EntryNameFunction {
+  return typeof value === 'function';
+}
+function isEntryFromHtmlFunction(value: unknown): value is EntryFromHtmlFunction {
+  return typeof value === 'function';
+}
+function optionalEntrySource(value: unknown): string | null {
+  if (value === null) return null;
+  if (typeof value === 'string') return value;
+  throw new TypeError('Invalid CI HTML entry src');
+}
+function loadCiUtils(value: unknown): CiUtils {
+  if (!isRecord(value) || typeof value['htmlTemplatesPath'] !== 'string' || !isEntryNameFunction(value['getEntryName']) || !isEntryFromHtmlFunction(value['getEntryFromHtml'])) {
+    throw new TypeError('Invalid CI utility module');
+  }
+  const htmlTemplatesPath = value['htmlTemplatesPath'];
+  const getEntryNameFunction = value['getEntryName'];
+  const getEntryFromHtmlFunction = value['getEntryFromHtml'];
+  return {
+    htmlTemplatesPath,
+    getEntryName(str, filename) {
+      const result = getEntryNameFunction(str, filename);
+      if (typeof result !== 'string') throw new TypeError('Invalid CI entry name');
+      return result;
+    },
+    getEntryFromHtml(filename, type) {
+      const result = getEntryFromHtmlFunction(filename, type);
+      if (result === undefined) return undefined;
+      if (!isRecord(result) || typeof result['type'] !== 'string' || (result['src'] !== null && typeof result['src'] !== 'string') || typeof result['origin'] !== 'string') {
+        throw new TypeError('Invalid CI HTML entry');
+      }
+      return {
+        type: String(result['type']),
+        src: optionalEntrySource(result['src']),
+        origin: String(result['origin']),
+      };
+    },
+  };
+}
+function decodePublishConfig(value: unknown): PublishConfig {
+  if (!isRecord(value) || typeof value['apiServer'] !== 'string') throw new TypeError('Invalid publish config');
+  const publicPath = value['webpackPublicPath'];
+  if (typeof publicPath !== 'string' && (!Array.isArray(publicPath) || !publicPath.every(item => typeof item === 'string'))) {
+    throw new TypeError('Invalid webpack public path');
+  }
+  return { apiServer: value['apiServer'], webpackPublicPath: publicPath };
+}
+const ciUtils = loadCiUtils(require('./utils.ts'));
+const { htmlTemplatesPath, getEntryName, getEntryFromHtml } = ciUtils;
+const { apiServer, webpackPublicPath } = decodePublishConfig(require('./publishConfig.ts'));
+const isProduction = process.env['NODE_ENV'] === 'production';
 const buildPath = path.join(__dirname, '../build');
 const htmlDestPath = path.join(__dirname, '../build/files');
-const version = require('child_process').execSync('git log --format="%H" -n 1').toString().trim();
+const execSync: typeof import('child_process').execSync = require('child_process').execSync;
+const version = execSync('git log --format="%H" -n 1').toString().trim();
 const mainCommonEntries = ['node_modules', 'cookies', 'vendors', 'worksheet', 'common', 'globals'];
 
-function getCommonEntries(type) {
+function getCommonEntries(type: string): readonly string[] {
   if (!isProduction) {
     return mainCommonEntries;
   }
@@ -28,7 +89,7 @@ function getCommonEntries(type) {
   return mainCommonEntries;
 }
 
-function mkdir(dirPath) {
+function mkdir(dirPath: string): void {
   dirPath = path.resolve(__dirname, dirPath);
   if (fs.existsSync(dirPath)) {
     return;
@@ -37,17 +98,21 @@ function mkdir(dirPath) {
   }
 }
 
-function getPublicPath(type) {
-  if (!isProduction) return webpackPublicPath;
+function getPublicPath(type: string): string {
+  if (!isProduction) {
+    if (typeof webpackPublicPath !== 'string') throw new TypeError('Development public path must be a string');
+    return webpackPublicPath;
+  }
 
-  const path = _.isArray(webpackPublicPath)
-    ? webpackPublicPath[_.random(0, webpackPublicPath.length - 1)]
+  const publicPath = lodash.isArray(webpackPublicPath)
+    ? webpackPublicPath[lodash.random(0, webpackPublicPath.length - 1)]
     : webpackPublicPath;
 
-  return type === 'index' ? path : path.replace('/dist/pack/', `/dist/${type}/pack/`);
+  if (typeof publicPath !== 'string') throw new TypeError('Missing webpack public path');
+  return type === 'index' ? publicPath : publicPath.replace('/dist/pack/', `/dist/${type}/pack/`);
 }
 
-async function destHtml(filename, html) {
+async function destHtml(filename: string, html: string): Promise<void> {
   fs.writeFileSync(
     path.join(htmlDestPath, filename),
     isProduction
@@ -59,11 +124,30 @@ async function destHtml(filename, html) {
   );
 }
 
-async function generate() {
+interface ManifestAsset { js?: string; css?: string }
+type Manifest = Record<string, ManifestAsset>;
+function decodeManifest(value: unknown): Manifest {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('Invalid webpack manifest');
+  const result: Manifest = {};
+  for (const [key, rawAsset] of Object.entries(value)) {
+    if (rawAsset === null || typeof rawAsset !== 'object' || Array.isArray(rawAsset)) throw new TypeError(`Invalid manifest entry: ${key}`);
+    const data: Record<string, unknown> = {};
+    for (const [field, fieldValue] of Object.entries(rawAsset)) data[field] = fieldValue;
+    if (data['js'] !== undefined && typeof data['js'] !== 'string') throw new TypeError(`Invalid manifest js: ${key}`);
+    if (data['css'] !== undefined && typeof data['css'] !== 'string') throw new TypeError(`Invalid manifest css: ${key}`);
+    const outputAsset: ManifestAsset = {};
+    if (typeof data['js'] === 'string') outputAsset.js = data['js'];
+    if (typeof data['css'] === 'string') outputAsset.css = data['css'];
+    result[key] = outputAsset;
+  }
+  return result;
+}
+
+async function generate(): Promise<void> {
   mkdir(htmlDestPath);
-  for (const filename of fs.readdirSync(htmlTemplatesPath).filter(filename => filename.endsWith('.html'))) {
-    let html = fs.readFileSync(path.join(htmlTemplatesPath, filename)).toString();
-    const $ = cheerio.load(html);
+  for (const filename of fs.readdirSync(htmlTemplatesPath).filter((name: string) => name.endsWith('.html'))) {
+    const html = fs.readFileSync(path.join(htmlTemplatesPath, filename), 'utf8');
+    const $: CheerioAPI = cheerio.load(html);
     const entry = getEntryFromHtml(filename);
     // 下面按条件往里挂 workflow / report / integration 等键，不标类型的话
     // 推出来只有 { main }，挂一个报一条 TS2339。
@@ -72,13 +156,13 @@ async function generate() {
     };
 
     if (!isProduction) {
-      apiMap.workflow = '/workflow_api';
-      apiMap.report = '/report_api';
-      apiMap.integration = '/integration_api';
-      apiMap.datapipeline = '/data_pipeline_api';
-      apiMap.workflowPlugin = '/workflow_plugin_api';
-      apiMap.knowledge = '/knowledge_api';
-      apiMap.cloudapi = '/cloudapi_api';
+      apiMap['workflow'] = '/workflow_api';
+      apiMap['report'] = '/report_api';
+      apiMap['integration'] = '/integration_api';
+      apiMap['datapipeline'] = '/data_pipeline_api';
+      apiMap['workflowPlugin'] = '/workflow_plugin_api';
+      apiMap['knowledge'] = '/knowledge_api';
+      apiMap['cloudapi'] = '/cloudapi_api';
     }
 
     $('head').prepend(`
@@ -161,6 +245,7 @@ async function generate() {
     `);
 
     if (entry) {
+      if (!entry.src) throw new TypeError(`Missing entry source in ${filename}`);
       const moduleName = getEntryName(entry.src, filename);
       const excludeArr = [
         'auth-workwx',
@@ -202,7 +287,7 @@ async function generate() {
       }
 
       const $entryScript = $('script')
-        .filter((i, node) => $(node).attr('src') === entry.origin)
+        .filter((_i: number, node: Element) => $(node).attr('src') === entry.origin)
         .eq(0);
 
       if (!$entryScript[0]) {
@@ -221,16 +306,19 @@ async function generate() {
         // 发布模式
         const baseEntry = ['runtime', ...getCommonEntries(entry.type)];
 
-        let manifestData = JSON.parse(
+        const manifestData: Manifest = decodeManifest(JSON.parse(
           fs
             .readFileSync(path.join(buildPath, `dist/${entry.type === 'index' ? '' : `${entry.type}/`}manifest.json`))
             .toString(),
-        );
+        ));
 
         $entryScript.replaceWith(
           [...(!noCommonResource ? baseEntry : ['runtime', 'cookies']), moduleName]
             .filter(key => !!manifestData[key] && manifestData[key].js)
-            .map(key => `<script src="${getPublicPath(entry.type) + manifestData[key].js}"></script>`)
+            .map(key => {
+              const asset = manifestData[key];
+              return asset?.js ? `<script src="${getPublicPath(entry.type) + asset.js}"></script>` : '';
+            })
             .join(''),
         );
 
@@ -238,7 +326,10 @@ async function generate() {
           $('head').append(
             ['css', ...baseEntry, moduleName]
               .filter(key => !!manifestData[key] && manifestData[key].css)
-              .map(key => `<link rel="stylesheet" href="${getPublicPath(entry.type) + manifestData[key].css}" />`)
+              .map(key => {
+                const asset = manifestData[key];
+                return asset?.css ? `<link rel="stylesheet" href="${getPublicPath(entry.type) + asset.css}" />` : '';
+              })
               .join(''),
           );
         }

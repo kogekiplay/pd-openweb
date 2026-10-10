@@ -1,6 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-const { fork, spawnSync } = require('child_process');
+const fs: typeof import('node:fs') = require('fs');
+const path: typeof import('node:path') = require('path');
+const childProcess: typeof import('node:child_process') = require('child_process');
+const { fork, spawnSync } = childProcess;
 
 // chalk 5+ 是纯 ESM。Node 22 起 require(esm) 已稳定（本仓 engines 要求 >=26.8.1），
 // 所以 require 本身没问题，但拿到的是 ESM 命名空间对象，具名导出在 .default 上。
@@ -10,13 +11,13 @@ const { merge } = require('webpack-merge');
 
 const generate = require('../CI/generate.ts');
 const serve = require('../CI/serve.ts');
-const { findEntryMap, uploadFunctionFileToWorksheet, webpackTaskFactory } = require('../CI/utils.ts');
+const { findEntryMap, webpackTaskFactory } = require('../CI/utils.ts');
 const webpackConfig = require('../CI/webpack.config.ts');
 const webpackConfigForMdFunction = require('../CI/webpack.mdfunction.config.ts');
 const webpackConfigForMingoEntryWidget = require('../CI/webpack.mingo-entry-widget.config.ts');
 const { ROOT_PATH } = require('./utils.ts');
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env['NODE_ENV'] === 'production';
 const blackWordList = [
   'http://hart-dev.com',
   'batheticrecords.com',
@@ -25,18 +26,31 @@ const blackWordList = [
 ];
 const sanitizedAssetExtensions = new Set(['.js', '.css']);
 const keepAliveCommands = new Set(['dev', 'dev:main', 'server', 'server:production', 'watch', 'webpack:watch']);
+type WebpackConfig = import('webpack').Configuration;
+type BuildDone = (error?: Error | null) => void;
+type BuildTask = (done: BuildDone) => void;
+type BuildMark = [label: string, durationMs: number];
+
+/**
+ * The historical command was wired to a helper that has never existed in CI/utils.
+ * Keep the command name discoverable, but fail explicitly instead of calling an
+ * undefined export after a costly bundle build.
+ */
+function uploadFunctionFileToWorksheet(_filePath: string, _callback: (error: Error) => void): never {
+  throw new Error('upload-md-function is unavailable: no worksheet upload transport is configured');
+}
 
 // 拼接项目根目录下的绝对路径，避免命令执行目录影响文件定位。
-function resolvePath(...segments) {
+function resolvePath(...segments: string[]): string {
   return path.join(ROOT_PATH, ...segments);
 }
 
 // 将普通字符串转成可安全放入 RegExp 的匹配片段。
-function escapeRegExp(str) {
+function escapeRegExp(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function formatDuration(ms) {
+function formatDuration(ms: number): string {
   if (ms < 1000) {
     return `${Math.round(ms)}ms`;
   }
@@ -61,16 +75,16 @@ function formatDuration(ms) {
 }
 
 // 将 callback 风格任务包装成 Promise，方便按构建顺序串行执行。
-function runTask(task) {
+function runTask(task: BuildTask): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     let settled = false;
 
-    const done = err => {
+    const done: BuildDone = err => {
       if (settled) return;
 
       settled = true;
       if (err) {
-        reject(err);
+        reject(err instanceof Error ? err : new Error(String(err)));
       } else {
         resolve();
       }
@@ -85,12 +99,12 @@ function runTask(task) {
 }
 
 // 执行 webpack 构建任务，watch 模式会在首轮编译结束后 resolve。
-function runWebpackTask(config, isWatch = false) {
+function runWebpackTask(config: WebpackConfig, isWatch = false): Promise<void> {
   return runTask(webpackTaskFactory(config, isWatch));
 }
 
 // 递归遍历目录下的文件，并对每个文件执行传入的处理函数。
-function walkFiles(dirPath, handler) {
+function walkFiles(dirPath: string, handler: (filePath: string) => void): void {
   if (!fs.existsSync(dirPath)) return;
 
   fs.readdirSync(dirPath, { withFileTypes: true }).forEach(entry => {
@@ -108,7 +122,7 @@ function walkFiles(dirPath, handler) {
 }
 
 // 递归复制目录内容，目标目录不存在时自动创建。
-function copyDir(sourcePath, targetPath) {
+function copyDir(sourcePath: string, targetPath: string): void {
   if (!fs.existsSync(sourcePath)) return;
 
   fs.mkdirSync(targetPath, { recursive: true });
@@ -116,7 +130,7 @@ function copyDir(sourcePath, targetPath) {
 }
 
 // 删除目录下所有满足 matcher 条件的文件。
-function deleteFilesByMatcher(basePath, matcher) {
+function deleteFilesByMatcher(basePath: string, matcher: (filePath: string) => boolean): void {
   walkFiles(basePath, filePath => {
     if (matcher(filePath)) {
       fs.unlinkSync(filePath);
@@ -171,13 +185,13 @@ function forkWebpackWatch() {
       process.exit(0);
     });
 
-    child.on('message', message => {
-      if (message && message.type === 'task-done') {
-        resolve(child);
+    child.on('message', (message: unknown) => {
+      if (message && typeof message === 'object' && 'type' in message && message.type === 'task-done') {
+        resolve();
       }
     });
     child.on('error', reject);
-    child.on('exit', code => {
+    child.on('exit', (code: number | null) => {
       if (code) reject(new Error(`webpack watch 子进程异常退出，code: ${code}`));
     });
   });
@@ -337,7 +351,7 @@ async function devMain() {
 // 它回答的是「改这几处有没有改坏」，不是「这次改动是安全的」。
 // 设 SKIP_TESTS=1 可临时跳过（会打醒目告警，供紧急发版用）。
 function specGate() {
-  if (process.env.SKIP_TESTS === '1') {
+  if (process.env['SKIP_TESTS'] === '1') {
     console.log(chalk.bgRed.white(' 警告 ') + chalk.red(' SKIP_TESTS=1：已跳过行为门禁，产物未经行为回归校验 '));
     return;
   }
@@ -361,12 +375,12 @@ function specGate() {
 // fork-ts-checker，所以「构建绿」从来不代表「类型干净」。
 // 设 SKIP_TYPECHECK=1 可临时跳过（会打醒目告警，供紧急发版用）。
 function typecheckGate() {
-  if (process.env.SKIP_TYPECHECK === '1') {
+  if (process.env['SKIP_TYPECHECK'] === '1') {
     console.log(chalk.bgRed.white(' 警告 ') + chalk.red(' SKIP_TYPECHECK=1：已跳过类型门禁，产物未经类型校验 '));
     return;
   }
 
-  const steps = [
+  const steps: Array<[string, string[]]> = [
     ['后缀并存检查（零容忍）', [resolvePath('scripts/checkExtensionCollisions.ts')]],
     ['工具链类型门禁（零容忍）', [resolvePath('scripts/typecheck/tools-gate.ts')]],
     ['语法门禁（零容忍）', [resolvePath('scripts/typecheck/tsc-syntax-gate.ts')]],
@@ -400,8 +414,8 @@ async function release() {
   // 分阶段计时：实测三次 webpack 编译只占 release 总时长的两成左右，
   // 其余七成八在门禁与资源落盘上。没有这个分解，很容易把优化力气花错地方
   //（曾经差点去并行化那三次编译 —— 最多省 25s，还要冒四个编译同时吃 8GB 堆的风险）。
-  const marks = [];
-  const phase = async (label, fn) => {
+  const marks: BuildMark[] = [];
+  const phase = async (label: string, fn: () => void | Promise<void>): Promise<void> => {
     const t = process.hrtime.bigint();
     const r = await fn();
 
@@ -428,7 +442,7 @@ async function release() {
   await phase('mingo widget', buildMingoEntryWidget);
 
   const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
-  const total = marks.reduce((a, [, ms]) => a + ms, 0);
+  const total = marks.reduce((sum, [, ms]) => sum + ms, 0);
   console.log(chalk.cyan('  分阶段耗时：'));
   marks.forEach(([l, ms]) =>
     console.log(chalk.cyan(`    ${l.padEnd(18)} ${formatDuration(ms).padStart(8)}  ${Math.round((ms / total) * 100)}%`)),
@@ -510,7 +524,7 @@ function uploadMdFunction() {
   console.log(chalk.green('Uploading mdfunction.bundle.js'));
 
   return new Promise<void>(resolve => {
-    uploadFunctionFileToWorksheet(filePath, err => {
+    uploadFunctionFileToWorksheet(filePath, (err: Error | null | undefined) => {
       if (err) {
         console.log(chalk.red('Upload failed'));
       } else {
@@ -523,7 +537,7 @@ function uploadMdFunction() {
 }
 
 // 命令名到执行方法的映射，package.json 中的 build 命令会从这里取任务。
-const commandMap = {
+const commandMap: Record<string, () => void | Promise<void>> = {
   copy,
   dev: devMain,
   'dev:main': devMain,

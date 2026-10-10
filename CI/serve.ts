@@ -13,31 +13,36 @@ const { createProxyMiddleware, responseInterceptor } = require('http-proxy-middl
 // 所以 require 本身没问题，但拿到的是 ESM 命名空间对象，具名导出在 .default 上。
 // 少写 .default 的表现是 `chalk.xxx is not a function`，不是 require 报错。
 const chalk = require('chalk').default;
+import type { IncomingMessage, ServerResponse } from 'node:http';
+import type { NetworkInterfaceInfo } from 'node:os';
+import type { Socket } from 'node:net';
+import type { RequestHandler } from 'http-proxy-middleware';
+type NextFunction = (err?: unknown) => void;
 
 const utils = require('./utils.ts');
 const publishConfig = require('./publishConfig.ts');
 const generate = require('./generate.ts');
 // dev server 的运行态，localUrl 等字段在启动过程中才填上
-const statusData: Record<string, any> = {};
+const statusData: Record<string, string | undefined> = {};
 const projectRootPath = path.join(__dirname, '..');
 const iconViewerPath = path.join(projectRootPath, 'scripts/iconViewer');
 
-function logObj(obj) {
+function logObj(obj: Record<string, unknown>): void {
   Object.keys(obj).forEach(key => console.log(`${chalk.yellow(key)}: ${chalk.green(obj[key])}`));
   console.log('\n');
 }
 
-function getLanIp() {
-  return Object.values(networkInterfaces())
-    .flat()
-    .filter((details: import('os').NetworkInterfaceInfo) => details.family === 'IPv4' && !details.internal)
-    .map((details: import('os').NetworkInterfaceInfo) => details.address);
+function getLanIp(): string[] {
+  return (Object.values(networkInterfaces()) as Array<NetworkInterfaceInfo[] | undefined>)
+    .flatMap(details => details || [])
+    .filter(details => details.family === 'IPv4' && !details.internal)
+    .map(details => details.address);
 }
 
-function checkPort(port) {
-  return new Promise(resolve => {
+function checkPort(port: number): Promise<boolean> {
+  return new Promise<boolean>(resolve => {
     const server = net.createServer();
-    server.once('error', err => {
+    server.once('error', (err: NodeJS.ErrnoException) => {
       if (err.code === 'EADDRINUSE') {
         resolve(false);
       }
@@ -50,7 +55,7 @@ function checkPort(port) {
   });
 }
 
-async function getValuedPort(port = 30001) {
+async function getValuedPort(port = 30001): Promise<number> {
   const available = await checkPort(port);
 
   if (available) {
@@ -72,7 +77,14 @@ const PLATFORM_REWRITE_PREFIXES = ['/accountapi/', '/account/', '/platformapi/',
 
 // rewriteHosts 只有部分条目有，不标类型的话 TS 会把数组推成三种字面量形状的联合，
 // 下游 makeProxy(config) 当场报「缺 rewriteHosts」。
-const proxyConfigs: { name: string; path: string; replace: string; server: any; rewriteHosts?: any }[] = [
+interface ProxyConfig {
+  name: string;
+  path: string;
+  replace: string;
+  server: string;
+  rewriteHosts?: boolean | string[] | undefined;
+}
+const proxyConfigs: ProxyConfig[] = [
   {
     name: 'md_agent_api',
     path: '/api/agent/',
@@ -111,7 +123,7 @@ const proxyConfigs: { name: string; path: string; replace: string; server: any; 
     name: 'api',
     path: '/api/',
     // 不设 API_PATH_PREFIX 时跟上游 7.4.5 的默认值一致
-    replace: process.env.API_PATH_PREFIX || '/wwwapi/',
+    replace: process.env['API_PATH_PREFIX'] || '/wwwapi/',
     server: publishConfig.apiServer,
     rewriteHosts: true,
   },
@@ -305,10 +317,10 @@ const REWRITE_PREFIXES = [
 const ANY_ORIGIN_FILE_PREFIXES = ['/file/mdpub', '/file/mdpic', '/file/mdmedia', '/file/mingdao'];
 
 // host 段不含 / " ' 和空白，所以这样只会吃掉 scheme + host[:port]，路径原样留下。
-const anyOriginRe = prefix =>
+const anyOriginRe = (prefix: string): RegExp =>
   new RegExp(`https?://[^"'\\s/]+(?=${prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[/"])`, 'g');
 
-function rewriteAbsoluteHosts(buffer, server, prefixes = REWRITE_PREFIXES) {
+function rewriteAbsoluteHosts(buffer: Buffer, server: string, prefixes: readonly string[] = REWRITE_PREFIXES): Buffer | string {
   let origin: string | null = null;
 
   try {
@@ -356,14 +368,7 @@ function makeProxy({
   path: matchPath,
   replace,
   rewriteHosts: rewrite,
-}: {
-  name: string;
-  server: any;
-  path: string;
-  replace: string;
-  // 只有部分代理条目配了它，所以是可选的
-  rewriteHosts?: any;
-}) {
+}: ProxyConfig): RequestHandler {
   const prefixes = Array.isArray(rewrite) ? rewrite : REWRITE_PREFIXES;
 
   return createProxyMiddleware({
@@ -382,7 +387,7 @@ function makeProxy({
             // 开着 rewriteHosts 的前缀里确实混着流式接口（如主 API 下的
             // sse/Certification/CheckFaceCertSSE），所以这里对非文本/流式响应直接对穿，
             // 只有真正需要改地址的文本响应才走缓冲改写。
-            proxyRes: (proxyRes, req, res) => {
+            proxyRes: (proxyRes: IncomingMessage, req: IncomingMessage, res: ServerResponse) => {
               const contentType = String(proxyRes.headers['content-type'] || '');
               const rewritable = /\b(json|xml)\b/i.test(contentType) || /^text\//i.test(contentType);
 
@@ -392,7 +397,7 @@ function makeProxy({
                 return;
               }
 
-              return responseInterceptor(async buffer => rewriteAbsoluteHosts(buffer, server, prefixes))(
+              return responseInterceptor(async (buffer: Buffer) => rewriteAbsoluteHosts(buffer, server, prefixes))(
                 proxyRes,
                 req,
                 res,
@@ -400,16 +405,18 @@ function makeProxy({
             },
           }
         : null),
-      error(err, req, res) {
+      error(err: Error, req: IncomingMessage, res: ServerResponse | Socket) {
         console.error(`[proxy ${name}] ${req.url} -> ${server} failed:`, err.message);
-        if (!res || res.headersSent) {
-          if (res && typeof res.destroy === 'function') res.destroy(err);
+        if ('headersSent' in res && res.headersSent) {
+          if ('destroy' in res && typeof res.destroy === 'function') res.destroy(err);
           return;
         }
 
         try {
-          res.writeHead(502, { 'Content-Type': 'text/plain; charset=utf-8' });
-          res.end('Bad gateway');
+          if ('writeHead' in res) {
+            res.writeHead(502, { 'Content-Type': 'text/plain; charset=utf-8' });
+            res.end('Bad gateway');
+          }
         } catch {
           /* ignore */
         }
@@ -422,7 +429,7 @@ function makeProxy({
 // 这组配对不是猜的，来自 src 里统一的取址写法：`__api_server__.<key> || md.global.Config.<Key>`
 //（见 src/pages/workflow/apiV2/base.ts 等）。dev 下走前者，生产下走后者，
 // 所以「后者的路径」就是「前者该被重写成什么」。
-const API_ROUTE_CONFIG_KEYS = {
+const API_ROUTE_CONFIG_KEYS: Record<string, string> = {
   workflow_api: 'WorkFlowUrl',
   report_api: 'WsReportUrl',
   integration_api: 'IntegrationAPIUrl',
@@ -439,7 +446,7 @@ const API_ROUTE_CONFIG_KEYS = {
 // 不推导的后果很隐蔽：页面能登录、能看数据，只有待办数这类少数模块 404，
 // 而且返回的是 SPA 的 index.html（200 + text/html，不是 404），
 // 前端把它当接口响应去解析，报出来的是「404 页面不存在」，看着完全像前端 bug。
-async function resolveApiRoutes(mainPrefix) {
+async function resolveApiRoutes(mainPrefix: string): Promise<void> {
   const base = publishConfig.apiServer;
   let metaUrl;
 
@@ -462,7 +469,7 @@ async function resolveApiRoutes(mainPrefix) {
 
     config = _.get(await res.json(), ['data', 'md.global', 'Config']);
   } catch (err) {
-    console.warn(chalk.yellow(`[proxy] 读取 ${metaUrl} 失败，各服务前缀沿用默认值：${err.message}`));
+    console.warn(chalk.yellow(`[proxy] 读取 ${metaUrl} 失败，各服务前缀沿用默认值：${err instanceof Error ? err.message : String(err)}`));
     return;
   }
 
@@ -471,10 +478,13 @@ async function resolveApiRoutes(mainPrefix) {
     return;
   }
 
-  const resolved = {};
+  const resolved: Record<string, string> = {};
 
+  const configRecord = config as Record<string, unknown>;
   for (const proxyConfig of proxyConfigs) {
-    const value = config[API_ROUTE_CONFIG_KEYS[proxyConfig.name]];
+    const routeKey = API_ROUTE_CONFIG_KEYS[proxyConfig.name];
+    if (!routeKey) continue;
+    const value = configRecord[routeKey];
 
     if (typeof value !== 'string' || !value) continue;
 
@@ -497,7 +507,8 @@ async function resolveApiRoutes(mainPrefix) {
   logObj({ ...resolved, api: `${publishConfig.apiServer}${mainPrefix.replace(/^\//, '')}` });
 }
 
-const proxyMiddlewares: Record<string, any> = {};
+const proxyMiddlewares: Record<string, RequestHandler> = {};
+interface RewriteRule { match: string; redirect: string; ignoreCase: boolean }
 
 function buildProxyMiddlewares() {
   for (const config of proxyConfigs) {
@@ -506,6 +517,7 @@ function buildProxyMiddlewares() {
 }
 
 function createRequestHandlers() {
+  type Handler = { match(req: IncomingMessage): boolean; handle(req: IncomingMessage, res: ServerResponse, next: NextFunction): unknown };
   const rewrites = utils
     .parseNginxRewriteConf([
       path.join(__dirname, '../docker/rewrite.setting'),
@@ -517,7 +529,7 @@ function createRequestHandlers() {
       ignoreCase: true,
     });
 
-  const handlers = [
+  const handlers: Handler[] = [
     // root redirect
     {
       match: req => req.url === '/',
@@ -528,10 +540,12 @@ function createRequestHandlers() {
     },
     // generic proxy：/__proxy?url=<encoded-target-url>
     {
-      match: req => req.url.startsWith('/__proxy'),
+      match: req => (req.url ?? '').startsWith('/__proxy'),
       handle: (req, res, next) => {
-        const urlObj = new URL(req.url, 'https://md.md');
-        const proxyUrl = decodeURIComponent(urlObj.searchParams.get('url'));
+        const urlObj = new URL(req.url ?? '', 'https://md.md');
+        const rawProxyUrl = urlObj.searchParams.get('url');
+        if (!rawProxyUrl) { res.statusCode = 400; res.end('Missing proxy url'); return; }
+        const proxyUrl = decodeURIComponent(rawProxyUrl);
         const proxyUrlObj = new URL(proxyUrl);
 
         req.url = proxyUrl.replace(proxyUrlObj.origin, '');
@@ -540,7 +554,7 @@ function createRequestHandlers() {
           changeOrigin: true,
           logger: { info: () => {}, warn: console.warn, error: console.error },
           on: {
-            error(err) {
+            error(err: Error) {
               console.error(`[proxy __proxy] ${proxyUrlObj.origin} failed:`, err.message);
               if (!res.headersSent) {
                 try {
@@ -557,19 +571,23 @@ function createRequestHandlers() {
     },
     // api proxies：pathRewrite 已在 makeProxy 里配置，调用点无需手动 replace url
     ...proxyConfigs.map(config => ({
-      match: req => req.url.startsWith(config.path),
-      handle: (req, res, next) => proxyMiddlewares[config.name](req, res, next),
+      match: (req: IncomingMessage) => (req.url ?? '').startsWith(config.path),
+      handle: (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
+        const middleware = proxyMiddlewares[config.name];
+        if (!middleware) { res.statusCode = 502; res.end('Proxy not configured'); return; }
+        void middleware(req, res, next);
+      },
     })),
     // static files
     {
-      match: req => req.url.startsWith('/dist/'),
-      handle: (req, res, next) => next(),
+      match: req => (req.url ?? '').startsWith('/dist/'),
+      handle: (_req: IncomingMessage, _res: ServerResponse, next: NextFunction) => next(),
     },
     // local helper files, for example /__fonticon
     {
-      match: req => req.url.startsWith('/__'),
+      match: req => (req.url ?? '').startsWith('/__'),
       handle: (req, res) => {
-        const url = new URL(`http://md.md${req.url}`);
+        const url = new URL(`http://md.md${req.url ?? ''}`);
         const basePath = url.pathname[3] === '/' ? projectRootPath : iconViewerPath;
         const filePath = path.join(basePath, url.pathname.slice(3) + (/\./.test(url.pathname) ? '' : '.html'));
         const rs = fs.createReadStream(filePath);
@@ -591,14 +609,14 @@ function createRequestHandlers() {
     // nginx rewrites
     {
       match: req =>
-        _.findIndex(rewrites, rule => new RegExp(rule.match, rule.ignoreCase ? 'i' : '').test(req.url)) > -1,
+        _.findIndex(rewrites, (rule: RewriteRule) => new RegExp(rule.match, rule.ignoreCase ? 'i' : '').test(req.url ?? '')) > -1,
       handle: (req, res, next) => {
-        const matchedIndex = _.findIndex(rewrites, rule =>
-          new RegExp(rule.match, rule.ignoreCase ? 'i' : '').test(req.url),
+        const matchedIndex = _.findIndex(rewrites, (rule: RewriteRule) =>
+          new RegExp(rule.match, rule.ignoreCase ? 'i' : '').test(req.url ?? ''),
         );
         const { match, redirect, ignoreCase } = rewrites[matchedIndex];
         req.url = redirect.includes('$')
-          ? req.url.replace(new RegExp(match, ignoreCase ? 'ig' : 'g'), redirect)
+          ? (req.url ?? '').replace(new RegExp(match, ignoreCase ? 'ig' : 'g'), redirect)
           : redirect;
         req.url = `/files${req.url}`;
         next();
@@ -606,7 +624,7 @@ function createRequestHandlers() {
     },
   ];
 
-  return function (req, res, next) {
+  return function (req: IncomingMessage, res: ServerResponse, next: NextFunction): unknown {
     for (const handler of handlers) {
       if (handler.match(req)) {
         return handler.handle(req, res, next);
@@ -619,10 +637,10 @@ function createRequestHandlers() {
   };
 }
 
-async function regenerateDevHtmlIfMissing({ filePath, pathname, isProductionServer }) {
+async function regenerateDevHtmlIfMissing({ filePath, pathname, isProductionServer }: { filePath: string; pathname: string; isProductionServer: boolean }): Promise<void> {
   if (
     isProductionServer ||
-    process.env.NODE_ENV === 'production' ||
+    process.env['NODE_ENV'] === 'production' ||
     !pathname.startsWith('/files/') ||
     !/\.html?$/.test(pathname) ||
     fs.existsSync(filePath)
@@ -633,22 +651,22 @@ async function regenerateDevHtmlIfMissing({ filePath, pathname, isProductionServ
   try {
     console.log(`missing ${pathname}, regenerating build/files html`);
     await generate();
-  } catch (err) {
+  } catch (err: unknown) {
     console.error('regenerate build/files html failed:', err);
   }
 }
 
 const middlewareList = [
   createRequestHandlers(),
-  function (req, res, next) {
+  function (req: IncomingMessage, res: ServerResponse, next: NextFunction): void {
     // 控制页面 TODO
     if (req.url === '/--dashboard') {
-      res.end(`dashboard-${statusData.localUrl}`);
+      res.end(`dashboard-${statusData['localUrl']}`);
     } else {
       next();
     }
   },
-  function (req, res, next) {
+  function (req: IncomingMessage, res: ServerResponse, next: NextFunction): void {
     // 跨域处理 + 禁止缓存。headers 已发出（代理流式中断回流到此）时 setHeader 会抛
     // ERR_HTTP_HEADERS_SENT 直接崩进程，加 guard 兜底
     if (!res.headersSent) {
@@ -660,33 +678,34 @@ const middlewareList = [
   },
 ];
 
-function runMiddleware(req, res, callback) {
+function runMiddleware(req: IncomingMessage, res: ServerResponse, callback: () => void): void {
   const stack = middlewareList.slice();
 
   (function next() {
     if (stack.length > 0) {
       const fn = stack.shift();
-      fn(req, res, next);
+      if (fn) fn(req, res, next);
     } else {
       callback();
     }
   })();
 }
 
-async function serve({ done = () => {}, needOpen = true, isProduction: isProductionServer = false } = {}) {
+interface ServeOptions { done?: (() => void) | undefined; needOpen?: boolean | undefined; isProduction?: boolean | undefined }
+async function serve({ done = () => {}, needOpen = true, isProduction: isProductionServer = false }: ServeOptions = {}): Promise<void> {
   // 必须在 createServer 之前完成：推导会改写 proxyConfigs 里的 replace/server，
   // 而 makeProxy 是按当时的值固化进中间件的，先建中间件再推导就白推了。
-  if (process.env.API_PATH_PREFIX) {
-    await resolveApiRoutes(process.env.API_PATH_PREFIX);
+  if (process.env['API_PATH_PREFIX']) {
+    await resolveApiRoutes(process.env['API_PATH_PREFIX']);
   }
 
   buildProxyMiddlewares();
 
   const port = await getValuedPort();
-  const server = http.createServer((req, res) => {
+  const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
     runMiddleware(req, res, async () => {
       // 静态文件服务实现
-      const { pathname } = new URL(`http://md.md${req.url}`);
+      const { pathname } = new URL(`http://md.md${req.url ?? ''}`);
 
       if (/\.html?$/.test(pathname)) {
         // 添加本地样式
@@ -726,14 +745,14 @@ async function serve({ done = () => {}, needOpen = true, isProduction: isProduct
     });
   });
 
-  server.on('error', err => {
+  server.on('error', (err: Error) => {
     console.log('\nstart failed ! 💣💀💣', err);
   });
 
   server.listen(port, () => {
     const lanIps = getLanIp();
     const localUrl = `http://localhost:${port}`;
-    statusData.localUrl = localUrl;
+    statusData['localUrl'] = localUrl;
     console.log('\n启动成功! 🎉 🎉 🎉\n');
     logObj({
       地址: localUrl,

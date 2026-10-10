@@ -15,15 +15,15 @@
  *   SKIP_TESTS=1 node scripts/run-specs.js     # opt out (mirrors SKIP_TYPECHECK)
  */
 
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const { execFile } = require('child_process');
+const fs: typeof import('node:fs') = require('fs');
+const os: typeof import('node:os') = require('os');
+const path: typeof import('node:path') = require('path');
+const { execFile }: typeof import('node:child_process') = require('child_process');
 // chalk 5+ 是纯 ESM（package.json 里 "type": "module"、exports 没有 CJS 条件）。
 // Node 22 起 require(esm) 已稳定，本仓 engines 要求 >=26.8.1，所以 require 本身没问题——
 // 但拿到的是 ESM 命名空间对象，具名导出在 .default 上，直接 chalk.gray 是 undefined
 //（表现为 `chalk.gray is not a function`，而不是 require 报错，所以别误判成「装错了」）。
-const chalk = require('chalk').default;
+const chalk: typeof import('chalk').default = require('chalk').default;
 
 const ROOT = path.resolve(__dirname, '..');
 // CI：构建/dev-server 那套脚本也归这里管（CI/serve.spec.js 守的是代理配置的成对性）。
@@ -35,12 +35,26 @@ const SEARCH_DIRS = ['src', 'scripts', 'CI'];
 // 已知有 spec 真的在跑定时器：SearchInput 用真实 setTimeout，CountDown 打桩 setInterval。
 const DEFAULT_TIMEOUT_MS = 30000;
 
-function parseArgs(argv) {
-  const args = { filter: null, concurrency: os.availableParallelism(), timeout: DEFAULT_TIMEOUT_MS };
+interface RunnerArgs {
+  filter: string | null | undefined;
+  concurrency: number;
+  timeout: number;
+}
+interface SpecResult {
+  spec: string;
+  ok: boolean;
+  timedOut: boolean;
+  stdout: string;
+  stderr: string;
+  ms: number;
+}
+function parseArgs(argv: string[]): RunnerArgs {
+  const args: RunnerArgs = { filter: null, concurrency: os.availableParallelism(), timeout: DEFAULT_TIMEOUT_MS };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--filter') args.filter = argv[++i];
-    else if (argv[i] === '--concurrency') args.concurrency = Math.max(1, parseInt(argv[++i], 10) || 1);
-    else if (argv[i] === '--timeout') args.timeout = Math.max(1000, parseInt(argv[++i], 10) || DEFAULT_TIMEOUT_MS);
+    else if (argv[i] === '--concurrency') args.concurrency = Math.max(1, parseInt(String(argv[++i]), 10) || 1);
+    else if (argv[i] === '--timeout')
+      args.timeout = Math.max(1000, parseInt(String(argv[++i]), 10) || DEFAULT_TIMEOUT_MS);
   }
   return args;
 }
@@ -51,19 +65,19 @@ function parseArgs(argv) {
 const SPEC_SUFFIXES = ['.spec.js', '.spec.ts'];
 const TEST_SUFFIXES = ['.test.js', '.test.ts'];
 
-function discover(dir, out, suffix) {
+function discover(dir: string, out: string[], suffix: string | string[]): string[] {
   const suffixes = Array.isArray(suffix) ? suffix : [suffix];
   const abs = path.join(ROOT, dir);
   if (!fs.existsSync(abs)) return out;
   for (const entry of fs.readdirSync(abs, { recursive: true, withFileTypes: true })) {
     if (!entry.isFile() || !suffixes.some(x => entry.name.endsWith(x))) continue;
-    out.push(path.relative(ROOT, path.join(entry.parentPath || entry.path, entry.name)));
+    out.push(path.relative(ROOT, path.join(entry.parentPath, entry.name)));
   }
   return out;
 }
 
-function runOne(spec, timeoutMs) {
-  return new Promise(resolve => {
+function runOne(spec: string, timeoutMs: number): Promise<SpecResult> {
+  return new Promise<SpecResult>(resolve => {
     const started = Date.now();
     execFile(
       process.execPath,
@@ -79,19 +93,27 @@ function runOne(spec, timeoutMs) {
   });
 }
 
-async function pool(items, limit, worker) {
-  const results = [];
-  let next = 0;
+async function pool<Item, Result>(
+  items: Item[],
+  limit: number,
+  worker: (item: Item) => Promise<Result>,
+): Promise<Result[]> {
+  const results: Result[] = [];
+  const pending = items.values();
   await Promise.all(
     Array.from({ length: Math.min(limit, items.length) }, async () => {
-      while (next < items.length) results.push(await worker(items[next++]));
+      while (true) {
+        const item = pending.next();
+        if (item.done) break;
+        results.push(await worker(item.value));
+      }
     }),
   );
   return results;
 }
 
-async function main() {
-  if (process.env.SKIP_TESTS === '1') {
+async function main(): Promise<void> {
+  if (process.env['SKIP_TESTS'] === '1') {
     console.log(chalk.yellow('SKIP_TESTS=1 -- behaviour specs skipped.'));
     return;
   }
@@ -109,8 +131,9 @@ async function main() {
   }
 
   const args = parseArgs(process.argv.slice(2));
-  let specs = SEARCH_DIRS.reduce((acc, d) => discover(d, acc, SPEC_SUFFIXES), []).sort();
-  if (args.filter) specs = specs.filter(s => s.includes(args.filter));
+  let specs = SEARCH_DIRS.reduce<string[]>((acc, d) => discover(d, acc, SPEC_SUFFIXES), []).sort();
+  const filter = args.filter;
+  if (filter) specs = specs.filter(s => s.includes(filter));
 
   if (!specs.length) {
     console.error(chalk.red(args.filter ? `No specs match "${args.filter}".` : 'No specs found.'));
@@ -158,3 +181,10 @@ main().catch(err => {
   console.error(err);
   process.exitCode = 1;
 });
+export type SpecRunner = {
+  parseArgs: typeof parseArgs;
+  discover: typeof discover;
+  runOne: typeof runOne;
+  pool: typeof pool;
+  main: typeof main;
+};
