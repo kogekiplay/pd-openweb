@@ -71,7 +71,7 @@ export default function SuccessDialog({ visible, secretInfo, onClose }) {
       title=""
       overlayClosable={false}
       showFooter={false}
-      onCancel={e => {
+      onCancel={(e?: KeyboardEvent) => {
         if (e && (e.key === 'Escape' || e.keyCode === 27)) return;
       }}
       handleClose={onClose}

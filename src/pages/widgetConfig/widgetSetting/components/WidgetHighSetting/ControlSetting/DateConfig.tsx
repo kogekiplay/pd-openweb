@@ -100,7 +100,7 @@ export function ShowFormatDialog(props) {
       width={720}
       className="textRegexpVerifyDialog"
       visible={true}
-      okDisabled={!value || checkError()}
+      okDisabled={!value || !!checkError()}
       onOk={() => onOk(checkError() ? '' : value)}
       onCancel={onClose}
       title={<span className="bold">{_l('自定义格式')}</span>}

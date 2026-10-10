@@ -1,19 +1,20 @@
 import { createRoot } from 'react-dom/client';
 import ConfirmButton from './ConfirmButton';
 import Dialog from './Dialog';
+import type { ConfirmOptions } from './types';
 import '../less/Dialog.less';
 
-export default function promise(props) {
+export default function promise(props: ConfirmOptions): Promise<void> {
   // 在Document中创建父节点
   const container = document.createElement('div');
   document.body.appendChild(container);
 
   // 记录状态
-  let step = null;
+  let step: AsyncGenerator<void, void, unknown> | null = null;
   let confirm = false;
 
   // 封装Promise
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     step = (async function* () {
       // 关闭弹框处理函数
       const handlerClose = (value: boolean) => {
@@ -21,7 +22,7 @@ export default function promise(props) {
         confirm = value;
 
         // 关闭弹框，执行后续步骤
-        if (step.next) step.next();
+        if (step?.next) void step.next();
       };
 
       // 底部

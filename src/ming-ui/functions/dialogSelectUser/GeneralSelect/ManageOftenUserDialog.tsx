@@ -1,9 +1,9 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
 import { Dialog, FunctionWrap, Icon, LoadDiv, RadioGroup, SortableList } from 'ming-ui';
 import accountSettingAjax from 'src/api/accountSetting';
 import addressBookAjax from 'src/api/addressBook';
 import userAjax from 'src/api/user';
+import styled from 'src/utils/typedStyled';
 import { userObject } from '../../quickSelectUser/boundary';
 import { decodeUsers } from './boundary';
 import { MAX_OFTEN_USERS, OFTEN_USER_OPTIONS } from './constant';

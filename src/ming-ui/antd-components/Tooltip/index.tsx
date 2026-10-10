@@ -1,9 +1,34 @@
-import { cloneElement } from 'react';
-import { Tooltip } from 'antd';
+import {
+  cloneElement,
+  type ComponentPropsWithRef,
+  type CSSProperties,
+  type MouseEventHandler,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
+import { type TooltipProps as AntdTooltipProps, Tooltip } from 'antd';
 import cx from 'classnames';
 import './index.less';
 
-export default function (props) {
+export interface LegacyTooltipStyle extends Omit<CSSProperties, 'wordWrap'> {
+  wordWrap?: CSSProperties['wordWrap'] | 'break-all' | undefined;
+}
+export interface TooltipProps extends Omit<ComponentPropsWithRef<typeof Tooltip>, 'children' | 'destroyTooltipOnHide'> {
+  children: ReactElement;
+  destroyTooltipOnHide?: boolean | undefined;
+  type?: string | undefined;
+  shortcut?: ReactNode;
+  maxWidth?: CSSProperties['maxWidth'];
+  visible?: boolean | undefined;
+  onVisibleChange?: AntdTooltipProps['onOpenChange'];
+  arrowPointAtCenter?: boolean | undefined;
+  tooltipStyle?: LegacyTooltipStyle | undefined;
+  popupPlacement?: AntdTooltipProps['placement'];
+  offset?: [number, number] | undefined;
+  onMouseEnter?: MouseEventHandler<HTMLElement> | undefined;
+}
+
+export default function HapTooltip(props: TooltipProps) {
   const {
     children,
     destroyTooltipOnHide = true,
@@ -28,8 +53,7 @@ export default function (props) {
     ...restProps
   } = props;
 
-  const renderTitle = () => {
-    let content = title;
+  const renderContent = (content: ReactNode): ReactNode => {
     if (!content) return null;
 
     // 如果有快捷键参数，则在 title 后面添加快捷键显示
@@ -47,6 +71,13 @@ export default function (props) {
     }
 
     return content;
+  };
+  const renderTitle = (): TooltipProps['title'] => {
+    if (typeof title === 'function') {
+      if (!shortcut && type !== 'white') return title;
+      return () => renderContent(title());
+    }
+    return renderContent(title);
   };
 
   return (

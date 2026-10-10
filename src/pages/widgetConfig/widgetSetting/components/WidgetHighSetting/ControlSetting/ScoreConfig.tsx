@@ -48,7 +48,7 @@ const defaultNames = [
 ];
 
 export default function ScoreConfig({ data, onChange }) {
-  const [visible, setVisible] = useState<boolean | { visible: boolean }>(false);
+  const [visible, setVisible] = useState(false);
   const { showvalue, max } = getAdvanceSetting(data);
   const itemnames = getAdvanceSetting(data, 'itemnames') || [];
   const [names, setNames] = useState(itemnames);
@@ -113,7 +113,7 @@ export default function ScoreConfig({ data, onChange }) {
       </div>
 
       {itemnames.length > 0 && (
-        <EditInfo style={{ marginTop: '8px' }} onClick={() => setVisible({ visible: true })}>
+        <EditInfo style={{ marginTop: '8px' }} onClick={() => setVisible(true)}>
           <div className="text overflow_ellipsis textPrimary">
             {itemnames
               .filter(i => i.value)

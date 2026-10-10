@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { LoadDiv, MobileSearch, ScrollView } from 'ming-ui';
 import { PopupWrapper } from 'ming-ui';
 import { Skeleton } from 'ming-ui/antd-components';
+import type { ScrollViewOptions } from 'ming-ui/components/ScrollView/types';
 import type { AgentSession } from 'src/components/Agent/shareTypes';
 import SessionActions from './SessionActions';
 import SessionRow from './SessionRow';
@@ -11,7 +12,7 @@ import type { SessionAction } from './types';
 import useSessionHistory from './useSessionHistory';
 
 const HISTORY_LAYER_ID = 'mobile-mingo-session-history';
-const HIDDEN_SCROLLBAR_OPTIONS = {
+const HIDDEN_SCROLLBAR_OPTIONS: ScrollViewOptions = {
   scrollbars: {
     visibility: 'hidden',
   },

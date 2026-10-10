@@ -3,18 +3,20 @@
  * disableParentScroll：滚动到底部或顶部时，是否阻止parent滚动
  * enableWheelDirectionControl：是否允许按住 shift 和 command 修改滚动方向
  */
+import type { InstancePluginEvent, OverlayScrollbars } from 'overlayscrollbars';
+import { readPluginOptions } from './options';
+
 export default {
   name: 'unifiedWheelControl',
-  instance: (osInstance, event) => {
-    const { customOptions = {} } = osInstance.options();
-    const { isMobile, disableParentScroll, enableWheelDirectionControl } = customOptions;
+  instance: (osInstance: OverlayScrollbars, event: InstancePluginEvent) => {
+    const { isMobile, disableParentScroll, enableWheelDirectionControl } = readPluginOptions(osInstance);
 
     if (isMobile || (!disableParentScroll && !enableWheelDirectionControl)) return undefined;
 
     const viewport = osInstance.elements().viewport;
     let lastScrollLeft = viewport.scrollLeft;
 
-    const handleWheel = e => {
+    const handleWheel = (e: WheelEvent) => {
       const isMac = window.isMacOs;
       const isHorizontalKey = e.shiftKey || (isMac && e.metaKey);
 

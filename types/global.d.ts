@@ -561,7 +561,7 @@ interface Window {
       id: string | number;
       className?: string | undefined;
       index?: number | undefined;
-      fn?(e: KeyboardEvent): void;
+      fn?: { handle(e: KeyboardEvent): void }['handle'] | undefined;
     };
   };
   /** closeFns 的层级计数，打开一层 +1、全关时归零（首次打开前是 undefined） */

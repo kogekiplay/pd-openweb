@@ -175,6 +175,7 @@ function load(file: string): unknown {
           jsxs: (type: unknown, props: Record<string, unknown>) => ({ type, props }),
         };
       if (name === 'styled-components') return { __esModule: true, default: styled };
+      if (name === 'src/utils/typedStyled') return load('../../../../utils/typedStyled.ts');
       if (name === 'react-redux') return { shallowEqual: () => false };
       if (name === 'lodash') return lodash;
       if (name === 'classnames') return () => '';

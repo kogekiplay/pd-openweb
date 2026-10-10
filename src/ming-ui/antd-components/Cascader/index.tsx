@@ -1,15 +1,26 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { ChangeEvent, KeyboardEvent, MouseEvent, ReactNode } from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Checkbox, Input, Spin } from 'antd';
+import type { InputRef } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
-import styled from 'styled-components';
 import { Icon } from 'ming-ui';
+import styled from 'src/utils/typedStyled';
+import { cancellation, cascaderOptions, cascaderValues, loadOutcome, searchPath } from './boundary';
+import type {
+  CascaderHandle,
+  CascaderKey,
+  CascaderOption,
+  CascaderProps,
+  CascaderValue,
+  FlattenedCascaderOption,
+} from './types';
 import 'rc-trigger/assets/index.css';
 import './index.less';
 
-const CascaderWrapper = styled.div`
+const CascaderWrapper = styled.div<{ isFocused: boolean; selectedKeys: CascaderValue[]; multiple: boolean }>`
   .cascader-selected-value,
   .cascader-selected-tag {
     ${({ isFocused }) => (isFocused ? 'opacity: 0.4;' : '')}
@@ -27,7 +38,7 @@ const CascaderWrapper = styled.div`
   }
 `;
 
-const Cascader = React.forwardRef(
+const Cascader = React.forwardRef<CascaderHandle, CascaderProps>(
   (
     {
       options = [],
@@ -38,6 +49,9 @@ const Cascader = React.forwardRef(
       multiple = false,
       showSearch = true,
       loadData, // 异步加载函数: (node) => Promise
+      loading = false,
+      loadError: externalLoadError = false,
+      onRetry,
       disabled = false,
       style = {},
       className = '',
@@ -54,38 +68,73 @@ const Cascader = React.forwardRef(
     },
     ref,
   ) => {
-    const [expandedKeys, setExpandedKeys] = useState([]);
+    const [expandedKeys, setExpandedKeys] = useState<CascaderKey[]>([]);
 
     // 扁平化树数据用于查找节点
-    const flattenTreeData = useCallback((data, parentPath = []) => {
-      let result = [];
-      data.forEach(item => {
-        const nodeValue = item.value;
-        const nodeChildren = item.children;
-        const path = [...parentPath, nodeValue];
+    const flattenTreeData = useCallback(
+      (data: CascaderOption[], parentPath: CascaderKey[] = []): FlattenedCascaderOption[] => {
+        let result: FlattenedCascaderOption[] = [];
+        data.forEach(item => {
+          const nodeValue = item.value;
+          const nodeChildren = item.children;
+          const path = [...parentPath, nodeValue];
 
-        result.push({
-          ...item,
-          path,
-          fullPath: path.join(' / '),
+          result.push({
+            ...item,
+            path,
+            fullPath: path.join(' / '),
+          });
+
+          if (nodeChildren && nodeChildren.length > 0) {
+            result = result.concat(flattenTreeData(nodeChildren, path));
+          }
         });
+        return result;
+      },
+      [],
+    );
 
-        if (nodeChildren && nodeChildren.length > 0) {
-          result = result.concat(flattenTreeData(nodeChildren, path));
-        }
-      });
-      return result;
-    }, []);
-
-    const [selectedKeys, setSelectedKeys] = useState(value || []);
+    const [selectedKeys, setSelectedKeys] = useState<CascaderValue[]>(() => {
+      try {
+        return cascaderValues(value || []);
+      } catch {
+        return [];
+      }
+    });
     const [searchValue, setSearchValue] = useState(''); // 搜索值，内部完全控制
-    const [loadingNode, setLoadingNode] = useState(''); // 正在加载的节点
+    const [loadingNode, setLoadingNode] = useState<CascaderKey | null>(null); // 正在加载的节点
     const [popupVisible, setPopupVisible] = useState(false);
     const [isFocus, setFocus] = useState(false);
-    const containerRef = useRef(null);
-    const searchInputRef = useRef(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const searchInputRef = useRef<InputRef>(null);
     const measureRef = useRef<HTMLSpanElement | null>(null);
     const [inputWidth, setInputWidth] = useState(3);
+
+    const activeRequest = useRef(0);
+    const mounted = useRef(false);
+    const focusTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+    const [retryFailed, setRetryFailed] = useState(false);
+    const [loadError, setLoadError] = useState<{ node: CascaderOption; level: number } | null>(null);
+    const checked = useMemo(() => {
+      try {
+        return { options: cascaderOptions(options), values: cascaderValues(value), error: false };
+      } catch {
+        return { options: [], values: [], error: true };
+      }
+    }, [options, value]);
+    const validOptions = checked.options;
+    useEffect(() => {
+      mounted.current = true;
+      return () => {
+        mounted.current = false;
+        activeRequest.current++;
+        clearTimeout(focusTimer.current);
+      };
+    }, []);
+
+    useEffect(() => {
+      if (loading) setRetryFailed(false);
+    }, [loading]);
 
     const isFocused = useMemo(() => popupVisible || isFocus, [popupVisible, isFocus]);
 
@@ -107,18 +156,22 @@ const Cascader = React.forwardRef(
 
     // 同步外部 value 变化
     useEffect(() => {
-      if (!_.isEqual(value, selectedKeys)) {
-        setSelectedKeys(value);
+      if (!checked.error && !_.isEqual(value, selectedKeys)) {
+        setSelectedKeys(checked.values);
       }
 
       if (isFocused) {
         searchInputRef.current?.focus();
       }
-    }, [value, selectedKeys]);
+    }, [value, selectedKeys, checked]);
 
     // 同步外部 searchValue 变化
     useEffect(() => {
-      if (searchValue !== externalSearchValue) {
+      if (externalSearchValue !== undefined && searchValue !== externalSearchValue) {
+        activeRequest.current++;
+        setLoadingNode(null);
+        setLoadError(null);
+        setRetryFailed(false);
         setSearchValue(externalSearchValue);
       }
     }, [externalSearchValue, searchValue]);
@@ -136,15 +189,15 @@ const Cascader = React.forwardRef(
 
     // 监听 options 变化，如果正在加载的节点有了子节点，清空加载状态
     useEffect(() => {
-      if (loadingNode) {
-        const flatData = flattenTreeData(options);
+      if (loadingNode !== null) {
+        const flatData = flattenTreeData(validOptions);
         const node = flatData.find(item => item.value === loadingNode);
 
         if (node && !_.isEmpty(node.children)) {
-          setLoadingNode('');
+          setLoadingNode(null);
         }
       }
-    }, [options, loadingNode, flattenTreeData]);
+    }, [validOptions, loadingNode, flattenTreeData]);
 
     useEffect(() => {
       if (disabled && popupVisible) {
@@ -154,9 +207,9 @@ const Cascader = React.forwardRef(
 
     // 处理搜索过滤
     const filteredTreeData = useMemo(() => {
-      if (!searchValue.trim() || (!multiple && searchValue.trim())) return options;
+      if (!searchValue.trim() || (!multiple && searchValue.trim())) return validOptions;
 
-      const filterNode = nodes => {
+      const filterNode = (nodes: CascaderOption[]): CascaderOption[] => {
         return nodes
           .map(node => ({ ...node }))
           .filter(node => {
@@ -179,37 +232,82 @@ const Cascader = React.forwardRef(
           });
       };
 
-      return filterNode(options);
-    }, [options, searchValue]);
+      return filterNode(validOptions);
+    }, [validOptions, searchValue, multiple]);
 
-    // 处理节点展开
+    // 处理节点展开；the real widget returns handled loaded/failed/cancelled completion.
     const handleExpand = useCallback(
-      (node, level) => {
+      (node: CascaderOption, level: number) => {
         const newExpandedKeys = _.isEmpty(expandedKeys) ? [node.value] : [...expandedKeys.slice(0, level), node.value];
-
-        // 如果有子节点数据，则直接展开
         if (!_.isEmpty(node.children)) {
+          activeRequest.current++;
+          setLoadingNode(null);
+          setLoadError(null);
+          setRetryFailed(false);
           setExpandedKeys(newExpandedKeys);
           return;
         }
-
-        // 正在加载子节点数据
         if (loadData && loadingNode === node.value) return;
-
-        // 展开节点
         setExpandedKeys(newExpandedKeys);
-        setLoadingNode(node.value);
-
-        if (loadData) {
-          loadData(node);
+        setLoadingNode(loadData ? node.value : null);
+        setLoadError(null);
+        setRetryFailed(false);
+        const version = ++activeRequest.current;
+        if (!loadData) return;
+        const fail = () => {
+          if (!mounted.current || activeRequest.current !== version) return;
+          setLoadingNode(null);
+          setLoadError({ node, level });
+        };
+        try {
+          const task = loadData(node);
+          if (task === undefined) return; // Legacy external-state loader waits for updated options.
+          Promise.resolve(task)
+            .then(value => {
+              if (!mounted.current || activeRequest.current !== version) return;
+              const outcome = loadOutcome(value);
+              setLoadingNode(null);
+              if (outcome.status === 'failed') setLoadError({ node, level });
+            })
+            .catch(error => {
+              if (cancellation(error)) {
+                if (mounted.current && activeRequest.current === version) setLoadingNode(null);
+              } else fail();
+            });
+        } catch {
+          fail();
         }
       },
       [loadData, expandedKeys, loadingNode],
     );
 
+    const retryExternal = useCallback(() => {
+      if (loadError) {
+        handleExpand(loadError.node, loadError.level);
+        return;
+      }
+      if (!onRetry) return;
+      const version = ++activeRequest.current;
+      setRetryFailed(false);
+      const fail = () => {
+        if (mounted.current && version === activeRequest.current) setRetryFailed(true);
+      };
+      try {
+        const task = onRetry();
+        if (task !== undefined)
+          Promise.resolve(task)
+            .then(result => {
+              if (loadOutcome(result).status === 'failed') fail();
+            })
+            .catch(fail);
+      } catch {
+        fail();
+      }
+    }, [loadError, handleExpand, onRetry]);
+
     // 处理节点选择
     const handleSelect = useCallback(
-      node => {
+      (node: CascaderOption) => {
         const nodeItem = { label: node.label, value: node.value };
 
         // 单选模式，直接选择
@@ -225,7 +323,7 @@ const Cascader = React.forwardRef(
 
         // 多选模式
         const isSelected = selectedKeys.some(item => item.value === node.value);
-        let newSelectedKeys;
+        let newSelectedKeys: CascaderValue[];
 
         if (isSelected) {
           newSelectedKeys = selectedKeys.filter(item => item.value !== node.value);
@@ -241,21 +339,26 @@ const Cascader = React.forwardRef(
 
     // 处理弹出层显示/隐藏
     const handlePopupVisibleChange = useCallback(
-      (visible, skipDisabled = false) => {
+      (visible: boolean, skipDisabled = false) => {
         if (disabled && !skipDisabled) return;
 
         setFocus(visible);
         setPopupVisible(visible);
         if (visible && showSearch) {
           // 延迟聚焦搜索框
-          setTimeout(() => {
-            searchInputRef.current?.focus();
+          clearTimeout(focusTimer.current);
+          focusTimer.current = setTimeout(() => {
+            if (mounted.current) searchInputRef.current?.focus();
           }, 0);
         }
 
         onDropdownVisibleChange?.(visible);
         if (!visible) {
-          setLoadingNode('');
+          activeRequest.current++;
+          clearTimeout(focusTimer.current);
+          setLoadError(null);
+          setRetryFailed(false);
+          setLoadingNode(null);
           setExpandedKeys([]);
           setSearchValue(''); // 关闭时清空搜索
           searchInputRef.current?.blur();
@@ -272,7 +375,7 @@ const Cascader = React.forwardRef(
 
     // 清空所有选择
     const handleClear = useCallback(
-      (e?) => {
+      (e?: MouseEvent) => {
         e?.stopPropagation();
         setSelectedKeys([]);
         onChange?.([]);
@@ -280,12 +383,12 @@ const Cascader = React.forwardRef(
           handlePopupVisibleChange(false);
         }
       },
-      [onChange],
+      [onChange, multiple, popupVisible, handlePopupVisibleChange],
     );
 
     // 移除单个标签
     const handleRemoveTag = useCallback(
-      key => {
+      (key: CascaderKey) => {
         const newSelectedKeys = selectedKeys.filter(item => item.value !== key);
         setSelectedKeys(newSelectedKeys);
         onChange?.(newSelectedKeys);
@@ -295,7 +398,7 @@ const Cascader = React.forwardRef(
 
     // 渲染级联面板
     const renderCascaderPanels = useCallback(
-      (nodes, level = 0) => {
+      (nodes: CascaderOption[], level = 0) => {
         const panelKey = `panel-${level}`;
         return (
           <div className="cascader-panel" key={panelKey}>
@@ -348,7 +451,7 @@ const Cascader = React.forwardRef(
                     className={cx('cascader-option-label overflow_ellipsis', {
                       'cascader-option-label-selected': isSelected,
                     })}
-                    title={nodeLabel}
+                    title={nodeLabel == null ? undefined : String(nodeLabel)}
                   >
                     {nodeLabel}
                   </span>
@@ -370,11 +473,11 @@ const Cascader = React.forwardRef(
 
     // 排序搜索结果
     const sortSearchResults = useCallback(
-      data => {
+      (data: CascaderOption[]) => {
         return data.sort((a, b) => {
           const reg = new RegExp(searchValue.trim().replace(/([,.+?:()*[\]^$|{}\\-])/g, '\\$1'), 'g');
-          const formatValue = value =>
-            JSON.parse(value?.path || '[]').map(i => {
+          const formatValue = (value: CascaderOption) =>
+            searchPath(value).map(i => {
               const idx = i.search(reg);
               return idx === -1 ? 999 : idx;
             });
@@ -383,8 +486,10 @@ const Cascader = React.forwardRef(
           const maxCount = Math.max(aIndexArr.length, bIndexArr.length);
 
           for (let i = 0; i < maxCount; i++) {
-            if (_.isUndefined(bIndexArr[i]) || aIndexArr[i] < bIndexArr[i]) return -1;
-            if (_.isUndefined(aIndexArr[i]) || aIndexArr[i] > bIndexArr[i]) return 1;
+            const aIndex = aIndexArr[i];
+            const bIndex = bIndexArr[i];
+            if (bIndex === undefined || (aIndex !== undefined && aIndex < bIndex)) return -1;
+            if (aIndex === undefined || aIndex > bIndex) return 1;
           }
 
           // 逐位都相等。原先这里掉出函数返回 undefined，按规范 NaN 当 0 处理，结果一样
@@ -396,8 +501,8 @@ const Cascader = React.forwardRef(
 
     // 渲染搜索结果标签
     const renderSearchLabel = useCallback(
-      item => {
-        const path = JSON.parse(item?.path || '[]');
+      (item: CascaderOption) => {
+        const path = searchPath(item);
 
         return path.map((text = '', i) => {
           const isLast = i === path.length - 1;
@@ -424,18 +529,55 @@ const Cascader = React.forwardRef(
 
     // 渲染级联面板容器
     const renderCascaderContent = useCallback(() => {
+      if (checked.error)
+        return (
+          <div className="cascader-content" role="alert">
+            {_l('数据源异常')}
+          </div>
+        );
+      if (externalLoadError || retryFailed)
+        return (
+          <div className="cascader-content" role="alert">
+            {notFoundContent || _l('加载失败，请重试')}
+            <button onClick={retryExternal}>{_l('重试')}</button>
+          </div>
+        );
+      if (loadError)
+        return (
+          <div className="cascader-content" role="alert">
+            {_l('加载失败，请重试')}
+            <button onClick={() => handleExpand(loadError.node, loadError.level)}>{_l('重试')}</button>
+          </div>
+        );
+      if (loading)
+        return (
+          <div className="cascader-content" aria-busy="true">
+            <div className="cascader-not-found-content">{notFoundContent || <Spin size="small" />}</div>
+          </div>
+        );
       if (_.isEmpty(filteredTreeData)) {
         return (
           <div className="cascader-content">
             <div className="cascader-not-found-content" style={{ width: containerRef.current?.clientWidth }}>
-              {notFoundContent || (loadingNode ? _l('数据加载中...') : searchValue ? _l('无匹配结果') : _l('暂无数据'))}
+              {notFoundContent ||
+                (loadingNode !== null ? _l('数据加载中...') : searchValue ? _l('无匹配结果') : _l('暂无数据'))}
             </div>
           </div>
         );
       }
 
       if (searchValue && !multiple) {
-        let flatData = sortSearchResults(filteredTreeData);
+        let flatData: CascaderOption[];
+        try {
+          filteredTreeData.forEach(item => searchPath(item));
+          flatData = sortSearchResults(filteredTreeData);
+        } catch {
+          return (
+            <div className="cascader-content" role="alert">
+              {_l('数据源异常')}
+            </div>
+          );
+        }
         return (
           <div className="cascader-content">
             <div className="cascader-panel" style={{ minWidth: containerRef.current?.clientWidth }}>
@@ -451,10 +593,10 @@ const Cascader = React.forwardRef(
         );
       }
 
-      const renderPanelsRecursive = (nodes, level = 0) => {
-        if (!nodes || nodes.length === 0) return null;
+      const renderPanelsRecursive = (nodes: CascaderOption[], level = 0): ReactNode[] => {
+        if (!nodes || nodes.length === 0) return [];
 
-        const panels = [renderCascaderPanels(nodes, level)];
+        const panels: ReactNode[] = [renderCascaderPanels(nodes, level)];
         const expandedNode = nodes.find(node => expandedKeys.includes(node.value));
 
         if (expandedNode) {
@@ -469,10 +611,27 @@ const Cascader = React.forwardRef(
       };
 
       return <div className="cascader-content">{renderPanelsRecursive(filteredTreeData)}</div>;
-    }, [searchValue, filteredTreeData, expandedKeys, renderCascaderPanels]);
+    }, [
+      searchValue,
+      filteredTreeData,
+      expandedKeys,
+      renderCascaderPanels,
+      checked.error,
+      loadError,
+      handleExpand,
+      multiple,
+      notFoundContent,
+      loadingNode,
+      sortSearchResults,
+      renderSearchLabel,
+      externalLoadError,
+      retryFailed,
+      retryExternal,
+      loading,
+    ]);
 
     // 默认弹出层对齐配置
-    const defaultPopupAlign = useMemo(() => {
+    const defaultPopupAlign = useMemo<NonNullable<CascaderProps['popupAlign']>>(() => {
       return {
         points: ['tl', 'bl'],
         offset: [0, 4],
@@ -513,7 +672,7 @@ const Cascader = React.forwardRef(
               ))}
             </div>
           ) : showSearch && searchValue ? null : (
-            <span className="cascader-selected-value breakAll" title={selectedKeys[0]?.label || ''}>
+            <span className="cascader-selected-value breakAll" title={String(selectedKeys[0]?.label || '')}>
               {selectedKeys[0]?.label || ''}
             </span>
           )}
@@ -601,13 +760,17 @@ const Cascader = React.forwardRef(
                         ? { pointerEvents: 'none' }
                         : undefined
                   }
-                  onChange={e => {
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const textValue = e.target.value;
+                    activeRequest.current++;
+                    setLoadingNode(null);
+                    setLoadError(null);
+                    setRetryFailed(false);
                     setSearchValue(textValue);
                     onSearch?.(textValue);
                     setExpandedKeys([]);
                   }}
-                  onKeyDown={e => {
+                  onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
                     if (
                       _.includes(['Escape'], e.key) ||
                       ((window.isMacOs ? e.metaKey : e.ctrlKey) && ['s', 'S'].includes(e.key))
@@ -626,4 +789,12 @@ const Cascader = React.forwardRef(
   },
 );
 
+export type {
+  CascaderProps,
+  CascaderHandle,
+  CascaderOption,
+  CascaderValue,
+  CascaderLoader,
+  CascaderLoadResult,
+} from './types';
 export default Cascader;

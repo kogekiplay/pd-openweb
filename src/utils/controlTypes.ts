@@ -370,7 +370,7 @@ export interface ControlOption {
   isDeleted?: boolean | undefined;
   color?: string | undefined;
   score?: number | undefined;
-  [key: string]: any;
+  [metadata: string]: unknown;
 }
 
 export interface SummaryHeadControl {

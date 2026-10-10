@@ -4,8 +4,8 @@ import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Checkbox, LoadDiv, Radio } from 'ming-ui';
+import styled from 'src/utils/typedStyled';
 import type { DepartmentListProps, SelectDepartment } from './types';
 import './css/department.less';
 

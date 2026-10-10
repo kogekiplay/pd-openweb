@@ -1,9 +1,11 @@
+import type { CSSProperties, MouseEventHandler, ReactNode } from 'react';
 import Trigger from '@rc-component/trigger';
+import type { TriggerProps } from '@rc-component/trigger';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Button } from 'ming-ui';
+import styled from 'src/utils/typedStyled';
 
-const Angle = styled.div(
+const Angle = styled.div<{ left?: number | undefined }>(
   ({ left }) => `
 position: absolute;
 left: ${left || 0}px;
@@ -40,7 +42,24 @@ const Footer = styled.div`
   margin-top: 30px;
 `;
 
-export default function ConfirmPanel(props) {
+export interface ConfirmPanelProps {
+  visible?: boolean | undefined;
+  className?: string | undefined;
+  content?: ReactNode;
+  showAngle?: boolean | undefined;
+  angleLeft?: number | undefined;
+  okText?: ReactNode;
+  cancelText?: ReactNode;
+  style?: CSSProperties | undefined;
+  offset?: number[] | undefined;
+  children: TriggerProps['children'];
+  points?: string[] | undefined;
+  /** Legacy caller metadata; this component positions its popup with points/offset. */
+  placement?: string | undefined;
+  onOk: MouseEventHandler<HTMLButtonElement>;
+  onPopupVisibleChange: (visible: boolean) => void;
+}
+export default function ConfirmPanel(props: ConfirmPanelProps) {
   const {
     visible,
     className,
@@ -58,9 +77,9 @@ export default function ConfirmPanel(props) {
   } = props;
   return (
     <Trigger
-      popupStyle={style}
+      {...(style === undefined ? {} : { popupStyle: style })}
       action={['click']}
-      popupVisible={visible}
+      {...(visible === undefined ? {} : { popupVisible: visible })}
       autoDestroy
       onPopupVisibleChange={onPopupVisibleChange}
       popup={
@@ -76,7 +95,7 @@ export default function ConfirmPanel(props) {
               className="Right"
               size="small"
               type="danger"
-              onClick={e => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 onOk(e);
                 onPopupVisibleChange(false);
               }}

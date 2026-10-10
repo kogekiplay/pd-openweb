@@ -1,5 +1,6 @@
+import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 import { number, shape, string } from 'prop-types';
-import styled from 'styled-components';
+import styled from 'src/utils/typedStyled';
 
 const Con = styled.div`
   display: inline-flex;
@@ -7,7 +8,18 @@ const Con = styled.div`
   align-items: center;
 `;
 
-export default function VCenterIconText(props) {
+export interface VCenterIconTextProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+  icon?: string | undefined;
+  text?: ReactNode;
+  iconSize?: number | undefined;
+  textSize?: number | undefined;
+  textLeft?: number | undefined;
+  iconStyle?: CSSProperties | undefined;
+  textStyle?: CSSProperties | undefined;
+  afterElement?: ReactNode;
+  children?: ReactNode;
+}
+export default function VCenterIconText(props: VCenterIconTextProps) {
   const {
     icon,
     text,

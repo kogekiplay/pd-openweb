@@ -1,17 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TreeSelect } from 'antd';
+import type { BaseSelectRef } from '@rc-component/select';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';
 import Cascader from 'ming-ui/antd-components/Cascader';
+import type { CascaderHandle, CascaderLoadResult, CascaderValue } from 'ming-ui/antd-components/Cascader/types';
 import sheetAjax from 'src/api/worksheet';
 import RestrictAccessStatus from 'src/components/restrictAccessStatus';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { renderText as renderCellText } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
-import { useWidgetEvent } from '../../../core/useFormEventManager';
 import type { FormControl } from 'src/utils/controlTypes';
+import { useWidgetEvent } from '../../../core/useFormEventManager';
+import { requestErrorCode, widgetOptions } from './boundary';
+import type { WidgetCascaderOption } from './boundary';
 
 const { SHOW_ALL } = TreeSelect;
 
@@ -51,20 +55,24 @@ export default function CascaderWidget(props) {
   } = props;
 
   const [popupVisible, setPopupVisible] = useState(false);
-  const [options, setOptions] = useState(null);
-  const [searchOptions, setSearchOptions] = useState(null);
+  const [options, setOptions] = useState<WidgetCascaderOption[] | null>(null);
+  const [searchOptions, setSearchOptions] = useState<WidgetCascaderOption[] | null>(null);
   const [widgetValue, setWidgetValue] = useState(dealValue(value));
   const [keywords, setKeywords] = useState('');
-  const [isError, setIsError] = useState(false);
-  const [treeExpandedKeys, setTreeExpandedKeys] = useState([]);
+  const [isError, setIsError] = useState<boolean | number>(false);
+  const [rootLoading, setRootLoading] = useState(false);
+  const lastLoadRowId = useRef('');
+  const [treeExpandedKeys, setTreeExpandedKeys] = useState<Array<string | number>>([]);
 
   // 装在途 ajax 句柄（要 abort），不是字符串；初值 '' 会把它推成 string
-  const ajaxRef = useRef<ApiResult | string>('');
+  const ajaxRef = useRef<ApiResult | null>(null);
+  const loadVersion = useRef(0);
+  const loadMounted = useRef(true);
   const cacheDataRef = useRef([]);
-  const sourcePathRef = useRef({});
+  const sourcePathRef = useRef<Record<string, string>>({});
   const cacheScrollTopRef = useRef(0);
-  const treeSelectCompRef = useRef(null);
-  const cascaderRef = useRef(null);
+  const treeSelectCompRef = useRef<BaseSelectRef>(null);
+  const cascaderRef = useRef<CascaderHandle>(null);
 
   const { showtype = '3', anylevel = '0' } = advancedSetting || {};
   // 多转单后也按多选展示
@@ -74,7 +82,7 @@ export default function CascaderWidget(props) {
   /**
    * 缓存树形完整路径
    */
-  const cacheTreePath = (data, title = '') => {
+  const cacheTreePath = (data: WidgetCascaderOption[], title = '') => {
     data.forEach(item => {
       sourcePathRef.current[item.value] = title + (item.title || item.label || '');
     });
@@ -136,8 +144,14 @@ export default function CascaderWidget(props) {
   /**
    * 更新数据
    */
-  const deepDataUpdate = (key, options, data, rowId: string) => {
-    let newOptions = [].concat(options);
+  const deepDataUpdate = (
+    key: 'searchOptions' | 'options',
+    options: WidgetCascaderOption[] | null,
+    data: WidgetCascaderOption[],
+    rowId: string,
+  ) => {
+    if (rowId && !options) throw new TypeError('Missing cascading parent options');
+    let newOptions = options ? [...options] : [];
 
     if (rowId) {
       newOptions.forEach(item => {
@@ -163,7 +177,11 @@ export default function CascaderWidget(props) {
   /**
    * 加载数据
    */
-  const loadData = (rowId = '') => {
+  const loadData = (rowId = ''): Promise<CascaderLoadResult> => {
+    const version = ++loadVersion.current;
+    lastLoadRowId.current = rowId;
+    setIsError(false);
+    setRootLoading(!rowId);
     const { topshow = '0' } = advancedSetting || {};
     const currentKeywords = keywords.trim();
 
@@ -195,39 +213,50 @@ export default function CascaderWidget(props) {
       relationWorksheetId: worksheetId,
     });
 
-    ajaxRef.current
-      .then(result => {
+    return ajaxRef.current
+      .then((result): CascaderLoadResult => {
+        if (!loadMounted.current || version !== loadVersion.current) return { status: 'cancelled' };
+        setRootLoading(false);
         if (result.resultCode === 1) {
           const { template } = result;
           const control = template.controls.find((item: FormControl) => item.attribute === 1);
-          const data = result.data.map(item => {
-            const isLeaf = currentKeywords || isEndLeaf(rowId) ? true : !item.childrenids;
-            return {
-              value: item.rowid,
-              [showtype === '4' ? 'title' : 'label']: control
-                ? renderCellText(Object.assign({}, control, { value: item[control.controlId] }), { noMask: true }) ||
-                  _l('未命名')
-                : _l('未命名'),
-              path: currentKeywords ? item.path : item.childrenids || item.path,
-              isLeaf,
-              ...(isMultiple && anylevel === '1' ? { checkable: isLeaf } : {}),
-            };
-          });
+          const data = widgetOptions(
+            result.data.map(item => {
+              const isLeaf = currentKeywords || isEndLeaf(rowId) ? true : !item.childrenids;
+              return {
+                value: item.rowid,
+                [showtype === '4' ? 'title' : 'label']: control
+                  ? renderCellText(Object.assign({}, control, { value: item[control.controlId] }), { noMask: true }) ||
+                    _l('未命名')
+                  : _l('未命名'),
+                path: currentKeywords ? item.path : item.childrenids || item.path,
+                isLeaf,
+                ...(isMultiple && anylevel === '1' ? { checkable: isLeaf } : {}),
+              };
+            }),
+          );
 
-          ajaxRef.current = '';
+          ajaxRef.current = null;
           cacheDataRef.current = currentKeywords
             ? result.data
             : _.uniqBy(cacheDataRef.current.concat(result.data), 'rowid');
           deepDataUpdate(currentKeywords ? 'searchOptions' : 'options', options, data, rowId);
+          setIsError(false);
+          return { status: 'loaded' };
         } else {
           setIsError(true);
+          ajaxRef.current = null;
+          return { status: 'failed', error: result };
         }
       })
-      .catch(err => {
-        // 1 表示请求被取消，不设置错误状态
-        if (err.errorCode !== 1) {
-          setIsError(err.errorCode);
-        }
+      .catch((error: unknown): CascaderLoadResult => {
+        if (!loadMounted.current || version !== loadVersion.current) return { status: 'cancelled' };
+        ajaxRef.current = null;
+        setRootLoading(false);
+        const errorCode = requestErrorCode(error);
+        if (errorCode === 1) return { status: 'cancelled' };
+        setIsError(errorCode ?? true);
+        return { status: 'failed', error };
       });
   };
 
@@ -258,7 +287,7 @@ export default function CascaderWidget(props) {
   /**
    * 平铺更新
    */
-  const cascaderChange = (ids = []) => {
+  const cascaderChange = (ids: CascaderValue[] = []) => {
     const { allpath = '0' } = advancedSetting || {};
 
     if (_.isEmpty(ids)) {
@@ -400,6 +429,7 @@ export default function CascaderWidget(props) {
 
   // 初始化
   useEffect(() => {
+    loadMounted.current = true;
     if (!_.isUndefined(visible) && visible) {
       setPopupVisible(true);
       loadData();
@@ -415,6 +445,8 @@ export default function CascaderWidget(props) {
     }
 
     return () => {
+      loadMounted.current = false;
+      loadVersion.current++;
       if (ajaxRef.current) {
         ajaxRef.current.abort();
       }
@@ -492,7 +524,7 @@ export default function CascaderWidget(props) {
 
   if (showtype === '4') {
     return (
-      (<TreeSelect
+      <TreeSelect
         className="w100 customAntSelect customTreeSelect"
         classNames={{ popup: { root: cx('customTreeSelectDropdown', popupClassName, `treeSelect_${controlId}`) } }}
         dropdownPopupAlign={treePopupAlign}
@@ -503,10 +535,12 @@ export default function CascaderWidget(props) {
           : {})}
         virtual={false}
         placeholder={hint || _l('请选择')}
-        showSearch={{ onSearch: value => {
-          setKeywords(value);
-          setTreeExpandedKeys([]);
-        } }}
+        showSearch={{
+          onSearch: value => {
+            setKeywords(value);
+            setTreeExpandedKeys([]);
+          },
+        }}
         allowClear={!_.isEmpty(widgetValue)}
         value={
           _.isEmpty(widgetValue) ? [] : widgetValue.map(item => ({ value: item.sid, label: item.name || _l('未命名') }))
@@ -514,17 +548,22 @@ export default function CascaderWidget(props) {
         selectable={!+anylevel}
         notFoundContent={
           <div className="textTertiary pLeft12 pBottom5">
-            {keywords ? (
+            {isError !== false ? (
+              <div role="alert">
+                {isError === 300016 ? <RestrictAccessStatus /> : _l('数据源异常')}
+                <button onClick={() => loadData(lastLoadRowId.current)}>{_l('重试')}</button>
+              </div>
+            ) : rootLoading ? (
+              keywords ? (
+                _l('搜索中...')
+              ) : (
+                _l('数据加载中...')
+              )
+            ) : keywords ? (
               searchOptions === null ? (
                 _l('搜索中...')
               ) : (
                 _l('请输入更多关键词')
-              )
-            ) : isError ? (
-              isError === 300016 ? (
-                <RestrictAccessStatus />
-              ) : (
-                _l('数据源异常')
               )
             ) : options === null ? (
               _l('数据加载中...')
@@ -533,15 +572,16 @@ export default function CascaderWidget(props) {
             )}
           </div>
         }
-        treeData={keywords ? searchOptions || [] : options || []}
+        treeData={rootLoading || isError !== false ? [] : keywords ? searchOptions || [] : options || []}
         treeExpandedKeys={treeExpandedKeys}
         suffixIcon={<Icon icon="arrow-down-border Font14" />}
-        loadData={({ value }) =>
-          new Promise(resolve => {
-            loadData(value);
-            resolve();
-          })
-        }
+        loadData={({ value }) => {
+          if (typeof value !== 'string') return Promise.reject(new TypeError('Invalid cascading record ID'));
+          return loadData(value).then(outcome => {
+            if (outcome.status === 'failed') throw outcome.error;
+            if (outcome.status === 'cancelled') throw { errorCode: 1 };
+          });
+        }}
         open={popupVisible}
         onChange={(id, title) => {
           if (id || !keywords.length) {
@@ -556,13 +596,16 @@ export default function CascaderWidget(props) {
           setTreeExpandedKeys(treeExpandedKeys);
           cacheScrollTopRef.current = getTreeSelectEl().scrollTop;
         }}
-      />)
+      />
     );
   }
 
   return (
     <Cascader
       ref={cascaderRef}
+      loading={rootLoading}
+      loadError={isError !== false && lastLoadRowId.current === ''}
+      onRetry={() => loadData(lastLoadRowId.current)}
       allowClear
       {...(isShowMultiple
         ? { multiple: true, ...(notLimitCount ? {} : { maxTagCount: MAX_CASCADE_SELECT_COUNT }) }
@@ -576,17 +619,23 @@ export default function CascaderWidget(props) {
       value={widgetValue.map(i => ({ value: i.sid, label: i.name || _l('未命名') }))}
       options={keywords ? searchOptions || [] : options || []}
       notFoundContent={
-        keywords ? (
-          searchOptions === null ? (
-            _l('搜索中...')
-          ) : (
-            _l('请输入更多关键词')
-          )
-        ) : isError ? (
+        isError !== false ? (
           isError === 300016 ? (
             <RestrictAccessStatus />
           ) : (
             _l('数据源异常')
+          )
+        ) : rootLoading ? (
+          keywords ? (
+            _l('搜索中...')
+          ) : (
+            _l('数据加载中...')
+          )
+        ) : keywords ? (
+          searchOptions === null ? (
+            _l('搜索中...')
+          ) : (
+            _l('请输入更多关键词')
           )
         ) : options === null ? (
           _l('数据加载中...')

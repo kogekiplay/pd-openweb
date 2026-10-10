@@ -23,6 +23,7 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import Buttons from 'src/pages/worksheet/common/recordInfo/RecordForm/CustomButtonsAutoWidth';
 import { emitter, getFilledRequestParams } from 'src/utils/common';
 import { checkCellIsEmpty } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { formatQuickFilter } from 'src/utils/filter';
 import { handleRecordError } from 'src/utils/record';
 import { replaceBtnsTranslateInfo } from 'src/utils/translate';
@@ -31,7 +32,6 @@ import ExportList from './ExportList';
 import PrintList from './PrintList';
 import SubButton from './SubButton';
 import './BatchOperate.less';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 const CancelTextContent = styled.div`
   display: flex;
@@ -729,7 +729,7 @@ class BatchOperate extends React.Component<any, any> {
                     return;
                   }
 
-                  function handleDelete(thoroughDelete) {
+                  function handleDelete(thoroughDelete?: boolean) {
                     const hasAuthRowIds = selectedRows
                       .filter((item: RecordRow) => (item.allowdelete || item.allowDelete) && !item.sys_lock)
                       .map(item => item.rowid);

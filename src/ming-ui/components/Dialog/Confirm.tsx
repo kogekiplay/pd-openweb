@@ -2,9 +2,10 @@ import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import ConfirmButton from './ConfirmButton';
 import Dialog from './Dialog';
+import type { ConfirmClose, ConfirmOptions } from './types';
 import '../less/Dialog.less';
 
-export default function confirm(props) {
+export default function confirm(props: ConfirmOptions): ConfirmClose {
   const body = document.body;
   if (!body) return _.noop;
 
@@ -13,7 +14,7 @@ export default function confirm(props) {
 
   const root = createRoot(div);
 
-  const handleClose = (needExecCancel = true, isOkBtn?) => {
+  const handleClose: ConfirmClose = (needExecCancel = true, isOkBtn) => {
     setTimeout(() => {
       root.unmount();
       div.parentNode?.removeChild(div);
@@ -23,7 +24,7 @@ export default function confirm(props) {
     }, 0);
   };
 
-  let footer = (
+  let footer: React.ReactNode = (
     <div className="Dialog-footer-btns">
       {!props.removeCancelBtn && (
         <ConfirmButton

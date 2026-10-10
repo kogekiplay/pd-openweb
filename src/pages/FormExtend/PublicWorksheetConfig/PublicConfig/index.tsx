@@ -873,7 +873,7 @@ class PublicConfig extends React.Component<any, any> {
             cancelText={_l('否')}
             okText={_l('是%25028')}
             handleClose={() => this.setState({ confirmDialog: { visible: false }, settingChanged: false })}
-            onCancel={isOkBtn => {
+            onCancel={(isOkBtn?: boolean) => {
               if (!isOkBtn) {
                 this.resetInitState();
                 if (confirmDialog.isOnClose) {

@@ -2,13 +2,16 @@ import type { CSSProperties, MouseEvent, ReactNode } from 'react';
 import type { TooltipProps } from 'antd';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import { browserIsMobile } from 'src/utils/common';
+import styled from 'src/utils/typedStyled';
 
 const isMobile = browserIsMobile();
 
-const Con = styled.div`
+const Con = styled.div<{
+  disabled?: boolean | undefined;
+  onMouseDown?: ((e: MouseEvent<HTMLDivElement>) => void) | null | undefined;
+}>`
   cursor: pointer;
   padding: var(--space-1);
   border-radius: var(--radius-sm);
@@ -131,7 +134,7 @@ BgIconButton.propTypes = {
   iconStyle: PropTypes.shape({}),
 };
 
-BgIconButton.Group = styled.div`
+BgIconButton.Group = styled.div<{ gap?: number | string | undefined }>`
   display: flex;
   gap: ${({ gap }) => gap || '10'}px;
 `;

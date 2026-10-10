@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
+import type { DialogBaseProps } from './types';
 import '../less/Dialog.less';
 
 const dialogContainerPadding = 32;
@@ -11,7 +12,7 @@ export interface DialogBaseState {
   dislocateIndex: number;
 }
 
-class DialogBase extends Component<any, DialogBaseState> {
+class DialogBase extends Component<DialogBaseProps, DialogBaseState> {
   declare target: HTMLDivElement | null;
   declare dialogId: number;
   declare id: number | undefined;
@@ -112,7 +113,7 @@ class DialogBase extends Component<any, DialogBaseState> {
     anim: false,
   };
 
-  constructor(props) {
+  constructor(props: DialogBaseProps) {
     super(props);
     let dislocateIndex = 1;
 
@@ -136,7 +137,7 @@ class DialogBase extends Component<any, DialogBaseState> {
     if (window.closeFns) {
       window.closeindex = (window.closeindex || 0) + 1;
       this.id = Math.random() && Math.random();
-      window.closeFns[this.id] = {
+      window.closeFns[String(this.id)] = {
         id: this.id,
         index: window.closeindex,
         fn: this.props.onClose,
@@ -144,7 +145,7 @@ class DialogBase extends Component<any, DialogBaseState> {
     }
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DialogBaseProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.type !== prevProps.type) {
         this.autoPosition();
@@ -170,7 +171,7 @@ class DialogBase extends Component<any, DialogBaseState> {
     }
 
     if (window.closeFns) {
-      delete window.closeFns[this.id];
+      delete window.closeFns[String(this.id)];
     }
   }
 
@@ -178,7 +179,7 @@ class DialogBase extends Component<any, DialogBaseState> {
     const dialog = [...document.querySelectorAll('.mui-dialog-container')].pop();
 
     if (!dialog || typeof window.getComputedStyle !== 'function') {
-      return;
+      return undefined;
     }
 
     let zIndex;
@@ -195,7 +196,7 @@ class DialogBase extends Component<any, DialogBaseState> {
   autoPosition = () => {
     if (this._dialog) {
       const windowHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
-      const propsMaxHeight = parseInt(this.props.maxHeight, 10);
+      const propsMaxHeight = parseInt(String(this.props.maxHeight), 10);
       let maxHeight = windowHeight;
 
       if (this.props.type !== 'fixed' && (maxHeight > propsMaxHeight || this.props.type === 'scroll')) {
@@ -205,6 +206,7 @@ class DialogBase extends Component<any, DialogBaseState> {
       // reset
       this._dialog.style.maxHeight = 'none';
       this._dialog.style.height = 'auto';
+      if (!this._ghost) throw new TypeError('Missing dialog positioning anchor');
       this._ghost.style.height = 'auto';
 
       if (this.props.type !== 'scroll') {
@@ -224,7 +226,7 @@ class DialogBase extends Component<any, DialogBaseState> {
       }
 
       if (this.props.width) {
-        let dialogWidth = parseInt(this.props.width, 10);
+        let dialogWidth = parseInt(String(this.props.width), 10);
         this._dialog.style.width = `${dialogWidth}px`;
       }
     }
@@ -235,7 +237,7 @@ class DialogBase extends Component<any, DialogBaseState> {
   setDislocate = () => {
     const { dislocateIndex } = this.state;
     const windowWidth = window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
-    let dialogWidth = parseInt(this.props.width, 10);
+    let dialogWidth = parseInt(String(this.props.width), 10);
 
     if (!this._dialog) {
       return;
@@ -324,13 +326,19 @@ class DialogBase extends Component<any, DialogBaseState> {
     }
 
     // 遮罩层关闭事件
-    const overlayOnClick = e => {
-      if (e.target.className !== 'mui-dialog-scroll-container' || e.target.id !== String(this.dialogId)) {
+    const overlayOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (
+        !(e.target instanceof Element) ||
+        e.target.className !== 'mui-dialog-scroll-container' ||
+        e.target.id !== String(this.dialogId)
+      ) {
         return;
       }
 
-      if (overlayClosable && this.props.onClose && !window.getSelection().toString().trim()) {
-        this.props.onClose(e);
+      if (overlayClosable && this.props.onClose) {
+        const selection = window.getSelection();
+        if (!selection) throw new TypeError('Missing dialog selection');
+        if (!selection.toString().trim()) this.props.onClose(e);
       }
     };
 

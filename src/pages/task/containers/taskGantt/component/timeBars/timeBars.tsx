@@ -702,7 +702,7 @@ let TimeBars: any = class TimeBars extends Component<any, any> {
         mouseEnterDelay={0.5}
         align={{
           offset,
-          overflow: [0, 0],
+          overflow: { adjustX: false, adjustY: false },
         }}
       >
         <div

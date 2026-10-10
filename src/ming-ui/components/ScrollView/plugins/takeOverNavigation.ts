@@ -1,10 +1,11 @@
-﻿import { compatibleMDJS } from 'src/utils/project';
+﻿import type { InstancePluginEvent, OverlayScrollbars } from 'overlayscrollbars';
+import { compatibleMDJS } from 'src/utils/project';
+import { readPluginOptions } from './options';
 
 export default {
   name: 'takeOverNavigation',
-  instance: (osInstance, event) => {
-    const { customOptions = {} } = osInstance.options();
-    const { enableSwipeBack, isMobile } = customOptions || {};
+  instance: (osInstance: OverlayScrollbars, event: InstancePluginEvent) => {
+    const { enableSwipeBack, isMobile } = readPluginOptions(osInstance, true);
 
     if (!isMobile || enableSwipeBack) return undefined;
 
@@ -16,19 +17,23 @@ export default {
 
     const sessionId = Date.now().toString();
 
-    const onTouchStart = e => {
+    const onTouchStart = (e: TouchEvent) => {
       if (!e.touches?.length) return;
+      const first = e.touches[0];
+      if (!first) throw new TypeError('Missing first touch');
 
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
+      startX = first.clientX;
+      startY = first.clientY;
       isHorizontal = false;
     };
 
-    const onTouchMove = e => {
+    const onTouchMove = (e: TouchEvent) => {
       if (!e.touches?.length) return;
+      const first = e.touches[0];
+      if (!first) throw new TypeError('Missing first touch');
 
-      const curX = e.touches[0].clientX;
-      const curY = e.touches[0].clientY;
+      const curX = first.clientX;
+      const curY = first.clientY;
 
       const dx = curX - startX;
       const dy = curY - startY;

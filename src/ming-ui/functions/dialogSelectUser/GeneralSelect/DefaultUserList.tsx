@@ -1,8 +1,8 @@
 import { Component } from 'react';
 import _ from 'lodash';
-import styled from 'styled-components';
 import { Collapse, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import styled from 'src/utils/typedStyled';
 import ManageOftenUserDialog from './ManageOftenUserDialog';
 import NoData from './NoData';
 import type { DefaultUserListProps, SelectUser } from './types';

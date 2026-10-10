@@ -7,10 +7,11 @@ import Icon from 'ming-ui/components/Icon';
 import DialogBase from './DialogBase';
 import DialogFooter from './DialogFooter';
 import DialogHeader from './DialogHeader';
+import type { DialogProps } from './types';
 import '../less/Dialog.less';
 
 function enterHandle(Comp: typeof Dialog) {
-  return function UseKey(props) {
+  return function UseKey(props: DialogProps) {
     useKey('Enter', () => {
       if (!props.visible || !props.bindEnterTriggerOk) {
         return;
@@ -18,7 +19,9 @@ function enterHandle(Comp: typeof Dialog) {
 
       if (_.isFunction(props.confirmOnOk)) {
         props.confirmOnOk();
-        props.onCancel();
+        const cancel = props.onCancel;
+        if (!cancel) throw new TypeError('Missing dialog cancel callback');
+        Reflect.apply(cancel, props, []);
       } else if (_.isFunction(props.onOk)) {
         props.onOk();
       }
@@ -27,7 +30,7 @@ function enterHandle(Comp: typeof Dialog) {
   };
 }
 
-let Dialog = class Dialog extends Component<any, any> {
+class Dialog extends Component<DialogProps> {
   static override propTypes = {
     /**
      * 弹窗叠弹窗错位
@@ -224,18 +227,24 @@ let Dialog = class Dialog extends Component<any, any> {
     showFooter: true,
   };
 
-  constructor(props) {
+  constructor(props: DialogProps) {
     super(props);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleOk = this.handleOk.bind(this);
   }
 
   handleCancel() {
-    this.props.onCancel();
+    const props = this.props;
+    const cancel = props.onCancel;
+    if (!cancel) throw new TypeError('Missing dialog cancel callback');
+    Reflect.apply(cancel, props, []);
   }
 
-  handleOk(e) {
-    this.props.onOk(e);
+  handleOk(e?: React.MouseEvent<HTMLButtonElement>) {
+    const props = this.props;
+    const confirm = props.onOk;
+    if (!confirm) throw new TypeError('Missing dialog confirm callback');
+    Reflect.apply(confirm, props, [e]);
   }
 
   override render() {
@@ -285,7 +294,7 @@ let Dialog = class Dialog extends Component<any, any> {
           {dialogCloseX}
           <div
             className={cx('mui-dialog-header', {
-              [props.headerClass]: props.headerClass,
+              [String(props.headerClass)]: props.headerClass,
             })}
           >
             <DialogHeader title={props.title} />
@@ -295,7 +304,7 @@ let Dialog = class Dialog extends Component<any, any> {
           {this.props.children && (
             <div
               className={cx('mui-dialog-body', {
-                [props.bodyClass]: props.bodyClass,
+                [String(props.bodyClass)]: props.bodyClass,
               })}
               onScroll={this.props.onScroll}
             >
@@ -324,6 +333,6 @@ let Dialog = class Dialog extends Component<any, any> {
 
     return content;
   }
-};
-Dialog = enterHandle(Dialog);
-export default Dialog;
+}
+export type DialogInstance = Dialog;
+export default enterHandle(Dialog);

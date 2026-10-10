@@ -1,10 +1,10 @@
 import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import styled from 'styled-components';
 import { Checkbox, Icon, LoadDiv, ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import departmentController from 'src/api/department';
+import styled from 'src/utils/typedStyled';
 import { userObject } from '../../quickSelectUser/boundary';
 import { decodeDepartments, decodeUserList, savedBoolean } from './boundary';
 import NoData from './NoData';

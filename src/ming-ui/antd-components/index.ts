@@ -6,3 +6,15 @@ export { default as Modal } from './Modal';
 export { default as Tooltip } from './Tooltip';
 export { default as Cascader } from './Cascader';
 export { default as WaterMark } from '../components/WaterMark';
+export type { ButtonProps } from './Button';
+export type { HapInputProps } from './Input';
+export type { ModalProps } from './Modal';
+export type { TooltipProps } from './Tooltip';
+export type {
+  CascaderProps,
+  CascaderHandle,
+  CascaderOption,
+  CascaderValue,
+  CascaderLoader,
+  CascaderLoadResult,
+} from './Cascader';

@@ -5,6 +5,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { TooltipProps } from 'ming-ui/antd-components/Tooltip';
 import { getDefaultData } from 'src/pages/widgetConfig/config/score.js';
 import { getAdvanceSetting } from 'src/pages/widgetConfig/util/setting.js';
 import { browserIsMobile } from 'src/utils/common';
@@ -130,7 +131,10 @@ class CustomScore extends Component<any, any> {
       <div className={cx('Score-wrapper customScoreWrap', className)}>
         {list.map((_item, index) => {
           const tipText = `${_.get(itemnames[index], 'value') || index + 1}`;
-          let tipProps = { placement: 'top', offset: [0, 1] };
+          let tipProps: { placement: NonNullable<TooltipProps['placement']>; offset: [number, number] } = {
+            placement: 'top',
+            offset: [0, 1],
+          };
 
           if (isMobile) {
             if (index === 0 && getStringBytes(tipText) >= 10) {

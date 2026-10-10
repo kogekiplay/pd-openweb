@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { Icon, LoadDiv, MobileSearch, PopupWrapper, ScrollView, SvgIcon } from 'ming-ui';
+import type { ScrollViewOptions } from 'ming-ui/components/ScrollView/types';
 
-const HIDDEN_SCROLLBAR_OPTIONS = { scrollbars: { visibility: 'hidden' } };
+const HIDDEN_SCROLLBAR_OPTIONS: ScrollViewOptions = { scrollbars: { visibility: 'hidden' } };
 
 const Content = styled.div`
   height: 100%;
@@ -60,7 +61,16 @@ const Content = styled.div`
   }
 `;
 
-export default function MobileMentionPopup({ apps, loading, onSearch, onSelect, onClose }: { loading?: boolean; [key: string]: any }) {
+export default function MobileMentionPopup({
+  apps,
+  loading,
+  onSearch,
+  onSelect,
+  onClose,
+}: {
+  loading?: boolean;
+  [key: string]: any;
+}) {
   return (
     <PopupWrapper
       visible

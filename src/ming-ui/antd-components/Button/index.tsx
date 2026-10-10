@@ -7,30 +7,34 @@ export interface ButtonProps extends Omit<AntdButtonProps, 'color' | 'variant'> 
   ellipsis?: boolean | undefined;
   wide?: boolean | undefined;
 }
-const COLORS: ReadonlySet<string> = new Set([
-  'default',
-  'primary',
-  'danger',
-  'blue',
-  'purple',
-  'cyan',
-  'green',
-  'magenta',
-  'pink',
-  'red',
-  'orange',
-  'yellow',
-  'volcano',
-  'geekblue',
-  'lime',
-  'gold',
-]);
+type NativeColor = NonNullable<AntdButtonProps['color']>;
+const COLORS: { readonly [Color in NativeColor]: true } = {
+  default: true,
+  primary: true,
+  danger: true,
+  blue: true,
+  purple: true,
+  cyan: true,
+  green: true,
+  magenta: true,
+  pink: true,
+  red: true,
+  orange: true,
+  yellow: true,
+  volcano: true,
+  geekblue: true,
+  lime: true,
+  gold: true,
+};
+function isNativeColor(color: string): color is NativeColor {
+  return Object.hasOwn(COLORS, color);
+}
 
 const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
   ({ color, variant, ellipsis, wide, style, title, children, className, ...props }, ref) => {
-    const customColor = color !== undefined && !COLORS.has(color);
+    const customColor = color !== undefined && !isNativeColor(color);
     const textBordered = variant === 'textBordered';
-    const nativeColor = (customColor ? 'primary' : color) as AntdButtonProps['color'];
+    const nativeColor = color === undefined ? undefined : isNativeColor(color) ? color : 'primary';
     const nativeVariant = textBordered ? 'text' : variant;
     const buttonStyle: CSSProperties = {
       ...(textBordered

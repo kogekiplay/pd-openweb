@@ -1,15 +1,16 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
+import type { ConfirmButtonProps } from './types';
 
 export interface ConfirmButtonState {
   loading: boolean;
 }
 
-class ConfirmButton extends Component<any, ConfirmButtonState> {
+class ConfirmButton extends Component<ConfirmButtonProps, ConfirmButtonState> {
   declare mounted: boolean | undefined;
 
-  constructor(props) {
+  constructor(props: ConfirmButtonProps) {
     super(props);
     this.state = {
       loading: false,
@@ -29,11 +30,16 @@ class ConfirmButton extends Component<any, ConfirmButtonState> {
     const { action, onClose } = this.props;
 
     if (action) {
-      const promise = action.apply(this);
+      const promise: unknown = action.apply(this);
 
-      if (promise && promise.then) {
+      // A returned scalar can also expose `then` through its prototype. Keep the
+      // original property-get receiver and call receiver when reading it.
+      const returnedObject: object = Object(promise);
+      const then: unknown = promise ? Reflect.get(returnedObject, 'then', promise) : undefined;
+
+      if (promise && then) {
         this.setState({ loading: true });
-        const stopLoading = noClose => {
+        const stopLoading = (noClose: unknown) => {
           if (this.mounted) {
             this.setState({ loading: false });
           }
@@ -43,14 +49,20 @@ class ConfirmButton extends Component<any, ConfirmButtonState> {
           }
         };
 
-        promise.then(stopLoading, stopLoading);
+        // The original branch reads `then` again after setting loading. A
+        // getter may return a different function on that second access.
+        const invokeThen: unknown = Reflect.get(returnedObject, 'then', promise);
+        if (typeof invokeThen !== 'function') throw new TypeError('Invalid dialog action promise');
+        Reflect.apply(invokeThen, promise, [stopLoading, stopLoading]);
       } else {
-        if (promise === false) return;
+        if (promise === false) return undefined;
         onClose && onClose();
       }
     } else {
       onClose && onClose();
     }
+
+    return undefined;
   }
 
   override render() {

@@ -1,11 +1,14 @@
-﻿import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { OverlayScrollbars } from 'overlayscrollbars';
+import type { PartialOptions } from 'overlayscrollbars';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import type { OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import PropTypes from 'prop-types';
 import { browserIsMobile } from 'src/utils/common';
 import instancePlugin from './plugins';
+import type { EmptyScrollInfo, ScrollInfo, ScrollViewProps } from './types';
 import 'overlayscrollbars/styles/overlayscrollbars.css';
 import './index.less';
 
@@ -15,7 +18,7 @@ OverlayScrollbars.plugin(instancePlugin);
 // 触发频率的滚动最小差值
 const threshold = 2;
 
-const defaultOptions = {
+const defaultOptions: PartialOptions = {
   paddingAbsolute: true,
   showNativeOverlaidScrollbars: false,
   update: {
@@ -43,54 +46,11 @@ const defaultOptions = {
   },
 };
 
-/**
- * ScrollView 的 props，字段与下面的 propTypes 对应。
- *
- * 【索引签名是如实描述】未列出的 prop 会随 ...rest 透传给 OverlayScrollbarsComponent，
- * 调用点确实会传 id / data-* / 事件处理器之类。
- * 没有这份类型时 forwardRef 把 props 推成 {}，解构任何字段都报"属性不存在"。
- */
-interface ScrollViewProps {
-  children?: React.ReactNode;
-  className?: string;
-  theme?: string;
-  disableParentScroll?: boolean;
-  enableSwipeBack?: boolean;
-  enableWheelDirectionControl?: boolean;
-  springBackMode?: '' | 'disableSpringBack' | 'disableSpringBackX' | 'disableSpringBackY';
-  allowance?: number;
-  style?: React.CSSProperties;
-  /** 滚动停止后回调（内部 debounce 过） */
-  onScrollEnd?: (info: { scrollTop: number; scrollLeft: number; clientHeight: number }) => void;
-  /** 触达上下边界 */
-  onReachVerticalEdge?: (info: { direction: 'up' | 'down' }) => void;
-  /** 触达左右边界 */
-  onReachHorizontalEdge?: (info: { direction: 'left' | 'right' }) => void;
-  onScroll?: (info: { scrollTop: number; scrollLeft: number }) => void;
-  /** 拿到 OverlayScrollbars 实例，自己接管滚动 */
-  customScroll?: (instance: unknown) => void;
-  setViewPortRef?: (el: HTMLElement | null) => void;
-  /** 打到真正的滚动内容元素上的 className（见下面那段 useEffect 的说明） */
-  scrollContentClassName?: string;
-  /** OverlayScrollbars 的配置，形状由库自己定义，这里不复述 */
-  options?: any;
-  [key: string]: any;
-}
-
 /** The actual imperative handle emitted by useImperativeHandle below. */
 export interface ScrollViewHandle {
   scrollTo(options?: ScrollToOptions, behavior?: ScrollBehavior): void;
   scrollToElement(element: Element | null | undefined, behavior?: ScrollBehavior): void;
-  getScrollInfo():
-    | {
-        scrollTop?: number;
-        scrollLeft?: number;
-        scrollHeight?: number;
-        clientHeight?: number;
-        maxScrollTop?: number;
-        viewport?: HTMLElement;
-      }
-    | undefined;
+  getScrollInfo(): ScrollInfo | EmptyScrollInfo | undefined;
 }
 
 const ScrollView = forwardRef<ScrollViewHandle, ScrollViewProps>((props, ref) => {
@@ -124,7 +84,7 @@ const ScrollView = forwardRef<ScrollViewHandle, ScrollViewProps>((props, ref) =>
       customOptions: { disableParentScroll, enableWheelDirectionControl, isMobile, enableSwipeBack },
     });
   }, [options, disableParentScroll, enableWheelDirectionControl, theme, enableSwipeBack]);
-  const osRef = useRef<any>(undefined);
+  const osRef = useRef<OverlayScrollbarsComponentRef<'div'> | null>(null);
   const lastScroll = useRef({ top: 0, left: 0 });
 
   /**
@@ -175,7 +135,7 @@ const ScrollView = forwardRef<ScrollViewHandle, ScrollViewProps>((props, ref) =>
   };
 
   // 获取滚动信息
-  const getScrollInfo = () => {
+  const getScrollInfo = (): ScrollInfo | EmptyScrollInfo | undefined => {
     if (!osRef.current) return {};
     const osInstance = osRef.current.osInstance();
     if (!osInstance) return undefined;
@@ -195,7 +155,7 @@ const ScrollView = forwardRef<ScrollViewHandle, ScrollViewProps>((props, ref) =>
   };
 
   // 滚动边界检测
-  const throttledHandleScroll = _.throttle(instance => {
+  const throttledHandleScroll = _.throttle((instance: OverlayScrollbars) => {
     const { scrollOffsetElement } = instance.elements();
     const { scrollTop, scrollLeft, scrollWidth, scrollHeight, clientWidth, clientHeight } = scrollOffsetElement;
 
@@ -239,6 +199,8 @@ const ScrollView = forwardRef<ScrollViewHandle, ScrollViewProps>((props, ref) =>
     onScroll && onScroll({ scrollTop, scrollLeft });
   }, 300);
 
+  useEffect(() => () => throttledHandleScroll.cancel(), [throttledHandleScroll]);
+
   useEffect(() => {
     if (osRef.current && setViewPortRef) {
       const osInstance = osRef.current.osInstance();
@@ -253,7 +215,7 @@ const ScrollView = forwardRef<ScrollViewHandle, ScrollViewProps>((props, ref) =>
 
   useEffect(() => {
     return () => {
-      osRef.current && osRef.current.osInstance().destroy();
+      osRef.current?.osInstance()?.destroy();
     };
   }, []);
 
