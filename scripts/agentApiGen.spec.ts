@@ -8,7 +8,7 @@ function loadAgentApiGenInternals() {
   // agentApiGen 从 .js 改名成 .ts 之后，源码里的类型标注对 new Function 就是语法错
   //（实测：`const grouped: Record<string, any[]> = …` -> Missing initializer in const declaration）。
   // 走 spec-harness 的 babel 转译把类型擦掉再 eval。
-  const source = `${transformFileSync(filename).code}\nmodule.exports.__test = { parseSwagger };`;
+  const source = `${transformFileSync(filename).code}\nmodule.exports['__test'] = { parseSwagger };`;
   const moduleLike: { exports: Record<string, any> } = { exports: {} };
 
   new Function('require', 'module', 'exports', '__dirname', '__filename', source)(
@@ -19,7 +19,7 @@ function loadAgentApiGenInternals() {
     filename,
   );
 
-  return moduleLike.exports.__test;
+  return moduleLike.exports['__test'];
 }
 
 const { parseSwagger } = loadAgentApiGenInternals();

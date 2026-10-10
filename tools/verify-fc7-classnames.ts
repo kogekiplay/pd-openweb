@@ -22,7 +22,7 @@
 const path = require('path');
 const assert = require('assert');
 
-const jsdomPath = process.env.JSDOM_PATH;
+const jsdomPath = process.env['JSDOM_PATH'];
 if (!jsdomPath) {
   console.error('需要 JSDOM_PATH，见本文件头的运行方式。');
   process.exit(2);

@@ -16,16 +16,17 @@ const wanted = new Set([
   'getGlobalMeta',
 ]);
 const ast = parser.parse(
-  transformFileSync(process.env.PORTAL_BOOTSTRAP_SOURCE || path.join(__dirname, 'preall.tsx'), { plugins: [] }).code,
+  transformFileSync(process.env['PORTAL_BOOTSTRAP_SOURCE'] || path.join(__dirname, 'preall.tsx'), { plugins: [] }).code,
   {
     sourceType: 'module',
   },
 );
 const selected = ast.program.body.filter(
-  node => node.type === 'VariableDeclaration' && node.declarations.some(d => wanted.has(d.id.name)),
+  (node: { type: string; declarations?: Array<{ id: { name?: string } }> }) =>
+    node.type === 'VariableDeclaration' && node.declarations?.some((d: { id: { name?: string } }) => wanted.has(d.id.name ?? '')),
 );
 assert.equal(selected.length, wanted.size);
-const source = selected.map(node => generate(node).code).join('\n');
+const source = selected.map((node: { type: string; declarations?: Array<{ id: { name?: string } }> }) => generate(node).code).join('\n');
 
 async function bootPortal(
   href: string,

@@ -56,7 +56,7 @@ async function run() {
     dayjs: { locale: noop },
     moment: { locale: noop },
     lodash: require('lodash'),
-    'styled-components': { StyleSheetManager: ({ children }) => children },
+    'styled-components': { StyleSheetManager: ({ children }: { children?: unknown }) => children },
     'ming-ui': { LoadDiv: () => React.createElement('p', null, 'loading') },
     'src/api/accountSetting': { autoEditAccountLangSetting: noop },
     'src/api/global': {

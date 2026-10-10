@@ -15,11 +15,13 @@ const wanted = new Set([
   'canUseLocalizationCache',
   'insertLocalData',
 ]);
+type BabelVariableNode = { type: string; declarations?: Array<{ id: { name?: string } }> };
 const nodes = ast.program.body.filter(
-  node => node.type === 'VariableDeclaration' && node.declarations.some(declaration => wanted.has(declaration.id.name)),
+  (node: BabelVariableNode) =>
+    node.type === 'VariableDeclaration' && node.declarations?.some(declaration => wanted.has(declaration.id.name ?? '')),
 );
 assert.equal(nodes.length, wanted.size);
-const selected = nodes.map(node => generate(node).code).join('\n');
+const selected = nodes.map((node: BabelVariableNode) => generate(node).code).join('\n');
 const windowStub = { shareState: {}, isWeiXin: false, isWxWork: false };
 const mdStub = { global: { Account: { accountId: 'user', lang: 'zh-Hans' } } };
 let writes = 0;

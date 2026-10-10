@@ -86,7 +86,7 @@ function countInSource(source: string): number {
   let n = 0;
   let m: RegExpExecArray | null;
   RADIUS_RE.lastIndex = 0;
-  while ((m = RADIUS_RE.exec(source))) if (!isExempt(m[1])) n++;
+  while ((m = RADIUS_RE.exec(source))) if (!isExempt(m[1] ?? '')) n++;
   return n;
 }
 

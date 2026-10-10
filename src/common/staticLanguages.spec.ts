@@ -164,7 +164,7 @@ test('每条文案四种语言齐全且非空', () => {
   assert.ok(keys.length > 50, `词条数看起来不对：${keys.length}`);
   for (const key of keys) {
     for (const locale of ['en', 'ja', 'zh-Hans', 'zh-Hant']) {
-      assert.ok(table[key][locale], `「${key}」缺少 ${locale}`);
+      assert.ok(table[key]?.[locale], `「${key}」缺少 ${locale}`);
     }
   }
 });

@@ -7,7 +7,7 @@ const babelParser = require('@babel/eslint-parser');
 const tsParser = require('@typescript-eslint/parser');
 const tsPlugin = require('@typescript-eslint/eslint-plugin');
 
-const reactHooksRecommendedRules = Object.keys(reactHooks.configs.recommended.rules).reduce((rules, ruleName) => {
+const reactHooksRecommendedRules = Object.keys(reactHooks.configs.recommended.rules).reduce<Record<string, unknown>>((rules, ruleName) => {
   rules[ruleName] = 'warn';
   return rules;
 }, {});

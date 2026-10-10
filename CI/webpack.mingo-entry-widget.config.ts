@@ -15,7 +15,7 @@ module.exports = {
   resolve: config.resolve,
   plugins: [
     {
-      apply(compiler) {
+      apply(compiler: import('webpack').Compiler) {
         compiler.hooks.afterEmit.tap('SyncMingoEntryWidget', () => {
           if (!fs.existsSync(path.dirname(NOCOLY_MINGO_ENTRY_WIDGET_PATH))) return;
           fs.cpSync(MDHOME_MINGO_ENTRY_WIDGET_PATH, NOCOLY_MINGO_ENTRY_WIDGET_PATH, { recursive: true });

@@ -164,7 +164,8 @@ function propTypeOf(init: any): string | null {
   }
   if (!cur || !is.isIdentifier(cur) || cur.text !== 'PropTypes') return null;
   // array/func/object/oneOf(...) 一律不收：不是可移植原始类型，写 any[] 没意义
-  return chain.length ? PROPTYPE_MAP[chain[0]] || null : null;
+  const first = chain[0];
+  return first === undefined ? null : PROPTYPE_MAP[first] || null;
 }
 
 project.eachSrcFile(({ text, node }: any) => {

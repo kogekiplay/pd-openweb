@@ -31,7 +31,7 @@ const { ROOT } = require('../../../scripts/spec-harness.ts');
 
 const SKIP_DIR = /(^|\/)(node_modules|library)(\/|$)/;
 
-function collectCssRoots(dir, out = []) {
+function collectCssRoots(dir: string, out: string[] = []): string[] {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const abs = path.join(dir, entry.name);
 
@@ -46,7 +46,7 @@ function collectCssRoots(dir, out = []) {
 }
 
 // 从每个 .css 出发，沿 @import 传递闭包收集 —— 这些全部按纯 CSS 解析
-function resolveImport(from, spec) {
+function resolveImport(from: string, spec: string): string | null {
   const base = path.resolve(path.dirname(from), spec);
 
   for (const candidate of [base, `${base}.less`, `${base}.css`]) {
@@ -56,18 +56,20 @@ function resolveImport(from, spec) {
   return null;
 }
 
-const graph = new Set();
+const graph = new Set<string>();
 const queue = collectCssRoots(path.join(ROOT, 'src'));
 
 while (queue.length) {
   const file = queue.pop();
+
+  if (file === undefined) continue;
 
   if (graph.has(file)) continue;
 
   graph.add(file);
 
   for (const m of fs.readFileSync(file, 'utf8').matchAll(/@import\s+(?:url\()?["']([^"']+)["']/g)) {
-    const target = resolveImport(file, m[1]);
+    const target = resolveImport(file, m[1] ?? '');
 
     if (target) queue.push(target);
   }
@@ -75,22 +77,22 @@ while (queue.length) {
 
 // 下限断言：主题那几个 .less 必须在图里，否则是 @import 解析坏了而不是「图是空的」
 // graph 是 Set，展开后元素推成 unknown，标一下才能用字符串方法
-const lessInGraph = [...graph].filter((f: string) => f.endsWith('.less'));
+const lessInGraph = [...graph].filter(f => f.endsWith('.less'));
 
 assert.ok(
-  lessInGraph.some((f: string) => f.endsWith('themes/antd-color.less')),
+  lessInGraph.some(f => f.endsWith('themes/antd-color.less')),
   '没在 @import 图里找到 themes/antd-color.less —— @import 解析逻辑大概率坏了，' +
     `当前图里只有 ${graph.size} 个文件、${lessInGraph.length} 个 .less`,
 );
 
 // `//` 只在行首/空白后才算注释，免得把 url(https://...) 误判
-const offenders = [];
+const offenders: string[] = [];
 
 for (const file of [...graph].sort()) {
   const src = fs.readFileSync(file, 'utf8');
   const lines = src.split('\n');
 
-  lines.forEach((line, i) => {
+  lines.forEach((line: string, i: number) => {
     if (/^\s*\/\//.test(line)) offenders.push(`${path.relative(ROOT, file)}:${i + 1}  ${line.trim().slice(0, 60)}`);
   });
 }

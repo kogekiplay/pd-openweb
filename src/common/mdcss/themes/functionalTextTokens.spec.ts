@@ -40,7 +40,7 @@ function parseRgba(value: string): [number, number, number, number] | null {
 
 function relativeLuminance([r, g, b]: Rgb): number {
   const lin = [r, g, b].map(v => v / 255).map(v => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
-  return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+  return 0.2126 * (lin[0] ?? 0) + 0.7152 * (lin[1] ?? 0) + 0.0722 * (lin[2] ?? 0);
 }
 
 function contrast(fg: Rgb, bg: Rgb): number {
@@ -51,7 +51,8 @@ function contrast(fg: Rgb, bg: Rgb): number {
 
 /** 半透明前景叠到不透明底色上，得到实际看到的颜色 */
 function flatten(fg: [number, number, number, number], bg: Rgb): Rgb {
-  return [0, 1, 2].map(i => Math.round(fg[i] * fg[3] + bg[i] * (1 - fg[3]))) as Rgb;
+  const alpha = fg[3] ?? 0;
+  return [0, 1, 2].map(i => Math.round((fg[i] ?? 0) * alpha + (bg[i] ?? 0) * (1 - alpha))) as Rgb;
 }
 
 /** 从 Less 源文件里取一个 CSS 变量的字面值（注释已先剔掉，避免注释里的示例值被当成定义） */
@@ -59,7 +60,9 @@ function readVar(source: string, name: string): string {
   const stripped = source.replace(/\/\*[\s\S]*?\*\//g, '');
   const m = stripped.match(new RegExp(`(^|[\\s;{])${name}\\s*:\\s*([^;]+);`));
   assert.ok(m, `${name} 在主题文件里没有定义`);
-  return m![2].trim();
+  const value = m?.[2];
+  if (value === undefined) throw new Error(`${name} 在主题文件里没有定义`);
+  return value.trim();
 }
 
 const themesDir = __dirname;

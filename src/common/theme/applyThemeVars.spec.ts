@@ -56,7 +56,7 @@ const g = globalThis as unknown as Record<string, unknown>;
  * 「属性变了会重刷成什么」，不是 DOM 规范的调度时机。
  */
 const modeCallbacks: Array<() => void> = [];
-g.MutationObserver = class {
+g['MutationObserver'] = class {
   cb: () => void;
   constructor(cb: () => void) {
     this.cb = cb;
@@ -74,7 +74,7 @@ function setThemeAttr(value: string | null) {
   modeCallbacks.forEach(cb => cb());
 }
 
-g.document = {
+g['document'] = {
   documentElement: docEl,
   head: {
     appendChild: (el: { id: string; textContent: string }) => {
