@@ -20,8 +20,8 @@
  * 新写脚本图省事用 .js —— 这些都不会被任何其它门禁发现，因为 .js 本来就能跑。
  * 没有这道闸，TS 化的成果会一点点被磨掉，而且是无声的。
  */
-const { execFileSync } = require('child_process');
-const path = require('path');
+const { execFileSync }: typeof import('node:child_process') = require('child_process');
+const path: typeof import('node:path') = require('path');
 
 const ROOT_PATH = path.join(__dirname, '..');
 const MODULE_EXT = new Set(['.js', '.jsx', '.ts', '.tsx']);
@@ -67,14 +67,14 @@ const JS_ALLOWLIST = [
 
 const JS_EXT = new Set(['.js', '.jsx', '.cjs', '.mjs']);
 
-function findStrayJs(files: string[]): string[] {
+function findStrayJs(files: readonly string[]): string[] {
   return files
     .filter(f => JS_EXT.has(path.extname(f)))
     .filter(f => !JS_ALLOWLIST.some(prefix => f.startsWith(prefix)))
     .sort();
 }
 
-function listTrackedFiles() {
+function listTrackedFiles(): string[] {
   // 【扫全仓不只是 src】后缀并存只在 src 有意义，但「不准出现 .js」要管 scripts/
   // CI/ tools/ 和根目录的配置文件 —— 回流最常发生的恰恰是那些地方。
   //
@@ -91,18 +91,20 @@ function listTrackedFiles() {
     .filter(Boolean);
 }
 
-function findCollisions(files: string[]): Array<{ stem: string; exts: string[] }> {
-  const byStem = new Map();
+type Collision = { stem: string; exts: string[] };
+function findCollisions(files: readonly string[]): Collision[] {
+  const byStem = new Map<string, string[]>();
   for (const file of files.filter(f => f.startsWith('src/'))) {
     const ext = path.extname(file);
     if (!MODULE_EXT.has(ext)) continue;
     // .d.ts 是类型声明，与同名 .js 并存是正常且期望的，不算违例
     if (file.endsWith('.d.ts')) continue;
     const stem = file.slice(0, -ext.length);
-    if (!byStem.has(stem)) byStem.set(stem, []);
-    byStem.get(stem).push(ext);
+    const extensions = byStem.get(stem);
+    if (extensions) extensions.push(ext);
+    else byStem.set(stem, [ext]);
   }
-  const collisions = [];
+  const collisions: Collision[] = [];
   for (const [stem, exts] of byStem) {
     if (exts.length > 1) collisions.push({ stem, exts: exts.sort() });
   }
@@ -139,3 +141,8 @@ function main() {
 if (require.main === module) main();
 
 module.exports = { findCollisions, findStrayJs, JS_ALLOWLIST };
+export type ExtensionCollisionExports = {
+  findCollisions: typeof findCollisions;
+  findStrayJs: typeof findStrayJs;
+  JS_ALLOWLIST: typeof JS_ALLOWLIST;
+};

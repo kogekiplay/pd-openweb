@@ -9,16 +9,16 @@
  * `//`、JSX 文本里的 `//`，都是裸词法扫描器会栽的地方
  *（2026-09 从 TypeScript 的 API 换成 @babel/parser 时，就是靠这几条把实现钉住的）。
  */
-const assert = require('assert');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const { CommentIndex } = require('./comment-ranges.ts');
+const assert: typeof import('node:assert') = require('assert');
+const fs: typeof import('node:fs') = require('fs');
+const os: typeof import('node:os') = require('os');
+const path: typeof import('node:path') = require('path');
+const { CommentIndex }: import('./comment-ranges').CommentRangesExports = require('./comment-ranges.ts');
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'comment-ranges-'));
 
 /** 写个临时文件，返回 (line, col) -> 是否在注释里 */
-function probe(name: string, source: string): (line: number, col: number) => boolean {
+function probe(name: string, source: string): (line: number, col: number) => boolean | null {
   fs.writeFileSync(path.join(dir, name), source);
   const idx = new CommentIndex(dir);
   return (line, col) => idx.isInComment(name, line, col);
@@ -26,10 +26,7 @@ function probe(name: string, source: string): (line: number, col: number) => boo
 
 // ── 1. 基本能力：真注释要认出来，真代码不能误判 ──────────────────
 {
-  const at = probe(
-    'basic.ts',
-    ['// 行注释', 'const a = 1;', '/* 块', '   注释 */', 'const b = 2;'].join('\n'),
-  );
+  const at = probe('basic.ts', ['// 行注释', 'const a = 1;', '/* 块', '   注释 */', 'const b = 2;'].join('\n'));
   assert.strictEqual(at(1, 3), true, '行注释内应判为注释');
   assert.strictEqual(at(2, 7), false, 'const a 是真代码');
   assert.strictEqual(at(3, 3), true, '块注释首行');
@@ -54,10 +51,7 @@ function probe(name: string, source: string): (line: number, col: number) => boo
 
 // ── 4. JSX 文本里的 // 不是注释 ────────────────────────────────
 {
-  const at = probe(
-    'jsx.tsx',
-    ['const el = (', '  <div>', '    a // b', '  </div>', ');'].join('\n'),
-  );
+  const at = probe('jsx.tsx', ['const el = (', '  <div>', '    a // b', '  </div>', ');'].join('\n'));
   assert.strictEqual(at(3, 8), false, 'JSX 文本里的 // 不能判成注释');
 }
 
@@ -85,5 +79,13 @@ function probe(name: string, source: string): (line: number, col: number) => boo
   assert.strictEqual(idx.isInComment('basic.ts', 999, 1), null, '行号越界应返回 null');
 }
 
+// Babel 8 parses class fields without the removed classProperties plugins.
+{
+  const at = probe('class-fields.ts', 'class Example {\n  field = 1; // public\n  #private = 2; // private\n}\n');
+  assert.strictEqual(at(2, 15), true);
+  assert.strictEqual(at(3, 18), true);
+  assert.strictEqual(at(3, 4), false);
+}
+
 fs.rmSync(dir, { recursive: true, force: true });
-console.log('comment-ranges: 7 组断言全部通过');
+console.log('comment-ranges: 8 组断言全部通过');

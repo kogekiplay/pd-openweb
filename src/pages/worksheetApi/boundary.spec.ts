@@ -229,7 +229,7 @@ function load(relative: string): unknown {
         Select: Object.assign(() => null, { Option: 'SelectOption' }),
       };
     if (name === '@mingdaocom/json-view') return { __esModule: true, default: 'JsonView' };
-    if (name === 'styled-components')
+    if (name === 'styled-components' || name === 'src/utils/typedStyled')
       return { __esModule: true, default: { header: () => 'HeaderWrap', div: () => 'Wrapper' } };
     if (name === 'worksheet/common/WorkSheetFilter/common/FilterConfig')
       return { __esModule: true, default: 'FilterConfig' };
@@ -291,6 +291,8 @@ function load(relative: string): unknown {
       name.startsWith('./core/') ||
       name === '../../core/enum' ||
       name === '../../core/utils' ||
+      name === '../../core/filterBoundary' ||
+      name === './filterBoundary' ||
       name === './apiV2Config' ||
       name === './applicationConfig' ||
       name === './enum'

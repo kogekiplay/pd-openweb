@@ -41,38 +41,73 @@
  * 一个辅助性的门禁不配把安装搞挂。
  */
 
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
+const fs: typeof import('node:fs') = require('fs');
+const path: typeof import('node:path') = require('path');
+const crypto: typeof import('node:crypto') = require('crypto');
+
+/** Hash the selected raw JSON values, not an invented package-manager DTO. */
+type JsonValue = string | number | boolean | null | JsonValue[] | JsonObject;
+interface JsonObject {
+  [key: string]: JsonValue;
+}
+interface StampHeader {
+  version?: unknown;
+  fingerprint?: unknown;
+}
+type CheckResult = 0 | 1 | 2;
+
+function jsonValue(value: unknown): value is JsonValue {
+  if (value === null || typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean')
+    return true;
+  if (Array.isArray(value)) return Array.from(value).every(jsonValue);
+  return typeof value === 'object' && Object.values(value).every(jsonValue);
+}
+function packageField(pkg: unknown, key: string, fallback: JsonValue): JsonValue {
+  // Preserve the historical scalar/array root defaults; null package input
+  // failed at its first property access and must still fail rather than hash {}.
+  if (pkg === null) throw new TypeError('Invalid null package manifest');
+  const value: unknown = typeof pkg === 'object' && !Array.isArray(pkg) ? Reflect.get(pkg, key) : undefined;
+  // Validate only hashed fields; ignored metadata must not add traversal cost or
+  // reject a deeply nested but irrelevant JSON property.
+  const selected: unknown = value || fallback;
+  if (!jsonValue(selected)) throw new TypeError(`Invalid install-stamp JSON field: ${key}`);
+  return selected;
+}
+function stampHeader(value: unknown): value is StampHeader {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
 
 const ROOT = path.resolve(__dirname, '..');
 const STAMP_PATH = path.join(ROOT, 'node_modules', '.install-stamp.json');
 const STAMP_VERSION = 1;
 
 /** 键排序后再序列化：package.json 里字段换个位置不该算成"依赖变了"。 */
-function canonical(value: unknown): unknown {
+function canonical(value: JsonValue): JsonValue {
   if (Array.isArray(value)) return value.map(item => canonical(item));
   if (value && typeof value === 'object') {
-    return Object.keys(value as Record<string, unknown>)
+    return Object.keys(value)
       .sort()
-      .reduce<Record<string, unknown>>((acc, k) => {
-        acc[k] = canonical((value as Record<string, unknown>)[k]);
+      .reduce<JsonObject>((acc, k) => {
+        const entry = value[k];
+        // Own keys originate in JSON.parse; preserve explicit null and false,
+        // and never manufacture an undefined JSON member.
+        if (entry !== undefined) acc[k] = canonical(entry);
         return acc;
       }, {});
   }
   return value;
 }
 
-function fingerprint() {
-  const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+function fingerprint(): string {
+  const pkg: unknown = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
   const relevant = canonical({
-    dependencies: pkg.dependencies || {},
-    devDependencies: pkg.devDependencies || {},
-    optionalDependencies: pkg.optionalDependencies || {},
-    peerDependencies: pkg.peerDependencies || {},
-    resolutions: pkg.resolutions || {},
+    dependencies: packageField(pkg, 'dependencies', {}),
+    devDependencies: packageField(pkg, 'devDependencies', {}),
+    optionalDependencies: packageField(pkg, 'optionalDependencies', {}),
+    peerDependencies: packageField(pkg, 'peerDependencies', {}),
+    resolutions: packageField(pkg, 'resolutions', {}),
     // 改白名单会改变「哪些包跑了 install 脚本」，装出来的东西是不一样的，算进指纹。
-    trustedDependencies: pkg.trustedDependencies || [],
+    trustedDependencies: packageField(pkg, 'trustedDependencies', []),
   });
   const hash = crypto.createHash('sha256');
   hash.update(JSON.stringify(relevant));
@@ -81,7 +116,7 @@ function fingerprint() {
   return hash.digest('hex');
 }
 
-function write() {
+function write(): void {
   try {
     // node_modules 不在就什么都不做：说明这次安装根本没落盘，
     // 硬造一个目录只会让 check 以为一切正常。
@@ -97,16 +132,21 @@ function write() {
   }
 }
 
-function check() {
-  let stamp;
+function check(): CheckResult {
+  let stamp: unknown;
   try {
     stamp = JSON.parse(fs.readFileSync(STAMP_PATH, 'utf8'));
   } catch {
     return 2;
   }
-  if (stamp.version !== STAMP_VERSION) return 2;
+  if (!stampHeader(stamp) || stamp.version !== STAMP_VERSION) return 2;
   return stamp.fingerprint === fingerprint() ? 0 : 1;
 }
+
+const installStamp = { canonical, fingerprint, write, check };
+export type InstallStamp = typeof installStamp;
+export type { JsonValue, JsonObject, CheckResult };
+module.exports = installStamp;
 
 const mode = process.argv[2];
 if (mode === 'write') {

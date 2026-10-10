@@ -26,19 +26,19 @@
  * （fileName/pos/end/code/category/text），没有 d.file，也没有
  * getLineAndCharacterOfPosition —— 行列号要自己按 pos 算。
  */
-const fs = require('fs');
-const path = require('path');
-const { API } = require('@typescript/native/unstable/sync');
+import type { Diagnostic } from '@typescript/native/unstable/sync';
+
+const fs: typeof import('node:fs') = require('fs');
+const path: typeof import('node:path') = require('path');
+const { API }: typeof import('@typescript/native/unstable/sync') = require('@typescript/native/unstable/sync');
 
 const ROOT = path.resolve(__dirname, '../..');
-const configPath = path.join(ROOT, 'tsconfig.gate.json');
-const rel = (f: string): string => path.relative(ROOT, f).split(path.sep).join('/');
 
 // 与语义门禁一致的噪声剔除：src/library 是预打包压缩产物，__ 前缀是探针
 const isNoise = (r: string): boolean => r.startsWith('src/library/') || path.basename(r).startsWith('__');
 
 /** pos（字符偏移）-> (line, col)，都是 1 起。按文件缓存行首表。 */
-const lineStartsCache = new Map();
+const lineStartsCache = new Map<string, number[] | null>();
 function posToLineCol(absFile: string, pos: number): { line: number; col: number } {
   let starts = lineStartsCache.get(absFile);
   if (starts === undefined) {
@@ -56,51 +56,64 @@ function posToLineCol(absFile: string, pos: number): { line: number; col: number
   let hi = starts.length - 1;
   while (lo < hi) {
     const mid = (lo + hi + 1) >> 1;
-    if (starts[mid] <= pos) lo = mid;
+    const midStart = starts[mid];
+    if (midStart === undefined) throw new Error('行首缓存缺少二分查找位置');
+    if (midStart <= pos) lo = mid;
     else hi = mid - 1;
   }
-  return { line: lo + 1, col: pos - starts[lo] + 1 };
+  const lineStart = starts[lo];
+  if (lineStart === undefined) throw new Error('行首缓存为空');
+  return { line: lo + 1, col: pos - lineStart + 1 };
 }
 
-const t0 = Date.now();
-const api = new API({ cwd: ROOT });
+function main(root = ROOT, configPath = path.join(root, 'tsconfig.gate.json')): 0 | 1 | 2 {
+  const rel = (f: string): string => path.relative(root, f).split(path.sep).join('/');
+  const t0 = Date.now();
+  const api = new API({ cwd: root });
+  try {
+    const cfg = api.parseConfigFile(configPath);
+    if (!cfg || !cfg.fileNames) {
+      console.error('tsconfig 无法解析:', configPath);
+      return 2;
+    }
 
-const cfg = api.parseConfigFile(configPath);
-if (!cfg || !cfg.fileNames) {
-  console.error('tsconfig 无法解析:', configPath);
-  process.exit(2);
-}
+    const snapshot = api.updateSnapshot({ openProjects: [configPath] });
+    const project = snapshot.getProject(configPath);
+    if (!project) {
+      console.error('tsconfig 加载不出 project:', configPath);
+      return 2;
+    }
 
-const snapshot = api.updateSnapshot({ openProjects: [configPath] });
-const project = snapshot.getProject(configPath);
-if (!project) {
-  console.error('tsconfig 加载不出 project:', configPath);
-  process.exit(2);
-}
+    const diags = project.program.getSyntacticDiagnostics().filter(d => !d.fileName || !isNoise(rel(d.fileName)));
+    const secs = ((Date.now() - t0) / 1000).toFixed(1);
 
-const diags = project.program.getSyntacticDiagnostics().filter((d: { fileName?: string }) => !d.fileName || !isNoise(rel(d.fileName)));
-const secs = ((Date.now() - t0) / 1000).toFixed(1);
+    if (diags.length === 0) {
+      console.log(`语法门禁通过：${cfg.fileNames.length} 个文件，0 条语法诊断（${secs}s）`);
+      return 0;
+    }
 
-if (diags.length === 0) {
-  console.log(`语法门禁通过：${cfg.fileNames.length} 个文件，0 条语法诊断（${secs}s）`);
-  api.close();
-  process.exit(0);
-}
-
-console.error(`\n语法门禁失败：${diags.length} 条语法诊断（${secs}s）`);
-console.error('提示：含 JSX 的文件必须是 .tsx，不能是 .ts —— 这是最常见的原因。\n');
-const byFile = new Map();
-for (const d of diags) {
-  const f = d.fileName ? rel(d.fileName) : '(no file)';
-  if (!byFile.has(f)) byFile.set(f, [] as typeof diags);
-  byFile.get(f).push(d);
-}
-for (const [f, ds] of byFile) {
-  console.error(`  ${f}  (${ds.length} 条)`);
-  for (const d of ds.slice(0, 3)) {
-    const { line, col } = posToLineCol(path.join(ROOT, f), d.pos);
-    console.error(`     (${line},${col}) TS${d.code}: ${d.text}`);
+    console.error(`\n语法门禁失败：${diags.length} 条语法诊断（${secs}s）`);
+    console.error('提示：含 JSX 的文件必须是 .tsx，不能是 .ts —— 这是最常见的原因。\n');
+    const byFile = new Map<string, Diagnostic[]>();
+    for (const d of diags) {
+      const f = d.fileName ? rel(d.fileName) : '(no file)';
+      const group = byFile.get(f);
+      if (group) group.push(d);
+      else byFile.set(f, [d]);
+    }
+    for (const [f, ds] of byFile) {
+      console.error(`  ${f}  (${ds.length} 条)`);
+      for (const d of ds.slice(0, 3)) {
+        const { line, col } = posToLineCol(path.join(root, f), d.pos);
+        console.error(`     (${line},${col}) TS${d.code}: ${d.text}`);
+      }
+    }
+    return 1;
+  } finally {
+    api.close();
   }
 }
-api.close();
-process.exit(1);
+
+export type SyntaxGateExports = { main: typeof main; posToLineCol: typeof posToLineCol };
+module.exports = { main, posToLineCol };
+if (require.main === module) process.exit(main());

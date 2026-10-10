@@ -1,6 +1,15 @@
 import { FILTER_BELONGS_TYPE, FILTER_CONDITION_MULTI_TYPE, FILTER_CONDITION_TYPE, FILTER_LOGIC_TYPE } from './enum';
+import { parsedId } from './filterBoundary';
+import type { ApiFilterFields, ApiFilterItem, ApiV3Condition, ApiV3Filters, ApiV3Group } from './filterTypes';
 
-const getFilterType = ({ dataType, filterType }) => {
+const conditionTypes: Readonly<Partial<Record<number, string>>> = FILTER_CONDITION_TYPE;
+const multiTypes: Readonly<Partial<Record<number, string>>> = FILTER_CONDITION_MULTI_TYPE;
+const belongsTypes: Readonly<Partial<Record<number, string>>> = FILTER_BELONGS_TYPE;
+const getFilterType = ({
+  dataType,
+  filterType,
+}: Pick<ApiFilterFields, 'dataType' | 'filterType'>): string | undefined => {
+  if (filterType === undefined) return undefined;
   switch (dataType) {
     case 19: // 地区
     case 23:
@@ -15,19 +24,19 @@ const getFilterType = ({ dataType, filterType }) => {
     case 29: // 关联记录
     case 35: // 级联选择
     case 37: // 汇总
-      if ([2, 6, 24, 25, 51].includes(filterType)) return FILTER_CONDITION_MULTI_TYPE[filterType];
-      else if ([11, 12].includes(filterType)) return FILTER_BELONGS_TYPE[filterType];
-      return FILTER_CONDITION_TYPE[filterType];
+      if ([2, 6, 24, 25, 51].includes(filterType)) return multiTypes[filterType];
+      else if ([11, 12].includes(filterType)) return belongsTypes[filterType];
+      return conditionTypes[filterType];
     default:
-      return FILTER_CONDITION_TYPE[filterType];
+      return conditionTypes[filterType];
   }
 };
 
 // 判断是否要特殊处理value
-const getSpecialValue = filterItem => {
+const getSpecialValue = (filterItem: ApiFilterFields) => {
   const { dataType, filterType, values = [] } = filterItem;
   let isSpecialValue = false;
-  let specialValues = null;
+  let specialValues: unknown[] | null = null;
 
   switch (dataType) {
     case 6: // 数字
@@ -38,7 +47,7 @@ const getSpecialValue = filterItem => {
     case 28: // 等级
       // 在范围内、不在范围内
       const { minValue = '', maxValue = '' } = filterItem;
-      isSpecialValue = [11, 12, 31, 32].includes(filterType);
+      isSpecialValue = filterType !== undefined && [11, 12, 31, 32].includes(filterType);
       if (isSpecialValue) specialValues = [minValue, maxValue];
       break;
     case 19: // 地区
@@ -50,20 +59,30 @@ const getSpecialValue = filterItem => {
     case 29: // 关联记录
     case 35: // 级联选择
       isSpecialValue = true;
-      specialValues = values.map(item => safeParse(item).id).filter(Boolean);
+      specialValues = values
+        .map(item => {
+          const parsed: unknown = safeParse(item);
+          return parsedId(parsed);
+        })
+        .filter(Boolean);
       break;
   }
 
   return { isSpecialValue, specialValues };
 };
 
-export const formatFilters = filters => {
+export const formatFilters = (filters?: readonly ApiFilterItem[] | null): ApiV3Filters => {
   if (!filters?.length) return {};
+  return formatNonEmptyGroup(filters);
+};
 
-  const { spliceType } = filters[0];
-  const data = {
+function formatNonEmptyGroup(filters: readonly ApiFilterItem[]): ApiV3Group {
+  const first = filters[0];
+  if (!first) throw new TypeError('Missing first worksheet API filter condition');
+  const { spliceType } = first;
+  const data: ApiV3Group = {
     type: 'group',
-    logic: FILTER_LOGIC_TYPE[spliceType],
+    logic: spliceType === undefined ? undefined : FILTER_LOGIC_TYPE[spliceType],
     children: [],
   };
 
@@ -71,7 +90,7 @@ export const formatFilters = filters => {
     if (filterItem.isGroup) {
       if (filterItem.groupFilters?.length) {
         // 递归调用 formatFilters 本身
-        const childGroup = formatFilters(filterItem.groupFilters);
+        const childGroup = formatNonEmptyGroup(filterItem.groupFilters);
         data.children.push(childGroup);
       }
 
@@ -81,10 +100,11 @@ export const formatFilters = filters => {
     const { controlId, dataType, filterType, values, value } = filterItem;
     const { isSpecialValue, specialValues } = getSpecialValue(filterItem);
 
-    const condition = {
+    const condition: ApiV3Condition = {
       type: 'condition',
       field: controlId,
       operator: getFilterType({ dataType, filterType }),
+      value: [],
     };
     if (isSpecialValue) condition.value = specialValues;
     else if (values?.length) condition.value = values;
@@ -95,9 +115,9 @@ export const formatFilters = filters => {
   });
 
   return data;
-};
+}
 
-export const convertControl = type => {
+export const convertControl = (type: number | string | null | undefined) => {
   switch (type) {
     case 2:
       return 'Text'; // 多行文本框

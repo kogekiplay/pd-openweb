@@ -22,11 +22,14 @@
  * 在 ESM 里不存在，当场 `ReferenceError: module is not defined`。
  * 门禁链上全是 `require`，保持 CJS。
  */
-const fs = require('fs');
-const path = require('path');
-const parser = require('@babel/parser');
+import type { ParserPlugin } from '@babel/parser';
 
-const PLUGINS = ['jsx', 'typescript', 'decorators-legacy', 'classProperties', 'classPrivateProperties'];
+const fs: typeof import('node:fs') = require('fs');
+const path: typeof import('node:path') = require('path');
+const parser: typeof import('@babel/parser') = require('@babel/parser');
+
+// Babel 8 parses public/private class fields by default; these are no longer plugin names.
+const PLUGINS: ParserPlugin[] = ['jsx', 'typescript', 'decorators-legacy'];
 
 /** 注释区间，[起, 止) 的字符偏移 */
 type Range = [number, number];
@@ -48,7 +51,7 @@ function buildInfo(absPath: string, _fileName?: string): FileInfo | null {
   const lineStarts: number[] = [0];
   for (let i = 0; i < text.length; i++) if (text[i] === '\n') lineStarts.push(i + 1);
 
-  let ast: any;
+  let ast: ReturnType<typeof parser.parse>;
   try {
     ast = parser.parse(text, {
       sourceType: 'module',
@@ -65,9 +68,13 @@ function buildInfo(absPath: string, _fileName?: string): FileInfo | null {
     return { lineStarts, ranges: [] };
   }
 
-  const ranges: Range[] = (ast.comments || [])
-    .map((c: any): Range => [c.start, c.end])
-    .sort((a: Range, b: Range) => a[0] - b[0]);
+  const ranges: Range[] = [];
+  for (const comment of ast.comments || []) {
+    if (typeof comment.start === 'number' && typeof comment.end === 'number') {
+      ranges.push([comment.start, comment.end]);
+    }
+  }
+  ranges.sort((a, b) => a[0] - b[0]);
   return { lineStarts, ranges };
 }
 
@@ -100,3 +107,4 @@ class CommentIndex {
 }
 
 module.exports = { CommentIndex, buildInfo };
+export type CommentRangesExports = { CommentIndex: typeof CommentIndex; buildInfo: typeof buildInfo };

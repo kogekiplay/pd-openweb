@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Select } from 'antd';
 import JsonView from '@mingdaocom/json-view';
-import _ from 'lodash';
-import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';
 import FilterConfig from 'worksheet/common/WorkSheetFilter/common/FilterConfig';
+import styled from 'src/utils/typedStyled';
+import { filterItems, optionalParsedId } from '../../core/filterBoundary';
+import type { ApiFilterFields, ApiFilterItem, ApiFilterVersion, ApiV3Filters } from '../../core/filterTypes';
 import { formatFilters } from '../../core/utils';
 import type { ApiSwitchPermit, ApiTemplateControl } from '../../types';
 
@@ -40,12 +41,12 @@ const Wrapper = styled.div`
   }
 `;
 
-const formatConditionsValue = conditions => {
+export const formatConditionsValue = (conditions: readonly ApiFilterItem[]): ApiFilterItem[] => {
   const formatValue = conditions.map(item => {
     if (item.isGroup) {
       return {
         ...item,
-        groupFilters: item.groupFilters.map(groupItem =>
+        groupFilters: checkedGroupChildren(item).map(groupItem =>
           Object.fromEntries(Object.entries(groupItem).filter(([, v]) => v !== undefined)),
         ),
       };
@@ -53,18 +54,22 @@ const formatConditionsValue = conditions => {
 
     return Object.fromEntries(Object.entries(item).filter(([, v]) => v !== undefined));
   });
-  return formatValue;
+  return filterItems(formatValue);
 };
-const normalizeValues = values => {
-  return _.isArray(values)
+function checkedGroupChildren(item: ApiFilterItem): ApiFilterItem[] {
+  if (!item.isGroup || !item.groupFilters) throw new TypeError('Missing worksheet API filter group conditions');
+  return item.groupFilters;
+}
+export const normalizeValues = (values: ApiFilterFields['values']): ApiFilterFields['values'] => {
+  return Array.isArray(values)
     ? values.map(v => {
-        const parsed = safeParse(v);
-        return parsed?.id ?? v;
+        const parsed: unknown = safeParse(v);
+        return optionalParsedId(parsed) ?? v;
       })
     : values;
 };
 
-const formatFilter = filter => {
+const formatFilter = (filter: ApiFilterItem): ApiFilterItem => {
   if (filter.dataType === 29) {
     return {
       ...filter,
@@ -75,12 +80,12 @@ const formatFilter = filter => {
   return filter;
 };
 
-const formatFiltersValue = (filters = []) => {
+export const formatFiltersValue = (filters: readonly ApiFilterItem[] = []): ApiFilterItem[] => {
   return filters.map(filter => {
     if (filter.isGroup) {
       return {
         ...filter,
-        groupFilters: _.isArray(filter.groupFilters) ? filter.groupFilters.map(formatFilter) : filter.groupFilters,
+        groupFilters: Array.isArray(filter.groupFilters) ? filter.groupFilters.map(formatFilter) : filter.groupFilters,
       };
     }
 
@@ -97,14 +102,20 @@ export interface FiltersGenerateProps {
 export default function FiltersGenerate(props: FiltersGenerateProps) {
   const { controls = [], projectId, appId, sheetSwitchPermit = [] } = props;
   const [visible, setVisible] = useState(false);
-  const [filters, setFilters] = useState([]);
-  const [apiVersion, setApiVersion] = useState('apiV2');
-  const [apiV3Filters, setApiV3Filters] = useState({});
+  const [filters, setFilters] = useState<ApiFilterItem[]>([]);
+  const [apiVersion, setApiVersion] = useState<ApiFilterVersion>('apiV2');
+  const [apiV3Filters, setApiV3Filters] = useState<ApiV3Filters>({});
+  const [filterError, setFilterError] = useState<string | undefined>();
 
   useEffect(() => {
     if (apiVersion === 'apiV3') {
-      setApiV3Filters(formatFilters(filters));
-    }
+      try {
+        setApiV3Filters(formatFilters(filters));
+        setFilterError(undefined);
+      } catch {
+        setFilterError(_l('筛选条件格式错误，请检查后重试'));
+      }
+    } else setFilterError(undefined);
   }, [filters, apiVersion]);
 
   return (
@@ -124,6 +135,7 @@ export default function FiltersGenerate(props: FiltersGenerateProps) {
           onCancel={() => {
             setVisible(false);
             setFilters([]);
+            setFilterError(undefined);
           }}
         >
           <Wrapper>
@@ -141,20 +153,24 @@ export default function FiltersGenerate(props: FiltersGenerateProps) {
                 sheetSwitchPermit={sheetSwitchPermit}
                 conditions={filters}
                 filterResigned={false}
-                onConditionsChange={(conditions = []) => {
-                  const isEmptyGroup =
-                    conditions.length === 1 && conditions[0]?.isGroup && !conditions[0]?.groupFilters?.length;
-
-                  const baseFilters = isEmptyGroup ? [] : formatConditionsValue(conditions);
-                  const finalFilters = apiVersion === 'apiV2' ? formatFiltersValue(baseFilters) : baseFilters;
-
-                  setFilters(finalFilters);
+                onConditionsChange={(value: unknown = []) => {
+                  try {
+                    const conditions = filterItems(value);
+                    const isEmptyGroup =
+                      conditions.length === 1 && conditions[0]?.isGroup && !conditions[0]?.groupFilters?.length;
+                    const baseFilters = isEmptyGroup ? [] : formatConditionsValue(conditions);
+                    const finalFilters = apiVersion === 'apiV2' ? formatFiltersValue(baseFilters) : baseFilters;
+                    setFilters(finalFilters);
+                    setFilterError(undefined);
+                  } catch {
+                    setFilterError(_l('筛选条件格式错误，请检查后重试'));
+                  }
                 }}
               />
             </div>
             <div className="viewWrapper">
               <div className="selectWrapper">
-                <Select
+                <Select<ApiFilterVersion>
                   value={apiVersion}
                   onChange={value => setApiVersion(value)}
                   style={{ width: 80, backgroundColor: 'var(--color-background-secondary)' }}
@@ -176,6 +192,7 @@ export default function FiltersGenerate(props: FiltersGenerateProps) {
                 </Select>
               </div>
               <div className="jsonViewWrapper">
+                {filterError && <div role="alert">{filterError}</div>}
                 <JsonView theme="light" data={apiVersion === 'apiV3' ? apiV3Filters : filters} />
               </div>
             </div>

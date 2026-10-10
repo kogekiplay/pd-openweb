@@ -1,25 +1,28 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox, Dialog } from 'ming-ui';
+import type { PrintOptDialogProps, PrintOptDialogState } from './printOptionTypes';
 
-export default class PrintOptDialog extends Component<any, any> {
+export type { PrintOptDialogProps, PrintOptDialogState, PrintDialogOptions } from './printOptionTypes';
+
+export default class PrintOptDialog extends Component<PrintOptDialogProps, PrintOptDialogState> {
   static override propTypes = {
-    visible: PropTypes.any,
-    reqInfo: PropTypes.any,
-    printCheckAll: PropTypes.any,
-    controlOption: PropTypes.any,
-    changePrintVisible: PropTypes.any,
-    processOption: PropTypes.any,
+    visible: PropTypes.bool,
+    reqInfo: PropTypes.object,
+    printCheckAll: PropTypes.bool,
+    controlOption: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.oneOf(['all'])]),
+    changePrintVisible: PropTypes.func,
+    processOption: PropTypes.string,
     worksheetId: PropTypes.string,
     hidePrintOptDialog: PropTypes.func,
     type: PropTypes.string,
-    task: PropTypes.any,
-    workflow: PropTypes.any,
-    options: PropTypes.any,
+    task: PropTypes.arrayOf(PropTypes.object),
+    workflow: PropTypes.arrayOf(PropTypes.object),
+    options: PropTypes.object,
   };
-  constructor(props) {
+  constructor(props: PrintOptDialogProps) {
     super(props);
-    let controlOption = [];
+    let controlOption: string[] = [];
 
     if (props.controlOption === 'all') {
       controlOption.splice(0, controlOption.length);
@@ -82,8 +85,9 @@ export default class PrintOptDialog extends Component<any, any> {
       this.setState({ controlOption, printCheckAll: false });
     }
   };
-  toggleTaskCheckItem(key) {
+  toggleTaskCheckItem(key: string) {
     const { task } = this.state;
+    if (!task) throw new TypeError('Missing print task options');
     const newTask = task.map(item => {
       if (item.key === key) {
         item.show = !item.show;
@@ -95,8 +99,9 @@ export default class PrintOptDialog extends Component<any, any> {
       task: newTask,
     });
   }
-  toggleWorkflowCheckItem(key) {
+  toggleWorkflowCheckItem(key: string) {
     const { workflow } = this.state;
+    if (!workflow) throw new TypeError('Missing print workflow options');
     const newWorkflow = workflow.map(item => {
       if (item.flowNode.id === key) {
         item.show = !item.show;
@@ -112,11 +117,11 @@ export default class PrintOptDialog extends Component<any, any> {
     const controlOption = this.state.controlOption;
 
     if (this.state.printCheckAll) {
-      // controlOption.splice(0, this.state.reqInfo.controls.filter(item => !item.printHide).length);
+      // controlOption.splice(0, (this.state.reqInfo.controls || []).filter(item => !item.printHide).length);
       this.setState({ controlOption: [], printCheckAll: false });
     } else {
       controlOption.splice(0, controlOption.length);
-      this.state.reqInfo.controls
+      (this.state.reqInfo.controls || [])
         .filter(item => !item.printHide)
         .forEach(item => {
           if (item && item.controlId) {
@@ -193,6 +198,7 @@ export default class PrintOptDialog extends Component<any, any> {
   }
   renderWorkflow() {
     const { workflow } = this.state;
+    if (!workflow) throw new TypeError('Missing print workflow options');
     return (
       <div className="controlOption mBottom32">
         <span className="Block Font13 textTertiary mBottom16">{`${_l('流程中的节点内容')}`}</span>
@@ -212,6 +218,7 @@ export default class PrintOptDialog extends Component<any, any> {
   }
   renderTask() {
     const { task } = this.state;
+    if (!task) throw new TypeError('Missing print task options');
     return (
       <div className="controlOption mBottom32">
         <span className="Block Font13 textTertiary mBottom16">{_l('任务')}</span>
@@ -252,7 +259,7 @@ export default class PrintOptDialog extends Component<any, any> {
             });
           if (
             this.state.controlOption.length ===
-            this.state.reqInfo.controls.filter(item => !item.printHide).length + formDetailEvaluateLength
+            (this.state.reqInfo.controls || []).filter(item => !item.printHide).length + formDetailEvaluateLength
           ) {
             controlOption = 'all';
           } else {
@@ -273,10 +280,13 @@ export default class PrintOptDialog extends Component<any, any> {
           }
 
           if (type === 'task') {
+            if (!this.state.task || !this.props.onUpdateTask) throw new TypeError('Missing print task callback');
             this.props.onUpdateTask(this.state.task);
           }
 
           if (type === 'workflow') {
+            if (!this.state.workflow || !this.props.onUpdateWorkflow)
+              throw new TypeError('Missing print workflow callback');
             this.props.onUpdateWorkflow(this.state.workflow);
           }
 
@@ -288,15 +298,15 @@ export default class PrintOptDialog extends Component<any, any> {
         }}
       >
         {this.props.type === 'task' && this.renderTask()}
-        {this.state.reqInfo.controls.filter(item => !item.printHide).length > 0 && (
+        {(this.state.reqInfo.controls || []).filter(item => !item.printHide).length > 0 && (
           <div className="controlOption mBottom32">
             <span className="Block Font13 textTertiary mBottom16">{_l('自定义字段内容')}</span>
-            {this.state.reqInfo.controls
+            {(this.state.reqInfo.controls || [])
               .sort((a, b) => {
                 if (a.row === b.row) {
-                  return a.col - b.col;
+                  return Number(a.col) - Number(b.col);
                 } else {
-                  return a.row - b.row;
+                  return Number(a.row) - Number(b.row);
                 }
               })
               .map(
@@ -306,8 +316,12 @@ export default class PrintOptDialog extends Component<any, any> {
                       className="controlOptionItem mBottom15"
                       key={index}
                       text={item.type === 22 ? (item.controlName ? item.controlName : _l('分段')) : item.controlName}
-                      checked={this.state.controlOption.indexOf(item.controlId) > -1}
+                      checked={
+                        typeof item.controlId === 'string' && this.state.controlOption.indexOf(item.controlId) > -1
+                      }
+                      disabled={item.controlId === undefined}
                       onClick={() => {
+                        if (item.controlId === undefined) return;
                         this.toggleCheckItem(item.controlId);
                       }}
                     />
@@ -337,10 +351,10 @@ export default class PrintOptDialog extends Component<any, any> {
                         className="controlOptionItem mBottom15"
                         key={index}
                         text={
-                          this.state.reqInfo.controls.filter(item => item.controlId === formControlItem.formId).length >
-                            0 &&
-                          this.state.reqInfo.controls.filter(item => item.controlId === formControlItem.formId)[0]
-                            .controlName + '统计'
+                          (this.state.reqInfo.controls || []).filter(item => item.controlId === formControlItem.formId)
+                            .length > 0 &&
+                          (this.state.reqInfo.controls || []).find(item => item.controlId === formControlItem.formId)
+                            ?.controlName + '统计'
                         }
                         checked={this.state.controlOption.indexOf('formDetailEvaluate-' + formControlItem.formId) > -1}
                         onClick={() => {
