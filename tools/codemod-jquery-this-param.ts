@@ -89,13 +89,13 @@ for (const sf of program.getSourceFiles()) {
     const file = sf.fileName;
     if (!byFile.has(file)) byFile.set(file, { text: sf.getFullText(), pos: new Set() });
     // 插在形参列表左括号之后
-    const open = fn.getChildren().find(c => c.kind === ts.SyntaxKind.OpenParenToken);
+    const open = fn.getChildren().find((c: { kind: number }) => c.kind === ts.SyntaxKind.OpenParenToken);
     if (!open) continue;
     byFile.get(file).pos.add({ at: open.end, hasOthers: fn.parameters.length > 0 });
   }
 }
 
-function findNode(root, pos) {
+function findNode(root: any, pos: number) {
   let hit = root;
   (function visit(n) {
     if (n.getStart() <= pos && pos < n.getEnd()) {

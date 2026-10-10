@@ -116,7 +116,7 @@ for (const sf of program.getSourceFiles()) {
   }
 }
 
-function findNode(root, pos) {
+function findNode(root: any, pos: number) {
   let hit = root;
   (function visit(n) {
     if (n.getStart() <= pos && pos < n.getEnd()) {
@@ -127,7 +127,7 @@ function findNode(root, pos) {
   return hit;
 }
 
-function findCall(node) {
+function findCall(node: any) {
   for (let n = node; n; n = n.parent) {
     if (ts.isCallExpression(n) || ts.isNewExpression(n)) return n;
   }
