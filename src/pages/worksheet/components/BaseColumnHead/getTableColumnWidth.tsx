@@ -3,18 +3,19 @@ import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import CellControl from 'worksheet/components/CellControls';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { SheetColumnStyle } from 'src/utils/worksheetTypes';
 
 export default function getTableColumnWidth(
   tableDom = document.querySelector('.sheetViewTable'),
-  rows,
-  control,
-  columnStyle,
-  worksheetId: string,
-) {
+  rows: readonly RecordRow[],
+  control: FormControl,
+  columnStyle: SheetColumnStyle | undefined,
+  worksheetId: string | undefined,
+): number {
   try {
     let result = 60;
 
-    function getValueWidthOfRow(row) {
+    function getValueWidthOfRow(row: RecordRow): number | undefined {
       const conForRender = document.createElement('div');
       conForRender.style.zIndex = '-1';
       conForRender.style.display = 'inline-block';
@@ -29,14 +30,14 @@ export default function getTableColumnWidth(
       }
 
       conForRender.style.position = 'relative';
-      conForRender.style.zIndex = 999;
+      conForRender.style.zIndex = '999';
       conForRender.style.backgroundColor = '#fff';
       conForRender.style.top = '0px';
       conForRender.style.left = '0px';
       flushSync(() => {
         createRoot(conForRender).render(
           <CellControl
-            cell={{ ...control, value: row[control.controlId] }}
+            cell={{ ...control, value: row[control.controlId === undefined ? 'undefined' : control.controlId] }}
             columnStyle={columnStyle}
             worksheetId={worksheetId}
             row={row}
@@ -50,8 +51,11 @@ export default function getTableColumnWidth(
         return 150;
       }
 
-      let width = conForRender.children[0].offsetWidth;
+      const child = conForRender.children[0];
+      const measured = child instanceof HTMLElement ? child.offsetWidth : undefined;
       conForRender.remove();
+      if (measured === undefined) return undefined;
+      let width = measured;
       if (width < 60) {
         width = 60;
       }
@@ -66,7 +70,7 @@ export default function getTableColumnWidth(
     rows.forEach((row: RecordRow) => {
       const width = getValueWidthOfRow(row);
 
-      if (width > result) {
+      if (width !== undefined && width > result) {
         result = width;
       }
     });
@@ -77,8 +81,8 @@ export default function getTableColumnWidth(
   }
 }
 
-export function getMaxControlNameWidthOfControls(controls) {
-  function getControlNameWidth(control) {
+export function getMaxControlNameWidthOfControls(controls: readonly FormControl[]): number {
+  function getControlNameWidth(control: FormControl): number {
     if (!document.body) {
       return 60;
     }
@@ -91,8 +95,8 @@ export function getMaxControlNameWidthOfControls(controls) {
     conForRender.style.maxWidth = '320px';
     conForRender.style.backgroundColor = '#fff';
     conForRender.style.fontWeight = 'bold';
-    conForRender.style.fontSize = 13;
-    conForRender.innerText = control.controlName;
+    conForRender.style.fontSize = '13';
+    conForRender.innerText = String(control.controlName);
     document.body.appendChild(conForRender);
     let width = conForRender.offsetWidth;
     conForRender.remove();

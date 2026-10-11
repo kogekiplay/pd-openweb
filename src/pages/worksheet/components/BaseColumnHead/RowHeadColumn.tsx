@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled from 'src/utils/typedStyled';
+import type { RowHeadColumnProps } from './baseColumnTypes';
 
 const Con = styled.div`
   display: flex;
@@ -25,8 +26,9 @@ const Con = styled.div`
   }
 `;
 
-export default function RowHeadColumn(props) {
+export default function RowHeadColumn(props: RowHeadColumnProps) {
   const { className, style, control, showNumber = true, showRequired = false, rowIndex } = props;
+  if (!style) throw new TypeError('Missing vertical column style');
   return (
     <Con
       style={{
@@ -35,7 +37,7 @@ export default function RowHeadColumn(props) {
       }}
       className={className}
     >
-      {showNumber && <div className="number">{rowIndex + 1}</div>}
+      {showNumber && <div className="number">{rowIndex === undefined ? NaN : rowIndex + 1}</div>}
       {showRequired && control.required && <div className="requiredStatus">*</div>}
       <div className="controlName ellipsis" title={control.controlName}>
         {control.controlName}

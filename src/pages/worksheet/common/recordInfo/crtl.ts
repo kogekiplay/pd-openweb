@@ -7,7 +7,7 @@ import { getRowDetail, type RecordDetail } from 'worksheet/api';
 import { exportSheet } from 'worksheet/components/ChildTable/redux/actions';
 import { getRuleErrorInfo } from 'src/components/Form/core/formUtils';
 import type { FormConditionRule } from 'src/components/Form/core/formUtils/types';
-import type { FormRule, RuleFilterItem } from 'src/components/Form/core/types';
+import type { RuleFilterItem } from 'src/components/Form/core/types';
 import { formatControlToServer } from 'src/components/Form/core/utils';
 import { getCustomWidgetUri } from 'src/pages/worksheet/constants/common';
 import { postWithToken } from 'src/utils/common';
@@ -44,19 +44,19 @@ interface UpdateRowResult {
 }
 
 interface LoadRecordOptions {
-  appId?: string;
-  viewId?: string;
-  worksheetId?: string;
-  relationWorksheetId?: string;
-  recordId?: string;
+  appId?: string | undefined;
+  viewId?: string | undefined;
+  worksheetId?: string | undefined;
+  relationWorksheetId?: string | undefined;
+  recordId?: string | undefined;
   /** 取数方式；instanceId + workId 同时存在时会被强制改成 9（工作流节点） */
-  getType?: number;
-  instanceId?: string;
-  workId?: string;
+  getType?: number | false | undefined;
+  instanceId?: string | undefined;
+  workId?: string | undefined;
   /** 是否顺带拉字段显隐规则 */
-  getRules?: boolean;
-  controls?: FormControl[];
-  discussId?: string;
+  getRules?: boolean | undefined;
+  controls?: FormControl[] | undefined;
+  discussId?: string | undefined;
 }
 
 export function getWorksheetInfo(...args: Parameters<typeof worksheetAjax.getWorksheetInfo>) {
@@ -144,31 +144,32 @@ export function loadRecord({
  * `badData => this.xxx(badData)` 就报 TS2322 —— 所以必须把签名写出来。
  */
 interface UpdateRecordOptions {
-  appId?: string;
-  viewId?: string;
-  getType?: number;
-  worksheetId?: string;
-  recordId?: string;
-  projectId?: string;
-  instanceId?: string;
-  workId?: string;
-  rowIds?: string[];
+  appId?: string | undefined;
+  viewId?: string | undefined;
+  getType?: number | undefined;
+  worksheetId?: string | undefined;
+  recordId?: string | undefined;
+  projectId?: string | undefined;
+  instanceId?: string | undefined;
+  workId?: string | undefined;
+  rowIds?: string[] | undefined;
   /** 当前表单的全部字段；配合 updateControlIds 挑出要提交的那些 */
-  data?: FormControl[];
-  updateControlIds?: string[];
+  data?: FormControl[] | undefined;
+  updateControlIds?: string[] | undefined;
   /** 41 = 锁定记录，42 = 解锁 */
-  updateType?: number;
-  isDraft?: boolean;
+  updateType?: number | undefined;
+  isDraft?: boolean | undefined;
   /** 本函数不用它，但移动端记录详情会一起传下来，留着以免触发多余属性检查 */
   draftType?: 'save' | 'submit';
   /** 没有任何字段变更时也照常发请求（锁定/解锁走这条路） */
-  allowEmptySubmit?: boolean;
-  triggerUniqueError?: (badData: BadData) => void;
-  updateSuccess?: (recordIds: string[], changedValues: { [controlId: string]: any }, record: RecordRow) => void;
-  setSubListUniqueError?: (badData: BadData) => void;
-  setRuleError?: (badData: BadData) => void;
-  setServiceError?: (badData: BadData) => void;
-  alertLockError?: () => void;
+  allowEmptySubmit?: boolean | undefined;
+  triggerUniqueError?: ((badData: BadData) => void) | undefined;
+  updateSuccess?:
+    ((recordIds: string[], changedValues: { [controlId: string]: any }, record: RecordRow) => void) | undefined;
+  setSubListUniqueError?: ((badData: BadData) => void) | undefined;
+  setRuleError?: ((badData: BadData) => void) | undefined;
+  setServiceError?: ((badData: BadData) => void) | undefined;
+  alertLockError?: (() => void) | undefined;
 }
 
 export function updateRecord(
@@ -306,12 +307,12 @@ export function updateRecord(
 }
 
 interface SubmitDraftOptions {
-  worksheetId?: string;
-  viewId?: string;
-  appId?: string;
-  recordId?: string;
-  formData?: FormControl[];
-  rules?: FormRule[];
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
+  appId?: string | undefined;
+  recordId?: string | undefined;
+  formData?: FormControl[] | undefined;
+  rules?: FormConditionRule[] | undefined;
   triggerUniqueError?: (badData: BadData) => void;
   setSubListUniqueError?: (badData: BadData) => void;
   /** 注意：这个参数【遮蔽】了本文件顶部从 src/utils/record 导入的同名函数，函数体内调的是它 */
@@ -351,7 +352,7 @@ export function handleSubmitDraft(
   };
 
   // 草稿提交仅传业务规则相关字段
-  const receiveControlsIds = rules.reduce<string[]>((controlIds, item) => {
+  const receiveControlsIds = rules.reduce<Array<string | undefined>>((controlIds, item) => {
     const { filters = [], ruleItems = [] } = item;
     // 声明了但从没往里放东西，末尾 concat 上来是个空数组；保留原样，只是把类型写出来
     const ids: string[] = [];
@@ -363,7 +364,7 @@ export function handleSubmitDraft(
           it.groupFilters.forEach(v => {
             controlIds = controlIds.concat(v.controlId);
             if (v.dynamicSource && v.dynamicSource.length > 0) {
-              const cids = v.dynamicSource.reduce((ids: string[], s) => ids.concat(s.cid), []);
+              const cids = v.dynamicSource.reduce<Array<string | undefined>>((ids, s) => ids.concat(s.cid), []);
               controlIds = controlIds.concat(cids);
             }
           });
@@ -373,7 +374,8 @@ export function handleSubmitDraft(
 
     if (!_.isEmpty(ruleItems)) {
       ruleItems.forEach(it => {
-        controlIds = controlIds.concat(it.controls.map((it: FormControl) => it.controlId));
+        if (!it.controls) throw new TypeError('Missing draft rule controls');
+        controlIds = controlIds.concat(it.controls.map(control => control.controlId));
       });
     }
 
@@ -489,14 +491,14 @@ export function updateRecordControl({
 }
 
 interface DeleteRecordOptions {
-  worksheetId?: string;
+  worksheetId?: string | undefined;
   /** 批量删除用；不传时退回单条 [recordId] */
-  recordIds?: string[];
-  recordId?: string;
-  viewId?: string;
-  appId?: string;
+  recordIds?: string[] | undefined;
+  recordId?: string | undefined;
+  viewId?: string | undefined;
+  appId?: string | undefined;
   /** 21 = 彻底删除（跳过回收站），其余值一律不下发 */
-  deleteType?: number;
+  deleteType?: number | undefined;
 }
 
 export function deleteRecord({ worksheetId, recordIds, recordId, viewId, appId, deleteType }: DeleteRecordOptions) {
@@ -529,10 +531,10 @@ export class RecordApi {
     viewId,
     recordId,
   }: {
-    appId?: string;
-    worksheetId?: string;
-    viewId?: string;
-    recordId?: string;
+    appId?: string | undefined;
+    worksheetId?: string | undefined;
+    viewId?: string | undefined;
+    recordId?: string | undefined;
   }) {
     this.baseArgs = {
       appId,

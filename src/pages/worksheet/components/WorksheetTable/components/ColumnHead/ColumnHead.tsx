@@ -213,8 +213,8 @@ export class ColumnHead extends Component<WorksheetFilterColumnProps> {
       sheetSelectedRows = [],
       disabledFunctions = [],
       rowIsSelected,
-      columnIndex = -1,
-      fixedColumnCount = 0,
+      columnIndex,
+      fixedColumnCount,
       sheetHiddenColumns = [], // 外部传入的视图配置中的隐藏列
       hideColumn, // 外部传入的隐藏列方法
       clearHiddenColumn, // 外部传入的清除隐藏列方法
@@ -401,23 +401,26 @@ export class ColumnHead extends Component<WorksheetFilterColumnProps> {
                 {_l('显示所有列')}
               </MenuItem>
             )}
-            {columnIndex < 11 && !control.hideFrozen && fixedColumnCount !== columnIndex + 1 && (
-              <MenuItem
-                onClick={() => {
-                  if (window.isPublicApp) {
-                    alert(_l('预览模式下，不能操作'), 3);
-                    return;
-                  }
+            {columnIndex !== undefined &&
+              columnIndex < 11 &&
+              !control.hideFrozen &&
+              fixedColumnCount !== columnIndex + 1 && (
+                <MenuItem
+                  onClick={() => {
+                    if (window.isPublicApp) {
+                      alert(_l('预览模式下，不能操作'), 3);
+                      return;
+                    }
 
-                  this.frozen(columnIndex);
-                  closeMenu();
-                }}
-              >
-                <i className="icon icon-lock"></i>
-                {_l('冻结')}
-              </MenuItem>
-            )}
-            {columnIndex === fixedColumnCount - 1 && !control.hideFrozen && (
+                    this.frozen(columnIndex);
+                    closeMenu();
+                  }}
+                >
+                  <i className="icon icon-lock"></i>
+                  {_l('冻结')}
+                </MenuItem>
+              )}
+            {fixedColumnCount !== undefined && columnIndex === fixedColumnCount - 1 && !control.hideFrozen && (
               <MenuItem
                 onClick={() => {
                   this.frozen(0);
