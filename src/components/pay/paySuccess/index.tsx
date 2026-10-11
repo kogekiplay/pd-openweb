@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import moment from 'moment';
-import styled from 'styled-components';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import orderController from 'src/api/order';
 import preall from 'src/common/preall';
 import { getRequest, pathCompletion } from 'src/utils/common';
+import styled from 'src/utils/typedStyled';
 import PayHeader from '../payHeader';
+import { decodePaySuccessResult } from './paySuccessBoundary';
+import type { PaySuccessResult } from './paySuccessBoundary';
 
 const PaySuccessWrap = styled.div`
   .successWrap {
@@ -61,14 +63,14 @@ const ORDERTYPE = {
   UPGRADE: 11, // 升级订单
 };
 
-const getOrderTxt = data => {
+const getOrderTxt = (data: PaySuccessResult) => {
   const { orderType, version = {} } = data;
 
   switch (orderType) {
     case ORDERTYPE.NEW:
     case ORDERTYPE.AGAINFIRST:
     case ORDERTYPE.UPGRADE:
-      return _l('感谢您开通%0，现在可以开始使用啦', version.name);
+      return _l('感谢您开通%0，现在可以开始使用啦', String(version.name));
     case ORDERTYPE.AGAINOTHER:
       return _l('为了不影响您正常使用，请去续费外部用户');
     case ORDERTYPE.RECHARGE:
@@ -76,14 +78,14 @@ const getOrderTxt = data => {
     case ORDERTYPE.ADDPERSON:
       return _l('感谢您购买用户增补包，现在可以开始使用啦');
     case ORDERTYPE.ONEDAY:
-      return _l('感谢您成功续费一天%0，现在可以开始使用啦', version.name);
+      return _l('感谢您成功续费一天%0，现在可以开始使用啦', String(version.name));
     default:
       return '';
   }
 };
 
 function PaySuccess() {
-  const [resultData, setResResultData] = useState({});
+  const [resultData, setResResultData] = useState<PaySuccessResult>({});
   const { orderType, unLimited, totalUserCount, projectId, startDate, endDate, totalPrice } = resultData;
   const { orderId, payType } = getRequest();
   const start = startDate ? moment(startDate).format('YYYY.MM.DD') : '';
@@ -91,26 +93,29 @@ function PaySuccess() {
   const { companyName } = _.find(md.global.Account.projects || [], o => o.projectId === projectId) || {};
 
   // 获取支付结果
-  const getPayResult = () => {
+  useEffect(() => {
+    let disposed = false;
+    const loadFailed = () => {
+      if (disposed) return;
+      alert({ msg: _l('加载失败'), type: 2, duration: 0 });
+    };
     orderController
       .getProjectPayResult({
         orderId,
       })
-      .then(data => {
+      .then((raw: unknown) => {
+        if (disposed) return;
+        const data = decodePaySuccessResult(raw);
         if (data) {
           setResResultData(data);
         } else {
-          alert({
-            msg: _l('加载失败'),
-            type: 2,
-            duration: 0,
-          });
+          loadFailed();
         }
-      });
-  };
-
-  useEffect(() => {
-    getPayResult();
+      })
+      .catch(loadFailed);
+    return () => {
+      disposed = true;
+    };
   }, []);
 
   return (
@@ -138,7 +143,7 @@ function PaySuccess() {
         {_.includes([1, 2, 4, 6, 11], orderType) && (
           <div className="LineHeight30 Font14">
             <span className="orderTitle">{_l('购买人数')}</span>
-            <span className="mLeft20">{unLimited ? _l('不限人数') : _l('%0人', totalUserCount)}</span>
+            <span className="mLeft20">{unLimited ? _l('不限人数') : _l('%0人', String(totalUserCount))}</span>
           </div>
         )}
         {_.includes([], resultData.orderType) && (
@@ -149,7 +154,7 @@ function PaySuccess() {
         )}
         <div className="LineHeight30 Font14">
           <span className="orderTitle">{_l('支付金额')}</span>
-          <span className="mLeft20">{_l('%0元（人民币）', totalPrice)}</span>
+          <span className="mLeft20">{_l('%0元（人民币）', String(totalPrice))}</span>
         </div>
         <p className="LineHeight30 textSecondary pTop20">
           {_l(
@@ -163,6 +168,8 @@ function PaySuccess() {
 }
 
 const Comp = preall(PaySuccess, { allowNotLogin: false });
-const root = createRoot(document.querySelector('#app'));
+const app = document.querySelector<HTMLElement>('#app');
+if (!app) throw new TypeError('Missing payment success mount node');
+const root = createRoot(app);
 
 root.render(<Comp />);
