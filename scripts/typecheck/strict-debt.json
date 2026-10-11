@@ -273,7 +273,6 @@
     "src/components/comment/config.ts",
     "src/components/createCalendar/component/SelectTimezone/index.tsx",
     "src/components/createCalendar/createCalendar.tsx",
-    "src/components/createCalendar/load.ts",
     "src/components/createShare/createShare.tsx",
     "src/components/createTask/addOldTask.tsx",
     "src/components/createTask/createTask.tsx",

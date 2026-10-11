@@ -52,6 +52,13 @@ interface CreateCalendarSettings {
   ProjectID?: string;
 }
 
+export type CreateCalendarOptions =
+  Partial<Omit<CreateCalendarSettings, 'Start' | 'End' | 'AllDay'>> & {
+    Start?: Date | string | undefined;
+    End?: Date | string | undefined;
+    AllDay?: boolean | string | undefined;
+  };
+
 interface CreateCalendarFields {
   settings: CreateCalendarSettings;
   /** 日期区间选择器的 React 根：全天勾选切换时要用同一个根重渲染 */
