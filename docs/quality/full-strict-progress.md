@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 Agent 面板批次
+
+Agent AppBuilder 的 AI 助手、自定义页面和工作表面板 props 已严格化，strict 诊断为 56,604 条、3,300 个欠债文件，strict-clean 1,432 / 4,732；204/204 规格通过。证据见 `agent-panels-20261011.md`，生产仍为 `5cf1a7bbb`。
+
 ## 2026-10-11 strict 门禁脚本批次
 
 严格化门禁脚本自身已在终点配置下清零诊断，保留全量编译、安全阈值和欠债棘轮行为；当前全仓 strict 诊断 56,607 条、strict-clean 1,429 / 4,732，204/204 规格通过。证据见 `strict-gate-self-20261011.md`，生产仍为 `5cf1a7bbb`。
