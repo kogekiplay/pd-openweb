@@ -3,7 +3,7 @@ import { title as createRecordBotTitle } from './CreateRecordBot/config';
 import { title as createWorksheetBotTitle } from './CreateWorksheetBot/config';
 import { title as createWorksheetDataBotTitle } from './CreateWorksheetDataBot/config';
 
-export function getTitleOfTaskType(taskType) {
+export function getTitleOfTaskType(taskType: number) {
   if (taskType === MINGO_TASK_TYPE.CREATE_WORKSHEET_ASSIGNMENT) {
     return createWorksheetBotTitle;
   }
