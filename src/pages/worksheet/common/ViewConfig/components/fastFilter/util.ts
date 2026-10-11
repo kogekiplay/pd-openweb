@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
 import { DATE_RANGE_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum.js';
 import { redefineComplexControl } from 'src/pages/worksheet/common/WorkSheetFilter/util';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { ControlAdvancedSetting, FormControl } from 'src/utils/controlTypes';
 import { DATE_SHOW_TYPE, DATE_TYPE, DATE_TYPE_ALL, DATE_TYPE_D, DATE_TYPE_H, DATE_TYPE_M, DATE_TYPE_Y } from './config';
 
 // 文本筛选方式
@@ -331,11 +331,32 @@ export const ADVANCEDSETTING_KEYS = [
 ];
 export const Filter_KEYS = ['filterType'];
 
-export const getControlFormatType = (control = {}) => {
+type DateShowtype = string | number | undefined;
+type DateRangeType = string | number | undefined;
+type FilterDefaultValue = string | number | number[] | undefined;
+interface FastFilterSet {
+  controlId?: string | undefined;
+  dataType?: number | undefined;
+  filterType?: number | undefined;
+  advancedSetting?: Record<string, string> | undefined;
+  [key: string]: unknown;
+}
+interface FastFilterInfo {
+  dataType?: number | undefined;
+  values?: string[] | undefined;
+  [key: string]: unknown;
+}
+interface FastFilterOption {
+  key: string;
+  keys: number[];
+  default?: FilterDefaultValue;
+}
+
+export const getControlFormatType = (control: FormControl = {}): number | undefined => {
   return redefineComplexControl(control).type;
 };
 
-export const getDefaultDateRange = showtype => {
+export const getDefaultDateRange = (showtype: DateShowtype): number[] => {
   return showtype === DATE_SHOW_TYPE.YEAR
     ? DATE_TYPE_Y
     : showtype === DATE_SHOW_TYPE.MONTH
@@ -348,7 +369,7 @@ export const getDefaultDateRange = showtype => {
 };
 
 //默认颗粒度日 1
-export const getDefaultDateRangeType = (control = {}) => {
+export const getDefaultDateRangeType = (control: FormControl = {}): number => {
   return !!_.get(control, 'advancedSetting.showtype') && Number(_.get(control, 'advancedSetting.showtype'))
     ? Number(_.get(control, 'advancedSetting.showtype')) > 3 && Number(_.get(control, 'advancedSetting.showtype')) < 6
       ? Number(_.get(control, 'advancedSetting.showtype'))
@@ -357,7 +378,7 @@ export const getDefaultDateRangeType = (control = {}) => {
 };
 
 //返回对应showtype
-export const getShowtypeByDateRangeType = dateRangeType => {
+export const getShowtypeByDateRangeType = (dateRangeType: DateRangeType): string | undefined => {
   switch (dateRangeType) {
     case DATE_RANGE_TYPE.YEAR:
       return DATE_SHOW_TYPE.YEAR;
@@ -377,7 +398,7 @@ export const getShowtypeByDateRangeType = dateRangeType => {
   return undefined;
 };
 
-export const getDateRangeTypeListByShowtype = showtype => {
+export const getDateRangeTypeListByShowtype = (showtype: DateShowtype) => {
   switch (showtype) {
     case DATE_SHOW_TYPE.YEAR:
       return DATE_GRANULARITY_TYPE_ENUM.filter(o => o.value === DATE_RANGE_TYPE.YEAR);
@@ -417,17 +438,17 @@ export const getDateRangeTypeListByShowtype = showtype => {
   }
 };
 
-export const getSetDefault = (control: FormControl = {}) => {
+export const getSetDefault = (control: FormControl = {}): FastFilterSet => {
   let type = getControlFormatType(control);
-  let fastFilterSet = {
+  let fastFilterSet: FastFilterSet = {
     controlId: control.controlId,
     dataType: type,
   };
-  FAST_FILTERS_WHITELIST.forEach(o => {
+  FAST_FILTERS_WHITELIST.forEach((o: FastFilterOption) => {
     let defaultValue = o.default;
 
     if (o.keys.some(key => key === type)) {
-      const { advancedSetting = {} } = fastFilterSet;
+      const advancedSetting = fastFilterSet.advancedSetting || {};
 
       if (!ADVANCEDSETTING_KEYS.includes(o.key)) {
         if (DATE_GRANULARITY_TYPE.keys.some(key => key === type) && o.key === 'dateRangeType') {
@@ -436,18 +457,18 @@ export const getSetDefault = (control: FormControl = {}) => {
 
         fastFilterSet = {
           ...fastFilterSet,
-          [o.key]: control[o.key] || defaultValue,
+          [o.key]: Reflect.get(control, o.key) || defaultValue,
         };
       } else {
         if (DATE_RANGE.keys.some(key => key === type) && o.key === 'daterange') {
-          defaultValue = getDefaultDateRange(_.get(control, 'advancedSetting.showtype'));
+          defaultValue = getDefaultDateRange(control.advancedSetting?.['showtype']);
         }
 
         fastFilterSet = {
           ...fastFilterSet,
           advancedSetting: {
             ...advancedSetting,
-            [o.key]: JSON.stringify(control[o.key] || defaultValue),
+            [o.key]: JSON.stringify(Reflect.get(control, o.key) || defaultValue),
           },
         }; //预设时间为多选
       }
@@ -458,23 +479,31 @@ export const getSetDefault = (control: FormControl = {}) => {
     fastFilterSet = { ...fastFilterSet, filterType: FILTER_CONDITION_TYPE.EQ };
   }
 
-  if (_.get(control, 'advancedSetting.searchcontrol')) {
-    fastFilterSet.advancedSetting.searchcontrol = _.get(control, 'advancedSetting.searchcontrol');
+  const searchControl = control.advancedSetting?.['searchcontrol'];
+  if (searchControl) {
+    fastFilterSet = {
+      ...fastFilterSet,
+      advancedSetting: { ...(fastFilterSet.advancedSetting || {}), ['searchcontrol']: searchControl },
+    };
   }
 
-  if (_.get(control, 'advancedSetting.searchtype')) {
-    fastFilterSet.advancedSetting.searchtype = _.get(control, 'advancedSetting.searchtype');
+  const searchType = control.advancedSetting?.['searchtype'];
+  if (searchType) {
+    fastFilterSet = {
+      ...fastFilterSet,
+      advancedSetting: { ...(fastFilterSet.advancedSetting || {}), ['searchtype']: searchType },
+    };
   }
 
   return fastFilterSet;
 };
 
 //格式化接口人员等字段只提交id
-export const formatFastFilterData = info => {
-  return info.map(o => {
+export const formatFastFilterData = (info: FastFilterInfo[]): FastFilterInfo[] => {
+  return info.map((o: FastFilterInfo) => {
     let values = o.values;
 
-    if ([26, 27, 48, 29, 35].includes(o.dataType)) {
+    if (o.dataType !== undefined && [26, 27, 48, 29, 35].includes(o.dataType)) {
       const key = [29, 35].includes(o.dataType)
         ? 'rowid'
         : o.dataType === 26
@@ -482,7 +511,7 @@ export const formatFastFilterData = info => {
           : o.dataType === 27
             ? 'departmentId'
             : 'organizeId';
-      values = (values || []).map(o => {
+      values = (values || []).map((o: string) => {
         if (o.indexOf(key) < 0 && o.indexOf('id') < 0) {
           return o;
         }
@@ -495,8 +524,8 @@ export const formatFastFilterData = info => {
   });
 };
 
-export const getDaterange = advancedSetting => {
-  let daterange = advancedSetting.daterange;
+export const getDaterange = (advancedSetting: ControlAdvancedSetting): unknown[] | undefined => {
+  let daterange: unknown = advancedSetting['daterange'];
 
   try {
     daterange = safeParse(daterange, 'array');
@@ -505,5 +534,5 @@ export const getDaterange = advancedSetting => {
     daterange = [];
   }
 
-  return daterange;
+  return Array.isArray(daterange) ? daterange : undefined;
 };
