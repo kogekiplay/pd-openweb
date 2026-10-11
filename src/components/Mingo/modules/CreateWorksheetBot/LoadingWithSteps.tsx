@@ -23,7 +23,7 @@ export function getStepStatusText(stepStatus: number) {
   return undefined;
 }
 
-export default function LoadingWithSteps({ stepStatus }) {
+export default function LoadingWithSteps({ stepStatus }: { stepStatus: number }) {
   return (
     <Con className="t-flex t-flex-col">
       {[STEP_STATUS.GET_WORKSHEET_NAME_AND_ICON, STEP_STATUS.CREATING_WORKSHEET, STEP_STATUS.CREATING_WORKSHEET_WIDGETS]
