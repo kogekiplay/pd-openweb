@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 SelectRecords 批次
+
+SelectRecords Header/RowHead props 合同已完成，strict 诊断为 56,630 条、3,316 个欠债文件，strict-clean 1,415 / 4,731；fast key 2,465，203/203 规格通过。证据见 `select-records-header-20261011.md`，生产仍为 `5cf1a7bbb`。
+
 ## 2026-10-11 RecordPay 批次
 
 RecordPay props 合同已完成，strict 诊断为 56,642 条、3,317 个欠债文件，strict-clean 1,414 / 4,731；203/203 规格通过。证据见 `record-pay-widget-20261011.md`，生产仍为 `5cf1a7bbb`。
