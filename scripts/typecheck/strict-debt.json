@@ -2940,7 +2940,6 @@
     "src/pages/worksheet/common/ViewConfig/components/fastFilter/config.ts",
     "src/pages/worksheet/common/ViewConfig/components/fastFilter/fastFilterCon.tsx",
     "src/pages/worksheet/common/ViewConfig/components/fastFilter/index.tsx",
-    "src/pages/worksheet/common/ViewConfig/components/fastFilter/util.ts",
     "src/pages/worksheet/common/ViewConfig/components/gunterSet/index.tsx",
     "src/pages/worksheet/common/ViewConfig/components/hierarchyViewSetting.tsx",
     "src/pages/worksheet/common/ViewConfig/components/mobileSet/MobileSet.tsx",

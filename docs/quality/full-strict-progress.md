@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 快速筛选工具批次
+
+快速筛选工具 `fastFilter/util.ts` 的 15 条终点诊断已清零，日期默认值、颗粒度、默认设置和人员/关联记录序列化通过 8 组历史 A/B。产品严格诊断为 56,652 条、3,339 个欠债文件，strict-clean 1,392 / 4,731；fast key 为 2,467，完整规格 203/203。证据见 `fast-filter-util-20261011.md`；生产仍为 `5cf1a7bbb`，本批尚未发布。
+
 ## 2026-10-11 最新冻结批次
 
 OnlySync、RecordInfo/DragCore、BaseColumnHead 及列头发布器的有限合同已完成并通过独立历史对照；ChildTable 本轮只补齐列头调用所需的当前 `control`，未把未完成的整类改造纳入提交。产品严格诊断为 56,666 条、3,340 个欠债文件，strict-clean 1,391 / 4,731；fast key 诊断 2,469，工具和语法门禁均为 0 条新增。完整规格为 202/202，专项证据见 `onlysync-recordinfo-basecolumn-20261011.md`。生产仍为 `5cf1a7bbb`，本批尚未发布。
