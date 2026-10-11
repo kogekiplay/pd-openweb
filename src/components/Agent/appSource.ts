@@ -1,35 +1,64 @@
 import homeAppAjax from 'src/api/homeApp';
 
+export interface MentionApp {
+  id: string;
+  name: string;
+  iconUrl?: string | undefined;
+  iconColor?: string | undefined;
+}
+
+interface AppRequestOptions {
+  abortController?: AbortController | undefined;
+}
+
+function record(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function optionalIcon(value: unknown): string | undefined {
+  return typeof value === 'string' ? value : undefined;
+}
+
+function requestOptions(abortController: AbortController | undefined): ApiOptions {
+  return { silent: true, ...(abortController ? { abortController } : {}) };
+}
+
 // Agent 应用候选数据源（@应用浮层 与 对话 context 的 commonApps 共用一套）：
 // 统一走 HomeApp/SearchMyApps（后端做最近访问优先 + 命中优先 + 简拼/拼音，只返回首页必要字段），
 // 无关键字的默认列表把收藏应用（getMyApp.markedApps）置顶。归一化为 { id, name, iconUrl, iconColor }，
 // 模块级 5 分钟缓存（key = `${projectId}::${keywords}`），避免反复打开浮层 / 每条消息都重复拉取。
 
 // 把不同接口返回的应用对象统一成数组（字段未必规整）
-function pickList(res) {
+function pickList(res: unknown): unknown[] {
   if (Array.isArray(res)) return res;
-  if (res && Array.isArray(res.apps)) return res.apps;
-  if (res && Array.isArray(res.list)) return res.list;
-  if (res && Array.isArray(res.data)) return res.data;
+  if (record(res) && Array.isArray(res['apps'])) return res['apps'];
+  if (record(res) && Array.isArray(res['list'])) return res['list'];
+  if (record(res) && Array.isArray(res['data'])) return res['data'];
   return [];
 }
 
 // 归一化应用对象为 { id, name, iconUrl, iconColor }
-export function normalizeApps(res) {
-  return pickList(res)
-    .map(a => ({
-      id: a.id || a.appId,
-      name: a.name || a.appName,
-      iconUrl: a.iconUrl || a.appIconUrl || a.icon,
-      iconColor: a.iconColor || a.appIconColor || a.themeColor || a.navColor,
-    }))
-    .filter(a => a.id && a.name);
+export function normalizeApps(res: unknown): MentionApp[] {
+  const apps: MentionApp[] = [];
+  for (const value of pickList(res)) {
+    if (!record(value)) continue;
+    const id = value['id'] || value['appId'];
+    const name = value['name'] || value['appName'];
+    if (typeof id !== 'string' || !id || typeof name !== 'string' || !name) continue;
+    apps.push({
+      id,
+      name,
+      iconUrl: optionalIcon(value['iconUrl'] || value['appIconUrl'] || value['icon']),
+      iconColor: optionalIcon(value['iconColor'] || value['appIconColor'] || value['themeColor'] || value['navColor']),
+    });
+  }
+  return apps;
 }
 
 // 应用列表缓存：模块级，key = `${projectId}::${query}`，5 分钟 TTL，容量上限防泄漏。
 const APP_CACHE_TTL = 5 * 60 * 1000;
 const APP_CACHE_MAX = 100;
-const appListCache = new Map();
+const appListCache = new Map<string, { ts: number; apps: MentionApp[] }>();
 
 export function readAppCache(key: string) {
   const hit = appListCache.get(key);
@@ -44,10 +73,11 @@ export function readAppCache(key: string) {
   return hit.apps;
 }
 
-export function writeAppCache(key: string, apps) {
+export function writeAppCache(key: string, apps: MentionApp[]): void {
   // 超出容量上限时淘汰最早写入的一条（Map 保持插入顺序）
   if (appListCache.size >= APP_CACHE_MAX) {
-    appListCache.delete(appListCache.keys().next().value);
+    const oldestKey = appListCache.keys().next().value;
+    if (oldestKey !== undefined) appListCache.delete(oldestKey);
   }
 
   appListCache.set(key, { ts: Date.now(), apps });
@@ -55,24 +85,24 @@ export function writeAppCache(key: string, apps) {
 
 // 收藏应用（markedApps），归一化后用于默认列表置顶。
 // abortController：透传给 mdyAPI，调用方切换关键字 / 关闭浮层时可中断已发出的请求。
-export async function fetchFavoriteApps(projectId: string, { abortController } = {}) {
-  const data = await homeAppAjax
-    .getMyApp({ projectId, containsLinks: true }, { silent: true, abortController })
+export async function fetchFavoriteApps(projectId: string, { abortController }: AppRequestOptions = {}) {
+  const data: unknown = await homeAppAjax
+    .getMyApp({ projectId, containsLinks: true }, requestOptions(abortController))
     .catch(() => null);
-  const favorites = (data && (data.markedApps || data.markedAppItems)) || [];
+  const favorites = record(data) ? data['markedApps'] || data['markedAppItems'] : [];
 
-  return normalizeApps(favorites.filter(a => a && (a.id || a.appId)));
+  return normalizeApps(favorites);
 }
 
 // 按关键字搜索应用（SearchMyApps，后端排序）。
-export async function searchApps(projectId: string, keywords: string, { abortController } = {}) {
-  const res = await homeAppAjax.searchMyApps({ projectId, keywords }, { silent: true, abortController });
+export async function searchApps(projectId: string, keywords: string, { abortController }: AppRequestOptions = {}) {
+  const res: unknown = await homeAppAjax.searchMyApps({ projectId, keywords }, requestOptions(abortController));
 
   return normalizeApps(res);
 }
 
 // 无关键字默认列表：收藏置顶 + SearchMyApps 常用应用（按 id 去重，收藏在前）。
-export async function fetchDefaultApps(projectId: string, { abortController } = {}) {
+export async function fetchDefaultApps(projectId: string, { abortController }: AppRequestOptions = {}) {
   const [favorites, recents] = await Promise.all([
     fetchFavoriteApps(projectId, { abortController }),
     searchApps(projectId, '', { abortController }),

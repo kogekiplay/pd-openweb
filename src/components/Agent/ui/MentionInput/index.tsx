@@ -1,12 +1,57 @@
-import { forwardRef, Suspense, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import {
+  type ClipboardEvent,
+  type ForwardedRef,
+  forwardRef,
+  type KeyboardEvent,
+  Suspense,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { browserIsMobile } from 'src/utils/common';
 import { fetchDefaultApps, readAppCache, searchApps, writeAppCache } from '../../appSource';
+import type { MentionApp } from '../../appSource';
 import AppMentionPopup from './AppMentionPopup';
 
 const IS_MOBILE = browserIsMobile();
+
+interface MentionValue {
+  type: 'app';
+  id: string | undefined;
+  name: string;
+}
+
+interface MentionInputValue {
+  text: string;
+  mentions: MentionValue[];
+}
+
+export interface MentionInputRef {
+  focus: () => void;
+  blur: () => void;
+  clear: () => void;
+  getValue: () => MentionInputValue;
+  setText: (text: string) => void;
+  insertAt: () => void;
+}
+
+export interface MentionInputProps {
+  projectId?: string | undefined;
+  placeholder?: string | undefined;
+  disabled?: boolean | undefined;
+  autoFocus?: boolean | undefined;
+  enableMention?: boolean | undefined;
+  embedded?: boolean | undefined;
+  inputId?: string | undefined;
+  onChange?: ((value: MentionInputValue) => void) | undefined;
+  onSubmit?: ((value: MentionInputValue) => void) | undefined;
+  onFocusChange?: ((focused: boolean) => void) | undefined;
+}
 
 // 富文本输入区，支持 @应用：
 //  - 底层是 contenteditable，每个 @应用 渲染成一个 contenteditable="false" 的原子 chip，
@@ -91,15 +136,15 @@ const Wrap = styled.div`
 `;
 
 // 创建一个 @应用 chip 节点
-function createMentionNode(app) {
+function createMentionNode(app: MentionApp) {
   const span = document.createElement('span');
   span.className = 'appMention';
   span.setAttribute('contenteditable', 'false');
-  span.dataset.appId = app.id;
-  span.dataset.appName = app.name;
+  span.dataset['appId'] = app.id;
+  span.dataset['appName'] = app.name;
   // @应用名称用应用自身主题色，缺省回退到 CSS 里的 mingo 色
   if (app.iconColor) {
-    span.dataset.appColor = app.iconColor;
+    span.dataset['appColor'] = app.iconColor;
     span.style.color = app.iconColor;
   }
 
@@ -130,13 +175,20 @@ function MentionInput(
     onChange,
     onSubmit,
     onFocusChange,
-  },
-  ref,
+  }: MentionInputProps,
+  ref: ForwardedRef<MentionInputRef>,
 ) {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const isComposingRef = useRef(false);
   // 失焦延迟关闭浮层的定时器；重新聚焦时需取消，避免点 @ 按钮后浮层被旧定时器关掉
-  const blurTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const blurTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clearBlurTimer = useCallback(() => {
+    const timer = blurTimerRef.current;
+    if (timer !== null) {
+      clearTimeout(timer);
+      blurTimerRef.current = null;
+    }
+  }, []);
   // 最近一次检测到的 @ 上下文：{ node, atIndex, caretOffset }，供插入 chip 时定位
   const mentionCtxRef = useRef<{ node: Node; atIndex: number; caretOffset: number; query: string } | null>(null);
 
@@ -145,36 +197,37 @@ function MentionInput(
   const [popupOpen, setPopupOpen] = useState(false);
   const [popupRect, setPopupRect] = useState<DOMRect | null>(null);
   const [query, setQuery] = useState('');
-  const [apps, setApps] = useState([]);
+  const [apps, setApps] = useState<MentionApp[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   // 编辑器里已 @ 的应用 id，浮层需排除（不重复展示已加入的）
-  const [mentionedIds, setMentionedIds] = useState([]);
+  const [mentionedIds, setMentionedIds] = useState<Array<string | undefined>>([]);
 
   // 遍历 contenteditable 子节点，序列化成 { text, mentions }
   const serialize = useCallback(() => {
     const root = editorRef.current;
     let text = '';
-    const mentions = [];
+    const mentions: MentionValue[] = [];
 
-    const walk = node => {
+    const walk = (node: Node): void => {
       if (node.nodeType === Node.TEXT_NODE) {
-        text += node.textContent;
+        text += node.textContent || '';
         return;
       }
 
       if (node.nodeType !== Node.ELEMENT_NODE) return;
+      const element = node as HTMLElement;
 
-      if (node.classList && node.classList.contains('appMention')) {
-        const name = node.dataset.appName || '';
+      if (element.classList.contains('appMention')) {
+        const name = element.dataset['appName'] || '';
         text += '@' + name;
-        mentions.push({ type: 'app', id: node.dataset.appId, name });
-      } else if (node.tagName === 'BR') {
+        mentions.push({ type: 'app', id: element.dataset['appId'], name });
+      } else if (element.tagName === 'BR') {
         text += '\n';
       } else {
         // 回车可能产生 <div> 包裹的行，前面补换行再递归
         if (text && !text.endsWith('\n')) text += '\n';
-        node.childNodes.forEach(walk);
+        element.childNodes.forEach(walk);
       }
     };
 
@@ -206,11 +259,11 @@ function MentionInput(
     if (root) {
       setPopupRect(root.getBoundingClientRect());
       root.blur();
-      clearTimeout(blurTimerRef.current);
+      clearBlurTimer();
     }
 
     setPopupOpen(true);
-  }, []);
+  }, [clearBlurTimer]);
 
   // 检测光标前是否处于「@关键字」状态；是则返回上下文，否则 null
   const detectMention = useCallback(() => {
@@ -223,12 +276,12 @@ function MentionInput(
     if (node.nodeType !== Node.TEXT_NODE) return null;
     if (!editorRef.current || !editorRef.current.contains(node)) return null;
 
-    const before = node.textContent.slice(0, range.startOffset);
+    const before = (node.textContent || '').slice(0, range.startOffset);
     // 匹配光标紧邻的 @关键字（关键字内不含空白与第二个 @）
     const m = /@([^@\s]*)$/.exec(before);
     if (!m) return null;
 
-    return { node, atIndex: m.index, caretOffset: range.startOffset, query: m[1] };
+    return { node, atIndex: m.index, caretOffset: range.startOffset, query: m[1] || '' };
   }, []);
 
   // 输入 / 光标变化后：上报内容 + 更新 @ 浮层状态
@@ -263,7 +316,7 @@ function MentionInput(
 
   // 在当前 @ 上下文处，用 chip 替换 @关键字 文本
   const insertApp = useCallback(
-    app => {
+    (app: MentionApp) => {
       const ctx = mentionCtxRef.current;
       const root = editorRef.current;
       if (!root || (!ctx && !IS_MOBILE)) return;
@@ -371,7 +424,7 @@ function MentionInput(
   const visibleApps = apps.filter(a => !mentionedIds.includes(a.id));
 
   const handleKeyDown = useCallback(
-    e => {
+    (e: KeyboardEvent<HTMLDivElement>) => {
       // 浮层一旦打开，Esc 始终能关掉（即使列表为空/加载中），避免浮层无法消除
       if (popupOpen && e.key === 'Escape') {
         e.preventDefault();
@@ -433,7 +486,7 @@ function MentionInput(
     blur: () => editorRef.current && editorRef.current.blur(),
     clear,
     getValue: () => serialize(),
-    setText: text => {
+    setText: (text: string) => {
       if (editorRef.current) editorRef.current.textContent = text || '';
       emitChange();
     },
@@ -461,7 +514,7 @@ function MentionInput(
     if (autoFocus) focusEnd();
   }, [autoFocus, focusEnd]);
 
-  useEffect(() => () => clearTimeout(blurTimerRef.current), []);
+  useEffect(() => clearBlurTimer, [clearBlurTimer]);
 
   return (
     <Wrap className={cx('mentionInputWrap', { disabled, focused, embedded })}>
@@ -474,7 +527,7 @@ function MentionInput(
         data-empty={isEmpty}
         data-placeholder={placeholder}
         onFocus={() => {
-          clearTimeout(blurTimerRef.current);
+          clearBlurTimer();
           setFocused(true);
           onFocusChange && onFocusChange(true);
         }}
@@ -489,13 +542,13 @@ function MentionInput(
           isComposingRef.current = false;
           handleInput();
         }}
-        onPaste={e => {
+        onPaste={(e: ClipboardEvent<HTMLDivElement>) => {
           // 阻止冒泡到全局 paste 监听（如 SheetView「AI 创建记录」、worksheet hooks），
           // 这些监听只豁免 input/textarea，识别不了 contenteditable，会误触发全局弹窗。
           // plupload 的 paste_element 监听在编辑器元素 target 阶段先执行，上传不受影响。
           e.stopPropagation();
 
-          const cd = e.clipboardData || window.clipboardData;
+          const cd = e.clipboardData || window['clipboardData'];
           const hasFile = !!(
             cd &&
             ((cd.files && cd.files.length) || (cd.items && Array.from(cd.items).some(it => it.kind === 'file')))
@@ -522,7 +575,7 @@ function MentionInput(
           onFocusChange && onFocusChange(false);
           if (IS_MOBILE && popupOpen) return;
           // 延迟关闭，让浮层的 click 先于 blur 生效；重新聚焦会取消该定时器
-          clearTimeout(blurTimerRef.current);
+          clearBlurTimer();
           blurTimerRef.current = setTimeout(closePopup, 150);
         }}
       />
@@ -545,4 +598,4 @@ function MentionInput(
   );
 }
 
-export default forwardRef(MentionInput);
+export default forwardRef<MentionInputRef, MentionInputProps>(MentionInput);

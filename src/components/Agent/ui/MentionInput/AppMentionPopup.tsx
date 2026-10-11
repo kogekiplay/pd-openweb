@@ -1,8 +1,11 @@
 import { useEffect, useRef } from 'react';
+import type { MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon, LoadDiv, ScrollView, SvgIcon } from 'ming-ui';
+import type { ScrollViewHandle } from 'ming-ui/components/ScrollView';
+import type { MentionApp } from '../../appSource';
 import MobileMentionPopup from './MobileMentionPopup';
 
 // @应用 下拉浮层：纯展示组件。
@@ -70,6 +73,18 @@ const Popup = styled.div`
   }
 `;
 
+interface AppMentionPopupProps {
+  rect: Pick<DOMRect, 'left' | 'top' | 'bottom'> | null;
+  apps: MentionApp[];
+  loading?: boolean | undefined;
+  activeIndex: number;
+  isMobile?: boolean | undefined;
+  onHover: (index: number) => void;
+  onSelect: (app: MentionApp) => void;
+  onClose: () => void;
+  onSearch: (value: string) => void;
+}
+
 export default function AppMentionPopup({
   rect,
   apps,
@@ -80,8 +95,8 @@ export default function AppMentionPopup({
   onSelect,
   onClose,
   onSearch,
-}) {
-  const scrollRef = useRef(null);
+}: AppMentionPopupProps) {
+  const scrollRef = useRef<ScrollViewHandle | null>(null);
 
   // 键盘上下导航时，把激活项滚动进可视区域（仅在超出视口时做最小滚动）
   useEffect(() => {
@@ -130,7 +145,7 @@ export default function AppMentionPopup({
         ...placement,
       }}
       // 用 mousedown + preventDefault 避免点击浮层时 contenteditable 失焦
-      onMouseDown={e => e.preventDefault()}
+      onMouseDown={(e: MouseEvent<HTMLDivElement>) => e.preventDefault()}
     >
       <ScrollView ref={scrollRef} style={{ maxHeight: listMaxHeight }}>
         {loading ? (
