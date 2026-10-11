@@ -1,15 +1,9 @@
 import styled from 'styled-components';
 import { Icon, LoadDiv, MobileSearch, PopupWrapper, ScrollView, SvgIcon } from 'ming-ui';
 import type { ScrollViewOptions } from 'ming-ui/components/ScrollView/types';
+import type { MentionApp } from '../../appSource';
 
 const HIDDEN_SCROLLBAR_OPTIONS: ScrollViewOptions = { scrollbars: { visibility: 'hidden' } };
-
-interface MentionApp {
-  id: string;
-  name: string;
-  iconColor?: string | undefined;
-  iconUrl?: string | undefined;
-}
 
 const Content = styled.div`
   height: 100%;
