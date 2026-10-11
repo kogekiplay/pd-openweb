@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 createCalendar 批次
+
+createCalendar 动态入口和调用方 options 协议已完成，strict 诊断为 56,628 条、3,314 个欠债文件，strict-clean 1,417 / 4,731；203/203 规格通过。证据见 `create-calendar-entry-20261011.md`，生产仍为 `5cf1a7bbb`。
+
 ## 2026-10-11 SelectRecords 入口批次
 
 SelectRecords functionWrap 入口已完成开放选项边界，strict 诊断为 56,629 条、3,315 个欠债文件，strict-clean 1,416 / 4,731；203/203 规格通过。证据见 `select-records-entry-20261011.md`，生产仍为 `5cf1a7bbb`。
