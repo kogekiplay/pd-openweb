@@ -92,7 +92,6 @@
     "src/components/Form/DesktopForm/widgets/Search/index.tsx",
     "src/components/Form/DesktopForm/widgets/Signature/index.tsx",
     "src/components/Form/DesktopForm/widgets/SubList/index.tsx",
-    "src/components/Form/DesktopForm/widgets/TelPhone/index.tsx",
     "src/components/Form/DesktopForm/widgets/Textarea/index.tsx",
     "src/components/Form/DesktopForm/widgets/Time/index.tsx",
     "src/components/Form/DesktopForm/widgets/UserSelect/QuickOperate.tsx",

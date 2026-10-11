@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 TelPhone 批次
+
+桌面 TelPhone props 合同已完成，strict 诊断为 56,643 条、3,318 个欠债文件，strict-clean 1,413 / 4,731；203/203 规格通过。证据见 `telphone-widget-20261011.md`，生产仍为 `5cf1a7bbb`。
+
 ## 2026-10-11 移动表单边界批次
 
 移动关联记录 Text 和 WaitingUpload props 合同已完成，strict 诊断为 56,644 条、3,319 个欠债文件，strict-clean 1,412 / 4,731；203/203 规格通过。证据见 `mobile-boundaries-20261011.md`，生产仍为 `5cf1a7bbb`。
