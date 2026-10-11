@@ -114,6 +114,17 @@ const ActionPill = styled.span`
     `}
 `;
 
+interface PlanDriftPart {
+  options?: string[] | undefined;
+  status?: string | undefined;
+  chosenAction?: string | undefined;
+}
+interface PlanDriftCardProps {
+  part: PlanDriftPart;
+  disabled?: boolean | undefined;
+  onConfirm: (action: string) => void;
+}
+
 const Resolved = styled.div`
   font-size: var(--font-sm);
   color: ${colors.textSubtle};
@@ -125,7 +136,7 @@ const Resolved = styled.div`
 // part：{ options: string[], status: 'pending' | 'resolved', chosenAction?: string }
 // disabled：流式进行中或本卡片已被其它操作占用时禁用按钮
 // onConfirm(action)：用户点选后回传选择的 action
-export default function PlanDriftCard({ part, disabled, onConfirm }: { disabled?: boolean; [key: string]: any }) {
+export default function PlanDriftCard({ part, disabled, onConfirm }: PlanDriftCardProps) {
   const options =
     Array.isArray(part.options) && part.options.length ? part.options : ['resume_with_old_plan', 'rebuild'];
 
@@ -154,7 +165,7 @@ export default function PlanDriftCard({ part, disabled, onConfirm }: { disabled?
         <Title>{_l('检测到搭建方案有变化')}</Title>
         <Desc>{_l('本次的方案与上次中断时不一致，请选择如何继续：')}</Desc>
         <Actions>
-          {options.map(action => (
+          {options.map((action: string) => (
             <ActionPill
               key={action}
               $primary={action === 'resume_with_old_plan'}
