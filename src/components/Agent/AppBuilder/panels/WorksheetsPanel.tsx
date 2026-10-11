@@ -3,6 +3,6 @@
 // 按 groupName 二级分组渲染；数组顺序 = 后端 worksheets.json 拓扑序，前端不再重排。
 import AppItemListRenderer from './_appItemRenderer';
 
-export default function WorksheetsPanel({ worksheets }) {
+export default function WorksheetsPanel({ worksheets }: { worksheets: unknown[] }) {
   return <AppItemListRenderer items={worksheets} fallbackType="worksheet" />;
 }

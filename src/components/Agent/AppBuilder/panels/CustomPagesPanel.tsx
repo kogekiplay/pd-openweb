@@ -3,6 +3,6 @@
 // 三种 type 共存于一个数组按 groupName 二级分组；流式 partial 状态下 type 未到时按 dashboard 兜底渲染。
 import AppItemListRenderer from './_appItemRenderer';
 
-export default function CustomPagesPanel({ pages }) {
+export default function CustomPagesPanel({ pages }: { pages: unknown[] }) {
   return <AppItemListRenderer items={pages} fallbackType="dashboard" />;
 }

@@ -3,6 +3,6 @@
 // 复用通用项渲染器，按 aiAssistant 兜底渲染（流式 partial 阶段 type 未到时也按 aiAssistant 呈现）。
 import AppItemListRenderer from './_appItemRenderer';
 
-export default function AiAssistantsPanel({ pages }) {
+export default function AiAssistantsPanel({ pages }: { pages: unknown[] }) {
   return <AppItemListRenderer items={pages} fallbackType="aiAssistant" />;
 }
