@@ -4,6 +4,18 @@ import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import { getTitleTextFromRelateControl } from 'src/utils/control';
 import type { RecordRow } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
+
+interface RelationTextProps {
+  control: FormControl;
+  entityName?: string | undefined;
+  allowOpenRecord?: boolean | undefined;
+  allowNewRecord?: boolean | undefined;
+  records?: RecordRow[] | undefined;
+  onAdd?: (() => void) | undefined;
+  onOpen: Function;
+  disabled?: boolean | undefined;
+}
 
 const MobileTextWrap = styled.div`
   display: flex;
@@ -25,7 +37,7 @@ const MobileTextWrap = styled.div`
   }
 `;
 
-export default function Texts(props) {
+export default function Texts(props: RelationTextProps) {
   const {
     control,
     entityName,
@@ -35,7 +47,7 @@ export default function Texts(props) {
     onAdd,
     onOpen,
     disabled,
-  }: { records: RecordRow[]; [key: string]: any } = props;
+  } = props;
 
   return (
     <MobileTextWrap>
