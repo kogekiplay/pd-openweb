@@ -1,9 +1,14 @@
-﻿import { Link } from 'react-router';
+import { Link, type LinkProps } from 'react-router';
 import cx from 'classnames';
 import propTypes from 'prop-types';
 import { pathCompletion } from 'src/utils/common';
 
-export default function MdLink(props) {
+interface MdLinkProps extends Omit<LinkProps, 'to'> {
+  /** HAP pathCompletion accepts a URL string before handing it to the router. */
+  to: string;
+}
+
+export default function MdLink(props: MdLinkProps) {
   const { to, children, onClick, className, ...rest } = props;
   return (
     <Link

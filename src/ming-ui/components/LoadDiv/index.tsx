@@ -1,10 +1,18 @@
-﻿import classNames from 'classnames';
+import type { CSSProperties } from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
+
+interface LoadDivProps {
+  size?: number | 'big' | 'middle' | 'small' | undefined;
+  /** Legacy callers sometimes pass CSS strings such as `left!important`. */
+  style?: CSSProperties | Record<string, string | number | undefined> | undefined;
+  className?: string | undefined;
+}
 
 /**
  * 加载中
  */
-function LoadDiv(props) {
+function LoadDiv(props: LoadDivProps) {
   let { size, style } = props;
 
   if (size === 'big') {
@@ -21,7 +29,10 @@ function LoadDiv(props) {
   const cy = cx;
   const width = cx + cy;
   return (
-    <div style={style} className={classNames('divCenter TxtCenter TxtMiddle', props.className)}>
+    <div
+      style={style as CSSProperties | undefined}
+      className={classNames('divCenter TxtCenter TxtMiddle', props.className)}
+    >
       <div className="MdLoader" style={{ width }}>
         <svg className="MdLoader-circular">
           <circle {...{ cx, cy, r, strokeWidth }} className="MdLoader-path" />

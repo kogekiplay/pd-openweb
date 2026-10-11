@@ -2,8 +2,15 @@ import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import { isNaN } from 'lodash';
 import { func, number } from 'prop-types';
-import styled from 'styled-components';
 import { Input } from 'ming-ui';
+import styled from 'src/utils/typedStyled';
+
+interface SimplePaginationProps {
+  count?: number | undefined;
+  pageSize?: number | undefined;
+  pageIndex?: number | undefined;
+  onChange?: ((pageIndex: number) => void) | undefined;
+}
 
 const Con = styled.div`
   display: flex;
@@ -44,12 +51,12 @@ const Con = styled.div`
   }
 `;
 
-export default function SimplePagination(props) {
+export default function SimplePagination(props: SimplePaginationProps) {
   const { count = 0, pageSize = 200, pageIndex = 1, onChange = () => {} } = props;
-  const [tempPageIndex, setTempPageIndex] = useState(pageIndex);
+  const [tempPageIndex, setTempPageIndex] = useState<number | string>(pageIndex);
   const pageNumber = Math.ceil(count / pageSize);
-  const prevDisabled = tempPageIndex <= 1;
-  const nextDisabled = tempPageIndex >= pageNumber;
+  const prevDisabled = Number(tempPageIndex) <= 1;
+  const nextDisabled = Number(tempPageIndex) >= pageNumber;
 
   function changePageIndex(newPageIndex: number) {
     if (isNaN(newPageIndex)) {
