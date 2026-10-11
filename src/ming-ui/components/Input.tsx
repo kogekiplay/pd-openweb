@@ -123,12 +123,15 @@ class Input extends Component<InputProps, { value: InputProps['value'] }> {
         type={type}
         ref={manualRef}
         value={inputValue}
-        className={cx(SIZE_LIST.indexOf(size) >= 0 ? 'Input--' + size : '', 'ming Input', this.props.className)}
+        className={cx(
+          size !== undefined && SIZE_LIST.indexOf(size) >= 0 ? 'Input--' + size : '',
+          'ming Input',
+          this.props.className,
+        )}
         onChange={event => this.onChange(event)}
       />
     );
   }
 }
-
 
 export default Input;
