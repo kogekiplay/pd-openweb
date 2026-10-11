@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 Agent 入口批次
+
+Agent runtime exactOptional 契约已完成，strict 诊断为 56,607 条、3,303 个欠债文件，strict-clean 1,429 / 4,732；204/204 规格通过。证据见 `agent-entry-20261011.md`，生产仍为 `5cf1a7bbb`。
+
 ## 2026-10-11 PaySuccess 批次（复验）
 
 PaySuccess 支付结果边界、挂载节点和失败/卸载生命周期已完成严格化；专项覆盖 44 组页面、15 个非法响应及历史 A/B。当前产品严格诊断 56,608 条，strict-clean 1,428 / 4,732，fast key 2,464，完整规格 204/204；证据见 `pay-success-widget-20261011.md`，生产仍为 `5cf1a7bbb`。

@@ -440,7 +440,7 @@ export default function ChatPanel({
   runtime = {},
   isSingleMingoPlan = false,
 }: {
-  runtime?: ChatPanelRuntime;
+  runtime?: ChatPanelRuntime | undefined;
   isSingleMingoPlan?: boolean;
 }) {
   // runtime（匿名/续建模式）：
