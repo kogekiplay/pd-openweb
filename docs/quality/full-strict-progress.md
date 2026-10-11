@@ -22,4 +22,6 @@
 
 本轮筛选面板、条件交互、动态值和列头发布器批次已完成 198/198 规格、全部 10 项门禁及严格诊断传播，产品严格诊断 57,306→57,028，按文件/错误码新增 0；strict 欠债 3,375→3,346，fast 9,129，工具门禁 0。完整记录在 `filter-ui-chain-20261011.md`。源码仍未部署生产。
 
+该批源码 `3a385743f4` 已完成正式 release（55 秒）、本地 publish 和 1095 JS / 387 CSS / 3 runtime 资源校验；73 个 HTML 的 532 个资源引用存在、无 dev JS，入口 SHA256 为 `e18d3500b3224282ea81c5ff4bd6baeb8c8572cfcab19f8aff8177461b7e7db3`。生产仍为 `5cf1a7bbb`。
+
 工具链批次 `b1347dbf6` 已推送：CI/utils、CI/generate、CI/serve、publishConfig、build、spec-harness 和 run-specs 的自有路径五开关零诊断；179/179 规格及 release 构建通过，资源为 1095 JS、387 CSS、3 runtime。全工具 strict 按诊断标题计数为 2929 条（3158 → 2929，减少 229；旧数字3391是含说明的输出行数），仍有 webpack 配置、其它脚本和既有测试 globals 等未处理债务；本批未更新生产。

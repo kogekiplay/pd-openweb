@@ -11,3 +11,5 @@
 完整证据目录 `/private/tmp/hap-filter-ui-20261011/final`；动态值专项 `/private/tmp/hap-filter-dynamic-20261011/review-report.json`，条件专项 `/private/tmp/hap-filter-conditions-20261011/freeze-report.json`，筛选核心和生命周期专项 `/private/tmp/hap-filtercore-20261011/freeze-report.json`，入口面板与发布器专项 `/private/tmp/hap-filterpanel-20261011/freeze-report.json`，根组件规格 `/private/tmp/hap-filter-ui-20261011/root-spec.log`、`root-ab.log`。本批未进行新的外部身份或后端端到端验收。
 
 本批源码尚未部署；生产仍为 `5cf1a7bbb`，每日 16:45 检查并在 17:30 前发布的任务继续保留。
+
+源码提交 `3a385743f4eb94d405b98c307c4dcd5e348a07d3` 已在整合工作区完成正式 release（55 秒）和本地 publish。runtime 校验通过 1095 JS、387 CSS、3 runtime；73 个 HTML 的 532 个本地资源引用存在且无 dev JS，入口 SHA256 为 `e18d3500b3224282ea81c5ff4bd6baeb8c8572cfcab19f8aff8177461b7e7db3`。该候选仅完成本地产物验证，尚未切换生产目录。
