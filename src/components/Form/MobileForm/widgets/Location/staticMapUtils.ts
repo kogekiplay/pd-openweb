@@ -1,7 +1,8 @@
 const STATIC_MAP_URL = '/_AMapService/v3/staticmap';
 const MAX_STATIC_MAP_SIZE = 1024;
 
-const isValidNumber = value => value !== '' && value !== null && value !== undefined && Number.isFinite(Number(value));
+const isValidNumber = (value: unknown): boolean =>
+  value !== '' && value !== null && value !== undefined && Number.isFinite(Number(value));
 
 export function getStaticMapUrl({ x, y, width, height }: { x?: number; y?: number; width?: number; height?: number }) {
   if (![x, y, width, height].every(isValidNumber) || Number(width) <= 0 || Number(height) <= 0) {

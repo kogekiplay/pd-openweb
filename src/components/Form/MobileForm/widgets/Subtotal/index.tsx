@@ -43,7 +43,7 @@ const Subtotal = (props: SubtotalProps) => {
         content = formatStrZero(content);
       }
 
-      if (advancedSetting.thousandth !== '1') {
+      if (advancedSetting['thousandth'] !== '1') {
         content = formatNumberThousand(content);
       }
 
