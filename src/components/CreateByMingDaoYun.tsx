@@ -13,7 +13,13 @@ const CreatedBy = styled.div`
   }
 `;
 
-export default function CreateByMingDaoYun(props) {
+interface CreatedByProps {
+  mode?: number | undefined;
+  fontSize?: number | undefined;
+  className?: string | undefined;
+}
+
+export default function CreateByMingDaoYun(props: CreatedByProps) {
   const { className, fontSize = 13 } = props;
 
   return (
