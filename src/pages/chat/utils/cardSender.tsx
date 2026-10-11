@@ -62,7 +62,7 @@ interface CardSenderOptions {
 
 export const newTask = (acceptor, options: CardSenderOptions = {}) => {
   return new Promise((resolve, reject) => {
-    let members = {};
+    let members: Array<{ accountId?: string; fullname?: string; avatar?: string }> = [];
 
     if (acceptor.type === Constant.SESSIONTYPE_USER && acceptor.id !== Constant.FILE_TRANSFER.id) {
       members = [

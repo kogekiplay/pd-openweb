@@ -276,7 +276,6 @@
     "src/components/createShare/createShare.tsx",
     "src/components/createTask/addOldTask.tsx",
     "src/components/createTask/createTask.tsx",
-    "src/components/createTask/load.ts",
     "src/components/dnd/legacyDecorators.tsx",
     "src/components/emotion/data.ts",
     "src/components/emotion/emotion.ts",

@@ -64,6 +64,8 @@ interface CreateTaskSettings {
   isComplete?: boolean;
 }
 
+export type CreateTaskOptions = Partial<CreateTaskSettings>;
+
 interface CreateTaskFields {
   settings: CreateTaskSettings;
 }
