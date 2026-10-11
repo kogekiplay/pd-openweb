@@ -74,7 +74,7 @@ export default <V,>({
     );
   };
 
-  const onChange = value => {
+  const onChange = (value: V | undefined) => {
     confirmValue = value;
     if (_.find(data, item => item.value === value)) {
       $('.deleteReconfirmFooter .deleteReconfirmOkBtn')
