@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 strict 门禁脚本批次
+
+严格化门禁脚本自身已在终点配置下清零诊断，保留全量编译、安全阈值和欠债棘轮行为；当前全仓 strict 诊断 56,607 条、strict-clean 1,429 / 4,732，204/204 规格通过。证据见 `strict-gate-self-20261011.md`，生产仍为 `5cf1a7bbb`。
+
 ## 2026-10-11 Agent 入口批次
 
 Agent runtime exactOptional 契约已完成，strict 诊断为 56,607 条、3,303 个欠债文件，strict-clean 1,429 / 4,732；204/204 规格通过。证据见 `agent-entry-20261011.md`，生产仍为 `5cf1a7bbb`。
