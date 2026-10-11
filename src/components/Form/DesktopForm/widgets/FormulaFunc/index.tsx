@@ -3,10 +3,15 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Linkify } from 'ming-ui';
 import { renderText as renderCellText } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
-const FormulaFunc = props => {
-  const { advancedSetting } = props;
-  const isLink = advancedSetting.analysislink === '1';
+export interface FormulaFuncProps extends FormControl {
+  formDisabled?: boolean | undefined;
+}
+
+const FormulaFunc = (props: FormulaFuncProps) => {
+  const { advancedSetting = {} } = props;
+  const isLink = advancedSetting['analysislink'] === '1';
   const content = renderCellText(props);
 
   return (

@@ -4,9 +4,18 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Checkbox, RadioGroup, Switch } from 'ming-ui';
 import { getSwitchItemNames } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
 
-const CheckWidgets = props => {
+export interface CheckWidgetProps extends FormControl {
+  disabled?: boolean | undefined;
+  hint?: string | undefined;
+  switchSize?: 'default' | 'small' | undefined;
+  formItemId?: string | undefined;
+  onChange: (value: string) => void;
+}
+
+const CheckWidgets = (props: CheckWidgetProps) => {
   const { disabled, value, onChange, advancedSetting = {}, hint = '', switchSize, formItemId } = props;
   const [isChecked, setIsChecked] = useState(false);
 

@@ -8,6 +8,7 @@ import { Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { formatNumberThousand, formatStrZero } from 'src/utils/control';
 import { getDatePickerConfigs } from 'src/utils/controlCommon';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const Tips = styled.div`
   max-width: 230;
@@ -20,7 +21,12 @@ const Tips = styled.div`
   }
 `;
 
-const Subtotal = props => {
+export interface SubtotalProps extends FormControl {
+  formDisabled?: boolean | undefined;
+  enumDefault2?: number | undefined;
+}
+
+const Subtotal = (props: SubtotalProps) => {
   const { value, dot, unit, advancedSetting = {}, enumDefault2, enumDefault, formDisabled } = props;
 
   const getContent = () => {

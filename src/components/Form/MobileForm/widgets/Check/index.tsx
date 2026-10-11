@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, RadioGroup, Switch } from 'ming-ui';
 import { getSwitchItemNames } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
 const CheckWidgetWrap = styled.div`
   display: flex;
@@ -46,7 +47,15 @@ const CheckWidgetWrap = styled.div`
   }
 `;
 
-const CheckWidget = props => {
+export interface CheckWidgetProps extends FormControl {
+  disabled?: boolean | undefined;
+  formDisabled?: boolean | undefined;
+  hint?: string | undefined;
+  switchSize?: 'default' | 'small' | undefined;
+  onChange: (value: string) => void;
+}
+
+const CheckWidget = (props: CheckWidgetProps) => {
   const { disabled, value, advancedSetting = {}, hint = '', switchSize, formDisabled } = props;
   const itemnames = getSwitchItemNames(props);
   const isChecked = Number(value) === 1;

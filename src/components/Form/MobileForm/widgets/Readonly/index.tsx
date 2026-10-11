@@ -4,30 +4,35 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Linkify } from 'ming-ui';
 import { formatNumberThousand, formatStrZero } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
-const Readonly = props => {
-  const { value, type, dot, unit, advancedSetting, formDisabled } = props;
-  const isUnLink = type === 32 && advancedSetting.analysislink !== '1';
+export interface ReadonlyProps extends FormControl {
+  formDisabled?: boolean | undefined;
+}
+
+const Readonly = (props: ReadonlyProps) => {
+  const { value, type, dot, unit, advancedSetting = {}, formDisabled } = props;
+  const isUnLink = type === 32 && advancedSetting['analysislink'] !== '1';
   const [content, setContent] = useState(value);
 
   useEffect(() => {
     if (!_.isUndefined(value) && type === 31) {
-      const prefix = advancedSetting.prefix;
-      const suffix = advancedSetting.suffix || unit;
+      const prefix = advancedSetting['prefix'];
+      const suffix = advancedSetting['suffix'] || unit;
 
       let initValue = value;
 
-      if (advancedSetting.numshow === '1' && initValue) {
+      if (advancedSetting['numshow'] === '1' && initValue) {
         initValue = parseFloat(initValue) * 100;
       }
 
       initValue = _.isUndefined(dot) ? initValue : _.round(initValue, dot).toFixed(dot);
 
-      if (advancedSetting.dotformat === '1') {
+      if (advancedSetting['dotformat'] === '1') {
         initValue = formatStrZero(initValue);
       }
 
-      if (advancedSetting.thousandth !== '1') {
+      if (advancedSetting['thousandth'] !== '1') {
         initValue = formatNumberThousand(initValue);
       }
 

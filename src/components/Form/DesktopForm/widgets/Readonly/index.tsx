@@ -4,27 +4,32 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Linkify } from 'ming-ui';
 import { formatNumberThousand, formatStrZero } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 
-const Readonly = props => {
-  const { value, type, dot, unit, advancedSetting } = props;
-  const isUnLink = type === 32 && advancedSetting.analysislink !== '1';
+export interface ReadonlyProps extends FormControl {
+  formDisabled?: boolean | undefined;
+}
+
+const Readonly = (props: ReadonlyProps) => {
+  const { value, type, dot, unit, advancedSetting = {} } = props;
+  const isUnLink = type === 32 && advancedSetting['analysislink'] !== '1';
   let content = value;
 
   if (!_.isUndefined(value) && type === 31) {
-    const prefix = advancedSetting.prefix;
-    const suffix = advancedSetting.suffix || unit;
+    const prefix = advancedSetting['prefix'];
+    const suffix = advancedSetting['suffix'] || unit;
 
-    if (advancedSetting.numshow === '1' && content) {
+    if (advancedSetting['numshow'] === '1' && content) {
       content = parseFloat(content) * 100;
     }
 
     content = _.isUndefined(dot) ? content : _.round(content, dot).toFixed(dot);
 
-    if (advancedSetting.dotformat === '1') {
+    if (advancedSetting['dotformat'] === '1') {
       content = formatStrZero(content);
     }
 
-    if (advancedSetting.thousandth !== '1') {
+    if (advancedSetting['thousandth'] !== '1') {
       content = formatNumberThousand(content);
     }
 

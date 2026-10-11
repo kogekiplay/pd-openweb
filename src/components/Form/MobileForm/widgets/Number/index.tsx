@@ -1,10 +1,16 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Slider } from 'ming-ui';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getAdvanceSetting } from '../../tools/utils';
 import Numeric from './Numeric';
 
-const Number = props => {
+export interface NumberProps extends FormControl {
+  disabled?: boolean | undefined;
+  onChange?: ((value: unknown) => void) | undefined;
+}
+
+const Number = (props: NumberProps) => {
   const {
     disabled,
     advancedSetting: { showtype, numinterval, showinput, min, max, numshow },
