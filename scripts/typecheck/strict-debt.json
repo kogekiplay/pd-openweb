@@ -378,7 +378,6 @@
     "src/ming-ui/components/amap/MapLoader.ts",
     "src/ming-ui/components/amap/components/CustomLocation.tsx",
     "src/ming-ui/components/amap/components/GoogleMap.tsx",
-    "src/ming-ui/components/amap/components/OperatorIcon.tsx",
     "src/ming-ui/components/amap/components/loadGoogleMapApi.ts",
     "src/ming-ui/components/antNotification/index.tsx",
     "src/ming-ui/components/richTextUtils.ts",

@@ -2,6 +2,19 @@ import { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 
+interface OperatorPosition {
+  lng: number;
+  lat: number;
+}
+
+interface OperatorIconProps {
+  isMobile?: boolean | undefined;
+  onClose?: (() => void) | undefined;
+  defaultLocation?: { position?: OperatorPosition | undefined } | undefined;
+  setPosition: (lng: number, lat: number) => void;
+  setZoom: (direction: 'plus' | 'minus') => void;
+}
+
 const ToolbarIconWrap = styled.div`
   width: 30px;
   text-align: center;
@@ -14,13 +27,10 @@ const ToolbarIconWrap = styled.div`
   box-shadow: var(--shadow-md);
 `;
 
-export default class OperatorIcon extends Component<any, any> {
-  constructor(props) {
-    super(props);
-  }
-
+export default class OperatorIcon extends Component<OperatorIconProps> {
   override render() {
     const { isMobile, onClose, defaultLocation, setPosition, setZoom } = this.props;
+    const position = defaultLocation?.position;
     return (
       <Fragment>
         <div
@@ -42,17 +52,17 @@ export default class OperatorIcon extends Component<any, any> {
           onClick={onClose}
         />
 
-        {defaultLocation && defaultLocation.position && (
+        {position && (
           <ToolbarIconWrap
             isMobile={isMobile}
             icon="gpsFixed"
             className="textTertiary Absolute hoverColorPrimary pointer flexRow gpsFixedIcon"
-            onClick={() => setPosition(defaultLocation.position.lng, defaultLocation.position.lat)}
+            onClick={() => setPosition(position.lng, position.lat)}
           >
             <Icon icon="gps_fixed" className="Font18" />
           </ToolbarIconWrap>
         )}
-        {defaultLocation && defaultLocation.position && (
+        {position && (
           <ToolbarIconWrap
             className="textTertiary Absolute pointer flexColumn zoomWrap"
             isMobile={isMobile}
