@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 DatePicker TaskHeader 批次
+
+TaskHeader 的类组件默认属性已改为类内静态 `defaultProps`，strict 诊断为 56,598 条、3,294 个欠债文件，strict-clean 1,438 / 4,732；204/204 规格和工具类型门禁通过。证据见 `date-picker-task-header-20261011.md`，生产仍为已验证的 `b4075d92f`，本批尚未单独发布。
+
 ## 2026-10-11 Mingo 任务标题批次
 
 Mingo 任务标题入口的 `taskType` 参数已明确为数值协议，strict 诊断为 56,599 条、3,295 个欠债文件，strict-clean 1,437 / 4,732；204/204 规格和工具类型门禁通过。证据见 `mingo-task-title-20261011.md`，生产仍为已验证的 `b4075d92f`，本批尚未单独发布。

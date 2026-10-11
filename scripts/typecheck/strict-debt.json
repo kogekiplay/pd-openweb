@@ -312,7 +312,6 @@
     "src/ming-ui/components/DatePicker/Picker.tsx",
     "src/ming-ui/components/DatePicker/RangeFooter.tsx",
     "src/ming-ui/components/DatePicker/RangePicker.tsx",
-    "src/ming-ui/components/DatePicker/TaskHeader.tsx",
     "src/ming-ui/components/DatePicker/YearTable.tsx",
     "src/ming-ui/components/DeleteReconfirm.tsx",
     "src/ming-ui/components/Dropdown.tsx",
