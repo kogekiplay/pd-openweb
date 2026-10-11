@@ -4,18 +4,20 @@ import _, { omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { getTitleTextFromControls } from 'src/utils/control';
 import { FILTER_CONDITION_TYPE } from '../../enum';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import { controlCoverId, relatedName, relatedRecord, selectedRows, stringValues } from './dynamicBoundary';
+import type { EditorValueProps, RelatedFilterRecord, RelatedFilterState } from './dynamicTypes';
 
-function safeParse(str) {
+function safeParse(str: string): unknown {
   try {
-    return JSON.parse(str);
+    const result: unknown = JSON.parse(str);
+    return result;
   } catch (err) {
     console.error(err);
     return {};
   }
 }
 
-export default class RelateRecord extends React.Component<any, any> {
+export default class RelateRecord extends React.Component<EditorValueProps, RelatedFilterState> {
   static override propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
@@ -27,11 +29,11 @@ export default class RelateRecord extends React.Component<any, any> {
     fullValues: [],
   };
 
-  constructor(props) {
+  constructor(props: EditorValueProps) {
     super(props);
     let { fullValues = [] } = props;
     this.state = {
-      records: _.map(fullValues, r => safeParse(r)),
+      records: _.map(stringValues(fullValues), r => relatedRecord(safeParse(r))),
       selectRecordVisible: false,
     };
   }
@@ -41,15 +43,18 @@ export default class RelateRecord extends React.Component<any, any> {
     return control.enumDefault === 1 && _.includes([FILTER_CONDITION_TYPE.ARREQ, FILTER_CONDITION_TYPE.ARRNE], type);
   }
 
-  addRecord = selectedRecords => {
+  addRecord = (rawRecords: unknown) => {
+    const selectedRecords = selectedRows(rawRecords);
     const { control, onChange } = this.props;
     const { records } = this.state;
-    const { relationControls }: { relationControls: FormControl[]; [key: string]: any } = control;
+    const { relationControls } = control;
     const newRecords = (
-      this.selectSingle ? [] : records.filter((r: RecordRow) => !_.find(selectedRecords, sr => r.id === sr.rowid))
+      this.selectSingle
+        ? []
+        : records.filter((r: RelatedFilterRecord) => !_.find(selectedRecords, sr => r.id === sr.rowid))
     ).concat(
       selectedRecords.map(sr => ({
-        name: getTitleTextFromControls(relationControls, sr),
+        name: relatedName(getTitleTextFromControls(relationControls, sr)),
         id: sr.rowid,
       })),
     );
@@ -59,10 +64,10 @@ export default class RelateRecord extends React.Component<any, any> {
     onChange({ values: newRecords.map(r => r.id), fullValues: newRecords.map(v => JSON.stringify(v)) });
   };
 
-  removeRecord = record => {
+  removeRecord = (record: RelatedFilterRecord) => {
     const { onChange } = this.props;
     const { records } = this.state;
-    const newRecords = records.filter((r: RecordRow) => r.id !== record.id);
+    const newRecords = records.filter((r: RelatedFilterRecord) => r.id !== record.id);
     this.setState({
       records: newRecords,
     });
@@ -86,8 +91,8 @@ export default class RelateRecord extends React.Component<any, any> {
                 getType: 32,
                 allowNewRecord: false,
                 multiple: !this.selectSingle,
-                coverCid: control.coverCid,
-                filterRowIds: records.map((r: RecordRow) => r.id),
+                coverCid: controlCoverId(control),
+                filterRowIds: records.map((r: RelatedFilterRecord) => r.id),
                 showControls: control.showControls,
                 appId: control.appId,
                 viewId: control.viewId,

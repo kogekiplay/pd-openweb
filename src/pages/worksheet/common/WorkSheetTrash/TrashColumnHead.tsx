@@ -5,11 +5,12 @@ import { Menu, MenuItem } from 'ming-ui';
 import { CONTROL_FILTER_WHITELIST } from 'worksheet/common/WorkSheetFilter/enum';
 import BaseColumnHead from 'worksheet/components/BaseColumnHead';
 import { isOtherShowFeild } from 'src/pages/widgetConfig/util';
-import { emitter } from 'src/utils/common';
 import { getSortData } from 'src/utils/control';
 import { fieldCanSort } from 'src/utils/control';
+import { publishFilterControl } from '../WorkSheetFilter/filterControlEvents';
+import type { ColumnMenuContext, TrashFilterColumnProps } from '../WorkSheetFilter/filterPanelTypes';
 
-export default function ColumnHead(props) {
+export default function ColumnHead(props: TrashFilterColumnProps) {
   const {
     worksheetId,
     selected,
@@ -24,9 +25,7 @@ export default function ColumnHead(props) {
   } = props;
   const isShowOtherField = isOtherShowFeild(control);
   const itemType = control.type === 30 ? control.sourceControlType : control.type;
-  const filterWhiteKeys = _.flatten(
-    Object.keys(CONTROL_FILTER_WHITELIST).map(key => CONTROL_FILTER_WHITELIST[key].keys),
-  );
+  const filterWhiteKeys = _.flatten(Object.values(CONTROL_FILTER_WHITELIST).map(group => group.keys));
   const canFilter = _.includes(filterWhiteKeys, itemType);
   const canSort = fieldCanSort(itemType);
   const maskData =
@@ -42,7 +41,7 @@ export default function ColumnHead(props) {
       isAsc={isAsc}
       changeSort={changeSort}
       updateSheetColumnWidths={updateSheetColumnWidths}
-      renderPopup={({ closeMenu }) => (
+      renderPopup={({ closeMenu }: ColumnMenuContext) => (
         <Menu className="worksheetColumnHeadMenu" style={{ width: 180 }} onClickAway={closeMenu}>
           {canSort &&
             !isShowOtherField &&
@@ -67,7 +66,7 @@ export default function ColumnHead(props) {
           {canFilter && !selected && !isShowOtherField && (
             <MenuItem
               onClick={() => {
-                emitter.emit('FILTER_ADD_FROM_COLUMNHEAD' + worksheetId + 'trash', control);
+                publishFilterControl('FILTER_ADD_FROM_COLUMNHEAD' + worksheetId + 'trash', control);
                 closeMenu();
               }}
             >

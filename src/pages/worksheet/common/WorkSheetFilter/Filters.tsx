@@ -1,16 +1,20 @@
 import { forwardRef, Fragment, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import type { ForwardedRef } from 'react';
 import _, { get, includes } from 'lodash';
-import styled from 'styled-components';
 import { Dropdown, Skeleton } from 'ming-ui';
 import { permitList } from 'src/pages/FormSet/config.js';
 import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { WORKFLOW_SYSTEM_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { filterOnlyShowField } from 'src/pages/widgetConfig/util';
 import type { FormControl } from 'src/utils/controlTypes';
+import styled from 'src/utils/typedStyled';
 import Empty from './components/Empty';
 import FilterDetail from './components/FilterDetail';
 import SavedFilters from './components/SavedFilters';
 import { CONTROL_FILTER_WHITELIST } from './enum';
+import type { EditingFilter } from './filterModelTypes';
+import { editingGroups } from './filterPanelBoundary';
+import type { FilterPanelCache, FiltersHandle, FiltersPanelProps } from './filterPanelTypes';
 import { formatForSave } from './model';
 import { filterUnavailableConditions, getDefaultCondition, redefineComplexControl } from './util';
 
@@ -85,7 +89,7 @@ const tabs = [
   },
 ];
 
-function Filters(props, ref) {
+function Filters(props: FiltersPanelProps, ref: ForwardedRef<FiltersHandle>) {
   const {
     style = {},
     maxHeight = 543,
@@ -97,19 +101,17 @@ function Filters(props, ref) {
     popupVisible,
     columns,
     showSavedFilters = true,
-    sheetSwitchPermit = {},
-    state = {},
-    actions = {},
+    sheetSwitchPermit = [],
+    state,
+    actions,
     onHideFilterPopup = () => {},
     onChange = () => {},
     filterResigned = true,
   } = props;
   const conRef = useRef<HTMLDivElement>(null);
-  const cache = useRef({});
+  const cache = useRef<FilterPanelCache>({});
   const base = { projectId, appId, worksheetId, isCharge };
-  const filterWhiteKeys = _.flatten(
-    Object.keys(CONTROL_FILTER_WHITELIST).map(key => CONTROL_FILTER_WHITELIST[key].keys),
-  );
+  const filterWhiteKeys = _.flatten(Object.values(CONTROL_FILTER_WHITELIST).map(group => group.keys));
   const showWorkflowControl = isOpenPermit(permitList.sysControlSwitch, sheetSwitchPermit, viewId);
   const controls: FormControl[] = columns
     .filter(o => (md.global.Account.isPortal ? !_.includes(['ownerid', 'caid', 'uaid'], o.controlId) : true))
@@ -117,8 +119,8 @@ function Filters(props, ref) {
     .map(redefineComplexControl)
     .filter(c => _.includes(filterWhiteKeys, c.type))
     .filter(c => !(c.type === 38 && c.enumDefault === 3))
-    .sort((a, b) => (a.row * 10 + a.col > b.row * 10 + b.col ? 1 : -1));
-  const { loading, filters, editingFilter, activeFilter, needSave, nameIsUpdated } = state;
+    .sort((a, b) => (Number(a.row) * 10 + Number(a.col) > Number(b.row) * 10 + Number(b.col) ? 1 : -1));
+  const { loading, filters = [], editingFilter, activeFilter, needSave, nameIsUpdated } = state;
   const {
     editFilter,
     copyFilter,
@@ -136,22 +138,22 @@ function Filters(props, ref) {
       return newType === '2' && showSavedFilters ? 2 : 1;
     })(),
   );
-  const [queryType, setQueryType] = useState(NEW_FILTER_QUERY_TYPE.IMMEDIATELY);
+  const [queryType, setQueryType] = useState<number | undefined>(NEW_FILTER_QUERY_TYPE.IMMEDIATELY);
   const [queryFlag, setQueryFlag] = useState<number | undefined>();
   const [queryButtonDisabled, setQueryButtonDisabled] = useState(false);
-  const isSavedEditing = !!editingFilter && !/^new/.test(editingFilter.id);
-  const isNewEditing = !!editingFilter && /^new/.test(editingFilter.id);
+  const isSavedEditing = !!editingFilter && !/^new/.test(String(editingFilter.id));
+  const isNewEditing = !!editingFilter && /^new/.test(String(editingFilter.id));
   const conditionsIsEmpty =
     editingFilter &&
     _.isEmpty(editingFilter.conditions) &&
-    !_.some(editingFilter.conditionsGroups.map(g => g.conditions.length));
+    !_.some(editingGroups(editingFilter).map(g => g.conditions.length));
 
   function updateActiveTab(newType: number) {
     setActiveTab(newType);
     localStorage.setItem('worksheetFilters_activeTab', String(newType));
   }
 
-  function filterAddConditionControls(controls) {
+  function filterAddConditionControls(controls: FormControl[]): FormControl[] {
     return filterOnlyShowField(
       showWorkflowControl
         ? controls
@@ -165,9 +167,9 @@ function Filters(props, ref) {
     );
   }
 
-  function filterWorksheet(filter) {
+  function filterWorksheet(filter?: EditingFilter) {
     const filterControls = filter && formatForSave(filter);
-    const isClear = !filter || _.isEmpty(filter.conditionsGroups.filter(g => g.conditions.length));
+    const isClear = !filter || _.isEmpty(editingGroups(filter).filter(g => g.conditions.length));
 
     if ((filterControls && !_.isEmpty(filterControls)) || isClear) {
       onChange({
@@ -176,12 +178,12 @@ function Filters(props, ref) {
       setQueryButtonDisabled(true);
     }
 
-    if (filter && filter.id.startsWith('new')) {
+    if (filter && String(filter.id).startsWith('new')) {
       setActiveFilter();
     }
   }
 
-  function handleTriggerFilter(filter) {
+  function handleTriggerFilter(filter?: EditingFilter) {
     setActiveFilter(filter);
     filterWorksheet(filter);
   }
@@ -190,7 +192,7 @@ function Filters(props, ref) {
     addFilter();
     setTimeout(() => {
       if (conRef.current) {
-        conRef.current.querySelector<HTMLElement>('.addFilterCondition > span').click();
+        conRef.current.querySelector<HTMLElement>('.addFilterCondition > span')?.click();
       }
     }, 80);
   }
@@ -200,6 +202,7 @@ function Filters(props, ref) {
       return;
     }
 
+    if (!worksheetId) return;
     loadFilters(worksheetId, data => {
       if (!_.isEmpty(data) && !cache.current.callFromColumn) {
         updateActiveTab(2);
@@ -233,7 +236,7 @@ function Filters(props, ref) {
   useEffect(() => {
     if (popupVisible && state.editingFilter) {
       const filteredConditions = filterUnavailableConditions(
-        get(state, 'editingFilter.conditionsGroups', []).map(c => ({
+        (state.editingFilter.conditionsGroups || []).map(c => ({
           ...c,
           isGroup: true,
         })),
@@ -254,12 +257,12 @@ function Filters(props, ref) {
     }
   }, [popupVisible]);
   useImperativeHandle(ref, () => ({
-    addFilterByControl: control => {
+    addFilterByControl: (control: FormControl) => {
       cache.current.callFromColumn = true;
       const newControl = redefineComplexControl(control);
       updateActiveTab(1);
-      if (isNewEditing) {
-        addCondition(newControl, editingFilter.conditionsGroups.length - 1);
+      if (isNewEditing && editingFilter) {
+        addCondition(newControl, editingGroups(editingFilter).length - 1);
       } else {
         addFilter({ defaultCondition: getDefaultCondition(newControl) });
       }
@@ -329,7 +332,7 @@ function Filters(props, ref) {
                   </div>
                 </div>
               )}
-              {isNewEditing && !conditionsIsEmpty && (
+              {isNewEditing && editingFilter && !conditionsIsEmpty && (
                 <FilterDetail
                   maxHeight={maxHeight}
                   canEdit
@@ -357,12 +360,12 @@ function Filters(props, ref) {
                   isNew
                   maxHeight={maxHeight}
                   controls={filterAddConditionControls(controls)}
-                  onAdd={selectedControl => {
+                  onAdd={(selectedControl: FormControl) => {
                     const defaultCondition = getDefaultCondition(selectedControl);
                     setTimeout(() => {
                       const dom = document.querySelector('.keyStr_' + defaultCondition.keyStr + ' .ant-select-content');
 
-                      if (dom) {
+                      if (dom instanceof HTMLElement) {
                         dom.click();
                       }
                     }, 100);
@@ -382,7 +385,7 @@ function Filters(props, ref) {
                   filters={filters}
                   activeFilter={activeFilter}
                   filterAddConditionControls={filterAddConditionControls}
-                  triggerFilter={f => {
+                  triggerFilter={(f: EditingFilter) => {
                     editFilter(undefined);
                     handleTriggerFilter(f);
                   }}
@@ -390,27 +393,29 @@ function Filters(props, ref) {
                     updateActiveTab(1);
                     handleAddNewFilter();
                   }}
-                  onEditFilter={filter => {
+                  onEditFilter={(filter: EditingFilter) => {
                     editFilter(filter);
                     if (!activeFilter || activeFilter.id !== filter.id) {
                       handleTriggerFilter(filter);
                     }
                   }}
-                  onCopy={filter => copyFilter({ appId, worksheetId, filter, isCharge })}
-                  onDelete={filter => {
+                  onCopy={(filter: EditingFilter) => copyFilter({ appId, worksheetId, filter, isCharge })}
+                  onDelete={(filter: EditingFilter) => {
                     deleteFilter({ appId, filter });
                     if (activeFilter && activeFilter.id === filter.id) {
                       handleTriggerFilter(undefined);
                     }
                   }}
-                  onToggleFilterType={filter => toggleFilterType({ appId, worksheetId, filter, isCharge })}
+                  onToggleFilterType={(filter: EditingFilter) =>
+                    toggleFilterType({ appId, worksheetId, filter, isCharge })
+                  }
                   onHideFilterPopup={onHideFilterPopup}
-                  onSortEnd={sortedIds => {
+                  onSortEnd={(sortedIds: string[]) => {
                     sortFilters(appId, worksheetId, sortedIds);
                   }}
                 />
               )}
-              {isSavedEditing && (
+              {isSavedEditing && editingFilter && (
                 <FilterDetail
                   maxHeight={maxHeight}
                   supportGroup
@@ -421,7 +426,7 @@ function Filters(props, ref) {
                   actions={actions}
                   controls={controls}
                   setActiveTab={updateActiveTab}
-                  onBack={needSetOriginFilter => {
+                  onBack={(needSetOriginFilter?: boolean) => {
                     if (needSetOriginFilter) {
                       const originFilter = _.find(filters, f => f.id === editingFilter.id);
 
@@ -445,4 +450,4 @@ function Filters(props, ref) {
   );
 }
 
-export default forwardRef(Filters);
+export default forwardRef<FiltersHandle, FiltersPanelProps>(Filters);

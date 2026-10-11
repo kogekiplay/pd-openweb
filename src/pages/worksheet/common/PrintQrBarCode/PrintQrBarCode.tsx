@@ -303,7 +303,7 @@ export default function PrintQrBarCode(props) {
               editable
               name={name}
               onChange={value => {
-                if (value.trim() === '') {
+                if (value === undefined || value.trim() === '') {
                   alert(_l('名称不能为空'), 3);
                   return;
                 }

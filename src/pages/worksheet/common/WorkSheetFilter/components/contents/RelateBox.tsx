@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, forwardRef } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -7,16 +7,18 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import { ROW_ID_CONTROL } from 'src/pages/widgetConfig/config/widget';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { relateDy } from 'src/pages/worksheet/common/WorkSheetFilter/util.js';
+import type { FormControl } from 'src/utils/controlTypes';
 import { isSheetDisplay } from '../../../../../widgetConfig/util';
 import { API_ENUM_TO_TYPE, DEFAULT_COLUMNS, FILTER_CONDITION_TYPE } from '../../enum';
-import type { FormControl } from 'src/utils/controlTypes';
+import { dynamicWidgetContext } from './dynamicBoundary';
+import type { DynamicChoice, RelateBoxProps } from './dynamicTypes';
 
 function searchableControlName(control: FormControl): string {
   if (typeof control.controlName !== 'string') throw new TypeError('Missing dynamic filter control name');
   return control.controlName.toLocaleLowerCase();
 }
 
-let RelateBox = class RelateBox extends Component<any, any> {
+export class RelateBox extends Component<RelateBoxProps> {
   static override propTypes = {
     disabled: PropTypes.bool,
     values: PropTypes.arrayOf(PropTypes.string),
@@ -24,10 +26,10 @@ let RelateBox = class RelateBox extends Component<any, any> {
   static defaultProps = {
     values: [],
   };
-  renderLi = (item, i: number, onChangeFn: () => void) => {
+  renderLi = (item: DynamicChoice, i: number, onChangeFn: () => void) => {
     return (
       <React.Fragment>
-        {item.isNavGroup && i !== 0 && <div className="BorderTopGrayC"></div>}
+        {Reflect.get(item, 'isNavGroup') && i !== 0 && <div className="BorderTopGrayC"></div>}
         <li className={cx('controlLi overflow_ellipsis WordBreak', {})} key={i} onClick={onChangeFn}>
           <Icon icon={getIconByType(item.type)} className={cx('controlIcon mRight5 Font16')} />
           {item.controlName}
@@ -35,7 +37,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
       </React.Fragment>
     );
   };
-  renderCustom = (data, type, isTop?: boolean | undefined) => {
+  renderCustom = (data: FormControl[], type: number | undefined, isTop?: boolean | undefined) => {
     const id = _.includes([2, 15, 16, 26, 46], type)
       ? _.get(
           _.find(DEFAULT_COLUMNS, d => d.type === type),
@@ -75,13 +77,13 @@ let RelateBox = class RelateBox extends Component<any, any> {
       showCustom,
     } = this.props;
     const dynamicControls = isGlobal ? globalSheetControls : columns;
-    let avaControls = relateDy(conditionType, dynamicControls, control, defaultValue, from); // 当前记录支持rowid
+    let avaControls = relateDy(conditionType, dynamicControls || [], control, defaultValue, from); // 当前记录支持rowid
 
     if (showCustom && control.type === 2 && !isGlobal) {
       avaControls = avaControls.concat(ROW_ID_CONTROL);
     }
 
-    const { globalSheetId, dataSource, controlId } = widgetControlData;
+    const { globalSheetId, dataSource, controlId, isSubList } = dynamicWidgetContext(widgetControlData);
     if (isGlobal && _.isUndefined(globalSheetControls)) return avaControls; // 记录id能反选到关联本表的关联记录
 
     if (
@@ -96,7 +98,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
             _.includes([29, 51], items.type) &&
             items.dataSource === dataSource &&
             items.controlId !== controlId &&
-            (widgetControlData.isSubList ? !isSheetDisplay(items) : true),
+            (isSubList ? !isSheetDisplay(items) : true),
         ),
       );
     } // 关联记录字段关联本表，支持rowid
@@ -144,10 +146,7 @@ let RelateBox = class RelateBox extends Component<any, any> {
     let listglobalSheetColumn = this.filterDynamicControls(true);
     let globalSheetControlsData = !keywords
       ? listglobalSheetColumn
-      : _.filter(
-          listglobalSheetColumn,
-          o => searchableControlName(o).indexOf(keywords.toLocaleLowerCase()) >= 0,
-        );
+      : _.filter(listglobalSheetColumn, o => searchableControlName(o).indexOf(keywords.toLocaleLowerCase()) >= 0);
     const showResult =
       listColumn.length > 0 || listglobalSheetColumn.length > 0 || (showCustom && customColums.length > 0);
     const searchResult =
@@ -219,6 +218,18 @@ let RelateBox = class RelateBox extends Component<any, any> {
       </React.Fragment>
     );
   }
-};
-RelateBox = ClickAway.wrap(RelateBox);
-export default RelateBox;
+}
+const WrappedRelateBox = forwardRef<HTMLSpanElement, RelateBoxProps>((props, ref) => {
+  const { onClickAway, onClickAwayExceptions, ...rest } = props;
+  return (
+    <ClickAway
+      {...rest}
+      component={RelateBox}
+      ref={ref}
+      {...(onClickAway === undefined ? {} : { onClickAway })}
+      {...(onClickAwayExceptions === undefined ? {} : { onClickAwayExceptions })}
+    />
+  );
+});
+WrappedRelateBox.displayName = 'ClickAway(RelateBox)';
+export default WrappedRelateBox;

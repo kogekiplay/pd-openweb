@@ -1,7 +1,7 @@
-import styled from 'styled-components';
+import styled from 'src/utils/typedStyled';
+import type { EmptyProps } from './detailTypes';
 import emptyPng from './empty.png';
 import SelectControls from './SelectControls';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   text-align: center;
@@ -23,8 +23,9 @@ const Con = styled.div`
   }
 `;
 
-export default function Empty(props) {
-  const { isNew, maxHeight, controls, onAdd = () => {} }: { controls: FormControl[]; [key: string]: any } = props;
+export default function Empty(props: EmptyProps) {
+  const { isNew, maxHeight, controls, onAdd = () => {} } = props;
+  if (isNew && !controls) throw new TypeError('Missing new-filter field choices');
   return isNew ? (
     <SelectControls
       maxHeight={maxHeight}
@@ -32,7 +33,7 @@ export default function Empty(props) {
         boxShadow: 'none',
       }}
       className="inEmpty"
-      controls={controls}
+      controls={controls || []}
       onAdd={onAdd}
     />
   ) : (

@@ -2,8 +2,9 @@ import { useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import styled from 'styled-components';
 import { Menu, MenuItem } from 'ming-ui';
+import styled from 'src/utils/typedStyled';
+import type { SaveButtonProps } from './detailTypes';
 
 const Con = styled.div`
   display: flex;
@@ -69,13 +70,13 @@ const DropdownIcon = styled.div`
   }
 `;
 
-export default function SaveButton(props) {
+export default function SaveButton(props: SaveButtonProps) {
   const { disabled, downList, onClick } = props;
   const [popupVisible, setPopupVisible] = useState<boolean | undefined>();
-  const hasDownList = _.isArray(downList) && !_.isEmpty(downList);
+  const hasDownList = Array.isArray(downList) && !_.isEmpty(downList);
   const content = (
     <Con className={cx({ hasDownList, disabled })}>
-      <div className="content" onClick={!disabled && onClick}>
+      <div className="content" onClick={disabled ? undefined : onClick}>
         {_l('保存')}
       </div>
       {hasDownList && (
@@ -86,11 +87,11 @@ export default function SaveButton(props) {
     </Con>
   );
 
-  if (hasDownList) {
+  if (hasDownList && downList) {
     return (
       <Trigger
         action={['click']}
-        popupVisible={popupVisible}
+        {...(popupVisible === undefined ? {} : { popupVisible })}
         popupAlign={{
           points: ['tr', 'br'],
           offset: [0, 4],

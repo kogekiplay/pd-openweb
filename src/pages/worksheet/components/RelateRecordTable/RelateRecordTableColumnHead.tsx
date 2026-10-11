@@ -4,13 +4,14 @@ import PropTypes from 'prop-types';
 import { Menu, MenuItem } from 'ming-ui';
 import { CONTROL_FILTER_WHITELIST } from 'worksheet/common/WorkSheetFilter/enum';
 import BaseColumnHead from 'worksheet/components/BaseColumnHead';
-import { emitter } from 'src/utils/common';
 import { controlBatchCanEdit } from 'src/utils/control';
 import { fieldCanSort, getSortData } from 'src/utils/control';
+import { publishFilterControl } from '../../common/WorkSheetFilter/filterControlEvents';
+import type { ColumnMenuContext, RelateFilterColumnProps } from '../../common/WorkSheetFilter/filterPanelTypes';
 
 const maxAllowFrozenColumnIndex = 10;
 
-export default function ColumnHead(props) {
+export default function ColumnHead(props: RelateFilterColumnProps) {
   const {
     iseditting,
     isCustomButtonFillRecord,
@@ -19,8 +20,8 @@ export default function ColumnHead(props) {
     className,
     style,
     control,
-    columnIndex,
-    fixedColumnCount,
+    columnIndex = -1,
+    fixedColumnCount = 0,
     isAsc,
     isLast,
     tableId,
@@ -39,9 +40,7 @@ export default function ColumnHead(props) {
     hideFilter,
   } = props;
   const itemType = control.type === 30 ? control.sourceControlType : control.type;
-  const filterWhiteKeys = _.flatten(
-    Object.keys(CONTROL_FILTER_WHITELIST).map(key => CONTROL_FILTER_WHITELIST[key].keys),
-  );
+  const filterWhiteKeys = _.flatten(Object.values(CONTROL_FILTER_WHITELIST).map(group => group.keys));
   let canFilter = _.includes(filterWhiteKeys, itemType);
 
   if ((control.type === 30 && control.strDefault === '10') || hideFilter) {
@@ -72,7 +71,7 @@ export default function ColumnHead(props) {
       updateSheetColumnWidths={updateSheetColumnWidths}
       getPopupContainer={getPopupContainer}
       isDraft={isDraft}
-      renderPopup={({ closeMenu }) => (
+      renderPopup={({ closeMenu }: ColumnMenuContext) => (
         <Menu className="worksheetColumnHeadMenu" style={{ width: 180 }} onClickAway={closeMenu}>
           {canSort &&
             getSortData(itemType, control).map(item => (
@@ -102,7 +101,7 @@ export default function ColumnHead(props) {
             !isRelationRecord && (
               <MenuItem
                 onClick={() => {
-                  emitter.emit(tableId, control);
+                  publishFilterControl(tableId, control);
                   closeMenu();
                 }}
               >

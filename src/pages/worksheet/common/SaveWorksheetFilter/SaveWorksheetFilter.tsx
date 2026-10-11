@@ -2,9 +2,10 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Dialog, Input, RadioGroup } from 'ming-ui';
+import type { SavedFilterSelection, SaveWorksheetFilterProps } from './types';
 import './SaveWorksheetFilter.less';
 
-export default class SaveWorksheetFilter extends Component<any, any> {
+export default class SaveWorksheetFilter extends Component<SaveWorksheetFilterProps, SavedFilterSelection> {
   declare form: HTMLDivElement | null | undefined;
 
   static override propTypes = {
@@ -16,7 +17,7 @@ export default class SaveWorksheetFilter extends Component<any, any> {
     filterName: PropTypes.string,
     filterType: PropTypes.number,
   };
-  constructor(props) {
+  constructor(props: SaveWorksheetFilterProps) {
     super(props);
     this.state = {
       filterName: props.filterName || _l('自定义筛选'),
@@ -25,7 +26,9 @@ export default class SaveWorksheetFilter extends Component<any, any> {
   }
   override componentDidMount() {
     if (this.form) {
-      this.form.querySelector<HTMLInputElement>('.sheetName').focus();
+      const input = this.form.querySelector<HTMLInputElement>('.sheetName');
+      if (!input) throw new TypeError('Missing worksheet filter name input');
+      input.focus();
     }
   }
   override render() {
@@ -50,7 +53,12 @@ export default class SaveWorksheetFilter extends Component<any, any> {
           onClose();
         }}
       >
-        <div className="formItem flexRow" ref={form => { this.form = form; }}>
+        <div
+          className="formItem flexRow"
+          ref={form => {
+            this.form = form;
+          }}
+        >
           <div className="label">{_l('名称')}</div>
           <div className="content">
             <div className="flex content">
@@ -69,7 +77,7 @@ export default class SaveWorksheetFilter extends Component<any, any> {
           <div className="formItem flexRow">
             <div className="label">{_l('使用范围')}</div>
             <div className="content">
-              <RadioGroup
+              <RadioGroup<number>
                 data={[
                   { text: _l('个人'), value: 1 },
                   { text: _l('公共'), value: 2, disabled: !isCharge },

@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
-import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
 import { FlexCenter } from 'worksheet/components/Basics';
-import { emitter } from 'src/utils/common';
+import styled from 'src/utils/typedStyled';
+import type { FormControl } from '../../../../utils/controlTypes';
+import { subscribeFilterControl } from './filterControlEvents';
+import type { FiltersHandle, FiltersPopupProps } from './filterPanelTypes';
 import Filters from './Filters';
 import { formatForSave } from './model';
 import {
@@ -42,7 +44,7 @@ const SelectedFilter = styled(FlexCenter)`
   }
 `;
 
-export default function FiltersPopup(props) {
+export default function FiltersPopup(props: FiltersPopupProps) {
   const {
     zIndex,
     actions,
@@ -51,6 +53,7 @@ export default function FiltersPopup(props) {
     getPopupContainer,
     disableAdd,
     readOnly,
+    popupHandleRef,
     controlledFilterControls,
     ...rest
   } = props;
@@ -63,14 +66,14 @@ export default function FiltersPopup(props) {
     isSingleView = false,
     persistFilterToUrl = false,
   } = rest;
-  const filtersRef = useRef<any>(undefined);
+  const filtersRef = useRef<FiltersHandle | null>(null);
   const btnRef = useRef<HTMLDivElement>(null);
   const didMountRef = useRef(false);
   const [popupVisible, setPopupVisible] = useState<boolean | undefined>();
   const { needSave, editingFilter, activeFilter } = state;
   // 受控同步用：保存最新 editingFilter / actions 引用，供同步 effect 读取，
   // 避免把不稳定的 actions、频繁变动的 editingFilter 放进依赖导致 effect 反复执行。
-  const latestRef = useRef({});
+  const latestRef = useRef({ editingFilter, actions });
 
   useEffect(() => {
     latestRef.current = { editingFilter, actions };
@@ -156,30 +159,35 @@ export default function FiltersPopup(props) {
     }
   }, [activeFilter && activeFilter.id]);
 
-  function handleWorksheetHeadAddFilter(control) {
+  const timers = useRef(new Set<ReturnType<typeof setTimeout>>());
+  useEffect(
+    () => () => {
+      timers.current.forEach(clearTimeout);
+      timers.current.clear();
+    },
+    [],
+  );
+  function handleWorksheetHeadAddFilter(control: FormControl) {
     setPopupVisible(true);
-    setTimeout(() => {
-      if (_.get(filtersRef, 'current.addFilterByControl')) {
-        filtersRef.current.addFilterByControl(control);
-      }
+    const timer = setTimeout(() => {
+      timers.current.delete(timer);
+      filtersRef.current?.addFilterByControl(control);
     }, 100);
+    timers.current.add(timer);
   }
 
-  useEffect(() => {
-    emitter.addListener(
-      filterCompId || 'FILTER_ADD_FROM_COLUMNHEAD' + worksheetId + type + (isSingleView ? viewId : ''),
-      handleWorksheetHeadAddFilter,
-    );
-    return () => {
-      emitter.removeListener(
+  useImperativeHandle(popupHandleRef, () => ({ handleWorksheetHeadAddFilter }));
+  useEffect(
+    () =>
+      subscribeFilterControl(
         filterCompId || 'FILTER_ADD_FROM_COLUMNHEAD' + worksheetId + type + (isSingleView ? viewId : ''),
         handleWorksheetHeadAddFilter,
-      );
-    };
-  }, []);
+      ),
+    [filterCompId, worksheetId, type, isSingleView, viewId],
+  );
   let filteredText;
 
-  if (editingFilter && /^new/.test(editingFilter.id)) {
+  if (editingFilter && /^new/.test(String(editingFilter.id))) {
     const filterControls = formatForSave(editingFilter);
     const count = _.sum(filterControls.map(c => _.get(c, 'groupFilters.length')));
 
@@ -194,7 +202,7 @@ export default function FiltersPopup(props) {
     ? window.innerHeight - btnRef.current.getBoundingClientRect().y - 120 - 29 - 6
     : undefined;
 
-  if (maxHeight < 300) {
+  if (maxHeight !== undefined && maxHeight < 300) {
     maxHeight = 300;
   }
 
@@ -208,7 +216,8 @@ export default function FiltersPopup(props) {
       action={['click']}
       popup={
         <ClickAway
-          specialFilter={target => {
+          specialFilter={(target: EventTarget | null) => {
+            if (!(target instanceof Node)) return undefined;
             const $targetTarget = $(target).closest(
               [
                 '.dropdownTrigger',
@@ -243,7 +252,7 @@ export default function FiltersPopup(props) {
             style={readOnly ? { cursor: 'not-allowed' } : undefined}
           >
             <Filters
-              popupVisible={popupVisible}
+              {...(popupVisible === undefined ? {} : { popupVisible })}
               actions={actions}
               ref={filtersRef}
               state={state}
@@ -257,7 +266,7 @@ export default function FiltersPopup(props) {
       }
       getPopupContainer={getPopupContainer || (() => document.body)}
       popupClassName="filterTrigger"
-      popupVisible={popupVisible}
+      {...(popupVisible === undefined ? {} : { popupVisible })}
       popupAlign={{
         points: ['tr', 'br'],
         offset: [162, 6],

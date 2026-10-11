@@ -1,8 +1,9 @@
 import { Fragment } from 'react';
-import styled from 'styled-components';
+import styled from 'src/utils/typedStyled';
+import { filterId } from './contents/dynamicBoundary';
+import type { SavedFiltersProps } from './contents/dynamicTypes';
 import Empty from './Empty';
 import FilterTitleList from './FilterTitleList';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Con = styled.div`
   padding: 0 6px 6px;
@@ -10,7 +11,7 @@ const Con = styled.div`
   overflow-x: hidden;
 `;
 
-export default function SavedFilters(props) {
+export default function SavedFilters(props: SavedFiltersProps) {
   const {
     maxHeight = 450,
     isCharge,
@@ -26,7 +27,7 @@ export default function SavedFilters(props) {
     onDelete,
     triggerFilter,
     onHideFilterPopup,
-  }: { controls: FormControl[]; [key: string]: any } = props;
+  } = props;
   const isEmpty = !filters.length;
   const personalFilters = filters.filter(f => f.type === 1);
   const globalFilters = filters.filter(f => f.type === 2);
@@ -45,7 +46,7 @@ export default function SavedFilters(props) {
               filterAddConditionControls={filterAddConditionControls}
               onEditFilter={onEditFilter}
               onSortEnd={sortedIds => {
-                onSortEnd(sortedIds.concat(globalFilters.map(f => f.id)));
+                onSortEnd(sortedIds.concat(globalFilters.map(filterId)));
               }}
               onCopy={onCopy}
               onDelete={onDelete}
@@ -64,7 +65,7 @@ export default function SavedFilters(props) {
               filterAddConditionControls={filterAddConditionControls}
               onEditFilter={onEditFilter}
               onSortEnd={sortedIds => {
-                onSortEnd(personalFilters.map(f => f.id).concat(sortedIds));
+                onSortEnd(personalFilters.map(filterId).concat(sortedIds));
               }}
               onCopy={onCopy}
               onDelete={onDelete}

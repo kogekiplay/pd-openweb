@@ -1,9 +1,11 @@
 import { useRef } from 'react';
+import type { ReactNode } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Input } from 'ming-ui';
+import styled from 'src/utils/typedStyled';
+import type { TagConProps } from './dynamicTypes';
 
 const InputWrap = styled.span`
   position: relative;
@@ -14,11 +16,11 @@ const InputWrap = styled.span`
   }
 `;
 
-function TagCon(props) {
+function TagCon<T extends { name?: ReactNode }>(props: TagConProps<T>) {
   const { disabled, data, renderItem, onRemove, needInput = false, search, onChangeInput = () => {} } = props;
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const onFetchData = _.debounce(value => {
+  const onFetchData = _.debounce((value: string) => {
     onChangeInput({ keywords: value });
   }, 500);
 

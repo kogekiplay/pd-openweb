@@ -2,7 +2,6 @@ import { Fragment, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { arrayOf, bool, func, shape, string } from 'prop-types';
-import styled from 'styled-components';
 import { Dialog, UpgradeIcon, VCenterIconText } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { FlexCenter, VerticalMiddle } from 'worksheet/components/Basics';
@@ -11,15 +10,21 @@ import FilterItemTexts from 'src/pages/widgetConfig/widgetSetting/components/Fil
 import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
+import styled from 'src/utils/typedStyled';
 import { saveWorksheetFilter } from '../../SaveWorksheetFilter';
 import { FILTER_TYPE } from '../enum';
+import type { EditingFilter } from '../filterModelTypes';
 import { formatForSave } from '../model';
 import AddCondition from './AddCondition';
 import ConditionsGroup from './ConditionsGroup';
+import { filterDetailId, filterGroupErrors } from './detailBoundary';
+import type { FilterDetailProps } from './detailTypes';
 import FilterDetailName from './FilterDetailName';
 import QueryButton from './QueryButton';
 import SaveButton from './SaveButton';
 import SplitDropdown from './SplitDropdown';
+
+export type { FilterDetailProps } from './detailTypes';
 
 const Con = styled.div`
   display: flex;
@@ -70,7 +75,7 @@ const Content = styled.div`
   }
 `;
 
-const Footer = styled(VerticalMiddle)`
+const Footer = styled(VerticalMiddle)<{ isSingleFilter?: boolean | undefined }>`
   margin-bottom: var(--space-6);
   font-size: 0px;
   margin-top: 19px;
@@ -86,7 +91,7 @@ const AddButton = styled(VCenterIconText)`
   }
 `;
 
-export default function FilterDetail(props) {
+export default function FilterDetail(props: FilterDetailProps) {
   const {
     maxHeight,
     showQueryButton = false,
@@ -102,7 +107,7 @@ export default function FilterDetail(props) {
     conditionProps,
     onBack,
     hideSave = false,
-    filterAddConditionControls = () => {},
+    filterAddConditionControls,
     setActiveTab = () => {},
     onAddCondition = () => {},
     handleTriggerFilter = () => {},
@@ -111,16 +116,18 @@ export default function FilterDetail(props) {
     filterError = [],
     isRules,
     showCustom,
-  }: { controls: FormControl[]; [key: string]: any } = props;
+  } = props;
   const formattedCondition = formatForSave(filter);
-  const notEmptyConditionsNum = _.sum(formattedCondition.map(c => (c.isGroup ? _.get(c, 'groupFilters.length') : 1)));
+  const notEmptyConditionsNum = _.sum(formattedCondition.map(c => (c.isGroup ? c.groupFilters.length : 1)));
   const canSave = !!notEmptyConditionsNum;
   const needSave = props.needSave || nameIsUpdated;
-  const isNew = filter.id.startsWith('new');
+  const isNew = filterDetailId(filter.id).startsWith('new');
   const saveButtonDisabled = !(isNew || needSave) || !canSave;
+  const conditionControls = filterAddConditionControls || ((items: FormControl[]) => items);
+  const availableControls = conditionControls(controls) || [];
   const { conditionsGroups = [] } = filter;
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [foldedMap, setFoldedMap] = useState({});
+  const [foldedMap, setFoldedMap] = useState<Record<string, boolean | undefined>>({});
   const { projectId, appId, worksheetId, isCharge } = base;
   const featureType = supportGroup ? getFeatureStatus(projectId, VersionProductType.filterGroup) : '';
   let canEdit = props.canEdit;
@@ -148,7 +155,7 @@ export default function FilterDetail(props) {
               worksheetId,
               filter: { ...filter, name: filterName, type: filterType, id: saveAsNew ? undefined : filter.id },
             },
-            newFilter => {
+            (newFilter: EditingFilter) => {
               setActiveTab(2);
               handleTriggerFilter(newFilter);
             },
@@ -162,7 +169,7 @@ export default function FilterDetail(props) {
           worksheetId,
           filter: { ...filter },
         },
-        newFilter => {
+        (newFilter: EditingFilter) => {
           handleTriggerFilter(newFilter);
         },
       );
@@ -180,6 +187,7 @@ export default function FilterDetail(props) {
   }
 
   function handleBack() {
+    if (!onBack) throw new TypeError('Missing worksheet filter back callback');
     if (needSave) {
       Dialog.confirm({
         title: _l('存在未保存的变更，是否需要保存？'),
@@ -206,7 +214,7 @@ export default function FilterDetail(props) {
             name={filter.name}
             withStar={needSave && !nameIsUpdated}
             onChange={value => {
-              if (value.trim() === '') {
+              if (value === undefined || value.trim() === '') {
                 alert(_l('名称不能为空'), 3);
                 return undefined;
               }
@@ -243,9 +251,9 @@ export default function FilterDetail(props) {
                 showCustom={showCustom}
                 projectId={projectId}
                 isGroup={filter.isGroup}
-                filterError={filterError[groupIndex] || []}
+                filterError={filterGroupErrors(filterError, groupIndex)}
                 filterResigned={filterResigned}
-                filterAddConditionControls={filterAddConditionControls}
+                filterAddConditionControls={conditionControls}
                 conditionSpliceType={conditionsGroup.conditionSpliceType}
                 conditions={conditionsGroup.conditions.map((c, i) => ({
                   ...c,
@@ -259,7 +267,7 @@ export default function FilterDetail(props) {
                 }}
                 // `= {}` 默认值让 TS 把 value 推成 {}，下面读 value.folded 就报 TS2339。
                 // 这里只需要 folded 有类型，其余字段原样透传给 actions.updateCondition。
-                onChange={(value: { folded?: boolean } = {}, conditionIndex) => {
+                onChange={(value = {}, conditionIndex) => {
                   actions.updateCondition(value, groupIndex, conditionIndex);
                   const condition = conditionsGroup.conditions[conditionIndex];
 
@@ -294,10 +302,10 @@ export default function FilterDetail(props) {
         <Footer className="flexRow" isSingleFilter={isSingleFilter}>
           {(!filter.isGroup || (filter.isGroup && conditionsGroups.length === 1)) && (
             <AddCondition
-              columns={filterAddConditionControls(controls)}
+              columns={availableControls}
               from={from}
-              widgetControlData={_.get(conditionProps, 'widgetControlData')}
-              disabled={_.get(conditionProps, 'disableAddCondition')}
+              widgetControlData={conditionProps?.widgetControlData}
+              disabled={conditionProps?.disableAddCondition}
               onAdd={control => {
                 if (filter.isGroup) {
                   actions.addCondition(control, undefined, from);
@@ -337,7 +345,7 @@ export default function FilterDetail(props) {
 
                     buriedUpgradeVersionDialog(projectId, VersionProductType.filterGroup);
                   } else {
-                    const spliceType = _.get(conditionsGroups, '0.spliceType');
+                    const spliceType = conditionsGroups[0]?.spliceType;
                     actions.addGroup(spliceType);
                     onAddCondition();
                     scrollToEnd();
@@ -355,7 +363,7 @@ export default function FilterDetail(props) {
           {!isSingleFilter && !hideSave && (
             <SaveButton
               disabled={saveButtonDisabled}
-              onClick={handleSave}
+              onClick={() => handleSave()}
               downList={
                 isNew || saveButtonDisabled
                   ? []
@@ -366,7 +374,7 @@ export default function FilterDetail(props) {
               }
             />
           )}
-          {showQueryButton & !!notEmptyConditionsNum && (
+          {Number(showQueryButton) & Number(!!notEmptyConditionsNum) && (
             <QueryButton num={notEmptyConditionsNum} hasQuery={queryButtonDisabled} onClick={onQuery} />
           )}
         </Footer>

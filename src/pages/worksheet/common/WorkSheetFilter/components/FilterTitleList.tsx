@@ -2,12 +2,17 @@ import { Fragment, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _, { get } from 'lodash';
-import styled from 'styled-components';
 import { Icon, Menu, MenuItem, SortableList } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { SortableRenderItemOptions } from 'ming-ui/components/SortableList';
 import { VerticalMiddle } from 'worksheet/components/Basics';
 import type { FormControl } from 'src/utils/controlTypes';
+import styled from 'src/utils/typedStyled';
 import { FILTER_TYPE } from '../enum';
+import { filterRecord } from '../filterModelBoundary';
+import type { EditingFilter } from '../filterModelTypes';
+import { filterId } from './contents/dynamicBoundary';
+import type { FilterTitleListProps } from './contents/dynamicTypes';
 
 const Con = styled.div`
   .title {
@@ -93,7 +98,21 @@ const FilterTitleItemCon = styled(VerticalMiddle)`
   }
 `;
 
-function FilterTitleItem(props) {
+function FilterTitleItem(
+  props: Omit<SortableRenderItemOptions<EditingFilter>, 'item'> & {
+    error: boolean;
+    filter: EditingFilter;
+    active: boolean;
+    className: string;
+    isCharge?: boolean | undefined;
+    onEditFilter: (filter: EditingFilter) => void;
+    onCopy: (filter: EditingFilter) => void;
+    onDelete: (filter: EditingFilter) => void;
+    onToggleFilterType: (filter: EditingFilter) => void;
+    triggerFilter: (filter: EditingFilter) => void;
+    onHideFilterPopup: () => void;
+  },
+) {
   const {
     error,
     isCharge,
@@ -122,9 +141,11 @@ function FilterTitleItem(props) {
       }}
     >
       <VerticalMiddle className="content">
-        <DragHandle>
-          <i className="icon icon-drag dragger hoverShow hoverColorPrimary"></i>
-        </DragHandle>
+        {DragHandle && (
+          <DragHandle>
+            <i className="icon icon-drag dragger hoverShow hoverColorPrimary"></i>
+          </DragHandle>
+        )}
         <i className="icon icon-worksheet_filter filterIcon"></i>
         <span title={name} className="Font14 mLeft10 ellipsis">
           {name}
@@ -170,7 +191,9 @@ function FilterTitleItem(props) {
                   onClick={() => {
                     onEditFilter(filter);
                     setTimeout(() => {
-                      document.querySelector('.filterDetailName .name').click();
+                      const element = document.querySelector<HTMLElement>('.filterDetailName .name');
+                      if (!element) throw new TypeError('Missing filter detail name element');
+                      element.click();
                     }, 40);
                   }}
                 >
@@ -223,15 +246,22 @@ function FilterTitleItem(props) {
   );
 }
 
-function filterHasError(filter, controls) {
-  if (filter.conditionsGroups) {
-    return _.some(filter.conditionsGroups.map(gf => filterHasError(gf, controls)));
+function filterHasError(filter: unknown, controls: FormControl[]): boolean {
+  if (!filterRecord(filter)) throw new TypeError('Invalid saved filter group');
+  const groups = filter['conditionsGroups'];
+  if (groups) {
+    if (!Array.isArray(groups)) throw new TypeError('Invalid saved filter condition groups');
+    return _.some(groups.map(gf => filterHasError(gf, controls)));
   }
-
-  return !!(_.get(filter, 'conditions') || []).filter(c => !_.find(controls, { controlId: c.controlId })).length;
+  const conditions = filter['conditions'] || [];
+  if (!Array.isArray(conditions)) throw new TypeError('Invalid saved filter conditions');
+  return !!conditions.filter(c => {
+    if (!filterRecord(c)) throw new TypeError('Invalid saved filter condition');
+    return !_.find(controls, { controlId: c['controlId'] });
+  }).length;
 }
 
-export default function FilterTitleList(props) {
+export default function FilterTitleList(props: FilterTitleListProps) {
   const {
     isCharge,
     title,
@@ -245,7 +275,7 @@ export default function FilterTitleList(props) {
     onToggleFilterType = () => {},
     triggerFilter = () => {},
     onHideFilterPopup = () => {},
-  }: { controls: FormControl[]; [key: string]: any } = props;
+  } = props;
   return (
     <Con>
       <div className="title">{title}</div>
@@ -255,7 +285,7 @@ export default function FilterTitleList(props) {
         itemKey="id"
         helperClass="draggingItem"
         onSortEnd={newItems => {
-          onSortEnd(newItems.map(f => f.id));
+          onSortEnd(newItems.map(filterId));
         }}
         renderItem={options => {
           const { item, index, dragging, isLayer } = options;

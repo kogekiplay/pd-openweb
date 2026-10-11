@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { ROW_ID_CONTROL } from 'src/pages/widgetConfig/config/widget';
+import { addConditionWidgetType } from './detailBoundary';
+import type { AddConditionProps, AddConditionState } from './detailTypes';
 import SelectControls from './SelectControls';
 
-export default class AddCondition extends Component<any, any> {
+export type { AddConditionProps } from './detailTypes';
+
+export default class AddCondition extends Component<AddConditionProps, AddConditionState> {
   declare box: HTMLDivElement | null | undefined;
 
   static override propTypes = {
@@ -16,14 +20,14 @@ export default class AddCondition extends Component<any, any> {
     onAdd: PropTypes.func,
     from: PropTypes.string, // 来源
   };
-  constructor(props) {
+  constructor(props: AddConditionProps) {
     super(props);
     this.state = {
       columnListVisible: _.isUndefined(props.defaultVisible) ? false : props.defaultVisible,
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: AddConditionProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.from === 'fastFilter' &&
@@ -58,7 +62,7 @@ export default class AddCondition extends Component<any, any> {
       from === 'relateSheet' &&
       !_.find(columns, { controlId: 'rowid' }) &&
       (_.isEmpty(widgetControlData) ||
-        (_.includes([29, 35, 51], widgetControlData.type) &&
+        (_.includes([29, 35, 51], addConditionWidgetType(widgetControlData)) &&
           _.get(widgetControlData, 'advancedSetting.querytype') !== '1'))
     ) {
       columns = columns.concat(ROW_ID_CONTROL);
@@ -91,7 +95,7 @@ export default class AddCondition extends Component<any, any> {
               }}
             />
           }
-          getPopupContainer={() => (renderInParent && !isAppendToBody ? this.box : document.body)}
+          getPopupContainer={target => (renderInParent && !isAppendToBody ? this.box || target : document.body)}
           popupAlign={
             this.props.popupAlign || {
               points: ['tl', 'bl'],

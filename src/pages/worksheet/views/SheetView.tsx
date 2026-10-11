@@ -311,6 +311,7 @@ const GroupTitleCell = React.memo(
 );
 
 // 优化的行头组件
+type MemoizedRowHeadProps = Parameters<typeof RowHead>[0];
 const MemoizedRowHead = React.memo(
   ({
     className,
@@ -353,7 +354,7 @@ const MemoizedRowHead = React.memo(
     isDraft,
     printCharge,
     layoutChangeVisible,
-  }) => {
+  }: MemoizedRowHeadProps) => {
     const { allowAdd, worksheetId, projectId } = worksheetInfo;
     const { allWorksheetIsSelected, sheetSelectedRows } = sheetViewConfig;
 

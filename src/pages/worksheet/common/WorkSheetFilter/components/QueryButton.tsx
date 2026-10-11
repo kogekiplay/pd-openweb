@@ -1,6 +1,7 @@
 import cx from 'classnames';
 import { noop } from 'lodash';
-import styled from 'styled-components';
+import styled from 'src/utils/typedStyled';
+import type { QueryButtonProps } from './detailTypes';
 
 const Con = styled.div`
   display: flex;
@@ -22,9 +23,9 @@ const Con = styled.div`
   }
 `;
 
-export default function QueryButton(props) {
+export default function QueryButton(props: QueryButtonProps) {
   const { num, hasQuery, onClick } = props;
-  const text = hasQuery ? _l('已查询') : _l('查询(%0)', num);
+  const text = hasQuery ? _l('已查询') : _l('查询(%0)', num === undefined ? String(num) : num);
   return (
     <Con className={cx({ disabled: hasQuery })} onClick={hasQuery ? noop : onClick}>
       {text}

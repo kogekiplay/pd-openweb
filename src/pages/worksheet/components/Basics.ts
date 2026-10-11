@@ -1,4 +1,13 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes } from 'src/utils/typedStyled';
+import type {
+  CardButtonProps,
+  CircleProps,
+  CssDimension,
+  CustomButtonProps,
+  HrProps,
+  PositionProps,
+  TipBlockProps,
+} from './basicTypes';
 
 // common
 const commonInput = `
@@ -19,18 +28,18 @@ export const commonShadow = `
 `;
 
 // 函数
-const numberToPx = number => (number ? `${number}px` : '');
+const numberToPx = (number: CssDimension | undefined) => (number ? `${number}px` : '');
 
 // 基础形状
-export const Circle = styled.div(
+export const Circle = styled.div<CircleProps>(
   ({ width = 20 }) => `
   display: inline-block;
   width: ${width}px;
   height: ${width}px;
-  border-radius: ${width / 2}px;
+  border-radius: ${Number(width) / 2}px;
 `,
 );
-export const CustomButton = styled.div(
+export const CustomButton = styled.div<CustomButtonProps>(
   ({
     fontSize = 13,
     height = 36,
@@ -57,7 +66,7 @@ export const CustomButton = styled.div(
 );
 
 // html 元素
-export const Hr = styled.div(
+export const Hr = styled.div<HrProps>(
   ({ color = 'var(--color-border-primary)', margin = '20px 0' }) =>
     `border: none; border-top: 1px solid ${color}; margin: ${margin};`,
 );
@@ -99,7 +108,7 @@ export const Tipbd = styled.div`
   color: var(--color-text-disabled);
   font-size: var(--font-sm);
 `;
-export const TipBlock = styled.div(
+export const TipBlock = styled.div<TipBlockProps>(
   ({ color = 'var(--color-text-tertiary)', bgcolor = 'var(--color-background-tertiary)' }) => `
   color: ${color};
   font-size: var(--font-sm);
@@ -133,7 +142,7 @@ export const Textarea = styled.textarea`
   ${commonInput}
 `;
 
-export const Absolute = styled.div(
+export const Absolute = styled.div<PositionProps>(
   ({ top, bottom, left, right }) => `
   position: absolute;
   top: ${numberToPx(top)};
@@ -143,7 +152,7 @@ export const Absolute = styled.div(
 `,
 );
 
-export const Fixed = styled.div(
+export const Fixed = styled.div<PositionProps>(
   ({ top, bottom, left, right }) => `
   position: fixed;
   top: ${numberToPx(top)};
@@ -204,7 +213,7 @@ export const rotate = keyframes`
   }
 `;
 
-export const CardButton = styled.span`
+export const CardButton = styled.span<CardButtonProps>`
   cursor: pointer;
   width: 22px;
   height: 22px;

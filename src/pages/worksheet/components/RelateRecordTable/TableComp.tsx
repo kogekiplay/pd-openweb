@@ -540,7 +540,8 @@ function TableComp(props) {
                 newDefaultScrollLeft,
               });
             }}
-            hideColumn={(controlId: string) => {
+            hideColumn={(controlId: string | undefined) => {
+              if (controlId === undefined) return;
               updateTableState({
                 sheetHiddenColumnIds: uniqBy(sheetHiddenColumnIds.concat(controlId)),
               });

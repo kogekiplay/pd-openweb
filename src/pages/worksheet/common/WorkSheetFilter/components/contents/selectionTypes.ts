@@ -29,7 +29,7 @@ export interface SelectionProps {
   projectId?: string | undefined;
   appId?: string | undefined;
   worksheetId?: string | undefined;
-  from?: string | undefined;
+  from?: string | number | undefined;
   folded?: boolean | undefined;
   filterResigned?: boolean | undefined;
 }

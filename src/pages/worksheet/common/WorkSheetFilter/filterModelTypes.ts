@@ -120,6 +120,9 @@ export interface FilterState {
   lastAction?: string | undefined;
   error?: string | undefined;
 }
+export interface FilterActionLifetime {
+  capture(): () => boolean;
+}
 /** Extra fields are produced locally by Embed, quick filters and worksheet row adapters. */
 export interface FilterFormControl extends FormControl {
   recordId?: string | undefined;

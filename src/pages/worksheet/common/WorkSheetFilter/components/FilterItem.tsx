@@ -1,14 +1,16 @@
 import { Component } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { Input } from 'ming-ui';
 import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
 import { filterOnlyShowField, isOtherShowFeild } from 'src/pages/widgetConfig/util';
-import { CONTROL_FILTER_WHITELIST, FILTER_TYPE } from '../enum';
-import { checkConditionAvailable, getDefaultCondition, getTypeKey } from '../util';
+import { conditionGroupType as getConditionGroupType } from '../conditionBoundary';
+import type { FilterItemFilter, FilterItemProps } from '../conditionTypes';
+import { FILTER_TYPE } from '../enum';
+import { checkConditionAvailable, getDefaultCondition } from '../util';
 import AddCondition from './AddCondition';
 import Condition from './Condition';
 import wrapDisableClick from './wrapDisableClick';
@@ -20,7 +22,7 @@ export interface FilterItemState {
   operateVisible: boolean;
 }
 
-export default class FilterItem extends Component<any, FilterItemState> {
+export default class FilterItem extends Component<FilterItemProps, FilterItemState> {
   declare title: HTMLDivElement | null | undefined;
 
   static override propTypes = {
@@ -76,7 +78,7 @@ export default class FilterItem extends Component<any, FilterItemState> {
       'updateFilter',
     ].map(() => () => {}),
   );
-  constructor(props) {
+  constructor(props: FilterItemProps) {
     super(props);
     this.state = {
       nameIsEditing: false,
@@ -95,8 +97,7 @@ export default class FilterItem extends Component<any, FilterItemState> {
     const canEdit = this.checkFilterEditable();
     return conditions.map((condition, index: number) => {
       const control = _.find(columns, column => condition.controlId === column.controlId);
-      const conditionGroupKey = getTypeKey((control || {}).type);
-      const conditionGroupType = control ? CONTROL_FILTER_WHITELIST[conditionGroupKey].value : '';
+      const conditionGroupType = getConditionGroupType(control);
       const isSheetFieldError = isOtherShowFeild(control);
       return (
         <Condition
@@ -125,7 +126,7 @@ export default class FilterItem extends Component<any, FilterItemState> {
     });
   };
 
-  renderOperate = canSave => {
+  renderOperate = (canSave: boolean | number | undefined) => {
     const { unsaved, isCharge, filter, onDelete, onCopy, onUpdateFilterType, onSave, onSaveAs } = this.props;
     const { operateVisible } = this.state;
     const canEdit = this.checkFilterEditable();
@@ -197,14 +198,14 @@ export default class FilterItem extends Component<any, FilterItemState> {
                   },
                   () => {
                     if (this.title) {
-                      this.title.querySelector<HTMLInputElement>('.filterNameInput').select();
-                      this.title.querySelector<HTMLInputElement>('.filterNameInput').focus();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput')?.select();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput')?.focus();
                     }
                   },
                 );
               }}
             >
-              <i className="icon icon-edit" on></i>
+              <i className="icon icon-edit"></i>
               {_l('重命名')}
             </NewMenuItem>
             <NewMenuItem
@@ -250,7 +251,7 @@ export default class FilterItem extends Component<any, FilterItemState> {
       </Trigger>
     );
   };
-  checkNewFilter(filter) {
+  checkNewFilter(filter: FilterItemFilter) {
     const availableConditions = filter.conditions.filter(condition => checkConditionAvailable(condition));
     return !!availableConditions.length;
   }
@@ -323,7 +324,9 @@ export default class FilterItem extends Component<any, FilterItemState> {
         <div
           className={cx('filterItem flexRow bgColorPrimary', { expanded })}
           onClick={e => {
-            const $targetTarget = $(e.target).closest('.moreOperateBtn, .worksheetFilterOperateList');
+            const $targetTarget = $(e.target instanceof Element ? e.target : []).closest(
+              '.moreOperateBtn, .worksheetFilterOperateList',
+            );
 
             if ($targetTarget.length) {
               return;
@@ -335,7 +338,9 @@ export default class FilterItem extends Component<any, FilterItemState> {
         >
           <div
             className={cx('filterTitle flex ellipsis', { colorPrimary: selected })}
-            ref={title => { this.title = title; }}
+            ref={title => {
+              this.title = title;
+            }}
           >
             {nameIsEditing ? (
               <Input
@@ -364,8 +369,8 @@ export default class FilterItem extends Component<any, FilterItemState> {
                   e.stopPropagation();
                   this.setState({ nameIsEditing: true }, () => {
                     if (this.title) {
-                      this.title.querySelector<HTMLInputElement>('.filterNameInput').select();
-                      this.title.querySelector<HTMLInputElement>('.filterNameInput').focus();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput')?.select();
+                      this.title.querySelector<HTMLInputElement>('.filterNameInput')?.focus();
                     }
                   });
                 }}

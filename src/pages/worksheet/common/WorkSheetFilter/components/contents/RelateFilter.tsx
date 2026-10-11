@@ -4,7 +4,10 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { FormControl } from 'src/utils/controlTypes';
 import { DEFAULT_COLUMNS } from '../../enum';
+import type { FilterDynamicSource } from '../../filterModelTypes';
+import type { DynamicChoice, EditorValueProps } from './dynamicTypes';
 import RelateBox from './RelateBox';
 
 export interface RelateFilterState {
@@ -12,7 +15,7 @@ export interface RelateFilterState {
   showUl: boolean;
 }
 
-export default class RelateFilter extends Component<any, RelateFilterState> {
+export default class RelateFilter extends Component<EditorValueProps, RelateFilterState> {
   static override propTypes = {
     disabled: PropTypes.bool,
     values: PropTypes.arrayOf(PropTypes.string),
@@ -21,7 +24,7 @@ export default class RelateFilter extends Component<any, RelateFilterState> {
   static defaultProps = {
     values: [],
   };
-  constructor(props) {
+  constructor(props: EditorValueProps) {
     super(props);
     this.state = {
       keywords: '',
@@ -29,7 +32,7 @@ export default class RelateFilter extends Component<any, RelateFilterState> {
     };
   }
 
-  onChangeFn = data => {
+  onChangeFn = (data: DynamicChoice) => {
     const { onChange } = this.props;
     this.setState({
       keywords: '',
@@ -47,8 +50,8 @@ export default class RelateFilter extends Component<any, RelateFilterState> {
     });
   };
 
-  remove = num => {
-    const { dynamicSource = {}, onChange } = this.props;
+  remove = (num: number) => {
+    const { dynamicSource = [], onChange } = this.props;
     const dy = dynamicSource.filter((_u, i) => i !== num);
     onChange({
       dynamicSource: [...dy],
@@ -56,10 +59,15 @@ export default class RelateFilter extends Component<any, RelateFilterState> {
     });
   };
 
-  renderName = (item, nameList, i, isParent?: boolean | undefined) => {
+  renderName = (
+    item: FilterDynamicSource,
+    nameList: Pick<FormControl, 'controlName'> | undefined,
+    i: number,
+    isParent?: boolean | undefined,
+  ) => {
     if (!nameList) {
       return (
-        <Tooltip title={_l('ID: %0', item.cid)} placement="bottom">
+        <Tooltip title={_l('ID: %0', String(item.cid))} placement="bottom">
           <span className="isWrong">{_l('该字段已删除')}</span>
         </Tooltip>
       );
@@ -84,7 +92,7 @@ export default class RelateFilter extends Component<any, RelateFilterState> {
     const {
       disabled,
       currentColumns = [],
-      dynamicSource = {},
+      dynamicSource = [],
       relateSheetList = [],
       conditionType,
       control,

@@ -1,12 +1,12 @@
 import cx from 'classnames';
 import _ from 'lodash';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
-import styled from 'styled-components';
 import { Dropdown, VCenterIconText } from 'ming-ui';
 import { isOtherShowFeild } from 'src/pages/widgetConfig/util';
-import type { FormControl } from 'src/utils/controlTypes';
-import { CONTROL_FILTER_WHITELIST, FILTER_RELATION_TYPE } from '../enum';
-import { getTypeKey } from '../util';
+import styled from 'src/utils/typedStyled';
+import { conditionKey, conditionGroupType as getConditionGroupType } from '../conditionBoundary';
+import type { ConditionsGroupProps } from '../conditionTypes';
+import { FILTER_RELATION_TYPE } from '../enum';
 import AddCondition from './AddCondition';
 import Condition from './ConditionV2';
 
@@ -123,7 +123,7 @@ const Con = styled.div`
   }
 `;
 
-const ConditionCon = styled.div`
+const ConditionCon = styled.div<{ isSingleFilter?: boolean | undefined }>`
   display: flex;
   flex-direction: row;
   margin-top: var(--space-3);
@@ -156,7 +156,7 @@ const AddButton = styled(VCenterIconText)`
   font-weight: bold;
 `;
 
-export default function ConditionsGroup(props) {
+export default function ConditionsGroup(props: ConditionsGroupProps) {
   const {
     from,
     isSingleFilter,
@@ -180,7 +180,7 @@ export default function ConditionsGroup(props) {
     isRules,
     showCustom,
     widgetControlData,
-  }: { controls: FormControl[]; [key: string]: any } = props;
+  } = props;
   return (
     <Con className={cx({ isSingleFilter })}>
       {conditions.map((condition, i) => {
@@ -190,11 +190,10 @@ export default function ConditionsGroup(props) {
           control = { ...control };
         }
 
-        const conditionGroupKey = getTypeKey((control || {}).type);
-        const conditionGroupType = control ? CONTROL_FILTER_WHITELIST[conditionGroupKey].value : '';
+        const conditionGroupType = getConditionGroupType(control);
         const isSheetFieldError = from !== 'rule' && isOtherShowFeild(control);
         return (
-          <ConditionCon key={condition.id} isSingleFilter={isSingleFilter}>
+          <ConditionCon key={conditionKey(condition['id'])} isSingleFilter={isSingleFilter}>
             <ConditionHeader>
               {i === 0 && <span className="text">{_l('当')}</span>}
               {i === 1 && (
@@ -219,7 +218,7 @@ export default function ConditionsGroup(props) {
                     {
                       [FILTER_RELATION_TYPE.AND]: _l('且%25000'),
                       [FILTER_RELATION_TYPE.OR]: _l('或'),
-                    }[conditionSpliceType]
+                    }[Number(conditionSpliceType)]
                   }
                 </span>
               )}
@@ -253,10 +252,10 @@ export default function ConditionsGroup(props) {
           <ConditionHeader />
           <div className="flex">
             <AddCondition
-              columns={filterAddConditionControls(controls)}
+              columns={(filterAddConditionControls ? filterAddConditionControls(controls) : controls) || []}
               onAdd={onAdd}
               from={from}
-              widgetControlData={_.get(conditionProps, 'widgetControlData')}
+              widgetControlData={conditionProps.widgetControlData}
             >
               <AddButton
                 className="mRight30 hoverColorPrimary"

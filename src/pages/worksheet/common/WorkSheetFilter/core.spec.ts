@@ -491,6 +491,32 @@ async function run() {
   );
   assert.equal(call(model, 'createReducer', [empty, { type: 'unknown' }]), empty);
   assert.deepEqual(call(model, 'createReducer', [empty, { type: 'RESET' }]), {});
+  let epoch = 0;
+  let active = true;
+  const lifetime = {
+    capture: () => {
+      const expected = epoch;
+      return () => active && epoch === expected;
+    },
+  };
+  let lifecycleState: unknown = { filters: [], loading: true };
+  const lifecycleDispatch = (action: unknown) => {
+    lifecycleState = call(model, 'createReducer', [lifecycleState, action]);
+  };
+  const lifecycleActions = call(model, 'createActions', [lifecycleDispatch, lifecycleState, lifetime]);
+  const staleLoad = call(lifecycleActions, 'loadFilters', ['sheet']);
+  active = false;
+  epoch++;
+  latest('getWorksheetFilters').resolve([body]);
+  await staleLoad;
+  assert.equal(read(lifecycleState, 'filters') instanceof Array && array(read(lifecycleState, 'filters')).length, 0);
+  active = true;
+  const currentLoad = call(call(model, 'createActions', [lifecycleDispatch, lifecycleState, lifetime]), 'loadFilters', [
+    'sheet',
+  ]);
+  latest('getWorksheetFilters').resolve([body]);
+  await currentLoad;
+  assert.equal(array(read(lifecycleState, 'filters')).length, 1);
   console.log(
     'Actual worksheet filter core helpers/actions/reducer/API failure and retry, mutable date/conditions, refs and finite boundaries passed',
   );

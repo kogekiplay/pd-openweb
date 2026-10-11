@@ -5,10 +5,14 @@ import { func, shape, string } from 'prop-types';
 import { Input, Menu, MenuItem } from 'ming-ui';
 import { VerticalMiddle } from 'worksheet/components/Basics';
 import { getIconByType } from 'src/pages/widgetConfig/util';
-import '../WorkSheetFilter.less';
 import type { FormControl } from 'src/utils/controlTypes';
+import { searchableControlName } from './detailBoundary';
+import type { SelectControlsProps } from './detailTypes';
+import '../WorkSheetFilter.less';
 
-export default function SelectControls(props) {
+export type { SelectControlsProps } from './detailTypes';
+
+export default function SelectControls(props: SelectControlsProps) {
   const {
     style,
     maxHeight,
@@ -19,10 +23,10 @@ export default function SelectControls(props) {
     onAdd = () => {},
     onClose = () => {},
   } = props;
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [keyword, setKeyword] = useState('');
   const controls: FormControl[] = keyword
-    ? props.controls.filter((c: FormControl) => c.controlName.toLowerCase().indexOf(keyword.toLowerCase()) > -1)
+    ? props.controls.filter(c => searchableControlName(c).indexOf(keyword.toLowerCase()) > -1)
     : props.controls;
 
   useEffect(() => {
@@ -44,6 +48,7 @@ export default function SelectControls(props) {
           manualRef={inputRef}
           value={keyword}
           onChange={() => {
+            if (!inputRef.current) throw new TypeError('Missing filter search input');
             setKeyword(inputRef.current.value);
           }}
         />

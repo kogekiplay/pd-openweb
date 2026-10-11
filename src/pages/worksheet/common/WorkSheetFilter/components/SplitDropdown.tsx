@@ -1,8 +1,9 @@
 import { Fragment } from 'react';
-import styled from 'styled-components';
 import { Dropdown } from 'ming-ui';
 import { FlexCenter } from 'worksheet/components/Basics';
+import styled from 'src/utils/typedStyled';
 import { FILTER_RELATION_TYPE } from '../enum';
+import type { SplitDropdownProps } from './detailTypes';
 
 const Con = styled.div`
   position: relative;
@@ -60,7 +61,7 @@ const DropdownCon = styled.div`
   }
 `;
 
-export default function SplitDropdown(props) {
+export default function SplitDropdown(props: SplitDropdownProps) {
   const { canEdit, type = FILTER_RELATION_TYPE.AND, onChange, onDelete } = props;
   return (
     <Con>
@@ -68,7 +69,7 @@ export default function SplitDropdown(props) {
       <Fragment>
         {canEdit ? (
           <DropdownCon>
-            <Dropdown
+            <Dropdown<number>
               dropIcon="task_custom_btn_unfold"
               defaultValue={type}
               isAppendToBody

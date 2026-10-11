@@ -6,6 +6,7 @@ import { savedFilter } from './filterModelBoundary';
 import type {
   EditingFilter,
   FilterAction,
+  FilterActionLifetime,
   FilterCondition,
   FilterConditionsGroup,
   FilterDispatch,
@@ -78,9 +79,11 @@ export function formatForSave(
 export class Actions {
   readonly dispatch: FilterDispatch;
   private error: FilterState['error'];
-  constructor(dispatch: FilterDispatch, state?: FilterState) {
+  private readonly lifetime: FilterActionLifetime | undefined;
+  constructor(dispatch: FilterDispatch, state?: FilterState, lifetime?: FilterActionLifetime) {
     this.dispatch = dispatch;
     this.error = state?.error;
+    this.lifetime = lifetime;
   }
   private failure(message: string): void {
     this.error = message;
@@ -100,7 +103,7 @@ export class Actions {
     });
   }
 
-  setActiveFilter = (filter: EditingFilter) => {
+  setActiveFilter = (filter?: EditingFilter) => {
     this.dispatch({
       type: 'UPDATE',
       value: {
@@ -111,10 +114,12 @@ export class Actions {
   };
 
   loadFilters = (worksheetId: string, cb: (filters: EditingFilter[]) => void = () => {}) => {
+    const isCurrent = this.lifetime?.capture() || (() => true);
     if (!worksheetId) return undefined;
     return worksheetAjax
       .getWorksheetFilters({ worksheetId })
       .then((raw: unknown) => {
+        if (!isCurrent()) return undefined;
         if (!Array.isArray(raw)) throw new TypeError('Invalid worksheet filter list');
         let filters = Array.from(raw, formatOriginFilterGroupValue);
 
@@ -125,11 +130,12 @@ export class Actions {
         return filters;
       })
       .catch(() => {
+        if (!isCurrent()) return undefined;
         this.failure(_l('加载失败，请重试'));
         return undefined;
       })
       .then(filters => {
-        if (filters === undefined) return;
+        if (filters === undefined || !isCurrent()) return;
         cb(filters);
         this.dispatch({
           type: 'UPDATE',
@@ -165,7 +171,7 @@ export class Actions {
     });
   };
 
-  editFilter = (filter: EditingFilter) => {
+  editFilter = (filter?: EditingFilter) => {
     this.dispatch({
       type: 'UPDATE',
       value: {
@@ -268,7 +274,7 @@ export class Actions {
     });
   };
 
-  toggleFilterType = ({ appId, worksheetId, filter }: SaveFilterOptions) => {
+  toggleFilterType = ({ appId, worksheetId, filter }: SaveFilterOptions & { isCharge?: boolean | undefined }) => {
     const newFilter = {
       ...filter,
       type: filter.type === FILTER_TYPE.PUBLIC ? FILTER_TYPE.PERSONAL : FILTER_TYPE.PUBLIC,
@@ -281,6 +287,7 @@ export class Actions {
   };
 
   saveFilter = ({ appId, worksheetId, filter }: SaveFilterOptions, cb: (filter: EditingFilter) => void = () => {}) => {
+    const isCurrent = this.lifetime?.capture() || (() => true);
     const isNew = !filter.id || filter.id.startsWith('new');
     const items = formatForSave(filter);
     return worksheetAjax
@@ -293,16 +300,18 @@ export class Actions {
         items: items,
       })
       .then((raw: unknown) => {
+        if (!isCurrent()) return undefined;
         const data = savedFilter(raw);
         if (!data.filterId) throw new TypeError('Missing saved worksheet filter ID');
         return { data, saved: formatOriginFilterGroupValue(data) };
       })
       .catch(() => {
+        if (!isCurrent()) return undefined;
         this.failure(_l('保存失败，请重试'));
         return undefined;
       })
       .then(response => {
-        if (response === undefined) return;
+        if (response === undefined || !isCurrent()) return;
         const { data, saved } = response;
         try {
           if (isNew) {
@@ -312,7 +321,7 @@ export class Actions {
             });
             setTimeout(() => {
               const editIconEl = document.querySelector('.filter_' + data.filterId + ' .editIcon');
-              if (editIconEl instanceof HTMLElement) editIconEl.click();
+              if (isCurrent() && editIconEl instanceof HTMLElement) editIconEl.click();
             }, 100);
           } else {
             this.dispatch({
@@ -337,21 +346,24 @@ export class Actions {
   };
 
   deleteFilter = ({ appId, filter }: Pick<SaveFilterOptions, 'appId' | 'filter'>) => {
+    const isCurrent = this.lifetime?.capture() || (() => true);
     return worksheetAjax
       .deleteWorksheetFilter({
         appId,
         filterId: filter.id,
       })
       .then((data: unknown) => {
+        if (!isCurrent()) return undefined;
         if (typeof data !== 'boolean') throw new TypeError('Invalid worksheet filter delete response');
         return data;
       })
       .catch(() => {
+        if (!isCurrent()) return undefined;
         this.failure(_l('删除失败'));
         return undefined;
       })
       .then(data => {
-        if (data === undefined) return;
+        if (data === undefined || !isCurrent()) return;
         if (data) {
           this.dispatch({
             type: 'DELETE_FILTER',
@@ -371,7 +383,8 @@ export class Actions {
       });
   };
 
-  sortFilters = (appId: string, worksheetId: string, sortedIds: string[]) => {
+  sortFilters = (appId: string | undefined, worksheetId: string | undefined, sortedIds: string[]) => {
+    const isCurrent = this.lifetime?.capture() || (() => true);
     void worksheetAjax
       .sortWorksheetFilters({
         appId,
@@ -383,11 +396,12 @@ export class Actions {
         return result;
       })
       .catch(() => {
+        if (!isCurrent()) return undefined;
         this.failure(_l('排序失败，请重试'));
         return undefined;
       })
       .then(result => {
-        if (result === undefined) return;
+        if (result === undefined || !isCurrent()) return;
         const recovered = this.recover();
         if (Object.hasOwn(recovered, 'error')) this.dispatch({ type: 'UPDATE', value: recovered });
       });
@@ -406,8 +420,8 @@ export class Actions {
 }
 
 export type FilterActions = Actions;
-export function createActions(dispatch: FilterDispatch, state?: FilterState) {
-  return new Actions(dispatch, state);
+export function createActions(dispatch: FilterDispatch, state?: FilterState, lifetime?: FilterActionLifetime) {
+  return new Actions(dispatch, state, lifetime);
 }
 
 function requiredFilters(state: FilterState): EditingFilter[] {

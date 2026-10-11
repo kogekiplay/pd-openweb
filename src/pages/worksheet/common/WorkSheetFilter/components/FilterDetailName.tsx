@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import { bool, func, string } from 'prop-types';
-import styled from 'styled-components';
+import styled from 'src/utils/typedStyled';
+import type { FilterDetailNameProps } from './detailTypes';
+
+export type { FilterDetailNameProps } from './detailTypes';
 
 const Con = styled.div`
   input {
@@ -36,7 +39,7 @@ const Con = styled.div`
   }
 `;
 
-export default function FilterDetailName(props) {
+export default function FilterDetailName(props: FilterDetailNameProps) {
   const { withStar, editable, name, onChange = () => {} } = props;
   const ref = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState(name);

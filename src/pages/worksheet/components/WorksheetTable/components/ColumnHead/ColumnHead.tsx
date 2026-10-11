@@ -24,15 +24,23 @@ import { SYS } from 'src/pages/widgetConfig/config/widget.js';
 import { isOtherShowFeild } from 'src/pages/widgetConfig/util';
 import { showTypeData } from 'src/pages/worksheet/common/ViewConfig/components/BatchSet';
 import { COVER_DISPLAY_FILL } from 'src/pages/worksheet/common/ViewConfig/config.js';
-import type { RootState } from 'src/redux/types';
-import { emitter } from 'src/utils/common';
+import type { AppDispatch, RootState } from 'src/redux/types';
 import { saveLRUWorksheetConfig } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { checkIsTextControl, controlIsNumber, fieldCanSort, getSortData } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
+import type { SheetColumnStyle, SheetColumnStyles } from 'src/utils/worksheetTypes';
 import { WIDGETS_TO_API_TYPE_ENUM } from '../../../../../widgetConfig/config/widget';
+import { publishFilterControl } from '../../../../common/WorkSheetFilter/filterControlEvents';
+import { headerContext } from '../../../../common/WorkSheetFilter/filterPanelBoundary';
+import type {
+  ColumnMenuContext,
+  ColumnWidthUpdate,
+  WorksheetFilterColumnProps,
+} from '../../../../common/WorkSheetFilter/filterPanelTypes';
 import './ColumnHead.less';
 
-function getShowTypeData(control) {
+function getShowTypeData(control: FormControl) {
   if (control.type === WIDGETS_TO_API_TYPE_ENUM.ATTACHMENT) {
     return showTypeData.filter(a => [4, 5, 6].includes(a.value));
   } else if (
@@ -46,7 +54,9 @@ function getShowTypeData(control) {
   return undefined;
 }
 
-class ColumnHead extends Component<any, any> {
+export class ColumnHead extends Component<WorksheetFilterColumnProps> {
+  declare context: unknown;
+  declare head: EventTarget | undefined;
   static override contextType = SheetContext;
   static override propTypes = {
     rowIsSelected: PropTypes.bool,
@@ -86,7 +96,7 @@ class ColumnHead extends Component<any, any> {
   // 就都成了 TS2740。2.6.5 那边这个 prop 是无类型的，所以看不出来。
   conRef = React.createRef<HTMLElement>();
 
-  getType(control) {
+  getType(control: Pick<FormControl, 'type' | 'sourceControlType'>) {
     const { type, sourceControlType } = control;
     let itemType = type;
 
@@ -101,7 +111,7 @@ class ColumnHead extends Component<any, any> {
     return itemType;
   }
 
-  changeSortType(controlId: string, isAsc, type) {
+  changeSortType(controlId: string | undefined, isAsc: boolean | undefined, type: number | undefined) {
     const { sortByControl } = this.props;
     sortByControl({
       controlId,
@@ -110,13 +120,17 @@ class ColumnHead extends Component<any, any> {
     });
   }
 
-  handleColumnWidthLRUSave(controlId: string, value, changes?) {
+  handleColumnWidthLRUSave(
+    controlId: string | undefined,
+    value?: number,
+    changes?: Record<string, number | undefined>,
+  ) {
     const { readonly, saveColumnStylesToLocal, updateColumnStyles } = this.props;
 
     if (readonly) return;
 
     if (changes) {
-      const newChanges = _.reduce(
+      const newChanges: SheetColumnStyles = _.reduce<Record<string, number | undefined>, SheetColumnStyles>(
         changes,
         (acc, width, controlId) => {
           acc[controlId] = { width };
@@ -129,11 +143,11 @@ class ColumnHead extends Component<any, any> {
       return;
     }
 
-    saveColumnStylesToLocal({ [controlId]: { width: value } });
-    updateColumnStyles({ [controlId]: { width: value } });
+    saveColumnStylesToLocal({ [String(controlId)]: { width: value } });
+    updateColumnStyles({ [String(controlId)]: { width: value } });
   }
 
-  changeSort = newIsAsc => {
+  changeSort = (newIsAsc?: boolean) => {
     const { updateDefaultScrollLeft } = this.props;
     const { controlId, sourceControlType, type } = this.props.control;
     this.changeSortType(controlId, newIsAsc, this.getType({ sourceControlType, type }));
@@ -153,20 +167,34 @@ class ColumnHead extends Component<any, any> {
     saveLRUWorksheetConfig('WORKSHEET_VIEW_COLUMN_FROZON', viewId, index);
   }
 
-  updateColumnWidth = ({ controlId, value }: { controlId?: string; [key: string]: any }) => {
+  updateColumnWidth = ({ controlId, value }: ColumnWidthUpdate) => {
     const { updateSheetColumnWidths } = this.props;
     this.handleColumnWidthLRUSave(controlId, value);
     updateSheetColumnWidths({ controlId, value });
   };
 
-  updateColumnStyle = ({ controlId, key, value }: { controlId?: string; [key: string]: any }) => {
+  updateColumnStyle = ({
+    controlId,
+    key,
+    value,
+  }: {
+    controlId?: string | undefined;
+    key: 'direction' | 'showtype' | 'coverFillType';
+    value: number;
+  }) => {
     const { saveColumnStylesToLocal, updateColumnStyles } = this.props;
 
     if (!get(window, 'shareState.shareId')) {
-      saveColumnStylesToLocal({ [controlId]: { [key]: value } });
+      saveColumnStylesToLocal({ [String(controlId)]: { [key]: value } });
     }
 
-    updateColumnStyles({ [controlId]: { [key]: value } });
+    updateColumnStyles({ [String(controlId)]: { [key]: value } });
+  };
+
+  getPopupContainer = (): HTMLElement => {
+    const element = this.conRef.current;
+    if (!element) throw new TypeError('Missing worksheet column menu container');
+    return element;
   };
 
   override render() {
@@ -185,8 +213,8 @@ class ColumnHead extends Component<any, any> {
       sheetSelectedRows = [],
       disabledFunctions = [],
       rowIsSelected,
-      columnIndex,
-      fixedColumnCount,
+      columnIndex = -1,
+      fixedColumnCount = 0,
       sheetHiddenColumns = [], // 外部传入的视图配置中的隐藏列
       hideColumn, // 外部传入的隐藏列方法
       clearHiddenColumn, // 外部传入的清除隐藏列方法
@@ -209,13 +237,17 @@ class ColumnHead extends Component<any, any> {
     // 判断是否是对外分享状态
 
     // 如果是分享模式，强制使用 redux 中的方法和数据  否则，优先使用外部传入的方法，没有则使用 redux 中的方法
-    const finalHideColumn = hideColumn || reduxHideColumn;
+    const finalHideColumn =
+      hideColumn ||
+      ((id: string | undefined) => {
+        if (id === undefined) throw new TypeError('Missing column hide ID');
+        return reduxHideColumn(id);
+      });
     const finalClearHiddenColumn = clearHiddenColumn || reduxClearHiddenColumn;
     const finalSheetHiddenColumns = hideColumn && clearHiddenColumn ? sheetHiddenColumns : reduxSheetHiddenColumns;
-    const hideColumnFilter = _.get(this.context, 'config.hideColumnFilter');
-    const isSingleView = _.get(this.context, 'isSingleView');
-    let control = { ...this.props.control };
-    const columnStyle = get(columnStyles, control.controlId, {});
+    const { hideColumnFilter, isSingleView } = headerContext(this.context);
+    let control: WorksheetFilterColumnProps['control'] = { ...this.props.control };
+    const columnStyle: SheetColumnStyle = columnStyles[String(control.controlId)] || {};
     const direction = isUndefined(columnStyle.direction) ? (controlIsNumber(control) ? 2 : 0) : columnStyle.direction;
     const showtype = !isUndefined(columnStyle.showtype)
       ? columnStyle.showtype
@@ -232,10 +264,8 @@ class ColumnHead extends Component<any, any> {
       _.includes(CONTROL_EDITABLE_WHITELIST, control.type) &&
       controlState(control).editable &&
       canBatchEdit &&
-      !SYS.filter(o => o !== 'ownerid').includes(control.controlId); //系统字段(除了拥有者字段)，不可编辑
-    const filterWhiteKeys = _.flatten(
-      Object.keys(CONTROL_FILTER_WHITELIST).map(key => CONTROL_FILTER_WHITELIST[key].keys),
-    );
+      !SYS.filter(o => o !== 'ownerid').some(id => id === control.controlId); //系统字段(除了拥有者字段)，不可编辑
+    const filterWhiteKeys = _.flatten(Object.values(CONTROL_FILTER_WHITELIST).map(group => group.keys));
     let canFilter =
       _.includes(filterWhiteKeys, itemType) &&
       !_.includes(disabledFunctions, 'filter') &&
@@ -255,7 +285,7 @@ class ColumnHead extends Component<any, any> {
       _.get(control, 'advancedSetting.datamask') === '1' &&
       _.get(control, 'advancedSetting.isdecrypt') === '1';
     control = redefineComplexControl(control);
-    const allowSetAlign = WORKSHEET_ALLOW_SET_ALIGN_CONTROLS.includes(control.type);
+    const allowSetAlign = WORKSHEET_ALLOW_SET_ALIGN_CONTROLS.some(type => type === control.type);
     return (
       <BaseColumnHead
         showRequired={showRequired}
@@ -272,11 +302,11 @@ class ColumnHead extends Component<any, any> {
         columnStyle={columnStyle}
         changeSort={this.changeSort}
         updateSheetColumnWidths={this.updateColumnWidth}
-        renderPopup={({ closeMenu }) => (
+        renderPopup={({ closeMenu }: ColumnMenuContext) => (
           <Menu
             className="worksheetColumnHeadMenu"
             style={{ width: 180 }}
-            specialFilter={target => target === this.head}
+            specialFilter={(target: EventTarget | null) => target === this.head}
             onClickAway={closeMenu}
             setRef={this.conRef}
           >
@@ -329,7 +359,7 @@ class ColumnHead extends Component<any, any> {
             {canFilter && !rowIsSelected && !isShowOtherField && !hideColumnFilter && (
               <MenuItem
                 onClick={() => {
-                  emitter.emit(
+                  publishFilterControl(
                     'FILTER_ADD_FROM_COLUMNHEAD' + worksheetId + type + (isSingleView ? viewId : ''),
                     control,
                   );
@@ -401,7 +431,7 @@ class ColumnHead extends Component<any, any> {
             {(isCharge || checkIsTextControl(control.type)) && <hr />}
             {isCharge && (
               <Trigger
-                getPopupContainer={() => this.conRef.current}
+                getPopupContainer={this.getPopupContainer}
                 popupClassName="Relative"
                 action={['hover']}
                 popupPlacement="bottom"
@@ -481,9 +511,9 @@ class ColumnHead extends Component<any, any> {
                 WIDGETS_TO_API_TYPE_ENUM.DROP_DOWN,
                 WIDGETS_TO_API_TYPE_ENUM.MULTI_SELECT,
                 WIDGETS_TO_API_TYPE_ENUM.ATTACHMENT,
-              ].includes(control.type) && (
+              ].some(type => type === control.type) && (
                 <Trigger
-                  getPopupContainer={() => this.conRef.current}
+                  getPopupContainer={this.getPopupContainer}
                   popupClassName="Relative"
                   action={['hover']}
                   popupPlacement="bottom"
@@ -494,7 +524,7 @@ class ColumnHead extends Component<any, any> {
                   }}
                   popup={
                     <Menu className="columnHeadChangeAlign Relative">
-                      {getShowTypeData(control).map(({ value, text }, index) => (
+                      {requiredShowTypeData(control).map(({ value, text }, index) => (
                         <MenuItem
                           key={index}
                           className={cx({ active: showtype === value })}
@@ -511,7 +541,7 @@ class ColumnHead extends Component<any, any> {
                       ))}
                       {control.type === 14 && showtype !== 6 && (
                         <Trigger
-                          getPopupContainer={() => this.conRef.current}
+                          getPopupContainer={this.getPopupContainer}
                           popupClassName="Relative"
                           action={['hover']}
                           popupPlacement="bottom"
@@ -583,7 +613,7 @@ class ColumnHead extends Component<any, any> {
                 </Trigger>
               )}
             <Trigger
-              getPopupContainer={() => this.conRef.current}
+              getPopupContainer={this.getPopupContainer}
               action={['hover']}
               popupPlacement="bottom"
               popupAlign={{
@@ -611,7 +641,7 @@ class ColumnHead extends Component<any, any> {
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
-                      const changes = {};
+                      const changes: Record<string, number | undefined> = {};
                       columns.forEach(o => {
                         const width = getTableColumnWidth(
                           document.querySelector('.sheetViewTable'),
@@ -620,7 +650,7 @@ class ColumnHead extends Component<any, any> {
                           columnStyle,
                           worksheetId,
                         );
-                        changes[o.controlId] = width;
+                        changes[String(o.controlId)] = width;
                       });
                       this.handleColumnWidthLRUSave(undefined, undefined, changes);
                       updateSheetColumnWidths({ changes });
@@ -636,8 +666,8 @@ class ColumnHead extends Component<any, any> {
                     <div className="customInputTitle">{_l('指定列宽')}</div>
                     <Input
                       className="w100"
-                      defaultValue={style.width}
-                      onBlur={e => {
+                      defaultValue={requiredColumnStyle(style).width}
+                      onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
                         let newWidth = Number(e.target.value);
 
                         if (isNaN(newWidth)) {
@@ -655,7 +685,7 @@ class ColumnHead extends Component<any, any> {
                         this.updateColumnWidth({ controlId: control.controlId, value: newWidth });
                         closeMenu();
                       }}
-                      onKeyDown={e => {
+                      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                         if (e.key === 'Enter') {
                           let newWidth = Number(e.currentTarget.value);
 
@@ -712,6 +742,16 @@ class ColumnHead extends Component<any, any> {
   }
 }
 
+function requiredColumnStyle(style: React.CSSProperties | undefined) {
+  if (!style) throw new TypeError('Missing worksheet column style');
+  return style;
+}
+function requiredShowTypeData(control: FormControl) {
+  const values = getShowTypeData(control);
+  if (!values) throw new TypeError('Unsupported worksheet column style');
+  return values;
+}
+
 const mapStateToProps = (state: RootState) => ({
   reduxSheetHiddenColumns: state.sheet.sheetview.sheetViewConfig.sheetHiddenColumns,
   sortControls: state.sheet.sheetview.sheetFetchParams.sortControls,
@@ -722,7 +762,7 @@ const mapStateToProps = (state: RootState) => ({
   worksheetInfo: state.sheet.worksheetInfo,
 });
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch: AppDispatch) =>
   bindActionCreators(
     {
       reduxHideColumn: hideColumn,

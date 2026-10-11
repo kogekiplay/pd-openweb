@@ -36,7 +36,7 @@ export interface FilterConfigProps extends SharedFilterProps {
   widgetControlData?: unknown;
   disableAddCondition?: boolean | undefined;
   /** Accepted by existing callers; the panel does not consume these two values. */
-  offset?: readonly number[] | undefined;
+  offset?: number[] | undefined;
 }
 
 export interface SingleFilterProps extends SharedFilterProps {
@@ -45,7 +45,7 @@ export interface SingleFilterProps extends SharedFilterProps {
   onConditionsChange?: ((conditions: FilterWireCondition[]) => void) | undefined;
   controllable?: boolean | undefined;
   conditionItemForDynamicStyle?: boolean | undefined;
-  offset?: readonly number[] | undefined;
+  offset?: number[] | undefined;
   comp?: (() => ReactNode) | undefined;
   /** Historical portal caller supplies filters, although this component reads conditions. */
   filters?: unknown;

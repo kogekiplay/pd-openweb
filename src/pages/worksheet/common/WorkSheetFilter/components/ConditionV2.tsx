@@ -3,12 +3,15 @@ import { Select } from 'antd';
 import cx from 'classnames';
 import _, { includes } from 'lodash';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Dropdown, Icon, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { VerticalMiddle } from 'worksheet/components/Basics';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { isCustomOptions } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
+import styled from 'src/utils/typedStyled';
+import { conditionNumber, conditionParameter } from '../conditionBoundary';
+import { firstConditionType } from '../conditionBoundary';
+import type { ConditionProps, ConditionV2State, DynamicConditionContext } from '../conditionTypes';
 import {
   API_ENUM_TO_TYPE,
   CONDITION_OPTIONS,
@@ -62,7 +65,7 @@ const ParamsDropdown = styled(Dropdown)`
     }
   }
 `;
-export default class Condition extends Component<any, any> {
+export default class Condition extends Component<ConditionProps, ConditionV2State> {
   static override propTypes = {
     isRules: PropTypes.bool,
     projectId: PropTypes.string,
@@ -76,7 +79,7 @@ export default class Condition extends Component<any, any> {
     onDelete: PropTypes.func,
     onUpdateFilter: PropTypes.func,
   };
-  constructor(props) {
+  constructor(props: ConditionProps) {
     super(props);
     this.state = {
       isDynamicsource: this.isCanDynamicsource(props) && this.setIsDynamicsourceFn(), // 是否动态筛选值
@@ -91,13 +94,13 @@ export default class Condition extends Component<any, any> {
     };
   }
 
-  getValueType = props => {
-    const dynamicSource = _.get(props, 'condition.dynamicSource') || [];
+  getValueType = (props: ConditionProps) => {
+    const dynamicSource = props.condition.dynamicSource || [];
     return dynamicSource.filter(item => item.rcid === 'url').length ? 2 : 1;
   };
 
   setIsDynamicsourceFn = () => {
-    const { condition = [], from } = this.props;
+    const { condition = {}, from } = this.props;
     let { dynamicSource, isDynamicsource } = condition;
 
     if (dynamicSource && dynamicSource.length > 0) {
@@ -117,7 +120,7 @@ export default class Condition extends Component<any, any> {
     return isDynamicsource;
   };
 
-  isCanDynamicsource = (data?) => {
+  isCanDynamicsource = (data?: DynamicConditionContext) => {
     const { condition = {}, from = '', control } = data || this.props;
     const { type = '', controlType = '' } = condition;
     // 附件 检查框 地区 地区 地区 没有动态值
@@ -144,7 +147,8 @@ export default class Condition extends Component<any, any> {
     return true;
   };
 
-  changeConditionType = type => {
+  changeConditionType = (rawType: unknown) => {
+    const type = conditionNumber(rawType);
     const { control, condition, onChange, from } = this.props;
     const overrideValue = getConditionOverrideValue(type, { ...condition, control }, this.state.valueType, from);
 
@@ -186,6 +190,7 @@ export default class Condition extends Component<any, any> {
       showCustom,
       widgetControlData,
     } = this.props;
+    if (!control) throw new TypeError('Condition value editor requires a control');
     const { dynamicSource = [] } = condition;
     const showParamsTypes = [
       ...CONTROL_FILTER_WHITELIST.TEXT.keys,
@@ -206,7 +211,8 @@ export default class Condition extends Component<any, any> {
             className="Width120 mRight12"
             data={valueTypeOptions}
             value={this.state.valueType}
-            onChange={value => {
+            onChange={rawValue => {
+              const value = conditionNumber(rawValue);
               this.setState({ valueType: value, isDynamicsource: value !== 1 });
               if (value === 1) {
                 onChange({ dynamicSource: [], isDynamicsource: false });
@@ -277,7 +283,8 @@ export default class Condition extends Component<any, any> {
               );
             }}
             value={(dynamicSource[0] || {}).cid || ''}
-            onChange={value => {
+            onChange={rawValue => {
+              const value = conditionParameter(rawValue);
               const dateRangeSetObj =
                 conditionGroupType === CONTROL_FILTER_WHITELIST.DATE.value ? { dateRange: 0 } : {};
               onChange({
@@ -319,7 +326,7 @@ export default class Condition extends Component<any, any> {
     if (isRules && control) {
       if (control.type === 29 && control.enumDefault === 2) {
         if (!_.find(conditionFilterTypes, type => type.value === condition.type) && condition.control) {
-          this.changeConditionType(conditionFilterTypes[0].value);
+          this.changeConditionType(firstConditionType(conditionFilterTypes));
         }
       }
 
@@ -354,7 +361,7 @@ export default class Condition extends Component<any, any> {
     const isDynamicStyle = _.includes(['relateSheet', 'rule', 'fastFilter'], from); // 动态值选择的特定样式
     const isDynamicValue = this.isCanDynamicsource();
     return (
-      (<div
+      <div
         className={cx(
           'conditionItem',
           {
@@ -373,7 +380,7 @@ export default class Condition extends Component<any, any> {
                 className={`controlIcon icon icon-${getIconByType(control.originType === 37 ? 37 : control.type)}`}
               ></i>
               <span className={cx('columnName ellipsis', { errorName: isSheetFieldError })} title={control.controlName}>
-                {isSheetFieldError ? _l('%0(无效数据)', control.controlName) : control.controlName}
+                {isSheetFieldError ? _l('%0(无效数据)', String(control.controlName)) : control.controlName}
               </span>
               {conditionGroupType !== CONTROL_FILTER_WHITELIST.BOOL.value && (
                 <span className="relation">
@@ -385,7 +392,7 @@ export default class Condition extends Component<any, any> {
                         ? control.type === 29
                           ? FILTER_CONDITION_TYPE.RCEQ
                           : FILTER_CONDITION_TYPE.EQ
-                        : condition.type || conditionFilterTypes[0].value
+                        : condition.type || firstConditionType(conditionFilterTypes)
                     }
                     disabled={!canEdit}
                     data={conditionFilterTypes}
@@ -409,7 +416,7 @@ export default class Condition extends Component<any, any> {
             <div className="deletedColumn mTop6">
               <Tooltip
                 overlayInnerStyle={{ padding: 'var(--space-2) 10px' }}
-                title={_l('ID: %0', condition.controlId)}
+                title={_l('ID: %0', String(condition.controlId))}
                 placement="bottom"
               >
                 <span className="Hand">{_l('该字段已删除')}</span>
@@ -428,10 +435,10 @@ export default class Condition extends Component<any, any> {
         <div className="conditionItemContent">
           {/* // 附件 检查框 为空 不为空  在范围内 不在范围内没有动态筛选 */}
           {isDynamicStyle && (
-            <Select
+            <Select<number>
               className="dynamicSource"
               disabled={!isDynamicValue}
-              classNames={{ popup: { root: "dynamicSelectDropdown" } }}
+              classNames={{ popup: { root: 'dynamicSelectDropdown' } }}
               value={this.state.isDynamicsource ? 2 : 1}
               options={isDynamicValue ? CONDITION_OPTIONS : CONDITION_OPTIONS.filter(o => o.value === 1)}
               suffixIcon={<Icon icon="arrow-down-border Font14" />}
@@ -454,7 +461,7 @@ export default class Condition extends Component<any, any> {
           )}
           {control ? this.renderControl() : <Input className="deletedColumn" disabled />}
         </div>
-      </div>)
+      </div>
     );
   }
 }
