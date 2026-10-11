@@ -111,11 +111,19 @@ const EstimateText = styled.span`
   margin-right: var(--space-4);
 `;
 
-const CHIP_THEME = {
+type BuildStatus = 'building' | 'completed' | 'failed';
+type ChipTheme = { bg: string; border: string; color: string };
+
+const CHIP_THEME: Record<BuildStatus, ChipTheme> = {
   building: { bg: 'rgba(255,152,0,0.12)', border: '#FFB74D', color: '#B36B00' },
   completed: { bg: 'rgba(76,175,80,0.12)', border: '#81C784', color: '#2E7D32' },
   failed: { bg: 'rgba(244,67,54,0.10)', border: '#EF9A9A', color: '#C62828' },
 };
+
+function chipTheme(value: unknown): ChipTheme {
+  const variant: BuildStatus = value === 'completed' || value === 'failed' ? value : 'building';
+  return CHIP_THEME[variant];
+}
 
 // overlay 顶部状态 chip：60×22 完全胶囊；浅橙(building)/浅绿(completed)/浅红(failed)
 const StatusChip = styled.span`
@@ -129,9 +137,9 @@ const StatusChip = styled.span`
   font-size: var(--font-xs);
   font-weight: 500;
   line-height: 20px;
-  background: ${p => (CHIP_THEME[p.$variant] || CHIP_THEME.building).bg};
-  border: 1px solid ${p => (CHIP_THEME[p.$variant] || CHIP_THEME.building).border};
-  color: ${p => (CHIP_THEME[p.$variant] || CHIP_THEME.building).color};
+  background: ${p => chipTheme(p.$variant).bg};
+  border: 1px solid ${p => chipTheme(p.$variant).border};
+  color: ${p => chipTheme(p.$variant).color};
 `;
 
 const GenerateBtn = styled.button`
@@ -233,7 +241,22 @@ export default function Header({
   estimateCredits,
   estimateLoading,
   isSingleMingoPlan = false,
-}: { activeTitle?: string | undefined; onGenerate?: (() => void) | undefined; generateDisabled?: boolean | undefined; builtVersionLabel?: string | undefined; onDownload?: (() => void) | undefined; onClose?: (() => void) | undefined; appName?: string | undefined; inBuild?: boolean; inOverlay?: boolean; onBack?: (() => void) | undefined; buildStatus?: string | undefined; estimateCredits?: number | null | undefined; estimateLoading?: boolean; isSingleMingoPlan?: boolean }) {
+}: {
+  activeTitle?: string | undefined;
+  onGenerate?: (() => void) | undefined;
+  generateDisabled?: boolean | undefined;
+  builtVersionLabel?: string | undefined;
+  onDownload?: (() => void) | undefined;
+  onClose?: (() => void) | undefined;
+  appName?: string | undefined;
+  inBuild?: boolean;
+  inOverlay?: boolean;
+  onBack?: (() => void) | undefined;
+  buildStatus?: string | undefined;
+  estimateCredits?: number | null | undefined;
+  estimateLoading?: boolean;
+  isSingleMingoPlan?: boolean;
+}) {
   const hasOverlayChip = inOverlay && buildStatus && buildStatus !== 'idle';
   // 仅在「生成应用」按钮真正可点时展示预估费用：未搭建、非 build 视图，且按钮未禁用（plan 已就绪、有工作表、无在途流）。
   // 与拉取预估的 canEstimate 门控一致；计算中显示「计算中…」，拿到结果显示信用点；
@@ -267,7 +290,18 @@ export default function Header({
       )}
       <Right>
         {showEstimate && <EstimateText>{estimateText}</EstimateText>}
-        {onDownload && <button type="button" onClick={onDownload} className="pAll6 textSecondary" style={{ border: 0, background: 'transparent' }} aria-label={_l('下载搭建方案')} title={_l('下载搭建方案')}><Icon icon="download" /></button>}
+        {onDownload && (
+          <button
+            type="button"
+            onClick={onDownload}
+            className="pAll6 textSecondary"
+            style={{ border: 0, background: 'transparent' }}
+            aria-label={_l('下载搭建方案')}
+            title={_l('下载搭建方案')}
+          >
+            <Icon icon="download" />
+          </button>
+        )}
         {builtVersionLabel ? (
           // 当前查看的方案版本已用于搭建：按钮转为已搭建态（禁用），明示用的是哪个版本
           <GenerateBtn type="button" disabled>

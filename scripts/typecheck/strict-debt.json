@@ -1,6 +1,5 @@
 {
   "files": [
-    "src/components/Agent/AppBuilder/Header.tsx",
     "src/components/Agent/AppBuilder/PreviewFrame.tsx",
     "src/components/Agent/AppBuilder/Sidebar.tsx",
     "src/components/Agent/AppBuilder/fileRegistry.ts",
