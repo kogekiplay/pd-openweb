@@ -61,7 +61,13 @@ const TARGET_FLAGS = [
   '--noPropertyAccessFromIndexSignature',
 ];
 
-function runStrictTsc() {
+type DiagnosticMap = Map<string, string[]>;
+interface StrictRunResult {
+  out: string;
+  ms: number;
+}
+
+function runStrictTsc(): StrictRunResult {
   const started = Date.now();
   // 【不能用 npx】npx 找的是 registry / 全局，不是工作区里的那个 tsc。
   // 2026-09-15 换 nodeLinker 时就是它静默失败、输出为空，而下面把「0 条诊断」
@@ -76,15 +82,16 @@ function runStrictTsc() {
   return { out, ms: Date.now() - started };
 }
 
-function parse(out) {
-  const byFile = new Map();
+function parse(out: string): DiagnosticMap {
+  const byFile: DiagnosticMap = new Map();
 
   for (const line of out.split('\n')) {
     const m = line.match(HEAD);
     if (!m) continue;
     const file = m[1];
+    if (file === undefined) continue;
     if (!byFile.has(file)) byFile.set(file, []);
-    byFile.get(file).push(line);
+    byFile.get(file)?.push(line);
   }
 
   return byFile;
@@ -112,11 +119,11 @@ function allCompiledFiles() {
       // 时这里还只排 .spec.js，它们整批混进来，把「strict-clean 605/4252」
       // 一夜刷成「674/4321」——进度数字凭空虚高 69，而产品代码一行没改。
       // 它们由 tsconfig.tools.json 的零容忍门禁负责。
-      .filter(f => /\.tsx?$/.test(f) && !f.startsWith('src/library/') && !/\.spec\.(js|ts)$/.test(f))
+      .filter((f: string) => /\.tsx?$/.test(f) && !f.startsWith('src/library/') && !/\.spec\.(js|ts)$/.test(f))
   );
 }
 
-if (process.env.SKIP_TYPECHECK === '1') {
+if (process.env['SKIP_TYPECHECK'] === '1') {
   console.log(chalk.yellow('SKIP_TYPECHECK=1 —— strict 欠债闸门已跳过。'));
   process.exit(0);
 }
@@ -125,16 +132,16 @@ const { out, ms } = runStrictTsc();
 const byFile = parse(out);
 const compiled = allCompiledFiles();
 // 未定义标识符由 tsc 接管 ESLint no-undef 的职责，欠债清单不能豁免。
-const undefinedNames = compiled.flatMap(f =>
-  (byFile.get(f) || []).filter(line => /error TS(?:2304|2552|18004|2662|2663):/.test(line)),
+const undefinedNames = compiled.flatMap((f: string) =>
+  (byFile.get(f) || []).filter((line: string) => /error TS(?:2304|2552|18004|2662|2663):/.test(line)),
 );
 if (undefinedNames.length) {
   console.error(`未定义标识符门禁失败：${undefinedNames.length} 条，strict 欠债清单不能豁免。`);
-  undefinedNames.slice(0, 40).forEach(line => console.error(`  ${line}`));
+  undefinedNames.slice(0, 40).forEach((line: string) => console.error(`  ${line}`));
   process.exit(1);
 }
-const dirty = compiled.filter(f => byFile.has(f));
-const clean = compiled.filter(f => !byFile.has(f));
+const dirty = compiled.filter((f: string) => byFile.has(f));
+const clean = compiled.filter((f: string) => !byFile.has(f));
 
 // ── 安全网：诊断数异常地少 = 编译器塌了，不是全仓变干净了 ──────────────────
 // 差分门禁早就有这道网（"剔噪后不足预期 50% 就拒绝执行"），这边一直没有。
@@ -169,7 +176,9 @@ if (STATS) {
   const codes: Record<string, number> = {};
   for (const lines of byFile.values()) {
     for (const l of lines) {
-      const c = l.match(/(TS\d+)/)[1];
+      const match = l.match(/(TS\d+)/);
+      const c = match?.[1];
+      if (!c) continue;
       codes[c] = (codes[c] || 0) + 1;
     }
   }
@@ -185,7 +194,7 @@ if (SHRINK) {
   const prev = fs.existsSync(DEBT) ? JSON.parse(fs.readFileSync(DEBT, 'utf8')).files : [];
   // 只减不增：这次算出来是脏的、但原先不在清单里的文件【不会】被补进来 ——
   // 那是新引入的欠债，应当当场报错，而不是被 --shrink 悄悄接纳。
-  const next = prev.filter(f => dirty.includes(f)).sort();
+  const next = prev.filter((f: string) => dirty.includes(f)).sort();
   const removed = prev.length - next.length;
   fs.writeFileSync(DEBT, `${JSON.stringify({ files: next }, null, 2)}\n`);
   console.log(chalk.green(`欠债清单已收紧：${prev.length} -> ${next.length}（移出 ${removed}）`));
@@ -202,12 +211,12 @@ const listed = JSON.parse(fs.readFileSync(DEBT, 'utf8')).files;
 const listedSet = new Set(listed);
 
 // 清单外出现诊断 = 新欠债。新文件、新目录、以及原本干净的文件退化都在这里。
-const offenders = dirty.filter(f => !listedSet.has(f));
+const offenders = dirty.filter((f: string) => !listedSet.has(f));
 // 清单里的文件已经不存在了 —— 不清掉的话清单会攒死条目，数字失真。
 const compiledSet = new Set(compiled);
-const stale = listed.filter(f => !compiledSet.has(f));
+const stale = listed.filter((f: string) => !compiledSet.has(f));
 // 清单里已经达标的 —— 只提示，不失败（否则一次大范围修复会连带要求改清单）。
-const payable = listed.filter(f => compiledSet.has(f) && !byFile.has(f));
+const payable = listed.filter((f: string) => compiledSet.has(f) && !byFile.has(f));
 
 console.log(
   chalk.gray(
@@ -227,10 +236,9 @@ if (offenders.length) {
   console.error(chalk.red(`\nstrict 欠债闸门失败：${offenders.length} 个文件不在欠债清单里，却有 strict 诊断\n`));
   for (const f of offenders.slice(0, 20)) {
     console.error(chalk.red(`  ${f}`));
-    byFile
-      .get(f)
+    (byFile.get(f) || [])
       .slice(0, 3)
-      .forEach(l => console.error(chalk.gray(`    ${l.replace(`${f}`, '')}`)));
+      .forEach((l: string) => console.error(chalk.gray(`    ${l.replace(`${f}`, '')}`)));
   }
   if (offenders.length > 20) console.error(chalk.red(`  …其余 ${offenders.length - 20} 个略`));
   console.error(
@@ -242,7 +250,7 @@ if (offenders.length) {
 
 if (stale.length) {
   console.error(chalk.red(`\n欠债清单里有 ${stale.length} 个文件已经不存在了，请从清单里删掉：\n`));
-  stale.slice(0, 20).forEach(f => console.error(chalk.red(`  ${f}`)));
+  stale.slice(0, 20).forEach((f: string) => console.error(chalk.red(`  ${f}`)));
   if (stale.length > 20) console.error(chalk.red(`  …其余 ${stale.length - 20} 个略`));
 }
 
