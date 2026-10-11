@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-12 AMap OperatorIcon 批次
+
+OperatorIcon 的位置与回调 props 已严格化，strict 诊断为 56,514 条、3,275 个欠债文件，strict-clean 1,457 / 4,732；205/205 规格和工具类型门禁通过。证据见 `amap-operator-icon-20261012.md`，生产仍为已验证的 `b4075d92f`，本批尚未发布。
+
 ## 2026-10-12 Agent AppBuilder Header 批次
 
 构建状态 chip 的主题键已收敛为有限联合并保留未知状态回退，strict 诊断为 56,523 条、3,276 个欠债文件，strict-clean 1,456 / 4,732；205/205 规格和工具类型门禁通过。证据见 `agent-appbuilder-header-20261012.md`，生产仍为已验证的 `b4075d92f`，本批尚未发布。
