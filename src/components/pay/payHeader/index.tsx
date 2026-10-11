@@ -32,7 +32,12 @@ const PayHeaderWrap = styled.div`
   }
 `;
 
-export default function PayHeader(props) {
+interface PayHeaderProps {
+  projectId?: string | undefined;
+  title?: string | undefined;
+}
+
+export default function PayHeader(props: PayHeaderProps) {
   const { projectId, title } = props;
   const [logo, setLogo] = useState<string | undefined>();
 
