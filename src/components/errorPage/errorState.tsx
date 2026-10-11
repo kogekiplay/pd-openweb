@@ -3,7 +3,16 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './errorPage.less';
 
-export default class ErrorState extends Component<any, any> {
+interface ErrorStateProps {
+  text?: string | undefined;
+  showBtn?: boolean | undefined;
+  className?: string | undefined;
+  iconClassName?: string | undefined;
+  btnText?: string | undefined;
+  callback?: (() => void) | undefined;
+}
+
+export default class ErrorState extends Component<ErrorStateProps, Record<string, never>> {
   static override propTypes = {
     text: PropTypes.string,
     showBtn: PropTypes.bool,
@@ -20,7 +29,7 @@ export default class ErrorState extends Component<any, any> {
     callback: () => {},
   };
 
-  constructor(props) {
+  constructor(props: ErrorStateProps) {
     super(props);
   }
 
