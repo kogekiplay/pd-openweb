@@ -54,7 +54,6 @@
     "src/components/ChangeLang/index.tsx",
     "src/components/CreateByMingDaoYun.tsx",
     "src/components/DateFilter/index.tsx",
-    "src/components/DisabledDepartmentAndRoleName/index.tsx",
     "src/components/DynamicRender/index.tsx",
     "src/components/Form/DesktopForm/components/DeskFormWidget.tsx",
     "src/components/Form/DesktopForm/components/FormLabel.tsx",
