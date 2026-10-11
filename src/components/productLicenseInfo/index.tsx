@@ -6,9 +6,34 @@ import marketplaceApi from 'src/api/marketplace';
 import marketplacePaymentApi from 'src/api/marketplacePayment';
 import './index.less';
 
+interface LicenseInfo {
+  licenseId?: string | undefined;
+  id?: string | undefined;
+  developName?: string | undefined;
+  planType?: number | undefined;
+  day?: number | undefined;
+  personCount?: number | string | undefined;
+  versionNo?: string | undefined;
+  status?: number | undefined;
+  projectType?: number | undefined;
+}
+interface LicenseData {
+  endTime?: string | undefined;
+  projectId?: string | undefined;
+  goodsId?: string | undefined;
+  id?: string | undefined;
+}
+interface ProductLicenseInfoProps {
+  children: React.ReactElement;
+  popupAlign?: { [key: string]: unknown } | undefined;
+  license?: LicenseInfo | undefined;
+  data?: LicenseData | undefined;
+  type?: string | undefined;
+}
+
 const planTypes: Record<number, string> = { 0: _l('免费'), 1: _l('试用'), 2: _l('固定价格'), 3: _l('按使用人数订阅') };
 
-export default function ProductLicenseInfo(props) {
+export default function ProductLicenseInfo(props: ProductLicenseInfoProps) {
   const { children, popupAlign = {}, license = {}, data = {}, type = 'app' } = props;
   const { endTime, projectId, goodsId, id } = data;
 
@@ -103,7 +128,7 @@ export default function ProductLicenseInfo(props) {
             </div>
             <div className="flexRow mBottom10">
               <div className="textSecondary mRight15 nowrap">{_l('订购计划')}</div>
-              <div className="ellipsis">{planTypes[license.planType]}</div>
+              <div className="ellipsis">{planTypes[license.planType ?? 0]}</div>
             </div>
             <div className="flexRow mBottom10">
               <div className="textSecondary mRight15 nowrap">{_l('周期')}</div>
@@ -140,7 +165,7 @@ export default function ProductLicenseInfo(props) {
                 </div>
               )}
             </div>
-            {type === 'app' && [2, 3].includes(license.planType) && license.status === 1 && endTime && (
+            {type === 'app' && license.planType !== undefined && [2, 3].includes(license.planType) && license.status === 1 && endTime && (
               <div
                 className="renewal mTop10 pointer flexRow alignItemsCenter justifyContentCenter"
                 onClick={handleCreateOrder}
