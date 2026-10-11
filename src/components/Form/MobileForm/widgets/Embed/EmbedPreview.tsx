@@ -25,7 +25,13 @@ const LoadableViewPreview = lazy(() =>
   })),
 );
 
-export default function EmbedPreview(props) {
+interface EmbedPreviewProps {
+  setting?:
+    { config?: { embedNeedUpdate?: unknown; [key: string]: unknown } | undefined; [key: string]: unknown } | undefined;
+  [key: string]: unknown;
+}
+
+export default function EmbedPreview(props: EmbedPreviewProps) {
   const { setting: { config = {} } = {} } = props;
   return useMemo(() => {
     return (

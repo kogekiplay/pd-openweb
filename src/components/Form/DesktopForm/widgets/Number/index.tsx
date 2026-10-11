@@ -1,10 +1,19 @@
 import { useCallback } from 'react';
 import { Slider } from 'ming-ui';
 import { getAdvanceSetting } from 'src/utils/controlCommon';
+import type { FormControl } from 'src/utils/controlTypes';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
 import Number from './number';
 
-const NumberWidget = props => {
+interface NumberWidgetProps extends FormControl {
+  disabled?: boolean | undefined;
+  formItemId?: string | undefined;
+  registerCell?: ((cell: unknown) => void) | undefined;
+  getControlRef?: ((controlId?: string) => { handleFocus?(): void; handleBlur?(): void } | undefined) | undefined;
+  onChange: (value: unknown) => void;
+}
+
+const NumberWidget = (props: NumberWidgetProps) => {
   const {
     disabled,
     advancedSetting: { showtype, numinterval, showinput, min, max, numshow },

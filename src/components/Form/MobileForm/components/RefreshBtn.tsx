@@ -1,8 +1,16 @@
 import { useState } from 'react';
 import cx from 'classnames';
 import sheetAjax from 'src/api/worksheet';
+import type { FormControl } from 'src/utils/controlTypes';
 
-export default props => {
+interface RefreshButtonProps {
+  recordId?: string | undefined;
+  item: FormControl;
+  worksheetId?: string | undefined;
+  onChange: (value: unknown, controlId?: string, item?: FormControl) => void;
+}
+
+export default (props: RefreshButtonProps) => {
   const { recordId, item, worksheetId, onChange } = props;
   const [isRefresh, setRefresh] = useState(false);
 
