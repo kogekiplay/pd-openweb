@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 支付失败页批次
+
+支付失败页 React root 挂载节点已严格验证，strict 诊断为 56,621 条、3,308 个欠债文件，strict-clean 1,423 / 4,731；203/203 规格通过。证据见 `pay-failed-mount-20261011.md`，生产仍为 `5cf1a7bbb`。
+
 ## 2026-10-11 停用名称组件批次
 
 DisabledDepartmentAndRoleName props 合同已完成，strict 诊断为 56,622 条、3,309 个欠债文件，strict-clean 1,422 / 4,731；203/203 规格通过。证据见 `disabled-name-20261011.md`，生产仍为 `5cf1a7bbb`。
