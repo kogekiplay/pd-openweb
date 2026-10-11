@@ -47,6 +47,8 @@ function PayFailed() {
 }
 
 const Comp = preall(PayFailed, { allowNotLogin: false });
-const root = createRoot(document.querySelector('#app'));
+const app = document.querySelector<HTMLElement>('#app');
+if (!app) throw new TypeError('Missing payment failure mount node');
+const root = createRoot(app);
 
 root.render(<Comp />);

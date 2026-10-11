@@ -282,7 +282,6 @@
     "src/components/kc/saveToKnowledge/saveToKnowledge.ts",
     "src/components/pay/contract/index.tsx",
     "src/components/pay/payDialog/index.tsx",
-    "src/components/pay/payFailed/index.tsx",
     "src/components/pay/payHeader/index.tsx",
     "src/components/pay/paySuccess/index.tsx",
     "src/components/pay/versionUpgrade/EditContractDialog.tsx",
