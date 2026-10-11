@@ -4,6 +4,13 @@ import type { ScrollViewOptions } from 'ming-ui/components/ScrollView/types';
 
 const HIDDEN_SCROLLBAR_OPTIONS: ScrollViewOptions = { scrollbars: { visibility: 'hidden' } };
 
+interface MentionApp {
+  id: string;
+  name: string;
+  iconColor?: string | undefined;
+  iconUrl?: string | undefined;
+}
+
 const Content = styled.div`
   height: 100%;
   display: flex;
@@ -68,8 +75,11 @@ export default function MobileMentionPopup({
   onSelect,
   onClose,
 }: {
-  loading?: boolean;
-  [key: string]: any;
+  apps: MentionApp[];
+  loading?: boolean | undefined;
+  onSearch: (value: string) => void;
+  onSelect: (app: MentionApp) => void;
+  onClose: () => void;
 }) {
   return (
     <PopupWrapper

@@ -24,7 +24,6 @@
     "src/components/Agent/ui/Conversation.tsx",
     "src/components/Agent/ui/MarkdownText.tsx",
     "src/components/Agent/ui/MentionInput/AppMentionPopup.tsx",
-    "src/components/Agent/ui/MentionInput/MobileMentionPopup.tsx",
     "src/components/Agent/ui/MentionInput/index.tsx",
     "src/components/Agent/ui/MermaidBlock.tsx",
     "src/components/Agent/ui/Message.tsx",
