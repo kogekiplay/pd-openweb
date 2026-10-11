@@ -278,7 +278,6 @@
     "src/components/dnd/legacyDecorators.tsx",
     "src/components/emotion/data.ts",
     "src/components/emotion/emotion.ts",
-    "src/components/errorPage/errorState.tsx",
     "src/components/kc/createRoot/createRoot.tsx",
     "src/components/kc/folderSelectDialog/folderSelectDialog.tsx",
     "src/components/kc/saveToKnowledge/saveToKnowledge.ts",

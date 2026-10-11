@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 ErrorState 批次
+
+ErrorState props/state 合同已完成，strict 诊断为 56,624 条、3,311 个欠债文件，strict-clean 1,420 / 4,731；203/203 规格通过。证据见 `error-state-20261011.md`，生产仍为 `5cf1a7bbb`。
+
 ## 2026-10-11 评论配置批次
 
 评论 SOURCE_TYPE/AT_ALL_TEXT 计算键已严格化并保留 undefined 协议，strict 诊断为 56,625 条、3,312 个欠债文件，strict-clean 1,419 / 4,731；203/203 规格通过。证据见 `comment-config-20261011.md`，生产仍为 `5cf1a7bbb`。
