@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 RestrictAccessStatus 批次
+
+RestrictAccessStatus props 合同已完成，strict 诊断为 56,619 条、3,306 个欠债文件，strict-clean 1,425 / 4,731；203/203 规格通过。证据见 `restrict-access-status-20261011.md`，生产仍为 `5cf1a7bbb`。
+
 ## 2026-10-11 PayHeader 批次
 
 PayHeader props 合同已完成，strict 诊断为 56,620 条、3,307 个欠债文件，strict-clean 1,424 / 4,731；203/203 规格通过。证据见 `pay-header-20261011.md`，生产仍为 `5cf1a7bbb`。
