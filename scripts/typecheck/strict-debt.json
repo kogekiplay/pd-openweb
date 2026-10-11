@@ -91,7 +91,6 @@
     "src/components/Form/DesktopForm/widgets/RichText/index.tsx",
     "src/components/Form/DesktopForm/widgets/Search/index.tsx",
     "src/components/Form/DesktopForm/widgets/Signature/index.tsx",
-    "src/components/Form/DesktopForm/widgets/SplitLine/index.tsx",
     "src/components/Form/DesktopForm/widgets/SubList/index.tsx",
     "src/components/Form/DesktopForm/widgets/TelPhone/index.tsx",
     "src/components/Form/DesktopForm/widgets/Textarea/index.tsx",
