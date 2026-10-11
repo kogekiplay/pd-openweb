@@ -270,7 +270,6 @@
     "src/components/comment/commentList.tsx",
     "src/components/comment/commentListItem.tsx",
     "src/components/comment/commenter.tsx",
-    "src/components/comment/config.ts",
     "src/components/createCalendar/component/SelectTimezone/index.tsx",
     "src/components/createCalendar/createCalendar.tsx",
     "src/components/createShare/createShare.tsx",

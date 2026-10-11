@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 评论配置批次
+
+评论 SOURCE_TYPE/AT_ALL_TEXT 计算键已严格化并保留 undefined 协议，strict 诊断为 56,625 条、3,312 个欠债文件，strict-clean 1,419 / 4,731；203/203 规格通过。证据见 `comment-config-20261011.md`，生产仍为 `5cf1a7bbb`。
+
 ## 2026-10-11 createTask 批次
 
 createTask 动态入口及成员数组调用方已完成，strict 诊断为 56,626 条、3,313 个欠债文件，strict-clean 1,418 / 4,731；203/203 规格通过。证据见 `create-task-entry-20261011.md`，生产仍为 `5cf1a7bbb`。

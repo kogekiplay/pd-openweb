@@ -11,8 +11,11 @@
   CHAT: 9,
 };
 
+// `SOURCE_TYPE.POST` is intentionally undefined; computed object keys stringify it to "undefined".
+const postSourceKey = String(SOURCE_TYPE.POST);
+
 export const AT_ALL_TEXT = {
-  [SOURCE_TYPE.POST]: _l('动态参与者'),
+  [postSourceKey]: _l('动态参与者'),
   [SOURCE_TYPE.TASK]: _l('任务全体成员'),
   [SOURCE_TYPE.FOLDER]: _l('项目全体成员'),
   [SOURCE_TYPE.CALENDAR]: _l('日程全体成员'),
