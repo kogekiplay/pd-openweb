@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-12 删除确认框参数批次
+
+DeleteReconfirm 的选中值回调已明确为组件泛型值或 `undefined`，strict 诊断为 56,543 条、3,290 个欠债文件，strict-clean 1,442 / 4,732；205/205 规格、工具类型门禁和格式检查通过。本批只收紧类型，未发布生产。
+
 ## 2026-10-12 Agent @应用输入批次
 
 Agent `appSource`、桌面/移动应用浮层和 MentionInput 已共享有限 `MentionApp`、输入值与 ref 合同，API/DOM/事件边界已严格化；strict 诊断为 56,544 条、3,291 个欠债文件，strict-clean 1,441 / 4,732；205/205 规格和工具类型门禁通过。证据见 `agent-mention-input-20261012.md`，生产仍为已验证的 `b4075d92f`，本批尚未单独发布。
