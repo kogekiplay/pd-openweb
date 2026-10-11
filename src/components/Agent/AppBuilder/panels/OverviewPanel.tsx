@@ -11,7 +11,7 @@ const Wrap = styled.div`
   box-shadow: var(--shadow-sm);
 `;
 
-export default function OverviewPanel({ plan }) {
+export default function OverviewPanel({ plan }: { plan?: unknown }) {
   return (
     <Wrap>
       <MarkdownText>{plan || ''}</MarkdownText>

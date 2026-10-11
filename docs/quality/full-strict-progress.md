@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 Agent 小面板批次
+
+OverviewPanel 和 PlanDriftCard 的 props 合同已完成，strict 诊断为 56,603 条、3,299 个欠债文件，strict-clean 1,433 / 4,732；204/204 规格通过。证据见 `agent-small-panels-20261011.md`，生产仍为 `5cf1a7bbb`。
+
 ## 2026-10-11 Agent 面板批次
 
 Agent AppBuilder 的 AI 助手、自定义页面和工作表面板 props 已严格化，strict 诊断为 56,604 条、3,300 个欠债文件，strict-clean 1,432 / 4,732；204/204 规格通过。证据见 `agent-panels-20261011.md`，生产仍为 `5cf1a7bbb`。

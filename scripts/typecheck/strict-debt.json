@@ -6,7 +6,6 @@
     "src/components/Agent/AppBuilder/fileRegistry.ts",
     "src/components/Agent/AppBuilder/index.tsx",
     "src/components/Agent/AppBuilder/panels/CustomActionsPanel.tsx",
-    "src/components/Agent/AppBuilder/panels/OverviewPanel.tsx",
     "src/components/Agent/AppBuilder/panels/RolesPanel.tsx",
     "src/components/Agent/AppBuilder/panels/WorkflowsPanel.tsx",
     "src/components/Agent/AppBuilder/panels/_appItemRenderer.tsx",
