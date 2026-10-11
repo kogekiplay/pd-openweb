@@ -224,7 +224,6 @@
     "src/components/Mingo/modules/WorkflowChatBot/ToolCalls/RecordCard.tsx",
     "src/components/Mingo/modules/WorkflowChatBot/ToolCalls/index.tsx",
     "src/components/Mingo/modules/WorkflowChatBot/index.tsx",
-    "src/components/Mingo/modules/index.ts",
     "src/components/MobileCardCellControls/MobileCardCellControl.tsx",
     "src/components/MobileCardCellControls/MobileCardCellControls.tsx",
     "src/components/MobileCardCellControls/SummaryCom.tsx",
