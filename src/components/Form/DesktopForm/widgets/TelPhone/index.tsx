@@ -7,6 +7,21 @@ import { ADD_EVENT_ENUM } from 'src/pages/widgetConfig/widgetSetting/components/
 import { dealMaskValue } from 'src/pages/widgetConfig/widgetSetting/components/WidgetSecurity/util';
 import { useWidgetEvent } from '../../../core/useFormEventManager';
 
+export interface TelPhoneProps {
+  hint?: string | undefined;
+  disabled?: boolean | undefined;
+  formItemId?: string | undefined;
+  value?: string | undefined;
+  onChange: (value: string) => void;
+  onBlur: (originValue: string) => void;
+  triggerCustomEvent?: ((eventType: string) => void) | undefined;
+  renderMaskContent?: (() => React.ReactNode) | undefined;
+  handleMaskClick?: (() => void) | undefined;
+  showMaskValue?: boolean | undefined;
+  isMaskReadonly?: boolean | undefined;
+  createEventHandler?: React.KeyboardEventHandler<HTMLInputElement> | undefined;
+}
+
 const TelPhoneWrap = styled.div`
   position: absolute;
   left: 0;
@@ -15,7 +30,7 @@ const TelPhoneWrap = styled.div`
   z-index: ${props => (props.isEditing ? 2 : -1)};
 `;
 
-const TelPhone = props => {
+const TelPhone = (props: TelPhoneProps) => {
   const {
     hint,
     disabled,
