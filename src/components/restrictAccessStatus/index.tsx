@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import unauthorizedPic from 'src/components/UnusualContent/unauthorized.png';
+import type { CSSProperties } from 'react';
 
 const RestrictAccessStatusWrap = styled.div`
   width: 100%;
@@ -18,7 +19,7 @@ const RestrictAccessStatusWrap = styled.div`
   }
 `;
 
-export default function RestrictAccessStatus(props) {
+export default function RestrictAccessStatus(props: { className?: string | undefined; style?: CSSProperties | undefined }) {
   const { className } = props;
   return (
     <RestrictAccessStatusWrap className={className}>

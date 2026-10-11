@@ -291,7 +291,6 @@
     "src/components/previewAttachments/previewAttachments.tsx",
     "src/components/recordCard/index.tsx",
     "src/components/relationControl/relationControl.tsx",
-    "src/components/restrictAccessStatus/index.tsx",
     "src/components/shareAttachment/ajax.ts",
     "src/components/shareAttachment/shareAttachment.tsx",
     "src/components/shareAttachment/toMobile.tsx",
