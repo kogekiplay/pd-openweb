@@ -243,7 +243,6 @@
     "src/components/SelectRecords/SelectDialog.tsx",
     "src/components/SelectRecords/SelectDialogList.tsx",
     "src/components/SelectRecords/SelectedInfo.tsx",
-    "src/components/SelectRecords/index.ts",
     "src/components/SelectRecords/useRecords.ts",
     "src/components/SelectRecords/util.ts",
     "src/components/ShareCardConfig/index.ts",
