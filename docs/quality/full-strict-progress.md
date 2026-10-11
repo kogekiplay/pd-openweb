@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-11 Agent 确认卡片批次
+
+RebuildConfirmCard 和 PlanDriftCard 的有限 props、动态 action 回调和可选 action 显示已完成，strict 诊断为 56,600 条、3,296 个欠债文件，strict-clean 1,436 / 4,732；204/204 规格、工具类型门禁和格式检查通过。证据见 `agent-confirmation-cards-20261011.md`，生产仍为已验证的 `b4075d92f`，本批尚未单独发布。
+
 ## 2026-10-11 Agent 小面板批次
 
 OverviewPanel 和 PlanDriftCard 的 props 合同已完成，strict 诊断为 56,603 条、3,299 个欠债文件，strict-clean 1,433 / 4,732；204/204 规格通过。证据见 `agent-small-panels-20261011.md`，生产仍为 `5cf1a7bbb`。

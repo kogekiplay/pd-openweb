@@ -141,7 +141,8 @@ export default function PlanDriftCard({ part, disabled, onConfirm }: PlanDriftCa
     Array.isArray(part.options) && part.options.length ? part.options : ['resume_with_old_plan', 'rebuild'];
 
   if (part.status === 'resolved') {
-    const label = ACTION_LABELS[part.chosenAction] || part.chosenAction;
+    const chosenAction = part.chosenAction || '';
+    const label = ACTION_LABELS[chosenAction] || chosenAction;
 
     return (
       <Card>
