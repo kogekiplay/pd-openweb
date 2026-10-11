@@ -2476,6 +2476,7 @@ class ChildTable extends React.Component<any, any> {
                   const showRemoveMask = maskData && !get(window, 'shareState.shareId');
                   return (
                     <ColumnHead
+                      control={control}
                       disableSort={isTreeTableView}
                       showDropdown={showEdit || showFrozen || showRemoveMask}
                       showRequired={!disabled}

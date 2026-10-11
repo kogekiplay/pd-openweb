@@ -20,8 +20,8 @@ export default function ColumnHead(props: RelateFilterColumnProps) {
     className,
     style,
     control,
-    columnIndex = -1,
-    fixedColumnCount = 0,
+    columnIndex,
+    fixedColumnCount,
     isAsc,
     isLast,
     tableId,
@@ -129,28 +129,33 @@ export default function ColumnHead(props: RelateFilterColumnProps) {
               {_l('显示所有列')}
             </MenuItem>
           )}
-          {columnIndex <= maxAllowFrozenColumnIndex && fixedColumnCount !== columnIndex + 1 && (
-            <MenuItem
-              onClick={() => {
-                frozen(columnIndex);
-                closeMenu();
-              }}
-            >
-              <i className="icon icon-lock"></i>
-              {_l('冻结')}
-            </MenuItem>
-          )}
-          {fixedColumnCount > 1 && columnIndex < fixedColumnCount && (
-            <MenuItem
-              onClick={() => {
-                frozen(0);
-                closeMenu();
-              }}
-            >
-              <i className="icon icon-task-new-no-locked"></i>
-              {_l('解冻所有列')}
-            </MenuItem>
-          )}
+          {columnIndex !== undefined &&
+            columnIndex <= maxAllowFrozenColumnIndex &&
+            fixedColumnCount !== columnIndex + 1 && (
+              <MenuItem
+                onClick={() => {
+                  frozen(columnIndex);
+                  closeMenu();
+                }}
+              >
+                <i className="icon icon-lock"></i>
+                {_l('冻结')}
+              </MenuItem>
+            )}
+          {fixedColumnCount !== undefined &&
+            columnIndex !== undefined &&
+            fixedColumnCount > 1 &&
+            columnIndex < fixedColumnCount && (
+              <MenuItem
+                onClick={() => {
+                  frozen(0);
+                  closeMenu();
+                }}
+              >
+                <i className="icon icon-task-new-no-locked"></i>
+                {_l('解冻所有列')}
+              </MenuItem>
+            )}
           {canEdit && selectedRowIds.length && !get(window, 'shareState.shareId') && (
             <MenuItem
               onClick={() => {

@@ -1,13 +1,14 @@
 import React from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { Tooltip } from 'ming-ui/antd-components';
 import { redefineComplexControl } from 'worksheet/common/WorkSheetFilter/util';
 import { isOtherShowFeild } from 'src/pages/widgetConfig/util';
 import { emitter } from 'src/utils/common';
 import { fieldCanSort } from 'src/utils/control';
+import type { BaseColumnHeadProps } from './baseColumnTypes';
 import getTableColumnWidth from './getTableColumnWidth';
 import './style.less';
 
@@ -15,7 +16,9 @@ export interface BaseColumnHeadState {
   listVisible?: boolean | undefined;
 }
 
-export default class BaseColumnHead extends React.Component<any, BaseColumnHeadState> {
+export type { BaseColumnHeadProps } from './baseColumnTypes';
+
+export default class BaseColumnHead extends React.Component<BaseColumnHeadProps, BaseColumnHeadState> {
   declare drag: HTMLSpanElement | null | undefined;
 
   static override propTypes = {
@@ -38,7 +41,7 @@ export default class BaseColumnHead extends React.Component<any, BaseColumnHeadS
     updateSheetColumnWidths: () => {},
   };
 
-  constructor(props) {
+  constructor(props: BaseColumnHeadProps) {
     super(props);
     this.state = {};
   }
@@ -49,7 +52,7 @@ export default class BaseColumnHead extends React.Component<any, BaseColumnHeadS
     }
   }
 
-  componentWillUnMount() {
+  override componentWillUnmount() {
     if (this.drag) {
       this.drag.removeEventListener('mousedown', this.handleMouseDown);
     }
@@ -68,7 +71,10 @@ export default class BaseColumnHead extends React.Component<any, BaseColumnHeadS
       }
 
       const result = getTableColumnWidth(tableDom, rows, control, columnStyle, worksheetId);
-      updateSheetColumnWidths({ controlId: control.controlId, value: result });
+      (updateSheetColumnWidths || BaseColumnHead.defaultProps.updateSheetColumnWidths)({
+        controlId: control.controlId,
+        value: result,
+      });
     } else {
       if (window.isFirefox) {
         this.resizeColumn(e);
@@ -81,10 +87,11 @@ export default class BaseColumnHead extends React.Component<any, BaseColumnHeadS
     }
   };
 
-  resizeColumn({ clientX }) {
+  resizeColumn({ clientX }: Pick<MouseEvent, 'clientX'>) {
     const { isLast, columnIndex, control, style, updateSheetColumnWidths } = this.props;
-    const columnWidth = style.width;
-    const tableElement = $(this.drag).parents('.sheetViewTable')[0];
+    if (!style) throw new TypeError('Missing column resize style');
+    const columnWidth = Number(style.width);
+    const tableElement = this.drag?.parentElement?.closest<HTMLElement>('.sheetViewTable');
 
     if (!tableElement) {
       return;
@@ -104,13 +111,15 @@ export default class BaseColumnHead extends React.Component<any, BaseColumnHeadS
       defaultLeft,
       maskMinLeft,
       target: tableElement,
-      callback: newWidth => {
-        updateSheetColumnWidths({ controlId: control.controlId, value: newWidth });
+      callback: (newWidth: number) => {
+        (updateSheetColumnWidths || BaseColumnHead.defaultProps.updateSheetColumnWidths)({
+          controlId: control.controlId,
+          value: newWidth,
+        });
         if (isLast) {
           setTimeout(() => {
-            if ($(tableElement).find('.scroll-x')[0]) {
-              $(tableElement).find('.scroll-x')[0].scrollLeft = 100000;
-            }
+            const scroll = tableElement.querySelector<HTMLElement>('.scroll-x');
+            if (scroll) scroll.scrollLeft = 100000;
           }, 30);
         }
       },
@@ -138,7 +147,7 @@ export default class BaseColumnHead extends React.Component<any, BaseColumnHeadS
       newSortType = true;
     }
 
-    changeSort(newSortType);
+    (changeSort || BaseColumnHead.defaultProps.changeSort)(newSortType);
   };
 
   override render() {
@@ -156,6 +165,7 @@ export default class BaseColumnHead extends React.Component<any, BaseColumnHeadS
       getPopupContainer,
       hideMaskIcon = false,
     } = this.props;
+    if (!style) throw new TypeError('Missing worksheet column style');
     const { listVisible } = this.state;
     const control = redefineComplexControl(this.props.control);
     const controlType = control.sourceControlType || control.type;
@@ -192,7 +202,7 @@ export default class BaseColumnHead extends React.Component<any, BaseColumnHeadS
           <div
             className={cx('controlName allowOutClick', { 'hoverColorPrimary Hand': canSort })}
             style={{
-              width: style.width - 10,
+              width: Number(style.width) - 10,
               height: style.height,
             }}
             onClick={canSort ? this.handleChangeSort : () => {}}
@@ -215,14 +225,22 @@ export default class BaseColumnHead extends React.Component<any, BaseColumnHeadS
             <span
               className="dropIcon"
               onClick={() => this.setState({ listVisible: true })}
-              style={className.indexOf('headAlignCenter') > -1 ? { lineHeight: style.height - 2 + 'px' } : {}}
+              style={
+                (className || '').indexOf('headAlignCenter') > -1 ? { lineHeight: Number(style.height) - 2 + 'px' } : {}
+              }
             >
               <i className="icon icon-arrow-down-border hoverColorPrimary Hand"></i>
             </span>
           )}
         </div>
         {!disabled && canDrag && (
-          <span ref={drag => { this.drag = drag; }} title={_l('双击自适应宽度')} className="resizeDrag Hand"></span>
+          <span
+            ref={drag => {
+              this.drag = drag;
+            }}
+            title={_l('双击自适应宽度')}
+            className="resizeDrag Hand"
+          ></span>
         )}
       </div>
     );
@@ -242,9 +260,9 @@ export default class BaseColumnHead extends React.Component<any, BaseColumnHeadS
         }
         getPopupContainer={getPopupContainer || (() => document.body)}
         popupClassName="filterTrigger"
-        popupVisible={listVisible}
+        {...(listVisible === undefined ? {} : { popupVisible: listVisible })}
         popupAlign={{
-          points: style.width > 180 ? ['tr', 'br'] : ['tl', 'bl'],
+          points: Number(style.width) > 180 ? ['tr', 'br'] : ['tl', 'bl'],
           overflow: {
             adjustX: true,
             adjustY: true,

@@ -1,14 +1,21 @@
 import { useCallback, useRef } from 'react';
+import type { HTMLAttributes, MouseEvent, Ref } from 'react';
+
+export interface DragCoreProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onDrag'> {
+  setRef?: Ref<HTMLDivElement> | undefined;
+  onDrag?: ((event: MouseEvent<HTMLDivElement>) => void) | undefined;
+  onDBClick?: ((event: MouseEvent<HTMLDivElement>) => void) | undefined;
+}
 
 const DOUBLE_CLICK_DELAY = 200; // 双击判定时间阈值（毫秒）
 
-export default function DragCore({ className, style, setRef, children, onDrag, onDBClick, ...props }) {
+export default function DragCore({ className, style, setRef, children, onDrag, onDBClick, ...props }: DragCoreProps) {
   const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastClickTimeRef = useRef(0);
   const isWaitingForDoubleClickRef = useRef(false);
 
   const handleMouseDown = useCallback(
-    e => {
+    (e: MouseEvent<HTMLDivElement>) => {
       // 阻止浏览器在按下拖拽手柄时发起文本选择（避免拖拽宽度时选中详情内文本）
       e.preventDefault();
 
