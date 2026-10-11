@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-12 Mingo 小边界批次
+
+Mingo Guide、LoadingWithSteps 及 prompt 配置/输入边界已严格化，strict 诊断为 56,526 条、3,277 个欠债文件，strict-clean 1,455 / 4,732；205/205 规格和工具类型门禁通过。证据见 `mingo-small-boundaries-20261012.md`，生产仍为已验证的 `b4075d92f`，本批尚未发布。
+
 ## 2026-10-12 ming-ui 基础组件批次
 
 Input、LoadDiv、MdLink、Qr、SimplePagination、Splitter 和 MdAntTimeRangePicker 的 props 合同已严格化，strict 诊断为 56,536 条、3,283 个欠债文件，strict-clean 1,449 / 4,732；205/205 规格和工具类型门禁通过。证据见 `ming-ui-primitives-20261012.md`，生产仍为已验证的 `b4075d92f`，本批尚未发布。

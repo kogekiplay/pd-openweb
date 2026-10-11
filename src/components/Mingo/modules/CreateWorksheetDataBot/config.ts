@@ -17,7 +17,7 @@ export function buildSystemPrompt({ worksheetInfo = {} } = {}) {
 
   # 表单字段列表：
     ${controls
-      .filter(c => c.controlId.length === 24)
+      .filter(c => typeof c.controlId === 'string' && c.controlId.length === 24)
       .map(
         control =>
           `controlId: ${control.controlId}, name: ${control.controlName}, type: ${convertControlTypeToAiRecommendControlType(control)} ${get(control, 'options', []).length > 0 ? `options: ${JSON.stringify(get(control, 'options', []).map(item => pick(item, ['value', 'key'])))} ` : ''}`,

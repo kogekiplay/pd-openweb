@@ -1,4 +1,4 @@
-﻿export const generateSystemPrompt = items => {
+﻿export const generateSystemPrompt = (items: unknown) => {
   return `角色
 你是一名资深产品设计师，擅长软件产品的文案、图标视觉。你的任务是优化命名、应用项的图标。
 

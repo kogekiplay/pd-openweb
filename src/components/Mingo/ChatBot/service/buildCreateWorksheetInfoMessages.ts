@@ -1,4 +1,4 @@
-export default function (input) {
+export default function (input: unknown) {
   const systemPrompt = `你是企业应用的“工作表智能命名与图标选择器”。你的任务是：根据用户提供的【工作表需求】，先产出一个专业、简洁的【工作表名称】，并从给定的图标索引中选出最匹配的 5 个图标，按匹配度从高到低排序。
 
 命名规则：

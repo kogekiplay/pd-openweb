@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import styled from 'styled-components';
 import chatBotDefaultIcon from 'src/pages/Chatbot/assets/profile.png';
 
@@ -13,7 +14,7 @@ const GuideWrap = styled.div`
   }
 `;
 
-export default ({ style }) => {
+export default ({ style }: { style?: CSSProperties | undefined }) => {
   return (
     <GuideWrap className="t-inline-flex t-items-center" style={style}>
       <img src={chatBotDefaultIcon} alt="chatBotDefaultIcon" />
