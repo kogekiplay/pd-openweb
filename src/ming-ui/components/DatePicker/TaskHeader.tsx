@@ -9,6 +9,12 @@ export interface TaskHeaderProps {
 }
 
 class TaskHeader extends Component<TaskHeaderProps, any> {
+  static defaultProps: Partial<TaskHeaderProps> = {
+    startChecked: false,
+    endChecked: false,
+    toggle: () => {},
+  };
+
   /**
    * 切换开始和结束的选中状态
    */
@@ -63,12 +69,6 @@ TaskHeader.propTypes = {
    * @param {boolean} checked - 切换到选中/非选中状态
    */
   toggle: PropTypes.func,
-};
-
-TaskHeader.defaultProps = {
-  startChecked: false,
-  endChecked: false,
-  toggle: () => {},
 };
 
 export default TaskHeader;
