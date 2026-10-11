@@ -8,6 +8,28 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { browserIsMobile } from 'src/utils/common';
 import { formatNumberThousand } from 'src/utils/control';
 
+interface PayConfig {
+  orderId?: string | undefined;
+  isAtOncePayment?: boolean | undefined;
+  isShowPay?: boolean | undefined;
+  payDescription?: string | undefined;
+  payAmount?: string | number | undefined;
+}
+interface RecordPayProps {
+  projectId?: string | undefined;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
+  rowId?: string | undefined;
+  from?: number | undefined;
+  isCharge?: boolean | undefined;
+  sheetSwitchPermit?: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] | undefined;
+  payConfig: PayConfig;
+  isRecordLock?: boolean | undefined;
+  entityName?: string | undefined;
+  onUpdateSuccess?: (() => void) | undefined;
+}
+
 const PayWrap = styled.div`
   color: var(--color-text-primary);
   padding: var(--space-3) 25px;
@@ -42,7 +64,7 @@ const PayShare = styled.div`
   }
 `;
 
-export default function RecordPay(props) {
+export default function RecordPay(props: RecordPayProps) {
   const {
     projectId,
     appId,
@@ -59,10 +81,11 @@ export default function RecordPay(props) {
 
   const isPayShare = location.search.includes('payshare=true');
   const isMobile = browserIsMobile();
+  const payAmount = payConfig.payAmount ?? '';
 
   const handlePayShare = () => {
     if (isRecordLock) {
-      alert(_l('%0已锁定', entityName), 3);
+      alert(_l('%0已锁定', entityName || ''), 3);
       return;
     }
 
@@ -107,7 +130,7 @@ export default function RecordPay(props) {
     return (
       <div className="payWrap flexRow alignItemsCenter Bold" onClick={handlePay}>
         <div className="flex ellipsis mRight10 Font15">{payConfig.payDescription}</div>
-        <div className="Font15 mRight10"> {_l('%0 元', formatNumberThousand(payConfig.payAmount))}</div>
+        <div className="Font15 mRight10"> {_l('%0 元', formatNumberThousand(payAmount))}</div>
         <div className="payBtn Font15">{_l('付款')}</div>
       </div>
     );
@@ -115,13 +138,13 @@ export default function RecordPay(props) {
 
   return (
     <PayWrap className="flexRow alignItemsCenter">
-      <div className="flex Bold Font14 ellipsis">{_l('支付内容：%0', payConfig.payDescription)}</div>
-      <span className="mLeft25 Font17 Bold">{_l('%0 元', formatNumberThousand(payConfig.payAmount))}</span>
+      <div className="flex Bold Font14 ellipsis">{_l('支付内容：%0', payConfig.payDescription || '')}</div>
+      <span className="mLeft25 Font17 Bold">{_l('%0 元', formatNumberThousand(payAmount))}</span>
       <PayButton
         className="mLeft25 Bold Hand"
         onClick={() => {
           if (isRecordLock) {
-            alert(_l('%0已锁定', entityName), 3);
+            alert(_l('%0已锁定', entityName || ''), 3);
             return;
           }
 
