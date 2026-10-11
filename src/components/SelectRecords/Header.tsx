@@ -5,6 +5,22 @@ import { Button, Input } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import type { FormControl } from 'src/utils/controlTypes';
 
+interface SelectRecordsHeaderProps {
+  btnName?: string | undefined;
+  entityName?: string | undefined;
+  showNewRecord?: boolean | undefined;
+  showFastFilters?: boolean | undefined;
+  isFiltered?: boolean | undefined;
+  filtersVisible?: boolean | string | undefined;
+  control?: FormControl | undefined;
+  controls: FormControl[];
+  searchConfig?: { searchControl?: FormControl | undefined } | undefined;
+  onSearch: (value: string) => void;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement> | undefined;
+  onNewRecord?: (() => void) | undefined;
+  onExpandFastFilters?: (() => void) | undefined;
+}
+
 const Con = styled.div`
   display: flex;
   height: 36px;
@@ -72,7 +88,7 @@ const FastFiltersExpandBtn = styled.div`
   }
 `;
 
-export default function Header(props) {
+export default function Header(props: SelectRecordsHeaderProps) {
   const {
     btnName,
     entityName,
@@ -88,10 +104,10 @@ export default function Header(props) {
     onKeyDown,
     onNewRecord,
     onExpandFastFilters,
-  }: { controls: FormControl[]; [key: string]: any } = props;
+  } = props;
   const inputRef = createRef<HTMLInputElement>();
   const [keyword, setKeyword] = useState('');
-  const searchControl = searchConfig.searchControl || _.find(controls, { attribute: 1 }) || {};
+  const searchControl = searchConfig?.searchControl || _.find(controls, { attribute: 1 }) || {};
   useEffect(() => {
     if (inputRef && inputRef.current) {
       inputRef.current.focus();

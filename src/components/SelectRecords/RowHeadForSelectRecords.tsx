@@ -2,6 +2,19 @@ import { isEmpty, isEqual } from 'lodash';
 import propTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, Radio } from 'ming-ui';
+import type { CSSProperties } from 'react';
+import type { RecordRow } from 'src/utils/controlTypes';
+
+interface RowHeadProps {
+  className?: string | undefined;
+  style?: CSSProperties | undefined;
+  type?: number | undefined;
+  rowIndex: number;
+  data?: RecordRow[] | undefined;
+  selectedRowIds?: Array<string | undefined> | undefined;
+  onToggleSelect?: ((rowId?: string, rowIndex?: number) => void) | undefined;
+  onUpdateSelectedRowIds?: ((rowIds: Array<string | undefined>) => void) | undefined;
+}
 
 const Con = styled.div`
   width: 40px;
@@ -27,7 +40,7 @@ export default function RowHeadForSelectRecords({
   selectedRowIds = [],
   onToggleSelect = () => {},
   onUpdateSelectedRowIds = () => {},
-}) {
+}: RowHeadProps) {
   const row = data[rowIndex] || {};
   const checked = row.rowid && selectedRowIds.includes(row.rowid);
   const isAllSelected =

@@ -239,7 +239,6 @@
     "src/components/MobileCardCellControls/MobileCardCellControls.tsx",
     "src/components/MobileCardCellControls/SummaryCom.tsx",
     "src/components/PublicAppLangDropdown/index.tsx",
-    "src/components/SelectRecords/Header.tsx",
     "src/components/SelectRecords/RowHeadForSelectRecords.tsx",
     "src/components/SelectRecords/SelectDialog.tsx",
     "src/components/SelectRecords/SelectDialogList.tsx",
