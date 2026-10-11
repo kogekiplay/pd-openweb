@@ -70,7 +70,16 @@ const ListPlaceholder = styled.div`
   }
 `;
 
-const WaitingUpload = props => {
+interface WaitingUploadFile {
+  base?: { fileName?: string | undefined; fileExt?: string | undefined } | undefined;
+}
+interface WaitingUploadProps {
+  type?: string | undefined;
+  file?: WaitingUploadFile | undefined;
+  removeUploadingFile: (file?: WaitingUploadFile) => void;
+}
+
+const WaitingUpload = (props: WaitingUploadProps) => {
   const { type, file, removeUploadingFile } = props;
 
   return (
