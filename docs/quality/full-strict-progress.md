@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 Agent 匿名附件入口
+
+匿名附件入口的文件事件、上传占位、失败回滚、会话和 React setter 合同已严格化，并保持 ChatPanel/嵌入入口泛型兼容。与 Agent SSE 批次合计移除 96 条严格诊断，未新增调用方诊断；详见 `agent-attachment-slot-strict-20261013.md`。后续继续 agentService 与 AppBuilder。
+
 ## 2026-10-13 Agent SSE 状态翻译层
 
 Agent SSE 的消息片段、工具调用、工作流进度、计划/重建确认和文件事件边界已严格化，保留开放事件兼容和 ChatPanel 行为。`streamEvents` 规格通过，严格诊断 55,256 → 55,182，移除 74 条隐式 any，未新增诊断。详见 `agent-stream-events-strict-20261013.md`。全仓严格化继续。
