@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 Chat Redux 消息生命周期 action
+
+个人/群组消息接收、系统通知、抖动、撤回、引用、未读消息、刷新和静音 action 已收紧，移除 55 条诊断，未新增调用方诊断。详见 `chat-redux-message-actions-strict-20261013.md`，消息数组和 socket 尾段继续处理。
+
 ## 2026-10-13 Chat Redux 会话 action 边界
 
 聊天会话列表、添加/删除会话、窗口同步、置顶、清未读和当前会话 action 的动态参数边界已收紧，移除 33 条诊断、未新增调用方诊断。详见 `chat-redux-actions-strict-20261013.md`，消息 action 继续拆批处理。
