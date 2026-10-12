@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 Agent service 响应解码入口
+
+Agent service 的基础 unknown 解码、字段读取、摘要、列表和 artifact 历史引用边界已收紧，移除 12 条隐式类型诊断，未新增调用方诊断。详见 `agent-service-decode-strict-20261013.md`，网络请求和 ChatPanel 传播继续拆批处理。
+
 ## 2026-10-13 Agent 匿名附件入口
 
 匿名附件入口的文件事件、上传占位、失败回滚、会话和 React setter 合同已严格化，并保持 ChatPanel/嵌入入口泛型兼容。与 Agent SSE 批次合计移除 96 条严格诊断，未新增调用方诊断；详见 `agent-attachment-slot-strict-20261013.md`。后续继续 agentService 与 AppBuilder。

@@ -1,7 +1,7 @@
-import { fetchAgentSessionPage } from './shareService';
-import type { AgentSessionQuery } from './shareTypes';
 import agentAjax from 'src/api/agent';
 import { withCaptcha as withAnonymousCaptcha } from './anonymous';
+import { fetchAgentSessionPage } from './shareService';
+import type { AgentSessionQuery } from './shareTypes';
 import type { AgentStreamEvent, ChatAttachmentRequest } from './types';
 import { extractEmbedSegments, isSilentEmbedSegment } from './ui/embed/protocol';
 import { splitWorkPartsFromText } from './workParts';
@@ -15,12 +15,12 @@ export const AGENT_ATTACHMENT_MIME_TYPES = [
   },
 ];
 
-function isRecord(value) {
+function isRecord(value: unknown): value is Record<string, any> {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
 
 // 大小写不敏感的字段读取：后端 Pascal / camel 混用，统一兜底
-export function readField(source, key: string) {
+export function readField(source: unknown, key: string): any {
   if (!isRecord(source)) return undefined;
   if (key in source) return source[key];
   const target = key.toLowerCase();
@@ -32,11 +32,11 @@ export function readField(source, key: string) {
   return undefined;
 }
 
-export function stringValue(value) {
+export function stringValue(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim() ? value.trim() : undefined;
 }
 
-export function summarizeUnknown(value) {
+export function summarizeUnknown(value: unknown): string {
   if (value === null || value === undefined) return '';
   if (typeof value === 'string') return value.length > 600 ? `${value.slice(0, 597)}...` : value;
   if (typeof value === 'number' || typeof value === 'boolean') return String(value);
@@ -47,7 +47,7 @@ export function summarizeUnknown(value) {
   }
 }
 
-export function getCompletedText(data) {
+export function getCompletedText(data: unknown): string {
   return (
     stringValue(readField(data, 'message')) ||
     stringValue(readField(readField(data, 'response'), 'text')) ||
@@ -87,7 +87,7 @@ export const AGENT_HEADER_EVENT = {
 };
 
 // 后端返回列表的字段名 Pascal / camel 混用，且外层可能套 data / messages / items：统一兜底取数组
-function pickList(body, keys: string[]) {
+function pickList(body: unknown, keys: string[]): any[] {
   if (Array.isArray(body)) return body;
   if (!isRecord(body)) return [];
   for (const key of keys) {
@@ -99,7 +99,7 @@ function pickList(body, keys: string[]) {
   return [];
 }
 
-function readFirstField(source, keys: string[]) {
+function readFirstField(source: unknown, keys: string[]): string | undefined {
   for (const key of keys) {
     const value = stringValue(readField(source, key));
 
@@ -109,7 +109,7 @@ function readFirstField(source, keys: string[]) {
   return undefined;
 }
 
-function parseRecord(value) {
+function parseRecord(value: unknown): Record<string, any> | null {
   if (isRecord(value)) return value;
   if (typeof value !== 'string' || !/^\s*[{[]/.test(value)) return null;
   const parsed = safeParse(value, 'object');
@@ -117,7 +117,10 @@ function parseRecord(value) {
   return isRecord(parsed) ? parsed : null;
 }
 
-function pickArtifactReferenceFrom(source, { allowId = false, fallback = {} } = {}) {
+function pickArtifactReferenceFrom(
+  source: unknown,
+  { allowId = false, fallback = {} }: { allowId?: boolean; fallback?: any } = {},
+): any {
   if (Array.isArray(source)) {
     for (let i = source.length - 1; i >= 0; i -= 1) {
       const artifact = pickArtifactReferenceFrom(source[i], { allowId, fallback });
@@ -825,6 +828,14 @@ export function mapAttachmentForRequest(item) {
   return { type: toAttachmentType(item), url: item.url, name: item.name, size: item.size };
 }
 
-export { createSessionShare, SESSION_SHARE_SCOPE, SHARE_ERROR, fetchSharedSessionMessages, continueSharedSession, fetchAgentSessionPage, fetchAgentSessionTitle } from './shareService';
+export {
+  createSessionShare,
+  SESSION_SHARE_SCOPE,
+  SHARE_ERROR,
+  fetchSharedSessionMessages,
+  continueSharedSession,
+  fetchAgentSessionPage,
+  fetchAgentSessionTitle,
+} from './shareService';
 
 export const HELP_AGENT_NAME = 'help-agent';
