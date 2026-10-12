@@ -279,7 +279,6 @@
     "src/components/worksheetConfigHeader/index.tsx",
     "src/ming-ui/components/CardNav.tsx",
     "src/ming-ui/components/CheckBlock/CheckBlock.tsx",
-    "src/ming-ui/components/CheckboxGroup.tsx",
     "src/ming-ui/components/CityPicker/MobileCityPciker.tsx",
     "src/ming-ui/components/CityPicker/index.tsx",
     "src/ming-ui/components/ClickAway.tsx",

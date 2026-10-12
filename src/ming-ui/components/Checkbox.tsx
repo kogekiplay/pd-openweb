@@ -8,7 +8,7 @@ import './less/Checkbox.less';
 
 export const SIZE_LIST = ['small', 'default'] as const;
 
-export interface CheckboxProps<V = any> {
+export interface CheckboxProps<V = unknown> {
   /** 复选框旁的文字 */
   text?: ReactNode;
   /** 去掉方框的右边距 */
@@ -20,9 +20,9 @@ export interface CheckboxProps<V = any> {
    * 点击（禁用时不触发）。第一个参数的含义随受控与否不同：
    * 受控（传了 checked）时是【点击前】的 checked，调用方自己取反；不受控时是翻转【之后】的值
    */
-  onClick?: ((checked: boolean, value: V, event: MouseEvent<HTMLLabelElement>) => void) | undefined;
+  onClick?: ((checked: boolean, value: V | undefined, event: MouseEvent<HTMLLabelElement>) => void) | undefined;
   /** 原样作为 onClick 的第二个参数 */
-  value?: V;
+  value?: V | undefined;
   size?: (typeof SIZE_LIST)[number] | undefined;
   /** 跟在方框和文字后面 */
   children?: ReactNode;
@@ -38,7 +38,7 @@ export interface CheckboxProps<V = any> {
   textPosition?: 'left' | 'right' | undefined;
 }
 
-class Checkbox<V = any> extends React.Component<CheckboxProps<V>, { checked: boolean }> {
+class Checkbox<V = unknown> extends React.Component<CheckboxProps<V>, { checked: boolean }> {
   static override propTypes = {
     /**
      * checkbox显示的元素
@@ -114,7 +114,7 @@ class Checkbox<V = any> extends React.Component<CheckboxProps<V>, { checked: boo
 
   constructor(props: CheckboxProps<V>) {
     super(props);
-    const checked = props.checked || props.defaultChecked;
+    const checked = props.checked !== undefined ? props.checked : props.defaultChecked;
     this.state = {
       checked: !!checked,
     };
@@ -136,13 +136,13 @@ class Checkbox<V = any> extends React.Component<CheckboxProps<V>, { checked: boo
     const { onClick, value } = this.props;
     if (this.props.disabled) return false;
     if (this.props.checked !== undefined) {
-      onClick?.(this.props.checked, value as V, event);
+      onClick?.(this.props.checked, value, event);
     } else {
       const checked = !this.state.checked;
       this.setState({
         checked,
       });
-      onClick?.(checked, value as V, event);
+      onClick?.(checked, value, event);
     }
     return undefined;
   }
