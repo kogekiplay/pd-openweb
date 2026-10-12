@@ -1,12 +1,15 @@
 import { notification } from 'antd';
 import displayMarketNotice from './displayMarketNotice';
 import displaySysNotice from './displaySysNotice';
+import { decodeMarketNotice } from '../socketTypes';
 
 export default function marketNotice() {
   const { socket } = window.IM || {};
 
   if (socket) {
-    socket.on('notice message', data => {
+    (socket as { on(event: 'notice message', handler: (data: unknown) => void): unknown }).on('notice message', rawData => {
+      const data = decodeMarketNotice(rawData);
+      if (!data) return;
       // 多页面通知同步关闭
       if (data.type === 99) {
         const { noticeId } = data;
@@ -24,7 +27,7 @@ export default function marketNotice() {
         return;
       }
 
-      if ([1, 2].includes(data.type)) {
+      if (data.type === 1 || data.type === 2) {
         displaySysNotice(data);
         return;
       }

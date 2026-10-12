@@ -11,6 +11,7 @@ import { wsexcelSocketInit } from 'src/pages/worksheet/common/WorksheetBody/Impo
 import { wsexcelbatchSocketInit } from 'src/pages/worksheet/components/DialogImportExcelCreate/socketHandlers/wsexcelbatch';
 import { getPssId } from 'src/utils/pssId';
 import customNotice from './customNotice';
+import type { SocketLike } from './socketTypes';
 
 export const socketInit = () => {
   if (window.IM === undefined) {
@@ -29,7 +30,7 @@ export const socketInit = () => {
           : {}, // 非私有部署 或 Iframe 或 mds2 多域名 下，走 Url 参数
       transports: window.config.SocketPolling ? ['polling', 'websocket'] : ['websocket'],
     });
-    window.IM.socket = socket;
+    window.IM.socket = socket as unknown as SocketLike;
   }
 };
 
