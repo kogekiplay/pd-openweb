@@ -65,7 +65,7 @@ const RangeBox = styled.div`
     overflow: auto;
   }
 `;
-let RangeDrop = class RangeDrop extends React.Component<any, any> {
+const UnwrappedRangeDrop = class RangeDrop extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }
@@ -140,6 +140,6 @@ let RangeDrop = class RangeDrop extends React.Component<any, any> {
     );
   }
 };
-RangeDrop = ClickAway.wrap(RangeDrop);
+const RangeDrop = ClickAway.wrap(UnwrappedRangeDrop);
 export { RangeDrop };
 export default RangeDrop;

@@ -9,7 +9,7 @@ const ClearSelect = styled.div`
   color: var(--color-text-secondary);
   cursor: pointer;
 `;
-let ClickAwayMenu = class ClickAwayMenu extends Component<any, any> {
+const UnwrappedClickAwayMenu = class ClickAwayMenu extends Component<any, any> {
   override render() {
     const { types, handleTimeSelect, dynamicValue, showClear = true } = this.props;
     return (
@@ -39,5 +39,5 @@ let ClickAwayMenu = class ClickAwayMenu extends Component<any, any> {
     );
   }
 };
-ClickAwayMenu = ClickAway.wrap(ClickAwayMenu);
+const ClickAwayMenu = ClickAway.wrap(UnwrappedClickAwayMenu);
 export default ClickAwayMenu;

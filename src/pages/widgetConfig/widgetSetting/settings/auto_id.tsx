@@ -272,7 +272,7 @@ function SortableItem({
           className="mTop0"
           getPopupContainer={() => $addTime.current}
           popupRender={() => (
-            <Menu width={'100%'}>
+            <Menu style={{ width: '100%' }}>
               {TIME_MODE.map(({ value, text }) => (
                 <MenuItem key={value} onClick={() => handleTimeSelect(value)}>
                   {text}

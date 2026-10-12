@@ -1,14 +1,28 @@
 import { Component } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import cx from 'classnames';
 import { assign } from 'lodash';
 import PropTypes from 'prop-types';
 import ClickAway from 'ming-ui/components/ClickAway';
 import List from './List';
+import type { ListProps } from './List';
 import './less/Menu.less';
 
-let Menu = class Menu extends Component<any, any> {
+export interface MenuProps extends ListProps {
+  fixedHeader?: ReactNode;
+  parentMenuItem?: unknown;
+  isSubMenu?: boolean | undefined;
+  con?: string | undefined;
+  renderToTop?: boolean | undefined;
+  isAppendToBody?: boolean | undefined;
+  parentMenuItemNode?: HTMLElement | null | undefined;
+  getParentMenuItemNode?: (() => HTMLElement | null | undefined) | undefined;
+  subMenuVisible?: boolean | undefined;
+}
+
+export class Menu extends Component<MenuProps, { pos: CSSProperties | undefined }> {
   /** 菜单根节点，由 ref 回填；定位时量它的 rect */
-  menuNode?: HTMLElement | null;
+  declare menuNode: HTMLDivElement | null | undefined;
 
   static override propTypes = {
     fixedHeader: PropTypes.any,
@@ -23,7 +37,7 @@ let Menu = class Menu extends Component<any, any> {
     getParentMenuItemNode: PropTypes.func,
     subMenuVisible: PropTypes.bool,
   };
-  override state = {
+  override state: { pos: CSSProperties | undefined } = {
     pos: undefined,
   };
 
@@ -31,7 +45,7 @@ let Menu = class Menu extends Component<any, any> {
     this.calcPos();
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: MenuProps) {
     // 二级菜单是父 MenuItem <li> 的子节点，React 先跑子节点的 layout effect 再挂父节点的 ref，
     // 所以它 mount 时还拿不到父菜单项 DOM，calcPos 会跳过定位、菜单退化成静态定位显示在下方。
     // 这里在二级菜单由隐藏切到显示时再算一次，既能拿到父节点，也能跟上父菜单的滚动位置。
@@ -40,14 +54,14 @@ let Menu = class Menu extends Component<any, any> {
     }
   }
 
-  setMenuNode = node => {
+  setMenuNode = (node: HTMLDivElement | null) => {
     this.menuNode = node;
   };
 
   // 非 fixedHeader 时 List 的 setRef 用于 Menu 自身定位，但会覆盖调用方透传的 setRef。
   // 这里合并两者：既记录用于 calcPos 的 menuNode，又把同一节点回传给调用方的 setRef。
   // 调用方的 setRef 可能是 React.createRef() 的 ref 对象，也可能是回调函数，两者都兼容。
-  setListRef = node => {
+  setListRef = (node: HTMLDivElement | null) => {
     this.setMenuNode(node);
     const { setRef } = this.props;
 
@@ -65,13 +79,7 @@ let Menu = class Menu extends Component<any, any> {
   calcPos() {
     let { isAppendToBody, renderToTop } = this.props;
     // 值是 CSS 长度：多数时候是 '100%' / 'inherit' 这类字符串，也有直接给 0 / px 数的
-    // 值是 CSS 长度：多数时候是 '100%' / 'inherit' 这类字符串，也有直接给 0 / px 数的
-    const pos: {
-      left?: string | number;
-      right?: string | number;
-      top?: string | number;
-      bottom?: string | number;
-    } = {};
+    const pos: CSSProperties = {};
 
     if (this.props.isSubMenu) {
       const parentMenuItem =
@@ -86,7 +94,7 @@ let Menu = class Menu extends Component<any, any> {
         (parentRect.left + 2 * parentRect.width > Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
           ? '-'
           : '') + '100%';
-      pos.top = parentMenuItem.offsetTop - parentMenuItem.parentElement.scrollTop;
+      pos.top = parentMenuItem.offsetTop - (parentMenuItem.parentElement?.scrollTop ?? 0);
     } else {
       const el = this.menuNode;
 
@@ -140,6 +148,9 @@ let Menu = class Menu extends Component<any, any> {
     delete listProps.parentMenuItemNode;
     delete listProps.getParentMenuItemNode;
     delete listProps.subMenuVisible;
+    delete listProps.con;
+    delete listProps.renderToTop;
+    delete listProps.isSubMenu;
 
     if (fixedHeader) {
       return (
@@ -176,6 +187,5 @@ let Menu = class Menu extends Component<any, any> {
       </List>
     );
   }
-};
-Menu = ClickAway.wrap(Menu);
-export default Menu;
+}
+export default ClickAway.wrap(Menu);

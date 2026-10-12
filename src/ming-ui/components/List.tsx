@@ -1,9 +1,18 @@
 import React, { cloneElement, Component } from 'react';
+import type { HTMLAttributes, ReactElement, ReactNode, Ref } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
+import type { ClickAwayHandlers } from './ClickAway';
 import './less/List.less';
 
-class List extends Component<any, any> {
+export interface ListProps extends HTMLAttributes<HTMLDivElement>, ClickAwayHandlers {
+  header?: ReactElement<{ className?: string | undefined }> | undefined;
+  footer?: ReactElement<{ className?: string | undefined }> | undefined;
+  bodyMaxHeight?: number | undefined;
+  setRef?: Ref<HTMLDivElement> | undefined;
+}
+
+class List extends Component<ListProps> {
   static override propTypes = {
     children: PropTypes.node,
     className: PropTypes.string,
@@ -15,7 +24,7 @@ class List extends Component<any, any> {
     let iconAtFront = false;
     let iconAtEnd = false;
     const items = React.Children.map(this.props.children, item => {
-      if (!React.isValidElement(item)) {
+      if (!React.isValidElement<{ icon?: ReactNode; iconAtEnd?: boolean }>(item)) {
         return null;
       }
 
@@ -54,7 +63,7 @@ class List extends Component<any, any> {
       onClickAwayExceptions: _onClickAwayExceptions,
       specialFilter: _specialFilter,
       ...rest
-    } = this.props as any;
+    } = this.props;
     return (
       <div
         {...rest}

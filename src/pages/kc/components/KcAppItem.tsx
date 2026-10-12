@@ -81,7 +81,6 @@ export default class KcAppItem extends React.Component<any, KcAppItemState> {
       updateNodeItem,
       showDetail,
       handlePreview,
-      handleAddLinkFile,
       onShareNode,
       moveOrCopyClick,
       download,
@@ -102,7 +101,6 @@ export default class KcAppItem extends React.Component<any, KcAppItemState> {
         moveOrCopyClick={moveOrCopyClick}
         updateNodeName={updateNodeName}
         updateNodeItem={updateNodeItem}
-        handleAddLinkFile={handleAddLinkFile}
         onShareNode={onShareNode}
         onStarNode={onStarNode}
         download={download}

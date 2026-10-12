@@ -44,7 +44,7 @@ function getNowByCurrentStateValue(value) {
   return ret;
 }
 
-let Calendar = class Calendar extends Component<any, any> {
+const UnwrappedCalendar = class Calendar extends Component<any, any> {
   static override propTypes = {
     value: PropTypes.object,
     selectedValue: PropTypes.object,
@@ -397,5 +397,5 @@ let Calendar = class Calendar extends Component<any, any> {
     });
   }
 };
-Calendar = ClickAway.wrap(Calendar);
+const Calendar = ClickAway.wrap(UnwrappedCalendar);
 export default Calendar;

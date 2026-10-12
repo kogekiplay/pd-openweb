@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import type { CSSProperties } from 'react';
 import Trigger from '@rc-component/trigger';
 import styled from 'styled-components';
 import { Icon, Menu, SvgIcon } from 'ming-ui';
@@ -23,9 +24,9 @@ export const POPUP_CLICK_AWAY_EXCEPTIONS = [
   '.rightRecord',
 ];
 
-const GROUP_MENU_STYLE = { position: 'relative', maxHeight: 500, overflowY: 'auto', minWidth: 180 };
+const GROUP_MENU_STYLE: CSSProperties = { position: 'relative', maxHeight: 500, overflowY: 'auto', minWidth: 180 };
 
-export function getGroupMenuStyle(type) {
+export function getGroupMenuStyle(type: string | undefined): CSSProperties {
   return type === 'button' ? { ...GROUP_MENU_STYLE, width: 240 } : GROUP_MENU_STYLE;
 }
 

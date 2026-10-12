@@ -38,7 +38,7 @@ const handleDialogCallback = (dispatch, payload) => {
   }
 };
 
-let DiaActionTree = class DiaActionTree extends React.Component<any, any> {
+const UnwrappedDiaActionTree = class DiaActionTree extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }
@@ -223,7 +223,7 @@ let DiaActionTree = class DiaActionTree extends React.Component<any, any> {
     );
   }
 };
-DiaActionTree = ClickAway.wrap(DiaActionTree);
+const DiaActionTree = ClickAway.wrap(UnwrappedDiaActionTree);
 
 const mapStateToProps = state => {
   const {

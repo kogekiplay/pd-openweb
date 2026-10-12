@@ -1,8 +1,8 @@
 import React, { Component, lazy, Suspense } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import { bool, func, oneOf, string } from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { Icon, MdLink, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
@@ -21,7 +21,7 @@ import 'rc-trigger/assets/index.css';
 const LoadableExternalLinkDialog = lazy(() => import('./ExternalLinkDialog'));
 const LoadableManageUserDialog = lazy(() => import('src/pages/Role/AppRoleCon/ManageUserDialog.jsx'));
 
-let MyAppItem = class MyAppItem extends Component<any, any> {
+const UnwrappedMyAppItem = class MyAppItem extends Component<any, any> {
   static override propTypes = {
     id: string,
     projectId: string,
@@ -453,5 +453,5 @@ let MyAppItem = class MyAppItem extends Component<any, any> {
     );
   }
 };
-MyAppItem = ClickAway.wrap(MyAppItem);
+const MyAppItem = ClickAway.wrap(UnwrappedMyAppItem);
 export default MyAppItem;

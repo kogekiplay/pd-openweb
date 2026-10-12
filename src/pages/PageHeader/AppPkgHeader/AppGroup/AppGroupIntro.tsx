@@ -6,7 +6,7 @@ import { Button, Icon } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
 import appGroupIntroPic from './images/appGroupIntro.gif';
 
-let AppGroupIntro = class AppGroupIntro extends Component<any, any> {
+const UnwrappedAppGroupIntro = class AppGroupIntro extends Component<any, any> {
   static override propTypes = {
     className: string,
     addAppGroup: func,
@@ -73,5 +73,5 @@ let AppGroupIntro = class AppGroupIntro extends Component<any, any> {
     );
   }
 };
-AppGroupIntro = ClickAway.wrap(AppGroupIntro);
+const AppGroupIntro = ClickAway.wrap(UnwrappedAppGroupIntro);
 export default AppGroupIntro;

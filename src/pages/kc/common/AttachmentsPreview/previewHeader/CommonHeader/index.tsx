@@ -1,7 +1,7 @@
 import { Fragment, useRef, useState } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import { Dialog, Icon, Menu, MenuItem, Popup } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import UploadNewVersion from 'src/pages/kc/components/UploadNewVersion.jsx';
@@ -217,7 +217,7 @@ export default function CommonHeader(props) {
             popupPlacement="bottom"
             builtinPlacements={{ bottom: { points: ['tc', 'bc'] } }}
             popup={
-              <Menu className="selectOptions" width={{ width: 120 }}>
+              <Menu className="selectOptions" style={{ width: 120 }}>
                 <MenuItem
                   icon={<Icon icon="attachment" />}
                   onClick={() => {

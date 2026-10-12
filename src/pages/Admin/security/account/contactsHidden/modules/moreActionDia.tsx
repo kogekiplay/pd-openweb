@@ -6,11 +6,9 @@ interface MoreActionDiaProps {
   addUser: () => void;
   addDept: () => void;
   addOrgRoles: () => void;
-  // ClickAway.wrap 包出来的组件还收 onClickAway 等
-  [key: string]: unknown;
 }
 
-let MoreActionDia = class MoreActionDia extends React.Component<MoreActionDiaProps> {
+const UnwrappedMoreActionDia = class MoreActionDia extends React.Component<MoreActionDiaProps> {
   override render() {
     if (!this.props.showMoreAction) {
       return '';
@@ -25,5 +23,5 @@ let MoreActionDia = class MoreActionDia extends React.Component<MoreActionDiaPro
     );
   }
 };
-MoreActionDia = ClickAway.wrap(MoreActionDia);
+const MoreActionDia = ClickAway.wrap(UnwrappedMoreActionDia);
 export default MoreActionDia;

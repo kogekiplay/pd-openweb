@@ -8,7 +8,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import Content from './Content';
 import './index.less';
 
-let IndexSide = class IndexSide extends Component<any, any> {
+const UnwrappedIndexSide = class IndexSide extends Component<any, any> {
   static override propTypes = {
     onClose: func,
     posX: number,
@@ -51,13 +51,15 @@ let IndexSide = class IndexSide extends Component<any, any> {
           <Dropdown
             trigger={['click']}
             placement="bottomRight"
-            popupRender={() => <Menu
+            popupRender={() => (
+              <Menu
                 style={{
                   width: 120,
                 }}
               >
                 <Menu.Item onClick={() => navigateTo('/personal?type=system')}>{_l('偏好设置')}</Menu.Item>
-              </Menu>}
+              </Menu>
+            )}
           >
             <div className="flexRow alignItemsCenter justifyContentCenter pointer moreWrap">
               <Icon className="textTertiary Font20" icon="more_horiz" />
@@ -69,5 +71,5 @@ let IndexSide = class IndexSide extends Component<any, any> {
     );
   }
 };
-IndexSide = ClickAway.wrap(IndexSide);
+const IndexSide = ClickAway.wrap(UnwrappedIndexSide);
 export default IndexSide;

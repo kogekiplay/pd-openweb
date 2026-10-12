@@ -8,7 +8,7 @@ import { VIEW_DISPLAY_TYPE, VIEW_TYPE_ICON } from 'src/pages/worksheet/constants
 import ViewConfigCon from './ViewConfig';
 import './ViewConfig.less';
 
-let ViewConfig = class ViewConfig extends React.Component<any, any> {
+const UnwrappedViewConfig = class ViewConfig extends React.Component<any, any> {
   declare inputEl: HTMLInputElement | null | undefined;
 
   constructor(props) {
@@ -146,5 +146,5 @@ let ViewConfig = class ViewConfig extends React.Component<any, any> {
     );
   }
 };
-ViewConfig = ClickAway.wrap(ViewConfig);
+const ViewConfig = ClickAway.wrap(UnwrappedViewConfig);
 export default ViewConfig;
