@@ -2,7 +2,7 @@
 
 ## 2026-10-13 AppBuilder 文件 registry/store
 
-AppBuilder 文件 registry、流式状态、方案代次重置和侧栏派生边界已严格化，新增状态机回归通过，未新增调用方诊断。详见 `appbuilder-file-store-strict-20261013.md`；继续处理 Builder 页面及动态面板。
+AppBuilder 文件 registry、流式状态、方案代次重置和侧栏派生边界已严格化，hook 返回的文件与侧栏 any 断言已移除，调用方直接消费有限模型并解码 unknown。修复半截代次及同名普通字符串值的识别，真实 hook 与 React StrictMode localhost 验收通过；216/216 规格及工具/语法/strict 门禁通过。严格诊断 54,742 → 54,671（按文件/错误码新增 0），债务 3,218 文件、strict-clean 1,523 / 4,741。详见 `appbuilder-file-store-strict-20261013.md`；Builder 页面、面板、AgentBus 及全仓目标继续。
 
 ## 2026-10-13 Statistics 图表通用工具
 

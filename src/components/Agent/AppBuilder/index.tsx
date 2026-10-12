@@ -1,15 +1,15 @@
-import { buildPlanMarkdown, buildPlanFileName } from './planExport';
-import type { PlanFiles } from './planTypes';
-import { downloadBlob } from 'src/utils/platform/browser/download';
 import { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import homeAppAjax from 'src/api/homeApp';
 import { emitter, pathCompletion } from 'src/utils/common';
+import { downloadBlob } from 'src/utils/platform/browser/download';
 import { useAgentBus, useAgentEvent } from '../agentBus';
 import { AGENT_HEADER_EVENT, fetchBuildEstimate } from '../agentService';
 import { IS_DEBUG } from '../debug';
 import { entryByKey, entryByPath } from './fileRegistry';
+import { fileArray, isFileRecord, readAppFileMetadata } from './fileTypes';
+import type { SidebarKey } from './fileTypes';
 import Header from './Header';
 import {
   AiAssistantsPanel,
@@ -21,6 +21,7 @@ import {
   WorkflowsPanel,
   WorksheetsPanel,
 } from './panels';
+import { buildPlanFileName, buildPlanMarkdown } from './planExport';
 import PreviewFrame from './PreviewFrame';
 import Sidebar from './Sidebar';
 import SkeletonPanel from './SkeletonPanel';
@@ -189,18 +190,18 @@ const RawJson = styled.pre`
   overflow-x: auto;
 `;
 
-const PANEL_BY_KEY = {
+const PANEL_BY_KEY: Record<SidebarKey, (props: { parsed: unknown }) => React.JSX.Element> = {
   overview: ({ parsed }) => <OverviewPanel plan={parsed} />,
-  roles: ({ parsed }) => <RolesPanel roles={parsed || []} />,
-  worksheets: ({ parsed }) => <WorksheetsPanel worksheets={parsed || []} />,
-  customPages: ({ parsed }) => <CustomPagesPanel pages={parsed || []} />,
-  customActions: ({ parsed }) => <CustomActionsPanel customActions={parsed || []} />,
-  workflows: ({ parsed }) => <WorkflowsPanel workflows={parsed || []} />,
-  aiAssistants: ({ parsed }) => <AiAssistantsPanel pages={parsed || []} />,
+  roles: ({ parsed }) => <RolesPanel roles={fileArray(parsed)} />,
+  worksheets: ({ parsed }) => <WorksheetsPanel worksheets={fileArray(parsed)} />,
+  customPages: ({ parsed }) => <CustomPagesPanel pages={fileArray(parsed)} />,
+  customActions: ({ parsed }) => <CustomActionsPanel customActions={fileArray(parsed)} />,
+  workflows: ({ parsed }) => <WorkflowsPanel workflows={fileArray(parsed)} />,
+  aiAssistants: ({ parsed }) => <AiAssistantsPanel pages={fileArray(parsed)} />,
 };
 
-function useStickyScroll(visible: boolean, focus, focusedContent) {
-  const ref = useRef(null);
+function useStickyScroll(visible: boolean, focus: string | null, focusedContent: string) {
+  const ref = useRef<HTMLDivElement | null>(null);
   const stickRef = useRef(true);
 
   useEffect(() => {
@@ -307,14 +308,10 @@ export default function AppBuilder({
   // focus 可能停在一个「无数据被侧栏过滤掉」的 tab 上（典型：方案不含 AI 助手时，流式末尾 focus 落在空的
   // ai-assistants.json）；此时该 tab 不在侧栏里，会出现「无选中项 + 右侧空白」。回落到侧栏中实际存在的最后一项
   // （流式自然停在末尾产物），都没有则退化到 overview。
-  const sidebarHasKey = focusedKey && sidebarItems.some((it: any) => it.key === focusedKey);
-  const activeKey = sidebarHasKey
-    ? focusedKey
-    : sidebarItems.length
-      ? sidebarItems[sidebarItems.length - 1].key
-      : 'overview';
-  const activeTitle = (entryByKey(activeKey) || {}).title || '';
-  const focusedContent = focus && files[focus] ? files[focus].content : '';
+  const focusedItem = sidebarItems.find(item => item.key === focusedKey);
+  const activeKey = focusedItem?.key ?? sidebarItems.at(-1)?.key ?? 'overview';
+  const activeTitle = entryByKey(activeKey)?.title || '';
+  const focusedContent = focus ? files[focus]?.content || '' : '';
   const [scrollRef, resetScroll] = useStickyScroll(visible, focus, focusedContent);
 
   useAgentEvent('file:begin', resetScroll);
@@ -538,7 +535,7 @@ export default function AppBuilder({
     };
   }, [appMeta.appId]);
 
-  function setActiveKey(key) {
+  function setActiveKey(key: string) {
     const entry = entryByKey(key);
 
     setFocus((entry && entry.file) || null);
@@ -546,7 +543,7 @@ export default function AppBuilder({
 
   // 方案是否含工作表：工作表是应用的最小数据载体，无工作表的空方案搭建无意义，禁止生成。
   const worksheetsEntry = entryByKey('worksheets');
-  const worksheetsParsed = worksheetsEntry && files[worksheetsEntry.file] && files[worksheetsEntry.file].parsed;
+  const worksheetsParsed = worksheetsEntry ? files[worksheetsEntry.file]?.parsed : undefined;
   const hasWorksheets = Array.isArray(worksheetsParsed) && worksheetsParsed.length > 0;
 
   // 预估费用只在「生成应用」可点态才计算：plan 已生成完（无在途流）、含工作表、非 build 视图（无 appId）、
@@ -648,14 +645,24 @@ export default function AppBuilder({
 
   // 应用图标/主色/语言：plan 产出的 /jsons/app.json（流式进 file store），规划期即可读到。
   const appMetaFile = files['/jsons/app.json'];
-  const appMetaParsed = (appMetaFile && appMetaFile.parsed) || {};
+  const appMetaParsed = readAppFileMetadata(appMetaFile?.parsed);
 
   const planFile = files['/plan.md'];
-  const canDownloadPlan = planFile?.status === 'ready' && Boolean(planFile.content?.trim()) && !chatSubmitting && !planStreaming && !Object.values(files).some((file: { status?: string }) => file.status === 'streaming');
+  const canDownloadPlan =
+    planFile?.status === 'ready' &&
+    Boolean(planFile.content?.trim()) &&
+    !chatSubmitting &&
+    !planStreaming &&
+    !Object.values(files).some((file: { status?: string }) => file.status === 'streaming');
   const handleDownloadPlan = () => {
     const now = new Date();
     const name = appMetaParsed.appName || appMeta.name;
-    downloadBlob(new Blob([buildPlanMarkdown({ files: files as PlanFiles, appName: name, estimateCredits, now })], { type: 'text/markdown;charset=utf-8' }), buildPlanFileName({ appName: name, versionLabel: appMeta.versionLabel, now }));
+    downloadBlob(
+      new Blob([buildPlanMarkdown({ files, appName: name, estimateCredits, now })], {
+        type: 'text/markdown;charset=utf-8',
+      }),
+      buildPlanFileName({ appName: name, versionLabel: appMeta.versionLabel, now }),
+    );
   };
   const hasAppId = !!appMeta.appId;
   const previewUrl = hasAppId
@@ -687,7 +694,10 @@ export default function AppBuilder({
   // 空窗骨架：已拿到应用元信息（app.json 在流式 / 已有字段）但还没有任何 tab 数据时，左右都用骨架占位，
   // 避免「左侧空列表 + 右侧空白卡片」的难看中间态。覆盖首次生成的起步阶段、整套重写的重置窗口，
   // 以及历史版本加载（loadingFiles）。一旦出现第一个 tab（sidebarItems 非空）即恢复正常渲染。
-  const hasMeta = !!appMetaFile && (appMetaFile.status === 'streaming' || Object.keys(appMetaParsed).length > 0);
+  const hasMeta =
+    !!appMetaFile &&
+    (appMetaFile.status === 'streaming' ||
+      (isFileRecord(appMetaFile.parsed) && Object.keys(appMetaFile.parsed).length > 0));
   const showSkeleton = loadingFiles || (sidebarItems.length === 0 && hasMeta);
   const showEmptyPlaceholder = split && !loadingFiles && !hasAppId && !hasMeta && sidebarItems.length === 0;
 
