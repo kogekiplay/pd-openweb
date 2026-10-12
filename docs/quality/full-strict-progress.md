@@ -4,6 +4,8 @@
 
 PositionContainer/Popup 的有限 props、几何坐标、事件/ref 和生命周期已完成；修复 React root 重复创建、监听器/root 泄漏、旧 timer 重新显示、null 锚点和扫码弹层无 ref 等问题。24 组正常定位、3 组渲染历史对照及 localhost 真实输入/父容器/卸载验收通过；完整严格诊断 56,282 → 56,223（新增 0），欠债 3,258 文件，strict-clean 1,476 / 4,734，213/213 规格与工具门禁通过。详见 `position-popup-chain-20261012.md`。本批未部署，现网仍为 `4d6ff521d`。
 
+整合源码 `c1fd272b7` 已通过真实 release（59 秒）、publish、runtime 与 HTML 本地资源校验，入口 revision 匹配源码，构建后工作树干净。本批已验证候选尚未部署，保留给后续日常发布选择。
+
 ## 2026-10-12 自动编号生产热修复
 
 真实自动编号默认规则的 start 为 null，之前的有限合同遗漏了它，保存字段配置前校验会抛出 Invalid widget setting list。已补齐 nullable start，并用实际内置生产者、旧版反例、保存前检查、原格式化与子表递归验证；212/212 规格和工具/语义/语法门禁通过，严格诊断保持 56,282（新增 0）。详见 `widget-increase-hotfix-20261012.md`，正在准备热修复发布。

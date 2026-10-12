@@ -13,3 +13,5 @@ localhost 30113 使用当前源码、实际 React 19 与 jQuery 4 验证：首�
 完整产品终点诊断 56,282 → 56,223，按文件/错误码新增 0；欠债 3,260 → 3,258，strict-clean 1,476 / 4,734，PositionContainer/Popup 移出清单。基础语义 9,053 → 9,041，key 2,449 → 2,447，基线仅收紧。213/213 完整规格通过，工具门禁通过；新增规格自身五开关 0 诊断。保留 PublicWorksheet weixinAuth 既有隔离项。全仓 strict/其余 API/styled 下限等目标仍未完成。
 
 证据 `/private/tmp/hap-position-before-strict-20261012.txt`、`hap-position-after-second-strict-20261012.txt`、`hap-position-tools-strict-final-20261012.txt`、`hap-position-specs-final-20261012.log`、`hap-position-debt-shrink-20261012.log`、`hap-position-baseline-20261012.log`。本批未部署，现网仍为已验证的自动编号热修复 `4d6ff521d`；今天日常发布在 16:41 已完成。本地工作分支保留，GitHub 仅推送 main。
+
+源码 `8f03f2569`、main 整合 `c1fd272b7` 的真实 release（59 秒）、publish 及 runtime 校验通过；release 和推送门禁均为 213/213 规格通过。79 个 HTML 的 537 个本地资源引用存在且无 dev 产物，3 个 runtime 的 1095 JS / 387 CSS 映射完整，widget 已生成，入口 revision 匹配源码，SHA256 为 `b2e9e62b5cebe522dd02f5b1ac1dc655efe7620eb31aee9f6f9dc42682a3ffb7`，构建后工作树干净。证据 `/private/tmp/hap-position-release-20261012.log`、`hap-position-publish-20261012.log`、`hap-position-runtime-20261012.log`、`hap-position-artifact-check-20261012.json`。本批是已验证候选，尚未发布。
