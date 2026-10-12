@@ -277,7 +277,6 @@
     "src/components/user/user.ts",
     "src/components/verifyPassword/index.ts",
     "src/components/worksheetConfigHeader/index.tsx",
-    "src/ming-ui/components/AutoSize.tsx",
     "src/ming-ui/components/BarCode.tsx",
     "src/ming-ui/components/Button.tsx",
     "src/ming-ui/components/CardNav.tsx",
