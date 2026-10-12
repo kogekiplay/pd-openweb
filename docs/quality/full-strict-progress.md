@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-12 ming-ui Signature 批次
+
+Signature 的 pad 生命周期、状态、canvas 与扫码附件回调边界已严格化，strict 诊断为 56,501 条、3,273 个欠债文件，strict-clean 1,459 / 4,732；205/205 规格和工具类型门禁通过。证据见 `ming-ui-signature-20261012.md`，生产仍为已验证的 `b4075d92f`，本批尚未发布。
+
 ## 2026-10-12 ming-ui AutoSize 批次
 
 AutoSize 的尺寸、ref、被包裹组件和观察器边界已严格化，strict 诊断为 56,507 条、3,274 个欠债文件，strict-clean 1,458 / 4,732；205/205 规格和工具类型门禁通过。证据见 `ming-ui-autosize-20261012.md`，生产仍为已验证的 `b4075d92f`，本批尚未发布。
