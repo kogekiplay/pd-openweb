@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { CardEditButton, PanelWrap } from './_shared';
+import { panelConfig, roleCardItems } from './panelModels';
 
 // 权限 tag 类型图标色：与「类型 badge」语义色统一（工作表=warning / 仪表盘=info / AI助手=mingo）
 const WORKSHEET_COLOR = 'var(--color-warning)';
@@ -70,7 +71,7 @@ const TagList = styled.div`
   margin-top: var(--space-3);
 `;
 
-const PermTag = styled.div`
+const PermTag = styled.div<{ $iconColor?: string | undefined }>`
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -92,7 +93,7 @@ const PermTag = styled.div`
 
 // type → { iconColor, icon }；背景统一走灰底，仅图标按类型着色
 // 后端权限模型：worksheet 引用工作表，customPage 引用仪表盘（UI 概念叫 dashboard），aiAssistant 引用 AI 助手
-const TAG_CONFIG = {
+const TAG_CONFIG: Record<string, { iconColor: string; icon: string }> = {
   customPage: {
     iconColor: DASHBOARD_COLOR,
     icon: 'dashboard',
@@ -108,21 +109,21 @@ const TAG_CONFIG = {
   },
 };
 
-function parsePermission(str) {
+function parsePermission(str: unknown) {
   const match = typeof str === 'string' ? str.match(/^(.+)\((\w+)\)$/) : null;
 
-  if (match) return { name: match[1].trim(), type: match[2] };
+  if (match) return { name: (match[1] || '').trim(), type: match[2] || '' };
   return { name: String(str), type: 'other' };
 }
 
-export default function RolesPanel({ roles }) {
-  const list = Array.isArray(roles) ? roles : [];
+export default function RolesPanel({ roles }: { roles: unknown }) {
+  const list = roleCardItems(roles);
 
   return (
     <PanelWrap>
       {list.map((role, i) => {
         const name = role.name || role.roleName || '';
-        const perms = Array.isArray(role.permissions) ? role.permissions : [];
+        const perms = role.permissions;
 
         return (
           <RoleCard key={role.roleId || name || i}>
@@ -136,11 +137,11 @@ export default function RolesPanel({ roles }) {
               <TagList>
                 {perms.map((p, j: number) => {
                   const { name: pName, type } = parsePermission(p);
-                  const cfg = TAG_CONFIG[type] || {};
+                  const cfg = panelConfig(TAG_CONFIG, type);
 
                   return (
-                    <PermTag key={j} $iconColor={cfg.iconColor}>
-                      {cfg.icon && <Icon icon={cfg.icon} />}
+                    <PermTag key={j} $iconColor={cfg?.iconColor}>
+                      {cfg?.icon && <Icon icon={cfg.icon} />}
                       {pName}
                     </PermTag>
                   );

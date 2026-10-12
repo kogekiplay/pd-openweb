@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 AppBuilder 页面、面板与预览
+
+页面状态、侧栏、六类设计内容的视图模型、修改意见 Context/输入事件和预览路由边界已收紧；导出入口的宽泛 object 类型谓词已替换为字段解码。修复非法 JSON 崩溃、字典原型名字、旧异步预览覆盖及新应用残留旧实体 ID。11 组渲染和 9 组 URL 历史 A/B、完整导出对照、公开类型与 localhost 实际组件验收通过。严格诊断 54,671 → 54,586（按文件/错误码新增 0），AppBuilder 目录五开关零诊断，债务 3,210 文件、strict-clean 1,535 / 4,745；219/219 规格及工具/语法门禁通过。详见 appbuilder-panels-strict-20261013.md。全仓目标继续，本批留作日常生产候选。
+
 ## 2026-10-13 AppBuilder 文件 registry/store
 
 AppBuilder 文件 registry、流式状态、方案代次重置和侧栏派生边界已严格化，hook 返回的文件与侧栏 any 断言已移除，调用方直接消费有限模型并解码 unknown。修复半截代次及同名普通字符串值的识别，真实 hook 与 React StrictMode localhost 验收通过；217/217 规格及工具/语法/strict 门禁通过。严格诊断 54,742 → 54,671（按文件/错误码新增 0），债务 3,218 文件、strict-clean 1,523 / 4,741。详见 `appbuilder-file-store-strict-20261013.md`；Builder 页面、面板、AgentBus 及全仓目标继续。

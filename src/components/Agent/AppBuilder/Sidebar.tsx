@@ -1,6 +1,11 @@
 import styled, { css, keyframes } from 'styled-components';
 import { Icon, SvgIcon } from 'ming-ui';
 import { transitions } from '../ui/tokens';
+import type { BuildPhase, SidebarProps } from './builderState';
+
+export type { SidebarProps } from './builderState';
+
+type ActiveStyle = { $active: boolean };
 
 // 搭建中状态点呼吸动画：不透明度 1 ↔ 0.3，周期 1s
 const dotBreath = keyframes`
@@ -9,7 +14,7 @@ const dotBreath = keyframes`
 `;
 
 // plan 产出的 appIcon 是 HAP customIcon 字体类（sys_ 前缀），按 URL 渲染 SVG。
-const customIconUrl = fileName => `https://fp1.mingdaoyun.cn/customIcon/${fileName}.svg`;
+const customIconUrl = (fileName: string) => `https://fp1.mingdaoyun.cn/customIcon/${fileName}.svg`;
 
 const Wrap = styled.div`
   width: 238px;
@@ -22,7 +27,7 @@ const Wrap = styled.div`
 
 // 状态盒：36 高 / 5 圆角 / 1px 灰描边 / 白底；左对齐文字 + 右侧 8px 颜色点
 // building=橙点(#FF9800)、completed=绿点(#43A047)、failed=红点(#E53935)
-const StatusBox = styled.button`
+const StatusBox = styled.button<{ $clickable: boolean }>`
   position: relative;
   margin: 0 10px var(--space-3);
   height: 36px;
@@ -51,7 +56,7 @@ const StatusLabel = styled.span`
   white-space: nowrap;
 `;
 
-const StatusDot = styled.span`
+const StatusDot = styled.span<{ $variant: Exclude<BuildPhase, 'idle'> }>`
   position: absolute;
   right: 17px;
   top: 50%;
@@ -106,7 +111,7 @@ const ExpandSidebarBtn = styled.button`
   }
 `;
 
-const AppIcon = styled.div`
+const AppIcon = styled.div<{ $color?: string | undefined }>`
   width: 32px;
   height: 32px;
   border-radius: 8px;
@@ -144,7 +149,7 @@ const NavList = styled.div`
   padding: 0 10px;
 `;
 
-const NavItem = styled.div`
+const NavItem = styled.div<ActiveStyle>`
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -160,7 +165,7 @@ const NavItem = styled.div`
   }
 `;
 
-const IconCircle = styled.div`
+const IconCircle = styled.div<ActiveStyle>`
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -184,7 +189,7 @@ const NavLabel = styled.div`
   min-width: 0;
 `;
 
-const NavTitle = styled.div`
+const NavTitle = styled.div<ActiveStyle>`
   display: flex;
   align-items: center;
   gap: 6px;
@@ -260,13 +265,13 @@ const SkelLines = styled.div`
   gap: 7px;
 `;
 
-const SkelBar = styled(SkelShimmer)`
+const SkelBar = styled(SkelShimmer)<{ $w?: string | undefined }>`
   height: 12px;
   border-radius: 6px;
   width: ${({ $w }) => $w || '100%'};
 `;
 
-function StatusBoxContent({ buildStatus, onStatusClick }) {
+function StatusBoxContent({ buildStatus, onStatusClick }: Pick<SidebarProps, 'buildStatus' | 'onStatusClick'>) {
   if (!buildStatus || buildStatus === 'idle') return null;
 
   let label = _l('搭建失败');
@@ -299,7 +304,7 @@ export default function Sidebar({
   onStatusClick,
   showSidebarExpand = false,
   onExpandSidebar,
-}) {
+}: SidebarProps) {
   return (
     <Wrap>
       <AppInfo>

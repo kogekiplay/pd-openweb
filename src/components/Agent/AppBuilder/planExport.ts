@@ -5,6 +5,7 @@
 // 纯函数模块：不碰 DOM、不读组件 state，时间由调用方传入，方便测试与复用。
 import moment from 'moment';
 import { parseCompactList, parseCompactStr } from './panels/compactValue';
+import { exportPlanItems, panelConfig } from './panels/panelModels';
 import type { PlanExportOptions, PlanFiles, PlanItem } from './planTypes';
 
 // 类型 → 中文名的映射一律放在函数工厂里生成：语言包可能晚于本模块加载，
@@ -120,9 +121,7 @@ function getPermissionSections() {
 }
 
 function asArray(value: unknown) {
-  return Array.isArray(value)
-    ? value.filter((item: unknown): item is PlanItem => Boolean(item) && typeof item === 'object')
-    : [];
+  return exportPlanItems(value);
 }
 
 function readFile(files: PlanFiles | undefined, path: string) {
@@ -232,7 +231,7 @@ function describeField(raw: unknown, typeLabels: Record<string, string>) {
 
   return {
     name,
-    typeLabel: typeLabels[base] || base || '',
+    typeLabel: panelConfig(typeLabels, base) || base || '',
     // 关联类字段的参数形如「客房:single:bi」，只有第一段是目标表，后面是关联方式等内部标记
     note: extra && isRelation ? _l('关联工作表：%0', extra.split(':')[0] || '') : extra,
   };
@@ -298,7 +297,7 @@ function renderRoles(roles: PlanItem[], order: number) {
   return lines;
 }
 
-function renderWorksheets(worksheets: PlanItem[], order: number, actionsByWorksheet: Record<string, string[]>) {
+function renderWorksheets(worksheets: PlanItem[], order: number, actionsByWorksheet: ReadonlyMap<string, string[]>) {
   const lines = [`## ${order}. ${_l('工作表')}`];
   const typeLabels = getFieldTypeLabels();
   let seq = 0;
@@ -331,7 +330,7 @@ function renderWorksheets(worksheets: PlanItem[], order: number, actionsByWorksh
 
       if (views.length) lines.push('', `-  **👁️${_l('视图')}**：${views.join(' | ')}`);
 
-      const actions = (actionsByWorksheet[name] || []).map(codeSpan);
+      const actions = (actionsByWorksheet.get(name) || []).map(codeSpan);
 
       if (actions.length) lines.push(`-  **📌${_l('自定义动作')}**：${actions.join(' | ')}`);
     });
@@ -355,7 +354,7 @@ function renderPages(pages: PlanItem[], order: number, title: string) {
 
       if (!name) return;
       seq += 1;
-      const typeLabel = typeLabels[item.type || ''];
+      const typeLabel = panelConfig(typeLabels, item.type || '');
 
       lines.push('', `### ${order}.${seq} ${name}${typeLabel ? ` \`[${typeLabel}]\`` : ''}`);
       if (item.description) lines.push('', `>  **${_l('描述')}**：${item.description}`);
@@ -369,7 +368,7 @@ function renderPages(pages: PlanItem[], order: number, title: string) {
           const { name: partName, type } = parseCompactStr(raw);
           const { base, extra } = splitType(type);
           // 组件类型可带参数（如筛选器的字段列表），基础类型映射中文后把参数附在括号里
-          const label = chartLabels[base] || componentLabels[base] || base;
+          const label = panelConfig(chartLabels, base) || panelConfig(componentLabels, base) || base;
           const suffix = [label, extra].filter(Boolean).join('：');
 
           lines.push(`    -  ${codeSpan(partName)}${suffix ? ` (${suffix})` : ''}`);
@@ -394,7 +393,7 @@ function renderCustomActions(groups: PlanItem[], order: number) {
 
     actions.forEach(action => {
       const name = action.name || _l('（未命名）');
-      const typeLabel = typeLabels[action.type || ''] || action.type || '';
+      const typeLabel = panelConfig(typeLabels, action.type || '') || action.type || '';
 
       seq += 1;
       lines.push('', `### ${order}.${seq} ${name}${typeLabel ? `  \`[${typeLabel}]\`` : ''}`);
@@ -421,7 +420,7 @@ function renderWorkflows(workflows: PlanItem[], order: number) {
 
   workflows.forEach((wf, index) => {
     const trigger = wf.trigger || {};
-    const typeLabel = typeLabels[trigger.type || ''] || trigger.type || '';
+    const typeLabel = panelConfig(typeLabels, trigger.type || '') || trigger.type || '';
     const name = wf.name || _l('（未命名）');
 
     lines.push('', `### ${order}.${index + 1} ${name}${typeLabel ? ` \`[${typeLabel}]\`` : ''}`);
@@ -475,11 +474,14 @@ export function buildPlanMarkdown({ files, appName, estimateCredits, now }: Plan
   const aiAssistants = asArray(readFile(files, '/jsons/ai-assistants.json').parsed);
 
   // 工作表章节要列出该表下的自定义动作：先按工作表名归拢一次
-  const actionsByWorksheet: Record<string, string[]> = {};
+  const actionsByWorksheet = new Map<string, string[]>();
 
   actionGroups.forEach(group => {
     if (!group || !group.worksheet) return;
-    actionsByWorksheet[group.worksheet] = asArray(group.actions).flatMap(action => (action.name ? [action.name] : []));
+    actionsByWorksheet.set(
+      group.worksheet,
+      asArray(group.actions).flatMap(action => (action.name ? [action.name] : [])),
+    );
   });
 
   const head = [`# 📦 ${_l('%0 搭建计划说明书', name)}`, '', `>  **${_l('应用名称')}**：${name}`];

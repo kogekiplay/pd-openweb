@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import homeAppAjax from 'src/api/homeApp';
@@ -7,6 +7,18 @@ import { downloadBlob } from 'src/utils/platform/browser/download';
 import { useAgentBus, useAgentEvent } from '../agentBus';
 import { AGENT_HEADER_EVENT, fetchBuildEstimate } from '../agentService';
 import { IS_DEBUG } from '../debug';
+import { ChatStateContext } from './builderContext';
+import type { PendingBuilderEdit } from './builderContext';
+import {
+  builderRecord,
+  builderText,
+  createdCustomPages,
+  customPageIndex,
+  mergeAppMeta,
+  pendingBuilderEdits,
+  buildPhase as readBuildPhase,
+} from './builderState';
+import type { AppMetaState, BuildPhase, CreatedCustomPage, CustomPagePreview, WorksheetPreview } from './builderState';
 import { entryByKey, entryByPath } from './fileRegistry';
 import { fileArray, isFileRecord, readAppFileMetadata } from './fileTypes';
 import type { SidebarKey } from './fileTypes';
@@ -23,16 +35,14 @@ import {
 } from './panels';
 import { buildPlanFileName, buildPlanMarkdown } from './planExport';
 import PreviewFrame from './PreviewFrame';
+import { buildPreviewUrl } from './previewNavigation';
 import Sidebar from './Sidebar';
 import SkeletonPanel from './SkeletonPanel';
 import { useFileStore } from './useFileStore';
 
-// 让 panels 内的 CardEditButton 也能读到 chat 提交状态：
-// AppBuilder 是常驻 portal，chat:submitting 事件不会错过；plan-card 到达后才挂载的 CardEditButton
-// 自己订阅会丢初始事件，改从 Context 取
-export const ChatStateContext = createContext({ submitting: false, pendingEdits: [] });
+export { ChatStateContext } from './builderContext';
 
-const Wrap = styled.div`
+const Wrap = styled.div<{ $split: boolean }>`
   display: flex;
   background: var(--color-background-secondary);
   overflow: hidden;
@@ -80,7 +90,7 @@ const PreviewWrap = styled.div`
 `;
 
 // build agent step → sidebar tab：拿到 appId 后自动 setFocus 让 iframe 跟随
-const STEP_TO_SIDEBAR_KEY: Record<string, string> = {
+const STEP_TO_SIDEBAR_KEY: Record<string, SidebarKey> = {
   'step-build-worksheets': 'worksheets',
   // 补表关联仍在工作表上加字段，停留在工作表 tab 让用户看到关联字段陆续出现
   'step-build-relations': 'worksheets',
@@ -91,61 +101,6 @@ const STEP_TO_SIDEBAR_KEY: Record<string, string> = {
   // 起始统一切到"自定义页面"（最直观的产物面），四个分支的 loop-start 不再各自切 tab，避免并发期抖动。
   'step-config-and-design': 'customPages',
 };
-
-// activeKey + 已知 ID 组合出 iframe src
-// iframe 嵌入应用必须带 ?rp=no，避免主应用层的页头/侧栏在 iframe 内重复渲染
-function buildPreviewUrl(
-  activeKey: string,
-  {
-    appId,
-    sectionIdByName,
-    latestWorksheet,
-    latestCustomPage,
-    previewNonce,
-    appLanguage,
-  }: { appId?: string; [key: string]: any },
-) {
-  if (!appId) return '';
-
-  // sys_lang：与搭建应用 build stream 透传的 appLanguage（app.json.language）保持一致，
-  // 让预览 iframe 按搭建语言渲染，避免预览语言与目标应用语言不一致。
-  const withLang = appLanguage ? `&sys_lang=${encodeURIComponent(appLanguage)}` : '';
-  const withRp = (path: string) => `${path}?rp=no${withLang}`;
-  // 应用根这类静态预览 URL 不随产物变化，附加 nonce 让 src 变化以触发 PreviewFrame 重新导航刷新
-  const withRefresh = (path: string) => `${withRp(path)}${previewNonce ? `&_r=${previewNonce}` : ''}`;
-
-  switch (activeKey) {
-    case 'roles':
-      return withRp(`/app/${appId}/role`);
-    case 'workflows':
-      return withRp(`/app/${appId}/workflow`);
-    case 'worksheets': {
-      // 优先跳最近 iteration-completed 透出的具体 worksheet（含真实 worksheetId + sectionId）
-      if (latestWorksheet && latestWorksheet.worksheetId && latestWorksheet.sectionId) {
-        return withRp(`/app/${appId}/${latestWorksheet.sectionId}/${latestWorksheet.worksheetId}`);
-      }
-
-      const firstSection = Object.values(sectionIdByName || {})[0];
-
-      return withRp(firstSection ? `/app/${appId}/${firstSection}` : `/app/${appId}`);
-    }
-
-    case 'customPages':
-      // 自定义页面（仪表盘 + 工作台）：必须跳到被配置的具体页面 /app/{appId}/{sectionId}/{pageId}。
-      // 跳应用根会被 HAP 重定向到默认空首页（非这些 dashboard），看着永远是空壳；带具体 pageId 后
-      // 路由 routeKey 变化触发 getPageInfo 重拉，才会呈现配置后的组件。无具体页面时退回应用根。
-      if (latestCustomPage && latestCustomPage.pageId && latestCustomPage.sectionId) {
-        return withRefresh(`/app/${appId}/${latestCustomPage.sectionId}/${latestCustomPage.pageId}`);
-      }
-
-      return withRefresh(`/app/${appId}`);
-
-    case 'customActions':
-    case 'overview':
-    default:
-      return withRefresh(`/app/${appId}`);
-  }
-}
 
 const DebugBar = styled.div`
   max-width: 762px;
@@ -257,7 +212,7 @@ export default function AppBuilder({
 }: AppBuilderProps) {
   const bus = useAgentBus();
   const { files, focus, setFocus, sidebarItems } = useFileStore();
-  const [appMeta, setAppMeta] = useState({
+  const [appMeta, setAppMeta] = useState<AppMetaState>({
     name: '',
     versionLabel: '',
     appId: '',
@@ -270,10 +225,10 @@ export default function AppBuilder({
   // build 费用预估（信用点）：null = 未返回 / 取不到（渲染「计算中…」）；loading 控制提交后到返回前的过渡
   const [estimateCredits, setEstimateCredits] = useState<number | null>(null);
   const [estimateLoading, setEstimateLoading] = useState(false);
-  const [buildPhase, setBuildPhase] = useState('idle'); // 'idle' | 'building' | 'completed' | 'failed'
+  const [buildPhase, setBuildPhase] = useState<BuildPhase>('idle'); // 'idle' | 'building' | 'completed' | 'failed'
   const [showRawJson, setShowRawJson] = useState(false);
   // build 阶段 iframe 跟随的"虚拟 activeKey"，由 sse:step-progress 推动
-  const [previewKey, setPreviewKey] = useState('overview');
+  const [previewKey, setPreviewKey] = useState<SidebarKey>('overview');
   // 预览刷新令牌：自定义页面/对话机器人无独立 worksheetId，预览 URL 恒为应用根，src 不变不会触发
   // PreviewFrame 重导航；这类步骤完成时 bump 此值，让预览 URL 变化以刷新左侧结构与页面内容
   const [previewNonce, setPreviewNonce] = useState(0);
@@ -285,19 +240,27 @@ export default function AppBuilder({
   // 给即时反馈 + 防重复点击；提交成功由 chatSubmitting 接力，预检被拦则恢复可点。
   const [kickingOff, setKickingOff] = useState(false);
   // 待提交的卡片修改（由 ChatPanel 广播）：卡片「修改」icon 据此常驻高亮 + 回显
-  const [pendingEdits, setPendingEdits] = useState([]);
+  const [pendingEdits, setPendingEdits] = useState<PendingBuilderEdit[]>([]);
   // 预览 overlay 显隐：appId 拿到自动开；arrow_back 手动关；buildPhase=completed 自动关
   const [overlayOpen, setOverlayOpen] = useState(false);
   // 最近一次 build 出来的 worksheet：{ worksheetId, sectionId, name }；用来把 iframe 跳到该工作表
-  const [latestWorksheet, setLatestWorksheet] = useState(null);
+  const [latestWorksheet, setLatestWorksheet] = useState<WorksheetPreview | null>(null);
   // 自定义页面空壳建好后透出的 [{ name, pageId }] 列表（含真实 pageId）；配置完成时据此把预览导航到具体页面
-  const customPagesRef = useRef([]);
+  const customPagesRef = useRef<CreatedCustomPage[]>([]);
   // 当前要在预览里展示的自定义页面：{ sectionId, pageId }；驱动 buildPreviewUrl 跳到具体页面。
-  const [latestCustomPage, setLatestCustomPage] = useState(null);
+  const [latestCustomPage, setLatestCustomPage] = useState<CustomPagePreview | null>(null);
   // 建表阶段累积的 name → { worksheetId, sectionId } 映射；供视图配置阶段按 name 反查工作表跳转
-  const worksheetByNameRef = useRef({});
+  const worksheetByNameRef = useRef(new Map<string, WorksheetPreview>());
+  const previewRequestRef = useRef(0);
+  const currentAppIdRef = useRef('');
+  useEffect(
+    () => () => {
+      previewRequestRef.current += 1;
+    },
+    [],
+  );
   // 本会话已用于搭建的方案版本集合（versionLabel → true）：命中当前版本时「生成应用」转为已搭建态
-  const [builtVersions, setBuiltVersions] = useState({});
+  const [builtVersions, setBuiltVersions] = useState<Record<string, boolean>>({});
   // 正在搭建的版本 label：build 失败时据此回滚 builtVersions，恢复「生成应用」可点
   const pendingBuildLabelRef = useRef('');
   // 点击历史卡片加载已提交版本文件期间：内容区显示骨架屏（实时流式不发该事件，不受影响）
@@ -315,35 +278,35 @@ export default function AppBuilder({
   const [scrollRef, resetScroll] = useStickyScroll(visible, focus, focusedContent);
 
   useAgentEvent('file:begin', resetScroll);
-  useAgentEvent(
-    'app:meta',
-    ({ name, versionLabel, appId, sectionIdByName, sessionId, artifactId, versionId, built } = {}) => {
-      setAppMeta(prev => ({
-        name: name || prev.name,
-        versionLabel: versionLabel || prev.versionLabel,
-        // built 为显式布尔（打开历史卡片：已搭建 true / 未搭建 false）时，用本次 appId 覆盖（空串即清残留），
-        // 避免上一张已搭建卡片的 appId 漏到当前卡片（含已搭建版本 appId 解析失败的情况）；
-        // 仅实时流式（built===undefined）维持「有则取、无则保留」语义
-        appId: built === undefined ? appId || prev.appId : appId || '',
-        sectionIdByName: sectionIdByName || prev.sectionIdByName,
-        sessionId: sessionId || prev.sessionId,
-        artifactId: artifactId || prev.artifactId,
-        versionId: versionId || prev.versionId,
-      }));
-      if (appId) setOverlayOpen(true);
+  useAgentEvent('app:meta', (payload: unknown) => {
+    const data = builderRecord(payload);
+    const appId = builderText(data['appId']);
+    const versionLabel = builderText(data['versionLabel']);
+    const built = data['built'];
+    const nextAppId = typeof built === 'boolean' ? appId : appId || currentAppIdRef.current;
+    if (nextAppId !== currentAppIdRef.current || typeof built === 'boolean') previewRequestRef.current += 1;
+    if (nextAppId !== currentAppIdRef.current) {
+      setLatestWorksheet(null);
+      setLatestCustomPage(null);
+      customPagesRef.current = [];
+      worksheetByNameRef.current.clear();
+      setPreviewNonce(0);
+    }
+    currentAppIdRef.current = nextAppId;
+    setAppMeta(prev => mergeAppMeta(prev, payload));
+    if (appId) setOverlayOpen(true);
 
-      // 历史会话还原「已搭建」完成态：标记该版本已搭建 + 切完成态；停在标签视图（不自动展开预览 overlay），
-      // Sidebar 显示「打开应用」、Header 显示「已使用 v* 搭建」。
-      if (built === true && versionLabel) {
-        setBuiltVersions(prev => ({ ...prev, [versionLabel]: true }));
-        setBuildPhase('completed');
-        setOverlayOpen(false);
-      } else if (built === false) {
-        // 切回未搭建版本：清掉残留的完成态，恢复「生成应用」可点
-        setBuildPhase('idle');
-      }
-    },
-  );
+    // 历史会话还原「已搭建」完成态：标记该版本已搭建 + 切完成态；停在标签视图（不自动展开预览 overlay），
+    // Sidebar 显示「打开应用」、Header 显示「已使用 v* 搭建」。
+    if (built === true && versionLabel) {
+      setBuiltVersions(prev => ({ ...prev, [versionLabel]: true }));
+      setBuildPhase('completed');
+      setOverlayOpen(false);
+    } else if (built === false) {
+      // 切回未搭建版本：清掉残留的完成态，恢复「生成应用」可点
+      setBuildPhase('idle');
+    }
+  });
 
   // 清掉待搭建/已搭建标记，让「生成应用」恢复可点。用于：搭建失败（撤销 building 时打的「已搭建」），
   // 以及预检（无创建权限 / 工作表超上限）拦截、搭建未发起（此时仅清待搭建版本，尚未标「已搭建」）。
@@ -360,7 +323,8 @@ export default function AppBuilder({
     });
   }
 
-  useAgentEvent('build:phase', phase => {
+  useAgentEvent('build:phase', (payload: unknown) => {
+    const phase = readBuildPhase(payload);
     if (!phase) return;
     setBuildPhase(phase);
     if (phase === 'completed') setOverlayOpen(false);
@@ -381,16 +345,16 @@ export default function AppBuilder({
     rollbackPendingBuild();
   });
 
-  useAgentEvent('chat:submitting', value => {
+  useAgentEvent('chat:submitting', (value: unknown) => {
     setChatSubmitting(!!value);
     if (!value) setPlanStreaming(false);
     // 搭建已真正发起（submitting 置位）：交接给 chatSubmitting 维持禁用，清掉过渡态
     if (value) setKickingOff(false);
   });
 
-  useAgentEvent('chat:pending-edits', value => setPendingEdits(Array.isArray(value) ? value : []));
+  useAgentEvent('chat:pending-edits', (value: unknown) => setPendingEdits(pendingBuilderEdits(value)));
 
-  useAgentEvent('builder:loading', value => setLoadingFiles(!!value));
+  useAgentEvent('builder:loading', (value: unknown) => setLoadingFiles(!!value));
 
   // 点对话里的方案便签（SchemePill）重新打开搭建预览：覆盖「继续搭建未自动弹出」「中途手动关闭后想重看」
   // 等场景。只要已拿到 appId 就允许重开（搭建中跟随进度，完成态回看成品），无 appId 时无可预览不处理。
@@ -412,13 +376,17 @@ export default function AppBuilder({
   }, [visible, overlayOpen, bus]);
 
   // build 进度自动跟随：把 iframe 拉到刚被建造的实体页（completed 后不再覆盖，让用户自由探索）
-  useAgentEvent('sse:step-progress', ({ stepId, status } = {}) => {
+  useAgentEvent('sse:step-progress', (payload: unknown) => {
+    const data = builderRecord(payload);
+    const stepId = builderText(data['stepId']);
+    const status = builderText(data['status']);
     console.log('[preview-trace] 2.recv sse:step-progress', { stepId, status });
-    const key = STEP_TO_SIDEBAR_KEY[stepId];
+    const key = Object.hasOwn(STEP_TO_SIDEBAR_KEY, stepId) ? STEP_TO_SIDEBAR_KEY[stepId] : undefined;
 
     if (!key) return;
 
     if (status === 'running') {
+      previewRequestRef.current += 1;
       console.log('[preview-trace] 3.setPreviewKey', key);
       setPreviewKey(key);
     }
@@ -430,23 +398,27 @@ export default function AppBuilder({
   });
 
   // 自定义页面空壳建好：缓存 [{ name, pageId }] 列表（含真实 pageId），供配置完成时按 index 取页导航。
-  useAgentEvent('sse:custom-pages-created', ({ pages } = {}) => {
+  useAgentEvent('sse:custom-pages-created', (payload: unknown) => {
+    const pages = builderRecord(payload)['pages'];
     console.log('[preview-trace] 0.recv custom-pages-created', { count: Array.isArray(pages) ? pages.length : 0 });
-    if (Array.isArray(pages)) customPagesRef.current = pages;
+    if (Array.isArray(pages)) customPagesRef.current = createdCustomPages(pages);
   });
 
   // 跳到指定自定义页面：pageId 已知，getAppSimpleInfo 反查 sectionId，跳到 /app/:appId/:sectionId/:pageId。
   // 预览走软导航（PreviewFrame 的 refreshFirst：push 前先 await 刷新 sheetList，让新页面进入应用结构再跳，
   // WorkSheet 能识别并渲染，pageContent 按 pageId 变化自动重拉配置），不整页 reload。
-  function focusCustomPage(pageId) {
+  function focusCustomPage(pageId: string) {
     if (!pageId) return;
+    const request = ++previewRequestRef.current;
     homeAppAjax
       .getAppSimpleInfo({ workSheetId: pageId }, { silent: true })
-      .then(info => {
-        if (info && info.appSectionId) {
-          console.log('[preview-trace] 10b.focusCustomPage', { pageId, sectionId: info.appSectionId });
+      .then((info: unknown) => {
+        const sectionId = builderText(builderRecord(info)['appSectionId']);
+        if (request !== previewRequestRef.current) return;
+        if (sectionId) {
+          console.log('[preview-trace] 10b.focusCustomPage', { pageId, sectionId });
           setPreviewKey('customPages');
-          setLatestCustomPage({ pageId, sectionId: info.appSectionId });
+          setLatestCustomPage({ pageId, sectionId });
         }
       })
       .catch(() => {});
@@ -455,7 +427,8 @@ export default function AppBuilder({
   // 单个自定义页面真实配置完成：配置内容写进了具体 pageId，但预览默认跳应用根会被 HAP 重定向到默认空首页。
   // 这里按 index 取出被配置页面的真实 pageId，把预览精确导航过去——pageId 与默认首页不同，routeKey 变化即触发
   // WorkSheet 的 getPageInfo 重拉（纯前端 SPA 软刷新，无整页 reload），呈现配置后的组件。
-  useAgentEvent('sse:custom-page-built', ({ index = 0 } = {}) => {
+  useAgentEvent('sse:custom-page-built', (payload: unknown) => {
+    const index = customPageIndex(builderRecord(payload)['index']);
     const list = customPagesRef.current || [];
     const page = list[index] || list[0];
 
@@ -471,19 +444,20 @@ export default function AppBuilder({
     name,
     switchTab,
   }: {
-    worksheetId?: string;
-    name?: string;
-    [key: string]: any;
+    worksheetId?: string | undefined;
+    name?: string | undefined;
+    switchTab?: boolean | undefined;
   }) {
     if (!worksheetId) return;
 
-    const apply = sectionId => {
-      if (!sectionId) return;
+    const request = ++previewRequestRef.current;
+    const apply = (sectionId: string) => {
+      if (!sectionId || request !== previewRequestRef.current) return;
       if (switchTab) setPreviewKey('worksheets');
       setLatestWorksheet({ worksheetId, sectionId, name });
       // 顺手维护 name → { worksheetId, sectionId } 缓存与 sectionIdByName（分组首页兜底 + 后续按名复用）
       if (name) {
-        worksheetByNameRef.current[name] = { worksheetId, sectionId };
+        worksheetByNameRef.current.set(name, { worksheetId, sectionId });
         setAppMeta(prev => ({
           ...prev,
           sectionIdByName: { ...(prev.sectionIdByName || {}), [name]: sectionId },
@@ -492,7 +466,7 @@ export default function AppBuilder({
     };
 
     // 同名且 worksheetId 一致时复用缓存的 sectionId，省一次请求
-    const cached = name ? worksheetByNameRef.current[name] : null;
+    const cached = name ? worksheetByNameRef.current.get(name) : null;
 
     if (cached && cached.sectionId && cached.worksheetId === worksheetId) {
       apply(cached.sectionId);
@@ -501,18 +475,24 @@ export default function AppBuilder({
 
     homeAppAjax
       .getAppSimpleInfo({ workSheetId: worksheetId }, { silent: true })
-      .then(info => info && info.appSectionId && apply(info.appSectionId))
+      .then((info: unknown) => apply(builderText(builderRecord(info)['appSectionId'])))
       .catch(() => {});
   }
 
   // 单个 worksheet 建好：跳到该表（previewKey 已由 step-build-worksheets 的 sse:step-progress 切到工作表 tab）
-  useAgentEvent('sse:worksheet-built', ({ worksheetId, name } = {}) => {
+  useAgentEvent('sse:worksheet-built', (payload: unknown) => {
+    const data = builderRecord(payload);
+    const worksheetId = builderText(data['worksheetId']);
+    const name = builderText(data['name']);
     console.log('[preview-trace] 7.worksheet built', { worksheetId, name });
     focusWorksheet({ worksheetId, name, switchTab: false });
   });
 
   // 单个 worksheet 视图/动作配完：worksheetId 直接来自事件，跳回该表重新拉取，呈现新建的视图
-  useAgentEvent('sse:worksheet-views-built', ({ worksheetId, name } = {}) => {
+  useAgentEvent('sse:worksheet-views-built', (payload: unknown) => {
+    const data = builderRecord(payload);
+    const worksheetId = builderText(data['worksheetId']);
+    const name = builderText(data['name']);
     console.log('[preview-trace] 8.worksheet views built', { worksheetId, name });
     focusWorksheet({ worksheetId, name, switchTab: true });
   });
@@ -524,7 +504,7 @@ export default function AppBuilder({
 
     homeAppAjax
       .getApp({ appId: appMeta.appId, getSection: true }, { silent: true })
-      .then(detail => {
+      .then((detail: unknown) => {
         if (cancelled || !detail) return;
         // 留位：后续可消费 detail.sections / .items，把名字 → 真实 worksheetId 映射进 buildPreviewUrl
       })
@@ -550,13 +530,17 @@ export default function AppBuilder({
   // 当前版本未被搭建。与按钮可点条件严格对齐，避免 plan 流式途中 / 已进搭建后还去打预估接口。
   // 非平台版（platformENV.isPlatform 为 false，如普通私有部署）无信用点计费体系：不拉预估，
   // estimateCredits / estimateLoading 保持空值，Header 的「预估消耗」随之不展示。
+  const versionAlreadyBuilt =
+    !!appMeta.versionLabel &&
+    Object.hasOwn(builtVersions, appMeta.versionLabel) &&
+    !!builtVersions[appMeta.versionLabel];
   const canEstimate =
     window.platformENV.isPlatform &&
     !!appMeta.artifactId &&
     !appMeta.appId &&
     !chatSubmitting &&
     hasWorksheets &&
-    !(appMeta.versionLabel && builtVersions[appMeta.versionLabel]);
+    !versionAlreadyBuilt;
 
   // 满足可点态后按 artifactId/versionId 拉取并轮询（后端异步算，status!=='ready' 每 2s 重试至多 15 次 ≈ 30s）；
   // 不满足（plan 未就绪 / 在途 / 已搭建）清空，Header 据此显示「计算中…」占位。
@@ -702,7 +686,7 @@ export default function AppBuilder({
   const showEmptyPlaceholder = split && !loadingFiles && !hasAppId && !hasMeta && sidebarItems.length === 0;
 
   // 当前查看的方案版本若已在本会话用于搭建，则把版本号给 Header 渲染「已使用 Vx 搭建」
-  const builtVersionLabel = appMeta.versionLabel && builtVersions[appMeta.versionLabel] ? appMeta.versionLabel : '';
+  const builtVersionLabel = versionAlreadyBuilt ? appMeta.versionLabel : '';
 
   if (showEmptyPlaceholder) return <Wrap $split={split} data-mingo-app-builder="true" aria-hidden="true" />;
 
