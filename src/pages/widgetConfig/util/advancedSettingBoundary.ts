@@ -85,7 +85,7 @@ export interface SettingRegex extends Record<string, unknown> {
 export interface SettingIncrease extends Record<string, unknown> {
   controlId?: string | undefined;
   type?: number | undefined;
-  start?: string | number | undefined;
+  start?: string | number | null | undefined;
   repeatType?: number | undefined;
   length?: number | undefined;
   format?: string | undefined;
@@ -241,7 +241,7 @@ function increase(value: unknown): value is SettingIncrease {
     text(value['controlId']) &&
     ['type', 'repeatType', 'length'].every(k => num(value[k])) &&
     text(value['format']) &&
-    (text(value['start']) || num(value['start']))
+    (value['start'] === null || text(value['start']) || num(value['start']))
   );
 }
 function summary(value: unknown): value is SettingSummary {
@@ -255,7 +255,11 @@ function objectOrEmpty<T>(value: unknown, predicate: (v: unknown) => v is T): T 
   return value;
 }
 export function countrySettings(value: unknown): SettingCountry[] {
-  return listSetting(value, (item): item is SettingCountry => widgetObject(item) && ['name', 'iso2', 'dialCode', 'id'].every(key => text(item[key])));
+  return listSetting(
+    value,
+    (item): item is SettingCountry =>
+      widgetObject(item) && ['name', 'iso2', 'dialCode', 'id'].every(key => text(item[key])),
+  );
 }
 export function styleSetting(value: unknown): SettingStyle {
   return objectOrEmpty(value, style) || {};
