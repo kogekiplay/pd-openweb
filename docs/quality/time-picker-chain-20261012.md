@@ -15,3 +15,5 @@ localhost 30114 使用当前真实组件、React 19、jQuery 4 和独立测试�
 证据 `/private/tmp/hap-timepicker-before-strict-20261012.txt`、`hap-timepicker-final-strict-20261012.txt`、`hap-timepicker-diagnostic-comparison-20261012.json`、`hap-timepicker-behavior-20261012.json`、`hap-timepicker-tools-strict-20261012.txt`、`hap-timepicker-specs-final-20261012.log`、`hap-timepicker-tools-20261012.log`、`hap-timepicker-stats-20261012.log` 和 `hap-timepicker-baseline-final-20261012.log`。
 
 本批准备作为下一次日常发布候选；现网仍为已验证的自动编号热修复 `4d6ff521d`，10 月 12 日常发布在 16:41 已完成。本地工作分支保留，GitHub 仅同步 main；不修改生产字段配置、编号序列或业务记录。
+
+源码 `6c7edc410`、main 整合 `7982f7722` 的真实 release（1 分 4 秒，其中规格 22 秒、类型门禁 14 秒）、publish 和 runtime 校验通过；release 的完整规格为 214/214。79 个 HTML 的 537 个本地 JS/CSS 引用存在，3 个 runtime 的 1095 JS / 387 CSS 映射完整，无 dev 产物；widget 已生成，入口 revision 匹配整合源码，SHA256 为 `69ff990777ba7b9d20944ab67591b06c71c185479145d9af2494bbafdfc4ea6e`，构建后工作树干净。现网提供的 favicon HTTP 200；厂商 freestyle 资源由既有部署流程保留。证据 `/private/tmp/hap-timepicker-release-20261012.log`、`hap-timepicker-publish-20261012.log`、`hap-timepicker-runtime-20261012.log`、`hap-timepicker-main-strict-20261012.log` 和 `hap-timepicker-artifact-check-20261012.json`。本批已验证候选尚未部署。
