@@ -35,11 +35,13 @@ export function decodeFileEvent(topic: FileTopic, payload: unknown): FileEvent |
   if (typeof path !== 'string' || !entryByPath(path)) return null;
   if (topic === 'file:delta') {
     const delta = payload['delta'];
-    return delta == null || typeof delta === 'string' ? { topic, path, delta: delta ?? '' } : null;
+    if (typeof delta === 'string') return { topic, path, delta };
+    return delta === null || delta === undefined ? { topic, path, delta: '' } : null;
   }
   if (topic === 'file:write') {
     const content = payload['content'];
-    return content == null || typeof content === 'string' ? { topic, path, content: content ?? '' } : null;
+    if (typeof content === 'string') return { topic, path, content };
+    return content === null || content === undefined ? { topic, path, content: '' } : null;
   }
   return { topic, path };
 }
@@ -85,6 +87,8 @@ export function readGenerationId(content: string): string | number | undefined {
       return undefined;
     }
     if (key !== 'planGenerationId') continue;
+    // A string value may equal the key name; only a property is followed by a colon.
+    if (!/^\s*:/.test(content.slice(end + 1))) continue;
     const match = content
       .slice(end + 1)
       .match(/^\s*:\s*("(?:\\.|[^"\\])*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?(?=\s*[,}]))/);

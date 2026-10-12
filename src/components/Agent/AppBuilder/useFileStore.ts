@@ -24,6 +24,5 @@ export function useFileStore() {
   useEffect(() => {
     bus.emit('builder:files-sync', { files, focus });
   }, [bus, files, focus]);
-  // Keep the legacy AppBuilder panel payload boundary opaque; panels own their per-file decoding.
-  return { files: files as any, focus, setFocus, sidebarItems: sidebarItemsOf(state) as any };
+  return { files, focus, setFocus, sidebarItems: sidebarItemsOf(state) };
 }
