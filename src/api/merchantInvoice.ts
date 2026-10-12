@@ -1,3 +1,9 @@
+interface InvoiceDropdownArgs {
+  projectId?: string | undefined;
+  appId?: string | undefined;
+  taxNo?: string | undefined;
+}
+
 export default {
   /**
    * 创建税号信息
@@ -120,7 +126,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getTaxInfoForDropdownList: function (args: ApiArgs, options: ApiOptions = {}) {
+  getTaxInfoForDropdownList: function (args: InvoiceDropdownArgs, options: ApiOptions = {}): ApiResultOf<unknown> {
     return mdyAPI('MerchantInvoice', 'GetTaxInfoForDropdownList', args, options);
   },
   /**
@@ -144,7 +150,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getSimpleInvoiceProducts: function (args: ApiArgs, options: ApiOptions = {}) {
+  getSimpleInvoiceProducts: function (args: InvoiceDropdownArgs, options: ApiOptions = {}): ApiResultOf<unknown> {
     return mdyAPI('MerchantInvoice', 'GetSimpleInvoiceProducts', args, options);
   },
   /**

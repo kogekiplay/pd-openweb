@@ -3,21 +3,52 @@ import cx from 'classnames';
 import _ from 'lodash';
 import { Button, Dropdown, Input, LoadDiv, RadioGroup, Support, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { DropdownOption } from 'ming-ui/components/Dropdown';
 import merchantInvoiceApi from 'src/api/merchantInvoice';
 import worksheetSettingApi from 'src/api/worksheetSetting';
 import { NORMAL_SYSTEM_FIELDS_SORT, WORKFLOW_SYSTEM_FIELDS_SORT } from 'src/pages/worksheet/common/ViewConfig/enum';
 import { navigateTo } from 'src/router/navigateTo';
+import type { FormControl } from 'src/utils/controlTypes';
 import MapField from '../common/MapField';
 import CustomRemark from './CustomRemark';
+import { invoiceSettings, productOptions, taxOptions } from './optionModels';
+import type { InvoiceSettings, TaxOption } from './optionModels';
 import '../common/payAndInvoice.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
-export default class InvoiceConfig extends Component<any, any> {
-  constructor(props) {
+interface InvoiceConfigProps {
+  worksheetInfo?:
+    | {
+        projectId?: string | undefined;
+        appId?: string | undefined;
+        worksheetId?: string | undefined;
+        template?: { controls?: FormControl[] | undefined } | undefined;
+      }
+    | undefined;
+}
+interface InvoiceConfigState extends InvoiceSettings {
+  loading: boolean;
+  loadError: boolean;
+  productError: boolean;
+  productLoading: boolean;
+  taxList: TaxOption[];
+  productList: DropdownOption<string>[];
+  settingChanged: boolean;
+}
+
+export default class InvoiceConfig extends Component<InvoiceConfigProps, InvoiceConfigState> {
+  private active = true;
+  private requestGeneration = 0;
+  private productGeneration = 0;
+  private editGeneration = 0;
+
+  constructor(props: InvoiceConfigProps) {
     super(props);
 
     this.state = {
       loading: true,
+      loadError: false,
+      productError: false,
+      productLoading: false,
       taxList: [],
       productList: [],
       settingChanged: false,
@@ -33,53 +64,84 @@ export default class InvoiceConfig extends Component<any, any> {
   }
 
   override componentDidMount() {
+    this.active = true;
     this.getData();
   }
 
+  override componentWillUnmount() {
+    this.active = false;
+    this.requestGeneration++;
+    this.productGeneration++;
+  }
+
   getData = () => {
+    const generation = ++this.requestGeneration;
+    ++this.productGeneration;
+    this.setState({ loading: true, loadError: false });
     const { projectId, appId, worksheetId } = this.props.worksheetInfo || {};
 
     Promise.all([
       worksheetSettingApi.getInvoiceSetting({ projectId, appId, worksheetId }),
       merchantInvoiceApi.getTaxInfoForDropdownList({ projectId, appId }),
-    ]).then(([settings = {}, taxInfos = []]) => {
-      const taxNo = settings.taxNo || taxInfos[0]?.taxNo;
-      this.setState({
-        ...settings,
-        taxList: taxInfos.map(item => ({
-          text: item.companyName,
-          value: item.taxNo,
-          disabled: item.planType === 99, //已过期
-          hasPay: item.planType !== 5,
-        })),
-        taxNo,
-        loading: false,
-        remark: settings.remark || _l('发票申请已提交，将进入管理员审核，请您耐心等待！'),
+    ])
+      .then(([settingResponse, taxResponse]) => {
+        if (!this.active || generation !== this.requestGeneration) return;
+        const settings = invoiceSettings(settingResponse);
+        const taxList = taxOptions(taxResponse ?? []);
+        const taxNo = settings.taxNo || taxList[0]?.value;
+        this.setState({
+          ...settings,
+          taxList,
+          taxNo,
+          loading: false,
+          remark: settings.remark || _l('发票申请已提交，将进入管理员审核，请您耐心等待！'),
+        });
+        if (taxNo) this.getProductList(taxNo);
+      })
+      .catch(() => {
+        if (this.active && generation === this.requestGeneration) this.setState({ loading: false, loadError: true });
       });
-      taxNo && this.getProductList(taxNo);
-    });
   };
 
-  getProductList = taxNo => {
+  getProductList = (taxNo: string | undefined, resetSelection = false) => {
+    const generation = ++this.productGeneration;
+    this.setState({
+      productError: false,
+      productLoading: !!taxNo,
+      productList: [],
+      ...(resetSelection ? { productId: undefined } : {}),
+    });
+    if (!taxNo) {
+      this.setState({ productList: [], productId: undefined });
+      return;
+    }
     const { projectId, appId } = this.props.worksheetInfo || {};
-    merchantInvoiceApi.getSimpleInvoiceProducts({ projectId, appId, taxNo }).then(res => {
-      const list = _.uniqBy(res, 'categoryName').map(item => ({
-        text: item.categoryName,
-        value: item.productId,
-      }));
+    merchantInvoiceApi
+      .getSimpleInvoiceProducts({ projectId, appId, taxNo })
+      .then(res => {
+        if (!this.active || generation !== this.productGeneration) return;
+        const list = productOptions(res);
 
-      this.setState({
-        productList: list,
-        productId: list.map(item => item.value).includes(this.state.productId) ? this.state.productId : undefined,
+        this.setState({
+          productList: list,
+          productLoading: false,
+          productId: list.map(item => item.value).includes(this.state.productId) ? this.state.productId : undefined,
+        });
+      })
+      .catch(() => {
+        if (this.active && generation === this.productGeneration)
+          this.setState({ productError: true, productLoading: false });
       });
-    });
   };
 
-  onChangeConfig = updateObj => {
+  onChangeConfig = (updateObj: InvoiceSettings) => {
+    ++this.editGeneration;
     this.setState({ ...updateObj, settingChanged: true });
   };
 
   onSave = () => {
+    if (this.state.loading || this.state.loadError || this.state.productError || this.state.productLoading) return;
+    const generation = this.editGeneration;
     const { projectId, worksheetId } = this.props.worksheetInfo || {};
     const { taxNo, scenes, productId, remark, fieldMaps, invoiceCustomRemark } = this.state;
 
@@ -101,12 +163,16 @@ export default class InvoiceConfig extends Component<any, any> {
         invoiceCustomRemark,
       })
       .then(res => {
-        if (res) {
+        if (!this.active) return;
+        if (res === true) {
           alert(_l('保存成功'));
-          this.setState({ settingChanged: false });
+          if (generation === this.editGeneration) this.setState({ settingChanged: false });
         } else {
           alert(_l('保存失败'), 2);
         }
+      })
+      .catch(() => {
+        if (this.active) alert(_l('保存失败'), 2);
       });
   };
 
@@ -114,22 +180,35 @@ export default class InvoiceConfig extends Component<any, any> {
     const { projectId } = this.props.worksheetInfo || {};
     const {
       loading,
-      scenes,
+      scenes = {},
       taxNo,
       taxList,
       contentType,
       remark,
-      fieldMaps,
+      fieldMaps = {},
       productId,
       productList,
       isOpenPayment,
       boundControlIds,
-      invoiceCustomRemark,
+      invoiceCustomRemark = '',
+      loadError,
+      productError,
+      productLoading,
     } = this.state;
     const controls: FormControl[] = _.get(this.props.worksheetInfo, 'template.controls') || [];
 
     if (loading) {
       return <LoadDiv className="mTop20" />;
+    }
+    if (loadError) {
+      return (
+        <div className="mTop20">
+          <span>{_l('加载失败')}</span>
+          <Button className="mLeft10" onClick={this.getData}>
+            {_l('重试')}
+          </Button>
+        </div>
+      );
     }
 
     return (
@@ -143,9 +222,9 @@ export default class InvoiceConfig extends Component<any, any> {
           <div className="configContent">
             <ul className="enableScene">
               {[{ key: 'payment', title: _l('支付订单') }, {}].map((item, i) => {
-                const checked = scenes[item.key];
+                const checked = item.key === 'payment' && scenes.payment;
                 return (
-                  <li className={cx('flexColumn', { Visibility: i === 1 })} key={item.key}>
+                  <li className={cx('flexColumn', { Visibility: i === 1 })} key={item.key || 'reserved'}>
                     <div className="flexRow alignItemsCenter justifyContentBetween mBottom16">
                       <div className="Font15 bold">{item.title}</div>
                       {!isOpenPayment && !checked ? (
@@ -156,7 +235,7 @@ export default class InvoiceConfig extends Component<any, any> {
                                 disabled={true}
                                 size="small"
                                 checked={checked}
-                                onClick={() => this.onChangeConfig({ scenes: { [item.key]: !checked } })}
+                                onClick={() => this.onChangeConfig({ scenes: { payment: !checked } })}
                               />
                             </span>
                           </Tooltip>
@@ -165,7 +244,7 @@ export default class InvoiceConfig extends Component<any, any> {
                         <Switch
                           size="small"
                           checked={checked}
-                          onClick={() => this.onChangeConfig({ scenes: { [item.key]: !checked } })}
+                          onClick={() => this.onChangeConfig({ scenes: { payment: !checked } })}
                         />
                       )}
                     </div>
@@ -195,7 +274,7 @@ export default class InvoiceConfig extends Component<any, any> {
                     data={taxList}
                     onChange={value => {
                       this.onChangeConfig({ taxNo: value });
-                      this.getProductList(value);
+                      this.getProductList(value, true);
                     }}
                     renderItem={item => {
                       return (
@@ -241,7 +320,9 @@ export default class InvoiceConfig extends Component<any, any> {
                     { text: _l('按类目汇总'), value: 1 },
                     { text: _l('明细（开发中）'), value: 2, disabled: true },
                   ]}
-                  onChange={value => this.onChangeConfig({ contentType: value })}
+                  onChange={value => {
+                    if (value !== undefined) this.onChangeConfig({ contentType: value });
+                  }}
                 />
 
                 <div className="subTitle">{_l('选择开票类目')}</div>
@@ -254,15 +335,24 @@ export default class InvoiceConfig extends Component<any, any> {
                   border
                   cancelAble
                   data={productList}
+                  itemLoading={productLoading}
                   value={productId || undefined}
                   onChange={value => this.onChangeConfig({ productId: value })}
                 />
+                {productError && (
+                  <div className="mTop10">
+                    <span>{_l('加载失败')}</span>
+                    <Button className="mLeft10" onClick={() => this.getProductList(taxNo)}>
+                      {_l('重试')}
+                    </Button>
+                  </div>
+                )}
 
                 <div className="subTitle">{_l('自定义发票备注')}</div>
                 <div className="textTertiary mBottom16">{_l('可自定义发票备注的显示内容，仅支持文本字段')}</div>
                 <CustomRemark
                   value={invoiceCustomRemark}
-                  onChange={value => this.onChangeConfig({ invoiceCustomRemark: value })}
+                  onChange={(value: string) => this.onChangeConfig({ invoiceCustomRemark: value })}
                   controlList={controls.filter(
                     ({ controlId, type }) =>
                       !_.includes([...NORMAL_SYSTEM_FIELDS_SORT, ...WORKFLOW_SYSTEM_FIELDS_SORT], controlId) &&
@@ -290,14 +380,14 @@ export default class InvoiceConfig extends Component<any, any> {
                   controls={controls}
                   filterIds={boundControlIds || []}
                   fieldMaps={fieldMaps}
-                  onOk={data => this.onChangeConfig({ fieldMaps: data })}
+                  onOk={(data: Record<string, string>) => this.onChangeConfig({ fieldMaps: data })}
                 />
               </Fragment>
             )}
           </div>
         </div>
         <div className="footer">
-          <Button type="primary" onClick={this.onSave}>
+          <Button type="primary" disabled={productError || productLoading} onClick={this.onSave}>
             {_l('保存设置')}
           </Button>
         </div>

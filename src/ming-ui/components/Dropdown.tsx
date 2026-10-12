@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { shallowEqual } from 'react-redux';
 import Trigger from '@rc-component/trigger';
 import type { TriggerRef } from '@rc-component/trigger';
-import type { CSSProperties, ReactNode } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -13,7 +13,8 @@ import MenuItem from './MenuItem';
 import './less/Dropdown.less';
 
 /** 下拉里的一项（value 的类型见 DropdownOption）。data 里也可以直接放一组项（数组），组与组之间画分隔线 */
-export interface DropdownItem {
+export interface DropdownItem<V = unknown> {
+  value?: V | undefined;
   text?: ReactNode;
   /** text 不是字符串时，搜索按它匹配 */
   searchText?: string | undefined;
@@ -29,30 +30,34 @@ export interface DropdownItem {
   iconAtEnd?: boolean | undefined;
   iconHint?: string | undefined;
   /** 取选中项的显示文字时会往下找的子项 */
-  children?: DropdownItem[] | undefined;
+  children?: readonly DropdownItem<V>[] | undefined;
 }
 
-/**
- * Item 推不出来时的兜底（data 还是 any）：项上可以有任意字段 —— 和 V 退回 any 同一个道理，
- * 调用方的数据本身没类型，renderItem 里读 item.hasPay 这类自带字段就不该凭空报错。
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type UntypedDropdownItem = DropdownItem & { [field: string]: any };
-
 /** 一项 = 调用方自己的项类型 Item（可以带任意额外字段）+ 值类型为 V 的 value */
-export type DropdownOption<V, Item extends DropdownItem = DropdownItem> = Item & { value?: V };
+export type DropdownOption<V = unknown, Item extends DropdownItem<V> = DropdownItem<V>> = Item & {
+  value?: V | undefined;
+};
+
+export type DropdownData<V = unknown, Item extends DropdownItem<V> = DropdownItem<V>> = readonly (
+  DropdownOption<V, Item> | readonly DropdownOption<V, Item>[]
+)[];
+
+function isGroup<V, Item extends DropdownItem<V>>(
+  item: DropdownOption<V, Item> | readonly DropdownOption<V, Item>[],
+): item is readonly DropdownOption<V, Item>[] {
+  return Array.isArray(item);
+}
 
 /**
  * 两个类型参数都从调用点推出来：
  * - V（值的类型）从 data 里项的 value、value / defaultValue、onChange 回调的参数标注里推；
  * - Item 从 data 推，调用方项上带的额外字段在 renderItem / renderTitle 里照样有类型。
- * 什么都推不出来（data 还是 any、又没给 value）时 V 退回 any —— 这时候调用方的数据本身就没类型，
- * 这里跟着是 any，不另外制造 unknown 逼调用方先去写 data 的类型。
+ * 未提供值模型时保持 unknown；额外字段由实际 data 推导，不设置开放索引兜底。
  */
-interface DropdownProps<V, Item extends DropdownItem> {
+export interface DropdownProps<V = unknown, Item extends DropdownItem<V> = DropdownItem<V>> {
   // 平铺数组和「含分组的数组」分成两支写：写成一个 (项 | 项[])[] 时，项的形状不齐（有的带 disabled、有的不带）
   // 的 data 推不出 Item，会整个报错
-  data?: readonly DropdownOption<V, Item>[] | readonly (DropdownOption<V, Item> | readonly DropdownOption<V, Item>[])[] | undefined;
+  data?: readonly DropdownOption<V, Item>[] | DropdownData<V, Item> | undefined;
   value?: V | undefined;
   defaultValue?: V | undefined;
   /**
@@ -120,8 +125,7 @@ interface DropdownState<V> {
   keywords: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- V 的兜底，见 DropdownProps 的说明
-class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends Component<
+class Dropdown<V = unknown, Item extends DropdownItem<V> = DropdownItem<V>> extends Component<
   DropdownProps<V, Item>,
   DropdownState<V>
 > {
@@ -305,29 +309,29 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
 
     this.state = {
       value,
-      showMenu: false,
+      showMenu: props.popupVisible ?? false,
       keywords: '',
     };
   }
 
-  getTextFromDataById(data: readonly DropdownOption<V, Item>[] | readonly (DropdownOption<V, Item> | readonly DropdownOption<V, Item>[])[] | undefined, value: V | undefined) {
+  getTextFromDataById(data: DropdownData<V, Item> | undefined, value: V | undefined): ReactNode {
     let text = this.props.placeholder;
 
-    const getTextFromList = list => {
+    const getTextFromList = (list: readonly (DropdownItem<V> | readonly DropdownItem<V>[])[]) => {
       list.forEach(item => {
-        if (item.value != undefined && item.value === value) {
+        if (isGroup(item)) {
+          getTextFromList(item);
+        } else if (item.value != undefined && item.value === value) {
           text = item.text;
           return false;
         } else if (item.children) {
           getTextFromList(item.children);
-        } else if (_.isArray(item)) {
-          getTextFromList(item);
         }
         return undefined;
       });
     };
 
-    getTextFromList(data);
+    getTextFromList(data || []);
     return text;
   }
 
@@ -343,7 +347,7 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
           keywords: '',
         },
         () => {
-          this.props.onVisibleChange(visible);
+          this.props.onVisibleChange?.(visible);
           if (this.state.showMenu && this.search) {
             this.search.focus();
           }
@@ -352,8 +356,8 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
     }
   }
 
-  handleChange(_event: React.MouseEvent<HTMLLIElement, MouseEvent>, item) {
-    if (item.disabled) {
+  handleChange(_event: React.MouseEvent<HTMLLIElement, MouseEvent>, item: DropdownOption<V, Item>) {
+    if (this.props.disabled || item.disabled || item.isTip) {
       return;
     }
 
@@ -367,7 +371,7 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
       this.setState({
         showMenu: false,
       });
-      this.props.onVisibleChange(false);
+      this.props.onVisibleChange?.(false);
     }
 
     if (this.props.onChange) {
@@ -375,7 +379,7 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
     }
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DropdownProps<V, Item>) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.value !== prevProps.value) {
         this.setState({
@@ -399,27 +403,25 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
     this.trigger?.forceAlign?.();
   }
 
-  filterFun(item) {
+  filterFun(item: DropdownOption<V, Item>) {
     const { keywords } = this.state;
     const text = typeof item.text === 'string' ? item.text : item.searchText || '';
 
     return String(text).toLowerCase().indexOf(keywords.toLowerCase()) > -1;
   }
 
-  checkIsNull(item) {
-    if (!item.length) return true;
-    if (item.length && _.isArray(item[0]) && !item.filter(o => o.length).length) return true;
-
-    return false;
+  checkIsNull(data: DropdownData<V, Item>) {
+    return data.every(item => isGroup(item) && item.length === 0);
   }
 
-  renderListItem(data) {
-    const { showItemTitle, currentItemClass, value, renderItem, hiddenValue = [] } = this.props;
+  renderListItem(data: DropdownData<V, Item>): ReactNode {
+    const { showItemTitle, currentItemClass, renderItem, hiddenValue = [] } = this.props;
+    const { value } = this.state;
 
     return data
-      .filter(item => !_.includes(hiddenValue, item.value))
+      .filter(item => isGroup(item) || !_.includes(hiddenValue, item.value))
       .map((item, index: number) => {
-        if (_.isArray(item)) {
+        if (isGroup(item)) {
           return (
             <Fragment key={index}>
               {this.renderListItem(item)}
@@ -427,6 +429,7 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
             </Fragment>
           );
         } else {
+          const { value: optionValue, ...menuItemProps } = item;
           return (
             <Fragment key={index}>
               {item.title ? (
@@ -440,7 +443,8 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
                 </li>
               ) : (
                 <MenuItem
-                  {...item}
+                  {...menuItemProps}
+                  value={typeof optionValue === 'string' || typeof optionValue === 'number' ? optionValue : undefined}
                   className={cx(item.className, value === item.value && currentItemClass ? currentItemClass : '')}
                   data-value={item.value}
                   icon={
@@ -448,11 +452,15 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
                   }
                   iconAtEnd={item.iconAtEnd}
                   iconHint={item.iconHint}
-                  onClick={event => {
+                  onClick={(event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
                     event.stopPropagation();
                     this.handleChange(event, item);
                   }}
-                  title={showItemTitle && item.text}
+                  title={
+                    showItemTitle && (typeof item.text === 'string' || typeof item.text === 'number')
+                      ? String(item.text)
+                      : undefined
+                  }
                 >
                   {renderItem ? renderItem(item) : <div className="itemText">{item.text}</div>}
                 </MenuItem>
@@ -474,7 +482,7 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
   displayMenu = () => {
     const { showMenu, keywords } = this.state;
     const {
-      data,
+      data = [],
       maxHeight,
       menuStyle,
       menuClass,
@@ -489,7 +497,7 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
     const searchData: (DropdownOption<V, Item> | readonly DropdownOption<V, Item>[])[] = [];
 
     (data || []).forEach(item => {
-      if (_.isArray(item)) {
+      if (isGroup(item)) {
         searchData.push(item.filter(o => this.filterFun(o)));
       } else if (this.filterFun(item)) {
         searchData.push(item);
@@ -514,7 +522,7 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
           this.setState({
             showMenu: false,
           });
-          this.props.onVisibleChange(false);
+          this.props.onVisibleChange?.(false);
         }}
         onClickAwayExceptions={[this._input]}
         fixedHeader={
@@ -567,8 +575,9 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
 
   displayPointer = () => {
     const { value } = this.state;
-    const { dropIcon, placeholder, data, cancelAble, disabledClickElement, renderPointer } = this.props;
-    const selectedData = _.find(_.flatten(data), item => item.value === value);
+    const { dropIcon, placeholder, data = [], cancelAble, disabledClickElement, renderPointer } = this.props;
+    const options = data.flatMap(item => (isGroup(item) ? item : [item]));
+    const selectedData = options.find(item => item.value === value);
     return (
       <div
         className={cx('Dropdown--input', { 'Dropdown--border': !!this.props.border }, { active: this.state.showMenu })}
@@ -595,11 +604,11 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
                   hoverBorderColorPrimary: this.props.hoverTheme,
                 })}
               >
-                {this.props.renderError && !this.props.data.map(o => (_.isArray(o) ? undefined : o.value)).includes(value)
+                {this.props.renderError && !options.some(item => item.value === value)
                   ? this.props.renderError()
                   : this.props.renderTitle
                     ? this.props.renderTitle(selectedData)
-                    : this.props.renderValue.replace(
+                    : (this.props.renderValue ?? '{{value}}').replace(
                         /{{value}}/g,
                         // text 可能是节点；replace 本来就会把它转成字符串，这里只是写明
                         String(this.getTextFromDataById(this.props.data, this.state.value)),
@@ -613,8 +622,9 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
                 <Icon
                   icon="cancel"
                   className="textTertiary mLeft8 clearIcon"
-                  onClick={e => {
+                  onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
                     e.stopPropagation();
+                    if (this.props.disabled) return;
                     if (value != undefined) {
                       this.setState({
                         value: undefined,
@@ -625,7 +635,7 @@ class Dropdown<V = any, Item extends DropdownItem = UntypedDropdownItem> extends
                       this.setState({
                         showMenu: false,
                       });
-                      this.props.onVisibleChange(false);
+                      this.props.onVisibleChange?.(false);
                     }
 
                     if (this.props.onChange) {
