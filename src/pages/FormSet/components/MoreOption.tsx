@@ -10,7 +10,7 @@ export const handleCopyOptionClick = ({ event, setFn, onCopy }) => {
   onCopy();
 };
 
-let MoreOption = class MoreOption extends React.Component<any, any> {
+const UnwrappedMoreOption = class MoreOption extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }
@@ -106,5 +106,5 @@ let MoreOption = class MoreOption extends React.Component<any, any> {
     );
   }
 };
-MoreOption = ClickAway.wrap(MoreOption);
+const MoreOption = ClickAway.wrap(UnwrappedMoreOption);
 export default MoreOption;

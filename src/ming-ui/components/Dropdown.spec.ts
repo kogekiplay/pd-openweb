@@ -147,11 +147,8 @@ void Dropdown; void defaults; void typed; void missing;
     assert.ok(result.status === 0 || result.status === 1);
     const headers = result.stdout.split('\n').filter(line => /^\S.*error TS\d+:/.test(line));
     assert.ok(result.status === 0 || headers.length > 0, result.stdout + result.stderr);
-    const existingDependencies = ['ClickAway.tsx', 'Menu.tsx', 'List.tsx'];
-    const unexpected = headers.filter(
-      line => !existingDependencies.some(name => line.startsWith('src/ming-ui/components/' + name + '(')),
-    );
-    assert.deepEqual(unexpected, [], result.stdout + result.stderr);
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    assert.deepEqual(headers, [], result.stdout + result.stderr);
   } finally {
     fs.rmSync(temporary, { recursive: true, force: true });
   }

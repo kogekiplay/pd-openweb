@@ -43,11 +43,9 @@ interface KcAppMenuProps {
   /** 交给 Menu 的定位容器选择器 */
   con?: string | undefined;
   showDetail?: (() => void) | undefined;
-  // ClickAway.wrap 包出来的组件还收 onClickAwayExceptions 等
-  [key: string]: unknown;
 }
 
-let KcAppMenu = class KcAppMenu extends React.Component<KcAppMenuProps> {
+const UnwrappedKcAppMenu = class KcAppMenu extends React.Component<KcAppMenuProps> {
   static override propTypes = {
     item: PropTypes.object,
     removeNode: PropTypes.func,
@@ -163,5 +161,5 @@ let KcAppMenu = class KcAppMenu extends React.Component<KcAppMenuProps> {
     );
   }
 };
-KcAppMenu = ClickAway.wrap(KcAppMenu);
+const KcAppMenu = ClickAway.wrap(UnwrappedKcAppMenu);
 export default KcAppMenu;

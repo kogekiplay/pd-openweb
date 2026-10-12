@@ -94,7 +94,7 @@ export class ColumnHead extends Component<WorksheetFilterColumnProps> {
   // 而 rc-trigger 5 给 getPopupContainer 补上了准确签名
   // ((node: HTMLElement) => HTMLElement)，四处 `() => this.conRef.current`
   // 就都成了 TS2740。2.6.5 那边这个 prop 是无类型的，所以看不出来。
-  conRef = React.createRef<HTMLElement>();
+  conRef = React.createRef<HTMLDivElement>();
 
   getType(control: Pick<FormControl, 'type' | 'sourceControlType'>) {
     const { type, sourceControlType } = control;

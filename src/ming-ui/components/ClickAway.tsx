@@ -1,202 +1,202 @@
-import React, { forwardRef, useCallback, useRef } from 'react';
-import { useClickAway } from 'react-use';
-import { compact, every, flatten, isFunction, map } from 'lodash';
+import React, { createElement, useCallback, useEffect, useRef } from 'react';
+import type {
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  ComponentRef,
+  ElementType,
+  PropsWithoutRef,
+  ReactElement,
+  Ref,
+  RefAttributes,
+} from 'react';
 import PropTypes from 'prop-types';
 
-const DEFAULT_EVENTS = ['mousedown'];
 const BOUNDARY_STYLE = { display: 'contents' };
 
-function assignRef(ref, value) {
-  if (isFunction(ref)) {
-    ref(value);
-  } else if (ref) {
-    ref.current = value;
-  }
+export interface ClickAwayHandlers {
+  onClickAway?: ((target: Node) => void) | undefined;
+  /** Selectors, jQuery collections, DOM nodes and ref/instance objects are decoded before use. */
+  onClickAwayExceptions?: readonly unknown[] | undefined;
+  specialFilter?: ((target: Node) => unknown) | undefined;
 }
 
-function getDomNode(node) {
-  if (!node) {
-    return null;
-  }
+export type ClickAwayProps<C extends ElementType = 'div'> = Omit<
+  ComponentPropsWithoutRef<C>,
+  keyof ClickAwayHandlers | 'component'
+> &
+  ClickAwayHandlers & {
+    component?: C | undefined;
+    ref?: Ref<C extends keyof React.JSX.IntrinsicElements ? ComponentRef<C> : HTMLSpanElement> | undefined;
+  };
 
-  if (node.nodeType) {
-    return node;
-  }
-
-  if (node.current) {
-    return getDomNode(node.current);
-  }
-
-  return null;
+/** The public generic contract validates component props; this boundary only forwards opaque fields. */
+interface RuntimeClickAwayProps extends ClickAwayHandlers {
+  component?: unknown;
+  ref?: unknown;
 }
 
-function getClickAwayExceptions(onClickAwayExceptions) {
-  return compact(
-    map(onClickAwayExceptions, item => {
-      if (window.jQuery && item instanceof window.jQuery) {
-        return map(item, x => x);
-      }
-
-      if (typeof item === 'string' && window.jQuery) {
-        return map(window.jQuery(item), x => x);
-      }
-
-      return getDomNode(item);
-    }),
-  );
+function object(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object';
 }
 
-function shouldTriggerClickAway({ el, target, exceptions, specialFilter }) {
-  if (!target || !el || !window.jQuery) {
+function isDomNode(value: unknown): value is Node {
+  if (value instanceof Node) return true;
+  // Native WebIDL getter checks the node brand across iframe realms, where instanceof differs.
+  const getter = Object.getOwnPropertyDescriptor(Node.prototype, 'nodeType')?.get;
+  if (!getter || !object(value)) return false;
+  try {
+    const type: unknown = Reflect.apply(getter, value, []);
+    return typeof type === 'number' && Number.isInteger(type) && type >= 1 && type <= 12;
+  } catch {
     return false;
   }
+}
 
+function getDomNode(value: unknown, visited = new Set<object>()): Node | null {
+  if (isDomNode(value)) return value;
+  if (!object(value) || visited.has(value)) return null;
+  visited.add(value);
+  return getDomNode(value['current'], visited) || getDomNode(value['nativeElement'], visited);
+}
+
+function getClickAwayExceptions(values: readonly unknown[] = []): Node[] {
+  return values.flatMap(value => {
+    if (window.jQuery && (value instanceof window.jQuery || typeof value === 'string')) {
+      const nodes: unknown =
+        typeof value === 'string'
+          ? window.jQuery(value).toArray()
+          : object(value) && typeof value['toArray'] === 'function'
+            ? Reflect.apply(value['toArray'], value, [])
+            : [];
+      if (!Array.isArray(nodes)) return [];
+      return Array.from(nodes).flatMap((item: unknown) => {
+        const node = getDomNode(item);
+        return node ? [node] : [];
+      });
+    }
+    const node = getDomNode(value);
+    return node ? [node] : [];
+  });
+}
+
+function shouldTriggerClickAway({
+  el,
+  target,
+  exceptions,
+  specialFilter,
+}: {
+  el: Node | null;
+  target: EventTarget | null;
+  exceptions: readonly Node[];
+  specialFilter?: ((target: Node) => unknown) | undefined;
+}): boolean {
+  if (!isDomNode(target) || !el || !window.jQuery) return false;
   return (
-    target !== el &&
-    !window.jQuery(target).closest(window.jQuery(el)).length &&
-    // exceptions 是异构的：字符串选择器、DOM 节点、jQuery 集合都可能进来
-    //（见上面 normalize 里的分支），所以 item 只能是 any。
-    every(
-      flatten(exceptions),
-      (item: any) => target !== item && !window.jQuery(target).closest(window.jQuery(item)).length,
-    ) &&
+    !el.contains(target) &&
+    exceptions.every(node => !node.contains(target)) &&
     document.documentElement.contains(target) &&
-    !(specialFilter && specialFilter(target))
+    !specialFilter?.(target)
   );
 }
 
-function useCompatibleClickAway({ ref, onClickAway, onClickAwayExceptions, specialFilter }) {
-  useClickAway(
-    ref,
-    event => {
+function assignRef(ref: unknown, value: Node | null): (() => void) | undefined {
+  if (typeof ref === 'function') {
+    const cleanup: unknown = Reflect.apply(ref, undefined, [value]);
+    return typeof cleanup === 'function'
+      ? () => {
+          Reflect.apply(cleanup, undefined, []);
+        }
+      : undefined;
+  }
+  if (object(ref)) ref['current'] = value;
+  return undefined;
+}
+
+function isComponent(value: unknown): value is ElementType {
+  if (typeof value === 'string' || typeof value === 'function' || value === React.Fragment || value === React.Suspense)
+    return true;
+  const tag = object(value) ? value['$$typeof'] : undefined;
+  return (
+    typeof tag === 'symbol' &&
+    [Symbol.for('react.memo'), Symbol.for('react.forward_ref'), Symbol.for('react.lazy')].includes(tag)
+  );
+}
+
+function useClickAwayElement<P extends RuntimeClickAwayProps>(props: P, ref: unknown, forwardHandlers: boolean) {
+  const { component = 'div', ref: _ref, onClickAway, onClickAwayExceptions, specialFilter, ...rest } = props;
+  const boundary = useRef<Node | null>(null);
+  const handlers = useRef({ onClickAway, onClickAwayExceptions, specialFilter });
+  useEffect(() => {
+    handlers.current = { onClickAway, onClickAwayExceptions, specialFilter };
+  }, [onClickAway, onClickAwayExceptions, specialFilter]);
+  useEffect(() => {
+    const listener = (event: Event) => {
+      const current = handlers.current;
+      const target = getDomNode(event.target);
       if (
-        onClickAway &&
+        current.onClickAway &&
+        target &&
         shouldTriggerClickAway({
-          el: ref.current,
-          target: event.target,
-          exceptions: getClickAwayExceptions(onClickAwayExceptions),
-          specialFilter,
+          el: boundary.current,
+          target,
+          exceptions: getClickAwayExceptions(current.onClickAwayExceptions),
+          specialFilter: current.specialFilter,
         })
       ) {
-        onClickAway(event.target);
+        current.onClickAway(target);
       }
-    },
-    DEFAULT_EVENTS,
-  );
-}
-
-function useClickAwayElement(props, ref: React.ForwardedRef<unknown>, shouldForwardClickAwayProps: boolean) {
-  const { component: Component = 'div', onClickAway, onClickAwayExceptions, specialFilter, ...rest } = props;
-  const clickAwayRef = useRef(null);
+    };
+    document.addEventListener('mousedown', listener);
+    return () => document.removeEventListener('mousedown', listener);
+  }, []);
   const handleRef = useCallback(
-    node => {
-      clickAwayRef.current = getDomNode(node);
-      assignRef(ref, node);
+    (node: Node | null) => {
+      boundary.current = getDomNode(node);
+      const cleanup = assignRef(ref, node);
+      if (cleanup)
+        return () => {
+          boundary.current = null;
+          cleanup();
+        };
+      return undefined;
     },
     [ref],
   );
 
-  useCompatibleClickAway({
-    ref: clickAwayRef,
-    onClickAway,
-    onClickAwayExceptions,
-    specialFilter,
-  });
-
-  const componentProps = shouldForwardClickAwayProps
-    ? {
-        ...rest,
-        onClickAway,
-        onClickAwayExceptions,
-        specialFilter,
-      }
-    : rest;
-
-  if (typeof Component === 'string') {
-    return <Component {...rest} ref={handleRef} />;
-  }
-
-  return <ClickAwayComponentBoundary component={Component} componentProps={componentProps} ref={handleRef} />;
-}
-
-/**
- * ClickAway 的 props。字段与下面的 propTypes 一一对应。
- *
- * 【索引签名是如实描述，不是放水】实现里 `...rest` 会原样透传给 component，
- * 而 component 可以是任意标签名或任意组件，所以剩余属性天然是开放的。
- * 没有这份类型时 forwardRef 把 props 推成 {}，调用点传 component / className
- * 一律报"属性不存在于 IntrinsicAttributes"——本仓有两处就是这么报的。
- */
-interface ClickAwayProps {
-  /** 渲染成什么，默认 'div'。ElementType 正好就是「标签名或组件」这个意思 */
-  component?: React.ElementType;
-  children?: React.ReactNode;
-  /** 点击外部区域时触发 */
-  onClickAway?: (target: EventTarget | null) => void;
-  /** 外部区域中点击到了也不触发的对象：jQuery 对象、ReactComponent 或原生 DOM */
-  onClickAwayExceptions?: any[];
-  /**
-   * 部分由 jquery plugins 绑定的元素无法直接传入，额外给一个自定义判断函数。
-   * 【返回类型不能写死成 boolean】调用点是按真假值用的，实际有返回
-   * jQuery 的 closest() 结果或 DOM 节点的写法（见 WorkSheetFilter/FiltersPopup）。
-   */
-  specialFilter?: (target: EventTarget | null) => any;
-  /** 其余属性原样透传给 component */
-  [key: string]: any;
-}
-
-const ClickAwayComponentBoundary = forwardRef<
-  HTMLSpanElement,
-  { component: React.ElementType; componentProps: Record<string, unknown> }
->(function ClickAwayComponentBoundary(props, ref) {
-  const { component: Component, componentProps } = props;
+  if (!isComponent(component)) throw new TypeError('Invalid ClickAway component');
+  if (typeof component === 'string') return createElement(component, { ...rest, ref: handleRef });
+  const componentProps = forwardHandlers ? { ...rest, onClickAway, onClickAwayExceptions, specialFilter } : rest;
   return (
-    <span ref={ref} style={BOUNDARY_STYLE}>
-      <Component {...componentProps} />
+    <span ref={handleRef} style={BOUNDARY_STYLE}>
+      {createElement(component, componentProps)}
     </span>
   );
-});
+}
 
-/**
- * 【类型里必须带上静态的 wrap】forwardRef 返回的是 ForwardRefExoticComponent，
- * 上面没有 wrap；而全仓有 30 处写 ClickAway.wrap(Xxx)。
- * 只给 props 补类型、不管这个静态方法的话，那 30 处会立刻全部报"属性不存在"。
- */
-const ClickAway = forwardRef(function ClickAway(props: ClickAwayProps, ref) {
-  return useClickAwayElement(props, ref, false);
-}) as React.ForwardRefExoticComponent<ClickAwayProps & React.RefAttributes<unknown>> & {
-  /**
-   * 把任意组件包一层 ClickAway。
-   *
-   * 【这里的 any 是量过的，两种精确签名都不成立，别再改】
-   * 包出来的组件 = 原组件的 props + ClickAway 自己注入的
-   * （onClickAway / onClickAwayExceptions / specialFilter）。两种写法各撞一堵墙：
-   *   · `<P>(c: ComponentType<P>) => ComponentType<P & Injected>`（准确）
-   *     → 全仓 10 处 `Xxx = ClickAway.wrap(Xxx)` 是回赋给同一个绑定，
-   *       全部报「ComponentType<any> 不能赋给 typeof Xxx」。
-   *   · `<T>(c: T) => T`（恒等，能过回赋）
-   *     → 丢掉注入的那几个 prop，CustomBtnCon 传 onClickAway 立刻报「不存在」。
-   * 要真解决，得先把那 10 处回赋改成不同名导出，那是独立的一件事。
-   */
-  wrap: (Component: any) => any;
-};
+function ClickAway<C extends ElementType = 'div'>(props: ClickAwayProps<C>): ReactElement;
+function ClickAway(props: RuntimeClickAwayProps): ReactElement {
+  return useClickAwayElement(props, props.ref, false);
+}
 
-ClickAway.propTypes = {
-  component: PropTypes.any,
-  children: PropTypes.node,
-  onClickAway: PropTypes.func, // 点击外部区域时触发的方法
-  // 外部区域中点击到了不触发 onClickAway 的对象，可以是 jQuery 对象、ReactComponent 或原生 DOM 对象
-  onClickAwayExceptions: PropTypes.array,
-  // 部分由 jquery plugins 绑定的元素无法直接传入，可额外传自定义判断函数 return bool
-  specialFilter: PropTypes.func,
-};
-
-ClickAway.wrap = Component => {
-  const ClickAwayWrapper = forwardRef((props, ref) =>
-    useClickAwayElement({ ...props, component: Component }, ref, true),
-  );
-  ClickAwayWrapper.displayName = `ClickAway(${Component.displayName || Component.name || 'Component'})`;
+function wrap<C extends ElementType>(Component: C) {
+  function ClickAwayWrapper(
+    props: PropsWithoutRef<React.JSX.LibraryManagedAttributes<C, ComponentProps<C>>> &
+      ClickAwayHandlers &
+      RefAttributes<C extends keyof React.JSX.IntrinsicElements ? ComponentRef<C> : HTMLSpanElement>,
+  ) {
+    return useClickAwayElement({ ...props, component: Component }, props.ref, true);
+  }
+  ClickAwayWrapper.displayName = `ClickAway(${typeof Component === 'string' ? Component : Component.displayName || Component.name || 'Component'})`;
   return ClickAwayWrapper;
-};
+}
 
-export default ClickAway;
+export default Object.assign(ClickAway, {
+  wrap,
+  propTypes: {
+    component: PropTypes.any,
+    children: PropTypes.node,
+    onClickAway: PropTypes.func,
+    onClickAwayExceptions: PropTypes.array,
+    specialFilter: PropTypes.func,
+  },
+});

@@ -103,7 +103,7 @@ const ChooseWidgetWrap = styled.div`
     }
   }
 `;
-let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
+const UnwrappedChooseWidget = class ChooseWidget extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { writeControls = [] } = props;
@@ -371,5 +371,5 @@ let ChooseWidget = class ChooseWidget extends React.Component<any, any> {
     );
   }
 };
-ChooseWidget = ClickAway.wrap(ChooseWidget);
+const ChooseWidget = ClickAway.wrap(UnwrappedChooseWidget);
 export default ChooseWidget;

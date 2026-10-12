@@ -1,9 +1,10 @@
 import React from 'react';
+import type { HTMLAttributes } from 'react';
 import { shallowEqual } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Trigger from '@rc-component/trigger';
 import ClickAway from 'ming-ui/components/ClickAway';
 import PhoneNumberInput from 'ming-ui/components/PhoneNumberInput';
 import { emitter } from 'src/utils/common';
@@ -258,8 +259,7 @@ export default class MobilePhone extends React.Component<any, any> {
     const errorText = error ? (typeof error === 'string' ? error : _l('不是有效的电话号码')) : '';
     const isCard = from === FROM.CARD;
     const editValue = isediting ? tempValue : value;
-    const editProps = {
-      value: editValue,
+    const editProps: HTMLAttributes<HTMLDivElement> = {
       style: {
         width: style.width,
         height: style.height,

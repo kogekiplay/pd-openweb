@@ -10,7 +10,7 @@ import MenuItem from 'ming-ui/components/MenuItem';
 import { NODE_OPERATOR_TYPE, NODE_STATUS, NODE_TYPE, NODE_VIEW_TYPE } from '../constant/enum';
 import UploadNewVersion from './UploadNewVersion';
 
-let RightMenu = class RightMenu extends React.Component<any, any> {
+const UnwrappedRightMenu = class RightMenu extends React.Component<any, any> {
   static override propTypes = {
     item: PropTypes.object,
     kcApp: PropTypes.object,
@@ -98,7 +98,9 @@ let RightMenu = class RightMenu extends React.Component<any, any> {
       return (
         <Menu
           className="rightMenu"
-          setRef={rightMenu => (this.rightMenu = rightMenu)}
+          setRef={rightMenu => {
+            this.rightMenu = rightMenu;
+          }}
           style={{
             left: this.state.clientX,
             top: this.state.clientY,
@@ -117,7 +119,9 @@ let RightMenu = class RightMenu extends React.Component<any, any> {
       return (
         <Menu
           className="rightMenu"
-          setRef={rightMenu => (this.rightMenu = rightMenu)}
+          setRef={rightMenu => {
+            this.rightMenu = rightMenu;
+          }}
           style={{
             left: this.state.clientX,
             top: this.state.clientY,
@@ -229,5 +233,5 @@ let RightMenu = class RightMenu extends React.Component<any, any> {
     }
   }
 };
-RightMenu = ClickAway.wrap(RightMenu);
+const RightMenu = ClickAway.wrap(UnwrappedRightMenu);
 export default RightMenu;

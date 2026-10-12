@@ -70,7 +70,7 @@ const HeaderRange = styled.div`
     color: var(--color-primary) !important;
   }
 `;
-let Range = class Range extends React.Component<any, any> {
+const UnwrappedRange = class Range extends React.Component<any, any> {
   el = null;
   containerRef = null;
 
@@ -226,5 +226,5 @@ let Range = class Range extends React.Component<any, any> {
     );
   }
 };
-Range = ClickAway.wrap(Range);
+const Range = ClickAway.wrap(UnwrappedRange);
 export default Range;

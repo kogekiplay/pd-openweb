@@ -4,7 +4,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import appManagementAjax from 'src/api/appManagement';
 import SecretKey from '../SecretKey';
 
-let MoreOption = class MoreOption extends Component<any, any> {
+const UnwrappedMoreOption = class MoreOption extends Component<any, any> {
   constructor(props) {
     super(props);
     const { data = {} } = props;
@@ -199,5 +199,5 @@ let MoreOption = class MoreOption extends Component<any, any> {
     );
   }
 };
-MoreOption = ClickAway.wrap(MoreOption);
+const MoreOption = ClickAway.wrap(UnwrappedMoreOption);
 export default MoreOption;

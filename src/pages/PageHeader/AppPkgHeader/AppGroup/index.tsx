@@ -157,7 +157,9 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
   updateAppGroupSort = () => {
     const { appId } = this.ids;
     const { data } = this.state;
-    const sortedAppGroupIds = data.map(({ appSectionId }: { appSectionId?: string; [key: string]: any }) => appSectionId);
+    const sortedAppGroupIds = data.map(
+      ({ appSectionId }: { appSectionId?: string; [key: string]: any }) => appSectionId,
+    );
     api.updateAppSectionSort({
       appId,
       appSectionIds: sortedAppGroupIds,
@@ -231,7 +233,15 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     this.ensurePointerStatus();
   }; // 分组配置点击
 
-  handleAppItemConfigClick = ({ id, type, appSectionId }: { appSectionId?: string; [key: string]: any }) => {
+  handleAppItemConfigClick = ({
+    id,
+    type,
+    appSectionId,
+  }: {
+    id?: string | undefined;
+    type?: number | undefined;
+    appSectionId?: string | undefined;
+  }) => {
     const { data } = this.state;
     const { appId } = this.ids;
     this.handledAppItemId = appSectionId;
@@ -325,7 +335,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     this.props.updateAppGroup(temp);
   }; // 添加分组
 
-  handleAddAppGroup = obj => {
+  handleAddAppGroup = (obj?: { appSectionId?: string | undefined; type?: number | undefined }) => {
     let sourceAppSectionId = obj ? obj.appSectionId : '';
     const { data } = this.state;
     const { appId } = this.ids;
@@ -424,7 +434,10 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
 
   formatDataToDropdownItems = data =>
     data
-      .filter(({ appSectionId, name }: { appSectionId?: string; name?: string; [key: string]: any }) => !!name && appSectionId !== this.handledAppItemId)
+      .filter(
+        ({ appSectionId, name }: { appSectionId?: string; name?: string; [key: string]: any }) =>
+          !!name && appSectionId !== this.handledAppItemId,
+      )
       .map(({ appSectionId, name }: { appSectionId?: string; name?: string; [key: string]: any }) => ({
         value: appSectionId,
         text: name,

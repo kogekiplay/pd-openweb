@@ -6,11 +6,11 @@ import { Checkbox } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
 import { SYS_CONTROLS } from 'src/pages/widgetConfig/config/widget';
 import { SelectFieldsWrap } from 'src/pages/widgetConfig/styled';
+import type { FormControl } from 'src/utils/controlTypes';
 import { SYSTEM_CONTROL, SYSTEM_PERSON_CONTROL, WORKFLOW_SYSTEM_CONTROL } from '../../../../config/widget';
 import { getIconByType } from '../../../../util';
 import { DYNAMIC_FROM_MODE } from '../config';
 import { filterControls, getControls, getOtherSelectField } from '../util';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const Empty = styled.div`
   color: var(--color-text-tertiary);
@@ -24,13 +24,11 @@ const filterSys = (controls: FormControl[] = [], fromCustomEventApi?) => {
   // 注意：SYS_CONTROLS 是 id 字符串数组，SYSTEM_CONTROL 是控件对象数组。下面拿它跟
   // i.controlId（字符串）比，fromCustomEventApi 为假时永远不相等 —— 即这条分支实际上
   // 一个系统字段都没过滤掉。这里只放开类型，不动行为。
-  const FILTER_SYS_CONTROLS: unknown[] = fromCustomEventApi
-    ? SYS_CONTROLS.filter(i => i !== 'rowid')
-    : SYSTEM_CONTROL;
+  const FILTER_SYS_CONTROLS: unknown[] = fromCustomEventApi ? SYS_CONTROLS.filter(i => i !== 'rowid') : SYSTEM_CONTROL;
   return controls.filter(i => !_.includes(FILTER_SYS_CONTROLS, i.controlId as unknown));
 };
 
-let SelectFields = class SelectFields extends Component<any, any> {
+const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
   static override propTypes = {};
   static defaultProps = {};
   override state = {
@@ -252,40 +250,51 @@ let SelectFields = class SelectFields extends Component<any, any> {
                     </div>
                   )}
                   <ul className="fieldList">
-                    {list.map(({ type, controlName, controlId, id, isEqualSource }: { controlId?: string; [key: string]: any }) => {
-                      const ids = {
+                    {list.map(
+                      ({
                         type,
-                        relateSheetControlId: recordId === 'current' ? '' : recordId,
-                        fieldId: controlId || id,
-                      };
-                      return this.isMultiUser(data) ? (
-                        <li className="overflow_ellipsis">
-                          <Checkbox
-                            size="small"
-                            checked={_.some(
-                              dynamicValue,
-                              item => item.cid === ids.fieldId && item.rcid === ids.relateSheetControlId,
-                            )}
-                            onClick={(checked: boolean) => {
-                              this.handleMultiUserClick({
-                                checked: !checked,
-                                ...ids,
-                                isAsync: data.type === 27 && type === 26,
-                              });
-                            }}
-                          >
+                        controlName,
+                        controlId,
+                        id,
+                        isEqualSource,
+                      }: {
+                        controlId?: string;
+                        [key: string]: any;
+                      }) => {
+                        const ids = {
+                          type,
+                          relateSheetControlId: recordId === 'current' ? '' : recordId,
+                          fieldId: controlId || id,
+                        };
+                        return this.isMultiUser(data) ? (
+                          <li className="overflow_ellipsis">
+                            <Checkbox
+                              size="small"
+                              checked={_.some(
+                                dynamicValue,
+                                item => item.cid === ids.fieldId && item.rcid === ids.relateSheetControlId,
+                              )}
+                              onClick={(checked: boolean) => {
+                                this.handleMultiUserClick({
+                                  checked: !checked,
+                                  ...ids,
+                                  isAsync: data.type === 27 && type === 26,
+                                });
+                              }}
+                            >
+                              <i className={`icon-${getIconByType(type)}`}></i>
+                              <span className="overflow_ellipsis">{controlName}</span>
+                            </Checkbox>
+                          </li>
+                        ) : (
+                          <li className="overflow_ellipsis" onClick={() => onClick(ids)}>
                             <i className={`icon-${getIconByType(type)}`}></i>
                             <span className="overflow_ellipsis">{controlName}</span>
-                          </Checkbox>
-                        </li>
-                      ) : (
-                        <li className="overflow_ellipsis" onClick={() => onClick(ids)}>
-                          <i className={`icon-${getIconByType(type)}`}></i>
-                          <span className="overflow_ellipsis">{controlName}</span>
-                          {isEqualSource && <span className="textTertiary">（{_l('相同选项集')}）</span>}
-                        </li>
-                      );
-                    })}
+                            {isEqualSource && <span className="textTertiary">（{_l('相同选项集')}）</span>}
+                          </li>
+                        );
+                      },
+                    )}
                   </ul>
                 </li>
               </ul>
@@ -325,5 +334,5 @@ let SelectFields = class SelectFields extends Component<any, any> {
     );
   }
 };
-SelectFields = ClickAway.wrap(SelectFields);
+const SelectFields = ClickAway.wrap(UnwrappedSelectFields);
 export default SelectFields;
