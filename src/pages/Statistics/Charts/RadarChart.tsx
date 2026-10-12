@@ -447,7 +447,7 @@ export default class extends Component<any, any> {
           }
         : false,
       annotations: _.flatten(
-        auxiliaryLineConfig.map(item => {
+        auxiliaryLineConfig.map((item: any) => {
           const { start, text } = item;
           const textConfig = {
             type: 'text',
@@ -495,9 +495,9 @@ export default class extends Component<any, any> {
   }
   override render() {
     const { count, originalCount, dropdownVisible, offset } = this.state;
-    const { summary, displaySetup = {} } = this.props.reportData;
+    const { summary, displaySetup = {} } = this.props['reportData'];
     return (
-      (<div className="flex flexColumn chartWrapper">
+      <div className="flex flexColumn chartWrapper">
         <Dropdown
           open={dropdownVisible}
           onOpenChange={dropdownVisible => {
@@ -517,8 +517,13 @@ export default class extends Component<any, any> {
             </Tooltip>
           </div>
         ) : null}
-        <div className={displaySetup.showTotal ? 'showTotalHeight' : 'h100'} ref={el => { this.chartEl = el; }}></div>
-      </div>)
+        <div
+          className={displaySetup.showTotal ? 'showTotalHeight' : 'h100'}
+          ref={el => {
+            this.chartEl = el;
+          }}
+        ></div>
+      </div>
     );
   }
 }

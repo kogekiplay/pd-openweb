@@ -199,7 +199,7 @@ export const getPorjectChartColors = (projectId: string) => getProjectChartColor
 /**
  * 获取图表颜色
  */
-export const getChartColors = (style, themeColor, projectId: string) => {
+export const getChartColors = (style: any, themeColor: any, projectId: string) => {
   const chartColors = getPorjectChartColors(projectId);
   const defaultScheme = chartColors[0];
   const { colorType, colorGroupIndex, colorGroupId, customColors, personColor = {} } = style ? style : {};
@@ -207,8 +207,8 @@ export const getChartColors = (style, themeColor, projectId: string) => {
   if ([0, 1].includes(colorType)) {
     // 新颜色配置
     if (colorGroupId === 'adaptThemeColor' && themeColor) {
-      const adaptThemeColors = chartColors.filter(item =>
-        (item.themeColors || []).map(n => n.toLocaleUpperCase()).includes(themeColor.toLocaleUpperCase()),
+      const adaptThemeColors = chartColors.filter((item: any) =>
+        (item.themeColors || []).map((n: any) => n.toLocaleUpperCase()).includes(themeColor.toLocaleUpperCase()),
       );
       return (adaptThemeColors[0] || defaultScheme)?.colors || [];
     } else if (colorGroupId && colorGroupId.includes('personColor')) {
@@ -228,7 +228,7 @@ export const getChartColors = (style, themeColor, projectId: string) => {
 /**
  * 获取辅助线样式
  */
-const getLineStyle = value => {
+const getLineStyle = (value: any) => {
   if (value === 1) {
     return { lineDash: [0, 0] };
   }
@@ -246,14 +246,18 @@ const getLineStyle = value => {
 /**
  * 获取辅助线配置
  */
-export const getAuxiliaryLineConfig = (auxiliaryLines = [], data, { yaxisList, colors }) => {
-  return auxiliaryLines.map(item => {
+export const getAuxiliaryLineConfig = (
+  auxiliaryLines: any = [],
+  data: any,
+  { yaxisList, colors }: { yaxisList: any; colors: any },
+) => {
+  return auxiliaryLines.map((item: any) => {
     const control = _.find(yaxisList, { controlId: item.controlId });
     const controlId = control ? item.controlId : null;
     const dot = control ? control.ydot || control.dot : 2;
 
     const getValue = () => {
-      const formatValue = value => (value < 1 && value > 0 && dot == 0 ? value : Number(toFixed(value, dot)));
+      const formatValue = (value: any) => (value < 1 && value > 0 && dot == 0 ? value : Number(toFixed(value, dot)));
 
       if (item.type === 'constantLine') {
         return item.value;
@@ -298,8 +302,8 @@ export const getAuxiliaryLineConfig = (auxiliaryLines = [], data, { yaxisList, c
       if (item.type === 'tendencyLine' && controlId) {
         const min = getControlMinValue(data, controlId);
         const max = getControlMaxValue(data, controlId);
-        const minKeys = data.filter(n => n.value === min);
-        const maxKeys = data.filter(n => n.value === max);
+        const minKeys = data.filter((n: any) => n.value === min);
+        const maxKeys = data.filter((n: any) => n.value === max);
         const minKey = minKeys[0] || {};
         const maxKey = maxKeys[maxKeys.length - 1] || {};
         const minIndex = _.findIndex(data, { name: minKey.name });
@@ -352,7 +356,7 @@ export const getAuxiliaryLineConfig = (auxiliaryLines = [], data, { yaxisList, c
 /**
  * 获取异化的样式
  */
-export const getAlienationColor = (xaxes, { originalId }) => {
+export const getAlienationColor = (xaxes: any, { originalId }: any) => {
   const item = _.find(xaxes.options, { key: originalId });
   return item ? item.color : 'var(--color-border-secondary)';
 };
@@ -360,7 +364,7 @@ export const getAlienationColor = (xaxes, { originalId }) => {
 /**
  * 获取图例信息
  */
-export const getLegendType = value => {
+export const getLegendType = (value: any) => {
   const data = _.find(LegendTypeData, { value });
   return _.isEmpty(data) ? LegendTypeData[0] : data;
 };
@@ -394,7 +398,7 @@ export const LegendTypeData = [
 /**
  * 自动添加数量级
  */
-export const abbreviateNumber = (value, dot = '', formatValue = toFixed) => {
+export const abbreviateNumber = (value: any, dot: any = '', formatValue: any = toFixed) => {
   const absValue = Math.abs(value);
 
   if (window.getCurrentLang() === 'en') {
@@ -434,49 +438,49 @@ export const numberLevel = [
     value: 1,
     text: _l('无'),
     suffix: '',
-    format: value => value,
+    format: (value: any) => value,
   },
   {
     value: 7,
     text: _l('百分比'),
     suffix: '%',
-    format: value => value * 100,
+    format: (value: any) => value * 100,
   },
   {
     value: 8,
     text: _l('千分比'),
     suffix: '‰',
-    format: value => value * 1000,
+    format: (value: any) => value * 1000,
   },
   {
     value: 2,
     text: _l('千'),
     suffix: 'K',
-    format: value => value / 1000,
+    format: (value: any) => value / 1000,
   },
   {
     value: 3,
     text: _l('万%06003'),
     suffix: _l('万%06003'),
-    format: value => value / 10000,
+    format: (value: any) => value / 10000,
   },
   {
     value: 4,
     text: _l('百万'),
     suffix: 'M',
-    format: value => value / 1000000,
+    format: (value: any) => value / 1000000,
   },
   {
     value: 5,
     text: _l('亿%06004'),
     suffix: _l('亿%06004'),
-    format: value => value / 100000000,
+    format: (value: any) => value / 100000000,
   },
   {
     value: 6,
     text: _l('十亿'),
     suffix: 'B',
-    format: value => value / 1000000000,
+    format: (value: any) => value / 1000000000,
   },
 ];
 
@@ -498,39 +502,39 @@ export const roundTypes = [
 /**
  * 为 yaxisList 添加自动数量级单位
  */
-export const formatYaxisList = (map, yaxisList, id?) => {
-  const maxValue = getMaxValue(map, []);
+export const formatYaxisList = (map: any, yaxisList: any, id?: any) => {
   const newYaxisList = _.cloneDeep(yaxisList);
 
-  newYaxisList.forEach((item, index: number) => {
+  const maxValue: any = getMaxValue(map, []);
+  newYaxisList.forEach((item: any, index: number) => {
     if ((id ? item.controlId == id : index === 0) && item.magnitude === 0) {
       if (window.getCurrentLang() === 'en') {
         if (maxValue >= 1000000000) {
           item.magnitude = 6;
-          item.suffix = _.find(numberLevel, { value: 6 }).suffix;
+          item.suffix = (_.find(numberLevel, { value: 6 }) as any)?.suffix || '';
         } else if (maxValue >= 1000000) {
           item.magnitude = 4;
-          item.suffix = _.find(numberLevel, { value: 4 }).suffix;
+          item.suffix = (_.find(numberLevel, { value: 4 }) as any)?.suffix || '';
         } else if (maxValue >= 1000) {
           item.magnitude = 2;
-          item.suffix = _.find(numberLevel, { value: 2 }).suffix;
+          item.suffix = (_.find(numberLevel, { value: 2 }) as any)?.suffix || '';
         } else {
           item.magnitude = 1;
-          item.suffix = _.find(numberLevel, { value: 1 }).suffix;
+          item.suffix = (_.find(numberLevel, { value: 1 }) as any)?.suffix || '';
         }
       } else {
         if (maxValue >= 100000000) {
           item.magnitude = 5;
-          item.suffix = _.find(numberLevel, { value: 5 }).suffix;
+          item.suffix = (_.find(numberLevel, { value: 5 }) as any)?.suffix || '';
         } else if (maxValue >= 10000) {
           item.magnitude = 3;
-          item.suffix = _.find(numberLevel, { value: 3 }).suffix;
+          item.suffix = (_.find(numberLevel, { value: 3 }) as any)?.suffix || '';
         } else if (maxValue >= 1000) {
           item.magnitude = 2;
-          item.suffix = _.find(numberLevel, { value: 2 }).suffix;
+          item.suffix = (_.find(numberLevel, { value: 2 }) as any)?.suffix || '';
         } else {
           item.magnitude = 1;
-          item.suffix = _.find(numberLevel, { value: 1 }).suffix;
+          item.suffix = (_.find(numberLevel, { value: 1 }) as any)?.suffix || '';
         }
       }
     }
@@ -539,7 +543,7 @@ export const formatYaxisList = (map, yaxisList, id?) => {
   return newYaxisList;
 };
 
-export const formatNumberValue = (value, config) => {
+export const formatNumberValue = (value: any, config: any) => {
   const { dot, roundType, dotFormat } = config;
   const ignoreZero = dotFormat === '1';
   const isNegative = value < 0;
@@ -547,7 +551,9 @@ export const formatNumberValue = (value, config) => {
 
   if (roundType === 0) {
     // 向下取整
-    value = String(toFixed(Math.floor(absValue * Math.pow(10, dot)) / Math.pow(10, dot), dot) * (isNegative ? -1 : 1));
+    value = String(
+      Number(toFixed(Math.floor(absValue * Math.pow(10, dot)) / Math.pow(10, dot), dot)) * (isNegative ? -1 : 1),
+    );
   } else if (roundType === 1) {
     // 向上取整
     value = String((Math.ceil(absValue * Math.pow(10, dot)) / Math.pow(10, dot)) * (isNegative ? -1 : 1));
@@ -587,7 +593,7 @@ export const formatNumberValue = (value, config) => {
 /**
  * 为字段值添加数量级单位
  */
-export const formatControlValueDot = (value, data) => {
+export const formatControlValueDot = (value: any, data: any) => {
   if (_.isEmpty(data)) {
     return value;
   }
@@ -596,16 +602,16 @@ export const formatControlValueDot = (value, data) => {
   const isRecordCount = controlId === 'record_count';
   const ydot = Number(data.ydot);
 
-  const formatValue = (value, dot: number) => {
+  const formatValue = (value: any, dot: number) => {
     return formatNumberValue(value, { dot, roundType, dotFormat });
   };
 
-  const formatThousandth = (value = '') => {
+  const formatThousandth = (value: any = '') => {
     value = value.toString();
     return thousandth ? formatNumberThousand(value) : value;
   };
 
-  const { format } = _.find(numberLevel, { value: magnitude || 0 });
+  const format = (_.find(numberLevel, { value: magnitude || 0 }) as any)?.format || ((input: any) => input);
 
   if (magnitude === 0) {
     // 自动
@@ -636,7 +642,13 @@ export const formatControlValueDot = (value, data) => {
 /**
  * 处理图表 label value
  */
-export const formatrChartValue = (value, isPerPile, yaxisList, id?, isHideEmptyValue = true) => {
+export const formatrChartValue = (
+  value: any,
+  isPerPile: any,
+  yaxisList: any,
+  id?: any,
+  isHideEmptyValue: any = true,
+) => {
   if (!value && isHideEmptyValue) {
     const { emptyShowType } = _.find(yaxisList, { controlId: id }) || yaxisList[0] || {};
 
@@ -662,7 +674,7 @@ export const formatrChartValue = (value, isPerPile, yaxisList, id?, isHideEmptyV
 /**
  * 处理图表 axis value
  */
-export const formatrChartAxisValue = (value: number, isPerPile, yaxisList) => {
+export const formatrChartAxisValue = (value: number, isPerPile: any, yaxisList: any) => {
   if (isPerPile) {
     return `${toFixed(value * 100, 0)}%`;
   } else {
@@ -671,7 +683,7 @@ export const formatrChartAxisValue = (value: number, isPerPile, yaxisList) => {
     }
 
     const { magnitude, ydot, suffix, fixType } = yaxisList[0];
-    const { format } = _.find(numberLevel, { value: magnitude || 0 });
+    const format = (_.find(numberLevel, { value: magnitude || 0 }) as any)?.format || ((input: any) => input);
 
     if ([7, 8].includes(magnitude)) {
       const result = toFixed(format(value), Number(ydot ?? 0));
@@ -688,7 +700,7 @@ export const formatrChartAxisValue = (value: number, isPerPile, yaxisList) => {
 /**
  * 将 `控件名-控件id` 字符格式转成 { name, id }
  */
-export const formatControlInfo = value => {
+export const formatControlInfo = (value: any) => {
   if (_.isNumber(value) || _.isEmpty(value)) return { name: value, id: null };
   let result = value.split(/-md-\w+-chart-/g);
   let name = null;
@@ -705,7 +717,7 @@ export const formatControlInfo = value => {
   return { name, id };
 };
 
-const isApplyStyle = (applyValue, recordKey) => {
+const isApplyStyle = (applyValue: any, recordKey: any) => {
   if (applyValue === 1) {
     return recordKey !== 'sum';
   }
@@ -722,14 +734,14 @@ const isApplyStyle = (applyValue, recordKey) => {
 
 // 规则没给 min/max 时回落到这个字段在整批数据里的实际最小/最大值
 export const getScopeRuleColor = (
-  value,
+  value: any,
   controlMinAndMax: { min?: number; max?: number } = {},
-  scopeRules,
-  emptyShowType,
+  scopeRules: any[],
+  emptyShowType: any,
 ) => {
   let result = null;
 
-  scopeRules.forEach(rule => {
+  scopeRules.forEach((rule: any) => {
     const { type, and, min, max, color } = rule;
     const minValue = _.isNumber(min) ? min : controlMinAndMax.min || 0;
     const maxValue = _.isNumber(max) ? max : controlMinAndMax.max || 0;
@@ -831,7 +843,7 @@ export const getStyleColor = ({
       }
     }
     */
-    percent = parseInt(percent);
+    percent = parseInt(String(percent), 10);
     if (value <= minValue) {
       percent = 0;
     }
@@ -861,10 +873,10 @@ export const getStyleColor = ({
   }
 };
 
-export const getControlMinAndMax = (yaxisList, data) => {
-  const result = {};
+export const getControlMinAndMax = (yaxisList: any, data: any) => {
+  const result: Record<string, any> = {};
 
-  const get = id => {
+  const get = (id: any) => {
     let values = [];
 
     for (let i = 0; i < data.length; i++) {
@@ -883,7 +895,7 @@ export const getControlMinAndMax = (yaxisList, data) => {
     };
   };
 
-  yaxisList.forEach(item => {
+  yaxisList.forEach((item: any) => {
     result[item.controlId] = get(item.controlId);
   });
 
@@ -893,9 +905,9 @@ export const getControlMinAndMax = (yaxisList, data) => {
 /**
  * 获取图表所有数据中的最大值
  */
-export const getMaxValue = (map, contrastMap?) => {
-  const mapRes = map.map(item => item.value);
-  const contrastMapRes = contrastMap ? contrastMap.map(item => item.value) : [0];
+export const getMaxValue = (map: any, contrastMap?: any) => {
+  const mapRes = map.map((item: any) => item.value);
+  const contrastMapRes = contrastMap ? contrastMap.map((item: any) => item.value) : [0];
   const mapMaxValue = _.max(mapRes);
   const contrastMapMaxValue = _.max(contrastMapRes);
   return _.max([mapMaxValue, contrastMapMaxValue]);
@@ -904,9 +916,9 @@ export const getMaxValue = (map, contrastMap?) => {
 /**
  * 获取图表所有数据中的最小值
  */
-export const getMinValue = (map, contrastMap?) => {
-  const mapRes = map.map(item => item.value);
-  const contrastMapRes = contrastMap ? contrastMap.map(item => item.value) : [0];
+export const getMinValue = (map: any, contrastMap?: any) => {
+  const mapRes = map.map((item: any) => item.value);
+  const contrastMapRes = contrastMap ? contrastMap.map((item: any) => item.value) : [0];
   const mapMinValue = _.min(mapRes) || 0;
   const contrastMapMinValue = _.min(contrastMapRes) || 0;
   return _.min([mapMinValue, contrastMapMinValue]);
@@ -915,9 +927,9 @@ export const getMinValue = (map, contrastMap?) => {
 /**
  * 获取图表某个数值维度中数据的最大值
  */
-export const getControlMaxValue = (map, id) => {
-  const mapRes = map.filter(m => m.controlId === id);
-  const valueRes = (mapRes.length ? mapRes : map).map(m => m.value);
+export const getControlMaxValue = (map: any, id: any) => {
+  const mapRes = map.filter((m: any) => m.controlId === id);
+  const valueRes = (mapRes.length ? mapRes : map).map((m: any) => m.value);
   const mapMaxValue = _.max(valueRes);
   return mapMaxValue;
 };
@@ -925,9 +937,9 @@ export const getControlMaxValue = (map, id) => {
 /**
  * 获取图表某个数值维度中数据的最小值
  */
-export const getControlMinValue = (map, id) => {
-  const mapRes = map.filter(m => m.controlId === id);
-  const valueRes = (mapRes.length ? mapRes : map).map(m => m.value);
+export const getControlMinValue = (map: any, id: any) => {
+  const mapRes = map.filter((m: any) => m.controlId === id);
+  const valueRes = (mapRes.length ? mapRes : map).map((m: any) => m.value);
   const mapMinValue = _.min(valueRes) || 0;
   return mapMinValue;
 };
@@ -935,19 +947,19 @@ export const getControlMinValue = (map, id) => {
 /**
  * 获取图表某个数值维度中数据的平均值
  */
-export const getControlAvgValue = (map, id) => {
-  const mapRes = map.filter(m => m.controlId === id);
-  const valueRes = (mapRes.length ? mapRes : map).map(m => m.value);
-  const sum = valueRes.reduce((previous, current) => (current += previous), 0);
+export const getControlAvgValue = (map: any, id: any) => {
+  const mapRes = map.filter((m: any) => m.controlId === id);
+  const valueRes = (mapRes.length ? mapRes : map).map((m: any) => m.value);
+  const sum = valueRes.reduce((previous: number, current: number) => (current += previous), 0);
   return sum / valueRes.length;
 };
 
 /**
  * 获取图表某个数值维度中数据的中位值
  */
-export const getControlMedianValue = (map, id) => {
-  const mapRes = map.filter(m => m.controlId === id);
-  const valueRes = (mapRes.length ? mapRes : map).map(m => m.value).sort((a, b) => a - b);
+export const getControlMedianValue = (map: any, id: any) => {
+  const mapRes = map.filter((m: any) => m.controlId === id);
+  const valueRes = (mapRes.length ? mapRes : map).map((m: any) => m.value).sort((a: number, b: number) => a - b);
   const lowMiddle = Math.floor((valueRes.length - 1) / 2);
   const highMiddle = Math.ceil((valueRes.length - 1) / 2);
   return (valueRes[lowMiddle] + valueRes[highMiddle]) / 2;
@@ -956,14 +968,14 @@ export const getControlMedianValue = (map, id) => {
 /**
  * 获取图表某个数值维度中数据的百分位数
  */
-export const getControlPercentValue = (map, id, value) => {
-  const mapRes = map.filter(m => m.controlId === id);
-  const valueRes = (mapRes.length ? mapRes : map).map(m => m.value).sort((a, b) => a - b);
+export const getControlPercentValue = (map: any, id: any, value: any) => {
+  const mapRes = map.filter((m: any) => m.controlId === id);
+  const valueRes = (mapRes.length ? mapRes : map).map((m: any) => m.value).sort((a: number, b: number) => a - b);
   const index = Math.floor((value / 100) * valueRes.length);
   return valueRes[index >= valueRes.length ? valueRes.length - 1 : index];
 };
 
-export const getEmptyChartData = reportData => {
+export const getEmptyChartData = (reportData: any) => {
   const { xaxes, yaxisList, valueMap } = reportData;
   const map = valueMap[xaxes.controlId] || {};
   const data = [];

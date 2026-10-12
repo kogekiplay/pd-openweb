@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 Statistics 图表通用工具
+
+图表颜色、辅助线、数量级、Y 轴格式化、范围规则和统计值工具已严格化；common.ts 诊断 133 → 0，RadarChart 传播诊断同步清理，未新增调用方诊断。详见 `statistics-chart-common-strict-20261013.md`。
+
 ## 2026-10-13 聚合配置工具边界
 
 AppSettings 聚合工具的字段筛选、公式分类、结果字段、版本上限和 interval 边界已严格化；该文件 144 条诊断降为 0，未新增调用方诊断。详见 `aggregation-util-strict-20261013.md`，继续处理日历 toolbar 与统计模块。
