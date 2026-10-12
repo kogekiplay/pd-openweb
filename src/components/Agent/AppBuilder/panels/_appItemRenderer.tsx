@@ -6,8 +6,10 @@
 import styled from 'styled-components';
 import { Icon, SvgIcon } from 'ming-ui';
 import { CardEditButton, PanelWrap, parseCompactList, parseCompactStr } from './_shared';
+import { panelConfig, planCardItems } from './panelModels';
+import type { AppItemType, CardStyle, PlanCardItem } from './panelModels';
 
-const TYPE_BADGE: Record<string, { label: string; color: string; border: string; bg: string }> = {
+const TYPE_BADGE: Record<AppItemType, { label: string; color: string; border: string; bg: string }> = {
   worksheet: {
     label: _l('工作表'),
     color: 'var(--color-warning-text)',
@@ -50,7 +52,7 @@ const DEFAULT_COLOR: Record<string, string> = {
 
 // plan 阶段为元素挑的 icon 是 HAP customIcon 字体类（sys_ 前缀），按此 URL 渲染 SVG；
 // 缺失时回退到 DEFAULT_ICON 的 ming-ui 字体 glyph。
-const customIconUrl = fileName => `https://fp1.mingdaoyun.cn/customIcon/${fileName}.svg`;
+const customIconUrl = (fileName: string) => `https://fp1.mingdaoyun.cn/customIcon/${fileName}.svg`;
 
 // 统计图表类型 → HAP 图表图标（与 statistics/Charts/reportTypeIcons 对齐，均为 HAP iconfont 字体名）。
 // 之前用的是 Material 图标名（pie_chart/show_chart 等），HAP 字体里没有对应 glyph 故不显示。
@@ -97,7 +99,7 @@ const COMPONENT_FALLBACK_ICON = 'custom_actions';
 
 // worksheet 字段紧凑字符串 Type → 图标（对齐 HAP 控件图标 widgetConfig/config/widget.js）。
 // Relation:目标表 这类带冒号的取冒号前的基础类型。
-const FIELD_ICONS = {
+const FIELD_ICONS: Record<string, string> = {
   Text: 'text_bold2',
   Number: 'looks_six',
   Currency: 'amount_rmb',
@@ -165,7 +167,7 @@ const CardTop = styled.div`
   gap: 6px;
 `;
 
-const ItemIcon = styled.div`
+const ItemIcon = styled.div<CardStyle>`
   width: 28px;
   height: 28px;
   display: flex;
@@ -203,7 +205,7 @@ const ItemName = styled.div`
   white-space: nowrap;
 `;
 
-const TypeBadge = styled.span`
+const TypeBadge = styled.span<CardStyle>`
   display: inline-flex;
   align-items: center;
   height: 22px;
@@ -279,33 +281,33 @@ const Pill = styled.div`
 `;
 
 // 后端 schema 规约 name 字段就叫 name；防御性兜底兼容 LLM 偶发漂移
-function getItemName(item) {
+function getItemName(item: PlanCardItem) {
   if (!item || typeof item !== 'object') return '';
   return item.name || item.title || item.worksheetName || item.dashboardName || item.assistantName || '';
 }
 
 // 把元素按 groupName 首次出现顺序分组
-function groupItems(items) {
-  const groups = [];
-  const map = new Map();
+function groupItems(items: PlanCardItem[]) {
+  const groups: Array<{ name: string; items: PlanCardItem[] }> = [];
+  const map = new Map<string, { name: string; items: PlanCardItem[] }>();
 
   items.forEach(item => {
     if (!item || typeof item !== 'object') return;
     const key = item.groupName || item.group || _l('未分组');
 
-    if (!map.has(key)) {
-      const group = { name: key, items: [] };
-
+    let group = map.get(key);
+    if (!group) {
+      group = { name: key, items: [] };
       map.set(key, group);
       groups.push(group);
     }
 
-    map.get(key).items.push(item);
+    group.items.push(item);
   });
   return groups;
 }
 
-function renderWorksheet(item) {
+function renderWorksheet(item: PlanCardItem) {
   const fields = parseCompactList(item.fields);
   const views = parseCompactList(item.views);
 
@@ -316,7 +318,7 @@ function renderWorksheet(item) {
           {fields.map((f, fi) => {
             const { name, type } = parseCompactStr(f);
             // Relation:目标表 取冒号前的基础类型
-            const icon = FIELD_ICONS[(type || '').split(':')[0]];
+            const icon = panelConfig(FIELD_ICONS, type.split(':')[0] || '');
 
             return (
               <FieldChip key={fi}>
@@ -342,7 +344,7 @@ function renderWorksheet(item) {
 }
 
 // 图表/组件 chip 图标统一走 FieldChip 的中性灰（与其它卡片胶囊标签一致，不再用类型主色）
-function renderDashboard(item) {
+function renderDashboard(item: PlanCardItem) {
   const charts = parseCompactList(item.charts);
 
   if (charts.length === 0) return null;
@@ -354,7 +356,7 @@ function renderDashboard(item) {
 
         return (
           <FieldChip key={ci}>
-            <Icon icon={CHART_ICONS[type] || CHART_FALLBACK_ICON} />
+            <Icon icon={panelConfig(CHART_ICONS, type) || CHART_FALLBACK_ICON} />
             {name}
           </FieldChip>
         );
@@ -363,7 +365,7 @@ function renderDashboard(item) {
   );
 }
 
-function renderWorkspace(item) {
+function renderWorkspace(item: PlanCardItem) {
   const components = parseCompactList(item.components);
 
   if (components.length === 0) return null;
@@ -373,7 +375,7 @@ function renderWorkspace(item) {
       {components.map((c, ci) => {
         const { name, type } = parseCompactStr(c);
         // 统计图表组件用图表类型图标，其余组件用组件类型图标
-        const icon = CHART_ICONS[type] || COMPONENT_ICONS[type] || COMPONENT_FALLBACK_ICON;
+        const icon = panelConfig(CHART_ICONS, type) || panelConfig(COMPONENT_ICONS, type) || COMPONENT_FALLBACK_ICON;
 
         return (
           <FieldChip key={ci}>
@@ -387,7 +389,7 @@ function renderWorkspace(item) {
 }
 
 // aiAssistant 元素只有 name / description / groupName，无 fields / charts / components；无 body 渲染
-function renderItemBody(item) {
+function renderItemBody(item: PlanCardItem) {
   if (item.type === 'worksheet') return renderWorksheet(item);
   if (item.type === 'dashboard') return renderDashboard(item);
   if (item.type === 'workspace') return renderWorkspace(item);
@@ -396,8 +398,14 @@ function renderItemBody(item) {
 
 // 通用应用项列表渲染器；调用方传入已按 type 过滤好的数组 + 默认 type fallback。
 // fallbackType 用于流式 partial-json 阶段 type 字段还没到的占位元素，决定如何兜底渲染。
-export default function AppItemListRenderer({ items, fallbackType = 'worksheet' }) {
-  const list = Array.isArray(items) ? items : [];
+export default function AppItemListRenderer({
+  items,
+  fallbackType = 'worksheet',
+}: {
+  items: unknown;
+  fallbackType?: AppItemType;
+}) {
+  const list = planCardItems(items);
   // 流式 partial-json 早期会给到 {} / {type:'worksheet'} 这种只有部分字段的占位元素，
   // 直接渲染会出现大量"未命名"骨架；只保留至少能识别（有名字）的元素。
   const ready = list.filter(item => item && typeof item === 'object' && getItemName(item));
@@ -413,8 +421,8 @@ export default function AppItemListRenderer({ items, fallbackType = 'worksheet' 
           </GroupHeader>
           {group.items.map((item, i) => {
             const type = item.type || fallbackType;
-            const badge = TYPE_BADGE[type] || TYPE_BADGE[fallbackType];
-            const color = item.color || DEFAULT_COLOR[type] || '#999';
+            const badge = panelConfig(TYPE_BADGE, type) || TYPE_BADGE[fallbackType];
+            const color = item.color || panelConfig(DEFAULT_COLOR, type) || '#999';
             const name = getItemName(item);
 
             return (
@@ -425,7 +433,7 @@ export default function AppItemListRenderer({ items, fallbackType = 'worksheet' 
                     {item.icon ? (
                       <SvgIcon url={customIconUrl(item.icon)} fill={color} size={24} />
                     ) : (
-                      <Icon icon={DEFAULT_ICON[type] || 'bookmark'} />
+                      <Icon icon={panelConfig(DEFAULT_ICON, type) || 'bookmark'} />
                     )}
                   </ItemIcon>
                   <ItemName title={name}>{name}</ItemName>

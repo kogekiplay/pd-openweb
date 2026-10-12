@@ -1,13 +1,5 @@
 {
   "files": [
-    "src/components/Agent/AppBuilder/PreviewFrame.tsx",
-    "src/components/Agent/AppBuilder/Sidebar.tsx",
-    "src/components/Agent/AppBuilder/index.tsx",
-    "src/components/Agent/AppBuilder/panels/CustomActionsPanel.tsx",
-    "src/components/Agent/AppBuilder/panels/RolesPanel.tsx",
-    "src/components/Agent/AppBuilder/panels/WorkflowsPanel.tsx",
-    "src/components/Agent/AppBuilder/panels/_appItemRenderer.tsx",
-    "src/components/Agent/AppBuilder/panels/_shared.tsx",
     "src/components/Agent/ChatPanel.tsx",
     "src/components/Agent/agentService.ts",
     "src/components/Agent/anonymous.ts",

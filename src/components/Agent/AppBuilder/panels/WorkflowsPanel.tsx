@@ -2,13 +2,23 @@ import { Fragment } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { CardEditButton, PanelWrap } from './_shared';
+import { panelConfig, workflowCardItems } from './panelModels';
+import type { CardStyle } from './panelModels';
 
 // workflows.json schema：
 //   { name, description,
 //     trigger: { type: worksheet_event|schedule|date_field, source, label },
 //     intentHints: [{ label }] }
 
-const TRIGGER_CONFIG = {
+interface TriggerPresentation {
+  label: string;
+  badgeBorder: string;
+  badgeColor: string;
+  badgeBg?: string | undefined;
+  iconName: string;
+  iconColor: string;
+}
+const TRIGGER_CONFIG: Record<string, TriggerPresentation> = {
   worksheet_event: {
     label: _l('工作表事件触发'),
     badgeBorder: 'var(--color-warning-border)',
@@ -75,7 +85,7 @@ const WfName = styled.div`
   white-space: nowrap;
 `;
 
-const TriggerBadge = styled.span`
+const TriggerBadge = styled.span<CardStyle>`
   display: inline-flex;
   align-items: center;
   height: 22px;
@@ -138,21 +148,21 @@ const ArrowIcon = styled(Icon)`
   flex-shrink: 0;
 `;
 
-export default function WorkflowsPanel({ workflows }) {
-  const list = Array.isArray(workflows) ? workflows : [];
+export default function WorkflowsPanel({ workflows }: { workflows: unknown }) {
+  const list = workflowCardItems(workflows);
 
   return (
     <PanelWrap>
       {list.map((wf, i) => {
-        const trigger = wf.trigger || {};
-        const cfg = TRIGGER_CONFIG[trigger.type] || {
+        const trigger = wf.trigger;
+        const cfg: TriggerPresentation = panelConfig(TRIGGER_CONFIG, trigger.type) || {
           label: trigger.type || _l('未知触发'),
           badgeBorder: 'var(--color-border-secondary)',
           badgeColor: 'var(--color-text-tertiary)',
           iconName: 'workflow',
           iconColor: 'var(--color-text-tertiary)',
         };
-        const hints = Array.isArray(wf.intentHints) ? wf.intentHints : [];
+        const hints = wf.intentHints;
         // Trigger chip 文本：worksheet_event/date_field 拼 source + label；schedule 只用 label
         const triggerChipText =
           (trigger.type === 'worksheet_event' || trigger.type === 'date_field') && trigger.source

@@ -2,12 +2,21 @@ import { Fragment } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { CardEditButton, PanelWrap } from './_shared';
+import { actionGroups, panelConfig } from './panelModels';
+import type { CardStyle } from './panelModels';
 
 // custom-actions.json schema：
 //   [{ worksheet, actions: [{ name, description, type, targetWorksheet?, intentHints?: [{ label }] }] }]
 // type ∈ updateCurrentRecord / createRelatedRecord / triggerWorkflow
 
-const TYPE_CONFIG = {
+interface ActionPresentation {
+  label: string;
+  color: string;
+  border: string;
+  bg?: string | undefined;
+  iconName: string;
+}
+const TYPE_CONFIG: Record<string, ActionPresentation> = {
   updateCurrentRecord: {
     label: _l('更新当前记录'),
     color: 'var(--color-info)',
@@ -85,7 +94,7 @@ const ActionName = styled.div`
   white-space: nowrap;
 `;
 
-const TypeBadge = styled.span`
+const TypeBadge = styled.span<CardStyle>`
   display: inline-flex;
   align-items: center;
   height: 22px;
@@ -174,8 +183,8 @@ const TargetTable = styled.span`
   }
 `;
 
-export default function CustomActionsPanel({ customActions }) {
-  const list = Array.isArray(customActions) ? customActions : [];
+export default function CustomActionsPanel({ customActions }: { customActions: unknown }) {
+  const list = actionGroups(customActions);
 
   if (list.length === 0) {
     return (
@@ -190,7 +199,7 @@ export default function CustomActionsPanel({ customActions }) {
   return (
     <PanelWrap>
       {list.map((group, gi) => {
-        const actions = Array.isArray(group.actions) ? group.actions : [];
+        const actions = group.actions;
 
         return (
           <WorksheetGroup key={group.worksheet || gi}>
@@ -199,13 +208,13 @@ export default function CustomActionsPanel({ customActions }) {
               {group.worksheet || _l('（未指定工作表）')}
             </GroupHeader>
             {actions.map((action, ai) => {
-              const cfg = TYPE_CONFIG[action.type] || {
+              const cfg: ActionPresentation = panelConfig(TYPE_CONFIG, action.type) || {
                 label: action.type || _l('未知类型'),
                 color: 'var(--color-text-tertiary)',
                 border: 'var(--color-border-secondary)',
                 iconName: 'touch_app',
               };
-              const hints = Array.isArray(action.intentHints) ? action.intentHints : [];
+              const hints = action.intentHints;
               const isTriggerWorkflow = action.type === 'triggerWorkflow';
               const triggerChipText = action.name || cfg.label;
 

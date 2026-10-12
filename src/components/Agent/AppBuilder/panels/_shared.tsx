@@ -1,10 +1,14 @@
 import { useContext, useEffect, useRef, useState } from 'react';
+import type { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { useAgentBus } from '../../agentBus';
-import { ChatStateContext } from '../index';
+import { ChatStateContext } from '../builderContext';
+import type { CardStyle } from './panelModels';
+
+export { parseCompactList, parseCompactStr } from './compactValue';
 
 export const PanelWrap = styled.div`
   display: flex;
@@ -25,7 +29,7 @@ export const Card = styled.div`
   box-shadow: var(--shadow-sm);
 `;
 
-export const CardLead = styled.div`
+export const CardLead = styled.div<CardStyle>`
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -69,7 +73,7 @@ export const CardDesc = styled.div`
   margin-top: var(--space-1);
 `;
 
-export const Badge = styled.span`
+export const Badge = styled.span<CardStyle>`
   display: inline-flex;
   align-items: center;
   height: 20px;
@@ -105,46 +109,6 @@ export const TagIcon = styled(Icon)`
   color: var(--color-text-tertiary);
 `;
 
-// Parse compact strings like "名称(Type)" or "名称(Relation→目标表)"
-export function parseCompactStr(str) {
-  if (typeof str !== 'string') return { name: String(str || ''), type: '' };
-  const m = str.match(/^(.+?)\(([^)]+)\)$/);
-  if (!m) return { name: str, type: '' };
-  return { name: m[1].trim(), type: m[2].trim() };
-}
-
-// 列表型紧凑字段（fields / views / charts / components）兼容两种产出：
-// 1) 数组：["客户名称(Text)", "客户分类(Relation:客户分类)"] —— 原样返回；
-// 2) 逗号分隔字符串："客户名称(Text), 客户分类(Relation:客户分类)" —— 按"括号深度为 0 的逗号"切分，
-//    避免类型里的逗号（如未来出现）被误切。两种都交给 parseCompactStr 逐项解析。
-export function parseCompactList(value) {
-  if (Array.isArray(value)) return value;
-  if (typeof value !== 'string') return [];
-
-  const out = [];
-  let depth = 0;
-  let cur = '';
-
-  for (const ch of value) {
-    if (ch === '(') depth += 1;
-    else if (ch === ')') depth = Math.max(0, depth - 1);
-
-    if (ch === ',' && depth === 0) {
-      const token = cur.trim();
-
-      if (token) out.push(token);
-      cur = '';
-    } else {
-      cur += ch;
-    }
-  }
-
-  const last = cur.trim();
-
-  if (last) out.push(last);
-  return out;
-}
-
 export const SectionDivider = styled.div`
   margin-top: var(--space-3);
   padding-top: var(--space-3);
@@ -179,7 +143,7 @@ export const Chip = styled.div`
   color: var(--color-text-secondary);
 `;
 
-export const ChipIcon = styled(Icon)`
+export const ChipIcon = styled(Icon)<CardStyle>`
   font-size: var(--font-sm) !important;
   color: ${p => p.$color || 'var(--color-text-tertiary)'};
 `;
@@ -337,10 +301,18 @@ const SendButton = styled.button`
   }
 `;
 
-function CardEditPopover({ moduleLabel, cardName, initialText = '', onClose }) {
+interface CardEditProps {
+  moduleLabel: string;
+  cardName: string;
+}
+interface CardEditPopoverProps extends CardEditProps {
+  initialText?: string | undefined;
+  onClose: () => void;
+}
+function CardEditPopover({ moduleLabel, cardName, initialText = '', onClose }: CardEditPopoverProps) {
   // 二次修改时回显上次输入，方便在原文上继续改
   const [value, setValue] = useState(initialText);
-  const textareaRef = useRef(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const bus = useAgentBus();
 
   // 自动聚焦并把光标移到文末（回显内容时避免光标停在最前面）
@@ -363,14 +335,14 @@ function CardEditPopover({ moduleLabel, cardName, initialText = '', onClose }) {
   };
 
   return (
-    <PopoverWrap onClick={e => e.stopPropagation()}>
+    <PopoverWrap onClick={(e: MouseEvent<HTMLDivElement>) => e.stopPropagation()}>
       <PopoverTitle title={cardName}>{_l('修改【%0】', cardName)}</PopoverTitle>
       <PopoverTextarea
         ref={textareaRef}
         value={value}
-        onChange={e => setValue(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setValue(e.target.value)}
         placeholder={_l('请告诉我你想如何修改？')}
-        onKeyDown={e => {
+        onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {
           if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
             e.preventDefault();
             handleSend();
@@ -386,7 +358,7 @@ function CardEditPopover({ moduleLabel, cardName, initialText = '', onClose }) {
   );
 }
 
-export function CardEditButton({ moduleLabel, cardName }) {
+export function CardEditButton({ moduleLabel, cardName }: CardEditProps) {
   const [open, setOpen] = useState(false);
   const { submitting, pendingEdits = [] } = useContext(ChatStateContext);
 
@@ -432,7 +404,7 @@ export function CardEditButton({ moduleLabel, cardName }) {
         type="button"
         className={cx('card-edit-btn', { active: open, pinned: !!pendingEdit })}
         aria-label={_l('修改')}
-        onClick={e => e.stopPropagation()}
+        onClick={(e: MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
       >
         <Icon icon={editIcon} />
       </EditIconButton>
