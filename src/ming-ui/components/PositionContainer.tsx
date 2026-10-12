@@ -1,30 +1,49 @@
 import { Component } from 'react';
+import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
+import type { Root } from 'react-dom/client';
 import { shallowEqual } from 'react-redux';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { getClickAwayExceptions, getDomNode } from './ClickAway';
 import './less/PositionContainer.less';
 
-function getDomNode(node) {
-  if (!node) {
-    return null;
-  }
-
-  if (node.nodeType) {
-    return node;
-  }
-
-  if (node.current) {
-    return getDomNode(node.current);
-  }
-
-  return null;
+export type PositionPlacement = 'top' | 'bottom' | 'left' | 'right';
+export type PositionBounding = Pick<DOMRectReadOnly, 'top' | 'left' | 'bottom' | 'right' | 'width' | 'height'>;
+export interface PositionOffset {
+  top?: number | undefined;
+  left?: number | undefined;
+}
+export interface PositionContainerProps {
+  visible?: boolean | undefined;
+  bounding?: PositionBounding | null | undefined;
+  placement?: PositionPlacement | undefined;
+  onHide?: (() => void) | undefined;
+  popupParentNode?: (() => HTMLElement | null | undefined) | undefined;
+  offset?: PositionOffset | undefined;
+  isInit?: boolean | undefined;
+  onClickAwayExceptions?: readonly unknown[] | undefined;
+  children?: ReactNode;
+}
+interface PositionPoint {
+  top: number;
+  left: number;
+}
+function isElement(node: Node): node is Element {
+  return node.nodeType === 1;
 }
 
-class PositionContainer extends Component<any, any> {
+class PositionContainer extends Component<PositionContainerProps> {
   declare popupBounding: DOMRect | undefined;
   declare hasTop: boolean | undefined;
   declare popup: HTMLDivElement | undefined;
+  declare popupParentNode: HTMLElement | undefined;
+  declare bounding: PositionBounding | null | undefined;
+  private root: Root | undefined;
+  private showTimer: number | undefined;
+  private mounted = false;
+  private listening = false;
+  private readonly handleResize = () => this.onWindowResize();
+  private readonly handleBodyClick = (event: MouseEvent) => this.destroy(event);
 
   static override propTypes = {
     visible: PropTypes.bool, // 显示隐藏
@@ -48,50 +67,52 @@ class PositionContainer extends Component<any, any> {
     popupParentNode: () => document.body,
     onHide: () => {},
   };
-  constructor(props) {
-    super(props);
-  }
   override componentDidMount() {
+    this.mounted = true;
     this.bounding = this.props.bounding;
-    if (this.props.isInit) {
-      this.create(this.props);
-    }
-
-    if (this.props.visible) {
-      this.renderLayer(this.props);
-    }
+    if (this.props.isInit || this.props.visible) this.create(this.props);
   }
-  create(props) {
-    let { popupParentNode } = props;
-    this.popupParentNode = popupParentNode();
+  create(props: PositionContainerProps) {
+    this.popupParentNode = props.popupParentNode?.() || document.body;
     this.hasTop = this.popupParentNode.tagName === 'BODY' ? true : false;
-    this.popup = document.createElement('div');
-    this.popup.className = 'ming PositionContainer-wrapper';
+    if (!this.popup) {
+      this.popup = document.createElement('div');
+      this.popup.className = 'ming PositionContainer-wrapper';
+      this.root = createRoot(this.popup);
+    }
     this.popupParentNode.appendChild(this.popup);
     this.renderLayer(props);
-
-    this.newDestroy = this.destroy.bind(this);
-    window.addEventListener('resize', this.onWindowResize.bind(this));
-    document.body.addEventListener('click', this.newDestroy, false);
-  }
-  override componentWillUnmount() {
-    if (this.popup) {
-      this.popupParentNode.removeChild(this.popup);
-      window.removeEventListener('resize', this.onWindowResize.bind(this));
-      document.body.removeEventListener('click', this.newDestroy);
+    if (!this.listening) {
+      window.addEventListener('resize', this.handleResize);
+      document.body.addEventListener('click', this.handleBodyClick, false);
+      this.listening = true;
     }
   }
+  override componentWillUnmount() {
+    this.mounted = false;
+    this.clearShowTimer();
+    window.removeEventListener('resize', this.handleResize);
+    document.body.removeEventListener('click', this.handleBodyClick);
+    this.listening = false;
+    const root = this.root;
+    this.root = undefined;
+    // Dispose the separate React root after the parent commit finishes.
+    if (root) queueMicrotask(() => root.unmount());
+    this.popup?.remove();
+    this.popup = undefined;
+    this.popupParentNode = undefined;
+  }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: PositionContainerProps) {
     if (!shallowEqual(prevProps, this.props)) {
       let { visible, bounding } = this.props;
       this.bounding = bounding;
       if (visible) {
-        if (this.popup) {
+        const parent = this.props.popupParentNode?.() || document.body;
+        if (this.popup && this.popupParentNode === parent && parent.contains(this.popup)) {
           this.renderLayer(this.props);
         } else {
           this.create(this.props);
-          this.show();
         }
       } else {
         if (this.popup) {
@@ -100,78 +121,52 @@ class PositionContainer extends Component<any, any> {
       }
     }
   }
-  renderLayer(props) {
+  private clearShowTimer() {
+    if (this.showTimer !== undefined) window.clearTimeout(this.showTimer);
+    this.showTimer = undefined;
+  }
+  renderLayer(props: PositionContainerProps) {
     let { children, visible } = props;
-    const root = createRoot(this.popup);
-
-    root.render(children);
-
-    setTimeout(() => {
-      if (visible) {
-        this.show();
-      }
-    }, 200);
+    this.clearShowTimer();
+    this.root?.render(children);
+    if (visible && props.bounding)
+      this.showTimer = window.setTimeout(() => {
+        this.showTimer = undefined;
+        if (this.mounted && this.props.visible) this.show();
+      }, 200);
+    else this.hide();
   }
-  getHasParent(el, className: string) {
-    let result = false;
-
-    if (el.classList.contains(className)) {
-      return true;
+  getHasParent(node: Node, className: string) {
+    for (let current: Node | null = node; current; current = current.parentNode) {
+      if (isElement(current) && current.classList.contains(className)) return false;
     }
-
-    if (!el || !el.parentNode) {
-      return result;
-    }
-
-    while ((result = !(el && el.parentNode && el.parentNode.classList.contains(className)))) {
-      if (el && el.parentNode === null) {
-        result = true;
-        break;
-      }
-
-      if (el && el.tagName && el.tagName === 'BODY') break;
-      el = el && el.parentNode ? el.parentNode : el;
-    }
-
-    return result;
+    return true;
   }
-  destroy(event) {
-    let target = event.target;
-    let { props } = this;
-    const exceptions = _.compact(
-      _.map(this.props.onClickAwayExceptions, item => {
-        if (window.jQuery && item instanceof window.jQuery) {
-          return _.map(item, x => x);
-        }
-
-        if (typeof item === 'string' && window.jQuery) {
-          return _.map(window.jQuery(item), x => x);
-        }
-
-        return getDomNode(item);
-      }),
-    );
-
+  destroy(event: MouseEvent) {
+    if (!this.mounted || !this.props.visible) return;
+    const target = getDomNode(event.target);
+    const exceptions = getClickAwayExceptions(this.props.onClickAwayExceptions);
     if (
       target &&
       this.getHasParent(target, 'PositionContainer-wrapper') &&
-      _.every(_.flatten(exceptions), item => target !== item && !$(target).closest($(item)).length)
+      exceptions.every(item => !item.contains(target))
     ) {
-      props.onHide();
+      this.props.onHide?.();
     }
   }
   onWindowResize() {
     let { visible, onHide } = this.props;
 
-    if (visible) {
-      onHide();
+    if (this.mounted && visible) {
+      onHide?.();
     }
   }
   getCurrentClientRect() {
     let { popupParentNode, bounding, popup } = this;
-    let { placement } = this.props;
+    const placement = this.props.placement || 'top';
+    if (!popupParentNode || !bounding || !popup) return { top: 0, left: 0 };
     let popupBounding = (this.popupBounding = popup.getBoundingClientRect());
-    let result: Record<string, any> = {};
+    let result: PositionPoint = { top: 0, left: 0 };
 
     let popupParentNodeBounding = popupParentNode.getBoundingClientRect();
 
@@ -218,7 +213,7 @@ class PositionContainer extends Component<any, any> {
 
     return result;
   }
-  getVerticalSpace(bounding, popupBounding: DOMRect) {
+  getVerticalSpace(bounding: PositionBounding, popupBounding: PositionBounding) {
     let { clientHeight } = document.body;
 
     let isTop = bounding.top - popupBounding.height >= 0 ? true : false;
@@ -254,7 +249,7 @@ class PositionContainer extends Component<any, any> {
       bottomSpace,
     };
   }
-  getHorizontalSpace(bounding, popupBounding: DOMRect) {
+  getHorizontalSpace(bounding: PositionBounding, popupBounding: PositionBounding) {
     let { clientWidth } = document.body;
 
     let left = bounding.left - popupBounding.width;
@@ -292,10 +287,11 @@ class PositionContainer extends Component<any, any> {
   }
   getBoundingClientRect() {
     let { bounding, popup } = this;
-    let { placement } = this.props;
+    const placement = this.props.placement || 'top';
+    if (!bounding || !popup) return { top: 0, left: 0 };
     let popupBounding = (this.popupBounding = popup.getBoundingClientRect());
     let { clientWidth, clientHeight } = document.body;
-    let result: Record<string, any> = {};
+    let result: PositionPoint = { top: 0, left: 0 };
 
     let verticalSpace = this.getVerticalSpace(bounding, popupBounding);
     let horizontalSpace = this.getHorizontalSpace(bounding, popupBounding);
@@ -328,19 +324,22 @@ class PositionContainer extends Component<any, any> {
       }
     }
 
-    return result;
+    return { top: Math.max(0, result.top), left: Math.max(0, result.left) };
   }
   show() {
-    let { offset } = this.props;
+    const { offset = {} } = this.props;
     let { popup } = this;
+    if (!popup || !this.bounding) return;
     let bounding = this.hasTop ? this.getBoundingClientRect() : this.getCurrentClientRect();
-    popup.style.left = `${bounding.left + offset.left}px`;
-    popup.style.top = `${bounding.top + offset.top}px`;
+    popup.style.left = `${bounding.left + (offset.left ?? 0)}px`;
+    popup.style.top = `${bounding.top + (offset.top ?? 0)}px`;
     popup.style.display = 'block';
     popup.classList.add('PositionContainer-active');
   }
   hide() {
+    this.clearShowTimer();
     let { popup } = this;
+    if (!popup) return;
     popup.style.left = '-99999px';
     popup.style.top = '-99999px';
     popup.classList.remove('PositionContainer-active');

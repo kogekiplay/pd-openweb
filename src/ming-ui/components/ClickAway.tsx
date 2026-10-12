@@ -52,14 +52,14 @@ function isDomNode(value: unknown): value is Node {
   }
 }
 
-function getDomNode(value: unknown, visited = new Set<object>()): Node | null {
+export function getDomNode(value: unknown, visited = new Set<object>()): Node | null {
   if (isDomNode(value)) return value;
   if (!object(value) || visited.has(value)) return null;
   visited.add(value);
   return getDomNode(value['current'], visited) || getDomNode(value['nativeElement'], visited);
 }
 
-function getClickAwayExceptions(values: readonly unknown[] = []): Node[] {
+export function getClickAwayExceptions(values: readonly unknown[] = []): Node[] {
   return values.flatMap(value => {
     if (window.jQuery && (value instanceof window.jQuery || typeof value === 'string')) {
       const nodes: unknown =
