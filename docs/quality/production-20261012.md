@@ -1,5 +1,13 @@
 # 生产前端更新记录：2026-10-12
 
+## 18:09 自动编号热修复
+
+当前生产为 `4d6ff521dda80284228c94a59ae52a98634d982a`。用户报告 Invalid widget setting list 后，确认自动编号内置默认规则 start:null 被之前的有限校验拒绝，补齐 nullable start 并通过真实生产者、旧版反例、保存检查/格式化和子表递归回归；212/212 规格及全部门禁通过，release 56 秒。上海时间 18:09:35 完成可回滚目录切换，现网入口文件 SHA256 为 `ea5c9429d16ffb1528d834f546c7781d51962beb33f0c7cdf538651818ff3d1c`。回滚目录 `/usr/local/MDPrivateDeployment/www-prev-20261012-4d6ff521dd` 保留 `91edc6ad8`，既有回滚副本、旧 chunk 和厂商资源均保留。
+
+候选所有文件 SHA256、HTML 引用/runtime 映射及实际网络 JS/CSS 匹配校验通过，5 个容器 ID 不变。新主入口为 `index-d3b0e33010160e4fddc61638a43a8c7f.97469d52.entry.js`；用户需刷新旧页面后再保存，本轮未替用户保存业务/字段配置或重置编号。见 `widget-increase-hotfix-20261012.md` 及 `/private/tmp/hap-deploy-widget-increase-20261012/`。16:41 日常发布已在 17:30 前完成，此次为随后报告异常的热修复。
+
+热修复前清理了两个与容器回滚目录逐文件完全一致的旧 host 暂存 www 树，保留暂存元数据；校验分别覆盖 78,880 / 78,795 文件。原 16:41 节所列剩余空间为当时读数，热修复后可用约 19.3 GiB；当前 4d6/91ed 暂存与全部容器回滚副本继续保留。
+
 ## 16:41 更新
 
 当前生产前端为 `91edc6ad87830ea4a42cbffba50eff4b291e5043`，于上海时间 16:41:24 完成目录切换，包含后续扫码上传、Button、Checkbox、Radio、Dropdown/开票及 ClickAway/Menu/List 严格化批次。真实 release 用时 1 分 14 秒，212/212 完整规格与全部类型门禁通过；publish、79 个 HTML 的 537 个本地资源引用和 3 个 runtime 资源映射校验通过。新源码仍有 56,282 条严格欠债，正式全仓 strict 目标继续。
