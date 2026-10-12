@@ -36,7 +36,9 @@ function normalizeRange(input: DateRangeInput = []): MutableDateRange {
   const normalize = (value: moment.MomentInput): DateValue => {
     if (value === undefined) return undefined;
     if (value === null) return null;
-    return moment(value);
+    if (typeof value === 'string' && !value.trim()) return null;
+    const parsed = moment(value);
+    return parsed.isValid() ? parsed : null;
   };
   return input.length === 0
     ? []
@@ -45,7 +47,8 @@ function normalizeRange(input: DateRangeInput = []): MutableDateRange {
       : [normalize(input[0]), normalize(input[1])];
 }
 function getValueFromSelectedValue(value: DateRangeInput = []): [moment.Moment, moment.Moment] {
-  return [moment(value[0] ?? getNow()), moment(value[1] ?? getNow())];
+  const normalized = normalizeRange(value);
+  return [moment(normalized[0] ?? getNow()), moment(normalized[1] ?? getNow())];
 }
 function halfValues(input?: HalfDayRange): [HalfDay | undefined, HalfDay | undefined] {
   return input ? [input[0], input[1]] : ['AM', 'PM'];

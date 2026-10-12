@@ -316,6 +316,10 @@ function main() {
     selectedValue: [anchor, end],
     onOk: (...args: unknown[]) => rangeCalls.push(args),
   });
+  const invalidInput = current.make('DatePicker/CalendarRange', { selectedValue: ['', Number.NaN] });
+  assert.deepEqual(state(invalidInput.value, 'selectedValue'), [null, null]);
+  assert.ok(date(invalidInput.call('getStartValue')).isValid());
+  assert.ok(date(invalidInput.call('getEndValue')).isValid());
   normalized.update({ selectedValue: [0, '2026-10-12'] });
   assert.equal(date(read(state(normalized.value, 'selectedValue'), '0')).valueOf(), 0);
   normalized.call('onOk');
