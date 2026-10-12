@@ -1,17 +1,39 @@
 import { Component } from 'react';
-import { shallowEqual } from 'react-redux';
+import type { ReactNode } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { default as Checkbox, SIZE_LIST } from './Checkbox';
+import type { CheckboxProps } from './Checkbox';
 import './less/CheckboxGroup.less';
 
-class CheckboxGroup extends Component<any, any> {
+export type CheckboxGroupItem<V = unknown> = Omit<CheckboxProps<V>, 'onClick'>;
+
+export interface CheckboxGroupProps<V = unknown> {
+  data?: readonly CheckboxGroupItem<V>[] | null | undefined;
+  defaultCheckedValues?: readonly (V | undefined)[] | null | undefined;
+  checkedValues?: readonly (V | undefined)[] | null | undefined;
+  onChange?: ((value: V | undefined) => void) | undefined;
+  size?: (typeof SIZE_LIST)[number] | undefined;
+  disabled?: boolean | undefined;
+  className?: string | undefined;
+  vertical?: boolean | undefined;
+  /** Legacy caller metadata retained without forwarding it to label elements. */
+  name?: string | undefined;
+  children?: ReactNode;
+}
+
+interface CheckboxGroupState<V> {
+  data: CheckboxGroupItem<V>[];
+}
+
+class CheckboxGroup<V = unknown> extends Component<CheckboxGroupProps<V>, CheckboxGroupState<V>> {
+  data: CheckboxGroupItem<V>[];
   static override propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({
         text: PropTypes.any, // Raio显示的名称
-        value: PropTypes.node, // 在回调中作为第二个参数返回
+        value: PropTypes.any, // 不参与渲染的泛型值，原样返回给 onChange
       }),
     ), // 数据
     defaultCheckedValues: PropTypes.array, // 默认选中
@@ -32,33 +54,41 @@ class CheckboxGroup extends Component<any, any> {
     vertical: false,
   };
 
-  constructor(props) {
+  constructor(props: CheckboxGroupProps<V>) {
     super(props);
     const checkedValues = props.checkedValues || props.defaultCheckedValues || [];
     this.state = {
       data: this.getCheckedData(props.data || [], checkedValues),
     };
-    this.data = _.cloneDeep(this.state.data);
+    this.data = this.getCheckedData(this.state.data, checkedValues);
   }
 
-  override componentDidUpdate(prevProps) {
-    if (!shallowEqual(prevProps, this.props)) {
-      if (this.props.checkedValues) {
-        this.checkedArraytoData(this.props.checkedValues);
-      }
-    }
+  override componentDidUpdate(prevProps: CheckboxGroupProps<V>) {
+    if (this.props.data === prevProps.data && this.props.checkedValues === prevProps.checkedValues) return;
+    const selected = this.props.checkedValues || this.state.data.filter(item => item.checked).map(item => item.value);
+    this.data = this.getCheckedData(this.props.data || [], selected);
+    this.setState({ data: this.data });
   }
 
-  handleClick(_checked: boolean, value) {
+  handleClick(checked: boolean, value: V | undefined) {
     const { onChange } = this.props;
+
+    if (this.props.checkedValues === undefined || this.props.checkedValues === null) {
+      const selected = this.state.data.filter(item => item.checked).map(item => item.value);
+      this.checkedArraytoData(checked ? selected.filter(item => item !== value) : [...selected, value]);
+    }
 
     if (onChange) {
       onChange(value);
     }
   }
 
-  getCheckedData(data, checkedArray) {
-    const nextData = _.cloneDeep(data || []);
+  getCheckedData(
+    data: readonly CheckboxGroupItem<V>[],
+    checkedArray: readonly (V | undefined)[] | null | undefined,
+  ): CheckboxGroupItem<V>[] {
+    // Clone presentation metadata while keeping the opaque value's identity.
+    const nextData = data.map(item => ({ ..._.cloneDeep(item), value: item.value }));
     if (!checkedArray) return nextData;
     return nextData.map(item => {
       if (checkedArray.indexOf(item.value) >= 0) {
@@ -71,7 +101,7 @@ class CheckboxGroup extends Component<any, any> {
     });
   }
 
-  checkedArraytoData(checkedArray) {
+  checkedArraytoData(checkedArray: readonly (V | undefined)[] | null | undefined) {
     if (!checkedArray) return;
     this.data = this.getCheckedData(this.data, checkedArray);
     this.setState({
@@ -81,8 +111,7 @@ class CheckboxGroup extends Component<any, any> {
 
   override render() {
     const { className, vertical } = this.props;
-    const cls = cx('ming CheckboxGroup', {
-      [className]: !!className,
+    const cls = cx('ming CheckboxGroup', className, {
       'CheckboxGroup--vertical': vertical,
     });
     return (
@@ -93,7 +122,7 @@ class CheckboxGroup extends Component<any, any> {
             onClick={(checked, value) => this.handleClick(checked, value)}
             key={index}
             size={this.props.size}
-            disabled={this.props.disabled}
+            disabled={this.props.disabled || props.disabled}
           />
         ))}
       </div>

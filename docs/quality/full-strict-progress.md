@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-12 复选框链路
+
+Checkbox/CheckboxGroup 的 value、状态和缓存模型已严格化，去掉泛型 any 缺省值及 value 断言；修复显式 false 被 defaultChecked 覆盖、组数据缓存不更新等选择状态问题。严格诊断 56,421 → 56,403（新增 0），欠债 3,269 文件，strict-clean 1,464 / 4,733；208/208 规格及实际 consumer 类型正反例通过。详见 `checkbox-chain-20261012.md`。本批未部署，今天生产仍为 `e091d5f553`。
+
 ## 2026-10-12 Button action 与事件链路
 
 Button 的原生事件和有限 props 合同已完成，修复同步 action 持续 loading、旧 Promise 清除新 action loading 及卸载生命周期问题；正常渲染历史对照通过。严格诊断 56,447 → 56,421（按文件/错误码新增 0），欠债 3,270 文件，strict-clean 1,463 / 4,733；完整规格 207/207，工具门禁通过。详见 `ming-ui-button-20261012.md`。本批尚未部署，今天生产仍为 `e091d5f553`。
