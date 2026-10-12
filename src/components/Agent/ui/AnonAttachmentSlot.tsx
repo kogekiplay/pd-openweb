@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import type { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { BgIconButton } from 'ming-ui';
 import { antAlert } from 'ming-ui/functions/alert';
 import {
@@ -27,7 +28,27 @@ const ANON_ATTACHMENT_MIME_TYPES = [
 // 由匿名入口允许的扩展名拼出 input accept（.pdf,.png,...）
 const ACCEPT = ANON_ATTACHMENT_MIME_TYPES.flatMap(m => m.extensions.split(',').map(e => `.${e.trim()}`)).join(',');
 
-export default function AnonAttachmentSlot({
+interface AnonymousAttachment {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  status: string;
+  progress?: number | undefined;
+  url?: string | undefined;
+}
+interface AnonAttachmentSlotProps<T extends { id: string } = AnonymousAttachment> {
+  sessionId?: string | undefined;
+  files?: readonly T[] | undefined;
+  onChange: Dispatch<SetStateAction<T[]>>;
+  onAfterAdd?: (() => void) | undefined;
+  className?: string | undefined;
+  icon?: string | undefined;
+  onSessionChange?: ((sessionId: string) => void) | undefined;
+  createSession?: (() => Promise<string>) | undefined;
+}
+
+export default function AnonAttachmentSlot<T extends { id: string } = AnonymousAttachment>({
   sessionId,
   files = [],
   onChange,
@@ -36,10 +57,10 @@ export default function AnonAttachmentSlot({
   icon = 'attachment',
   onSessionChange,
   createSession,
-}) {
+}: AnonAttachmentSlotProps<T>) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  async function handlePick(e) {
+  async function handlePick(e: ChangeEvent<HTMLInputElement>) {
     const picked = Array.from(e.target.files || []);
 
     e.target.value = '';
@@ -52,7 +73,7 @@ export default function AnonAttachmentSlot({
     }
 
     const accepted = picked.slice(0, room);
-    let placeholders = [];
+    let placeholders: AnonymousAttachment[] = [];
 
     try {
       // 先完成匿名会话/验证码，再进入上传占位，避免验证码弹层背后出现未开始的上传流程。
@@ -70,7 +91,7 @@ export default function AnonAttachmentSlot({
         progress: 0,
       }));
 
-      onChange(prev => [...prev, ...placeholders]);
+      onChange(prev => [...prev, ...placeholders] as T[]);
       onAfterAdd && onAfterAdd();
 
       const uploaded = await uploadAnonymousFiles(accepted, sid);
@@ -83,7 +104,7 @@ export default function AnonAttachmentSlot({
           if (idx === -1) return f;
           const done = uploaded[idx];
 
-          return done ? { ...f, status: 'uploaded', url: done.url, size: done.size } : { ...f, status: 'error' };
+          return (done ? { ...f, status: 'uploaded', url: done.url, size: done.size } : { ...f, status: 'error' }) as T;
         }),
       );
 
@@ -112,7 +133,7 @@ export default function AnonAttachmentSlot({
       }
 
       if (ids.size) {
-        onChange(prev => prev.map(f => (ids.has(f.id) ? { ...f, status: 'error' } : f)));
+        onChange(prev => prev.map(f => (ids.has(f.id) ? ({ ...f, status: 'error' } as T) : f)));
       }
 
       antAlert(_l('上传失败'), 2);
