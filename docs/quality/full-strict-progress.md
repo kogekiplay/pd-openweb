@@ -2,7 +2,9 @@
 
 ## 2026-10-13 现代日期时间与时间菜单链路
 
-现代 NewTimePicker、Calendar、DatePickerBase、DateTime/Range 及公开出口已有限化；修复精度舍入、上下限、空值、跨午夜自动补全、清空回调、受控 props、format/locale/disabledDate 和工作流任务端点问题。真实 localhost 验收通过，215/215 规格、工具/语法/strict 门禁通过。严格诊断 55,833 → 55,256（新增 0），欠债 3,225 文件，strict-clean 1,514 / 4,739；详见 `modern-date-time-chain-20261013.md`。本批未发布，现网仍为 `4d6ff521d`。
+现代 NewTimePicker、Calendar、DatePickerBase、DateTime/Range 及公开出口已有限化；修复精度舍入、上下限、空值、跨午夜自动补全、清空回调、受控 props、format/locale/disabledDate 和工作流任务端点问题。真实 localhost 验收通过，最终 215/215 规格、工具/语法/strict/后缀门禁通过。严格诊断 55,833 → 55,256（新增 0），欠债 3,225 文件，strict-clean 1,514 / 4,739；详见 `modern-date-time-chain-20261013.md`。本批未发布，现网仍为 `4d6ff521d`。
+
+整合源码 `74fb92f12` 已通过真实 release（1 分 2 秒）、publish、runtime 与 HTML JS/CSS 资源校验，入口 revision 匹配源码，构建后工作树干净。本批候选尚未部署，保留给今天 17:30 前的日常发布。
 
 ## 2026-10-13 经典日历与范围选择链路
 
