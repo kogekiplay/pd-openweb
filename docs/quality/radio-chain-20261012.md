@@ -9,3 +9,5 @@ Radio 显式 checked 优先于默认值；非受控选项点击后选中，无�
 本批组件原先已 strict-clean，但含 4 个 any 泛型缺省值和 1 个 value 断言；本批将它们删除。收紧初期暴露 17 条消费者诊断，已逐一修复而未扩大合同，完整程序按文件/错误码新增 0。最终产品严格诊断保持 56,403、欠债 3,269 文件、strict-clean 1,464 / 4,733，不以诊断不变宣称目标完成。工具、语义差分和格式门禁通过；209/209 完整规格通过，PublicWorksheet weixinAuth 既有隔离项保留。新规格自身在工具终点五开关下 0 诊断。
 
 证据：`/private/tmp/hap-radio-before-strict.txt`、`hap-radio-final-strict.txt`、`hap-radio-tools-strict-final.txt`、`hap-radio-specs-20261012.log`。本批未部署，今天生产仍为 `e091d5f553`。
+
+类型分支 `67d8c9d95`、主分支整合 `b0d6ea4cf` 的完整推送门禁均通过 209/209 规格。整合源码真实 release 用时 1 分 14 秒，publish 成功；3 个 runtime 的 1095 JS / 387 CSS 映射、79 个 HTML 的 537 个非厂商本地资源引用完整，未引用 dev 资源。入口 revision 匹配源码，SHA256 为 `8ba3946a7a3207ce8a6645ebe44a752b860e81175ecc1130e6a220918067eb36`，widget 已生成，构建后工作树干净。证据见 `/private/tmp/hap-radio-release-20261012.log`、`hap-radio-publish-20261012.log`、`hap-radio-artifact-check-20261012.json`。本批候选尚未部署。
