@@ -9,3 +9,7 @@ Checkbox 和 CheckboxGroup 的泛型缺省值改为 unknown，去掉 `value as V
 产品严格诊断 56,421 → 56,403，按文件/错误码新增 0；欠债 3,270 → 3,269 文件，strict-clean 1,463 → 1,464 / 4,733。新规格在工具终点五开关下自身 0 诊断；工具、格式和 208/208 完整规格通过，既有隔离项 PublicWorksheet weixinAuth 保留。Checkbox 原本已在 strict-clean 范围，本轮进一步消除其两个 any 缺省参数和两处断言。全仓严格化尚未完成。
 
 证据：`/private/tmp/hap-checkbox-before-strict.txt`、`hap-checkbox-after-strict.txt`、`hap-checkbox-tools-strict.txt`、`hap-checkbox-specs-20261012.log`。本批尚未发布；今天生产仍为 `e091d5f553`。
+
+类型分支 `7da6b6acb`、主分支整合 `4170cc701` 的完整推送门禁均通过 208/208 规格。整合源码真实 release 用时 1 分 14 秒，publish 成功；3 个 runtime 的 1095 JS / 387 CSS 映射、79 个 HTML 的 537 个非厂商本地资源引用存在，未引用 dev 产物。入口 revision 匹配源码，SHA256 为 `0bc7071676e53f94950acfe5d956b4b1406fe441461d294a708953f51d6958ab`，widget 已生成，构建后工作树干净。证据见 `/private/tmp/hap-checkbox-release-20261012.log`、`hap-checkbox-publish-20261012.log`、`hap-checkbox-artifact-check-20261012.json`。候选尚未部署。
+
+公开 Props 缺省值的反例验证也已覆盖 CheckboxProps、CheckboxGroupProps 和不传 data 的 CheckboxGroup，防止这些接口退回 any。语义基线删除已消失的 4 条诊断，keptCount 9,061 → 9,057，唯一 key 2,452 → 2,451，没有新增豁免。
