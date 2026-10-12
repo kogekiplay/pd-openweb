@@ -4,11 +4,17 @@ import PropTypes from 'prop-types';
 import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
 import PositionContainer from 'ming-ui/components/PositionContainer';
+import { getDomNode } from '../ClickAway';
 import CalendarRange from './CalendarRange';
 import locale from './locale/zh_CN';
 import '../less/DateDropdDown.less';
 
+function isElement(node: Node): node is Element {
+  return node.nodeType === 1;
+}
+
 class DateDropdDown extends Component<any, any> {
+  declare _picker: Element | null | undefined;
   static override propTypes = {
     /**
      * 日历属性
@@ -97,7 +103,10 @@ class DateDropdDown extends Component<any, any> {
     const props = this.props;
     return React.cloneElement(props.children, {
       onClick: !props.disabled ? this.handleClick : null,
-      ref: picker => (this._picker = picker),
+      ref: (picker: unknown) => {
+        const node = getDomNode(picker);
+        this._picker = node && isElement(node) ? node : null;
+      },
     });
   };
 
@@ -176,6 +185,7 @@ class DateDropdDown extends Component<any, any> {
   };
 
   handleClick = () => {
+    if (this.props['disabled'] || !this._picker) return;
     this.setState({
       visibleMenu: true,
       bounding: this._picker.getBoundingClientRect(),
@@ -233,6 +243,7 @@ class DateDropdDown extends Component<any, any> {
           visible={state.visibleMenu}
           bounding={state.bounding}
           popupParentNode={props.popupParentNode}
+          onClickAwayExceptions={[this._picker]}
         >
           {this.getMenuElement()}
         </PositionContainer>
@@ -243,6 +254,7 @@ class DateDropdDown extends Component<any, any> {
           visible={state.visibleRange}
           bounding={state.bounding}
           popupParentNode={props.popupParentNode}
+          onClickAwayExceptions={[this._picker]}
         >
           {this.getCalendarElement()}
         </PositionContainer>

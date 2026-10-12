@@ -1,26 +1,30 @@
-/**
- * @param {目标元素} element
- * @param {目标位置} to
- * @param {持续时间} duration
- */
-export const scrollTo = (element, to, duration = 200) => {
-  const requestAnimationFrame =
-    window.requestAnimationFrame ||
-    function requestAnimationFrameTimeout() {
-      return setTimeout(arguments[0], 10);
-    };
-
-  if (duration <= 0) {
-    element.scrollTop = to;
-    return;
+/** Animate a scroll using the original ten-millisecond step calculation; return lifecycle cleanup. */
+export function scrollTo(element: Pick<HTMLElement, 'scrollTop'>, to: number, duration = 200): () => void {
+  let cancelled = false;
+  let frame: number | undefined;
+  const nativeFrame = typeof window.requestAnimationFrame === 'function';
+  const schedule = (callback: FrameRequestCallback) =>
+    nativeFrame ? window.requestAnimationFrame(callback) : window.setTimeout(() => callback(0), 10);
+  function step(remaining: number) {
+    if (cancelled) return;
+    if (remaining <= 0) {
+      element.scrollTop = to;
+      return;
+    }
+    const perTick = ((to - element.scrollTop) / remaining) * 10;
+    frame = schedule(() => {
+      frame = undefined;
+      if (cancelled) return;
+      element.scrollTop += perTick;
+      if (element.scrollTop !== to) step(remaining - 10);
+    });
   }
-
-  const difference = to - element.scrollTop;
-  const perTick = (difference / duration) * 10;
-
-  requestAnimationFrame(() => {
-    element.scrollTop = element.scrollTop + perTick;
-    if (element.scrollTop === to) return;
-    scrollTo(element, to, duration - 10);
-  });
-};
+  step(duration);
+  return () => {
+    cancelled = true;
+    if (frame !== undefined) {
+      if (nativeFrame) window.cancelAnimationFrame(frame);
+      else window.clearTimeout(frame);
+    }
+  };
+}

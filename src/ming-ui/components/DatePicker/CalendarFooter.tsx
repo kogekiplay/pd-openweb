@@ -1,14 +1,33 @@
 import React, { Component } from 'react';
+import type { ReactNode } from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 import TimePicker from 'ming-ui/components/TimePicker/TimePicker';
+import type { TimePickerProps } from '../TimePicker/types';
+import type { CalendarMode, CalendarView, FooterLocale } from './footerTypes';
 
-class CalendarFooter extends Component<any, any> {
+export interface CalendarFooterProps extends TimePickerProps {
+  locale: FooterLocale;
+  prefixCls: string;
+  mode?: CalendarMode | undefined;
+  view?: CalendarView | undefined;
+  openView?: ((view: CalendarView) => void) | undefined;
+  timePicker?: boolean | undefined;
+  selectedValue?: import('../TimePicker/types').TimeValue;
+  onSelect?: ((value: import('../TimePicker/types').TimeValue) => void) | undefined;
+  allowClear?: boolean | undefined;
+  onClear?: (() => void) | undefined;
+  onOk?: (() => void) | undefined;
+  onToday?: (() => void) | undefined;
+  onToMorrow?: (() => void) | undefined;
+}
+class CalendarFooter extends Component<CalendarFooterProps> {
+  static defaultProps = { allowClear: true };
   /**
    * 后退到指定 view
    */
   back = () => {
-    let toView = 'month';
+    let toView: CalendarView = 'month';
 
     if (this.props.mode === 'date' || this.props.mode === 'datetime') {
       toView = 'date';
@@ -23,19 +42,19 @@ class CalendarFooter extends Component<any, any> {
     const props = this.props;
     const { locale, prefixCls, timePicker } = props;
 
-    let footerBtns = [];
+    let footerBtns: ReactNode;
     let clearBtn: React.JSX.Element | null = null;
 
     if (this.props.allowClear) {
       clearBtn = (
-        <a onClick={() => props.onClear()} className={`${prefixCls}-clear-btn`} role="button">
+        <a onClick={() => props.onClear?.()} className={`${prefixCls}-clear-btn`} role="button">
           {locale.lang.clear}
         </a>
       );
     }
 
     const okBtn = (
-      <a onClick={() => props.onOk()} className={`${prefixCls}-ok-btn`} role="button">
+      <a onClick={() => props.onOk?.()} className={`${prefixCls}-ok-btn`} role="button">
         {locale.lang.ok}
       </a>
     );
@@ -46,7 +65,7 @@ class CalendarFooter extends Component<any, any> {
         <TimePicker
           {...props}
           popupParentNode={props.popupParentNode}
-          onChange={val => props.onSelect(val)}
+          onChange={val => props.onSelect?.(val)}
           className={`${prefixCls}-timepicker-btn`}
         />
       </span>
@@ -150,10 +169,6 @@ CalendarFooter.propTypes = {
   value: PropTypes.object,
   defaultValue: PropTypes.object,
   popupParentNode: PropTypes.func,
-};
-
-CalendarFooter.defaultProps = {
-  allowClear: true,
 };
 
 export default CalendarFooter;

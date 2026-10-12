@@ -1,11 +1,33 @@
 import { Component } from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import Dropdown from 'ming-ui/components/Dropdown';
 import TimePicker from 'ming-ui/components/TimePicker/TimePicker';
+import type { TimePickerProps, TimeValue } from '../TimePicker/types';
+import type { FooterLocale, HalfDay } from './footerTypes';
 
-class RangeFooter extends Component<any, any> {
+export interface RangeFooterProps {
+  prefixCls: string;
+  locale: FooterLocale;
+  timePicker?: boolean | undefined;
+  mode?: 'default' | 'task' | 'halfday' | undefined;
+  startValue?: TimeValue;
+  endValue?: TimeValue;
+  selectedValue?: readonly TimeValue[] | undefined;
+  halfStart?: HalfDay | undefined;
+  halfEnd?: HalfDay | undefined;
+  halfOnChange?: ((value: HalfDay | undefined, target: 'start' | 'end') => void) | undefined;
+  onStartTimeSelect?: ((value: TimeValue) => void) | undefined;
+  onEndTimeSelect?: ((value: TimeValue) => void) | undefined;
+  onClear?: (() => void) | undefined;
+  onOk?: (() => void) | undefined;
+  value?: TimeValue;
+  defaultValue?: TimeValue;
+  popupParentNode?: TimePickerProps['popupParentNode'];
+}
+class RangeFooter extends Component<RangeFooterProps> {
   static override propTypes = {
     prefixCls: PropTypes.string,
     timePicker: PropTypes.bool,
@@ -28,7 +50,7 @@ class RangeFooter extends Component<any, any> {
     popupParentNode: PropTypes.func,
   };
 
-  isWarning = (startValue, endValue) => {
+  isWarning = (startValue: TimeValue, endValue: TimeValue) => {
     if (startValue && endValue && startValue.isSame(endValue, 'day')) {
       if (endValue.isBefore(startValue, 'hour')) {
         return true;
@@ -43,7 +65,7 @@ class RangeFooter extends Component<any, any> {
   };
 
   // 半天选择
-  halfOnChange = (value, target: string) => {
+  halfOnChange = (value: HalfDay | undefined, target: 'start' | 'end') => {
     if (this.props.halfOnChange) {
       this.props.halfOnChange(value, target);
     }
@@ -53,36 +75,36 @@ class RangeFooter extends Component<any, any> {
     const props = this.props;
     const { startValue, endValue, locale, prefixCls, timePicker } = props;
 
-    let footerBtns = [];
+    let footerBtns: ReactNode;
     const clearBtn = (
-      <a onClick={() => props.onClear()} className={`${prefixCls}-clear-btn`} role="button">
+      <a onClick={() => props.onClear?.()} className={`${prefixCls}-clear-btn`} role="button">
         {locale.lang.clear}
       </a>
     );
 
     const okBtn = (
-      <a onClick={() => props.onOk()} className={`${prefixCls}-ok-btn`} role="button">
+      <a onClick={() => props.onOk?.()} className={`${prefixCls}-ok-btn`} role="button">
         {locale.lang.ok}
       </a>
     );
 
     // 任务模式特殊参数
-    let startExtraOptions = {};
-    let endExtraOptions = {};
+    let startExtraOptions: Partial<TimePickerProps> = {};
+    let endExtraOptions: Partial<TimePickerProps> = {};
 
     if (this.props.mode === 'task') {
       const extraOptions = {
         showMinute: false,
-        optionFormatter: n => `${String(n).padStart(2, 0)}:00`,
-        resultFormatter: m => (m ? m.format('HH:00') : '— —'),
+        optionFormatter: (n: number) => `${String(n).padStart(2, '0')}:00`,
+        resultFormatter: (m: TimeValue) => (m ? m.format('HH:00') : '— —'),
       };
       startExtraOptions = Object.assign(
         {
-          onChange: val => {
+          onChange: (val: TimeValue) => {
             if (val) {
-              props.onStartTimeSelect(val);
+              props.onStartTimeSelect?.(val);
             } else {
-              props.onStartTimeSelect(
+              props.onStartTimeSelect?.(
                 moment(startValue || new Date())
                   .startOf('day')
                   .add(9, 'hour'),
@@ -94,11 +116,11 @@ class RangeFooter extends Component<any, any> {
       );
       endExtraOptions = Object.assign(
         {
-          onChange: val => {
+          onChange: (val: TimeValue) => {
             if (val) {
-              props.onEndTimeSelect(val);
+              props.onEndTimeSelect?.(val);
             } else {
-              props.onEndTimeSelect(
+              props.onEndTimeSelect?.(
                 moment(endValue || new Date())
                   .startOf('day')
                   .add(18, 'hour'),
@@ -117,7 +139,7 @@ class RangeFooter extends Component<any, any> {
           showSecond={false}
           value={startValue}
           popupParentNode={props.popupParentNode}
-          onChange={val => props.onStartTimeSelect(val)}
+          onChange={val => props.onStartTimeSelect?.(val)}
           className={`${prefixCls}-timepicker-btn`}
           {...startExtraOptions}
         />
@@ -131,7 +153,7 @@ class RangeFooter extends Component<any, any> {
           showSecond={false}
           value={endValue}
           popupParentNode={props.popupParentNode}
-          onChange={val => props.onEndTimeSelect(val)}
+          onChange={val => props.onEndTimeSelect?.(val)}
           className={classNames(`${prefixCls}-timepicker-btn`, {
             warning: this.isWarning(startValue, endValue),
           })}
@@ -141,7 +163,7 @@ class RangeFooter extends Component<any, any> {
     );
 
     // 半天
-    const halfOptions = [
+    const halfOptions: { value: HalfDay; text: string }[] = [
       {
         value: 'AM',
         text: 'AM',

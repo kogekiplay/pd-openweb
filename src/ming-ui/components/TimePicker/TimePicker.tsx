@@ -2,17 +2,32 @@ import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import moment from 'moment';
+import type { Moment } from 'moment';
 import PropTypes from 'prop-types';
 import PositionContainer from 'ming-ui/components/PositionContainer';
+import type { PositionBounding } from 'ming-ui/components/PositionContainer';
+import { getDomNode } from '../ClickAway';
 import Panel from './Panel';
+import type { TimePickerProps, TimeValue } from './types';
 import '../less/TimePicker.less';
 
-const getComputedStyle = (element, attr: string) => {
+const getComputedStyle = (element: Element, attr: string) => {
   return window.getComputedStyle(element, null).getPropertyValue(attr);
 };
 
-class TimePicker extends Component<any, any> {
+function isElementNode(node: Node): node is Element {
+  return node.nodeType === 1;
+}
+interface TimePickerState {
+  value: TimeValue;
+  visible: boolean;
+  bounding: PositionBounding | null;
+}
+class TimePicker extends Component<TimePickerProps, TimePickerState> {
   declare clickHandler: { remove(): void } | undefined;
+  declare _panel: HTMLDivElement | null | undefined;
+  declare _timepicker: Element | null | undefined;
+  private mounted = false;
 
   static override propTypes = {
     /**
@@ -56,7 +71,7 @@ class TimePicker extends Component<any, any> {
      */
     resultFormatter: PropTypes.func,
     /**
-     * 格式化选项显示的方法，参数为 (type:'hour'|'minute'|'second', value: number)
+     * 格式化选项显示的方法，沿用 Array.map 的数字值、索引和原数组参数
      */
     optionFormatter: PropTypes.func,
     /**
@@ -92,10 +107,10 @@ class TimePicker extends Component<any, any> {
     onChange: () => {},
   };
 
-  constructor(props) {
+  constructor(props: TimePickerProps) {
     super(props);
 
-    let value;
+    let value: TimeValue;
 
     if ('defaultValue' in props) {
       value = props.defaultValue;
@@ -113,10 +128,11 @@ class TimePicker extends Component<any, any> {
   }
 
   override componentDidMount() {
+    this.mounted = true;
     this.clickHandler = this.addEvent(document, 'click', this.withClickAway);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: TimePickerProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if ('value' in this.props) {
         this.setState({
@@ -125,18 +141,21 @@ class TimePicker extends Component<any, any> {
       }
     }
 
-    if (!this.clickHandler) {
+    if (this.props.disabled && this.state.visible) this.handleClose();
+    if (this.mounted && !this.clickHandler) {
       this.clickHandler = this.addEvent(document, 'click', this.withClickAway);
     }
   }
 
   override componentWillUnmount() {
+    this.mounted = false;
     if (this.clickHandler) {
       this.clickHandler.remove();
+      this.clickHandler = undefined;
     }
   }
 
-  getRef = panel => {
+  getRef = (panel: HTMLDivElement | null) => {
     this._panel = panel;
   };
 
@@ -160,8 +179,8 @@ class TimePicker extends Component<any, any> {
     );
   };
 
-  getFormat = value => {
-    const { showHour, showMinute, showSecond } = this.props;
+  getFormat = (value: TimeValue) => {
+    const { showHour = true, showMinute = true, showSecond = true } = this.props;
 
     if (this.props.resultFormatter) {
       return this.props.resultFormatter(value, showHour, showMinute, showSecond);
@@ -176,13 +195,21 @@ class TimePicker extends Component<any, any> {
     }
   };
 
-  withClickAway = event => {
-    if (this._panel && !$(event.target).closest($(this._panel)).length && this._timepicker !== event.target) {
+  withClickAway = (event: Event) => {
+    const target = getDomNode(event.target);
+    if (
+      this.mounted &&
+      this.state.visible &&
+      target &&
+      this._panel &&
+      !this._panel.contains(target) &&
+      !this._timepicker?.contains(target)
+    ) {
       this.handleClose();
     }
   };
 
-  addEvent(element: Document, type: string, handler) {
+  addEvent(element: Document, type: string, handler: EventListener) {
     element.addEventListener(type, handler);
     return {
       remove() {
@@ -192,12 +219,13 @@ class TimePicker extends Component<any, any> {
   }
 
   handleFocus = () => {
-    if (this.props.disabled) {
+    if (this.props.disabled || !this._timepicker) {
       return;
     }
 
     const bounding = this._timepicker.getBoundingClientRect();
-    const iptHeight = parseInt(getComputedStyle(this._timepicker, 'height'), 10);
+    const computedHeight = parseInt(getComputedStyle(this._timepicker, 'height'), 10);
+    const iptHeight = Number.isFinite(computedHeight) ? computedHeight : bounding.height;
 
     const newBounding = {
       left: bounding.left,
@@ -214,20 +242,22 @@ class TimePicker extends Component<any, any> {
     });
   };
 
-  handleChange = value => {
+  handleChange = (value: Moment) => {
+    if (this.props.disabled) return;
     if (!('value' in this.props)) {
       this.setState({ value });
     }
 
-    this.props.onChange(value);
+    this.props.onChange?.(value);
   };
 
   handleClear = () => {
+    if (this.props.disabled) return;
     if (!('value' in this.props)) {
       this.setState({ value: null });
     }
 
-    this.props.onChange(null);
+    this.props.onChange?.(null);
     this.setState({ visible: false });
   };
 
@@ -244,7 +274,10 @@ class TimePicker extends Component<any, any> {
         <span className="TimePicker-input-container">
           {children
             ? React.cloneElement(children, {
-                ref: timepicker => (this._timepicker = timepicker),
+                ref: (timepicker: unknown) => {
+                  const node = getDomNode(timepicker);
+                  this._timepicker = node && isElementNode(node) ? node : null;
+                },
                 onClick: this.handleFocus,
               })
             : this.getDefaultChildren()}
@@ -255,6 +288,7 @@ class TimePicker extends Component<any, any> {
           placement="bottom"
           onHide={this.handleClose}
           popupParentNode={popupParentNode}
+          onClickAwayExceptions={[this._timepicker]}
         >
           <Panel
             {...others}
