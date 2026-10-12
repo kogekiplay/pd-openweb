@@ -1,12 +1,7 @@
 import { Component } from 'react';
 import DateTBody from './DateTBody';
 import DateTHead from './DateTHead';
-
-interface DateTableProps {
-  prefixCls?: string | undefined;
-  // 其余属性原样透传给 DateTHead / DateTBody
-  [key: string]: unknown;
-}
+import type { DateTableProps } from './types';
 
 export default class DateTable extends Component<DateTableProps> {
   override render() {

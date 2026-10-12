@@ -1,7 +1,10 @@
 import { Component } from 'react';
+import type { MouseEvent } from 'react';
 import PropTypes from 'prop-types';
+import type { NumericTableProps } from './types';
 
-class MonthTable extends Component<any, any> {
+class MonthTable extends Component<NumericTableProps> {
+  static defaultProps = { value: null, onChange: () => {} };
   /**
    * 渲染列表
    */
@@ -39,7 +42,7 @@ class MonthTable extends Component<any, any> {
   /**
    * 选择月
    */
-  itemOnClick = (event, month: number) => {
+  itemOnClick = (event: MouseEvent<HTMLLIElement>, month: number) => {
     if (month !== this.props.value && this.props.onChange) {
       this.props.onChange(event, month, {
         prevValue: this.props.value,
@@ -67,11 +70,6 @@ MonthTable.propTypes = {
    * data.prevValue {number} - 改变前的月份
    */
   onChange: PropTypes.func,
-};
-
-MonthTable.defaultProps = {
-  value: null,
-  onChange: () => {},
 };
 
 export default MonthTable;

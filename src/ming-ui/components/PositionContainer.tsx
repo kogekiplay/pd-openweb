@@ -146,8 +146,15 @@ class PositionContainer extends Component<PositionContainerProps> {
     if (!this.mounted || !this.props.visible) return;
     const target = getDomNode(event.target);
     const exceptions = getClickAwayExceptions(this.props.onClickAwayExceptions);
+    // React may remove the clicked child before this native body listener runs.
+    const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
+    const startedInside = path.some(item => {
+      const node = getDomNode(item);
+      return node && isElement(node) && node.classList.contains('PositionContainer-wrapper');
+    });
     if (
       target &&
+      !startedInside &&
       this.getHasParent(target, 'PositionContainer-wrapper') &&
       exceptions.every(item => !item.contains(target))
     ) {

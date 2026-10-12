@@ -4,9 +4,21 @@ import classNames from 'classnames';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import CalendarPart from './CalendarPart';
+import type { HalfDay } from './footerTypes';
 import defaultLocale from './locale/zh_CN';
 import RangeFooter from './RangeFooter';
 import TaskHeader from './TaskHeader';
+import { copyRange } from './types';
+import type {
+  CalendarRangeProps,
+  DateRangeInput,
+  DateRangeValue,
+  DateSelectCause,
+  DateValue,
+  HalfDayRange,
+  MutableDateRange,
+  RangeTarget,
+} from './types';
 import '../less/dateRangePicker.less';
 
 function noop() {}
@@ -15,37 +27,38 @@ function getNow() {
   return moment();
 }
 
-function syncTime(from, to) {
+function syncTime(from: moment.Moment, to: moment.Moment) {
   to.hour(from.hour());
   to.minute(from.minute());
   to.second(from.second());
 }
-
-function isEmptyArray(arr) {
-  return Array.isArray(arr) && (arr.length === 0 || arr.every(i => !i));
+function normalizeRange(input: DateRangeInput = []): MutableDateRange {
+  const normalize = (value: moment.MomentInput): DateValue => {
+    if (value === undefined) return undefined;
+    if (value === null) return null;
+    return moment(value);
+  };
+  return input.length === 0
+    ? []
+    : input.length === 1
+      ? [normalize(input[0])]
+      : [normalize(input[0]), normalize(input[1])];
+}
+function getValueFromSelectedValue(value: DateRangeInput = []): [moment.Moment, moment.Moment] {
+  return [moment(value[0] ?? getNow()), moment(value[1] ?? getNow())];
+}
+function halfValues(input?: HalfDayRange): [HalfDay | undefined, HalfDay | undefined] {
+  return input ? [input[0], input[1]] : ['AM', 'PM'];
+}
+interface CalendarRangeState {
+  value: [moment.Moment, moment.Moment];
+  selectedValue: MutableDateRange;
+  rememberedValue: MutableDateRange;
+  halfData: [HalfDay | undefined, HalfDay | undefined];
+  waingAble: boolean;
 }
 
-function getValueFromSelectedValue(selectedValue) {
-  let [start, end] = selectedValue;
-  start = moment(start || getNow());
-  end = moment(end || getNow());
-  return [start, end];
-}
-
-function momentize(obj) {
-  if (Array.isArray(obj)) {
-    return obj.map(item => momentize(item));
-  }
-
-  return obj ? moment(obj) : obj;
-}
-
-function normalizeAnchor(props, init: number) {
-  const normalizedValue = momentize(getValueFromSelectedValue(props.selectedValue));
-  return !isEmptyArray(normalizedValue) ? normalizedValue : init && [getNow(), getNow()];
-}
-
-class CalendarRange extends Component<any, any> {
+class CalendarRange extends Component<CalendarRangeProps, CalendarRangeState> {
   declare _root: HTMLDivElement | null | undefined;
 
   static override propTypes = {
@@ -69,12 +82,11 @@ class CalendarRange extends Component<any, any> {
     popupParentNode: PropTypes.func,
   };
 
-  static defaultProps = {
+  static defaultProps: Partial<CalendarRangeProps> = {
     locale: defaultLocale,
     prefixCls: 'Calendar',
     defaultValue: [],
     halfData: ['AM', 'PM'],
-    selectedValue: [],
     mode: 'default',
     onOk: noop,
     onClear: noop,
@@ -82,35 +94,40 @@ class CalendarRange extends Component<any, any> {
     onSelect: noop,
   };
 
-  constructor(props) {
+  constructor(props: CalendarRangeProps) {
     super(props);
 
-    const selectedValue = momentize(props.selectedValue);
-    const value = normalizeAnchor(props, 1);
+    const selectedValue = normalizeRange(props.selectedValue);
+    const value = getValueFromSelectedValue(
+      props.value || (props.defaultValue?.length ? props.defaultValue : props.selectedValue),
+    );
     this.state = {
       value,
       selectedValue,
-      rememberedValue: [...(selectedValue || [null, null])],
+      rememberedValue: copyRange(selectedValue),
+      halfData: halfValues(props.halfData),
       waingAble: false,
     };
-
-    this.halfData = this.props.halfData;
   }
 
-  override componentDidUpdate(prevProps) {
-    if (!shallowEqual(prevProps, this.props)) {
-      const newState: { selectedValue?: unknown } = {};
-
-      if ('selectedValue' in this.props) {
-        newState.selectedValue = this.props.selectedValue;
-        this.setState(newState);
-      }
+  override componentDidUpdate(prevProps: CalendarRangeProps) {
+    if (shallowEqual(prevProps, this.props)) return;
+    const next: Partial<CalendarRangeState> = {};
+    if ('selectedValue' in this.props) {
+      next.selectedValue = normalizeRange(this.props.selectedValue);
+      next.rememberedValue = [
+        next.selectedValue[0] || this.state.rememberedValue[0],
+        next.selectedValue[1] || this.state.rememberedValue[1],
+      ];
     }
+    if ('value' in this.props) next.value = getValueFromSelectedValue(this.props.value);
+    if (prevProps.halfData !== this.props.halfData) next.halfData = halfValues(this.props.halfData);
+    this.setState(state => ({ ...state, ...next }));
   }
 
-  onDateSelect(index: number, value, options?: { source: string } | undefined) {
-    const selectedValue = [...this.state.selectedValue];
-    const rememberedValue = [...this.state.rememberedValue];
+  onDateSelect(index: 0 | 1, value: DateValue, options?: DateSelectCause) {
+    const selectedValue = copyRange(this.state.selectedValue);
+    const rememberedValue = copyRange(this.state.rememberedValue);
     selectedValue[index] = value;
     rememberedValue[index] = selectedValue[index] || rememberedValue[index];
     if (!('selectedValue' in this.props)) {
@@ -118,22 +135,22 @@ class CalendarRange extends Component<any, any> {
     }
 
     this.setState({ rememberedValue, waingAble: false });
-    this.props.onSelect(selectedValue, options);
+    this.props.onSelect?.(selectedValue, options);
   }
 
-  onStartTimeSelect = leftValue => {
+  onStartTimeSelect = (leftValue: DateValue) => {
     this.onDateSelect(0, leftValue, { source: 'timePicker' });
   };
 
-  onEndTimeSelect = rightValue => {
+  onEndTimeSelect = (rightValue: DateValue) => {
     this.onDateSelect(1, rightValue, { source: 'timePicker' });
   };
 
-  onStartDateSelect = leftValue => {
+  onStartDateSelect = (leftValue: DateValue) => {
     this.onDateSelect(0, leftValue);
   };
 
-  onEndDateSelect = rightValue => {
+  onEndDateSelect = (rightValue: DateValue) => {
     this.onDateSelect(1, rightValue);
   };
 
@@ -147,19 +164,19 @@ class CalendarRange extends Component<any, any> {
     }
 
     this.setState({ waingAble: false });
-    this.props.onOk(selectedValue, this.halfData);
+    this.props.onOk?.(selectedValue, this.state.halfData);
   };
 
   onStartValueChange = (leftValue: moment.Moment) => {
     const state = this.state;
-    const value = [...state.value];
+    const value: [moment.Moment, moment.Moment] = [state.value[0], state.value[1]];
     value[0] = leftValue;
     return this.fireValueChange(value);
   };
 
   onEndValueChange = (rightValue: moment.Moment) => {
     const state = this.state;
-    const value = [...state.value];
+    const value: [moment.Moment, moment.Moment] = [state.value[0], state.value[1]];
     value[1] = rightValue;
     return this.fireValueChange(value);
   };
@@ -194,7 +211,7 @@ class CalendarRange extends Component<any, any> {
     return endValue;
   };
 
-  compare = (v1, v2) => {
+  compare = (v1: moment.Moment, v2: moment.Moment) => {
     if (this.props.timePicker) {
       return v1.diff(v2);
     }
@@ -202,7 +219,8 @@ class CalendarRange extends Component<any, any> {
     return v1.diff(v2, 'days');
   };
 
-  fireSelectValueChange = (selectedValue, direct: boolean) => {
+  fireSelectValueChange = (selection: DateRangeValue, direct: boolean) => {
+    const selectedValue = copyRange(selection);
     if (!('selectedValue' in this.props)) {
       this.setState({
         selectedValue,
@@ -218,13 +236,13 @@ class CalendarRange extends Component<any, any> {
       });
     }
 
-    this.props.onChange(selectedValue);
+    this.props.onChange?.(selectedValue);
     if (direct || (selectedValue[0] && selectedValue[1])) {
-      this.props.onSelect(selectedValue);
+      this.props.onSelect?.(selectedValue);
     }
   };
 
-  fireValueChange = value => {
+  fireValueChange = (value: [moment.Moment, moment.Moment]) => {
     const props = this.props;
 
     if (!('value' in props)) {
@@ -236,13 +254,13 @@ class CalendarRange extends Component<any, any> {
 
   clear = () => {
     this.fireSelectValueChange([], true);
-    this.props.onClear();
+    this.props.onClear?.();
   };
 
   /**
    * 任务模式，切换开始和结束的选中状态
    */
-  toggleValue = (type: string, checked: boolean) => {
+  toggleValue = (type: RangeTarget, checked: boolean) => {
     const value = checked ? moment(this.state.rememberedValue[type === 'start' ? 0 : 1] || new Date()) : null;
 
     if (type === 'start') {
@@ -252,29 +270,19 @@ class CalendarRange extends Component<any, any> {
     }
   };
 
-  halfOnChange = (value, target) => {
-    if (!this.halfData) {
-      this.halfData = ['AM', 'PM'];
-    }
-
-    if (target === 'start') {
-      this.halfData[0] = value;
-    } else {
-      this.halfData[1] = value;
-    }
-
-    if (this.props.onSelect) {
-      this.props.onSelect(this.state.selectedValue, {}, this.halfData);
-    }
+  halfOnChange = (value: HalfDay | undefined, target: RangeTarget) => {
+    const halfData: [HalfDay | undefined, HalfDay | undefined] = [this.state.halfData[0], this.state.halfData[1]];
+    halfData[target === 'start' ? 0 : 1] = value;
+    this.setState({ halfData });
+    this.props.onSelect?.(this.state.selectedValue, {}, halfData);
   };
 
   override render() {
     const props = this.props;
     const state = this.state;
-    const { prefixCls, timePicker, className, locale } = props;
+    const { prefixCls = 'Calendar', timePicker, className, locale = defaultLocale } = props;
     const { selectedValue } = state;
-    const classes = classNames({
-      [className]: !!className,
+    const classes = classNames(className, {
       [prefixCls]: true,
       [`${prefixCls}-range`]: true,
       [`${prefixCls}-waingAble`]: state.waingAble,
@@ -348,8 +356,8 @@ class CalendarRange extends Component<any, any> {
           onClear={this.clear}
           startValue={selectedValue[0]}
           endValue={selectedValue[1]}
-          halfStart={this.halfData[0]}
-          halfEnd={this.halfData[1]}
+          halfStart={this.state.halfData[0]}
+          halfEnd={this.state.halfData[1]}
           halfOnChange={(value, target) => {
             this.halfOnChange(value, target);
           }}

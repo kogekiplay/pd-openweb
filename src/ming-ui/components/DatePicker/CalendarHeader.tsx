@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
+import defaultLocale from './locale/zh_CN';
+import type { CalendarHeaderProps } from './types';
 
-function formatMonth(month) {
+function formatMonth(month: number) {
   month = month + 1;
   if (month < 10) {
     return `0${month}`;
@@ -11,22 +13,22 @@ function formatMonth(month) {
   return month;
 }
 
-class CalendarHeader extends Component<any, any> {
+class CalendarHeader extends Component<CalendarHeaderProps> {
   /**
    * 后退
    */
-  goBack = (event?) => {
+  goBack = () => {
     if (this.props.goBack) {
-      this.props.goBack(event);
+      this.props.goBack();
     }
   };
 
   /**
    * 前进
    */
-  goForward = (event?) => {
+  goForward = () => {
     if (this.props.goForward) {
-      this.props.goForward(event);
+      this.props.goForward();
     }
   };
 
@@ -34,11 +36,11 @@ class CalendarHeader extends Component<any, any> {
     let beginEnd;
 
     if (this.props.direction === 'left') {
-      beginEnd = this.props.locale.lang.begin;
+      beginEnd = (this.props.locale || defaultLocale).lang.begin;
     }
 
     if (this.props.direction === 'right') {
-      beginEnd = this.props.locale.lang.end;
+      beginEnd = (this.props.locale || defaultLocale).lang.end;
     }
 
     // header-year
@@ -52,7 +54,7 @@ class CalendarHeader extends Component<any, any> {
       <span
         className={yearClassList.join(' ')}
         onClick={() => {
-          this.props.openView('year');
+          this.props.openView?.('year');
         }}
       >{`${this.props.value.year()}年`}</span>
     );
@@ -71,7 +73,7 @@ class CalendarHeader extends Component<any, any> {
         <span
           className={monthClassList.join(' ')}
           onClick={() => {
-            this.props.openView('month');
+            this.props.openView?.('month');
           }}
         >
           {`${formatMonth(this.props.value.month())}月`}

@@ -451,7 +451,6 @@ class Dropdown<V = unknown, Item extends DropdownItem<V> = DropdownItem<V>> exte
                     item.iconName || item.icon ? <Icon icon={item.iconName || item.icon} hint={item.iconHint} /> : null
                   }
                   iconAtEnd={item.iconAtEnd}
-                  iconHint={item.iconHint}
                   onClick={(event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
                     event.stopPropagation();
                     this.handleChange(event, item);

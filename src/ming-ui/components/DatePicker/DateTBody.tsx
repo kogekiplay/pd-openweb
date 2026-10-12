@@ -1,24 +1,30 @@
 import { Component } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
+import type { Moment } from 'moment';
 import PropTypes from 'prop-types';
+import type { DateRangeValue, DateTableProps, DateValue } from './types';
+
+function isRange(value: DateValue | DateRangeValue): value is DateRangeValue {
+  return Array.isArray(value);
+}
 
 const DATE_ROW_COUNT = 6;
 const DATE_COL_COUNT = 7;
 
-function getTitleString(value) {
-  return value.date();
+function getTitleString(value: Moment) {
+  return String(value.date());
 }
 
 function getTodayTime() {
   return moment();
 }
 
-function isSameDay(one, two) {
+function isSameDay(one: DateValue, two: DateValue) {
   return one && two && one.isSame(two, 'day');
 }
 
-function beforeCurrentMonthYear(current, today) {
+function beforeCurrentMonthYear(current: Moment, today: Moment) {
   if (current.year() < today.year()) {
     return 1;
   }
@@ -26,7 +32,7 @@ function beforeCurrentMonthYear(current, today) {
   return current.year() === today.year() && current.month() < today.month();
 }
 
-function afterCurrentMonthYear(current, today) {
+function afterCurrentMonthYear(current: Moment, today: Moment) {
   if (current.year() > today.year()) {
     return 1;
   }
@@ -34,19 +40,19 @@ function afterCurrentMonthYear(current, today) {
   return current.year() === today.year() && current.month() > today.month();
 }
 
-function getIdFromDate(date) {
+function getIdFromDate(date: Moment) {
   return `Calendar-${date.year()}-${date.month()}-${date.date()}`;
 }
 
-function isStartOfMonth(current) {
+function isStartOfMonth(current: Moment) {
   return isSameDay(current, current.clone().startOf('month'));
 }
 
-function isEndOfMonth(current) {
+function isEndOfMonth(current: Moment) {
   return isSameDay(current, current.clone().endOf('month'));
 }
 
-class DateTBody extends Component<any, any> {
+class DateTBody extends Component<DateTableProps> {
   static override propTypes = {
     disabledDate: PropTypes.func,
     prefixCls: PropTypes.string,
@@ -61,7 +67,7 @@ class DateTBody extends Component<any, any> {
     let iIndex;
     let jIndex;
     let current;
-    const dateTable = [];
+    const dateTable: Moment[] = [];
     const today = getTodayTime();
     const cellClass = `${prefixCls}-cell`;
     const dateClass = `${prefixCls}-date`;
@@ -108,9 +114,10 @@ class DateTBody extends Component<any, any> {
       const dateCells = [];
 
       for (jIndex = 0; jIndex < DATE_COL_COUNT; jIndex++) {
-        let next = null;
-        let last = null;
+        let next: Moment | null | undefined = null;
+        let last: Moment | null | undefined = null;
         current = dateTable[passed];
+        if (!current) continue;
         if (jIndex < DATE_COL_COUNT - 1) {
           next = dateTable[passed + 1];
         }
@@ -140,7 +147,7 @@ class DateTBody extends Component<any, any> {
         const isBeforeCurrentMonthYear = beforeCurrentMonthYear(current, value);
         const isAfterCurrentMonthYear = afterCurrentMonthYear(current, value);
 
-        if (selectedValue && Array.isArray(selectedValue)) {
+        if (selectedValue && isRange(selectedValue)) {
           if (!isBeforeCurrentMonthYear && !isAfterCurrentMonthYear) {
             const startValue = selectedValue[0];
             const endValue = selectedValue[1];
@@ -187,7 +194,7 @@ class DateTBody extends Component<any, any> {
           selected = true;
         }
 
-        if (selectedValue && !Array.isArray(selectedValue) && isSameDay(current, selectedValue)) {
+        if (selectedValue && !isRange(selectedValue) && isSameDay(current, selectedValue)) {
           cls += ` ${selectedDateClass}`;
         }
 
@@ -231,7 +238,7 @@ class DateTBody extends Component<any, any> {
         dateCells.push(
           <div
             key={passed}
-            onClick={disabled ? undefined : props.onSelect.bind(null, current)}
+            onClick={disabled ? undefined : props.onSelect?.bind(null, current)}
             title={getTitleString(current)}
             className={cls}
           >

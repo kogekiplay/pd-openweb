@@ -1,19 +1,49 @@
 import React, { Component } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Menu from 'ming-ui/components/Menu';
 import MenuItem from 'ming-ui/components/MenuItem';
 import PositionContainer from 'ming-ui/components/PositionContainer';
 import { getDomNode } from '../ClickAway';
+import type { PositionBounding } from '../PositionContainer';
+import type { TimeTriggerProps } from '../TimePicker/types';
 import CalendarRange from './CalendarRange';
 import locale from './locale/zh_CN';
+import type { CalendarRangeProps, DateRangeValue } from './types';
 import '../less/DateDropdDown.less';
 
 function isElement(node: Node): node is Element {
   return node.nodeType === 1;
 }
 
-class DateDropdDown extends Component<any, any> {
+export interface DateMenuOption<V> {
+  value: V;
+  text: ReactNode;
+  disabled?: boolean | undefined;
+}
+interface MenuCalendarProps extends Pick<CalendarRangeProps, 'locale' | 'timePicker'> {
+  onOk?: (() => void) | undefined;
+  onClear?: (() => void) | undefined;
+  onSelect?: ((value: DateRangeValue) => void) | undefined;
+}
+export interface DateDropdDownProps<V> {
+  data?: readonly DateMenuOption<V>[] | undefined;
+  calendarProps?: MenuCalendarProps | undefined;
+  defaultActiveKey?: V | 'customDate' | undefined;
+  children?: ReactElement<TimeTriggerProps> | undefined;
+  disabled?: boolean | undefined;
+  popupParentNode?: CalendarRangeProps['popupParentNode'];
+  onChange?: ((value: V | 'customDate') => void) | undefined;
+}
+interface DateDropdDownState<V> {
+  dateValue: DateRangeValue;
+  bounding: PositionBounding | null;
+  visibleMenu: boolean;
+  visibleRange: boolean;
+  activeKey: V | 'customDate' | undefined;
+}
+class DateDropdDown<V = unknown> extends Component<DateDropdDownProps<V>, DateDropdDownState<V>> {
   declare _picker: Element | null | undefined;
   static override propTypes = {
     /**
@@ -87,7 +117,7 @@ class DateDropdDown extends Component<any, any> {
     calendarProps: { locale, onOk: () => {}, onSelect: () => {}, onClear: () => {}, timePicker: false },
   };
 
-  constructor(props) {
+  constructor(props: DateDropdDownProps<V>) {
     super(props);
 
     this.state = {
@@ -101,8 +131,8 @@ class DateDropdDown extends Component<any, any> {
 
   getChildrenElement = () => {
     const props = this.props;
-    return React.cloneElement(props.children, {
-      onClick: !props.disabled ? this.handleClick : null,
+    return React.cloneElement(props.children || <span>{_l('请选择')}</span>, {
+      onClick: !props.disabled ? this.handleClick : undefined,
       ref: (picker: unknown) => {
         const node = getDomNode(picker);
         this._picker = node && isElement(node) ? node : null;
@@ -114,13 +144,14 @@ class DateDropdDown extends Component<any, any> {
     const props = this.props;
     const state = this.state;
 
-    const menuItems = props.data.map((item, index: number) => {
+    const menuItems = (props.data || []).map((item, index: number) => {
       const cls = classNames({
         active: item.value === state.activeKey,
       });
       return (
         <MenuItem
-          {...item}
+          disabled={item.disabled}
+          value={typeof item.value === 'string' || typeof item.value === 'number' ? item.value : undefined}
           key={index}
           className={cls}
           data-value={item.value}
@@ -152,7 +183,7 @@ class DateDropdDown extends Component<any, any> {
   getCalendarElement = () => {
     const props = this.props;
     const state = this.state;
-    const { timePicker } = props.calendarProps;
+    const { timePicker } = props.calendarProps || {};
     return (
       <CalendarRange
         prefixCls="Calendar"
@@ -167,21 +198,23 @@ class DateDropdDown extends Component<any, any> {
     );
   };
 
-  handleChange = value => {
+  handleChange = (value: V) => {
+    if (this.props.disabled || this.props.data?.some(item => Object.is(item.value, value) && item.disabled)) return;
     this.setState({
       activeKey: value,
       visibleMenu: false,
     });
-    this.props.onChange(value);
+    this.props.onChange?.(value);
   };
 
   handleSelectRange = () => {
+    if (this.props.disabled) return;
     this.setState({
       visibleRange: true,
       visibleMenu: false,
       activeKey: 'customDate',
     });
-    this.props.onChange('customDate');
+    this.props.onChange?.('customDate');
   };
 
   handleClick = () => {
@@ -220,7 +253,7 @@ class DateDropdDown extends Component<any, any> {
     this.handleCloseRange();
   };
 
-  handleCalendarSelect = dateValue => {
+  handleCalendarSelect = (dateValue: DateRangeValue) => {
     this.setState({ dateValue, visibleRange: true });
     const calendarProps = this.props.calendarProps;
 

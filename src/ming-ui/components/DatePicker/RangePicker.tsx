@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import CalendarRange from './CalendarRange';
 import locale from './locale/zh_CN';
 import Picker from './Picker';
+import type { DateRangeValue, DateSelectCause, HalfDayRange, RangePickerProps } from './types';
 import '../less/DatePicker.less';
 import '../less/dateRangePicker.less';
 import '../less/Rangepicker.less';
 
-class RangePicker extends Component<any, any> {
+class RangePicker extends Component<RangePickerProps> {
   static override propTypes = {
     /**
      * 占位符
@@ -94,7 +95,7 @@ class RangePicker extends Component<any, any> {
     popupParentNode: PropTypes.func,
   };
 
-  static defaultProps = {
+  static defaultProps: Partial<RangePickerProps> = {
     locale,
     separator: '至',
     placeholder: _l('请选择'),
@@ -109,19 +110,19 @@ class RangePicker extends Component<any, any> {
 
     if (!format) {
       if (props.timePicker) {
-        format = props.locale.lang.dateTimeFormat;
+        format = (props.locale || locale).lang.dateTimeFormat;
       } else {
-        format = props.locale.lang.dateFormat;
+        format = (props.locale || locale).lang.dateFormat;
       }
     }
 
     return format;
   };
 
-  getDateString = (value, format) => {
+  getDateString = (value: DateRangeValue | undefined, format: string) => {
     const props = this.props;
 
-    if (value && Array.isArray(value) && value[0] && value[1]) {
+    if (value && value[0] && value[1]) {
       return (
         <span className="Calendar-picker-input-duration">
           <span className="Calendar-picker-input-start">{value[0].format(format)}</span>
@@ -140,7 +141,7 @@ class RangePicker extends Component<any, any> {
     const formatVal = this.getFormat();
     const calendar = <CalendarRange {...other} prefixCls="Calendar" />;
     return (
-      <Picker
+      <Picker<DateRangeValue, [DateRangeValue, DateSelectCause?, HalfDayRange?], [DateRangeValue, HalfDayRange]>
         timePicker
         offsetTop={offsetTop}
         offsetLeft={offsetLeft}
@@ -159,7 +160,7 @@ class RangePicker extends Component<any, any> {
           }
 
           return (
-            <span tabIndex="0" className="Calendar-picker-input">
+            <span tabIndex={0} className="Calendar-picker-input">
               {this.getDateString(value, formatVal)}
             </span>
           );

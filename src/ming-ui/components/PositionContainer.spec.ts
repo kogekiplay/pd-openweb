@@ -360,6 +360,9 @@ function main() {
   layer.call('destroy', { target: child });
   layer.call('destroy', { target: popup });
   assert.equal(hides.length, 0);
+  child.remove();
+  layer.call('destroy', { target: child, composedPath: () => [child, popup, body] });
+  assert.equal(hides.length, 0, 'Removing the selected child must not turn its original click into an outside click');
   const exempt = new FakeElement();
   body.appendChild(exempt);
   selectors.set('.exempt', [exempt]);
@@ -368,7 +371,7 @@ function main() {
   assert.equal(hides.length, 0);
   const outside = new FakeElement();
   body.appendChild(outside);
-  layer.call('destroy', { target: outside });
+  layer.call('destroy', { target: outside, composedPath: () => [outside, body] });
   assert.equal(hides.length, 1);
   const anotherParent = new FakeElement();
   body.appendChild(anotherParent);

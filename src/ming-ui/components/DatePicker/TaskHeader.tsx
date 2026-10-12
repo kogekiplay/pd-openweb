@@ -1,14 +1,15 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Checkbox from 'ming-ui/components/Checkbox';
+import type { RangeTarget } from './types';
 
 export interface TaskHeaderProps {
-  toggle: (value: string, arg1: boolean) => void;
+  toggle: (value: RangeTarget, arg1: boolean) => void;
   startChecked: boolean;
   endChecked: boolean;
 }
 
-class TaskHeader extends Component<TaskHeaderProps, any> {
+class TaskHeader extends Component<TaskHeaderProps> {
   static defaultProps: Partial<TaskHeaderProps> = {
     startChecked: false,
     endChecked: false,
@@ -18,7 +19,7 @@ class TaskHeader extends Component<TaskHeaderProps, any> {
   /**
    * 切换开始和结束的选中状态
    */
-  toggle = (type: string, checked: boolean) => {
+  toggle = (type: RangeTarget, checked: boolean) => {
     if (this.props.toggle) {
       this.props.toggle(type, checked);
     }
