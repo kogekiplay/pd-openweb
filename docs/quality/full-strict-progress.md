@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 Agent SSE 状态翻译层
+
+Agent SSE 的消息片段、工具调用、工作流进度、计划/重建确认和文件事件边界已严格化，保留开放事件兼容和 ChatPanel 行为。`streamEvents` 规格通过，严格诊断 55,256 → 55,182，移除 74 条隐式 any，未新增诊断。详见 `agent-stream-events-strict-20261013.md`。全仓严格化继续。
+
 ## 2026-10-13 现代日期时间与时间菜单链路
 
 现代 NewTimePicker、Calendar、DatePickerBase、DateTime/Range 及公开出口已有限化；修复精度舍入、上下限、空值、跨午夜自动补全、清空回调、受控 props、format/locale/disabledDate 和工作流任务端点问题。真实 localhost 验收通过，最终 215/215 规格、工具/语法/strict/后缀门禁通过。严格诊断 55,833 → 55,256（新增 0），欠债 3,225 文件，strict-clean 1,514 / 4,739；详见 `modern-date-time-chain-20261013.md`。本批未发布，现网仍为 `4d6ff521d`。

@@ -5,6 +5,7 @@
 import { parse as parsePartial } from 'partial-json';
 import { readField, stringValue, summarizeUnknown } from './agentService';
 import { BUILD_STEPS } from './buildSteps';
+import type { AgentStreamEvent, ChatMessage } from './types';
 import { carveWorkParts } from './workParts';
 
 const TOOL_EVENTS = ['tool-call', 'tool-result', 'subagent-tool-call', 'subagent-tool-result'];
@@ -29,7 +30,72 @@ const ARTIFACT_EVENTS = new Set([
   'artifact-version-committed',
 ]);
 
-function mergeText(parts, kind: string, text, extras = {}) {
+type UnknownRecord = Record<string, unknown>;
+interface StreamPart extends UnknownRecord {
+  kind?: string;
+  id?: string | undefined;
+  text?: string | undefined;
+  ts?: number | undefined;
+  title?: string | undefined;
+  status?: string | undefined;
+  appName?: string | undefined;
+  appJsonBuf?: string | undefined;
+  appIcon?: string | undefined;
+  appColor?: string | undefined;
+  artifactId?: string | undefined;
+  draftVersionId?: string | undefined;
+  versionId?: string | undefined;
+  versionLabel?: string | undefined;
+  appId?: string | undefined;
+  finishedAt?: number | undefined;
+  aborted?: boolean | undefined;
+  steps?: Record<string, StreamStep> | undefined;
+}
+interface StreamStep extends UnknownRecord {
+  title?: string;
+  kind?: string;
+  status?: string;
+  index?: number;
+  total?: number;
+  failed?: number;
+  iterations?: StreamIteration[];
+}
+interface StreamIteration extends UnknownRecord {
+  index?: number;
+  status?: string;
+}
+type StreamParts = StreamPart[];
+interface StreamMessage {
+  id?: string;
+  parts?: unknown[];
+  role?: string;
+}
+interface StreamData extends UnknownRecord {
+  stepId?: string;
+  branchId?: string;
+  status?: string;
+  result?: UnknownRecord;
+  error?: string;
+  path?: string;
+  skipped?: boolean;
+  content?: string;
+  contentDelta?: string;
+  total?: number;
+  index?: number;
+  item?: unknown;
+  count?: number;
+}
+interface StreamEvent {
+  eventName: string;
+  receivedAt: number;
+  payload: { data: StreamData; delta?: string; errorMessage?: string; agentName?: string };
+}
+type PartMutator = (part: StreamPart) => StreamPart;
+interface EventBus {
+  emit(name: string, data: UnknownRecord): void;
+}
+
+function mergeText(parts: StreamParts, kind: string, text: string, extras: UnknownRecord = {}): StreamParts {
   const last = parts[parts.length - 1];
 
   if (last && last.kind === kind) {
@@ -41,7 +107,7 @@ function mergeText(parts, kind: string, text, extras = {}) {
   return [...parts, { kind, text, ts: Date.now(), ...extras }];
 }
 
-function appendDelta(parts, kind: string, delta) {
+function appendDelta(parts: StreamParts, kind: string, delta: string): StreamParts {
   const last = parts[parts.length - 1];
 
   if (last && last.kind === kind) {
@@ -51,8 +117,8 @@ function appendDelta(parts, kind: string, delta) {
   return [...parts, { kind, text: delta, ts: Date.now() }];
 }
 
-function upsertToolPart(parts, tool) {
-  const normalized = { ...tool, title: tool.title || _l('工具调用') };
+function upsertToolPart(parts: StreamParts, tool: StreamPart): StreamParts {
+  const normalized: StreamPart = { ...tool, kind: 'tool', title: tool.title || _l('工具调用') };
   const idx = parts.findIndex(p => p.kind === 'tool' && p.id === normalized.id);
 
   if (idx >= 0) {
@@ -63,7 +129,7 @@ function upsertToolPart(parts, tool) {
   return [...parts, { kind: 'tool', ...normalized, ts: Date.now() }];
 }
 
-function toolIdOf(event) {
+function toolIdOf(event: StreamEvent): string {
   const d = event.payload.data;
 
   return (
@@ -74,7 +140,7 @@ function toolIdOf(event) {
   );
 }
 
-function toolNameOf(event) {
+function toolNameOf(event: StreamEvent): string {
   const d = event.payload.data;
 
   return (
@@ -85,7 +151,7 @@ function toolNameOf(event) {
   );
 }
 
-function summarizeArgs(d) {
+function summarizeArgs(d: StreamData): string | undefined {
   const v = readField(d, 'arguments');
   const fallback = readField(d, 'args');
   const picked = v !== undefined ? v : fallback;
@@ -93,7 +159,7 @@ function summarizeArgs(d) {
   return picked === undefined ? undefined : summarizeUnknown(picked);
 }
 
-function summarizeResult(d) {
+function summarizeResult(d: StreamData): string | undefined {
   const r = readField(d, 'result');
   const o = readField(d, 'output');
   const v = readField(d, 'value');
@@ -102,9 +168,10 @@ function summarizeResult(d) {
   return picked === undefined ? undefined : summarizeUnknown(picked);
 }
 
-function routePart(event) {
+function routePart(event: StreamEvent): StreamPart | null {
   if (event.eventName === 'route-start') {
     return {
+      kind: 'tool',
       id: ROUTE_TOOL_ID,
       title: _l('路由选择'),
       status: 'running',
@@ -122,7 +189,7 @@ function routePart(event) {
 }
 
 // 把"过程性"事件描述成 reasoning 段文本；completed / workflow-* 不在此处理
-function describeAsReasoning(event) {
+function describeAsReasoning(event: StreamEvent): string {
   if (event.eventName === 'subagent-text-delta') {
     return event.payload.delta || _l('子 agent 正在返回内容');
   }
@@ -134,17 +201,17 @@ function describeAsReasoning(event) {
   return '';
 }
 
-function hasBuildProgress(parts) {
+function hasBuildProgress(parts: StreamParts): boolean {
   return parts.some(p => p.kind === 'build-progress');
 }
 
 // plan 阶段 artifact 事件 → plan-card part
 // 状态机：writing-overview（写 /plan.md）→ writing-details（写 /jsons/*.json）→ committed（版本提交）
-function upsertPlanCard(parts, mutator) {
+function upsertPlanCard(parts: StreamParts, mutator: PartMutator): StreamParts {
   const idx = parts.findIndex(p => p.kind === 'plan-card');
   const base =
     idx >= 0
-      ? parts[idx]
+      ? parts[idx]!
       : { kind: 'plan-card', ts: Date.now(), status: 'writing-overview', name: '', versionLabel: '' };
   const next = mutator({ ...base });
 
@@ -152,7 +219,7 @@ function upsertPlanCard(parts, mutator) {
   return [...parts, next];
 }
 
-function applyArtifactToPlanCard(card, event) {
+function applyArtifactToPlanCard(card: StreamPart, event: StreamEvent): StreamPart {
   const d = (event.payload && event.payload.data) || {};
 
   if (card.status === 'committed' && event.eventName !== 'artifact-version-committed') return card;
@@ -170,7 +237,7 @@ function applyArtifactToPlanCard(card, event) {
           stringValue(readField(d, 'draftVersionId')) ||
           stringValue(readField(d, 'artifactVersionId')) ||
           card.draftVersionId,
-        name: earlyName || card.name,
+        name: earlyName || card['name'],
       };
     }
 
@@ -179,7 +246,7 @@ function applyArtifactToPlanCard(card, event) {
       if (!d.path || d.skipped) return card;
       // app.json 是最先输出的应用元信息（非 tab），不应把卡片状态从「写总览」翻成「写详情」
       const isDetail = d.path.startsWith('/jsons/') && d.path !== '/jsons/app.json';
-      const next = { ...card, status: isDetail ? 'writing-details' : 'writing-overview' };
+      const next: StreamPart = { ...card, status: isDetail ? 'writing-details' : 'writing-overview' };
 
       // /jsons/app.json 携带 appIcon/appColor：累积内容增量并尽力解析，给卡片图标用
       if (d.path === '/jsons/app.json' && d.contentDelta) {
@@ -194,7 +261,8 @@ function applyArtifactToPlanCard(card, event) {
             if (parsed.appColor) next.appColor = parsed.appColor;
             // 始终以本轮 app.json 流出的 appName 为准：修改/重生成场景 draft-started 带的是旧 artifact 名，
             // 若用 `!card.name` 守卫会卡在旧名；而侧栏标题直接 live 解析 app.json 显示新名，造成卡片名与侧栏不一致。
-            if (parsed.appName) next.name = parsed.appName;
+            const parsedName = stringValue(readField(parsed, 'appName'));
+            if (parsedName) next['name'] = parsedName;
           }
         } catch {
           /* 半截 JSON，忽略 */
@@ -216,10 +284,10 @@ function applyArtifactToPlanCard(card, event) {
       return {
         ...card,
         status: 'committed',
-        name: name || card.name,
-        versionLabel: versionLabel || card.versionLabel,
-        versionId: versionId || card.versionId,
-        artifactId: artifactId || card.artifactId,
+        name: name || card['name'],
+        versionLabel: versionLabel || card['versionLabel'],
+        versionId: versionId || card['versionId'],
+        artifactId: artifactId || card['artifactId'],
       };
     }
 
@@ -229,16 +297,16 @@ function applyArtifactToPlanCard(card, event) {
 }
 
 // 找到 build-progress part 并 upsert；没有就在 parts 末尾追加一个空骨架
-function upsertBuildProgress(parts, mutator) {
+function upsertBuildProgress(parts: StreamParts, mutator: PartMutator): StreamParts {
   const idx = parts.findIndex(p => p.kind === 'build-progress');
-  const base = idx >= 0 ? parts[idx] : { kind: 'build-progress', ts: Date.now(), steps: {} };
-  const next = mutator(base);
+  const base = idx >= 0 ? parts[idx]! : { kind: 'build-progress', ts: Date.now(), steps: {} };
+  const next = mutator(base as StreamPart);
 
   if (idx >= 0) return parts.map((p, i) => (i === idx ? next : p));
   return [...parts, next];
 }
 
-function applyWorkflowEvent(progress, event) {
+function applyWorkflowEvent(progress: StreamPart, event: StreamEvent): StreamPart {
   const d = event.payload.data || {};
   // 纯 agent 并行步的分支：容器 stepId + 独立 branchId，自己拼成复合 key "{容器}:{分支}"，
   // 与 loop 分支（step-config-and-design:build-roles 等）同体系，BuildProgress 按复合 key 读取。
@@ -278,7 +346,8 @@ function applyWorkflowEvent(progress, event) {
       const nextProgress = { ...progress, steps };
 
       steps[stepId] = { ...cur, status: 'completed', result };
-      if (stepId === 'step-create-app' && result && result.appId) nextProgress.appId = result.appId;
+      const appId = stringValue(readField(result, 'appId'));
+      if (stepId === 'step-create-app' && appId) nextProgress['appId'] = appId;
       return nextProgress;
     }
 
@@ -352,7 +421,7 @@ function applyWorkflowEvent(progress, event) {
 
 // plan 漂移确认事件 → plan-drift part。后端在 build "继续" 检测到本次方案与上次 checkpoint 不一致时发此事件并
 // halt，等用户二选一（rebuild / resume_with_old_plan）。upsert by kind，避免二次进入重复追加。
-function upsertPlanDrift(parts, data) {
+function upsertPlanDrift(parts: StreamParts, data: UnknownRecord): StreamParts {
   const next = {
     kind: 'plan-drift',
     ts: Date.now(),
@@ -371,22 +440,22 @@ function upsertPlanDrift(parts, data) {
 }
 
 // 用户点选后把 plan-drift part 标记为已决策，禁用按钮、展示选择结果。
-export function resolvePlanDrift(message, chosenAction: string) {
-  const parts = message.parts || [];
+export function resolvePlanDrift<T extends StreamMessage>(message: T, chosenAction: string): T {
+  const parts = (message.parts || []) as StreamParts;
   const idx = parts.findIndex(p => p.kind === 'plan-drift');
 
   if (idx < 0) return message;
   return {
     ...message,
     parts: parts.map((p, i) => (i === idx ? { ...p, status: 'resolved', chosenAction } : p)),
-  };
+  } as T;
 }
 
 // 意图弹层确认（路径 E）：build "继续"/模糊表达，后端在「有进度」时跑意图分类器判 rebuild / 低置信 / unrelated，
 // 经 completed{status:awaiting_rebuild_confirmation} 携带 stepId + 动态 options 回来，等用户定夺。
 // 与 plan-drift 不同，它没有专属事件，由 completed payload 直接驱动卡片。upsert by kind 避免重复追加。
-export function upsertRebuildConfirm(message, data) {
-  const parts = message.parts || [];
+export function upsertRebuildConfirm<T extends StreamMessage>(message: T, data: UnknownRecord): T {
+  const parts = (message.parts || []) as StreamParts;
   const options = readField(data, 'options');
   const next = {
     kind: 'rebuild-confirm',
@@ -399,8 +468,8 @@ export function upsertRebuildConfirm(message, data) {
   };
   const idx = parts.findIndex(p => p.kind === 'rebuild-confirm');
 
-  if (idx >= 0) return { ...message, parts: parts.map((p, i) => (i === idx ? { ...next, ts: p.ts } : p)) };
-  return { ...message, parts: [...parts, next] };
+  if (idx >= 0) return { ...message, parts: parts.map((p, i) => (i === idx ? { ...next, ts: p.ts } : p)) } as T;
+  return { ...message, parts: [...parts, next] } as T;
 }
 
 // 把服务端回吐的「挂起中意图弹层」还原到历史消息里（进入/刷新会话时用）。
@@ -410,13 +479,28 @@ export function upsertRebuildConfirm(message, data) {
 // upsertRebuildConfirm，两条来源共用同一套渲染与回传逻辑。
 // 挂到最后一条 assistant 消息上（视觉上贴在对话末尾，与实时那轮的位置一致）；没有 assistant 消息
 // （历史里只有用户提问）则不还原——卡片无处安放，且这种会话本就不该有挂起的弹层。
-export function restorePendingConfirmation(messages, pendingConfirmation) {
+export function restorePendingConfirmation(
+  messages: ChatMessage[],
+  pendingConfirmation: UnknownRecord | null | undefined,
+): ChatMessage[];
+export function restorePendingConfirmation(
+  messages: object[],
+  pendingConfirmation: UnknownRecord | null | undefined,
+): ChatMessage[];
+export function restorePendingConfirmation<T extends StreamMessage>(
+  messages: T[],
+  pendingConfirmation: UnknownRecord | null | undefined,
+): T[];
+export function restorePendingConfirmation<T extends StreamMessage>(
+  messages: T[],
+  pendingConfirmation: UnknownRecord | null | undefined,
+): T[] {
   if (!pendingConfirmation || !Array.isArray(messages) || !messages.length) return messages;
 
   let idx = -1;
 
   for (let i = messages.length - 1; i >= 0; i -= 1) {
-    if (messages[i] && messages[i].role === 'assistant') {
+    if (messages[i]?.role === 'assistant') {
       idx = i;
       break;
     }
@@ -427,33 +511,34 @@ export function restorePendingConfirmation(messages, pendingConfirmation) {
 }
 
 // 用户点选后把 rebuild-confirm part 标记为已决策。
-export function resolveRebuildConfirm(message, chosenAction) {
-  const parts = message.parts || [];
+export function resolveRebuildConfirm<T extends StreamMessage>(message: T, chosenAction: string): T {
+  const parts = (message.parts || []) as StreamParts;
   const idx = parts.findIndex(p => p.kind === 'rebuild-confirm');
 
   if (idx < 0) return message;
   return {
     ...message,
     parts: parts.map((p, i) => (i === idx ? { ...p, status: 'resolved', chosenAction } : p)),
-  };
+  } as T;
 }
 
-export function appendEventToParts(message, event) {
-  const parts = message.parts || [];
+export function appendEventToParts<T extends StreamMessage>(message: T, rawEvent: AgentStreamEvent): T {
+  const event = rawEvent as StreamEvent;
+  const parts = (message.parts || []) as StreamParts;
 
   // 0. plan 漂移确认：独占 part，halt 等用户决策
   if (event.eventName === 'workflow-plan-drift-detected') {
-    return { ...message, parts: upsertPlanDrift(parts, event.payload.data || {}) };
+    return { ...message, parts: upsertPlanDrift(parts, event.payload.data || {}) } as T;
   }
 
   // 1. workflow-*：进度卡 part，独占消化（不进 reasoning / text）
   if (WORKFLOW_EVENTS.has(event.eventName)) {
-    return { ...message, parts: upsertBuildProgress(parts, base => applyWorkflowEvent(base, event)) };
+    return { ...message, parts: upsertBuildProgress(parts, base => applyWorkflowEvent(base, event)) } as T;
   }
 
   // 1.5 plan 阶段 artifact-* 事件：drive 一张 plan-card；文件内容仍由 forwardFileEvent 单独消化
   if (ARTIFACT_EVENTS.has(event.eventName)) {
-    return { ...message, parts: upsertPlanCard(parts, base => applyArtifactToPlanCard(base, event)) };
+    return { ...message, parts: upsertPlanCard(parts, base => applyArtifactToPlanCard(base, event)) } as T;
   }
 
   // 2. build 阶段 subagent-text-delta 是 sub-agent 内部 JSON 回吐，无 UI 价值；其他场景仍走 reasoning
@@ -462,12 +547,12 @@ export function appendEventToParts(message, event) {
   }
 
   if (event.eventName === 'reasoning-delta' && event.payload.delta) {
-    return { ...message, parts: appendDelta(parts, 'reasoning', event.payload.delta) };
+    return { ...message, parts: appendDelta(parts, 'reasoning', event.payload.delta) } as T;
   }
 
   if (event.eventName === 'text-delta' && event.payload.delta) {
     // 先累积文本，再把已闭合的 <workEnd /> 段切成 work part（finishedAt 取标签到达时刻）
-    return { ...message, parts: carveWorkParts(appendDelta(parts, 'text', event.payload.delta), Date.now()) };
+    return { ...message, parts: carveWorkParts(appendDelta(parts, 'text', event.payload.delta), Date.now()) } as T;
   }
 
   if (TOOL_EVENTS.includes(event.eventName)) {
@@ -486,12 +571,12 @@ export function appendEventToParts(message, event) {
           output: summarizeResult(d),
         };
 
-    return { ...message, parts: upsertToolPart(parts, next) };
+    return { ...message, parts: upsertToolPart(parts, next) } as T;
   }
 
   const route = routePart(event);
 
-  if (route) return { ...message, parts: upsertToolPart(parts, route) };
+  if (route) return { ...message, parts: upsertToolPart(parts, route) } as T;
 
   if (event.eventName === 'error') {
     let next = parts;
@@ -500,58 +585,61 @@ export function appendEventToParts(message, event) {
     // 错误由 ChatPanel 顶层 interceptError 渲染成"贴底拦截卡"，不再落消息流内 part；
     // 此处仅保留过程性 reasoning 文本（若有）。
     if (desc) next = mergeText(next, 'reasoning', desc, { open: true });
-    return { ...message, parts: next };
+    return { ...message, parts: next } as T;
   }
 
   const desc = describeAsReasoning(event);
 
-  if (desc) return { ...message, parts: mergeText(parts, 'reasoning', desc, { open: true }) };
+  if (desc) return { ...message, parts: mergeText(parts, 'reasoning', desc, { open: true }) } as T;
   return message;
 }
 
-export function ensureCompletedText(message, text: string) {
-  const parts = message.parts || [];
+export function ensureCompletedText<T extends StreamMessage>(message: T, text: string): T {
+  const parts = (message.parts || []) as StreamParts;
 
   if (parts.some(p => p.kind === 'text')) return message;
-  return { ...message, parts: [...parts, { kind: 'text', text, ts: Date.now() }] };
+  return { ...message, parts: [...parts, { kind: 'text', text, ts: Date.now() }] } as T;
 }
 
 // build 流到尾（completed 事件）给 build-progress part 打 finishedAt 时间戳，
 // 让 BuildProgress 折叠态能算出总耗时（finishedAt - ts）并展示"已完成 16m24s"。
-export function markBuildProgressFinished(message) {
-  const parts = message.parts || [];
+export function markBuildProgressFinished<T extends StreamMessage>(message: T): T {
+  const parts = (message.parts || []) as StreamParts;
   const idx = parts.findIndex(p => p.kind === 'build-progress');
 
-  if (idx < 0 || parts[idx].finishedAt) return message;
-  return { ...message, parts: parts.map((p, i) => (i === idx ? { ...p, finishedAt: Date.now() } : p)) };
+  if (idx < 0 || parts[idx]?.finishedAt) return message;
+  return { ...message, parts: parts.map((p, i) => (i === idx ? { ...p, finishedAt: Date.now() } : p)) } as T;
 }
 
 // 搭建异常 / 中止：给 build-progress part 打 aborted 标记，BuildProgress 据此停掉所有 loading（•••）动画，
 // 避免运行中的步骤在出错后仍无限转圈。
-export function markBuildProgressAborted(message) {
-  const parts = message.parts || [];
+export function markBuildProgressAborted<T extends StreamMessage>(message: T): T {
+  const parts = (message.parts || []) as StreamParts;
   const idx = parts.findIndex(p => p.kind === 'build-progress');
 
-  if (idx < 0 || parts[idx].aborted) return message;
-  return { ...message, parts: parts.map((p, i) => (i === idx ? { ...p, aborted: true } : p)) };
+  if (idx < 0 || parts[idx]?.aborted) return message;
+  return { ...message, parts: parts.map((p, i) => (i === idx ? { ...p, aborted: true } : p)) } as T;
 }
 
 // build agent 的 completed 顶层直接铺 appName；plan agent 在 artifact.name 下。
 // 同时把 appName 落到 build-progress part（如果存在），让 BuildProgress 标题用到
-export function applyCompletedAppName(message, appName: string) {
+export function applyCompletedAppName<T extends StreamMessage>(message: T, appName: string): T {
   if (!appName) return message;
-  const parts = message.parts || [];
+  const parts = (message.parts || []) as StreamParts;
   const idx = parts.findIndex(p => p.kind === 'build-progress');
 
   if (idx < 0) return message;
-  return { ...message, parts: parts.map((p, i) => (i === idx ? { ...p, appName: p.appName || appName } : p)) };
+  return { ...message, parts: parts.map((p, i) => (i === idx ? { ...p, appName: p.appName || appName } : p)) } as T;
 }
 
 // build 流：从 SSE 事件里取出最早的 appId（含 sectionIdByName）。
 // 两个来源，取先到的那个：
 //   1) subagent-tool-result 且 name='create_app' → result.Text JSON.data.appId（与 fence ARTIFACT_BEGIN 同帧）
 //   2) workflow-step-completed 且 stepId='step-create-app' → result.appId / result.sectionIdByName
-export function extractAppCreatedIds(event) {
+export function extractAppCreatedIds(
+  rawEvent: AgentStreamEvent,
+): { appId: string; sectionIdByName: UnknownRecord } | null {
+  const event = rawEvent as StreamEvent;
   const d = (event && event.payload && event.payload.data) || {};
 
   if (event.eventName === 'subagent-tool-result' && stringValue(readField(d, 'name')) === 'create_app') {
@@ -575,7 +663,8 @@ export function extractAppCreatedIds(event) {
 }
 
 // 把 artifact-file-* SSE 事件转成 bus 的 file:* 事件；返回 true 表示已消化
-export function forwardFileEvent(event, bus) {
+export function forwardFileEvent(rawEvent: AgentStreamEvent, bus: EventBus): boolean {
+  const event = rawEvent as StreamEvent;
   const data = (event && event.payload && event.payload.data) || {};
 
   switch (event.eventName) {
