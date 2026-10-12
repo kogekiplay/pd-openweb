@@ -143,11 +143,11 @@ const VoteUpdater = defineMethods<VoteUpdaterFields>()({
         <DatePicker
           timePicker={false}
           allowClear={false}
-          offsetTop={24}
+          offset={{ top: 24 }}
           selectedValue={moment(_this.voteLastTime)}
           onOk={value => {
             _this.voteLastTime = moment(value).format('YYYY-MM-DD');
-            var voteLastTime = new Date(value);
+            var voteLastTime = value.toDate();
             var today = new Date(new Date().getTime() - (new Date().getTime() % 86400000));
             if (today.getTime() - voteLastTime.getTime() === 0) {
               var hour = new Date().getHours();

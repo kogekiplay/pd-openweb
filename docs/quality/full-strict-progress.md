@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 现代日期时间与时间菜单链路
+
+现代 NewTimePicker、Calendar、DatePickerBase、DateTime/Range 及公开出口已有限化；修复精度舍入、上下限、空值、跨午夜自动补全、清空回调、受控 props、format/locale/disabledDate 和工作流任务端点问题。真实 localhost 验收通过，215/215 规格、工具/语法/strict 门禁通过。严格诊断 55,833 → 55,256（新增 0），欠债 3,225 文件，strict-clean 1,514 / 4,739；详见 `modern-date-time-chain-20261013.md`。本批未发布，现网仍为 `4d6ff521d`。
+
 ## 2026-10-13 经典日历与范围选择链路
 
 Calendar/CalendarRange、DatePicker/RangePicker、泛型 Picker/DateDropdDown、日期/年月表格与 header 的有限合同已完成，开放透传和空状态 any 已移除；修复调用方数据被修改、空值初始化、半天同步、缺省年份页和年月节点替换导致误关闭。正常渲染历史对照、公开类型正反例与 localhost 真实日期/半天下拉验收通过。严格诊断 56,097 → 55,833（新增 0），欠债 3,239 文件，strict-clean 1,498 / 4,737；215/215 规格及工具/语法/strict 门禁通过。详见 `classic-calendar-chain-20261013.md`。现代日期链路及全仓目标继续，本批未部署，现网仍为 `4d6ff521d`。

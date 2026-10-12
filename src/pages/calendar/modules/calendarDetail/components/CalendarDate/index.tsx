@@ -5,6 +5,7 @@ import CheckBox from 'ming-ui/components/Checkbox';
 import ClickAway from 'ming-ui/components/ClickAway';
 import DatePicker from 'ming-ui/components/DatePicker';
 import Icon from 'ming-ui/components/Icon';
+import type { DateTimeRangeProps } from 'ming-ui/components/NewDateTimePicker/types';
 import { formatRecur, formatShowTime } from '../../common';
 import RepeatBox from './RepeatBox';
 
@@ -70,7 +71,7 @@ const UnwrappedEditBlock = class EditBlock extends Component<any, any> {
       change,
     } = this.props;
     const { unSelected } = this.state;
-    const rangePickerProps = {
+    const rangePickerProps: DateTimeRangeProps = {
       offset: {
         left: -48,
         top: 5,

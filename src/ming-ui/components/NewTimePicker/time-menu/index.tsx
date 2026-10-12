@@ -2,23 +2,32 @@ import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import LibCalender from '../../NewDateTimePicker/lib/calender';
+import { normalizeClock } from '../types';
+import type { ClockEvent, TimeItem, TimeMenuProps, TimeMode } from '../types';
 import List from './list';
 import './style.less';
 
-class TimeMenu extends Component<any, any> {
-  constructor(props) {
+interface TimeMenuState {
+  hourList: TimeItem[];
+  minuteList: TimeItem[];
+  secondList: TimeItem[];
+}
+
+class TimeMenu extends Component<TimeMenuProps, TimeMenuState> {
+  static defaultProps: Partial<TimeMenuProps> = { show: false, mode: 'second', min: null, max: null, onPick: () => {} };
+  constructor(props: TimeMenuProps) {
     super(props);
 
     this.state = this.init(props);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: TimeMenuProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState(this.init(this.props));
     }
   }
 
-  init = props => {
+  init = (props: TimeMenuProps) => {
     const state = {
       /**
        * 小时列表
@@ -37,8 +46,9 @@ class TimeMenu extends Component<any, any> {
     return state;
   };
 
-  generateHourList = props => {
-    const list = [];
+  generateHourList = (props: TimeMenuProps) => {
+    const value = normalizeClock(props.value);
+    const list: TimeItem[] = [];
 
     let i = 0;
 
@@ -59,7 +69,7 @@ class TimeMenu extends Component<any, any> {
         value: i,
         label,
         disabled,
-        current: i === props.value.hour,
+        current: i === value.hour,
       });
 
       i = i + 1;
@@ -68,8 +78,9 @@ class TimeMenu extends Component<any, any> {
     return list;
   };
 
-  generateMinuteList = props => {
-    const list = [];
+  generateMinuteList = (props: TimeMenuProps) => {
+    const value = normalizeClock(props.value);
+    const list: TimeItem[] = [];
 
     let i = 0;
 
@@ -79,13 +90,13 @@ class TimeMenu extends Component<any, any> {
         label: i < 10 ? `0${i}` : i.toString(),
         disabled: !LibCalender.minuteInRange(
           {
-            hour: props.value.hour,
+            hour: value.hour,
             minute: i,
           },
           props.min,
           props.max,
         ),
-        current: i === props.value.minute,
+        current: i === value.minute,
       });
 
       i = i + 1;
@@ -94,8 +105,9 @@ class TimeMenu extends Component<any, any> {
     return list;
   };
 
-  generateSecondList = props => {
-    const list = [];
+  generateSecondList = (props: TimeMenuProps) => {
+    const value = normalizeClock(props.value);
+    const list: TimeItem[] = [];
 
     let i = 0;
 
@@ -105,14 +117,14 @@ class TimeMenu extends Component<any, any> {
         label: i < 10 ? `0${i}` : i.toString(),
         disabled: !LibCalender.secondInRange(
           {
-            hour: props.value.hour,
-            minute: props.value.minute,
+            hour: value.hour,
+            minute: value.minute,
             second: i,
           },
           props.min,
           props.max,
         ),
-        current: i === props.value.second,
+        current: i === value.second,
       });
 
       i = i + 1;
@@ -121,12 +133,12 @@ class TimeMenu extends Component<any, any> {
     return list;
   };
 
-  onPick = (event, type: string, value) => {
+  onPick = (event: ClockEvent, type: TimeMode, value: number) => {
     if (this.props.onPick) {
       let time = {
-        hour: this.props.value.hour,
-        minute: this.props.value.minute,
-        second: this.props.value.second,
+        hour: normalizeClock(this.props.value).hour,
+        minute: normalizeClock(this.props.value).minute,
+        second: normalizeClock(this.props.value).second,
       };
 
       time[type] = value;
@@ -147,7 +159,7 @@ class TimeMenu extends Component<any, any> {
       }
 
       if (min) {
-        time = this.props.min;
+        time = normalizeClock(this.props.min);
       }
 
       // check max
@@ -166,7 +178,7 @@ class TimeMenu extends Component<any, any> {
       }
 
       if (max) {
-        time = this.props.max;
+        time = normalizeClock(this.props.max);
       }
 
       this.props.onPick(event, time);
@@ -262,19 +274,6 @@ TimeMenu.propTypes = {
    * @param {object} time - 选择的时间
    */
   onPick: PropTypes.func,
-};
-
-TimeMenu.defaultProps = {
-  show: false,
-  mode: 'second',
-  min: null,
-  max: null,
-  value: {
-    hour: 0,
-    minute: 0,
-    second: 0,
-  },
-  onPick: () => {},
 };
 
 export default TimeMenu;

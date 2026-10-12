@@ -1,127 +1,124 @@
 import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
-import _ from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import Button from '../../Button';
 import Checkbox from '../../Checkbox';
 import Dropdown from '../../Dropdown';
 import Time from '../../NewTimePicker/index';
+import type { ClockTime } from '../../NewTimePicker/types';
 import DatePickerBase from '../date-picker-base/index';
 import LibCalender from '../lib/calender';
+import { clockData, clockOf, dateAllowed, dateValue, roundedDate, sameDate } from '../types';
+import type {
+  DateBounds,
+  DatePair,
+  GridEvent,
+  HalfDay,
+  HeaderEvent,
+  MomentRange,
+  PickerEvent,
+  RangePanelProps,
+  TimeData,
+} from '../types';
 import './style.less';
 
-class DateTimeRangeDoublePicker extends Component<any, any> {
-  constructor(props) {
+interface RangePanelState {
+  value: DatePair;
+  startTime: TimeData;
+  endTime: TimeData;
+  partialStart: boolean;
+  partialEnd: boolean;
+  halfData: [HalfDay | undefined, HalfDay | undefined];
+}
+
+class DateTimeRangeDoublePicker extends Component<RangePanelProps, RangePanelState> {
+  static defaultProps: Partial<RangePanelProps> = {
+    show: false,
+    type: 'date',
+    timeType: 'minute',
+    halfStart: 'AM',
+    halfEnd: 'PM',
+    allowClear: true,
+    partial: false,
+    config: {
+      start: true,
+      end: true,
+    },
+    firstDayOfWeek: 1,
+    min: null,
+    max: null,
+    onChange: () => {},
+    onOk: () => {},
+    onClear: () => {},
+    onSelect: () => {},
+  };
+  constructor(props: RangePanelProps) {
     super(props);
 
     this.state = this.generateState(props);
   }
 
-  override componentDidUpdate(prevProps) {
-    if (!shallowEqual(prevProps, this.props)) {
-      this.setState(this.generateState(this.props));
-    }
+  override componentDidUpdate(prevProps: RangePanelProps) {
+    if (shallowEqual(prevProps, this.props)) return;
+    const changed =
+      !sameDate(prevProps.value?.[0], this.props.value?.[0]) || !sameDate(prevProps.value?.[1], this.props.value?.[1]);
+    const configChanged =
+      prevProps.config?.start !== this.props.config?.start || prevProps.config?.end !== this.props.config?.end;
+    const boundsChanged = !sameDate(prevProps.min, this.props.min) || !sameDate(prevProps.max, this.props.max);
+    if (
+      changed ||
+      configChanged ||
+      boundsChanged ||
+      prevProps.halfStart !== this.props.halfStart ||
+      prevProps.halfEnd !== this.props.halfEnd ||
+      prevProps.type !== this.props.type ||
+      prevProps.timeType !== this.props.timeType
+    )
+      this.setState(
+        this.generateState(
+          this.props,
+          changed,
+          configChanged,
+          prevProps.halfStart !== this.props.halfStart ||
+            prevProps.halfEnd !== this.props.halfEnd ||
+            prevProps.type !== this.props.type,
+        ),
+      );
   }
-
-  generateState = props => {
+  generateState = (props: RangePanelProps, reset = true, resetConfig = true, resetHalf = true): RangePanelState => {
     const today = new Date();
-    const defaultStartTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9);
-    const defaultEndTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18);
-
-    const value = [
-      this.state && this.state.value ? this.state.value[0] : defaultStartTime,
-      this.state && this.state.value ? this.state.value[1] : defaultEndTime,
+    const startDefault = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9);
+    const endDefault = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18);
+    const value: DatePair = [
+      dateValue((reset ? props.value?.[0] : null) || this.state?.value?.[0] || startDefault),
+      dateValue((reset ? props.value?.[1] : null) || this.state?.value?.[1] || endDefault),
     ];
-
-    if (props.value[0]) {
-      value[0] = props.value[0];
-    }
-
-    if (props.value[1]) {
-      value[1] = props.value[1];
-    }
-
-    let halfData = ['AM', 'PM'];
-
-    if (props.type === 'half') {
-      halfData = [props.halfStart, props.halfEnd];
-    }
-
-    const state = {
-      /**
-       * 当前选中的值
-       */
+    const halfData: [HalfDay | undefined, HalfDay | undefined] =
+      props.type === 'half' && resetHalf
+        ? [props.halfStart, props.halfEnd]
+        : this.state?.halfData
+          ? [...this.state.halfData]
+          : ['AM', 'PM'];
+    return {
       value,
-      /**
-       * 当前时间
-       */
-      startTime: this.getTimeData(
-        {
-          hour: value[0].getHours(),
-          minute: value[0].getMinutes(),
-          second: value[0].getSeconds(),
-        },
-        props,
-        value[0],
-      ),
-      endTime: this.getTimeData(
-        {
-          hour: value[1].getHours(),
-          minute: value[1].getMinutes(),
-          second: value[1].getSeconds(),
-        },
-        props,
-        value[1],
-      ),
-      /**
-       * 是否选中开始时间
-       */
-      partialStart: props.config.start || false,
-      /**
-       * 是否选中结束时间
-       */
-      partialEnd: props.config.end || false,
+      startTime: this.getTimeData(clockOf(value[0]), props, value[0]),
+      endTime: this.getTimeData(clockOf(value[1]), props, value[1]),
+      partialStart: resetConfig ? (props.config?.start ?? true) : this.state.partialStart,
+      partialEnd: resetConfig ? (props.config?.end ?? true) : this.state.partialEnd,
       halfData,
     };
-
-    return state;
   };
+  getTimeData = (value: ClockTime, props: DateBounds, time: Date) => clockData(value, props, time);
 
-  getTimeData = (value, props, time) => {
-    return {
-      min:
-        props.min && LibCalender.isSameDate(time, props.min)
-          ? {
-              hour: props.min.getHours(),
-              minute: props.min.getMinutes(),
-              second: props.min.getSeconds(),
-            }
-          : null,
-      max:
-        props.max && LibCalender.isSameDate(time, props.max)
-          ? {
-              hour: props.max.getHours(),
-              minute: props.max.getMinutes(),
-              second: props.max.getSeconds(),
-            }
-          : null,
-      value: {
-        hour: value.hour,
-        minute: value.minute,
-        second: value.second,
-      },
-    };
-  };
-
-  onPick = (event, value, i: number) => {
-    const range = [this.state.value[0], this.state.value[1]];
+  onPick = (event: GridEvent, value: Date, i: 0 | 1) => {
+    const range: DatePair = [this.state.value[0], this.state.value[1]];
     range[i] = value;
 
     this.dateOnChange(event, range, i);
   };
 
-  dateOnChange = (_event, value, i: number) => {
+  dateOnChange = (_event: GridEvent, value: readonly [Date, Date], i: 0 | 1) => {
     const start = new Date(this.state.value[0]);
 
     start.setFullYear(value[0].getFullYear(), value[0].getMonth(), value[0].getDate());
@@ -216,14 +213,19 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     );
   };
 
-  timeOnChange = (_event, value, index: number, halfData?) => {
+  timeOnChange = (
+    _event: PickerEvent,
+    value: ClockTime,
+    index: 0 | 1,
+    halfData?: [HalfDay | undefined, HalfDay | undefined],
+  ) => {
     const newValue = new Date(this.state.value[index]);
 
     newValue.setHours(value.hour);
     newValue.setMinutes(value.minute);
     newValue.setSeconds(value.second);
 
-    const list = this.state.value;
+    const list: DatePair = [new Date(this.state.value[0]), new Date(this.state.value[1])];
     list[index] = newValue;
 
     let startTime = this.state.startTime;
@@ -241,9 +243,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
       moment(list[0]).format('YYYY-MM-DD') === moment(list[1]).format('YYYY-MM-DD')
     ) {
       list[1] = moment(list[0]).add(this.props.autoFillEndTime, 'h').toDate();
-      endTime = _.cloneDeep(startTime);
-      const newHour = endTime.value.hour + this.props.autoFillEndTime;
-      endTime.value.hour = newHour > 23 ? newHour - 23 : newHour;
+      endTime = this.getTimeData(clockOf(list[1]), this.props, list[1]);
     }
 
     this.setState(
@@ -266,104 +266,60 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
     );
   };
 
-  buttonOnClick = (event, action: string) => {
-    if (this.props.onChange) {
-      const value = this.state.value || null;
-
-      if (action === 'ok' && value) {
-        if (value[0] && value[0].getTime && value[1] && value[1].getTime) {
-          if (this.props.type === 'half') {
-            if (
-              LibCalender.isSameDate(value[0], value[1]) &&
-              this.state.halfData[0] === 'PM' &&
-              this.state.halfData[1] === 'AM'
-            ) {
-              alert(_l('结束时间不能早于开始时间'), 3);
-
-              return;
-            }
-          }
-
-          if (
-            value[0].getTime() > value[1].getTime() &&
-            ((this.props.partial && this.state.partialStart && this.state.partialEnd) || !this.props.partial)
-          ) {
-            alert(_l('结束时间不能早于开始时间'), 3);
-
-            return;
-          }
-        }
-      }
-
-      if (value) {
-        value[0].setMilliseconds(0);
-        value[1].setMilliseconds(0);
-        if (this.props.timeType === 'minute') {
-          value[0].setSeconds(0);
-          value[1].setSeconds(0);
-
-          if (this.props.timeType === 'hour') {
-            value[0].setMinutes(0);
-            value[1].setMinutes(0);
-          }
-        }
-      }
-
-      let config = {
-        start: true,
-        end: true,
-      };
-      let returnValue = null;
-
-      if (value && value.length === 2) {
-        returnValue = [moment(value[0]), moment(value[1])];
-      }
-
-      if (this.props.partial) {
-        config = {
-          start: this.state.partialStart,
-          end: this.state.partialEnd,
-        };
-        returnValue = [
-          this.state.partialStart ? value && value[0] && moment(value[0]) : null,
-          this.state.partialEnd ? value && value[1] && moment(value[1]) : null,
-        ];
-      }
-
-      this.props.onChange(event, value, config);
-
-      let halfData = null;
-
-      if (this.props.type === 'half') {
-        halfData = this.state.halfData;
-      }
-
-      if (action === 'ok' && this.props.onOk) {
-        this.props.onOk(returnValue, halfData);
-      }
-
-      if (action === 'clear' && this.props.onClear) {
-        this.props.onClear();
-      }
+  buttonOnClick = (event: HeaderEvent, action: 'ok' | 'clear') => {
+    if (action === 'clear') {
+      this.props.onChange?.(event, null, { start: false, end: false });
+      this.props.onClear?.();
+      return;
     }
+    const bounds = this.props.type === 'datetime' ? this.props : undefined;
+    const start = roundedDate(this.state.value[0], this.props.timeType, bounds);
+    const end = roundedDate(this.state.value[1], this.props.timeType, bounds);
+    if (
+      !start ||
+      !end ||
+      ((!this.props.partial || this.state.partialStart) && !dateAllowed(start, this.props.type, this.props)) ||
+      ((!this.props.partial || this.state.partialEnd) && !dateAllowed(end, this.props.type, this.props))
+    ) {
+      alert(_l('该范围内没有可选时间'));
+      return;
+    }
+    if (
+      this.props.type === 'half' &&
+      LibCalender.isSameDate(start, end) &&
+      this.state.halfData[0] === 'PM' &&
+      this.state.halfData[1] === 'AM'
+    ) {
+      alert(_l('结束时间不能早于开始时间'), 3);
+      return;
+    }
+    if (
+      start.getTime() > end.getTime() &&
+      (!this.props.partial || (this.state.partialStart && this.state.partialEnd))
+    ) {
+      alert(_l('结束时间不能早于开始时间'), 3);
+      return;
+    }
+    const config = this.props.partial
+      ? { start: this.state.partialStart, end: this.state.partialEnd }
+      : { start: true, end: true };
+    const returned: MomentRange = [config.start ? moment(start) : null, config.end ? moment(end) : null];
+    this.props.onChange?.(event, [start, end], config);
+    this.props.onOk?.(returned, this.props.type === 'half' ? [...this.state.halfData] : null);
   };
-
-  checkboxOnChange = (target: string) => {
-    const data = {};
-    data[target] = !this.state[target];
-
-    this.setState(data);
+  checkboxOnChange = (target: 'partialStart' | 'partialEnd') => {
+    this.setState(state => ({ ...state, [target]: !state[target] }));
   };
 
   // 半天选择
-  halfOnChange = (value, target: string) => {
-    const halfData = this.state.halfData;
+  halfOnChange = (value: HalfDay | undefined, target: 'start' | 'end') => {
+    const halfData: [HalfDay | undefined, HalfDay | undefined] = [...this.state.halfData];
     let time = {
       hour: 0,
       minute: 0,
       second: 0,
     };
-    let index = 0;
+    let index: 0 | 1 = 0;
 
     if (target === 'start') {
       halfData[0] = value;
@@ -437,7 +393,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
 
     let startTimePicker: React.JSX.Element | null = null;
     let endTimePicker: React.JSX.Element | null = null;
-    const halfOptions = [
+    const halfOptions: { value: HalfDay; text: string }[] = [
       {
         value: 'AM',
         text: 'AM',
@@ -542,6 +498,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
               type={dateType}
               part="start"
               firstDayOfWeek={this.props.firstDayOfWeek}
+              disabledDate={this.props.disabledDate}
               min={this.props.min}
               max={this.props.max}
               value={this.state.value[0]}
@@ -557,6 +514,7 @@ class DateTimeRangeDoublePicker extends Component<any, any> {
               type={dateType}
               part="end"
               firstDayOfWeek={this.props.firstDayOfWeek}
+              disabledDate={this.props.disabledDate}
               min={this.props.min}
               max={this.props.max}
               value={this.state.value[1]}
@@ -661,28 +619,6 @@ DateTimeRangeDoublePicker.propTypes = {
    * @param {object} time - 选中的时间
    */
   onSelect: PropTypes.func,
-};
-
-DateTimeRangeDoublePicker.defaultProps = {
-  show: false,
-  type: 'date',
-  timeType: 'minute',
-  halfStart: 'AM',
-  halfEnd: 'PM',
-  allowClear: true,
-  partial: false,
-  config: {
-    start: true,
-    end: true,
-  },
-  firstDayOfWeek: 1,
-  value: [new Date(), new Date()],
-  min: null,
-  max: null,
-  onChange: () => {},
-  onOk: () => {},
-  onClear: () => {},
-  onSelect: () => {},
 };
 
 export default DateTimeRangeDoublePicker;

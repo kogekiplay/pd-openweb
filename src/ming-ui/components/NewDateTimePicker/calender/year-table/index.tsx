@@ -1,8 +1,13 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import type { CalendarCell, GridEvent, TableProps } from '../../types';
 
-class YearTable extends Component<any, any> {
-  itemOnClick = (event, item) => {
+class YearTable extends Component<TableProps> {
+  static defaultProps = {
+    bodyData: [],
+    onPick: () => {},
+  };
+  itemOnClick = (event: GridEvent, item: CalendarCell) => {
     if (item.disabled) {
       event.preventDefault();
       event.stopPropagation();
@@ -14,7 +19,7 @@ class YearTable extends Component<any, any> {
   };
 
   renderBodyList = () => {
-    const trList = this.props.bodyData.map((row, i) => {
+    const trList = (this.props.bodyData || []).map((row, i) => {
       const tdList = row.map((item, j: number) => {
         const classList = [];
 
@@ -85,11 +90,6 @@ YearTable.propTypes = {
    * @param {Date} time - 选中的日期
    */
   onPick: PropTypes.func,
-};
-
-YearTable.defaultProps = {
-  bodyData: [],
-  onPick: () => {},
 };
 
 export default YearTable;

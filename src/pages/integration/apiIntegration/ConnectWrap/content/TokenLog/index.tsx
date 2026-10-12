@@ -6,6 +6,8 @@ import moment from 'moment';
 import styled from 'styled-components';
 import { Dropdown, Icon, LoadDiv } from 'ming-ui';
 import DateRangePicker from 'ming-ui/components/NewDateTimePicker/date-time-range';
+import { emptyMomentRange } from 'ming-ui/components/NewDateTimePicker/types';
+import type { MomentRange } from 'ming-ui/components/NewDateTimePicker/types';
 import oauth2Ajax from 'src/pages/workflow/api/oauth2';
 import { TableWrap } from 'src/pages/integration/apiIntegration/style';
 import LogDialog from './LogDialog.jsx';
@@ -162,7 +164,7 @@ export default function Log(props) {
       keyWord: '', //
       type: '', //日志类型
       status: '', //状态
-      time: ['', ''],
+      time: emptyMomentRange(),
       user: {},
       logInfo: null,
     },
@@ -329,7 +331,7 @@ export default function Log(props) {
     }
   };
 
-  const formatTime = (time: string[]) => time.map(item => item && moment(item).format('YYYY-MM-DD HH:mm:ss'));
+  const formatTime = (time: MomentRange) => time.map(item => item && moment(item).format('YYYY-MM-DD HH:mm:ss'));
 
   const renderTimePlaceholder = () => {
     const [startTime, endTime] = formatTime(time);
@@ -390,7 +392,7 @@ export default function Log(props) {
               </div>
             }
             onOk={time => setState({ time, pageIndex: 1, isAll: false })}
-            onClear={() => setState({ time: ['', ''], pageIndex: 1, isAll: false })}
+            onClear={() => setState({ time: emptyMomentRange(), pageIndex: 1, isAll: false })}
           />
         </div>
         {renderCon()}

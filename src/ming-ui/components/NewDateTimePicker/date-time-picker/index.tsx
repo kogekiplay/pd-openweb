@@ -5,14 +5,35 @@ import PropTypes from 'prop-types';
 import Button from 'ming-ui/components/Button';
 import DatePickerBase from 'ming-ui/components/NewDateTimePicker/date-picker-base';
 import Time from 'ming-ui/components/NewTimePicker';
+import type { ClockEvent, ClockTime } from '../../NewTimePicker/types';
 import LibCalender from '../lib/calender';
+import { clockData, clockOf, dateAllowed, dateValue, roundedDate, sameDate } from '../types';
+import type { DateBounds, GridEvent, HeaderEvent, PanelProps, TimeData } from '../types';
 import './style.less';
 
-class DateTimePicker extends Component<any, any> {
-  constructor(props) {
+interface PanelState {
+  value: Date;
+  time: TimeData;
+}
+
+class DateTimePicker extends Component<PanelProps, PanelState> {
+  static defaultProps: Partial<PanelProps> = {
+    show: false,
+    type: 'date',
+    timeType: 'minute',
+    allowClear: true,
+    firstDayOfWeek: 1,
+    min: null,
+    max: null,
+    onChange: () => {},
+    onOk: () => {},
+    onClear: () => {},
+    onSelect: () => {},
+  };
+  constructor(props: PanelProps) {
     super(props);
 
-    const value = props.value || new Date();
+    const value = dateValue(props.value);
     this.state = {
       /**
        * 当前选中的值
@@ -33,53 +54,21 @@ class DateTimePicker extends Component<any, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
-    if (!shallowEqual(prevProps, this.props)) {
-      if (this.props.value !== this.state.value) {
-        const value = this.props.value || new Date();
-        this.setState({
-          value,
-          time: this.getTimeData(
-            {
-              hour: value.getHours(),
-              minute: value.getMinutes(),
-              second: value.getSeconds(),
-            },
-            this.props,
-            value,
-          ),
-        });
-      }
+  override componentDidUpdate(prevProps: PanelProps) {
+    if (shallowEqual(prevProps, this.props)) return;
+    if (
+      !sameDate(prevProps.value, this.props.value) ||
+      !sameDate(prevProps.min, this.props.min) ||
+      !sameDate(prevProps.max, this.props.max) ||
+      prevProps.timeType !== this.props.timeType
+    ) {
+      const value = !sameDate(prevProps.value, this.props.value) ? dateValue(this.props.value) : this.state.value;
+      this.setState({ value, time: this.getTimeData(clockOf(value), this.props, value) });
     }
   }
+  getTimeData = (value: ClockTime, props: DateBounds, time: Date) => clockData(value, props, time);
 
-  getTimeData = (value, props, time) => {
-    return {
-      min:
-        props.min && LibCalender.isSameDate(time, props.min)
-          ? {
-              hour: props.min.getHours(),
-              minute: props.min.getMinutes(),
-              second: props.min.getSeconds(),
-            }
-          : null,
-      max:
-        props.max && LibCalender.isSameDate(time, props.max)
-          ? {
-              hour: props.max.getHours(),
-              minute: props.max.getMinutes(),
-              second: props.max.getSeconds(),
-            }
-          : null,
-      value: {
-        hour: value.hour,
-        minute: value.minute,
-        second: value.second,
-      },
-    };
-  };
-
-  dateOnChange = (_event, value) => {
+  dateOnChange = (_event: GridEvent, value: Date) => {
     const newValue = new Date(this.state.value);
 
     newValue.setFullYear(value.getFullYear(), value.getMonth(), value.getDate());
@@ -134,7 +123,7 @@ class DateTimePicker extends Component<any, any> {
     );
   };
 
-  timeOnChange = (_event, value) => {
+  timeOnChange = (_event: ClockEvent, value: ClockTime) => {
     const newValue = new Date(this.state.value);
 
     newValue.setHours(value.hour);
@@ -154,31 +143,23 @@ class DateTimePicker extends Component<any, any> {
     );
   };
 
-  buttonOnClick = (event, action: string) => {
-    if (this.props.onChange) {
-      const value = action === 'ok' ? this.state.value : null;
-
-      if (value) {
-        value.setMilliseconds(0);
-        if (this.props.timeType === 'minute') {
-          value.setSeconds(0);
-
-          if (this.props.timeType === 'hour') {
-            value.setMinutes(0);
-          }
-        }
-      }
-
-      this.props.onChange(event, value);
-
-      if (action === 'ok' && this.props.onOk) {
-        this.props.onOk(moment(value));
-      }
-
-      if (action === 'clear' && this.props.onClear) {
-        this.props.onClear();
-      }
+  buttonOnClick = (event: HeaderEvent, action: 'ok' | 'clear') => {
+    if (action === 'clear') {
+      this.props.onChange?.(event, null);
+      this.props.onClear?.();
+      return;
     }
+    const value = roundedDate(
+      this.state.value,
+      this.props.timeType,
+      this.props.type === 'datetime' ? this.props : undefined,
+    );
+    if (!value || !dateAllowed(value, this.props.type, this.props)) {
+      alert(_l('该范围内没有可选时间'));
+      return;
+    }
+    this.props.onChange?.(event, value);
+    this.props.onOk?.(moment(value));
   };
 
   override render() {
@@ -222,6 +203,7 @@ class DateTimePicker extends Component<any, any> {
           <DatePickerBase
             type={dateType}
             firstDayOfWeek={this.props.firstDayOfWeek}
+            disabledDate={this.props.disabledDate}
             min={this.props.min}
             max={this.props.max}
             value={this.state.value}
@@ -314,21 +296,6 @@ DateTimePicker.propTypes = {
    * @param {object} time - 选中的时间
    */
   onSelect: PropTypes.func,
-};
-
-DateTimePicker.defaultProps = {
-  show: false,
-  type: 'date',
-  timeType: 'minute',
-  allowClear: true,
-  firstDayOfWeek: 1,
-  value: new Date(),
-  min: null,
-  max: null,
-  onChange: () => {},
-  onOk: () => {},
-  onClear: () => {},
-  onSelect: () => {},
 };
 
 export default DateTimePicker;

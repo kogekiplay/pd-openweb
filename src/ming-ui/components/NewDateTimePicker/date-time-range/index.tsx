@@ -1,17 +1,51 @@
 import { Component } from 'react';
+import type { Ref } from 'react';
 import { shallowEqual } from 'react-redux';
-import _ from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import DateTimeRangePicker from 'ming-ui/components/NewDateTimePicker/date-time-range-picker';
 import PositionContainer from 'ming-ui/components/PositionContainer';
 import LibCalender from '../lib/calender';
+import { decodeDate, displayDate } from '../types';
+import type {
+  DateTimeRangeProps,
+  HalfPair,
+  HeaderEvent,
+  MomentRange,
+  NullableDatePair,
+  PickerMode,
+  PublicRangeState,
+  RangeConfig,
+} from '../types';
 import './style.less';
 
-class DateTimeRange extends Component<any, any> {
+class DateTimeRange extends Component<DateTimeRangeProps, PublicRangeState> {
+  static defaultProps: Partial<DateTimeRangeProps> = {
+    mode: 'date',
+    timePicker: false,
+    timeMode: 'minute',
+    halfData: ['AM', 'PM'],
+    allowClear: true,
+    firstDayOfWeek: 1,
+    selectedValue: null,
+    min: null,
+    max: null,
+    defaultVisible: false,
+    disabled: false,
+    placeholder: _l('请选择'),
+    offset: {
+      top: 0,
+      left: 0,
+    },
+    onOk: () => {},
+    onClear: () => {},
+    onSelect: () => {},
+    onVisibleChange: () => {},
+    autoFillEndTime: 0,
+  };
   declare _picker: HTMLSpanElement | null | undefined;
 
-  constructor(props) {
+  constructor(props: DateTimeRangeProps) {
     super(props);
 
     this.state = this.generateState(props);
@@ -23,114 +57,79 @@ class DateTimeRange extends Component<any, any> {
     }
   }
 
-  override componentDidUpdate(prevProps) {
-    if (!shallowEqual(prevProps, this.props)) {
-      if (!_.isEqual(this.props.selectedValue, prevProps.selectedValue)) {
-        this.setState(this.generateState(this.props));
-      }
+  override componentDidUpdate(prevProps: DateTimeRangeProps) {
+    if (shallowEqual(prevProps, this.props)) return;
+    if (prevProps.selectedValue !== this.props.selectedValue) {
+      const next = this.generateState(this.props);
+      this.setState({ value: next.value, label: next.label, config: next.config });
+    } else {
+      this.setState({ label: this.getRangeLabel(this.state.value, this.state.config, this.props) });
     }
+    if (this.props.disabled && this.state.menuOpened) this.hideMenu();
   }
-
-  generateState = props => {
-    const start = !!(props.selectedValue && props.selectedValue[0]);
-    const end = !!(props.selectedValue && props.selectedValue[1]);
-
-    const startValue = props.selectedValue && props.selectedValue[0] ? moment(props.selectedValue[0]).toDate() : null;
-    const endValue = props.selectedValue && props.selectedValue[1] ? moment(props.selectedValue[1]).toDate() : null;
-    const value = [startValue, endValue];
-    const state = {
-      /**
-       * 当前值
-       */
-      value,
-      /**
-       * 显示文本
-       */
-      label: value
-        ? this.getRangeLabel(
-            value,
-            {
-              start,
-              end,
-            },
-            props,
-          )
-        : this.props.placeholder,
-      /**
-       * 选中配置
-       */
-      config: {
-        /**
-         * 开始时间是否选中
-         */
-        start,
-        /**
-         * 结束时间是否选中
-         */
-        end,
-      },
-      /**
-       * 菜单是否展开
-       */
-      menuOpened: false,
-      bounding: null,
-    };
-
-    return state;
+  generateState = (props: DateTimeRangeProps): PublicRangeState => {
+    const value: NullableDatePair = [decodeDate(props.selectedValue?.[0]), decodeDate(props.selectedValue?.[1])];
+    const config = { start: !!value[0], end: !!value[1] };
+    return { value, config, label: this.getRangeLabel(value, config, props), menuOpened: false, bounding: null };
   };
-
-  getRangeLabel = (value, config, props) => {
+  getRangeLabel = (
+    value: readonly [Date | null, Date | null] | null,
+    config: RangeConfig,
+    props: DateTimeRangeProps,
+  ): string => {
     const mode = props.timePicker ? 'datetime' : props.mode;
-
     const partial = props.mode === 'task';
-
     const start =
-      value && value[0] && ((partial && config && config.start) || !partial)
-        ? LibCalender.formatTime(value[0], mode, this.props.timeMode)
+      value?.[0] && (!partial || config.start)
+        ? (displayDate(value[0], mode, props.timeMode, props) ?? LibCalender.formatTime(value[0], mode, props.timeMode))
         : '';
     const end =
-      value && value[1] && ((partial && config && config.end) || !partial)
-        ? LibCalender.formatTime(value[1], mode, this.props.timeMode)
+      value?.[1] && (!partial || config.end)
+        ? (displayDate(value[1], mode, props.timeMode, props) ?? LibCalender.formatTime(value[1], mode, props.timeMode))
         : '';
-
-    const list = [start, end];
-
-    return start || end ? list.join(' ~ ') : props.placeholder;
+    return start || end ? [start, end].join(props.separator ?? ' ~ ') : props.placeholder || '';
+  };
+  onOk = (value: MomentRange, halves: HalfPair | null) => {
+    const props = this.props;
+    if (props.mode === 'task') props.onOk?.(value, halves);
+    else if (value[0] && value[1]) props.onOk?.([value[0], value[1]], halves);
   };
 
   showMenu = () => {
+    if (this.props.disabled || !this._picker) return;
     this.setState({
       menuOpened: true,
       bounding: this._picker.getBoundingClientRect(),
     });
-    this.props.onVisibleChange(true);
+    this.props.onVisibleChange?.(true);
   };
 
   hideMenu = () => {
     this.setState({
       menuOpened: false,
     });
-    this.props.onVisibleChange(false);
+    this.props.onVisibleChange?.(false);
   };
 
   toggleMenuOpened = () => {
-    if (this.props.disabled) {
+    if (this.props.disabled || !this._picker) {
       return;
     }
 
+    const menuOpened = !this.state.menuOpened;
     this.setState({
-      menuOpened: !this.state.menuOpened,
+      menuOpened,
       bounding: this._picker.getBoundingClientRect(),
     });
-    this.props.onVisibleChange(!this.state.menuOpened);
+    this.props.onVisibleChange?.(menuOpened);
   };
 
-  onChange = (_event, value, config) => {
-    let newValue = null;
-    let label = this.props.placeholder;
+  onChange = (_event: HeaderEvent, value: readonly [Date, Date] | null, config: RangeConfig) => {
+    let newValue: NullableDatePair | null = null;
+    let label = this.props.placeholder || '';
 
     if (value) {
-      newValue = value;
+      newValue = [new Date(value[0]), new Date(value[1])];
       label = this.getRangeLabel(value, config, this.props);
     }
 
@@ -140,19 +139,19 @@ class DateTimeRange extends Component<any, any> {
       config,
       menuOpened: false,
     });
-    this.props.onVisibleChange(false);
+    this.props.onVisibleChange?.(false);
   };
 
   override render() {
-    const min = this.props.min ? this.props.min.toDate() : null;
-    const max = this.props.max ? this.props.max.toDate() : null;
+    const min = decodeDate(this.props.min);
+    const max = decodeDate(this.props.max);
 
-    let mode = 'date';
+    let mode: PickerMode | 'half' = 'date';
 
     if (this.props.timePicker || this.props.mode === 'task') {
       mode = 'datetime';
     } else {
-      mode = this.props.mode;
+      mode = this.props.mode || 'date';
     }
 
     const pickerClassList = ['mui-datetime-picker'];
@@ -168,7 +167,7 @@ class DateTimeRange extends Component<any, any> {
           this._picker = picker;
         }}
         className={pickerClassNames}
-        disabled={this.props.disabled}
+        aria-disabled={this.props.disabled}
         onClick={this.toggleMenuOpened}
       >
         <span>{this.state.label}</span>
@@ -182,7 +181,7 @@ class DateTimeRange extends Component<any, any> {
             this._picker = picker;
           }}
           className={pickerClassNames}
-          disabled={this.props.disabled}
+          aria-disabled={this.props.disabled}
           onClick={this.toggleMenuOpened}
         >
           {this.props.children}
@@ -198,15 +197,16 @@ class DateTimeRange extends Component<any, any> {
         allowClear={this.props.allowClear}
         config={this.state.config}
         firstDayOfWeek={this.props.firstDayOfWeek}
+        disabledDate={this.props.disabledDate ? date => this.props.disabledDate?.(moment(date)) : undefined}
         min={min}
         max={max}
         value={this.state.value}
-        halfStart={this.props.halfData[0]}
-        halfEnd={this.props.halfData[1]}
+        halfStart={this.props.halfData?.[0]}
+        halfEnd={this.props.halfData?.[1]}
         onChange={(event, value, config) => {
           this.onChange(event, value, config);
         }}
-        onOk={this.props.onOk}
+        onOk={this.onOk}
         onClear={this.props.onClear}
         onSelect={this.props.onSelect}
         autoFillEndTime={this.props.autoFillEndTime}
@@ -214,7 +214,10 @@ class DateTimeRange extends Component<any, any> {
     );
 
     const content = (
-      <div className="mui-datetimerange-base">
+      <div
+        className={['mui-datetimerange-base', this.props.className].filter(Boolean).join(' ')}
+        style={this.props.style}
+      >
         {button}
         <PositionContainer
           popupParentNode={this.props.popupParentNode}
@@ -339,28 +342,8 @@ DateTimeRange.propTypes = {
   autoFillEndTime: PropTypes.number,
 };
 
-DateTimeRange.defaultProps = {
-  mode: 'date',
-  timePicker: false,
-  timeMode: 'minute',
-  halfData: ['AM', 'PM'],
-  allowClear: true,
-  firstDayOfWeek: 1,
-  selectedValue: null,
-  min: null,
-  max: null,
-  defaultVisible: false,
-  disabled: false,
-  placeholder: _l('请选择'),
-  offset: {
-    top: 0,
-    left: 0,
-  },
-  onOk: () => {},
-  onClear: () => {},
-  onSelect: () => {},
-  onVisibleChange: () => {},
-  autoFillEndTime: 0,
-};
-
-export default DateTimeRange;
+export { DateTimeRange };
+// Keep task mode required at the public boundary; class defaultProps would make it optional in JSX.
+export default function RangePicker(props: DateTimeRangeProps & { ref?: Ref<DateTimeRange> | undefined }) {
+  return <DateTimeRange {...props} />;
+}

@@ -1,14 +1,17 @@
-const padZero = value => {
+import type { ClockTime, TimeMode } from '../../NewTimePicker/types';
+import type { RangeMode } from '../types';
+
+const padZero = (value: number) => {
   return value < 10 ? `0${value}` : value.toString();
 };
 
-const isTimeEarly = (a, b) => {
+const isTimeEarly = (a: Readonly<ClockTime>, b: Readonly<ClockTime>) => {
   const _a = a.hour * 10000 + a.minute * 100 + a.second;
   const _b = b.hour * 10000 + b.minute * 100 + b.second;
   return _a < _b;
 };
 
-const isTimeLater = (a, b) => {
+const isTimeLater = (a: Readonly<ClockTime>, b: Readonly<ClockTime>) => {
   const _a = a.hour * 10000 + a.minute * 100 + a.second;
   const _b = b.hour * 10000 + b.minute * 100 + b.second;
   return _a > _b;
@@ -18,13 +21,15 @@ const Calender = {
   /**
    * 是否为同一天
    */
-  isSameDate: (a, b) => {
-    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  isSameDate: (a: Date | null | undefined, b: Date | null | undefined) => {
+    return (
+      !!a && !!b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
+    );
   },
   /**
    * 计算指定月份的天数
    */
-  daysOfMonth: (year, month) => {
+  daysOfMonth: (year: number, month: number) => {
     const nextMonth = month >= 11 ? 0 : month + 1;
     const nextYear = month >= 11 ? year + 1 : year;
 
@@ -38,7 +43,7 @@ const Calender = {
   /**
    * 计算日期是否在范围内
    */
-  dateInRange: (date: Date, min, max) => {
+  dateInRange: (date: Date, min?: Date | null, max?: Date | null) => {
     const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     let n: Date | null = null;
 
@@ -63,7 +68,7 @@ const Calender = {
   /**
    * 计算月份是否在范围内
    */
-  monthInRange: (month: Date, min, max) => {
+  monthInRange: (month: Date, min?: Date | null, max?: Date | null) => {
     const d = new Date(month.getFullYear(), month.getMonth());
     let n: Date | null = null;
 
@@ -88,7 +93,7 @@ const Calender = {
   /**
    * 上个月
    */
-  prevMonth: time => {
+  prevMonth: (time: Date) => {
     const year = time.getFullYear();
     const month = time.getMonth();
 
@@ -105,7 +110,7 @@ const Calender = {
   /**
    * 下个月
    */
-  nextMonth: time => {
+  nextMonth: (time: Date) => {
     const year = time.getFullYear();
     const month = time.getMonth();
 
@@ -122,7 +127,11 @@ const Calender = {
   /**
    * 分钟是否在范围内
    */
-  minuteInRange: (time, min, max) => {
+  minuteInRange: (
+    time: Pick<ClockTime, 'hour' | 'minute'>,
+    min?: Readonly<ClockTime> | null,
+    max?: Readonly<ClockTime> | null,
+  ) => {
     let inRange = true;
 
     if (min) {
@@ -146,7 +155,7 @@ const Calender = {
   /**
    * 秒是否在范围内
    */
-  secondInRange: (time, min, max) => {
+  secondInRange: (time: Readonly<ClockTime>, min?: Readonly<ClockTime> | null, max?: Readonly<ClockTime> | null) => {
     let inRange = true;
 
     if ((min && isTimeEarly(time, min)) || (max && isTimeLater(time, max))) {
@@ -158,13 +167,13 @@ const Calender = {
   /**
    * 左侧补 0
    */
-  padZero: value => {
+  padZero: (value: number) => {
     return padZero(value);
   },
   /**
    * 格式化时间
    */
-  formatTime: (time, type, timeType) => {
+  formatTime: (time: Date | null | undefined, type: RangeMode = 'date', timeType: TimeMode = 'minute') => {
     if (!time) {
       return '';
     }
@@ -175,7 +184,7 @@ const Calender = {
 
     if (type === 'month') {
       dateData = [time.getFullYear().toString(), padZero(time.getMonth() + 1)];
-    } else if (type === 'date' || type === 'datetime' || type === 'task') {
+    } else if (type === 'date' || type === 'datetime' || type === 'task' || type === 'half') {
       dateData = [time.getFullYear().toString(), padZero(time.getMonth() + 1), padZero(time.getDate())];
     }
 
@@ -199,13 +208,13 @@ const Calender = {
   /**
    * 时间 a 是否早于 b
    */
-  isTimeEarly: (a, b) => {
+  isTimeEarly: (a: Readonly<ClockTime>, b: Readonly<ClockTime>) => {
     return isTimeEarly(a, b);
   },
   /**
    * 时间 a 是否晚于 b
    */
-  isTimeLater: (a, b) => {
+  isTimeLater: (a: Readonly<ClockTime>, b: Readonly<ClockTime>) => {
     return isTimeLater(a, b);
   },
 };

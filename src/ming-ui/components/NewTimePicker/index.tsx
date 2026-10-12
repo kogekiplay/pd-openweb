@@ -1,21 +1,33 @@
 import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
+import { getDomNode } from '../ClickAway';
 import TimeMenu from './time-menu';
+import { normalizeClock } from './types';
+import type { ClockEvent, ClockTime, TimeProps } from './types';
 import './style.less';
 
-class Time extends Component<any, any> {
+interface TimeState {
+  value: ClockTime;
+  label: string;
+  menuOpened: boolean;
+}
+
+class Time extends Component<TimeProps, TimeState> {
+  static defaultProps: Partial<TimeProps> = {
+    type: 'minute',
+    min: null,
+    max: null,
+    disabled: false,
+    onChange: () => {},
+  };
   declare button: HTMLButtonElement | null;
   declare root: HTMLDivElement | null;
 
-  constructor(props) {
+  constructor(props: TimeProps) {
     super(props);
 
-    const value = this.props.value || {
-      hour: 0,
-      minute: 0,
-      second: 0,
-    };
+    const value = normalizeClock(props.value);
 
     this.state = {
       /**
@@ -42,21 +54,11 @@ class Time extends Component<any, any> {
     window.addEventListener('keydown', this.keyDownListener, false);
   }
 
-  override componentDidUpdate(prevProps) {
-    if (!shallowEqual(prevProps, this.props)) {
-      if (this.props.value !== this.state.value) {
-        const value = this.props.value || {
-          hour: 0,
-          minute: 0,
-          second: 0,
-        };
-        const label = this.getTimeLabel(value);
-        this.setState({
-          value,
-          label,
-        });
-      }
-    }
+  override componentDidUpdate(prevProps: TimeProps) {
+    if (shallowEqual(prevProps, this.props)) return;
+    const value = prevProps.value !== this.props.value ? normalizeClock(this.props.value) : this.state.value;
+    const label = this.getTimeLabel(value);
+    this.setState({ value, label, menuOpened: this.props.disabled ? false : this.state.menuOpened });
   }
 
   override componentWillUnmount() {
@@ -65,12 +67,13 @@ class Time extends Component<any, any> {
     window.removeEventListener('keydown', this.keyDownListener, false);
   }
 
-  padZero = value => {
+  padZero = (value: number) => {
     return value < 10 ? `0${value}` : value.toString();
   };
 
-  getTimeLabel = time => {
-    let data = [this.padZero(time.hour), this.padZero(time.minute)];
+  getTimeLabel = (time: Readonly<ClockTime>) => {
+    let data =
+      this.props.type === 'hour' ? [this.padZero(time.hour)] : [this.padZero(time.hour), this.padZero(time.minute)];
 
     if (this.props.type === 'second') {
       data = [this.padZero(time.hour), this.padZero(time.minute), this.padZero(time.second)];
@@ -79,10 +82,11 @@ class Time extends Component<any, any> {
     return data.join(':');
   };
 
-  clickListener = e => {
+  clickListener = (e: MouseEvent) => {
+    const target = getDomNode(e.target);
     const node = this.root;
 
-    if (node && (node === e.target || !node.contains(e.target)) && this.state.menuOpened) {
+    if (node && (node === target || (target && !node.contains(target))) && this.state.menuOpened) {
       this.hideMenu();
     }
   };
@@ -97,6 +101,7 @@ class Time extends Component<any, any> {
   };
 
   showMenu() {
+    if (this.props.disabled) return;
     this.setState({
       menuOpened: true,
     });
@@ -109,12 +114,15 @@ class Time extends Component<any, any> {
   }
 
   toggleMenuOpened = () => {
+    if (this.props.disabled) return;
     this.setState({
       menuOpened: !this.state.menuOpened,
     });
   };
 
-  onPick = (event, value) => {
+  onPick = (event: ClockEvent, picked: ClockTime) => {
+    if (this.props.disabled) return;
+    const value = normalizeClock(picked);
     const label = this.getTimeLabel(value);
 
     this.setState({
@@ -210,17 +218,5 @@ Time.propTypes = {
   onChange: PropTypes.func,
 };
 
-Time.defaultProps = {
-  type: 'minute',
-  min: null,
-  max: null,
-  value: {
-    hour: 0,
-    minute: 0,
-    second: 0,
-  },
-  disabled: false,
-  onChange: () => {},
-};
-
 export default Time;
+export type { ClockTime, TimeMode, TimeProps } from './types';
