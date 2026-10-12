@@ -353,7 +353,6 @@
     "src/ming-ui/components/QiniuUpload/index.tsx",
     "src/ming-ui/components/RichText.tsx",
     "src/ming-ui/components/Score.tsx",
-    "src/ming-ui/components/Signature.tsx",
     "src/ming-ui/components/SortableList/index.tsx",
     "src/ming-ui/components/Steps.tsx",
     "src/ming-ui/components/SvgIcon.tsx",

@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import type { ComponentType, CSSProperties, ReactElement } from 'react';
 import axios from 'axios';
 import { get, isFunction, replace } from 'lodash';
 // signature_pad 5 的 exports 映射只有 '.'，深子路径 dist/signature_pad 已被封死。
@@ -44,10 +45,43 @@ const SignatureBox = styled.div`
   }
 `;
 
-export default class Signature extends Component<any, any> {
+interface ScanAttachment {
+  url?: string | undefined;
+  [key: string]: unknown;
+}
+
+interface SignatureScanQrProps {
+  type?: string | number | undefined;
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
+  onScanResultUpdate?: ((files: ScanAttachment[]) => void) | undefined;
+  children: ReactElement;
+}
+
+// GenScanUploadQr is a legacy JS boundary; its runtime emits attachment arrays even
+// though the inferred declaration only exposes the zero-argument default callback.
+const SignatureScanQr = GenScanUploadQr as unknown as ComponentType<SignatureScanQrProps>;
+
+interface SignatureProps {
+  showButton?: boolean | undefined;
+  showUploadFromMobile?: boolean | undefined;
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
+  canvasStyle?: CSSProperties | undefined;
+  onBegin?: (() => void) | undefined;
+}
+
+interface SignatureState {
+  isEdit: boolean;
+  signature: string;
+  key: string;
+  showButton: boolean;
+}
+
+export default class Signature extends Component<SignatureProps, SignatureState> {
   declare signaturePad: SignaturePad | undefined;
 
-  override state = {
+  override state: SignatureState = {
     isEdit: false,
     signature: '',
     key: '',
@@ -88,7 +122,7 @@ export default class Signature extends Component<any, any> {
   };
 
   clear = () => {
-    this.signaturePad.clear();
+    this.signaturePad?.clear();
     this.setState({ isEdit: false, signature: '', key: '' }, () => {
       setTimeout(() => {
         this.initCanvas();
@@ -127,8 +161,13 @@ export default class Signature extends Component<any, any> {
         } else {
           const token = requireBase64FileToken(res);
           const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(token.key)}`;
+          const signaturePad = this.signaturePad;
+          if (!signaturePad) {
+            this.isComplete = true;
+            return undefined;
+          }
           return axios
-            .post(url, this.signaturePad.toDataURL('image/png').split(',')[1], {
+            .post(url, signaturePad.toDataURL('image/png').split(',')[1], {
               headers: {
                 'Content-Type': 'application/octet-stream',
                 Authorization: `UpToken ${token.uptoken}`,
@@ -185,19 +224,20 @@ export default class Signature extends Component<any, any> {
               </span>
             )}
             {showUploadFromMobile && (
-              <GenScanUploadQr
+              <SignatureScanQr
                 worksheetId={worksheetId}
                 viewId={viewId}
                 type={2}
-                onScanResultUpdate={files => {
-                  if (get(files, '0.url')) {
+                onScanResultUpdate={(files: ScanAttachment[]) => {
+                  const url = files[0]?.url;
+                  if (url) {
                     this.setState({
                       isEdit: false,
-                      signature: get(files, '0.url'),
-                      key: replace(files[0].url.replace(/\?.*$/, ''), `${md.global.FileStoreConfig.pictureHost}/`, ''),
+                      signature: url,
+                      key: replace(url.replace(/\?.*$/, ''), `${md.global.FileStoreConfig.pictureHost}/`, ''),
                     });
                     if (get(window, 'md.global.Account.accountId')) {
-                      accountSettingAjax.editSign({ url: get(files, '0.url') });
+                      accountSettingAjax.editSign({ url });
                     }
                   }
                 }}
@@ -206,7 +246,7 @@ export default class Signature extends Component<any, any> {
                   <i className="icon icon-zendeskHelp-qrcode"></i>
                   {_l('扫码签名')}
                 </div>
-              </GenScanUploadQr>
+              </SignatureScanQr>
             )}
 
             <div className="flex" />
