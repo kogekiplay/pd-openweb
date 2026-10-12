@@ -4,27 +4,24 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import PositionContainer from 'ming-ui/components/PositionContainer';
 import { getDomNode } from '../ClickAway';
+import type { DateSelectCause, DateValue, PickerProps, PickerState } from './types';
 
 function isElement(node: Node): node is Element {
   return node.nodeType === 1;
 }
 
-function createChainedFunction(...argsOuter) {
-  if (argsOuter.length === 1) {
-    return argsOuter[0];
-  }
-
-  // 原样把调用方的 this 转给每个被串起来的函数
-  return function chainedFunction(this: unknown, ...argsInner) {
-    for (let i = 0; i < argsOuter.length; i++) {
-      if (argsOuter[i] && argsOuter[i].apply) {
-        argsOuter[i].apply(this, argsInner);
-      }
-    }
+function createChainedFunction<A extends unknown[]>(...functions: (((...args: A) => void) | undefined)[]) {
+  if (functions.length === 1 && functions[0]) return functions[0];
+  return function chainedFunction(this: unknown, ...args: A) {
+    for (const callback of functions) if (callback) Reflect.apply(callback, this, args);
   };
 }
 
-class Picker extends Component<any, any> {
+class Picker<
+  V = DateValue,
+  A extends [V, ...unknown[]] = [V, DateSelectCause?],
+  O extends unknown[] = [V],
+> extends Component<PickerProps<V, A, O>, PickerState<V>> {
   declare _picker: Element | null | undefined;
   static override propTypes = {
     panelCls: PropTypes.string,
@@ -49,7 +46,7 @@ class Picker extends Component<any, any> {
     popupParentNode: () => document.body,
   };
 
-  constructor(props) {
+  constructor(props: PickerProps<V, A, O>) {
     super(props);
 
     const value = props.defaultValue;
@@ -66,7 +63,7 @@ class Picker extends Component<any, any> {
     }
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: PickerProps<V, A, O>) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         value: this.props.defaultValue,
@@ -91,7 +88,8 @@ class Picker extends Component<any, any> {
     this.setState({ visible: false });
   };
 
-  onCalendarSelect = value => {
+  onCalendarSelect = (...args: A) => {
+    const value = args[0];
     const visible = true;
     // if (this.props.timePicker) {
     //   visible = true;
@@ -122,7 +120,7 @@ class Picker extends Component<any, any> {
     const props = this.props;
     const state = this.state;
     return React.cloneElement(props.children(state, props), {
-      onClick: !props.disabled ? this.onClick : null,
+      onClick: !props.disabled ? this.onClick : undefined,
       ref: (picker: unknown) => {
         const node = getDomNode(picker);
         this._picker = node && isElement(node) ? node : null;

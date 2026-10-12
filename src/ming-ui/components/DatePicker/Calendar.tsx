@@ -1,20 +1,31 @@
 import React, { Component } from 'react';
+import type { MouseEvent } from 'react';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
+import type { Moment } from 'moment';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import ClickAway from 'ming-ui/components/ClickAway';
 import CalendarFooter from './CalendarFooter';
 import CalendarHeader from './CalendarHeader';
 import DateTable from './DateTable';
+import type { CalendarView } from './footerTypes';
 import locale from './locale/zh_CN';
 import MonthTable from './MonthTable';
+import type { CalendarProps, DateSelectCause, DateValue } from './types';
 import YearTable from './YearTable';
 import '../less/DatePicker.less';
 import '../less/dateRangePicker.less';
 import '../less/Rangepicker.less';
 
-function getMorrowTime(value) {
+interface CalendarState {
+  value: Moment;
+  selectedValue: DateValue;
+  yearPage: number;
+  view: CalendarView;
+}
+
+function getMorrowTime(value: Moment) {
   const tomorrow = moment().add(1, 'days');
   tomorrow.locale(value.locale()).utcOffset(value.utcOffset());
   return tomorrow;
@@ -26,13 +37,13 @@ function getNow() {
   return moment();
 }
 
-function getTodayTime(value) {
+function getTodayTime(value: Moment) {
   const today = moment();
   today.locale(value.locale()).utcOffset(value.utcOffset());
   return today;
 }
 
-function getNowByCurrentStateValue(value) {
+function getNowByCurrentStateValue(value: DateValue) {
   let ret;
 
   if (value) {
@@ -44,7 +55,7 @@ function getNowByCurrentStateValue(value) {
   return ret;
 }
 
-const UnwrappedCalendar = class Calendar extends Component<any, any> {
+const UnwrappedCalendar = class Calendar extends Component<CalendarProps, CalendarState> {
   static override propTypes = {
     value: PropTypes.object,
     selectedValue: PropTypes.object,
@@ -94,10 +105,10 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
     locale: locale,
   };
 
-  constructor(props) {
+  constructor(props: CalendarProps) {
     super(props);
     const value = props.value || props.defaultValue || getNow();
-    let view = 'date';
+    let view: CalendarView = 'date';
 
     if (this.props.mode === 'month') {
       view = 'month';
@@ -107,7 +118,7 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
 
     this.state = {
       value,
-      selectedValue: props.selectedValue || value,
+      selectedValue: 'selectedValue' in props ? props.selectedValue : value,
 
       /**
        * 年份表格页面
@@ -125,7 +136,7 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: CalendarProps) {
     if (!shallowEqual(prevProps, this.props)) {
       let { value } = this.props;
       const { selectedValue } = this.props;
@@ -145,7 +156,7 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
     }
   }
 
-  onSelect = (value, cause: { source: string }) => {
+  onSelect = (value: DateValue, cause: DateSelectCause) => {
     if (value) {
       this.setValue(value);
     }
@@ -156,18 +167,18 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
     this.onSelect(null, {
       source: 'clearButton',
     });
-    this.props.onClear();
+    this.props.onClear?.();
   };
   onOk = () => {
     const { value } = this.state;
-    this.props.onOk(value);
+    this.props.onOk?.(value);
   };
-  onDateTableSelect = value => {
+  onDateTableSelect = (value: Moment) => {
     this.onSelect(value, {
       source: 'dateTable',
     });
   };
-  onSelectTime = value => {
+  onSelectTime = (value: DateValue) => {
     this.onSelect(value, {
       source: 'timePicker',
     });
@@ -186,7 +197,7 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
       source: 'tomorrowButton',
     });
   };
-  setValue = value => {
+  setValue = (value: Moment) => {
     const originalValue = this.state.value;
 
     if (!('value' in this.props)) {
@@ -196,24 +207,21 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
     }
 
     if (originalValue !== value) {
-      this.props.onChange(value);
+      this.props.onChange?.(value);
     }
   };
-  setSelectedValue = (selectedValue, cause: { source: string }) => {
+  setSelectedValue = (selectedValue: DateValue, cause: DateSelectCause) => {
     if (!('selectedValue' in this.props)) {
       this.setState({
         selectedValue,
       });
     }
 
-    this.props.onSelect(selectedValue, cause);
+    this.props.onSelect?.(selectedValue, cause);
   };
   renderRoot = (newProps: { children: React.JSX.Element }) => {
-    const { prefixCls, className, style } = this.props;
-    const classes = {
-      [prefixCls]: 1,
-      [className]: !!className,
-    };
+    const { prefixCls = 'Calendar', className, style } = this.props;
+    const classes = classNames(prefixCls, className);
     return (
       <div style={style} className={`${classNames(classes)}`}>
         {newProps.children}
@@ -224,7 +232,7 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
    * 切换当前视图
    */
 
-  setCurrentView = view => {
+  setCurrentView = (view: CalendarView) => {
     this.setState({
       view,
     });
@@ -275,8 +283,8 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
       });
     }
   };
-  yearChanged = (_event, value) => {
-    let view = 'year';
+  yearChanged = (_event: MouseEvent<HTMLLIElement>, value: number) => {
+    let view: CalendarView = 'year';
 
     if (this.props.mode === 'month') {
       view = 'month';
@@ -287,12 +295,12 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
     this.setState({
       view,
     });
-    this.onSelect(this.state.value.year(value), {
+    this.onSelect(this.state.value.clone().year(value), {
       source: 'yearTable',
     });
   };
-  monthChanged = (_event, value) => {
-    let view = 'month';
+  monthChanged = (_event: MouseEvent<HTMLLIElement>, value: number) => {
+    let view: CalendarView = 'month';
 
     if (this.props.mode === 'date' || this.props.mode === 'datetime') {
       view = 'date';
@@ -301,14 +309,21 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
     this.setState({
       view,
     });
-    this.onSelect(this.state.value.month(value - 1), {
+    this.onSelect(this.state.value.clone().month(value - 1), {
       source: 'monthTable',
     });
   };
 
   override render() {
     const props = this.props;
-    const { locale, prefixCls, timePicker, disabledDate, showMinute = true, showSecond = false } = props;
+    const {
+      locale: currentLocale = locale,
+      prefixCls = 'Calendar',
+      timePicker,
+      disabledDate,
+      showMinute = true,
+      showSecond = false,
+    } = props;
     const state = this.state;
     const { value, selectedValue } = state;
     let table: React.JSX.Element | null = null;
@@ -316,7 +331,7 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
     if (this.state.view === 'date') {
       table = (
         <DateTable
-          locale={locale}
+          locale={currentLocale}
           value={value}
           disabledDate={disabledDate}
           selectedValue={selectedValue}
@@ -329,8 +344,8 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
       table = (
         <MonthTable
           value={month}
-          onChange={(event, _value, data) => {
-            this.monthChanged(event, _value, data);
+          onChange={(event, _value) => {
+            this.monthChanged(event, _value);
           }}
         />
       );
@@ -341,8 +356,8 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
         <YearTable
           value={year}
           page={this.state.yearPage}
-          onChange={(event, _value, data) => {
-            this.yearChanged(event, _value, data);
+          onChange={(event, _value) => {
+            this.yearChanged(event, _value);
           }}
         />
       );
@@ -359,17 +374,17 @@ const UnwrappedCalendar = class Calendar extends Component<any, any> {
             openView={view => {
               this.setCurrentView(view);
             }}
-            goBack={event => {
-              this.goBack(event);
+            goBack={() => {
+              this.goBack();
             }}
-            goForward={event => {
-              this.goForward(event);
+            goForward={() => {
+              this.goForward();
             }}
           />
           <div className={`${prefixCls}-body`}>{table}</div>
 
           <CalendarFooter
-            locale={locale}
+            locale={currentLocale}
             prefixCls={prefixCls}
             mode={this.props.mode}
             view={this.state.view}

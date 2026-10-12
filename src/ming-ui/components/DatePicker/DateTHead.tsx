@@ -1,16 +1,17 @@
 import { Component } from 'react';
 import moment from 'moment';
+import type { DateTableProps } from './types';
 
 const DATE_COL_COUNT = 7;
 
-class DateTHead extends Component<any, any> {
+class DateTHead extends Component<Pick<DateTableProps, 'value' | 'prefixCls'>> {
   override render() {
     const props = this.props;
     const value = props.value;
     const localeData = value.localeData();
     const prefixCls = props.prefixCls;
-    const veryShortWeekdays = [];
-    const weekDays = [];
+    const veryShortWeekdays: string[] = [];
+    const weekDays: string[] = [];
     const firstDayOfWeek = localeData.firstDayOfWeek();
     const now = moment();
 

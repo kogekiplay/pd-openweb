@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
+import defaultLocale from './locale/zh_CN';
+import type { CalendarPartProps } from './types';
 
-function formatMonth(month) {
+function formatMonth(month: number) {
   month = month + 1;
   if (month < 10) {
     return `0${month}`;
@@ -10,7 +12,13 @@ function formatMonth(month) {
   return month;
 }
 
-const CalendarHeader = ({ prefixCls, value, onValueChange, locale, direction }) => {
+const CalendarHeader = ({
+  prefixCls,
+  value,
+  onValueChange,
+  locale = defaultLocale,
+  direction,
+}: Pick<CalendarPartProps, 'prefixCls' | 'value' | 'onValueChange' | 'locale' | 'direction'>) => {
   let beginEnd;
 
   if (direction === 'left') {
@@ -26,7 +34,7 @@ const CalendarHeader = ({ prefixCls, value, onValueChange, locale, direction }) 
       <Icon
         icon="arrow-left-border"
         className={`${prefixCls}-prev-month-btn`}
-        onClick={() => onValueChange(value.clone().add(-1, 'months'))}
+        onClick={() => onValueChange?.(value.clone().add(-1, 'months'))}
       />
       <div className={`${prefixCls}-title`}>
         {beginEnd && <span className={`${prefixCls}-beginEnd`}>{`${beginEnd}: `}</span>}
@@ -35,7 +43,7 @@ const CalendarHeader = ({ prefixCls, value, onValueChange, locale, direction }) 
       <Icon
         icon="arrow-right-border"
         className={`${prefixCls}-next-month-btn`}
-        onClick={() => onValueChange(value.clone().add(1, 'months'))}
+        onClick={() => onValueChange?.(value.clone().add(1, 'months'))}
       />
     </div>
   );

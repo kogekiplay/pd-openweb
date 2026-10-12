@@ -1,26 +1,25 @@
 import { Component } from 'react';
+import type { MouseEvent } from 'react';
 import PropTypes from 'prop-types';
+import type { NumericTableProps } from './types';
 
-class YearTable extends Component<any, any> {
+class YearTable extends Component<NumericTableProps> {
+  static defaultProps = { value: null, page: null, onChange: () => {} };
   /**
    * 渲染列表
    */
   renderList = () => {
     const list = [];
-    let value = this.props.value;
-
-    if (value === undefined) {
-      value = new Date().getFullYear();
-    }
+    const value = this.props.value ?? new Date().getFullYear();
 
     let page = this.props.page;
 
-    if (page === undefined) {
+    if (page == null) {
       page = value % 16 ? 16 * Math.floor(value / 16) + 1 : 16 * (Math.floor(value / 16) - 1) + 1;
     }
 
     for (let i = 0; i < 16; i++) {
-      const item = this.props.page + i;
+      const item = page + i;
       let className = '';
 
       if (this.props.value !== undefined && item === this.props.value) {
@@ -46,7 +45,7 @@ class YearTable extends Component<any, any> {
   /**
    * 选择年
    */
-  itemOnClick = (event, year) => {
+  itemOnClick = (event: MouseEvent<HTMLLIElement>, year: number) => {
     if (year !== this.props.value && this.props.onChange) {
       this.props.onChange(event, year, {
         prevValue: this.props.value,
@@ -79,12 +78,6 @@ YearTable.propTypes = {
    * data.prevValue {number} - 改变前的年份
    */
   onChange: PropTypes.func,
-};
-
-YearTable.defaultProps = {
-  value: null,
-  page: null,
-  onChange: () => {},
 };
 
 export default YearTable;

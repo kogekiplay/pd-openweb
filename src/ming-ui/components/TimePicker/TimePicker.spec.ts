@@ -79,7 +79,11 @@ function fixture(revision?: string) {
     );
   const Icon = (props: Record<string, unknown>) => React.createElement('i', { className: props['className'] });
   const Dropdown = (props: Record<string, unknown>) =>
-    React.createElement('div', { className: 'dropdown' }, String(props['defaultValue'] || ''));
+    React.createElement(
+      'div',
+      { className: 'dropdown' },
+      String(('value' in props ? props['value'] : props['defaultValue']) || ''),
+    );
   function load(name: string): Record<string, unknown> {
     const old = cache.get(name);
     if (old) return old;

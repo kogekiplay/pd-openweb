@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import type { Moment } from 'moment';
 import PropTypes from 'prop-types';
 import Calendar from './Calendar';
+import type { CalendarMode } from './footerTypes';
 import locale from './locale/zh_CN';
 import Picker from './Picker';
+import type { DatePickerProps, DateSelectCause, DateValue } from './types';
 
-class DatePicker extends Component<any, any> {
+class DatePicker extends Component<DatePickerProps> {
   static override propTypes = {
     /**
      * 占位符
@@ -101,7 +104,7 @@ class DatePicker extends Component<any, any> {
     popupParentNode: PropTypes.func,
   };
 
-  static defaultProps = {
+  static defaultProps: Partial<DatePickerProps> = {
     locale,
     placeholder: _l('请选择'),
     allowClear: true,
@@ -113,16 +116,16 @@ class DatePicker extends Component<any, any> {
 
     if (!format) {
       if (props.timePicker) {
-        format = props.locale.lang.dateTimeFormat;
+        format = (props.locale || locale).lang.dateTimeFormat;
       } else {
-        format = props.locale.lang.dateFormat;
+        format = (props.locale || locale).lang.dateFormat;
       }
     }
 
     return format;
   };
 
-  getDateString = (value, format) => {
+  getDateString = (value: DateValue, format: string) => {
     const props = this.props;
 
     if (value) {
@@ -136,7 +139,7 @@ class DatePicker extends Component<any, any> {
     const props = this.props;
     const { offsetTop, offsetLeft, panelCls, className, popupParentNode, children, defaultVisible, ...other } = props;
     const formatVal = this.getFormat();
-    let mode = this.props.timePicker ? 'datetime' : 'date';
+    let mode: CalendarMode = this.props.timePicker ? 'datetime' : 'date';
 
     if (this.props.mode) {
       mode = this.props.mode;
@@ -144,7 +147,7 @@ class DatePicker extends Component<any, any> {
 
     const calendar = <Calendar {...other} mode={mode} prefixCls="Calendar" />;
     return (
-      <Picker
+      <Picker<DateValue, [DateValue, DateSelectCause], [Moment]>
         calendar={calendar}
         panelCls={panelCls}
         className={className}

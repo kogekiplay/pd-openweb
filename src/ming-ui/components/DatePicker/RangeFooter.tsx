@@ -178,7 +178,7 @@ class RangeFooter extends Component<RangeFooterProps> {
       <span className={`${prefixCls}-timepicker`}>
         <span className={`${prefixCls}-timepicker-title`}>{_l('时段')}</span>
         <Dropdown
-          defaultValue={this.props.halfStart}
+          value={this.props.halfStart}
           data={halfOptions}
           onChange={value => {
             this.halfOnChange(value, 'start');
@@ -191,7 +191,7 @@ class RangeFooter extends Component<RangeFooterProps> {
       <span className={`${prefixCls}-timepicker`}>
         <span className={`${prefixCls}-timepicker-title`}>{_l('时段')}</span>
         <Dropdown
-          defaultValue={this.props.halfEnd}
+          value={this.props.halfEnd}
           data={halfOptions}
           onChange={value => {
             this.halfOnChange(value, 'end');
