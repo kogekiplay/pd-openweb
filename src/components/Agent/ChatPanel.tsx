@@ -1,22 +1,28 @@
-import Share from 'src/pages/worksheet/components/Share';
-import SharePopup from 'src/pages/Mobile/components/SharePopup';
-import { Button, Checkbox } from 'ming-ui/antd-components';
-import { buildSessionShareProps } from './sessionShare';
-import { getSessionMessageGroups, alignSessionMessageIds, getFeedbackTraceId } from './sessionSelection';
-import { ChartSaveProvider } from './ui/embed/chartSaveContext';
-import useAgentFeedback from './ui/Feedback';
-import { HelpComposerBar, TransferHumanDialog, fetchHelpSessionShareUrl, openCustomerService } from './ui/TransferHuman';
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { BgIconButton } from 'ming-ui';
+import { Button, Checkbox } from 'ming-ui/antd-components';
 import projectAjax from 'src/api/project';
 import AddedFiles from 'src/components/Mingo/ChatBot/components/AddedFiles';
 import MingoAttachmentUploader from 'src/components/Mingo/ChatBot/components/AttachmentUploader';
 import { upgradeVersionDialog } from 'src/components/upgradeVersion';
+import SharePopup from 'src/pages/Mobile/components/SharePopup';
+import Share from 'src/pages/worksheet/components/Share';
 import { browserIsMobile, emitter, pathCompletion } from 'src/utils/common';
-import { useAgentBus, useAgentEvent } from './agentBus';
+import { useAgentBus, useAgentEvent, useDecodedAgentEvent } from './agentBus';
 import type { AgentBus } from './agentBus';
+import {
+  decodeAppNameEvent,
+  decodeAskReply,
+  decodeBuilderEdit,
+  decodeBuilderOpenEvent,
+  decodeFilesEvent,
+  decodeGenerateEvent,
+  decodePlanMetaEvent,
+  decodePromptEvent,
+} from './agentEventPayloads';
+import type { BuilderEdit, PendingAgentEdit } from './agentEventPayloads';
 import {
   AGENT_ATTACHMENT_MIME_TYPES,
   AGENT_HEADER_EVENT,
@@ -38,6 +44,8 @@ import {
 import { clearAnonHandoff, isCaptchaCancelled, PROD_AGENT, requestAnonymousVoiceToken } from './anonymous';
 import AppBuilder from './AppBuilder';
 import { FILE_ENTRIES } from './AppBuilder/fileRegistry';
+import { fileArray, isFileRecord } from './AppBuilder/fileTypes';
+import type { PlanFiles } from './AppBuilder/planTypes';
 import { fetchAppCandidates } from './appSource';
 import {
   composeAppContext,
@@ -47,6 +55,8 @@ import {
   isAppListPage,
 } from './buildContext';
 import { formatPartTs, IS_DEBUG, logSseEvent } from './debug';
+import { alignSessionMessageIds, getFeedbackTraceId, getSessionMessageGroups } from './sessionSelection';
+import { buildSessionShareProps } from './sessionShare';
 import {
   appendEventToParts,
   applyCompletedAppName,
@@ -103,7 +113,15 @@ import {
   TRIGGER_BUILD_SUMMARY_SUFFIX,
 } from './ui/embed';
 import AskEmbed from './ui/embed/Ask';
+import { ChartSaveProvider } from './ui/embed/chartSaveContext';
+import useAgentFeedback from './ui/Feedback';
 import ModifyPlanComposer from './ui/ModifyPlanComposer';
+import {
+  fetchHelpSessionShareUrl,
+  HelpComposerBar,
+  openCustomerService,
+  TransferHumanDialog,
+} from './ui/TransferHuman';
 
 const ASSISTANT_NAME = 'Mingo';
 // 不展示信用点用量的 agent：help-agent（帮助/答疑）不计费，气泡上不显示费用、也不轮询用量。
@@ -510,7 +528,7 @@ export default function ChatPanel({
   const [draft, setDraft] = useState('');
   const [draftAttachments, setDraftAttachments] = useState<ChatAttachment[]>([]);
   // 卡片「修改」聚合的待提交修改：1 条→填入输入框纯文本；≥2 条→输入框上方聚合成「修改搭建计划」chip
-  const [pendingEdits, setPendingEdits] = useState<any[]>([]);
+  const [pendingEdits, setPendingEdits] = useState<PendingAgentEdit[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [appBuilderVisible, setAppBuilderVisible] = useState(initialAppBuilderVisible);
   // 落地页左侧会话列表是否收起（由 AgentLand 广播）：决定中栏 AppBuilder 左上角是否显示「展开会话列表」icon
@@ -532,7 +550,7 @@ export default function ChatPanel({
   // 成功路径 *-completed 清；失败只会有 terminal error（无 *-completed），故 error/completed 也要兜底清空。
   const [extracting, setExtracting] = useState({ doc: 0, image: 0 });
 
-  const filesRef = useRef<Record<string, any>>({});
+  const filesRef = useRef<PlanFiles>({});
   // 「生成应用」发起中闸：预检为异步（await 工作表上限接口），在这段窗口内 submitting 尚未置位、
   // 按钮也还没变「已搭建」，靠它挡住重复点击，避免并发预检 / 发起两次搭建。发起完成（提交或被拒）即放开。
   const buildKickoffRef = useRef(false);
@@ -623,7 +641,7 @@ export default function ChatPanel({
     const file = filesRef.current && filesRef.current['/jsons/worksheets.json'];
     const parsed = file && file.parsed;
 
-    return Array.isArray(parsed) ? parsed.filter((i: any) => i && i.type === 'worksheet').length : 0;
+    return fileArray(parsed).filter(item => isFileRecord(item) && item['type'] === 'worksheet').length;
   }
 
   // 点「生成应用」前的预检：组织无创建应用权限、或「已用 + 本次计划」工作表数会超组织上限时拦截，
@@ -712,9 +730,9 @@ export default function ChatPanel({
   useAgentEvent('builder:open-preview', () => {
     if (!disableAppBuilder) revealAppBuilder();
   });
-  useAgentEvent('builder:open', (payload: any = {}) => {
+  useDecodedAgentEvent('builder:open', decodeBuilderOpenEvent, payload => {
     const { artifactId, versionId, name, versionLabel, source, appId, built } = payload || {};
-    let loadFilesPromise: Promise<any> = Promise.resolve();
+    let loadFilesPromise: Promise<unknown> = Promise.resolve();
     // 历史已搭建版本：透传 appId + built，让 AppBuilder 还原完成态（Sidebar「打开应用」/ Header「已使用 v* 搭建」）；
     // built 为显式布尔，切回未搭建版本时（built=false）由 AppBuilder 清掉残留的 appId / 完成态
     const appMetaPayload = { name, versionLabel, artifactId, versionId, appId, built };
@@ -743,14 +761,14 @@ export default function ChatPanel({
 
     if (!disableAppBuilder) revealAppBuilder();
   });
-  useAgentEvent('builder:request-prompt', ({ text } = {}) => text && setDraft(text));
-  useAgentEvent('builder:submit-prompt', ({ text } = {}) => {
+  useDecodedAgentEvent('builder:request-prompt', decodePromptEvent, ({ text }) => text && setDraft(text));
+  useDecodedAgentEvent('builder:submit-prompt', decodePromptEvent, ({ text }) => {
     if (text) submitPrompt(text);
   });
   // mingo_ask 提问卡作答提交：打包成 ask_reply embed 作为一条用户消息发回。
   // 续上「提问的那个 agent」（最后一条 assistant 消息的 agentName）、不重路由，仅本次生效；
   // 未捕获到 agentName（老后端/缺 route 事件）则回退到正常路由，无回归。
-  useAgentEvent('ask:submit', ({ answers } = {}) => {
+  useDecodedAgentEvent('ask:submit', decodeAskReply, ({ answers }) => {
     if (!Array.isArray(answers) || !answers.length) return;
     const askMsg = messages[messages.length - 1];
     const continueAgent = askMsg && askMsg.role === 'assistant' ? askMsg.agentName : undefined;
@@ -759,22 +777,23 @@ export default function ChatPanel({
   });
   // 卡片「修改」入口：累加到 pendingEdits（不直接发送）。
   // 同一卡片二次修改时替换原条目（而非追加），保证一卡一条、icon 回显最新输入。
-  useAgentEvent('builder:add-edit', ({ module, card, text } = {}) => {
+  useDecodedAgentEvent('builder:add-edit', decodeBuilderEdit, ({ module, card, text }) => {
     if (!text) return;
     setPendingEdits(prev => {
       const idx = prev.findIndex(e => e.module === module && e.card === card);
       if (idx === -1) return [...prev, { id: uid('edit'), module, card, text }];
       const next = [...prev];
-      next[idx] = { ...next[idx], text };
+      const existing = next[idx];
+      if (existing) next[idx] = { ...existing, text };
       return next;
     });
   });
-  useAgentEvent('builder:files-sync', ({ files } = {}) => {
+  useDecodedAgentEvent('builder:files-sync', decodeFilesEvent, ({ files }) => {
     if (!files) return;
 
     filesRef.current = files;
   });
-  useAgentEvent('app:meta', ({ name, versionLabel } = {}) => {
+  useDecodedAgentEvent('app:meta', decodeAppNameEvent, ({ name, versionLabel }) => {
     if (name) {
       appMetaRef.current.name = name;
       setCurrentAppName(name);
@@ -783,27 +802,31 @@ export default function ChatPanel({
     // 激活版本切换（实时提交 / 点击历史卡片打开版本）时更新，驱动 plan-card 选中态
     if (versionLabel) setActiveVersionLabel(versionLabel);
   });
-  useAgentEvent('plan-card:meta', ({ artifactId, versionId, appIcon, appColor, appName } = {}) => {
-    if (!artifactId || !versionId) return;
+  useDecodedAgentEvent(
+    'plan-card:meta',
+    decodePlanMetaEvent,
+    ({ artifactId, versionId, appIcon, appColor, appName }) => {
+      if (!artifactId || !versionId) return;
 
-    setMessages(cur =>
-      cur.map(m => ({
-        ...m,
-        parts: (m.parts || []).map(p =>
-          p.kind === 'plan-card' && p.artifactId === artifactId && p.versionId === versionId
-            ? {
-                ...p,
-                appMetaResolved: true,
-                appIcon: appIcon || p.appIcon || '',
-                appColor: appColor || p.appColor || '',
-                name: appName || p.name || '',
-              }
-            : p,
-        ),
-      })),
-    );
-  });
-  useAgentEvent('builder:generate', ({ files, source } = {}) => {
+      setMessages(cur =>
+        cur.map(m => ({
+          ...m,
+          parts: (m.parts || []).map(p =>
+            p.kind === 'plan-card' && p.artifactId === artifactId && p.versionId === versionId
+              ? {
+                  ...p,
+                  appMetaResolved: true,
+                  appIcon: appIcon || p.appIcon || '',
+                  appColor: appColor || p.appColor || '',
+                  name: appName || p.name || '',
+                }
+              : p,
+          ),
+        })),
+      );
+    },
+  );
+  useDecodedAgentEvent('builder:generate', decodeGenerateEvent, ({ files, source }) => {
     if (files) filesRef.current = files;
     // 匿名态不能真正搭建：点「生成应用」交给外部环境处理（官网单页会按 isSingleMingoPlan 分流链接）
     if (anonymous) {
@@ -1198,7 +1221,18 @@ export default function ChatPanel({
     if (event.eventName === 'completed') {
       const backendMessageId = stringValue(readField(event.payload, 'messageId'));
       const completedTraceId = stringValue(readField(event.payload, 'traceId')) || roundTraceIdRef.current || '';
-      if (backendMessageId || completedTraceId) setMessages(current => current.map(message => message.id === assistantId ? { ...message, ...(backendMessageId ? { messageId: backendMessageId } : {}), ...(completedTraceId ? { traceId: completedTraceId } : {}) } : message));
+      if (backendMessageId || completedTraceId)
+        setMessages(current =>
+          current.map(message =>
+            message.id === assistantId
+              ? {
+                  ...message,
+                  ...(backendMessageId ? { messageId: backendMessageId } : {}),
+                  ...(completedTraceId ? { traceId: completedTraceId } : {}),
+                }
+              : message,
+          ),
+        );
       // plan 漂移确认：这是 halt 信号而非真正收尾，drift 卡片已由 workflow-plan-drift-detected 渲染，
       // 不做 build 收尾（不盖 finishedAt、不切 build:phase=completed），等用户在卡片上二选一。
       if (stringValue(readField(event.payload.data, 'status')) === 'awaiting_plan_drift_confirmation') {
@@ -1571,7 +1605,7 @@ export default function ChatPanel({
   // extraText 来自主发送按钮（编辑器实时文本，最可靠）；从 chip 弹窗「提交修改」进入时无参，回退取 draft。
   function handleSubmitEdits(extraText?: string) {
     if (!pendingEdits.length) return;
-    const items = pendingEdits.map(({ module, card, text }) => ({ module, card, text }));
+    const items: BuilderEdit[] = pendingEdits.map(({ module, card, text }) => ({ module, card, text }));
     const extra = (typeof extraText === 'string' ? extraText : draft || '').trim();
     if (extra) items.push({ text: extra });
     // 改的是「已有计划」，必须点名 plan agent、不重路由，仅本次生效：否则登录态默认 forceReroute，
@@ -2117,229 +2151,307 @@ export default function ChatPanel({
       setMessages(source);
     }
     const ids = getSessionMessageGroups(source).find(group => group.includes(messageId)) || [messageId];
-    if (ids.length > 100) { alert(_l('最多分享 %0 条消息', 100), 3); return; }
+    if (ids.length > 100) {
+      alert(_l('最多分享 %0 条消息', 100), 3);
+      return;
+    }
     setSelectedShareIds(ids);
   }
   function toggleShareMessage(messageId: string) {
     const ids = shareGroups.find(group => group.includes(messageId)) || [messageId];
     const selected = ids.some(id => selectedShareIds.includes(id));
-    const next = selected ? selectedShareIds.filter(id => !ids.includes(id)) : [...new Set([...selectedShareIds, ...ids])];
-    if (next.length > 100) { alert(_l('最多分享 %0 条消息', 100), 3); return; }
+    const next = selected
+      ? selectedShareIds.filter(id => !ids.includes(id))
+      : [...new Set([...selectedShareIds, ...ids])];
+    if (next.length > 100) {
+      alert(_l('最多分享 %0 条消息', 100), 3);
+      return;
+    }
     setSelectedShareIds(next);
   }
-  const shareProps = buildSessionShareProps({ sessionId, title: shareTitle, projectId: getContextProjectId(), messageIds: selectedShareIds, groupCount: shareGroups.filter(group => group.some(id => selectedShareIds.includes(id))).length });
+  const shareProps = buildSessionShareProps({
+    sessionId,
+    title: shareTitle,
+    projectId: getContextProjectId(),
+    messageIds: selectedShareIds,
+    groupCount: shareGroups.filter(group => group.some(id => selectedShareIds.includes(id))).length,
+  });
   async function transferToHuman() {
-    if (!messages.length || anonymous) { openCustomerService(); return; }
-    try { setTransferUrl(await fetchHelpSessionShareUrl(sessionId)); } catch { alert(_l('分享失败'), 2); }
+    if (!messages.length || anonymous) {
+      openCustomerService();
+      return;
+    }
+    try {
+      setTransferUrl(await fetchHelpSessionShareUrl(sessionId));
+    } catch {
+      alert(_l('分享失败'), 2);
+    }
   }
   return (
     <ChartSaveProvider value={{ canSave: !anonymous && !helpMode, projectId: getContextProjectId() }}>
-    <Wrap $dock={builderSplit}>
-      <ConversationArea>
-        {shareEnabled && messages.length > 0 && !submitting && <div className="flexRow alignItemsCenter pAll8" style={{ gap: 12 }}><Button type="text" onClick={() => { setSelectedShareIds([]); setShareVisible(true); }}>{_l('分享对话')}</Button>{selectedShareIds.length > 0 && <><Button type="primary" onClick={() => setShareVisible(true)}>{_l('分享所选内容')}</Button><Button onClick={() => setSelectedShareIds([])}>{_l('取消')}</Button></>}</div>}
-        <Conversation
-          autoScroll={submitting}
-          scrollBottomSignal={historyScrollSignal}
-          emptyState={
-            <EmptyState>
-              <div className="title">{_l('开始一段新的 AI 会话')}</div>
-              <div>{_l('描述你想做的事，AI 会自动调用合适的 agent 完成任务。')}</div>
-            </EmptyState>
-          }
-        >
-          <CenteredMessages $topInset={contentTopInset}>
-            {historyLoading && !messages.length ? (
-              <ConversationSkeleton />
-            ) : (
-              messages.map(message => (
-                <div key={message.id} className="flexRow" style={{ gap: 8 }} >
-                {selectedShareIds.length > 0 && message.messageId && <Checkbox checked={selectedShareIds.includes(message.messageId)} onChange={() => toggleShareMessage(message.messageId!)} />}
-                <div className="flex" style={{ minWidth: 0 }}><MessageRow
-                  key={message.id}
-                  message={message}
-                  isLast={message.id === lastMessageId}
-                  submitting={submitting}
-                  onShare={shareEnabled && message.messageId ? () => { void shareFromMessage(message.messageId!); } : undefined}
-                  onFeedback={!anonymous && !helpMode && getFeedbackTraceId(message) ? () => feedback.open({ traceId: getFeedbackTraceId(message), projectId: getContextProjectId() }) : undefined}
-                  onRetry={retryAssistant}
-                  onConfirmPlanDrift={sendPlanDriftConfirmation}
-                  onConfirmRebuild={sendRebuildConfirmation}
-                  onRefreshUsage={handleRefreshUsage}
-                  bus={bus}
-                  currentAppName={currentAppName}
-                  activeVersionLabel={activeVersionLabel}
-                  loadingHint={loadingHint}
-                /></div></div>
-              ))
-            )}
-          </CenteredMessages>
-        </Conversation>
-      </ConversationArea>
-
-      {!showDockedAsk && !askStreaming && (
-        <ComposerArea>
-          {interceptError && (
-            <ResponseError
-              error={interceptError.message}
-              errorCode={interceptError.errorCode}
-              onClose={() => setInterceptError(null)}
-              onRetry={() => {
-                setInterceptError(null);
-                if (onRetryIntercept) {
-                  onRetryIntercept();
-                } else {
-                  retryLastMessage();
-                }
-              }}
-              // 信用点不足 → 复用全站「立即充值」弹窗（参见 Form/Search/OCR 等 code===20008 处理）
-              onRecharge={() => {
-                setInterceptError(null);
-                const projectId = getContextProjectId();
-                upgradeVersionDialog({
-                  projectId,
-                  okText: _l('立即充值'),
-                  hint: _l('信用点不足，请联系管理员充值'),
-                  explainText: <div></div>,
-                  onOk: () => {
-                    location.href = pathCompletion(`/admin/valueaddservice/${projectId}`);
-                  },
-                });
-              }}
-              // 版本/配额不足 → 复用全站「立即升级」弹窗（默认跳 /admin/upgradeservice）
-              onUpgrade={() => {
-                setInterceptError(null);
-                upgradeVersionDialog({
-                  projectId: getContextProjectId(),
-                  okText: _l('立即升级'),
-                  hint: _l('当前版本无法继续搭建应用，请升级版本后继续'),
-                });
-              }}
-            />
+      <Wrap $dock={builderSplit}>
+        <ConversationArea>
+          {shareEnabled && messages.length > 0 && !submitting && (
+            <div className="flexRow alignItemsCenter pAll8" style={{ gap: 12 }}>
+              <Button
+                type="text"
+                onClick={() => {
+                  setSelectedShareIds([]);
+                  setShareVisible(true);
+                }}
+              >
+                {_l('分享对话')}
+              </Button>
+              {selectedShareIds.length > 0 && (
+                <>
+                  <Button type="primary" onClick={() => setShareVisible(true)}>
+                    {_l('分享所选内容')}
+                  </Button>
+                  <Button onClick={() => setSelectedShareIds([])}>{_l('取消')}</Button>
+                </>
+              )}
+            </div>
           )}
-          {helpMode && enableHumanSupport && <HelpComposerBar onTransfer={() => { void transferToHuman(); }} />}
-          <PromptInput
-            className={promptInputClassName}
-            ref={promptInputRef}
-            autoFocus={autoFocus}
-            value={draft}
-            projectId={mentionEnabled ? getContextProjectId() : undefined}
-            enableMention={mentionEnabled}
-            forceEnableVoice={forceEnableVoice}
-            getVoiceAuthConfig={
-              anonymous
-                ? () =>
-                    requestAnonymousVoiceToken(sessionId, {
-                      onSessionRefresh: setSessionId,
-                    })
-                : undefined
+          <Conversation
+            autoScroll={submitting}
+            scrollBottomSignal={historyScrollSignal}
+            emptyState={
+              <EmptyState>
+                <div className="title">{_l('开始一段新的 AI 会话')}</div>
+                <div>{_l('描述你想做的事，AI 会自动调用合适的 agent 完成任务。')}</div>
+              </EmptyState>
             }
-            onChange={setDraft}
-            onSubmit={(text, mentions) => {
-              const composed = typeof text === 'string' ? text : draft;
-
-              // 有待提交修改时：把多条修改 + 当前输入文字一并打包成 modify_plan 发送，避免只发文字、漏带修改
-              if (pendingEdits.length) {
-                handleSubmitEdits(composed);
-                return;
-              }
-
-              submitPrompt(composed, undefined, mentions);
-            }}
-            onStop={handleStop}
-            submitting={submitting}
-            // 有待提交修改时即使输入框为空也允许发送（直接提交聚合修改，无需先手敲文字）
-            canSendWhenEmpty={pendingEdits.length >= 1}
-            placeholder={
-              // runtime 指定优先；否则已有消息流（含从历史进入还原的对话）统一提示「发消息」
-              promptPlaceholder ||
-              (messages.length
-                ? _l('发消息')
-                : anonymous
-                  ? _l('继续补充需求或修改方案')
-                  : inAppContext
-                    ? _l('对当前应用提问或继续搭建')
-                    : _l('@应用提问或开始搭建一个新应用'))
-            }
-            inputId={PROMPT_INPUT_ID}
-            mentionButtonIcon={promptMentionButtonIcon}
-            mentionButtonText={promptMentionButtonText}
-            // 必须输入文字才能发送：仅有附件（无正文）时保持发送禁用，不再因已上传附件放开 canSendWhenEmpty
-            attachments={
-              pendingEdits.length >= 1 || draftAttachments.length ? (
-                <React.Fragment>
-                  {pendingEdits.length >= 1 && (
-                    <ModifyPlanComposer edits={pendingEdits} onDelete={handleDeleteEdit} onSubmit={handleSubmitEdits} />
-                  )}
-                  {draftAttachments.length ? (
-                    <AddedFiles
-                      files={draftAttachments}
-                      onRemove={id => setDraftAttachments(prev => prev.filter(f => f.id !== id))}
-                    />
-                  ) : null}
-                </React.Fragment>
-              ) : null
-            }
-            attachmentSlot={
-              anonymous ? (
-                <AnonAttachmentSlot
-                  className={promptAttachmentButtonClassName}
-                  icon={promptAttachmentButtonIcon}
-                  sessionId={sessionId}
-                  files={draftAttachments}
-                  onChange={setDraftAttachments}
-                  onAfterAdd={() => setTimeout(() => promptInputRef.current && promptInputRef.current.focus(), 0)}
-                />
+          >
+            <CenteredMessages $topInset={contentTopInset}>
+              {historyLoading && !messages.length ? (
+                <ConversationSkeleton />
               ) : (
-                <AttachmentUploader
-                  buttonClassName={promptAttachmentButtonClassName}
-                  buttonIcon={promptAttachmentButtonIcon}
-                  files={draftAttachments}
-                  onChange={setDraftAttachments}
-                  inputId={PROMPT_INPUT_ID}
-                  onAfterAdd={() => setTimeout(() => promptInputRef.current && promptInputRef.current.focus(), 0)}
-                />
-              )
-            }
-          />
-        </ComposerArea>
-      )}
-      {showDockedAsk && (
-        <DockedAskLayer>
-          {/* key 绑定 会话 + 提问消息：切换会话/换一道 ask 时整卡重挂载，避免复用旧实例残留翻页进度与作答（导致旧 ask 不刷新/越界报错） */}
-          <AskEmbed key={`${sessionId}-${lastMessage.id}`} data={pendingAskData} docked />
-        </DockedAskLayer>
-      )}
-      {askStreaming && !showDockedAsk && (
-        <DockedAskLayer>
-          {/* 流式期：ask 围栏已出现但 JSON 未流完，先占位骨架；流完 !submitting 后无缝换成真卡 */}
-          <AskSkeleton docked />
-        </DockedAskLayer>
-      )}
+                messages.map(message => (
+                  <div key={message.id} className="flexRow" style={{ gap: 8 }}>
+                    {selectedShareIds.length > 0 && message.messageId && (
+                      <Checkbox
+                        checked={selectedShareIds.includes(message.messageId)}
+                        onChange={() => toggleShareMessage(message.messageId!)}
+                      />
+                    )}
+                    <div className="flex" style={{ minWidth: 0 }}>
+                      <MessageRow
+                        key={message.id}
+                        message={message}
+                        isLast={message.id === lastMessageId}
+                        submitting={submitting}
+                        onShare={
+                          shareEnabled && message.messageId
+                            ? () => {
+                                void shareFromMessage(message.messageId!);
+                              }
+                            : undefined
+                        }
+                        onFeedback={
+                          !anonymous && !helpMode && getFeedbackTraceId(message)
+                            ? () =>
+                                feedback.open({
+                                  traceId: getFeedbackTraceId(message),
+                                  projectId: getContextProjectId(),
+                                })
+                            : undefined
+                        }
+                        onRetry={retryAssistant}
+                        onConfirmPlanDrift={sendPlanDriftConfirmation}
+                        onConfirmRebuild={sendRebuildConfirmation}
+                        onRefreshUsage={handleRefreshUsage}
+                        bus={bus}
+                        currentAppName={currentAppName}
+                        activeVersionLabel={activeVersionLabel}
+                        loadingHint={loadingHint}
+                      />
+                    </div>
+                  </div>
+                ))
+              )}
+            </CenteredMessages>
+          </Conversation>
+        </ConversationArea>
 
-      {feedback.holder}
-      {transferUrl && <TransferHumanDialog url={transferUrl} onClose={() => setTransferUrl('')} />}
-      {shareVisible && (isMobile ? <SharePopup {...shareProps} onClose={() => setShareVisible(false)} /> : <Share {...shareProps} onClose={() => setShareVisible(false)} />)}
-      {historyVisible && (
-        <SessionHistory
-          currentSessionId={sessionId}
-          onSelect={handleSelectSession}
-          onDeleted={handleSessionDeleted}
-          onClose={() => setHistoryVisible(false)}
-        />
-      )}
+        {!showDockedAsk && !askStreaming && (
+          <ComposerArea>
+            {interceptError && (
+              <ResponseError
+                error={interceptError.message}
+                errorCode={interceptError.errorCode}
+                onClose={() => setInterceptError(null)}
+                onRetry={() => {
+                  setInterceptError(null);
+                  if (onRetryIntercept) {
+                    onRetryIntercept();
+                  } else {
+                    retryLastMessage();
+                  }
+                }}
+                // 信用点不足 → 复用全站「立即充值」弹窗（参见 Form/Search/OCR 等 code===20008 处理）
+                onRecharge={() => {
+                  setInterceptError(null);
+                  const projectId = getContextProjectId();
+                  upgradeVersionDialog({
+                    projectId,
+                    okText: _l('立即充值'),
+                    hint: _l('信用点不足，请联系管理员充值'),
+                    explainText: <div></div>,
+                    onOk: () => {
+                      location.href = pathCompletion(`/admin/valueaddservice/${projectId}`);
+                    },
+                  });
+                }}
+                // 版本/配额不足 → 复用全站「立即升级」弹窗（默认跳 /admin/upgradeservice）
+                onUpgrade={() => {
+                  setInterceptError(null);
+                  upgradeVersionDialog({
+                    projectId: getContextProjectId(),
+                    okText: _l('立即升级'),
+                    hint: _l('当前版本无法继续搭建应用，请升级版本后继续'),
+                  });
+                }}
+              />
+            )}
+            {helpMode && enableHumanSupport && (
+              <HelpComposerBar
+                onTransfer={() => {
+                  void transferToHuman();
+                }}
+              />
+            )}
+            <PromptInput
+              className={promptInputClassName}
+              ref={promptInputRef}
+              autoFocus={autoFocus}
+              value={draft}
+              projectId={mentionEnabled ? getContextProjectId() : undefined}
+              enableMention={mentionEnabled}
+              forceEnableVoice={forceEnableVoice}
+              getVoiceAuthConfig={
+                anonymous
+                  ? () =>
+                      requestAnonymousVoiceToken(sessionId, {
+                        onSessionRefresh: setSessionId,
+                      })
+                  : undefined
+              }
+              onChange={setDraft}
+              onSubmit={(text, mentions) => {
+                const composed = typeof text === 'string' ? text : draft;
 
-      {!disableAppBuilder &&
-        document.querySelector('#containerWrapper') &&
-        createPortal(
-          <AppBuilder
-            visible={appBuilderVisible}
-            isSingleMingoPlan={isSingleMingoPlan}
-            split={builderSplit}
-            sidebarCollapsed={sidebarCollapsed}
-          />,
-          document.querySelector('#containerWrapper'),
+                // 有待提交修改时：把多条修改 + 当前输入文字一并打包成 modify_plan 发送，避免只发文字、漏带修改
+                if (pendingEdits.length) {
+                  handleSubmitEdits(composed);
+                  return;
+                }
+
+                submitPrompt(composed, undefined, mentions);
+              }}
+              onStop={handleStop}
+              submitting={submitting}
+              // 有待提交修改时即使输入框为空也允许发送（直接提交聚合修改，无需先手敲文字）
+              canSendWhenEmpty={pendingEdits.length >= 1}
+              placeholder={
+                // runtime 指定优先；否则已有消息流（含从历史进入还原的对话）统一提示「发消息」
+                promptPlaceholder ||
+                (messages.length
+                  ? _l('发消息')
+                  : anonymous
+                    ? _l('继续补充需求或修改方案')
+                    : inAppContext
+                      ? _l('对当前应用提问或继续搭建')
+                      : _l('@应用提问或开始搭建一个新应用'))
+              }
+              inputId={PROMPT_INPUT_ID}
+              mentionButtonIcon={promptMentionButtonIcon}
+              mentionButtonText={promptMentionButtonText}
+              // 必须输入文字才能发送：仅有附件（无正文）时保持发送禁用，不再因已上传附件放开 canSendWhenEmpty
+              attachments={
+                pendingEdits.length >= 1 || draftAttachments.length ? (
+                  <React.Fragment>
+                    {pendingEdits.length >= 1 && (
+                      <ModifyPlanComposer
+                        edits={pendingEdits}
+                        onDelete={handleDeleteEdit}
+                        onSubmit={handleSubmitEdits}
+                      />
+                    )}
+                    {draftAttachments.length ? (
+                      <AddedFiles
+                        files={draftAttachments}
+                        onRemove={id => setDraftAttachments(prev => prev.filter(f => f.id !== id))}
+                      />
+                    ) : null}
+                  </React.Fragment>
+                ) : null
+              }
+              attachmentSlot={
+                anonymous ? (
+                  <AnonAttachmentSlot
+                    className={promptAttachmentButtonClassName}
+                    icon={promptAttachmentButtonIcon}
+                    sessionId={sessionId}
+                    files={draftAttachments}
+                    onChange={setDraftAttachments}
+                    onAfterAdd={() => setTimeout(() => promptInputRef.current && promptInputRef.current.focus(), 0)}
+                  />
+                ) : (
+                  <AttachmentUploader
+                    buttonClassName={promptAttachmentButtonClassName}
+                    buttonIcon={promptAttachmentButtonIcon}
+                    files={draftAttachments}
+                    onChange={setDraftAttachments}
+                    inputId={PROMPT_INPUT_ID}
+                    onAfterAdd={() => setTimeout(() => promptInputRef.current && promptInputRef.current.focus(), 0)}
+                  />
+                )
+              }
+            />
+          </ComposerArea>
         )}
-    </Wrap>
+        {showDockedAsk && (
+          <DockedAskLayer>
+            {/* key 绑定 会话 + 提问消息：切换会话/换一道 ask 时整卡重挂载，避免复用旧实例残留翻页进度与作答（导致旧 ask 不刷新/越界报错） */}
+            <AskEmbed key={`${sessionId}-${lastMessage.id}`} data={pendingAskData} docked />
+          </DockedAskLayer>
+        )}
+        {askStreaming && !showDockedAsk && (
+          <DockedAskLayer>
+            {/* 流式期：ask 围栏已出现但 JSON 未流完，先占位骨架；流完 !submitting 后无缝换成真卡 */}
+            <AskSkeleton docked />
+          </DockedAskLayer>
+        )}
+
+        {feedback.holder}
+        {transferUrl && <TransferHumanDialog url={transferUrl} onClose={() => setTransferUrl('')} />}
+        {shareVisible &&
+          (isMobile ? (
+            <SharePopup {...shareProps} onClose={() => setShareVisible(false)} />
+          ) : (
+            <Share {...shareProps} onClose={() => setShareVisible(false)} />
+          ))}
+        {historyVisible && (
+          <SessionHistory
+            currentSessionId={sessionId}
+            onSelect={handleSelectSession}
+            onDeleted={handleSessionDeleted}
+            onClose={() => setHistoryVisible(false)}
+          />
+        )}
+
+        {!disableAppBuilder &&
+          document.querySelector('#containerWrapper') &&
+          createPortal(
+            <AppBuilder
+              visible={appBuilderVisible}
+              isSingleMingoPlan={isSingleMingoPlan}
+              split={builderSplit}
+              sidebarCollapsed={sidebarCollapsed}
+            />,
+            document.querySelector('#containerWrapper'),
+          )}
+      </Wrap>
     </ChartSaveProvider>
   );
 }
@@ -2512,8 +2624,16 @@ function MessageRow({
           always={isLast}
           onRefresh={() => onRefreshUsage(message)}
         >
-          {onShare && <Button type="text" size="small" onClick={onShare}>{_l('分享')}</Button>}
-          {onFeedback && <Button type="text" size="small" onClick={onFeedback}>{_l('反馈')}</Button>}
+          {onShare && (
+            <Button type="text" size="small" onClick={onShare}>
+              {_l('分享')}
+            </Button>
+          )}
+          {onFeedback && (
+            <Button type="text" size="small" onClick={onFeedback}>
+              {_l('反馈')}
+            </Button>
+          )}
         </MessageMeta>
       )}
       {/* 用户消息只展示发送时间（无扣费）：整行最新一条常驻、旧消息 hover 才显现 */}

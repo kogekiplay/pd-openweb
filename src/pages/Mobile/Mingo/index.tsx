@@ -5,6 +5,7 @@ import { Icon, LoadDiv } from 'ming-ui';
 import { AgentBusProvider } from 'src/components/Agent/agentBus';
 import { mapAttachmentForRequest, readField, stringValue } from 'src/components/Agent/agentService';
 import { claimAnonymousSession, peekAnonHandoff } from 'src/components/Agent/anonymous';
+import type { FileMap } from 'src/components/Agent/AppBuilder/fileTypes';
 import ChatPanel from 'src/components/Agent/ChatPanel';
 import { useDailyBuildSuggestions } from 'src/components/Mingo/ChatBot/components/buildRecommender';
 import { TRY_TRY_LIST } from 'src/components/Mingo/ChatBot/components/tryTryList';
@@ -66,7 +67,7 @@ function isWideHistoryLayout() {
 
 export default function Mingo() {
   const promptInputRef = useRef(null);
-  const overviewFilesRef = useRef({});
+  const overviewFilesRef = useRef<FileMap>({});
   const anonymousProjectSheetOpenedRef = useRef(false);
   const isBuildAppMode = isCreateAppRoute();
   const [initialRoute] = useState(() => ({

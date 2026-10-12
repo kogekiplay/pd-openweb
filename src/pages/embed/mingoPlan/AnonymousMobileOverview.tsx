@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
+import type { FileMap } from 'src/components/Agent/AppBuilder/fileTypes';
 import OverviewPopup, { OverviewController } from 'src/pages/Mobile/Mingo/components/OverviewPopup';
 
 export interface AnonymousMobileOverviewProps {
@@ -6,7 +7,7 @@ export interface AnonymousMobileOverviewProps {
 }
 
 export default function AnonymousMobileOverview({ autoOpenOnReady = false }: AnonymousMobileOverviewProps) {
-  const filesRef = useRef({});
+  const filesRef = useRef<FileMap>({});
   const autoOpenedRef = useRef(false);
   const [visible, setVisible] = useState(false);
   const [content, setContent] = useState('');
@@ -19,7 +20,7 @@ export default function AnonymousMobileOverview({ autoOpenOnReady = false }: Ano
   }, []);
 
   const handleReadyChange = useCallback(
-    nextReady => {
+    (nextReady: boolean) => {
       setReady(nextReady);
       if (nextReady && autoOpenOnReady && !autoOpenedRef.current) {
         autoOpenedRef.current = true;
