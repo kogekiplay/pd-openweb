@@ -209,6 +209,7 @@ export default function AccessConditions(props) {
         checkedValue={accessType}
         data={ACCESS_CONDITION_ENUM}
         onChange={value => {
+          if (value === undefined) return;
           setAccessType(value);
           setIpRule([]);
           setHearderRule([{ index: 0, key: '', value: '' }]);

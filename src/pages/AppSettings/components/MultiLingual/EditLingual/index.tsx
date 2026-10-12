@@ -204,7 +204,7 @@ export default function Edit(props) {
                       ]}
                       checkedValue={fillType}
                       onChange={value => {
-                        setFillType(value);
+                        if (value !== undefined) setFillType(value);
                       }}
                     ></RadioGroup>
                   </div>

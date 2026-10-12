@@ -9,17 +9,17 @@ import './less/RadioGroup.less';
 export const SIZE_LIST = ['small', 'default', 'middle'] as const;
 export type RadioSize = (typeof SIZE_LIST)[number];
 
-export interface RadioProps<V = any> {
+export interface RadioProps<V = unknown> {
   /** 去掉右边距 */
   noMargin?: boolean | undefined;
   /** 显示的名称 */
   text?: ReactNode;
   /** 点击时原样交给 onClick */
-  value?: V;
+  value?: V | undefined;
   checked?: boolean | undefined;
   defaultChecked?: boolean | undefined;
   /** 点击（禁用时不触发），参数是 value */
-  onClick?: ((value: V) => void) | undefined;
+  onClick?: ((value: V | undefined) => void) | undefined;
   disabled?: boolean | undefined;
   /** 跟在 text 后面 */
   children?: ReactNode;
@@ -33,7 +33,7 @@ export interface RadioProps<V = any> {
   icon?: string | undefined;
 }
 
-class Radio<V = any> extends Component<RadioProps<V>, { checked: boolean | undefined }> {
+class Radio<V = unknown> extends Component<RadioProps<V>, { checked: boolean | undefined }> {
   static override propTypes = {
     /**
      * 是否没有margin
@@ -82,11 +82,11 @@ class Radio<V = any> extends Component<RadioProps<V>, { checked: boolean | undef
   };
 
   override state = {
-    checked: this.props.checked || this.props.defaultChecked,
+    checked: this.props.checked !== undefined ? this.props.checked : this.props.defaultChecked,
   };
 
   override componentDidUpdate(prevProps: RadioProps<V>) {
-    if (!shallowEqual(prevProps, this.props)) {
+    if (!shallowEqual(prevProps, this.props) && this.props.checked !== undefined) {
       this.setState({
         checked: this.props.checked,
       });
@@ -96,9 +96,10 @@ class Radio<V = any> extends Component<RadioProps<V>, { checked: boolean | undef
   handleClick = () => {
     const { onClick, value, disabled } = this.props;
     if (disabled) return;
+    if (this.props.checked === undefined) this.setState({ checked: true });
     if (isFunction(onClick)) {
       // value 是可选属性：没传时回调收到 undefined，和原来一样
-      onClick(value as V);
+      onClick(value);
     }
   };
 

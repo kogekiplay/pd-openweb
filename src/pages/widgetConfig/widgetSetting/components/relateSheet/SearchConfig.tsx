@@ -60,7 +60,9 @@ export default function ApiSearchConfig(props) {
   const [visible, setVisible] = useState(false);
 
   const searchableControls = formatControlsToDropdown(
-    controls.filter(item => TEXT_TYPE_CONTROL.some(type => type === item.type) && /^\w{24}$/.test(item.controlId || '')),
+    controls.filter(
+      item => TEXT_TYPE_CONTROL.some(type => type === item.type) && /^\w{24}$/.test(item.controlId || ''),
+    ),
   );
   const defaultSearchControl =
     get(
@@ -143,7 +145,7 @@ export default function ApiSearchConfig(props) {
               { value: '0', text: _l('模糊搜索'), disabled: isForbidEncry() },
             ]}
             onChange={value => {
-              setState({ searchtype: value });
+              if (value !== undefined) setState({ searchtype: value });
             }}
           />
         </div>
@@ -179,9 +181,7 @@ export default function ApiSearchConfig(props) {
                         popup={
                           <SelectControl
                             list={filterOnlyShowField(controls).filter(({ type, sourceControlType, controlId }) => {
-                              const ids = searchfilters.map(
-                                ({ controlId }) => controlId,
-                              );
+                              const ids = searchfilters.map(({ controlId }) => controlId);
                               return (
                                 _.includes(FASTFILTER_CONDITION_TYPE, type === 30 ? sourceControlType : type) &&
                                 !ids.includes(controlId)

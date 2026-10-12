@@ -423,7 +423,9 @@ export default function EditRuleDrawer(props) {
               size="middle"
               checkedValue={modelScope}
               data={MODEL_SCOPE_OPTIONS}
-              onChange={val => setState({ modelScope: val })}
+              onChange={val => {
+                if (val !== undefined) setState({ modelScope: val });
+              }}
               disableTitle
             />
             {modelScope === 'specific' && (
@@ -471,7 +473,9 @@ export default function EditRuleDrawer(props) {
               size="middle"
               checkedValue={appScope}
               data={APP_SCOPE_OPTIONS}
-              onChange={val => setState({ appScope: val })}
+              onChange={val => {
+                if (val !== undefined) setState({ appScope: val });
+              }}
               disableTitle
             />
             {appScope === 'specific' && (

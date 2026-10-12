@@ -71,7 +71,14 @@ export default function AddSubList(props) {
           )}
           <Support type={3} href="https://help.mingdao.com/worksheet/control-subform" text={_l('帮助')} />
         </div>
-        <RadioGroup vertical data={OPTIONS} checkedValue={createType} onChange={setType} />
+        <RadioGroup
+          vertical
+          data={OPTIONS}
+          checkedValue={createType}
+          onChange={value => {
+            if (value !== undefined) setType(value);
+          }}
+        />
         <div className="selectSheetWrap">
           {createType === '2' && (
             <SelectSheetFromApp
