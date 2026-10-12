@@ -1,16 +1,23 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { transformFileSync } = require('../../../../scripts/spec-harness.ts');
+const { transformFileSync, transformSync } = require('../../../../scripts/spec-harness.ts');
+const { execFileSync }: typeof import('node:child_process') = require('node:child_process');
 const lodash = require('lodash');
 global._l = (value: string) => value;
-function load(file: string, imports: Record<string, unknown>) {
+function load(file: string, imports: Record<string, unknown>, revision?: string) {
   const loaded: { exports: Record<string, unknown> } = { exports: {} };
   new Function(
     'module',
     'exports',
     'require',
-    transformFileSync(file, { plugins: ['@babel/plugin-transform-modules-commonjs'] }).code,
+    (revision
+      ? transformSync(
+          execFileSync('git', ['show', `${revision}:${path.relative(repo, file)}`], { cwd: repo, encoding: 'utf8' }),
+          { filename: file, plugins: ['@babel/plugin-transform-modules-commonjs'] },
+        )
+      : transformFileSync(file, { plugins: ['@babel/plugin-transform-modules-commonjs'] })
+    ).code,
   )(loaded, loaded.exports, (name: string) => {
     if (!(name in imports)) throw new Error('Unstubbed ' + name);
     return imports[name];
@@ -27,6 +34,14 @@ const controlCommon = load(path.join(repo, 'src/utils/controlCommon.ts'), {
   './advancedSettingBoundary': sourceBoundary,
 });
 const boundary = load(path.join(__dirname, 'advancedSettingBoundary.ts'), { 'src/utils/controlCommon': controlCommon });
+const dragConfig = load(path.join(repo, 'src/pages/widgetConfig/config/Drag.ts'), {});
+const scoreConfig = load(path.join(repo, 'src/pages/widgetConfig/config/score.ts'), { lodash });
+const widgetConfig = load(path.join(repo, 'src/pages/widgetConfig/config/widget.ts'), {
+  lodash,
+  uuid: require('uuid'),
+  './Drag': dragConfig,
+  './score': scoreConfig,
+});
 type ReadSetting = (data: { advancedSetting?: Record<string, unknown> }, key?: string | string[]) => unknown;
 const read = boundary.getWidgetAdvanceSetting as ReadSetting;
 const raw = controlCommon.getAdvanceSetting as ReadSetting;
@@ -83,10 +98,22 @@ for (const key of ['showtype', 'checktype', 'topshow', 'querytype', 'min', 'max'
 }
 for (const key of ['allowcountries', 'commcountries']) {
   const countries = [{ name: 'China', iso2: 'cn', dialCode: '86' }];
-  assert.deepStrictEqual(read({ advancedSetting: { [key]: JSON.stringify(countries) } }, key), countries, key + ' retains full telephone country objects');
+  assert.deepStrictEqual(
+    read({ advancedSetting: { [key]: JSON.stringify(countries) } }, key),
+    countries,
+    key + ' retains full telephone country objects',
+  );
 }
-assert.deepStrictEqual(read({ advancedSetting: { commcountries: '["CN","US"]' } }, 'commcountries'), ['CN', 'US'], 'area country identifiers remain strings');
-assert.deepStrictEqual(read({ advancedSetting: { defsource: '[{"cid":"","rcid":"","staticValue":3}]' } }, 'defsource'), [{ cid: '', rcid: '', staticValue: 3 }], 'numeric score defaults are not filtered out');
+assert.deepStrictEqual(
+  read({ advancedSetting: { commcountries: '["CN","US"]' } }, 'commcountries'),
+  ['CN', 'US'],
+  'area country identifiers remain strings',
+);
+assert.deepStrictEqual(
+  read({ advancedSetting: { defsource: '[{"cid":"","rcid":"","staticValue":3}]' } }, 'defsource'),
+  [{ cid: '', rcid: '', staticValue: 3 }],
+  'numeric score defaults are not filtered out',
+);
 const defaultRules = [{ type: 1, repeatType: 0, start: '', length: 0, format: '' }];
 assert.strictEqual(
   read({}, 'increase') || defaultRules,
@@ -98,6 +125,123 @@ assert.deepStrictEqual(
   [],
   'explicit empty rules remain explicit',
 );
+function field(value: unknown, name: string): unknown {
+  if (value === null || typeof value !== 'object') throw new TypeError('Missing observed producer field');
+  return Reflect.get(value, name);
+}
+const autoIdDefaults = field(field(widgetConfig.DEFAULT_DATA, 'AUTO_ID'), 'advancedSetting');
+const actualIncrease = field(autoIdDefaults, 'increase');
+assert.strictEqual(typeof actualIncrease, 'string');
+const actualRules: unknown = JSON.parse(String(actualIncrease));
+if (!Array.isArray(actualRules)) throw new TypeError('Expected built-in auto-number rules');
+assert.strictEqual(
+  field(actualRules[0], 'start'),
+  null,
+  'Exercise the built-in auto-number producer, not a synthesized empty string',
+);
+assert.deepStrictEqual(read({ advancedSetting: { increase: actualIncrease } }, 'increase'), actualRules);
+assert.strictEqual(
+  read({ advancedSetting: { increase: actualRules } }, 'increase'),
+  actualRules,
+  'Already decoded null defaults retain identity',
+);
+for (const start of [null, '', 0, 1, '007', undefined]) {
+  const value = [{ type: 1, repeatType: 0, start, length: 0, format: '' }];
+  assert.deepStrictEqual(
+    read({ advancedSetting: { increase: JSON.stringify(value) } }, 'increase'),
+    JSON.parse(JSON.stringify(value)),
+  );
+}
+for (const start of [true, {}, []]) {
+  assert.throws(
+    () => read({ advancedSetting: { increase: JSON.stringify([{ type: 1, start }]) } }, 'increase'),
+    /Invalid widget setting list/,
+  );
+}
+const before = process.env['WIDGET_SETTING_BEFORE_REV'];
+if (before) {
+  const previous = load(
+    path.join(__dirname, 'advancedSettingBoundary.ts'),
+    { 'src/utils/controlCommon': controlCommon },
+    before,
+  );
+  const previousRead = previous.getWidgetAdvanceSetting as ReadSetting;
+  assert.throws(
+    () => previousRead({ advancedSetting: { increase: actualIncrease } }, 'increase'),
+    /Invalid widget setting list/,
+    'The actual producer reproduces the production exception before the fix',
+  );
+}
+
+// Execute the actual pre-save and formatting functions with their real setting decoder.
+const dataSource = fs.readFileSync(path.join(__dirname, 'data.tsx'), 'utf8');
+const saveStart = dataSource.indexOf('export const checkWidgetBeforeSave =');
+const saveEnd = dataSource.indexOf('// 处理查询输入参数层级关系', saveStart);
+assert.ok(saveStart >= 0 && saveEnd > saveStart);
+const settingSource = fs.readFileSync(path.join(__dirname, 'setting.ts'), 'utf8');
+const changeStart = settingSource.indexOf('export const handleAdvancedSettingChange =');
+const changeEnd = settingSource.indexOf('// 根据row、col排序controls', changeStart);
+assert.ok(changeStart >= 0 && changeEnd > changeStart);
+const consumerSource = settingSource.slice(changeStart, changeEnd) + dataSource.slice(saveStart, saveEnd);
+const consumerCode = transformSync(consumerSource, {
+  filename: path.join(__dirname, 'save-chain.tsx'),
+  plugins: ['@babel/plugin-transform-modules-commonjs'],
+}).code;
+const resetCalls: unknown[] = [];
+const consumer: { exports: Record<string, unknown> } = { exports: {} };
+const localWindow = { auto_id_reset: { autonumber: true } };
+const names = [
+  'getAdvanceSetting',
+  '_',
+  'find',
+  'findIndex',
+  'isEmpty',
+  'update',
+  'window',
+  'sheetAjax',
+  'canAsUniqueWidget',
+];
+new Function('module', 'exports', ...names, consumerCode)(
+  consumer,
+  consumer.exports,
+  read,
+  lodash,
+  lodash.find,
+  lodash.findIndex,
+  lodash.isEmpty,
+  require('immutability-helper'),
+  localWindow,
+  { resetControlIncrease: (args: unknown) => resetCalls.push(args) },
+  () => false,
+);
+function callSave(name: string, ...args: unknown[]): unknown {
+  const fn = consumer.exports[name];
+  if (typeof fn !== 'function') throw new TypeError('Missing actual save consumer');
+  return Reflect.apply(fn, undefined, args);
+}
+const actualControl = { controlId: 'autonumber', type: 33, advancedSetting: { increase: actualIncrease } };
+const scope = { appId: 'app', worksheetId: 'worksheet' };
+assert.doesNotThrow(() => callSave('checkWidgetBeforeSave', [actualControl], [actualControl], scope));
+assert.deepStrictEqual(resetCalls, [], 'An unchanged null start must not reset an auto-number sequence');
+const formatted: unknown = callSave('formatControlsData', [actualControl]);
+if (!Array.isArray(formatted)) throw new TypeError('Expected formatted controls');
+const savedRules: unknown = read(
+  { advancedSetting: field(formatted[0], 'advancedSetting') as Record<string, unknown> },
+  'increase',
+);
+if (!Array.isArray(savedRules)) throw new TypeError('Expected saved rules');
+assert.strictEqual(field(savedRules[0], 'start'), 1, 'The existing save formatter initializes an unset start to one');
+assert.strictEqual(field(actualRules[0], 'start'), null, 'Reading and formatting do not mutate producer defaults');
+callSave('checkWidgetBeforeSave', formatted, [actualControl], scope);
+assert.deepStrictEqual(resetCalls, [{ appId: 'app', worksheetId: 'worksheet', controlId: 'autonumber', initNum: 0 }]);
+const sublist = {
+  controlId: 'sublist',
+  type: 34,
+  dataSource: 'child-sheet',
+  advancedSetting: { detailworksheettype: '2' },
+  relationControls: [actualControl],
+};
+assert.doesNotThrow(() => callSave('checkWidgetBeforeSave', [sublist], [sublist], scope));
 for (const [key, value] of Object.entries({
   widths: ['wrong'],
   sorts: [{ isAsc: 'yes' }],
