@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 Chat Redux 消息数组与发送 action
+
+消息发送、消息数组设置/重置/分页、删除、更新和文件字段边界已收紧，移除 100 条严格诊断，未新增调用方诊断。详见 `chat-redux-message-array-strict-20261013.md`，群组返回可空性和撤回尾段继续处理。
+
 ## 2026-10-13 Chat Redux 消息生命周期 action
 
 个人/群组消息接收、系统通知、抖动、撤回、引用、未读消息、刷新和静音 action 已收紧，移除 55 条诊断，未新增调用方诊断。详见 `chat-redux-message-actions-strict-20261013.md`，消息数组和 socket 尾段继续处理。
