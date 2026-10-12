@@ -2,7 +2,7 @@
 
 经典 Calendar/CalendarRange、DatePicker/RangePicker、泛型 Picker/DateDropdDown、日期表格、年月表格和 header 使用共享有限合同。移除 15 个旧文件里的 Component<any, any>、隐式参数及 CalendarPart/DateTable 的开放透传字典；TaskHeader 的空状态 any 也移除。单日值为 Moment/null/undefined，范围限制为最多两项，原始 CalendarRange 输入允许 MomentInput 并在初始化及 props 更新时归一化；公开输出为 Moment 范围，半天为 AM/PM，来源、视图、方向、样式和事件/ref 有限化。默认导出仍连接 NewDateTimePicker，现代日期时间链路与全仓目标待继续完成。
 
-Picker 用泛型元组保存日历回调的完整参数和 this，不吞掉 range 的第三个半天参数；菜单值使用泛型保留对象身份与 customDate 分支，禁用项阻止选择。DOM ref 经过既有节点验证，React clone 的 ref 不返回节点；CalendarRange 的日期锚点固定为两个 Moment，缺省/defaultValue/受控锚点和空选择分开处理，props 更新继续归一化日期字符串与时间戳 0。未添加整包断言或 any 缺省值。
+Picker 用泛型元组保存日历回调的完整参数和 this，不吞掉 range 的第三个半天参数；菜单值使用泛型保留对象身份与 customDate 分支，禁用项阻止选择。DOM ref 经过既有节点验证，React clone 的 ref 不返回节点；CalendarRange 的日期锚点固定为两个 Moment，缺省/defaultValue/受控锚点和空选择分开处理，props 更新继续归一化日期字符串与时间戳 0。空白字符串和无效日期归一化为空选择，锚点保持有效，避免空字符串生成 NaN 日历；规格覆盖空字符串与 NaN。未添加整包断言或 any 缺省值。
 
 修复切换年月修改调用方 Moment、初始 selectedValue:null 被当成已选择、YearTable 缺省 page 显示 0..15、范围非受控选择被静态 selectedValue 缺省值阻断、修改传入半天数组及半天 props 不同步。RangeFooter 的下拉改为受控值，实际 Dropdown 实例能同步外部更新；选择/清除、任务模式记忆值和 9/18 点规则保留。Dropdown 只向 Icon 传递 hint，移除向 DOM 泄漏的重复 iconHint。
 
