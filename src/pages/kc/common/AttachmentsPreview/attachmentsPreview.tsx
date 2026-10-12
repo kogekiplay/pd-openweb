@@ -470,10 +470,8 @@ class AttachmentsPreview extends React.Component<any, any> {
                         </a>
                         <Button
                           className="downloadBtn boderRadAll_3 bgColorPrimary"
-                          rel="noopener noreferrer"
-                          target="_blank"
                           onClick={() => {
-                            window.open(currentAttachment.sourceNode.shortLinkUrl);
+                            window.open(currentAttachment.sourceNode.shortLinkUrl, '_blank', 'noopener,noreferrer');
                           }}
                         >
                           {_l('打开链接')}
