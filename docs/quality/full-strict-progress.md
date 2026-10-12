@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-12 ming-ui AutoSize 批次
+
+AutoSize 的尺寸、ref、被包裹组件和观察器边界已严格化，strict 诊断为 56,507 条、3,274 个欠债文件，strict-clean 1,458 / 4,732；205/205 规格和工具类型门禁通过。证据见 `ming-ui-autosize-20261012.md`，生产仍为已验证的 `b4075d92f`，本批尚未发布。
+
 ## 2026-10-12 AMap OperatorIcon 批次
 
 OperatorIcon 的位置与回调 props 已严格化，strict 诊断为 56,514 条、3,275 个欠债文件，strict-clean 1,457 / 4,732；205/205 规格和工具类型门禁通过。证据见 `amap-operator-icon-20261012.md`，生产仍为已验证的 `b4075d92f`，本批尚未发布。

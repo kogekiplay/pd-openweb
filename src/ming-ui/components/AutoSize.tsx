@@ -1,17 +1,23 @@
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import type { ElementType } from 'react';
 
-function getElementSize(el) {
+interface ElementSize {
+  width: number;
+  height: number;
+}
+
+function getElementSize(el: HTMLElement | null): ElementSize {
   return el
     ? {
         width: el.clientWidth,
         height: el.clientHeight,
       }
-    : {};
+    : { width: 0, height: 0 };
 }
 
 function shouldUpdateSize(
-  nextSize,
-  prevSize: { width: number; height: number } | undefined,
+  nextSize: ElementSize,
+  prevSize: ElementSize | undefined,
   watchHeight: boolean | undefined,
   forceUpdate: boolean,
 ) {
@@ -49,10 +55,15 @@ function shouldUpdateSize(
  */
 const RESIZE_COMMIT_DELAY = 120;
 
-function canReceiveRef(Comp) {
+function canReceiveRef(Comp: ElementType): boolean {
+  const candidate = Comp as unknown as {
+    prototype?: { isReactComponent?: unknown } | undefined;
+    $$typeof?: unknown;
+  };
   return !!(
-    Comp &&
-    ((Comp.prototype && Comp.prototype.isReactComponent) || Comp.$$typeof === Symbol.for('react.forward_ref'))
+    candidate &&
+    ((candidate.prototype && candidate.prototype.isReactComponent) ||
+      candidate.$$typeof === Symbol.for('react.forward_ref'))
   );
 }
 
@@ -76,25 +87,25 @@ export interface AutoSizeProps {
   [key: string]: unknown;
 }
 
-export default function autoSize(Comp, { onlyWidth }: { onlyWidth?: boolean } = {}) {
+export default function autoSize(Comp: ElementType, { onlyWidth }: { onlyWidth?: boolean } = {}) {
   const AutoSizer = memo(
     forwardRef(function AutoSizer(props: AutoSizeProps, ref) {
       const { height, width, watchHeight, ...rest } = props;
       const controlledSize = width && height ? { width, height } : undefined;
-      const conRef = useRef(null);
+      const conRef = useRef<HTMLDivElement | null>(null);
       const tableRef = useRef(null);
       // 容器节点单独放 state，只为让下面那个 effect 知道该观察谁；挂载时只会变一次。
       const [conEl, setConEl] = useState<HTMLElement | null>(null);
       const [size, setSize] = useState(controlledSize);
       const supportResizeObserver = typeof window !== 'undefined' && typeof window.ResizeObserver !== 'undefined';
 
-      const setConRef = useCallback(con => {
+      const setConRef = useCallback((con: HTMLDivElement | null) => {
         conRef.current = con;
         setConEl(con);
       }, []);
 
       const commitSize = useCallback(
-        (nextSize, forceUpdate: boolean) => {
+        (nextSize: ElementSize, forceUpdate: boolean) => {
           setSize(prevSize => (shouldUpdateSize(nextSize, prevSize, watchHeight, forceUpdate) ? nextSize : prevSize));
         },
         [watchHeight],
@@ -151,7 +162,7 @@ export default function autoSize(Comp, { onlyWidth }: { onlyWidth?: boolean } = 
 
         const initSize = () => updateSize();
 
-        if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined' && !window.sheetAutoSized) {
+        if (process.env['NODE_ENV'] !== 'production' && typeof window !== 'undefined' && !window.sheetAutoSized) {
           const timer = setTimeout(initSize, 300);
           window.sheetAutoSized = true;
           return () => clearTimeout(timer);
@@ -225,7 +236,8 @@ export default function autoSize(Comp, { onlyWidth }: { onlyWidth?: boolean } = 
     }),
   );
 
-  AutoSizer.displayName = `autoSize(${Comp.displayName || Comp.name || 'Component'})`;
+  const componentName = typeof Comp === 'function' ? Comp.displayName || Comp.name || 'Component' : 'Component';
+  AutoSizer.displayName = `autoSize(${componentName})`;
 
   return AutoSizer;
 }
