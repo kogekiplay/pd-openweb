@@ -1,4 +1,6 @@
 import { parse as parsePartial } from 'partial-json';
+import { isFileRecord } from './fileTypes';
+import type { FileEntry, FileMap, FileState, SidebarEntry } from './fileTypes';
 
 // 单一登记表：每一行同时定义了 sidebar 入口 + 对应文件（path/type/initial）。
 // 没有 file 的行（如 'other'）只参与 sidebar 列表，不进 file store。
@@ -8,7 +10,7 @@ import { parse as parsePartial } from 'partial-json';
 // 一次产出 6 个文件，对应 6 个 sidebar tab。
 // 旧 schema（app-items.json 单文件混排 worksheet+dashboard+workspace+aiAssistant）已下线，
 // 现按前端 tab 拆为 worksheets.json + custom-pages.json，1 file = 1 tab 维持流式渲染契约。
-export const SIDEBAR_ITEMS = [
+export const SIDEBAR_ITEMS: SidebarEntry[] = [
   {
     key: 'overview',
     title: _l('总览'),
@@ -80,15 +82,18 @@ export const SIDEBAR_ITEMS = [
 // 渲染应用图标、以及 build 派生导航顺序。不进 SIDEBAR_ITEMS（不产生 tab），但要进 file store 以便流式接收 + 解析。
 // object:true —— app.json 本身就是对象，解析时**不**走 unwrapJson 的"脱壳取数组"逻辑（否则它含的数组字段
 // 如 navGroups 会被误当成壳里的数组取出，把整份元信息对象压成 navGroups 数组）。
-export const META_FILE_ENTRIES = [{ key: 'appMeta', file: '/jsons/app.json', type: 'json', initial: {}, object: true }];
+export const META_FILE_PATH = '/jsons/app.json';
+export const META_FILE_ENTRIES: FileEntry[] = [
+  { key: 'appMeta', file: META_FILE_PATH, type: 'json', initial: {}, object: true },
+];
 
 export const FILE_ENTRIES = [...SIDEBAR_ITEMS.filter(item => item.file), ...META_FILE_ENTRIES];
 
-export function entryByPath(path) {
+export function entryByPath(path: string): FileEntry | undefined {
   return FILE_ENTRIES.find(e => e.file === path);
 }
 
-export function entryByKey(key) {
+export function entryByKey(key: string): SidebarEntry | undefined {
   return SIDEBAR_ITEMS.find(e => e.key === key);
 }
 
@@ -97,9 +102,9 @@ export function entryByKey(key) {
 //  1. 已经是数组直接返回
 //  2. 是对象 → 优先按 entry.wrapperKey 或 entry.key 取；找不到再退化到「第一个数组属性」
 //  3. 否则原样返回（让 panel 自行判空）
-function unwrapJson(entry, raw) {
+function unwrapJson(entry: FileEntry, raw: unknown): unknown {
   if (Array.isArray(raw)) return raw;
-  if (raw && typeof raw === 'object') {
+  if (isFileRecord(raw)) {
     const wrapperKey = entry.wrapperKey || entry.key;
 
     if (wrapperKey && Array.isArray(raw[wrapperKey])) return raw[wrapperKey];
@@ -114,23 +119,23 @@ function unwrapJson(entry, raw) {
 
 // partial-json 在内容已完整时与原生 JSON.parse 行为一致；半截内容则尽力返回当前已构造的子结构。
 // 所以流式 file:delta 与最终 file:write/file:end 共用同一个解析函数，无需区分。
-export function parseFile(entry, content) {
+export function parseFile(entry: FileEntry | undefined, content: string): unknown {
   if (!entry) throw new Error('unknown file');
   if (entry.type === 'markdown') return content || '';
-  const raw = parsePartial(content);
+  const raw: unknown = parsePartial(content);
   // 对象型元信息文件（app.json）：本身是对象、不是"套壳数组"，原样返回，避免 unwrapJson 把含数组字段
   // （navGroups）的对象误脱壳成那个数组。
   if (entry.object) return raw;
   return unwrapJson(entry, raw);
 }
 
-export function serializeFile(entry, parsed) {
+export function serializeFile(entry: FileEntry | undefined, parsed: unknown): string {
   if (!entry) return '';
-  if (entry.type === 'markdown') return parsed || '';
-  return JSON.stringify(parsed, null, 2);
+  if (entry.type === 'markdown') return typeof parsed === 'string' ? parsed : '';
+  return JSON.stringify(parsed, null, 2) ?? '';
 }
 
-export function hasData(file) {
+export function hasData(file: FileState | undefined): boolean {
   if (!file) return false;
   const parsed = file.parsed;
 
@@ -139,13 +144,14 @@ export function hasData(file) {
   return parsed != null;
 }
 
-export function makeInitialFiles() {
-  const files = {};
+export function makeInitialFiles(): FileMap {
+  const files: FileMap = {};
 
   FILE_ENTRIES.forEach(entry => {
+    const content = serializeFile(entry, entry.initial);
     files[entry.file] = {
-      content: serializeFile(entry, entry.initial),
-      parsed: entry.initial,
+      content,
+      parsed: parseFile(entry, content),
       status: 'idle',
     };
   });

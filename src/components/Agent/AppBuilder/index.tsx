@@ -307,7 +307,7 @@ export default function AppBuilder({
   // focus 可能停在一个「无数据被侧栏过滤掉」的 tab 上（典型：方案不含 AI 助手时，流式末尾 focus 落在空的
   // ai-assistants.json）；此时该 tab 不在侧栏里，会出现「无选中项 + 右侧空白」。回落到侧栏中实际存在的最后一项
   // （流式自然停在末尾产物），都没有则退化到 overview。
-  const sidebarHasKey = focusedKey && sidebarItems.some(it => it.key === focusedKey);
+  const sidebarHasKey = focusedKey && sidebarItems.some((it: any) => it.key === focusedKey);
   const activeKey = sidebarHasKey
     ? focusedKey
     : sidebarItems.length

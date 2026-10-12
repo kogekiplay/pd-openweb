@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 AppBuilder 文件 registry/store
+
+AppBuilder 文件 registry、流式状态、方案代次重置和侧栏派生边界已严格化，新增状态机回归通过，未新增调用方诊断。详见 `appbuilder-file-store-strict-20261013.md`；继续处理 Builder 页面及动态面板。
+
 ## 2026-10-13 Statistics 图表通用工具
 
 图表颜色、辅助线、数量级、Y 轴格式化、范围规则和统计值工具已严格化；common.ts 诊断 133 → 0，RadarChart 传播诊断同步清理，未新增调用方诊断。详见 `statistics-chart-common-strict-20261013.md`。
