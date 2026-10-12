@@ -765,20 +765,20 @@ const createTaskMethods = defineMethods<CreateTaskFields>()({
           timeMode="hour"
           placeholder={_l('未指定起止时间')}
           onOk={selectedValue => {
-            let [start, end] = selectedValue;
+            const [start, end] = selectedValue;
 
             if (start && end && start >= end) {
               alert(_l('结束时间不能早于或等于开始时间'), 2);
               return false;
             }
 
-            start = start ? start.format('YYYY-MM-DD HH:00') : '';
-            end = end ? end.format('YYYY-MM-DD HH:00') : '';
-            $txtLastDate.data('start', start);
-            $txtLastDate.data('end', end);
+            const startText = start ? start.format('YYYY-MM-DD HH:00') : '';
+            const endText = end ? end.format('YYYY-MM-DD HH:00') : '';
+            $txtLastDate.data('start', startText);
+            $txtLastDate.data('end', endText);
 
             $('#txtLastDateText').html(
-              !start && !end ? _l('未指定起止时间') : formatTaskTime(false, start, end, '', '', true),
+              !startText && !endText ? _l('未指定起止时间') : formatTaskTime(false, startText, endText, '', '', true),
             );
             return undefined;
           }}

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
+import type { HeaderAction, HeaderEvent, HeaderProps } from '../../types';
 import './style.less';
 
-class Header extends Component<any, any> {
-  buttonOnClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, action: string) => {
+class Header extends Component<HeaderProps> {
+  buttonOnClick = (event: HeaderEvent, action: HeaderAction) => {
     if (this.props.buttonOnClick) {
       this.props.buttonOnClick(event, action);
     }
@@ -30,16 +31,16 @@ class Header extends Component<any, any> {
     const thisYear = time.getFullYear();
     const year = thisYear.toString();
 
-    const page = parseInt(thisYear / 10, 10);
+    const page = Math.trunc(thisYear / 10);
 
     const startYear = (page * 10).toString();
     const endYear = ((page + 1) * 10 - 1).toString();
 
     const _month = time.getMonth() + 1;
     // 月 MM
-    const month = _month.toString();
+    const month = _month;
 
-    const timeButtons = [];
+    const timeButtons: React.ReactNode[] = [];
 
     if (this.props.view === 'year') {
       timeButtons.push(

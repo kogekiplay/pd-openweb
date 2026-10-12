@@ -4,6 +4,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Checkbox, DatePicker, Dialog, Dropdown, UserCard } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { DateTimeRangeProps } from 'ming-ui/components/NewDateTimePicker/types';
 import { quickSelectUser } from 'ming-ui/functions';
 import ajaxRequest from 'src/api/calendar';
 import 'src/components/autoTextarea/autoTextarea';
@@ -52,12 +53,11 @@ interface CreateCalendarSettings {
   ProjectID?: string;
 }
 
-export type CreateCalendarOptions =
-  Partial<Omit<CreateCalendarSettings, 'Start' | 'End' | 'AllDay'>> & {
-    Start?: Date | string | undefined;
-    End?: Date | string | undefined;
-    AllDay?: boolean | string | undefined;
-  };
+export type CreateCalendarOptions = Partial<Omit<CreateCalendarSettings, 'Start' | 'End' | 'AllDay'>> & {
+  Start?: Date | string | undefined;
+  End?: Date | string | undefined;
+  AllDay?: boolean | string | undefined;
+};
 
 interface CreateCalendarFields {
   settings: CreateCalendarSettings;
@@ -356,7 +356,7 @@ const createCalendarMethods = defineMethods<CreateCalendarFields>()({
   // 初始化日期事件
   initDateEvent: function () {
     var settings = this.settings;
-    const rangePickerProps = {
+    const rangePickerProps: DateTimeRangeProps = {
       offset: {
         left: 0,
         top: 5,

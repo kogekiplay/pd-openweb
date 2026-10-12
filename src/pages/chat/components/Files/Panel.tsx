@@ -1,7 +1,7 @@
 import { Component } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import moment from 'moment';
-import Trigger from '@rc-component/trigger';
 import { ScrollView } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import DatePicker from 'ming-ui/components/DatePicker';
@@ -196,7 +196,7 @@ export default class FilesPanel extends Component<any, any> {
       },
       allowClear: false,
       max: moment(),
-      popupParentNode: () => document.querySelector('.ChatPanel-FilesPanel-filterDate'),
+      popupParentNode: () => document.querySelector<HTMLElement>('.ChatPanel-FilesPanel-filterDate'),
       onOk: selectValue => {
         this.handleDateChange(selectValue, 4);
       },

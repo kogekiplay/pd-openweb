@@ -1,13 +1,31 @@
 import { Component } from 'react';
-import { shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import Calender from 'ming-ui/components/NewDateTimePicker/calender';
 import LibCalender from '../lib/calender';
+import { datePair, dateValue, sameValue } from '../types';
+import type { DateBaseProps, DateView, GridEvent, HeaderAction, HeaderEvent } from '../types';
 import Header from './header';
 import './style.less';
 
-class DatePickerBase extends Component<any, any> {
-  constructor(props) {
+interface DateBaseState {
+  mode: DateView;
+  value: Date | readonly [Date, Date];
+  cursor: Date;
+  step: number;
+}
+
+class DatePickerBase extends Component<DateBaseProps, DateBaseState> {
+  static defaultProps: Partial<DateBaseProps> = {
+    type: 'date',
+    range: false,
+    part: '',
+    firstDayOfWeek: 1,
+    min: null,
+    max: null,
+    prefix: '',
+    onChange: () => {},
+  };
+  constructor(props: DateBaseProps) {
     super(props);
 
     const state = this.generateState(props);
@@ -20,19 +38,19 @@ class DatePickerBase extends Component<any, any> {
     this.state = state;
   }
 
-  override componentDidUpdate(prevProps) {
-    if (!shallowEqual(prevProps, this.props)) {
+  override componentDidUpdate(prevProps: DateBaseProps) {
+    if (!sameValue(prevProps.value, this.props.value) || prevProps.range !== this.props.range)
       this.setState(this.generateState(this.props));
-    }
+    else if (prevProps.type !== this.props.type) this.setState({ mode: this.props.type || 'date' });
   }
 
-  generateState = props => {
-    const value = props.value || (props.range ? [new Date(), new Date()] : new Date());
+  generateState = (props: DateBaseProps): DateBaseState => {
+    const value = props.range ? datePair(props.value) : dateValue(props.value);
     const state = {
       /**
        * 显示模式
        */
-      mode: props.type,
+      mode: props.type || 'date',
       /**
        * 当前值
        */
@@ -40,15 +58,16 @@ class DatePickerBase extends Component<any, any> {
       /**
        * 当前显示页面的值
        */
-      cursor: props.range ? value[0] : value,
+      cursor: dateValue(value),
+      step: this.state?.step ?? 1,
     };
 
     return state;
   };
 
-  headerButtonOnClick = (_event, action) => {
+  headerButtonOnClick = (_event: HeaderEvent, action: HeaderAction) => {
     // 头部按钮会改这三样：切换年/月/日视图、挪光标日期、换翻页步长
-    const data: { mode?: string; cursor?: Date; step?: number } = {};
+    const data: Partial<DateBaseState> = {};
 
     // toggle calender mode
     if (action === 'year' || action === 'month' || action === 'date') {
@@ -95,13 +114,13 @@ class DatePickerBase extends Component<any, any> {
       }
     }
 
-    this.setState(data);
+    this.setState(state => ({ ...state, ...data }));
   };
 
   /**
    * 日历选择事件
    */
-  calenderOnPick = (event, type, value, time) => {
+  calenderOnPick = (event: GridEvent, type: DateView, value: number, time: Date) => {
     let newValue = new Date(this.state.cursor);
     let changeView = this.state.mode;
 
@@ -121,7 +140,8 @@ class DatePickerBase extends Component<any, any> {
       }
     }
 
-    const newData = {
+    const newData: DateBaseState = {
+      ...this.state,
       mode: changeView,
       cursor: newValue,
     };
@@ -165,6 +185,7 @@ class DatePickerBase extends Component<any, any> {
           range={this.props.range}
           part={this.props.part}
           firstDayOfWeek={this.props.firstDayOfWeek}
+          disabledDate={this.props.disabledDate}
           min={this.props.min}
           max={this.props.max}
           value={this.state.value}
@@ -238,17 +259,6 @@ DatePickerBase.propTypes = {
    * @param {date} value - 选中的值
    */
   onChange: PropTypes.func,
-};
-
-DatePickerBase.defaultProps = {
-  type: 'date',
-  range: false,
-  part: '',
-  firstDayOfWeek: 1,
-  min: null,
-  max: null,
-  prefix: '',
-  onChange: () => {},
 };
 
 export default DatePickerBase;

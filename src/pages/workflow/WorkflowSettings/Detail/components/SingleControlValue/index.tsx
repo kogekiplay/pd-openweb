@@ -18,6 +18,8 @@ import {
   TagTextarea,
 } from 'ming-ui';
 import { DateTime, DateTimeRange } from 'ming-ui/components/NewDateTimePicker';
+import type { PickerMode } from 'ming-ui/components/NewDateTimePicker/types';
+import type { TimeMode } from 'ming-ui/components/NewTimePicker/types';
 import { dialogSelectDept, dialogSelectOrgRole, dialogSelectUser } from 'ming-ui/functions';
 import previewAttachments, { transformQiniuUrl } from 'src/components/previewAttachments/previewAttachments';
 import { formatResponseData } from 'src/components/UploadFiles/utils';
@@ -886,8 +888,8 @@ export default class SingleControlValue extends Component<any, any> {
           _.find(controls, obj => obj.controlId === item.fieldId),
           'advancedSetting.showtype',
         ) || 1;
-      const mode: Record<number, string> = { 3: 'date', 4: 'month', 5: 'year' };
-      const timeMode: Record<number, string> = { 1: 'minute', 2: 'hour', 6: 'second' };
+      const mode: Partial<Record<number, PickerMode>> = { 3: 'date', 4: 'month', 5: 'year' };
+      const timeMode: Partial<Record<number, TimeMode>> = { 1: 'minute', 2: 'hour', 6: 'second' };
 
       return (
         <div className="mTop8 flexRow relative">

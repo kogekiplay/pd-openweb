@@ -1,8 +1,14 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import type { CalendarCell, GridEvent, TableProps } from '../../types';
 
-class DateTable extends Component<any, any> {
-  itemOnClick = (event, item) => {
+class DateTable extends Component<TableProps> {
+  static defaultProps = {
+    headData: [],
+    bodyData: [],
+    onPick: () => {},
+  };
+  itemOnClick = (event: GridEvent, item: CalendarCell) => {
     if (item.disabled) {
       event.preventDefault();
       event.stopPropagation();
@@ -14,7 +20,7 @@ class DateTable extends Component<any, any> {
   };
 
   renderHeadList = () => {
-    const thList = this.props.headData.map((item, i) => {
+    const thList = (this.props.headData || []).map((item, i) => {
       return <th key={i}>{item}</th>;
     });
 
@@ -22,7 +28,7 @@ class DateTable extends Component<any, any> {
   };
 
   renderBodyList = () => {
-    const trList = this.props.bodyData.map((row, i) => {
+    const trList = (this.props.bodyData || []).map((row, i) => {
       const tdList = row.map((item, j: number) => {
         const classList = [];
         const labelClassList = [];
@@ -123,12 +129,6 @@ DateTable.propTypes = {
    * @param {Date} time - 选中的日期
    */
   onPick: PropTypes.func,
-};
-
-DateTable.defaultProps = {
-  headData: [],
-  bodyData: [],
-  onPick: () => {},
 };
 
 export default DateTable;

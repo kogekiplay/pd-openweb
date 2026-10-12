@@ -3,13 +3,31 @@ import { shallowEqual } from 'react-redux';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import LibCalender from '../lib/calender';
+import { calendarProps } from '../types';
+import type { CalendarCell, CalendarProps, DateView, GridEvent, ResolvedCalendarProps } from '../types';
 import DateTable from './date-table';
 import MonthTable from './month-table';
 import YearTable from './year-table';
 import './style.less';
 
-class Calender extends Component<any, any> {
-  constructor(props) {
+interface CalendarData {
+  weekList: string[];
+  dateList: CalendarCell[][];
+  monthList: CalendarCell[][];
+  yearList: CalendarCell[][];
+}
+
+class Calender extends Component<CalendarProps, CalendarData> {
+  static defaultProps: Partial<CalendarProps> = {
+    mode: 'date',
+    range: false,
+    part: '',
+    firstDayOfWeek: 1,
+    min: null,
+    max: null,
+    onPick: () => {},
+  };
+  constructor(props: CalendarProps) {
     super(props);
 
     this.state = this.getListData(props);
@@ -22,7 +40,7 @@ class Calender extends Component<any, any> {
    * 生成周数据
    */
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: CalendarProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.generateList(this.props);
     }
@@ -31,19 +49,19 @@ class Calender extends Component<any, any> {
   /**
    * 生成周数据
    */
-  generateWeekList = props => {
+  generateWeekList = (props: ResolvedCalendarProps) => {
     const WeekDays = [0, 1, 2, 3, 4, 5, 6].map(function (item) {
       return moment().day(item).format('dd');
     });
 
     const firstDayOfWeek = props.firstDayOfWeek;
-    const list = [];
+    const list: string[] = [];
     let i = 0;
 
     while (i < 7) {
       const item = firstDayOfWeek + i >= 7 ? firstDayOfWeek + i - 7 : firstDayOfWeek + i;
 
-      list.push(WeekDays[item]);
+      list.push(WeekDays[item] || '');
 
       i = i + 1;
     }
@@ -63,8 +81,15 @@ class Calender extends Component<any, any> {
    * @param {number} startDate - 开始日期
    * @param {number} endDate - 结束日期
    */
-  generateDates = (props, other: boolean | number, year, month, startDate: number, endDate: number) => {
-    const list = [];
+  generateDates = (
+    props: ResolvedCalendarProps,
+    other: boolean | -1 | 1,
+    year: number,
+    month: number,
+    startDate: number,
+    endDate: number,
+  ) => {
+    const list: CalendarCell[] = [];
 
     let i = 0;
 
@@ -73,16 +98,16 @@ class Calender extends Component<any, any> {
 
       const time = new Date(year, month, date);
       // is date disabled
-      const disabled = !LibCalender.dateInRange(time, props.min, props.max);
+      const disabled = !LibCalender.dateInRange(time, props.min, props.max) || !!props.disabledDate?.(time);
       // is same date with props.value
       let current = false;
 
-      if (props.range) {
+      if (props.range === true) {
         current = LibCalender.dateInRange(time, props.value[0], props.value[1]);
       }
 
       if (
-        !props.range &&
+        props.range === false &&
         props.value.getFullYear() === year &&
         props.value.getMonth() === month &&
         props.value.getDate() === date
@@ -125,7 +150,7 @@ class Calender extends Component<any, any> {
   /**
    * 生成日期数据
    */
-  generateDateList = props => {
+  generateDateList = (props: ResolvedCalendarProps) => {
     // 当前显示页面
     const currentPage = props.cursor;
 
@@ -182,12 +207,12 @@ class Calender extends Component<any, any> {
     /**
      * 日期数据 6 行 * 7 列
      */
-    const list = [];
+    const list: CalendarCell[][] = [];
 
     const allDays = prevDates.concat(currentDates, nextDates);
 
     let i = 0;
-    let prevItem = null;
+    let prevItem: CalendarCell | null = null;
 
     while (i < 6) {
       const items = allDays.slice(7 * i, 7 * (i + 1));
@@ -195,9 +220,9 @@ class Calender extends Component<any, any> {
       items.map((item, j) => {
         if (item.current && item.inRange) {
           // start
-          items[j].start = this.props.part === 'start';
+          item.start = props.part === 'start';
           // end
-          items[j].end = this.props.part === 'end';
+          item.end = props.part === 'end';
 
           if (props.selectedRange) {
             const a = props.selectedRange[0];
@@ -205,20 +230,20 @@ class Calender extends Component<any, any> {
 
             // same date
             if (a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()) {
-              items[j].start = true;
-              items[j].end = true;
+              item.start = true;
+              item.end = true;
             }
           }
         }
 
         // left
-        if (item.inRange && (j === 0 || (j > 0 && !prevItem.inRange))) {
-          items[j].left = true;
+        if (item.inRange && (j === 0 || (j > 0 && !prevItem?.inRange))) {
+          item.left = true;
         }
 
         // right
-        if (item.inRange && (j === 6 || (j < 6 && !items[j + 1].inRange))) {
-          items[j].right = true;
+        if (item.inRange && (j === 6 || (j < 6 && !items[j + 1]?.inRange))) {
+          item.right = true;
         }
 
         prevItem = item;
@@ -237,8 +262,8 @@ class Calender extends Component<any, any> {
   /**
    * 生成月份数据
    */
-  generateMonthList = props => {
-    const monthList = [];
+  generateMonthList = (props: ResolvedCalendarProps) => {
+    const monthList: CalendarCell[] = [];
     // 当前年
     const thisYear = props.cursor.getFullYear();
     const thisMonth = props.cursor.getMonth();
@@ -252,11 +277,11 @@ class Calender extends Component<any, any> {
       // is current month
       let current = false;
 
-      if (props.range) {
+      if (props.range === true) {
         current = LibCalender.monthInRange(time, props.value[0], props.value[1]);
       }
 
-      if (!props.range && props.value.getFullYear() === thisYear && props.value.getMonth() === i) {
+      if (props.range === false && props.value.getFullYear() === thisYear && props.value.getMonth() === i) {
         current = true;
       }
 
@@ -288,7 +313,7 @@ class Calender extends Component<any, any> {
       i = i + 1;
     }
 
-    const list = [];
+    const list: CalendarCell[][] = [];
 
     let j = 0;
 
@@ -305,12 +330,12 @@ class Calender extends Component<any, any> {
   /**
    * 生成年份数据
    */
-  generateYearList = props => {
-    const yearList = [];
+  generateYearList = (props: ResolvedCalendarProps) => {
+    const yearList: CalendarCell[] = [];
 
     const thisYear = props.cursor.getFullYear();
 
-    const page = parseInt(thisYear / 10, 10);
+    const page = Math.trunc(thisYear / 10);
 
     const startYear = page * 10 - 1;
 
@@ -329,11 +354,11 @@ class Calender extends Component<any, any> {
       // is current year
       let current = false;
 
-      if (props.range) {
+      if (props.range === true) {
         current = year >= props.value[0].getFullYear() && year <= props.value[1].getFullYear();
       }
 
-      if (!props.range) {
+      if (props.range === false) {
         current = props.value.getFullYear() === year;
       }
 
@@ -363,7 +388,7 @@ class Calender extends Component<any, any> {
       i = i + 1;
     }
 
-    const list = [];
+    const list: CalendarCell[][] = [];
 
     let j = 0;
 
@@ -380,7 +405,8 @@ class Calender extends Component<any, any> {
   /**
    * 生成数据列表
    */
-  getListData = props => {
+  getListData = (input: CalendarProps): CalendarData => {
+    const props = calendarProps(input);
     return {
       weekList: this.generateWeekList(props),
       dateList: this.generateDateList(props),
@@ -389,7 +415,7 @@ class Calender extends Component<any, any> {
     };
   };
 
-  generateList = props => {
+  generateList = (props: CalendarProps) => {
     // BUG: too much update
     this.setState(this.getListData(props));
   };
@@ -397,7 +423,7 @@ class Calender extends Component<any, any> {
   /**
    * 选择日期、月份或年份
    */
-  onPick = (event, type: string, value, time) => {
+  onPick = (event: GridEvent, type: DateView, value: number, time: Date) => {
     if (this.props.onPick) {
       this.props.onPick(event, type, value, time);
     }
@@ -507,18 +533,6 @@ Calender.propTypes = {
    * @param {Date} time - 选中的日期
    */
   onPick: PropTypes.func,
-};
-
-Calender.defaultProps = {
-  mode: 'date',
-  range: false,
-  part: '',
-  firstDayOfWeek: 1,
-  min: null,
-  max: null,
-  value: new Date(),
-  cursor: new Date(),
-  onPick: () => {},
 };
 
 export default Calender;
