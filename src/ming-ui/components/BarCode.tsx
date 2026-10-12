@@ -1,7 +1,30 @@
 import { Component } from 'react';
 import JsBarcode from 'jsbarcode';
 
-export default class Barcode extends Component<any, any> {
+interface BarcodeProps {
+  value?: string | undefined;
+  renderer?: 'svg' | 'canvas' | 'img' | undefined;
+  format?: string | undefined;
+  width?: number | undefined;
+  height?: number | undefined;
+  displayValue?: boolean | undefined;
+  textAlign?: string | undefined;
+  textPosition?: string | undefined;
+  textMargin?: number | undefined;
+  fontSize?: number | undefined;
+  background?: string | undefined;
+  lineColor?: string | undefined;
+  margin?: number | undefined;
+  marginTop?: number | undefined;
+  marginBottom?: number | undefined;
+  renderWidth?: number | undefined;
+}
+
+type BarcodeElement = SVGSVGElement | HTMLCanvasElement | HTMLImageElement | null;
+
+export default class Barcode extends Component<BarcodeProps> {
+  declare barcode: BarcodeElement;
+
   static defaultProps = {
     format: 'CODE128',
     renderer: 'svg',
@@ -19,14 +42,14 @@ export default class Barcode extends Component<any, any> {
     renderWidth: 160,
   };
 
-  constructor(props) {
+  constructor(props: BarcodeProps) {
     super(props);
     this.update = this.update.bind(this);
   }
 
   override componentDidMount() {
     if (this.props.renderWidth && this.barcode) {
-      this.barcode.width = this.props.renderWidth;
+      (this.barcode as unknown as { width: number }).width = this.props.renderWidth;
     }
 
     this.update();
@@ -36,7 +59,7 @@ export default class Barcode extends Component<any, any> {
     this.update();
   }
 
-  handleBarcode = r => {
+  handleBarcode = (r: BarcodeElement) => {
     this.barcode = r;
   };
 
@@ -57,7 +80,7 @@ export default class Barcode extends Component<any, any> {
       marginBottom,
     } = this.props;
 
-    JsBarcode(this.barcode, value, {
+    JsBarcode(this.barcode, value || '', {
       format,
       width,
       height,
@@ -70,7 +93,7 @@ export default class Barcode extends Component<any, any> {
       margin,
       lineColor,
       marginBottom,
-    });
+    } as JsBarcode.Options);
   }
 
   override render() {
