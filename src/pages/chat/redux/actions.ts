@@ -1218,11 +1218,11 @@ export const updateMessage = (message: any) => (dispatch: AppDispatch, getState:
  * 将卡片类型的知识文件更新成附件类型
  * @param {*} message
  */
-export const updateFileMessage = (newMessage, to) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateFileMessage = (newMessage: any, to: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages } = getState().chat;
   const { id } = newMessage;
   const currentMessage = messages[to];
-  const newCurrentMessage = currentMessage.map(item => {
+  const newCurrentMessage = currentMessage.map((item: any) => {
     if (item.id === id) {
       return newMessage;
     }
@@ -1240,7 +1240,7 @@ export const updateFileMessage = (newMessage, to) => (dispatch: AppDispatch, get
  * 将消息改为已经撤回的消息
  * @param {*} newMessage
  */
-export const updateWithdrawMessage = (id, newMessage) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateWithdrawMessage = (id: string, newMessage: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages, referMessage, bottomUnreadMessage } = getState().chat;
   const { id: messageId, msg } = newMessage;
   const currentMessage = messages[id];
