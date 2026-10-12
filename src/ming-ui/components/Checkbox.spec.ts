@@ -144,6 +144,18 @@ export const group = <CheckboxGroup data={[{ value: 'a', text: 'A' }]} checkedVa
   const result: string | undefined = value;
   void result;
 }} />;
+export const unspecifiedGroup = <CheckboxGroup onChange={value => {
+  // @ts-expect-error A group's unspecified value remains unknown.
+  value.id;
+}} />;
+export const defaultCheckboxModel: CheckboxProps = { onClick: (_checked, value) => {
+  // @ts-expect-error The public Props default cannot become any.
+  value.id;
+} };
+export const defaultGroupModel: CheckboxGroupProps = { onChange: value => {
+  // @ts-expect-error The public group Props default cannot become any.
+  value.id;
+} };
 export const callback: CheckboxProps<string> = {
   // @ts-expect-error Optional Checkbox values can be undefined.
   onClick: (_checked: boolean, value: string) => { void value; },
