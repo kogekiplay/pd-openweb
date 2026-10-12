@@ -218,6 +218,7 @@ class DateTimeRange extends Component<any, any> {
         {button}
         <PositionContainer
           popupParentNode={this.props.popupParentNode}
+          onClickAwayExceptions={[this._picker]}
           placement="bottom"
           offset={this.props.offset}
           bounding={this.state.bounding}

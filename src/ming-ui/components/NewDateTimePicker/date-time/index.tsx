@@ -148,6 +148,7 @@ class DateTime extends Component<any, DateTimeState> {
         {button}
         <PositionContainer
           popupParentNode={this.props.popupParentNode}
+          onClickAwayExceptions={[this._picker]}
           placement={this.props.placement || 'bottom'}
           bounding={this.state.bounding}
           visible={this.state.menuOpened}

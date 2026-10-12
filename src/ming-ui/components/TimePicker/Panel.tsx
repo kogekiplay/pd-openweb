@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import type { ChangeEvent } from 'react';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import { times } from 'lodash';
@@ -6,13 +7,10 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import Icon from 'ming-ui/components/Icon';
 import PanelSelect from './PanelSelect';
-
-function timetoString(val) {
-  return val < 10 ? `0${val}` : `${val}`;
-}
+import type { TimePanelProps, TimeUnit } from './types';
 
 // 将布尔值转化为数�
-const boolToNumber = bool => {
+const boolToNumber = (bool: boolean | undefined) => {
   if (bool) {
     return 1;
   }
@@ -20,7 +18,8 @@ const boolToNumber = bool => {
   return 0;
 };
 
-class Panel extends Component<any, any> {
+class Panel extends Component<TimePanelProps, { inputValue: string }> {
+  declare _panel: HTMLDivElement | null | undefined;
   static defaultProps = {
     onChange: () => {},
   };
@@ -44,7 +43,7 @@ class Panel extends Component<any, any> {
     disabledSeconds: PropTypes.func,
   };
 
-  constructor(props) {
+  constructor(props: TimePanelProps) {
     super(props);
     const { value, format } = props;
     this.state = {
@@ -52,7 +51,7 @@ class Panel extends Component<any, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: TimePanelProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { value, format } = this.props;
       this.setState({
@@ -61,7 +60,7 @@ class Panel extends Component<any, any> {
     }
   }
 
-  handleSelect = (type, option) => {
+  handleSelect = (type: TimeUnit, option: number) => {
     const { defaultOpenValue } = this.props;
     const value = moment(this.props.value || defaultOpenValue);
 
@@ -76,31 +75,31 @@ class Panel extends Component<any, any> {
     const { showHour, showMinute, showSecond } = this.props;
 
     if ([showHour, showMinute, showSecond].filter(x => x).length === 1) {
-      this.props.onClose();
+      this.props.onClose?.();
     }
 
-    this.props.onChange(value);
+    this.props.onChange?.(value);
   };
 
-  handleIptChange = event => {
+  handleIptChange = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ inputValue: event.target.value });
   };
 
   handleClear = () => {
-    this.props.onClear();
+    this.props.onClear?.();
   };
 
-  refFunc = panel => {
+  refFunc = (panel: HTMLDivElement | null) => {
     this._panel = panel;
-    this.props.getRef(panel);
+    this.props.getRef?.(panel);
   };
 
   renderHour = () => {
     const { showHour, defaultOpenValue, disabledHours } = this.props;
     const value = this.props.value || defaultOpenValue;
-    const hour = value.hour().toString();
+    const hour = value.hour();
     const hourOptions = times(24).map(
-      this.props.optionFormatter ? this.props.optionFormatter : n => String(n).padStart(2, 0),
+      this.props.optionFormatter ? this.props.optionFormatter : n => String(n).padStart(2, '0'),
     );
     const disabledSelect = disabledHours ? disabledHours() : [];
 
@@ -109,7 +108,7 @@ class Panel extends Component<any, any> {
         <PanelSelect
           type="hour"
           disabledSelect={disabledSelect}
-          selectedIndex={hourOptions.indexOf(timetoString(hour))}
+          selectedIndex={hour}
           onSelect={this.handleSelect}
           options={hourOptions}
         />
@@ -122,9 +121,9 @@ class Panel extends Component<any, any> {
   renderMinute = () => {
     const { showMinute, defaultOpenValue, disabledMinutes } = this.props;
     const value = this.props.value || defaultOpenValue;
-    const minute = value.minute().toString();
+    const minute = value.minute();
     const minuteOptions = times(60).map(
-      this.props.optionFormatter ? this.props.optionFormatter : n => String(n).padStart(2, 0),
+      this.props.optionFormatter ? this.props.optionFormatter : n => String(n).padStart(2, '0'),
     );
     const disabledSelect = disabledMinutes ? disabledMinutes(value.hour()) : [];
 
@@ -133,7 +132,7 @@ class Panel extends Component<any, any> {
         <PanelSelect
           type="minute"
           disabledSelect={disabledSelect}
-          selectedIndex={minuteOptions.indexOf(timetoString(minute))}
+          selectedIndex={minute}
           onSelect={this.handleSelect}
           options={minuteOptions}
         />
@@ -146,9 +145,9 @@ class Panel extends Component<any, any> {
   renderSecond = () => {
     const { showSecond, defaultOpenValue, disabledSeconds } = this.props;
     const value = this.props.value || defaultOpenValue;
-    const second = value.second().toString();
+    const second = value.second();
     const secondOptions = times(60).map(
-      this.props.optionFormatter ? this.props.optionFormatter : n => String(n).padStart(2, 0),
+      this.props.optionFormatter ? this.props.optionFormatter : n => String(n).padStart(2, '0'),
     );
     const disabledSelect = disabledSeconds ? disabledSeconds(value.minute()) : [];
 
@@ -157,7 +156,7 @@ class Panel extends Component<any, any> {
         <PanelSelect
           type="second"
           disabledSelect={disabledSelect}
-          selectedIndex={secondOptions.indexOf(timetoString(second))}
+          selectedIndex={second}
           onSelect={this.handleSelect}
           options={secondOptions}
         />
@@ -187,7 +186,7 @@ class Panel extends Component<any, any> {
             <input
               name="timePickerPanel"
               autoComplete="off"
-              readOnly="true"
+              readOnly
               placeholder={placeholder}
               value={this.state.inputValue}
               onChange={this.handleIptChange}

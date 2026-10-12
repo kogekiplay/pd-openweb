@@ -3,6 +3,11 @@ import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import PositionContainer from 'ming-ui/components/PositionContainer';
+import { getDomNode } from '../ClickAway';
+
+function isElement(node: Node): node is Element {
+  return node.nodeType === 1;
+}
 
 function createChainedFunction(...argsOuter) {
   if (argsOuter.length === 1) {
@@ -20,6 +25,7 @@ function createChainedFunction(...argsOuter) {
 }
 
 class Picker extends Component<any, any> {
+  declare _picker: Element | null | undefined;
   static override propTypes = {
     panelCls: PropTypes.string,
     className: PropTypes.string,
@@ -69,6 +75,7 @@ class Picker extends Component<any, any> {
   }
 
   onClick = () => {
+    if (this.props['disabled'] || !this._picker) return;
     this.setState({ visible: true, bounding: this._picker.getBoundingClientRect() });
   };
 
@@ -116,7 +123,10 @@ class Picker extends Component<any, any> {
     const state = this.state;
     return React.cloneElement(props.children(state, props), {
       onClick: !props.disabled ? this.onClick : null,
-      ref: picker => (this._picker = picker),
+      ref: (picker: unknown) => {
+        const node = getDomNode(picker);
+        this._picker = node && isElement(node) ? node : null;
+      },
     });
   };
 
@@ -132,6 +142,7 @@ class Picker extends Component<any, any> {
           visible={state.visible}
           bounding={state.bounding}
           popupParentNode={props.popupParentNode}
+          onClickAwayExceptions={[this._picker]}
           offset={{ left: props.offsetLeft, top: props.offsetTop }}
         >
           {this.getCalendarElement()}
