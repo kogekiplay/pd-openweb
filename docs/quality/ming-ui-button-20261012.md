@@ -9,3 +9,7 @@ Button 改用原生按钮属性加有限自有 props 合同，点击事件明确
 产品严格诊断 56,447 → 56,421，按文件/错误码新增 0；欠债 3,271 → 3,270 文件，strict-clean 1,462 → 1,463 / 4,733。语义差分为 9,061 条、2,452 key，无新增；工具和格式门禁通过。全量规格在并行编译负载下首次出现 customEvent 定时失败，降低并发至 4 后 207/207 通过；既有隔离项 PublicWorksheet weixinAuth 保留。全仓严格化尚未完成。
 
 证据见 `/private/tmp/hap-button-before-strict.txt`、`hap-button-final-strict.txt`、`hap-button-tools-strict.txt`、`hap-button-specs-verified-20261012.log`。本批未部署，今天生产仍为 `e091d5f553`。
+
+类型分支 `1ae552f40`、主分支整合 `007bd39fa` 均通过默认并发 10 下的 207/207 推送门禁。整合源码真实 release 用时 1 分 10 秒，publish 成功；3 个 runtime 的 1095 JS / 387 CSS 引用、79 个 HTML 的 537 个非厂商本地资源引用完整，未引用 dev 资源。入口 revision 匹配源码，widget 已生成，构建后工作树干净。证据见 `/private/tmp/hap-button-release-20261012.log`、`hap-button-publish-20261012.log`、`hap-button-artifact-check-20261012.json`；候选尚未部署。
+
+语义差分基线再删除 4 条已消失诊断：keptCount 9,065 → 9,061，唯一 key 2,454 → 2,452；没有增加任何豁免。
