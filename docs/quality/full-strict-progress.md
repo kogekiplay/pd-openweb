@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-12 ming-ui BarCode 批次
+
+BarCode 的 props、DOM ref 和 JsBarcode 选项边界已严格化，strict 诊断为 56,493 条、3,272 个欠债文件，strict-clean 1,460 / 4,732；205/205 规格和工具类型门禁通过。证据见 `ming-ui-barcode-20261012.md`，生产当前为已验证的 `e091d5f553`，本批尚未发布。
+
 ## 2026-10-12 生产发布
 
 已将通过完整 release、publish 和 runtime 资源校验的 `e091d5f553` 发布到生产；入口 SHA256 为 `c24ce35d...`，回滚副本保留旧入口。根路径、外部门户应用和管理员应用均 HTTP 200，容器未重启。详见 `production-20261012.md`。
