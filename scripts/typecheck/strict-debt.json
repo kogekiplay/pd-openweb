@@ -3020,7 +3020,6 @@
     "src/pages/worksheet/components/DropdownWrapper.tsx",
     "src/pages/worksheet/components/EditableCellCon/index.tsx",
     "src/pages/worksheet/components/ExportSheetButton/index.tsx",
-    "src/pages/worksheet/components/GenScanUploadQr.tsx",
     "src/pages/worksheet/components/GenericDropdownButton/index.tsx",
     "src/pages/worksheet/components/GroupByControl.tsx",
     "src/pages/worksheet/components/Guidance/Guidance.tsx",

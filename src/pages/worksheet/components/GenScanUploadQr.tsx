@@ -1,13 +1,14 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
-import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { LoadDiv, Qr } from 'ming-ui';
 import attachmentAjax from 'src/api/attachment';
 import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
 import { UPLOAD_TYPE } from 'worksheet/constants/enum';
 import { getTemporaryAttachmentFromUrl } from 'src/utils/common';
+import type { TemporaryAttachment } from 'src/utils/commonRequestTypes';
+import styled from 'src/utils/typedStyled';
+import { decodeScanId, decodeScanResponse, scanFlags } from './scanUploadBoundary';
 
 const Popup = styled.div`
   position: relative;
@@ -32,6 +33,9 @@ const Popup = styled.div`
     justify-content: center;
     height: 200px;
     background-color: rgba(255, 255, 255, 0.95);
+    &.error {
+      line-height: 1.5;
+    }
     .icon {
       color: var(--color-primary);
     }
@@ -107,12 +111,43 @@ const Popup = styled.div`
   }
 `;
 
-function getUrlNoSearch(url) {
+function getUrlNoSearch(url: string): string {
   const urlObj = new URL(url);
   return urlObj.origin + urlObj.pathname;
 }
 
 const UPDATE_ATTACHMENT_INTERVAL = 1000;
+
+export type ScanAttachment = TemporaryAttachment;
+
+interface ScanCache {
+  appendedAttachmentIds: string[];
+  timer?: ReturnType<typeof setInterval> | undefined;
+  scanId?: string | undefined;
+  active: boolean;
+  generation: number;
+}
+
+export interface GenScanUploadQrProps {
+  type?: number | undefined;
+  from?: string | undefined;
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
+  controlId?: string | undefined;
+  rowId?: string | undefined;
+  children: React.ReactElement<{ className?: string | undefined; ref?: React.Ref<HTMLElement> | undefined }>;
+  onScanResultUpdate?: ((files: ScanAttachment[]) => void) | undefined;
+}
+
+interface QrPopupProps extends Omit<GenScanUploadQrProps, 'children' | 'onScanResultUpdate'> {
+  popupPosition: 'top' | 'bottom';
+  onScanResultUpdate: (files: ScanAttachment[]) => void;
+  setPopupVisible: (visible: boolean) => void;
+}
+
+function stopScan(scanId: string): void {
+  void attachmentAjax.stopAttachmentScanUrl({ scanId }).catch(() => {});
+}
 
 function QrPopup({
   type,
@@ -124,125 +159,115 @@ function QrPopup({
   popupPosition,
   onScanResultUpdate,
   setPopupVisible,
-}) {
-  const cache = useRef({ appendedAttachmentIds: [] });
+}: QrPopupProps) {
+  const cache = useRef<ScanCache>({ appendedAttachmentIds: [], active: false, generation: 0 });
   const [loading, setLoading] = useState(true);
-  const [scanId, setScanId] = useState();
-  const [appendedAttachmentIds, setAppendedAttachmentIds] = useState([]);
+  const [scanId, setScanId] = useState<string | undefined>();
   const [error, setError] = useState('');
   const [expired, setExpired] = useState(false);
-  const { recordBaseInfo: { fromIsDraft, fromIsWorkflow } = {} } = useContext(RecordInfoContext) || {};
+  const callbacks = useRef({ onScanResultUpdate, setPopupVisible });
+  callbacks.current = { onScanResultUpdate, setPopupVisible };
+  const { fromIsDraft, fromIsWorkflow } = scanFlags(useContext(RecordInfoContext));
+  const clearPolling = useCallback(() => {
+    if (cache.current.timer !== undefined) {
+      clearInterval(cache.current.timer);
+      cache.current.timer = undefined;
+    }
+  }, []);
+
   const listenScan = useCallback(
-    newScanId => {
-      if (cache.current.timer) {
-        clearInterval(cache.current.timer);
-      }
-
-      function run() {
-        attachmentAjax.getScanAttachments({ scanId: newScanId }).then(res => {
-          if (res.status !== 1) {
+    (newScanId: string, generation: number) => {
+      clearPolling();
+      let pending = false;
+      const isCurrent = () => cache.current.active && cache.current.generation === generation;
+      const run = async () => {
+        // A slow poll must finish before another can deliver the same attachments.
+        if (pending || !isCurrent()) return;
+        pending = true;
+        try {
+          const raw: unknown = await attachmentAjax.getScanAttachments({ scanId: newScanId });
+          if (!isCurrent()) return;
+          const response = decodeScanResponse(raw);
+          if (response.status !== 1) {
             setExpired(true);
-            if (cache.current.timer) {
-              clearInterval(cache.current.timer);
-            }
-
+            clearPolling();
             return;
           }
-
-          const { attachmentScanSimpleDetail = [] } = res;
-
-          if (!isEmpty(attachmentScanSimpleDetail)) {
-            const newAttachments = attachmentScanSimpleDetail.filter(
-              item => !cache.current.appendedAttachmentIds.includes(getUrlNoSearch(item.fileUrl)),
-            );
-
-            if (newAttachments.length > 0) {
-              onScanResultUpdate(newAttachments.map(getTemporaryAttachmentFromUrl));
-              const newAppendedAttachmentIds = newAttachments.map(item => getUrlNoSearch(item.fileUrl));
-              setAppendedAttachmentIds(old => [...old, ...newAppendedAttachmentIds]);
-              cache.current.appendedAttachmentIds = [
-                ...cache.current.appendedAttachmentIds,
-                ...newAppendedAttachmentIds,
-              ];
-              if (type === UPLOAD_TYPE.SIGNATURE) {
-                setPopupVisible(false);
-              }
+          const newAttachments = response.attachments.filter(
+            item => !cache.current.appendedAttachmentIds.includes(getUrlNoSearch(item.fileUrl)),
+          );
+          if (newAttachments.length) {
+            const attachments = newAttachments.map(item => getTemporaryAttachmentFromUrl(item));
+            callbacks.current.onScanResultUpdate(attachments);
+            if (!isCurrent()) return;
+            cache.current.appendedAttachmentIds.push(...newAttachments.map(item => getUrlNoSearch(item.fileUrl)));
+            if (type === UPLOAD_TYPE.SIGNATURE) {
+              clearPolling();
+              callbacks.current.setPopupVisible(false);
             }
           }
-        });
-      }
-
-      const timer = setInterval(run, UPDATE_ATTACHMENT_INTERVAL);
-      cache.current.timer = timer;
-    },
-    [type, onScanResultUpdate, appendedAttachmentIds, setPopupVisible],
-  );
-
-  const genScanId = useCallback(
-    (cb = () => {}) => {
-      setLoading(true);
-      let sourceType = 1;
-
-      if (!worksheetId) {
-        sourceType = 3;
-      } else if (from === 'worksheet') {
-        sourceType = 1;
-      } else {
-        sourceType = 2;
-      }
-
-      let getType;
-
-      if (fromIsDraft) {
-        getType = 21;
-      } else if (fromIsWorkflow) {
-        getType = 9;
-      }
-
-      attachmentAjax
-        .getAttachmentScanUrl({
-          sourceType,
-          getType,
-          fileType: type,
-          worksheetId,
-          controlId,
-          viewId,
-          rowId: '',
-        })
-        .then(data => {
-          if (data.scanUrl) {
-            const generatedScanId = (data.scanUrl.match(/\/(\w{16})$/) || '')[1];
-            setScanId(generatedScanId);
-            cb(generatedScanId);
-          } else {
-            setError(_l('获取扫码链接失败'));
+        } catch {
+          if (isCurrent()) {
+            clearPolling();
+            setError(_l('获取扫码附件失败'));
           }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+        } finally {
+          pending = false;
+        }
+      };
+      cache.current.timer = setInterval(() => void run(), UPDATE_ATTACHMENT_INTERVAL);
     },
-    [from, worksheetId, controlId, rowId, type, viewId],
+    [clearPolling, type],
   );
 
-  useEffect(() => {
-    cache.current.scanId = scanId;
-  }, [scanId]);
+  const genScanId = useCallback(async () => {
+    const current = cache.current;
+    const generation = ++current.generation;
+    clearPolling();
+    if (current.scanId) stopScan(current.scanId);
+    current.scanId = undefined;
+    setLoading(true);
+    setError('');
+    setExpired(false);
+    const isCurrent = () => current.active && current.generation === generation;
+    try {
+      const raw: unknown = await attachmentAjax.getAttachmentScanUrl({
+        sourceType: !worksheetId ? 3 : from === 'worksheet' ? 1 : 2,
+        getType: fromIsDraft ? 21 : fromIsWorkflow ? 9 : undefined,
+        fileType: type,
+        worksheetId,
+        controlId,
+        viewId,
+        // Scan uploads historically use an empty row identifier.
+        rowId: '',
+      });
+      const generatedScanId = decodeScanId(raw);
+      if (!isCurrent()) {
+        if (current.scanId !== generatedScanId) stopScan(generatedScanId);
+        return;
+      }
+      current.scanId = generatedScanId;
+      setScanId(generatedScanId);
+      listenScan(generatedScanId, generation);
+    } catch {
+      if (isCurrent()) setError(_l('获取扫码链接失败'));
+    } finally {
+      if (isCurrent()) setLoading(false);
+    }
+  }, [clearPolling, from, worksheetId, controlId, type, viewId, fromIsDraft, fromIsWorkflow, listenScan]);
 
   useEffect(() => {
-    genScanId(newScanId => {
-      listenScan(newScanId);
-    });
+    cache.current.active = true;
+    cache.current.appendedAttachmentIds = [];
+    void genScanId();
     return () => {
-      if (cache.current.scanId) {
-        attachmentAjax.stopAttachmentScanUrl({ scanId: cache.current.scanId });
-      }
-
-      if (cache.current.timer) {
-        clearInterval(cache.current.timer);
-      }
+      cache.current.active = false;
+      ++cache.current.generation;
+      clearPolling();
+      if (cache.current.scanId) stopScan(cache.current.scanId);
+      cache.current.scanId = undefined;
     };
-  }, []);
+  }, [genScanId, clearPolling, rowId]);
 
   return (
     <Popup className={popupPosition}>
@@ -261,20 +286,11 @@ function QrPopup({
             style={{ height: 200 }}
           />
         ))}
-      {error && <div className="error">{error}</div>}
-      {expired && (
-        <div className="expired">
+      {(expired || error) && (
+        <div className={error ? 'expired error' : 'expired'}>
           <i className="icon icon-error1 Font48"></i>
-          <p className="qrExpired">{_l('当前二维码已过期')}</p>
-          <span
-            className="refresh Hand"
-            onClick={() => {
-              genScanId(newScanId => {
-                setExpired(false);
-                listenScan(newScanId);
-              });
-            }}
-          >
+          <p className="qrExpired">{expired ? _l('当前二维码已过期') : error}</p>
+          <span className="refresh Hand" onClick={() => void genScanId()}>
             {_l('刷新')}
           </span>
         </div>
@@ -284,7 +300,7 @@ function QrPopup({
 }
 
 QrPopup.propTypes = {
-  type: PropTypes.string,
+  type: PropTypes.number,
   from: PropTypes.string,
   worksheetId: PropTypes.string,
   controlId: PropTypes.string,
@@ -303,10 +319,10 @@ export default function GenScanUploadQr({
   controlId,
   children,
   onScanResultUpdate = () => {},
-}) {
-  const ref = useRef(null);
+}: GenScanUploadQrProps) {
+  const ref = useRef<HTMLElement | null>(null);
   const [popupVisible, setPopupVisible] = useState(false);
-  const [popupPosition, setPopupPosition] = useState('bottom');
+  const [popupPosition, setPopupPosition] = useState<'top' | 'bottom'>('bottom');
 
   const child = React.Children.only(children);
 
@@ -315,7 +331,9 @@ export default function GenScanUploadQr({
       popupVisible={popupVisible}
       onPopupVisibleChange={newVisible => {
         if (newVisible) {
-          const { bottom } = ref.current.getBoundingClientRect();
+          const element = ref.current;
+          if (!element) return;
+          const { bottom } = element.getBoundingClientRect();
           setPopupPosition(bottom + 290 > window.innerHeight ? 'top' : 'bottom');
         }
 
@@ -350,7 +368,7 @@ export default function GenScanUploadQr({
 }
 
 GenScanUploadQr.propTypes = {
-  type: PropTypes.string,
+  type: PropTypes.number,
   from: PropTypes.string,
   rowId: PropTypes.string,
   worksheetId: PropTypes.string,
