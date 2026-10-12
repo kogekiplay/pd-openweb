@@ -308,7 +308,7 @@ export const addUserSession =
 
     if (session) {
       if (!_.get(session, 'top_info.isTop')) {
-    const list = sessionList.filter((item: any) => item.value !== id);
+        const list = sessionList.filter((item: any) => item.value !== id);
         const topIndex = _.findLastIndex(list, item => _.get(item, 'top_info.isTop') === true) + 1;
 
         list.splice(topIndex, 0, session);
@@ -467,7 +467,7 @@ export const setTop = (message: any) => (dispatch: AppDispatch, getState: GetSta
   const time = message.top_info ? message.top_info.time : '';
 
   if (session) {
-      const newCurrentSessionList = currentSessionList.map((item: any) => {
+    const newCurrentSessionList = currentSessionList.map((item: any) => {
       if (item.id === message.value) {
         item.isTop = isTop;
         delete item.isSession;
@@ -488,7 +488,7 @@ export const setTop = (message: any) => (dispatch: AppDispatch, getState: GetSta
     );
 
     if (message.value === currentSession.value) {
-        let _current = sessionList.find((l: any) => l.value === message.value);
+      let _current = sessionList.find((l: any) => l.value === message.value);
       dispatch(
         setNewCurrentSession({
           ..._current,
@@ -1305,7 +1305,7 @@ export const updateWithdrawMessage = (id, newMessage) => (dispatch: AppDispatch,
  * 收到新消息
  * @param {*} message
  */
-export const receiveMessage = (id, message) => (dispatch: AppDispatch, getState: GetState) => {
+export const receiveMessage = (id: string, message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages } = getState().chat;
   const currentMessage = messages[id];
   const unnecessary = _.findIndex(currentMessage, { id: message.id }) === -1 ? false : true;
@@ -1348,7 +1348,7 @@ export const receiveMessage = (id, message) => (dispatch: AppDispatch, getState:
  * 系统消息
  * @param {*} message
  */
-export const newNotifyMessage = message => (dispatch: AppDispatch, getState: GetState) => {
+export const newNotifyMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList } = getState().chat;
   const showBadge = [0, 1].includes(message.type) ? message.type + 1 : 0;
 
@@ -1425,7 +1425,7 @@ export const newNotifyMessage = message => (dispatch: AppDispatch, getState: Get
  * 个人信息
  * @param {*} message
  */
-export const newUserMessage = message => (dispatch: AppDispatch, getState: GetState) => {
+export const newUserMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList, isWindow } = getState().chat;
   const id = md.global.Account.accountId === message.from ? message.to : message.from;
   const isSelf = md.global.Account.accountId === message.from;
@@ -1488,7 +1488,7 @@ export const newUserMessage = message => (dispatch: AppDispatch, getState: GetSt
  * 个人抖动消息
  * @param {*} message
  */
-export const userShake = message => (dispatch: AppDispatch, getState: GetState) => {
+export const userShake = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const addShakeMessage = () => {
     const { currentSession, messages } = getState().chat;
 
@@ -1530,7 +1530,7 @@ export const userShake = message => (dispatch: AppDispatch, getState: GetState) 
  * 创建群组
  * @param {*} message
  */
-export const newGroup = message => (dispatch: AppDispatch) => {
+export const newGroup = (message: any) => (dispatch: AppDispatch) => {
   const { admins } = message;
   const index = _.findIndex(admins, { aid: md.global.Account.accountId });
   const isSelf = index === -1 ? false : true;
@@ -1557,7 +1557,7 @@ export const newGroup = message => (dispatch: AppDispatch) => {
  * 收到群组信息
  * @param {*} message
  */
-export const newGroupMessage = message => (dispatch: AppDispatch, getState: GetState) => {
+export const newGroupMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList, isWindow } = getState().chat;
   const result = sessionList.filter(item => item.value === message.to);
   const isWindowSession = utils.chatWindow.is(message.to);
@@ -1605,7 +1605,7 @@ export const newGroupMessage = message => (dispatch: AppDispatch, getState: GetS
  * 收到群组 @ 消息
  * @param {*} message
  */
-export const groupShake = message => (dispatch: AppDispatch, getState: GetState) => {
+export const groupShake = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList } = getState().chat;
   const session = sessionList.filter(item => item.value === message.gid)[0];
   const isWindowSession = utils.chatWindow.is(message.gid);
@@ -1632,7 +1632,7 @@ export const groupShake = message => (dispatch: AppDispatch, getState: GetState)
  * 收到群组撤回消息
  * @param {*} message
  */
-export const newWithdrawGroupMessage = message => (dispatch: AppDispatch, getState: GetState) => {
+export const newWithdrawGroupMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const session = sessionList.filter(item => item.value === message.gid)[0];
   dispatch(updateWithdrawMessage(message.gid, message));
@@ -1680,7 +1680,7 @@ export const newWithdrawGroupMessage = message => (dispatch: AppDispatch, getSta
  * @param {*} id
  * @param {*} message
  */
-export const setReferMessage = (id, message) => {
+export const setReferMessage = (id: string, message: any) => {
   return {
     type: 'SET_REFER_MESSAGE',
     id,
@@ -1693,7 +1693,7 @@ export const setReferMessage = (id, message) => {
  * @param {*} id
  * @param {*} message
  */
-export const addBottomUnreadMessage = (id, message) => (dispatch: AppDispatch, getState: GetState) => {
+export const addBottomUnreadMessage = (id: string, message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { bottomUnreadMessage } = getState().chat;
   const currentMessage = bottomUnreadMessage[id];
 
@@ -1712,7 +1712,7 @@ export const addBottomUnreadMessage = (id, message) => (dispatch: AppDispatch, g
   }
 };
 
-export const removeBottomUnreadMessage = id => {
+export const removeBottomUnreadMessage = (id: string) => {
   return {
     type: 'REMOVE_BOTTOM_UNREAD_MESSAGE',
     id,
@@ -1723,7 +1723,7 @@ export const removeBottomUnreadMessage = id => {
  * 删除引用消息
  * @param {*} id
  */
-export const removeReferMessage = id => {
+export const removeReferMessage = (id: string) => {
   return {
     type: 'REMOVE_REFER_MESSAGE',
     id,
@@ -1735,7 +1735,7 @@ export const removeReferMessage = id => {
  * @param {*} id
  * @param {*} messageId
  */
-export const setGotoMessage = (id, messageId) => {
+export const setGotoMessage = (id: string, messageId: string) => {
   return {
     type: 'SET_GOTO_MESSAGE',
     id,
@@ -1747,7 +1747,7 @@ export const setGotoMessage = (id, messageId) => {
  * 删除指定的消息
  * @param {*} id
  */
-export const removeGotoMessage = id => {
+export const removeGotoMessage = (id: string) => {
   return {
     type: 'REMOVE_GOTO_MESSAGE',
     id,
@@ -1769,7 +1769,7 @@ export const setIsWindow = (isWindow: boolean) => {
  * 更新通讯录的显示
  * @param {*} isShowAddressBook
  */
-export const setShowAddressBook = isShowAddressBook => (dispatch: AppDispatch) => {
+export const setShowAddressBook = (isShowAddressBook: boolean) => (dispatch: AppDispatch) => {
   dispatch({
     type: 'UPDATE_SHOW_ADD_RESSBOOK',
     result: isShowAddressBook,
@@ -1851,7 +1851,7 @@ export const refresh = () => (dispatch: AppDispatch, getState: GetState) => {
  * 发送设置免打扰
  * @param {*} message
  */
-export const sendSetSlience = message => () => {
+export const sendSetSlience = (message: any) => () => {
   socket.Contact.setSlience(message);
 };
 
@@ -1859,7 +1859,7 @@ export const sendSetSlience = message => () => {
  * 设置免打扰
  * @param {*} message
  */
-export const setSlience = message => (dispatch: AppDispatch, getState: GetState) => {
+export const setSlience = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList, currentSession } = getState().chat;
   const isSilent = message.isSilent ? message.isSilent : false;
   const showBadge = message.showBadge ? message.showBadge : 0;
@@ -1909,7 +1909,7 @@ export const setSocketState = (state: number) => {
  * 更新 toolbarConfig 配置
  * @param {*} config
  */
-export const setToolbarConfig = config => {
+export const setToolbarConfig = (config: any) => {
   return {
     type: 'SET_TOOLBAR_CONFIG',
     result: config,
