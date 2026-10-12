@@ -18,6 +18,12 @@ const Tab = [
   { text: _l('样式'), type: 'style' },
 ];
 
+interface RequiredFilterOption {
+  value?: string | undefined;
+  text: string;
+  type?: number | undefined;
+}
+
 const Wrap = styled.div`
   box-sizing: border-box;
   width: 360px;
@@ -287,7 +293,7 @@ function Setting(props) {
                 selectClose={false}
                 placeholder={_l('请选择')}
                 className={cx('w100 mTop8 fastFilterControlDropdown')}
-                renderItem={item => {
+                renderItem={(item: RequiredFilterOption) => {
                   if (item.value === 'all') {
                     return <div className={'itemText Hand forAll flexRow alignItemsCenter'}>{item.text}</div>;
                   }

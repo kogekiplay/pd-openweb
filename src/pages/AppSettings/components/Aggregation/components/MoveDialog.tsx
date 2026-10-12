@@ -3,6 +3,7 @@ import { useSetState } from 'react-use';
 import cx from 'classnames';
 import styled from 'styled-components';
 import { Dialog, Dropdown, Icon } from 'ming-ui';
+import type { DropdownOption } from 'ming-ui/components/Dropdown';
 import ajaxRequest from 'src/api/appManagement';
 import AggTableAjax from 'src/pages/integration/api/aggTable.js';
 
@@ -14,9 +15,21 @@ const Wrap = styled.div`
   }
 `;
 
-export default function MoveDialog(props) {
+interface MoveDialogProps {
+  onCancel: () => void;
+  onOk: () => void;
+  className?: string | undefined;
+  projectId: string;
+  appId: string;
+  item: { aggTableId: string; name?: string | undefined };
+}
+
+export default function MoveDialog(props: MoveDialogProps) {
   const { onCancel, onOk, className, projectId, item } = props;
-  const [{ appList, selectAppId }, setState] = useSetState({
+  const [{ appList, selectAppId }, setState] = useSetState<{
+    appList: DropdownOption<string>[];
+    selectAppId: string | undefined;
+  }>({
     appList: [],
     selectAppId: '',
   });

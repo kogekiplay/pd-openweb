@@ -1,3 +1,18 @@
+interface InvoiceScope {
+  projectId?: string | undefined;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+}
+interface SaveInvoiceArgs extends InvoiceScope {
+  taxNo: string;
+  scenes?: { payment?: boolean | undefined } | undefined;
+  productId?: string | undefined;
+  remark?: string | undefined;
+  fieldMaps?: Record<string, string> | undefined;
+  mapWorksheetId?: string | undefined;
+  invoiceCustomRemark?: string | undefined;
+}
+
 export default {
   /**
    * 保存支付基础配置
@@ -36,7 +51,7 @@ export default {
    **/
   getPaymentSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
-      type: 'GET'
+      type: 'GET',
     });
     return mdyAPI('WorksheetSetting', 'GetPaymentSetting', args, options);
   },
@@ -49,7 +64,7 @@ export default {
    **/
   getRowDetailIsShowOrder: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
-      type: 'GET'
+      type: 'GET',
     });
     return mdyAPI('WorksheetSetting', 'GetRowDetailIsShowOrder', args, options);
   },
@@ -69,7 +84,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  saveInvoiceSetting: function (args: ApiArgs, options: ApiOptions = {}) {
+  saveInvoiceSetting: function (args: SaveInvoiceArgs, options: ApiOptions = {}): ApiResultOf<unknown> {
     return mdyAPI('WorksheetSetting', 'SaveInvoiceSetting', args, options);
   },
   /**
@@ -79,9 +94,9 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInvoiceSetting: function (args: ApiArgs, options: ApiOptions = {}) {
+  getInvoiceSetting: function (args: InvoiceScope, options: ApiOptions = {}): ApiResultOf<unknown> {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
-      type: 'GET'
+      type: 'GET',
     });
     return mdyAPI('WorksheetSetting', 'GetInvoiceSetting', args, options);
   },
@@ -109,8 +124,8 @@ export default {
    **/
   getShareCardSetting: function (args: ApiArgs, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, {
-      type: 'GET'
+      type: 'GET',
     });
     return mdyAPI('WorksheetSetting', 'GetShareCardSetting', args, options);
-  }
+  },
 };

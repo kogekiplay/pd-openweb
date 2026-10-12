@@ -110,7 +110,7 @@ const ColumnDrop = props => {
   let { value, advancedSetting = {}, controls = [], worksheetControls = [] } = props;
   const { max } = advancedSetting;
   const allTypes = getAllTypes(controls);
-  const allColumns = worksheetControls.filter((o: FormControl) => allTypes.includes(o.type as number));
+  const allColumns: FormControl[] = worksheetControls.filter((o: FormControl) => allTypes.includes(o.type as number));
 
   return (
     <div className="">
@@ -150,7 +150,7 @@ const CustomControlDrop = props => {
   }
 
   const allTypes = props.sourceControlType === 29 ? [29, 34] : getAllTypes(props.controls);
-  const allColumns = worksheetControls.filter((o: FormControl) => allTypes.includes(o.type as number));
+  const allColumns: FormControl[] = worksheetControls.filter((o: FormControl) => allTypes.includes(o.type as number));
   return (
     <div className="flexRow">
       <Dropdown

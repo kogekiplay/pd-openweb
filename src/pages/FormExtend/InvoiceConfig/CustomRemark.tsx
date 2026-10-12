@@ -64,11 +64,17 @@ const Wrapper = styled.div`
   }
 `;
 
-export default function SelectWithRefer(props) {
-  const { value, onChange, controlList = [] }: { controlList: FormControl[]; [key: string]: any } = props;
+interface SelectWithReferProps {
+  value?: string | undefined;
+  onChange: (value: string) => void;
+  controlList?: readonly FormControl[] | undefined;
+}
+
+export default function SelectWithRefer(props: SelectWithReferProps) {
+  const { value, onChange, controlList = [] } = props;
   const [visible, setVisible] = useState(false);
   const tagTextareaRef = useRef<TagTextarea | null>(null);
-  const popupContainerRef = useRef(null);
+  const popupContainerRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <Wrapper ref={popupContainerRef}>
@@ -90,13 +96,15 @@ export default function SelectWithRefer(props) {
         popupVisible={visible}
         onPopupVisibleChange={visible => setVisible(visible)}
         popupAlign={{ points: ['tr', 'br'], offset: [0, 5], overflow: { adjustX: true, adjustY: true } }}
-        getPopupContainer={() => popupContainerRef.current}
+        getPopupContainer={() => popupContainerRef.current ?? document.body}
         popup={
           <Menu>
             {controlList.map(control => (
               <MenuItem
                 key={control.controlId}
-                onClick={() => tagTextareaRef.current.insertColumnTag(control.controlId)}
+                onClick={() => {
+                  if (control.controlId) tagTextareaRef.current?.insertColumnTag(control.controlId);
+                }}
               >
                 <Icon icon={getIconByType(control.type)} className="Font16" />
                 <span className="overflow_ellipsis flex mLeft12">{control.controlName}</span>
