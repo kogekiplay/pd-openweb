@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 Socket 通知边界
+
+Socket 初始化、自定义通知、市场/系统通知和 mobile socket payload 已有限化；通知 action 改为有限分支，新增 socket.io-client 使用声明与 decoder 回归。严格诊断 54,519 → 54,503（按文件/错误码新增 0），socket 目录零诊断；221/221 规格、语法和工具门禁通过。详见 socket-notice-strict-20261013.md。全仓目标继续，待 release/资源校验后按日常窗口发布。
+
 ## 2026-10-13 Agent 事件总线与移动概览
 
 开放总线 payload 的 any 已改为 unknown，聊天事件消费端通过解码器取得字段合同，文件引用/修改意见和移动概览状态/ref 已收紧。修复重复取消旧订阅误删新监听器和移动流式 falsy JSON 丢值；真实总线、聊天/移动接收源码的历史 A/B、公开类型及 localhost StrictMode 验收通过。严格诊断 54,586 → 54,519（按文件/错误码新增 0），债务 3,208 文件、strict-clean 1,539 / 4,747，220/220 规格及工具/语法门禁通过。详见 agent-event-bus-strict-20261013.md。清理逐文件验证过的重复主机暂存后，生产发布可用空间恢复到约 38.1 GiB；现网和全部容器回滚保留。全仓目标继续。

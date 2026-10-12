@@ -5,6 +5,8 @@ import { renderBtnList } from 'ming-ui/functions/mdNotification';
 import ErrorDialog from 'src/pages/worksheet/common/WorksheetBody/ImportDataFromExcel/ErrorDialog';
 import { navigateTo } from 'src/router/navigateTo';
 import { downloadFile, emitter, getPathWithoutSubPath } from 'src/utils/common';
+import { decodeCustomNotice } from '../socketTypes';
+import type { CustomNoticeData } from '../socketTypes';
 
 // path-to-regexp 8 的可选段语法变了：v6 的 `:x?` 要写成 `{/:x}`（斜杠写进花括号里）。
 // v6 写法在 v8 会【构造时就抛】，而这行在模块顶层 —— 等于整个模块 import 失败。
@@ -53,19 +55,20 @@ export default function customNotice() {
         if (href.indexOf('excelerrorpage') > -1) {
           const id = href.slice(href.indexOf('excelerrorpage') + 15).split('/');
 
-          ErrorDialog({ fileKey: id[0] });
+          ErrorDialog({ fileKey: id[0], isAttachment: false, isBatch: false });
           stop();
         }
 
         if (href.indexOf('excelbatcherrorpage') > -1) {
           const id = href.slice(href.indexOf('excelbatcherrorpage') + 15).split('/');
 
-          ErrorDialog({ fileKey: id[1], isBatch: true });
+          ErrorDialog({ fileKey: id[1], isAttachment: false, isBatch: true });
           stop();
         }
 
         if (href.indexOf('applang') > -1) {
-          navigateTo(`/app/${href.match(/applang\/(.*)/)[1]}/settings/language`);
+          const matchResult = href.match(/applang\/(.*)/);
+          if (matchResult?.[1]) navigateTo(`/app/${matchResult[1]}/settings/language`);
           stop();
           return;
         }
@@ -73,13 +76,15 @@ export default function customNotice() {
         if (href.indexOf('importattachmentserrorpage') > -1) {
           const arr = href.split('/');
 
-          ErrorDialog({ fileKey: arr[arr.length - 1], isAttachment: true });
+          ErrorDialog({ fileKey: arr[arr.length - 1], isAttachment: true, isBatch: false });
           stop();
         }
       }
     });
 
-    socket.on('custom', data => {
+    (socket as { on(event: 'custom', handler: (data: CustomNoticeData) => void): unknown }).on('custom', rawData => {
+      const data = decodeCustomNotice(rawData);
+      if (!data) return;
       const { id, status, title, msg, link, linkText, color, type } = data;
       const { params } = integrationParams(getPathWithoutSubPath(location.pathname)) || {};
       let action = '';
@@ -100,7 +105,7 @@ export default function customNotice() {
       }
 
       // api集成导入升级 type=2 导出，type=101 api导入，type=102 api升级
-      if (status === 2 && type === 102 && !_.isEmpty(params) && params.id === data.id) {
+      if (status === 2 && type === 102 && !_.isEmpty(params) && params?.['id'] === data.id) {
         setTimeout(() => {
           window.location.reload();
         }, 200);
@@ -113,7 +118,8 @@ export default function customNotice() {
         }, 200);
       }
 
-      antNotification[action]({
+      const notify = action === 'info' ? antNotification.info : action === 'success' ? antNotification.success : action === 'warning' ? antNotification.warning : antNotification.error;
+      notify({
         key: id,
         className: 'customNotification',
         closeIcon: <Icon icon="close" className="Font20 textTertiary hoverColorPrimary" />,

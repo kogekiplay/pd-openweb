@@ -1,7 +1,8 @@
 import moment from 'moment';
 import { mdNotification } from 'ming-ui/functions';
+import type { MarketNoticeData } from '../socketTypes';
 
-export default function sysNotice(data) {
+export default function sysNotice(data: MarketNoticeData): void {
   if (!md.global.Config.MdNoticeServer) return;
 
   if (data) {
