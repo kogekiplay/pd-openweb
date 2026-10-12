@@ -1418,7 +1418,6 @@
     "src/pages/Statistics/Charts/VerificationDataLength.tsx",
     "src/pages/Statistics/Charts/WordCloudChart.tsx",
     "src/pages/Statistics/Charts/WorldMap.tsx",
-    "src/pages/Statistics/Charts/common.ts",
     "src/pages/Statistics/Charts/index.tsx",
     "src/pages/Statistics/Charts/loadG2Plot.ts",
     "src/pages/Statistics/Charts/reportTypeIcons.ts",
