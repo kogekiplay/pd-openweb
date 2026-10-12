@@ -1,14 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
+import type { Dispatch, RefObject, SetStateAction } from 'react';
 import styled from 'styled-components';
 import { Icon, PopupWrapper } from 'ming-ui';
 import { useAgentBus } from 'src/components/Agent/agentBus';
+import { subscribeDecodedAgentEvent } from 'src/components/Agent/agentEventBus';
+import { decodeBuilderOpenEvent } from 'src/components/Agent/agentEventPayloads';
 import {
   entryByKey,
   entryByPath,
   hasData,
   parseFile,
+  serializeFile,
   SIDEBAR_ITEMS,
 } from 'src/components/Agent/AppBuilder/fileRegistry';
+import { countSidebarItems, decodeFileEvent } from 'src/components/Agent/AppBuilder/fileStore';
+import { fileArray } from 'src/components/Agent/AppBuilder/fileTypes';
+import type { FileEntry, FileMap, FileState, SidebarKey } from 'src/components/Agent/AppBuilder/fileTypes';
 import {
   AiAssistantsPanel,
   CustomActionsPanel,
@@ -20,17 +27,19 @@ import {
 } from 'src/components/Agent/AppBuilder/panels';
 import ScrollToBottom from './ScrollToBottom';
 
-const PANEL_BY_KEY = {
+const PANEL_BY_KEY: Record<SidebarKey, (props: { parsed: unknown }) => React.JSX.Element> = {
   overview: ({ parsed }) => <OverviewPanel plan={parsed} />,
   roles: ({ parsed }) => <RolesPanel roles={parsed || []} />,
-  worksheets: ({ parsed }) => <WorksheetsPanel worksheets={parsed || []} />,
-  customPages: ({ parsed }) => <CustomPagesPanel pages={parsed || []} />,
+  worksheets: ({ parsed }) => <WorksheetsPanel worksheets={fileArray(parsed)} />,
+  customPages: ({ parsed }) => <CustomPagesPanel pages={fileArray(parsed)} />,
   customActions: ({ parsed }) => <CustomActionsPanel customActions={parsed || []} />,
   workflows: ({ parsed }) => <WorkflowsPanel workflows={parsed || []} />,
-  aiAssistants: ({ parsed }) => <AiAssistantsPanel pages={parsed || []} />,
+  aiAssistants: ({ parsed }) => <AiAssistantsPanel pages={fileArray(parsed)} />,
 };
 
-const ICON_STYLE_BY_KEY = {
+const ICON_STYLE_BY_KEY: Partial<Record<SidebarKey, { color: string; background: string }>> & {
+  overview: { color: string; background: string };
+} = {
   overview: {
     color: 'var(--color-primary)',
     background: 'var(--color-primary-transparent-light)',
@@ -63,11 +72,11 @@ const ICON_STYLE_BY_KEY = {
 
 const STICK_TO_BOTTOM_OFFSET = 48;
 
-function isScrollNearBottom(node) {
+function isScrollNearBottom(node: HTMLElement) {
   return node.scrollHeight - node.scrollTop - node.clientHeight < STICK_TO_BOTTOM_OFFSET;
 }
 
-function hasOverflow(node) {
+function hasOverflow(node: HTMLElement) {
   return node.scrollHeight - node.clientHeight > STICK_TO_BOTTOM_OFFSET;
 }
 
@@ -122,7 +131,7 @@ const SectionBlock = styled.div`
   background: var(--color-background-card);
 `;
 
-const SectionHeader = styled.button`
+const SectionHeader = styled.button<{ $color: string; $background: string; $collapsed: boolean }>`
   width: 100%;
   min-height: 64px;
   border: 0;
@@ -235,7 +244,7 @@ const OverviewFooter = styled.div`
   }
 `;
 
-function tryParseFile(path, content) {
+function tryParseFile(path: string, content: string): unknown {
   const entry = entryByPath(path);
 
   if (!entry) return undefined;
@@ -247,33 +256,45 @@ function tryParseFile(path, content) {
   }
 }
 
+export interface OverviewControllerProps {
+  filesRef: RefObject<FileMap>;
+  setOverviewContent: Dispatch<SetStateAction<string>>;
+  setOverviewReady: (ready: boolean) => void;
+  setOverviewVisible: (visible: boolean) => void;
+  onFilesChange?: (() => void) | undefined;
+}
 export function OverviewController({
   filesRef,
   setOverviewContent,
   setOverviewReady,
   setOverviewVisible,
   onFilesChange,
-}) {
+}: OverviewControllerProps) {
   const bus = useAgentBus();
 
   useEffect(() => {
-    const isOverview = payload => payload && payload.path === '/plan.md';
+    const isOverview = (payload: { path: string }) => payload.path === '/plan.md';
     const openOverview = () => setOverviewVisible(true);
 
-    const updateFile = (path, mutator) => {
+    const updateFile = (path: string, mutator: (entry: FileEntry, current: FileState) => FileState | undefined) => {
       const entry = entryByPath(path);
 
       if (!entry) return;
 
-      const cur = filesRef.current[path] || { content: '', parsed: entry.initial, status: 'idle' };
+      const cur: FileState = filesRef.current[path] || {
+        content: '',
+        parsed: parseFile(entry, serializeFile(entry, entry.initial)),
+        status: 'idle',
+      };
       const next = mutator(entry, cur);
 
       if (next) filesRef.current = { ...filesRef.current, [path]: next };
       if (next && onFilesChange) onFilesChange();
     };
 
-    const handleBegin = payload => {
-      if (!payload?.path) return;
+    const handleBegin = (value: unknown) => {
+      const payload = decodeFileEvent('file:begin', value);
+      if (!payload || payload.topic !== 'file:begin') return;
       updateFile(payload.path, (entry, cur) => ({
         ...cur,
         content: '',
@@ -287,13 +308,14 @@ export function OverviewController({
       }
     };
 
-    const handleDelta = payload => {
-      if (!payload?.path) return;
+    const handleDelta = (value: unknown) => {
+      const payload = decodeFileEvent('file:delta', value);
+      if (!payload || payload.topic !== 'file:delta') return;
       updateFile(payload.path, (entry, cur) => {
         const content = (cur.content || '') + (payload.delta || '');
-        const parsed = entry.type === 'markdown' ? content : tryParseFile(payload.path, content) || cur.parsed;
+        const parsed = entry.type === 'markdown' ? content : tryParseFile(payload.path, content);
 
-        return { ...cur, content, parsed, status: 'streaming' };
+        return { ...cur, content, parsed: parsed === undefined ? cur.parsed : parsed, status: 'streaming' };
       });
       setOverviewReady(false);
       if (isOverview(payload)) {
@@ -301,8 +323,9 @@ export function OverviewController({
       }
     };
 
-    const handleWrite = payload => {
-      if (!payload?.path) return;
+    const handleWrite = (value: unknown) => {
+      const payload = decodeFileEvent('file:write', value);
+      if (!payload || payload.topic !== 'file:write') return;
       updateFile(payload.path, (_entry, cur) => {
         const parsed = tryParseFile(payload.path, payload.content || '');
 
@@ -318,8 +341,9 @@ export function OverviewController({
       }
     };
 
-    const handleEnd = payload => {
-      if (!payload?.path) return;
+    const handleEnd = (value: unknown) => {
+      const payload = decodeFileEvent('file:end', value);
+      if (!payload || payload.topic !== 'file:end') return;
       updateFile(payload.path, (_entry, cur) => {
         const parsed = tryParseFile(payload.path, cur.content || '');
 
@@ -327,7 +351,15 @@ export function OverviewController({
       });
     };
 
-    const handleAppMeta = ({ versionLabel, artifactId, versionId } = {}) => {
+    const handleAppMeta = ({
+      versionLabel,
+      artifactId,
+      versionId,
+    }: {
+      versionLabel: string;
+      artifactId: string;
+      versionId: string;
+    }) => {
       if (versionLabel || artifactId || versionId) setOverviewReady(true);
     };
 
@@ -336,7 +368,7 @@ export function OverviewController({
       bus.on('file:delta', handleDelta),
       bus.on('file:end', handleEnd),
       bus.on('file:write', handleWrite),
-      bus.on('app:meta', handleAppMeta),
+      subscribeDecodedAgentEvent(bus, 'app:meta', decodeBuilderOpenEvent, handleAppMeta),
       bus.on('mobile:open-overview', openOverview),
     ];
 
@@ -346,7 +378,12 @@ export function OverviewController({
   return null;
 }
 
-function GenerateBar({ filesRef, ready, generating, onGenerateStart }) {
+function GenerateBar({
+  filesRef,
+  ready,
+  generating,
+  onGenerateStart,
+}: Pick<OverviewPopupProps, 'filesRef' | 'ready' | 'generating' | 'onGenerateStart'>) {
   const bus = useAgentBus();
   const disabled = !ready || generating;
 
@@ -386,24 +423,28 @@ function GenerateBar({ filesRef, ready, generating, onGenerateStart }) {
   );
 }
 
-function getCount(key: string, parsed) {
+function getCount(key: string, parsed: unknown) {
   if (!Array.isArray(parsed)) return null;
 
-  if (key === 'customActions') {
-    return parsed.reduce((sum, group) => sum + (Array.isArray(group && group.actions) ? group.actions.length : 0), 0);
-  }
-
-  return parsed.length;
+  return countSidebarItems(key, parsed);
 }
 
-function getFileByKey(filesRef, key) {
+function getFileByKey(filesRef: RefObject<FileMap>, key: SidebarKey) {
   const entry = entryByKey(key);
 
   if (!entry || !entry.file) return undefined;
   return filesRef.current[entry.file];
 }
 
-function PlanPanel({ activeKey, filesRef, content }) {
+function PlanPanel({
+  activeKey,
+  filesRef,
+  content,
+}: {
+  activeKey: SidebarKey;
+  filesRef: RefObject<FileMap>;
+  content: string;
+}) {
   const entry = entryByKey(activeKey);
 
   if (!entry || !entry.file) return null;
@@ -417,7 +458,7 @@ function PlanPanel({ activeKey, filesRef, content }) {
   return null;
 }
 
-function getGeneratedItems(filesRef, content) {
+function getGeneratedItems(filesRef: RefObject<FileMap>, content: string) {
   return SIDEBAR_ITEMS.filter(item => {
     const file = getFileByKey(filesRef, item.key);
 
@@ -427,6 +468,16 @@ function getGeneratedItems(filesRef, content) {
   });
 }
 
+export interface OverviewPopupProps {
+  visible: boolean;
+  content: string;
+  ready: boolean;
+  generating: boolean;
+  filesRef: RefObject<FileMap>;
+  filesVersion?: number | undefined;
+  onClose: () => void;
+  onGenerateStart: () => void;
+}
 export default function OverviewPopup({
   visible,
   content,
@@ -436,10 +487,10 @@ export default function OverviewPopup({
   filesVersion = 0,
   onClose,
   onGenerateStart,
-}) {
-  const [collapsedKeys, setCollapsedKeys] = useState({});
+}: OverviewPopupProps) {
+  const [collapsedKeys, setCollapsedKeys] = useState<Partial<Record<SidebarKey, boolean>>>({});
   const [showScrollBottom, setShowScrollBottom] = useState(false);
-  const contentRef = useRef(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
   const stickToBottomRef = useRef(true);
   const lastScrollTopRef = useRef(0);
   const userScrollIntentRef = useRef(false);
