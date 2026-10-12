@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import type { ComponentType, CSSProperties, ReactElement } from 'react';
+import type { CSSProperties } from 'react';
 import axios from 'axios';
 import { get, isFunction, replace } from 'lodash';
 // signature_pad 5 的 exports 映射只有 '.'，深子路径 dist/signature_pad 已被封死。
@@ -7,6 +7,7 @@ import SignaturePad from 'signature_pad';
 import styled from 'styled-components';
 import accountSettingAjax from 'src/api/accountSetting';
 import GenScanUploadQr from 'worksheet/components/GenScanUploadQr';
+import type { ScanAttachment } from 'worksheet/components/GenScanUploadQr';
 import { getToken } from 'src/utils/common';
 import { requireBase64FileToken } from 'src/utils/commonRequestBoundary';
 import { stripFileUrlSignature } from 'src/utils/signature';
@@ -44,23 +45,6 @@ const SignatureBox = styled.div`
     }
   }
 `;
-
-interface ScanAttachment {
-  url?: string | undefined;
-  [key: string]: unknown;
-}
-
-interface SignatureScanQrProps {
-  type?: string | number | undefined;
-  worksheetId?: string | undefined;
-  viewId?: string | undefined;
-  onScanResultUpdate?: ((files: ScanAttachment[]) => void) | undefined;
-  children: ReactElement;
-}
-
-// GenScanUploadQr is a legacy JS boundary; its runtime emits attachment arrays even
-// though the inferred declaration only exposes the zero-argument default callback.
-const SignatureScanQr = GenScanUploadQr as unknown as ComponentType<SignatureScanQrProps>;
 
 interface SignatureProps {
   showButton?: boolean | undefined;
@@ -224,7 +208,7 @@ export default class Signature extends Component<SignatureProps, SignatureState>
               </span>
             )}
             {showUploadFromMobile && (
-              <SignatureScanQr
+              <GenScanUploadQr
                 worksheetId={worksheetId}
                 viewId={viewId}
                 type={2}
@@ -246,7 +230,7 @@ export default class Signature extends Component<SignatureProps, SignatureState>
                   <i className="icon icon-zendeskHelp-qrcode"></i>
                   {_l('扫码签名')}
                 </div>
-              </SignatureScanQr>
+              </GenScanUploadQr>
             )}
 
             <div className="flex" />
