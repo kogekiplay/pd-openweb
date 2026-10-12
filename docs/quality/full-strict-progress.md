@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 Chat Redux 会话 action 边界
+
+聊天会话列表、添加/删除会话、窗口同步、置顶、清未读和当前会话 action 的动态参数边界已收紧，移除 33 条诊断、未新增调用方诊断。详见 `chat-redux-actions-strict-20261013.md`，消息 action 继续拆批处理。
+
 ## 2026-10-13 Agent service 响应解码入口
 
 Agent service 的基础 unknown 解码、字段读取、摘要、列表和 artifact 历史引用边界已收紧，移除 12 条隐式类型诊断，未新增调用方诊断。详见 `agent-service-decode-strict-20261013.md`，网络请求和 ChatPanel 传播继续拆批处理。

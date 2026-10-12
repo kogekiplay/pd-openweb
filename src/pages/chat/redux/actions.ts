@@ -10,7 +10,7 @@ import * as socket from '../utils/socket';
  * 设置会话列表
  * @param {*} result
  */
-export const setSessionList = result => (dispatch: AppDispatch, getState: GetState) => {
+export const setSessionList = (result: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { toolbarConfig } = getState().chat;
   dispatch({
     type: 'SET_SESSION_LIST',
@@ -22,7 +22,7 @@ export const setSessionList = result => (dispatch: AppDispatch, getState: GetSta
  * 添加更多的会话
  * @param {*} result
  */
-export const addSessionList = result => (dispatch: AppDispatch, getState: GetState) => {
+export const addSessionList = (result: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { toolbarConfig } = getState().chat;
   dispatch({
     type: 'ADD_SESSION_LIST',
@@ -34,14 +34,14 @@ export const addSessionList = result => (dispatch: AppDispatch, getState: GetSta
  * 更新会话列表数据
  * @param {*} result
  */
-export const updateSessionList = result => (dispatch: AppDispatch, getState: GetState) => {
+export const updateSessionList = (result: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList, currentSessionList, toolbarConfig } = getState().chat;
   const newSessionList = _.cloneDeep(sessionList);
   const { id } = result;
-  const adjust = [];
+  const adjust: any[] = [];
   let hasClearCount = false;
 
-  newSessionList.forEach(item => {
+  newSessionList.forEach((item: any) => {
     if (item.value === id) {
       // 草稿
       if ('sendMsg' in result) {
@@ -94,7 +94,7 @@ export const updateSessionList = result => (dispatch: AppDispatch, getState: Get
         adjust.push(item);
         delete item.isSession;
         let isSetTop = false;
-        const newCurrentSessionList = currentSessionList.map(n => {
+        const newCurrentSessionList = currentSessionList.map((n: any) => {
           if (n.id === item.value && 'isSession' in n) {
             isSetTop = true;
             n.isTop = false;
@@ -181,7 +181,7 @@ export const updateSessionList = result => (dispatch: AppDispatch, getState: Get
  * 删除会话
  * @param {*} result
  */
-export const removeSession = id => {
+export const removeSession = (id: string) => {
   return {
     type: 'REMOVE_SESSION',
     id,
@@ -192,12 +192,12 @@ export const removeSession = id => {
  * 添加会话
  * @param {*} result
  */
-export const addSession = (result, id?) => (dispatch: AppDispatch, getState: GetState) => {
+export const addSession = (result: any, id?: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
 
   // 兼容连续消息
   if (id) {
-    const session = sessionList.filter(item => item.value === id)[0];
+    const session = sessionList.filter((item: any) => item.value === id)[0];
     const isSelf = md.global.Account.accountId === result.from;
     const name = isSelf ? _l('我') : result.uname;
     const msg = {
@@ -236,7 +236,7 @@ export const addGroupSession =
     // if (utils.chatWindow.is(groupId)) {
     //   return;
     // }
-    const session = sessionList.filter(item => item.value == groupId)[0];
+    const session = sessionList.filter((item: any) => item.value == groupId)[0];
 
     if (session) {
       isOpen && dispatch(setCurrentSessionId(groupId));
@@ -298,17 +298,17 @@ export const addGroupSession =
  * @param {*} cb
  */
 export const addUserSession =
-  (id, msg: Record<string, any> = {}, isOpen = true, cb?: (() => void) | undefined) =>
+  (id: string, msg: Record<string, any> = {}, isOpen = true, cb?: (() => void) | undefined) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     // if (utils.chatWindow.is(id)) {
     //   return;
     // }
-    const session = sessionList.filter(item => item.value === id)[0];
+    const session = sessionList.filter((item: any) => item.value === id)[0];
 
     if (session) {
       if (!_.get(session, 'top_info.isTop')) {
-        const list = sessionList.filter(item => item.value !== id);
+    const list = sessionList.filter((item: any) => item.value !== id);
         const topIndex = _.findLastIndex(list, item => _.get(item, 'top_info.isTop') === true) + 1;
 
         list.splice(topIndex, 0, session);
@@ -383,7 +383,7 @@ export const addUserSession =
  * @param {*} msg
  */
 export const addSysSession =
-  (id, msg = {}) =>
+  (id: string, msg: Record<string, any> = {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     const session = sessionList.filter(item => item.value == id)[0];
@@ -400,7 +400,7 @@ export const addSysSession =
  * 窗口同步
  * @param {*} status
  */
-export const operate = status => (dispatch: AppDispatch, getState: GetState) => {
+export const operate = (status: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const { contact, isclose, isopen } = status;
   const session = sessionList.filter(item => item.value === contact.id)[0];
@@ -439,11 +439,11 @@ export const operate = status => (dispatch: AppDispatch, getState: GetState) => 
  * 发送设置置顶的会话
  * @param {*} message
  */
-export const sendSetTop = message => (_dispatch: AppDispatch, getState: GetState) => {
+export const sendSetTop = (message: any) => (_dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const { isTop } = message;
 
-  const count = sessionList.reduce((count, item) => {
+  const count = sessionList.reduce((count: number, item: any) => {
     const { top_info } = item;
     const n = top_info ? (top_info.isTop ? 1 : 0) : 0;
     return count + n;
@@ -460,14 +460,14 @@ export const sendSetTop = message => (_dispatch: AppDispatch, getState: GetState
  * 设置置顶
  * @param {*} message
  */
-export const setTop = message => (dispatch: AppDispatch, getState: GetState) => {
+export const setTop = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList, currentSession } = getState().chat;
-  const session = sessionList.filter(item => item.value === message.value)[0];
+  const session = sessionList.filter((item: any) => item.value === message.value)[0];
   const isTop = message.top_info ? message.top_info.isTop : false;
   const time = message.top_info ? message.top_info.time : '';
 
   if (session) {
-    const newCurrentSessionList = currentSessionList.map(item => {
+      const newCurrentSessionList = currentSessionList.map((item: any) => {
       if (item.id === message.value) {
         item.isTop = isTop;
         delete item.isSession;
@@ -488,7 +488,7 @@ export const setTop = message => (dispatch: AppDispatch, getState: GetState) => 
     );
 
     if (message.value === currentSession.value) {
-      let _current = sessionList.find(l => l.value === message.value);
+        let _current = sessionList.find((l: any) => l.value === message.value);
       dispatch(
         setNewCurrentSession({
           ..._current,
@@ -506,7 +506,7 @@ export const setTop = message => (dispatch: AppDispatch, getState: GetState) => 
  * 同步删除会话
  * @param {*} message
  */
-export const sessionRemoved = message => (dispatch: AppDispatch, getState: GetState) => {
+export const sessionRemoved = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { id, type } = message;
   const { currentSession, sessionList } = getState().chat;
   const value = type > 2 ? utils.getInboxId(type) : id;
@@ -525,7 +525,7 @@ export const sessionRemoved = message => (dispatch: AppDispatch, getState: GetSt
  * 清除会话未读消息计数
  * @param {*} message
  */
-export const clearUnread = message => (dispatch: AppDispatch) => {
+export const clearUnread = (message: any) => (dispatch: AppDispatch) => {
   const { id } = message;
   dispatch(updateSessionList({ id, atlist: [] }));
   dispatch(updateSessionList({ id, reflist: [] }));
@@ -538,7 +538,7 @@ export const clearUnread = message => (dispatch: AppDispatch) => {
  */
 export const clearAllUnread = () => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
-  const newSessionList = _.cloneDeep(sessionList).map(item => {
+  const newSessionList = _.cloneDeep(sessionList).map((item: any) => {
     if (item.count) {
       item.count = 0;
     }
@@ -568,7 +568,7 @@ export const clearAllUnread = () => (dispatch: AppDispatch, getState: GetState) 
  * 清除 inbox 的未读计数
  * @param {*} message
  */
-export const clearNotification = message => (dispatch: AppDispatch, getState: GetState) => {
+export const clearNotification = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession } = getState().chat;
   const { type } = message;
   dispatch(updateSessionList({ id: type, clearCount: 0 }));
@@ -587,7 +587,7 @@ export const clearNotification = message => (dispatch: AppDispatch, getState: Ge
  * 删除群组
  * @param {*} data
  */
-export const removedFromGroup = data => (dispatch: AppDispatch, getState: GetState) => {
+export const removedFromGroup = (data: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession } = getState().chat;
   const { id } = data;
 
@@ -616,7 +616,7 @@ export const closeSessionPanel = () => (dispatch: AppDispatch, getState: GetStat
  * 设置一个新的会话信息
  * @param {*} result
  */
-export const setNewCurrentSession = result => (dispatch: AppDispatch) => {
+export const setNewCurrentSession = (result: any) => (dispatch: AppDispatch) => {
   /* 【点会话列表时 dev 下报 A state mutation was detected ... 'chat.sessionList.N.id'】
      result 常常直接是 chat.sessionList 里的对象（SessionList.handleOpenPanel 只在带 showBadge 时才拷一份），
      原先 setCurrentChat 在它身上写 id = value，RTK 的不可变检查在 dev 下抛错、会话面板打不开；生产没有这个检查，
@@ -645,10 +645,10 @@ export const setNewCurrentSession = result => (dispatch: AppDispatch) => {
  * @param {*} message
  */
 export const setCurrentSessionId =
-  (id, message = {}) =>
+  (id: string, message: Record<string, any> = {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
-    const found = sessionList.filter(item => item.value === id)[0];
+    const found = sessionList.filter((item: any) => item.value === id)[0];
     // 同上：session 取自 sessionList（store 里的对象），不能原地 assign；id = value 原先是 setCurrentChat 顺手写上的
     const session = found && found.value ? { ...found, id: found.value } : found;
     socket.Contact.setCurrentChat(session);
