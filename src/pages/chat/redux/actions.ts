@@ -264,7 +264,7 @@ export const addGroupSession =
             type: Constant.SESSIONTYPE_GROUP,
             value: groupId,
           })
-          .then(group => {
+          ?.then(group => {
             const message = Object.assign(
               {
                 isGroup: true,
@@ -348,7 +348,7 @@ export const addUserSession =
             type: Constant.SESSIONTYPE_USER,
             value: id,
           })
-          .then(user => {
+          ?.then(user => {
             const message = Object.assign(
               {
                 count: 0,
@@ -1244,13 +1244,13 @@ export const updateWithdrawMessage = (id: string, newMessage: any) => (dispatch:
   const { messages, referMessage, bottomUnreadMessage } = getState().chat;
   const { id: messageId, msg } = newMessage;
   const currentMessage = messages[id];
-  const bottomUnread = bottomUnreadMessage[id] || [];
+  const bottomUnread = (bottomUnreadMessage as Record<string, any>)[id] || [];
 
   if (!currentMessage) {
     return;
   }
 
-  currentMessage.forEach((item, index: number) => {
+  currentMessage.forEach((item: any, index: number) => {
     if (item.id == messageId) {
       const nextMessage = currentMessage[index + 1];
       item.iswd = true;
@@ -1270,7 +1270,7 @@ export const updateWithdrawMessage = (id: string, newMessage: any) => (dispatch:
     }
   });
 
-  bottomUnread.forEach((item, index: number) => {
+  bottomUnread.forEach((item: any, index: number) => {
     if (item.id == messageId) {
       const nextMessage = bottomUnread[index + 1];
       item.iswd = true;
@@ -1286,7 +1286,7 @@ export const updateWithdrawMessage = (id: string, newMessage: any) => (dispatch:
     }
   });
 
-  if (referMessage[id] && referMessage[id].id == messageId) {
+  if ((referMessage as Record<string, any>)[id] && (referMessage as Record<string, any>)[id].id == messageId) {
     dispatch(removeReferMessage(id));
   }
 
@@ -1394,7 +1394,7 @@ export const newNotifyMessage = (message: any) => (dispatch: AppDispatch, getSta
     message.msg = `${message.name}: ${message.msg}`;
   }
 
-  const result = sessionList.filter(item => item.value === message.id);
+  const result = sessionList.filter((item: any) => item.value === message.id);
 
   if (result.length) {
     dispatch(
@@ -1430,7 +1430,7 @@ export const newUserMessage = (message: any) => (dispatch: AppDispatch, getState
   const { currentSession, sessionList, isWindow } = getState().chat;
   const id = md.global.Account.accountId === message.from ? message.to : message.from;
   const isSelf = md.global.Account.accountId === message.from;
-  const result = sessionList.filter(item => item.value === id);
+  const result = sessionList.filter((item: any) => item.value === id);
   const isWindowSession = utils.chatWindow.is(id);
 
   if (isWindow && !result.length) {
@@ -1516,7 +1516,7 @@ export const userShake = (message: any) => (dispatch: AppDispatch, getState: Get
   dispatch(
     addUserSession(message.aid, {}, true, () => {
       const { currentSessionList } = getState().chat;
-      const session = currentSessionList.filter(item => item.id == message.aid)[0];
+      const session = currentSessionList.filter((item: any) => item.id == message.aid)[0];
 
       if (session) {
         addShakeMessage();
@@ -1560,7 +1560,7 @@ export const newGroup = (message: any) => (dispatch: AppDispatch) => {
  */
 export const newGroupMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList, isWindow } = getState().chat;
-  const result = sessionList.filter(item => item.value === message.to);
+  const result = sessionList.filter((item: any) => item.value === message.to);
   const isWindowSession = utils.chatWindow.is(message.to);
 
   // 全局聊天下，不是当前的聊天消息过来过滤掉
@@ -1608,14 +1608,14 @@ export const newGroupMessage = (message: any) => (dispatch: AppDispatch, getStat
  */
 export const groupShake = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList } = getState().chat;
-  const session = sessionList.filter(item => item.value === message.gid)[0];
+  const session = sessionList.filter((item: any) => item.value === message.gid)[0];
   const isWindowSession = utils.chatWindow.is(message.gid);
   const { msg } = message;
 
   if (currentSession.value === message.gid) {
     utils.shake(message.gid);
   } else {
-    const atlist = session.atlist ? session.atlist.filter(atId => atId !== message.id) : [];
+    const atlist = session.atlist ? session.atlist.filter((atId: string) => atId !== message.id) : [];
     const listMsg = {
       id: message.gid,
       atlist: isWindowSession ? [] : atlist.concat(msg.msgid),
@@ -1635,7 +1635,7 @@ export const groupShake = (message: any) => (dispatch: AppDispatch, getState: Ge
  */
 export const newWithdrawGroupMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
-  const session = sessionList.filter(item => item.value === message.gid)[0];
+  const session = sessionList.filter((item: any) => item.value === message.gid)[0];
   dispatch(updateWithdrawMessage(message.gid, message));
   dispatch(
     updateSessionList({
@@ -1645,7 +1645,7 @@ export const newWithdrawGroupMessage = (message: any) => (dispatch: AppDispatch,
   );
 
   if (session && session.atlist) {
-    const atlist = session.atlist.filter(atId => atId !== message.id);
+    const atlist = session.atlist.filter((atId: string) => atId !== message.id);
     dispatch(
       updateSessionList({
         id: message.gid,
@@ -1696,7 +1696,7 @@ export const setReferMessage = (id: string, message: any) => {
  */
 export const addBottomUnreadMessage = (id: string, message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { bottomUnreadMessage } = getState().chat;
-  const currentMessage = bottomUnreadMessage[id];
+  const currentMessage = (bottomUnreadMessage as Record<string, any>)[id];
 
   if (currentMessage) {
     dispatch({
@@ -1788,20 +1788,20 @@ export const refresh = () => (dispatch: AppDispatch, getState: GetState) => {
       pageIndex: 1,
       pageSize: 30,
     })
-    .then(res => {
+    .then((res: any[]) => {
       if (id) {
-        res.forEach(item => {
+        res.forEach((item: any) => {
           if (item && item.value == id) {
             item.count = 0;
           }
         });
         dispatch(setSessionList(res));
-        currentInboxList.forEach(inbox => {
+        currentInboxList.forEach((inbox: any) => {
           if (inbox.id !== id) {
             dispatch(removeCurrentInbox(inbox.id));
           }
         });
-        const newCurrentSessionList = currentSessionList.filter(item => item.id === id)[0];
+        const newCurrentSessionList = currentSessionList.filter((item: any) => item.id === id)[0];
 
         if (!newCurrentSessionList) {
           return;
@@ -1813,7 +1813,7 @@ export const refresh = () => (dispatch: AppDispatch, getState: GetState) => {
             id,
             type: isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER,
           })
-          .then(res => {
+          .then((res: any[]) => {
             res = _.isArray(res) ? res.reverse() : [];
             const newMessages = {
               [id]: utils.formatMessages(res),
@@ -1865,7 +1865,7 @@ export const setSlience = (message: any) => (dispatch: AppDispatch, getState: Ge
   const isSilent = message.isSilent ? message.isSilent : false;
   const showBadge = message.showBadge ? message.showBadge : 0;
 
-  const newCurrentSessionList = currentSessionList.map(item => {
+  const newCurrentSessionList = currentSessionList.map((item: any) => {
     if (item.value === message.value) {
       item.isSilent = isSilent;
       item.showBadge = showBadge;
@@ -1873,7 +1873,7 @@ export const setSlience = (message: any) => (dispatch: AppDispatch, getState: Ge
 
     return item;
   });
-  const newSessionList = sessionList.map(item => {
+  const newSessionList = sessionList.map((item: any) => {
     if (item.value === message.value) {
       item.isSilent = isSilent;
       item.showBadge = showBadge;
@@ -1890,7 +1890,7 @@ export const setSlience = (message: any) => (dispatch: AppDispatch, getState: Ge
     result: newSessionList,
   });
   if (message.value === currentSession.value) {
-    let _current = newSessionList.find(l => l.value === message.value);
+    let _current = newSessionList.find((l: any) => l.value === message.value);
     dispatch(setNewCurrentSession(_current));
   }
 };
