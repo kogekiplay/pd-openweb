@@ -15,8 +15,6 @@
     "src/components/Agent/anonymous.ts",
     "src/components/Agent/buildContext.ts",
     "src/components/Agent/debug.ts",
-    "src/components/Agent/streamEvents.ts",
-    "src/components/Agent/ui/AnonAttachmentSlot.tsx",
     "src/components/Agent/ui/Attachments.tsx",
     "src/components/Agent/ui/BuildProgress.tsx",
     "src/components/Agent/ui/Conversation.tsx",
