@@ -136,6 +136,7 @@ export default function HierarchyViewConfig({
           data={RELATE_TYPE}
           checkedValue={relateType}
           onChange={value => {
+            if (value === undefined) return;
             if (value !== relateType) {
               setRelate({ relateType: value });
               updateView({

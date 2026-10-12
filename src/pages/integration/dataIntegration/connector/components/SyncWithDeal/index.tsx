@@ -136,7 +136,9 @@ export default function SyncWithDeal(props) {
             className="mBottom24"
             data={CREATE_TYPE_RADIO_LIST}
             checkedValue={sheetNameData.sheetCreateType}
-            onChange={sheetCreateType => onCreateTypeChange(sheetCreateType)}
+            onChange={sheetCreateType => {
+              if (sheetCreateType !== undefined) onCreateTypeChange(sheetCreateType);
+            }}
           />
           {sheetNameData.sheetCreateType === CREATE_TYPE.NEW ? (
             <div className="sheetNameInput">

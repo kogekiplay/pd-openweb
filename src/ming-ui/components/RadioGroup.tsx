@@ -9,16 +9,16 @@ import type { RadioProps, RadioSize } from './Radio';
 export { Radio, SIZE_LIST };
 
 /** 一个选项：整个展开到 <Radio> 上，所以 Radio 的属性（title、icon、disabled…）都能写在项里 */
-export type RadioGroupItem<V = any> = Omit<RadioProps<V>, 'onClick'>;
+export type RadioGroupItem<V = unknown> = Omit<RadioProps<V>, 'onClick'>;
 
-interface RadioGroupProps<V> {
+export interface RadioGroupProps<V = unknown> {
   data?: readonly RadioGroupItem<V>[] | undefined;
   /** 选中项的值，每次变化都会重新按它标出选中项 */
   checkedValue?: V | null | undefined;
   /** 只在挂载时用一次，优先于 checkedValue */
   defaultCheckedValue?: V | null | undefined;
   /** 点选某项，参数是那一项的 value */
-  onChange?: ((value: V) => void) | undefined;
+  onChange?: ((value: V | undefined) => void) | undefined;
   size?: RadioSize | undefined;
   disabled?: boolean | undefined;
   className?: string | undefined;
@@ -32,23 +32,34 @@ interface RadioGroupProps<V> {
   needDefaultUpdate?: boolean | undefined;
 }
 
-function formatData<V>(value: V | null | undefined, data: readonly RadioGroupItem<V>[] | undefined) {
-  if (value === null || value === undefined || value === '') {
-    return data;
-  } else {
-    return (data || []).map(item => {
-      item.checked = item.value === value;
-      return item;
-    });
-  }
+interface Selection<V> {
+  value: V | null | undefined;
 }
 
-class RadioGroup<V = any> extends Component<RadioGroupProps<V>, { data: readonly RadioGroupItem<V>[] | undefined }> {
+function selectionFor<V>(
+  value: V | null | undefined,
+  data: readonly RadioGroupItem<V>[] | undefined,
+): Selection<V> | undefined {
+  if (value === undefined) return undefined;
+  if ((value === null || value === '') && !data?.some(item => item.value === value)) return undefined;
+  return { value };
+}
+
+function formatData<V>(selection: Selection<V> | undefined, data: readonly RadioGroupItem<V>[] | undefined) {
+  return (data || []).map(item => ({ ...item, checked: !!selection && item.value === selection.value }));
+}
+
+interface RadioGroupState<V> {
+  data: readonly RadioGroupItem<V>[];
+  selection: Selection<V> | undefined;
+}
+
+class RadioGroup<V = unknown> extends Component<RadioGroupProps<V>, RadioGroupState<V>> {
   static override propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({
         text: PropTypes.any, // Raio显示的名称
-        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
+        value: PropTypes.any,
       }),
     ), // 数据
     checked: PropTypes.string, // 选中
@@ -75,8 +86,12 @@ class RadioGroup<V = any> extends Component<RadioGroupProps<V>, { data: readonly
           ? this.props.checkedValue
           : null;
 
+    const selection = selectionFor(checkedValue, props.data);
+    const hasInitialSelection = props.defaultCheckedValue !== undefined || props.checkedValue !== undefined;
     this.state = {
-      data: formatData(checkedValue, this.props.data),
+      // Without an explicit selection, retain initial option checked/defaultChecked presets.
+      data: hasInitialSelection ? formatData(selection, props.data) : (props.data || []).map(item => ({ ...item })),
+      selection,
     };
   }
 
@@ -89,15 +104,25 @@ class RadioGroup<V = any> extends Component<RadioGroupProps<V>, { data: readonly
   }
 
   override componentDidUpdate(prevProps: RadioGroupProps<V>) {
-    if (!shallowEqual(prevProps, this.props)) {
-      this.refreshId(this.props.checkedValue, this.props.data);
-    }
+    if (shallowEqual(prevProps, this.props)) return;
+    const externalSelection =
+      this.props.checkedValue !== undefined || this.props.checkedValue !== prevProps.checkedValue;
+    if (!externalSelection && this.props.data === prevProps.data) return;
+    const selection = externalSelection ? selectionFor(this.props.checkedValue, this.props.data) : this.state.selection;
+    this.setState({
+      data:
+        !externalSelection && !selection
+          ? (this.props.data || []).map(item => ({ ...item }))
+          : formatData(selection, this.props.data),
+      selection,
+    });
   }
 
-  handleClick(value: V) {
+  handleClick(value: V | undefined) {
     const { onChange } = this.props;
 
-    this.refreshId(value, this.state.data);
+    const selection = { value };
+    this.setState({ data: formatData(selection, this.state.data), selection });
 
     if (onChange) {
       onChange(value);
@@ -105,8 +130,10 @@ class RadioGroup<V = any> extends Component<RadioGroupProps<V>, { data: readonly
   }
 
   refreshId(value: V | null | undefined, data: readonly RadioGroupItem<V>[] | undefined) {
+    const selection = selectionFor(value, data);
     this.setState({
-      data: formatData(value, data),
+      data: formatData(selection, data),
+      selection,
     });
   }
 

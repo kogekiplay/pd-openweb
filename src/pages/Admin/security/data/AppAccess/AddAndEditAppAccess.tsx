@@ -100,8 +100,10 @@ export default function AddAndEditAppAccess(props) {
       accessType,
       accessPass: accessPass ? true : false,
       limitAction,
-      whiteApps: limitAction === 1 ? appList.map(({ appId }: { appId?: string; [key: string]: any }) => ({ appId })) : [],
-      blackApps: limitAction === 0 ? appList.map(({ appId }: { appId?: string; [key: string]: any }) => ({ appId })) : [],
+      whiteApps:
+        limitAction === 1 ? appList.map(({ appId }: { appId?: string; [key: string]: any }) => ({ appId })) : [],
+      blackApps:
+        limitAction === 0 ? appList.map(({ appId }: { appId?: string; [key: string]: any }) => ({ appId })) : [],
       isAllowPublicAccess,
       isAllowCrossApp,
       isEnable: isEdit ? actionRecord.isEnable : true,
@@ -234,7 +236,9 @@ export default function AddAndEditAppAccess(props) {
           size="middle"
           checkedValue={limitAction}
           data={POLICY_ACTION_ENUM}
-          onChange={value => setState({ limitAction: value })}
+          onChange={value => {
+            if (value !== undefined) setState({ limitAction: value });
+          }}
         />
 
         <div className="mBottom20 mTop30">

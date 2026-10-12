@@ -1007,7 +1007,9 @@ function CreateTemplateDialog(props) {
                 vertical={true}
                 checkedValue={type}
                 data={TEMPLATE_TYPE_LIST}
-                onChange={value => setTemplateInfoState({ type: value })}
+                onChange={value => {
+                  if (value !== undefined) setTemplateInfoState({ type: value });
+                }}
               />
               {showOrgRelationNotice && (
                 <TemplateRelationNotice>

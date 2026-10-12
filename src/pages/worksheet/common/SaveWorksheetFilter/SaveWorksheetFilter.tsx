@@ -84,7 +84,7 @@ export default class SaveWorksheetFilter extends Component<SaveWorksheetFilterPr
                 ]}
                 checkedValue={filterType}
                 onChange={value => {
-                  this.setState({ filterType: value });
+                  if (value !== undefined) this.setState({ filterType: value });
                 }}
                 size="small"
               />

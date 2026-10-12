@@ -104,7 +104,13 @@ export default function HierarchyViewConfig({ fields, handleSelect, currentSheet
     <HierarchyViewConfigWrap>
       <SettingItem>
         <div className="settingItemTitle">{_l('层级结构关系')}</div>
-        <RadioGroup data={RELATE_TYPE} checkedValue={relateType} onChange={value => setRelate({ relateType: value })} />
+        <RadioGroup
+          data={RELATE_TYPE}
+          checkedValue={relateType}
+          onChange={value => {
+            if (value !== undefined) setRelate({ relateType: value });
+          }}
+        />
       </SettingItem>
       <SettingItem>
         <div className="settingItemTitle">

@@ -144,7 +144,7 @@ function CustomBtnCon(props) {
           data={deleteStr(isAllView)}
           size="small"
           onChange={value => {
-            setDeleteState(prev => ({ ...prev, value }));
+            if (value !== undefined) setDeleteState(prev => ({ ...prev, value }));
           }}
           checkedValue={value}
         />

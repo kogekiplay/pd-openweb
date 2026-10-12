@@ -360,13 +360,13 @@ class DialogSelectOrgRole extends Component<any, any> {
                   className="GSelect-department--checkbox mRight0"
                   checked={this.getCurrentUserOrgRoleChecked()}
                   text={_l('当前用户所在的组织角色')}
-                  onClick={(checked: boolean) =>
+                  onClick={() =>
                     this.toggle(
                       {
                         organizeId: 'user-role',
                         organizeName: _l('当前用户所在的组织角色'),
                       },
-                      !checked,
+                      !this.getCurrentUserOrgRoleChecked(),
                     )
                   }
                 />

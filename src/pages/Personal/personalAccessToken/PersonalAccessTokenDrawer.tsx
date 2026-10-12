@@ -333,14 +333,16 @@ export default function PersonalAccessTokenDrawer(props) {
       <Select
         mode="multiple"
         allowClear
-        showSearch={{ filterOption: (inputValue, option) => {
-          return String(option?.label || '')
-            .toLowerCase()
-            .includes(inputValue.toLowerCase());
-        } }}
+        showSearch={{
+          filterOption: (inputValue, option) => {
+            return String(option?.label || '')
+              .toLowerCase()
+              .includes(inputValue.toLowerCase());
+          },
+        }}
         optionLabelProp="label"
         className="w100 mdAntSelect projectSelect"
-        classNames={{ popup: { root: "patProjectSelectDropdown" } }}
+        classNames={{ popup: { root: 'patProjectSelectDropdown' } }}
         disabled={isEdit}
         placeholder={_l('请选择组织')}
         value={formData.entityScopeType === ENTITY_SCOPE_TYPE.ALL ? [ALL_PROJECTS_VALUE] : formData.projectIds || []}
@@ -374,6 +376,7 @@ export default function PersonalAccessTokenDrawer(props) {
         }))}
         checkedValue={formData.appScopeType}
         onChange={value => {
+          if (value === undefined) return;
           if (value === 2 && !canSelectSpecifiedApps) return;
           setFormData({ appScopeType: value });
         }}
@@ -415,7 +418,7 @@ export default function PersonalAccessTokenDrawer(props) {
   );
 
   return (
-    (<Drawer
+    <Drawer
       open={visible}
       size={600}
       title={_l('个人访问令牌')}
@@ -439,6 +442,6 @@ export default function PersonalAccessTokenDrawer(props) {
           {renderApiScope()}
         </div>
       )}
-    </Drawer>)
+    </Drawer>
   );
 }

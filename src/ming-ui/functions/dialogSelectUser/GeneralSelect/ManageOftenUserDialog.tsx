@@ -244,7 +244,9 @@ function ManageOftenUserDialog(props: ManageOftenUserProps) {
           className="mBottom16"
           checkedValue={type}
           data={OFTEN_USER_OPTIONS}
-          onChange={(value: number) => setType(value)}
+          onChange={value => {
+            if (value !== undefined) setType(value);
+          }}
         />
 
         <div className="textSecondary mBottom20 Font14">
