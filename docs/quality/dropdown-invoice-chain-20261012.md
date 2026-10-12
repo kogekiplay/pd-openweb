@@ -11,3 +11,5 @@ Dropdown 删除泛型 any 缺省值和开放 Item 索引兜底，公开有限 Pr
 完整产品终点配置诊断 56,403 → 56,350（按文件/错误码新增 0），欠债 3,269 → 3,264，strict-clean 1,470 / 4,734；5 个达标文件移出欠债名单。基础语义诊断 9,057 → 9,055，key 2,451 → 2,450，基线仅删除已消失项。211/211 规格、工具与语法门禁通过；PublicWorksheet weixinAuth 既有隔离项保留。两个新增规格在工具五开关下自身 0 诊断。全仓正式 strict 开关、其余 API 和 styled-components 下限声明仍有欠债，目标未完成。
 
 证据：`/private/tmp/hap-next-chain-before-strict-20261012.txt`、`hap-dropdown-final-strict-20261012.txt`、`hap-dropdown-tools-strict-final-20261012.txt`、`hap-dropdown-specs-final-20261012.log`、`hap-dropdown-behavior-20261012.json`、`hap-invoice-options-behavior-20261012.json`。本批尚未部署，今天生产仍为已发布的 `e091d5f553`。本地工作分支保留；验证后的整合只推送 GitHub main。
+
+源码提交 `e86ef7d2a`、主分支整合 `6ef3bb6e6` 已完成真实 release（58 秒）及 publish；release 211/211 规格和全部类型门禁通过。3 个 runtime 的 1095 JS / 387 CSS 映射完整，79 个 HTML 的 537 个本地资源引用存在且无 dev 产物，widget 已生成。入口 revision 匹配整合源码，SHA256 为 `3a6f686c842bb917fd7d76eca96dab57b217a8775a778467a795384e1f05b528`，构建后工作树干净。证据为 `/private/tmp/hap-dropdown-release-20261012.log`、`hap-dropdown-publish-20261012.log`、`hap-dropdown-runtime-20261012.log`、`hap-dropdown-artifact-check-20261012.json`。本批候选已验证，尚未部署生产。
