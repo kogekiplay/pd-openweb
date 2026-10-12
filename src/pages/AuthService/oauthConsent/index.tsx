@@ -185,7 +185,7 @@ function OAuthConsentPage() {
             type="primary"
             className="w100 Bold boderRadAll_3 authorizeBtn"
             fullWidth
-            height={44}
+            style={{ height: 44 }}
             disabled={authorizeLoading}
             onClick={onAuthorize}
           >
@@ -194,7 +194,7 @@ function OAuthConsentPage() {
           <Button
             className="w100 mTop12 boderRadAll_3 Border cancelBtn"
             fullWidth
-            height={44}
+            style={{ height: 44 }}
             type="link"
             onClick={onCancel}
           >

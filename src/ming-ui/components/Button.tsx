@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import type { ButtonHTMLAttributes, MouseEvent } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Icon from './Icon';
@@ -20,10 +21,26 @@ export interface ButtonState {
   loading: boolean;
 }
 
-export default class Button extends Component<any, ButtonState> {
+export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'onClick'> {
+  /** Visual class variants also support application-specific Button-- classes. */
+  type?: string | undefined;
+  size?: string | undefined;
+  radius?: boolean | undefined;
+  fullWidth?: boolean | undefined;
+  loading?: boolean | undefined;
+  loadingClassName?: string | undefined;
+  icon?: string | null | undefined;
+  action?: ((this: Button, event: MouseEvent<HTMLButtonElement>) => unknown) | undefined;
+  onClick?: ((this: Button, event: MouseEvent<HTMLButtonElement>) => unknown) | undefined;
+}
+
+export default class Button extends Component<ButtonProps, ButtonState> {
   declare width: number | undefined;
-  declare mounted: boolean | undefined;
+  mounted = false;
   declare button: HTMLButtonElement | null | undefined;
+  declare promise: unknown;
+  private actionGeneration = 0;
+  private measurementTimer: ReturnType<typeof setTimeout> | undefined;
 
   static override propTypes = {
     /**
@@ -87,14 +104,18 @@ export default class Button extends Component<any, ButtonState> {
   };
 
   override componentDidMount() {
-    if (!this.props.loading && !this.state.loading) {
-      setTimeout(() => this.computeWidth(), 0);
-    }
-
     this.mounted = true;
+    // A revived lifecycle no longer owns the action invalidated at unmount.
+    if (this.state.loading) this.setState({ loading: false });
+    if (!this.props.loading && !this.state.loading) {
+      this.measurementTimer = setTimeout(() => {
+        this.measurementTimer = undefined;
+        if (this.mounted) this.computeWidth();
+      }, 0);
+    }
   }
 
-  override componentDidUpdate(prevProps, prevState) {
+  override componentDidUpdate(prevProps: ButtonProps, prevState: ButtonState) {
     if (
       this.props.children !== prevProps.children ||
       ((this.props.loading || this.state.loading) && !(prevProps.loading || prevState.loading))
@@ -105,6 +126,9 @@ export default class Button extends Component<any, ButtonState> {
 
   override componentWillUnmount() {
     this.mounted = false;
+    ++this.actionGeneration;
+    if (this.measurementTimer !== undefined) clearTimeout(this.measurementTimer);
+    this.measurementTimer = undefined;
   }
 
   computeWidth() {
@@ -114,19 +138,29 @@ export default class Button extends Component<any, ButtonState> {
     this.width = this.button.getBoundingClientRect().width;
   }
 
-  handleClick(...args) {
+  handleClick(...args: [MouseEvent<HTMLButtonElement>]) {
     const { action, onClick } = this.props;
 
     if (action) {
+      const generation = ++this.actionGeneration;
       try {
         this.promise = action.apply(this, args);
         this.setState({ loading: true });
         const stopLoading = () => {
-          if (this.mounted) this.setState({ loading: false });
+          if (this.mounted && generation === this.actionGeneration) this.setState({ loading: false });
         };
 
-        this.promise && this.promise.then(stopLoading, stopLoading);
+        // Preserve the actual receiver when a custom thenable supplies a getter.
+        const then: unknown = this.promise ? Reflect.get(Object(this.promise), 'then', this.promise) : undefined;
+        if (typeof then === 'function') {
+          Reflect.apply(then, this.promise, [stopLoading, stopLoading]);
+        } else if (then !== undefined && then !== null) {
+          throw new TypeError('Invalid button action promise');
+        } else {
+          stopLoading();
+        }
       } catch (e) {
+        if (this.mounted && generation === this.actionGeneration) this.setState({ loading: false });
         console.error(e);
       }
     }
@@ -147,9 +181,11 @@ export default class Button extends Component<any, ButtonState> {
       className,
       style,
       loadingClassName,
+      loading: _loading,
+      action: _action,
+      onClick: _onClick,
       ...otherProps
     } = this.props;
-    delete otherProps.loading;
 
     const content = loading ? (
       <div className={cx(loadingClassName, 'Button-loadingCircle')} />
@@ -179,7 +215,8 @@ export default class Button extends Component<any, ButtonState> {
       },
       style,
     );
-    const clickHandler = disabled || loading ? undefined : (...args) => this.handleClick(...args);
+    const clickHandler =
+      disabled || loading ? undefined : (event: MouseEvent<HTMLButtonElement>) => this.handleClick(event);
 
     return (
       <button
